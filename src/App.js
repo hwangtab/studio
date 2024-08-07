@@ -9,8 +9,10 @@ import Booking from './pages/Booking';
 import Contact from './pages/Contact';
 
 function App() {
+  const basePath = process.env.NODE_ENV === 'production' ? '/studio' : '';
+
   return (
-    <Router basename="/studio">
+    <Router basename={basePath}>
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
