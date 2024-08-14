@@ -13,12 +13,12 @@
   <meta property="og:url" content="https://hwangtab.github.io/studio/">
   <meta property="og:title" content="스튜디오 놀 - 음악 제작의 모든 것">
   <meta property="og:description" content="스튜디오 놀에서 최상의 사운드로 당신의 음악을 완성하세요.">
-  <meta property="og:image" content="https://hwangtab.github.io/studio/thumbnail.jpg">
+  <meta property="og:image" content="%PUBLIC_URL%/thumbnail.jpg">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://hwangtab.github.io/studio/">
   <meta property="twitter:title" content="스튜디오 놀 - 음악 제작의 모든 것">
   <meta property="twitter:description" content="스튜디오 놀에서 최상의 사운드로 당신의 음악을 완성하세요.">
-  <meta property="twitter:image" content="https://hwangtab.github.io/studio/thumbnail.jpg">
+  <meta property="twitter:image" content="%PUBLIC_URL%/thumbnail.jpg">
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -53,6 +53,13 @@
           }
         }
       }(window.location))
+      (function(){
+    var redirect = sessionStorage.redirect;
+    delete sessionStorage.redirect;
+    if (redirect && redirect != location.href) {
+      history.replaceState(null, null, redirect);
+    }
+  })();
     </script>
   </head>
   <body>

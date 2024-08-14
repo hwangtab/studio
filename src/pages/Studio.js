@@ -54,7 +54,7 @@ const Studio = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <motion.h1 
-        className="text-5xl pt-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+        className="word-break-keep-all text-5xl pt-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -82,7 +82,14 @@ const Studio = () => {
         </p>
       </motion.div>
 
-      <h2 className="text-5xl pt-6 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent">장비 목록</h2>
+      <motion.h1 
+        className="word-break-keep-all text-5xl pt-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        장비 목록
+      </motion.h1>
       <div className="grid md:grid-cols-2 gap-6">
         <EquipmentSection title="마이크" items={equipment.microphones} icon={FaMicrophone} />
         <EquipmentSection title="프리앰프 & 이퀄라이저" items={[...equipment.preamps, ...equipment.equalizers]} icon={FaSlidersH} />

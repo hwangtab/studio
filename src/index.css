@@ -51,3 +51,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.word-break-keep-all {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaUser, FaPaperPlane } from 'react-icons/fa';
 
@@ -14,7 +15,7 @@ const InputField = ({ icon: Icon, ...props }) => (
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    phone: '',
     message: ''
   });
   const [submitMessage, setSubmitMessage] = useState('');
@@ -26,21 +27,18 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/contacts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setSubmitMessage('메시지가 성공적으로 전송되었습니다.');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setSubmitMessage('메시지 전송에 실패했습니다. 다시 시도해주세요.');
-      }
+      const result = await emailjs.send(
+        "service_lop4659",
+        "template_wxwj093",
+        formData,
+        "E5wHxyFgSkrjQhYVG"
+      );
+      console.log('Success:', result.text);
+      setSubmitMessage('메시지가 성공적으로 전송되었습니다.');
+      setFormData({ name: '', phone: '', message: '' });
     } catch (error) {
-      setSubmitMessage('서버 연결 중 오류가 발생했습니다.');
+      console.error('EmailJS error:', error.text);
+      setSubmitMessage('메시지 전송에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -64,18 +62,18 @@ const Contact = () => {
           >
             <h2 className="text-xl font-bold mb-4">연락처 정보</h2>
             <div className="space-y-4">
-              <p className="flex items-center">
+              <a href="https://goo.gl/maps/YourGoogleMapsLink" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-primary transition-colors">
                 <FaMapMarkerAlt className="w-5 h-5 mr-2 text-primary" />
                 서울특별시 은평구 통일로71길 2-1 3층 스튜디오 놀
-              </p>
-              <p className="flex items-center">
+              </a>
+              <a href="tel:02-764-3114" className="flex items-center hover:text-primary transition-colors">
                 <FaPhone className="w-5 h-5 mr-2 text-primary" />
                 02-764-3114
-              </p>
-              <p className="flex items-center">
+              </a>
+              <a href="mailto:contact@kosmart.org" className="flex items-center hover:text-primary transition-colors">
                 <FaEnvelope className="w-5 h-5 mr-2 text-primary" />
                 contact@kosmart.org
-              </p>
+              </a>
             </div>
             <div className="mt-6">
               <h3 className="text-xl font-bold mb-2">상담 가능 시간</h3>
@@ -107,12 +105,12 @@ const Contact = () => {
                 required 
               />
               <InputField 
-                icon={FaEnvelope}
-                type="email" 
-                name="email"
-                value={formData.email}
+                icon={FaPhone}
+                type="tel" 
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
-                placeholder="이메일" 
+                placeholder="연락처" 
                 required 
               />
               <div className="relative mb-4">
@@ -133,8 +131,9 @@ const Contact = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary hover:from-primary-dark hover:to-secondary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary hover:from-primary-dark hover:to-secondary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
+                <FaPaperPlane className="mr-2" />
                 보내기
               </motion.button>
             </form>

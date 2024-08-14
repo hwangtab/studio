@@ -11,6 +11,15 @@ root.render(
   </React.StrictMode>
 );
 
+// 404 리다이렉션 처리
+(function(){
+  var redirect = sessionStorage.redirect;
+  delete sessionStorage.redirect;
+  if (redirect && redirect !== window.location.href) {
+    window.history.replaceState(null, null, redirect);
+  }
+})();
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
