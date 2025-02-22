@@ -83,7 +83,7 @@ const Services = () => {
           <ServiceCard key={index} {...service} index={index} />
         ))}
       </div>
-      <div className="text-center py-12">
+      <div className="text-center pt-16 pb-12">
         <motion.a
           href="https://open.kakao.com/o/sgTfRiah"
           target="_blank"
