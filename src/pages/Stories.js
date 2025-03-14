@@ -109,7 +109,7 @@ const Stories = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          스튜디오 녹음과 관련된 다양한 이야기를 만나보세요.
+          스튜디오 작업과 관련된 다양한 이야기를 만나보세요.
         </motion.p>
         
         {/* 카테고리 필터 */}
