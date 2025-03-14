@@ -1,7 +1,35 @@
 // 로컬 스토리지 기반 데이터 관리 유틸리티
 
-// 샘플 스토리 데이터 (빈 배열로 변경)
-const sampleStories = [];
+// 샘플 스토리 데이터 (기본 데이터 제공)
+const sampleStories = [
+  {
+    id: 'sample-1',
+    title: '스튜디오 녹음 작업기',
+    category: 'work',
+    summary: '스튜디오 녹음 작업 과정에 대한 이야기입니다.',
+    content: '스튜디오 녹음은 여러 단계를 거쳐 진행됩니다. 먼저 녹음 준비를 하고, 실제 녹음을 진행한 후, 믹싱과 마스터링 과정을 거칩니다.',
+    coverImage: 'https://via.placeholder.com/800x400?text=Studio+Recording',
+    createdAt: '2025-03-01T09:00:00.000Z'
+  },
+  {
+    id: 'sample-2',
+    title: '음향 엔지니어 인터뷰',
+    category: 'interview',
+    summary: '베테랑 음향 엔지니어와의 인터뷰 내용입니다.',
+    content: '10년 경력의 음향 엔지니어와 함께한 인터뷰입니다. 음향 엔지니어로서의 경험과 조언을 들어봅니다.',
+    coverImage: 'https://via.placeholder.com/800x400?text=Sound+Engineer+Interview',
+    createdAt: '2025-03-05T14:30:00.000Z'
+  },
+  {
+    id: 'sample-3',
+    title: '녹음 장비 선택 가이드',
+    category: 'tips',
+    summary: '녹음 장비 선택에 대한 팁과 가이드입니다.',
+    content: '녹음 장비를 선택할 때 고려해야 할 사항들과 추천 장비 목록입니다.',
+    coverImage: 'https://via.placeholder.com/800x400?text=Recording+Equipment+Guide',
+    createdAt: '2025-03-10T11:15:00.000Z'
+  }
+];
 
 // GitHub 설정
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN || '';
@@ -117,7 +145,7 @@ const saveStoriesToGitHub = async (stories) => {
 // 로컬 스토리지 초기화
 const initializeLocalStorage = () => {
   if (!localStorage.getItem('stories')) {
-    localStorage.setItem('stories', JSON.stringify([]));
+    localStorage.setItem('stories', JSON.stringify(sampleStories));
     console.log('로컬 스토리지 초기화 완료');
   }
 };
@@ -126,11 +154,11 @@ const initializeLocalStorage = () => {
 const getLocalStories = () => {
   initializeLocalStorage();
   try {
-    const stories = JSON.parse(localStorage.getItem('stories') || '[]');
-    return stories;
+    const stories = JSON.parse(localStorage.getItem('stories') || JSON.stringify(sampleStories));
+    return stories.length > 0 ? stories : sampleStories;
   } catch (error) {
     console.error('로컬 스토리지 데이터 가져오기 오류:', error);
-    return [];
+    return sampleStories;
   }
 };
 

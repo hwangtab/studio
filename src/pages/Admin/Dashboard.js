@@ -172,7 +172,7 @@ const Dashboard = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
                           <Link
-                            to={`/admin/story/edit/${story.id}`}
+                            to={`/admin/story/new?edit=${story.id}`}
                             className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
                           >
                             <FaEdit size={18} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaSave, FaUpload, FaTrash } from 'react-icons/fa';
 import { getStoryById, addStory, updateStory, handleImageUpload, isAdminLoggedIn } from '../../utils/localDataUtils';
@@ -38,7 +38,11 @@ const quillFormats = [
 const StoryForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const isEditMode = !!id;
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const editId = queryParams.get('edit');
+  const storyId = id || editId;
+  const isEditMode = !!storyId;
   
   // 스토리 상태
   const [formData, setFormData] = useState({
@@ -69,7 +73,8 @@ const StoryForm = () => {
       if (isEditMode) {
         try {
           setLoading(true);
-          const storyData = await getStoryById(id);
+          console.log('스토리 ID 불러오기:', storyId);
+          const storyData = await getStoryById(storyId);
           
           if (storyData) {
             setFormData({
@@ -98,7 +103,7 @@ const StoryForm = () => {
     };
     
     fetchStory();
-  }, [id, isEditMode]);
+  }, [storyId, isEditMode]);
 
   // 입력 필드 변경 핸들러
   const handleChange = (e) => {
@@ -159,7 +164,7 @@ const StoryForm = () => {
       
       if (isEditMode) {
         // 스토리 업데이트
-        await updateStory(id, storyData);
+        await updateStory(storyId, storyData);
       } else {
         // 새 스토리 추가
         await addStory(storyData);

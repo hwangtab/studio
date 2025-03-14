@@ -13,7 +13,6 @@ const StoryDetail = () => {
   const [story, setStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [galleryImagesLoaded, setGalleryImagesLoaded] = useState({});
 
   // 스토리 데이터 가져오기
@@ -157,35 +156,11 @@ const StoryDetail = () => {
         </motion.div>
       </div>
       
-      {/* 메인 이미지 */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mb-12"
-      >
-        <div className="aspect-w-16 aspect-h-9 w-full pb-[56.25%] relative rounded-xl overflow-hidden">
-          {!imageLoaded && (
-            <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
-          <LazyLoadImage
-            src={story.imageUrl || 'https://via.placeholder.com/1200x600?text=No+Image'}
-            alt={story.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-            effect="blur"
-            threshold={100}
-            afterLoad={() => setImageLoaded(true)}
-          />
-        </div>
-      </motion.div>
-      
       {/* 스토리 내용 */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
         className="prose prose-lg dark:prose-invert max-w-none mb-12"
       >
         <div dangerouslySetInnerHTML={{ __html: story.content }} />
@@ -196,28 +171,22 @@ const StoryDetail = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           className="mb-12"
         >
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            갤러리
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h2 className="text-2xl font-bold mb-6">갤러리</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {story.images.map((image, index) => (
-              <div 
-                key={index} 
-                className="aspect-w-16 aspect-h-9 w-full pb-[56.25%] relative rounded-lg overflow-hidden"
-              >
+              <div key={index} className="aspect-w-16 aspect-h-9 relative rounded-lg overflow-hidden">
                 {!galleryImagesLoaded[index] && (
                   <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 )}
                 <LazyLoadImage
                   src={image}
-                  alt={`${story.title} - ${index + 1}`}
-                  className={`absolute inset-0 w-full h-full object-cover hover:scale-105 transition-all duration-300 ${galleryImagesLoaded[index] ? 'opacity-100' : 'opacity-0'}`}
+                  alt={`갤러리 이미지 ${index + 1}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${galleryImagesLoaded[index] ? 'opacity-100' : 'opacity-0'}`}
                   effect="blur"
                   threshold={100}
                   afterLoad={() => handleGalleryImageLoad(index)}
@@ -228,14 +197,16 @@ const StoryDetail = () => {
         </motion.div>
       )}
       
-      {/* 관련 스토리 섹션 */}
-      <div className="mt-12 text-center">
-        <button
-          onClick={() => navigate('/stories')}
-          className="px-6 py-3 bg-primary text-white rounded-full hover:bg-primary-dark transition-colors duration-300 inline-block"
+      {/* 관련 스토리 */}
+      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <h2 className="text-2xl font-bold mb-6">더 많은 스토리</h2>
+        <Link 
+          to="/stories"
+          className="inline-flex items-center text-primary hover:underline"
         >
-          다른 스토리 보기
-        </button>
+          <FaArrowLeft className="mr-2" />
+          모든 스토리 보기
+        </Link>
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
 
 const StoryCard = ({ story }) => {
+  const navigate = useNavigate();
+  
   // 카테고리 매핑
   const categoryMap = {
     'work': '작업기',
@@ -16,14 +18,20 @@ const StoryCard = ({ story }) => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
+  
+  // 카드 클릭 핸들러
+  const handleCardClick = () => {
+    navigate(`/stories/${story.id}`);
+  };
 
   return (
     <motion.div
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
       whileHover={{ scale: 1.02 }}
+      onClick={handleCardClick}
     >
       {story.imageUrl && (
         <div className="w-full h-48 overflow-hidden">
@@ -53,12 +61,12 @@ const StoryCard = ({ story }) => {
           {story.summary}
         </p>
         
-        <Link 
-          to={`/stories/${story.id}`} 
+        <div 
           className="inline-flex items-center text-primary hover:text-primary-dark transition-colors duration-300"
+          onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
         >
           더 보기 <FaArrowRight className="ml-2" size={14} />
-        </Link>
+        </div>
       </div>
     </motion.div>
   );
