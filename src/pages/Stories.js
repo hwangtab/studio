@@ -87,15 +87,30 @@ const Stories = () => {
 
   return (
     <div className="container mx-auto px-4 py-16">
+      {/* 헤더 */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        className="mb-16"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
       >
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-8 text-center">스토리</h1>
-        <p className="text-gray-600 dark:text-gray-300 text-center mb-12 max-w-2xl mx-auto">
-          스튜디오 녹음과 관련된 다양한 이야기, 인터뷰, 그리고 유용한 정보들을 만나보세요.
-        </p>
+        <motion.h1 
+          className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          스토리
+        </motion.h1>
+        
+        <motion.p
+          className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          스튜디오 녹음과 관련된 다양한 이야기를 만나보세요.
+        </motion.p>
         
         {/* 카테고리 필터 */}
         <CategoryFilter 
