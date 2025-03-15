@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   // GitHub Pagesuc640 ucee4uc2a4ud140 ub3c4uba54uc778uc744 uc704ud55c basename uc124uc815
-  const basename = '';
+  const basename = process.env.PUBLIC_URL || '/';
 
   return (
     <Router basename={basename}>
