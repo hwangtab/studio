@@ -1,11 +1,21 @@
 [
   {
+    "title": "ㅁㄹ",
+    "summary": "",
+    "content": "<p>ㅁㄹ</p>",
+    "category": "work",
+    "imageUrl": "",
+    "author": "관리자",
+    "id": "story-1742054942498",
+    "createdAt": "2025-03-15T16:09:02.498Z"
+  },
+  {
     "title": "afaf",
     "summary": "",
     "content": "<p>afaf</p>",
     "category": "work",
     "imageUrl": "",
-    "author": "관리자",
+    "author": "ê´ë¦¬ì",
     "id": "story-1742050260543",
     "createdAt": "2025-03-15T14:51:00.543Z"
   },
@@ -15,7 +25,7 @@
     "content": "<p>afaf</p>",
     "category": "work",
     "imageUrl": "",
-    "author": "관리자",
+    "author": "ê´ë¦¬ì",
     "id": "story-1742050146811",
     "createdAt": "2025-03-15T14:49:06.811Z"
   },
@@ -25,7 +35,7 @@
     "content": "<p>asdasd</p><p><br></p><p><br></p><p><br></p><p>asdasd</p>",
     "category": "work",
     "imageUrl": "",
-    "author": "관리자",
+    "author": "ê´ë¦¬ì",
     "id": "1741955305107",
     "createdAt": "2025-03-14T12:28:25.107Z"
   },
@@ -35,7 +45,7 @@
     "content": "<p>asdasd</p><p><br></p><p><br></p><p><br></p><p>asdasd</p>",
     "category": "work",
     "imageUrl": "",
-    "author": "관리자",
+    "author": "ê´ë¦¬ì",
     "id": "1741955305342",
     "createdAt": "2025-03-14T12:28:25.342Z"
   },
@@ -45,7 +55,7 @@
     "content": "<p>afaf</p>",
     "category": "work",
     "imageUrl": "",
-    "author": "관리자",
+    "author": "ê´ë¦¬ì",
     "id": "1741956252556",
     "createdAt": "2025-03-14T12:44:12.556Z"
   }
