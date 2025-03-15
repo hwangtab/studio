@@ -32,13 +32,25 @@ const sampleStories = [
 ];
 
 // GitHub 설정
+// 주의: 토큰을 직접 코드에 포함하지 않고 환경변수를 사용합니다.
+const getGitHubToken = () => {
+  return process.env.REACT_APP_GITHUB_TOKEN || localStorage.getItem('github_token') || '';
+};
 const GITHUB_OWNER = 'hwangtab';
 const GITHUB_REPO = 'studio';
-const DATA_BRANCH = 'data'; // 데이터를 저장할 브랜치
-const STORIES_FILE = 'stories.json'; // 데이터 파일명
+const GITHUB_BRANCH = 'data';
+const GITHUB_PATH = 'stories.json';
 
-// GitHub 데이터 URL
-const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${DATA_BRANCH}`;
+// GitHub API 설정
+const getGitHubConfig = () => {
+  return {
+    owner: GITHUB_OWNER,
+    repo: GITHUB_REPO,
+    branch: GITHUB_BRANCH,
+    dataPath: GITHUB_PATH,
+    token: getGitHubToken()
+  };
+};
 
 // 로컬 스토리지 초기화
 const initializeLocalStorage = () => {
@@ -70,31 +82,114 @@ const saveLocalStories = (stories) => {
   }
 };
 
-// GitHub에서 데이터 가져오기
+// GitHub API를 통해 데이터 가져오기
 const fetchStoriesFromGitHub = async () => {
   try {
-    const response = await fetch(`${GITHUB_RAW_URL}/${STORIES_FILE}`);
+    const url = `https://api.github.com/repos/${getGitHubConfig().owner}/${getGitHubConfig().repo}/contents/${getGitHubConfig().dataPath}?ref=${getGitHubConfig().branch}`;
     
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `token ${getGitHubConfig().token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
     if (!response.ok) {
-      // 데이터 파일이 없거나 오류 발생 시 로컬 데이터 사용
-      console.warn(`GitHub에서 데이터를 가져올 수 없습니다. 상태 코드: ${response.status}`);
+      // GitHub API uc624ub958
+      if (response.status === 404) {
+        // ub370uc774ud130uac00 uc5c6uc744 uacbduc6b0 uc0d8ud50c ub370uc774ud130ub97c uc800uc7a5ud558uace0 ubc18ud658
+        console.log('ub370uc774ud130 ud30cuc77cuc774 uc5c6uc2b5ub2c8ub2e4. uc0c8ub85c uc0dduc131ud569ub2c8ub2e4.');
+        await saveStoriesToGitHub(sampleStories);
+        return sampleStories;
+      }
+      console.warn(`GitHubuc5d0uc11c ub370uc774ud130ub97c uac00uc838uc62c uc218 uc5c6uc2b5ub2c8ub2e4. uc0c1ud0dc ucf54ub4dc: ${response.status}`);
       return getLocalStories();
     }
-    
+
     const data = await response.json();
-    // 가져온 데이터를 로컬 스토리지에도 저장
-    saveLocalStories(data);
-    return data;
+    const content = atob(data.content); // Base64 uc514ucf54ub529
+    
+    // uac00ub2a5ud55c uc778ucf54ub529 ubb38uc81c ud574uacb0
+    let stories;
+    try {
+      stories = JSON.parse(content);
+    } catch (e) {
+      // uc778ucf54ub529 ubb38uc81c ubc1cuc0dd uc2dc ub514ucf54ub529 ubc29ubc95 ubcc0uacbd
+      const decodedContent = decodeURIComponent(escape(content));
+      stories = JSON.parse(decodedContent);
+    }
+    
+    // uac00uc838uc628 ub370uc774ud130ub97c ub85cuceec uc2a4ud1a0ub9acuc9c0uc5d0ub3c4 uc800uc7a5
+    saveLocalStories(stories);
+    return stories;
   } catch (error) {
-    console.error('GitHub에서 데이터 가져오기 오류:', error);
+    console.error('GitHub APIuc5d0uc11c ub370uc774ud130 uac00uc838uc624uae30 uc624ub958:', error);
+    // uc624ub958 ubc1cuc0dd uc2dc ub85cuceec ub370uc774ud130ub97c uc0acuc6a9ud569ub2c8ub2e4.
     return getLocalStories();
+  }
+};
+
+// GitHub API를 통해 데이터 저장하기
+const saveStoriesToGitHub = async (stories) => {
+  try {
+    // 데이터 파일이 있는지 확인
+    let sha = null;
+    try {
+      const fileInfoResponse = await fetch(`https://api.github.com/repos/${getGitHubConfig().owner}/${getGitHubConfig().repo}/contents/${getGitHubConfig().dataPath}?ref=${getGitHubConfig().branch}`, {
+        headers: {
+          'Authorization': `token ${getGitHubConfig().token}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      
+      if (fileInfoResponse.ok) {
+        const fileInfo = await fileInfoResponse.json();
+        sha = fileInfo.sha;
+      }
+    } catch (error) {
+      console.log('데이터 파일 정보 가져오기 오류:', error);
+    }
+
+    // 데이터 파일 업데이트
+    // Base64 인코딩 - Latin1 인코딩 사용
+    const storiesJson = JSON.stringify(stories, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(storiesJson)));
+    
+    const response = await fetch(`https://api.github.com/repos/${getGitHubConfig().owner}/${getGitHubConfig().repo}/contents/${getGitHubConfig().dataPath}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${getGitHubConfig().token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: '데이터 파일 업데이트',
+        content: base64Content,
+        branch: getGitHubConfig().branch,
+        sha: sha
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub API를 통해 데이터 저장 오류: ${response.status} ${response.statusText}`);
+    }
+
+    // 로컬 스토리지에 저장
+    saveLocalStories(stories);
+    
+    return await response.json();
+  } catch (error) {
+    console.error('GitHub API를 통해 데이터 저장 오류:', error);
+    // 오류 발생 시 로컬 데이터 사용
+    saveLocalStories(stories);
+    throw error;
   }
 };
 
 // 모든 스토리 가져오기
 const getAllStories = async () => {
   try {
-    // 먼저 GitHub에서 데이터 가져오기 시도
+    // 먼저 GitHub API를 통해 데이터 가져오기 시도
     const stories = await fetchStoriesFromGitHub();
     return stories;
   } catch (error) {
@@ -132,11 +227,8 @@ const addStory = async (story) => {
     // 데이터 업데이트
     const updatedStories = [newStory, ...stories];
     
-    // 로컬 스토리지에 저장
-    saveLocalStories(updatedStories);
-    
-    // 사용자에게 GitHub 저장소에 직접 커밋하라는 메시지 표시
-    alert('스토리가 로컬에 저장되었습니다. GitHub 저장소에 반영하려면 data 브랜치에 stories.json 파일을 업데이트해주세요.');
+    // GitHub API를 통해 데이터 저장
+    await saveStoriesToGitHub(updatedStories);
     
     return newStory;
   } catch (error) {
@@ -169,11 +261,8 @@ const updateStory = async (id, updatedStory) => {
     const updatedStories = [...stories];
     updatedStories[index] = newStory;
     
-    // 로컬 스토리지에 저장
-    saveLocalStories(updatedStories);
-    
-    // 사용자에게 GitHub 저장소에 직접 커밋하라는 메시지 표시
-    alert('스토리가 로컬에 저장되었습니다. GitHub 저장소에 반영하려면 data 브랜치에 stories.json 파일을 업데이트해주세요.');
+    // GitHub API를 통해 데이터 저장
+    await saveStoriesToGitHub(updatedStories);
     
     return newStory;
   } catch (error) {
@@ -197,11 +286,8 @@ const deleteStory = async (id) => {
     // 데이터 업데이트
     const updatedStories = stories.filter(story => story.id !== id);
     
-    // 로컬 스토리지에 저장
-    saveLocalStories(updatedStories);
-    
-    // 사용자에게 GitHub 저장소에 직접 커밋하라는 메시지 표시
-    alert('스토리가 로컬에서 삭제되었습니다. GitHub 저장소에 반영하려면 data 브랜치에 stories.json 파일을 업데이트해주세요.');
+    // GitHub API를 통해 데이터 저장
+    await saveStoriesToGitHub(updatedStories);
     
     return id;
   } catch (error) {

@@ -6,14 +6,22 @@ import { loginAdmin, isAdminLoggedIn } from '../../utils/localDataUtils';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [githubToken, setGithubToken] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   // 이미 로그인 되어 있는지 확인
   useEffect(() => {
     if (isAdminLoggedIn()) {
       navigate('/admin/dashboard');
+    }
+    
+    // GitHub 토큰 저장
+    const savedToken = localStorage.getItem('github_token');
+    if (savedToken) {
+      setGithubToken(savedToken);
     }
   }, [navigate]);
 
@@ -23,6 +31,12 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // GitHub 토큰 저장
+      if (githubToken) {
+        localStorage.setItem('github_token', githubToken);
+        setMessage('GitHub 토큰 저장 완료.');
+      }
+      
       // 로컬 스토리지를 이용한 로그인 처리
       const success = loginAdmin(username, password);
       
@@ -58,6 +72,12 @@ const Login = () => {
           </div>
         )}
         
+        {message && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
+            {message}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="username" className="block text-gray-700 dark:text-gray-300 mb-2">사용자 이름</label>
@@ -81,6 +101,19 @@ const Login = () => {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               required
             />
+          </div>
+          
+          <div className="mb-6">
+            <label htmlFor="githubToken" className="block text-gray-700 dark:text-gray-300 mb-2">GitHub 토큰</label>
+            <input
+              type="password"
+              id="githubToken"
+              value={githubToken}
+              onChange={(e) => setGithubToken(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="GitHub Personal Access Token"
+            />
+            <p className="text-sm text-gray-500 mt-1">GitHub API 사용을 위해 토큰을 입력하세요.</p>
           </div>
           
           <button

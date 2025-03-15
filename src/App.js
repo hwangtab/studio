@@ -29,7 +29,7 @@ function App() {
   }, []);
 
   // GitHub Pagesuc640 ucee4uc2a4ud140 ub3c4uba54uc778uc744 uc704ud55c basename uc124uc815
-  const basename = process.env.PUBLIC_URL;
+  const basename = '';
 
   return (
     <Router basename={basename}>
@@ -49,7 +49,7 @@ function App() {
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/story/new" element={<StoryForm />} />
-        <Route path="/admin/story/:id" element={<StoryForm />} />
+        <Route path="/admin/story/edit/:id" element={<StoryForm />} />
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
