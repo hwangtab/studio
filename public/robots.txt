@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
+
+# Naver Search Engine
+User-agent: Yeti
+Allow: /
+
+Sitemap: https://studionol.co.kr/sitemap.xml
