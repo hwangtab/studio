@@ -180,6 +180,12 @@ const StoryDetail = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className="prose prose-lg dark:prose-invert max-w-none mb-12"
+        style={{
+          lineHeight: '2',
+          '@media (max-width: 768px)': {
+            lineHeight: '1.8'
+          }
+        }}
       >
         <Markdown
           options={{
