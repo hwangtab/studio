@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "public": true,
+  "name": "studio-nori",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/stories/(.*)",
+      "dest": "/stories/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/stories/:id",
+      "destination": "/story-detail.html"
+    }
+  ]
+}

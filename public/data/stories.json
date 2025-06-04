@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sample1",
+    "title": "스튜디오 놀 웹사이트를 리뉴얼 했습니다.",
+    "date": "2025-06-03T00:00:00.000Z",
+    "author": "황경하",
+    "tags": [
+      "리뉴얼",
+      "녹음실"
+    ],
+    "image": "/images/studio1.jpg",
+    "content": "<p><img src=\"/images/studio1.jpg\" alt=\"스튜디오 놀 내부 전경\"></p>\n<h1>스튜디오 놀 웹사이트 리뉴얼 완료..!</h1>\n<p>아직 버그가 좀 있겠지만, 계속 개선해보겠습니다!</p>\n<h2>소제목</h2>\n<ul>\n<li>리스트 아이템 1</li>\n<li>리스트 아이템 2</li>\n<li>리스트 아이템 3</li>\n</ul>\n<pre><code class=\"language-javascript\">console.log(&quot;코드 블록도 사용 가능&quot;);\n</code></pre>\n"
+  }
+]
