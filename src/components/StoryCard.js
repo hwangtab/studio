@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
+import { summarizeContent } from '../utils/localDataUtils';
 
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
@@ -35,8 +36,8 @@ const StoryCard = ({ story }) => {
     >
       <div className="w-full h-48 overflow-hidden">
         <img
-          src={story.image || '/images/default-story.jpg'}
-          alt={story.title}
+          src={story.thumbnail || '/images/default-story.jpg'}
+          alt={story.title || '스토리 썸네일'}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           onError={(e) => {
             e.target.src = '/images/default-story.jpg';
@@ -50,7 +51,7 @@ const StoryCard = ({ story }) => {
             {categoryMap[story.category] || story.category}
           </span>
           <span className="text-xs text-gray-500 dark:text-gray-400">
-            {new Date(story.date || Date.now()).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+            {story.createdAt ? new Date(story.createdAt).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) : '날짜 없음'}
           </span>
         </div>
         
@@ -59,7 +60,7 @@ const StoryCard = ({ story }) => {
         </h3>
         
         <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
-          {story.summary}
+          {summarizeContent(story.content) || '내용 없음'}
         </p>
         
         <div 

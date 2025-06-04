@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
-import { getStoryById } from '../utils/localDataUtils'; 
+import { getStoryById } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // 스토리 상세 페이지
 const StoryDetail = () => {
@@ -150,11 +152,11 @@ const StoryDetail = () => {
           <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6">
             <div className="flex items-center mr-6 mb-2">
               <FaCalendarAlt className="mr-2" />
-              <span>{new Date(story.createdAt).toLocaleDateString('ko-KR', {
+              <span>{story.createdAt ? new Date(story.createdAt).toLocaleDateString('ko-KR', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
-              })}</span>
+              }) : '날짜 없음'}</span>
             </div>
             
             <div className="flex items-center mr-6 mb-2">
@@ -180,7 +182,20 @@ const StoryDetail = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="prose prose-lg dark:prose-invert max-w-none mb-12"
       >
-        <div dangerouslySetInnerHTML={{ __html: story.content }} />
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            img: ({node, ...props}) => (
+              <img
+                {...props}
+                className="w-full h-auto rounded-lg my-4"
+                alt={props.alt || '이미지'}
+              />
+            )
+          }}
+        >
+          {story.content.replace(/^```markdown[\s\S]*?```/g, '')}
+        </ReactMarkdown>
       </motion.div>
       
       {/* 갤러리 */}

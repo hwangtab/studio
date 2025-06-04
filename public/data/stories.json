@@ -1,6 +1,15 @@
 [
   {
     "id": "story1",
-    "content": "```markdown\n---\ntitle: \"스튜디오 놀 웹사이트 리뉴얼 완료!\"\ndate: 2025-06-04\nauthor: \"\b스튜디오 놀\"\ncategory: \"공지\"\ntags: [\"리뉴얼\", \"녹음실\"]\nthumbnail: \"/images/studio1.jpg\"  # 썸네일 이미지 경로\n---\n## 스튜디오 놀 웹사이트를 리뉴얼 했어요!\n\n![스튜디오 놀 녹음실](/images/studio2.jpg)\n\n점점 기능들을 추가하고 보강하여 필요한 정보를 제공할 수 있는 웹사이트로 발전시켜 나가겠습니다!\n```"
+    "title": "스튜디오 놀 웹사이트 리뉴얼 완료!",
+    "date": "2025-06-04T00:00:00.000Z",
+    "author": "스튜디오 놀",
+    "category": "공지",
+    "tags": [
+      "리뉴얼",
+      "녹음실"
+    ],
+    "thumbnail": "/images/studio1.jpg",
+    "content": "## 스튜디오 놀 웹사이트를 리뉴얼 했어요!\n\n![스튜디오 놀 녹음실](/images/studio2.jpg)\n\n점점 기능들을 추가하고 보강하여 필요한 정보를 제공할 수 있는 웹사이트로 발전시켜 나가겠습니다!"
   }
 ]

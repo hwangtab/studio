@@ -10,12 +10,27 @@ const generateStories = () => {
   const stories = files
     .filter(file => file.endsWith('.md'))
     .map(file => {
-      const content = fs.readFileSync(path.join(storiesDir, file), 'utf8');
+      const rawContent = fs.readFileSync(path.join(storiesDir, file), 'utf8');
+      // 마크다운 코드 블록 완전 제거
+      const content = rawContent
+        .replace(/^```markdown\n/, '')
+        .replace(/\n```$/, '')
+        .trim();
+      
       const { data, content: body } = matter(content);
+      const cleanContent = body
+        .replace(/^---[\s\S]*?---/, '') // 남아있는 frontmatter 제거
+        .trim();
+      
       return {
         id: path.parse(file).name,
-        ...data,
-        content: body
+        title: data.title || path.parse(file).name,
+        date: data.date || new Date().toISOString(),
+        author: data.author || '스튜디오 놀',
+        category: data.category || '공지',
+        tags: Array.isArray(data.tags) ? data.tags : ['기본'],
+        thumbnail: data.thumbnail || '/images/studio1.jpg',
+        content: cleanContent
       };
     });
   fs.writeFileSync(outputFile, JSON.stringify(stories, null, 2));

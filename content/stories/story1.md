@@ -2,7 +2,7 @@
 ---
 title: "스튜디오 놀 웹사이트 리뉴얼 완료!"
 date: 2025-06-04
-author: "스튜디오 놀"
+author: "스튜디오 놀"
 category: "공지"
 tags: ["리뉴얼", "녹음실"]
 thumbnail: "/images/studio1.jpg"  # 썸네일 이미지 경로
