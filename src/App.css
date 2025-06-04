@@ -24,6 +24,32 @@
   color: white;
 }
 
+/* 마크다운 줄바꿈 스타일 */
+.prose p {
+  margin-bottom: 1.5em;
+  line-height: 1.7;
+  position: relative;
+}
+
+.prose br {
+  content: "";
+  display: block;
+  margin: 0.5em 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(156, 163, 175, 0.5), transparent);
+}
+
+/* 다크 모드 대응 */
+.dark .prose br {
+  background: linear-gradient(90deg, transparent, rgba(75, 85, 99, 0.5), transparent);
+}
+
+/* 단락 간격 강조 */
+.prose p + p {
+  margin-top: 1.5em;
+  padding-top: 0.5em;
+}
+
 .App-link {
   color: #61dafb;
 }

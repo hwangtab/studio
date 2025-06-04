@@ -16,22 +16,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "http://hosting.kr",
-      "destination": "https://studionol.co.kr",
-      "permanent": true
-    },
-    {
-      "source": "http://studionol.co.kr",
-      "destination": "https://studionol.co.kr",
-      "permanent": true
-    },
-    {
-      "source": "https://hosting.kr",
-      "destination": "https://studionol.co.kr",
-      "permanent": true
-    }
   ]
 }

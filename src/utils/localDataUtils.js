@@ -36,41 +36,24 @@ const getStoryById = async (id) => {
   }
 };
 
-// 마크다운 및 HTML 태그 제거
-const removeMarkdown = (content) => {
-  if (!content) return '';
-  
-  // 마크다운 코드 블록 제거
-  let result = content.replace(/^```[\s\S]*?```/gm, '');
-  // 마크다운 링크 제거
-  result = result.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-  // 마크다운 강조 제거
-  result = result.replace(/(\*\*|__)(.*?)\1/g, '$2');
-  result = result.replace(/(\*|_)(.*?)\1/g, '$2');
-  // HTML 태그 제거
-  result = result.replace(/<[^>]+>/g, '');
-  // 여러 공백을 하나로 줄임
-  return result.replace(/\s+/g, ' ').trim();
-};
-
 // 내용 요약 (문장 단위로 자름)
 const summarizeContent = (content, maxLength = 100) => {
   if (!content) return '';
   
-  const cleanContent = removeMarkdown(content);
-  if (cleanContent.length <= maxLength) return cleanContent;
+  // 첫 번째 문장 또는 최대 길이까지 자르기
+  const firstLine = content.split('\n')[0];
+  if (firstLine.length <= maxLength) return firstLine;
   
   // 문장 경계에서 자르기
-  const lastSpaceIndex = cleanContent.lastIndexOf(' ', maxLength);
-  const summary = cleanContent.substring(0, lastSpaceIndex > 0 ? lastSpaceIndex : maxLength);
+  const lastSpaceIndex = firstLine.lastIndexOf(' ', maxLength);
+  const summary = firstLine.substring(0, lastSpaceIndex > 0 ? lastSpaceIndex : maxLength);
   
-  return summary + (cleanContent.length > maxLength ? '...' : '');
+  return summary + (firstLine.length > maxLength ? '...' : '');
 };
 
 export {
   getAllStories,
   getStoriesByCategory,
   getStoryById,
-  removeMarkdown,
   summarizeContent
 };

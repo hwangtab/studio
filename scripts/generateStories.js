@@ -20,6 +20,8 @@ const generateStories = () => {
       const { data, content: body } = matter(content);
       const cleanContent = body
         .replace(/^---[\s\S]*?---/, '') // 남아있는 frontmatter 제거
+        // 마크다운 헤더 정규화 (## → ###)
+        .replace(/^##\s+(.*$)/gm, '### $1')
         .trim();
       
       return {
@@ -29,8 +31,8 @@ const generateStories = () => {
         author: data.author || '스튜디오 놀',
         category: data.category || '공지',
         tags: Array.isArray(data.tags) ? data.tags : ['기본'],
-        thumbnail: data.thumbnail || '/images/studio1.jpg',
-        content: cleanContent
+        content: cleanContent,
+        summary: cleanContent.replace(/\n/g, ' ').substring(0, 100) + (cleanContent.length > 100 ? '...' : '')
       };
     });
   fs.writeFileSync(outputFile, JSON.stringify(stories, null, 2));

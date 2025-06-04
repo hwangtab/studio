@@ -5,8 +5,7 @@ import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
 import { getStoryById } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import Markdown from 'markdown-to-jsx';
 
 // 스토리 상세 페이지
 const StoryDetail = () => {
@@ -182,20 +181,36 @@ const StoryDetail = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="prose prose-lg dark:prose-invert max-w-none mb-12"
       >
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            img: ({node, ...props}) => (
-              <img
-                {...props}
-                className="w-full h-auto rounded-lg my-4"
-                alt={props.alt || '이미지'}
-              />
-            )
+        <Markdown
+          options={{
+            overrides: {
+              img: {
+                component: ({alt, ...props}) => (
+                  <img
+                    {...props}
+                    className="w-full h-auto rounded-lg my-4"
+                    alt={alt || '이미지'}
+                  />
+                )
+              }
+            },
+            forceBlock: true,
+            forceWrapper: true,
+            wrapper: 'div',
+            createElement(type, props, children) {
+              // 줄바꿈 규칙: 엔터1번=br, 엔터2번=p
+              if (type === 'p') {
+                return <p className="mb-4">{children}</p>;
+              }
+              if (type === 'br') {
+                return <br className="block h-4" />;
+              }
+              return React.createElement(type, props, children);
+            }
           }}
         >
           {story.content.replace(/^```markdown[\s\S]*?```/g, '')}
-        </ReactMarkdown>
+        </Markdown>
       </motion.div>
       
       {/* 갤러리 */}
@@ -206,7 +221,7 @@ const StoryDetail = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mb-12"
         >
-          <h2 className="text-2xl font-bold mb-6">갤러리</h2>
+          <h2 className="text-3xl font-bold mb-6">갤러리</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {story.images.map((image, index) => (
               <div key={index} className="aspect-w-16 aspect-h-9 relative rounded-lg overflow-hidden">
@@ -231,7 +246,7 @@ const StoryDetail = () => {
       
       {/* 관련 스토리 */}
       <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-        <h2 className="text-2xl font-bold mb-6">더 많은 스토리</h2>
+        <h2 className="text-3xl font-bold mb-6">더 많은 스토리</h2>
         <Link 
           to="/stories"
           className="inline-flex items-center text-primary hover:underline"
