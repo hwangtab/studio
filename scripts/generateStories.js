@@ -41,6 +41,7 @@ const generateStories = () => {
             id: path.parse(file).name,
             title: data.title || path.parse(file).name,
             date: data.date || new Date().toISOString(),
+            createdAt: data.date || new Date().toISOString(),
             author: data.author || '스튜디오 놀',
             category: data.category || '공지',
             tags: Array.isArray(data.tags) ? data.tags : ['기본'],
