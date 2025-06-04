@@ -6,7 +6,7 @@ import { getStoryById } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Markdown from 'markdown-to-jsx';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, timeAgo } from '../utils/dateUtils';
 
 // 스토리 상세 페이지
 const StoryDetail = () => {
@@ -150,9 +150,18 @@ const StoryDetail = () => {
           </h1>
           
           <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6">
-            <div className="flex items-center mr-6 mb-2">
-              <FaCalendarAlt className="mr-2" />
-              <span>{story.createdAt ? formatDate(story.createdAt, 'YYYY년 MM월 DD일') : '날짜 없음'}</span>
+            <div className="flex items-center mr-6 mb-2 group">
+              <FaCalendarAlt className="mr-2 text-gray-500 group-hover:text-primary transition-colors" />
+              <div className="flex flex-col">
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {story.createdAt ? formatDate(story.createdAt, 'YYYY년 MM월 DD일') : '날짜 정보 없음'}
+                </span>
+                {story.createdAt && (
+                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {timeAgo(story.createdAt)}
+                  </span>
+                )}
+              </div>
             </div>
             
             <div className="flex items-center mr-6 mb-2">
