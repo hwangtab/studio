@@ -23,21 +23,10 @@ export const formatDate = (date, format = 'YYYY-MM-DD') => {
 };
 
 /**
- * 상대적 시간 표시 (예: 3일 전)
- * @param {string|Date} date - 계산할 날짜
- * @returns {string} 상대적 시간 문자열
+ * 날짜를 YYYY-MM-DD 형식으로 표시
+ * @param {string|Date} date - 포맷팅할 날짜
+ * @returns {string} 포맷팅된 날짜 문자열 (YYYY-MM-DD)
  */
 export const timeAgo = (date) => {
-  const d = new Date(date);
-  if (isNaN(d.getTime())) return '';
-
-  const now = new Date();
-  const diffInSeconds = Math.floor((now - d) / 1000);
-  
-  if (diffInSeconds < 60) return '방금 전';
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}분 전`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}시간 전`;
-  if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}일 전`;
-  
-  return formatDate(d, 'YYYY-MM-DD');
+  return formatDate(date, 'YYYY-MM-DD');
 };
