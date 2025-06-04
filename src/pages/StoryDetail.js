@@ -6,6 +6,7 @@ import { getStoryById } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Markdown from 'markdown-to-jsx';
+import { formatDate } from '../utils/dateUtils';
 
 // 스토리 상세 페이지
 const StoryDetail = () => {
@@ -151,11 +152,7 @@ const StoryDetail = () => {
           <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6">
             <div className="flex items-center mr-6 mb-2">
               <FaCalendarAlt className="mr-2" />
-              <span>{story.createdAt ? new Date(story.createdAt).toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              }) : '날짜 없음'}</span>
+              <span>{story.createdAt ? formatDate(story.createdAt, 'YYYY년 MM월 DD일') : '날짜 없음'}</span>
             </div>
             
             <div className="flex items-center mr-6 mb-2">

@@ -6,7 +6,7 @@ author: "스튜디오 놀"
 category: "인터뷰"
 tags: ["박찬울", "인터뷰", "Golden Hour"]
 ---
-![박찬울 프로듀서](./images/pcw.png)
+![박찬울 프로듀서](/images/pcw.png)
 
 # 자이(Jai) 새 앨범 'Golden Hour' 프로듀서 박찬울 인터뷰: '균형'과 '소통'으로 완성한 25년 음악 여정의 황금빛 시간
 
