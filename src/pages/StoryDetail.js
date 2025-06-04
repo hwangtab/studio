@@ -154,13 +154,8 @@ const StoryDetail = () => {
               <FaCalendarAlt className="mr-2 text-gray-500 group-hover:text-primary transition-colors" />
               <div className="flex flex-col">
                 <span className="font-medium text-gray-900 dark:text-white">
-                  {story.createdAt ? formatDate(story.createdAt, 'YYYY년 MM월 DD일') : '날짜 정보 없음'}
+                  {story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}
                 </span>
-                {story.createdAt && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {timeAgo(story.createdAt)}
-                  </span>
-                )}
               </div>
             </div>
             

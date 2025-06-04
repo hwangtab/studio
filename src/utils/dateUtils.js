@@ -4,22 +4,18 @@
  * @param {string} format - 포맷 문자열 (기본값: 'YYYY-MM-DD')
  * @returns {string} 포맷팅된 날짜 문자열
  */
-export const formatDate = (date, format = 'YYYY-MM-DD') => {
+export const formatDate = (date, format = 'YYYY년 MM월 DD일') => {
   const d = new Date(date);
   if (isNaN(d.getTime())) return '';
 
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
-  const hours = String(d.getHours()).padStart(2, '0');
-  const minutes = String(d.getMinutes()).padStart(2, '0');
 
   return format
     .replace('YYYY', year)
     .replace('MM', month)
-    .replace('DD', day)
-    .replace('HH', hours)
-    .replace('mm', minutes);
+    .replace('DD', day);
 };
 
 /**
@@ -28,5 +24,5 @@ export const formatDate = (date, format = 'YYYY-MM-DD') => {
  * @returns {string} 포맷팅된 날짜 문자열 (YYYY-MM-DD)
  */
 export const timeAgo = (date) => {
-  return formatDate(date, 'YYYY-MM-DD');
+  return formatDate(date, 'YYYY년 MM월 DD일');
 };

@@ -5,7 +5,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { formatDate } from '../utils/dateUtils';
+import { timeAgo } from '../utils/dateUtils';
 
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const StoryCard = ({ story }) => {
         {story.title || '제목 없음'}
       </h3>
       <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-        {story.date ? formatDate(story.date) : '날짜 없음'}
+        {story.date ? timeAgo(story.date) : '날짜 없음'}
       </div>
       <div className="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">
         <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
