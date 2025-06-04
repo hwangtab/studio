@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { getStoriesByCategory } from '../utils/localDataUtils';
+import { getAllStories } from '../utils/localDataUtils';
 import StoryCard from '../components/StoryCard';
 import CategoryFilter from '../components/CategoryFilter';
 
@@ -10,6 +9,7 @@ const Stories = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [categories, setCategories] = useState([]);
 
   // 스토리 데이터 불러오기
   useEffect(() => {
@@ -18,16 +18,22 @@ const Stories = () => {
         setLoading(true);
         let fetchedStories;
         
+        // 모든 스토리 가져오기 (카테고리 목록 추출용)
+        const allStories = await getAllStories();
+        
+        // 고유한 카테고리 목록 추출 (모든 스토리 기준)
+        const uniqueCategories = [...new Set(allStories.map(story => story.category))];
+        setCategories(uniqueCategories);
+
+        // 필터링 적용
         if (activeCategory === 'all') {
-          // 모든 스토리 가져오기
-          const { getAllStories } = require('../utils/localDataUtils');
-          fetchedStories = await getAllStories();
+          fetchedStories = allStories;
         } else {
-          // 카테고리별 스토리 가져오기
-          fetchedStories = await getStoriesByCategory(activeCategory);
+          fetchedStories = allStories.filter(story => story.category === activeCategory);
         }
         
         setStories(fetchedStories);
+        
         setLoading(false);
       } catch (error) {
         console.error('스토리 불러오기 오류:', error);
@@ -113,9 +119,10 @@ const Stories = () => {
         </motion.p>
         
         {/* 카테고리 필터 */}
-        <CategoryFilter 
-          activeCategory={activeCategory} 
-          setActiveCategory={handleCategoryChange} 
+        <CategoryFilter
+          activeCategory={activeCategory}
+          setActiveCategory={handleCategoryChange}
+          categories={categories}
         />
         
         {/* 스토리 그리드 */}

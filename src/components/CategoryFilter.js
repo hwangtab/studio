@@ -1,13 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const CategoryFilter = ({ activeCategory, setActiveCategory }) => {
-  // 카테고리 목록 (메모리에서 언급된 세 가지 카테고리로 변경)
+const CategoryFilter = ({ activeCategory, setActiveCategory, categories: propCategories }) => {
+  // props로 전달받은 카테고리 목록 사용
   const categories = [
     { id: 'all', label: '전체' },
-    { id: 'work', label: '작업기' },
-    { id: 'interview', label: '인터뷰' },
-    { id: 'tips', label: '팁과 정보' }
+    ...propCategories.map(category => ({
+      id: category,
+      label: category
+    }))
   ];
 
   return (
