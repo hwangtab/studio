@@ -254,7 +254,7 @@ const PracticeRoom = () => {
         transition={{ duration: 0.5, delay: 1 }}
       >
         <div className="grid md:grid-cols-2 items-stretch">
-          <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 flex flex-col justify-center">
+          <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 flex flex-col justify-center items-center text-center">
             <motion.h2 
               className="text-3xl font-bold mb-4 text-gray-800 dark:text-white"
               initial={{ opacity: 0, x: -20 }}
@@ -277,11 +277,11 @@ const PracticeRoom = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <a 
-                href="https://open.kakao.com/o/sAWXdN5g" 
-                target="_blank" 
+              <a
+                href="https://open.kakao.com/o/sAWXdN5g"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg"
+                className="inline-flex items-center bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg mx-auto"
               >
                 <FaComments className="mr-2 text-xl" />
                 카카오톡으로 문의하기
