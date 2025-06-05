@@ -335,7 +335,7 @@ const About = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.3 }}
               whileHover={{ y: -5 }}
-              onClick={() => window.open('https://open.kakao.com/o/sgTfRiah', '_blank')}
+              onClick={() => window.open('https://open.kakao.com/me/nol', '_blank')}
             >
               <div className="flex justify-center mb-4">
                 <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">

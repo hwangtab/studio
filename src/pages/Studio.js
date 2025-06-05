@@ -199,7 +199,7 @@ const Studio = () => {
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <h3 className="text-xl font-bold mb-2 text-primary dark:text-primary-light">상담 방법</h3>
             <a 
-              href="https://open.kakao.com/o/sgTfRiah" 
+              href="https://open.kakao.com/me/nol"
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"

@@ -278,7 +278,7 @@ const PracticeRoom = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <a
-                href="https://open.kakao.com/o/sAWXdN5g"
+                href="https://open.kakao.com/me/nol"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg mx-auto"

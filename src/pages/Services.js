@@ -176,7 +176,7 @@ const Services = () => {
         
         <div className="text-center">
           <motion.a
-            href="https://open.kakao.com/o/swjEfude"
+            href="https://open.kakao.com/me/nol"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
