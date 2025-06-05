@@ -63,3 +63,112 @@
   }
 }
 
+
+/* Prism.js 코드 하이라이트 스타일 */
+pre[class*="language-"] {
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  overflow: auto;
+  padding: 1.25rem;
+  background: #2d2d2d !important;
+}
+
+code[class*="language-"] {
+  font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* 다크 모드 대응 */
+.dark pre[class*="language-"] {
+  background: #1e1e1e !important;
+}
+
+/* 코드 블록 스크롤바 스타일 */
+pre[class*="language-"]::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-track {
+  background: #3a3a3a;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 3px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* 인라인 코드 스타일 */
+:not(pre) > code[class*="language-"] {
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
+  white-space: normal;
+  background: rgba(175, 184, 193, 0.2);
+}
+
+/* 토큰 스타일 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6a9955;
+}
+
+.token.punctuation {
+  color: #d4d4d4;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #b5cea8;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #ce9178;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d4d4d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #569cd6;
+}
+
+.token.function,
+.token.class-name {
+  color: #dcdcaa;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #d16969;
+}

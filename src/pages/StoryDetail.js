@@ -5,8 +5,8 @@ import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
 import { getStoryById } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import Markdown from 'markdown-to-jsx';
 import { formatDate, timeAgo } from '../utils/dateUtils';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 // 스토리 상세 페이지
 const StoryDetail = () => {
@@ -180,59 +180,9 @@ const StoryDetail = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="prose prose-lg dark:prose-invert max-w-none mb-12"
-        style={{
-          lineHeight: '2',
-          '@media (max-width: 768px)': {
-            lineHeight: '1.8'
-          }
-        }}
+        className="mb-12"
       >
-        <Markdown
-          options={{
-            overrides: {
-              h1: {
-                component: ({children, ...props}) => <h1 className="text-4xl font-bold mt-8 mb-2" {...props}>{children}</h1>
-              },
-              h2: {
-                component: ({children, ...props}) => <h2 className="text-3xl font-bold mt-6 mb-1.5" {...props}>{children}</h2>
-              },
-              h3: {
-                component: ({children, ...props}) => <h3 className="text-2xl font-bold mt-4 mb-1" {...props}>{children}</h3>
-              },
-              ul: {
-                component: ({children, ...props}) => <ul className="list-disc pl-5 mb-4" {...props}>{children}</ul>
-              },
-              li: {
-                component: ({children, ...props}) => <li className="mb-2" {...props}>{children}</li>
-              },
-              img: {
-                component: ({alt, ...props}) => (
-                  <img
-                    {...props}
-                    className="w-full h-auto rounded-lg my-4"
-                    alt={alt || '이미지'}
-                  />
-                )
-              }
-            },
-            forceBlock: true,
-            forceWrapper: true,
-            wrapper: 'div',
-            createElement(type, props, children) {
-              // 줄바꿈 규칙: 엔터1번=br, 엔터2번=p
-              if (type === 'p') {
-                return <p className="mb-4 leading-[1.8]" {...props}>{children}</p>;
-              }
-              if (type === 'br') {
-                return <br className="block h-4" />;
-              }
-              return React.createElement(type, props, children);
-            }
-          }}
-        >
-          {story.content.replace(/^```markdown[\s\S]*?```/g, '')}
-        </Markdown>
+        <MarkdownRenderer content={story.content.replace(/^```markdown[\s\S]*?```/g, '')} />
       </motion.div>
       
       {/* 갤러리 */}
