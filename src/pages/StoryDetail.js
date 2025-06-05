@@ -144,15 +144,11 @@ const StoryDetail = () => {
         <meta property="og:description" content={story.content.substring(0, 160)} />
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="article" />
-        <meta
-          property="og:image"
-          content={
-            story.image ?
-              `${process.env.PUBLIC_URL}${story.image.startsWith('/') ? '' : '/'}${story.image}` :
-            (story.content.match(/!\[.*?\]\((.*?)\)/) || [])[1] ?
-              `${process.env.PUBLIC_URL}${story.content.match(/!\[.*?\]\((.*?)\)/)[1].startsWith('/') ? '' : '/'}${story.content.match(/!\[.*?\]\((.*?)\)/)[1]}` :
-            `${process.env.PUBLIC_URL}/images/studio1.jpg`
-          }
+        <meta 
+          property="og:image" 
+          content={story.image || 
+            (story.content.match(/!\[.*?\]\((.*?)\)/) || [])[1] || 
+            `${window.location.origin}/public/images/studio1.jpg`} 
         />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
