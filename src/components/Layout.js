@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 
-const NavLink = ({ to, children }) => {
+const NavLink = ({ to, children, isScrolled }) => {
   const location = useLocation();
   const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
   
@@ -12,7 +12,7 @@ const NavLink = ({ to, children }) => {
       className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
         isActive
           ? 'bg-white/90 text-primary-dark font-bold shadow-sm'
-          : 'text-white hover:bg-white/20'
+          : `${isScrolled ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
       }`}
     >
       {children}
@@ -80,22 +80,23 @@ const Layout = ({ children }) => {
       <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'} pt-2 text-4xl sm:text-5xl font-title tracking-wider hover:opacity-90 transition-all duration-300`}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               스튜디오 놀
             </Link>
             
             <div className="flex items-center space-x-4">
               <nav className="hidden md:flex space-x-1">
-                <NavLink to="/">홈</NavLink>
-                <NavLink to="/about">소개</NavLink>
-                <NavLink to="/portfolio">포트폴리오</NavLink>
-                <NavLink to="/studio-info">스튜디오</NavLink>
-                <NavLink to="/practice-room">연습실</NavLink>
-                <NavLink to="/stories">스토리</NavLink>
-                <NavLink to="/contact">연락처</NavLink>
+                <NavLink to="/" isScrolled={isScrolled}>홈</NavLink>
+                <NavLink to="/about" isScrolled={isScrolled}>소개</NavLink>
+                <NavLink to="/portfolio" isScrolled={isScrolled}>포트폴리오</NavLink>
+                <NavLink to="/studio-info" isScrolled={isScrolled}>스튜디오</NavLink>
+                <NavLink to="/practice-room" isScrolled={isScrolled}>연습실</NavLink>
+                <NavLink to="/stories" isScrolled={isScrolled}>스토리</NavLink>
+                <NavLink to="/contact" isScrolled={isScrolled}>연락처</NavLink>
               </nav>
               
               <button

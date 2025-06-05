@@ -44,17 +44,29 @@ const StoryDetail = () => {
 
   // 스토리 공유 기능
   const shareStory = () => {
+    // 첫 번째 이미지 추출 (메인 이미지 또는 내용 첫 이미지)
+    const thumbnailUrl = story?.image ||
+      (story?.content?.match(/!\[.*?\]\((.*?)\)/) || [])[1] ||
+      `${window.location.origin}/public/images/studio1.jpg`;
+
     if (navigator.share) {
       navigator.share({
         title: story?.title,
         text: story?.content?.substring(0, 100) + '...',
-        url: window.location.href
+        url: window.location.href,
+        ...(thumbnailUrl && { files: [thumbnailUrl] }) // Web Share API v2+에서 지원
       })
-      .catch(error => console.error('공유 오류:', error));
+      .catch(error => {
+        console.error('공유 오류:', error);
+        // fallback: URL만 공유
+        navigator.clipboard.writeText(`${story?.title}\n${window.location.href}`)
+          .then(() => alert('공유 정보가 클립보드에 복사되었습니다.'))
+          .catch(err => console.error('클립보드 복사 오류:', err));
+      });
     } else {
-      // 클립보드 복사
-      navigator.clipboard.writeText(window.location.href)
-        .then(() => alert('링크가 클립보드에 복사되었습니다.'))
+      // 클립보드 복사 (제목 + URL)
+      navigator.clipboard.writeText(`${story?.title}\n${window.location.href}`)
+        .then(() => alert('공유 정보가 클립보드에 복사되었습니다.'))
         .catch(error => console.error('클립보드 복사 오류:', error));
     }
   };
@@ -112,7 +124,7 @@ const StoryDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-8">
       {/* 메인 이미지 */}
       {story.image && (
         <motion.div
@@ -217,7 +229,7 @@ const StoryDetail = () => {
       )}
       
       {/* 관련 스토리 */}
-      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
         <h2 className="text-3xl font-bold mb-6">더 많은 스토리</h2>
         <Link 
           to="/stories"

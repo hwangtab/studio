@@ -1,7 +1,7 @@
 ```markdown
 ---
 title: "박찬울 프로듀서 인터뷰"
-date: 2025-06-04
+date: 2025-06-05
 author: "스튜디오 놀"
 category: "인터뷰"
 tags: ["박찬울", "인터뷰", "Golden Hour"]

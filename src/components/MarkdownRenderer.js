@@ -99,14 +99,7 @@ const MarkdownRenderer = ({ content }) => {
             p: {
               component: ({ children, ...props }) => (
                 <p
-                  style={{
-                    fontSize: '1rem',
-                    fontFamily: 'Pretendard, sans-serif',
-                    marginBottom: '1.5rem',
-                    marginTop: '0.5rem',
-                    lineHeight: 1.8,
-                    color: '#333'
-                  }}
+                  className="text-base font-sans mb-6 mt-2 leading-relaxed text-gray-800 dark:text-gray-200"
                   {...props}
                 >
                   {children}

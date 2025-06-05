@@ -4,10 +4,31 @@
 const getAllStories = async () => {
   try {
     const response = await fetch('/data/stories.json');
-    if (!response.ok) {
-      throw new Error('스토리 데이터를 불러오지 못했습니다.');
-    }
-    return await response.json();
+    if (!response.ok) throw new Error('스토리 데이터 불러오기 실패');
+    
+    const stories = await response.json();
+    // 정렬 함수
+    const compareStories = (a, b) => {
+      // createdAt이 없는 경우를 대비한 fallback (오늘 자정)
+      const getDate = (story) => {
+        if (story.createdAt) return new Date(story.createdAt);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today;
+      };
+      
+      const dateA = getDate(a);
+      const dateB = getDate(b);
+      
+      // 1. 날짜 기준 내림차순 (최신순)
+      const dateCompare = dateB - dateA;
+      if (dateCompare !== 0) return dateCompare;
+      
+      // 2. 동일 날짜 시 파일명(id) 기준 오름차순
+      return (a.id || '').localeCompare(b.id || '');
+    };
+    
+    return [...stories].sort(compareStories);
   } catch (error) {
     console.error('스토리 데이터 로딩 오류:', error);
     return [];
