@@ -1,40 +1,27 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots } from 'react-icons/fa';
+import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots, FaCalendarAlt } from 'react-icons/fa';
 
-const ProcessStep = ({ icon: Icon, title, description, delay }) => (
-  <motion.div 
-    className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay }}
-    whileHover={{ y: -5 }}
-  >
-    <div className="flex items-center mb-4">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-xl text-primary dark:text-primary-light" />
-      </div>
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h3>
-    </div>
-    <p className="text-gray-600 dark:text-gray-300">{description}</p>
-  </motion.div>
-);
-
-const FeatureCard = ({ title, description, icon: Icon, delay }) => (
+const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => (
   <motion.div
-    className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
+    className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 h-full flex flex-col"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay }}
-    whileHover={{ y: -5 }}
+    whileHover={{ y: -5, shadow: 'lg' }}
   >
     <div className="flex items-center mb-4">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
         <Icon className="text-xl text-primary dark:text-primary-light" />
       </div>
-      <h3 className="text-lg font-bold text-gray-800 dark:text-white">{title}</h3>
+      <h3 className={`${size === 'lg' ? 'text-xl' : 'text-lg'} font-bold text-gray-800 dark:text-white`}>
+        {title}
+      </h3>
     </div>
-    <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+    <p className={`${size === 'lg' ? 'text-base' : 'text-sm'} text-gray-600 dark:text-gray-300 mt-2 flex-grow`}>
+      {description}
+    </p>
   </motion.div>
 );
 
@@ -72,8 +59,13 @@ const About = () => {
     },
     {
       title: "홍보/마케팅",
-      description: "SNS 활용, 언론 배포, 공연 기획 지원으로 음악을 알립니다.",
+      description: "SNS 활용, 언론 배포, 온오프라인 홍보 지원으로 음악을 알립니다.",
       icon: FaBullhorn
+    },
+    {
+      title: "공연 기획",
+      description: "라이브 공연 기획 및 운영 지원으로 아티스트의 무대를 완성합니다.",
+      icon: FaCalendarAlt
     }
   ];
 
@@ -167,23 +159,26 @@ const About = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <FeatureCard 
+            <StandardCard
               title="앨범 기획부터 유통까지"
               description="모든 음악 제작 과정을 한 곳에서 처리하여 효율성을 극대화합니다."
               icon={FaMusic}
               delay={0.1}
+              size="lg"
             />
-            <FeatureCard 
+            <StandardCard
               title="뮤지션의 비전 실현"
               description="뮤지션의 음악적 비전을 최우선으로 존중하는 프로덕션 철학을 가지고 있습니다."
               icon={FaRegLightbulb}
               delay={0.2}
+              size="lg"
             />
-            <FeatureCard 
+            <StandardCard
               title="전문가 연계 시스템"
               description="각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다."
               icon={FaUsers}
               delay={0.3}
+              size="lg"
             />
           </div>
         </div>
@@ -206,7 +201,7 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {productionProcess.map((step, index) => (
-              <ProcessStep 
+              <StandardCard
                 key={index}
                 title={step.title}
                 description={step.description}
@@ -369,19 +364,27 @@ const About = () => {
             </motion.div>
           </div>
 
-          <motion.div
-            className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-100 dark:border-gray-700 text-center max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <p className="text-lg font-bold text-primary dark:text-primary-light mb-2">스튜디오 놀과 함께하세요!</p>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              스튜디오 놀은 단순한 녹음 스튜디오가 아닌 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다. 
-              <br />
-              음악 작업에 집중하고 싶은 뮤지션들에게 최적의 올인원 프로덕션 서비스를 제공합니다.
-            </p>
-          </motion.div>
+          <Link to="/contact">
+            <motion.div
+              className="mt-12 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 rounded-lg shadow-lg p-8 border border-primary/20 dark:border-secondary/20 text-center max-w-2xl mx-auto cursor-pointer group"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <p className="text-xl font-bold text-primary dark:text-primary-light mb-3 group-hover:text-primary-dark dark:group-hover:text-primary-light/90 transition-colors">
+                스튜디오 놀과 함께하세요!
+              </p>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                스튜디오 놀은 단순한 녹음 스튜디오가 아닌 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.
+                <br />
+                음악 작업에 집중하고 싶은 뮤지션들에게 최적의 올인원 프로덕션 서비스를 제공합니다.
+              </p>
+              <div className="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium py-2 px-6 rounded-full text-sm hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 shadow-sm">
+                연락하기
+              </div>
+            </motion.div>
+          </Link>
         </div>
       </section>
     </div>

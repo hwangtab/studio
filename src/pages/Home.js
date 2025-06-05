@@ -73,7 +73,7 @@ const HeroSection = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Link
-                to="/booking"
+                to="/contact"
                 className="bg-white text-primary-dark font-bold py-3 px-8 rounded-full hover:bg-white/90 transition duration-300 shadow-lg"
               >
                 예약하기
@@ -116,41 +116,40 @@ const HeroSection = () => {
 
 // 개선된 서비스 카드 컴포넌트
 const ServiceCard = ({ title, description, link, icon: Icon }) => (
-  <motion.div
-    className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-    whileHover={{ y: -5 }}
-  >
-    {/* 배경 그라데이션 */}
-    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
-    
-    <div className="p-6">
-      <div className="flex items-center mb-4">
-        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-3 rounded-full mr-4 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
-          <Icon className="text-2xl text-primary dark:text-primary-light" />
+  <Link to={link} className="block h-full">
+    <motion.div
+      className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full"
+      whileHover={{ y: -5 }}
+    >
+      {/* 배경 그라데이션 */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
+      
+      <div className="p-6 h-full flex flex-col">
+        <div className="flex items-center mb-4">
+          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-3 rounded-full mr-4 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
+            <Icon className="text-2xl text-primary dark:text-primary-light" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h3>
         </div>
-        <h3 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h3>
+        
+        <p className="mb-6 text-gray-600 dark:text-gray-300 leading-relaxed flex-grow">{description}</p>
+        
+        <div className="mt-auto">
+          <div className="inline-flex items-center text-primary dark:text-primary-light font-medium hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
+            자세히 보기
+            <motion.span
+              className="ml-1"
+              initial={{ x: 0 }}
+              whileHover={{ x: 5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FaArrowRight size={14} />
+            </motion.span>
+          </div>
+        </div>
       </div>
-      
-      <p className="mb-6 text-gray-600 dark:text-gray-300 leading-relaxed">{description}</p>
-      
-      <div className="mt-auto">
-        <Link 
-          to={link} 
-          className="inline-flex items-center text-primary dark:text-primary-light font-medium hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300"
-        >
-          자세히 보기
-          <motion.span
-            className="ml-1"
-            initial={{ x: 0 }}
-            whileHover={{ x: 5 }}
-            transition={{ duration: 0.3 }}
-          >
-            <FaArrowRight size={14} />
-          </motion.span>
-        </Link>
-      </div>
-    </div>
-  </motion.div>
+    </motion.div>
+  </Link>
 );
 
 const StudioGallery = () => {
@@ -237,24 +236,24 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-         <ServiceCard 
-          title="음반 기획" 
-          description="당신의 음악적 비전을 현실로 만들어드립니다. 기획부터 제작까지 전 과정을 함께합니다." 
-          link="/services#album-planning"
-          icon={FaCompactDisc}
-        />
-        <ServiceCard 
-          title="녹음 & 믹싱" 
-          description="고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다." 
-          link="/services#recording-mixing"
-          icon={FaMicrophone}
-        />
-        <ServiceCard 
-          title="음원 유통" 
-          description="당신의 음악을 리스너들에게 선보일 수 있도록 도와드립니다. 주요 스트리밍 플랫폼에 배포합니다." 
-          link="/services#music-distribution"
-          icon={FaGlobeAmericas}
-        />
+         <ServiceCard
+         title="음반 기획"
+         description="당신의 음악적 비전을 현실로 만들어드립니다. 기획부터 제작까지 전 과정을 함께합니다."
+         link="/about"
+         icon={FaCompactDisc}
+       />
+       <ServiceCard
+         title="녹음 & 믹싱"
+         description="고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다."
+         link="/about"
+         icon={FaMicrophone}
+       />
+       <ServiceCard
+       title="홍보 & 마케팅"
+       description="언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다."
+       link="/about"
+       icon={FaGlobeAmericas}
+     />
       </motion.div>
 
         <motion.div
@@ -265,7 +264,7 @@ const Home = () => {
         >
           <h2 className="text-heading-3 font-bold mb-4 text-gray-800 dark:text-white">당신의 음악 여정을 시작하세요</h2>
           <p className="text-subtitle-1 mb-8 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">최고의 환경에서 음악을 완성하세요. 스튜디오 놀이 당신의 음악적 여정을 함께합니다.</p>
-          <Link to="/booking" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
+          <Link to="/contact" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
             <FaCalendarCheck className="mr-2" />
             스튜디오 예약하기
           </Link>
