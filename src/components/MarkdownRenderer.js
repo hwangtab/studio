@@ -99,7 +99,15 @@ const MarkdownRenderer = ({ content }) => {
             p: {
               component: ({ children, ...props }) => (
                 <p
-                  className="text-base font-sans mb-6 mt-2 leading-relaxed text-gray-800 dark:text-gray-200"
+                  style={{
+                    fontSize: '1.125rem',
+                    fontFamily: 'Pretendard, sans-serif',
+                    lineHeight: '2',
+                    marginBottom: '1.5rem',
+                    marginTop: '1rem',
+                    color: '#1f2937' // gray-800
+                  }}
+                  className="dark:text-gray-200"
                   {...props}
                 >
                   {children}
@@ -156,12 +164,15 @@ const MarkdownRenderer = ({ content }) => {
               component: ({ children, ...props }) => (
                 <li
                   style={{
-                    fontSize: '1rem',
-                    lineHeight: 1.8,
-                    marginBottom: '0.5rem',
+                    fontSize: '1.125rem',
+                    fontFamily: 'Pretendard, sans-serif',
+                    lineHeight: '2',
+                    marginBottom: '1.5rem',
                     paddingLeft: '0.5rem',
-                    display: 'list-item'
+                    display: 'list-item',
+                    color: '#1f2937' // gray-800
                   }}
+                  className="dark:text-gray-200"
                   {...props}
                 >
                   {children}
@@ -243,7 +254,7 @@ const MarkdownRenderer = ({ content }) => {
           forceBlock: true,
           forceWrapper: true,
           wrapper: ({ children }) => (
-            <div className="prose prose-lg dark:prose-invert max-w-none">
+            <div className="max-w-none">
               {children}
             </div>
           ),
