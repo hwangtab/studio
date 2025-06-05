@@ -72,9 +72,23 @@ const summarizeContent = (content, maxLength = 100) => {
   return summary + (firstLine.length > maxLength ? '...' : '');
 };
 
+// 관련 스토리 가져오기 (현재 스토리 제외 최신 3개)
+const getRelatedStories = async (currentId) => {
+  try {
+    const stories = await getAllStories();
+    return stories
+      .filter(story => story.id !== currentId)
+      .slice(0, 3);
+  } catch (error) {
+    console.error('관련 스토리 로딩 오류:', error);
+    return [];
+  }
+};
+
 export {
   getAllStories,
   getStoriesByCategory,
   getStoryById,
-  summarizeContent
+  summarizeContent,
+  getRelatedStories
 };

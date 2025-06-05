@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
-import { getStoryById } from '../utils/localDataUtils';
+import { getStoryById, getRelatedStories } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { formatDate, timeAgo } from '../utils/dateUtils';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import { Helmet } from 'react-helmet-async';
+import StoryCard from '../components/StoryCard';
 
 const StoryDetail = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ const StoryDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [galleryImagesLoaded, setGalleryImagesLoaded] = useState({});
+  const [relatedStories, setRelatedStories] = useState([]);
 
   // 스토리 데이터 가져오기
   useEffect(() => {
@@ -41,6 +43,22 @@ const StoryDetail = () => {
 
     fetchStory();
   }, [id]);
+
+  // 관련 스토리 가져오기
+  useEffect(() => {
+    if (!story) return;
+    
+    const fetchRelatedStories = async () => {
+      try {
+        const related = await getRelatedStories(story.id);
+        setRelatedStories(related);
+      } catch (error) {
+        console.error('관련 스토리 불러오기 오류:', error);
+      }
+    };
+    
+    fetchRelatedStories();
+  }, [story]);
 
   // 스토리 공유 기능
   const shareStory = () => {
@@ -260,7 +278,16 @@ const StoryDetail = () => {
         {/* 관련 스토리 */}
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <h2 className="text-3xl font-bold mb-6">더 많은 스토리</h2>
-          <Link 
+          {relatedStories.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              {relatedStories.map(story => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 mb-6">관련 스토리가 없습니다.</p>
+          )}
+          <Link
             to="/stories"
             className="inline-flex items-center text-primary hover:underline"
           >
