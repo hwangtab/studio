@@ -9,7 +9,7 @@ import { FaMicrophone, FaCompactDisc, FaGlobeAmericas, FaCalendarCheck, FaArrowR
 // 히어로 섹션 컴포넌트
 const HeroSection = () => {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-primary-dark via-primary to-secondary min-h-[90vh] flex items-center">
+    <div className="relative overflow-hidden bg-gradient-to-r from-primary-dark via-primary to-secondary min-h-[90vh] flex items-center px-4 sm:px-0">
       {/* 배경 패턴 */}
       <div className="absolute inset-0 opacity-10">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -44,21 +44,21 @@ const HeroSection = () => {
         </motion.div>
       </div>
       
-      <div className="container mx-auto px-4 z-10 py-16">
+      <div className="container mx-auto px-4 z-10 py-8 sm:py-16">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
             <motion.h1
-              className="text-display-1 font-title text-white mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl font-title text-white mb-6 break-keep"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              당신의 음악에<br />
+              <span className="whitespace-nowrap">당신의 음악에</span>{' '}
               <span className="text-accent-light">생명</span>을 불어넣는 공간
             </motion.h1>
             
             <motion.p
-              className="text-subtitle-1 text-white/80 mb-8 max-w-lg leading-relaxed"
+              className="text-base sm:text-lg text-white/80 mb-8 max-w-lg leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}

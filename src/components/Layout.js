@@ -24,6 +24,17 @@ const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // 윈도우 크기 변경 감지
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // 다크모드 설정
   useEffect(() => {
@@ -76,20 +87,20 @@ const Layout = ({ children }) => {
   }, [isDarkMode]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
       <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link
               to="/"
-              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'} pt-2 text-4xl sm:text-5xl font-title tracking-wider hover:opacity-90 transition-all duration-300`}
+              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'} pt-2 text-4xl sm:text-5xl font-title tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap`}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               스튜디오 놀
             </Link>
             
             <div className="flex items-center space-x-4">
-              <nav className="hidden md:flex space-x-1">
+              <nav className={`hidden ${windowWidth >= 1024 ? 'lg:flex' : 'md:hidden'} space-x-1`}>
                 <NavLink to="/" isScrolled={isScrolled}>홈</NavLink>
                 <NavLink to="/about" isScrolled={isScrolled}>소개</NavLink>
                 <NavLink to="/portfolio" isScrolled={isScrolled}>포트폴리오</NavLink>
@@ -108,7 +119,7 @@ const Layout = ({ children }) => {
               </button>
               
               <button
-                className={`md:hidden p-2 rounded-full ${isScrolled ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/20'} transition-colors duration-300`}
+                className={`${windowWidth >= 1024 ? 'lg:hidden' : 'md:block'} p-2 rounded-full ${isScrolled ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/20'} transition-colors duration-300`}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle menu"
               >
