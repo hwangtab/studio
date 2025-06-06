@@ -53,7 +53,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              당신의 음악안에<br />
+              당신의 음악에<br />
               <span className="text-accent-light">생명</span>을 불어넣는 공간
             </motion.h1>
             
