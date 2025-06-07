@@ -99,15 +99,7 @@ const MarkdownRenderer = ({ content }) => {
             p: {
               component: ({ children, ...props }) => (
                 <p
-                  style={{
-                    fontSize: '1.125rem',
-                    fontFamily: 'Pretendard, sans-serif',
-                    lineHeight: '2',
-                    marginBottom: '1.5rem',
-                    marginTop: '1rem',
-                    color: '#1f2937' // gray-800
-                  }}
-                  className="dark:text-gray-200"
+                  className="text-lg font-sans leading-relaxed mb-6 mt-4 text-gray-800 dark:text-gray-200"
                   {...props}
                 >
                   {children}
@@ -163,16 +155,7 @@ const MarkdownRenderer = ({ content }) => {
             li: {
               component: ({ children, ...props }) => (
                 <li
-                  style={{
-                    fontSize: '1.125rem',
-                    fontFamily: 'Pretendard, sans-serif',
-                    lineHeight: '2',
-                    marginBottom: '1.5rem',
-                    paddingLeft: '0.5rem',
-                    display: 'list-item',
-                    color: '#1f2937' // gray-800
-                  }}
-                  className="dark:text-gray-200"
+                  className="text-lg font-sans leading-relaxed mb-4 pl-2 list-item text-gray-800 dark:text-gray-200"
                   {...props}
                 >
                   {children}
