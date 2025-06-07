@@ -24,8 +24,8 @@ const getAllStories = async () => {
       const dateCompare = dateB - dateA;
       if (dateCompare !== 0) return dateCompare;
       
-      // 2. 동일 날짜 시 파일명(id) 기준 오름차순
-      return (a.id || '').localeCompare(b.id || '');
+      // 2. 동일 날짜 시 파일명(id) 기준 내림차순
+      return (b.id || '').localeCompare(a.id || '');
     };
     
     return [...stories].sort(compareStories);
