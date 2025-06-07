@@ -28,31 +28,24 @@ const EquipmentSection = ({ title, items, icon: Icon }) => (
 const Studio = () => {
   const equipment = {
     microphones: [
-      "Neumann U87AI", "AKG C414 XLS", "Warm Audio WA47jr",
+      "Neumann U87AI", "AKG C414 XLS", "Studio Project C1",
       "Beyerdynamic TG-X81", "Shure SM58", "Shure SM57"
     ],
     preamps: ["Vintech X73i Preamp", "Focusrite Saffire Octopre"],
     equalizers: [
-      "SPL Optimizer Parametric Equalizer",
-      "TL Audio 2012 Parametric Equalizer"
-    ],
-    compressors: ["Toft Audio DC-2", "Drawmer DL251", "Alctron Cp540v2"],
-    interfaces: ["Prism Sound Lyra 2"],
-    processors: ["Solid State Logic Fusion"],
-    speakers: ["Proac Tablett 50", "EVE Audio SC207", "KRK VXT4"],
+      "SPL Optimizer Parametric Equalizer"],
+    compressors: ["Tegeler Vari Tube Compressor", "Alctron Cp540v2"],
+    interfaces: ["Prism Sound Lyra 2", "Arturia X8 OUT"],
+    processors: ["Solid State Logic Fusion", "Lexicon MX300"],
+    speakers: ["Proac Tablett 50", "EVE Audio SC207", "ADAM Audio A5"],
     headphones: ["Sennheiser HD600", "Sony MDR-7506", "Calyx H", "SHURE SRH 440"],
-    instruments: [
-      "Vox AC30 Guitar Amp", "Fender Princeton", "Fender Rumble 100",
-      "Yamaha U3 Piano"
-    ],
-    consoles: ["Softube Colsole 1", "Softube Colsole 1 Fader"],
+    instruments: ["Vox AC30 Guitar Amp", "Yamaha U3 Piano", "Yamaha U1 Piano", "Gibson J-15", "G&L Tribute ASAT"],
+    consoles: ["Softube Colsole 1", "Softube Colsole 1 Fader", "Presonus Faderport V2"],
     synthesizers: [
-      "Spectrasonics", "Spitfire Audio", "Native Instruments", "U-he", "Arturia"
-    ],
+      "Spectrasonics", "Spitfire Audio", "Native Instruments", "u-he", "Arturia", "UJAM", "Moog"],
     plugins: [
-      "UAD", "Acustica Audio", "Softube", "Ik Multimea", "Soundtoys",
-      "Izotope", "Arturia FX Collection", "Sonnox", "Liquidsonics", "Oeksound"
-    ]
+      "UAD", "Acustica Audio", "Softube", "Soundtoys",
+      "Izotope", "Sonnox 등 다수"]
   };
 
   return (

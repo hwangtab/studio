@@ -396,7 +396,7 @@ const Portfolio = () => {
       image: "https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZTg0NGRhNDAtMDNmOS00NmQ1LWE0ODUtY2NhY2YxYTIzMDVkLzVhYjQzY2I4LWFhMGEtNGU2Mi05NjhiLWFiNDRmYjdmNzZiNi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJoZWlnaHQiOjEyNDAsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ==", 
       title: "삼각전파사 <Dystopia 2025>", 
       description: "기획, 녹음, 믹싱, 마스터링",
-      link: "https://tumblbug.com/dystopia2025"
+      link: "https://dystopia2025.kr"
     },
     { 
       image: "https://image.bugsm.co.kr/album/images/1000/373556/37355636.jpg", 
