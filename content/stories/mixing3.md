@@ -1,6 +1,6 @@
 ```markdown
 ---
-title: "믹싱 강좌 - 제2장: 스튜디오 환경"
+title: "믹싱 강좌 - 제3부: 스튜디오 환경"
 date: 2025-06-07
 author: "스튜디오 놀"
 category: "강좌"

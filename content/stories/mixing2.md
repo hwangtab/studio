@@ -1,6 +1,6 @@
 ```markdown
 ---
-title: "믹싱 강좌 - 제2장: 음향 이론 기초"
+title: "믹싱 강좌 - 제2부: 음향 이론 기초"
 date: 2025-06-04
 author: "스튜디오 놀"
 category: "강좌"
