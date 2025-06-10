@@ -25,6 +25,12 @@ const Layout = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const location = useLocation();
+
+  // 페이지 전환 시 스크롤 최상단으로 이동
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   // 윈도우 크기 변경 감지
   useEffect(() => {
@@ -38,15 +44,21 @@ const Layout = ({ children }) => {
   
   // 다크모드 설정
   useEffect(() => {
-    // 사용자 시스템 설정에 따른 초기 다크모드 설정
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setIsDarkMode(prefersDarkMode);
-    
-    // 로컬 스토리지에서 다크모드 설정 불러오기
+    // 1. 로컬 스토리지에 저장된 사용자 설정 우선 적용
     const savedDarkMode = localStorage.getItem('darkMode');
     if (savedDarkMode !== null) {
       setIsDarkMode(savedDarkMode === 'true');
+      return;
     }
+    
+    // 2. 시스템 설정 확인
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // 3. 시간대에 따른 자동 설정 (6:00~18:00 라이트, 그 외 다크)
+    const currentHour = new Date().getHours();
+    const isNightTime = currentHour < 6 || currentHour >= 18;
+    
+    setIsDarkMode(prefersDarkMode || isNightTime);
   }, []);
   
   // 다크모드 토글 함수
