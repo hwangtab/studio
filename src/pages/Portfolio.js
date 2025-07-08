@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlay, FaPause, FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeadphones, FaExternalLinkAlt, FaMusic } from 'react-icons/fa';
+import { FaPlay, FaPause, FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeadphones, FaExternalLinkAlt, FaMusic, FaFilter } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import { 
+  getAllPortfolioItems, 
+  getPortfolioItemsByCategory, 
+  getAllCategories, 
+  getAllAudioTracks 
+} from '../utils/portfolioDataUtils';
 
 // 개선된 포트폴리오 카드 컴포넌트
 const PortfolioItem = ({ image, title, description, link, index }) => (
@@ -391,176 +397,93 @@ const AudioPlayer = ({ tracks }) => {
 };
 
 const Portfolio = () => {
-  const portfolioItems = [
-    { 
-      image: "https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZTg0NGRhNDAtMDNmOS00NmQ1LWE0ODUtY2NhY2YxYTIzMDVkLzVhYjQzY2I4LWFhMGEtNGU2Mi05NjhiLWFiNDRmYjdmNzZiNi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJoZWlnaHQiOjEyNDAsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ==", 
-      title: "삼각전파사 <Dystopia 2025>", 
-      description: "기획, 녹음, 믹싱, 마스터링",
-      link: "https://dystopia2025.kr"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/373556/37355636.jpg", 
-      title: "자이 <Golden Hour>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://soundcloud.com/user-292846120/sets/jai-golden-hour/s-BPI7SsQ1rfb?si=cf71793aa6574753902aefae1c68631f&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/363228/36322824.jpg", 
-      title: "이서영 <우리>", 
-      description: "기획, 녹음",
-      link: "https://www.youtube.com/watch?v=GAXy7iJKGzk"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/364148/36414830.jpg", 
-      title: "자이(Jai) x HANASH <분홍색 패딩 소녀>", 
-      description: "기획, 녹음",
-      link: "https://www.youtube.com/watch?v=812CJnROxxs"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/363226/36322647.jpg", 
-      title: "모모 <If this can't be tolerated, what can't be?>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://www.youtube.com/watch?v=aq2DESx9ITQ"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/370548/37054815.jpg", 
-      title: "여유 <서울의 밤 (feat. 정수민)>", 
-      description: "기획, 녹음",
-      link: "https://orcd.co/4e3m8rx"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/368417/36841743.jpg", 
-      title: "나뭇잎들 <눈 앞의 마음>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://orcd.co/v4bq9px"
-    },
-    { 
-      image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d5/b2/77/d5b277e3-8285-0ef6-9cbd-7d1552b09ff7/198846759562.jpg/1200x630bb.jpg", 
-      title: "모레도토요일 <We will sail for your freedom>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://orcd.co/qjanjyy"
-    },
-    { 
-      image: "https://thumb.mt.co.kr/06/2025/01/2025011014033361606_1.jpg", 
-      title: "김인 <별을 보러 간 사람>", 
-      description: "기획, 편곡, 녹음, 믹싱",
-      link: "https://www.youtube.com/watch?v=waPHNm89mDk"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/366016/36601647.jpg", 
-      title: "까르 <TRANSITION>",
-      description: "기획, 편곡, 녹음, 믹싱",
-      link: "https://orcd.co/o3vzobo"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/363226/36322648.jpg", 
-      title: "남수 <안녕 (먼 곳의 그대에게)>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://www.youtube.com/watch?v=JMKr0dOLWZo"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/500/366018/36601838.jpg", 
-      title: "김동산과 블루이웃 <물결>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://image.bugsm.co.kr/album/images/500/366018/36601838.jpg"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/1000/363228/36322827.jpg", 
-      title: "정진석 <이 땅이 니 땅이가>", 
-      description: "기획, 편곡, 녹음, 믹싱",
-      link: "https://orcd.co/7zkgde8"
-    },
-    { 
-      image: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/32/6f/3d/326f3d7d-4467-9ebd-2b0e-3bbc8e02e78d/888618381700.jpg/600x600bf-60.jpg", 
-      title: "황경하 <눈녹듯>", 
-      description: "기획, 녹음, 믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=WmI2EPjLr0c"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/500/206343/20634376.jpg", 
-      title: "희우 <잊음>", 
-      description: "편곡, 녹음, 믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=fTmh92Lmo-w"
-    },
-    { 
-      image: `${process.env.PUBLIC_URL}/images/portfolio1.jpg`, 
-      title: "희우 <그대는>", 
-      description: "녹음, 믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=j5PuwQVzRe8"
-    },
-    { 
-      image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d6/bc/4b/d6bc4b2f-b966-61ad-82a5-460e191013a9/artwork.jpg/600x600bf-60.jpg", 
-      title: "Jinu Konda <Burn In Hell>", 
-      description: "녹음, 믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=-7J59hf6rdc" 
-    },
-    { 
-      image: "https://i.ytimg.com/vi/qzlkFmRBUl4/maxresdefault.jpg", 
-      title: "남자애 <하란>", 
-      description: "녹음, 믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=qzlkFmRBUl4"
-    },
-    { 
-      image: `${process.env.PUBLIC_URL}/images/portfolio2.jpg`, 
-      title: "남자애 <해방>", 
-      description: "녹음, 믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=89hXcnBydp4&t=4s"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/500/206169/20616910.jpg", 
-      title: "세민 <여린 잎>", 
-      description: "기획, 믹싱, 마스터링",
-      link: "https://www.youtube.com/playlist?list=PLzLIgzZ5BKyBQdDZE7wZRZ3YD-Aocx53W"
-    },
-    { 
-      image: "https://image.bugsm.co.kr/album/images/350/308732/30873239.jpg", 
-      title: "영인 <빨간 점>", 
-      description: "믹싱, 마스터링",
-      link: "https://www.youtube.com/watch?v=NGvBAaiWqU8"
-    },
-    { 
-      image: "https://cdn.imweb.me/thumbnail/20221109/0132edb19f0bf.jpg", 
-      title: "남자애 <위 인물은 X를 겪고 깨달음을 얻음>", 
-      description: "편곡, 레코딩, 믹싱, 마스터링",
-      link: "https://music.bugs.co.kr/album/30859733?wl_ref=M_contents_01_04"
-    },
-    { 
-      image: `${process.env.PUBLIC_URL}/images/portfolio3.jpg`, 
-      title: "류형수 <하루>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://youtu.be/6vgPysZOQ9c"
-    },
-    { 
-      image: "https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5Ijoic3RvcnkvNDRhY2E0MWItYzI0Zi00MTZmLWIyNzktNjMxZDZjZDA3MDAyLzA5Y2YzNjhjLThjZTgtNDYxMS1iZTQ4LTcwNzUyZjFiMTE2MS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlLCJ3aWR0aCI6IjEyNDAifX19", 
-      title: "엉아들 <Self-titled>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://www.youtube.com/playlist?list=PLlm8-iwS-7gOY8-pmL0Xz25_Hzl2FM-U7"
-    },
-    { 
-      image: `${process.env.PUBLIC_URL}/images/portfolio4.jpg`, 
-      title: "강호중 <Self-titled>", 
-      description: "기획, 녹음, 믹싱",
-      link: "https://www.youtube.com/watch?v=emtWqYhuZQw"
-    },
-    { 
-      image: `${process.env.PUBLIC_URL}/images/portfolio5.jpg`, 
-      title: "Various Artists <물고기는 물이 없으면 죽어요>", 
-      description: "기획, 녹음, 믹싱, 마스터링",
-      link: "https://www.melon.com/album/detail.htm?albumId=11109846"
-    },
-    { 
-      image: `${process.env.PUBLIC_URL}/images/portfolio6.jpg`, 
-      title: "<발쾌한> CM송", 
-      description: "녹음, 믹싱, 마스터링",
-      link: "https://www.11st.co.kr/products/5966956725"
-    },
-  ];
+  // 상태 관리
+  const [portfolioItems, setPortfolioItems] = useState([]);
+  const [audioTracks, setAudioTracks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const audioTracks = [
-    { title: "황경하 - 눈녹듯", src: `${process.env.PUBLIC_URL}/audio/sample1.mp3`, albumArt: `${process.env.PUBLIC_URL}/images/album1.jpg` },
-    { title: "휘우 - 그대는", src: `${process.env.PUBLIC_URL}/audio/sample2.mp3`, albumArt: `${process.env.PUBLIC_URL}/images/album2.jpg` },
-    { title: "류형수 - 숨 (Vocal 김수린)", src: `${process.env.PUBLIC_URL}/audio/sample3.mp3`, albumArt: `${process.env.PUBLIC_URL}/images/album3.jpg` },
-  ];
+  // 데이터 로딩
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [itemsData, tracksData, categoriesData] = await Promise.all([
+          getAllPortfolioItems(),
+          getAllAudioTracks(),
+          getAllCategories()
+        ]);
+        
+        setPortfolioItems(itemsData);
+        setAudioTracks(tracksData);
+        setCategories(categoriesData);
+        setFilteredItems(itemsData);
+        setError(null);
+      } catch (err) {
+        console.error('데이터 로딩 오류:', err);
+        setError('데이터를 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // 카테고리 필터링
+  useEffect(() => {
+    const filterItems = async () => {
+      try {
+        const filtered = await getPortfolioItemsByCategory(selectedCategory);
+        setFilteredItems(filtered);
+      } catch (err) {
+        console.error('필터링 오류:', err);
+        setFilteredItems(portfolioItems);
+      }
+    };
+
+    if (portfolioItems.length > 0) {
+      filterItems();
+    }
+  }, [selectedCategory, portfolioItems]);
+
+  // 카테고리 변경 핸들러
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+  };
+
+  // 로딩 상태 렌더링
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">포트폴리오 데이터를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태 렌더링
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
+          <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -585,23 +508,69 @@ const Portfolio = () => {
           각 작품을 클릭하여 더 자세한 정보를 확인하세요.
         </motion.p>
       </div>
+
+      {/* 카테고리 필터 */}
+      <motion.div
+        className="mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <div className="flex items-center mb-6">
+          <FaFilter className="text-xl text-primary mr-3" />
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">카테고리</h3>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryChange(category.id)}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                selectedCategory === category.id
+                  ? 'bg-primary text-white shadow-lg transform scale-105'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+              style={{
+                backgroundColor: selectedCategory === category.id ? category.color : undefined
+              }}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+      </motion.div>
       
       {/* 포트폴리오 그리드 */}
       <motion.div
         className="mb-24"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <div className="flex items-center mb-8">
-          <FaMusic className="text-2xl text-primary mr-3" />
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">작업 프로젝트</h2>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center">
+            <FaMusic className="text-2xl text-primary mr-3" />
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">작업 프로젝트</h2>
+          </div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {filteredItems.length}개 프로젝트
+          </div>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {portfolioItems.map((item, index) => (
-            <PortfolioItem key={index} {...item} index={index} />
-          ))}
-        </div>
+        
+        {filteredItems.length === 0 ? (
+          <div className="text-center py-16">
+            <FaMusic className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
+              선택한 카테고리에 해당하는 프로젝트가 없습니다.
+            </p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredItems.map((item, index) => (
+              <PortfolioItem key={item.id} {...item} index={index} />
+            ))}
+          </div>
+        )}
       </motion.div>
       
       {/* 오디오 플레이어 섹션 */}
@@ -609,13 +578,22 @@ const Portfolio = () => {
         className="mb-16"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
       >
         <div className="flex items-center mb-8">
           <FaHeadphones className="text-2xl text-primary mr-3" />
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">샘플 트랙</h2>
         </div>
-        <AudioPlayer tracks={audioTracks} />
+        {audioTracks.length > 0 ? (
+          <AudioPlayer tracks={audioTracks} />
+        ) : (
+          <div className="text-center py-16 bg-gray-100 dark:bg-gray-800 rounded-xl">
+            <FaHeadphones className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
+              샘플 트랙을 준비중입니다.
+            </p>
+          </div>
+        )}
       </motion.div>
     </div>
   );
