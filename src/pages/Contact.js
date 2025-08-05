@@ -48,7 +48,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pt-16 pb-8">
       <motion.h1 
         className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
         initial={{ opacity: 0, y: -50 }}
@@ -57,10 +57,10 @@ const Contact = () => {
       >
         연락하기
       </motion.h1>
-      <div className="max-w-5xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6">
           <motion.div 
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -85,14 +85,48 @@ const Contact = () => {
               </a>
             </div>
             <div className="mt-6">
-              <h3 className="text-xl font-bold mb-2 dark:text-white">상담 가능 시간</h3>
-              <p className="dark:text-gray-300 leading-relaxed">월요일 - 금요일: 10:00 AM - 6:00 PM</p>
-              <p className="dark:text-gray-300 leading-relaxed">토요일: 12:00 PM - 6:00 PM</p>
-              <p className="dark:text-gray-300 leading-relaxed">일요일: 상담 업무 미제공</p>
+              <h3 className="text-xl font-bold mb-4 dark:text-white">찾아오시는 길</h3>
+              <div className="mb-6">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1sko!2skr!4v1704364800000!5m2!1sko!2skr"
+                  width="100%"
+                  height="200"
+                  style={{ border: 0, borderRadius: '8px' }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="스튜디오 놀 위치"
+                ></iframe>
+              </div>
+            </div>
+            <div className="mt-6">
+              <h3 className="text-xl font-bold mb-4 dark:text-white">상담 가능 시간</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="dark:text-gray-300 font-medium">월요일 - 금요일</span>
+                  <span className="dark:text-gray-300">10:00 AM - 6:00 PM</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="dark:text-gray-300 font-medium">토요일</span>
+                  <span className="dark:text-gray-300">12:00 PM - 6:00 PM</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="dark:text-gray-300 font-medium">일요일</span>
+                  <span className="text-red-500 dark:text-red-400">상담 업무 미제공</span>
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                <p className="text-sm text-blue-800 dark:text-blue-300">
+                  <span className="font-medium">주차 안내:</span> 인근 KT은평빌딩 주차장 유료 이용 가능
+                </p>
+                <p className="text-sm text-blue-800 dark:text-blue-300 mt-1">
+                  <span className="font-medium">대중교통:</span> 지하철 6호선 불광역 7번 출구 도보 5분
+                </p>
+              </div>
             </div>
           </motion.div>
           <motion.div 
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -133,33 +167,65 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder="메시지" 
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent" 
-                  rows="4" 
+                  rows="8" 
                   required
                 ></textarea>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary hover:from-primary-dark hover:to-secondary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    처리 중...
-                  </>
-                ) : (
-                  <>
-                    <FaPaperPlane className="mr-2" />
-                    보내기
-                  </>
-                )}
-              </motion.button>
+              <div className="space-y-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary hover:from-primary-dark hover:to-secondary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      처리 중...
+                    </>
+                  ) : (
+                    <>
+                      <FaPaperPlane className="mr-2" />
+                      이메일로 문의하기
+                    </>
+                  )}
+                </motion.button>
+                
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href="https://open.kakao.com/me/nol"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-800 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200"
+                >
+                  <FaCommentDots className="mr-2" />
+                  카카오톡으로 문의하기
+                </motion.a>
+              </div>
             </form>
+            
+            <div className="mt-6 space-y-4">
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2">문의 전 확인사항</h4>
+                <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
+                  <li>• 24시간 내 답변 드립니다</li>
+                  <li>• 구체적인 프로젝트 내용을 적어주시면 정확한 상담 가능</li>
+                  <li>• 급한 문의는 카카오톡을 이용해주세요</li>
+                </ul>
+              </div>
+              
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+                <h4 className="font-medium text-gray-800 dark:text-gray-300 mb-2">개인정보 처리방침</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  수집된 개인정보는 문의 응답 목적으로만 사용되며, 상담 완료 후 즉시 삭제됩니다.
+                </p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
