@@ -13,7 +13,7 @@ const FeatureCard = ({ icon: Icon, title, description, className }) => (
   >
     <div className="flex items-center mb-4">
       <Icon className="text-2xl text-primary dark:text-primary-light mr-3" />
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h3>
+      <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200">{title}</h3>
     </div>
     <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{description}</p>
   </motion.div>
@@ -48,7 +48,7 @@ const TargetAudience = ({ title, description, icon: Icon }) => (
   >
     <div className="flex items-center mb-2">
       <Icon className="text-2xl text-primary dark:text-primary-light mr-3" />
-      <h3 className="text-lg font-bold text-gray-800 dark:text-white">{title}</h3>
+      <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200">{title}</h3>
     </div>
     <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{description}</p>
   </motion.div>
@@ -105,7 +105,7 @@ const PracticeRoom = () => {
           </motion.div>
           
           <div>
-            <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">이런 고민이 있으신가요?</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <PainPoint icon={FaWind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." />
@@ -256,7 +256,7 @@ const PracticeRoom = () => {
         <div className="grid md:grid-cols-2 items-stretch">
           <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 flex flex-col justify-center items-center text-center">
             <motion.h2 
-              className="text-3xl font-bold mb-4 text-gray-800 dark:text-white"
+              className="text-3xl font-bold mb-4 text-gray-600 dark:text-gray-200"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}

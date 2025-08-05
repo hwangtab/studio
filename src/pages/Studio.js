@@ -10,7 +10,7 @@ const EquipmentSection = ({ title, items, icon: Icon }) => (
     transition={{ duration: 0.5 }}
     whileHover={{ y: -5 }}
   >
-    <h3 className="text-xl font-bold mb-4 flex items-center text-gray-800 dark:text-white">
+    <h3 className="text-xl font-bold mb-4 flex items-center text-gray-600 dark:text-gray-200">
       <Icon className="mr-2 text-primary dark:text-primary-light" />
       {title}
     </h3>
@@ -75,7 +75,7 @@ const Studio = () => {
           >
             <div className="flex items-center mb-6">
               <FaInfoCircle className="text-2xl text-primary dark:text-primary-light mr-3" />
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">스튜디오 놀</h2>
+              <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200">스튜디오 놀</h2>
             </div>
             <div className="space-y-4">
               <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
@@ -181,7 +181,7 @@ const Studio = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-white">스튜디오 이용 안내</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-600 dark:text-gray-200">스튜디오 이용 안내</h2>
         <div className="grid md:grid-cols-3 gap-6 text-center">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-bold mb-2 text-primary dark:text-primary-light">상담 가능 시간</h3>

@@ -30,7 +30,7 @@ const StoryCard = ({ story }) => {
       whileHover={{ scale: 1.01 }}
       onClick={handleCardClick}
     >
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+      <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200 mb-2">
         {story.title || '제목 없음'}
       </h3>
       <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">

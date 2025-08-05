@@ -47,7 +47,7 @@ const PortfolioItem = ({ image, title, description, link, index }) => (
     
     {/* 컨텐츠 */}
     <div className="p-6">
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">{title}</h3>
+      <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200 mb-3">{title}</h3>
       <p className="text-gray-600 dark:text-gray-300">{description}</p>
     </div>
     
@@ -550,7 +550,7 @@ const Portfolio = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <FaMusic className="text-2xl text-primary mr-3" />
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">작업 프로젝트</h2>
+            <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200">작업 프로젝트</h2>
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {filteredItems.length}개 프로젝트
@@ -582,7 +582,7 @@ const Portfolio = () => {
       >
         <div className="flex items-center mb-8">
           <FaHeadphones className="text-2xl text-primary mr-3" />
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">샘플 트랙</h2>
+          <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200">샘플 트랙</h2>
         </div>
         {audioTracks.length > 0 ? (
           <AudioPlayer tracks={audioTracks} />

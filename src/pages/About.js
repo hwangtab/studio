@@ -15,7 +15,7 @@ const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) 
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
         <Icon className="text-xl text-primary dark:text-primary-light" />
       </div>
-      <h3 className={`${size === 'lg' ? 'text-xl' : 'text-lg'} font-bold text-gray-800 dark:text-white`}>
+      <h3 className={`${size === 'lg' ? 'text-xl' : 'text-lg'} font-bold text-gray-600 dark:text-gray-200`}>
         {title}
       </h3>
     </div>
@@ -112,7 +112,7 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+            <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200 mb-6">
               기획부터 유통, 홍보까지 함께하는 올인원 프로덕션
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
@@ -151,7 +151,7 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">올인원 음악 프로덕션 서비스</h2>
+            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">올인원 음악 프로덕션 서비스</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
               앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여 뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.
               개별 과정마다 전문가 연계로 최상의 결과물을 보장합니다.
@@ -193,7 +193,7 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">종합 음반 제작 프로세스</h2>
+            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">종합 음반 제작 프로세스</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
               스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여 최고 품질의 결과물을 만들어냅니다.
             </p>
@@ -222,7 +222,7 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">스튜디오 놀의 차별점</h2>
+            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">스튜디오 놀의 차별점</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
               연신내에 위치한 원스톱 프로덕션 시스템으로 아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다.
             </p>
@@ -235,7 +235,7 @@ const About = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">비용 효율적인 패키지 옵션</h3>
+              <h3 className="text-2xl font-bold text-gray-600 dark:text-gray-200 mb-4">비용 효율적인 패키지 옵션</h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
@@ -269,7 +269,7 @@ const About = () => {
                 >
                   <div className="flex items-center mb-2">
                     <advantage.icon className="text-primary dark:text-primary-light mr-2" />
-                    <h4 className="text-md font-bold text-gray-800 dark:text-white">{advantage.title}</h4>
+                    <h4 className="text-md font-bold text-gray-600 dark:text-gray-200">{advantage.title}</h4>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{advantage.description}</p>
                 </div>
@@ -288,7 +288,7 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">연락 및 상담</h2>
+            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">연락 및 상담</h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
               무료 프로덕션 상담을 제공해 드립니다. 언제든지 아래 연락처로 문의해 주세요.
             </p>
@@ -308,7 +308,7 @@ const About = () => {
                   <FaPhoneAlt className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">전화</h3>
+              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">전화</h3>
               <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">02-764-3114</p>
             </motion.div>
 
@@ -325,7 +325,7 @@ const About = () => {
                   <FaEnvelope className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">이메일</h3>
+              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">이메일</h3>
               <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">contact@kosmart.org</p>
             </motion.div>
 
@@ -342,7 +342,7 @@ const About = () => {
                   <FaCommentDots className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">카카오톡</h3>
+              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">카카오톡</h3>
               <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">오픈채팅 바로가기</p>
             </motion.div>
 
@@ -359,7 +359,7 @@ const About = () => {
                   <FaMapMarkerAlt className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">위치</h3>
+              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">위치</h3>
               <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
             </motion.div>
           </div>

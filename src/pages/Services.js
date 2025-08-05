@@ -19,7 +19,7 @@ const ServiceCard = ({ title, description, icon: Icon, link, index, id }) => (
         <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
           <Icon className="text-2xl text-primary dark:text-primary-light" />
         </div>
-        <h3 className="text-xl font-bold ml-4 text-gray-800 dark:text-white">{title}</h3>
+        <h3 className="text-xl font-bold ml-4 text-gray-600 dark:text-gray-200">{title}</h3>
       </div>
       
       <p className="text-gray-600 dark:text-gray-300 mb-6">{description}</p>
@@ -56,7 +56,7 @@ const ServiceFeature = ({ title, description, icon: Icon, index }) => (
     <div className="bg-gradient-to-r from-primary to-secondary p-4 rounded-full mb-4 text-white">
       <Icon className="text-2xl" />
     </div>
-    <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">{title}</h3>
+    <h3 className="text-xl font-bold mb-2 text-gray-600 dark:text-gray-200">{title}</h3>
     <p className="text-gray-600 dark:text-gray-300">{description}</p>
   </motion.div>
 );
