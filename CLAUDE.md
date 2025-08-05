@@ -29,8 +29,13 @@ npm test                    # Run tests
 npm run generate-stories    # Generate stories.json from markdown files
 
 # Backend development (in server/ directory)
-cd server && npm run dev    # Start backend with nodemon
+cd server && npm run dev    # Start backend with nodemon (ignores db.json changes)
 cd server && npm start      # Start backend server
+cd server && npm test       # Backend tests (currently no tests specified)
+
+# Deployment
+npm run predeploy           # Runs build automatically
+npm run deploy              # Deploy to GitHub Pages
 ```
 
 ## Architecture & Data Flow
@@ -50,6 +55,8 @@ The project uses a unique static story publishing system:
 - **Routing**: React Router with Layout wrapper component
 - **State Management**: React hooks, no external state management
 - **Styling**: Tailwind CSS with custom color palette and typography system
+- **Internationalization**: i18next setup with comprehensive Korean/English translations in `src/i18n.js`
+- **Dark Mode**: Time-based auto-switching (6:00-18:00 light mode) with manual toggle, uses class-based Tailwind dark mode
 
 ### Content Structure
 
@@ -68,13 +75,15 @@ Content here...
 
 ## Important Files & Directories
 
-- `src/App.js` - Main application router and layout
-- `src/components/Layout.js` - Main layout wrapper with navigation
-- `src/utils/localDataUtils.js` - Story data management utilities
-- `scripts/generateStories.js` - Markdown to JSON conversion script
-- `src/i18n.js` - Internationalization configuration
-- `server/server.js` - Backend API server
-- `public/data/stories.json` - Generated story data (build artifact)
+- `src/App.js` - Main application router with React Router setup
+- `src/components/Layout.js` - Layout wrapper with navigation, dark mode toggle, responsive design
+- `src/utils/localDataUtils.js` - Story data management utilities and sorting logic  
+- `scripts/generateStories.js` - Markdown to JSON conversion script with frontmatter parsing
+- `src/i18n.js` - Internationalization configuration (Korean default, English fallback)
+- `server/server.js` - Express backend server with CORS and LowDB
+- `public/data/stories.json` - Generated story data (build artifact, auto-generated from markdown)
+- `public/data/portfolio.json` - Portfolio data for projects display
+- `tailwind.config.js` - Custom Tailwind configuration with Korean fonts and extended color palette
 
 ## Styling System
 
@@ -84,9 +93,23 @@ The project uses Tailwind CSS with custom configuration:
 - **Dark Mode**: Class-based dark mode support
 - **Responsive**: Mobile-first responsive design
 
+## Data Management Architecture
+
+### Static Data Sources
+- **Stories**: Markdown files in `content/stories/` → compiled to `public/data/stories.json`
+- **Portfolio**: Static JSON in `public/data/portfolio.json`
+- **Images**: Static assets in `public/images/` (room, studio, service, portfolio, hardware images)
+- **Audio**: Sample tracks in `public/audio/`
+
+### Backend Data (LowDB)
+- **Bookings**: Stored in `server/db.json` for form submissions and booking data
+- **API Endpoints**: Express server provides booking and contact form functionality
+
 ## Deployment Notes
 
-- **Production Build**: Automatically generates CNAME file for custom domain
+- **Production Build**: Automatically generates CNAME file for custom domain (studionol.co.kr)
 - **Story Generation**: Always runs before build via `prebuild` script
+- **Vercel Configuration**: SPA rewrite rules in `vercel.json` for client-side routing
 - **Assets**: Images stored in `public/images/` directory
-- **Backend**: Separate deployment for server component
+- **Backend**: Separate deployment required for server component (Express + LowDB)
+- **GitHub Pages**: Alternate deployment option with `npm run deploy`
