@@ -50,6 +50,7 @@ module.exports = {
         sans: ['Pretendard', 'Noto Sans KR', 'sans-serif'],
         title: ['GmarketSans', 'sans-serif'],
         display: ['Montserrat', 'GmarketSans', 'sans-serif'],
+        logo: ['PartialSansKR-Regular', 'GmarketSans', 'sans-serif'],
       },
     },
   },

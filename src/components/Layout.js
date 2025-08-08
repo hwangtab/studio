@@ -105,7 +105,7 @@ const Layout = ({ children }) => {
           <div className="flex items-center justify-between">
             <Link
               to="/"
-              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'} pt-2 text-4xl sm:text-5xl font-title tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap`}
+              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'} flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               스튜디오 놀
