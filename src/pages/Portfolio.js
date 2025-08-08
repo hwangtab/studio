@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlay, FaPause, FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeadphones, FaExternalLinkAlt, FaMusic, FaFilter } from 'react-icons/fa';
+import { FaPlay, FaPause, FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeadphones, FaExternalLinkAlt, FaMusic } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 import { 
   getAllPortfolioItems, 
@@ -8,6 +8,7 @@ import {
   getAllCategories, 
   getAllAudioTracks 
 } from '../utils/portfolioDataUtils';
+import CategoryFilter from '../components/CategoryFilter';
 
 // 개선된 포트폴리오 카드 컴포넌트
 const PortfolioItem = ({ image, title, description, link, index }) => (
@@ -516,28 +517,14 @@ const Portfolio = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <div className="flex items-center mb-6">
-          <FaFilter className="text-xl text-primary mr-3" />
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">카테고리</h3>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryChange(category.id)}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                selectedCategory === category.id
-                  ? 'bg-primary text-white shadow-lg transform scale-105'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-              }`}
-              style={{
-                backgroundColor: selectedCategory === category.id ? category.color : undefined
-              }}
-            >
-              {category.name}
-            </button>
-          ))}
-        </div>
+        <CategoryFilter
+          activeCategory={selectedCategory}
+          setActiveCategory={handleCategoryChange}
+          categories={categories}
+          buttonSize="lg"
+          useCustomColors={true}
+          gap="gap-3"
+        />
       </motion.div>
       
       {/* 포트폴리오 그리드 */}
