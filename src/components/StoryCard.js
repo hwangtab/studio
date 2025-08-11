@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
@@ -7,6 +7,29 @@ import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils'
 
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
+  const titleRef = useRef(null);
+  const [summaryLineClamp, setSummaryLineClamp] = useState(3);
+
+  useLayoutEffect(() => {
+    const checkTitleLines = () => {
+      if (titleRef.current) {
+        const titleElement = titleRef.current;
+        const lineHeight = parseFloat(getComputedStyle(titleElement).lineHeight);
+        const titleHeight = titleElement.scrollHeight;
+        const lines = Math.round(titleHeight / lineHeight);
+        
+        if (lines > 1) {
+          setSummaryLineClamp(2);
+        } else {
+          setSummaryLineClamp(3);
+        }
+      }
+    };
+
+    checkTitleLines();
+    window.addEventListener('resize', checkTitleLines);
+    return () => window.removeEventListener('resize', checkTitleLines);
+  }, [story.title]);
   
   // 애니메이션 설정
   const cardVariants = {
@@ -68,12 +91,24 @@ const StoryCard = ({ story }) => {
         </div>
         
         {/* 제목 */}
-        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-3 line-clamp-2 leading-tight flex-shrink-0">
+        <h3
+          ref={titleRef}
+          className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-3 line-clamp-2 leading-tight flex-shrink-0"
+        >
           {story.title || '제목 없음'}
         </h3>
         
         {/* 요약 */}
-        <div className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm leading-relaxed flex-grow">
+        <div
+          className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed flex-grow"
+          style={{
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: summaryLineClamp,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
           {plainSummary || '내용 없음'}
         </div>
         
