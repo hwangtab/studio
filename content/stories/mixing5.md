@@ -6,7 +6,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌"]
 ---
-![스튜디오 놀 녹음실](/images/studio4.jpg)
+![스튜디오 놀 녹음실](/images/studio5.jpg)
 
 오늘날 음악 제작의 중심에는 DAW(Digital Audio Workstation, 디지털 오디오 워크스테이션)가 있습니다. 수많은 DAW 중에서 어떤 것을 선택할지는 개인의 취향, 예산, 작업 방식, 협업 환경 등 다양한 요소에 따라 달라집니다. 이 장에서는 현재 시장에서 가장 널리 사용되는 주요 DAW들인 Pro Tools, Logic Pro, Ableton Live, Cubase, Studio One, Reaper를 비교 분석하여, 각각의 장단점과 특징을 살펴보고, 자신의 작업에 가장 적합한 DAW를 선택하는 데 도움을 드리겠습니다.
 
