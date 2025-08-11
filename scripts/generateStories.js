@@ -36,6 +36,38 @@ const generateStories = () => {
             // 마크다운 헤더 정규화 (## → ###)
             .replace(/^##\s+(.*$)/gm, '### $1')
             .trim();
+
+          // 개선된 summary 생성 - 마크다운을 평문으로 변환
+          const createSummary = (content, maxLength = 150) => {
+            if (!content) return '';
+            
+            const plainText = content
+              // 이미지 제거
+              .replace(/!\[.*?\]\([^)]+\)/g, '')
+              // 링크를 텍스트만 남기기
+              .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+              // 헤딩 제거
+              .replace(/#{1,6}\s+/g, '')
+              // 볼드/이탤릭 마크다운 제거
+              .replace(/\*\*([^*]+)\*\*/g, '$1')
+              .replace(/\*([^*]+)\*/g, '$1')
+              .replace(/__([^_]+)__/g, '$1')
+              .replace(/_([^_]+)_/g, '$1')
+              // 코드 블록 제거
+              .replace(/```[\s\S]*?```/g, '')
+              .replace(/`([^`]+)`/g, '$1')
+              // 연속된 공백 및 개행 정리
+              .replace(/\s+/g, ' ')
+              .trim();
+              
+            if (plainText.length <= maxLength) return plainText;
+            
+            // 문장 경계에서 자르기
+            const lastSpaceIndex = plainText.lastIndexOf(' ', maxLength);
+            const summary = plainText.substring(0, lastSpaceIndex > 0 ? lastSpaceIndex : maxLength);
+            
+            return summary + '...';
+          };
           
           return {
             id: path.parse(file).name,
@@ -46,7 +78,7 @@ const generateStories = () => {
             category: data.category || '공지',
             tags: Array.isArray(data.tags) ? data.tags : ['기본'],
             content: cleanContent,
-            summary: cleanContent.replace(/\n/g, ' ').substring(0, 100) + (cleanContent.length > 100 ? '...' : '')
+            summary: createSummary(cleanContent)
           };
         } catch (e) {
           console.error(`파일 처리 오류 (${file}):`, e.message);

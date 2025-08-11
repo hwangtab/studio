@@ -2,10 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
 import { timeAgo } from '../utils/dateUtils';
+import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils';
 
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
@@ -20,29 +18,69 @@ const StoryCard = ({ story }) => {
   const handleCardClick = () => {
     navigate(`/stories/${story.id}`);
   };
+  
+  // 썸네일 이미지 URL 추출
+  const thumbnailUrl = extractFirstImageUrl(story.content);
+  
+  // 평문 요약 생성
+  const plainSummary = summarizeContent(story.content, 120);
 
   return (
     <motion.div
-      className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer"
+      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer h-80 flex flex-col"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
       whileHover={{ scale: 1.01 }}
       onClick={handleCardClick}
     >
-      <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200 mb-2">
-        {story.title || '제목 없음'}
-      </h3>
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-        {story.date ? timeAgo(story.date) : '날짜 없음'}
+      {/* 썸네일 이미지 */}
+      <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0">
+        {thumbnailUrl ? (
+          <img
+            src={thumbnailUrl}
+            alt={story.title}
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            onError={(e) => {
+              // 이미지 로드 실패 시 기본 그라디언트 표시
+              e.target.style.display = 'none';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="text-white/80 text-6xl font-bold">
+              {story.category?.charAt(0) || 'S'}
+            </div>
+          </div>
+        )}
       </div>
-      <div className="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">
-        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
-          {story.summary || '내용 없음'}
-        </ReactMarkdown>
-      </div>
-      <div className="inline-flex items-center text-primary hover:text-primary-dark transition-colors duration-300">
-        더 보기 <FaArrowRight className="ml-1" size={12} />
+      
+      {/* 콘텐츠 영역 */}
+      <div className="p-4 flex flex-col flex-grow">
+        {/* 카테고리 및 날짜 */}
+        <div className="flex items-center justify-between mb-2 flex-shrink-0">
+          <span className="text-xs px-2 py-1 bg-primary/10 text-primary-dark rounded-full font-medium">
+            {story.category || '기본'}
+          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {story.date ? timeAgo(story.date) : '날짜 없음'}
+          </span>
+        </div>
+        
+        {/* 제목 */}
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-3 line-clamp-2 leading-tight flex-shrink-0">
+          {story.title || '제목 없음'}
+        </h3>
+        
+        {/* 요약 */}
+        <div className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm leading-relaxed flex-grow">
+          {plainSummary || '내용 없음'}
+        </div>
+        
+        {/* 더 보기 버튼 */}
+        <div className="inline-flex items-center text-primary hover:text-primary-dark transition-colors duration-300 text-sm font-medium flex-shrink-0 mt-auto">
+          더 보기 <FaArrowRight className="ml-1" size={12} />
+        </div>
       </div>
     </motion.div>
   );
