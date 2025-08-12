@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaMicrophone, FaCompactDisc, FaGlobeAmericas, FaCalendarCheck, FaArrowRight } from 'react-icons/fa';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 
 // 히어로 섹션 컴포넌트
 const HeroSection = () => {
@@ -214,9 +215,7 @@ const Home = () => {
       <div className="container mx-auto px-4 py-16">
         <motion.h2 
           className="word-break-keep-all text-heading-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          {...PAGE_TITLE_ANIMATION}
         >
           당신을 위한 녹음 공간과 장비
         </motion.h2>
@@ -224,17 +223,13 @@ const Home = () => {
 
         <motion.h2 
           className="word-break-keep-all text-heading-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          {...PAGE_SUBTITLE_ANIMATION}
         >
           우리의 서비스
         </motion.h2>
         <motion.div
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          {...PAGE_CONTENT_ANIMATION}
         >
          <ServiceCard
          title="음반 기획"
@@ -258,9 +253,9 @@ const Home = () => {
 
         <motion.div
           className="text-center bg-gray-50 dark:bg-gray-800 py-16 px-4 rounded-2xl shadow-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
         >
           <h2 className="text-heading-3 font-bold mb-4 text-gray-600 dark:text-gray-200">당신의 음악 여정을 시작하세요</h2>
           <p className="text-subtitle-1 mb-8 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">최고의 환경에서 음악을 완성하세요. 스튜디오 놀이 당신의 음악적 여정을 함께합니다.</p>

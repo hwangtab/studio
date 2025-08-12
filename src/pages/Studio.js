@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaSlidersH, FaHeadphones, FaGuitar, FaKeyboard, FaMusic, FaCompactDisc, FaLaptop, FaInfoCircle, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
 const EquipmentSection = ({ title, items, icon: Icon }) => (
   <motion.div
@@ -59,9 +60,7 @@ const Studio = () => {
       >
         <motion.h1 
           className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          {...PAGE_TITLE_ANIMATION}
         >
           스튜디오 소개
         </motion.h1>

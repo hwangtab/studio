@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaUser, FaPaperPlane, FaCheckCircle, FaCommentDots } from 'react-icons/fa';
+import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 
 const InputField = ({ icon: Icon, ...props }) => (
   <div className="relative mb-4">
@@ -51,9 +52,7 @@ const Contact = () => {
     <div className="container mx-auto px-4 pt-16 pb-8">
       <motion.h1 
         className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        {...PAGE_TITLE_ANIMATION}
       >
         연락하기
       </motion.h1>

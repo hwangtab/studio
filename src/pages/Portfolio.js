@@ -9,6 +9,7 @@ import {
   getAllAudioTracks 
 } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 
 // 개선된 포트폴리오 카드 컴포넌트
 const PortfolioItem = ({ image, title, description, link, index }) => (
@@ -492,17 +493,13 @@ const Portfolio = () => {
       <div className="mb-16 text-center">
         <motion.h1 
           className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          {...PAGE_TITLE_ANIMATION}
         >
           포트폴리오
         </motion.h1>
         <motion.p
           className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          {...PAGE_SUBTITLE_ANIMATION}
         >
           스튜디오 놀에서 작업한 다양한 프로젝트들을 소개합니다.
           <br />
@@ -513,9 +510,7 @@ const Portfolio = () => {
       {/* 카테고리 필터 */}
       <motion.div
         className="mb-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        {...PAGE_CONTENT_ANIMATION}
       >
         <CategoryFilter
           activeCategory={selectedCategory}

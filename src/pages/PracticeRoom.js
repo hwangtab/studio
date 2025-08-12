@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaFan, FaVolumeMute, FaWind, FaBolt, FaBroom, FaComments } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
 const FeatureCard = ({ icon: Icon, title, description, className }) => (
   <motion.div
@@ -66,18 +67,14 @@ const PracticeRoom = () => {
       >
         <motion.h1 
           className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          {...PAGE_TITLE_ANIMATION}
         >
           은평구 프리미엄 방음 연습실
         </motion.h1>
         
         <motion.p
           className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          {...PAGE_SUBTITLE_ANIMATION}
         >
           최적의 환경에서 여러분의 음악을 연습하세요.
           <br />

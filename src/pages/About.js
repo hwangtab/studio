@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots, FaCalendarAlt } from 'react-icons/fa';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
 const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => (
   <motion.div
@@ -99,18 +100,14 @@ const About = () => {
         <div className="container mx-auto px-4">
           <motion.h1 
             className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            {...PAGE_TITLE_ANIMATION}
           >
             스튜디오 놀
           </motion.h1>
           
           <motion.div
             className="max-w-3xl mx-auto text-center mb-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            {...PAGE_SUBTITLE_ANIMATION}
           >
             <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200 mb-6">
               기획부터 유통, 홍보까지 함께하는 올인원 프로덕션
