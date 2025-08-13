@@ -3,17 +3,17 @@
   "name": "스튜디오 놀 - 음악 제작의 모든 것",
   "icons": [
     {
-      "src": "favicon.ico?v=2.0",
+      "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "favicon.ico?v=2.0",
+      "src": "favicon.ico",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "favicon.ico?v=2.0",
+      "src": "favicon.ico",
       "type": "image/png",
       "sizes": "512x512"
     }
