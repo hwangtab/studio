@@ -49,14 +49,14 @@ const Contact = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pt-16 pb-8">
       <motion.h1 
         className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
         {...PAGE_TITLE_ANIMATION}
       >
         연락하기
       </motion.h1>
-      <div className="max-w-6xl mx-auto min-h-[50vh] mb-16">
+      <div className="max-w-6xl mx-auto min-h-[50vh]">
         <div className="grid md:grid-cols-2 gap-6">
           <motion.div 
             className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
