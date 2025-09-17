@@ -316,7 +316,7 @@
     {
       "id": "hwang-gyeong-ha-nunnokeut",
       "title": "황경하 <눈녹듯>",
-      "description": "기획, 레코딩, 믹싱, 마스터링, 홍보",
+      "description": "기획, 작곡, 편곡, 레코딩, 믹싱, 마스터링, 홍보",
       "image": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/32/6f/3d/326f3d7d-4467-9ebd-2b0e-3bbc8e02e78d/888618381700.jpg/600x600bf-60.jpg",
       "link": "https://www.youtube.com/watch?v=WmI2EPjLr0c",
       "category": "single",
@@ -350,7 +350,7 @@
     {
       "id": "hee-woo-geudaeneun",
       "title": "희우 <그대는>",
-      "description": "레코딩, 믹싱, 마스터링, 홍보",
+      "description": "레코딩, 편곡, 믹싱, 마스터링, 홍보",
       "image": "/images/portfolio1.jpg",
       "link": "https://www.youtube.com/watch?v=j5PuwQVzRe8",
       "category": "single",
@@ -476,7 +476,7 @@
     {
       "id": "eongadeul-self-titled",
       "title": "엉아들 <Self-titled>",
-      "description": "기획, 레코딩, 믹싱, 홍보",
+      "description": "기획, 편곡, 레코딩, 믹싱, 홍보",
       "image": "https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5Ijoic3RvcnkvNDRhY2E0MWItYzI0Zi00MTZmLWIyNzktNjMxZDZjZDA3MDAyLzA5Y2YzNjhjLThjZTgtNDYxMS1iZTQ4LTcwNzUyZjFiMTE2MS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlLCJ3aWR0aCI6IjEyNDAifX19",
       "link": "https://www.youtube.com/playlist?list=PLlm8-iwS-7gOY8-pmL0Xz25_Hzl2FM-U7",
       "category": "album",
@@ -492,7 +492,7 @@
     {
       "id": "kang-ho-jung-self-titled",
       "title": "강호중 <Self-titled>",
-      "description": "기획, 레코딩, 믹싱, 홍보",
+      "description": "기획, 편곡, 레코딩, 믹싱, 홍보",
       "image": "/images/portfolio4.jpg",
       "link": "https://www.youtube.com/watch?v=emtWqYhuZQw",
       "category": "album",
@@ -541,23 +541,23 @@
   "audioTracks": [
     {
       "id": "track-1",
-      "title": "눈녹듯",
-      "artist": "황경하",
-      "src": "/audio/sample1.mp3",
-      "albumArt": "/images/album1.jpg",
-      "duration": "3:42",
+      "title": "Fever",
+      "artist": "Jai",
+      "src": "/audio/fever.mp3",
+      "albumArt": "https://image.bugsm.co.kr/album/images/1000/373556/37355636.jpg",
+      "duration": "3:44",
       "featured": true,
-      "description": "스튜디오 놀에서 레코딩, 믹싱, 마스터링한 트랙"
+      "description": "스튜디오 놀에서 레코딩, 믹싱한 트랙"
     },
     {
       "id": "track-2",
-      "title": "그대는",
-      "artist": "휘우",
-      "src": "/audio/sample2.mp3",
-      "albumArt": "/images/album2.jpg",
+      "title": "물결",
+      "artist": "김동산과 블루이웃",
+      "src": "/audio/wave.mp3",
+      "albumArt": "https://image.bugsm.co.kr/album/images/500/366018/36601838.jpg",
       "duration": "4:15",
       "featured": true,
-      "description": "스튜디오 놀에서 레코딩, 믹싱, 마스터링한 트랙"
+      "description": "스튜디오 놀에서 레코딩, 믹싱한 트랙"
     },
     {
       "id": "track-3",
