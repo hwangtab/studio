@@ -96,13 +96,36 @@ const AudioPlayer = ({ tracks }) => {
   }, [currentTrack, tracks]);
 
   useEffect(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+
     if (isPlaying) {
-      audioRef.current.play();
-      animationRef.current = requestAnimationFrame(whilePlaying);
+      const playPromise = audioRef.current.play();
+
+      if (playPromise && typeof playPromise.then === 'function') {
+        playPromise
+          .then(() => {
+            animationRef.current = requestAnimationFrame(whilePlaying);
+          })
+          .catch((error) => {
+            console.error('오디오 재생 오류:', error);
+            setIsPlaying(false);
+          });
+      } else {
+        animationRef.current = requestAnimationFrame(whilePlaying);
+      }
     } else {
       audioRef.current.pause();
-      cancelAnimationFrame(animationRef.current);
     }
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    };
   }, [isPlaying, currentTrack]);
 
   useEffect(() => {
