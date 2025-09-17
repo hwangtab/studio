@@ -258,7 +258,10 @@ const Home = () => {
           transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
         >
           <h2 className="text-heading-3 font-bold mb-4 text-gray-600 dark:text-gray-200">당신의 음악 여정을 시작하세요</h2>
-          <p className="text-subtitle-1 mb-8 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">최고의 환경에서 음악을 완성하세요. 스튜디오 놀이 당신의 음악적 여정을 함께합니다.</p>
+          <p className="text-subtitle-1 mb-8 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            최고의 환경에서 음악을 완성하세요.<br />
+            스튜디오 놀이 당신의 음악적 여정을 함께합니다.
+          </p>
           <Link to="/contact" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
             <FaCalendarCheck className="mr-2" />
             스튜디오 예약하기
