@@ -74,7 +74,7 @@ const MarkdownRenderer = ({ content }) => {
               component: ({ children, ...props }) => (
                 <h3
                   style={{
-                    fontSize: '2rem',
+                    fontSize: '1.5rem',
                     fontFamily: 'Pretendard, sans-serif',
                     fontWeight: 600,
                     marginBottom: '1rem',
