@@ -49,7 +49,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 pt-16 pb-8">
+    <div className="container mx-auto px-4 py-16">
       <motion.h1 
         className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
         {...PAGE_TITLE_ANIMATION}
