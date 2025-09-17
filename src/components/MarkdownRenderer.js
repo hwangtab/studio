@@ -55,14 +55,38 @@ const MarkdownRenderer = ({ content }) => {
             },
             h2: {
               component: ({ children, ...props }) => (
-                <h2 {...props}>
+                <h2
+                  {...props}
+                  style={{
+                    fontSize: '3rem',
+                    fontFamily: "'GmarketSans', sans-serif",
+                    fontWeight: '700',
+                    lineHeight: '1.2',
+                    marginTop: '2.5rem',
+                    marginBottom: '1.5rem',
+                    color: 'inherit',
+                    ...props.style
+                  }}
+                >
                   {children}
                 </h2>
               ),
             },
             h3: {
               component: ({ children, ...props }) => (
-                <h3 {...props}>
+                <h3
+                  {...props}
+                  style={{
+                    fontSize: '1.25rem',
+                    fontFamily: "'Pretendard', sans-serif",
+                    fontWeight: '400',
+                    lineHeight: '1.4',
+                    marginTop: '2rem',
+                    marginBottom: '1rem',
+                    color: 'inherit',
+                    ...props.style
+                  }}
+                >
                   {children}
                 </h3>
               ),
