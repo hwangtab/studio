@@ -76,7 +76,7 @@ const MarkdownRenderer = ({ content }) => {
                   style={{
                     fontSize: '1.5rem !important',
                     fontFamily: 'Pretendard, sans-serif !important',
-                    fontWeight: '600 !important',
+                    fontWeight: '500 !important',
                     marginBottom: '1rem',
                     marginTop: '2rem',
                     lineHeight: 1.3
