@@ -11,23 +11,34 @@ const StoryCard = ({ story }) => {
 
   useLayoutEffect(() => {
     const checkTitleLines = () => {
-      if (titleRef.current) {
-        const titleElement = titleRef.current;
-        const lineHeight = parseFloat(getComputedStyle(titleElement).lineHeight);
-        const titleHeight = titleElement.scrollHeight;
-        const lines = Math.round(titleHeight / lineHeight);
-        
-        if (lines > 1) {
-          setSummaryLineClamp(2);
-        } else {
-          setSummaryLineClamp(3);
-        }
-      }
+      if (!titleRef.current) return;
+      const el = titleRef.current;
+      const computed = getComputedStyle(el);
+      const lineHeight = parseFloat(computed.lineHeight || '0') || 1;
+      const height = el.scrollHeight || el.clientHeight;
+      const lines = Math.max(1, Math.round(height / lineHeight));
+      setSummaryLineClamp(lines > 1 ? 2 : 3);
     };
 
+    // 최초 계산
     checkTitleLines();
-    window.addEventListener('resize', checkTitleLines);
-    return () => window.removeEventListener('resize', checkTitleLines);
+
+    // 폰트 로딩 이후 다시 계산
+    if (document && document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(checkTitleLines).catch(() => {});
+    }
+
+    // 리사이즈/요소 크기 변화에 대응
+    const ro = titleRef.current ? new ResizeObserver(checkTitleLines) : null;
+    if (ro && titleRef.current) ro.observe(titleRef.current);
+
+    const onResize = () => checkTitleLines();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (ro && titleRef.current) ro.unobserve(titleRef.current);
+    };
   }, [story.title]);
   
   // 애니메이션 설정
