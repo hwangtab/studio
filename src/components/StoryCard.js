@@ -110,14 +110,7 @@ const StoryCard = ({ story }) => {
         
         {/* 요약 */}
         <div
-          className="typo-card-body leading-snug mb-0 flex-grow"
-          style={{
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: summaryLineClamp,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
+          className={`typo-card-body leading-snug ${summaryLineClamp === 3 ? 'line-clamp-3' : 'line-clamp-2'} flex-grow`}
         >
           {plainSummary || '내용 없음'}
         </div>
