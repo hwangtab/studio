@@ -7,40 +7,37 @@ import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils'
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
   const titleRef = useRef(null);
-  const [summaryLineClamp, setSummaryLineClamp] = useState(2);
+  // 요약은 항상 4줄로 고정 (요청 사항)
+  const [summaryLineClamp] = useState(4);
 
   useLayoutEffect(() => {
-    const measureTitleLines = () => {
+    const fitTitleToOneLine = () => {
       const el = titleRef.current;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const clone = el.cloneNode(true);
-      // unclamp and normalize for measuring
-      clone.style.position = 'absolute';
-      clone.style.visibility = 'hidden';
-      clone.style.whiteSpace = 'normal';
-      clone.style.display = 'block';
-      clone.style.webkitLineClamp = 'unset';
-      clone.style.lineClamp = 'unset';
-      clone.classList.remove('line-clamp-2');
-      clone.style.width = `${Math.ceil(rect.width)}px`;
-      document.body.appendChild(clone);
-      const comp = getComputedStyle(clone);
-      const lh = parseFloat(comp.lineHeight || '0') || 1;
-      const h = clone.scrollHeight || clone.clientHeight || 0;
-      const lines = Math.max(1, Math.round(h / lh));
-      document.body.removeChild(clone);
-      setSummaryLineClamp(lines > 1 ? 2 : 4);
+      // allow wrapping for measurement
+      el.style.whiteSpace = 'normal';
+      el.style.fontSize = '';
+      let comp = getComputedStyle(el);
+      let size = parseFloat(comp.fontSize || '16');
+      const min = Math.max(12, Math.round(size * 0.75));
+      const getLines = () => (el.getClientRects ? el.getClientRects().length : 1);
+      let guard = 40;
+      while (getLines() > 1 && size > min && guard-- > 0) {
+        size -= 1;
+        el.style.fontSize = size + 'px';
+        comp = getComputedStyle(el);
+      }
+      // finalize: single line with ellipsis if still overflow
+      el.style.whiteSpace = 'nowrap';
+      el.style.overflow = 'hidden';
+      el.style.textOverflow = 'ellipsis';
     };
 
-    // initial
-    measureTitleLines();
-    // after fonts load
+    fitTitleToOneLine();
     if (document && document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(measureTitleLines).catch(() => {});
+      document.fonts.ready.then(() => requestAnimationFrame(fitTitleToOneLine)).catch(() => {});
     }
-    // on resize
-    const onResize = () => measureTitleLines();
+    const onResize = () => fitTitleToOneLine();
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
@@ -109,7 +106,7 @@ const StoryCard = ({ story }) => {
         {/* 제목 */}
         <h3
           ref={titleRef}
-          className="typo-card-title mb-2 line-clamp-2 leading-tight flex-shrink-0"
+          className="typo-card-title mb-2 leading-tight flex-shrink-0"
         >
           {story.title || '제목 없음'}
         </h3>
