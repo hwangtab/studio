@@ -17,7 +17,7 @@ const StoryCard = ({ story }) => {
       const lineHeight = parseFloat(computed.lineHeight || '0') || 1;
       const height = el.scrollHeight || el.clientHeight;
       const lines = Math.max(1, Math.round(height / lineHeight));
-      setSummaryLineClamp(lines > 1 ? 2 : 3);
+      setSummaryLineClamp(lines > 1 ? 2 : 4);
     };
 
     // 최초 계산
@@ -110,7 +110,7 @@ const StoryCard = ({ story }) => {
         
         {/* 요약 */}
         <div
-          className={`typo-card-body leading-snug ${summaryLineClamp === 3 ? 'line-clamp-3' : 'line-clamp-2'} flex-grow`}
+          className={`typo-card-body leading-snug ${summaryLineClamp === 4 ? 'line-clamp-4' : 'line-clamp-2'} flex-grow`}
         >
           {plainSummary || '내용 없음'}
         </div>

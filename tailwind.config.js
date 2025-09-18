@@ -85,6 +85,12 @@ module.exports = {
           'display': '-webkit-box',
           '-webkit-box-orient': 'vertical',
           '-webkit-line-clamp': '3',
+        },
+        '.line-clamp-4': {
+          'overflow': 'hidden',
+          'display': '-webkit-box',
+          '-webkit-box-orient': 'vertical',
+          '-webkit-line-clamp': '4',
         }
       })
     }
