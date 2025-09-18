@@ -128,7 +128,7 @@ const StoryCard = ({ story }) => {
         {/* 요약 */}
         <div
           ref={summaryRef}
-          className={`typo-card-body leading-snug ${summaryLineClamp === 4 ? 'line-clamp-4' : 'line-clamp-2'} flex-grow`}
+          className={`typo-card-body leading-snug ${summaryLineClamp === 4 ? 'line-clamp-4' : 'line-clamp-2'} flex-none`}
         >
           {plainSummary || '내용 없음'}
         </div>
