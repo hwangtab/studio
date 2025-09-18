@@ -7,6 +7,7 @@ import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils'
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
   const titleRef = useRef(null);
+  const summaryRef = useRef(null);
   // 요약은 항상 4줄로 고정 (요청 사항)
   const [summaryLineClamp] = useState(4);
 
@@ -32,12 +33,25 @@ const StoryCard = ({ story }) => {
       el.style.overflow = 'hidden';
       el.style.textOverflow = 'ellipsis';
     };
+    const enforceSummaryFourLines = () => {
+      const s = summaryRef.current;
+      if (!s) return;
+      const cs = getComputedStyle(s);
+      const lh = parseFloat(cs.lineHeight || '0') || 0;
+      if (!lh) return;
+      const max = Math.ceil(lh * 4 + 0.5)
+      s.style.maxHeight = max + 'px'
+      s.style.overflow = 'hidden'
+    };
 
     fitTitleToOneLine();
+    enforceSummaryFourLines();
     if (document && document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => requestAnimationFrame(fitTitleToOneLine)).catch(() => {});
+      document.fonts.ready
+        .then(() => requestAnimationFrame(() => { fitTitleToOneLine(); enforceSummaryFourLines(); }))
+        .catch(() => {});
     }
-    const onResize = () => fitTitleToOneLine();
+    const onResize = () => { fitTitleToOneLine(); enforceSummaryFourLines(); };
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
@@ -113,6 +127,7 @@ const StoryCard = ({ story }) => {
         
         {/* 요약 */}
         <div
+          ref={summaryRef}
           className={`typo-card-body leading-snug ${summaryLineClamp === 4 ? 'line-clamp-4' : 'line-clamp-2'} flex-grow`}
         >
           {plainSummary || '내용 없음'}
