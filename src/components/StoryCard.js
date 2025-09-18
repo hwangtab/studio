@@ -7,16 +7,14 @@ import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils'
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
   const titleRef = useRef(null);
-  const [summaryLineClamp, setSummaryLineClamp] = useState(3);
+  const [summaryLineClamp, setSummaryLineClamp] = useState(2);
 
   useLayoutEffect(() => {
     const checkTitleLines = () => {
-      if (!titleRef.current) return;
       const el = titleRef.current;
-      const computed = getComputedStyle(el);
-      const lineHeight = parseFloat(computed.lineHeight || '0') || 1;
-      const height = el.scrollHeight || el.clientHeight;
-      const lines = Math.max(1, Math.round(height / lineHeight));
+      if (!el) return;
+      const rects = el.getClientRects ? el.getClientRects() : [];
+      const lines = Math.max(1, (rects && rects.length) || 1);
       setSummaryLineClamp(lines > 1 ? 2 : 4);
     };
 
