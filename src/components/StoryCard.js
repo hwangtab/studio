@@ -1,7 +1,6 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaArrowRight } from 'react-icons/fa';
 import { timeAgo } from '../utils/dateUtils';
 import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils';
 
@@ -50,7 +49,7 @@ const StoryCard = ({ story }) => {
 
   return (
     <motion.div
-      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer h-80 flex flex-col"
+      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer h-96 flex flex-col"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
@@ -93,14 +92,14 @@ const StoryCard = ({ story }) => {
         {/* 제목 */}
         <h3
           ref={titleRef}
-          className="typo-card-title mb-3 line-clamp-2 leading-tight flex-shrink-0"
+          className="typo-card-title mb-2 line-clamp-2 leading-tight flex-shrink-0"
         >
           {story.title || '제목 없음'}
         </h3>
         
         {/* 요약 */}
         <div
-          className="typo-card-body mb-4 flex-grow"
+          className="typo-card-body leading-snug mb-0 flex-grow"
           style={{
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
@@ -110,11 +109,6 @@ const StoryCard = ({ story }) => {
           }}
         >
           {plainSummary || '내용 없음'}
-        </div>
-
-        {/* 더 보기 버튼 */}
-        <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300 flex-shrink-0 mt-auto">
-          더 보기 <FaArrowRight className="ml-1" size={12} />
         </div>
       </div>
     </motion.div>
