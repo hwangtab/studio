@@ -5,7 +5,7 @@ import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
 import { getStoryById, getRelatedStories } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { formatDate, timeAgo } from '../utils/dateUtils';
+import { timeAgo } from '../utils/dateUtils';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import { Helmet } from 'react-helmet-async';
 import StoryCard from '../components/StoryCard';
@@ -193,7 +193,7 @@ const StoryDetail = () => {
         <div className="mb-8">
           <button
             onClick={() => navigate('/stories')}
-            className="inline-flex items-center text-primary hover:underline mb-6"
+            className="inline-flex items-center typo-card-cta hover:underline mb-6"
           >
             <FaArrowLeft className="mr-2" />
             스토리 목록으로 돌아가기
@@ -204,28 +204,26 @@ const StoryDetail = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-heading-1 font-title text-gray-900 dark:text-white mb-4">
               {story.title}
             </h1>
             
-            <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6">
-              <div className="flex items-center mr-6 mb-2 group">
+            <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6 text-caption">
+              <div className="flex items-center mr-6 mb-2 group text-thin">
                 <FaCalendarAlt className="mr-2 text-gray-500 group-hover:text-primary transition-colors" />
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}
-                  </span>
-                </div>
+                <span className="text-gray-600 dark:text-gray-300">
+                  {story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}
+                </span>
               </div>
               
-              <div className="flex items-center mr-6 mb-2">
+              <div className="flex items-center mr-6 mb-2 text-thin">
                 <FaTag className="mr-2" />
                 <span>{story.category}</span>
               </div>
               
               <button 
                 onClick={shareStory}
-                className="inline-flex items-center text-primary hover:underline ml-auto mb-2"
+                className="inline-flex items-center typo-card-cta hover:underline ml-auto mb-2"
               >
                 <FaShare className="mr-2" />
                 공유하기
@@ -252,7 +250,7 @@ const StoryDetail = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mb-12"
           >
-            <h2 className="text-3xl font-bold mb-6">갤러리</h2>
+            <h2 className="typo-card-title mb-6">갤러리</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {story.images.map((image, index) => (
                 <div key={index} className="aspect-w-16 aspect-h-9 relative rounded-lg overflow-hidden">
@@ -277,7 +275,7 @@ const StoryDetail = () => {
         
         {/* 관련 스토리 */}
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <h2 className="text-3xl font-bold mb-6">더 많은 스토리</h2>
+          <h2 className="typo-card-title mb-6">더 많은 스토리</h2>
           {relatedStories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map(story => (
@@ -285,11 +283,11 @@ const StoryDetail = () => {
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 mb-6">관련 스토리가 없습니다.</p>
+            <p className="typo-card-body text-gray-500 mb-6">관련 스토리가 없습니다.</p>
           )}
           <Link
             to="/stories"
-            className="inline-flex items-center text-primary hover:underline"
+            className="inline-flex items-center typo-card-cta hover:underline"
           >
             <FaArrowLeft className="mr-2" />
             모든 스토리 보기

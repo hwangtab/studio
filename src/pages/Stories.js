@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { getAllStories } from '../utils/localDataUtils';
 import StoryCard from '../components/StoryCard';
 import CategoryFilter from '../components/CategoryFilter';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
@@ -55,9 +55,9 @@ const Stories = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">스토리</h1>
+        <h1 className="text-heading-1 font-title mb-8 text-center">스토리</h1>
         <div className="flex justify-center items-center h-64">
-          <p className="text-lg">스토리를 불러오는 중...</p>
+          <p className="typo-section-lead">스토리를 불러오는 중...</p>
         </div>
       </div>
     );
@@ -67,9 +67,9 @@ const Stories = () => {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">스토리</h1>
+        <h1 className="text-heading-1 font-title mb-8 text-center">스토리</h1>
         <div className="flex justify-center items-center h-64">
-          <p className="text-lg text-red-500">{error}</p>
+          <p className="typo-section-lead text-red-500">{error}</p>
         </div>
       </div>
     );
@@ -81,8 +81,8 @@ const Stories = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
           <div className="text-gray-400 text-2xl mb-4">📭</div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">스토리가 없습니다</h2>
-          <p className="text-gray-600 dark:text-gray-300">
+          <h2 className="typo-card-title mb-4 text-gray-800 dark:text-white">스토리가 없습니다</h2>
+          <p className="typo-card-body">
             {activeCategory === 'all' 
               ? '아직 등록된 스토리가 없습니다.'
               : `'${activeCategory}' 카테고리에 등록된 스토리가 없습니다.`}
@@ -109,7 +109,7 @@ const Stories = () => {
         </motion.h1>
         
         <motion.p
-          className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
+          className="typo-section-lead max-w-2xl mx-auto mb-12 text-center"
           {...PAGE_SUBTITLE_ANIMATION}
         >
           스튜디오 작업과 관련된 다양한 이야기를 만나보세요.

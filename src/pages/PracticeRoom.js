@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaFan, FaVolumeMute, FaWind, FaBolt, FaBroom, FaComments } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaVolumeMute, FaWind, FaBolt, FaBroom, FaComments } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
 const FeatureCard = ({ icon: Icon, title, description, className }) => (
@@ -14,9 +13,9 @@ const FeatureCard = ({ icon: Icon, title, description, className }) => (
   >
     <div className="flex items-center mb-4">
       <Icon className="text-2xl text-primary dark:text-primary-light mr-3" />
-      <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200">{title}</h3>
+      <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{title}</h3>
     </div>
-    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{description}</p>
+    <p className="typo-card-body">{description}</p>
   </motion.div>
 );
 
@@ -33,7 +32,7 @@ const PainPoint = ({ icon: Icon, text }) => (
         <Icon className="text-xl" />
       </div>
       <div>
-        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium whitespace-normal" style={{ wordBreak: 'keep-all' }}>{text}</p>
+        <p className="typo-card-body whitespace-normal" style={{ wordBreak: 'keep-all' }}>{text}</p>
       </div>
     </div>
   </motion.div>
@@ -49,9 +48,9 @@ const TargetAudience = ({ title, description, icon: Icon }) => (
   >
     <div className="flex items-center mb-2">
       <Icon className="text-2xl text-primary dark:text-primary-light mr-3" />
-      <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200">{title}</h3>
+      <h3 className="typo-card-subtitle text-gray-600 dark:text-gray-200">{title}</h3>
     </div>
-    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{description}</p>
+    <p className="typo-card-body">{description}</p>
   </motion.div>
 );
 
@@ -73,7 +72,7 @@ const PracticeRoom = () => {
         </motion.h1>
         
         <motion.p
-          className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
+          className="text-body-1-extra-light text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center leading-relaxed"
           {...PAGE_SUBTITLE_ANIMATION}
         >
           최적의 환경에서 여러분의 음악을 연습하세요.
@@ -94,15 +93,15 @@ const PracticeRoom = () => {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
-              <div className="p-6">
-                <p className="text-white text-xl font-bold">프로페셔널한 연습 환경</p>
-                <p className="text-white/80">당신의 음악을 위한 최적의 공간</p>
+            <div className="p-6">
+                <p className="text-heading-3 font-title font-bold text-white">프로페셔널한 연습 환경</p>
+                <p className="text-body-1-extra-light text-white/80">당신의 음악을 위한 최적의 공간</p>
               </div>
             </div>
           </motion.div>
           
           <div>
-            <h2 className="text-2xl font-bold mb-6 text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
+            <h2 className="typo-card-title mb-6 text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <PainPoint icon={FaWind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." />
@@ -123,7 +122,7 @@ const PracticeRoom = () => {
         transition={{ duration: 0.8, delay: 0.6 }}
       >
         <motion.h2 
-          className="text-2xl font-bold mb-6 text-center text-primary dark:text-primary-light"
+          className="typo-section-title mb-6 text-center text-primary dark:text-primary-light"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -190,7 +189,7 @@ const PracticeRoom = () => {
         transition={{ duration: 0.8, delay: 0.8 }}
       >
         <motion.h2 
-          className="text-3xl font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+          className="text-heading-2 font-title font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -253,7 +252,7 @@ const PracticeRoom = () => {
         <div className="grid md:grid-cols-2 items-stretch">
           <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 flex flex-col justify-center items-center text-center">
             <motion.h2 
-              className="text-3xl font-bold mb-4 text-gray-600 dark:text-gray-200"
+              className="typo-section-title mb-4 text-gray-600 dark:text-gray-200"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -261,7 +260,7 @@ const PracticeRoom = () => {
               연습실 문의하기
             </motion.h2>
             <motion.p 
-              className="text-gray-700 dark:text-gray-300 mb-8 text-lg"
+              className="typo-section-lead mb-8"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
@@ -278,7 +277,7 @@ const PracticeRoom = () => {
                 href="https://open.kakao.com/me/nol"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg mx-auto"
+                className="inline-flex items-center bg-primary hover:bg-primary-dark text-white text-body-1 py-3 px-8 rounded-full transition duration-300 shadow-lg mx-auto"
               >
                 <FaComments className="mr-2 text-xl" />
                 카카오톡으로 문의하기

@@ -40,9 +40,9 @@ const CategoryFilter = ({
 
   // 버튼 크기별 패딩
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2',
-    lg: 'px-6 py-2 font-medium'
+    sm: 'px-3 py-1.5 text-body-2',
+    md: 'px-4 py-2 text-body-1',
+    lg: 'px-6 py-2 text-body-1'
   };
 
   return (
@@ -51,7 +51,7 @@ const CategoryFilter = ({
       {showTitle && (
         <div className="flex items-center mb-6">
           {TitleIcon && <TitleIcon className="text-xl text-primary mr-3" />}
-          <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-200">{titleText}</h3>
+          <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{titleText}</h3>
         </div>
       )}
       

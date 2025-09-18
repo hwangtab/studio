@@ -4,27 +4,29 @@ import { motion } from 'framer-motion';
 import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots, FaCalendarAlt } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
-const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => (
-  <motion.div
-    className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 h-full flex flex-col"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4, delay }}
-    whileHover={{ y: -5, shadow: 'lg' }}
-  >
-    <div className="flex items-center mb-4">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-xl text-primary dark:text-primary-light" />
+const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => {
+  const isLarge = size === 'lg';
+
+  return (
+    <motion.div
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 h-full flex flex-col"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+      whileHover={{ y: -5, shadow: 'lg' }}
+    >
+      <div className="flex items-center mb-4">
+        <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
+          <Icon className="text-2xl text-primary dark:text-primary-light" />
+        </div>
+        <h3 className={`${isLarge ? 'typo-card-title' : 'typo-card-subtitle'} text-gray-600 dark:text-gray-200`}>{title}</h3>
       </div>
-      <h3 className={`${size === 'lg' ? 'text-xl' : 'text-lg'} font-bold text-gray-600 dark:text-gray-200`}>
-        {title}
-      </h3>
-    </div>
-    <p className={`${size === 'lg' ? 'text-base' : 'text-sm'} text-gray-600 dark:text-gray-300 mt-2 flex-grow`}>
-      {description}
-    </p>
-  </motion.div>
-);
+      <p className={`typo-card-body mt-2 flex-grow`}>
+        {description}
+      </p>
+    </motion.div>
+  );
+};
 
 const About = () => {
   const productionProcess = [
@@ -109,10 +111,10 @@ const About = () => {
             className="max-w-3xl mx-auto text-center mb-10"
             {...PAGE_SUBTITLE_ANIMATION}
           >
-            <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200 mb-6">
+            <h2 className="typo-card-title text-gray-600 dark:text-gray-200 mb-6">
               기획부터 유통, 홍보까지 함께하는 올인원 프로덕션
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+            <p className="typo-section-lead mb-6">
               스튜디오 놀은 단순한 녹음 스튜디오가 아닌 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.
               <br />
               음악 작업에 집중하고 싶은 뮤지션들에게 최적의 올인원 프로덕션 서비스를 제공합니다.
@@ -132,8 +134,8 @@ const About = () => {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-8">
-              <h3 className="text-white text-2xl font-bold mb-2">올인원 음악 프로덕션 서비스</h3>
-              <p className="text-white/90 max-w-2xl">앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하는 토털 솔루션</p>
+              <h3 className="text-heading-3 font-title font-bold text-white mb-2">올인원 음악 프로덕션 서비스</h3>
+              <p className="text-body-1-extra-light text-white/90 max-w-2xl">앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하는 토털 솔루션</p>
             </div>
           </motion.div>
         </div>
@@ -148,8 +150,8 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">올인원 음악 프로덕션 서비스</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">올인원 음악 프로덕션 서비스</h2>
+            <p className="typo-section-lead max-w-3xl mx-auto">
               앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여 뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.
               개별 과정마다 전문가 연계로 최상의 결과물을 보장합니다.
             </p>
@@ -190,8 +192,8 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">종합 음반 제작 프로세스</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">종합 음반 제작 프로세스</h2>
+            <p className="typo-section-lead max-w-3xl mx-auto">
               스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여 최고 품질의 결과물을 만들어냅니다.
             </p>
           </motion.div>
@@ -219,8 +221,8 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">스튜디오 놀의 차별점</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">스튜디오 놀의 차별점</h2>
+            <p className="typo-section-lead max-w-3xl mx-auto">
               연신내에 위치한 원스톱 프로덕션 시스템으로 아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다.
             </p>
           </motion.div>
@@ -232,23 +234,23 @@ const About = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="text-2xl font-bold text-gray-600 dark:text-gray-200 mb-4">비용 효율적인 패키지 옵션</h3>
+              <h3 className="typo-card-title text-gray-600 dark:text-gray-200 mb-4">비용 효율적인 패키지 옵션</h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">개별 서비스 이용보다 통합 패키지로 비용 절감</p>
+                  <p className="typo-card-body">개별 서비스 이용보다 통합 패키지로 비용 절감</p>
                 </li>
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">뮤지션 상황에 맞춘 맞춤형 서비스 구성</p>
+                  <p className="typo-card-body">뮤지션 상황에 맞춘 맞춤형 서비스 구성</p>
                 </li>
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">독립 뮤지션을 위한 맞춤형 인프라 제공</p>
+                  <p className="typo-card-body">독립 뮤지션을 위한 맞춤형 인프라 제공</p>
                 </li>
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드 구현</p>
+                  <p className="typo-card-body">아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드 구현</p>
                 </li>
               </ul>
             </motion.div>
@@ -266,9 +268,9 @@ const About = () => {
                 >
                   <div className="flex items-center mb-2">
                     <advantage.icon className="text-primary dark:text-primary-light mr-2" />
-                    <h4 className="text-md font-bold text-gray-600 dark:text-gray-200">{advantage.title}</h4>
+                    <h4 className="typo-card-subtitle text-gray-600 dark:text-gray-200">{advantage.title}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{advantage.description}</p>
+                  <p className="typo-card-body">{advantage.description}</p>
                 </div>
               ))}
             </motion.div>
@@ -285,8 +287,8 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold text-gray-600 dark:text-gray-200 mb-4">연락 및 상담</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">연락 및 상담</h2>
+            <p className="typo-section-lead max-w-3xl mx-auto">
               무료 프로덕션 상담을 제공해 드립니다. 언제든지 아래 연락처로 문의해 주세요.
             </p>
           </motion.div>
@@ -305,8 +307,8 @@ const About = () => {
                   <FaPhoneAlt className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">전화</h3>
-              <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">02-764-3114</p>
+              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">전화</h3>
+              <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">02-764-3114</p>
             </motion.div>
 
             <motion.div
@@ -322,8 +324,8 @@ const About = () => {
                   <FaEnvelope className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">이메일</h3>
-              <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">contact@kosmart.org</p>
+              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">이메일</h3>
+              <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">contact@kosmart.org</p>
             </motion.div>
 
             <motion.div
@@ -339,8 +341,8 @@ const About = () => {
                   <FaCommentDots className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">카카오톡</h3>
-              <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">오픈채팅 바로가기</p>
+              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">카카오톡</h3>
+              <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">오픈채팅 바로가기</p>
             </motion.div>
 
             <motion.div
@@ -356,8 +358,8 @@ const About = () => {
                   <FaMapMarkerAlt className="text-xl text-primary dark:text-primary-light" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-600 dark:text-gray-200 mb-2">위치</h3>
-              <p className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
+              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">위치</h3>
+              <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
             </motion.div>
           </div>
 
@@ -369,15 +371,16 @@ const About = () => {
               transition={{ duration: 0.5, delay: 0.5 }}
               whileHover={{ scale: 1.02 }}
             >
-              <p className="text-xl font-bold text-primary dark:text-primary-light mb-3 group-hover:text-primary-dark dark:group-hover:text-primary-light/90 transition-colors">
+              <p className="typo-card-title text-primary dark:text-primary-light mb-3 group-hover:text-primary-dark dark:group-hover:text-primary-light/90 transition-colors">
                 스튜디오 놀과 함께하세요!
               </p>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-                스튜디오 놀은 단순한 녹음 스튜디오가 아닌 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.
-                <br />
-                음악 작업에 집중하고 싶은 뮤지션들에게 최적의 올인원 프로덕션 서비스를 제공합니다.
+              <p className="typo-section-lead mb-4">
+                스튜디오 놀은 단순한 녹음 스튜디오가 아닌<br />
+                뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.<br />
+                음악 작업에 집중하고 싶은 뮤지션들에게<br />
+                최적의 올인원 프로덕션 서비스를 제공합니다.
               </p>
-              <div className="inline-block bg-gradient-to-r from-primary to-secondary text-white font-medium py-2 px-6 rounded-full text-sm hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 shadow-sm">
+              <div className="inline-block bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-2 px-6 rounded-full hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 shadow-sm">
                 연락하기
               </div>
             </motion.div>

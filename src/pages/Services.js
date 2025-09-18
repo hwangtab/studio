@@ -16,20 +16,20 @@ const ServiceCard = ({ title, description, icon: Icon, link, index, id }) => (
     
     <div className="p-6">
       <div className="flex items-center mb-6">
-        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
+        <div className="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
           <Icon className="text-2xl text-primary dark:text-primary-light" />
         </div>
-        <h3 className="text-xl font-bold ml-4 text-gray-600 dark:text-gray-200">{title}</h3>
+        <h3 className="typo-card-title ml-4 text-gray-600 dark:text-gray-200">{title}</h3>
       </div>
-      
-      <p className="text-gray-600 dark:text-gray-300 mb-6">{description}</p>
+
+      <p className="typo-card-body mb-6">{description}</p>
       
       <div className="mt-auto">
         <a 
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center text-primary dark:text-primary-light font-medium hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300"
+          className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300"
         >
           자세히 보기
           <motion.span
@@ -56,8 +56,8 @@ const ServiceFeature = ({ title, description, icon: Icon, index }) => (
     <div className="bg-gradient-to-r from-primary to-secondary p-4 rounded-full mb-4 text-white">
       <Icon className="text-2xl" />
     </div>
-    <h3 className="text-xl font-bold mb-2 text-gray-600 dark:text-gray-200">{title}</h3>
-    <p className="text-gray-600 dark:text-gray-300">{description}</p>
+    <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">{title}</h3>
+    <p className="typo-card-body text-center">{description}</p>
   </motion.div>
 );
 
@@ -140,7 +140,7 @@ const Services = () => {
           </motion.h1>
           
           <motion.p
-            className="text-subtitle-1 text-gray-600 dark:text-gray-300 text-center max-w-3xl mx-auto mb-12"
+            className="typo-section-lead text-center max-w-3xl mx-auto mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -160,7 +160,7 @@ const Services = () => {
       {/* 서비스 카드 섹션 */}
       <div className="container mx-auto px-4 py-16">
         <motion.h2 
-          className="text-heading-2 font-title mb-8 text-center text-gray-800 dark:text-white"
+          className="typo-section-title mb-8 text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -179,7 +179,7 @@ const Services = () => {
             href="https://open.kakao.com/me/nol"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             whileTap={{ scale: 0.95 }}
           >
             <FaCalendarAlt className="mr-2" />

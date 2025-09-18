@@ -49,7 +49,7 @@ const HeroSection = () => {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
             <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl font-title text-white mb-6 break-keep"
+              className="text-heading-1 sm:text-display-2 md:text-display-1 font-title text-white mb-6 break-keep"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -59,7 +59,7 @@ const HeroSection = () => {
             </motion.h1>
             
             <motion.p
-              className="text-base sm:text-lg text-white/80 mb-8 max-w-lg leading-relaxed"
+              className="text-body-1-light text-white/80 mb-8 max-w-lg leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -75,13 +75,13 @@ const HeroSection = () => {
             >
               <Link
                 to="/contact"
-                className="bg-white text-primary-dark font-bold py-3 px-8 rounded-full hover:bg-white/90 transition duration-300 shadow-lg"
+                className="inline-flex items-center justify-center bg-white text-primary-dark text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/90 transition duration-300 shadow-lg"
               >
                 예약하기
               </Link>
               <Link
                 to="/portfolio"
-                className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white/10 transition duration-300"
+                className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/10 transition duration-300"
               >
                 포트폴리오 보기
               </Link>
@@ -127,16 +127,16 @@ const ServiceCard = ({ title, description, link, icon: Icon }) => (
       
       <div className="p-6 h-full flex flex-col">
         <div className="flex items-center mb-4">
-          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-3 rounded-full mr-4 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
+          <div className="flex-shrink-0 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-3 rounded-full mr-4 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
             <Icon className="text-2xl text-primary dark:text-primary-light" />
           </div>
-          <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200">{title}</h3>
+          <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{title}</h3>
         </div>
         
-        <p className="mb-6 text-gray-600 dark:text-gray-300 leading-relaxed flex-grow">{description}</p>
+        <p className="mb-6 typo-card-body flex-grow">{description}</p>
         
         <div className="mt-auto">
-          <div className="inline-flex items-center text-primary dark:text-primary-light font-medium hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
+          <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
             자세히 보기
             <motion.span
               className="ml-1"
@@ -214,7 +214,7 @@ const Home = () => {
 
       <div className="container mx-auto px-4 py-16">
         <motion.h2 
-          className="word-break-keep-all text-heading-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+          className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           {...PAGE_TITLE_ANIMATION}
         >
           당신을 위한 녹음 공간과 장비
@@ -222,7 +222,7 @@ const Home = () => {
         <StudioGallery />
 
         <motion.h2 
-          className="word-break-keep-all text-heading-2 font-title mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+          className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           {...PAGE_SUBTITLE_ANIMATION}
         >
           우리의 서비스
@@ -257,12 +257,12 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
         >
-          <h2 className="text-heading-3 font-bold mb-4 text-gray-600 dark:text-gray-200">당신의 음악 여정을 시작하세요</h2>
-          <p className="text-subtitle-1 mb-8 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <h2 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">당신의 음악 여정을 시작하세요</h2>
+          <p className="typo-section-lead mb-8 max-w-2xl mx-auto text-center">
             최고의 환경에서 음악을 완성하세요.<br />
             스튜디오 놀이 당신의 음악적 여정을 함께합니다.
           </p>
-          <Link to="/contact" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-8 rounded-full text-lg hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
+          <Link to="/contact" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-3 px-8 rounded-full hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
             <FaCalendarCheck className="mr-2" />
             스튜디오 예약하기
           </Link>

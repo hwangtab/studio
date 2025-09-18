@@ -82,10 +82,10 @@ const StoryCard = ({ story }) => {
       <div className="p-4 flex flex-col flex-grow">
         {/* 카테고리 및 날짜 */}
         <div className="flex items-center justify-between mb-2 flex-shrink-0">
-          <span className="text-xs px-2 py-1 bg-primary/10 text-primary-dark rounded-full font-medium">
+          <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full">
             {story.category || '기본'}
           </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="typo-card-meta text-gray-500 dark:text-gray-400">
             {story.date ? timeAgo(story.date) : '날짜 없음'}
           </span>
         </div>
@@ -93,14 +93,14 @@ const StoryCard = ({ story }) => {
         {/* 제목 */}
         <h3
           ref={titleRef}
-          className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-3 line-clamp-2 leading-tight flex-shrink-0"
+          className="typo-card-title mb-3 line-clamp-2 leading-tight flex-shrink-0"
         >
           {story.title || '제목 없음'}
         </h3>
         
         {/* 요약 */}
         <div
-          className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed flex-grow"
+          className="typo-card-body mb-4 flex-grow"
           style={{
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
@@ -111,9 +111,9 @@ const StoryCard = ({ story }) => {
         >
           {plainSummary || '내용 없음'}
         </div>
-        
+
         {/* 더 보기 버튼 */}
-        <div className="inline-flex items-center text-primary hover:text-primary-dark transition-colors duration-300 text-sm font-medium flex-shrink-0 mt-auto">
+        <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300 flex-shrink-0 mt-auto">
           더 보기 <FaArrowRight className="ml-1" size={12} />
         </div>
       </div>

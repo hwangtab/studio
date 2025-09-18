@@ -19,7 +19,7 @@ const MusicPlayer = ({ tracks }) => {
 
   return (
     <div className="music-player">
-      <h3 className="text-lg font-semibold mb-2">{tracks[currentTrack].name}</h3>
+      <h3 className="typo-card-title mb-2">{tracks[currentTrack].name}</h3>
       <AudioPlayer
         src={tracks[currentTrack].src}
         onClickNext={handleClickNext}

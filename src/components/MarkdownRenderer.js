@@ -103,7 +103,7 @@ const MarkdownRenderer = ({ content }) => {
             p: {
               component: ({ children, ...props }) => (
                 <p
-                  className="text-lg font-sans leading-relaxed mb-6 mt-4 text-gray-800 dark:text-gray-200"
+                  className="text-body-1 leading-relaxed mb-6 mt-4 text-gray-800 dark:text-gray-200"
                   {...props}
                 >
                   {children}
@@ -112,7 +112,7 @@ const MarkdownRenderer = ({ content }) => {
             },
             strong: {
               component: ({ children, ...props }) => (
-                <strong className="font-semibold text-primary-dark dark:text-primary-light" {...props}>
+                <strong className="font-bold text-primary-dark dark:text-primary-light" {...props}>
                   {children}
                 </strong>
               ),
@@ -159,7 +159,7 @@ const MarkdownRenderer = ({ content }) => {
             li: {
               component: ({ children, ...props }) => (
                 <li
-                  className="text-lg font-sans leading-relaxed mb-4 pl-2 list-item text-gray-800 dark:text-gray-200"
+                  className="text-body-1 leading-relaxed mb-4 pl-2 list-item text-gray-800 dark:text-gray-200"
                   {...props}
                 >
                   {children}

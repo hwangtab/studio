@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaMicrophone, FaSlidersH, FaHeadphones, FaGuitar, FaKeyboard, FaMusic, FaCompactDisc, FaLaptop, FaInfoCircle, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
+import { FaMicrophone, FaSlidersH, FaHeadphones, FaGuitar, FaKeyboard, FaMusic, FaLaptop, FaInfoCircle, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 
 const EquipmentSection = ({ title, items, icon: Icon }) => (
   <motion.div
@@ -11,13 +11,13 @@ const EquipmentSection = ({ title, items, icon: Icon }) => (
     transition={{ duration: 0.5 }}
     whileHover={{ y: -5 }}
   >
-    <h3 className="text-xl font-bold mb-4 flex items-center text-gray-600 dark:text-gray-200">
+    <h3 className="typo-card-title mb-4 flex items-center text-gray-600 dark:text-gray-200">
       <Icon className="mr-2 text-primary dark:text-primary-light" />
       {title}
     </h3>
-    <ul className="grid gap-2 text-gray-700 dark:text-gray-300">
+    <ul className="grid gap-2">
       {items.map((item, index) => (
-        <li key={index} className="flex items-center">
+        <li key={index} className="flex items-center typo-card-body">
           <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mr-2"></span>
           {item}
         </li>
@@ -74,19 +74,19 @@ const Studio = () => {
           >
             <div className="flex items-center mb-6">
               <FaInfoCircle className="text-2xl text-primary dark:text-primary-light mr-3" />
-              <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200">스튜디오 놀</h2>
+              <h2 className="typo-card-title text-gray-600 dark:text-gray-200">스튜디오 놀</h2>
             </div>
             <div className="space-y-4">
-              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              <p className="typo-section-lead mb-4">
                 스튜디오 놀은 음악인들의 자유로운 상상과 창작 활동을 지원하기 위해 탄생한 공간입니다. 우리는 최고의 시설과 장비, 그리고 전문 엔지니어의 노하우를 바탕으로 여러분의 음악적 비전을 현실로 만드는 일에 전념하고 있습니다.
               </p>
-              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              <p className="typo-section-lead mb-4">
                 단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 이야기를 나누고, 아이디어를 실험하며, 창의적인 협업을 이뤄낼 수 있는 공간. 그것이 바로 '스튜디오 놀'이 추구하는 가치입니다.
               </p>
-              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              <p className="typo-section-lead mb-4">
                 스튜디오 놀은 음악인들이 자신의 음악을 녹음하고, 믹싱하고, 마스터링할 수 있는 공간과 서비스를 제공합니다. 또한, 음악인들이 자신의 음악을 홍보하고, 판매할 수 있도록 도움을 주는 데에도 노력하고 있습니다.
               </p>
-              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              <p className="typo-section-lead mb-4">
                 스튜디오 놀은 음악인들이 자신의 음악을 통해 꿈을 이루는 데 도움을 주는 데에 목표를 두고 있습니다. 우리는 음악인들이 자신의 음악을 통해 성공을 거두는 데에 기여할 수 있도록 최선을 다하고 있습니다.
               </p>
             </div>
@@ -105,8 +105,8 @@ const Studio = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
               <div className="p-8">
-                <p className="text-white text-xl font-bold mb-2">전문적인 음향 환경</p>
-                <p className="text-white/90">당신의 음악을 위한 최적의 공간</p>
+                <p className="text-heading-3 font-title font-bold text-white mb-2">전문적인 음향 환경</p>
+                <p className="text-body-1-extra-light text-white/90">당신의 음악을 위한 최적의 공간</p>
               </div>
             </div>
           </motion.div>
@@ -180,36 +180,36 @@ const Studio = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-600 dark:text-gray-200">스튜디오 이용 안내</h2>
+        <h2 className="typo-section-title mb-4 text-center text-gray-600 dark:text-gray-200">스튜디오 이용 안내</h2>
         <div className="grid md:grid-cols-3 gap-6 text-center">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold mb-2 text-primary dark:text-primary-light">상담 가능 시간</h3>
-            <p className="text-gray-700 dark:text-gray-300">
+            <h3 className="typo-card-subtitle mb-2 text-gray-700 dark:text-gray-200">상담 가능 시간</h3>
+            <p className="typo-card-body">
               월-금: 10:00 AM - 6:00 PM<br />토요일: 12:00 PM - 6:00 PM<br />일요일: 상담 업무 미제공
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-            <h3 className="text-xl font-bold mb-2 text-primary dark:text-primary-light">상담 방법</h3>
+            <h3 className="typo-card-subtitle mb-2 text-gray-700 dark:text-gray-200">상담 방법</h3>
             <a 
               href="https://open.kakao.com/me/nol"
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"
+              className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"
             >
-              <FaCalendarAlt className="text-2xl mb-2 text-primary" />
-              <span>카카오톡으로 문의하기</span>
+              <FaCalendarAlt className="text-2xl mb-2 text-primary dark:text-primary-light" />
+              <span className="typo-card-body">카카오톡으로 문의하기</span>
             </a>
           </div>
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-            <h3 className="text-xl font-bold mb-2 text-primary dark:text-primary-light">위치 안내</h3>
+            <h3 className="typo-card-subtitle mb-2 text-gray-700 dark:text-gray-200">위치 안내</h3>
             <a 
               href="https://naver.me/5gFZhS3X" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"
+              className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"
             >
-              <FaMapMarkerAlt className="text-2xl mb-2 text-primary" />
-              <span>서울특별시 은평구 대조동 84-3 3층</span>
+              <FaMapMarkerAlt className="text-2xl mb-2 text-primary dark:text-primary-light" />
+              <span className="typo-card-body">서울특별시 은평구 대조동 84-3 3층</span>
             </a>
           </div>
         </div>

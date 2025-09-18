@@ -5,12 +5,33 @@
 /* Montserrat 폰트 (영문, 숫자용) */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* GmarketSans 폰트 (제목용) */
+/* GmarketSans 폰트 (일반 텍스트용) */
 @font-face {
   font-family: 'GmarketSans';
-  font-weight: 700;
+  font-weight: 100;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Thin.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 200;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
 }
 
 @font-face {
@@ -18,6 +39,13 @@
   font-weight: 500;
   font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
 }
 
 /* PartialSansKR 폰트 (로고용) */
@@ -29,7 +57,14 @@
     font-display: swap;
 }
 
-/* Pretendard 폰트 (본문용) */
+/* Pretendard 폰트 (보조 폰트) */
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+}
+
 @font-face {
   font-family: 'Pretendard';
   font-weight: 400;
@@ -42,6 +77,13 @@
   font-weight: 500;
   font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
 }
 
 @font-face {
@@ -71,6 +113,52 @@
 
   h3 {
     @apply text-heading-3;
+  }
+}
+
+@layer components {
+  .typo-nav-link {
+    @apply text-body-2 font-medium tracking-tight;
+  }
+
+  .typo-section-title {
+    @apply text-heading-2 font-title text-gray-800 dark:text-white;
+  }
+
+  .typo-section-lead {
+    @apply text-body-1-light text-gray-600 dark:text-gray-300 leading-relaxed;
+  }
+
+  .typo-card-title {
+    @apply text-heading-3 font-title text-gray-700 dark:text-gray-200;
+  }
+
+  .typo-card-subtitle {
+    @apply text-subtitle-2 font-title text-gray-600 dark:text-gray-300;
+  }
+
+  .typo-card-body {
+    @apply text-body-1-light text-gray-600 dark:text-gray-300 leading-relaxed;
+  }
+
+  .typo-card-meta {
+    @apply text-caption text-gray-500 dark:text-gray-400 tracking-[0.08em];
+  }
+
+  .typo-card-cta {
+    @apply text-body-2 font-medium text-primary dark:text-primary-light;
+  }
+
+  .typo-footer-heading {
+    @apply text-subtitle-2 font-title text-white;
+  }
+
+  .typo-footer-body {
+    @apply text-body-1-light text-gray-200/80;
+  }
+
+  .typo-footer-meta {
+    @apply text-caption text-gray-200/70;
   }
 }
 

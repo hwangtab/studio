@@ -49,8 +49,8 @@ const PortfolioItem = ({ image, title, description, link, index }) => (
     
     {/* 컨텐츠 */}
     <div className="p-6">
-      <h3 className="text-xl font-bold text-gray-600 dark:text-gray-200 mb-3">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-300">{description}</p>
+      <h3 className="typo-card-title text-gray-600 dark:text-gray-200 mb-3">{title}</h3>
+      <p className="typo-card-body">{description}</p>
     </div>
     
     {/* 상단 바 요소 */}
@@ -259,7 +259,7 @@ const AudioPlayer = ({ tracks }) => {
         
         <div className="text-center md:text-left flex-1">
           <motion.h3 
-            className="text-2xl font-bold text-white mb-2"
+            className="typo-card-title text-white mb-2"
             layout
           >
             {tracks[currentTrack].title}
@@ -275,7 +275,7 @@ const AudioPlayer = ({ tracks }) => {
           {/* 확장 시 표시되는 추가 정보 */}
           {isExpanded && (
             <motion.div 
-              className="text-gray-400 text-sm mb-4"
+              className="typo-card-body text-gray-400 mb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -307,8 +307,8 @@ const AudioPlayer = ({ tracks }) => {
       {/* 프로그레스 바 */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">{formatTime(currentTime)}</span>
-          <span className="text-sm text-gray-400">{formatTime(duration)}</span>
+          <span className="typo-card-meta text-gray-400">{formatTime(currentTime)}</span>
+          <span className="typo-card-meta text-gray-400">{formatTime(duration)}</span>
         </div>
         <div className="relative h-2 bg-gray-700 rounded-full overflow-hidden">
           <input 
@@ -486,7 +486,7 @@ const Portfolio = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">포트폴리오 데이터를 불러오는 중...</p>
+          <p className="typo-section-lead">포트폴리오 데이터를 불러오는 중...</p>
         </div>
       </div>
     );
@@ -498,7 +498,7 @@ const Portfolio = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
+          <p className="typo-section-lead text-red-600 dark:text-red-400 text-center">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
@@ -521,7 +521,7 @@ const Portfolio = () => {
           포트폴리오
         </motion.h1>
         <motion.p
-          className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+          className="typo-section-lead max-w-2xl mx-auto"
           {...PAGE_SUBTITLE_ANIMATION}
         >
           스튜디오 놀에서 작업한 다양한 프로젝트들을 소개합니다.
@@ -555,9 +555,9 @@ const Portfolio = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <FaMusic className="text-2xl text-primary mr-3" />
-            <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200">작업 프로젝트</h2>
+            <h2 className="typo-card-title text-gray-600 dark:text-gray-200">작업 프로젝트</h2>
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="typo-card-meta text-gray-500 dark:text-gray-400">
             {filteredItems.length}개 프로젝트
           </div>
         </div>
@@ -565,7 +565,7 @@ const Portfolio = () => {
         {filteredItems.length === 0 ? (
           <div className="text-center py-16">
             <FaMusic className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
+            <p className="typo-card-body text-gray-500 dark:text-gray-400">
               선택한 카테고리에 해당하는 프로젝트가 없습니다.
             </p>
           </div>
@@ -587,14 +587,14 @@ const Portfolio = () => {
       >
         <div className="flex items-center mb-8">
           <FaHeadphones className="text-2xl text-primary mr-3" />
-          <h2 className="text-2xl font-bold text-gray-600 dark:text-gray-200">샘플 트랙</h2>
+          <h2 className="typo-card-title text-gray-600 dark:text-gray-200">샘플 트랙</h2>
         </div>
         {audioTracks.length > 0 ? (
           <AudioPlayer tracks={audioTracks} />
         ) : (
           <div className="text-center py-16 bg-gray-100 dark:bg-gray-800 rounded-xl">
             <FaHeadphones className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
+            <p className="typo-card-body text-gray-500 dark:text-gray-400">
               샘플 트랙을 준비중입니다.
             </p>
           </div>
