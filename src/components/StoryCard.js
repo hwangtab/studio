@@ -10,32 +10,40 @@ const StoryCard = ({ story }) => {
   const [summaryLineClamp, setSummaryLineClamp] = useState(2);
 
   useLayoutEffect(() => {
-    const checkTitleLines = () => {
+    const measureTitleLines = () => {
       const el = titleRef.current;
       if (!el) return;
-      const rects = el.getClientRects ? el.getClientRects() : [];
-      const lines = Math.max(1, (rects && rects.length) || 1);
+      const rect = el.getBoundingClientRect();
+      const clone = el.cloneNode(true);
+      // unclamp and normalize for measuring
+      clone.style.position = 'absolute';
+      clone.style.visibility = 'hidden';
+      clone.style.whiteSpace = 'normal';
+      clone.style.display = 'block';
+      clone.style.webkitLineClamp = 'unset';
+      clone.style.lineClamp = 'unset';
+      clone.classList.remove('line-clamp-2');
+      clone.style.width = `${Math.ceil(rect.width)}px`;
+      document.body.appendChild(clone);
+      const comp = getComputedStyle(clone);
+      const lh = parseFloat(comp.lineHeight || '0') || 1;
+      const h = clone.scrollHeight || clone.clientHeight || 0;
+      const lines = Math.max(1, Math.round(h / lh));
+      document.body.removeChild(clone);
       setSummaryLineClamp(lines > 1 ? 2 : 4);
     };
 
-    // 최초 계산
-    checkTitleLines();
-
-    // 폰트 로딩 이후 다시 계산
+    // initial
+    measureTitleLines();
+    // after fonts load
     if (document && document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(checkTitleLines).catch(() => {});
+      document.fonts.ready.then(measureTitleLines).catch(() => {});
     }
-
-    // 리사이즈/요소 크기 변화에 대응
-    const ro = titleRef.current ? new ResizeObserver(checkTitleLines) : null;
-    if (ro && titleRef.current) ro.observe(titleRef.current);
-
-    const onResize = () => checkTitleLines();
+    // on resize
+    const onResize = () => measureTitleLines();
     window.addEventListener('resize', onResize);
-
     return () => {
       window.removeEventListener('resize', onResize);
-      if (ro && titleRef.current) ro.unobserve(titleRef.current);
     };
   }, [story.title]);
   
