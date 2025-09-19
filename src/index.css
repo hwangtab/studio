@@ -174,6 +174,25 @@
   .typo-footer-meta {
     @apply text-caption text-gray-200/70;
   }
+
+
+  /* --- Footer Gap Unification --- */
+  /* Base gap handled by Layout (.page-main pb-16 md:pb-20).
+     Strip duplicate bottom paddings/margins on the last block. */
+  .page-main { display: block; }
+
+  .page-main > :is(section,div,article,main):last-child,
+  .page-main > :is(section,div,article,main):last-child > :is(section,div,article,main):last-child {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .page-main :is([class*="py-16"], [class*="py-20"], [class*="py-24"],
+                 [class*="pb-16"], [class*="pb-20"], [class*="pb-24"],
+                 [class*="mb-16"], [class*="mb-20"], [class*="mb-24"]):last-child {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
 }
 
 /* 마크다운 컨텐츠 전용 헤딩 스타일 - 최고 우선순위 */
