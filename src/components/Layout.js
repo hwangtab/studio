@@ -156,7 +156,7 @@ const Layout = ({ children }) => {
         )}
       </header>
       
-      <main className="flex-grow pt-24">
+      <main className="page-main flex-grow pt-24 pb-24 md:pb-28">
         {children}
       </main>
       
