@@ -77,7 +77,7 @@ const StoryCard = ({ story }) => {
 
   return (
     <motion.div
-      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer h-96 flex flex-col"
+      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer flex flex-col"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
