@@ -101,7 +101,7 @@ const StoryDetail = () => {
         <Helmet>
           <title>로딩 중 - 스튜디오 놀</title>
         </Helmet>
-        <div className="container mx-auto px-4 py-16 flex justify-center items-center h-64">
+        <div className="container mx-auto px-4 pt-16 pb-12 flex justify-center items-center h-64">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         </div>
       </>
@@ -115,7 +115,7 @@ const StoryDetail = () => {
         <Helmet>
           <title>오류 발생 - 스튜디오 놀</title>
         </Helmet>
-        <div className="container mx-auto px-4 py-16 flex justify-center items-center h-64">
+        <div className="container mx-auto px-4 pt-16 pb-12 flex justify-center items-center h-64">
           <div className="text-center">
             <p className="text-xl text-red-500 mb-4">{error}</p>
             <button
@@ -137,7 +137,7 @@ const StoryDetail = () => {
         <Helmet>
           <title>스토리 없음 - 스튜디오 놀</title>
         </Helmet>
-        <div className="container mx-auto px-4 py-16 flex justify-center items-center h-64">
+        <div className="container mx-auto px-4 pt-16 pb-12 flex justify-center items-center h-64">
           <div className="text-center">
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">스토리를 찾을 수 없습니다.</p>
             <button
@@ -171,7 +171,7 @@ const StoryDetail = () => {
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-8 pb-12">
         {/* 메인 이미지 */}
         {story.image && (
           <motion.div

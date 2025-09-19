@@ -50,7 +50,7 @@ const Studio = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 스튜디오 소개 섹션 */}
       <motion.div
         className="mb-16"

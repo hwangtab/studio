@@ -98,7 +98,7 @@ const About = () => {
   return (
     <div className="overflow-visible">
       {/* 헤더 섹션 */}
-      <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent py-16">
+      <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-16 pb-12">
         <div className="container mx-auto px-4">
           <motion.h1 
             className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
@@ -142,7 +142,7 @@ const About = () => {
       </section>
 
       {/* 올인원 프로덕션 서비스 */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="pt-16 pb-12 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-12"
@@ -184,7 +184,7 @@ const About = () => {
       </section>
 
       {/* 종합 음반 제작 프로세스 */}
-      <section className="py-16">
+      <section className="pt-16 pb-12">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-12"
@@ -213,7 +213,7 @@ const About = () => {
       </section>
 
       {/* 스튜디오 놀의 차별점 */}
-      <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
+      <section className="pt-16 pb-12 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-12"
@@ -279,7 +279,7 @@ const About = () => {
       </section>
 
       {/* 연락 및 상담 */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="pt-16 pb-12 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-12"

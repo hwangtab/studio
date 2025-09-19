@@ -54,7 +54,7 @@ const Stories = () => {
   // 로딩 중 표시
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-8 pb-12">
         <h1 className="text-heading-1 font-title mb-8 text-center">스토리</h1>
         <div className="flex justify-center items-center h-64">
           <p className="typo-section-lead">스토리를 불러오는 중...</p>
@@ -66,7 +66,7 @@ const Stories = () => {
   // 오류 표시
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-8 pb-12">
         <h1 className="text-heading-1 font-title mb-8 text-center">스토리</h1>
         <div className="flex justify-center items-center h-64">
           <p className="typo-section-lead text-red-500">{error}</p>
@@ -78,7 +78,7 @@ const Stories = () => {
   // 스토리가 없을 경우
   if (stories.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 pt-16 pb-12">
         <div className="text-center">
           <div className="text-gray-400 text-2xl mb-4">📭</div>
           <h2 className="typo-card-title mb-4 text-gray-800 dark:text-white">스토리가 없습니다</h2>
@@ -93,10 +93,9 @@ const Stories = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 헤더 */}
       <motion.div
-        className="mb-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}

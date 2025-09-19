@@ -128,7 +128,7 @@ const Services = () => {
   return (
     <div className="overflow-visible">
       {/* 서비스 소개 섹션 */}
-      <div className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent py-16">
+      <div className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-16 pb-12">
         <div className="container mx-auto px-4">
           <motion.h1 
             className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
@@ -158,7 +158,7 @@ const Services = () => {
       </div>
       
       {/* 서비스 카드 섹션 */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 pt-16 pb-12">
         <motion.h2 
           className="typo-section-title mb-8 text-center"
           initial={{ opacity: 0, y: -20 }}

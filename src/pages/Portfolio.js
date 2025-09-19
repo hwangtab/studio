@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FaPlay, FaPause, FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeadphones, FaExternalLinkAlt, FaMusic } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
@@ -70,7 +70,24 @@ const AudioPlayer = ({ tracks }) => {
   const audioRef = useRef(new Audio(tracks[currentTrack].src));
   const progressBarRef = useRef(null);
   const animationRef = useRef(null);
-  const location = useLocation();
+  const routerLocation = useLocation();
+
+  const stopPlayback = useCallback(() => {
+    audioRef.current.pause();
+    setIsPlaying(false);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+  }, []);
+
+  const whilePlaying = useCallback(() => {
+    if (progressBarRef.current) {
+      progressBarRef.current.value = audioRef.current.currentTime;
+      setCurrentTime(audioRef.current.currentTime);
+      animationRef.current = requestAnimationFrame(whilePlaying);
+    }
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -126,32 +143,22 @@ const AudioPlayer = ({ tracks }) => {
         animationRef.current = null;
       }
     };
-  }, [isPlaying, currentTrack]);
+  }, [isPlaying, currentTrack, whilePlaying]);
 
   useEffect(() => {
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-      cancelAnimationFrame(animationRef.current);
-    }
-  }, [location.pathname]);
+    stopPlayback();
+  }, [routerLocation.pathname, stopPlayback]);
 
   useEffect(() => {
+    const audio = audioRef.current;
     return () => {
-      audioRef.current.pause();
+      audio.pause();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
   }, []);
-
-  const whilePlaying = () => {
-    if (progressBarRef.current) {
-      progressBarRef.current.value = audioRef.current.currentTime;
-      setCurrentTime(audioRef.current.currentTime);
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    }
-  }
 
   const changeRange = () => {
     audioRef.current.currentTime = progressBarRef.current.value;
@@ -483,7 +490,7 @@ const Portfolio = () => {
   // 로딩 상태 렌더링
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 pt-16 pb-12">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
           <p className="typo-section-lead">포트폴리오 데이터를 불러오는 중...</p>
@@ -495,7 +502,7 @@ const Portfolio = () => {
   // 에러 상태 렌더링
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 pt-16 pb-12">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
           <p className="typo-section-lead text-red-600 dark:text-red-400 text-center">{error}</p>
@@ -511,7 +518,7 @@ const Portfolio = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 헤더 섹션 */}
       <div className="mb-16 text-center">
         <motion.h1 
@@ -563,7 +570,7 @@ const Portfolio = () => {
         </div>
         
         {filteredItems.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center pt-16 pb-12">
             <FaMusic className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <p className="typo-card-body text-gray-500 dark:text-gray-400">
               선택한 카테고리에 해당하는 프로젝트가 없습니다.
@@ -580,7 +587,7 @@ const Portfolio = () => {
       
       {/* 오디오 플레이어 섹션 */}
       <motion.div
-        className="mb-16"
+        className="mt-16"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
@@ -592,7 +599,7 @@ const Portfolio = () => {
         {audioTracks.length > 0 ? (
           <AudioPlayer tracks={audioTracks} />
         ) : (
-          <div className="text-center py-16 bg-gray-100 dark:bg-gray-800 rounded-xl">
+          <div className="text-center pt-16 pb-12 bg-gray-100 dark:bg-gray-800 rounded-xl">
             <FaHeadphones className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <p className="typo-card-body text-gray-500 dark:text-gray-400">
               샘플 트랙을 준비중입니다.

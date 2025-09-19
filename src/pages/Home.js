@@ -45,7 +45,7 @@ const HeroSection = () => {
         </motion.div>
       </div>
       
-      <div className="container mx-auto px-4 z-10 py-8 sm:py-16">
+      <div className="container mx-auto px-4 z-10 pt-8 pb-12 sm:pt-16">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
             <motion.h1
@@ -212,7 +212,7 @@ const Home = () => {
       {/* 히어로 섹션 */}
       <HeroSection />
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 pt-16 pb-12">
         <motion.h2 
           className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           {...PAGE_TITLE_ANIMATION}
@@ -252,7 +252,7 @@ const Home = () => {
       </motion.div>
 
         <motion.div
-          className="text-center bg-gray-50 dark:bg-gray-800 py-16 px-4 rounded-2xl shadow-sm"
+          className="text-center bg-gray-50 dark:bg-gray-800 pt-16 pb-12 px-4 rounded-2xl shadow-sm"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}

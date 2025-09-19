@@ -56,7 +56,7 @@ const TargetAudience = ({ title, description, icon: Icon }) => (
 
 const PracticeRoom = () => {
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 히어로 섹션 */}
       <motion.div
         className="mb-16"
@@ -244,7 +244,7 @@ const PracticeRoom = () => {
       
       {/* CTA 섹션 */}
       <motion.div
-        className="mb-16 overflow-hidden rounded-xl shadow-xl"
+        className="mt-16 overflow-hidden rounded-xl shadow-xl"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1 }}
