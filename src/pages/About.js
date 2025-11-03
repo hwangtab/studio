@@ -112,12 +112,14 @@ const About = () => {
             {...PAGE_SUBTITLE_ANIMATION}
           >
             <h2 className="typo-card-title text-gray-600 dark:text-gray-200 mb-6">
-              기획부터 유통, 홍보까지 함께하는 올인원 프로덕션
+              기획부터 유통, 홍보까지 함께하는{" "}
+              <span className="whitespace-nowrap">올인원 프로덕션</span>
             </h2>
             <p className="typo-section-lead mb-6">
               스튜디오 놀은 단순한 녹음 스튜디오가 아닌 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.
               <br />
-              음악 작업에 집중하고 싶은 뮤지션들에게 최적의 올인원 프로덕션 서비스를 제공합니다.
+              음악 작업에 집중하고 싶은 뮤지션들에게 최적의{" "}
+              <span className="whitespace-nowrap">올인원 프로덕션</span> 서비스를 제공합니다.
             </p>
           </motion.div>
 
@@ -134,7 +136,9 @@ const About = () => {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-8">
-              <h3 className="text-heading-3 font-title font-bold text-white mb-2">올인원 음악 프로덕션 서비스</h3>
+              <h3 className="text-heading-3 font-title font-bold text-white mb-2">
+                <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
+              </h3>
               <p className="text-body-1-extra-light text-white/90 max-w-2xl">앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하는 토털 솔루션</p>
             </div>
           </motion.div>
@@ -150,7 +154,9 @@ const About = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">올인원 음악 프로덕션 서비스</h2>
+            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">
+              <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
+            </h2>
             <p className="typo-section-lead max-w-3xl mx-auto">
               앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여 뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.
               개별 과정마다 전문가 연계로 최상의 결과물을 보장합니다.
@@ -378,7 +384,7 @@ const About = () => {
                 스튜디오 놀은 단순한 녹음 스튜디오가 아닌<br />
                 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.<br />
                 음악 작업에 집중하고 싶은 뮤지션들에게<br />
-                최적의 올인원 프로덕션 서비스를 제공합니다.
+                최적의 <span className="whitespace-nowrap">올인원 프로덕션</span> 서비스를 제공합니다.
               </p>
               <div className="inline-block bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-2 px-6 rounded-full hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 shadow-sm">
                 연락하기
