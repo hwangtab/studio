@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { timeAgo } from '../utils/dateUtils';
 import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils';
+import ResponsiveImage from './ResponsiveImage';
 
 const StoryCard = ({ story }) => {
   const navigate = useNavigate();
@@ -87,13 +88,17 @@ const StoryCard = ({ story }) => {
       {/* 썸네일 이미지 */}
       <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0">
         {thumbnailUrl ? (
-          <img
+          <ResponsiveImage
             src={thumbnailUrl}
             alt={story.title}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            pictureClassName="block w-full h-full"
+            loading="lazy"
+            sizes="(min-width: 1024px) 320px, (min-width: 640px) 260px, 100vw"
             onError={(e) => {
-              // 이미지 로드 실패 시 기본 그라디언트 표시
-              e.target.style.display = 'none';
+              if (e?.currentTarget) {
+                e.currentTarget.style.display = 'none';
+              }
             }}
           />
         ) : (

@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaMicrophone, FaCompactDisc, FaGlobeAmericas, FaCalendarCheck, FaArrowRight } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
+import ResponsiveImage from '../components/ResponsiveImage';
 
 // 히어로 섹션 컴포넌트
 const HeroSection = () => {
@@ -95,10 +96,13 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
-              <img
+              <ResponsiveImage
                 src={`${process.env.PUBLIC_URL}/images/studio1.jpg`}
                 alt="스튜디오 놀 메인 스튜디오"
                 className="w-full h-auto"
+                pictureClassName="block"
+                loading="eager"
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
               
               {/* 오버레이 그라데이션 */}
@@ -197,7 +201,14 @@ const StudioGallery = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <img src={image} alt={`Studio ${index + 1}`} className="w-full h-64 object-cover rounded-lg shadow-md" />
+              <ResponsiveImage
+                src={image}
+                alt={`Studio ${index + 1}`}
+                className="w-full h-64 object-cover rounded-lg shadow-md"
+                pictureClassName="block"
+                loading="lazy"
+                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+              />
             </motion.div>
           </div>
         ))}

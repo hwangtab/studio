@@ -10,6 +10,7 @@ import {
 } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
+import ResponsiveImage from '../components/ResponsiveImage';
 
 // 개선된 포트폴리오 카드 컴포넌트
 const PortfolioItem = ({ image, title, description, link, index }) => (
@@ -24,10 +25,13 @@ const PortfolioItem = ({ image, title, description, link, index }) => (
     {/* 이미지 컨테이너 */}
     <div className="relative overflow-hidden">
       <div className="w-full pb-[100%] relative">
-        <img 
+        <ResponsiveImage 
           src={image} 
           alt={title} 
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+          pictureClassName="absolute inset-0 block h-full w-full"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+          loading="lazy"
+          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
         />
       </div>
       
@@ -232,10 +236,13 @@ const AudioPlayer = ({ tracks }) => {
           className={`relative rounded-xl shadow-lg overflow-hidden mb-6 md:mb-0 md:mr-8 transition-all duration-300 ${isExpanded ? 'w-48 h-48' : 'w-36 h-36'}`}
           layout
         >
-          <img 
+          <ResponsiveImage 
             src={tracks[currentTrack].albumArt} 
             alt={`${tracks[currentTrack].title} 앨범 아트`} 
+            pictureClassName="block w-full h-full"
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+            loading="lazy"
+            sizes="160px"
           />
           {/* 재생 중 표시기 */}
           {isPlaying && (

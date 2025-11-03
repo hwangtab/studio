@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaVolumeMute, FaWind, FaBolt, FaBroom, FaComments } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
+import ResponsiveImage from '../components/ResponsiveImage';
 
 const FeatureCard = ({ icon: Icon, title, description, className }) => (
   <motion.div
@@ -87,10 +88,13 @@ const PracticeRoom = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <img 
+            <ResponsiveImage 
               src={`${process.env.PUBLIC_URL}/images/room6.jpg`} 
               alt="프리미엄 방음 연습실" 
               className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="eager"
+              sizes="(min-width: 1024px) 50vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
             <div className="p-6">
@@ -155,28 +159,56 @@ const PracticeRoom = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/room2.jpg`} alt="연습실 내부" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/room2.jpg`}
+              alt="연습실 내부"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-48" 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/room3.jpg`} alt="연습실 내부" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/room3.jpg`}
+              alt="연습실 내부"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-48" 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/room4.jpg`} alt="연습실 내부" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/room4.jpg`}
+              alt="연습실 내부"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-48" 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/room5.jpg`} alt="연습실 내부" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/room5.jpg`}
+              alt="연습실 내부"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
         </div>
       </motion.div>
@@ -230,14 +262,28 @@ const PracticeRoom = () => {
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/room6.jpg`} alt="연습실 내부" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/room6.jpg`}
+              alt="연습실 내부"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-64 md:col-span-2" 
             whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/room7.jpg`} alt="연습실 내부" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/room7.jpg`}
+              alt="연습실 내부"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            />
           </motion.div>
         </div>
       </motion.div>
@@ -286,10 +332,13 @@ const PracticeRoom = () => {
           </div>
           
           <div className="h-full">
-            <img 
+            <ResponsiveImage 
               src={`${process.env.PUBLIC_URL}/images/room8.jpg`} 
               alt="연습실 전경" 
               className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 768px) 50vw, 100vw"
             />
           </div>
         </div>

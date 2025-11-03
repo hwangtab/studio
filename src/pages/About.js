@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots, FaCalendarAlt } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
+import ResponsiveImage from '../components/ResponsiveImage';
 
 const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => {
   const isLarge = size === 'lg';
@@ -130,10 +131,13 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <img 
+            <ResponsiveImage 
               src={`${process.env.PUBLIC_URL}/images/studio2.jpg`} 
               alt="스튜디오 놀 메인" 
               className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="eager"
+              sizes="(min-width: 1024px) 60vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-8">
               <h3 className="text-heading-3 font-title font-bold text-white mb-2">

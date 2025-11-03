@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaSlidersH, FaHeadphones, FaGuitar, FaKeyboard, FaMusic, FaLaptop, FaInfoCircle, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
+import ResponsiveImage from '../components/ResponsiveImage';
 
 const EquipmentSection = ({ title, items, icon: Icon }) => (
   <motion.div
@@ -98,10 +99,13 @@ const Studio = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <img 
+            <ResponsiveImage 
               src={`${process.env.PUBLIC_URL}/images/hardware1.jpg`} 
               alt="스튜디오 장비" 
               className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="eager"
+              sizes="(min-width: 1024px) 50vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
               <div className="p-8">
@@ -136,28 +140,56 @@ const Studio = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/hardware2.jpg`} alt="스튜디오 장비" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/hardware2.jpg`}
+              alt="스튜디오 장비"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-48" 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/hardware3.jpg`} alt="스튜디오 장비" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/hardware3.jpg`}
+              alt="스튜디오 장비"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-48" 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/hardware4.jpg`} alt="스튜디오 장비" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/hardware4.jpg`}
+              alt="스튜디오 장비"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
           <motion.div 
             className="rounded-lg overflow-hidden shadow-md h-48" 
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <img src={`${process.env.PUBLIC_URL}/images/hardware5.jpg`} alt="스튜디오 장비" className="w-full h-full object-cover" />
+            <ResponsiveImage
+              src={`${process.env.PUBLIC_URL}/images/hardware5.jpg`}
+              alt="스튜디오 장비"
+              className="w-full h-full object-cover"
+              pictureClassName="block h-full"
+              loading="lazy"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            />
           </motion.div>
         </div>
 

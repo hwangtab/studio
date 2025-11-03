@@ -7,6 +7,7 @@ import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-bash';
+import ResponsiveImage from './ResponsiveImage';
 
 // 코드 블록 하이라이팅 컴포넌트
 const CodeBlock = ({ children, className }) => {
@@ -179,12 +180,16 @@ const MarkdownRenderer = ({ content }) => {
             
             // 이미지 스타일링
             img: {
-              component: ({ alt, ...props }) => (
+              component: ({ alt, src, ...rest }) => (
                 <div className="my-6">
-                  <img
-                    {...props}
-                    className="w-full h-auto rounded-lg shadow-md"
+                  <ResponsiveImage
+                    src={src}
                     alt={alt || '이미지'}
+                    className="w-full h-auto rounded-lg shadow-md"
+                    pictureClassName="block"
+                    loading="lazy"
+                    sizes="100vw"
+                    {...rest}
                   />
                   {alt && <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">{alt}</p>}
                 </div>

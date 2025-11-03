@@ -49,11 +49,12 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "prebuild": "node scripts/generateStories.js && node scripts/generateSitemap.js",
+    "prebuild": "node scripts/generateStories.js && node scripts/generateSitemap.js && node scripts/optimizeImages.js",
     "build": "react-scripts build && echo studionol.co.kr > build/CNAME",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-stories": "node scripts/generateStories.js"
+    "generate-stories": "node scripts/generateStories.js",
+    "optimize-images": "node scripts/optimizeImages.js"
   },
   "eslintConfig": {
     "extends": [
@@ -77,6 +78,7 @@
     "gh-pages": "^6.1.1",
     "gray-matter": "^4.0.3",
     "marked": "^15.0.12",
+    "sharp": "^0.33.4",
     "vercel": "^42.3.0"
   }
 }
