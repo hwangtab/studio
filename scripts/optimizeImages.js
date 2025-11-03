@@ -56,20 +56,10 @@ const needsUpdate = async (sourcePath, outputPath) => {
   }
 };
 
-const buildWidthSet = (metadataWidth) => {
-  const widthSet = new Set();
-  TARGET_WIDTHS.forEach((width) => {
-    widthSet.add(Math.min(width, metadataWidth));
-  });
-  widthSet.add(metadataWidth);
-  return Array.from(widthSet).sort((a, b) => a - b);
-};
-
 const optimizeImage = async (filePath) => {
   const relativePath = path.relative(SOURCE_DIR, filePath);
   const parsed = path.parse(relativePath);
-  const metadata = await sharp(filePath).metadata();
-  const widthVariants = buildWidthSet(metadata.width || TARGET_WIDTHS[TARGET_WIDTHS.length - 1]);
+  const widthVariants = TARGET_WIDTHS;
   const outputDir = path.join(OUTPUT_DIR, parsed.dir);
 
   await ensureDir(outputDir);
