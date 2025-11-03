@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import initEmailJS from './emailjs';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import Portfolio from './pages/Portfolio';
-import Studio from './pages/Studio';
-import PracticeRoom from './pages/PracticeRoom';
-import Contact from './pages/Contact';
-import About from './pages/About';
-import Stories from './pages/Stories';
-import StoryDetail from './pages/StoryDetail';
+const Home = lazy(() => import('./pages/Home'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Studio = lazy(() => import('./pages/Studio'));
+const PracticeRoom = lazy(() => import('./pages/PracticeRoom'));
+const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./pages/About'));
+const Stories = lazy(() => import('./pages/Stories'));
+const StoryDetail = lazy(() => import('./pages/StoryDetail'));
 
 function App() {
   useEffect(() => {
@@ -31,18 +31,20 @@ function App() {
   return (
     <HelmetProvider>
       <Router basename={basename}>
-        <Routes>
-          <Route path="/" element={<Layout><Home /></Layout>} />
-          <Route path="/portfolio" element={<Layout><Portfolio /></Layout>} />
-          <Route path="/studio-info" element={<Layout><Studio /></Layout>} />
-          <Route path="/practice-room" element={<Layout><PracticeRoom /></Layout>} />
-          <Route path="/contact" element={<Layout><Contact /></Layout>} />
-          <Route path="/about" element={<Layout><About /></Layout>} />
-          <Route path="/stories" element={<Layout><Stories /></Layout>} />
-          <Route path="/stories/:id" element={<Layout><StoryDetail /></Layout>} />
-          
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-gray-500">페이지를 불러오는 중입니다...</div>}>
+          <Routes>
+            <Route path="/" element={<Layout><Home /></Layout>} />
+            <Route path="/portfolio" element={<Layout><Portfolio /></Layout>} />
+            <Route path="/studio-info" element={<Layout><Studio /></Layout>} />
+            <Route path="/practice-room" element={<Layout><PracticeRoom /></Layout>} />
+            <Route path="/contact" element={<Layout><Contact /></Layout>} />
+            <Route path="/about" element={<Layout><About /></Layout>} />
+            <Route path="/stories" element={<Layout><Stories /></Layout>} />
+            <Route path="/stories/:id" element={<Layout><StoryDetail /></Layout>} />
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </Router>
     </HelmetProvider>
   );
