@@ -119,29 +119,6 @@
 @layer components {
 }
 
-/* 마크다운 컨텐츠 전용 헤딩 스타일 - 최고 우선순위 */
-div.markdown-content h2,
-.markdown-content h2.markdown-content h2 {
-  font-size: 3rem !important;
-  font-family: 'GmarketSans', sans-serif !important;
-  font-weight: 700 !important;
-  line-height: 1.2 !important;
-  margin-top: 2.5rem !important;
-  margin-bottom: 1.5rem !important;
-  color: inherit !important;
-}
-
-div.markdown-content h3,
-.markdown-content h3.markdown-content h3 {
-  font-size: 1.25rem !important;
-  font-family: 'Pretendard', sans-serif !important;
-  font-weight: 400 !important;
-  line-height: 1.4 !important;
-  margin-top: 2rem !important;
-  margin-bottom: 1rem !important;
-  color: inherit !important;
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

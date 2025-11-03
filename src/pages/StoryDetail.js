@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
-import { getStoryById, getRelatedStories } from '../utils/localDataUtils';
+import { getStoryById, getRelatedStories, stripMarkdown } from '../utils/localDataUtils';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { timeAgo } from '../utils/dateUtils';
@@ -153,13 +153,15 @@ const StoryDetail = () => {
     );
   }
 
+  const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
+
   return (
     <>
       <Helmet>
         <title>{story.title} - 스튜디오 놀</title>
-        <meta name="description" content={story.content.substring(0, 160)} />
+        <meta name="description" content={metaDescription} />
         <meta property="og:title" content={story.title} />
-        <meta property="og:description" content={story.content.substring(0, 160)} />
+        <meta property="og:description" content={metaDescription} />
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="article" />
         <meta 

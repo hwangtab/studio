@@ -29,6 +29,8 @@ const CodeBlock = ({ children, className }) => {
 };
 
 // 마크다운 렌더링 컴포넌트
+const mergeClassNames = (base, extra) => (extra ? `${base} ${extra}` : base);
+
 const MarkdownRenderer = ({ content }) => {
   return (
     <div className="markdown-content">
@@ -37,63 +39,53 @@ const MarkdownRenderer = ({ content }) => {
           overrides: {
             // 제목 스타일링
             h1: {
-              component: ({ children, ...props }) => (
+              component: ({ children, className, ...rest }) => (
                 <h1
-                  style={{
-                    fontSize: '3rem',
-                    fontFamily: 'GmarketSans, sans-serif',
-                    fontWeight: 700,
-                    marginBottom: '1.5rem',
-                    marginTop: '3rem',
-                    lineHeight: 1.2
-                  }}
-                  {...props}
+                  {...rest}
+                  className={mergeClassNames(
+                    'font-title text-4xl md:text-5xl font-bold leading-tight mt-12 mb-6',
+                    className
+                  )}
                 >
                   {children}
                 </h1>
               ),
             },
             h2: {
-              component: ({ children, ...props }) => (
+              component: ({ children, className, ...rest }) => (
                 <h2
-                  {...props}
-                  style={{
-                    fontSize: '3rem',
-                    fontFamily: "'GmarketSans', sans-serif",
-                    fontWeight: '700',
-                    lineHeight: '1.2',
-                    marginTop: '2.5rem',
-                    marginBottom: '1.5rem',
-                    color: 'inherit',
-                    ...props.style
-                  }}
+                  {...rest}
+                  className={mergeClassNames(
+                    'font-title text-3xl md:text-4xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
+                    className
+                  )}
                 >
                   {children}
                 </h2>
               ),
             },
             h3: {
-              component: ({ children, ...props }) => (
+              component: ({ children, className, ...rest }) => (
                 <h3
-                  {...props}
-                  style={{
-                    fontSize: '1.25rem',
-                    fontFamily: "'Pretendard', sans-serif",
-                    fontWeight: '400',
-                    lineHeight: '1.4',
-                    marginTop: '2rem',
-                    marginBottom: '1rem',
-                    color: 'inherit',
-                    ...props.style
-                  }}
+                  {...rest}
+                  className={mergeClassNames(
+                    'text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
+                    className
+                  )}
                 >
                   {children}
                 </h3>
               ),
             },
             h4: {
-              component: ({ children, ...props }) => (
-                <h4 className="text-heading-3 font-sans mb-3 mt-6" {...props}>
+              component: ({ children, className, ...rest }) => (
+                <h4
+                  {...rest}
+                  className={mergeClassNames(
+                    'text-xl font-medium mt-6 mb-3 text-gray-900 dark:text-white',
+                    className
+                  )}
+                >
                   {children}
                 </h4>
               ),
