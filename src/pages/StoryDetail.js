@@ -64,7 +64,7 @@ const StoryDetail = () => {
   const shareStory = () => {
     const thumbnailUrl = story?.image || 
       (story?.content?.match(/!\[.*?\]\((.*?)\)/) || [])[1] || 
-      `${window.location.origin}/public/images/studio1.jpg`;
+      `${window.location.origin}/images/hardware2.jpg`;
 
     if (navigator.share) {
       navigator.share({
@@ -168,7 +168,7 @@ const StoryDetail = () => {
           property="og:image" 
           content={story.image || 
             (story.content.match(/!\[.*?\]\((.*?)\)/) || [])[1] || 
-            `${window.location.origin}/public/images/studio1.jpg`} 
+            `${window.location.origin}/images/hardware2.jpg`} 
         />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
