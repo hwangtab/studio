@@ -51,14 +51,8 @@ const Layout = ({ children }) => {
       return;
     }
     
-    // 2. 시스템 설정 확인
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // 3. 시간대에 따른 자동 설정 (6:00~18:00 라이트, 그 외 다크)
-    const currentHour = new Date().getHours();
-    const isNightTime = currentHour < 6 || currentHour >= 18;
-    
-    setIsDarkMode(prefersDarkMode || isNightTime);
+    // 2. 기본값은 라이트 모드
+    setIsDarkMode(false);
   }, []);
   
   // 다크모드 토글 함수
