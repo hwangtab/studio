@@ -1,7 +1,7 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import initEmailJS from './emailjs';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 const Home = lazy(() => import('./pages/Home'));
 const Portfolio = lazy(() => import('./pages/Portfolio'));
@@ -11,6 +11,7 @@ const Contact = lazy(() => import('./pages/Contact'));
 const About = lazy(() => import('./pages/About'));
 const Stories = lazy(() => import('./pages/Stories'));
 const StoryDetail = lazy(() => import('./pages/StoryDetail'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   useEffect(() => {
@@ -41,8 +42,8 @@ function App() {
             <Route path="/about" element={<Layout><About /></Layout>} />
             <Route path="/stories" element={<Layout><Stories /></Layout>} />
             <Route path="/stories/:id" element={<Layout><StoryDetail /></Layout>} />
-            
-            <Route path="*" element={<Navigate to="/" replace />} />
+
+            <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>
         </Suspense>
       </Router>
