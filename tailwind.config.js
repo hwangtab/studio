@@ -37,8 +37,8 @@ module.exports = {
       fontSize: {
         'display-1': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],
         'display-2': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '700' }],
-        'heading-1': ['2.75rem', { lineHeight: '1.2', fontWeight: '700' }],
-        'heading-2': ['2.25rem', { lineHeight: '1.25', fontWeight: '700' }],
+        'heading-1': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],
+        'heading-2': ['2.5rem', { lineHeight: '1.25', fontWeight: '700' }],
         'heading-3': ['1.5rem', { lineHeight: '1.3', fontWeight: '500' }],
         'subtitle-1': ['1.25rem', { lineHeight: '1.4', fontWeight: '500' }],
         'subtitle-2': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],
