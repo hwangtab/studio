@@ -117,6 +117,49 @@
 }
 
 @layer components {
+  /* Section Typography */
+  .typo-section-title {
+    @apply text-heading-2 mb-4;
+  }
+
+  .typo-section-lead {
+    @apply text-subtitle-2 text-gray-600 dark:text-gray-300;
+  }
+
+  /* Card Typography */
+  .typo-card-title {
+    @apply text-subtitle-1;
+  }
+
+  .typo-card-subtitle {
+    @apply text-subtitle-2;
+  }
+
+  .typo-card-body {
+    @apply text-body-1 text-gray-700 dark:text-gray-400;
+  }
+
+  .typo-card-meta {
+    @apply text-body-2 text-gray-500 dark:text-gray-400;
+  }
+
+  /* Navigation Typography */
+  .typo-nav-link {
+    @apply text-body-1-medium;
+  }
+
+  /* Footer Typography */
+  .typo-footer-heading {
+    @apply text-subtitle-1 font-bold;
+  }
+
+  .typo-footer-body {
+    @apply text-body-1-light;
+  }
+
+  .typo-footer-meta {
+    @apply text-caption;
+  }
 }
 
 code {
