@@ -42,7 +42,7 @@ module.exports = {
         'heading-3': ['1.5rem', { lineHeight: '1.3', fontWeight: '500' }],
         'subtitle-1': ['1.25rem', { lineHeight: '1.4', fontWeight: '500' }],
         'subtitle-2': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],
-        'body-1': ['1rem', { lineHeight: '1.5', fontWeight: '400' }],
+        'body-1': ['1rem', { lineHeight: '1.5', fontWeight: '300' }],
         'body-1-light': ['1rem', { lineHeight: '1.5', fontWeight: '300' }],
         'body-1-extra-light': ['1rem', { lineHeight: '1.5', fontWeight: '200' }],
         'body-1-medium': ['1rem', { lineHeight: '1.5', fontWeight: '500' }],
