@@ -38,6 +38,21 @@
   ],
   "portfolioItems": [
     {
+      "id": "the-projectors-babu-first-flight",
+      "title": "더 프로젝터스 <바보의 첫 비행>",
+      "description": "레코딩, 믹싱, 마스터링",
+      "image": "https://image.bugsm.co.kr/album/images/1000/389681/38968186.jpg",
+      "link": "https://www.youtube.com/watch?v=HcxkwRuIBp8",
+      "category": "single",
+      "services": [
+        "레코딩",
+        "믹싱",
+        "마스터링"
+      ],
+      "featured": true,
+      "artist": "더 프로젝터스"
+    },
+    {
       "id": "guitar-choi-dementia-2024",
       "title": "Guitar Choi <Dementia>",
       "description": "기획, 믹싱, 마스터링, 아트워크, 홍보",
@@ -253,7 +268,7 @@
       "description": "기획, 편곡, 레코딩, 믹싱, 홍보",
       "image": "https://image.bugsm.co.kr/album/images/1000/366016/36601647.jpg",
       "link": "https://orcd.co/o3vzobo",
-      "category": "album",
+      "category": "single",
       "services": [
         "기획",
         "편곡",
@@ -463,7 +478,7 @@
       "description": "기획, 레코딩, 믹싱, 홍보",
       "image": "/images/portfolio3.jpg",
       "link": "https://youtu.be/6vgPysZOQ9c",
-      "category": "single",
+      "category": "album",
       "services": [
         "기획",
         "레코딩",
