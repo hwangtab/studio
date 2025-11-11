@@ -73,7 +73,7 @@ const PracticeRoom = () => {
         </motion.h1>
         
         <motion.p
-          className="text-body-1-extra-light text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center leading-relaxed"
+          className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
           {...PAGE_SUBTITLE_ANIMATION}
         >
           최적의 환경에서 여러분의 음악을 연습하세요.
