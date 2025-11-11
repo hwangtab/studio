@@ -117,10 +117,11 @@ const About = () => {
               <span className="whitespace-nowrap">올인원 프로덕션</span>
             </h2>
             <p className="typo-section-lead mb-6">
-              스튜디오 놀은 단순한 녹음 스튜디오가 아닌 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.
+              스튜디오 놀은 단순한 녹음 스튜디오가 아닌{" "}
+              <span className="whitespace-nowrap">뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.</span>
               <br />
-              음악 작업에 집중하고 싶은 뮤지션들에게 최적의{" "}
-              <span className="whitespace-nowrap">올인원 프로덕션</span> 서비스를 제공합니다.
+              음악 작업에 집중하고 싶은 뮤지션들에게{" "}
+              <span className="whitespace-nowrap">최적의 올인원 프로덕션 서비스를 제공합니다.</span>
             </p>
           </motion.div>
 
@@ -162,7 +163,9 @@ const About = () => {
               <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
             </h2>
             <p className="typo-section-lead max-w-3xl mx-auto">
-              앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여 뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.
+              앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여{" "}
+              <span className="whitespace-nowrap">뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.</span>
+              <br />
               개별 과정마다 전문가 연계로 최상의 결과물을 보장합니다.
             </p>
           </motion.div>
@@ -233,7 +236,8 @@ const About = () => {
           >
             <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">스튜디오 놀의 차별점</h2>
             <p className="typo-section-lead max-w-3xl mx-auto">
-              연신내에 위치한 원스톱 프로덕션 시스템으로 아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다.
+              연신내에 위치한 원스톱 프로덕션 시스템으로{" "}
+              <span className="whitespace-nowrap">아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다.</span>
             </p>
           </motion.div>
 
