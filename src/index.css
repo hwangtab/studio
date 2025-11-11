@@ -96,7 +96,7 @@
 /* 기본 스타일 */
 @layer base {
   body {
-    @apply font-sans text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
+    @apply font-sans font-light text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
   }
   
   h1, h2, h3, h4, h5, h6 {
