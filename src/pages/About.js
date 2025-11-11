@@ -385,10 +385,9 @@ const About = () => {
                 스튜디오 놀과 함께하세요!
               </p>
               <p className="typo-section-lead mb-4">
-                스튜디오 놀은 단순한 녹음 스튜디오가 아닌<br />
-                뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.<br />
-                음악 작업에 집중하고 싶은 뮤지션들에게<br />
-                최적의 <span className="whitespace-nowrap">올인원 프로덕션</span> 서비스를 제공합니다.
+                지금 바로 상담 예약이 가능합니다.<br />
+                프로젝트의 규모와 상관없이 언제든 편하게 문의주세요.<br />
+                첫 상담부터 최종 마스터링까지 함께합니다.
               </p>
               <div className="inline-block bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-2 px-6 rounded-full hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 shadow-sm">
                 연락하기
