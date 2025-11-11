@@ -186,11 +186,26 @@ const StudioGallery = () => {
   };
 
   const studioImages = [
-    `${process.env.PUBLIC_URL}/images/studio2.jpg`,
-    `${process.env.PUBLIC_URL}/images/studio3.jpg`,
-    `${process.env.PUBLIC_URL}/images/studio4.jpg`,
-    `${process.env.PUBLIC_URL}/images/studio5.jpg`,
-    `${process.env.PUBLIC_URL}/images/hardware8.jpg`,
+    {
+      src: `${process.env.PUBLIC_URL}/images/studio2.jpg`,
+      alt: "모니터링 스피커와 컨트롤 데스크가 있는 레코딩 룸"
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/studio3.jpg`,
+      alt: "프로페셔널 마이크와 팝 필터가 설치된 보컬 녹음 부스"
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/studio4.jpg`,
+      alt: "최신 DAW 시스템과 모니터를 갖춘 믹싱 워크스테이션"
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/studio5.jpg`,
+      alt: "음향 처리가 완료된 프로덕션 룸 전경"
+    },
+    {
+      src: `${process.env.PUBLIC_URL}/images/hardware8.jpg`,
+      alt: "아날로그 아웃보드 장비와 프리앰프 랙"
+    }
   ];
 
   return (
@@ -203,8 +218,8 @@ const StudioGallery = () => {
               transition={{ duration: 0.3 }}
             >
               <ResponsiveImage
-                src={image}
-                alt={`Studio ${index + 1}`}
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-64 object-cover rounded-lg shadow-md"
                 pictureClassName="block"
                 loading="lazy"

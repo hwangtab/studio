@@ -161,7 +161,7 @@ const PracticeRoom = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/room2.jpg`}
-              alt="연습실 내부"
+              alt="드럼과 앰프가 갖춰진 밴드 합주실 전경"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"
@@ -175,7 +175,7 @@ const PracticeRoom = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/room3.jpg`}
-              alt="연습실 내부"
+              alt="흡음 패널이 설치된 방음 연습실 내부"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"
@@ -189,7 +189,7 @@ const PracticeRoom = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/room4.jpg`}
-              alt="연습실 내부"
+              alt="기타 앰프와 이펙터가 준비된 개인 연습실"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"
@@ -203,7 +203,7 @@ const PracticeRoom = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/room5.jpg`}
-              alt="연습실 내부"
+              alt="쾌적한 환경의 보컬 녹음 부스 내부"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"

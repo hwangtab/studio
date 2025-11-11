@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaGuitar, FaCompactDisc, FaMusic, FaGlobe, FaCalendarAlt, FaArrowRight } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 const ServiceCard = ({ title, description, icon: Icon, link, index, id }) => (
   <motion.div

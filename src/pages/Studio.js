@@ -142,7 +142,7 @@ const Studio = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/hardware2.jpg`}
-              alt="스튜디오 장비"
+              alt="Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"
@@ -156,7 +156,7 @@ const Studio = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/hardware3.jpg`}
-              alt="스튜디오 장비"
+              alt="API 550B EQ와 SSL Fusion 컴프레서"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"
@@ -170,7 +170,7 @@ const Studio = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/hardware4.jpg`}
-              alt="스튜디오 장비"
+              alt="Universal Audio Apollo x8p 오디오 인터페이스"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"
@@ -184,7 +184,7 @@ const Studio = () => {
           >
             <ResponsiveImage
               src={`${process.env.PUBLIC_URL}/images/hardware5.jpg`}
-              alt="스튜디오 장비"
+              alt="Adam Audio A7X 모니터 스피커와 믹싱 데스크"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="lazy"

@@ -3,6 +3,7 @@ import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaUser, FaPaperPlane, FaCheckCircle, FaCommentDots } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
+import SEO from '../components/SEO';
 
 const InputField = ({ icon: Icon, ...props }) => (
   <div className="relative mb-4">
