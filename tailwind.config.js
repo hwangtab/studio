@@ -104,17 +104,17 @@ module.exports = {
         '.typo-section-lead': {
           fontSize: theme('fontSize.subtitle-1[0]'),
           lineHeight: theme('fontSize.subtitle-1[1].lineHeight'),
-          fontWeight: theme('fontSize.subtitle-1[1].fontWeight'),
+          fontWeight: '300',
         },
         '.typo-card-title': {
           fontSize: theme('fontSize.heading-3[0]'),
           lineHeight: theme('fontSize.heading-3[1].lineHeight'),
-          fontWeight: theme('fontSize.heading-3[1].fontWeight'),
+          fontWeight: '400',
         },
         '.typo-card-subtitle': {
           fontSize: theme('fontSize.subtitle-2[0]'),
           lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
-          fontWeight: theme('fontSize.subtitle-2[1].fontWeight'),
+          fontWeight: '300',
         },
         '.typo-card-body': {
           fontSize: theme('fontSize.body-1[0]'),
