@@ -381,7 +381,7 @@ const About = () => {
               transition={{ duration: 0.5, delay: 0.5 }}
               whileHover={{ scale: 1.02 }}
             >
-              <p className="typo-card-title text-primary dark:text-primary-light mb-3 group-hover:text-primary-dark dark:group-hover:text-primary-light/90 transition-colors">
+              <p className="typo-card-title font-medium text-primary dark:text-primary-light mb-3 group-hover:text-primary-dark dark:group-hover:text-primary-light/90 transition-colors">
                 스튜디오 놀과 함께하세요!
               </p>
               <p className="typo-section-lead mb-4">
