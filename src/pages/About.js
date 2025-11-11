@@ -207,7 +207,8 @@ const About = () => {
           >
             <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">종합 음반 제작 프로세스</h2>
             <p className="typo-section-lead max-w-3xl mx-auto">
-              스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여 최고 품질의 결과물을 만들어냅니다.
+              스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여{" "}
+              <span className="whitespace-nowrap">최고 품질의 결과물을 만들어냅니다.</span>
             </p>
           </motion.div>
 
