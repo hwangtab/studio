@@ -62,7 +62,7 @@ module.exports = {
   },
   darkMode: 'class',
   plugins: [
-    function({ addUtilities }) {
+    function({ addUtilities, addComponents, theme }) {
       addUtilities({
         '.scrollbar-hide': {
           /* IE and Edge */
@@ -92,6 +92,65 @@ module.exports = {
           '-webkit-box-orient': 'vertical',
           '-webkit-line-clamp': '4',
         }
+      })
+
+      // Typography component classes
+      addComponents({
+        '.typo-section-title': {
+          fontSize: theme('fontSize.heading-2[0]'),
+          lineHeight: theme('fontSize.heading-2[1].lineHeight'),
+          fontWeight: theme('fontSize.heading-2[1].fontWeight'),
+        },
+        '.typo-section-lead': {
+          fontSize: theme('fontSize.subtitle-1[0]'),
+          lineHeight: theme('fontSize.subtitle-1[1].lineHeight'),
+          fontWeight: theme('fontSize.subtitle-1[1].fontWeight'),
+        },
+        '.typo-card-title': {
+          fontSize: theme('fontSize.heading-3[0]'),
+          lineHeight: theme('fontSize.heading-3[1].lineHeight'),
+          fontWeight: theme('fontSize.heading-3[1].fontWeight'),
+        },
+        '.typo-card-subtitle': {
+          fontSize: theme('fontSize.subtitle-2[0]'),
+          lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
+          fontWeight: theme('fontSize.subtitle-2[1].fontWeight'),
+        },
+        '.typo-card-body': {
+          fontSize: theme('fontSize.body-1[0]'),
+          lineHeight: theme('fontSize.body-1[1].lineHeight'),
+          fontWeight: theme('fontSize.body-1[1].fontWeight'),
+        },
+        '.typo-card-meta': {
+          fontSize: theme('fontSize.body-2[0]'),
+          lineHeight: theme('fontSize.body-2[1].lineHeight'),
+          fontWeight: theme('fontSize.body-2[1].fontWeight'),
+        },
+        '.typo-card-cta': {
+          fontSize: theme('fontSize.body-1-medium[0]'),
+          lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
+          fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
+        },
+        '.typo-nav-link': {
+          fontSize: theme('fontSize.body-1-medium[0]'),
+          lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
+          fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
+        },
+        '.typo-footer-heading': {
+          fontSize: theme('fontSize.subtitle-2[0]'),
+          lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
+          fontWeight: theme('fontSize.subtitle-2[1].fontWeight'),
+        },
+        '.typo-footer-body': {
+          fontSize: theme('fontSize.body-2[0]'),
+          lineHeight: theme('fontSize.body-2[1].lineHeight'),
+          fontWeight: theme('fontSize.body-2[1].fontWeight'),
+        },
+        '.typo-footer-meta': {
+          fontSize: theme('fontSize.caption[0]'),
+          lineHeight: theme('fontSize.caption[1].lineHeight'),
+          fontWeight: theme('fontSize.caption[1].fontWeight'),
+        },
       })
     }
   ],

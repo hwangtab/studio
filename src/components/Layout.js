@@ -139,7 +139,7 @@ const Layout = ({ children }) => {
           <nav className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg">
             <div className="px-4 py-3 space-y-2">
               <Link to="/" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">홈</Link>
-              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors.duration-300">소개</Link>
+              <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">소개</Link>
               <Link to="/portfolio" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">포트폴리오</Link>
               <Link to="/studio-info" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">스튜디오</Link>
               <Link to="/practice-room" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300">연습실</Link>
@@ -169,7 +169,7 @@ const Layout = ({ children }) => {
                 <li><Link to="/" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">홈</Link></li>
                 <li><Link to="/about" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">소개</Link></li>
                 <li><Link to="/portfolio" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">포트폴리오</Link></li>
-                <li><Link to="/stories" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors.duration-300">스토리</Link></li>
+                <li><Link to="/stories" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">스토리</Link></li>
               </ul>
             </div>
             
