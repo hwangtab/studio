@@ -11,6 +11,7 @@ import {
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
+import SEO from '../components/SEO';
 
 // 개선된 포트폴리오 카드 컴포넌트
 const PortfolioItem = ({ image, title, description, link, index }) => (
@@ -111,6 +112,12 @@ const AudioPlayer = ({ tracks }) => {
     audio.addEventListener('timeupdate', setAudioTime);
 
     return () => {
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
       audio.removeEventListener('loadeddata', setAudioData);
       audio.removeEventListener('timeupdate', setAudioTime);
     }
@@ -142,6 +149,12 @@ const AudioPlayer = ({ tracks }) => {
     }
 
     return () => {
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
@@ -156,6 +169,12 @@ const AudioPlayer = ({ tracks }) => {
   useEffect(() => {
     const audio = audioRef.current;
     return () => {
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
       audio.pause();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -223,6 +242,12 @@ const AudioPlayer = ({ tracks }) => {
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
     <motion.div 
       className={`bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
       initial={{ opacity: 0, y: 20 }}
@@ -497,6 +522,12 @@ const Portfolio = () => {
   // 로딩 상태 렌더링
   if (loading) {
     return (
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
       <div className="container mx-auto px-4 pt-16 pb-12">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
@@ -509,6 +540,12 @@ const Portfolio = () => {
   // 에러 상태 렌더링
   if (error) {
     return (
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
       <div className="container mx-auto px-4 pt-16 pb-12">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
@@ -525,6 +562,12 @@ const Portfolio = () => {
   }
 
   return (
+      <SEO
+        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
+        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
+        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        canonical="https://hwangtab.github.io/studio/portfolio"
+      />
     <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 헤더 섹션 */}
       <div className="mb-16 text-center">

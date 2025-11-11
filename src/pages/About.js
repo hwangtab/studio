@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots, FaCalendarAlt } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
+import SEO from '../components/SEO';
 
 const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => {
   const isLarge = size === 'lg';
@@ -98,6 +99,12 @@ const About = () => {
 
   return (
     <div className="overflow-visible">
+      <SEO
+        title="스튜디오 놀 소개 - 올인원 음악 프로덕션"
+        description="기획부터 유통, 홍보까지 함께하는 올인원 음악 프로덕션. 스튜디오 놀은 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다."
+        keywords="스튜디오 놀 소개, 음반 제작 프로세스, 음악 프로덕션, 레코딩 스튜디오, 믹싱 마스터링, 음원 유통, 음악 기획, 아날로그 장비"
+        canonical="https://hwangtab.github.io/studio/about"
+      />
       {/* 헤더 섹션 */}
       <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-16 pb-12">
         <div className="container mx-auto px-4">

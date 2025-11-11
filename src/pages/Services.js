@@ -126,6 +126,12 @@ const Services = () => {
   ];
 
   return (
+      <SEO
+        title="서비스 안내 - 레코딩, 믹싱, 마스터링, 기획"
+        description="스튜디오 놀의 전문 음악 제작 서비스. 레코딩, 믹싱, 마스터링, 음반 기획, 유통, 홍보까지 토털 솔루션을 제공합니다."
+        keywords="레코딩 서비스, 믹싱 서비스, 마스터링 서비스, 음반 기획, 음원 유통, 음악 홍보, 음악 제작 패키지"
+        canonical="https://hwangtab.github.io/studio/services"
+      />
     <div className="overflow-visible">
       {/* 서비스 소개 섹션 */}
       <div className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-16 pb-12">

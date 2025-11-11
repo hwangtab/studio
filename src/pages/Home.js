@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaMicrophone, FaCompactDisc, FaGlobeAmericas, FaCalendarCheck, FaArrowRight } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
+import SEO from '../components/SEO';
 
 // 히어로 섹션 컴포넌트
 const HeroSection = () => {
@@ -220,6 +221,13 @@ const StudioGallery = () => {
 const Home = () => {
   return (
     <div className="overflow-visible">
+      <SEO
+        title="스튜디오 놀 - 음악 제작 전문 스튜디오 | 레코딩, 믹싱, 마스터링"
+        description="최고의 사운드를 위한 음악 제작 스튜디오, 스튜디오 놀. 전문적인 믹싱, 마스터링, 레코딩 서비스로 당신의 음악을 완성하세요. 기획부터 유통까지 올인원 음악 프로덕션."
+        keywords="스튜디오 놀, 음악 제작, 레코딩, 믹싱, 마스터링, 음반 제작, 음악 프로듀싱, 연신내 스튜디오, 서울 녹음 스튜디오, 음원 유통, 음악 기획"
+        canonical="https://hwangtab.github.io/studio/"
+        includeSchema={true}
+      />
       {/* 히어로 섹션 */}
       <HeroSection />
 
