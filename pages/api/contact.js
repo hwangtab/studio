@@ -1,0 +1,47 @@
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  const { name, phone, message } = req.body || {};
+
+  if (!name || !phone || !message) {
+    return res.status(400).json({ error: '필수 입력값이 누락되었습니다.' });
+  }
+
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+
+  if (!serviceId || !templateId || !publicKey) {
+    return res.status(500).json({ error: '이메일 서비스 환경 변수가 설정되지 않았습니다.' });
+  }
+
+  try {
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        template_params: {
+          from_name: name,
+          from_phone: phone,
+          message,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || '이메일 전송에 실패했습니다.');
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('EmailJS error:', error);
+    return res.status(500).json({ error: '메시지 전송 중 오류가 발생했습니다.' });
+  }
+}
