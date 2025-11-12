@@ -12,7 +12,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
-const AudioPlayer = dynamic(() => import('../components/AudioPlayer'), { ssr: false });
+const AudioPlayer = dynamic(() => import('../components/AudioPlayer').then((mod) => mod.default), { ssr: false });
 
 const PortfolioItem = ({ image, title, description, link, index }) => (
   <motion.div
