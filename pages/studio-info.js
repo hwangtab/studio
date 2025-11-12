@@ -54,8 +54,9 @@ const Studio = () => {
   return (
     <>
       <SEO
-        title="스튜디오 정보 - 스튜디오 놀 장비 소개"
-        description="스튜디오 놀의 레코딩/믹싱 장비와 공간 정보를 확인해 보세요."
+        title="연신내 프로 녹음실 장비 소개 | 스튜디오 놀 스튜디오 정보"
+        description="Neumann 마이크, Prism Sound 인터페이스, SSL/UA 아웃보드 등 프로 레벨 장비를 갖춘 스튜디오 놀의 레코딩·믹싱 환경을 확인하세요."
+        keywords="연신내 녹음실 장비, 스튜디오 놀 장비, 은평구 녹음 스튜디오, 프로 녹음실"
         canonical="https://studionol.co.kr/studio-info"
       />
       <div className="container mx-auto px-4 pt-16 pb-12">

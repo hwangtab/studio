@@ -55,9 +55,9 @@ const Contact = () => {
   return (
     <>
       <SEO
-        title="문의하기 - 스튜디오 놀 연락처 및 위치"
-        description="스튜디오 놀 예약 및 상담 문의. 서울 은평구 연신내에 위치한 음악 제작 스튜디오. 전화, 이메일, 카카오톡으로 문의하세요."
-        keywords="스튜디오 놀 문의, 레코딩 예약, 믹싱 상담, 연신내 스튜디오 위치, 음악 제작 문의, 스튜디오 연락처"
+        title="연신내 녹음실 · 연습실 예약 문의 | 스튜디오 놀"
+        description="스튜디오 놀 녹음실/연습실 예약, 견적 상담은 전화 02-764-3114 또는 카카오톡 @nol로 연락주세요. 위치: 서울 은평구 대조동 84-3 3층."
+        keywords="녹음실 예약 문의, 연습실 예약, 스튜디오 놀 연락처, 연신내 녹음실 상담"
         canonical="https://studionol.co.kr/contact"
       />
       <div className="container mx-auto px-4 pt-16 pb-12">
