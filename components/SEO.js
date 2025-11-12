@@ -7,7 +7,6 @@ const SEO = ({
   canonical = 'https://studionol.co.kr/',
   ogImage = '/images/hardware2.jpg',
   includeSchema = false,
-  structuredData = [],
 }) => {
   const schemaData = {
     '@context': 'https://schema.org',
@@ -55,16 +54,9 @@ const SEO = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
-      {[includeSchema ? schemaData : null, ...structuredData]
-        .filter(Boolean)
-        .map((schema, index) => (
-          <script
-            // eslint-disable-next-line react/no-array-index-key
-            key={`schema-${index}`}
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-          />
-        ))}
+      {includeSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
+      )}
     </Head>
   );
 };

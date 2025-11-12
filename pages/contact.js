@@ -55,32 +55,10 @@ const Contact = () => {
   return (
     <>
       <SEO
-        title="스튜디오 놀 문의 · 예약 | 연신내 녹음실 · 연습실 상담"
-        description="연신내역 5분, 스튜디오 놀 녹음실/연습실/음악 제작 서비스를 예약하세요. 전화 02-764-3114, 카카오톡 @nol, 이메일 contact@kosmart.org."
-        keywords="연신내 녹음실 예약, 은평구 연습실 상담, 스튜디오 놀 문의, 보컬 녹음 예약, 음악 제작 견적"
+        title="문의하기 - 스튜디오 놀 연락처 및 위치"
+        description="스튜디오 놀 예약 및 상담 문의. 서울 은평구 연신내에 위치한 음악 제작 스튜디오. 전화, 이메일, 카카오톡으로 문의하세요."
+        keywords="스튜디오 놀 문의, 레코딩 예약, 믹싱 상담, 연신내 스튜디오 위치, 음악 제작 문의, 스튜디오 연락처"
         canonical="https://studionol.co.kr/contact"
-        structuredData={[
-          {
-            '@context': 'https://schema.org',
-            '@type': 'MusicRecordingStudio',
-            name: '스튜디오 놀',
-            telephone: '+82-2-764-3114',
-            email: 'contact@kosmart.org',
-            address: {
-              '@type': 'PostalAddress',
-              streetAddress: '서울 은평구 대조동 84-3 3층',
-              addressLocality: '은평구',
-              addressRegion: '서울특별시',
-              postalCode: '03387',
-              addressCountry: 'KR',
-            },
-            sameAs: ['https://open.kakao.com/me/nol'],
-            openingHoursSpecification: [
-              { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '10:00', closes: '22:00' },
-              { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '12:00', closes: '22:00' },
-            ],
-          },
-        ]}
       />
       <div className="container mx-auto px-4 pt-16 pb-12">
       <motion.h1 
