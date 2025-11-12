@@ -50,13 +50,14 @@ const Contact = () => {
   };
 
   return (
+    <>
       <SEO
         title="문의하기 - 스튜디오 놀 연락처 및 위치"
         description="스튜디오 놀 예약 및 상담 문의. 서울 은평구 연신내에 위치한 음악 제작 스튜디오. 전화, 이메일, 카카오톡으로 문의하세요."
         keywords="스튜디오 놀 문의, 레코딩 예약, 믹싱 상담, 연신내 스튜디오 위치, 음악 제작 문의, 스튜디오 연락처"
         canonical="https://hwangtab.github.io/studio/contact"
       />
-    <div className="container mx-auto px-4 pt-16 pb-12">
+      <div className="container mx-auto px-4 pt-16 pb-12">
       <motion.h1 
         className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
         {...PAGE_TITLE_ANIMATION}
@@ -235,7 +236,8 @@ const Contact = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
