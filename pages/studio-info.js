@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaSlidersH, FaHeadphones, FaGuitar, FaKeyboard, FaMusic, FaLaptop, FaInfoCircle, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
@@ -54,9 +55,30 @@ const Studio = () => {
   return (
     <>
       <SEO
-        title="스튜디오 정보 - 스튜디오 놀 장비 소개"
-        description="스튜디오 놀의 레코딩/믹싱 장비와 공간 정보를 확인해 보세요."
+        title="연신내 프로 녹음실 · 스튜디오 장비 소개 | 스튜디오 놀"
+        description="Neumann 마이크, Prism Sound 인터페이스, SSL/UA 아웃보드 등 프로 레벨 장비와 방음 시설을 갖춘 연신내 녹음실. 스튜디오 놀의 레코딩/믹싱 환경과 작업 프로세스를 확인해 보세요."
         canonical="https://studionol.co.kr/studio-info"
+        structuredData={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'MusicRecordingStudio',
+            name: '스튜디오 놀',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: '서울 은평구 대조동 84-3 3층',
+              addressLocality: '은평구',
+              addressRegion: '서울특별시',
+              postalCode: '03387',
+              addressCountry: 'KR',
+            },
+            telephone: '+82-2-764-3114',
+            amenityFeature: [
+              { '@type': 'LocationFeatureSpecification', name: 'Dedicated vocal booth', value: true },
+              { '@type': 'LocationFeatureSpecification', name: 'Premium monitoring environment', value: true },
+              { '@type': 'LocationFeatureSpecification', name: 'Professional recording engineer available', value: true },
+            ],
+          },
+        ]}
       />
       <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 스튜디오 소개 섹션 */}
@@ -92,10 +114,12 @@ const Studio = () => {
                 단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 이야기를 나누고, 아이디어를 실험하며, 창의적인 협업을 이뤄낼 수 있는 공간. 그것이 바로 &lsquo;스튜디오 놀&rsquo;이 추구하는 가치입니다.
               </p>
               <p className="typo-section-lead mb-4">
-                스튜디오 놀은 음악인들이 자신의 음악을 녹음하고, 믹싱하고, 마스터링할 수 있는 공간과 서비스를 제공합니다. 또한, 음악인들이 자신의 음악을 홍보하고, 판매할 수 있도록 도움을 주는 데에도 노력하고 있습니다.
+                스튜디오 놀은 음악인들이 자신의 음악을 녹음하고, 믹싱하고, 마스터링할 수 있는 공간과 서비스를 제공합니다. 음반
+                제작 외에도 영상 촬영, 라이브 콘텐츠 제작, 브랜드 협업 등 다양한 제작 경험을 갖추고 있습니다.
               </p>
               <p className="typo-section-lead mb-4">
-                스튜디오 놀은 음악인들이 자신의 음악을 통해 꿈을 이루는 데 도움을 주는 데에 목표를 두고 있습니다. 우리는 음악인들이 자신의 음악을 통해 성공을 거두는 데에 기여할 수 있도록 최선을 다하고 있습니다.
+                연신내역 5분 거리에 위치해 은평구·고양·파주 뮤지션이 빠르게 접근할 수 있으며, 주차와 장비 이동이 편리한 것이
+                강점입니다. 완성도 높은 음원을 목표로 하는 모든 팀을 위해 공간부터 엔지니어까지 토털 솔루션을 제공합니다.
               </p>
             </div>
           </motion.div>
@@ -123,6 +147,72 @@ const Studio = () => {
           </motion.div>
         </div>
       </motion.div>
+      
+      <section className="mb-16 bg-gradient-to-r from-primary via-secondary to-accent rounded-3xl text-white p-8 flex flex-col lg:flex-row gap-8">
+        <div className="flex-1">
+          <p className="uppercase tracking-widest text-white/80 text-sm mb-2">Book a Session</p>
+          <h2 className="text-heading-2 font-title mb-3">작업 투어 · 샘플 녹음 · 프로젝트 상담</h2>
+          <p className="text-body-1 text-white/90">
+            앨범·OST·광고·콘텐츠 제작 등 어떤 목적이든 맞춤형 세션을 설계해 드립니다. 공간 투어, 테스트 녹음, 견적 상담을
+            원하시면 편한 채널을 선택해 주세요.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 w-full lg:w-auto">
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-primary-dark font-semibold hover:bg-gray-100 transition"
+          >
+            문의 페이지에서 예약
+          </Link>
+          <a
+            href="https://open.kakao.com/me/nol"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white font-semibold hover:bg-white/10 transition"
+          >
+            카카오톡 빠른 상담
+          </a>
+          <Link
+            href="/practice-room"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white font-semibold hover:bg-white/10 transition"
+          >
+            연습실 · 보컬 부스 보기
+          </Link>
+        </div>
+      </section>
+      
+      <section className="mb-16">
+        <h2 className="text-heading-2 font-title text-center text-gray-800 dark:text-white mb-6">
+          스튜디오 놀을 선택해야 하는 이유
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              icon: FaMicrophone,
+              title: '보컬 · 밴드 녹음 특화',
+              desc: '보컬 부스와 컨트롤룸이 분리되어 있어 동시 녹음과 토크백이 빠르게 이뤄집니다.',
+            },
+            {
+              icon: FaLaptop,
+              title: '믹싱/마스터링 워크플로',
+              desc: 'Prism Sound, SSL Fusion 등 하이엔드 아날로그 체인을 통한 하이브리드 믹싱 지원.',
+            },
+            {
+              icon: FaCalendarAlt,
+              title: '유연한 대관 & 엔지니어 옵션',
+              desc: '스튜디오만 대관하거나 10년 이상 경력 엔지니어와 프로젝트 단위로 진행할 수 있습니다.',
+            },
+          ].map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-md p-6">
+              <div className="flex items-center mb-4">
+                <Icon className="text-primary text-2xl mr-3" />
+                <h3 className="typo-card-title text-gray-700 dark:text-gray-200">{title}</h3>
+              </div>
+              <p className="typo-card-body text-gray-600 dark:text-gray-300">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
       
       {/* 장비 목록 섹션 */}
       <motion.div

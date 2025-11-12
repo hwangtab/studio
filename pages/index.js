@@ -237,16 +237,113 @@ const Home = () => {
   return (
     <div className="overflow-visible">
       <SEO
-        title="스튜디오 놀 - 음악 제작 전문 스튜디오 | 레코딩, 믹싱, 마스터링"
-        description="최고의 사운드를 위한 음악 제작 스튜디오, 스튜디오 놀. 전문적인 믹싱, 마스터링, 레코딩 서비스로 당신의 음악을 완성하세요. 기획부터 유통까지 올인원 음악 프로덕션."
-        keywords="스튜디오 놀, 음악 제작, 레코딩, 믹싱, 마스터링, 음반 제작, 음악 프로듀싱, 연신내 스튜디오, 서울 녹음 스튜디오, 음원 유통, 음악 기획"
+        title="스튜디오 놀 | 연신내 녹음실 · 은평구 연습실 · 음악 제작 스튜디오"
+        description="은평구 연신내역 5분, 스튜디오 놀에서 프리미엄 녹음실·연습실·음악 제작 서비스를 만나보세요. 방음/공조 시스템과 프로 엔지니어가 상주하여 레코딩, 믹싱, 마스터링, 콘텐츠 제작을 한 번에 해결합니다."
+        keywords="연신내 녹음실, 은평구 연습실, 서울 방음 연습실, 스튜디오 놀, 음악 제작 스튜디오, 프로 녹음실, 연습실 대여, 밴드 합주실"
         canonical="https://studionol.co.kr/"
         includeSchema={true}
+        structuredData={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            serviceType: 'Music rehearsal & recording studio rental',
+            provider: {
+              '@type': 'MusicRecordingStudio',
+              name: '스튜디오 놀',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: '서울 은평구 대조동 84-3 3층',
+                addressLocality: '은평구',
+                addressRegion: '서울특별시',
+                postalCode: '03387',
+                addressCountry: 'KR',
+              },
+              telephone: '+82-2-764-3114',
+            },
+            areaServed: 'Seoul, South Korea',
+            availableChannel: 'OnSite',
+          },
+        ]}
       />
       {/* 히어로 섹션 */}
       <HeroSection />
 
       <div className="container mx-auto px-4 pt-16 pb-12">
+        <section className="grid lg:grid-cols-2 gap-10 mb-16">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+            <p className="typo-card-meta text-primary-dark dark:text-primary-light uppercase tracking-widest">
+              Why Studio Nol?
+            </p>
+            <h2 className="text-heading-2 font-title mt-3 mb-5 text-gray-800 dark:text-white">
+              연신내역 5분, 음악인을 위한 원스톱 녹음실 · 연습실
+            </h2>
+            <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-6">
+              스튜디오 놀은 은평구에서 유일하게 방음·공조·습도 제어를 모두 갖춘 프리미엄 음악 제작 공간입니다. 밴드 합주,
+              보컬 녹음, 콘텐츠 촬영, 미디 작업까지 한 층에서 해결하세요.
+            </p>
+            <ul className="space-y-3 text-body-1">
+              <li className="flex items-start">
+                <span className="mr-3 text-primary">•</span>
+                전용 공조/환기 시스템으로 장시간 작업에도 쾌적한 공기 유지
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-primary">•</span>
+                은평구·고양·파주 뮤지션이 접근하기 좋은 연신내역 도보 5분 거리
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-primary">•</span>
+                Pro Tools, Apollo, Neumann 등 프로 장비 풀 세팅 지원
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-primary">•</span>
+                엔지니어 상주로 녹음·믹싱·마스터링·영상 촬영 컨설팅 즉시 가능
+              </li>
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/practice-room"
+                className="inline-flex items-center px-5 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition"
+              >
+                연습실 상세 보기
+              </Link>
+              <Link
+                href="/studio-info"
+                className="inline-flex items-center px-5 py-3 rounded-full border border-primary text-primary hover:bg-primary/10 transition"
+              >
+                녹음 장비 확인
+              </Link>
+            </div>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-200 dark:border-gray-800">
+            <h3 className="typo-card-title text-gray-700 dark:text-gray-200 mb-4">
+              이런 검색어로 오셨나요?
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                '은평구 녹음실 추천',
+                '연신내 연습실 예약',
+                '서울 합주실 대여',
+                '방음 잘 되는 프라이빗 스튜디오',
+                '보컬 녹음·믹싱 원스톱',
+                '유튜브 촬영 가능한 스튜디오',
+              ].map((keyword) => (
+                <span
+                  key={keyword}
+                  className="inline-flex items-center justify-center rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-100 dark:border-gray-700 px-4 py-2 text-sm shadow-sm"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+            <p className="typo-card-body mt-6 text-gray-600 dark:text-gray-300">
+              위 검색어 중 하나라도 해당된다면 스튜디오 놀에서 답을 찾을 수 있습니다. 공간 투어 또는 테스트 녹음을 원하시면{' '}
+              <Link href="/contact" className="text-primary font-medium hover:underline">
+                문의 페이지
+              </Link>
+              로 예약을 남겨주세요.
+            </p>
+          </div>
+        </section>
         <motion.h2 
           className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           {...PAGE_TITLE_ANIMATION}

@@ -1,6 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaVolumeMute, FaWind, FaBolt, FaBroom, FaComments } from 'react-icons/fa';
+import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaVolumeMute, FaWind, FaBolt, FaBroom, FaComments, FaCheckCircle } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
@@ -56,13 +57,67 @@ const TargetAudience = ({ title, description, icon: Icon }) => (
   </motion.div>
 );
 
+const packages = [
+  {
+    title: '데이라이트 패스',
+    time: '오전 10시 - 오후 5시',
+    price: '₩25,000 / 시간',
+    desc: '작곡, 편곡, 미디 작업을 위한 집중 시간대',
+  },
+  {
+    title: '나이트 프로 패스',
+    time: '오후 5시 - 자정',
+    price: '₩30,000 / 시간',
+    desc: '보컬 녹음 · 밴드 합주 · 라이브 리허설에 최적화',
+  },
+  {
+    title: '올나잇 락커 패스',
+    time: '자정 - 오전 8시',
+    price: '₩150,000 / 8시간',
+    desc: '심야 크리에이티브 세션과 집중 믹싱 세션용',
+  },
+];
+
+const faqEntries = [
+  {
+    question: '예약은 어떻게 진행되나요?',
+    answer: '카카오톡 오픈채팅 또는 전화(02-764-3114)로 희망 날짜·시간을 알려주시면 실시간 스케줄을 확인 후 확정 드립니다. 정기 대관도 가능합니다.',
+  },
+  {
+    question: '어떤 장비를 제공하나요?',
+    answer: 'Neumann 마이크, Apollo 인터페이스, Ableton/Pro Tools, Yamaha 모니터 스피커, Roland 전자드럼, 기타/베이스 앰프, 미디 컨트롤러 등 대부분의 장비를 기본 제공하며, 개인 장비도 자유롭게 연결할 수 있습니다.',
+  },
+  {
+    question: '방음과 공조 시스템은 어떻게 되어 있나요?',
+    answer: '벽체와 천장 전체가 이중 방음 구조이며, 초미세먼지 필터가 포함된 독립 공조 시스템으로 장시간 작업해도 쾌적한 온·습도를 유지합니다.',
+  },
+  {
+    question: '녹음 엔지니어 지원이 가능한가요?',
+    answer: '네. 사전 요청 시 실무 경력 10년 이상의 엔지니어가 배정되어 보컬 녹음, 튠 보정, 믹싱, 마스터링까지 원스톱으로 지원합니다.',
+  },
+];
+
 const PracticeRoom = () => {
   return (
     <>
       <SEO
-        title="연습실 안내 - 스튜디오 놀"
-        description="연신내역 도보 5분, 방음과 공조 시스템을 갖춘 스튜디오 놀 연습실을 만나보세요."
+        title="연신내 녹음실 · 은평구 연습실 대관 | 스튜디오 놀"
+        description="연신내역 도보 5분, 방음·공조·프로 장비를 갖춘 스튜디오 놀 연습실. 보컬 녹음, 밴드 합주, 콘텐츠 촬영까지 가능한 프리미엄 음악 작업 공간을 예약하세요."
         canonical="https://studionol.co.kr/practice-room"
+        structuredData={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqEntries.map((faq) => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer,
+              },
+            })),
+          },
+        ]}
       />
       <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 히어로 섹션 */}
@@ -80,12 +135,11 @@ const PracticeRoom = () => {
         </motion.h1>
         
         <motion.p
-          className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
+          className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-12 text-center"
           {...PAGE_SUBTITLE_ANIMATION}
         >
-          최적의 환경에서 여러분의 음악을 연습하세요.
-          <br />
-          다양한 장비와 시설을 갖춘 프리미엄 연습실에서 음악을 즐기세요.
+          은평구·고양·파주 뮤지션이 가장 많이 찾는 연습실/녹음실. 방음, 온습도, 장비, 주차, 접근성까지 세심하게 설계된
+          원스톱 공간에서 앨범 제작과 콘텐츠 촬영을 한 번에 진행해 보세요.
         </motion.p>
         
         <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -120,6 +174,7 @@ const PracticeRoom = () => {
               <PainPoint icon={FaWind} text="공기가 잘 통하지 않아 답답해요..." />
               <PainPoint icon={FaBolt} text="전기 노이즈 때문에 녹음을 다시 해야 해요..." />
               <PainPoint icon={FaBroom} text="작업환경이 불쾌하고 지저분해요..." />
+              <PainPoint icon={FaComments} text="엔지니어가 상주하지 않아 녹음/튜닝이 걱정돼요..." />
             </div>
           </div>
         </div>
@@ -219,6 +274,112 @@ const PracticeRoom = () => {
           </motion.div>
         </div>
       </motion.div>
+      
+      <section className="mb-20">
+        <h2 className="text-heading-2 font-title text-center text-gray-800 dark:text-white mb-6">연습실 · 녹음실 특장점</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              title: '독립형 공조/환기',
+              description: '초미세먼지 필터와 습도 조절 시스템으로 4계절 내내 쾌적한 공기 유지',
+              icon: FaWind,
+            },
+            {
+              title: '프리미엄 어쿠스틱',
+              description: '다중 방음과 벽면 디퓨저, 흡음 패널로 자연스러운 룸 사운드 확보',
+              icon: FaShieldAlt,
+            },
+            {
+              title: '통합 하드웨어',
+              description: 'Neumann, Universal Audio, Yamaha, Roland 등 검증된 장비 풀 세팅',
+              icon: FaMusic,
+            },
+          ].map(({ title, description, icon: Icon }) => (
+            <div key={title} className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center mb-4">
+                <Icon className="text-primary text-2xl mr-3" />
+                <h3 className="typo-card-title text-gray-700 dark:text-gray-200">{title}</h3>
+              </div>
+              <p className="typo-card-body">{description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      
+      <section className="mb-20">
+        <h2 className="text-heading-2 font-title text-center text-gray-800 dark:text-white mb-6">대관 요금 & 패키지</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {packages.map((item) => (
+            <div key={item.title} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+              <p className="typo-card-meta text-primary">{item.title}</p>
+              <h3 className="text-heading-3 mt-2 mb-2">{item.price}</h3>
+              <p className="text-body-1 text-gray-600 dark:text-gray-300 mb-4">{item.time}</p>
+              <p className="typo-card-body">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+          VAT 포함. 장기 대관, 영상 촬영, 엔지니어 옵션은 문의 시 맞춤 견적을 드립니다.
+        </p>
+      </section>
+      
+      <section className="mb-20 bg-gradient-to-r from-primary-dark via-primary to-accent text-white rounded-3xl p-8">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-8">
+          <div className="flex-1">
+            <p className="uppercase tracking-widest text-white/80 text-sm mb-2">How to Book</p>
+            <h2 className="text-heading-2 font-title mb-3">예약 & 상담 방법</h2>
+            <p className="text-body-1 mb-4 text-white/90">
+              카카오톡 오픈채팅(@nol) 또는 전화(02-764-3114)로 원하는 시간과 목적(녹음, 합주, 촬영 등)을 알려주세요.
+              5분 안에 담당자가 답변 드립니다. 공간 투어도 사전 예약 후 상시 가능해요.
+            </p>
+            <ul className="space-y-2 text-white/90">
+              <li className="flex items-center">
+                <FaCheckCircle className="mr-2" /> 당일 예약 가능 (공간 상황에 따라)
+              </li>
+              <li className="flex items-center">
+                <FaCheckCircle className="mr-2" /> 주차 1대 무료, 인근 공영주차장 연계
+              </li>
+              <li className="flex items-center">
+                <FaCheckCircle className="mr-2" /> 장비 세팅/엔지니어 옵션 선택 가능
+              </li>
+            </ul>
+          </div>
+          <div className="flex flex-col gap-3">
+            <a
+              href="https://open.kakao.com/me/nol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-primary-dark font-medium hover:bg-gray-100 transition"
+            >
+              카카오톡으로 빠른 상담
+            </a>
+            <a
+              href="tel:02-764-3114"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white font-medium hover:bg-white/10 transition"
+            >
+              02-764-3114 전화 연결
+            </a>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white text-white font-medium hover:bg-white/10 transition"
+            >
+              문의 폼 작성
+            </Link>
+          </div>
+        </div>
+      </section>
+      
+      <section className="mb-20">
+        <h2 className="text-heading-2 font-title text-center text-gray-800 dark:text-white mb-8">자주 묻는 질문</h2>
+        <div className="space-y-4">
+          {faqEntries.map((faq) => (
+            <div key={faq.question} className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 p-6">
+              <h3 className="typo-card-title text-gray-800 dark:text-white mb-2">{faq.question}</h3>
+              <p className="typo-card-body text-gray-600 dark:text-gray-300">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
       
       {/* 특징 섹션 */}
       <motion.div
