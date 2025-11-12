@@ -112,12 +112,6 @@ const AudioPlayer = ({ tracks }) => {
     audio.addEventListener('timeupdate', setAudioTime);
 
     return () => {
-      <SEO
-        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
-        canonical="https://hwangtab.github.io/studio/portfolio"
-      />
       audio.removeEventListener('loadeddata', setAudioData);
       audio.removeEventListener('timeupdate', setAudioTime);
     }
@@ -149,12 +143,6 @@ const AudioPlayer = ({ tracks }) => {
     }
 
     return () => {
-      <SEO
-        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
-        canonical="https://hwangtab.github.io/studio/portfolio"
-      />
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
@@ -169,12 +157,6 @@ const AudioPlayer = ({ tracks }) => {
   useEffect(() => {
     const audio = audioRef.current;
     return () => {
-      <SEO
-        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
-        canonical="https://hwangtab.github.io/studio/portfolio"
-      />
       audio.pause();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -242,14 +224,7 @@ const AudioPlayer = ({ tracks }) => {
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
-    <>
-      <SEO
-        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
-        canonical="https://hwangtab.github.io/studio/portfolio"
-      />
-      <motion.div 
+    <motion.div 
       className={`bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
