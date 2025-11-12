@@ -53,7 +53,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
       />
       <div className="container mx-auto px-4 pt-8 pb-12">
-        {story.thumbnail && (
+        {story.thumbnail && !story.thumbnailDerived && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
