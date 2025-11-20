@@ -1,10 +1,47 @@
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const rateLimitStore = new Map();
+
+const getClientIp = (req) => {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string' && forwarded.length > 0) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.socket?.remoteAddress || 'unknown';
+};
+
+const isRateLimited = (ip) => {
+  if (!ip) return false;
+  const now = Date.now();
+  const entry = rateLimitStore.get(ip) || { count: 0, expiresAt: now + RATE_LIMIT_WINDOW_MS };
+
+  if (entry.expiresAt < now) {
+    entry.count = 0;
+    entry.expiresAt = now + RATE_LIMIT_WINDOW_MS;
+  }
+
+  entry.count += 1;
+  rateLimitStore.set(ip, entry);
+
+  return entry.count > RATE_LIMIT_MAX_REQUESTS;
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { name, phone, message } = req.body || {};
+  const clientIp = getClientIp(req);
+  if (isRateLimited(clientIp)) {
+    return res.status(429).json({ error: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.' });
+  }
+
+  const { name, phone, message, company } = req.body || {};
+
+  if (company) {
+    return res.status(400).json({ error: '잘못된 요청입니다.' });
+  }
 
   if (!name || !phone || !message) {
     return res.status(400).json({ error: '필수 입력값이 누락되었습니다.' });
@@ -45,3 +82,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: '메시지 전송 중 오류가 발생했습니다.' });
   }
 }
+
+export const __contactTestUtils = {
+  resetRateLimitStore: () => rateLimitStore.clear(),
+};

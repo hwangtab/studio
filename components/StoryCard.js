@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { timeAgo } from '../utils/dateUtils';
@@ -6,55 +6,6 @@ import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils'
 import ResponsiveImage from './ResponsiveImage';
 
 const StoryCard = ({ story }) => {
-  const titleRef = useRef(null);
-  const summaryRef = useRef(null);
-  const [summaryLineClamp] = useState(4);
-
-  useEffect(() => {
-    const fitTitleToOneLine = () => {
-      const el = titleRef.current;
-      if (!el) return;
-      el.style.whiteSpace = 'normal';
-      el.style.fontSize = '';
-      let comp = getComputedStyle(el);
-      let size = parseFloat(comp.fontSize || '16');
-      const min = Math.max(12, Math.round(size * 0.75));
-      const getLines = () => (el.getClientRects ? el.getClientRects().length : 1);
-      let guard = 40;
-      while (getLines() > 1 && size > min && guard-- > 0) {
-        size -= 1;
-        el.style.fontSize = size + 'px';
-        comp = getComputedStyle(el);
-      }
-      el.style.whiteSpace = 'nowrap';
-      el.style.overflow = 'hidden';
-      el.style.textOverflow = 'ellipsis';
-    };
-    const enforceSummaryFourLines = () => {
-      const s = summaryRef.current;
-      if (!s) return;
-      const cs = getComputedStyle(s);
-      const lh = parseFloat(cs.lineHeight || '0') || 0;
-      if (!lh) return;
-      const max = Math.ceil(lh * 4 + 0.5);
-      s.style.maxHeight = max + 'px';
-      s.style.overflow = 'hidden';
-    };
-
-    fitTitleToOneLine();
-    enforceSummaryFourLines();
-    if (typeof document !== 'undefined' && document.fonts?.ready) {
-      document.fonts.ready
-        .then(() => requestAnimationFrame(() => { fitTitleToOneLine(); enforceSummaryFourLines(); }))
-        .catch(() => {});
-    }
-    const onResize = () => { fitTitleToOneLine(); enforceSummaryFourLines(); };
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [story.title]);
-  
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
@@ -101,17 +52,11 @@ const StoryCard = ({ story }) => {
             </span>
           </div>
           
-          <h3
-            ref={titleRef}
-            className="typo-card-title mb-2 leading-tight flex-shrink-0"
-          >
+          <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 truncate">
             {story.title || '제목 없음'}
           </h3>
           
-          <div
-            ref={summaryRef}
-            className={`typo-card-body leading-snug ${summaryLineClamp === 4 ? 'line-clamp-4' : 'line-clamp-2'} flex-none`}
-          >
+          <div className="typo-card-body leading-snug line-clamp-4 flex-none">
             {plainSummary || '내용 없음'}
           </div>
         </div>

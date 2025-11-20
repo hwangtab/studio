@@ -1,12 +1,27 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-bash';
 import ResponsiveImage from './ResponsiveImage';
+
+let prismLoaderPromise = null;
+
+const loadPrism = async () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  if (!prismLoaderPromise) {
+    prismLoaderPromise = import('prismjs').then(async (module) => {
+      await Promise.all([
+        import('prismjs/components/prism-javascript'),
+        import('prismjs/components/prism-typescript'),
+        import('prismjs/components/prism-jsx'),
+        import('prismjs/components/prism-css'),
+        import('prismjs/components/prism-bash'),
+      ]);
+      return module.default || module;
+    });
+  }
+  return prismLoaderPromise;
+};
 
 // 코드 블록 하이라이팅 컴포넌트
 const CodeBlock = ({ children, className }) => {
@@ -14,10 +29,19 @@ const CodeBlock = ({ children, className }) => {
   const codeRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (codeRef.current) {
-      Prism.highlightElement(codeRef.current);
-    }
-  }, [children]);
+    let isMounted = true;
+    loadPrism()
+      .then((PrismLib) => {
+        if (PrismLib && isMounted && codeRef.current) {
+          PrismLib.highlightElement(codeRef.current);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, [children, className]);
 
   return (
     <pre className={`rounded-lg overflow-hidden my-4 ${language}`}>

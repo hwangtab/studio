@@ -17,7 +17,8 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    message: ''
+    message: '',
+    company: '',
   });
   const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +44,7 @@ const Contact = () => {
       }
 
       setSubmitMessage('메시지가 성공적으로 전송되었습니다.');
-      setFormData({ name: '', phone: '', message: '' });
+      setFormData({ name: '', phone: '', message: '', company: '' });
     } catch (error) {
       console.error('Contact form error:', error);
       setSubmitMessage('메시지 전송에 실패했습니다. 다시 시도해주세요.');
@@ -149,6 +150,18 @@ const Contact = () => {
               </div>
             )}
             <form onSubmit={handleSubmit}>
+              <div className="sr-only" aria-hidden="true">
+                <label htmlFor="company">회사명</label>
+                <input
+                  id="company"
+                  name="company"
+                  type="text"
+                  autoComplete="off"
+                  tabIndex="-1"
+                  value={formData.company}
+                  onChange={handleChange}
+                />
+              </div>
               <InputField 
                 icon={FaUser}
                 type="text" 

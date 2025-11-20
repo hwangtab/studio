@@ -36,6 +36,7 @@ const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
 
   const currentPath = useMemo(() => router.asPath || '/', [router.asPath]);
 
@@ -51,21 +52,21 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const savedDarkMode = localStorage.getItem('darkMode');
-    if (savedDarkMode !== null) {
-      setIsDarkMode(savedDarkMode === 'true');
+    try {
+      const savedDarkMode = localStorage.getItem('darkMode');
+      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+      const initialDarkMode = savedDarkMode !== null ? savedDarkMode === 'true' : Boolean(prefersDark);
+      setIsDarkMode(initialDarkMode);
+      setHasThemeLoaded(true);
+      document.documentElement.classList.toggle('dark', initialDarkMode);
+    } catch (error) {
+      console.warn('Failed to read dark mode preference', error);
+      setHasThemeLoaded(true);
     }
   }, []);
 
   const toggleDarkMode = () => {
-    const nextDarkMode = !isDarkMode;
-    setIsDarkMode(nextDarkMode);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('darkMode', nextDarkMode.toString());
-    }
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('dark', nextDarkMode);
-    }
+    setIsDarkMode((prev) => !prev);
   };
 
   useEffect(() => {
@@ -76,10 +77,12 @@ const Layout = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('dark', isDarkMode);
+    if (!hasThemeLoaded || typeof document === 'undefined') return;
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('darkMode', isDarkMode.toString());
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, hasThemeLoaded]);
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">

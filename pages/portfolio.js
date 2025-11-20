@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { FaExternalLinkAlt, FaMusic, FaHeadphones } from 'react-icons/fa';
-import { 
-  getAllPortfolioItems, 
-  getPortfolioItemsByCategory, 
-  getAllCategories, 
-  getAllAudioTracks 
-} from '../utils/portfolioDataUtils';
+import { filterPortfolioItems, hydratePortfolioData } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
+import { readPortfolioData } from '../lib/portfolio';
 const AudioPlayer = dynamic(() => import('../components/AudioPlayer').then((mod) => mod.default), { ssr: false });
 
 const PortfolioItem = ({ image, title, description, link, index }) => (
@@ -58,110 +54,22 @@ const PortfolioItem = ({ image, title, description, link, index }) => (
   </motion.div>
 );
 
-const Portfolio = () => {
-  // 상태 관리
-  const [portfolioItems, setPortfolioItems] = useState([]);
-  const [audioTracks, setAudioTracks] = useState([]);
-  const [categories, setCategories] = useState([]);
+const Portfolio = ({
+  initialPortfolioItems = [],
+  audioTracks = [],
+  categories = [],
+}) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [filteredItems, setFilteredItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // 데이터 로딩
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const [itemsData, tracksData, categoriesData] = await Promise.all([
-          getAllPortfolioItems(),
-          getAllAudioTracks(),
-          getAllCategories()
-        ]);
-        
-        setPortfolioItems(itemsData);
-        setAudioTracks(tracksData);
-        setCategories(categoriesData);
-        setFilteredItems(itemsData);
-        setError(null);
-      } catch (err) {
-        console.error('데이터 로딩 오류:', err);
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  // 카테고리 필터링
-  useEffect(() => {
-    const filterItems = async () => {
-      try {
-        const filtered = await getPortfolioItemsByCategory(selectedCategory);
-        setFilteredItems(filtered);
-      } catch (err) {
-        console.error('필터링 오류:', err);
-        setFilteredItems(portfolioItems);
-      }
-    };
-
-    if (portfolioItems.length > 0) {
-      filterItems();
-    }
-  }, [selectedCategory, portfolioItems]);
+  const filteredItems = useMemo(
+    () => filterPortfolioItems(initialPortfolioItems, selectedCategory),
+    [initialPortfolioItems, selectedCategory]
+  );
 
   // 카테고리 변경 핸들러
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
   };
-
-  // 로딩 상태 렌더링
-  if (loading) {
-    return (
-      <>
-        <SEO
-          title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-          description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-          keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
-          canonical="https://studionol.co.kr/portfolio"
-        />
-        <div className="container mx-auto px-4 pt-16 pb-12">
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-          <p className="typo-section-lead">포트폴리오 데이터를 불러오는 중...</p>
-        </div>
-        </div>
-      </>
-    );
-  }
-
-  // 에러 상태 렌더링
-  if (error) {
-    return (
-      <>
-        <SEO
-          title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-          description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-          keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
-          canonical="https://studionol.co.kr/portfolio"
-        />
-        <div className="container mx-auto px-4 pt-16 pb-12">
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <p className="typo-section-lead text-red-600 dark:text-red-400 text-center">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-          >
-            다시 시도
-          </button>
-        </div>
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -218,7 +126,7 @@ const Portfolio = () => {
             <h2 className="typo-card-title text-gray-600 dark:text-gray-200">작업 프로젝트</h2>
           </div>
           <div className="typo-card-meta text-gray-500 dark:text-gray-400">
-            {filteredItems.length}개 프로젝트
+            {filteredItems.length > 0 ? `${filteredItems.length}개 프로젝트` : '등록된 프로젝트 없음'}
           </div>
         </div>
         
@@ -266,3 +174,17 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
+
+export const getStaticProps = () => {
+  const rawData = readPortfolioData();
+  const { portfolioItems, audioTracks, categories } = hydratePortfolioData(rawData);
+
+  return {
+    props: {
+      initialPortfolioItems: portfolioItems,
+      audioTracks,
+      categories,
+    },
+    revalidate: 60,
+  };
+};
