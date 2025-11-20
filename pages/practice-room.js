@@ -357,3 +357,7 @@ const PracticeRoom = () => {
 };
 
 export default PracticeRoom;
+
+export const getStaticProps = () => ({
+  props: {},
+});

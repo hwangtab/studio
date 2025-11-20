@@ -260,3 +260,7 @@ const Studio = () => {
 };
 
 export default Studio;
+
+export const getStaticProps = () => ({
+  props: {},
+});

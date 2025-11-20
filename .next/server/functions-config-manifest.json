@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/api/contact":{},"/portfolio":{},"/stories/[id]":{},"/stories":{}}}
+{"version":1,"functions":{"/api/contact":{},"/about":{},"/":{},"/contact":{},"/stories":{},"/portfolio":{},"/stories/[id]":{},"/studio-info":{},"/practice-room":{}}}

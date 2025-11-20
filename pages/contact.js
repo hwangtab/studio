@@ -258,3 +258,7 @@ const Contact = () => {
 };
 
 export default Contact;
+
+export const getStaticProps = () => ({
+  props: {},
+});
