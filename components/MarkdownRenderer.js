@@ -67,7 +67,7 @@ const MarkdownRenderer = ({ content }) => {
                 <h1
                   {...rest}
                   className={mergeClassNames(
-                    'font-title text-4xl md:text-5xl font-bold leading-tight mt-12 mb-6',
+                    'font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
                     className
                   )}
                 >
@@ -80,7 +80,7 @@ const MarkdownRenderer = ({ content }) => {
                 <h2
                   {...rest}
                   className={mergeClassNames(
-                    'font-title text-3xl md:text-4xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
+                    'font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
                     className
                   )}
                 >
@@ -93,7 +93,7 @@ const MarkdownRenderer = ({ content }) => {
                 <h3
                   {...rest}
                   className={mergeClassNames(
-                    'text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
+                    'text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
                     className
                   )}
                 >
