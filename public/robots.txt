@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://studionol.co.kr
+Host: studionol.co.kr
 
 # Sitemaps
 Sitemap: https://studionol.co.kr/sitemap.xml

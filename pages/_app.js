@@ -11,8 +11,10 @@ function StudioNoriApp({ Component, pageProps }) {
   return (
     <>
       <Head>
+        <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="스튜디오 놀 - 레코딩, 믹싱, 마스터링 전문 음악 제작 스튜디오" />
+        <meta name="theme-color" content="#1a56db" />
+        <meta name="theme-color" content="#1e3a8a" media="(prefers-color-scheme: dark)" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>

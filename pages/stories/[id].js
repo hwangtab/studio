@@ -51,6 +51,11 @@ const StoryDetailPage = ({ story, relatedStories }) => {
         description={metaDescription}
         canonical={shareUrl}
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
+        ogType="article"
+        articlePublishedTime={story.date}
+        articleModifiedTime={story.updatedAt || story.date}
+        articleAuthor={story.author}
+        articleSection={story.category}
       />
       <div className="container mx-auto px-4 pt-8 pb-12">
         {story.thumbnail && !story.thumbnailDerived && (
