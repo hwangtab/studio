@@ -101,20 +101,20 @@ const About = () => {
     <div className="overflow-visible">
       <SEO
         title="스튜디오 놀 소개 - 올인원 음악 프로덕션"
-        description="기획부터 유통, 홍보까지 함께하는 올인원 음악 프로덕션. 스튜디오 놀은 뮤지션의 음악적 여정 전체를 함께하는 파트너입니다."
+        description="한 곡의 아이디어가 완성된 앨범이 되기까지, 스튜디오 놀은 그 모든 과정의 동반자입니다. 녹음을 넘어 기획, 디자인, 유통, 홍보까지."
         keywords="스튜디오 놀 소개, 음반 제작 프로세스, 음악 프로덕션, 레코딩 스튜디오, 믹싱 마스터링, 음원 유통, 음악 기획, 아날로그 장비"
         canonical="https://studionol.co.kr/about"
       />
       {/* 헤더 섹션 */}
       <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-16 pb-12">
         <div className="container mx-auto px-4">
-          <motion.h1 
+          <motion.h1
             className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
             {...PAGE_TITLE_ANIMATION}
           >
             스튜디오 놀
           </motion.h1>
-          
+
           <motion.div
             className="max-w-3xl mx-auto text-center mb-10"
             {...PAGE_SUBTITLE_ANIMATION}
@@ -124,24 +124,24 @@ const About = () => {
               <span className="whitespace-nowrap">올인원 프로덕션</span>
             </h2>
             <p className="typo-section-lead mb-6">
-              스튜디오 놀은 단순한 녹음 스튜디오가 아닌{" "}
-              <span className="whitespace-nowrap">뮤지션의 음악적 여정 전체를 함께하는 파트너입니다.</span>
+              한 곡의 아이디어가 완성된 앨범이 되기까지,{" "}
+              <span className="whitespace-nowrap">스튜디오 놀은 그 모든 과정의 동반자입니다.</span>
               <br />
-              음악 작업에 집중하고 싶은 뮤지션들에게{" "}
-              <span className="whitespace-nowrap">최적의 올인원 프로덕션 서비스를 제공합니다.</span>
+              녹음을 넘어 기획, 디자인, 유통, 홍보까지{" "}
+              <span className="whitespace-nowrap">뮤지션의 비전을 현실로 만드는 올인원 프로덕션 파트너입니다.</span>
             </p>
           </motion.div>
 
           {/* 메인 이미지 */}
-          <motion.div 
+          <motion.div
             className="relative rounded-xl overflow-hidden shadow-2xl max-w-4xl mx-auto h-[400px] mb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <ResponsiveImage 
-              src={`/images/studio2.jpg`} 
-              alt="스튜디오 놀 메인" 
+            <ResponsiveImage
+              src={`/images/studio2.jpg`}
+              alt="스튜디오 놀 메인"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
               loading="eager"
@@ -160,7 +160,7 @@ const About = () => {
       {/* 올인원 프로덕션 서비스 */}
       <section className="pt-16 pb-12 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -206,7 +206,7 @@ const About = () => {
       {/* 종합 음반 제작 프로세스 */}
       <section className="pt-16 pb-12">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -236,7 +236,7 @@ const About = () => {
       {/* 스튜디오 놀의 차별점 */}
       <section className="pt-16 pb-12 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -284,8 +284,8 @@ const About = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               {advantages.map((advantage, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="flex items-center mb-2">
@@ -303,7 +303,7 @@ const About = () => {
       {/* 연락 및 상담 */}
       <section className="pt-16 pb-12 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
