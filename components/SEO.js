@@ -46,6 +46,7 @@ const SEO = ({
     logo: `${siteUrl}/logo512.png`,
     image: absoluteOgImage,
     description,
+    priceRange: 'KRW 400000/month',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '대조동 84-3 3층',
@@ -117,6 +118,92 @@ const SEO = ({
         },
       ],
     },
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        contactType: '예약 및 상담',
+        telephone: '+82-507-1384-3144',
+        url: 'https://open.kakao.com/o/sAWXdN5g',
+        availableLanguage: ['ko'],
+      },
+    ],
+    offers: [
+      {
+        '@type': 'Offer',
+        name: '프리미엄 연습실 입주 프로그램',
+        description: '월 40만 원으로 방음 연습실과 입주 고객 전용 혜택을 제공합니다.',
+        priceCurrency: 'KRW',
+        price: 400000,
+        url: 'https://open.kakao.com/o/sAWXdN5g',
+        availability: 'https://schema.org/InStock',
+        eligibleCustomerType: 'https://schema.org/BusinessCustomer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Studio Nol Residency Benefits',
+          serviceType: [
+            '녹음실 할인',
+            '음원 유통',
+            '보도자료 작성',
+            '버스킹 장비 대여',
+            '전문가 피드백',
+            '크라우드 펀딩 컨설팅',
+            '예술지원사업 정보',
+            '공구 대여',
+          ],
+          provider: '스튜디오 놀',
+          areaServed: '서울특별시',
+          offers: {
+            '@type': 'AggregateOffer',
+            priceCurrency: 'KRW',
+            lowPrice: 10000,
+            highPrice: 200000,
+            offerCount: 8,
+          },
+          amenityFeature: [
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: 'Premium Recording Chain',
+              value: 'Neumann U87AI, Vintech X73i, Tegeler tube compressor, Prism Sound Lyra 2, Proac/EVE monitoring',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '무료 음원 유통',
+              value: '오디오가이 및 The Orchard를 통한 글로벌 플랫폼 송출, 순이익 70% 아티스트 배분',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '홍보 지원',
+              value: '전문 보도자료 작성, 뉴스아트 및 주요 매체 배포, 아티스트 프로필 작성',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '버스킹 장비',
+              value: 'Roland CUBE Street EX2 2대, 마이크/케이블/스탠드, 180W 파워뱅크, 이동용 캐리어',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '전문가 피드백',
+              value: 'A&R 관점 컨설팅과 장르별 믹싱/마스터링 방향 제안',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '크라우드 펀딩 컨설팅',
+              value: '플랫폼 추천, 목표 금액, 리워드 구성, 스토리텔링 및 마케팅 전략 자문',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '예술지원사업 정보',
+              value: 'KOCCA, 예술위, 서울문화재단 지원사업 맞춤 추천 및 서류 준비 조언',
+            },
+            {
+              '@type': 'LocationFeatureSpecification',
+              name: '공구 무료 대여',
+              value: '전동드릴, 니퍼, 펜치, 드라이버 등 장비 설치/수리용 공구 제공',
+            },
+          ],
+        },
+      },
+    ],
   };
 
   return (

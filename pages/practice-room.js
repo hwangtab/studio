@@ -64,6 +64,7 @@ const PracticeRoom = () => {
         description="방음·공조·프로 장비를 갖춘 스튜디오 놀 연습실에서 보컬 녹음, 밴드 합주, 콘텐츠 촬영을 진행하세요. 연신내역 5분, 시간제·장기 대관 예약 가능."
         keywords="은평구 연습실, 연신내 연습실, 연신내 녹음실, 스튜디오 대관, 방음 연습실, 밴드 합주실"
         canonical="https://studionol.co.kr/practice-room"
+        includeSchema={true}
       />
       <div className="container mx-auto px-4 pt-16 pb-12">
       {/* 히어로 섹션 */}
