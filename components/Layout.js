@@ -6,10 +6,10 @@ import { Menu, Moon, Sun, X } from 'lucide-react';
 const NAV_ITEMS = [
   { href: '/', label: '홈' },
   { href: '/about', label: '소개' },
+  { href: '/pricing', label: '가격' },
   { href: '/portfolio', label: '포트폴리오' },
   { href: '/studio-info', label: '스튜디오' },
   { href: '/practice-room', label: '연습실' },
-  { href: '/pricing', label: '가격' },
   { href: '/stories', label: '스토리' },
   { href: '/contact', label: '연락처' },
 ];
@@ -22,8 +22,8 @@ const NavLink = ({ href, children, isScrolled, currentPath, onNavigate }) => {
       href={href}
       onClick={onNavigate}
       className={`px-3 py-2 rounded-md typo-nav-link transition-all duration-300 ${isActive
-          ? 'bg-white/90 text-primary-dark shadow-sm'
-          : `${isScrolled ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
+        ? 'bg-white/90 text-primary-dark shadow-sm'
+        : `${isScrolled ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
         }`}
     >
       {children}
