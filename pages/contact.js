@@ -150,18 +150,18 @@ const Contact = () => {
               </div>
             )}
             <form onSubmit={handleSubmit}>
-              <div className="sr-only" aria-hidden="true">
-                <label htmlFor="company">회사명</label>
-                <input
-                  id="company"
-                  name="company"
-                  type="text"
-                  autoComplete="off"
-                  tabIndex="-1"
-                  value={formData.company}
-                  onChange={handleChange}
-                />
-              </div>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                className="hidden"
+                autoComplete="off"
+                tabIndex="-1"
+                value={formData.company}
+                onChange={handleChange}
+                aria-hidden="true"
+                spellCheck="false"
+              />
               <InputField 
                 icon={FaUser}
                 type="text" 
