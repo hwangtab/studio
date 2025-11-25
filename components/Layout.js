@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { href: '/portfolio', label: '포트폴리오' },
   { href: '/studio-info', label: '스튜디오' },
   { href: '/practice-room', label: '연습실' },
-  { href: '/pricing', label: '이용안내' },
+  { href: '/pricing', label: '가격' },
   { href: '/stories', label: '스토리' },
   { href: '/contact', label: '연락처' },
 ];
@@ -172,7 +172,7 @@ const Layout = ({ children }) => {
                 <li><Link href="/" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">홈</Link></li>
                 <li><Link href="/about" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">소개</Link></li>
                 <li><Link href="/portfolio" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">포트폴리오</Link></li>
-                <li><Link href="/pricing" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">이용안내</Link></li>
+                <li><Link href="/pricing" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">가격</Link></li>
                 <li><Link href="/stories" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">스토리</Link></li>
               </ul>
             </div>

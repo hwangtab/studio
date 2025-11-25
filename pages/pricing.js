@@ -22,12 +22,12 @@ const PricingCard = ({ title, price, unit, description, features, recommended, d
                     RECOMMENDED
                 </div>
             )}
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{title}</h3>
+            <h3 className="typo-card-title font-bold text-gray-800 dark:text-white mb-2">{title}</h3>
             <div className="flex items-baseline mb-4">
                 <span className="text-3xl font-extrabold text-primary dark:text-primary-light">{price}</span>
                 {unit && <span className="text-gray-500 dark:text-gray-400 ml-1 text-sm">{unit}</span>}
             </div>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 min-h-[40px]">{description}</p>
+            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6 min-h-[40px]">{description}</p>
 
             <div className="border-t border-gray-100 dark:border-gray-700 my-4"></div>
 
@@ -54,8 +54,8 @@ const SectionTitle = ({ icon: Icon, title, subtitle }) => (
         <div className="inline-flex items-center justify-center p-3 bg-primary/10 dark:bg-primary/20 rounded-full mb-4">
             <Icon className="text-2xl text-primary dark:text-primary-light" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">{title}</h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{subtitle}</p>
+        <h2 className="typo-section-title text-gray-800 dark:text-white mb-3">{title}</h2>
+        <p className="typo-section-lead text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{subtitle}</p>
     </motion.div>
 );
 
@@ -67,19 +67,20 @@ const Pricing = () => {
                 description="스튜디오 놀의 합리적이고 투명한 가격 정책을 확인하세요. 레코딩, 믹싱, 마스터링부터 올인원 프로덕션 서비스까지."
                 keywords="스튜디오 가격, 녹음실 가격, 믹싱 비용, 마스터링 비용, 음반 제작 비용, 스튜디오 놀 이용안내"
                 canonical="https://studionol.co.kr/pricing"
+                includeSchema={true}
             />
 
             {/* Hero Section */}
             <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-20 pb-16">
                 <div className="container mx-auto px-4 text-center">
                     <motion.h1
-                        className="text-4xl md:text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+                        className="text-heading-1 md:text-display-2 font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
                         {...PAGE_TITLE_ANIMATION}
                     >
                         합리적인 가격, 투명한 서비스
                     </motion.h1>
                     <motion.p
-                        className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
+                        className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
                         {...PAGE_SUBTITLE_ANIMATION}
                     >
                         프로젝트 스튜디오 운영에 필요한 핵심 서비스에 대한 고정 단가를 제시합니다.<br className="hidden md:block" />
@@ -120,11 +121,11 @@ const Pricing = () => {
                         />
                         <PricingCard
                             title="일당 레코딩 (Day Lock)"
-                            price="600,000원"
+                            price="500,000원"
                             unit="/ 일"
                             description="앨범 작업 등 장시간 녹음이 필요할 때 합리적인 선택입니다."
                             features={[
-                                "10시간 패키지 (시간당 6만원 꼴)",
+                                "10시간 패키지 (시간당 5만원 꼴)",
                                 "충분한 휴식과 여유로운 작업",
                                 "식사 시간 포함",
                                 "장시간 집중이 필요한 프로젝트에 최적"
@@ -246,15 +247,15 @@ const Pricing = () => {
                         title="부가 서비스"
                         subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
                     />
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <motion.div
                             className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
                             whileHover={{ y: -5 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">기획/컨설팅</h3>
+                            <h3 className="typo-card-title font-bold mb-2 text-gray-800 dark:text-white">기획/컨설팅</h3>
                             <p className="text-2xl font-bold text-primary dark:text-primary-light mb-4">50,000원 <span className="text-sm text-gray-500 font-normal">/ 시간</span></p>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">프로젝트 기획, 일정 관리, 예산 수립 등 전반적인 앨범 제작 컨설팅</p>
+                            <p className="typo-card-body text-gray-600 dark:text-gray-300">프로젝트 기획, 일정 관리, 예산 수립 등 전반적인 앨범 제작 컨설팅</p>
                         </motion.div>
 
                         <motion.div
@@ -262,32 +263,21 @@ const Pricing = () => {
                             whileHover={{ y: -5 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">펀딩 설계 대행</h3>
+                            <h3 className="typo-card-title font-bold mb-2 text-gray-800 dark:text-white">펀딩 설계 대행</h3>
                             <div className="mb-4">
                                 <p className="text-lg font-bold text-primary dark:text-primary-light">400,000원 <span className="text-xs text-gray-500 font-normal">(선불)</span></p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">+ 성공 수수료 10% (후불)</p>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">텀블벅 등 크라우드 펀딩 페이지 기획, 스토리텔링, 리워드 설계</p>
+                            <p className="typo-card-body text-gray-600 dark:text-gray-300">텀블벅 등 크라우드 펀딩 페이지 기획, 스토리텔링, 리워드 설계</p>
                         </motion.div>
-
                         <motion.div
                             className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
                             whileHover={{ y: -5 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">펀딩 성공 수수료</h3>
-                            <p className="text-2xl font-bold text-primary dark:text-primary-light mb-4">성공액의 10%</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">목표 금액 초과분 포함 최종 펀딩 성공액 기준, 성과 발생 시 후불 청구</p>
-                        </motion.div>
-
-                        <motion.div
-                            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-                            whileHover={{ y: -5 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">기본 홍보 패키지</h3>
+                            <h3 className="typo-card-title font-bold mb-2 text-gray-800 dark:text-white">기본 홍보 패키지</h3>
                             <p className="text-2xl font-bold text-primary dark:text-primary-light mb-4">300,000원</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">전문 보도자료 작성 및 언론 배포, 주요 음악 사이트 앨범 소개 등록 대행</p>
+                            <p className="typo-card-body text-gray-600 dark:text-gray-300">전문 보도자료 작성 및 언론 배포, 주요 음악 사이트 앨범 소개 등록 대행</p>
                         </motion.div>
 
                         <motion.div
@@ -295,16 +285,16 @@ const Pricing = () => {
                             whileHover={{ y: -5 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">EPK 웹사이트</h3>
+                            <h3 className="typo-card-title font-bold mb-2 text-gray-800 dark:text-white">EPK 웹사이트</h3>
                             <p className="text-2xl font-bold text-primary dark:text-primary-light mb-4">500,000원</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">아티스트/앨범 소개를 위한 반응형 웹사이트 제작 (Electronic Press Kit)</p>
+                            <p className="typo-card-body text-gray-600 dark:text-gray-300">아티스트/앨범 소개를 위한 반응형 웹사이트 제작 (Electronic Press Kit)</p>
                         </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-primary via-secondary to-accent text-white text-center">
+            <section className="py-20 bg-gradient-to-r from-primary via-secondary to-accent text-white text-center -mb-12 md:-mb-16">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl md:text-4xl font-bold mb-6">당신의 음악을 위한 최고의 파트너</h2>
                     <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
