@@ -294,22 +294,27 @@ const Pricing = () => {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-primary via-secondary to-accent text-white text-center -mb-12 md:-mb-16">
+            <section className="py-20 bg-gray-50 dark:bg-gray-950">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6">당신의 음악을 위한 최고의 파트너</h2>
-                    <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                        예산과 일정에 맞는 최적의 플랜을 제안해 드립니다.<br />
-                        부담 없이 문의해주세요.
-                    </p>
-                    <Link href="/contact" passHref legacyBehavior>
-                        <motion.a
-                            className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            무료 상담 신청하기
-                        </motion.a>
-                    </Link>
+                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
+                        <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
+                        <div className="relative">
+                            <h2 className="text-3xl md:text-4xl font-bold mb-6">당신의 음악을 위한 최고의 파트너</h2>
+                            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                                예산과 일정에 맞는 최적의 플랜을 제안해 드립니다.<br />
+                                부담 없이 문의해주세요.
+                            </p>
+                            <Link href="/contact" passHref legacyBehavior>
+                                <motion.a
+                                    className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    무료 상담 신청하기
+                                </motion.a>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
