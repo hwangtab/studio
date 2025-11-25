@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
   const { name, phone, message, company } = req.body || {};
 
-  if (company) {
+  if (typeof company === 'string' && company.trim().length > 0) {
     return res.status(400).json({ error: '잘못된 요청입니다.' });
   }
 

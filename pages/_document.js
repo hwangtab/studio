@@ -16,7 +16,7 @@ const themeInitializer = `
 
 export default function Document() {
   return (
-    <Html lang="ko" className="scroll-smooth">
+    <Html lang="ko" className="scroll-smooth" prefix="og: https://ogp.me/ns#">
       <Head>
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </Head>
