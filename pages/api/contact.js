@@ -2,6 +2,8 @@ const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const rateLimitStore = new Map();
 
+const getEnvVar = (key) => process.env[key] || process.env[`NEXT_PUBLIC_${key}`];
+
 const getClientIp = (req) => {
   const forwarded = req.headers['x-forwarded-for'];
   if (typeof forwarded === 'string' && forwarded.length > 0) {
@@ -47,9 +49,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '필수 입력값이 누락되었습니다.' });
   }
 
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const serviceId = getEnvVar('EMAILJS_SERVICE_ID');
+  const templateId = getEnvVar('EMAILJS_TEMPLATE_ID');
+  const publicKey = getEnvVar('EMAILJS_PUBLIC_KEY');
 
   if (!serviceId || !templateId || !publicKey) {
     return res.status(500).json({ error: '이메일 서비스 환경 변수가 설정되지 않았습니다.' });
