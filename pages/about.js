@@ -385,7 +385,7 @@ const About = () => {
             </motion.div>
           </div>
 
-          <div className="mt-12 max-w-4xl mx-auto">
+          <div className="mt-12">
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
               <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
               <div className="relative">
