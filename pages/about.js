@@ -385,27 +385,28 @@ const About = () => {
             </motion.div>
           </div>
 
-          <Link href="/contact">
-            <motion.div
-              className="mt-12 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 rounded-lg shadow-lg p-8 border border-primary/20 dark:border-secondary/20 text-center max-w-2xl mx-auto cursor-pointer group"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <p className="typo-card-title font-medium text-primary dark:text-primary-light mb-3 group-hover:text-primary-dark dark:group-hover:text-primary-light/90 transition-colors">
-                스튜디오 놀과 함께하세요!
-              </p>
-              <p className="typo-section-lead mb-4">
-                지금 바로 상담 예약이 가능합니다.<br />
-                프로젝트의 규모와 상관없이 언제든 편하게 문의주세요.<br />
-                첫 상담부터 최종 마스터링까지 함께합니다.
-              </p>
-              <div className="inline-block bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-2 px-6 rounded-full hover:from-primary-dark hover:to-secondary-dark transition-all duration-300 shadow-sm">
-                연락하기
+          <div className="mt-12 max-w-4xl mx-auto">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
+              <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
+              <div className="relative">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">스튜디오 놀과 함께하세요!</h2>
+                <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                  지금 바로 상담 예약이 가능합니다.<br />
+                  프로젝트의 규모와 상관없이 언제든 편하게 문의주세요.<br />
+                  첫 상담부터 최종 마스터링까지 함께합니다.
+                </p>
+                <Link href="/contact" passHref legacyBehavior>
+                  <motion.a
+                    className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    연락하기
+                  </motion.a>
+                </Link>
               </div>
-            </motion.div>
-          </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>
