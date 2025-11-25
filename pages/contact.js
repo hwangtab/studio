@@ -224,7 +224,7 @@ const Contact = () => {
                   href="https://open.kakao.com/me/nol"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-2 text-gray-800 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200"
+                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-gray-900 dark:text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 font-title"
                 >
                   <FaCommentDots className="mr-2" />
                   카카오톡으로 문의하기
