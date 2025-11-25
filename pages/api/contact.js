@@ -2,7 +2,16 @@ const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const rateLimitStore = new Map();
 
-const getEnvVar = (key) => process.env[key] || process.env[`NEXT_PUBLIC_${key}`];
+const getEnvVar = (...keys) => {
+  for (const key of keys) {
+    if (!key) continue;
+    const value = process.env[key];
+    if (value) return value;
+    const publicValue = process.env[`NEXT_PUBLIC_${key}`];
+    if (publicValue) return publicValue;
+  }
+  return undefined;
+};
 
 const getClientIp = (req) => {
   const forwarded = req.headers['x-forwarded-for'];
@@ -51,7 +60,7 @@ export default async function handler(req, res) {
 
   const serviceId = getEnvVar('EMAILJS_SERVICE_ID');
   const templateId = getEnvVar('EMAILJS_TEMPLATE_ID');
-  const publicKey = getEnvVar('EMAILJS_PUBLIC_KEY');
+  const publicKey = getEnvVar('EMAILJS_PUBLIC_KEY', 'EMAILJS_USER_ID');
 
   if (!serviceId || !templateId || !publicKey) {
     return res.status(500).json({ error: '이메일 서비스 환경 변수가 설정되지 않았습니다.' });
@@ -81,7 +90,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error('EmailJS error:', error);
-    return res.status(500).json({ error: '메시지 전송 중 오류가 발생했습니다.' });
+    return res.status(500).json({ error: error.message || '메시지 전송 중 오류가 발생했습니다.' });
   }
 }
 
