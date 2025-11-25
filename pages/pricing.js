@@ -1,15 +1,16 @@
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaSlidersH, FaCompactDisc, FaChartLine, FaCheck, FaInfoCircle } from 'react-icons/fa';
 import SEO from '../components/SEO';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, STAGGER_CHILDREN } from '../utils/animationUtils';
+import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 
 const PricingCard = ({ title, price, unit, description, features, recommended, delay }) => {
     return (
         <motion.div
             className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg border ${recommended
-                    ? 'border-primary dark:border-primary-light ring-2 ring-primary/20 dark:ring-primary-light/20'
-                    : 'border-gray-100 dark:border-gray-700'
+                ? 'border-primary dark:border-primary-light ring-2 ring-primary/20 dark:ring-primary-light/20'
+                : 'border-gray-100 dark:border-gray-700'
                 } p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -300,14 +301,15 @@ const Pricing = () => {
                         예산과 일정에 맞는 최적의 플랜을 제안해 드립니다.<br />
                         부담 없이 문의해주세요.
                     </p>
-                    <motion.a
-                        href="/contact"
-                        className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        무료 상담 신청하기
-                    </motion.a>
+                    <Link href="/contact">
+                        <motion.div
+                            className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            무료 상담 신청하기
+                        </motion.div>
+                    </Link>
                 </div>
             </section>
         </div>
