@@ -10,7 +10,6 @@ const NAV_ITEMS = [
   { href: '/studio-info', label: '스튜디오' },
   { href: '/practice-room', label: '연습실' },
   { href: '/stories', label: '스토리' },
-  { href: '/pricing', label: '이용안내' },
   { href: '/contact', label: '연락처' },
 ];
 
@@ -21,10 +20,11 @@ const NavLink = ({ href, children, isScrolled, currentPath, onNavigate }) => {
     <Link
       href={href}
       onClick={onNavigate}
-      className={`px-3 py-2 rounded-md typo-nav-link transition-all duration-300 ${isActive
+      className={`px-3 py-2 rounded-md typo-nav-link transition-all duration-300 ${
+        isActive
           ? 'bg-white/90 text-primary-dark shadow-sm'
           : `${isScrolled ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
-        }`}
+      }`}
     >
       {children}
     </Link>
@@ -152,11 +152,11 @@ const Layout = ({ children }) => {
           </nav>
         )}
       </header>
-
+      
       <main className="page-main flex-grow pt-24 pb-12">
         {children}
       </main>
-
+      
       <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -165,7 +165,7 @@ const Layout = ({ children }) => {
               <p className="typo-footer-body text-gray-200/90 mb-4 leading-relaxed">아티스트의 비전을 실현하는 음악 제작 스튜디오</p>
               <p className="typo-footer-meta">2024 스튜디오 놀. All rights reserved.</p>
             </div>
-
+            
             <div>
               <h3 className="typo-footer-heading mb-4">바로가기</h3>
               <ul className="space-y-2">
@@ -173,30 +173,29 @@ const Layout = ({ children }) => {
                 <li><Link href="/about" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">소개</Link></li>
                 <li><Link href="/portfolio" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">포트폴리오</Link></li>
                 <li><Link href="/stories" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">스토리</Link></li>
-                <li><Link href="/pricing" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">이용안내</Link></li>
               </ul>
             </div>
-
+            
             <div>
               <h3 className="typo-footer-heading mb-4">연락처</h3>
-              <a
-                href="https://naver.me/5gFZhS3X"
-                target="_blank"
+              <a 
+                href="https://naver.me/5gFZhS3X" 
+                target="_blank" 
                 rel="noopener noreferrer"
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
               >
                 <span className="inline-block w-4 mr-2">📍</span>
                 <span className="leading-relaxed">서울특별시 은평구 대조동 84-3 3층</span>
               </a>
-              <a
-                href="mailto:contact@kosmart.org"
+              <a 
+                href="mailto:contact@kosmart.org" 
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
               >
                 <span className="inline-block w-4 mr-2">📧</span>
                 <span className="leading-relaxed">문의: contact@kosmart.org</span>
               </a>
-              <a
-                href="tel:02-764-3114"
+              <a 
+                href="tel:02-764-3114" 
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center"
               >
                 <span className="inline-block w-4 mr-2">📞</span>
