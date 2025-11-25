@@ -375,3 +375,5 @@ const AudioPlayer = ({ tracks }) => {
     </motion.div>
   );
 };
+
+export default AudioPlayer;
