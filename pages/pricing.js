@@ -246,7 +246,7 @@ const Pricing = () => {
                         title="부가 서비스"
                         subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
                     />
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         <motion.div
                             className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
                             whileHover={{ y: -5 }}
@@ -268,6 +268,16 @@ const Pricing = () => {
                                 <p className="text-xs text-gray-500 dark:text-gray-400">+ 성공 수수료 10% (후불)</p>
                             </div>
                             <p className="text-sm text-gray-600 dark:text-gray-300">텀블벅 등 크라우드 펀딩 페이지 기획, 스토리텔링, 리워드 설계</p>
+                        </motion.div>
+
+                        <motion.div
+                            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
+                            whileHover={{ y: -5 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <h3 className="font-bold text-lg mb-2 text-gray-800 dark:text-white">펀딩 성공 수수료</h3>
+                            <p className="text-2xl font-bold text-primary dark:text-primary-light mb-4">성공액의 10%</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">목표 금액 초과분 포함 최종 펀딩 성공액 기준, 성과 발생 시 후불 청구</p>
                         </motion.div>
 
                         <motion.div
@@ -301,14 +311,14 @@ const Pricing = () => {
                         예산과 일정에 맞는 최적의 플랜을 제안해 드립니다.<br />
                         부담 없이 문의해주세요.
                     </p>
-                    <Link href="/contact">
-                        <motion.div
-                            className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+                    <Link href="/contact" passHref legacyBehavior>
+                        <motion.a
+                            className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
                             무료 상담 신청하기
-                        </motion.div>
+                        </motion.a>
                     </Link>
                 </div>
             </section>
