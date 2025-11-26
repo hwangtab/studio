@@ -92,16 +92,7 @@ const Portfolio = ({
           <br />
           각 작품을 클릭하여 더 자세한 정보를 확인하세요.
         </motion.p>
-        {audioTracks.length > 0 && (
-          <motion.div
-            className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3"
-            {...PAGE_CONTENT_ANIMATION}
-          >
-            <p className="typo-card-body text-gray-600 dark:text-gray-300">
-              대표 트랙을 바로 아래에서 감상해 보세요.
-            </p>
-          </motion.div>
-        )}
+        {audioTracks.length > 0 && <div className="mt-6" />}
       </div>
 
       {/* 샘플 트랙 섹션 */}

@@ -286,8 +286,8 @@ const AudioPlayer = ({ tracks }) => {
       </div>
 
       {/* 컨트롤 버튼 */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center justify-center sm:justify-start space-x-2">
           <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }} 
@@ -351,7 +351,7 @@ const AudioPlayer = ({ tracks }) => {
           </motion.button>
         </div>
 
-        <div className="w-24 flex justify-end">
+        <div className="flex justify-center sm:justify-end w-full sm:w-24">
           <motion.button
             className="text-white/80 hover:text-white p-2 rounded-full md:hidden"
             onClick={toggleExpand}
