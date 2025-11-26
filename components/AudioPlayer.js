@@ -165,7 +165,7 @@ const AudioPlayer = ({ tracks }) => {
 
   return (
     <motion.div 
-      className={`bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
+      className={`bg-gradient-to-br from-primary-dark via-secondary to-accent text-white rounded-2xl shadow-2xl overflow-hidden border border-white/10 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -220,7 +220,7 @@ const AudioPlayer = ({ tracks }) => {
             {tracks[currentTrack].title}
           </motion.h3>
           <motion.div 
-            className="flex items-center justify-center md:justify-start mb-4 text-gray-300"
+            className="flex items-center justify-center md:justify-start mb-4 text-white/80"
             layout
           >
             <FaHeadphones className="mr-2 text-primary-light" /> 
@@ -230,7 +230,7 @@ const AudioPlayer = ({ tracks }) => {
           {/* 확장 시 표시되는 추가 정보 */}
           {isExpanded && (
             <motion.div 
-              className="typo-card-body text-gray-400 mb-4"
+              className="typo-card-body text-white/80 mb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -243,7 +243,7 @@ const AudioPlayer = ({ tracks }) => {
 
         {/* 확장/축소 버튼 */}
         <motion.button
-          className="text-gray-400 hover:text-white p-2 rounded-full self-start hidden md:block"
+          className="text-white/80 hover:text-white p-2 rounded-full self-start hidden md:block"
           onClick={toggleExpand}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -262,10 +262,10 @@ const AudioPlayer = ({ tracks }) => {
       {/* 프로그레스 바 */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="typo-card-meta text-gray-400">{formatTime(currentTime)}</span>
-          <span className="typo-card-meta text-gray-400">{formatTime(duration)}</span>
+          <span className="typo-card-meta text-white/80">{formatTime(currentTime)}</span>
+          <span className="typo-card-meta text-white/80">{formatTime(duration)}</span>
         </div>
-        <div className="relative h-2 bg-gray-700 rounded-full overflow-hidden">
+        <div className="relative h-2 bg-white/20 rounded-full overflow-hidden">
           <input 
             type="range" 
             ref={progressBarRef}
@@ -275,12 +275,8 @@ const AudioPlayer = ({ tracks }) => {
             className="absolute inset-0 w-full h-full appearance-none bg-transparent z-10 opacity-0 cursor-pointer"
           />
           <div 
-            className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-secondary rounded-full" 
+            className="absolute top-0 left-0 h-full bg-white/60 rounded-full" 
             style={{ width: `${progress}%` }}
-          ></div>
-          <div 
-            className="absolute top-0 left-0 h-full w-full bg-gray-600 rounded-full opacity-20"
-            style={{ transform: `scaleX(${progress / 100})`, transformOrigin: 'left' }}
           ></div>
           <div 
             className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md pointer-events-none" 
@@ -296,17 +292,17 @@ const AudioPlayer = ({ tracks }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }} 
             onClick={toggleMute}
-            className="text-gray-400 hover:text-white transition-colors p-2"
+            className="text-white/80 hover:text-white transition-colors p-2"
           >
             {isMuted ? <FaVolumeMute className="text-xl" /> : <FaVolumeUp className="text-xl" />}
           </motion.button>
-          <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden hidden sm:block relative">
+          <div className="w-20 h-2 bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
             <div 
-              className="absolute top-0 left-0 h-full w-full bg-gray-700 rounded-full"
+              className="absolute top-0 left-0 h-full w-full bg-transparent rounded-full"
               onClick={changeVolume}
             ></div>
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary-light to-secondary rounded-full" 
+              className="absolute top-0 left-0 h-full bg-white rounded-full" 
               style={{ width: `${volume * 100}%` }}
               onClick={changeVolume}
             ></div>
@@ -331,7 +327,7 @@ const AudioPlayer = ({ tracks }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }} 
             onClick={prevTrack}
-            className="text-gray-400 hover:text-white transition-colors p-2"
+            className="text-white/80 hover:text-white transition-colors p-2"
           >
             <FaBackward className="text-xl" />
           </motion.button>
@@ -349,7 +345,7 @@ const AudioPlayer = ({ tracks }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }} 
             onClick={nextTrack}
-            className="text-gray-400 hover:text-white transition-colors p-2"
+            className="text-white/80 hover:text-white transition-colors p-2"
           >
             <FaForward className="text-xl" />
           </motion.button>
@@ -357,7 +353,7 @@ const AudioPlayer = ({ tracks }) => {
 
         <div className="w-24 flex justify-end">
           <motion.button
-            className="text-gray-400 hover:text-white p-2 rounded-full md:hidden"
+            className="text-white/80 hover:text-white p-2 rounded-full md:hidden"
             onClick={toggleExpand}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}

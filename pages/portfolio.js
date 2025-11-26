@@ -10,13 +10,9 @@ import SEO from '../components/SEO';
 import { readPortfolioData } from '../lib/portfolio';
 const AudioPlayer = dynamic(() => import('../components/AudioPlayer').then((mod) => mod.default), { ssr: false });
 
-const PortfolioItem = ({ image, title, description, link, index }) => (
+const PortfolioItem = ({ image, title, description, link }) => (
   <motion.div
     className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
-    whileHover={{ y: -5 }}
     onClick={() => window.open(link, '_blank', 'noopener,noreferrer')}
   >
     <div className="relative overflow-hidden">
@@ -147,9 +143,9 @@ const Portfolio = ({
       {/* 포트폴리오 그리드 */}
       <motion.div
         className="mb-24"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
       >
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -170,8 +166,8 @@ const Portfolio = ({
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredItems.map((item, index) => (
-              <PortfolioItem key={item.id} {...item} index={index} />
+            {filteredItems.map((item) => (
+              <PortfolioItem key={item.id} {...item} />
             ))}
           </div>
         )}
