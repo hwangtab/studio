@@ -295,9 +295,8 @@ const Pricing = () => {
                         title="레코딩 (Recording)"
                         subtitle="최고급 아날로그 장비와 전문 엔지니어링이 포함된 프리미엄 녹음 서비스"
                     />
-                    <p className="typo-card-body text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10">
-                        {SECTION_SUMMARIES.recording}
-                        <span className="block text-sm text-gray-500 dark:text-gray-400 mt-2">{VAT_NOTICE}</span>
+                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                        {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                         {recordingOffers.map((offer, index) => (
@@ -325,9 +324,8 @@ const Pricing = () => {
                         title="믹싱 (Mixing)"
                         subtitle="트랙 수에 따른 합리적인 가격 책정. 아날로그와 디지털의 조화로 최상의 사운드를 만듭니다."
                     />
-                    <p className="typo-card-body text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10">
-                        {SECTION_SUMMARIES.mixing}
-                        <span className="block text-sm text-gray-500 dark:text-gray-400 mt-2">{VAT_NOTICE}</span>
+                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                        {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
                         {mixingOffers.map((offer, index) => (
@@ -362,11 +360,10 @@ const Pricing = () => {
                     <SectionTitle
                         icon={FaCompactDisc}
                         title="마스터링 (Mastering)"
-                        subtitle="음악의 최종 완성도를 높이는 마지막 단계. 어떤 재생 환경에서도 일관된 사운드를 보장합니다."
+                        subtitle="음악의 최종 완성도를 책임지는 단계로, 어떤 재생 환경에서도 균일한 사운드를 보장합니다."
                     />
-                    <p className="typo-card-body text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10">
-                        {SECTION_SUMMARIES.mastering}
-                        <span className="block text-sm text-gray-500 dark:text-gray-400 mt-2">{VAT_NOTICE}</span>
+                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                        {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                         {masteringOffers.map((offer, index) => (
@@ -394,9 +391,8 @@ const Pricing = () => {
                         title="부가 서비스"
                         subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
                     />
-                    <p className="typo-card-body text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10">
-                        {SECTION_SUMMARIES.extras}
-                        <span className="block text-sm text-gray-500 dark:text-gray-400 mt-2">{VAT_NOTICE}</span>
+                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                        {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {additionalServices.map((service) => (
