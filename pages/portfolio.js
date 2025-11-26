@@ -96,7 +96,38 @@ const Portfolio = ({
           <br />
           각 작품을 클릭하여 더 자세한 정보를 확인하세요.
         </motion.p>
+        {audioTracks.length > 0 && (
+          <motion.div
+            className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3"
+            {...PAGE_CONTENT_ANIMATION}
+          >
+            <a
+              href="#sample-tracks"
+              className="inline-flex items-center px-5 py-2 rounded-full bg-primary text-white typo-card-body shadow-md hover:bg-primary-dark transition-colors"
+            >
+              <FaHeadphones className="mr-2" />
+              샘플 트랙 바로 듣기
+            </a>
+          </motion.div>
+        )}
       </div>
+
+      {/* 샘플 트랙 섹션 */}
+      {audioTracks.length > 0 && (
+        <motion.section
+          id="sample-tracks"
+          className="mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="flex items-center mb-8">
+            <FaHeadphones className="text-2xl text-primary mr-3" />
+            <h2 className="typo-card-title text-gray-600 dark:text-gray-200">샘플 트랙</h2>
+          </div>
+          <AudioPlayer tracks={audioTracks} />
+        </motion.section>
+      )}
 
       {/* 카테고리 필터 */}
       <motion.div
@@ -146,28 +177,6 @@ const Portfolio = ({
         )}
       </motion.div>
       
-      {/* 오디오 플레이어 섹션 */}
-      <motion.div
-        className="mt-16"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
-        <div className="flex items-center mb-8">
-          <FaHeadphones className="text-2xl text-primary mr-3" />
-          <h2 className="typo-card-title text-gray-600 dark:text-gray-200">샘플 트랙</h2>
-        </div>
-        {audioTracks.length > 0 ? (
-          <AudioPlayer tracks={audioTracks} />
-        ) : (
-          <div className="text-center pt-16 pb-12 bg-gray-100 dark:bg-gray-800 rounded-xl">
-            <FaHeadphones className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="typo-card-body text-gray-500 dark:text-gray-400">
-              샘플 트랙을 준비중입니다.
-            </p>
-          </div>
-        )}
-      </motion.div>
       </div>
     </>
   );
