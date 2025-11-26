@@ -8,6 +8,7 @@ const SEO = ({
   ogImage = '/images/hardware2.jpg',
   ogType = 'website',
   includeSchema = false,
+  schema,
   author = '스튜디오 놀',
   robots = 'index, follow',
   articlePublishedTime,
@@ -37,7 +38,7 @@ const SEO = ({
       ? canonicalUrl.slice(0, -1)
       : canonicalUrl;
 
-  const schemaData = {
+  const defaultSchema = {
     '@context': 'https://schema.org',
     '@type': 'MusicRecordingStudio',
     name: '스튜디오 놀',
@@ -205,6 +206,7 @@ const SEO = ({
       },
     ],
   };
+  const schemaData = schema || defaultSchema;
 
   return (
     <Head>
