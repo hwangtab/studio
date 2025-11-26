@@ -67,9 +67,17 @@ export default async function handler(req, res) {
   }
 
   try {
+    const customOrigin = getEnvVar('EMAILJS_ALLOWED_ORIGIN') || 'https://studionol.co.kr';
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (customOrigin) {
+      headers.origin = customOrigin;
+    }
+
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         service_id: serviceId,
         template_id: templateId,
