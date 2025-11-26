@@ -264,7 +264,7 @@ const Pricing = () => {
             <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-20 pb-16">
                 <div className="container mx-auto px-4 text-center">
                     <motion.h1
-                        className="text-heading-1 md:text-display-2 font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+                        className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
                         {...PAGE_TITLE_ANIMATION}
                     >
                         합리적인 가격, 투명한 서비스
