@@ -286,8 +286,8 @@ const AudioPlayer = ({ tracks }) => {
       </div>
 
       {/* 컨트롤 버튼 */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex items-center justify-center sm:justify-start space-x-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4">
+        <div className="flex items-center justify-center space-x-2">
           <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }} 
