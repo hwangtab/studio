@@ -97,13 +97,9 @@ const Portfolio = ({
             className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3"
             {...PAGE_CONTENT_ANIMATION}
           >
-            <a
-              href="#sample-tracks"
-              className="inline-flex items-center px-5 py-2 rounded-full bg-primary text-white typo-card-body shadow-md hover:bg-primary-dark transition-colors"
-            >
-              <FaHeadphones className="mr-2" />
-              샘플 트랙 바로 듣기
-            </a>
+            <p className="typo-card-body text-gray-600 dark:text-gray-300">
+              대표 트랙을 바로 아래에서 감상해 보세요.
+            </p>
           </motion.div>
         )}
       </div>

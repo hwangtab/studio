@@ -223,7 +223,7 @@ const AudioPlayer = ({ tracks }) => {
             className="flex items-center justify-center md:justify-start mb-4 text-white/80"
             layout
           >
-            <FaHeadphones className="mr-2 text-primary-light" /> 
+            <FaHeadphones className="mr-2 text-white" /> 
             <span>트랙 {currentTrack + 1} / {tracks.length}</span>
           </motion.div>
 
