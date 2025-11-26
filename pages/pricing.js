@@ -423,10 +423,14 @@ const Pricing = () => {
                         <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
                         <div className="relative">
                             <h2 className="text-3xl md:text-4xl font-bold mb-6">당신의 음악을 위한 최고의 파트너</h2>
-                            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                                예산과 일정에 맞는 최적의 플랜을 제안해 드립니다.<br />
-                                부담 없이 문의해주세요.
-                            </p>
+                            <motion.p
+                                className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                예산과 일정에 맞는 최적의 플랜을 제안해 드립니다. 부담 없이 문의해주세요.
+                            </motion.p>
                             <Link href="/contact" passHref legacyBehavior>
                                 <motion.a
                                     className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
