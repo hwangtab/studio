@@ -91,7 +91,7 @@ const Portfolio = ({
 
         {/* 포트폴리오 그리드 */}
         <motion.div
-          className="mb-24"
+          className="mb-0"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
