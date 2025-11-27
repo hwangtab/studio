@@ -276,27 +276,30 @@ const About = () => {
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
             </BaseCard>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-12">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
-              <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
-              <div className="relative">
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">스튜디오 놀과 함께하세요!</h2>
-                <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                  지금 바로 상담 예약이 가능합니다.<br />
-                  프로젝트의 규모와 상관없이 언제든 편하게 문의주세요.<br />
-                  첫 상담부터 최종 마스터링까지 함께합니다.
-                </p>
-                <Link href="/contact" passHref legacyBehavior>
-                  <motion.a
-                    className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    연락하기
-                  </motion.a>
-                </Link>
-              </div>
+      {/* CTA Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
+            <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
+            <div className="relative">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">스튜디오 놀과 함께하세요!</h2>
+              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                지금 바로 상담 예약이 가능합니다.<br />
+                프로젝트의 규모와 상관없이 언제든 편하게 문의주세요.<br />
+                첫 상담부터 최종 마스터링까지 함께합니다.
+              </p>
+              <Link href="/contact" passHref legacyBehavior>
+                <motion.a
+                  className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  연락하기
+                </motion.a>
+              </Link>
             </div>
           </div>
         </div>
