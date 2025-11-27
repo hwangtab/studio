@@ -4,56 +4,43 @@ import { FaMusic, FaShieldAlt, FaStar, FaMapMarkerAlt, FaVolumeMute, FaWind, FaB
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
+import BaseCard from '../components/ui/BaseCard';
 
-const FeatureCard = ({ icon: Icon, title, description, className }) => (
-  <motion.div
-    className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg ${className}`}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-    whileHover={{ y: -5 }}
-  >
+const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => (
+  <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-4">
-      <Icon className="text-2xl text-primary dark:text-primary-light mr-3" />
+      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
+        <Icon className="text-2xl text-primary dark:text-primary-light" />
+      </div>
       <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{title}</h3>
     </div>
     <p className="typo-card-body">{description}</p>
-  </motion.div>
+  </BaseCard>
 );
 
-const PainPoint = ({ icon: Icon, text }) => (
-  <motion.div 
-    className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300"
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-    whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
-  >
+const PainPoint = ({ icon: Icon, text, delay = 0 }) => (
+  <BaseCard variant="default" delay={delay} className="p-5 h-full">
     <div className="flex items-start">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white">
+      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
         <Icon className="text-xl" />
       </div>
       <div>
         <p className="typo-card-body whitespace-normal" style={{ wordBreak: 'keep-all' }}>{text}</p>
       </div>
     </div>
-  </motion.div>
+  </BaseCard>
 );
 
-const TargetAudience = ({ title, description, icon: Icon }) => (
-  <motion.div
-    className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4"
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.5 }}
-    whileHover={{ y: -5 }}
-  >
+const TargetAudience = ({ title, description, icon: Icon, delay = 0 }) => (
+  <BaseCard variant="default" delay={delay} className="p-6 mb-4">
     <div className="flex items-center mb-2">
-      <Icon className="text-2xl text-primary dark:text-primary-light mr-3" />
+      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
+        <Icon className="text-2xl text-primary dark:text-primary-light" />
+      </div>
       <h3 className="typo-card-subtitle text-gray-600 dark:text-gray-200">{title}</h3>
     </div>
     <p className="typo-card-body">{description}</p>
-  </motion.div>
+  </BaseCard>
 );
 
 const PracticeRoom = () => {
@@ -117,11 +104,11 @@ const PracticeRoom = () => {
             <h2 className="typo-card-title mb-6 text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <PainPoint icon={FaWind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." />
-              <PainPoint icon={FaVolumeMute} text="옆방 소리가 다 들려서 집중이 안 돼요..." />
-              <PainPoint icon={FaWind} text="공기가 잘 통하지 않아 답답해요..." />
-              <PainPoint icon={FaBolt} text="전기 노이즈 때문에 녹음을 다시 해야 해요..." />
-              <PainPoint icon={FaBroom} text="작업환경이 불쾌하고 지저분해요..." />
+              <PainPoint icon={FaWind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." delay={0.1} />
+              <PainPoint icon={FaVolumeMute} text="옆방 소리가 다 들려서 집중이 안 돼요..." delay={0.2} />
+              <PainPoint icon={FaWind} text="공기가 잘 통하지 않아 답답해요..." delay={0.3} />
+              <PainPoint icon={FaBolt} text="전기 노이즈 때문에 녹음을 다시 해야 해요..." delay={0.4} />
+              <PainPoint icon={FaBroom} text="작업환경이 불쾌하고 지저분해요..." delay={0.5} />
             </div>
           </div>
         </div>
@@ -144,20 +131,23 @@ const PracticeRoom = () => {
         </motion.h2>
         
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <TargetAudience 
-            title="음악 작업자" 
-            description="프로듀서/작곡가를 위한 미디작업실, 보컬/래퍼를 위한 녹음 공간" 
-            icon={FaMusic} 
+          <TargetAudience
+            title="음악 작업자"
+            description="프로듀서/작곡가를 위한 미디작업실, 보컬/래퍼를 위한 녹음 공간"
+            icon={FaMusic}
+            delay={0.1}
           />
-          <TargetAudience 
-            title="콘텐츠 크리에이터" 
-            description="유튜버, 팟캐스터, 스트리머를 위한 녹음 스튜디오" 
-            icon={FaStar} 
+          <TargetAudience
+            title="콘텐츠 크리에이터"
+            description="유튜버, 팟캐스터, 스트리머를 위한 녹음 스튜디오"
+            icon={FaStar}
+            delay={0.2}
           />
-          <TargetAudience 
-            title="음악 교육" 
-            description="프라이빗 레슨, 소규모 마스터클래스, 학원 분원용 연습실" 
-            icon={FaMusic} 
+          <TargetAudience
+            title="음악 교육"
+            description="프라이빗 레슨, 소규모 마스터클래스, 학원 분원용 연습실"
+            icon={FaMusic}
+            delay={0.3}
           />
         </div>
         
@@ -239,28 +229,32 @@ const PracticeRoom = () => {
         </motion.h2>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <FeatureCard 
-            icon={FaMusic} 
-            title="진정한 프로의 작업 환경" 
-            description="국제표준 STC 방음 시스템, 이중 벽체 설계로 완벽한 소리 차단, 전문 방진 시공으로 진동 차단, DAW 작업에 최적화된 조명 설계" 
+          <FeatureCard
+            icon={FaMusic}
+            title="진정한 프로의 작업 환경"
+            description="국제표준 STC 방음 시스템, 이중 벽체 설계로 완벽한 소리 차단, 전문 방진 시공으로 진동 차단, DAW 작업에 최적화된 조명 설계"
+            delay={0.1}
           />
-          
-          <FeatureCard 
-            icon={FaShieldAlt} 
-            title="장비 보호 시스템" 
-            description="특수 설계 시스템 냉난방기, 결로 현상 완벽 차단, 장비 손상 위험 ZERO, 최적 습도 자동 유지" 
+
+          <FeatureCard
+            icon={FaShieldAlt}
+            title="장비 보호 시스템"
+            description="특수 설계 시스템 냉난방기, 결로 현상 완벽 차단, 장비 손상 위험 ZERO, 최적 습도 자동 유지"
+            delay={0.2}
           />
-          
-          <FeatureCard 
-            icon={FaStar} 
-            title="프로덕션 최적화 시설" 
-            description="기가비트 급 초고속 인터넷, 전문가급 음향 설비 완비, 업라이트 피아노 설치 가능, 노이즈리스 전기 시설" 
+
+          <FeatureCard
+            icon={FaStar}
+            title="프로덕션 최적화 시설"
+            description="기가비트 급 초고속 인터넷, 전문가급 음향 설비 완비, 업라이트 피아노 설치 가능, 노이즈리스 전기 시설"
+            delay={0.3}
           />
-          
-          <FeatureCard 
-            icon={FaMapMarkerAlt} 
-            title="위치 및 접근성" 
-            description="불광역/연신내역 도보 5분, 24시간 보안 시스템, 조용한 작업 환경" 
+
+          <FeatureCard
+            icon={FaMapMarkerAlt}
+            title="위치 및 접근성"
+            description="불광역/연신내역 도보 5분, 24시간 보안 시스템, 조용한 작업 환경"
+            delay={0.4}
           />
         </div>
         

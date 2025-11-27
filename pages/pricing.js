@@ -90,6 +90,7 @@ const pricingSchema = {
 };
 
 import PricingCard from '../components/ui/PricingCard';
+import { SECTION_BG } from '../utils/sectionStyles';
 
 const Pricing = () => {
     return (
@@ -104,7 +105,7 @@ const Pricing = () => {
             />
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-20 pb-16">
+            <section className={`${SECTION_BG.hero} pt-20 pb-16`}>
                 <div className="container mx-auto px-4 text-center">
                     <motion.h1
                         className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
@@ -160,7 +161,7 @@ const Pricing = () => {
             </section>
 
             {/* Mixing Section */}
-            <section id="mixing" className="py-16 bg-gray-50 dark:bg-gray-900/50">
+            <section id="mixing" className={`py-16 ${SECTION_BG.alternate}`}>
                 <div className="container mx-auto px-4">
                     <SectionHeading
                         icon={FaSlidersH}
@@ -227,7 +228,7 @@ const Pricing = () => {
             </section>
 
             {/* Additional Services Section */}
-            <section id="support-services" className="py-16 bg-gray-50 dark:bg-gray-900/50">
+            <section id="support-services" className={`py-16 ${SECTION_BG.alternate}`}>
                 <div className="container mx-auto px-4">
                     <SectionHeading
                         icon={FaChartLine}
@@ -238,29 +239,24 @@ const Pricing = () => {
                         {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {additionalServices.map((service) => (
-                            <motion.div
+                        {additionalServices.map((service, index) => (
+                            <PricingCard
                                 key={service.id}
                                 id={service.id}
-                                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700"
-                                whileHover={{ y: -5 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <h3 className="typo-card-title font-bold mb-2 text-gray-800 dark:text-white">{service.title}</h3>
-                                <p className="text-2xl font-bold text-primary dark:text-primary-light mb-4">
-                                    {service.priceDisplay}
-                                    {service.unit && <span className="text-sm text-gray-500 font-normal"> {service.unit}</span>}
-                                </p>
-                                <p className="typo-card-body text-gray-600 dark:text-gray-300">{service.description}</p>
-                                {service.note && <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{service.note}</p>}
-                            </motion.div>
+                                title={service.title}
+                                price={service.priceDisplay}
+                                unit={service.unit}
+                                description={service.description}
+                                features={service.note ? [service.note] : []}
+                                delay={0.1 * (index + 1)}
+                            />
                         ))}
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gray-50 dark:bg-gray-950">
+            <section className={`py-20 ${SECTION_BG.cta}`}>
                 <div className="container mx-auto px-4">
                     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
                         <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>

@@ -6,7 +6,9 @@ import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animatio
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
+import BaseCard from '../components/ui/BaseCard';
 import { coreServices, productionProcess, advantages } from '../data/services';
+import { SECTION_BG } from '../utils/sectionStyles';
 
 const About = () => {
 
@@ -19,7 +21,7 @@ const About = () => {
         canonical="https://studionol.co.kr/about"
       />
       {/* 헤더 섹션 */}
-      <section className="bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent pt-16 pb-12">
+      <section className={`${SECTION_BG.hero} pt-16 pb-12`}>
         <div className="container mx-auto px-4">
           <motion.h1
             className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
@@ -71,7 +73,7 @@ const About = () => {
       </section>
 
       {/* 올인원 프로덕션 서비스 */}
-      <section className="pt-16 pb-12 bg-gray-50 dark:bg-gray-900">
+      <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
@@ -136,7 +138,7 @@ const About = () => {
       </section>
 
       {/* 스튜디오 놀의 차별점 */}
-      <section className="pt-16 pb-12 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10">
+      <section className={`pt-16 pb-12 ${SECTION_BG.highlight}`}>
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
@@ -152,11 +154,9 @@ const About = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-100 dark:border-gray-700"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
+            <BaseCard
+              variant="default"
+              className="p-6"
             >
               <h3 className="typo-card-title text-gray-600 dark:text-gray-200 mb-4">비용 효율적인 패키지 옵션</h3>
               <ul className="space-y-3">
@@ -177,7 +177,7 @@ const About = () => {
                   <p className="typo-card-body">아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드 구현</p>
                 </li>
               </ul>
-            </motion.div>
+            </BaseCard>
 
             <motion.div
               className="grid grid-cols-2 gap-4"
@@ -186,16 +186,18 @@ const About = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               {advantages.map((advantage, index) => (
-                <div
+                <BaseCard
                   key={index}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300"
+                  variant="default"
+                  delay={0.2 + 0.1 * index}
+                  className="p-4"
                 >
                   <div className="flex items-center mb-2">
                     <advantage.icon className="text-primary dark:text-primary-light mr-2" />
                     <h4 className="typo-card-subtitle text-gray-600 dark:text-gray-200">{advantage.title}</h4>
                   </div>
                   <p className="typo-card-body">{advantage.description}</p>
-                </div>
+                </BaseCard>
               ))}
             </motion.div>
           </div>
@@ -203,7 +205,7 @@ const About = () => {
       </section>
 
       {/* 연락 및 상담 */}
-      <section className="pt-16 pb-12 bg-gray-50 dark:bg-gray-900">
+      <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
@@ -218,12 +220,9 @@ const About = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700 text-center cursor-pointer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              whileHover={{ y: -5 }}
+            <BaseCard
+              delay={0.1}
+              className="p-6 text-center cursor-pointer"
               onClick={() => window.open('tel:02-764-3114', '_blank')}
             >
               <div className="flex justify-center mb-4">
@@ -233,14 +232,11 @@ const About = () => {
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">전화</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">02-764-3114</p>
-            </motion.div>
+            </BaseCard>
 
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700 text-center cursor-pointer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-              whileHover={{ y: -5 }}
+            <BaseCard
+              delay={0.2}
+              className="p-6 text-center cursor-pointer"
               onClick={() => window.open('mailto:contact@kosmart.org', '_blank')}
             >
               <div className="flex justify-center mb-4">
@@ -250,14 +246,11 @@ const About = () => {
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">이메일</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">contact@kosmart.org</p>
-            </motion.div>
+            </BaseCard>
 
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700 text-center cursor-pointer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
-              whileHover={{ y: -5 }}
+            <BaseCard
+              delay={0.3}
+              className="p-6 text-center cursor-pointer"
               onClick={() => window.open('https://open.kakao.com/me/nol', '_blank')}
             >
               <div className="flex justify-center mb-4">
@@ -267,14 +260,11 @@ const About = () => {
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">카카오톡</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">오픈채팅 바로가기</p>
-            </motion.div>
+            </BaseCard>
 
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-100 dark:border-gray-700 text-center cursor-pointer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.4 }}
-              whileHover={{ y: -5 }}
+            <BaseCard
+              delay={0.4}
+              className="p-6 text-center cursor-pointer"
               onClick={() => window.open('https://naver.me/5gFZhS3X', '_blank')}
             >
               <div className="flex justify-center mb-4">
@@ -284,7 +274,7 @@ const About = () => {
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">위치</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
-            </motion.div>
+            </BaseCard>
           </div>
 
           <div className="mt-12">
