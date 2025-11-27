@@ -1,14 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaCompactDisc, FaGlobeAmericas, FaCalendarCheck, FaArrowRight } from 'react-icons/fa';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
-import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
+import HeroBanner from '../components/common/HeroBanner';
+import MediaGallery from '../components/ui/MediaGallery';
 
-const Slider = dynamic(() => import('react-slick').then((mod) => mod.default), { ssr: false });
 const CORE_SERVICES = [
   {
     title: '음반 기획',
@@ -30,191 +29,28 @@ const CORE_SERVICES = [
   },
 ];
 
-// 히어로 섹션 컴포넌트
-const HeroSection = () => {
-  return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-primary-dark via-primary to-secondary min-h-[90vh] flex items-center px-4 sm:px-0">
-      {/* 배경 패턴 */}
-      <div className="absolute inset-0 opacity-10">
-        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse">
-            <path d="M 8 0 L 0 0 0 8" fill="none" stroke="currentColor" strokeWidth="0.5" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div>
-      
-      {/* 음파 애니메이션 */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 opacity-20">
-        <motion.div
-          className="w-full h-full"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{
-            duration: 2,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-        >
-          <svg viewBox="0 0 1440 320" className="w-full h-full">
-            <path
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-              d="M0,160 C320,300,420,240,640,160 C880,80,960,120,1120,160 C1280,200,1360,120,1440,80 L1440,320 L0,320 Z"
-            />
-          </svg>
-        </motion.div>
-      </div>
-      
-      <div className="container mx-auto px-4 z-10 pt-8 pb-12 sm:pt-16">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <motion.h1
-              className="text-heading-1 sm:text-display-2 md:text-display-1 font-title text-white mb-6 break-keep"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="whitespace-nowrap">당신의 음악에</span>{' '}
-              <span className="text-accent-light">생명</span>을 불어넣는 공간
-            </motion.h1>
-            
-            <motion.p
-              className="text-body-1-light text-white/80 mb-8 max-w-lg leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              최고급 장비와 전문 엔지니어가 함께하는 스튜디오 놀에서 당신만의 사운드를 완성하세요.
-            </motion.p>
-            
-            <motion.div
-              className="flex flex-wrap gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center bg-white text-primary-dark text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/90 transition duration-300 shadow-lg"
-              >
-                예약하기
-              </Link>
-              <Link
-                href="/portfolio"
-                className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/10 transition duration-300"
-              >
-                포트폴리오 보기
-              </Link>
-            </motion.div>
-          </div>
-          
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
-              <ResponsiveImage
-                src={`/images/studio1.jpg`}
-                alt="스튜디오 놀 메인 스튜디오"
-                className="w-full h-auto"
-                pictureClassName="block"
-                loading="eager"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-              />
-              
-              {/* 오버레이 그라데이션 */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary-dark/30 to-transparent" />
-            </div>
-            
-            {/* 장식 요소 */}
-            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-accent rounded-full opacity-80 blur-sm z-0" />
-            <div className="absolute -top-6 -left-6 w-16 h-16 bg-secondary rounded-full opacity-60 blur-sm z-0" />
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const StudioGallery = () => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
-  };
-
-  const studioImages = [
-    {
-      src: `/images/studio2.jpg`,
-      alt: "모니터링 스피커와 컨트롤 데스크가 있는 레코딩 룸"
-    },
-    {
-      src: `/images/studio3.jpg`,
-      alt: "프로페셔널 마이크와 팝 필터가 설치된 보컬 녹음 부스"
-    },
-    {
-      src: `/images/studio4.jpg`,
-      alt: "최신 DAW 시스템과 모니터를 갖춘 믹싱 워크스테이션"
-    },
-    {
-      src: `/images/studio5.jpg`,
-      alt: "음향 처리가 완료된 프로덕션 룸 전경"
-    },
-    {
-      src: `/images/hardware8.jpg`,
-      alt: "아날로그 아웃보드 장비와 프리앰프 랙"
-    }
-  ];
-
-  return (
-    <div className="mb-12">
-      <Slider {...settings}>
-        {studioImages.map((image, index) => (
-          <div key={index} className="px-2">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ResponsiveImage
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-64 object-cover rounded-lg shadow-md"
-                pictureClassName="block"
-                loading="lazy"
-                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
-              />
-            </motion.div>
-          </div>
-        ))}
-      </Slider>
-    </div>
-  );
-};
+const STUDIO_IMAGES = [
+  {
+    src: `/images/studio2.jpg`,
+    alt: "모니터링 스피커와 컨트롤 데스크가 있는 레코딩 룸"
+  },
+  {
+    src: `/images/studio3.jpg`,
+    alt: "프로페셔널 마이크와 팝 필터가 설치된 보컬 녹음 부스"
+  },
+  {
+    src: `/images/studio4.jpg`,
+    alt: "최신 DAW 시스템과 모니터를 갖춘 믹싱 워크스테이션"
+  },
+  {
+    src: `/images/studio5.jpg`,
+    alt: "음향 처리가 완료된 프로덕션 룸 전경"
+  },
+  {
+    src: `/images/hardware8.jpg`,
+    alt: "아날로그 아웃보드 장비와 프리앰프 랙"
+  }
+];
 
 const Home = () => {
   return (
@@ -226,19 +62,46 @@ const Home = () => {
         canonical="https://studionol.co.kr/"
         includeSchema={true}
       />
-      {/* 히어로 섹션 */}
-      <HeroSection />
+
+      <HeroBanner
+        title={
+          <>
+            <span className="whitespace-nowrap">당신의 음악에</span>{' '}
+            <span className="text-accent-light">생명</span>을 불어넣는 공간
+          </>
+        }
+        subtitle="최고급 장비와 전문 엔지니어가 함께하는 스튜디오 놀에서 당신만의 사운드를 완성하세요."
+        ctaButtons={
+          <>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center bg-white text-primary-dark text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/90 transition duration-300 shadow-lg"
+            >
+              예약하기
+            </Link>
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/10 transition duration-300"
+            >
+              포트폴리오 보기
+            </Link>
+          </>
+        }
+        image="/images/studio1.jpg"
+        imageAlt="스튜디오 놀 메인 스튜디오"
+      />
 
       <div className="container mx-auto px-4 pt-16 pb-12">
-        <motion.h2 
+        <motion.h2
           className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           {...PAGE_TITLE_ANIMATION}
         >
           당신을 위한 녹음 공간과 장비
         </motion.h2>
-        <StudioGallery />
 
-        <motion.h2 
+        <MediaGallery images={STUDIO_IMAGES} />
+
+        <motion.h2
           className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
           {...PAGE_SUBTITLE_ANIMATION}
         >

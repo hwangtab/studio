@@ -6,73 +6,9 @@ import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animatio
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
+import { coreServices, productionProcess, advantages } from '../data/services';
 
 const About = () => {
-  const productionProcess = [
-    {
-      title: "기획 단계",
-      description: "앨범 콘셉트 설정, 제작 일정 및 예산 계획을 함께 수립합니다.",
-      icon: FaRegLightbulb
-    },
-    {
-      title: "펀딩 지원",
-      description: "크라우드 펀딩을 통한 예산 마련 컨설팅을 제공합니다.",
-      icon: FaRegMoneyBillAlt
-    },
-    {
-      title: "레코딩",
-      description: "프리미엄 아날로그 장비를 활용한 고품질 녹음 서비스를 제공합니다.",
-      icon: FaHeadphones
-    },
-    {
-      title: "믹싱/마스터링",
-      description: "따뜻하고 입체적인 사운드를 구현하여 음악에 생명을 불어넣습니다.",
-      icon: FaMusic
-    },
-    {
-      title: "디자인",
-      description: "앨범 아트워크, 자켓, 프로모션 이미지 제작을 지원합니다.",
-      icon: FaPalette
-    },
-    {
-      title: "유통",
-      description: "온라인/오프라인 음원 및 음반 유통 서비스를 제공합니다.",
-      icon: FaGlobeAsia
-    },
-    {
-      title: "홍보/마케팅",
-      description: "SNS 활용, 언론 배포, 온오프라인 홍보 지원으로 음악을 알립니다.",
-      icon: FaBullhorn
-    },
-    {
-      title: "공연 기획",
-      description: "라이브 공연 기획 및 운영 지원으로 아티스트의 무대를 완성합니다.",
-      icon: FaCalendarAlt
-    }
-  ];
-
-  const advantages = [
-    {
-      title: "소통 오류 최소화",
-      description: "각 단계별 소통 오류를 최소화하여 원활한 제작 과정을 보장합니다.",
-      icon: FaUsers
-    },
-    {
-      title: "일관된 콘셉트 유지",
-      description: "처음부터 끝까지 일관된 앨범 콘셉트를 유지하여 작품의 완성도를 높입니다.",
-      icon: FaRegLightbulb
-    },
-    {
-      title: "시간과 비용 효율성",
-      description: "통합 프로세스를 통해 시간과 비용의 효율성을 극대화합니다.",
-      icon: FaRegClock
-    },
-    {
-      title: "창작 집중 환경",
-      description: "뮤지션은 창작에만 집중할 수 있는 환경을 제공합니다.",
-      icon: FaMusic
-    }
-  ];
 
   return (
     <div className="overflow-visible">
@@ -155,27 +91,16 @@ const About = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <FeatureCard
-              title="앨범 기획부터 유통까지"
-              description="모든 음악 제작 과정을 한 곳에서 처리하여 효율성을 극대화합니다."
-              icon={FaMusic}
-              delay={0.1}
-              size="lg"
-            />
-            <FeatureCard
-              title="뮤지션의 비전 실현"
-              description="뮤지션의 음악적 비전을 최우선으로 존중하는 프로덕션 철학을 가지고 있습니다."
-              icon={FaRegLightbulb}
-              delay={0.2}
-              size="lg"
-            />
-            <FeatureCard
-              title="전문가 연계 시스템"
-              description="각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다."
-              icon={FaUsers}
-              delay={0.3}
-              size="lg"
-            />
+            {coreServices.map((service, index) => (
+              <FeatureCard
+                key={service.title}
+                title={service.title}
+                description={service.description}
+                icon={service.icon}
+                delay={0.1 * (index + 1)}
+                size="lg"
+              />
+            ))}
           </div>
         </div>
       </section>

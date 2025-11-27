@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import BaseCard from './BaseCard';
 
 const FeatureCard = ({
   icon: Icon,
@@ -15,13 +14,14 @@ const FeatureCard = ({
   children,
 }) => {
   const isLarge = size === 'lg';
-  const content = (
-    <motion.div
-      className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 h-full flex flex-col ${variant === 'highlight' ? 'pt-8' : ''} ${className}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      whileHover={{ y: -5 }}
+  const baseVariant = variant === 'highlight' ? 'highlight' : 'default';
+
+  return (
+    <BaseCard
+      href={href}
+      delay={delay}
+      variant={baseVariant}
+      className={`p-6 h-full flex flex-col ${variant === 'highlight' ? 'pt-8' : ''} ${className}`}
     >
       {variant === 'highlight' && (
         <span className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" aria-hidden />
@@ -46,18 +46,8 @@ const FeatureCard = ({
       {description && <p className="typo-card-body flex-grow text-gray-600 dark:text-gray-300">{description}</p>}
       {children}
       {cta && <div className="mt-auto pt-4">{cta}</div>}
-    </motion.div>
+    </BaseCard>
   );
-
-  if (href) {
-    return (
-      <Link href={href} className="block h-full">
-        {content}
-      </Link>
-    );
-  }
-
-  return content;
 };
 
 export default FeatureCard;

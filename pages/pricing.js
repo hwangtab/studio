@@ -89,44 +89,7 @@ const pricingSchema = {
     },
 };
 
-const PricingCard = ({ id, title, price, unit, description, features, recommended, delay }) => {
-    return (
-        <motion.div
-            id={id}
-            className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg border ${recommended
-                ? 'border-primary dark:border-primary-light ring-2 ring-primary/20 dark:ring-primary-light/20'
-                : 'border-gray-100 dark:border-gray-700'
-                } p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay }}
-        >
-            {recommended && (
-                <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
-                    RECOMMENDED
-                </div>
-            )}
-            <h3 className="typo-card-title font-bold text-gray-800 dark:text-white mb-2">{title}</h3>
-            <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-extrabold text-primary dark:text-primary-light">{price}</span>
-                {unit && <span className="text-gray-500 dark:text-gray-400 ml-1 text-sm">{unit}</span>}
-            </div>
-            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6 min-h-[40px]">{description}</p>
-
-            <div className="border-t border-gray-100 dark:border-gray-700 my-4"></div>
-
-            <ul className="space-y-3 flex-grow">
-                {features.map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                        <FaCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                        <span>{feature}</span>
-                    </li>
-                ))}
-            </ul>
-        </motion.div>
-    );
-};
+import PricingCard from '../components/ui/PricingCard';
 
 const Pricing = () => {
     return (

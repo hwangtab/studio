@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
+import { SITE_CONFIG } from '../data/siteConfig';
 
 const NAV_ITEMS = [
   { href: '/', label: '홈' },
@@ -180,27 +181,27 @@ const Layout = ({ children }) => {
             <div>
               <h3 className="typo-footer-heading mb-4">연락처</h3>
               <a
-                href="https://naver.me/5gFZhS3X"
+                href={SITE_CONFIG.contact.naverMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
               >
                 <span className="inline-block w-4 mr-2">📍</span>
-                <span className="leading-relaxed">서울특별시 은평구 대조동 84-3 3층</span>
+                <span className="leading-relaxed">{SITE_CONFIG.contact.address}</span>
               </a>
               <a
-                href="mailto:contact@kosmart.org"
+                href={`mailto:${SITE_CONFIG.contact.email}`}
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
               >
                 <span className="inline-block w-4 mr-2">📧</span>
-                <span className="leading-relaxed">문의: contact@kosmart.org</span>
+                <span className="leading-relaxed">문의: {SITE_CONFIG.contact.email}</span>
               </a>
               <a
-                href="tel:02-764-3114"
+                href={`tel:${SITE_CONFIG.contact.phone}`}
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center"
               >
                 <span className="inline-block w-4 mr-2">📞</span>
-                <span className="leading-relaxed">전화: 02-764-3114</span>
+                <span className="leading-relaxed">전화: {SITE_CONFIG.contact.phone}</span>
               </a>
             </div>
           </div>

@@ -1,44 +1,5 @@
 // 포트폴리오 데이터 정규화 및 필터링 유틸리티
 
-const withPublicPath = (value = '') => {
-  if (!value) return '';
-  if (/^https?:\/\//i.test(value)) return value;
-  return value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`;
-};
-
-const ensureArray = (value) => (Array.isArray(value) ? value : []);
-
-const normalizePortfolioItems = (items = []) =>
-  ensureArray(items).map((item) => ({
-    ...item,
-    image: withPublicPath(item.image),
-  }));
-
-const normalizeAudioTracks = (tracks = []) =>
-  ensureArray(tracks).map((track) => ({
-    ...track,
-    src: withPublicPath(track.src),
-    albumArt: withPublicPath(track.albumArt),
-  }));
-
-const normalizeCategories = (categories = []) => {
-  const normalized = ensureArray(categories).map((category) => ({
-    ...category,
-    color: category.color || '#6d28d9',
-  }));
-
-  if (!normalized.some((category) => category.id === 'all')) {
-    normalized.unshift({
-      id: 'all',
-      name: '전체',
-      description: '모든 프로젝트',
-      color: '#6d28d9',
-    });
-  }
-
-  return normalized;
-};
-
 const filterPortfolioItems = (items, categoryId = 'all') => {
   if (!Array.isArray(items)) return [];
   if (categoryId === 'all' || !categoryId) {
@@ -90,33 +51,8 @@ const getPortfolioStats = (items = [], tracks = [], categories = []) => {
   };
 };
 
-const hydratePortfolioData = (rawData = {}) => {
-  const metadata =
-    rawData.metadata || {
-      version: '1.0',
-      lastUpdated: new Date().toISOString(),
-      description: '스튜디오 놀 포트폴리오 데이터',
-    };
-
-  const portfolioItems = normalizePortfolioItems(rawData.portfolioItems);
-  const audioTracks = normalizeAudioTracks(rawData.audioTracks);
-  const categories = normalizeCategories(rawData.categories);
-
-  return {
-    metadata,
-    portfolioItems,
-    audioTracks,
-    categories,
-  };
-};
-
 export {
-  hydratePortfolioData,
   filterPortfolioItems,
   searchPortfolioItems,
   getPortfolioStats,
-  withPublicPath,
-  normalizePortfolioItems,
-  normalizeAudioTracks,
-  normalizeCategories,
 };

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { FaPlay, FaPause, FaBackward, FaForward, FaVolumeUp, FaVolumeMute, FaHeadphones } from 'react-icons/fa';
 import ResponsiveImage from './ResponsiveImage';
-const AudioPlayer = ({ tracks }) => {
+const AudioPlayer = ({ tracks, layout = 'grid' }) => {
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -12,14 +12,21 @@ const AudioPlayer = ({ tracks }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const audioRef = useRef(new Audio(tracks[currentTrack].src));
+  const audioRef = useRef(null);
   const progressBarRef = useRef(null);
   const animationRef = useRef(null);
   const router = useRouter();
 
+  // Initialize audioRef lazily to avoid hydration mismatch or issues during SSR
+  useEffect(() => {
+    audioRef.current = new Audio(tracks[currentTrack].src);
+  }, [currentTrack, tracks]);
+
   const stopPlayback = useCallback(() => {
-    audioRef.current.pause();
-    setIsPlaying(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
@@ -27,7 +34,7 @@ const AudioPlayer = ({ tracks }) => {
   }, []);
 
   const whilePlaying = useCallback(() => {
-    if (progressBarRef.current) {
+    if (progressBarRef.current && audioRef.current) {
       progressBarRef.current.value = audioRef.current.currentTime;
       setCurrentTime(audioRef.current.currentTime);
       animationRef.current = requestAnimationFrame(whilePlaying);
@@ -35,6 +42,8 @@ const AudioPlayer = ({ tracks }) => {
   }, []);
 
   useEffect(() => {
+    if (!audioRef.current) return;
+
     const audio = audioRef.current;
     audio.src = tracks[currentTrack].src;
     audio.load();
@@ -58,6 +67,8 @@ const AudioPlayer = ({ tracks }) => {
   }, [currentTrack, tracks]);
 
   useEffect(() => {
+    if (!audioRef.current) return;
+
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
@@ -95,9 +106,10 @@ const AudioPlayer = ({ tracks }) => {
   }, [router.asPath, stopPlayback]);
 
   useEffect(() => {
-    const audio = audioRef.current;
     return () => {
-      audio.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
@@ -106,8 +118,10 @@ const AudioPlayer = ({ tracks }) => {
   }, []);
 
   const changeRange = () => {
-    audioRef.current.currentTime = progressBarRef.current.value;
-    setCurrentTime(progressBarRef.current.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = progressBarRef.current.value;
+      setCurrentTime(progressBarRef.current.value);
+    }
   }
 
   const playPause = () => {
@@ -136,17 +150,21 @@ const AudioPlayer = ({ tracks }) => {
     }
 
     setVolume(value);
-    audioRef.current.volume = value;
+    if (audioRef.current) {
+      audioRef.current.volume = value;
+    }
     setIsMuted(value === 0);
   }
 
   const toggleMute = () => {
-    if (isMuted) {
-      audioRef.current.volume = volume;
-      setIsMuted(false);
-    } else {
-      audioRef.current.volume = 0;
-      setIsMuted(true);
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.volume = volume;
+        setIsMuted(false);
+      } else {
+        audioRef.current.volume = 0;
+        setIsMuted(true);
+      }
     }
   }
 
@@ -162,9 +180,10 @@ const AudioPlayer = ({ tracks }) => {
   }
 
   const progress = duration ? (currentTime / duration) * 100 : 0;
+  const isStack = layout === 'stack';
 
   return (
-    <motion.div 
+    <motion.div
       className={`bg-gradient-to-br from-primary-dark via-secondary to-accent text-white rounded-2xl shadow-2xl overflow-hidden border border-white/10 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -172,14 +191,14 @@ const AudioPlayer = ({ tracks }) => {
       layout
     >
       {/* 앨범 아트 및 트랙 정보 */}
-      <div className="flex flex-col md:flex-row items-center mb-6">
-        <motion.div 
-          className={`relative rounded-xl shadow-lg overflow-hidden mb-6 md:mb-0 md:mr-8 transition-all duration-300 ${isExpanded ? 'w-48 h-48' : 'w-36 h-36'}`}
+      <div className={`flex flex-col ${isStack ? '' : 'md:flex-row'} items-center mb-6`}>
+        <motion.div
+          className={`relative rounded-xl shadow-lg overflow-hidden mb-6 ${isStack ? '' : 'md:mb-0 md:mr-8'} transition-all duration-300 ${isExpanded ? 'w-48 h-48' : 'w-36 h-36'}`}
           layout
         >
-          <ResponsiveImage 
-            src={tracks[currentTrack].albumArt} 
-            alt={`${tracks[currentTrack].title} 앨범 아트`} 
+          <ResponsiveImage
+            src={tracks[currentTrack].albumArt}
+            alt={`${tracks[currentTrack].title} 앨범 아트`}
             pictureClassName="block w-full h-full"
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
             loading="lazy"
@@ -198,7 +217,7 @@ const AudioPlayer = ({ tracks }) => {
             </div>
           )}
           {/* 재생/일시정지 오버레이 */}
-          <div 
+          <div
             className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
             onClick={playPause}
           >
@@ -213,23 +232,23 @@ const AudioPlayer = ({ tracks }) => {
         </motion.div>
 
         <div className="text-center md:text-left flex-1">
-          <motion.h3 
+          <motion.h3
             className="typo-card-title text-white mb-2"
             layout
           >
             {tracks[currentTrack].title}
           </motion.h3>
-          <motion.div 
+          <motion.div
             className="flex items-center justify-center md:justify-start mb-4 text-white/80"
             layout
           >
-            <FaHeadphones className="mr-2 text-white" /> 
+            <FaHeadphones className="mr-2 text-white" />
             <span>트랙 {currentTrack + 1} / {tracks.length}</span>
           </motion.div>
 
           {/* 확장 시 표시되는 추가 정보 */}
           {isExpanded && (
-            <motion.div 
+            <motion.div
               className="typo-card-body text-white/80 mb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -266,20 +285,20 @@ const AudioPlayer = ({ tracks }) => {
           <span className="typo-card-meta text-white/80">{formatTime(duration)}</span>
         </div>
         <div className="relative h-2 bg-white/20 rounded-full overflow-hidden">
-          <input 
-            type="range" 
+          <input
+            type="range"
             ref={progressBarRef}
             defaultValue="0"
             onChange={changeRange}
             max={duration || 0}
             className="absolute inset-0 w-full h-full appearance-none bg-transparent z-10 opacity-0 cursor-pointer"
           />
-          <div 
-            className="absolute top-0 left-0 h-full bg-white/60 rounded-full" 
+          <div
+            className="absolute top-0 left-0 h-full bg-white/60 rounded-full"
             style={{ width: `${progress}%` }}
           ></div>
-          <div 
-            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md pointer-events-none" 
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md pointer-events-none"
             style={{ left: `calc(${progress}% - 8px)`, display: progress > 0 ? 'block' : 'none' }}
           ></div>
         </div>
@@ -288,26 +307,26 @@ const AudioPlayer = ({ tracks }) => {
       {/* 컨트롤 버튼 */}
       <div className="flex flex-col sm:grid sm:grid-cols-[auto,1fr,auto] sm:items-center gap-4">
         <div className="flex items-center justify-center sm:justify-start space-x-2">
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }} 
+            whileTap={{ scale: 0.95 }}
             onClick={toggleMute}
             className="text-white/80 hover:text-white transition-colors p-2"
           >
             {isMuted ? <FaVolumeMute className="text-xl" /> : <FaVolumeUp className="text-xl" />}
           </motion.button>
           <div className="w-20 h-2 bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
-            <div 
+            <div
               className="absolute top-0 left-0 h-full w-full bg-transparent rounded-full"
               onClick={changeVolume}
             ></div>
-            <div 
-              className="absolute top-0 left-0 h-full bg-white rounded-full" 
+            <div
+              className="absolute top-0 left-0 h-full bg-white rounded-full"
               style={{ width: `${volume * 100}%` }}
               onClick={changeVolume}
             ></div>
-            <input 
-              type="range" 
+            <input
+              type="range"
               min="0"
               max="1"
               step="0.01"
@@ -315,35 +334,35 @@ const AudioPlayer = ({ tracks }) => {
               onChange={changeVolume}
               className="w-full h-full appearance-none bg-transparent opacity-0 absolute cursor-pointer z-10"
             />
-            <div 
-              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md pointer-events-none" 
+            <div
+              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md pointer-events-none"
               style={{ left: `calc(${volume * 100}% - 6px)` }}
             ></div>
           </div>
         </div>
 
         <div className="flex items-center justify-center space-x-4">
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }} 
+            whileTap={{ scale: 0.95 }}
             onClick={prevTrack}
             className="text-white/80 hover:text-white transition-colors p-2"
           >
             <FaBackward className="text-xl" />
           </motion.button>
 
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }} 
-            onClick={playPause} 
+            whileTap={{ scale: 0.9 }}
+            onClick={playPause}
             className="bg-gradient-to-r from-primary to-secondary text-white p-5 rounded-full shadow-lg hover:shadow-xl transition-all"
           >
             {isPlaying ? <FaPause className="text-2xl" /> : <FaPlay className="text-2xl ml-1" />}
           </motion.button>
 
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }} 
+            whileTap={{ scale: 0.95 }}
             onClick={nextTrack}
             className="text-white/80 hover:text-white transition-colors p-2"
           >
