@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"pages/portfolio.js -> ../components/AudioPlayer\":{\"id\":\"pages/portfolio.js -> ../components/AudioPlayer\",\"files\":[\"static/chunks/components_AudioPlayer_js.js\"]}}"
