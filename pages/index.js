@@ -6,8 +6,29 @@ import { FaMicrophone, FaCompactDisc, FaGlobeAmericas, FaCalendarCheck, FaArrowR
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
+import FeatureCard from '../components/ui/FeatureCard';
 
 const Slider = dynamic(() => import('react-slick').then((mod) => mod.default), { ssr: false });
+const CORE_SERVICES = [
+  {
+    title: '음반 기획',
+    description: '당신의 음악적 비전을 현실로 만들어드립니다. 기획부터 제작까지 전 과정을 함께합니다.',
+    link: '/about',
+    icon: FaCompactDisc,
+  },
+  {
+    title: '녹음 & 믹싱',
+    description: '고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다.',
+    link: '/about',
+    icon: FaMicrophone,
+  },
+  {
+    title: '홍보 & 마케팅',
+    description: '언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다.',
+    link: '/about',
+    icon: FaGlobeAmericas,
+  },
+];
 
 // 히어로 섹션 컴포넌트
 const HeroSection = () => {
@@ -120,44 +141,6 @@ const HeroSection = () => {
   );
 };
 
-// 개선된 서비스 카드 컴포넌트
-const ServiceCard = ({ title, description, link, icon: Icon }) => (
-  <Link href={link} className="block h-full">
-    <motion.div
-      className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full"
-      whileHover={{ y: -5 }}
-    >
-      {/* 배경 그라데이션 */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
-      
-      <div className="p-6 h-full flex flex-col">
-        <div className="flex items-center mb-4">
-          <div className="flex-shrink-0 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-3 rounded-full mr-4 group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-colors duration-300">
-            <Icon className="text-2xl text-primary dark:text-primary-light" />
-          </div>
-          <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{title}</h3>
-        </div>
-        
-        <p className="mb-6 typo-card-body flex-grow">{description}</p>
-        
-        <div className="mt-auto">
-          <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
-            자세히 보기
-            <motion.span
-              className="ml-1"
-              initial={{ x: 0 }}
-              whileHover={{ x: 5 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FaArrowRight size={14} />
-            </motion.span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  </Link>
-);
-
 const StudioGallery = () => {
   const settings = {
     dots: true,
@@ -265,25 +248,31 @@ const Home = () => {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
           {...PAGE_CONTENT_ANIMATION}
         >
-         <ServiceCard
-         title="음반 기획"
-         description="당신의 음악적 비전을 현실로 만들어드립니다. 기획부터 제작까지 전 과정을 함께합니다."
-         link="/about"
-         icon={FaCompactDisc}
-       />
-       <ServiceCard
-         title="녹음 & 믹싱"
-         description="고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다."
-         link="/about"
-         icon={FaMicrophone}
-       />
-       <ServiceCard
-       title="홍보 & 마케팅"
-       description="언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다."
-       link="/about"
-       icon={FaGlobeAmericas}
-     />
-      </motion.div>
+          {CORE_SERVICES.map((service, index) => (
+            <FeatureCard
+              key={service.title}
+              icon={service.icon}
+              title={service.title}
+              description={service.description}
+              href={service.link}
+              variant="highlight"
+              delay={0.1 * (index + 1)}
+              cta={
+                <div className="inline-flex items-center typo-card-cta text-gray-600 dark:text-gray-200 hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
+                  자세히 보기
+                  <motion.span
+                    className="ml-1"
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <FaArrowRight size={14} />
+                  </motion.span>
+                </div>
+              }
+            />
+          ))}
+        </motion.div>
 
         <motion.div
           className="text-center bg-gray-50 dark:bg-gray-800 pt-16 pb-12 px-4 rounded-2xl shadow-sm"

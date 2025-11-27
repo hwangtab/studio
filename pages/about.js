@@ -5,30 +5,7 @@ import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, 
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
-
-const StandardCard = ({ icon: Icon, title, description, delay, size = 'base' }) => {
-  const isLarge = size === 'lg';
-
-  return (
-    <motion.div
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-300 h-full flex flex-col"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      whileHover={{ y: -5, shadow: 'lg' }}
-    >
-      <div className="flex items-center mb-4">
-        <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-          <Icon className="text-2xl text-primary dark:text-primary-light" />
-        </div>
-        <h3 className={`${isLarge ? 'typo-card-title' : 'typo-card-subtitle'} text-gray-600 dark:text-gray-200`}>{title}</h3>
-      </div>
-      <p className={`typo-card-body mt-2 flex-grow`}>
-        {description}
-      </p>
-    </motion.div>
-  );
-};
+import FeatureCard from '../components/ui/FeatureCard';
 
 const About = () => {
   const productionProcess = [
@@ -178,21 +155,21 @@ const About = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <StandardCard
+            <FeatureCard
               title="앨범 기획부터 유통까지"
               description="모든 음악 제작 과정을 한 곳에서 처리하여 효율성을 극대화합니다."
               icon={FaMusic}
               delay={0.1}
               size="lg"
             />
-            <StandardCard
+            <FeatureCard
               title="뮤지션의 비전 실현"
               description="뮤지션의 음악적 비전을 최우선으로 존중하는 프로덕션 철학을 가지고 있습니다."
               icon={FaRegLightbulb}
               delay={0.2}
               size="lg"
             />
-            <StandardCard
+            <FeatureCard
               title="전문가 연계 시스템"
               description="각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다."
               icon={FaUsers}
@@ -221,8 +198,8 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {productionProcess.map((step, index) => (
-              <StandardCard
-                key={index}
+              <FeatureCard
+                key={step.title}
                 title={step.title}
                 description={step.description}
                 icon={step.icon}
