@@ -5,7 +5,32 @@ const nextConfig = {
   swcMinify: true,
   i18n,
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'image.bugsm.co.kr',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.tumblbug.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'is1-ssl.mzstatic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'thumb.mt.co.kr',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.imweb.me',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+      },
+    ],
   },
 };
 
