@@ -10,7 +10,7 @@ const PortfolioCard = ({ image, title, description, link, delay = 0 }) => {
             href={link}
             delay={delay}
             variant="default"
-            className="group p-0 border-0 overflow-hidden"
+            className="group p-0 border-0 overflow-hidden h-full flex flex-col"
             hoverEffect={false} // Custom hover effect implemented below
         >
             <div className="relative overflow-hidden">
@@ -35,9 +35,9 @@ const PortfolioCard = ({ image, title, description, link, delay = 0 }) => {
                 </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-6 flex flex-col flex-grow">
                 <h3 className="typo-card-title text-gray-600 dark:text-gray-200 mb-3">{title}</h3>
-                <p className="typo-card-body">{description}</p>
+                <p className="typo-card-body flex-grow">{description}</p>
             </div>
 
             <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
