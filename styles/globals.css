@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Montserrat 폰트 (영문, 숫자용) */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+/* Montserrat is now loaded via next/font in _app.js */
 
 /* GmarketSans 폰트 (일반 텍스트용) */
 @font-face {

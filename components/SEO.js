@@ -215,16 +215,23 @@ const SEO = ({
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
       <meta name="robots" content={robots} />
-      
-      {/* Geo Tags */}
+
       <meta name="geo.region" content="KR-11" />
       <meta name="geo.placename" content="서울특별시 은평구" />
       <meta name="geo.position" content="37.614353;126.925887" />
       <meta name="ICBM" content="37.614353, 126.925887" />
-      
+
+      {/* Preconnect to external image domains */}
+      <link rel="preconnect" href="https://image.bugsm.co.kr" />
+      <link rel="preconnect" href="https://img.tumblbug.com" />
+      <link rel="preconnect" href="https://is1-ssl.mzstatic.com" />
+      <link rel="preconnect" href="https://thumb.mt.co.kr" />
+      <link rel="preconnect" href="https://cdn.imweb.me" />
+      <link rel="preconnect" href="https://i.ytimg.com" />
+
       {/* Canonical URL */}
       <link rel="canonical" href={normalizedCanonical} />
-      
+
       {/* Open Graph */}
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={normalizedCanonical} />
@@ -248,7 +255,7 @@ const SEO = ({
       {ogType === 'article' && articleSection && (
         <meta property="article:section" content={articleSection} />
       )}
-      
+
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={normalizedCanonical} />
@@ -257,7 +264,7 @@ const SEO = ({
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content="스튜디오 놀 - 음악 제작 스튜디오" />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
-      
+
       {/* Structured Data */}
       {includeSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />

@@ -4,12 +4,20 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import Head from 'next/head';
 import { appWithTranslation } from 'next-i18next';
+import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import nextI18NextConfig from '../next-i18next.config';
 
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-montserrat',
+});
+
 function StudioNoriApp({ Component, pageProps }) {
   return (
-    <>
+    <div className={montserrat.variable}>
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,7 +28,7 @@ function StudioNoriApp({ Component, pageProps }) {
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </>
+    </div>
   );
 }
 
