@@ -27,21 +27,6 @@ const ResponsiveImage = ({
   const useFill = Boolean(fill);
   const wrapperClass = pictureClassName || containerClassName;
 
-  if (!useFill && !hasDimensions) {
-    return (
-      <div className={wrapperClass}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={normalizedSrc}
-          alt={alt}
-          className={className}
-          loading="lazy"
-          {...rest}
-        />
-      </div>
-    );
-  }
-
   if (useFill) {
     return (
       <div className={wrapperClass}>

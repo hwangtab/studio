@@ -50,6 +50,7 @@ const MediaGallery = ({ images, settings: customSettings, className = '' }) => {
                                 pictureClassName="block"
                                 loading="lazy"
                                 sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+                                fill
                             />
                         </motion.div>
                     </div>
