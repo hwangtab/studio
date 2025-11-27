@@ -16,7 +16,7 @@ import {
 const SITE_URL = 'https://studionol.co.kr';
 
 const SECTION_SUMMARIES = {
-    recording: '레코딩은 시간당 7만원(최소 2시간) 혹은 Day Lock 10시간 50만원으로 이용할 수 있으며 모든 금액은 VAT 별도입니다.',
+    recording: '레코딩은 시간당 10만원(최소 2시간) 혹은 6시간 패키지(Day Lock) 50만원으로 이용할 수 있으며 모든 금액은 VAT 별도입니다.',
     mixing: '믹싱은 트랙 수에 따라 20만~50만원으로 고정되어 있고, 모든 플랜에는 기본 두 번의 수정이 포함됩니다.',
     mastering: '마스터링은 싱글 곡당 10만원, 4곡 이상의 EP·앨범 작업은 곡당 8만원으로 묶음 할인이 적용됩니다.',
     extras: '컨설팅은 시간당 5만원, 펀딩 설계 대행은 40만원+성과 수수료 10%, 홍보/EPK 패키지는 각 30·50만원으로 제공됩니다.',
@@ -96,7 +96,7 @@ const Pricing = () => {
         <div className="overflow-visible">
             <SEO
                 title="녹음실·믹싱·마스터링 가격 | 스튜디오 놀 이용안내"
-                description="시간당 7만원 레코딩, Day Lock 50만원, 믹싱 20~50만원, 마스터링 8~10만원까지 스튜디오 놀의 VAT 별도 고정 단가표를 확인하세요."
+                description="시간당 10만원 레코딩, 6시간 패키지 50만원, 믹싱 20~50만원, 마스터링 8~10만원까지 스튜디오 놀의 VAT 별도 고정 단가표를 확인하세요."
                 keywords="녹음실 가격표, 믹싱 가격, 마스터링 가격, 레코딩 스튜디오 비용, 부가 서비스 패키지, 스튜디오 놀 가격"
                 canonical="https://studionol.co.kr/pricing"
                 includeSchema={true}
