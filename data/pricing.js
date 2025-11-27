@@ -4,21 +4,21 @@ export const recordingOffers = [
   {
     id: 'recording-hourly',
     title: '시간당 레코딩',
-    priceDisplay: '70,000원',
-    priceValue: 70000,
+    priceDisplay: '100,000원',
+    priceValue: 100000,
     unit: '/ 시간',
     description: '짧은 녹음이나 성우 녹음, 간단한 악기 녹음에 적합합니다.',
     features: ['전문 엔지니어링 포함', '최소 2시간부터 예약 가능', '보컬 디렉팅 지원', '실시간 모니터링 및 피드백'],
   },
   {
     id: 'recording-daylock',
-    title: '일당 레코딩 (Day Lock)',
+    title: '6시간 패키지 (Day Lock)',
     priceDisplay: '500,000원',
     priceValue: 500000,
     unit: '/ 일',
     description: '앨범 작업 등 장시간 녹음이 필요할 때 합리적인 선택입니다.',
     recommended: true,
-    features: ['10시간 패키지 (시간당 5만원 꼴)', '충분한 휴식과 여유로운 작업', '식사 시간 포함', '장시간 집중이 필요한 프로젝트에 최적'],
+    features: ['6시간 패키지 (약 17% 할인)', '충분한 휴식과 여유로운 작업', '식사 시간 포함', '장시간 집중이 필요한 프로젝트에 최적'],
   },
 ];
 
