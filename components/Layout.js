@@ -87,7 +87,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
-      <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
+      <header className={`w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -154,7 +154,7 @@ const Layout = ({ children }) => {
         )}
       </header>
 
-      <main className="page-main flex-grow pt-24 pb-12">
+      <main className="page-main flex-grow pb-12">
         {children}
       </main>
 
