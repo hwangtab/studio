@@ -59,7 +59,9 @@ const About = () => {
               alt="스튜디오 놀 메인"
               className="w-full h-full object-cover"
               pictureClassName="block h-full"
-              loading="eager"
+              priority={true}
+              width={1000}
+              height={400}
               sizes="(min-width: 1024px) 60vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-8">

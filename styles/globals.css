@@ -4,47 +4,26 @@
 
 /* Montserrat is now loaded via next/font in _app.js */
 
-/* GmarketSans 폰트 (일반 텍스트용) */
+/* Pretendard 폰트 (주 폰트 - GmarketSans 대체) */
 @font-face {
   font-family: 'GmarketSans';
-  font-weight: 100;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Thin.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
-  font-weight: 200;
+  font-weight: 300;
   font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
 }
 
 @font-face {
   font-family: 'GmarketSans';
-  font-weight: 300;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
   font-weight: 400;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
-  font-weight: 500;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
 }
 
 @font-face {
   font-family: 'GmarketSans';
   font-weight: 700;
   font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
 }
 
 /* PartialSansKR 폰트 (로고용) */
@@ -56,40 +35,12 @@
     font-display: swap;
 }
 
-/* Pretendard 폰트 (보조 폰트) */
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 300;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 500;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff') format('woff');
-}
-
+/* Pretendard 폰트 (보조 폰트 - 필요한 가중치만) */
 @font-face {
   font-family: 'Pretendard';
   font-weight: 600;
   font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
 }
 
 /* 기본 스타일 */
@@ -128,31 +79,6 @@ code {
   word-break: keep-all;
   overflow-wrap: break-word;
 }
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
 /* 마크다운 줄바꿈 스타일 */
 .prose p {
@@ -178,19 +104,6 @@ code {
 .prose p + p {
   margin-top: 1.5em;
   padding-top: 0.5em;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 

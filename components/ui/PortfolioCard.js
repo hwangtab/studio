@@ -21,6 +21,8 @@ const PortfolioCard = ({ image, title, description, link, delay = 0 }) => {
                         pictureClassName="absolute inset-0 block h-full w-full"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         loading="lazy"
+                        width={400}
+                        height={400}
                         sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw"
                     />
                 </div>

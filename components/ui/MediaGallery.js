@@ -49,10 +49,11 @@ const MediaGallery = ({ images, settings: customSettings, className = '' }) => {
                                 src={image.src}
                                 alt={image.alt}
                                 className="w-full h-64 object-cover rounded-lg shadow-md"
-                                pictureClassName="block"
+                                pictureClassName="block aspect-video"
                                 loading="lazy"
+                                width={600}
+                                height={400}
                                 sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
-                                fill
                             />
                         </motion.div>
                     </div>

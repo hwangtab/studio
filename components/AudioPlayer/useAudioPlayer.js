@@ -16,10 +16,11 @@ export const useAudioPlayer = (tracks) => {
     const router = useRouter();
 
     // Initialize audioRef lazily to avoid hydration mismatch or issues during SSR
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        audioRef.current = new Audio(tracks[currentTrack].src);
-    }, [currentTrack]);
+        if (tracks && tracks.length > 0) {
+            audioRef.current = new Audio(tracks[currentTrack].src);
+        }
+    }, [currentTrack, tracks]);
 
     const stopPlayback = useCallback(() => {
         if (audioRef.current) {

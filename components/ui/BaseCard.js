@@ -45,4 +45,15 @@ const BaseCard = ({
     return CardContent;
 };
 
-export default BaseCard;
+export default React.memo(BaseCard, (prevProps, nextProps) => {
+    // Custom comparison: only re-render if these key props change
+    return (
+        prevProps.href === nextProps.href &&
+        prevProps.variant === nextProps.variant &&
+        prevProps.className === nextProps.className &&
+        prevProps.children === nextProps.children &&
+        prevProps.onClick === nextProps.onClick &&
+        prevProps.delay === nextProps.delay &&
+        prevProps.hoverEffect === nextProps.hoverEffect
+    );
+});

@@ -47,7 +47,7 @@ const SEO = ({
     logo: `${siteUrl}/logo512.png`,
     image: absoluteOgImage,
     description,
-    priceRange: 'KRW 400000/month',
+    priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '대조동 84-3 3층',
@@ -58,7 +58,6 @@ const SEO = ({
     },
     telephone: '+82-2-764-3114',
     email: 'contact@kosmart.org',
-    priceRange: '$$',
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',

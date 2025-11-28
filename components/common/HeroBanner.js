@@ -94,7 +94,9 @@ const HeroBanner = ({
                                     alt={imageAlt}
                                     className="w-full h-auto"
                                     pictureClassName="block"
-                                    loading="eager"
+                                    priority={true}
+                                    width={800}
+                                    height={600}
                                     sizes="(min-width: 1024px) 50vw, 100vw"
                                 />
 
