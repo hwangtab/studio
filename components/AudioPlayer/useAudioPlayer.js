@@ -15,13 +15,6 @@ export const useAudioPlayer = (tracks) => {
     const animationRef = useRef(null);
     const router = useRouter();
 
-    // Initialize audioRef lazily to avoid hydration mismatch or issues during SSR
-    useEffect(() => {
-        if (tracks && tracks.length > 0) {
-            audioRef.current = new Audio(tracks[currentTrack].src);
-        }
-    }, [currentTrack, tracks]);
-
     const stopPlayback = useCallback(() => {
         if (audioRef.current) {
             audioRef.current.pause();
@@ -43,9 +36,20 @@ export const useAudioPlayer = (tracks) => {
 
     // Load and setup audio when track changes
     useEffect(() => {
+        // Initialize audioRef once if not already initialized
+        if (!audioRef.current && tracks && tracks.length > 0) {
+            audioRef.current = new Audio(tracks[currentTrack].src);
+        }
+
         if (!audioRef.current) return;
 
         const audio = audioRef.current;
+
+        // Stop previous playback and reset
+        audio.pause();
+        audio.currentTime = 0;
+
+        // Load new track
         audio.src = tracks[currentTrack].src;
         audio.load();
 
