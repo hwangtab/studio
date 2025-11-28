@@ -206,7 +206,35 @@ const SEO = ({
       },
     ],
   };
-  const schemaData = schema || defaultSchema;
+
+  // Generate Article schema for blog posts
+  const articleSchema = ogType === 'article' && articlePublishedTime ? {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    datePublished: articlePublishedTime,
+    dateModified: articleModifiedTime || articlePublishedTime,
+    author: {
+      '@type': 'Person',
+      name: articleAuthor || '스튜디오 놀',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '스튜디오 놀',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo512.png`,
+      },
+    },
+    image: absoluteOgImage,
+    description: description,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': normalizedCanonical,
+    },
+  } : null;
+
+  const schemaData = schema || articleSchema || defaultSchema;
 
   return (
     <Head>

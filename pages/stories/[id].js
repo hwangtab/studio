@@ -56,6 +56,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
         articleModifiedTime={story.updatedAt || story.date}
         articleAuthor={story.author}
         articleSection={story.category}
+        includeSchema={true}
       />
       <div className="container mx-auto px-4 pt-8 pb-12">
         {story.thumbnail && !story.thumbnailDerived && (
