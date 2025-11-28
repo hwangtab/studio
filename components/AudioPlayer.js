@@ -18,9 +18,10 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
   const router = useRouter();
 
   // Initialize audioRef lazily to avoid hydration mismatch or issues during SSR
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     audioRef.current = new Audio(tracks[currentTrack].src);
-  }, [currentTrack, tracks]);
+  }, [currentTrack]);
 
   const stopPlayback = useCallback(() => {
     if (audioRef.current) {
@@ -267,6 +268,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           layout
+          aria-label={isExpanded ? "플레이어 축소" : "플레이어 확장"}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             {isExpanded ? (
@@ -312,6 +314,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
             whileTap={{ scale: 0.95 }}
             onClick={toggleMute}
             className="text-white/80 hover:text-white transition-colors p-2"
+            aria-label={isMuted ? "음소거 해제" : "음소거"}
           >
             {isMuted ? <FaVolumeMute className="text-xl" /> : <FaVolumeUp className="text-xl" />}
           </motion.button>
@@ -347,6 +350,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
             whileTap={{ scale: 0.95 }}
             onClick={prevTrack}
             className="text-white/80 hover:text-white transition-colors p-2"
+            aria-label="이전 트랙"
           >
             <FaBackward className="text-xl" />
           </motion.button>
@@ -356,6 +360,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
             whileTap={{ scale: 0.9 }}
             onClick={playPause}
             className="bg-gradient-to-r from-primary to-secondary text-white p-5 rounded-full shadow-lg hover:shadow-xl transition-all"
+            aria-label={isPlaying ? "일시정지" : "재생"}
           >
             {isPlaying ? <FaPause className="text-2xl" /> : <FaPlay className="text-2xl ml-1" />}
           </motion.button>
@@ -365,6 +370,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
             whileTap={{ scale: 0.95 }}
             onClick={nextTrack}
             className="text-white/80 hover:text-white transition-colors p-2"
+            aria-label="다음 트랙"
           >
             <FaForward className="text-xl" />
           </motion.button>
@@ -376,6 +382,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }) => {
             onClick={toggleExpand}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            aria-label={isExpanded ? "플레이어 축소" : "플레이어 확장"}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               {isExpanded ? (
