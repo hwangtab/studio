@@ -1,17 +1,16 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { FaEye } from 'react-icons/fa';
 import BaseCard from './BaseCard';
 import ResponsiveImage from '../ResponsiveImage';
 
-const PortfolioCard = ({ image, title, description, link, delay = 0 }) => {
+const PortfolioCard = ({ image, title, description, onClick, delay = 0 }) => {
     return (
         <BaseCard
-            href={link}
+            onClick={onClick}
             delay={delay}
             variant="default"
-            className="group p-0 border-0 overflow-hidden h-full flex flex-col"
-            hoverEffect={false} // Custom hover effect implemented below
+            className="group p-0 border-0 overflow-hidden h-full flex flex-col cursor-pointer"
+            hoverEffect={false}
         >
             <div className="relative overflow-hidden">
                 <div className="w-full pb-[100%] relative">
@@ -31,9 +30,9 @@ const PortfolioCard = ({ image, title, description, link, delay = 0 }) => {
 
                 <div
                     className="absolute bottom-4 right-4 bg-white/90 text-primary p-3 rounded-full shadow-lg transform translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary hover:text-white z-10"
-                    aria-label="외부 링크로 이동"
+                    aria-label="상세 보기"
                 >
-                    <FaExternalLinkAlt />
+                    <FaEye />
                 </div>
             </div>
 

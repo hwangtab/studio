@@ -1,13 +1,14 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { FaExternalLinkAlt, FaMusic, FaHeadphones } from 'react-icons/fa';
+import { FaMusic, FaHeadphones } from 'react-icons/fa';
 import { filterPortfolioItems } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
-import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import { categories, portfolioItems, audioTracks } from '../data/portfolio';
+import PortfolioDetailModal from '../components/PortfolioDetailModal';
 const AudioPlayer = dynamic(() => import('../components/AudioPlayer').then((mod) => mod.default), { ssr: false });
 
 import PortfolioCard from '../components/ui/PortfolioCard';
@@ -17,12 +18,49 @@ const Portfolio = ({
   audioTracks = [],
   categories = [],
 }) => {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const filteredItems = useMemo(
     () => filterPortfolioItems(initialPortfolioItems, selectedCategory),
     [initialPortfolioItems, selectedCategory]
   );
+
+  // URL 쿼리에서 모달 상태 복원 (shallow routing 지원)
+  useEffect(() => {
+    const itemId = router.query.item;
+    if (itemId) {
+      const item = initialPortfolioItems.find((p) => p.id === itemId);
+      setSelectedItem(item || null);
+    } else {
+      setSelectedItem(null);
+    }
+  }, [router.query.item, initialPortfolioItems]);
+
+  // 브라우저 뒤로가기 처리
+  useEffect(() => {
+    const handlePopState = () => {
+      if (!router.query.item) {
+        setSelectedItem(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [router.query.item]);
+
+  // 카드 클릭 핸들러
+  const handleCardClick = (item) => {
+    setSelectedItem(item);
+    router.push(`/portfolio?item=${item.id}`, `/portfolio/${item.id}`, { shallow: true });
+  };
+
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setSelectedItem(null);
+    router.push('/portfolio', undefined, { shallow: true });
+  };
 
   // 카테고리 변경 핸들러
   const handleCategoryChange = (categoryId) => {
@@ -116,13 +154,22 @@ const Portfolio = ({
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredItems.map((item) => (
-                <PortfolioCard key={item.id} {...item} />
+                <PortfolioCard
+                  key={item.id}
+                  {...item}
+                  onClick={() => handleCardClick(item)}
+                />
               ))}
             </div>
           )}
         </motion.div>
 
       </div>
+
+      {/* 포트폴리오 상세 모달 */}
+      {selectedItem && (
+        <PortfolioDetailModal item={selectedItem} onClose={handleCloseModal} />
+      )}
     </>
   );
 };
