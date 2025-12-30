@@ -48,7 +48,8 @@ const StoryDetailPage = ({ story, relatedStories }) => {
     <>
       <SEO
         title={`${story.title} - 스튜디오 놀`}
-        description={metaDescription}
+        description={story.summary || metaDescription}
+        keywords={story.tags ? story.tags.join(', ') : '스튜디오 놀, 음악, 스토리'}
         canonical={shareUrl}
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
         ogType="article"
@@ -57,6 +58,11 @@ const StoryDetailPage = ({ story, relatedStories }) => {
         articleAuthor={story.author}
         articleSection={story.category}
         includeSchema={true}
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '스토리', path: '/stories' },
+          { name: story.title, path: `/stories/${story.slug}` },
+        ]}
       />
       <div className="container mx-auto px-4 pt-8 pb-12">
         {story.thumbnail && !story.thumbnailDerived && (

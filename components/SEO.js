@@ -15,6 +15,8 @@ const SEO = ({
   articleModifiedTime,
   articleAuthor,
   articleSection,
+  breadcrumbs = null,
+  faqItems = null, // e.g. [{ question: '질문?', answer: '답변' }]
 }) => {
   // 기본 사이트 URL
   const siteUrl = 'https://studionol.co.kr';
@@ -233,6 +235,32 @@ const SEO = ({
     },
   } : null;
 
+  // Generate BreadcrumbList schema for navigation
+  const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: `${siteUrl}${crumb.path}`,
+    })),
+  } : null;
+
+  // Generate FAQPage schema for AI assistants
+  const faqSchema = faqItems && faqItems.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
+
   const schemaData = schema || articleSchema || defaultSchema;
 
   return (
@@ -295,6 +323,12 @@ const SEO = ({
       {/* Structured Data */}
       {includeSchema && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
+      )}
+      {breadcrumbSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      )}
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       )}
     </Head>
   );

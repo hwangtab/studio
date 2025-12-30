@@ -1,6 +1,6 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
-import ResponsiveImage from './ResponsiveImage';
+
 
 let prismLoaderPromise = null;
 
@@ -36,7 +36,7 @@ const CodeBlock = ({ children, className }) => {
           PrismLib.highlightElement(codeRef.current);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       isMounted = false;
@@ -114,7 +114,7 @@ const MarkdownRenderer = ({ content }) => {
                 </h4>
               ),
             },
-            
+
             // 문단 및 텍스트 스타일링
             p: {
               component: ({ children, ...props }) => (
@@ -140,7 +140,7 @@ const MarkdownRenderer = ({ content }) => {
                 </em>
               ),
             },
-            
+
             // 목록 스타일링
             ul: {
               component: ({ children, ...props }) => (
@@ -182,7 +182,7 @@ const MarkdownRenderer = ({ content }) => {
                 </li>
               ),
             },
-            
+
             // 인용문 스타일링
             blockquote: {
               component: ({ children, ...props }) => (
@@ -191,7 +191,7 @@ const MarkdownRenderer = ({ content }) => {
                 </blockquote>
               ),
             },
-            
+
             // 링크 스타일링
             a: {
               component: ({ children, ...props }) => (
@@ -200,25 +200,24 @@ const MarkdownRenderer = ({ content }) => {
                 </a>
               ),
             },
-            
+
             // 이미지 스타일링
             img: {
               component: ({ alt, src, ...rest }) => (
                 <div className="my-6">
-                  <ResponsiveImage
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={src}
                     alt={alt || '이미지'}
                     className="w-full h-auto rounded-lg shadow-md"
-                    pictureClassName="block"
                     loading="lazy"
-                    sizes="100vw"
                     {...rest}
                   />
                   {alt && <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">{alt}</p>}
                 </div>
               ),
             },
-            
+
             // 코드 블록 스타일링
             code: {
               component: ({ children, className, ...props }) => {
@@ -232,7 +231,7 @@ const MarkdownRenderer = ({ content }) => {
                 );
               },
             },
-            
+
             // 테이블 스타일링
             table: {
               component: ({ children, ...props }) => (
