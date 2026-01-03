@@ -53,13 +53,13 @@ const Portfolio = ({
   // 카드 클릭 핸들러
   const handleCardClick = (item) => {
     setSelectedItem(item);
-    router.push(`/portfolio?item=${item.id}`, `/portfolio/${item.id}`, { shallow: true });
+    router.push(`/portfolio?item=${item.id}`, `/portfolio/${item.id}`, { shallow: true, scroll: false });
   };
 
   // 모달 닫기 핸들러
   const handleCloseModal = () => {
     setSelectedItem(null);
-    router.push('/portfolio', undefined, { shallow: true });
+    router.push('/portfolio', undefined, { shallow: true, scroll: false });
   };
 
   // 카테고리 변경 핸들러
