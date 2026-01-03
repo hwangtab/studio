@@ -11,7 +11,7 @@ const BaseCard = ({
     variant = 'default', // default, highlight, outline
     hoverEffect = true,
 }) => {
-    const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden transition-all duration-300";
+    const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]";
 
     const variants = {
         default: "shadow-md border border-gray-100 dark:border-gray-700",
@@ -19,14 +19,15 @@ const BaseCard = ({
         outline: "border border-gray-200 dark:border-gray-700 bg-transparent",
     };
 
-    const hoverStyles = hoverEffect ? "hover:shadow-xl hover:-translate-y-1" : "";
+    // Removed CSS hover styles to prevent conflict with Framer Motion
 
     const CardContent = (
         <motion.div
-            className={`${baseStyles} ${variants[variant]} ${hoverStyles} ${className}`}
+            className={`${baseStyles} ${variants[variant]} ${className}`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            whileHover={hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {}}
+            viewport={{ once: true, margin: "0px 0px -50px 0px" }}
             transition={{ duration: 0.4, delay }}
             onClick={onClick}
         >

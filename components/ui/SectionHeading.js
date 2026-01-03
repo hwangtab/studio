@@ -8,7 +8,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, align = 'center' }) => {
 
   return (
     <motion.div
-      className={`${alignmentClasses[align] ?? alignmentClasses.center} mb-12`}
+      className={`${alignmentClasses[align] ?? alignmentClasses.center} mb-12 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

@@ -180,7 +180,7 @@ const Layout = ({ children }) => {
         )}
       </header>
 
-      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-24'} pb-12`}>
+      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} pb-12`}>
         {children}
       </main>
 
