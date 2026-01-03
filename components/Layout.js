@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { href: '/contact', label: '연락처' },
 ];
 
-const NavLink = ({ href, children, isScrolled, currentPath, onNavigate }) => {
+const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, isHome }) => {
   const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 
   return (
@@ -24,7 +24,7 @@ const NavLink = ({ href, children, isScrolled, currentPath, onNavigate }) => {
       onClick={onNavigate}
       className={`px-3 py-2 rounded-md typo-nav-link transition-all duration-300 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
-        : `${isScrolled ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
+        : `${isScrolled || !isHome ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
         }`}
     >
       {children}
@@ -94,14 +94,24 @@ const Layout = ({ children }) => {
     }
   }, [isDarkMode, hasThemeLoaded]);
 
+  const isHome = router.pathname === '/';
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
-      <header className={`fixed w-full z-50 transition-all duration-300 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
+      <header
+        className={`fixed w-full z-50 transition-all duration-300 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] ${isScrolled
+          ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md'
+          : isHome
+            ? 'bg-transparent'
+            : 'bg-gradient-to-r from-primary via-secondary to-accent'
+          }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/"
-              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'} flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
+              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'
+                } flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
               onClick={(event) => {
                 event.preventDefault();
                 setIsMenuOpen(false);
@@ -120,6 +130,7 @@ const Layout = ({ children }) => {
                     isScrolled={isScrolled}
                     currentPath={currentPath}
                     onNavigate={() => setIsMenuOpen(false)}
+                    isHome={isHome}
                   >
                     {item.label}
                   </NavLink>
@@ -127,7 +138,10 @@ const Layout = ({ children }) => {
               </nav>
 
               <button
-                className={`p-2 rounded-full ${isScrolled ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/20'} transition-colors duration-300`}
+                className={`p-2 rounded-full ${isScrolled
+                  ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                  : 'text-white hover:bg-white/20'
+                  } transition-colors duration-300`}
                 onClick={toggleDarkMode}
                 aria-label="Toggle dark mode"
               >
@@ -135,7 +149,10 @@ const Layout = ({ children }) => {
               </button>
 
               <button
-                className={`lg:hidden p-2 rounded-full ${isScrolled ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/20'} transition-colors duration-300`}
+                className={`lg:hidden p-2 rounded-full ${isScrolled
+                  ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                  : 'text-white hover:bg-white/20'
+                  } transition-colors duration-300`}
                 onClick={() => setIsMenuOpen((prev) => !prev)}
                 aria-label="Toggle menu"
               >
@@ -163,7 +180,7 @@ const Layout = ({ children }) => {
         )}
       </header>
 
-      <main className="page-main flex-grow pt-24 pb-12">
+      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-24'} pb-12`}>
         {children}
       </main>
 
