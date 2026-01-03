@@ -37,7 +37,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, isExpanded, onP
                     className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
                     onClick={onPlayPause}
                 >
-                    <div className="bg-white/20 backdrop-blur-md p-4 rounded-full">
+                    <div className="bg-white/20 backdrop-blur-md p-4 rounded-full will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
                         {isPlaying ? (
                             <svg className="text-white text-2xl" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                 <rect x="6" y="4" width="4" height="16" />

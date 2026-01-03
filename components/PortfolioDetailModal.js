@@ -100,7 +100,7 @@ const PortfolioDetailModal = ({ item, onClose }) => {
       >
         {/* 오버레이 배경 */}
         <motion.div
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]"
           variants={overlayVariants}
         />
 
@@ -113,7 +113,7 @@ const PortfolioDetailModal = ({ item, onClose }) => {
           exit="exit"
         >
           {/* 헤더 - 닫기 및 공유 버튼 */}
-          <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700">
+          <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
             <button
               onClick={onClose}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

@@ -96,7 +96,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
-      <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
+      <header className={`fixed w-full z-50 transition-all duration-300 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md' : 'bg-gradient-to-r from-primary via-secondary to-accent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -146,7 +146,7 @@ const Layout = ({ children }) => {
         </div>
 
         {isMenuOpen && (
-          <nav className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg">
+          <nav className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
             <div className="px-4 py-3 space-y-2">
               {NAV_ITEMS.map((item) => (
                 <Link
