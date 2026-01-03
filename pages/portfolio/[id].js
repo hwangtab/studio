@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaShare, FaExternalLinkAlt } from 'react-icons/fa';
+import { ArrowLeft, Share2, ExternalLink } from 'lucide-react';
 import SEO from '../../components/SEO';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { categories, portfolioItems } from '../../data/portfolio';
@@ -62,7 +62,7 @@ const PortfolioDetailPage = ({ item }) => {
             href="/portfolio"
             className="inline-flex items-center typo-card-cta hover:underline mb-6"
           >
-            <FaArrowLeft className="mr-2" />
+            <ArrowLeft className="mr-2" size={16} />
             포트폴리오 목록으로 돌아가기
           </Link>
         </div>
@@ -133,14 +133,14 @@ const PortfolioDetailPage = ({ item }) => {
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
                 >
-                  <FaExternalLinkAlt />
+                  <ExternalLink size={16} />
                   음원 들으러 가기
                 </a>
                 <button
                   onClick={sharePortfolio}
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium"
                 >
-                  <FaShare />
+                  <Share2 size={16} />
                   공유하기
                 </button>
               </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaCheck } from 'react-icons/fa';
+import { Check } from 'lucide-react';
 import BaseCard from './BaseCard';
 
 const PricingCard = ({ id, title, price, unit, description, features, recommended, delay }) => {
@@ -27,7 +27,7 @@ const PricingCard = ({ id, title, price, unit, description, features, recommende
             <ul className="space-y-3 flex-grow">
                 {features.map((feature, index) => (
                     <li key={index} className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                        <FaCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                        <Check className="text-green-500 mt-1 mr-2 flex-shrink-0" size={14} />
                         <span>{feature}</span>
                     </li>
                 ))}

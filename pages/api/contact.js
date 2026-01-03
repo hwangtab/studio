@@ -50,13 +50,47 @@ export default async function handler(req, res) {
 
   const { name, phone, message, company } = req.body || {};
 
+  // Honeypot check (spam prevention)
   if (typeof company === 'string' && company.trim().length > 0) {
     return res.status(400).json({ error: '잘못된 요청입니다.' });
   }
 
+  // Required fields validation
   if (!name || !phone || !message) {
     return res.status(400).json({ error: '필수 입력값이 누락되었습니다.' });
   }
+
+  // Input type validation
+  if (typeof name !== 'string' || typeof phone !== 'string' || typeof message !== 'string') {
+    return res.status(400).json({ error: '잘못된 입력 형식입니다.' });
+  }
+
+  // Length validation (prevent DoS)
+  const MAX_NAME_LENGTH = 100;
+  const MAX_PHONE_LENGTH = 20;
+  const MAX_MESSAGE_LENGTH = 5000;
+
+  if (name.length > MAX_NAME_LENGTH) {
+    return res.status(400).json({ error: `이름은 ${MAX_NAME_LENGTH}자 이내로 입력해주세요.` });
+  }
+  if (phone.length > MAX_PHONE_LENGTH) {
+    return res.status(400).json({ error: `전화번호는 ${MAX_PHONE_LENGTH}자 이내로 입력해주세요.` });
+  }
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    return res.status(400).json({ error: `메시지는 ${MAX_MESSAGE_LENGTH}자 이내로 입력해주세요.` });
+  }
+
+  // Phone format validation (Korean phone number)
+  const phoneRegex = /^[0-9\-\+\s\(\)]{8,20}$/;
+  if (!phoneRegex.test(phone)) {
+    return res.status(400).json({ error: '올바른 전화번호 형식이 아닙니다.' });
+  }
+
+  // Sanitize inputs (basic XSS prevention)
+  const sanitize = (str) => str.replace(/[<>]/g, '').trim();
+  const sanitizedName = sanitize(name);
+  const sanitizedPhone = sanitize(phone);
+  const sanitizedMessage = sanitize(message);
 
   const serviceId = getEnvVar('EMAILJS_SERVICE_ID');
   const templateId = getEnvVar('EMAILJS_TEMPLATE_ID');
@@ -83,9 +117,9 @@ export default async function handler(req, res) {
         template_id: templateId,
         user_id: publicKey,
         template_params: {
-          from_name: name,
-          from_phone: phone,
-          message,
+          from_name: sanitizedName,
+          from_phone: sanitizedPhone,
+          message: sanitizedMessage,
         },
       }),
     });
@@ -97,8 +131,9 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error('EmailJS error:', error);
-    return res.status(500).json({ error: error.message || '메시지 전송 중 오류가 발생했습니다.' });
+    // Log error internally but don't expose details to client
+    console.error('EmailJS error:', error.message);
+    return res.status(500).json({ error: '메시지 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.' });
   }
 }
 

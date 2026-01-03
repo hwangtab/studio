@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaCalendarAlt, FaTag, FaShare } from 'react-icons/fa';
+import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
 import SEO from '../../components/SEO';
 import MarkdownRenderer from '../../components/MarkdownRenderer';
 import StoryCard from '../../components/StoryCard';
@@ -88,7 +88,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
             href="/stories"
             className="inline-flex items-center typo-card-cta hover:underline mb-6"
           >
-            <FaArrowLeft className="mr-2" />
+            <ArrowLeft className="mr-2" size={16} />
             스토리 목록으로 돌아가기
           </Link>
 
@@ -103,12 +103,12 @@ const StoryDetailPage = ({ story, relatedStories }) => {
 
             <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6 text-caption">
               <div className="flex items-center mr-6 mb-2">
-                <FaCalendarAlt className="mr-2 text-gray-500" />
+                <Calendar className="mr-2 text-gray-500" size={14} />
                 <span>{story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}</span>
               </div>
 
               <div className="flex items-center mr-6 mb-2">
-                <FaTag className="mr-2" />
+                <Tag className="mr-2" size={14} />
                 <span>{story.category}</span>
               </div>
 
@@ -116,7 +116,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
                 onClick={shareStory}
                 className="inline-flex items-center typo-card-cta hover:underline ml-auto mb-2"
               >
-                <FaShare className="mr-2" />
+                <Share2 className="mr-2" size={14} />
                 공유하기
               </button>
             </div>
@@ -168,7 +168,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
             <p className="typo-card-body text-gray-500 mb-6">관련 스토리가 없습니다.</p>
           )}
           <Link href="/stories" className="inline-flex items-center typo-card-cta hover:underline">
-            <FaArrowLeft className="mr-2" />
+            <ArrowLeft className="mr-2" size={16} />
             모든 스토리 보기
           </Link>
         </div>

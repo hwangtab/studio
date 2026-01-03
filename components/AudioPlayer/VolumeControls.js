@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+import { Volume2, VolumeX } from 'lucide-react';
 
 const VolumeControls = ({ volume, isMuted, onToggleMute, onChangeVolume }) => {
     return (
@@ -12,7 +12,7 @@ const VolumeControls = ({ volume, isMuted, onToggleMute, onChangeVolume }) => {
                 className="text-white/80 hover:text-white transition-colors p-2"
                 aria-label={isMuted ? "음소거 해제" : "음소거"}
             >
-                {isMuted ? <FaVolumeMute className="text-xl" /> : <FaVolumeUp className="text-xl" />}
+                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </motion.button>
             <div className="w-20 h-2 bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
                 <div

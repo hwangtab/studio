@@ -1,23 +1,23 @@
-import { FaMicrophone, FaCompactDisc, FaGlobeAmericas } from 'react-icons/fa';
+import { Mic, Disc, Globe } from 'lucide-react';
 
 export const homeServices = [
     {
         title: '음반 기획',
         description: '당신의 음악적 비전을 현실로 만들어드립니다. 기획부터 제작까지 전 과정을 함께합니다.',
         link: '/about',
-        icon: FaCompactDisc,
+        icon: Disc,
     },
     {
         title: '녹음 & 믹싱',
         description: '고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다.',
         link: '/about',
-        icon: FaMicrophone,
+        icon: Mic,
     },
     {
         title: '홍보 & 마케팅',
         description: '언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다.',
         link: '/about',
-        icon: FaGlobeAmericas,
+        icon: Globe,
     },
 ];
 

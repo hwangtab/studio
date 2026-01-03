@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaMicrophone, FaSlidersH, FaCompactDisc, FaChartLine, FaCheck, FaInfoCircle } from 'react-icons/fa';
+import { Mic, SlidersHorizontal, Disc, TrendingUp, Check, Info } from 'lucide-react';
 import SEO from '../components/SEO';
 import SectionHeading from '../components/ui/SectionHeading';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
@@ -135,7 +135,7 @@ const Pricing = () => {
             <section id="recording" className="py-16">
                 <div className="container mx-auto px-4">
                     <SectionHeading
-                        icon={FaMicrophone}
+                        icon={Mic}
                         title="레코딩 (Recording)"
                         subtitle="최고급 아날로그 장비와 전문 엔지니어링이 포함된 프리미엄 녹음 서비스"
                     />
@@ -164,7 +164,7 @@ const Pricing = () => {
             <section id="mixing" className={`py-16 ${SECTION_BG.alternate}`}>
                 <div className="container mx-auto px-4">
                     <SectionHeading
-                        icon={FaSlidersH}
+                        icon={SlidersHorizontal}
                         title="믹싱 (Mixing)"
                         subtitle="트랙 수에 따른 합리적인 가격 책정. 아날로그와 디지털의 조화로 최상의 사운드를 만듭니다."
                     />
@@ -187,7 +187,7 @@ const Pricing = () => {
                         ))}
                     </div>
                     <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
-                        <FaInfoCircle className="text-primary mt-1 mr-3 flex-shrink-0" />
+                        <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} />
                         <div>
                             <h4 className="font-bold text-gray-800 dark:text-white mb-1">보컬 튠/에딧 옵션</h4>
                             <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -202,7 +202,7 @@ const Pricing = () => {
             <section id="mastering" className="py-16">
                 <div className="container mx-auto px-4">
                     <SectionHeading
-                        icon={FaCompactDisc}
+                        icon={Disc}
                         title="마스터링 (Mastering)"
                         subtitle="음악의 최종 완성도를 책임지는 단계로, 어떤 재생 환경에서도 균일한 사운드를 보장합니다."
                     />
@@ -231,7 +231,7 @@ const Pricing = () => {
             <section id="support-services" className={`py-16 ${SECTION_BG.alternate}`}>
                 <div className="container mx-auto px-4">
                     <SectionHeading
-                        icon={FaChartLine}
+                        icon={TrendingUp}
                         title="부가 서비스"
                         subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
                     />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaHeadphones } from 'react-icons/fa';
+import { Headphones } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 
 const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, isExpanded, onPlayPause, onToggleExpand, layout }) => {
@@ -57,7 +57,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, isExpanded, onP
                     {track.title}
                 </motion.h3>
                 <motion.div className="flex items-center justify-center md:justify-start mb-4 text-white/80" layout>
-                    <FaHeadphones className="mr-2 text-white" />
+                    <Headphones className="mr-2 text-white" size={18} />
                     <span>트랙 {trackNumber} / {totalTracks}</span>
                 </motion.div>
 

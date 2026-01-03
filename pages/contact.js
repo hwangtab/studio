@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaUser, FaPaperPlane, FaCheckCircle, FaCommentDots } from 'react-icons/fa';
+import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 
 import { SITE_CONFIG } from '../data/siteConfig';
 
-const InputField = ({ icon: Icon, ...props }) => (
+const InputField = ({ icon: Icon, label, id, ...props }) => (
   <div className="relative mb-4">
+    <label htmlFor={id} className="sr-only">{label}</label>
     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
     </div>
-    <input className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent" {...props} />
+    <input id={id} className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent" {...props} />
   </div>
 );
 
@@ -81,19 +82,19 @@ const Contact = () => {
               <h2 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">연락처 정보</h2>
               <div className="space-y-4">
                 <a href={SITE_CONFIG.contact.naverMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <FaMapMarkerAlt className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
                   <span className="leading-relaxed">{SITE_CONFIG.contact.address} {SITE_CONFIG.name}</span>
                 </a>
                 <a href={`tel:${SITE_CONFIG.contact.phone}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <FaPhone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
                   <span className="leading-relaxed">{SITE_CONFIG.contact.phone}</span>
                 </a>
                 <a href={`mailto:${SITE_CONFIG.contact.email}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <FaEnvelope className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
                   <span className="leading-relaxed">{SITE_CONFIG.contact.email}</span>
                 </a>
                 <a href={SITE_CONFIG.contact.kakaoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <FaCommentDots className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
                   <span className="leading-relaxed">카카오톡 오픈채팅</span>
                 </a>
               </div>
@@ -147,7 +148,7 @@ const Contact = () => {
               <h2 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">문의하기</h2>
               {submitMessage && (
                 <div className={`mb-4 p-4 rounded-md flex items-center ${submitMessage.includes('성공') ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}>
-                  {submitMessage.includes('성공') && <FaCheckCircle className="mr-2" />}
+                  {submitMessage.includes('성공') && <CheckCircle className="mr-2" size={18} />}
                   {submitMessage}
                 </div>
               )}
@@ -165,28 +166,36 @@ const Contact = () => {
                   spellCheck="false"
                 />
                 <InputField
-                  icon={FaUser}
+                  icon={User}
+                  id="name"
+                  label="이름"
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="이름"
                   required
+                  autoComplete="name"
                 />
                 <InputField
-                  icon={FaPhone}
+                  icon={Phone}
+                  id="phone"
+                  label="연락처"
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="연락처"
                   required
+                  autoComplete="tel"
                 />
                 <div className="relative mb-4">
+                  <label htmlFor="message" className="sr-only">메시지</label>
                   <div className="absolute top-3 left-3 pointer-events-none">
-                    <FaPaperPlane className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    <Send className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                   </div>
                   <textarea
+                    id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
@@ -214,7 +223,7 @@ const Contact = () => {
                       </>
                     ) : (
                       <>
-                        <FaPaperPlane className="mr-2" />
+                        <Send className="mr-2" size={18} />
                         이메일로 문의하기
                       </>
                     )}
@@ -228,7 +237,7 @@ const Contact = () => {
                     rel="noopener noreferrer"
                     className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-gray-900 dark:text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 font-title"
                   >
-                    <FaCommentDots className="mr-2" />
+                    <MessageCircle className="mr-2" size={18} />
                     카카오톡으로 문의하기
                   </motion.a>
                 </div>

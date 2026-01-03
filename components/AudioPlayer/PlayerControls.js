@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaPlay, FaPause, FaBackward, FaForward } from 'react-icons/fa';
+import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
 
 const PlayerControls = ({ isPlaying, onPlayPause, onPrevTrack, onNextTrack }) => {
     return (
@@ -12,7 +12,7 @@ const PlayerControls = ({ isPlaying, onPlayPause, onPrevTrack, onNextTrack }) =>
                 className="text-white/80 hover:text-white transition-colors p-2"
                 aria-label="이전 트랙"
             >
-                <FaBackward className="text-xl" />
+                <SkipBack size={20} />
             </motion.button>
 
             <motion.button
@@ -22,7 +22,7 @@ const PlayerControls = ({ isPlaying, onPlayPause, onPrevTrack, onNextTrack }) =>
                 className="bg-gradient-to-r from-primary to-secondary text-white p-5 rounded-full shadow-lg hover:shadow-xl transition-all"
                 aria-label={isPlaying ? "일시정지" : "재생"}
             >
-                {isPlaying ? <FaPause className="text-2xl" /> : <FaPlay className="text-2xl ml-1" />}
+                {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-1" />}
             </motion.button>
 
             <motion.button
@@ -32,7 +32,7 @@ const PlayerControls = ({ isPlaying, onPlayPause, onPrevTrack, onNextTrack }) =>
                 className="text-white/80 hover:text-white transition-colors p-2"
                 aria-label="다음 트랙"
             >
-                <FaForward className="text-xl" />
+                <SkipForward size={20} />
             </motion.button>
         </div>
     );

@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaShare, FaExternalLinkAlt } from 'react-icons/fa';
+import { X, Share2, ExternalLink } from 'lucide-react';
 import ResponsiveImage from './ResponsiveImage';
 import { categories } from '../data/portfolio';
 
@@ -119,13 +119,13 @@ const PortfolioDetailModal = ({ item, onClose }) => {
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               aria-label="닫기"
             >
-              <FaTimes className="text-xl text-gray-600 dark:text-gray-300" />
+              <X size={20} className="text-gray-600 dark:text-gray-300" />
             </button>
             <button
               onClick={sharePortfolio}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors"
             >
-              <FaShare />
+              <Share2 size={16} />
               공유
             </button>
           </div>
@@ -193,7 +193,7 @@ const PortfolioDetailModal = ({ item, onClose }) => {
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
             >
-              <FaExternalLinkAlt />
+              <ExternalLink size={16} />
               음원 들으러 가기
             </a>
           </div>

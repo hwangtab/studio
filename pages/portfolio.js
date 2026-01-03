@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { FaMusic, FaHeadphones } from 'react-icons/fa';
+import { Music, Headphones } from 'lucide-react';
 import { filterPortfolioItems } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
@@ -105,7 +105,7 @@ const Portfolio = ({
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex items-center mb-8">
-              <FaHeadphones className="text-2xl text-primary mr-3" />
+              <Headphones className="text-primary mr-3" size={24} />
               <h2 className="typo-card-title text-gray-600 dark:text-gray-200">샘플 트랙</h2>
             </div>
             <AudioPlayer tracks={audioTracks} />
@@ -136,7 +136,7 @@ const Portfolio = ({
         >
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center">
-              <FaMusic className="text-2xl text-primary mr-3" />
+              <Music className="text-primary mr-3" size={24} />
               <h2 className="typo-card-title text-gray-600 dark:text-gray-200">작업 프로젝트</h2>
             </div>
             <div className="typo-card-meta text-gray-500 dark:text-gray-400">
@@ -146,7 +146,7 @@ const Portfolio = ({
 
           {filteredItems.length === 0 ? (
             <div className="text-center pt-16 pb-12">
-              <FaMusic className="text-6xl text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+              <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} />
               <p className="typo-card-body text-gray-500 dark:text-gray-400">
                 선택한 카테고리에 해당하는 프로젝트가 없습니다.
               </p>

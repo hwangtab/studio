@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaMicrophone, FaSlidersH, FaHeadphones, FaGuitar, FaKeyboard, FaMusic, FaLaptop, FaInfoCircle, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info, MapPin, Calendar } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
@@ -14,7 +14,7 @@ const EquipmentSection = ({ title, items, icon: Icon }) => (
     whileHover={{ y: -5 }}
   >
     <h3 className="typo-card-title mb-4 flex items-center text-gray-600 dark:text-gray-200">
-      <Icon className="mr-2 text-primary dark:text-primary-light" />
+      <Icon className="mr-2 text-primary dark:text-primary-light" size={20} />
       {title}
     </h3>
     <ul className="grid gap-2">
@@ -82,7 +82,7 @@ const Studio = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex items-center mb-6">
-              <FaInfoCircle className="text-2xl text-primary dark:text-primary-light mr-3" />
+              <Info className="text-primary dark:text-primary-light mr-3" size={24} />
               <h2 className="typo-card-title text-gray-600 dark:text-gray-200">스튜디오 놀</h2>
             </div>
             <div className="space-y-4">
@@ -202,14 +202,14 @@ const Studio = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <EquipmentSection title="마이크" items={equipment.microphones} icon={FaMicrophone} />
-          <EquipmentSection title="프리앰프 & 이퀄라이저" items={[...equipment.preamps, ...equipment.equalizers]} icon={FaSlidersH} />
-          <EquipmentSection title="컴프레서 & 프로세서" items={[...equipment.compressors, ...equipment.processors]} icon={FaSlidersH} />
-          <EquipmentSection title="스피커 & 헤드폰" items={[...equipment.speakers, ...equipment.headphones]} icon={FaHeadphones} />
-          <EquipmentSection title="악기 & 앰프" items={equipment.instruments} icon={FaGuitar} />
-          <EquipmentSection title="신디사이저 & 샘플러" items={equipment.synthesizers} icon={FaKeyboard} />
-          <EquipmentSection title="플러그인" items={equipment.plugins} icon={FaMusic} />
-          <EquipmentSection title="인터페이스 & 콘솔" items={[...equipment.interfaces, ...equipment.consoles]} icon={FaLaptop} />
+          <EquipmentSection title="마이크" items={equipment.microphones} icon={Mic} />
+          <EquipmentSection title="프리앰프 & 이퀄라이저" items={[...equipment.preamps, ...equipment.equalizers]} icon={SlidersHorizontal} />
+          <EquipmentSection title="컴프레서 & 프로세서" items={[...equipment.compressors, ...equipment.processors]} icon={SlidersHorizontal} />
+          <EquipmentSection title="스피커 & 헤드폰" items={[...equipment.speakers, ...equipment.headphones]} icon={Headphones} />
+          <EquipmentSection title="악기 & 앰프" items={equipment.instruments} icon={Guitar} />
+          <EquipmentSection title="신디사이저 & 샘플러" items={equipment.synthesizers} icon={Piano} />
+          <EquipmentSection title="플러그인" items={equipment.plugins} icon={Music} />
+          <EquipmentSection title="인터페이스 & 콘솔" items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
         </div>
       </motion.div>
       
@@ -236,7 +236,7 @@ const Studio = () => {
               rel="noopener noreferrer"
               className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"
             >
-              <FaCalendarAlt className="text-2xl mb-2 text-primary dark:text-primary-light" />
+              <Calendar className="mb-2 text-primary dark:text-primary-light" size={24} />
               <span className="typo-card-body">카카오톡으로 문의하기</span>
             </a>
           </div>
@@ -248,7 +248,7 @@ const Studio = () => {
               rel="noopener noreferrer"
               className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors duration-300 flex flex-col items-center"
             >
-              <FaMapMarkerAlt className="text-2xl mb-2 text-primary dark:text-primary-light" />
+              <MapPin className="mb-2 text-primary dark:text-primary-light" size={24} />
               <span className="typo-card-body">서울특별시 은평구 대조동 84-3 3층</span>
             </a>
           </div>

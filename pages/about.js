@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaMusic, FaUsers, FaRegLightbulb, FaRegClock, FaHeadphones, FaPalette, FaGlobeAsia, FaBullhorn, FaRegMoneyBillAlt, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaCommentDots, FaCalendarAlt } from 'react-icons/fa';
+import { Phone, Mail, MessageCircle, MapPin } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
@@ -229,7 +229,7 @@ const About = () => {
             >
               <div className="flex justify-center mb-4">
                 <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <FaPhoneAlt className="text-xl text-primary dark:text-primary-light" />
+                  <Phone className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">전화</h3>
@@ -243,7 +243,7 @@ const About = () => {
             >
               <div className="flex justify-center mb-4">
                 <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <FaEnvelope className="text-xl text-primary dark:text-primary-light" />
+                  <Mail className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">이메일</h3>
@@ -257,7 +257,7 @@ const About = () => {
             >
               <div className="flex justify-center mb-4">
                 <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <FaCommentDots className="text-xl text-primary dark:text-primary-light" />
+                  <MessageCircle className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">카카오톡</h3>
@@ -271,7 +271,7 @@ const About = () => {
             >
               <div className="flex justify-center mb-4">
                 <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <FaMapMarkerAlt className="text-xl text-primary dark:text-primary-light" />
+                  <MapPin className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">위치</h3>

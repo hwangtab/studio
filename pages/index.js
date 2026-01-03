@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaCalendarCheck, FaArrowRight } from 'react-icons/fa';
+import { CalendarCheck, ArrowRight } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
@@ -116,7 +116,7 @@ const Home = () => {
                     whileHover={{ x: 5 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <FaArrowRight size={14} />
+                    <ArrowRight size={14} />
                   </motion.span>
                 </div>
               }
@@ -136,7 +136,7 @@ const Home = () => {
             스튜디오 놀이 당신의 음악적 여정을 함께합니다.
           </p>
           <Link href="/contact" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-3 px-8 rounded-full hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
-            <FaCalendarCheck className="mr-2" />
+            <CalendarCheck className="mr-2" size={18} />
             스튜디오 예약하기
           </Link>
         </motion.div>

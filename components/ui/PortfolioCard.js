@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaEye } from 'react-icons/fa';
+import { Eye } from 'lucide-react';
 import BaseCard from './BaseCard';
 import ResponsiveImage from '../ResponsiveImage';
 
@@ -32,7 +32,7 @@ const PortfolioCard = ({ image, title, description, onClick, delay = 0 }) => {
                     className="absolute bottom-4 right-4 bg-white/90 text-primary p-3 rounded-full shadow-lg transform translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary hover:text-white z-10"
                     aria-label="상세 보기"
                 >
-                    <FaEye />
+                    <Eye size={16} />
                 </div>
             </div>
 
