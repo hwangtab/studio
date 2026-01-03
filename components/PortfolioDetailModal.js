@@ -106,14 +106,14 @@ const PortfolioDetailModal = ({ item, onClose }) => {
 
         {/* 모달 콘텐츠 */}
         <motion.div
-          className="relative w-full max-w-lg md:max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden"
+          className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
           variants={modalVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
         >
-          {/* 헤더 (모바일 전용 - 닫기 버튼) */}
-          <div className="md:hidden sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700">
+          {/* 헤더 - 닫기 및 공유 버튼 */}
+          <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
             <button
               onClick={onClose}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -130,99 +130,72 @@ const PortfolioDetailModal = ({ item, onClose }) => {
             </button>
           </div>
 
-          {/* 좌측: 이미지 영역 (데스크탑: 50% 너비 / 모바일: 상단) */}
-          <div className="w-full md:w-1/2 bg-gray-100 dark:bg-gray-900 relative min-h-[300px] md:min-h-[500px]">
-            <div className="md:absolute md:inset-0 h-full w-full">
+          {/* 이미지 영역 */}
+          <div className="px-6 pt-6">
+            <div className="relative aspect-square max-w-xs mx-auto rounded-xl overflow-hidden shadow-lg">
               <ResponsiveImage
                 src={item.image}
                 alt={item.title}
                 className="object-cover"
                 pictureClassName="block w-full h-full"
-                sizes="(min-width: 768px) 50vw, 100vw"
+                sizes="320px"
                 fill
               />
             </div>
-            {/* 데스크탑 전용 닫기 버튼 (이미지 위에 오버레이) */}
-            <button
-              onClick={onClose}
-              className="hidden md:flex absolute top-4 left-4 p-2 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full text-white transition-colors z-20"
-              aria-label="닫기"
-            >
-              <X size={20} />
-            </button>
           </div>
 
-          {/* 우측: 콘텐츠 영역 (데스크탑: 50% 너비, 스크롤 가능) */}
-          <div className="w-full md:w-1/2 flex flex-col max-h-[90vh] md:overflow-y-auto">
-            {/* 데스크탑 헤더 (공유 버튼 등) */}
-            <div className="hidden md:flex justify-end p-6 pb-0">
-              <button
-                onClick={sharePortfolio}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+          {/* 콘텐츠 영역 */}
+          <div className="p-6">
+            {/* 카테고리 배지 */}
+            <div className="mb-3">
+              <span
+                className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
+                style={{ backgroundColor: categoryInfo.color }}
               >
-                <Share2 size={16} />
-                공유하기
-              </button>
+                {categoryInfo.name}
+              </span>
             </div>
 
-            <div className="p-6 md:p-8 flex flex-col flex-grow">
-              {/* 카테고리 배지 */}
-              <div className="mb-4">
-                <span
-                  className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
-                  style={{ backgroundColor: categoryInfo.color }}
-                >
-                  {categoryInfo.name}
-                </span>
-              </div>
+            {/* 제목 */}
+            <h2
+              id="modal-title"
+              className="text-heading-3 font-title text-gray-900 dark:text-white mb-2"
+            >
+              {item.title}
+            </h2>
 
-              {/* 제목 */}
-              <h2
-                id="modal-title"
-                className="text-heading-3 font-title text-gray-900 dark:text-white mb-2"
-              >
-                {item.title}
-              </h2>
+            {/* 아티스트 */}
+            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-4">
+              아티스트: {item.artist}
+            </p>
 
-              {/* 아티스트 */}
-              <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6 text-lg">
-                아티스트: <span className="font-semibold text-gray-900 dark:text-white">{item.artist}</span>
-              </p>
-
-              <hr className="border-gray-100 dark:border-gray-700 mb-6" />
-
-              {/* 제공 서비스 */}
-              <div className="mb-8">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
-                  제공 서비스
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {item.services.map((service) => (
-                    <span
-                      key={service}
-                      className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md text-sm font-medium border border-gray-200 dark:border-gray-700"
-                    >
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex-grow"></div>
-
-              {/* 외부 링크 버튼 */}
-              <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700 sticky bottom-0 bg-white dark:bg-gray-800 pb-2">
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-nori-dark hover:bg-nori-dark/90 text-white rounded-xl transition-all font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  <ExternalLink size={18} />
-                  음원 들으러 가기
-                </a>
+            {/* 제공 서비스 */}
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                제공 서비스
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {item.services.map((service) => (
+                  <span
+                    key={service}
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                  >
+                    {service}
+                  </span>
+                ))}
               </div>
             </div>
+
+            {/* 외부 링크 버튼 */}
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
+            >
+              <ExternalLink size={16} />
+              음원 들으러 가기
+            </a>
           </div>
         </motion.div>
       </motion.div>
