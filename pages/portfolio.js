@@ -53,7 +53,7 @@ const Portfolio = ({
   // 카드 클릭 핸들러
   const handleCardClick = (item) => {
     setSelectedItem(item);
-    router.push(`/portfolio?item=${item.id}`, `/portfolio/${item.id}`, { shallow: true, scroll: false });
+    router.push(`/portfolio?item=${item.id}`, undefined, { shallow: true, scroll: false });
   };
 
   // 모달 닫기 핸들러
