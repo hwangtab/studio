@@ -1,9 +1,11 @@
+import { Analytics } from '@vercel/analytics/react';
 import '../styles/globals.css';
 
 import Head from 'next/head';
 import { appWithTranslation } from 'next-i18next';
 import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
+import ErrorBoundary from '../components/ErrorBoundary';
 import nextI18NextConfig from '../next-i18next.config';
 
 const montserrat = Montserrat({
@@ -23,9 +25,12 @@ function StudioNoriApp({ Component, pageProps }) {
         <meta name="theme-color" content="#1e3a8a" media="(prefers-color-scheme: dark)" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <ErrorBoundary>
+        <Layout>
+          <Component {...pageProps} />
+          <Analytics />
+        </Layout>
+      </ErrorBoundary>
     </div>
   );
 }
