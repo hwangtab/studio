@@ -19,6 +19,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, isExpanded, onP
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     loading="lazy"
                     sizes="160px"
+                    fill
                 />
                 {/* 재생 중 표시기 */}
                 {isPlaying && (

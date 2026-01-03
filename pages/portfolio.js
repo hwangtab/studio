@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Music, Headphones } from 'lucide-react';
 import { filterPortfolioItems } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
@@ -53,7 +53,8 @@ const Portfolio = ({
   // 카드 클릭 핸들러
   const handleCardClick = (item) => {
     setSelectedItem(item);
-    router.push(`/portfolio?item=${item.id}`, `/portfolio/${item.id}`, { shallow: true, scroll: false });
+    // URL 마스킹 제거 - [id].js 페이지와의 충돌 방지
+    router.push(`/portfolio?item=${item.id}`, undefined, { shallow: true, scroll: false });
   };
 
   // 모달 닫기 핸들러
@@ -167,9 +168,11 @@ const Portfolio = ({
       </div>
 
       {/* 포트폴리오 상세 모달 */}
-      {selectedItem && (
-        <PortfolioDetailModal item={selectedItem} onClose={handleCloseModal} />
-      )}
+      <AnimatePresence>
+        {selectedItem && (
+          <PortfolioDetailModal item={selectedItem} onClose={handleCloseModal} />
+        )}
+      </AnimatePresence>
     </>
   );
 };

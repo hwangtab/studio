@@ -47,9 +47,11 @@ const Layout = ({ children }) => {
     }
   };
 
+  // 실제 페이지 변경 시에만 스크롤 상단으로 이동 (pathname 기준)
+  // asPath(전체 URL)가 아닌 pathname(경로만) 사용하여 쿼리/해시 변경 시 스크롤 방지
   useEffect(() => {
     scrollToTop();
-  }, [currentPath]);
+  }, [router.pathname]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
