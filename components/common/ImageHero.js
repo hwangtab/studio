@@ -23,7 +23,7 @@ const ImageHero = ({
 
   return (
     <section
-      className={`relative overflow-hidden ${minHeight} flex items-center ${className}`}
+      className={`relative overflow-hidden ${minHeight} flex items-center -mt-20 pt-24 ${className}`}
     >
       {/* 배경 이미지 */}
       <div className="absolute inset-0 z-0">
