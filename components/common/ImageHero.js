@@ -10,13 +10,12 @@ const ImageHero = ({
   backgroundImage,
   imageAlt = "Hero Background",
   minHeight = "min-h-[55vh]",
-  overlayOpacity = 60,
   overlayGradient,
   textAlign = "center",
   className = "",
 }) => {
-  // 기본 오버레이 그래디언트
-  const defaultGradient = `bg-gradient-to-b from-black/${overlayOpacity} via-black/${Math.max(overlayOpacity - 20, 30)} to-black/${overlayOpacity}`;
+  // 기본 오버레이 그래디언트 (Tailwind JIT 호환을 위해 고정 클래스 사용)
+  const defaultGradient = "bg-gradient-to-b from-black/60 via-black/40 to-black/60";
 
   const alignmentClass = textAlign === 'center'
     ? 'text-center'
