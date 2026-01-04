@@ -63,7 +63,7 @@ const PracticeRoom = () => {
             다양한 장비와 시설을 갖춘 프리미엄 연습실에서 음악을 즐기세요.
           </>
         }
-        backgroundImage="/images/room6.jpg"
+        backgroundImage="/images/room5.jpg"
         imageAlt="스튜디오 놀 연습실"
         minHeight="min-h-[55vh]"
       />
