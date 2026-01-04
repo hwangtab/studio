@@ -32,7 +32,7 @@ const About = () => {
             한 곡의 아이디어가 완성된 앨범이 되기까지, 스튜디오 놀은 그 모든 과정의 동반자입니다.
           </>
         }
-        backgroundImage="/images/studio3.jpg"
+        backgroundImage="/images/recording15.png"
         imageAlt="스튜디오 놀 소개"
         minHeight="min-h-[55vh]"
       />
