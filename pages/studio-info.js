@@ -4,6 +4,7 @@ import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info,
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
+import ImageHero from '../components/common/ImageHero';
 
 const EquipmentSection = ({ title, items, icon: Icon }) => (
   <motion.div
@@ -59,7 +60,14 @@ const Studio = () => {
         keywords="연신내 녹음실 장비, 스튜디오 놀 장비, 은평구 녹음 스튜디오, 프로 녹음실"
         canonical="https://studionol.co.kr/studio-info"
       />
-      <div className="container mx-auto px-4 pt-16 pb-12">
+      <ImageHero
+        title="스튜디오 소개"
+        subtitle="최고의 시설과 장비, 전문 엔지니어의 노하우로 여러분의 음악적 비전을 현실로 만듭니다."
+        backgroundImage="/images/hardware1.jpg"
+        imageAlt="스튜디오 놀 장비"
+        minHeight="min-h-[55vh]"
+      />
+      <div className="container mx-auto px-4 py-16">
         {/* 스튜디오 소개 섹션 */}
         <motion.div
           className="mb-16"
@@ -67,18 +75,11 @@ const Studio = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.h1
-            className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            {...PAGE_TITLE_ANIMATION}
-          >
-            스튜디오 소개
-          </motion.h1>
-
-          <div className="grid md:grid-cols-2 gap-8 items-stretch">
+          <div className="max-w-4xl mx-auto">
             <motion.div
-              className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 h-full flex flex-col"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <div className="flex items-center mb-6">
@@ -95,32 +96,6 @@ const Studio = () => {
                 <p className="typo-section-lead mb-4">
                   스튜디오 놀은 음악인들이 자신의 음악을 녹음하고, 믹싱하고, 마스터링할 수 있는 공간과 서비스를 제공합니다. 또한, 음악인들이 자신의 음악을 홍보하고, 판매할 수 있도록 도움을 주는 데에도 노력하고 있습니다.
                 </p>
-                <p className="typo-section-lead mb-4">
-                  스튜디오 놀은 음악인들이 자신의 음악을 통해 꿈을 이루는 데 도움을 주는 데에 목표를 두고 있습니다. 우리는 음악인들이 자신의 음악을 통해 성공을 거두는 데에 기여할 수 있도록 최선을 다하고 있습니다.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="relative rounded-xl overflow-hidden shadow-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 h-full"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <ResponsiveImage
-                src={`/images/hardware1.jpg`}
-                alt="스튜디오 장비"
-                className="w-full h-full object-cover"
-                pictureClassName="block h-full"
-                loading="eager"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                fill
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-8">
-                  <p className="text-heading-3 font-title font-bold text-white mb-2">전문적인 음향 환경</p>
-                  <p className="text-body-1-extra-light text-white/90">당신의 음악을 위한 최적의 공간</p>
-                </div>
               </div>
             </motion.div>
           </div>

@@ -90,6 +90,7 @@ const pricingSchema = {
 };
 
 import PricingCard from '../components/ui/PricingCard';
+import ImageHero from '../components/common/ImageHero';
 import { SECTION_BG } from '../utils/sectionStyles';
 
 const Pricing = () => {
@@ -105,31 +106,19 @@ const Pricing = () => {
             />
 
             {/* Hero Section */}
-            <section className={`${SECTION_BG.hero} pt-20 pb-16`}>
-                <div className="container mx-auto px-4 text-center">
-                    <motion.h1
-                        className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-                        {...PAGE_TITLE_ANIMATION}
-                    >
-                        합리적인 가격, 투명한 서비스
-                    </motion.h1>
-                    <motion.p
-                        className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
-                        {...PAGE_SUBTITLE_ANIMATION}
-                    >
-                        프로젝트 스튜디오 운영에 필요한 핵심 서비스에 대한 고정 단가를 제시합니다.<br className="hidden md:block" />
+            <ImageHero
+                title="합리적인 가격, 투명한 서비스"
+                subtitle={
+                    <>
+                        프로젝트 스튜디오 운영에 필요한 핵심 서비스에 대한 고정 단가를 제시합니다.
+                        <br />
                         숨겨진 비용 없이, 뮤지션의 예산 계획을 돕습니다.
-                    </motion.p>
-                    <motion.p
-                        className="mt-4 text-sm font-medium text-red-500 dark:text-red-400"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                    >
-                        * 모든 가격은 VAT 별도입니다.
-                    </motion.p>
-                </div>
-            </section>
+                    </>
+                }
+                backgroundImage="/images/service1.jpg"
+                imageAlt="스튜디오 놀 가격 안내"
+                minHeight="min-h-[55vh]"
+            />
 
             {/* Recording Section */}
             <section id="recording" className="py-16">

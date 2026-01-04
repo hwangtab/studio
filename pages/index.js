@@ -5,7 +5,7 @@ import { CalendarCheck, ArrowRight } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
-import HeroBanner from '../components/common/HeroBanner';
+import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
 import { homeServices, studioImages } from '../data/home';
 
@@ -50,7 +50,7 @@ const Home = () => {
         ]}
       />
 
-      <HeroBanner
+      <ImageHero
         title={
           <>
             <span className="whitespace-nowrap">당신의 음악에</span>{' '}
@@ -58,6 +58,10 @@ const Home = () => {
           </>
         }
         subtitle="최고급 장비와 전문 엔지니어가 함께하는 스튜디오 놀에서 당신만의 사운드를 완성하세요."
+        backgroundImage="/images/studio2.jpg"
+        imageAlt="스튜디오 놀 메인 스튜디오"
+        minHeight="min-h-[90vh]"
+        overlayGradient="bg-gradient-to-b from-black/70 via-black/50 to-black/70"
         ctaButtons={
           <>
             <Link
@@ -74,8 +78,6 @@ const Home = () => {
             </Link>
           </>
         }
-        image="/images/studio1.jpg"
-        imageAlt="스튜디오 놀 메인 스튜디오"
       />
 
       <div className="container mx-auto px-4 pt-16 pb-12">

@@ -7,6 +7,7 @@ import { filterPortfolioItems } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
+import ImageHero from '../components/common/ImageHero';
 import { categories, portfolioItems, audioTracks } from '../data/portfolio';
 import PortfolioDetailModal from '../components/PortfolioDetailModal';
 const AudioPlayer = dynamic(() => import('../components/AudioPlayer').then((mod) => mod.default), { ssr: false });
@@ -76,25 +77,20 @@ const Portfolio = ({
         keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
         canonical="https://studionol.co.kr/portfolio"
       />
-      <div className="container mx-auto px-4 pt-16 pb-12">
-        {/* 헤더 섹션 */}
-        <div className="mb-16 text-center">
-          <motion.h1
-            className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            {...PAGE_TITLE_ANIMATION}
-          >
-            포트폴리오
-          </motion.h1>
-          <motion.p
-            className="typo-section-lead max-w-2xl mx-auto"
-            {...PAGE_SUBTITLE_ANIMATION}
-          >
+      <ImageHero
+        title="포트폴리오"
+        subtitle={
+          <>
             스튜디오 놀에서 작업한 다양한 프로젝트들을 소개합니다.
             <br />
             각 작품을 클릭하여 더 자세한 정보를 확인하세요.
-          </motion.p>
-          {audioTracks.length > 0 && <div className="mt-6" />}
-        </div>
+          </>
+        }
+        backgroundImage="/images/recording1.png"
+        imageAlt="스튜디오 놀 포트폴리오"
+        minHeight="min-h-[55vh]"
+      />
+      <div className="container mx-auto px-4 py-16">
 
         {/* 샘플 트랙 섹션 */}
         {audioTracks.length > 0 && (

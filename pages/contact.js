@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
+import ImageHero from '../components/common/ImageHero';
 
 import { SITE_CONFIG } from '../data/siteConfig';
 
@@ -64,14 +65,15 @@ const Contact = () => {
         keywords="녹음실 예약 문의, 연습실 예약, 스튜디오 놀 연락처, 연신내 녹음실 상담"
         canonical="https://studionol.co.kr/contact"
       />
-      <div className="container mx-auto px-4 pt-16 pb-12">
-        <motion.h1
-          className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-          {...PAGE_TITLE_ANIMATION}
-        >
-          연락하기
-        </motion.h1>
-        <div className="max-w-6xl mx-auto min-h-[50vh]">
+      <ImageHero
+        title="연락하기"
+        subtitle="프로젝트에 대한 문의나 예약 상담을 편하게 해주세요."
+        backgroundImage="/images/studio5.jpg"
+        imageAlt="스튜디오 놀 연락"
+        minHeight="min-h-[50vh]"
+      />
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"

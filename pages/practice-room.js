@@ -4,6 +4,7 @@ import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircl
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
+import ImageHero from '../components/common/ImageHero';
 import BaseCard from '../components/ui/BaseCard';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => (
@@ -53,65 +54,34 @@ const PracticeRoom = () => {
         canonical="https://studionol.co.kr/practice-room"
         includeSchema={true}
       />
-      <div className="container mx-auto px-4 pt-16 pb-12">
-        {/* 히어로 섹션 */}
+      <ImageHero
+        title="은평구 프리미엄 방음 연습실"
+        subtitle={
+          <>
+            최적의 환경에서 여러분의 음악을 연습하세요.
+            <br />
+            다양한 장비와 시설을 갖춘 프리미엄 연습실에서 음악을 즐기세요.
+          </>
+        }
+        backgroundImage="/images/room6.jpg"
+        imageAlt="스튜디오 놀 연습실"
+        minHeight="min-h-[55vh]"
+      />
+      <div className="container mx-auto px-4 py-16">
+        {/* 고민 섹션 */}
         <motion.div
           className="mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.h1
-            className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            {...PAGE_TITLE_ANIMATION}
-          >
-            은평구 프리미엄 방음 연습실
-          </motion.h1>
-
-          <motion.p
-            className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12 text-center"
-            {...PAGE_SUBTITLE_ANIMATION}
-          >
-            최적의 환경에서 여러분의 음악을 연습하세요.
-            <br />
-            다양한 장비와 시설을 갖춘 프리미엄 연습실에서 음악을 즐기세요.
-          </motion.p>
-
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <motion.div
-              className="relative rounded-xl overflow-hidden shadow-xl h-[400px]"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <ResponsiveImage
-                src={`/images/room6.jpg`}
-                alt="프리미엄 방음 연습실"
-                className="w-full h-full object-cover"
-                pictureClassName="block h-full"
-                loading="eager"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                fill
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
-                <div className="p-6">
-                  <p className="text-heading-3 font-title font-bold text-white">프로페셔널한 연습 환경</p>
-                  <p className="text-body-1-extra-light text-white/80">당신의 음악을 위한 최적의 공간</p>
-                </div>
-              </div>
-            </motion.div>
-
-            <div>
-              <h2 className="typo-card-title mb-6 text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <PainPoint icon={Wind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." delay={0.1} />
-                <PainPoint icon={VolumeX} text="옆방 소리가 다 들려서 집중이 안 돼요..." delay={0.2} />
-                <PainPoint icon={Wind} text="공기가 잘 통하지 않아 답답해요..." delay={0.3} />
-                <PainPoint icon={Zap} text="전기 노이즈 때문에 녹음을 다시 해야 해요..." delay={0.4} />
-                <PainPoint icon={Sparkles} text="작업환경이 불쾌하고 지저분해요..." delay={0.5} />
-              </div>
-            </div>
+          <h2 className="typo-section-title mb-8 text-center text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <PainPoint icon={Wind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." delay={0.1} />
+            <PainPoint icon={VolumeX} text="옆방 소리가 다 들려서 집중이 안 돼요..." delay={0.2} />
+            <PainPoint icon={Wind} text="공기가 잘 통하지 않아 답답해요..." delay={0.3} />
+            <PainPoint icon={Zap} text="전기 노이즈 때문에 녹음을 다시 해야 해요..." delay={0.4} />
+            <PainPoint icon={Sparkles} text="작업환경이 불쾌하고 지저분해요..." delay={0.5} />
           </div>
         </motion.div>
 

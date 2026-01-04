@@ -7,6 +7,7 @@ import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
 import BaseCard from '../components/ui/BaseCard';
+import ImageHero from '../components/common/ImageHero';
 import { coreServices, productionProcess, advantages } from '../data/services';
 import { SECTION_BG } from '../utils/sectionStyles';
 
@@ -20,59 +21,21 @@ const About = () => {
         keywords="스튜디오 놀 소개, 음반 제작 프로세스, 음악 프로덕션, 레코딩 스튜디오, 믹싱 마스터링, 음원 유통, 음악 기획, 아날로그 장비"
         canonical="https://studionol.co.kr/about"
       />
-      {/* 헤더 섹션 */}
-      <section className={`${SECTION_BG.hero} pt-16 pb-12`}>
-        <div className="container mx-auto px-4">
-          <motion.h1
-            className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            {...PAGE_TITLE_ANIMATION}
-          >
-            스튜디오 놀
-          </motion.h1>
-
-          <motion.div
-            className="max-w-3xl mx-auto text-center mb-10"
-            {...PAGE_SUBTITLE_ANIMATION}
-          >
-            <h2 className="typo-card-title text-gray-600 dark:text-gray-200 mb-6">
-              기획부터 유통, 홍보까지 함께하는{" "}
-              <span className="whitespace-nowrap">올인원 프로덕션</span>
-            </h2>
-            <p className="typo-section-lead mb-6">
-              한 곡의 아이디어가 완성된 앨범이 되기까지,{" "}
-              <span className="whitespace-nowrap">스튜디오 놀은 그 모든 과정의 동반자입니다.</span>
-              <br />
-              녹음을 넘어 기획, 디자인, 유통, 홍보까지{" "}
-              <span className="whitespace-nowrap">뮤지션의 비전을 현실로 만드는 올인원 프로덕션 파트너입니다.</span>
-            </p>
-          </motion.div>
-
-          {/* 메인 이미지 */}
-          <motion.div
-            className="relative rounded-xl overflow-hidden shadow-2xl max-w-4xl mx-auto h-[400px] mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <ResponsiveImage
-              src={`/images/studio2.jpg`}
-              alt="스튜디오 놀 메인"
-              className="w-full h-full object-cover"
-              pictureClassName="block h-full"
-              priority={true}
-              width={1000}
-              height={400}
-              sizes="(min-width: 1024px) 60vw, 100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-8">
-              <h3 className="text-heading-3 font-title font-bold text-white mb-2">
-                <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
-              </h3>
-              <p className="text-body-1-extra-light text-white/90 max-w-2xl">앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하는 토털 솔루션</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* 히어로 섹션 */}
+      <ImageHero
+        title="스튜디오 놀"
+        subtitle={
+          <>
+            기획부터 유통, 홍보까지 함께하는{" "}
+            <span className="whitespace-nowrap">올인원 프로덕션</span>
+            <br />
+            한 곡의 아이디어가 완성된 앨범이 되기까지, 스튜디오 놀은 그 모든 과정의 동반자입니다.
+          </>
+        }
+        backgroundImage="/images/studio3.jpg"
+        imageAlt="스튜디오 놀 소개"
+        minHeight="min-h-[55vh]"
+      />
 
       {/* 올인원 프로덕션 서비스 */}
       <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>

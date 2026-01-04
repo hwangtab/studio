@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import StoryCard from '../../components/StoryCard';
 import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
+import ImageHero from '../../components/common/ImageHero';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import { getAllStories } from '../../lib/stories';
 
@@ -27,22 +28,15 @@ const StoriesPage = ({ stories }) => {
         canonical="https://studionol.co.kr/stories"
         keywords="스튜디오 놀 스토리, 작업 후기, 음악 제작 스토리"
       />
-      <div className="container mx-auto px-4 pt-16 pb-12">
+      <ImageHero
+        title="스토리"
+        subtitle="스튜디오 작업과 관련된 다양한 이야기를 만나보세요."
+        backgroundImage="/images/studio1.jpg"
+        imageAlt="스튜디오 놀 스토리"
+        minHeight="min-h-[50vh]"
+      />
+      <div className="container mx-auto px-4 py-16">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-          <motion.h1
-            className="text-heading-1 font-title mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            {...PAGE_TITLE_ANIMATION}
-          >
-            스토리
-          </motion.h1>
-
-          <motion.p
-            className="typo-section-lead max-w-2xl mx-auto mb-12 text-center"
-            {...PAGE_SUBTITLE_ANIMATION}
-          >
-            스튜디오 작업과 관련된 다양한 이야기를 만나보세요.
-          </motion.p>
-
           <CategoryFilter
             activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
