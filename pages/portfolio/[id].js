@@ -156,7 +156,7 @@ export const getStaticPaths = () => {
   const paths = portfolioItems.map((item) => ({
     params: { id: item.id },
   }));
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: false };
 };
 
 export const getStaticProps = async ({ params }) => {
@@ -168,7 +168,6 @@ export const getStaticProps = async ({ params }) => {
 
   return {
     props: { item },
-    revalidate: 60,
   };
 };
 

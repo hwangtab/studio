@@ -180,7 +180,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
 export const getStaticPaths = () => {
   return {
     paths: getStoryPaths(),
-    fallback: 'blocking',
+    fallback: false,
   };
 };
 
@@ -196,7 +196,6 @@ export const getStaticProps = async ({ params }) => {
         story,
         relatedStories,
       },
-      revalidate: 60,
     };
   } catch (error) {
     console.error('Story detail error:', error);

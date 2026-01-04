@@ -72,7 +72,6 @@ export const getStaticProps = () => {
     props: {
       stories,
     },
-    revalidate: 60,
   };
 };
 

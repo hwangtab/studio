@@ -182,6 +182,5 @@ export const getStaticProps = () => {
       audioTracks,
       categories,
     },
-    revalidate: 60,
   };
 };
