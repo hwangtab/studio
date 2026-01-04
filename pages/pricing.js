@@ -115,7 +115,7 @@ const Pricing = () => {
                         숨겨진 비용 없이, 뮤지션의 예산 계획을 돕습니다.
                     </>
                 }
-                backgroundImage="/images/service1.jpg"
+                backgroundImage="/images/hardware2.jpg"
                 imageAlt="스튜디오 놀 가격 안내"
                 minHeight="min-h-[55vh]"
             />
