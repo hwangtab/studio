@@ -91,9 +91,14 @@
     @apply font-sans font-light text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
     word-break: keep-all;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-title text-gray-900 dark:text-white;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: balance;
   }
 
   h1 {
