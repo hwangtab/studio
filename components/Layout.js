@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { href: '/contact', label: '연락처' },
 ];
 
-const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, isHome }) => {
+const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, hasHero }) => {
   const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 
   return (
@@ -24,7 +24,7 @@ const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, isHome }
       onClick={onNavigate}
       className={`px-3 py-2 rounded-md typo-nav-link transition-all duration-300 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
-        : `${isScrolled || !isHome ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
+        : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
         }`}
     >
       {children}
@@ -98,12 +98,16 @@ const Layout = ({ children }) => {
 
   const isHome = router.pathname === '/';
 
+  // Pages that use ImageHero and need transparent header initially
+  const HERO_PAGES = ['/', '/about', '/portfolio', '/pricing', '/studio-info', '/practice-room', '/contact', '/stories'];
+  const hasHero = HERO_PAGES.includes(router.pathname);
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
       <header
         className={`fixed w-full z-50 transition-all duration-300 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] ${isScrolled
           ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md'
-          : isHome
+          : hasHero
             ? 'bg-transparent'
             : 'bg-gradient-to-r from-primary via-secondary to-accent'
           }`}
@@ -112,7 +116,7 @@ const Layout = ({ children }) => {
           <div className="flex items-center justify-between">
             <Link
               href="/"
-              className={`${isScrolled ? 'text-primary dark:text-white' : 'text-white'
+              className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'
                 } flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
               onClick={(event) => {
                 event.preventDefault();
@@ -132,7 +136,7 @@ const Layout = ({ children }) => {
                     isScrolled={isScrolled}
                     currentPath={currentPath}
                     onNavigate={() => setIsMenuOpen(false)}
-                    isHome={isHome}
+                    hasHero={hasHero}
                   >
                     {item.label}
                   </NavLink>
@@ -140,7 +144,7 @@ const Layout = ({ children }) => {
               </nav>
 
               <button
-                className={`p-2 rounded-full ${isScrolled
+                className={`p-2 rounded-full ${isScrolled || !hasHero
                   ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                   : 'text-white hover:bg-white/20'
                   } transition-colors duration-300`}
@@ -151,7 +155,7 @@ const Layout = ({ children }) => {
               </button>
 
               <button
-                className={`lg:hidden p-2 rounded-full ${isScrolled
+                className={`lg:hidden p-2 rounded-full ${isScrolled || !hasHero
                   ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                   : 'text-white hover:bg-white/20'
                   } transition-colors duration-300`}
