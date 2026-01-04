@@ -149,6 +149,8 @@ const Home = () => {
 
 export default Home;
 
+Home.hasHero = true;
+
 export const getStaticProps = () => ({
   props: {},
 });

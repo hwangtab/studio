@@ -175,6 +175,8 @@ const Portfolio = ({
 
 export default Portfolio;
 
+Portfolio.hasHero = true;
+
 export const getStaticProps = () => {
   return {
     props: {

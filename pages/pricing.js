@@ -277,3 +277,5 @@ const Pricing = () => {
 };
 
 export default Pricing;
+
+Pricing.hasHero = true;

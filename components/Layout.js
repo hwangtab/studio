@@ -32,7 +32,7 @@ const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, hasHero 
   );
 };
 
-const Layout = ({ children }) => {
+const Layout = ({ children, hasHero }) => {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -96,11 +96,8 @@ const Layout = ({ children }) => {
     }
   }, [isDarkMode, hasThemeLoaded]);
 
+  // isHome은 이제 로고 클릭 등의 단순 참조용으로만 사용 (스타일링 로직은 hasHero가 담당)
   const isHome = router.pathname === '/';
-
-  // Pages that use ImageHero and need transparent header initially
-  const HERO_PAGES = ['/', '/about', '/portfolio', '/pricing', '/studio-info', '/practice-room', '/contact', '/stories'];
-  const hasHero = HERO_PAGES.includes(router.pathname);
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">

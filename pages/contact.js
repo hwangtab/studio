@@ -272,6 +272,8 @@ const Contact = () => {
 
 export default Contact;
 
+Contact.hasHero = true;
+
 export const getStaticProps = () => ({
   props: {},
 });

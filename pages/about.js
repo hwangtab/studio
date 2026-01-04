@@ -275,6 +275,8 @@ const About = () => {
 
 export default About;
 
+About.hasHero = true;
+
 export const getStaticProps = () => ({
   props: {},
 });

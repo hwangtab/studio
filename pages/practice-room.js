@@ -331,6 +331,8 @@ const PracticeRoom = () => {
 
 export default PracticeRoom;
 
+PracticeRoom.hasHero = true;
+
 export const getStaticProps = () => ({
   props: {},
 });

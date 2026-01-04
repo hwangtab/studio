@@ -2,11 +2,9 @@ import { Analytics } from '@vercel/analytics/react';
 import '../styles/globals.css';
 
 import Head from 'next/head';
-import { appWithTranslation } from 'next-i18next';
 import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
-import nextI18NextConfig from '../next-i18next.config';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -16,6 +14,9 @@ const montserrat = Montserrat({
 });
 
 function StudioNoriApp({ Component, pageProps }) {
+  // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
+  const hasHero = Component.hasHero || false;
+
   return (
     <div className={montserrat.variable}>
       <Head>
@@ -26,7 +27,7 @@ function StudioNoriApp({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ErrorBoundary>
-        <Layout>
+        <Layout hasHero={hasHero}>
           <Component {...pageProps} />
           <Analytics />
         </Layout>
@@ -35,4 +36,4 @@ function StudioNoriApp({ Component, pageProps }) {
   );
 }
 
-export default appWithTranslation(StudioNoriApp, nextI18NextConfig);
+export default StudioNoriApp;

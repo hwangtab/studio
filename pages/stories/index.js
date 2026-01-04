@@ -76,3 +76,5 @@ export const getStaticProps = () => {
 };
 
 export default StoriesPage;
+
+StoriesPage.hasHero = true;

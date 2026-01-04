@@ -241,6 +241,8 @@ const Studio = () => {
 
 export default Studio;
 
+Studio.hasHero = true;
+
 export const getStaticProps = () => ({
   props: {},
 });
