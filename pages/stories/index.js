@@ -31,7 +31,7 @@ const StoriesPage = ({ stories }) => {
       <ImageHero
         title="스토리"
         subtitle="스튜디오 작업과 관련된 다양한 이야기를 만나보세요."
-        backgroundImage="/images/studio1.jpg"
+        backgroundImage="/images/studio3.jpg"
         imageAlt="스튜디오 놀 스토리"
         minHeight="min-h-[50vh]"
       />
