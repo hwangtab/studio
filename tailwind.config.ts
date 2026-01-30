@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
   content: [
     "./pages/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
@@ -64,7 +66,7 @@ module.exports = {
   },
   darkMode: 'class',
   plugins: [
-    function ({ addUtilities, addComponents, theme }) {
+    function ({ addUtilities, addComponents, theme }: any) {
       addUtilities({
         '.scrollbar-hide': {
           /* IE and Edge */
@@ -157,3 +159,5 @@ module.exports = {
     }
   ],
 }
+
+export default config;
