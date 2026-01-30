@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/portfolio', label: '포트폴리오' },
   { href: '/studio-info', label: '스튜디오' },
   { href: '/practice-room', label: '연습실' },
+  { href: '/lesson', label: '레슨' },
   { href: '/stories', label: '스토리' },
   { href: '/contact', label: '연락처' },
 ];
@@ -187,7 +188,7 @@ const Layout = ({ children, hasHero }) => {
         {children}
       </main>
 
-      <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8">
+      <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>

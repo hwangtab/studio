@@ -46,10 +46,10 @@ module.exports = {
         'subtitle-2': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],
         'body-1': ['1rem', { lineHeight: '1.5', fontWeight: '300' }],
         'body-1-light': ['1rem', { lineHeight: '1.5', fontWeight: '300' }],
-        'body-1-extra-light': ['1rem', { lineHeight: '1.5', fontWeight: '200' }],
+        'body-1-extra-light': ['1rem', { lineHeight: '1.5', fontWeight: '300' }],
         'body-1-medium': ['1rem', { lineHeight: '1.5', fontWeight: '500' }],
-        'body-2': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
-        'caption': ['0.75rem', { lineHeight: '1.5', fontWeight: '100' }],
+        'body-2': ['0.875rem', { lineHeight: '1.5', fontWeight: '300' }],
+        'caption': ['0.75rem', { lineHeight: '1.5', fontWeight: '300' }],
         'text-thin': ['1rem', { lineHeight: '1.5', fontWeight: '100' }],
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },
@@ -64,7 +64,7 @@ module.exports = {
   },
   darkMode: 'class',
   plugins: [
-    function({ addUtilities, addComponents, theme }) {
+    function ({ addUtilities, addComponents, theme }) {
       addUtilities({
         '.scrollbar-hide': {
           /* IE and Edge */
