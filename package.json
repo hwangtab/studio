@@ -53,6 +53,13 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.1.0",
+    "@types/prismjs": "^1.26.5",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-slick": "^0.23.13",
+    "@types/uuid": "^10.0.0",
     "eslint-config-next": "^14.2.5",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
