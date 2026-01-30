@@ -116,7 +116,7 @@ const Lesson = () => {
                     <p className="typo-section-lead text-gray-600 dark:text-gray-300">
                         스튜디오 놀의 레슨은 교과서적인 이론 교육이 아닙니다. <br className="hidden md:block" />
                         실제 앨범 제작 현장에서 프로들이 사용하는 장비와 워크플로우를 그대로 경험하며, <br className="hidden md:block" />
-                        자신만의 음악을 완성해가는 <strong>'실전형 프로젝트'</strong>입니다.
+                        자신만의 음악을 완성해가는 <strong>&apos;실전형 프로젝트&apos;</strong>입니다.
                     </p>
                 </motion.div>
 
@@ -282,28 +282,49 @@ const Lesson = () => {
 
                 </div>
 
-                {/* CTA Banner */}
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl p-8 md:p-12 text-center">
-                    <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">아직 망설여지시나요?</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-                        음악을 시작하는 데 늦은 때란 없습니다. <br />
-                        방문 상담을 통해 스튜디오 시설을 직접 둘러보시고, 구체적인 커리큘럼을 안내받아보세요.
-                    </p>
-                    <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <Link href="/contact" className="inline-flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-medium py-3 px-8 rounded-full hover:bg-gray-50 transition-colors">
-                            오시는 길
-                        </Link>
-                        <a
-                            href="https://open.kakao.com/me/nol"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center bg-primary hover:bg-primary-dark text-white text-body-1 py-3 px-8 rounded-full transition duration-300 shadow-lg"
-                        >
-                            <MessageCircle className="mr-2" size={20} />
-                            카카오톡으로 문의하기
-                        </a>
+                {/* Improved CTA Section (Reference: Practice Room style) */}
+                <motion.div
+                    className="mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
+                        <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
+                            <h3 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                                아직 망설여지시나요?<br />
+                                <span className="text-primary">첫 걸음을 함께합니다.</span>
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                                음악을 시작하는 데 늦은 때란 없습니다. 프로의 공간에서 직접 장비를 만져보고 상담받으며 당신만의 커리큘럼을 계획해보세요.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <Link href="/contact" className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600">
+                                    오시는 길
+                                </Link>
+                                <a
+                                    href="https://open.kakao.com/me/nol"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
+                                >
+                                    <MessageCircle className="mr-2" size={20} />
+                                    카카오톡 상담하기
+                                </a>
+                            </div>
+                        </div>
+                        <div className="relative h-64 md:h-auto overflow-hidden">
+                            <ResponsiveImage
+                                src="/images/hardware1.jpg"
+                                alt="스튜디오 교육 현장"
+                                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                                fill
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+                        </div>
                     </div>
-                </div>
+                </motion.div>
 
             </div>
         </>

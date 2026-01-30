@@ -7,6 +7,7 @@ import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
 import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
+import ResponsiveImage from '../components/ResponsiveImage';
 import { homeServices, studioImages } from '../data/home';
 
 const Home = () => {
@@ -127,20 +128,54 @@ const Home = () => {
         </motion.div>
 
         <motion.div
-          className="text-center bg-gray-50 dark:bg-gray-800 pt-16 pb-12 px-4 rounded-2xl shadow-sm"
+          className="mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
         >
-          <h2 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">당신의 음악 여정을 시작하세요</h2>
-          <p className="typo-section-lead mb-8 max-w-2xl mx-auto text-center">
-            최고의 환경에서 음악을 완성하세요.<br />
-            스튜디오 놀이 당신의 음악적 여정을 함께합니다.
-          </p>
-          <Link href="/contact" className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-secondary text-white text-body-1 py-3 px-8 rounded-full hover:from-primary-dark hover:to-secondary-dark transition duration-300 shadow-md">
-            <CalendarCheck className="mr-2" size={18} />
-            스튜디오 예약하기
-          </Link>
+          <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
+            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
+              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                상상했던 사운드,<br />
+                <span className="text-primary">현실이 되는 곳</span>
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                최고의 장비와 편안한 공간에서 당신만의 음악을 완성하세요.<br className="hidden md:block" />
+                스튜디오 놀이 당신의 음악적 여정을 함께합니다.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
+                >
+                  오시는 길
+                </Link>
+                <a
+                  href="https://open.kakao.com/me/nol"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
+                >
+                  <CalendarCheck className="mr-2" size={20} />
+                  예약 문의하기
+                </a>
+              </div>
+            </div>
+
+            <div className="relative h-64 md:h-auto overflow-hidden">
+              <ResponsiveImage
+                src="/images/hardware5.jpg"
+                alt="스튜디오 놀 메인 작업실 전경"
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                pictureClassName="block h-full"
+                loading="lazy"
+                sizes="(min-width: 768px) 50vw, 100vw"
+                fill
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

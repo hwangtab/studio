@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
@@ -270,57 +271,71 @@ const PracticeRoom = () => {
 
         {/* CTA 섹션 */}
         <motion.div
-          className="mt-16 overflow-hidden rounded-xl shadow-xl"
+          className="mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
         >
-          <div className="grid md:grid-cols-2 items-stretch">
-            <div className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 flex flex-col justify-center items-center text-center">
+          <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
+            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
               <motion.h2
-                className="typo-section-title mb-4 text-gray-600 dark:text-gray-200"
+                className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight"
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                연습실 문의하기
+                최적의 몰입,<br />
+                <span className="text-primary">최고의 결과물</span>
               </motion.h2>
               <motion.p
-                className="typo-section-lead mb-8"
+                className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed"
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                궁금한 점이 있으시면 언제든지 문의해주세요.
+                24시간 쾌적한 환경에서 오직 음악에만 집중하세요.<br className="hidden md:block" />
+                지금 바로 방문하여 스튜디오를 직접 둘러보실 수 있습니다.
               </motion.p>
 
               <motion.div
+                className="flex flex-col sm:flex-row gap-4"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
+                >
+                  오시는 길
+                </Link>
                 <a
                   href="https://open.kakao.com/me/nol"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center bg-primary hover:bg-primary-dark text-white text-body-1 py-3 px-8 rounded-full transition duration-300 shadow-lg mx-auto"
+                  className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
                 >
                   <MessageCircle className="mr-2" size={20} />
-                  카카오톡으로 문의하기
+                  카카오톡 문의하기
                 </a>
               </motion.div>
             </div>
 
-            <div className="h-full">
+            <div className="relative h-64 md:h-auto overflow-hidden">
               <ResponsiveImage
                 src={`/images/room8.jpg`}
                 alt="자연광이 들어오는 쾌적한 연습실 공간"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 loading="lazy"
                 sizes="(min-width: 768px) 50vw, 100vw"
                 fill
               />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
             </div>
           </div>
         </motion.div>
