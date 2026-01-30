@@ -1,3 +1,4 @@
+import type { AppProps } from 'next/app';
 import { Analytics } from '@vercel/analytics/react';
 import '../styles/globals.css';
 
@@ -13,9 +14,9 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-function StudioNoriApp({ Component, pageProps }) {
+function StudioNoriApp({ Component, pageProps }: AppProps) {
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
-  const hasHero = Component.hasHero || false;
+  const hasHero = (Component as any).hasHero || false;
 
   return (
     <div className={montserrat.variable}>

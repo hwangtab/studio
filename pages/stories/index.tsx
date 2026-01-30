@@ -1,13 +1,21 @@
 import React, { useMemo, useState } from 'react';
+import type { NextPage, GetStaticProps } from 'next';
 import { motion } from 'framer-motion';
 import StoryCard from '../../components/StoryCard';
 import CategoryFilter from '../../components/CategoryFilter';
+// @ts-ignore - SEO component is JS
 import SEO from '../../components/SEO';
+// @ts-ignore - ImageHero component is JS
 import ImageHero from '../../components/common/ImageHero';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import { getAllStories } from '../../lib/stories';
+import type { Story } from '../../types/story';
 
-const StoriesPage = ({ stories }) => {
+interface StoriesPageProps {
+  stories: Story[];
+}
+
+const StoriesPage: NextPage<StoriesPageProps> = ({ stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const categories = useMemo(() => {
@@ -34,6 +42,7 @@ const StoriesPage = ({ stories }) => {
         backgroundImage="/images/studio1.jpg"
         imageAlt="스튜디오 놀 스토리"
         minHeight="min-h-[60vh]"
+        overlayGradient="from-black/60 via-black/40 to-transparent"
       />
       <div className="container mx-auto px-4 py-16">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
@@ -56,7 +65,7 @@ const StoriesPage = ({ stories }) => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredStories.map((story) => (
-                <StoryCard key={story.slug} story={story} />
+                <StoryCard key={story.slug} story={story as any} />
               ))}
             </div>
           )}
@@ -66,7 +75,7 @@ const StoriesPage = ({ stories }) => {
   );
 };
 
-export const getStaticProps = () => {
+export const getStaticProps: GetStaticProps<StoriesPageProps> = () => {
   const stories = getAllStories();
   return {
     props: {
@@ -77,4 +86,4 @@ export const getStaticProps = () => {
 
 export default StoriesPage;
 
-StoriesPage.hasHero = true;
+(StoriesPage as any).hasHero = true;

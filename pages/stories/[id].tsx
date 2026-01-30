@@ -1,17 +1,32 @@
 import React from 'react';
+import type { NextPage, GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
+// @ts-ignore - SEO component is JS
 import SEO from '../../components/SEO';
+// @ts-ignore - MarkdownRenderer component is JS
 import MarkdownRenderer from '../../components/MarkdownRenderer';
+// @ts-ignore - StoryCard component is JS
 import StoryCard from '../../components/StoryCard';
+// @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { stripMarkdown } from '../../utils/localDataUtils';
 import { timeAgo } from '../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../lib/stories';
+import type { Story, StoryDetail } from '../../types/story';
 
-const StoryDetailPage = ({ story, relatedStories }) => {
+interface StoryDetailPageProps {
+  story: StoryDetail;
+  relatedStories: Story[];
+}
+
+type Params = {
+  id: string;
+};
+
+const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories }) => {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -54,10 +69,11 @@ const StoryDetailPage = ({ story, relatedStories }) => {
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
         ogType="article"
         articlePublishedTime={story.date}
-        articleModifiedTime={story.updatedAt || story.date}
+        articleModifiedTime={(story as any).updatedAt || story.date}
         articleAuthor={story.author}
         articleSection={story.category}
-        includeSchema={true}
+        includeSchema
+        // @ts-ignore - SEO component is JS
         breadcrumbs={[
           { name: '홈', path: '/' },
           { name: '스토리', path: '/stories' },
@@ -78,6 +94,8 @@ const StoryDetailPage = ({ story, relatedStories }) => {
               className="object-cover"
               pictureClassName="block w-full h-72 md:h-[26rem]"
               sizes="100vw"
+              width={1200}
+              height={600}
               fill
             />
           </motion.div>
@@ -148,6 +166,8 @@ const StoryDetailPage = ({ story, relatedStories }) => {
                     alt={`갤러리 이미지 ${index + 1}`}
                     className="object-cover"
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    width={600}
+                    height={400}
                     fill
                   />
                 </div>
@@ -161,7 +181,7 @@ const StoryDetailPage = ({ story, relatedStories }) => {
           {relatedStories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map((related) => (
-                <StoryCard key={related.slug} story={related} />
+                <StoryCard key={related.slug} story={related as any} />
               ))}
             </div>
           ) : (
@@ -177,18 +197,18 @@ const StoryDetailPage = ({ story, relatedStories }) => {
   );
 };
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths<Params> = () => {
   return {
     paths: getStoryPaths(),
     fallback: false,
   };
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<StoryDetailPageProps, Params> = async ({ params }) => {
   try {
-    const story = await getStoryDetail(params.id);
+    const story = await getStoryDetail(params!.id);
     const relatedStories = getAllStories()
-      .filter((item) => item.slug !== params.id)
+      .filter((item) => item.slug !== params!.id)
       .slice(0, 3);
 
     return {

@@ -1,16 +1,18 @@
 import React from 'react';
+import type { NextPage } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CalendarCheck, ArrowRight } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
+// @ts-ignore - ImageHero component is JS
 import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
 import ResponsiveImage from '../components/ResponsiveImage';
 import { homeServices, studioImages } from '../data/home';
 
-const Home = () => {
+const Home: NextPage = () => {
   return (
     <div className="overflow-visible">
       <SEO
@@ -18,7 +20,8 @@ const Home = () => {
         description="연신내역 도보 5분, 스튜디오 놀에서 녹음실·연습실·믹싱/마스터링 서비스를 한 번에 이용하세요. 프로 장비와 엔지니어가 상주해 보컬 녹음, 밴드 합주, 콘텐츠 제작까지 지원합니다."
         keywords="연신내 녹음실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오"
         canonical="https://studionol.co.kr/"
-        includeSchema={true}
+        includeSchema
+        // @ts-ignore - SEO component is JS
         faqItems={[
           {
             question: '스튜디오 놀의 위치는 어디인가요?',
@@ -52,20 +55,22 @@ const Home = () => {
       />
 
       <ImageHero
-        title={
-          <>
-            <span className="block mb-2 text-gray-100 drop-shadow-lg">당신의 음악에</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white font-black drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
-              생명
-            </span>
-            <span className="text-gray-100 drop-shadow-lg">을 불어넣는 공간</span>
-          </>
-        }
-        subtitle="최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요."
-        backgroundImage="/images/studio2.jpg"
-        imageAlt="스튜디오 놀 메인 스튜디오"
-        minHeight="min-h-[100vh]"
-        ctaButtons={
+        {...{
+          title: (
+            <>
+              <span className="block mb-2 text-gray-100 drop-shadow-lg">당신의 음악에</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white font-black drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+                생명
+              </span>
+              <span className="text-gray-100 drop-shadow-lg">을 불어넣는 공간</span>
+            </>
+          ),
+          subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
+          backgroundImage: "/images/studio2.jpg",
+          imageAlt: "스튜디오 놀 메인 스튜디오",
+          minHeight: "min-h-[100vh]",
+          overlayGradient: "from-black/60 via-black/40 to-transparent",
+          ctaButtons: (
           <>
             <Link
               href="/contact"
@@ -80,7 +85,8 @@ const Home = () => {
               포트폴리오
             </Link>
           </>
-        }
+          ),
+        } as any}
       />
 
       <div className="container mx-auto px-4 pt-16 pb-12">
@@ -91,7 +97,7 @@ const Home = () => {
           당신을 위한 녹음 공간과 장비
         </motion.h2>
 
-        <MediaGallery images={studioImages} />
+        <MediaGallery images={[...studioImages]} />
 
         <motion.h2
           className="word-break-keep-all text-heading-2 font-title font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
@@ -178,6 +184,8 @@ const Home = () => {
                 pictureClassName="block h-full"
                 loading="lazy"
                 sizes="(min-width: 768px) 50vw, 100vw"
+                width={800}
+                height={600}
                 fill
               />
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
@@ -191,7 +199,7 @@ const Home = () => {
 
 export default Home;
 
-Home.hasHero = true;
+(Home as any).hasHero = true;
 
 export const getStaticProps = () => ({
   props: {},

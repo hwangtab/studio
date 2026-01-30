@@ -1,13 +1,25 @@
 import React from 'react';
+import type { NextPage, GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, ExternalLink } from 'lucide-react';
+// @ts-ignore - SEO component is JS
 import SEO from '../../components/SEO';
+// @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { categories, portfolioItems } from '../../data/portfolio';
+import type { PortfolioItem } from '../../types/data';
 
-const PortfolioDetailPage = ({ item }) => {
+interface PortfolioDetailPageProps {
+  item: PortfolioItem;
+}
+
+type Params = {
+  id: string;
+};
+
+const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ item }) => {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -21,7 +33,6 @@ const PortfolioDetailPage = ({ item }) => {
   const shareUrl = `https://studionol.co.kr/portfolio/${item.id}`;
   const metaDescription = `${item.artist}의 "${item.title}" - ${item.description}. 스튜디오 놀에서 작업한 프로젝트입니다.`;
 
-  // 카테고리 정보 가져오기
   const categoryInfo = categories.find((cat) => cat.id === item.category) || {
     name: item.category,
     color: '#6d28d9',
@@ -74,7 +85,6 @@ const PortfolioDetailPage = ({ item }) => {
             transition={{ duration: 0.5 }}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
           >
-            {/* 이미지 영역 */}
             <div className="relative aspect-square max-w-md mx-auto mt-8">
               <ResponsiveImage
                 src={item.image}
@@ -82,13 +92,13 @@ const PortfolioDetailPage = ({ item }) => {
                 className="object-cover rounded-lg"
                 pictureClassName="block w-full h-full"
                 sizes="(min-width: 768px) 400px, 100vw"
+                width={400}
+                height={400}
                 fill
               />
             </div>
 
-            {/* 콘텐츠 영역 */}
             <div className="p-8">
-              {/* 카테고리 배지 */}
               <div className="mb-4">
                 <span
                   className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
@@ -98,17 +108,14 @@ const PortfolioDetailPage = ({ item }) => {
                 </span>
               </div>
 
-              {/* 제목 */}
               <h1 className="text-heading-2 font-title text-gray-900 dark:text-white mb-2">
                 {item.title}
               </h1>
 
-              {/* 아티스트 */}
               <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6">
                 아티스트: {item.artist}
               </p>
 
-              {/* 제공 서비스 */}
               <div className="mb-8">
                 <h2 className="typo-card-title text-gray-900 dark:text-white mb-3">
                   제공 서비스
@@ -125,7 +132,6 @@ const PortfolioDetailPage = ({ item }) => {
                 </div>
               </div>
 
-              {/* 버튼 그룹 */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
                   href={item.link}
@@ -152,22 +158,22 @@ const PortfolioDetailPage = ({ item }) => {
   );
 };
 
-export const getStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths<Params> = () => {
   const paths = portfolioItems.map((item) => ({
     params: { id: item.id },
   }));
   return { paths, fallback: false };
 };
 
-export const getStaticProps = async ({ params }) => {
-  const item = portfolioItems.find((p) => p.id === params.id);
+export const getStaticProps: GetStaticProps<PortfolioDetailPageProps, Params> = async ({ params }) => {
+  const item = portfolioItems.find((p) => p.id === params!.id);
 
   if (!item) {
     return { notFound: true };
   }
 
   return {
-    props: { item },
+    props: { item: item as any },
   };
 };
 

@@ -1,10 +1,11 @@
+import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 
-export default function NotFoundPage() {
+const NotFoundPage: NextPage = () => {
   const router = useRouter();
   const path = router.asPath;
 
@@ -58,4 +59,6 @@ export default function NotFoundPage() {
       </motion.div>
     </div>
   );
-}
+};
+
+export default NotFoundPage;
