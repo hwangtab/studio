@@ -93,9 +93,9 @@ const Lesson = () => {
                         프로의 공간에서 프로의 노하우를 배우세요.
                     </>
                 }
-                backgroundImage="/images/mixing-console.jpg"
+                backgroundImage="/images/lesson1.png"
                 imageAlt="스튜디오 믹싱 콘솔"
-                minHeight="min-h-[60vh]"
+                minHeight="min-h-[55vh]"
             />
 
             <div className="container mx-auto px-4 py-16">
