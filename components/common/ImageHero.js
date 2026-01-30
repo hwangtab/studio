@@ -12,15 +12,13 @@ const ImageHero = ({
   overlayGradient,
   textAlign = "center",
   className = "",
-  isMain = false, // 메인 페이지 히어로 여부
 }) => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]); // Parallax effect
 
   // 기본 오버레이 그래디언트 업그레이드 (Cinematic Atmosphere)
   // 하단에서 올라오는 짙은 그림자와 상단의 은은한 비네팅
-  const defaultGradient = "bg-gradient-to-b from-black/40 via-transparent to-black/80";
-  const mainOverlay = "bg-gradient-to-b from-black/30 via-transparent to-[#0f172a] via-80%";
+  const cinematicOverlay = "bg-gradient-to-b from-black/30 via-transparent to-[#0f172a] via-80%";
 
   const alignmentClass = textAlign === 'center'
     ? 'text-center'
@@ -34,8 +32,8 @@ const ImageHero = ({
       <motion.div
         className="absolute inset-0 z-0"
         style={{ y }}
-        initial={isMain ? { scale: 1.1 } : { scale: 1 }}
-        animate={isMain ? { scale: 1 } : { scale: 1 }}
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
         transition={{ duration: 10, ease: "easeOut" }}
       >
         <ResponsiveImage
@@ -50,10 +48,10 @@ const ImageHero = ({
 
       {/* 오버레이 */}
       <div
-        className={`absolute inset-0 z-10 ${overlayGradient || (isMain ? mainOverlay : defaultGradient)}`}
+        className={`absolute inset-0 z-10 ${overlayGradient || cinematicOverlay}`}
       />
       {/* 노이즈 텍스처 오버레이 (Premium Feel) */}
-      {isMain && <div className="absolute inset-0 z-10 opacity-[0.03] bg-[url('/images/noise.png')] pointer-events-none mix-blend-overlay" />}
+      <div className="absolute inset-0 z-10 opacity-[0.03] bg-[url('/images/noise.png')] pointer-events-none mix-blend-overlay" />
 
       {/* 콘텐츠 */}
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>

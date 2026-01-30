@@ -52,7 +52,6 @@ const Home = () => {
       />
 
       <ImageHero
-        isMain={true}
         title={
           <>
             <span className="block mb-2 text-gray-100 drop-shadow-lg">당신의 음악에</span>
