@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users } from 'lucide-react';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
@@ -221,14 +221,15 @@ const Lesson = () => {
                                     </p>
                                 </div>
                             </div>
+
                             <div className="flex">
                                 <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <CheckCircle className="text-primary" size={32} />
+                                    <Users className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-xl mb-3 dark:text-white">입주 회원 특별 혜택</h4>
+                                    <h4 className="font-bold text-xl mb-3 dark:text-white">현업 엔지니어 실전 멘토링</h4>
                                     <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                                        스튜디오 놀 연습실 입주 회원은 레슨비 할인 혜택을 받을 수 있습니다. 연습 공간과 배움의 기회를 합리적인 비용으로 동시에 누리세요.
+                                        단순한 기술 전수가 아닌, 현장에서 즉시 활용 가능한 실전 노하우와 음악적 고민을 함께 나누는 1:1 멘토링을 제공합니다.
                                     </p>
                                 </div>
                             </div>
@@ -265,10 +266,7 @@ const Lesson = () => {
                                     <CheckCircle size={18} className="text-green-500 mr-3" />
                                     <span>수업 외 연습 시 녹음실 할인</span>
                                 </li>
-                                <li className="flex items-center text-gray-600 dark:text-gray-300">
-                                    <CheckCircle size={18} className="text-green-500 mr-3" />
-                                    <span>연습실 입주 회원 할인 혜택</span>
-                                </li>
+
                             </ul>
                             <a
                                 href="https://open.kakao.com/me/nol"
