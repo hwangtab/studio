@@ -290,8 +290,8 @@ const Pricing = () => {
                                 className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
                             >
                                 <ResponsiveImage
-                                    src="/images/hardware8.jpg"
-                                    alt="스튜디오 놀 하이엔드 전용 장비"
+                                    src="/images/recording15.png"
+                                    alt="스튜디오 놀 프로 패키지 녹음 장비"
                                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     pictureClassName="block h-full"
                                     loading="lazy"
