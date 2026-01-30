@@ -8,7 +8,7 @@ const ImageHero = ({
   ctaButtons,
   backgroundImage,
   imageAlt = "Hero Background",
-  minHeight = "min-h-[55vh]",
+  minHeight = "min-h-[60vh]",
   overlayGradient,
   textAlign = "center",
   className = "",
