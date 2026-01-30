@@ -70,13 +70,13 @@ const Home = () => {
           <>
             <Link
               href="/contact"
-              className="backdrop-blur-sm bg-white/90 hover:bg-white text-gray-900 border border-white/50 text-lg font-bold py-4 px-10 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:-translate-y-1"
+              className="inline-flex items-center justify-center bg-white text-primary-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
             >
               예약하기
             </Link>
             <Link
               href="/portfolio"
-              className="backdrop-blur-md bg-black/30 border border-white/30 text-white hover:bg-white/10 text-lg font-medium py-4 px-10 rounded-full transition-all duration-300 hover:-translate-y-1"
+              className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white font-medium text-lg py-4 px-10 rounded-full hover:bg-white/10 transition-all duration-300 hover:-translate-y-1"
             >
               포트폴리오
             </Link>
