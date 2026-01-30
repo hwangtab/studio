@@ -285,8 +285,8 @@ const Pricing = () => {
                             </div>
                             <div className="relative h-64 md:h-auto overflow-hidden">
                                 <ResponsiveImage
-                                    src="/images/hardware4.jpg"
-                                    alt="스튜디오 놀 하이엔드 오디오 인터페이스"
+                                    src="/images/hardware8.jpg"
+                                    alt="스튜디오 놀 하이엔드 전용 장비"
                                     className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                                     pictureClassName="block h-full"
                                     loading="lazy"
