@@ -26,7 +26,7 @@ const ImageHero = ({
 
   return (
     <section
-      className={`relative overflow-hidden ${minHeight} flex flex-col justify-center -mt-20 pt-48 pb-20 ${className}`}
+      className={`relative overflow-hidden ${minHeight} flex flex-col justify-center -mt-20 pt-32 pb-12 ${className}`}
     >
       {/* 배경 이미지 (Ken Burns Effect + Parallax) */}
       <motion.div
