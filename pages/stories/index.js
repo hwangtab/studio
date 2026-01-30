@@ -33,7 +33,7 @@ const StoriesPage = ({ stories }) => {
         subtitle="스튜디오 작업과 관련된 다양한 이야기를 만나보세요."
         backgroundImage="/images/studio1.jpg"
         imageAlt="스튜디오 놀 스토리"
-        minHeight="min-h-[50vh]"
+        minHeight="min-h-[60vh]"
       />
       <div className="container mx-auto px-4 py-16">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>

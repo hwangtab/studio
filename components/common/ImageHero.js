@@ -24,9 +24,15 @@ const ImageHero = ({
     ? 'text-center'
     : 'text-left';
 
+  // 100vh일 때(메인 페이지)는 정중앙 정렬, 그 외(서브 페이지)는 상단 기준 고정 위치 정렬
+  const isFullHeight = minHeight.includes('100vh');
+  const verticalAlignClass = isFullHeight
+    ? 'justify-center pt-32 pb-12'
+    : 'justify-start pt-48 pb-20';
+
   return (
     <section
-      className={`relative overflow-hidden ${minHeight} flex flex-col justify-center -mt-20 pt-32 pb-12 ${className}`}
+      className={`relative overflow-hidden ${minHeight} flex flex-col ${verticalAlignClass} -mt-20 ${className}`}
     >
       {/* 배경 이미지 (Ken Burns Effect + Parallax) */}
       <motion.div
