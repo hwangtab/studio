@@ -83,6 +83,7 @@ const Lesson = () => {
                     { name: '홈', path: '/' },
                     { name: '레슨', path: '/lesson' },
                 ]}
+                ogImage="/images/lesson1.png"
             />
             <ImageHero
                 title="올인원 프로덕션 마스터 클래스"
