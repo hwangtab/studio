@@ -1,18 +1,32 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import handler, { __contactTestUtils } from '../pages/api/contact';
+
+type MockRequest = {
+  method?: string;
+  body?: Record<string, unknown>;
+  headers?: Record<string, string>;
+  socket: { remoteAddress: string };
+};
+
+type MockResponse = {
+  status: jest.Mock;
+  json: jest.Mock;
+  setHeader: jest.Mock;
+};
 
 const createRequestResponse = ({
   method = 'POST',
   body = {},
   headers = {},
-} = {}) => {
-  const req = {
+} = {}): { req: MockRequest; res: MockResponse } => {
+  const req: MockRequest = {
     method,
     body,
     headers,
     socket: { remoteAddress: '127.0.0.1' },
   };
 
-  const res = {
+  const res: MockResponse = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn().mockReturnThis(),
     setHeader: jest.fn(),
@@ -33,7 +47,7 @@ describe('/api/contact', () => {
         json: () => Promise.resolve({}),
         text: () => Promise.resolve(''),
       })
-    );
+    ) as jest.Mock;
   });
 
   it('차단용 허니팟 필드가 채워지면 요청을 거절한다', async () => {
@@ -41,7 +55,7 @@ describe('/api/contact', () => {
       body: { name: 'test', phone: '010', message: 'hi', company: 'bot' },
     });
 
-    await handler(req, res);
+    await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: '잘못된 요청입니다.' });
@@ -56,7 +70,7 @@ describe('/api/contact', () => {
         headers: forwardedHeaders,
         body: { name: 'user', phone: '010', message: 'hello' },
       });
-      await handler(req, res);
+      await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
       expect(res.status).toHaveBeenCalledWith(200);
     }
 
@@ -64,7 +78,7 @@ describe('/api/contact', () => {
       headers: forwardedHeaders,
       body: { name: 'user', phone: '010', message: 'blocked' },
     });
-    await handler(req, res);
+    await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
     expect(res.status).toHaveBeenCalledWith(429);
     expect(res.json).toHaveBeenCalledWith({
