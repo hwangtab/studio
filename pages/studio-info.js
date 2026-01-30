@@ -65,7 +65,7 @@ const Studio = () => {
         subtitle="최고의 시설과 장비, 전문 엔지니어의 노하우로 여러분의 음악적 비전을 현실로 만듭니다."
         backgroundImage="/images/hardware1.jpg"
         imageAlt="스튜디오 놀 장비"
-        minHeight="min-h-[55vh]"
+        minHeight="min-h-[60vh]"
       />
       <div className="container mx-auto px-4 py-16">
         {/* 스튜디오 소개 섹션 */}

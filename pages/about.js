@@ -34,7 +34,7 @@ const About = () => {
         }
         backgroundImage="/images/recording15.png"
         imageAlt="스튜디오 놀 소개"
-        minHeight="min-h-[55vh]"
+        minHeight="min-h-[60vh]"
       />
 
       {/* 올인원 프로덕션 서비스 */}

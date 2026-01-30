@@ -70,7 +70,7 @@ const Contact = () => {
         subtitle="프로젝트에 대한 문의나 예약 상담을 편하게 해주세요."
         backgroundImage="/images/studio3.jpg"
         imageAlt="스튜디오 놀 연락"
-        minHeight="min-h-[50vh]"
+        minHeight="min-h-[60vh]"
       />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">

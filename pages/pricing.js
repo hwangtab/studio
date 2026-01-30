@@ -118,7 +118,7 @@ const Pricing = () => {
                 }
                 backgroundImage="/images/hardware2.jpg"
                 imageAlt="스튜디오 놀 가격 안내"
-                minHeight="min-h-[55vh]"
+                minHeight="min-h-[60vh]"
             />
 
             {/* Recording Section */}

@@ -96,7 +96,7 @@ const Lesson = () => {
                 }
                 backgroundImage="/images/lesson1.png"
                 imageAlt="스튜디오 믹싱 콘솔"
-                minHeight="min-h-[55vh]"
+                minHeight="min-h-[60vh]"
             />
 
             <div className="container mx-auto px-4 py-16">
