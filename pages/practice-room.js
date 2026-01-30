@@ -325,18 +325,23 @@ const PracticeRoom = () => {
               </motion.div>
             </div>
 
-            <div className="relative h-64 md:h-auto overflow-hidden">
+            <a
+              href="https://open.kakao.com/me/nol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
+            >
               <ResponsiveImage
                 src={`/images/room8.jpg`}
                 alt="자연광이 들어오는 쾌적한 연습실 공간"
-                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 loading="lazy"
                 sizes="(min-width: 768px) 50vw, 100vw"
                 fill
               />
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-            </div>
+            </a>
           </div>
         </motion.div>
       </div>
