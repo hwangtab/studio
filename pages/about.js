@@ -244,29 +244,58 @@ const About = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Improved CTA Section (Consistency with other pages) */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-dark via-secondary to-accent text-white text-center px-6 py-16 shadow-[0_20px_60px_rgba(15,23,42,0.35)]">
-            <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-white/30 via-transparent to-black/30 pointer-events-none"></div>
-            <div className="relative">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">스튜디오 놀과 함께하세요!</h2>
-              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                지금 바로 상담 예약이 가능합니다.<br />
-                프로젝트의 규모와 상관없이 언제든 편하게 문의주세요.<br />
-                첫 상담부터 최종 마스터링까지 함께합니다.
-              </p>
-              <Link href="/contact" passHref legacyBehavior>
-                <motion.a
-                  className="inline-block bg-white text-primary-dark font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  연락하기
-                </motion.a>
-              </Link>
+          <motion.div
+            className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
+              <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
+                <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                  당신의 음악 여정에<br />
+                  <span className="text-primary">가장 믿음직한 파트너</span>
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                  프로젝트의 규모와 상관없이 정성을 다합니다.<br className="hidden md:block" />
+                  기획부터 최종 마스터링까지, 당신의 상상을 완벽한 사운드로 실현해드립니다.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
+                  >
+                    오시는 길
+                  </Link>
+                  <a
+                    href="https://open.kakao.com/me/nol"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
+                  >
+                    <MessageCircle className="mr-2" size={20} />
+                    카카오톡 문의하기
+                  </a>
+                </div>
+              </div>
+              <div className="relative h-64 md:h-auto overflow-hidden">
+                <ResponsiveImage
+                  src="/images/hardware3.jpg"
+                  alt="스튜디오 놀 프로덕션 환경"
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+                  pictureClassName="block h-full"
+                  loading="lazy"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  fill
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>
