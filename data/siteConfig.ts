@@ -1,4 +1,6 @@
-export const SITE_CONFIG = {
+import type { SiteConfig, SEODefaults } from '../types/data';
+
+export const SITE_CONFIG: SiteConfig = {
     name: '스튜디오 놀',
     url: 'https://studionol.co.kr',
     description: '연신내 녹음실, 연습실, 믹싱, 마스터링, 음반 제작 스튜디오',
@@ -12,7 +14,7 @@ export const SITE_CONFIG = {
     vatNotice: '* 모든 가격은 VAT 별도입니다.',
 };
 
-export const SEO_DEFAULTS = {
+export const SEO_DEFAULTS: SEODefaults = {
     title: '스튜디오 놀 - 음악 제작 스튜디오',
     description: '연신내역 도보 5분, 스튜디오 놀에서 녹음실·연습실·믹싱/마스터링 서비스를 한 번에 이용하세요.',
     keywords: '연신내 녹음실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오',

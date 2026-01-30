@@ -1,3 +1,5 @@
+import type { PricingPlan } from '../types/data';
+
 export const VAT_NOTICE = '모든 가격은 VAT(부가가치세) 별도입니다.';
 
 export const recordingOffers = [
@@ -20,7 +22,7 @@ export const recordingOffers = [
     recommended: true,
     features: ['6시간 패키지 (약 17% 할인)', '충분한 휴식과 여유로운 작업', '식사 시간 포함', '장시간 집중이 필요한 프로젝트에 최적'],
   },
-];
+] as const;
 
 export const mixingOffers = [
   {
@@ -51,7 +53,7 @@ export const mixingOffers = [
     description: '대편성 오케스트라나 복잡한 레이어의 곡에 적합합니다.',
     features: ['31 트랙 이상', '대편성 또는 복잡한 일렉트로닉', '기본 2회 수정 포함', '최고 수준의 디테일 작업'],
   },
-];
+] as const;
 
 export const masteringOffers = [
   {
@@ -73,7 +75,7 @@ export const masteringOffers = [
     recommended: true,
     features: ['4곡 이상 진행 시 적용', '앨범 전체의 톤 앤 매너 통일', '곡 간 레벨 밸런싱', '기본 1회 수정 포함'],
   },
-];
+] as const;
 
 export const additionalServices = [
   {
@@ -106,4 +108,4 @@ export const additionalServices = [
     priceValue: 500000,
     description: '아티스트/앨범 소개를 위한 반응형 웹사이트 제작 (Electronic Press Kit)',
   },
-];
+] as const;

@@ -1,4 +1,5 @@
 import { Mic, Disc, Globe } from 'lucide-react';
+import type { HomeService, StudioImage } from '../types/data';
 
 export const homeServices = [
     {
@@ -19,7 +20,7 @@ export const homeServices = [
         link: '/about',
         icon: Globe,
     },
-];
+] as const;
 
 export const studioImages = [
     {
@@ -42,4 +43,4 @@ export const studioImages = [
         src: `/images/hardware8.jpg`,
         alt: "아날로그 아웃보드 장비와 프리앰프 랙"
     }
-];
+] as const;

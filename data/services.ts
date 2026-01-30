@@ -1,4 +1,5 @@
 import { Music, Users, Lightbulb, Clock, Headphones, Palette, Globe, Megaphone, Banknote, Calendar } from 'lucide-react';
+import type { ProcessStep, Advantage, CoreService } from '../types/data';
 
 export const productionProcess = [
     {
@@ -41,7 +42,7 @@ export const productionProcess = [
         description: "라이브 공연 기획 및 운영 지원으로 아티스트의 무대를 완성합니다.",
         icon: Calendar
     }
-];
+] as const;
 
 export const advantages = [
     {
@@ -64,7 +65,7 @@ export const advantages = [
         description: "뮤지션은 창작에만 집중할 수 있는 환경을 제공합니다.",
         icon: Music
     }
-];
+] as const;
 
 export const coreServices = [
     {
@@ -82,4 +83,4 @@ export const coreServices = [
         description: "각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다.",
         icon: Users
     }
-];
+] as const;

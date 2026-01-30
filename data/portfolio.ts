@@ -1,3 +1,5 @@
+import type { PortfolioCategory, PortfolioItem, AudioTrack } from '../types/data';
+
 export const categories = [
     {
         "id": "all",
@@ -29,7 +31,7 @@ export const categories = [
         "description": "CM송 및 상업적 목적의 음악",
         "color": "#ea580c"
     }
-];
+] as const;
 
 export const portfolioItems = [
     {
@@ -563,7 +565,7 @@ export const portfolioItems = [
         "featured": true,
         "artist": "Various Artists"
     }
-];
+] as const;
 
 export const audioTracks = [
     {
@@ -596,4 +598,4 @@ export const audioTracks = [
         "featured": true,
         "description": "스튜디오 놀에서 레코딩, 믹싱한 트랙"
     }
-];
+] as const;
