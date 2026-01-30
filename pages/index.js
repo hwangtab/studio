@@ -76,7 +76,7 @@ const Home = () => {
             </Link>
             <Link
               href="/portfolio"
-              className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white font-medium text-lg py-4 px-10 rounded-full hover:bg-white/10 transition-all duration-300 hover:-translate-y-1"
+              className="inline-flex items-center justify-center bg-primary border-2 border-primary text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
             >
               포트폴리오
             </Link>
