@@ -1,7 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
-import { HERO_TITLE_ANIMATION, HERO_SUBTITLE_ANIMATION, HERO_CTA_ANIMATION } from '../../utils/animationUtils';
 
 const ImageHero = ({
   title,
@@ -13,9 +12,15 @@ const ImageHero = ({
   overlayGradient,
   textAlign = "center",
   className = "",
+  isMain = false, // 메인 페이지 히어로 여부
 }) => {
-  // 기본 오버레이 그래디언트 (Tailwind JIT 호환을 위해 고정 클래스 사용)
-  const defaultGradient = "bg-gradient-to-b from-black/60 via-black/40 to-black/60";
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]); // Parallax effect
+
+  // 기본 오버레이 그래디언트 업그레이드 (Cinematic Atmosphere)
+  // 하단에서 올라오는 짙은 그림자와 상단의 은은한 비네팅
+  const defaultGradient = "bg-gradient-to-b from-black/40 via-transparent to-black/80";
+  const mainOverlay = "bg-gradient-to-b from-black/30 via-transparent to-[#0f172a] via-80%";
 
   const alignmentClass = textAlign === 'center'
     ? 'text-center'
@@ -25,8 +30,14 @@ const ImageHero = ({
     <section
       className={`relative overflow-hidden ${minHeight} flex items-center -mt-20 pt-24 ${className}`}
     >
-      {/* 배경 이미지 */}
-      <div className="absolute inset-0 z-0">
+      {/* 배경 이미지 (Ken Burns Effect + Parallax) */}
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{ y }}
+        initial={isMain ? { scale: 1.1 } : { scale: 1 }}
+        animate={isMain ? { scale: 1 } : { scale: 1 }}
+        transition={{ duration: 10, ease: "easeOut" }}
+      >
         <ResponsiveImage
           src={backgroundImage}
           alt={imageAlt}
@@ -35,39 +46,44 @@ const ImageHero = ({
           className="object-cover"
           sizes="100vw"
         />
-      </div>
+      </motion.div>
 
       {/* 오버레이 */}
       <div
-        className={`absolute inset-0 z-10 ${overlayGradient || defaultGradient}`}
+        className={`absolute inset-0 z-10 ${overlayGradient || (isMain ? mainOverlay : defaultGradient)}`}
       />
+      {/* 노이즈 텍스처 오버레이 (Premium Feel) */}
+      {isMain && <div className="absolute inset-0 z-10 opacity-[0.03] bg-[url('/images/noise.png')] pointer-events-none mix-blend-overlay" />}
 
       {/* 콘텐츠 */}
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
-        <motion.h1
-          className={`font-logo text-heading-1 md:text-display-2 lg:text-display-1 text-white mb-6 break-keep ${textAlign === 'center' ? 'max-w-4xl mx-auto' : 'max-w-3xl'}`}
-          {...HERO_TITLE_ANIMATION}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
         >
-          {title}
-        </motion.h1>
-
-        {subtitle && (
-          <motion.p
-            className={`font-pretendard text-body-1-light md:text-subtitle-1 text-white/90 mb-8 max-w-2xl leading-relaxed ${textAlign === 'center' ? 'mx-auto' : ''}`}
-            {...HERO_SUBTITLE_ANIMATION}
+          <h1
+            className={`font-logo text-heading-1 md:text-6xl lg:text-7xl text-white mb-8 break-keep leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
           >
-            {subtitle}
-          </motion.p>
-        )}
+            {title}
+          </h1>
 
-        {ctaButtons && (
-          <motion.div
-            className={`flex flex-wrap gap-4 ${textAlign === 'center' ? 'justify-center' : ''}`}
-            {...HERO_CTA_ANIMATION}
-          >
-            {ctaButtons}
-          </motion.div>
-        )}
+          {subtitle && (
+            <p
+              className={`font-pretendard text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 ${textAlign === 'center' ? 'mx-auto' : ''}`}
+            >
+              {subtitle}
+            </p>
+          )}
+
+          {ctaButtons && (
+            <div
+              className={`flex flex-wrap gap-4 ${textAlign === 'center' ? 'justify-center' : ''}`}
+            >
+              {ctaButtons}
+            </div>
+          )}
+        </motion.div>
       </div>
     </section>
   );

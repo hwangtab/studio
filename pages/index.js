@@ -52,30 +52,33 @@ const Home = () => {
       />
 
       <ImageHero
+        isMain={true}
         title={
           <>
-            <span className="whitespace-nowrap">당신의 음악에</span>{' '}
-            <span className="text-accent-light">생명</span>을 불어넣는 공간
+            <span className="block mb-2 text-gray-100 drop-shadow-lg">당신의 음악에</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white font-black drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+              생명
+            </span>
+            <span className="text-gray-100 drop-shadow-lg">을 불어넣는 공간</span>
           </>
         }
-        subtitle="최고급 장비와 전문 엔지니어가 함께하는 스튜디오 놀에서 당신만의 사운드를 완성하세요."
+        subtitle="최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요."
         backgroundImage="/images/studio2.jpg"
         imageAlt="스튜디오 놀 메인 스튜디오"
-        minHeight="min-h-[90vh]"
-        overlayGradient="bg-gradient-to-b from-black/70 via-black/50 to-black/70"
+        minHeight="min-h-[100vh]"
         ctaButtons={
           <>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center bg-white text-primary-dark text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/90 transition duration-300 shadow-lg"
+              className="backdrop-blur-sm bg-white/90 hover:bg-white text-gray-900 border border-white/50 text-lg font-bold py-4 px-10 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] hover:-translate-y-1"
             >
               예약하기
             </Link>
             <Link
               href="/portfolio"
-              className="inline-flex items-center justify-center bg-transparent border-2 border-white text-white text-body-1 leading-none py-3 px-8 rounded-full hover:bg-white/10 transition duration-300"
+              className="backdrop-blur-md bg-black/30 border border-white/30 text-white hover:bg-white/10 text-lg font-medium py-4 px-10 rounded-full transition-all duration-300 hover:-translate-y-1"
             >
-              포트폴리오 보기
+              포트폴리오
             </Link>
           </>
         }
