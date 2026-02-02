@@ -1,13 +1,24 @@
-import type { NextPage } from 'next'; import React from 'react';
+
+import type { NextPage } from 'next';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users, LucideIcon } from 'lucide-react';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
 import BaseCard from '../components/ui/BaseCard';
 import Link from 'next/link';
 
-const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay = 0 }: any) => (
+interface CurriculumCardProps {
+    step: string;
+    title: string;
+    subtitle: string;
+    description: string[];
+    icon: LucideIcon;
+    delay?: number;
+}
+
+const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
     <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700">
         <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-primary transition-transform group-hover:scale-110">
             {step}
@@ -19,7 +30,7 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
             <h3 className="text-xl font-bold mb-1 text-gray-800 dark:text-gray-100">{title}</h3>
             <p className="text-sm font-semibold text-primary mb-4">{subtitle}</p>
             <ul className="space-y-2">
-                {description.map((item: any, idx: number) => (
+                {description.map((item, idx) => (
                     <li key={idx} className="flex items-start text-gray-600 dark:text-gray-300 text-sm">
                         <CheckCircle size={14} className="mt-1 mr-2 text-primary flex-shrink-0" />
                         <span>{item}</span>
@@ -30,7 +41,9 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
     </BaseCard>
 );
 
-const Lesson: NextPage = () => {
+type PageWithHero = NextPage & { hasHero?: boolean };
+
+const Lesson: PageWithHero = () => {
     return (
         <>
             <SEO
@@ -86,20 +99,18 @@ const Lesson: NextPage = () => {
                 ogImage="/images/lesson1.png"
             />
             <ImageHero
-                {...{
-                    title: "올인원 프로덕션 마스터 클래스",
-                    subtitle: (
-                        <>
-                            상상을 현실의 소리로, 아이디어를 완성된 음반으로.
-                            <br />
-                            프로의 공간에서 프로의 노하우를 배우세요.
-                        </>
-                    ),
-                    backgroundImage: "/images/lesson1.png",
-                    imageAlt: "스튜디오 믹싱 콘솔",
-                    minHeight: "min-h-[60vh]",
-                    overlayGradient: "from-black/60 via-black/40 to-transparent",
-                } as any}
+                title="올인원 프로덕션 마스터 클래스"
+                subtitle={
+                    <>
+                        상상을 현실의 소리로, 아이디어를 완성된 음반으로.
+                        <br />
+                        프로의 공간에서 프로의 노하우를 배우세요.
+                    </>
+                }
+                backgroundImage="/images/lesson1.png"
+                imageAlt="스튜디오 믹싱 콘솔"
+                minHeight="min-h-[60vh]"
+                overlayGradient="from-black/60 via-black/40 to-transparent"
             />
 
             <div className="container mx-auto px-4 py-16">
@@ -342,10 +353,11 @@ const Lesson: NextPage = () => {
     );
 };
 
-export default Lesson;
+Lesson.hasHero = true;
 
-(Lesson as any).hasHero = true;
+export default Lesson;
 
 export const getStaticProps = () => ({
     props: {},
 });
+

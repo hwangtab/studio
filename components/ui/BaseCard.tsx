@@ -1,3 +1,4 @@
+import { cn } from '../../lib/utils';
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -31,7 +32,7 @@ const BaseCard = ({
 
     const CardContent = (
         <motion.div
-            className={`${baseStyles} ${variants[variant]} ${className}`}
+            className={cn(baseStyles, variants[variant], className)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             whileHover={hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {}}

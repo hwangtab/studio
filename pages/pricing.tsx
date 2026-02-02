@@ -222,7 +222,7 @@ const Pricing: NextPage = () => {
                     <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
                         <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} />
                         <div>
-                            <h4 className="font-bold text-gray-800 dark:text-white mb-1">보컬 튠/에딧 옵션</h4>
+                            <h4 className="typo-card-subtitle text-gray-800 dark:text-white mb-1">보컬 튠/에딧 옵션</h4>
                             <p className="text-gray-600 dark:text-gray-300 text-sm">
                                 정교한 보컬 튜닝과 박자 보정이 필요한 경우 <span className="font-bold text-primary dark:text-primary-light">곡당 150,000원</span>이 추가됩니다. 자연스러운 보정을 원칙으로 합니다.
                             </p>

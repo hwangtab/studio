@@ -90,7 +90,7 @@ const Home: NextPage = () => {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="word-break-keep-all text-heading-2 font-title font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+            className="typo-section-title word-break-keep-all mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
             {...PAGE_TITLE_ANIMATION}
           >
             당신을 위한 녹음 공간과 장비
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
       <section className="py-24 bg-gray-50/50 dark:bg-gray-800/10">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="word-break-keep-all text-heading-2 font-title font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+            className="typo-section-title word-break-keep-all mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
             {...PAGE_SUBTITLE_ANIMATION}
           >
             우리의 서비스

@@ -2,9 +2,7 @@ import type { NextPage } from 'next'; import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
-// @ts-ignore - Component is JS
 import SEO from '../components/SEO';
-// @ts-ignore - Component is JS
 import ImageHero from '../components/common/ImageHero';
 
 import { SITE_CONFIG } from '../data/siteConfig';
