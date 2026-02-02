@@ -40,7 +40,7 @@ const homeFaqs = [
   },
   {
     question: '음원 유통 서비스도 제공하나요?',
-    answer: '네, 입주 고객에게는 오디오가이 및 The Orchard를 통한 글로벌 플랫폼(Spotify, Apple Music, YouTube Music 등) 배포 서비스를 무료로 제공하며, 순이익의 70%를 아티스트에게 배분합니다.',
+    answer: '네, 입주 고객에게는 오디오가이를 통한 글로벌 플랫폼(Spotify, Apple Music, YouTube Music 등) 배포 서비스를 무료로 제공하며, 순이익의 70%를 아티스트에게 배분합니다.',
   },
 ];
 

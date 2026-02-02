@@ -229,7 +229,7 @@ const SEO = ({
             {
               '@type': 'LocationFeatureSpecification',
               name: '무료 음원 유통',
-              value: '오디오가이 및 The Orchard를 통한 글로벌 플랫폼 송출, 순이익 70% 아티스트 배분',
+              value: '오디오가이를 통한 글로벌 플랫폼 송출, 순이익 70% 아티스트 배분',
             },
             {
               '@type': 'LocationFeatureSpecification',
