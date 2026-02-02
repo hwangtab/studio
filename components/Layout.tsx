@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence as AnimatePresenceOrig, motion } from 'framer-motion';
+const AnimatePresence = AnimatePresenceOrig as any;
 import { SITE_CONFIG } from '../data/siteConfig';
 
 const NAV_ITEMS = [

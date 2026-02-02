@@ -7,6 +7,7 @@ import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
 import BaseCard from '../components/ui/BaseCard';
+import SectionHeading from '../components/ui/SectionHeading';
 import Link from 'next/link';
 
 interface CurriculumCardProps {
@@ -116,34 +117,32 @@ const Lesson: PageWithHero = () => {
             <div className="container mx-auto px-4 py-16">
 
                 {/* Intro Section */}
-                <motion.div
-                    className="text-center max-w-3xl mx-auto mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
-                    <h2 className="typo-section-title mb-6 text-gray-800 dark:text-gray-100">
-                        단순히 배우는 것을 넘어,<br />
-                        <span className="text-primary">아티스트로 데뷔하는 과정</span>입니다
-                    </h2>
-                    <p className="typo-section-lead text-gray-600 dark:text-gray-300">
-                        스튜디오 놀의 레슨은 교과서적인 이론 교육이 아닙니다. <br className="hidden md:block" />
-                        실제 앨범 제작 현장에서 프로들이 사용하는 장비와 워크플로우를 그대로 경험하며, <br className="hidden md:block" />
-                        자신만의 음악을 완성해가는 <strong>&apos;실전형 프로젝트&apos;</strong>입니다.
-                    </p>
-                </motion.div>
+                {/* Intro Section */}
+                <SectionHeading
+                    title={
+                        <>
+                            단순히 배우는 것을 넘어,<br />
+                            <span className="text-primary">아티스트로 데뷔하는 과정</span>입니다
+                        </>
+                    }
+                    subtitle={
+                        <>
+                            스튜디오 놀의 레슨은 교과서적인 이론 교육이 아닙니다. <br className="hidden md:block" />
+                            실제 앨범 제작 현장에서 프로들이 사용하는 장비와 워크플로우를 그대로 경험하며, <br className="hidden md:block" />
+                            자신만의 음악을 완성해가는 <strong>&apos;실전형 프로젝트&apos;</strong>입니다.
+                        </>
+                    }
+                    className="mb-16"
+                />
 
                 {/* Curriculum Grid */}
                 <div className="mb-16">
-                    <motion.h3
-                        className="text-2xl font-bold text-center mb-12 text-gray-800 dark:text-gray-100"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                    >
-                        Curriculum: 4 Steps to Master
-                    </motion.h3>
+                    <SectionHeading
+                        title="Curriculum: 4 Steps to Master"
+                        as="h3"
+                        className="mb-12"
+                        titleClassName="text-2xl"
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <CurriculumCard
                             step="01"
@@ -210,9 +209,12 @@ const Lesson: PageWithHero = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h3 className="typo-section-title mb-8 text-gray-800 dark:text-gray-100">
-                            Why Studio Nol?
-                        </h3>
+                        <SectionHeading
+                            title="Why Studio Nol?"
+                            as="h3"
+                            align="left"
+                            className="mb-8"
+                        />
                         <div className="space-y-10">
                             <div className="flex">
                                 <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
@@ -306,13 +308,18 @@ const Lesson: PageWithHero = () => {
                 >
                     <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                         <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                            <h3 className="typo-section-title mb-4 text-gray-800 dark:text-white">
-                                아직 망설여지시나요?<br />
-                                <span className="text-primary">첫 걸음을 함께합니다.</span>
-                            </h3>
-                            <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
-                                음악을 시작하는 데 늦은 때란 없습니다. 프로의 공간에서 직접 장비를 만져보고 상담받으며 당신만의 커리큘럼을 계획해보세요.
-                            </p>
+                            <SectionHeading
+                                title={
+                                    <>
+                                        아직 망설여지시나요?<br />
+                                        <span className="text-primary">첫 걸음을 함께합니다.</span>
+                                    </>
+                                }
+                                subtitle="음악을 시작하는 데 늦은 때란 없습니다. 프로의 공간에서 직접 장비를 만져보고 상담받으며 당신만의 커리큘럼을 계획해보세요."
+                                align="left"
+                                className="mb-8"
+                                as="h3"
+                            />
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link href="/contact" className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600">
                                     오시는 길
