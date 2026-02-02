@@ -114,7 +114,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
               title="샘플 트랙"
               align="left"
               className="mb-8"
-              titleClassName="typo-card-title text-gray-600 dark:text-gray-200"
+              titleClassName="typo-card-title"
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} />
@@ -148,7 +148,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
                 title="작업 프로젝트"
                 align="left"
                 className="mb-0"
-                titleClassName="typo-card-title text-gray-600 dark:text-gray-200"
+                titleClassName="typo-card-title"
                 as="h2"
               />
             </div>

@@ -139,7 +139,7 @@ const Contact: NextPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <h2 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">연락처 정보</h2>
+              <h2 className="typo-card-title mb-4">연락처 정보</h2>
               <div className="space-y-4">
                 <a href={SITE_CONFIG.contact.naverMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
                   <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
@@ -159,7 +159,7 @@ const Contact: NextPage = () => {
                 </a>
               </div>
               <div className="mt-6">
-                <h3 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">찾아오시는 길</h3>
+                <h3 className="typo-card-title mb-4">찾아오시는 길</h3>
                 <div className="mb-6">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1sko!2skr!4v1704364800000!5m2!1sko!2skr"
@@ -174,7 +174,7 @@ const Contact: NextPage = () => {
                 </div>
               </div>
               <div className="mt-6">
-                <h3 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">상담 가능 시간</h3>
+                <h3 className="typo-card-title mb-4">상담 가능 시간</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="dark:text-gray-300 typo-card-body">월요일 - 금요일</span>
@@ -205,7 +205,7 @@ const Contact: NextPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <h2 className="typo-card-title mb-4 text-gray-600 dark:text-gray-200">문의하기</h2>
+              <h2 className="typo-card-title mb-4">문의하기</h2>
               {submitMessage && (
                 <div className={`mb-4 p-4 rounded-md flex items-center ${submitMessage.includes('성공') ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}>
                   {submitMessage.includes('성공') && <CheckCircle className="mr-2" size={18} />}

@@ -116,6 +116,10 @@ const config: Config = {
           fontSize: theme('fontSize.heading-3[0]'),
           lineHeight: theme('fontSize.heading-3[1].lineHeight'),
           fontWeight: '700',
+          color: theme('colors.gray.800'),
+          '.dark &': {
+            color: theme('colors.gray.200'),
+          },
         },
         '.typo-card-subtitle': {
           fontFamily: theme('fontFamily.title'),

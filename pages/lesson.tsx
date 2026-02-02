@@ -223,7 +223,7 @@ const Lesson: PageWithHero = () => {
                                     <Mic2 className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="typo-card-title mb-3 text-gray-600 dark:text-gray-200">최고급 장비 실습</h4>
+                                    <h4 className="typo-card-title mb-3">최고급 장비 실습</h4>
                                     <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         강의실이 아닌 실제 레코딩 스튜디오에서 수업합니다. Neumann, SPL, SSL 등 프로들이 사용하는 장비를 직접 만져보고 소리를 들어보며 귀를 트레이닝합니다.
                                     </p>
@@ -234,7 +234,7 @@ const Lesson: PageWithHero = () => {
                                     <Disc className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="typo-card-title mb-3 text-gray-600 dark:text-gray-200">음원 발매 지원</h4>
+                                    <h4 className="typo-card-title mb-3">음원 발매 지원</h4>
                                     <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         수업의 결과물은 연습 파일로 끝나지 않습니다. 완성된 곡을 실제 음원 사이트에 발매하여 아티스트로서의 커리어를 시작할 수 있도록 돕습니다.
                                     </p>
@@ -246,7 +246,7 @@ const Lesson: PageWithHero = () => {
                                     <Users className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="typo-card-title mb-3 text-gray-600 dark:text-gray-200">현업 엔지니어 실전 멘토링</h4>
+                                    <h4 className="typo-card-title mb-3">현업 엔지니어 실전 멘토링</h4>
                                     <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         단순한 기술 전수가 아닌, 현장에서 즉시 활용 가능한 실전 노하우와 음악적 고민을 함께 나누는 1:1 멘토링을 제공합니다.
                                     </p>

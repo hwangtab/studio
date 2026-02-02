@@ -21,7 +21,7 @@ const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) =
     transition={{ duration: 0.5 }}
     whileHover={{ y: -5 }}
   >
-    <h3 className="typo-card-title mb-4 flex items-center text-gray-600 dark:text-gray-200">
+    <h3 className="typo-card-title mb-4 flex items-center">
       <Icon className="mr-2 text-primary dark:text-primary-light" size={20} />
       {title}
     </h3>
@@ -100,7 +100,7 @@ const Studio: NextPage = () => {
                 align="left"
                 className="mb-6"
                 as="h2"
-                titleClassName="typo-card-title text-gray-600 dark:text-gray-200"
+                titleClassName="typo-card-title"
               />
               <div className="space-y-4">
                 <p className="typo-section-lead mb-4">

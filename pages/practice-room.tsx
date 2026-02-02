@@ -16,7 +16,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any,
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
         <Icon className="text-primary dark:text-primary-light" size={24} />
       </div>
-      <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{title}</h3>
+      <h3 className="typo-card-title">{title}</h3>
     </div>
     <p className="typo-card-body">{description}</p>
   </BaseCard>

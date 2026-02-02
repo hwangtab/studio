@@ -127,7 +127,7 @@ const About: NextPage = () => {
               variant="default"
               className="p-6"
             >
-              <h3 className="typo-card-title text-gray-600 dark:text-gray-200 mb-4">비용 효율적인 패키지 옵션</h3>
+              <h3 className="typo-card-title mb-4">비용 효율적인 패키지 옵션</h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
