@@ -110,6 +110,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   }, [isDarkMode, hasThemeLoaded]);
 
   const isHome = router.pathname === '/';
+  const isFullBleed = ['/', '/practice-room'].includes(router.pathname);
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
@@ -195,7 +196,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
         )}
       </header>
 
-      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} pb-0`}>
+      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} ${isFullBleed ? 'pb-0' : 'pb-24'}`}>
         {children}
       </main>
 
