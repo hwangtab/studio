@@ -203,14 +203,14 @@ const Home: NextPage = () => {
         </div>
       </section>
 
-      {/* 리뷰 및 FAQ 통합 섹션 */}
-      <div className="bg-gray-50 dark:bg-gray-800/30">
-        <ReviewSection className="pt-24 pb-12 bg-transparent" />
-        <div className="container mx-auto px-4">
-          <hr className="border-gray-200 dark:border-gray-700" />
-        </div>
-        <FAQSection items={homeFaqs} className="pt-12 pb-24 bg-transparent" />
-      </div>
+      {/* 리뷰 섹션 */}
+      <ReviewSection className="py-24 bg-white dark:bg-gray-900" />
+
+      {/* FAQ 섹션 */}
+      <FAQSection
+        items={homeFaqs}
+        className="py-24 bg-gray-50/50 dark:bg-gray-800/10"
+      />
     </div>
   );
 };
