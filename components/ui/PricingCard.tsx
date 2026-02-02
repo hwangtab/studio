@@ -31,7 +31,7 @@ const PricingCard = ({ id, title, price, unit, description, features, recommende
                 <span className="text-3xl font-extrabold text-primary dark:text-primary-light">{price}</span>
                 {unit && <span className="text-gray-500 dark:text-gray-400 ml-1 text-sm">{unit}</span>}
             </div>
-            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6 min-h-[96px]">{description}</p>
+            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6">{description}</p>
 
             <div className="border-t border-gray-100 dark:border-gray-700 my-4"></div>
 
