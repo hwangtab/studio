@@ -36,17 +36,70 @@ const Contact: NextPage = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitMessage('');
+
+    const { name, phone, message, company } = formData;
+
+    // Honeypot check
+    if (company.trim().length > 0) {
+      setSubmitMessage('잘못된 요청입니다.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Basic validation
+    if (!name.trim() || !phone.trim() || !message.trim()) {
+      setSubmitMessage('필수 입력값이 누락되었습니다.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9\-\+\s\(\)]{8,20}$/;
+    if (!phoneRegex.test(phone)) {
+      setSubmitMessage('올바른 전화번호 형식이 아닙니다.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Sanitation
+    const sanitize = (str: string) => str.replace(/[<>]/g, '').trim();
+    const sanitizedName = sanitize(name);
+    const sanitizedPhone = sanitize(phone);
+    const sanitizedMessage = sanitize(message);
+
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('EmailJS configuration missing');
+      setSubmitMessage('이메일 서비스 설정 오류가 발생했습니다.');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: {
+            from_name: sanitizedName,
+            from_phone: sanitizedPhone,
+            message: sanitizedMessage,
+          },
+        }),
       });
 
       if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || '메시지 전송에 실패했습니다.');
+        const text = await response.text();
+        throw new Error(text || '메시지 전송에 실패했습니다.');
       }
 
       setSubmitMessage('메시지가 성공적으로 전송되었습니다.');
