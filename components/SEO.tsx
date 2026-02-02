@@ -300,11 +300,18 @@ const SEO = ({
       <meta name="ICBM" content="37.614353, 126.925887" />
 
       <link rel="preconnect" href="https://image.bugsm.co.kr" />
+      <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
       <link rel="preconnect" href="https://img.tumblbug.com" />
+      <link rel="dns-prefetch" href="https://img.tumblbug.com" />
       <link rel="preconnect" href="https://is1-ssl.mzstatic.com" />
+      <link rel="dns-prefetch" href="https://is1-ssl.mzstatic.com" />
       <link rel="preconnect" href="https://thumb.mt.co.kr" />
+      <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
       <link rel="preconnect" href="https://cdn.imweb.me" />
+      <link rel="dns-prefetch" href="https://cdn.imweb.me" />
       <link rel="preconnect" href="https://i.ytimg.com" />
+      <link rel="dns-prefetch" href="https://i.ytimg.com" />
+
 
       <link rel="canonical" href={normalizedCanonical} />
 
