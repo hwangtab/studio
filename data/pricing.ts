@@ -109,3 +109,35 @@ export const additionalServices = [
     description: '아티스트/앨범 소개를 위한 반응형 웹사이트 제작 (Electronic Press Kit)',
   },
 ] as const;
+
+export const specialPackages = [
+  {
+    id: 'package-wedding',
+    title: '셀프 축가/이벤트 녹음',
+    priceDisplay: '350,000원',
+    priceValue: 350000,
+    unit: '/ 1곡',
+    description: '결혼식 축가, 프로포즈, 기념일 음원 제작을 위한 올인원 패키지입니다.',
+    recommended: true,
+    features: ['녹음 2시간 (스튜디오 사용료 포함)', '정밀 보컬 튠 및 박자 보정', '전문 믹싱 & 마스터링', '당일 보정본 수령 가능 (사전 협의 시)'],
+  },
+  {
+    id: 'package-voiceover',
+    title: '성우/나레이션 녹음',
+    priceDisplay: '100,000원',
+    priceValue: 100000,
+    unit: '/ 시간',
+    description: '유튜브 나레이션, 오디오북, 광고 녹음 등 깨끗한 목소리 수음에 최적화되어 있습니다.',
+    features: ['Neumann U87AI 등 하이엔드 마이크 사용', '노이즈 제어 및 톤 보정', '실시간 편집 지원', '성우 대기실 제공'],
+  },
+  {
+    id: 'package-rental',
+    title: '유튜브/방송 촬영 대관',
+    priceDisplay: '100,000원',
+    priceValue: 100000,
+    unit: '/ 시간',
+    description: '뮤직비디오, 인터뷰, 라이브 영상 촬영을 위한 스튜디오 공간 대여입니다.',
+    features: ['메인 부스 및 컨트롤 룸 전체 사용', '촬영용 조명(지속광) 무료 대여', '오디오 인터페이스 직접 연결 지원', '대기실 및 탈의실 사용'],
+  },
+] as const;
+

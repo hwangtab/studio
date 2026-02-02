@@ -14,11 +14,13 @@ import {
     mixingOffers,
     masteringOffers,
     additionalServices,
+    specialPackages,
 } from '../data/pricing';
 
 const SITE_URL = 'https://studionol.co.kr';
 
 const SECTION_SUMMARIES = {
+    special: '축가, 성우, 유튜브 촬영 등 목적에 맞춰 최적화된 올인원 패키지 상품입니다.',
     recording: '레코딩은 시간당 10만원(최소 2시간) 혹은 6시간 패키지(Day Lock) 50만원으로 이용할 수 있으며 모든 금액은 VAT 별도입니다.',
     mixing: '믹싱은 트랙 수에 따라 20만~50만원으로 고정되어 있고, 모든 플랜에는 기본 두 번의 수정이 포함됩니다.',
     mastering: '마스터링은 싱글 곡당 10만원, 4곡 이상의 EP·앨범 작업은 곡당 8만원으로 묶음 할인이 적용됩니다.',
@@ -84,6 +86,7 @@ const pricingSchema = {
         '@type': 'OfferCatalog',
         name: 'Studio Nol Fixed Pricing',
         itemListElement: [
+            buildOfferCatalog('스페셜 패키지', specialPackages),
             buildOfferCatalog('레코딩', recordingOffers),
             buildOfferCatalog('믹싱', mixingOffers),
             buildOfferCatalog('마스터링', masteringOffers),
@@ -126,6 +129,35 @@ const Pricing: NextPage = () => {
                 imageAlt="스튜디오 놀 가격 안내"
                 minHeight="min-h-[60vh]"
             />
+
+            {/* Special Packages Section */}
+            <section id="special-packages" className={`py-16 ${SECTION_BG.highlight} bg-amber-50 dark:bg-amber-900/10`}>
+                <div className="container mx-auto px-4">
+                    <SectionHeading
+                        icon={TrendingUp}
+                        title="스페셜 패키지 (Purpose-Built)"
+                        subtitle="축가, 성우, 유튜브 등 구체적인 목적에 맞춰 최적화된 올인원 패키지"
+                    />
+                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                        {VAT_NOTICE}
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {specialPackages.map((offer, index) => (
+                            <PricingCard
+                                key={offer.id}
+                                id={offer.id}
+                                title={offer.title}
+                                price={offer.priceDisplay}
+                                unit={offer.unit}
+                                description={offer.description}
+                                features={offer.features}
+                                recommended={offer.recommended}
+                                delay={0.1 * (index + 1)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* Recording Section */}
             <section id="recording" className="py-16">
