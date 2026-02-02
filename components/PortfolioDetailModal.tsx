@@ -101,7 +101,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
       aria-labelledby="modal-title"
     >
       <motion.div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         variants={overlayVariants}
         onClick={onClose}
       />
@@ -113,7 +113,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
         animate="visible"
         exit="exit"
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700">
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

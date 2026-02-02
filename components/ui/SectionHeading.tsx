@@ -31,7 +31,7 @@ const SectionHeading = ({
     <motion.div
       className={cn(
         alignmentClasses[align] ?? alignmentClasses.center,
-        "mb-12 will-change-transform",
+        "mb-12",
         className
       )}
       initial="initial"

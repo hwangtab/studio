@@ -112,12 +112,12 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   }, [isDarkMode, hasThemeLoaded]);
 
   const isHome = router.pathname === '/';
-  const isFullBleed = ['/', '/practice-room'].includes(router.pathname);
+  const isFullBleed = ['/practice-room'].includes(router.pathname);
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
       <header
-        className={`fixed w-full z-50 transition-all duration-300 will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] ${isScrolled
+        className={`fixed w-full z-50 transition-all duration-300 ${isScrolled
           ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md'
           : hasHero
             ? 'bg-transparent'
@@ -187,7 +187,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] overflow-hidden"
+              className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
             >
               <div className="px-4 py-3 space-y-2">
                 {NAV_ITEMS.map((item) => (

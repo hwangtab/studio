@@ -31,7 +31,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, isExpanded, onP
     return (
         <div className={`flex flex-col ${isStack ? '' : 'md:flex-row'} items-center mb-6`}>
             <motion.div
-                className={`relative rounded-xl shadow-lg overflow-hidden mb-6 ${isStack ? '' : 'md:mb-0 md:mr-8'} transition-all duration-300 ${isExpanded ? 'w-48 h-48' : 'w-36 h-36'}`}
+                className={`relative rounded-xl shadow-lg overflow-hidden mb-6 ${isStack ? '' : 'md:mb-0 md:mr-8'} ${isExpanded ? 'w-48 h-48' : 'w-36 h-36'}`}
                 layout
             >
                 <ResponsiveImage
@@ -60,7 +60,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, isExpanded, onP
                     className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
                     onClick={onPlayPause}
                 >
-                    <div className="bg-white/20 backdrop-blur-md p-4 rounded-full will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
+                    <div className="bg-white/20 backdrop-blur-md p-4 rounded-full">
                         {isPlaying ? (
                             <svg className="text-white text-2xl" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                 <rect x="6" y="4" width="4" height="16" />
