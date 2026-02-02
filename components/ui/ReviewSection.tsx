@@ -57,7 +57,7 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                     {reviews.map((review, index) => (
                         <motion.div
                             key={index}
-                            className="will-change-transform"
+                            className="group"
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}

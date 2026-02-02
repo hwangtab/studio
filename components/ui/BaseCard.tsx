@@ -24,7 +24,8 @@ const BaseCard = ({
     hoverEffect = true,
     enableAnimation = true,
 }: BaseCardProps) => {
-    const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden will-change-transform";
+    const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden";
+
 
     const variants = {
         default: "shadow-md border border-gray-100 dark:border-gray-700",
@@ -64,14 +65,4 @@ const BaseCard = ({
     return CardContent;
 };
 
-export default React.memo(BaseCard, (prevProps, nextProps) => {
-    return (
-        prevProps.href === nextProps.href &&
-        prevProps.variant === nextProps.variant &&
-        prevProps.className === nextProps.className &&
-        prevProps.children === nextProps.children &&
-        prevProps.onClick === nextProps.onClick &&
-        prevProps.delay === nextProps.delay &&
-        prevProps.hoverEffect === nextProps.hoverEffect
-    );
-});
+export default BaseCard;

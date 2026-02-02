@@ -242,7 +242,7 @@ const About: NextPage = () => {
         </div>
       </section>
 
-      <section className="py-12">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <motion.div
             className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
