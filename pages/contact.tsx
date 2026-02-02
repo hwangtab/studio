@@ -77,6 +77,7 @@ const Contact: NextPage = () => {
         backgroundImage="/images/studio3.jpg"
         imageAlt="스튜디오 놀 연락"
         minHeight="min-h-[60vh]"
+        overlayGradient="from-black/60 via-black/40 to-transparent"
       />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">

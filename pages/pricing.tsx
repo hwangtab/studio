@@ -132,6 +132,7 @@ const Pricing: NextPage = () => {
                 backgroundImage="/images/hardware2.jpg"
                 imageAlt="스튜디오 놀 가격 안내"
                 minHeight="min-h-[60vh]"
+                overlayGradient="from-black/60 via-black/40 to-transparent"
             />
 
             {/* Special Packages Section */}

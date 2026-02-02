@@ -34,10 +34,7 @@ const ImageHero = ({
     ? 'text-center'
     : 'text-left';
 
-  const isFullHeight = minHeight.includes('100vh');
-  const verticalAlignClass = isFullHeight
-    ? 'justify-center pt-32 pb-12'
-    : 'justify-start pt-48 pb-20';
+  const verticalAlignClass = 'justify-center pt-32 pb-12';
 
   return (
     <section

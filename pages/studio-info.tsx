@@ -74,6 +74,7 @@ const Studio: NextPage = () => {
         backgroundImage="/images/hardware1.jpg"
         imageAlt="스튜디오 놀 장비"
         minHeight="min-h-[60vh]"
+        overlayGradient="from-black/60 via-black/40 to-transparent"
       />
       <div className="container mx-auto px-4 py-16">
         {/* 스튜디오 소개 섹션 */}
