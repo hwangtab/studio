@@ -4,15 +4,10 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MessageCircle, MapPin } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
-// @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../components/ResponsiveImage';
-// @ts-ignore - SEO component is JS
 import SEO from '../components/SEO';
-// @ts-ignore - FeatureCard component is JS
 import FeatureCard from '../components/ui/FeatureCard';
-// @ts-ignore - BaseCard component is JS
 import BaseCard from '../components/ui/BaseCard';
-// @ts-ignore - ImageHero component is JS
 import ImageHero from '../components/common/ImageHero';
 import { coreServices, productionProcess, advantages } from '../data/services';
 import { SECTION_BG } from '../utils/sectionStyles';
@@ -46,7 +41,7 @@ const About: NextPage = () => {
           imageAlt: "스튜디오 놀 소개",
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/60 via-black/40 to-transparent",
-        } as any}
+        }}
       />
 
       <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>

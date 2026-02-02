@@ -1,18 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import type { AudioTrack } from '../../types/data';
 
-interface Track {
-    id: string;
-    title: string;
-    artist: string;
-    src: string;
-    albumArt: string;
-    duration: string;
-    featured: boolean;
-    description: string;
-}
-
-export const useAudioPlayer = (tracks: Track[]) => {
+export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const [currentTrack, setCurrentTrack] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);

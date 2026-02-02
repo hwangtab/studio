@@ -18,7 +18,7 @@ type CategoryInput = string | CategoryObject | CategoryBase;
 interface CategoryFilterProps {
   activeCategory: string;
   setActiveCategory: (category: string) => void;
-  categories: CategoryInput[];
+  categories: readonly CategoryInput[];
   showTitle?: boolean;
   titleIcon?: React.ElementType<{ className?: string }> | null;
   titleText?: string;
@@ -27,9 +27,9 @@ interface CategoryFilterProps {
   gap?: string;
 }
 
-const CategoryFilter = ({ 
-  activeCategory, 
-  setActiveCategory, 
+const CategoryFilter = ({
+  activeCategory,
+  setActiveCategory,
   categories: propCategories,
   showTitle = false,
   titleIcon: TitleIcon = null,
@@ -73,26 +73,25 @@ const CategoryFilter = ({
           <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{titleText}</h3>
         </div>
       )}
-      
+
       <div className="relative">
         <div className={`flex ${gap} overflow-x-auto md:flex-wrap md:overflow-x-visible scrollbar-hide pb-2 scroll-smooth`}>
           {categories.map((category) => {
             const isActive = activeCategory === category.id;
-            const customStyle = useCustomColors && isActive && category.color 
+            const customStyle = useCustomColors && isActive && category.color
               ? { backgroundColor: category.color }
               : {};
-            
+
             return (
               <motion.button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`${sizeClasses[buttonSize]} rounded-full transition-all duration-300 min-w-fit whitespace-nowrap flex-shrink-0 ${
-                  isActive
-                    ? useCustomColors && category.color 
+                className={`${sizeClasses[buttonSize]} rounded-full transition-all duration-300 min-w-fit whitespace-nowrap flex-shrink-0 ${isActive
+                    ? useCustomColors && category.color
                       ? 'text-white shadow-lg transform scale-105'
                       : 'bg-primary text-white shadow-lg transform scale-105'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
+                  }`}
                 style={customStyle}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -102,7 +101,7 @@ const CategoryFilter = ({
             );
           })}
         </div>
-        
+
         <div className="md:hidden absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-white dark:from-gray-900 to-transparent pointer-events-none"></div>
       </div>
     </div>

@@ -1,11 +1,4 @@
-interface PortfolioItem {
-  category: string;
-  title?: string;
-  description?: string;
-  artist?: string;
-  services?: string[];
-  featured?: boolean;
-}
+import type { PortfolioItem } from '../types/data';
 
 interface PortfolioStats {
   totalItems: number;
@@ -17,15 +10,15 @@ interface PortfolioStats {
   lastUpdated: number;
 }
 
-const filterPortfolioItems = (items: PortfolioItem[], categoryId: string = 'all'): PortfolioItem[] => {
+const filterPortfolioItems = (items: readonly PortfolioItem[], categoryId: string = 'all'): PortfolioItem[] => {
   if (!Array.isArray(items)) return [];
   if (categoryId === 'all' || !categoryId) {
-    return items;
+    return [...items];
   }
   return items.filter((item) => item.category === categoryId);
 };
 
-const searchPortfolioItems = (items: PortfolioItem[], query: string = ''): PortfolioItem[] => {
+const searchPortfolioItems = (items: readonly PortfolioItem[], query: string = ''): PortfolioItem[] => {
   if (!Array.isArray(items) || !query) return [];
   const lowerQuery = query.toLowerCase();
   return items.filter((item) => {
@@ -42,7 +35,7 @@ const searchPortfolioItems = (items: PortfolioItem[], query: string = ''): Portf
   });
 };
 
-const getPortfolioStats = (items: PortfolioItem[] = [], tracks: unknown[] = [], categories: unknown[] = []): PortfolioStats => {
+const getPortfolioStats = (items: readonly PortfolioItem[] = [], tracks: ReadonlyArray<unknown> = [], categories: ReadonlyArray<unknown> = []): PortfolioStats => {
   const categoryStats: Record<string, number> = {};
   items.forEach((item) => {
     categoryStats[item.category] = (categoryStats[item.category] || 0) + 1;

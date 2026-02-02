@@ -1,16 +1,18 @@
-// @ts-nocheck
 import type { NextPage } from 'next'; import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info, MapPin, Calendar, MessageCircle, CalendarCheck } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
-// @ts-ignore - Component is JS
 import ResponsiveImage from '../components/ResponsiveImage';
-// @ts-ignore - Component is JS
 import SEO from '../components/SEO';
-// @ts-ignore - Component is JS
 import ImageHero from '../components/common/ImageHero';
 
-const EquipmentSection = ({ title, items, icon: Icon }) => (
+interface EquipmentSectionProps {
+  title: string;
+  items: string[] | readonly string[];
+  icon: React.ElementType;
+}
+
+const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => (
   <motion.div
     className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
     initial={{ opacity: 0, y: 20 }}

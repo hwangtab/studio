@@ -5,25 +5,20 @@ import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Music, Headphones } from 'lucide-react';
 import { filterPortfolioItems } from '../utils/portfolioDataUtils';
-// @ts-ignore - CategoryFilter component is JS
 import CategoryFilter from '../components/CategoryFilter';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
-// @ts-ignore - SEO component is JS
 import SEO from '../components/SEO';
-// @ts-ignore - ImageHero component is JS
 import ImageHero from '../components/common/ImageHero';
 import { categories, portfolioItems, audioTracks } from '../data/portfolio';
-// @ts-ignore - PortfolioDetailModal component is JS
 import PortfolioDetailModal from '../components/PortfolioDetailModal';
-const AudioPlayer = dynamic(() => import('../components/AudioPlayer').then((mod: any) => mod.default), { ssr: false });
-// @ts-ignore - PortfolioCard component is JS
+const AudioPlayer = dynamic(() => import('../components/AudioPlayer'), { ssr: false });
 import PortfolioCard from '../components/ui/PortfolioCard';
-import type { PortfolioItem, AudioTrack } from '../types/data';
+import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../types/data';
 
 interface PortfolioProps {
-  initialPortfolioItems: any[];
-  audioTracks: any[];
-  categories: any[];
+  initialPortfolioItems: readonly PortfolioItem[];
+  audioTracks: readonly AudioTrack[];
+  categories: readonly PortfolioCategory[];
 }
 
 const Portfolio: NextPage<PortfolioProps> = ({
@@ -33,7 +28,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
 }) => {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
 
   const filteredItems = useMemo(
     () => filterPortfolioItems(initialPortfolioItems, selectedCategory),
@@ -61,7 +56,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
     return () => window.removeEventListener('popstate', handlePopState);
   }, [router.query.item]);
 
-  const handleCardClick = (item: any) => {
+  const handleCardClick = (item: PortfolioItem) => {
     setSelectedItem(item);
     router.push(`/portfolio?item=${item.id}`, undefined, { shallow: true, scroll: false });
   };
@@ -101,7 +96,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
           imageAlt: "스튜디오 놀 포트폴리오",
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/60 via-black/40 to-transparent",
-        } as any}
+        }}
       />
       <div className="container mx-auto px-4 py-16">
 
@@ -117,8 +112,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
               <Headphones className="text-primary mr-3" size={24} />
               <h2 className="typo-card-title text-gray-600 dark:text-gray-200">샘플 트랙</h2>
             </div>
-            {/* @ts-ignore - AudioPlayer is dynamically imported JS */}
-            <AudioPlayer tracks={audioTracks as any} />
+            <AudioPlayer tracks={audioTracks} />
           </motion.section>
         )}
 
@@ -161,7 +155,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredItems.map((item: any) => (
+              {filteredItems.map((item) => (
                 <PortfolioCard
                   key={item.id}
                   {...item}
@@ -191,9 +185,9 @@ export default Portfolio;
 export const getStaticProps: GetStaticProps<PortfolioProps> = () => {
   return {
     props: {
-      initialPortfolioItems: portfolioItems as any,
-      audioTracks: audioTracks as any,
-      categories: categories as any,
+      initialPortfolioItems: portfolioItems,
+      audioTracks: audioTracks,
+      categories: categories,
     },
   };
 };

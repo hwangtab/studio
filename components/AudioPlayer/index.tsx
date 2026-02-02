@@ -8,7 +8,7 @@ import PlayerControls from './PlayerControls';
 import type { AudioTrack } from '../../types/data';
 
 interface AudioPlayerProps {
-    tracks: AudioTrack[];
+    tracks: readonly AudioTrack[];
     layout?: 'grid' | 'stack';
 }
 

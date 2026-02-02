@@ -13,7 +13,7 @@ export interface PortfolioItem {
   image: string;
   link: string;
   category: string;
-  services: string[];
+  services: readonly string[];
   featured: boolean;
   artist: string;
 }
@@ -36,11 +36,11 @@ export interface ServiceItem {
   icon: React.ComponentType<any>;
 }
 
-export interface ProcessStep extends ServiceItem {}
+export interface ProcessStep extends ServiceItem { }
 
-export interface Advantage extends ServiceItem {}
+export interface Advantage extends ServiceItem { }
 
-export interface CoreService extends ServiceItem {}
+export interface CoreService extends ServiceItem { }
 
 // Pricing types
 export interface PricingPlan {
@@ -50,7 +50,7 @@ export interface PricingPlan {
   priceValue: number;
   unit?: string;
   description: string;
-  features?: string[];
+  features?: readonly string[];
   recommended?: boolean;
   note?: string;
 }
