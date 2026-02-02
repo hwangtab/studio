@@ -104,9 +104,9 @@ const Pricing: NextPage = () => {
     return (
         <div className="overflow-visible">
             <SEO
-                title="녹음실 이용료 · 축가 녹음 비용 & 성우 녹음 견적 | 스튜디오 놀"
-                description="복잡한 추가금 없는 투명한 정찰제. 축가 녹음, 유튜브 커버, 성우 녹음 비용을 미리 확인하세요. 일반인도 부담 없이 이용 가능한 합리적인 가격입니다."
-                keywords="녹음실 비용, 축가 녹음 비용, 성우 녹음 견적, 셀프 축가 녹음, 유튜브 스튜디오 대여, 믹싱 가격, 마스터링 가격, 스튜디오 놀 이용료"
+                title="셀프 축가 녹음 비용 · 성우 녹음 & 유튜브 스튜디오 대관료 | 스튜디오 놀"
+                description="투명한 정찰제 운영. 셀프 축가 녹음 패키지, 성우/나레이션 녹음 견적, 유튜브 촬영 스튜디오 대관 비용을 확인하세요. 합리적인 가격의 프로덕션."
+                keywords="셀프 축가 비용, 축가 녹음 가격, 성우 녹음 견적, 유튜브 스튜디오 대관료, 녹음실 대여 비용, 믹싱 의뢰 가격, 음반 제작 비용, 스튜디오 놀"
                 canonical="https://studionol.co.kr/pricing"
                 includeSchema={true}
                 schema={pricingSchema}
