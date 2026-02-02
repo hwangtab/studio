@@ -2,7 +2,7 @@
 import type { NextPage } from 'next'; import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Mic, SlidersHorizontal, Disc, TrendingUp, Check, Info, MessageCircle, CalendarCheck } from 'lucide-react';
+import { Mic, SlidersHorizontal, Disc, TrendingUp, Check, Info, MessageCircle, CalendarCheck, Star, PlusCircle, Sparkles } from 'lucide-react';
 // @ts-ignore - Component is JS
 import SEO from '../components/SEO';
 // @ts-ignore - Component is JS
@@ -139,7 +139,7 @@ const Pricing: NextPage = () => {
             <section id="special-packages" className={`py-16 ${SECTION_BG.highlight} bg-amber-50 dark:bg-amber-900/10`}>
                 <div className="container mx-auto px-4">
                     <SectionHeading
-                        icon={TrendingUp}
+                        icon={Star}
                         title="스페셜 패키지 (Purpose-Built)"
                         subtitle="축가, 성우, 유튜브 등 구체적인 목적에 맞춰 최적화된 올인원 패키지"
                     />
@@ -264,7 +264,7 @@ const Pricing: NextPage = () => {
             <section id="support-services" className={`py-16 ${SECTION_BG.alternate}`}>
                 <div className="container mx-auto px-4">
                     <SectionHeading
-                        icon={TrendingUp}
+                        icon={PlusCircle}
                         title="부가 서비스"
                         subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
                     />
@@ -300,14 +300,24 @@ const Pricing: NextPage = () => {
                     >
                         <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                                <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
-                                    당신의 음악을 위한<br />
-                                    <span className="text-primary">최고의 파트너</span>
-                                </h2>
-                                <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
-                                    예산과 일정에 맞는 최적의 플랜을 제안해 드립니다. <br className="hidden md:block" />
-                                    부담 없이 문의주세요. 첫 소통부터 최종 결과물까지 함께합니다.
-                                </p>
+                                <SectionHeading
+                                    icon={Sparkles}
+                                    title={
+                                        <>
+                                            당신의 음악을 위한<br />
+                                            <span className="text-primary">최고의 파트너</span>
+                                        </>
+                                    }
+                                    subtitle={
+                                        <>
+                                            예산과 일정에 맞는 최적의 플랜을 제안해 드립니다. <br className="hidden md:block" />
+                                            부담 없이 문의주세요. 첫 소통부터 최종 결과물까지 함께합니다.
+                                        </>
+                                    }
+                                    align="left"
+                                    className="mb-8"
+                                    titleClassName="text-gray-800 dark:text-white"
+                                />
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <Link
                                         href="/contact"

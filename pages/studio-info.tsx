@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'; import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info, MapPin, Calendar, MessageCircle, CalendarCheck } from 'lucide-react';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info, MapPin, Calendar, MessageCircle, CalendarCheck, Mic2, Sparkles, Building } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
@@ -94,10 +94,14 @@ const Studio: NextPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="flex items-center mb-6">
-                <Info className="text-primary dark:text-primary-light mr-3" size={24} />
-                <h2 className="typo-card-title text-gray-600 dark:text-gray-200">스튜디오 놀</h2>
-              </div>
+              <SectionHeading
+                icon={Building}
+                title="스튜디오 놀"
+                align="left"
+                className="mb-6"
+                as="h2"
+                titleClassName="typo-card-title text-gray-600 dark:text-gray-200"
+              />
               <div className="space-y-4">
                 <p className="typo-section-lead mb-4">
                   스튜디오 놀은 음악인들의 자유로운 상상과 창작 활동을 지원하기 위해 탄생한 공간입니다. 우리는 최고의 시설과 장비, 그리고 전문 엔지니어의 노하우를 바탕으로 여러분의 음악적 비전을 현실로 만드는 일에 전념하고 있습니다.
@@ -121,6 +125,7 @@ const Studio: NextPage = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <SectionHeading
+            icon={Mic2}
             title="장비 목록"
             titleClassName="text-heading-1 font-title bg-clip-text text-transparent bg-gradient-to-r from-primary-dark via-secondary to-accent"
             className="mb-12 py-4"
@@ -213,6 +218,7 @@ const Studio: NextPage = () => {
           <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
               <SectionHeading
+                icon={Sparkles}
                 title={
                   <>
                     당신의 소중한 음악,<br />

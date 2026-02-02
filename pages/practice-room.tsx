@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'; import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle } from 'lucide-react';
+import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle, HelpCircle, Target, ShieldCheck } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
@@ -113,6 +113,7 @@ const PracticeRoom: NextPage = () => {
           transition={{ duration: 0.8 }}
         >
           <SectionHeading
+            icon={HelpCircle}
             title="이런 고민이 있으신가요?"
             className="mb-8"
           />
@@ -133,6 +134,7 @@ const PracticeRoom: NextPage = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <SectionHeading
+            icon={Target}
             title="이런 분들을 위한 공간"
             className="mb-6"
             titleClassName="text-primary"
@@ -232,6 +234,7 @@ const PracticeRoom: NextPage = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <SectionHeading
+            icon={ShieldCheck}
             title="뮤지션을 위한 완벽한 시스템"
             titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
             className="mb-12"
@@ -313,6 +316,7 @@ const PracticeRoom: NextPage = () => {
           <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
               <SectionHeading
+                icon={Sparkles}
                 title={
                   <>
                     최적의 몰입,<br />

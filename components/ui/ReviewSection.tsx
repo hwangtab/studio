@@ -57,6 +57,7 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                     {reviews.map((review, index) => (
                         <motion.div
                             key={index}
+                            className="will-change-transform"
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
@@ -65,14 +66,14 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                             <BaseCard
                                 variant="default"
                                 enableAnimation={false}
-                                className="p-8 h-full relative border border-gray-100 dark:border-gray-800 group"
+                                className="p-8 h-full relative group"
                             >
                                 <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
                                     <Quote size={60} />
                                 </div>
 
                                 <div className="relative z-10">
-                                    <div className="flex items-center mb-4">
+                                    <div className="flex items-center mb-4" aria-label={`평점 ${review.rating}점`}>
                                         {[...Array(review.rating)].map((_, i) => (
                                             <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" />
                                         ))}

@@ -2,7 +2,7 @@ import React from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MessageCircle, MapPin } from 'lucide-react';
+import { Phone, Mail, MessageCircle, MapPin, Music, Activity, Award, Headphones } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
@@ -48,6 +48,7 @@ const About: NextPage = () => {
       <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>
         <div className="container mx-auto px-4">
           <SectionHeading
+            icon={Music}
             title={
               <>
                 <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
@@ -82,6 +83,7 @@ const About: NextPage = () => {
       <section className="pt-16 pb-12">
         <div className="container mx-auto px-4">
           <SectionHeading
+            icon={Activity}
             title="종합 음반 제작 프로세스"
             subtitle={
               <>
@@ -109,6 +111,7 @@ const About: NextPage = () => {
       <section className={`pt-16 pb-12 ${SECTION_BG.highlight}`}>
         <div className="container mx-auto px-4">
           <SectionHeading
+            icon={Award}
             title="스튜디오 놀의 차별점"
             subtitle={
               <>
@@ -173,6 +176,7 @@ const About: NextPage = () => {
       <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>
         <div className="container mx-auto px-4">
           <SectionHeading
+            icon={Headphones}
             title="연락 및 상담"
             subtitle="무료 프로덕션 상담을 제공해 드립니다. 언제든지 아래 연락처로 문의해 주세요."
             className="mb-12"

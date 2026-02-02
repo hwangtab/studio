@@ -13,6 +13,7 @@ import { categories, portfolioItems, audioTracks } from '../data/portfolio';
 import PortfolioDetailModal from '../components/PortfolioDetailModal';
 const AudioPlayer = dynamic(() => import('../components/AudioPlayer'), { ssr: false });
 import PortfolioCard from '../components/ui/PortfolioCard';
+import SectionHeading from '../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../types/data';
 
 interface PortfolioProps {
@@ -108,10 +109,14 @@ const Portfolio: NextPage<PortfolioProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="flex items-center mb-8">
-              <Headphones className="text-primary mr-3" size={24} />
-              <h2 className="typo-card-title text-gray-600 dark:text-gray-200">샘플 트랙</h2>
-            </div>
+            <SectionHeading
+              icon={Headphones}
+              title="샘플 트랙"
+              align="left"
+              className="mb-8"
+              titleClassName="typo-card-title text-gray-600 dark:text-gray-200"
+              as="h2"
+            />
             <AudioPlayer tracks={audioTracks} />
           </motion.section>
         )}
@@ -138,8 +143,14 @@ const Portfolio: NextPage<PortfolioProps> = ({
         >
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center">
-              <Music className="text-primary mr-3" size={24} />
-              <h2 className="typo-card-title text-gray-600 dark:text-gray-200">작업 프로젝트</h2>
+              <SectionHeading
+                icon={Music}
+                title="작업 프로젝트"
+                align="left"
+                className="mb-0"
+                titleClassName="typo-card-title text-gray-600 dark:text-gray-200"
+                as="h2"
+              />
             </div>
             <div className="typo-card-meta text-gray-500 dark:text-gray-400">
               {filteredItems.length > 0 ? `${filteredItems.length}개 프로젝트` : '등록된 프로젝트 없음'}
