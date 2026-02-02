@@ -49,7 +49,7 @@ const ReviewSection = ({ className = "py-20 bg-gray-50 dark:bg-gray-900/50" }: {
                         transition={{ duration: 0.6 }}
                     >
                         <h2 className="typo-section-title mb-4 font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent">
-                            아티스트와 함께 만드는 <span className="italic">감동의 기록</span>
+                            아티스트와 함께 만드는 <span>감동의 기록</span>
                         </h2>
                         <p className="typo-section-lead text-gray-600 dark:text-gray-400">
                             스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.
