@@ -19,7 +19,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     items,
     title = "자주 묻는 질문",
     subtitle = "스튜디오 이용에 대해 궁금한 점들을 모았습니다.",
-    className = "py-20 bg-gray-50 dark:bg-gray-800/30"
+    className = "py-24 bg-gray-50 dark:bg-gray-800/30"
 }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
