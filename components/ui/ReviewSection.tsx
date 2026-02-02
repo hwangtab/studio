@@ -37,9 +37,9 @@ export const reviews: Review[] = [
     }
 ];
 
-const ReviewSection = () => {
+const ReviewSection = ({ className = "py-20 bg-gray-50 dark:bg-gray-900/50" }: { className?: string }) => {
     return (
-        <section className="py-20 bg-gray-50 dark:bg-gray-900/50">
+        <section className={className}>
             <div className="container mx-auto px-4">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.div

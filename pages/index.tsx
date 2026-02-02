@@ -190,8 +190,10 @@ const Home: NextPage = () => {
           </div>
         </motion.div>
       </div>
-      <ReviewSection />
-      <FAQSection items={homeFaqs} />
+      <div className="bg-gray-50 dark:bg-gray-800/30">
+        <ReviewSection className="pt-20 pb-10 bg-transparent" />
+        <FAQSection items={homeFaqs} className="pt-10 pb-20 bg-transparent" />
+      </div>
     </div>
   );
 };

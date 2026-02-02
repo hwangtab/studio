@@ -195,7 +195,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
         )}
       </header>
 
-      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} pb-12`}>
+      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} pb-0`}>
         {children}
       </main>
 
