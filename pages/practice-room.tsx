@@ -8,6 +8,7 @@ import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
 import BaseCard from '../components/ui/BaseCard';
 import FAQSection from '../components/ui/FAQSection';
+import SectionHeading from '../components/ui/SectionHeading';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -111,7 +112,10 @@ const PracticeRoom: NextPage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="typo-section-title mb-8 text-center text-gray-600 dark:text-gray-200">이런 고민이 있으신가요?</h2>
+          <SectionHeading
+            title="이런 고민이 있으신가요?"
+            className="mb-8"
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
             <PainPoint icon={Wind} text="에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." delay={0.1} />
             <PainPoint icon={VolumeX} text="옆방 소리가 다 들려서 집중이 안 돼요..." delay={0.2} />
@@ -128,14 +132,11 @@ const PracticeRoom: NextPage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <motion.h2
-            className="typo-section-title mb-6 text-center text-primary dark:text-primary-light"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            이런 분들을 위한 공간
-          </motion.h2>
+          <SectionHeading
+            title="이런 분들을 위한 공간"
+            className="mb-6"
+            titleClassName="text-primary"
+          />
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <TargetAudience
@@ -230,14 +231,11 @@ const PracticeRoom: NextPage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <motion.h2
-            className="text-heading-2 font-title font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            뮤지션을 위한 완벽한 시스템
-          </motion.h2>
+          <SectionHeading
+            title="뮤지션을 위한 완벽한 시스템"
+            titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+            className="mb-12"
+          />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <FeatureCard
@@ -314,26 +312,22 @@ const PracticeRoom: NextPage = () => {
         >
           <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <motion.h2
-                className="typo-section-title mb-4 text-gray-800 dark:text-white"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                최적의 몰입,<br />
-                <span className="text-primary">최고의 결과물</span>
-              </motion.h2>
-              <motion.p
-                className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                24시간 쾌적한 환경에서 오직 음악에만 집중하세요.<br className="hidden md:block" />
-                지금 바로 방문하여 스튜디오를 직접 둘러보실 수 있습니다.
-              </motion.p>
+              <SectionHeading
+                title={
+                  <>
+                    최적의 몰입,<br />
+                    <span className="text-primary">최고의 결과물</span>
+                  </>
+                }
+                subtitle={
+                  <>
+                    24시간 쾌적한 환경에서 오직 음악에만 집중하세요.<br className="hidden md:block" />
+                    지금 바로 방문하여 스튜디오를 직접 둘러보실 수 있습니다.
+                  </>
+                }
+                align="left"
+                className="mb-8"
+              />
 
               <motion.div
                 className="flex flex-col sm:flex-row gap-4"

@@ -5,6 +5,7 @@ import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
+import SectionHeading from '../components/ui/SectionHeading';
 
 interface EquipmentSectionProps {
   title: string;
@@ -119,14 +120,11 @@ const Studio: NextPage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <motion.h1
-            className="text-heading-1 font-title mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent py-4"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            장비 목록
-          </motion.h1>
+          <SectionHeading
+            title="장비 목록"
+            titleClassName="text-heading-1 font-title bg-clip-text text-transparent bg-gradient-to-r from-primary-dark via-secondary to-accent"
+            className="mb-12 py-4"
+          />
 
           {/* 장비 이미지 갤러리 추가 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -214,14 +212,22 @@ const Studio: NextPage = () => {
         >
           <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
-                당신의 소중한 음악,<br />
-                <span className="text-primary">최상의 사운드로</span>
-              </h2>
-              <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
-                검증된 장비와 전문 엔지니어링으로 최선의 결과물을 약속합니다.<br className="hidden md:block" />
-                지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.
-              </p>
+              <SectionHeading
+                title={
+                  <>
+                    당신의 소중한 음악,<br />
+                    <span className="text-primary">최상의 사운드로</span>
+                  </>
+                }
+                subtitle={
+                  <>
+                    검증된 장비와 전문 엔지니어링으로 최선의 결과물을 약속합니다.<br className="hidden md:block" />
+                    지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.
+                  </>
+                }
+                align="left"
+                className="mb-8"
+              />
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"

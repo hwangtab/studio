@@ -11,6 +11,7 @@ import BaseCard from '../components/ui/BaseCard';
 import ImageHero from '../components/common/ImageHero';
 import { coreServices, productionProcess, advantages } from '../data/services';
 import { SECTION_BG } from '../utils/sectionStyles';
+import SectionHeading from '../components/ui/SectionHeading';
 
 const About: NextPage = () => {
 
@@ -46,22 +47,22 @@ const About: NextPage = () => {
 
       <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">
-              <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
-            </h2>
-            <p className="typo-section-lead max-w-3xl mx-auto">
-              앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여{" "}
-              <span className="whitespace-nowrap">뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.</span>
-              <br />
-              개별 과정마다 전문가 연계로 최상의 결과물을 보장합니다.
-            </p>
-          </motion.div>
+          <SectionHeading
+            title={
+              <>
+                <span className="whitespace-nowrap">올인원 음악</span> 프로덕션 서비스
+              </>
+            }
+            subtitle={
+              <>
+                앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여{" "}
+                <span className="whitespace-nowrap">뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.</span>
+                <br />
+                개별 과정마다 전문가 연계로 최상의 결과물을 보장합니다.
+              </>
+            }
+            className="mb-12"
+          />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {coreServices.map((service, index) => (
@@ -80,18 +81,16 @@ const About: NextPage = () => {
 
       <section className="pt-16 pb-12">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">종합 음반 제작 프로세스</h2>
-            <p className="typo-section-lead max-w-3xl mx-auto">
-              스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여{" "}
-              <span className="whitespace-nowrap">최고 품질의 결과물을 만들어냅니다.</span>
-            </p>
-          </motion.div>
+          <SectionHeading
+            title="종합 음반 제작 프로세스"
+            subtitle={
+              <>
+                스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여{" "}
+                <span className="whitespace-nowrap">최고 품질의 결과물을 만들어냅니다.</span>
+              </>
+            }
+            className="mb-12"
+          />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {productionProcess.map((step, index) => (
@@ -109,18 +108,16 @@ const About: NextPage = () => {
 
       <section className={`pt-16 pb-12 ${SECTION_BG.highlight}`}>
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">스튜디오 놀의 차별점</h2>
-            <p className="typo-section-lead max-w-3xl mx-auto">
-              연신내에 위치한 원스톱 프로덕션 시스템으로{" "}
-              <span className="whitespace-nowrap">아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다.</span>
-            </p>
-          </motion.div>
+          <SectionHeading
+            title="스튜디오 놀의 차별점"
+            subtitle={
+              <>
+                연신내에 위치한 원스톱 프로덕션 시스템으로{" "}
+                <span className="whitespace-nowrap">아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다.</span>
+              </>
+            }
+            className="mb-12"
+          />
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <BaseCard
@@ -175,17 +172,11 @@ const About: NextPage = () => {
 
       <section className={`pt-16 pb-12 ${SECTION_BG.alternate}`}>
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="typo-section-title mb-4 text-gray-600 dark:text-gray-200">연락 및 상담</h2>
-            <p className="typo-section-lead max-w-3xl mx-auto">
-              무료 프로덕션 상담을 제공해 드립니다. 언제든지 아래 연락처로 문의해 주세요.
-            </p>
-          </motion.div>
+          <SectionHeading
+            title="연락 및 상담"
+            subtitle="무료 프로덕션 상담을 제공해 드립니다. 언제든지 아래 연락처로 문의해 주세요."
+            className="mb-12"
+          />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <BaseCard
@@ -258,14 +249,22 @@ const About: NextPage = () => {
           >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
               <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
-                  당신의 음악 여정에<br />
-                  <span className="text-primary">가장 믿음직한 파트너</span>
-                </h2>
-                <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
-                  프로젝트의 규모와 상관없이 정성을 다합니다.<br className="hidden md:block" />
-                  기획부터 최종 마스터링까지, 당신의 상상을 완벽한 사운드로 실현해드립니다.
-                </p>
+                <SectionHeading
+                  title={
+                    <>
+                      당신의 음악 여정에<br />
+                      <span className="text-primary">가장 믿음직한 파트너</span>
+                    </>
+                  }
+                  subtitle={
+                    <>
+                      프로젝트의 규모와 상관없이 정성을 다합니다.<br className="hidden md:block" />
+                      기획부터 최종 마스터링까지, 당신의 상상을 완벽한 사운드로 실현해드립니다.
+                    </>
+                  }
+                  align="left"
+                  className="mb-8"
+                />
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/contact"
