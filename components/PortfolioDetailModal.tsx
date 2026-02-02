@@ -157,7 +157,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
 
           <h2
             id="modal-title"
-            className="text-heading-3 font-title text-gray-900 dark:text-white mb-2"
+            className="typo-card-title text-gray-900 dark:text-white mb-2"
           >
             {item.title}
           </h2>
@@ -167,7 +167,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
           </p>
 
           <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+            <h3 className="typo-card-meta font-medium text-gray-400 dark:text-gray-500 mb-2">
               제공 서비스
             </h3>
             <div className="flex flex-wrap gap-2">

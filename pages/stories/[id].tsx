@@ -119,7 +119,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
               {story.title}
             </h1>
 
-            <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6 text-caption">
+            <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6 typo-card-meta">
               <div className="flex items-center mr-6 mb-2">
                 <Calendar className="mr-2 text-gray-500" size={14} />
                 <span>{story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}</span>

@@ -300,11 +300,11 @@ const Pricing: NextPage = () => {
                     >
                         <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                                <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                                <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
                                     당신의 음악을 위한<br />
                                     <span className="text-primary">최고의 파트너</span>
                                 </h2>
-                                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                                <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
                                     예산과 일정에 맞는 최적의 플랜을 제안해 드립니다. <br className="hidden md:block" />
                                     부담 없이 문의주세요. 첫 소통부터 최종 결과물까지 함께합니다.
                                 </p>

@@ -199,7 +199,7 @@ const Lesson: NextPage = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h3 className="text-2xl font-bold mb-8 text-gray-800 dark:text-gray-100">
+                        <h3 className="typo-section-title mb-8 text-gray-800 dark:text-gray-100">
                             Why Studio Nol?
                         </h3>
                         <div className="space-y-10">
@@ -208,8 +208,8 @@ const Lesson: NextPage = () => {
                                     <Mic2 className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-xl mb-3 dark:text-white">최고급 장비 실습</h4>
-                                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                                    <h4 className="typo-card-title mb-3 dark:text-white">최고급 장비 실습</h4>
+                                    <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         강의실이 아닌 실제 레코딩 스튜디오에서 수업합니다. Neumann, SPL, SSL 등 프로들이 사용하는 장비를 직접 만져보고 소리를 들어보며 귀를 트레이닝합니다.
                                     </p>
                                 </div>
@@ -219,8 +219,8 @@ const Lesson: NextPage = () => {
                                     <Disc className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-xl mb-3 dark:text-white">음원 발매 지원</h4>
-                                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                                    <h4 className="typo-card-title mb-3 dark:text-white">음원 발매 지원</h4>
+                                    <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         수업의 결과물은 연습 파일로 끝나지 않습니다. 완성된 곡을 실제 음원 사이트에 발매하여 아티스트로서의 커리어를 시작할 수 있도록 돕습니다.
                                     </p>
                                 </div>
@@ -231,8 +231,8 @@ const Lesson: NextPage = () => {
                                     <Users className="text-primary" size={32} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-xl mb-3 dark:text-white">현업 엔지니어 실전 멘토링</h4>
-                                    <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                                    <h4 className="typo-card-title mb-3 dark:text-white">현업 엔지니어 실전 멘토링</h4>
+                                    <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         단순한 기술 전수가 아닌, 현장에서 즉시 활용 가능한 실전 노하우와 음악적 고민을 함께 나누는 1:1 멘토링을 제공합니다.
                                     </p>
                                 </div>
@@ -295,11 +295,11 @@ const Lesson: NextPage = () => {
                 >
                     <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                         <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                            <h3 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                            <h3 className="typo-section-title mb-4 text-gray-800 dark:text-white">
                                 아직 망설여지시나요?<br />
                                 <span className="text-primary">첫 걸음을 함께합니다.</span>
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                            <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
                                 음악을 시작하는 데 늦은 때란 없습니다. 프로의 공간에서 직접 장비를 만져보고 상담받으며 당신만의 커리큘럼을 계획해보세요.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">

@@ -212,11 +212,11 @@ const Studio: NextPage = () => {
         >
           <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+              <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
                 당신의 소중한 음악,<br />
                 <span className="text-primary">최상의 사운드로</span>
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+              <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
                 검증된 장비와 전문 엔지니어링으로 최선의 결과물을 약속합니다.<br className="hidden md:block" />
                 지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.
               </p>

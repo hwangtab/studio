@@ -263,11 +263,11 @@ const About: NextPage = () => {
           >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
               <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
                   당신의 음악 여정에<br />
                   <span className="text-primary">가장 믿음직한 파트너</span>
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
                   프로젝트의 규모와 상관없이 정성을 다합니다.<br className="hidden md:block" />
                   기획부터 최종 마스터링까지, 당신의 상상을 완벽한 사운드로 실현해드립니다.
                 </p>

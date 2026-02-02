@@ -42,11 +42,11 @@
 
 /* PartialSansKR 폰트 (로고용) */
 @font-face {
-    font-family: 'PartialSansKR-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: 'PartialSansKR-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* Pretendard 폰트 (보조 폰트) */
@@ -88,13 +88,20 @@
 /* 기본 스타일 */
 @layer base {
   body {
-    @apply font-sans font-light text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
+    @apply font-sans text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
     word-break: keep-all;
+    line-height: 1.6;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-title text-gray-900 dark:text-white;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-title font-bold text-gray-900 dark:text-white;
     text-wrap: balance;
+    letter-spacing: -0.02em;
   }
 
   p {
@@ -114,8 +121,7 @@
   }
 }
 
-@layer components {
-}
+@layer components {}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -148,7 +154,7 @@ code {
 }
 
 /* 단락 간격 강조 */
-.prose p + p {
+.prose p+p {
   margin-top: 1.5em;
   padding-top: 0.5em;
 }
@@ -200,7 +206,7 @@ pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
 }
 
 /* 인라인 코드 스타일 */
-:not(pre) > code[class*="language-"] {
+:not(pre)>code[class*="language-"] {
   padding: 0.2em 0.4em;
   border-radius: 0.3em;
   white-space: normal;

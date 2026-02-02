@@ -152,11 +152,11 @@ const Home: NextPage = () => {
           >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
               <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">
+                <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
                   상상했던 사운드,<br />
                   <span className="text-primary">현실이 되는 곳</span>
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
                   최고의 장비와 편안한 공간에서 당신만의 음악을 완성하세요.<br className="hidden md:block" />
                   스튜디오 놀이 당신의 음악적 여정을 함께합니다.
                 </p>

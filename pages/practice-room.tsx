@@ -315,7 +315,7 @@ const PracticeRoom: NextPage = () => {
           <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
             <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
               <motion.h2
-                className="text-3xl font-bold mb-4 text-gray-800 dark:text-white leading-tight"
+                className="typo-section-title mb-4 text-gray-800 dark:text-white"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -325,7 +325,7 @@ const PracticeRoom: NextPage = () => {
                 <span className="text-primary">최고의 결과물</span>
               </motion.h2>
               <motion.p
-                className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed"
+                className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}

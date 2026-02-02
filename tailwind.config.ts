@@ -56,7 +56,7 @@ const config: Config = {
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },
       fontFamily: {
-        sans: ['GmarketSans', 'Pretendard', 'Noto Sans KR', 'sans-serif'],
+        sans: ['Pretendard', 'GmarketSans', 'Noto Sans KR', 'sans-serif'],
         title: ['GmarketSans', 'sans-serif'],
         display: ['Montserrat', 'GmarketSans', 'sans-serif'],
         logo: ['PartialSansKR-Regular', 'GmarketSans', 'sans-serif'],
