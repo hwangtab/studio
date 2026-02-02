@@ -109,19 +109,19 @@ const config: Config = {
         '.typo-section-lead': {
           fontSize: theme('fontSize.subtitle-1[0]'),
           lineHeight: theme('fontSize.subtitle-1[1].lineHeight'),
-          fontWeight: '300',
+          fontWeight: '500',
         },
         '.typo-card-title': {
           fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.heading-3[0]'),
           lineHeight: theme('fontSize.heading-3[1].lineHeight'),
-          fontWeight: '400',
+          fontWeight: '700',
         },
         '.typo-card-subtitle': {
           fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.subtitle-2[0]'),
           lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
-          fontWeight: '300',
+          fontWeight: '700',
         },
         '.typo-card-body': {
           fontSize: theme('fontSize.body-1[0]'),
@@ -148,7 +148,7 @@ const config: Config = {
           fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.subtitle-2[0]'),
           lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
-          fontWeight: theme('fontSize.subtitle-2[1].fontWeight'),
+          fontWeight: '700',
         },
         '.typo-footer-body': {
           fontSize: theme('fontSize.body-2[0]'),
