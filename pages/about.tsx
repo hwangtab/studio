@@ -163,7 +163,7 @@ const About: NextPage = () => {
                 >
                   <div className="flex items-center mb-2">
                     <advantage.icon className="text-primary dark:text-primary-light mr-2" />
-                    <h4 className="typo-card-subtitle text-gray-600 dark:text-gray-200">{advantage.title}</h4>
+                    <h4 className="typo-card-subtitle">{advantage.title}</h4>
                   </div>
                   <p className="typo-card-body">{advantage.description}</p>
                 </BaseCard>
@@ -193,7 +193,7 @@ const About: NextPage = () => {
                   <Phone className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">전화</h3>
+              <h3 className="typo-card-subtitle mb-2">전화</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">02-764-3114</p>
             </BaseCard>
 
@@ -207,7 +207,7 @@ const About: NextPage = () => {
                   <Mail className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">이메일</h3>
+              <h3 className="typo-card-subtitle mb-2">이메일</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">contact@kosmart.org</p>
             </BaseCard>
 
@@ -221,7 +221,7 @@ const About: NextPage = () => {
                   <MessageCircle className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">카카오톡</h3>
+              <h3 className="typo-card-subtitle mb-2">카카오톡</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">오픈채팅 바로가기</p>
             </BaseCard>
 
@@ -235,7 +235,7 @@ const About: NextPage = () => {
                   <MapPin className="text-primary dark:text-primary-light" size={20} />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-gray-600 dark:text-gray-200">위치</h3>
+              <h3 className="typo-card-subtitle mb-2">위치</h3>
               <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
             </BaseCard>
           </div>

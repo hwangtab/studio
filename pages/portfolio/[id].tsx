@@ -108,16 +108,16 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ item }) => {
                 </span>
               </div>
 
-              <h1 className="text-heading-2 font-title text-gray-900 dark:text-white mb-2">
+              <h1 className="text-heading-2 font-title mb-2">
                 {item.title}
               </h1>
 
-              <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-6">
+              <p className="typo-card-body mb-6">
                 아티스트: {item.artist}
               </p>
 
               <div className="mb-8">
-                <h2 className="typo-card-title text-gray-900 dark:text-white mb-3">
+                <h2 className="typo-card-title mb-3">
                   제공 서비스
                 </h2>
                 <div className="flex flex-wrap gap-2">

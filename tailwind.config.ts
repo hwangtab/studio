@@ -105,11 +105,19 @@ const config: Config = {
           fontSize: theme('fontSize.heading-2[0]'),
           lineHeight: theme('fontSize.heading-2[1].lineHeight'),
           fontWeight: theme('fontSize.heading-2[1].fontWeight'),
+          color: theme('colors.gray.800'),
+          '.dark &': {
+            color: theme('colors.white'),
+          },
         },
         '.typo-section-lead': {
           fontSize: theme('fontSize.subtitle-1[0]'),
           lineHeight: theme('fontSize.subtitle-1[1].lineHeight'),
           fontWeight: '500',
+          color: theme('colors.gray.600'),
+          '.dark &': {
+            color: theme('colors.gray.400'),
+          },
         },
         '.typo-card-title': {
           fontFamily: theme('fontFamily.title'),
@@ -126,21 +134,37 @@ const config: Config = {
           fontSize: theme('fontSize.subtitle-2[0]'),
           lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
           fontWeight: '700',
+          color: theme('colors.gray.600'),
+          '.dark &': {
+            color: theme('colors.gray.300'),
+          },
         },
         '.typo-card-body': {
           fontSize: theme('fontSize.body-1[0]'),
           lineHeight: theme('fontSize.body-1[1].lineHeight'),
           fontWeight: theme('fontSize.body-1[1].fontWeight'),
+          color: theme('colors.gray.600'),
+          '.dark &': {
+            color: theme('colors.gray.300'),
+          },
         },
         '.typo-card-meta': {
           fontSize: theme('fontSize.body-2[0]'),
           lineHeight: theme('fontSize.body-2[1].lineHeight'),
           fontWeight: theme('fontSize.body-2[1].fontWeight'),
+          color: theme('colors.gray.500'),
+          '.dark &': {
+            color: theme('colors.gray.400'),
+          },
         },
         '.typo-card-cta': {
           fontSize: theme('fontSize.body-1-medium[0]'),
           lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
           fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
+          color: theme('colors.gray.600'),
+          '.dark &': {
+            color: theme('colors.gray.200'),
+          },
         },
         '.typo-nav-link': {
           fontFamily: theme('fontFamily.title'),

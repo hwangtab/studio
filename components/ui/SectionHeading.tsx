@@ -58,7 +58,7 @@ const SectionHeading = ({
       </Component>
 
       {subtitle && (
-        <p className="typo-section-lead text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="typo-section-lead max-w-2xl mx-auto">
           {subtitle}
         </p>
       )}

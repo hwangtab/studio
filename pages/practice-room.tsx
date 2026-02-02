@@ -41,7 +41,7 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
         <Icon className="text-primary dark:text-primary-light" size={24} />
       </div>
-      <h3 className="typo-card-subtitle text-gray-600 dark:text-gray-200">{title}</h3>
+      <h3 className="typo-card-subtitle">{title}</h3>
     </div>
     <p className="typo-card-body">{description}</p>
   </BaseCard>

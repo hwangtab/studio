@@ -121,7 +121,7 @@ const Home: NextPage = () => {
                 variant="highlight"
                 delay={0.1 * (index + 1)}
                 cta={
-                  <div className="inline-flex items-center typo-card-cta text-gray-600 dark:text-gray-200 hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
+                  <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
                     자세히 보기
                     <motion.span
                       className="ml-1"

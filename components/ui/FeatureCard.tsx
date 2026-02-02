@@ -53,12 +53,12 @@ const FeatureCard = ({
               {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
             </div>
           )}
-          <h3 className={`${isLarge ? 'typo-card-title' : 'typo-card-subtitle'} text-gray-600 dark:text-gray-200`}>
+          <h3 className={isLarge ? 'typo-card-title' : 'typo-card-subtitle'}>
             {title}
           </h3>
         </div>
       )}
-      {description && <p className="typo-card-body flex-grow text-gray-600 dark:text-gray-300">{description}</p>}
+      {description && <p className="typo-card-body flex-grow">{description}</p>}
       {children}
       {cta && <div className="mt-auto pt-4">{cta}</div>}
     </BaseCard>

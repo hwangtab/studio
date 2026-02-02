@@ -25,14 +25,14 @@ const NotFoundPage: NextPage = () => {
       </motion.div>
 
       <motion.h1
-        className="text-heading-1 font-title text-gray-800 dark:text-gray-100 mb-6"
+        className="text-heading-1 font-title mb-6"
         {...PAGE_TITLE_ANIMATION}
       >
         찾으시는 페이지가 없습니다
       </motion.h1>
 
       <motion.p
-        className="typo-section-lead text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10"
+        className="typo-section-lead max-w-2xl mx-auto mb-10"
         {...PAGE_CONTENT_ANIMATION}
       >
         {path ? `요청하신 주소 "${path}"가 존재하지 않거나 이동되었어요.` : '요청하신 페이지가 존재하지 않거나 이동되었어요.'}

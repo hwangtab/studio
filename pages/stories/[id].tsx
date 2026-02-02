@@ -115,11 +115,11 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-heading-1 font-title text-gray-900 dark:text-white mb-4">
+            <h1 className="text-heading-1 font-title mb-4">
               {story.title}
             </h1>
 
-            <div className="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-6 typo-card-meta">
+            <div className="flex flex-wrap items-center mb-6 typo-card-meta">
               <div className="flex items-center mr-6 mb-2">
                 <Calendar className="mr-2 text-gray-500" size={14} />
                 <span>{story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}</span>

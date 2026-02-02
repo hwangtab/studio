@@ -143,7 +143,7 @@ const Pricing: NextPage = () => {
                         title="스페셜 패키지 (Purpose-Built)"
                         subtitle="축가, 성우, 유튜브 등 구체적인 목적에 맞춰 최적화된 올인원 패키지"
                     />
-                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
                         {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -172,7 +172,7 @@ const Pricing: NextPage = () => {
                         title="레코딩 (Recording)"
                         subtitle="최고급 아날로그 장비와 전문 엔지니어링이 포함된 프리미엄 녹음 서비스"
                     />
-                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
                         {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -201,7 +201,7 @@ const Pricing: NextPage = () => {
                         title="믹싱 (Mixing)"
                         subtitle="트랙 수에 따른 합리적인 가격 책정. 아날로그와 디지털의 조화로 최상의 사운드를 만듭니다."
                     />
-                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
                         {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
@@ -222,8 +222,8 @@ const Pricing: NextPage = () => {
                     <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
                         <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} />
                         <div>
-                            <h4 className="typo-card-subtitle text-gray-800 dark:text-white mb-1">보컬 튠/에딧 옵션</h4>
-                            <p className="text-gray-600 dark:text-gray-300 text-sm">
+                            <h4 className="typo-card-subtitle mb-1">보컬 튠/에딧 옵션</h4>
+                            <p className="typo-card-body text-sm">
                                 정교한 보컬 튜닝과 박자 보정이 필요한 경우 <span className="font-bold text-primary dark:text-primary-light">곡당 150,000원</span>이 추가됩니다. 자연스러운 보정을 원칙으로 합니다.
                             </p>
                         </div>
@@ -239,7 +239,7 @@ const Pricing: NextPage = () => {
                         title="마스터링 (Mastering)"
                         subtitle="음악의 최종 완성도를 책임지는 단계로, 어떤 재생 환경에서도 균일한 사운드를 보장합니다."
                     />
-                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
                         {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -268,7 +268,7 @@ const Pricing: NextPage = () => {
                         title="부가 서비스"
                         subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
                     />
-                    <p className="typo-card-body text-center text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-6">
+                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
                         {VAT_NOTICE}
                     </p>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -316,7 +316,6 @@ const Pricing: NextPage = () => {
                                     }
                                     align="left"
                                     className="mb-8"
-                                    titleClassName="text-gray-800 dark:text-white"
                                 />
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <Link

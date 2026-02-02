@@ -32,7 +32,7 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
             <p className="text-sm font-semibold text-primary mb-4">{subtitle}</p>
             <ul className="space-y-2">
                 {description.map((item, idx) => (
-                    <li key={idx} className="flex items-start text-gray-600 dark:text-gray-300 text-sm">
+                    <li key={idx} className="flex items-start typo-card-body text-body-2">
                         <CheckCircle size={14} className="mt-1 mr-2 text-primary flex-shrink-0" />
                         <span>{item}</span>
                     </li>
@@ -143,7 +143,7 @@ const Lesson: PageWithHero = () => {
                         title="Curriculum: 4 Steps to Master"
                         as="h3"
                         className="mb-12"
-                        titleClassName="text-2xl"
+                        titleClassName="text-heading-3"
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <CurriculumCard
@@ -264,7 +264,7 @@ const Lesson: PageWithHero = () => {
                         className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
                     >
                         <div className="p-8 bg-gradient-to-br from-primary to-secondary text-white text-center">
-                            <h3 className="text-2xl font-bold mb-2">1:1 Private Lesson</h3>
+                            <h3 className="typo-card-title text-white mb-2">1:1 Private Lesson</h3>
                             <p className="opacity-90">개개인의 수준과 목표에 맞춘 맞춤형 수업</p>
                         </div>
                         <div className="p-8">
