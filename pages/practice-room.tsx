@@ -48,12 +48,16 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
 
 const practiceRoomFaqs = [
   {
+    question: '은평구 어디에서 가깝나요?',
+    answer: '스튜디오 놀은 연신내역에서 도보 5분 거리에 위치하여 연신내, 불광, 구산, 역촌, 응암 등 은평구 주요 지역에서 접근성이 매우 뛰어납니다.',
+  },
+  {
     question: '연습실은 24시간 이용 가능한가요?',
     answer: '네, 연습실 입주 고객은 24시간 언제든 지문 인식 또는 번호키를 통해 자유롭게 출입하고 작업하실 수 있습니다.',
   },
   {
     question: '주차 지원이 되나요?',
-    answer: '스튜디오 인근에 KT은평빌딩 주차장이 있으며 유료로 이용 가능합니다. 도보 5분 거리의 공영 주차장도 이용하실 수 있습니다.',
+    answer: '연신내역 인근 KT은평빌딩 주차장 및 도보 5분 거리의 공영 주차장을 통해 불광, 구산, 역촌 등 인근 지역 방문객도 편리하게 이용 가능합니다.',
   },
   {
     question: '여름이나 겨울에 냉난방 이용이 자유로운가요?',
@@ -135,9 +139,9 @@ const PracticeRoom: NextPage = () => {
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <TargetAudience
-              title="음악 작업자"
-              description="프로듀서/작곡가를 위한 미디작업실, 보컬/래퍼를 위한 녹음 공간"
-              icon={Music}
+              title="로컬 뮤지션"
+              description="연신내, 불광, 구산, 역촌, 응암 인근에서 나만의 아지트 같은 작업실을 찾는 분"
+              icon={MapPin}
               delay={0.1}
             />
             <TargetAudience
