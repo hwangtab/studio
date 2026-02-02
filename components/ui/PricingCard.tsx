@@ -26,7 +26,7 @@ const PricingCard = ({ id, title, price, unit, description, features, recommende
                     RECOMMENDED
                 </div>
             )}
-            <h3 className="typo-card-title font-bold text-gray-800 dark:text-white mb-2">{title}</h3>
+            <h3 className="typo-card-title text-gray-800 dark:text-white mb-2">{title}</h3>
             <div className="flex items-baseline mb-4">
                 <span className="text-3xl font-extrabold text-primary dark:text-primary-light">{price}</span>
                 {unit && <span className="text-gray-500 dark:text-gray-400 ml-1 text-sm">{unit}</span>}

@@ -101,6 +101,7 @@ const config: Config = {
       // Typography component classes
       addComponents({
         '.typo-section-title': {
+          fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.heading-2[0]'),
           lineHeight: theme('fontSize.heading-2[1].lineHeight'),
           fontWeight: theme('fontSize.heading-2[1].fontWeight'),
@@ -111,11 +112,13 @@ const config: Config = {
           fontWeight: '300',
         },
         '.typo-card-title': {
+          fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.heading-3[0]'),
           lineHeight: theme('fontSize.heading-3[1].lineHeight'),
           fontWeight: '400',
         },
         '.typo-card-subtitle': {
+          fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.subtitle-2[0]'),
           lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
           fontWeight: '300',
@@ -142,6 +145,7 @@ const config: Config = {
           fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
         },
         '.typo-footer-heading': {
+          fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.subtitle-2[0]'),
           lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
           fontWeight: theme('fontSize.subtitle-2[1].fontWeight'),
