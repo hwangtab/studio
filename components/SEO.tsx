@@ -68,7 +68,7 @@ const SEO = ({
 
   const defaultSchema = {
     '@context': 'https://schema.org',
-    '@type': 'MusicRecordingStudio',
+    '@type': ['MusicRecordingStudio', 'LocalBusiness', 'Organization'],
     name: '스튜디오 놀',
     alternateName: 'Studio Nol',
     url: siteUrl,

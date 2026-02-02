@@ -82,6 +82,10 @@ const Portfolio: NextPage<PortfolioProps> = ({
         description="스튜디오 놀의 레코딩, 믹싱, 마스터링 결과물을 직접 확인해보세요. 인디 록부터 발라드, 힙합까지 장르별 고음질 사운드 샘플을 들어보실 수 있습니다."
         keywords="녹음 샘플, 믹싱 전후 비교, 마스터링 예시, 스튜디오 포트폴리오, 음반 제작 퀄리티, 레코딩 결과물, 스튜디오 놀"
         canonical="https://studionol.co.kr/portfolio"
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '포트폴리오', path: '/portfolio' },
+        ]}
       />
       <ImageHero
         {...{

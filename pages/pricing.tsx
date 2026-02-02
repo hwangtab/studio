@@ -113,6 +113,10 @@ const Pricing: NextPage = () => {
                 canonical="https://studionol.co.kr/pricing"
                 includeSchema={true}
                 schema={pricingSchema}
+                breadcrumbs={[
+                    { name: '홈', path: '/' },
+                    { name: '가격 안내', path: '/pricing' },
+                ]}
             />
 
             {/* Hero Section */}

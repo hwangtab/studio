@@ -63,6 +63,10 @@ const Studio: NextPage = () => {
         description="최상의 사운드를 위한 과감한 투자. Neumann U87AI, Vintech X73i, SSL Fusion 등 프로들이 신뢰하는 하이엔드 장비와 룸 어쿠스틱을 확인하세요."
         keywords="하이엔드 녹음 장비, Neumann U87AI, SSL Fusion, 연신내 녹음실 장비, 프로 오디오 장비, Vintech 프리앰프, 스튜디오 장비 리스트"
         canonical="https://studionol.co.kr/studio-info"
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '스튜디오 소개', path: '/studio-info' },
+        ]}
       />
       <ImageHero
         title="스튜디오 소개"

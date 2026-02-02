@@ -59,6 +59,10 @@ const PracticeRoom: NextPage = () => {
         keywords="은평구 연습실, 방음 부스 대여, 레코딩 연습실, 개인 작업실, 믹싱 작업실, 유튜브 촬영 스튜디오, 연신내 연습실, 스튜디오 놀"
         canonical="https://studionol.co.kr/practice-room"
         includeSchema={true}
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '연습실', path: '/practice-room' },
+        ]}
       />
       <ImageHero
         title="은평구 프리미엄 방음 연습실"

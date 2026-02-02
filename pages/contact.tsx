@@ -66,6 +66,10 @@ const Contact: NextPage = () => {
         description="프로젝트 예산과 일정에 맞는 최적의 솔루션을 무료로 상담받으세요. 녹음실, 레슨, 연습실 예약 문의. 전화/카톡/이메일로 24시간 언제든 환영합니다."
         keywords="녹음실 비용 상담, 무료 견적 요청, 스튜디오 예약, 레슨 상담, 카카오톡 문의, 스튜디오 놀"
         canonical="https://studionol.co.kr/contact"
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '연락하기', path: '/contact' },
+        ]}
       />
       <ImageHero
         title="연락하기"

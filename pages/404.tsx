@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
+import SEO from '../components/SEO';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
@@ -11,10 +11,11 @@ const NotFoundPage: NextPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-20 sm:py-28 text-center">
-      <Head>
-        <title>페이지를 찾을 수 없습니다 | 스튜디오 놀</title>
-        <meta name="robots" content="noindex" />
-      </Head>
+      <SEO
+        title="페이지를 찾을 수 없습니다 | 스튜디오 놀"
+        description="요청하신 페이지를 찾을 수 없습니다. 스튜디오 놀 홈페이지로 이동하거나 다른 페이지를 탐색해 주세요."
+        robots="noindex, nofollow"
+      />
 
       <motion.div
         className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-light"

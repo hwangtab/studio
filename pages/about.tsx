@@ -26,6 +26,10 @@ const About: NextPage = () => {
         description="한 곡의 아이디어가 완성된 앨범이 되기까지, 스튜디오 놀은 그 모든 과정의 동반자입니다. 녹음을 넘어 기획, 디자인, 유통, 홍보까지."
         keywords="스튜디오 놀 소개, 음반 제작 프로세스, 음악 프로덕션, 레코딩 스튜디오, 믹싱 마스터링, 음원 유통, 음악 기획, 아날로그 장비"
         canonical="https://studionol.co.kr/about"
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '소개', path: '/about' },
+        ]}
       />
       <ImageHero
         {...{

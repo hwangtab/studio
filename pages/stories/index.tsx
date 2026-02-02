@@ -35,6 +35,10 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ stories }) => {
         description="스튜디오 놀에서 진행된 다양한 작업 후기와 스토리를 만나보세요."
         canonical="https://studionol.co.kr/stories"
         keywords="스튜디오 놀 스토리, 작업 후기, 음악 제작 스토리"
+        breadcrumbs={[
+          { name: '홈', path: '/' },
+          { name: '스토리', path: '/stories' },
+        ]}
       />
       <ImageHero
         title="스토리"
