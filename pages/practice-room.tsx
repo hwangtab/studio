@@ -12,6 +12,7 @@ import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
 // @ts-ignore - Component is JS
 import BaseCard from '../components/ui/BaseCard';
+import FAQSection from '../components/ui/FAQSection';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -50,6 +51,29 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }) => (
   </BaseCard>
 );
 
+const practiceRoomFaqs = [
+  {
+    question: '연습실은 24시간 이용 가능한가요?',
+    answer: '네, 연습실 입주 고객은 24시간 언제든 지문 인식 또는 번호키를 통해 자유롭게 출입하고 작업하실 수 있습니다.',
+  },
+  {
+    question: '주차 지원이 되나요?',
+    answer: '스튜디오 인근에 KT은평빌딩 주차장이 있으며 유료로 이용 가능합니다. 도보 5분 거리의 공영 주차장도 이용하실 수 있습니다.',
+  },
+  {
+    question: '여름이나 겨울에 냉난방 이용이 자유로운가요?',
+    answer: '모든 연습실마다 개별 제어가 가능한 최신형 무풍 에어컨과 바닥 난방 시스템이 완비되어 있어 사계절 내내 쾌적하게 작업할 수 있습니다.',
+  },
+  {
+    question: '악기나 장비를 두고 다녀도 안전한가요?',
+    answer: '열 개의 CCTV가 사각지대 없이 복도와 공동 구역을 24시간 녹화하며, 각 방마다 개별 디지털 도어록이 설치되어 있어 보안이 철저합니다.',
+  },
+  {
+    question: '방음 성능은 어느 정도인가요?',
+    answer: '방송국 수준의 STC 차음 설계를 적용하여 옆방과의 소리 간섭을 최소화했습니다. 보컬, 성우 녹음은 물론 미디 작업 시에도 높은 몰입감을 제공합니다.',
+  },
+];
+
 const PracticeRoom: NextPage = () => {
   return (
     <>
@@ -59,6 +83,8 @@ const PracticeRoom: NextPage = () => {
         keywords="은평구 연습실, 방음 부스 대여, 레코딩 연습실, 개인 작업실, 믹싱 작업실, 유튜브 촬영 스튜디오, 연신내 연습실, 스튜디오 놀"
         canonical="https://studionol.co.kr/practice-room"
         includeSchema={true}
+        // @ts-ignore - SEO component is JS
+        faqItems={practiceRoomFaqs}
         breadcrumbs={[
           { name: '홈', path: '/' },
           { name: '연습실', path: '/practice-room' },
@@ -355,6 +381,11 @@ const PracticeRoom: NextPage = () => {
           </div>
         </motion.div>
       </div>
+      <FAQSection
+        items={practiceRoomFaqs}
+        title="연습실 FAQ"
+        subtitle="작업실 입주와 이용에 관해 가장 많이 하시는 질문들입니다."
+      />
     </>
   );
 };
