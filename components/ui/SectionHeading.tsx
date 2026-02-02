@@ -27,7 +27,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, align = 'center' }: Secti
           {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
         </div>
       )}
-      <h2 className="typo-section-title text-gray-800 dark:text-white mb-3">{title}</h2>
+      <h2 className="typo-section-title text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mb-3">{title}</h2>
       {subtitle && <p className="typo-section-lead text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{subtitle}</p>}
     </motion.div>
   );
