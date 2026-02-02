@@ -9,6 +9,7 @@ import FeatureCard from '../components/ui/FeatureCard';
 import FAQSection from '../components/ui/FAQSection';
 import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
+import ReviewSection, { reviews } from '../components/ui/ReviewSection';
 import ResponsiveImage from '../components/ResponsiveImage';
 import { homeServices, studioImages } from '../data/home';
 
@@ -54,6 +55,7 @@ const Home: NextPage = () => {
         includeSchema
         // @ts-ignore - SEO component is JS
         faqItems={homeFaqs}
+        reviewItems={reviews}
       />
 
 
@@ -188,6 +190,7 @@ const Home: NextPage = () => {
           </div>
         </motion.div>
       </div>
+      <ReviewSection />
       <FAQSection items={homeFaqs} />
     </div>
   );

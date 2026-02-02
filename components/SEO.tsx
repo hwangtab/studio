@@ -10,6 +10,13 @@ interface FAQItem {
   answer: string;
 }
 
+interface ReviewItem {
+  author: string;
+  rating: number;
+  content: string;
+  datePublished?: string;
+}
+
 interface SEOProps {
   title?: string;
   description?: string;
@@ -27,6 +34,7 @@ interface SEOProps {
   articleSection?: string;
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
+  reviewItems?: ReviewItem[] | null;
 }
 
 const SEO = ({
@@ -46,6 +54,7 @@ const SEO = ({
   articleSection,
   breadcrumbs = null,
   faqItems = null,
+  reviewItems = null,
 }: SEOProps) => {
   const siteUrl = 'https://studionol.co.kr';
 
@@ -114,6 +123,30 @@ const SEO = ({
       },
       geoRadius: '50000',
     },
+    ...(reviewItems && reviewItems.length > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: (reviewItems.reduce((acc, item) => acc + item.rating, 0) / reviewItems.length).toFixed(1),
+        reviewCount: reviewItems.length,
+        bestRating: '5',
+        worstRating: '1'
+      },
+      review: reviewItems.map(item => ({
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: item.author
+        },
+        reviewRating: {
+          '@type': 'ReviewRating',
+          ratingValue: item.rating,
+          bestRating: '5',
+          worstRating: '1'
+        },
+        reviewBody: item.content,
+        datePublished: item.datePublished || new Date().toISOString().split('T')[0]
+      }))
+    } : {}),
     sameAs: ['https://open.kakao.com/me/nol'],
     serviceType: ['레코딩', '믹싱', '마스터링', '음반 기획', '음원 유통', '음악 프로덕션'],
     hasOfferCatalog: {
