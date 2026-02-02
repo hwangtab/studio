@@ -1,20 +1,15 @@
-// @ts-nocheck
 import type { NextPage } from 'next'; import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../utils/animationUtils';
-// @ts-ignore - Component is JS
 import ResponsiveImage from '../components/ResponsiveImage';
-// @ts-ignore - Component is JS
 import SEO from '../components/SEO';
-// @ts-ignore - Component is JS
 import ImageHero from '../components/common/ImageHero';
-// @ts-ignore - Component is JS
 import BaseCard from '../components/ui/BaseCard';
 import FAQSection from '../components/ui/FAQSection';
 
-const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => (
+const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-4">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
@@ -26,7 +21,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => (
   </BaseCard>
 );
 
-const PainPoint = ({ icon: Icon, text, delay = 0 }) => (
+const PainPoint = ({ icon: Icon, text, delay = 0 }: { icon: any, text: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-5 h-full">
     <div className="flex items-start">
       <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
@@ -39,7 +34,7 @@ const PainPoint = ({ icon: Icon, text, delay = 0 }) => (
   </BaseCard>
 );
 
-const TargetAudience = ({ title, description, icon: Icon, delay = 0 }) => (
+const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: string, description: string, icon: any, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 mb-4">
     <div className="flex items-center mb-2">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">

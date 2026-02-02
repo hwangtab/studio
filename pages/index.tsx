@@ -7,7 +7,6 @@ import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION }
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
 import FAQSection from '../components/ui/FAQSection';
-// @ts-ignore - ImageHero component is JS
 import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
 import ResponsiveImage from '../components/ResponsiveImage';

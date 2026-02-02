@@ -1,13 +1,9 @@
 import type { NextPage } from 'next'; import React from 'react';
 import { motion } from 'framer-motion';
 import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users } from 'lucide-react';
-// @ts-ignore - Component is JS
 import ResponsiveImage from '../components/ResponsiveImage';
-// @ts-ignore - Component is JS
 import SEO from '../components/SEO';
-// @ts-ignore - Component is JS
 import ImageHero from '../components/common/ImageHero';
-// @ts-ignore - Component is JS
 import BaseCard from '../components/ui/BaseCard';
 import Link from 'next/link';
 

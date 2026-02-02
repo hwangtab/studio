@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handler, { __contactTestUtils } from '../pages/api/contact';
+import handler, { __contactTestUtils } from '../pages_api_backup/contact';
 
 type MockRequest = {
   method?: string;

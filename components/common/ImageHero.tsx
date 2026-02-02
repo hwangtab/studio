@@ -4,7 +4,7 @@ import ResponsiveImage from '../ResponsiveImage';
 
 interface ImageHeroProps {
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   ctaButtons?: React.ReactNode;
   backgroundImage: string;
   imageAlt?: string;
