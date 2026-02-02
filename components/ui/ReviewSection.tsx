@@ -64,7 +64,7 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                             <BaseCard
                                 variant="default"
                                 enableAnimation={false}
-                                className="p-8 h-full relative border border-gray-100 dark:border-gray-800 hover:shadow-2xl transition-all duration-500 group"
+                                className="p-8 h-full relative border border-gray-100 dark:border-gray-800 group"
                             >
                                 <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
                                     <Quote size={60} />

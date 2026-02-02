@@ -137,6 +137,16 @@ const Home: NextPage = () => {
         </div>
       </section>
 
+
+      {/* 리뷰 섹션 */}
+      <ReviewSection className="py-24 bg-white dark:bg-gray-900" />
+
+      {/* FAQ 섹션 */}
+      <FAQSection
+        items={homeFaqs}
+        className="py-24 bg-gray-50/50 dark:bg-gray-800/10"
+      />
+
       {/* 하단 CTA 섹션 */}
       <section className="py-24">
         <div className="container mx-auto px-4">
@@ -207,15 +217,6 @@ const Home: NextPage = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* 리뷰 섹션 */}
-      <ReviewSection className="py-24 bg-white dark:bg-gray-900" />
-
-      {/* FAQ 섹션 */}
-      <FAQSection
-        items={homeFaqs}
-        className="py-24 bg-gray-50/50 dark:bg-gray-800/10"
-      />
     </div>
   );
 };
