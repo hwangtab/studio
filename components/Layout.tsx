@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { SITE_CONFIG } from '../data/siteConfig';
 
 const NAV_ITEMS = [
@@ -178,22 +179,30 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
           </div>
         </div>
 
-        {isMenuOpen && (
-          <nav className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]">
-            <div className="px-4 py-3 space-y-2">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </nav>
-        )}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.nav
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)] overflow-hidden"
+            >
+              <div className="px-4 py-3 space-y-2">
+                {NAV_ITEMS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </header>
 
       <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} ${isFullBleed ? 'pb-0' : 'pb-24'}`}>

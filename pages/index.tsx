@@ -7,6 +7,7 @@ import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION }
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
 import FAQSection from '../components/ui/FAQSection';
+import SectionHeading from '../components/ui/SectionHeading';
 import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
 import ReviewSection, { reviews } from '../components/ui/ReviewSection';
@@ -89,12 +90,10 @@ const Home: NextPage = () => {
       {/* 스튜디오 갤러리 섹션 */}
       <section className="py-24">
         <div className="container mx-auto px-4">
-          <motion.h2
-            className="typo-section-title word-break-keep-all mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-            {...PAGE_TITLE_ANIMATION}
-          >
-            당신을 위한 녹음 공간과 장비
-          </motion.h2>
+          <SectionHeading
+            title="당신을 위한 녹음 공간과 장비"
+            className="mb-12"
+          />
           <MediaGallery images={[...studioImages]} />
         </div>
       </section>
@@ -102,12 +101,10 @@ const Home: NextPage = () => {
       {/* 서비스 소개 섹션 */}
       <section className="py-24 bg-gray-50/50 dark:bg-gray-800/10">
         <div className="container mx-auto px-4">
-          <motion.h2
-            className="typo-section-title word-break-keep-all mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-            {...PAGE_SUBTITLE_ANIMATION}
-          >
-            우리의 서비스
-          </motion.h2>
+          <SectionHeading
+            title="우리의 서비스"
+            className="mb-12"
+          />
           <motion.div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             {...PAGE_CONTENT_ANIMATION}
@@ -152,14 +149,22 @@ const Home: NextPage = () => {
           >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
               <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                <h2 className="typo-section-title mb-4 text-gray-800 dark:text-white">
-                  상상했던 사운드,<br />
-                  <span className="text-primary">현실이 되는 곳</span>
-                </h2>
-                <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
-                  최고의 장비와 편안한 공간에서 당신만의 음악을 완성하세요.<br className="hidden md:block" />
-                  스튜디오 놀이 당신의 음악적 여정을 함께합니다.
-                </p>
+                <SectionHeading
+                  title={
+                    <>
+                      상상했던 사운드,<br />
+                      <span className="text-primary">현실이 되는 곳</span>
+                    </>
+                  }
+                  subtitle={
+                    <>
+                      최고의 장비와 편안한 공간에서 당신만의 음악을 완성하세요.<br className="hidden md:block" />
+                      스튜디오 놀이 당신의 음악적 여정을 함께합니다.
+                    </>
+                  }
+                  align="left"
+                  className="mb-8"
+                />
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/contact"

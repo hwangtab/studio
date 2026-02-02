@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence as AnimatePresenceOrig } from 'framer-motion';
 const AnimatePresence = AnimatePresenceOrig as any;
 import { Plus, Minus, HelpCircle } from 'lucide-react';
+import SectionHeading from './SectionHeading';
 
 interface FAQItem {
     question: string;
@@ -30,33 +31,12 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     return (
         <section className={className}>
             <div className="container mx-auto px-4 max-w-4xl">
-                <div className="text-center mb-12">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-primary/10 text-primary dark:text-primary-light"
-                    >
-                        <HelpCircle size={32} />
-                    </motion.div>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="typo-section-title mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-                    >
-                        {title}
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="typo-section-lead text-gray-600 dark:text-gray-400"
-                    >
-                        {subtitle}
-                    </motion.p>
-                </div>
+                <SectionHeading
+                    icon={HelpCircle}
+                    title={title}
+                    subtitle={subtitle}
+                    className="mb-12"
+                />
 
                 <div className="space-y-4">
                     {items.map((item, index) => (

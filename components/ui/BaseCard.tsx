@@ -11,6 +11,7 @@ interface BaseCardProps {
     delay?: number;
     variant?: 'default' | 'highlight' | 'outline';
     hoverEffect?: boolean;
+    enableAnimation?: boolean;
 }
 
 const BaseCard = ({
@@ -21,6 +22,7 @@ const BaseCard = ({
     delay = 0,
     variant = 'default',
     hoverEffect = true,
+    enableAnimation = true,
 }: BaseCardProps) => {
     const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden will-change-transform [transform:translateZ(0)] [-webkit-transform:translateZ(0)]";
 
@@ -30,14 +32,21 @@ const BaseCard = ({
         outline: "border border-gray-200 dark:border-gray-700 bg-transparent",
     };
 
+    const animationProps = enableAnimation ? {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        whileHover: hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {},
+        viewport: { once: true, margin: "0px 0px -50px 0px" },
+        transition: { duration: 0.4, delay }
+    } : {
+        whileHover: hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {},
+        transition: { duration: 0.2 } // Faster transition for hover only
+    };
+
     const CardContent = (
         <motion.div
             className={cn(baseStyles, variants[variant], className)}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {}}
-            viewport={{ once: true, margin: "0px 0px -50px 0px" }}
-            transition={{ duration: 0.4, delay }}
+            {...animationProps}
             onClick={onClick}
         >
             {children}

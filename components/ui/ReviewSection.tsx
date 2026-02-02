@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, MessageSquare, Quote } from 'lucide-react';
 import BaseCard from './BaseCard';
+import SectionHeading from './SectionHeading';
 
 interface Review {
     author: string;
@@ -41,21 +42,15 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
     return (
         <section className={className}>
             <div className="container mx-auto px-4">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h2 className="typo-section-title mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent">
+                <SectionHeading
+                    title={
+                        <>
                             아티스트와 함께 만드는 <span>감동의 기록</span>
-                        </h2>
-                        <p className="typo-section-lead text-gray-600 dark:text-gray-400">
-                            스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.
-                        </p>
-                    </motion.div>
-                </div>
+                        </>
+                    }
+                    subtitle="스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다."
+                    className="mb-16"
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                     {reviews.map((review, index) => (
@@ -68,6 +63,7 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                         >
                             <BaseCard
                                 variant="default"
+                                enableAnimation={false}
                                 className="p-8 h-full relative border border-gray-100 dark:border-gray-800 hover:shadow-2xl transition-all duration-500 group"
                             >
                                 <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
