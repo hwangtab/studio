@@ -16,9 +16,9 @@ const Home: NextPage = () => {
   return (
     <div className="overflow-visible">
       <SEO
-        title="연신내 녹음실 · 은평구 연습실 | 스튜디오 놀 음악 제작 스튜디오"
-        description="연신내역 도보 5분, 스튜디오 놀에서 녹음실·연습실·믹싱/마스터링 서비스를 한 번에 이용하세요. 프로 장비와 엔지니어가 상주해 보컬 녹음, 밴드 합주, 콘텐츠 제작까지 지원합니다."
-        keywords="연신내 녹음실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오"
+        title="연신내 녹음실 · 일반인/유튜브 커버 녹음 | 스튜디오 놀"
+        description="연신내역 5분. 일반인 축가/프로포즈 녹음부터 유튜브 커버 영상 제작까지. 누구나 쉽고 편안하게 이용할 수 있는 전문 레코딩 스튜디오입니다."
+        keywords="연신내 녹음실, 은평구 녹음실, 일반인 녹음실, 유튜브 노래 녹음, 커버 영상 제작, 축가 녹음, 프로포즈 녹음, 스튜디오 놀"
         canonical="https://studionol.co.kr/"
         includeSchema
         // @ts-ignore - SEO component is JS
@@ -71,20 +71,20 @@ const Home: NextPage = () => {
           minHeight: "min-h-[100vh]",
           overlayGradient: "from-black/60 via-black/40 to-transparent",
           ctaButtons: (
-          <>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center bg-white text-primary-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-            >
-              예약하기
-            </Link>
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center justify-center bg-primary border-2 border-primary text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-            >
-              포트폴리오
-            </Link>
-          </>
+            <>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center bg-white text-primary-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+              >
+                예약하기
+              </Link>
+              <Link
+                href="/portfolio"
+                className="inline-flex items-center justify-center bg-primary border-2 border-primary text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+              >
+                포트폴리오
+              </Link>
+            </>
           ),
         } as any}
       />

@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';import React, { useState } from 'react';
+import type { NextPage } from 'next'; import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
@@ -62,9 +62,9 @@ const Contact: NextPage = () => {
   return (
     <>
       <SEO
-        title="연신내 녹음실 · 연습실 예약 문의 | 스튜디오 놀"
-        description="스튜디오 놀 녹음실/연습실 예약, 견적 상담은 전화 02-764-3114 또는 카카오톡 @nol로 연락주세요. 위치: 서울 은평구 대조동 84-3 3층."
-        keywords="녹음실 예약 문의, 연습실 예약, 스튜디오 놀 연락처, 연신내 녹음실 상담"
+        title="무료 견적 상담 · 녹음/레슨 예약 문의 | 스튜디오 놀"
+        description="프로젝트 예산과 일정에 맞는 최적의 솔루션을 무료로 상담받으세요. 녹음실, 레슨, 연습실 예약 문의. 전화/카톡/이메일로 24시간 언제든 환영합니다."
+        keywords="녹음실 비용 상담, 무료 견적 요청, 스튜디오 예약, 레슨 상담, 카카오톡 문의, 스튜디오 놀"
         canonical="https://studionol.co.kr/contact"
       />
       <ImageHero

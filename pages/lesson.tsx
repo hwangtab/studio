@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';import React from 'react';
+import type { NextPage } from 'next'; import React from 'react';
 import { motion } from 'framer-motion';
 import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users } from 'lucide-react';
 // @ts-ignore - Component is JS
@@ -38,9 +38,9 @@ const Lesson: NextPage = () => {
     return (
         <>
             <SEO
-                title="미디/레코딩/믹싱 레슨 · 올인원 프로덕션 클래스 | 스튜디오 놀"
-                description="서울 은평구 연신내 1:1 미디/믹싱 레슨. 현업 엔지니어 직강, Neumann/SSL 등 하이엔드 장비 실습. 작곡부터 음원 발매까지 한 번에 끝내는 올인원 커리큘럼."
-                keywords="미디 레슨, 믹싱 레슨, 레코딩 레슨, 마스터링 레슨, 은평구 미디 학원, 연신내 실용음악, 큐베이스, 로직 프로, 에이블톤 라이브, 보컬 믹싱, 음반 제작 수업, 1:1 멘토링"
+                title="은평구 미디/믹싱 레슨 · 음반 제작 올인원 클래스 | 스튜디오 놀"
+                description="미디 작곡부터 레코딩, 믹싱, 마스터링까지 한 번에 배우는 실전 커리큘럼. 현업 엔지니어의 1:1 멘토링으로 당신의 첫 음원을 직접 제작하고 발매하세요."
+                keywords="은평구 미디 레슨, 믹싱 레슨, 음반 제작 수업, 1:1 미디 레슨, 큐베이스, 로직 프로, 레코딩 실습, 싱어송라이터, 연신내 실용음악"
                 canonical="https://studionol.co.kr/lesson"
                 includeSchema={true}
                 schema={{
@@ -89,22 +89,22 @@ const Lesson: NextPage = () => {
                 ]}
                 ogImage="/images/lesson1.png"
             />
-      <ImageHero
-        {...{
-          title: "올인원 프로덕션 마스터 클래스",
-          subtitle: (
-            <>
-              상상을 현실의 소리로, 아이디어를 완성된 음반으로.
-              <br />
-              프로의 공간에서 프로의 노하우를 배우세요.
-            </>
-          ),
-          backgroundImage: "/images/lesson1.png",
-          imageAlt: "스튜디오 믹싱 콘솔",
-          minHeight: "min-h-[60vh]",
-          overlayGradient: "from-black/60 via-black/40 to-transparent",
-        } as any}
-      />
+            <ImageHero
+                {...{
+                    title: "올인원 프로덕션 마스터 클래스",
+                    subtitle: (
+                        <>
+                            상상을 현실의 소리로, 아이디어를 완성된 음반으로.
+                            <br />
+                            프로의 공간에서 프로의 노하우를 배우세요.
+                        </>
+                    ),
+                    backgroundImage: "/images/lesson1.png",
+                    imageAlt: "스튜디오 믹싱 콘솔",
+                    minHeight: "min-h-[60vh]",
+                    overlayGradient: "from-black/60 via-black/40 to-transparent",
+                } as any}
+            />
 
             <div className="container mx-auto px-4 py-16">
 
@@ -351,5 +351,5 @@ export default Lesson;
 (Lesson as any).hasHero = true;
 
 export const getStaticProps = () => ({
-  props: {},
+    props: {},
 });

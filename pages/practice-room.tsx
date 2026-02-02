@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { NextPage } from 'next';import React from 'react';
+import type { NextPage } from 'next'; import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle } from 'lucide-react';
@@ -54,9 +54,9 @@ const PracticeRoom: NextPage = () => {
   return (
     <>
       <SEO
-        title="은평구 연습실 대관 · 연신내 녹음 연습 공간 | 스튜디오 놀"
-        description="방음·공조·프로 장비를 갖춘 스튜디오 놀 연습실에서 보컬 녹음, 밴드 합주, 콘텐츠 촬영을 진행하세요. 연신내역 5분, 시간제·장기 대관 예약 가능."
-        keywords="은평구 연습실, 연신내 연습실, 연신내 녹음실, 스튜디오 대관, 방음 연습실, 밴드 합주실"
+        title="은평구 방음 연습실 · 유튜브 촬영 & 개인 작업실 | 스튜디오 놀"
+        description="24시간 완벽 방음/공조 시스템. 보컬, 미디, 악기 연습부터 유튜브 콘텐츠 촬영까지 가능한 프리미엄 개인 연습실. 연신내역 5분, 시간제/월 대관 가능."
+        keywords="은평구 연습실, 연신내 연습실, 개인 연습실 대여, 유튜브 촬영 스튜디오, 방음 부스 대여, 미디 작업실, 24시간 연습실, 스튜디오 놀"
         canonical="https://studionol.co.kr/practice-room"
         includeSchema={true}
       />

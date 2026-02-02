@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { NextPage } from 'next';import React from 'react';
+import type { NextPage } from 'next'; import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mic, SlidersHorizontal, Disc, TrendingUp, Check, Info, MessageCircle, CalendarCheck } from 'lucide-react';
@@ -104,9 +104,9 @@ const Pricing: NextPage = () => {
     return (
         <div className="overflow-visible">
             <SEO
-                title="녹음실·믹싱·마스터링 가격 | 스튜디오 놀 이용안내"
-                description="시간당 10만원 레코딩, 6시간 패키지 50만원, 믹싱 20~50만원, 마스터링 8~10만원까지 스튜디오 놀의 VAT 별도 고정 단가표를 확인하세요."
-                keywords="녹음실 가격표, 믹싱 가격, 마스터링 가격, 레코딩 스튜디오 비용, 부가 서비스 패키지, 스튜디오 놀 가격"
+                title="녹음실 이용료 · 축가 녹음 비용 & 성우 녹음 견적 | 스튜디오 놀"
+                description="복잡한 추가금 없는 투명한 정찰제. 축가 녹음, 유튜브 커버, 성우 녹음 비용을 미리 확인하세요. 일반인도 부담 없이 이용 가능한 합리적인 가격입니다."
+                keywords="녹음실 비용, 축가 녹음 비용, 성우 녹음 견적, 셀프 축가 녹음, 유튜브 스튜디오 대여, 믹싱 가격, 마스터링 가격, 스튜디오 놀 이용료"
                 canonical="https://studionol.co.kr/pricing"
                 includeSchema={true}
                 schema={pricingSchema}

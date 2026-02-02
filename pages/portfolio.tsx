@@ -78,9 +78,9 @@ const Portfolio: NextPage<PortfolioProps> = ({
   return (
     <>
       <SEO
-        title="포트폴리오 - 스튜디오 놀의 작업 결과물"
-        description="스튜디오 놀에서 제작한 음반, 싱글, 앨범 작업 결과물. 다양한 장르의 뮤지션들과 함께한 레코딩, 믹싱, 마스터링 포트폴리오."
-        keywords="스튜디오 놀 포트폴리오, 음반 제작 실적, 믹싱 마스터링 작업물, 레코딩 샘플, 음악 제작 사례"
+        title="녹음/믹싱 샘플 듣기 · 포트폴리오 | 스튜디오 놀"
+        description="스튜디오 놀의 레코딩, 믹싱, 마스터링 결과물을 직접 확인해보세요. 인디 록부터 발라드, 힙합까지 장르별 고음질 사운드 샘플을 들어보실 수 있습니다."
+        keywords="녹음 샘플, 믹싱 전후 비교, 마스터링 예시, 스튜디오 포트폴리오, 음반 제작 퀄리티, 레코딩 결과물, 스튜디오 놀"
         canonical="https://studionol.co.kr/portfolio"
       />
       <ImageHero

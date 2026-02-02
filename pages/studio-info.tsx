@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { NextPage } from 'next';import Link from 'next/link';
+import type { NextPage } from 'next'; import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info, MapPin, Calendar, MessageCircle, CalendarCheck } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
@@ -59,9 +59,9 @@ const Studio: NextPage = () => {
   return (
     <>
       <SEO
-        title="연신내 프로 녹음실 장비 소개 | 스튜디오 놀 스튜디오 정보"
-        description="Neumann 마이크, Prism Sound 인터페이스, SSL/UA 아웃보드 등 프로 레벨 장비를 갖춘 스튜디오 놀의 레코딩·믹싱 환경을 확인하세요."
-        keywords="연신내 녹음실 장비, 스튜디오 놀 장비, 은평구 녹음 스튜디오, 프로 녹음실"
+        title="하이엔드 녹음 장비 · Neumann/SSL 보유 | 스튜디오 놀"
+        description="최상의 사운드를 위한 과감한 투자. Neumann U87AI, Vintech X73i, SSL Fusion 등 프로들이 신뢰하는 하이엔드 장비와 룸 어쿠스틱을 확인하세요."
+        keywords="하이엔드 녹음 장비, Neumann U87AI, SSL Fusion, 연신내 녹음실 장비, 프로 오디오 장비, Vintech 프리앰프, 스튜디오 장비 리스트"
         canonical="https://studionol.co.kr/studio-info"
       />
       <ImageHero
