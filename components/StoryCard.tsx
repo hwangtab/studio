@@ -20,11 +20,13 @@ interface StoryCardProps {
   story: Story;
 }
 
-const StoryCard = ({ story }: StoryCardProps) => {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
+// 컴포넌트 외부로 이동하여 매 렌더마다 재생성 방지
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
+const StoryCard = React.memo(({ story }: StoryCardProps) => {
   
   const thumbnailUrl = story.thumbnail || extractFirstImageUrl(story.content || '');
   const plainSummary = story.summary || summarizeContent(story.content, 120);
@@ -36,7 +38,8 @@ const StoryCard = ({ story }: StoryCardProps) => {
         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
         variants={cardVariants}
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
+        viewport={{ once: true }}
         whileHover={{ scale: 1.01 }}
       >
         <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
@@ -80,6 +83,8 @@ const StoryCard = ({ story }: StoryCardProps) => {
       </motion.div>
     </Link>
   );
-};
+});
+
+StoryCard.displayName = 'StoryCard';
 
 export default StoryCard;

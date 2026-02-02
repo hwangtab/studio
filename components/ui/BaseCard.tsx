@@ -14,7 +14,7 @@ interface BaseCardProps {
     enableAnimation?: boolean;
 }
 
-const BaseCard = ({
+const BaseCard = React.memo(({
     children,
     className = '',
     href,
@@ -63,6 +63,8 @@ const BaseCard = ({
     }
 
     return CardContent;
-};
+});
+
+BaseCard.displayName = 'BaseCard';
 
 export default BaseCard;

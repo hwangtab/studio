@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { Star, MessageSquare, Quote } from 'lucide-react';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
+import { STAGGER_CONTAINER, STAGGER_ITEM } from '../../utils/animationUtils';
+
+// 별점 5점 고정이므로 상수 배열로 정의 (매 렌더마다 재생성 방지)
+const FIVE_STARS = [0, 1, 2, 3, 4] as const;
 
 interface Review {
     author: string;
@@ -53,15 +57,18 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                     className="mb-16"
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <motion.div
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
+                    variants={STAGGER_CONTAINER}
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true }}
+                >
                     {reviews.map((review, index) => (
                         <motion.div
                             key={index}
                             className="group"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            variants={STAGGER_ITEM}
                         >
                             <BaseCard
                                 variant="default"
@@ -74,18 +81,18 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
 
                                 <div className="relative z-10">
                                     <div className="flex items-center mb-4" aria-label={`평점 ${review.rating}점`}>
-                                        {[...Array(review.rating)].map((_, i) => (
+                                        {FIVE_STARS.slice(0, review.rating).map((i) => (
                                             <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" />
                                         ))}
                                     </div>
 
-                                    <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-8 font-pretendard break-keep">
+                                    <p className="typo-card-body text-lg leading-relaxed mb-8 font-pretendard break-keep">
                                         &quot;{review.content}&quot;
                                     </p>
 
                                     <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                                         <div>
-                                            <span className="block font-bold text-gray-900 dark:text-white mb-1">
+                                            <span className="block font-bold typo-card-title text-base mb-1">
                                                 {review.author} 님
                                             </span>
                                             <span className="text-sm text-primary font-semibold">
@@ -100,7 +107,7 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
                             </BaseCard>
                         </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );
