@@ -136,6 +136,7 @@ const config: Config = {
           fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
         },
         '.typo-nav-link': {
+          fontFamily: theme('fontFamily.title'),
           fontSize: theme('fontSize.body-1-medium[0]'),
           lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
           fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),

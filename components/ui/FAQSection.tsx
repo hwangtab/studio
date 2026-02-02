@@ -73,7 +73,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 className="w-full text-left px-6 py-5 flex items-center justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-750"
                                 aria-expanded={activeIndex === index}
                             >
-                                <span className="text-lg font-bold text-gray-800 dark:text-gray-200 leading-tight pr-8">
+                                <span className="text-lg font-title font-bold text-gray-800 dark:text-gray-200 leading-tight pr-8">
                                     {item.question}
                                 </span>
                                 <span className="flex-shrink-0 text-primary dark:text-primary-light">
