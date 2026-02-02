@@ -2,7 +2,7 @@
 import type { NextPage } from 'next';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users, LucideIcon } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users, LucideIcon, GraduationCap, BookOpen, Sparkles } from 'lucide-react';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
@@ -119,6 +119,7 @@ const Lesson: PageWithHero = () => {
                 {/* Intro Section */}
                 {/* Intro Section */}
                 <SectionHeading
+                    icon={GraduationCap}
                     title={
                         <>
                             단순히 배우는 것을 넘어,<br />
@@ -138,6 +139,7 @@ const Lesson: PageWithHero = () => {
                 {/* Curriculum Grid */}
                 <div className="mb-16">
                     <SectionHeading
+                        icon={BookOpen}
                         title="Curriculum: 4 Steps to Master"
                         as="h3"
                         className="mb-12"
@@ -309,6 +311,7 @@ const Lesson: PageWithHero = () => {
                     <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                         <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
                             <SectionHeading
+                                icon={Sparkles}
                                 title={
                                     <>
                                         아직 망설여지시나요?<br />

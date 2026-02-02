@@ -2,7 +2,7 @@ import React from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { CalendarCheck, ArrowRight } from 'lucide-react';
+import { CalendarCheck, ArrowRight, Mic2, Music, Sparkles } from 'lucide-react';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import FeatureCard from '../components/ui/FeatureCard';
@@ -91,6 +91,7 @@ const Home: NextPage = () => {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <SectionHeading
+            icon={Mic2}
             title="당신을 위한 녹음 공간과 장비"
             className="mb-12"
           />
@@ -102,6 +103,7 @@ const Home: NextPage = () => {
       <section className="py-24 bg-gray-50/50 dark:bg-gray-800/10">
         <div className="container mx-auto px-4">
           <SectionHeading
+            icon={Music}
             title="우리의 서비스"
             className="mb-12"
           />
@@ -160,6 +162,7 @@ const Home: NextPage = () => {
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
               <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
                 <SectionHeading
+                  icon={Sparkles}
                   title={
                     <>
                       상상했던 사운드,<br />

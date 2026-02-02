@@ -43,6 +43,7 @@ const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: {
         <section className={className}>
             <div className="container mx-auto px-4">
                 <SectionHeading
+                    icon={MessageSquare}
                     title={
                         <>
                             아티스트와 함께 만드는 <span>감동의 기록</span>
