@@ -43,7 +43,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-heading-2 font-title font-bold mb-4 text-gray-900 dark:text-white"
+                        className="typo-section-title font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
                     >
                         {title}
                     </motion.h2>
@@ -52,7 +52,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-lg text-gray-600 dark:text-gray-400"
+                        className="typo-section-lead text-gray-600 dark:text-gray-400"
                     >
                         {subtitle}
                     </motion.p>
