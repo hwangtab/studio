@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
 
 interface ImageHeroProps {
-  title: string;
+  title: React.ReactNode;
   subtitle?: React.ReactNode;
   ctaButtons?: React.ReactNode;
   backgroundImage: string;
