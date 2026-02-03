@@ -50,19 +50,19 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
 const practiceRoomFaqs = [
   {
     question: '은평구 어디에서 가깝나요?',
-    answer: '스튜디오 놀은 연신내역에서 도보 5분 거리에 위치하여 연신내, 불광, 구산, 역촌, 응암 등 은평구 주요 지역에서 접근성이 매우 뛰어납니다.',
+    answer: '동명여고 바로 옆에 위치하고 있습니다. 연신내역에서 도보 5분 거리로 연신내, 불광, 구산, 역촌, 응암 등 은평구 주요 지역에서 접근성이 매우 뛰어납니다.',
   },
   {
     question: '연습실은 24시간 이용 가능한가요?',
-    answer: '네, 연습실 입주 고객은 24시간 언제든 지문 인식 또는 번호키를 통해 자유롭게 출입하고 작업하실 수 있습니다.',
+    answer: '네, 연습실 입주 고객은 24시간 언제든 각 방별 도어록 번호키를 통해 자유롭게 출입하고 작업하실 수 있습니다.',
   },
   {
-    question: '주차 지원이 되나요?',
-    answer: '연신내역 인근 KT은평빌딩 주차장 및 도보 5분 거리의 공영 주차장을 통해 불광, 구산, 역촌 등 인근 지역 방문객도 편리하게 이용 가능합니다.',
+    question: '주차장이나 대중교통 이용은 어떻게 되나요?',
+    answer: '주차는 도보 1-2분 거리의 저렴한 대조동 공영주차장을 이용하실 수 있습니다. 대중교통은 불광역(3, 6호선) 또는 연신내역(3, 6호선) 이용이 편리하며, 버스는 "동명여고.천주교불광동성당" 정류장에서 하차하시면 바로 앞입니다.',
   },
   {
     question: '여름이나 겨울에 냉난방 이용이 자유로운가요?',
-    answer: '모든 연습실마다 개별 제어가 가능한 최신형 무풍 에어컨과 바닥 난방 시스템이 완비되어 있어 사계절 내내 쾌적하게 작업할 수 있습니다.',
+    answer: '모든 연습실마다 개별 제어가 가능한 최신형 무풍 냉난방기 시스템이 완비되어 있어 사계절 내내 쾌적하게 작업할 수 있습니다.',
   },
   {
     question: '악기나 장비를 두고 다녀도 안전한가요?',
@@ -306,8 +306,17 @@ const PracticeRoom: NextPage = () => {
         </motion.div>
 
         {/* CTA 섹션 */}
+      </div>
+      <FAQSection
+        items={practiceRoomFaqs}
+        title="연습실 FAQ"
+        subtitle="작업실 입주와 이용에 관해 가장 많이 하시는 질문들입니다."
+      />
+
+      <div className="container mx-auto px-4 pb-16">
+        {/* CTA 섹션 */}
         <motion.div
-          className="mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
+          className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -378,11 +387,6 @@ const PracticeRoom: NextPage = () => {
           </div>
         </motion.div>
       </div>
-      <FAQSection
-        items={practiceRoomFaqs}
-        title="연습실 FAQ"
-        subtitle="작업실 입주와 이용에 관해 가장 많이 하시는 질문들입니다."
-      />
     </>
   );
 };

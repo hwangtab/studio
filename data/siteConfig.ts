@@ -7,7 +7,7 @@ export const SITE_CONFIG: SiteConfig = {
     contact: {
         phone: '02-764-3114',
         email: 'contact@kosmart.org',
-        address: '서울특별시 은평구 대조동 84-3 3층',
+        address: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',
         kakaoUrl: 'https://open.kakao.com/me/nol',
         naverMapUrl: 'https://naver.me/5gFZhS3X',
     },

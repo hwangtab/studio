@@ -34,7 +34,7 @@ const providerSchema = {
     telephone: '+82-2-764-3114',
     address: {
         '@type': 'PostalAddress',
-        streetAddress: '대조동 84-3 3층',
+        streetAddress: '대조동 84-3 3층(동명여고 바로 옆)',
         addressLocality: '은평구',
         addressRegion: '서울특별시',
         postalCode: '03424',

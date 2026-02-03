@@ -87,30 +87,49 @@ const Studio: NextPage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-4xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
+            >
+              <ResponsiveImage
+                src="/images/recording1.png"
+                alt="스튜디오 놀 작업 환경"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                pictureClassName="block h-full"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
               <SectionHeading
                 icon={Building}
-                title="스튜디오 놀"
+                title="Creative Space for Musicians"
+                subtitle="스튜디오 놀은 음악인들의 자유로운 상상과 창작 활동을 지원하기 위해 탄생한 공간입니다."
                 align="left"
-                className="mb-6"
+                className="mb-8"
                 as="h2"
-                titleClassName="typo-card-title"
+                titleClassName="text-heading-2 font-bold mb-2"
               />
-              <div className="space-y-4">
-                <p className="typo-section-lead mb-4">
-                  스튜디오 놀은 음악인들의 자유로운 상상과 창작 활동을 지원하기 위해 탄생한 공간입니다. 우리는 최고의 시설과 장비, 그리고 전문 엔지니어의 노하우를 바탕으로 여러분의 음악적 비전을 현실로 만드는 일에 전념하고 있습니다.
+              <div className="space-y-6 text-gray-600 dark:text-gray-300">
+                <p className="text-xl font-medium leading-relaxed text-gray-900 dark:text-white border-l-4 border-primary pl-4">
+                  "단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 창의적인 협업을 이뤄낼 수 있는 공간."
                 </p>
-                <p className="typo-section-lead mb-4">
-                  단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 이야기를 나누고, 아이디어를 실험하며, 창의적인 협업을 이뤄낼 수 있는 공간. 그것이 바로 &lsquo;스튜디오 놀&rsquo;이 추구하는 가치입니다.
+                <p className="typo-card-body leading-loose">
+                  우리는 최고의 시설과 장비, 그리고 전문 엔지니어의 노하우를 바탕으로 여러분의 음악적 비전을 현실로 만드는 일에 전념하고 있습니다.
+                  <br className="mb-2" />
+                  스튜디오 놀이 추구하는 가치는 기술적인 완성을 넘어, <strong>음악 그 자체의 본질</strong>에 집중하는 것입니다.
                 </p>
-                <p className="typo-section-lead mb-4">
-                  스튜디오 놀은 음악인들이 자신의 음악을 녹음하고, 믹싱하고, 마스터링할 수 있는 공간과 서비스를 제공합니다. 또한, 음악인들이 자신의 음악을 홍보하고, 판매할 수 있도록 도움을 주는 데에도 노력하고 있습니다.
+                <p className="typo-card-body leading-loose">
+                  녹음, 믹싱, 마스터링뿐만 아니라 앨범 발매와 홍보까지. 음악인들이 자신의 목소리를 세상에 전할 수 있도록 든든한 파트너가 되어드리겠습니다.
                 </p>
               </div>
             </motion.div>
@@ -205,7 +224,7 @@ const Studio: NextPage = () => {
             <EquipmentSection title="플러그인" items={equipment.plugins} icon={Music} />
             <EquipmentSection title="인터페이스 & 콘솔" items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
           </div>
-        </motion.div>
+        </motion.div >
 
         {/* Improved CTA Section (Consistency with other pages) */}
         <motion.div

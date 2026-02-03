@@ -236,7 +236,7 @@ const About: NextPage = () => {
                 </div>
               </div>
               <h3 className="typo-card-subtitle mb-2">위치</h3>
-              <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층</p>
+              <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)</p>
             </BaseCard>
           </div>
         </div>
