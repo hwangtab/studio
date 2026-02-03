@@ -49,7 +49,7 @@ const Studio: NextPageWithLayout = () => {
             >
               <ResponsiveImage
                 src="/images/hardware2.jpg"
-                alt="스튜디오 놀의 하이엔드 장비 (Neumann U87AI)"
+                alt="스튜디오 놀 메인 컨트롤 룸"
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 fill

@@ -51,8 +51,8 @@ export const equipment = {
 } as const;
 
 export const studioImages = [
-    { src: "/images/hardware2.jpg", alt: "Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프" },
-    { src: "/images/hardware3.jpg", alt: "API 550B EQ와 SSL Fusion 컴프레서" },
+    { src: "/images/hardware2.jpg", alt: "스튜디오 놀 메인 컨트롤 룸" },
+    { src: "/images/hardware3.jpg", alt: "Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프" },
     { src: "/images/hardware4.jpg", alt: "Universal Audio Apollo x8p 오디오 인터페이스" },
     { src: "/images/hardware5.jpg", alt: "Adam Audio A7X 모니터 스피커와 믹싱 데스크" },
 ] as const;
