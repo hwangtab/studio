@@ -72,7 +72,7 @@ const ImageHero = ({
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <h1
-            className={`font-logo text-heading-1 md:text-6xl lg:text-7xl text-white mb-8 break-keep leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 break-keep leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
           >
             {title}
           </h1>
