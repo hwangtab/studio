@@ -117,10 +117,10 @@ const Studio: NextPage = () => {
                 align="left"
                 className="mb-8"
                 as="h2"
-                titleClassName="text-heading-2 font-bold mb-2"
+                titleClassName="mb-2"
               />
-              <div className="space-y-6 text-gray-600 dark:text-gray-300">
-                <p className="text-xl font-medium leading-relaxed text-gray-900 dark:text-white border-l-4 border-primary pl-4">
+              <div className="space-y-6">
+                <p className="typo-section-lead text-gray-900 dark:text-white border-l-4 border-primary pl-4 font-bold">
                   &quot;단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 창의적인 협업을 이뤄낼 수 있는 공간.&quot;
                 </p>
                 <p className="typo-card-body leading-loose">
