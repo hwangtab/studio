@@ -1,63 +1,16 @@
-import type { NextPage } from 'next'; import Link from 'next/link';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Info, MapPin, Calendar, MessageCircle, CalendarCheck, Mic2, Sparkles, Building } from 'lucide-react';
-import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, MessageCircle, Sparkles, Building, Mic2 } from 'lucide-react';
 import ResponsiveImage from '../components/ResponsiveImage';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
 import SectionHeading from '../components/ui/SectionHeading';
+import { equipment, studioImages } from '../data/equipment';
+import EquipmentSection from '../components/studio/EquipmentSection';
+import ContactCTA from '../components/common/ContactCTA';
+import { NextPageWithLayout } from '../types';
 
-interface EquipmentSectionProps {
-  title: string;
-  items: string[] | readonly string[];
-  icon: React.ElementType;
-}
-
-const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => (
-  <motion.div
-    className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-    whileHover={{ y: -5 }}
-  >
-    <h3 className="typo-card-title mb-4 flex items-center">
-      <Icon className="mr-2 text-primary dark:text-primary-light" size={20} />
-      {title}
-    </h3>
-    <ul className="grid gap-2">
-      {items.map((item, index) => (
-        <li key={index} className="flex items-center typo-card-body">
-          <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mr-2"></span>
-          {item}
-        </li>
-      ))}
-    </ul>
-  </motion.div>
-);
-
-const Studio: NextPage = () => {
-  const equipment = {
-    microphones: [
-      "Neumann U87AI", "AKG C414 XLS", "Studio Project C1",
-      "Beyerdynamic TG-X81", "Shure SM58", "Shure SM57"
-    ],
-    preamps: ["Vintech X73i Preamp", "Focusrite Saffire Octopre"],
-    equalizers: [
-      "SPL Optimizer Parametric Equalizer"],
-    compressors: ["Tegeler Vari Tube Compressor", "Alctron Cp540v2"],
-    interfaces: ["Prism Sound Lyra 2", "Arturia X8 OUT"],
-    processors: ["Solid State Logic Fusion", "Lexicon MX300"],
-    speakers: ["Proac Tablett 50", "EVE Audio SC207", "ADAM Audio A5"],
-    headphones: ["Sennheiser HD600", "Sony MDR-7506", "Calyx H", "SHURE SRH 440"],
-    instruments: ["Vox AC30 Guitar Amp", "Yamaha U3 Piano", "Yamaha U1 Piano", "Gibson J-15", "G&L Tribute ASAT"],
-    consoles: ["Softube Colsole 1", "Softube Colsole 1 Fader", "Presonus Faderport V2"],
-    synthesizers: [
-      "Spectrasonics", "Spitfire Audio", "Native Instruments", "u-he", "Arturia", "UJAM", "Moog"],
-    plugins: [
-      "UAD", "Acustica Audio", "Softube", "Soundtoys",
-      "Izotope", "Sonnox 등 다수"]
-  };
+const Studio: NextPageWithLayout = () => {
 
   return (
     <>
@@ -95,8 +48,8 @@ const Studio: NextPage = () => {
               className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
             >
               <ResponsiveImage
-                src="/images/recording1.png"
-                alt="스튜디오 놀 작업 환경"
+                src="/images/hardware2.jpg"
+                alt="스튜디오 놀의 하이엔드 장비 (Neumann U87AI)"
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 fill
@@ -150,68 +103,26 @@ const Studio: NextPage = () => {
             className="mb-12 py-4"
           />
 
-          {/* 장비 이미지 갤러리 추가 */}
+          {/* 장비 이미지 갤러리 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <motion.div
-              className="rounded-lg overflow-hidden shadow-md h-48"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ResponsiveImage
-                src={`/images/hardware2.jpg`}
-                alt="Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프"
-                className="w-full h-full object-cover"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                fill
-              />
-            </motion.div>
-            <motion.div
-              className="rounded-lg overflow-hidden shadow-md h-48"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ResponsiveImage
-                src={`/images/hardware3.jpg`}
-                alt="API 550B EQ와 SSL Fusion 컴프레서"
-                className="w-full h-full object-cover"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                fill
-              />
-            </motion.div>
-            <motion.div
-              className="rounded-lg overflow-hidden shadow-md h-48"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ResponsiveImage
-                src={`/images/hardware4.jpg`}
-                alt="Universal Audio Apollo x8p 오디오 인터페이스"
-                className="w-full h-full object-cover"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                fill
-              />
-            </motion.div>
-            <motion.div
-              className="rounded-lg overflow-hidden shadow-md h-48"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ResponsiveImage
-                src={`/images/hardware5.jpg`}
-                alt="Adam Audio A7X 모니터 스피커와 믹싱 데스크"
-                className="w-full h-full object-cover"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                fill
-              />
-            </motion.div>
+            {studioImages.map((image, index) => (
+              <motion.div
+                key={index}
+                className="rounded-lg overflow-hidden shadow-md h-48"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ResponsiveImage
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover"
+                  pictureClassName="block h-full"
+                  loading="lazy"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  fill
+                />
+              </motion.div>
+            ))}
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -227,78 +138,16 @@ const Studio: NextPage = () => {
         </motion.div >
 
         {/* Improved CTA Section (Consistency with other pages) */}
-        <motion.div
-          className="mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <SectionHeading
-                icon={Sparkles}
-                title={
-                  <>
-                    당신의 소중한 음악,<br />
-                    <span className="text-primary">최상의 사운드로</span>
-                  </>
-                }
-                subtitle={
-                  <>
-                    검증된 장비와 전문 엔지니어링으로 최선의 결과물을 약속합니다.<br className="hidden md:block" />
-                    지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.
-                  </>
-                }
-                align="left"
-                className="mb-8"
-              />
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
-                >
-                  오시는 길
-                </Link>
-                <a
-                  href="https://open.kakao.com/me/nol"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
-                >
-                  <MessageCircle className="mr-2" size={20} />
-                  카카오톡 문의하기
-                </a>
-              </div>
-            </div>
-
-            <a
-              href="https://open.kakao.com/me/nol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
-            >
-              <ResponsiveImage
-                src="/images/studio2.jpg"
-                alt="스튜디오 놀 메인 컨트롤 룸"
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 768px) 50vw, 100vw"
-                fill
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-            </a>
-          </div>
-        </motion.div>
+        <ContactCTA />
       </div>
     </>
   );
 };
 
-export default Studio;
+// Use the hasHero property typed in NextPageWithLayout
+Studio.hasHero = true;
 
-(Studio as any).hasHero = true;
+export default Studio;
 
 export const getStaticProps = () => ({
   props: {},
