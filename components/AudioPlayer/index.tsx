@@ -6,6 +6,7 @@ import ProgressBar from './ProgressBar';
 import VolumeControls from './VolumeControls';
 import PlayerControls from './PlayerControls';
 import type { AudioTrack } from '../../types/data';
+import { FADE_IN_UP, HOVER_SCALE, TAP_SCALE } from '../../utils/animationUtils';
 
 interface AudioPlayerProps {
     tracks: readonly AudioTrack[];
@@ -37,9 +38,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }: AudioPlayerProps) => {
     return (
         <motion.div
             className={`bg-gradient-to-br from-primary-dark via-secondary to-accent text-white rounded-2xl shadow-2xl overflow-hidden border border-white/10 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            {...FADE_IN_UP}
             layout
         >
             <TrackInfo
@@ -81,8 +80,8 @@ const AudioPlayer = ({ tracks, layout = 'grid' }: AudioPlayerProps) => {
                     <motion.button
                         className="text-white/80 hover:text-white p-2 rounded-full md:hidden"
                         onClick={toggleExpand}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={HOVER_SCALE}
+                        whileTap={TAP_SCALE}
                         aria-label={isExpanded ? "플레이어 축소" : "플레이어 확장"}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

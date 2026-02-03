@@ -14,7 +14,7 @@ interface MediaImage {
 }
 
 interface MediaGalleryProps {
-    images: MediaImage[];
+    images: readonly MediaImage[];
     settings?: Settings;
     className?: string;
 }

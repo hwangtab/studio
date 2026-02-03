@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { HOVER_SCALE, TAP_SCALE } from '../utils/animationUtils';
 
 interface CategoryBase {
   id: string;
@@ -87,14 +88,14 @@ const CategoryFilter = ({
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
                 className={`${sizeClasses[buttonSize]} rounded-full transition-all duration-300 min-w-fit whitespace-nowrap flex-shrink-0 ${isActive
-                    ? useCustomColors && category.color
-                      ? 'text-white shadow-lg transform scale-105'
-                      : 'bg-primary text-white shadow-lg transform scale-105'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? useCustomColors && category.color
+                    ? 'text-white shadow-lg transform scale-105'
+                    : 'bg-primary text-white shadow-lg transform scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 style={customStyle}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={HOVER_SCALE}
+                whileTap={TAP_SCALE}
               >
                 {category.label}
               </motion.button>

@@ -51,16 +51,19 @@ const ResponsiveImage = ({
     return (
       <div className={wrapperClass}>
         <div className={`relative w-full h-full ${error ? 'p-8 bg-gray-50 dark:bg-gray-800 flex items-center justify-center' : ''}`}>
-          <Image
-            src={error ? fallbackSrc : normalizedSrc}
-            alt={alt}
-            className={`${className} ${error ? 'object-contain opacity-50' : ''}`}
-            sizes={sizes}
-            priority={priority}
-            fill
-            onError={() => setError(true)}
-            {...rest}
-          />
+          <picture className="block w-full h-full">
+            <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+            <Image
+              src={error ? fallbackSrc : normalizedSrc}
+              alt={alt}
+              className={`${className} ${error ? 'object-contain opacity-50' : ''}`}
+              sizes={sizes}
+              priority={priority}
+              fill
+              onError={() => setError(true)}
+              {...rest}
+            />
+          </picture>
         </div>
       </div>
     );
@@ -68,17 +71,20 @@ const ResponsiveImage = ({
 
   return (
     <div className={wrapperClass}>
-      <Image
-        src={error ? fallbackSrc : normalizedSrc}
-        alt={alt}
-        className={`${className} ${error ? 'object-contain opacity-50 bg-gray-50 dark:bg-gray-800 p-2' : ''}`}
-        sizes={sizes}
-        priority={priority}
-        width={width!}
-        height={height!}
-        onError={() => setError(true)}
-        {...rest}
-      />
+      <picture className="block w-full h-full">
+        <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+        <Image
+          src={error ? fallbackSrc : normalizedSrc}
+          alt={alt}
+          className={`${className} ${error ? 'object-contain opacity-50 bg-gray-50 dark:bg-gray-800 p-2' : ''}`}
+          sizes={sizes}
+          priority={priority}
+          width={width!}
+          height={height!}
+          onError={() => setError(true)}
+          {...rest}
+        />
+      </picture>
     </div>
   );
 };

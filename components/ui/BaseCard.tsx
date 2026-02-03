@@ -2,6 +2,7 @@ import { cn } from '../../lib/utils';
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
 
 interface BaseCardProps {
     children: React.ReactNode;
@@ -34,13 +35,11 @@ const BaseCard = React.memo(({
     };
 
     const animationProps = enableAnimation ? {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        whileHover: hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {},
-        viewport: { once: true, margin: "0px 0px -50px 0px" },
-        transition: { duration: 0.4, delay }
+        ...FADE_IN_UP,
+        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
+        transition: { ...FADE_IN_UP.transition, delay }
     } : {
-        whileHover: hoverEffect ? { y: -4, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)" } : {},
+        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
         transition: { duration: 0.2 } // Faster transition for hover only
     };
 

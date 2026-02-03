@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import React from 'react';
 
 interface Breadcrumb {
   name: string;
@@ -58,24 +59,25 @@ const SEO = ({
 }: SEOProps) => {
   const siteUrl = 'https://studionol.co.kr';
 
-  const toAbsoluteUrl = (value = '') => {
+  const toAbsoluteUrl = React.useCallback((value = '') => {
     if (!value) return '';
     if (/^https?:\/\//i.test(value)) {
       return value;
     }
     const sanitized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`;
     return `${siteUrl}${sanitized}`;
-  };
+  }, [siteUrl]);
 
-  const absoluteOgImage = toAbsoluteUrl(ogImage);
+  const absoluteOgImage = React.useMemo(() => toAbsoluteUrl(ogImage), [ogImage, toAbsoluteUrl]);
 
-  const canonicalUrl = toAbsoluteUrl(canonical);
-  const normalizedCanonical =
+  const canonicalUrl = React.useMemo(() => toAbsoluteUrl(canonical), [canonical, toAbsoluteUrl]);
+  const normalizedCanonical = React.useMemo(() =>
     canonicalUrl.endsWith('/') && canonicalUrl !== `${siteUrl}/`
       ? canonicalUrl.slice(0, -1)
-      : canonicalUrl;
+      : canonicalUrl,
+    [canonicalUrl, siteUrl]);
 
-  const defaultSchema = {
+  const defaultSchema = React.useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': ['MusicRecordingStudio', 'LocalBusiness', 'Organization'],
     name: '스튜디오 놀',
@@ -265,57 +267,63 @@ const SEO = ({
         },
       },
     ],
-  };
+  }), [siteUrl, absoluteOgImage, description, reviewItems]);
 
-  const articleSchema = ogType === 'article' && articlePublishedTime ? {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: title,
-    datePublished: articlePublishedTime,
-    dateModified: articleModifiedTime || articlePublishedTime,
-    author: {
-      '@type': 'Person',
-      name: articleAuthor || '스튜디오 놀',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: '스튜디오 놀',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${siteUrl}/logo512.png`,
+  const articleSchema = React.useMemo(() =>
+    ogType === 'article' && articlePublishedTime ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      datePublished: articlePublishedTime,
+      dateModified: articleModifiedTime || articlePublishedTime,
+      author: {
+        '@type': 'Person',
+        name: articleAuthor || '스튜디오 놀',
       },
-    },
-    image: absoluteOgImage,
-    description: description,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': normalizedCanonical,
-    },
-  } : null;
-
-  const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: breadcrumbs.map((crumb, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: crumb.name,
-      item: `${siteUrl}${crumb.path}`,
-    })),
-  } : null;
-
-  const faqSchema = faqItems && faqItems.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqItems.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer,
+      publisher: {
+        '@type': 'Organization',
+        name: '스튜디오 놀',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/logo512.png`,
+        },
       },
-    })),
-  } : null;
+      image: absoluteOgImage,
+      description: description,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': normalizedCanonical,
+      },
+    } : null,
+    [ogType, articlePublishedTime, title, articleModifiedTime, articleAuthor, siteUrl, absoluteOgImage, description, normalizedCanonical]);
+
+  const breadcrumbSchema = React.useMemo(() =>
+    breadcrumbs && breadcrumbs.length > 0 ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((crumb, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: crumb.name,
+        item: `${siteUrl}${crumb.path}`,
+      })),
+    } : null,
+    [breadcrumbs, siteUrl]);
+
+  const faqSchema = React.useMemo(() =>
+    faqItems && faqItems.length > 0 ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    } : null,
+    [faqItems]);
 
   const schemaData = schema || articleSchema || defaultSchema;
 

@@ -7,28 +7,7 @@
 /* GmarketSans 폰트 (일반 텍스트용) */
 @font-face {
   font-family: 'GmarketSans';
-  font-weight: 100;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansThin.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
-  font-weight: 300;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
   font-weight: 400;
-  font-display: swap;
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
-  font-weight: 500;
   font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
 }

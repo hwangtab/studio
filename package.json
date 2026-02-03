@@ -39,6 +39,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prebuild": "node scripts/optimizeImages.js",
     "postbuild": "next-sitemap",
     "test": "jest"
   },
@@ -68,6 +69,7 @@
     "eslint-config-next": "^14.2.5",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "sharp": "^0.34.5",
     "vercel": "^42.3.0"
   }
 }

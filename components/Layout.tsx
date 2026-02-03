@@ -27,7 +27,7 @@ interface NavLinkProps {
   hasHero?: boolean;
 }
 
-const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, hasHero }: NavLinkProps) => {
+const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigate, hasHero }: NavLinkProps) => {
   const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 
   return (
@@ -42,7 +42,9 @@ const NavLink = ({ href, children, isScrolled, currentPath, onNavigate, hasHero 
       {children}
     </Link>
   );
-};
+});
+
+NavLink.displayName = 'NavLink';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -111,6 +113,8 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
     }
   }, [isDarkMode, hasThemeLoaded]);
 
+  const handleNavigate = React.useCallback(() => setIsMenuOpen(false), []);
+
   const isHome = router.pathname === '/';
   const isFullBleed = ['/practice-room'].includes(router.pathname);
 
@@ -147,7 +151,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
                     href={item.href}
                     isScrolled={isScrolled}
                     currentPath={currentPath}
-                    onNavigate={() => setIsMenuOpen(false)}
+                    onNavigate={handleNavigate}
                     hasHero={hasHero}
                   >
                     {item.label}

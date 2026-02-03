@@ -95,7 +95,7 @@ const Home: NextPage = () => {
             title="당신을 위한 녹음 공간과 장비"
             className="mb-12"
           />
-          <MediaGallery images={[...studioImages]} />
+          <MediaGallery images={studioImages} />
         </div>
       </section>
 
