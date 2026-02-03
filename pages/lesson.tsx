@@ -111,7 +111,7 @@ const Lesson: PageWithHero = () => {
                 backgroundImage="/images/lesson1.png"
                 imageAlt="스튜디오 믹싱 콘솔"
                 minHeight="min-h-[60vh]"
-                overlayGradient="from-black/60 via-black/40 to-transparent"
+                overlayGradient="from-black/40 via-transparent to-black/20"
             />
 
             <div className="container mx-auto px-4 py-16">
