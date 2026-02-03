@@ -67,7 +67,7 @@ const Home: NextPage = () => {
           backgroundImage: "/images/studio2.jpg",
           imageAlt: "스튜디오 놀 메인 스튜디오",
           minHeight: "min-h-[100vh]",
-          overlayGradient: "from-black/60 via-black/40 to-transparent",
+          overlayGradient: "from-black/40 via-transparent to-black/20",
           ctaButtons: (
             <>
               <Link

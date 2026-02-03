@@ -41,7 +41,7 @@ const About: NextPage = () => {
           backgroundImage: "/images/recording15.png",
           imageAlt: "스튜디오 놀 소개",
           minHeight: "min-h-[60vh]",
-          overlayGradient: "from-black/60 via-black/40 to-transparent",
+          overlayGradient: "from-black/40 via-transparent to-black/20",
         }}
       />
 

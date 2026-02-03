@@ -28,7 +28,7 @@ const ImageHero = ({
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
 
-  const cinematicOverlay = "bg-gradient-to-b from-black/30 via-transparent to-[#0f172a] via-80%";
+  const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
 
   const alignmentClass = textAlign === 'center'
     ? 'text-center'

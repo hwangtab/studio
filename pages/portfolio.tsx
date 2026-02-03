@@ -96,7 +96,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
           backgroundImage: "/images/recording1.png",
           imageAlt: "스튜디오 놀 포트폴리오",
           minHeight: "min-h-[60vh]",
-          overlayGradient: "from-black/60 via-black/40 to-transparent",
+          overlayGradient: "from-black/40 via-transparent to-black/20",
         }}
       />
       <div className="container mx-auto px-4 py-16">

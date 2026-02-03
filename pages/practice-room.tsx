@@ -102,7 +102,7 @@ const PracticeRoom: NextPage = () => {
         backgroundImage="/images/room5.jpg"
         imageAlt="스튜디오 놀 연습실"
         minHeight="min-h-[60vh]"
-        overlayGradient="from-black/60 via-black/40 to-transparent"
+        overlayGradient="from-black/40 via-transparent to-black/20"
       />
       <div className="container mx-auto px-4 py-16">
         {/* 고민 섹션 */}
