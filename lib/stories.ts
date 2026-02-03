@@ -98,15 +98,27 @@ export const getStoryDetail = async (slug: string): Promise<StoryDetail> => {
   const normalized = stripCodeFenceWrapper(fileContents);
   const { data, content } = matter(normalized);
   const baseStory = mapStoryFrontmatter(slug, data, content);
+  let contentToProcess = content;
+
+  // If the thumbnail was derived from the content (meaning it's the first image),
+  // we remove that image from the content to avoid duplication in the UI (Hero + Content Body).
+  if (baseStory.thumbnailDerived && baseStory.thumbnail) {
+    const imageRegex = /!\[.*?\]\(([^)]+)\)/;
+    const match = contentToProcess.match(imageRegex);
+    if (match && match[1] === baseStory.thumbnail) {
+      contentToProcess = contentToProcess.replace(match[0], '');
+    }
+  }
+
   const processedContent = await remark()
     .use(remarkGfm)
     .use(remarkBreaks)
     .use(html)
-    .process(content);
+    .process(contentToProcess);
 
   return {
     ...baseStory,
-    content,
+    content: contentToProcess,
     contentHtml: processedContent.toString(),
   };
 };
