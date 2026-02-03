@@ -213,7 +213,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                     loading="lazy"
                     {...rest}
                   />
-                  {alt && <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">{alt}</p>}
+                  {/* {alt && <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">{alt}</p>} */}
                 </div>
               ),
             },
