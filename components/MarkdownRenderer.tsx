@@ -218,6 +218,15 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
 
+            hr: {
+              component: ({ className, ...props }: any) => (
+                <hr
+                  className={mergeClassNames('my-12 border-t border-gray-200 dark:border-gray-700', className)}
+                  {...props}
+                />
+              ),
+            },
+
             code: {
               component: ({ children, className, ...props }: any) => {
                 if (className) {

@@ -10,6 +10,8 @@ import SEO from '../../components/SEO';
 import MarkdownRenderer from '../../components/MarkdownRenderer';
 // @ts-ignore - StoryCard component is JS
 import StoryCard from '../../components/StoryCard';
+// @ts-ignore - ImageHero component is JS
+import ImageHero from '../../components/common/ImageHero';
 // @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { stripMarkdown } from '../../utils/localDataUtils';
@@ -80,71 +82,51 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
           { name: story.title, path: `/stories/${story.slug}` },
         ]}
       />
-      <div className="container mx-auto px-4 pt-8 pb-12">
-        {story.thumbnail && !story.thumbnailDerived && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8 rounded-xl overflow-hidden"
-          >
-            <ResponsiveImage
-              src={story.thumbnail}
-              alt={story.title}
-              className="object-cover"
-              pictureClassName="block w-full h-72 md:h-[26rem]"
-              sizes="100vw"
-              width={1200}
-              height={600}
-              fill
-            />
-          </motion.div>
-        )}
 
-        <div className="mb-8">
+      <ImageHero
+        title={story.title}
+        subtitle={
+          <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">
+            <div className="flex items-center">
+              <Tag className="mr-2" size={18} />
+              <span>{story.category}</span>
+            </div>
+            <span className="hidden sm:inline">•</span>
+            <div className="flex items-center">
+              <Calendar className="mr-2" size={18} />
+              <span>{story.createdAt ? timeAgo(story.createdAt) : story.date}</span>
+            </div>
+          </div>
+        }
+        backgroundImage={story.thumbnail || '/images/studio1.jpg'}
+        imageAlt={story.title}
+        minHeight="min-h-[50vh]"
+        overlayGradient="from-black/70 via-black/40 to-black/70"
+      />
+
+      <div className="container mx-auto px-4 pt-12 pb-12">
+        <div className="mb-12 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-6">
           <Link
             href="/stories"
-            className="inline-flex items-center typo-card-cta hover:underline mb-6"
+            className="inline-flex items-center typo-card-cta hover:underline"
           >
             <ArrowLeft className="mr-2" size={16} />
             스토리 목록으로 돌아가기
           </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+          <button
+            onClick={shareStory}
+            className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400"
           >
-            <h1 className="text-heading-1 font-title mb-4">
-              {story.title}
-            </h1>
-
-            <div className="flex flex-wrap items-center mb-6 typo-card-meta">
-              <div className="flex items-center mr-6 mb-2">
-                <Calendar className="mr-2 text-gray-500" size={14} />
-                <span>{story.createdAt ? timeAgo(story.createdAt) : '날짜 정보 없음'}</span>
-              </div>
-
-              <div className="flex items-center mr-6 mb-2">
-                <Tag className="mr-2" size={14} />
-                <span>{story.category}</span>
-              </div>
-
-              <button
-                onClick={shareStory}
-                className="inline-flex items-center typo-card-cta hover:underline ml-auto mb-2"
-              >
-                <Share2 className="mr-2" size={14} />
-                공유하기
-              </button>
-            </div>
-          </motion.div>
+            <Share2 className="mr-2" size={16} />
+            공유하기
+          </button>
         </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5 }}
           className="mb-12"
         >
           <MarkdownRenderer content={story.content} />
@@ -154,7 +136,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="mb-12"
           >
             <h2 className="typo-card-title mb-6">갤러리</h2>
@@ -226,3 +208,5 @@ export const getStaticProps: GetStaticProps<StoryDetailPageProps, Params> = asyn
 };
 
 export default StoryDetailPage;
+
+(StoryDetailPage as any).hasHero = true;
