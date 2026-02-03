@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { href: '/about', label: '소개' },
   { href: '/pricing', label: '가격' },
   { href: '/portfolio', label: '포트폴리오' },
-  { href: '/studio-info', label: '스튜디오' },
+  { href: '/studio-info', label: '장비 소개' },
   { href: '/practice-room', label: '연습실' },
   { href: '/lesson', label: '레슨' },
   { href: '/stories', label: '스토리' },

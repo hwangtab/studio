@@ -68,11 +68,11 @@ const Studio: NextPage = () => {
         canonical="https://studionol.co.kr/studio-info"
         breadcrumbs={[
           { name: '홈', path: '/' },
-          { name: '스튜디오 소개', path: '/studio-info' },
+          { name: '장비 소개', path: '/studio-info' },
         ]}
       />
       <ImageHero
-        title="스튜디오 소개"
+        title="장비 소개"
         subtitle="최고의 시설과 장비, 전문 엔지니어의 노하우로 여러분의 음악적 비전을 현실로 만듭니다."
         backgroundImage="/images/hardware1.jpg"
         imageAlt="스튜디오 놀 장비"
@@ -121,7 +121,7 @@ const Studio: NextPage = () => {
               />
               <div className="space-y-6 text-gray-600 dark:text-gray-300">
                 <p className="text-xl font-medium leading-relaxed text-gray-900 dark:text-white border-l-4 border-primary pl-4">
-                  "단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 창의적인 협업을 이뤄낼 수 있는 공간."
+                  &quot;단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 창의적인 협업을 이뤄낼 수 있는 공간.&quot;
                 </p>
                 <p className="typo-card-body leading-loose">
                   우리는 최고의 시설과 장비, 그리고 전문 엔지니어의 노하우를 바탕으로 여러분의 음악적 비전을 현실로 만드는 일에 전념하고 있습니다.
