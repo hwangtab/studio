@@ -14,6 +14,7 @@ import StoryCard from '../../components/StoryCard';
 import ImageHero from '../../components/common/ImageHero';
 // @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
+import StoryCTA from '../../components/StoryCTA';
 import { stripMarkdown } from '../../utils/localDataUtils';
 import { timeAgo } from '../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../lib/stories';
@@ -131,6 +132,8 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
         >
           <MarkdownRenderer content={story.content} />
         </motion.div>
+
+        <StoryCTA />
 
         {Array.isArray(story.images) && story.images.length > 0 && (
           <motion.div
