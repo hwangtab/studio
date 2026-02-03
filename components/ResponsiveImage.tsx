@@ -47,12 +47,18 @@ const ResponsiveImage = ({
 
   const fallbackSrc = '/logo512.png';
 
+  const isExternal = normalizedSrc.startsWith('http');
+  // Only use webp source for local images
+  const showWebpSource = !isExternal && /\.(jpg|jpeg|png)$/i.test(normalizedSrc);
+
   if (useFill) {
     return (
       <div className={wrapperClass}>
         <div className={`relative w-full h-full ${error ? 'p-8 bg-gray-50 dark:bg-gray-800 flex items-center justify-center' : ''}`}>
           <picture className="block w-full h-full">
-            <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+            {showWebpSource && (
+              <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+            )}
             <Image
               src={error ? fallbackSrc : normalizedSrc}
               alt={alt}
@@ -72,7 +78,9 @@ const ResponsiveImage = ({
   return (
     <div className={wrapperClass}>
       <picture className="block w-full h-full">
-        <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+        {showWebpSource && (
+          <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+        )}
         <Image
           src={error ? fallbackSrc : normalizedSrc}
           alt={alt}
