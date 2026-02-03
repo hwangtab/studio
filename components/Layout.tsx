@@ -116,7 +116,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   const handleNavigate = React.useCallback(() => setIsMenuOpen(false), []);
 
   const isHome = router.pathname === '/';
-  const isFullBleed = ['/practice-room'].includes(router.pathname);
+  const isFullBleed = [].includes(router.pathname as never);
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
@@ -210,7 +210,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
         </AnimatePresence>
       </header>
 
-      <main className={`page-main flex-grow ${isHome ? 'pt-0' : 'pt-20'} ${isFullBleed ? 'pb-0' : 'pb-24'}`}>
+      <main className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : 'pt-20'} ${isFullBleed ? 'pb-0' : 'pb-24'}`}>
         {children}
       </main>
 
