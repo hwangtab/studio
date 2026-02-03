@@ -62,7 +62,15 @@ const Home: NextPage = () => {
 
       <ImageHero
         {...{
-          title: <>당신의 음악에 <span className="text-primary">생명</span>을 불어넣는 공간</>,
+          title: (
+            <>
+              <span className="block mb-2 text-gray-100 drop-shadow-lg">당신의 음악에</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white font-black drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+                생명
+              </span>
+              <span className="text-gray-100 drop-shadow-lg">을 불어넣는 공간</span>
+            </>
+          ),
           subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
           backgroundImage: "/images/studio2.jpg",
           imageAlt: "스튜디오 놀 메인 스튜디오",
