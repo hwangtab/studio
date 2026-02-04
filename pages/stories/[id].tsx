@@ -30,6 +30,28 @@ type Params = {
 };
 
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories }) => {
+  const getCTAType = (category: string | undefined): CTAType => {
+    // 1. Context Matching (70% probability)
+    const random = Math.random();
+    if (random < 0.7) {
+      if (category === '강좌') return 'lesson';
+      if (category === '장비' || category === '리뷰') return 'practice';
+      if (category === '인터뷰' || category === '아티스트') return 'recording';
+    }
+
+    // 2. Fallback / Random Rotation
+    const types: CTAType[] = ['recording', 'lesson', 'practice'];
+    return types[Math.floor(Math.random() * types.length)];
+  };
+
+  const [ctaType, setCtaType] = React.useState<CTAType>('recording');
+
+  React.useEffect(() => {
+    if (story?.category) {
+      setCtaType(getCTAType(story.category));
+    }
+  }, [story?.category]);
+
   const router = useRouter();
 
   if (router.isFallback) {
@@ -61,26 +83,6 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
       console.error('공유 오류:', error);
     }
   };
-
-  const getCTAType = (category: string | undefined): CTAType => {
-    // 1. Context Matching (70% probability)
-    const random = Math.random();
-    if (random < 0.7) {
-      if (category === '강좌') return 'lesson';
-      if (category === '장비' || category === '리뷰') return 'practice';
-      if (category === '인터뷰' || category === '아티스트') return 'recording';
-    }
-
-    // 2. Fallback / Random Rotation
-    const types: CTAType[] = ['recording', 'lesson', 'practice'];
-    return types[Math.floor(Math.random() * types.length)];
-  };
-
-  const [ctaType, setCtaType] = React.useState<CTAType>('recording');
-
-  React.useEffect(() => {
-    setCtaType(getCTAType(story.category));
-  }, [story.category]);
 
   return (
     <>
