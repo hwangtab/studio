@@ -35,7 +35,7 @@ const ProjectRowCard = ({
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
+            transition={{ delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
             className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-all duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none"
             onClick={onClick}
         >
@@ -93,7 +93,7 @@ const ProjectRowCard = ({
                         {description}
                     </p>
 
-                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary/80 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-4 group-hover:translate-x-0 transition-transform duration-300">
+                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary/80 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300">
                         <span className="mr-2">VIEW PROJECT</span>
                         <ExternalLink size={14} />
                     </div>

@@ -43,21 +43,25 @@ const ImageHero = ({
       <motion.div
         className="absolute inset-0 z-0"
         style={{ y }}
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 10, ease: "easeOut" }}
       >
-        <ResponsiveImage
-          src={backgroundImage}
-          alt={imageAlt}
-          fill={true}
-          priority={true}
-          className="object-cover"
-          pictureClassName="absolute inset-0 block h-full w-full"
-          width={1920}
-          height={1080}
-          sizes="100vw"
-        />
+        <motion.div
+          className="w-full h-full"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 10, ease: "easeOut" }}
+        >
+          <ResponsiveImage
+            src={backgroundImage}
+            alt={imageAlt}
+            fill={true}
+            priority={true}
+            className="object-cover"
+            pictureClassName="absolute inset-0 block h-full w-full"
+            width={1920}
+            height={1080}
+            sizes="100vw"
+          />
+        </motion.div>
       </motion.div>
 
       <div

@@ -70,7 +70,6 @@
     @apply font-sans text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
     word-break: keep-all;
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1,

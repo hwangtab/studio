@@ -27,7 +27,7 @@ const modalVariants = {
     opacity: 0,
     scale: 0.95,
     y: 20,
-    transition: { duration: 0.2 },
+    transition: { duration: 0.25, ease: 'easeIn' },
   },
 };
 
@@ -50,7 +50,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
 
     return () => {
       document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      // document.body.style.overflow = 'unset'; // Removed to restore in onAnimationComplete
     };
   }, [handleEsc]);
 
@@ -77,12 +77,17 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       variants={overlayVariants}
       initial="hidden"
       animate="visible"
       exit="hidden"
       onClick={handleOverlayClick}
+      onAnimationComplete={(definition) => {
+        if (definition === 'hidden' || (typeof definition === 'object' && 'hidden' in (definition as any))) {
+          document.body.style.overflow = 'unset';
+        }
+      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"

@@ -201,7 +201,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
+              className="md:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
             >
               <div className="px-4 py-3 space-y-2">
                 {NAV_ITEMS.map((item) => (
