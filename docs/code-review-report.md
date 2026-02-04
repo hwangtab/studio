@@ -1,6 +1,6 @@
 # 코드 리뷰 보고서: 코드 중복 및 버그 분석
 
-> 분석 일자: 2026-02-04
+> 분석 일자: 2026-02-04 (업데이트됨)
 > 대상: Studio Nol 웹사이트 전체 코드베이스
 
 ---
@@ -69,8 +69,11 @@
 
 ---
 
-### BUG-4: 불필요한 `@ts-ignore` 남용
+### BUG-4: 불필요한 `@ts-ignore` 남용 (일부 해결됨)
 - **심각도**: MEDIUM
+- **상태**: **PARTIALLY RESOLVED**
+  - `pages/portfolio.tsx`: 해결됨 (`AnimatePresence` 타입 이슈 해결로 제거)
+  - `pages/stories/[id].tsx`, `pages/portfolio/[id].tsx`: 여전히 존재
 - **파일**:
   - `pages/stories/[id].tsx` (7-16행)
   - `pages/portfolio/[id].tsx` (7-10행)
@@ -160,6 +163,13 @@
   };
   ```
 - **권장 수정**: `PortfolioItem` 타입이 JSON serializable한지 확인 후 `as any` 제거
+
+---
+
+### ETC-1: 테스트 파일 타입 에러 (해결됨)
+- **상태**: **RESOLVED**
+- **파일**: `utils/localDataUtils.test.ts`
+- **내용**: 존재하지 않는 함수(`summarizeContent`)를 import하여 발생하던 `tsc` 에러를 수정함. `textUtils.ts`에서 올바른 함수(`summarizeText`, `stripMarkdown`)를 import하도록 변경.
 
 ---
 
@@ -271,20 +281,15 @@
 
 ---
 
-### DUP-5: `AnimatePresence as any` 캐스팅 2중 중복
+### DUP-5: `AnimatePresence as any` 캐스팅 2중 중복 (해결됨)
 - **우선순위**: LOW
+- **상태**: **RESOLVED**
 - **파일**:
-  - `pages/_app.tsx` (17-18행)
-  - `components/Layout.tsx` (5-6행)
-- **동일 패턴**:
-  ```typescript
-  import { AnimatePresence as AnimatePresenceOrig, motion } from 'framer-motion';
-  const AnimatePresence = AnimatePresenceOrig as any;
-  ```
-- **근본 원인**: framer-motion의 TypeScript 타입 정의와 프로젝트 설정 간의 호환성 이슈
-- **권장 수정**:
-  - `types/framer-motion.d.ts` 타입 선언 파일 추가로 근본적 해결
-  - 또는 한 곳에서 래핑한 컴포넌트를 export하여 사용
+  - `pages/portfolio.tsx`
+  - `components/ui/FAQSection.tsx`
+  - `pages/_app.tsx` (기존 해결됨)
+  - `components/Layout.tsx` (기존 해결됨)
+- **해결 내용**: `framer-motion`의 `AnimatePresence` 타입 호환성 문제를 해결하기 위해 `components/ui/AnimatePresence.tsx`라는 커스텀 래퍼 컴포넌트를 사용하도록 모든 사용처를 통일함. 불필요한 `as any` 캐스팅과 `@ts-ignore` 주석을 제거함.
 
 ---
 
@@ -293,12 +298,11 @@
 | 구분 | HIGH | MEDIUM | LOW | 합계 |
 |------|------|--------|-----|------|
 | 버그 | 2건 | 3건 | 2건 | **7건** |
-| 코드 중복 | 2건 | - | 3건 | **5건** |
-| **합계** | **4건** | **3건** | **5건** | **12건** |
+| 코드 중복 | 2건 | - | 2건 | **4건** |
+| **합계** | **4건** | **3건** | **4건** | **11건** |
 
 ### 우선 수정 권장 항목
 1. **DUP-1**: 공유 기능 유틸 함수 추출 (3개 파일 영향)
 2. **BUG-2**: useAudioPlayer 언마운트 후 상태 업데이트 방지
 3. **DUP-2**: 텍스트 요약 함수 통일
 4. **BUG-3**: ResponsiveImage non-null assertion 안전 처리
-5. **BUG-4**: 불필요한 `@ts-ignore` 제거

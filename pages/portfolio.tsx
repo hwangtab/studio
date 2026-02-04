@@ -2,7 +2,8 @@ import React, { useMemo, useState, useEffect } from 'react';
 import type { NextPage, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import AnimatePresence from '../components/ui/AnimatePresence';
 import { Music, Headphones } from 'lucide-react';
 import { filterPortfolioItems } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';
@@ -175,10 +176,9 @@ const Portfolio: NextPage<PortfolioProps> = ({
 
       </div>
 
-      {/* @ts-ignore - AnimatePresence type issue */}
       <AnimatePresence>
         {selectedItem && (
-          <PortfolioDetailModal item={selectedItem} onClose={handleCloseModal} />
+          <PortfolioDetailModal key={selectedItem.id} item={selectedItem} onClose={handleCloseModal} />
         )}
       </AnimatePresence>
     </>

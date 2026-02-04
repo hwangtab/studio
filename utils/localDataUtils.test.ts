@@ -1,6 +1,7 @@
-import { summarizeContent, stripMarkdown, extractFirstImageUrl } from './localDataUtils';
+import { extractFirstImageUrl } from './localDataUtils';
+import { stripMarkdown, summarizeText } from './textUtils';
 
-describe('localDataUtils helpers', () => {
+describe('Utility functions', () => {
   it('strips markdown syntax from content', () => {
     const markdown = '**굵게** 텍스트와 [링크](https://example.com)';
     expect(stripMarkdown(markdown)).toBe('굵게 텍스트와 링크');
@@ -8,7 +9,7 @@ describe('localDataUtils helpers', () => {
 
   it('summarizes lengthy content with ellipsis', () => {
     const text = 'a '.repeat(200);
-    const summary = summarizeContent(text, 50);
+    const summary = summarizeText(text, 50);
     expect(summary.endsWith('...')).toBe(true);
     expect(summary.length).toBeGreaterThan(0);
   });

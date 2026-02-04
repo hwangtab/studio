@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence as AnimatePresenceOrig } from 'framer-motion';
-const AnimatePresence = AnimatePresenceOrig as any;
+import AnimatePresence, { motion } from './AnimatePresence';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 
