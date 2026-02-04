@@ -90,3 +90,21 @@ export interface SEODefaults {
   description: string;
   keywords: string;
 }
+
+// Shared Component Types
+export interface Breadcrumb {
+  name: string;
+  path: string;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface ReviewItem {
+  author: string;
+  rating: number;
+  content: string;
+  datePublished?: string;
+}
