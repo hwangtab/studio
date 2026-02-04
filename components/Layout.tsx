@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
-import AnimatePresence, { motion } from './ui/AnimatePresence';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { SITE_CONFIG } from '../data/siteConfig';
 
 const NAV_ITEMS = [
@@ -56,6 +56,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const currentPath = useMemo(() => router.asPath || '/', [router.asPath]);
 
@@ -94,7 +95,11 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
     const handleScroll = () => {
       if (!ticking) {
         rafId = window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 10);
+          const isOverThreshold = window.scrollY > 10;
+          setIsScrolled((prev) => {
+            if (prev !== isOverThreshold) return isOverThreshold;
+            return prev;
+          });
           ticking = false;
         });
         ticking = true;
@@ -200,7 +205,10 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.3,
+                ease: 'easeInOut'
+              }}
               className="md:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
             >
               <div className="px-4 py-3 space-y-2">

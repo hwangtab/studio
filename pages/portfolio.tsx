@@ -3,7 +3,7 @@ import type { GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import AnimatePresence from '../components/ui/AnimatePresence';
+import { AnimatePresence } from 'framer-motion';
 import { Music, Headphones } from 'lucide-react';
 import { filterPortfolioItems } from '../utils/portfolioDataUtils';
 import CategoryFilter from '../components/CategoryFilter';

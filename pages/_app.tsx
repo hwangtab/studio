@@ -14,7 +14,7 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-import AnimatePresence, { motion } from '../components/ui/AnimatePresence';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
