@@ -17,6 +17,7 @@ import ProjectRowCard from '../components/ui/ProjectRowCard';
 import SectionHeading from '../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../types/data';
 import type { NextPageWithLayout } from '../types';
+import { Section } from '../components/ui/Section';
 
 interface PortfolioProps {
   initialPortfolioItems: readonly PortfolioItem[];
@@ -101,12 +102,11 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           overlayGradient: "from-black/40 via-transparent to-black/20",
         }}
       />
-      <div className="container mx-auto px-4 py-16">
 
-        {audioTracks.length > 0 && (
-          <motion.section
+      {audioTracks.length > 0 && (
+        <Section variant="default">
+          <motion.div
             id="sample-tracks"
-            className="mb-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -120,11 +120,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} />
-          </motion.section>
-        )}
+          </motion.div>
+        </Section>
+      )}
 
+      <Section variant="alternate">
         <motion.div
-          className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -152,8 +153,6 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
             />
           </div>
 
-
-
           {filteredItems.length === 0 ? (
             <div className="text-center pt-16 pb-12">
               <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} />
@@ -174,8 +173,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
             </div>
           )}
         </motion.div>
-
-      </div>
+      </Section>
 
       <AnimatePresence>
         {selectedItem && (

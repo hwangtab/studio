@@ -11,6 +11,7 @@ import type { PortfolioItem } from '../../types/data';
 import { shareContent } from '../../utils/shareUtils';
 import { getCategoryInfo } from '../../utils/portfolioDataUtils';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { Section } from '../../components/ui/Section';
 
 interface PortfolioDetailPageProps {
   item: PortfolioItem;
@@ -50,7 +51,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ item }) => {
         ogType="music.album"
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, 스튜디오 놀`}
       />
-      <div className="container mx-auto px-4 pt-8 pb-12">
+      <Section variant="default" className="pt-8 pb-12">
         <div className="mb-8">
           <Link
             href="/portfolio"
@@ -136,7 +137,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ item }) => {
             </div>
           </motion.div>
         </div>
-      </div>
+      </Section>
     </>
   );
 };

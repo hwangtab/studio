@@ -4,6 +4,7 @@ import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'luc
 import { PAGE_TITLE_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import ImageHero from '../components/common/ImageHero';
+import { Section } from '../components/ui/Section';
 
 import { SITE_CONFIG } from '../data/siteConfig';
 
@@ -130,7 +131,7 @@ const Contact: NextPage = () => {
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
-      <div className="container mx-auto px-4 py-16">
+      <Section variant="default">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
@@ -323,7 +324,7 @@ const Contact: NextPage = () => {
             </motion.div>
           </div>
         </div>
-      </div>
+      </Section>
     </>
   );
 };

@@ -1,4 +1,3 @@
-
 import type { NextPage } from 'next';
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -9,6 +8,7 @@ import ImageHero from '../components/common/ImageHero';
 import BaseCard from '../components/ui/BaseCard';
 import SectionHeading from '../components/ui/SectionHeading';
 import Link from 'next/link';
+import { Section } from '../components/ui/Section';
 
 interface CurriculumCardProps {
     step: string;
@@ -114,10 +114,8 @@ const Lesson: PageWithHero = () => {
                 overlayGradient="from-black/40 via-transparent to-black/20"
             />
 
-            <div className="container mx-auto px-4 py-16">
-
-                {/* Intro Section */}
-                {/* Intro Section */}
+            {/* Intro Section */}
+            <Section variant="default">
                 <SectionHeading
                     icon={GraduationCap}
                     title={
@@ -135,73 +133,75 @@ const Lesson: PageWithHero = () => {
                     }
                     className="mb-16"
                 />
+            </Section>
 
-                {/* Curriculum Grid */}
-                <div className="mb-16">
-                    <SectionHeading
-                        icon={BookOpen}
-                        title="Curriculum: 4 Steps to Master"
-                        as="h3"
-                        className="mb-12"
-                        titleClassName="text-heading-3"
+            {/* Curriculum Grid */}
+            <Section variant="alternate">
+                <SectionHeading
+                    icon={BookOpen}
+                    title="Curriculum: 4 Steps to Master"
+                    as="h3"
+                    className="mb-12"
+                    titleClassName="text-heading-3"
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <CurriculumCard
+                        step="01"
+                        title="MIDI & Producing"
+                        subtitle="창작의 기초"
+                        icon={Music}
+                        description={[
+                            "DAW 워크플로우 최적화",
+                            "가상악기 및 사운드 디자인",
+                            "드럼/베이스 리듬 편곡법",
+                            "송 폼(Song Form)과 편곡의 미학"
+                        ]}
+                        delay={0.1}
                     />
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <CurriculumCard
-                            step="01"
-                            title="MIDI & Producing"
-                            subtitle="창작의 기초"
-                            icon={Music}
-                            description={[
-                                "DAW 워크플로우 최적화",
-                                "가상악기 및 사운드 디자인",
-                                "드럼/베이스 리듬 편곡법",
-                                "송 폼(Song Form)과 편곡의 미학"
-                            ]}
-                            delay={0.1}
-                        />
-                        <CurriculumCard
-                            step="02"
-                            title="Recording"
-                            subtitle="프로 사운드 캡처"
-                            icon={Mic2}
-                            description={[
-                                "프로급 마이크(U87ai 등) 비교 청음",
-                                "시그널 플로우 (마이크-프리-DAW) 이해",
-                                "보컬 디렉팅 및 튠 보정(Melodyne)",
-                                "실제 악기 마이킹 테크닉"
-                            ]}
-                            delay={0.2}
-                        />
-                        <CurriculumCard
-                            step="03"
-                            title="Mixing"
-                            subtitle="사운드 조각하기"
-                            icon={Sliders}
-                            description={[
-                                "밸런스와 패닝, 스테레오 이미지",
-                                "EQ & Dynamics(컴프레서) 활용",
-                                "공간계 이펙트(리버브/딜레이)",
-                                "아날로그 아웃보드 하이브리드 믹싱"
-                            ]}
-                            delay={0.3}
-                        />
-                        <CurriculumCard
-                            step="04"
-                            title="Mastering"
-                            subtitle="완성과 발매"
-                            icon={Disc}
-                            description={[
-                                "라우드니스 표준(LUFS)과 플랫폼 규격",
-                                "앨범 톤 밸런스 및 일관성",
-                                "유통 메타데이터 및 ISRC",
-                                "최종 모니터링 및 음원 발매 실습"
-                            ]}
-                            delay={0.4}
-                        />
-                    </div>
+                    <CurriculumCard
+                        step="02"
+                        title="Recording"
+                        subtitle="프로 사운드 캡처"
+                        icon={Mic2}
+                        description={[
+                            "프로급 마이크(U87ai 등) 비교 청음",
+                            "시그널 플로우 (마이크-프리-DAW) 이해",
+                            "보컬 디렉팅 및 튠 보정(Melodyne)",
+                            "실제 악기 마이킹 테크닉"
+                        ]}
+                        delay={0.2}
+                    />
+                    <CurriculumCard
+                        step="03"
+                        title="Mixing"
+                        subtitle="사운드 조각하기"
+                        icon={Sliders}
+                        description={[
+                            "밸런스와 패닝, 스테레오 이미지",
+                            "EQ & Dynamics(컴프레서) 활용",
+                            "공간계 이펙트(리버브/딜레이)",
+                            "아날로그 아웃보드 하이브리드 믹싱"
+                        ]}
+                        delay={0.3}
+                    />
+                    <CurriculumCard
+                        step="04"
+                        title="Mastering"
+                        subtitle="완성과 발매"
+                        icon={Disc}
+                        description={[
+                            "라우드니스 표준(LUFS)과 플랫폼 규격",
+                            "앨범 톤 밸런스 및 일관성",
+                            "유통 메타데이터 및 ISRC",
+                            "최종 모니터링 및 음원 발매 실습"
+                        ]}
+                        delay={0.4}
+                    />
                 </div>
+            </Section>
 
-                {/* Why Choose Us & Pricing - 2 Column Layout */}
+            {/* Why Choose Us & Pricing - 2 Column Layout */}
+            <Section variant="default">
                 <div className="grid lg:grid-cols-2 gap-12 items-start mb-16">
 
                     {/* Why Choose Us */}
@@ -299,10 +299,12 @@ const Lesson: PageWithHero = () => {
                     </motion.div>
 
                 </div>
+            </Section>
 
-                {/* Improved CTA Section (Reference: Practice Room style) */}
+            {/* Improved CTA Section (Reference: Practice Room style) */}
+            <Section variant="alternate">
                 <motion.div
-                    className="mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
+                    className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -357,8 +359,7 @@ const Lesson: PageWithHero = () => {
                         </a>
                     </div>
                 </motion.div>
-
-            </div>
+            </Section>
         </>
     );
 };
@@ -370,4 +371,3 @@ export default Lesson;
 export const getStaticProps = () => ({
     props: {},
 });
-

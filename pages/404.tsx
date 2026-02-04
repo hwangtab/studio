@@ -4,13 +4,14 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
+import { Section } from '../components/ui/Section';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
   const path = router.asPath;
 
   return (
-    <div className="container mx-auto px-4 py-20 sm:py-28 text-center">
+    <Section variant="default" className="min-h-[60vh] flex flex-col justify-center text-center">
       <SEO
         title="페이지를 찾을 수 없습니다 | 스튜디오 놀"
         description="요청하신 페이지를 찾을 수 없습니다. 스튜디오 놀 홈페이지로 이동하거나 다른 페이지를 탐색해 주세요."
@@ -58,7 +59,7 @@ const NotFoundPage: NextPage = () => {
           문의하기
         </Link>
       </motion.div>
-    </div>
+    </Section>
   );
 };
 

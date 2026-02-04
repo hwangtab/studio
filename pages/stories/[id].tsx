@@ -18,6 +18,7 @@ import { timeAgo } from '../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../lib/stories';
 import type { Story, StoryDetail } from '../../types/story';
 import type { NextPageWithLayout } from '../../types';
+import { Section } from '../../components/ui/Section';
 
 interface StoryDetailPageProps {
   story: StoryDetail;
@@ -135,7 +136,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ story, rela
         overlayGradient="from-black/70 via-black/40 to-black/70"
       />
 
-      <div className="container mx-auto px-4 pt-12 pb-12">
+      <Section variant="default" className="pt-12 pb-12">
         <div className="mb-12 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-6">
           <Link
             href="/stories"
@@ -207,7 +208,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ story, rela
             모든 스토리 보기
           </Link>
         </div>
-      </div>
+      </Section>
     </>
   );
 };

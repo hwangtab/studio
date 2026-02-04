@@ -10,6 +10,7 @@ import ImageHero from '../../components/common/ImageHero';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import { getAllStories } from '../../lib/stories';
 import type { Story } from '../../types/story';
+import { Section } from '../../components/ui/Section';
 
 interface StoriesPageProps {
   stories: Story[];
@@ -48,7 +49,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ stories }) => {
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
-      <div className="container mx-auto px-4 py-16">
+      <Section variant="default">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <div className="mb-8">
             <CategoryFilter
@@ -76,7 +77,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ stories }) => {
             </div>
           )}
         </motion.div>
-      </div>
+      </Section>
     </>
   );
 };

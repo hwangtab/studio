@@ -9,6 +9,7 @@ import { equipment, studioImages } from '../data/equipment';
 import EquipmentSection from '../components/studio/EquipmentSection';
 import ContactCTA from '../components/common/ContactCTA';
 import { NextPageWithLayout } from '../types';
+import { Section } from '../components/ui/Section';
 
 const Studio: NextPageWithLayout = () => {
 
@@ -32,10 +33,10 @@ const Studio: NextPageWithLayout = () => {
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
-      <div className="container mx-auto px-4 py-16">
-        {/* 스튜디오 소개 섹션 */}
+
+      {/* 스튜디오 소개 섹션 */}
+      <Section variant="default">
         <motion.div
-          className="mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -88,10 +89,11 @@ const Studio: NextPageWithLayout = () => {
             </motion.div>
           </div>
         </motion.div>
+      </Section>
 
-        {/* 장비 목록 섹션 */}
+      {/* 장비 목록 섹션 */}
+      <Section variant="alternate">
         <motion.div
-          className="mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -136,10 +138,12 @@ const Studio: NextPageWithLayout = () => {
             <EquipmentSection title="인터페이스 & 콘솔" items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
           </div>
         </motion.div >
+      </Section>
 
-        {/* Improved CTA Section (Consistency with other pages) */}
-        <ContactCTA />
-      </div>
+      {/* Improved CTA Section (Consistency with other pages) */}
+      <Section variant="default">
+        <ContactCTA className="mt-0" />
+      </Section>
     </>
   );
 };

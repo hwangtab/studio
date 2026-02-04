@@ -9,6 +9,7 @@ import ImageHero from '../components/common/ImageHero';
 import BaseCard from '../components/ui/BaseCard';
 import FAQSection from '../components/ui/FAQSection';
 import SectionHeading from '../components/ui/SectionHeading';
+import { Section } from '../components/ui/Section';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -104,10 +105,10 @@ const PracticeRoom: NextPage = () => {
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
-      <div className="container mx-auto px-4 py-16">
-        {/* 고민 섹션 */}
+
+      {/* 고민 섹션 */}
+      <Section variant="default">
         <motion.div
-          className="mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -125,10 +126,11 @@ const PracticeRoom: NextPage = () => {
             <PainPoint icon={Sparkles} text="작업환경이 불쾌하고 지저분해요..." delay={0.5} />
           </div>
         </motion.div>
+      </Section>
 
-        {/* 타겟 오디언스 섹션 */}
+      {/* 타겟 오디언스 섹션 */}
+      <Section variant="alternate">
         <motion.div
-          className="mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -225,10 +227,11 @@ const PracticeRoom: NextPage = () => {
             </motion.div>
           </div>
         </motion.div>
+      </Section>
 
-        {/* 특징 섹션 */}
+      {/* 특징 섹션 */}
+      <Section variant="default">
         <motion.div
-          className="mb-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
@@ -304,17 +307,17 @@ const PracticeRoom: NextPage = () => {
             </motion.div>
           </div>
         </motion.div>
+      </Section>
 
-        {/* CTA 섹션 */}
-      </div>
       <FAQSection
         items={practiceRoomFaqs}
         title="연습실 FAQ"
         subtitle="작업실 입주와 이용에 관해 가장 많이 하시는 질문들입니다."
+        variant="alternate"
       />
 
-      <div className="container mx-auto px-4 pb-16">
-        {/* CTA 섹션 */}
+      <Section variant="default" className="pb-16 pt-0 md:pt-16">
+        {/* CTA 섹션 - added pt-0 to reduce gap if FAQ has bottom padding */}
         <motion.div
           className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
           initial={{ opacity: 0, y: 30 }}
@@ -386,7 +389,7 @@ const PracticeRoom: NextPage = () => {
             </a>
           </div>
         </motion.div>
-      </div>
+      </Section>
     </>
   );
 };

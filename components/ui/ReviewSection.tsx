@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Star, MessageSquare, Quote } from 'lucide-react';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
+import { Section, SectionVariant } from './Section';
 import { STAGGER_CONTAINER, STAGGER_ITEM } from '../../utils/animationUtils';
 
 // 별점 5점 고정이므로 상수 배열로 정의 (매 렌더마다 재생성 방지)
@@ -42,74 +43,77 @@ export const reviews: Review[] = [
     }
 ];
 
-const ReviewSection = ({ className = "py-24 bg-gray-50 dark:bg-gray-900/50" }: { className?: string }) => {
+interface ReviewSectionProps {
+    className?: string;
+    variant?: SectionVariant;
+}
+
+const ReviewSection = ({ className, variant = "default" }: ReviewSectionProps) => {
     return (
-        <section className={className}>
-            <div className="container mx-auto px-4">
-                <SectionHeading
-                    icon={MessageSquare}
-                    title={
-                        <>
-                            아티스트와 함께 만드는 <span>감동의 기록</span>
-                        </>
-                    }
-                    subtitle="스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다."
-                    className="mb-16"
-                />
+        <Section variant={variant} className={className}>
+            <SectionHeading
+                icon={MessageSquare}
+                title={
+                    <>
+                        아티스트와 함께 만드는 <span>감동의 기록</span>
+                    </>
+                }
+                subtitle="스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다."
+                className="mb-16"
+            />
 
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
-                    variants={STAGGER_CONTAINER}
-                    initial="initial"
-                    whileInView="animate"
-                    viewport={{ once: true }}
-                >
-                    {reviews.map((review, index) => (
-                        <motion.div
-                            key={index}
-                            className="group"
-                            variants={STAGGER_ITEM}
+            <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
+                variants={STAGGER_CONTAINER}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true }}
+            >
+                {reviews.map((review, index) => (
+                    <motion.div
+                        key={index}
+                        className="group"
+                        variants={STAGGER_ITEM}
+                    >
+                        <BaseCard
+                            variant="default"
+                            enableAnimation={false}
+                            className="p-8 h-full relative group"
                         >
-                            <BaseCard
-                                variant="default"
-                                enableAnimation={false}
-                                className="p-8 h-full relative group"
-                            >
-                                <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
-                                    <Quote size={60} />
+                            <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
+                                <Quote size={60} />
+                            </div>
+
+                            <div className="relative z-10">
+                                <div className="flex items-center mb-4" aria-label={`평점 ${review.rating}점`}>
+                                    {FIVE_STARS.slice(0, review.rating).map((i) => (
+                                        <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" />
+                                    ))}
                                 </div>
 
-                                <div className="relative z-10">
-                                    <div className="flex items-center mb-4" aria-label={`평점 ${review.rating}점`}>
-                                        {FIVE_STARS.slice(0, review.rating).map((i) => (
-                                            <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" />
-                                        ))}
+                                <p className="typo-card-body text-lg leading-relaxed mb-8 font-pretendard break-keep">
+                                    &quot;{review.content}&quot;
+                                </p>
+
+                                <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                                    <div>
+                                        <span className="block font-bold typo-card-title text-base mb-1">
+                                            {review.author} 님
+                                        </span>
+                                        <span className="text-sm text-primary font-semibold">
+                                            {review.category}
+                                        </span>
                                     </div>
-
-                                    <p className="typo-card-body text-lg leading-relaxed mb-8 font-pretendard break-keep">
-                                        &quot;{review.content}&quot;
-                                    </p>
-
-                                    <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
-                                        <div>
-                                            <span className="block font-bold typo-card-title text-base mb-1">
-                                                {review.author} 님
-                                            </span>
-                                            <span className="text-sm text-primary font-semibold">
-                                                {review.category}
-                                            </span>
-                                        </div>
-                                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                                            <MessageSquare size={20} />
-                                        </div>
+                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                        <MessageSquare size={20} />
                                     </div>
                                 </div>
-                            </BaseCard>
-                        </motion.div>
-                    ))}
-                </motion.div>
-            </div>
-        </section>
+                            </div>
+                        </BaseCard>
+                    </motion.div>
+                ))}
+            </motion.div>
+        </Section>
     );
 };
 

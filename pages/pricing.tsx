@@ -16,6 +16,7 @@ import {
     additionalServices,
     specialPackages,
 } from '../data/pricing';
+import { Section } from '../components/ui/Section';
 
 const SITE_URL = 'https://studionol.co.kr';
 
@@ -101,7 +102,6 @@ import PricingCard from '../components/ui/PricingCard';
 import ImageHero from '../components/common/ImageHero';
 // @ts-ignore - Component is JS
 import ResponsiveImage from '../components/ResponsiveImage';
-import { SECTION_BG } from '../utils/sectionStyles';
 
 const Pricing: NextPage = () => {
     return (
@@ -136,226 +136,214 @@ const Pricing: NextPage = () => {
             />
 
             {/* Special Packages Section */}
-            <section id="special-packages" className={`py-16 ${SECTION_BG.highlight} bg-amber-50 dark:bg-amber-900/10`}>
-                <div className="container mx-auto px-4">
-                    <SectionHeading
-                        icon={Star}
-                        title="스페셜 패키지 (Purpose-Built)"
-                        subtitle="축가, 성우, 유튜브 등 구체적인 목적에 맞춰 최적화된 올인원 패키지"
-                    />
-                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
-                        {VAT_NOTICE}
-                    </p>
-                    <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                        {specialPackages.map((offer, index) => (
-                            <PricingCard
-                                key={offer.id}
-                                id={offer.id}
-                                title={offer.title}
-                                price={offer.priceDisplay}
-                                unit={offer.unit}
-                                description={offer.description}
-                                features={offer.features}
-                                recommended={offer.recommended}
-                                delay={0.1 * (index + 1)}
-                            />
-                        ))}
-                    </div>
+            <Section id="special-packages" variant="alternate">
+                <SectionHeading
+                    icon={Star}
+                    title="스페셜 패키지 (Purpose-Built)"
+                    subtitle="축가, 성우, 유튜브 등 구체적인 목적에 맞춰 최적화된 올인원 패키지"
+                />
+                <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+                    {VAT_NOTICE}
+                </p>
+                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    {specialPackages.map((offer, index) => (
+                        <PricingCard
+                            key={offer.id}
+                            id={offer.id}
+                            title={offer.title}
+                            price={offer.priceDisplay}
+                            unit={offer.unit}
+                            description={offer.description}
+                            features={offer.features}
+                            recommended={offer.recommended}
+                            delay={0.1 * (index + 1)}
+                        />
+                    ))}
                 </div>
-            </section>
+            </Section>
 
             {/* Recording Section */}
-            <section id="recording" className="py-16">
-                <div className="container mx-auto px-4">
-                    <SectionHeading
-                        icon={Mic}
-                        title="레코딩 (Recording)"
-                        subtitle="최고급 아날로그 장비와 전문 엔지니어링이 포함된 프리미엄 녹음 서비스"
-                    />
-                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
-                        {VAT_NOTICE}
-                    </p>
-                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                        {recordingOffers.map((offer, index) => (
-                            <PricingCard
-                                key={offer.id}
-                                id={offer.id}
-                                title={offer.title}
-                                price={offer.priceDisplay}
-                                unit={offer.unit}
-                                description={offer.description}
-                                features={offer.features}
-                                recommended={offer.recommended}
-                                delay={0.1 * (index + 1)}
-                            />
-                        ))}
-                    </div>
+            <Section id="recording" variant="default">
+                <SectionHeading
+                    icon={Mic}
+                    title="레코딩 (Recording)"
+                    subtitle="최고급 아날로그 장비와 전문 엔지니어링이 포함된 프리미엄 녹음 서비스"
+                />
+                <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+                    {VAT_NOTICE}
+                </p>
+                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    {recordingOffers.map((offer, index) => (
+                        <PricingCard
+                            key={offer.id}
+                            id={offer.id}
+                            title={offer.title}
+                            price={offer.priceDisplay}
+                            unit={offer.unit}
+                            description={offer.description}
+                            features={offer.features}
+                            recommended={offer.recommended}
+                            delay={0.1 * (index + 1)}
+                        />
+                    ))}
                 </div>
-            </section>
+            </Section>
 
             {/* Mixing Section */}
-            <section id="mixing" className={`py-16 ${SECTION_BG.alternate}`}>
-                <div className="container mx-auto px-4">
-                    <SectionHeading
-                        icon={SlidersHorizontal}
-                        title="믹싱 (Mixing)"
-                        subtitle="트랙 수에 따른 합리적인 가격 책정. 아날로그와 디지털의 조화로 최상의 사운드를 만듭니다."
-                    />
-                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
-                        {VAT_NOTICE}
-                    </p>
-                    <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-                        {mixingOffers.map((offer, index) => (
-                            <PricingCard
-                                key={offer.id}
-                                id={offer.id}
-                                title={offer.title}
-                                price={offer.priceDisplay}
-                                unit={offer.unit}
-                                description={offer.description}
-                                features={offer.features}
-                                recommended={offer.recommended}
-                                delay={0.1 * (index + 1)}
-                            />
-                        ))}
-                    </div>
-                    <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
-                        <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} />
-                        <div>
-                            <h4 className="typo-card-subtitle mb-1">보컬 튠/에딧 옵션</h4>
-                            <p className="typo-card-body text-sm">
-                                정교한 보컬 튜닝과 박자 보정이 필요한 경우 <span className="font-bold text-primary dark:text-primary-light">곡당 150,000원</span>이 추가됩니다. 자연스러운 보정을 원칙으로 합니다.
-                            </p>
-                        </div>
+            <Section id="mixing" variant="alternate">
+                <SectionHeading
+                    icon={SlidersHorizontal}
+                    title="믹싱 (Mixing)"
+                    subtitle="트랙 수에 따른 합리적인 가격 책정. 아날로그와 디지털의 조화로 최상의 사운드를 만듭니다."
+                />
+                <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+                    {VAT_NOTICE}
+                </p>
+                <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+                    {mixingOffers.map((offer, index) => (
+                        <PricingCard
+                            key={offer.id}
+                            id={offer.id}
+                            title={offer.title}
+                            price={offer.priceDisplay}
+                            unit={offer.unit}
+                            description={offer.description}
+                            features={offer.features}
+                            recommended={offer.recommended}
+                            delay={0.1 * (index + 1)}
+                        />
+                    ))}
+                </div>
+                <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
+                    <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} />
+                    <div>
+                        <h4 className="typo-card-subtitle mb-1">보컬 튠/에딧 옵션</h4>
+                        <p className="typo-card-body text-sm">
+                            정교한 보컬 튜닝과 박자 보정이 필요한 경우 <span className="font-bold text-primary dark:text-primary-light">곡당 150,000원</span>이 추가됩니다. 자연스러운 보정을 원칙으로 합니다.
+                        </p>
                     </div>
                 </div>
-            </section>
+            </Section>
 
             {/* Mastering Section */}
-            <section id="mastering" className="py-16">
-                <div className="container mx-auto px-4">
-                    <SectionHeading
-                        icon={Disc}
-                        title="마스터링 (Mastering)"
-                        subtitle="음악의 최종 완성도를 책임지는 단계로, 어떤 재생 환경에서도 균일한 사운드를 보장합니다."
-                    />
-                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
-                        {VAT_NOTICE}
-                    </p>
-                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                        {masteringOffers.map((offer, index) => (
-                            <PricingCard
-                                key={offer.id}
-                                id={offer.id}
-                                title={offer.title}
-                                price={offer.priceDisplay}
-                                unit={offer.unit}
-                                description={offer.description}
-                                features={offer.features}
-                                recommended={offer.recommended}
-                                delay={0.1 * (index + 1)}
-                            />
-                        ))}
-                    </div>
+            <Section id="mastering" variant="default">
+                <SectionHeading
+                    icon={Disc}
+                    title="마스터링 (Mastering)"
+                    subtitle="음악의 최종 완성도를 책임지는 단계로, 어떤 재생 환경에서도 균일한 사운드를 보장합니다."
+                />
+                <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+                    {VAT_NOTICE}
+                </p>
+                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    {masteringOffers.map((offer, index) => (
+                        <PricingCard
+                            key={offer.id}
+                            id={offer.id}
+                            title={offer.title}
+                            price={offer.priceDisplay}
+                            unit={offer.unit}
+                            description={offer.description}
+                            features={offer.features}
+                            recommended={offer.recommended}
+                            delay={0.1 * (index + 1)}
+                        />
+                    ))}
                 </div>
-            </section>
+            </Section>
 
             {/* Additional Services Section */}
-            <section id="support-services" className={`py-16 ${SECTION_BG.alternate}`}>
-                <div className="container mx-auto px-4">
-                    <SectionHeading
-                        icon={PlusCircle}
-                        title="부가 서비스"
-                        subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
-                    />
-                    <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
-                        {VAT_NOTICE}
-                    </p>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {additionalServices.map((service, index) => (
-                            <PricingCard
-                                key={service.id}
-                                id={service.id}
-                                title={service.title}
-                                price={service.priceDisplay}
-                                unit={service.unit}
-                                description={service.description}
-                                features={service.note ? [service.note] : []}
-                                delay={0.1 * (index + 1)}
-                            />
-                        ))}
-                    </div>
+            <Section id="support-services" variant="alternate">
+                <SectionHeading
+                    icon={PlusCircle}
+                    title="부가 서비스"
+                    subtitle="기획부터 홍보까지, 뮤지션의 성공적인 활동을 위한 올인원 서포트"
+                />
+                <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+                    {VAT_NOTICE}
+                </p>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {additionalServices.map((service, index) => (
+                        <PricingCard
+                            key={service.id}
+                            id={service.id}
+                            title={service.title}
+                            price={service.priceDisplay}
+                            unit={service.unit}
+                            description={service.description}
+                            features={service.note ? [service.note] : []}
+                            delay={0.1 * (index + 1)}
+                        />
+                    ))}
                 </div>
-            </section>
+            </Section>
 
             {/* Improved CTA Section (Consistency with other pages) */}
-            <section className="py-16">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-                            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                                <SectionHeading
-                                    icon={Sparkles}
-                                    title={
-                                        <>
-                                            당신의 음악을 위한<br />
-                                            <span className="text-primary">최고의 파트너</span>
-                                        </>
-                                    }
-                                    subtitle={
-                                        <>
-                                            예산과 일정에 맞는 최적의 플랜을 제안해 드립니다. <br className="hidden md:block" />
-                                            부담 없이 문의주세요. 첫 소통부터 최종 결과물까지 함께합니다.
-                                        </>
-                                    }
-                                    align="left"
-                                    className="mb-8"
-                                />
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    <Link
-                                        href="/contact"
-                                        className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
-                                    >
-                                        오시는 길
-                                    </Link>
-                                    <a
-                                        href="https://open.kakao.com/me/nol"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
-                                    >
-                                        <MessageCircle className="mr-2" size={20} />
-                                        카카오톡 문의하기
-                                    </a>
-                                </div>
+            <Section variant="default" className="py-16">
+                <motion.div
+                    className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
+                        <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
+                            <SectionHeading
+                                icon={Sparkles}
+                                title={
+                                    <>
+                                        당신의 음악을 위한<br />
+                                        <span className="text-primary">최고의 파트너</span>
+                                    </>
+                                }
+                                subtitle={
+                                    <>
+                                        예산과 일정에 맞는 최적의 플랜을 제안해 드립니다. <br className="hidden md:block" />
+                                        부담 없이 문의주세요. 첫 소통부터 최종 결과물까지 함께합니다.
+                                    </>
+                                }
+                                align="left"
+                                className="mb-8"
+                            />
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <Link
+                                    href="/contact"
+                                    className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
+                                >
+                                    오시는 길
+                                </Link>
+                                <a
+                                    href="https://open.kakao.com/me/nol"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
+                                >
+                                    <MessageCircle className="mr-2" size={20} />
+                                    카카오톡 문의하기
+                                </a>
                             </div>
-                            <a
-                                href="https://open.kakao.com/me/nol"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
-                            >
-                                <ResponsiveImage
-                                    src="/images/recording15.png"
-                                    alt="스튜디오 놀 프로 패키지 녹음 장비"
-                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                                    pictureClassName="block h-full"
-                                    loading="lazy"
-                                    sizes="(min-width: 768px) 50vw, 100vw"
-                                    fill
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-                            </a>
                         </div>
-                    </motion.div>
-                </div>
-            </section>
+                        <a
+                            href="https://open.kakao.com/me/nol"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
+                        >
+                            <ResponsiveImage
+                                src="/images/recording15.png"
+                                alt="스튜디오 놀 프로 패키지 녹음 장비"
+                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                pictureClassName="block h-full"
+                                loading="lazy"
+                                sizes="(min-width: 768px) 50vw, 100vw"
+                                fill
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+                        </a>
+                    </div>
+                </motion.div>
+            </Section>
         </div>
     );
 };

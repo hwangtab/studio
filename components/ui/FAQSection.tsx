@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
+import { Section, SectionVariant } from './Section';
 
 interface FAQItem {
     question: string;
@@ -13,13 +14,15 @@ interface FAQSectionProps {
     title?: string;
     subtitle?: string;
     className?: string;
+    variant?: SectionVariant;
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({
     items,
     title = "자주 묻는 질문",
     subtitle = "스튜디오 이용에 대해 궁금한 점들을 모았습니다.",
-    className = "py-24 bg-gray-50 dark:bg-gray-800/30"
+    className,
+    variant = "alternate"
 }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -28,8 +31,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     };
 
     return (
-        <section className={className}>
-            <div className="container mx-auto px-4 max-w-4xl">
+        <Section variant={variant} className={className}>
+            <div className="max-w-4xl mx-auto">
                 <SectionHeading
                     icon={HelpCircle}
                     title={title}
@@ -82,7 +85,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                     ))}
                 </div>
             </div>
-        </section>
+        </Section>
     );
 };
 
