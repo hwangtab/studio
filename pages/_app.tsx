@@ -36,7 +36,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <Layout hasHero={hasHero}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={router.asPath}
+              key={router.asPath.split('?')[0]}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
