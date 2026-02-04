@@ -33,32 +33,42 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
   const getCTAType = (category: string | undefined): CTAType => {
     const random = Math.random();
 
-    // 1. 강좌 (Tutorials) - Most Traffic
-    // Strategy: Balanced exposure (Lesson 40%, Practice 30%, Recording 30%)
+    // 1. 강좌 (Tutorials) - Learner focused
+    // Strategy: Lesson (40%), Practice (30%), Recording (20%), Production (10%)
     if (category?.includes('강좌')) {
       if (random < 0.4) return 'lesson';
       if (random < 0.7) return 'practice';
-      return 'recording';
+      if (random < 0.9) return 'recording';
+      return 'production';
     }
 
-    // 2. 장비/리뷰 (Equipment/Review)
-    // Strategy: Practice focused (Practice 70%, others 30%)
+    // 2. 장비/리뷰 (Equipment/Review) - Gear focused
+    // Strategy: Practice (60%), Recording (20%), Lesson (20%)
     if (category === '장비' || category === '리뷰') {
-      if (random < 0.7) return 'practice';
-      if (random < 0.85) return 'lesson';
-      return 'recording';
+      if (random < 0.6) return 'practice';
+      if (random < 0.8) return 'recording';
+      return 'lesson';
     }
 
-    // 3. 인터뷰/아티스트 (Interview/Artist)
-    // Strategy: Production focused (Production 70%, others 30%)
+    // 3. 인터뷰/아티스트 (Interview/Artist) - Inspiration focused
+    // Strategy: Production (70%), Recording (20%), Lesson (10%) - No Practice
     if (category === '인터뷰' || category === '아티스트') {
       if (random < 0.7) return 'production';
-      if (random < 0.85) return 'recording';
+      if (random < 0.9) return 'recording';
+      return 'lesson';
+    }
+
+    // 4. 이벤트 (Event) - Community focused
+    // Strategy: Production (30%), Lesson (30%), Recording (20%), Practice (20%)
+    if (category === '이벤트' || category === '공지') {
+      if (random < 0.3) return 'production';
+      if (random < 0.6) return 'lesson';
+      if (random < 0.8) return 'recording';
       return 'practice';
     }
 
-    // 4. Default / Fallback
-    // Strategy: Equal distribution
+    // 5. Default / Fallback
+    // Strategy: Equal distribution (25% each)
     const types: CTAType[] = ['recording', 'lesson', 'practice', 'production'];
     return types[Math.floor(Math.random() * types.length)];
   };
