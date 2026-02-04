@@ -56,31 +56,31 @@ export const generateDefaultSchema = (
     },
     ...(reviewItems && reviewItems.length > 0
       ? {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: (
-              reviewItems.reduce((acc, item) => acc + item.rating, 0) / reviewItems.length
-            ).toFixed(1),
-            reviewCount: reviewItems.length,
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: (
+            reviewItems.reduce((acc, item) => acc + item.rating, 0) / reviewItems.length
+          ).toFixed(1),
+          reviewCount: reviewItems.length,
+          bestRating: '5',
+          worstRating: '1',
+        },
+        review: reviewItems.map((item) => ({
+          '@type': 'Review',
+          author: {
+            '@type': 'Person',
+            name: item.author,
+          },
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: item.rating,
             bestRating: '5',
             worstRating: '1',
           },
-          review: reviewItems.map((item) => ({
-            '@type': 'Review',
-            author: {
-              '@type': 'Person',
-              name: item.author,
-            },
-            reviewRating: {
-              '@type': 'Rating',
-              ratingValue: item.rating,
-              bestRating: '5',
-              worstRating: '1',
-            },
-            reviewBody: item.content,
-            datePublished: item.datePublished || new Date().toISOString().split('T')[0],
-          })),
-        }
+          reviewBody: item.content,
+          datePublished: item.datePublished || new Date().toISOString().split('T')[0],
+        })),
+      }
       : {}),
     sameAs: ['https://open.kakao.com/me/nol'],
     serviceType: ['레코딩', '믹싱', '마스터링', '음반 기획', '음원 유통', '음악 프로덕션'],
@@ -273,3 +273,26 @@ export const generateFaqSchema = (faqItems: FAQItem[] | null) => {
     })),
   };
 };
+
+export const generateCourseSchema = (
+  title: string,
+  description: string,
+  siteUrl: string,
+  absoluteOgImage: string,
+  normalizedCanonical: string
+) => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: title,
+    description: description,
+    provider: {
+      '@type': 'Organization',
+      name: '스튜디오 놀',
+      sameAs: siteUrl,
+    },
+    image: absoluteOgImage,
+    url: normalizedCanonical,
+  };
+};
+

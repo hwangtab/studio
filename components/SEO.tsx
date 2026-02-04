@@ -6,6 +6,7 @@ import {
   generateArticleSchema,
   generateBreadcrumbSchema,
   generateFaqSchema,
+  generateCourseSchema,
 } from '../utils/schemaGenerator';
 
 interface SEOProps {
@@ -26,6 +27,7 @@ interface SEOProps {
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
   reviewItems?: ReviewItem[] | null;
+  isCourse?: boolean;
 }
 
 const SEO = ({
@@ -46,6 +48,7 @@ const SEO = ({
   breadcrumbs = null,
   faqItems = null,
   reviewItems = null,
+  isCourse = false,
 }: SEOProps) => {
   const siteUrl = 'https://studionol.co.kr';
 
@@ -76,15 +79,15 @@ const SEO = ({
     () =>
       ogType === 'article'
         ? generateArticleSchema(
-            title,
-            description,
-            siteUrl,
-            absoluteOgImage,
-            normalizedCanonical,
-            articlePublishedTime,
-            articleModifiedTime,
-            articleAuthor
-          )
+          title,
+          description,
+          siteUrl,
+          absoluteOgImage,
+          normalizedCanonical,
+          articlePublishedTime,
+          articleModifiedTime,
+          articleAuthor
+        )
         : null,
     [
       ogType,
@@ -99,6 +102,20 @@ const SEO = ({
     ]
   );
 
+  const courseSchema = React.useMemo(
+    () =>
+      isCourse
+        ? generateCourseSchema(
+          title,
+          description,
+          siteUrl,
+          absoluteOgImage,
+          normalizedCanonical
+        )
+        : null,
+    [isCourse, title, description, siteUrl, absoluteOgImage, normalizedCanonical]
+  );
+
   const breadcrumbSchema = React.useMemo(
     () => generateBreadcrumbSchema(breadcrumbs, siteUrl),
     [breadcrumbs, siteUrl]
@@ -106,7 +123,7 @@ const SEO = ({
 
   const faqSchema = React.useMemo(() => generateFaqSchema(faqItems), [faqItems]);
 
-  const schemaData = schema || articleSchema || defaultSchema;
+  const schemaData = schema || courseSchema || articleSchema || defaultSchema;
 
   return (
     <Head>
@@ -182,3 +199,4 @@ const SEO = ({
 };
 
 export default SEO;
+

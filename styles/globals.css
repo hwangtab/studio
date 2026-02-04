@@ -8,14 +8,14 @@
 @font-face {
   font-family: 'GmarketSans';
   font-weight: 400;
-  font-display: optional;
+  font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
 }
 
 @font-face {
   font-family: 'GmarketSans';
   font-weight: 700;
-  font-display: optional;
+  font-display: swap;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
 }
 

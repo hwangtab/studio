@@ -56,9 +56,9 @@ const config: Config = {
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },
       fontFamily: {
-        sans: ['Pretendard', 'GmarketSans', 'Noto Sans KR', 'sans-serif'],
-        title: ['GmarketSans', 'sans-serif'],
-        display: ['Montserrat', 'GmarketSans', 'sans-serif'],
+        sans: ['Pretendard', 'GmarketSans', 'Noto Sans KR', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        title: ['GmarketSans', 'Pretendard', 'sans-serif'],
+        display: ['var(--font-montserrat)', 'GmarketSans', 'sans-serif'],
         logo: ['PartialSansKR-Regular', 'GmarketSans', 'sans-serif'],
         pretendard: ['Pretendard', 'Noto Sans KR', 'sans-serif'],
       },

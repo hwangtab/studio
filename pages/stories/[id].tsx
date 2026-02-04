@@ -108,6 +108,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ story, rela
         articleAuthor={story.author}
         articleSection={story.category}
         includeSchema
+        isCourse={story.category?.includes('강좌')}
         breadcrumbs={[
           { name: '홈', path: '/' },
           { name: '스토리', path: '/stories' },
