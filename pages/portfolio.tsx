@@ -122,26 +122,12 @@ const Portfolio: NextPage<PortfolioProps> = ({
         )}
 
         <motion.div
-          className="mb-12"
-          {...PAGE_CONTENT_ANIMATION}
-        >
-          <CategoryFilter
-            activeCategory={selectedCategory}
-            setActiveCategory={handleCategoryChange}
-            categories={categories}
-            buttonSize="lg"
-            useCustomColors={true}
-            gap="gap-3"
-          />
-        </motion.div>
-
-        <motion.div
-          className="mb-0"
+          className="mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
             <div className="flex items-center">
               <SectionHeading
                 icon={Music}
@@ -151,10 +137,17 @@ const Portfolio: NextPage<PortfolioProps> = ({
                 titleClassName="typo-card-title"
                 as="h2"
               />
+
             </div>
-            <div className="typo-card-meta text-gray-500 dark:text-gray-400">
-              {filteredItems.length > 0 ? `${filteredItems.length}개 프로젝트` : '등록된 프로젝트 없음'}
-            </div>
+
+            <CategoryFilter
+              activeCategory={selectedCategory}
+              setActiveCategory={handleCategoryChange}
+              categories={categories}
+              buttonSize="sm"
+              useCustomColors={true}
+              gap="gap-2"
+            />
           </div>
 
 
