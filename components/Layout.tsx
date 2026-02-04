@@ -73,12 +73,10 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      const savedDarkMode = localStorage.getItem('darkMode');
-      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
-      const initialDarkMode = savedDarkMode !== null ? savedDarkMode === 'true' : Boolean(prefersDark);
+      // _document에서 설정한 값을 읽어 state만 동기화 (DOM 조작 제거)
+      const initialDarkMode = sessionStorage.getItem('initialDarkMode') === 'true';
       setIsDarkMode(initialDarkMode);
       setHasThemeLoaded(true);
-      document.documentElement.classList.toggle('dark', initialDarkMode);
     } catch (error) {
       console.warn('Failed to read dark mode preference', error);
       setHasThemeLoaded(true);
@@ -107,9 +105,12 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
 
   useEffect(() => {
     if (!hasThemeLoaded || typeof document === 'undefined') return;
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('darkMode', isDarkMode.toString());
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('darkMode', 'false');
     }
   }, [isDarkMode, hasThemeLoaded]);
 
@@ -119,7 +120,10 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   const isFullBleed = [].includes(router.pathname as never);
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 break-keep overflow-x-hidden w-full">
+    <div
+      className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out break-keep overflow-x-hidden w-full"
+      suppressHydrationWarning
+    >
       <header
         className={`fixed w-full z-50 transition-all duration-300 ${isScrolled
           ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md'

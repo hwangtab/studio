@@ -62,6 +62,10 @@ const config: Config = {
         logo: ['PartialSansKR-Regular', 'GmarketSans', 'sans-serif'],
         pretendard: ['Pretendard', 'Noto Sans KR', 'sans-serif'],
       },
+      animation: {
+        'spin-slow': 'spin 8s linear infinite',
+        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+      },
     },
   },
   darkMode: 'class',

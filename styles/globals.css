@@ -8,14 +8,14 @@
 @font-face {
   font-family: 'GmarketSans';
   font-weight: 400;
-  font-display: swap;
+  font-display: optional;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
 }
 
 @font-face {
   font-family: 'GmarketSans';
   font-weight: 700;
-  font-display: swap;
+  font-display: optional;
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
 }
 
@@ -25,7 +25,7 @@
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
 }
 
 /* Pretendard 폰트 (보조 폰트) */
@@ -70,6 +70,7 @@
     @apply font-sans text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
     word-break: keep-all;
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1,

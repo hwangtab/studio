@@ -14,7 +14,12 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
+import { AnimatePresence as AnimatePresenceOrig, motion } from 'framer-motion';
+const AnimatePresence = AnimatePresenceOrig as any;
+import { useRouter } from 'next/router';
+
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
+  const router = useRouter();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
 
@@ -29,7 +34,17 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <ErrorBoundary>
         <Layout hasHero={hasHero}>
-          <Component {...pageProps} />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={router.asPath}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              <Component {...pageProps} />
+            </motion.div>
+          </AnimatePresence>
           <Analytics />
         </Layout>
       </ErrorBoundary>

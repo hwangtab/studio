@@ -50,11 +50,13 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ stories }) => {
       />
       <div className="container mx-auto px-4 py-16">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
-          <CategoryFilter
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            categories={categories}
-          />
+          <div className="mb-8">
+            <CategoryFilter
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              categories={categories}
+            />
+          </div>
 
           {filteredStories.length === 0 ? (
             <div className="text-center py-16">

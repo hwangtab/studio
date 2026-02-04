@@ -7,7 +7,12 @@ const themeInitializer = `
     var storedPreference = localStorage.getItem(storageKey);
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     var shouldUseDark = storedPreference === 'true' || (storedPreference === null && prefersDark);
+
+    // documentElement에 dark 클래스 설정
     document.documentElement.classList.toggle('dark', shouldUseDark);
+
+    // sessionStorage에 초기 상태 저장 (Layout에서 hydration mismatch 방지)
+    sessionStorage.setItem('initialDarkMode', shouldUseDark.toString());
   } catch (error) {
     console.warn('theme init failed', error);
   }
@@ -16,7 +21,12 @@ const themeInitializer = `
 
 export default function Document() {
   return (
-    <Html lang="ko" className="scroll-smooth" prefix="og: https://ogp.me/ns#">
+    <Html
+      lang="ko"
+      className="scroll-smooth"
+      prefix="og: https://ogp.me/ns#"
+      suppressHydrationWarning
+    >
       <Head>
         <link
           rel="preload"
@@ -27,14 +37,14 @@ export default function Document() {
         />
         <link
           rel="preload"
-          href="https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff"
+          href="https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2"
           as="font"
-          type="font/woff"
+          type="font/woff2"
           crossOrigin="anonymous"
         />
         <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
       </Head>
-      <body className="bg-white dark:bg-gray-900">
+      <body className="bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out">
         <Main />
         <NextScript />
       </body>

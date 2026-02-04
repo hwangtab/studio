@@ -27,7 +27,9 @@ const Playlist = ({ tracks, currentTrackIndex, isPlaying, onSelectTrack }: Playl
                             animate={{
                                 backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.1)' : 'rgba(0, 0, 0, 0)',
                             }}
-                            whileHover={{ backgroundColor: 'rgba(var(--primary-rgb), 0.05)' }}
+                            whileHover={{
+                                backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.15)' : 'rgba(var(--primary-rgb), 0.05)'
+                            }}
                             className={`group flex items-center p-3 rounded-lg cursor-pointer transition-colors border border-transparent ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
                                 }`}
                             onClick={() => onSelectTrack(index)}

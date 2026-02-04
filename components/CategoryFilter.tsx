@@ -67,7 +67,7 @@ const CategoryFilter = ({
   };
 
   return (
-    <div className="mb-8">
+    <div>
       {showTitle && (
         <div className="flex items-center mb-6">
           {TitleIcon && React.createElement(TitleIcon, { className: "text-xl text-primary mr-3" })}
