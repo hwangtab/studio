@@ -1,17 +1,17 @@
 import React, { useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import ResponsiveImage from './ResponsiveImage';
 import type { PortfolioItem } from '../types/data';
 import { shareContent } from '../utils/shareUtils';
 import { getCategoryInfo } from '../utils/portfolioDataUtils';
 
-const overlayVariants = {
+const overlayVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
 
-const modalVariants = {
+const modalVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
     opacity: 1,
