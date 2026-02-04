@@ -50,7 +50,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
 
     return () => {
       document.removeEventListener('keydown', handleEsc);
-      // document.body.style.overflow = 'unset'; // Removed to restore in onAnimationComplete
+      document.body.style.overflow = 'unset'; // Restored for safety in case of unexpected unmount
     };
   }, [handleEsc]);
 
@@ -62,11 +62,15 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
   const metaDescription = `${item.artist}의 "${item.title}" - ${item.description}. 스튜디오 놀에서 작업한 프로젝트입니다.`;
 
   const sharePortfolio = async () => {
-    await shareContent({
-      title: `${item.title} - 스튜디오 놀`,
-      text: metaDescription,
-      url: shareUrl,
-    });
+    try {
+      await shareContent({
+        title: `${item.title} - 스튜디오 놀`,
+        text: metaDescription,
+        url: shareUrl,
+      });
+    } catch (error) {
+      console.error('포트폴리오 공유 실패:', error);
+    }
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {

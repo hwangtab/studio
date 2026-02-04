@@ -35,6 +35,7 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     }, []);
 
     const whilePlaying = useCallback(() => {
+        if (!isMounted.current) return;
         if (progressBarRef.current && audioRef.current) {
             progressBarRef.current.value = String(audioRef.current.currentTime);
             setCurrentTime(audioRef.current.currentTime);
@@ -117,7 +118,7 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
 
     useEffect(() => {
         stopPlayback();
-    }, [router.asPath, stopPlayback]);
+    }, [router.pathname, stopPlayback]);
 
     useEffect(() => {
         return () => {

@@ -1,0 +1,8 @@
+{
+  "general": {
+    "previewFeatures": true
+  },
+  "security": {
+    "enablePermanentToolApproval": true
+  }
+}

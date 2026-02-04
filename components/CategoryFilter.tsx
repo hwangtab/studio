@@ -39,7 +39,7 @@ const CategoryFilter = ({
   useCustomColors = false,
   gap = "gap-2"
 }: CategoryFilterProps) => {
-  const categories: CategoryBase[] = propCategories.map(category => {
+  const mappedCategories: CategoryBase[] = propCategories.map(category => {
     if (typeof category === 'object' && 'name' in category) {
       return {
         id: category.id,
@@ -56,9 +56,9 @@ const CategoryFilter = ({
     return category;
   });
 
-  if (!categories.find(cat => cat.id === 'all')) {
-    categories.unshift({ id: 'all', label: '전체' });
-  }
+  const categories: CategoryBase[] = mappedCategories.find(cat => cat.id === 'all')
+    ? mappedCategories
+    : [{ id: 'all', label: '전체' }, ...mappedCategories];
 
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-body-2',
