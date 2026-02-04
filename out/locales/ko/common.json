@@ -1,5 +1,81 @@
 {
   "nav": {
-    "home": "홈"
+    "about": "소개",
+    "portfolio": "포트폴리오",
+    "stories": "스토리",
+    "contact": "문의하기",
+    "pricing": "가격",
+    "equipment": "장비 소개",
+    "practiceRoom": "연습실",
+    "lesson": "레슨"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "address": "주소",
+    "contact": "연락처",
+    "privacy": "개인정보 처리방침"
+  },
+  "actions": {
+    "more": "더 보기",
+    "submit": "제출하기",
+    "close": "닫기",
+    "call": "전화",
+    "email": "이메일",
+    "kakao": "카카오톡",
+    "location": "위치"
+  },
+  "home": {
+    "heroTitle": "음악이 시작되는 곳, 스튜디오 놀",
+    "heroSubtitle": "당신의 음악을 위한 최고의 공간",
+    "startProject": "프로젝트 시작하기"
+  },
+  "about": {
+    "title": "스튜디오 놀 소개 - 올인원 음악 프로덕션",
+    "description": "한 곡의 아이디어가 완성된 앨범이 되기까지, 스튜디오 놀은 그 모든 과정의 동반자입니다.",
+    "subtitle": "기획부터 유통, 홍보까지 함께하는 올인원 프로덕션",
+    "serviceTitle": "올인원 음악 프로덕션 서비스",
+    "serviceSubtitle": "앨범 기획부터 유통, 홍보까지 모든 과정을 한 곳에서 제공하여 뮤지션의 비전을 실현하는 토털 솔루션을 제공합니다.",
+    "processTitle": "종합 음반 제작 프로세스",
+    "processSubtitle": "스튜디오 놀은 음반 제작의 모든 단계를 체계적으로 관리하여 최고 품질의 결과물을 만들어냅니다.",
+    "differenceTitle": "스튜디오 놀의 차별점",
+    "differenceSubtitle": "연신내에 위치한 원스톱 프로덕션 시스템으로 아날로그 장비를 통한 따뜻하고 감칠맛 있는 사운드를 구현합니다."
+  },
+  "portfolio": {
+    "title": "포트폴리오",
+    "subtitle": "스튜디오 놀에서 작업한 다양한 프로젝트들을 소개합니다. 각 작품을 클릭하여 더 자세한 정보를 확인하세요.",
+    "sampleTracks": "샘플 트랙",
+    "projects": "작업 프로젝트",
+    "noProjects": "선택한 카테고리에 해당하는 프로젝트가 없습니다."
+  },
+  "contact": {
+    "title": "연락하기",
+    "subtitle": "프로젝트에 대한 문의나 예약 상담을 편하게 해주세요.",
+    "form": {
+      "name": "이름",
+      "phone": "연락처",
+      "message": "메시지",
+      "submit": "이메일로 문의하기",
+      "kakao": "카카오톡으로 문의하기",
+      "success": "메시지가 성공적으로 전송되었습니다.",
+      "error": "메시지 전송에 실패했습니다. 다시 시도해주세요."
+    },
+    "info": {
+      "title": "연락처 정보",
+      "kakao": "카카오톡 오픈채팅",
+      "location": "찾아오시는 길",
+      "hours": "상담 가능 시간",
+      "parking": "주차 안내: 인근 KT은평빌딩 주차장 유료 이용 가능",
+      "transport": "대중교통: 지하철 6호선 불광역 7번 출구 도보 5분"
+    },
+    "notice": {
+      "title": "문의 전 확인사항",
+      "list": [
+        "24시간 내 답변 드립니다",
+        "구체적인 프로젝트 내용을 적어주시면 정확한 상담 가능",
+        "급한 문의는 카카오톡을 이용해주세요"
+      ],
+      "privacyTitle": "개인정보 처리방침",
+      "privacyText": "수집된 개인정보는 문의 응답 목적으로만 사용되며, 상담 완료 후 즉시 삭제됩니다."
+    }
   }
 }

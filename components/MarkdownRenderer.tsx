@@ -1,5 +1,7 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
+import { useRouter } from 'next/router';
+import { locales } from '../lib/i18n';
 
 let prismLoaderPromise: Promise<any> | null = null;
 
@@ -62,6 +64,12 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
+  const router = useRouter();
+
+  // Detect current locale from path
+  const segments = router.asPath.split('/');
+  const currentLocale = locales.includes(segments[1] as any) ? segments[1] : 'ko';
+
   return (
     <div className="markdown-content">
       <Markdown
@@ -195,11 +203,21 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             a: {
-              component: ({ children, ...props }: any) => (
-                <a className="text-primary hover:underline underline-offset-4" {...props}>
-                  {children}
-                </a>
-              ),
+              component: ({ children, href, ...props }: any) => {
+                // If it's an internal link starting with / and not already having a locale
+                let finalHref = href;
+                if (href?.startsWith('/') && !href.startsWith('//')) {
+                  const pathSegments = href.split('/');
+                  if (!locales.includes(pathSegments[1] as any)) {
+                    finalHref = `/${currentLocale}${href === '/' ? '' : href}`;
+                  }
+                }
+                return (
+                  <a href={finalHref} className="text-primary hover:underline underline-offset-4" {...props}>
+                    {children}
+                  </a>
+                );
+              },
             },
 
             img: {
@@ -208,12 +226,11 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={src}
-                    alt={alt || '이미지'}
+                    alt={alt || 'image'}
                     className="w-full h-auto rounded-lg shadow-md"
                     loading="lazy"
                     {...rest}
                   />
-                  {/* {alt && <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">{alt}</p>} */}
                 </div>
               ),
             },

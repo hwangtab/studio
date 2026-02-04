@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import {
   generateDefaultSchema,
@@ -8,6 +9,7 @@ import {
   generateFaqSchema,
   generateCourseSchema,
 } from '../utils/schemaGenerator';
+import { locales, localeNames } from '../lib/i18n';
 
 interface SEOProps {
   title?: string;
@@ -34,7 +36,7 @@ const SEO = ({
   title = '스튜디오 놀 - 음악 제작의 모든 것',
   description = '최고의 사운드를 위한 음악 제작 스튜디오, 스튜디오 놀. 전문적인 믹싱, 마스터링, 레코딩 서비스로 당신의 음악을 완성하세요.',
   keywords = '스튜디오 놀, 음악 제작, 레코딩, 믹싱, 마스터링, 음반 제작, 음악 프로듀싱, 연신내 스튜디오, 서울 녹음 스튜디오',
-  canonical = 'https://studionol.co.kr/',
+  canonical,
   ogImage = '/images/hardware2.jpg',
   ogType = 'website',
   includeSchema = false,
@@ -50,7 +52,28 @@ const SEO = ({
   reviewItems = null,
   isCourse = false,
 }: SEOProps) => {
+  const router = useRouter();
   const siteUrl = 'https://studionol.co.kr';
+
+  // Determine current locale and path
+  // router.asPath includes query params, router.pathname includes placeholders
+  // We want the clean path for hreflangs.
+  // Assuming pages are at /[locale]/...
+  // We need to strip the current locale from the path to append new ones.
+
+  const currentPath = router.asPath.split('?')[0];
+  const segments = currentPath.split('/');
+  // segments[0] is empty, segments[1] is locale (if valid)
+  let pathWithoutLocale = currentPath;
+  let currentLocale = 'ko';
+
+  if (locales.includes(segments[1] as any)) {
+    currentLocale = segments[1];
+    pathWithoutLocale = '/' + segments.slice(2).join('/');
+  }
+
+  // Clean up double slashes if any (e.g. root path)
+  if (pathWithoutLocale === '//') pathWithoutLocale = '/';
 
   const toAbsoluteUrl = React.useCallback((value = '') => {
     if (!value) return '';
@@ -63,7 +86,10 @@ const SEO = ({
 
   const absoluteOgImage = React.useMemo(() => toAbsoluteUrl(ogImage), [ogImage, toAbsoluteUrl]);
 
-  const canonicalUrl = React.useMemo(() => toAbsoluteUrl(canonical), [canonical, toAbsoluteUrl]);
+  // Use provided canonical or generate one based on current path
+  const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
+  const canonicalUrl = React.useMemo(() => toAbsoluteUrl(derivedCanonical), [derivedCanonical, toAbsoluteUrl]);
+
   const normalizedCanonical = React.useMemo(() =>
     canonicalUrl.endsWith('/') && canonicalUrl !== `${siteUrl}/`
       ? canonicalUrl.slice(0, -1)
@@ -125,6 +151,14 @@ const SEO = ({
 
   const schemaData = schema || courseSchema || articleSchema || defaultSchema;
 
+  // Map locale codes to Open Graph locale format (e.g. ko -> ko_KR)
+  const ogLocaleMap: Record<string, string> = {
+    ko: 'ko_KR',
+    en: 'en_US',
+    zh: 'zh_CN',
+    es: 'es_ES',
+  };
+
   return (
     <Head>
       <title>{title}</title>
@@ -151,19 +185,41 @@ const SEO = ({
       <link rel="preconnect" href="https://i.ytimg.com" />
       <link rel="dns-prefetch" href="https://i.ytimg.com" />
 
-
       <link rel="canonical" href={normalizedCanonical} />
+
+      {/* Hreflang tags for SEO */}
+      {locales.map((locale) => (
+        <link
+          key={locale}
+          rel="alternate"
+          hrefLang={locale}
+          href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+        />
+      ))}
+      {/* Default fallback (x-default) usually points to the default language or a language selector page. 
+          Here pointing to Korean version as default. */}
+      <link
+        rel="alternate"
+        hrefLang="x-default"
+        href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+      />
 
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={normalizedCanonical} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={absoluteOgImage} />
-      <meta property="og:image:alt" content="스튜디오 놀 - 음악 제작 스튜디오" />
+      <meta property="og:image:alt" content="Studio NOL - Music Production Studio" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:locale" content="ko_KR" />
-      <meta property="og:site_name" content="스튜디오 놀" />
+      <meta property="og:locale" content={ogLocaleMap[currentLocale] || 'ko_KR'} />
+      <meta property="og:site_name" content="Studio NOL" />
+
+      {/* Alternate locales in OG */}
+      {locales.filter(l => l !== currentLocale).map(locale => (
+        <meta key={locale} property="og:locale:alternate" content={ogLocaleMap[locale]} />
+      ))}
+
       {ogType === 'article' && articlePublishedTime && (
         <meta property="article:published_time" content={articlePublishedTime} />
       )}
@@ -182,7 +238,7 @@ const SEO = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={absoluteOgImage} />
-      <meta name="twitter:image:alt" content="스튜디오 놀 - 음악 제작 스튜디오" />
+      <meta name="twitter:image:alt" content="Studio NOL" />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
 
       {includeSchema && (
@@ -199,4 +255,3 @@ const SEO = ({
 };
 
 export default SEO;
-

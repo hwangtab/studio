@@ -26,6 +26,7 @@ interface CategoryFilterProps {
   buttonSize?: 'sm' | 'md' | 'lg';
   useCustomColors?: boolean;
   gap?: string;
+  allLabel?: string;
 }
 
 const CategoryFilter = ({
@@ -37,7 +38,8 @@ const CategoryFilter = ({
   titleText = "카테고리",
   buttonSize = "md",
   useCustomColors = false,
-  gap = "gap-2"
+  gap = "gap-2",
+  allLabel = "전체"
 }: CategoryFilterProps) => {
   const mappedCategories: CategoryBase[] = propCategories.map(category => {
     if (typeof category === 'object' && 'name' in category) {
@@ -58,7 +60,7 @@ const CategoryFilter = ({
 
   const categories: CategoryBase[] = mappedCategories.find(cat => cat.id === 'all')
     ? mappedCategories
-    : [{ id: 'all', label: '전체' }, ...mappedCategories];
+    : [{ id: 'all', label: allLabel }, ...mappedCategories];
 
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-body-2',

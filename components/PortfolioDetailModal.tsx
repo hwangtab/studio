@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import ResponsiveImage from './ResponsiveImage';
-import type { PortfolioItem } from '../types/data';
+import type { PortfolioItem, PortfolioCategory } from '../types/data';
 import { shareContent } from '../utils/shareUtils';
 import { getCategoryInfo } from '../utils/portfolioDataUtils';
 
@@ -33,10 +33,11 @@ const modalVariants: Variants = {
 
 interface PortfolioDetailModalProps {
   item: PortfolioItem | null;
+  categories: readonly PortfolioCategory[];
   onClose: () => void;
 }
 
-const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
+const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModalProps) => {
   const handleEsc = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -56,7 +57,7 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
 
   if (!item) return null;
 
-  const categoryInfo = getCategoryInfo(item.category);
+  const categoryInfo = getCategoryInfo(item.category, categories);
 
   const shareUrl = `https://studionol.co.kr/portfolio/${item.id}`;
   const metaDescription = `${item.artist}의 "${item.title}" - ${item.description}. 스튜디오 놀에서 작업한 프로젝트입니다.`;

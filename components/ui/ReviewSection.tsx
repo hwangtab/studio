@@ -5,60 +5,51 @@ import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
 import { STAGGER_CONTAINER, STAGGER_ITEM } from '../../utils/animationUtils';
+import { getReviews } from '../../data/reviews';
+import type { Locale } from '../../lib/i18n';
 
 // 별점 5점 고정이므로 상수 배열로 정의 (매 렌더마다 재생성 방지)
 const FIVE_STARS = [0, 1, 2, 3, 4] as const;
 
-interface Review {
-    author: string;
-    rating: number;
-    content: string;
-    category?: string;
-}
-
-export const reviews: Review[] = [
-    {
-        author: "김*준",
-        rating: 5,
-        category: "음반 프로덕션",
-        content: "단순히 녹음만 하는 곳이 아니라, 아티스트가 가진 의도를 깊게 이해하고 제가 원하는 음악적 방향으로 갈 수 있게 세심하게 가이드해주십니다. 덕분에 첫 음반임에도 불구하고 생각했던 것 이상으로 멋진 결과물이 나왔어요."
-    },
-    {
-        author: "이*정",
-        rating: 5,
-        category: "셀프 축가 녹음",
-        content: "결혼식 셀프 축가 녹음은 처음이라 긴장을 많이 했는데, 단순한 녹음을 넘어 곡의 감정선까지 잘 잡아주셨어요. 제가 원했던 따뜻한 느낌이 소리에 고스란히 담길 수 있도록 디렉팅해주신 덕분에 평생 잊지 못할 선물을 만들었습니다."
-    },
-    {
-        author: "박*현",
-        rating: 5,
-        category: "믹싱 & 마스터링",
-        content: "추상적으로 표현한 아이디어들을 소리로 구체화하는 능력이 탁월하십니다. 믹싱 과정에서도 소통이 정말 잘 돼서 제가 머릿속으로만 그리던 사운드를 실제로 듣게 됐을 때 전율이 돋았네요. 아티스트의 고집과 대중성 사이의 밸런스를 정말 잘 잡아주십니다."
-    },
-    {
-        author: "최*민",
-        rating: 5,
-        category: "방음 연습실",
-        content: "여러 연습실을 다녀봤지만, 여기만큼 작업에만 몰입할 수 있는 쾌적한 곳은 없었습니다. 특히 공조 시스템이 완벽해서 장시간 작업해도 머리가 아프지 않고, 방음 퀄리티가 전문 스튜디오 급이라 새벽에도 소음 걱정 없이 작업할 수 있어요."
-    }
-];
-
 interface ReviewSectionProps {
     className?: string;
     variant?: SectionVariant;
+    locale?: Locale;
 }
 
-const ReviewSection = ({ className, variant = "default" }: ReviewSectionProps) => {
+const ReviewSection = ({ className, variant = "default", locale = 'ko' }: ReviewSectionProps) => {
+    const reviews = getReviews(locale);
+    
+    // Simple translation for title/subtitle
+    const t = (ko: string, en: string, zh?: string, es?: string) => {
+        if (locale === 'ko') return ko;
+        if (locale === 'en') return en;
+        if (locale === 'zh') return zh || en;
+        if (locale === 'es') return es || en;
+        return ko;
+    };
+
     return (
         <Section variant={variant} className={className}>
             <SectionHeading
                 icon={MessageSquare}
                 title={
-                    <>
-                        아티스트와 함께 만드는 <span>감동의 기록</span>
-                    </>
+                    locale === 'ko' ? (
+                        <>
+                            아티스트와 함께 만드는 <span>감동의 기록</span>
+                        </>
+                    ) : (
+                        <>
+                            {t("Creating Together:", "Creating Together:", "共同创造:", "Creando Juntos:")} <span>{t("Touching Records", "Touching Records", "感动的记录", "Registros Conmovedores")}</span>
+                        </>
+                    )
                 }
-                subtitle="스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다."
+                subtitle={t(
+                    "스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.",
+                    "Proven technology and sincerity verified by many who have visited Studio NOL.",
+                    "这是经过 Studio NOL 的许多人证明的技术力量和真诚。",
+                    "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL."
+                )}
                 className="mb-16"
             />
 
@@ -98,7 +89,7 @@ const ReviewSection = ({ className, variant = "default" }: ReviewSectionProps) =
                                 <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                                     <div>
                                         <span className="block font-bold typo-card-title text-base mb-1">
-                                            {review.author} 님
+                                            {review.author}
                                         </span>
                                         <span className="text-sm text-primary font-semibold">
                                             {review.category}

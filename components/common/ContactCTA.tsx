@@ -3,12 +3,27 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Sparkles } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
+import type { Locale } from '../../lib/i18n';
 
 interface ContactCTAProps {
     className?: string;
+    locale?: Locale;
 }
 
-const ContactCTA = ({ className = "" }: ContactCTAProps) => {
+const ContactCTA = ({ className = "", locale = 'ko' }: ContactCTAProps) => {
+    const isKo = locale === 'ko';
+    
+    // Simple translation helper
+    const t = (ko: string, en: string, zh?: string, es?: string) => {
+        if (locale === 'ko') return ko;
+        if (locale === 'en') return en;
+        if (locale === 'zh') return zh || en;
+        if (locale === 'es') return es || en;
+        return ko;
+    };
+
+    const getLink = (path: string) => `/${locale}${path}`;
+
     return (
         <motion.div
             className={`mt-16 overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
@@ -23,14 +38,14 @@ const ContactCTA = ({ className = "" }: ContactCTAProps) => {
                         icon={Sparkles}
                         title={
                             <>
-                                당신의 소중한 음악,<br />
-                                <span className="text-primary">최상의 사운드로</span>
+                                {t("당신의 소중한 음악,", "Your Precious Music,", "您珍贵的音乐，", "Tu Preciada Música,")}<br />
+                                <span className="text-primary">{t("최상의 사운드로", "With the Best Sound", "以最佳音质", "Con el Mejor Sonido")}</span>
                             </>
                         }
                         subtitle={
                             <>
-                                검증된 장비와 전문 엔지니어의 노하우로 최선의 결과물을 약속합니다.<br className="hidden md:block" />
-                                지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.
+                                {t("검증된 장비와 전문 엔지니어의 노하우로 최선의 결과물을 약속합니다.", "We promise the best results with verified equipment and expert know-how.", "凭借经过验证的设备和专业工程师的经验，承诺最佳结果。", "Prometemos los mejores resultados con equipos verificados y conocimientos expertos.")}<br className="hidden md:block" />
+                                {t("지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.", "Book a consultation now and tour the studio.", "立即预约访问咨询并参观工作室。", "Reserva una consulta ahora y recorre el estudio.")}
                             </>
                         }
                         align="left"
@@ -38,10 +53,10 @@ const ContactCTA = ({ className = "" }: ContactCTAProps) => {
                     />
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Link
-                            href="/contact"
+                            href={getLink("/contact")}
                             className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
                         >
-                            오시는 길
+                            {t("오시는 길", "Location", "位置", "Ubicación")}
                         </Link>
                         <a
                             href="https://open.kakao.com/me/nol"
@@ -50,7 +65,7 @@ const ContactCTA = ({ className = "" }: ContactCTAProps) => {
                             className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
                         >
                             <MessageCircle className="mr-2" size={20} />
-                            카카오톡 문의하기
+                            {t("카카오톡 문의하기", "Inquiry", "KakaoTalk 咨询", "Consulta por KakaoTalk")}
                         </a>
                     </div>
                 </div>
@@ -63,7 +78,7 @@ const ContactCTA = ({ className = "" }: ContactCTAProps) => {
                 >
                     <ResponsiveImage
                         src="/images/studio2.jpg"
-                        alt="스튜디오 놀 메인 컨트롤 룸"
+                        alt="Studio NOL Control Room"
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                         pictureClassName="block h-full"
                         loading="lazy"

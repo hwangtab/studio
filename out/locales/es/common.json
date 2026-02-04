@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "about": "Sobre Nosotros",
+    "portfolio": "Portafolio",
+    "stories": "Historias",
+    "contact": "Contacto",
+    "pricing": "Precios",
+    "equipment": "Equipo",
+    "practiceRoom": "Sala de Práctica",
+    "lesson": "Clases"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "address": "Dirección",
+    "contact": "Contacto"
+  },
+  "actions": {
+    "more": "Ver Más",
+    "submit": "Enviar",
+    "close": "Cerrar"
+  }
+}

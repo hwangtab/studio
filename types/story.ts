@@ -47,5 +47,6 @@ export interface StoryDetail extends Story {
 export interface StoryPath {
   params: {
     id: string;
+    locale?: string;
   };
 }

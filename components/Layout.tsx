@@ -3,19 +3,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { SITE_CONFIG } from '../data/siteConfig';
-
-const NAV_ITEMS = [
-  { href: '/', label: '홈' },
-  { href: '/about', label: '소개' },
-  { href: '/pricing', label: '가격' },
-  { href: '/portfolio', label: '포트폴리오' },
-  { href: '/studio-info', label: '장비 소개' },
-  { href: '/practice-room', label: '연습실' },
-  { href: '/lesson', label: '레슨' },
-  { href: '/stories', label: '스토리' },
-  { href: '/contact', label: '연락처' },
-];
+import { useTranslation } from 'react-i18next';
+import { getSiteConfig } from '../data/siteConfig';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { type Locale, defaultLocale } from '../lib/i18n';
 
 interface NavLinkProps {
   href: string;
@@ -27,7 +18,10 @@ interface NavLinkProps {
 }
 
 const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigate, hasHero }: NavLinkProps) => {
-  const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+  // Exact match for home, prefix match for others
+  // Need to be careful with locale prefixes.
+  // href is like /ko/about. currentPath is /ko/about.
+  const isActive = currentPath === href || (href !== '/' && currentPath.startsWith(href) && currentPath !== href && currentPath[href.length] === '/');
 
   return (
     <Link
@@ -48,10 +42,12 @@ NavLink.displayName = 'NavLink';
 interface LayoutProps {
   children: React.ReactNode;
   hasHero?: boolean;
+  locale?: Locale;
 }
 
-const Layout = ({ children, hasHero }: LayoutProps) => {
+const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const router = useRouter();
+  const { t } = useTranslation('common', { lng: locale });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,6 +55,20 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   const shouldReduceMotion = useReducedMotion();
 
   const currentPath = useMemo(() => router.asPath || '/', [router.asPath]);
+  const navItems = useMemo(() => {
+    const prefix = `/${locale}`;
+    return [
+      { href: prefix, label: t('nav.home') },
+      { href: `${prefix}/about`, label: t('nav.about') },
+      { href: `${prefix}/pricing`, label: t('nav.pricing') },
+      { href: `${prefix}/portfolio`, label: t('nav.portfolio') },
+      { href: `${prefix}/studio-info`, label: t('nav.equipment') },
+      { href: `${prefix}/practice-room`, label: t('nav.practiceRoom') },
+      { href: `${prefix}/lesson`, label: t('nav.lesson') },
+      { href: `${prefix}/stories`, label: t('nav.stories') },
+      { href: `${prefix}/contact`, label: t('nav.contact') },
+    ];
+  }, [locale, t]);
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -73,7 +83,6 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      // _document에서 설정한 값을 읽어 state만 동기화 (DOM 조작 제거)
       const initialDarkMode = sessionStorage.getItem('initialDarkMode') === 'true';
       setIsDarkMode(initialDarkMode);
       setHasThemeLoaded(true);
@@ -127,8 +136,9 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
 
   const handleNavigate = React.useCallback(() => setIsMenuOpen(false), []);
 
-  const isHome = router.pathname === '/';
+  const isHome = router.pathname === '/[locale]';
   const isFullBleed = [].includes(router.pathname as never);
+  const siteConfig = getSiteConfig(locale);
 
   return (
     <div
@@ -146,21 +156,20 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link
-              href="/"
-              className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'
-                } flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
+              href={`/${locale}`}
+              className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
+                flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
               onClick={(event) => {
-                event.preventDefault();
+                // If needed, custom logic here. Default Link behavior handles navigation.
                 setIsMenuOpen(false);
-                router.push('/').then(scrollToTop);
               }}
             >
-              스튜디오 놀
+              {siteConfig.name}
             </Link>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <nav className="hidden lg:flex space-x-1">
-                {NAV_ITEMS.map((item) => (
+                {navItems.map((item) => (
                   <NavLink
                     key={item.href}
                     href={item.href}
@@ -184,6 +193,12 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
+
+              <LanguageSwitcher
+                currentLocale={locale}
+                isScrolled={isScrolled}
+                hasHero={hasHero || false}
+              />
 
               <button
                 className={`lg:hidden p-2 rounded-full ${isScrolled || !hasHero
@@ -212,7 +227,7 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
               className="md:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
             >
               <div className="px-4 py-3 space-y-2">
-                {NAV_ITEMS.map((item) => (
+                {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -236,46 +251,51 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="typo-footer-heading mb-4">스튜디오 놀</h3>
-              <p className="typo-footer-body text-gray-200/90 mb-4 leading-relaxed">아티스트의 비전을 실현하는 음악 제작 스튜디오</p>
-              <p className="typo-footer-meta">2024 스튜디오 놀. All rights reserved.</p>
+              <h3 className="typo-footer-heading mb-4">
+                {siteConfig.name}
+              </h3>
+              <p className="typo-footer-body text-gray-200/90 mb-4 leading-relaxed">
+                {t('footer.tagline')}
+              </p>
+              <p className="typo-footer-meta">
+                2024 {siteConfig.name}. {t('footer.rights')}
+              </p>
             </div>
 
             <div>
-              <h3 className="typo-footer-heading mb-4">바로가기</h3>
+              <h3 className="typo-footer-heading mb-4">{t('footer.linksTitle')}</h3>
               <ul className="space-y-2">
-                <li><Link href="/" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">홈</Link></li>
-                <li><Link href="/about" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">소개</Link></li>
-                <li><Link href="/portfolio" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">포트폴리오</Link></li>
-                <li><Link href="/pricing" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">가격</Link></li>
-                <li><Link href="/stories" className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">스토리</Link></li>
+                {/* Simplified footer links for now - can use navItems but filtered */}
+                <li><Link href={`/${locale}`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.home')}</Link></li>
+                <li><Link href={`/${locale}/about`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.about')}</Link></li>
+                <li><Link href={`/${locale}/contact`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.contact')}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="typo-footer-heading mb-4">연락처</h3>
+              <h3 className="typo-footer-heading mb-4">{t('footer.contactTitle')}</h3>
               <a
-                href={SITE_CONFIG.contact.naverMapUrl}
+                href={siteConfig.contact.naverMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
               >
                 <span className="inline-block w-4 mr-2">📍</span>
-                <span className="leading-relaxed">{SITE_CONFIG.contact.address}</span>
+                <span className="leading-relaxed">{siteConfig.contact.address}</span>
               </a>
               <a
-                href={`mailto:${SITE_CONFIG.contact.email}`}
+                href={`mailto:${siteConfig.contact.email}`}
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
               >
                 <span className="inline-block w-4 mr-2">📧</span>
-                <span className="leading-relaxed">문의: {SITE_CONFIG.contact.email}</span>
+                <span className="leading-relaxed">{t('footer.emailLabel')}: {siteConfig.contact.email}</span>
               </a>
               <a
-                href={`tel:${SITE_CONFIG.contact.phone}`}
+                href={`tel:${siteConfig.contact.phone}`}
                 className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center"
               >
                 <span className="inline-block w-4 mr-2">📞</span>
-                <span className="leading-relaxed">전화: {SITE_CONFIG.contact.phone}</span>
+                <span className="leading-relaxed">{t('footer.phoneLabel')}: {siteConfig.contact.phone}</span>
               </a>
             </div>
           </div>

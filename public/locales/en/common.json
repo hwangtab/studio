@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "about": "About",
+    "portfolio": "Portfolio",
+    "stories": "Stories",
+    "contact": "Contact",
+    "pricing": "Pricing",
+    "equipment": "Equipment",
+    "practiceRoom": "Practice Room",
+    "lesson": "Lesson"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "address": "Address",
+    "contact": "Contact",
+    "privacy": "Privacy Policy"
+  },
+  "actions": {
+    "more": "Learn More",
+    "submit": "Submit",
+    "close": "Close",
+    "call": "Call",
+    "email": "Email",
+    "kakao": "KakaoTalk",
+    "location": "Location"
+  },
+  "home": {
+    "heroTitle": "Where Music Begins, Studio NOL",
+    "heroSubtitle": "The best space for your music",
+    "startProject": "Start Project"
+  },
+  "about": {
+    "title": "About Studio NOL - All-in-One Music Production",
+    "description": "From a single song idea to a complete album, Studio NOL is your partner in every step.",
+    "subtitle": "All-in-One Production from Planning to Distribution",
+    "serviceTitle": "All-in-One Music Production Service",
+    "serviceSubtitle": "We provide a total solution to realize the musician's vision by managing everything from planning to distribution in one place.",
+    "processTitle": "Comprehensive Production Process",
+    "processSubtitle": "Studio NOL systematically manages every step of album production to create the highest quality results.",
+    "differenceTitle": "Why Studio NOL?",
+    "differenceSubtitle": "A one-stop production system in Yeonsinnae, realizing warm and rich sound through analog equipment."
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Introduction to various projects worked on at Studio NOL. Click each work to see more details.",
+    "sampleTracks": "Sample Tracks",
+    "projects": "Projects",
+    "noProjects": "No projects found in the selected category."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Feel free to contact us for inquiries or reservations.",
+    "form": {
+      "name": "Name",
+      "phone": "Phone",
+      "message": "Message",
+      "submit": "Send Email Inquiry",
+      "kakao": "Inquiry via KakaoTalk",
+      "success": "Message sent successfully.",
+      "error": "Failed to send message. Please try again."
+    },
+    "info": {
+      "title": "Contact Information",
+      "kakao": "KakaoTalk Open Chat",
+      "location": "Location",
+      "hours": "Business Hours",
+      "parking": "Parking: Paid parking available at nearby KT Eunpyeong Building",
+      "transport": "Public Transport: 5 min walk from Bulgwang Station (Line 6) Exit 7"
+    },
+    "notice": {
+      "title": "Before Inquiry",
+      "list": [
+        "We allow responses within 24 hours",
+        "Specific project details help us provide accurate consultation",
+        "Use KakaoTalk for urgent inquiries"
+      ],
+      "privacyTitle": "Privacy Policy",
+      "privacyText": "Collected personal information is used only for response purposes and deleted immediately after consultation."
+    }
+  }
+}

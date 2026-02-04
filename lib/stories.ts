@@ -8,11 +8,19 @@ import remarkBreaks from 'remark-breaks';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryFrontmatter, StoryPath } from '../types/story';
+import { locales, defaultLocale, type Locale } from './i18n';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 
-const getStoryFilePath = (slug: string): string =>
-  path.join(storiesDirectory, `${slug}.md`);
+const getStoryFilePath = (slug: string, locale: string = defaultLocale): string => {
+  // Try locale specific file: slug.en.md
+  const localeFilePath = path.join(storiesDirectory, `${slug}.${locale}.md`);
+  if (fs.existsSync(localeFilePath)) {
+    return localeFilePath;
+  }
+  // Fallback to base file: slug.md
+  return path.join(storiesDirectory, `${slug}.md`);
+};
 
 const stripCodeFenceWrapper = (source: string): string => {
   if (!source) return '';
@@ -43,10 +51,24 @@ const getAllStorySlugs = (): string[] => {
   if (!fs.existsSync(storiesDirectory)) {
     return [];
   }
-  return fs
-    .readdirSync(storiesDirectory)
-    .filter((file: string) => file.endsWith('.md'))
-    .map((file: string) => file.replace(/\.md$/, ''));
+  const files = fs.readdirSync(storiesDirectory);
+  const slugs = new Set<string>();
+
+  files.forEach(file => {
+    if (file.endsWith('.md')) {
+      // Remove .md
+      let name = file.replace(/\.md$/, '');
+      // If it has locale suffix (e.g. slug.en), remove it
+      locales.forEach(locale => {
+        if (name.endsWith(`.${locale}`)) {
+          name = name.replace(new RegExp(`\.${locale}$`), '');
+        }
+      });
+      slugs.add(name);
+    }
+  });
+
+  return Array.from(slugs);
 };
 
 const normalizeDate = (value: string | Date | undefined): string => {
@@ -81,30 +103,30 @@ const mapStoryFrontmatter = (
   };
 };
 
-export const getAllStories = (): Story[] => {
+export const getAllStories = (locale: string = defaultLocale): Story[] => {
   return getAllStorySlugs()
     .map((slug: string) => {
-      const filePath = getStoryFilePath(slug);
+      const filePath = getStoryFilePath(slug, locale);
+      if (!fs.existsSync(filePath)) return null;
       const fileContents = fs.readFileSync(filePath, 'utf8');
       const normalized = stripCodeFenceWrapper(fileContents);
       const { data, content } = matter(normalized);
       return mapStoryFrontmatter(slug, data, content);
     })
+    .filter((story): story is Story => story !== null)
     .sort((a: Story, b: Story) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
-export const getStoryDetail = async (slug: string): Promise<StoryDetail> => {
-  const filePath = getStoryFilePath(slug);
+export const getStoryDetail = async (slug: string, locale: string = defaultLocale): Promise<StoryDetail> => {
+  const filePath = getStoryFilePath(slug, locale);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const normalized = stripCodeFenceWrapper(fileContents);
   const { data, content } = matter(normalized);
   const baseStory = mapStoryFrontmatter(slug, data, content);
   let contentToProcess = content;
 
-  // If the thumbnail was derived from the content (meaning it's the first image),
-  // we remove that image from the content to avoid duplication in the UI (Hero + Content Body).
   if (baseStory.thumbnailDerived && baseStory.thumbnail) {
-    const imageRegex = /!\[.*?\]\(([^)]+)\)/;
+    const imageRegex = /!.*\]\(([^)]+)\)/;
     const match = contentToProcess.match(imageRegex);
     if (match && match[1] === baseStory.thumbnail) {
       contentToProcess = contentToProcess.replace(match[0], '');
@@ -124,5 +146,15 @@ export const getStoryDetail = async (slug: string): Promise<StoryDetail> => {
   };
 };
 
-export const getStoryPaths = (): StoryPath[] =>
-  getAllStorySlugs().map((slug: string) => ({ params: { id: slug } }));
+export const getStoryPaths = (): StoryPath[] => {
+  const slugs = getAllStorySlugs();
+  const paths: StoryPath[] = [];
+
+  slugs.forEach(slug => {
+    locales.forEach(locale => {
+      paths.push({ params: { locale, id: slug } });
+    });
+  });
+
+  return paths;
+};

@@ -2,14 +2,26 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
+import type { Locale } from '../lib/i18n';
 
 export type CTAType = 'recording' | 'lesson' | 'practice' | 'production';
 
 interface StoryCTAProps {
     type?: CTAType;
+    locale?: Locale;
 }
 
-const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording' }) => {
+const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
+    const t = (ko: string, en: string, zh?: string, es?: string) => {
+        if (locale === 'ko') return ko;
+        if (locale === 'en') return en;
+        if (locale === 'zh') return zh || en;
+        if (locale === 'es') return es || en;
+        return ko;
+    };
+
+    const getLink = (path: string) => `/${locale}${path}`;
+
     const content = {
         recording: {
             gradient: 'from-indigo-900 to-purple-900',
@@ -26,17 +38,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording' }) => {
                     <Music size={20} />
                 </>
             ),
-            title: '더 나은 사운드를 원하시나요?',
+            title: t("더 나은 사운드를 원하시나요?", "Want Better Sound?", "想要更好的声音吗？", "¿Quieres un mejor sonido?"),
             description: (
                 <>
-                    스튜디오 놀의 전문적인 레코딩, 믹싱 서비스를 경험해보세요.<br className="hidden md:block" />
-                    최고의 장비와 노하우로 당신의 음악을 완성해드립니다.
+                    {t("스튜디오 놀의 전문적인 레코딩, 믹싱 서비스를 경험해보세요.", "Experience professional recording and mixing services at Studio NOL.", "体验 Studio NOL 的专业录音和混音服务。", "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.")}<br className="hidden md:block" />
+                    {t("최고의 장비와 노하우로 당신의 음악을 완성해드립니다.", "We complete your music with the best equipment and know-how.", "用最好的设备和经验完成您的音乐。", "Completamos tu música con el mejor equipo y experiencia.")}
                 </>
             ),
-            primaryLink: '/pricing',
-            primaryText: '서비스 가격 보기',
-            secondaryLink: '/contact',
-            secondaryText: '문의하기',
+            primaryLink: getLink('/pricing'),
+            primaryText: t("서비스 가격 보기", "View Pricing", "查看价格", "Ver Precios"),
+            secondaryLink: getLink('/contact'),
+            secondaryText: t("문의하기", "Inquiry", "咨询", "Consulta"),
             visualText: 'Professional Audio',
             visualGradient: 'from-purple-500 to-indigo-400',
         },
@@ -55,17 +67,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording' }) => {
                     <GraduationCap size={20} />
                 </>
             ),
-            title: '직접 음악을 만들고 싶으신가요?',
+            title: t("직접 음악을 만들고 싶으신가요?", "Want to Make Music Yourself?", "想自己制作音乐吗？", "¿Quieres crear tu propia música?"),
             description: (
                 <>
-                    혼자 고민하지 마세요. 1:1 맞춤형 레슨으로 도와드립니다.<br className="hidden md:block" />
-                    미디, 믹싱, 사운드 디자인까지 기초부터 탄탄하게 배워보세요.
+                    {t("혼자 고민하지 마세요. 1:1 맞춤형 레슨으로 도와드립니다.", "Don't struggle alone. We help with 1:1 customized lessons.", "不要独自烦恼。我们提供1:1定制课程。", "No luches solo. Te ayudamos con clases personalizadas 1:1.")}<br className="hidden md:block" />
+                    {t("미디, 믹싱, 사운드 디자인까지 기초부터 탄탄하게 배워보세요.", "Learn from basics to MIDI, mixing, and sound design.", "从基础开始扎实学习 MIDI、混音、声音设计。", "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.")}
                 </>
             ),
-            primaryLink: '/lesson',
-            primaryText: '레슨 커리큘럼 보기',
-            secondaryLink: '/contact',
-            secondaryText: '상담 신청하기',
+            primaryLink: getLink('/lesson'),
+            primaryText: t("레슨 커리큘럼 보기", "View Curriculum", "查看课程大纲", "Ver Currículo"),
+            secondaryLink: getLink('/contact'),
+            secondaryText: t("상담 신청하기", "Apply for Consultation", "申请咨询", "Solicitar Consulta"),
             visualText: 'Music Education',
             visualGradient: 'from-amber-500 to-orange-400',
         },
@@ -84,17 +96,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording' }) => {
                     <Speaker size={20} />
                 </>
             ),
-            title: '몰입할 나만의 공간이 필요한가요?',
+            title: t("몰입할 나만의 공간이 필요한가요?", "Need Your Own Space to Focus?", "需要沉浸的专属空间吗？", "¿Necesitas tu propio espacio para concentrarte?"),
             description: (
                 <>
-                    언제든 자유롭게 이용할 수 있는 프리미엄 연습실.<br className="hidden md:block" />
-                    쾌적한 환경과 완벽한 방음 시설이 준비되어 있습니다.
+                    {t("언제든 자유롭게 이용할 수 있는 프리미엄 연습실.", "Premium practice rooms available freely anytime.", "随时可以自由使用的高级练习室。", "Salas de práctica premium disponibles libremente en cualquier momento.")}<br className="hidden md:block" />
+                    {t("쾌적한 환경과 완벽한 방음 시설이 준비되어 있습니다.", "Pleasant environment and perfect soundproofing ready.", "准备了舒适的环境和完美的隔音设施。", "Ambiente agradable e insonorización perfecta listos.")}
                 </>
             ),
-            primaryLink: '/practice-room',
-            primaryText: '연습실 시설 보기',
-            secondaryLink: '/contact',
-            secondaryText: '예약 문의하기',
+            primaryLink: getLink('/practice-room'),
+            primaryText: t("연습실 시설 보기", "View Facilities", "查看设施", "Ver Instalaciones"),
+            secondaryLink: getLink('/contact'),
+            secondaryText: t("예약 문의하기", "Inquiry", "预约咨询", "Consulta de Reserva"),
             visualText: 'Creative Space',
             visualGradient: 'from-emerald-500 to-teal-400',
         },
@@ -113,17 +125,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording' }) => {
                     <Settings size={20} />
                 </>
             ),
-            title: '나만의 음원을 제작하고 싶으신가요?',
+            title: t("나만의 음원을 제작하고 싶으신가요?", "Want to Produce Your Own Music?", "想制作自己的音源吗？", "¿Quieres producir tu propia música?"),
             description: (
                 <>
-                    작곡, 편곡부터 믹싱, 마스터링까지.<br className="hidden md:block" />
-                    당신의 아이디어를 완성된 음원으로 만들어드립니다.
+                    {t("작곡, 편곡부터 믹싱, 마스터링까지.", "From composition, arrangement to mixing, mastering.", "从作曲、编曲到混音、母带。", "Desde la composición y arreglo hasta la mezcla y masterización.")}<br className="hidden md:block" />
+                    {t("당신의 아이디어를 완성된 음원으로 만들어드립니다.", "We turn your ideas into finished tracks.", "将您的想法变成完成的音源。", "Convertimos tus ideas en pistas terminadas.")}
                 </>
             ),
-            primaryLink: '/contact',
-            primaryText: '음원 제작 상담하기',
-            secondaryLink: '/pricing',
-            secondaryText: '제작 비용 보기',
+            primaryLink: getLink('/contact'),
+            primaryText: t("음원 제작 상담하기", "Production Inquiry", "音源制作咨询", "Consulta de Producción"),
+            secondaryLink: getLink('/pricing'),
+            secondaryText: t("제작 비용 보기", "View Cost", "查看费用", "Ver Costos"),
             visualText: 'Music Production',
             visualGradient: 'from-blue-500 to-indigo-400',
         }
