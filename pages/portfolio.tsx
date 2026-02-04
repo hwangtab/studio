@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import type { NextPage, GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
@@ -16,6 +16,7 @@ const AudioPlayer = dynamic(() => import('../components/AudioPlayer'), { ssr: fa
 import ProjectRowCard from '../components/ui/ProjectRowCard';
 import SectionHeading from '../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../types/data';
+import type { NextPageWithLayout } from '../types';
 
 interface PortfolioProps {
   initialPortfolioItems: readonly PortfolioItem[];
@@ -23,7 +24,7 @@ interface PortfolioProps {
   categories: readonly PortfolioCategory[];
 }
 
-const Portfolio: NextPage<PortfolioProps> = ({
+const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   initialPortfolioItems = [],
   audioTracks = [],
   categories = [],
@@ -187,7 +188,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
 
 export default Portfolio;
 
-(Portfolio as any).hasHero = true;
+Portfolio.hasHero = true;
 
 export const getStaticProps: GetStaticProps<PortfolioProps> = () => {
   return {

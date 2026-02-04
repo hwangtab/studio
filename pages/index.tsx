@@ -12,7 +12,7 @@ import ImageHero from '../components/common/ImageHero';
 import MediaGallery from '../components/ui/MediaGallery';
 import ReviewSection, { reviews } from '../components/ui/ReviewSection';
 import ResponsiveImage from '../components/ResponsiveImage';
-import { homeServices, studioImages } from '../data/home';
+import { homeServices, studioImages, heroContent } from '../data/home';
 import { homeFaqs } from '../data/faq';
 
 const Home: NextPageWithLayout = () => {
@@ -30,38 +30,36 @@ const Home: NextPageWithLayout = () => {
 
 
       <ImageHero
-        {...{
-          title: (
-            <>
-              <span className="block mb-2 text-gray-100 drop-shadow-lg">당신의 음악에</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
-                생명
-              </span>
-              <span className="text-gray-100 drop-shadow-lg">을 불어넣는 공간</span>
-            </>
-          ),
-          subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
-          backgroundImage: "/images/studio2.jpg",
-          imageAlt: "스튜디오 놀 메인 스튜디오",
-          minHeight: "min-h-[100vh]",
-          overlayGradient: "from-black/40 via-transparent to-black/20",
-          ctaButtons: (
-            <>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center bg-white text-primary-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-              >
-                예약하기
-              </Link>
-              <Link
-                href="/portfolio"
-                className="inline-flex items-center justify-center bg-primary border-2 border-primary text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
-              >
-                포트폴리오
-              </Link>
-            </>
-          ),
-        } as any}
+        title={
+          <>
+            <span className="block mb-2 text-gray-100 drop-shadow-lg">{heroContent.titlePrefix}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+              {heroContent.titleHighlight}
+            </span>
+            <span className="text-gray-100 drop-shadow-lg">{heroContent.titleSuffix}</span>
+          </>
+        }
+        subtitle={heroContent.subtitle}
+        backgroundImage={heroContent.backgroundImage}
+        imageAlt={heroContent.imageAlt}
+        minHeight="min-h-[100vh]"
+        overlayGradient="from-black/40 via-transparent to-black/20"
+        ctaButtons={
+          <>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center bg-white text-primary-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+            >
+              {heroContent.cta.reserve}
+            </Link>
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center justify-center bg-primary border-2 border-primary text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+            >
+              {heroContent.cta.portfolio}
+            </Link>
+          </>
+        }
       />
 
       {/* 스튜디오 갤러리 섹션 */}

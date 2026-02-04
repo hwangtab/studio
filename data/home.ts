@@ -1,6 +1,19 @@
 import { Mic, Disc, Globe } from 'lucide-react';
 import type { HomeService, StudioImage } from '../types/data';
 
+export const heroContent = {
+    titlePrefix: "당신의 음악에",
+    titleHighlight: "생명",
+    titleSuffix: "을 불어넣는 공간",
+    subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
+    backgroundImage: "/images/studio2.jpg",
+    imageAlt: "스튜디오 놀 메인 스튜디오",
+    cta: {
+        reserve: "예약하기",
+        portfolio: "포트폴리오"
+    }
+} as const;
+
 export const homeServices = [
     {
         title: '음반 기획',

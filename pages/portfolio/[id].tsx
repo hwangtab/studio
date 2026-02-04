@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, ExternalLink } from 'lucide-react';
-// @ts-ignore - SEO component is JS
 import SEO from '../../components/SEO';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import { portfolioItems } from '../../data/portfolio';

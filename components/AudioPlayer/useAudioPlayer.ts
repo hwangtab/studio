@@ -26,7 +26,9 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const stopPlayback = useCallback(() => {
         if (audioRef.current) {
             audioRef.current.pause();
-            setIsPlaying(false);
+            if (isMounted.current) {
+                setIsPlaying(false);
+            }
         }
         if (animationRef.current) {
             cancelAnimationFrame(animationRef.current);
@@ -54,19 +56,23 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
 
         const audio = audioRef.current;
 
+        // Reset audio state for new track
         audio.pause();
         audio.currentTime = 0;
-
         audio.src = tracks[currentTrack].src;
         audio.load();
 
         const setAudioData = () => {
-            setDuration(audio.duration);
-            setCurrentTime(audio.currentTime);
+            if (isMounted.current) {
+                setDuration(audio.duration);
+                setCurrentTime(audio.currentTime);
+            }
         };
 
         const setAudioTime = () => {
-            setCurrentTime(audio.currentTime);
+            if (isMounted.current) {
+                setCurrentTime(audio.currentTime);
+            }
         };
 
         audio.addEventListener('loadeddata', setAudioData);
@@ -92,7 +98,9 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             if (playPromise && typeof playPromise.then === 'function') {
                 playPromise
                     .then(() => {
-                        animationRef.current = requestAnimationFrame(whilePlaying);
+                        if (isMounted.current) {
+                            animationRef.current = requestAnimationFrame(whilePlaying);
+                        }
                     })
                     .catch((error) => {
                         if (error.name === 'AbortError') return;
@@ -102,7 +110,9 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
                         }
                     });
             } else {
-                animationRef.current = requestAnimationFrame(whilePlaying);
+                if (isMounted.current) {
+                    animationRef.current = requestAnimationFrame(whilePlaying);
+                }
             }
         } else {
             audioRef.current.pause();

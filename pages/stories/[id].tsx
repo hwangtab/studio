@@ -17,6 +17,7 @@ import { stripMarkdown, summarizeText } from '../../utils/textUtils';
 import { timeAgo } from '../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../lib/stories';
 import type { Story, StoryDetail } from '../../types/story';
+import type { NextPageWithLayout } from '../../types';
 
 interface StoryDetailPageProps {
   story: StoryDetail;
@@ -27,7 +28,7 @@ type Params = {
   id: string;
 };
 
-const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories }) => {
+const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ story, relatedStories }) => {
   const getCTAType = (slug: string, category: string | undefined): CTAType => {
     // slug를 기반으로 결정적인 시드값 생성 (하이드레이션 오류 방지)
     let hash = 0;
@@ -241,4 +242,4 @@ export const getStaticProps: GetStaticProps<StoryDetailPageProps, Params> = asyn
 
 export default StoryDetailPage;
 
-(StoryDetailPage as any).hasHero = true;
+StoryDetailPage.hasHero = true;
