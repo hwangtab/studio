@@ -2,8 +2,9 @@ import React, { useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import ResponsiveImage from './ResponsiveImage';
-import { categories } from '../data/portfolio';
 import type { PortfolioItem } from '../types/data';
+import { shareContent } from '../utils/shareUtils';
+import { getCategoryInfo } from '../utils/portfolioDataUtils';
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -55,31 +56,17 @@ const PortfolioDetailModal = ({ item, onClose }: PortfolioDetailModalProps) => {
 
   if (!item) return null;
 
-  const categoryInfo = categories.find((cat) => cat.id === item.category) || {
-    name: item.category,
-    color: '#6d28d9',
-  };
+  const categoryInfo = getCategoryInfo(item.category);
 
   const shareUrl = `https://studionol.co.kr/portfolio/${item.id}`;
   const metaDescription = `${item.artist}의 "${item.title}" - ${item.description}. 스튜디오 놀에서 작업한 프로젝트입니다.`;
 
   const sharePortfolio = async () => {
-    const shareData = {
+    await shareContent({
       title: `${item.title} - 스튜디오 놀`,
       text: metaDescription,
       url: shareUrl,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(`${item.title}\n${shareUrl}`);
-        alert('링크가 클립보드에 복사되었습니다.');
-      }
-    } catch (error) {
-      console.error('공유 오류:', error);
-    }
+    });
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {

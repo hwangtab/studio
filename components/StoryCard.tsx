@@ -2,7 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { timeAgo } from '../utils/dateUtils';
-import { extractFirstImageUrl, summarizeContent } from '../utils/localDataUtils';
+import { extractFirstImageUrl } from '../utils/localDataUtils';
+import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
 
 interface Story {
@@ -27,9 +28,9 @@ const cardVariants = {
 };
 
 const StoryCard = React.memo(({ story }: StoryCardProps) => {
-  
+
   const thumbnailUrl = story.thumbnail || extractFirstImageUrl(story.content || '');
-  const plainSummary = story.summary || summarizeContent(story.content, 120);
+  const plainSummary = story.summary || summarizeText(story.content, 120, { stripMarkdown: true });
   const slug = story.slug || story.id;
 
   return (
@@ -61,7 +62,7 @@ const StoryCard = React.memo(({ story }: StoryCardProps) => {
             </div>
           )}
         </div>
-        
+
         <div className="p-4 flex flex-col flex-grow">
           <div className="flex items-center justify-between mb-2 flex-shrink-0">
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full">
@@ -71,11 +72,11 @@ const StoryCard = React.memo(({ story }: StoryCardProps) => {
               {story.date ? timeAgo(story.date) : '날짜 없음'}
             </span>
           </div>
-          
+
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 truncate">
             {story.title || '제목 없음'}
           </h3>
-          
+
           <div className="typo-card-body leading-snug line-clamp-4 flex-none">
             {plainSummary || '내용 없음'}
           </div>

@@ -4,18 +4,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
-// @ts-ignore - SEO component is JS
 import SEO from '../../components/SEO';
-// @ts-ignore - MarkdownRenderer component is JS
 import MarkdownRenderer from '../../components/MarkdownRenderer';
-// @ts-ignore - StoryCard component is JS
 import StoryCard from '../../components/StoryCard';
-// @ts-ignore - ImageHero component is JS
 import ImageHero from '../../components/common/ImageHero';
-// @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
 import StoryCTA, { CTAType } from '../../components/StoryCTA';
-import { stripMarkdown } from '../../utils/localDataUtils';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { shareContent } from '../../utils/shareUtils';
+import { extractFirstImageUrl } from '../../utils/localDataUtils';
+import { stripMarkdown, summarizeText } from '../../utils/textUtils';
 import { timeAgo } from '../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../lib/stories';
 import type { Story, StoryDetail } from '../../types/story';
@@ -30,87 +28,68 @@ type Params = {
 };
 
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories }) => {
-  const getCTAType = (category: string | undefined): CTAType => {
-    const random = Math.random();
+  const getCTAType = (slug: string, category: string | undefined): CTAType => {
+    // slug를 기반으로 결정적인 시드값 생성 (하이드레이션 오류 방지)
+    let hash = 0;
+    for (let i = 0; i < slug.length; i++) {
+      hash = (hash << 5) - hash + slug.charCodeAt(i);
+      hash |= 0;
+    }
+    const seed = Math.abs(hash % 100) / 100;
 
-    // 1. 강좌 (Tutorials) - Learner focused
-    // Strategy: Lesson (40%), Practice (30%), Recording (20%), Production (10%)
     if (category?.includes('강좌')) {
-      if (random < 0.4) return 'lesson';
-      if (random < 0.7) return 'practice';
-      if (random < 0.9) return 'recording';
+      if (seed < 0.4) return 'lesson';
+      if (seed < 0.7) return 'practice';
+      if (seed < 0.9) return 'recording';
       return 'production';
     }
 
-    // 2. 장비/리뷰 (Equipment/Review) - Gear focused
-    // Strategy: Practice (60%), Recording (20%), Lesson (20%)
     if (category === '장비' || category === '리뷰') {
-      if (random < 0.6) return 'practice';
-      if (random < 0.8) return 'recording';
+      if (seed < 0.6) return 'practice';
+      if (seed < 0.8) return 'recording';
       return 'lesson';
     }
 
-    // 3. 인터뷰/아티스트 (Interview/Artist) - Inspiration focused
-    // Strategy: Production (70%), Recording (20%), Lesson (10%) - No Practice
     if (category === '인터뷰' || category === '아티스트') {
-      if (random < 0.7) return 'production';
-      if (random < 0.9) return 'recording';
+      if (seed < 0.7) return 'production';
+      if (seed < 0.9) return 'recording';
       return 'lesson';
     }
 
-    // 4. 이벤트 (Event) - Community focused
-    // Strategy: Production (30%), Lesson (30%), Recording (20%), Practice (20%)
     if (category === '이벤트' || category === '공지') {
-      if (random < 0.3) return 'production';
-      if (random < 0.6) return 'lesson';
-      if (random < 0.8) return 'recording';
+      if (seed < 0.3) return 'production';
+      if (seed < 0.6) return 'lesson';
+      if (seed < 0.8) return 'recording';
       return 'practice';
     }
 
-    // 5. Default / Fallback
-    // Strategy: Equal distribution (25% each)
     const types: CTAType[] = ['recording', 'lesson', 'practice', 'production'];
-    return types[Math.floor(Math.random() * types.length)];
+    return types[Math.floor(seed * types.length)];
   };
 
   const [ctaType, setCtaType] = React.useState<CTAType>('recording');
 
   React.useEffect(() => {
     if (story?.category) {
-      setCtaType(getCTAType(story.category));
+      setCtaType(getCTAType(story.slug, story.category));
     }
-  }, [story?.category]);
+  }, [story?.category, story?.slug]);
 
   const router = useRouter();
 
   if (router.isFallback) {
-    return (
-      <div className="container mx-auto px-4 pt-16 pb-12 flex justify-center items-center h-64">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
   const shareUrl = `https://studionol.co.kr/stories/${story.slug}`;
 
   const shareStory = async () => {
-    const shareData = {
+    await shareContent({
       title: story.title,
       text: metaDescription,
       url: shareUrl,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(`${story.title}\n${shareUrl}`);
-        alert('링크가 클립보드에 복사되었습니다.');
-      }
-    } catch (error) {
-      console.error('공유 오류:', error);
-    }
+    });
   };
 
   return (
@@ -127,7 +106,6 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
         articleAuthor={story.author}
         articleSection={story.category}
         includeSchema
-        // @ts-ignore - SEO component is JS
         breadcrumbs={[
           { name: '홈', path: '/' },
           { name: '스토리', path: '/stories' },

@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
-import { AnimatePresence as AnimatePresenceOrig, motion } from 'framer-motion';
-const AnimatePresence = AnimatePresenceOrig as any;
+import AnimatePresence, { motion } from './ui/AnimatePresence';
 import { SITE_CONFIG } from '../data/siteConfig';
 
 const NAV_ITEMS = [
@@ -90,9 +89,11 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     let ticking = false;
+    let rafId: number | null = null;
+
     const handleScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
+        rafId = window.requestAnimationFrame(() => {
           setIsScrolled(window.scrollY > 10);
           ticking = false;
         });
@@ -100,7 +101,12 @@ const Layout = ({ children, hasHero }: LayoutProps) => {
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   useEffect(() => {

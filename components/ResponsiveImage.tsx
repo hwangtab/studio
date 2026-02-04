@@ -41,8 +41,8 @@ const ResponsiveImage = ({
 
   if (!normalizedSrc) return null;
 
-  const hasDimensions = Number.isFinite(width) && Number.isFinite(height);
-  const useFill = Boolean(fill);
+  const hasDimensions = typeof width === 'number' && typeof height === 'number';
+  const useFill = Boolean(fill) || !hasDimensions;
   const wrapperClass = pictureClassName || containerClassName;
 
   const fallbackSrc = '/logo512.png';
@@ -87,8 +87,8 @@ const ResponsiveImage = ({
           className={`${className} ${error ? 'object-contain opacity-50 bg-gray-50 dark:bg-gray-800 p-2' : ''}`}
           sizes={sizes}
           priority={priority}
-          width={width!}
-          height={height!}
+          width={width || 300}
+          height={height || 300}
           onError={() => setError(true)}
           {...rest}
         />

@@ -1,4 +1,6 @@
 import type { PortfolioItem } from '../types/data';
+import { categories } from '../data/portfolio';
+
 
 interface PortfolioStats {
   totalItems: number;
@@ -61,10 +63,18 @@ const getPortfolioStats = (items: readonly PortfolioItem[] = [], tracks: Readonl
   };
 };
 
+const getCategoryInfo = (categoryId: string) => {
+  return categories.find((cat) => cat.id === categoryId) || {
+    name: categoryId,
+    color: '#6d28d9',
+  };
+};
+
 export {
   filterPortfolioItems,
   searchPortfolioItems,
   getPortfolioStats,
+  getCategoryInfo,
   type PortfolioItem,
   type PortfolioStats,
 };

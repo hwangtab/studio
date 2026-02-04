@@ -5,7 +5,8 @@ import { remark } from 'remark';
 import html from 'remark-html';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { summarizeContent, extractFirstImageUrl } from '../utils/localDataUtils';
+import { extractFirstImageUrl } from '../utils/localDataUtils';
+import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryFrontmatter, StoryPath } from '../types/story';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
@@ -73,7 +74,7 @@ const mapStoryFrontmatter = (
     author: (frontmatter?.author as string) || '스튜디오 놀',
     category: (frontmatter?.category as string) || '공지',
     tags: Array.isArray(frontmatter?.tags) ? (frontmatter.tags as string[]) : ['기본'],
-    summary: (frontmatter?.summary as string) || summarizeContent(content, 150),
+    summary: (frontmatter?.summary as string) || summarizeText(content, 150, { stripMarkdown: true }),
     thumbnail: derivedThumbnail || null,
     thumbnailDerived: !(frontmatter?.thumbnail) && Boolean(derivedThumbnail),
     images: Array.isArray(frontmatter?.images) ? (frontmatter.images as string[]) : [],

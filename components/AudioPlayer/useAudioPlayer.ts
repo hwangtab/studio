@@ -10,10 +10,18 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const [volume, setVolume] = useState(0.8);
     const [isMuted, setIsMuted] = useState(false);
 
+    const isMounted = useRef(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const progressBarRef = useRef<HTMLInputElement>(null);
     const animationRef = useRef<number | null>(null);
     const router = useRouter();
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const stopPlayback = useCallback(() => {
         if (audioRef.current) {
@@ -35,6 +43,8 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     }, []);
 
     useEffect(() => {
+        if (typeof window === 'undefined') return;
+
         if (!audioRef.current && tracks && tracks.length > 0) {
             audioRef.current = new Audio(tracks[currentTrack].src);
         }
@@ -84,8 +94,11 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
                         animationRef.current = requestAnimationFrame(whilePlaying);
                     })
                     .catch((error) => {
+                        if (error.name === 'AbortError') return;
                         console.error('오디오 재생 오류:', error);
-                        setIsPlaying(false);
+                        if (isMounted.current) {
+                            setIsPlaying(false);
+                        }
                     });
             } else {
                 animationRef.current = requestAnimationFrame(whilePlaying);

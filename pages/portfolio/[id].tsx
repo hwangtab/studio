@@ -6,10 +6,12 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Share2, ExternalLink } from 'lucide-react';
 // @ts-ignore - SEO component is JS
 import SEO from '../../components/SEO';
-// @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
-import { categories, portfolioItems } from '../../data/portfolio';
+import { portfolioItems } from '../../data/portfolio';
 import type { PortfolioItem } from '../../types/data';
+import { shareContent } from '../../utils/shareUtils';
+import { getCategoryInfo } from '../../utils/portfolioDataUtils';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 interface PortfolioDetailPageProps {
   item: PortfolioItem;
@@ -23,38 +25,20 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ item }) => {
   const router = useRouter();
 
   if (router.isFallback) {
-    return (
-      <div className="container mx-auto px-4 pt-16 pb-12 flex justify-center items-center h-64">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   const shareUrl = `https://studionol.co.kr/portfolio/${item.id}`;
   const metaDescription = `${item.artist}의 "${item.title}" - ${item.description}. 스튜디오 놀에서 작업한 프로젝트입니다.`;
 
-  const categoryInfo = categories.find((cat) => cat.id === item.category) || {
-    name: item.category,
-    color: '#6d28d9',
-  };
+  const categoryInfo = getCategoryInfo(item.category);
 
   const sharePortfolio = async () => {
-    const shareData = {
+    await shareContent({
       title: `${item.title} - 스튜디오 놀`,
       text: metaDescription,
       url: shareUrl,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(`${item.title}\n${shareUrl}`);
-        alert('링크가 클립보드에 복사되었습니다.');
-      }
-    } catch (error) {
-      console.error('공유 오류:', error);
-    }
+    });
   };
 
   return (
@@ -173,7 +157,7 @@ export const getStaticProps: GetStaticProps<PortfolioDetailPageProps, Params> = 
   }
 
   return {
-    props: { item: item as any },
+    props: { item },
   };
 };
 
