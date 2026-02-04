@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
 
-export type CTAType = 'recording' | 'lesson' | 'practice';
+export type CTAType = 'recording' | 'lesson' | 'practice' | 'production';
 
 interface StoryCTAProps {
     type?: CTAType;
@@ -97,6 +97,35 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording' }) => {
             secondaryText: '예약 문의하기',
             visualText: 'Creative Space',
             visualGradient: 'from-emerald-500 to-teal-400',
+        },
+        production: {
+            gradient: 'from-blue-900 to-indigo-900',
+            accentColor: 'text-blue-200',
+            accentBg: 'bg-blue-200',
+            buttonBg: 'bg-white text-blue-900 hover:bg-blue-50',
+            secondaryButtonBg: 'bg-indigo-700/50 text-white hover:bg-indigo-700/70 border-indigo-500/30',
+            icons: (
+                <>
+                    <Music size={20} />
+                    <span className="w-1 h-1 bg-blue-200 rounded-full" />
+                    <Mic2 size={20} />
+                    <span className="w-1 h-1 bg-blue-200 rounded-full" />
+                    <Settings size={20} />
+                </>
+            ),
+            title: '나만의 음원을 제작하고 싶으신가요?',
+            description: (
+                <>
+                    작곡, 편곡부터 믹싱, 마스터링까지.<br className="hidden md:block" />
+                    당신의 아이디어를 완성된 음원으로 만들어드립니다.
+                </>
+            ),
+            primaryLink: '/contact',
+            primaryText: '음원 제작 상담하기',
+            secondaryLink: '/pricing',
+            secondaryText: '제작 비용 보기',
+            visualText: 'Music Production',
+            visualGradient: 'from-blue-500 to-indigo-400',
         }
     };
 

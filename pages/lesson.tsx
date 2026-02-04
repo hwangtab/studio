@@ -50,14 +50,14 @@ const Lesson: PageWithHero = () => {
             <SEO
                 title="음원 발매 컨설팅 · 믹싱 피드백 & 단기 미디 레슨 | 스튜디오 놀"
                 description="혼자 하기 힘든 음원 유통/저작권 등록 컨설팅부터 믹싱 1:1 원포인트 피드백까지. 현업 엔지니어가 필요한 부분만 콕 집어 해결해 드립니다."
-                keywords="음원 발매 컨설팅, 믹싱 피드백, 미디 멘토링, 앨범 제작 상담, 단기 미디 레슨, 큐베이스 원데이, 로직 프로 과외, 연신내 실용음악"
+                keywords="음원 발매 컨설팅, 믹싱 피드백, 미디 멘토링, 음원/앨범 제작 상담, 단기 미디 레슨, 큐베이스 원데이, 로직 프로 과외, 연신내 실용음악"
                 canonical="https://studionol.co.kr/lesson"
                 includeSchema={true}
                 schema={{
                     '@context': 'https://schema.org',
                     '@type': 'Course',
                     'name': '올인원 프로덕션 마스터 클래스',
-                    'description': '미디 작곡부터 레코딩, 믹싱, 마스터링까지. 현업 엔지니어와 함께 나만의 음반을 완성하는 실전형 음악 제작 레슨입니다.',
+                    'description': '미디 작곡부터 레코딩, 믹싱, 마스터링까지. 현업 엔지니어와 함께 나만의 음원을 완성하는 실전형 음악 제작 레슨입니다.',
                     'provider': {
                         '@type': 'Organization',
                         'name': '스튜디오 놀',
@@ -103,7 +103,7 @@ const Lesson: PageWithHero = () => {
                 title="올인원 프로덕션 마스터 클래스"
                 subtitle={
                     <>
-                        상상을 현실의 소리로, 아이디어를 완성된 음반으로.
+                        상상을 현실의 소리로, 아이디어를 완성된 음원으로.
                         <br />
                         프로의 공간에서 프로의 노하우를 배우세요.
                     </>

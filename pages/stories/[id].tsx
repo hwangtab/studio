@@ -50,16 +50,16 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
     }
 
     // 3. 인터뷰/아티스트 (Interview/Artist)
-    // Strategy: Recording focused (Recording 70%, others 30%)
+    // Strategy: Production focused (Production 70%, others 30%)
     if (category === '인터뷰' || category === '아티스트') {
-      if (random < 0.7) return 'recording';
-      if (random < 0.85) return 'practice';
-      return 'lesson';
+      if (random < 0.7) return 'production';
+      if (random < 0.85) return 'recording';
+      return 'practice';
     }
 
     // 4. Default / Fallback
     // Strategy: Equal distribution
-    const types: CTAType[] = ['recording', 'lesson', 'practice'];
+    const types: CTAType[] = ['recording', 'lesson', 'practice', 'production'];
     return types[Math.floor(Math.random() * types.length)];
   };
 

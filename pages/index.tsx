@@ -49,9 +49,9 @@ const Home: NextPage = () => {
   return (
     <div className="overflow-visible">
       <SEO
-        title="전문 음반 제작 · 믹싱&마스터링 & 성우/축가 녹음 | 스튜디오 놀"
-        description="아티스트의 음악적 비전을 소리로 실현하는 프로페셔널 뮤직 프로덕션. 하이엔드 장비와 전문 엔지니어링으로 최고의 결과물을 보장합니다. 앨범 제작, 믹싱, 마스터링 전문 스튜디오."
-        keywords="음반 제작, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 스튜디오 놀"
+        title="전문 음원 제작 · 믹싱&마스터링 & 성우/축가 녹음 | 스튜디오 놀"
+        description="아티스트의 음악적 비전을 소리로 실현하는 프로페셔널 뮤직 프로덕션. 하이엔드 장비와 전문 엔지니어링으로 최고의 결과물을 보장합니다. 음원/앨범 제작, 믹싱, 마스터링 전문 스튜디오."
+        keywords="음원 제작, 디지털 싱글, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 스튜디오 놀"
         canonical="https://studionol.co.kr/"
         includeSchema
         // @ts-ignore - SEO component is JS
