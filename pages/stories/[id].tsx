@@ -31,15 +31,34 @@ type Params = {
 
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories }) => {
   const getCTAType = (category: string | undefined): CTAType => {
-    // 1. Context Matching (70% probability)
     const random = Math.random();
-    if (random < 0.7) {
-      if (category === '강좌') return 'lesson';
-      if (category === '장비' || category === '리뷰') return 'practice';
-      if (category === '인터뷰' || category === '아티스트') return 'recording';
+
+    // 1. 강좌 (Tutorials) - Most Traffic
+    // Strategy: Balanced exposure (Lesson 40%, Practice 30%, Recording 30%)
+    if (category?.includes('강좌')) {
+      if (random < 0.4) return 'lesson';
+      if (random < 0.7) return 'practice';
+      return 'recording';
     }
 
-    // 2. Fallback / Random Rotation
+    // 2. 장비/리뷰 (Equipment/Review)
+    // Strategy: Practice focused (Practice 70%, others 30%)
+    if (category === '장비' || category === '리뷰') {
+      if (random < 0.7) return 'practice';
+      if (random < 0.85) return 'lesson';
+      return 'recording';
+    }
+
+    // 3. 인터뷰/아티스트 (Interview/Artist)
+    // Strategy: Recording focused (Recording 70%, others 30%)
+    if (category === '인터뷰' || category === '아티스트') {
+      if (random < 0.7) return 'recording';
+      if (random < 0.85) return 'practice';
+      return 'lesson';
+    }
+
+    // 4. Default / Fallback
+    // Strategy: Equal distribution
     const types: CTAType[] = ['recording', 'lesson', 'practice'];
     return types[Math.floor(Math.random() * types.length)];
   };
