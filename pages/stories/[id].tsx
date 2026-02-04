@@ -14,7 +14,7 @@ import StoryCard from '../../components/StoryCard';
 import ImageHero from '../../components/common/ImageHero';
 // @ts-ignore - ResponsiveImage component is JS
 import ResponsiveImage from '../../components/ResponsiveImage';
-import StoryCTA from '../../components/StoryCTA';
+import StoryCTA, { CTAType } from '../../components/StoryCTA';
 import { stripMarkdown } from '../../utils/localDataUtils';
 import { timeAgo } from '../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../lib/stories';
@@ -61,6 +61,26 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
       console.error('공유 오류:', error);
     }
   };
+
+  const getCTAType = (category: string | undefined): CTAType => {
+    // 1. Context Matching (70% probability)
+    const random = Math.random();
+    if (random < 0.7) {
+      if (category === '강좌') return 'lesson';
+      if (category === '장비' || category === '리뷰') return 'practice';
+      if (category === '인터뷰' || category === '아티스트') return 'recording';
+    }
+
+    // 2. Fallback / Random Rotation
+    const types: CTAType[] = ['recording', 'lesson', 'practice'];
+    return types[Math.floor(Math.random() * types.length)];
+  };
+
+  const [ctaType, setCtaType] = React.useState<CTAType>('recording');
+
+  React.useEffect(() => {
+    setCtaType(getCTAType(story.category));
+  }, [story.category]);
 
   return (
     <>
@@ -133,7 +153,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ story, relatedStories
           <MarkdownRenderer content={story.content} />
         </motion.div>
 
-        <StoryCTA />
+        <StoryCTA type={ctaType} />
 
         {Array.isArray(story.images) && story.images.length > 0 && (
           <motion.div
