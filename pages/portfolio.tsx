@@ -12,7 +12,7 @@ import ImageHero from '../components/common/ImageHero';
 import { categories, portfolioItems, audioTracks } from '../data/portfolio';
 import PortfolioDetailModal from '../components/PortfolioDetailModal';
 const AudioPlayer = dynamic(() => import('../components/AudioPlayer'), { ssr: false });
-import PortfolioCard from '../components/ui/PortfolioCard';
+import ProjectRowCard from '../components/ui/ProjectRowCard';
 import SectionHeading from '../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../types/data';
 
@@ -157,6 +157,8 @@ const Portfolio: NextPage<PortfolioProps> = ({
             </div>
           </div>
 
+
+
           {filteredItems.length === 0 ? (
             <div className="text-center pt-16 pb-12">
               <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} />
@@ -165,11 +167,12 @@ const Portfolio: NextPage<PortfolioProps> = ({
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredItems.map((item) => (
-                <PortfolioCard
+            <div className="flex flex-col gap-4">
+              {filteredItems.map((item, index) => (
+                <ProjectRowCard
                   key={item.id}
                   {...item}
+                  index={index}
                   onClick={() => handleCardClick(item)}
                 />
               ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAudioPlayer } from './useAudioPlayer';
 import TrackInfo from './TrackInfo';
 import ProgressBar from './ProgressBar';
@@ -11,7 +11,6 @@ import { FADE_IN_UP } from '../../utils/animationUtils';
 
 interface AudioPlayerProps {
     tracks: readonly AudioTrack[];
-    layout?: 'grid' | 'stack';
 }
 
 const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
@@ -22,7 +21,6 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
         currentTime,
         volume,
         isMuted,
-        isExpanded,
         progressBarRef,
         playPause,
         nextTrack,
@@ -31,7 +29,6 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
         changeRange,
         changeVolume,
         toggleMute,
-        toggleExpand,
         formatTime,
         progress,
         track,
@@ -44,11 +41,11 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
 
     return (
         <motion.div
-            className="bg-[#121212] overflow-hidden rounded-3xl shadow-2xl border border-white/5 relative"
+            className="bg-white dark:bg-[#121212] overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-white/5 relative"
             {...FADE_IN_UP}
         >
-            {/* Background Atmosphere */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            {/* Background Atmosphere (Dark Mode Only) */}
+            <div className="hidden dark:block absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[-50%] left-[-20%] w-[70%] h-[70%] rounded-full bg-primary/20 blur-[120px]" />
                 <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary/20 blur-[100px]" />
                 <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-[0.03]" />
@@ -56,17 +53,14 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
 
             <div className="relative z-10 grid lg:grid-cols-[1.2fr,1fr] gap-0">
                 {/* Left Side: Player Main */}
-                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-white/5 backdrop-blur-sm">
+                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-white/5 backdrop-blur-sm">
                     <div className="flex-1 flex flex-col justify-center">
                         <TrackInfo
                             track={track}
                             trackNumber={currentTrack + 1}
                             totalTracks={tracks.length}
                             isPlaying={isPlaying}
-                            isExpanded={true} // Always show full info in this new design
                             onPlayPause={playPause}
-                            onToggleExpand={toggleExpand}
-                            layout="stack" // Force stack layout for the left panel
                         />
                     </div>
 
@@ -99,7 +93,7 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
                 </div>
 
                 {/* Right Side: Playlist */}
-                <div className="bg-black/20 p-6 lg:p-8 max-h-[400px] lg:max-h-[500px] overflow-hidden flex flex-col backdrop-blur-md">
+                <div className="bg-gray-50 dark:bg-black/20 p-6 lg:p-8 h-full min-h-[400px] flex flex-col backdrop-blur-md border-l border-gray-100 dark:border-white/5">
                     <Playlist
                         tracks={tracks}
                         currentTrackIndex={currentTrack}

@@ -12,7 +12,7 @@ interface ProgressBarProps {
 const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChangeRange, formatTime }: ProgressBarProps) => {
     return (
         <div className="w-full">
-            <div className="relative h-1.5 w-full bg-white/10 rounded-full group cursor-pointer mb-2">
+            <div className="relative h-1.5 w-full bg-gray-200 dark:bg-white/10 rounded-full group cursor-pointer mb-2">
                 <input
                     type="range"
                     ref={progressBarRef}
@@ -23,7 +23,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                 />
 
                 {/* Background Track */}
-                <div className="absolute inset-0 bg-white/5 rounded-full" />
+                <div className="absolute inset-0 bg-gray-100 dark:bg-white/5 rounded-full" />
 
                 {/* Progress Fill with Glow */}
                 <div
@@ -33,16 +33,16 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
 
                 {/* Handle (visible on hover or interaction) */}
                 <div
-                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
+                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 dark:bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
                     style={{ left: `${progress}%`, transform: 'translate(-50%, -50%)' }}
                 />
             </div>
 
             <div className="flex items-center justify-between px-1">
-                <span className="text-[10px] font-mono font-medium text-white/50 tracking-wider">
+                <span className="text-[10px] font-mono font-medium text-gray-400 dark:text-white/50 tracking-wider">
                     {formatTime(currentTime)}
                 </span>
-                <span className="text-[10px] font-mono font-medium text-white/50 tracking-wider">
+                <span className="text-[10px] font-mono font-medium text-gray-400 dark:text-white/50 tracking-wider">
                     {formatTime(duration)}
                 </span>
             </div>

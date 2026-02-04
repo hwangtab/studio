@@ -9,7 +9,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [volume, setVolume] = useState(0.8);
     const [isMuted, setIsMuted] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const progressBarRef = useRef<HTMLInputElement>(null);
@@ -177,10 +176,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
-    const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
-    };
-
     return {
         currentTrack,
         isPlaying,
@@ -188,7 +183,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         currentTime,
         volume,
         isMuted,
-        isExpanded,
 
         progressBarRef,
 
@@ -198,7 +192,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         changeRange,
         changeVolume,
         toggleMute,
-        toggleExpand,
         formatTime,
 
         selectTrack: (index: number) => {

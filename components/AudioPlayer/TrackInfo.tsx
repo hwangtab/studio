@@ -19,13 +19,10 @@ interface TrackInfoProps {
     trackNumber: number;
     totalTracks: number;
     isPlaying: boolean;
-    isExpanded: boolean;
     onPlayPause: () => void;
-    onToggleExpand: () => void;
-    layout?: 'grid' | 'stack';
 }
 
-const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, onPlayPause }: TrackInfoProps) => {
+const TrackInfo = ({ track, trackNumber, isPlaying }: TrackInfoProps) => {
     return (
         <div className="flex flex-col items-center text-center">
             {/* Album Art with localized glow and rotation effect */}
@@ -39,7 +36,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, onPlayPause }: 
                     }`} />
 
                 <div
-                    className={`relative w-48 h-48 sm:w-64 sm:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-black/50 ring-1 ring-white/10 ${isPlaying ? 'animate-spin-slow' : ''}`}
+                    className={`relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl border-4 border-black/50 ring-1 ring-white/10 ${isPlaying ? 'animate-spin-slow' : ''}`}
                     style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}
                 >
                     <ResponsiveImage
@@ -48,16 +45,16 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, onPlayPause }: 
                         pictureClassName="block w-full h-full"
                         className="w-full h-full object-cover"
                         loading="lazy"
-                        sizes="(max-width: 640px) 192px, 256px"
+                        sizes="(max-width: 640px) 256px, 320px"
                         fill={true}
-                        width={256}
-                        height={256}
+                        width={320}
+                        height={320}
                     />
 
                     {/* Vinyl Center Hole */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-8 h-8 bg-[#121212] rounded-full border border-white/10 flex items-center justify-center">
-                            <div className="w-2 h-2 bg-black rounded-full" />
+                        <div className="w-8 h-8 bg-gray-100 dark:bg-[#121212] rounded-full border border-gray-200 dark:border-white/10 flex items-center justify-center">
+                            <div className="w-2 h-2 bg-gray-800 dark:bg-black rounded-full" />
                         </div>
                     </div>
 
@@ -72,12 +69,12 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, onPlayPause }: 
                             <motion.div
                                 key={i}
                                 animate={isPlaying ? { height: [4, 12, 4] } : { height: 4 }}
-                                transition={{
+                                transition={isPlaying ? {
                                     repeat: Infinity,
                                     duration: 0.8,
                                     delay: i * 0.2,
                                     ease: "easeInOut"
-                                }}
+                                } : { duration: 0.2 }}
                                 className={`w-1 rounded-full ${isPlaying ? 'bg-primary' : 'bg-gray-500'}`}
                             />
                         ))}
@@ -91,7 +88,7 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, onPlayPause }: 
             {/* Title & Artist */}
             <div className="w-full">
                 <motion.h3
-                    className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight"
+                    className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight"
                     layout
                 >
                     {track.title}
@@ -103,10 +100,10 @@ const TrackInfo = ({ track, trackNumber, totalTracks, isPlaying, onPlayPause }: 
                     {track.artist}
                 </motion.p>
 
-                <div className="flex items-center justify-center gap-2 text-xs font-mono text-white/40 uppercase tracking-widest border border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-white/5">
+                <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/40 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
                     <Disc size={12} />
                     <span>High Fidelity Audio</span>
-                    <span className="w-1 h-1 bg-white/20 rounded-full mx-1" />
+                    <span className="w-1 h-1 bg-gray-300 dark:bg-white/20 rounded-full mx-1" />
                     <span>Track {trackNumber < 10 ? `0${trackNumber}` : trackNumber}</span>
                 </div>
             </div>

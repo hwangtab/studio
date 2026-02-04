@@ -1,0 +1,106 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ExternalLink, Disc, Mic2, MousePointer2 } from 'lucide-react';
+import ResponsiveImage from '../ResponsiveImage';
+import { PortfolioItem } from '../../types/data';
+
+interface ProjectRowCardProps extends PortfolioItem {
+    onClick?: () => void;
+    index: number;
+}
+
+const ProjectRowCard = ({
+    title,
+    description,
+    image,
+    artist,
+    category,
+    services,
+    onClick,
+    index
+}: ProjectRowCardProps) => {
+
+    // 카테고리에 따른 뱃지 색상 (Light/Dark 대응)
+    const getCategoryColor = (cat: string) => {
+        switch (cat) {
+            case 'album': return 'bg-pink-50 text-pink-600 border-pink-200 dark:bg-pink-500/20 dark:text-pink-400 dark:border-pink-500/30';
+            case 'single': return 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30';
+            case 'compilation': return 'bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-500/20 dark:text-violet-400 dark:border-violet-500/30';
+            case 'commercial': return 'bg-orange-50 text-orange-600 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30';
+            default: return 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-400 dark:border-gray-500/30';
+        }
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-all duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none"
+            onClick={onClick}
+        >
+            {/* Left: Album Art */}
+            <div className="relative w-full sm:w-48 h-48 sm:h-full flex-shrink-0 overflow-hidden bg-gray-100 dark:bg-black">
+                <ResponsiveImage
+                    src={image}
+                    alt={title}
+                    pictureClassName="w-full h-full"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-100 dark:opacity-90 dark:group-hover:opacity-100"
+                    width={200}
+                    height={200}
+                    sizes="(max-width: 640px) 100vw, 200px"
+                />
+
+                {/* Vinyl Effect Overlay (Dark Mode Only) */}
+                <div className="hidden dark:block absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/10 pointer-events-none" />
+
+                {/* Hover Play/Action Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">
+                    <div className="bg-white/10 p-3 rounded-full border border-white/20 backdrop-blur-md">
+                        <MousePointer2 className="text-white" size={24} />
+                    </div>
+                </div>
+            </div>
+
+            {/* Right: Content */}
+            <div className="flex-1 p-6 flex flex-col justify-between relative overflow-hidden">
+                {/* Background Decor (Dark Mode Only) */}
+                <div className="hidden dark:block absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+                <div className="relative z-10">
+                    <div className="flex flex-wrap gap-2 mb-3">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${getCategoryColor(category)} uppercase tracking-wider`}>
+                            {category}
+                        </span>
+                        {services.slice(0, 3).map((service, i) => (
+                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/40 dark:border-white/10 px-2 py-0.5 rounded">
+                                {service}
+                            </span>
+                        ))}
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors mb-1 line-clamp-1">
+                        {title}
+                    </h3>
+                    <div className="flex items-center text-gray-600 dark:text-white/60 mb-2">
+                        <Mic2 size={14} className="mr-1.5" />
+                        <span className="text-sm font-medium">{artist}</span>
+                    </div>
+                </div>
+
+                <div className="relative z-10 flex items-end justify-between mt-2">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 max-w-[80%]">
+                        {description}
+                    </p>
+
+                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary/80 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-4 group-hover:translate-x-0 transition-transform duration-300">
+                        <span className="mr-2">VIEW PROJECT</span>
+                        <ExternalLink size={14} />
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
+
+export default ProjectRowCard;
