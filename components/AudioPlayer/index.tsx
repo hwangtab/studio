@@ -1,19 +1,20 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAudioPlayer } from './useAudioPlayer';
 import TrackInfo from './TrackInfo';
 import ProgressBar from './ProgressBar';
 import VolumeControls from './VolumeControls';
 import PlayerControls from './PlayerControls';
+import Playlist from './Playlist';
 import type { AudioTrack } from '../../types/data';
-import { FADE_IN_UP, HOVER_SCALE, TAP_SCALE } from '../../utils/animationUtils';
+import { FADE_IN_UP } from '../../utils/animationUtils';
 
 interface AudioPlayerProps {
     tracks: readonly AudioTrack[];
     layout?: 'grid' | 'stack';
 }
 
-const AudioPlayer = ({ tracks, layout = 'grid' }: AudioPlayerProps) => {
+const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
     const {
         currentTrack,
         isPlaying,
@@ -26,6 +27,7 @@ const AudioPlayer = ({ tracks, layout = 'grid' }: AudioPlayerProps) => {
         playPause,
         nextTrack,
         prevTrack,
+        selectTrack,
         changeRange,
         changeVolume,
         toggleMute,
@@ -35,63 +37,75 @@ const AudioPlayer = ({ tracks, layout = 'grid' }: AudioPlayerProps) => {
         track,
     } = useAudioPlayer(tracks);
 
+    // 데스크탑에서는 항상 확장된 뷰처럼 보이게 하되, 모바일에서는 토글 지원
+    // 하지만 이번 디자인은 플레이리스트를 옆에 붙이는 형태이므로
+    // 모바일에서는 플레이리스트를 하단에 배치하거나 탭으로 처리하는 것이 좋음.
+    // 여기서는 반응형 그리드 레이아웃을 사용.
+
     return (
         <motion.div
-            className={`bg-gradient-to-br from-primary-dark via-secondary to-accent text-white rounded-2xl shadow-2xl overflow-hidden border border-white/10 transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}
+            className="bg-[#121212] overflow-hidden rounded-3xl shadow-2xl border border-white/5 relative"
             {...FADE_IN_UP}
-            layout
         >
-            <TrackInfo
-                track={track}
-                trackNumber={currentTrack + 1}
-                totalTracks={tracks.length}
-                isPlaying={isPlaying}
-                isExpanded={isExpanded}
-                onPlayPause={playPause}
-                onToggleExpand={toggleExpand}
-                layout={layout}
-            />
+            {/* Background Atmosphere */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                <div className="absolute top-[-50%] left-[-20%] w-[70%] h-[70%] rounded-full bg-primary/20 blur-[120px]" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary/20 blur-[100px]" />
+                <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-[0.03]" />
+            </div>
 
-            <ProgressBar
-                currentTime={currentTime}
-                duration={duration}
-                progress={progress}
-                progressBarRef={progressBarRef}
-                onChangeRange={changeRange}
-                formatTime={formatTime}
-            />
+            <div className="relative z-10 grid lg:grid-cols-[1.2fr,1fr] gap-0">
+                {/* Left Side: Player Main */}
+                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-white/5 backdrop-blur-sm">
+                    <div className="flex-1 flex flex-col justify-center">
+                        <TrackInfo
+                            track={track}
+                            trackNumber={currentTrack + 1}
+                            totalTracks={tracks.length}
+                            isPlaying={isPlaying}
+                            isExpanded={true} // Always show full info in this new design
+                            onPlayPause={playPause}
+                            onToggleExpand={toggleExpand}
+                            layout="stack" // Force stack layout for the left panel
+                        />
+                    </div>
 
-            <div className="flex flex-col sm:grid sm:grid-cols-[auto,1fr,auto] sm:items-center gap-4">
-                <VolumeControls
-                    volume={volume}
-                    isMuted={isMuted}
-                    onToggleMute={toggleMute}
-                    onChangeVolume={changeVolume}
-                />
+                    <div className="mt-8">
+                        <ProgressBar
+                            currentTime={currentTime}
+                            duration={duration}
+                            progress={progress}
+                            progressBarRef={progressBarRef}
+                            onChangeRange={changeRange}
+                            formatTime={formatTime}
+                        />
 
-                <PlayerControls
-                    isPlaying={isPlaying}
-                    onPlayPause={playPause}
-                    onPrevTrack={prevTrack}
-                    onNextTrack={nextTrack}
-                />
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mt-6">
+                            <PlayerControls
+                                isPlaying={isPlaying}
+                                onPlayPause={playPause}
+                                onPrevTrack={prevTrack}
+                                onNextTrack={nextTrack}
+                            />
 
-                <div className="flex justify-center sm:justify-end w-full sm:w-24">
-                    <motion.button
-                        className="text-white/80 hover:text-white p-2 rounded-full md:hidden"
-                        onClick={toggleExpand}
-                        whileHover={HOVER_SCALE}
-                        whileTap={TAP_SCALE}
-                        aria-label={isExpanded ? "플레이어 축소" : "플레이어 확장"}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            {isExpanded ? (
-                                <path fillRule="evenodd" d="M5 10a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1z" clipRule="evenodd" />
-                            ) : (
-                                <path fillRule="evenodd" d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1z" clipRule="evenodd" />
-                            )}
-                        </svg>
-                    </motion.button>
+                            <VolumeControls
+                                volume={volume}
+                                isMuted={isMuted}
+                                onToggleMute={toggleMute}
+                                onChangeVolume={changeVolume}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Side: Playlist */}
+                <div className="bg-black/20 p-6 lg:p-8 max-h-[400px] lg:max-h-[500px] overflow-hidden flex flex-col backdrop-blur-md">
+                    <Playlist
+                        tracks={tracks}
+                        currentTrackIndex={currentTrack}
+                        isPlaying={isPlaying}
+                        onSelectTrack={selectTrack}
+                    />
                 </div>
             </div>
         </motion.div>

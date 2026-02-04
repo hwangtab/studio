@@ -201,6 +201,10 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         toggleExpand,
         formatTime,
 
+        selectTrack: (index: number) => {
+            setCurrentTrack(index);
+            setIsPlaying(true);
+        },
         progress: duration ? (currentTime / duration) * 100 : 0,
         track: tracks[currentTrack],
     };

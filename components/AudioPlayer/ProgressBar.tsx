@@ -11,28 +11,40 @@ interface ProgressBarProps {
 
 const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChangeRange, formatTime }: ProgressBarProps) => {
     return (
-        <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-                <span className="typo-card-meta text-white/80">{formatTime(currentTime)}</span>
-                <span className="typo-card-meta text-white/80">{formatTime(duration)}</span>
-            </div>
-            <div className="relative h-2 bg-white/20 rounded-full overflow-hidden">
+        <div className="w-full">
+            <div className="relative h-1.5 w-full bg-white/10 rounded-full group cursor-pointer mb-2">
                 <input
                     type="range"
                     ref={progressBarRef}
                     defaultValue="0"
                     onChange={onChangeRange}
                     max={duration || 0}
-                    className="absolute inset-0 w-full h-full appearance-none bg-transparent z-10 opacity-0 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
                 />
+
+                {/* Background Track */}
+                <div className="absolute inset-0 bg-white/5 rounded-full" />
+
+                {/* Progress Fill with Glow */}
                 <div
-                    className="absolute top-0 left-0 h-full bg-white/60 rounded-full"
+                    className="absolute top-0 left-0 h-full bg-primary rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.7)] transition-all duration-100 ease-linear"
                     style={{ width: `${progress}%` }}
-                ></div>
+                />
+
+                {/* Handle (visible on hover or interaction) */}
                 <div
-                    className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md pointer-events-none"
-                    style={{ left: `calc(${progress}% - 8px)`, display: progress > 0 ? 'block' : 'none' }}
-                ></div>
+                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
+                    style={{ left: `${progress}%`, transform: 'translate(-50%, -50%)' }}
+                />
+            </div>
+
+            <div className="flex items-center justify-between px-1">
+                <span className="text-[10px] font-mono font-medium text-white/50 tracking-wider">
+                    {formatTime(currentTime)}
+                </span>
+                <span className="text-[10px] font-mono font-medium text-white/50 tracking-wider">
+                    {formatTime(duration)}
+                </span>
             </div>
         </div>
     );
