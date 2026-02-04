@@ -97,7 +97,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
         keywords="녹음 샘플, 믹싱 전후 비교, 마스터링 예시, 스튜디오 포트폴리오, 음원 제작 퀄리티, 레코딩 결과물, 스튜디오 놀"
         canonical={`https://studionol.co.kr/${locale}/portfolio`}
         breadcrumbs={[
-          { name: t('nav.about'), path: `/${locale}` },
+          { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
         ]}
       />

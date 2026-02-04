@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Inicio",
     "about": "Sobre Nosotros",
     "portfolio": "Portafolio",
     "stories": "Historias",
@@ -12,11 +13,419 @@
   "footer": {
     "rights": "Todos los derechos reservados.",
     "address": "Dirección",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "privacy": "Política de Privacidad",
+    "tagline": "Estudio de producción musical que realiza la visión del artista",
+    "linksTitle": "Enlaces",
+    "contactTitle": "Contacto",
+    "emailLabel": "Email",
+    "phoneLabel": "Teléfono"
   },
   "actions": {
     "more": "Ver Más",
     "submit": "Enviar",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "call": "Llamar",
+    "email": "Email",
+    "kakao": "KakaoTalk",
+    "location": "Ubicación"
+  },
+  "home": {
+    "heroTitle": "Donde comienza la música, Studio NOL",
+    "heroSubtitle": "El mejor espacio para tu música",
+    "startProject": "Iniciar proyecto",
+    "sections": {
+      "galleryTitle": "Espacio y equipo para ti",
+      "servicesTitle": "Nuestros servicios",
+      "servicesCta": "Ver más"
+    },
+    "cta": {
+      "titleLine1": "El sonido que imaginaste,",
+      "titleHighlight": "se vuelve realidad",
+      "subtitleLine1": "Completa tu música con el mejor equipo en un espacio cómodo.",
+      "subtitleLine2": "Studio NOL acompaña tu viaje musical.",
+      "location": "Ubicación",
+      "inquiry": "Consulta"
+    }
+  },
+  "about": {
+    "title": "Sobre Studio NOL - Producción musical todo en uno",
+    "description": "Desde una idea hasta un álbum completo, Studio NOL es tu socio en cada paso.",
+    "subtitle": "Producción todo en uno: de la planificación a la distribución",
+    "serviceTitle": "Servicio de producción musical todo en uno",
+    "serviceSubtitle": "Ofrecemos una solución total para realizar la visión del músico, gestionando todo en un solo lugar.",
+    "processTitle": "Proceso integral de producción",
+    "processSubtitle": "Studio NOL gestiona cada etapa para crear resultados de la más alta calidad.",
+    "differenceTitle": "¿Por qué Studio NOL?",
+    "differenceSubtitle": "Sistema de producción integral en Yeonsinnae, con sonido cálido y rico gracias a equipos analógicos.",
+    "heroAlt": "Acerca de Studio NOL",
+    "package": {
+      "title": "Opciones de paquetes rentables",
+      "items": [
+        "Ahorra con paquetes integrados frente a servicios individuales",
+        "Configuración de servicios personalizada según el músico",
+        "Infraestructura a medida para músicos independientes",
+        "Sonido cálido y rico gracias a equipos analógicos"
+      ]
+    },
+    "cta": {
+      "titleLine1": "En tu viaje musical",
+      "titleHighlight": "el socio más confiable",
+      "subtitleLine1": "Nos esforzamos al máximo sin importar el tamaño del proyecto.",
+      "subtitleLine2": "Desde la planificación hasta la masterización final, hacemos realidad tu sonido.",
+      "imageAlt": "Entorno de producción de Studio NOL"
+    }
+  },
+  "portfolio": {
+    "title": "Portafolio",
+    "subtitle": "Presentamos varios proyectos realizados en Studio NOL. Haz clic en cada obra para ver más detalles.",
+    "sampleTracks": "Pistas de muestra",
+    "projects": "Proyectos",
+    "noProjects": "No hay proyectos en la categoría seleccionada.",
+    "detail": {
+      "titleSuffix": "Portafolio de Studio NOL",
+      "metaDescription": "\"{{title}}\" de {{artist}} - {{description}}. Proyecto realizado en Studio NOL.",
+      "backToList": "Volver al portafolio",
+      "artistLabel": "Artista",
+      "servicesProvided": "Servicios proporcionados",
+      "listenNow": "Escuchar ahora",
+      "share": "Compartir"
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "Contáctanos para consultas o reservas.",
+    "heroAlt": "Contactar Studio NOL",
+    "form": {
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "message": "Mensaje",
+      "submit": "Enviar consulta por email",
+      "kakao": "Consulta por KakaoTalk",
+      "success": "Mensaje enviado correctamente.",
+      "error": "Error al enviar. Inténtalo de nuevo.",
+      "loading": "Enviando..."
+    },
+    "info": {
+      "title": "Información de contacto",
+      "kakao": "Chat abierto KakaoTalk",
+      "location": "Ubicación",
+      "hours": "Horario de atención",
+      "parking": "Estacionamiento",
+      "parkingDetail": "Estacionamiento pago disponible en el edificio KT Eunpyeong cercano",
+      "transport": "Transporte público",
+      "transportDetail": "A 5 min a pie de la estación Bulgwang (Línea 6) Salida 7"
+    },
+    "hours": {
+      "weekdaysLabel": "Lun - Vie",
+      "weekdaysTime": "10:00 AM - 6:00 PM",
+      "satLabel": "Sáb",
+      "satTime": "12:00 PM - 6:00 PM",
+      "sunLabel": "Dom",
+      "closed": "Cerrado"
+    },
+    "notice": {
+      "title": "Antes de consultar",
+      "list": [
+        "Respondemos dentro de 24 horas",
+        "Los detalles específicos ayudan a brindar una consulta precisa",
+        "Para urgencias, usa KakaoTalk"
+      ],
+      "privacyTitle": "Política de Privacidad",
+      "privacyText": "La información personal recopilada se usa solo para responder y se elimina después de la consulta."
+    }
+  },
+  "pricing": {
+    "seo": {
+      "title": "Tarifas de grabación y alquiler de estudio | Studio NOL",
+      "description": "Precios transparentes. Consulta tarifas para grabaciones de bodas, locuciones y alquiler de estudio."
+    },
+    "hero": {
+      "title": "Precio accesible, servicio transparente",
+      "subtitleLine1": "Ofrecemos precios fijos para los servicios clave de un estudio de proyectos.",
+      "subtitleLine2": "Sin costos ocultos, ayudamos a planificar el presupuesto.",
+      "alt": "Precios de Studio NOL"
+    },
+    "special": {
+      "title": "Paquetes especiales (a medida)",
+      "subtitle": "Paquetes todo en uno optimizados para necesidades específicas como bodas y locuciones"
+    },
+    "recording": {
+      "title": "Grabación",
+      "subtitle": "Servicio premium con equipos analógicos de alta gama e ingeniería experta"
+    },
+    "mixing": {
+      "title": "Mezcla",
+      "subtitle": "Precio justo según el número de pistas. Combinación de analógico y digital para el mejor sonido.",
+      "noticeTitle": "Ajuste/edición vocal",
+      "noticeBody": "La afinación vocal profesional y corrección de tiempo tiene un costo adicional de ₩150,000 por canción."
+    },
+    "mastering": {
+      "title": "Masterización",
+      "subtitle": "Garantiza la calidad final y un sonido consistente en cualquier entorno."
+    },
+    "additional": {
+      "title": "Servicios adicionales",
+      "subtitle": "Soporte integral para músicos, desde la planificación hasta la promoción"
+    },
+    "cta": {
+      "title": "El mejor socio para tu música",
+      "subtitle": "Sugerimos el plan óptimo según tu presupuesto y calendario.",
+      "location": "Ubicación",
+      "inquiry": "Consulta"
+    }
+  },
+  "lesson": {
+    "seo": {
+      "title": "Masterclass de producción musical | Studio NOL",
+      "description": "Desde consultoría de distribución hasta feedback de mezcla 1:1. Haz realidad tu música con ingeniería profesional."
+    },
+    "hero": {
+      "title": "Masterclass de producción todo en uno",
+      "subtitleLine1": "Convierte la imaginación en sonido y las ideas en pistas terminadas.",
+      "subtitleLine2": "Aprende conocimientos profesionales en un espacio profesional.",
+      "alt": "Consola de mezcla del estudio"
+    },
+    "intro": {
+      "titleLine1": "Más allá de aprender,",
+      "titleHighlight": "es un proceso para debutar como artista",
+      "subtitleLine1": "Nuestras clases no son teoría de manual.",
+      "subtitleLine2": "Experimenta el mismo equipo y flujo de trabajo que usan los profesionales,",
+      "subtitleLine3": "en un 'proyecto práctico' para completar tu música."
+    },
+    "curriculum": {
+      "title": "Currículum: 4 pasos para dominar",
+      "step1": {
+        "title": "MIDI y Producción",
+        "subtitle": "Bases de la creación",
+        "items": [
+          "Optimización del flujo de trabajo en DAW",
+          "Instrumentos virtuales y diseño de sonido",
+          "Arreglos rítmicos de batería/bajo",
+          "Forma de canción y estética"
+        ]
+      },
+      "step2": {
+        "title": "Grabación",
+        "subtitle": "Captura de sonido profesional",
+        "items": [
+          "Comparación de micros pro (U87ai, etc.)",
+          "Flujo de señal (Mic-Pre-DAW)",
+          "Dirección vocal y afinación",
+          "Técnicas de microfonía de instrumentos"
+        ]
+      },
+      "step3": {
+        "title": "Mezcla",
+        "subtitle": "Esculpir el sonido",
+        "items": [
+          "Balance, paneo e imagen estéreo",
+          "EQ y dinámica (compresor)",
+          "Efectos espaciales (reverb/delay)",
+          "Mezcla híbrida con outboard analógico"
+        ]
+      },
+      "step4": {
+        "title": "Masterización",
+        "subtitle": "Finalización y lanzamiento",
+        "items": [
+          "Estándares de loudness (LUFS)",
+          "Tono y consistencia del álbum",
+          "Metadatos de distribución e ISRC",
+          "Monitoreo final y práctica de lanzamiento"
+        ]
+      }
+    },
+    "why": {
+      "title": "¿Por qué Studio NOL?",
+      "items": [
+        {
+          "title": "Práctica con equipo profesional",
+          "body": "Las clases se realizan en un estudio real, no en un aula."
+        },
+        {
+          "title": "Soporte para lanzamiento",
+          "body": "Te ayudamos a publicar tus temas en plataformas musicales."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Clase privada 1:1",
+      "subtitle": "Clases personalizadas",
+      "unit": "KRW / mes",
+      "cta": "Solicitar consulta"
+    },
+    "cta": {
+      "title": "Demos el primer paso juntos.",
+      "subtitle": "Planifica tu propio currículum.",
+      "location": "Ubicación",
+      "inquiry": "Consulta",
+      "imageAlt": "Imagen de la clase"
+    }
+  },
+  "practiceRoom": {
+    "seo": {
+      "title": "Sala de práctica premium 24h en Eunpyeong | Studio NOL",
+      "description": "Salas de práctica insonorizadas premium con excelente accesibilidad en Eunpyeong-gu."
+    },
+    "hero": {
+      "title": "Sala de práctica insonorizada premium",
+      "subtitleLine1": "Practica tu música en un entorno óptimo.",
+      "subtitleLine2": "Disfruta de un estudio premium con diversos equipos e instalaciones.",
+      "alt": "Sala de práctica de Studio NOL"
+    },
+    "painPoints": {
+      "title": "¿Tienes estos problemas?",
+      "items": [
+        "Me preocupa que el agua del aire acondicionado dañe el equipo...",
+        "El ruido de la sala de al lado me distrae...",
+        "El aire no circula y se siente pesado...",
+        "Debo regrabar por el ruido eléctrico...",
+        "El entorno de trabajo es incómodo y desordenado..."
+      ]
+    },
+    "audience": {
+      "title": "Un espacio para quienes...",
+      "items": [
+        {
+          "title": "Músicos locales",
+          "description": "Quienes buscan un estudio privado en Eunpyeong-gu."
+        },
+        {
+          "title": "Creadores de contenido",
+          "description": "Estudio de grabación para YouTubers, podcasters y streamers."
+        },
+        {
+          "title": "Educación musical",
+          "description": "Salas para clases privadas y masterclasses."
+        }
+      ]
+    },
+    "gallery": {
+      "alt": "Imagen de la sala de práctica {{index}}"
+    },
+    "features": {
+      "title": "Sistema perfecto para músicos",
+      "items": [
+        {
+          "title": "Entorno profesional",
+          "description": "Insonorización estándar STC y doble pared para aislar el sonido."
+        },
+        {
+          "title": "Protección de equipos",
+          "description": "Aire acondicionado especial que evita la condensación y protege el equipo."
+        },
+        {
+          "title": "Instalaciones optimizadas",
+          "description": "Internet gigabit y equipamiento acústico profesional."
+        },
+        {
+          "title": "Ubicación y accesibilidad",
+          "description": "A 5 min a pie de estaciones, seguridad 24h."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Preguntas frecuentes de la sala",
+      "subtitle": "Preguntas más comunes sobre uso y residencia.",
+      "items": [
+        {
+          "q": "¿Qué zonas de Eunpyeong-gu están cerca?",
+          "a": "Estamos junto a la escuela secundaria Dongmyeong. A 5 minutos a pie de la estación Yeonsinnae, con excelente acceso desde Yeonsinnae, Bulgwang, Gusan, Yeokchon y Eungam."
+        },
+        {
+          "q": "¿Se puede usar la sala 24 horas?",
+          "a": "Sí, los residentes pueden acceder libremente 24/7 mediante códigos de puertas individuales."
+        },
+        {
+          "q": "¿Cómo es el estacionamiento y el transporte público?",
+          "a": "Hay un estacionamiento público económico a 1-2 minutos a pie. El acceso en metro es fácil vía Bulgwang o Yeonsinnae (Líneas 3 y 6), y la parada de bus \"Dongmyeong Girls' High School / Catholic Bulgwang-dong Church\" está justo enfrente."
+        },
+        {
+          "q": "¿Se puede usar aire acondicionado en verano e invierno?",
+          "a": "Cada sala tiene un sistema HVAC moderno e independiente, cómodo todo el año."
+        },
+        {
+          "q": "¿Es seguro dejar instrumentos o equipo?",
+          "a": "Diez cámaras CCTV graban los pasillos y áreas comunes 24/7, y cada sala tiene cerradura digital."
+        },
+        {
+          "q": "¿Qué tan buena es la insonorización?",
+          "a": "Usamos un diseño STC de nivel broadcast para minimizar el ruido entre salas. Ideal para voces, locuciones y trabajo MIDI."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Enfoque óptimo,",
+      "titleHighlight": "mejores resultados",
+      "subtitleLine1": "Concéntrate solo en la música en un entorno cómodo 24/7.",
+      "subtitleLine2": "Visítanos hoy para un recorrido.",
+      "location": "Ubicación",
+      "inquiry": "Consulta",
+      "imageAlt": "Sala de práctica de Studio NOL"
+    }
+  },
+  "studioInfo": {
+    "seo": {
+      "title": "Equipo de grabación de alta gama | Studio NOL",
+      "description": "Equipo de alta gama para el mejor sonido. Descubre Neumann U87AI, Vintech X73i, SSL Fusion y más."
+    },
+    "hero": {
+      "title": "Nuestro equipo",
+      "subtitle": "Hacemos realidad tu visión musical con instalaciones, equipo y experiencia de primer nivel.",
+      "alt": "Equipo de Studio NOL"
+    },
+    "intro": {
+      "imageAlt": "Sala de control principal de Studio NOL",
+      "title": "Espacio creativo para músicos",
+      "subtitle": "Studio NOL nació para apoyar la imaginación y creatividad de los músicos.",
+      "quote": "\"Más que un espacio de grabación, es donde artistas e ingenieros respiran juntos para crear en colaboración.\"",
+      "paragraphs": [
+        "Nos dedicamos a hacer realidad tu visión musical con instalaciones y equipo de primera, y experiencia profesional.",
+        "El valor que persigue Studio NOL es centrarse en la esencia de la música más allá de la perfección técnica.",
+        "Desde grabación, mezcla y masterización hasta lanzamiento y promoción, seremos un socio confiable."
+      ]
+    },
+    "equipment": {
+      "title": "Lista de equipo",
+      "preampsEq": "Preamplificadores y EQ",
+      "compressorsProcessors": "Compresores y procesadores",
+      "interfacesConsoles": "Interfaces y consolas"
+    }
+  },
+  "stories": {
+    "seo": {
+      "title": "Historias - Registros de proyectos de Studio NOL",
+      "description": "Descubre historias y reseñas de proyectos en Studio NOL."
+    },
+    "hero": {
+      "title": "Historias",
+      "subtitle": "Explora historias sobre el trabajo del estudio.",
+      "alt": "Historias de Studio NOL"
+    },
+    "filters": {
+      "all": "Todo"
+    },
+    "empty": {
+      "title": "No se encontraron historias",
+      "all": "Aún no hay historias registradas.",
+      "byCategory": "No hay historias en la categoría '{{category}}'."
+    },
+    "detail": {
+      "backToList": "Volver a historias",
+      "share": "Compartir",
+      "moreTitle": "Más historias",
+      "noRelated": "No hay historias relacionadas.",
+      "viewAll": "Ver todas las historias"
+    }
+  },
+  "notFound": {
+    "seoTitle": "Página no encontrada | Studio NOL",
+    "badge": "404 Not Found",
+    "title": "Página no encontrada",
+    "messageLine1": "La URL solicitada \"{{path}}\" no se encontró en este servidor.",
+    "messageLine2": "Vuelve a la página de inicio o prueba otra página.",
+    "goHome": "Ir al inicio",
+    "contact": "Contáctanos"
   }
 }

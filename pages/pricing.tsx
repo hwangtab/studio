@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { defaultLocale } from '../lib/i18n';
+import { getClientLocale } from '../utils/localeUtils';
 
 export default function PricingRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`/${defaultLocale}/pricing`);
+    const locale = getClientLocale();
+    router.replace(`/${locale}/pricing`);
   }, [router]);
 
   return null;

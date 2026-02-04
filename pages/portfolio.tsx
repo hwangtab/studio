@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { defaultLocale } from '../lib/i18n';
+import { getClientLocale } from '../utils/localeUtils';
 
 export default function PortfolioRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`/${defaultLocale}/portfolio`);
+    const locale = getClientLocale();
+    router.replace(`/${locale}/portfolio`);
   }, [router]);
 
   return null;

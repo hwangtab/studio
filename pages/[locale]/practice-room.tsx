@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle, HelpCircle, Target, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -51,70 +52,61 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
   </BaseCard>
 );
 
-const practiceRoomFaqs = [
-  {
-    question: '은평구 어디에서 가깝나요?',
-    answer: '동명여고 바로 옆에 위치하고 있습니다. 연신내역에서 도보 5분 거리로 연신내, 불광, 구산, 역촌, 응암 등 은평구 주요 지역에서 접근성이 매우 뛰어납니다.',
-  },
-  {
-    question: '연습실은 24시간 이용 가능한가요?',
-    answer: '네, 연습실 입주 고객은 24시간 언제든 각 방별 도어록 번호키를 통해 자유롭게 출입하고 작업하실 수 있습니다.',
-  },
-  {
-    question: '주차장이나 대중교통 이용은 어떻게 되나요?',
-    answer: '주차는 도보 1-2분 거리의 저렴한 대조동 공영주차장을 이용하실 수 있습니다. 대중교통은 불광역(3, 6호선) 또는 연신내역(3, 6호선) 이용이 편리하며, 버스는 "동명여고.천주교불광동성당" 정류장에서 하차하시면 바로 앞입니다.',
-  },
-  {
-    question: '여름이나 겨울에 냉난방 이용이 자유로운가요?',
-    answer: '모든 연습실마다 개별 제어가 가능한 최신형 무풍 냉난방기 시스템이 완비되어 있어 사계절 내내 쾌적하게 작업할 수 있습니다.',
-  },
-  {
-    question: '악기나 장비를 두고 다녀도 안전한가요?',
-    answer: '열 개의 CCTV가 사각지대 없이 복도와 공동 구역을 24시간 녹화하며, 각 방마다 개별 디지털 도어록이 설치되어 있어 보안이 철저합니다.',
-  },
-  {
-    question: '방음 성능은 어느 정도인가요?',
-    answer: '방송국 수준의 STC 차음 설계를 적용하여 옆방과의 소리 간섭을 최소화했습니다. 보컬, 성우 녹음은 물론 미디 작업 시에도 높은 몰입감을 제공합니다.',
-  },
-];
-
 const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
-  const isKo = locale === 'ko';
+  const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
+  const practiceRoomFaqs = React.useMemo(() => ([
+    {
+      question: t('practiceRoom.faq.items.0.q'),
+      answer: t('practiceRoom.faq.items.0.a'),
+    },
+    {
+      question: t('practiceRoom.faq.items.1.q'),
+      answer: t('practiceRoom.faq.items.1.a'),
+    },
+    {
+      question: t('practiceRoom.faq.items.2.q'),
+      answer: t('practiceRoom.faq.items.2.a'),
+    },
+    {
+      question: t('practiceRoom.faq.items.3.q'),
+      answer: t('practiceRoom.faq.items.3.a'),
+    },
+    {
+      question: t('practiceRoom.faq.items.4.q'),
+      answer: t('practiceRoom.faq.items.4.a'),
+    },
+    {
+      question: t('practiceRoom.faq.items.5.q'),
+      answer: t('practiceRoom.faq.items.5.a'),
+    },
+  ]), [t]);
 
   return (
     <>
       <SEO
-        title={isKo ? "연신내 · 불광 · 구산 · 역촌 · 응암 방음 연습실 | 프리미엄 24시 작업실" : "Premium 24h Practice Room in Eunpyeong | Studio NOL"}
-        description={isKo ? "연신내, 불광, 구산, 역촌, 응암 등 은평구 주요 지역에서 접근성이 뛰어난 프리미엄 방음 연습실." : "Premium soundproof practice rooms with great accessibility in Eunpyeong-gu."}
+        title={t('practiceRoom.seo.title')}
+        description={t('practiceRoom.seo.description')}
         keywords="연신내 연습실, 불광 연습실, 구산 연습실, 역촌 연습실, 응암 연습실, 은평구 연습실, 대조동 연습실, 방음 연습실, 개인 작업실, 스튜디오 놀"
         canonical={`https://studionol.co.kr/${locale}/practice-room`}
         includeSchema={true}
         faqItems={practiceRoomFaqs}
         breadcrumbs={[
-          { name: isKo ? '홈' : 'Home', path: `/${locale}` },
-          { name: isKo ? '연습실' : 'Practice Room', path: `/${locale}/practice-room` },
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
         ]}
       />
       <ImageHero
-        title={isKo ? "은평구 프리미엄 방음 연습실" : "Premium Soundproof Practice Room"}
+        title={t('practiceRoom.hero.title')}
         subtitle={
-          isKo ? (
-            <>
-              최적의 환경에서 여러분의 음악을 연습하세요.
-              <br />
-              다양한 장비와 시설을 갖춘 프리미엄 연습실에서 음악을 즐기세요.
-            </>
-          ) : (
-            <>
-              Practice your music in an optimal environment.
-              <br />
-              Enjoy music in a premium studio with various equipment and facilities.
-            </>
-          )
+          <>
+            {t('practiceRoom.hero.subtitleLine1')}
+            <br />
+            {t('practiceRoom.hero.subtitleLine2')}
+          </>
         }
         backgroundImage="/images/room5.jpg"
-        imageAlt="스튜디오 놀 연습실"
+        imageAlt={t('practiceRoom.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
@@ -128,15 +120,15 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         >
           <SectionHeading
             icon={HelpCircle}
-            title={isKo ? "이런 고민이 있으신가요?" : "Are you having these troubles?"}
+            title={t('practiceRoom.painPoints.title')}
             className="mb-8"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            <PainPoint icon={Wind} text={isKo ? "에어컨에서 떨어지는 물방울 때문에 장비가 망가질까 불안해요..." : "Worried about water from AC damaging gear..."} delay={0.1} />
-            <PainPoint icon={VolumeX} text={isKo ? "옆방 소리가 다 들려서 집중이 안 돼요..." : "Distracted by sound from the next room..."} delay={0.2} />
-            <PainPoint icon={Wind} text={isKo ? "공기가 잘 통하지 않아 답답해요..." : "Feeling stuffy due to poor air circulation..."} delay={0.3} />
-            <PainPoint icon={Zap} text={isKo ? "전기 노이즈 때문에 녹음을 다시 해야 해요..." : "Re-recording due to electrical noise..."} delay={0.4} />
-            <PainPoint icon={Sparkles} text={isKo ? "작업환경이 불쾌하고 지저분해요..." : "Unpleasant and messy working environment..."} delay={0.5} />
+            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} delay={0.1} />
+            <PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} delay={0.2} />
+            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} delay={0.3} />
+            <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} delay={0.4} />
+            <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} delay={0.5} />
           </div>
         </motion.div>
       </Section>
@@ -150,27 +142,27 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         >
           <SectionHeading
             icon={Target}
-            title={isKo ? "이런 분들을 위한 공간" : "A space for those who..."}
+            title={t('practiceRoom.audience.title')}
             className="mb-6"
             titleClassName="text-primary"
           />
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <TargetAudience
-              title={isKo ? "로컬 뮤지션" : "Local Musicians"}
-              description={isKo ? "연신내, 불광, 구산, 역촌, 응암 인근에서 나만의 아지트 같은 작업실을 찾는 분" : "Those looking for a private studio in Eunpyeong-gu."}
+              title={t('practiceRoom.audience.items.0.title')}
+              description={t('practiceRoom.audience.items.0.description')}
               icon={MapPin}
               delay={0.1}
             />
             <TargetAudience
-              title={isKo ? "콘텐츠 크리에이터" : "Content Creators"}
-              description={isKo ? "유튜버, 팟캐스터, 스트리머를 위한 녹음 스튜디오" : "Recording studio for YouTubers, podcasters, and streamers."}
+              title={t('practiceRoom.audience.items.1.title')}
+              description={t('practiceRoom.audience.items.1.description')}
               icon={Star}
               delay={0.2}
             />
             <TargetAudience
-              title={isKo ? "음악 교육" : "Music Education"}
-              description={isKo ? "프라이빗 레슨, 소규모 마스터클래스, 학원 분원용 연습실" : "Studios for private lessons and masterclasses."}
+              title={t('practiceRoom.audience.items.2.title')}
+              description={t('practiceRoom.audience.items.2.description')}
               icon={Music}
               delay={0.3}
             />
@@ -187,7 +179,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
               >
                 <ResponsiveImage
                   src={`/images/room${i}.jpg`}
-                  alt={`Practice room image ${i}`}
+                  alt={t('practiceRoom.gallery.alt', { index: i })}
                   className="w-full h-full object-cover"
                   pictureClassName="block h-full"
                   loading="lazy"
@@ -208,7 +200,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         >
           <SectionHeading
             icon={ShieldCheck}
-            title={isKo ? "뮤지션을 위한 완벽한 시스템" : "Perfect System for Musicians"}
+            title={t('practiceRoom.features.title')}
             titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
             className="mb-12"
           />
@@ -216,29 +208,29 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <FeatureCard
               icon={Music}
-              title={isKo ? "진정한 프로의 작업 환경" : "Professional Environment"}
-              description={isKo ? "국제표준 STC 방음 시스템, 이중 벽체 설계로 완벽한 소리 차단" : "International standard STC soundproofing, double wall design."}
+              title={t('practiceRoom.features.items.0.title')}
+              description={t('practiceRoom.features.items.0.description')}
               delay={0.1}
             />
 
             <FeatureCard
               icon={Shield}
-              title={isKo ? "장비 보호 시스템" : "Equipment Protection"}
-              description={isKo ? "특수 설계 시스템 냉난방기, 결로 현상 완벽 차단" : "Specially designed AC, zero condensation, gear protection."}
+              title={t('practiceRoom.features.items.1.title')}
+              description={t('practiceRoom.features.items.1.description')}
               delay={0.2}
             />
 
             <FeatureCard
               icon={Star}
-              title={isKo ? "프로덕션 최적화 시설" : "Optimized Facilities"}
-              description={isKo ? "기가비트 급 초고속 인터넷, 전문가급 음향 설비 완비" : "Gigabit high-speed internet, pro-grade acoustic facilities."}
+              title={t('practiceRoom.features.items.2.title')}
+              description={t('practiceRoom.features.items.2.description')}
               delay={0.3}
             />
 
             <FeatureCard
               icon={MapPin}
-              title={isKo ? "위치 및 접근성" : "Location & Accessibility"}
-              description={isKo ? "불광역/연신내역 도보 5분, 24시간 보안 시스템" : "5-min walk from stations, 24h security system."}
+              title={t('practiceRoom.features.items.3.title')}
+              description={t('practiceRoom.features.items.3.description')}
               delay={0.4}
             />
           </div>
@@ -247,8 +239,8 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
 
       <FAQSection
         items={practiceRoomFaqs}
-        title={isKo ? "연습실 FAQ" : "Practice Room FAQ"}
-        subtitle={isKo ? "작업실 입주와 이용에 관해 가장 많이 하시는 질문들입니다." : "Frequently asked questions about the studio."}
+        title={t('practiceRoom.faq.title')}
+        subtitle={t('practiceRoom.faq.subtitle')}
         variant="alternate"
       />
 
@@ -265,30 +257,16 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
               <SectionHeading
                 icon={Sparkles}
                 title={
-                  isKo ? (
-                    <>
-                      최적의 몰입,<br />
-                      <span className="text-primary">최고의 결과물</span>
-                    </>
-                  ) : (
-                    <>
-                      Optimal Focus,<br />
-                      <span className="text-primary">Best Results</span>
-                    </>
-                  )
+                  <>
+                    {t('practiceRoom.cta.titleLine1')}<br />
+                    <span className="text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
+                  </>
                 }
                 subtitle={
-                  isKo ? (
-                    <>
-                      24시간 쾌적한 환경에서 오직 음악에만 집중하세요.<br className="hidden md:block" />
-                      지금 바로 방문하여 스튜디오를 직접 둘러보실 수 있습니다.
-                    </>
-                  ) : (
-                    <>
-                      Focus only on music in a comfortable environment 24/7.<br className="hidden md:block" />
-                      Visit us today to take a tour.
-                    </>
-                  )
+                  <>
+                    {t('practiceRoom.cta.subtitleLine1')}<br className="hidden md:block" />
+                    {t('practiceRoom.cta.subtitleLine2')}
+                  </>
                 }
                 align="left"
                 className="mb-8"
@@ -305,7 +283,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
                   href={getLink("/contact")}
                   className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
                 >
-                  {isKo ? "오시는 길" : "Location"}
+                  {t('practiceRoom.cta.location')}
                 </Link>
                 <a
                   href="https://open.kakao.com/me/nol"
@@ -314,14 +292,14 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
                   className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
                 >
                   <MessageCircle className="mr-2" size={20} />
-                  {isKo ? "카카오톡 문의하기" : "Inquiry"}
+                  {t('practiceRoom.cta.inquiry')}
                 </a>
               </motion.div>
             </div>
             <div className="relative h-64 md:h-auto">
                <ResponsiveImage
                 src={`/images/room8.jpg`}
-                alt="Studio NOL"
+                alt={t('practiceRoom.cta.imageAlt')}
                 fill
                 className="object-cover"
               />

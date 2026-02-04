@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { defaultLocale } from '../lib/i18n';
+import { getClientLocale } from '../utils/localeUtils';
 
 export default function ContactRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`/${defaultLocale}/contact`);
+    const locale = getClientLocale();
+    router.replace(`/${locale}/contact`);
   }, [router]);
 
   return null;

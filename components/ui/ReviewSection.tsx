@@ -76,7 +76,15 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                             </div>
 
                             <div className="relative z-10">
-                                <div className="flex items-center mb-4" aria-label={`평점 ${review.rating}점`}>
+                                <div
+                                    className="flex items-center mb-4"
+                                    aria-label={t(
+                                        `평점 ${review.rating}점`,
+                                        `Rating ${review.rating} stars`,
+                                        `评分 ${review.rating} 分`,
+                                        `Calificación ${review.rating} estrellas`
+                                    )}
+                                >
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
                                         <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" />
                                     ))}

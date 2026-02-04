@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { motion } from 'framer-motion';
 import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, MessageCircle, Sparkles, Building, Mic2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
@@ -20,26 +21,26 @@ interface StudioInfoProps {
 
 const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
   const { categories, equipment, studioImages } = equipmentData;
-  const isKo = locale === 'ko';
+  const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
 
   return (
     <>
       <SEO
-        title={isKo ? "하이엔드 녹음 장비 · Neumann/SSL 보유 | 스튜디오 놀" : "High-end Recording Equipment | Studio NOL"}
-        description={isKo ? "최상의 사운드를 위한 과감한 투자. Neumann U87AI, Vintech X73i, SSL Fusion 등 프로들이 신뢰하는 하이엔드 장비와 룸 어쿠스틱을 확인하세요." : "High-end gear for the best sound. Check out our Neumann U87AI, Vintech X73i, SSL Fusion, and more."}
+        title={t('studioInfo.seo.title')}
+        description={t('studioInfo.seo.description')}
         keywords="하이엔드 녹음 장비, Neumann U87AI, SSL Fusion, 연신내 녹음실 장비, 프로 오디오 장비, Vintech 프리앰프, 스튜디오 장비 리스트"
         canonical={`https://studionol.co.kr/${locale}/studio-info`}
         breadcrumbs={[
-          { name: isKo ? '홈' : 'Home', path: `/${locale}` },
-          { name: isKo ? '장비 소개' : 'Equipment', path: `/${locale}/studio-info` },
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.equipment'), path: `/${locale}/studio-info` },
         ]}
       />
       <ImageHero
-        title={isKo ? "장비 소개" : "Our Equipment"}
-        subtitle={isKo ? "최고의 시설과 장비, 전문 엔지니어의 노하우로 여러분의 음악적 비전을 현실로 만듭니다." : "Turning your musical vision into reality with top-tier facilities, equipment, and expertise."}
+        title={t('studioInfo.hero.title')}
+        subtitle={t('studioInfo.hero.subtitle')}
         backgroundImage="/images/hardware1.jpg"
-        imageAlt="스튜디오 놀 장비"
+        imageAlt={t('studioInfo.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
@@ -60,7 +61,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
             >
               <ResponsiveImage
                 src="/images/hardware2.jpg"
-                alt="스튜디오 놀 메인 컨트롤 룸"
+                alt={t('studioInfo.intro.imageAlt')}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 fill
@@ -76,8 +77,8 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
             >
               <SectionHeading
                 icon={Building}
-                title="Creative Space for Musicians"
-                subtitle={isKo ? "스튜디오 놀은 음악인들의 자유로운 상상과 창작 활동을 지원하기 위해 탄생한 공간입니다." : "Studio NOL is a space born to support the free imagination and creative activities of musicians."}
+                title={t('studioInfo.intro.title')}
+                subtitle={t('studioInfo.intro.subtitle')}
                 align="left"
                 className="mb-8"
                 as="h2"
@@ -85,23 +86,15 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
               />
               <div className="space-y-6">
                 <p className="typo-section-lead text-gray-900 dark:text-white border-l-4 border-primary pl-4 font-bold">
-                  {isKo 
-                    ? "\"단순히 음악을 녹음하는 공간을 넘어, 아티스트와 엔지니어가 함께 호흡하며 창의적인 협업을 이뤄낼 수 있는 공간.\""
-                    : "\"More than just a recording space, it's where artists and engineers breathe together to achieve creative collaboration.\""}
+                  {t('studioInfo.intro.quote')}
                 </p>
                 <p className="typo-card-body leading-loose">
-                  {isKo 
-                    ? "우리는 최고의 시설과 장비, 그리고 전문 엔지니어의 노하우를 바탕으로 여러분의 음악적 비전을 현실로 만드는 일에 전념하고 있습니다."
-                    : "We are dedicated to making your musical vision a reality based on top facilities, equipment, and expert know-how."}
+                  {t('studioInfo.intro.paragraphs.0')}
                   <br className="mb-2" />
-                  {isKo 
-                    ? "스튜디오 놀이 추구하는 가치는 기술적인 완성을 넘어, 음악 그 자체의 본질에 집중하는 것입니다."
-                    : "The value Studio NOL pursues is focusing on the essence of music itself, beyond technical perfection."}
+                  {t('studioInfo.intro.paragraphs.1')}
                 </p>
                 <p className="typo-card-body leading-loose">
-                  {isKo
-                    ? "녹음, 믹싱, 마스터링뿐만 아니라 앨범 발매와 홍보까지. 음악인들이 자신의 목소리를 세상에 전할 수 있도록 든든한 파트너가 되어드리겠습니다."
-                    : "From recording, mixing, mastering to album release and promotion. We will be a reliable partner so musicians can share their voices with the world."}
+                  {t('studioInfo.intro.paragraphs.2')}
                 </p>
               </div>
             </motion.div>
@@ -118,7 +111,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
         >
           <SectionHeading
             icon={Mic2}
-            title={isKo ? "장비 목록" : "Equipment List"}
+            title={t('studioInfo.equipment.title')}
             titleClassName="text-heading-1 font-title bg-clip-text text-transparent bg-gradient-to-r from-primary-dark via-secondary to-accent"
             className="mb-12 py-4"
           />
@@ -147,13 +140,13 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <EquipmentSection title={categories.microphones} items={equipment.microphones} icon={Mic} />
-            <EquipmentSection title={isKo ? "프리앰프 & 이퀄라이저" : "Preamp & EQ"} items={[...equipment.preamps, ...equipment.equalizers]} icon={SlidersHorizontal} />
-            <EquipmentSection title={isKo ? "컴프레서 & 프로세서" : "Compressor & Processor"} items={[...equipment.compressors, ...equipment.processors]} icon={SlidersHorizontal} />
+            <EquipmentSection title={t('studioInfo.equipment.preampsEq')} items={[...equipment.preamps, ...equipment.equalizers]} icon={SlidersHorizontal} />
+            <EquipmentSection title={t('studioInfo.equipment.compressorsProcessors')} items={[...equipment.compressors, ...equipment.processors]} icon={SlidersHorizontal} />
             <EquipmentSection title={categories.speakers + " & " + categories.headphones} items={[...equipment.speakers, ...equipment.headphones]} icon={Headphones} />
             <EquipmentSection title={categories.instruments} items={equipment.instruments} icon={Guitar} />
             <EquipmentSection title={categories.synthesizers} items={equipment.synthesizers} icon={Piano} />
             <EquipmentSection title={categories.plugins} items={equipment.plugins} icon={Music} />
-            <EquipmentSection title={isKo ? "인터페이스 & 콘솔" : "Interface & Console"} items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
+            <EquipmentSection title={t('studioInfo.equipment.interfacesConsoles')} items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
           </div>
         </motion.div >
       </Section>

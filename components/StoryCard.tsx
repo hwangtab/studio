@@ -29,9 +29,13 @@ const cardVariants = {
 };
 
 const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
-  const isKo = locale === 'ko';
-  
-  const t = (ko: string, en: string) => (isKo ? ko : en);
+  const t = (ko: string, en: string, zh?: string, es?: string) => {
+    if (locale === 'ko') return ko;
+    if (locale === 'en') return en;
+    if (locale === 'zh') return zh || en;
+    if (locale === 'es') return es || en;
+    return ko;
+  };
 
   const thumbnailUrl = story.thumbnail || extractFirstImageUrl(story.content || '');
   const plainSummary = story.summary || summarizeText(story.content, 120, { stripMarkdown: true });
@@ -69,19 +73,19 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
         <div className="p-4 flex flex-col flex-grow">
           <div className="flex items-center justify-between mb-2 flex-shrink-0">
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full">
-              {story.category || t('기본', 'Default')}
+              {story.category || t('기본', 'Default', '默认', 'Predeterminado')}
             </span>
             <span className="typo-card-meta text-gray-500 dark:text-gray-400">
-              {story.date ? timeAgo(story.date) : t('날짜 없음', 'No Date')}
+              {story.date ? timeAgo(story.date, locale) : t('날짜 없음', 'No Date', '无日期', 'Sin fecha')}
             </span>
           </div>
 
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 truncate">
-            {story.title || t('제목 없음', 'No Title')}
+            {story.title || t('제목 없음', 'No Title', '无标题', 'Sin título')}
           </h3>
 
           <div className="typo-card-body leading-snug line-clamp-4 flex-none">
-            {plainSummary || t('내용 없음', 'No Content')}
+            {plainSummary || t('내용 없음', 'No Content', '无内容', 'Sin contenido')}
           </div>
         </div>
       </motion.div>

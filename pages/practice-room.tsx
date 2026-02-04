@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { defaultLocale } from '../lib/i18n';
+import { getClientLocale } from '../utils/localeUtils';
 
 export default function PracticeRoomRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`/${defaultLocale}/practice-room`);
+    const locale = getClientLocale();
+    router.replace(`/${locale}/practice-room`);
   }, [router]);
 
   return null;

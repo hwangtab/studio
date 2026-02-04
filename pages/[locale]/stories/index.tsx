@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
@@ -19,7 +20,7 @@ interface StoriesPageProps {
 
 const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const isKo = locale === 'ko';
+  const { t } = useTranslation('common', { lng: locale });
 
   const categories = useMemo(() => {
     const unique = new Set(stories.map((story) => story.category).filter(Boolean));
@@ -34,20 +35,20 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   return (
     <>
       <SEO
-        title={isKo ? "스토리 - 스튜디오 놀 프로젝트 기록" : "Stories - Studio NOL Project Logs"}
-        description={isKo ? "스튜디오 놀에서 진행된 다양한 작업 후기와 스토리를 만나보세요." : "Discover various stories and reviews from projects at Studio NOL."}
+        title={t('stories.seo.title')}
+        description={t('stories.seo.description')}
         canonical={`https://studionol.co.kr/${locale}/stories`}
         keywords="스튜디오 놀 스토리, 작업 후기, 음악 제작 스토리"
         breadcrumbs={[
-          { name: isKo ? '홈' : 'Home', path: `/${locale}` },
-          { name: isKo ? '스토리' : 'Stories', path: `/${locale}/stories` },
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.stories'), path: `/${locale}/stories` },
         ]}
       />
       <ImageHero
-        title={isKo ? "스토리" : "Stories"}
-        subtitle={isKo ? "스튜디오 작업과 관련된 다양한 이야기를 만나보세요." : "Explore various stories about studio work."}
+        title={t('stories.hero.title')}
+        subtitle={t('stories.hero.subtitle')}
         backgroundImage="/images/studio1.jpg"
-        imageAlt="Studio NOL Stories"
+        imageAlt={t('stories.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
@@ -58,7 +59,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
               activeCategory={activeCategory}
               setActiveCategory={setActiveCategory}
               categories={categories}
-              allLabel={isKo ? "전체" : "All"}
+              allLabel={t('stories.filters.all')}
             />
           </div>
 
@@ -66,12 +67,12 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
             <div className="text-center py-16">
               <div className="text-gray-400 text-2xl mb-4">📭</div>
               <h2 className="typo-card-title mb-4 text-gray-800 dark:text-white">
-                {isKo ? "스토리가 없습니다" : "No stories found"}
+                {t('stories.empty.title')}
               </h2>
               <p className="typo-card-body">
                 {activeCategory === 'all'
-                  ? (isKo ? '아직 등록된 스토리가 없습니다.' : 'No stories registered yet.')
-                  : (isKo ? `'${activeCategory}' 카테고리에 등록된 스토리가 없습니다.` : `No stories in '${activeCategory}' category.`)}
+                  ? t('stories.empty.all')
+                  : t('stories.empty.byCategory', { category: activeCategory })}
               </p>
             </div>
           ) : (

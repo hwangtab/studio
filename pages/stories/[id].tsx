@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { defaultLocale } from '../../lib/i18n';
+import { getClientLocale } from '../../utils/localeUtils';
 
 export default function StoryItemRedirect() {
   const router = useRouter();
@@ -8,7 +8,8 @@ export default function StoryItemRedirect() {
 
   useEffect(() => {
     if (id) {
-      router.replace(`/${defaultLocale}/stories/${id}`);
+      const locale = getClientLocale();
+      router.replace(`/${locale}/stories/${id}`);
     }
   }, [router, id]);
 

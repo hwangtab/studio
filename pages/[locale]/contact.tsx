@@ -84,7 +84,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
         keywords="스튜디오 놀 연락처, 음악 제작 문의, 레코딩 예약, 믹싱 의뢰, 은평구 스튜디오 위치, 카카오톡 상담, 프로덕션 견적"
         canonical={`https://studionol.co.kr/${locale}/contact`}
         breadcrumbs={[
-          { name: t('nav.about'), path: `/${locale}` },
+          { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.contact'), path: `/${locale}/contact` },
         ]}
       />
@@ -164,10 +164,10 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
                   <p className="typo-card-body text-blue-800 dark:text-blue-300">
-                    <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.parking')}:</span> {t('contact.notice.list.0', { defaultValue: 'Paid parking available' })}
+                    <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.parking')}:</span> {t('contact.info.parkingDetail')}
                   </p>
                   <p className="typo-card-body text-blue-800 dark:text-blue-300 mt-1">
-                    <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.transport')}:</span> {t('contact.notice.list.1', { defaultValue: 'Line 6 Bulgwang Station' })}
+                    <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.transport')}:</span> {t('contact.info.transportDetail')}
                   </p>
                 </div>
               </div>

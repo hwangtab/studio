@@ -66,22 +66,60 @@ const faqData = {
       question: 'Studio NOL 位于哪里？',
       answer: '位于首尔恩平区大枣洞 84-3 3楼。从地铁6号线佛光站7号出口或延身内站步行5分钟即到。',
     },
-     {
+    {
       question: '录音室费用是多少？',
       answer: '录音每小时 100,000 韩元，最少预订 2 小时。6 小时套餐 (Day Lock) 为 500,000 韩元（约优惠 17%）。包含专业工程服务。',
     },
-    // ... Simplified Chinese placeholders or partial translations ...
+    {
+      question: '混音服务价格是多少？',
+      answer: '根据轨道数量不同。10 轨以下 200,000 韩元，11-30 轨 350,000 韩元，31 轨以上 500,000 韩元。包含 2 次基础修改。',
+    },
+    {
+      question: '母带处理费用是多少？',
+      answer: '单曲母带处理每首 100,000 韩元；EP/专辑套餐（4 首以上）每首 80,000 韩元。将按 Spotify、Apple Music 等流媒体平台规格制作。',
+    },
+    {
+      question: '有练习室入驻项目吗？',
+      answer: '有，月费 400,000 韩元，提供高端隔音练习室及 8 项福利（录音室折扣、免费发行、新闻稿支持、街头演出设备租借等）。',
+    },
+    {
+      question: '有哪些设备？',
+      answer: '配备 Neumann U87AI、AKG C414 XLS 麦克风、Vintech X73i 前级、Prism Sound Lyra 2 接口、SSL Fusion 处理器等高端模拟/数字设备。',
+    },
+    {
+      question: '提供音乐发行服务吗？',
+      answer: '是的，入驻客户可通过 Audioguy 免费发行至 Spotify、Apple Music、YouTube Music 等全球平台，净收益的 70% 分成给艺人。',
+    },
   ],
   es: [
     {
       question: '¿Dónde está ubicado Studio NOL?',
       answer: 'Estamos en el 3er piso, 84-3 Daejo-dong, Eunpyeong-gu, Seúl. A 5 minutos a pie de la estación Bulgwang (Salida 7) o la estación Yeonsinnae.',
     },
-     {
+    {
       question: '¿Cuánto cuesta el estudio de grabación?',
-      answer: 'La grabación cuesta 100,000 KRW por hora, con un mínimo de 2 horas. El paquete de 6 horas cuesta 500,000 KRW. Incluye ingeniería profesional.',
+      answer: 'La grabación cuesta 100.000 KRW por hora, con un mínimo de 2 horas. El paquete de 6 horas (Day Lock) cuesta 500.000 KRW (aprox. 17% de descuento). Incluye ingeniería profesional.',
     },
-    // ... Spanish placeholders ...
+    {
+      question: '¿Cuánto cuestan los servicios de mezcla?',
+      answer: 'Depende del número de pistas. Hasta 10 pistas: 200.000 KRW; 11-30 pistas: 350.000 KRW; 31+ pistas: 500.000 KRW. Incluye 2 revisiones básicas.',
+    },
+    {
+      question: '¿Cuánto cuesta la masterización?',
+      answer: 'La masterización de un sencillo cuesta 100.000 KRW por canción. El paquete EP/Álbum (4+ canciones) cuesta 80.000 KRW por canción. Se entrega según estándares de plataformas como Spotify y Apple Music.',
+    },
+    {
+      question: '¿Tienen un programa de residencia para salas de práctica?',
+      answer: 'Sí, por 400.000 KRW/mes ofrecemos una sala premium insonorizada y 8 beneficios (descuento en estudio, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
+    },
+    {
+      question: '¿Qué equipo tienen?',
+      answer: 'Contamos con equipo premium como Neumann U87AI, AKG C414 XLS, preamplificador Vintech X73i, interfaz Prism Sound Lyra 2 y procesador SSL Fusion.',
+    },
+    {
+      question: '¿Ofrecen distribución musical?',
+      answer: 'Sí, para miembros residentes ofrecemos distribución global gratuita (Spotify, Apple Music, etc.) vía Audioguy, y entregamos el 70% de las ganancias netas al artista.',
+    },
   ]
 };
 

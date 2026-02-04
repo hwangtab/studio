@@ -134,6 +134,11 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     }
   }, [isDarkMode, hasThemeLoaded]);
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   const handleNavigate = React.useCallback(() => setIsMenuOpen(false), []);
 
   const isHome = router.pathname === '/[locale]';

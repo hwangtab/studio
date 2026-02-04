@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
 import StoryCard from '../../../components/StoryCard';
@@ -26,6 +27,7 @@ interface StoryDetailPageProps {
 }
 
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
+  const { t } = useTranslation('common', { lng: locale });
   const getCTAType = (slug: string, category: string | undefined): CTAType => {
     let hash = 0;
     for (let i = 0; i < slug.length; i++) {
@@ -65,7 +67,6 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
     return <LoadingSpinner />;
   }
 
-  const isKo = locale === 'ko';
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
   const shareUrl = `https://studionol.co.kr/${locale}/stories/${story.slug}`;
@@ -91,8 +92,8 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         articleAuthor={story.author}
         includeSchema
         breadcrumbs={[
-          { name: isKo ? '홈' : 'Home', path: `/${locale}` },
-          { name: isKo ? '스토리' : 'Stories', path: `/${locale}/stories` },
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.stories'), path: `/${locale}/stories` },
           { name: story.title, path: `/${locale}/stories/${story.slug}` },
         ]}
       />
@@ -108,7 +109,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center">
               <Calendar className="mr-2" size={18} />
-              <span>{story.createdAt ? timeAgo(story.createdAt) : story.date}</span>
+              <span>{story.createdAt ? timeAgo(story.createdAt, locale) : story.date}</span>
             </div>
           </div>
         }
@@ -125,7 +126,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
             className="inline-flex items-center typo-card-cta hover:underline"
           >
             <ArrowLeft className="mr-2" size={16} />
-            {isKo ? "스토리 목록으로 돌아가기" : "Back to Stories"}
+            {t('stories.detail.backToList')}
           </Link>
 
           <button
@@ -133,7 +134,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
             className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400"
           >
             <Share2 className="mr-2" size={16} />
-            {isKo ? "공유하기" : "Share"}
+            {t('stories.detail.share')}
           </button>
         </div>
 
@@ -149,7 +150,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         <StoryCTA type={ctaType} locale={locale} />
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <h2 className="typo-card-title mb-6">{isKo ? "더 많은 스토리" : "More Stories"}</h2>
+          <h2 className="typo-card-title mb-6">{t('stories.detail.moreTitle')}</h2>
           {relatedStories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map((related) => (
@@ -157,11 +158,11 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
               ))}
             </div>
           ) : (
-            <p className="typo-card-body text-gray-500 mb-6">{isKo ? "관련 스토리가 없습니다." : "No related stories."}</p>
+            <p className="typo-card-body text-gray-500 mb-6">{t('stories.detail.noRelated')}</p>
           )}
           <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta hover:underline">
             <ArrowLeft className="mr-2" size={16} />
-            {isKo ? "모든 스토리 보기" : "View all stories"}
+            {t('stories.detail.viewAll')}
           </Link>
         </div>
       </Section>
