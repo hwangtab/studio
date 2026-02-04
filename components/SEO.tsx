@@ -140,7 +140,7 @@ const SEO = ({
           name: item.author
         },
         reviewRating: {
-          '@type': 'ReviewRating',
+          '@type': 'Rating',
           ratingValue: item.rating,
           bestRating: '5',
           worstRating: '1'
