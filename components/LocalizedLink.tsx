@@ -1,22 +1,48 @@
 import React from 'react';
 import Link, { LinkProps } from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { defaultLocale, locales, type Locale } from '../lib/i18n';
 
 interface LocalizedLinkProps extends LinkProps {
   children: React.ReactNode;
   className?: string;
+  locale?: Locale;
   [key: string]: any;
 }
 
-export const LocalizedLink = ({ href, children, ...props }: LocalizedLinkProps) => {
+const normalizeLocale = (value?: string): Locale | undefined => {
+  const normalized = value?.split('-')[0] as Locale | undefined;
+  return normalized && locales.includes(normalized) ? normalized : undefined;
+};
+
+export const LocalizedLink = ({ href, children, locale, ...props }: LocalizedLinkProps) => {
   const { i18n } = useTranslation();
-  const locale = i18n.language;
+  const router = useRouter();
+  const resolvedLocale =
+    locale ||
+    normalizeLocale(router.query.locale as string | undefined) ||
+    normalizeLocale(i18n.language) ||
+    defaultLocale;
 
   // Handle external links or already localized links if needed (though usually we pass relative paths)
   // Assuming href is a string for simplicity in this helper
   const path = href.toString();
-  const isExternal = path.startsWith('http') || path.startsWith('//');
-  const localizedHref = isExternal ? path : `/${locale}${path.startsWith('/') ? '' : '/'}${path}`;
+  const isExternal =
+    path.startsWith('http') ||
+    path.startsWith('//') ||
+    path.startsWith('mailto:') ||
+    path.startsWith('tel:');
+  const isHashOrQuery = path.startsWith('#') || path.startsWith('?');
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const hasLocalePrefix = locales.some(
+    (candidate) => normalizedPath === `/${candidate}` || normalizedPath.startsWith(`/${candidate}/`)
+  );
+  const localizedHref = isExternal || isHashOrQuery
+    ? path
+    : hasLocalePrefix
+      ? normalizedPath
+      : `/${resolvedLocale}${normalizedPath}`;
 
   return (
     <Link href={localizedHref} {...props}>
