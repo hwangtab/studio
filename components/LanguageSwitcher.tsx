@@ -82,7 +82,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
         aria-expanded={isOpen}
         aria-label="Language selector"
         className={`
-          inline-flex items-center gap-2 px-3 py-2 sm:px-2.5 sm:py-1.5 min-h-[40px] sm:min-h-[32px] rounded-md text-sm sm:text-xs font-bold uppercase tracking-wide transition-colors duration-200 touch-manipulation
+          inline-flex items-center gap-2 px-3 py-2 sm:px-2.5 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold uppercase tracking-wide transition-colors duration-200 touch-manipulation
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen ? 'bg-primary text-white shadow-sm' : ''}
           ${!isOpen && (isScrolled || !hasHero)
@@ -92,7 +92,8 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
               : ''}
         `}
       >
-        <span>{localeNames[currentLocale]}</span>
+        <span className="hidden sm:inline">{localeNames[currentLocale]}</span>
+        <span className="sm:hidden">{currentLocale.toUpperCase()}</span>
         <span className="text-[10px] opacity-80">▾</span>
       </button>
       {isOpen && (
@@ -111,7 +112,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
                   href={getPathForLocale(locale)}
                   onClick={() => setIsOpen(false)}
                   className={`
-                    px-3 py-2 sm:px-2 sm:py-1.5 min-h-[40px] sm:min-h-[32px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
+                    px-3 py-2 sm:px-2 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                     ${currentLocale === locale
                       ? 'bg-primary text-white shadow-sm'

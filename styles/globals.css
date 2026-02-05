@@ -78,8 +78,12 @@
 
   a,
   button,
-  [role='button'] {
+  [role='button'],
+  input,
+  select,
+  textarea {
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1,
