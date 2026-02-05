@@ -119,7 +119,7 @@
       "kakao": "Inquiry via KakaoTalk",
       "success": "Message sent successfully.",
       "error": "Failed to send message. Please try again.",
-      "loading": "Sending..."
+      "loading": "Sending…"
     },
     "info": {
       "title": "Contact Information",
@@ -301,15 +301,15 @@
     "painPoints": {
       "title": "Are you having these troubles?",
       "items": [
-        "Worried about water from AC damaging gear...",
-        "Distracted by sound from the next room...",
-        "Feeling stuffy due to poor air circulation...",
-        "Re-recording due to electrical noise...",
-        "Unpleasant and messy working environment..."
+        "Worried about water from AC damaging gear…",
+        "Distracted by sound from the next room…",
+        "Feeling stuffy due to poor air circulation…",
+        "Re-recording due to electrical noise…",
+        "Unpleasant and messy working environment…"
       ]
     },
     "audience": {
-      "title": "A space for those who...",
+      "title": "A space for those who…",
       "items": [
         {
           "title": "Local Musicians",

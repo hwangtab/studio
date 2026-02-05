@@ -119,7 +119,7 @@
       "kakao": "KakaoTalk orqali so'rov",
       "success": "Xabar muvaffaqiyatli yuborildi.",
       "error": "Xabar yuborilmadi. Qayta urinib ko'ring.",
-      "loading": "Yuborilmoqda..."
+      "loading": "Yuborilmoqda…"
     },
     "info": {
       "title": "Aloqa ma'lumotlari",
@@ -301,15 +301,15 @@
     "painPoints": {
       "title": "Quyidagi muammolar sizda bormi?",
       "items": [
-        "Konditsionerdan suv uskunaga zarar yetkazadimi deb xavotir...",
-        "Yon xonadagi tovush chalg'itadi...",
-        "Havo almashinuvi yomon, dim bo'lib qoladimi...",
-        "Elektr shovqini sabab qayta yozish...",
-        "Noqulay va tartibsiz ish muhiti..."
+        "Konditsionerdan suv uskunaga zarar yetkazadimi deb xavotir…",
+        "Yon xonadagi tovush chalg'itadi…",
+        "Havo almashinuvi yomon, dim bo'lib qoladimi…",
+        "Elektr shovqini sabab qayta yozish…",
+        "Noqulay va tartibsiz ish muhiti…"
       ]
     },
     "audience": {
-      "title": "Quyidagilar uchun joy...",
+      "title": "Quyidagilar uchun joy…",
       "items": [
         {
           "title": "Mahalliy musiqachilar",

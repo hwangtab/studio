@@ -119,7 +119,7 @@
       "kakao": "Consulta por KakaoTalk",
       "success": "Mensaje enviado correctamente.",
       "error": "Error al enviar. Inténtalo de nuevo.",
-      "loading": "Enviando..."
+      "loading": "Enviando…"
     },
     "info": {
       "title": "Información de contacto",
@@ -301,15 +301,15 @@
     "painPoints": {
       "title": "¿Tienes estos problemas?",
       "items": [
-        "Me preocupa que el agua del aire acondicionado dañe el equipo...",
-        "El ruido de la sala de al lado me distrae...",
-        "El aire no circula y se siente pesado...",
-        "Debo regrabar por el ruido eléctrico...",
-        "El entorno de trabajo es incómodo y desordenado..."
+        "Me preocupa que el agua del aire acondicionado dañe el equipo…",
+        "El ruido de la sala de al lado me distrae…",
+        "El aire no circula y se siente pesado…",
+        "Debo regrabar por el ruido eléctrico…",
+        "El entorno de trabajo es incómodo y desordenado…"
       ]
     },
     "audience": {
-      "title": "Un espacio para quienes...",
+      "title": "Un espacio para quienes…",
       "items": [
         {
           "title": "Músicos locales",

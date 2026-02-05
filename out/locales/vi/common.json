@@ -119,7 +119,7 @@
       "kakao": "Liên hệ qua KakaoTalk",
       "success": "Đã gửi tin nhắn thành công.",
       "error": "Gửi thất bại. Vui lòng thử lại.",
-      "loading": "Đang gửi..."
+      "loading": "Đang gửi…"
     },
     "info": {
       "title": "Thông tin liên hệ",
@@ -301,15 +301,15 @@
     "painPoints": {
       "title": "Bạn có gặp những vấn đề này?",
       "items": [
-        "Lo nước điều hòa làm hư thiết bị...",
-        "Bị phân tâm bởi tiếng phòng bên...",
-        "Cảm giác ngột ngạt do lưu thông khí kém...",
-        "Phải thu lại vì nhiễu điện...",
-        "Môi trường làm việc khó chịu và bừa bộn..."
+        "Lo nước điều hòa làm hư thiết bị…",
+        "Bị phân tâm bởi tiếng phòng bên…",
+        "Cảm giác ngột ngạt do lưu thông khí kém…",
+        "Phải thu lại vì nhiễu điện…",
+        "Môi trường làm việc khó chịu và bừa bộn…"
       ]
     },
     "audience": {
-      "title": "Dành cho những ai...",
+      "title": "Dành cho những ai…",
       "items": [
         {
           "title": "Nhạc sĩ địa phương",
