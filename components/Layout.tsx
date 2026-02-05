@@ -39,7 +39,7 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
       href={href}
       onClick={onNavigate}
       aria-current={isActive ? 'page' : undefined}
-      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-nowrap transition-colors transition-shadow duration-300 touch-manipulation
+      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-normal transition-colors transition-shadow duration-300 touch-manipulation
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
         : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
@@ -209,7 +209,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
             </Link>
 
             <div className="flex items-center space-x-2 md:space-x-4">
-              <nav className="hidden xl:flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0 max-w-[70vw]">
+              <nav className="hidden 2xl:flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0 max-w-[70vw]">
                 {navItems.map((item) => (
                   <NavLink
                     key={item.href}
@@ -242,7 +242,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
               />
 
               <button
-                className={`xl:hidden p-2 rounded-full ${isScrolled || !hasHero
+                className={`2xl:hidden p-2 rounded-full ${isScrolled || !hasHero
                   ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                   : 'text-white hover:bg-white/20'
                   } min-h-[44px] min-w-[44px] transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
@@ -265,7 +265,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                 duration: shouldReduceMotion ? 0 : 0.3,
                 ease: 'easeInOut'
               }}
-              className="md:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
+              className="2xl:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
             >
               <div className="px-4 py-3 space-y-2">
                 {navItems.map((item) => (
@@ -273,7 +273,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="block px-3 py-2 min-h-[44px] rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                    className="block px-3 py-2 min-h-[44px] rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300 touch-manipulation"
                     aria-current={currentPath === item.href ? 'page' : undefined}
                   >
                     {item.label}
