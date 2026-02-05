@@ -188,7 +188,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           <BaseCard
             delay={0.1}
             className="p-6 text-center cursor-pointer"
-            onClick={() => window.open(`tel:${siteConfig.contact.phone}`, '_blank')}
+            href={`tel:${siteConfig.contact.phone}`}
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
@@ -202,7 +202,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           <BaseCard
             delay={0.2}
             className="p-6 text-center cursor-pointer"
-            onClick={() => window.open(`mailto:${siteConfig.contact.email}`, '_blank')}
+            href={`mailto:${siteConfig.contact.email}`}
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
@@ -216,7 +216,9 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           <BaseCard
             delay={0.3}
             className="p-6 text-center cursor-pointer"
-            onClick={() => window.open(siteConfig.contact.kakaoUrl, '_blank')}
+            href={siteConfig.contact.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
@@ -230,7 +232,9 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           <BaseCard
             delay={0.4}
             className="p-6 text-center cursor-pointer"
-            onClick={() => window.open(siteConfig.contact.naverMapUrl, '_blank')}
+            href={siteConfig.contact.naverMapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">

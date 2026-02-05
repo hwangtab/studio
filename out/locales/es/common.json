@@ -112,9 +112,13 @@
     "heroAlt": "Contactar Studio NOL",
     "form": {
       "name": "Nombre",
+      "namePlaceholder": "p. ej., Alex Kim…",
       "phone": "Teléfono",
+      "phonePlaceholder": "p. ej., 010-1234-5678…",
       "email": "Email",
+      "emailPlaceholder": "p. ej., hello@studionol.co.kr…",
       "message": "Mensaje",
+      "messagePlaceholder": "p. ej., objetivo, horario, enlaces de referencia…",
       "submit": "Enviar consulta por email",
       "kakao": "Consulta por KakaoTalk",
       "success": "Mensaje enviado correctamente.",

@@ -112,9 +112,13 @@
     "heroAlt": "Studio NOL 문의",
     "form": {
       "name": "이름",
+      "namePlaceholder": "예: 홍길동…",
       "phone": "연락처",
+      "phonePlaceholder": "예: 010-1234-5678…",
       "email": "이메일",
+      "emailPlaceholder": "예: hello@studionol.co.kr…",
       "message": "메시지",
+      "messagePlaceholder": "예: 프로젝트 목적, 일정, 참고 링크…",
       "submit": "이메일로 문의하기",
       "kakao": "카카오톡으로 문의하기",
       "success": "메시지가 성공적으로 전송되었습니다.",

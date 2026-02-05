@@ -8,7 +8,9 @@ interface BaseCardProps {
     children: React.ReactNode;
     className?: string;
     href?: string;
-    onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
+    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+    target?: string;
+    rel?: string;
     delay?: number;
     variant?: 'default' | 'highlight' | 'outline';
     hoverEffect?: boolean;
@@ -20,6 +22,8 @@ const BaseCard = React.memo(({
     className = '',
     href,
     onClick,
+    target,
+    rel,
     delay = 0,
     variant = 'default',
     hoverEffect = true,
@@ -43,38 +47,60 @@ const BaseCard = React.memo(({
         transition: { duration: 0.2 } // Faster transition for hover only
     };
 
-    const isInteractive = Boolean(onClick);
+    const isInteractive = Boolean(onClick || href);
     const interactiveStyles = isInteractive
-        ? "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         : "";
-    const CardContent = (
-        <motion.div
-            className={cn(baseStyles, variants[variant], interactiveStyles, className)}
-            {...animationProps}
-            onClick={onClick}
-            role={isInteractive ? 'button' : undefined}
-            tabIndex={isInteractive ? 0 : undefined}
-            onKeyDown={(event) => {
-                if (!onClick) return;
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    onClick(event);
-                }
-            }}
-        >
-            {children}
-        </motion.div>
-    );
+    const cardClassName = cn(baseStyles, variants[variant], interactiveStyles, className);
+    const isExternal = Boolean(href && /^(https?:|mailto:|tel:)/.test(href));
 
     if (href) {
+        const resolvedRel = target === '_blank' ? (rel ?? 'noopener noreferrer') : rel;
+        const anchorProps = {
+            className: cardClassName,
+            onClick,
+            target,
+            rel: resolvedRel,
+        };
+
+        if (isExternal) {
+            return (
+                <motion.a href={href} {...animationProps} {...anchorProps}>
+                    {children}
+                </motion.a>
+            );
+        }
+
         return (
-            <Link href={href} className="block h-full" onClick={(e) => onClick && onClick(e)}>
-                {CardContent}
+            <Link href={href} legacyBehavior passHref>
+                <motion.a {...animationProps} {...anchorProps}>
+                    {children}
+                </motion.a>
             </Link>
         );
     }
 
-    return CardContent;
+    if (onClick) {
+        return (
+            <motion.button
+                type="button"
+                className={cardClassName}
+                {...animationProps}
+                onClick={onClick}
+            >
+                {children}
+            </motion.button>
+        );
+    }
+
+    return (
+        <motion.div
+            className={cardClassName}
+            {...animationProps}
+        >
+            {children}
+        </motion.div>
+    );
 });
 
 BaseCard.displayName = 'BaseCard';

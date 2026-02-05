@@ -163,17 +163,8 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         setIsPlaying(true);
     };
 
-    const changeVolume = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLDivElement>) => {
-        let value: number;
-        if ((e.target as HTMLElement).tagName !== 'INPUT') {
-            const rect = (e.target as HTMLElement).getBoundingClientRect();
-            const clickPosition = (e as React.MouseEvent).clientX - rect.left;
-            value = clickPosition / rect.width;
-            value = Math.max(0, Math.min(1, value));
-        } else {
-            value = Number((e.target as HTMLInputElement).value);
-        }
-
+    const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Number(e.target.value);
         setVolume(value);
         if (audioRef.current) {
             audioRef.current.volume = value;

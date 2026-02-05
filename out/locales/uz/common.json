@@ -112,9 +112,13 @@
     "heroAlt": "Studio NOL bilan aloqa",
     "form": {
       "name": "Ism",
+      "namePlaceholder": "Masalan: Alex Kim…",
       "phone": "Telefon",
+      "phonePlaceholder": "Masalan: 010-1234-5678…",
       "email": "Email",
+      "emailPlaceholder": "Masalan: hello@studionol.co.kr…",
       "message": "Xabar",
+      "messagePlaceholder": "Masalan: maqsad, jadval, havolalar…",
       "submit": "Email orqali so'rov yuborish",
       "kakao": "KakaoTalk orqali so'rov",
       "success": "Xabar muvaffaqiyatli yuborildi.",

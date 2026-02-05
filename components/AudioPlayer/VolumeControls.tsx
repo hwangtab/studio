@@ -8,7 +8,7 @@ interface VolumeControlsProps {
     volume: number;
     isMuted: boolean;
     onToggleMute: () => void;
-    onChangeVolume: (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLDivElement>) => void;
+    onChangeVolume: (e: React.ChangeEvent<HTMLInputElement>) => void;
     locale?: Locale;
 }
 
@@ -33,13 +33,8 @@ const VolumeControls = ({
             </motion.button>
             <div className="w-20 h-2 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
                 <div
-                    className="absolute top-0 left-0 h-full w-full bg-transparent rounded-full"
-                    onClick={onChangeVolume}
-                ></div>
-                <div
                     className="absolute top-0 left-0 h-full bg-gray-800 dark:bg-white rounded-full"
                     style={{ width: `${volume * 100}%` }}
-                    onClick={onChangeVolume}
                 ></div>
                 <input
                     type="range"

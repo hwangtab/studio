@@ -112,9 +112,13 @@
     "heroAlt": "Liên hệ Studio NOL",
     "form": {
       "name": "Họ tên",
+      "namePlaceholder": "VD: Alex Kim…",
       "phone": "Số điện thoại",
+      "phonePlaceholder": "VD: 010-1234-5678…",
       "email": "Email",
+      "emailPlaceholder": "VD: hello@studionol.co.kr…",
       "message": "Tin nhắn",
+      "messagePlaceholder": "VD: mục tiêu, lịch trình, link tham khảo…",
       "submit": "Gửi yêu cầu qua email",
       "kakao": "Liên hệ qua KakaoTalk",
       "success": "Đã gửi tin nhắn thành công.",

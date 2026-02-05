@@ -32,6 +32,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.ytimg.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.news-art.co.kr',
+      },
     ],
     minimumCacheTTL: 31536000, // 1 year for external images
     formats: ['image/avif', 'image/webp'],

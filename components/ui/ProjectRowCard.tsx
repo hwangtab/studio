@@ -33,21 +33,14 @@ const ProjectRowCard = ({
     };
 
     return (
-        <motion.div
+        <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
-            className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 text-left disabled:cursor-default disabled:opacity-80"
             onClick={onClick}
-            role={isInteractive ? 'button' : undefined}
-            tabIndex={isInteractive ? 0 : undefined}
-            onKeyDown={(event) => {
-                if (!onClick) return;
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    onClick();
-                }
-            }}
+            type="button"
+            disabled={!isInteractive}
         >
             {/* Left: Album Art */}
             <div className="relative w-full sm:w-48 h-48 sm:h-full flex-shrink-0 overflow-hidden bg-gray-100 dark:bg-black">
@@ -109,7 +102,7 @@ const ProjectRowCard = ({
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </motion.button>
     );
 };
 

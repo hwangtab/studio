@@ -45,11 +45,12 @@ class MyDocument extends Document<Props> {
     return (
       <Html
         lang={locale}
-        className="scroll-smooth"
         prefix="og: https://ogp.me/ns#"
         suppressHydrationWarning
       >
         <Head>
+          <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
           <link
             rel="preload"
             href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff"

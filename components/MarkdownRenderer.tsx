@@ -1,9 +1,13 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { locales } from '../lib/i18n';
+import imageMetadata from '../utils/imageMetadata.json';
 
 let prismLoaderPromise: Promise<any> | null = null;
+
+const imageMetadataMap = imageMetadata as Record<string, { width: number; height: number }>;
 
 const loadPrism = async () => {
   if (typeof window === 'undefined') {
@@ -221,18 +225,43 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             img: {
-              component: ({ alt, src, ...rest }: any) => (
-                <div className="my-6">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={src}
-                    alt={alt || 'image'}
-                    className="w-full h-auto rounded-lg shadow-md"
-                    loading="lazy"
-                    {...rest}
-                  />
-                </div>
-              ),
+              component: ({ alt, src, ...rest }: any) => {
+                if (!src) return null;
+                const metadata = imageMetadataMap[src];
+                const hasDimensions = metadata?.width && metadata?.height;
+                const altText = typeof alt === 'string' && alt.trim().length > 0 ? alt : '';
+
+                if (hasDimensions) {
+                  return (
+                    <div className="my-6">
+                      <Image
+                        src={src}
+                        alt={altText}
+                        width={metadata.width}
+                        height={metadata.height}
+                        sizes="(max-width: 768px) 100vw, 768px"
+                        className="w-full h-auto rounded-lg shadow-md"
+                        {...rest}
+                      />
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="my-6">
+                    <div className="relative w-full overflow-hidden rounded-lg shadow-md" style={{ aspectRatio: '16 / 9' }}>
+                      <Image
+                        src={src}
+                        alt={altText}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 768px"
+                        className="object-contain"
+                        {...rest}
+                      />
+                    </div>
+                  </div>
+                );
+              },
             },
 
             hr: {

@@ -16,11 +16,12 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'framer-motion';
 import { useRouter } from 'next/router';
 
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
   const locale = (pageProps?.locale as Locale | undefined) || defaultLocale;
@@ -36,20 +37,22 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
-          <Layout hasHero={hasHero} locale={locale}>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={router.asPath.split('?')[0]}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
-              >
-                <Component {...pageProps} />
-              </motion.div>
-            </AnimatePresence>
-            <Analytics />
-          </Layout>
+          <MotionConfig reducedMotion="user">
+            <Layout hasHero={hasHero} locale={locale}>
+              <AnimatePresence mode="wait" initial={!shouldReduceMotion}>
+                <motion.div
+                  key={router.asPath.split('?')[0]}
+                  initial={shouldReduceMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                  transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeInOut' }}
+                >
+                  <Component {...pageProps} />
+                </motion.div>
+              </AnimatePresence>
+              <Analytics />
+            </Layout>
+          </MotionConfig>
         </ErrorBoundary>
       </I18nextProvider>
     </div>
