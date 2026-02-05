@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Globe2 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { locales, localeNames, type Locale } from '../lib/i18n';
@@ -83,7 +82,8 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
         aria-expanded={isOpen}
         aria-label="Language selector"
         className={`
-          inline-flex items-center gap-1 sm:gap-2 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
+          inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
+          max-w-[120px] sm:max-w-[160px]
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen ? 'bg-primary text-white shadow-sm' : ''}
           ${!isOpen && (isScrolled || !hasHero)
@@ -93,11 +93,8 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
               : ''}
         `}
       >
-        <span className="sm:hidden">
-          <Globe2 size={16} aria-hidden="true" />
-        </span>
-        <span className="hidden sm:inline">{localeNames[currentLocale]}</span>
-        <span className="hidden sm:inline text-[10px] opacity-80">▾</span>
+        <span className="truncate max-w-[72px] sm:max-w-[120px]">{localeNames[currentLocale]}</span>
+        <span className="text-[10px] opacity-80 flex-shrink-0">▾</span>
       </button>
       {isOpen && (
         <div
