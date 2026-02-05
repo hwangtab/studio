@@ -238,7 +238,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder={`${t('contact.form.name')}...`}
+                  placeholder={`${t('contact.form.name')}…`}
                   required
                   autoComplete="name"
                 />
@@ -251,7 +251,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder={`${t('contact.form.phone')}...`}
+                  placeholder={`${t('contact.form.phone')}…`}
                   required
                   autoComplete="tel"
                   inputMode="tel"
@@ -265,7 +265,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder={`${t('contact.form.email')}...`}
+                  placeholder={`${t('contact.form.email')}…`}
                   required
                   autoComplete="email"
                   inputMode="email"
@@ -282,7 +282,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder={`${t('contact.form.message')}...`}
+                    placeholder={`${t('contact.form.message')}…`}
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent"
                     rows={8}
                     required
