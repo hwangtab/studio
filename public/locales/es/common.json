@@ -28,7 +28,9 @@
     "call": "Llamar",
     "email": "Email",
     "kakao": "KakaoTalk",
-    "location": "Ubicación"
+    "location": "Ubicación",
+    "shareCopied": "Enlace copiado al portapapeles.",
+    "shareUnsupported": "Compartir no está disponible en este navegador."
   },
   "home": {
     "heroTitle": "Donde comienza la música, Studio NOL",
@@ -99,6 +101,7 @@
     "form": {
       "name": "Nombre",
       "phone": "Teléfono",
+      "email": "Email",
       "message": "Mensaje",
       "submit": "Enviar consulta por email",
       "kakao": "Consulta por KakaoTalk",

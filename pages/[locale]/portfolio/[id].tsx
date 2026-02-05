@@ -41,9 +41,13 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 
   const sharePortfolio = async () => {
     await shareContent({
-      title: `${item.title} - Studio NOL`,
+      title: `${item.title} - ${t('portfolio.detail.titleSuffix')}`,
       text: metaDescription,
       url: shareUrl,
+      messages: {
+        copied: t('actions.shareCopied'),
+        unsupported: t('actions.shareUnsupported'),
+      },
     });
   };
 

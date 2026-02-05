@@ -76,6 +76,10 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
       title: story.title,
       text: metaDescription,
       url: shareUrl,
+      messages: {
+        copied: t('actions.shareCopied'),
+        unsupported: t('actions.shareUnsupported'),
+      },
     });
   };
 

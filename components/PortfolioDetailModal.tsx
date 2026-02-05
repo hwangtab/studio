@@ -1,10 +1,12 @@
 import React, { useEffect, useCallback } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ResponsiveImage from './ResponsiveImage';
 import type { PortfolioItem, PortfolioCategory } from '../types/data';
 import { shareContent } from '../utils/shareUtils';
 import { getCategoryInfo } from '../utils/portfolioDataUtils';
+import { defaultLocale, type Locale } from '../lib/i18n';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -35,9 +37,11 @@ interface PortfolioDetailModalProps {
   item: PortfolioItem | null;
   categories: readonly PortfolioCategory[];
   onClose: () => void;
+  locale?: Locale;
 }
 
-const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModalProps) => {
+const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocale }: PortfolioDetailModalProps) => {
+  const { t } = useTranslation('common', { lng: locale });
   const handleEsc = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -59,18 +63,26 @@ const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModa
 
   const categoryInfo = getCategoryInfo(item.category, categories);
 
-  const shareUrl = `https://studionol.co.kr/portfolio/${item.id}`;
-  const metaDescription = `${item.artist}의 "${item.title}" - ${item.description}. 스튜디오 놀에서 작업한 프로젝트입니다.`;
+  const shareUrl = `https://studionol.co.kr/${locale}/portfolio/${item.id}`;
+  const metaDescription = t('portfolio.detail.metaDescription', {
+    artist: item.artist,
+    title: item.title,
+    description: item.description,
+  });
 
   const sharePortfolio = async () => {
     try {
       await shareContent({
-        title: `${item.title} - 스튜디오 놀`,
+        title: `${item.title} - ${t('portfolio.detail.titleSuffix')}`,
         text: metaDescription,
         url: shareUrl,
+        messages: {
+          copied: t('actions.shareCopied'),
+          unsupported: t('actions.shareUnsupported'),
+        },
       });
     } catch (error) {
-      console.error('포트폴리오 공유 실패:', error);
+      console.error('Portfolio share failed:', error);
     }
   };
 
@@ -114,7 +126,7 @@ const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModa
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            aria-label="닫기"
+            aria-label={t('actions.close')}
           >
             <X size={20} className="text-gray-600 dark:text-gray-300" />
           </button>
@@ -123,7 +135,7 @@ const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModa
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors"
           >
             <Share2 size={16} />
-            공유
+            {t('portfolio.detail.share')}
           </button>
         </div>
 
@@ -160,12 +172,12 @@ const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModa
           </h2>
 
           <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-4">
-            아티스트: {item.artist}
+            {t('portfolio.detail.artistLabel')}: {item.artist}
           </p>
 
           <div className="mb-6">
             <h3 className="typo-card-meta font-medium text-gray-400 dark:text-gray-500 mb-2">
-              제공 서비스
+              {t('portfolio.detail.servicesProvided')}
             </h3>
             <div className="flex flex-wrap gap-2">
               {item.services.map((service) => (
@@ -186,7 +198,7 @@ const PortfolioDetailModal = ({ item, categories, onClose }: PortfolioDetailModa
             className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
           >
             <ExternalLink size={16} />
-            음원 들으러 가기
+            {t('portfolio.detail.listenNow')}
           </a>
         </div>
       </motion.div>

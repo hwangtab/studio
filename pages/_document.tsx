@@ -3,6 +3,14 @@ import { Html, Head, Main, NextScript } from 'next/document';
 const themeInitializer = `
 (function() {
   try {
+    var supportedLocales = ['ko', 'en', 'zh', 'es'];
+    var pathLocale = window.location.pathname.split('/')[1] || 'ko';
+    if (supportedLocales.indexOf(pathLocale) !== -1) {
+      document.documentElement.lang = pathLocale;
+    } else {
+      document.documentElement.lang = 'ko';
+    }
+
     var storageKey = 'darkMode';
     var storedPreference = localStorage.getItem(storageKey);
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

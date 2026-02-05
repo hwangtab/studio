@@ -28,7 +28,9 @@
     "call": "电话",
     "email": "邮箱",
     "kakao": "KakaoTalk",
-    "location": "位置"
+    "location": "位置",
+    "shareCopied": "链接已复制到剪贴板。",
+    "shareUnsupported": "此浏览器不支持分享。"
   },
   "home": {
     "heroTitle": "音乐开始的地方，Studio NOL",
@@ -99,6 +101,7 @@
     "form": {
       "name": "姓名",
       "phone": "联系电话",
+      "email": "邮箱",
       "message": "留言",
       "submit": "通过邮箱咨询",
       "kakao": "通过 KakaoTalk 咨询",

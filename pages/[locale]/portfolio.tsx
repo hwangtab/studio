@@ -189,7 +189,13 @@ const Portfolio: NextPage<PortfolioProps> = ({
 
       <AnimatePresence>
         {selectedItem && (
-          <PortfolioDetailModal key={selectedItem.id} item={selectedItem} categories={categories} onClose={handleCloseModal} />
+          <PortfolioDetailModal
+            key={selectedItem.id}
+            item={selectedItem}
+            categories={categories}
+            onClose={handleCloseModal}
+            locale={locale}
+          />
         )}
       </AnimatePresence>
     </>

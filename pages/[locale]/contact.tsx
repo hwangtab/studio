@@ -30,6 +30,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    email: '',
     message: '',
     company: '',
   });
@@ -46,25 +47,45 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
     setIsSubmitting(true);
     setSubmitMessage('');
 
-    const { name, phone, message, company } = formData;
+    const { name, phone, email, message, company } = formData;
 
     // Honeypot check
     if (company.trim().length > 0) {
+      setIsSubmitting(false);
       return;
     }
 
     try {
-      const response = await fetch('/api/contact', {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        setSubmitMessage(t('contact.form.error'));
+        return;
+      }
+
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, phone, message }),
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: {
+            name,
+            phone,
+            email,
+            message,
+          },
+        }),
       });
 
       if (response.ok) {
         setSubmitMessage(t('contact.form.success'));
-        setFormData({ name: '', phone: '', message: '', company: '' });
+        setFormData({ name: '', phone: '', email: '', message: '', company: '' });
       } else {
         setSubmitMessage(t('contact.form.error'));
       }
@@ -233,10 +254,12 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                 <InputField
                   icon={Mail}
                   id="email"
-                  label={t('actions.email')}
+                  label={t('contact.form.email')}
                   type="email"
                   name="email"
-                  placeholder="example@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t('contact.form.email')}
                   required
                   autoComplete="email"
                 />

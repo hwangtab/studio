@@ -28,7 +28,9 @@
     "call": "전화",
     "email": "이메일",
     "kakao": "카카오톡",
-    "location": "위치"
+    "location": "위치",
+    "shareCopied": "링크가 클립보드에 복사되었습니다.",
+    "shareUnsupported": "이 브라우저에서는 공유가 지원되지 않습니다."
   },
   "home": {
     "heroTitle": "음악이 시작되는 곳, 스튜디오 놀",
@@ -99,6 +101,7 @@
     "form": {
       "name": "이름",
       "phone": "연락처",
+      "email": "이메일",
       "message": "메시지",
       "submit": "이메일로 문의하기",
       "kakao": "카카오톡으로 문의하기",
