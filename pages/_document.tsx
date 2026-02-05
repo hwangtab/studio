@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 
 const themeInitializer = `
 (function() {
@@ -27,35 +27,52 @@ const themeInitializer = `
 })();
 `;
 
-export default function Document() {
-  return (
-    <Html
-      lang="ko"
-      className="scroll-smooth"
-      prefix="og: https://ogp.me/ns#"
-      suppressHydrationWarning
-    >
-      <Head>
-        <link
-          rel="preload"
-          href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff"
-          as="font"
-          type="font/woff"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
-      </Head>
-      <body className="bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out">
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+type Props = {
+  locale: string;
+};
+
+class MyDocument extends Document<Props> {
+  static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps & Props> {
+    const initialProps = await Document.getInitialProps(ctx);
+    // ctx.query.locale exists because pages are under pages/[locale]/
+    const locale = (ctx.query?.locale as string) || 'ko';
+    return { ...initialProps, locale };
+  }
+
+  render() {
+    const { locale } = this.props;
+
+    return (
+      <Html
+        lang={locale}
+        className="scroll-smooth"
+        prefix="og: https://ogp.me/ns#"
+        suppressHydrationWarning
+      >
+        <Head>
+          <link
+            rel="preload"
+            href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff"
+            as="font"
+            type="font/woff"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            href="https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
+        </Head>
+        <body className="bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out">
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
+
+export default MyDocument;

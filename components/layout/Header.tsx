@@ -37,7 +37,7 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
       href={href}
       onClick={onNavigate}
       aria-current={isActive ? 'page' : undefined}
-      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-nowrap transition-colors transition-shadow duration-300 touch-manipulation
+      className={`px-2 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-nowrap transition-colors transition-shadow duration-300 touch-manipulation
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
         : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
@@ -106,7 +106,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           </Link>
 
           <div className="flex items-center space-x-2 md:space-x-4">
-            <nav className="hidden 2xl:flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0 max-w-[70vw]">
+            <nav className="hidden 2xl:flex flex-nowrap items-center gap-x-1 gap-y-1 min-w-0 max-w-[70vw]">
               {navItems.map((item) => (
                 <NavLink
                   key={item.href}
