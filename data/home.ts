@@ -199,6 +199,144 @@ const homeData = {
       { src: `/images/studio5.jpg`, alt: "Sala de producción" },
       { src: `/images/hardware8.jpg`, alt: "Equipo analógico" }
     ]
+  },
+  vi: {
+    seo: {
+      title: "Sản xuất âm nhạc chuyên nghiệp · Mixing/Mastering & thu âm voiceover/nhạc cưới | Studio NOL",
+      description: "Sản xuất âm nhạc chuyên nghiệp hiện thực hóa tầm nhìn của nghệ sĩ. Bảo đảm kết quả tốt nhất với thiết bị cao cấp và kỹ thuật chuyên môn.",
+      keywords: "Sản xuất âm nhạc, đĩa đơn số, mixing mastering, phát hành album, sản xuất âm nhạc, phòng thu chuyên nghiệp, thu âm voiceover, thu âm nhạc cưới, Studio NOL"
+    },
+    heroContent: {
+      titlePrefix: "Thổi",
+      titleHighlight: "Sự sống",
+      titleSuffix: "vào âm nhạc của bạn",
+      subtitle: "Hoàn thiện âm thanh riêng của bạn với thiết bị cao cấp và bàn tay của kỹ sư chuyên nghiệp. Trải nghiệm tại Studio NOL.",
+      backgroundImage: "/images/studio2.jpg",
+      imageAlt: "Studio NOL phòng thu chính",
+      cta: {
+        reserve: "Đặt lịch",
+        portfolio: "Portfolio"
+      }
+    },
+    homeServices: [
+      {
+        title: 'Kế hoạch album',
+        description: 'Biến tầm nhìn âm nhạc của bạn thành hiện thực. Đồng hành từ lên kế hoạch đến sản xuất.',
+        link: '/about',
+        icon: 'Disc',
+      },
+      {
+        title: 'Thu âm & Mixing',
+        description: 'Tạo âm thanh tốt nhất với thiết bị cao cấp và chuyên gia. Thổi sự sống vào âm thanh của bạn.',
+        link: '/about',
+        icon: 'Mic',
+      },
+      {
+        title: 'PR & Marketing',
+        description: 'Quảng bá hiệu quả trên truyền thông và hỗ trợ showcase để lan tỏa sức hút âm nhạc của bạn.',
+        link: '/about',
+        icon: 'Globe',
+      },
+    ],
+    studioImages: [
+      { src: `/images/studio2.jpg`, alt: "Phòng thu với loa kiểm âm và bàn điều khiển" },
+      { src: `/images/studio3.jpg`, alt: "Booth thu vocal với micro chuyên nghiệp và pop filter" },
+      { src: `/images/studio4.jpg`, alt: "Trạm làm việc mixing với hệ thống DAW mới nhất" },
+      { src: `/images/studio5.jpg`, alt: "Phòng sản xuất đã xử lý âm học" },
+      { src: `/images/hardware8.jpg`, alt: "Thiết bị outboard analog và rack preamp" }
+    ]
+  },
+  th: {
+    seo: {
+      title: "ผลิตเพลงมืออาชีพ · มิกซ์/มาสเตอริ่ง & อัดเสียงพากย์/เพลงงานแต่ง | Studio NOL",
+      description: "สตูดิโอผลิตเพลงมืออาชีพที่ทำให้วิสัยทัศน์ของศิลปินเป็นจริง ด้วยอุปกรณ์ไฮเอนด์และวิศวกรรมระดับมืออาชีพ",
+      keywords: "การผลิตเพลง, ซิงเกิลดิจิทัล, มิกซ์มาสเตอริ่ง, ออกอัลบั้ม, โปรดิวซ์เพลง, สตูดิโอบันทึกเสียง, อัดเสียงพากย์, อัดเพลงงานแต่ง, Studio NOL"
+    },
+    heroContent: {
+      titlePrefix: "เติม",
+      titleHighlight: "ชีวิต",
+      titleSuffix: "ให้กับดนตรีของคุณ",
+      subtitle: "เติมเต็มซาวด์ของคุณด้วยอุปกรณ์ระดับไฮเอนด์และการดูแลของวิศวกรมืออาชีพ พบกันที่ Studio NOL",
+      backgroundImage: "/images/studio2.jpg",
+      imageAlt: "สตูดิโอหลักของ Studio NOL",
+      cta: {
+        reserve: "จองคิว",
+        portfolio: "ผลงาน"
+      }
+    },
+    homeServices: [
+      {
+        title: 'วางแผนอัลบั้ม',
+        description: 'ทำให้วิสัยทัศน์ทางดนตรีของคุณเป็นจริง เราดูแลตั้งแต่การวางแผนจนถึงการผลิต',
+        link: '/about',
+        icon: 'Disc',
+      },
+      {
+        title: 'บันทึกเสียง & มิกซ์',
+        description: 'สร้างซาวด์ที่ดีที่สุดด้วยอุปกรณ์ไฮเอนด์และผู้เชี่ยวชาญ เราเติมชีวิตให้เสียงของคุณ',
+        link: '/about',
+        icon: 'Mic',
+      },
+      {
+        title: 'ประชาสัมพันธ์ & การตลาด',
+        description: 'โปรโมตผ่านสื่ออย่างมีประสิทธิภาพและสนับสนุนโชว์เคสเพื่อกระจายเสน่ห์ของเพลงคุณ',
+        link: '/about',
+        icon: 'Globe',
+      },
+    ],
+    studioImages: [
+      { src: `/images/studio2.jpg`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
+      { src: `/images/studio3.jpg`, alt: "บูธร้องพร้อมไมค์มืออาชีพและป๊อปฟิลเตอร์" },
+      { src: `/images/studio4.jpg`, alt: "เวิร์กสเตชันมิกซ์พร้อมระบบ DAW ล่าสุด" },
+      { src: `/images/studio5.jpg`, alt: "ห้องโปรดักชันที่ปรับอะคูสติกแล้ว" },
+      { src: `/images/hardware8.jpg`, alt: "อุปกรณ์เอาต์บอร์ดอนาล็อกและแร็คพรีแอมป์" }
+    ]
+  },
+  uz: {
+    seo: {
+      title: "Professional musiqa ishlab chiqarish · Mixing/Mastering & voiceover/to‘y qo‘shiqlari yozuvi | Studio NOL",
+      description: "San’atkorning musiqiy tasavvurini hayotga tatbiq etuvchi professional prodakshn. Yuqori darajadagi uskunalar va muhandislik bilan eng yaxshi natija.",
+      keywords: "musiqa ishlab chiqarish, raqamli singl, miks mastering, albom chiqishi, musiqa prodakshn, professional studiya, voiceover yozuvi, to‘y qo‘shig‘i yozuvi, Studio NOL"
+    },
+    heroContent: {
+      titlePrefix: "Musiqangizga",
+      titleHighlight: "hayot",
+      titleSuffix: "bag‘ishlaydigan makon",
+      subtitle: "Yuqori darajadagi uskunalar va professional muhandislar bilan o‘ziga xos tovushingizni yarating. Studio NOLda his qiling.",
+      backgroundImage: "/images/studio2.jpg",
+      imageAlt: "Studio NOL asosiy studiyasi",
+      cta: {
+        reserve: "Band qilish",
+        portfolio: "Portfolio"
+      }
+    },
+    homeServices: [
+      {
+        title: 'Albom rejalash',
+        description: 'Musiqiy tasavvuringizni haqiqatga aylantiramiz. Rejadan ishlab chiqarishgacha birga.',
+        link: '/about',
+        icon: 'Disc',
+      },
+      {
+        title: 'Yozuv & Miks',
+        description: 'Yuqori darajadagi uskunalar va mutaxassislar bilan eng yaxshi tovushni yarating. Tovushingizga hayot bag‘ishlaymiz.',
+        link: '/about',
+        icon: 'Mic',
+      },
+      {
+        title: 'PR & Marketing',
+        description: 'OAV orqali samarali targ‘ibot va showcase qo‘llovi bilan musiqangiz jozibasini keng yoyamiz.',
+        link: '/about',
+        icon: 'Globe',
+      },
+    ],
+    studioImages: [
+      { src: `/images/studio2.jpg`, alt: "Monitoring karnaylari va boshqaruv stoli bo‘lgan yozuv xonasi" },
+      { src: `/images/studio3.jpg`, alt: "Professional mikrofon va pop filtrli vokal yozuv kabinasi" },
+      { src: `/images/studio4.jpg`, alt: "Eng so‘nggi DAW tizimli miks ish stansiyasi" },
+      { src: `/images/studio5.jpg`, alt: "Akustik ishlov berilgan prodakshn xonasi" },
+      { src: `/images/hardware8.jpg`, alt: "Analog outboard uskunalar va preamp rack" }
+    ]
   }
 };
 

@@ -1,24 +1,24 @@
 import type { Locale } from '../lib/i18n';
 
 // Translation helper
-const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string }) => {
+const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => {
   return dict[locale] || dict['en'] || dict['ko'];
 };
 
 export const getEquipmentData = (locale: Locale) => {
   const categories = {
-    microphones: t(locale, { ko: '마이크', en: 'Microphones', zh: '麦克风', es: 'Micrófonos' }),
-    preamps: t(locale, { ko: '프리앰프', en: 'Preamps', zh: '前置放大器', es: 'Preamplificadores' }),
-    equalizers: t(locale, { ko: '이퀄라이저', en: 'Equalizers', zh: '均衡器', es: 'Ecualizadores' }),
-    compressors: t(locale, { ko: '컴프레서', en: 'Compressors', zh: '压缩器', es: 'Compresores' }),
-    interfaces: t(locale, { ko: '인터페이스', en: 'Interfaces', zh: '音频接口', es: 'Interfaces' }),
-    processors: t(locale, { ko: '프로세서', en: 'Processors', zh: '处理器', es: 'Procesadores' }),
-    speakers: t(locale, { ko: '스피커', en: 'Speakers', zh: '扬声器', es: 'Altavoces' }),
-    headphones: t(locale, { ko: '헤드폰', en: 'Headphones', zh: '耳机', es: 'Auriculares' }),
-    instruments: t(locale, { ko: '악기', en: 'Instruments', zh: '乐器', es: 'Instrumentos' }),
-    consoles: t(locale, { ko: '콘솔', en: 'Consoles', zh: '调音台', es: 'Consolas' }),
-    synthesizers: t(locale, { ko: '신디사이저/가상악기', en: 'Synthesizers/VST', zh: '合成器/虚拟乐器', es: 'Sintetizadores/VST' }),
-    plugins: t(locale, { ko: '플러그인', en: 'Plugins', zh: '插件', es: 'Plugins' }),
+    microphones: t(locale, { ko: '마이크', en: 'Microphones', zh: '麦克风', es: 'Micrófonos', vi: 'Micro', th: 'ไมโครโฟน', uz: 'Mikrofonlar' }),
+    preamps: t(locale, { ko: '프리앰프', en: 'Preamps', zh: '前置放大器', es: 'Preamplificadores', vi: 'Preamp', th: 'พรีแอมป์', uz: 'Preamp' }),
+    equalizers: t(locale, { ko: '이퀄라이저', en: 'Equalizers', zh: '均衡器', es: 'Ecualizadores', vi: 'EQ', th: 'อีควอไลเซอร์', uz: 'Ekvalayzerlar' }),
+    compressors: t(locale, { ko: '컴프레서', en: 'Compressors', zh: '压缩器', es: 'Compresores', vi: 'Compressor', th: 'คอมเพรสเซอร์', uz: 'Kompressorlar' }),
+    interfaces: t(locale, { ko: '인터페이스', en: 'Interfaces', zh: '音频接口', es: 'Interfaces', vi: 'Giao diện âm thanh', th: 'อินเทอร์เฟซ', uz: 'Interfeyslar' }),
+    processors: t(locale, { ko: '프로세서', en: 'Processors', zh: '处理器', es: 'Procesadores', vi: 'Bộ xử lý', th: 'โปรเซสเซอร์', uz: 'Protsessorlar' }),
+    speakers: t(locale, { ko: '스피커', en: 'Speakers', zh: '扬声器', es: 'Altavoces', vi: 'Loa', th: 'ลำโพง', uz: 'Karnaylar' }),
+    headphones: t(locale, { ko: '헤드폰', en: 'Headphones', zh: '耳机', es: 'Auriculares', vi: 'Tai nghe', th: 'หูฟัง', uz: 'Quloqchinlar' }),
+    instruments: t(locale, { ko: '악기', en: 'Instruments', zh: '乐器', es: 'Instrumentos', vi: 'Nhạc cụ', th: 'เครื่องดนตรี', uz: 'Cholg‘ular' }),
+    consoles: t(locale, { ko: '콘솔', en: 'Consoles', zh: '调音台', es: 'Consolas', vi: 'Console', th: 'คอนโซล', uz: 'Konsollar' }),
+    synthesizers: t(locale, { ko: '신디사이저/가상악기', en: 'Synthesizers/VST', zh: '合成器/虚拟乐器', es: 'Sintetizadores/VST', vi: 'Synth/VST', th: 'ซินธิไซเซอร์/VST', uz: 'Sintezator/VST' }),
+    plugins: t(locale, { ko: '플러그인', en: 'Plugins', zh: '插件', es: 'Plugins', vi: 'Plugin', th: 'ปลั๊กอิน', uz: 'Plaginlar' }),
   };
 
   const equipment = {
@@ -69,26 +69,66 @@ export const getEquipmentData = (locale: Locale) => {
       "Softube",
       "Soundtoys",
       "Izotope",
-      t(locale, { ko: "Sonnox 등 다수", en: "Sonnox and many more", zh: "Sonnox 等更多", es: "Sonnox y muchos más" }),
+      t(locale, {
+        ko: "Sonnox 등 다수",
+        en: "Sonnox and many more",
+        zh: "Sonnox 等更多",
+        es: "Sonnox y muchos más",
+        vi: "Sonnox và nhiều hãng khác",
+        th: "Sonnox และอีกมากมาย",
+        uz: "Sonnox va boshqalar",
+      }),
     ],
   };
 
   const studioImages = [
     { 
       src: "/images/hardware2.jpg", 
-      alt: t(locale, { ko: "스튜디오 놀 메인 컨트롤 룸", en: "Studio NOL Main Control Room", zh: "Studio NOL 主控制室", es: "Sala de Control Principal Studio NOL" }) 
+      alt: t(locale, {
+        ko: "스튜디오 놀 메인 컨트롤 룸",
+        en: "Studio NOL Main Control Room",
+        zh: "Studio NOL 主控制室",
+        es: "Sala de Control Principal Studio NOL",
+        vi: "Phòng điều khiển chính Studio NOL",
+        th: "ห้องควบคุมหลักของ Studio NOL",
+        uz: "Studio NOL asosiy nazorat xonasi",
+      }) 
     },
     { 
       src: "/images/hardware3.jpg", 
-      alt: t(locale, { ko: "Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프", en: "Neumann U87AI & Vintech Preamp", zh: "Neumann U87AI 电容麦克风 & Vintech 前置放大器", es: "Micrófono Condensador Neumann U87AI & Preamplificador Vintech" }) 
+      alt: t(locale, {
+        ko: "Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프",
+        en: "Neumann U87AI & Vintech Preamp",
+        zh: "Neumann U87AI 电容麦克风 & Vintech 前置放大器",
+        es: "Micrófono Condensador Neumann U87AI & Preamplificador Vintech",
+        vi: "Micro condenser Neumann U87AI & preamp Vintech",
+        th: "ไมค์คอนเดนเซอร์ Neumann U87AI และพรีแอมป์ Vintech",
+        uz: "Neumann U87AI kondensator mikrofoni va Vintech preamp",
+      }) 
     },
     { 
       src: "/images/hardware4.jpg", 
-      alt: t(locale, { ko: "Universal Audio Apollo x8p 오디오 인터페이스", en: "Universal Audio Apollo x8p", zh: "Universal Audio Apollo x8p 音频接口", es: "Interfaz de Audio Universal Audio Apollo x8p" }) 
+      alt: t(locale, {
+        ko: "Universal Audio Apollo x8p 오디오 인터페이스",
+        en: "Universal Audio Apollo x8p",
+        zh: "Universal Audio Apollo x8p 音频接口",
+        es: "Interfaz de Audio Universal Audio Apollo x8p",
+        vi: "Giao diện âm thanh Universal Audio Apollo x8p",
+        th: "อินเทอร์เฟซเสียง Universal Audio Apollo x8p",
+        uz: "Universal Audio Apollo x8p audio interfeysi",
+      }) 
     },
     { 
       src: "/images/hardware5.jpg", 
-      alt: t(locale, { ko: "Adam Audio A7X 모니터 스피커와 믹싱 데스크", en: "Adam Audio A7X & Mixing Desk", zh: "Adam Audio A7X 监听扬声器 & 混音台", es: "Monitores Adam Audio A7X & Mesa de Mezclas" }) 
+      alt: t(locale, {
+        ko: "Adam Audio A7X 모니터 스피커와 믹싱 데스크",
+        en: "Adam Audio A7X & Mixing Desk",
+        zh: "Adam Audio A7X 监听扬声器 & 混音台",
+        es: "Monitores Adam Audio A7X & Mesa de Mezclas",
+        vi: "Loa monitor Adam Audio A7X & bàn mix",
+        th: "ลำโพงมอนิเตอร์ Adam Audio A7X และโต๊ะมิกซ์",
+        uz: "Adam Audio A7X monitor karnaylari va miks pulti",
+      }) 
     },
   ];
 

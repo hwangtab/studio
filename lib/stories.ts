@@ -18,6 +18,13 @@ const getStoryFilePath = (slug: string, locale: string = defaultLocale): string 
   if (fs.existsSync(localeFilePath)) {
     return localeFilePath;
   }
+  // Fallback to English for non-default locales when available
+  if (locale !== defaultLocale) {
+    const englishFallbackPath = path.join(storiesDirectory, `${slug}.en.md`);
+    if (fs.existsSync(englishFallbackPath)) {
+      return englishFallbackPath;
+    }
+  }
   // Fallback to base file: slug.md
   return path.join(storiesDirectory, `${slug}.md`);
 };

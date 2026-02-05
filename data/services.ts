@@ -4,89 +4,113 @@
 import type { Locale } from '../lib/i18n';
 
 // Translation helper
-const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string }) => {
+const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => {
   return dict[locale] || dict['en'] || dict['ko'];
 };
 
 export const getServicesData = (locale: Locale) => {
   const productionProcess = [
     {
-      title: t(locale, { ko: "기획 단계", en: "Planning", zh: "策划阶段", es: "Planificación" }),
+      title: t(locale, { ko: "기획 단계", en: "Planning", zh: "策划阶段", es: "Planificación", vi: "Giai đoạn lập kế hoạch", th: "ขั้นตอนวางแผน", uz: "Rejalash bosqichi" }),
       description: t(locale, {
         ko: "앨범 콘셉트 설정, 제작 일정 및 예산 계획을 함께 수립합니다.",
         en: "Setting album concepts, scheduling production, and planning budgets together.",
         zh: "设定专辑概念，共同制定制作日程及预算计划。",
-        es: "Establecimiento de conceptos, programación y presupuestos del álbum."
+        es: "Establecimiento de conceptos, programación y presupuestos del álbum.",
+        vi: "Cùng thiết lập концеп album, lịch sản xuất và kế hoạch ngân sách.",
+        th: "ร่วมกำหนดคอนเซ็ปต์อัลบั้ม ตารางการผลิต และแผนงบประมาณ",
+        uz: "Albom konsepsiyasi, ishlab chiqarish jadvali va byudjet rejasini birga belgilaymiz."
       }),
       icon: 'Lightbulb'
     },
     {
-      title: t(locale, { ko: "펀딩 지원", en: "Funding Support", zh: "众筹支持", es: "Soporte de Fondos" }),
+      title: t(locale, { ko: "펀딩 지원", en: "Funding Support", zh: "众筹支持", es: "Soporte de Fondos", vi: "Hỗ trợ gọi vốn", th: "สนับสนุนการระดมทุน", uz: "Moliyalashtirish bo‘yicha yordam" }),
       description: t(locale, {
         ko: "크라우드 펀딩을 통한 예산 마련 컨설팅을 제공합니다.",
         en: "Consulting for budget raising through crowdfunding.",
         zh: "提供通过众筹筹集预算的咨询。",
-        es: "Consultoría para la recaudación de fondos a través de crowdfunding."
+        es: "Consultoría para la recaudación de fondos a través de crowdfunding.",
+        vi: "Tư vấn gây quỹ thông qua crowdfunding.",
+        th: "ให้คำปรึกษาการระดมทุนผ่านคราวด์ฟันดิง",
+        uz: "Crowdfunding orqali byudjet yig‘ish bo‘yicha maslahat beramiz."
       }),
       icon: 'Banknote'
     },
     {
-      title: t(locale, { ko: "레코딩", en: "Recording", zh: "录音", es: "Grabación" }),
+      title: t(locale, { ko: "레코딩", en: "Recording", zh: "录音", es: "Grabación", vi: "Thu âm", th: "บันทึกเสียง", uz: "Yozuv" }),
       description: t(locale, {
         ko: "프리미엄 아날로그 장비를 활용한 고품질 녹음 서비스를 제공합니다.",
         en: "High-quality recording services using premium analog equipment.",
         zh: "利用高级模拟设备提供高品质录音服务。",
-        es: "Servicios de grabación de alta calidad con equipos analógicos premium."
+        es: "Servicios de grabación de alta calidad con equipos analógicos premium.",
+        vi: "Dịch vụ thu âm chất lượng cao với thiết bị analog cao cấp.",
+        th: "บริการบันทึกเสียงคุณภาพสูงด้วยอุปกรณ์อนาล็อกระดับพรีเมียม",
+        uz: "Premium analog uskunalar yordamida yuqori sifatli yozuv xizmatlari."
       }),
       icon: 'Headphones'
     },
     {
-      title: t(locale, { ko: "믹싱/마스터링", en: "Mixing/Mastering", zh: "混音/母带", es: "Mezcla/Masterización" }),
+      title: t(locale, { ko: "믹싱/마스터링", en: "Mixing/Mastering", zh: "混音/母带", es: "Mezcla/Masterización", vi: "Mixing/Mastering", th: "มิกซ์/มาสเตอริ่ง", uz: "Miks/Mastering" }),
       description: t(locale, {
         ko: "따뜻하고 입체적인 사운드를 구현하여 음악에 생명을 불어넣습니다.",
         en: "Breathing life into music with warm, three-dimensional sound.",
         zh: "实现温暖且立体的声音，为音乐注入生命。",
-        es: "Dando vida a la música con un sonido cálido y tridimensional."
+        es: "Dando vida a la música con un sonido cálido y tridimensional.",
+        vi: "Thổi sự sống vào âm nhạc bằng âm thanh ấm áp và có chiều sâu.",
+        th: "เติมชีวิตให้เพลงด้วยซาวด์อบอุ่นและมีมิติ",
+        uz: "Iliq va uch o‘lchamli tovush bilan musiqaga hayot bag‘ishlaymiz."
       }),
       icon: 'Music'
     },
     {
-      title: t(locale, { ko: "디자인", en: "Design", zh: "设计", es: "Diseño" }),
+      title: t(locale, { ko: "디자인", en: "Design", zh: "设计", es: "Diseño", vi: "Thiết kế", th: "ออกแบบ", uz: "Dizayn" }),
       description: t(locale, {
         ko: "앨범 아트워크, 자켓, 프로모션 이미지 제작을 지원합니다.",
         en: "Support for album artwork, jackets, and promotional image creation.",
         zh: "支持专辑封面、封套、宣传图片的制作。",
-        es: "Soporte para arte de álbum, portadas e imágenes promocionales."
+        es: "Soporte para arte de álbum, portadas e imágenes promocionales.",
+        vi: "Hỗ trợ thiết kế artwork album, bìa và hình ảnh quảng bá.",
+        th: "สนับสนุนงานอาร์ตเวิร์กอัลบั้ม ปก และภาพโปรโมชัน",
+        uz: "Albom artworki, buklet va promo tasvirlarini ishlab chiqishda yordam beramiz."
       }),
       icon: 'Palette'
     },
     {
-      title: t(locale, { ko: "유통", en: "Distribution", zh: "发行", es: "Distribución" }),
+      title: t(locale, { ko: "유통", en: "Distribution", zh: "发行", es: "Distribución", vi: "Phân phối", th: "จัดจำหน่าย", uz: "Tarqatish" }),
       description: t(locale, {
         ko: "온라인/오프라인 음원 및 음반 유통 서비스를 제공합니다.",
         en: "Online/offline music and album distribution services.",
         zh: "提供线上/线下音源及唱片发行服务。",
-        es: "Servicios de distribución de música y álbumes online/offline."
+        es: "Servicios de distribución de música y álbumes online/offline.",
+        vi: "Cung cấp dịch vụ phân phối nhạc và album online/offline.",
+        th: "บริการจัดจำหน่ายเพลงและอัลบั้มทั้งออนไลน์/ออฟไลน์",
+        uz: "Onlayn/offlayn musiqa va albom tarqatish xizmatlari."
       }),
       icon: 'Globe'
     },
     {
-      title: t(locale, { ko: "홍보/마케팅", en: "PR/Marketing", zh: "宣传/营销", es: "RP/Marketing" }),
+      title: t(locale, { ko: "홍보/마케팅", en: "PR/Marketing", zh: "宣传/营销", es: "RP/Marketing", vi: "PR/Marketing", th: "ประชาสัมพันธ์/การตลาด", uz: "PR/Marketing" }),
       description: t(locale, {
         ko: "SNS 활용, 언론 배포, 온오프라인 홍보 지원으로 음악을 알립니다.",
         en: "Promoting music via SNS, press releases, and on/offline support.",
         zh: "利用SNS、媒体发布、线上线下宣传支持来推广音乐。",
-        es: "Promoción vía redes sociales, comunicados de prensa y soporte on/offline."
+        es: "Promoción vía redes sociales, comunicados de prensa y soporte on/offline.",
+        vi: "Quảng bá qua SNS, phát hành thông cáo báo chí và hỗ trợ online/offline.",
+        th: "โปรโมตผ่านโซเชียล มีเดีย, ข่าวประชาสัมพันธ์ และการสนับสนุนออนไลน์/ออฟไลน์",
+        uz: "SNS, press-reliz va onlayn/offlayn qo‘llov orqali musiqani targ‘ib qilamiz."
       }),
       icon: 'Megaphone'
     },
     {
-      title: t(locale, { ko: "공연 기획", en: "Concert Planning", zh: "演出策划", es: "Planificación de Conciertos" }),
+      title: t(locale, { ko: "공연 기획", en: "Concert Planning", zh: "演出策划", es: "Planificación de Conciertos", vi: "Tổ chức biểu diễn", th: "วางแผนคอนเสิร์ต", uz: "Konsert rejalash" }),
       description: t(locale, {
         ko: "라이브 공연 기획 및 운영 지원으로 아티스트의 무대를 완성합니다.",
         en: "Completing the artist's stage with live concert planning and operation support.",
         zh: "通过现场演出策划及运营支持，完成艺术家的舞台。",
-        es: "Completando el escenario del artista con planificación y soporte de conciertos."
+        es: "Completando el escenario del artista con planificación y soporte de conciertos.",
+        vi: "Hỗ trợ lập kế hoạch và vận hành show live để hoàn thiện sân khấu của nghệ sĩ.",
+        th: "สนับสนุนการวางแผนและการดำเนินงานคอนเสิร์ต เพื่อเติมเต็มเวทีของศิลปิน",
+        uz: "Jonli konsertni rejalash va 운영을 qo‘llab-quvvatlab, san’atkor sahnasini to‘liq qilamiz."
       }),
       icon: 'Calendar'
     }
@@ -94,42 +118,54 @@ export const getServicesData = (locale: Locale) => {
 
   const advantages = [
     {
-      title: t(locale, { ko: "소통 오류 최소화", en: "Minimized Miscommunication", zh: "最大限度减少沟通误误", es: "Minimización de Errores" }),
+      title: t(locale, { ko: "소통 오류 최소화", en: "Minimized Miscommunication", zh: "最大限度减少沟通误误", es: "Minimización de Errores", vi: "Giảm thiểu sai sót giao tiếp", th: "ลดความคลาดเคลื่อนในการสื่อสาร", uz: "Muloqot xatolarini kamaytirish" }),
       description: t(locale, {
         ko: "각 단계별 소통 오류를 최소화하여 원활한 제작 과정을 보장합니다.",
         en: "Ensuring a smooth production process by minimizing communication errors at each step.",
         zh: "最大限度地减少各阶段的沟通错误，保障顺畅的制作过程。",
-        es: "Asegurando un proceso de producción fluido minimizando errores de comunicación."
+        es: "Asegurando un proceso de producción fluido minimizando errores de comunicación.",
+        vi: "Giảm lỗi giao tiếp ở mỗi giai đoạn để đảm bảo quy trình suôn sẻ.",
+        th: "ลดข้อผิดพลาดในการสื่อสารแต่ละขั้นเพื่อให้กระบวนการราบรื่น",
+        uz: "Har bosqichdagi muloqot xatolarini minimallashtirib, jarayonni silliq qiladi."
       }),
       icon: 'Users'
     },
     {
-      title: t(locale, { ko: "일관된 콘셉트 유지", en: "Consistent Concept", zh: "保持一致的概念", es: "Concepto Consistente" }),
+      title: t(locale, { ko: "일관된 콘셉트 유지", en: "Consistent Concept", zh: "保持一致的概念", es: "Concepto Consistente", vi: "Giữ concept nhất quán", th: "คงคอนเซ็ปต์ให้สม่ำเสมอ", uz: "Yagona konsepsiyani saqlash" }),
       description: t(locale, {
         ko: "처음부터 끝까지 일관된 앨범 콘셉트를 유지하여 작품의 완성도를 높입니다.",
         en: "Maintaining a consistent album concept from start to finish to enhance quality.",
         zh: "从头到尾保持一致的专辑概念，提高作品的完成度。",
-        es: "Manteniendo un concepto de álbum consistente de principio a fin."
+        es: "Manteniendo un concepto de álbum consistente de principio a fin.",
+        vi: "Duy trì concept album nhất quán từ đầu đến cuối để nâng cao chất lượng.",
+        th: "รักษาคอนเซ็ปต์อัลบั้มให้สม่ำเสมอตั้งแต่ต้นจนจบเพื่อเพิ่มความสมบูรณ์",
+        uz: "Boshlanishdan oxirigacha albom konsepsiyasini bir xil saqlab, sifatini oshiramiz."
       }),
       icon: 'Lightbulb'
     },
     {
-      title: t(locale, { ko: "시간과 비용 효율성", en: "Time & Cost Efficiency", zh: "时间和成本效率", es: "Eficiencia de Tiempo y Costos" }),
+      title: t(locale, { ko: "시간과 비용 효율성", en: "Time & Cost Efficiency", zh: "时间和成本效率", es: "Eficiencia de Tiempo y Costos", vi: "Hiệu quả thời gian & chi phí", th: "ประสิทธิภาพด้านเวลาและค่าใช้จ่าย", uz: "Vaqt va xarajat samaradorligi" }),
       description: t(locale, {
         ko: "통합 프로세스를 통해 시간과 비용의 효율성을 극대화합니다.",
         en: "Maximizing time and cost efficiency through an integrated process.",
         zh: "通过整合流程，最大限度地提高时间和成本效率。",
-        es: "Maximizando la eficiencia de tiempo y costos a través de un proceso integrado."
+        es: "Maximizando la eficiencia de tiempo y costos a través de un proceso integrado.",
+        vi: "Tối ưu thời gian và chi phí thông qua quy trình tích hợp.",
+        th: "เพิ่มประสิทธิภาพเวลาและค่าใช้จ่ายด้วยกระบวนการแบบบูรณาการ",
+        uz: "Integratsiyalashgan jarayon orqali vaqt va xarajat samaradorligini maksimal darajada oshiramiz."
       }),
       icon: 'Clock'
     },
     {
-      title: t(locale, { ko: "창작 집중 환경", en: "Focus on Creation", zh: "专注于创作的环境", es: "Enfoque en la Creación" }),
+      title: t(locale, { ko: "창작 집중 환경", en: "Focus on Creation", zh: "专注于创作的环境", es: "Enfoque en la Creación", vi: "Môi trường tập trung sáng tạo", th: "สภาพแวดล้อมเพื่อโฟกัสการสร้างสรรค์", uz: "Ijodga e’tibor muhiti" }),
       description: t(locale, {
         ko: "뮤지션은 창작에만 집중할 수 있는 환경을 제공합니다.",
         en: "Providing an environment where musicians can focus solely on creation.",
         zh: "提供音乐人只专注于创作的环境。",
-        es: "Proporcionando un entorno donde los músicos pueden centrarse solo en la creación."
+        es: "Proporcionando un entorno donde los músicos pueden centrarse solo en la creación.",
+        vi: "Tạo môi trường để nhạc sĩ chỉ tập trung vào sáng tạo.",
+        th: "สร้างสภาพแวดล้อมให้ศิลปินโฟกัสการสร้างสรรค์ได้เต็มที่",
+        uz: "Musiqachilar faqat ijodga e’tibor qaratishi mumkin bo‘lgan muhit yaratamiz."
       }),
       icon: 'Music'
     },
@@ -137,32 +173,41 @@ export const getServicesData = (locale: Locale) => {
 
   const coreServices = [
     {
-      title: t(locale, { ko: "앨범 기획부터 유통까지", en: "From Planning to Distribution", zh: "从专辑策划到发行", es: "De la Planificación a la Distribución" }),
+      title: t(locale, { ko: "앨범 기획부터 유통까지", en: "From Planning to Distribution", zh: "从专辑策划到发行", es: "De la Planificación a la Distribución", vi: "Từ lên kế hoạch đến phân phối", th: "จากวางแผนถึงจัดจำหน่าย", uz: "Rejalashtirishdan tarqatishgacha" }),
       description: t(locale, {
         ko: "모든 음악 제작 과정을 한 곳에서 처리하여 효율성을 극대화합니다.",
         en: "Maximizing efficiency by handling the entire music production process in one place.",
         zh: "在一处处理所有音乐制作过程，最大限度地提高效率。",
-        es: "Maximizando la eficiencia manejando todo el proceso de producción musical en un solo lugar."
+        es: "Maximizando la eficiencia manejando todo el proceso de producción musical en un solo lugar.",
+        vi: "Xử lý toàn bộ quy trình sản xuất âm nhạc tại một nơi để tối ưu hiệu quả.",
+        th: "จัดการกระบวนการผลิตเพลงทั้งหมดในที่เดียวเพื่อเพิ่มประสิทธิภาพสูงสุด",
+        uz: "Butun musiqa ishlab chiqarish jarayonini bir joyda boshqarib, samaradorlikni oshiramiz."
       }),
       icon: 'Music'
     },
     {
-      title: t(locale, { ko: "뮤지션의 비전 실현", en: "Realizing Musician's Vision", zh: "实现音乐人的愿景", es: "Realizando la Visión del Músico" }),
+      title: t(locale, { ko: "뮤지션의 비전 실현", en: "Realizing Musician's Vision", zh: "实现音乐人的愿景", es: "Realizando la Visión del Músico", vi: "Hiện thực hóa tầm nhìn nghệ sĩ", th: "ทำให้วิสัยทัศน์ของศิลปินเป็นจริง", uz: "Musiqachi tasavvurini ro‘yobga chiqarish" }),
       description: t(locale, {
         ko: "뮤지션의 음악적 비전을 최우선으로 존중하는 프로덕션 철학을 가지고 있습니다.",
         en: "Our production philosophy prioritizes respecting the musician's musical vision.",
         zh: "拥有优先尊重音乐人音乐愿景的制作理念。",
-        es: "Nuestra filosofía de producción prioriza el respeto por la visión musical del músico."
+        es: "Nuestra filosofía de producción prioriza el respeto por la visión musical del músico.",
+        vi: "Triết lý sản xuất của chúng tôi ưu tiên tôn trọng tầm nhìn âm nhạc của nghệ sĩ.",
+        th: "ปรัชญาการผลิตของเราให้ความสำคัญกับวิสัยทัศน์ทางดนตรีของศิลปินเป็นอันดับแรก",
+        uz: "Ishlab chiqarish falsafamiz musiqachining musiqiy tasavvurini birinchi o‘ringa qo‘yadi."
       }),
       icon: 'Lightbulb'
     },
     {
-      title: t(locale, { ko: "전문가 연계 시스템", en: "Expert Network System", zh: "专家连接系统", es: "Red de Expertos" }),
+      title: t(locale, { ko: "전문가 연계 시스템", en: "Expert Network System", zh: "专家连接系统", es: "Red de Expertos", vi: "Mạng lưới chuyên gia", th: "เครือข่ายผู้เชี่ยวชาญ", uz: "Mutaxassislar tarmog‘i" }),
       description: t(locale, {
         ko: "각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다.",
         en: "Collaborating with top experts in each field to guarantee the best results.",
         zh: "与各领域最优秀的专家合作，保证最佳结果。",
-        es: "Colaborando con los mejores expertos en cada campo para garantizar los mejores resultados."
+        es: "Colaborando con los mejores expertos en cada campo para garantizar los mejores resultados.",
+        vi: "Hợp tác với các chuyên gia hàng đầu để đảm bảo kết quả tốt nhất.",
+        th: "ร่วมงานกับผู้เชี่ยวชาญชั้นนำในแต่ละด้านเพื่อรับประกันผลลัพธ์ที่ดีที่สุด",
+        uz: "Har sohadagi yetakchi mutaxassislar bilan hamkorlik qilib, eng yaxshi natijani kafolatlaymiz."
       }),
       icon: 'Users'
     }

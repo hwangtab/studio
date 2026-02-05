@@ -12,11 +12,14 @@ interface StoryCTAProps {
 }
 
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
-    const t = (ko: string, en: string, zh?: string, es?: string) => {
+    const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
         if (locale === 'ko') return ko;
         if (locale === 'en') return en;
         if (locale === 'zh') return zh || en;
         if (locale === 'es') return es || en;
+        if (locale === 'vi') return vi || en;
+        if (locale === 'th') return th || en;
+        if (locale === 'uz') return uz || en;
         return ko;
     };
 
@@ -38,17 +41,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     <Music size={20} />
                 </>
             ),
-            title: t("더 나은 사운드를 원하시나요?", "Want Better Sound?", "想要更好的声音吗？", "¿Quieres un mejor sonido?"),
+            title: t("더 나은 사운드를 원하시나요?", "Want Better Sound?", "想要更好的声音吗？", "¿Quieres un mejor sonido?", "Bạn muốn âm thanh tốt hơn?", "อยากได้ซาวด์ที่ดีกว่าไหม?", "Yaxshiroq tovush xohlaysizmi?"),
             description: (
                 <>
-                    {t("스튜디오 놀의 전문적인 레코딩, 믹싱 서비스를 경험해보세요.", "Experience professional recording and mixing services at Studio NOL.", "体验 Studio NOL 的专业录音和混音服务。", "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.")}<br className="hidden md:block" />
-                    {t("최고의 장비와 노하우로 당신의 음악을 완성해드립니다.", "We complete your music with the best equipment and know-how.", "用最好的设备和经验完成您的音乐。", "Completamos tu música con el mejor equipo y experiencia.")}
+                    {t("스튜디오 놀의 전문적인 레코딩, 믹싱 서비스를 경험해보세요.", "Experience professional recording and mixing services at Studio NOL.", "体验 Studio NOL 的专业录音和混音服务。", "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.", "Hãy trải nghiệm dịch vụ thu âm và mix chuyên nghiệp tại Studio NOL.", "สัมผัสบริการบันทึกเสียงและมิกซ์ระดับมืออาชีพที่ Studio NOL", "Studio NOL’da professional yozuv va miks xizmatlarini sinab ko‘ring.")}<br className="hidden md:block" />
+                    {t("최고의 장비와 노하우로 당신의 음악을 완성해드립니다.", "We complete your music with the best equipment and know-how.", "用最好的设备和经验完成您的音乐。", "Completamos tu música con el mejor equipo y experiencia.", "Chúng tôi hoàn thiện âm nhạc của bạn với thiết bị tốt nhất và kinh nghiệm chuyên môn.", "เราทำเพลงของคุณให้สมบูรณ์ด้วยอุปกรณ์ชั้นยอดและความชำนาญ", "Eng yaxshi uskunalar va tajriba bilan musiqangizni yakunlaymiz.")}
                 </>
             ),
             primaryLink: getLink('/pricing'),
-            primaryText: t("서비스 가격 보기", "View Pricing", "查看价格", "Ver Precios"),
+            primaryText: t("서비스 가격 보기", "View Pricing", "查看价格", "Ver Precios", "Xem giá dịch vụ", "ดูราคาบริการ", "Xizmat narxlarini ko‘rish"),
             secondaryLink: getLink('/contact'),
-            secondaryText: t("문의하기", "Inquiry", "咨询", "Consulta"),
+            secondaryText: t("문의하기", "Inquiry", "咨询", "Consulta", "Liên hệ", "สอบถาม", "So‘rov"),
             visualText: 'Professional Audio',
             visualGradient: 'from-purple-500 to-indigo-400',
         },
@@ -67,17 +70,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     <GraduationCap size={20} />
                 </>
             ),
-            title: t("직접 음악을 만들고 싶으신가요?", "Want to Make Music Yourself?", "想自己制作音乐吗？", "¿Quieres crear tu propia música?"),
+            title: t("직접 음악을 만들고 싶으신가요?", "Want to Make Music Yourself?", "想自己制作音乐吗？", "¿Quieres crear tu propia música?", "Bạn muốn tự làm nhạc?", "อยากทำเพลงด้วยตัวเองไหม?", "Musiqani o‘zingiz yaratmoqchimisiz?"),
             description: (
                 <>
-                    {t("혼자 고민하지 마세요. 1:1 맞춤형 레슨으로 도와드립니다.", "Don't struggle alone. We help with 1:1 customized lessons.", "不要独自烦恼。我们提供1:1定制课程。", "No luches solo. Te ayudamos con clases personalizadas 1:1.")}<br className="hidden md:block" />
-                    {t("미디, 믹싱, 사운드 디자인까지 기초부터 탄탄하게 배워보세요.", "Learn from basics to MIDI, mixing, and sound design.", "从基础开始扎实学习 MIDI、混音、声音设计。", "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.")}
+                    {t("혼자 고민하지 마세요. 1:1 맞춤형 레슨으로 도와드립니다.", "Don't struggle alone. We help with 1:1 customized lessons.", "不要独自烦恼。我们提供1:1定制课程。", "No luches solo. Te ayudamos con clases personalizadas 1:1.", "Đừng lo một mình. Chúng tôi hỗ trợ với lớp học 1:1 theo nhu cầu.", "ไม่ต้องกังวลคนเดียว เราช่วยด้วยบทเรียนแบบตัวต่อตัว", "Yolg‘iz qiynalmang. Sizga 1:1 moslashtirilgan darslar bilan yordam beramiz.")}<br className="hidden md:block" />
+                    {t("미디, 믹싱, 사운드 디자인까지 기초부터 탄탄하게 배워보세요.", "Learn from basics to MIDI, mixing, and sound design.", "从基础开始扎实学习 MIDI、混音、声音设计。", "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.", "Học từ nền tảng đến MIDI, mixing và sound design một cách chắc chắn.", "เรียนตั้งแต่พื้นฐานไปจนถึง MIDI มิกซ์ และซาวด์ดีไซน์", "MIDI, miks va sound dizayngacha asoslardan puxta o‘rganing.")}
                 </>
             ),
             primaryLink: getLink('/lesson'),
-            primaryText: t("레슨 커리큘럼 보기", "View Curriculum", "查看课程大纲", "Ver Currículo"),
+            primaryText: t("레슨 커리큘럼 보기", "View Curriculum", "查看课程大纲", "Ver Currículo", "Xem giáo trình", "ดูหลักสูตร", "O‘quv dasturini ko‘rish"),
             secondaryLink: getLink('/contact'),
-            secondaryText: t("상담 신청하기", "Apply for Consultation", "申请咨询", "Solicitar Consulta"),
+            secondaryText: t("상담 신청하기", "Apply for Consultation", "申请咨询", "Solicitar Consulta", "Đăng ký tư vấn", "ขอคำปรึกษา", "Maslahat so‘rash"),
             visualText: 'Music Education',
             visualGradient: 'from-amber-500 to-orange-400',
         },
@@ -96,17 +99,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     <Speaker size={20} />
                 </>
             ),
-            title: t("몰입할 나만의 공간이 필요한가요?", "Need Your Own Space to Focus?", "需要沉浸的专属空间吗？", "¿Necesitas tu propio espacio para concentrarte?"),
+            title: t("몰입할 나만의 공간이 필요한가요?", "Need Your Own Space to Focus?", "需要沉浸的专属空间吗？", "¿Necesitas tu propio espacio para concentrarte?", "Bạn cần không gian riêng để tập trung?", "ต้องการพื้นที่ส่วนตัวเพื่อโฟกัสไหม?", "Diqqat jamlash uchun o‘zingizga xos joy kerakmi?"),
             description: (
                 <>
-                    {t("언제든 자유롭게 이용할 수 있는 프리미엄 연습실.", "Premium practice rooms available freely anytime.", "随时可以自由使用的高级练习室。", "Salas de práctica premium disponibles libremente en cualquier momento.")}<br className="hidden md:block" />
-                    {t("쾌적한 환경과 완벽한 방음 시설이 준비되어 있습니다.", "Pleasant environment and perfect soundproofing ready.", "准备了舒适的环境和完美的隔音设施。", "Ambiente agradable e insonorización perfecta listos.")}
+                    {t("언제든 자유롭게 이용할 수 있는 프리미엄 연습실.", "Premium practice rooms available freely anytime.", "随时可以自由使用的高级练习室。", "Salas de práctica premium disponibles libremente en cualquier momento.", "Phòng tập cao cấp có thể sử dụng tự do bất cứ lúc nào.", "ห้องซ้อมระดับพรีเมียมใช้ได้ทุกเวลา", "Istalgan vaqtda erkin foydalaniladigan premium mashg‘ulot xonalari.")}<br className="hidden md:block" />
+                    {t("쾌적한 환경과 완벽한 방음 시설이 준비되어 있습니다.", "Pleasant environment and perfect soundproofing ready.", "准备了舒适的环境和完美的隔音设施。", "Ambiente agradable e insonorización perfecta listos.", "Môi trường thoải mái và cách âm hoàn hảo đã sẵn sàng.", "สภาพแวดล้อมสบายและระบบกันเสียงที่สมบูรณ์พร้อม", "Qulay muhit va mukammal ovoz izolyatsiyasi tayyor.")}
                 </>
             ),
             primaryLink: getLink('/practice-room'),
-            primaryText: t("연습실 시설 보기", "View Facilities", "查看设施", "Ver Instalaciones"),
+            primaryText: t("연습실 시설 보기", "View Facilities", "查看设施", "Ver Instalaciones", "Xem cơ sở vật chất", "ดูสิ่งอำนวยความสะดวก", "Jihozlarni ko‘rish"),
             secondaryLink: getLink('/contact'),
-            secondaryText: t("예약 문의하기", "Inquiry", "预约咨询", "Consulta de Reserva"),
+            secondaryText: t("예약 문의하기", "Inquiry", "预约咨询", "Consulta de Reserva", "Hỏi về đặt chỗ", "สอบถามการจอง", "Bron bo‘yicha so‘rov"),
             visualText: 'Creative Space',
             visualGradient: 'from-emerald-500 to-teal-400',
         },
@@ -125,17 +128,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     <Settings size={20} />
                 </>
             ),
-            title: t("나만의 음원을 제작하고 싶으신가요?", "Want to Produce Your Own Music?", "想制作自己的音源吗？", "¿Quieres producir tu propia música?"),
+            title: t("나만의 음원을 제작하고 싶으신가요?", "Want to Produce Your Own Music?", "想制作自己的音源吗？", "¿Quieres producir tu propia música?", "Bạn muốn sản xuất bản thu của riêng mình?", "อยากทำเพลงของตัวเองไหม?", "O‘zingizning treklaringizni yaratmoqchimisiz?"),
             description: (
                 <>
-                    {t("작곡, 편곡부터 믹싱, 마스터링까지.", "From composition, arrangement to mixing, mastering.", "从作曲、编曲到混音、母带。", "Desde la composición y arreglo hasta la mezcla y masterización.")}<br className="hidden md:block" />
-                    {t("당신의 아이디어를 완성된 음원으로 만들어드립니다.", "We turn your ideas into finished tracks.", "将您的想法变成完成的音源。", "Convertimos tus ideas en pistas terminadas.")}
+                    {t("작곡, 편곡부터 믹싱, 마스터링까지.", "From composition, arrangement to mixing, mastering.", "从作曲、编曲到混音、母带。", "Desde la composición y arreglo hasta la mezcla y masterización.", "Từ sáng tác, hòa âm đến mix và mastering.", "ตั้งแต่แต่งเพลง เรียบเรียง ไปจนถึงมิกซ์และมาสเตอริ่ง", "Kompozitsiya va aranjimandan miks va masteringgacha.")}<br className="hidden md:block" />
+                    {t("당신의 아이디어를 완성된 음원으로 만들어드립니다.", "We turn your ideas into finished tracks.", "将您的想法变成完成的音源。", "Convertimos tus ideas en pistas terminadas.", "Chúng tôi biến ý tưởng của bạn thành bản nhạc hoàn chỉnh.", "เราจะทำไอเดียของคุณให้เป็นเพลงที่เสร็จสมบูรณ์", "G‘oyalaringizni yakunlangan trekka aylantiramiz.")}
                 </>
             ),
             primaryLink: getLink('/contact'),
-            primaryText: t("음원 제작 상담하기", "Production Inquiry", "音源制作咨询", "Consulta de Producción"),
+            primaryText: t("음원 제작 상담하기", "Production Inquiry", "音源制作咨询", "Consulta de Producción", "Tư vấn sản xuất", "ปรึกษางานผลิตเพลง", "Prodakshn bo‘yicha so‘rov"),
             secondaryLink: getLink('/pricing'),
-            secondaryText: t("제작 비용 보기", "View Cost", "查看费用", "Ver Costos"),
+            secondaryText: t("제작 비용 보기", "View Cost", "查看费用", "Ver Costos", "Xem chi phí", "ดูค่าใช้จ่าย", "Narxlarni ko‘rish"),
             visualText: 'Music Production',
             visualGradient: 'from-blue-500 to-indigo-400',
         }

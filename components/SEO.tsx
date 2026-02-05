@@ -166,6 +166,9 @@ const SEO = ({
     en: 'en_US',
     zh: 'zh_CN',
     es: 'es_ES',
+    vi: 'vi_VN',
+    th: 'th_TH',
+    uz: 'uz_UZ',
   };
 
   return (

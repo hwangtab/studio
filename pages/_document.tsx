@@ -3,7 +3,7 @@ import { Html, Head, Main, NextScript } from 'next/document';
 const themeInitializer = `
 (function() {
   try {
-    var supportedLocales = ['ko', 'en', 'zh', 'es'];
+    var supportedLocales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
     var pathLocale = window.location.pathname.split('/')[1] || 'ko';
     if (supportedLocales.indexOf(pathLocale) !== -1) {
       document.documentElement.lang = pathLocale;

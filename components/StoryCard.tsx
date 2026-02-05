@@ -29,11 +29,14 @@ const cardVariants = {
 };
 
 const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
-  const t = (ko: string, en: string, zh?: string, es?: string) => {
+  const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
     if (locale === 'ko') return ko;
     if (locale === 'en') return en;
     if (locale === 'zh') return zh || en;
     if (locale === 'es') return es || en;
+    if (locale === 'vi') return vi || en;
+    if (locale === 'th') return th || en;
+    if (locale === 'uz') return uz || en;
     return ko;
   };
 
@@ -73,19 +76,19 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
         <div className="p-4 flex flex-col flex-grow">
           <div className="flex items-center justify-between mb-2 flex-shrink-0">
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full">
-              {story.category || t('기본', 'Default', '默认', 'Predeterminado')}
+              {story.category || t('기본', 'Default', '默认', 'Predeterminado', 'Mặc định', 'ค่าเริ่มต้น', 'Standart')}
             </span>
             <span className="typo-card-meta text-gray-500 dark:text-gray-400">
-              {story.date ? timeAgo(story.date, locale) : t('날짜 없음', 'No Date', '无日期', 'Sin fecha')}
+              {story.date ? timeAgo(story.date, locale) : t('날짜 없음', 'No Date', '无日期', 'Sin fecha', 'Không có ngày', 'ไม่มีวันที่', 'Sana yoʻq')}
             </span>
           </div>
 
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 truncate">
-            {story.title || t('제목 없음', 'No Title', '无标题', 'Sin título')}
+            {story.title || t('제목 없음', 'No Title', '无标题', 'Sin título', 'Không có tiêu đề', 'ไม่มีชื่อเรื่อง', 'Sarlavha yoʻq')}
           </h3>
 
           <div className="typo-card-body leading-snug line-clamp-4 flex-none">
-            {plainSummary || t('내용 없음', 'No Content', '无内容', 'Sin contenido')}
+            {plainSummary || t('내용 없음', 'No Content', '无内容', 'Sin contenido', 'Không có nội dung', 'ไม่มีเนื้อหา', 'Mazmun yoʻq')}
           </div>
         </div>
       </motion.div>

@@ -120,6 +120,96 @@ const faqData = {
       question: '¿Ofrecen distribución musical?',
       answer: 'Sí, para miembros residentes ofrecemos distribución global gratuita (Spotify, Apple Music, etc.) vía Audioguy, y entregamos el 70% de las ganancias netas al artista.',
     },
+  ],
+  vi: [
+    {
+      question: 'Studio NOL ở đâu?',
+      answer: 'Chúng tôi ở tầng 3, 84-3 Daejo-dong, Eunpyeong-gu, Seoul (ngay bên trường nữ Dongmyeong). Cách ga Bulgwang (Line 6) cửa số 7 hoặc ga Yeonsinnae khoảng 5 phút đi bộ.',
+    },
+    {
+      question: 'Phí sử dụng phòng thu là bao nhiêu?',
+      answer: 'Thu âm 100.000 KRW/giờ, tối thiểu 2 giờ. Gói 6 giờ (Day Lock) là 500.000 KRW (giảm khoảng 17%). Bao gồm kỹ thuật chuyên nghiệp.',
+    },
+    {
+      question: 'Giá dịch vụ mixing như thế nào?',
+      answer: 'Tùy theo số track. Dưới 10 track: 200.000 KRW; 11–30 track: 350.000 KRW; 31+ track: 500.000 KRW. Bao gồm 2 lần chỉnh sửa cơ bản.',
+    },
+    {
+      question: 'Mastering giá bao nhiêu?',
+      answer: 'Mastering single 100.000 KRW/bài; gói EP/album (4+ bài) 80.000 KRW/bài. Thực hiện theo chuẩn Spotify, Apple Music, v.v.',
+    },
+    {
+      question: 'Có chương trình phòng tập cư trú không?',
+      answer: 'Có, 400.000 KRW/tháng cho phòng tập cách âm cao cấp và 8 quyền lợi (giảm giá phòng thu, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
+    },
+    {
+      question: 'Có những thiết bị nào?',
+      answer: 'Trang bị Neumann U87AI, AKG C414 XLS, preamp Vintech X73i, interface Prism Sound Lyra 2, bộ xử lý SSL Fusion, v.v.',
+    },
+    {
+      question: 'Có dịch vụ phát hành nhạc không?',
+      answer: 'Có. Khách cư trú được phát hành toàn cầu miễn phí (Spotify, Apple Music, YouTube Music, v.v.) qua Audioguy và nhận 70% lợi nhuận ròng.',
+    },
+  ],
+  th: [
+    {
+      question: 'Studio NOL อยู่ที่ไหน?',
+      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 84-3 Daejo-dong, Eunpyeong-gu, Seoul (ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7 หรือสถานี Yeonsinnae',
+    },
+    {
+      question: 'ค่าห้องอัดเท่าไหร่?',
+      answer: 'อัดเสียง 100,000 วอน/ชั่วโมง ขั้นต่ำ 2 ชั่วโมง แพ็กเกจ 6 ชั่วโมง (Day Lock) 500,000 วอน (ลดประมาณ 17%) รวมวิศวกรเสียงมืออาชีพ',
+    },
+    {
+      question: 'ค่าบริการมิกซ์คิดอย่างไร?',
+      answer: 'ขึ้นอยู่กับจำนวนแทร็ก ต่ำกว่า 10 แทร็ก 200,000 วอน, 11–30 แทร็ก 350,000 วอน, 31+ แทร็ก 500,000 วอน รวมแก้ไขพื้นฐาน 2 ครั้ง',
+    },
+    {
+      question: 'ค่ามาสเตอริ่งเท่าไหร่?',
+      answer: 'มาสเตอริ่งซิงเกิล 100,000 วอน/เพลง แพ็กเกจ EP/อัลบั้ม (4 เพลงขึ้นไป) 80,000 วอน/เพลง ทำตามมาตรฐาน Spotify, Apple Music ฯลฯ',
+    },
+    {
+      question: 'มีโปรแกรมห้องซ้อมรายเดือนหรือไม่?',
+      answer: 'มีค่ะ เดือนละ 400,000 วอน ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ส่วนลดสตูดิโอ, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
+    },
+    {
+      question: 'มีอุปกรณ์อะไรบ้าง?',
+      answer: 'มีอุปกรณ์ระดับพรีเมียม เช่น ไมค์ Neumann U87AI, AKG C414 XLS, พรีแอมป์ Vintech X73i, อินเทอร์เฟซ Prism Sound Lyra 2 และโปรเซสเซอร์ SSL Fusion เป็นต้น',
+    },
+    {
+      question: 'มีบริการจัดจำหน่ายเพลงไหม?',
+      answer: 'มี สำหรับสมาชิกที่พักประจำ เราให้บริการจัดจำหน่ายทั่วโลกฟรีผ่าน Audioguy (Spotify, Apple Music, YouTube Music ฯลฯ) และแบ่งรายได้สุทธิ 70% ให้ศิลปิน',
+    },
+  ],
+  uz: [
+    {
+      question: 'Studio NOL qayerda joylashgan?',
+      answer: 'Biz Seul sh., Eunpyeong-gu, Daejo-dong 84-3, 3‑qavatda joylashganmiz (Dongmyeong qizlar maktabi yonida). 6‑yo‘nalishdagi Bulgwang bekati 7‑chi chiqishidan yoki Yeonsinnae bekatidan 5 daqiqada piyoda.',
+    },
+    {
+      question: 'Yozuv studiyasi narxi qancha?',
+      answer: 'Yozuv 100,000 KRW/soat, minimal 2 soat. 6 soatlik paket (Day Lock) 500,000 KRW (taxm. 17% chegirma). Professional muhandislik kiritilgan.',
+    },
+    {
+      question: 'Miks xizmatlari narxi qanday?',
+      answer: 'Track soniga bog‘liq. 10 trackgacha 200,000 KRW, 11–30 track 350,000 KRW, 31+ track 500,000 KRW. 2 ta asosiy tahrir kiritilgan.',
+    },
+    {
+      question: 'Mastering narxi qancha?',
+      answer: 'Single mastering 100,000 KRW/qo‘shiq, EP/album paketi (4+ qo‘shiq) 80,000 KRW/qo‘shiq. Spotify, Apple Music kabi platformalar standartiga mos.',
+    },
+    {
+      question: 'Mashg‘ulot xonasi rezident dasturi bormi?',
+      answer: 'Ha. Oyiga 400,000 KRW evaziga premium ovoz izolyatsiyali mashg‘ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo‘llovi, busking uskunalari ijarasi va h.k.) beriladi.',
+    },
+    {
+      question: 'Qanday uskunalar bor?',
+      answer: 'Neumann U87AI, AKG C414 XLS mikrofonlari, Vintech X73i preamp, Prism Sound Lyra 2 interfeys, SSL Fusion protsessori kabi premium analog/raqamli uskunalar mavjud.',
+    },
+    {
+      question: 'Musiqa tarqatish xizmati ham bormi?',
+      answer: 'Ha. Rezident mijozlar Audioguy orqali global platformalarga (Spotify, Apple Music, YouTube Music va b.) bepul tarqatish xizmatini oladi va sof daromadning 70% san’atkorga beriladi.',
+    },
   ]
 };
 

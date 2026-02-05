@@ -21,11 +21,14 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
     const reviews = getReviews(locale);
     
     // Simple translation for title/subtitle
-    const t = (ko: string, en: string, zh?: string, es?: string) => {
+    const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
         if (locale === 'ko') return ko;
         if (locale === 'en') return en;
         if (locale === 'zh') return zh || en;
         if (locale === 'es') return es || en;
+        if (locale === 'vi') return vi || en;
+        if (locale === 'th') return th || en;
+        if (locale === 'uz') return uz || en;
         return ko;
     };
 
@@ -40,7 +43,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                         </>
                     ) : (
                         <>
-                            {t("Creating Together:", "Creating Together:", "共同创造:", "Creando Juntos:")} <span>{t("Touching Records", "Touching Records", "感动的记录", "Registros Conmovedores")}</span>
+                            {t("Creating Together:", "Creating Together:", "共同创造:", "Creando Juntos:", "Cùng tạo nên:", "สร้างร่วมกัน:", "Birga yaratamiz:")} <span>{t("Touching Records", "Touching Records", "感动的记录", "Registros Conmovedores", "Những khoảnh khắc lay động", "บันทึกที่ประทับใจ", "Ta’sirli xotiralar")}</span>
                         </>
                     )
                 }
@@ -48,7 +51,10 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                     "스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.",
                     "Proven technology and sincerity verified by many who have visited Studio NOL.",
                     "这是经过 Studio NOL 的许多人证明的技术力量和真诚。",
-                    "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL."
+                    "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL.",
+                    "Công nghệ và sự chân thành được nhiều người đã đến Studio NOL chứng thực.",
+                    "เทคโนโลยีที่พิสูจน์แล้วและความจริงใจที่ได้รับการยืนยันจากผู้ที่เคยมา Studio NOL",
+                    "Studio NOL’dan o‘tgan ko‘plab insonlar tasdiqlagan texnologiya va samimiyat."
                 )}
                 className="mb-16"
             />
@@ -82,7 +88,10 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                         `평점 ${review.rating}점`,
                                         `Rating ${review.rating} stars`,
                                         `评分 ${review.rating} 分`,
-                                        `Calificación ${review.rating} estrellas`
+                                        `Calificación ${review.rating} estrellas`,
+                                        `Đánh giá ${review.rating} sao`,
+                                        `คะแนน ${review.rating} ดาว`,
+                                        `${review.rating} yulduzli baho`
                                     )}
                                 >
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
