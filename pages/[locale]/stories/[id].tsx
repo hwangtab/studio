@@ -105,6 +105,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
       />
 
       <ImageHero
+        locale={locale}
         title={story.title}
         subtitle={
           <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">

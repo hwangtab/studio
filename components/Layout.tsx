@@ -18,10 +18,21 @@ interface NavLinkProps {
 }
 
 const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigate, hasHero }: NavLinkProps) => {
-  // Exact match for home, prefix match for others
-  // Need to be careful with locale prefixes.
-  // href is like /ko/about. currentPath is /ko/about.
-  const isActive = currentPath === href || (href !== '/' && currentPath.startsWith(href) && currentPath !== href && currentPath[href.length] === '/');
+  // Normalize paths to remove trailing slashes for consistent comparison
+  const normalizedPath = currentPath.endsWith('/') && currentPath.length > 1 ? currentPath.slice(0, -1) : currentPath;
+  const normalizedHref = href.endsWith('/') && href.length > 1 ? href.slice(0, -1) : href;
+
+  // Determine if we should allow prefix matching.
+  // We avoid prefix matching for the locale root (e.g. "/ko") so it doesn't highlight for all subpages.
+  // href.split('/').filter(Boolean) gives segments. "/ko" -> 1 segment. "/ko/about" -> 2 segments.
+  const hrefSegments = normalizedHref.split('/').filter(Boolean).length;
+  
+  const isExactMatch = normalizedPath === normalizedHref;
+  const isPrefixMatch = hrefSegments > 1 && 
+    normalizedPath.startsWith(normalizedHref) && 
+    normalizedPath[normalizedHref.length] === '/';
+
+  const isActive = isExactMatch || isPrefixMatch;
 
   return (
     <Link
@@ -254,6 +265,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
                     className="block px-3 py-2 rounded-md typo-nav-link text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                    aria-current={currentPath === item.href ? 'page' : undefined}
                   >
                     {item.label}
                   </Link>

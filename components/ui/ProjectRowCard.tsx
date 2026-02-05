@@ -19,6 +19,7 @@ const ProjectRowCard = ({
     onClick,
     index
 }: ProjectRowCardProps) => {
+    const isInteractive = Boolean(onClick);
 
     // 카테고리에 따른 뱃지 색상 (Light/Dark 대응)
     const getCategoryColor = (cat: string) => {
@@ -38,6 +39,15 @@ const ProjectRowCard = ({
             transition={{ delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
             className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-all duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none"
             onClick={onClick}
+            role={isInteractive ? 'button' : undefined}
+            tabIndex={isInteractive ? 0 : undefined}
+            onKeyDown={(event) => {
+                if (!onClick) return;
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onClick();
+                }
+            }}
         >
             {/* Left: Album Art */}
             <div className="relative w-full sm:w-48 h-48 sm:h-full flex-shrink-0 overflow-hidden bg-gray-100 dark:bg-black">

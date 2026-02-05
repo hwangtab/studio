@@ -56,6 +56,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
       />
       <ImageHero
         {...{
+          locale,
           title: siteConfig.name,
           subtitle: (
             <>

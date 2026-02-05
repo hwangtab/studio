@@ -49,6 +49,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
 
       {/* Hero Section */}
       <ImageHero
+        locale={locale}
         title={t('pricing.hero.title')}
         subtitle={
           <>

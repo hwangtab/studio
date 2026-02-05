@@ -64,6 +64,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                 ogImage="/images/lesson1.png"
             />
             <ImageHero
+                locale={locale}
                 title={t('lesson.hero.title')}
                 subtitle={
                     <>

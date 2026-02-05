@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
+import type { Locale } from '../../lib/i18n';
 
 interface ImageHeroProps {
   title: React.ReactNode;
@@ -12,6 +13,7 @@ interface ImageHeroProps {
   overlayGradient?: string;
   textAlign?: 'center' | 'left';
   className?: string;
+  locale?: Locale;
 }
 
 const ImageHero = ({
@@ -24,6 +26,7 @@ const ImageHero = ({
   overlayGradient,
   textAlign = "center",
   className = "",
+  locale = 'ko',
 }: ImageHeroProps) => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
@@ -33,6 +36,7 @@ const ImageHero = ({
   const alignmentClass = textAlign === 'center'
     ? 'text-center'
     : 'text-left';
+  const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
 
   const verticalAlignClass = 'justify-center pt-32 pb-12';
 
@@ -76,7 +80,7 @@ const ImageHero = ({
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <h1
-            className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 break-keep leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
           >
             {title}
           </h1>

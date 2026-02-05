@@ -37,6 +37,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
         ]}
       />
       <ImageHero
+        locale={locale}
         title={t('studioInfo.hero.title')}
         subtitle={t('studioInfo.hero.subtitle')}
         backgroundImage="/images/hardware1.jpg"

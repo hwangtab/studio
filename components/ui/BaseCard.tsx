@@ -8,7 +8,7 @@ interface BaseCardProps {
     children: React.ReactNode;
     className?: string;
     href?: string;
-    onClick?: (e: React.MouseEvent) => void;
+    onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
     delay?: number;
     variant?: 'default' | 'highlight' | 'outline';
     hoverEffect?: boolean;
@@ -43,11 +43,21 @@ const BaseCard = React.memo(({
         transition: { duration: 0.2 } // Faster transition for hover only
     };
 
+    const isInteractive = Boolean(onClick);
     const CardContent = (
         <motion.div
             className={cn(baseStyles, variants[variant], className)}
             {...animationProps}
             onClick={onClick}
+            role={isInteractive ? 'button' : undefined}
+            tabIndex={isInteractive ? 0 : undefined}
+            onKeyDown={(event) => {
+                if (!onClick) return;
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onClick(event);
+                }
+            }}
         >
             {children}
         </motion.div>

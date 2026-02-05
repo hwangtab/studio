@@ -27,14 +27,14 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any,
   </BaseCard>
 );
 
-const PainPoint = ({ icon: Icon, text, delay = 0 }: { icon: any, text: string, delay?: number }) => (
+const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: any, text: string, delay?: number, locale?: Locale }) => (
   <BaseCard variant="default" delay={delay} className="p-5 h-full">
     <div className="flex items-start">
       <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
         <Icon size={20} />
       </div>
       <div>
-        <p className="typo-card-body whitespace-normal" style={{ wordBreak: 'keep-all' }}>{text}</p>
+        <p className={`typo-card-body whitespace-normal ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>{text}</p>
       </div>
     </div>
   </BaseCard>
@@ -97,6 +97,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         ]}
       />
       <ImageHero
+        locale={locale}
         title={t('practiceRoom.hero.title')}
         subtitle={
           <>
@@ -124,11 +125,11 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
             className="mb-8"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} delay={0.1} />
-            <PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} delay={0.2} />
-            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} delay={0.3} />
-            <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} delay={0.4} />
-            <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} delay={0.5} />
+            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} delay={0.1} locale={locale} />
+            <PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} delay={0.2} locale={locale} />
+            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} delay={0.3} locale={locale} />
+            <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} delay={0.4} locale={locale} />
+            <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} delay={0.5} locale={locale} />
           </div>
         </motion.div>
       </Section>

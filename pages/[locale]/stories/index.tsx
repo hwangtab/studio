@@ -45,6 +45,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
         ]}
       />
       <ImageHero
+        locale={locale}
         title={t('stories.hero.title')}
         subtitle={t('stories.hero.subtitle')}
         backgroundImage="/images/studio1.jpg"

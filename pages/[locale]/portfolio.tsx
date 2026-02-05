@@ -103,6 +103,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
       />
       <ImageHero
         {...{
+          locale,
           title: t('portfolio.title'),
           subtitle: (
             <>

@@ -111,6 +111,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
       />
       <ImageHero
         {...{
+          locale,
           title: t('contact.title'),
           subtitle: t('contact.subtitle'),
           backgroundImage: "/images/contact-bg.jpg",
@@ -209,7 +210,11 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
             >
               <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>
               {submitMessage && (
-                <div className={`mb-4 p-4 rounded-md flex items-center ${submitMessage === t('contact.form.success') ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}>
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className={`mb-4 p-4 rounded-md flex items-center ${submitMessage === t('contact.form.success') ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
+                >
                   {submitMessage === t('contact.form.success') && <CheckCircle className="mr-2" size={18} />}
                   {submitMessage}
                 </div>

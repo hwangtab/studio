@@ -31,7 +31,7 @@ const Playlist = ({
                     const isActive = currentTrackIndex === index;
 
                     return (
-                        <motion.div
+                        <motion.button
                             key={track.id}
                             initial={false}
                             animate={{
@@ -40,9 +40,12 @@ const Playlist = ({
                             whileHover={{
                                 backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.15)' : 'rgba(var(--primary-rgb), 0.05)'
                             }}
-                            className={`group flex items-center p-3 rounded-lg cursor-pointer transition-colors border border-transparent ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
+                            type="button"
+                            className={`group w-full text-left flex items-center p-3 rounded-lg cursor-pointer transition-colors border border-transparent ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
                                 }`}
                             onClick={() => onSelectTrack(index)}
+                            aria-pressed={isActive}
+                            aria-label={`${track.title} ${track.artist}`}
                         >
                             <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0 mr-4 shadow-sm">
                                 <img
@@ -94,7 +97,7 @@ const Playlist = ({
                             <div className="text-xs text-gray-400 dark:text-white/40 font-mono ml-2">
                                 {track.duration}
                             </div>
-                        </motion.div>
+                        </motion.button>
                     );
                 })}
             </div>
