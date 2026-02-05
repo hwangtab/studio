@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import type { AudioTrack } from '../../types/data';
@@ -48,13 +49,11 @@ const Playlist = ({
                             aria-label={`${track.title} ${track.artist}`}
                         >
                             <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0 mr-4 shadow-sm">
-                                <img
+                                <Image
                                     src={track.albumArt}
-                                    alt={track.title}
+                                    alt={t('audioPlayer.albumArtAlt', { title: track.title })}
                                     width={40}
                                     height={40}
-                                    loading="lazy"
-                                    decoding="async"
                                     className={`w-full h-full object-cover transition-transform duration-300 ${isActive && isPlaying ? 'scale-110' : ''}`}
                                 />
                                 {isActive && (
