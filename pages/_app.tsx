@@ -35,7 +35,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <I18nextProvider i18n={i18n}>
-        <ErrorBoundary>
+        <ErrorBoundary locale={locale}>
           <Layout hasHero={hasHero} locale={locale}>
             <AnimatePresence mode="wait" initial={false}>
               <motion.div

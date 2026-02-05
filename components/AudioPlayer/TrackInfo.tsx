@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Headphones, Disc } from 'lucide-react';
+import { Disc } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
+import { useTranslation } from 'react-i18next';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
 interface Track {
     id: string;
@@ -20,9 +22,12 @@ interface TrackInfoProps {
     totalTracks: number;
     isPlaying: boolean;
     onPlayPause: () => void;
+    locale?: Locale;
 }
 
-const TrackInfo = ({ track, trackNumber, isPlaying }: TrackInfoProps) => {
+const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: TrackInfoProps) => {
+    const { t } = useTranslation('common', { lng: locale });
+    const trackNumberLabel = trackNumber < 10 ? `0${trackNumber}` : String(trackNumber);
     return (
         <div className="flex flex-col items-center text-center">
             {/* Album Art with localized glow and rotation effect */}
@@ -41,7 +46,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying }: TrackInfoProps) => {
                 >
                     <ResponsiveImage
                         src={track.albumArt}
-                        alt={`${track.title} 앨범 아트`}
+                        alt={t('audioPlayer.albumArtAlt', { title: track.title })}
                         pictureClassName="block w-full h-full"
                         className="w-full h-full object-cover"
                         loading="lazy"
@@ -80,7 +85,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying }: TrackInfoProps) => {
                         ))}
                     </div>
                     <span className="text-[10px] font-bold text-white/90 tracking-wider">
-                        {isPlaying ? 'PLAYING' : 'PAUSED'}
+                        {isPlaying ? t('audioPlayer.playing') : t('audioPlayer.paused')}
                     </span>
                 </div>
             </motion.div>
@@ -102,9 +107,9 @@ const TrackInfo = ({ track, trackNumber, isPlaying }: TrackInfoProps) => {
 
                 <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/40 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
                     <Disc size={12} />
-                    <span>High Fidelity Audio</span>
+                    <span>{t('audioPlayer.highFidelity')}</span>
                     <span className="w-1 h-1 bg-gray-300 dark:bg-white/20 rounded-full mx-1" />
-                    <span>Track {trackNumber < 10 ? `0${trackNumber}` : trackNumber}</span>
+                    <span>{t('audioPlayer.trackLabel', { number: trackNumberLabel })}</span>
                 </div>
             </div>
         </div>

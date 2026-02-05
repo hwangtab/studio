@@ -94,7 +94,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
       <SEO
         title={t('portfolio.title')}
         description={t('portfolio.subtitle')}
-        keywords="녹음 샘플, 믹싱 전후 비교, 마스터링 예시, 스튜디오 포트폴리오, 음원 제작 퀄리티, 레코딩 결과물, 스튜디오 놀"
+        keywords={t('portfolio.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/portfolio`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
@@ -110,7 +110,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
             </>
           ),
           backgroundImage: "/images/recording1.png",
-          imageAlt: "Studio NOL Portfolio",
+          imageAlt: t('portfolio.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/40 via-transparent to-black/20",
         }}
@@ -132,7 +132,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
               titleClassName="typo-card-title"
               as="h2"
             />
-            <AudioPlayer tracks={audioTracks} />
+            <AudioPlayer tracks={audioTracks} locale={locale} />
           </motion.div>
         </Section>
       )}

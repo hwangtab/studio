@@ -8,7 +8,7 @@ import remarkBreaks from 'remark-breaks';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryFrontmatter, StoryPath } from '../types/story';
-import { locales, defaultLocale, type Locale } from './i18n';
+import { locales, defaultLocale, resources, type Locale } from './i18n';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 
@@ -79,13 +79,50 @@ const normalizeDate = (value: string | Date | undefined): string => {
   return date.toISOString();
 };
 
+const storyCategoryKeyMap: Record<string, string> = {
+  공지: 'notice',
+  이벤트: 'event',
+  강좌: 'lesson',
+  인터뷰: 'interview',
+  장비: 'equipment',
+  리뷰: 'review',
+};
+
+const storyCategoryKeys = new Set<string>([
+  'notice',
+  'event',
+  'lesson',
+  'interview',
+  'equipment',
+  'review',
+  'other',
+]);
+
+const normalizeStoryCategoryKey = (category?: string): string => {
+  if (!category) return 'other';
+  const trimmed = category.trim();
+  if (storyCategoryKeyMap[trimmed]) return storyCategoryKeyMap[trimmed];
+  if (storyCategoryKeys.has(trimmed)) return trimmed;
+  return 'other';
+};
+
+const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
+  const localized = resources?.[locale]?.common?.stories?.categories as Record<string, string> | undefined;
+  const fallback = resources?.[defaultLocale]?.common?.stories?.categories as Record<string, string> | undefined;
+  return localized?.[categoryKey] || fallback?.[categoryKey] || categoryKey;
+};
+
 const mapStoryFrontmatter = (
   slug: string,
   frontmatter: Record<string, unknown>,
-  content: string
+  content: string,
+  locale: Locale
 ): Story => {
   const isoDate = normalizeDate(frontmatter?.date as string | Date | undefined);
   const derivedThumbnail = (frontmatter?.thumbnail as string | undefined) || extractFirstImageUrl(content);
+  const rawCategory = (frontmatter?.category as string | undefined) || '';
+  const categoryKey = normalizeStoryCategoryKey(rawCategory);
+  const categoryLabel = getStoryCategoryLabel(categoryKey, locale);
 
   return {
     id: slug,
@@ -94,7 +131,8 @@ const mapStoryFrontmatter = (
     date: isoDate,
     createdAt: isoDate,
     author: (frontmatter?.author as string) || '스튜디오 놀',
-    category: (frontmatter?.category as string) || '공지',
+    category: categoryLabel,
+    categoryKey,
     tags: Array.isArray(frontmatter?.tags) ? (frontmatter.tags as string[]) : ['기본'],
     summary: (frontmatter?.summary as string) || summarizeText(content, 150, { stripMarkdown: true }),
     thumbnail: derivedThumbnail || null,
@@ -111,7 +149,7 @@ export const getAllStories = (locale: string = defaultLocale): Story[] => {
       const fileContents = fs.readFileSync(filePath, 'utf8');
       const normalized = stripCodeFenceWrapper(fileContents);
       const { data, content } = matter(normalized);
-      return mapStoryFrontmatter(slug, data, content);
+      return mapStoryFrontmatter(slug, data, content, locale as Locale);
     })
     .filter((story): story is Story => story !== null)
     .sort((a: Story, b: Story) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -122,7 +160,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const normalized = stripCodeFenceWrapper(fileContents);
   const { data, content } = matter(normalized);
-  const baseStory = mapStoryFrontmatter(slug, data, content);
+  const baseStory = mapStoryFrontmatter(slug, data, content, locale as Locale);
   let contentToProcess = content;
 
   if (baseStory.thumbnailDerived && baseStory.thumbnail) {

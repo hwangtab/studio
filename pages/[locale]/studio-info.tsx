@@ -29,7 +29,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
       <SEO
         title={t('studioInfo.seo.title')}
         description={t('studioInfo.seo.description')}
-        keywords="하이엔드 녹음 장비, Neumann U87AI, SSL Fusion, 연신내 녹음실 장비, 프로 오디오 장비, Vintech 프리앰프, 스튜디오 장비 리스트"
+        keywords={t('studioInfo.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/studio-info`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },

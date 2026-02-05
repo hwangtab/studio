@@ -25,6 +25,7 @@ export interface Story {
   createdAt: string; // ISO 8601 format
   author: string;
   category: string;
+  categoryKey: string;
   tags: string[];
   summary: string;
   thumbnail: string | null;

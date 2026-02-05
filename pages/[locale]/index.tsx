@@ -138,6 +138,8 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
       {/* FAQ 섹션 */}
       <FAQSection
         items={faqData}
+        title={t('home.faq.title')}
+        subtitle={t('home.faq.subtitle')}
         variant="alternate"
       />
 

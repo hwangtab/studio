@@ -51,6 +51,11 @@ export const getSeoDefaults = (locale: Locale): SEODefaults => {
       zh: '步行5分钟即到。在 Studio NOL 一站式体验录音、练习、混音/母带服务。',
       es: 'A 5 min a pie de la estación. Experimenta grabación, salas de práctica y mezcla/masterización.'
     }),
-    keywords: '연신내 녹음실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오',
+    keywords: t(locale, {
+      ko: '연신내 녹음실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오',
+      en: 'Yeonsinnae recording studio, Eunpyeong practice room, Studio NOL, Seoul recording studio, mixing mastering studio, music production studio',
+      zh: '延新内录音室, 恩平区练习室, Studio NOL, 首尔录音室, 混音母带工作室, 音乐制作工作室',
+      es: 'estudio de grabación en Yeonsinnae, sala de práctica en Eunpyeong, Studio NOL, estudio de grabación en Seúl, estudio de mezcla y masterización, estudio de producción musical'
+    }),
   };
 };

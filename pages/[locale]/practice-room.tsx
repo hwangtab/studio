@@ -87,7 +87,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
       <SEO
         title={t('practiceRoom.seo.title')}
         description={t('practiceRoom.seo.description')}
-        keywords="연신내 연습실, 불광 연습실, 구산 연습실, 역촌 연습실, 응암 연습실, 은평구 연습실, 대조동 연습실, 방음 연습실, 개인 작업실, 스튜디오 놀"
+        keywords={t('practiceRoom.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/practice-room`}
         includeSchema={true}
         faqItems={practiceRoomFaqs}

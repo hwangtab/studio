@@ -39,7 +39,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
       <SEO
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
-        keywords="셀프 축가 비용, 축가 녹음 가격, 성우 녹음 견적, 유튜브 스튜디오 대관료, 녹음실 대여 비용, 믹싱 의뢰 가격, 음원 제작 비용, 음반 제작 비용, 스튜디오 놀"
+        keywords={t('pricing.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/pricing`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
@@ -250,7 +250,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
             >
               <ResponsiveImage
                 src="/images/recording15.png"
-                alt="스튜디오 놀 프로 패키지 녹음 장비"
+                alt={t('pricing.images.packageAlt')}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 loading="lazy"

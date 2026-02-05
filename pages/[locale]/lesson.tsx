@@ -54,7 +54,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
             <SEO
                 title={t('lesson.seo.title')}
                 description={t('lesson.seo.description')}
-                keywords="음원 발매 컨설팅, 믹싱 피드백, 미디 멘토링, 음원/앨범 제작 상담, 단기 미디 레슨, 큐베이스 원데이, 로직 프로 과외, 연신내 실용음악"
+                keywords={t('lesson.seo.keywords')}
                 canonical={`https://studionol.co.kr/${locale}/lesson`}
                 includeSchema={true}
                 breadcrumbs={[

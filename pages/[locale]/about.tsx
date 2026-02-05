@@ -48,7 +48,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
       <SEO
         title={t('about.title')}
         description={t('about.description')}
-        keywords="스튜디오 놀 소개, 음원 제작 프로세스, 음악 프로덕션, 레코딩 스튜디오, 믹싱 마스터링, 음원 유통, 음악 기획, 아날로그 장비"
+        keywords={t('about.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/about`}
         breadcrumbs={[
           { name: t('nav.about'), path: `/${locale}/about` },

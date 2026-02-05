@@ -9,7 +9,8 @@ import {
   generateFaqSchema,
   generateCourseSchema,
 } from '../utils/schemaGenerator';
-import { locales, localeNames } from '../lib/i18n';
+import { locales, type Locale } from '../lib/i18n';
+import { getSeoDefaults, getSiteConfig } from '../data/siteConfig';
 
 interface SEOProps {
   title?: string;
@@ -33,15 +34,15 @@ interface SEOProps {
 }
 
 const SEO = ({
-  title = '스튜디오 놀 - 음악 제작의 모든 것',
-  description = '최고의 사운드를 위한 음악 제작 스튜디오, 스튜디오 놀. 전문적인 믹싱, 마스터링, 레코딩 서비스로 당신의 음악을 완성하세요.',
-  keywords = '스튜디오 놀, 음악 제작, 레코딩, 믹싱, 마스터링, 음반 제작, 음악 프로듀싱, 연신내 스튜디오, 서울 녹음 스튜디오',
+  title,
+  description,
+  keywords,
   canonical,
   ogImage = '/images/hardware2.jpg',
   ogType = 'website',
   includeSchema = false,
   schema,
-  author = '스튜디오 놀',
+  author,
   robots = 'index, follow',
   articlePublishedTime,
   articleModifiedTime,
@@ -65,10 +66,10 @@ const SEO = ({
   const segments = currentPath.split('/');
   // segments[0] is empty, segments[1] is locale (if valid)
   let pathWithoutLocale = currentPath;
-  let currentLocale = 'ko';
+  let currentLocale: Locale = 'ko';
 
-  if (locales.includes(segments[1] as any)) {
-    currentLocale = segments[1];
+  if (locales.includes(segments[1] as Locale)) {
+    currentLocale = segments[1] as Locale;
     pathWithoutLocale = '/' + segments.slice(2).join('/');
   }
 
@@ -84,6 +85,14 @@ const SEO = ({
     return `${siteUrl}${sanitized}`;
   }, [siteUrl]);
 
+  const seoDefaults = React.useMemo(() => getSeoDefaults(currentLocale), [currentLocale]);
+  const siteConfig = React.useMemo(() => getSiteConfig(currentLocale), [currentLocale]);
+
+  const resolvedTitle = title || seoDefaults.title;
+  const resolvedDescription = description || seoDefaults.description;
+  const resolvedKeywords = keywords || seoDefaults.keywords;
+  const resolvedAuthor = author || siteConfig.name;
+
   const absoluteOgImage = React.useMemo(() => toAbsoluteUrl(ogImage), [ogImage, toAbsoluteUrl]);
 
   // Use provided canonical or generate one based on current path
@@ -97,16 +106,16 @@ const SEO = ({
     [canonicalUrl, siteUrl]);
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl, absoluteOgImage, description, reviewItems),
-    [siteUrl, absoluteOgImage, description, reviewItems]
+    () => generateDefaultSchema(siteUrl, absoluteOgImage, resolvedDescription, reviewItems),
+    [siteUrl, absoluteOgImage, resolvedDescription, reviewItems]
   );
 
   const articleSchema = React.useMemo(
     () =>
       ogType === 'article'
         ? generateArticleSchema(
-          title,
-          description,
+          resolvedTitle,
+          resolvedDescription,
           siteUrl,
           absoluteOgImage,
           normalizedCanonical,
@@ -117,8 +126,8 @@ const SEO = ({
         : null,
     [
       ogType,
-      title,
-      description,
+      resolvedTitle,
+      resolvedDescription,
       siteUrl,
       absoluteOgImage,
       normalizedCanonical,
@@ -132,14 +141,14 @@ const SEO = ({
     () =>
       isCourse
         ? generateCourseSchema(
-          title,
-          description,
+          resolvedTitle,
+          resolvedDescription,
           siteUrl,
           absoluteOgImage,
           normalizedCanonical
         )
         : null,
-    [isCourse, title, description, siteUrl, absoluteOgImage, normalizedCanonical]
+    [isCourse, resolvedTitle, resolvedDescription, siteUrl, absoluteOgImage, normalizedCanonical]
   );
 
   const breadcrumbSchema = React.useMemo(
@@ -161,10 +170,10 @@ const SEO = ({
 
   return (
     <Head>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta name="keywords" content={keywords} />
-      <meta name="author" content={author} />
+      <title>{resolvedTitle}</title>
+      <meta name="description" content={resolvedDescription} />
+      <meta name="keywords" content={resolvedKeywords} />
+      <meta name="author" content={resolvedAuthor} />
       <meta name="robots" content={robots} />
 
       <meta name="geo.region" content="KR-11" />
@@ -206,8 +215,8 @@ const SEO = ({
 
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={normalizedCanonical} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:title" content={resolvedTitle} />
+      <meta property="og:description" content={resolvedDescription} />
       <meta property="og:image" content={absoluteOgImage} />
       <meta property="og:image:alt" content="Studio NOL - Music Production Studio" />
       <meta property="og:image:width" content="1200" />
@@ -235,8 +244,8 @@ const SEO = ({
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={normalizedCanonical} />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:title" content={resolvedTitle} />
+      <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content="Studio NOL" />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}

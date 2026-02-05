@@ -30,7 +30,8 @@
     "kakao": "KakaoTalk",
     "location": "Ubicación",
     "shareCopied": "Enlace copiado al portapapeles.",
-    "shareUnsupported": "Compartir no está disponible en este navegador."
+    "shareUnsupported": "Compartir no está disponible en este navegador.",
+    "reload": "Recargar"
   },
   "home": {
     "heroTitle": "Donde comienza la música, Studio NOL",
@@ -48,6 +49,10 @@
       "subtitleLine2": "Studio NOL acompaña tu viaje musical.",
       "location": "Ubicación",
       "inquiry": "Consulta"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "Recopilamos preguntas comunes sobre el uso del estudio."
     }
   },
   "about": {
@@ -76,6 +81,9 @@
       "subtitleLine1": "Nos esforzamos al máximo sin importar el tamaño del proyecto.",
       "subtitleLine2": "Desde la planificación hasta la masterización final, hacemos realidad tu sonido.",
       "imageAlt": "Entorno de producción de Studio NOL"
+    },
+    "seo": {
+      "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico"
     }
   },
   "portfolio": {
@@ -92,6 +100,10 @@
       "servicesProvided": "Servicios proporcionados",
       "listenNow": "Escuchar ahora",
       "share": "Compartir"
+    },
+    "heroAlt": "Portafolio de Studio NOL",
+    "seo": {
+      "keywords": "muestras de grabación, comparación antes y después de mezcla, ejemplos de masterización, portafolio del estudio, calidad de producción musical, resultados de grabación, Studio NOL"
     }
   },
   "contact": {
@@ -136,12 +148,16 @@
       ],
       "privacyTitle": "Política de Privacidad",
       "privacyText": "La información personal recopilada se usa solo para responder y se elimina después de la consulta."
+    },
+    "seo": {
+      "keywords": "contacto de Studio NOL, consulta de producción musical, reserva de grabación, solicitud de mezcla, ubicación del estudio, consulta por KakaoTalk, presupuesto de producción"
     }
   },
   "pricing": {
     "seo": {
       "title": "Tarifas de grabación y alquiler de estudio | Studio NOL",
-      "description": "Precios transparentes. Consulta tarifas para grabaciones de bodas, locuciones y alquiler de estudio."
+      "description": "Precios transparentes. Consulta tarifas para grabaciones de bodas, locuciones y alquiler de estudio.",
+      "keywords": "tarifas de grabación, presupuesto de locución, precio de alquiler de estudio, precio de mezcla, precio de masterización, Studio NOL"
     },
     "hero": {
       "title": "Precio accesible, servicio transparente",
@@ -176,12 +192,16 @@
       "subtitle": "Sugerimos el plan óptimo según tu presupuesto y calendario.",
       "location": "Ubicación",
       "inquiry": "Consulta"
+    },
+    "images": {
+      "packageAlt": "Equipo de grabación del paquete profesional de Studio NOL"
     }
   },
   "lesson": {
     "seo": {
       "title": "Masterclass de producción musical | Studio NOL",
-      "description": "Desde consultoría de distribución hasta feedback de mezcla 1:1. Haz realidad tu música con ingeniería profesional."
+      "description": "Desde consultoría de distribución hasta feedback de mezcla 1:1. Haz realidad tu música con ingeniería profesional.",
+      "keywords": "consultoría de producción musical, feedback de mezcla, mentoría MIDI, clases de producción musical, clases cortas de MIDI, Cubase, Logic Pro"
     },
     "hero": {
       "title": "Masterclass de producción todo en uno",
@@ -269,7 +289,8 @@
   "practiceRoom": {
     "seo": {
       "title": "Sala de práctica premium 24h en Eunpyeong | Studio NOL",
-      "description": "Salas de práctica insonorizadas premium con excelente accesibilidad en Eunpyeong-gu."
+      "description": "Salas de práctica insonorizadas premium con excelente accesibilidad en Eunpyeong-gu.",
+      "keywords": "sala de práctica, sala insonorizada, sala de práctica en Eunpyeong, estudio privado, Studio NOL"
     },
     "hero": {
       "title": "Sala de práctica insonorizada premium",
@@ -371,7 +392,8 @@
   "studioInfo": {
     "seo": {
       "title": "Equipo de grabación de alta gama | Studio NOL",
-      "description": "Equipo de alta gama para el mejor sonido. Descubre Neumann U87AI, Vintech X73i, SSL Fusion y más."
+      "description": "Equipo de alta gama para el mejor sonido. Descubre Neumann U87AI, Vintech X73i, SSL Fusion y más.",
+      "keywords": "equipo de grabación de alta gama, Neumann U87AI, SSL Fusion, lista de equipos del estudio, equipo de audio profesional"
     },
     "hero": {
       "title": "Nuestro equipo",
@@ -399,7 +421,9 @@
   "stories": {
     "seo": {
       "title": "Historias - Registros de proyectos de Studio NOL",
-      "description": "Descubre historias y reseñas de proyectos en Studio NOL."
+      "description": "Descubre historias y reseñas de proyectos en Studio NOL.",
+      "keywords": "historias de Studio NOL, reseñas de producción, historias de producción musical",
+      "fallbackKeywords": "Studio NOL, música, historias"
     },
     "hero": {
       "title": "Historias",
@@ -420,6 +444,15 @@
       "moreTitle": "Más historias",
       "noRelated": "No hay historias relacionadas.",
       "viewAll": "Ver todas las historias"
+    },
+    "categories": {
+      "notice": "Aviso",
+      "event": "Evento",
+      "lesson": "Clase",
+      "interview": "Entrevista",
+      "equipment": "Equipo",
+      "review": "Reseña",
+      "other": "Otros"
     }
   },
   "notFound": {
@@ -430,5 +463,26 @@
     "messageLine2": "Vuelve a la página de inicio o prueba otra página.",
     "goHome": "Ir al inicio",
     "contact": "Contáctanos"
+  },
+  "errors": {
+    "title": "Ocurrió un problema",
+    "description": "Se produjo un error al cargar la página. Inténtalo de nuevo."
+  },
+  "loading": {
+    "default": "Cargando"
+  },
+  "audioPlayer": {
+    "prevTrack": "Pista anterior",
+    "nextTrack": "Siguiente pista",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "playlist": "Lista de reproducción",
+    "playing": "Reproduciendo",
+    "paused": "En pausa",
+    "albumArtAlt": "Arte del álbum {{title}}",
+    "highFidelity": "Audio de alta fidelidad",
+    "trackLabel": "Pista {{number}}"
   }
 }

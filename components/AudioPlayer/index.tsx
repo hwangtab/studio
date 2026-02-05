@@ -8,12 +8,14 @@ import PlayerControls from './PlayerControls';
 import Playlist from './Playlist';
 import type { AudioTrack } from '../../types/data';
 import { FADE_IN_UP } from '../../utils/animationUtils';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
 interface AudioPlayerProps {
     tracks: readonly AudioTrack[];
+    locale?: Locale;
 }
 
-const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
+const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
     const {
         currentTrack,
         isPlaying,
@@ -61,6 +63,7 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
                             totalTracks={tracks.length}
                             isPlaying={isPlaying}
                             onPlayPause={playPause}
+                            locale={locale}
                         />
                     </div>
 
@@ -80,6 +83,7 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
                                 onPlayPause={playPause}
                                 onPrevTrack={prevTrack}
                                 onNextTrack={nextTrack}
+                                locale={locale}
                             />
 
                             <VolumeControls
@@ -87,6 +91,7 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
                                 isMuted={isMuted}
                                 onToggleMute={toggleMute}
                                 onChangeVolume={changeVolume}
+                                locale={locale}
                             />
                         </div>
                     </div>
@@ -99,6 +104,7 @@ const AudioPlayer = ({ tracks }: AudioPlayerProps) => {
                         currentTrackIndex={currentTrack}
                         isPlaying={isPlaying}
                         onSelectTrack={selectTrack}
+                        locale={locale}
                     />
                 </div>
             </div>

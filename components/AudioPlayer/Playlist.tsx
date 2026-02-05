@@ -1,20 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Play, BarChart2 } from 'lucide-react';
+import { Play } from 'lucide-react';
 import type { AudioTrack } from '../../types/data';
+import { useTranslation } from 'react-i18next';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
 interface PlaylistProps {
     tracks: readonly AudioTrack[];
     currentTrackIndex: number;
     isPlaying: boolean;
     onSelectTrack: (index: number) => void;
+    locale?: Locale;
 }
 
-const Playlist = ({ tracks, currentTrackIndex, isPlaying, onSelectTrack }: PlaylistProps) => {
+const Playlist = ({
+    tracks,
+    currentTrackIndex,
+    isPlaying,
+    onSelectTrack,
+    locale = defaultLocale,
+}: PlaylistProps) => {
+    const { t } = useTranslation('common', { lng: locale });
     return (
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
             <h3 className="text-gray-500 dark:text-white/60 text-xs font-bold uppercase tracking-wider mb-4 px-2">
-                Playlist ({tracks.length})
+                {t('audioPlayer.playlist')} ({tracks.length})
             </h3>
             <div className="space-y-2">
                 {tracks.map((track, index) => {

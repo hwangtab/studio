@@ -1,15 +1,25 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
 interface VolumeControlsProps {
     volume: number;
     isMuted: boolean;
     onToggleMute: () => void;
     onChangeVolume: (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLDivElement>) => void;
+    locale?: Locale;
 }
 
-const VolumeControls = ({ volume, isMuted, onToggleMute, onChangeVolume }: VolumeControlsProps) => {
+const VolumeControls = ({
+    volume,
+    isMuted,
+    onToggleMute,
+    onChangeVolume,
+    locale = defaultLocale,
+}: VolumeControlsProps) => {
+    const { t } = useTranslation('common', { lng: locale });
     return (
         <div className="flex items-center justify-center sm:justify-start space-x-2">
             <motion.button
@@ -17,7 +27,7 @@ const VolumeControls = ({ volume, isMuted, onToggleMute, onChangeVolume }: Volum
                 whileTap={{ scale: 0.95 }}
                 onClick={onToggleMute}
                 className="text-gray-400 hover:text-gray-900 dark:text-white/80 dark:hover:text-white transition-colors p-2"
-                aria-label={isMuted ? "음소거 해제" : "음소거"}
+                aria-label={isMuted ? t('audioPlayer.unmute') : t('audioPlayer.mute')}
             >
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </motion.button>

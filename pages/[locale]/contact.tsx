@@ -102,7 +102,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
       <SEO
         title={t('contact.title')}
         description={t('contact.subtitle')}
-        keywords="스튜디오 놀 연락처, 음악 제작 문의, 레코딩 예약, 믹싱 의뢰, 은평구 스튜디오 위치, 카카오톡 상담, 프로덕션 견적"
+        keywords={t('contact.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/contact`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },

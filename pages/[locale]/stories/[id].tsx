@@ -19,6 +19,7 @@ import { getAllStories, getStoryDetail, getStoryPaths } from '../../../lib/stori
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import type { Locale } from '../../../lib/i18n';
+import { getSiteConfig } from '../../../data/siteConfig';
 
 interface StoryDetailPageProps {
   locale: Locale;
@@ -28,7 +29,8 @@ interface StoryDetailPageProps {
 
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const getCTAType = (slug: string, category: string | undefined): CTAType => {
+  const siteConfig = getSiteConfig(locale);
+  const getCTAType = (slug: string, categoryKey: string | undefined, categoryLabel: string | undefined): CTAType => {
     let hash = 0;
     for (let i = 0; i < slug.length; i++) {
       hash = (hash << 5) - hash + slug.charCodeAt(i);
@@ -36,14 +38,14 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
     }
     const seed = Math.abs(hash % 100) / 100;
 
-    if (category?.includes('강좌')) {
+    if (categoryKey === 'lesson' || categoryLabel?.includes('강좌')) {
       if (seed < 0.4) return 'lesson';
       if (seed < 0.7) return 'practice';
       if (seed < 0.9) return 'recording';
       return 'production';
     }
 
-    if (category === '장비' || category === '리뷰') {
+    if (categoryKey === 'equipment' || categoryKey === 'review' || categoryLabel === '장비' || categoryLabel === '리뷰') {
       if (seed < 0.6) return 'practice';
       if (seed < 0.8) return 'recording';
       return 'lesson';
@@ -57,14 +59,14 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
 
   React.useEffect(() => {
     if (story?.category) {
-      setCtaType(getCTAType(story.slug, story.category));
+      setCtaType(getCTAType(story.slug, story.categoryKey, story.category));
     }
-  }, [story?.category, story?.slug]);
+  }, [story?.category, story?.categoryKey, story?.slug]);
 
   const router = useRouter();
 
   if (router.isFallback) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner locale={locale} />;
   }
 
   const getLink = (path: string) => `/${locale}${path}`;
@@ -86,9 +88,9 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
   return (
     <>
       <SEO
-        title={`${story.title} - Studio NOL`}
+        title={`${story.title} - ${siteConfig.name}`}
         description={story.summary || metaDescription}
-        keywords={story.tags ? story.tags.join(', ') : '스튜디오 놀, 음악, 스토리'}
+        keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
         canonical={shareUrl}
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
         ogType="article"

@@ -30,7 +30,8 @@
     "kakao": "KakaoTalk",
     "location": "Location",
     "shareCopied": "Link copied to clipboard.",
-    "shareUnsupported": "Sharing is not supported in this browser."
+    "shareUnsupported": "Sharing is not supported in this browser.",
+    "reload": "Reload"
   },
   "home": {
     "heroTitle": "Where Music Begins, Studio NOL",
@@ -48,6 +49,10 @@
       "subtitleLine2": "Studio NOL joins your musical journey.",
       "location": "Location",
       "inquiry": "Inquiry"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "We collected common questions about using the studio."
     }
   },
   "about": {
@@ -76,6 +81,9 @@
       "subtitleLine1": "We give our best regardless of project size.",
       "subtitleLine2": "From planning to final mastering, we realize your ideas with perfect sound.",
       "imageAlt": "Studio NOL production environment"
+    },
+    "seo": {
+      "keywords": "Studio NOL, music production process, music production, recording studio, mixing mastering, music distribution, music planning, analog equipment"
     }
   },
   "portfolio": {
@@ -92,6 +100,10 @@
       "servicesProvided": "Services Provided",
       "listenNow": "Listen Now",
       "share": "Share"
+    },
+    "heroAlt": "Studio NOL Portfolio",
+    "seo": {
+      "keywords": "recording samples, before and after mixing, mastering examples, studio portfolio, music production quality, recording results, Studio NOL"
     }
   },
   "contact": {
@@ -136,12 +148,16 @@
       ],
       "privacyTitle": "Privacy Policy",
       "privacyText": "Collected personal information is used only for response purposes and deleted immediately after consultation."
+    },
+    "seo": {
+      "keywords": "Studio NOL contact, music production inquiry, recording reservation, mixing request, studio location, KakaoTalk consultation, production quote"
     }
   },
   "pricing": {
     "seo": {
       "title": "Recording Fees & Studio Rental | Studio NOL",
-      "description": "Transparent pricing. Check fees for wedding recordings, voiceovers, and studio rentals."
+      "description": "Transparent pricing. Check fees for wedding recordings, voiceovers, and studio rentals.",
+      "keywords": "recording fees, voiceover recording quote, studio rental price, mixing price, mastering price, Studio NOL"
     },
     "hero": {
       "title": "Affordable Price, Transparent Service",
@@ -176,12 +192,16 @@
       "subtitle": "We suggest the best plan matching your budget and schedule.",
       "location": "Location",
       "inquiry": "Inquiry"
+    },
+    "images": {
+      "packageAlt": "Studio NOL pro package recording gear"
     }
   },
   "lesson": {
     "seo": {
       "title": "Music Production Masterclass | Studio NOL",
-      "description": "From distribution consulting to 1:1 mixing feedback. Realize your music with pro engineering."
+      "description": "From distribution consulting to 1:1 mixing feedback. Realize your music with pro engineering.",
+      "keywords": "music production consulting, mixing feedback, MIDI mentoring, music production coaching, short-term MIDI lessons, Cubase, Logic Pro"
     },
     "hero": {
       "title": "All-in-One Production Masterclass",
@@ -269,7 +289,8 @@
   "practiceRoom": {
     "seo": {
       "title": "Premium 24h Practice Room in Eunpyeong | Studio NOL",
-      "description": "Premium soundproof practice rooms with great accessibility in Eunpyeong-gu."
+      "description": "Premium soundproof practice rooms with great accessibility in Eunpyeong-gu.",
+      "keywords": "practice room, soundproof practice room, Eunpyeong practice room, private studio, Studio NOL"
     },
     "hero": {
       "title": "Premium Soundproof Practice Room",
@@ -371,7 +392,8 @@
   "studioInfo": {
     "seo": {
       "title": "High-end Recording Equipment | Studio NOL",
-      "description": "High-end gear for the best sound. Check out our Neumann U87AI, Vintech X73i, SSL Fusion, and more."
+      "description": "High-end gear for the best sound. Check out our Neumann U87AI, Vintech X73i, SSL Fusion, and more.",
+      "keywords": "high-end recording equipment, Neumann U87AI, SSL Fusion, recording studio gear, professional audio equipment"
     },
     "hero": {
       "title": "Our Equipment",
@@ -399,7 +421,9 @@
   "stories": {
     "seo": {
       "title": "Stories - Studio NOL Project Logs",
-      "description": "Discover various stories and reviews from projects at Studio NOL."
+      "description": "Discover various stories and reviews from projects at Studio NOL.",
+      "keywords": "Studio NOL stories, production reviews, music production stories",
+      "fallbackKeywords": "Studio NOL, music, stories"
     },
     "hero": {
       "title": "Stories",
@@ -420,6 +444,15 @@
       "moreTitle": "More Stories",
       "noRelated": "No related stories.",
       "viewAll": "View all stories"
+    },
+    "categories": {
+      "notice": "Notice",
+      "event": "Event",
+      "lesson": "Lesson",
+      "interview": "Interview",
+      "equipment": "Equipment",
+      "review": "Review",
+      "other": "Other"
     }
   },
   "notFound": {
@@ -430,5 +463,26 @@
     "messageLine2": "Please return to the homepage or try another page.",
     "goHome": "Go Home",
     "contact": "Contact Us"
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "description": "An error occurred while loading the page. Please try again."
+  },
+  "loading": {
+    "default": "Loading"
+  },
+  "audioPlayer": {
+    "prevTrack": "Previous track",
+    "nextTrack": "Next track",
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "playlist": "Playlist",
+    "playing": "Playing",
+    "paused": "Paused",
+    "albumArtAlt": "{{title}} album art",
+    "highFidelity": "High Fidelity Audio",
+    "trackLabel": "Track {{number}}"
   }
 }

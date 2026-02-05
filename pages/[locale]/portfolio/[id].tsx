@@ -14,6 +14,7 @@ import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { locales, type Locale } from '../../../lib/i18n';
+import { getSiteConfig } from '../../../data/siteConfig';
 
 interface PortfolioDetailPageProps {
   locale: Locale;
@@ -24,9 +25,10 @@ interface PortfolioDetailPageProps {
 const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
+  const siteConfig = getSiteConfig(locale);
 
   if (router.isFallback) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner locale={locale} />;
   }
 
   const getLink = (path: string) => `/${locale}${path}`;
@@ -59,7 +61,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         canonical={shareUrl}
         ogImage={item.image}
         ogType="music.album"
-        keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, 스튜디오 놀`}
+        keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}
       />
       <Section variant="default" className="pt-8 pb-12">
         <div className="mb-8">
