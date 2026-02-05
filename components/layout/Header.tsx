@@ -95,32 +95,32 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <Link
             href={`/${locale}`}
             className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-              flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              flex-shrink-0 flex items-center text-3xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
             {siteConfig.name}
           </Link>
 
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <nav className="hidden 2xl:flex flex-nowrap items-center gap-x-1 gap-y-1 min-w-0 max-w-[70vw]">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.href}
-                  href={item.href}
-                  isScrolled={isScrolled}
-                  currentPath={currentPath}
-                  onNavigate={handleNavigate}
-                  hasHero={hasHero}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+          <nav className="hidden 2xl:flex flex-1 justify-center items-center gap-x-4 min-w-0 px-4">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.href}
+                href={item.href}
+                isScrolled={isScrolled}
+                currentPath={currentPath}
+                onNavigate={handleNavigate}
+                hasHero={hasHero}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
+          <div className="flex-shrink-0 flex items-center space-x-1 sm:space-x-2 md:space-x-4">
             <button
               className={`p-2 rounded-full ${isScrolled || !hasHero
                 ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
