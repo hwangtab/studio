@@ -84,7 +84,7 @@ const Playlist = ({
                                 )}
                                 {!isActive && (
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                        <Play size={12} className="text-white fill-current" />
+                                        <Play size={12} className="text-white fill-current" aria-hidden="true" />
                                     </div>
                                 )}
                             </div>

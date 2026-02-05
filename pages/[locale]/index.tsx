@@ -185,7 +185,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                 >
-                  <CalendarCheck className="mr-2 flex-shrink-0" size={20} />
+                  <CalendarCheck className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
                   <span className="min-w-0">{t('home.cta.inquiry')}</span>
                 </a>
               </div>

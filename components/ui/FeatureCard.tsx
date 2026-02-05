@@ -49,7 +49,7 @@ const FeatureCard = ({
       {(Icon || title) && (
         <div className="flex items-start gap-4 mb-4 min-w-0">
           {Icon && (
-            <div className="flex-shrink-0 bg-primary/10 dark:bg-primary/20 p-3 rounded-full">
+            <div className="flex-shrink-0 bg-primary/10 dark:bg-primary/20 p-3 rounded-full" aria-hidden="true">
               {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
             </div>
           )}

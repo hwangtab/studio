@@ -29,7 +29,7 @@ const PlayerControls = ({
                 className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-all duration-300 p-2"
                 aria-label={t('audioPlayer.prevTrack')}
             >
-                <SkipBack size={24} strokeWidth={2} />
+                <SkipBack size={24} strokeWidth={2} aria-hidden="true" />
             </motion.button>
 
             <motion.button
@@ -42,9 +42,9 @@ const PlayerControls = ({
                 <div className="absolute inset-0 rounded-full border border-gray-900/50 dark:border-white/50 animate-ping-slow opacity-0 group-hover:opacity-100" />
                 <div className="relative z-10 flex items-center justify-center">
                     {isPlaying ? (
-                        <Pause size={28} fill="currentColor" className="ml-[1px]" />
+                        <Pause size={28} fill="currentColor" className="ml-[1px]" aria-hidden="true" />
                     ) : (
-                        <Play size={28} fill="currentColor" className="ml-1" />
+                        <Play size={28} fill="currentColor" className="ml-1" aria-hidden="true" />
                     )}
                 </div>
             </motion.button>
@@ -56,7 +56,7 @@ const PlayerControls = ({
                 className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-all duration-300 p-2"
                 aria-label={t('audioPlayer.nextTrack')}
             >
-                <SkipForward size={24} strokeWidth={2} />
+                <SkipForward size={24} strokeWidth={2} aria-hidden="true" />
             </motion.button>
         </div>
     );

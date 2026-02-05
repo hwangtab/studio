@@ -61,9 +61,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 </span>
                                 <span className="flex-shrink-0 text-primary dark:text-primary-light">
                                     {activeIndex === index ? (
-                                        <Minus className="w-6 h-6" />
+                                        <Minus className="w-6 h-6" aria-hidden="true" />
                                     ) : (
-                                        <Plus className="w-6 h-6" />
+                                        <Plus className="w-6 h-6" aria-hidden="true" />
                                     )}
                                 </span>
                             </button>

@@ -39,7 +39,7 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
       href={href}
       onClick={onNavigate}
       aria-current={isActive ? 'page' : undefined}
-      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-normal transition-all duration-300 touch-manipulation
+      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-normal transition-colors transition-shadow duration-300 touch-manipulation
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
         : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
@@ -71,6 +71,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   const currentPath = useMemo(() => router.asPath || '/', [router.asPath]);
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
+  const skipLabel = locale === 'ko' ? '본문 바로가기' : 'Skip to content';
   const navItems = useMemo(() => {
     const prefix = `/${locale}`;
     return [
@@ -178,9 +179,15 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
       suppressHydrationWarning
     >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white focus:text-gray-900 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      >
+        {skipLabel}
+      </a>
       <header
         ref={headerRef}
-        className={`fixed w-full z-50 transition-all duration-300 ${isScrolled
+        className={`fixed w-full z-50 transition-colors transition-shadow duration-300 ${isScrolled
           ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md'
           : hasHero
             ? 'bg-transparent'
@@ -192,7 +199,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
             <Link
               href={`/${locale}`}
               className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-                flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-all duration-300 whitespace-nowrap -translate-y-1`}
+                flex items-center text-4xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
               onClick={(event) => {
                 // If needed, custom logic here. Default Link behavior handles navigation.
                 setIsMenuOpen(false);
@@ -225,7 +232,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                 onClick={toggleDarkMode}
                 aria-label="Toggle dark mode"
               >
-                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                {isDarkMode ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
               </button>
 
               <LanguageSwitcher
@@ -242,7 +249,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                 onClick={() => setIsMenuOpen((prev) => !prev)}
                 aria-label="Toggle menu"
               >
-                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                {isMenuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
               </button>
             </div>
           </div>
@@ -279,6 +286,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </header>
 
       <main
+        id="main-content"
         className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : ''} ${isFullBleed ? 'pb-0' : 'pb-12'}`}
         style={isHome || hasHero ? undefined : { paddingTop: headerHeight }}
       >

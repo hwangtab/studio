@@ -122,7 +122,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         }
         backgroundImage={story.thumbnail || '/images/studio1.jpg'}
         imageAlt={story.title}
-        minHeight="min-h-[50vh]"
+        minHeight="min-h-[60vh]"
         overlayGradient="from-black/70 via-black/40 to-black/70"
       />
 

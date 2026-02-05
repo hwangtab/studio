@@ -113,6 +113,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         variants={overlayVariants}
         onClick={onClose}
+        aria-hidden="true"
       />
 
       <motion.div
@@ -129,14 +130,14 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
             aria-label={t('actions.close')}
           >
-            <X size={20} className="text-gray-600 dark:text-gray-300" />
+            <X size={20} className="text-gray-600 dark:text-gray-300" aria-hidden="true" />
           </button>
           <button
             onClick={sharePortfolio}
             type="button"
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           >
-            <Share2 size={16} />
+            <Share2 size={16} aria-hidden="true" />
             {t('portfolio.detail.share')}
           </button>
         </div>
@@ -199,7 +200,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
           >
-            <ExternalLink size={16} />
+            <ExternalLink size={16} aria-hidden="true" />
             {t('portfolio.detail.listenNow')}
           </a>
         </div>

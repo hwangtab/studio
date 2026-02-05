@@ -121,7 +121,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
         }}
       />
 
-      <Section variant="default" className="relative -mt-20 z-10 pt-0">
+      <Section variant="default">
         <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
           <motion.div
             initial={{ opacity: 0, x: -50 }}

@@ -57,7 +57,7 @@ const ContactCTA = ({ className = "", locale = 'ko' }: ContactCTAProps) => {
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Link
                             href={getLink("/contact")}
-                            className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                            className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                         >
                             {t("오시는 길", "Location", "位置", "Ubicación", "Đường đi", "ที่ตั้ง", "Manzil")}
                         </Link>
@@ -65,9 +65,9 @@ const ContactCTA = ({ className = "", locale = 'ko' }: ContactCTAProps) => {
                             href="https://open.kakao.com/me/nol"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                            className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                         >
-                            <MessageCircle className="mr-2 flex-shrink-0" size={20} />
+                            <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
                             <span className="min-w-0">
                                 {t("카카오톡 문의하기", "Inquiry", "KakaoTalk 咨询", "Consulta por KakaoTalk", "Liên hệ qua KakaoTalk", "สอบถามผ่าน KakaoTalk", "KakaoTalk orqali so‘rov")}
                             </span>

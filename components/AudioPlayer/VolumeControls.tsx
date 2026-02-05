@@ -29,7 +29,7 @@ const VolumeControls = ({
                 className="text-gray-400 hover:text-gray-900 dark:text-white/80 dark:hover:text-white transition-colors p-2"
                 aria-label={isMuted ? t('audioPlayer.unmute') : t('audioPlayer.mute')}
             >
-                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                {isMuted ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}
             </motion.button>
             <div className="w-20 h-2 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
                 <div

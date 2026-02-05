@@ -48,7 +48,7 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
   return (
     <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
       <motion.div
-        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
+        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
         variants={cardVariants}
         initial="hidden"
         whileInView="visible"

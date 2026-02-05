@@ -77,7 +77,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                             enableAnimation={false}
                             className="p-8 h-full relative group"
                         >
-                            <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors">
+                            <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors" aria-hidden="true">
                                 <Quote size={60} />
                             </div>
 
@@ -95,7 +95,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                     )}
                                 >
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
-                                        <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" />
+                                        <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" aria-hidden="true" />
                                     ))}
                                 </div>
 
@@ -112,7 +112,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                             {review.category}
                                         </span>
                                     </div>
-                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary" aria-hidden="true">
                                         <MessageSquare size={20} />
                                     </div>
                                 </div>

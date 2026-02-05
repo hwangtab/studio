@@ -67,7 +67,7 @@ const ProjectRowCard = ({
                 {/* Hover Play/Action Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">
                     <div className="bg-white/10 p-3 rounded-full border border-white/20 backdrop-blur-md">
-                        <MousePointer2 className="text-white" size={24} />
+                        <MousePointer2 className="text-white" size={24} aria-hidden="true" />
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ const ProjectRowCard = ({
                         {title}
                     </h3>
                     <div className="flex items-center text-gray-600 dark:text-white/60 mb-2">
-                        <Mic2 size={14} className="mr-1.5" />
+                        <Mic2 size={14} className="mr-1.5" aria-hidden="true" />
                         <span className="text-sm font-medium">{artist}</span>
                     </div>
                 </div>
@@ -105,7 +105,7 @@ const ProjectRowCard = ({
 
                     <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary/80 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300 flex-shrink-0">
                         <span className="mr-2">VIEW PROJECT</span>
-                        <ExternalLink size={14} />
+                        <ExternalLink size={14} aria-hidden="true" />
                     </div>
                 </div>
             </div>

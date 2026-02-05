@@ -161,7 +161,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 md:p-10 gap-8">
                 <div className="flex-1 text-center md:text-left">
-                    <div className={`flex items-center justify-center md:justify-start gap-3 mb-4 ${current.accentColor}`}>
+                    <div className={`flex items-center justify-center md:justify-start gap-3 mb-4 ${current.accentColor}`} aria-hidden="true">
                         {current.icons}
                     </div>
 
@@ -179,7 +179,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                             className={`inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-black/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.buttonBg}`}
                         >
                             <span className="min-w-0">{current.primaryText}</span>
-                            <ArrowRight size={18} className="ml-2 flex-shrink-0" />
+                            <ArrowRight size={18} className="ml-2 flex-shrink-0" aria-hidden="true" />
                         </Link>
                         <Link
                             href={current.secondaryLink}
