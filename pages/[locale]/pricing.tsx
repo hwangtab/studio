@@ -13,6 +13,7 @@ import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import QuickAnswers from '../../components/ui/QuickAnswers';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
@@ -33,6 +34,61 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
   } = pricingData;
 
   const getLink = (path: string) => `/${locale}${path}`;
+  const pricingUrl = `https://studionol.co.kr/${locale}/pricing`;
+
+  const pricingQuickAnswers = React.useMemo(() => ([
+    {
+      question: t('pricing.quickAnswers.items.0.q'),
+      answer: t('pricing.quickAnswers.items.0.a', { vatNotice: VAT_NOTICE }),
+    },
+    {
+      question: t('pricing.quickAnswers.items.1.q'),
+      answer: t('pricing.quickAnswers.items.1.a', { mixingNotice: t('pricing.mixing.noticeBody') }),
+    },
+    {
+      question: t('pricing.quickAnswers.items.2.q'),
+      answer: t('pricing.quickAnswers.items.2.a'),
+    },
+  ]), [t, VAT_NOTICE]);
+
+  const offerToSchema = React.useCallback((offer: any) => ({
+    '@type': 'Offer',
+    name: offer.title,
+    description: offer.description,
+    priceCurrency: 'KRW',
+    price: offer.priceValue,
+    url: `${pricingUrl}#${offer.id}`,
+    itemOffered: {
+      '@type': 'Service',
+      name: offer.title,
+    },
+  }), [pricingUrl]);
+
+  const catalogToSchema = React.useCallback((name: string, offers: any[]) => ({
+    '@type': 'OfferCatalog',
+    name,
+    itemListElement: offers.map(offerToSchema),
+  }), [offerToSchema]);
+
+  const pricingSchema = React.useMemo(() => ({
+    '@type': 'OfferCatalog',
+    name: t('pricing.seo.title'),
+    itemListElement: [
+      catalogToSchema(t('pricing.special.title'), specialPackages),
+      catalogToSchema(t('pricing.recording.title'), recordingOffers),
+      catalogToSchema(t('pricing.mixing.title'), mixingOffers),
+      catalogToSchema(t('pricing.mastering.title'), masteringOffers),
+      catalogToSchema(t('pricing.additional.title'), additionalServices),
+    ],
+  }), [
+    t,
+    catalogToSchema,
+    specialPackages,
+    recordingOffers,
+    mixingOffers,
+    masteringOffers,
+    additionalServices,
+  ]);
 
   return (
     <div className="overflow-visible">
@@ -40,7 +96,10 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
         keywords={t('pricing.seo.keywords')}
-        canonical={`https://studionol.co.kr/${locale}/pricing`}
+        canonical={pricingUrl}
+        includeSchema
+        faqItems={pricingQuickAnswers}
+        schema={pricingSchema}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.pricing'), path: `/${locale}/pricing` },
@@ -62,6 +121,13 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
         imageAlt={t('pricing.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+      />
+
+      <QuickAnswers
+        title={t('pricing.quickAnswers.title')}
+        subtitle={t('pricing.quickAnswers.subtitle')}
+        items={pricingQuickAnswers}
+        variant="default"
       />
 
       {/* Special Packages Section */}

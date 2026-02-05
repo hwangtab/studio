@@ -191,6 +191,24 @@
       "title": "Qo'shimcha xizmatlar",
       "subtitle": "Rejalashtirishdan reklamagacha musiqachilar uchun all-in-one qo'llab-quvvatlash"
     },
+    "quickAnswers": {
+      "title": "Narxlar qisqacha",
+      "subtitle": "Narx va bron haqida eng ko‘p so‘raladigan savollar.",
+      "items": [
+        {
+          "q": "Narxlar qanday belgilanadi?",
+          "a": "{{vatNotice}} Quyidagi jadvalda har bir xizmat narxini ko‘rishingiz mumkin."
+        },
+        {
+          "q": "Qo‘shimcha to‘lovlar bormi?",
+          "a": "{{mixingNotice}}"
+        },
+        {
+          "q": "Qanday bron qilaman yoki so‘rayman?",
+          "a": "KakaoTalk orqali yoki aloqa sahifasi orqali murojaat qiling."
+        }
+      ]
+    },
     "cta": {
       "title": "Musiqangiz uchun eng yaxshi hamkor",
       "subtitle": "Byudjet va jadvalingizga mos eng yaxshi reja taklif qilamiz.",
@@ -281,6 +299,24 @@
       "subtitle": "Moslashtirilgan darslar",
       "unit": "KRW / oy",
       "cta": "Konsultatsiyaga yozilish"
+    },
+    "quickAnswers": {
+      "title": "Dars qisqacha",
+      "subtitle": "Asosiy savollarga tezkor javob.",
+      "items": [
+        {
+          "q": "Dars kimlar uchun?",
+          "a": "Musiqa chiqarishni maqsad qilgan musiqachi/producerlar uchun 1:1 amaliy dars."
+        },
+        {
+          "q": "Nimalarni o‘rganaman?",
+          "a": "MIDI, yozuv, miks, mastering bo‘yicha 4 bosqichli loyiha."
+        },
+        {
+          "q": "Qanday ariza beraman?",
+          "a": "KakaoTalk orqali yoki aloqa sahifasi orqali murojaat qiling."
+        }
+      ]
     },
     "cta": {
       "title": "Keling, birinchi qadamni birga tashlaymiz.",

@@ -158,7 +158,33 @@ const SEO = ({
 
   const faqSchema = React.useMemo(() => generateFaqSchema(faqItems), [faqItems]);
 
-  const schemaData = schema || courseSchema || articleSchema || defaultSchema;
+  const schemaItems = React.useMemo(() => {
+    const items: any[] = [];
+    if (defaultSchema) items.push(defaultSchema);
+    if (articleSchema) items.push(articleSchema);
+    if (courseSchema) items.push(courseSchema);
+    if (schema) {
+      if (Array.isArray(schema?.['@graph'])) {
+        items.push(...schema['@graph']);
+      } else {
+        items.push(schema);
+      }
+    }
+    return items.filter(Boolean);
+  }, [defaultSchema, articleSchema, courseSchema, schema]);
+
+  const schemaData = React.useMemo(() => {
+    if (schemaItems.length === 0) return null;
+    if (schemaItems.length === 1) return schemaItems[0];
+    return {
+      '@context': 'https://schema.org',
+      '@graph': schemaItems.map((item) => {
+        if (!item || typeof item !== 'object') return item;
+        const { ['@context']: _context, ...rest } = item;
+        return rest;
+      }),
+    };
+  }, [schemaItems]);
 
   // Map locale codes to Open Graph locale format (e.g. ko -> ko_KR)
   const ogLocaleMap: Record<string, string> = {
@@ -253,7 +279,7 @@ const SEO = ({
       <meta name="twitter:image:alt" content="Studio NOL" />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
 
-      {includeSchema && (
+      {includeSchema && schemaData && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       )}
       {breadcrumbSchema && (

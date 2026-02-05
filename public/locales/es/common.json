@@ -191,6 +191,24 @@
       "title": "Servicios adicionales",
       "subtitle": "Soporte integral para músicos, desde la planificación hasta la promoción"
     },
+    "quickAnswers": {
+      "title": "Resumen de precios",
+      "subtitle": "Resuelve primero las dudas más comunes de precios y reservas.",
+      "items": [
+        {
+          "q": "¿Cómo se determinan los precios?",
+          "a": "{{vatNotice}} Consulta la tabla de precios para cada servicio."
+        },
+        {
+          "q": "¿Hay cargos adicionales?",
+          "a": "{{mixingNotice}}"
+        },
+        {
+          "q": "¿Cómo reservo o consulto?",
+          "a": "Puedes contactarnos por KakaoTalk o desde la página de contacto."
+        }
+      ]
+    },
     "cta": {
       "title": "El mejor socio para tu música",
       "subtitle": "Sugerimos el plan óptimo según tu presupuesto y calendario.",
@@ -281,6 +299,24 @@
       "subtitle": "Clases personalizadas",
       "unit": "KRW / mes",
       "cta": "Solicitar consulta"
+    },
+    "quickAnswers": {
+      "title": "Lección en breve",
+      "subtitle": "Respuestas rápidas a las preguntas clave.",
+      "items": [
+        {
+          "q": "¿Para quién es esta lección?",
+          "a": "Programa 1:1 práctico para músicos/productores que quieren publicar música."
+        },
+        {
+          "q": "¿Qué aprenderé?",
+          "a": "Completamos un proyecto en 4 etapas: MIDI, grabación, mezcla y mastering."
+        },
+        {
+          "q": "¿Cómo solicito o consulto?",
+          "a": "Puedes contactarnos por KakaoTalk o desde la página de contacto."
+        }
+      ]
     },
     "cta": {
       "title": "Demos el primer paso juntos.",

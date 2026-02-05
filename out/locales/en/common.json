@@ -191,6 +191,24 @@
       "title": "Additional Services",
       "subtitle": "All-in-one support for musicians, from planning to promotion"
     },
+    "quickAnswers": {
+      "title": "Pricing FAQ Summary",
+      "subtitle": "Check the most common pricing and booking questions first.",
+      "items": [
+        {
+          "q": "How are prices determined?",
+          "a": "{{vatNotice}} Check the price table below for each service."
+        },
+        {
+          "q": "Are there extra fees?",
+          "a": "{{mixingNotice}}"
+        },
+        {
+          "q": "How do I book or inquire?",
+          "a": "You can contact us via KakaoTalk or the inquiry page."
+        }
+      ]
+    },
     "cta": {
       "title": "Best Partner for Your Music",
       "subtitle": "We suggest the best plan matching your budget and schedule.",
@@ -281,6 +299,24 @@
       "subtitle": "Tailored Lessons",
       "unit": "KRW / mo",
       "cta": "Book a Consultation"
+    },
+    "quickAnswers": {
+      "title": "Lesson at a Glance",
+      "subtitle": "Quick answers to the key questions.",
+      "items": [
+        {
+          "q": "Who is this lesson for?",
+          "a": "A 1:1 practical program for musicians/producers aiming to release music."
+        },
+        {
+          "q": "What will I learn?",
+          "a": "We complete a project through a 4-step curriculum: MIDI, recording, mixing, and mastering."
+        },
+        {
+          "q": "How do I apply or inquire?",
+          "a": "Contact us via KakaoTalk or the inquiry page."
+        }
+      ]
     },
     "cta": {
       "title": "Let's take the first step together.",

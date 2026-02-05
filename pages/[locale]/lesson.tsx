@@ -8,6 +8,7 @@ import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
+import QuickAnswers from '../../components/ui/QuickAnswers';
 import Link from 'next/link';
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
@@ -49,6 +50,21 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
     const { t } = useTranslation('common', { lng: locale });
     const getLink = (path: string) => `/${locale}${path}`;
 
+    const lessonQuickAnswers = React.useMemo(() => ([
+        {
+            question: t('lesson.quickAnswers.items.0.q'),
+            answer: t('lesson.quickAnswers.items.0.a'),
+        },
+        {
+            question: t('lesson.quickAnswers.items.1.q'),
+            answer: t('lesson.quickAnswers.items.1.a'),
+        },
+        {
+            question: t('lesson.quickAnswers.items.2.q'),
+            answer: t('lesson.quickAnswers.items.2.a'),
+        },
+    ]), [t]);
+
     return (
         <>
             <SEO
@@ -57,6 +73,8 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                 keywords={t('lesson.seo.keywords')}
                 canonical={`https://studionol.co.kr/${locale}/lesson`}
                 includeSchema={true}
+                isCourse
+                faqItems={lessonQuickAnswers}
                 breadcrumbs={[
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },
@@ -77,6 +95,13 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                 imageAlt={t('lesson.hero.alt')}
                 minHeight="min-h-[60vh]"
                 overlayGradient="from-black/40 via-transparent to-black/20"
+            />
+
+            <QuickAnswers
+                title={t('lesson.quickAnswers.title')}
+                subtitle={t('lesson.quickAnswers.subtitle')}
+                items={lessonQuickAnswers}
+                variant="default"
             />
 
             {/* Intro Section */}

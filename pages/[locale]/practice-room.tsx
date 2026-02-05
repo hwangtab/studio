@@ -11,9 +11,11 @@ import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
 import FAQSection from '../../components/ui/FAQSection';
 import SectionHeading from '../../components/ui/SectionHeading';
+import QuickAnswers from '../../components/ui/QuickAnswers';
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
+import { getSiteConfig } from '../../data/siteConfig';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -55,6 +57,7 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
 const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
+  const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
     {
       question: t('practiceRoom.faq.items.0.q'),
@@ -82,6 +85,22 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
     },
   ]), [t]);
 
+  const practiceRoomQuickAnswers = React.useMemo(() => practiceRoomFaqs.slice(0, 3), [practiceRoomFaqs]);
+
+  const practiceRoomSchema = React.useMemo(() => ({
+    '@type': 'Service',
+    name: t('practiceRoom.seo.title'),
+    description: t('practiceRoom.seo.description'),
+    serviceType: t('nav.practiceRoom'),
+    areaServed: siteConfig.contact.address,
+    provider: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    url: `https://studionol.co.kr/${locale}/practice-room`,
+  }), [t, siteConfig, locale]);
+
   return (
     <>
       <SEO
@@ -91,6 +110,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         canonical={`https://studionol.co.kr/${locale}/practice-room`}
         includeSchema={true}
         faqItems={practiceRoomFaqs}
+        schema={practiceRoomSchema}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
@@ -110,6 +130,13 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         imageAlt={t('practiceRoom.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+      />
+
+      <QuickAnswers
+        title={t('practiceRoom.faq.title')}
+        subtitle={t('practiceRoom.faq.subtitle')}
+        items={practiceRoomQuickAnswers}
+        variant="default"
       />
 
       {/* 고민 섹션 */}

@@ -191,6 +191,24 @@
       "title": "Dịch vụ bổ sung",
       "subtitle": "Hỗ trợ trọn gói cho nghệ sĩ từ kế hoạch đến quảng bá"
     },
+    "quickAnswers": {
+      "title": "Tóm tắt giá",
+      "subtitle": "Xem nhanh các câu hỏi thường gặp về giá và đặt lịch.",
+      "items": [
+        {
+          "q": "Giá được tính như thế nào?",
+          "a": "{{vatNotice}} Xem bảng giá dưới đây cho từng dịch vụ."
+        },
+        {
+          "q": "Có phí phát sinh không?",
+          "a": "{{mixingNotice}}"
+        },
+        {
+          "q": "Đặt lịch/ tư vấn như thế nào?",
+          "a": "Liên hệ qua KakaoTalk hoặc trang liên hệ."
+        }
+      ]
+    },
     "cta": {
       "title": "Đối tác tốt nhất cho âm nhạc của bạn",
       "subtitle": "Chúng tôi đề xuất gói phù hợp với ngân sách và lịch trình của bạn.",
@@ -281,6 +299,24 @@
       "subtitle": "Bài học tùy chỉnh",
       "unit": "KRW / tháng",
       "cta": "Đặt lịch tư vấn"
+    },
+    "quickAnswers": {
+      "title": "Tóm tắt khóa học",
+      "subtitle": "Giải đáp nhanh các câu hỏi chính.",
+      "items": [
+        {
+          "q": "Khóa học phù hợp với ai?",
+          "a": "Chương trình 1:1 thực chiến cho nghệ sĩ/producer muốn phát hành nhạc."
+        },
+        {
+          "q": "Bạn sẽ học gì?",
+          "a": "Hoàn thiện dự án qua 4 bước: MIDI, thu âm, mixing, mastering."
+        },
+        {
+          "q": "Đăng ký/tư vấn ra sao?",
+          "a": "Liên hệ qua KakaoTalk hoặc trang liên hệ."
+        }
+      ]
     },
     "cta": {
       "title": "Hãy cùng bước đầu tiên.",

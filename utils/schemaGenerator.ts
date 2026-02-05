@@ -82,7 +82,7 @@ export const generateDefaultSchema = (
         })),
       }
       : {}),
-    sameAs: ['https://open.kakao.com/me/nol'],
+    sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
     serviceType: ['레코딩', '믹싱', '마스터링', '음반 기획', '음원 유통', '음악 프로덕션'],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
@@ -118,8 +118,8 @@ export const generateDefaultSchema = (
       {
         '@type': 'ContactPoint',
         contactType: '예약 및 상담',
-        telephone: '+82-507-1384-3144',
-        url: 'https://open.kakao.com/o/sAWXdN5g',
+        telephone: '+82-2-764-3114',
+        url: 'https://open.kakao.com/me/nol',
         availableLanguage: ['ko'],
       },
     ],
@@ -295,4 +295,3 @@ export const generateCourseSchema = (
     url: normalizedCanonical,
   };
 };
-
