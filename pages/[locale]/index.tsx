@@ -216,6 +216,8 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
   );
 };
 
+(Home as any).hasHero = true;
+
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = locales.map((locale) => ({ params: { locale } }));
   return { paths, fallback: false };

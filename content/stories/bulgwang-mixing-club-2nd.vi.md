@@ -1,5 +1,5 @@
 ---
-title: ""Bulgwang Mixing Club" Thông báo buổi gặp mặt lần 2"
+title: '"Bulgwang Mixing Club" Thông báo buổi gặp mặt lần 2'
 date: 2025-11-10
 author: "Studio NOL"
 category: "event"
@@ -20,7 +20,7 @@ Từ khóa của buổi này là “chia sẻ” và “thử nghiệm”. Hãy 
   * Người dùng Studio NOL vẫn miễn phí!
 * Sức chứa: Tối đa 6 người, giữ không khí nhỏ và tập trung
 
-### ❗ 꼭 확인: Thông báo vào thứ Hai
+### ❗ Lưu ý: Thông báo vào thứ Hai
 Lịch “Bulgwang Mixing Club” được cập nhật mỗi thứ Hai. Hãy xem thông báo thứ Hai để biết tình trạng—trễ là phải đợi tuần sau.
 
 ### 🚀 Cách tham gia

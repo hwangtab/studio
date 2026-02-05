@@ -1,5 +1,5 @@
 ---
-title: ""Bulgwang Mixing Club" Thông báo buổi gặp mặt lần 3"
+title: '"Bulgwang Mixing Club" Thông báo buổi gặp mặt lần 3'
 date: 2025-11-18
 author: "Studio NOL"
 category: "event"
