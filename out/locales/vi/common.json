@@ -1,0 +1,488 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "portfolio": "Portfolio",
+    "stories": "Câu chuyện",
+    "contact": "Liên hệ",
+    "pricing": "Bảng giá",
+    "equipment": "Thiết bị",
+    "practiceRoom": "Phòng tập",
+    "lesson": "Bài học"
+  },
+  "footer": {
+    "rights": "Tất cả quyền được bảo lưu.",
+    "address": "Địa chỉ",
+    "contact": "Liên hệ",
+    "privacy": "Chính sách bảo mật",
+    "tagline": "Studio sản xuất âm nhạc hiện thực hóa tầm nhìn của nghệ sĩ",
+    "linksTitle": "Liên kết",
+    "contactTitle": "Liên hệ",
+    "emailLabel": "Email",
+    "phoneLabel": "Điện thoại"
+  },
+  "actions": {
+    "more": "Xem thêm",
+    "submit": "Gửi",
+    "close": "Đóng",
+    "call": "Gọi",
+    "email": "Email",
+    "kakao": "KakaoTalk",
+    "location": "Địa điểm",
+    "shareCopied": "Đã sao chép liên kết.",
+    "shareUnsupported": "Trình duyệt này không hỗ trợ chia sẻ.",
+    "reload": "Tải lại"
+  },
+  "home": {
+    "heroTitle": "Nơi âm nhạc bắt đầu, Studio NOL",
+    "heroSubtitle": "Không gian tốt nhất cho âm nhạc của bạn",
+    "startProject": "Bắt đầu dự án",
+    "sections": {
+      "galleryTitle": "Không gian & thiết bị dành cho bạn",
+      "servicesTitle": "Dịch vụ của chúng tôi",
+      "servicesCta": "Tìm hiểu thêm"
+    },
+    "cta": {
+      "titleLine1": "Âm thanh bạn tưởng tượng,",
+      "titleHighlight": "Trở thành hiện thực",
+      "subtitleLine1": "Hoàn thiện âm nhạc của bạn với thiết bị tốt nhất trong không gian thoải mái.",
+      "subtitleLine2": "Studio NOL đồng hành cùng hành trình âm nhạc của bạn.",
+      "location": "Địa điểm",
+      "inquiry": "Liên hệ"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Chúng tôi tổng hợp các câu hỏi thường gặp khi sử dụng studio."
+    }
+  },
+  "about": {
+    "title": "Giới thiệu Studio NOL - Sản xuất âm nhạc trọn gói",
+    "description": "Từ ý tưởng bài hát đến album hoàn chỉnh, Studio NOL là đối tác của bạn ở mọi bước.",
+    "subtitle": "Sản xuất trọn gói từ lên kế hoạch đến phân phối",
+    "serviceTitle": "Dịch vụ sản xuất âm nhạc all‑in‑one",
+    "serviceSubtitle": "Chúng tôi cung cấp giải pháp tổng thể để hiện thực hóa tầm nhìn của nghệ sĩ bằng cách quản lý mọi thứ từ kế hoạch đến phân phối.",
+    "processTitle": "Quy trình sản xuất toàn diện",
+    "processSubtitle": "Studio NOL quản lý hệ thống từng bước của sản xuất album để tạo ra kết quả chất lượng cao nhất.",
+    "differenceTitle": "Vì sao là Studio NOL?",
+    "differenceSubtitle": "Hệ thống one‑stop tại Yeonsinnae, tạo âm thanh ấm và dày nhờ thiết bị analog.",
+    "heroAlt": "Giới thiệu Studio NOL",
+    "package": {
+      "title": "Gói dịch vụ tiết kiệm",
+      "items": [
+        "Tiết kiệm chi phí với gói tích hợp so với dịch vụ rời",
+        "Cấu hình dịch vụ theo từng nghệ sĩ",
+        "Hạ tầng tối ưu cho nghệ sĩ độc lập",
+        "Âm thanh ấm và dày nhờ thiết bị analog"
+      ]
+    },
+    "cta": {
+      "titleLine1": "Trên hành trình âm nhạc của bạn,",
+      "titleHighlight": "Đối tác đáng tin cậy nhất",
+      "subtitleLine1": "Chúng tôi nỗ lực hết mình dù dự án lớn hay nhỏ.",
+      "subtitleLine2": "Từ lên kế hoạch đến mastering cuối cùng, chúng tôi hiện thực hóa ý tưởng của bạn bằng âm thanh hoàn hảo.",
+      "imageAlt": "Môi trường sản xuất Studio NOL"
+    },
+    "seo": {
+      "keywords": "Studio NOL, quy trình sản xuất âm nhạc, sản xuất âm nhạc, phòng thu, mixing mastering, phân phối nhạc, lập kế hoạch âm nhạc, thiết bị analog"
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Giới thiệu các dự án đã thực hiện tại Studio NOL. Nhấp để xem chi tiết.",
+    "sampleTracks": "Track mẫu",
+    "projects": "Dự án",
+    "noProjects": "Không có dự án trong danh mục đã chọn.",
+    "detail": {
+      "titleSuffix": "Portfolio Studio NOL",
+      "metaDescription": "\"{{title}}\" bởi {{artist}} - {{description}}. Dự án thực hiện tại Studio NOL.",
+      "backToList": "Quay lại Portfolio",
+      "artistLabel": "Nghệ sĩ",
+      "servicesProvided": "Dịch vụ đã cung cấp",
+      "listenNow": "Nghe ngay",
+      "share": "Chia sẻ"
+    },
+    "heroAlt": "Portfolio Studio NOL",
+    "seo": {
+      "keywords": "mẫu thu âm, trước và sau mixing, ví dụ mastering, portfolio studio, chất lượng sản xuất âm nhạc, kết quả thu âm, Studio NOL"
+    }
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "subtitle": "Hãy liên hệ với chúng tôi cho mọi thắc mắc hoặc đặt lịch.",
+    "heroAlt": "Liên hệ Studio NOL",
+    "form": {
+      "name": "Họ tên",
+      "phone": "Số điện thoại",
+      "email": "Email",
+      "message": "Tin nhắn",
+      "submit": "Gửi yêu cầu qua email",
+      "kakao": "Liên hệ qua KakaoTalk",
+      "success": "Đã gửi tin nhắn thành công.",
+      "error": "Gửi thất bại. Vui lòng thử lại.",
+      "loading": "Đang gửi..."
+    },
+    "info": {
+      "title": "Thông tin liên hệ",
+      "kakao": "KakaoTalk Open Chat",
+      "location": "Địa điểm",
+      "hours": "Giờ làm việc",
+      "parking": "Bãi đỗ xe",
+      "parkingDetail": "Có bãi đỗ xe trả phí tại tòa nhà KT Eunpyeong gần đó",
+      "transport": "Giao thông công cộng",
+      "transportDetail": "Đi bộ 5 phút từ ga Bulgwang (Line 6) cửa số 7"
+    },
+    "hours": {
+      "weekdaysLabel": "Thứ 2 - Thứ 6",
+      "weekdaysTime": "10:00 - 18:00",
+      "satLabel": "Thứ 7",
+      "satTime": "12:00 - 18:00",
+      "sunLabel": "Chủ nhật",
+      "closed": "Nghỉ"
+    },
+    "notice": {
+      "title": "Trước khi liên hệ",
+      "list": [
+        "Chúng tôi phản hồi trong vòng 24 giờ",
+        "Cung cấp chi tiết dự án giúp tư vấn chính xác hơn",
+        "Dùng KakaoTalk cho trường hợp khẩn cấp"
+      ],
+      "privacyTitle": "Chính sách bảo mật",
+      "privacyText": "Thông tin cá nhân được sử dụng chỉ để phản hồi và sẽ được xóa ngay sau khi tư vấn."
+    },
+    "seo": {
+      "keywords": "liên hệ Studio NOL, tư vấn sản xuất âm nhạc, đặt phòng thu, yêu cầu mixing, địa điểm studio, tư vấn KakaoTalk, báo giá sản xuất"
+    }
+  },
+  "pricing": {
+    "seo": {
+      "title": "Phí thu âm & thuê studio | Studio NOL",
+      "description": "Giá minh bạch. Xem phí thu âm nhạc cưới, voiceover và thuê studio.",
+      "keywords": "phí thu âm, báo giá thu âm voiceover, giá thuê studio, giá mixing, giá mastering, Studio NOL"
+    },
+    "hero": {
+      "title": "Giá hợp lý, dịch vụ minh bạch",
+      "subtitleLine1": "Chúng tôi cung cấp mức giá cố định cho các dịch vụ chính.",
+      "subtitleLine2": "Không có phí ẩn, giúp nghệ sĩ lên kế hoạch ngân sách hiệu quả.",
+      "alt": "Bảng giá Studio NOL"
+    },
+    "special": {
+      "title": "Gói đặc biệt (theo mục đích)",
+      "subtitle": "Gói all‑in‑one tối ưu cho nhạc cưới và voiceover"
+    },
+    "recording": {
+      "title": "Thu âm",
+      "subtitle": "Dịch vụ thu âm cao cấp với thiết bị analog và kỹ sư chuyên nghiệp"
+    },
+    "mixing": {
+      "title": "Mixing",
+      "subtitle": "Giá công bằng theo số track. Tạo âm thanh tốt nhất với sự hài hòa analog & digital.",
+      "noticeTitle": "Vocal Tuning/Editing",
+      "noticeBody": "Dịch vụ chỉnh giọng và timing chuyên nghiệp có thêm 150.000 KRW/bài."
+    },
+    "mastering": {
+      "title": "Mastering",
+      "subtitle": "Đảm bảo chất lượng cuối cùng và âm thanh nhất quán ở mọi môi trường nghe."
+    },
+    "additional": {
+      "title": "Dịch vụ bổ sung",
+      "subtitle": "Hỗ trợ trọn gói cho nghệ sĩ từ kế hoạch đến quảng bá"
+    },
+    "cta": {
+      "title": "Đối tác tốt nhất cho âm nhạc của bạn",
+      "subtitle": "Chúng tôi đề xuất gói phù hợp với ngân sách và lịch trình của bạn.",
+      "location": "Địa điểm",
+      "inquiry": "Liên hệ"
+    },
+    "images": {
+      "packageAlt": "Bộ thiết bị thu âm pro Studio NOL"
+    }
+  },
+  "lesson": {
+    "seo": {
+      "title": "Masterclass sản xuất âm nhạc | Studio NOL",
+      "description": "Từ tư vấn phân phối đến phản hồi mixing 1:1. Hiện thực hóa âm nhạc của bạn với kỹ thuật chuyên nghiệp.",
+      "keywords": "tư vấn sản xuất âm nhạc, phản hồi mixing, mentoring MIDI, coaching sản xuất âm nhạc, lớp MIDI ngắn hạn, Cubase, Logic Pro"
+    },
+    "hero": {
+      "title": "Masterclass sản xuất trọn gói",
+      "subtitleLine1": "Biến tưởng tượng thành âm thanh, ý tưởng thành track hoàn chỉnh.",
+      "subtitleLine2": "Học know‑how chuyên nghiệp trong không gian chuyên nghiệp.",
+      "alt": "Bàn điều khiển mixing"
+    },
+    "intro": {
+      "titleLine1": "Không chỉ học,",
+      "titleHighlight": "mà là quá trình debut như một nghệ sĩ",
+      "subtitleLine1": "Bài học của chúng tôi không phải lý thuyết giáo trình.",
+      "subtitleLine2": "Trải nghiệm thiết bị và workflow như sản xuất album thật,",
+      "subtitleLine3": "trong dự án hướng thực hành để hoàn thiện âm nhạc của bạn."
+    },
+    "curriculum": {
+      "title": "Giáo trình: 4 bước làm chủ",
+      "step1": {
+        "title": "MIDI & Producing",
+        "subtitle": "Nền tảng sáng tạo",
+        "items": [
+          "Tối ưu workflow DAW",
+          "VST & sound design",
+          "Sắp xếp nhịp trống/bass",
+          "Cấu trúc bài & thẩm mỹ"
+        ]
+      },
+      "step2": {
+        "title": "Thu âm",
+        "subtitle": "Ghi âm chuyên nghiệp",
+        "items": [
+          "So sánh micro chuyên nghiệp (U87ai, v.v.)",
+          "Luồng tín hiệu (Mic‑Pre‑DAW)",
+          "Vocal directing & tuning",
+          "Kỹ thuật đặt mic nhạc cụ"
+        ]
+      },
+      "step3": {
+        "title": "Mixing",
+        "subtitle": "Điêu khắc âm thanh",
+        "items": [
+          "Cân bằng, panning, stereo imaging",
+          "EQ & Dynamics (Compressor)",
+          "Hiệu ứng không gian (Reverb/Delay)",
+          "Hybrid mixing với outboard analog"
+        ]
+      },
+      "step4": {
+        "title": "Mastering",
+        "subtitle": "Hoàn thiện & phát hành",
+        "items": [
+          "Chuẩn loudness (LUFS)",
+          "Tông & độ nhất quán của album",
+          "Metadata phân phối & ISRC",
+          "Monitoring cuối & thực hành phát hành"
+        ]
+      }
+    },
+    "why": {
+      "title": "Vì sao Studio NOL?",
+      "items": [
+        {
+          "title": "Thực hành với thiết bị pro",
+          "body": "Bài học diễn ra trong studio thật, không phải phòng học."
+        },
+        {
+          "title": "Hỗ trợ phát hành",
+          "body": "Chúng tôi hỗ trợ bạn phát hành track hoàn chỉnh trên các nền tảng toàn cầu."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Lớp riêng 1:1",
+      "subtitle": "Bài học tùy chỉnh",
+      "unit": "KRW / tháng",
+      "cta": "Đặt lịch tư vấn"
+    },
+    "cta": {
+      "title": "Hãy cùng bước đầu tiên.",
+      "subtitle": "Thiết kế giáo trình riêng cho bạn.",
+      "location": "Địa điểm",
+      "inquiry": "Liên hệ",
+      "imageAlt": "Ảnh minh họa bài học"
+    }
+  },
+  "practiceRoom": {
+    "seo": {
+      "title": "Phòng tập 24h premium tại Eunpyeong | Studio NOL",
+      "description": "Phòng tập cách âm premium, dễ tiếp cận tại Eunpyeong-gu.",
+      "keywords": "phòng tập, phòng tập cách âm, phòng tập Eunpyeong, studio riêng, Studio NOL"
+    },
+    "hero": {
+      "title": "Phòng tập cách âm premium",
+      "subtitleLine1": "Luyện tập trong môi trường tối ưu cho âm nhạc.",
+      "subtitleLine2": "Tận hưởng studio premium với nhiều thiết bị và tiện ích.",
+      "alt": "Phòng tập Studio NOL"
+    },
+    "painPoints": {
+      "title": "Bạn có gặp những vấn đề này?",
+      "items": [
+        "Lo nước điều hòa làm hư thiết bị...",
+        "Bị phân tâm bởi tiếng phòng bên...",
+        "Cảm giác ngột ngạt do lưu thông khí kém...",
+        "Phải thu lại vì nhiễu điện...",
+        "Môi trường làm việc khó chịu và bừa bộn..."
+      ]
+    },
+    "audience": {
+      "title": "Dành cho những ai...",
+      "items": [
+        {
+          "title": "Nhạc sĩ địa phương",
+          "description": "Người tìm studio riêng tại Eunpyeong‑gu."
+        },
+        {
+          "title": "Nhà sáng tạo nội dung",
+          "description": "Phòng thu cho YouTuber, podcaster, streamer."
+        },
+        {
+          "title": "Giáo dục âm nhạc",
+          "description": "Studio cho lớp riêng và masterclass."
+        }
+      ]
+    },
+    "gallery": {
+      "alt": "Ảnh phòng tập {{index}}"
+    },
+    "features": {
+      "title": "Hệ thống hoàn hảo cho nhạc sĩ",
+      "items": [
+        {
+          "title": "Môi trường chuyên nghiệp",
+          "description": "Cách âm tiêu chuẩn quốc tế STC, thiết kế tường đôi."
+        },
+        {
+          "title": "Bảo vệ thiết bị",
+          "description": "Điều hòa thiết kế riêng, không đọng nước, bảo vệ thiết bị."
+        },
+        {
+          "title": "Cơ sở tối ưu",
+          "description": "Internet gigabit tốc độ cao, cơ sở âm học chuyên nghiệp."
+        },
+        {
+          "title": "Vị trí & 접근",
+          "description": "Đi bộ 5 phút từ ga, hệ thống an ninh 24h."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ phòng tập",
+      "subtitle": "Các câu hỏi thường gặp về studio.",
+      "items": [
+        {
+          "q": "Khu vực nào ở Eunpyeong‑gu gần đây?",
+          "a": "Chúng tôi nằm ngay cạnh trường nữ Dongmyeong. Đi bộ 5 phút từ ga Yeonsinnae, thuận tiện cho Yeonsinnae, Bulgwang, Gusan, Yeokchon và Eungam."
+        },
+        {
+          "q": "Phòng tập có mở 24 giờ không?",
+          "a": "Có. Thành viên cư trú có thể ra vào 24/7 bằng mã khóa riêng."
+        },
+        {
+          "q": "Đỗ xe và phương tiện công cộng thế nào?",
+          "a": "Có bãi đỗ xe công cộng giá rẻ ở Daejo‑dong, cách 1–2 phút đi bộ. Đi lại thuận tiện qua ga Bulgwang hoặc Yeonsinnae (Line 3 & 6), và trạm xe buýt “Dongmyeong Girls' High School / Catholic Bulgwang-dong Church” ngay trước cửa."
+        },
+        {
+          "q": "Mùa hè và mùa đông có dùng điều hòa/sưởi tự do không?",
+          "a": "Mỗi phòng có hệ thống HVAC độc lập, không gió lùa, luôn thoải mái quanh năm."
+        },
+        {
+          "q": "Để lại nhạc cụ hoặc thiết bị có an toàn không?",
+          "a": "10 camera CCTV ghi hình 24/7 ở hành lang và khu chung, mỗi phòng có khóa số riêng đảm bảo an toàn."
+        },
+        {
+          "q": "Cách âm tốt đến mức nào?",
+          "a": "Sử dụng cách âm chuẩn STC phát sóng để giảm tối đa tiếng ồn giữa các phòng. Rất phù hợp cho vocal, voiceover và công việc MIDI."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Tập trung tối ưu,",
+      "titleHighlight": "Kết quả tốt nhất",
+      "subtitleLine1": "Tập trung vào âm nhạc trong môi trường thoải mái 24/7.",
+      "subtitleLine2": "Hãy đến thăm và tham quan ngay hôm nay.",
+      "location": "Địa điểm",
+      "inquiry": "Liên hệ",
+      "imageAlt": "Phòng tập Studio NOL"
+    }
+  },
+  "studioInfo": {
+    "seo": {
+      "title": "Thiết bị thu âm cao cấp | Studio NOL",
+      "description": "Thiết bị cao cấp cho âm thanh tốt nhất. Xem Neumann U87AI, Vintech X73i, SSL Fusion và hơn thế nữa.",
+      "keywords": "thiết bị thu âm cao cấp, Neumann U87AI, SSL Fusion, gear phòng thu, thiết bị âm thanh chuyên nghiệp"
+    },
+    "hero": {
+      "title": "Thiết bị của chúng tôi",
+      "subtitle": "Hiện thực hóa tầm nhìn âm nhạc bằng cơ sở vật chất, thiết bị và chuyên môn hàng đầu.",
+      "alt": "Thiết bị Studio NOL"
+    },
+    "intro": {
+      "imageAlt": "Phòng điều khiển chính Studio NOL",
+      "title": "Không gian sáng tạo cho nhạc sĩ",
+      "subtitle": "Studio NOL được sinh ra để hỗ trợ trí tưởng tượng tự do và hoạt động sáng tạo của nhạc sĩ.",
+      "quote": "\"Không chỉ là không gian thu âm, mà là nơi nghệ sĩ và kỹ sư cùng hít thở để tạo nên cộng tác sáng tạo.\"",
+      "paragraphs": [
+        "Chúng tôi nỗ lực hiện thực hóa tầm nhìn âm nhạc của bạn dựa trên cơ sở vật chất và thiết bị hàng đầu cùng know‑how chuyên gia.",
+        "Giá trị Studio NOL hướng tới là tập trung vào bản chất của âm nhạc, vượt lên sự hoàn hảo kỹ thuật.",
+        "Từ thu âm, mixing, mastering đến phát hành và quảng bá. Chúng tôi sẽ là đối tác đáng tin cậy để tiếng nói của bạn vang xa."
+      ]
+    },
+    "equipment": {
+      "title": "Danh sách thiết bị",
+      "preampsEq": "Preamp & EQ",
+      "compressorsProcessors": "Compressor & Processor",
+      "interfacesConsoles": "Interface & Console"
+    }
+  },
+  "stories": {
+    "seo": {
+      "title": "Stories - Nhật ký dự án Studio NOL",
+      "description": "Khám phá các câu chuyện và review từ các dự án tại Studio NOL.",
+      "keywords": "stories Studio NOL, review sản xuất, câu chuyện sản xuất âm nhạc",
+      "fallbackKeywords": "Studio NOL, âm nhạc, câu chuyện"
+    },
+    "hero": {
+      "title": "Stories",
+      "subtitle": "Khám phá các câu chuyện về công việc tại studio.",
+      "alt": "Stories Studio NOL"
+    },
+    "filters": {
+      "all": "Tất cả"
+    },
+    "empty": {
+      "title": "Không tìm thấy câu chuyện",
+      "all": "Chưa có câu chuyện nào.",
+      "byCategory": "Không có câu chuyện trong danh mục '{{category}}'."
+    },
+    "detail": {
+      "backToList": "Quay lại Stories",
+      "share": "Chia sẻ",
+      "moreTitle": "Câu chuyện khác",
+      "noRelated": "Không có câu chuyện liên quan.",
+      "viewAll": "Xem tất cả stories"
+    },
+    "categories": {
+      "notice": "Thông báo",
+      "event": "Sự kiện",
+      "lesson": "Bài học",
+      "interview": "Phỏng vấn",
+      "equipment": "Thiết bị",
+      "review": "Review",
+      "other": "Khác"
+    }
+  },
+  "notFound": {
+    "seoTitle": "Không tìm thấy trang | Studio NOL",
+    "badge": "404 Không tìm thấy",
+    "title": "Không tìm thấy trang",
+    "messageLine1": "URL \"{{path}}\" không tồn tại trên máy chủ.",
+    "messageLine2": "Vui lòng quay lại trang chủ hoặc thử trang khác.",
+    "goHome": "Về trang chủ",
+    "contact": "Liên hệ"
+  },
+  "errors": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Có lỗi khi tải trang. Vui lòng thử lại."
+  },
+  "loading": {
+    "default": "Đang tải"
+  },
+  "audioPlayer": {
+    "prevTrack": "Bài trước",
+    "nextTrack": "Bài tiếp",
+    "play": "Phát",
+    "pause": "Tạm dừng",
+    "mute": "Tắt tiếng",
+    "unmute": "Bật tiếng",
+    "playlist": "Danh sách phát",
+    "playing": "Đang phát",
+    "paused": "Đang tạm dừng",
+    "albumArtAlt": "Bìa album {{title}}",
+    "highFidelity": "Âm thanh Hi‑Fi",
+    "trackLabel": "Track {{number}}"
+  }
+}

@@ -1,0 +1,488 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "about": "Biz haqimizda",
+    "portfolio": "Portfolio",
+    "stories": "Hikoyalar",
+    "contact": "Aloqa",
+    "pricing": "Narxlar",
+    "equipment": "Uskunalar",
+    "practiceRoom": "Mashg'ulot xonasi",
+    "lesson": "Dars"
+  },
+  "footer": {
+    "rights": "Barcha huquqlar himoyalangan.",
+    "address": "Manzil",
+    "contact": "Aloqa",
+    "privacy": "Maxfiylik siyosati",
+    "tagline": "Artist visionini ro'yobga chiqaruvchi musiqa prodakshn studiyasi",
+    "linksTitle": "Havolalar",
+    "contactTitle": "Aloqa",
+    "emailLabel": "Email",
+    "phoneLabel": "Telefon"
+  },
+  "actions": {
+    "more": "Batafsil",
+    "submit": "Yuborish",
+    "close": "Yopish",
+    "call": "Qo'ng'iroq",
+    "email": "Email",
+    "kakao": "KakaoTalk",
+    "location": "Manzil",
+    "shareCopied": "Havola buferga nusxalandi.",
+    "shareUnsupported": "Ushbu brauzerda ulashish qo'llab-quvvatlanmaydi.",
+    "reload": "Qayta yuklash"
+  },
+  "home": {
+    "heroTitle": "Musiqa boshlanadigan joy, Studio NOL",
+    "heroSubtitle": "Sizning musiqangiz uchun eng yaxshi makon",
+    "startProject": "Loyihani boshlash",
+    "sections": {
+      "galleryTitle": "Siz uchun joy va uskunalar",
+      "servicesTitle": "Xizmatlarimiz",
+      "servicesCta": "Batafsil"
+    },
+    "cta": {
+      "titleLine1": "Tasavvur qilgan ovoz,",
+      "titleHighlight": "Haqiqatga aylanadi",
+      "subtitleLine1": "Qulay makonda eng yaxshi uskunalar bilan musiqangizni yakunlang.",
+      "subtitleLine2": "Studio NOL musiqiy sayohatingizga qo'shiladi.",
+      "location": "Manzil",
+      "inquiry": "So'rov"
+    },
+    "faq": {
+      "title": "Ko'p so'raladigan savollar",
+      "subtitle": "Studiodan foydalanish bo'yicha eng ko'p beriladigan savollarni jamladik."
+    }
+  },
+  "about": {
+    "title": "Studio NOL haqida - All-in-One musiqa prodakshn",
+    "description": "Bitta qo'shiq g'oyasidan to to'liq albomgacha, Studio NOL har bir bosqichda hamkoringiz.",
+    "subtitle": "Rejalashtirishdan tarqatishgacha All-in-One prodakshn",
+    "serviceTitle": "All-in-One musiqa prodakshn xizmati",
+    "serviceSubtitle": "Musiqachining visionini ro'yobga chiqarish uchun rejalashtirishdan tarqatishgacha hammasini bir joyda boshqaramiz.",
+    "processTitle": "Kompleks prodakshn jarayoni",
+    "processSubtitle": "Studio NOL albom ishlab chiqarishning har bir bosqichini tizimli boshqarib, eng yuqori sifatga erishadi.",
+    "differenceTitle": "Nega Studio NOL?",
+    "differenceSubtitle": "Yeonsinnaedagi bir oynali prodakshn tizimi, analog uskunalar orqali iliq va boy ovoz.",
+    "heroAlt": "Studio NOL haqida",
+    "package": {
+      "title": "Tejamkor paket variantlari",
+      "items": [
+        "Alohida xizmatlarga nisbatan integratsiyalashgan paketlarda xarajatni tejash",
+        "Har bir musiqachiga moslashtirilgan xizmat konfiguratsiyasi",
+        "Mustaqil artistlar uchun mos infratuzilma",
+        "Analog uskunalar orqali iliq, boy ovoz"
+      ]
+    },
+    "cta": {
+      "titleLine1": "Musiqiy sayohatingizda",
+      "titleHighlight": "Eng ishonchli hamkor",
+      "subtitleLine1": "Loyiha hajmidan qat'i nazar, bor kuchimizni beramiz.",
+      "subtitleLine2": "Rejalashtirishdan yakuniy masteringgacha, g'oyalaringizni mukammal ovoz bilan ro'yobga chiqaramiz.",
+      "imageAlt": "Studio NOL prodakshn muhiti"
+    },
+    "seo": {
+      "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar"
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Studio NOLda ishlangan turli loyihalar bilan tanishing. Har bir ishni bosib, batafsil ko'ring.",
+    "sampleTracks": "Namunaviy treklar",
+    "projects": "Loyihalar",
+    "noProjects": "Tanlangan kategoriyada loyihalar topilmadi.",
+    "detail": {
+      "titleSuffix": "Studio NOL Portfolio",
+      "metaDescription": "\"{{title}}\" — {{artist}} ijrosida. {{description}}. Studio NOLda ishlangan loyiha.",
+      "backToList": "Portfolioga qaytish",
+      "artistLabel": "Artist",
+      "servicesProvided": "Ko'rsatilgan xizmatlar",
+      "listenNow": "Hozir tinglang",
+      "share": "Ulashish"
+    },
+    "heroAlt": "Studio NOL Portfolio",
+    "seo": {
+      "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL"
+    }
+  },
+  "contact": {
+    "title": "Bog'laning",
+    "subtitle": "Savol yoki bron qilish uchun bemalol murojaat qiling.",
+    "heroAlt": "Studio NOL bilan aloqa",
+    "form": {
+      "name": "Ism",
+      "phone": "Telefon",
+      "email": "Email",
+      "message": "Xabar",
+      "submit": "Email orqali so'rov yuborish",
+      "kakao": "KakaoTalk orqali so'rov",
+      "success": "Xabar muvaffaqiyatli yuborildi.",
+      "error": "Xabar yuborilmadi. Qayta urinib ko'ring.",
+      "loading": "Yuborilmoqda..."
+    },
+    "info": {
+      "title": "Aloqa ma'lumotlari",
+      "kakao": "KakaoTalk ochiq chat",
+      "location": "Manzil",
+      "hours": "Ish vaqti",
+      "parking": "Avtoturargoh",
+      "parkingDetail": "Yaqin atrofdagi KT Eunpyeong binosida pullik parking mavjud",
+      "transport": "Jamoat transporti",
+      "transportDetail": "Bulgwang stansiyasi (6-liniya) 7-chi chiqishidan 5 daqiqa piyoda"
+    },
+    "hours": {
+      "weekdaysLabel": "Dush - Jum",
+      "weekdaysTime": "10:00 - 18:00",
+      "satLabel": "Shanba",
+      "satTime": "12:00 - 18:00",
+      "sunLabel": "Yakshanba",
+      "closed": "Yopiq"
+    },
+    "notice": {
+      "title": "So'rovdan oldin",
+      "list": [
+        "24 soat ichida javob beramiz",
+        "Aniq loyiha tafsilotlari to'g'ri maslahat berishga yordam beradi",
+        "Shoshilinch so'rovlar uchun KakaoTalkdan foydalaning"
+      ],
+      "privacyTitle": "Maxfiylik siyosati",
+      "privacyText": "Yig'ilgan shaxsiy ma'lumotlar faqat javob uchun ishlatiladi va maslahatdan so'ng darhol o'chiriladi."
+    },
+    "seo": {
+      "keywords": "Studio NOL aloqa, musiqa prodakshn so'rovi, yozuv bron qilish, miks so'rovi, studio manzili, KakaoTalk konsultatsiya, prodakshn narxlari"
+    }
+  },
+  "pricing": {
+    "seo": {
+      "title": "Yozuv narxlari va studio ijarasi | Studio NOL",
+      "description": "Shaffof narxlar. To'y yozuvlari, voiceover va studio ijarasi uchun to'lovlarni tekshiring.",
+      "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL"
+    },
+    "hero": {
+      "title": "Hamyonbop narx, shaffof xizmat",
+      "subtitleLine1": "Loyiha studiyalari uchun zarur asosiy xizmatlarga qat'iy narx taklif qilamiz.",
+      "subtitleLine2": "Yashirin to'lovlarsiz, musiqachilarga byudjet rejalashda yordam beramiz.",
+      "alt": "Studio NOL narxlari"
+    },
+    "special": {
+      "title": "Maxsus paketlar (maqsadga yo'naltirilgan)",
+      "subtitle": "To'y va voiceover kabi ehtiyojlar uchun optimallashtirilgan all-in-one paketlar"
+    },
+    "recording": {
+      "title": "Yozuv",
+      "subtitle": "Yuqori darajadagi analog uskunalar va ekspert muhandislik bilan premium yozuv xizmati"
+    },
+    "mixing": {
+      "title": "Miks",
+      "subtitle": "Trek soniga asoslangan adolatli narx. Analog va raqamli uyg'unlik bilan eng yaxshi ovoz.",
+      "noticeTitle": "Vokal tuning/editing",
+      "noticeBody": "Professional vokal tuning va timing tuzatish har bir qo'shiq uchun qo'shimcha 150,000 KRW."
+    },
+    "mastering": {
+      "title": "Mastering",
+      "subtitle": "Barcha tinglash muhitlarida yakuniy sifat va izchillikni ta'minlaydi."
+    },
+    "additional": {
+      "title": "Qo'shimcha xizmatlar",
+      "subtitle": "Rejalashtirishdan reklamagacha musiqachilar uchun all-in-one qo'llab-quvvatlash"
+    },
+    "cta": {
+      "title": "Musiqangiz uchun eng yaxshi hamkor",
+      "subtitle": "Byudjet va jadvalingizga mos eng yaxshi reja taklif qilamiz.",
+      "location": "Manzil",
+      "inquiry": "So'rov"
+    },
+    "images": {
+      "packageAlt": "Studio NOL pro paket yozuv uskunalari"
+    }
+  },
+  "lesson": {
+    "seo": {
+      "title": "Musiqa prodakshn masterklass | Studio NOL",
+      "description": "Tarqatish bo'yicha konsultatsiyadan 1:1 miks fikr-mulohazagacha. Musiqangizni pro muhandislik bilan ro'yobga chiqarish.",
+      "keywords": "musiqa prodakshn konsultatsiyasi, miks fikr-mulohaza, MIDI mentoring, musiqa prodakshn coaching, qisqa muddatli MIDI darslari, Cubase, Logic Pro"
+    },
+    "hero": {
+      "title": "All-in-One prodakshn masterklass",
+      "subtitleLine1": "Tasavvurni ovozga, g'oyani tayyor trekka aylantiring.",
+      "subtitleLine2": "Professional makonda professional bilimlarni o'rganing.",
+      "alt": "Studio miks pulti"
+    },
+    "intro": {
+      "titleLine1": "Faqat o'rganish emas,",
+      "titleHighlight": "Bu artist sifatida debyut qilish jarayoni",
+      "subtitleLine1": "Bizning darslar darslik nazariyasi emas.",
+      "subtitleLine2": "Real albom ishlab chiqarishda prolar ishlatadigan uskunalar va workflow'ni aynan shu yerda his etasiz,",
+      "subtitleLine3": "o'zingizning musiqangizni yakunlash uchun \"amaliy loyiha\"da."
+    },
+    "curriculum": {
+      "title": "Kurikulum: 4 bosqichda ustalik",
+      "step1": {
+        "title": "MIDI va prodakshn",
+        "subtitle": "Yaratish asoslari",
+        "items": [
+          "DAW ish jarayonini optimallashtirish",
+          "VST va sound design",
+          "Drum/bass ritm aranjirovkasi",
+          "Qo'shiq formasi va estetika"
+        ]
+      },
+      "step2": {
+        "title": "Yozuv",
+        "subtitle": "Professional ovoz yozib olish",
+        "items": [
+          "Pro mikrofonlar taqqoslanishi (U87ai va boshqalar)",
+          "Signal flow (Mic-Pre-DAW)",
+          "Vokal yo'naltirish va tuning",
+          "Asbob miklash texnikalari"
+        ]
+      },
+      "step3": {
+        "title": "Miks",
+        "subtitle": "Ovozni shakllantirish",
+        "items": [
+          "Balans, panning, stereo imaging",
+          "EQ va Dynamics (Compressor)",
+          "Fazoviy effektlar (Reverb/Delay)",
+          "Analog outboard hybrid miks"
+        ]
+      },
+      "step4": {
+        "title": "Mastering",
+        "subtitle": "Yakunlash va chiqarish",
+        "items": [
+          "Loudness standartlari (LUFS)",
+          "Albom ohangi va izchilligi",
+          "Tarqatish metadata va ISRC",
+          "Yakuniy monitoring va reliz amaliyoti"
+        ]
+      }
+    },
+    "why": {
+      "title": "Nega Studio NOL?",
+      "items": [
+        {
+          "title": "Pro uskunalarda amaliyot",
+          "body": "Darslar sinfxonada emas, haqiqiy yozuv studiyasida o'tadi."
+        },
+        {
+          "title": "Reliz qo'llab-quvvatlashi",
+          "body": "Tayyor treklaringizni global musiqa saytlari orqali chiqarishga yordam beramiz."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "1:1 shaxsiy dars",
+      "subtitle": "Moslashtirilgan darslar",
+      "unit": "KRW / oy",
+      "cta": "Konsultatsiyaga yozilish"
+    },
+    "cta": {
+      "title": "Keling, birinchi qadamni birga tashlaymiz.",
+      "subtitle": "O'zingizga mos kurikulumni rejalashtiring.",
+      "location": "Manzil",
+      "inquiry": "So'rov",
+      "imageAlt": "Dars preview rasmi"
+    }
+  },
+  "practiceRoom": {
+    "seo": {
+      "title": "Eunpyeongdagi premium 24 soatlik mashg'ulot xonasi | Studio NOL",
+      "description": "Eunpyeong-gu'da qulay joylashuvli, premium tovush izolyatsiyali mashg'ulot xonalari.",
+      "keywords": "mashg'ulot xonasi, tovush izolyatsiyali mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, private studio, Studio NOL"
+    },
+    "hero": {
+      "title": "Premium tovush izolyatsiyali mashg'ulot xonasi",
+      "subtitleLine1": "Musiqangizni optimal muhitda mashq qiling.",
+      "subtitleLine2": "Turli uskunalar va qulayliklarga ega premium studioda musiqadan bahramand bo'ling.",
+      "alt": "Studio NOL mashg'ulot xonasi"
+    },
+    "painPoints": {
+      "title": "Quyidagi muammolar sizda bormi?",
+      "items": [
+        "Konditsionerdan suv uskunaga zarar yetkazadimi deb xavotir...",
+        "Yon xonadagi tovush chalg'itadi...",
+        "Havo almashinuvi yomon, dim bo'lib qoladimi...",
+        "Elektr shovqini sabab qayta yozish...",
+        "Noqulay va tartibsiz ish muhiti..."
+      ]
+    },
+    "audience": {
+      "title": "Quyidagilar uchun joy...",
+      "items": [
+        {
+          "title": "Mahalliy musiqachilar",
+          "description": "Eunpyeong-gu'da private studio izlayotganlar."
+        },
+        {
+          "title": "Kontent yaratuvchilar",
+          "description": "YouTuber, podkaster va strimerlar uchun yozuv studiyasi."
+        },
+        {
+          "title": "Musiqa ta'limi",
+          "description": "Shaxsiy darslar va masterklasslar uchun studiyalar."
+        }
+      ]
+    },
+    "gallery": {
+      "alt": "Mashg'ulot xonasi rasmi {{index}}"
+    },
+    "features": {
+      "title": "Musiqachilar uchun mukammal tizim",
+      "items": [
+        {
+          "title": "Professional muhit",
+          "description": "Xalqaro STC tovush izolyatsiyasi, ikki devor dizayni."
+        },
+        {
+          "title": "Uskuna himoyasi",
+          "description": "Maxsus dizayndagi konditsioner, kondensatsiya yo'q, uskuna himoyasi."
+        },
+        {
+          "title": "Optimallashtirilgan qulayliklar",
+          "description": "Gigabit tezlikdagi internet, pro darajadagi akustik sharoitlar."
+        },
+        {
+          "title": "Joylashuv va qulay kirish",
+          "description": "Stansiyalardan 5 daqiqa piyoda, 24/7 xavfsizlik tizimi."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Mashg'ulot xonasi FAQ",
+      "subtitle": "Studiyaga oid ko'p so'raladigan savollar.",
+      "items": [
+        {
+          "q": "Eunpyeong-gu'da qaysi hududlar yaqin?",
+          "a": "Biz Dongmyeong qizlar o'rta maktabi yonidamiz. Yeonsinnae stansiyasidan 5 daqiqa piyoda, Yeonsinnae, Bulgwang, Gusan, Yeokchon va Eungamdan kelish juda qulay."
+        },
+        {
+          "q": "Mashg'ulot xonasi 24 soat ishlaydimi?",
+          "a": "Ha. Rezident a'zolar xonalariga 24/7 shaxsiy eshik kodlari orqali kirishlari mumkin."
+        },
+        {
+          "q": "Parking va jamoat transporti qanday?",
+          "a": "Daejo-dongdagi arzon ommaviy parking 1-2 daqiqalik masofada. Bulgwang yoki Yeonsinnae stansiyasi (3 va 6-liniyalar) orqali jamoat transporti qulay, \"Dongmyeong Girls' High School / Catholic Bulgwang-dong Church\" avtobus bekati esa to'g'ridan-to'g'ri oldimizda."
+        },
+        {
+          "q": "Yoz va qishda isitish/sovitishni erkin ishlatish mumkinmi?",
+          "a": "Har bir xona mustaqil, zamonaviy va shabada bermaydigan HVAC tizimi bilan jihozlangan, yil bo'yi qulaylikni ta'minlaydi."
+        },
+        {
+          "q": "Asboblar yoki uskunani qoldirish xavfsizmi?",
+          "a": "Koridorlar va umumiy joylar 24/7 10 ta CCTV bilan kuzatiladi, har bir xonada esa raqamli eshik qulfi mavjud."
+        },
+        {
+          "q": "Tovush izolyatsiyasi qanchalik yaxshi?",
+          "a": "Xonalar orasidagi shovqinni kamaytirish uchun broadcast darajasidagi STC tovush izolyatsiyasidan foydalanamiz. Vokal, voiceover va MIDI ishlarida juda yaxshi immersion beradi."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Optimal fokus,",
+      "titleHighlight": "Eng yaxshi natija",
+      "subtitleLine1": "Qulay muhitda 24/7 faqat musiqaga e'tibor qarating.",
+      "subtitleLine2": "Bugun kelib ko'zdan kechiring.",
+      "location": "Manzil",
+      "inquiry": "So'rov",
+      "imageAlt": "Studio NOL mashg'ulot xonasi"
+    }
+  },
+  "studioInfo": {
+    "seo": {
+      "title": "Yuqori darajadagi yozuv uskunalari | Studio NOL",
+      "description": "Eng yaxshi ovoz uchun yuqori darajadagi uskunalar. Neumann U87AI, Vintech X73i, SSL Fusion va boshqalarni ko'ring.",
+      "keywords": "yuqori darajadagi yozuv uskunalari, Neumann U87AI, SSL Fusion, yozuv studiyasi uskunalari, professional audio uskunalar"
+    },
+    "hero": {
+      "title": "Bizning uskunalar",
+      "subtitle": "Top darajadagi inshootlar, uskunalar va tajriba bilan musiqiy tasavvuringizni ro'yobga chiqaramiz.",
+      "alt": "Studio NOL uskunalari"
+    },
+    "intro": {
+      "imageAlt": "Studio NOL asosiy nazorat xonasi",
+      "title": "Musiqachilar uchun ijodiy makon",
+      "subtitle": "Studio NOL - musiqachilarning erkin tasavvuri va ijodiy faoliyatini qo'llab-quvvatlash uchun yaratilgan makon.",
+      "quote": "\"Oddiy yozuv joyidan ko'ra ko'proq, bu yerda artistlar va muhandislar birgalikda nafas olib, ijodiy hamkorlikka erishadi.\"",
+      "paragraphs": [
+        "Eng yuqori darajadagi inshootlar, uskunalar va ekspert know-how asosida musiqiy tasavvuringizni ro'yobga chiqarishga bag'ishlanganmiz.",
+        "Studio NOL uchun muhim narsa - texnik mukammallikdan tashqari, musiqaning o'z mohiyatiga e'tibor.",
+        "Yozuv, miks, masteringdan albom relizi va promo'ga qadar. Musiqachilar o'z ovozini dunyoga yetkazishi uchun ishonchli hamkormiz."
+      ]
+    },
+    "equipment": {
+      "title": "Uskunalar ro'yxati",
+      "preampsEq": "Preamp va EQ",
+      "compressorsProcessors": "Kompressor va Protsessor",
+      "interfacesConsoles": "Interfeys va Konsol"
+    }
+  },
+  "stories": {
+    "seo": {
+      "title": "Hikoyalar - Studio NOL loyiha kundaliklari",
+      "description": "Studio NOLdagi loyihalardan turli hikoyalar va sharhlarni kashf eting.",
+      "keywords": "Studio NOL hikoyalari, prodakshn sharhlari, musiqa prodakshn hikoyalari",
+      "fallbackKeywords": "Studio NOL, musiqa, hikoyalar"
+    },
+    "hero": {
+      "title": "Hikoyalar",
+      "subtitle": "Studio ishlariga oid turli hikoyalarni ko'ring.",
+      "alt": "Studio NOL hikoyalari"
+    },
+    "filters": {
+      "all": "Barchasi"
+    },
+    "empty": {
+      "title": "Hikoyalar topilmadi",
+      "all": "Hali hikoyalar ro'yxatdan o'tmagan.",
+      "byCategory": "'{{category}}' kategoriyasida hikoyalar yo'q."
+    },
+    "detail": {
+      "backToList": "Hikoyalarga qaytish",
+      "share": "Ulashish",
+      "moreTitle": "Yana hikoyalar",
+      "noRelated": "O'xshash hikoyalar yo'q.",
+      "viewAll": "Barcha hikoyalarni ko'rish"
+    },
+    "categories": {
+      "notice": "E'lon",
+      "event": "Tadbir",
+      "lesson": "Dars",
+      "interview": "Intervyu",
+      "equipment": "Uskuna",
+      "review": "Sharh",
+      "other": "Boshqa"
+    }
+  },
+  "notFound": {
+    "seoTitle": "Sahifa topilmadi | Studio NOL",
+    "badge": "404 Sahifa topilmadi",
+    "title": "Sahifa topilmadi",
+    "messageLine1": "So'ralgan URL \"{{path}}\" ushbu serverda topilmadi.",
+    "messageLine2": "Iltimos, bosh sahifaga qayting yoki boshqa sahifani sinab ko'ring.",
+    "goHome": "Bosh sahifaga",
+    "contact": "Biz bilan bog'laning"
+  },
+  "errors": {
+    "title": "Nimadir xato bo'ldi",
+    "description": "Sahifani yuklashda xato yuz berdi. Iltimos, qayta urinib ko'ring."
+  },
+  "loading": {
+    "default": "Yuklanmoqda"
+  },
+  "audioPlayer": {
+    "prevTrack": "Oldingi trek",
+    "nextTrack": "Keyingi trek",
+    "play": "Ijro etish",
+    "pause": "Pauza",
+    "mute": "Ovozni o'chirish",
+    "unmute": "Ovozni yoqish",
+    "playlist": "Pleylis",
+    "playing": "Ijro etilmoqda",
+    "paused": "Pauzada",
+    "albumArtAlt": "{{title}} albom rasmi",
+    "highFidelity": "Yuqori aniqlikdagi audio",
+    "trackLabel": "Trek {{number}}"
+  }
+}
