@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, Moon, Sun, X } from 'lucide-react';
@@ -27,7 +27,7 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
     <Link
       href={href}
       onClick={onNavigate}
-      className={`px-3 py-2 rounded-md typo-nav-link transition-all duration-300 ${isActive
+      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-normal transition-all duration-300 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
         : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
         }`}
@@ -52,9 +52,12 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(80);
+  const headerRef = useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
   const currentPath = useMemo(() => router.asPath || '/', [router.asPath]);
+  const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const navItems = useMemo(() => {
     const prefix = `/${locale}`;
     return [
@@ -90,6 +93,18 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       console.warn('Failed to read dark mode preference', error);
       setHasThemeLoaded(true);
     }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !headerRef.current || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver((entries) => {
+      const nextHeight = Math.ceil(entries[0]?.contentRect?.height || 0);
+      if (nextHeight > 0) {
+        setHeaderHeight((prev) => (prev !== nextHeight ? nextHeight : prev));
+      }
+    });
+    observer.observe(headerRef.current);
+    return () => observer.disconnect();
   }, []);
 
   const toggleDarkMode = () => {
@@ -147,10 +162,11 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   return (
     <div
-      className="flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out break-keep overflow-x-hidden w-full"
+      className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
       suppressHydrationWarning
     >
       <header
+        ref={headerRef}
         className={`fixed w-full z-50 transition-all duration-300 ${isScrolled
           ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-md'
           : hasHero
@@ -173,7 +189,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
             </Link>
 
             <div className="flex items-center space-x-2 md:space-x-4">
-              <nav className="hidden lg:flex space-x-1">
+              <nav className="hidden lg:flex flex-wrap items-center gap-x-1 gap-y-1 min-w-0 max-w-[60vw]">
                 {navItems.map((item) => (
                   <NavLink
                     key={item.href}
@@ -248,7 +264,10 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         </AnimatePresence>
       </header>
 
-      <main className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : 'pt-20'} ${isFullBleed ? 'pb-0' : 'pb-24'}`}>
+      <main
+        className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : ''} ${isFullBleed ? 'pb-0' : 'pb-12'}`}
+        style={isHome || hasHero ? undefined : { paddingTop: headerHeight }}
+      >
         {children}
       </main>
 

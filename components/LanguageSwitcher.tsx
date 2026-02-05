@@ -78,7 +78,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
         aria-expanded={isOpen}
         aria-label="Language selector"
         className={`
-          inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors duration-200
+          inline-flex items-center gap-2 px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-md text-sm sm:text-xs font-bold uppercase tracking-wide transition-colors duration-200
           ${isOpen ? 'bg-primary text-white shadow-sm' : ''}
           ${!isOpen && (isScrolled || !hasHero)
             ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
@@ -95,7 +95,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
           ref={menuRef}
           role="menu"
           className={`
-            absolute right-0 top-full mt-2 ${menuWidthClass} max-h-64 overflow-y-auto
+            absolute right-0 top-full mt-2 ${menuWidthClass} max-h-[60vh] overflow-y-auto overscroll-contain
             rounded-lg border border-gray-200/70 dark:border-gray-700 bg-white dark:bg-gray-900
             shadow-lg py-2 z-50
           `}
@@ -108,7 +108,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
                 className={`
-                  px-2 py-1 rounded text-xs font-bold uppercase text-left transition-colors duration-200
+                  px-3 py-2 sm:px-2 sm:py-1.5 rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200
                   ${currentLocale === locale
                     ? 'bg-primary text-white shadow-sm'
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'}
