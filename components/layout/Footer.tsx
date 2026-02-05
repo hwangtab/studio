@@ -1,0 +1,70 @@
+import React from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { getSiteConfig } from '../../data/siteConfig';
+import { type Locale } from '../../lib/i18n';
+
+interface FooterProps {
+  locale: Locale;
+}
+
+export const Footer = ({ locale }: FooterProps) => {
+  const { t } = useTranslation('common', { lng: locale });
+  const siteConfig = getSiteConfig(locale);
+
+  return (
+    <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="typo-footer-heading mb-4">
+              {siteConfig.name}
+            </h3>
+            <p className="typo-footer-body text-gray-200/90 mb-4 leading-relaxed">
+              {t('footer.tagline')}
+            </p>
+            <p className="typo-footer-meta">
+              2024 {siteConfig.name}. {t('footer.rights')}
+            </p>
+          </div>
+
+          <div>
+            <h3 className="typo-footer-heading mb-4">{t('footer.linksTitle')}</h3>
+            <ul className="space-y-2">
+              <li><Link href={`/${locale}`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.home')}</Link></li>
+              <li><Link href={`/${locale}/about`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.about')}</Link></li>
+              <li><Link href={`/${locale}/contact`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.contact')}</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="typo-footer-heading mb-4">{t('footer.contactTitle')}</h3>
+            <a
+              href={siteConfig.contact.naverMapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
+            >
+              <span className="inline-block w-4 mr-2">📍</span>
+              <span className="leading-relaxed">{siteConfig.contact.address}</span>
+            </a>
+            <a
+              href={`mailto:${siteConfig.contact.email}`}
+              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
+            >
+              <span className="inline-block w-4 mr-2">📧</span>
+              <span className="leading-relaxed">{t('footer.emailLabel')}: {siteConfig.contact.email}</span>
+            </a>
+            <a
+              href={`tel:${siteConfig.contact.phone}`}
+              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center"
+            >
+              <span className="inline-block w-4 mr-2">📞</span>
+              <span className="leading-relaxed">{t('footer.phoneLabel')}: {siteConfig.contact.phone}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};

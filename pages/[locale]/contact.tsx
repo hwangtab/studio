@@ -1,15 +1,15 @@
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { PAGE_TITLE_ANIMATION } from '../../utils/animationUtils';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { NextPageWithLayout } from '../../types';
 
 interface ContactProps {
   locale: Locale;
@@ -25,7 +25,7 @@ const InputField = ({ icon: Icon, label, id, ...props }: any) => (
   </div>
 );
 
-const Contact: NextPage<ContactProps> = ({ locale }) => {
+const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const [formData, setFormData] = useState({
     name: '',
@@ -357,7 +357,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
   );
 };
 
-(Contact as any).hasHero = true;
+Contact.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = getCommonStaticProps;
