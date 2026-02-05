@@ -1,6 +1,6 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION } from '../../utils/animationUtils';
@@ -37,6 +37,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
   const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const siteConfig = getSiteConfig(locale);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -124,15 +125,15 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
       <Section variant="default">
         <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
             className="card p-8 shadow-xl"
           >
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
             >
               <h2 className="typo-card-title mb-4">{t('contact.info.title')}</h2>
               <div className="space-y-4">
@@ -198,15 +199,15 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
 
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
             className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl"
           >
             <motion.div
-              initial={{ opacity: 0, x: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, x: 0 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.4 }}
             >
               <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>
               {submitMessage && (
@@ -240,7 +241,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   onChange={handleChange}
                   placeholder={`${t('contact.form.name')}…`}
                   required
-                  autoComplete="name"
+                  autoComplete="off"
                 />
 
                 <InputField
@@ -253,7 +254,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   onChange={handleChange}
                   placeholder={`${t('contact.form.phone')}…`}
                   required
-                  autoComplete="tel"
+                  autoComplete="off"
                   inputMode="tel"
                 />
 
@@ -267,7 +268,7 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   onChange={handleChange}
                   placeholder={`${t('contact.form.email')}…`}
                   required
-                  autoComplete="email"
+                  autoComplete="off"
                   inputMode="email"
                   spellCheck={false}
                 />
@@ -286,13 +287,14 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent"
                     rows={8}
                     required
+                    autoComplete="off"
                   ></textarea>
                 </div>
 
                 <div className="flex flex-col gap-3">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+                    whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 font-title disabled:opacity-50 touch-manipulation"
@@ -314,8 +316,8 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
                   </motion.button>
 
                   <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+                    whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
                     href={siteConfig.contact.kakaoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
