@@ -44,9 +44,12 @@ const BaseCard = React.memo(({
     };
 
     const isInteractive = Boolean(onClick);
+    const interactiveStyles = isInteractive
+        ? "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        : "";
     const CardContent = (
         <motion.div
-            className={cn(baseStyles, variants[variant], className)}
+            className={cn(baseStyles, variants[variant], interactiveStyles, className)}
             {...animationProps}
             onClick={onClick}
             role={isInteractive ? 'button' : undefined}

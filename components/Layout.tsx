@@ -38,7 +38,9 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
     <Link
       href={href}
       onClick={onNavigate}
-      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-normal transition-all duration-300 ${isActive
+      aria-current={isActive ? 'page' : undefined}
+      className={`px-2.5 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-normal transition-all duration-300 touch-manipulation
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
         ? 'bg-white/90 text-primary-dark shadow-sm'
         : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
         }`}
@@ -219,7 +221,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                 className={`p-2 rounded-full ${isScrolled || !hasHero
                   ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                   : 'text-white hover:bg-white/20'
-                  } transition-colors duration-300`}
+                  } transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
                 onClick={toggleDarkMode}
                 aria-label="Toggle dark mode"
               >
@@ -236,7 +238,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
                 className={`lg:hidden p-2 rounded-full ${isScrolled || !hasHero
                   ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                   : 'text-white hover:bg-white/20'
-                  } transition-colors duration-300`}
+                  } transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
                 onClick={() => setIsMenuOpen((prev) => !prev)}
                 aria-label="Toggle menu"
               >

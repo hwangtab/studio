@@ -47,13 +47,13 @@ const FeatureCard = ({
         </span>
       )}
       {(Icon || title) && (
-        <div className="flex items-center mb-4">
+        <div className="flex items-start gap-4 mb-4 min-w-0">
           {Icon && (
-            <div className="flex-shrink-0 bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
+            <div className="flex-shrink-0 bg-primary/10 dark:bg-primary/20 p-3 rounded-full">
               {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
             </div>
           )}
-          <h3 className={isLarge ? 'typo-card-title' : 'typo-card-subtitle'}>
+          <h3 className={`${isLarge ? 'typo-card-title' : 'typo-card-subtitle'} min-w-0 break-words leading-snug`}>
             {title}
           </h3>
         </div>

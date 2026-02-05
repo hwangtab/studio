@@ -65,8 +65,12 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
     return 1;
   }, []);
 
-  const menuWidthClass = menuCols === 1 ? 'w-40' : menuCols === 2 ? 'w-56' : 'w-72';
-  const menuGridClass = menuCols === 1 ? 'grid-cols-1' : menuCols === 2 ? 'grid-cols-2' : 'grid-cols-3';
+  const menuWidthClass = menuCols === 1 ? 'w-44' : menuCols === 2 ? 'w-60' : 'w-80';
+  const menuGridClass = menuCols === 1
+    ? 'grid-cols-1'
+    : menuCols === 2
+      ? 'grid-cols-1 sm:grid-cols-2'
+      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
 
   return (
     <div className="relative flex items-center ml-2">
@@ -78,7 +82,8 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
         aria-expanded={isOpen}
         aria-label="Language selector"
         className={`
-          inline-flex items-center gap-2 px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-md text-sm sm:text-xs font-bold uppercase tracking-wide transition-colors duration-200
+          inline-flex items-center gap-2 px-3 py-2 sm:px-2.5 sm:py-1.5 min-h-[40px] sm:min-h-[32px] rounded-md text-sm sm:text-xs font-bold uppercase tracking-wide transition-colors duration-200 touch-manipulation
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen ? 'bg-primary text-white shadow-sm' : ''}
           ${!isOpen && (isScrolled || !hasHero)
             ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
@@ -93,32 +98,32 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
       {isOpen && (
         <div
           ref={menuRef}
-          role="menu"
           className={`
-            absolute right-0 top-full mt-2 ${menuWidthClass} max-h-[60vh] overflow-y-auto overscroll-contain
+            absolute right-0 top-full mt-2 ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
             rounded-lg border border-gray-200/70 dark:border-gray-700 bg-white dark:bg-gray-900
             shadow-lg py-2 z-50
           `}
         >
-          <div className={`grid ${menuGridClass} gap-1 px-2`}>
+          <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label="Language options">
             {locales.map((locale) => (
-              <Link
-                key={locale}
-                href={getPathForLocale(locale)}
-                role="menuitem"
-                onClick={() => setIsOpen(false)}
-                className={`
-                  px-3 py-2 sm:px-2 sm:py-1.5 rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200
-                  ${currentLocale === locale
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'}
-                `}
-                aria-current={currentLocale === locale ? 'page' : undefined}
-              >
-                {localeNames[locale]}
-              </Link>
+              <li key={locale}>
+                <Link
+                  href={getPathForLocale(locale)}
+                  onClick={() => setIsOpen(false)}
+                  className={`
+                    px-3 py-2 sm:px-2 sm:py-1.5 min-h-[40px] sm:min-h-[32px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                    ${currentLocale === locale
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'}
+                  `}
+                  aria-current={currentLocale === locale ? 'page' : undefined}
+                >
+                  {localeNames[locale]}
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
     </div>

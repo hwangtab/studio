@@ -43,7 +43,7 @@ const SectionHeading = ({
         <div className={cn(
           "inline-flex items-center justify-center p-3 bg-primary/10 dark:bg-primary/20 rounded-full mb-4",
           align === 'center' ? "mx-auto" : "" // Only center if alignment is center
-        )}>
+        )} aria-hidden="true">
           {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
         </div>
       )}
@@ -58,7 +58,7 @@ const SectionHeading = ({
       </Component>
 
       {subtitle && (
-        <p className="typo-section-lead max-w-2xl mx-auto">
+        <p className={cn("typo-section-lead max-w-2xl", align === 'center' ? "mx-auto" : "")}>
           {subtitle}
         </p>
       )}

@@ -41,7 +41,7 @@ const Playlist = ({
                                 backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.15)' : 'rgba(var(--primary-rgb), 0.05)'
                             }}
                             type="button"
-                            className={`group w-full text-left flex items-center p-3 rounded-lg cursor-pointer transition-colors border border-transparent ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
+                            className={`group w-full text-left flex items-center p-3 rounded-lg cursor-pointer transition-colors border border-transparent touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
                                 }`}
                             onClick={() => onSelectTrack(index)}
                             aria-pressed={isActive}
@@ -51,6 +51,10 @@ const Playlist = ({
                                 <img
                                     src={track.albumArt}
                                     alt={track.title}
+                                    width={40}
+                                    height={40}
+                                    loading="lazy"
+                                    decoding="async"
                                     className={`w-full h-full object-cover transition-all duration-300 ${isActive && isPlaying ? 'scale-110' : ''}`}
                                 />
                                 {isActive && (
@@ -86,10 +90,10 @@ const Playlist = ({
                             </div>
 
                             <div className="flex-1 min-w-0">
-                                <h4 className={`text-sm font-medium truncate ${isActive ? 'text-primary' : 'text-gray-900 dark:text-white'}`}>
+                                <h4 className={`text-sm font-medium truncate ${isActive ? 'text-primary' : 'text-gray-900 dark:text-white'}`} title={track.title}>
                                     {track.title}
                                 </h4>
-                                <p className="text-xs text-gray-500 dark:text-white/50 truncate">
+                                <p className="text-xs text-gray-500 dark:text-white/50 truncate" title={track.artist}>
                                     {track.artist}
                                 </p>
                             </div>

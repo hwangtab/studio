@@ -46,7 +46,7 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
   const href = `/${locale}/stories/${slug}`;
 
   return (
-    <Link href={href} className="block h-full">
+    <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
       <motion.div
         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
         variants={cardVariants}
@@ -73,17 +73,17 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
           )}
         </div>
 
-        <div className="p-4 flex flex-col flex-grow">
-          <div className="flex items-center justify-between mb-2 flex-shrink-0">
-            <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full">
+        <div className="p-4 flex flex-col flex-grow min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
+            <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
               {story.category || t('기본', 'Default', '默认', 'Predeterminado', 'Mặc định', 'ค่าเริ่มต้น', 'Standart')}
             </span>
-            <span className="typo-card-meta text-gray-500 dark:text-gray-400">
+            <span className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
               {story.date ? timeAgo(story.date, locale) : t('날짜 없음', 'No Date', '无日期', 'Sin fecha', 'Không có ngày', 'ไม่มีวันที่', 'Sana yoʻq')}
             </span>
           </div>
 
-          <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 truncate">
+          <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title}>
             {story.title || t('제목 없음', 'No Title', '无标题', 'Sin título', 'Không có tiêu đề', 'ไม่มีชื่อเรื่อง', 'Sarlavha yoʻq')}
           </h3>
 

@@ -114,9 +114,9 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
           locale,
           title: t('contact.title'),
           subtitle: t('contact.subtitle'),
-          backgroundImage: "/images/contact-bg.jpg",
+          backgroundImage: "/images/hardware5.jpg",
           imageAlt: t('contact.heroAlt'),
-          minHeight: "min-h-[50vh]",
+          minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/50 via-black/30 to-black/50",
         }}
       />

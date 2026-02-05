@@ -42,7 +42,7 @@ const ImageHero = ({
 
   return (
     <section
-      className={`relative overflow-hidden ${minHeight} flex flex-col ${verticalAlignClass} md:-mt-20 ${className}`}
+      className={`relative overflow-hidden ${minHeight} flex flex-col ${verticalAlignClass} ${className}`}
     >
       <motion.div
         className="absolute inset-0 z-0"

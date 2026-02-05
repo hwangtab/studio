@@ -71,13 +71,13 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
           <>
             <Link
               href={getLink('/contact')}
-              className="inline-flex items-center justify-center bg-white text-primary-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {heroContent.cta.reserve}
             </Link>
             <Link
               href={getLink('/portfolio')}
-              className="inline-flex items-center justify-center bg-primary border-2 border-primary text-white font-bold text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary border-2 border-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
             >
               {heroContent.cta.portfolio}
             </Link>
@@ -175,7 +175,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href={getLink('/contact')}
-                  className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
+                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 >
                   {t('home.cta.location')}
                 </Link>
@@ -183,10 +183,10 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
                   href="https://open.kakao.com/me/nol"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
+                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                 >
-                  <CalendarCheck className="mr-2" size={20} />
-                  {t('home.cta.inquiry')}
+                  <CalendarCheck className="mr-2 flex-shrink-0" size={20} />
+                  <span className="min-w-0">{t('home.cta.inquiry')}</span>
                 </a>
               </div>
             </div>

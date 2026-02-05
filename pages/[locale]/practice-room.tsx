@@ -282,7 +282,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
               >
                 <Link
                   href={getLink("/contact")}
-                  className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600"
+                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 >
                   {t('practiceRoom.cta.location')}
                 </Link>
@@ -290,10 +290,10 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
                   href="https://open.kakao.com/me/nol"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300"
+                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                 >
-                  <MessageCircle className="mr-2" size={20} />
-                  {t('practiceRoom.cta.inquiry')}
+                  <MessageCircle className="mr-2 flex-shrink-0" size={20} />
+                  <span className="min-w-0">{t('practiceRoom.cta.inquiry')}</span>
                 </a>
               </motion.div>
             </div>
