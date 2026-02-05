@@ -19,7 +19,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any,
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-4">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} />
+        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
       </div>
       <h3 className="typo-card-title">{title}</h3>
     </div>
@@ -31,7 +31,7 @@ const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: any, 
   <BaseCard variant="default" delay={delay} className="p-5 h-full">
     <div className="flex items-start">
       <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
-        <Icon size={20} />
+        <Icon size={20} aria-hidden="true" />
       </div>
       <div>
         <p className={`typo-card-body whitespace-normal ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>{text}</p>
@@ -44,7 +44,7 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
   <BaseCard variant="default" delay={delay} className="p-6 mb-4">
     <div className="flex items-center mb-2">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} />
+        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
       </div>
       <h3 className="typo-card-subtitle">{title}</h3>
     </div>

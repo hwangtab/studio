@@ -144,7 +144,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
           ))}
         </div>
         <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
-          <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} />
+          <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} aria-hidden="true" />
           <div>
             <h4 className="typo-card-subtitle mb-1">{t('pricing.mixing.noticeTitle')}</h4>
             <p className="typo-card-body text-sm">
@@ -228,7 +228,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href={getLink("/contact")}
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 >
                   {t('pricing.cta.location')}
                 </Link>
@@ -236,7 +236,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
                   href="https://open.kakao.com/me/nol"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                 >
                   <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
                   <span className="min-w-0">{t('pricing.cta.inquiry')}</span>

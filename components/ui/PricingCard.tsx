@@ -38,7 +38,7 @@ const PricingCard = ({ id, title, price, unit, description, features, recommende
             <ul className="space-y-3 flex-grow">
                 {features.map((feature, index) => (
                     <li key={index} className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                        <Check className="text-green-500 mt-1 mr-2 flex-shrink-0" size={14} />
+                        <Check className="text-green-500 mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
                         <span>{feature}</span>
                     </li>
                 ))}

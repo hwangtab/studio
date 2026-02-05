@@ -69,7 +69,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
             href={getLink("/portfolio")}
             className="inline-flex items-center typo-card-cta hover:underline mb-6"
           >
-            <ArrowLeft className="mr-2" size={16} />
+            <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('portfolio.detail.backToList')}
           </Link>
         </div>
@@ -133,14 +133,14 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
                 >
-                  <ExternalLink size={16} />
+                  <ExternalLink size={16} aria-hidden="true" />
                   {t('portfolio.detail.listenNow')}
                 </a>
                 <button
                   onClick={sharePortfolio}
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium"
                 >
-                  <Share2 size={16} />
+                  <Share2 size={16} aria-hidden="true" />
                   {t('portfolio.detail.share')}
                 </button>
               </div>

@@ -19,6 +19,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                     defaultValue="0"
                     onChange={onChangeRange}
                     max={duration || 0}
+                    aria-label="Playback progress"
                     className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
                 />
 
@@ -27,7 +28,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
 
                 {/* Progress Fill with Glow */}
                 <div
-                    className="absolute top-0 left-0 h-full bg-primary rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.7)] transition-all duration-100 ease-linear"
+                    className="absolute top-0 left-0 h-full bg-primary rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.7)] transition-[width] duration-100 ease-linear"
                     style={{ width: `${progress}%` }}
                 />
 

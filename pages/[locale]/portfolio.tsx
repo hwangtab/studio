@@ -168,7 +168,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
 
           {filteredItems.length === 0 ? (
             <div className="text-center pt-16 pb-12">
-              <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} />
+              <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} aria-hidden="true" />
               <p className="typo-card-body text-gray-500 dark:text-gray-400">
                 {t('portfolio.noProjects')}
               </p>

@@ -48,6 +48,7 @@ const VolumeControls = ({
                     step="0.01"
                     value={volume}
                     onChange={onChangeVolume}
+                    aria-label="Volume"
                     className="w-full h-full appearance-none bg-transparent opacity-0 absolute cursor-pointer z-10"
                 />
                 <div

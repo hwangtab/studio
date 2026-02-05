@@ -137,19 +137,19 @@ const Contact: NextPage<ContactProps> = ({ locale }) => {
               <h2 className="typo-card-title mb-4">{t('contact.info.title')}</h2>
               <div className="space-y-4">
                 <a href={siteConfig.contact.naverMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{siteConfig.contact.address}</span>
                 </a>
                 <a href={`tel:${siteConfig.contact.phone}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{siteConfig.contact.phone}</span>
                 </a>
                 <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{siteConfig.contact.email}</span>
                 </a>
                 <a href={siteConfig.contact.kakaoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">
-                  <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-light" />
+                  <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{t('actions.kakao')}</span>
                 </a>
               </div>

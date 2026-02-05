@@ -165,7 +165,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
                   className="p-4"
                 >
                   <div className="flex items-center mb-2">
-                    <Icon className="text-primary dark:text-primary-light mr-2" />
+                    <Icon className="text-primary dark:text-primary-light mr-2" aria-hidden="true" />
                     <h4 className="typo-card-subtitle">{advantage.title}</h4>
                   </div>
                   <p className="typo-card-body">{advantage.description}</p>
@@ -192,7 +192,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Phone className="text-primary dark:text-primary-light" size={20} />
+                <Phone className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.call')}</h3>
@@ -206,7 +206,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Mail className="text-primary dark:text-primary-light" size={20} />
+                <Mail className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.email')}</h3>
@@ -220,7 +220,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MessageCircle className="text-primary dark:text-primary-light" size={20} />
+                <MessageCircle className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.kakao')}</h3>
@@ -234,7 +234,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MapPin className="text-primary dark:text-primary-light" size={20} />
+                <MapPin className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.location')}</h3>

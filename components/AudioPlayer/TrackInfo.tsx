@@ -37,7 +37,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
             >
-                <div className={`absolute inset-0 rounded-full blur-3xl opacity-20 transition-all duration-1000 ${isPlaying ? 'bg-primary scale-110' : 'bg-white/10 scale-90'
+                <div className={`absolute inset-0 rounded-full blur-3xl opacity-20 transition-transform transition-colors duration-1000 ${isPlaying ? 'bg-primary scale-110' : 'bg-white/10 scale-90'
                     }`} />
 
                 <div

@@ -110,12 +110,12 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         subtitle={
           <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">
             <div className="flex items-center">
-              <Tag className="mr-2" size={18} />
+              <Tag className="mr-2" size={18} aria-hidden="true" />
               <span>{story.category}</span>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center">
-              <Calendar className="mr-2" size={18} />
+              <Calendar className="mr-2" size={18} aria-hidden="true" />
               <span>{story.createdAt ? timeAgo(story.createdAt, locale) : story.date}</span>
             </div>
           </div>
@@ -132,7 +132,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
             href={getLink("/stories")}
             className="inline-flex items-center typo-card-cta hover:underline"
           >
-            <ArrowLeft className="mr-2" size={16} />
+            <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.backToList')}
           </Link>
 
@@ -140,7 +140,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
             onClick={shareStory}
             className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400"
           >
-            <Share2 className="mr-2" size={16} />
+            <Share2 className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.share')}
           </button>
         </div>
@@ -168,7 +168,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
             <p className="typo-card-body text-gray-500 mb-6">{t('stories.detail.noRelated')}</p>
           )}
           <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta hover:underline">
-            <ArrowLeft className="mr-2" size={16} />
+            <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.viewAll')}
           </Link>
         </div>

@@ -36,7 +36,7 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
             <ul className="space-y-2">
                 {description.map((item, idx) => (
                     <li key={idx} className="flex items-start typo-card-body text-body-2">
-                        <CheckCircle size={14} className="mt-1 mr-2 text-primary flex-shrink-0" />
+                        <CheckCircle size={14} className="mt-1 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
                         <span>{item}</span>
                     </li>
                 ))}
@@ -184,7 +184,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                         <div className="space-y-10">
                             <div className="flex">
                                 <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <Mic2 className="text-primary" size={32} />
+                                    <Mic2 className="text-primary" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h4 className="typo-card-title mb-3">{t('lesson.why.items.0.title')}</h4>
@@ -195,7 +195,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                             </div>
                             <div className="flex">
                                 <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <Disc className="text-primary" size={32} />
+                                    <Disc className="text-primary" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h4 className="typo-card-title mb-3">{t('lesson.why.items.1.title')}</h4>
@@ -259,7 +259,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
                                     href={getLink("/contact")}
-                                    className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                                    className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                                 >
                                     {t('lesson.cta.location')}
                                 </Link>
@@ -267,7 +267,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                                     href="https://open.kakao.com/me/nol"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                                    className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                                 >
                                     <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
                                     <span className="min-w-0">{t('lesson.cta.inquiry')}</span>
