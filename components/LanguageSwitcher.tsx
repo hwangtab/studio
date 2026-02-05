@@ -95,7 +95,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
           ref={menuRef}
           role="menu"
           className={`
-            absolute right-0 mt-2 ${menuWidthClass} max-h-64 overflow-y-auto
+            absolute right-0 top-full mt-2 ${menuWidthClass} max-h-64 overflow-y-auto
             rounded-lg border border-gray-200/70 dark:border-gray-700 bg-white dark:bg-gray-900
             shadow-lg py-2 z-50
           `}
