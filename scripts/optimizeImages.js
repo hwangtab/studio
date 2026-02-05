@@ -5,6 +5,10 @@ const path = require('path');
 const IMAGES_DIR = path.join(__dirname, '../public/images');
 const METADATA_OUTPUT = path.join(__dirname, '../utils/imageMetadata.json');
 const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+// AVIF 생성 여부 (더 작지만 인코딩 느림)
+const GENERATE_AVIF = false; // true로 변경시 AVIF 생성
+
 const imageMetadata = {};
 
 const toPublicPath = (filePath) => {
@@ -31,6 +35,13 @@ const captureMetadata = async (filePath) => {
     }
 };
 
+const isNewer = (targetPath, sourcePath) => {
+    if (!fs.existsSync(targetPath)) return false;
+    const targetStats = fs.statSync(targetPath);
+    const sourceStats = fs.statSync(sourcePath);
+    return targetStats.mtime > sourceStats.mtime;
+};
+
 async function optimizeImages(directory) {
     const files = fs.readdirSync(directory);
 
@@ -45,24 +56,36 @@ async function optimizeImages(directory) {
 
         const ext = path.extname(file).toLowerCase();
         await captureMetadata(filePath);
-        if (['.jpg', '.jpeg', '.png'].includes(ext)) {
-            const webpPath = filePath.replace(ext, '.webp');
 
-            // Skip if webp already exists and is newer than source
-            if (fs.existsSync(webpPath)) {
-                const webpStats = fs.statSync(webpPath);
-                if (webpStats.mtime > stats.mtime) {
-                    continue;
+        if (['.jpg', '.jpeg', '.png'].includes(ext)) {
+            const basePath = filePath.replace(ext, '');
+            const webpPath = `${basePath}.webp`;
+
+            // WebP 생성
+            if (!isNewer(webpPath, filePath)) {
+                console.log(`Converting ${file} to WebP...`);
+                try {
+                    await sharp(filePath)
+                        .webp({ quality: 80 })
+                        .toFile(webpPath);
+                } catch (err) {
+                    console.error(`Error converting ${file} to WebP:`, err);
                 }
             }
 
-            console.log(`Converting ${file} to WebP...`);
-            try {
-                await sharp(filePath)
-                    .webp({ quality: 80 })
-                    .toFile(webpPath);
-            } catch (err) {
-                console.error(`Error converting ${file}:`, err);
+            // AVIF 생성 (옵션)
+            if (GENERATE_AVIF) {
+                const avifPath = `${basePath}.avif`;
+                if (!isNewer(avifPath, filePath)) {
+                    console.log(`Converting ${file} to AVIF...`);
+                    try {
+                        await sharp(filePath)
+                            .avif({ quality: 65 })
+                            .toFile(avifPath);
+                    } catch (err) {
+                        console.error(`Error converting ${file} to AVIF:`, err);
+                    }
+                }
             }
         }
     }
@@ -73,5 +96,6 @@ optimizeImages(IMAGES_DIR)
         fs.writeFileSync(METADATA_OUTPUT, JSON.stringify(imageMetadata, null, 2));
         console.log('Image optimization complete!');
         console.log('Image metadata written to utils/imageMetadata.json');
+        console.log(`Processed ${Object.keys(imageMetadata).length} images.`);
     })
     .catch((err) => console.error('Image optimization failed:', err));
