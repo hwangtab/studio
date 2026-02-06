@@ -40,15 +40,15 @@ const QuickAnswers = ({
             <BaseCard
               key={`${item.question}-${index}`}
               variant="outline"
-              className="p-6 h-full"
+              className="p-6 h-full flex flex-col"
             >
               <div className="text-xs font-semibold uppercase tracking-widest text-primary/70 mb-3">
                 Q{index + 1}
               </div>
-              <h3 className="typo-card-title mb-3 text-gray-900 dark:text-gray-100">
+              <h3 className="typo-card-title mb-3 text-gray-900 dark:text-gray-100 min-h-[3.5rem]">
                 {item.question}
               </h3>
-              <p className="typo-card-body text-gray-600 dark:text-gray-300">
+              <p className="typo-card-body text-gray-600 dark:text-gray-300 flex-grow">
                 {item.answer}
               </p>
             </BaseCard>
