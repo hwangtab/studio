@@ -270,8 +270,18 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
             <Section variant="alternate" className="py-16">
                 <ContactCTA
                     locale={locale}
-                    title={t('lesson.cta.title')}
-                    subtitle={t('lesson.cta.subtitle')}
+                    title={
+                        <>
+                            {t('lesson.cta.titleLine1')}<br />
+                            <span className="text-primary">{t('lesson.cta.titleHighlight')}</span>
+                        </>
+                    }
+                    subtitle={
+                        <>
+                            {t('lesson.cta.subtitleLine1')}<br className="hidden md:block" />
+                            {t('lesson.cta.subtitleLine2')}
+                        </>
+                    }
                     imageSrc="/images/lesson1.png"
                     imageAlt={t('lesson.cta.imageAlt')}
                     primaryButtonLabel={t('lesson.cta.inquiry')}

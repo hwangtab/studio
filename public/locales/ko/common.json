@@ -57,12 +57,12 @@
       "servicesCta": "자세히 보기"
     },
     "cta": {
-      "titleLine1": "상상했던 사운드,",
-      "titleHighlight": "현실이 되는 곳",
-      "subtitleLine1": "최고의 장비와 편안한 공간에서 당신만의 음악을 완성하세요.",
-      "subtitleLine2": "스튜디오 놀이 당신의 음악적 여정을 함께합니다.",
+      "titleLine1": "당신이 상상한 소리,",
+      "titleHighlight": "여기서 현실이 됩니다",
+      "subtitleLine1": "1억원 장비 · 10년 경력 엔지니어 · 은평구 유일 프리미엄 스튜디오",
+      "subtitleLine2": "지금 카톡 문의하면 첫 녹음 20% 할인",
       "location": "오시는 길",
-      "inquiry": "예약 문의하기"
+      "inquiry": "할인 문의하기"
     },
     "faq": {
       "title": "자주 묻는 질문",
@@ -90,10 +90,10 @@
       ]
     },
     "cta": {
-      "titleLine1": "당신의 음악 여정에",
-      "titleHighlight": "가장 믿음직한 파트너",
-      "subtitleLine1": "프로젝트의 규모와 상관없이 정성을 다합니다.",
-      "subtitleLine2": "기획부터 최종 마스터링까지, 당신의 상상을 완벽한 사운드로 실현해드립니다.",
+      "titleLine1": "작곡부터 유통까지,",
+      "titleHighlight": "원스톱으로 완결",
+      "subtitleLine1": "기획 → 녹음 → 믹싱 → 마스터링 → Spotify 배포까지",
+      "subtitleLine2": "견적 상담 무료 · 1:1 프로젝트 매니저 배정",
       "imageAlt": "스튜디오 놀 프로덕션 환경"
     },
     "seo": {
@@ -224,10 +224,10 @@
       ]
     },
     "cta": {
-      "title": "당신의 음악을 위한 최고의 파트너",
-      "subtitle": "예산과 일정에 맞는 최적의 플랜을 제안해 드립니다.",
+      "title": "예산 걱정 없이 시작하세요",
+      "subtitle": "맞춤 견적 무료 · 분할 결제 가능 · 패키지 할인 최대 30%",
       "location": "오시는 길",
-      "inquiry": "카카오톡 문의하기"
+      "inquiry": "무료 견적 받기"
     },
     "images": {
       "packageAlt": "스튜디오 놀 프로 패키지 녹음 장비"
@@ -333,10 +333,12 @@
       ]
     },
     "cta": {
-      "title": "첫 걸음을 함께합니다.",
-      "subtitle": "당신만의 커리큘럼을 계획해보세요.",
+      "titleLine1": "지금 시작하면,",
+      "titleHighlight": "6개월 후 당신도 프로듀서",
+      "subtitleLine1": "350,000원/월 정액제로 실전 프로듀싱의 모든 것을 배우세요.",
+      "subtitleLine2": "첫 상담 무료 · 현직 프로듀서 1:1 맞춤 지도",
       "location": "오시는 길",
-      "inquiry": "카카오톡 상담하기",
+      "inquiry": "무료 상담 신청",
       "imageAlt": "레슨 소개 이미지"
     }
   },
@@ -434,12 +436,12 @@
       ]
     },
     "cta": {
-      "titleLine1": "최적의 몰입,",
-      "titleHighlight": "최고의 결과물",
-      "subtitleLine1": "24시간 쾌적한 환경에서 오직 음악에만 집중하세요.",
-      "subtitleLine2": "지금 바로 방문하여 스튜디오를 직접 둘러보실 수 있습니다.",
+      "titleLine1": "월 40만원대로",
+      "titleHighlight": "24시간 프로 환경 독점",
+      "subtitleLine1": "방음완비 · 냉난방 · 하이엔드 모니터링 · 무제한 이용",
+      "subtitleLine2": "지금 입주 상담하고 첫 달 10% 할인 받으세요.",
       "location": "오시는 길",
-      "inquiry": "카카오톡 문의하기",
+      "inquiry": "입주 상담 신청",
       "imageAlt": "스튜디오 놀 연습실"
     }
   },
@@ -472,10 +474,10 @@
       "interfacesConsoles": "인터페이스 & 콘솔"
     },
     "cta": {
-      "titleLine1": "당신의 소중한 음악,",
-      "titleHighlight": "최상의 사운드로",
-      "subtitleLine1": "검증된 장비와 전문 엔지니어의 노하우로 최선의 결과물을 약속합니다.",
-      "subtitleLine2": "지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.",
+      "titleLine1": "1억원 상당 장비,",
+      "titleHighlight": "당신의 곡에 투입됩니다",
+      "subtitleLine1": "Neumann · Avalon · Neve — 세계적 장비로 완성되는 사운드",
+      "subtitleLine2": "지금 무료 방문 상담 → 스튜디오 투어 + 맞춤 견적",
       "imageAlt": "스튜디오 놀 컨트롤 룸"
     }
   },
