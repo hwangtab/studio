@@ -38,9 +38,9 @@ export const generateDefaultSchema = (
         url: siteUrl,
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/logo512.png`,
-          width: '512',
-          height: '512',
+          url: `${siteUrl}/logo/logo.png`,
+          width: '3350',
+          height: '862',
         },
         contactPoint: [
           {

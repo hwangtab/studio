@@ -3,7 +3,15 @@
     "width": 512,
     "height": 512
   },
+  "/images/album1.webp": {
+    "width": 512,
+    "height": 512
+  },
   "/images/album2.jpg": {
+    "width": 432,
+    "height": 426
+  },
+  "/images/album2.webp": {
     "width": 432,
     "height": 426
   },
@@ -11,7 +19,15 @@
     "width": 1200,
     "height": 1200
   },
+  "/images/album3.webp": {
+    "width": 1200,
+    "height": 1200
+  },
   "/images/bulgwang-mixing-club-2nd.png": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/bulgwang-mixing-club-2nd.webp": {
     "width": 1280,
     "height": 720
   },
@@ -19,7 +35,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/bulgwang-mixing-club.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/console.jpg": {
+    "width": 960,
+    "height": 1280
+  },
+  "/images/console.webp": {
     "width": 960,
     "height": 1280
   },
@@ -27,7 +51,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/hardware1.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/hardware2.jpg": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/hardware2.webp": {
     "width": 1280,
     "height": 720
   },
@@ -35,7 +67,15 @@
     "width": 1280,
     "height": 961
   },
+  "/images/hardware3.webp": {
+    "width": 1280,
+    "height": 961
+  },
   "/images/hardware4.jpg": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/hardware4.webp": {
     "width": 1280,
     "height": 720
   },
@@ -43,7 +83,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/hardware5.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/hardware8.jpg": {
+    "width": 1440,
+    "height": 960
+  },
+  "/images/hardware8.webp": {
     "width": 1440,
     "height": 960
   },
@@ -51,7 +99,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/lesson1.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/pcw.png": {
+    "width": 1280,
+    "height": 721
+  },
+  "/images/pcw.webp": {
     "width": 1280,
     "height": 721
   },
@@ -59,7 +115,15 @@
     "width": 432,
     "height": 426
   },
+  "/images/portfolio1.webp": {
+    "width": 432,
+    "height": 426
+  },
   "/images/portfolio2.jpg": {
+    "width": 600,
+    "height": 600
+  },
+  "/images/portfolio2.webp": {
     "width": 600,
     "height": 600
   },
@@ -67,7 +131,15 @@
     "width": 1200,
     "height": 1200
   },
+  "/images/portfolio3.webp": {
+    "width": 1200,
+    "height": 1200
+  },
   "/images/portfolio4.jpg": {
+    "width": 523,
+    "height": 523
+  },
+  "/images/portfolio4.webp": {
     "width": 523,
     "height": 523
   },
@@ -75,7 +147,15 @@
     "width": 500,
     "height": 500
   },
+  "/images/portfolio5.webp": {
+    "width": 500,
+    "height": 500
+  },
   "/images/portfolio6.jpg": {
+    "width": 300,
+    "height": 300
+  },
+  "/images/portfolio6.webp": {
     "width": 300,
     "height": 300
   },
@@ -83,7 +163,15 @@
     "width": 1920,
     "height": 937
   },
+  "/images/recording1.webp": {
+    "width": 1920,
+    "height": 937
+  },
   "/images/recording10.png": {
+    "width": 913,
+    "height": 1280
+  },
+  "/images/recording10.webp": {
     "width": 913,
     "height": 1280
   },
@@ -91,7 +179,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/recording11.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/recording12.png": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/recording12.webp": {
     "width": 1280,
     "height": 720
   },
@@ -99,7 +195,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/recording13.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/recording14.png": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/recording14.webp": {
     "width": 1280,
     "height": 720
   },
@@ -107,7 +211,15 @@
     "width": 1280,
     "height": 854
   },
+  "/images/recording15.webp": {
+    "width": 1280,
+    "height": 854
+  },
   "/images/recording16.png": {
+    "width": 1280,
+    "height": 854
+  },
+  "/images/recording16.webp": {
     "width": 1280,
     "height": 854
   },
@@ -115,7 +227,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/recording17.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/recording2.png": {
+    "width": 1920,
+    "height": 1080
+  },
+  "/images/recording2.webp": {
     "width": 1920,
     "height": 1080
   },
@@ -123,7 +243,15 @@
     "width": 1280,
     "height": 854
   },
+  "/images/recording3.webp": {
+    "width": 1280,
+    "height": 854
+  },
   "/images/recording4.png": {
+    "width": 1280,
+    "height": 854
+  },
+  "/images/recording4.webp": {
     "width": 1280,
     "height": 854
   },
@@ -131,7 +259,15 @@
     "width": 1280,
     "height": 854
   },
+  "/images/recording5.webp": {
+    "width": 1280,
+    "height": 854
+  },
   "/images/recording6.png": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/recording6.webp": {
     "width": 1280,
     "height": 720
   },
@@ -139,7 +275,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/recording7.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/recording8.png": {
+    "width": 1280,
+    "height": 960
+  },
+  "/images/recording8.webp": {
     "width": 1280,
     "height": 960
   },
@@ -147,7 +291,15 @@
     "width": 1280,
     "height": 960
   },
+  "/images/recording9.webp": {
+    "width": 1280,
+    "height": 960
+  },
   "/images/room1.jpg": {
+    "width": 1440,
+    "height": 960
+  },
+  "/images/room1.webp": {
     "width": 1440,
     "height": 960
   },
@@ -155,7 +307,15 @@
     "width": 901,
     "height": 854
   },
+  "/images/room2.webp": {
+    "width": 901,
+    "height": 854
+  },
   "/images/room3.jpg": {
+    "width": 1280,
+    "height": 854
+  },
+  "/images/room3.webp": {
     "width": 1280,
     "height": 854
   },
@@ -163,7 +323,15 @@
     "width": 1440,
     "height": 959
   },
+  "/images/room4.webp": {
+    "width": 1440,
+    "height": 959
+  },
   "/images/room5.jpg": {
+    "width": 1440,
+    "height": 810
+  },
+  "/images/room5.webp": {
     "width": 1440,
     "height": 810
   },
@@ -171,7 +339,15 @@
     "width": 1440,
     "height": 960
   },
+  "/images/room6.webp": {
+    "width": 1440,
+    "height": 960
+  },
   "/images/room7.jpg": {
+    "width": 1440,
+    "height": 809
+  },
+  "/images/room7.webp": {
     "width": 1440,
     "height": 809
   },
@@ -179,7 +355,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/room8.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/service1.jpg": {
+    "width": 1440,
+    "height": 810
+  },
+  "/images/service1.webp": {
     "width": 1440,
     "height": 810
   },
@@ -187,7 +371,15 @@
     "width": 1440,
     "height": 809
   },
+  "/images/service2.webp": {
+    "width": 1440,
+    "height": 809
+  },
   "/images/service3.jpg": {
+    "width": 1440,
+    "height": 810
+  },
+  "/images/service3.webp": {
     "width": 1440,
     "height": 810
   },
@@ -195,7 +387,15 @@
     "width": 1440,
     "height": 810
   },
+  "/images/service4.webp": {
+    "width": 1440,
+    "height": 810
+  },
   "/images/service5.jpg": {
+    "width": 1440,
+    "height": 960
+  },
+  "/images/service5.webp": {
     "width": 1440,
     "height": 960
   },
@@ -203,7 +403,15 @@
     "width": 1440,
     "height": 1080
   },
+  "/images/service6.webp": {
+    "width": 1440,
+    "height": 1080
+  },
   "/images/service7.jpg": {
+    "width": 1080,
+    "height": 607
+  },
+  "/images/service7.webp": {
     "width": 1080,
     "height": 607
   },
@@ -211,7 +419,15 @@
     "width": 1440,
     "height": 960
   },
+  "/images/service8.webp": {
+    "width": 1440,
+    "height": 960
+  },
   "/images/studio1.jpg": {
+    "width": 1440,
+    "height": 809
+  },
+  "/images/studio1.webp": {
     "width": 1440,
     "height": 809
   },
@@ -219,7 +435,15 @@
     "width": 1280,
     "height": 720
   },
+  "/images/studio2.webp": {
+    "width": 1280,
+    "height": 720
+  },
   "/images/studio3.jpg": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/studio3.webp": {
     "width": 1280,
     "height": 720
   },
@@ -227,7 +451,15 @@
     "width": 1440,
     "height": 810
   },
+  "/images/studio4.webp": {
+    "width": 1440,
+    "height": 810
+  },
   "/images/studio5.jpg": {
+    "width": 1440,
+    "height": 960
+  },
+  "/images/studio5.webp": {
     "width": 1440,
     "height": 960
   }
