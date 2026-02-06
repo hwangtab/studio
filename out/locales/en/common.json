@@ -12,8 +12,10 @@
     "groups": {
       "services": "Services",
       "space": "Space",
-      "contents": "Contents"
-    }
+      "contents": "Contents",
+      "inquiry": "Inquiry"
+    },
+    "contactInfo": "Contact Us"
   },
   "footer": {
     "rights": "All rights reserved.",

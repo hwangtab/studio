@@ -12,8 +12,10 @@
     "groups": {
       "services": "서비스",
       "space": "공간",
-      "contents": "컨텐츠"
-    }
+      "contents": "컨텐츠",
+      "inquiry": "문의"
+    },
+    "contactInfo": "연락처"
   },
   "footer": {
     "rights": "All rights reserved.",

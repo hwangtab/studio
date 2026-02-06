@@ -12,8 +12,10 @@
     "groups": {
       "services": "Dịch vụ",
       "space": "Không gian",
-      "contents": "Nội dung"
-    }
+      "contents": "Nội dung",
+      "inquiry": "Liên hệ"
+    },
+    "contactInfo": "Thông tin liên hệ"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",

@@ -65,6 +65,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
         { label: t('nav.stories'), href: `/${locale}/stories` },
       ]
+    },
+    {
+      id: 'inquiry',
+      label: t('nav.groups.inquiry'),
+      items: [
+        { label: t('nav.contactInfo'), href: `/${locale}/contact` },
+      ]
     }
   ], [t, locale]);
 
@@ -128,15 +135,17 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               />
             </div>
 
-            <Link
-              href={`/${locale}/contact`}
+            <a
+              href="https://open.kakao.com/me/nol"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border ${isScrolled || !hasHero
                 ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
                 : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
                 }`}
             >
-              {t('nav.contact')}
-            </Link>
+              {t('actions.kakao')}
+            </a>
 
             <button
               className={`xl:hidden p-2 rounded-full transition-colors duration-300 ${isScrolled || !hasHero

@@ -12,8 +12,10 @@
     "groups": {
       "services": "บริการ",
       "space": "พื้นที่",
-      "contents": "คอนเทนต์"
-    }
+      "contents": "คอนเทนต์",
+      "inquiry": "สอบถาม"
+    },
+    "contactInfo": "ข้อมูลติดต่อ"
   },
   "footer": {
     "rights": "สงวนลิขสิทธิ์ทั้งหมด",

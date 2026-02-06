@@ -12,8 +12,10 @@
     "groups": {
       "services": "Xizmatlar",
       "space": "Joy",
-      "contents": "Mundarija"
-    }
+      "contents": "Mundarija",
+      "inquiry": "So'rov"
+    },
+    "contactInfo": "Bog'lanish"
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",

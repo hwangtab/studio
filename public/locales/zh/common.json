@@ -12,8 +12,10 @@
     "groups": {
       "services": "服务",
       "space": "空间",
-      "contents": "内容"
-    }
+      "contents": "内容",
+      "inquiry": "咨询"
+    },
+    "contactInfo": "联系我们"
   },
   "footer": {
     "rights": "版权所有。",
