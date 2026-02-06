@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -79,8 +79,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 ${isScrolled
         ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
         : hasHero
-          ? 'bg-transparent backdrop-saturate-100 shadow-lg shadow-transparent'
-          : 'bg-gradient-to-r from-primary via-secondary to-accent backdrop-saturate-100 shadow-lg shadow-primary/20'
+          ? 'bg-transparent'
+          : 'bg-gradient-to-r from-primary via-secondary to-accent shadow-lg shadow-primary/20'
         }`}
       style={{ transform: 'translateZ(0)' }}
     >
@@ -89,7 +89,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           <Link
             href={`/${locale}`}
             className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight -translate-y-[2px] hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
             {siteConfig.name}
@@ -202,6 +202,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
                         className="pl-4 space-y-1 overflow-hidden"
                       >
                         {group.items.map((item) => (
