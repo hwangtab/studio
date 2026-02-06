@@ -87,7 +87,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           <Link
             href={`/${locale}`}
             className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight translate-y-0.5 hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
             {siteConfig.name}

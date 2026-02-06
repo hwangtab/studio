@@ -29,8 +29,8 @@
   font-style: normal;
   font-display: optional;
   /* 폰트 메트릭 조정으로 상단 여백 보정 */
-  ascent-override: 85%;
-  descent-override: 15%;
+  ascent-override: 75%;
+  descent-override: 20%;
 }
 
 /* Pretendard 폰트 (보조 폰트) - 주요 weight만 로드 */
