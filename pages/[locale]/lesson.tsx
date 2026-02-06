@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
+import { getReviews } from '../../data/reviews';
 
 interface CurriculumCardProps {
     step: string;
@@ -50,6 +51,7 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
 const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
     const { t } = useTranslation('common', { lng: locale });
     const getLink = (path: string) => `/${locale}${path}`;
+    const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
     const lessonQuickAnswers = React.useMemo(() => ([
         {
@@ -76,6 +78,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                 includeSchema={true}
                 isCourse
                 faqItems={lessonQuickAnswers}
+                reviewItems={reviewsData}
                 breadcrumbs={[
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },

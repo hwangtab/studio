@@ -9,6 +9,8 @@ import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import { getPricingData } from '../../data/pricing';
+import { generateAggregateOfferSchema } from '../../utils/schemaGenerator';
+import { getReviews } from '../../data/reviews';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
@@ -25,14 +27,16 @@ interface PricingProps {
 
 const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const { 
-    VAT_NOTICE, 
-    recordingOffers, 
-    mixingOffers, 
-    masteringOffers, 
-    additionalServices, 
-    specialPackages 
+  const {
+    VAT_NOTICE,
+    recordingOffers,
+    mixingOffers,
+    masteringOffers,
+    additionalServices,
+    specialPackages
   } = pricingData;
+
+  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
   const getLink = (path: string) => `/${locale}${path}`;
   const pricingUrl = `https://studionol.co.kr/${locale}/pricing`;
@@ -52,18 +56,35 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
     },
   ]), [t, VAT_NOTICE]);
 
+  const priceValidUntil = React.useMemo(() => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 6);
+    return date.toISOString().split('T')[0];
+  }, []);
+
   const offerToSchema = React.useCallback((offer: any) => ({
     '@type': 'Offer',
     name: offer.title,
     description: offer.description,
     priceCurrency: 'KRW',
     price: offer.priceValue,
+    priceValidUntil,
+    availability: 'https://schema.org/InStock',
     url: `${pricingUrl}#${offer.id}`,
+    seller: {
+      '@type': 'LocalBusiness',
+      name: locale === 'ko' ? '스튜디오 놀' : 'Studio NOL',
+      '@id': 'https://studionol.co.kr/#organization',
+    },
     itemOffered: {
       '@type': 'Service',
       name: offer.title,
+      provider: {
+        '@type': 'LocalBusiness',
+        name: locale === 'ko' ? '스튜디오 놀' : 'Studio NOL',
+      },
     },
-  }), [pricingUrl]);
+  }), [pricingUrl, priceValidUntil, locale]);
 
   const catalogToSchema = React.useCallback((name: string, offers: any[]) => ({
     '@type': 'OfferCatalog',
@@ -71,19 +92,43 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
     itemListElement: offers.map(offerToSchema),
   }), [offerToSchema]);
 
+  const allOffers = React.useMemo(() => [
+    ...specialPackages,
+    ...recordingOffers,
+    ...mixingOffers,
+    ...masteringOffers,
+    ...additionalServices,
+  ], [specialPackages, recordingOffers, mixingOffers, masteringOffers, additionalServices]);
+
+  const aggregateOfferSchema = React.useMemo(() =>
+    generateAggregateOfferSchema(
+      locale === 'ko' ? '스튜디오 놀 서비스 요금' : 'Studio NOL Service Pricing',
+      allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
+      locale
+    ),
+    [allOffers, locale]
+  );
+
   const pricingSchema = React.useMemo(() => ({
-    '@type': 'OfferCatalog',
-    name: t('pricing.seo.title'),
-    itemListElement: [
-      catalogToSchema(t('pricing.special.title'), specialPackages),
-      catalogToSchema(t('pricing.recording.title'), recordingOffers),
-      catalogToSchema(t('pricing.mixing.title'), mixingOffers),
-      catalogToSchema(t('pricing.mastering.title'), masteringOffers),
-      catalogToSchema(t('pricing.additional.title'), additionalServices),
-    ],
+    '@context': 'https://schema.org',
+    '@graph': [
+      aggregateOfferSchema,
+      {
+        '@type': 'OfferCatalog',
+        name: t('pricing.seo.title'),
+        itemListElement: [
+          catalogToSchema(t('pricing.special.title'), specialPackages),
+          catalogToSchema(t('pricing.recording.title'), recordingOffers),
+          catalogToSchema(t('pricing.mixing.title'), mixingOffers),
+          catalogToSchema(t('pricing.mastering.title'), masteringOffers),
+          catalogToSchema(t('pricing.additional.title'), additionalServices),
+        ],
+      },
+    ].filter(Boolean),
   }), [
     t,
     catalogToSchema,
+    aggregateOfferSchema,
     specialPackages,
     recordingOffers,
     mixingOffers,
@@ -101,6 +146,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
         includeSchema
         faqItems={pricingQuickAnswers}
         schema={pricingSchema}
+        reviewItems={reviewsData}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.pricing'), path: `/${locale}/pricing` },

@@ -17,6 +17,7 @@ import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getReviews } from '../../data/reviews';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -59,6 +60,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
+  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
     {
       question: t('practiceRoom.faq.items.0.q'),
@@ -112,6 +114,10 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         includeSchema={true}
         faqItems={practiceRoomFaqs}
         schema={practiceRoomSchema}
+        reviewItems={reviewsData.filter(r =>
+          r.category.includes('연습실') ||
+          r.category.includes('Practice')
+        )}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },

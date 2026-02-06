@@ -16,6 +16,8 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import { getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getReviews } from '../../data/reviews';
+import { generateHowToSchema } from '../../utils/schemaGenerator';
 
 const ICON_MAP: Record<string, any> = {
   Lightbulb,
@@ -41,6 +43,18 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const { coreServices, productionProcess, advantages } = servicesData;
   const siteConfig = getSiteConfig(locale);
+  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
+
+  const howToSchema = React.useMemo(() => generateHowToSchema(
+    locale === 'ko' ? '스튜디오 놀에서 음원 제작하는 방법' : 'How to Produce Music at Studio NOL',
+    locale === 'ko' ? '전문 스튜디오에서 음원을 제작하는 전체 과정을 안내합니다.' : 'A complete guide to producing music at a professional studio.',
+    productionProcess.map((step) => ({
+      name: step.title,
+      text: step.description,
+    })),
+    'P2D',
+    locale
+  ), [productionProcess, locale]);
 
   const getLink = (path: string) => `/${locale}${path}`;
 
@@ -52,9 +66,17 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
         keywords={t('about.seo.keywords')}
         canonical={`https://studionol.co.kr/${locale}/about`}
         breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.about'), path: `/${locale}/about` },
         ]}
         includeSchema={true}
+        reviewItems={reviewsData.filter(r =>
+          r.category.includes('프로덕션') ||
+          r.category.includes('Production') ||
+          r.category.includes('믹싱') ||
+          r.category.includes('Mixing')
+        )}
+        schema={howToSchema}
       />
       <ImageHero
         {...{

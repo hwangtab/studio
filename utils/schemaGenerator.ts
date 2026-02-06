@@ -105,6 +105,11 @@ export const generateDefaultSchema = (
       }
       : {}),
     sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
+    hasMap: 'https://naver.me/5gFZhS3X',
+    paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'KakaoPay'],
+    currenciesAccepted: 'KRW',
+    knowsLanguage: ['ko', 'en'],
+    slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
     serviceType: translations.serviceTypes,
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
@@ -287,6 +292,228 @@ export const generateCourseSchema = (
     },
     image: absoluteOgImage,
     url: normalizedCanonical,
+    educationalLevel: isKo ? '초급부터 고급까지' : 'Beginner to Advanced',
+    teaches: isKo
+      ? ['음악 프로덕션', '보컬 레코딩', '믹싱 기초']
+      : ['Music Production', 'Vocal Recording', 'Mixing Basics'],
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'onsite',
+      instructor: {
+        '@type': 'Person',
+        name: isKo ? '스튜디오 놀 엔지니어' : 'Studio NOL Engineer',
+      },
+    },
+  };
+};
+
+export interface ServiceOfferInput {
+  name: string;
+  description: string;
+  priceValue: number;
+  unit?: string;
+  url: string;
+}
+
+export const generateServiceOfferSchema = (
+  service: ServiceOfferInput,
+  locale: Locale = 'ko'
+) => {
+  const isKo = locale === 'ko';
+  const priceValidUntil = new Date();
+  priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
+
+  return {
+    '@type': 'Offer',
+    name: service.name,
+    description: service.description,
+    priceCurrency: 'KRW',
+    price: service.priceValue,
+    priceValidUntil: priceValidUntil.toISOString().split('T')[0],
+    availability: 'https://schema.org/InStock',
+    url: service.url,
+    ...(service.unit && { unitText: service.unit }),
+    seller: {
+      '@type': 'LocalBusiness',
+      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      '@id': 'https://studionol.co.kr/#organization',
+    },
+    itemOffered: {
+      '@type': 'Service',
+      name: service.name,
+      provider: {
+        '@type': 'LocalBusiness',
+        name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      },
+    },
+  };
+};
+
+export interface AggregateOfferInput {
+  name: string;
+  priceValue: number;
+}
+
+export const generateAggregateOfferSchema = (
+  catalogName: string,
+  offers: AggregateOfferInput[],
+  locale: Locale = 'ko'
+) => {
+  const prices = offers.map((o) => o.priceValue).filter((p) => p > 0);
+  if (prices.length === 0) return null;
+
+  const isKo = locale === 'ko';
+  const priceValidUntil = new Date();
+  priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: catalogName,
+    brand: {
+      '@type': 'Brand',
+      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+    },
+    offers: {
+      '@type': 'AggregateOffer',
+      lowPrice: Math.min(...prices),
+      highPrice: Math.max(...prices),
+      priceCurrency: 'KRW',
+      offerCount: offers.length,
+      priceValidUntil: priceValidUntil.toISOString().split('T')[0],
+      availability: 'https://schema.org/InStock',
+      offers: offers.map((offer) => ({
+        '@type': 'Offer',
+        name: offer.name,
+        price: offer.priceValue,
+        priceCurrency: 'KRW',
+      })),
+    },
+  };
+};
+
+export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') => {
+  const isKo = locale === 'ko';
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: isKo ? '스튜디오 놀' : 'Studio NOL',
+    alternateName: 'Studio Nol',
+    url: siteUrl,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteUrl}/${locale}/stories?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+};
+
+export interface HowToStep {
+  name: string;
+  text: string;
+  image?: string;
+}
+
+export const generateHowToSchema = (
+  name: string,
+  description: string,
+  steps: HowToStep[],
+  totalTime?: string,
+  locale: Locale = 'ko'
+) => {
+  const isKo = locale === 'ko';
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name,
+    description,
+    ...(totalTime && { totalTime }),
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      ...(step.image && { image: step.image }),
+    })),
+    tool: {
+      '@type': 'HowToTool',
+      name: isKo ? '전문 녹음 장비' : 'Professional Recording Equipment',
+    },
+  };
+};
+
+export interface MusicRecordingInput {
+  title: string;
+  artist: string;
+  image?: string;
+  url?: string;
+  datePublished?: string;
+  genre?: string;
+}
+
+export const generateMusicRecordingSchema = (
+  item: MusicRecordingInput,
+  siteUrl: string,
+  locale: Locale = 'ko'
+) => {
+  const isKo = locale === 'ko';
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'MusicRecording',
+    name: item.title,
+    byArtist: {
+      '@type': 'MusicGroup',
+      name: item.artist,
+    },
+    recordingOf: {
+      '@type': 'MusicComposition',
+      name: item.title,
+    },
+    producer: {
+      '@type': 'Organization',
+      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      url: siteUrl,
+    },
+    ...(item.image && { image: item.image }),
+    ...(item.url && { url: item.url }),
+    ...(item.datePublished && { datePublished: item.datePublished }),
+    ...(item.genre && { genre: item.genre }),
+  };
+};
+
+export interface VideoInput {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  contentUrl: string;
+  uploadDate: string;
+  duration?: string;
+}
+
+export const generateVideoSchema = (video: VideoInput) => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: video.name,
+    description: video.description,
+    thumbnailUrl: video.thumbnailUrl,
+    contentUrl: video.contentUrl,
+    uploadDate: video.uploadDate,
+    ...(video.duration && { duration: video.duration }),
+    publisher: {
+      '@type': 'Organization',
+      name: 'Studio NOL',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://studionol.co.kr/logo512.png',
+      },
+    },
   };
 };
 

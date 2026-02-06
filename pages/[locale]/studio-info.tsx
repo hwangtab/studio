@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { motion } from 'framer-motion';
@@ -13,6 +14,8 @@ import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
+import { getReviews } from '../../data/reviews';
+import { getStudioFaqData } from '../../data/faq';
 
 interface StudioInfoProps {
   locale: Locale;
@@ -23,6 +26,8 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
+  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
+  const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
 
   return (
     <>
@@ -36,6 +41,8 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },
         ]}
         includeSchema={true}
+        reviewItems={reviewsData}
+        faqItems={studioFaqData}
       />
       <ImageHero
         locale={locale}
