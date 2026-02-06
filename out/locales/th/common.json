@@ -2,13 +2,18 @@
   "nav": {
     "home": "หน้าแรก",
     "about": "เกี่ยวกับ",
-    "portfolio": "พอร์ต",
+    "portfolio": "พอร์ตโฟลิโอ",
     "stories": "เรื่องราว",
     "contact": "ติดต่อ",
     "pricing": "ราคา",
     "equipment": "อุปกรณ์",
     "practiceRoom": "ห้องซ้อม",
-    "lesson": "บทเรียน"
+    "lesson": "บทเรียน",
+    "groups": {
+      "services": "บริการ",
+      "space": "พื้นที่",
+      "contents": "คอนเทนต์"
+    }
   },
   "footer": {
     "rights": "สงวนลิขสิทธิ์ทั้งหมด",

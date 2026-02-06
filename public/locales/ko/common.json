@@ -8,7 +8,12 @@
     "pricing": "가격",
     "equipment": "장비",
     "practiceRoom": "연습실",
-    "lesson": "레슨"
+    "lesson": "레슨",
+    "groups": {
+      "services": "서비스",
+      "space": "공간",
+      "contents": "컨텐츠"
+    }
   },
   "footer": {
     "rights": "All rights reserved.",

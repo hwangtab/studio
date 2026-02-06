@@ -3,12 +3,17 @@
     "home": "Home",
     "about": "Giới thiệu",
     "portfolio": "Portfolio",
-    "stories": "Story",
-    "contact": "L.Hệ",
-    "pricing": "Giá",
-    "equipment": "T.Bị",
-    "practiceRoom": "Phòng",
-    "lesson": "Học"
+    "stories": "Câu chuyện",
+    "contact": "Liên hệ",
+    "pricing": "Giá dịch vụ",
+    "equipment": "Thiết bị",
+    "practiceRoom": "Phòng tập",
+    "lesson": "Bài học",
+    "groups": {
+      "services": "Dịch vụ",
+      "space": "Không gian",
+      "contents": "Nội dung"
+    }
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",

@@ -8,7 +8,12 @@
     "pricing": "Pricing",
     "equipment": "Gear",
     "practiceRoom": "Practice",
-    "lesson": "Lesson"
+    "lesson": "Lesson",
+    "groups": {
+      "services": "Services",
+      "space": "Space",
+      "contents": "Contents"
+    }
   },
   "footer": {
     "rights": "All rights reserved.",

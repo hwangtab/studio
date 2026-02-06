@@ -8,7 +8,12 @@
     "pricing": "Precios",
     "equipment": "Equipo",
     "practiceRoom": "Sala",
-    "lesson": "Clases"
+    "lesson": "Clases",
+    "groups": {
+      "services": "Servicios",
+      "space": "Espacio",
+      "contents": "Contenidos"
+    }
   },
   "footer": {
     "rights": "Todos los derechos reservados.",

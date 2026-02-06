@@ -1,14 +1,19 @@
 {
   "nav": {
     "home": "主页",
-    "about": "关于",
+    "about": "关于我们",
     "portfolio": "作品集",
     "stories": "故事",
-    "contact": "联系",
+    "contact": "联系我们",
     "pricing": "价格",
-    "equipment": "设备",
+    "equipment": "设备介绍",
     "practiceRoom": "练习室",
-    "lesson": "课程"
+    "lesson": "课程",
+    "groups": {
+      "services": "服务",
+      "space": "空间",
+      "contents": "内容"
+    }
   },
   "footer": {
     "rights": "版权所有。",
