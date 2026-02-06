@@ -36,7 +36,16 @@
     "location": "위치",
     "shareCopied": "링크가 클립보드에 복사되었습니다.",
     "shareUnsupported": "이 브라우저에서는 공유가 지원되지 않습니다.",
-    "reload": "새로고침"
+    "reload": "새로고침",
+    "toggleThemeLight": "라이트 모드로 전환",
+    "toggleThemeDark": "다크 모드로 전환",
+    "openMenu": "메뉴 열기",
+    "closeMenu": "메뉴 닫기",
+    "kakaoExternal": "카카오톡 문의 (새 창)"
+  },
+  "theme": {
+    "light": "라이트",
+    "dark": "다크"
   },
   "home": {
     "heroTitle": "음악이 시작되는 곳, 스튜디오 놀",

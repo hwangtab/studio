@@ -36,7 +36,16 @@
     "location": "位置",
     "shareCopied": "链接已复制到剪贴板。",
     "shareUnsupported": "此浏览器不支持分享。",
-    "reload": "刷新"
+    "reload": "刷新",
+    "toggleThemeLight": "切换到浅色模式",
+    "toggleThemeDark": "切换到深色模式",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单",
+    "kakaoExternal": "KakaoTalk 咨询 (在新窗口中打开)"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色"
   },
   "home": {
     "heroTitle": "音乐开始的地方，Studio NOL",

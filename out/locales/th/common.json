@@ -36,7 +36,16 @@
     "location": "ที่ตั้ง",
     "shareCopied": "คัดลอกลิงก์แล้ว",
     "shareUnsupported": "เบราว์เซอร์นี้ไม่รองรับการแชร์",
-    "reload": "โหลดใหม่"
+    "reload": "โหลดใหม่",
+    "toggleThemeLight": "เปลี่ยนเป็นโหมดสว่าง",
+    "toggleThemeDark": "เปลี่ยนเป็นโหมดมืด",
+    "openMenu": "เปิดเมนู",
+    "closeMenu": "ปิดเมนู",
+    "kakaoExternal": "สอบถามทาง KakaoTalk (เปิดในหน้าต่างใหม่)"
+  },
+  "theme": {
+    "light": "สว่าง",
+    "dark": "มืด"
   },
   "home": {
     "heroTitle": "จุดเริ่มต้นของดนตรี, Studio NOL",

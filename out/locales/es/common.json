@@ -36,7 +36,16 @@
     "location": "Ubicación",
     "shareCopied": "Enlace copiado al portapapeles.",
     "shareUnsupported": "Compartir no está disponible en este navegador.",
-    "reload": "Recargar"
+    "reload": "Recargar",
+    "toggleThemeLight": "Cambiar a modo claro",
+    "toggleThemeDark": "Cambiar a modo oscuro",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "kakaoExternal": "Consulta por KakaoTalk (abre en una nueva ventana)"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro"
   },
   "home": {
     "heroTitle": "Donde comienza la música, Studio NOL",

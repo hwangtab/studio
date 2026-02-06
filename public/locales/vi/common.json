@@ -36,7 +36,16 @@
     "location": "Địa điểm",
     "shareCopied": "Đã sao chép liên kết.",
     "shareUnsupported": "Trình duyệt này không hỗ trợ chia sẻ.",
-    "reload": "Tải lại"
+    "reload": "Tải lại",
+    "toggleThemeLight": "Chuyển sang chế độ sáng",
+    "toggleThemeDark": "Chuyển sang chế độ tối",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "kakaoExternal": "Tư vấn qua KakaoTalk (mở trong cửa sổ mới)"
+  },
+  "theme": {
+    "light": "Sáng",
+    "dark": "Tối"
   },
   "home": {
     "heroTitle": "Nơi âm nhạc bắt đầu, Studio NOL",

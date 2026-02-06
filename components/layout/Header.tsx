@@ -26,19 +26,30 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const siteConfig = getSiteConfig(locale);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (isMenuOpen) setIsMenuOpen(false);
+    if (!isMenuOpen) return;
+
+    const handleScroll = () => setIsMenuOpen(false);
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('keydown', handleEsc);
+
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
   }, [isMenuOpen]);
 
-  const toggleGroup = (group: string) => {
+  const toggleGroup = useCallback((group: string) => {
     setExpandedGroups(prev =>
       prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
     );
-  };
+  }, []);
 
   const navGroups = useMemo(() => [
     {
@@ -73,22 +84,21 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     setIsMenuOpen(false);
   }, []);
 
+  const isTransparent = hasHero && !isScrolled;
+
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 ${isScrolled
+      className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 transform-gpu ${!isTransparent
         ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
-        : hasHero
-          ? 'bg-transparent'
-          : 'bg-gradient-to-r from-primary via-secondary to-accent shadow-lg shadow-primary/20'
+        : 'bg-transparent'
         }`}
-      style={{ transform: 'translateZ(0)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4 h-12">
           <Link
             href={`/${locale}`}
-            className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
+            className={`${!isTransparent ? 'text-primary dark:text-white' : 'text-white'}
               flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
@@ -112,28 +122,29 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-4">
             <div className="hidden sm:flex items-center space-x-2">
               <button
-                className={`p-2 rounded-full transition-colors duration-300 ${isScrolled || !hasHero
+                className={`p-2 rounded-full transition-colors duration-300 ${!isTransparent
                   ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                   : 'text-white hover:bg-white/20'
                   }`}
                 onClick={toggleDarkMode}
-                aria-label="Toggle dark mode"
+                aria-label={isDarkMode ? t('actions.toggleThemeLight') : t('actions.toggleThemeDark')}
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
 
               <LanguageSwitcher
                 currentLocale={locale}
-                isScrolled={isScrolled}
-                hasHero={hasHero || false}
+                isScrolled={!isTransparent}
+                hasHero={isTransparent}
               />
             </div>
 
             <a
-              href="https://open.kakao.com/me/nol"
+              href={siteConfig.contact.kakaoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border ${isScrolled || !hasHero
+              aria-label={t('actions.kakaoExternal')}
+              className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border ${!isTransparent
                 ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
                 : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
                 }`}
@@ -142,12 +153,12 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
             </a>
 
             <button
-              className={`xl:hidden p-2 rounded-full transition-colors duration-300 ${isScrolled || !hasHero
+              className={`xl:hidden p-2 rounded-full transition-colors duration-300 ${!isTransparent
                 ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 : 'text-white hover:bg-white/20'
                 }`}
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              aria-label="Toggle menu"
+              aria-label={isMenuOpen ? t('actions.closeMenu') : t('actions.openMenu')}
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -168,12 +179,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               {/* 모바일 테마/언어 스위처 */}
               <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
                 <button
-                  className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white"
+                  className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
                   onClick={toggleDarkMode}
+                  aria-label={isDarkMode ? t('actions.toggleThemeLight') : t('actions.toggleThemeDark')}
                 >
                   <div className="flex items-center gap-2">
                     {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                    <span>{isDarkMode ? 'Light' : 'Dark'} Mode</span>
+                    <span>{isDarkMode ? t('theme.light') : t('theme.dark')}</span>
                   </div>
                 </button>
                 <LanguageSwitcher
@@ -188,7 +200,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                 <div key={group.id} className="space-y-2">
                   <button
                     onClick={() => toggleGroup(group.id)}
-                    className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white"
+                    aria-expanded={expandedGroups.includes(group.id)}
+                    className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
                   >
                     {group.label}
                     <ChevronDown
@@ -210,9 +223,9 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                             key={item.href}
                             href={item.href}
                             onClick={() => setIsMenuOpen(false)}
-                            className={`block px-3 py-2 text-sm rounded-lg transition-colors ${currentPath === item.href
+                            className={`block px-3 py-2 text-sm rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary ${currentPath === item.href
                               ? 'bg-primary/10 text-primary dark:text-accent font-medium'
-                              : 'text-gray-600 dark:text-gray-400'
+                              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                               }`}
                           >
                             {item.label}

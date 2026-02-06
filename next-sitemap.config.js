@@ -14,5 +14,16 @@ module.exports = {
     '/api/*',
     '/',
     '/about',
-// ... rest of the file
-
+    '/contact',
+    '/portfolio',
+    '/portfolio/*',
+    '/stories',
+    '/stories/*',
+    '/pricing',
+    '/lesson',
+    '/practice-room',
+    '/studio-info',
+    '/[locale]',
+    '/[locale]/*',
+  ],
+}

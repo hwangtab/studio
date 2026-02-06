@@ -36,7 +36,16 @@
     "location": "Manzil",
     "shareCopied": "Havola buferga nusxalandi.",
     "shareUnsupported": "Ushbu brauzerda ulashish qo'llab-quvvatlanmaydi.",
-    "reload": "Qayta yuklash"
+    "reload": "Qayta yuklash",
+    "toggleThemeLight": "Yorug‘ rejimga o‘tish",
+    "toggleThemeDark": "Tungi rejimga o‘tish",
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish",
+    "kakaoExternal": "KakaoTalk orqali so‘rov (yangi oynada ochiladi)"
+  },
+  "theme": {
+    "light": "Yorug‘",
+    "dark": "Tungi"
   },
   "home": {
     "heroTitle": "Musiqa boshlanadigan joy, Studio NOL",
