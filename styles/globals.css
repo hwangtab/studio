@@ -38,7 +38,7 @@
   font-style: normal;
   font-display: optional;
   /* 상단 여백 줄이기: ascender가 큰 폰트 특성 보정 */
-  ascent-override: 85%;
+  ascent-override: 80%;
   descent-override: 20%;
   line-gap-override: 0%;
 }
