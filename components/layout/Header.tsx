@@ -76,19 +76,19 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     <header
       ref={ref}
       className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 ${isScrolled
-        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
+        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
         : hasHero
-          ? 'bg-transparent backdrop-blur-[0.5px] shadow-lg shadow-transparent'
-          : 'bg-gradient-to-r from-primary via-secondary to-accent backdrop-blur-[0.5px] shadow-lg shadow-primary/20'
+          ? 'bg-transparent backdrop-saturate-100 shadow-lg shadow-transparent'
+          : 'bg-gradient-to-r from-primary via-secondary to-accent backdrop-saturate-100 shadow-lg shadow-primary/20'
         }`}
-      style={{ willChange: 'backdrop-filter, background-color' }}
+      style={{ transform: 'translateZ(0)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 h-12">
           <Link
             href={`/${locale}`}
             className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight -translate-y-[2px] hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
             {siteConfig.name}
@@ -130,9 +130,9 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
 
             <Link
               href={`/${locale}/contact`}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap ${isScrolled || !hasHero
-                ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg'
-                : 'bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-sm'
+              className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border ${isScrolled || !hasHero
+                ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
+                : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
                 }`}
             >
               {t('nav.contact')}
