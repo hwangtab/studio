@@ -10,12 +10,10 @@
     "practiceRoom": "Practice",
     "lesson": "Lesson",
     "groups": {
-      "services": "Services",
-      "space": "Space",
-      "contents": "Contents",
-      "inquiry": "Inquiry"
-    },
-    "contactInfo": "Contact Us"
+      "recording": "Recording",
+      "practice": "Practice",
+      "explore": "Explore"
+    }
   },
   "footer": {
     "rights": "All rights reserved.",

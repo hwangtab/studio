@@ -10,12 +10,10 @@
     "practiceRoom": "Sala",
     "lesson": "Clases",
     "groups": {
-      "services": "Servicios",
-      "space": "Espacio",
-      "contents": "Contenidos",
-      "inquiry": "Consulta"
-    },
-    "contactInfo": "Contáctanos"
+      "recording": "Grabación",
+      "practice": "Práctica",
+      "explore": "Explorar"
+    }
   },
   "footer": {
     "rights": "Todos los derechos reservados.",

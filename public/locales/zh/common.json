@@ -10,12 +10,10 @@
     "practiceRoom": "练习室",
     "lesson": "课程",
     "groups": {
-      "services": "服务",
-      "space": "空间",
-      "contents": "内容",
-      "inquiry": "咨询"
-    },
-    "contactInfo": "联系我们"
+      "recording": "录音/混音",
+      "practice": "练习/课程",
+      "explore": "了解更多"
+    }
   },
   "footer": {
     "rights": "版权所有。",

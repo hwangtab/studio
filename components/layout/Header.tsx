@@ -42,8 +42,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
 
   const navGroups = useMemo(() => [
     {
-      id: 'services',
-      label: t('nav.groups.services'),
+      id: 'recording',
+      label: t('nav.groups.recording'),
       items: [
         { label: t('nav.about'), href: `/${locale}/about` },
         { label: t('nav.pricing'), href: `/${locale}/pricing` },
@@ -51,26 +51,20 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       ]
     },
     {
-      id: 'space',
-      label: t('nav.groups.space'),
+      id: 'practice',
+      label: t('nav.groups.practice'),
       items: [
         { label: t('nav.practiceRoom'), href: `/${locale}/practice-room` },
         { label: t('nav.lesson'), href: `/${locale}/lesson` },
       ]
     },
     {
-      id: 'contents',
-      label: t('nav.groups.contents'),
+      id: 'explore',
+      label: t('nav.groups.explore'),
       items: [
         { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
         { label: t('nav.stories'), href: `/${locale}/stories` },
-      ]
-    },
-    {
-      id: 'inquiry',
-      label: t('nav.groups.inquiry'),
-      items: [
-        { label: t('nav.contactInfo'), href: `/${locale}/contact` },
+        { label: t('nav.contact'), href: `/${locale}/contact` },
       ]
     }
   ], [t, locale]);

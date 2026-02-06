@@ -10,12 +10,10 @@
     "practiceRoom": "ห้องซ้อม",
     "lesson": "บทเรียน",
     "groups": {
-      "services": "บริการ",
-      "space": "พื้นที่",
-      "contents": "คอนเทนต์",
-      "inquiry": "สอบถาม"
-    },
-    "contactInfo": "ข้อมูลติดต่อ"
+      "recording": "บันทึกเสียง",
+      "practice": "ฝึกซ้อม",
+      "explore": "สำรวจ"
+    }
   },
   "footer": {
     "rights": "สงวนลิขสิทธิ์ทั้งหมด",

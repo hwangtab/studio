@@ -10,12 +10,10 @@
     "practiceRoom": "연습실",
     "lesson": "레슨",
     "groups": {
-      "services": "서비스",
-      "space": "공간",
-      "contents": "컨텐츠",
-      "inquiry": "문의"
-    },
-    "contactInfo": "연락처"
+      "recording": "녹음/믹싱",
+      "practice": "연습/레슨",
+      "explore": "알아보기"
+    }
   },
   "footer": {
     "rights": "All rights reserved.",

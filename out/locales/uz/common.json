@@ -10,12 +10,10 @@
     "practiceRoom": "Mashg'ulot xonasi",
     "lesson": "Dars",
     "groups": {
-      "services": "Xizmatlar",
-      "space": "Joy",
-      "contents": "Mundarija",
-      "inquiry": "So'rov"
-    },
-    "contactInfo": "Bog'lanish"
+      "recording": "Yozuv",
+      "practice": "Mashg'ulot",
+      "explore": "Batafsil"
+    }
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",

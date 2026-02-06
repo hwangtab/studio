@@ -10,12 +10,10 @@
     "practiceRoom": "Phòng tập",
     "lesson": "Bài học",
     "groups": {
-      "services": "Dịch vụ",
-      "space": "Không gian",
-      "contents": "Nội dung",
-      "inquiry": "Liên hệ"
-    },
-    "contactInfo": "Thông tin liên hệ"
+      "recording": "Thu âm",
+      "practice": "Luyện tập",
+      "explore": "Khám phá"
+    }
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
