@@ -99,13 +99,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           <Link
             href={`/${locale}`}
             className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-              flex-shrink-0 flex items-center text-2xl sm:text-4xl 3xl:text-5xl font-logo tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              flex-shrink-0 flex items-center text-xl sm:text-2xl 3xl:text-5xl font-logo tracking-tight sm:tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
             {siteConfig.name}
           </Link>
 
-          <nav className="hidden 3xl:flex flex-1 justify-center items-center gap-x-2 3xl:gap-x-4 min-w-0 px-2 3xl:px-4">
+          <nav className="hidden 3xl:flex justify-center items-center gap-x-1.5 3xl:gap-x-4 min-w-0 px-2 3xl:px-4 mx-auto">
             {navItems.map((item) => (
               <NavLink
                 key={item.href}

@@ -1,13 +1,13 @@
 {
   "nav": {
-    "home": "Bosh sahifa",
-    "about": "Biz haqimizda",
+    "home": "Bosh",
+    "about": "Biz",
     "portfolio": "Portfolio",
     "stories": "Hikoyalar",
     "contact": "Aloqa",
     "pricing": "Narxlar",
     "equipment": "Uskunalar",
-    "practiceRoom": "Mashg'ulot xonasi",
+    "practiceRoom": "Xona",
     "lesson": "Dars"
   },
   "footer": {

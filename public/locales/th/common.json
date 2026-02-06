@@ -2,7 +2,7 @@
   "nav": {
     "home": "หน้าแรก",
     "about": "เกี่ยวกับ",
-    "portfolio": "พอร์ตโฟลิโอ",
+    "portfolio": "พอร์ต",
     "stories": "เรื่องราว",
     "contact": "ติดต่อ",
     "pricing": "ราคา",
@@ -492,7 +492,7 @@
     "categories": {
       "notice": "ประกาศ",
       "event": "อีเวนต์",
-      "lesson": "บทเรียน",
+      "lesson": "เรียน",
       "interview": "สัมภาษณ์",
       "equipment": "อุปกรณ์",
       "review": "รีวิว",

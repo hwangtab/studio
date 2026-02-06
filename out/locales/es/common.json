@@ -1,13 +1,13 @@
 {
   "nav": {
     "home": "Inicio",
-    "about": "Sobre Nosotros",
+    "about": "Acerca",
     "portfolio": "Portafolio",
     "stories": "Historias",
     "contact": "Contacto",
     "pricing": "Precios",
     "equipment": "Equipo",
-    "practiceRoom": "Sala de Práctica",
+    "practiceRoom": "Sala",
     "lesson": "Clases"
   },
   "footer": {

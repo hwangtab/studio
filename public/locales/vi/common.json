@@ -1,14 +1,14 @@
 {
   "nav": {
-    "home": "Trang chủ",
+    "home": "Home",
     "about": "Giới thiệu",
     "portfolio": "Portfolio",
-    "stories": "Câu chuyện",
-    "contact": "Liên hệ",
-    "pricing": "Bảng giá",
-    "equipment": "Thiết bị",
-    "practiceRoom": "Phòng tập",
-    "lesson": "Bài học"
+    "stories": "Story",
+    "contact": "L.Hệ",
+    "pricing": "Giá",
+    "equipment": "T.Bị",
+    "practiceRoom": "Phòng",
+    "lesson": "Học"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
