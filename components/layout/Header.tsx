@@ -24,10 +24,10 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
 
   // Determine if we should allow prefix matching.
   const hrefSegments = normalizedHref.split('/').filter(Boolean).length;
-  
+
   const isExactMatch = normalizedPath === normalizedHref;
-  const isPrefixMatch = hrefSegments > 1 && 
-    normalizedPath.startsWith(normalizedHref) && 
+  const isPrefixMatch = hrefSegments > 1 &&
+    normalizedPath.startsWith(normalizedHref) &&
     normalizedPath[normalizedHref.length] === '/';
 
   const isActive = isExactMatch || isPrefixMatch;
@@ -39,8 +39,8 @@ const NavLink = React.memo(({ href, children, isScrolled, currentPath, onNavigat
       aria-current={isActive ? 'page' : undefined}
       className={`px-2 py-1.5 rounded-md typo-nav-link text-sm leading-snug whitespace-nowrap transition-colors transition-shadow duration-300 touch-manipulation
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
-        ? 'bg-white/90 text-primary-dark shadow-sm'
-        : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
+          ? 'bg-white/90 text-primary-dark shadow-sm'
+          : `${isScrolled || !hasHero ? 'text-gray-800 dark:text-white' : 'text-white'} hover:bg-white/20`
         }`}
     >
       {children}
@@ -99,13 +99,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           <Link
             href={`/${locale}`}
             className={`${isScrolled || !hasHero ? 'text-primary dark:text-white' : 'text-white'}
-              flex-shrink-0 flex items-center text-3xl sm:text-5xl font-logo tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+              flex-shrink-0 flex items-center text-2xl sm:text-4xl 3xl:text-5xl font-logo tracking-wider hover:opacity-90 transition-opacity duration-300 whitespace-nowrap -translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
             onClick={() => setIsMenuOpen(false)}
           >
             {siteConfig.name}
           </Link>
 
-          <nav className="hidden 2xl:flex flex-1 justify-center items-center gap-x-4 min-w-0 px-4">
+          <nav className="hidden 3xl:flex flex-1 justify-center items-center gap-x-2 3xl:gap-x-4 min-w-0 px-2 3xl:px-4">
             {navItems.map((item) => (
               <NavLink
                 key={item.href}
@@ -139,7 +139,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
             />
 
             <button
-              className={`2xl:hidden p-2 rounded-full ${isScrolled || !hasHero
+              className={`3xl:hidden p-2 rounded-full ${isScrolled || !hasHero
                 ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 : 'text-white hover:bg-white/20'
                 } min-h-[44px] min-w-[44px] transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
@@ -162,7 +162,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               duration: shouldReduceMotion ? 0 : 0.3,
               ease: 'easeInOut'
             }}
-            className="2xl:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
+            className="3xl:hidden z-40 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg overflow-hidden"
           >
             <div className="px-4 py-3 space-y-2">
               {navItems.map((item) => (
