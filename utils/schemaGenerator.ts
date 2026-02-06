@@ -78,7 +78,7 @@ export const generateDefaultSchema = (
             worstRating: '1',
           },
           reviewBody: item.content,
-          datePublished: item.datePublished || new Date().toISOString().split('T')[0],
+          ...(item.datePublished ? { datePublished: item.datePublished } : {}),
         })),
       }
       : {}),
