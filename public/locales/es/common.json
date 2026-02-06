@@ -26,6 +26,9 @@
     "emailLabel": "Email",
     "phoneLabel": "Teléfono"
   },
+  "seo": {
+    "geoPlacename": "Eunpyeong-gu, Seúl"
+  },
   "actions": {
     "more": "Ver Más",
     "submit": "Enviar",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "Cambiar a modo oscuro",
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
-    "kakaoExternal": "Consulta por KakaoTalk (abre en una nueva ventana)"
+    "kakaoExternal": "Consulta por KakaoTalk (abre en una nueva ventana)",
+    "skipToContent": "Saltar al contenido"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "Categoría",
+      "all": "Todo"
+    },
+    "siteName": "Studio NOL"
   },
   "theme": {
     "light": "Claro",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico"
-    }
+    },
+    "howToTitle": "Cómo producir música en Studio NOL",
+    "howToDescription": "Una guía completa para producir música en un estudio profesional."
   },
   "portfolio": {
     "title": "Portafolio",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "Tarifas de grabación y alquiler de estudio | Studio NOL",
       "description": "Precios transparentes. Consulta tarifas para grabaciones de bodas, locuciones y alquiler de estudio.",
-      "keywords": "tarifas de grabación, presupuesto de locución, precio de alquiler de estudio, precio de mezcla, precio de masterización, Studio NOL"
+      "keywords": "tarifas de grabación, presupuesto de locución, precio de alquiler de estudio, precio de mezcla, precio de masterización, Studio NOL",
+      "schemaTitle": "Precios de los Servicios de Studio NOL"
     },
     "hero": {
       "title": "Precio accesible, servicio transparente",
@@ -491,6 +505,42 @@
       "title": "No se encontraron historias",
       "all": "Aún no hay historias registradas.",
       "byCategory": "No hay historias en la categoría '{{category}}'."
+    },
+    "list": {
+      "defaultCategory": "Predeterminado",
+      "noDate": "Sin fecha",
+      "noTitle": "Sin título",
+      "noContent": "Sin contenido"
+    },
+    "cta": {
+      "recording": {
+        "title": "¿Quieres un mejor sonido?",
+        "descriptionLine1": "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.",
+        "descriptionLine2": "Completamos tu música con el mejor equipo y experiencia.",
+        "primaryText": "Ver Precios",
+        "secondaryText": "Consulta"
+      },
+      "lesson": {
+        "title": "¿Quieres crear tu propia música?",
+        "descriptionLine1": "No luches solo. Te ayudamos con clases personalizadas 1:1.",
+        "descriptionLine2": "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.",
+        "primaryText": "Ver Currículo",
+        "secondaryText": "Solicitar Consulta"
+      },
+      "practice": {
+        "title": "¿Necesitas tu propio espacio para concentrarte?",
+        "descriptionLine1": "Salas de práctica premium disponibles libremente en cualquier momento.",
+        "descriptionLine2": "Ambiente agradable e insonorización perfecta listos.",
+        "primaryText": "Ver Instalaciones",
+        "secondaryText": "Consulta de Reserva"
+      },
+      "production": {
+        "title": "¿Quieres producir tu propia música?",
+        "descriptionLine1": "Desde la composición y arreglo hasta la mezcla y masterización.",
+        "descriptionLine2": "Convertimos tus ideas en pistas terminadas.",
+        "primaryText": "Consulta de Producción",
+        "secondaryText": "Ver Costos"
+      }
     },
     "detail": {
       "backToList": "Volver a historias",

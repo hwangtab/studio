@@ -1,7 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { timeAgo } from '../utils/dateUtils';
+
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
@@ -29,16 +31,7 @@ const cardVariants = {
 };
 
 const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
-  const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
-    if (locale === 'ko') return ko;
-    if (locale === 'en') return en;
-    if (locale === 'zh') return zh || en;
-    if (locale === 'es') return es || en;
-    if (locale === 'vi') return vi || en;
-    if (locale === 'th') return th || en;
-    if (locale === 'uz') return uz || en;
-    return ko;
-  };
+  const { t } = useTranslation('common');
 
   const thumbnailUrl = story.thumbnail || extractFirstImageUrl(story.content || '');
   const plainSummary = story.summary || summarizeText(story.content, 120, { stripMarkdown: true });
@@ -76,19 +69,19 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
         <div className="p-4 flex flex-col flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
-              {story.category || t('기본', 'Default', '默认', 'Predeterminado', 'Mặc định', 'ค่าเริ่มต้น', 'Standart')}
+              {story.category || t('stories.list.defaultCategory')}
             </span>
             <span className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
-              {story.date ? timeAgo(story.date, locale) : t('날짜 없음', 'No Date', '无日期', 'Sin fecha', 'Không có ngày', 'ไม่มีวันที่', 'Sana yoʻq')}
+              {story.date ? timeAgo(story.date, locale) : t('stories.list.noDate')}
             </span>
           </div>
 
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title}>
-            {story.title || t('제목 없음', 'No Title', '无标题', 'Sin título', 'Không có tiêu đề', 'ไม่มีชื่อเรื่อง', 'Sarlavha yoʻq')}
+            {story.title || t('stories.list.noTitle')}
           </h3>
 
           <div className="typo-card-body leading-snug line-clamp-4 flex-none">
-            {plainSummary || t('내용 없음', 'No Content', '无内容', 'Sin contenido', 'Không có nội dung', 'ไม่มีเนื้อหา', 'Mazmun yoʻq')}
+            {plainSummary || t('stories.list.noContent')}
           </div>
         </div>
       </motion.div>

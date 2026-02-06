@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { motion } from 'framer-motion';
 import { HOVER_SCALE, TAP_SCALE } from '../utils/animationUtils';
 
@@ -27,6 +29,7 @@ interface CategoryFilterProps {
   useCustomColors?: boolean;
   gap?: string;
   allLabel?: string;
+  locale?: string;
 }
 
 const CategoryFilter = ({
@@ -35,12 +38,16 @@ const CategoryFilter = ({
   categories: propCategories,
   showTitle = false,
   titleIcon: TitleIcon = null,
-  titleText = "카테고리",
+  titleText,
   buttonSize = "md",
   useCustomColors = false,
   gap = "gap-2",
-  allLabel = "전체"
+  allLabel,
+  locale
 }: CategoryFilterProps) => {
+  const { t } = useTranslation('common', { lng: locale });
+  const resolvedTitleText = titleText || t('common.categoryFilter.title');
+  const resolvedAllLabel = allLabel || t('common.categoryFilter.all');
   const mappedCategories: CategoryBase[] = propCategories.map(category => {
     if (typeof category === 'object' && 'name' in category) {
       return {
@@ -60,7 +67,7 @@ const CategoryFilter = ({
 
   const categories: CategoryBase[] = mappedCategories.find(cat => cat.id === 'all')
     ? mappedCategories
-    : [{ id: 'all', label: allLabel }, ...mappedCategories];
+    : [{ id: 'all', label: resolvedAllLabel as string }, ...mappedCategories];
 
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-body-2',
@@ -73,7 +80,7 @@ const CategoryFilter = ({
       {showTitle && (
         <div className="flex items-center mb-6">
           {TitleIcon && React.createElement(TitleIcon, { className: "text-xl text-primary mr-3" })}
-          <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{titleText}</h3>
+          <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{resolvedTitleText}</h3>
         </div>
       )}
 

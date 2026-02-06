@@ -26,6 +26,9 @@
     "emailLabel": "Email",
     "phoneLabel": "Phone"
   },
+  "seo": {
+    "geoPlacename": "Eunpyeong-gu, Seoul"
+  },
   "actions": {
     "more": "Learn More",
     "submit": "Submit",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "Switch to dark mode",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "kakaoExternal": "KakaoTalk inquiry (opens in new window)"
+    "kakaoExternal": "KakaoTalk inquiry (opens in new window)",
+    "skipToContent": "Skip to content"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "Category",
+      "all": "All"
+    },
+    "siteName": "Studio NOL"
   },
   "theme": {
     "light": "Light",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "Studio NOL, music production process, music production, recording studio, mixing mastering, music distribution, music planning, analog equipment"
-    }
+    },
+    "howToTitle": "How to Produce Music at Studio NOL",
+    "howToDescription": "A complete guide to producing music at a professional studio."
   },
   "portfolio": {
     "title": "Portfolio",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "Recording Fees & Studio Rental | Studio NOL",
       "description": "Transparent pricing. Check fees for wedding recordings, voiceovers, and studio rentals.",
-      "keywords": "recording fees, voiceover recording quote, studio rental price, mixing price, mastering price, Studio NOL"
+      "keywords": "recording fees, voiceover recording quote, studio rental price, mixing price, mastering price, Studio NOL",
+      "schemaTitle": "Studio NOL Service Pricing"
     },
     "hero": {
       "title": "Affordable Price, Transparent Service",

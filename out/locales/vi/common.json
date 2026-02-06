@@ -26,6 +26,9 @@
     "emailLabel": "Email",
     "phoneLabel": "Điện thoại"
   },
+  "seo": {
+    "geoPlacename": "Eunpyeong-gu, Seoul"
+  },
   "actions": {
     "more": "Xem thêm",
     "submit": "Gửi",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "Chuyển sang chế độ tối",
     "openMenu": "Mở menu",
     "closeMenu": "Đóng menu",
-    "kakaoExternal": "Tư vấn qua KakaoTalk (mở trong cửa sổ mới)"
+    "kakaoExternal": "Tư vấn qua KakaoTalk (mở trong cửa sổ mới)",
+    "skipToContent": "Nhảy đến nội dung"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "Danh mục",
+      "all": "Tất cả"
+    },
+    "siteName": "Studio NOL"
   },
   "theme": {
     "light": "Sáng",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "Studio NOL, quy trình sản xuất âm nhạc, sản xuất âm nhạc, phòng thu, mixing mastering, phân phối nhạc, lập kế hoạch âm nhạc, thiết bị analog"
-    }
+    },
+    "howToTitle": "Cách sản xuất âm nhạc tại Studio NOL",
+    "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp."
   },
   "portfolio": {
     "title": "Portfolio",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "Phí thu âm & thuê studio | Studio NOL",
       "description": "Giá minh bạch. Xem phí thu âm nhạc cưới, voiceover và thuê studio.",
-      "keywords": "phí thu âm, báo giá thu âm voiceover, giá thuê studio, giá mixing, giá mastering, Studio NOL"
+      "keywords": "phí thu âm, báo giá thu âm voiceover, giá thuê studio, giá mixing, giá mastering, Studio NOL",
+      "schemaTitle": "Bảng giá dịch vụ Studio NOL"
     },
     "hero": {
       "title": "Giá hợp lý, dịch vụ minh bạch",
@@ -491,6 +505,42 @@
       "title": "Không tìm thấy câu chuyện",
       "all": "Chưa có câu chuyện nào.",
       "byCategory": "Không có câu chuyện trong danh mục '{{category}}'."
+    },
+    "list": {
+      "defaultCategory": "Mặc định",
+      "noDate": "Không có ngày",
+      "noTitle": "Không có tiêu đề",
+      "noContent": "Không có nội dung"
+    },
+    "cta": {
+      "recording": {
+        "title": "Bạn muốn âm thanh tốt hơn?",
+        "descriptionLine1": "Hãy trải nghiệm dịch vụ thu âm và mix chuyên nghiệp tại Studio NOL.",
+        "descriptionLine2": "Chúng tôi hoàn thiện âm nhạc của bạn với thiết bị tốt nhất và kinh nghiệm chuyên môn.",
+        "primaryText": "Xem giá dịch vụ",
+        "secondaryText": "Liên hệ"
+      },
+      "lesson": {
+        "title": "Bạn muốn tự làm nhạc?",
+        "descriptionLine1": "Đừng lo một mình. Chúng tôi hỗ trợ với lớp học 1:1 theo nhu cầu.",
+        "descriptionLine2": "Học từ nền tảng đến MIDI, mixing và sound design một cách chắc chắn.",
+        "primaryText": "Xem giáo trình",
+        "secondaryText": "Đăng ký tư vấn"
+      },
+      "practice": {
+        "title": "Bạn cần không gian riêng để tập trung?",
+        "descriptionLine1": "Phòng tập cao cấp có thể sử dụng tự do bất cứ lúc nào.",
+        "descriptionLine2": "Môi trường thoải mái và cách âm hoàn hảo đã sẵn sàng.",
+        "primaryText": "Xem cơ sở vật chất",
+        "secondaryText": "Hỏi về đặt chỗ"
+      },
+      "production": {
+        "title": "Bạn muốn sản xuất bản thu của riêng mình?",
+        "descriptionLine1": "Từ sáng tác, hòa âm đến mix và mastering.",
+        "descriptionLine2": "Chúng tôi biến ý tưởng của bạn thành bản nhạc hoàn chỉnh.",
+        "primaryText": "Tư vấn sản xuất",
+        "secondaryText": "Xem chi phí"
+      }
     },
     "detail": {
       "backToList": "Quay lại Stories",

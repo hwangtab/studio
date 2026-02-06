@@ -26,6 +26,9 @@
     "emailLabel": "อีเมล",
     "phoneLabel": "โทรศัพท์"
   },
+  "seo": {
+    "geoPlacename": "เขตอึนพยอง โซล"
+  },
   "actions": {
     "more": "ดูเพิ่มเติม",
     "submit": "ส่ง",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "เปลี่ยนเป็นโหมดมืด",
     "openMenu": "เปิดเมนู",
     "closeMenu": "ปิดเมนู",
-    "kakaoExternal": "สอบถามทาง KakaoTalk (เปิดในหน้าต่างใหม่)"
+    "kakaoExternal": "สอบถามทาง KakaoTalk (เปิดในหน้าต่างใหม่)",
+    "skipToContent": "ข้ามไปที่เนื้อหาหลัก"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "หมวดหมู่",
+      "all": "ทั้งหมด"
+    },
+    "siteName": "Studio NOL"
   },
   "theme": {
     "light": "สว่าง",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "Studio NOL, กระบวนการผลิตเพลง, ผลิตเพลง, ห้องอัด, มิกซ์มาสเตอริ่ง, จัดจำหน่ายเพลง, วางแผนเพลง, อุปกรณ์อนาล็อก"
-    }
+    },
+    "howToTitle": "วิธีผลิตเพลงที่ Studio NOL",
+    "howToDescription": "คู่มือฉบับสมบูรณ์สำหรับการผลิตเพลงในสตูดิโอระดับมืออาชีพ"
   },
   "portfolio": {
     "title": "พอร์ตโฟลิโอ",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "ค่าบันทึกเสียง & เช่าสตูดิโอ | Studio NOL",
       "description": "ราคาชัดเจน ตรวจสอบค่าบันทึกเพลงงานแต่ง, voiceover และเช่าสตูดิโอ.",
-      "keywords": "ค่าบันทึกเสียง, ใบเสนอราคา voiceover, ราคาเช่าสตูดิโอ, ราคา mixing, ราคา mastering, Studio NOL"
+      "keywords": "ค่าบันทึกเสียง, ใบเสนอราคา voiceover, ราคาเช่าสตูดิโอ, ราคา mixing, ราคา mastering, Studio NOL",
+      "schemaTitle": "อัตราค่าบริการ Studio NOL"
     },
     "hero": {
       "title": "ราคาเหมาะสม บริการโปร่งใส",
@@ -495,6 +509,42 @@
       "title": "ไม่พบเรื่องราว",
       "all": "ยังไม่มีเรื่องราวใด ๆ.",
       "byCategory": "ไม่มีเรื่องราวในหมวด '{{category}}'."
+    },
+    "list": {
+      "defaultCategory": "ค่าเริ่มต้น",
+      "noDate": "ไม่มีวันที่",
+      "noTitle": "ไม่มีชื่อเรื่อง",
+      "noContent": "ไม่มีเนื้อหา"
+    },
+    "cta": {
+      "recording": {
+        "title": "อยากได้ซาวด์ที่ดีกว่าไหม?",
+        "descriptionLine1": "สัมผัสบริการบันทึกเสียงและมิกซ์ระดับมืออาชีพที่ Studio NOL",
+        "descriptionLine2": "เราทำเพลงของคุณให้สมบูรณ์ด้วยอุปกรณ์ชั้นยอดและความชำนาญ",
+        "primaryText": "ดูราคาบริการ",
+        "secondaryText": "สอบถาม"
+      },
+      "lesson": {
+        "title": "อยากทำเพลงด้วยตัวเองไหม?",
+        "descriptionLine1": "ไม่ต้องกังวลคนเดียว เราช่วยด้วยบทเรียนแบบตัวต่อตัว",
+        "descriptionLine2": "เรียนตั้งแต่พื้นฐานไปจนถึง MIDI มิกซ์ และซาวด์ดีไซน์",
+        "primaryText": "ดูหลักสูตร",
+        "secondaryText": "ขอคำปรึกษา"
+      },
+      "practice": {
+        "title": "ต้องการพื้นที่ส่วนตัวเพื่อโฟกัสไหม?",
+        "descriptionLine1": "ห้องซ้อมระดับพรีเมียมใช้ได้ทุกเวลา",
+        "descriptionLine2": "สภาพแวดล้อมสบายและระบบกันเสียงที่สมบูรณ์พร้อม",
+        "primaryText": "ดูสิ่งอำนวยความสะดวก",
+        "secondaryText": "สอบถามการจอง"
+      },
+      "production": {
+        "title": "อยากทำเพลงของตัวเองไหม?",
+        "descriptionLine1": "ตั้งแต่แต่งเพลง เรียบเรียง ไปจนถึงมิกซ์และมาสเตอริ่ง",
+        "descriptionLine2": "เราจะทำไอเดียของคุณให้เป็นเพลงที่เสร็จสมบูรณ์",
+        "primaryText": "ปรึกษางานผลิตเพลง",
+        "secondaryText": "ดูค่าใช้จ่าย"
+      }
     },
     "detail": {
       "backToList": "กลับไปที่ Stories",

@@ -26,6 +26,9 @@
     "emailLabel": "Email",
     "phoneLabel": "Telefon"
   },
+  "seo": {
+    "geoPlacename": "Eunpyeong-gu, Seul"
+  },
   "actions": {
     "more": "Batafsil",
     "submit": "Yuborish",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "Tungi rejimga o‘tish",
     "openMenu": "Menyuni ochish",
     "closeMenu": "Menyuni yopish",
-    "kakaoExternal": "KakaoTalk orqali so‘rov (yangi oynada ochiladi)"
+    "kakaoExternal": "KakaoTalk orqali so‘rov (yangi oynada ochiladi)",
+    "skipToContent": "Asosiy mazmunga o'tish"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "Kategoriya",
+      "all": "Hammasi"
+    },
+    "siteName": "Studio NOL"
   },
   "theme": {
     "light": "Yorug‘",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar"
-    }
+    },
+    "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
+    "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
   },
   "portfolio": {
     "title": "Portfolio",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "Yozuv narxlari va studio ijarasi | Studio NOL",
       "description": "Shaffof narxlar. To'y yozuvlari, voiceover va studio ijarasi uchun to'lovlarni tekshiring.",
-      "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL"
+      "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL",
+      "schemaTitle": "Studio NOL xizmat narxlari"
     },
     "hero": {
       "title": "Hamyonbop narx, shaffof xizmat",
@@ -491,6 +505,42 @@
       "title": "Hikoyalar topilmadi",
       "all": "Hali hikoyalar ro'yxatdan o'tmagan.",
       "byCategory": "'{{category}}' kategoriyasida hikoyalar yo'q."
+    },
+    "list": {
+      "defaultCategory": "Standart",
+      "noDate": "Sana yoʻq",
+      "noTitle": "Sarlavha yoʻq",
+      "noContent": "Mazmun yoʻq"
+    },
+    "cta": {
+      "recording": {
+        "title": "Yaxshiroq tovush xohlaysizmi?",
+        "descriptionLine1": "Studio NOL’da professional yozuv va miks xizmatlarini sinab ko‘ring.",
+        "descriptionLine2": "Eng yaxshi uskunalar va tajriba bilan musiqangizni yakunlaymiz.",
+        "primaryText": "Xizmat narxlarini ko‘rish",
+        "secondaryText": "So‘rov"
+      },
+      "lesson": {
+        "title": "Musiqani o‘zingiz yaratmoqchimisiz?",
+        "descriptionLine1": "Yolg‘iz qiynalmang. Sizga 1:1 moslashtirilgan darslar bilan yordam beramiz.",
+        "descriptionLine2": "MIDI, miks va sound dizayngacha asoslardan puxta o‘rganing.",
+        "primaryText": "O‘quv dasturini ko‘rish",
+        "secondaryText": "Maslahat so‘rash"
+      },
+      "practice": {
+        "title": "Diqqat jamlash uchun o‘zingizga xos joy kerakmi?",
+        "descriptionLine1": "Istalgan vaqtda erkin foydalaniladigan premium mashg‘ulot xonalari.",
+        "descriptionLine2": "Qulay muhit va mukammal ovoz izolyatsiyasi tayyor.",
+        "primaryText": "Jihozlarni ko‘rish",
+        "secondaryText": "Bron bo‘yicha so‘rov"
+      },
+      "production": {
+        "title": "O‘zingizning treklaringizni yaratmoqchimisiz?",
+        "descriptionLine1": "Kompozitsiya va aranjimandan miks va masteringgacha.",
+        "descriptionLine2": "G‘oyalaringizni yakunlangan trekka aylantiramiz.",
+        "primaryText": "Prodakshn bo‘yicha so‘rov",
+        "secondaryText": "Narxlarni ko‘rish"
+      }
     },
     "detail": {
       "backToList": "Hikoyalarga qaytish",

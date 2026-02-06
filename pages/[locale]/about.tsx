@@ -46,15 +46,15 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
   const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
   const howToSchema = React.useMemo(() => generateHowToSchema(
-    locale === 'ko' ? '스튜디오 놀에서 음원 제작하는 방법' : 'How to Produce Music at Studio NOL',
-    locale === 'ko' ? '전문 스튜디오에서 음원을 제작하는 전체 과정을 안내합니다.' : 'A complete guide to producing music at a professional studio.',
+    t('about.howToTitle'),
+    t('about.howToDescription'),
     productionProcess.map((step) => ({
       name: step.title,
       text: step.description,
     })),
     'P2D',
     locale
-  ), [productionProcess, locale]);
+  ), [productionProcess, locale, t]);
 
   const getLink = (path: string) => `/${locale}${path}`;
 

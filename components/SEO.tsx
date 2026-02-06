@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Head from 'next/head';
 import React from 'react';
 import { useRouter } from 'next/router';
@@ -57,6 +58,7 @@ const SEO = ({
   const siteUrl = 'https://studionol.co.kr';
 
   // Determine current locale and path
+  const { t } = useTranslation('common');
   // router.asPath includes query params, router.pathname includes placeholders
   // We want the clean path for hreflangs.
   // Assuming pages are at /[locale]/...
@@ -200,6 +202,57 @@ const SEO = ({
     uz: 'uz_UZ',
   };
 
+  const finalSchema = React.useMemo(() => {
+    if (!includeSchema || !schemaData) return null;
+
+    // Initialize with existing schema items
+    const items = [...schemaItems];
+
+    // Add breadcrumb and FAQ to graph if they aren't already there
+    if (breadcrumbSchema) {
+      const { ['@context']: _, ...rest } = breadcrumbSchema as any;
+      items.push(rest);
+    }
+    if (faqSchema) {
+      const { ['@context']: _, ...rest } = faqSchema as any;
+      items.push(rest);
+    }
+
+    if (items.length === 1 && !breadcrumbSchema && !faqSchema) return schemaData;
+
+    return {
+      '@context': 'https://schema.org',
+      '@graph': items.map((item) => {
+        if (!item || typeof item !== 'object') return item;
+        const { ['@context']: _context, ...rest } = item;
+        return rest;
+      }),
+    };
+  }, [includeSchema, schemaData, schemaItems, breadcrumbSchema, faqSchema]);
+
+  const renderSchema = (data: any) => {
+    if (!data) return null;
+    let jsonString = '';
+    try {
+      if (typeof data === 'string') {
+        JSON.parse(data);
+        jsonString = data;
+      } else {
+        jsonString = JSON.stringify(data);
+      }
+    } catch (e) {
+      console.error('Schema parsing error:', e);
+      return null;
+    }
+
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    );
+  };
+
   return (
     <Head>
       <title>{resolvedTitle}</title>
@@ -209,7 +262,7 @@ const SEO = ({
       <meta name="robots" content={robots} />
 
       <meta name="geo.region" content="KR-11" />
-      <meta name="geo.placename" content="서울특별시 은평구" />
+      <meta name="geo.placename" content={t('seo.geoPlacename')} />
       <meta name="geo.position" content="37.614353;126.925887" />
       <meta name="ICBM" content="37.614353, 126.925887" />
 
@@ -283,15 +336,7 @@ const SEO = ({
       <meta name="twitter:site" content="@StudioNOL" />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
 
-      {includeSchema && schemaData && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-      )}
-      {breadcrumbSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      )}
-      {faqSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      )}
+      {renderSchema(finalSchema)}
     </Head>
   );
 };

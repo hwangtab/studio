@@ -30,168 +30,186 @@ export const generateDefaultSchema = (
 
   return {
     '@context': 'https://schema.org',
-    '@type': ['MusicRecordingStudio', 'LocalBusiness', 'Organization'],
-    name: translations.name,
-    alternateName: 'Studio Nol',
-    url: siteUrl,
-    logo: `${siteUrl}/logo512.png`,
-    image: absoluteOgImage,
-    description,
-    priceRange: '$$',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: translations.street,
-      addressLocality: translations.locality,
-      addressRegion: translations.region,
-      postalCode: '03424',
-      addressCountry: 'KR',
-    },
-    telephone: '+82-2-764-3114',
-    email: 'contact@kosmart.org',
-    openingHoursSpecification: [
+    '@graph': [
       {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '10:00',
-        closes: '18:00',
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
+        name: translations.name,
+        url: siteUrl,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/logo512.png`,
+          width: '512',
+          height: '512',
+        },
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            contactType: translations.contactType,
+            telephone: '+82-2-764-3114',
+            url: 'https://open.kakao.com/me/nol',
+            availableLanguage: ['ko', 'en'],
+          },
+        ],
+        sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
+        slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
       },
       {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Saturday',
-        opens: '12:00',
-        closes: '18:00',
-      },
-    ],
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: '37.614353',
-      longitude: '126.925887',
-    },
-    areaServed: {
-      '@type': 'GeoCircle',
-      geoMidpoint: {
-        '@type': 'GeoCoordinates',
-        latitude: '37.614353',
-        longitude: '126.925887',
-      },
-      geoRadius: '50000',
-    },
-    ...(reviewItems && reviewItems.length > 0
-      ? {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: (
-            reviewItems.reduce((acc, item) => acc + item.rating, 0) / reviewItems.length
-          ).toFixed(1),
-          reviewCount: reviewItems.length,
-          bestRating: '5',
-          worstRating: '1',
+        '@type': ['MusicRecordingStudio', 'LocalBusiness'],
+        '@id': `${siteUrl}/#studio`,
+        name: translations.name,
+        image: absoluteOgImage,
+        url: siteUrl,
+        description: description,
+        priceRange: '$$',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: translations.street,
+          addressLocality: translations.locality,
+          addressRegion: translations.region,
+          postalCode: '03424',
+          addressCountry: 'KR',
         },
-        review: reviewItems.map((item) => ({
-          '@type': 'Review',
-          author: {
-            '@type': 'Person',
-            name: item.author,
-          },
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: item.rating,
-            bestRating: '5',
-            worstRating: '1',
-          },
-          reviewBody: item.content,
-          ...(item.datePublished ? { datePublished: item.datePublished } : {}),
-        })),
-      }
-      : {}),
-    sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
-    hasMap: 'https://naver.me/5gFZhS3X',
-    paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'KakaoPay'],
-    currenciesAccepted: 'KRW',
-    knowsLanguage: ['ko', 'en'],
-    slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
-    serviceType: translations.serviceTypes,
-    hasOfferCatalog: {
-      '@type': 'OfferCatalog',
-      name: isKo ? '스튜디오 서비스' : 'Studio Services',
-      itemListElement: [
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
-            name: translations.recordingService,
-            description: isKo ? '프로페셔널 레코딩 서비스' : 'Professional recording services',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
-            name: translations.mixingMastering,
-            description: isKo ? '전문 믹싱 및 마스터링 서비스' : 'Professional mixing and mastering services',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
-            name: translations.productionPlanning,
-            description: isKo ? '음반 제작 전 과정 기획 및 지원' : 'Full-cycle music production planning and support',
-          },
-        },
-      ],
-    },
-    contactPoint: [
-      {
-        '@type': 'ContactPoint',
-        contactType: translations.contactType,
         telephone: '+82-2-764-3114',
-        url: 'https://open.kakao.com/me/nol',
-        availableLanguage: ['ko', 'en'],
-      },
-    ],
-    offers: [
-      {
-        '@type': 'Offer',
-        name: translations.residencyTitle,
-        description: translations.residencyDesc,
-        priceCurrency: 'KRW',
-        price: 400000,
-        url: 'https://open.kakao.com/o/sAWXdN5g',
-        availability: 'https://schema.org/InStock',
-        eligibleCustomerType: 'https://schema.org/BusinessCustomer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Studio Nol Residency Benefits',
-          serviceType: isKo ? [
-            '녹음실 할인',
-            '음원 유통',
-            '보도자료 작성',
-            '버스킹 장비 대여',
-            '전문가 피드백',
-            '크라우드 펀딩 컨설팅',
-            '예술지원사업 정보',
-            '공구 대여',
-          ] : [
-            'Recording Studio Discounts',
-            'Music Distribution',
-            'Press Release Writing',
-            'Busking Equipment Rental',
-            'Expert Feedback',
-            'Crowdfunding Consulting',
-            'Grant Information',
-            'Tool Rental',
-          ],
-          provider: translations.name,
-          areaServed: translations.region,
-          offers: {
-            '@type': 'AggregateOffer',
-            priceCurrency: 'KRW',
-            lowPrice: 10000,
-            highPrice: 200000,
-            offerCount: 8,
+        email: 'contact@kosmart.org',
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            opens: '10:00',
+            closes: '18:00',
           },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: 'Saturday',
+            opens: '12:00',
+            closes: '18:00',
+          },
+        ],
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: '37.614353',
+          longitude: '126.925887',
         },
+        areaServed: {
+          '@type': 'GeoCircle',
+          geoMidpoint: {
+            '@type': 'GeoCoordinates',
+            latitude: '37.614353',
+            longitude: '126.925887',
+          },
+          geoRadius: '50000',
+        },
+        hasMap: 'https://naver.me/5gFZhS3X',
+        paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'KakaoPay'],
+        currenciesAccepted: 'KRW',
+        serviceType: translations.serviceTypes,
+        knowsLanguage: ['ko', 'en'],
+        parentOrganization: {
+          '@id': `${siteUrl}/#organization`,
+        },
+        ...(reviewItems && reviewItems.length > 0
+          ? {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: (
+                reviewItems.reduce((acc, item) => acc + item.rating, 0) / reviewItems.length
+              ).toFixed(1),
+              reviewCount: reviewItems.length,
+              bestRating: '5',
+              worstRating: '1',
+            },
+            review: reviewItems.map((item) => ({
+              '@type': 'Review',
+              author: {
+                '@type': 'Person',
+                name: item.author,
+              },
+              reviewRating: {
+                '@type': 'Rating',
+                ratingValue: item.rating,
+                bestRating: '5',
+                worstRating: '1',
+              },
+              reviewBody: item.content,
+              ...(item.datePublished ? { datePublished: item.datePublished } : {}),
+            })),
+          }
+          : {}),
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: isKo ? '스튜디오 서비스' : 'Studio Services',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: translations.recordingService,
+                description: isKo ? '프로페셔널 레코딩 서비스' : 'Professional recording services',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: translations.mixingMastering,
+                description: isKo ? '전문 믹싱 및 마스터링 서비스' : 'Professional mixing and mastering services',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: translations.productionPlanning,
+                description: isKo ? '음반 제작 전 과정 기획 및 지원' : 'Full-cycle music production planning and support',
+              },
+            },
+          ],
+        },
+        offers: [
+          {
+            '@type': 'Offer',
+            name: translations.residencyTitle,
+            description: translations.residencyDesc,
+            priceCurrency: 'KRW',
+            price: 400000,
+            url: 'https://open.kakao.com/o/sAWXdN5g',
+            availability: 'https://schema.org/InStock',
+            eligibleCustomerType: 'https://schema.org/BusinessCustomer',
+            itemOffered: {
+              '@type': 'Service',
+              name: 'Studio Nol Residency Benefits',
+              serviceType: isKo ? [
+                '녹음실 할인',
+                '음원 유통',
+                '보도자료 작성',
+                '버스킹 장비 대여',
+                '전문가 피드백',
+                '크라우드 펀딩 컨설팅',
+                '예술지원사업 정보',
+                '공구 대여',
+              ] : [
+                'Recording Studio Discounts',
+                'Music Distribution',
+                'Press Release Writing',
+                'Busking Equipment Rental',
+                'Expert Feedback',
+                'Crowdfunding Consulting',
+                'Grant Information',
+                'Tool Rental',
+              ],
+              provider: translations.name,
+              areaServed: translations.region,
+              offers: {
+                '@type': 'AggregateOffer',
+                priceCurrency: 'KRW',
+                lowPrice: 10000,
+                highPrice: 200000,
+                offerCount: 8,
+              },
+            },
+          },
+        ],
       },
     ],
   };

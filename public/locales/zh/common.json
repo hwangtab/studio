@@ -26,6 +26,9 @@
     "emailLabel": "邮箱",
     "phoneLabel": "电话"
   },
+  "seo": {
+    "geoPlacename": "首尔特别市恩平区"
+  },
   "actions": {
     "more": "查看更多",
     "submit": "提交",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "切换到深色模式",
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
-    "kakaoExternal": "KakaoTalk 咨询 (在新窗口中打开)"
+    "kakaoExternal": "KakaoTalk 咨询 (在新窗口中打开)",
+    "skipToContent": "跳到主要内容"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "类别",
+      "all": "全部"
+    },
+    "siteName": "Studio NOL"
   },
   "theme": {
     "light": "浅色",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备"
-    }
+    },
+    "howToTitle": "在 Studio NOL 制作音乐的方法",
+    "howToDescription": "为您介绍在专业录音室制作音乐的全过程。"
   },
   "portfolio": {
     "title": "作品集",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "录音费用与录音棚租赁 | Studio NOL",
       "description": "价格透明。查看婚礼录音、配音与录影棚租赁费用。",
-      "keywords": "录音费用, 配音录音报价, 录音室租赁价格, 混音价格, 母带价格, Studio NOL"
+      "keywords": "录音费用, 配音录音报价, 录音室租赁价格, 混音价格, 母带价格, Studio NOL",
+      "schemaTitle": "Studio NOL 服务价格"
     },
     "hero": {
       "title": "合理价格，透明服务",
@@ -491,6 +505,42 @@
       "title": "暂无故事",
       "all": "尚未发布任何故事。",
       "byCategory": "“{{category}}”分类下暂无故事。"
+    },
+    "list": {
+      "defaultCategory": "默认",
+      "noDate": "无日期",
+      "noTitle": "无标题",
+      "noContent": "无 内容"
+    },
+    "cta": {
+      "recording": {
+        "title": "想要更好的声音吗？",
+        "descriptionLine1": "体验 Studio NOL 的专业录音和混音服务。",
+        "descriptionLine2": "用最好的设备和经验完成您的音乐。",
+        "primaryText": "查看价格",
+        "secondaryText": "咨询"
+      },
+      "lesson": {
+        "title": "想自己制作音乐吗？",
+        "descriptionLine1": "不要独自烦恼。我们提供1:1定制课程。",
+        "descriptionLine2": "从基础开始扎实学习 MIDI、混音、声音设计。",
+        "primaryText": "查看课程大纲",
+        "secondaryText": "申请咨询"
+      },
+      "practice": {
+        "title": "需要沉浸的专属空间吗？",
+        "descriptionLine1": "随时可以自由使用的高级练习室。",
+        "descriptionLine2": "准备了舒适的环境和完美的隔音设施。",
+        "primaryText": "查看设施",
+        "secondaryText": "预约咨询"
+      },
+      "production": {
+        "title": "想制作自己的音源吗？",
+        "descriptionLine1": "从作曲、编曲到混音、母带。",
+        "descriptionLine2": "将您的想法变成完成的音源。",
+        "primaryText": "音源制作咨询",
+        "secondaryText": "查看费用"
+      }
     },
     "detail": {
       "backToList": "返回故事列表",

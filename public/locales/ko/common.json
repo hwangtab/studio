@@ -26,6 +26,9 @@
     "emailLabel": "문의",
     "phoneLabel": "전화"
   },
+  "seo": {
+    "geoPlacename": "서울특별시 은평구"
+  },
   "actions": {
     "more": "더 보기",
     "submit": "제출하기",
@@ -41,7 +44,15 @@
     "toggleThemeDark": "다크 모드로 전환",
     "openMenu": "메뉴 열기",
     "closeMenu": "메뉴 닫기",
-    "kakaoExternal": "카카오톡 문의 (새 창)"
+    "kakaoExternal": "카카오톡 문의 (새 창)",
+    "skipToContent": "본문 바로가기"
+  },
+  "common": {
+    "categoryFilter": {
+      "title": "카테고리",
+      "all": "전체"
+    },
+    "siteName": "스튜디오 놀"
   },
   "theme": {
     "light": "라이트",
@@ -98,7 +109,9 @@
     },
     "seo": {
       "keywords": "스튜디오 놀 소개, 음원 제작 프로세스, 음악 프로덕션, 레코딩 스튜디오, 믹싱 마스터링, 음원 유통, 음악 기획, 아날로그 장비"
-    }
+    },
+    "howToTitle": "스튜디오 놀에서 음원 제작하는 방법",
+    "howToDescription": "전문 스튜디오에서 음원을 제작하는 전체 과정을 안내합니다."
   },
   "portfolio": {
     "title": "포트폴리오",
@@ -175,7 +188,8 @@
     "seo": {
       "title": "셀프 축가 녹음 비용 · 성우 녹음 & 유튜브 스튜디오 대관료 | 스튜디오 놀",
       "description": "투명한 정찰제 운영. 셀프 축가 녹음 패키지, 성우/나레이션 녹음 견적, 유튜브 촬영 스튜디오 대관 비용을 확인하세요.",
-      "keywords": "셀프 축가 비용, 축가 녹음 가격, 성우 녹음 견적, 유튜브 스튜디오 대관료, 녹음실 대여 비용, 믹싱 의뢰 가격, 음원 제작 비용, 음반 제작 비용, 스튜디오 놀"
+      "keywords": "셀프 축가 비용, 축가 녹음 가격, 성우 녹음 견적, 유튜브 스튜디오 대관료, 녹음실 대여 비용, 믹싱 의뢰 가격, 음원 제작 비용, 음반 제작 비용, 스튜디오 놀",
+      "schemaTitle": "스튜디오 놀 서비스 요금"
     },
     "hero": {
       "title": "합리적인 가격, 투명한 서비스",
@@ -500,6 +514,42 @@
       "title": "스토리가 없습니다",
       "all": "아직 등록된 스토리가 없습니다.",
       "byCategory": "'{{category}}' 카테고리에 등록된 스토리가 없습니다."
+    },
+    "list": {
+      "defaultCategory": "기본",
+      "noDate": "날짜 없음",
+      "noTitle": "제목 없음",
+      "noContent": "내용 없음"
+    },
+    "cta": {
+      "recording": {
+        "title": "더 나은 사운드를 원하시나요?",
+        "descriptionLine1": "스튜디오 놀의 전문적인 레코딩, 믹싱 서비스를 경험해보세요.",
+        "descriptionLine2": "최고의 장비와 노하우로 당신의 음악을 완성해드립니다.",
+        "primaryText": "서비스 가격 보기",
+        "secondaryText": "문의하기"
+      },
+      "lesson": {
+        "title": "직접 음악을 만들고 싶으신가요?",
+        "descriptionLine1": "혼자 고민하지 마세요. 1:1 맞춤형 레슨으로 도와드립니다.",
+        "descriptionLine2": "미디, 믹싱, 사운드 디자인까지 기초부터 탄탄하게 배워보세요.",
+        "primaryText": "레슨 커리큘럼 보기",
+        "secondaryText": "상담 신청하기"
+      },
+      "practice": {
+        "title": "몰입할 나만의 공간이 필요한가요?",
+        "descriptionLine1": "언제든 자유롭게 이용할 수 있는 프리미엄 연습실.",
+        "descriptionLine2": "쾌적한 환경과 완벽한 방음 시설이 준비되어 있습니다.",
+        "primaryText": "연습실 시설 보기",
+        "secondaryText": "예약 문의하기"
+      },
+      "production": {
+        "title": "나만의 음원을 제작하고 싶으신가요?",
+        "descriptionLine1": "작곡, 편곡부터 믹싱, 마스터링까지.",
+        "descriptionLine2": "당신의 아이디어를 완성된 음원으로 만들어드립니다.",
+        "primaryText": "음원 제작 상담하기",
+        "secondaryText": "제작 비용 보기"
+      }
     },
     "detail": {
       "backToList": "스토리 목록으로 돌아가기",

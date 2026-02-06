@@ -73,7 +73,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
     url: `${pricingUrl}#${offer.id}`,
     seller: {
       '@type': 'LocalBusiness',
-      name: locale === 'ko' ? '스튜디오 놀' : 'Studio NOL',
+      name: t('common.siteName'),
       '@id': 'https://studionol.co.kr/#organization',
     },
     itemOffered: {
@@ -81,7 +81,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
       name: offer.title,
       provider: {
         '@type': 'LocalBusiness',
-        name: locale === 'ko' ? '스튜디오 놀' : 'Studio NOL',
+        name: t('common.siteName'),
       },
     },
   }), [pricingUrl, priceValidUntil, locale]);
@@ -102,7 +102,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
 
   const aggregateOfferSchema = React.useMemo(() =>
     generateAggregateOfferSchema(
-      locale === 'ko' ? '스튜디오 놀 서비스 요금' : 'Studio NOL Service Pricing',
+      t('pricing.seo.schemaTitle'),
       allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
       locale
     ),

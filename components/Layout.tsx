@@ -103,7 +103,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   const isHome = router.pathname === '/[locale]';
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
-  const skipLabel = locale === 'ko' ? '본문 바로가기' : 'Skip to content';
+  const skipLabel = t('actions.skipToContent');
 
   return (
     <div
@@ -116,7 +116,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       >
         {skipLabel}
       </a>
-      
+
       <Header
         ref={headerRef}
         locale={locale}
