@@ -1,9 +1,10 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, MessageCircle, Users, LucideIcon, GraduationCap, BookOpen, Sparkles } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, Users, LucideIcon, GraduationCap, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
@@ -263,52 +264,17 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
             </Section>
 
             {/* Improved CTA Section */}
-            <Section variant="alternate">
-                <motion.div
-                    className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
-                    <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-                        <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-                            <SectionHeading
-                                icon={Sparkles}
-                                title={t('lesson.cta.title')}
-                                subtitle={t('lesson.cta.subtitle')}
-                                align="left"
-                                className="mb-8"
-                                as="h3"
-                            />
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Link
-                                    href={getLink("/contact")}
-                                    className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                                >
-                                    {t('lesson.cta.location')}
-                                </Link>
-                                <a
-                                    href="https://open.kakao.com/me/nol"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                                >
-                                    <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                                    <span className="min-w-0">{t('lesson.cta.inquiry')}</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div className="relative h-64 md:h-auto">
-                            <ResponsiveImage
-                                src="/images/lesson1.png"
-                                alt={t('lesson.cta.imageAlt')}
-                                fill
-                                className="object-cover"
-                            />
-                        </div>
-                    </div>
-                </motion.div>
+            <Section variant="alternate" className="py-16">
+                <ContactCTA
+                    locale={locale}
+                    title={t('lesson.cta.title')}
+                    subtitle={t('lesson.cta.subtitle')}
+                    imageSrc="/images/lesson1.png"
+                    imageAlt={t('lesson.cta.imageAlt')}
+                    primaryButtonLabel={t('lesson.cta.inquiry')}
+                    secondaryButtonLabel={t('lesson.cta.location')}
+                    headingAs="h3"
+                />
             </Section>
         </>
     );

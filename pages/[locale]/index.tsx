@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { CalendarCheck, ArrowRight, Mic2, Music, Sparkles, Disc, Mic, Globe } from 'lucide-react';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
 import SEO from '../../components/SEO';
@@ -13,6 +13,7 @@ import ImageHero from '../../components/common/ImageHero';
 import MediaGallery from '../../components/ui/MediaGallery';
 import ReviewSection from '../../components/ui/ReviewSection';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
 import { getHomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
@@ -146,72 +147,25 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
 
       {/* 하단 CTA 섹션 */}
       <Section variant="default" className="py-16">
-        <motion.div
-          className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <SectionHeading
-                icon={Sparkles}
-                title={
-                  <>
-                    {t('home.cta.titleLine1')}<br />
-                    <span className="text-primary">{t('home.cta.titleHighlight')}</span>
-                  </>
-                }
-                subtitle={
-                  <>
-                    {t('home.cta.subtitleLine1')}<br className="hidden md:block" />
-                    {t('home.cta.subtitleLine2')}
-                  </>
-                }
-                align="left"
-                className="mb-8"
-              />
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href={getLink('/contact')}
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                >
-                  {t('home.cta.location')}
-                </Link>
-                <a
-                  href="https://open.kakao.com/me/nol"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                >
-                  <CalendarCheck className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                  <span className="min-w-0">{t('home.cta.inquiry')}</span>
-                </a>
-              </div>
-            </div>
-
-            <a
-              href="https://open.kakao.com/me/nol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
-            >
-              <ResponsiveImage
-                src="/images/hardware5.jpg"
-                alt="Studio NOL Main Room"
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 768px) 50vw, 100vw"
-                width={800}
-                height={600}
-                fill
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-            </a>
-          </div>
-        </motion.div>
+        <ContactCTA
+          locale={locale}
+          title={
+            <>
+              {t('home.cta.titleLine1')}<br />
+              <span className="text-primary">{t('home.cta.titleHighlight')}</span>
+            </>
+          }
+          subtitle={
+            <>
+              {t('home.cta.subtitleLine1')}<br className="hidden md:block" />
+              {t('home.cta.subtitleLine2')}
+            </>
+          }
+          imageSrc="/images/hardware5.jpg"
+          imageAlt="Studio NOL Main Room"
+          primaryButtonLabel={t('home.cta.inquiry')}
+          secondaryButtonLabel={t('home.cta.location')}
+        />
       </Section>
     </div>
   );

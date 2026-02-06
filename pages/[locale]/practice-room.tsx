@@ -2,10 +2,11 @@ import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, MessageCircle, HelpCircle, Target, ShieldCheck } from 'lucide-react';
+import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
@@ -272,68 +273,26 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         variant="alternate"
       />
 
-      <Section variant="default" className="pb-16 pt-0 md:pt-16">
-        <motion.div
-          className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <SectionHeading
-                icon={Sparkles}
-                title={
-                  <>
-                    {t('practiceRoom.cta.titleLine1')}<br />
-                    <span className="text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
-                  </>
-                }
-                subtitle={
-                  <>
-                    {t('practiceRoom.cta.subtitleLine1')}<br className="hidden md:block" />
-                    {t('practiceRoom.cta.subtitleLine2')}
-                  </>
-                }
-                align="left"
-                className="mb-8"
-              />
-
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <Link
-                  href={getLink("/contact")}
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                >
-                  {t('practiceRoom.cta.location')}
-                </Link>
-                <a
-                  href="https://open.kakao.com/me/nol"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                >
-                  <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                  <span className="min-w-0">{t('practiceRoom.cta.inquiry')}</span>
-                </a>
-              </motion.div>
-            </div>
-            <div className="relative h-64 md:h-auto">
-               <ResponsiveImage
-                src={`/images/room8.jpg`}
-                alt={t('practiceRoom.cta.imageAlt')}
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </motion.div>
+      <Section variant="default" className="py-16">
+        <ContactCTA
+          locale={locale}
+          title={
+            <>
+              {t('practiceRoom.cta.titleLine1')}<br />
+              <span className="text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
+            </>
+          }
+          subtitle={
+            <>
+              {t('practiceRoom.cta.subtitleLine1')}<br className="hidden md:block" />
+              {t('practiceRoom.cta.subtitleLine2')}
+            </>
+          }
+          imageSrc="/images/room8.jpg"
+          imageAlt={t('practiceRoom.cta.imageAlt')}
+          primaryButtonLabel={t('practiceRoom.cta.inquiry')}
+          secondaryButtonLabel={t('practiceRoom.cta.location')}
+        />
       </Section>
     </>
   );
