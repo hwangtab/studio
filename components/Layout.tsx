@@ -102,7 +102,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   }, [locale]);
 
   const isHome = router.pathname === '/[locale]';
-  const isFullBleed = [].includes(router.pathname as never);
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const skipLabel = locale === 'ko' ? '본문 바로가기' : 'Skip to content';
 
@@ -129,7 +128,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
       <main
         id="main-content"
-        className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : ''} ${isFullBleed ? 'pb-0' : 'pb-12'}`}
+        className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : ''}`}
         style={isHome || hasHero ? undefined : { paddingTop: headerHeight }}
       >
         {children}
