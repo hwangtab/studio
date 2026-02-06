@@ -33,14 +33,38 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       if (e.key === 'Escape') setIsMenuOpen(false);
     };
 
+    const handleFocusTrap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = document.querySelectorAll(
+        'nav.xl\\:hidden button, nav.xl\\:hidden a'
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleEsc);
+    window.addEventListener('keydown', handleFocusTrap);
 
     document.body.style.overflow = 'hidden';
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener('keydown', handleFocusTrap);
       document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
@@ -111,8 +135,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                 key={group.id}
                 label={group.label}
                 items={group.items}
-                isScrolled={isScrolled}
-                hasHero={hasHero}
+                isTransparent={isTransparent}
                 currentPath={currentPath}
                 onNavigate={handleNavigate}
               />

@@ -11,8 +11,7 @@ interface MenuItem {
 interface DropdownMenuProps {
     label: string;
     items: MenuItem[];
-    isScrolled: boolean;
-    hasHero: boolean;
+    isTransparent: boolean;
     currentPath: string;
     onNavigate: () => void;
 }
@@ -20,12 +19,14 @@ interface DropdownMenuProps {
 export const DropdownMenu = ({
     label,
     items,
-    isScrolled,
-    hasHero,
+    isTransparent,
     currentPath,
     onNavigate
 }: DropdownMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleMouseEnter = () => {
@@ -40,10 +41,21 @@ export const DropdownMenu = ({
     };
 
     useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (isOpen && containerRef.current && !containerRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
         return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
-    }, []);
+    }, [isOpen]);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -53,24 +65,22 @@ export const DropdownMenu = ({
             setIsOpen(false);
         } else if (e.key === 'ArrowDown' && isOpen) {
             e.preventDefault();
-            const firstItem = document.querySelector(`[data-dropdown-item="${items[0].href}"]`) as HTMLElement;
-            firstItem?.focus();
+            itemRefs.current[0]?.focus();
         }
     };
 
     const handleItemKeyDown = (e: React.KeyboardEvent, index: number) => {
         if (e.key === 'Escape') {
             setIsOpen(false);
-            const trigger = document.querySelector(`[data-dropdown-trigger="${label}"]`) as HTMLElement;
-            trigger?.focus();
+            triggerRef.current?.focus();
         } else if (e.key === 'ArrowDown') {
             e.preventDefault();
-            const nextItem = document.querySelector(`[data-dropdown-item="${items[(index + 1) % items.length].href}"]`) as HTMLElement;
-            nextItem?.focus();
+            const nextIndex = (index + 1) % items.length;
+            itemRefs.current[nextIndex]?.focus();
         } else if (e.key === 'ArrowUp') {
             e.preventDefault();
-            const prevItem = document.querySelector(`[data-dropdown-item="${items[(index - 1 + items.length) % items.length].href}"]`) as HTMLElement;
-            prevItem?.focus();
+            const prevIndex = (index - 1 + items.length) % items.length;
+            itemRefs.current[prevIndex]?.focus();
         }
     };
 
@@ -78,23 +88,24 @@ export const DropdownMenu = ({
 
     return (
         <div
+            ref={containerRef}
             className="relative"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <button
+                ref={triggerRef}
                 className={`flex items-center gap-1 px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
-                    ? isScrolled || !hasHero
+                    ? !isTransparent
                         ? 'text-primary dark:text-accent font-bold'
                         : 'text-white font-bold bg-white/20'
-                    : isScrolled || !hasHero
+                    : !isTransparent
                         ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent'
                         : 'text-white hover:bg-white/10 hover:text-white'
                     }`}
                 aria-expanded={isOpen}
                 aria-haspopup="true"
                 onKeyDown={handleKeyDown}
-                data-dropdown-trigger={label}
             >
                 {label}
                 <motion.div
@@ -114,19 +125,20 @@ export const DropdownMenu = ({
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="absolute left-0 mt-1 w-48 rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50 origin-top-left"
                     >
-                        <div className="py-2">
+                        <div className="py-2" role="menu" aria-orientation="vertical">
                             {items.map((item, index) => {
                                 const isItemActive = currentPath === item.href;
                                 return (
                                     <Link
                                         key={item.href}
                                         href={item.href}
+                                        ref={el => { itemRefs.current[index] = el; }}
+                                        role="menuitem"
                                         onClick={() => {
                                             setIsOpen(false);
                                             onNavigate();
                                         }}
                                         onKeyDown={(e) => handleItemKeyDown(e, index)}
-                                        data-dropdown-item={item.href}
                                         className={`block px-4 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:bg-primary/5 focus-visible:text-primary ${isItemActive
                                             ? 'bg-primary/5 text-primary dark:text-accent font-medium'
                                             : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
