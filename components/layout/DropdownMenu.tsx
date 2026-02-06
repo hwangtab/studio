@@ -55,10 +55,12 @@ export const DropdownMenu = ({
         >
             <button
                 className={`flex items-center gap-1 px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus:outline-none ${isActive
+                    ? isScrolled || !hasHero
                         ? 'text-primary dark:text-accent font-bold'
-                        : isScrolled || !hasHero
-                            ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                            : 'text-white hover:bg-white/10'
+                        : 'text-white font-bold bg-white/20'
+                    : isScrolled || !hasHero
+                        ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent'
+                        : 'text-white hover:bg-white/10 hover:text-white'
                     }`}
                 aria-expanded={isOpen}
                 aria-haspopup="true"
@@ -93,8 +95,8 @@ export const DropdownMenu = ({
                                             onNavigate();
                                         }}
                                         className={`block px-4 py-2.5 text-sm transition-colors ${isItemActive
-                                                ? 'bg-primary/5 text-primary dark:text-accent font-medium'
-                                                : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            ? 'bg-primary/5 text-primary dark:text-accent font-medium'
+                                            : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
                                             }`}
                                     >
                                         {item.label}

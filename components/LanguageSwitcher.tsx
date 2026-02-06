@@ -128,11 +128,15 @@ export const LanguageSwitcher = ({
           inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
-          ${isOpen ? 'bg-primary text-white shadow-sm' : ''}
+          ${isOpen
+            ? isScrolled || !hasHero
+              ? 'bg-primary text-white shadow-sm'
+              : 'bg-white/20 text-white shadow-sm'
+            : ''}
           ${!isOpen && (isScrolled || !hasHero)
             ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
             : !isOpen
-              ? 'text-gray-300 hover:text-white hover:bg-white/10'
+              ? 'text-white/90 hover:text-white hover:bg-white/10'
               : ''}
         `}
       >
