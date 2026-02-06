@@ -75,7 +75,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 transition-all duration-300 py-3 ${isScrolled
+      className={`fixed w-full z-50 transition-all duration-300 py-4 ${isScrolled
         ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg'
         : hasHero
           ? 'bg-transparent'
