@@ -158,22 +158,25 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
             animate={{ opacity: 1, scaleY: 1 }}
             exit={{ opacity: 0, scaleY: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top overflow-hidden"
+            className="xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
           >
             <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
               {/* 모바일 테마/언어 스위처 */}
-              <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
+              <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
                 <button
-                  className="flex items-center gap-2 p-2 rounded-lg text-gray-800 dark:text-white"
+                  className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white"
                   onClick={toggleDarkMode}
                 >
-                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                  <span className="text-sm font-medium">{isDarkMode ? 'Light' : 'Dark'} Mode</span>
+                  <div className="flex items-center gap-2">
+                    {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                    <span>{isDarkMode ? 'Light' : 'Dark'} Mode</span>
+                  </div>
                 </button>
                 <LanguageSwitcher
                   currentLocale={locale}
                   isScrolled={true}
                   hasHero={false}
+                  variant="inline"
                 />
               </div>
 

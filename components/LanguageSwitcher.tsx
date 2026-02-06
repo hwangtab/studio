@@ -7,9 +7,15 @@ interface LanguageSwitcherProps {
   currentLocale: Locale;
   isScrolled: boolean;
   hasHero: boolean;
+  variant?: 'dropdown' | 'inline';
 }
 
-export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: LanguageSwitcherProps) => {
+export const LanguageSwitcher = ({
+  currentLocale,
+  isScrolled,
+  hasHero,
+  variant = 'dropdown'
+}: LanguageSwitcherProps) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -18,15 +24,12 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
   const getPathForLocale = (targetLocale: Locale) => {
     const path = router.asPath;
     const segments = path.split('/');
-    // segments[0] is empty
-    // segments[1] is usually the locale in our new structure
-    
+
     if (locales.includes(segments[1] as Locale)) {
-       segments[1] = targetLocale;
-       return segments.join('/') || '/';
+      segments[1] = targetLocale;
+      return segments.join('/') || '/';
     }
-    
-    // Fallback for root or other paths
+
     return `/${targetLocale}${path === '/' ? '' : path}`;
   };
 
@@ -40,7 +43,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
   }, [router?.events]);
 
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isOpen || variant === 'inline') return undefined;
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       if (menuRef.current?.contains(target) || buttonRef.current?.contains(target)) {
@@ -57,7 +60,7 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeydown);
     };
-  }, [isOpen]);
+  }, [isOpen, variant]);
 
   const menuCols = useMemo(() => {
     if (locales.length >= 10) return 3;
@@ -69,8 +72,48 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
   const menuGridClass = menuCols === 1
     ? 'grid-cols-1'
     : menuCols === 2
-      ? 'grid-cols-1 sm:grid-cols-2'
-      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+      ? 'grid-cols-2'
+      : 'grid-cols-2 sm:grid-cols-3';
+
+  if (variant === 'inline') {
+    return (
+      <div className="w-full">
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white"
+        >
+          <div className="flex items-center gap-2">
+            <span>🌐</span>
+            <span>{localeNames[currentLocale]}</span>
+          </div>
+          <span className={`text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>▾</span>
+        </button>
+        {isOpen && (
+          <div className="pl-4 mt-1 space-y-1">
+            <div className={`grid ${menuGridClass} gap-2`}>
+              {locales.map((locale) => (
+                <Link
+                  key={locale}
+                  href={getPathForLocale(locale)}
+                  onClick={() => setIsOpen(false)}
+                  className={`
+                    px-3 py-2 rounded-lg text-sm transition-colors text-left
+                    ${currentLocale === locale
+                      ? 'bg-primary/10 text-primary dark:text-accent font-medium'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    }
+                  `}
+                >
+                  {localeNames[locale]}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex items-center">
@@ -101,8 +144,8 @@ export const LanguageSwitcher = ({ currentLocale, isScrolled, hasHero }: Languag
           ref={menuRef}
           className={`
             absolute right-0 top-full mt-2 ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
-            rounded-lg border border-gray-200/70 dark:border-gray-700 bg-white dark:bg-gray-900
-            shadow-lg py-2 z-50
+            rounded-xl border border-gray-200/70 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl
+            shadow-2xl py-2 z-[100]
           `}
         >
           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label="Language options">
