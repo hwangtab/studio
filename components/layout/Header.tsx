@@ -21,7 +21,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common', { lng: locale });
   const currentPath = router.asPath;
   const siteConfig = getSiteConfig(locale);
 
