@@ -165,25 +165,25 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         {current.icons}
                     </div>
 
-                    <h3 className={`text-2xl md:text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200`}>
+                    <h3 className={`text-2xl md:text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200 break-words [overflow-wrap:anywhere]`}>
                         {current.title}
                     </h3>
 
-                    <p className="text-white/90 text-lg leading-relaxed mb-6">
+                    <p className="text-white/90 text-lg leading-relaxed mb-6 break-words [overflow-wrap:anywhere]">
                         {current.description}
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                         <Link
                             href={current.primaryLink}
-                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-black/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.buttonBg}`}
+                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-black/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.buttonBg}`}
                         >
                             <span className="min-w-0">{current.primaryText}</span>
                             <ArrowRight size={18} className="ml-2 flex-shrink-0" aria-hidden="true" />
                         </Link>
                         <Link
                             href={current.secondaryLink}
-                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
+                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
                         >
                             <span className="min-w-0">{current.secondaryText}</span>
                         </Link>

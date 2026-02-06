@@ -50,7 +50,7 @@ const SectionHeading = ({
 
       <Component
         className={cn(
-          "typo-section-title text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mb-3",
+          "typo-section-title text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mb-3 break-words [overflow-wrap:anywhere]",
           titleClassName
         )}
       >
@@ -58,7 +58,7 @@ const SectionHeading = ({
       </Component>
 
       {subtitle && (
-        <p className={cn("typo-section-lead max-w-2xl", align === 'center' ? "mx-auto" : "")}>
+        <p className={cn("typo-section-lead max-w-2xl break-words [overflow-wrap:anywhere]", align === 'center' ? "mx-auto" : "")}>
           {subtitle}
         </p>
       )}
