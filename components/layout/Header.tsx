@@ -75,13 +75,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 transition-[background-color,box-shadow] duration-300 py-4 backdrop-blur-xl ${isScrolled
-        ? 'bg-white/80 dark:bg-gray-900/80 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
+      className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 ${isScrolled
+        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
         : hasHero
-          ? 'bg-transparent shadow-lg shadow-transparent'
-          : 'bg-gradient-to-r from-primary via-secondary to-accent shadow-lg shadow-primary/20'
+          ? 'bg-transparent backdrop-blur-[0.5px] shadow-lg shadow-transparent'
+          : 'bg-gradient-to-r from-primary via-secondary to-accent backdrop-blur-[0.5px] shadow-lg shadow-primary/20'
         }`}
-      style={{ transform: 'translateZ(0)' }}
+      style={{ willChange: 'backdrop-filter, background-color' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4">
