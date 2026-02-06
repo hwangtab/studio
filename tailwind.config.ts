@@ -67,7 +67,7 @@ const config: Config = {
         sans: ['Pretendard', 'GmarketSans', 'Noto Sans KR', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         title: ['GmarketSans', 'Pretendard', 'sans-serif'],
         display: ['var(--font-montserrat)', 'GmarketSans', 'sans-serif'],
-        logo: ['PartialSansKR-Regular', 'GmarketSans', 'sans-serif'],
+        logo: ['PartialSansKR-Logo', 'PartialSansKR-Regular', 'GmarketSans', 'sans-serif'],
         pretendard: ['Pretendard', 'Noto Sans KR', 'sans-serif'],
       },
       animation: {

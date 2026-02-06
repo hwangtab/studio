@@ -21,14 +21,26 @@
     url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
 }
 
-/* PartialSansKR 폰트 (로고용) */
+/* PartialSansKR 폰트 (원본) */
 @font-face {
   font-family: 'PartialSansKR-Regular';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: optional;
-  /* 폰트 메트릭 조정 제거 - backdrop-filter와 충돌 방지, CSS로 개별 보정 */
+}
+
+/* PartialSansKR 폰트 (로고용 - 메트릭 조정) */
+@font-face {
+  font-family: 'PartialSansKR-Logo';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+  /* 상단 여백 줄이기: ascender가 큰 폰트 특성 보정 */
+  ascent-override: 85%;
+  descent-override: 20%;
+  line-gap-override: 0%;
 }
 
 /* Pretendard 폰트 (보조 폰트) - 주요 weight만 로드 */
