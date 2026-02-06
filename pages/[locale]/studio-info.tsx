@@ -35,6 +35,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },
         ]}
+        includeSchema={true}
       />
       <ImageHero
         locale={locale}
@@ -152,8 +153,24 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
         </motion.div >
       </Section>
 
-      <Section variant="default">
-        <ContactCTA className="mt-0" locale={locale} />
+      <Section variant="default" className="py-16">
+        <ContactCTA
+          locale={locale}
+          title={
+            <>
+              {t('studioInfo.cta.titleLine1')}<br />
+              <span className="text-primary">{t('studioInfo.cta.titleHighlight')}</span>
+            </>
+          }
+          subtitle={
+            <>
+              {t('studioInfo.cta.subtitleLine1')}<br className="hidden md:block" />
+              {t('studioInfo.cta.subtitleLine2')}
+            </>
+          }
+          imageSrc="/images/studio2.jpg"
+          imageAlt={t('studioInfo.cta.imageAlt')}
+        />
       </Section>
     </>
   );

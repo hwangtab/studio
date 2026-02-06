@@ -109,6 +109,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.contact'), path: `/${locale}/contact` },
         ]}
+        includeSchema={true}
       />
       <ImageHero
         {...{

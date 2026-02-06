@@ -2,9 +2,10 @@ import React from 'react';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MessageCircle, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
@@ -53,6 +54,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
         breadcrumbs={[
           { name: t('nav.about'), path: `/${locale}/about` },
         ]}
+        includeSchema={true}
       />
       <ImageHero
         {...{
@@ -248,70 +250,23 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
       </Section>
 
       <Section variant="alternate" className="py-16">
-        <motion.div
-          className="overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-            <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
-              <SectionHeading
-                title={
-                  <>
-                    {t('about.cta.titleLine1')}<br />
-                    <span className="text-primary">{t('about.cta.titleHighlight')}</span>
-                  </>
-                }
-                subtitle={
-                  <>
-                    {t('about.cta.subtitleLine1')}<br className="hidden md:block" />
-                    {t('about.cta.subtitleLine2')}
-                  </>
-                }
-                align="left"
-                className="mb-8"
-              />
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href={getLink("/contact")}
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                >
-                  {t('actions.location')}
-                </Link>
-                <a
-                  href={siteConfig.contact.kakaoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                >
-                  <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                  <span className="min-w-0">{t('actions.kakao')}</span>
-                </a>
-              </div>
-            </div>
-            <a
-              href={siteConfig.contact.kakaoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
-            >
-              <ResponsiveImage
-                src="/images/hardware3.jpg"
-                alt={t('about.cta.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                pictureClassName="block h-full"
-                loading="lazy"
-                sizes="(min-width: 768px) 50vw, 100vw"
-                width={800}
-                height={600}
-                fill
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-            </a>
-          </div>
-        </motion.div>
+        <ContactCTA
+          locale={locale}
+          title={
+            <>
+              {t('about.cta.titleLine1')}<br />
+              <span className="text-primary">{t('about.cta.titleHighlight')}</span>
+            </>
+          }
+          subtitle={
+            <>
+              {t('about.cta.subtitleLine1')}<br className="hidden md:block" />
+              {t('about.cta.subtitleLine2')}
+            </>
+          }
+          imageSrc="/images/hardware3.jpg"
+          imageAlt={t('about.cta.imageAlt')}
+        />
       </Section>
     </div>
   );

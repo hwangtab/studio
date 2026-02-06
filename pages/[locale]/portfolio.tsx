@@ -100,6 +100,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
         ]}
+        includeSchema={true}
       />
       <ImageHero
         {...{

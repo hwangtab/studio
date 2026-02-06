@@ -106,8 +106,8 @@ const SEO = ({
     [canonicalUrl, siteUrl]);
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl, absoluteOgImage, resolvedDescription, reviewItems),
-    [siteUrl, absoluteOgImage, resolvedDescription, reviewItems]
+    () => generateDefaultSchema(siteUrl, absoluteOgImage, resolvedDescription, reviewItems, currentLocale),
+    [siteUrl, absoluteOgImage, resolvedDescription, reviewItems, currentLocale]
   );
 
   const articleSchema = React.useMemo(
@@ -121,7 +121,8 @@ const SEO = ({
           normalizedCanonical,
           articlePublishedTime,
           articleModifiedTime,
-          articleAuthor
+          articleAuthor,
+          currentLocale
         )
         : null,
     [
@@ -134,6 +135,7 @@ const SEO = ({
       articlePublishedTime,
       articleModifiedTime,
       articleAuthor,
+      currentLocale,
     ]
   );
 
@@ -145,10 +147,11 @@ const SEO = ({
           resolvedDescription,
           siteUrl,
           absoluteOgImage,
-          normalizedCanonical
+          normalizedCanonical,
+          currentLocale
         )
         : null,
-    [isCourse, resolvedTitle, resolvedDescription, siteUrl, absoluteOgImage, normalizedCanonical]
+    [isCourse, resolvedTitle, resolvedDescription, siteUrl, absoluteOgImage, normalizedCanonical, currentLocale]
   );
 
   const breadcrumbSchema = React.useMemo(
@@ -277,6 +280,7 @@ const SEO = ({
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content="Studio NOL" />
+      <meta name="twitter:site" content="@StudioNOL" />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
 
       {includeSchema && schemaData && (

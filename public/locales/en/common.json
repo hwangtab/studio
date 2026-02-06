@@ -461,6 +461,13 @@
       "preampsEq": "Preamp & EQ",
       "compressorsProcessors": "Compressor & Processor",
       "interfacesConsoles": "Interface & Console"
+    },
+    "cta": {
+      "titleLine1": "Your Precious Music,",
+      "titleHighlight": "With the Best Sound",
+      "subtitleLine1": "We promise the best results with verified equipment and expert know-how.",
+      "subtitleLine2": "Book a consultation now and tour the studio.",
+      "imageAlt": "Studio NOL Control Room"
     }
   },
   "stories": {

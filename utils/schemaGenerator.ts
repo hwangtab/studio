@@ -1,15 +1,37 @@
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
+import { type Locale } from '../lib/i18n';
 
 export const generateDefaultSchema = (
   siteUrl: string,
   absoluteOgImage: string,
   description: string,
-  reviewItems: ReviewItem[] | null
+  reviewItems: ReviewItem[] | null,
+  locale: Locale = 'ko'
 ) => {
+  const isKo = locale === 'ko';
+
+  const translations = {
+    name: isKo ? '스튜디오 놀' : 'Studio NOL',
+    locality: isKo ? '은평구' : 'Eunpyeong-gu',
+    region: isKo ? '서울특별시' : 'Seoul',
+    street: isKo ? '대조동 84-3 3층(동명여고 바로 옆)' : '3rd Floor, 84-3 Daejo-dong (Next to Dongmyeong Girls High School)',
+    serviceTypes: isKo
+      ? ['레코딩', '믹싱', '마스터링', '음반 기획', '음원 유통', '음악 프로덕션']
+      : ['Recording', 'Mixing', 'Mastering', 'Music Planning', 'Music Distribution', 'Music Production'],
+    contactType: isKo ? '예약 및 상담' : 'Booking & Inquiry',
+    residencyTitle: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
+    residencyDesc: isKo
+      ? '월 40만 원으로 방음 연습실과 입주 고객 전용 혜택을 제공합니다.'
+      : 'Soundproof practice rooms and exclusive benefits starting for 400,000 KRW/month.',
+    recordingService: isKo ? '레코딩 서비스' : 'Recording Service',
+    mixingMastering: isKo ? '믹싱 & 마스터링' : 'Mixing & Mastering',
+    productionPlanning: isKo ? '음반 기획' : 'Music Planning',
+  };
+
   return {
     '@context': 'https://schema.org',
     '@type': ['MusicRecordingStudio', 'LocalBusiness', 'Organization'],
-    name: '스튜디오 놀',
+    name: translations.name,
     alternateName: 'Studio Nol',
     url: siteUrl,
     logo: `${siteUrl}/logo512.png`,
@@ -18,9 +40,9 @@ export const generateDefaultSchema = (
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '대조동 84-3 3층(동명여고 바로 옆)',
-      addressLocality: '은평구',
-      addressRegion: '서울특별시',
+      streetAddress: translations.street,
+      addressLocality: translations.locality,
+      addressRegion: translations.region,
       postalCode: '03424',
       addressCountry: 'KR',
     },
@@ -83,33 +105,33 @@ export const generateDefaultSchema = (
       }
       : {}),
     sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
-    serviceType: ['레코딩', '믹싱', '마스터링', '음반 기획', '음원 유통', '음악 프로덕션'],
+    serviceType: translations.serviceTypes,
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: '스튜디오 서비스',
+      name: isKo ? '스튜디오 서비스' : 'Studio Services',
       itemListElement: [
         {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: '레코딩 서비스',
-            description: '프로페셔널 레코딩 서비스',
+            name: translations.recordingService,
+            description: isKo ? '프로페셔널 레코딩 서비스' : 'Professional recording services',
           },
         },
         {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: '믹싱 & 마스터링',
-            description: '전문 믹싱 및 마스터링 서비스',
+            name: translations.mixingMastering,
+            description: isKo ? '전문 믹싱 및 마스터링 서비스' : 'Professional mixing and mastering services',
           },
         },
         {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: '음반 기획',
-            description: '음반 제작 전 과정 기획 및 지원',
+            name: translations.productionPlanning,
+            description: isKo ? '음반 제작 전 과정 기획 및 지원' : 'Full-cycle music production planning and support',
           },
         },
       ],
@@ -117,17 +139,17 @@ export const generateDefaultSchema = (
     contactPoint: [
       {
         '@type': 'ContactPoint',
-        contactType: '예약 및 상담',
+        contactType: translations.contactType,
         telephone: '+82-2-764-3114',
         url: 'https://open.kakao.com/me/nol',
-        availableLanguage: ['ko'],
+        availableLanguage: ['ko', 'en'],
       },
     ],
     offers: [
       {
         '@type': 'Offer',
-        name: '프리미엄 연습실 입주 프로그램',
-        description: '월 40만 원으로 방음 연습실과 입주 고객 전용 혜택을 제공합니다.',
+        name: translations.residencyTitle,
+        description: translations.residencyDesc,
         priceCurrency: 'KRW',
         price: 400000,
         url: 'https://open.kakao.com/o/sAWXdN5g',
@@ -136,7 +158,7 @@ export const generateDefaultSchema = (
         itemOffered: {
           '@type': 'Service',
           name: 'Studio Nol Residency Benefits',
-          serviceType: [
+          serviceType: isKo ? [
             '녹음실 할인',
             '음원 유통',
             '보도자료 작성',
@@ -145,9 +167,18 @@ export const generateDefaultSchema = (
             '크라우드 펀딩 컨설팅',
             '예술지원사업 정보',
             '공구 대여',
+          ] : [
+            'Recording Studio Discounts',
+            'Music Distribution',
+            'Press Release Writing',
+            'Busking Equipment Rental',
+            'Expert Feedback',
+            'Crowdfunding Consulting',
+            'Grant Information',
+            'Tool Rental',
           ],
-          provider: '스튜디오 놀',
-          areaServed: '서울특별시',
+          provider: translations.name,
+          areaServed: translations.region,
           offers: {
             '@type': 'AggregateOffer',
             priceCurrency: 'KRW',
@@ -155,48 +186,6 @@ export const generateDefaultSchema = (
             highPrice: 200000,
             offerCount: 8,
           },
-          amenityFeature: [
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: 'Premium Recording Chain',
-              value: 'Neumann U87AI, Vintech X73i, Tegeler tube compressor, Prism Sound Lyra 2, Proac/EVE monitoring',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '무료 음원 유통',
-              value: '오디오가이를 통한 글로벌 플랫폼 송출, 순이익 70% 아티스트 배분',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '홍보 지원',
-              value: '전문 보도자료 작성, 뉴스아트 및 주요 매체 배포, 아티스트 프로필 작성',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '버스킹 장비',
-              value: 'Roland CUBE Street EX2 2대, 마이크/케이블/스탠드, 180W 파워뱅크, 이동용 캐리어',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '전문가 피드백',
-              value: 'A&R 관점 컨설팅과 장르별 믹싱/마스터링 방향 제안',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '크라우드 펀딩 컨설팅',
-              value: '플랫폼 추천, 목표 금액, 리워드 구성, 스토리텔링 및 마케팅 전략 자문',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '예술지원사업 정보',
-              value: 'KOCCA, 예술위, 서울문화재단 지원사업 맞춤 추천 및 서류 준비 조언',
-            },
-            {
-              '@type': 'LocationFeatureSpecification',
-              name: '공구 무료 대여',
-              value: '전동드릴, 니퍼, 펜치, 드라이버 등 장비 설치/수리용 공구 제공',
-            },
-          ],
         },
       },
     ],
@@ -211,9 +200,11 @@ export const generateArticleSchema = (
   normalizedCanonical: string,
   articlePublishedTime?: string,
   articleModifiedTime?: string,
-  articleAuthor?: string
+  articleAuthor?: string,
+  locale: Locale = 'ko'
 ) => {
   if (!articlePublishedTime) return null;
+  const isKo = locale === 'ko';
 
   return {
     '@context': 'https://schema.org',
@@ -223,11 +214,11 @@ export const generateArticleSchema = (
     dateModified: articleModifiedTime || articlePublishedTime,
     author: {
       '@type': 'Person',
-      name: articleAuthor || '스튜디오 놀',
+      name: articleAuthor || (isKo ? '스튜디오 놀' : 'Studio NOL'),
     },
     publisher: {
       '@type': 'Organization',
-      name: '스튜디오 놀',
+      name: isKo ? '스튜디오 놀' : 'Studio NOL',
       logo: {
         '@type': 'ImageObject',
         url: `${siteUrl}/logo512.png`,
@@ -279,8 +270,11 @@ export const generateCourseSchema = (
   description: string,
   siteUrl: string,
   absoluteOgImage: string,
-  normalizedCanonical: string
+  normalizedCanonical: string,
+  locale: Locale = 'ko'
 ) => {
+  const isKo = locale === 'ko';
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Course',
@@ -288,10 +282,11 @@ export const generateCourseSchema = (
     description: description,
     provider: {
       '@type': 'Organization',
-      name: '스튜디오 놀',
+      name: isKo ? '스튜디오 놀' : 'Studio NOL',
       sameAs: siteUrl,
     },
     image: absoluteOgImage,
     url: normalizedCanonical,
   };
 };
+

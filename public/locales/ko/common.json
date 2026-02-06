@@ -461,6 +461,13 @@
       "preampsEq": "프리앰프 & 이퀄라이저",
       "compressorsProcessors": "컴프레서 & 프로세서",
       "interfacesConsoles": "인터페이스 & 콘솔"
+    },
+    "cta": {
+      "titleLine1": "당신의 소중한 음악,",
+      "titleHighlight": "최상의 사운드로",
+      "subtitleLine1": "검증된 장비와 전문 엔지니어의 노하우로 최선의 결과물을 약속합니다.",
+      "subtitleLine2": "지금 바로 방문 상담을 예약하고 스튜디오를 둘러보세요.",
+      "imageAlt": "스튜디오 놀 컨트롤 룸"
     }
   },
   "stories": {
