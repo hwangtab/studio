@@ -112,7 +112,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               {t('portfolio.subtitle')}
             </>
           ),
-          backgroundImage: "/images/recording1.png",
+          backgroundImage: "/images/recording1.webp",
           imageAlt: t('portfolio.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/40 via-transparent to-black/20",

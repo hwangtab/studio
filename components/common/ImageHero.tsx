@@ -71,7 +71,6 @@ const ImageHero = ({
       <div
         className={`absolute inset-0 z-10 ${overlayGradient ? `bg-gradient-to-b ${overlayGradient}` : cinematicOverlay}`}
       />
-      <div className="absolute inset-0 z-10 opacity-[0.03] bg-[url('/images/noise.png')] pointer-events-none mix-blend-overlay" />
 
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
         <motion.div

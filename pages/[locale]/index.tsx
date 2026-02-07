@@ -161,7 +161,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
               {t('home.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/hardware5.jpg"
+          imageSrc="/images/hardware5.webp"
           imageAlt="Studio NOL Main Room"
           primaryButtonLabel={t('home.cta.inquiry')}
           secondaryButtonLabel={t('home.cta.location')}

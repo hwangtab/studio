@@ -89,7 +89,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
               {t('about.description')}
             </>
           ),
-          backgroundImage: "/images/recording15.png",
+          backgroundImage: "/images/recording15.webp",
           imageAlt: t('about.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/40 via-transparent to-black/20",

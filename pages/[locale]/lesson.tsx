@@ -83,7 +83,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },
                 ]}
-                ogImage="/images/lesson1.png"
+                ogImage="/images/lesson1.webp"
             />
             <ImageHero
                 locale={locale}
@@ -95,7 +95,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                         {t('lesson.hero.subtitleLine2')}
                     </>
                 }
-                backgroundImage="/images/lesson1.png"
+                backgroundImage="/images/lesson1.webp"
                 imageAlt={t('lesson.hero.alt')}
                 minHeight="min-h-[60vh]"
                 overlayGradient="from-black/40 via-transparent to-black/20"
@@ -282,7 +282,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                             {t('lesson.cta.subtitleLine2')}
                         </>
                     }
-                    imageSrc="/images/lesson1.png"
+                    imageSrc="/images/lesson1.webp"
                     imageAlt={t('lesson.cta.imageAlt')}
                     primaryButtonLabel={t('lesson.cta.inquiry')}
                     secondaryButtonLabel={t('lesson.cta.location')}

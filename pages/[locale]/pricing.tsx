@@ -326,7 +326,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
           locale={locale}
           title={t('pricing.cta.title')}
           subtitle={t('pricing.cta.subtitle')}
-          imageSrc="/images/recording15.png"
+          imageSrc="/images/recording15.webp"
           imageAlt={t('pricing.images.packageAlt')}
           primaryButtonLabel={t('pricing.cta.inquiry')}
           secondaryButtonLabel={t('pricing.cta.location')}
