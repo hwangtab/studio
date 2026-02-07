@@ -8,6 +8,13 @@ const normalizeSrc = (src = '') => {
   return `/${src.replace(/^\/+/g, '')}`;
 };
 
+// Convert jpg/png paths to webp for local images
+const toWebpSrc = (src: string) => {
+  if (src.startsWith('http')) return src;
+  if (/\.(webp|avif)$/i.test(src)) return src;
+  return src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+};
+
 interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
@@ -51,37 +58,24 @@ const ResponsiveImage = ({
 
   const fallbackSrc = '/logo512.png';
 
-  const isExternal = normalizedSrc.startsWith('http');
-  // Only use webp source for local images (jpg/png will be converted to webp)
-  const showWebpSource = !isExternal && /\.(jpg|jpeg|png)$/i.test(normalizedSrc);
-  const webpSrc = showWebpSource ? normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp') : null;
-
-  const renderImage = (isFill: boolean) => (
-    <Image
-      src={error ? fallbackSrc : normalizedSrc}
-      alt={alt}
-      className={`${className} ${error ? 'object-contain opacity-50 bg-gray-50 dark:bg-gray-800 p-2' : ''}`}
-      sizes={sizes}
-      priority={priority}
-      fill={isFill}
-      width={!isFill ? (width || 300) : undefined}
-      height={!isFill ? (height || 300) : undefined}
-      onError={() => setError(true)}
-      {...rest}
-    />
-  );
+  // Use webp version for local images (they exist alongside originals)
+  const imageSrc = error ? fallbackSrc : toWebpSrc(normalizedSrc);
 
   return (
     <div className={wrapperClass}>
-      <div className={`relative w-full h-full ${error ? 'p-8 flex items-center justify-center' : ''}`}>
-        {webpSrc && !error ? (
-          <picture className="block w-full h-full">
-            <source srcSet={webpSrc} type="image/webp" />
-            {renderImage(useFill)}
-          </picture>
-        ) : (
-          renderImage(useFill)
-        )}
+      <div className={`relative w-full h-full ${error ? 'p-8 flex items-center justify-center bg-gray-50 dark:bg-gray-800' : ''}`}>
+        <Image
+          src={imageSrc}
+          alt={alt}
+          className={`${className} ${error ? 'object-contain opacity-50' : ''}`}
+          sizes={sizes}
+          priority={priority}
+          fill={useFill}
+          width={!useFill ? (width || 300) : undefined}
+          height={!useFill ? (height || 300) : undefined}
+          onError={() => setError(true)}
+          {...rest}
+        />
       </div>
     </div>
   );
