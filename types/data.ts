@@ -80,6 +80,7 @@ export interface ContactInfo {
 export interface SiteConfig {
   name: string;
   url: string;
+  logo: string;
   description: string;
   contact: ContactInfo;
   vatNotice: string;

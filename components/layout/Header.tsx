@@ -122,12 +122,25 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         <div className="flex items-center justify-between gap-4 h-12">
           <Link
             href={`/${locale}`}
-            className={`${!isTransparent ? 'text-primary dark:text-white' : 'text-white'}
-              flex-shrink-0 flex items-center text-2xl sm:text-3xl font-logo leading-none tracking-tight hover:opacity-90 transition-opacity duration-300 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
-            style={{ contain: 'layout style' }}
+            className="flex-shrink-0 flex items-center hover:opacity-90 transition-all duration-300 focus-visible:outline-none"
             onClick={() => setIsMenuOpen(false)}
           >
-            {siteConfig.name}
+            <div className="relative h-8 sm:h-10 w-auto">
+              {/* Logo with specific styling for visibility on different backgrounds */}
+              <img
+                src={siteConfig.logo}
+                alt={siteConfig.name}
+                className={`h-full w-auto object-contain transition-all duration-300 ${isTransparent || isDarkMode
+                    ? 'brightness-0 invert' // Make it white on dark backgrounds
+                    : ''
+                  }`}
+                style={{
+                  filter: (isTransparent || isDarkMode)
+                    ? 'brightness(0) invert(1) brightness(1.2)' // Ensure it's very white
+                    : 'none'
+                }}
+              />
+            </div>
           </Link>
 
           <nav className="hidden xl:flex items-center gap-x-2">
