@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "템플릿", "Template", "Routing"]
 ---
-![DAW 믹서 화면](/images/recording13.png)
+![DAW 믹서 화면](/images/recording13.webp)
 
 매번 믹싱할 때마다 트랙 만들고, 이름 바꾸고, 이펙터 걸고... 귀찮지 않으세요? (에구구-)
 프로들은 절대 밑바닥(Zero)에서 시작하지 않습니다.

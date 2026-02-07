@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Template", "Routing", "Workflow"]
 ---
-![Cửa sổ mixer DAW](/images/recording13.png)
+![Cửa sổ mixer DAW](/images/recording13.webp)
 
 Mỗi lần mix bạn lại tạo track, đổi tên, chèn hiệu ứng... mệt đúng không? (Oof.)
 Pro không bao giờ bắt đầu từ số 0.

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Editing", "Comping", "Timing"]
 ---
-![Waveform editing screen](/images/recording11.png)
+![Waveform editing screen](/images/recording11.webp)
 
 "Start the mix, please!" (Sure!)
 Hold on—before you raise a single fader, there’s a mandatory gate: **editing**.

@@ -82,8 +82,8 @@ export const getEquipmentData = (locale: Locale) => {
   };
 
   const studioImages = [
-    { 
-      src: "/images/hardware2.jpg", 
+    {
+      src: "/images/hardware2.jpg",
       alt: t(locale, {
         ko: "스튜디오 놀 메인 컨트롤 룸",
         en: "Studio NOL Main Control Room",
@@ -92,10 +92,10 @@ export const getEquipmentData = (locale: Locale) => {
         vi: "Phòng điều khiển chính Studio NOL",
         th: "ห้องควบคุมหลักของ Studio NOL",
         uz: "Studio NOL asosiy nazorat xonasi",
-      }) 
+      })
     },
-    { 
-      src: "/images/hardware3.jpg", 
+    {
+      src: "/images/hardware3.jpg",
       alt: t(locale, {
         ko: "Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프",
         en: "Neumann U87AI & Vintech Preamp",
@@ -104,10 +104,10 @@ export const getEquipmentData = (locale: Locale) => {
         vi: "Micro condenser Neumann U87AI & preamp Vintech",
         th: "ไมค์คอนเดนเซอร์ Neumann U87AI และพรีแอมป์ Vintech",
         uz: "Neumann U87AI kondensator mikrofoni va Vintech preamp",
-      }) 
+      })
     },
-    { 
-      src: "/images/hardware4.jpg", 
+    {
+      src: "/images/hardware4.jpg",
       alt: t(locale, {
         ko: "Universal Audio Apollo x8p 오디오 인터페이스",
         en: "Universal Audio Apollo x8p",
@@ -116,10 +116,10 @@ export const getEquipmentData = (locale: Locale) => {
         vi: "Giao diện âm thanh Universal Audio Apollo x8p",
         th: "อินเทอร์เฟซเสียง Universal Audio Apollo x8p",
         uz: "Universal Audio Apollo x8p audio interfeysi",
-      }) 
+      })
     },
-    { 
-      src: "/images/hardware5.jpg", 
+    {
+      src: "/images/hardware5.webp",
       alt: t(locale, {
         ko: "Adam Audio A7X 모니터 스피커와 믹싱 데스크",
         en: "Adam Audio A7X & Mixing Desk",
@@ -128,7 +128,7 @@ export const getEquipmentData = (locale: Locale) => {
         vi: "Loa monitor Adam Audio A7X & bàn mix",
         th: "ลำโพงมอนิเตอร์ Adam Audio A7X และโต๊ะมิกซ์",
         uz: "Adam Audio A7X monitor karnaylari va miks pulti",
-      }) 
+      })
     },
   ];
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Plantilla", "Template", "Routing"]
 ---
-![Ventana del mezclador en el DAW](/images/recording13.png)
+![Ventana del mezclador en el DAW](/images/recording13.webp)
 
 Cada vez que mezclas creas pistas, cambias nombres, insertas efectos... ¿no cansa? (Uff.)
 Los pros jamás parten desde cero.

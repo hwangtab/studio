@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
 ---
-![](/images/bulgwang-mixing-club-2nd.png)
+![](/images/bulgwang-mixing-club-2nd.webp)
 
 ### 🔥 Nhiệt của buổi đầu vẫn còn! Round 2 của “Bulgwang Mixing Club” bắt đầu! 🔥
 Vẫn còn nóng sau đêm đầu với gà rán? Tuần này nâng cấp lên pizza nóng và bia lạnh cho buổi gặp lần 2. Khoe gear, tranh luận plugin, so sánh reference—tiếp tục nói chuyện nerd nhé.

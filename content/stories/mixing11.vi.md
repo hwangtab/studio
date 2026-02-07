@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Editing", "Comping", "Timing"]
 ---
-![Màn hình chỉnh waveform](/images/recording11.png)
+![Màn hình chỉnh waveform](/images/recording11.webp)
 
 “Bắt đầu mix nhé!” (Ok!)
 Khoan đã—trước khi đẩy một fader, có một cổng bắt buộc: **editing**.

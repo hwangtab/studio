@@ -1,0 +1,58 @@
+                src="/images/hardware2.jpg"
+            "albumArt": "/images/album3.jpg",
+            "image": "/images/portfolio1.jpg",
+            "image": "/images/portfolio2.jpg",
+            "image": "/images/portfolio3.jpg",
+            "image": "/images/portfolio4.jpg",
+            "image": "/images/portfolio5.jpg",
+            "image": "/images/portfolio6.jpg",
+          imageSrc="/images/hardware3.jpg"
+          imageSrc="/images/room8.jpg"
+          imageSrc="/images/studio2.jpg"
+        backgroundImage="/images/hardware1.jpg"
+        backgroundImage="/images/hardware2.jpg"
+        backgroundImage="/images/room5.jpg"
+        backgroundImage="/images/studio1.jpg"
+        backgroundImage={story.thumbnail || '/images/studio1.jpg'}
+        ogImage={story.thumbnail || '/images/hardware2.jpg'}
+        src: `/images/hardware8.jpg`,
+        src: `/images/studio2.jpg`,
+        src: `/images/studio3.jpg`,
+        src: `/images/studio4.jpg`,
+        src: `/images/studio5.jpg`,
+      { src: `/images/hardware8.jpg`, alt: "อุปกรณ์เอาต์บอร์ดอนาล็อกและแร็คพรีแอมป์" }
+      { src: `/images/hardware8.jpg`, alt: "模拟设备" }
+      { src: `/images/hardware8.jpg`, alt: "Analog outboard gear and preamps" }
+      { src: `/images/hardware8.jpg`, alt: "Analog outboard uskunalar va preamp rack" }
+      { src: `/images/hardware8.jpg`, alt: "Equipo analógico" }
+      { src: `/images/hardware8.jpg`, alt: "Thiết bị outboard analog và rack preamp" }
+      { src: `/images/studio2.jpg`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
+      { src: `/images/studio2.jpg`, alt: "录音室" },
+      { src: `/images/studio2.jpg`, alt: "Monitoring karnaylari va boshqaruv stoli bo‘lgan yozuv xonasi" },
+      { src: `/images/studio2.jpg`, alt: "Phòng thu với loa kiểm âm và bàn điều khiển" },
+      { src: `/images/studio2.jpg`, alt: "Recording room with monitoring speakers" },
+      { src: `/images/studio2.jpg`, alt: "Sala de grabación" },
+      { src: `/images/studio3.jpg`, alt: "บูธร้องพร้อมไมค์มืออาชีพและป๊อปฟิลเตอร์" },
+      { src: `/images/studio3.jpg`, alt: "人声录音棚" },
+      { src: `/images/studio3.jpg`, alt: "Booth thu vocal với micro chuyên nghiệp và pop filter" },
+      { src: `/images/studio3.jpg`, alt: "Cabina vocal" },
+      { src: `/images/studio3.jpg`, alt: "Professional mikrofon va pop filtrli vokal yozuv kabinasi" },
+      { src: `/images/studio3.jpg`, alt: "Vocal booth with professional mic" },
+      { src: `/images/studio4.jpg`, alt: "เวิร์กสเตชันมิกซ์พร้อมระบบ DAW ล่าสุด" },
+      { src: `/images/studio4.jpg`, alt: "混音工作站" },
+      { src: `/images/studio4.jpg`, alt: "Eng so‘nggi DAW tizimli miks ish stansiyasi" },
+      { src: `/images/studio4.jpg`, alt: "Estación de mezcla" },
+      { src: `/images/studio4.jpg`, alt: "Mixing workstation with latest DAW" },
+      { src: `/images/studio4.jpg`, alt: "Trạm làm việc mixing với hệ thống DAW mới nhất" },
+      { src: `/images/studio5.jpg`, alt: "ห้องโปรดักชันที่ปรับอะคูสติกแล้ว" },
+      { src: `/images/studio5.jpg`, alt: "制作室" },
+      { src: `/images/studio5.jpg`, alt: "Acoustically treated production room" },
+      { src: `/images/studio5.jpg`, alt: "Akustik ishlov berilgan prodakshn xonasi" },
+      { src: `/images/studio5.jpg`, alt: "Phòng sản xuất đã xử lý âm học" },
+      { src: `/images/studio5.jpg`, alt: "Sala de producción" },
+      backgroundImage: "/images/studio2.jpg",
+      src: "/images/hardware2.jpg", 
+      src: "/images/hardware3.jpg", 
+      src: "/images/hardware4.jpg", 
+      src: "/images/hardware5.jpg", 
+  ogImage = '/images/hardware2.jpg',

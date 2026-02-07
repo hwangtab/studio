@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Networking", "Encuentro"]
 ---
-![](/images/bulgwang-mixing-club-2nd.png)
+![](/images/bulgwang-mixing-club-2nd.webp)
 
 ### 🔥 ¡Sigue el calor del primer encuentro! Empieza la ronda 2 de "Bulgwang Mixing Club" 🔥
 ¿Aún sientes el calor de la primera reunión con pollo? Esta semana subimos el nivel con pizza y cerveza fría. Presume equipo, debate plugins, compara referencias: sigamos con la charla de nerds del audio.

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Edicion", "Editing", "Comping"]
 ---
-![Pantalla de edición de ondas](/images/recording11.png)
+![Pantalla de edición de ondas](/images/recording11.webp)
 
 "¡Empieza la mezcla, por favor!" (¡Claro!)
 Espera—antes de subir un fader, hay una puerta obligatoria: **la edición**.

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Editing", "Comping", "Timing"]
 ---
-![หน้าจอแก้ไขเวฟฟอร์ม](/images/recording11.png)
+![หน้าจอแก้ไขเวฟฟอร์ม](/images/recording11.webp)
 
 “เริ่มมิกซ์เลย!” (ได้!)
 เดี๋ยวก่อน—ก่อนจะยก fader มีประตูบังคับ: **editing**

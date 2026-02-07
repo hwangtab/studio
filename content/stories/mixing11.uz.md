@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Editing", "Comping", "Timing"]
 ---
-![Waveform tahrirlash ekrani](/images/recording11.png)
+![Waveform tahrirlash ekrani](/images/recording11.webp)
 
 “Miksni boshlaymiz!” (Bo'ldi!)
 Biroz kuting — biror faderni ko'tarishdan oldin majburiy darvoza bor: **editing**.

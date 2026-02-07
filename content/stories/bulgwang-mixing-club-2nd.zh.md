@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "社交", "聚会"]
 ---
-![](/images/bulgwang-mixing-club-2nd.png)
+![](/images/bulgwang-mixing-club-2nd.webp)
 
 ### 🔥 首场热度不减！"Bulgwang Mixing Club" 第二轮开始！🔥
 鸡肉点燃的第一场还热着呢？本周升级为披萨+冰啤的第二次聚会。设备炫技、插件讨论、参考曲对比——继续把混音宅的热情拉满。

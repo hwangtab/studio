@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Template", "Routing", "Workflow"]
 ---
-![หน้าต่างมิกเซอร์ของ DAW](/images/recording13.png)
+![หน้าต่างมิกเซอร์ของ DAW](/images/recording13.webp)
 
 ทุกครั้งที่มิกซ์ต้องสร้างแทร็ก เปลี่ยนชื่อ ใส่เอฟเฟกต์… เหนื่อยไหม? (อืม)
 โปรไม่เคยเริ่มจากศูนย์

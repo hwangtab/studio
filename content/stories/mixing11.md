@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "에디팅", "Editing", "Comping"]
 ---
-![파형 에디팅 화면](/images/recording11.png)
+![파형 에디팅 화면](/images/recording11.webp)
 
 "믹싱 시작해 주세요!" (네-!)
 잠깐, 믹싱 페이더를 올리기 전에 반드시 거쳐야 할 관문이 있습니다. 바로 **'에디팅(Editing)'**입니다.

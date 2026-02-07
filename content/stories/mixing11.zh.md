@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "编辑", "Editing", "Comping"]
 ---
-![波形编辑界面](/images/recording11.png)
+![波形编辑界面](/images/recording11.webp)
 
 “开始混音吧！”（好嘞！）
 等等——在推子拉起来之前，有一道必经关卡：**编辑（Editing）**。
