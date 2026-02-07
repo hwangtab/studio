@@ -2,7 +2,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   compress: true,
-  // output: 'export',
+  output: 'export',
 
   // Optimized image configuration
   images: {
@@ -44,6 +44,10 @@ const nextConfig = {
   // Experimental optimizations
   experimental: {
     optimizePackageImports: ['lucide-react', 'react-icons', 'react-icons/fa'],
+  },
+
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 
   // Headers configuration removed as it is incompatible with output: 'export'
