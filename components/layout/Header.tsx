@@ -125,18 +125,26 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
             className="flex-shrink-0 flex items-center hover:opacity-90 transition-all duration-300 focus-visible:outline-none"
             onClick={() => setIsMenuOpen(false)}
           >
-            <div className="relative h-8 sm:h-10 w-auto">
-              {/* Logo with specific styling for visibility on different backgrounds */}
+            <div className="relative h-8 sm:h-10 w-auto flex items-center">
+              {/* NOL Part - Always original color */}
               <img
                 src={siteConfig.logo}
                 alt={siteConfig.name}
-                className={`h-full w-auto object-contain transition-all duration-300 ${isTransparent || isDarkMode
-                    ? 'brightness-0 invert' // Make it white on dark backgrounds
-                    : ''
-                  }`}
+                className="h-full w-auto object-contain"
                 style={{
+                  clipPath: 'inset(0 0 0 52.3%)', // Show only the right part (NOL)
+                }}
+              />
+              {/* Studio Part - Turns white on dark/transparent backgrounds */}
+              <img
+                src={siteConfig.logo}
+                alt=""
+                aria-hidden="true"
+                className="h-full w-auto object-contain absolute top-0 left-0 transition-all duration-300"
+                style={{
+                  clipPath: 'inset(0 47.7% 0 0)', // Show only the left part (studio)
                   filter: (isTransparent || isDarkMode)
-                    ? 'brightness(0) invert(1) brightness(1.2)' // Ensure it's very white
+                    ? 'brightness(0) invert(1) brightness(1.2)' // Make it white
                     : 'none'
                 }}
               />
