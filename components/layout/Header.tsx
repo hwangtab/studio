@@ -102,7 +102,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         { label: t('nav.contact'), href: `/${locale}/contact` },
       ]
     }
-  ], [t, locale]);
+  ], [locale]); // t from useTranslation is usually stable enough or we want translations to update when locale changes. locale is the key.
 
   const handleNavigate = useCallback(() => {
     setIsMenuOpen(false);
@@ -122,7 +122,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         <div className="flex items-center justify-between gap-4 h-12">
           <Link
             href={`/${locale}`}
-            className="flex-shrink-0 flex items-center hover:opacity-90 transition-all duration-300 focus-visible:outline-none"
+            className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none"
             onClick={() => setIsMenuOpen(false)}
           >
             <div className="relative h-8 sm:h-10 w-auto flex items-center">
@@ -140,7 +140,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                 src={siteConfig.logo}
                 alt=""
                 aria-hidden="true"
-                className="h-full w-auto object-contain absolute top-0 left-0 transition-all duration-300"
+                className="h-full w-auto object-contain absolute top-0 left-0 transition-[filter] duration-300"
                 style={{
                   clipPath: 'inset(0 47.7% 0 0)', // Show only the left part (studio)
                   filter: (isTransparent || isDarkMode)
@@ -179,8 +179,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
 
               <LanguageSwitcher
                 currentLocale={locale}
-                isScrolled={!isTransparent}
-                hasHero={isTransparent}
+                isFloating={isTransparent}
               />
             </div>
 
@@ -235,8 +234,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                 </button>
                 <LanguageSwitcher
                   currentLocale={locale}
-                  isScrolled={true}
-                  hasHero={false}
+                  isFloating={false}
                   variant="inline"
                 />
               </div>

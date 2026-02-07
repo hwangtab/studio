@@ -5,15 +5,13 @@ import { locales, localeNames, type Locale } from '../lib/i18n';
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
-  isScrolled: boolean;
-  hasHero: boolean;
+  isFloating: boolean; // Whether it's on a transparent/hero background
   variant?: 'dropdown' | 'inline';
 }
 
 export const LanguageSwitcher = ({
   currentLocale,
-  isScrolled,
-  hasHero,
+  isFloating,
   variant = 'dropdown'
 }: LanguageSwitcherProps) => {
   const router = useRouter();
@@ -129,11 +127,11 @@ export const LanguageSwitcher = ({
           max-w-[120px] sm:max-w-[160px]
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen
-            ? isScrolled || !hasHero
+            ? !isFloating
               ? 'bg-primary text-white shadow-sm'
               : 'bg-white/20 text-white shadow-sm'
             : ''}
-          ${!isOpen && (isScrolled || !hasHero)
+          ${!isOpen && !isFloating
             ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
             : !isOpen
               ? 'text-white/90 hover:text-white hover:bg-white/10'
