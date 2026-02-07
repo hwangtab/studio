@@ -38,11 +38,6 @@ const ResponsiveImage = ({
   const [error, setError] = React.useState(false);
   const normalizedSrc = normalizeSrc(src);
 
-  // Reset error state when src changes
-  React.useEffect(() => {
-    setError(false);
-  }, [src]);
-
   if (!normalizedSrc) return null;
 
   const hasDimensions = typeof width === 'number' && typeof height === 'number';
@@ -51,26 +46,81 @@ const ResponsiveImage = ({
 
   const fallbackSrc = '/logo512.png';
 
-  // Use original path directly - do NOT convert to webp
-  // next/image with unoptimized:true will serve the file as-is
-  const imageSrc = error ? fallbackSrc : normalizedSrc;
+  const isExternal = normalizedSrc.startsWith('http');
+  // Only use webp source for local images (jpg/png will be converted to webp)
+  const showWebpSource = !isExternal && /\.(jpg|jpeg|png)$/i.test(normalizedSrc);
+  // If already webp/avif, use it directly without picture wrapper
+  const isModernFormat = /\.(webp|avif)$/i.test(normalizedSrc);
+
+  if (useFill) {
+    return (
+      <div className={wrapperClass}>
+        <div className={`relative w-full h-full ${error ? 'p-8 bg-gray-50 dark:bg-gray-800 flex items-center justify-center' : ''}`}>
+          {isModernFormat ? (
+            <Image
+              src={error ? fallbackSrc : normalizedSrc}
+              alt={alt}
+              className={`${className} ${error ? 'object-contain opacity-50' : ''}`}
+              sizes={sizes}
+              priority={priority}
+              fill
+              onError={() => setError(true)}
+              {...rest}
+            />
+          ) : (
+            <picture className="block w-full h-full">
+              {showWebpSource && (
+                <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+              )}
+              <Image
+                src={error ? fallbackSrc : normalizedSrc}
+                alt={alt}
+                className={`${className} ${error ? 'object-contain opacity-50' : ''}`}
+                sizes={sizes}
+                priority={priority}
+                fill
+                onError={() => setError(true)}
+                {...rest}
+              />
+            </picture>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={wrapperClass}>
-      <div className={`relative w-full h-full ${error ? 'p-8 flex items-center justify-center bg-gray-50 dark:bg-gray-800' : ''}`}>
+      {isModernFormat ? (
         <Image
-          src={imageSrc}
+          src={error ? fallbackSrc : normalizedSrc}
           alt={alt}
-          className={`${className} ${error ? 'object-contain opacity-50' : ''}`}
+          className={`${className} ${error ? 'object-contain opacity-50 bg-gray-50 dark:bg-gray-800 p-2' : ''}`}
           sizes={sizes}
           priority={priority}
-          fill={useFill}
-          width={!useFill ? (width || 300) : undefined}
-          height={!useFill ? (height || 300) : undefined}
+          width={width || 300}
+          height={height || 300}
           onError={() => setError(true)}
           {...rest}
         />
-      </div>
+      ) : (
+        <picture className="block w-full h-full">
+          {showWebpSource && (
+            <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+          )}
+          <Image
+            src={error ? fallbackSrc : normalizedSrc}
+            alt={alt}
+            className={`${className} ${error ? 'object-contain opacity-50 bg-gray-50 dark:bg-gray-800 p-2' : ''}`}
+            sizes={sizes}
+            priority={priority}
+            width={width || 300}
+            height={height || 300}
+            onError={() => setError(true)}
+            {...rest}
+          />
+        </picture>
+      )}
     </div>
   );
 };
