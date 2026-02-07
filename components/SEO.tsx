@@ -165,16 +165,23 @@ const SEO = ({
 
   const schemaItems = React.useMemo(() => {
     const items: any[] = [];
-    if (defaultSchema) items.push(defaultSchema);
-    if (articleSchema) items.push(articleSchema);
-    if (courseSchema) items.push(courseSchema);
-    if (schema) {
-      if (Array.isArray(schema?.['@graph'])) {
-        items.push(...schema['@graph']);
+
+    const addItems = (input: any) => {
+      if (!input) return;
+      if (Array.isArray(input)) {
+        input.forEach(addItems);
+      } else if (input['@graph'] && Array.isArray(input['@graph'])) {
+        input['@graph'].forEach(addItems);
       } else {
-        items.push(schema);
+        items.push(input);
       }
-    }
+    };
+
+    addItems(defaultSchema);
+    addItems(articleSchema);
+    addItems(courseSchema);
+    addItems(schema);
+
     return items.filter(Boolean);
   }, [defaultSchema, articleSchema, courseSchema, schema]);
 

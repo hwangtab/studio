@@ -118,6 +118,9 @@ export const generateDefaultSchema = (
               reviewCount: reviewItems.length,
               bestRating: '5',
               worstRating: '1',
+              itemReviewed: {
+                '@id': `${siteUrl}/#studio`,
+              },
             },
             review: reviewItems.map((item) => ({
               '@type': 'Review',
