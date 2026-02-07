@@ -7,7 +7,7 @@ const METADATA_OUTPUT = path.join(__dirname, '../utils/imageMetadata.json');
 const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 
 // AVIF 생성 여부 (더 작지만 인코딩 느림)
-const GENERATE_AVIF = false; // true로 변경시 AVIF 생성
+const GENERATE_AVIF = true; // true로 변경시 AVIF 생성
 
 const imageMetadata = {};
 

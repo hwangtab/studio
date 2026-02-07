@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Phase", "DrumMixing", "Polarity"]
 ---
-![Baraban miklash surati](/images/recording1.png)
+![Baraban miklash surati](/images/recording1.webp)
 
 “Kick juda katta edi, lekin overhead bilan birga eshitsam yo'qolib qoladi!” (Ha?)
 Bu arvoh emas. Bu fan: **phase cancellation**.

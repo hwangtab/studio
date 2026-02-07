@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "디지털", "SampleRate", "BitDepth"]
 ---
-![디지털 오디오 파형](/images/recording8.png)
+![디지털 오디오 파형](/images/recording8.webp)
 
 "44.1kHz로 녹음해야 하나요, 48kHz로 해야 하나요?"
 "16비트와 24비트는 무슨 차이가 있나요?"

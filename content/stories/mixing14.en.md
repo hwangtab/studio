@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Balance", "Fader", "Headroom"]
 ---
-![Mixing console and faders](/images/console.jpg)
+![Mixing console and faders](/images/console.webp)
 
 "Mixing is too hard. I don’t know which plug‑in to use." (Sad.)
 That’s the most common complaint I hear from beginners.

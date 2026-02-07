@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Automation", "DynamicMix", "FaderRide"]
 ---
-![Màn hình DAW với đường automation](/images/console.jpg)
+![Màn hình DAW với đường automation](/images/console.webp)
 
 “Mixing không phải ảnh đóng khung, nó là một bộ phim sống.” (Action!)
 

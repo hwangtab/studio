@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Metering", "Metering", "Loudness"]
 ---
-![Various level meters](/images/console.jpg)
+![Various level meters](/images/console.webp)
 
 “I can’t trust my ears.”
 Then you need a reliable friend: the **level meter**.

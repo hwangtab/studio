@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import type { NextPageWithLayout } from '../../types';
+import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
@@ -11,7 +12,7 @@ import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
-import PortfolioDetailModal from '../../components/PortfolioDetailModal';
+const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
 const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), { ssr: false });
 import ProjectRowCard from '../../components/ui/ProjectRowCard';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -27,7 +28,7 @@ interface PortfolioProps {
   categories: readonly PortfolioCategory[];
 }
 
-const Portfolio: NextPage<PortfolioProps> = ({
+const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   locale,
   initialPortfolioItems = [],
   audioTracks = [],
@@ -204,7 +205,7 @@ const Portfolio: NextPage<PortfolioProps> = ({
   );
 };
 
-(Portfolio as any).hasHero = true;
+Portfolio.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params }) => {

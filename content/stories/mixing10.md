@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "청음훈련", "EarTraining", "Reference"]
 ---
-![헤드폰을 쓰고 집중하는 모습](/images/recording2.png)
+![헤드폰을 쓰고 집중하는 모습](/images/recording2.webp)
 
 "저는 막귀라서 믹싱을 못 하겠어요." (시무룩-)
 아뇨, 여러분은 막귀가 아닙니다. 단지 **'무엇을 들어야 할지'** 모를 뿐입니다.

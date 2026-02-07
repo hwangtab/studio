@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Digital", "SampleRate", "BitDepth"]
 ---
-![Dạng sóng âm thanh số](/images/recording8.png)
+![Dạng sóng âm thanh số](/images/recording8.webp)
 
 “Nên thu ở 44.1 kHz hay 48 kHz?”
 “Khác nhau giữa 16‑bit và 24‑bit là gì?”

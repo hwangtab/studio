@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "社交", "聚会"]
 ---
-![](/images/recording16.png)
+![](/images/recording16.webp)
 
 ### 🔥 第三轮即将到来！（但有时间变更通知）
 

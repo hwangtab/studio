@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "StaticMix", "Balance", "NoPlugins"]
 ---
-![Engineer with a hand on the fader](/images/console.jpg)
+![Engineer with a hand on the fader](/images/console.webp)
 
 All preparations are done. (Deep breath.)
 * Room is treated (Session Prep)

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Networking", "Encuentro"]
 ---
-![](/images/recording16.png)
+![](/images/recording16.webp)
 
 ### 🔥 ¡Tercera ronda programada! (Pero aviso de cambio de fecha)
 

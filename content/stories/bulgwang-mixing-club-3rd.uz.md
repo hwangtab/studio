@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
 ---
-![](/images/recording16.png)
+![](/images/recording16.webp)
 
 ### 🔥 3-raund belgilandi! (Ammo jadvalda o'zgarish bor)
 

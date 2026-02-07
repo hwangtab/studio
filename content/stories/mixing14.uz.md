@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Balance", "Fader", "Headroom"]
 ---
-![Miks pulti va faderlar](/images/console.jpg)
+![Miks pulti va faderlar](/images/console.webp)
 
 “Miks juda qiyin. Qaysi pluginni ishlatishni bilmayman.” (Xafa.)
 Bu boshlovchilardan eng ko'p eshitadigan shikoyat.

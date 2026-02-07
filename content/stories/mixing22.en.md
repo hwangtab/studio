@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Automation", "DynamicMix", "FaderRide"]
 ---
-![DAW screen with automation lines](/images/console.jpg)
+![DAW screen with automation lines](/images/console.webp)
 
 "Mixing isn’t a pinned photo, it’s a living film." (Action!)
 

@@ -102,7 +102,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         { label: t('nav.contact'), href: `/${locale}/contact` },
       ]
     }
-  ], [locale]); // t from useTranslation is usually stable enough or we want translations to update when locale changes. locale is the key.
+  ], [locale, t]);
 
   const handleNavigate = useCallback(() => {
     setIsMenuOpen(false);

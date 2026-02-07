@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "StaticMix", "Balance", "NoPlugins"]
 ---
-![페이더에 손을 올린 엔지니어](/images/console.jpg)
+![페이더에 손을 올린 엔지니어](/images/console.webp)
 
 자, 이제 모든 준비가 끝났습니다. (심호흡 습- 하-)
 *   방 정리도 했고 (Session Prep)

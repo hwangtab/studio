@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Automation", "DynamicMix", "FaderRide"]
 ---
-![Automation chiziqlari tushirilgan DAW ekrani](/images/console.jpg)
+![Automation chiziqlari tushirilgan DAW ekrani](/images/console.webp)
 
 “Miks ramkaga qotirilgan surat emas, u tirik film.” (Action!)
 

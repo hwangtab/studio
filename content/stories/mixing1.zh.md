@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "入门", "Mixing", "Introduction"]
 ---
-![混音控制台与录音室全景](/images/console.jpg)
+![混音控制台与录音室全景](/images/console.webp)
 
 制作音乐的过程常常被比作“做菜”。
 我觉得再合适不过了。为了初学混音的你们，我从今天开始当你们的主厨。（心跳加速！）

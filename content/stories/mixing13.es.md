@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "StaticMix", "Balance", "NoPlugins"]
 ---
-![Ingeniero con la mano en el fader](/images/console.jpg)
+![Ingeniero con la mano en el fader](/images/console.webp)
 
 Ya está todo listo. (Respira hondo.)
 * Sala preparada (Session Prep)

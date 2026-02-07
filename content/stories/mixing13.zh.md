@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "StaticMix", "Balance", "NoPlugins"]
 ---
-![把手放在推子上的工程师](/images/console.jpg)
+![把手放在推子上的工程师](/images/console.webp)
 
 准备工作都完成了。（深呼吸）
 * 房间整理完毕（Session Prep）

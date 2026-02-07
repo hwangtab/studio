@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "EarTraining", "Reference", "Listening"]
 ---
-![Quloqchin bilan diqqatli tinglash](/images/recording2.png)
+![Quloqchin bilan diqqatli tinglash](/images/recording2.webp)
 
 “Qulog'im yomon, shuning uchun miks qila olmayman.” (Xafa.)
 Yo'q — qulog'ingiz yomon emas. Siz hali **nimani tinglashni** bilmayapsiz.

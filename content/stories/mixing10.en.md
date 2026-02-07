@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "EarTraining", "Reference", "Listening"]
 ---
-![Focused listening with headphones](/images/recording2.png)
+![Focused listening with headphones](/images/recording2.webp)
 
 "I have bad ears, so I can’t mix." (Sad face.)
 No—you don’t have bad ears. You just don’t know **what to listen for** yet.

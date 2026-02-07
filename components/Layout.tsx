@@ -30,17 +30,42 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     scrollToTop();
   }, [router.pathname]);
 
+  // Consolidated Theme Management
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // 1. Initial Load
     try {
-      const initialDarkMode = sessionStorage.getItem('initialDarkMode') === 'true';
-      setIsDarkMode(initialDarkMode);
-      setHasThemeLoaded(true);
+      const savedTheme = localStorage.getItem('darkMode');
+      const sessionTheme = sessionStorage.getItem('initialDarkMode');
+      const isDark = savedTheme === 'true' || sessionTheme === 'true';
+      setIsDarkMode(isDark);
     } catch (error) {
       console.warn('Failed to read dark mode preference', error);
+    } finally {
       setHasThemeLoaded(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!hasThemeLoaded || typeof document === 'undefined') return;
+
+    // 2. Apply Theme
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('darkMode', 'false');
+    }
+
+    // 3. Sync Lang
+    document.documentElement.lang = locale;
+  }, [isDarkMode, hasThemeLoaded, locale]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined' || !headerRef.current || typeof ResizeObserver === 'undefined') return;
@@ -54,10 +79,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     return () => observer.disconnect();
   }, []);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
-  };
-
   useEffect(() => {
     if (typeof window === 'undefined') return;
     let ticking = false;
@@ -67,10 +88,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       if (!ticking) {
         rafId = window.requestAnimationFrame(() => {
           const isOverThreshold = window.scrollY > 10;
-          setIsScrolled((prev) => {
-            if (prev !== isOverThreshold) return isOverThreshold;
-            return prev;
-          });
+          setIsScrolled((prev) => prev !== isOverThreshold ? isOverThreshold : prev);
           ticking = false;
         });
         ticking = true;
@@ -79,27 +97,9 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (rafId !== null) {
-        window.cancelAnimationFrame(rafId);
-      }
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, []);
-
-  useEffect(() => {
-    if (!hasThemeLoaded || typeof document === 'undefined') return;
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('darkMode', 'true');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('darkMode', 'false');
-    }
-  }, [isDarkMode, hasThemeLoaded]);
-
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    document.documentElement.lang = locale;
-  }, [locale]);
 
   const isHome = router.pathname === '/[locale]';
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';

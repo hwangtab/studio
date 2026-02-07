@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Metering", "Metering", "Loudness"]
 ---
-![Các loại meter mức](/images/console.jpg)
+![Các loại meter mức](/images/console.webp)
 
 “Tôi không thể tin vào tai mình.”
 Vậy bạn cần một người bạn đáng tin: **level meter**.

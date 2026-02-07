@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "이벤트"
 tags: ["믹싱클럽", "네트워킹", "모임"]
 ---
-![](/images/recording16.png)
+![](/images/recording16.webp)
 
 ### 🔥 3라운드 예정! (하지만 일정 변경 공지)
 

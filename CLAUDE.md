@@ -1,115 +1,72 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance for development in the **Studio NOL** repository.
 
 ## Project Overview
 
-Studio Nol is a React-based music studio website featuring:
-- **Main Frontend**: React SPA with React Router for navigation
-- **Backend Server**: Express.js server for booking and data management
-- **Static Story System**: Markdown-based content management that compiles to JSON
-- **Deployment**: Vercel hosting with GitHub Pages support
+Studio NOL is a multi-language music studio website built with:
+- **Framework**: Next.js 14.2 (Pages Router)
+- **Styling**: Tailwind CSS with custom design system
+- **Animation**: Framer Motion
+- **i18n**: react-i18next (7 languages: ko, en, zh, es, vi, th, uz)
+- **Content**: Markdown-based story system
+- **Deployment**: Vercel
 
 ## Key Technologies
 
-- **Frontend**: React 18, React Router, Material-UI, Tailwind CSS, Framer Motion
-- **Backend**: Express.js, LowDB, CORS
-- **Content**: Markdown with gray-matter for frontmatter parsing
-- **Styling**: Tailwind CSS with custom theme, PostCSS
-- **Internationalization**: i18next with Korean/English support
-- **Audio**: react-h5-audio-player for music playback
+- **Frontend**: Next.js, React 18, Tailwind CSS, Framer Motion, Lucide React
+- **i18n**: i18next with language detection and locale-based routing
+- **Form**: Serverless contact form via Next.js API Routes and EmailJS
+- **Imaging**: Sharp-based image optimization (WebP/AVIF)
+- **Audio**: Custom AudioPlayer with `useAudioPlayer` hook
 
 ## Development Commands
 
 ```bash
-# Frontend development
-npm start                    # Start development server (localhost:3000)
-npm run build               # Build for production (includes story generation)
-npm test                    # Run tests
-npm run generate-stories    # Generate stories.json from markdown files
+# Development
+npm run dev                  # Start Next.js development server
 
-# Backend development (in server/ directory)
-cd server && npm run dev    # Start backend with nodemon (ignores db.json changes)
-cd server && npm start      # Start backend server
-cd server && npm test       # Backend tests (currently no tests specified)
+# Build & Verification
+npm run type-check           # Run TypeScript compiler check
+npm run lint                 # Run ESLint
+npm run build                # Production build (includes image optimization)
 
-# Deployment
-npm run predeploy           # Runs build automatically
-npm run deploy              # Deploy to GitHub Pages
+# Image Optimization
+node scripts/optimizeImages.js # Manually run image optimization
 ```
 
 ## Architecture & Data Flow
 
-### Story Management System
-The project uses a unique static story publishing system:
+### Image Optimization System
+The project uses a custom optimization script `scripts/optimizeImages.js`:
+1. **Source**: Original images in `public/images/`
+2. **Process**: Converts JPG/PNG to WebP and AVIF (using Sharp)
+3. **Artifacts**: Generates `utils/imageMetadata.json` for dimension hints
+4. **Usage**: Use optimized formats (.webp/.avif) in content for better performance
 
-1. **Content Creation**: Stories are written in Markdown format in `content/stories/`
-2. **Build Process**: `scripts/generateStories.js` parses markdown files and generates `public/data/stories.json`
-3. **Frontend Consumption**: `src/utils/localDataUtils.js` fetches and manages story data
-4. **Pre-build Hook**: `prebuild` script automatically generates stories before building
+### Contact Form Logic
+- **Client**: `pages/[locale]/contact.tsx` captures user input
+- **Server**: `pages/api/contact/send-email.ts` (API route)
+- **Validation**: Honeypot and Rate Limiting implemented on server-side
+- **Delivery**: Server-side request to EmailJS REST API
 
-### Key Architecture Patterns
-
-- **Component Structure**: Pages in `src/pages/`, reusable components in `src/components/`
-- **Data Management**: Static JSON files for stories, utils for data fetching
-- **Routing**: React Router with Layout wrapper component
-- **State Management**: React hooks, no external state management
-- **Styling**: Tailwind CSS with custom color palette and typography system
-- **Internationalization**: i18next setup with comprehensive Korean/English translations in `src/i18n.js`
-- **Dark Mode**: Time-based auto-switching (6:00-18:00 light mode) with manual toggle, uses class-based Tailwind dark mode
-
-### Content Structure
-
-Story markdown files must include frontmatter:
-```markdown
----
-title: "Story Title"
-date: 2025-01-01
-author: "Author Name"
-category: "Category"
-tags: ["tag1", "tag2"]
----
-
-Content here...
-```
+### Routing & i18n
+- **Path structure**: `/[locale]/[path]`
+- **Locale management**: `lib/i18n.ts` and `utils/localeUtils.ts`
+- **Dynamic Routes**: Stories are loaded from `content/stories/` based on slug and locale
 
 ## Important Files & Directories
 
-- `src/App.js` - Main application router with React Router setup
-- `src/components/Layout.js` - Layout wrapper with navigation, dark mode toggle, responsive design
-- `src/utils/localDataUtils.js` - Story data management utilities and sorting logic  
-- `scripts/generateStories.js` - Markdown to JSON conversion script with frontmatter parsing
-- `src/i18n.js` - Internationalization configuration (Korean default, English fallback)
-- `server/server.js` - Express backend server with CORS and LowDB
-- `public/data/stories.json` - Generated story data (build artifact, auto-generated from markdown)
-- `public/data/portfolio.json` - Portfolio data for projects display
-- `tailwind.config.js` - Custom Tailwind configuration with Korean fonts and extended color palette
-
-## Styling System
-
-The project uses Tailwind CSS with custom configuration:
-- **Colors**: Primary (purple), secondary (pink), accent (emerald)
-- **Typography**: Custom font sizes and Korean font support (Pretendard, Noto Sans KR)
-- **Dark Mode**: Class-based dark mode support
-- **Responsive**: Mobile-first responsive design
-
-## Data Management Architecture
-
-### Static Data Sources
-- **Stories**: Markdown files in `content/stories/` → compiled to `public/data/stories.json`
-- **Portfolio**: Static JSON in `public/data/portfolio.json`
-- **Images**: Static assets in `public/images/` (room, studio, service, portfolio, hardware images)
-- **Audio**: Sample tracks in `public/audio/`
-
-### Backend Data (LowDB)
-- **Bookings**: Stored in `server/db.json` for form submissions and booking data
-- **API Endpoints**: Express server provides booking and contact form functionality
+- `pages/[locale]/` - Localized page components
+- `pages/api/` - Backend API routes (Serverless functions)
+- `components/` - Reusable UI components
+- `content/stories/` - Markdown files for studio news and stories
+- `lib/i18n.ts` - Internationalization configuration
+- `tailwind.config.ts` - Design system (colors, typography)
+- `next.config.mjs` - Next.js configuration
 
 ## Deployment Notes
 
-- **Production Build**: Automatically generates CNAME file for custom domain (studionol.co.kr)
-- **Story Generation**: Always runs before build via `prebuild` script
-- **Vercel Configuration**: SPA rewrite rules in `vercel.json` for client-side routing
-- **Assets**: Images stored in `public/images/` directory
-- **Backend**: Separate deployment required for server component (Express + LowDB)
-- **GitHub Pages**: Alternate deployment option with `npm run deploy`
+- **Hosting**: Vercel (Standard Next.js deployment)
+- **Environment Variables**: Configure `EMAILJS_*` variables in Vercel dashboard
+- **Build**: Prebuild hook runs image optimization automatically

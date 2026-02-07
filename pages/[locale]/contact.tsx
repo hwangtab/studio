@@ -1,5 +1,5 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -15,13 +15,28 @@ interface ContactProps {
   locale: Locale;
 }
 
-const InputField = ({ icon: Icon, label, id, ...props }: any) => (
+interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  icon: React.ElementType;
+  label: string;
+  id: string;
+  error?: string;
+}
+
+const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps) => (
   <div className="relative mb-4">
     <label htmlFor={id} className="sr-only">{label}</label>
     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
       <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
     </div>
-    <input id={id} className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent" {...props} />
+    <input
+      id={id}
+      aria-required={props.required}
+      aria-invalid={!!error}
+      aria-describedby={error ? `${id}-error` : undefined}
+      className={`w-full pl-10 pr-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent`}
+      {...props}
+    />
+    {error && <span id={`${id}-error`} role="alert" className="text-xs text-red-500 mt-1 pl-10 block">{error}</span>}
   </div>
 );
 
@@ -39,56 +54,31 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const siteConfig = getSiteConfig(locale);
   const shouldReduceMotion = useReducedMotion();
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitMessage('');
 
-    const { name, phone, email, message, company } = formData;
-
-    // Honeypot check
-    if (company.trim().length > 0) {
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-
-      if (!serviceId || !templateId || !publicKey) {
-        setSubmitMessage(t('contact.form.error'));
-        return;
-      }
-
-      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      const response = await fetch('/api/contact/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          service_id: serviceId,
-          template_id: templateId,
-          user_id: publicKey,
-          template_params: {
-            name,
-            phone,
-            email,
-            message,
-          },
-        }),
+        body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setSubmitMessage(t('contact.form.success'));
         setFormData({ name: '', phone: '', email: '', message: '', company: '' });
       } else {
-        setSubmitMessage(t('contact.form.error'));
+        setSubmitMessage(result.message || t('contact.form.error'));
       }
     } catch (error) {
       console.error('Error sending email:', error);
@@ -116,7 +106,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           locale,
           title: t('contact.title'),
           subtitle: t('contact.subtitle'),
-          backgroundImage: "/images/hardware5.jpg",
+          backgroundImage: "/images/hardware5.webp",
           imageAlt: t('contact.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/50 via-black/30 to-black/50",

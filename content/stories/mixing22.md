@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "오토메이션", "Automation", "DynamicMix"]
 ---
-![오토메이션 라인이 구불구불하게 그려진 DAW 화면](/images/console.jpg)
+![오토메이션 라인이 구불구불하게 그려진 DAW 화면](/images/console.webp)
 
 "믹싱은 박제된 사진이 아니라, 살아 움직이는 영화입니다." (액션-!)
 

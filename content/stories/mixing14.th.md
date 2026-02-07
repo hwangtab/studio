@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Balance", "Fader", "Headroom"]
 ---
-![คอนโซลมิกซ์และ fader](/images/console.jpg)
+![คอนโซลมิกซ์และ fader](/images/console.webp)
 
 “มิกซ์ยากเกินไป ไม่รู้จะใช้ปลั๊กอินอะไร” (เศร้า)
 นี่คือคำบ่นที่ได้ยินบ่อยที่สุดจากมือใหม่

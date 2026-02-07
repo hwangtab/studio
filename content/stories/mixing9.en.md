@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Phase", "DrumMixing", "Polarity"]
 ---
-![Drum miking photo](/images/recording1.png)
+![Drum miking photo](/images/recording1.webp)
 
 "The kick sounded huge, but when I play it with the overheads, it disappears!" (Huh?)
 This isn’t a ghost. It’s science: **phase cancellation**.

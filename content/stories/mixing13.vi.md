@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "StaticMix", "Balance", "NoPlugins"]
 ---
-![Kỹ sư đặt tay lên fader](/images/console.jpg)
+![Kỹ sư đặt tay lên fader](/images/console.webp)
 
 Mọi chuẩn bị đã xong. (Hít sâu.)
 * Phòng đã xử lý (Session Prep)

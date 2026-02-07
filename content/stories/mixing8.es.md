@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "GainStaging", "Headroom", "InputLevel"]
 ---
-![Medidor VU analógico](/images/hardware5.jpg)
+![Medidor VU analógico](/images/hardware5.webp)
 
 "Puse un plug‑in y el sonido se distorsiona raro."
 "El compresor no hace nada." (¿Eh? ¿Qué pasa?)

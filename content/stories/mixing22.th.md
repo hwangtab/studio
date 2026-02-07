@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Automation", "DynamicMix", "FaderRide"]
 ---
-![หน้าจอ DAW กับเส้น automation](/images/console.jpg)
+![หน้าจอ DAW กับเส้น automation](/images/console.webp)
 
 “มิกซ์ไม่ใช่รูปนิ่ง มันคือหนังที่มีชีวิต” (แอ็กชัน!)
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "EarTraining", "Reference", "Listening"]
 ---
-![Nghe tập trung bằng tai nghe](/images/recording2.png)
+![Nghe tập trung bằng tai nghe](/images/recording2.webp)
 
 “Tôi tai kém nên không mix được.” (Mặt buồn.)
 Không—bạn không có tai kém. Bạn chỉ chưa biết **cần nghe gì** thôi.

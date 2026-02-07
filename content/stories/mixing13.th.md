@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "StaticMix", "Balance", "NoPlugins"]
 ---
-![วิศวกรวางมือบน fader](/images/console.jpg)
+![วิศวกรวางมือบน fader](/images/console.webp)
 
 ทุกอย่างพร้อมแล้ว (สูดลมหายใจลึก)
 * ห้องจัดเรียบร้อย (Session Prep)

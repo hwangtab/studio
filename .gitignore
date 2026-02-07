@@ -27,4 +27,5 @@ yarn-error.log*
 .vercel
 .next
 public/images/**/*.webp
+public/images/**/*.avif
 

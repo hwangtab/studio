@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Principiante", "Mixing", "Introducción"]
 ---
-![Consola de mezcla y vista del estudio](/images/console.jpg)
+![Consola de mezcla y vista del estudio](/images/console.webp)
 
 El proceso de crear música a menudo se compara con “cocinar”.
 No se me ocurre una mejor metáfora. Para quienes empiezan con la mezcla, hoy seré su chef. (¡Nervios!)

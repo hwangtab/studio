@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Digital", "SampleRate", "BitDepth"]
 ---
-![Digital audio waveform](/images/recording8.png)
+![Digital audio waveform](/images/recording8.webp)
 
 “Should I record at 44.1 kHz or 48 kHz?”
 “What’s the difference between 16‑bit and 24‑bit?”

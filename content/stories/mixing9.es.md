@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Fase", "Phase", "DrumMixing"]
 ---
-![Foto de microfonía de batería](/images/recording1.png)
+![Foto de microfonía de batería](/images/recording1.webp)
 
 "El bombo sonaba enorme, pero al mezclarlo con los overheads desaparece." (¿Qué?)
 No es un fantasma. Es ciencia: **cancelación de fase**.

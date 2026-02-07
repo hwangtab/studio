@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Networking", "Meetup"]
 ---
-![](/images/recording16.png)
+![](/images/recording16.webp)
 
 ### 🔥 Round 3 scheduled! (But a schedule change notice)
 

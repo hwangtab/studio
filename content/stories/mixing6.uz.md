@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Metering", "Metering", "Loudness"]
 ---
-![Turli daraja meterlari](/images/console.jpg)
+![Turli daraja meterlari](/images/console.webp)
 
 “Qulog'imga ishonolmayman.”
 Unda sizga ishonchli do'st kerak: **level meter**.

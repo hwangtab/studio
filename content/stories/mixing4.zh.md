@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "数字", "SampleRate", "BitDepth"]
 ---
-![数字音频波形](/images/recording8.png)
+![数字音频波形](/images/recording8.webp)
 
 “录 44.1kHz 还是 48kHz？”
 “16 位和 24 位有什么区别？”

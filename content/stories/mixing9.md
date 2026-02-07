@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "위상", "Phase", "DrumMixing"]
 ---
-![드럼 마이킹 사진](/images/recording1.png)
+![드럼 마이킹 사진](/images/recording1.webp)
 
 "킥 드럼 소리가 분명 컸는데, 오버헤드 마이크랑 같이 틀으니까 소리가 사라졌어요!" (어라?)
 이것은 귀신 곡할 노릇이 아닙니다. **'위상(Phase) 캔슬레이션'**이라는 과학 현상입니다.

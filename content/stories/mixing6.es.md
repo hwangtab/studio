@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Metering", "Metering", "Loudness"]
 ---
-![Varios medidores de nivel](/images/console.jpg)
+![Varios medidores de nivel](/images/console.webp)
 
 “No puedo confiar en mis oídos.”
 Entonces necesitas un amigo confiable: el **medidor de nivel**.

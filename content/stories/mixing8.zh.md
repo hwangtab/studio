@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "增益分级", "GainStaging", "Headroom"]
 ---
-![模拟 VU 表](/images/hardware5.jpg)
+![模拟 VU 表](/images/hardware5.webp)
 
 "插了插件之后声音怎么怪怪地失真了。"
 "压缩器完全不动。"（咦？怎么回事？）

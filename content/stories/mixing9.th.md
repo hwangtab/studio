@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Phase", "DrumMixing", "Polarity"]
 ---
-![ภาพการไมค์กลอง](/images/recording1.png)
+![ภาพการไมค์กลอง](/images/recording1.webp)
 
 “คิกดังมาก แต่พอเปิดกับโอเวอร์เฮดกลับหายไป!” (เอ๊ะ?)
 นี่ไม่ใช่ผี แต่เป็นวิทยาศาสตร์: **phase cancellation**

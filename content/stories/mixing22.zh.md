@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Automation", "DynamicMix", "FaderRide"]
 ---
-![DAW 上的自动化曲线](/images/console.jpg)
+![DAW 上的自动化曲线](/images/console.webp)
 
 “混音不是被钉住的照片，而是一部会动的电影。”（Action！）
 

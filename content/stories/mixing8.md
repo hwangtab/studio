@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "게인스테이징", "GainStaging", "Headroom"]
 ---
-![아날로그 VU 미터기](/images/hardware5.jpg)
+![아날로그 VU 미터기](/images/hardware5.webp)
 
 "플러그인을 걸었는데 소리가 이상하게 찌그러져요."
 "컴프레서가 작동을 안 해요." (으응? 왜 이러지?)

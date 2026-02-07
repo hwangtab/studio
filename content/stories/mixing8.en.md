@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "GainStaging", "Headroom", "InputLevel"]
 ---
-![Analog VU meter](/images/hardware5.jpg)
+![Analog VU meter](/images/hardware5.webp)
 
 "I inserted a plug-in and the sound is weirdly distorted."
 "My compressor isn’t working." (Huh? What’s going on?)

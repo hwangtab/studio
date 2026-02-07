@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Balance", "Fader", "Headroom"]
 ---
-![Consola de mezcla y faders](/images/console.jpg)
+![Consola de mezcla y faders](/images/console.webp)
 
 "Mezclar es muy difícil. No sé qué plug‑in usar." (Triste.)
 Es la queja más común que escucho de principiantes.

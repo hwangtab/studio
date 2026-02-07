@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
 ---
-![](/images/recording16.png)
+![](/images/recording16.webp)
 
 ### 🔥 Round 3 đã lên lịch! (nhưng có thay đổi lịch)
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Metering", "Metering", "Loudness"]
 ---
-![มิเตอร์ระดับเสียงหลากหลายแบบ](/images/console.jpg)
+![มิเตอร์ระดับเสียงหลากหลายแบบ](/images/console.webp)
 
 “ฉันเชื่อหูตัวเองไม่ได้เลย”
 งั้นคุณต้องมีเพื่อนที่ไว้ใจได้: **level meter**

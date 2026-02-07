@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "StaticMix", "Balance", "NoPlugins"]
 ---
-![Injyener faderga qo'l qo'ygan](/images/console.jpg)
+![Injyener faderga qo'l qo'ygan](/images/console.webp)
 
 Barcha tayyorgarlik tugadi. (Chuqur nafas.)
 * Xona tayyor (Session Prep)

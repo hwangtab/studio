@@ -23,10 +23,6 @@
     "width": 1200,
     "height": 1200
   },
-  "/images/bulgwang-mixing-club-2nd.png": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/bulgwang-mixing-club-2nd.webp": {
     "width": 1280,
     "height": 720
@@ -38,10 +34,6 @@
   "/images/bulgwang-mixing-club.webp": {
     "width": 1280,
     "height": 720
-  },
-  "/images/console.jpg": {
-    "width": 960,
-    "height": 1280
   },
   "/images/console.webp": {
     "width": 960,
@@ -79,10 +71,6 @@
     "width": 1280,
     "height": 720
   },
-  "/images/hardware5.jpg": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/hardware5.webp": {
     "width": 1280,
     "height": 720
@@ -94,10 +82,6 @@
   "/images/hardware8.webp": {
     "width": 1440,
     "height": 960
-  },
-  "/images/lesson1.png": {
-    "width": 1280,
-    "height": 720
   },
   "/images/lesson1.webp": {
     "width": 1280,
@@ -159,31 +143,15 @@
     "width": 300,
     "height": 300
   },
-  "/images/recording1.png": {
-    "width": 1920,
-    "height": 937
-  },
   "/images/recording1.webp": {
     "width": 1920,
     "height": 937
-  },
-  "/images/recording10.png": {
-    "width": 913,
-    "height": 1280
   },
   "/images/recording10.webp": {
     "width": 913,
     "height": 1280
   },
-  "/images/recording11.png": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/recording11.webp": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/recording12.png": {
     "width": 1280,
     "height": 720
   },
@@ -191,15 +159,7 @@
     "width": 1280,
     "height": 720
   },
-  "/images/recording13.png": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/recording13.webp": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/recording14.png": {
     "width": 1280,
     "height": 720
   },
@@ -207,15 +167,7 @@
     "width": 1280,
     "height": 720
   },
-  "/images/recording15.png": {
-    "width": 1280,
-    "height": 854
-  },
   "/images/recording15.webp": {
-    "width": 1280,
-    "height": 854
-  },
-  "/images/recording16.png": {
     "width": 1280,
     "height": 854
   },
@@ -223,31 +175,15 @@
     "width": 1280,
     "height": 854
   },
-  "/images/recording17.png": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/recording17.webp": {
     "width": 1280,
     "height": 720
-  },
-  "/images/recording2.png": {
-    "width": 1920,
-    "height": 1080
   },
   "/images/recording2.webp": {
     "width": 1920,
     "height": 1080
   },
-  "/images/recording3.png": {
-    "width": 1280,
-    "height": 854
-  },
   "/images/recording3.webp": {
-    "width": 1280,
-    "height": 854
-  },
-  "/images/recording4.png": {
     "width": 1280,
     "height": 854
   },
@@ -255,23 +191,11 @@
     "width": 1280,
     "height": 854
   },
-  "/images/recording5.png": {
-    "width": 1280,
-    "height": 854
-  },
   "/images/recording5.webp": {
     "width": 1280,
     "height": 854
   },
-  "/images/recording6.png": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/recording6.webp": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/recording7.png": {
     "width": 1280,
     "height": 720
   },
@@ -279,15 +203,7 @@
     "width": 1280,
     "height": 720
   },
-  "/images/recording8.png": {
-    "width": 1280,
-    "height": 960
-  },
   "/images/recording8.webp": {
-    "width": 1280,
-    "height": 960
-  },
-  "/images/recording9.png": {
     "width": 1280,
     "height": 960
   },

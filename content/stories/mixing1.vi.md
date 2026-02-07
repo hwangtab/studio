@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Cơ bản", "Mixing", "Giới thiệu"]
 ---
-![Bàn điều khiển mixing và toàn cảnh studio](/images/console.jpg)
+![Bàn điều khiển mixing và toàn cảnh studio](/images/console.webp)
 
 Quá trình làm nhạc thường được ví như “nấu ăn”.
 Mình không nghĩ ra ẩn dụ nào hay hơn. Với những bạn mới bắt đầu mixing, từ hôm nay tôi sẽ là đầu bếp của bạn. (Hơi hồi hộp!)

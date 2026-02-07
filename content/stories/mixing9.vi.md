@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Phase", "DrumMixing", "Polarity"]
 ---
-![Ảnh micro trống](/images/recording1.png)
+![Ảnh micro trống](/images/recording1.webp)
 
 “Kick nghe rất to, nhưng khi bật cùng overhead thì nó biến mất!” (Hả?)
 Đó không phải ma. Đó là khoa học: **phase cancellation**.

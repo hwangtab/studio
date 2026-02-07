@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "相位", "Phase", "DrumMixing"]
 ---
-![鼓组拾音照片](/images/recording1.png)
+![鼓组拾音照片](/images/recording1.webp)
 
 "踢鼓明明很大，一和吊麦一起放就消失了！"（咦？）
 这不是闹鬼，而是科学现象：**相位抵消**。

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { locales, localeNames, type Locale } from '../lib/i18n';
 
 interface LanguageSwitcherProps {
@@ -19,7 +19,7 @@ export const LanguageSwitcher = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const getPathForLocale = (targetLocale: Locale) => {
+  const getPathForLocale = useCallback((targetLocale: Locale) => {
     const path = router.asPath;
     const segments = path.split('/');
 
@@ -29,7 +29,7 @@ export const LanguageSwitcher = ({
     }
 
     return `/${targetLocale}${path === '/' ? '' : path}`;
-  };
+  }, [router.asPath]);
 
   useEffect(() => {
     if (!router?.events) return undefined;

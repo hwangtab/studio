@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Digital", "SampleRate", "BitDepth"]
 ---
-![Raqamli audio to'lqin shakli](/images/recording8.png)
+![Raqamli audio to'lqin shakli](/images/recording8.webp)
 
 “44.1 kHz'da yozaymi yoki 48 kHz'da?”
 “16‑bit bilan 24‑bit nimasi bilan farq qiladi?”

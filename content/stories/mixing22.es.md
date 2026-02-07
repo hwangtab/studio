@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Automation", "DynamicMix", "FaderRide"]
 ---
-![Pantalla de DAW con líneas de automatización](/images/console.jpg)
+![Pantalla de DAW con líneas de automatización](/images/console.webp)
 
 "La mezcla no es una foto congelada, es una película viva." (¡Acción!)
 

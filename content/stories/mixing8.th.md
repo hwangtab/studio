@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "GainStaging", "Headroom", "InputLevel"]
 ---
-![VU meter แบบอนาล็อก](/images/hardware5.jpg)
+![VU meter แบบอนาล็อก](/images/hardware5.webp)
 
 “ผมใส่ปลั๊กอินแล้วเสียงแตกแปลก ๆ”
 “คอมเพรสเซอร์ไม่ทำงานเลย” (เอ๊ะ? เกิดอะไรขึ้น?)

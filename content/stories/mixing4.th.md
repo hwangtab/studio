@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Digital", "SampleRate", "BitDepth"]
 ---
-![รูปคลื่นเสียงดิจิทัล](/images/recording8.png)
+![รูปคลื่นเสียงดิจิทัล](/images/recording8.webp)
 
 “ควรอัดที่ 44.1 kHz หรือ 48 kHz?”
 “16‑bit กับ 24‑bit ต่างกันยังไง?”

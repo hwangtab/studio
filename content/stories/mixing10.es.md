@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "EntrenamientoAuditivo", "EarTraining", "Reference"]
 ---
-![Persona concentrada con auriculares](/images/recording2.png)
+![Persona concentrada con auriculares](/images/recording2.webp)
 
 "Tengo oído malo, no puedo mezclar." (Cabizbajo.)
 No. No tienes oído malo; simplemente no sabes **qué escuchar** todavía.

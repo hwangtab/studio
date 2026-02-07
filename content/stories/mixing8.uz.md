@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "GainStaging", "Headroom", "InputLevel"]
 ---
-![Analog VU meter](/images/hardware5.jpg)
+![Analog VU meter](/images/hardware5.webp)
 
 “Plugin qo'ydim, ovoz g'alati buzilib ketdi.”
 “Kompressori ishlamayapti.” (Ha? Nima bo'lyapti?)

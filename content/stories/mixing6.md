@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "미터링", "Metering", "Loudness"]
 ---
-![다양한 레벨 미터](/images/console.jpg)
+![다양한 레벨 미터](/images/console.webp)
 
 "제 귀를 못 믿겠어요."
 그렇다면 여러분에게는 믿음직한 친구가 필요합니다. 바로 **'레벨 미터(Level Meter)'**입니다.

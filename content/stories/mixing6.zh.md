@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "计量", "Metering", "Loudness"]
 ---
-![多种电平表](/images/console.jpg)
+![多种电平表](/images/console.webp)
 
 “我不敢相信自己的耳朵。”
 那你需要一个可靠的朋友：**电平表（Level Meter）**。

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "GainStaging", "Headroom", "InputLevel"]
 ---
-![VU meter analog](/images/hardware5.jpg)
+![VU meter analog](/images/hardware5.webp)
 
 “Tôi chèn plugin rồi âm thanh bị méo kỳ lạ.”
 “Compressor của tôi không hoạt động.” (Hả? Sao vậy?)

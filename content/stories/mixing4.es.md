@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Digital", "SampleRate", "BitDepth"]
 ---
-![Forma de onda de audio digital](/images/recording8.png)
+![Forma de onda de audio digital](/images/recording8.webp)
 
 “¿Debo grabar a 44.1 kHz o 48 kHz?”
 “¿Qué diferencia hay entre 16‑bit y 24‑bit?”

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "音量", "Balance", "Headroom"]
 ---
-![混音台与推子](/images/console.jpg)
+![混音台与推子](/images/console.webp)
 
 “混音太难了，不知道该用哪个插件。”（沮丧）
 这是新手最常见的抱怨。

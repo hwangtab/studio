@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Beginner", "Mixing", "Introduction"]
 ---
-![Mixing console and studio view](/images/console.jpg)
+![Mixing console and studio view](/images/console.webp)
 
 The process of making music is often compared to “cooking.”
 I can’t think of a better metaphor. For those new to mixing, I’ll be your chef starting today. (Nervous excitement!)

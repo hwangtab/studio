@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Boshlovchi", "Mixing", "Kirish"]
 ---
-![Miks pulti va studio ko'rinishi](/images/console.jpg)
+![Miks pulti va studio ko'rinishi](/images/console.webp)
 
 Musiqa yaratish jarayoni ko'pincha “ovqat pishirish”ga qiyoslanadi.
 Bundan yaxshiroq o'xshatish topa olmayman. Miksni endi boshlayotganlar uchun bugundan boshlab men sizning oshpazingiz bo'laman. (Hayajon aralash!)

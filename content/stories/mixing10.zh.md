@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "听力训练", "EarTraining", "Reference"]
 ---
-![戴着耳机专注聆听](/images/recording2.png)
+![戴着耳机专注聆听](/images/recording2.webp)
 
 “我耳朵不行，混不了音。”（沮丧）
 不，你不是“木耳”，只是还不知道 **该听什么**。

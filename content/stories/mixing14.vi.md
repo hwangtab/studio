@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Balance", "Fader", "Headroom"]
 ---
-![Bàn mixer và fader](/images/console.jpg)
+![Bàn mixer và fader](/images/console.webp)
 
 “Mixing quá khó. Mình không biết dùng plugin nào.” (Buồn.)
 Đó là lời than phổ biến nhất tôi nghe từ người mới.

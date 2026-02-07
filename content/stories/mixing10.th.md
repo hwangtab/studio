@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "EarTraining", "Reference", "Listening"]
 ---
-![การฟังอย่างตั้งใจด้วยหูฟัง](/images/recording2.png)
+![การฟังอย่างตั้งใจด้วยหูฟัง](/images/recording2.webp)
 
 “หูฉันไม่ดี มิกซ์ไม่ได้หรอก” (หน้าเศร้า)
 ไม่ใช่—คุณไม่ได้หูไม่ดี แค่ยังไม่รู้ว่า **ต้องฟังอะไร**
