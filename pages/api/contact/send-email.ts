@@ -1,12 +1,46 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import validator from 'validator';
 
-// Simple in-memory rate limiting
-// NOTE: This will not be shared across serverless instances.
-// Consider using Vercel KV or Upstash for production.
-const rateLimitMap = new Map<string, number[]>();
+import { kv } from '@vercel/kv';
+
+// Rate limiting configuration
 const LIMIT = 5; // max 5 requests
-const WINDOW = 15 * 60 * 1000; // 15 minutes
+const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
+
+// Fallback in-memory rate limiting (Serverless instances don't share this)
+const rateLimitMap = new Map<string, number[]>();
+const WINDOW_MS = WINDOW * 1000;
+
+async function isRateLimited(ip: string): Promise<boolean> {
+    // 1. Try Vercel KV if configured
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+        try {
+            const key = `rate_limit_contact:${ip}`;
+            const count = await kv.incr(key);
+
+            if (count === 1) {
+                await kv.expire(key, WINDOW);
+            }
+
+            return count > LIMIT;
+        } catch (error) {
+            console.warn('[Rate Limit] Vercel KV failed, falling back to in-memory:', error);
+        }
+    }
+
+    // 2. Fallback to in-memory
+    const now = Date.now();
+    const timestamps = rateLimitMap.get(ip) || [];
+    const recentTimestamps = timestamps.filter(t => now - t < WINDOW_MS);
+
+    if (recentTimestamps.length >= LIMIT) {
+        return true;
+    }
+
+    recentTimestamps.push(now);
+    rateLimitMap.set(ip, recentTimestamps);
+    return false;
+}
 
 interface EmailJSPayload {
     service_id: string;
@@ -36,16 +70,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // 2. Rate limiting by IP
     const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'unknown';
-    const now = Date.now();
-    const timestamps = rateLimitMap.get(ip) || [];
-    const recentTimestamps = timestamps.filter(t => now - t < WINDOW);
 
-    if (recentTimestamps.length >= LIMIT) {
+    if (await isRateLimited(ip)) {
         return res.status(429).json({ message: 'Too many requests. Please try again later.' });
     }
-
-    recentTimestamps.push(now);
-    rateLimitMap.set(ip, recentTimestamps);
 
     // 3. Validation & Sanitization
     if (!name || typeof name !== 'string' || validator.isEmpty(name)) {
