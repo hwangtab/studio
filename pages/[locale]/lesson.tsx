@@ -1,16 +1,14 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, Users, LucideIcon, GraduationCap, BookOpen } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import QuickAnswers from '../../components/ui/QuickAnswers';
-import Link from 'next/link';
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -50,7 +48,6 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
 
 const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
     const { t } = useTranslation('common', { lng: locale });
-    const getLink = (path: string) => `/${locale}${path}`;
     const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
     const lessonQuickAnswers = React.useMemo(() => ([
@@ -293,7 +290,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
     );
 };
 
-(Lesson as any).hasHero = true;
+(Lesson as NextPage<{ locale: Locale }> & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = getCommonStaticProps;

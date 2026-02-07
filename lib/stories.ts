@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
-import type { Story, StoryDetail, StoryFrontmatter, StoryPath } from '../types/story';
+import type { Story, StoryDetail, StoryPath } from '../types/story';
 import { locales, defaultLocale, resources, type Locale } from './i18n';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');

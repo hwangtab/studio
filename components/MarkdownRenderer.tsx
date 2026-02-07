@@ -2,10 +2,10 @@ import React from 'react';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { locales } from '../lib/i18n';
+import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
 
-let prismLoaderPromise: Promise<any> | null = null;
+let prismLoaderPromise: Promise<typeof import('prismjs')> | null = null;
 
 const imageMetadataMap = imageMetadata as Record<string, { width: number; height: number }>;
 
@@ -16,11 +16,11 @@ const loadPrism = async () => {
   if (!prismLoaderPromise) {
     prismLoaderPromise = import('prismjs').then(async (module) => {
       await Promise.all([
-        import('prismjs/components/prism-javascript' as any),
-        import('prismjs/components/prism-typescript' as any),
-        import('prismjs/components/prism-jsx' as any),
-        import('prismjs/components/prism-css' as any),
-        import('prismjs/components/prism-bash' as any),
+        import('prismjs/components/prism-javascript'),
+        import('prismjs/components/prism-typescript'),
+        import('prismjs/components/prism-jsx'),
+        import('prismjs/components/prism-css'),
+        import('prismjs/components/prism-bash'),
       ]);
       return module.default || module;
     });
@@ -72,7 +72,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
 
   // Detect current locale from path
   const segments = router.asPath.split('/');
-  const currentLocale = locales.includes(segments[1] as any) ? segments[1] : 'ko';
+  const currentLocale = locales.includes(segments[1] as (typeof locales)[number]) ? segments[1] as (typeof locales)[number] : 'ko';
 
   return (
     <div className="markdown-content">
@@ -80,7 +80,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
         options={{
           overrides: {
             h1: {
-              component: ({ children, className, ...rest }: any) => (
+              component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
                 <h1
                   {...rest}
                   className={mergeClassNames(
@@ -93,7 +93,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             h2: {
-              component: ({ children, className, ...rest }: any) => (
+              component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
                 <h2
                   {...rest}
                   className={mergeClassNames(
@@ -106,7 +106,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             h3: {
-              component: ({ children, className, ...rest }: any) => (
+              component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
                 <h3
                   {...rest}
                   className={mergeClassNames(
@@ -119,7 +119,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             h4: {
-              component: ({ children, className, ...rest }: any) => (
+              component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
                 <h4
                   {...rest}
                   className={mergeClassNames(
@@ -133,7 +133,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             p: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <p
                   className="text-body-1 leading-relaxed mb-6 mt-4 text-gray-800 dark:text-gray-200"
                   {...props}
@@ -143,14 +143,14 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             strong: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <strong className="font-bold text-primary-dark dark:text-primary-light" {...props}>
                   {children}
                 </strong>
               ),
             },
             em: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <em className="italic" {...props}>
                   {children}
                 </em>
@@ -158,7 +158,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             ul: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <ul
                   style={{
                     listStyleType: 'disc',
@@ -173,7 +173,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             ol: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <ol
                   style={{
                     listStyleType: 'decimal',
@@ -188,7 +188,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             li: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <li
                   className="text-body-1 leading-relaxed mb-4 pl-2 list-item text-gray-800 dark:text-gray-200"
                   {...props}
@@ -199,7 +199,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             blockquote: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
                 <blockquote className="border-l-4 border-primary-light dark:border-primary-dark pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 italic" {...props}>
                   {children}
                 </blockquote>
@@ -207,12 +207,12 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             a: {
-              component: ({ children, href, ...props }: any) => {
+              component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
                 // If it's an internal link starting with / and not already having a locale
                 let finalHref = href;
                 if (href?.startsWith('/') && !href.startsWith('//')) {
                   const pathSegments = href.split('/');
-                  if (!locales.includes(pathSegments[1] as any)) {
+                  if (!locales.includes(pathSegments[1] as Locale)) {
                     finalHref = `/${currentLocale}${href === '/' ? '' : href}`;
                   }
                 }
@@ -225,9 +225,9 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             img: {
-              component: ({ alt, src, ...rest }: any) => {
+              component: ({ alt, src }: { alt?: string; src?: string } & React.ImgHTMLAttributes<HTMLImageElement>) => {
                 if (!src) return null;
-                const metadata = imageMetadataMap[src];
+                const metadata = (imageMetadataMap as Record<string, { width: number; height: number }>)[src];
                 const hasDimensions = metadata?.width && metadata?.height;
                 const altText = typeof alt === 'string' && alt.trim().length > 0 ? alt : '';
 
@@ -237,11 +237,11 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                       <Image
                         src={src}
                         alt={altText}
-                        width={metadata.width}
-                        height={metadata.height}
+                        width={Number(metadata.width)}
+                        height={Number(metadata.height)}
                         sizes="(max-width: 768px) 100vw, 768px"
                         className="w-full h-auto rounded-lg shadow-md"
-                        {...rest}
+                      // rest is narrowed to HTML element props compatible with Image
                       />
                     </div>
                   );
@@ -256,7 +256,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                         fill
                         sizes="(max-width: 768px) 100vw, 768px"
                         className="object-contain"
-                        {...rest}
+                      // rest is narrowed to HTML element props compatible with Image
                       />
                     </div>
                   </div>
@@ -265,7 +265,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             hr: {
-              component: ({ className, ...props }: any) => (
+              component: ({ className, ...props }: { className?: string } & React.HTMLAttributes<HTMLHRElement>) => (
                 <hr
                   className={mergeClassNames('my-12 border-t border-gray-200 dark:border-gray-700', className)}
                   {...props}
@@ -274,7 +274,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             code: {
-              component: ({ children, className, ...props }: any) => {
+              component: ({ children, className, ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => {
                 if (className) {
                   return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
                 }
@@ -287,7 +287,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             },
 
             table: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.TableHTMLAttributes<HTMLTableElement>) => (
                 <div className="overflow-x-auto my-6">
                   <table className="w-full border-collapse" {...props}>
                     {children}
@@ -296,14 +296,14 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
               ),
             },
             th: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.ThHTMLAttributes<HTMLTableCellElement>) => (
                 <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left bg-gray-50 dark:bg-gray-800" {...props}>
                   {children}
                 </th>
               ),
             },
             td: {
-              component: ({ children, ...props }: any) => (
+              component: ({ children, ...props }: { children: React.ReactNode } & React.TdHTMLAttributes<HTMLTableCellElement>) => (
                 <td className="border border-gray-200 dark:border-gray-700 px-4 py-2" {...props}>
                   {children}
                 </td>
@@ -312,7 +312,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
           },
           forceBlock: true,
           forceWrapper: true,
-          wrapper: ({ children }: any) => (
+          wrapper: ({ children }: { children: React.ReactNode }) => (
             <div className="max-w-none">
               {children}
             </div>

@@ -1,10 +1,8 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
@@ -19,7 +17,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 
-const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any, title: string, description: string, delay?: number }) => (
+const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-4">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
@@ -31,7 +29,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: any,
   </BaseCard>
 );
 
-const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: any, text: string, delay?: number, locale?: Locale }) => (
+const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: LucideIcon, text: string, delay?: number, locale?: Locale }) => (
   <BaseCard variant="default" delay={delay} className="p-5 h-full">
     <div className="flex items-start">
       <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
@@ -44,7 +42,7 @@ const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: any, 
   </BaseCard>
 );
 
-const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: string, description: string, icon: any, delay?: number }) => (
+const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: string, description: string, icon: LucideIcon, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 mb-4">
     <div className="flex items-center mb-2">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
@@ -58,7 +56,6 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
 
 const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const getLink = (path: string) => `/${locale}${path}`;
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
@@ -304,7 +301,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
   );
 };
 
-(PracticeRoom as any).hasHero = true;
+(PracticeRoom as NextPage & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = getCommonStaticProps;

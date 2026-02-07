@@ -1,10 +1,8 @@
 import React from 'react';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
+import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
@@ -19,7 +17,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { generateHowToSchema } from '../../utils/schemaGenerator';
 
-const ICON_MAP: Record<string, any> = {
+const ICON_MAP: Record<string, LucideIcon> = {
   Lightbulb,
   Banknote,
   Headphones,
@@ -55,8 +53,6 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
     'P2D',
     locale
   ), [productionProcess, locale, t]);
-
-  const getLink = (path: string) => `/${locale}${path}`;
 
   return (
     <div className="overflow-visible">
@@ -294,7 +290,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
   );
 };
 
-(About as any).hasHero = true;
+(About as NextPage & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

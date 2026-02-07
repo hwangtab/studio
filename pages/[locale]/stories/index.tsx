@@ -6,7 +6,6 @@ import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../../utils/animationUtils';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
@@ -79,7 +78,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredStories.map((story) => (
-                <StoryCard key={story.slug} story={story as any} locale={locale} />
+                <StoryCard key={story.slug} story={story} locale={locale} />
               ))}
             </div>
           )}
@@ -89,7 +88,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   );
 };
 
-(StoriesPage as any).hasHero = true;
+(StoriesPage as NextPage & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

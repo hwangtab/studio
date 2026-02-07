@@ -1,8 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { motion } from 'framer-motion';
-import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, MessageCircle, Sparkles, Building, Mic2 } from 'lucide-react';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -12,7 +11,7 @@ import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
+import { getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
@@ -25,7 +24,6 @@ interface StudioInfoProps {
 const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
-  const getLink = (path: string) => `/${locale}${path}`;
   const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
   const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
 
@@ -183,12 +181,12 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
   );
 };
 
-(Studio as any).hasHero = true;
+(Studio as NextPage<StudioInfoProps> & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = params?.locale || 'ko';
-  const equipmentData = getEquipmentData(locale as any);
+  const equipmentData = getEquipmentData(locale as Locale);
   return {
     props: {
       locale,

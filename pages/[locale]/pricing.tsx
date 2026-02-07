@@ -1,28 +1,34 @@
-// @ts-nocheck
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Mic, SlidersHorizontal, Disc, TrendingUp, Check, Info, CalendarCheck, Star, PlusCircle } from 'lucide-react';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION } from '../../utils/animationUtils';
 import { getPricingData } from '../../data/pricing';
 import { generateAggregateOfferSchema } from '../../utils/schemaGenerator';
 import { getReviews } from '../../data/reviews';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
-import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
 import QuickAnswers from '../../components/ui/QuickAnswers';
-import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
+import { getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
 interface PricingProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
+}
+
+interface Offer {
+  id: string;
+  title: string;
+  description: string;
+  priceValue: number;
+  priceDisplay: string;
+  unit: string;
+  features: string[];
+  recommended?: boolean;
 }
 
 const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
@@ -38,7 +44,6 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
 
   const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
-  const getLink = (path: string) => `/${locale}${path}`;
   const pricingUrl = `https://studionol.co.kr/${locale}/pricing`;
 
   const pricingQuickAnswers = React.useMemo(() => ([
@@ -62,7 +67,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
     return date.toISOString().split('T')[0];
   }, []);
 
-  const offerToSchema = React.useCallback((offer: any) => ({
+  const offerToSchema = React.useCallback((offer: Offer) => ({
     '@type': 'Offer',
     name: offer.title,
     description: offer.description,
@@ -84,20 +89,20 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
         name: t('common.siteName'),
       },
     },
-  }), [pricingUrl, priceValidUntil, locale]);
+  }), [pricingUrl, priceValidUntil, t]);
 
-  const catalogToSchema = React.useCallback((name: string, offers: any[]) => ({
+  const catalogToSchema = React.useCallback((name: string, offers: Offer[]) => ({
     '@type': 'OfferCatalog',
     name,
     itemListElement: offers.map(offerToSchema),
   }), [offerToSchema]);
 
   const allOffers = React.useMemo(() => [
-    ...specialPackages,
-    ...recordingOffers,
-    ...mixingOffers,
-    ...masteringOffers,
-    ...additionalServices,
+    ...specialPackages as Offer[],
+    ...recordingOffers as Offer[],
+    ...mixingOffers as Offer[],
+    ...masteringOffers as Offer[],
+    ...additionalServices.map(s => ({ ...s, features: s.note ? [s.note] : [] })) as Offer[],
   ], [specialPackages, recordingOffers, mixingOffers, masteringOffers, additionalServices]);
 
   const aggregateOfferSchema = React.useMemo(() =>
@@ -106,7 +111,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
       allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
       locale
     ),
-    [allOffers, locale]
+    [allOffers, locale, t]
   );
 
   const pricingSchema = React.useMemo(() => ({
@@ -117,14 +122,22 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
         '@type': 'OfferCatalog',
         name: t('pricing.seo.title'),
         itemListElement: [
-          catalogToSchema(t('pricing.special.title'), specialPackages),
-          catalogToSchema(t('pricing.recording.title'), recordingOffers),
-          catalogToSchema(t('pricing.mixing.title'), mixingOffers),
-          catalogToSchema(t('pricing.mastering.title'), masteringOffers),
-          catalogToSchema(t('pricing.additional.title'), additionalServices),
+          catalogToSchema(t('pricing.special.title'), specialPackages as Offer[]),
+          catalogToSchema(t('pricing.recording.title'), recordingOffers as Offer[]),
+          catalogToSchema(t('pricing.mixing.title'), mixingOffers as Offer[]),
+          catalogToSchema(t('pricing.mastering.title'), masteringOffers as Offer[]),
+          catalogToSchema(t('pricing.additional.title'), additionalServices.map(s => ({
+            id: s.id,
+            title: s.title,
+            description: s.note || '',
+            priceValue: 0,
+            priceDisplay: s.priceDisplay,
+            unit: '',
+            features: s.note ? [s.note] : [],
+          }))),
         ],
       },
-    ].filter(Boolean),
+    ].filter(Boolean) as Record<string, unknown>[],
   }), [
     t,
     catalogToSchema,
@@ -336,11 +349,12 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
   );
 };
 
-(Pricing as any).hasHero = true;
+// Use type assertion for custom property
+(Pricing as NextPage<PricingProps> & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = params?.locale || 'ko';
+  const locale = (params?.locale as Locale) || 'ko';
   const pricingData = getPricingData(locale);
   return {
     props: {
@@ -351,3 +365,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export default Pricing;
+

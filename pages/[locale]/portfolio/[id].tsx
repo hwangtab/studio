@@ -153,7 +153,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths: any[] = [];
+  const paths: { params: { locale: string; id: string } }[] = [];
   locales.forEach(locale => {
     const items = getPortfolioItems(locale);
     items.forEach(item => {

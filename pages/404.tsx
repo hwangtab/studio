@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
-import { defaultLocale, locales } from '../lib/i18n';
+import { defaultLocale, locales, type Locale } from '../lib/i18n';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
@@ -18,12 +18,12 @@ const NotFoundPage: NextPage = () => {
   useEffect(() => {
     if (router.isReady) {
       setPath(router.asPath);
-      
+
       // Attempt to extract locale from path: /en/wrong-page -> en
       const segments = router.asPath.split('/');
       const potentialLocale = segments[1];
-      if (locales.includes(potentialLocale as any)) {
-        setLocale(potentialLocale as any);
+      if (locales.includes(potentialLocale as Locale)) {
+        setLocale(potentialLocale as Locale);
       }
     }
   }, [router.isReady, router.asPath]);

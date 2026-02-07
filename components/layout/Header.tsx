@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
@@ -127,19 +128,24 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
           >
             <div className="relative h-8 sm:h-10 w-auto flex items-center">
               {/* NOL Part - Always original color */}
-              <img
+              <Image
                 src={siteConfig.logo}
                 alt={siteConfig.name}
+                height={40}
+                width={200}
                 className="h-full w-auto object-contain"
                 style={{
                   clipPath: 'inset(0 0 0 52.3%)', // Show only the right part (NOL)
                 }}
+                priority
               />
               {/* Studio Part - Turns white on dark/transparent backgrounds */}
-              <img
+              <Image
                 src={siteConfig.logo}
                 alt=""
                 aria-hidden="true"
+                height={40}
+                width={200}
                 className="h-full w-auto object-contain absolute top-0 left-0 transition-[filter] duration-300"
                 style={{
                   clipPath: 'inset(0 47.7% 0 0)', // Show only the left part (studio)
@@ -147,6 +153,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                     ? 'brightness(0) invert(1) brightness(1.2)' // Make it white
                     : 'none'
                 }}
+                priority
               />
             </div>
           </Link>

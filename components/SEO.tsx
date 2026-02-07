@@ -21,7 +21,7 @@ interface SEOProps {
   ogImage?: string;
   ogType?: string;
   includeSchema?: boolean;
-  schema?: any;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
   author?: string;
   robots?: string;
   articlePublishedTime?: string;
@@ -164,16 +164,16 @@ const SEO = ({
   const faqSchema = React.useMemo(() => generateFaqSchema(faqItems), [faqItems]);
 
   const schemaItems = React.useMemo(() => {
-    const items: any[] = [];
+    const items: Record<string, unknown>[] = [];
 
-    const addItems = (input: any) => {
+    const addItems = (input: unknown) => {
       if (!input) return;
       if (Array.isArray(input)) {
         input.forEach(addItems);
-      } else if (input['@graph'] && Array.isArray(input['@graph'])) {
-        input['@graph'].forEach(addItems);
-      } else {
-        items.push(input);
+      } else if (typeof input === 'object' && input !== null && '@graph' in input && Array.isArray((input as Record<string, unknown>)['@graph'])) {
+        ((input as Record<string, unknown>)['@graph'] as unknown[]).forEach(addItems);
+      } else if (typeof input === 'object' && input !== null) {
+        items.push(input as Record<string, unknown>);
       }
     };
 
@@ -217,11 +217,11 @@ const SEO = ({
 
     // Add breadcrumb and FAQ to graph if they aren't already there
     if (breadcrumbSchema) {
-      const { ['@context']: _, ...rest } = breadcrumbSchema as any;
+      const { ['@context']: _, ...rest } = breadcrumbSchema as Record<string, unknown>;
       items.push(rest);
     }
     if (faqSchema) {
-      const { ['@context']: _, ...rest } = faqSchema as any;
+      const { ['@context']: _, ...rest } = faqSchema as Record<string, unknown>;
       items.push(rest);
     }
 
@@ -237,7 +237,7 @@ const SEO = ({
     };
   }, [includeSchema, schemaData, schemaItems, breadcrumbSchema, faqSchema]);
 
-  const renderSchema = (data: any) => {
+  const renderSchema = (data: Record<string, unknown> | null) => {
     if (!data) return null;
     let jsonString = '';
     try {

@@ -31,6 +31,7 @@ export interface Story {
   thumbnail: string | null;
   thumbnailDerived: boolean;
   images: string[];
+  content?: string;
 }
 
 /**

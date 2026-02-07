@@ -1,3 +1,4 @@
+import type { GetStaticProps } from 'next';
 import { locales } from './i18n';
 
 export const getCommonStaticPaths = async () => {
@@ -7,7 +8,7 @@ export const getCommonStaticPaths = async () => {
   };
 };
 
-export const getCommonStaticProps = async ({ params }: any) => {
+export const getCommonStaticProps: GetStaticProps = async ({ params }) => {
   const locale = params?.locale || 'ko';
   return {
     props: {

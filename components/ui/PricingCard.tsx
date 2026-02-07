@@ -13,7 +13,7 @@ interface PricingCardProps {
     delay?: number;
 }
 
-const PricingCard = ({ id, title, price, unit, description, features, recommended, delay }: PricingCardProps) => {
+const PricingCard = ({ title, price, unit, description, features, recommended, delay }: PricingCardProps) => {
     return (
         <BaseCard
             className="p-8 h-full flex flex-col"

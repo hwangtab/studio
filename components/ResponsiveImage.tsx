@@ -8,7 +8,7 @@ const normalizeSrc = (src = '') => {
   return `/${src.replace(/^\/+/g, '')}`;
 };
 
-interface ResponsiveImageProps {
+interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
   className?: string;
@@ -20,7 +20,6 @@ interface ResponsiveImageProps {
   sizes?: string;
   priority?: boolean;
   loading?: 'lazy' | 'eager';
-  [key: string]: any;
 }
 
 const ResponsiveImage = ({

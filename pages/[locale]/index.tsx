@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Mic2, Music, Disc, Mic, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
+import { PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import FAQSection from '../../components/ui/FAQSection';
@@ -12,7 +12,6 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import ImageHero from '../../components/common/ImageHero';
 import MediaGallery from '../../components/ui/MediaGallery';
 import ReviewSection from '../../components/ui/ReviewSection';
-import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
 import { getHomeData } from '../../data/home';
@@ -171,7 +170,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
   );
 };
 
-(Home as any).hasHero = true;
+(Home as React.FC<HomeProps> & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = locales.map((locale) => ({ params: { locale } }));

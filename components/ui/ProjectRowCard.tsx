@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Disc, Mic2, MousePointer2 } from 'lucide-react';
+import { ExternalLink, Mic2, MousePointer2 } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { PortfolioItem } from '../../types/data';
 

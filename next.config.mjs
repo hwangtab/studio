@@ -47,7 +47,7 @@ const nextConfig = {
   },
 
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
 
   // Headers configuration removed as it is incompatible with output: 'export'

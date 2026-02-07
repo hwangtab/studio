@@ -6,7 +6,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import ResponsiveImage from '../ResponsiveImage';
 import type { Settings } from 'react-slick';
 
-const Slider = dynamic(() => import('react-slick').then((mod) => mod.default), { ssr: false }) as any;
+
+const Slider = dynamic<Settings>(() => import('react-slick').then((mod) => mod.default), { ssr: false }) as unknown as React.ComponentType<Settings>;
 
 interface MediaImage {
     src: string;

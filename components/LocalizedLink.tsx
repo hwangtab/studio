@@ -4,11 +4,10 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
 
-interface LocalizedLinkProps extends LinkProps {
+interface LocalizedLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'children'> {
+  href: LinkProps['href'];
   children: React.ReactNode;
-  className?: string;
   locale?: Locale;
-  [key: string]: any;
 }
 
 const normalizeLocale = (value?: string): Locale | undefined => {

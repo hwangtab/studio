@@ -9,16 +9,7 @@ import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
 import type { Locale } from '../lib/i18n';
 
-interface Story {
-  id: string;
-  slug?: string;
-  title: string;
-  content?: string;
-  summary?: string;
-  thumbnail?: string;
-  category?: string;
-  date?: string;
-}
+import type { Story } from '../types/story';
 
 interface StoryCardProps {
   story: Story;

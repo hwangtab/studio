@@ -100,8 +100,8 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       animate="visible"
       exit="hidden"
       onClick={handleOverlayClick}
-      onAnimationComplete={(definition) => {
-        if (definition === 'hidden' || (typeof definition === 'object' && 'hidden' in (definition as any))) {
+      onAnimationComplete={(definition: string | { hidden: unknown }) => {
+        if (definition === 'hidden' || (typeof definition === 'object' && definition !== null && 'hidden' in definition)) {
           document.body.style.overflow = 'unset';
         }
       }}

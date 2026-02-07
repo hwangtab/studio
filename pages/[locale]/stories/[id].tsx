@@ -9,7 +9,6 @@ import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
 import StoryCard from '../../../components/StoryCard';
 import ImageHero from '../../../components/common/ImageHero';
-import ResponsiveImage from '../../../components/ResponsiveImage';
 import StoryCTA, { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { shareContent } from '../../../utils/shareUtils';
@@ -161,7 +160,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
           {relatedStories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map((related) => (
-                <StoryCard key={related.slug} story={related as any} locale={locale} />
+                <StoryCard key={related.slug} story={related} locale={locale} />
               ))}
             </div>
           ) : (
@@ -177,7 +176,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
   );
 };
 
-(StoryDetailPage as any).hasHero = true;
+(StoryDetailPage as NextPage & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
