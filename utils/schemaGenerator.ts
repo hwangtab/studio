@@ -15,9 +15,6 @@ export const generateDefaultSchema = (
     locality: isKo ? '은평구' : 'Eunpyeong-gu',
     region: isKo ? '서울특별시' : 'Seoul',
     street: isKo ? '대조동 84-3 3층(동명여고 바로 옆)' : '3rd Floor, 84-3 Daejo-dong (Next to Dongmyeong Girls High School)',
-    serviceTypes: isKo
-      ? ['레코딩', '믹싱', '마스터링', '음반 기획', '음원 유통', '음악 프로덕션']
-      : ['Recording', 'Mixing', 'Mastering', 'Music Planning', 'Music Distribution', 'Music Production'],
     contactType: isKo ? '예약 및 상담' : 'Booking & Inquiry',
     residencyTitle: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
     residencyDesc: isKo
@@ -39,8 +36,8 @@ export const generateDefaultSchema = (
         logo: {
           '@type': 'ImageObject',
           url: `${siteUrl}/logo/logo.png`,
-          width: '3350',
-          height: '862',
+          width: 3350,
+          height: 862,
         },
         contactPoint: [
           {
@@ -53,6 +50,7 @@ export const generateDefaultSchema = (
         ],
         sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
         slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
+        knowsLanguage: ['ko', 'en'],
       },
       {
         '@type': ['MusicRecordingStudio', 'LocalBusiness'],
@@ -101,10 +99,9 @@ export const generateDefaultSchema = (
           geoRadius: '50000',
         },
         hasMap: 'https://naver.me/5gFZhS3X',
-        paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'KakaoPay'],
+        paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
-        serviceType: translations.serviceTypes,
-        knowsLanguage: ['ko', 'en'],
+
         parentOrganization: {
           '@id': `${siteUrl}/#organization`,
         },
@@ -118,9 +115,6 @@ export const generateDefaultSchema = (
               reviewCount: reviewItems.length,
               bestRating: '5',
               worstRating: '1',
-              itemReviewed: {
-                '@id': `${siteUrl}/#studio`,
-              },
             },
             review: reviewItems.map((item) => ({
               '@type': 'Review',
@@ -178,37 +172,19 @@ export const generateDefaultSchema = (
             price: 400000,
             url: 'https://open.kakao.com/o/sAWXdN5g',
             availability: 'https://schema.org/InStock',
-            eligibleCustomerType: 'https://schema.org/BusinessCustomer',
             itemOffered: {
               '@type': 'Service',
-              name: 'Studio Nol Residency Benefits',
-              serviceType: isKo ? [
-                '녹음실 할인',
-                '음원 유통',
-                '보도자료 작성',
-                '버스킹 장비 대여',
-                '전문가 피드백',
-                '크라우드 펀딩 컨설팅',
-                '예술지원사업 정보',
-                '공구 대여',
-              ] : [
-                'Recording Studio Discounts',
-                'Music Distribution',
-                'Press Release Writing',
-                'Busking Equipment Rental',
-                'Expert Feedback',
-                'Crowdfunding Consulting',
-                'Grant Information',
-                'Tool Rental',
-              ],
-              provider: translations.name,
-              areaServed: translations.region,
-              offers: {
-                '@type': 'AggregateOffer',
-                priceCurrency: 'KRW',
-                lowPrice: 10000,
-                highPrice: 200000,
-                offerCount: 8,
+              name: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
+              description: isKo
+                ? '녹음실 할인, 음원 유통, 보도자료 작성, 버스킹 장비 대여, 전문가 피드백, 크라우드 펀딩 컨설팅, 예술지원사업 정보, 공구 대여'
+                : 'Recording Studio Discounts, Music Distribution, Press Release Writing, Busking Equipment Rental, Expert Feedback, Crowdfunding Consulting, Grant Information, Tool Rental',
+              provider: {
+                '@type': 'Organization',
+                '@id': `${siteUrl}/#organization`,
+              },
+              areaServed: {
+                '@type': 'AdministrativeArea',
+                name: translations.region,
               },
             },
           },

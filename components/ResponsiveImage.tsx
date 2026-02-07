@@ -8,13 +8,6 @@ const normalizeSrc = (src = '') => {
   return `/${src.replace(/^\/+/g, '')}`;
 };
 
-// Convert jpg/png paths to webp for local images
-const toWebpSrc = (src: string) => {
-  if (src.startsWith('http')) return src;
-  if (/\.(webp|avif)$/i.test(src)) return src;
-  return src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
-};
-
 interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
@@ -58,8 +51,9 @@ const ResponsiveImage = ({
 
   const fallbackSrc = '/logo512.png';
 
-  // Use webp version for local images (they exist alongside originals)
-  const imageSrc = error ? fallbackSrc : toWebpSrc(normalizedSrc);
+  // Use original path directly - do NOT convert to webp
+  // next/image with unoptimized:true will serve the file as-is
+  const imageSrc = error ? fallbackSrc : normalizedSrc;
 
   return (
     <div className={wrapperClass}>
