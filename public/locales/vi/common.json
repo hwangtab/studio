@@ -347,11 +347,13 @@
       ]
     },
     "cta": {
-      "title": "Hãy cùng bước đầu tiên.",
-      "subtitle": "Thiết kế giáo trình riêng cho bạn.",
+      "titleLine1": "Hãy cùng bước đầu tiên,",
+      "titleHighlight": "Thiết kế giáo trình riêng cho bạn",
+      "subtitleLine1": "Phí cố định 350.000 KRW/tháng để học mọi thứ về sản xuất thực tế.",
+      "subtitleLine2": "Tư vấn đầu tiên miễn phí · Hướng dẫn 1:1 từ producer đang hoạt động",
       "location": "Địa điểm",
-      "inquiry": "Liên hệ",
-      "imageAlt": "Ảnh minh họa bài học"
+      "inquiry": "Đăng ký tư vấn miễn phí",
+      "imageAlt": "Ảnh giới thiệu bài học"
     }
   },
   "practiceRoom": {

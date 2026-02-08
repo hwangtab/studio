@@ -22,13 +22,16 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   const { t } = useTranslation('common', { lng: locale });
 
   const categories = useMemo(() => {
-    const unique = new Set(stories.map((story) => story.category).filter(Boolean));
-    return Array.from(unique);
-  }, [stories]);
+    const uniqueKeys = new Set(stories.map((story) => story.categoryKey).filter(Boolean));
+    return Array.from(uniqueKeys).map(key => ({
+      id: key,
+      label: t(`stories.categories.${key}`)
+    }));
+  }, [stories, t]);
 
   const filteredStories = useMemo(() => {
     if (activeCategory === 'all') return stories;
-    return stories.filter((story) => story.category === activeCategory);
+    return stories.filter((story) => story.categoryKey === activeCategory);
   }, [stories, activeCategory]);
 
   return (
@@ -71,7 +74,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
               <p className="typo-card-body">
                 {activeCategory === 'all'
                   ? t('stories.empty.all')
-                  : t('stories.empty.byCategory', { category: activeCategory })}
+                  : t('stories.empty.byCategory', { category: t(`stories.categories.${activeCategory}`) })}
               </p>
             </div>
           ) : (

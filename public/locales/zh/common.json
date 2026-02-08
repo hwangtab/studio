@@ -347,11 +347,13 @@
       ]
     },
     "cta": {
-      "title": "一起迈出第一步",
-      "subtitle": "规划你的专属课程。",
+      "titleLine1": "一起迈出第一步，",
+      "titleHighlight": "规划你的专属课程",
+      "subtitleLine1": "每月 350,000 韩元固定费用，学习实战制作的一切。",
+      "subtitleLine2": "首次咨询免费 · 现职制作人 1:1 定制指导",
       "location": "位置",
-      "inquiry": "KakaoTalk 咨询",
-      "imageAlt": "课程预览图"
+      "inquiry": "申请免费咨询",
+      "imageAlt": "课程介绍图"
     }
   },
   "practiceRoom": {

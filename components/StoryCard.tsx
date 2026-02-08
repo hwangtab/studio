@@ -60,7 +60,7 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
         <div className="p-4 flex flex-col flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
-              {story.category || t('stories.list.defaultCategory')}
+              {t(`stories.categories.${story.categoryKey}`) || story.category || t('stories.list.defaultCategory')}
             </span>
             <span className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
               {story.date ? timeAgo(story.date, locale) : t('stories.list.noDate')}

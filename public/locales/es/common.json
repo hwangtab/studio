@@ -347,11 +347,13 @@
       ]
     },
     "cta": {
-      "title": "Demos el primer paso juntos.",
-      "subtitle": "Planifica tu propio currículum.",
+      "titleLine1": "Demos el primer paso juntos,",
+      "titleHighlight": "Planifica tu propio currículum",
+      "subtitleLine1": "Tarifa fija de 350,000 KRW/mes para aprender todo sobre producción práctica.",
+      "subtitleLine2": "Primera consulta gratuita · Orientación 1:1 de un productor en activo",
       "location": "Ubicación",
-      "inquiry": "Consulta",
-      "imageAlt": "Imagen de la clase"
+      "inquiry": "Solicitar consulta gratuita",
+      "imageAlt": "Imagen de introducción de la clase"
     }
   },
   "practiceRoom": {

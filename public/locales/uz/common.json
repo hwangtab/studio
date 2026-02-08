@@ -347,11 +347,13 @@
       ]
     },
     "cta": {
-      "title": "Keling, birinchi qadamni birga tashlaymiz.",
-      "subtitle": "O'zingizga mos kurikulumni rejalashtiring.",
+      "titleLine1": "Keling, birinchi qadamni birga tashlaymiz,",
+      "titleHighlight": "O'zingizga mos kurikulumni rejalashtiring",
+      "subtitleLine1": "Amaliy prodakshn haqida hamma narsani o'rganish uchun oyiga 350,000 KRW belgilangan narx.",
+      "subtitleLine2": "Birinchi maslahat bepul · Amaldagi prodyuser tomonidan 1:1 shaxsiy yo'riqnoma",
       "location": "Manzil",
-      "inquiry": "So'rov",
-      "imageAlt": "Dars preview rasmi"
+      "inquiry": "Bepul maslahat olish",
+      "imageAlt": "Darsga kirish rasmi"
     }
   },
   "practiceRoom": {

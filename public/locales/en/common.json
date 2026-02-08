@@ -347,11 +347,13 @@
       ]
     },
     "cta": {
-      "title": "Let's take the first step together.",
-      "subtitle": "Plan your own custom curriculum.",
+      "titleLine1": "Let's take the first step together,",
+      "titleHighlight": "Plan your own custom curriculum",
+      "subtitleLine1": "$350,000 KRW/mo fixed price for everything about practical production.",
+      "subtitleLine2": "First consultation free · 1:1 tailored guidance by active producer",
       "location": "Location",
-      "inquiry": "Inquiry",
-      "imageAlt": "Lesson preview image"
+      "inquiry": "Free Consultation Apply",
+      "imageAlt": "Lesson introduction image"
     }
   },
   "practiceRoom": {
