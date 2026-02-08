@@ -59,7 +59,7 @@ export const getReviews = (locale: Locale) => {
       author: t(locale, { ko: "최*민", en: "Choi *Min", zh: "Choi *Min", es: "Choi *Min", vi: "Choi *Min", th: "Choi *Min", uz: "Choi *Min" }),
       rating: 5,
       categoryKey: 'practice',
-      category: t(locale, { ko: "방음 연습실", en: "Practice Room", zh: "隔음练习室", es: "Sala de Práctica", vi: "Phòng tập", th: "ห้องซ้อม", uz: "Mashg‘ulot xonasi" }),
+      category: t(locale, { ko: "방음 연습실", en: "Practice Room", zh: "隔音练习室", es: "Sala de Práctica", vi: "Phòng tập", th: "ห้องซ้อม", uz: "Mashg‘ulot xonasi" }),
       content: t(locale, {
         ko: "여러 연습실을 다녀봤지만, 여기만큼 작업에만 몰입할 수 있는 쾌적한 곳은 없었습니다. 특히 공조 시스템이 완벽해서 장시간 작업해도 머리가 아프지 않고, 방음 퀄리티가 전문 스튜디오 급이라 새벽에도 소음 걱정 없이 작업할 수 있어요.",
         en: "I've been to many practice rooms, but none were as comfortable for focusing as this one. The ventilation is perfect, so no headaches after long sessions, and the soundproofing is pro-studio quality.",

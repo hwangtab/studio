@@ -9,7 +9,7 @@ const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: str
 export const getSiteConfig = (locale: Locale): SiteConfig => {
   return {
     name: t(locale, { ko: '스튜디오 놀', en: 'Studio NOL', zh: 'Studio NOL', es: 'Studio NOL', vi: 'Studio NOL', th: 'Studio NOL', uz: 'Studio NOL' }),
-    url: 'https://studionol.co.kr',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr',
     logo: '/logo/logo.png',
     description: t(locale, {
       ko: '연신내 녹음실, 연습실, 믹싱, 마스터링, 음반 제작 스튜디오',
