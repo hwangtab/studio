@@ -302,6 +302,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       locale,
       servicesData,
     },
+    revalidate: 86400,
   };
 };
 

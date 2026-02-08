@@ -160,7 +160,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       paths.push({ params: { locale, id: item.id } });
     });
   });
-  return { paths, fallback: false };
+  return { paths, fallback: 'blocking' };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
@@ -179,6 +179,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       item,
       categories
     },
+    revalidate: 3600,
   };
 };
 

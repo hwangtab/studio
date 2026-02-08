@@ -181,7 +181,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: getStoryPaths(),
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
@@ -199,6 +199,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         story,
         relatedStories,
       },
+      revalidate: 3600,
     };
   } catch (error) {
     console.error('Story detail error:', error);

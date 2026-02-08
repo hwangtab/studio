@@ -100,6 +100,7 @@ export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params 
       locale: locale as Locale,
       stories,
     },
+    revalidate: 1800,
   };
 };
 

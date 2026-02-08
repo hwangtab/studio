@@ -2,11 +2,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   compress: true,
-  output: 'export',
 
   // Optimized image configuration
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -50,7 +48,39 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
 
-  // Headers configuration removed as it is incompatible with output: 'export'
+  async headers() {
+    return [
+      {
+        source: '/images/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net https://fastly.jsdelivr.net; connect-src 'self' https://api.emailjs.com;",
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

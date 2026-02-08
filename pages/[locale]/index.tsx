@@ -190,6 +190,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       faqData,
       reviewsData, // Added to props
     },
+    revalidate: 3600,
   };
 };
 

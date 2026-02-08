@@ -192,6 +192,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       locale,
       equipmentData,
     },
+    revalidate: 86400,
   };
 };
 
