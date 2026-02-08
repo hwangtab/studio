@@ -25,7 +25,7 @@ export const Footer = ({ locale }: FooterProps) => {
               {t('footer.tagline')}
             </p>
             <p className="typo-footer-meta">
-              2024 {siteConfig.name}. {t('footer.rights')}
+              {new Date().getFullYear()} {siteConfig.name}. {t('footer.rights')}
             </p>
           </div>
 

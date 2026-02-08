@@ -146,12 +146,10 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
 
     const nextTrack = () => {
         setCurrentTrack((prev) => (prev + 1) % tracks.length);
-        setIsPlaying(true);
     };
 
     const prevTrack = () => {
         setCurrentTrack((prev) => (prev - 1 + tracks.length) % tracks.length);
-        setIsPlaying(true);
     };
 
     const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -33,6 +33,7 @@ const ResponsiveImage = React.memo(({
   height,
   sizes = '100vw',
   priority = false,
+  loading,
   ...rest
 }: ResponsiveImageProps) => {
   const [error, setError] = React.useState(false);
@@ -57,6 +58,7 @@ const ResponsiveImage = React.memo(({
             sizes={sizes}
             priority={priority}
             fill
+            loading={loading}
             onError={() => setError(true)}
             {...rest}
           />
@@ -75,6 +77,7 @@ const ResponsiveImage = React.memo(({
         priority={priority}
         width={width || 300}
         height={height || 300}
+        loading={loading}
         onError={() => setError(true)}
         {...rest}
       />

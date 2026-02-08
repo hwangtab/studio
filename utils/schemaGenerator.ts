@@ -1,5 +1,6 @@
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
+import { getSiteConfig } from '../data/siteConfig';
 
 export const generateDefaultSchema = (
   siteUrl: string,
@@ -9,9 +10,10 @@ export const generateDefaultSchema = (
   locale: Locale = 'ko'
 ) => {
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
 
   const translations = {
-    name: isKo ? '스튜디오 놀' : 'Studio NOL',
+    name: config.name,
     locality: isKo ? '은평구' : 'Eunpyeong-gu',
     region: isKo ? '서울특별시' : 'Seoul',
     street: isKo ? '대조동 84-3 3층(동명여고 바로 옆)' : '3rd Floor, 84-3 Daejo-dong (Next to Dongmyeong Girls High School)',
@@ -35,7 +37,7 @@ export const generateDefaultSchema = (
         url: siteUrl,
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/logo/logo.png`,
+          url: `${siteUrl}${config.logo}`,
           width: 3350,
           height: 862,
         },
@@ -43,12 +45,12 @@ export const generateDefaultSchema = (
           {
             '@type': 'ContactPoint',
             contactType: translations.contactType,
-            telephone: '+82-2-764-3114',
-            url: 'https://open.kakao.com/me/nol',
+            telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
+            url: config.contact.kakaoUrl,
             availableLanguage: ['ko', 'en'],
           },
         ],
-        sameAs: ['https://open.kakao.com/me/nol', 'https://naver.me/5gFZhS3X'],
+        sameAs: [config.contact.kakaoUrl, config.contact.naverMapUrl],
         slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
         knowsLanguage: ['ko', 'en'],
       },
@@ -68,8 +70,8 @@ export const generateDefaultSchema = (
           postalCode: '03424',
           addressCountry: 'KR',
         },
-        telephone: '+82-2-764-3114',
-        email: 'contact@kosmart.org',
+        telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
+        email: config.contact.email,
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
@@ -98,7 +100,7 @@ export const generateDefaultSchema = (
           },
           geoRadius: '50000',
         },
-        hasMap: 'https://naver.me/5gFZhS3X',
+        hasMap: config.contact.naverMapUrl,
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
 
@@ -205,6 +207,7 @@ export const generateArticleSchema = (
 ) => {
   if (!articlePublishedTime) return null;
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
 
   return {
     '@context': 'https://schema.org',
@@ -214,14 +217,14 @@ export const generateArticleSchema = (
     dateModified: articleModifiedTime || articlePublishedTime,
     author: {
       '@type': 'Person',
-      name: articleAuthor || (isKo ? '스튜디오 놀' : 'Studio NOL'),
+      name: articleAuthor || config.name,
     },
     publisher: {
       '@type': 'Organization',
-      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      name: config.name,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/logo512.png`,
+        url: `${siteUrl}${config.logo}`,
       },
     },
     image: absoluteOgImage,
@@ -274,6 +277,7 @@ export const generateCourseSchema = (
   locale: Locale = 'ko'
 ) => {
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
 
   return {
     '@context': 'https://schema.org',
@@ -282,7 +286,7 @@ export const generateCourseSchema = (
     description: description,
     provider: {
       '@type': 'Organization',
-      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      name: config.name,
       sameAs: siteUrl,
     },
     image: absoluteOgImage,
@@ -315,6 +319,7 @@ export const generateServiceOfferSchema = (
   locale: Locale = 'ko'
 ) => {
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
   const priceValidUntil = new Date();
   priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
 
@@ -330,15 +335,15 @@ export const generateServiceOfferSchema = (
     ...(service.unit && { unitText: service.unit }),
     seller: {
       '@type': 'LocalBusiness',
-      name: isKo ? '스튜디오 놀' : 'Studio NOL',
-      '@id': 'https://studionol.co.kr/#organization',
+      name: config.name,
+      '@id': `${config.url}/#organization`,
     },
     itemOffered: {
       '@type': 'Service',
       name: service.name,
       provider: {
         '@type': 'LocalBusiness',
-        name: isKo ? '스튜디오 놀' : 'Studio NOL',
+        name: config.name,
       },
     },
   };
@@ -358,6 +363,7 @@ export const generateAggregateOfferSchema = (
   if (prices.length === 0) return null;
 
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
   const priceValidUntil = new Date();
   priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
 
@@ -367,7 +373,7 @@ export const generateAggregateOfferSchema = (
     name: catalogName,
     brand: {
       '@type': 'Brand',
-      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      name: config.name,
     },
     offers: {
       '@type': 'AggregateOffer',
@@ -389,11 +395,12 @@ export const generateAggregateOfferSchema = (
 
 export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') => {
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: isKo ? '스튜디오 놀' : 'Studio NOL',
+    name: config.name,
     alternateName: 'Studio Nol',
     url: siteUrl,
     potentialAction: {
@@ -457,6 +464,7 @@ export const generateMusicRecordingSchema = (
   locale: Locale = 'ko'
 ) => {
   const isKo = locale === 'ko';
+  const config = getSiteConfig(locale);
 
   return {
     '@context': 'https://schema.org',
@@ -472,7 +480,7 @@ export const generateMusicRecordingSchema = (
     },
     producer: {
       '@type': 'Organization',
-      name: isKo ? '스튜디오 놀' : 'Studio NOL',
+      name: config.name,
       url: siteUrl,
     },
     ...(item.image && { image: item.image }),
@@ -491,7 +499,8 @@ export interface VideoInput {
   duration?: string;
 }
 
-export const generateVideoSchema = (video: VideoInput) => {
+export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') => {
+  const config = getSiteConfig(locale);
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
@@ -503,12 +512,11 @@ export const generateVideoSchema = (video: VideoInput) => {
     ...(video.duration && { duration: video.duration }),
     publisher: {
       '@type': 'Organization',
-      name: 'Studio NOL',
+      name: config.name,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://studionol.co.kr/logo512.png',
+        url: `${config.url}${config.logo}`,
       },
     },
   };
 };
-

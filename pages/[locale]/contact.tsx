@@ -94,7 +94,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         title={t('contact.title')}
         description={t('contact.subtitle')}
         keywords={t('contact.seo.keywords')}
-        canonical={`https://studionol.co.kr/${locale}/contact`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.contact'), path: `/${locale}/contact` },

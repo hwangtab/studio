@@ -110,7 +110,7 @@ export const getServicesData = (locale: Locale) => {
         es: "Completando el escenario del artista con planificación y soporte de conciertos.",
         vi: "Hỗ trợ lập kế hoạch và vận hành show live để hoàn thiện sân khấu của nghệ sĩ.",
         th: "สนับสนุนการวางแผนและการดำเนินงานคอนเสิร์ต เพื่อเติมเต็มเวทีของศิลปิน",
-        uz: "Jonli konsertni rejalash va 운영을 qo‘llab-quvvatlab, san’atkor sahnasini to‘liq qilamiz."
+        uz: "Jonli konsertni rejalash va boshqarishni qo‘llab-quvvatlab, san’atkor sahnasini to‘liq qilamiz."
       }),
       icon: 'Calendar'
     }

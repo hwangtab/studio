@@ -75,7 +75,6 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
                 title={t('lesson.seo.title')}
                 description={t('lesson.seo.description')}
                 keywords={t('lesson.seo.keywords')}
-                canonical={`https://studionol.co.kr/${locale}/lesson`}
                 includeSchema={true}
                 isCourse
                 faqItems={lessonQuickAnswers}
