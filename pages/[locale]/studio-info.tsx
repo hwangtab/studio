@@ -19,12 +19,12 @@ import { getStudioFaqData } from '../../data/faq';
 interface StudioInfoProps {
   locale: Locale;
   equipmentData: ReturnType<typeof getEquipmentData>;
+  reviewsData: ReturnType<typeof getReviews>;
 }
 
-const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
+const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
-  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
   const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
 
   return (
@@ -33,7 +33,6 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
         title={t('studioInfo.seo.title')}
         description={t('studioInfo.seo.description')}
         keywords={t('studioInfo.seo.keywords')}
-        canonical={`https://studionol.co.kr/${locale}/studio-info`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },
@@ -187,10 +186,12 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = params?.locale || 'ko';
   const equipmentData = getEquipmentData(locale as Locale);
+  const reviewsData = getReviews(locale as Locale);
   return {
     props: {
       locale,
       equipmentData,
+      reviewsData,
     },
     revalidate: 86400,
   };

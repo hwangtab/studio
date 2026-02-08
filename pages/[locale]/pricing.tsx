@@ -18,6 +18,7 @@ import type { Locale } from '../../lib/i18n';
 interface PricingProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
+  reviewsData: ReturnType<typeof getReviews>;
 }
 
 interface Offer {
@@ -31,7 +32,7 @@ interface Offer {
   recommended?: boolean;
 }
 
-const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
+const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const {
     VAT_NOTICE,
@@ -42,9 +43,8 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
     specialPackages
   } = pricingData;
 
-  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
-
-  const pricingUrl = `https://studionol.co.kr/${locale}/pricing`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
+  const pricingUrl = `${siteUrl}/${locale}/pricing`;
 
   const pricingQuickAnswers = React.useMemo(() => ([
     {
@@ -155,7 +155,6 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData }) => {
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
         keywords={t('pricing.seo.keywords')}
-        canonical={pricingUrl}
         includeSchema
         faqItems={pricingQuickAnswers}
         schema={pricingSchema}
@@ -356,10 +355,12 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = (params?.locale as Locale) || 'ko';
   const pricingData = getPricingData(locale);
+  const reviewsData = getReviews(locale);
   return {
     props: {
       locale,
       pricingData,
+      reviewsData,
     },
     revalidate: 86400,
   };

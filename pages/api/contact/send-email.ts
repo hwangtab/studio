@@ -7,12 +7,8 @@ import { kv } from '@vercel/kv';
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
 
-// Fallback in-memory rate limiting (Serverless instances don't share this)
-const rateLimitMap = new Map<string, number[]>();
-const WINDOW_MS = WINDOW * 1000;
-
-async function isRateLimited(ip: string): Promise<boolean> {
-    // 1. Try Vercel KV if configured
+async function checkRateLimit(ip: string): Promise<void> {
+    // Vercel KV is required for production rate limiting
     if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
         try {
             const key = `rate_limit_contact:${ip}`;
@@ -22,24 +18,27 @@ async function isRateLimited(ip: string): Promise<boolean> {
                 await kv.expire(key, WINDOW);
             }
 
-            return count > LIMIT;
-        } catch (error) {
-            console.warn('[Rate Limit] Vercel KV failed, falling back to in-memory:', error);
+            if (count > LIMIT) {
+                throw new Error('RATE_LIMIT_EXCEEDED');
+            }
+            return;
+        } catch (error: unknown) {
+            if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') throw error;
+
+            console.error('[Rate Limit] Vercel KV failed:', error);
+            if (process.env.NODE_ENV === 'production') {
+                throw new Error('RATE_LIMIT_INFRASTRUCTURE_ERROR');
+            }
+            return;
         }
     }
 
-    // 2. Fallback to in-memory
-    const now = Date.now();
-    const timestamps = rateLimitMap.get(ip) || [];
-    const recentTimestamps = timestamps.filter(t => now - t < WINDOW_MS);
-
-    if (recentTimestamps.length >= LIMIT) {
-        return true;
+    if (process.env.NODE_ENV === 'production') {
+        console.error('[Rate Limit] Vercel KV not configured in production!');
+        throw new Error('RATE_LIMIT_CONFIG_ERROR');
     }
 
-    recentTimestamps.push(now);
-    rateLimitMap.set(ip, recentTimestamps);
-    return false;
+    return;
 }
 
 interface EmailJSPayload {
@@ -71,8 +70,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 2. Rate limiting by IP
     const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'unknown';
 
-    if (await isRateLimited(ip)) {
-        return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+    try {
+        await checkRateLimit(ip);
+    } catch (error: unknown) {
+        if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') {
+            return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+        }
+        console.error('[API Route Error] Rate limit check failed:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 
     // 3. Validation & Sanitization
@@ -152,4 +157,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
-

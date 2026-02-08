@@ -36,7 +36,6 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
       <SEO
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
-        canonical={`https://studionol.co.kr/${locale}/stories`}
         keywords={t('stories.seo.keywords')}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },

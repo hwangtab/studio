@@ -45,7 +45,6 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
         title={seo.title}
         description={seo.description}
         keywords={seo.keywords}
-        canonical={`https://studionol.co.kr/${locale}`}
         includeSchema
         faqItems={faqData}
         reviewItems={reviewsData} // Updated prop

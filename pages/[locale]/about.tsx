@@ -35,13 +35,13 @@ const ICON_MAP: Record<string, LucideIcon> = {
 interface AboutProps {
   locale: Locale;
   servicesData: ReturnType<typeof getServicesData>;
+  reviewsData: ReturnType<typeof getReviews>;
 }
 
-const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
+const About: NextPage<AboutProps> = ({ locale, servicesData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const { coreServices, productionProcess, advantages } = servicesData;
   const siteConfig = getSiteConfig(locale);
-  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
   const howToSchema = React.useMemo(() => generateHowToSchema(
     t('about.howToTitle'),
@@ -60,18 +60,15 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
         title={t('about.title')}
         description={t('about.description')}
         keywords={t('about.seo.keywords')}
-        canonical={`https://studionol.co.kr/${locale}/about`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.about'), path: `/${locale}/about` },
         ]}
         includeSchema={true}
-        reviewItems={reviewsData.filter(r =>
-          r.category.includes('프로덕션') ||
-          r.category.includes('Production') ||
-          r.category.includes('믹싱') ||
-          r.category.includes('Mixing')
-        )}
+        reviewItems={reviewsData.filter((r) => {
+          const review = r as { categoryKey?: string };
+          return review.categoryKey === 'production' || review.categoryKey === 'mixing';
+        })}
         schema={howToSchema}
       />
       <ImageHero
@@ -297,10 +294,12 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = (params?.locale as Locale) || 'ko';
   const servicesData = getServicesData(locale);
+  const reviewsData = getReviews(locale);
   return {
     props: {
       locale,
       servicesData,
+      reviewsData,
     },
     revalidate: 86400,
   };

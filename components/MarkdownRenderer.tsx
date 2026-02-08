@@ -1,6 +1,7 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Image from 'next/image';
 import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
@@ -319,6 +320,9 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
 
   return (
     <div className="markdown-content">
+      <Head>
+        <link key="prism-theme" rel="stylesheet" href="/styles/prism-theme.css" />
+      </Head>
       <Markdown
         options={{
           overrides,

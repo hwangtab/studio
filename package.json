@@ -33,6 +33,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
     "prebuild": "node scripts/optimizeImages.js",
     "postbuild": "next-sitemap",
     "test": "jest"

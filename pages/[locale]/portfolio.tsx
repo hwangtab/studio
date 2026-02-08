@@ -96,7 +96,6 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         title={t('portfolio.title')}
         description={t('portfolio.subtitle')}
         keywords={t('portfolio.seo.keywords')}
-        canonical={`https://studionol.co.kr/${locale}/portfolio`}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },

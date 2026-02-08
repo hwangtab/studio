@@ -32,7 +32,6 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   }
 
   const getLink = (path: string) => `/${locale}${path}`;
-  const shareUrl = `https://studionol.co.kr/${locale}/portfolio/${item.id}`;
   const metaDescription = t('portfolio.detail.metaDescription', {
     artist: item.artist,
     title: item.title,
@@ -42,6 +41,8 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   const categoryInfo = getCategoryInfo(item.category, categories);
 
   const sharePortfolio = async () => {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
+    const shareUrl = `${siteUrl}/${locale}/portfolio/${item.id}`;
     await shareContent({
       title: `${item.title} - ${t('portfolio.detail.titleSuffix')}`,
       text: metaDescription,
@@ -58,7 +59,6 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
       <SEO
         title={`${item.title} - ${t('portfolio.detail.titleSuffix')}`}
         description={metaDescription}
-        canonical={shareUrl}
         ogImage={item.image}
         ogType="music.album"
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}

@@ -70,9 +70,10 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
 
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
-  const shareUrl = `https://studionol.co.kr/${locale}/stories/${story.slug}`;
 
   const shareStory = async () => {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
+    const shareUrl = `${siteUrl}/${locale}/stories/${story.slug}`;
     await shareContent({
       title: story.title,
       text: metaDescription,
@@ -90,7 +91,6 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         title={`${story.title} - ${siteConfig.name}`}
         description={story.summary || metaDescription}
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
-        canonical={shareUrl}
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
         ogType="article"
         articlePublishedTime={story.date}

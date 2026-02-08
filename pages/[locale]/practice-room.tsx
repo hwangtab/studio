@@ -12,7 +12,7 @@ import FAQSection from '../../components/ui/FAQSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
+import { getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
@@ -54,10 +54,14 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
   </BaseCard>
 );
 
-const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
+interface PracticeRoomProps {
+  locale: Locale;
+  reviewsData: ReturnType<typeof getReviews>;
+}
+
+const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
-  const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
     {
       question: t('practiceRoom.faq.items.0.q'),
@@ -98,7 +102,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
       name: siteConfig.name,
       url: siteConfig.url,
     },
-    url: `https://studionol.co.kr/${locale}/practice-room`,
+    url: `${siteConfig.url}/${locale}/practice-room`,
   }), [t, siteConfig, locale]);
 
   return (
@@ -107,14 +111,10 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
         title={t('practiceRoom.seo.title')}
         description={t('practiceRoom.seo.description')}
         keywords={t('practiceRoom.seo.keywords')}
-        canonical={`https://studionol.co.kr/${locale}/practice-room`}
         includeSchema={true}
         faqItems={practiceRoomFaqs}
         schema={practiceRoomSchema}
-        reviewItems={reviewsData.filter(r =>
-          r.category.includes('연습실') ||
-          r.category.includes('Practice')
-        )}
+        reviewItems={reviewsData.filter((r) => (r as { categoryKey?: string }).categoryKey === 'practice')}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
@@ -304,6 +304,16 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
 (PracticeRoom as NextPage & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
-export const getStaticProps: GetStaticProps = getCommonStaticProps;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const locale = (params?.locale as Locale) || 'ko';
+  const reviewsData = getReviews(locale);
+  return {
+    props: {
+      locale,
+      reviewsData,
+    },
+    revalidate: 86400,
+  };
+};
 
 export default PracticeRoom;

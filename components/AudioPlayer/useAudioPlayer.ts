@@ -46,85 +46,75 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     }, []);
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === 'undefined' || !tracks || tracks.length === 0) return;
 
-        if (!audioRef.current && tracks && tracks.length > 0) {
+        let isEffectMounted = true;
+
+        if (!audioRef.current) {
             audioRef.current = new Audio(tracks[currentTrack].src);
         }
 
-        if (!audioRef.current) return;
-
         const audio = audioRef.current;
 
-        // Reset audio state for new track
-        audio.pause();
-        audio.currentTime = 0;
-        audio.src = tracks[currentTrack].src;
-        audio.load();
+        // Sync volume and mute state
+        audio.volume = isMuted ? 0 : volume;
+
+        // If track changed, reset and load
+        if (audio.src !== new URL(tracks[currentTrack].src, window.location.href).href) {
+            audio.pause();
+            audio.src = tracks[currentTrack].src;
+            audio.load();
+        }
 
         const setAudioData = () => {
-            if (isMounted.current) {
+            if (isEffectMounted && isMounted.current) {
                 setDuration(audio.duration);
                 setCurrentTime(audio.currentTime);
             }
         };
 
         const setAudioTime = () => {
-            if (isMounted.current) {
+            if (isEffectMounted && isMounted.current) {
                 setCurrentTime(audio.currentTime);
             }
         };
 
-        audio.addEventListener('loadeddata', setAudioData);
+        audio.addEventListener('loadedmetadata', setAudioData);
         audio.addEventListener('timeupdate', setAudioTime);
 
-        return () => {
-            audio.removeEventListener('loadeddata', setAudioData);
-            audio.removeEventListener('timeupdate', setAudioTime);
-        };
-    }, [currentTrack, tracks]);
-
-    useEffect(() => {
-        if (!audioRef.current) return;
-
-        if (animationRef.current) {
-            cancelAnimationFrame(animationRef.current);
-            animationRef.current = null;
-        }
-
+        // Handle playback
         if (isPlaying) {
-            const playPromise = audioRef.current.play();
-
+            const playPromise = audio.play();
             if (playPromise && typeof playPromise.then === 'function') {
                 playPromise
                     .then(() => {
-                        if (isMounted.current) {
+                        if (isEffectMounted && isMounted.current) {
+                            if (animationRef.current) cancelAnimationFrame(animationRef.current);
                             animationRef.current = requestAnimationFrame(whilePlaying);
                         }
                     })
                     .catch((error) => {
                         if (error.name === 'AbortError') return;
-                        console.error('오디오 재생 오류:', error);
-                        if (isMounted.current) {
+                        console.error('Audio playback error:', error);
+                        if (isEffectMounted && isMounted.current) {
                             setIsPlaying(false);
                         }
                     });
-            } else {
-                if (isMounted.current) {
-                    animationRef.current = requestAnimationFrame(whilePlaying);
-                }
             }
         } else {
-            audioRef.current.pause();
-        }
-
-        return () => {
+            audio.pause();
             if (animationRef.current) {
                 cancelAnimationFrame(animationRef.current);
                 animationRef.current = null;
             }
+        }
+
+        return () => {
+            isEffectMounted = false;
+            audio.removeEventListener('loadedmetadata', setAudioData);
+            audio.removeEventListener('timeupdate', setAudioTime);
         };
-    }, [isPlaying, currentTrack, whilePlaying]);
+    }, [currentTrack, tracks, isPlaying, whilePlaying, volume, isMuted]);
 
     useEffect(() => {
         stopPlayback();
@@ -134,6 +124,7 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
+                audioRef.current = null;
             }
             if (animationRef.current) {
                 cancelAnimationFrame(animationRef.current);

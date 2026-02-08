@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
+import { Phone, Mail, MapPin } from 'lucide-react';
 
 interface FooterProps {
   locale: Locale;
@@ -45,21 +46,21 @@ export const Footer = ({ locale }: FooterProps) => {
               rel="noopener noreferrer"
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
             >
-              <span className="inline-block w-4 mr-2">📍</span>
+              <MapPin className="mr-2" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{siteConfig.contact.address}</span>
             </a>
             <a
               href={`mailto:${siteConfig.contact.email}`}
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center mb-2"
             >
-              <span className="inline-block w-4 mr-2">📧</span>
+              <Mail className="mr-2" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{t('footer.emailLabel')}: {siteConfig.contact.email}</span>
             </a>
             <a
               href={`tel:${siteConfig.contact.phone}`}
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-center"
             >
-              <span className="inline-block w-4 mr-2">📞</span>
+              <Phone className="mr-2" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{t('footer.phoneLabel')}: {siteConfig.contact.phone}</span>
             </a>
           </div>

@@ -10,6 +10,7 @@ export const getReviews = (locale: Locale) => {
     {
       author: t(locale, { ko: "김*준", en: "Kim *Jun", zh: "Kim *Jun", es: "Kim *Jun", vi: "Kim *Jun", th: "Kim *Jun", uz: "Kim *Jun" }),
       rating: 5,
+      categoryKey: 'production',
       category: t(locale, { ko: "음반 프로덕션", en: "Music Production", zh: "唱片制作", es: "Producción Musical", vi: "Sản xuất âm nhạc", th: "โปรดักชันเพลง", uz: "Musiqa prodakshn" }),
       content: t(locale, {
         ko: "단순히 녹음만 하는 곳이 아니라, 아티스트가 가진 의도를 깊게 이해하고 제가 원하는 음악적 방향으로 갈 수 있게 세심하게 가이드해주십니다. 덕분에 첫 음반임에도 불구하고 생각했던 것 이상으로 멋진 결과물이 나왔어요.",
@@ -25,6 +26,7 @@ export const getReviews = (locale: Locale) => {
     {
       author: t(locale, { ko: "이*정", en: "Lee *Jeong", zh: "Lee *Jeong", es: "Lee *Jeong", vi: "Lee *Jeong", th: "Lee *Jeong", uz: "Lee *Jeong" }),
       rating: 5,
+      categoryKey: 'wedding',
       category: t(locale, { ko: "셀프 축가 녹음", en: "Self Wedding Recording", zh: "自助婚礼祝歌录音", es: "Grabación de Boda", vi: "Thu âm nhạc cưới tự thực hiện", th: "อัดเพลงงานแต่งด้วยตัวเอง", uz: "O‘z to‘y qo‘shig‘ini yozish" }),
       content: t(locale, {
         ko: "결혼식 셀프 축가 녹음은 처음이라 긴장을 많이 했는데, 단순한 녹음을 넘어 곡의 감정선까지 잘 잡아주셨어요. 제가 원했던 따뜻한 느낌이 소리에 고스란히 담길 수 있도록 디렉팅해주신 덕분에 평생 잊지 못할 선물을 만들었습니다.",
@@ -55,6 +57,7 @@ export const getReviews = (locale: Locale) => {
     {
       author: t(locale, { ko: "최*민", en: "Choi *Min", zh: "Choi *Min", es: "Choi *Min", vi: "Choi *Min", th: "Choi *Min", uz: "Choi *Min" }),
       rating: 5,
+      categoryKey: 'practice',
       category: t(locale, { ko: "방음 연습실", en: "Practice Room", zh: "隔音练习室", es: "Sala de Práctica", vi: "Phòng tập", th: "ห้องซ้อม", uz: "Mashg‘ulot xonasi" }),
       content: t(locale, {
         ko: "여러 연습실을 다녀봤지만, 여기만큼 작업에만 몰입할 수 있는 쾌적한 곳은 없었습니다. 특히 공조 시스템이 완벽해서 장시간 작업해도 머리가 아프지 않고, 방음 퀄리티가 전문 스튜디오 급이라 새벽에도 소음 걱정 없이 작업할 수 있어요.",
