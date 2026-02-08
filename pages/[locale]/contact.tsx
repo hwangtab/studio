@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
+import { getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { NextPageWithLayout } from '../../types';
@@ -351,6 +351,14 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 Contact.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
-export const getStaticProps: GetStaticProps = getCommonStaticProps;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const locale = params?.locale || 'ko';
+  return {
+    props: {
+      locale,
+    },
+    revalidate: 86400,
+  };
+};
 
 export default Contact;

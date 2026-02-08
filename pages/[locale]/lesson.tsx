@@ -10,7 +10,7 @@ import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getCommonStaticProps } from '../../lib/getStatic';
+import { getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 
@@ -46,9 +46,13 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
     </BaseCard>
 );
 
-const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
+interface LessonProps {
+    locale: Locale;
+    reviewsData: ReturnType<typeof getReviews>;
+}
+
+const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
     const { t } = useTranslation('common', { lng: locale });
-    const reviewsData = React.useMemo(() => getReviews(locale), [locale]);
 
     const lessonQuickAnswers = React.useMemo(() => ([
         {
@@ -290,9 +294,19 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
     );
 };
 
-(Lesson as NextPage<{ locale: Locale }> & { hasHero?: boolean }).hasHero = true;
+(Lesson as NextPage<LessonProps> & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
-export const getStaticProps: GetStaticProps = getCommonStaticProps;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    const locale = (params?.locale as Locale) || 'ko';
+    const reviewsData = getReviews(locale);
+    return {
+        props: {
+            locale,
+            reviewsData,
+        },
+        revalidate: 86400,
+    };
+};
 
 export default Lesson;

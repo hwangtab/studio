@@ -55,7 +55,7 @@ const SEO = ({
   isCourse = false,
 }: SEOProps) => {
   const router = useRouter();
-  const siteUrl = 'https://studionol.co.kr';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
 
   // Determine current locale and path
   const { t } = useTranslation('common');

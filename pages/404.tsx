@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
@@ -11,22 +11,18 @@ import { defaultLocale, locales, type Locale } from '../lib/i18n';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
-  const [path, setPath] = useState('');
-  const [locale, setLocale] = useState(defaultLocale);
+
+  const { locale, path } = useMemo(() => {
+    const currentPath = router.asPath;
+    const segments = currentPath.split('/');
+    const potentialLocale = segments[1];
+    const detectedLocale = locales.includes(potentialLocale as Locale)
+      ? (potentialLocale as Locale)
+      : defaultLocale;
+    return { locale: detectedLocale, path: currentPath };
+  }, [router.asPath]);
+
   const { t } = useTranslation('common', { lng: locale });
-
-  useEffect(() => {
-    if (router.isReady) {
-      setPath(router.asPath);
-
-      // Attempt to extract locale from path: /en/wrong-page -> en
-      const segments = router.asPath.split('/');
-      const potentialLocale = segments[1];
-      if (locales.includes(potentialLocale as Locale)) {
-        setLocale(potentialLocale as Locale);
-      }
-    }
-  }, [router.isReady, router.asPath]);
 
   return (
     <Section variant="default" className="min-h-[60vh] flex flex-col justify-center text-center">

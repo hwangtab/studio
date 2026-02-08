@@ -64,7 +64,7 @@ const getAllStorySlugs = (): string[] => {
       // If it has locale suffix (e.g. slug.en), remove it
       locales.forEach(locale => {
         if (name.endsWith(`.${locale}`)) {
-          name = name.replace(new RegExp(`\.${locale}$`), '');
+          name = name.replace(new RegExp(`\\.${locale}$`), '');
         }
       });
       slugs.add(name);

@@ -65,8 +65,18 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 
 const mergeClassNames = (base: string, extra?: string) => (extra ? `${base} ${extra}` : base);
 
+// Block dangerous HTML tags to prevent XSS from markdown content
+const DangerousTagBlock = () => null;
+
 // Static overrides extracted outside to prevent re-creation
 const STATIC_OVERRIDES = {
+  script: { component: DangerousTagBlock },
+  iframe: { component: DangerousTagBlock },
+  object: { component: DangerousTagBlock },
+  embed: { component: DangerousTagBlock },
+  form: { component: DangerousTagBlock },
+  input: { component: DangerousTagBlock },
+  style: { component: DangerousTagBlock },
   h1: {
     component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <h1
@@ -278,18 +288,6 @@ interface MarkdownRendererProps {
 
 const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
   const router = useRouter();
-
-  // Lazy load Prism CSS
-  React.useEffect(() => {
-    const linkId = 'prism-theme-link';
-    if (!document.getElementById(linkId)) {
-      const link = document.createElement('link');
-      link.id = linkId;
-      link.rel = 'stylesheet';
-      link.href = '/styles/prism-theme.css';
-      document.head.appendChild(link);
-    }
-  }, []);
 
   // Detect current locale from path
   const currentLocale = React.useMemo(() => {
