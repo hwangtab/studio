@@ -9,6 +9,7 @@ module.exports = {
     { href: 'https://studionol.co.kr/vi', hreflang: 'vi' },
     { href: 'https://studionol.co.kr/th', hreflang: 'th' },
     { href: 'https://studionol.co.kr/uz', hreflang: 'uz' },
+    { href: 'https://studionol.co.kr/ko', hreflang: 'x-default' },
   ],
   exclude: ['/api/*', '/404'],
 }

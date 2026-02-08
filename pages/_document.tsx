@@ -4,10 +4,13 @@ const themeInitializer = `
 (function() {
   try {
     var supportedLocales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
-    var pathLocale = window.location.pathname.split('/')[1] || 'ko';
+    var pathSegments = window.location.pathname.split('/');
+    var pathLocale = pathSegments[1];
+    
     if (supportedLocales.indexOf(pathLocale) !== -1) {
       document.documentElement.lang = pathLocale;
     } else {
+      // For root path or unknown paths, fallback to 'ko'
       document.documentElement.lang = 'ko';
     }
 
