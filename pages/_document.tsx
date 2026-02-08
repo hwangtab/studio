@@ -56,16 +56,16 @@ class MyDocument extends Document<Props> {
           <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
           <link
             rel="preload"
-            href="/fonts/GmarketSansMedium.woff2"
+            href="/fonts/GmarketSansMedium.woff"
             as="font"
-            type="font/woff2"
+            type="font/woff"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="/fonts/GmarketSansBold.woff2"
+            href="/fonts/GmarketSansBold.woff"
             as="font"
-            type="font/woff2"
+            type="font/woff"
             crossOrigin="anonymous"
           />
           <link
