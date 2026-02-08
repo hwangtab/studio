@@ -3,7 +3,7 @@ import type { NextPageWithLayout } from '../../types';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import { Music, Headphones } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -121,7 +121,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       {audioTracks.length > 0 && (
         <Section variant="default">
-          <motion.div
+          <m.div
             id="sample-tracks"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,12 +136,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} locale={locale} />
-          </motion.div>
+          </m.div>
         </Section>
       )}
 
       <Section variant="alternate">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -187,7 +187,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               ))}
             </div>
           )}
-        </motion.div>
+        </m.div>
       </Section>
 
       <AnimatePresence>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Disc } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
     return (
         <div className="flex flex-col items-center text-center">
             {/* Album Art with localized glow and rotation effect */}
-            <motion.div
+            <m.div
                 className="relative mb-8 group"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -71,7 +71,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                 <div className="absolute bottom-0 right-4 bg-black/80 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full flex items-center gap-2 shadow-lg z-10">
                     <div className="flex gap-[2px] items-end h-3">
                         {[...Array(3)].map((_, i) => (
-                            <motion.div
+                            <m.div
                                 key={i}
                                 animate={isPlaying ? { height: [4, 12, 4] } : { height: 4 }}
                                 transition={isPlaying ? {
@@ -88,22 +88,22 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                         {isPlaying ? t('audioPlayer.playing') : t('audioPlayer.paused')}
                     </span>
                 </div>
-            </motion.div>
+            </m.div>
 
             {/* Title & Artist */}
             <div className="w-full">
-                <motion.h3
+                <m.h3
                     className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight"
                     layout
                 >
                     {track.title}
-                </motion.h3>
-                <motion.p
+                </m.h3>
+                <m.p
                     className="text-lg text-primary font-medium mb-6"
                     layout
                 >
                     {track.artist}
-                </motion.p>
+                </m.p>
 
                 <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/40 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
                     <Disc size={12} aria-hidden="true" />

@@ -40,7 +40,6 @@ export interface Story {
  */
 export interface StoryDetail extends Story {
   content: string; // Raw markdown content
-  contentHtml: string; // Rendered HTML from remark
 }
 
 /**

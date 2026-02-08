@@ -1,7 +1,7 @@
 import { cn } from '../../lib/utils';
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
 
 interface BaseCardProps {
@@ -65,41 +65,41 @@ const BaseCard = React.memo(({
 
         if (isExternal) {
             return (
-                <motion.a href={href} {...animationProps} {...anchorProps}>
+                <m.a href={href} {...animationProps} {...anchorProps}>
                     {children}
-                </motion.a>
+                </m.a>
             );
         }
 
         return (
             <Link href={href} legacyBehavior passHref>
-                <motion.a {...animationProps} {...anchorProps}>
+                <m.a {...animationProps} {...anchorProps}>
                     {children}
-                </motion.a>
+                </m.a>
             </Link>
         );
     }
 
     if (onClick) {
         return (
-            <motion.button
+            <m.button
                 type="button"
                 className={cardClassName}
                 {...animationProps}
                 onClick={onClick}
             >
                 {children}
-            </motion.button>
+            </m.button>
         );
     }
 
     return (
-        <motion.div
+        <m.div
             className={cardClassName}
             {...animationProps}
         >
             {children}
-        </motion.div>
+        </m.div>
     );
 });
 

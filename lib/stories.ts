@@ -1,10 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryPath } from '../types/story';
@@ -114,9 +110,11 @@ const normalizeStoryCategoryKey = (category?: string): string => {
 };
 
 const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
-  const localized = resources?.[locale]?.common?.stories?.categories as Record<string, string> | undefined;
-  const fallback = resources?.[defaultLocale]?.common?.stories?.categories as Record<string, string> | undefined;
-  return localized?.[categoryKey] || fallback?.[categoryKey] || categoryKey;
+  const localized = (resources[locale]?.common as Record<string, unknown>)?.stories as Record<string, Record<string, string>> | undefined;
+  const fallback = (resources[defaultLocale]?.common as Record<string, unknown>)?.stories as Record<string, Record<string, string>> | undefined;
+  const localizedCategories = localized?.categories;
+  const fallbackCategories = fallback?.categories;
+  return localizedCategories?.[categoryKey] || fallbackCategories?.[categoryKey] || categoryKey;
 };
 
 const mapStoryFrontmatter = (
@@ -178,16 +176,9 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     }
   }
 
-  const processedContent = await remark()
-    .use(remarkGfm)
-    .use(remarkBreaks)
-    .use(html)
-    .process(contentToProcess);
-
   return {
     ...baseStory,
     content: contentToProcess,
-    contentHtml: processedContent.toString(),
   };
 };
 

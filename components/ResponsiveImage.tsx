@@ -22,7 +22,7 @@ interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement>
   loading?: 'lazy' | 'eager';
 }
 
-const ResponsiveImage = ({
+const ResponsiveImage = React.memo(({
   src,
   alt,
   className = '',
@@ -36,7 +36,16 @@ const ResponsiveImage = ({
   ...rest
 }: ResponsiveImageProps) => {
   const [error, setError] = React.useState(false);
-  const normalizedSrc = normalizeSrc(src);
+  const normalizedSrc = React.useMemo(() => normalizeSrc(src), [src]);
+
+  const isExternal = React.useMemo(() => normalizedSrc.startsWith('http'), [normalizedSrc]);
+  // Only use webp source for local images (jpg/png will be converted to webp)
+  const showWebpSource = React.useMemo(() => !isExternal && /\.(jpg|jpeg|png)$/i.test(normalizedSrc), [isExternal, normalizedSrc]);
+
+  const webpSrc = React.useMemo(() => {
+    if (!showWebpSource) return null;
+    return normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+  }, [normalizedSrc, showWebpSource]);
 
   if (!normalizedSrc) return null;
 
@@ -46,9 +55,6 @@ const ResponsiveImage = ({
 
   const fallbackSrc = '/logo512.png';
 
-  const isExternal = normalizedSrc.startsWith('http');
-  // Only use webp source for local images (jpg/png will be converted to webp)
-  const showWebpSource = !isExternal && /\.(jpg|jpeg|png)$/i.test(normalizedSrc);
   // If already webp/avif, use it directly without picture wrapper
   const isModernFormat = /\.(webp|avif)$/i.test(normalizedSrc);
 
@@ -69,8 +75,8 @@ const ResponsiveImage = ({
             />
           ) : (
             <picture className="block w-full h-full">
-              {showWebpSource && (
-                <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+              {webpSrc && (
+                <source srcSet={webpSrc} type="image/webp" />
               )}
               <Image
                 src={error ? fallbackSrc : normalizedSrc}
@@ -105,8 +111,8 @@ const ResponsiveImage = ({
         />
       ) : (
         <picture className="block w-full h-full">
-          {showWebpSource && (
-            <source srcSet={normalizedSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp')} type="image/webp" />
+          {webpSrc && (
+            <source srcSet={webpSrc} type="image/webp" />
           )}
           <Image
             src={error ? fallbackSrc : normalizedSrc}
@@ -123,6 +129,8 @@ const ResponsiveImage = ({
       )}
     </div>
   );
-};
+});
+
+ResponsiveImage.displayName = 'ResponsiveImage';
 
 export default ResponsiveImage;

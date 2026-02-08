@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
@@ -36,21 +36,21 @@ const NotFoundPage: NextPage = () => {
         robots="noindex, nofollow"
       />
 
-      <motion.div
+      <m.div
         className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-light"
         {...PAGE_SUBTITLE_ANIMATION}
       >
         {t('notFound.badge')}
-      </motion.div>
+      </m.div>
 
-      <motion.h1
+      <m.h1
         className="text-heading-1 font-title mb-6"
         {...PAGE_TITLE_ANIMATION}
       >
         {t('notFound.title')}
-      </motion.h1>
+      </m.h1>
 
-      <motion.p
+      <m.p
         className="typo-section-lead max-w-2xl mx-auto mb-10 text-gray-600 dark:text-gray-300"
         {...PAGE_CONTENT_ANIMATION}
       >
@@ -59,9 +59,9 @@ const NotFoundPage: NextPage = () => {
           <br className="hidden sm:block" />
           {t('notFound.messageLine2')}
         </>
-      </motion.p>
+      </m.p>
 
-      <motion.div
+      <m.div
         className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         {...PAGE_CONTENT_ANIMATION}
         transition={{ ...PAGE_CONTENT_ANIMATION.transition, delay: 0.6 }}
@@ -78,7 +78,7 @@ const NotFoundPage: NextPage = () => {
         >
           {t('notFound.contact')}
         </Link>
-      </motion.div>
+      </m.div>
     </Section>
   );
 };

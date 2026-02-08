@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { timeAgo } from '../utils/dateUtils';
 
@@ -31,7 +31,7 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
 
   return (
     <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
-      <motion.div
+      <m.div
         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
         variants={cardVariants}
         initial="hidden"
@@ -75,7 +75,7 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
             {plainSummary || t('stories.list.noContent')}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </Link>
   );
 });

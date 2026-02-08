@@ -1,6 +1,6 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
@@ -145,7 +145,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
 
       {/* 고민 섹션 */}
       <Section variant="default">
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -162,12 +162,12 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
             <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} delay={0.4} locale={locale} />
             <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} delay={0.5} locale={locale} />
           </div>
-        </motion.div>
+        </m.div>
       </Section>
 
       {/* 타겟 오디언스 섹션 */}
       <Section variant="alternate">
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -203,7 +203,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
           {/* 이미지 갤러리 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {[2, 3, 4, 5].map((i) => (
-              <motion.div
+              <m.div
                 key={i}
                 className="rounded-lg overflow-hidden shadow-md h-48"
                 whileHover={{ scale: 1.05 }}
@@ -218,14 +218,14 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   fill
                 />
-              </motion.div>
+              </m.div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
       </Section>
 
       <Section variant="default">
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
@@ -266,7 +266,7 @@ const PracticeRoom: NextPage<{ locale: Locale }> = ({ locale }) => {
               delay={0.4}
             />
           </div>
-        </motion.div>
+        </m.div>
       </Section>
 
       <FAQSection

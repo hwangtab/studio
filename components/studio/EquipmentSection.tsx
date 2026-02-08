@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import React from 'react';
 import { FADE_IN_UP, HOVER_Y } from '../../utils/animationUtils';
 
@@ -9,7 +9,7 @@ export interface EquipmentSectionProps {
 }
 
 const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => (
-    <motion.div
+    <m.div
         className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
         {...FADE_IN_UP}
         whileHover={HOVER_Y}
@@ -26,7 +26,7 @@ const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) =
                 </li>
             ))}
         </ul>
-    </motion.div>
+    </m.div>
 );
 
 export default EquipmentSection;

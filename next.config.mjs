@@ -43,7 +43,7 @@ const nextConfig = {
 
   // Experimental optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react', 'react-icons', 'react-icons/fa'],
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 
   eslint: {

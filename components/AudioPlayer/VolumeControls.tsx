@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
@@ -22,7 +22,7 @@ const VolumeControls = ({
     const { t } = useTranslation('common', { lng: locale });
     return (
         <div className="flex items-center justify-center sm:justify-start space-x-2">
-            <motion.button
+            <m.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onToggleMute}
@@ -30,7 +30,7 @@ const VolumeControls = ({
                 aria-label={isMuted ? t('audioPlayer.unmute') : t('audioPlayer.mute')}
             >
                 {isMuted ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}
-            </motion.button>
+            </m.button>
             <div className="w-20 h-2 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
                 <div
                     className="absolute top-0 left-0 h-full bg-gray-800 dark:bg-white rounded-full"

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { m, Variants } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from './ResponsiveImage';
@@ -93,7 +93,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
   };
 
   return (
-    <motion.div
+    <m.div
       className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       variants={overlayVariants}
       initial="hidden"
@@ -109,14 +109,14 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <motion.div
+      <m.div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         variants={overlayVariants}
         onClick={onClose}
         aria-hidden="true"
       />
 
-      <motion.div
+      <m.div
         className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
         variants={modalVariants}
         initial="hidden"
@@ -204,8 +204,8 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
             {t('portfolio.detail.listenNow')}
           </a>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 

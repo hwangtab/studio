@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { m, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
 import type { Locale } from '../../lib/i18n';
 
@@ -28,8 +28,9 @@ const ImageHero = ({
   className = "",
   locale = 'ko',
 }: ImageHeroProps) => {
+  const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const y = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 150]);
 
   const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
 
@@ -44,14 +45,14 @@ const ImageHero = ({
     <section
       className={`relative overflow-hidden ${minHeight} flex flex-col ${verticalAlignClass} ${className}`}
     >
-      <motion.div
-        className="absolute inset-0 z-0"
+      <m.div
+        className="absolute inset-0 z-0 will-change-transform"
         style={{ y }}
       >
-        <motion.div
-          className="w-full h-full"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
+        <m.div
+          className="w-full h-full will-change-transform"
+          initial={shouldReduceMotion ? false : { scale: 1.1 }}
+          animate={shouldReduceMotion ? false : { scale: 1 }}
           transition={{ duration: 10, ease: "easeOut" }}
         >
           <ResponsiveImage
@@ -65,15 +66,15 @@ const ImageHero = ({
             height={1080}
             sizes="100vw"
           />
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       <div
         className={`absolute inset-0 z-10 ${overlayGradient ? `bg-gradient-to-b ${overlayGradient}` : cinematicOverlay}`}
       />
 
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -99,7 +100,7 @@ const ImageHero = ({
               {ctaButtons}
             </div>
           )}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

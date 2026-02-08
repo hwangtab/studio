@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ExternalLink, Mic2, MousePointer2 } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { PortfolioItem } from '../../types/data';
@@ -33,7 +33,7 @@ const ProjectRowCard = ({
     };
 
     return (
-        <motion.button
+        <m.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
@@ -102,7 +102,7 @@ const ProjectRowCard = ({
                     </div>
                 </div>
             </div>
-        </motion.button>
+        </m.button>
     );
 };
 

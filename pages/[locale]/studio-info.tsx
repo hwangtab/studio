@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
@@ -54,13 +54,13 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
 
       {/* 스튜디오 소개 섹션 */}
       <Section variant="default">
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -75,9 +75,9 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -104,14 +104,14 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
                   {t('studioInfo.intro.paragraphs.2')}
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           </div>
-        </motion.div>
+        </m.div>
       </Section>
 
       {/* 장비 목록 섹션 */}
       <Section variant="alternate">
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -126,7 +126,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
           {/* 장비 이미지 갤러리 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {studioImages.map((image, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 className="rounded-lg overflow-hidden shadow-md h-48"
                 whileHover={{ scale: 1.05 }}
@@ -141,7 +141,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   fill
                 />
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
@@ -155,7 +155,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData }) => {
             <EquipmentSection title={categories.plugins} items={equipment.plugins} icon={Music} />
             <EquipmentSection title={t('studioInfo.equipment.interfacesConsoles')} items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
           </div>
-        </motion.div >
+        </m.div >
       </Section>
 
       <Section variant="default" className="py-16">

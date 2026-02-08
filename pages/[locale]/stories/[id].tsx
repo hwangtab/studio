@@ -2,7 +2,7 @@ import React from 'react';
 import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
@@ -144,14 +144,14 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
           </button>
         </div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
           <MarkdownRenderer content={story.content} />
-        </motion.div>
+        </m.div>
 
         <StoryCTA type={ctaType} locale={locale} />
 

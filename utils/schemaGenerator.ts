@@ -53,7 +53,7 @@ export const generateDefaultSchema = (
         knowsLanguage: ['ko', 'en'],
       },
       {
-        '@type': ['MusicRecordingStudio', 'LocalBusiness'],
+        '@type': 'LocalBusiness',
         '@id': `${siteUrl}/#studio`,
         name: translations.name,
         image: absoluteOgImage,
@@ -161,34 +161,32 @@ export const generateDefaultSchema = (
                 description: isKo ? '음반 제작 전 과정 기획 및 지원' : 'Full-cycle music production planning and support',
               },
             },
-          ],
-        },
-        offers: [
-          {
-            '@type': 'Offer',
-            name: translations.residencyTitle,
-            description: translations.residencyDesc,
-            priceCurrency: 'KRW',
-            price: 400000,
-            url: 'https://open.kakao.com/o/sAWXdN5g',
-            availability: 'https://schema.org/InStock',
-            itemOffered: {
-              '@type': 'Service',
-              name: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
-              description: isKo
-                ? '녹음실 할인, 음원 유통, 보도자료 작성, 버스킹 장비 대여, 전문가 피드백, 크라우드 펀딩 컨설팅, 예술지원사업 정보, 공구 대여'
-                : 'Recording Studio Discounts, Music Distribution, Press Release Writing, Busking Equipment Rental, Expert Feedback, Crowdfunding Consulting, Grant Information, Tool Rental',
-              provider: {
-                '@type': 'Organization',
-                '@id': `${siteUrl}/#organization`,
-              },
-              areaServed: {
-                '@type': 'AdministrativeArea',
-                name: translations.region,
+            {
+              '@type': 'Offer',
+              name: translations.residencyTitle,
+              description: translations.residencyDesc,
+              priceCurrency: 'KRW',
+              price: 400000,
+              url: 'https://open.kakao.com/o/sAWXdN5g',
+              availability: 'https://schema.org/InStock',
+              itemOffered: {
+                '@type': 'Service',
+                name: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
+                description: isKo
+                  ? '녹음실 할인, 음원 유통, 보도자료 작성, 버스킹 장비 대여, 전문가 피드백, 크라우드 펀딩 컨설팅, 예술지원사업 정보, 공구 대여'
+                  : 'Recording Studio Discounts, Music Distribution, Press Release Writing, Busking Equipment Rental, Expert Feedback, Crowdfunding Consulting, Grant Information, Tool Rental',
+                provider: {
+                  '@type': 'Organization',
+                  '@id': `${siteUrl}/#organization`,
+                },
+                areaServed: {
+                  '@type': 'AdministrativeArea',
+                  name: translations.region,
+                },
               },
             },
-          },
-        ],
+          ],
+        },
       },
     ],
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useAudioPlayer } from './useAudioPlayer';
 import TrackInfo from './TrackInfo';
 import ProgressBar from './ProgressBar';
@@ -42,7 +42,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
     // 여기서는 반응형 그리드 레이아웃을 사용.
 
     return (
-        <motion.div
+        <m.div
             className="bg-white dark:bg-[#121212] overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-white/5 relative"
             {...FADE_IN_UP}
         >
@@ -107,7 +107,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
                     />
                 </div>
             </div>
-        </motion.div>
+        </m.div>
     );
 };
 

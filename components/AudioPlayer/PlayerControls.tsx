@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
@@ -22,7 +22,7 @@ const PlayerControls = ({
     const { t } = useTranslation('common', { lng: locale });
     return (
         <div className="flex items-center justify-center gap-6">
-            <motion.button
+            <m.button
                 whileHover={{ scale: 1.1, color: '#fff' }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onPrevTrack}
@@ -30,9 +30,9 @@ const PlayerControls = ({
                 aria-label={t('audioPlayer.prevTrack')}
             >
                 <SkipBack size={24} strokeWidth={2} aria-hidden="true" />
-            </motion.button>
+            </m.button>
 
-            <motion.button
+            <m.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(var(--primary-rgb), 0.5)" }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onPlayPause}
@@ -47,9 +47,9 @@ const PlayerControls = ({
                         <Play size={28} fill="currentColor" className="ml-1" aria-hidden="true" />
                     )}
                 </div>
-            </motion.button>
+            </m.button>
 
-            <motion.button
+            <m.button
                 whileHover={{ scale: 1.1, color: '#fff' }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onNextTrack}
@@ -57,7 +57,7 @@ const PlayerControls = ({
                 aria-label={t('audioPlayer.nextTrack')}
             >
                 <SkipForward size={24} strokeWidth={2} aria-hidden="true" />
-            </motion.button>
+            </m.button>
         </div>
     );
 };

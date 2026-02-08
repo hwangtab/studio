@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Star, MessageSquare, Quote } from 'lucide-react';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
@@ -59,7 +59,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                 className="mb-16"
             />
 
-            <motion.div
+            <m.div
                 className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
                 variants={STAGGER_CONTAINER}
                 initial="initial"
@@ -67,7 +67,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                 viewport={{ once: true }}
             >
                 {reviews.map((review, index) => (
-                    <motion.div
+                    <m.div
                         key={index}
                         className="group"
                         variants={STAGGER_ITEM}
@@ -118,9 +118,9 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                 </div>
                             </div>
                         </BaseCard>
-                    </motion.div>
+                    </m.div>
                 ))}
-            </motion.div>
+            </m.div>
         </Section>
     );
 };

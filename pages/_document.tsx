@@ -53,9 +53,16 @@ class MyDocument extends Document<Props> {
           <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
           <link
             rel="preload"
-            href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff"
+            href="https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.woff2"
             as="font"
-            type="font/woff"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            href="https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.woff2"
+            as="font"
+            type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
@@ -65,9 +72,16 @@ class MyDocument extends Document<Props> {
             type="font/woff2"
             crossOrigin="anonymous"
           />
+          <link
+            rel="preload"
+            href="https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
           <script dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         </Head>
-        <body className="bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out">
+        <body className="bg-white dark:bg-gray-900">
           <Main />
           <NextScript />
         </body>

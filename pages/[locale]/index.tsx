@@ -1,7 +1,7 @@
 import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowRight, Mic2, Music, Disc, Mic, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
@@ -102,7 +102,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
           title={t('home.sections.servicesTitle')}
           className="mb-12"
         />
-        <motion.div
+        <m.div
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           {...PAGE_CONTENT_ANIMATION}
         >
@@ -118,19 +118,19 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
               cta={
                 <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
                   {t('home.sections.servicesCta')}
-                  <motion.span
+                  <m.span
                     className="ml-1"
                     initial={{ x: 0 }}
                     whileHover={{ x: 5 }}
                     transition={{ duration: 0.3 }}
                   >
                     <ArrowRight size={14} aria-hidden="true" />
-                  </motion.span>
+                  </m.span>
                 </div>
               }
             />
           ))}
-        </motion.div>
+        </m.div>
       </Section>
 
       {/* 리뷰 섹션 */}

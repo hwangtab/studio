@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { cn } from '../../lib/utils';
 import { PAGE_TITLE_ANIMATION } from '../../utils/animationUtils';
 
@@ -28,7 +28,7 @@ const SectionHeading = ({
   };
 
   return (
-    <motion.div
+    <m.div
       className={cn(
         alignmentClasses[align] ?? alignmentClasses.center,
         "mb-12",
@@ -62,7 +62,7 @@ const SectionHeading = ({
           {subtitle}
         </p>
       )}
-    </motion.div>
+    </m.div>
   );
 };
 

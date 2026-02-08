@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
@@ -42,7 +42,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
 
                 <div className="space-y-4">
                     {items.map((item, index) => (
-                        <motion.div
+                        <m.div
                             key={index}
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
 
                             <AnimatePresence initial={false}>
                                 {activeIndex === index && (
-                                    <motion.div
+                                    <m.div
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: "auto", opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
@@ -79,10 +79,10 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                         <div className="px-6 pb-6 pt-2 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
                                             {item.answer}
                                         </div>
-                                    </motion.div>
+                                    </m.div>
                                 )}
                             </AnimatePresence>
-                        </motion.div>
+                        </m.div>
                     ))}
                 </div>
             </div>

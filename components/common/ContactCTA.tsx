@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { MessageCircle, Sparkles, LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
@@ -39,7 +39,7 @@ const ContactCTA = ({
     const secondaryLabel = secondaryButtonLabel ?? t('actions.location');
 
     return (
-        <motion.div
+        <m.div
             className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -93,7 +93,7 @@ const ContactCTA = ({
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
                 </a>
             </div>
-        </motion.div>
+        </m.div>
     );
 };
 

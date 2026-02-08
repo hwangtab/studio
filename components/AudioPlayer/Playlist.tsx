@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Play } from 'lucide-react';
 import type { AudioTrack } from '../../types/data';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,7 @@ const Playlist = ({
                     const isActive = currentTrackIndex === index;
 
                     return (
-                        <motion.button
+                        <m.button
                             key={track.id}
                             initial={false}
                             animate={{
@@ -60,17 +60,17 @@ const Playlist = ({
                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                                         {isPlaying ? (
                                             <div className="flex space-x-[2px] items-end h-3">
-                                                <motion.div
+                                                <m.div
                                                     animate={{ height: [4, 12, 6, 12, 4] }}
                                                     transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
-                                                <motion.div
+                                                <m.div
                                                     animate={{ height: [8, 4, 12, 5, 8] }}
                                                     transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
-                                                <motion.div
+                                                <m.div
                                                     animate={{ height: [5, 10, 5, 10, 5] }}
                                                     transition={{ repeat: Infinity, duration: 1.0, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
@@ -100,7 +100,7 @@ const Playlist = ({
                             <div className="text-xs text-gray-400 dark:text-white/40 font-mono ml-2">
                                 {track.duration}
                             </div>
-                        </motion.button>
+                        </m.button>
                     );
                 })}
             </div>

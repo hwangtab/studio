@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { HOVER_SCALE, TAP_SCALE } from '../utils/animationUtils';
 
 interface CategoryBase {
@@ -93,7 +93,7 @@ const CategoryFilter = ({
               : {};
 
             return (
-              <motion.button
+              <m.button
                 key={category.id}
                 type="button"
                 onClick={() => setActiveCategory(category.id)}
@@ -108,7 +108,7 @@ const CategoryFilter = ({
                 whileTap={TAP_SCALE}
               >
                 {category.label}
-              </motion.button>
+              </m.button>
             );
           })}
         </div>

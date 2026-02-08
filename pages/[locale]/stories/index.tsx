@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
@@ -53,7 +53,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
       <Section variant="default">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
+        <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <div className="mb-8">
             <CategoryFilter
               activeCategory={activeCategory}
@@ -82,7 +82,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
               ))}
             </div>
           )}
-        </motion.div>
+        </m.div>
       </Section>
     </>
   );

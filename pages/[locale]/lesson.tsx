@@ -1,6 +1,6 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ContactCTA from '../../components/common/ContactCTA';
@@ -195,7 +195,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
             <Section variant="default">
                 <div className="grid lg:grid-cols-2 gap-12 items-start mb-16">
                     {/* Why Choose Us */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -231,10 +231,10 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
+                    </m.div>
 
                     {/* Pricing Card */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -259,7 +259,7 @@ const Lesson: NextPage<{ locale: Locale }> = ({ locale }) => {
                                 {t('lesson.pricing.cta')}
                             </a>
                         </div>
-                    </motion.div>
+                    </m.div>
                 </div>
             </Section>
 

@@ -1,79 +1,149 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
-import { motion } from 'framer-motion';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { m } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
-import type { Settings } from 'react-slick';
-
-
-const Slider = dynamic<Settings>(() => import('react-slick').then((mod) => mod.default), { ssr: false }) as unknown as React.ComponentType<Settings>;
 
 interface MediaImage {
-    src: string;
-    alt: string;
+  src: string;
+  alt: string;
 }
 
 interface MediaGalleryProps {
-    images: readonly MediaImage[];
-    settings?: Settings;
-    className?: string;
+  images: readonly MediaImage[];
+  className?: string;
 }
 
-const MediaGallery = ({ images, settings: customSettings, className = '' }: MediaGalleryProps) => {
-    const defaultSettings: Settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
+const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = React.useState(false);
+  const [showRightArrow, setShowRightArrow] = React.useState(true);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+
+  const checkScroll = React.useCallback(() => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 10);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+
+      // Update active dot based on scroll position
+      const index = Math.round(scrollLeft / (clientWidth * 0.85)); // 0.85 is based on w-[85%]
+      setActiveIndex(prev => (prev !== index ? index : prev));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const current = scrollRef.current;
+    let rafId: number;
+
+    const handleScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(checkScroll);
     };
 
-    const settings = { ...defaultSettings, ...customSettings };
+    if (current) {
+      current.addEventListener('scroll', handleScroll, { passive: true });
+      // Initial check
+      checkScroll();
+      window.addEventListener('resize', handleScroll);
+    }
+    return () => {
+      if (current) current.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, [checkScroll]);
 
-    return (
-        <div className={`mb-12 ${className}`}>
-            <Slider {...settings}>
-                {images.map((image, index) => (
-                    <div key={index} className="px-2">
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <ResponsiveImage
-                                src={image.src}
-                                alt={image.alt}
-                                className="w-full h-64 object-cover rounded-lg shadow-md"
-                                pictureClassName="block aspect-video"
-                                loading="lazy"
-                                width={600}
-                                height={400}
-                                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
-                            />
-                        </motion.div>
-                    </div>
-                ))}
-            </Slider>
-        </div>
-    );
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      const scrollAmount = direction === 'left' ? -clientWidth : clientWidth;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToImage = (index: number) => {
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      // Approximate scroll position based on width
+      const scrollAmount = index * clientWidth * 0.85; 
+      scrollRef.current.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className={`relative group mb-12 ${className}`}>
+      {/* Navigation Arrows */}
+      {showLeftArrow && (
+        <button
+          onClick={() => scroll('left')}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/80 dark:bg-gray-800/80 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          aria-label="Previous images"
+        >
+          <ChevronLeft className="w-6 h-6 text-primary-dark dark:text-primary-light" />
+        </button>
+      )}
+      {showRightArrow && (
+        <button
+          onClick={() => scroll('right')}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/80 dark:bg-gray-800/80 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          aria-label="Next images"
+        >
+          <ChevronRight className="w-6 h-6 text-primary-dark dark:text-primary-light" />
+        </button>
+      )}
+
+      {/* Scrollable Container */}
+      <div
+        ref={scrollRef}
+        className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-4 pb-8"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className="flex-none w-[85%] sm:w-[45%] lg:w-[31%] snap-center"
+          >
+            <m.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+            >
+              <ResponsiveImage
+                src={image.src}
+                alt={image.alt}
+                className="w-full h-64 object-cover rounded-xl shadow-md"
+                pictureClassName="block aspect-video"
+                loading="lazy"
+                width={600}
+                height={400}
+                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+              />
+            </m.div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="flex justify-center gap-2 mt-4">
+        {images.length > 1 && (
+          <div className="flex gap-2">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => scrollToImage(i)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === activeIndex 
+                    ? 'w-6 bg-primary' 
+                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                }`}
+                aria-label={`Go to image ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default MediaGallery;

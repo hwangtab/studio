@@ -1,13 +1,8 @@
-import i18n from 'i18next';
+import i18n, { Resource } from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
 
 import koCommon from '../public/locales/ko/common.json';
-import enCommon from '../public/locales/en/common.json';
-import zhCommon from '../public/locales/zh/common.json';
-import esCommon from '../public/locales/es/common.json';
-import viCommon from '../public/locales/vi/common.json';
-import thCommon from '../public/locales/th/common.json';
-import uzCommon from '../public/locales/uz/common.json';
 
 export const defaultLocale = 'ko';
 export const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
@@ -23,20 +18,18 @@ export const localeNames: Record<Locale, string> = {
   uz: "O‘zbekcha",
 };
 
-export const resources = {
+// resources will be populated dynamically in _app.tsx for other languages
+// We use Resource type to satisfy i18next init
+export const resources: Resource = {
   ko: { common: koCommon },
-  en: { common: enCommon },
-  zh: { common: zhCommon },
-  es: { common: esCommon },
-  vi: { common: viCommon },
-  th: { common: thCommon },
-  uz: { common: uzCommon },
-} as const;
+};
 
 if (!i18n.isInitialized) {
   i18n
+    .use(Backend)
     .use(initReactI18next)
     .init({
+      partialBundledLanguages: true,
       resources,
       lng: defaultLocale,
       fallbackLng: defaultLocale,
@@ -45,6 +38,9 @@ if (!i18n.isInitialized) {
       defaultNS: 'common',
       interpolation: {
         escapeValue: false,
+      },
+      backend: {
+        loadPath: '/locales/{{lng}}/{{ns}}.json',
       },
       react: {
         useSuspense: false,

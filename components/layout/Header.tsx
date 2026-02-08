@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -219,7 +219,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
 
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.nav
+          <m.nav
             initial={{ opacity: 0, scaleY: 0 }}
             animate={{ opacity: 1, scaleY: 1 }}
             exit={{ opacity: 0, scaleY: 0 }}
@@ -261,7 +261,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                   </button>
                   <AnimatePresence>
                     {expandedGroups.includes(group.id) && (
-                      <motion.div
+                      <m.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -281,13 +281,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
                             {item.label}
                           </Link>
                         ))}
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
               ))}
             </div>
-          </motion.nav>
+          </m.nav>
         )}
       </AnimatePresence>
     </header>

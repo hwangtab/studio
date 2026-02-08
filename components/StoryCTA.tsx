@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
 
@@ -141,7 +141,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
 
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -188,7 +188,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     <div className="relative aspect-square rounded-xl overflow-hidden bg-black/20 backdrop-blur-sm border border-white/10 p-6 flex flex-col justify-center items-center">
                         <div className="w-full flex justify-between items-end h-32 gap-2 mb-4">
                             {heights.map((h, i) => (
-                                <motion.div
+                                <m.div
                                     key={i}
                                     initial={{ height: '20%' }}
                                     whileInView={{ height: `${h}%` }}
@@ -206,7 +206,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </m.div>
     );
 };
 

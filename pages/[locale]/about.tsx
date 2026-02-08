@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ContactCTA from '../../components/common/ContactCTA';
@@ -169,7 +169,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
             </ul>
           </BaseCard>
 
-          <motion.div
+          <m.div
             className="grid grid-cols-2 gap-4"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -192,7 +192,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData }) => {
                 </BaseCard>
               );
             })}
-          </motion.div>
+          </m.div>
         </div>
       </Section>
 

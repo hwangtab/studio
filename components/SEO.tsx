@@ -90,15 +90,15 @@ const SEO = ({
   const seoDefaults = React.useMemo(() => getSeoDefaults(currentLocale), [currentLocale]);
   const siteConfig = React.useMemo(() => getSiteConfig(currentLocale), [currentLocale]);
 
-  const resolvedTitle = title || seoDefaults.title;
-  const resolvedDescription = description || seoDefaults.description;
-  const resolvedKeywords = keywords || seoDefaults.keywords;
-  const resolvedAuthor = author || siteConfig.name;
+  const resolvedTitle = React.useMemo(() => title || seoDefaults.title, [title, seoDefaults.title]);
+  const resolvedDescription = React.useMemo(() => description || seoDefaults.description, [description, seoDefaults.description]);
+  const resolvedKeywords = React.useMemo(() => keywords || seoDefaults.keywords, [keywords, seoDefaults.keywords]);
+  const resolvedAuthor = React.useMemo(() => author || siteConfig.name, [author, siteConfig.name]);
 
   const absoluteOgImage = React.useMemo(() => toAbsoluteUrl(ogImage), [ogImage, toAbsoluteUrl]);
 
   // Use provided canonical or generate one based on current path
-  const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
+  const derivedCanonical = React.useMemo(() => canonical || `${siteUrl}${currentPath}`, [canonical, siteUrl, currentPath]);
   const canonicalUrl = React.useMemo(() => toAbsoluteUrl(derivedCanonical), [derivedCanonical, toAbsoluteUrl]);
 
   const normalizedCanonical = React.useMemo(() =>
@@ -237,7 +237,7 @@ const SEO = ({
     };
   }, [includeSchema, schemaData, schemaItems, breadcrumbSchema, faqSchema]);
 
-  const renderSchema = (data: Record<string, unknown> | null) => {
+  const renderSchema = React.useCallback((data: Record<string, unknown> | null) => {
     if (!data) return null;
     let jsonString = '';
     try {
@@ -258,7 +258,7 @@ const SEO = ({
         dangerouslySetInnerHTML={{ __html: jsonString }}
       />
     );
-  };
+  }, []);
 
   return (
     <Head>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 interface MenuItem {
@@ -108,17 +108,17 @@ export const DropdownMenu = ({
                 onKeyDown={handleKeyDown}
             >
                 {label}
-                <motion.div
+                <m.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                 >
                     <ChevronDown size={14} />
-                </motion.div>
+                </m.div>
             </button>
 
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
@@ -149,7 +149,7 @@ export const DropdownMenu = ({
                                 );
                             })}
                         </div>
-                    </motion.div>
+                    </m.div>
                 )}
             </AnimatePresence>
         </div>
