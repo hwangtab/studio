@@ -56,28 +56,35 @@ class MyDocument extends Document<Props> {
           <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
           <link
             rel="preload"
-            href="https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansMedium.woff2"
+            href="/fonts/GmarketSansMedium.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="https://cdn.jsdelivr.net/gh/webfontworld/gmarket/GmarketSansBold.woff2"
+            href="/fonts/GmarketSansBold.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2"
+            href="/fonts/PartialSansKR-Regular.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2"
+            href="/fonts/Pretendard-Regular.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            href="/fonts/Pretendard-Bold.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
