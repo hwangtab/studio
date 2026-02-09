@@ -36,9 +36,12 @@ export const loadCommonResource = (locale: Locale): Record<string, unknown> => {
   return common;
 };
 
-export const resources: Resource = {
-  ko: { common: loadCommonResource(defaultLocale) },
-};
+// Initialize with empty resources on client, server-side props will merge actual translations.
+// This prevents empty bundles from blocking real resource injection in _app.tsx.
+export const resources: Resource =
+  typeof window === 'undefined'
+    ? { ko: { common: loadCommonResource(defaultLocale) } }
+    : {};
 
 export const getLocaleI18nResources = (locale: Locale): Resource => ({
   [locale]: {

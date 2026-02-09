@@ -27,14 +27,15 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const locale = pageProps?.locale || defaultLocale;
   const i18nResources = pageProps?.i18nResources;
 
-  // Idempotent resource injection — safe in render because hasResourceBundle guards prevent mutation on re-render
+  // Merge i18n resources from server-side props. Always merge to override empty bundles
+  // initialized on client. The overwrite flags (true, true) ensure server resources take precedence.
   useMemo(() => {
     if (!i18nResources) return;
     Object.entries(i18nResources).forEach(([lng, namespaces]) => {
       Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
-        if (!i18n.hasResourceBundle(lng, ns)) {
-          i18n.addResourceBundle(lng, ns, data, true, true);
-        }
+        if (!data) return;
+        // Always merge: empty bundle ({}) from client init is overwritten by actual server resources
+        i18n.addResourceBundle(lng, ns, data, true, true);
       });
     });
   }, [i18nResources]);
