@@ -51,10 +51,12 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                             className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
                         >
                             <button
+                                id={`faq-button-${index}`}
                                 type="button"
                                 onClick={() => toggleAccordion(index)}
                                 className="w-full text-left px-6 py-5 flex items-start justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-750 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                                 aria-expanded={activeIndex === index}
+                                aria-controls={`faq-panel-${index}`}
                             >
                                 <span className="text-lg font-title font-bold text-gray-800 dark:text-gray-200 leading-tight pr-8 min-w-0 break-words flex-1">
                                     {item.question}
@@ -71,6 +73,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                             <AnimatePresence initial={false}>
                                 {activeIndex === index && (
                                     <m.div
+                                        id={`faq-panel-${index}`}
+                                        role="region"
+                                        aria-labelledby={`faq-button-${index}`}
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: "auto", opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}

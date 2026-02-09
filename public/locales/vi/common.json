@@ -9,6 +9,7 @@
     "equipment": "Thiết bị",
     "practiceRoom": "Phòng tập",
     "lesson": "Bài học",
+    "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "Thu âm",
       "practice": "Luyện tập",
@@ -252,6 +253,7 @@
     }
   },
   "lesson": {
+    "mobileMenu": "Mobile Menu",
     "seo": {
       "title": "Masterclass sản xuất âm nhạc | Studio NOL",
       "description": "Từ tư vấn phân phối đến phản hồi mixing 1:1. Hiện thực hóa âm nhạc của bạn với kỹ thuật chuyên nghiệp.",
@@ -535,6 +537,7 @@
          "visualText": "Âm thanh chuyên nghiệp"
        },
        "lesson": {
+    "mobileMenu": "Mobile Menu",
          "title": "Bạn muốn tự làm nhạc?",
          "descriptionLine1": "Đừng lo một mình. Chúng tôi hỗ trợ với lớp học 1:1 theo nhu cầu.",
          "descriptionLine2": "Học từ nền tảng đến MIDI, mixing và sound design một cách chắc chắn.",
@@ -570,6 +573,7 @@
       "notice": "Thông báo",
       "event": "Sự kiện",
       "lesson": "Bài học",
+    "mobileMenu": "Mobile Menu",
       "interview": "Phỏng vấn",
       "equipment": "Thiết bị",
       "review": "Review",

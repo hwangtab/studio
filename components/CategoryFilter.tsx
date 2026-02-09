@@ -106,6 +106,7 @@ const CategoryFilter = ({
                 style={customStyle}
                 whileHover={HOVER_SCALE}
                 whileTap={TAP_SCALE}
+                aria-pressed={isActive}
               >
                 {category.label}
               </m.button>

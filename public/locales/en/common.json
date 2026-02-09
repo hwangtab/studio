@@ -9,6 +9,7 @@
     "equipment": "Gear",
     "practiceRoom": "Practice",
     "lesson": "Lesson",
+    "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "Recording",
       "practice": "Practice",
@@ -252,6 +253,7 @@
     }
   },
   "lesson": {
+    "mobileMenu": "Mobile Menu",
     "seo": {
       "title": "Music Production Masterclass | Studio NOL",
       "description": "From distribution consulting to 1:1 mixing feedback. Realize your music with pro engineering.",
@@ -535,6 +537,7 @@
           "visualText": "Professional Audio"
         },
         "lesson": {
+    "mobileMenu": "Mobile Menu",
           "title": "Want to create your own music?",
           "descriptionLine1": "Don't struggle alone. We help with 1:1 customized lessons.",
           "descriptionLine2": "Learn from basics to MIDI, mixing, and sound design.",
@@ -570,6 +573,7 @@
       "notice": "Notice",
       "event": "Event",
       "lesson": "Lesson",
+    "mobileMenu": "Mobile Menu",
       "interview": "Interview",
       "equipment": "Equipment",
       "review": "Review",

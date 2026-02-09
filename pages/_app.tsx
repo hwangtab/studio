@@ -10,7 +10,7 @@ import i18n, { defaultLocale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -29,7 +29,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   // Merge i18n resources from server-side props. Always merge to override empty bundles
   // initialized on client. The overwrite flags (true, true) ensure server resources take precedence.
-  useMemo(() => {
+  useEffect(() => {
     if (!i18nResources) return;
     Object.entries(i18nResources).forEach(([lng, namespaces]) => {
       Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {

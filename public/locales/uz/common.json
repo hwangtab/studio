@@ -9,6 +9,7 @@
     "equipment": "Uskunalar",
     "practiceRoom": "Mashg'ulot xonasi",
     "lesson": "Dars",
+    "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "Yozuv",
       "practice": "Mashg'ulot",
@@ -252,6 +253,7 @@
     }
   },
   "lesson": {
+    "mobileMenu": "Mobile Menu",
     "seo": {
       "title": "Musiqa prodakshn masterklass | Studio NOL",
       "description": "Tarqatish bo'yicha konsultatsiyadan 1:1 miks fikr-mulohazagacha. Musiqangizni pro muhandislik bilan ro'yobga chiqarish.",
@@ -535,6 +537,7 @@
          "visualText": "Professional audio"
        },
        "lesson": {
+    "mobileMenu": "Mobile Menu",
          "title": "Musiqani o'zingiz yaratmoqchimisiz?",
          "descriptionLine1": "Yolg'iz qiynalmang. Sizga 1:1 moslashtirilgan darslar bilan yordam beramiz.",
          "descriptionLine2": "MIDI, miks va sound dizayngacha asoslardan puxta o'rganing.",
@@ -570,6 +573,7 @@
       "notice": "E'lon",
       "event": "Tadbir",
       "lesson": "Dars",
+    "mobileMenu": "Mobile Menu",
       "interview": "Intervyu",
       "equipment": "Uskuna",
       "review": "Sharh",

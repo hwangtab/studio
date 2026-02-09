@@ -9,6 +9,7 @@
     "equipment": "设备介绍",
     "practiceRoom": "练习室",
     "lesson": "课程",
+    "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "录音/混音",
       "practice": "练习/课程",
@@ -252,6 +253,7 @@
     }
   },
   "lesson": {
+    "mobileMenu": "Mobile Menu",
     "seo": {
       "title": "音乐发行咨询 · 混音反馈与短期 MIDI 课程 | Studio NOL",
       "description": "从发行/版权注册咨询到 1:1 混音反馈，帮助你完成音乐。",
@@ -535,6 +537,7 @@
          "visualText": "专业音频"
        },
        "lesson": {
+    "mobileMenu": "Mobile Menu",
          "title": "想自己制作音乐吗？",
          "descriptionLine1": "不要独自烦恼。我们提供1:1定制课程。",
          "descriptionLine2": "从基础开始扎实学习 MIDI、混音、声音设计。",
@@ -570,6 +573,7 @@
       "notice": "公告",
       "event": "活动",
       "lesson": "课程",
+    "mobileMenu": "Mobile Menu",
       "interview": "采访",
       "equipment": "设备",
       "review": "评论",

@@ -9,6 +9,7 @@
     "equipment": "อุปกรณ์",
     "practiceRoom": "ห้องซ้อม",
     "lesson": "บทเรียน",
+    "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "บันทึกเสียง",
       "practice": "ฝึกซ้อม",
@@ -252,6 +253,7 @@
     }
   },
   "lesson": {
+    "mobileMenu": "Mobile Menu",
     "seo": {
       "title": "มาสเตอร์คลาสโปรดักชันเพลง | Studio NOL",
       "description": "ตั้งแต่คำปรึกษาการจัดจำหน่ายถึงฟีดแบ็กมิกซ์แบบ 1:1 ทำเพลงของคุณให้เป็นจริงด้วยวิศวกรรมมืออาชีพ.",
@@ -539,6 +541,7 @@
          "visualText": "เสียงระดับมืออาชีพ"
        },
        "lesson": {
+    "mobileMenu": "Mobile Menu",
          "title": "อยากทำเพลงด้วยตัวเองไหม?",
          "descriptionLine1": "ไม่ต้องกังวลคนเดียว เราช่วยด้วยบทเรียนแบบตัวต่อตัว",
          "descriptionLine2": "เรียนตั้งแต่พื้นฐานไปจนถึง MIDI มิกซ์ และซาวด์ดีไซน์",
@@ -574,6 +577,7 @@
       "notice": "ประกาศ",
       "event": "อีเวนต์",
       "lesson": "เรียน",
+    "mobileMenu": "Mobile Menu",
       "interview": "สัมภาษณ์",
       "equipment": "อุปกรณ์",
       "review": "รีวิว",
