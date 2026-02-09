@@ -55,12 +55,12 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const siteConfig = getSiteConfig(locale);
   const shouldReduceMotion = useReducedMotion();
 
-  const validateName = (value: string): string => {
-    if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin');
-    if (value.length > 100) return t('contact.form.errors.nameMax');
-    if (!/^[a-zA-Z가-힣\s]+$/.test(value)) return t('contact.form.errors.nameInvalid');
-    return '';
-  };
+   const validateName = (value: string): string => {
+     if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin');
+     if (value.length > 100) return t('contact.form.errors.nameMax');
+     if (!/^[\p{L}\p{M}\s'-]+$/u.test(value)) return t('contact.form.errors.nameInvalid');
+     return '';
+   };
 
   const validateEmail = (value: string): string => {
     if (!value) return t('contact.form.errors.emailRequired');
@@ -69,14 +69,14 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     return '';
   };
 
-  const validatePhone = (value: string): string => {
-    if (!value) return t('contact.form.errors.phoneRequired');
-    if (!/^[0-9\-\(\)\s]+$/.test(value)) return t('contact.form.errors.phoneInvalid');
-    const normalized = value.replace(/\s/g, '');
-    if (!normalized) return t('contact.form.errors.phoneRequired');
-    if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength');
-    return '';
-  };
+   const validatePhone = (value: string): string => {
+     if (!value) return t('contact.form.errors.phoneRequired');
+     if (!/^[\d\s+\-\(\)]+$/.test(value)) return t('contact.form.errors.phoneInvalid');
+     const normalized = value.replace(/\s/g, '');
+     if (!normalized) return t('contact.form.errors.phoneRequired');
+     if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength');
+     return '';
+   };
 
   const validateMessage = (value: string): string => {
     if (!value || value.trim().length < 10) return t('contact.form.errors.messageMin');

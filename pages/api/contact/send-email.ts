@@ -7,6 +7,27 @@ import { kv } from '@vercel/kv';
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
 
+// Extract client IP with proper header priority to prevent rate limit bypass
+function getClientIP(req: NextApiRequest): string {
+  // 1. x-real-ip (Vercel and most proxies use this)
+  const realIP = req.headers['x-real-ip'];
+  if (realIP && typeof realIP === 'string') {
+    return realIP.trim();
+  }
+
+  // 2. x-forwarded-for (comma-separated list, take first IP only)
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    const firstIP = typeof forwarded === 'string'
+      ? forwarded.split(',')[0].trim()
+      : forwarded[0].trim();
+    if (firstIP) return firstIP;
+  }
+
+  // 3. Direct socket connection (fallback)
+  return req.socket.remoteAddress || 'unknown';
+}
+
 // CSRF protection - allowed origins
 const ALLOWED_ORIGINS = [
     'https://studionol.co.kr',
@@ -86,8 +107,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          return res.status(403).json({ message: 'Forbidden' });
      }
 
-    // 3. Rate limiting by IP
-    const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'unknown';
+     // 3. Rate limiting by IP
+     const ip = getClientIP(req);
 
     try {
         await checkRateLimit(ip);
@@ -103,14 +124,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const normalizedName = typeof name === 'string' ? name.trim() : '';
     const normalizedMessage = typeof message === 'string' ? message.trim() : '';
 
-    // Name validation: 2-100 chars, alphanumeric + Korean + spaces only
+    // Name validation: 2-100 chars, Unicode letters + spaces + hyphens + apostrophes
     if (!name || typeof name !== 'string' || validator.isEmpty(normalizedName)) {
         return res.status(400).json({ message: 'Name is required', field: 'name' });
     }
     if (!validator.isLength(normalizedName, { min: 2, max: 100 })) {
         return res.status(400).json({ message: 'Name must be 2-100 characters', field: 'name' });
     }
-    if (!validator.matches(normalizedName, /^[a-zA-Z가-힣\s]+$/)) {
+    if (!validator.matches(normalizedName, /^[\p{L}\p{M}\s'-]+$/u)) {
         return res.status(400).json({ message: 'Name contains invalid characters', field: 'name' });
     }
 
@@ -122,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ message: 'Email must not exceed 254 characters', field: 'email' });
     }
 
-    // Phone validation (required): normalize whitespace, then validate
+    // Phone validation (required): normalize whitespace, then validate (supports international format with +)
     if (!phone || typeof phone !== 'string') {
         return res.status(400).json({ message: 'Phone is required', field: 'phone' });
     }
@@ -133,7 +154,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!validator.isLength(normalizedPhone, { min: 5, max: 50 })) {
         return res.status(400).json({ message: 'Phone must be 5-50 characters', field: 'phone' });
     }
-    if (!validator.matches(normalizedPhone, /^[\d\-\(\)]+$/)) {
+    if (!validator.matches(normalizedPhone, /^[\d\s+\-\(\)]+$/)) {
         return res.status(400).json({ message: 'Phone contains invalid characters', field: 'phone' });
     }
 
