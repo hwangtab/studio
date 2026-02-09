@@ -48,15 +48,6 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
 
-  async rewrites() {
-    return {
-      beforeFiles: [
-        { source: '/sitemap.xml', destination: '/api/sitemap.xml' },
-        { source: '/sitemap-:id.xml', destination: '/api/sitemap-:id.xml' },
-      ],
-    };
-  },
-
   async headers() {
     return [
       // Sitemap & robots.txt Content-Type 헤더
