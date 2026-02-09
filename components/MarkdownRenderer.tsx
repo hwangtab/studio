@@ -65,6 +65,43 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 
 const mergeClassNames = (base: string, extra?: string) => (extra ? `${base} ${extra}` : base);
 
+const CONTROL_AND_SPACE_CHARS = /[\u0000-\u001F\u007F\s]+/g;
+const EXPLICIT_PROTOCOL = /^([a-z][a-z0-9+.-]*):/;
+
+const isAllowedProtocol = (href: string | undefined): boolean => {
+  if (!href) {
+    return false;
+  }
+
+  const trimmed = href.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  const normalized = trimmed.toLowerCase();
+  const compact = normalized.replace(CONTROL_AND_SPACE_CHARS, '');
+
+  if (
+    compact.startsWith('/') ||
+    compact.startsWith('./') ||
+    compact.startsWith('../') ||
+    compact.startsWith('#') ||
+    compact.startsWith('?')
+  ) {
+    return !compact.startsWith('//');
+  }
+
+  if (/^(https?|mailto|tel):/.test(compact)) {
+    return true;
+  }
+
+  if (EXPLICIT_PROTOCOL.test(compact)) {
+    return false;
+  }
+
+  return true;
+};
+
 // Block dangerous HTML tags to prevent XSS from markdown content
 const DangerousTagBlock = () => null;
 
@@ -299,6 +336,10 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
     ...STATIC_OVERRIDES,
     a: {
       component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+        if (!isAllowedProtocol(href)) {
+          return <span className="text-gray-500">{children}</span>;
+        }
+
         // If it's an internal link starting with / and not already having a locale
         let finalHref = href;
         if (href?.startsWith('/') && !href.startsWith('//')) {
@@ -324,6 +365,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
       <Markdown
         options={{
           overrides,
+          disableParsingRawHTML: true,
           forceBlock: true,
           forceWrapper: true,
           wrapper: ({ children }: { children: React.ReactNode }) => (
