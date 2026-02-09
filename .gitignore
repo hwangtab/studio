@@ -15,7 +15,6 @@
 # misc
 .DS_Store
 .next-sitemap.cache
-public/sitemap*.xml
 .env
 .env.local
 .env.development.local
