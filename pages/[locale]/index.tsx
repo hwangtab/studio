@@ -160,7 +160,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
             </>
           }
           imageSrc="/images/hardware5.webp"
-          imageAlt="Studio NOL Main Room"
+          imageAlt={heroContent.ctaImageAlt}
           primaryButtonLabel={t('home.cta.inquiry')}
           secondaryButtonLabel={t('home.cta.location')}
         />

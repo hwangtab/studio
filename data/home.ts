@@ -13,11 +13,12 @@ const homeData = {
       titleSuffix: "을 불어넣는 공간",
       subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
       backgroundImage: "/images/studio2.jpg",
-      imageAlt: "스튜디오 놀 메인 스튜디오",
+      imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
         reserve: "예약하기",
         portfolio: "포트폴리오"
-      }
+      },
+      ctaImageAlt: "연신내 녹음실 스튜디오 놀 - 전문 녹음 장비와 하드웨어"
     },
     homeServices: [
       {
@@ -42,23 +43,23 @@ const homeData = {
     studioImages: [
       {
         src: `/images/studio2.jpg`,
-        alt: "모니터링 스피커와 컨트롤 데스크가 있는 레코딩 룸"
+        alt: "연신내 녹음실 스튜디오 놀 - 모니터링 스피커와 컨트롤 데스크가 있는 레코딩 룸"
       },
       {
         src: `/images/studio3.jpg`,
-        alt: "프로페셔널 마이크와 팝 필터가 설치된 보컬 녹음 부스"
+        alt: "스튜디오 놀 보컬 녹음 부스 - 프로페셔널 마이크와 팝 필터 설치"
       },
       {
         src: `/images/studio4.jpg`,
-        alt: "최신 DAW 시스템과 모니터를 갖춘 믹싱 워크스테이션"
+        alt: "연신내 녹음실 믹싱 워크스테이션 - 최신 DAW 시스템과 모니터"
       },
       {
         src: `/images/studio5.jpg`,
-        alt: "음향 처리가 완료된 프로덕션 룸 전경"
+        alt: "스튜디오 놀 프로덕션 룸 - 전문 음향 처리 완료"
       },
       {
         src: `/images/hardware8.jpg`,
-        alt: "아날로그 아웃보드 장비와 프리앰프 랙"
+        alt: "스튜디오 놀 아날로그 아웃보드 장비와 프리앰프 랙"
       }
     ]
   },
@@ -78,7 +79,8 @@ const homeData = {
       cta: {
         reserve: "Book Now",
         portfolio: "Portfolio"
-      }
+      },
+      ctaImageAlt: "Studio NOL Seoul - Professional Recording Equipment and Hardware"
     },
     homeServices: [
       {
@@ -124,7 +126,8 @@ const homeData = {
       cta: {
         reserve: "立即预订",
         portfolio: "作品集"
-      }
+      },
+      ctaImageAlt: "Studio NOL 首尔 - 专业录音设备和硬件"
     },
     homeServices: [
       {
@@ -170,7 +173,8 @@ const homeData = {
       cta: {
         reserve: "Reservar",
         portfolio: "Portafolio"
-      }
+      },
+      ctaImageAlt: "Studio NOL Seúl - Equipo de grabación profesional"
     },
     homeServices: [
       {
@@ -216,7 +220,8 @@ const homeData = {
       cta: {
         reserve: "Đặt lịch",
         portfolio: "Portfolio"
-      }
+      },
+      ctaImageAlt: "Studio NOL Seoul - Thiết bị thu âm chuyên nghiệp"
     },
     homeServices: [
       {
@@ -262,7 +267,8 @@ const homeData = {
       cta: {
         reserve: "จองคิว",
         portfolio: "ผลงาน"
-      }
+      },
+      ctaImageAlt: "Studio NOL โซล - อุปกรณ์บันทึกเสียงมืออาชีพ"
     },
     homeServices: [
       {
@@ -308,7 +314,8 @@ const homeData = {
       cta: {
         reserve: "Band qilish",
         portfolio: "Portfolio"
-      }
+      },
+      ctaImageAlt: "Studio NOL Seul - Professional yozuv uskunalari"
     },
     homeServices: [
       {

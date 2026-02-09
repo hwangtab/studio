@@ -1,15 +1,44 @@
+/** @type {import('next-sitemap').IConfig} */
+const siteUrl = process.env.SITE_URL || 'https://studionol.co.kr';
+
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://studionol.co.kr',
+  siteUrl,
   generateRobotsTxt: true,
-  alternateRefs: [
-    { href: 'https://studionol.co.kr/ko', hreflang: 'ko' },
-    { href: 'https://studionol.co.kr/en', hreflang: 'en' },
-    { href: 'https://studionol.co.kr/zh', hreflang: 'zh' },
-    { href: 'https://studionol.co.kr/es', hreflang: 'es' },
-    { href: 'https://studionol.co.kr/vi', hreflang: 'vi' },
-    { href: 'https://studionol.co.kr/th', hreflang: 'th' },
-    { href: 'https://studionol.co.kr/uz', hreflang: 'uz' },
-    { href: 'https://studionol.co.kr/ko', hreflang: 'x-default' },
-  ],
-  exclude: ['/api/*', '/404'],
+  changefreq: 'weekly',
+  priority: 0.7,
+  exclude: ['/api/*', '/404', '/500'],
+  robotsTxtOptions: {
+    policies: [
+      { userAgent: '*', allow: '/' },
+    ],
+    additionalSitemaps: [],
+  },
+  // hreflang은 SEO 컴포넌트에서 HTML head로 처리됨
+  // sitemap에서는 기본 URL만 제공
+  transform: async (config, path) => {
+    // 홈페이지 우선순위 높게
+    if (path === '/' || path.match(/^\/[a-z]{2}$/)) {
+      return {
+        loc: path,
+        changefreq: 'daily',
+        priority: 1.0,
+        lastmod: new Date().toISOString(),
+      }
+    }
+    // 스토리/포트폴리오 우선순위
+    if (path.includes('/stories/') || path.includes('/portfolio/')) {
+      return {
+        loc: path,
+        changefreq: 'weekly',
+        priority: 0.8,
+        lastmod: new Date().toISOString(),
+      }
+    }
+    return {
+      loc: path,
+      changefreq: config.changefreq,
+      priority: config.priority,
+      lastmod: new Date().toISOString(),
+    }
+  },
 }
