@@ -47,13 +47,15 @@
     "kakaoExternal": "KakaoTalk 咨询 (在新窗口中打开)",
     "skipToContent": "跳到主要内容"
   },
-  "common": {
-    "categoryFilter": {
-      "title": "类别",
-      "all": "全部"
-    },
-    "siteName": "Studio NOL"
-  },
+   "common": {
+     "categoryFilter": {
+       "title": "类别",
+       "all": "全部"
+     },
+     "siteName": "Studio NOL",
+     "languageSelector": "语言选择器",
+     "languageOptions": "语言选项"
+   },
   "theme": {
     "light": "浅色",
     "dark": "深色"
@@ -113,26 +115,27 @@
     "howToTitle": "在 Studio NOL 制作音乐的方法",
     "howToDescription": "为您介绍在专业录音室制作音乐的全过程。"
   },
-  "portfolio": {
-    "title": "作品集",
-    "subtitle": "展示 Studio NOL 完成的多样项目，点击查看详情。",
-    "sampleTracks": "示例音轨",
-    "projects": "项目",
-    "noProjects": "所选分类下暂无项目。",
-    "detail": {
-      "titleSuffix": "Studio NOL 作品集",
-      "metaDescription": "{{artist}} 的\"{{title}}\" - {{description}}。在 Studio NOL 完成的项目。",
-      "backToList": "返回作品集",
-      "artistLabel": "艺人",
-      "servicesProvided": "提供的服务",
-      "listenNow": "立即收听",
-      "share": "分享"
-    },
-    "heroAlt": "Studio NOL 作品集",
-    "seo": {
-      "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL"
-    }
-  },
+   "portfolio": {
+     "title": "作品集",
+     "subtitle": "展示 Studio NOL 完成的多样项目，点击查看详情。",
+     "sampleTracks": "示例音轨",
+     "projects": "项目",
+     "noProjects": "所选分类下暂无项目。",
+     "viewProject": "查看项目",
+     "detail": {
+       "titleSuffix": "Studio NOL 作品集",
+       "metaDescription": "{{artist}} 的\"{{title}}\" - {{description}}。在 Studio NOL 完成的项目。",
+       "backToList": "返回作品集",
+       "artistLabel": "艺人",
+       "servicesProvided": "提供的服务",
+       "listenNow": "立即收听",
+       "share": "分享"
+     },
+     "heroAlt": "Studio NOL 作品集",
+     "seo": {
+       "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL"
+     }
+   },
   "contact": {
     "title": "联系我们",
     "subtitle": "欢迎咨询项目或预约。",
@@ -170,16 +173,17 @@
       "sunLabel": "周日",
       "closed": "休息"
     },
-    "notice": {
-      "title": "咨询前须知",
-      "list": [
-        "24 小时内回复",
-        "请提供具体项目内容以便准确咨询",
-        "紧急咨询请使用 KakaoTalk"
-      ],
-      "privacyTitle": "隐私政策",
-      "privacyText": "收集的个人信息仅用于回复咨询，咨询完成后立即删除。"
-    },
+     "notice": {
+       "title": "咨询前须知",
+       "list": [
+         "24 小时内回复",
+         "请提供具体项目内容以便准确咨询",
+         "紧急咨询请使用 KakaoTalk"
+       ],
+       "privacyTitle": "隐私政策",
+       "privacyText": "收集的个人信息仅用于回复咨询，咨询完成后立即删除。"
+     },
+     "checkNotices": "查看公告",
     "seo": {
       "keywords": "Studio NOL 联系方式, 音乐制作咨询, 录音预约, 混音委托, 工作室位置, KakaoTalk 咨询, 制作报价"
     }
@@ -481,13 +485,20 @@
         "从录音、混音、母带到发行与宣传，我们将成为音乐人可靠的伙伴。"
       ]
     },
-    "equipment": {
-      "title": "设备列表",
-      "preampsEq": "前级放大器 & 均衡器",
-      "compressorsProcessors": "压缩器 & 处理器",
-      "interfacesConsoles": "接口 & 控制台"
-    }
-  },
+     "equipment": {
+       "title": "设备列表",
+       "preampsEq": "前级放大器 & 均衡器",
+       "compressorsProcessors": "压缩器 & 处理器",
+       "interfacesConsoles": "接口 & 控制台"
+     },
+      "cta": {
+        "titleLine1": "你珍贵的音乐,",
+        "titleHighlight": "用最好的声音",
+        "subtitleLine1": "Neumann · SSL · Tegeler — 世界级设备完成的声音",
+        "subtitleLine2": "现在免费上门咨询 → 工作室参观 + 定制报价",
+        "imageAlt": "Studio NOL 控制室"
+      }
+   },
   "stories": {
     "seo": {
       "title": "故事 - Studio NOL 项目记录",
@@ -514,36 +525,40 @@
       "noTitle": "无标题",
       "noContent": "无 内容"
     },
-    "cta": {
-      "recording": {
-        "title": "想要更好的声音吗？",
-        "descriptionLine1": "体验 Studio NOL 的专业录音和混音服务。",
-        "descriptionLine2": "用最好的设备和经验完成您的音乐。",
-        "primaryText": "查看价格",
-        "secondaryText": "咨询"
-      },
-      "lesson": {
-        "title": "想自己制作音乐吗？",
-        "descriptionLine1": "不要独自烦恼。我们提供1:1定制课程。",
-        "descriptionLine2": "从基础开始扎实学习 MIDI、混音、声音设计。",
-        "primaryText": "查看课程大纲",
-        "secondaryText": "申请咨询"
-      },
-      "practice": {
-        "title": "需要沉浸的专属空间吗？",
-        "descriptionLine1": "随时可以自由使用的高级练习室。",
-        "descriptionLine2": "准备了舒适的环境和完美的隔音设施。",
-        "primaryText": "查看设施",
-        "secondaryText": "预约咨询"
-      },
-      "production": {
-        "title": "想制作自己的音源吗？",
-        "descriptionLine1": "从作曲、编曲到混音、母带。",
-        "descriptionLine2": "将您的想法变成完成的音源。",
-        "primaryText": "音源制作咨询",
-        "secondaryText": "查看费用"
-      }
-    },
+     "cta": {
+       "recording": {
+         "title": "想要更好的声音吗？",
+         "descriptionLine1": "体验 Studio NOL 的专业录音和混音服务。",
+         "descriptionLine2": "用最好的设备和经验完成您的音乐。",
+         "primaryText": "查看价格",
+         "secondaryText": "咨询",
+         "visualText": "专业音频"
+       },
+       "lesson": {
+         "title": "想自己制作音乐吗？",
+         "descriptionLine1": "不要独自烦恼。我们提供1:1定制课程。",
+         "descriptionLine2": "从基础开始扎实学习 MIDI、混音、声音设计。",
+         "primaryText": "查看课程大纲",
+         "secondaryText": "申请咨询",
+         "visualText": "音乐教育"
+       },
+       "practice": {
+         "title": "需要沉浸的专属空间吗？",
+         "descriptionLine1": "随时可以自由使用的高级练习室。",
+         "descriptionLine2": "准备了舒适的环境和完美的隔音设施。",
+         "primaryText": "查看设施",
+         "secondaryText": "预约咨询",
+         "visualText": "创意空间"
+       },
+       "production": {
+         "title": "想制作自己的音源吗？",
+         "descriptionLine1": "从作曲、编曲到混音、母带。",
+         "descriptionLine2": "将您的想法变成完成的音源。",
+         "primaryText": "音源制作咨询",
+         "secondaryText": "查看费用",
+         "visualText": "音乐制作"
+       }
+     },
     "detail": {
       "backToList": "返回故事列表",
       "share": "分享",

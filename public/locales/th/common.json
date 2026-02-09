@@ -47,13 +47,15 @@
     "kakaoExternal": "สอบถามทาง KakaoTalk (เปิดในหน้าต่างใหม่)",
     "skipToContent": "ข้ามไปที่เนื้อหาหลัก"
   },
-  "common": {
-    "categoryFilter": {
-      "title": "หมวดหมู่",
-      "all": "ทั้งหมด"
-    },
-    "siteName": "Studio NOL"
-  },
+   "common": {
+     "categoryFilter": {
+       "title": "หมวดหมู่",
+       "all": "ทั้งหมด"
+     },
+     "siteName": "Studio NOL",
+     "languageSelector": "ตัวเลือกภาษา",
+     "languageOptions": "ตัวเลือกภาษา"
+   },
   "theme": {
     "light": "สว่าง",
     "dark": "มืด"
@@ -113,26 +115,27 @@
     "howToTitle": "วิธีผลิตเพลงที่ Studio NOL",
     "howToDescription": "คู่มือฉบับสมบูรณ์สำหรับการผลิตเพลงในสตูดิโอระดับมืออาชีพ"
   },
-  "portfolio": {
-    "title": "พอร์ตโฟลิโอ",
-    "subtitle": "แนะนำโปรเจกต์หลากหลายที่ทำกับ Studio NOL คลิกเพื่อดูรายละเอียด.",
-    "sampleTracks": "แทร็กตัวอย่าง",
-    "projects": "โปรเจกต์",
-    "noProjects": "ไม่พบโปรเจกต์ในหมวดที่เลือก.",
-    "detail": {
-      "titleSuffix": "พอร์ตโฟลิโอ Studio NOL",
-      "metaDescription": "\"{{title}}\" โดย {{artist}} - {{description}} โปรเจกต์ที่ทำกับ Studio NOL.",
-      "backToList": "กลับไปที่พอร์ตโฟลิโอ",
-      "artistLabel": "ศิลปิน",
-      "servicesProvided": "บริการที่ให้",
-      "listenNow": "ฟัง الآن",
-      "share": "แชร์"
-    },
-    "heroAlt": "พอร์ตโฟลิโอ Studio NOL",
-    "seo": {
-      "keywords": "ตัวอย่างงานอัด, ก่อน‑หลังการมิกซ์, ตัวอย่างมาสเตอริ่ง, พอร์ตโฟลิโอสตูดิโอ, คุณภาพการผลิตเพลง, ผลงานการอัด, Studio NOL"
-    }
-  },
+   "portfolio": {
+     "title": "พอร์ตโฟลิโอ",
+     "subtitle": "แนะนำโปรเจกต์หลากหลายที่ทำกับ Studio NOL คลิกเพื่อดูรายละเอียด.",
+     "sampleTracks": "แทร็กตัวอย่าง",
+     "projects": "โปรเจกต์",
+     "noProjects": "ไม่พบโปรเจกต์ในหมวดที่เลือก.",
+     "viewProject": "ดูโปรเจกต์",
+     "detail": {
+       "titleSuffix": "พอร์ตโฟลิโอ Studio NOL",
+       "metaDescription": "\"{{title}}\" โดย {{artist}} - {{description}} โปรเจกต์ที่ทำกับ Studio NOL.",
+       "backToList": "กลับไปที่พอร์ตโฟลิโอ",
+       "artistLabel": "ศิลปิน",
+       "servicesProvided": "บริการที่ให้",
+       "listenNow": "ฟัง الآن",
+       "share": "แชร์"
+     },
+     "heroAlt": "พอร์ตโฟลิโอ Studio NOL",
+     "seo": {
+       "keywords": "ตัวอย่างงานอัด, ก่อน‑หลังการมิกซ์, ตัวอย่างมาสเตอริ่ง, พอร์ตโฟลิโอสตูดิโอ, คุณภาพการผลิตเพลง, ผลงานการอัด, Studio NOL"
+     }
+   },
   "contact": {
     "title": "ติดต่อเรา",
     "subtitle": "ติดต่อเราได้เสมอสำหรับการสอบถามหรือการจอง.",
@@ -170,16 +173,17 @@
       "sunLabel": "อาทิตย์",
       "closed": "ปิด"
     },
-    "notice": {
-      "title": "ก่อนสอบถาม",
-      "list": [
-        "เราตอบกลับภายใน 24 ชั่วโมง",
-        "รายละเอียดโปรเจกต์ช่วยให้ให้คำปรึกษาได้แม่นยำ",
-        "กรณีเร่งด่วนใช้ KakaoTalk"
-      ],
-      "privacyTitle": "นโยบายความเป็นส่วนตัว",
-      "privacyText": "ข้อมูลส่วนบุคคลใช้เพื่อการตอบกลับเท่านั้น และจะถูกลบหลังให้คำปรึกษาเสร็จ."
-    },
+     "notice": {
+       "title": "ก่อนสอบถาม",
+       "list": [
+         "เราตอบกลับภายใน 24 ชั่วโมง",
+         "รายละเอียดโปรเจกต์ช่วยให้ให้คำปรึกษาได้แม่นยำ",
+         "กรณีเร่งด่วนใช้ KakaoTalk"
+       ],
+       "privacyTitle": "นโยบายความเป็นส่วนตัว",
+       "privacyText": "ข้อมูลส่วนบุคคลใช้เพื่อการตอบกลับเท่านั้น และจะถูกลบหลังให้คำปรึกษาเสร็จ."
+     },
+     "checkNotices": "ตรวจสอบประกาศ",
     "seo": {
       "keywords": "ติดต่อ Studio NOL, สอบถามการผลิตเพลง, จองห้องอัด, ขอ 믹싱, ที่ตั้งสตูดิโอ, ปรึกษา KakaoTalk, ใบเสนอราคา"
     }
@@ -485,13 +489,20 @@
         "ตั้งแต่การอัด มิกซ์ มาสเตอริ่ง ไปจนถึงการปล่อยและโปรโมต เราจะเป็นพาร์ทเนอร์ที่ไว้ใจได้ให้เสียงของคุณไปถึงโลก."
       ]
     },
-    "equipment": {
-      "title": "รายการอุปกรณ์",
-      "preampsEq": "Preamp & EQ",
-      "compressorsProcessors": "Compressor & Processor",
-      "interfacesConsoles": "Interface & Console"
-    }
-  },
+     "equipment": {
+       "title": "รายการอุปกรณ์",
+       "preampsEq": "Preamp & EQ",
+       "compressorsProcessors": "Compressor & Processor",
+       "interfacesConsoles": "Interface & Console"
+     },
+      "cta": {
+        "titleLine1": "เพลงที่มีค่าของคุณ,",
+        "titleHighlight": "ด้วยเสียงที่ดีที่สุด",
+        "subtitleLine1": "เราม承ญญาว่าผลลัพธ์ที่ดีที่สุดด้วยอุปกรณ์ที่ตรวจสอบและ know-how ของผู้เชี่ยวชาญ",
+        "subtitleLine2": "จองปรึกษาตอนนี้และทัวร์สตูดิโอ",
+        "imageAlt": "ห้องควบคุมหลัก Studio NOL"
+      }
+   },
   "stories": {
     "seo": {
       "title": "Stories - บันทึกโปรเจกต์ Studio NOL",
@@ -518,36 +529,40 @@
       "noTitle": "ไม่มีชื่อเรื่อง",
       "noContent": "ไม่มีเนื้อหา"
     },
-    "cta": {
-      "recording": {
-        "title": "อยากได้ซาวด์ที่ดีกว่าไหม?",
-        "descriptionLine1": "สัมผัสบริการบันทึกเสียงและมิกซ์ระดับมืออาชีพที่ Studio NOL",
-        "descriptionLine2": "เราทำเพลงของคุณให้สมบูรณ์ด้วยอุปกรณ์ชั้นยอดและความชำนาญ",
-        "primaryText": "ดูราคาบริการ",
-        "secondaryText": "สอบถาม"
-      },
-      "lesson": {
-        "title": "อยากทำเพลงด้วยตัวเองไหม?",
-        "descriptionLine1": "ไม่ต้องกังวลคนเดียว เราช่วยด้วยบทเรียนแบบตัวต่อตัว",
-        "descriptionLine2": "เรียนตั้งแต่พื้นฐานไปจนถึง MIDI มิกซ์ และซาวด์ดีไซน์",
-        "primaryText": "ดูหลักสูตร",
-        "secondaryText": "ขอคำปรึกษา"
-      },
-      "practice": {
-        "title": "ต้องการพื้นที่ส่วนตัวเพื่อโฟกัสไหม?",
-        "descriptionLine1": "ห้องซ้อมระดับพรีเมียมใช้ได้ทุกเวลา",
-        "descriptionLine2": "สภาพแวดล้อมสบายและระบบกันเสียงที่สมบูรณ์พร้อม",
-        "primaryText": "ดูสิ่งอำนวยความสะดวก",
-        "secondaryText": "สอบถามการจอง"
-      },
-      "production": {
-        "title": "อยากทำเพลงของตัวเองไหม?",
-        "descriptionLine1": "ตั้งแต่แต่งเพลง เรียบเรียง ไปจนถึงมิกซ์และมาสเตอริ่ง",
-        "descriptionLine2": "เราจะทำไอเดียของคุณให้เป็นเพลงที่เสร็จสมบูรณ์",
-        "primaryText": "ปรึกษางานผลิตเพลง",
-        "secondaryText": "ดูค่าใช้จ่าย"
-      }
-    },
+     "cta": {
+       "recording": {
+         "title": "อยากได้ซาวด์ที่ดีกว่าไหม?",
+         "descriptionLine1": "สัมผัสบริการบันทึกเสียงและมิกซ์ระดับมืออาชีพที่ Studio NOL",
+         "descriptionLine2": "เราทำเพลงของคุณให้สมบูรณ์ด้วยอุปกรณ์ชั้นยอดและความชำนาญ",
+         "primaryText": "ดูราคาบริการ",
+         "secondaryText": "สอบถาม",
+         "visualText": "เสียงระดับมืออาชีพ"
+       },
+       "lesson": {
+         "title": "อยากทำเพลงด้วยตัวเองไหม?",
+         "descriptionLine1": "ไม่ต้องกังวลคนเดียว เราช่วยด้วยบทเรียนแบบตัวต่อตัว",
+         "descriptionLine2": "เรียนตั้งแต่พื้นฐานไปจนถึง MIDI มิกซ์ และซาวด์ดีไซน์",
+         "primaryText": "ดูหลักสูตร",
+         "secondaryText": "ขอคำปรึกษา",
+         "visualText": "การศึกษาด้านดนตรี"
+       },
+       "practice": {
+         "title": "ต้องการพื้นที่ส่วนตัวเพื่อโฟกัสไหม?",
+         "descriptionLine1": "ห้องซ้อมระดับพรีเมียมใช้ได้ทุกเวลา",
+         "descriptionLine2": "สภาพแวดล้อมสบายและระบบกันเสียงที่สมบูรณ์พร้อม",
+         "primaryText": "ดูสิ่งอำนวยความสะดวก",
+         "secondaryText": "สอบถามการจอง",
+         "visualText": "พื้นที่สร้างสรรค์"
+       },
+       "production": {
+         "title": "อยากทำเพลงของตัวเองไหม?",
+         "descriptionLine1": "ตั้งแต่แต่งเพลง เรียบเรียง ไปจนถึงมิกซ์และมาสเตอริ่ง",
+         "descriptionLine2": "เราจะทำไอเดียของคุณให้เป็นเพลงที่เสร็จสมบูรณ์",
+         "primaryText": "ปรึกษางานผลิตเพลง",
+         "secondaryText": "ดูค่าใช้จ่าย",
+         "visualText": "การผลิตเพลง"
+       }
+     },
     "detail": {
       "backToList": "กลับไปที่ Stories",
       "share": "แชร์",

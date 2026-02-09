@@ -47,13 +47,15 @@
     "kakaoExternal": "KakaoTalk orqali so‘rov (yangi oynada ochiladi)",
     "skipToContent": "Asosiy mazmunga o'tish"
   },
-  "common": {
-    "categoryFilter": {
-      "title": "Kategoriya",
-      "all": "Hammasi"
-    },
-    "siteName": "Studio NOL"
-  },
+   "common": {
+     "categoryFilter": {
+       "title": "Kategoriya",
+       "all": "Hammasi"
+     },
+     "siteName": "Studio NOL",
+     "languageSelector": "Til tanlagichi",
+     "languageOptions": "Til variantlari"
+   },
   "theme": {
     "light": "Yorug‘",
     "dark": "Tungi"
@@ -113,26 +115,27 @@
     "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
     "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
   },
-  "portfolio": {
-    "title": "Portfolio",
-    "subtitle": "Studio NOLda ishlangan turli loyihalar bilan tanishing. Har bir ishni bosib, batafsil ko'ring.",
-    "sampleTracks": "Namunaviy treklar",
-    "projects": "Loyihalar",
-    "noProjects": "Tanlangan kategoriyada loyihalar topilmadi.",
-    "detail": {
-      "titleSuffix": "Studio NOL Portfolio",
-      "metaDescription": "\"{{title}}\" — {{artist}} ijrosida. {{description}}. Studio NOLda ishlangan loyiha.",
-      "backToList": "Portfolioga qaytish",
-      "artistLabel": "Artist",
-      "servicesProvided": "Ko'rsatilgan xizmatlar",
-      "listenNow": "Hozir tinglang",
-      "share": "Ulashish"
-    },
-    "heroAlt": "Studio NOL Portfolio",
-    "seo": {
-      "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL"
-    }
-  },
+   "portfolio": {
+     "title": "Portfolio",
+     "subtitle": "Studio NOLda ishlangan turli loyihalar bilan tanishing. Har bir ishni bosib, batafsil ko'ring.",
+     "sampleTracks": "Namunaviy treklar",
+     "projects": "Loyihalar",
+     "noProjects": "Tanlangan kategoriyada loyihalar topilmadi.",
+     "viewProject": "Loyihani ko'rish",
+     "detail": {
+       "titleSuffix": "Studio NOL Portfolio",
+       "metaDescription": "\"{{title}}\" — {{artist}} ijrosida. {{description}}. Studio NOLda ishlangan loyiha.",
+       "backToList": "Portfolioga qaytish",
+       "artistLabel": "Artist",
+       "servicesProvided": "Ko'rsatilgan xizmatlar",
+       "listenNow": "Hozir tinglang",
+       "share": "Ulashish"
+     },
+     "heroAlt": "Studio NOL Portfolio",
+     "seo": {
+       "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL"
+     }
+   },
   "contact": {
     "title": "Bog'laning",
     "subtitle": "Savol yoki bron qilish uchun bemalol murojaat qiling.",
@@ -170,16 +173,17 @@
       "sunLabel": "Yakshanba",
       "closed": "Yopiq"
     },
-    "notice": {
-      "title": "So'rovdan oldin",
-      "list": [
-        "24 soat ichida javob beramiz",
-        "Aniq loyiha tafsilotlari to'g'ri maslahat berishga yordam beradi",
-        "Shoshilinch so'rovlar uchun KakaoTalkdan foydalaning"
-      ],
-      "privacyTitle": "Maxfiylik siyosati",
-      "privacyText": "Yig'ilgan shaxsiy ma'lumotlar faqat javob uchun ishlatiladi va maslahatdan so'ng darhol o'chiriladi."
-    },
+     "notice": {
+       "title": "So'rovdan oldin",
+       "list": [
+         "24 soat ichida javob beramiz",
+         "Aniq loyiha tafsilotlari to'g'ri maslahat berishga yordam beradi",
+         "Shoshilinch so'rovlar uchun KakaoTalkdan foydalaning"
+       ],
+       "privacyTitle": "Maxfiylik siyosati",
+       "privacyText": "Yig'ilgan shaxsiy ma'lumotlar faqat javob uchun ishlatiladi va maslahatdan so'ng darhol o'chiriladi."
+     },
+     "checkNotices": "Elon-xabarlari tekshirish",
     "seo": {
       "keywords": "Studio NOL aloqa, musiqa prodakshn so'rovi, yozuv bron qilish, miks so'rovi, studio manzili, KakaoTalk konsultatsiya, prodakshn narxlari"
     }
@@ -481,13 +485,20 @@
         "Yozuv, miks, masteringdan albom relizi va promo'ga qadar. Musiqachilar o'z ovozini dunyoga yetkazishi uchun ishonchli hamkormiz."
       ]
     },
-    "equipment": {
-      "title": "Uskunalar ro'yxati",
-      "preampsEq": "Preamp va EQ",
-      "compressorsProcessors": "Kompressor va Protsessor",
-      "interfacesConsoles": "Interfeys va Konsol"
-    }
-  },
+     "equipment": {
+       "title": "Uskunalar ro'yxati",
+       "preampsEq": "Preamp va EQ",
+       "compressorsProcessors": "Kompressor va Protsessor",
+       "interfacesConsoles": "Interfeys va Konsol"
+     },
+     "cta": {
+       "titleLine1": "Sizning qimmatli musiqangiz,",
+       "titleHighlight": "Eng yaxshi ovoz bilan",
+       "subtitleLine1": "Tekshirilgan uskunalar va ekspert know-how bilan eng yaxshi natijalarni kafolatlayamiz.",
+       "subtitleLine2": "Hozir maslahat bron qiling va studiyo bo'ylab tur qiling.",
+       "imageAlt": "Studio NOL asosiy nazorat xonasi"
+     }
+   },
   "stories": {
     "seo": {
       "title": "Hikoyalar - Studio NOL loyiha kundaliklari",
@@ -514,37 +525,41 @@
       "noTitle": "Sarlavha yoʻq",
       "noContent": "Mazmun yoʻq"
     },
-    "cta": {
-      "recording": {
-        "title": "Yaxshiroq tovush xohlaysizmi?",
-        "descriptionLine1": "Studio NOL’da professional yozuv va miks xizmatlarini sinab ko‘ring.",
-        "descriptionLine2": "Eng yaxshi uskunalar va tajriba bilan musiqangizni yakunlaymiz.",
-        "primaryText": "Xizmat narxlarini ko‘rish",
-        "secondaryText": "So‘rov"
+     "cta": {
+       "recording": {
+         "title": "Yaxshiroq tovush xohlaysizmi?",
+         "descriptionLine1": "Studio NOL'da professional yozuv va miks xizmatlarini sinab ko'ring.",
+         "descriptionLine2": "Eng yaxshi uskunalar va tajriba bilan musiqangizni yakunlaymiz.",
+         "primaryText": "Xizmat narxlarini ko'rish",
+         "secondaryText": "So'rov",
+         "visualText": "Professional audio"
+       },
+       "lesson": {
+         "title": "Musiqani o'zingiz yaratmoqchimisiz?",
+         "descriptionLine1": "Yolg'iz qiynalmang. Sizga 1:1 moslashtirilgan darslar bilan yordam beramiz.",
+         "descriptionLine2": "MIDI, miks va sound dizayngacha asoslardan puxta o'rganing.",
+         "primaryText": "O'quv dasturini ko'rish",
+         "secondaryText": "Maslahat so'rash",
+         "visualText": "Musiqa ta'limi"
+       },
+       "practice": {
+         "title": "Diqqat jamlash uchun o'zingizga xos joy kerakmi?",
+         "descriptionLine1": "Istalgan vaqtda erkin foydalaniladigan premium mashg'ulot xonalari.",
+         "descriptionLine2": "Qulay muhit va mukammal ovoz izolyatsiyasi tayyor.",
+         "primaryText": "Jihozlarni ko'rish",
+         "secondaryText": "Bron bo'yicha so'rov",
+         "visualText": "Ijodiy fazo"
+       },
+       "production": {
+         "title": "O'zingizning treklaringizni yaratmoqchimisiz?",
+         "descriptionLine1": "Kompozitsiya va aranjimandan miks va masteringgacha.",
+         "descriptionLine2": "G'oyalaringizni yakunlangan trekka aylantiramiz.",
+         "primaryText": "Prodakshn bo'yicha so'rov",
+         "secondaryText": "Narxlarni ko'rish",
+         "visualText": "Musiqa prodakshn"
+        }
       },
-      "lesson": {
-        "title": "Musiqani o‘zingiz yaratmoqchimisiz?",
-        "descriptionLine1": "Yolg‘iz qiynalmang. Sizga 1:1 moslashtirilgan darslar bilan yordam beramiz.",
-        "descriptionLine2": "MIDI, miks va sound dizayngacha asoslardan puxta o‘rganing.",
-        "primaryText": "O‘quv dasturini ko‘rish",
-        "secondaryText": "Maslahat so‘rash"
-      },
-      "practice": {
-        "title": "Diqqat jamlash uchun o‘zingizga xos joy kerakmi?",
-        "descriptionLine1": "Istalgan vaqtda erkin foydalaniladigan premium mashg‘ulot xonalari.",
-        "descriptionLine2": "Qulay muhit va mukammal ovoz izolyatsiyasi tayyor.",
-        "primaryText": "Jihozlarni ko‘rish",
-        "secondaryText": "Bron bo‘yicha so‘rov"
-      },
-      "production": {
-        "title": "O‘zingizning treklaringizni yaratmoqchimisiz?",
-        "descriptionLine1": "Kompozitsiya va aranjimandan miks va masteringgacha.",
-        "descriptionLine2": "G‘oyalaringizni yakunlangan trekka aylantiramiz.",
-        "primaryText": "Prodakshn bo‘yicha so‘rov",
-        "secondaryText": "Narxlarni ko‘rish"
-      }
-    },
-    "detail": {
+     "detail": {
       "backToList": "Hikoyalarga qaytish",
       "share": "Ulashish",
       "moreTitle": "Yana hikoyalar",

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { locales, localeNames, type Locale } from '../lib/i18n';
 
 interface LanguageSwitcherProps {
@@ -15,6 +16,7 @@ export const LanguageSwitcher = ({
   variant = 'dropdown'
 }: LanguageSwitcherProps) => {
   const router = useRouter();
+  const { t } = useTranslation('common', { lng: currentLocale });
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -115,13 +117,13 @@ export const LanguageSwitcher = ({
 
   return (
     <div className="relative flex items-center">
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-label="Language selector"
+       <button
+         ref={buttonRef}
+         type="button"
+         onClick={() => setIsOpen((prev) => !prev)}
+         aria-haspopup="menu"
+         aria-expanded={isOpen}
+         aria-label={t('common.languageSelector')}
         className={`
           inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]
@@ -150,7 +152,7 @@ export const LanguageSwitcher = ({
             shadow-2xl py-2 z-[100]
           `}
         >
-          <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label="Language options">
+           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
             {locales.map((locale) => (
               <li key={locale}>
                 <Link

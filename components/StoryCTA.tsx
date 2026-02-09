@@ -45,7 +45,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             primaryText: t('stories.cta.recording.primaryText'),
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.recording.secondaryText'),
-            visualText: 'Professional Audio',
+            visualText: t('stories.cta.recording.visualText'),
             visualGradient: 'from-purple-500 to-indigo-400',
         },
         lesson: {
@@ -74,7 +74,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             primaryText: t('stories.cta.lesson.primaryText'),
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.lesson.secondaryText'),
-            visualText: 'Music Education',
+            visualText: t('stories.cta.lesson.visualText'),
             visualGradient: 'from-amber-500 to-orange-400',
         },
         practice: {
@@ -103,7 +103,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             primaryText: t('stories.cta.practice.primaryText'),
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.practice.secondaryText'),
-            visualText: 'Creative Space',
+            visualText: t('stories.cta.practice.visualText'),
             visualGradient: 'from-emerald-500 to-teal-400',
         },
         production: {
@@ -132,7 +132,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             primaryText: t('stories.cta.production.primaryText'),
             secondaryLink: getLink('/pricing'),
             secondaryText: t('stories.cta.production.secondaryText'),
-            visualText: 'Music Production',
+            visualText: t('stories.cta.production.visualText'),
             visualGradient: 'from-blue-500 to-indigo-400',
         }
     };

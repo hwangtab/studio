@@ -407,9 +407,9 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   {(t('contact.notice.list', { returnObjects: true }) as string[])?.map && (t('contact.notice.list', { returnObjects: true }) as string[]).map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
-                  {!(t('contact.notice.list', { returnObjects: true }) as string[])?.map && (
-                    <li>Check our notices</li>
-                  )}
+                   {!(t('contact.notice.list', { returnObjects: true }) as string[])?.map && (
+                     <li>{t('contact.checkNotices')}</li>
+                   )}
                 </ul>
               </div>
 

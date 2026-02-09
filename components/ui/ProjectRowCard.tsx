@@ -1,6 +1,7 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import { ExternalLink, Mic2, MousePointer2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import { PortfolioItem } from '../../types/data';
 
@@ -19,6 +20,7 @@ const ProjectRowCard = ({
     onClick,
     index
 }: ProjectRowCardProps) => {
+    const { t } = useTranslation('common');
     const isInteractive = Boolean(onClick);
 
     // 카테고리에 따른 뱃지 색상 (Light/Dark 대응)
@@ -97,7 +99,7 @@ const ProjectRowCard = ({
                     </p>
 
                     <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary/80 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300 flex-shrink-0">
-                        <span className="mr-2">VIEW PROJECT</span>
+                        <span className="mr-2">{t('portfolio.viewProject')}</span>
                         <ExternalLink size={14} aria-hidden="true" />
                     </div>
                 </div>
