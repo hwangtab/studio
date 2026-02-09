@@ -9,7 +9,7 @@ import ImageHero from '../../../components/common/ImageHero';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
-import { getCommonStaticPaths } from '../../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 
 interface StoriesPageProps {
@@ -99,7 +99,7 @@ export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params 
   const stories = getAllStories(locale as string);
   return {
     props: {
-      locale: locale as Locale,
+      ...getI18nStaticProps(locale),
       stories,
     },
     revalidate: 1800,

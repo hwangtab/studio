@@ -12,7 +12,7 @@ import FAQSection from '../../components/ui/FAQSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths } from '../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
@@ -309,7 +309,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const reviewsData = getReviews(locale);
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       reviewsData,
     },
     revalidate: 86400,

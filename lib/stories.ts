@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryPath } from '../types/story';
-import { locales, defaultLocale, resources, type Locale } from './i18n';
+import { locales, defaultLocale, type Locale, loadCommonResource } from './i18n';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 
@@ -110,10 +110,10 @@ const normalizeStoryCategoryKey = (category?: string): string => {
 };
 
 const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
-  const localized = (resources[locale]?.common as Record<string, unknown>)?.stories as Record<string, Record<string, string>> | undefined;
-  const fallback = (resources[defaultLocale]?.common as Record<string, unknown>)?.stories as Record<string, Record<string, string>> | undefined;
-  const localizedCategories = localized?.categories;
-  const fallbackCategories = fallback?.categories;
+  const localeCommon = loadCommonResource(locale);
+  const fallbackCommon = loadCommonResource(defaultLocale);
+  const localizedCategories = (localeCommon?.stories as Record<string, Record<string, string>> | undefined)?.categories;
+  const fallbackCategories = (fallbackCommon?.stories as Record<string, Record<string, string>> | undefined)?.categories;
   return localizedCategories?.[categoryKey] || fallbackCategories?.[categoryKey] || categoryKey;
 };
 

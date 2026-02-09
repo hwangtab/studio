@@ -18,7 +18,7 @@ import ProjectRowCard from '../../components/ui/ProjectRowCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/data';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths } from '../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
 interface PortfolioProps {
@@ -216,7 +216,7 @@ export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params })
 
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       initialPortfolioItems,
       audioTracks,
       categories,

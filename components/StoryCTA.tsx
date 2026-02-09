@@ -14,7 +14,7 @@ interface StoryCTAProps {
 }
 
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('common', { lng: locale });
 
     const getLink = (path: string) => `/${locale}${path}`;
 

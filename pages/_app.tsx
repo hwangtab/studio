@@ -6,11 +6,11 @@ import Head from 'next/head';
 import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
-import i18n, { defaultLocale, type Locale } from '../lib/i18n';
+import i18n, { defaultLocale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -24,7 +24,20 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const shouldReduceMotion = useReducedMotion();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
-  const locale = (pageProps?.locale as Locale | undefined) || defaultLocale;
+  const locale = pageProps?.locale || defaultLocale;
+  const i18nResources = pageProps?.i18nResources;
+
+  // Idempotent resource injection — safe in render because hasResourceBundle guards prevent mutation on re-render
+  useMemo(() => {
+    if (!i18nResources) return;
+    Object.entries(i18nResources).forEach(([lng, namespaces]) => {
+      Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
+        if (!i18n.hasResourceBundle(lng, ns)) {
+          i18n.addResourceBundle(lng, ns, data, true, true);
+        }
+      });
+    });
+  }, [i18nResources]);
 
   useEffect(() => {
     if (i18n.language !== locale) {
@@ -46,7 +59,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion="user">
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="popLayout" initial={!shouldReduceMotion}>
+                <AnimatePresence mode="wait" initial={!shouldReduceMotion}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     initial={shouldReduceMotion ? false : { opacity: 0 }}

@@ -22,7 +22,7 @@ const cardVariants = {
 };
 
 const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common', { lng: locale });
 
   const thumbnailUrl = story.thumbnail || extractFirstImageUrl(story.content || '');
   const plainSummary = story.summary || summarizeText(story.content, 120, { stripMarkdown: true });

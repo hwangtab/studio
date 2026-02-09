@@ -17,6 +17,7 @@ import { Section } from '../../components/ui/Section';
 import { getHomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
 import { getReviews } from '../../data/reviews'; // Added import
+import { getI18nStaticProps } from '../../lib/getStatic';
 import { locales, type Locale } from '../../lib/i18n';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -184,7 +185,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       homeData,
       faqData,
       reviewsData, // Added to props

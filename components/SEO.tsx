@@ -57,16 +57,8 @@ const SEO = ({
   const router = useRouter();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
 
-  // Determine current locale and path
-  const { t } = useTranslation('common');
-  // router.asPath includes query params, router.pathname includes placeholders
-  // We want the clean path for hreflangs.
-  // Assuming pages are at /[locale]/...
-  // We need to strip the current locale from the path to append new ones.
-
   const currentPath = router.asPath.split('?')[0];
   const segments = currentPath.split('/');
-  // segments[0] is empty, segments[1] is locale (if valid)
   let pathWithoutLocale = currentPath;
   let currentLocale: Locale = 'ko';
 
@@ -75,37 +67,38 @@ const SEO = ({
     pathWithoutLocale = '/' + segments.slice(2).join('/');
   }
 
+  const { t } = useTranslation('common', { lng: currentLocale });
+
   // Clean up double slashes if any (e.g. root path)
   if (pathWithoutLocale === '//') pathWithoutLocale = '/';
 
-  const toAbsoluteUrl = React.useCallback((value = '') => {
+  const toAbsoluteUrl = (value = '') => {
     if (!value) return '';
     if (/^https?:\/\//i.test(value)) {
       return value;
     }
     const sanitized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`;
     return `${siteUrl}${sanitized}`;
-  }, [siteUrl]);
+  };
 
-  const seoDefaults = React.useMemo(() => getSeoDefaults(currentLocale), [currentLocale]);
-  const siteConfig = React.useMemo(() => getSiteConfig(currentLocale), [currentLocale]);
+  const seoDefaults = getSeoDefaults(currentLocale);
+  const siteConfig = getSiteConfig(currentLocale);
 
-  const resolvedTitle = React.useMemo(() => title || seoDefaults.title, [title, seoDefaults.title]);
-  const resolvedDescription = React.useMemo(() => description || seoDefaults.description, [description, seoDefaults.description]);
-  const resolvedKeywords = React.useMemo(() => keywords || seoDefaults.keywords, [keywords, seoDefaults.keywords]);
-  const resolvedAuthor = React.useMemo(() => author || siteConfig.name, [author, siteConfig.name]);
+  const resolvedTitle = title || seoDefaults.title;
+  const resolvedDescription = description || seoDefaults.description;
+  const resolvedKeywords = keywords || seoDefaults.keywords;
+  const resolvedAuthor = author || siteConfig.name;
 
-  const absoluteOgImage = React.useMemo(() => toAbsoluteUrl(ogImage), [ogImage, toAbsoluteUrl]);
+  const absoluteOgImage = toAbsoluteUrl(ogImage);
 
   // Use provided canonical or generate one based on current path
-  const derivedCanonical = React.useMemo(() => canonical || `${siteUrl}${currentPath}`, [canonical, siteUrl, currentPath]);
-  const canonicalUrl = React.useMemo(() => toAbsoluteUrl(derivedCanonical), [derivedCanonical, toAbsoluteUrl]);
+  const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
+  const canonicalUrl = toAbsoluteUrl(derivedCanonical);
 
-  const normalizedCanonical = React.useMemo(() =>
+  const normalizedCanonical =
     canonicalUrl.endsWith('/') && canonicalUrl !== `${siteUrl}/`
       ? canonicalUrl.slice(0, -1)
-      : canonicalUrl,
-    [canonicalUrl, siteUrl]);
+      : canonicalUrl;
 
   const defaultSchema = React.useMemo(
     () => generateDefaultSchema(siteUrl, absoluteOgImage, resolvedDescription, reviewItems, currentLocale),

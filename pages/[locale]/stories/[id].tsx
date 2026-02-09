@@ -17,6 +17,7 @@ import { timeAgo } from '../../../utils/dateUtils';
 import { getAllStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
+import { getI18nStaticProps } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 
@@ -29,7 +30,7 @@ interface StoryDetailPageProps {
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
-  const getCTAType = (slug: string, categoryKey: string | undefined, categoryLabel: string | undefined): CTAType => {
+  const getCTAType = (slug: string, categoryKey: string | undefined): CTAType => {
     let hash = 0;
     for (let i = 0; i < slug.length; i++) {
       hash = (hash << 5) - hash + slug.charCodeAt(i);
@@ -37,14 +38,14 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
     }
     const seed = Math.abs(hash % 100) / 100;
 
-    if (categoryKey === 'lesson' || categoryLabel?.includes('강좌')) {
+    if (categoryKey === 'lesson') {
       if (seed < 0.4) return 'lesson';
       if (seed < 0.7) return 'practice';
       if (seed < 0.9) return 'recording';
       return 'production';
     }
 
-    if (categoryKey === 'equipment' || categoryKey === 'review' || categoryLabel === '장비' || categoryLabel === '리뷰') {
+    if (categoryKey === 'equipment' || categoryKey === 'review') {
       if (seed < 0.6) return 'practice';
       if (seed < 0.8) return 'recording';
       return 'lesson';
@@ -57,10 +58,10 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
   const [ctaType, setCtaType] = React.useState<CTAType>('recording');
 
   React.useEffect(() => {
-    if (story?.category) {
-      setCtaType(getCTAType(story.slug, story.categoryKey, story.category));
+    if (story?.slug) {
+      setCtaType(getCTAType(story.slug, story.categoryKey));
     }
-  }, [story?.category, story?.categoryKey, story?.slug]);
+  }, [story?.categoryKey, story?.slug]);
 
   const router = useRouter();
 
@@ -195,7 +196,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     return {
       props: {
-        locale,
+        ...getI18nStaticProps(locale),
         story,
         relatedStories,
       },

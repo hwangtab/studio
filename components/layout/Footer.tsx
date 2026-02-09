@@ -5,6 +5,8 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
 import { Phone, Mail, MapPin } from 'lucide-react';
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 interface FooterProps {
   locale: Locale;
 }
@@ -25,7 +27,7 @@ export const Footer = ({ locale }: FooterProps) => {
               {t('footer.tagline')}
             </p>
             <p className="typo-footer-meta">
-              {new Date().getFullYear()} {siteConfig.name}. {t('footer.rights')}
+              {CURRENT_YEAR} {siteConfig.name}. {t('footer.rights')}
             </p>
           </div>
 

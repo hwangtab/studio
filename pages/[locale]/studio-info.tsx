@@ -11,7 +11,7 @@ import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths } from '../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
@@ -189,7 +189,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const reviewsData = getReviews(locale as Locale);
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       equipmentData,
       reviewsData,
     },

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths } from '../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { NextPageWithLayout } from '../../types';
@@ -49,27 +49,90 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     message: '',
     company: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const siteConfig = getSiteConfig(locale);
   const shouldReduceMotion = useReducedMotion();
 
+  const validateName = (value: string): string => {
+    if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin');
+    if (value.length > 100) return t('contact.form.errors.nameMax');
+    if (!/^[a-zA-Z가-힣\s]+$/.test(value)) return t('contact.form.errors.nameInvalid');
+    return '';
+  };
+
+  const validateEmail = (value: string): string => {
+    if (!value) return t('contact.form.errors.emailRequired');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('contact.form.errors.emailInvalid');
+    if (value.length > 254) return t('contact.form.errors.emailMax');
+    return '';
+  };
+
+  const validatePhone = (value: string): string => {
+    if (!value) return t('contact.form.errors.phoneRequired');
+    if (!/^[0-9\-\(\)\s]+$/.test(value)) return t('contact.form.errors.phoneInvalid');
+    const normalized = value.replace(/\s/g, '');
+    if (!normalized) return t('contact.form.errors.phoneRequired');
+    if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength');
+    return '';
+  };
+
+  const validateMessage = (value: string): string => {
+    if (!value || value.trim().length < 10) return t('contact.form.errors.messageMin');
+    if (value.length > 5000) return t('contact.form.errors.messageMax');
+    return '';
+  };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // 실시간 검증
+    let error = '';
+    if (name === 'name') error = validateName(value);
+    else if (name === 'email') error = validateEmail(value);
+    else if (name === 'phone') error = validatePhone(value);
+    else if (name === 'message') error = validateMessage(value);
+
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    const newErrors: Record<string, string> = {
+      name: validateName(formData.name),
+      email: validateEmail(formData.email),
+      phone: validatePhone(formData.phone),
+      message: validateMessage(formData.message),
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some(err => err)) {
+      // 첫 번째 에러 필드로 포커스
+      const firstErrorField = Object.keys(newErrors).find(key => newErrors[key]);
+      document.getElementById(firstErrorField || '')?.focus();
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitMessage('');
 
     try {
+      // Normalize phone number by removing spaces before submission
+      const normalizedFormData = {
+        ...formData,
+        phone: formData.phone.replace(/\s/g, ''),
+      };
+
       const response = await fetch('/api/contact/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(normalizedFormData),
       });
 
       const result = await response.json();
@@ -210,6 +273,13 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   {submitMessage}
                 </div>
               )}
+              {Object.keys(errors).filter(key => errors[key]).length > 0 && (
+                <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
+                  <p className="text-sm font-medium text-red-800 dark:text-red-300">
+                    {t('contact.form.errorsFound', { count: Object.keys(errors).filter(key => errors[key]).length })}
+                  </p>
+                </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Honeypot field */}
                 <input
@@ -229,6 +299,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  error={errors.name}
                   placeholder={t('contact.form.namePlaceholder')}
                   required
                   autoComplete="off"
@@ -242,6 +313,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  error={errors.phone}
                   placeholder={t('contact.form.phonePlaceholder')}
                   required
                   autoComplete="off"
@@ -256,6 +328,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  error={errors.email}
                   placeholder={t('contact.form.emailPlaceholder')}
                   required
                   autoComplete="off"
@@ -273,12 +346,19 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                     placeholder={t('contact.form.messagePlaceholder')}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent"
+                    className={`w-full pl-10 pr-3 py-2 border ${errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent`}
                     rows={8}
                     required
                     autoComplete="off"
                   ></textarea>
+                  {errors.message && (
+                    <span id="message-error" role="alert" className="text-xs text-red-500 mt-1 pl-10 block">
+                      {errors.message}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-3">
@@ -354,7 +434,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = params?.locale || 'ko';
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
     },
     revalidate: 86400,
   };

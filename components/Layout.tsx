@@ -35,11 +35,11 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // 1. Initial Load
+    // 1. Initial Load - localStorage만 사용
     try {
       const savedTheme = localStorage.getItem('darkMode');
-      const sessionTheme = sessionStorage.getItem('initialDarkMode');
-      const isDark = savedTheme === 'true' || sessionTheme === 'true';
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = savedTheme === 'true' || (savedTheme === null && prefersDark);
       setIsDarkMode(isDark);
     } catch (error) {
       console.warn('Failed to read dark mode preference', error);
@@ -48,6 +48,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     }
   }, []);
 
+  // Theme 적용 및 theme-color 동적 갱신
   useEffect(() => {
     if (!hasThemeLoaded || typeof document === 'undefined') return;
 
@@ -59,8 +60,15 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('darkMode', 'false');
     }
+    
+    // 3. Update theme-color meta tag
+    const themeColor = isDarkMode ? '#1e3a8a' : '#1a56db';
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', themeColor);
+    }
 
-    // 3. Sync Lang
+    // 4. Sync Lang
     document.documentElement.lang = locale;
   }, [isDarkMode, hasThemeLoaded, locale]);
 

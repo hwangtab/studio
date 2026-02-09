@@ -7,6 +7,13 @@ import { kv } from '@vercel/kv';
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
 
+// CSRF protection - allowed origins
+const ALLOWED_ORIGINS = [
+    'https://studionol.co.kr',
+    'http://localhost:3000',
+    'http://localhost:3001',
+];
+
 async function checkRateLimit(ip: string): Promise<void> {
     // Vercel KV is required for production rate limiting
     if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
@@ -67,7 +74,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ success: true, message: 'Message sent successfully' });
     }
 
-    // 2. Rate limiting by IP
+     // 2. CSRF protection - validate origin/referer
+     const origin = req.headers.origin || req.headers.referer;
+     if (!origin || !ALLOWED_ORIGINS.some(allowed => {
+         try {
+             return new URL(origin).origin === allowed;
+         } catch {
+             return false;
+         }
+     })) {
+         return res.status(403).json({ message: 'Forbidden' });
+     }
+
+    // 3. Rate limiting by IP
     const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || 'unknown';
 
     try {
@@ -80,29 +99,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ message: 'Internal server error' });
     }
 
-    // 3. Validation & Sanitization
-    if (!name || typeof name !== 'string' || validator.isEmpty(name)) {
-        return res.status(400).json({ message: 'Name is required' });
+    // 4. Enhanced validation & sanitization
+    const normalizedName = typeof name === 'string' ? name.trim() : '';
+    const normalizedMessage = typeof message === 'string' ? message.trim() : '';
+
+    // Name validation: 2-100 chars, alphanumeric + Korean + spaces only
+    if (!name || typeof name !== 'string' || validator.isEmpty(normalizedName)) {
+        return res.status(400).json({ message: 'Name is required', field: 'name' });
     }
-    if (!email || typeof email !== 'string' || !validator.isEmail(email)) {
-        return res.status(400).json({ message: 'Valid email is required' });
+    if (!validator.isLength(normalizedName, { min: 2, max: 100 })) {
+        return res.status(400).json({ message: 'Name must be 2-100 characters', field: 'name' });
     }
-    if (!message || typeof message !== 'string' || validator.isEmpty(message)) {
-        return res.status(400).json({ message: 'Message is required' });
+    if (!validator.matches(normalizedName, /^[a-zA-Z가-힣\s]+$/)) {
+        return res.status(400).json({ message: 'Name contains invalid characters', field: 'name' });
     }
 
-    // Length limits
-    if (name.length > 100 || (phone && phone.length > 50) || message.length > 5000) {
-        return res.status(400).json({ message: 'Input too long' });
+    // Email validation: standard email + max 254 chars
+    if (!email || typeof email !== 'string' || !validator.isEmail(email)) {
+        return res.status(400).json({ message: 'Valid email is required', field: 'email' });
+    }
+    if (!validator.isLength(email, { min: 1, max: 254 })) {
+        return res.status(400).json({ message: 'Email must not exceed 254 characters', field: 'email' });
+    }
+
+    // Phone validation (required): normalize whitespace, then validate
+    if (!phone || typeof phone !== 'string') {
+        return res.status(400).json({ message: 'Phone is required', field: 'phone' });
+    }
+    const normalizedPhone = phone.replace(/\s/g, '');
+    if (!normalizedPhone) {
+        return res.status(400).json({ message: 'Phone contains only whitespace', field: 'phone' });
+    }
+    if (!validator.isLength(normalizedPhone, { min: 5, max: 50 })) {
+        return res.status(400).json({ message: 'Phone must be 5-50 characters', field: 'phone' });
+    }
+    if (!validator.matches(normalizedPhone, /^[\d\-\(\)]+$/)) {
+        return res.status(400).json({ message: 'Phone contains invalid characters', field: 'phone' });
+    }
+
+    // Message validation: 10-5000 chars
+    if (!message || typeof message !== 'string' || validator.isEmpty(normalizedMessage)) {
+        return res.status(400).json({ message: 'Message is required', field: 'message' });
+    }
+    if (!validator.isLength(normalizedMessage, { min: 10, max: 5000 })) {
+        return res.status(400).json({ message: 'Message must be 10-5000 characters', field: 'message' });
     }
 
     // Sanitization
-    const sanitizedName = validator.escape(name.trim());
+    const sanitizedName = validator.escape(normalizedName);
     const sanitizedEmail = validator.normalizeEmail(email.trim()) || email.trim();
-    const sanitizedMessage = validator.escape(message.trim());
-    const sanitizedPhone = phone ? validator.escape(String(phone).trim()) : undefined;
+    const sanitizedMessage = validator.escape(normalizedMessage);
+    const sanitizedPhone = normalizedPhone ? validator.escape(String(normalizedPhone).trim()) : undefined;
 
-    // 4. Send email via EmailJS REST API
+    // 5. Send email via EmailJS REST API
     try {
         const serviceId = process.env.EMAILJS_SERVICE_ID;
         const templateId = process.env.EMAILJS_TEMPLATE_ID;

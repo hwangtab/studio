@@ -11,7 +11,7 @@ import ImageHero from '../../components/common/ImageHero';
 import { getServicesData } from '../../data/services';
 import { Section } from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
-import { getCommonStaticPaths } from '../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
@@ -297,7 +297,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const reviewsData = getReviews(locale);
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       servicesData,
       reviewsData,
     },

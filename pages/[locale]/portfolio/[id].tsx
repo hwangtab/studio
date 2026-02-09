@@ -13,6 +13,7 @@ import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
+import { getI18nStaticProps } from '../../../lib/getStatic';
 import { locales, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 
@@ -175,7 +176,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       item,
       categories
     },

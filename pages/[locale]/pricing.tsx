@@ -12,7 +12,7 @@ import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
 import ContactCTA from '../../components/common/ContactCTA';
 import QuickAnswers from '../../components/ui/QuickAnswers';
-import { getCommonStaticPaths } from '../../lib/getStatic';
+import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
 interface PricingProps {
@@ -358,7 +358,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const reviewsData = getReviews(locale);
   return {
     props: {
-      locale,
+      ...getI18nStaticProps(locale),
       pricingData,
       reviewsData,
     },
@@ -367,4 +367,3 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export default Pricing;
-

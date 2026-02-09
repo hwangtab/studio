@@ -41,11 +41,14 @@ export function middleware(request: NextRequest) {
     const newUrl = request.nextUrl.clone();
     newUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
 
-    return NextResponse.redirect(newUrl, 307);
+    // SEO: Permanent redirect for locale normalization
+    const response = NextResponse.redirect(newUrl, 308);
+    response.headers.set('Vary', 'Accept-Language');
+    return response;
 }
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|favicon\\.ico|robots\\.txt|sitemap.*\\.xml|locales|images|logo.*|audio|styles|fonts).*)',
+        '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|robots\\.txt|sitemap.*\\.xml|locales|images|logo.*|audio|styles|fonts).*)',
     ],
 };

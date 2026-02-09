@@ -1,5 +1,5 @@
 import type { GetStaticProps } from 'next';
-import { locales } from './i18n';
+import { defaultLocale, getLocaleI18nResources, locales, type Locale } from './i18n';
 
 export const getCommonStaticPaths = async () => {
   return {
@@ -9,10 +9,20 @@ export const getCommonStaticPaths = async () => {
 };
 
 export const getCommonStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = params?.locale || 'ko';
+  const locale = (params?.locale as Locale) || defaultLocale;
   return {
     props: {
       locale,
+      i18nResources: getLocaleI18nResources(locale),
     },
+  };
+};
+
+export const getI18nStaticProps = (localeParam: unknown) => {
+  const locale = (localeParam as Locale) || defaultLocale;
+
+  return {
+    locale,
+    i18nResources: getLocaleI18nResources(locale),
   };
 };

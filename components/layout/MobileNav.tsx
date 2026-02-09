@@ -1,0 +1,183 @@
+import React, { useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { m, AnimatePresence } from 'framer-motion';
+import { Sun, Moon, ChevronDown } from 'lucide-react';
+import { type TFunction } from 'i18next';
+import { LanguageSwitcher } from '../LanguageSwitcher';
+import { type Locale } from '../../lib/i18n';
+
+interface NavGroup {
+  id: string;
+  label: string;
+  items: { label: string; href: string; }[];
+}
+
+interface MobileNavProps {
+  isOpen: boolean;
+  onClose: () => void;
+  navGroups: NavGroup[];
+  currentPath: string;
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
+  locale: Locale;
+  isTransparent: boolean;
+  expandedGroups: string[];
+  toggleGroup: (group: string) => void;
+  t: TFunction;
+}
+
+export const MobileNav = ({
+  isOpen,
+  onClose,
+  navGroups,
+  currentPath,
+  isDarkMode,
+  toggleDarkMode,
+  locale,
+  expandedGroups,
+  toggleGroup,
+  t
+}: MobileNavProps) => {
+  const navRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Capture the trigger element (previously focused element) when nav opens
+    triggerRef.current = document.activeElement as HTMLElement;
+
+    const handleScroll = () => onClose();
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    const handleFocusTrap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
+        'button, a[href], input, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('keydown', handleEsc);
+    window.addEventListener('keydown', handleFocusTrap);
+
+    document.body.style.overflow = 'hidden';
+
+    // Set initial focus to first focusable element in nav
+    const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
+      'button, a[href], input, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableElements && focusableElements.length > 0) {
+      focusableElements[0].focus();
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleEsc);
+      window.removeEventListener('keydown', handleFocusTrap);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
+  const handleExitComplete = () => {
+    if (triggerRef.current && triggerRef.current.focus) {
+      triggerRef.current.focus();
+    }
+  };
+
+  return (
+    <AnimatePresence onExitComplete={handleExitComplete}>
+       {isOpen && (
+         <m.nav
+           ref={navRef}
+           initial={{ opacity: 0, scaleY: 0 }}
+           animate={{ opacity: 1, scaleY: 1 }}
+           exit={{ opacity: 0, scaleY: 0 }}
+           transition={{ duration: 0.2, ease: "easeOut" }}
+           className="xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
+         >
+          <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            {/* Mobile Theme/Language Switcher */}
+            <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
+              <button
+                className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+                onClick={toggleDarkMode}
+                aria-label={isDarkMode ? t('actions.toggleThemeLight') : t('actions.toggleThemeDark')}
+              >
+                <div className="flex items-center gap-2">
+                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                  <span>{isDarkMode ? t('theme.light') : t('theme.dark')}</span>
+                </div>
+              </button>
+              <LanguageSwitcher
+                currentLocale={locale}
+                isFloating={false}
+                variant="inline"
+              />
+            </div>
+
+            {navGroups.map((group) => (
+              <div key={group.id} className="space-y-2">
+                <button
+                  onClick={() => toggleGroup(group.id)}
+                  aria-expanded={expandedGroups.includes(group.id)}
+                  className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+                >
+                  {group.label}
+                  <ChevronDown
+                    size={18}
+                    className={`transition-transform duration-200 ${expandedGroups.includes(group.id) ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                <AnimatePresence>
+                  {expandedGroups.includes(group.id) && (
+                    <m.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeInOut' }}
+                      className="pl-4 space-y-1 overflow-hidden"
+                    >
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={onClose}
+                          className={`block px-3 py-2 text-sm rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary ${currentPath === item.href
+                            ? 'bg-primary/10 text-primary dark:text-accent font-medium'
+                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                            }`}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </m.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </m.nav>
+      )}
+    </AnimatePresence>
+  );
+};
