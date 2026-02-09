@@ -50,6 +50,20 @@ const nextConfig = {
 
   async headers() {
     return [
+      // Sitemap & robots.txt Content-Type 헤더
+      {
+        source: '/sitemap(-[0-9]+)?.xml',
+        headers: [
+          { key: 'Content-Type', value: 'application/xml' },
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=43200' },
+        ],
+      },
+      {
+        source: '/robots.txt',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain' },
+        ],
+      },
       {
         source: '/images/:path*',
         headers: [
