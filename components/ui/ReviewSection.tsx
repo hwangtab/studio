@@ -1,5 +1,5 @@
 import React from 'react';
-import { m } from 'framer-motion';
+import { m, useScroll, useTransform } from 'framer-motion';
 import { Star, MessageSquare, Quote } from 'lucide-react';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
@@ -19,7 +19,15 @@ interface ReviewSectionProps {
 
 const ReviewSection = ({ className, variant = "default", locale = 'ko' }: ReviewSectionProps) => {
     const reviews = getReviews(locale);
-    
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    });
+
+    const yLeft = useTransform(scrollYProgress, [0, 1], [0, -50]);
+    const yRight = useTransform(scrollYProgress, [0, 1], [0, 50]);
+
     // Simple translation for title/subtitle
     const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
         if (locale === 'ko') return ko;
@@ -60,6 +68,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
             />
 
             <m.div
+                ref={containerRef}
                 className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
                 variants={STAGGER_CONTAINER}
                 initial="initial"
@@ -71,6 +80,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                         key={index}
                         className="group"
                         variants={STAGGER_ITEM}
+                        style={{ y: index % 2 === 0 ? yLeft : yRight }}
                     >
                         <BaseCard
                             variant="default"

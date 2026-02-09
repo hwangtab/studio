@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
+import { ScrollProgress } from './common/ScrollProgress';
 import { type Locale, defaultLocale } from '../lib/i18n';
 
 interface LayoutProps {
@@ -110,6 +111,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
       suppressHydrationWarning
     >
+      <ScrollProgress />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white focus:text-gray-900 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"

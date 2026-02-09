@@ -49,3 +49,16 @@ export const STAGGER_ITEM = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 }
 };
+export const TEXT_REVEAL = {
+  initial: { y: "100%", opacity: 0 },
+  whileInView: { y: 0, opacity: 1 },
+  viewport: { once: true },
+  transition: { duration: 0.8, ease: [0.33, 1, 0.68, 1] }
+};
+
+export const SCROLL_REVEAL = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-10% 0px -10% 0px" },
+  transition: { duration: 0.8, ease: "easeOut" }
+};

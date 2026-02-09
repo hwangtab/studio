@@ -1,7 +1,7 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import { cn } from '../../lib/utils';
-import { PAGE_TITLE_ANIMATION } from '../../utils/animationUtils';
+import { SCROLL_REVEAL } from '../../utils/animationUtils';
 
 interface SectionHeadingProps {
   icon?: React.ElementType<{ className?: string }>;
@@ -35,9 +35,9 @@ const SectionHeading = ({
         className
       )}
       initial="initial"
-      whileInView="animate"
-      viewport={{ once: true }}
-      variants={PAGE_TITLE_ANIMATION}
+      whileInView="whileInView"
+      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+      variants={SCROLL_REVEAL}
     >
       {Icon && (
         <div className={cn(
