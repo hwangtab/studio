@@ -20,13 +20,25 @@ interface ReviewSectionProps {
 const ReviewSection = ({ className, variant = "default", locale = 'ko' }: ReviewSectionProps) => {
     const reviews = getReviews(locale);
     const containerRef = React.useRef<HTMLDivElement>(null);
+
+    // 모바일에서는 패럴랙스를 끄기 위해 상태 관리
+    const [isDesktop, setIsDesktop] = React.useState(false);
+
+    React.useEffect(() => {
+        const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+        checkDesktop();
+        window.addEventListener('resize', checkDesktop);
+        return () => window.removeEventListener('resize', checkDesktop);
+    }, []);
+
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
     });
 
-    const yLeft = useTransform(scrollYProgress, [0, 1], [0, -50]);
-    const yRight = useTransform(scrollYProgress, [0, 1], [0, 50]);
+    // 강도를 50에서 20으로 줄임
+    const yLeft = useTransform(scrollYProgress, [0, 1], [0, -20]);
+    const yRight = useTransform(scrollYProgress, [0, 1], [0, 20]);
 
     // Simple translation for title/subtitle
     const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
@@ -80,7 +92,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                         key={index}
                         className="group"
                         variants={STAGGER_ITEM}
-                        style={{ y: index % 2 === 0 ? yLeft : yRight }}
+                        style={{ y: isDesktop ? (index % 2 === 0 ? yLeft : yRight) : 0 }}
                     >
                         <BaseCard
                             variant="default"
@@ -131,7 +143,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                     </m.div>
                 ))}
             </m.div>
-        </Section>
+        </Section >
     );
 };
 
