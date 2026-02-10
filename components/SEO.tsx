@@ -278,7 +278,7 @@ const SEO = ({
       {/* Hreflang tags for SEO */}
       {locales.map((locale) => (
         <link
-          key={locale}
+          key={`hreflang-${locale}`}
           rel="alternate"
           hrefLang={locale}
           href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
@@ -305,7 +305,7 @@ const SEO = ({
 
       {/* Alternate locales in OG */}
       {locales.filter(l => l !== currentLocale).map(locale => (
-        <meta key={locale} property="og:locale:alternate" content={ogLocaleMap[locale]} />
+        <meta key={`og-locale-alt-${locale}`} property="og:locale:alternate" content={ogLocaleMap[locale]} />
       ))}
 
       {ogType === 'article' && articlePublishedTime && (
