@@ -79,20 +79,21 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
     availability: 'https://schema.org/InStock',
     url: `${pricingUrl}#${offer.id}`,
     seller: {
-      '@type': 'LocalBusiness',
+      '@type': 'Organization',
       name: t('common.siteName'),
-      '@id': 'https://studionol.co.kr/#organization',
+      '@id': `${siteUrl}/#organization`,
     },
     itemOffered: {
       '@type': 'Service',
       name: offer.title,
       inLanguage: schemaLanguage,
       provider: {
-        '@type': 'LocalBusiness',
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
         name: t('common.siteName'),
       },
     },
-  }), [pricingUrl, priceValidUntil, schemaLanguage, t]);
+  }), [pricingUrl, priceValidUntil, schemaLanguage, siteUrl, t]);
 
   const catalogToSchema = React.useCallback((name: string, offers: Offer[]) => ({
     '@type': 'OfferCatalog',

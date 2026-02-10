@@ -11,6 +11,7 @@ import { getPortfolioItems, getCategories } from '../../../data/portfolio';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
 import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
+import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { getI18nStaticProps } from '../../../lib/getStatic';
@@ -28,10 +29,6 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
 
-  if (router.isFallback) {
-    return <LoadingSpinner locale={locale} />;
-  }
-
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = t('portfolio.detail.metaDescription', {
     artist: item.artist,
@@ -40,6 +37,22 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   });
 
   const categoryInfo = getCategoryInfo(item.category, categories);
+  const schemaImage = item.image.startsWith('http') ? item.image : `${siteConfig.url}${item.image}`;
+  const portfolioSchema = generateMusicRecordingSchema(
+    {
+      title: item.title,
+      artist: item.artist,
+      image: schemaImage,
+      url: `${siteConfig.url}/${locale}/portfolio/${item.id}`,
+      genre: categoryInfo.name,
+    },
+    siteConfig.url,
+    locale
+  );
+
+  if (router.isFallback) {
+    return <LoadingSpinner locale={locale} />;
+  }
 
   const sharePortfolio = async () => {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
@@ -63,6 +76,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         ogImage={item.image}
         ogType="music.album"
         includeSchema
+        schema={portfolioSchema}
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}
       />
       <Section variant="default" className="pt-8 pb-12">

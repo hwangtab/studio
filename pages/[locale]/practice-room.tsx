@@ -102,6 +102,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
     areaServed: siteConfig.contact.address,
     provider: {
       '@type': 'Organization',
+      '@id': `${siteConfig.url}/#organization`,
       name: siteConfig.name,
       url: siteConfig.url,
     },

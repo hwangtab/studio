@@ -8,6 +8,7 @@ import { PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import FAQSection from '../../components/ui/FAQSection';
+import QuickAnswers from '../../components/ui/QuickAnswers';
 import SectionHeading from '../../components/ui/SectionHeading';
 import ImageHero from '../../components/common/ImageHero';
 import MediaGallery from '../../components/ui/MediaGallery';
@@ -39,6 +40,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
 
   // Helper to generate locale-aware links
   const getLink = (path: string) => `/${locale}${path}`;
+  const homeQuickAnswers = React.useMemo(() => faqData.slice(0, 3), [faqData]);
 
   return (
     <div className="overflow-visible">
@@ -137,6 +139,13 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
       <ReviewSection variant="default" locale={locale} />
 
       {/* FAQ 섹션 */}
+      <QuickAnswers
+        items={homeQuickAnswers}
+        title={t('home.faq.title')}
+        subtitle={t('home.faq.subtitle')}
+        variant="default"
+      />
+
       <FAQSection
         items={faqData}
         title={t('home.faq.title')}
