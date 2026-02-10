@@ -131,13 +131,13 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion="user">
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="wait" initial={!shouldReduceMotion}>
+                <AnimatePresence mode="sync" initial={false}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     initial={shouldReduceMotion ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                    transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.1, ease: 'easeInOut' }}
+                    transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.06, ease: 'linear' }}
                   >
                     <Component {...pageProps} />
                   </m.div>

@@ -14,6 +14,7 @@ interface ImageHeroProps {
   textAlign?: 'center' | 'left';
   className?: string;
   locale?: Locale;
+  priority?: boolean;
 }
 
 const ImageHero = ({
@@ -27,6 +28,7 @@ const ImageHero = ({
   textAlign = "center",
   className = "",
   locale = 'ko',
+  priority = false,
 }: ImageHeroProps) => {
   const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
@@ -58,11 +60,11 @@ const ImageHero = ({
           animate={shouldReduceMotion ? false : { scale: 1 }}
           transition={{ duration: 10, ease: "easeOut" }}
         >
-          <ResponsiveImage
-            src={backgroundImage}
-            alt={imageAlt}
-            fill={true}
-            priority={true}
+            <ResponsiveImage
+              src={backgroundImage}
+              alt={imageAlt}
+              fill={true}
+              priority={priority}
             className="object-cover"
             pictureClassName="absolute inset-0 block h-full w-full"
             width={1920}

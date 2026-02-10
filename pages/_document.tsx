@@ -25,8 +25,6 @@ class MyDocument extends Document<Props> {
         suppressHydrationWarning
       >
          <Head nonce={nonce}>
-           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-           <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
            {/* Critical fonts for above-the-fold content */}
            <link
              rel="preload"
@@ -37,19 +35,12 @@ class MyDocument extends Document<Props> {
            />
            <link
              rel="preload"
-             href="/fonts/GmarketSansBold.woff"
-             as="font"
-             type="font/woff"
-             crossOrigin="anonymous"
-           />
-           <link
-             rel="preload"
              href="/fonts/PartialSansKR-Regular.woff2"
              as="font"
              type="font/woff2"
              crossOrigin="anonymous"
            />
-           {/* Other fonts (GmarketSansMedium, Pretendard-Bold) will load normally */}
+           {/* Other fonts load on demand */}
            <script src="/scripts/theme-init.js" nonce={nonce} defer />
           </Head>
         <body className="bg-white dark:bg-gray-900">

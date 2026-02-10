@@ -19,6 +19,7 @@ interface StoriesPageProps {
 
 const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(8);
   const { t } = useTranslation('common', { lng: locale });
 
   const categories = useMemo(() => {
@@ -33,6 +34,22 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
     if (activeCategory === 'all') return stories;
     return stories.filter((story) => story.categoryKey === activeCategory);
   }, [stories, activeCategory]);
+
+  const visibleStories = useMemo(
+    () => filteredStories.slice(0, visibleCount),
+    [filteredStories, visibleCount]
+  );
+
+  const hasMoreStories = filteredStories.length > visibleCount;
+
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setVisibleCount(8);
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 8);
+  };
 
   return (
     <>
@@ -60,7 +77,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
           <div className="mb-8">
             <CategoryFilter
               activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
+              setActiveCategory={handleCategoryChange}
               categories={categories}
               allLabel={t('stories.filters.all')}
             />
@@ -80,9 +97,21 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredStories.map((story) => (
+              {visibleStories.map((story) => (
                 <StoryCard key={story.slug} story={story} locale={locale} />
               ))}
+            </div>
+          )}
+
+          {hasMoreStories && (
+            <div className="mt-8 flex justify-center">
+              <button
+                type="button"
+                onClick={handleLoadMore}
+                className="px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium"
+              >
+                {t('actions.more')}
+              </button>
             </div>
           )}
         </m.div>

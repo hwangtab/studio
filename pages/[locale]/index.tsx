@@ -55,6 +55,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
 
       <ImageHero
         locale={locale}
+        priority
         title={
           <>
             <span className="block mb-2 text-gray-100 drop-shadow-lg">{heroContent.titlePrefix}</span>

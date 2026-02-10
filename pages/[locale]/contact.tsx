@@ -15,6 +15,51 @@ interface ContactProps {
   locale: Locale;
 }
 
+const submitErrorMessages: Record<Locale, { timeout: string; tooMany: string; unavailable: string; retry: string }> = {
+  ko: {
+    timeout: '요청 시간이 초과되었습니다. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.',
+    tooMany: '요청이 많아 잠시 제한되었습니다. 잠시 후 다시 시도해 주세요.',
+    unavailable: '현재 문의 서비스가 일시적으로 불안정합니다. 잠시 후 다시 시도해 주세요.',
+    retry: '다시 시도',
+  },
+  en: {
+    timeout: 'Request timed out. Please check your network and try again.',
+    tooMany: 'Too many requests. Please try again in a moment.',
+    unavailable: 'Contact service is temporarily unavailable. Please try again shortly.',
+    retry: 'Try again',
+  },
+  zh: {
+    timeout: '请求超时。请检查网络后重试。',
+    tooMany: '请求过于频繁，请稍后再试。',
+    unavailable: '咨询服务暂时不可用，请稍后重试。',
+    retry: '重试',
+  },
+  es: {
+    timeout: 'La solicitud supero el tiempo de espera. Verifica tu red e intentalo de nuevo.',
+    tooMany: 'Demasiadas solicitudes. Intentalo de nuevo en un momento.',
+    unavailable: 'El servicio de contacto no esta disponible temporalmente. Intentalo pronto.',
+    retry: 'Reintentar',
+  },
+  vi: {
+    timeout: 'Yeu cau het thoi gian cho. Vui long kiem tra mang va thu lai.',
+    tooMany: 'Qua nhieu yeu cau. Vui long thu lai sau it phut.',
+    unavailable: 'Dich vu lien he tam thoi khong kha dung. Vui long thu lai sau.',
+    retry: 'Thu lai',
+  },
+  th: {
+    timeout: 'คําขอหมดเวลา กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง',
+    tooMany: 'มีคําขอมากเกินไป กรุณาลองใหม่อีกครั้งในภายหลัง',
+    unavailable: 'บริการติดต่อไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่อีกครั้ง',
+    retry: 'ลองอีกครั้ง',
+  },
+  uz: {
+    timeout: 'Sorov vaqti tugadi. Tarmoqni tekshirib, qayta urinib koring.',
+    tooMany: 'So\'rovlar juda kop. Birozdan keyin yana urinib koring.',
+    unavailable: 'Aloqa xizmati vaqtincha mavjud emas. Keyinroq qayta urinib koring.',
+    retry: 'Qayta urinish',
+  },
+};
+
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon: React.ElementType;
   label: string;
@@ -52,6 +97,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [canRetrySubmit, setCanRetrySubmit] = useState(false);
+  const [lastSubmittedData, setLastSubmittedData] = useState<typeof formData | null>(null);
   const siteConfig = getSiteConfig(locale);
   const shouldReduceMotion = useReducedMotion();
 
@@ -98,9 +145,64 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
+  const submitWithPayload = async (payload: typeof formData) => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 12000);
+
+    try {
+      const response = await fetch('/api/contact/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setSubmitMessage(t('contact.form.success'));
+        setFormData({ name: '', phone: '', email: '', message: '', company: '' });
+        setCanRetrySubmit(false);
+        setLastSubmittedData(null);
+        return;
+      }
+
+      const localeMessages = submitErrorMessages[locale] || submitErrorMessages.ko;
+      if (response.status === 429) {
+        setSubmitMessage(localeMessages.tooMany);
+        setCanRetrySubmit(true);
+        return;
+      }
+      if (response.status === 503) {
+        setSubmitMessage(localeMessages.unavailable);
+        setCanRetrySubmit(true);
+        return;
+      }
+
+      setSubmitMessage(result.message || t('contact.form.error'));
+      setCanRetrySubmit(response.status >= 500);
+    } catch (error) {
+      const localeMessages = submitErrorMessages[locale] || submitErrorMessages.ko;
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        setSubmitMessage(localeMessages.timeout);
+        setCanRetrySubmit(true);
+        return;
+      }
+
+      console.error('Error sending email:', error);
+      setSubmitMessage(t('contact.form.error'));
+      setCanRetrySubmit(true);
+    } finally {
+      window.clearTimeout(timeout);
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     const newErrors: Record<string, string> = {
       name: validateName(formData.name),
       email: validateEmail(formData.email),
@@ -111,7 +213,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     setErrors(newErrors);
 
     if (Object.values(newErrors).some(err => err)) {
-      // 첫 번째 에러 필드로 포커스
       const firstErrorField = Object.keys(newErrors).find(key => newErrors[key]);
       document.getElementById(firstErrorField || '')?.focus();
       return;
@@ -119,36 +220,23 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
     setIsSubmitting(true);
     setSubmitMessage('');
+    setCanRetrySubmit(false);
 
-    try {
-      // Normalize phone number by removing spaces before submission
-      const normalizedFormData = {
-        ...formData,
-        phone: formData.phone.replace(/\s/g, ''),
-      };
+    const normalizedFormData = {
+      ...formData,
+      phone: formData.phone.replace(/\s/g, ''),
+    };
+    setLastSubmittedData(normalizedFormData);
 
-      const response = await fetch('/api/contact/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(normalizedFormData),
-      });
+    await submitWithPayload(normalizedFormData);
+  };
 
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        setSubmitMessage(t('contact.form.success'));
-        setFormData({ name: '', phone: '', email: '', message: '', company: '' });
-      } else {
-        setSubmitMessage(result.message || t('contact.form.error'));
-      }
-    } catch (error) {
-      console.error('Error sending email:', error);
-      setSubmitMessage(t('contact.form.error'));
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleRetrySubmit = () => {
+    if (!lastSubmittedData || isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitMessage('');
+    setCanRetrySubmit(false);
+    void submitWithPayload(lastSubmittedData);
   };
 
   return (
@@ -272,6 +360,15 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   {submitMessage === t('contact.form.success') && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
                   {submitMessage}
                 </div>
+              )}
+              {canRetrySubmit && !isSubmitting && (
+                <button
+                  type="button"
+                  onClick={handleRetrySubmit}
+                  className="mb-4 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
+                >
+                  {(submitErrorMessages[locale] || submitErrorMessages.ko).retry}
+                </button>
               )}
               {Object.keys(errors).filter(key => errors[key]).length > 0 && (
                 <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">

@@ -43,11 +43,19 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
     color: '#000'
   });
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const filteredItems = useMemo(
     () => filterPortfolioItems(initialPortfolioItems, selectedCategory.id === 'all' ? 'all' : selectedCategory.id),
     [initialPortfolioItems, selectedCategory]
   );
+
+  const visibleItems = useMemo(
+    () => filteredItems.slice(0, visibleCount),
+    [filteredItems, visibleCount]
+  );
+
+  const hasMoreItems = filteredItems.length > visibleCount;
 
   // Update state when router param changes or categories update (e.g. locale change)
   useEffect(() => {
@@ -87,7 +95,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
     const category = categories.find(c => c.id === categoryId);
     if (category) {
       setSelectedCategory(category);
+      setVisibleCount(12);
     }
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 12);
   };
 
   return (
@@ -176,7 +189,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              {filteredItems.map((item, index) => (
+              {visibleItems.map((item, index) => (
                 <ProjectRowCard
                   key={item.id}
                   {...item}
@@ -184,6 +197,18 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
                   onClick={() => handleCardClick(item)}
                 />
               ))}
+            </div>
+          )}
+
+          {hasMoreItems && (
+            <div className="mt-8 flex justify-center">
+              <button
+                type="button"
+                onClick={handleLoadMore}
+                className="px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium"
+              >
+                {t('actions.more')}
+              </button>
             </div>
           )}
         </m.div>
