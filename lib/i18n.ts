@@ -16,6 +16,7 @@ export const localeNames: Record<Locale, string> = {
 };
 
 const commonByLocaleCache: Partial<Record<Locale, Record<string, unknown>>> = {};
+const commonByLocalePending: Partial<Record<Locale, Promise<Record<string, unknown>>>> = {};
 
 export const loadCommonResource = (locale: Locale): Record<string, unknown> => {
   const cached = commonByLocaleCache[locale];
@@ -34,6 +35,38 @@ export const loadCommonResource = (locale: Locale): Record<string, unknown> => {
   commonByLocaleCache[locale] = common;
 
   return common;
+};
+
+export const loadCommonResourceClient = async (locale: Locale): Promise<Record<string, unknown>> => {
+  const cached = commonByLocaleCache[locale];
+  if (cached) {
+    return cached;
+  }
+
+  if (typeof window === 'undefined') {
+    return loadCommonResource(locale);
+  }
+
+  const pending = commonByLocalePending[locale];
+  if (pending) {
+    return pending;
+  }
+
+  const loader = fetch(`/locales/${locale}/common.json`)
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to load common resources for locale: ${locale}`);
+      }
+      const data = (await response.json()) as Record<string, unknown>;
+      commonByLocaleCache[locale] = data;
+      return data;
+    })
+    .finally(() => {
+      delete commonByLocalePending[locale];
+    });
+
+  commonByLocalePending[locale] = loader;
+  return loader;
 };
 
 // Initialize with empty resources on client, server-side props will merge actual translations.

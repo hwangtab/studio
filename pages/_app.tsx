@@ -6,11 +6,11 @@ import Head from 'next/head';
 import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
-import i18n, { defaultLocale } from '../lib/i18n';
+import i18n, { defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -24,27 +24,57 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const shouldReduceMotion = useReducedMotion();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
-  const locale = pageProps?.locale || defaultLocale;
+  const routeLocale = router.asPath.split('?')[0].split('/')[1];
+  const detectedRouteLocale = locales.includes(routeLocale as Locale)
+    ? (routeLocale as Locale)
+    : defaultLocale;
+  const locale = (pageProps?.locale as Locale) || detectedRouteLocale;
   const i18nResources = pageProps?.i18nResources;
+  const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
 
-  // Merge i18n resources from server-side props. Always merge to override empty bundles
-  // initialized on client. The overwrite flags (true, true) ensure server resources take precedence.
-  useEffect(() => {
-    if (!i18nResources) return;
-    Object.entries(i18nResources).forEach(([lng, namespaces]) => {
+  // Merge i18n resources from server-side props synchronously before rendering children.
+  // This prevents raw translation keys from flashing on first paint.
+  if (i18nResources) {
+    Object.entries(i18nResources as Record<string, unknown>).forEach(([lng, namespaces]) => {
       Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
         if (!data) return;
-        // Always merge: empty bundle ({}) from client init is overwritten by actual server resources
         i18n.addResourceBundle(lng, ns, data, true, true);
       });
     });
-  }, [i18nResources]);
+  }
 
   useEffect(() => {
-    if (i18n.language !== locale) {
-      i18n.changeLanguage(locale);
-    }
+    let isCancelled = false;
+
+    const ensureLocaleReady = async () => {
+      if (!i18n.hasResourceBundle(locale, 'common')) {
+        try {
+          const commonResource = await loadCommonResourceClient(locale);
+          i18n.addResourceBundle(locale, 'common', commonResource, true, true);
+        } catch {
+          // Keep fallback behavior: default locale resources are initialized by i18n config.
+        }
+      }
+
+      if (!isCancelled) {
+        setIsLocaleReady(i18n.hasResourceBundle(locale, 'common'));
+      }
+
+      if (i18n.language !== locale) {
+        await i18n.changeLanguage(locale);
+      }
+    };
+
+    void ensureLocaleReady();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [locale]);
+
+  if (!isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
+    return null;
+  }
 
   return (
     <div className={montserrat.variable}>
