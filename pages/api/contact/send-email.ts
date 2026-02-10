@@ -82,8 +82,10 @@ const checkRateLimitInMemory = (ip: string): void => {
 };
 
 async function checkRateLimit(ip: string): Promise<void> {
+    const isKvConfigured = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+
     // Vercel KV is required for production rate limiting
-    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+    if (isKvConfigured) {
         try {
             const key = `rate_limit_contact:${ip}`;
             const count = await kv.incr(key);
@@ -100,6 +102,9 @@ async function checkRateLimit(ip: string): Promise<void> {
             if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') throw error;
 
             console.error('[Rate Limit] Vercel KV failed:', error);
+            if (process.env.NODE_ENV === 'production') {
+                throw new Error('RATE_LIMIT_UNAVAILABLE');
+            }
             if (!hasLoggedMemoryFallback) {
                 console.warn('[Rate Limit] Falling back to in-memory limiter due to KV failure.');
                 hasLoggedMemoryFallback = true;
@@ -107,6 +112,11 @@ async function checkRateLimit(ip: string): Promise<void> {
             checkRateLimitInMemory(ip);
             return;
         }
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+        console.error('[Rate Limit] Vercel KV is not configured in production. Failing closed.');
+        throw new Error('RATE_LIMIT_UNAVAILABLE');
     }
 
     if (!hasLoggedMemoryFallback) {
@@ -165,6 +175,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (error: unknown) {
         if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') {
             return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+        }
+        if (error instanceof Error && error.message === 'RATE_LIMIT_UNAVAILABLE') {
+            return res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
         }
         console.error('[API Route Error] Rate limit check failed:', error);
         return res.status(500).json({ message: 'Internal server error' });

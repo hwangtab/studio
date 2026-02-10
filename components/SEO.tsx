@@ -56,7 +56,6 @@ const SEO = ({
   isCourse = false,
 }: SEOProps) => {
   const router = useRouter();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
 
   const currentPath = router.asPath.split('?')[0];
   const segments = currentPath.split('/');
@@ -69,6 +68,9 @@ const SEO = ({
   }
 
   const { t } = useTranslation('common', { lng: currentLocale });
+  const siteConfig = getSiteConfig(currentLocale);
+  const siteUrl = siteConfig.url;
+  const seoDefaults = getSeoDefaults(currentLocale);
 
   // Clean up double slashes if any (e.g. root path)
   if (pathWithoutLocale === '//') pathWithoutLocale = '/';
@@ -81,9 +83,6 @@ const SEO = ({
     const sanitized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`;
     return `${siteUrl}${sanitized}`;
   };
-
-  const seoDefaults = getSeoDefaults(currentLocale);
-  const siteConfig = getSiteConfig(currentLocale);
 
   const resolvedTitle = title || seoDefaults.title;
   const resolvedDescription = description || seoDefaults.description;

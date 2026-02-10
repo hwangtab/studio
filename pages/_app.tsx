@@ -19,6 +19,16 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
+const localeLoadingMessage: Record<Locale, string> = {
+  ko: '콘텐츠를 불러오는 중입니다...',
+  en: 'Loading content...',
+  zh: '正在加载内容...',
+  es: 'Cargando contenido...',
+  vi: 'Dang tai noi dung...',
+  th: 'กําลังโหลดเนื้อหา...',
+  uz: 'Kontent yuklanmoqda...',
+};
+
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
@@ -97,8 +107,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <div className="min-h-screen bg-white dark:bg-gray-900" aria-live="polite" role="status">
-          <span className="sr-only">Loading localized content</span>
+        <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center" aria-live="polite" role="status">
+          <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
+            <span className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-primary animate-spin" aria-hidden="true" />
+            <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
+          </div>
         </div>
       </div>
     );

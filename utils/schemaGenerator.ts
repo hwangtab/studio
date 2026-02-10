@@ -442,14 +442,6 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     publisher: {
       '@id': `${siteUrl}/#organization`,
     },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/${locale}/stories?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
   };
 };
 

@@ -7,6 +7,7 @@ import type { PortfolioItem, PortfolioCategory } from '../types/data';
 import { shareContent } from '../utils/shareUtils';
 import { getCategoryInfo } from '../utils/portfolioDataUtils';
 import { defaultLocale, type Locale } from '../lib/i18n';
+import { getSiteConfig } from '../data/siteConfig';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -42,6 +43,7 @@ interface PortfolioDetailModalProps {
 
 const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocale }: PortfolioDetailModalProps) => {
   const { t } = useTranslation('common', { lng: locale });
+  const siteConfig = getSiteConfig(locale);
   const handleEsc = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -63,7 +65,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
 
   const categoryInfo = getCategoryInfo(item.category, categories);
 
-  const shareUrl = `https://studionol.co.kr/${locale}/portfolio/${item.id}`;
+  const shareUrl = `${siteConfig.url}/${locale}/portfolio/${item.id}`;
   const metaDescription = t('portfolio.detail.metaDescription', {
     artist: item.artist,
     title: item.title,
