@@ -8,21 +8,21 @@ import { locales, defaultLocale, type Locale, loadCommonResource } from './i18n'
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 
-const getStoryFilePath = (slug: string, locale: string = defaultLocale): string => {
+const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { filePath: string; sourceLocale: Locale } => {
   // Try locale specific file: slug.en.md
   const localeFilePath = path.join(storiesDirectory, `${slug}.${locale}.md`);
   if (fs.existsSync(localeFilePath)) {
-    return localeFilePath;
+    return { filePath: localeFilePath, sourceLocale: locale };
   }
   // Fallback to English for non-default locales when available
   if (locale !== defaultLocale) {
     const englishFallbackPath = path.join(storiesDirectory, `${slug}.en.md`);
     if (fs.existsSync(englishFallbackPath)) {
-      return englishFallbackPath;
+      return { filePath: englishFallbackPath, sourceLocale: 'en' };
     }
   }
   // Fallback to base file: slug.md
-  return path.join(storiesDirectory, `${slug}.md`);
+  return { filePath: path.join(storiesDirectory, `${slug}.md`), sourceLocale: defaultLocale };
 };
 
 const stripCodeFenceWrapper = (source: string): string => {
@@ -149,7 +149,7 @@ const mapStoryFrontmatter = (
 export const getAllStories = (locale: string = defaultLocale): Story[] => {
   return getAllStorySlugs()
     .map((slug: string) => {
-      const filePath = getStoryFilePath(slug, locale);
+      const { filePath } = resolveStoryFile(slug, locale as Locale);
       if (!fs.existsSync(filePath)) return null;
       const fileContents = fs.readFileSync(filePath, 'utf8');
       const normalized = stripCodeFenceWrapper(fileContents);
@@ -161,11 +161,12 @@ export const getAllStories = (locale: string = defaultLocale): Story[] => {
 };
 
 export const getStoryDetail = async (slug: string, locale: string = defaultLocale): Promise<StoryDetail> => {
-  const filePath = getStoryFilePath(slug, locale);
+  const requestedLocale = locale as Locale;
+  const { filePath, sourceLocale } = resolveStoryFile(slug, requestedLocale);
   const fileContents = fs.readFileSync(filePath, 'utf8');
   const normalized = stripCodeFenceWrapper(fileContents);
   const { data, content } = matter(normalized);
-  const baseStory = mapStoryFrontmatter(slug, data, content, locale as Locale);
+  const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
   let contentToProcess = content;
 
   if (baseStory.thumbnailDerived && baseStory.thumbnail) {
@@ -179,6 +180,8 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   return {
     ...baseStory,
     content: contentToProcess,
+    sourceLocale,
+    isFallbackTranslation: sourceLocale !== requestedLocale,
   };
 };
 

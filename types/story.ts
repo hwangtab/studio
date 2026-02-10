@@ -1,3 +1,5 @@
+import type { Locale } from '../lib/i18n';
+
 /**
  * Frontmatter interface for Story markdown files
  * Extracted from gray-matter parsing of content/stories/*.md files
@@ -40,6 +42,8 @@ export interface Story {
  */
 export interface StoryDetail extends Story {
   content: string; // Raw markdown content
+  sourceLocale: Locale;
+  isFallbackTranslation: boolean;
 }
 
 /**

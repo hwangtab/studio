@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnimatePresence, m } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
@@ -70,23 +70,19 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 </span>
                             </button>
 
-                            <AnimatePresence initial={false}>
-                                {activeIndex === index && (
-                                    <m.div
-                                        id={`faq-panel-${index}`}
-                                        role="region"
-                                        aria-labelledby={`faq-button-${index}`}
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: "auto", opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                                    >
-                                        <div className="px-6 pb-6 pt-2 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
-                                            {item.answer}
-                                        </div>
-                                    </m.div>
-                                )}
-                            </AnimatePresence>
+                            <m.div
+                                id={`faq-panel-${index}`}
+                                role="region"
+                                aria-labelledby={`faq-button-${index}`}
+                                initial={false}
+                                animate={activeIndex === index ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                className="overflow-hidden"
+                            >
+                                <div className="px-6 pb-6 pt-2 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
+                                    {item.answer}
+                                </div>
+                            </m.div>
                         </m.div>
                     ))}
                 </div>

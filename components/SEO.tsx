@@ -9,6 +9,7 @@ import {
   generateBreadcrumbSchema,
   generateFaqSchema,
   generateCourseSchema,
+  generateWebSiteSchema,
 } from '../utils/schemaGenerator';
 import { locales, type Locale } from '../lib/i18n';
 import { getSeoDefaults, getSiteConfig } from '../data/siteConfig';
@@ -105,6 +106,11 @@ const SEO = ({
     [siteUrl, absoluteOgImage, resolvedDescription, reviewItems, currentLocale]
   );
 
+  const websiteSchema = React.useMemo(
+    () => generateWebSiteSchema(siteUrl, currentLocale),
+    [siteUrl, currentLocale]
+  );
+
   const articleSchema = React.useMemo(
     () =>
       ogType === 'article'
@@ -171,12 +177,13 @@ const SEO = ({
     };
 
     addItems(defaultSchema);
+    addItems(websiteSchema);
     addItems(articleSchema);
     addItems(courseSchema);
     addItems(schema);
 
     return items.filter(Boolean);
-  }, [defaultSchema, articleSchema, courseSchema, schema]);
+  }, [defaultSchema, websiteSchema, articleSchema, courseSchema, schema]);
 
   const schemaData = React.useMemo(() => {
     if (schemaItems.length === 0) return null;
