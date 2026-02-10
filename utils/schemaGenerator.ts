@@ -39,12 +39,15 @@ export const generateDefaultSchema = (
     productionPlanning: isKo ? '음반 기획' : 'Music Planning',
   };
 
+  const organizationId = `${siteUrl}/#organization`;
+  const studioId = `${siteUrl}/#studio`;
+
   return {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
+        '@id': organizationId,
         name: translations.name,
         url: siteUrl,
         logo: {
@@ -68,7 +71,7 @@ export const generateDefaultSchema = (
       },
       {
         '@type': 'LocalBusiness',
-        '@id': `${siteUrl}/#studio`,
+        '@id': studioId,
         name: translations.name,
         image: absoluteOgImage,
         url: siteUrl,
@@ -117,7 +120,7 @@ export const generateDefaultSchema = (
         currenciesAccepted: 'KRW',
 
         parentOrganization: {
-          '@id': `${siteUrl}/#organization`,
+          '@id': organizationId,
         },
         ...(reviewItems && reviewItems.length > 0
           ? {
@@ -191,7 +194,7 @@ export const generateDefaultSchema = (
                   : 'Recording Studio Discounts, Music Distribution, Press Release Writing, Busking Equipment Rental, Expert Feedback, Crowdfunding Consulting, Grant Information, Tool Rental',
                 provider: {
                   '@type': 'Organization',
-                  '@id': `${siteUrl}/#organization`,
+                  '@id': organizationId,
                 },
                 areaServed: {
                   '@type': 'AdministrativeArea',
@@ -221,10 +224,13 @@ export const generateArticleSchema = (
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
+  const organizationId = `${siteUrl}/#organization`;
+  const websiteId = `${siteUrl}/#website`;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
+    '@id': `${normalizedCanonical}#article`,
     headline: title,
     datePublished: articlePublishedTime,
     dateModified: articleModifiedTime || articlePublishedTime,
@@ -234,7 +240,7 @@ export const generateArticleSchema = (
     },
     publisher: {
       '@type': 'Organization',
-      name: config.name,
+      '@id': organizationId,
       logo: {
         '@type': 'ImageObject',
         url: `${siteUrl}${config.logo}`,
@@ -246,6 +252,9 @@ export const generateArticleSchema = (
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': normalizedCanonical,
+    },
+    isPartOf: {
+      '@id': websiteId,
     },
   };
 };
@@ -295,16 +304,18 @@ export const generateCourseSchema = (
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
+  const organizationId = `${siteUrl}/#organization`;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Course',
+    '@id': `${normalizedCanonical}#course`,
     name: title,
     description: description,
     inLanguage: schemaLanguage,
     provider: {
       '@type': 'Organization',
-      name: config.name,
+      '@id': organizationId,
       sameAs: siteUrl,
     },
     image: absoluteOgImage,
@@ -382,15 +393,19 @@ export const generateAggregateOfferSchema = (
 
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
   const priceValidUntil = new Date();
   priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
+    '@id': `${config.url}/#pricing-catalog`,
     name: catalogName,
+    inLanguage: schemaLanguage,
     brand: {
-      '@type': 'Brand',
+      '@type': 'Organization',
+      '@id': `${config.url}/#organization`,
       name: config.name,
     },
     offers: {
@@ -419,10 +434,14 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': `${siteUrl}/#website`,
     name: config.name,
     alternateName: 'Studio Nol',
     url: siteUrl,
     inLanguage: schemaLanguage,
+    publisher: {
+      '@id': `${siteUrl}/#organization`,
+    },
     potentialAction: {
       '@type': 'SearchAction',
       target: {

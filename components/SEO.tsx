@@ -289,7 +289,7 @@ const SEO = ({
       <link
         rel="alternate"
         hrefLang="x-default"
-        href={`${siteUrl}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+        href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
       />
 
       <meta property="og:type" content={ogType} />
