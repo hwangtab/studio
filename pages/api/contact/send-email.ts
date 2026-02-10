@@ -7,6 +7,14 @@ import { kv } from '@vercel/kv';
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
 
+interface MemoryRateLimitEntry {
+    count: number;
+    expiresAt: number;
+}
+
+const memoryRateLimitStore = new Map<string, MemoryRateLimitEntry>();
+let hasLoggedMemoryFallback = false;
+
 // Extract client IP with proper header priority to prevent rate limit bypass
 function getClientIP(req: NextApiRequest): string {
   // 1. x-real-ip (Vercel and most proxies use this)
@@ -28,12 +36,50 @@ function getClientIP(req: NextApiRequest): string {
   return req.socket.remoteAddress || 'unknown';
 }
 
-// CSRF protection - allowed origins
-const ALLOWED_ORIGINS = [
-    'https://studionol.co.kr',
-    'http://localhost:3000',
-    'http://localhost:3001',
-];
+const getAllowedOrigins = (): string[] => {
+    const envOrigins = (process.env.ALLOWED_ORIGINS || '')
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean);
+
+    const siteUrlOrigin = (() => {
+        const value = process.env.NEXT_PUBLIC_SITE_URL;
+        if (!value) return null;
+        try {
+            return new URL(value).origin;
+        } catch {
+            return null;
+        }
+    })();
+
+    const defaults = [
+        'https://studionol.co.kr',
+        process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : null,
+        process.env.NODE_ENV !== 'production' ? 'http://localhost:3001' : null,
+        siteUrlOrigin,
+    ].filter((origin): origin is string => Boolean(origin));
+
+    return [...new Set([...defaults, ...envOrigins])];
+};
+
+const checkRateLimitInMemory = (ip: string): void => {
+    const key = `rate_limit_contact:${ip}`;
+    const now = Date.now();
+    const expiresAt = now + WINDOW * 1000;
+    const existing = memoryRateLimitStore.get(key);
+
+    if (!existing || existing.expiresAt <= now) {
+        memoryRateLimitStore.set(key, { count: 1, expiresAt });
+        return;
+    }
+
+    const nextCount = existing.count + 1;
+    if (nextCount > LIMIT) {
+        throw new Error('RATE_LIMIT_EXCEEDED');
+    }
+
+    memoryRateLimitStore.set(key, { count: nextCount, expiresAt: existing.expiresAt });
+};
 
 async function checkRateLimit(ip: string): Promise<void> {
     // Vercel KV is required for production rate limiting
@@ -54,18 +100,21 @@ async function checkRateLimit(ip: string): Promise<void> {
             if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') throw error;
 
             console.error('[Rate Limit] Vercel KV failed:', error);
-            if (process.env.NODE_ENV === 'production') {
-                throw new Error('RATE_LIMIT_INFRASTRUCTURE_ERROR');
+            if (!hasLoggedMemoryFallback) {
+                console.warn('[Rate Limit] Falling back to in-memory limiter due to KV failure.');
+                hasLoggedMemoryFallback = true;
             }
+            checkRateLimitInMemory(ip);
             return;
         }
     }
 
-    if (process.env.NODE_ENV === 'production') {
-        console.error('[Rate Limit] Vercel KV not configured in production!');
-        throw new Error('RATE_LIMIT_CONFIG_ERROR');
+    if (!hasLoggedMemoryFallback) {
+        console.warn('[Rate Limit] Vercel KV not configured. Using in-memory limiter fallback.');
+        hasLoggedMemoryFallback = true;
     }
 
+    checkRateLimitInMemory(ip);
     return;
 }
 
@@ -96,8 +145,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
      // 2. CSRF protection - validate origin/referer
+     const allowedOrigins = getAllowedOrigins();
      const origin = req.headers.origin || req.headers.referer;
-     if (!origin || !ALLOWED_ORIGINS.some(allowed => {
+     if (!origin || !allowedOrigins.some(allowed => {
          try {
              return new URL(origin).origin === allowed;
          } catch {

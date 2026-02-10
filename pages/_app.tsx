@@ -52,21 +52,34 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     let isCancelled = false;
 
     const ensureLocaleReady = async () => {
+      let renderLocale: Locale = locale;
+
       if (!i18n.hasResourceBundle(locale, 'common')) {
         try {
           const commonResource = await loadCommonResourceClient(locale);
           i18n.addResourceBundle(locale, 'common', commonResource, true, true);
         } catch {
-          // Keep fallback behavior: default locale resources are initialized by i18n config.
+          renderLocale = defaultLocale;
+
+          if (!i18n.hasResourceBundle(defaultLocale, 'common')) {
+            try {
+              const fallbackCommonResource = await loadCommonResourceClient(defaultLocale);
+              i18n.addResourceBundle(defaultLocale, 'common', fallbackCommonResource, true, true);
+            } catch {
+              // Keep fallback behavior with loading UI when both locale and default loading fail.
+            }
+          }
         }
       }
 
+      const hasRenderableResource = i18n.hasResourceBundle(renderLocale, 'common');
+
       if (!isCancelled) {
-        setIsLocaleReady(i18n.hasResourceBundle(locale, 'common'));
+        setIsLocaleReady(hasRenderableResource);
       }
 
-      if (i18n.language !== locale) {
-        await i18n.changeLanguage(locale);
+      if (hasRenderableResource && i18n.language !== renderLocale) {
+        await i18n.changeLanguage(renderLocale);
       }
     };
 
@@ -78,7 +91,17 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [locale]);
 
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
-    return null;
+    return (
+      <div className={montserrat.variable}>
+        <Head>
+          <meta charSet="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        </Head>
+        <div className="min-h-screen bg-white dark:bg-gray-900" aria-live="polite" role="status">
+          <span className="sr-only">Loading localized content</span>
+        </div>
+      </div>
+    );
   }
 
   return (
