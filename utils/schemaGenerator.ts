@@ -2,6 +2,18 @@ import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 
+const schemaLanguageByLocale: Record<Locale, string> = {
+  ko: 'ko-KR',
+  en: 'en-US',
+  zh: 'zh-CN',
+  es: 'es-ES',
+  vi: 'vi-VN',
+  th: 'th-TH',
+  uz: 'uz-UZ',
+};
+
+export const getSchemaLanguage = (locale: Locale): string => schemaLanguageByLocale[locale] || schemaLanguageByLocale.ko;
+
 export const generateDefaultSchema = (
   siteUrl: string,
   absoluteOgImage: string,
@@ -208,6 +220,7 @@ export const generateArticleSchema = (
   if (!articlePublishedTime) return null;
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
@@ -229,6 +242,7 @@ export const generateArticleSchema = (
     },
     image: absoluteOgImage,
     description: description,
+    inLanguage: schemaLanguage,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': normalizedCanonical,
@@ -251,12 +265,14 @@ export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteU
   };
 };
 
-export const generateFaqSchema = (faqItems: FAQItem[] | null) => {
+export const generateFaqSchema = (faqItems: FAQItem[] | null, locale: Locale = 'ko') => {
   if (!faqItems || faqItems.length === 0) return null;
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    inLanguage: schemaLanguage,
     mainEntity: faqItems.map((item) => ({
       '@type': 'Question',
       name: item.question,
@@ -278,12 +294,14 @@ export const generateCourseSchema = (
 ) => {
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Course',
     name: title,
     description: description,
+    inLanguage: schemaLanguage,
     provider: {
       '@type': 'Organization',
       name: config.name,
@@ -396,6 +414,7 @@ export const generateAggregateOfferSchema = (
 export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') => {
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
@@ -403,6 +422,7 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     name: config.name,
     alternateName: 'Studio Nol',
     url: siteUrl,
+    inLanguage: schemaLanguage,
     potentialAction: {
       '@type': 'SearchAction',
       target: {
@@ -428,12 +448,14 @@ export const generateHowToSchema = (
   locale: Locale = 'ko'
 ) => {
   const isKo = locale === 'ko';
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'HowTo',
     name,
     description,
+    inLanguage: schemaLanguage,
     ...(totalTime && { totalTime }),
     step: steps.map((step, index) => ({
       '@type': 'HowToStep',

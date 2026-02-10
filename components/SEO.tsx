@@ -160,7 +160,7 @@ const SEO = ({
     [breadcrumbs, siteUrl]
   );
 
-  const faqSchema = React.useMemo(() => generateFaqSchema(faqItems), [faqItems]);
+  const faqSchema = React.useMemo(() => generateFaqSchema(faqItems, currentLocale), [faqItems, currentLocale]);
 
   const schemaItems = React.useMemo(() => {
     const items: Record<string, unknown>[] = [];
@@ -289,7 +289,7 @@ const SEO = ({
       <link
         rel="alternate"
         hrefLang="x-default"
-        href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+        href={`${siteUrl}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
       />
 
       <meta property="og:type" content={ogType} />

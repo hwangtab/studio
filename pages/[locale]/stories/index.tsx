@@ -40,6 +40,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}
+        includeSchema
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },

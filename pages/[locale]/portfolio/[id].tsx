@@ -62,6 +62,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         description={metaDescription}
         ogImage={item.image}
         ogType="music.album"
+        includeSchema
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}
       />
       <Section variant="default" className="pt-8 pb-12">

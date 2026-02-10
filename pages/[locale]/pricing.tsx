@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getPricingData } from '../../data/pricing';
-import { generateAggregateOfferSchema } from '../../utils/schemaGenerator';
+import { generateAggregateOfferSchema, getSchemaLanguage } from '../../utils/schemaGenerator';
 import { getReviews } from '../../data/reviews';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
@@ -45,6 +45,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
   const pricingUrl = `${siteUrl}/${locale}/pricing`;
+  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   const pricingQuickAnswers = React.useMemo(() => ([
     {
@@ -71,6 +72,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
     '@type': 'Offer',
     name: offer.title,
     description: offer.description,
+    inLanguage: schemaLanguage,
     priceCurrency: 'KRW',
     price: offer.priceValue,
     priceValidUntil,
@@ -84,18 +86,20 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
     itemOffered: {
       '@type': 'Service',
       name: offer.title,
+      inLanguage: schemaLanguage,
       provider: {
         '@type': 'LocalBusiness',
         name: t('common.siteName'),
       },
     },
-  }), [pricingUrl, priceValidUntil, t]);
+  }), [pricingUrl, priceValidUntil, schemaLanguage, t]);
 
   const catalogToSchema = React.useCallback((name: string, offers: Offer[]) => ({
     '@type': 'OfferCatalog',
     name,
+    inLanguage: schemaLanguage,
     itemListElement: offers.map(offerToSchema),
-  }), [offerToSchema]);
+  }), [offerToSchema, schemaLanguage]);
 
   const allOffers = React.useMemo(() => [
     ...specialPackages as Offer[],
@@ -121,6 +125,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
       {
         '@type': 'OfferCatalog',
         name: t('pricing.seo.title'),
+        inLanguage: schemaLanguage,
         itemListElement: [
           catalogToSchema(t('pricing.special.title'), specialPackages as Offer[]),
           catalogToSchema(t('pricing.recording.title'), recordingOffers as Offer[]),
@@ -147,6 +152,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
     mixingOffers,
     masteringOffers,
     additionalServices,
+    schemaLanguage,
   ]);
 
   return (

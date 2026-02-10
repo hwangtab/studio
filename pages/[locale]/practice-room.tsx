@@ -16,6 +16,7 @@ import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
+import { getSchemaLanguage } from '../../utils/schemaGenerator';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -90,11 +91,13 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
   ]), [t]);
 
   const practiceRoomQuickAnswers = React.useMemo(() => practiceRoomFaqs.slice(0, 3), [practiceRoomFaqs]);
+  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   const practiceRoomSchema = React.useMemo(() => ({
     '@type': 'Service',
     name: t('practiceRoom.seo.title'),
     description: t('practiceRoom.seo.description'),
+    inLanguage: schemaLanguage,
     serviceType: t('nav.practiceRoom'),
     areaServed: siteConfig.contact.address,
     provider: {
@@ -103,7 +106,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
       url: siteConfig.url,
     },
     url: `${siteConfig.url}/${locale}/practice-room`,
-  }), [t, siteConfig, locale]);
+  }), [t, siteConfig, locale, schemaLanguage]);
 
   return (
     <>
