@@ -16,7 +16,7 @@ const faqData = {
     },
     {
       question: '마스터링 비용은 얼마인가요?',
-      answer: '싱글 마스터링은 곡당 100,000원이며, EP/앨범 패키지(4곡 이상)는 곡당 80,000원입니다. Spotify, Apple Music 등 스트리밍 플랫폼 규격에 맞게 작업됩니다.',
+      answer: '싱글 마스터링은 곡당 100,000원이며, EP/앨범 패키지(4곡 이상)는 곡당 80,000원입니다. 멜론, 지니, 유튜브 뮤직, 애플뮤직 등 주요 음원사이트 규격에 맞게 작업됩니다.',
     },
     {
       question: '연습실 입주 프로그램이 있나요?',
@@ -28,7 +28,7 @@ const faqData = {
     },
     {
       question: '음원 유통 서비스도 제공하나요?',
-      answer: '네, 입주 고객에게는 오디오가이를 통한 글로벌 플랫폼(Spotify, Apple Music, YouTube Music 등) 배포 서비스를 무료로 제공하며, 순이익의 70%를 아티스트에게 배분합니다.',
+      answer: '네, 입주 고객에게는 오디오가이를 통한 국내외 음원사이트(멜론, 유튜브 뮤직, 애플뮤직 등) 배포 서비스를 무료로 제공하며, 순이익의 70%를 아티스트에게 배분합니다.',
     },
   ],
   en: [
@@ -300,7 +300,7 @@ export const getDistributionFaqData = (locale: Locale) => {
   const allFaq = getFaqData(locale);
   const distributionKeywords = [
     // Korean
-    '유통', '배포', 'Spotify', 'Apple Music',
+    '유통', '배포', '멜론', '지니', '유튜브 뮤직', '애플뮤직',
     // English
     'distribution', 'distribute',
     // Chinese
