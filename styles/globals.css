@@ -31,7 +31,7 @@
     url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
 /* PartialSansKR 폰트 (로고용 - 메트릭 조정) */
@@ -42,7 +42,7 @@
     url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   /* 상단 여백 줄이기: ascender가 큰 폰트 특성 보정 */
   ascent-override: 80%;
   descent-override: 20%;
@@ -183,4 +183,3 @@ code {
   margin-top: 1.5em;
   padding-top: 0.5em;
 }
-

@@ -30,6 +30,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     : defaultLocale;
   const locale = (pageProps?.locale as Locale) || detectedRouteLocale;
   const i18nResources = pageProps?.i18nResources;
+  const hasServerResourceForLocale = Boolean(
+    i18nResources &&
+    typeof i18nResources === 'object' &&
+    locale in (i18nResources as Record<string, unknown>)
+  );
   const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
 
   // Merge i18n resources from server-side props synchronously before rendering children.
@@ -72,7 +77,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     };
   }, [locale]);
 
-  if (!isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
+  if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return null;
   }
 

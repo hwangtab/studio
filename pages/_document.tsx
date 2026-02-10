@@ -42,9 +42,16 @@ class MyDocument extends Document<Props> {
              type="font/woff"
              crossOrigin="anonymous"
            />
-           {/* Other fonts (GmarketSansMedium, PartialSansKR-Regular, Pretendard-Bold) will load normally */}
+           <link
+             rel="preload"
+             href="/fonts/PartialSansKR-Regular.woff2"
+             as="font"
+             type="font/woff2"
+             crossOrigin="anonymous"
+           />
+           {/* Other fonts (GmarketSansMedium, Pretendard-Bold) will load normally */}
            <script src="/scripts/theme-init.js" nonce={nonce} defer />
-         </Head>
+          </Head>
         <body className="bg-white dark:bg-gray-900">
           <Main />
           <NextScript nonce={nonce} />
