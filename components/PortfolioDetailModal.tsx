@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { m, Variants } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -44,6 +44,9 @@ interface PortfolioDetailModalProps {
 const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocale }: PortfolioDetailModalProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const handleEsc = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -52,14 +55,52 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
   );
 
   useEffect(() => {
+    if (!item) return;
+
+    triggerRef.current = document.activeElement as HTMLElement;
+
     document.addEventListener('keydown', handleEsc);
     document.body.style.overflow = 'hidden';
 
+    const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+      'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableElements && focusableElements.length > 0) {
+      (closeButtonRef.current || focusableElements[0]).focus();
+    }
+
+    const handleFocusTrap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const nodes = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!nodes || nodes.length === 0) return;
+
+      const firstElement = nodes[0];
+      const lastElement = nodes[nodes.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else if (document.activeElement === lastElement) {
+        firstElement.focus();
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('keydown', handleFocusTrap);
+
     return () => {
       document.removeEventListener('keydown', handleEsc);
+      document.removeEventListener('keydown', handleFocusTrap);
       document.body.style.overflow = 'unset'; // Restored for safety in case of unexpected unmount
+      if (triggerRef.current && triggerRef.current.focus) {
+        triggerRef.current.focus();
+      }
     };
-  }, [handleEsc]);
+  }, [handleEsc, item]);
 
   if (!item) return null;
 
@@ -119,6 +160,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       />
 
       <m.div
+        ref={modalRef}
         className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
         variants={modalVariants}
         initial="hidden"
@@ -127,6 +169,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       >
         <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700">
           <button
+            ref={closeButtonRef}
             onClick={onClose}
             type="button"
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"

@@ -15,47 +15,68 @@ interface ContactProps {
   locale: Locale;
 }
 
-const submitErrorMessages: Record<Locale, { timeout: string; tooMany: string; unavailable: string; retry: string }> = {
+const submitErrorMessages: Record<Locale, {
+  timeout: string;
+  tooMany: string;
+  unavailable: string;
+  forbidden: string;
+  invalidRequest: string;
+  retry: string;
+}> = {
   ko: {
     timeout: '요청 시간이 초과되었습니다. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.',
     tooMany: '요청이 많아 잠시 제한되었습니다. 잠시 후 다시 시도해 주세요.',
     unavailable: '현재 문의 서비스가 일시적으로 불안정합니다. 잠시 후 다시 시도해 주세요.',
+    forbidden: '요청이 차단되었습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.',
+    invalidRequest: '요청 형식이 올바르지 않습니다. 입력 내용을 확인해 주세요.',
     retry: '다시 시도',
   },
   en: {
     timeout: 'Request timed out. Please check your network and try again.',
     tooMany: 'Too many requests. Please try again in a moment.',
     unavailable: 'Contact service is temporarily unavailable. Please try again shortly.',
+    forbidden: 'Request was blocked. Please refresh the page and try again.',
+    invalidRequest: 'Request format is invalid. Please review your input and try again.',
     retry: 'Try again',
   },
   zh: {
     timeout: '请求超时。请检查网络后重试。',
     tooMany: '请求过于频繁，请稍后再试。',
     unavailable: '咨询服务暂时不可用，请稍后重试。',
+    forbidden: '请求被拦截。请刷新页面后重试。',
+    invalidRequest: '请求格式无效。请检查输入后重试。',
     retry: '重试',
   },
   es: {
     timeout: 'La solicitud supero el tiempo de espera. Verifica tu red e intentalo de nuevo.',
     tooMany: 'Demasiadas solicitudes. Intentalo de nuevo en un momento.',
     unavailable: 'El servicio de contacto no esta disponible temporalmente. Intentalo pronto.',
+    forbidden: 'La solicitud fue bloqueada. Recarga la pagina e intentalo de nuevo.',
+    invalidRequest: 'El formato de la solicitud no es valido. Revisa tus datos e intentalo de nuevo.',
     retry: 'Reintentar',
   },
   vi: {
     timeout: 'Yeu cau het thoi gian cho. Vui long kiem tra mang va thu lai.',
     tooMany: 'Qua nhieu yeu cau. Vui long thu lai sau it phut.',
     unavailable: 'Dich vu lien he tam thoi khong kha dung. Vui long thu lai sau.',
+    forbidden: 'Yeu cau bi chan. Vui long tai lai trang roi thu lai.',
+    invalidRequest: 'Dinh dang yeu cau khong hop le. Vui long kiem tra lai noi dung.',
     retry: 'Thu lai',
   },
   th: {
     timeout: 'คําขอหมดเวลา กรุณาตรวจสอบเครือข่ายแล้วลองใหม่อีกครั้ง',
     tooMany: 'มีคําขอมากเกินไป กรุณาลองใหม่อีกครั้งในภายหลัง',
     unavailable: 'บริการติดต่อไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่อีกครั้ง',
+    forbidden: 'คําขอถูกบล็อก กรุณารีเฟรชหน้าแล้วลองใหม่อีกครั้ง',
+    invalidRequest: 'รูปแบบคําขอไม่ถูกต้อง กรุณาตรวจสอบข้อมูลแล้วลองใหม่อีกครั้ง',
     retry: 'ลองอีกครั้ง',
   },
   uz: {
     timeout: 'Sorov vaqti tugadi. Tarmoqni tekshirib, qayta urinib koring.',
     tooMany: 'So\'rovlar juda kop. Birozdan keyin yana urinib koring.',
     unavailable: 'Aloqa xizmati vaqtincha mavjud emas. Keyinroq qayta urinib koring.',
+    forbidden: 'So\'rov bloklandi. Sahifani yangilang va qayta urinib koring.',
+    invalidRequest: 'So\'rov formati noto\'g\'ri. Kiritilgan ma\'lumotlarni tekshirib qayta urinib koring.',
     retry: 'Qayta urinish',
   },
 };
@@ -131,6 +152,14 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     return '';
   };
 
+  const getFieldValidationMessage = (field: string, payload: typeof formData): string => {
+    if (field === 'name') return validateName(payload.name);
+    if (field === 'email') return validateEmail(payload.email);
+    if (field === 'phone') return validatePhone(payload.phone);
+    if (field === 'message') return validateMessage(payload.message);
+    return '';
+  };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -160,6 +189,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       });
 
       const result = await response.json();
+      const localeMessages = submitErrorMessages[locale] || submitErrorMessages.ko;
 
       if (response.ok && result.success) {
         setSubmitMessage(t('contact.form.success'));
@@ -169,7 +199,28 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         return;
       }
 
-      const localeMessages = submitErrorMessages[locale] || submitErrorMessages.ko;
+      if (response.status === 400 && typeof result?.field === 'string') {
+        const field = result.field;
+        const message = getFieldValidationMessage(field, payload) || localeMessages.invalidRequest;
+        setErrors((prev) => ({ ...prev, [field]: message }));
+        document.getElementById(field)?.focus();
+        setSubmitMessage('');
+        setCanRetrySubmit(false);
+        return;
+      }
+
+      if (response.status === 400 || response.status === 415) {
+        setSubmitMessage(localeMessages.invalidRequest);
+        setCanRetrySubmit(false);
+        return;
+      }
+
+      if (response.status === 403) {
+        setSubmitMessage(localeMessages.forbidden);
+        setCanRetrySubmit(false);
+        return;
+      }
+
       if (response.status === 429) {
         setSubmitMessage(localeMessages.tooMany);
         setCanRetrySubmit(true);
@@ -177,6 +228,12 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       }
       if (response.status === 503) {
         setSubmitMessage(localeMessages.unavailable);
+        setCanRetrySubmit(true);
+        return;
+      }
+
+      if (response.status === 504) {
+        setSubmitMessage(localeMessages.timeout);
         setCanRetrySubmit(true);
         return;
       }
