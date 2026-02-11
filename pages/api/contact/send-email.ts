@@ -149,7 +149,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
-    const { name, phone, email, message, company } = req.body;
+    const contentType = req.headers['content-type'];
+    if (contentType && !String(contentType).toLowerCase().includes('application/json')) {
+        return res.status(415).json({ message: 'Content-Type must be application/json' });
+    }
+
+    if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {
+        return res.status(400).json({ message: 'Invalid request body' });
+    }
+
+    const payload = req.body as Record<string, unknown>;
+
+    const { name, phone, email, message, company } = payload;
 
     // 1. Honeypot validation
     if (company && typeof company === 'string' && company.trim().length > 0) {

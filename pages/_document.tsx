@@ -2,7 +2,6 @@ import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitia
 
 type Props = {
   locale: string;
-  nonce?: string;
 };
 
 class MyDocument extends Document<Props> {
@@ -10,28 +9,19 @@ class MyDocument extends Document<Props> {
     const initialProps = await Document.getInitialProps(ctx);
     // ctx.query.locale exists because pages are under pages/[locale]/
     const locale = (ctx.query?.locale as string) || 'ko';
-    const nonceHeader = ctx.req?.headers['x-nonce'];
-    const nonce = Array.isArray(nonceHeader) ? nonceHeader[0] : nonceHeader;
 
-    const html = nonce
-      ? initialProps.html.replace(
-        /<script([^>]*type="application\/ld\+json"[^>]*)>/g,
-        (match, attrs: string) => (attrs.includes(' nonce=') ? match : `<script nonce="${nonce}"${attrs}>`)
-      )
-      : initialProps.html;
-
-    return { ...initialProps, html, locale, nonce };
+    return { ...initialProps, locale };
   }
 
   render() {
-    const { locale, nonce } = this.props;
+    const { locale } = this.props;
 
     return (
       <Html
         lang={locale}
         prefix="og: https://ogp.me/ns#"
       >
-         <Head nonce={nonce}>
+         <Head>
            {/* Critical fonts for above-the-fold content */}
            <link
              rel="preload"
@@ -48,11 +38,11 @@ class MyDocument extends Document<Props> {
              crossOrigin="anonymous"
            />
            {/* Other fonts load on demand */}
-           <script src="/scripts/theme-init.js" nonce={nonce} defer />
-          </Head>
+            <script src="/scripts/theme-init.js" defer />
+           </Head>
         <body className="bg-white dark:bg-gray-900">
           <Main />
-          <NextScript nonce={nonce} />
+          <NextScript />
         </body>
       </Html>
     );
