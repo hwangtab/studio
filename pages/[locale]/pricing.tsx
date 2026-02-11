@@ -136,7 +136,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
             id: s.id,
             title: s.title,
             description: s.note || '',
-            priceValue: 0,
+            priceValue: s.priceValue || 0,
             priceDisplay: s.priceDisplay,
             unit: '',
             features: s.note ? [s.note] : [],
