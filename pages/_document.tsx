@@ -1,4 +1,5 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
+import Script from 'next/script';
 
 type Props = {
   locale: string;
@@ -38,7 +39,7 @@ class MyDocument extends Document<Props> {
              crossOrigin="anonymous"
            />
            {/* Other fonts load on demand */}
-            <script src="/scripts/theme-init.js" defer />
+            <Script src="/scripts/theme-init.js" strategy="beforeInteractive" />
            </Head>
         <body className="bg-white dark:bg-gray-900">
           <Main />

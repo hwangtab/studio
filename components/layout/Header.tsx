@@ -21,7 +21,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
-  const currentPath = router.asPath;
+  const currentPath = router.asPath.split('?')[0].split('#')[0];
   const siteConfig = getSiteConfig(locale);
 
   const toggleGroup = useCallback((group: string) => {

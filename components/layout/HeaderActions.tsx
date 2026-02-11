@@ -30,7 +30,7 @@ export const HeaderActions = ({
     <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-4">
       <div className="hidden sm:flex items-center space-x-2">
         <button
-          className={`p-2 rounded-full transition-colors duration-300 ${!isTransparent
+          className={`p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
             ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
             : 'text-white hover:bg-white/20'
             }`}
@@ -51,7 +51,7 @@ export const HeaderActions = ({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={t('actions.kakaoExternal')}
-        className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border ${!isTransparent
+        className={`px-4 py-2 min-h-[44px] rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
           ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
           : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
           }`}
@@ -60,7 +60,7 @@ export const HeaderActions = ({
       </a>
 
       <button
-        className={`xl:hidden p-2 rounded-full transition-colors duration-300 ${!isTransparent
+        className={`xl:hidden p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
           ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
           : 'text-white hover:bg-white/20'
           }`}
