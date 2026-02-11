@@ -53,7 +53,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     Object.entries(i18nResources as Record<string, unknown>).forEach(([lng, namespaces]) => {
       Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
         if (!data) return;
-        i18n.addResourceBundle(lng, ns, data, true, true);
+        if (!i18n.hasResourceBundle(lng, ns)) {
+          i18n.addResourceBundle(lng, ns, data, true, true);
+        }
       });
     });
   }
@@ -131,7 +133,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion="user">
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="sync" initial={false}>
+                <AnimatePresence mode="sync" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     initial={shouldReduceMotion ? false : { opacity: 0 }}
