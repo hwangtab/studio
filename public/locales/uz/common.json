@@ -2,7 +2,7 @@
   "nav": {
     "home": "Bosh sahifa",
     "about": "Biz haqimizda",
-    "portfolio": "Portfolio",
+    "portfolio": "Portfel",
     "stories": "Hikoyalar",
     "contact": "Aloqa",
     "pricing": "Narxlar",
@@ -117,22 +117,22 @@
     "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
   },
    "portfolio": {
-     "title": "Portfolio",
+     "title": "Portfel",
      "subtitle": "Studio NOLda ishlangan turli loyihalar bilan tanishing. Har bir ishni bosib, batafsil ko'ring.",
      "sampleTracks": "Namunaviy treklar",
      "projects": "Loyihalar",
      "noProjects": "Tanlangan kategoriyada loyihalar topilmadi.",
      "viewProject": "Loyihani ko'rish",
      "detail": {
-       "titleSuffix": "Studio NOL Portfolio",
+       "titleSuffix": "Studio NOL Portfeli",
        "metaDescription": "\"{{title}}\" — {{artist}} ijrosida. {{description}}. Studio NOLda ishlangan loyiha.",
-       "backToList": "Portfolioga qaytish",
+       "backToList": "Portfelga qaytish",
        "artistLabel": "Artist",
        "servicesProvided": "Ko'rsatilgan xizmatlar",
        "listenNow": "Hozir tinglang",
        "share": "Ulashish"
      },
-     "heroAlt": "Studio NOL Portfolio",
+     "heroAlt": "Studio NOL Portfeli",
      "seo": {
        "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL"
      }

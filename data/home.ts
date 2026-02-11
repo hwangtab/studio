@@ -313,7 +313,7 @@ const homeData = {
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
         reserve: "Band qilish",
-        portfolio: "Portfolio"
+        portfolio: "Portfel"
       },
       ctaImageAlt: "Studio NOL Seul - Professional yozuv uskunalari"
     },
