@@ -8,10 +8,10 @@ function createNonce(): string {
     return btoa(crypto.randomUUID());
 }
 
-function buildContentSecurityPolicy(): string {
+function buildContentSecurityPolicy(nonce: string): string {
     return [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com",
+        `script-src 'self' 'unsafe-inline' 'nonce-${nonce}' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com`,
         "script-src-attr 'none'",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
@@ -24,7 +24,7 @@ function buildContentSecurityPolicy(): string {
 }
 
 function setSecurityHeaders(response: NextResponse, nonce: string): NextResponse {
-    response.headers.set('Content-Security-Policy', buildContentSecurityPolicy());
+    response.headers.set('Content-Security-Policy', buildContentSecurityPolicy(nonce));
     response.headers.set('x-nonce', nonce);
     return response;
 }

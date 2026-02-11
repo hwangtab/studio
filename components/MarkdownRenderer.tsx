@@ -54,7 +54,7 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
   }, [children, className]);
 
   return (
-    <pre className={`rounded-lg overflow-hidden my-4 ${language}`}>
+    <pre className={`rounded-lg overflow-hidden my-4 language-${language}`}>
       <code ref={codeRef} className={`language-${language}`}>
         {children}
       </code>

@@ -266,6 +266,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             payload.accessToken = privateKey;
         }
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+
         const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
             method: 'POST',
             headers: {
@@ -273,6 +276,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
             body: JSON.stringify(payload),
             cache: 'no-store',
+            signal: controller.signal,
+        }).finally(() => {
+            clearTimeout(timeoutId);
         });
 
         if (response.ok) {
@@ -290,6 +296,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
         }
     } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+            return res.status(504).json({ message: 'Email service timeout. Please try again later.' });
+        }
         console.error('[API Route Error]', error);
         return res.status(500).json({ message: 'Internal server error' });
     }

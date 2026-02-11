@@ -12,7 +12,15 @@ class MyDocument extends Document<Props> {
     const locale = (ctx.query?.locale as string) || 'ko';
     const nonceHeader = ctx.req?.headers['x-nonce'];
     const nonce = Array.isArray(nonceHeader) ? nonceHeader[0] : nonceHeader;
-    return { ...initialProps, locale, nonce };
+
+    const html = nonce
+      ? initialProps.html.replace(
+        /<script([^>]*type="application\/ld\+json"[^>]*)>/g,
+        (match, attrs: string) => (attrs.includes(' nonce=') ? match : `<script nonce="${nonce}"${attrs}>`)
+      )
+      : initialProps.html;
+
+    return { ...initialProps, html, locale, nonce };
   }
 
   render() {

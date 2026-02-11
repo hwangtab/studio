@@ -18,6 +18,23 @@ export const localeNames: Record<Locale, string> = {
 const commonByLocaleCache: Partial<Record<Locale, Record<string, unknown>>> = {};
 const commonByLocalePending: Partial<Record<Locale, Promise<Record<string, unknown>>>> = {};
 
+const getClientInitialResources = (): Resource => {
+  if (typeof window === 'undefined') {
+    return {};
+  }
+
+  const nextData = (window as typeof window & {
+    __NEXT_DATA__?: { props?: { pageProps?: { i18nResources?: unknown } } };
+  }).__NEXT_DATA__;
+
+  const resources = nextData?.props?.pageProps?.i18nResources;
+  if (!resources || typeof resources !== 'object') {
+    return {};
+  }
+
+  return resources as Resource;
+};
+
 export const loadCommonResource = (locale: Locale): Record<string, unknown> => {
   const cached = commonByLocaleCache[locale];
   if (cached) {
@@ -73,8 +90,11 @@ export const loadCommonResourceClient = async (locale: Locale): Promise<Record<s
 // This prevents empty bundles from blocking real resource injection in _app.tsx.
 export const resources: Resource =
   typeof window === 'undefined'
-    ? { ko: { common: loadCommonResource(defaultLocale) } }
-    : {};
+    ? locales.reduce<Resource>((acc, locale) => {
+      acc[locale] = { common: loadCommonResource(locale) };
+      return acc;
+    }, {})
+    : getClientInitialResources();
 
 export const getLocaleI18nResources = (locale: Locale): Resource => ({
   [locale]: {
