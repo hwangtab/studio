@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
 import type { Locale } from '../../lib/i18n';
+import { getSiteConfig } from '../../data/siteConfig';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -33,10 +34,14 @@ const ContactCTA = ({
     headingAs = 'h2',
 }: ContactCTAProps) => {
     const { t } = useTranslation('common', { lng: locale });
+    const siteConfig = getSiteConfig(locale);
+    const isKorean = locale === 'ko';
     const getLink = (path: string) => `/${locale}${path}`;
 
     const primaryLabel = primaryButtonLabel ?? t('actions.kakao');
     const secondaryLabel = secondaryButtonLabel ?? t('actions.location');
+    const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
+    const imageHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
 
     return (
         <m.div
@@ -63,35 +68,63 @@ const ContactCTA = ({
                         >
                             <span className="min-w-0">{secondaryLabel}</span>
                         </Link>
-                        <a
-                            href="https://open.kakao.com/me/nol"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                        >
-                            <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                            <span className="min-w-0">{primaryLabel}</span>
-                        </a>
+                        {isKorean ? (
+                            <a
+                                href={primaryHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                            >
+                                <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                <span className="min-w-0">{primaryLabel}</span>
+                            </a>
+                        ) : (
+                            <Link
+                                href={primaryHref}
+                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                            >
+                                <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                <span className="min-w-0">{primaryLabel}</span>
+                            </Link>
+                        )}
                     </div>
                 </div>
 
-                <a
-                    href="https://open.kakao.com/me/nol"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
-                >
-                    <ResponsiveImage
-                        src={imageSrc}
-                        alt={imageAlt}
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                        pictureClassName="block h-full"
-                        loading="lazy"
-                        sizes="(min-width: 768px) 50vw, 100vw"
-                        fill
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-                </a>
+                {isKorean ? (
+                    <a
+                        href={imageHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
+                    >
+                        <ResponsiveImage
+                            src={imageSrc}
+                            alt={imageAlt}
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            pictureClassName="block h-full"
+                            loading="lazy"
+                            sizes="(min-width: 768px) 50vw, 100vw"
+                            fill
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+                    </a>
+                ) : (
+                    <Link
+                        href={imageHref}
+                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
+                    >
+                        <ResponsiveImage
+                            src={imageSrc}
+                            alt={imageAlt}
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            pictureClassName="block h-full"
+                            loading="lazy"
+                            sizes="(min-width: 768px) 50vw, 100vw"
+                            fill
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+                    </Link>
+                )}
             </div>
         </m.div>
     );
