@@ -153,7 +153,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <MarkdownRenderer content={story.content} />
+          <MarkdownRenderer content={story.content} locale={locale} />
         </m.div>
 
         <StoryCTA type={ctaType} locale={locale} />

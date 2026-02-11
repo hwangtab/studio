@@ -2,12 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MarkdownRenderer from './MarkdownRenderer';
 
-jest.mock('next/router', () => ({
-  useRouter: () => ({
-    asPath: '/ko/stories/test-story',
-  }),
-}));
-
 jest.mock('next/head', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -21,7 +15,7 @@ jest.mock('next/image', () => ({
 
 describe('MarkdownRenderer link protocol filtering', () => {
   it('renders allowed protocols and relative links', () => {
-    render(<MarkdownRenderer content={'[Safe](https://example.com) [Local](/stories/story-1) [Mail](mailto:test@example.com)'} />);
+    render(<MarkdownRenderer locale="ko" content={'[Safe](https://example.com) [Local](/stories/story-1) [Mail](mailto:test@example.com)'} />);
 
     expect(screen.getByRole('link', { name: 'Safe' }).getAttribute('href')).toBe('https://example.com');
     expect(screen.getByRole('link', { name: 'Mail' }).getAttribute('href')).toBe('mailto:test@example.com');
@@ -29,7 +23,7 @@ describe('MarkdownRenderer link protocol filtering', () => {
   });
 
   it('blocks dangerous protocols and keeps plain text', () => {
-    render(<MarkdownRenderer content={'[JS](javascript:alert(1)) [Data](data:text/html;base64,abc) [VB](vbscript:msgbox(1))'} />);
+    render(<MarkdownRenderer locale="ko" content={'[JS](javascript:alert(1)) [Data](data:text/html;base64,abc) [VB](vbscript:msgbox(1))'} />);
 
     expect(screen.queryByRole('link', { name: 'JS' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Data' })).toBeNull();

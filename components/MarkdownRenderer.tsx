@@ -1,6 +1,5 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
-import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
@@ -320,16 +319,11 @@ const STATIC_OVERRIDES = {
 
 interface MarkdownRendererProps {
   content: string;
+  locale?: Locale;
 }
 
-const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
-  const router = useRouter();
-
-  // Detect current locale from path
-  const currentLocale = React.useMemo(() => {
-    const segments = router.asPath.split('/');
-    return locales.includes(segments[1] as Locale) ? (segments[1] as Locale) : 'ko';
-  }, [router.asPath]);
+const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => {
+  const currentLocale = locale;
 
   const overrides = React.useMemo(() => ({
     ...STATIC_OVERRIDES,
