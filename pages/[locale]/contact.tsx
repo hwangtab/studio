@@ -81,6 +81,120 @@ const submitErrorMessages: Record<Locale, {
   },
 };
 
+const validationFallbacks: Record<Locale, {
+  errorsFound: string;
+  nameMin: string;
+  nameMax: string;
+  nameInvalid: string;
+  emailRequired: string;
+  emailInvalid: string;
+  emailMax: string;
+  phoneRequired: string;
+  phoneInvalid: string;
+  phoneLength: string;
+  messageMin: string;
+  messageMax: string;
+}> = {
+  ko: {
+    errorsFound: '{{count}}개의 입력 항목을 확인해 주세요.',
+    nameMin: '이름은 2자 이상 입력해 주세요.',
+    nameMax: '이름은 100자 이하로 입력해 주세요.',
+    nameInvalid: '이름에 사용할 수 없는 문자가 포함되어 있습니다.',
+    emailRequired: '이메일을 입력해 주세요.',
+    emailInvalid: '유효한 이메일 형식을 입력해 주세요.',
+    emailMax: '이메일은 254자 이하로 입력해 주세요.',
+    phoneRequired: '연락처를 입력해 주세요.',
+    phoneInvalid: '연락처 형식이 올바르지 않습니다.',
+    phoneLength: '연락처는 5자 이상 50자 이하로 입력해 주세요.',
+    messageMin: '메시지는 10자 이상 입력해 주세요.',
+    messageMax: '메시지는 5000자 이하로 입력해 주세요.',
+  },
+  en: {
+    errorsFound: 'Please review {{count}} field(s).',
+    nameMin: 'Name must be at least 2 characters.',
+    nameMax: 'Name must be 100 characters or fewer.',
+    nameInvalid: 'Name contains invalid characters.',
+    emailRequired: 'Email is required.',
+    emailInvalid: 'Please enter a valid email address.',
+    emailMax: 'Email must be 254 characters or fewer.',
+    phoneRequired: 'Phone is required.',
+    phoneInvalid: 'Phone format is invalid.',
+    phoneLength: 'Phone must be between 5 and 50 characters.',
+    messageMin: 'Message must be at least 10 characters.',
+    messageMax: 'Message must be 5000 characters or fewer.',
+  },
+  zh: {
+    errorsFound: '请检查 {{count}} 个输入项。',
+    nameMin: '姓名至少需要 2 个字符。',
+    nameMax: '姓名不能超过 100 个字符。',
+    nameInvalid: '姓名包含无效字符。',
+    emailRequired: '请输入电子邮箱。',
+    emailInvalid: '请输入有效的电子邮箱地址。',
+    emailMax: '电子邮箱不能超过 254 个字符。',
+    phoneRequired: '请输入联系电话。',
+    phoneInvalid: '联系电话格式无效。',
+    phoneLength: '联系电话长度需在 5 到 50 个字符之间。',
+    messageMin: '留言至少需要 10 个字符。',
+    messageMax: '留言不能超过 5000 个字符。',
+  },
+  es: {
+    errorsFound: 'Revisa {{count}} campo(s).',
+    nameMin: 'El nombre debe tener al menos 2 caracteres.',
+    nameMax: 'El nombre debe tener como maximo 100 caracteres.',
+    nameInvalid: 'El nombre contiene caracteres no validos.',
+    emailRequired: 'El correo es obligatorio.',
+    emailInvalid: 'Ingresa un correo electronico valido.',
+    emailMax: 'El correo debe tener como maximo 254 caracteres.',
+    phoneRequired: 'El telefono es obligatorio.',
+    phoneInvalid: 'El formato del telefono no es valido.',
+    phoneLength: 'El telefono debe tener entre 5 y 50 caracteres.',
+    messageMin: 'El mensaje debe tener al menos 10 caracteres.',
+    messageMax: 'El mensaje debe tener como maximo 5000 caracteres.',
+  },
+  vi: {
+    errorsFound: 'Vui long kiem tra {{count}} truong.',
+    nameMin: 'Ten phai co it nhat 2 ky tu.',
+    nameMax: 'Ten khong duoc vuot qua 100 ky tu.',
+    nameInvalid: 'Ten chua ky tu khong hop le.',
+    emailRequired: 'Vui long nhap email.',
+    emailInvalid: 'Vui long nhap email hop le.',
+    emailMax: 'Email khong duoc vuot qua 254 ky tu.',
+    phoneRequired: 'Vui long nhap so dien thoai.',
+    phoneInvalid: 'Dinh dang so dien thoai khong hop le.',
+    phoneLength: 'So dien thoai phai tu 5 den 50 ky tu.',
+    messageMin: 'Noi dung phai co it nhat 10 ky tu.',
+    messageMax: 'Noi dung khong duoc vuot qua 5000 ky tu.',
+  },
+  th: {
+    errorsFound: 'กรุณาตรวจสอบ {{count}} ช่องข้อมูล',
+    nameMin: 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร',
+    nameMax: 'ชื่อต้องไม่เกิน 100 ตัวอักษร',
+    nameInvalid: 'ชื่อมีอักขระที่ไม่ถูกต้อง',
+    emailRequired: 'กรุณากรอกอีเมล',
+    emailInvalid: 'กรุณากรอกอีเมลที่ถูกต้อง',
+    emailMax: 'อีเมลต้องไม่เกิน 254 ตัวอักษร',
+    phoneRequired: 'กรุณากรอกเบอร์โทรศัพท์',
+    phoneInvalid: 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง',
+    phoneLength: 'เบอร์โทรศัพท์ต้องมีความยาว 5 ถึง 50 ตัวอักษร',
+    messageMin: 'ข้อความต้องมีอย่างน้อย 10 ตัวอักษร',
+    messageMax: 'ข้อความต้องไม่เกิน 5000 ตัวอักษร',
+  },
+  uz: {
+    errorsFound: '{{count}} ta maydonni tekshiring.',
+    nameMin: 'Ism kamida 2 ta belgidan iborat bolishi kerak.',
+    nameMax: 'Ism 100 ta belgidan oshmasligi kerak.',
+    nameInvalid: 'Ismda yaroqsiz belgilar bor.',
+    emailRequired: 'Email kiritilishi shart.',
+    emailInvalid: 'Yaroqli email manzilini kiriting.',
+    emailMax: 'Email 254 ta belgidan oshmasligi kerak.',
+    phoneRequired: 'Telefon raqami kiritilishi shart.',
+    phoneInvalid: 'Telefon raqami formati notogri.',
+    phoneLength: 'Telefon raqami 5 dan 50 tagacha belgidan iborat bolishi kerak.',
+    messageMin: 'Xabar kamida 10 ta belgidan iborat bolishi kerak.',
+    messageMax: 'Xabar 5000 ta belgidan oshmasligi kerak.',
+  },
+};
+
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon: React.ElementType;
   label: string;
@@ -108,6 +222,7 @@ const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps)
 
 const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const validationCopy = validationFallbacks[locale] || validationFallbacks.ko;
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -140,32 +255,32 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     });
   }, []);
 
-   const validateName = (value: string): string => {
-     if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin');
-     if (value.length > 100) return t('contact.form.errors.nameMax');
-     if (!/^[\p{L}\p{M}\s'-]+$/u.test(value)) return t('contact.form.errors.nameInvalid');
-     return '';
-   };
+    const validateName = (value: string): string => {
+      if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin', { defaultValue: validationCopy.nameMin });
+      if (value.length > 100) return t('contact.form.errors.nameMax', { defaultValue: validationCopy.nameMax });
+      if (!/^[\p{L}\p{M}\s'-]+$/u.test(value)) return t('contact.form.errors.nameInvalid', { defaultValue: validationCopy.nameInvalid });
+      return '';
+    };
 
   const validateEmail = (value: string): string => {
-    if (!value) return t('contact.form.errors.emailRequired');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('contact.form.errors.emailInvalid');
-    if (value.length > 254) return t('contact.form.errors.emailMax');
+    if (!value) return t('contact.form.errors.emailRequired', { defaultValue: validationCopy.emailRequired });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('contact.form.errors.emailInvalid', { defaultValue: validationCopy.emailInvalid });
+    if (value.length > 254) return t('contact.form.errors.emailMax', { defaultValue: validationCopy.emailMax });
     return '';
   };
 
-   const validatePhone = (value: string): string => {
-     if (!value) return t('contact.form.errors.phoneRequired');
-     if (!/^[\d\s+\-\(\)]+$/.test(value)) return t('contact.form.errors.phoneInvalid');
-     const normalized = value.replace(/\s/g, '');
-     if (!normalized) return t('contact.form.errors.phoneRequired');
-     if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength');
-     return '';
-   };
+    const validatePhone = (value: string): string => {
+      if (!value) return t('contact.form.errors.phoneRequired', { defaultValue: validationCopy.phoneRequired });
+      if (!/^[\d\s+\-\(\)]+$/.test(value)) return t('contact.form.errors.phoneInvalid', { defaultValue: validationCopy.phoneInvalid });
+      const normalized = value.replace(/\s/g, '');
+      if (!normalized) return t('contact.form.errors.phoneRequired', { defaultValue: validationCopy.phoneRequired });
+      if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength', { defaultValue: validationCopy.phoneLength });
+      return '';
+    };
 
   const validateMessage = (value: string): string => {
-    if (!value || value.trim().length < 10) return t('contact.form.errors.messageMin');
-    if (value.length > 5000) return t('contact.form.errors.messageMax');
+    if (!value || value.trim().length < 10) return t('contact.form.errors.messageMin', { defaultValue: validationCopy.messageMin });
+    if (value.length > 5000) return t('contact.form.errors.messageMax', { defaultValue: validationCopy.messageMax });
     return '';
   };
 
@@ -444,10 +559,13 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   {(submitErrorMessages[locale] || submitErrorMessages.ko).retry}
                 </button>
               )}
-              {Object.keys(errors).filter(key => errors[key]).length > 0 && (
+              {Object.keys(errors).filter(key => errors[key]).length > 1 && (
                 <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
                   <p className="text-sm font-medium text-red-800 dark:text-red-300">
-                    {t('contact.form.errorsFound', { count: Object.keys(errors).filter(key => errors[key]).length })}
+                    {t('contact.form.errorsFound', {
+                      count: Object.keys(errors).filter(key => errors[key]).length,
+                      defaultValue: validationCopy.errorsFound,
+                    })}
                   </p>
                 </div>
               )}

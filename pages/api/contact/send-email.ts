@@ -54,12 +54,29 @@ const getAllowedOrigins = (): string[] => {
 
     const defaults = [
         'https://studionol.co.kr',
+        'https://www.studionol.co.kr',
         process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : null,
         process.env.NODE_ENV !== 'production' ? 'http://localhost:3001' : null,
         siteUrlOrigin,
     ].filter((origin): origin is string => Boolean(origin));
 
-    return [...new Set([...defaults, ...envOrigins])];
+    const allOrigins = [...new Set([...defaults, ...envOrigins])];
+    const variantOrigins = allOrigins.flatMap((origin) => {
+        try {
+            const url = new URL(origin);
+            if (url.hostname === 'localhost' || url.hostname.startsWith('127.')) {
+                return [origin];
+            }
+            if (url.hostname.startsWith('www.')) {
+                return [origin, `${url.protocol}//${url.hostname.slice(4)}`];
+            }
+            return [origin, `${url.protocol}//www.${url.hostname}`];
+        } catch {
+            return [origin];
+        }
+    });
+
+    return [...new Set(variantOrigins)];
 };
 
 const checkRateLimitInMemory = (ip: string): void => {
