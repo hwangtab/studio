@@ -23,6 +23,10 @@ export const generateDefaultSchema = (
 ) => {
   const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
+  const localeContactUrl = isKo ? config.contact.kakaoUrl : `${siteUrl}/${locale}/contact`;
+  const sameAsLinks = isKo
+    ? [config.contact.kakaoUrl, config.contact.naverMapUrl]
+    : [config.contact.naverMapUrl];
 
   const translations = {
     name: config.name,
@@ -61,11 +65,11 @@ export const generateDefaultSchema = (
             '@type': 'ContactPoint',
             contactType: translations.contactType,
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
-            url: config.contact.kakaoUrl,
-            availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
+            url: localeContactUrl,
+            availableLanguage: [locale],
           },
         ],
-        sameAs: [config.contact.kakaoUrl, config.contact.naverMapUrl],
+        sameAs: sameAsLinks,
         slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
       },
@@ -184,7 +188,7 @@ export const generateDefaultSchema = (
               description: translations.residencyDesc,
               priceCurrency: 'KRW',
               price: 400000,
-              url: 'https://open.kakao.com/o/sAWXdN5g',
+              url: localeContactUrl,
               availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
