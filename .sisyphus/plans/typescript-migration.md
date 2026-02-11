@@ -57,11 +57,11 @@ Next.js 14 JavaScript 코드베이스 전체를 TypeScript로 마이그레이션
 - 공유 타입 정의 파일 (`types/` 디렉토리)
 
 ### Definition of Done
-- [ ] `npx tsc --noEmit` → Exit code: 0
-- [ ] `npm run build` → Exit code: 0, 동일한 페이지 수
-- [ ] `npm test -- --watchAll=false` → Exit code: 0, 동일한 테스트 수
-- [ ] `find pages components utils lib data -name "*.js" -o -name "*.jsx" | wc -l` → 0
-- [ ] `npm run lint` → Exit code: 0
+- [x] `npx tsc --noEmit` → Exit code: 0
+- [x] `npm run build` → Exit code: 0, 동일한 페이지 수
+- [x] `npm test -- --watchAll=false` → Exit code: 0, 동일한 테스트 수
+- [x] `find pages components utils lib data -name "*.js" -o -name "*.jsx" | wc -l` → 0
+- [x] `npm run lint` → Exit code: 0
 
 ### Must Have
 - TypeScript strict mode 활성화
@@ -168,7 +168,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 1: TypeScript 환경 설정
 
-- [ ] 1. TypeScript 환경 설정
+- [x] 1. TypeScript 환경 설정
 
   **What to do**:
   - tsconfig.json 생성 (strict: true, Next.js 권장 설정)
@@ -235,7 +235,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 2: Utils 마이그레이션
 
-- [ ] 2. Utils 마이그레이션 (utils/*.js → utils/*.ts)
+- [x] 2. Utils 마이그레이션 (utils/*.js → utils/*.ts)
 
   **What to do**:
   - utils/animationUtils.js → utils/animationUtils.ts
@@ -307,7 +307,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 3: Data 마이그레이션
 
-- [ ] 3. Data 마이그레이션 (data/*.js → data/*.ts)
+- [x] 3. Data 마이그레이션 (data/*.js → data/*.ts)
 
   **What to do**:
   - data/home.js → data/home.ts
@@ -374,7 +374,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 4: Lib 마이그레이션
 
-- [ ] 4. Lib 마이그레이션 (lib/*.js → lib/*.ts)
+- [x] 4. Lib 마이그레이션 (lib/*.js → lib/*.ts)
 
   **What to do**:
   - lib/stories.js → lib/stories.ts
@@ -444,7 +444,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 5: Components 마이그레이션
 
-- [ ] 5. Components 마이그레이션 (components/**/*.js → components/**/*.tsx)
+- [x] 5. Components 마이그레이션 (components/**/*.js → components/**/*.tsx)
 
   **What to do**:
   - **UI Components** (components/ui/):
@@ -545,7 +545,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 6: Pages 마이그레이션
 
-- [ ] 6. Pages 마이그레이션 (pages/**/*.js → pages/**/*.tsx)
+- [x] 6. Pages 마이그레이션 (pages/**/*.js → pages/**/*.tsx)
 
   **What to do**:
   - **Root Pages** (pages/):
@@ -640,7 +640,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 7: Tests 마이그레이션
 
-- [ ] 7. Tests 마이그레이션 및 Jest TypeScript 설정
+- [x] 7. Tests 마이그레이션 및 Jest TypeScript 설정
 
   **What to do**:
   - Jest TypeScript 지원 설정 (ts-jest 또는 next/jest의 기본 TS 지원 활용)
@@ -724,7 +724,7 @@ Critical Path: Task 1 → Task 2 → Task 5 → Task 7 → Task 8
 
 ### Task 8: Config 파일 및 최종 검증
 
-- [ ] 8. Config 파일 마이그레이션 및 최종 검증
+- [x] 8. Config 파일 마이그레이션 및 최종 검증
 
   **What to do**:
   - next.config.js → next.config.ts (Next.js 14 지원 확인 후)
@@ -851,10 +851,10 @@ find pages components utils lib data -type f \( -name "*.js" -o -name "*.jsx" \)
 ```
 
 ### Final Checklist
-- [ ] tsconfig.json strict: true 활성화
-- [ ] 모든 @types 패키지 설치됨
-- [ ] pages, components, utils, lib, data 모두 .ts/.tsx 변환
-- [ ] 테스트 파일 TypeScript 변환 및 통과
-- [ ] 빌드 출력물 동일 (페이지 수, 에러 없음)
-- [ ] ESLint TypeScript 플러그인 적용
-- [ ] 비즈니스 로직 변경 없음
+- [x] tsconfig.json strict: true 활성화
+- [x] 모든 @types 패키지 설치됨
+- [x] pages, components, utils, lib, data 모두 .ts/.tsx 변환
+- [x] 테스트 파일 TypeScript 변환 및 통과
+- [x] 빌드 출력물 동일 (페이지 수, 에러 없음)
+- [x] ESLint TypeScript 플러그인 적용
+- [x] 비즈니스 로직 변경 없음
