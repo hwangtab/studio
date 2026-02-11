@@ -194,6 +194,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
                   key={item.id}
                   {...item}
                   index={index}
+                  locale={locale}
                   onClick={() => handleCardClick(item)}
                 />
               ))}

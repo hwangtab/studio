@@ -8,6 +8,7 @@ import { PortfolioItem } from '../../types/data';
 interface ProjectRowCardProps extends PortfolioItem {
     onClick?: () => void;
     index: number;
+    locale: string;
 }
 
 const ProjectRowCard = ({
@@ -18,9 +19,10 @@ const ProjectRowCard = ({
     category,
     services,
     onClick,
-    index
+    index,
+    locale,
 }: ProjectRowCardProps) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('common', { lng: locale });
     const isInteractive = Boolean(onClick);
 
     // 카테고리에 따른 뱃지 색상 (Light/Dark 대응)
