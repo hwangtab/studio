@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { type TFunction } from 'i18next';
+import Link from 'next/link';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -46,18 +47,30 @@ export const HeaderActions = ({
         />
       </div>
 
-      <a
-        href={siteConfig.contact.kakaoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={t('actions.kakaoExternal')}
-        className={`px-4 py-2 min-h-[44px] rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
-          ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
-          : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
-          }`}
-      >
-        {t('actions.kakao')}
-      </a>
+      {locale === 'ko' ? (
+        <a
+          href={siteConfig.contact.kakaoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t('actions.kakaoExternal')}
+          className={`px-4 py-2 min-h-[44px] rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+            ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
+            : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
+            }`}
+        >
+          {t('actions.kakao')}
+        </a>
+      ) : (
+        <Link
+          href={`/${locale}/contact`}
+          className={`px-4 py-2 min-h-[44px] rounded-full text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+            ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
+            : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
+            }`}
+        >
+          {t('nav.contact')}
+        </Link>
+      )}
 
       <button
         className={`xl:hidden p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
