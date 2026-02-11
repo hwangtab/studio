@@ -137,6 +137,10 @@ interface EmailJSPayload {
         phone?: string;
         email: string;
         message: string;
+        utm_source?: string;
+        utm_medium?: string;
+        utm_campaign?: string;
+        referrer?: string;
     };
     accessToken?: string;
 }
@@ -160,7 +164,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const payload = req.body as Record<string, unknown>;
 
-    const { name, phone, email, message, company } = payload;
+    const { name, phone, email, message, company, utm_source, utm_medium, utm_campaign, referrer } = payload;
 
     // 1. Honeypot validation
     if (company && typeof company === 'string' && company.trim().length > 0) {
@@ -270,6 +274,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 phone: sanitizedPhone,
                 email: sanitizedEmail,
                 message: sanitizedMessage,
+                utm_source: typeof utm_source === 'string' ? utm_source : undefined,
+                utm_medium: typeof utm_medium === 'string' ? utm_medium : undefined,
+                utm_campaign: typeof utm_campaign === 'string' ? utm_campaign : undefined,
+                referrer: typeof referrer === 'string' ? referrer : undefined,
             },
         };
 

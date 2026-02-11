@@ -1,5 +1,5 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { m, useReducedMotion } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -120,8 +120,25 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [canRetrySubmit, setCanRetrySubmit] = useState(false);
   const [lastSubmittedData, setLastSubmittedData] = useState<typeof formData | null>(null);
+  const [attribution, setAttribution] = useState<{
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    referrer?: string;
+  }>({});
   const siteConfig = getSiteConfig(locale);
   const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    setAttribution({
+      utm_source: params.get('utm_source') || undefined,
+      utm_medium: params.get('utm_medium') || undefined,
+      utm_campaign: params.get('utm_campaign') || undefined,
+      referrer: document.referrer || undefined,
+    });
+  }, []);
 
    const validateName = (value: string): string => {
      if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin');
@@ -184,7 +201,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, ...attribution }),
         signal: controller.signal,
       });
 
@@ -326,7 +343,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
             initial={shouldReduceMotion ? false : { opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
-            className="card p-8 shadow-xl"
+            className="card p-8 shadow-xl order-2 lg:order-1"
           >
             <m.div
               initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
@@ -400,7 +417,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
             initial={shouldReduceMotion ? false : { opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
-            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl"
+            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
           >
             <m.div
               initial={shouldReduceMotion ? false : { opacity: 0, x: 0 }}
@@ -456,7 +473,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   error={errors.name}
                   placeholder={t('contact.form.namePlaceholder')}
                   required
-                  autoComplete="off"
+                  autoComplete="name"
                 />
 
                 <InputField
@@ -470,7 +487,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   error={errors.phone}
                   placeholder={t('contact.form.phonePlaceholder')}
                   required
-                  autoComplete="off"
+                  autoComplete="tel"
                   inputMode="tel"
                 />
 
@@ -485,7 +502,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   error={errors.email}
                   placeholder={t('contact.form.emailPlaceholder')}
                   required
-                  autoComplete="off"
+                  autoComplete="email"
                   inputMode="email"
                   spellCheck={false}
                 />
@@ -506,7 +523,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                     className={`w-full pl-10 pr-3 py-2 border ${errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent`}
                     rows={8}
                     required
-                    autoComplete="off"
+                    autoComplete="on"
                   ></textarea>
                   {errors.message && (
                     <span id="message-error" role="alert" className="text-xs text-red-500 mt-1 pl-10 block">
