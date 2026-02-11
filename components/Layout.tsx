@@ -117,7 +117,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   return (
     <div
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
-      suppressHydrationWarning
     >
       <ScrollProgress />
       <a

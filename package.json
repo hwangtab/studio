@@ -32,7 +32,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint pages components lib data utils middleware.ts next.config.mjs --ext .js,.jsx,.ts,.tsx",
     "type-check": "tsc --noEmit",
     "prebuild": "node scripts/optimizeImages.js",
     "postbuild": "next-sitemap",

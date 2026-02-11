@@ -47,26 +47,27 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   );
   const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
 
-  // Merge i18n resources from server-side props synchronously before rendering children.
-  // This prevents raw translation keys from flashing on first paint.
-  if (i18nResources) {
-    Object.entries(i18nResources as Record<string, unknown>).forEach(([lng, namespaces]) => {
-      Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
-        if (!data) return;
-        if (!i18n.hasResourceBundle(lng, ns)) {
-          i18n.addResourceBundle(lng, ns, data, true, true);
-        }
-      });
-    });
-  }
-
   useEffect(() => {
     let isCancelled = false;
 
     const ensureLocaleReady = async () => {
       let renderLocale: Locale = locale;
 
-      if (!i18n.hasResourceBundle(locale, 'common')) {
+      if (i18nResources && typeof i18nResources === 'object') {
+        Object.entries(i18nResources as Record<string, unknown>).forEach(([lng, namespaces]) => {
+          Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
+            if (!data) return;
+            i18n.addResourceBundle(lng, ns, data, true, true);
+          });
+        });
+      }
+
+      const hasLocaleBundle = i18n.hasResourceBundle(locale, 'common');
+      if (!hasServerResourceForLocale && !hasLocaleBundle) {
+        setIsLocaleReady(false);
+      }
+
+      if (!hasLocaleBundle) {
         try {
           const commonResource = await loadCommonResourceClient(locale);
           i18n.addResourceBundle(locale, 'common', commonResource, true, true);
@@ -100,7 +101,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     return () => {
       isCancelled = true;
     };
-  }, [locale]);
+  }, [hasServerResourceForLocale, i18nResources, locale]);
 
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (

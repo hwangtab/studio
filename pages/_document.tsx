@@ -22,7 +22,6 @@ class MyDocument extends Document<Props> {
       <Html
         lang={locale}
         prefix="og: https://ogp.me/ns#"
-        suppressHydrationWarning
       >
          <Head nonce={nonce}>
            {/* Critical fonts for above-the-fold content */}
