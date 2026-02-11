@@ -11,6 +11,7 @@ import { filterPortfolioItems } from '../../utils/portfolioDataUtils';
 import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import ContactCTA from '../../components/common/ContactCTA';
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
 const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), { ssr: false });
@@ -214,6 +215,16 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           )}
         </m.div>
       </Section>
+
+      <ContactCTA
+        locale={locale}
+        title={t('pricing.cta.title')}
+        subtitle={t('pricing.cta.subtitle')}
+        imageSrc="/images/recording15.webp"
+        imageAlt={t('pricing.images.packageAlt')}
+        primaryButtonLabel={t('pricing.cta.inquiry')}
+        secondaryButtonLabel={t('pricing.cta.location')}
+      />
 
       <AnimatePresence>
         {selectedItem && (

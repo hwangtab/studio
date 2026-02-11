@@ -6,6 +6,7 @@ import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
+import ContactCTA from '../../../components/common/ContactCTA';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
@@ -116,6 +117,15 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
           )}
         </m.div>
       </Section>
+      <ContactCTA
+        locale={locale}
+        title={t('pricing.cta.title')}
+        subtitle={t('pricing.cta.subtitle')}
+        imageSrc="/images/recording15.webp"
+        imageAlt={t('pricing.images.packageAlt')}
+        primaryButtonLabel={t('pricing.cta.inquiry')}
+        secondaryButtonLabel={t('pricing.cta.location')}
+      />
     </>
   );
 };
