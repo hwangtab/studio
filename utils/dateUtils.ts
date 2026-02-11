@@ -16,7 +16,7 @@ export const formatDate = (date: string | Date, locale: string = 'ko'): string =
       month: 'short',
       day: 'numeric',
     }).format(d);
-  } catch (error) {
+  } catch {
     return new Intl.DateTimeFormat('en', {
       year: 'numeric',
       month: 'short',

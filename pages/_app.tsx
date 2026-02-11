@@ -1,6 +1,7 @@
 import type { AppPropsWithLayout } from '../types';
 import { Analytics } from '@vercel/analytics/react';
 import '../styles/globals.css';
+import '../styles/prism-theme.css';
 
 import Head from 'next/head';
 import { Montserrat } from 'next/font/google';

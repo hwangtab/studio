@@ -221,7 +221,6 @@ export const generateArticleSchema = (
   locale: Locale = 'ko'
 ) => {
   if (!articlePublishedTime) return null;
-  const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
   const organizationId = `${siteUrl}/#organization`;
@@ -302,7 +301,6 @@ export const generateCourseSchema = (
   locale: Locale = 'ko'
 ) => {
   const isKo = locale === 'ko';
-  const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
   const organizationId = `${siteUrl}/#organization`;
 
@@ -347,7 +345,6 @@ export const generateServiceOfferSchema = (
   service: ServiceOfferInput,
   locale: Locale = 'ko'
 ) => {
-  const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
   const priceValidUntil = new Date();
   priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
@@ -391,7 +388,6 @@ export const generateAggregateOfferSchema = (
   const prices = offers.map((o) => o.priceValue).filter((p) => p > 0);
   if (prices.length === 0) return null;
 
-  const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
   const priceValidUntil = new Date();
@@ -427,7 +423,6 @@ export const generateAggregateOfferSchema = (
 };
 
 export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') => {
-  const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
 
@@ -496,7 +491,6 @@ export const generateMusicRecordingSchema = (
   siteUrl: string,
   locale: Locale = 'ko'
 ) => {
-  const isKo = locale === 'ko';
   const config = getSiteConfig(locale);
 
   return {
