@@ -20,7 +20,8 @@ export const detectIOSSafari = (): boolean => {
 };
 
 export const useIsIOSSafari = (): boolean => {
-  const [isIOSSafari, setIsIOSSafari] = useState(false);
+  // Start in safe mode to avoid initial hidden-state animations before device detection.
+  const [isIOSSafari, setIsIOSSafari] = useState(true);
 
   useEffect(() => {
     setIsIOSSafari(detectIOSSafari());

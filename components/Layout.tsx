@@ -18,7 +18,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isIOSSafari, setIsIOSSafari] = useState(false);
+  const [isIOSSafari, setIsIOSSafari] = useState(true);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(80);
   const headerRef = useRef<HTMLElement | null>(null);

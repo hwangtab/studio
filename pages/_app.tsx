@@ -33,7 +33,7 @@ const localeLoadingMessage: Record<Locale, string> = {
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
-  const [isIOSSafari, setIsIOSSafari] = useState(false);
+  const [isIOSSafari, setIsIOSSafari] = useState(true);
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
   const routeLocale = router.asPath.split('?')[0].split('/')[1];
