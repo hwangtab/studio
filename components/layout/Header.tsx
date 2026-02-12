@@ -69,7 +69,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 transform-gpu ${!isTransparent
+      className={`fixed w-full z-50 py-4 ${disableEffects ? 'transition-[background-color,box-shadow] duration-150 ios-stable-layer' : 'transition-[background-color,backdrop-filter,box-shadow] duration-300 transform-gpu'} ${!isTransparent
         ? disableEffects
           ? 'bg-white/95 dark:bg-gray-900/95 shadow-md shadow-gray-200/40 dark:shadow-gray-950/40'
           : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
@@ -103,6 +103,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
             siteConfig={siteConfig}
             isMenuOpen={isMenuOpen}
             setIsMenuOpen={setIsMenuOpen}
+            disableEffects={disableEffects}
           />
         </div>
       </div>

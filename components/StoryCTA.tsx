@@ -144,9 +144,9 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
     const ctaMotionProps = isIOSSafari
         ? {
-            initial: { opacity: 0 },
+            initial: false,
             animate: { opacity: 1 },
-            transition: { duration: 0.2 }
+            transition: { duration: 0 }
         }
         : {
             initial: { opacity: 0, y: 20 },
@@ -158,7 +158,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     return (
         <m.div
             {...ctaMotionProps}
-            className={`my-16 relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.gradient} text-white shadow-xl`}
+            className={`my-16 relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.gradient} text-white shadow-xl ${isIOSSafari ? 'ios-stable-layer' : ''}`}
         >
             {/* Background Decor */}
             <div className={`absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full ${isIOSSafari ? '' : 'blur-2xl'}`} />

@@ -158,6 +158,13 @@ html.ios-safari .backdrop-blur-\[2px\] {
   -webkit-backdrop-filter: none !important;
 }
 
+html.ios-safari .ios-stable-layer {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
 @layer components {}
 
 code {

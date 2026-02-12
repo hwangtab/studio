@@ -15,6 +15,7 @@ interface HeaderActionsProps {
   siteConfig: ReturnType<typeof getSiteConfig>;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  disableEffects?: boolean;
 }
 
 export const HeaderActions = ({
@@ -25,11 +26,12 @@ export const HeaderActions = ({
   t,
   siteConfig,
   isMenuOpen,
-  setIsMenuOpen
+  setIsMenuOpen,
+  disableEffects = false
 }: HeaderActionsProps) => {
-  const headerCtaButtonClass = `inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-none text-center transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+  const headerCtaButtonClass = `inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-none text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${disableEffects ? 'transition-colors duration-150' : 'transition-all duration-300 transform hover:scale-105 active:scale-95'} ${!isTransparent
     ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
-    : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
+    : disableEffects ? 'bg-white/15 hover:bg-white/25 text-white border-white/30' : 'bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm'
     }`;
 
   return (

@@ -118,7 +118,7 @@ export const MobileNav = ({
   };
 
   return (
-    <AnimatePresence onExitComplete={handleExitComplete}>
+    <AnimatePresence initial={false} onExitComplete={handleExitComplete}>
        {isOpen && (
          <m.nav
            ref={navRef}
@@ -128,10 +128,10 @@ export const MobileNav = ({
            initial={navInitial}
            animate={navAnimate}
            exit={navExit}
-           transition={shouldAnimate ? (isIOSSafari ? { duration: 0.14, ease: 'linear' as const } : { duration: 0.2, ease: 'easeOut' as const }) : { duration: 0 }}
-           className={`xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 ${disableEffects ? '' : 'backdrop-blur-xl'} shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top`}
+           transition={shouldAnimate ? (isIOSSafari ? { duration: 0, ease: 'linear' as const } : { duration: 0.2, ease: 'easeOut' as const }) : { duration: 0 }}
+           className={`xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 ${disableEffects ? '' : 'backdrop-blur-xl'} shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top ${isIOSSafari ? 'ios-stable-layer' : ''}`}
          >
-          <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
+          <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Mobile Theme/Language Switcher */}
             <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
               <button

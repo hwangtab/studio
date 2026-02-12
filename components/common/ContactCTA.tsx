@@ -47,9 +47,9 @@ const ContactCTA = ({
 
     const contactCtaMotionProps = isIOSSafari
         ? {
-            initial: { opacity: 0 },
+            initial: false,
             animate: { opacity: 1 },
-            transition: { duration: 0.2 }
+            transition: { duration: 0 }
         }
         : {
             initial: { opacity: 0, y: 30 },
@@ -60,7 +60,7 @@ const ContactCTA = ({
 
     return (
         <m.div
-            className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
+            className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${isIOSSafari ? 'ios-stable-layer' : ''} ${className}`}
             {...contactCtaMotionProps}
         >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
