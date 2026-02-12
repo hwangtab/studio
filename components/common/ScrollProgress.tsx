@@ -1,13 +1,21 @@
 import React from 'react';
 import { m, useScroll, useSpring } from 'framer-motion';
 
-export const ScrollProgress: React.FC = () => {
+interface ScrollProgressProps {
+    disabled?: boolean;
+}
+
+export const ScrollProgress: React.FC<ScrollProgressProps> = ({ disabled = false }) => {
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 100,
         damping: 30,
         restDelta: 0.001
     });
+
+    if (disabled) {
+        return null;
+    }
 
     return (
         <m.div

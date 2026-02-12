@@ -7,6 +7,7 @@ import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 import i18n, { defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
+import { detectIOSSafari } from '../utils/deviceUtils';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -32,6 +33,7 @@ const localeLoadingMessage: Record<Locale, string> = {
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
+  const [isIOSSafari, setIsIOSSafari] = useState(false);
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
   const routeLocale = router.asPath.split('?')[0].split('/')[1];
@@ -46,6 +48,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     locale in (i18nResources as Record<string, unknown>)
   );
   const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
+  const shouldReduceMotionAggressively = shouldReduceMotion || isIOSSafari;
+
+  useEffect(() => {
+    setIsIOSSafari(detectIOSSafari());
+  }, []);
 
   useEffect(() => {
     let isCancelled = false;
@@ -132,15 +139,15 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>
-            <MotionConfig reducedMotion="user">
+            <MotionConfig reducedMotion={isIOSSafari ? 'always' : 'user'}>
               <Layout hasHero={hasHero} locale={locale}>
                 <AnimatePresence mode="sync" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
                   <m.div
                     key={router.asPath.split('?')[0]}
-                    initial={shouldReduceMotion ? false : { opacity: 0 }}
+                    initial={shouldReduceMotionAggressively ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                    transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.06, ease: 'linear' }}
+                    exit={shouldReduceMotionAggressively ? { opacity: 1 } : { opacity: 0 }}
+                    transition={shouldReduceMotionAggressively ? { duration: 0 } : { duration: 0.06, ease: 'linear' }}
                   >
                     <Component {...pageProps} />
                   </m.div>

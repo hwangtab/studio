@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
 import { ScrollProgress } from './common/ScrollProgress';
+import { detectIOSSafari } from '../utils/deviceUtils';
 import { type Locale, defaultLocale } from '../lib/i18n';
 
 interface LayoutProps {
@@ -17,6 +18,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isIOSSafari, setIsIOSSafari] = useState(false);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(80);
   const headerRef = useRef<HTMLElement | null>(null);
@@ -30,6 +32,10 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   useEffect(() => {
     scrollToTop();
   }, [router.pathname]);
+
+  useEffect(() => {
+    setIsIOSSafari(detectIOSSafari());
+  }, []);
 
   // Consolidated Theme Management
   useEffect(() => {
@@ -96,8 +102,13 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     const handleScroll = () => {
       if (!ticking) {
         rafId = window.requestAnimationFrame(() => {
-          const isOverThreshold = window.scrollY > 10;
-          setIsScrolled((prev) => prev !== isOverThreshold ? isOverThreshold : prev);
+          const y = window.scrollY;
+          const enterThreshold = isIOSSafari ? 24 : 10;
+          const exitThreshold = isIOSSafari ? 8 : 10;
+          setIsScrolled((prev) => {
+            const next = prev ? y > exitThreshold : y > enterThreshold;
+            return prev !== next ? next : prev;
+          });
           ticking = false;
         });
         ticking = true;
@@ -108,7 +119,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       window.removeEventListener('scroll', handleScroll);
       if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [isIOSSafari]);
 
   const isHome = router.pathname === '/[locale]';
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
@@ -118,7 +129,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     <div
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
     >
-      <ScrollProgress />
+      <ScrollProgress disabled={isIOSSafari} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white focus:text-gray-900 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
@@ -133,6 +144,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         hasHero={hasHero || false}
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}
+        disableEffects={isIOSSafari}
       />
 
       <main

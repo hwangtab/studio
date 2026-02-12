@@ -14,9 +14,10 @@ interface HeaderProps {
   hasHero: boolean;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
+  disableEffects?: boolean;
 }
 
-export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isScrolled, hasHero, isDarkMode, toggleDarkMode }, ref) => {
+export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isScrolled, hasHero, isDarkMode, toggleDarkMode, disableEffects = false }, ref) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const router = useRouter();
@@ -69,7 +70,9 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     <header
       ref={ref}
       className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 py-4 transform-gpu ${!isTransparent
-        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
+        ? disableEffects
+          ? 'bg-white/95 dark:bg-gray-900/95 shadow-md shadow-gray-200/40 dark:shadow-gray-950/40'
+          : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
         : 'bg-transparent'
         }`}
     >
@@ -112,6 +115,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         toggleDarkMode={toggleDarkMode}
         locale={locale}
         isTransparent={isTransparent}
+        disableEffects={disableEffects}
         expandedGroups={expandedGroups}
         toggleGroup={toggleGroup}
         t={t}
