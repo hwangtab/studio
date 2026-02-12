@@ -13,7 +13,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const isMounted = useRef(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const progressBarRef = useRef<HTMLInputElement>(null);
-    const animationRef = useRef<number | null>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -30,19 +29,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
                 setIsPlaying(false);
             }
         }
-        if (animationRef.current) {
-            cancelAnimationFrame(animationRef.current);
-            animationRef.current = null;
-        }
-    }, []);
-
-    const whilePlaying = useCallback(() => {
-        if (!isMounted.current) return;
-        if (progressBarRef.current && audioRef.current) {
-            progressBarRef.current.value = String(audioRef.current.currentTime);
-            setCurrentTime(audioRef.current.currentTime);
-            animationRef.current = requestAnimationFrame(whilePlaying);
-        }
     }, []);
 
     useEffect(() => {
@@ -56,9 +42,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
 
         const audio = audioRef.current;
 
-        // Sync volume and mute state
-        audio.volume = isMuted ? 0 : volume;
-
         // If track changed, reset and load
         if (audio.src !== new URL(tracks[currentTrack].src, window.location.href).href) {
             audio.pause();
@@ -70,12 +53,18 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             if (isEffectMounted && isMounted.current) {
                 setDuration(audio.duration);
                 setCurrentTime(audio.currentTime);
+                if (progressBarRef.current) {
+                    progressBarRef.current.value = String(audio.currentTime);
+                }
             }
         };
 
         const setAudioTime = () => {
             if (isEffectMounted && isMounted.current) {
                 setCurrentTime(audio.currentTime);
+                if (progressBarRef.current) {
+                    progressBarRef.current.value = String(audio.currentTime);
+                }
             }
         };
 
@@ -87,12 +76,7 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             const playPromise = audio.play();
             if (playPromise && typeof playPromise.then === 'function') {
                 playPromise
-                    .then(() => {
-                        if (isEffectMounted && isMounted.current) {
-                            if (animationRef.current) cancelAnimationFrame(animationRef.current);
-                            animationRef.current = requestAnimationFrame(whilePlaying);
-                        }
-                    })
+                    .then(() => undefined)
                     .catch((error) => {
                         if (error.name === 'AbortError') return;
                         console.error('Audio playback error:', error);
@@ -103,10 +87,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             }
         } else {
             audio.pause();
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current);
-                animationRef.current = null;
-            }
         }
 
         return () => {
@@ -114,7 +94,12 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             audio.removeEventListener('loadedmetadata', setAudioData);
             audio.removeEventListener('timeupdate', setAudioTime);
         };
-    }, [currentTrack, tracks, isPlaying, whilePlaying, volume, isMuted]);
+    }, [currentTrack, tracks, isPlaying]);
+
+    useEffect(() => {
+        if (!audioRef.current) return;
+        audioRef.current.volume = isMuted ? 0 : volume;
+    }, [volume, isMuted]);
 
     useEffect(() => {
         stopPlayback();
@@ -125,10 +110,6 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             if (audioRef.current) {
                 audioRef.current.pause();
                 audioRef.current = null;
-            }
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current);
-                animationRef.current = null;
             }
         };
     }, []);
@@ -141,7 +122,7 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     };
 
     const playPause = () => {
-        setIsPlaying(!isPlaying);
+        setIsPlaying((prev) => !prev);
     };
 
     const nextTrack = () => {

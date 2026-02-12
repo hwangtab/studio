@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
 import { ScrollProgress } from './common/ScrollProgress';
-import { detectIOSSafari } from '../utils/deviceUtils';
+import { useIsIOSSafari } from '../utils/deviceUtils';
 import { type Locale, defaultLocale } from '../lib/i18n';
 
 interface LayoutProps {
@@ -18,10 +18,10 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isIOSSafari, setIsIOSSafari] = useState(true);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(80);
   const headerRef = useRef<HTMLElement | null>(null);
+  const isIOSSafari = useIsIOSSafari();
 
   const scrollToTop = useCallback(() => {
     if (typeof window !== 'undefined') {
@@ -32,10 +32,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   useEffect(() => {
     scrollToTop();
   }, [router.pathname, scrollToTop]);
-
-  useEffect(() => {
-    setIsIOSSafari(detectIOSSafari());
-  }, []);
 
   // Consolidated Theme Management
   useEffect(() => {

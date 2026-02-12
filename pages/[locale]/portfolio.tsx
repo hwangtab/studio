@@ -21,6 +21,7 @@ import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/d
 import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface PortfolioProps {
   locale: Locale;
@@ -37,6 +38,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
+  const isIOSSafari = useIsIOSSafari();
   const [selectedCategory, setSelectedCategory] = useState<PortfolioCategory>({
     id: 'all',
     name: t('nav.portfolio'),
@@ -195,7 +197,8 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
                   key={item.id}
                   {...item}
                   index={index}
-                  locale={locale}
+                  disableEffects={isIOSSafari}
+                  viewProjectLabel={t('portfolio.viewProject')}
                   onClick={() => handleCardClick(item)}
                 />
               ))}

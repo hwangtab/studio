@@ -20,6 +20,7 @@ import { Section } from '../../../components/ui/Section';
 import { getI18nStaticProps } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { useIsIOSSafari } from '../../../utils/deviceUtils';
 
 interface StoryDetailPageProps {
   locale: Locale;
@@ -30,6 +31,7 @@ interface StoryDetailPageProps {
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
+  const isIOSSafari = useIsIOSSafari();
   const getCTAType = (slug: string, categoryKey: string | undefined): CTAType => {
     let hash = 0;
     for (let i = 0; i < slug.length; i++) {
@@ -61,6 +63,24 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
   );
 
   const router = useRouter();
+  const storyCardLabels = React.useMemo(
+    () => ({
+      defaultCategory: t('stories.list.defaultCategory'),
+      noDate: t('stories.list.noDate'),
+      noTitle: t('stories.list.noTitle'),
+      noContent: t('stories.list.noContent'),
+      categoryByKey: {
+        notice: t('stories.categories.notice'),
+        event: t('stories.categories.event'),
+        lesson: t('stories.categories.lesson'),
+        interview: t('stories.categories.interview'),
+        equipment: t('stories.categories.equipment'),
+        review: t('stories.categories.review'),
+        other: t('stories.categories.other'),
+      },
+    }),
+    [t]
+  );
 
   if (router.isFallback) {
     return <LoadingSpinner locale={locale} />;
@@ -160,7 +180,13 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
           {relatedStories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map((related) => (
-                <StoryCard key={related.slug} story={related} locale={locale} />
+                <StoryCard
+                  key={related.slug}
+                  story={related}
+                  locale={locale}
+                  disableEffects={isIOSSafari}
+                  labels={storyCardLabels}
+                />
               ))}
             </div>
           ) : (

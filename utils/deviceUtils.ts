@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 export const detectIOSSafari = (): boolean => {
   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
@@ -19,13 +19,35 @@ export const detectIOSSafari = (): boolean => {
   return isIOSDevice && isWebKit && !isExcludedBrowser;
 };
 
+let cachedIsIOSSafari = true;
+let hasResolvedIOSSafari = false;
+const safariStoreListeners = new Set<() => void>();
+
+const subscribeIOSSafariStore = (listener: () => void) => {
+  safariStoreListeners.add(listener);
+  return () => safariStoreListeners.delete(listener);
+};
+
+const getIOSSafariSnapshot = () => cachedIsIOSSafari;
+const getIOSSafariServerSnapshot = () => true;
+
+const resolveIOSSafariOnce = () => {
+  if (hasResolvedIOSSafari || typeof window === 'undefined') {
+    return;
+  }
+  hasResolvedIOSSafari = true;
+  cachedIsIOSSafari = detectIOSSafari();
+  safariStoreListeners.forEach((listener) => listener());
+};
+
 export const useIsIOSSafari = (): boolean => {
-  // Start in safe mode to avoid initial hidden-state animations before device detection.
-  const [isIOSSafari, setIsIOSSafari] = useState(true);
-
-  useEffect(() => {
-    setIsIOSSafari(detectIOSSafari());
-  }, []);
-
-  return isIOSSafari;
+  return useSyncExternalStore(
+    (listener) => {
+      const unsubscribe = subscribeIOSSafariStore(listener);
+      resolveIOSSafariOnce();
+      return unsubscribe;
+    },
+    getIOSSafariSnapshot,
+    getIOSSafariServerSnapshot
+  );
 };

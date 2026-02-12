@@ -7,7 +7,7 @@ import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 import i18n, { defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
-import { detectIOSSafari } from '../utils/deviceUtils';
+import { useIsIOSSafari } from '../utils/deviceUtils';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -33,7 +33,7 @@ const localeLoadingMessage: Record<Locale, string> = {
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
-  const [isIOSSafari, setIsIOSSafari] = useState(true);
+  const isIOSSafari = useIsIOSSafari();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
   const routeLocale = router.asPath.split('?')[0].split('/')[1];
@@ -51,15 +51,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const shouldReduceMotionAggressively = shouldReduceMotion || isIOSSafari;
 
   useEffect(() => {
-    const detected = detectIOSSafari();
-    setIsIOSSafari(detected);
-    if (detected) {
+    if (typeof document === 'undefined') return;
+    if (isIOSSafari) {
       document.documentElement.classList.add('ios-safari');
     }
     return () => {
       document.documentElement.classList.remove('ios-safari');
     };
-  }, []);
+  }, [isIOSSafari]);
 
   useEffect(() => {
     let isCancelled = false;

@@ -12,6 +12,7 @@ import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { getCommonStaticPaths, getI18nStaticProps } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
+import { useIsIOSSafari } from '../../../utils/deviceUtils';
 
 interface StoriesPageProps {
   locale: Locale;
@@ -22,6 +23,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(8);
   const { t } = useTranslation('common', { lng: locale });
+  const isIOSSafari = useIsIOSSafari();
 
   const categories = useMemo(() => {
     const uniqueKeys = new Set(stories.map((story) => story.categoryKey).filter(Boolean));
@@ -42,6 +44,24 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   );
 
   const hasMoreStories = filteredStories.length > visibleCount;
+  const storyCardLabels = useMemo(
+    () => ({
+      defaultCategory: t('stories.list.defaultCategory'),
+      noDate: t('stories.list.noDate'),
+      noTitle: t('stories.list.noTitle'),
+      noContent: t('stories.list.noContent'),
+      categoryByKey: {
+        notice: t('stories.categories.notice'),
+        event: t('stories.categories.event'),
+        lesson: t('stories.categories.lesson'),
+        interview: t('stories.categories.interview'),
+        equipment: t('stories.categories.equipment'),
+        review: t('stories.categories.review'),
+        other: t('stories.categories.other'),
+      },
+    }),
+    [t]
+  );
 
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
@@ -99,7 +119,13 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {visibleStories.map((story) => (
-                <StoryCard key={story.slug} story={story} locale={locale} />
+                <StoryCard
+                  key={story.slug}
+                  story={story}
+                  locale={locale}
+                  disableEffects={isIOSSafari}
+                  labels={storyCardLabels}
+                />
               ))}
             </div>
           )}

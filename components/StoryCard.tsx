@@ -1,13 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { timeAgo } from '../utils/dateUtils';
 
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
-import { useIsIOSSafari } from '../utils/deviceUtils';
 import type { Locale } from '../lib/i18n';
 
 import type { Story } from '../types/story';
@@ -15,6 +13,14 @@ import type { Story } from '../types/story';
 interface StoryCardProps {
   story: Story;
   locale?: Locale;
+  disableEffects?: boolean;
+  labels?: {
+    defaultCategory: string;
+    noDate: string;
+    noTitle: string;
+    noContent: string;
+    categoryByKey: Record<string, string>;
+  };
 }
 
 const cardVariants = {
@@ -22,10 +28,7 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
-  const { t } = useTranslation('common', { lng: locale });
-  const isIOSSafari = useIsIOSSafari();
-
+const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, labels }: StoryCardProps) => {
   const thumbnailUrl = React.useMemo(() => {
     if (story.thumbnail) return story.thumbnail;
     if (!story.content) return null;
@@ -40,16 +43,20 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
 
   const slug = story.slug || story.id;
   const href = `/${locale}/stories/${slug}`;
+  const dateText = story.date ? timeAgo(story.date, locale) : labels?.noDate || 'No date';
+  const categoryText = labels?.categoryByKey[story.categoryKey] || story.category || labels?.defaultCategory || 'Story';
+  const titleText = story.title || labels?.noTitle || 'Untitled';
+  const contentText = plainSummary || labels?.noContent || '';
 
   return (
     <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
       <m.div
         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
         variants={cardVariants}
-        initial={isIOSSafari ? false : "hidden"}
-        whileInView={isIOSSafari ? undefined : "visible"}
-        viewport={isIOSSafari ? undefined : { once: true }}
-        whileHover={isIOSSafari ? undefined : { scale: 1.01 }}
+        initial={disableEffects ? false : "hidden"}
+        whileInView={disableEffects ? undefined : "visible"}
+        viewport={disableEffects ? undefined : { once: true }}
+        whileHover={disableEffects ? undefined : { scale: 1.01 }}
       >
         <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
           {thumbnailUrl ? (
@@ -72,19 +79,19 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
         <div className="p-4 flex flex-col flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
-              {t(`stories.categories.${story.categoryKey}`) || story.category || t('stories.list.defaultCategory')}
+              {categoryText}
             </span>
             <span className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
-              {story.date ? timeAgo(story.date, locale) : t('stories.list.noDate')}
+              {dateText}
             </span>
           </div>
 
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title}>
-            {story.title || t('stories.list.noTitle')}
+            {titleText}
           </h3>
 
           <div className="typo-card-body leading-snug line-clamp-4 flex-none">
-            {plainSummary || t('stories.list.noContent')}
+            {contentText}
           </div>
         </div>
       </m.div>
