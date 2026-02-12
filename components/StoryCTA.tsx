@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
+import { useIsIOSSafari } from '../utils/deviceUtils';
 
 import type { Locale } from '../lib/i18n';
 
@@ -15,6 +16,7 @@ interface StoryCTAProps {
 
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
     const { t } = useTranslation('common', { lng: locale });
+    const isIOSSafari = useIsIOSSafari();
 
     const getLink = (path: string) => `/${locale}${path}`;
 
@@ -142,10 +144,10 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
     return (
         <m.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            initial={isIOSSafari ? false : { opacity: 0, y: 20 }}
+            whileInView={isIOSSafari ? undefined : { opacity: 1, y: 0 }}
+            viewport={isIOSSafari ? undefined : { once: true }}
+            transition={isIOSSafari ? { duration: 0 } : { duration: 0.5 }}
             className={`my-16 relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.gradient} text-white shadow-xl`}
         >
             {/* Background Decor */}
@@ -176,7 +178,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         </Link>
                         <Link
                             href={current.secondaryLink}
-                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
+                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors ${isIOSSafari ? '' : 'backdrop-blur-sm'} border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
                         >
                             <span className="min-w-0">{current.secondaryText}</span>
                         </Link>
@@ -185,14 +187,15 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
                 <div className="hidden md:block w-full max-w-xs lg:max-w-sm">
                     {/* Abstract Visual Representation */}
-                    <div className="relative aspect-square rounded-xl overflow-hidden bg-black/20 backdrop-blur-sm border border-white/10 p-6 flex flex-col justify-center items-center">
+                    <div className={`relative aspect-square rounded-xl overflow-hidden bg-black/20 ${isIOSSafari ? '' : 'backdrop-blur-sm'} border border-white/10 p-6 flex flex-col justify-center items-center`}>
                         <div className="w-full flex justify-between items-end h-32 gap-2 mb-4">
                             {heights.map((h, i) => (
                                 <m.div
                                     key={i}
-                                    initial={{ height: '20%' }}
-                                    whileInView={{ height: `${h}%` }}
-                                    transition={{
+                                    initial={isIOSSafari ? false : { height: '20%' }}
+                                    whileInView={isIOSSafari ? undefined : { height: `${h}%` }}
+                                    animate={isIOSSafari ? { height: `${h}%` } : undefined}
+                                    transition={isIOSSafari ? { duration: 0 } : {
                                         repeat: Infinity,
                                         repeatType: "reverse",
                                         duration: 1.5,

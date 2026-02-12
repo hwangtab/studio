@@ -2,6 +2,7 @@ import React from 'react';
 import { m, useReducedMotion } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
 import type { Locale } from '../../lib/i18n';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface ImageHeroProps {
   title: React.ReactNode;
@@ -31,6 +32,8 @@ const ImageHero = ({
   priority = false,
 }: ImageHeroProps) => {
   const shouldReduceMotion = useReducedMotion();
+  const isIOSSafari = useIsIOSSafari();
+  const shouldAnimate = !shouldReduceMotion && !isIOSSafari;
 
   const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
 
@@ -50,9 +53,9 @@ const ImageHero = ({
       >
         <m.div
           className="w-full h-full"
-          initial={shouldReduceMotion ? false : { scale: 1.1 }}
-          animate={shouldReduceMotion ? false : { scale: 1 }}
-          transition={{ duration: 10, ease: "easeOut" }}
+          initial={shouldAnimate ? { scale: 1.1 } : false}
+          animate={shouldAnimate ? { scale: 1 } : { scale: 1 }}
+          transition={shouldAnimate ? { duration: 10, ease: "easeOut" } : { duration: 0 }}
         >
             <ResponsiveImage
               src={backgroundImage}
@@ -74,9 +77,9 @@ const ImageHero = ({
 
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
         <m.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={shouldAnimate ? { duration: 0.8, delay: 0.2 } : { duration: 0 }}
         >
           <m.h1
             className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
