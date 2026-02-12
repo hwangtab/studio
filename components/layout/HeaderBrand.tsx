@@ -8,6 +8,7 @@ interface HeaderBrandProps {
   locale: Locale;
   isTransparent: boolean;
   isDarkMode: boolean;
+  disableEffects?: boolean;
   siteConfig: ReturnType<typeof getSiteConfig>;
   onLogoClick: () => void;
 }
@@ -16,9 +17,31 @@ export const HeaderBrand = ({
   locale,
   isTransparent,
   isDarkMode,
+  disableEffects = false,
   siteConfig,
   onLogoClick
 }: HeaderBrandProps) => {
+  if (disableEffects) {
+    return (
+      <Link
+        href={`/${locale}`}
+        className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none"
+        onClick={onLogoClick}
+      >
+        <div className="relative h-8 sm:h-10 w-auto flex items-center">
+          <Image
+            src={siteConfig.logo}
+            alt={siteConfig.name}
+            height={40}
+            width={200}
+            className="h-full w-auto object-contain"
+            priority
+          />
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <Link
       href={`/${locale}`}

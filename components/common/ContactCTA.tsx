@@ -45,13 +45,23 @@ const ContactCTA = ({
     const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
     const imageHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
 
+    const contactCtaMotionProps = isIOSSafari
+        ? {
+            initial: { opacity: 0 },
+            animate: { opacity: 1 },
+            transition: { duration: 0.2 }
+        }
+        : {
+            initial: { opacity: 0, y: 30 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true },
+            transition: { duration: 0.8 }
+        };
+
     return (
         <m.div
             className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
-            initial={isIOSSafari ? false : { opacity: 0, y: 30 }}
-            whileInView={isIOSSafari ? undefined : { opacity: 1, y: 0 }}
-            viewport={isIOSSafari ? undefined : { once: true }}
-            transition={isIOSSafari ? { duration: 0 } : { duration: 0.8 }}
+            {...contactCtaMotionProps}
         >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                 <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">

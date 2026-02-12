@@ -44,7 +44,15 @@ export const MobileNav = ({
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const isIOSSafari = useIsIOSSafari();
-  const shouldAnimate = !disableEffects && !isIOSSafari;
+  const shouldAnimate = !disableEffects;
+  const navInitial = shouldAnimate
+    ? (isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 })
+    : false;
+  const navAnimate = isIOSSafari ? { opacity: 1 } : { opacity: 1, scaleY: 1 };
+  const navExit = shouldAnimate
+    ? (isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 })
+    : navAnimate;
+  const shouldAnimateGroups = shouldAnimate && !isIOSSafari;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -117,10 +125,10 @@ export const MobileNav = ({
            role="dialog"
            aria-modal="true"
            aria-label={t('nav.mobileMenu')}
-           initial={shouldAnimate ? { opacity: 0, scaleY: 0 } : false}
-           animate={{ opacity: 1, scaleY: 1 }}
-           exit={shouldAnimate ? { opacity: 0, scaleY: 0 } : { opacity: 1, scaleY: 1 }}
-           transition={shouldAnimate ? { duration: 0.2, ease: "easeOut" } : { duration: 0 }}
+           initial={navInitial}
+           animate={navAnimate}
+           exit={navExit}
+           transition={shouldAnimate ? (isIOSSafari ? { duration: 0.14, ease: 'linear' as const } : { duration: 0.2, ease: 'easeOut' as const }) : { duration: 0 }}
            className={`xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 ${disableEffects ? '' : 'backdrop-blur-xl'} shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top`}
          >
           <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
@@ -159,10 +167,10 @@ export const MobileNav = ({
                 <AnimatePresence>
                   {expandedGroups.includes(group.id) && (
                     <m.div
-                      initial={shouldAnimate ? { height: 0, opacity: 0 } : false}
+                      initial={shouldAnimateGroups ? { height: 0, opacity: 0 } : false}
                       animate={{ height: 'auto', opacity: 1 }}
-                      exit={shouldAnimate ? { height: 0, opacity: 0 } : { height: 'auto', opacity: 1 }}
-                      transition={shouldAnimate ? { duration: 0.2, ease: 'easeInOut' } : { duration: 0 }}
+                      exit={shouldAnimateGroups ? { height: 0, opacity: 0 } : { height: 'auto', opacity: 1 }}
+                      transition={shouldAnimateGroups ? { duration: 0.2, ease: 'easeInOut' } : { duration: 0 }}
                       className="pl-4 space-y-1 overflow-hidden"
                     >
                       {group.items.map((item) => (

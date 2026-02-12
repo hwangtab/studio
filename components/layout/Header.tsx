@@ -82,6 +82,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
             locale={locale}
             isTransparent={isTransparent}
             isDarkMode={isDarkMode}
+            disableEffects={disableEffects}
             siteConfig={siteConfig}
             onLogoClick={() => setIsMenuOpen(false)}
           />

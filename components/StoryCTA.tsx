@@ -142,17 +142,27 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     const current = content[type];
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
 
+    const ctaMotionProps = isIOSSafari
+        ? {
+            initial: { opacity: 0 },
+            animate: { opacity: 1 },
+            transition: { duration: 0.2 }
+        }
+        : {
+            initial: { opacity: 0, y: 20 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true },
+            transition: { duration: 0.5 }
+        };
+
     return (
         <m.div
-            initial={isIOSSafari ? false : { opacity: 0, y: 20 }}
-            whileInView={isIOSSafari ? undefined : { opacity: 1, y: 0 }}
-            viewport={isIOSSafari ? undefined : { once: true }}
-            transition={isIOSSafari ? { duration: 0 } : { duration: 0.5 }}
+            {...ctaMotionProps}
             className={`my-16 relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.gradient} text-white shadow-xl`}
         >
             {/* Background Decor */}
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-            <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
+            <div className={`absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full ${isIOSSafari ? '' : 'blur-2xl'}`} />
+            <div className={`absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/5 rounded-full ${isIOSSafari ? '' : 'blur-2xl'}`} />
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 md:p-10 gap-8">
                 <div className="flex-1 text-center md:text-left">
