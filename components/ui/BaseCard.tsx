@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface BaseCardProps {
     children: React.ReactNode;
@@ -29,6 +30,7 @@ const BaseCard = React.memo(({
     hoverEffect = true,
     enableAnimation = true,
 }: BaseCardProps) => {
+    const isIOSSafari = useIsIOSSafari();
     const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden";
 
 
@@ -38,13 +40,16 @@ const BaseCard = React.memo(({
         outline: "border border-gray-200 dark:border-gray-700 bg-transparent",
     };
 
-    const animationProps = enableAnimation ? {
+    const shouldAnimate = enableAnimation && !isIOSSafari;
+    const shouldHover = hoverEffect && !isIOSSafari;
+
+    const animationProps = shouldAnimate ? {
         ...FADE_IN_UP,
-        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
+        whileHover: shouldHover ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
         transition: { ...FADE_IN_UP.transition, delay }
     } : {
-        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
-        transition: { duration: 0.2 } // Faster transition for hover only
+        whileHover: shouldHover ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
+        transition: { duration: 0.2 }
     };
 
     const isInteractive = Boolean(onClick || href);

@@ -4,6 +4,7 @@ import { ExternalLink, Mic2, MousePointer2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import { PortfolioItem } from '../../types/data';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface ProjectRowCardProps extends PortfolioItem {
     onClick?: () => void;
@@ -23,6 +24,7 @@ const ProjectRowCard = ({
     locale,
 }: ProjectRowCardProps) => {
     const { t } = useTranslation('common', { lng: locale });
+    const isIOSSafari = useIsIOSSafari();
     const isInteractive = Boolean(onClick);
 
     // 카테고리에 따른 뱃지 색상 (Light/Dark 대응)
@@ -38,9 +40,9 @@ const ProjectRowCard = ({
 
     return (
         <m.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
+            initial={isIOSSafari ? false : { opacity: 0, y: 20 }}
+            animate={isIOSSafari ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+            transition={isIOSSafari ? { duration: 0 } : { delay: index * 0.05, duration: 0.4, ease: 'easeOut' }}
             className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 text-left disabled:cursor-default disabled:opacity-80"
             onClick={onClick}
             type="button"

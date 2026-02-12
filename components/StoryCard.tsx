@@ -7,6 +7,7 @@ import { timeAgo } from '../utils/dateUtils';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
+import { useIsIOSSafari } from '../utils/deviceUtils';
 import type { Locale } from '../lib/i18n';
 
 import type { Story } from '../types/story';
@@ -23,6 +24,7 @@ const cardVariants = {
 
 const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isIOSSafari = useIsIOSSafari();
 
   const thumbnailUrl = React.useMemo(() => {
     if (story.thumbnail) return story.thumbnail;
@@ -44,10 +46,10 @@ const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
       <m.div
         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
         variants={cardVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        whileHover={{ scale: 1.01 }}
+        initial={isIOSSafari ? false : "hidden"}
+        whileInView={isIOSSafari ? undefined : "visible"}
+        viewport={isIOSSafari ? undefined : { once: true }}
+        whileHover={isIOSSafari ? undefined : { scale: 1.01 }}
       >
         <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
           {thumbnailUrl ? (

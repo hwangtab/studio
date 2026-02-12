@@ -51,7 +51,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const shouldReduceMotionAggressively = shouldReduceMotion || isIOSSafari;
 
   useEffect(() => {
-    setIsIOSSafari(detectIOSSafari());
+    const detected = detectIOSSafari();
+    setIsIOSSafari(detected);
+    if (detected) {
+      document.documentElement.classList.add('ios-safari');
+    }
+    return () => {
+      document.documentElement.classList.remove('ios-safari');
+    };
   }, []);
 
   useEffect(() => {

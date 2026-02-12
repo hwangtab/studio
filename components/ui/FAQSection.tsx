@@ -3,6 +3,7 @@ import { m } from 'framer-motion';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface FAQItem {
     question: string;
@@ -25,6 +26,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     variant = "alternate"
 }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const isIOSSafari = useIsIOSSafari();
 
     const toggleAccordion = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
@@ -44,10 +46,10 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                     {items.map((item, index) => (
                         <m.div
                             key={index}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.05 }}
+                            initial={isIOSSafari ? false : { opacity: 0, y: 10 }}
+                            whileInView={isIOSSafari ? undefined : { opacity: 1, y: 0 }}
+                            viewport={isIOSSafari ? undefined : { once: true }}
+                            transition={isIOSSafari ? { duration: 0 } : { delay: index * 0.05 }}
                             className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
                         >
                             <button

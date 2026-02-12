@@ -7,6 +7,7 @@ import { Section, SectionVariant } from './Section';
 import { STAGGER_CONTAINER, STAGGER_ITEM } from '../../utils/animationUtils';
 import { getReviews } from '../../data/reviews';
 import type { Locale } from '../../lib/i18n';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 // 별점 5점 고정이므로 상수 배열로 정의 (매 렌더마다 재생성 방지)
 const FIVE_STARS = [0, 1, 2, 3, 4] as const;
@@ -19,6 +20,7 @@ interface ReviewSectionProps {
 
 const ReviewSection = ({ className, variant = "default", locale = 'ko' }: ReviewSectionProps) => {
     const reviews = getReviews(locale);
+    const isIOSSafari = useIsIOSSafari();
 
 
     // Simple translation for title/subtitle
@@ -62,16 +64,16 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
 
             <m.div
                 className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto"
-                variants={STAGGER_CONTAINER}
-                initial="initial"
-                whileInView="animate"
-                viewport={{ once: true }}
+                variants={isIOSSafari ? undefined : STAGGER_CONTAINER}
+                initial={isIOSSafari ? false : "initial"}
+                whileInView={isIOSSafari ? undefined : "animate"}
+                viewport={isIOSSafari ? undefined : { once: true }}
             >
                 {reviews.map((review, index) => (
                     <m.div
                         key={index}
                         className="group"
-                        variants={STAGGER_ITEM}
+                        variants={isIOSSafari ? undefined : STAGGER_ITEM}
                     >
                         <BaseCard
                             variant="default"

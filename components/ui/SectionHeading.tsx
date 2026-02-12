@@ -2,6 +2,7 @@ import React from 'react';
 import { m } from 'framer-motion';
 import { cn } from '../../lib/utils';
 import { SCROLL_REVEAL } from '../../utils/animationUtils';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface SectionHeadingProps {
   icon?: React.ElementType<{ className?: string }>;
@@ -22,6 +23,7 @@ const SectionHeading = ({
   as: Component = 'h2',
   titleClassName
 }: SectionHeadingProps) => {
+  const isIOSSafari = useIsIOSSafari();
   const alignmentClasses = {
     center: 'text-center',
     left: 'text-left',
@@ -34,10 +36,10 @@ const SectionHeading = ({
         "mb-12",
         className
       )}
-      initial="initial"
-      whileInView="whileInView"
-      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-      variants={SCROLL_REVEAL}
+      initial={isIOSSafari ? false : "initial"}
+      whileInView={isIOSSafari ? undefined : "whileInView"}
+      viewport={isIOSSafari ? undefined : { once: true, margin: "-10% 0px -10% 0px" }}
+      variants={isIOSSafari ? undefined : SCROLL_REVEAL}
     >
       {Icon && (
         <div className={cn(

@@ -146,6 +146,26 @@
   }
 }
 
+html.ios-safari {
+  scroll-behavior: auto;
+}
+
+html.ios-safari *,
+html.ios-safari *::before,
+html.ios-safari *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+html.ios-safari .backdrop-blur-sm,
+html.ios-safari .backdrop-blur-md,
+html.ios-safari .backdrop-blur-xl,
+html.ios-safari .backdrop-blur-\[2px\] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 @layer components {}
 
 code {
