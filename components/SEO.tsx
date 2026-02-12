@@ -19,6 +19,7 @@ interface SEOProps {
   description?: string;
   keywords?: string;
   canonical?: string;
+  disableCanonicalAndAlternates?: boolean;
   ogImage?: string;
   ogType?: string;
   includeSchema?: boolean;
@@ -40,6 +41,7 @@ const SEO = ({
   description,
   keywords,
   canonical,
+  disableCanonicalAndAlternates = false,
   ogImage = '/images/hardware2.jpg',
   ogType = 'website',
   includeSchema = false,
@@ -52,7 +54,7 @@ const SEO = ({
   articleSection,
   breadcrumbs = null,
   faqItems = null,
-  reviewItems = null,
+  reviewItems: _reviewItems = null,
   isCourse = false,
 }: SEOProps) => {
   const router = useRouter();
@@ -101,8 +103,8 @@ const SEO = ({
       : canonicalUrl;
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl, absoluteOgImage, resolvedDescription, reviewItems, currentLocale),
-    [siteUrl, absoluteOgImage, resolvedDescription, reviewItems, currentLocale]
+    () => generateDefaultSchema(siteUrl),
+    [siteUrl]
   );
 
   const websiteSchema = React.useMemo(
@@ -272,27 +274,29 @@ const SEO = ({
       <meta name="geo.position" content="37.614353;126.925887" />
       <meta name="ICBM" content="37.614353, 126.925887" />
 
-      <link rel="canonical" href={normalizedCanonical} />
+      {!disableCanonicalAndAlternates && <link rel="canonical" href={normalizedCanonical} />}
 
       {/* Hreflang tags for SEO */}
-      {locales.map((locale) => (
+      {!disableCanonicalAndAlternates && (
+        locales.map((locale) => (
+          <link
+            key={`hreflang-${locale}`}
+            rel="alternate"
+            hrefLang={locale}
+            href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+          />
+        ))
+      )}
+      {!disableCanonicalAndAlternates && (
         <link
-          key={`hreflang-${locale}`}
           rel="alternate"
-          hrefLang={locale}
-          href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+          hrefLang="x-default"
+          href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
         />
-      ))}
-      {/* Default fallback (x-default) usually points to the default language or a language selector page. 
-          Here pointing to Korean version as default. */}
-      <link
-        rel="alternate"
-        hrefLang="x-default"
-        href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
-      />
+      )}
 
       <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={normalizedCanonical} />
+      {!disableCanonicalAndAlternates && <meta property="og:url" content={normalizedCanonical} />}
       <meta property="og:title" content={resolvedTitle} />
       <meta property="og:description" content={resolvedDescription} />
       <meta property="og:image" content={absoluteOgImage} />
@@ -321,7 +325,7 @@ const SEO = ({
       )}
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={normalizedCanonical} />
+      {!disableCanonicalAndAlternates && <meta name="twitter:url" content={normalizedCanonical} />}
       <meta name="twitter:title" content={resolvedTitle} />
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />

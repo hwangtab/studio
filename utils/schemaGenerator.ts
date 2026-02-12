@@ -1,4 +1,4 @@
-import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
+import { Breadcrumb, FAQItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 
@@ -15,33 +15,11 @@ const schemaLanguageByLocale: Record<Locale, string> = {
 export const getSchemaLanguage = (locale: Locale): string => schemaLanguageByLocale[locale] || schemaLanguageByLocale.ko;
 
 export const generateDefaultSchema = (
-  siteUrl: string,
-  absoluteOgImage: string,
-  description: string,
-  reviewItems: ReviewItem[] | null,
-  locale: Locale = 'ko'
+  siteUrl: string
 ) => {
-  const isKo = locale === 'ko';
-  const config = getSiteConfig(locale);
-  const localeContactUrl = isKo ? config.contact.kakaoUrl : `${siteUrl}/${locale}/contact`;
-  const sameAsLinks = isKo
-    ? [config.contact.kakaoUrl, config.contact.naverMapUrl]
-    : [config.contact.naverMapUrl];
-
-  const translations = {
-    name: config.name,
-    locality: isKo ? '은평구' : 'Eunpyeong-gu',
-    region: isKo ? '서울특별시' : 'Seoul',
-    street: isKo ? '대조동 84-3 3층(동명여고 바로 옆)' : '3rd Floor, 84-3 Daejo-dong (Next to Dongmyeong Girls High School)',
-    contactType: isKo ? '예약 및 상담' : 'Booking & Inquiry',
-    residencyTitle: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
-    residencyDesc: isKo
-      ? '월 40만 원으로 방음 연습실과 입주 고객 전용 혜택을 제공합니다.'
-      : 'Soundproof practice rooms and exclusive benefits starting for 400,000 KRW/month.',
-    recordingService: isKo ? '레코딩 서비스' : 'Recording Service',
-    mixingMastering: isKo ? '믹싱 & 마스터링' : 'Mixing & Mastering',
-    productionPlanning: isKo ? '음반 기획' : 'Music Planning',
-  };
+  const config = getSiteConfig('ko');
+  const localeContactUrl = `${siteUrl}/ko/contact`;
+  const sameAsLinks = [config.contact.kakaoUrl, config.contact.naverMapUrl];
 
   const organizationId = `${siteUrl}/#organization`;
   const studioId = `${siteUrl}/#studio`;
@@ -52,7 +30,7 @@ export const generateDefaultSchema = (
       {
         '@type': 'Organization',
         '@id': organizationId,
-        name: translations.name,
+        name: 'Studio NOL',
         url: siteUrl,
         logo: {
           '@type': 'ImageObject',
@@ -63,29 +41,29 @@ export const generateDefaultSchema = (
         contactPoint: [
           {
             '@type': 'ContactPoint',
-            contactType: translations.contactType,
+            contactType: 'Booking & Inquiry',
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
             url: localeContactUrl,
-            availableLanguage: [locale],
+            availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
           },
         ],
         sameAs: sameAsLinks,
-        slogan: isKo ? '아티스트의 음악적 비전을 소리로 실현' : 'Realizing artists\' musical vision through sound',
+        slogan: 'Realizing artists\' musical vision through sound',
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
       },
       {
         '@type': 'LocalBusiness',
         '@id': studioId,
-        name: translations.name,
-        image: absoluteOgImage,
+        name: 'Studio NOL',
+        image: `${siteUrl}/thumbnail.jpg`,
         url: siteUrl,
-        description: description,
+        description: '연신내 녹음실, 연습실, 믹싱, 마스터링, 음반 제작 스튜디오',
         priceRange: '$$',
         address: {
           '@type': 'PostalAddress',
-          streetAddress: translations.street,
-          addressLocality: translations.locality,
-          addressRegion: translations.region,
+          streetAddress: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',
+          addressLocality: '은평구',
+          addressRegion: '서울특별시',
           postalCode: '03424',
           addressCountry: 'KR',
         },
@@ -126,83 +104,53 @@ export const generateDefaultSchema = (
         parentOrganization: {
           '@id': organizationId,
         },
-        ...(reviewItems && reviewItems.length > 0
-          ? {
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: (
-                reviewItems.reduce((acc, item) => acc + item.rating, 0) / reviewItems.length
-              ).toFixed(1),
-              reviewCount: reviewItems.length,
-              bestRating: '5',
-              worstRating: '1',
-            },
-            review: reviewItems.map((item) => ({
-              '@type': 'Review',
-              author: {
-                '@type': 'Person',
-                name: item.author,
-              },
-              reviewRating: {
-                '@type': 'Rating',
-                ratingValue: item.rating,
-                bestRating: '5',
-                worstRating: '1',
-              },
-              reviewBody: item.content,
-              ...(item.datePublished ? { datePublished: item.datePublished } : {}),
-            })),
-          }
-          : {}),
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
-          name: isKo ? '스튜디오 서비스' : 'Studio Services',
+          name: '스튜디오 서비스',
           itemListElement: [
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'Service',
-                name: translations.recordingService,
-                description: isKo ? '프로페셔널 레코딩 서비스' : 'Professional recording services',
+                name: '레코딩 서비스',
+                description: '프로페셔널 레코딩 서비스',
               },
             },
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'Service',
-                name: translations.mixingMastering,
-                description: isKo ? '전문 믹싱 및 마스터링 서비스' : 'Professional mixing and mastering services',
+                name: '믹싱 & 마스터링',
+                description: '전문 믹싱 및 마스터링 서비스',
               },
             },
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'Service',
-                name: translations.productionPlanning,
-                description: isKo ? '음반 제작 전 과정 기획 및 지원' : 'Full-cycle music production planning and support',
+                name: '음반 기획',
+                description: '음반 제작 전 과정 기획 및 지원',
               },
             },
             {
               '@type': 'Offer',
-              name: translations.residencyTitle,
-              description: translations.residencyDesc,
+              name: '프리미엄 연습실 입주 프로그램',
+              description: '월 40만 원으로 방음 연습실과 입주 고객 전용 혜택을 제공합니다.',
               priceCurrency: 'KRW',
               price: 400000,
               url: localeContactUrl,
               availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
-                name: isKo ? '프리미엄 연습실 입주 프로그램' : 'Premium Practice Room Residency Program',
-                description: isKo
-                  ? '녹음실 할인, 음원 유통, 보도자료 작성, 버스킹 장비 대여, 전문가 피드백, 크라우드 펀딩 컨설팅, 예술지원사업 정보, 공구 대여'
-                  : 'Recording Studio Discounts, Music Distribution, Press Release Writing, Busking Equipment Rental, Expert Feedback, Crowdfunding Consulting, Grant Information, Tool Rental',
+                name: '프리미엄 연습실 입주 프로그램',
+                description: '녹음실 할인, 음원 유통, 보도자료 작성, 버스킹 장비 대여, 전문가 피드백, 크라우드 펀딩 컨설팅, 예술지원사업 정보, 공구 대여',
                 provider: {
                   '@type': 'Organization',
                   '@id': organizationId,
                 },
                 areaServed: {
                   '@type': 'AdministrativeArea',
-                  name: translations.region,
+                  name: '서울특별시',
                 },
               },
             },

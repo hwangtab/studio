@@ -4,6 +4,7 @@ const siteUrl = process.env.SITE_URL || 'https://studionol.co.kr';
 module.exports = {
   siteUrl,
   generateRobotsTxt: true,
+  autoLastmod: false,
   changefreq: 'weekly',
   priority: 0.7,
   exclude: ['/api/*', '/404', '/500'],
@@ -22,7 +23,6 @@ module.exports = {
         loc: path,
         changefreq: 'daily',
         priority: 1.0,
-        lastmod: new Date().toISOString(),
       }
     }
     // 스토리/포트폴리오 우선순위
@@ -31,14 +31,12 @@ module.exports = {
         loc: path,
         changefreq: 'weekly',
         priority: 0.8,
-        lastmod: new Date().toISOString(),
       }
     }
     return {
       loc: path,
       changefreq: config.changefreq,
       priority: config.priority,
-      lastmod: new Date().toISOString(),
     }
   },
 }
