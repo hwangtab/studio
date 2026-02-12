@@ -77,34 +77,40 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4 h-12">
-          <HeaderBrand
-            locale={locale}
-            isTransparent={isTransparent}
-            isDarkMode={isDarkMode}
-            disableEffects={disableEffects}
-            siteConfig={siteConfig}
-            onLogoClick={() => setIsMenuOpen(false)}
-          />
+        <div className="grid h-12 grid-cols-[1fr_auto_1fr] items-center gap-4">
+          <div className="justify-self-start">
+            <HeaderBrand
+              locale={locale}
+              isTransparent={isTransparent}
+              isDarkMode={isDarkMode}
+              disableEffects={disableEffects}
+              siteConfig={siteConfig}
+              onLogoClick={() => setIsMenuOpen(false)}
+            />
+          </div>
 
-          <DesktopNav
-            navGroups={navGroups}
-            isTransparent={isTransparent}
-            currentPath={currentPath}
-            onNavigate={handleNavigate}
-          />
+          <div className="justify-self-center">
+            <DesktopNav
+              navGroups={navGroups}
+              isTransparent={isTransparent}
+              currentPath={currentPath}
+              onNavigate={handleNavigate}
+            />
+          </div>
 
-          <HeaderActions
-            isTransparent={isTransparent}
-            isDarkMode={isDarkMode}
-            toggleDarkMode={toggleDarkMode}
-            locale={locale}
-            t={t}
-            siteConfig={siteConfig}
-            isMenuOpen={isMenuOpen}
-            setIsMenuOpen={setIsMenuOpen}
-            disableEffects={disableEffects}
-          />
+          <div className="justify-self-end">
+            <HeaderActions
+              isTransparent={isTransparent}
+              isDarkMode={isDarkMode}
+              toggleDarkMode={toggleDarkMode}
+              locale={locale}
+              t={t}
+              siteConfig={siteConfig}
+              isMenuOpen={isMenuOpen}
+              setIsMenuOpen={setIsMenuOpen}
+              disableEffects={disableEffects}
+            />
+          </div>
         </div>
       </div>
 
