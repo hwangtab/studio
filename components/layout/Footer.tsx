@@ -30,6 +30,12 @@ export const Footer = ({ locale }: FooterProps) => {
             <p className="typo-footer-meta">
               {CURRENT_YEAR} {siteConfig.name}. {t('footer.rights')}
             </p>
+            <Link
+              href={`/${locale}/privacy-policy`}
+              className="mt-2 inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300"
+            >
+              {t('footer.privacy')}
+            </Link>
           </div>
 
           <div className="flex flex-col">
