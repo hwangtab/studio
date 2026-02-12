@@ -24,8 +24,18 @@ const cardVariants = {
 const StoryCard = React.memo(({ story, locale = 'ko' }: StoryCardProps) => {
   const { t } = useTranslation('common', { lng: locale });
 
-  const thumbnailUrl = story.thumbnail || extractFirstImageUrl(story.content || '');
-  const plainSummary = story.summary || summarizeText(story.content, 120, { stripMarkdown: true });
+  const thumbnailUrl = React.useMemo(() => {
+    if (story.thumbnail) return story.thumbnail;
+    if (!story.content) return null;
+    return extractFirstImageUrl(story.content);
+  }, [story.content, story.thumbnail]);
+
+  const plainSummary = React.useMemo(() => {
+    if (story.summary) return story.summary;
+    if (!story.content) return '';
+    return summarizeText(story.content, 120, { stripMarkdown: true });
+  }, [story.content, story.summary]);
+
   const slug = story.slug || story.id;
   const href = `/${locale}/stories/${slug}`;
 

@@ -6,8 +6,18 @@ const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: str
     return dict[locale] || dict['en'] || dict['ko'];
 };
 
+const enableCache = process.env.NODE_ENV === 'production';
+const categoriesCache: Partial<Record<Locale, PortfolioCategory[]>> = {};
+const portfolioItemsCache: Partial<Record<Locale, PortfolioItem[]>> = {};
+const audioTracksCache: Partial<Record<Locale, AudioTrack[]>> = {};
+
 export const getCategories = (locale: Locale): PortfolioCategory[] => {
-    return [
+    const cached = enableCache ? categoriesCache[locale] : undefined;
+    if (cached && enableCache) {
+        return cached;
+    }
+
+    const categories: PortfolioCategory[] = [
         {
             "id": "all",
             "name": t(locale, { ko: "전체", en: "All", zh: "全部", es: "Todo", vi: "Tất cả", th: "ทั้งหมด", uz: "Barchasi" }),
@@ -39,9 +49,18 @@ export const getCategories = (locale: Locale): PortfolioCategory[] => {
             "color": "#ea580c"
         }
     ];
+    if (enableCache) {
+        categoriesCache[locale] = categories;
+    }
+    return categories;
 };
 
 export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
+    const cached = enableCache ? portfolioItemsCache[locale] : undefined;
+    if (cached && enableCache) {
+        return cached;
+    }
+
     // Service names translation helper
     const getService = (serviceDict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => t(locale, serviceDict);
 
@@ -58,7 +77,7 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
         composition: { ko: "작곡", en: "Composition", zh: "作曲", es: "Composición", vi: "Sáng tác", th: "แต่งเพลง", uz: "Kompozitsiya" },
     };
 
-    return [
+    const items: PortfolioItem[] = [
         {
             "id": "the-projectors-babu-first-flight",
             "title": "더 프로젝터스 <바보의 첫 비행>",
@@ -596,10 +615,19 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "artist": "Various Artists"
         }
     ];
+    if (enableCache) {
+        portfolioItemsCache[locale] = items;
+    }
+    return items;
 };
 
 export const getAudioTracks = (locale: Locale): AudioTrack[] => {
-    return [
+    const cached = enableCache ? audioTracksCache[locale] : undefined;
+    if (cached && enableCache) {
+        return cached;
+    }
+
+    const tracks: AudioTrack[] = [
         {
             "id": "track-1",
             "title": "Fever",
@@ -631,6 +659,10 @@ export const getAudioTracks = (locale: Locale): AudioTrack[] => {
             "description": t(locale, { ko: "스튜디오 놀에서 레코딩, 믹싱한 트랙", en: "Recorded and Mixed at Studio NOL", vi: "Bản thu và mixing tại Studio NOL", th: "บันทึกและมิกซ์ที่ Studio NOL", uz: "Studio NOL’da yozilgan va miks qilingan trek" })
         }
     ];
+    if (enableCache) {
+        audioTracksCache[locale] = tracks;
+    }
+    return tracks;
 };
 
 // Deprecated: For backward compatibility if needed, but should be removed

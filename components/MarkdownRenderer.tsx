@@ -5,6 +5,7 @@ import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
 
 let prismLoaderPromise: Promise<typeof import('prismjs')> | null = null;
+const PRISM_THEME_STYLESHEET_ID = 'prism-theme-stylesheet';
 
 const imageMetadataMap = imageMetadata as Record<string, { width: number; height: number }>;
 
@@ -324,6 +325,17 @@ interface MarkdownRendererProps {
 
 const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => {
   const currentLocale = locale;
+
+  React.useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (document.getElementById(PRISM_THEME_STYLESHEET_ID)) return;
+
+    const link = document.createElement('link');
+    link.id = PRISM_THEME_STYLESHEET_ID;
+    link.rel = 'stylesheet';
+    link.href = '/styles/prism-theme.css';
+    document.head.appendChild(link);
+  }, []);
 
   const overrides = React.useMemo(() => ({
     ...STATIC_OVERRIDES,

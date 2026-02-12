@@ -7,22 +7,49 @@ import type { Story, StoryDetail, StoryPath } from '../types/story';
 import { locales, defaultLocale, type Locale, loadCommonResource } from './i18n';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
+const enableCache = process.env.NODE_ENV === 'production';
+const storySlugsCache: { value: string[] | null } = { value: null };
+const storyPathsCache: { value: StoryPath[] | null } = { value: null };
+const storyFileResolutionCache = new Map<string, { filePath: string; sourceLocale: Locale }>();
+const parsedStoryFileCache = new Map<string, { data: Record<string, unknown>; content: string }>();
+const storyCategoryLabelCache = new Map<string, string>();
+const allStoriesCache = new Map<Locale, Story[]>();
+const storyDetailCache = new Map<string, StoryDetail>();
 
 const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { filePath: string; sourceLocale: Locale } => {
-  // Try locale specific file: slug.en.md
+  const cacheKey = `${locale}:${slug}`;
+  const cached = enableCache ? storyFileResolutionCache.get(cacheKey) : undefined;
+  if (cached && enableCache) {
+    return cached;
+  }
+
+  let resolved: { filePath: string; sourceLocale: Locale };
+
   const localeFilePath = path.join(storiesDirectory, `${slug}.${locale}.md`);
   if (fs.existsSync(localeFilePath)) {
-    return { filePath: localeFilePath, sourceLocale: locale };
+    resolved = { filePath: localeFilePath, sourceLocale: locale };
+    if (enableCache) {
+      storyFileResolutionCache.set(cacheKey, resolved);
+    }
+    return resolved;
   }
-  // Fallback to English for non-default locales when available
+
   if (locale !== defaultLocale) {
     const englishFallbackPath = path.join(storiesDirectory, `${slug}.en.md`);
     if (fs.existsSync(englishFallbackPath)) {
-      return { filePath: englishFallbackPath, sourceLocale: 'en' };
+      resolved = { filePath: englishFallbackPath, sourceLocale: 'en' };
+      if (enableCache) {
+        storyFileResolutionCache.set(cacheKey, resolved);
+      }
+      return resolved;
     }
   }
-  // Fallback to base file: slug.md
-  return { filePath: path.join(storiesDirectory, `${slug}.md`), sourceLocale: defaultLocale };
+
+  resolved = { filePath: path.join(storiesDirectory, `${slug}.md`), sourceLocale: defaultLocale };
+  if (enableCache) {
+    storyFileResolutionCache.set(cacheKey, resolved);
+  }
+  return resolved;
 };
 
 const stripCodeFenceWrapper = (source: string): string => {
@@ -51,18 +78,25 @@ const stripCodeFenceWrapper = (source: string): string => {
 };
 
 const getAllStorySlugs = (): string[] => {
+  if (enableCache && storySlugsCache.value) {
+    return storySlugsCache.value;
+  }
+
   if (!fs.existsSync(storiesDirectory)) {
+    if (enableCache) {
+      storySlugsCache.value = [];
+      return storySlugsCache.value;
+    }
     return [];
   }
+
   const files = fs.readdirSync(storiesDirectory);
   const slugs = new Set<string>();
 
-  files.forEach(file => {
+  files.forEach((file) => {
     if (file.endsWith('.md')) {
-      // Remove .md
       let name = file.replace(/\.md$/, '');
-      // If it has locale suffix (e.g. slug.en), remove it
-      locales.forEach(locale => {
+      locales.forEach((locale) => {
         if (name.endsWith(`.${locale}`)) {
           name = name.replace(new RegExp(`\\.${locale}$`), '');
         }
@@ -71,7 +105,11 @@ const getAllStorySlugs = (): string[] => {
     }
   });
 
-  return Array.from(slugs);
+  const parsedSlugs = Array.from(slugs);
+  if (enableCache) {
+    storySlugsCache.value = parsedSlugs;
+  }
+  return parsedSlugs;
 };
 
 const normalizeDate = (value: string | Date | undefined): string => {
@@ -110,11 +148,21 @@ const normalizeStoryCategoryKey = (category?: string): string => {
 };
 
 const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
+  const cacheKey = `${locale}:${categoryKey}`;
+  const cached = enableCache ? storyCategoryLabelCache.get(cacheKey) : undefined;
+  if (cached && enableCache) {
+    return cached;
+  }
+
   const localeCommon = loadCommonResource(locale);
   const fallbackCommon = loadCommonResource(defaultLocale);
   const localizedCategories = (localeCommon?.stories as Record<string, Record<string, string>> | undefined)?.categories;
   const fallbackCategories = (fallbackCommon?.stories as Record<string, Record<string, string>> | undefined)?.categories;
-  return localizedCategories?.[categoryKey] || fallbackCategories?.[categoryKey] || categoryKey;
+  const label = localizedCategories?.[categoryKey] || fallbackCategories?.[categoryKey] || categoryKey;
+  if (enableCache) {
+    storyCategoryLabelCache.set(cacheKey, label);
+  }
+  return label;
 };
 
 const mapStoryFrontmatter = (
@@ -146,26 +194,65 @@ const mapStoryFrontmatter = (
   };
 };
 
+const getParsedStoryFile = (slug: string, locale: Locale): {
+  sourceLocale: Locale;
+  data: Record<string, unknown>;
+  content: string;
+} => {
+  const { filePath, sourceLocale } = resolveStoryFile(slug, locale);
+  const cached = enableCache ? parsedStoryFileCache.get(filePath) : undefined;
+  if (cached && enableCache) {
+    return { sourceLocale, data: cached.data, content: cached.content };
+  }
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Story file not found: ${filePath}`);
+  }
+
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const normalized = stripCodeFenceWrapper(fileContents);
+  const { data, content } = matter(normalized);
+  const parsed = { data, content };
+  if (enableCache) {
+    parsedStoryFileCache.set(filePath, parsed);
+  }
+  return { sourceLocale, ...parsed };
+};
+
 export const getAllStories = (locale: string = defaultLocale): Story[] => {
-  return getAllStorySlugs()
+  const normalizedLocale = (locale as Locale) || defaultLocale;
+  const cached = enableCache ? allStoriesCache.get(normalizedLocale) : undefined;
+  if (cached && enableCache) {
+    return cached;
+  }
+
+  const stories = getAllStorySlugs()
     .map((slug: string) => {
-      const { filePath } = resolveStoryFile(slug, locale as Locale);
-      if (!fs.existsSync(filePath)) return null;
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const normalized = stripCodeFenceWrapper(fileContents);
-      const { data, content } = matter(normalized);
-      return mapStoryFrontmatter(slug, data, content, locale as Locale);
+      try {
+        const { data, content } = getParsedStoryFile(slug, normalizedLocale);
+        return mapStoryFrontmatter(slug, data, content, normalizedLocale);
+      } catch {
+        return null;
+      }
     })
     .filter((story): story is Story => story !== null)
     .sort((a: Story, b: Story) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  if (enableCache) {
+    allStoriesCache.set(normalizedLocale, stories);
+  }
+  return stories;
 };
 
 export const getStoryDetail = async (slug: string, locale: string = defaultLocale): Promise<StoryDetail> => {
   const requestedLocale = locale as Locale;
-  const { filePath, sourceLocale } = resolveStoryFile(slug, requestedLocale);
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const normalized = stripCodeFenceWrapper(fileContents);
-  const { data, content } = matter(normalized);
+  const cacheKey = `${requestedLocale}:${slug}`;
+  const cached = enableCache ? storyDetailCache.get(cacheKey) : undefined;
+  if (cached && enableCache) {
+    return cached;
+  }
+
+  const { sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
   const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
   let contentToProcess = content;
 
@@ -177,23 +264,41 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     }
   }
 
-  return {
+  const storyDetail: StoryDetail = {
     ...baseStory,
     content: contentToProcess,
     sourceLocale,
     isFallbackTranslation: sourceLocale !== requestedLocale,
   };
+
+  if (enableCache) {
+    storyDetailCache.set(cacheKey, storyDetail);
+  }
+  return storyDetail;
 };
 
 export const getStoryPaths = (): StoryPath[] => {
+  if (enableCache && storyPathsCache.value) {
+    return storyPathsCache.value;
+  }
+
   const slugs = getAllStorySlugs();
   const paths: StoryPath[] = [];
 
-  slugs.forEach(slug => {
-    locales.forEach(locale => {
+  slugs.forEach((slug) => {
+    locales.forEach((locale) => {
       paths.push({ params: { locale, id: slug } });
     });
   });
 
+  if (enableCache) {
+    storyPathsCache.value = paths;
+  }
   return paths;
+};
+
+export const getRelatedStories = (locale: string, slug: string, limit = 3): Story[] => {
+  return getAllStories(locale)
+    .filter((item) => item.slug !== slug)
+    .slice(0, limit);
 };

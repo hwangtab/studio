@@ -14,11 +14,11 @@ import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
-import { getAllStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
+import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { getI18nStaticProps } from '../../../lib/getStatic';
-import type { Locale } from '../../../lib/i18n';
+import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 
 interface StoryDetailPageProps {
@@ -55,13 +55,10 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
     return types[Math.floor(seed * types.length)];
   };
 
-  const [ctaType, setCtaType] = React.useState<CTAType>('recording');
-
-  React.useEffect(() => {
-    if (story?.slug) {
-      setCtaType(getCTAType(story.slug, story.categoryKey));
-    }
-  }, [story?.categoryKey, story?.slug]);
+  const ctaType = React.useMemo(
+    () => getCTAType(story.slug, story.categoryKey),
+    [story.categoryKey, story.slug]
+  );
 
   const router = useRouter();
 
@@ -182,8 +179,12 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
 (StoryDetailPage as NextPage & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const preRenderedPaths = getStoryPaths().filter(
+    (path) => path.params.locale === defaultLocale
+  );
+
   return {
-    paths: getStoryPaths(),
+    paths: preRenderedPaths,
     fallback: 'blocking',
   };
 };
@@ -192,9 +193,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = params?.locale || 'ko';
   try {
     const story = await getStoryDetail(params!.id as string, locale as string);
-    const relatedStories = getAllStories(locale as string)
-      .filter((item) => item.slug !== params!.id)
-      .slice(0, 3);
+    const relatedStories = getRelatedStories(locale as string, params!.id as string, 3);
 
     return {
       props: {

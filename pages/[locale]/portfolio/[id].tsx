@@ -15,7 +15,7 @@ import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { getI18nStaticProps } from '../../../lib/getStatic';
-import { locales, type Locale } from '../../../lib/i18n';
+import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 
 interface PortfolioDetailPageProps {
@@ -170,12 +170,13 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths: { params: { locale: string; id: string } }[] = [];
-  locales.forEach(locale => {
-    const items = getPortfolioItems(locale);
-    items.forEach(item => {
-      paths.push({ params: { locale, id: item.id } });
+  const items = getPortfolioItems(defaultLocale);
+  items
+    .filter((item) => item.featured)
+    .forEach((item) => {
+      paths.push({ params: { locale: defaultLocale, id: item.id } });
     });
-  });
+
   return { paths, fallback: 'blocking' };
 };
 
