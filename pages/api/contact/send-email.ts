@@ -1,13 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import validator from 'validator';
+import { createHash } from 'crypto';
 
 import { kv } from '@vercel/kv';
 
 // Rate limiting configuration
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
+const UNKNOWN_IP_LIMIT = 3; // stricter limit for low-trust fallback identifiers
+const UNKNOWN_IP_WINDOW = 2 * 60; // short TTL to avoid long lockouts on collisions
 const PRODUCTION_ORIGIN = 'https://studionol.co.kr';
 const PRODUCTION_WWW_ORIGIN = 'https://www.studionol.co.kr';
+const UNKNOWN_IP_KEY = 'unknown';
+
+interface RateLimitSubject {
+    key: string;
+    limit: number;
+    windowSeconds: number;
+}
 
 interface MemoryRateLimitEntry {
     count: number;
@@ -69,7 +79,43 @@ function getClientIP(req: NextApiRequest): string {
     if (forwardedIP) return forwardedIP;
 
     const socketIP = normalizeIP(req.socket.remoteAddress || '');
-    return socketIP || 'unknown';
+    return socketIP || UNKNOWN_IP_KEY;
+}
+
+function buildFallbackFingerprint(req: NextApiRequest): string {
+    const userAgent = String(req.headers['user-agent'] || '');
+    const acceptLanguage = String(req.headers['accept-language'] || '');
+    const secChUa = String(req.headers['sec-ch-ua'] || '');
+    const secChUaPlatform = String(req.headers['sec-ch-ua-platform'] || '');
+    const host = String(req.headers.host || '');
+
+    const fingerprintSource = [
+        userAgent.trim().toLowerCase(),
+        acceptLanguage.trim().toLowerCase(),
+        secChUa.trim().toLowerCase(),
+        secChUaPlatform.trim().toLowerCase(),
+        host.trim().toLowerCase(),
+    ].join('|');
+
+    return createHash('sha256').update(fingerprintSource).digest('hex').slice(0, 24);
+}
+
+function getRateLimitSubject(req: NextApiRequest): RateLimitSubject {
+    const ip = getClientIP(req);
+    if (ip !== UNKNOWN_IP_KEY) {
+        return {
+            key: `ip:${ip}`,
+            limit: LIMIT,
+            windowSeconds: WINDOW,
+        };
+    }
+
+    const fingerprint = buildFallbackFingerprint(req);
+    return {
+        key: `fp:${fingerprint}`,
+        limit: UNKNOWN_IP_LIMIT,
+        windowSeconds: UNKNOWN_IP_WINDOW,
+    };
 }
 
 const getAllowedOrigins = (): string[] => {
@@ -100,10 +146,10 @@ const pruneExpiredInMemoryEntries = (now: number): void => {
     }
 };
 
-const checkRateLimitInMemory = (ip: string): void => {
-    const key = `rate_limit_contact:${ip}`;
+const checkRateLimitInMemory = (subject: RateLimitSubject): void => {
+    const key = `rate_limit_contact:${subject.key}`;
     const now = Date.now();
-    const expiresAt = now + WINDOW * 1000;
+    const expiresAt = now + subject.windowSeconds * 1000;
     pruneExpiredInMemoryEntries(now);
     const existing = memoryRateLimitStore.get(key);
 
@@ -113,27 +159,27 @@ const checkRateLimitInMemory = (ip: string): void => {
     }
 
     const nextCount = existing.count + 1;
-    if (nextCount > LIMIT) {
+    if (nextCount > subject.limit) {
         throw new Error('RATE_LIMIT_EXCEEDED');
     }
 
     memoryRateLimitStore.set(key, { count: nextCount, expiresAt: existing.expiresAt });
 };
 
-async function checkRateLimit(ip: string): Promise<void> {
+async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
     const isKvConfigured = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 
     // Vercel KV is required for production rate limiting
     if (isKvConfigured) {
         try {
-            const key = `rate_limit_contact:${ip}`;
+            const key = `rate_limit_contact:${subject.key}`;
             const count = await kv.incr(key);
 
             if (count === 1) {
-                await kv.expire(key, WINDOW);
+                await kv.expire(key, subject.windowSeconds);
             }
 
-            if (count > LIMIT) {
+            if (count > subject.limit) {
                 throw new Error('RATE_LIMIT_EXCEEDED');
             }
             return;
@@ -148,7 +194,7 @@ async function checkRateLimit(ip: string): Promise<void> {
                 console.warn('[Rate Limit] Falling back to in-memory limiter due to KV failure.');
                 hasLoggedMemoryFallback = true;
             }
-            checkRateLimitInMemory(ip);
+            checkRateLimitInMemory(subject);
             return;
         }
     }
@@ -163,7 +209,7 @@ async function checkRateLimit(ip: string): Promise<void> {
         hasLoggedMemoryFallback = true;
     }
 
-    checkRateLimitInMemory(ip);
+    checkRateLimitInMemory(subject);
     return;
 }
 
@@ -219,10 +265,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // 3. Rate limiting by IP
-    const ip = getClientIP(req);
+    const rateLimitSubject = getRateLimitSubject(req);
 
     try {
-        await checkRateLimit(ip);
+        await checkRateLimit(rateLimitSubject);
     } catch (error: unknown) {
         if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') {
             return res.status(429).json({ message: 'Too many requests. Please try again later.' });
