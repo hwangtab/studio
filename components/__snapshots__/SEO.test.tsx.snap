@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SEO alternates renders canonical and alternate tags by default 1`] = `
+<div>
+  <title>
+    Sample Title
+  </title>
+  <meta
+    content="Sample Description"
+    name="description"
+  />
+  <meta
+    content="sample,seo"
+    name="keywords"
+  />
+  <meta
+    content="Studio NOL"
+    name="author"
+  />
+  <meta
+    content="index, follow"
+    name="robots"
+  />
+  <meta
+    content="KR-11"
+    name="geo.region"
+  />
+  <meta
+    content="Eunpyeong-gu, Seoul"
+    name="geo.placename"
+  />
+  <meta
+    content="37.614353;126.925887"
+    name="geo.position"
+  />
+  <meta
+    content="37.614353, 126.925887"
+    name="ICBM"
+  />
+  <link
+    href="https://studionol.co.kr/en/stories/sample-story"
+    rel="canonical"
+  />
+  <link
+    href="https://studionol.co.kr/ko/stories/sample-story"
+    hreflang="ko"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/en/stories/sample-story"
+    hreflang="en"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/zh/stories/sample-story"
+    hreflang="zh"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/es/stories/sample-story"
+    hreflang="es"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/vi/stories/sample-story"
+    hreflang="vi"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/th/stories/sample-story"
+    hreflang="th"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/uz/stories/sample-story"
+    hreflang="uz"
+    rel="alternate"
+  />
+  <link
+    href="https://studionol.co.kr/ko/stories/sample-story"
+    hreflang="x-default"
+    rel="alternate"
+  />
+  <meta
+    content="website"
+    property="og:type"
+  />
+  <meta
+    content="https://studionol.co.kr/en/stories/sample-story"
+    property="og:url"
+  />
+  <meta
+    content="Sample Title"
+    property="og:title"
+  />
+  <meta
+    content="Sample Description"
+    property="og:description"
+  />
+  <meta
+    content="https://studionol.co.kr/images/hardware2.jpg"
+    property="og:image"
+  />
+  <meta
+    content="Studio NOL - Music Production Studio"
+    property="og:image:alt"
+  />
+  <meta
+    content="1200"
+    property="og:image:width"
+  />
+  <meta
+    content="630"
+    property="og:image:height"
+  />
+  <meta
+    content="en_US"
+    property="og:locale"
+  />
+  <meta
+    content="Studio NOL"
+    property="og:site_name"
+  />
+  <meta
+    content="ko_KR"
+    property="og:locale:alternate"
+  />
+  <meta
+    content="zh_CN"
+    property="og:locale:alternate"
+  />
+  <meta
+    content="es_ES"
+    property="og:locale:alternate"
+  />
+  <meta
+    content="vi_VN"
+    property="og:locale:alternate"
+  />
+  <meta
+    content="th_TH"
+    property="og:locale:alternate"
+  />
+  <meta
+    content="uz_UZ"
+    property="og:locale:alternate"
+  />
+  <meta
+    content="summary_large_image"
+    name="twitter:card"
+  />
+  <meta
+    content="https://studionol.co.kr/en/stories/sample-story"
+    name="twitter:url"
+  />
+  <meta
+    content="Sample Title"
+    name="twitter:title"
+  />
+  <meta
+    content="Sample Description"
+    name="twitter:description"
+  />
+  <meta
+    content="https://studionol.co.kr/images/hardware2.jpg"
+    name="twitter:image"
+  />
+  <meta
+    content="Studio NOL"
+    name="twitter:image:alt"
+  />
+  <meta
+    content="@StudioNOL"
+    name="twitter:site"
+  />
+</div>
+`;

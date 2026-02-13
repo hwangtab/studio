@@ -22,7 +22,7 @@ export const generateDefaultSchema = (
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
 
-  const localeContactUrl = `${siteUrl}/ko/contact`;
+  const localeContactUrl = `${siteUrl}/${locale}/contact`;
   const sameAsLinks = [config.contact.kakaoUrl, config.contact.naverMapUrl];
 
   const organizationId = `${siteUrl}/#organization`;

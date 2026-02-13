@@ -49,15 +49,6 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
-  // Hydration 불일치 방지: 렌더링 전에 i18n 리소스를 동기적으로 적용
-  // 서버/클라이언트 모두에서 실행되어 동일한 번역으로 렌더링
-  if (hasServerResourceForLocale && !i18n.hasResourceBundle(locale, 'common')) {
-    applyI18nResources(i18nResources);
-  }
-  if (i18n.language !== locale && i18n.hasResourceBundle(locale, 'common')) {
-    void i18n.changeLanguage(locale);
-  }
-
   useEffect(() => {
     if (typeof document === 'undefined') return;
     if (isIOSSafari) {

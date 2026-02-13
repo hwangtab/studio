@@ -113,6 +113,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         description={story.summary || metaDescription}
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
         canonical={story.isFallbackTranslation ? `/${story.sourceLocale}/stories/${story.slug}` : undefined}
+        disableAlternates={story.isFallbackTranslation}
         ogImage={story.thumbnail || '/images/hardware2.jpg'}
         ogType="article"
         robots={story.isFallbackTranslation ? 'noindex, follow' : 'index, follow'}

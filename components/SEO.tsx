@@ -20,6 +20,7 @@ interface SEOProps {
   keywords?: string;
   canonical?: string;
   disableCanonicalAndAlternates?: boolean;
+  disableAlternates?: boolean;
   ogImage?: string;
   ogType?: string;
   includeSchema?: boolean;
@@ -42,6 +43,7 @@ const SEO = ({
   keywords,
   canonical,
   disableCanonicalAndAlternates = false,
+  disableAlternates = false,
   ogImage = '/images/hardware2.jpg',
   ogType = 'website',
   includeSchema = false,
@@ -97,6 +99,7 @@ const SEO = ({
   // Use provided canonical or generate one based on current path
   const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
   const canonicalUrl = toAbsoluteUrl(derivedCanonical);
+  const shouldRenderAlternates = !disableCanonicalAndAlternates && !disableAlternates;
 
   const normalizedCanonical =
     canonicalUrl.endsWith('/') && canonicalUrl !== `${siteUrl}/`
@@ -279,7 +282,7 @@ const SEO = ({
       {!disableCanonicalAndAlternates && <link rel="canonical" href={normalizedCanonical} />}
 
       {/* Hreflang tags for SEO */}
-      {!disableCanonicalAndAlternates && (
+      {shouldRenderAlternates && (
         locales.map((locale) => (
           <link
             key={`hreflang-${locale}`}
@@ -289,7 +292,7 @@ const SEO = ({
           />
         ))
       )}
-      {!disableCanonicalAndAlternates && (
+      {shouldRenderAlternates && (
         <link
           rel="alternate"
           hrefLang="x-default"

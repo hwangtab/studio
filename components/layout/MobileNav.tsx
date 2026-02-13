@@ -23,6 +23,7 @@ interface MobileNavProps {
   toggleDarkMode: () => void;
   locale: Locale;
   isTransparent: boolean;
+  navId: string;
   disableEffects?: boolean;
   expandedGroups: string[];
   toggleGroup: (group: string) => void;
@@ -37,6 +38,7 @@ export const MobileNav = ({
   isDarkMode,
   toggleDarkMode,
   locale,
+  navId,
   disableEffects = false,
   expandedGroups,
   toggleGroup,
@@ -144,6 +146,7 @@ export const MobileNav = ({
     <AnimatePresence initial={false} onExitComplete={handleExitComplete}>
        {isOpen && (
          <m.nav
+           id={navId}
            ref={navRef}
            role="dialog"
            aria-modal="true"

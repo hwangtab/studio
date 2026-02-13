@@ -21,6 +21,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const router = useRouter();
+  const mobileNavId = React.useId();
   const { t } = useTranslation('common', { lng: locale });
   const currentPath = router.asPath.split('?')[0].split('#')[0];
   const siteConfig = getSiteConfig(locale);
@@ -108,6 +109,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               siteConfig={siteConfig}
               isMenuOpen={isMenuOpen}
               setIsMenuOpen={setIsMenuOpen}
+              mobileNavId={mobileNavId}
               disableEffects={disableEffects}
             />
           </div>
@@ -122,6 +124,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}
         locale={locale}
+        navId={mobileNavId}
         isTransparent={isTransparent}
         disableEffects={disableEffects}
         expandedGroups={expandedGroups}
