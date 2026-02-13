@@ -158,6 +158,7 @@ export const MobileNav = ({
             {/* Mobile Theme/Language Switcher */}
             <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
               <button
+                type="button"
                 className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
                 onClick={toggleDarkMode}
                 aria-label={isDarkMode ? t('actions.toggleThemeLight') : t('actions.toggleThemeDark')}
@@ -177,9 +178,10 @@ export const MobileNav = ({
             {navGroups.map((group) => (
               <div key={group.id} className="space-y-2">
                 <button
+                  type="button"
                   onClick={() => toggleGroup(group.id)}
                   aria-expanded={expandedGroups.includes(group.id)}
-                  className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+                  className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded-lg"
                 >
                   {group.label}
                   <ChevronDown
@@ -201,7 +203,7 @@ export const MobileNav = ({
                           key={item.href}
                           href={item.href}
                           onClick={onClose}
-                          className={`block px-3 py-2 text-sm rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary ${currentPath === item.href
+                          className={`block min-h-[44px] px-3 py-2 text-sm rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === item.href
                             ? 'bg-primary/10 text-primary dark:text-accent font-medium'
                             : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}

@@ -86,7 +86,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         <div className="mb-8">
           <Link
             href={getLink("/portfolio")}
-            className="inline-flex items-center typo-card-cta hover:underline mb-6"
+            className="inline-flex items-center typo-card-cta hover:underline mb-6 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           >
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('portfolio.detail.backToList')}
@@ -148,14 +148,15 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                 >
                   <ExternalLink size={16} aria-hidden="true" />
                   {t('portfolio.detail.listenNow')}
                 </a>
                 <button
+                  type="button"
                   onClick={sharePortfolio}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 >
                   <Share2 size={16} aria-hidden="true" />
                   {t('portfolio.detail.share')}

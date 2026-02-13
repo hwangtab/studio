@@ -210,7 +210,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium"
+                className="min-h-[44px] px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
               >
                 {t('actions.more')}
               </button>

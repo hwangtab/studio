@@ -32,7 +32,7 @@ export const Footer = ({ locale }: FooterProps) => {
             </p>
             <Link
               href={`/${locale}/privacy-policy`}
-              className="mt-2 inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300"
+              className="mt-2 inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               {t('footer.privacy')}
             </Link>
@@ -42,9 +42,9 @@ export const Footer = ({ locale }: FooterProps) => {
             <h3 className="typo-footer-heading mb-4">{t('footer.linksTitle')}</h3>
             <div className="h-px w-full bg-white/25 mb-4" />
             <ul className="space-y-2">
-              <li><Link href={`/${locale}`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.home')}</Link></li>
-              <li><Link href={`/${locale}/about`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.about')}</Link></li>
-              <li><Link href={`/${locale}/contact`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300">{t('nav.contact')}</Link></li>
+              <li><Link href={`/${locale}`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.home')}</Link></li>
+              <li><Link href={`/${locale}/about`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.about')}</Link></li>
+              <li><Link href={`/${locale}/contact`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.contact')}</Link></li>
             </ul>
           </div>
 
@@ -55,21 +55,21 @@ export const Footer = ({ locale }: FooterProps) => {
               href={siteConfig.contact.naverMapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2"
+              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <MapPin className="mr-2 mt-0.5" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{siteConfig.contact.address}</span>
             </a>
             <a
               href={`mailto:${siteConfig.contact.email}`}
-              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2"
+              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <Mail className="mr-2 mt-0.5" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{t('footer.emailLabel')}: {siteConfig.contact.email}</span>
             </a>
             <a
               href={`tel:${siteConfig.contact.phone}`}
-              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start"
+              className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <Phone className="mr-2 mt-0.5" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{t('footer.phoneLabel')}: {siteConfig.contact.phone}</span>

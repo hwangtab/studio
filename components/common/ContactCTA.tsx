@@ -107,7 +107,7 @@ const ContactCTA = ({
                         href={imageHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
+                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                     >
                         <ResponsiveImage
                             src={imageSrc}
@@ -123,7 +123,7 @@ const ContactCTA = ({
                 ) : (
                     <Link
                         href={imageHref}
-                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer"
+                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                     >
                         <ResponsiveImage
                             src={imageSrc}
