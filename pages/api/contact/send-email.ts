@@ -296,6 +296,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(500).json({ message: 'Server configuration error' });
         }
 
+        if (!privateKey) {
+            console.warn('[API Warning] EMAILJS_PRIVATE_KEY is not set. If EmailJS requires it (non-browser apps), calls will fail.');
+        }
+
         const payload: EmailJSPayload = {
             service_id: serviceId,
             template_id: templateId,

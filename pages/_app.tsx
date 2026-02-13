@@ -9,7 +9,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { useIsIOSSafari } from '../utils/deviceUtils';
 import { I18nextProvider } from 'react-i18next';
-import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
+import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -32,7 +32,6 @@ const localeLoadingMessage: Record<Locale, string> = {
 
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
-  const shouldReduceMotion = useReducedMotion();
   const isIOSSafari = useIsIOSSafari();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
@@ -48,8 +47,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     locale in (i18nResources as Record<string, unknown>)
   );
 
-  const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
-  const shouldReduceMotionAggressively = shouldReduceMotion;
+  const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -140,13 +138,13 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion={isIOSSafari ? 'always' : 'user'}>
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="wait" initial={!shouldReduceMotionAggressively} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'auto' })}>
+                <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'auto' })}>
                   <m.div
                     key={router.asPath.split('?')[0]}
-                    initial={shouldReduceMotionAggressively ? false : { opacity: 0 }}
+                    initial={false}
                     animate={{ opacity: 1 }}
-                    exit={shouldReduceMotionAggressively ? { opacity: 1 } : { opacity: 0 }}
-                    transition={shouldReduceMotionAggressively ? { duration: 0 } : { duration: 0.06, ease: 'linear' }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.06, ease: 'linear' }}
                   >
                     <Component {...pageProps} />
                   </m.div>

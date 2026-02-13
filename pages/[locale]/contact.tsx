@@ -1,6 +1,6 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import { m, useReducedMotion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
@@ -244,7 +244,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     referrer?: string;
   }>({});
   const siteConfig = getSiteConfig(locale);
-  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -463,9 +462,9 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       <Section variant="default">
         <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
           <m.div
-            initial={shouldReduceMotion ? false : { opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
+            transition={{ duration: 0.5 }}
             className="card p-8 shadow-xl order-2 lg:order-1"
           >
             <div>
@@ -533,9 +532,9 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
           {/* Contact Form */}
           <m.div
-            initial={shouldReduceMotion ? false : { opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
           >
             <div>
@@ -654,8 +653,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
                 <div className="flex flex-col gap-3">
                   <m.button
-                    whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
-                    whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 font-title disabled:opacity-50 touch-manipulation"
@@ -677,8 +676,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   </m.button>
 
                   <m.a
-                    whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
-                    whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     href={siteConfig.contact.kakaoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
