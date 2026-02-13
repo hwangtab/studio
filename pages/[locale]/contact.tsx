@@ -257,12 +257,12 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     });
   }, []);
 
-    const validateName = (value: string): string => {
-      if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin', { defaultValue: validationCopy.nameMin });
-      if (value.length > 100) return t('contact.form.errors.nameMax', { defaultValue: validationCopy.nameMax });
-      if (!/^[\p{L}\p{M}\s'-]+$/u.test(value)) return t('contact.form.errors.nameInvalid', { defaultValue: validationCopy.nameInvalid });
-      return '';
-    };
+  const validateName = (value: string): string => {
+    if (!value || value.trim().length < 2) return t('contact.form.errors.nameMin', { defaultValue: validationCopy.nameMin });
+    if (value.length > 100) return t('contact.form.errors.nameMax', { defaultValue: validationCopy.nameMax });
+    if (!/^[\p{L}\p{M}\s'-]+$/u.test(value)) return t('contact.form.errors.nameInvalid', { defaultValue: validationCopy.nameInvalid });
+    return '';
+  };
 
   const validateEmail = (value: string): string => {
     if (!value) return t('contact.form.errors.emailRequired', { defaultValue: validationCopy.emailRequired });
@@ -271,14 +271,14 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     return '';
   };
 
-    const validatePhone = (value: string): string => {
-      if (!value) return t('contact.form.errors.phoneRequired', { defaultValue: validationCopy.phoneRequired });
-      if (!/^[\d\s+\-\(\)]+$/.test(value)) return t('contact.form.errors.phoneInvalid', { defaultValue: validationCopy.phoneInvalid });
-      const normalized = value.replace(/\s/g, '');
-      if (!normalized) return t('contact.form.errors.phoneRequired', { defaultValue: validationCopy.phoneRequired });
-      if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength', { defaultValue: validationCopy.phoneLength });
-      return '';
-    };
+  const validatePhone = (value: string): string => {
+    if (!value) return t('contact.form.errors.phoneRequired', { defaultValue: validationCopy.phoneRequired });
+    if (!/^[\d\s+\-\(\)]+$/.test(value)) return t('contact.form.errors.phoneInvalid', { defaultValue: validationCopy.phoneInvalid });
+    const normalized = value.replace(/\s/g, '');
+    if (!normalized) return t('contact.form.errors.phoneRequired', { defaultValue: validationCopy.phoneRequired });
+    if (normalized.length < 5 || normalized.length > 50) return t('contact.form.errors.phoneLength', { defaultValue: validationCopy.phoneLength });
+    return '';
+  };
 
   const validateMessage = (value: string): string => {
     if (!value || value.trim().length < 10) return t('contact.form.errors.messageMin', { defaultValue: validationCopy.messageMin });
@@ -352,6 +352,12 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       if (response.status === 403) {
         setSubmitMessage(localeMessages.forbidden);
         setCanRetrySubmit(false);
+        return;
+      }
+
+      if (response.status === 502) {
+        setSubmitMessage(localeMessages.unavailable);
+        setCanRetrySubmit(true);
         return;
       }
 
@@ -692,9 +698,9 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   {(t('contact.notice.list', { returnObjects: true }) as string[])?.map && (t('contact.notice.list', { returnObjects: true }) as string[]).map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
-                   {!(t('contact.notice.list', { returnObjects: true }) as string[])?.map && (
-                     <li>{t('contact.checkNotices')}</li>
-                   )}
+                  {!(t('contact.notice.list', { returnObjects: true }) as string[])?.map && (
+                    <li>{t('contact.checkNotices')}</li>
+                  )}
                 </ul>
               </div>
 

@@ -341,7 +341,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 error: errorText,
                 serviceId
             });
-            return res.status(response.status).json({
+            // Map external service errors to 502 Bad Gateway to distinguish from internal CSRF 403
+            return res.status(502).json({
                 message: 'Failed to send message. Please try again later.'
             });
         }
