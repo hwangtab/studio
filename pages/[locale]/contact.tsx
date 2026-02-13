@@ -356,7 +356,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       }
 
       if (response.status === 502) {
-        setSubmitMessage(localeMessages.unavailable);
+        setSubmitMessage(result.message || localeMessages.unavailable);
         setCanRetrySubmit(true);
         return;
       }

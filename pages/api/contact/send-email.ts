@@ -17,58 +17,58 @@ const memoryRateLimitStore = new Map<string, MemoryRateLimitEntry>();
 let hasLoggedMemoryFallback = false;
 
 const toHeaderCandidates = (value: string | string[] | undefined): string[] => {
-  if (!value) return [];
-  if (Array.isArray(value)) {
-    return value.flatMap((item) => item.split(',')).map((item) => item.trim()).filter(Boolean);
-  }
-  return value.split(',').map((item) => item.trim()).filter(Boolean);
+    if (!value) return [];
+    if (Array.isArray(value)) {
+        return value.flatMap((item) => item.split(',')).map((item) => item.trim()).filter(Boolean);
+    }
+    return value.split(',').map((item) => item.trim()).filter(Boolean);
 };
 
 const normalizeIP = (value: string): string | null => {
-  if (!value) return null;
-  const trimmed = value.trim();
-  if (!trimmed) return null;
+    if (!value) return null;
+    const trimmed = value.trim();
+    if (!trimmed) return null;
 
-  const deBracketed = trimmed.startsWith('[') && trimmed.endsWith(']')
-    ? trimmed.slice(1, -1)
-    : trimmed;
-  const strippedPort = deBracketed.includes('.') ? deBracketed.replace(/:\d+$/, '') : deBracketed;
-  const normalized = strippedPort.startsWith('::ffff:') ? strippedPort.slice(7) : strippedPort;
+    const deBracketed = trimmed.startsWith('[') && trimmed.endsWith(']')
+        ? trimmed.slice(1, -1)
+        : trimmed;
+    const strippedPort = deBracketed.includes('.') ? deBracketed.replace(/:\d+$/, '') : deBracketed;
+    const normalized = strippedPort.startsWith('::ffff:') ? strippedPort.slice(7) : strippedPort;
 
-  return validator.isIP(normalized) ? normalized : null;
+    return validator.isIP(normalized) ? normalized : null;
 };
 
 const getFirstValidIP = (value: string | string[] | undefined): string | null => {
-  const candidates = toHeaderCandidates(value);
-  for (const candidate of candidates) {
-    const ip = normalizeIP(candidate);
-    if (ip) return ip;
-  }
-  return null;
+    const candidates = toHeaderCandidates(value);
+    for (const candidate of candidates) {
+        const ip = normalizeIP(candidate);
+        if (ip) return ip;
+    }
+    return null;
 };
 
 const normalizeOrigin = (value: string): string | null => {
-  if (!value) return null;
-  try {
-    return new URL(value).origin;
-  } catch {
-    return null;
-  }
+    if (!value) return null;
+    try {
+        return new URL(value).origin;
+    } catch {
+        return null;
+    }
 };
 
 // Extract client IP with Vercel-aware header priority
 function getClientIP(req: NextApiRequest): string {
-  const vercelIP = getFirstValidIP(req.headers['x-vercel-forwarded-for']);
-  if (vercelIP) return vercelIP;
+    const vercelIP = getFirstValidIP(req.headers['x-vercel-forwarded-for']);
+    if (vercelIP) return vercelIP;
 
-  const realIP = getFirstValidIP(req.headers['x-real-ip']);
-  if (realIP) return realIP;
+    const realIP = getFirstValidIP(req.headers['x-real-ip']);
+    if (realIP) return realIP;
 
-  const forwardedIP = getFirstValidIP(req.headers['x-forwarded-for']);
-  if (forwardedIP) return forwardedIP;
+    const forwardedIP = getFirstValidIP(req.headers['x-forwarded-for']);
+    if (forwardedIP) return forwardedIP;
 
-  const socketIP = normalizeIP(req.socket.remoteAddress || '');
-  return socketIP || 'unknown';
+    const socketIP = normalizeIP(req.socket.remoteAddress || '');
+    return socketIP || 'unknown';
 }
 
 const getAllowedOrigins = (): string[] => {
@@ -209,15 +209,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ success: true, message: 'Message sent successfully' });
     }
 
-     // 2. CSRF protection - validate origin/referer
-     const allowedOrigins = getAllowedOrigins();
-     const requestOrigin = normalizeOrigin(String(req.headers.origin || req.headers.referer || ''));
-     if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
-         return res.status(403).json({ message: 'Forbidden' });
-     }
+    // 2. CSRF protection - validate origin/referer
+    const allowedOrigins = getAllowedOrigins();
+    const requestOrigin = normalizeOrigin(String(req.headers.origin || req.headers.referer || ''));
+    if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
 
-     // 3. Rate limiting by IP
-     const ip = getClientIP(req);
+    // 3. Rate limiting by IP
+    const ip = getClientIP(req);
 
     try {
         await checkRateLimit(ip);
@@ -342,8 +342,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 serviceId
             });
             // Map external service errors to 502 Bad Gateway to distinguish from internal CSRF 403
+            // Include error text for debugging in this phase
             return res.status(502).json({
-                message: 'Failed to send message. Please try again later.'
+                message: `EmailJS Error: ${errorText}`
             });
         }
     } catch (error) {
