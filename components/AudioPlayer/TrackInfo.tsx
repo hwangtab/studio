@@ -1,5 +1,5 @@
 import React from 'react';
-import { m } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import { Disc } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,8 @@ interface TrackInfoProps {
 
 const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: TrackInfoProps) => {
     const { t } = useTranslation('common', { lng: locale });
+    const shouldReduceMotion = useReducedMotion();
+    const shouldAnimateNowPlaying = isPlaying && !shouldReduceMotion;
     const trackNumberLabel = trackNumber < 10 ? `0${trackNumber}` : String(trackNumber);
     return (
         <div className="flex flex-col items-center text-center">
@@ -41,8 +43,8 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                     }`} />
 
                 <div
-                    className={`relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl border-4 border-black/50 ring-1 ring-white/10 ${isPlaying ? 'animate-spin-slow' : ''}`}
-                    style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}
+                    className={`relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl border-4 border-black/50 ring-1 ring-white/10 ${shouldAnimateNowPlaying ? 'animate-spin-slow' : ''}`}
+                    style={{ animationPlayState: shouldAnimateNowPlaying ? 'running' : 'paused' }}
                 >
                     <ResponsiveImage
                         src={track.albumArt}
@@ -73,8 +75,8 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                         {[...Array(3)].map((_, i) => (
                             <m.div
                                 key={i}
-                                animate={isPlaying ? { height: [4, 12, 4] } : { height: 4 }}
-                                transition={isPlaying ? {
+                                animate={shouldAnimateNowPlaying ? { height: [4, 12, 4] } : { height: 4 }}
+                                transition={shouldAnimateNowPlaying ? {
                                     repeat: Infinity,
                                     duration: 0.8,
                                     delay: i * 0.2,

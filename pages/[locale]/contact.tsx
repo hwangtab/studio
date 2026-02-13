@@ -460,11 +460,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
             transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
             className="card p-8 shadow-xl order-2 lg:order-1"
           >
-            <m.div
-              initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
-            >
+            <div>
               <h2 className="typo-card-title mb-4">{t('contact.info.title')}</h2>
               <div className="space-y-4">
                 <a href={siteConfig.contact.naverMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation">
@@ -524,7 +520,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   </p>
                 </div>
               </div>
-            </m.div>
+            </div>
           </m.div>
 
           {/* Contact Form */}
@@ -534,11 +530,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
             transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.2 }}
             className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
           >
-            <m.div
-              initial={shouldReduceMotion ? false : { opacity: 0, x: 0 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : 0.4 }}
-            >
+            <div>
               <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>
               {submitMessage && (
                 <div
@@ -687,7 +679,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   </m.a>
                 </div>
               </form>
-            </m.div>
+            </div>
 
             <div className="mt-6 space-y-4">
               <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">

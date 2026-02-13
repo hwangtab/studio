@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { m } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import type { AudioTrack } from '../../types/data';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +22,7 @@ const Playlist = ({
     locale = defaultLocale,
 }: PlaylistProps) => {
     const { t } = useTranslation('common', { lng: locale });
+    const shouldReduceMotion = useReducedMotion();
     return (
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
             <h3 className="text-gray-500 dark:text-white/60 text-xs font-bold uppercase tracking-wider mb-4 px-2">
@@ -61,18 +62,18 @@ const Playlist = ({
                                         {isPlaying ? (
                                             <div className="flex space-x-[2px] items-end h-3">
                                                 <m.div
-                                                    animate={{ height: [4, 12, 6, 12, 4] }}
-                                                    transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+                                                    animate={shouldReduceMotion ? { height: 8 } : { height: [4, 12, 6, 12, 4] }}
+                                                    transition={shouldReduceMotion ? { duration: 0 } : { repeat: Infinity, duration: 1.2, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
                                                 <m.div
-                                                    animate={{ height: [8, 4, 12, 5, 8] }}
-                                                    transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                                                    animate={shouldReduceMotion ? { height: 8 } : { height: [8, 4, 12, 5, 8] }}
+                                                    transition={shouldReduceMotion ? { duration: 0 } : { repeat: Infinity, duration: 1.5, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
                                                 <m.div
-                                                    animate={{ height: [5, 10, 5, 10, 5] }}
-                                                    transition={{ repeat: Infinity, duration: 1.0, ease: "linear" }}
+                                                    animate={shouldReduceMotion ? { height: 8 } : { height: [5, 10, 5, 10, 5] }}
+                                                    transition={shouldReduceMotion ? { duration: 0 } : { repeat: Infinity, duration: 1.0, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
                                             </div>

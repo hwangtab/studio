@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { m } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
 import { useIsIOSSafari } from '../utils/deviceUtils';
@@ -17,6 +17,7 @@ interface StoryCTAProps {
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
     const { t } = useTranslation('common', { lng: locale });
     const isIOSSafari = useIsIOSSafari();
+    const shouldReduceMotion = useReducedMotion();
 
     const getLink = (path: string) => `/${locale}${path}`;
 
@@ -141,18 +142,19 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
     const current = content[type];
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
+    const shouldAnimate = !isIOSSafari && !shouldReduceMotion;
 
-    const ctaMotionProps = isIOSSafari
+    const ctaMotionProps = shouldAnimate
         ? {
-            initial: false,
-            animate: { opacity: 1 },
-            transition: { duration: 0 }
-        }
-        : {
             initial: { opacity: 0, y: 20 },
             whileInView: { opacity: 1, y: 0 },
             viewport: { once: true },
             transition: { duration: 0.5 }
+        }
+        : {
+            initial: false,
+            animate: { opacity: 1 },
+            transition: { duration: 0 }
         };
 
     return (
@@ -202,15 +204,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                             {heights.map((h, i) => (
                                 <m.div
                                     key={i}
-                                    initial={isIOSSafari ? false : { height: '20%' }}
-                                    whileInView={isIOSSafari ? undefined : { height: `${h}%` }}
-                                    animate={isIOSSafari ? { height: `${h}%` } : undefined}
-                                    transition={isIOSSafari ? { duration: 0 } : {
-                                        repeat: Infinity,
-                                        repeatType: "reverse",
-                                        duration: 1.5,
-                                        delay: i * 0.1
-                                    }}
+                                    initial={shouldAnimate ? { height: '20%' } : false}
+                                    whileInView={shouldAnimate ? { height: `${h}%` } : undefined}
+                                    animate={shouldAnimate ? undefined : { height: `${h}%` }}
+                                    transition={shouldAnimate
+                                        ? {
+                                            repeat: Infinity,
+                                            repeatType: "reverse",
+                                            duration: 1.5,
+                                            delay: i * 0.1
+                                        }
+                                        : { duration: 0 }}
                                     className={`flex-1 bg-gradient-to-t ${current.visualGradient} rounded-t-sm opacity-80`}
                                 />
                             ))}

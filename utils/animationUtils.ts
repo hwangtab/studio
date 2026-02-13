@@ -58,9 +58,11 @@ export const TEXT_REVEAL = {
 
 export const SCROLL_REVEAL = {
   initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-10% 0px -10% 0px" },
-  transition: { duration: 0.8, ease: "easeOut" }
+  whileInView: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" as const }
+  }
 };
 
 interface EnterAnimationOptions {
