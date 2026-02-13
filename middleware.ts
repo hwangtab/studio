@@ -88,8 +88,9 @@ export function middleware(request: NextRequest) {
     }
 
     if (shouldRedirect) {
-        // SEO: Permanent redirect for host/locale normalization
-        const response = NextResponse.redirect(redirectUrl, 308);
+        // Language negotiation redirects should be temporary to avoid sticky caching by intermediaries.
+        const redirectStatus = shouldVaryByLanguage ? 307 : 308;
+        const response = NextResponse.redirect(redirectUrl, redirectStatus);
         if (shouldVaryByLanguage) {
             response.headers.set('Vary', 'Accept-Language');
         }
