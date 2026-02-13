@@ -81,7 +81,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                                 className="overflow-hidden"
                             >
-                                <div className="px-6 pb-6 pt-2 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
+                                <div className="px-6 pb-6 pt-6 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
                                     {item.answer}
                                 </div>
                             </m.div>
