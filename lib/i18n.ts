@@ -47,11 +47,24 @@ export const loadCommonResource = (locale: Locale): Record<string, unknown> => {
 
   const nodeRequire = eval('require') as NodeRequire;
   const path = nodeRequire('node:path') as typeof import('node:path');
-  const localePath = path.join(process.cwd(), 'public', 'locales', locale, 'common.json');
-  const common = nodeRequire(localePath) as Record<string, unknown>;
-  commonByLocaleCache[locale] = common;
+  const fs = nodeRequire('node:fs') as typeof import('node:fs');
 
-  return common;
+  const readLocaleFile = (targetLocale: Locale): Record<string, unknown> | null => {
+    try {
+      const localePath = path.join(process.cwd(), 'public', 'locales', targetLocale, 'common.json');
+      if (!fs.existsSync(localePath)) {
+        return null;
+      }
+      const raw = fs.readFileSync(localePath, 'utf8');
+      return JSON.parse(raw) as Record<string, unknown>;
+    } catch {
+      return null;
+    }
+  };
+
+  const loaded = readLocaleFile(locale) ?? readLocaleFile(defaultLocale) ?? {};
+  commonByLocaleCache[locale] = loaded;
+  return loaded;
 };
 
 export const loadCommonResourceClient = async (locale: Locale): Promise<Record<string, unknown>> => {
