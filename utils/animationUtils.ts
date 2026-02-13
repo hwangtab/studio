@@ -75,6 +75,15 @@ interface FadeInAnimationOptions {
   delay?: number;
 }
 
+interface InViewEnterAnimationOptions {
+  axis?: 'x' | 'y';
+  distance?: number;
+  delay?: number;
+  duration?: number;
+  once?: boolean;
+  margin?: string;
+}
+
 export const createEnterAnimation = ({
   axis = 'y',
   distance = 20,
@@ -94,3 +103,23 @@ export const createFadeInAnimation = ({
   animate: { opacity: 1 },
   transition: { duration, delay },
 });
+
+export const createInViewEnterAnimation = ({
+  axis = 'y',
+  distance = 20,
+  delay,
+  duration,
+  once = true,
+  margin,
+}: InViewEnterAnimationOptions = {}) => {
+  const transition: { delay?: number; duration?: number } = {};
+  if (typeof delay === 'number') transition.delay = delay;
+  if (typeof duration === 'number') transition.duration = duration;
+
+  return {
+    initial: { opacity: 0, [axis]: distance },
+    whileInView: { opacity: 1, [axis]: 0 },
+    viewport: margin ? { once, margin } : { once },
+    transition,
+  };
+};

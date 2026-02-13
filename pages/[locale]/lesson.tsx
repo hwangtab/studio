@@ -13,6 +13,7 @@ import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
+import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 interface CurriculumCardProps {
     step: string;
@@ -50,6 +51,9 @@ interface LessonProps {
     locale: Locale;
     reviewsData: ReturnType<typeof getReviews>;
 }
+
+const WHY_SECTION_REVEAL = createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
+const PRICING_SECTION_REVEAL = createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
 
 const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
     const { t } = useTranslation('common', { lng: locale });
@@ -199,10 +203,7 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
                 <div className="grid lg:grid-cols-2 gap-12 items-start mb-16">
                     {/* Why Choose Us */}
                     <m.div
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
+                        {...WHY_SECTION_REVEAL}
                     >
                         <SectionHeading
                             title={t('lesson.why.title')}
@@ -238,10 +239,7 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
 
                     {/* Pricing Card */}
                     <m.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
+                        {...PRICING_SECTION_REVEAL}
                         className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
                     >
                         <div className="p-8 bg-gradient-to-br from-primary to-secondary text-white text-center">

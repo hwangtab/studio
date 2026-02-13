@@ -15,7 +15,7 @@ import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
-import { createEnterAnimation, createFadeInAnimation } from '../../utils/animationUtils';
+import { createEnterAnimation, createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 interface StudioInfoProps {
   locale: Locale;
@@ -117,7 +117,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
               <m.div
                 key={index}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={{ scale: 1.05 }}
+                whileHover={HOVER_SCALE}
                 transition={{ duration: 0.3 }}
               >
                 <ResponsiveImage

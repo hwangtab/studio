@@ -17,7 +17,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
-import { createFadeInAnimation } from '../../utils/animationUtils';
+import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -207,7 +207,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
               <m.div
                 key={i}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={{ scale: 1.05 }}
+                whileHover={HOVER_SCALE}
                 transition={{ duration: 0.3 }}
               >
                 <ResponsiveImage

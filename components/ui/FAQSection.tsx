@@ -4,6 +4,7 @@ import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
 import { useIsIOSSafari } from '../../utils/deviceUtils';
+import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 interface FAQItem {
     question: string;
@@ -46,10 +47,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                     {items.map((item, index) => (
                         <m.div
                             key={index}
-                            initial={isIOSSafari ? false : { opacity: 0, y: 10 }}
-                            whileInView={isIOSSafari ? undefined : { opacity: 1, y: 0 }}
-                            viewport={isIOSSafari ? undefined : { once: true }}
-                            transition={isIOSSafari ? { duration: 0 } : { delay: index * 0.05 }}
+                            {...(isIOSSafari
+                                ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+                                : createInViewEnterAnimation({ distance: 10, delay: index * 0.05 }))}
                             className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
                         >
                             <button
