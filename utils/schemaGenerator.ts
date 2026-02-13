@@ -1,4 +1,4 @@
-import { Breadcrumb, FAQItem } from '../types/data';
+import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 
@@ -15,9 +15,13 @@ const schemaLanguageByLocale: Record<Locale, string> = {
 export const getSchemaLanguage = (locale: Locale): string => schemaLanguageByLocale[locale] || schemaLanguageByLocale.ko;
 
 export const generateDefaultSchema = (
-  siteUrl: string
+  siteUrl: string,
+  reviewItems?: ReviewItem[] | null,
+  locale: Locale = 'ko'
 ) => {
-  const config = getSiteConfig('ko');
+  const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
+
   const localeContactUrl = `${siteUrl}/ko/contact`;
   const sameAsLinks = [config.contact.kakaoUrl, config.contact.naverMapUrl];
 
@@ -57,7 +61,8 @@ export const generateDefaultSchema = (
         name: 'Studio NOL',
         image: `${siteUrl}/thumbnail.jpg`,
         url: siteUrl,
-        description: '연신내 녹음실, 연습실, 믹싱, 마스터링, 음반 제작 스튜디오',
+        description: config.description,
+
         priceRange: '$$',
         address: {
           '@type': 'PostalAddress',
@@ -100,6 +105,33 @@ export const generateDefaultSchema = (
         hasMap: config.contact.naverMapUrl,
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
+
+        ...(reviewItems && reviewItems.length > 0 && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: (reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length).toFixed(1),
+            reviewCount: reviewItems.length,
+            bestRating: 5,
+            worstRating: 1
+          },
+          review: reviewItems.slice(0, 10).map((item) => ({
+            '@type': 'Review',
+            author: {
+              '@type': 'Person',
+              name: item.author,
+            },
+            reviewRating: {
+              '@type': 'Rating',
+              ratingValue: item.rating,
+              bestRating: 5,
+              worstRating: 1,
+            },
+            reviewBody: item.content,
+            inLanguage: schemaLanguage,
+            ...(item.datePublished && { datePublished: item.datePublished }),
+          })),
+        }),
+
 
         parentOrganization: {
           '@id': organizationId,

@@ -54,8 +54,9 @@ const SEO = ({
   articleSection,
   breadcrumbs = null,
   faqItems = null,
-  reviewItems: _reviewItems = null,
+  reviewItems = null,
   isCourse = false,
+
 }: SEOProps) => {
   const router = useRouter();
 
@@ -103,9 +104,10 @@ const SEO = ({
       : canonicalUrl;
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl),
-    [siteUrl]
+    () => generateDefaultSchema(siteUrl, reviewItems, currentLocale),
+    [siteUrl, reviewItems, currentLocale]
   );
+
 
   const websiteSchema = React.useMemo(
     () => generateWebSiteSchema(siteUrl, currentLocale),
