@@ -97,10 +97,12 @@ const CategoryFilter = ({
                 key={category.id}
                 type="button"
                 onClick={() => setActiveCategory(category.id)}
+                animate={{ scale: isActive ? 1.05 : 1 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 className={`${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow transition-transform duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                   ? useCustomColors && category.color
-                    ? 'text-white shadow-lg transform scale-105'
-                    : 'bg-primary text-white shadow-lg transform scale-105'
+                    ? 'text-white shadow-lg'
+                    : 'bg-primary text-white shadow-lg'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 style={customStyle}

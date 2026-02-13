@@ -17,6 +17,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
+import { createFadeInAnimation } from '../../utils/animationUtils';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -59,6 +60,10 @@ interface PracticeRoomProps {
   locale: Locale;
   reviewsData: ReturnType<typeof getReviews>;
 }
+
+const PAIN_POINTS_ANIMATION = createFadeInAnimation();
+const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
+const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
 
 const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -149,11 +154,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
 
       {/* 고민 섹션 */}
       <Section variant="default">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+        <m.div {...PAIN_POINTS_ANIMATION}>
           <SectionHeading
             icon={HelpCircle}
             title={t('practiceRoom.painPoints.title')}
@@ -171,11 +172,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
 
       {/* 타겟 오디언스 섹션 */}
       <Section variant="alternate">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
+        <m.div {...AUDIENCE_SECTION_ANIMATION}>
           <SectionHeading
             icon={Target}
             title={t('practiceRoom.audience.title')}
@@ -229,11 +226,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
       </Section>
 
       <Section variant="default">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
+        <m.div {...FEATURES_SECTION_ANIMATION}>
           <SectionHeading
             icon={ShieldCheck}
             title={t('practiceRoom.features.title')}

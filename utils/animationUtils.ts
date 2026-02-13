@@ -62,3 +62,35 @@ export const SCROLL_REVEAL = {
   viewport: { once: true, margin: "-10% 0px -10% 0px" },
   transition: { duration: 0.8, ease: "easeOut" }
 };
+
+interface EnterAnimationOptions {
+  axis?: 'x' | 'y';
+  distance?: number;
+  duration?: number;
+  delay?: number;
+}
+
+interface FadeInAnimationOptions {
+  duration?: number;
+  delay?: number;
+}
+
+export const createEnterAnimation = ({
+  axis = 'y',
+  distance = 20,
+  duration = 0.5,
+  delay = 0,
+}: EnterAnimationOptions = {}) => ({
+  initial: { opacity: 0, [axis]: distance },
+  animate: { opacity: 1, [axis]: 0 },
+  transition: { duration, delay },
+});
+
+export const createFadeInAnimation = ({
+  duration = 0.8,
+  delay = 0,
+}: FadeInAnimationOptions = {}) => ({
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { duration, delay },
+});

@@ -8,6 +8,7 @@ import { shareContent } from '../utils/shareUtils';
 import { getCategoryInfo } from '../utils/portfolioDataUtils';
 import { defaultLocale, type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
+import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -60,7 +61,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
     triggerRef.current = document.activeElement as HTMLElement;
 
     document.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden';
+    lockBodyScroll();
 
     const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
       'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
@@ -95,7 +96,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
     return () => {
       document.removeEventListener('keydown', handleEsc);
       document.removeEventListener('keydown', handleFocusTrap);
-      document.body.style.overflow = 'unset'; // Restored for safety in case of unexpected unmount
+      unlockBodyScroll();
       if (triggerRef.current && triggerRef.current.focus) {
         triggerRef.current.focus();
       }
@@ -143,11 +144,6 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       animate="visible"
       exit="hidden"
       onClick={handleOverlayClick}
-      onAnimationComplete={(definition: string | { hidden: unknown }) => {
-        if (definition === 'hidden' || (typeof definition === 'object' && definition !== null && 'hidden' in definition)) {
-          document.body.style.overflow = 'unset';
-        }
-      }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"

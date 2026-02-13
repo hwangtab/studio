@@ -21,12 +21,15 @@ import { getI18nStaticProps } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { useIsIOSSafari } from '../../../utils/deviceUtils';
+import { createEnterAnimation } from '../../../utils/animationUtils';
 
 interface StoryDetailPageProps {
   locale: Locale;
   story: StoryDetail;
   relatedStories: Story[];
 }
+
+const STORY_BODY_ANIMATION = createEnterAnimation();
 
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -165,9 +168,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
         </div>
 
         <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          {...STORY_BODY_ANIMATION}
           className="mb-12"
         >
           <MarkdownRenderer content={story.content} locale={locale} />

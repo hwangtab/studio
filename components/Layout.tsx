@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
@@ -22,16 +22,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const [headerHeight, setHeaderHeight] = useState(80);
   const headerRef = useRef<HTMLElement | null>(null);
   const isIOSSafari = useIsIOSSafari();
-
-  const scrollToTop = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: isIOSSafari ? 'auto' : 'smooth' });
-    }
-  }, [isIOSSafari]);
-
-  useEffect(() => {
-    scrollToTop();
-  }, [router.pathname, scrollToTop]);
 
   // Consolidated Theme Management
   useEffect(() => {

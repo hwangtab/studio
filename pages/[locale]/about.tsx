@@ -16,6 +16,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { generateHowToSchema } from '../../utils/schemaGenerator';
+import { createEnterAnimation } from '../../utils/animationUtils';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Lightbulb,
@@ -37,6 +38,8 @@ interface AboutProps {
   servicesData: ReturnType<typeof getServicesData>;
   reviewsData: ReturnType<typeof getReviews>;
 }
+
+const ADVANTAGES_GRID_ANIMATION = createEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
 
 const About: NextPage<AboutProps> = ({ locale, servicesData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -168,9 +171,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData, reviewsData }) => {
 
           <m.div
             className="grid grid-cols-2 gap-4"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            {...ADVANTAGES_GRID_ANIMATION}
           >
             {advantages.map((advantage, index) => {
               const Icon = ICON_MAP[advantage.icon as string] || Users;

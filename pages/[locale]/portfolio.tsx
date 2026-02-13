@@ -22,6 +22,7 @@ import { Section } from '../../components/ui/Section';
 import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { useIsIOSSafari } from '../../utils/deviceUtils';
+import { createEnterAnimation } from '../../utils/animationUtils';
 
 interface PortfolioProps {
   locale: Locale;
@@ -29,6 +30,9 @@ interface PortfolioProps {
   audioTracks: readonly AudioTrack[];
   categories: readonly PortfolioCategory[];
 }
+
+const SAMPLE_TRACKS_ANIMATION = createEnterAnimation({ delay: 0.2 });
+const PROJECTS_ANIMATION = createEnterAnimation({ delay: 0.3 });
 
 const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   locale,
@@ -138,9 +142,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         <Section variant="default">
           <m.div
             id="sample-tracks"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            {...SAMPLE_TRACKS_ANIMATION}
           >
             <SectionHeading
               icon={Headphones}
@@ -157,9 +159,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       <Section variant="alternate">
         <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          {...PROJECTS_ANIMATION}
         >
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
             <div className="flex items-center">

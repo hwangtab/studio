@@ -17,12 +17,15 @@ import { Section } from '../../../components/ui/Section';
 import { getI18nStaticProps } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { createEnterAnimation } from '../../../utils/animationUtils';
 
 interface PortfolioDetailPageProps {
   locale: Locale;
   item: PortfolioItem;
   categories: PortfolioCategory[];
 }
+
+const DETAIL_CONTENT_ANIMATION = createEnterAnimation();
 
 const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories }) => {
   const router = useRouter();
@@ -92,9 +95,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 
         <div className="max-w-4xl mx-auto">
           <m.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            {...DETAIL_CONTENT_ANIMATION}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
           >
             <div className="relative aspect-square max-w-md mx-auto mt-8">

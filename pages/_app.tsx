@@ -147,7 +147,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion={isIOSSafari ? 'always' : 'user'}>
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="sync" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+                <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     initial={shouldReduceMotionAggressively ? false : { opacity: 0 }}

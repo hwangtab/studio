@@ -15,12 +15,18 @@ import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
+import { createEnterAnimation, createFadeInAnimation } from '../../utils/animationUtils';
 
 interface StudioInfoProps {
   locale: Locale;
   equipmentData: ReturnType<typeof getEquipmentData>;
   reviewsData: ReturnType<typeof getReviews>;
 }
+
+const INTRO_SECTION_ANIMATION = createFadeInAnimation();
+const INTRO_IMAGE_ANIMATION = createEnterAnimation({ axis: 'x', distance: -30, duration: 0.6, delay: 0.2 });
+const INTRO_TEXT_ANIMATION = createEnterAnimation({ axis: 'x', distance: 30, duration: 0.6, delay: 0.4 });
+const EQUIPMENT_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 
 const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
   const { categories, equipment, studioImages } = equipmentData;
@@ -53,18 +59,9 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
 
       {/* 스튜디오 소개 섹션 */}
       <Section variant="default">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+        <m.div {...INTRO_SECTION_ANIMATION}>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <m.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
-            >
+            <m.div {...INTRO_IMAGE_ANIMATION} className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group">
               <ResponsiveImage
                 src="/images/hardware2.jpg"
                 alt={t('studioInfo.intro.imageAlt')}
@@ -76,11 +73,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
             </m.div>
 
-            <m.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+            <m.div {...INTRO_TEXT_ANIMATION}>
               <SectionHeading
                 icon={Building}
                 title={t('studioInfo.intro.title')}
@@ -110,11 +103,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
 
       {/* 장비 목록 섹션 */}
       <Section variant="alternate">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
+        <m.div {...EQUIPMENT_SECTION_ANIMATION}>
           <SectionHeading
             icon={Mic2}
             title={t('studioInfo.equipment.title')}

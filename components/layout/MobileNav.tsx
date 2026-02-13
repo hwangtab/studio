@@ -6,6 +6,7 @@ import { type TFunction } from 'i18next';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { useIsIOSSafari } from '../../utils/deviceUtils';
+import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
 
 interface NavGroup {
   id: string;
@@ -93,7 +94,7 @@ export const MobileNav = ({
     window.addEventListener('keydown', handleEsc);
     window.addEventListener('keydown', handleFocusTrap);
 
-    document.body.style.overflow = 'hidden';
+    lockBodyScroll();
 
     // Set initial focus to first focusable element in nav
     const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
@@ -107,7 +108,7 @@ export const MobileNav = ({
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('keydown', handleEsc);
       window.removeEventListener('keydown', handleFocusTrap);
-      document.body.style.overflow = '';
+      unlockBodyScroll();
     };
   }, [isOpen, onClose]);
 
