@@ -10,7 +10,8 @@
   font-weight: 400;
   font-display: swap;
   src: local('Gmarket Sans Medium'), local('GmarketSansMedium'),
-    url('/fonts/GmarketSansMedium.woff') format('woff');
+    url('/fonts/GmarketSansMedium.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
 }
 
 @font-face {
@@ -18,14 +19,16 @@
   font-weight: 700;
   font-display: swap;
   src: local('Gmarket Sans Bold'), local('GmarketSansBold'),
-    url('/fonts/GmarketSansBold.woff') format('woff');
+    url('/fonts/GmarketSansBold.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
 }
 
 /* PartialSansKR 폰트 (원본) */
 @font-face {
   font-family: 'PartialSansKR-Regular';
   src: local('PartialSansKR-Regular'),
-    url('/fonts/PartialSansKR-Regular.woff2') format('woff2');
+    url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),
+    url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -35,7 +38,8 @@
 @font-face {
   font-family: 'PartialSansKR-Logo';
   src: local('PartialSansKR-Regular'),
-    url('/fonts/PartialSansKR-Regular.woff2') format('woff2');
+    url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),
+    url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -51,7 +55,8 @@
   font-weight: 400;
   font-display: swap;
   src: local('Pretendard Regular'), local('Pretendard-Regular'),
-    url('/fonts/Pretendard-Regular.woff2') format('woff2');
+    url('/fonts/Pretendard-Regular.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -59,7 +64,8 @@
   font-weight: 600;
   font-display: swap;
   src: local('Pretendard SemiBold'), local('Pretendard-SemiBold'),
-    url('/fonts/Pretendard-SemiBold.woff2') format('woff2');
+    url('/fonts/Pretendard-SemiBold.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-SemiBold.woff2') format('woff2');
 }
 
 @font-face {
@@ -67,7 +73,8 @@
   font-weight: 700;
   font-display: swap;
   src: local('Pretendard Bold'), local('Pretendard-Bold'),
-    url('/fonts/Pretendard-Bold.woff2') format('woff2');
+    url('/fonts/Pretendard-Bold.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2');
 }
 
 /* 기본 스타일 */

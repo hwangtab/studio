@@ -1,25 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
+import { ScrollProgress } from './common/ScrollProgress';
 import { useIsIOSSafari } from '../utils/deviceUtils';
 import { type Locale, defaultLocale } from '../lib/i18n';
-
-const ScrollProgress = dynamic(
-  () => import('./common/ScrollProgress').then((mod) => mod.ScrollProgress),
-  { ssr: false }
-);
 
 interface LayoutProps {
   children: React.ReactNode;
   hasHero?: boolean;
-  enableScrollProgress?: boolean;
   locale?: Locale;
 }
 
-const Layout = ({ children, hasHero, enableScrollProgress = false, locale = defaultLocale }: LayoutProps) => {
+const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -124,7 +118,7 @@ const Layout = ({ children, hasHero, enableScrollProgress = false, locale = defa
     <div
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
     >
-      {enableScrollProgress && <ScrollProgress disabled={isIOSSafari} />}
+      <ScrollProgress disabled={isIOSSafari} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white focus:text-gray-900 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"

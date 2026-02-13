@@ -11,7 +11,6 @@ export interface BaseProps {
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
     hasHero?: boolean;
-    enableScrollProgress?: boolean;
 };
 
 export interface I18nPageProps {
