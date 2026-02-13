@@ -346,9 +346,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 serviceId
             });
             // Map external service errors to 502 Bad Gateway to distinguish from internal CSRF 403
-            // Include error text for debugging in this phase
             return res.status(502).json({
-                message: `EmailJS Error: ${errorText}`
+                message: 'Failed to send message. Please try again later.'
             });
         }
     } catch (error) {
