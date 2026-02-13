@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { m, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, ChevronDown } from 'lucide-react';
@@ -44,7 +44,7 @@ export const MobileNav = ({
 }: MobileNavProps) => {
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
-  const isBodyLockedRef = useRef(false);
+  const bodyLockCountRef = useRef(0);
   const isIOSSafari = useIsIOSSafari();
   const shouldAnimate = !disableEffects;
   const navInitial = shouldAnimate
@@ -55,6 +55,17 @@ export const MobileNav = ({
     ? (isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 })
     : navAnimate;
   const shouldAnimateGroups = shouldAnimate && !isIOSSafari;
+
+  const acquireBodyLock = useCallback(() => {
+    lockBodyScroll();
+    bodyLockCountRef.current += 1;
+  }, []);
+
+  const releaseBodyLock = useCallback(() => {
+    if (bodyLockCountRef.current === 0) return;
+    unlockBodyScroll();
+    bodyLockCountRef.current -= 1;
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -95,8 +106,9 @@ export const MobileNav = ({
     window.addEventListener('keydown', handleEsc);
     window.addEventListener('keydown', handleFocusTrap);
 
-    lockBodyScroll();
-    isBodyLockedRef.current = true;
+    if (bodyLockCountRef.current === 0) {
+      acquireBodyLock();
+    }
 
     // Set initial focus to first focusable element in nav
     const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
@@ -111,22 +123,18 @@ export const MobileNav = ({
       window.removeEventListener('keydown', handleEsc);
       window.removeEventListener('keydown', handleFocusTrap);
     };
-  }, [isOpen, onClose]);
+  }, [acquireBodyLock, isOpen, onClose]);
 
   useEffect(() => {
     return () => {
-      if (isBodyLockedRef.current) {
-        unlockBodyScroll();
-        isBodyLockedRef.current = false;
+      while (bodyLockCountRef.current > 0) {
+        releaseBodyLock();
       }
     };
-  }, []);
+  }, [releaseBodyLock]);
 
   const handleExitComplete = () => {
-    if (isBodyLockedRef.current) {
-      unlockBodyScroll();
-      isBodyLockedRef.current = false;
-    }
+    releaseBodyLock();
     if (triggerRef.current && triggerRef.current.focus) {
       triggerRef.current.focus();
     }

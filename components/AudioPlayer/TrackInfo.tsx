@@ -4,6 +4,7 @@ import { Disc } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface Track {
     id: string;
@@ -28,7 +29,8 @@ interface TrackInfoProps {
 const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: TrackInfoProps) => {
     const { t } = useTranslation('common', { lng: locale });
     const shouldReduceMotion = useReducedMotion();
-    const shouldAnimateNowPlaying = isPlaying && !shouldReduceMotion;
+    const isIOSSafari = useIsIOSSafari();
+    const shouldAnimateNowPlaying = isPlaying && !shouldReduceMotion && !isIOSSafari;
     const trackNumberLabel = trackNumber < 10 ? `0${trackNumber}` : String(trackNumber);
     return (
         <div className="flex flex-col items-center text-center">

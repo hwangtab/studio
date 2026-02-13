@@ -48,7 +48,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     locale in (i18nResources as Record<string, unknown>)
   );
   const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
-  const shouldReduceMotionAggressively = shouldReduceMotion || isIOSSafari;
+  const shouldReduceMotionAggressively = shouldReduceMotion;
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -147,7 +147,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion={isIOSSafari ? 'always' : 'user'}>
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'auto' })}>
+                <AnimatePresence mode="wait" initial={!shouldReduceMotionAggressively} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'auto' })}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     initial={shouldReduceMotionAggressively ? false : { opacity: 0 }}

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
-import { m, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
 import { useIsIOSSafari } from '../utils/deviceUtils';
@@ -143,6 +143,9 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     const current = content[type];
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
     const shouldAnimate = !isIOSSafari && !shouldReduceMotion;
+    const visualRef = useRef<HTMLDivElement>(null);
+    const isVisualInView = useInView(visualRef, { amount: 0.35 });
+    const shouldAnimateBars = shouldAnimate && isVisualInView;
 
     const ctaMotionProps = shouldAnimate
         ? {
@@ -199,16 +202,16 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
                 <div className="hidden md:block w-full max-w-xs lg:max-w-sm">
                     {/* Abstract Visual Representation */}
-                    <div className={`relative aspect-square rounded-xl overflow-hidden bg-black/20 ${isIOSSafari ? '' : 'backdrop-blur-sm'} border border-white/10 p-6 flex flex-col justify-center items-center`}>
+                    <div ref={visualRef} className={`relative aspect-square rounded-xl overflow-hidden bg-black/20 ${isIOSSafari ? '' : 'backdrop-blur-sm'} border border-white/10 p-6 flex flex-col justify-center items-center`}>
                         <div className="w-full flex justify-between items-end h-32 gap-2 mb-4">
                             {heights.map((h, i) => (
                                 <m.div
                                     key={i}
                                     initial={shouldAnimate ? { height: '20%' } : false}
-                                    whileInView={shouldAnimate ? { height: `${h}%` } : undefined}
-                                    viewport={shouldAnimate ? { once: true } : undefined}
-                                    animate={shouldAnimate ? undefined : { height: `${h}%` }}
-                                    transition={shouldAnimate
+                                    animate={shouldAnimate
+                                        ? (shouldAnimateBars ? { height: `${h}%` } : { height: '20%' })
+                                        : { height: `${h}%` }}
+                                    transition={shouldAnimateBars
                                         ? {
                                             repeat: Infinity,
                                             repeatType: "reverse",
