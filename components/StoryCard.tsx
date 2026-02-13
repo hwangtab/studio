@@ -56,7 +56,6 @@ const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, la
         initial={disableEffects ? false : "hidden"}
         whileInView={disableEffects ? undefined : "visible"}
         viewport={disableEffects ? undefined : { once: true }}
-        whileHover={disableEffects ? undefined : { scale: 1.01 }}
       >
         <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
           {thumbnailUrl ? (

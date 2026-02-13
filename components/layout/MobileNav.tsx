@@ -44,6 +44,7 @@ export const MobileNav = ({
 }: MobileNavProps) => {
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
+  const isBodyLockedRef = useRef(false);
   const isIOSSafari = useIsIOSSafari();
   const shouldAnimate = !disableEffects;
   const navInitial = shouldAnimate
@@ -95,6 +96,7 @@ export const MobileNav = ({
     window.addEventListener('keydown', handleFocusTrap);
 
     lockBodyScroll();
+    isBodyLockedRef.current = true;
 
     // Set initial focus to first focusable element in nav
     const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
@@ -108,11 +110,23 @@ export const MobileNav = ({
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('keydown', handleEsc);
       window.removeEventListener('keydown', handleFocusTrap);
-      unlockBodyScroll();
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    return () => {
+      if (isBodyLockedRef.current) {
+        unlockBodyScroll();
+        isBodyLockedRef.current = false;
+      }
+    };
+  }, []);
+
   const handleExitComplete = () => {
+    if (isBodyLockedRef.current) {
+      unlockBodyScroll();
+      isBodyLockedRef.current = false;
+    }
     if (triggerRef.current && triggerRef.current.focus) {
       triggerRef.current.focus();
     }

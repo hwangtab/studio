@@ -43,7 +43,7 @@ const Playlist = ({
                                 backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.15)' : 'rgba(var(--primary-rgb), 0.05)'
                             }}
                             type="button"
-                            className={`group w-full text-left flex items-center p-3 min-h-[44px] rounded-lg cursor-pointer transition-colors border border-transparent touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
+                            className={`group w-full text-left flex items-center p-3 min-h-[44px] rounded-lg cursor-pointer transition-[border-color] duration-300 border border-transparent touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
                                 }`}
                             onClick={() => onSelectTrack(index)}
                             aria-pressed={isActive}

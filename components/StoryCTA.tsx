@@ -206,6 +206,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                                     key={i}
                                     initial={shouldAnimate ? { height: '20%' } : false}
                                     whileInView={shouldAnimate ? { height: `${h}%` } : undefined}
+                                    viewport={shouldAnimate ? { once: true } : undefined}
                                     animate={shouldAnimate ? undefined : { height: `${h}%` }}
                                     transition={shouldAnimate
                                         ? {
