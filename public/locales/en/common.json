@@ -48,15 +48,15 @@
     "kakaoExternal": "KakaoTalk inquiry (opens in new window)",
     "skipToContent": "Skip to content"
   },
-   "common": {
-     "categoryFilter": {
-       "title": "Category",
-       "all": "All"
-     },
-     "siteName": "Studio NOL",
-     "languageSelector": "Language selector",
-     "languageOptions": "Language options"
-   },
+  "common": {
+    "categoryFilter": {
+      "title": "Category",
+      "all": "All"
+    },
+    "siteName": "Studio NOL",
+    "languageSelector": "Language selector",
+    "languageOptions": "Language options"
+  },
   "theme": {
     "light": "Light",
     "dark": "Dark"
@@ -116,27 +116,27 @@
     "howToTitle": "How to Produce Music at Studio NOL",
     "howToDescription": "A complete guide to producing music at a professional studio."
   },
-   "portfolio": {
-     "title": "Portfolio",
-     "subtitle": "Introduction to various projects worked on at Studio NOL. Click each work to see more details.",
-     "sampleTracks": "Sample Tracks",
-     "projects": "Projects",
-     "noProjects": "No projects found in the selected category.",
-     "viewProject": "View Project",
-     "detail": {
-       "titleSuffix": "Studio NOL Portfolio",
-       "metaDescription": "\"{{title}}\" by {{artist}} - {{description}}. A project worked on at Studio NOL.",
-       "backToList": "Back to Portfolio",
-       "artistLabel": "Artist",
-       "servicesProvided": "Services Provided",
-       "listenNow": "Listen Now",
-       "share": "Share"
-     },
-     "heroAlt": "Studio NOL Portfolio",
-     "seo": {
-       "keywords": "recording samples, before and after mixing, mastering examples, studio portfolio, music production quality, recording results, Studio NOL"
-     }
-   },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Introduction to various projects worked on at Studio NOL. Click each work to see more details.",
+    "sampleTracks": "Sample Tracks",
+    "projects": "Projects",
+    "noProjects": "No projects found in the selected category.",
+    "viewProject": "View Project",
+    "detail": {
+      "titleSuffix": "Studio NOL Portfolio",
+      "metaDescription": "\"{{title}}\" by {{artist}} - {{description}}. A project worked on at Studio NOL.",
+      "backToList": "Back to Portfolio",
+      "artistLabel": "Artist",
+      "servicesProvided": "Services Provided",
+      "listenNow": "Listen Now",
+      "share": "Share"
+    },
+    "heroAlt": "Studio NOL Portfolio",
+    "seo": {
+      "keywords": "recording samples, before and after mixing, mastering examples, studio portfolio, music production quality, recording results, Studio NOL"
+    }
+  },
   "contact": {
     "title": "Contact Us",
     "subtitle": "Feel free to contact us for inquiries or reservations.",
@@ -156,6 +156,10 @@
       "error": "Failed to send message. Please try again.",
       "loading": "Sending…"
     },
+    "directions": {
+      "title": "Directions",
+      "description": "Studio NOL is located on the 3rd floor of the building right next to the main gate of Dongmyeong Girls' High School. It takes about 5-7 minutes on foot from Yeonsinnae Station (Line 3 & 6) or Bulgwang Station (Line 6, Exit 7). There is a convenience store on the first floor, making it easy to find. Public transport is recommended as parking space is limited."
+    },
     "info": {
       "title": "Contact Information",
       "kakao": "KakaoTalk Open Chat",
@@ -174,17 +178,17 @@
       "sunLabel": "Sun",
       "closed": "Closed"
     },
-     "notice": {
-       "title": "Before Inquiry",
-       "list": [
-         "We allow responses within 24 hours",
-         "Specific project details help us provide accurate consultation",
-         "Use KakaoTalk for urgent inquiries"
-       ],
-       "privacyTitle": "Privacy Policy",
-       "privacyText": "Collected personal information is used only for response purposes and deleted immediately after consultation."
-     },
-     "checkNotices": "Check our notices",
+    "notice": {
+      "title": "Before Inquiry",
+      "list": [
+        "We allow responses within 24 hours",
+        "Specific project details help us provide accurate consultation",
+        "Use KakaoTalk for urgent inquiries"
+      ],
+      "privacyTitle": "Privacy Policy",
+      "privacyText": "Collected personal information is used only for response purposes and deleted immediately after consultation."
+    },
+    "checkNotices": "Check our notices",
     "seo": {
       "keywords": "Studio NOL contact, music production inquiry, recording reservation, mixing request, studio location, KakaoTalk consultation, production quote"
     }
@@ -516,53 +520,53 @@
     "filters": {
       "all": "All"
     },
-     "empty": {
-       "title": "No stories found",
-       "all": "No stories registered yet.",
-       "byCategory": "No stories in '{{category}}' category."
-     },
-     "list": {
-       "defaultCategory": "Default",
-       "noDate": "No Date",
-       "noTitle": "No Title",
-       "noContent": "No Content"
-     },
-      "cta": {
-        "recording": {
-          "title": "Want better sound?",
-          "descriptionLine1": "Experience Studio NOL's professional recording and mixing services.",
-          "descriptionLine2": "We complete your music with the best equipment and expertise.",
-          "primaryText": "View Pricing",
-          "secondaryText": "Inquiry",
-          "visualText": "Professional Audio"
-        },
-        "lesson": {
-    "mobileMenu": "Mobile Menu",
-          "title": "Want to create your own music?",
-          "descriptionLine1": "Don't struggle alone. We help with 1:1 customized lessons.",
-          "descriptionLine2": "Learn from basics to MIDI, mixing, and sound design.",
-          "primaryText": "View Curriculum",
-          "secondaryText": "Request Consultation",
-          "visualText": "Music Education"
-        },
-        "practice": {
-          "title": "Need your own space to focus?",
-          "descriptionLine1": "Premium practice rooms available freely anytime.",
-          "descriptionLine2": "Comfortable environment and perfect soundproofing ready.",
-          "primaryText": "View Facilities",
-          "secondaryText": "Booking Inquiry",
-          "visualText": "Creative Space"
-        },
-        "production": {
-          "title": "Want to produce your own music?",
-          "descriptionLine1": "From composition and arrangement to mixing and mastering.",
-          "descriptionLine2": "We turn your ideas into finished tracks.",
-          "primaryText": "Production Consultation",
-          "secondaryText": "View Costs",
-          "visualText": "Music Production"
-        }
+    "empty": {
+      "title": "No stories found",
+      "all": "No stories registered yet.",
+      "byCategory": "No stories in '{{category}}' category."
+    },
+    "list": {
+      "defaultCategory": "Default",
+      "noDate": "No Date",
+      "noTitle": "No Title",
+      "noContent": "No Content"
+    },
+    "cta": {
+      "recording": {
+        "title": "Want better sound?",
+        "descriptionLine1": "Experience Studio NOL's professional recording and mixing services.",
+        "descriptionLine2": "We complete your music with the best equipment and expertise.",
+        "primaryText": "View Pricing",
+        "secondaryText": "Inquiry",
+        "visualText": "Professional Audio"
       },
-     "detail": {
+      "lesson": {
+        "mobileMenu": "Mobile Menu",
+        "title": "Want to create your own music?",
+        "descriptionLine1": "Don't struggle alone. We help with 1:1 customized lessons.",
+        "descriptionLine2": "Learn from basics to MIDI, mixing, and sound design.",
+        "primaryText": "View Curriculum",
+        "secondaryText": "Request Consultation",
+        "visualText": "Music Education"
+      },
+      "practice": {
+        "title": "Need your own space to focus?",
+        "descriptionLine1": "Premium practice rooms available freely anytime.",
+        "descriptionLine2": "Comfortable environment and perfect soundproofing ready.",
+        "primaryText": "View Facilities",
+        "secondaryText": "Booking Inquiry",
+        "visualText": "Creative Space"
+      },
+      "production": {
+        "title": "Want to produce your own music?",
+        "descriptionLine1": "From composition and arrangement to mixing and mastering.",
+        "descriptionLine2": "We turn your ideas into finished tracks.",
+        "primaryText": "Production Consultation",
+        "secondaryText": "View Costs",
+        "visualText": "Music Production"
+      }
+    },
+    "detail": {
       "backToList": "Back to Stories",
       "share": "Share",
       "moreTitle": "More Stories",
@@ -573,7 +577,7 @@
       "notice": "Notice",
       "event": "Event",
       "lesson": "Lesson",
-    "mobileMenu": "Mobile Menu",
+      "mobileMenu": "Mobile Menu",
       "interview": "Interview",
       "equipment": "Equipment",
       "review": "Review",

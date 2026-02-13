@@ -501,7 +501,26 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                     title={t('contact.info.location')}
                   ></iframe>
                 </div>
+
+                {/* 오시는 길 설명 (GEO 최적화) */}
+                <m.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="mt-12 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700"
+                >
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    {t('contact.directions.title')}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                    {t('contact.directions.description')}
+                  </p>
+                </m.div>
               </div>
+
+              {/* 지도 */}
               <div className="mt-8">
                 <h3 className="typo-card-title mb-4">{t('contact.info.hours')}</h3>
                 <div className="space-y-2">

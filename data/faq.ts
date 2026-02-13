@@ -27,9 +27,18 @@ const faqData = {
       answer: 'Neumann U87AI, AKG C414 XLS 마이크, Vintech X73i 프리앰프, Prism Sound Lyra 2 인터페이스, SSL Fusion 프로세서 등 프리미엄 아날로그/디지털 장비를 구비하고 있습니다.',
     },
     {
-      question: '음원 유통 서비스도 제공하나요?',
-      answer: '네, 입주 고객에게는 오디오가이를 통한 국내외 음원사이트(멜론, 유튜브 뮤직, 애플뮤직 등) 배포 서비스를 무료로 제공하며, 순이익의 70%를 아티스트에게 배분합니다.',
+      question: '스튜디오 놀은 주말이나 공휴일에도 영업하나요?',
+      answer: '네, 스튜디오 놀은 100% 예약제로 운영되며, 사전 예약 시 주말 및 공휴일, 심야 시간대에도 이용 가능합니다.',
     },
+    {
+      question: '연신내역 근처에 녹음실이나 연습실이 있나요?',
+      answer: '네, 스튜디오 놀은 연신내역과 불광역에서 도보 5분 거리에 위치해 있어 은평구 지역에서 접근성이 매우 좋습니다.',
+    },
+    {
+      question: '초보자도 녹음실을 이용할 수 있나요?',
+      answer: '물론입니다. 전문 엔지니어가 녹음 준비부터 진행, 후보정까지 전 과정을 세심하게 도와드리므로 녹음 경험이 없으신 분들도 편안하게 고품질 결과물을 만드실 수 있습니다.',
+    },
+
   ],
   en: [
     {
@@ -57,9 +66,18 @@ const faqData = {
       answer: 'We have premium gear including Neumann U87AI, AKG C414 XLS mics, Vintech X73i preamp, Prism Sound Lyra 2 interface, and SSL Fusion processor.',
     },
     {
-      question: 'Do you offer music distribution?',
-      answer: 'Yes, for resident members, we offer free global distribution (Spotify, Apple Music, etc.) via Audioguy, distributing 70% of net revenue to the artist.',
+      question: 'Is Studio NOL open on weekends or holidays?',
+      answer: 'Yes, Studio NOL operates on a 100% reservation basis. If booked in advance, services are available on weekends, holidays, and late-night hours.',
     },
+    {
+      question: 'Is there a recording studio near Yeonsinnae Station?',
+      answer: 'Yes, Studio NOL is conveniently located just a 5-minute walk from both Yeonsinnae Station and Bulgwang Station in Eunpyeong-gu.',
+    },
+    {
+      question: 'Can beginners use the recording studio?',
+      answer: 'Absolutely. Our professional engineers guide you through the entire process, from preparation to post-production, ensuring high-quality results even for those with no prior recording experience.',
+    },
+
   ],
   zh: [
     {
