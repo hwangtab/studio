@@ -1,19 +1,9 @@
 import i18n, { Resource } from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { defaultLocale, localeNames, locales, type Locale } from './i18n-config';
 
-export const defaultLocale = 'ko';
-export const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
-export type Locale = typeof locales[number];
-
-export const localeNames: Record<Locale, string> = {
-  ko: '한국어',
-  en: 'English',
-  zh: '中文',
-  es: 'Español',
-  vi: 'Tiếng Việt',
-  th: 'ไทย',
-  uz: "O‘zbekcha",
-};
+export { defaultLocale, localeNames, locales };
+export type { Locale };
 
 const commonByLocaleCache: Partial<Record<Locale, Record<string, unknown>>> = {};
 const commonByLocalePending: Partial<Record<Locale, Promise<Record<string, unknown>>>> = {};
@@ -35,38 +25,6 @@ const getClientInitialResources = (): Resource => {
   return resources as Resource;
 };
 
-export const loadCommonResource = (locale: Locale): Record<string, unknown> => {
-  const cached = commonByLocaleCache[locale];
-  if (cached) {
-    return cached;
-  }
-
-  if (typeof window !== 'undefined') {
-    return {};
-  }
-
-  const nodeRequire = eval('require') as NodeRequire;
-  const path = nodeRequire('node:path') as typeof import('node:path');
-  const fs = nodeRequire('node:fs') as typeof import('node:fs');
-
-  const readLocaleFile = (targetLocale: Locale): Record<string, unknown> | null => {
-    try {
-      const localePath = path.join(process.cwd(), 'public', 'locales', targetLocale, 'common.json');
-      if (!fs.existsSync(localePath)) {
-        return null;
-      }
-      const raw = fs.readFileSync(localePath, 'utf8');
-      return JSON.parse(raw) as Record<string, unknown>;
-    } catch {
-      return null;
-    }
-  };
-
-  const loaded = readLocaleFile(locale) ?? readLocaleFile(defaultLocale) ?? {};
-  commonByLocaleCache[locale] = loaded;
-  return loaded;
-};
-
 export const loadCommonResourceClient = async (locale: Locale): Promise<Record<string, unknown>> => {
   const cached = commonByLocaleCache[locale];
   if (cached) {
@@ -74,7 +32,7 @@ export const loadCommonResourceClient = async (locale: Locale): Promise<Record<s
   }
 
   if (typeof window === 'undefined') {
-    return loadCommonResource(locale);
+    return {};
   }
 
   const pending = commonByLocalePending[locale];
@@ -99,21 +57,27 @@ export const loadCommonResourceClient = async (locale: Locale): Promise<Record<s
   return loader;
 };
 
-// Initialize with empty resources on client, server-side props will merge actual translations.
-// This prevents empty bundles from blocking real resource injection in _app.tsx.
-export const resources: Resource =
-  typeof window === 'undefined'
-    ? locales.reduce<Resource>((acc, locale) => {
-      acc[locale] = { common: loadCommonResource(locale) };
-      return acc;
-    }, {})
-    : getClientInitialResources();
+export const applyI18nResources = (resourceInput: unknown): void => {
+  if (!resourceInput || typeof resourceInput !== 'object') {
+    return;
+  }
 
-export const getLocaleI18nResources = (locale: Locale): Resource => ({
-  [locale]: {
-    common: loadCommonResource(locale),
-  },
-});
+  Object.entries(resourceInput as Record<string, unknown>).forEach(([lng, namespaces]) => {
+    if (!namespaces || typeof namespaces !== 'object') {
+      return;
+    }
+
+    Object.entries(namespaces as Record<string, unknown>).forEach(([ns, data]) => {
+      if (!data || typeof data !== 'object') {
+        return;
+      }
+      i18n.addResourceBundle(lng, ns, data, true, true);
+    });
+  });
+};
+
+export const resources: Resource =
+  typeof window === 'undefined' ? {} : getClientInitialResources();
 
 if (!i18n.isInitialized) {
   i18n

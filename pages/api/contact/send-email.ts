@@ -6,6 +6,7 @@ import { kv } from '@vercel/kv';
 // Rate limiting configuration
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
+const PRODUCTION_ORIGIN = 'https://studionol.co.kr';
 
 interface MemoryRateLimitEntry {
     count: number;
@@ -15,74 +16,93 @@ interface MemoryRateLimitEntry {
 const memoryRateLimitStore = new Map<string, MemoryRateLimitEntry>();
 let hasLoggedMemoryFallback = false;
 
-// Extract client IP with proper header priority to prevent rate limit bypass
+const toHeaderCandidates = (value: string | string[] | undefined): string[] => {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => item.split(',')).map((item) => item.trim()).filter(Boolean);
+  }
+  return value.split(',').map((item) => item.trim()).filter(Boolean);
+};
+
+const normalizeIP = (value: string): string | null => {
+  if (!value) return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  const deBracketed = trimmed.startsWith('[') && trimmed.endsWith(']')
+    ? trimmed.slice(1, -1)
+    : trimmed;
+  const strippedPort = deBracketed.includes('.') ? deBracketed.replace(/:\d+$/, '') : deBracketed;
+  const normalized = strippedPort.startsWith('::ffff:') ? strippedPort.slice(7) : strippedPort;
+
+  return validator.isIP(normalized) ? normalized : null;
+};
+
+const getFirstValidIP = (value: string | string[] | undefined): string | null => {
+  const candidates = toHeaderCandidates(value);
+  for (const candidate of candidates) {
+    const ip = normalizeIP(candidate);
+    if (ip) return ip;
+  }
+  return null;
+};
+
+const normalizeOrigin = (value: string): string | null => {
+  if (!value) return null;
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+};
+
+// Extract client IP with Vercel-aware header priority
 function getClientIP(req: NextApiRequest): string {
-  // 1. x-real-ip (Vercel and most proxies use this)
-  const realIP = req.headers['x-real-ip'];
-  if (realIP && typeof realIP === 'string') {
-    return realIP.trim();
-  }
+  const vercelIP = getFirstValidIP(req.headers['x-vercel-forwarded-for']);
+  if (vercelIP) return vercelIP;
 
-  // 2. x-forwarded-for (comma-separated list, take first IP only)
-  const forwarded = req.headers['x-forwarded-for'];
-  if (forwarded) {
-    const firstIP = typeof forwarded === 'string'
-      ? forwarded.split(',')[0].trim()
-      : forwarded[0].trim();
-    if (firstIP) return firstIP;
-  }
+  const realIP = getFirstValidIP(req.headers['x-real-ip']);
+  if (realIP) return realIP;
 
-  // 3. Direct socket connection (fallback)
-  return req.socket.remoteAddress || 'unknown';
+  const forwardedIP = getFirstValidIP(req.headers['x-forwarded-for']);
+  if (forwardedIP) return forwardedIP;
+
+  const socketIP = normalizeIP(req.socket.remoteAddress || '');
+  return socketIP || 'unknown';
 }
 
 const getAllowedOrigins = (): string[] => {
     const envOrigins = (process.env.ALLOWED_ORIGINS || '')
         .split(',')
-        .map((origin) => origin.trim())
-        .filter(Boolean);
-
-    const siteUrlOrigin = (() => {
-        const value = process.env.NEXT_PUBLIC_SITE_URL;
-        if (!value) return null;
-        try {
-            return new URL(value).origin;
-        } catch {
-            return null;
-        }
-    })();
+        .map((origin) => normalizeOrigin(origin.trim()))
+        .filter((origin): origin is string => Boolean(origin));
 
     const defaults = [
-        'https://studionol.co.kr',
-        'https://www.studionol.co.kr',
+        normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL || ''),
+        PRODUCTION_ORIGIN,
         process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : null,
         process.env.NODE_ENV !== 'production' ? 'http://localhost:3001' : null,
-        siteUrlOrigin,
-    ].filter((origin): origin is string => Boolean(origin));
+    ]
+        .filter((origin): origin is string => Boolean(origin))
+        .map((origin) => normalizeOrigin(origin))
+        .filter((origin): origin is string => Boolean(origin));
 
-    const allOrigins = [...new Set([...defaults, ...envOrigins])];
-    const variantOrigins = allOrigins.flatMap((origin) => {
-        try {
-            const url = new URL(origin);
-            if (url.hostname === 'localhost' || url.hostname.startsWith('127.')) {
-                return [origin];
-            }
-            if (url.hostname.startsWith('www.')) {
-                return [origin, `${url.protocol}//${url.hostname.slice(4)}`];
-            }
-            return [origin, `${url.protocol}//www.${url.hostname}`];
-        } catch {
-            return [origin];
+    return [...new Set([...defaults, ...envOrigins])];
+};
+
+const pruneExpiredInMemoryEntries = (now: number): void => {
+    for (const [key, entry] of memoryRateLimitStore.entries()) {
+        if (entry.expiresAt <= now) {
+            memoryRateLimitStore.delete(key);
         }
-    });
-
-    return [...new Set(variantOrigins)];
+    }
 };
 
 const checkRateLimitInMemory = (ip: string): void => {
     const key = `rate_limit_contact:${ip}`;
     const now = Date.now();
     const expiresAt = now + WINDOW * 1000;
+    pruneExpiredInMemoryEntries(now);
     const existing = memoryRateLimitStore.get(key);
 
     if (!existing || existing.expiresAt <= now) {
@@ -191,14 +211,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
      // 2. CSRF protection - validate origin/referer
      const allowedOrigins = getAllowedOrigins();
-     const origin = req.headers.origin || req.headers.referer;
-     if (!origin || !allowedOrigins.some(allowed => {
-         try {
-             return new URL(origin).origin === allowed;
-         } catch {
-             return false;
-         }
-     })) {
+     const requestOrigin = normalizeOrigin(String(req.headers.origin || req.headers.referer || ''));
+     if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
          return res.status(403).json({ message: 'Forbidden' });
      }
 

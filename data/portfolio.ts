@@ -664,7 +664,3 @@ export const getAudioTracks = (locale: Locale): AudioTrack[] => {
     }
     return tracks;
 };
-
-// Deprecated: For backward compatibility if needed, but should be removed
-export const portfolioItems = getPortfolioItems('ko');
-export const audioTracks = getAudioTracks('ko');

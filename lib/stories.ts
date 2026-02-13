@@ -4,7 +4,8 @@ import matter from 'gray-matter';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryPath } from '../types/story';
-import { locales, defaultLocale, type Locale, loadCommonResource } from './i18n';
+import { locales, defaultLocale, type Locale } from './i18n';
+import { loadCommonResourceServer } from './i18n.server';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 const enableCache = process.env.NODE_ENV === 'production';
@@ -154,8 +155,8 @@ const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
     return cached;
   }
 
-  const localeCommon = loadCommonResource(locale);
-  const fallbackCommon = loadCommonResource(defaultLocale);
+  const localeCommon = loadCommonResourceServer(locale);
+  const fallbackCommon = loadCommonResourceServer(defaultLocale);
   const localizedCategories = (localeCommon?.stories as Record<string, Record<string, string>> | undefined)?.categories;
   const fallbackCategories = (fallbackCommon?.stories as Record<string, Record<string, string>> | undefined)?.categories;
   const label = localizedCategories?.[categoryKey] || fallbackCategories?.[categoryKey] || categoryKey;

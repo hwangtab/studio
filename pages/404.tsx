@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
@@ -8,6 +8,7 @@ import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION }
 import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
+import { getLocaleI18nResourcesServer } from '../lib/i18n.server';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
@@ -78,6 +79,14 @@ const NotFoundPage: NextPage = () => {
       </m.div>
     </Section>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {
+      i18nResources: getLocaleI18nResourcesServer(defaultLocale),
+    },
+  };
 };
 
 export default NotFoundPage;

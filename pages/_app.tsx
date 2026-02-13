@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
-import i18n, { defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
+import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { useIsIOSSafari } from '../utils/deviceUtils';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, useReducedMotion, LazyMotion, domAnimation } from 'framer-motion';
@@ -47,6 +47,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     typeof i18nResources === 'object' &&
     locale in (i18nResources as Record<string, unknown>)
   );
+
   const [isLocaleReady, setIsLocaleReady] = useState(() => i18n.hasResourceBundle(locale, 'common'));
   const shouldReduceMotionAggressively = shouldReduceMotion;
 
@@ -65,15 +66,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
     const ensureLocaleReady = async () => {
       let renderLocale: Locale = locale;
-
-      if (i18nResources && typeof i18nResources === 'object') {
-        Object.entries(i18nResources as Record<string, unknown>).forEach(([lng, namespaces]) => {
-          Object.entries((namespaces ?? {}) as Record<string, unknown>).forEach(([ns, data]) => {
-            if (!data) return;
-            i18n.addResourceBundle(lng, ns, data, true, true);
-          });
-        });
-      }
+      applyI18nResources(i18nResources);
 
       const hasLocaleBundle = i18n.hasResourceBundle(locale, 'common');
       if (!hasServerResourceForLocale && !hasLocaleBundle) {
