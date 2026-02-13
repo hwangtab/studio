@@ -7,6 +7,7 @@ import { kv } from '@vercel/kv';
 const LIMIT = 5; // max 5 requests
 const WINDOW = 15 * 60; // 15 minutes in seconds (KV uses seconds for TTL)
 const PRODUCTION_ORIGIN = 'https://studionol.co.kr';
+const PRODUCTION_WWW_ORIGIN = 'https://www.studionol.co.kr';
 
 interface MemoryRateLimitEntry {
     count: number;
@@ -80,6 +81,7 @@ const getAllowedOrigins = (): string[] => {
     const defaults = [
         normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL || ''),
         PRODUCTION_ORIGIN,
+        PRODUCTION_WWW_ORIGIN,
         process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : null,
         process.env.NODE_ENV !== 'production' ? 'http://localhost:3001' : null,
     ]

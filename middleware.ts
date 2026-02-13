@@ -3,6 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
 type Locale = (typeof locales)[number];
 const defaultLocale: Locale = 'ko';
+const DEFAULT_SITE_URL = 'https://studionol.co.kr';
+
+const parseCanonicalSiteUrl = (): URL | null => {
+    const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || DEFAULT_SITE_URL;
+    try {
+        return new URL(raw);
+    } catch {
+        return null;
+    }
+};
+
+const canonicalSiteUrl = parseCanonicalSiteUrl();
 
 function buildContentSecurityPolicy(): string {
     return [
@@ -49,24 +61,42 @@ function getPreferredLocale(request: NextRequest): Locale {
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    const redirectUrl = request.nextUrl.clone();
+    let shouldRedirect = false;
+    let shouldVaryByLanguage = false;
+
+    if (
+        canonicalSiteUrl &&
+        redirectUrl.hostname !== canonicalSiteUrl.hostname
+    ) {
+        redirectUrl.protocol = canonicalSiteUrl.protocol;
+        redirectUrl.hostname = canonicalSiteUrl.hostname;
+        redirectUrl.port = canonicalSiteUrl.port;
+        shouldRedirect = true;
+    }
 
     // Skip if path already has a locale prefix
     const pathnameHasLocale = locales.some(
         (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
     );
-    if (pathnameHasLocale) {
-        const response = NextResponse.next();
+    if (!pathnameHasLocale) {
+        // Redirect to locale-prefixed path
+        const locale = getPreferredLocale(request);
+        redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
+        shouldRedirect = true;
+        shouldVaryByLanguage = true;
+    }
+
+    if (shouldRedirect) {
+        // SEO: Permanent redirect for host/locale normalization
+        const response = NextResponse.redirect(redirectUrl, 308);
+        if (shouldVaryByLanguage) {
+            response.headers.set('Vary', 'Accept-Language');
+        }
         return setSecurityHeaders(response);
     }
 
-    // Redirect to locale-prefixed path
-    const locale = getPreferredLocale(request);
-    const newUrl = request.nextUrl.clone();
-    newUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
-
-    // SEO: Permanent redirect for locale normalization
-    const response = NextResponse.redirect(newUrl, 308);
-    response.headers.set('Vary', 'Accept-Language');
+    const response = NextResponse.next();
     return setSecurityHeaders(response);
 }
 
