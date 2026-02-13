@@ -20,7 +20,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                     onChange={onChangeRange}
                     max={duration || 0}
                     aria-label="Playback progress"
-                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-full"
                 />
 
                 {/* Background Track */}
@@ -34,7 +34,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
 
                 {/* Handle (visible on hover or interaction) */}
                 <div
-                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 dark:bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
+                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 dark:bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none z-10"
                     style={{ left: `${progress}%`, transform: 'translate(-50%, -50%)' }}
                 />
             </div>

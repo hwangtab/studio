@@ -27,7 +27,7 @@ export const HeaderBrand = ({
     return (
       <Link
         href={`/${locale}`}
-        className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none"
+        className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded-sm"
         onClick={onLogoClick}
       >
         <div className="relative h-8 sm:h-10 w-auto flex items-center ios-stable-layer">
@@ -63,7 +63,7 @@ export const HeaderBrand = ({
   return (
     <Link
       href={`/${locale}`}
-      className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none"
+      className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded-sm"
       onClick={onLogoClick}
     >
       <div className="relative h-8 sm:h-10 w-auto flex items-center">

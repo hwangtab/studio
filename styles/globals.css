@@ -101,7 +101,7 @@
   select,
   textarea {
     touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(var(--primary-rgb), 0.18);
   }
 
   h1,

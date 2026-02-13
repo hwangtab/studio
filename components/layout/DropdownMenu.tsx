@@ -28,6 +28,7 @@ export const DropdownMenu = ({
     const triggerRef = useRef<HTMLButtonElement>(null);
     const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const menuId = React.useId();
 
     const handleMouseEnter = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -95,6 +96,7 @@ export const DropdownMenu = ({
         >
             <button
                 ref={triggerRef}
+                type="button"
                 className={`flex items-center gap-1 px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                     ? !isTransparent
                         ? 'text-primary dark:text-accent font-bold'
@@ -104,7 +106,9 @@ export const DropdownMenu = ({
                         : 'text-white hover:bg-white/10 hover:text-white'
                     }`}
                 aria-expanded={isOpen}
-                aria-haspopup="true"
+                aria-haspopup="menu"
+                aria-controls={menuId}
+                onClick={() => setIsOpen((prev) => !prev)}
                 onKeyDown={handleKeyDown}
             >
                 {label}
@@ -119,6 +123,7 @@ export const DropdownMenu = ({
             <AnimatePresence>
                 {isOpen && (
                     <m.div
+                        id={menuId}
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}

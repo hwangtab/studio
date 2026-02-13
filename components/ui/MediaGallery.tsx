@@ -75,8 +75,9 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
       {/* Navigation Arrows */}
       {showLeftArrow && (
         <button
+          type="button"
           onClick={() => scroll('left')}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/80 dark:bg-gray-800/80 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-30 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/85 dark:bg-gray-800/85 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label="Previous images"
         >
           <ChevronLeft className="w-6 h-6 text-primary-dark dark:text-primary-light" />
@@ -84,8 +85,9 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
       )}
       {showRightArrow && (
         <button
+          type="button"
           onClick={() => scroll('right')}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-30 p-2 bg-white/80 dark:bg-gray-800/80 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-30 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/85 dark:bg-gray-800/85 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label="Next images"
         >
           <ChevronRight className="w-6 h-6 text-primary-dark dark:text-primary-light" />
@@ -130,14 +132,21 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
             {images.map((_, i) => (
               <button
                 key={i}
+                type="button"
                 onClick={() => scrollToImage(i)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${
                   i === activeIndex 
-                    ? 'w-6 bg-primary' 
-                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                    ? 'text-primary' 
+                    : 'text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500'
                 }`}
                 aria-label={`Go to image ${i + 1}`}
-              />
+              >
+                <span
+                  className={`rounded-full transition-all duration-300 ${
+                    i === activeIndex ? 'w-6 h-2 bg-current' : 'w-2 h-2 bg-current'
+                  }`}
+                />
+              </button>
             ))}
           </div>
         )}

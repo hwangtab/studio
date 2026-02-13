@@ -31,7 +31,7 @@ const VolumeControls = ({
             >
                 {isMuted ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}
             </m.button>
-            <div className="w-20 h-2 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden hidden sm:block relative">
+            <div className="w-20 h-2 bg-gray-200 dark:bg-white/20 rounded-full overflow-hidden hidden sm:block relative group">
                 <div
                     className="absolute top-0 left-0 h-full bg-gray-800 dark:bg-white rounded-full"
                     style={{ width: `${volume * 100}%` }}
@@ -44,10 +44,10 @@ const VolumeControls = ({
                     value={volume}
                     onChange={onChangeVolume}
                     aria-label="Volume"
-                    className="w-full h-full appearance-none bg-transparent opacity-0 absolute cursor-pointer z-10"
+                    className="w-full h-full appearance-none bg-transparent opacity-0 absolute cursor-pointer z-10 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-full"
                 />
                 <div
-                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 dark:bg-white rounded-full shadow-md pointer-events-none"
+                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 dark:bg-white rounded-full shadow-md pointer-events-none opacity-80 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
                     style={{ left: `calc(${volume * 100}% - 6px)` }}
                 ></div>
             </div>
