@@ -4,7 +4,7 @@ interface ProgressBarProps {
     currentTime: number;
     duration: number;
     progress: number;
-    progressBarRef: React.RefObject<HTMLInputElement>;
+    progressBarRef: React.MutableRefObject<HTMLInputElement | null>;
     onChangeRange: () => void;
     formatTime: (time: number) => string;
 }
