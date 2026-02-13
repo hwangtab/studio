@@ -181,6 +181,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
 };
 
 (Home as React.FC<HomeProps> & { hasHero?: boolean }).hasHero = true;
+(Home as React.FC<HomeProps> & { enableScrollProgress?: boolean }).enableScrollProgress = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = locales.map((locale) => ({ params: { locale } }));

@@ -36,26 +36,10 @@ interface CodeBlockProps {
 
 const CodeBlock = ({ children, className }: CodeBlockProps) => {
   const language = className?.replace('lang-', '') || 'text';
-  const codeRef = React.useRef<HTMLElement>(null);
-
-  React.useEffect(() => {
-    let isMounted = true;
-    loadPrism()
-      .then((PrismLib) => {
-        if (PrismLib && isMounted && codeRef.current) {
-          PrismLib.highlightElement(codeRef.current);
-        }
-      })
-      .catch(() => { });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [children, className]);
 
   return (
     <pre className={`rounded-lg overflow-hidden my-4 language-${language}`}>
-      <code ref={codeRef} className={`language-${language}`}>
+      <code className={`language-${language}`}>
         {children}
       </code>
     </pre>
@@ -325,6 +309,7 @@ interface MarkdownRendererProps {
 
 const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => {
   const currentLocale = locale;
+  const markdownRootRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -336,6 +321,29 @@ const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => 
     link.href = '/styles/prism-theme.css';
     document.head.appendChild(link);
   }, []);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    let rafId: number | null = null;
+
+    loadPrism()
+      .then((PrismLib) => {
+        if (!PrismLib || !isMounted || !markdownRootRef.current) return;
+        rafId = window.requestAnimationFrame(() => {
+          if (!markdownRootRef.current) return;
+          const codeNodes = markdownRootRef.current.querySelectorAll<HTMLElement>('pre code[class*="language-"]');
+          codeNodes.forEach((node) => PrismLib.highlightElement(node));
+        });
+      })
+      .catch(() => { });
+
+    return () => {
+      isMounted = false;
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }, [content]);
 
   const overrides = React.useMemo(() => ({
     ...STATIC_OVERRIDES,
@@ -363,7 +371,7 @@ const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => 
   }), [currentLocale]);
 
   return (
-    <div className="markdown-content">
+    <div ref={markdownRootRef} className="markdown-content">
       <Markdown
         options={{
           overrides,
