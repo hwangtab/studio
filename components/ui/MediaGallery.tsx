@@ -1,7 +1,8 @@
 import React from 'react';
-import { m } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface MediaImage {
   src: string;
@@ -14,6 +15,9 @@ interface MediaGalleryProps {
 }
 
 const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
+  const shouldReduceMotion = useReducedMotion();
+  const disableMotionEffects = useDisableMotionEffects();
+  const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = React.useState(false);
   const [showRightArrow, setShowRightArrow] = React.useState(true);
@@ -57,7 +61,7 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
     if (scrollRef.current) {
       const { clientWidth } = scrollRef.current;
       const scrollAmount = direction === 'left' ? -clientWidth : clientWidth;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: shouldAnimate ? 'smooth' : 'auto' });
     }
   };
 
@@ -66,7 +70,7 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
       const { clientWidth } = scrollRef.current;
       // Approximate scroll position based on width
       const scrollAmount = index * clientWidth * 0.85; 
-      scrollRef.current.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+      scrollRef.current.scrollTo({ left: scrollAmount, behavior: shouldAnimate ? 'smooth' : 'auto' });
     }
   };
 
@@ -106,8 +110,8 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
             className="flex-none w-[85%] sm:w-[45%] lg:w-[31%] snap-center"
           >
             <m.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
+              whileHover={shouldAnimate ? { scale: 1.02 } : undefined}
+              transition={shouldAnimate ? { duration: 0.3 } : { duration: 0 }}
               className="h-full"
             >
               <ResponsiveImage

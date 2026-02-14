@@ -581,6 +581,12 @@
       "other": "기타"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "아티스트와 함께 만드는",
+    "titleHighlight": "감동의 기록",
+    "subtitle": "스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.",
+    "ratingAria": "평점 {{rating}}점"
+  },
   "notFound": {
     "seoTitle": "페이지를 찾을 수 없습니다 | 스튜디오 놀",
     "badge": "404 Not Found",

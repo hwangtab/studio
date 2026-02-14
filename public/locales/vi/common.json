@@ -580,6 +580,12 @@
       "other": "Khác"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "Cùng tạo nên:",
+    "titleHighlight": "Những khoảnh khắc lay động",
+    "subtitle": "Công nghệ và sự chân thành được nhiều người đã đến Studio NOL chứng thực.",
+    "ratingAria": "Đánh giá {{rating}} sao"
+  },
   "notFound": {
     "seoTitle": "Không tìm thấy trang | Studio NOL",
     "badge": "404 Không tìm thấy",

@@ -580,6 +580,12 @@
       "other": "Otros"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "Creando Juntos:",
+    "titleHighlight": "Registros Conmovedores",
+    "subtitle": "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL.",
+    "ratingAria": "Calificación {{rating}} estrellas"
+  },
   "notFound": {
     "seoTitle": "Página no encontrada | Studio NOL",
     "badge": "404 Not Found",

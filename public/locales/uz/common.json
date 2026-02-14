@@ -577,6 +577,12 @@
       "other": "Boshqa"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "Birga yaratamiz:",
+    "titleHighlight": "Ta'sirli xotiralar",
+    "subtitle": "Studio NOL’dan o‘tgan ko‘plab insonlar tasdiqlagan texnologiya va samimiyat.",
+    "ratingAria": "{{rating}} yulduzli baho"
+  },
   "notFound": {
     "seoTitle": "Sahifa topilmadi | Studio NOL",
     "badge": "404 Sahifa topilmadi",

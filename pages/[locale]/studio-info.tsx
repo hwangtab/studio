@@ -16,6 +16,7 @@ import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
 import { createEnterAnimation, createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface StudioInfoProps {
   locale: Locale;
@@ -31,7 +32,20 @@ const EQUIPMENT_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
+  const disableMotionEffects = useDisableMotionEffects();
   const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
+  const introSectionAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
+    : INTRO_SECTION_ANIMATION;
+  const introImageAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
+    : INTRO_IMAGE_ANIMATION;
+  const introTextAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
+    : INTRO_TEXT_ANIMATION;
+  const equipmentSectionAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
+    : EQUIPMENT_SECTION_ANIMATION;
 
   return (
     <>
@@ -59,13 +73,13 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
 
       {/* 스튜디오 소개 섹션 */}
       <Section variant="default">
-        <m.div {...INTRO_SECTION_ANIMATION}>
+        <m.div {...introSectionAnimation}>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <m.div {...INTRO_IMAGE_ANIMATION} className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group">
+            <m.div {...introImageAnimation} className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group">
               <ResponsiveImage
                 src="/images/hardware2.jpg"
                 alt={t('studioInfo.intro.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                className={`w-full h-full object-cover ${disableMotionEffects ? '' : 'transform group-hover:scale-105 transition-transform duration-700'}`}
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -73,7 +87,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
             </m.div>
 
-            <m.div {...INTRO_TEXT_ANIMATION}>
+            <m.div {...introTextAnimation}>
               <SectionHeading
                 icon={Building}
                 title={t('studioInfo.intro.title')}
@@ -103,7 +117,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
 
       {/* 장비 목록 섹션 */}
       <Section variant="alternate">
-        <m.div {...EQUIPMENT_SECTION_ANIMATION}>
+        <m.div {...equipmentSectionAnimation}>
           <SectionHeading
             icon={Mic2}
             title={t('studioInfo.equipment.title')}
@@ -117,8 +131,8 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
               <m.div
                 key={index}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={HOVER_SCALE}
-                transition={{ duration: 0.3 }}
+                whileHover={disableMotionEffects ? undefined : HOVER_SCALE}
+                transition={disableMotionEffects ? { duration: 0 } : { duration: 0.3 }}
               >
                 <ResponsiveImage
                   src={image.src}

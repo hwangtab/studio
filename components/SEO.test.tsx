@@ -30,23 +30,24 @@ import SEO from './SEO';
 
 describe('SEO alternates', () => {
   beforeEach(() => {
+    document.head.innerHTML = '';
     useRouterMock.mockReturnValue({
       asPath: '/en/stories/sample-story?from=test',
     });
   });
 
   it('renders canonical and alternate tags by default', () => {
-    const { container } = render(
+    render(
       <SEO title="Sample Title" description="Sample Description" keywords="sample,seo" />
     );
 
-    expect(container.querySelector('link[rel="canonical"]')).toBeTruthy();
-    expect(container.querySelectorAll('link[rel="alternate"]').length).toBeGreaterThan(0);
-    expect(container).toMatchSnapshot();
+    expect(document.head.querySelector('link[rel="canonical"]')).toBeTruthy();
+    expect(document.head.querySelectorAll('link[rel="alternate"]').length).toBeGreaterThan(0);
+    expect(document.head.innerHTML).toMatchSnapshot();
   });
 
   it('disables alternate tags while keeping canonical when requested', () => {
-    const { container } = render(
+    render(
       <SEO
         title="Fallback Story"
         description="Fallback story should not advertise alternates"
@@ -55,7 +56,7 @@ describe('SEO alternates', () => {
       />
     );
 
-    expect(container.querySelector('link[rel="canonical"]')).toBeTruthy();
-    expect(container.querySelector('link[rel="alternate"]')).toBeNull();
+    expect(document.head.querySelector('link[rel="canonical"]')).toBeTruthy();
+    expect(document.head.querySelector('link[rel="alternate"]')).toBeNull();
   });
 });

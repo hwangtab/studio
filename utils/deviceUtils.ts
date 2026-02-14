@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 
 export const detectIOSSafari = (): boolean => {
   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
@@ -53,14 +53,42 @@ export const useIsIOSSafari = (): boolean => {
   );
 };
 
+const isClient = typeof window !== 'undefined';
+let hasHydrated = false;
+const hydrationStoreListeners = new Set<() => void>();
+
+const subscribeHydrationStore = (listener: () => void) => {
+  hydrationStoreListeners.add(listener);
+  return () => hydrationStoreListeners.delete(listener);
+};
+
+const getHydrationSnapshot = () => hasHydrated;
+const getHydrationServerSnapshot = () => false;
+
+const resolveHydrationOnce = () => {
+  if (hasHydrated || !isClient) {
+    return;
+  }
+  hasHydrated = true;
+  hydrationStoreListeners.forEach((listener) => listener());
+};
+
+const useHasHydrated = (): boolean => {
+  return useSyncExternalStore(
+    (listener) => {
+      const unsubscribe = subscribeHydrationStore(listener);
+      resolveHydrationOnce();
+      return unsubscribe;
+    },
+    getHydrationSnapshot,
+    getHydrationServerSnapshot
+  );
+};
+
 export const useDisableMotionEffects = (): boolean => {
   const isIOSSafari = useIsIOSSafari();
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  const hasHydratedClient = useHasHydrated();
 
   // Keep motion disabled until hydration completes to avoid SSR/CSR animation mismatches.
-  return !hasMounted || isIOSSafari;
+  return !hasHydratedClient || isIOSSafari;
 };

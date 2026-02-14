@@ -51,6 +51,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   });
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
+  const sampleTracksAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+    : SAMPLE_TRACKS_ANIMATION;
+  const projectsAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+    : PROJECTS_ANIMATION;
 
   const filteredItems = useMemo(
     () => filterPortfolioItems(initialPortfolioItems, selectedCategory.id === 'all' ? 'all' : selectedCategory.id),
@@ -142,7 +148,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         <Section variant="default">
           <m.div
             id="sample-tracks"
-            {...SAMPLE_TRACKS_ANIMATION}
+            {...sampleTracksAnimation}
           >
             <SectionHeading
               icon={Headphones}
@@ -159,7 +165,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       <Section variant="alternate">
         <m.div
-          {...PROJECTS_ANIMATION}
+          {...projectsAnimation}
         >
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
             <div className="flex items-center">

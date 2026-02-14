@@ -1,6 +1,7 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import { Star, MessageSquare, Quote } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
@@ -21,44 +22,19 @@ interface ReviewSectionProps {
 const ReviewSection = ({ className, variant = "default", locale = 'ko' }: ReviewSectionProps) => {
     const reviews = getReviews(locale);
     const disableMotionEffects = useDisableMotionEffects();
-
-
-    // Simple translation for title/subtitle
-    const t = (ko: string, en: string, zh?: string, es?: string, vi?: string, th?: string, uz?: string) => {
-        if (locale === 'ko') return ko;
-        if (locale === 'en') return en;
-        if (locale === 'zh') return zh || en;
-        if (locale === 'es') return es || en;
-        if (locale === 'vi') return vi || en;
-        if (locale === 'th') return th || en;
-        if (locale === 'uz') return uz || en;
-        return ko;
-    };
+    const { t } = useTranslation('common', { lng: locale });
 
     return (
         <Section variant={variant} className={className}>
             <SectionHeading
                 icon={MessageSquare}
-                title={
-                    locale === 'ko' ? (
-                        <>
-                            아티스트와 함께 만드는 <span>감동의 기록</span>
-                        </>
-                    ) : (
-                        <>
-                            {t("Creating Together:", "Creating Together:", "共同创造:", "Creando Juntos:", "Cùng tạo nên:", "สร้างร่วมกัน:", "Birga yaratamiz:")} <span>{t("Touching Records", "Touching Records", "感动的记录", "Registros Conmovedores", "Những khoảnh khắc lay động", "บันทึกที่ประทับใจ", "Ta’sirli xotiralar")}</span>
-                        </>
-                    )
-                }
-                subtitle={t(
-                    "스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.",
-                    "Proven technology and sincerity verified by many who have visited Studio NOL.",
-                    "这是经过 Studio NOL 的许多人证明的技术力量和真诚。",
-                    "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL.",
-                    "Công nghệ và sự chân thành được nhiều người đã đến Studio NOL chứng thực.",
-                    "เทคโนโลยีที่พิสูจน์แล้วและความจริงใจที่ได้รับการยืนยันจากผู้ที่เคยมา Studio NOL",
-                    "Studio NOL’dan o‘tgan ko‘plab insonlar tasdiqlagan texnologiya va samimiyat."
+                title={(
+                    <>
+                        {t('reviewSection.titlePrefix', { defaultValue: '아티스트와 함께 만드는' })}{' '}
+                        <span>{t('reviewSection.titleHighlight', { defaultValue: '감동의 기록' })}</span>
+                    </>
                 )}
+                subtitle={t('reviewSection.subtitle', { defaultValue: '스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.' })}
                 className="mb-16"
             />
 
@@ -69,9 +45,9 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                 whileInView={disableMotionEffects ? undefined : "animate"}
                 viewport={disableMotionEffects ? undefined : { once: true }}
             >
-                {reviews.map((review, index) => (
+                {reviews.map((review) => (
                     <m.div
-                        key={index}
+                        key={`${review.author}-${review.categoryKey}-${review.datePublished}`}
                         className="group"
                         variants={disableMotionEffects ? undefined : STAGGER_ITEM}
                     >
@@ -87,15 +63,10 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                             <div className="relative z-10">
                                 <div
                                     className="flex items-center mb-4"
-                                    aria-label={t(
-                                        `평점 ${review.rating}점`,
-                                        `Rating ${review.rating} stars`,
-                                        `评分 ${review.rating} 分`,
-                                        `Calificación ${review.rating} estrellas`,
-                                        `Đánh giá ${review.rating} sao`,
-                                        `คะแนน ${review.rating} ดาว`,
-                                        `${review.rating} yulduzli baho`
-                                    )}
+                                    aria-label={t('reviewSection.ratingAria', {
+                                        rating: review.rating,
+                                        defaultValue: `평점 ${review.rating}점`,
+                                    })}
                                 >
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
                                         <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" aria-hidden="true" />

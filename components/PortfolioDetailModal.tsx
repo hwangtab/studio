@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useRef } from 'react';
-import { m, Variants } from 'framer-motion';
+import { m, Variants, useReducedMotion } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from './ResponsiveImage';
@@ -9,6 +9,7 @@ import { getCategoryInfo } from '../utils/portfolioDataUtils';
 import { defaultLocale, type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock';
+import { useDisableMotionEffects } from '../utils/deviceUtils';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -44,6 +45,9 @@ interface PortfolioDetailModalProps {
 
 const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocale }: PortfolioDetailModalProps) => {
   const { t } = useTranslation('common', { lng: locale });
+  const shouldReduceMotion = useReducedMotion();
+  const disableMotionEffects = useDisableMotionEffects();
+  const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
   const siteConfig = getSiteConfig(locale);
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -139,18 +143,18 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
   return (
     <m.div
       className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-      variants={overlayVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
+      variants={shouldAnimate ? overlayVariants : undefined}
+      initial={shouldAnimate ? "hidden" : false}
+      animate={shouldAnimate ? "visible" : undefined}
+      exit={shouldAnimate ? "hidden" : undefined}
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       <m.div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        variants={overlayVariants}
+        className={`absolute inset-0 bg-black/60 ${shouldAnimate ? 'backdrop-blur-sm' : ''}`}
+        variants={shouldAnimate ? overlayVariants : undefined}
         onClick={onClose}
         aria-hidden="true"
       />
@@ -158,12 +162,12 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       <m.div
         ref={modalRef}
         className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
-        variants={modalVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
+        variants={shouldAnimate ? modalVariants : undefined}
+        initial={shouldAnimate ? "hidden" : false}
+        animate={shouldAnimate ? "visible" : undefined}
+        exit={shouldAnimate ? "exit" : undefined}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-700">
+        <div className={`sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 border-b border-gray-100 dark:border-gray-700 ${shouldAnimate ? 'backdrop-blur-sm' : ''}`}>
           <button
             ref={closeButtonRef}
             onClick={onClose}

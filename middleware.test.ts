@@ -32,6 +32,7 @@ describe('middleware redirects', () => {
 
   it('returns 308 for host normalization without locale negotiation', async () => {
     process.env.NEXT_PUBLIC_SITE_URL = 'https://www.studionol.co.kr';
+    process.env.NODE_ENV = 'production';
 
     const { NextRequest } = await import('next/server');
     const { middleware } = await import('./middleware');

@@ -580,6 +580,12 @@
       "other": "其他"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "共同创造:",
+    "titleHighlight": "感动的记录",
+    "subtitle": "这是经过 Studio NOL 的许多人证明的技术力量和真诚。",
+    "ratingAria": "评分 {{rating}} 分"
+  },
   "notFound": {
     "seoTitle": "页面未找到 | Studio NOL",
     "badge": "404 Not Found",

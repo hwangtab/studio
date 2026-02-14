@@ -29,6 +29,7 @@ const cardVariants = {
 };
 
 const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, labels }: StoryCardProps) => {
+  const shouldAnimate = !disableEffects;
   const thumbnailUrl = React.useMemo(() => {
     if (story.thumbnail) return story.thumbnail;
     if (!story.content) return null;
@@ -51,7 +52,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, la
   return (
     <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
       <m.div
-        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer flex flex-col h-full"
+        className={`bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full ${shouldAnimate ? 'transition-shadow duration-300 hover:shadow-lg' : ''}`}
         variants={cardVariants}
         initial={disableEffects ? false : "hidden"}
         whileInView={disableEffects ? undefined : "visible"}
@@ -62,7 +63,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, la
             <ResponsiveImage
               src={thumbnailUrl}
               alt={story.title}
-              className="object-cover transition-transform duration-300 hover:scale-105"
+              className={`object-cover ${shouldAnimate ? 'transition-transform duration-300 hover:scale-105' : ''}`}
               sizes="(min-width: 1024px) 320px, (min-width: 640px) 260px, 100vw"
               fill={true}
             />

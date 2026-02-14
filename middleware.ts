@@ -15,6 +15,7 @@ const parseCanonicalSiteUrl = (): URL | null => {
 };
 
 const canonicalSiteUrl = parseCanonicalSiteUrl();
+const shouldEnforceCanonicalHost = process.env.NODE_ENV === 'production' && Boolean(canonicalSiteUrl);
 
 function buildContentSecurityPolicy(): string {
     return [
@@ -66,6 +67,7 @@ export function middleware(request: NextRequest) {
     let shouldVaryByLanguage = false;
 
     if (
+        shouldEnforceCanonicalHost &&
         canonicalSiteUrl &&
         redirectUrl.hostname !== canonicalSiteUrl.hostname
     ) {

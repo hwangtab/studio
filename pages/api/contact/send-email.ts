@@ -3,6 +3,12 @@ import validator from 'validator';
 import { createHash } from 'crypto';
 
 import { kv } from '@vercel/kv';
+import {
+    getFirstContactValidationError,
+    toContactFormFields,
+    validateContactForm,
+    type ContactValidationCode,
+} from '../../../utils/contactValidation';
 
 // Rate limiting configuration
 const LIMIT = 5; // max 5 requests
@@ -230,6 +236,22 @@ interface EmailJSPayload {
     accessToken?: string;
 }
 
+const validationCodeMessageMap: Record<ContactValidationCode, string> = {
+    name_required: 'Name is required',
+    name_min: 'Name must be 2-100 characters',
+    name_max: 'Name must be 2-100 characters',
+    name_invalid: 'Name contains invalid characters',
+    email_required: 'Valid email is required',
+    email_invalid: 'Valid email is required',
+    email_max: 'Email must not exceed 254 characters',
+    phone_required: 'Phone is required',
+    phone_invalid: 'Phone contains invalid characters',
+    phone_length: 'Phone must be 5-50 characters',
+    message_required: 'Message is required',
+    message_min: 'Message must be 10-5000 characters',
+    message_max: 'Message must be 10-5000 characters',
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Vary', 'Origin');
@@ -280,57 +302,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ message: 'Internal server error' });
     }
 
-    // 4. Enhanced validation & sanitization
-    const normalizedName = typeof name === 'string' ? name.trim() : '';
-    const normalizedMessage = typeof message === 'string' ? message.trim() : '';
+    // 4. Shared validation
+    const contactFields = toContactFormFields({ name, phone, email, message });
+    const validationResult = validateContactForm(contactFields);
+    const firstValidationError = getFirstContactValidationError(validationResult.errors);
 
-    // Name validation: 2-100 chars, Unicode letters + spaces + hyphens + apostrophes
-    if (!name || typeof name !== 'string' || validator.isEmpty(normalizedName)) {
-        return res.status(400).json({ message: 'Name is required', field: 'name' });
-    }
-    if (!validator.isLength(normalizedName, { min: 2, max: 100 })) {
-        return res.status(400).json({ message: 'Name must be 2-100 characters', field: 'name' });
-    }
-    if (!validator.matches(normalizedName, /^[\p{L}\p{M}\s'-]+$/u)) {
-        return res.status(400).json({ message: 'Name contains invalid characters', field: 'name' });
-    }
-
-    // Email validation: standard email + max 254 chars
-    if (!email || typeof email !== 'string' || !validator.isEmail(email)) {
-        return res.status(400).json({ message: 'Valid email is required', field: 'email' });
-    }
-    if (!validator.isLength(email, { min: 1, max: 254 })) {
-        return res.status(400).json({ message: 'Email must not exceed 254 characters', field: 'email' });
-    }
-
-    // Phone validation (required): normalize whitespace, then validate (supports international format with +)
-    if (!phone || typeof phone !== 'string') {
-        return res.status(400).json({ message: 'Phone is required', field: 'phone' });
-    }
-    const normalizedPhone = phone.replace(/\s/g, '');
-    if (!normalizedPhone) {
-        return res.status(400).json({ message: 'Phone contains only whitespace', field: 'phone' });
-    }
-    if (!validator.isLength(normalizedPhone, { min: 5, max: 50 })) {
-        return res.status(400).json({ message: 'Phone must be 5-50 characters', field: 'phone' });
-    }
-    if (!validator.matches(normalizedPhone, /^[\d\s+\-\(\)]+$/)) {
-        return res.status(400).json({ message: 'Phone contains invalid characters', field: 'phone' });
-    }
-
-    // Message validation: 10-5000 chars
-    if (!message || typeof message !== 'string' || validator.isEmpty(normalizedMessage)) {
-        return res.status(400).json({ message: 'Message is required', field: 'message' });
-    }
-    if (!validator.isLength(normalizedMessage, { min: 10, max: 5000 })) {
-        return res.status(400).json({ message: 'Message must be 10-5000 characters', field: 'message' });
+    if (firstValidationError) {
+        return res.status(400).json({
+            message: validationCodeMessageMap[firstValidationError.code],
+            field: firstValidationError.field,
+            code: firstValidationError.code,
+        });
     }
 
     // Sanitization
-    const sanitizedName = validator.escape(normalizedName);
-    const sanitizedEmail = validator.normalizeEmail(email.trim()) || email.trim();
-    const sanitizedMessage = validator.escape(normalizedMessage);
-    const sanitizedPhone = normalizedPhone ? validator.escape(String(normalizedPhone).trim()) : undefined;
+    const sanitizedName = validator.escape(validationResult.normalized.name);
+    const sanitizedEmail = validator.normalizeEmail(validationResult.normalized.email) || validationResult.normalized.email;
+    const sanitizedMessage = validator.escape(validationResult.normalized.message);
+    const sanitizedPhone = validator.escape(validationResult.normalized.phone);
 
     // 5. Send email via EmailJS REST API
     try {

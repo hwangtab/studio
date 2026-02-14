@@ -18,6 +18,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -67,6 +68,7 @@ const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
 
 const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const disableMotionEffects = useDisableMotionEffects();
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
     {
@@ -113,6 +115,15 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
     },
     url: `${siteConfig.url}/${locale}/practice-room`,
   }), [t, siteConfig, locale, schemaLanguage]);
+  const painPointsAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
+    : PAIN_POINTS_ANIMATION;
+  const audienceSectionAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
+    : AUDIENCE_SECTION_ANIMATION;
+  const featuresSectionAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
+    : FEATURES_SECTION_ANIMATION;
 
   return (
     <>
@@ -154,7 +165,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
 
       {/* 고민 섹션 */}
       <Section variant="default">
-        <m.div {...PAIN_POINTS_ANIMATION}>
+        <m.div {...painPointsAnimation}>
           <SectionHeading
             icon={HelpCircle}
             title={t('practiceRoom.painPoints.title')}
@@ -172,7 +183,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
 
       {/* 타겟 오디언스 섹션 */}
       <Section variant="alternate">
-        <m.div {...AUDIENCE_SECTION_ANIMATION}>
+        <m.div {...audienceSectionAnimation}>
           <SectionHeading
             icon={Target}
             title={t('practiceRoom.audience.title')}
@@ -207,8 +218,8 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
               <m.div
                 key={i}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={HOVER_SCALE}
-                transition={{ duration: 0.3 }}
+                whileHover={disableMotionEffects ? undefined : HOVER_SCALE}
+                transition={disableMotionEffects ? { duration: 0 } : { duration: 0.3 }}
               >
                 <ResponsiveImage
                   src={`/images/room${i}.jpg`}
@@ -226,7 +237,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
       </Section>
 
       <Section variant="default">
-        <m.div {...FEATURES_SECTION_ANIMATION}>
+        <m.div {...featuresSectionAnimation}>
           <SectionHeading
             icon={ShieldCheck}
             title={t('practiceRoom.features.title')}

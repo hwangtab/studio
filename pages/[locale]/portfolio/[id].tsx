@@ -18,6 +18,7 @@ import { getI18nStaticProps } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
+import { useDisableMotionEffects } from '../../../utils/deviceUtils';
 
 interface PortfolioDetailPageProps {
   locale: Locale;
@@ -30,6 +31,7 @@ const DETAIL_CONTENT_ANIMATION = createEnterAnimation();
 const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
+  const disableMotionEffects = useDisableMotionEffects();
   const siteConfig = getSiteConfig(locale);
 
   const getLink = (path: string) => `/${locale}${path}`;
@@ -52,6 +54,9 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
     siteConfig.url,
     locale
   );
+  const detailContentAnimation = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+    : DETAIL_CONTENT_ANIMATION;
 
   if (router.isFallback) {
     return <LoadingSpinner locale={locale} />;
@@ -95,7 +100,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 
         <div className="max-w-4xl mx-auto">
           <m.div
-            {...DETAIL_CONTENT_ANIMATION}
+            {...detailContentAnimation}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
           >
             <div className="relative aspect-square max-w-md mx-auto mt-8">

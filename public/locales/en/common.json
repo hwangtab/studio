@@ -584,6 +584,12 @@
       "other": "Other"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "Creating Together:",
+    "titleHighlight": "Touching Records",
+    "subtitle": "Proven technology and sincerity verified by many who have visited Studio NOL.",
+    "ratingAria": "Rating {{rating}} stars"
+  },
   "notFound": {
     "seoTitle": "Page Not Found | Studio NOL",
     "badge": "404 Not Found",

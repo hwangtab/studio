@@ -12,13 +12,15 @@ interface DesktopNavProps {
   isTransparent: boolean;
   currentPath: string;
   onNavigate: () => void;
+  disableEffects?: boolean;
 }
 
 export const DesktopNav = ({
   navGroups,
   isTransparent,
   currentPath,
-  onNavigate
+  onNavigate,
+  disableEffects = false,
 }: DesktopNavProps) => {
   return (
     <nav className="hidden xl:flex items-center gap-x-2">
@@ -30,6 +32,7 @@ export const DesktopNav = ({
           isTransparent={isTransparent}
           currentPath={currentPath}
           onNavigate={onNavigate}
+          disableEffects={disableEffects}
         />
       ))}
     </nav>

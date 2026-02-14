@@ -581,6 +581,12 @@
       "other": "อื่น ๆ"
     }
   },
+  "reviewSection": {
+    "titlePrefix": "สร้างร่วมกัน:",
+    "titleHighlight": "บันทึกที่ประทับใจ",
+    "subtitle": "เทคโนโลยีที่พิสูจน์แล้วและความจริงใจที่ได้รับการยืนยันจากผู้ที่เคยมา Studio NOL",
+    "ratingAria": "คะแนน {{rating}} ดาว"
+  },
   "notFound": {
     "seoTitle": "ไม่พบหน้า | Studio NOL",
     "badge": "404 ไม่พบหน้า",
