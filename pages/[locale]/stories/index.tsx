@@ -11,7 +11,7 @@ import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { getCommonStaticPaths, getI18nStaticProps } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
-import { useIsIOSSafari } from '../../../utils/deviceUtils';
+import { useDisableMotionEffects } from '../../../utils/deviceUtils';
 
 interface StoriesPageProps {
   locale: Locale;
@@ -22,7 +22,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(8);
   const { t } = useTranslation('common', { lng: locale });
-  const isIOSSafari = useIsIOSSafari();
+  const disableMotionEffects = useDisableMotionEffects();
 
   const categories = useMemo(() => {
     const uniqueKeys = new Set(stories.map((story) => story.categoryKey).filter(Boolean));
@@ -122,7 +122,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
                   key={story.slug}
                   story={story}
                   locale={locale}
-                  disableEffects={isIOSSafari}
+                  disableEffects={disableMotionEffects}
                   labels={storyCardLabels}
                 />
               ))}

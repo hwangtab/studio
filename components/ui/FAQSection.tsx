@@ -3,7 +3,7 @@ import { m } from 'framer-motion';
 import { Plus, Minus, HelpCircle } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
-import { useIsIOSSafari } from '../../utils/deviceUtils';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 interface FAQItem {
@@ -27,7 +27,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     variant = "alternate"
 }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const isIOSSafari = useIsIOSSafari();
+    const disableMotionEffects = useDisableMotionEffects();
 
     const toggleAccordion = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
@@ -47,7 +47,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                     {items.map((item, index) => (
                         <m.div
                             key={index}
-                            {...(isIOSSafari
+                            {...(disableMotionEffects
                                 ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
                                 : createInViewEnterAnimation({ distance: 10, delay: index * 0.05 }))}
                             className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"

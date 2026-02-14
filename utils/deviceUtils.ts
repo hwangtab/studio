@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 export const detectIOSSafari = (): boolean => {
   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
@@ -51,4 +51,16 @@ export const useIsIOSSafari = (): boolean => {
     getIOSSafariSnapshot,
     getIOSSafariServerSnapshot
   );
+};
+
+export const useDisableMotionEffects = (): boolean => {
+  const isIOSSafari = useIsIOSSafari();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Keep motion disabled until hydration completes to avoid SSR/CSR animation mismatches.
+  return !hasMounted || isIOSSafari;
 };

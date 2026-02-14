@@ -14,6 +14,7 @@ import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface CurriculumCardProps {
     step: string;
@@ -52,11 +53,15 @@ interface LessonProps {
     reviewsData: ReturnType<typeof getReviews>;
 }
 
-const WHY_SECTION_REVEAL = createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
-const PRICING_SECTION_REVEAL = createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
-
 const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
     const { t } = useTranslation('common', { lng: locale });
+    const disableMotionEffects = useDisableMotionEffects();
+    const whySectionRevealProps = disableMotionEffects
+        ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
+        : createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
+    const pricingSectionRevealProps = disableMotionEffects
+        ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
+        : createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
 
     const lessonQuickAnswers = React.useMemo(() => ([
         {
@@ -203,7 +208,7 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
                 <div className="grid lg:grid-cols-2 gap-12 items-start mb-16">
                     {/* Why Choose Us */}
                     <m.div
-                        {...WHY_SECTION_REVEAL}
+                        {...whySectionRevealProps}
                     >
                         <SectionHeading
                             title={t('lesson.why.title')}
@@ -239,7 +244,7 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
 
                     {/* Pricing Card */}
                     <m.div
-                        {...PRICING_SECTION_REVEAL}
+                        {...pricingSectionRevealProps}
                         className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
                     >
                         <div className="p-8 bg-gradient-to-br from-primary to-secondary text-white text-center">

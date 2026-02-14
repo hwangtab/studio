@@ -9,9 +9,11 @@ import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
 import { getLocaleI18nResourcesServer } from '../lib/i18n.server';
+import { useDisableMotionEffects } from '../utils/deviceUtils';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
+  const disableMotionEffects = useDisableMotionEffects();
 
   const { locale, path } = useMemo(() => {
     const currentPath = router.asPath;
@@ -24,6 +26,13 @@ const NotFoundPage: NextPage = () => {
   }, [router.asPath]);
 
   const { t } = useTranslation('common', { lng: locale });
+  const pageContentMotionProps = disableMotionEffects
+    ? {
+      initial: false,
+      animate: { opacity: 1 },
+      transition: { duration: 0 },
+    }
+    : PAGE_CONTENT_ANIMATION;
 
   return (
     <Section variant="default" className="min-h-[60vh] flex flex-col justify-center text-center">
@@ -50,7 +59,7 @@ const NotFoundPage: NextPage = () => {
 
       <m.p
         className="typo-section-lead max-w-2xl mx-auto mb-10 text-gray-600 dark:text-gray-300"
-        {...PAGE_CONTENT_ANIMATION}
+        {...pageContentMotionProps}
       >
         <>
           {t('notFound.messageLine1', { path })}
@@ -61,8 +70,8 @@ const NotFoundPage: NextPage = () => {
 
       <m.div
         className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
-        {...PAGE_CONTENT_ANIMATION}
-        transition={{ ...PAGE_CONTENT_ANIMATION.transition, delay: 0.6 }}
+        {...pageContentMotionProps}
+        transition={disableMotionEffects ? { duration: 0 } : { ...PAGE_CONTENT_ANIMATION.transition, delay: 0.6 }}
       >
         <Link
           href={`/${locale}`}

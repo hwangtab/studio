@@ -10,6 +10,7 @@ import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { NextPageWithLayout } from '../../types';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface ContactProps {
   locale: Locale;
@@ -224,6 +225,7 @@ const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps)
 
 const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const disableMotionEffects = useDisableMotionEffects();
   const validationCopy = validationFallbacks[locale] || validationFallbacks.ko;
   const [formData, setFormData] = useState({
     name: '',
@@ -244,6 +246,20 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     referrer?: string;
   }>({});
   const siteConfig = getSiteConfig(locale);
+  const infoCardMotionProps = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
+    : { initial: { opacity: 0, x: -50 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.5 } };
+  const directionsMotionProps = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+    : {
+      initial: { opacity: 0, y: 20 },
+      whileInView: { opacity: 1, y: 0 },
+      viewport: { once: true },
+      transition: { duration: 0.5, delay: 0.4 },
+    };
+  const formCardMotionProps = disableMotionEffects
+    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
+    : { initial: { opacity: 0, x: 50 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.5, delay: 0.2 } };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -462,9 +478,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       <Section variant="default">
         <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
           <m.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            {...infoCardMotionProps}
             className="card p-8 shadow-xl order-2 lg:order-1"
           >
             <div>
@@ -504,10 +518,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
                 {/* 오시는 길 설명 (GEO 최적화) */}
                 <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+                  {...directionsMotionProps}
                   className="mt-12 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700"
                 >
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -551,9 +562,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
           {/* Contact Form */}
           <m.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            {...formCardMotionProps}
             className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
           >
             <div>

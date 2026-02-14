@@ -9,6 +9,7 @@ import Playlist from './Playlist';
 import type { AudioTrack } from '../../types/data';
 import { FADE_IN_UP } from '../../utils/animationUtils';
 import { defaultLocale, type Locale } from '../../lib/i18n';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface AudioPlayerProps {
     tracks: readonly AudioTrack[];
@@ -16,6 +17,11 @@ interface AudioPlayerProps {
 }
 
 const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
+    const disableMotionEffects = useDisableMotionEffects();
+    const audioPlayerMotionProps = disableMotionEffects
+        ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
+        : FADE_IN_UP;
+
     const {
         currentTrack,
         isPlaying,
@@ -44,7 +50,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
     return (
         <m.div
             className="bg-white dark:bg-[#121212] overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-white/5 relative"
-            {...FADE_IN_UP}
+            {...audioPlayerMotionProps}
         >
             {/* Background Atmosphere (Dark Mode Only) */}
             <div className="hidden dark:block absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">

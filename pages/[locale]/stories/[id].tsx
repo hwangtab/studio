@@ -20,7 +20,7 @@ import { Section } from '../../../components/ui/Section';
 import { getI18nStaticProps } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { useIsIOSSafari } from '../../../utils/deviceUtils';
+import { useDisableMotionEffects } from '../../../utils/deviceUtils';
 import { createEnterAnimation } from '../../../utils/animationUtils';
 
 interface StoryDetailPageProps {
@@ -34,7 +34,7 @@ const STORY_BODY_ANIMATION = createEnterAnimation();
 const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
-  const isIOSSafari = useIsIOSSafari();
+  const disableMotionEffects = useDisableMotionEffects();
   const getCTAType = (slug: string, categoryKey: string | undefined): CTAType => {
     let hash = 0;
     for (let i = 0; i < slug.length; i++) {
@@ -187,7 +187,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
                   key={related.slug}
                   story={related}
                   locale={locale}
-                  disableEffects={isIOSSafari}
+                  disableEffects={disableMotionEffects}
                   labels={storyCardLabels}
                 />
               ))}

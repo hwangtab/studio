@@ -20,6 +20,7 @@ import { getFaqData } from '../../data/faq';
 import { getReviews } from '../../data/reviews'; // Added import
 import { getI18nStaticProps } from '../../lib/getStatic';
 import { locales, type Locale } from '../../lib/i18n';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Disc,
@@ -37,10 +38,18 @@ interface HomeProps {
 const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Added prop
   const { heroContent, homeServices, studioImages, seo } = homeData;
   const { t } = useTranslation('common', { lng: locale });
+  const disableMotionEffects = useDisableMotionEffects();
 
   // Helper to generate locale-aware links
   const getLink = (path: string) => `/${locale}${path}`;
   const homeQuickAnswers = React.useMemo(() => faqData.slice(0, 3), [faqData]);
+  const homeServicesMotionProps = disableMotionEffects
+    ? {
+      initial: false,
+      animate: { opacity: 1 },
+      transition: { duration: 0 },
+    }
+    : PAGE_CONTENT_ANIMATION;
 
   return (
     <div className="overflow-visible">
@@ -107,7 +116,7 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
         />
         <m.div
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          {...PAGE_CONTENT_ANIMATION}
+          {...homeServicesMotionProps}
         >
           {homeServices.map((service, index) => (
             <FeatureCard

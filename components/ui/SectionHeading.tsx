@@ -2,7 +2,7 @@ import React from 'react';
 import { m } from 'framer-motion';
 import { cn } from '../../lib/utils';
 import { SCROLL_REVEAL } from '../../utils/animationUtils';
-import { useIsIOSSafari } from '../../utils/deviceUtils';
+import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface SectionHeadingProps {
   icon?: React.ElementType<{ className?: string }>;
@@ -23,7 +23,7 @@ const SectionHeading = ({
   as: Component = 'h2',
   titleClassName
 }: SectionHeadingProps) => {
-  const isIOSSafari = useIsIOSSafari();
+  const disableMotionEffects = useDisableMotionEffects();
   const alignmentClasses = {
     center: 'text-center',
     left: 'text-left',
@@ -36,10 +36,10 @@ const SectionHeading = ({
         "mb-12",
         className
       )}
-      initial={isIOSSafari ? false : "initial"}
-      whileInView={isIOSSafari ? undefined : "whileInView"}
-      viewport={isIOSSafari ? undefined : { once: true, margin: "-10% 0px -10% 0px" }}
-      variants={isIOSSafari ? undefined : SCROLL_REVEAL}
+      initial={disableMotionEffects ? false : "initial"}
+      whileInView={disableMotionEffects ? undefined : "whileInView"}
+      viewport={disableMotionEffects ? undefined : { once: true, margin: "-10% 0px -10% 0px" }}
+      variants={disableMotionEffects ? undefined : SCROLL_REVEAL}
     >
       {Icon && (
         <div className={cn(

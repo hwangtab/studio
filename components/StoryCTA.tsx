@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { m, useReducedMotion, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
-import { useIsIOSSafari } from '../utils/deviceUtils';
+import { useDisableMotionEffects, useIsIOSSafari } from '../utils/deviceUtils';
 
 import type { Locale } from '../lib/i18n';
 
@@ -17,6 +17,7 @@ interface StoryCTAProps {
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
     const { t } = useTranslation('common', { lng: locale });
     const isIOSSafari = useIsIOSSafari();
+    const disableMotionEffects = useDisableMotionEffects();
     const shouldReduceMotion = useReducedMotion();
 
     const getLink = (path: string) => `/${locale}${path}`;
@@ -142,7 +143,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
     const current = content[type];
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
-    const shouldAnimate = !isIOSSafari && !shouldReduceMotion;
+    const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
     const visualRef = useRef<HTMLDivElement>(null);
     const isVisualInView = useInView(visualRef, { amount: 0.35 });
     const shouldAnimateBars = shouldAnimate && isVisualInView;
