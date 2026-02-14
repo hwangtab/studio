@@ -21,6 +21,7 @@ import { getReviews } from '../../data/reviews'; // Added import
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import type { NextPageWithLayout } from '../../types';
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Disc,
@@ -35,7 +36,7 @@ interface HomeProps {
   reviewsData: ReturnType<typeof getReviews>; // Added prop type
 }
 
-const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Added prop
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, reviewsData }) => { // Added prop
   const { heroContent, homeServices, studioImages, seo } = homeData;
   const { t } = useTranslation('common', { lng: locale });
   const disableMotionEffects = useDisableMotionEffects();
@@ -189,11 +190,9 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
   );
 };
 
-(Home as React.FC<HomeProps> & { hasHero?: boolean }).hasHero = true;
+Home.hasHero = true;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return getCommonStaticPaths();
-};
+export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);

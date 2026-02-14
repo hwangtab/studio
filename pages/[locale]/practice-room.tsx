@@ -1,4 +1,4 @@
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { m } from 'framer-motion';
 import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck } from 'lucide-react';
@@ -19,6 +19,7 @@ import { getReviews } from '../../data/reviews';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import type { NextPageWithLayout } from '../../types';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
@@ -66,7 +67,7 @@ const PAIN_POINTS_ANIMATION = createFadeInAnimation();
 const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
 
-const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
+const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const disableMotionEffects = useDisableMotionEffects();
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
@@ -309,7 +310,7 @@ const PracticeRoom: NextPage<PracticeRoomProps> = ({ locale, reviewsData }) => {
   );
 };
 
-(PracticeRoom as NextPage & { hasHero?: boolean }).hasHero = true;
+PracticeRoom.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

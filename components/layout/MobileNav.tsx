@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { useIsIOSSafari } from '../../utils/deviceUtils';
 import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
+import { useFocusTrapDialog } from '../../utils/useFocusTrapDialog';
 
 interface NavGroup {
   id: string;
@@ -45,7 +46,6 @@ export const MobileNav = ({
   t
 }: MobileNavProps) => {
   const navRef = useRef<HTMLElement>(null);
-  const triggerRef = useRef<HTMLElement | null>(null);
   const bodyLockCountRef = useRef(0);
   const isIOSSafari = useIsIOSSafari();
   const shouldAnimate = !disableEffects;
@@ -69,61 +69,27 @@ export const MobileNav = ({
     bodyLockCountRef.current -= 1;
   }, []);
 
+  const { restoreFocus } = useFocusTrapDialog({
+    isOpen,
+    containerRef: navRef,
+    onClose,
+    eventTarget: 'window',
+    restoreOnCleanup: false,
+  });
+
   useEffect(() => {
     if (!isOpen) return;
 
-    // Capture the trigger element (previously focused element) when nav opens
-    triggerRef.current = document.activeElement as HTMLElement;
-
     const handleScroll = () => onClose();
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-
-    const handleFocusTrap = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-
-      const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
-        'button, a[href], input, [tabindex]:not([tabindex="-1"])'
-      );
-      if (!focusableElements || focusableElements.length === 0) return;
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          firstElement.focus();
-          e.preventDefault();
-        }
-      }
-    };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('keydown', handleEsc);
-    window.addEventListener('keydown', handleFocusTrap);
 
     if (bodyLockCountRef.current === 0) {
       acquireBodyLock();
     }
 
-    // Set initial focus to first focusable element in nav
-    const focusableElements = navRef.current?.querySelectorAll<HTMLElement>(
-      'button, a[href], input, [tabindex]:not([tabindex="-1"])'
-    );
-    if (focusableElements && focusableElements.length > 0) {
-      focusableElements[0].focus();
-    }
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('keydown', handleEsc);
-      window.removeEventListener('keydown', handleFocusTrap);
     };
   }, [acquireBodyLock, isOpen, onClose]);
 
@@ -137,9 +103,7 @@ export const MobileNav = ({
 
   const handleExitComplete = () => {
     releaseBodyLock();
-    if (triggerRef.current && triggerRef.current.focus) {
-      triggerRef.current.focus();
-    }
+    restoreFocus();
   };
 
   return (

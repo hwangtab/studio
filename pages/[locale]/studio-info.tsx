@@ -1,5 +1,5 @@
 import React from 'react';
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import { m } from 'framer-motion';
 import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
 import { createEnterAnimation, createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import type { NextPageWithLayout } from '../../types';
 
 interface StudioInfoProps {
   locale: Locale;
@@ -29,7 +30,7 @@ const INTRO_IMAGE_ANIMATION = createEnterAnimation({ axis: 'x', distance: -30, d
 const INTRO_TEXT_ANIMATION = createEnterAnimation({ axis: 'x', distance: 30, duration: 0.6, delay: 0.4 });
 const EQUIPMENT_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 
-const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
+const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
   const disableMotionEffects = useDisableMotionEffects();
@@ -183,7 +184,7 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
   );
 };
 
-(Studio as NextPage<StudioInfoProps> & { hasHero?: boolean }).hasHero = true;
+Studio.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

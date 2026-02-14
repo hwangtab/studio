@@ -1,4 +1,4 @@
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { m } from 'framer-motion';
 import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen } from 'lucide-react';
@@ -15,6 +15,7 @@ import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import type { NextPageWithLayout } from '../../types';
 
 interface CurriculumCardProps {
     step: string;
@@ -53,7 +54,7 @@ interface LessonProps {
     reviewsData: ReturnType<typeof getReviews>;
 }
 
-const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
+const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
     const { t } = useTranslation('common', { lng: locale });
     const disableMotionEffects = useDisableMotionEffects();
     const whySectionRevealProps = disableMotionEffects
@@ -296,7 +297,7 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
     );
 };
 
-(Lesson as NextPage<LessonProps> & { hasHero?: boolean }).hasHero = true;
+Lesson.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

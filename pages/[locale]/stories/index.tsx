@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import type { GetStaticProps, GetStaticPaths } from 'next';
 import { useTranslation } from 'react-i18next';
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
@@ -12,13 +12,14 @@ import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { useDisableMotionEffects } from '../../../utils/deviceUtils';
+import type { NextPageWithLayout } from '../../../types';
 
 interface StoriesPageProps {
   locale: Locale;
   stories: Story[];
 }
 
-const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
+const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(8);
   const { t } = useTranslation('common', { lng: locale });
@@ -157,7 +158,7 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
   );
 };
 
-(StoriesPage as NextPage & { hasHero?: boolean }).hasHero = true;
+StoriesPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

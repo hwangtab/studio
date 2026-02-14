@@ -26,19 +26,9 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   // Consolidated Theme Management
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // 1. Initial Load - localStorage만 사용
-    try {
-      const savedTheme = localStorage.getItem('darkMode');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const isDark = savedTheme === 'true' || (savedTheme === null && prefersDark);
-      setIsDarkMode(isDark);
-    } catch (error) {
-      console.warn('Failed to read dark mode preference', error);
-    } finally {
-      setHasThemeLoaded(true);
-    }
+    if (typeof document === 'undefined') return;
+    setIsDarkMode(document.documentElement.classList.contains('dark'));
+    setHasThemeLoaded(true);
   }, []);
 
   // Theme 적용 및 theme-color 동적 갱신

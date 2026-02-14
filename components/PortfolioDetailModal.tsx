@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { m, Variants, useReducedMotion } from 'framer-motion';
 import { X, Share2, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { defaultLocale, type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock';
 import { useDisableMotionEffects } from '../utils/deviceUtils';
+import { useFocusTrapDialog } from '../utils/useFocusTrapDialog';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -51,61 +52,23 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
   const siteConfig = getSiteConfig(locale);
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const triggerRef = useRef<HTMLElement | null>(null);
-  const handleEsc = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    },
-    [onClose]
-  );
+
+  useFocusTrapDialog({
+    isOpen: Boolean(item),
+    containerRef: modalRef,
+    onClose,
+    initialFocusRef: closeButtonRef,
+  });
 
   useEffect(() => {
     if (!item) return;
 
-    triggerRef.current = document.activeElement as HTMLElement;
-
-    document.addEventListener('keydown', handleEsc);
     lockBodyScroll();
 
-    const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
-      'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
-    );
-    if (focusableElements && focusableElements.length > 0) {
-      (closeButtonRef.current || focusableElements[0]).focus();
-    }
-
-    const handleFocusTrap = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-      const nodes = modalRef.current?.querySelectorAll<HTMLElement>(
-        'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
-      );
-      if (!nodes || nodes.length === 0) return;
-
-      const firstElement = nodes[0];
-      const lastElement = nodes[nodes.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        }
-      } else if (document.activeElement === lastElement) {
-        firstElement.focus();
-        e.preventDefault();
-      }
-    };
-
-    document.addEventListener('keydown', handleFocusTrap);
-
     return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.removeEventListener('keydown', handleFocusTrap);
       unlockBodyScroll();
-      if (triggerRef.current && triggerRef.current.focus) {
-        triggerRef.current.focus();
-      }
     };
-  }, [handleEsc, item]);
+  }, [item]);
 
   if (!item) return null;
 

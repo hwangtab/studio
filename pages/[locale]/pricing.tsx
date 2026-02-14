@@ -1,4 +1,4 @@
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import ContactCTA from '../../components/common/ContactCTA';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
+import type { NextPageWithLayout } from '../../types';
 
 interface PricingProps {
   locale: Locale;
@@ -32,7 +33,7 @@ interface Offer {
   recommended?: boolean;
 }
 
-const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) => {
+const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const {
     VAT_NOTICE,
@@ -355,8 +356,7 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
   );
 };
 
-// Use type assertion for custom property
-(Pricing as NextPage<PricingProps> & { hasHero?: boolean }).hasHero = true;
+Pricing.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

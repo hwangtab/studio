@@ -1,5 +1,5 @@
 import React from 'react';
-import type { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import { m } from 'framer-motion';
 import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,7 @@ import { getReviews } from '../../data/reviews';
 import { generateHowToSchema } from '../../utils/schemaGenerator';
 import { createEnterAnimation } from '../../utils/animationUtils';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import type { NextPageWithLayout } from '../../types';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Lightbulb,
@@ -42,7 +43,7 @@ interface AboutProps {
 
 const ADVANTAGES_GRID_ANIMATION = createEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
 
-const About: NextPage<AboutProps> = ({ locale, servicesData, reviewsData }) => {
+const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const disableMotionEffects = useDisableMotionEffects();
   const { coreServices, productionProcess, advantages } = servicesData;
@@ -293,7 +294,7 @@ const About: NextPage<AboutProps> = ({ locale, servicesData, reviewsData }) => {
   );
 };
 
-(About as NextPage & { hasHero?: boolean }).hasHero = true;
+About.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

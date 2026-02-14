@@ -1,5 +1,5 @@
 import React from 'react';
-import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
@@ -22,6 +22,7 @@ import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { useDisableMotionEffects } from '../../../utils/deviceUtils';
 import { createEnterAnimation } from '../../../utils/animationUtils';
+import type { NextPageWithLayout } from '../../../types';
 
 interface StoryDetailPageProps {
   locale: Locale;
@@ -31,7 +32,7 @@ interface StoryDetailPageProps {
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
 
-const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
+const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const disableMotionEffects = useDisableMotionEffects();
@@ -205,7 +206,7 @@ const StoryDetailPage: NextPage<StoryDetailPageProps> = ({ locale, story, relate
   );
 };
 
-(StoryDetailPage as NextPage & { hasHero?: boolean }).hasHero = true;
+StoryDetailPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const preRenderedPaths = getStoryPaths().filter(
