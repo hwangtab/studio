@@ -14,7 +14,7 @@ import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
 import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
-import { getI18nStaticProps } from '../../../lib/getStatic';
+import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
@@ -188,7 +188,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = (params?.locale as Locale) || 'ko';
+  const locale = resolveLocaleParam(params?.locale);
   const portfolioItems = getPortfolioItems(locale);
   const item = portfolioItems.find((p) => p.id === params!.id);
   const categories = getCategories(locale);
@@ -197,14 +197,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return { notFound: true };
   }
 
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
+  return buildPageStaticProps(
+    locale,
+    {
       item,
-      categories
+      categories,
     },
-    revalidate: 3600,
-  };
+    { revalidate: 3600 }
+  );
 };
 
 export default PortfolioDetailPage;

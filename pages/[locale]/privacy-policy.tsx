@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { Section } from '../../components/ui/Section';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
 interface PrivacyPolicyProps {
@@ -263,15 +263,7 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = params?.locale || 'ko';
-
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
-    },
-    revalidate: 86400,
-  };
-};
+export const getStaticProps: GetStaticProps = async ({ params }) =>
+  buildPageStaticProps(params?.locale, {}, { revalidate: 86400 });
 
 export default PrivacyPolicyPage;

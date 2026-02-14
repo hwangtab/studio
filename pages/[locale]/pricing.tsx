@@ -12,7 +12,7 @@ import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
 import ContactCTA from '../../components/common/ContactCTA';
 import QuickAnswers from '../../components/ui/QuickAnswers';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
 interface PricingProps {
@@ -360,17 +360,17 @@ const Pricing: NextPage<PricingProps> = ({ locale, pricingData, reviewsData }) =
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = (params?.locale as Locale) || 'ko';
+  const locale = resolveLocaleParam(params?.locale);
   const pricingData = getPricingData(locale);
   const reviewsData = getReviews(locale);
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
+  return buildPageStaticProps(
+    locale,
+    {
       pricingData,
       reviewsData,
     },
-    revalidate: 86400,
-  };
+    { revalidate: 86400 }
+  );
 };
 
 export default Pricing;

@@ -9,7 +9,7 @@ import ContactCTA from '../../../components/common/ContactCTA';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { useDisableMotionEffects } from '../../../utils/deviceUtils';
 
@@ -162,15 +162,16 @@ const StoriesPage: NextPage<StoriesPageProps> = ({ locale, stories }) => {
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params }) => {
-  const locale = params?.locale || 'ko';
-  const stories = getAllStories(locale as string);
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
+  const locale = resolveLocaleParam(params?.locale);
+  const stories = getAllStories(locale);
+
+  return buildPageStaticProps(
+    locale,
+    {
       stories,
     },
-    revalidate: 1800,
-  };
+    { revalidate: 1800 }
+  );
 };
 
 export default StoriesPage;

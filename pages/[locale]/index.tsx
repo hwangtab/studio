@@ -18,8 +18,8 @@ import { Section } from '../../components/ui/Section';
 import { getHomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
 import { getReviews } from '../../data/reviews'; // Added import
-import { getI18nStaticProps } from '../../lib/getStatic';
-import { locales, type Locale } from '../../lib/i18n';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
+import { type Locale } from '../../lib/i18n';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -192,25 +192,24 @@ const Home = ({ locale, homeData, faqData, reviewsData }: HomeProps) => { // Add
 (Home as React.FC<HomeProps> & { hasHero?: boolean }).hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = locales.map((locale) => ({ params: { locale } }));
-  return { paths, fallback: false };
+  return getCommonStaticPaths();
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = (params?.locale as Locale) || 'ko';
+  const locale = resolveLocaleParam(params?.locale);
   const homeData = getHomeData(locale);
   const faqData = getFaqData(locale);
   const reviewsData = getReviews(locale); // Added fetch
 
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
+  return buildPageStaticProps(
+    locale,
+    {
       homeData,
       faqData,
       reviewsData, // Added to props
     },
-    revalidate: 3600,
-  };
+    { revalidate: 3600 }
+  );
 };
 
 export default Home;

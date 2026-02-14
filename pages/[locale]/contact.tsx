@@ -1,29 +1,18 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import React from 'react';
 import { m } from 'framer-motion';
 import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { NextPageWithLayout } from '../../types';
 import { useDisableMotionEffects } from '../../utils/deviceUtils';
-import {
-  getContactValidationMessage,
-  getSubmitErrorMessages,
-  getValidationFallbacks,
-} from '../../utils/contactMessages';
-import {
-  getFirstContactValidationError,
-  toContactFormFields,
-  validateContactField,
-  validateContactForm,
-  type ContactField,
-  type ContactValidationCode,
-} from '../../utils/contactValidation';
+import { getValidationFallbacks } from '../../utils/contactMessages';
+import { useContactForm } from '../../utils/useContactForm';
 
 interface ContactProps {
   locale: Locale;
@@ -35,9 +24,6 @@ interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   error?: string;
 }
-
-const isContactField = (value: string): value is ContactField =>
-  value === 'name' || value === 'email' || value === 'phone' || value === 'message';
 
 const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps) => (
   <div className="relative mb-4">
@@ -63,25 +49,19 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const disableMotionEffects = useDisableMotionEffects();
   const validationCopy = getValidationFallbacks(locale);
-  const submitErrorCopy = getSubmitErrorMessages(locale);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    message: '',
-    company: '',
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitMessage, setSubmitMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [canRetrySubmit, setCanRetrySubmit] = useState(false);
-  const [lastSubmittedData, setLastSubmittedData] = useState<typeof formData | null>(null);
-  const [attribution, setAttribution] = useState<{
-    utm_source?: string;
-    utm_medium?: string;
-    utm_campaign?: string;
-    referrer?: string;
-  }>({});
+  const {
+    formData,
+    errors,
+    submitMessage,
+    isSubmitSuccess,
+    isSubmitting,
+    canRetrySubmit,
+    retryLabel,
+    errorCount,
+    handleChange,
+    handleSubmit,
+    handleRetrySubmit,
+  } = useContactForm({ locale, t });
   const siteConfig = getSiteConfig(locale);
   const infoCardMotionProps = disableMotionEffects
     ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
@@ -100,170 +80,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const interactiveMotionProps = disableMotionEffects
     ? {}
     : { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const params = new URLSearchParams(window.location.search);
-    setAttribution({
-      utm_source: params.get('utm_source') || undefined,
-      utm_medium: params.get('utm_medium') || undefined,
-      utm_campaign: params.get('utm_campaign') || undefined,
-      referrer: document.referrer || undefined,
-    });
-  }, []);
-
-  const getValidationMessage = (code?: ContactValidationCode): string =>
-    getContactValidationMessage(code, locale, t);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    const nextFormData = { ...formData, [name]: value };
-    setFormData(nextFormData);
-
-    if (isContactField(name)) {
-      const code = validateContactField(name, toContactFormFields(nextFormData));
-      setErrors((prev) => ({ ...prev, [name]: getValidationMessage(code) }));
-    }
-  };
-
-  const submitWithPayload = async (payload: typeof formData) => {
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 12000);
-
-    try {
-      const response = await fetch('/api/contact/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...payload, ...attribution }),
-        signal: controller.signal,
-      });
-
-      const result = await response.json();
-      const localeMessages = submitErrorCopy;
-
-      if (response.ok && result.success) {
-        setSubmitMessage(t('contact.form.success'));
-        setFormData({ name: '', phone: '', email: '', message: '', company: '' });
-        setCanRetrySubmit(false);
-        setLastSubmittedData(null);
-        return;
-      }
-
-      if (response.status === 400 && typeof result?.field === 'string') {
-        const field = result.field;
-        if (isContactField(field)) {
-          const codeFromServer = typeof result?.code === 'string'
-            ? (result.code as ContactValidationCode)
-            : validateContactField(field, toContactFormFields(payload));
-          const message = getValidationMessage(codeFromServer) || localeMessages.invalidRequest;
-          setErrors((prev) => ({ ...prev, [field]: message }));
-          document.getElementById(field)?.focus();
-          setSubmitMessage('');
-          setCanRetrySubmit(false);
-          return;
-        }
-      }
-
-      if (response.status === 400 || response.status === 415) {
-        setSubmitMessage(localeMessages.invalidRequest);
-        setCanRetrySubmit(false);
-        return;
-      }
-
-      if (response.status === 403) {
-        setSubmitMessage(localeMessages.forbidden);
-        setCanRetrySubmit(false);
-        return;
-      }
-
-      if (response.status === 502) {
-        setSubmitMessage(localeMessages.unavailable);
-        setCanRetrySubmit(true);
-        return;
-      }
-
-      if (response.status === 429) {
-        setSubmitMessage(localeMessages.tooMany);
-        setCanRetrySubmit(true);
-        return;
-      }
-      if (response.status === 503) {
-        setSubmitMessage(localeMessages.unavailable);
-        setCanRetrySubmit(true);
-        return;
-      }
-
-      if (response.status === 504) {
-        setSubmitMessage(localeMessages.timeout);
-        setCanRetrySubmit(true);
-        return;
-      }
-
-      setSubmitMessage(result.message || t('contact.form.error'));
-      setCanRetrySubmit(response.status >= 500);
-    } catch (error) {
-      const localeMessages = submitErrorCopy;
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        setSubmitMessage(localeMessages.timeout);
-        setCanRetrySubmit(true);
-        return;
-      }
-
-      console.error('Error sending email:', error);
-      setSubmitMessage(t('contact.form.error'));
-      setCanRetrySubmit(true);
-    } finally {
-      window.clearTimeout(timeout);
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const validationResult = validateContactForm(toContactFormFields(formData));
-    const newErrors: Record<ContactField, string> = {
-      name: getValidationMessage(validationResult.errors.name),
-      email: getValidationMessage(validationResult.errors.email),
-      phone: getValidationMessage(validationResult.errors.phone),
-      message: getValidationMessage(validationResult.errors.message),
-    };
-
-    setErrors((prev) => ({ ...prev, ...newErrors }));
-
-    if (!validationResult.isValid) {
-      const firstError = getFirstContactValidationError(validationResult.errors);
-      if (firstError) {
-        document.getElementById(firstError.field)?.focus();
-      }
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitMessage('');
-    setCanRetrySubmit(false);
-
-    const normalizedFormData: typeof formData = {
-      ...formData,
-      name: validationResult.normalized.name,
-      email: validationResult.normalized.email,
-      phone: validationResult.normalized.phone,
-      message: validationResult.normalized.message,
-    };
-    setLastSubmittedData(normalizedFormData);
-
-    await submitWithPayload(normalizedFormData);
-  };
-
-  const handleRetrySubmit = () => {
-    if (!lastSubmittedData || isSubmitting) return;
-    setIsSubmitting(true);
-    setSubmitMessage('');
-    setCanRetrySubmit(false);
-    void submitWithPayload(lastSubmittedData);
-  };
   const noticeList = t('contact.notice.list', { returnObjects: true });
   const resolvedNoticeList = Array.isArray(noticeList) ? noticeList : null;
 
@@ -387,9 +203,9 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                 <div
                   role="status"
                   aria-live="polite"
-                  className={`mb-4 p-4 rounded-md flex items-center ${submitMessage === t('contact.form.success') ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
+                  className={`mb-4 p-4 rounded-md flex items-center ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
                 >
-                  {submitMessage === t('contact.form.success') && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
+                  {isSubmitSuccess && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
                   {submitMessage}
                 </div>
               )}
@@ -399,14 +215,14 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   onClick={handleRetrySubmit}
                   className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                 >
-                  {submitErrorCopy.retry}
+                  {retryLabel}
                 </button>
               )}
-              {Object.keys(errors).filter(key => errors[key]).length > 1 && (
+              {errorCount > 1 && (
                 <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
                   <p className="text-sm font-medium text-red-800 dark:text-red-300">
                     {t('contact.form.errorsFound', {
-                      count: Object.keys(errors).filter(key => errors[key]).length,
+                      count: errorCount,
                       defaultValue: validationCopy.errorsFound,
                     })}
                   </p>
@@ -562,14 +378,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 Contact.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = params?.locale || 'ko';
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
-    },
-    revalidate: 86400,
-  };
-};
+export const getStaticProps: GetStaticProps = async ({ params }) =>
+  buildPageStaticProps(params?.locale, {}, { revalidate: 86400 });
 
 export default Contact;

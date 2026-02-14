@@ -11,7 +11,7 @@ import ImageHero from '../../components/common/ImageHero';
 import { getServicesData } from '../../data/services';
 import { Section } from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
@@ -298,17 +298,18 @@ const About: NextPage<AboutProps> = ({ locale, servicesData, reviewsData }) => {
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = (params?.locale as Locale) || 'ko';
+  const locale = resolveLocaleParam(params?.locale);
   const servicesData = getServicesData(locale);
   const reviewsData = getReviews(locale);
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
+
+  return buildPageStaticProps(
+    locale,
+    {
       servicesData,
       reviewsData,
     },
-    revalidate: 86400,
-  };
+    { revalidate: 86400 }
+  );
 };
 
 export default About;

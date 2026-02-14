@@ -15,6 +15,10 @@ const initializeServerI18n = (locale: Locale) => {
   return resources;
 };
 
+interface BuildPageStaticPropsOptions {
+  revalidate?: number;
+}
+
 export const getCommonStaticPaths = async () => {
   return {
     paths: locales.map((locale) => ({ params: { locale } })),
@@ -22,8 +26,18 @@ export const getCommonStaticPaths = async () => {
   };
 };
 
+export const resolveLocaleParam = (localeParam: unknown): Locale => {
+  if (typeof localeParam !== 'string') {
+    return defaultLocale;
+  }
+
+  return locales.includes(localeParam as Locale)
+    ? (localeParam as Locale)
+    : defaultLocale;
+};
+
 export const getCommonStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = (params?.locale as Locale) || defaultLocale;
+  const locale = resolveLocaleParam(params?.locale);
   const i18nResources = initializeServerI18n(locale) || getLocaleI18nResourcesServer(locale);
   return {
     props: {
@@ -34,11 +48,27 @@ export const getCommonStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getI18nStaticProps = (localeParam: unknown) => {
-  const locale = (localeParam as Locale) || defaultLocale;
+  const locale = resolveLocaleParam(localeParam);
   const i18nResources = initializeServerI18n(locale) || getLocaleI18nResourcesServer(locale);
 
   return {
     locale,
     i18nResources,
+  };
+};
+
+export const buildPageStaticProps = <TProps extends Record<string, unknown>>(
+  localeParam: unknown,
+  extraProps: TProps = {} as TProps,
+  options: BuildPageStaticPropsOptions = {}
+) => {
+  const baseProps = getI18nStaticProps(localeParam);
+
+  return {
+    props: {
+      ...baseProps,
+      ...extraProps,
+    },
+    ...(typeof options.revalidate === 'number' ? { revalidate: options.revalidate } : {}),
   };
 };

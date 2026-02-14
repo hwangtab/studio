@@ -236,6 +236,28 @@ interface EmailJSPayload {
     accessToken?: string;
 }
 
+interface EmailJSConfig {
+    serviceId: string;
+    templateId: string;
+    publicKey: string;
+    privateKey?: string;
+}
+
+interface SanitizedContactPayload {
+    name: string;
+    phone: string;
+    email: string;
+    message: string;
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    referrer?: string;
+}
+
+const EMAILJS_ENDPOINT = 'https://api.emailjs.com/api/v1.0/email/send';
+const EMAIL_REQUEST_TIMEOUT_MS = 12000;
+const SUCCESS_RESPONSE = { success: true, message: 'Message sent successfully' };
+
 const validationCodeMessageMap: Record<ContactValidationCode, string> = {
     name_required: 'Name is required',
     name_min: 'Name must be 2-100 characters',
@@ -252,141 +274,227 @@ const validationCodeMessageMap: Record<ContactValidationCode, string> = {
     message_max: 'Message must be 10-5000 characters',
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Vary', 'Origin');
+const toOptionalString = (value: unknown): string | undefined =>
+    typeof value === 'string' ? value : undefined;
 
+const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<string, unknown> | null => {
     if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
+        res.status(405).json({ message: 'Method not allowed' });
+        return null;
     }
 
     const contentType = req.headers['content-type'];
     if (contentType && !String(contentType).toLowerCase().includes('application/json')) {
-        return res.status(415).json({ message: 'Content-Type must be application/json' });
+        res.status(415).json({ message: 'Content-Type must be application/json' });
+        return null;
     }
 
     if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {
-        return res.status(400).json({ message: 'Invalid request body' });
+        res.status(400).json({ message: 'Invalid request body' });
+        return null;
     }
 
-    const payload = req.body as Record<string, unknown>;
+    return req.body as Record<string, unknown>;
+};
 
-    const { name, phone, email, message, company, utm_source, utm_medium, utm_campaign, referrer } = payload;
+const isHoneypotSubmission = (company: unknown): boolean =>
+    typeof company === 'string' && company.trim().length > 0;
 
-    // 1. Honeypot validation
-    if (company && typeof company === 'string' && company.trim().length > 0) {
-        // Silently ignore honeypot submissions
-        return res.status(200).json({ success: true, message: 'Message sent successfully' });
-    }
-
-    // 2. CSRF protection - validate origin/referer
+const isAllowedRequestOrigin = (req: NextApiRequest): boolean => {
     const allowedOrigins = getAllowedOrigins();
     const requestOrigin = normalizeOrigin(String(req.headers.origin || req.headers.referer || ''));
-    if (!requestOrigin || !allowedOrigins.includes(requestOrigin)) {
-        return res.status(403).json({ message: 'Forbidden' });
-    }
+    return Boolean(requestOrigin && allowedOrigins.includes(requestOrigin));
+};
 
-    // 3. Rate limiting by IP
+const enforceRateLimit = async (req: NextApiRequest, res: NextApiResponse): Promise<boolean> => {
     const rateLimitSubject = getRateLimitSubject(req);
 
     try {
         await checkRateLimit(rateLimitSubject);
+        return true;
     } catch (error: unknown) {
         if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') {
-            return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+            res.status(429).json({ message: 'Too many requests. Please try again later.' });
+            return false;
         }
         if (error instanceof Error && error.message === 'RATE_LIMIT_UNAVAILABLE') {
-            return res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
+            res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
+            return false;
         }
         console.error('[API Route Error] Rate limit check failed:', error);
-        return res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error' });
+        return false;
     }
+};
 
-    // 4. Shared validation
-    const contactFields = toContactFormFields({ name, phone, email, message });
+const validateAndSanitizeContactPayload = (
+    payload: Record<string, unknown>
+): {
+    validationError?: { field: string; code: ContactValidationCode; message: string };
+    sanitized?: SanitizedContactPayload;
+} => {
+    const contactFields = toContactFormFields({
+        name: payload.name,
+        phone: payload.phone,
+        email: payload.email,
+        message: payload.message,
+    });
     const validationResult = validateContactForm(contactFields);
     const firstValidationError = getFirstContactValidationError(validationResult.errors);
 
     if (firstValidationError) {
+        return {
+            validationError: {
+                field: firstValidationError.field,
+                code: firstValidationError.code,
+                message: validationCodeMessageMap[firstValidationError.code],
+            },
+        };
+    }
+
+    return {
+        sanitized: {
+            name: validator.escape(validationResult.normalized.name),
+            email: validator.normalizeEmail(validationResult.normalized.email) || validationResult.normalized.email,
+            message: validator.escape(validationResult.normalized.message),
+            phone: validator.escape(validationResult.normalized.phone),
+            utm_source: toOptionalString(payload.utm_source),
+            utm_medium: toOptionalString(payload.utm_medium),
+            utm_campaign: toOptionalString(payload.utm_campaign),
+            referrer: toOptionalString(payload.referrer),
+        },
+    };
+};
+
+const getEmailJsConfig = (): EmailJSConfig | null => {
+    const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const templateId = process.env.EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+    const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+        return null;
+    }
+
+    if (!privateKey) {
+        console.warn('[API Warning] EMAILJS_PRIVATE_KEY is not set. If EmailJS requires it (non-browser apps), calls will fail.');
+    }
+
+    return {
+        serviceId,
+        templateId,
+        publicKey,
+        privateKey: privateKey || undefined,
+    };
+};
+
+const buildEmailJsPayload = (config: EmailJSConfig, sanitized: SanitizedContactPayload): EmailJSPayload => {
+    const payload: EmailJSPayload = {
+        service_id: config.serviceId,
+        template_id: config.templateId,
+        user_id: config.publicKey,
+        template_params: {
+            name: sanitized.name,
+            phone: sanitized.phone,
+            email: sanitized.email,
+            message: sanitized.message,
+            utm_source: sanitized.utm_source,
+            utm_medium: sanitized.utm_medium,
+            utm_campaign: sanitized.utm_campaign,
+            referrer: sanitized.referrer,
+        },
+    };
+
+    if (config.privateKey) {
+        payload.accessToken = config.privateKey;
+    }
+
+    return payload;
+};
+
+const sendEmailJsRequest = async (payload: EmailJSPayload): Promise<Response> => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), EMAIL_REQUEST_TIMEOUT_MS);
+
+    return fetch(EMAILJS_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        cache: 'no-store',
+        signal: controller.signal,
+    }).finally(() => {
+        clearTimeout(timeoutId);
+    });
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Vary', 'Origin');
+
+    const payload = getRequestPayload(req, res);
+    if (!payload) {
+        return;
+    }
+
+    // 1. Honeypot validation
+    if (isHoneypotSubmission(payload.company)) {
+        // Silently ignore honeypot submissions
+        return res.status(200).json(SUCCESS_RESPONSE);
+    }
+
+    // 2. CSRF protection - validate origin/referer
+    if (!isAllowedRequestOrigin(req)) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // 3. Rate limiting by IP
+    if (!(await enforceRateLimit(req, res))) {
+        return;
+    }
+
+    // 4. Shared validation
+    const { validationError, sanitized } = validateAndSanitizeContactPayload(payload);
+    if (validationError) {
         return res.status(400).json({
-            message: validationCodeMessageMap[firstValidationError.code],
-            field: firstValidationError.field,
-            code: firstValidationError.code,
+            message: validationError.message,
+            field: validationError.field,
+            code: validationError.code,
         });
     }
 
-    // Sanitization
-    const sanitizedName = validator.escape(validationResult.normalized.name);
-    const sanitizedEmail = validator.normalizeEmail(validationResult.normalized.email) || validationResult.normalized.email;
-    const sanitizedMessage = validator.escape(validationResult.normalized.message);
-    const sanitizedPhone = validator.escape(validationResult.normalized.phone);
+    if (!sanitized) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 
     // 5. Send email via EmailJS REST API
+    const emailJsConfig = getEmailJsConfig();
+    if (!emailJsConfig) {
+        console.error('[API Error] Missing EmailJS configuration');
+        return res.status(500).json({ message: 'Server configuration error' });
+    }
+
+    const emailJsPayload = buildEmailJsPayload(emailJsConfig, sanitized);
+
     try {
-        const serviceId = process.env.EMAILJS_SERVICE_ID;
-        const templateId = process.env.EMAILJS_TEMPLATE_ID;
-        const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-        const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-
-        if (!serviceId || !templateId || !publicKey) {
-            console.error('[API Error] Missing EmailJS configuration');
-            return res.status(500).json({ message: 'Server configuration error' });
-        }
-
-        if (!privateKey) {
-            console.warn('[API Warning] EMAILJS_PRIVATE_KEY is not set. If EmailJS requires it (non-browser apps), calls will fail.');
-        }
-
-        const payload: EmailJSPayload = {
-            service_id: serviceId,
-            template_id: templateId,
-            user_id: publicKey,
-            template_params: {
-                name: sanitizedName,
-                phone: sanitizedPhone,
-                email: sanitizedEmail,
-                message: sanitizedMessage,
-                utm_source: typeof utm_source === 'string' ? utm_source : undefined,
-                utm_medium: typeof utm_medium === 'string' ? utm_medium : undefined,
-                utm_campaign: typeof utm_campaign === 'string' ? utm_campaign : undefined,
-                referrer: typeof referrer === 'string' ? referrer : undefined,
-            },
-        };
-
-        if (privateKey) {
-            payload.accessToken = privateKey;
-        }
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
-
-        const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-            cache: 'no-store',
-            signal: controller.signal,
-        }).finally(() => {
-            clearTimeout(timeoutId);
-        });
+        const response = await sendEmailJsRequest(emailJsPayload);
 
         if (response.ok) {
-            return res.status(200).json({ success: true, message: 'Message sent successfully' });
-        } else {
-            const errorText = await response.text();
-            // Log full error on server, but send generic message to client
-            console.error('[EmailJS Error]', {
-                status: response.status,
-                error: errorText,
-                serviceId
-            });
-            // Map external service errors to 502 Bad Gateway to distinguish from internal CSRF 403
-            return res.status(502).json({
-                message: 'Failed to send message. Please try again later.'
-            });
+            return res.status(200).json(SUCCESS_RESPONSE);
         }
+
+        const errorText = await response.text();
+        // Log full error on server, but send generic message to client
+        console.error('[EmailJS Error]', {
+            status: response.status,
+            error: errorText,
+            serviceId: emailJsConfig.serviceId
+        });
+        // Map external service errors to 502 Bad Gateway to distinguish from internal CSRF 403
+        return res.status(502).json({
+            message: 'Failed to send message. Please try again later.'
+        });
     } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {
             return res.status(504).json({ message: 'Email service timeout. Please try again later.' });

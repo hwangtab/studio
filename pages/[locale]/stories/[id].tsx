@@ -17,7 +17,7 @@ import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
-import { getI18nStaticProps } from '../../../lib/getStatic';
+import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { useDisableMotionEffects } from '../../../utils/deviceUtils';
@@ -219,19 +219,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = params?.locale || 'ko';
+  const locale = resolveLocaleParam(params?.locale);
   try {
-    const story = await getStoryDetail(params!.id as string, locale as string);
-    const relatedStories = getRelatedStories(locale as string, params!.id as string, 3);
+    const story = await getStoryDetail(params!.id as string, locale);
+    const relatedStories = getRelatedStories(locale, params!.id as string, 3);
 
-    return {
-      props: {
-        ...getI18nStaticProps(locale),
+    return buildPageStaticProps(
+      locale,
+      {
         story,
         relatedStories,
       },
-      revalidate: 3600,
-    };
+      { revalidate: 3600 }
+    );
   } catch (error) {
     console.error('Story detail error:', error);
     return {

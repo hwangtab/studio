@@ -10,7 +10,7 @@ import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
@@ -300,15 +300,15 @@ const Lesson: NextPage<LessonProps> = ({ locale, reviewsData }) => {
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const locale = (params?.locale as Locale) || 'ko';
+    const locale = resolveLocaleParam(params?.locale);
     const reviewsData = getReviews(locale);
-    return {
-        props: {
-            ...getI18nStaticProps(locale),
+    return buildPageStaticProps(
+        locale,
+        {
             reviewsData,
         },
-        revalidate: 86400,
-    };
+        { revalidate: 86400 }
+    );
 };
 
 export default Lesson;

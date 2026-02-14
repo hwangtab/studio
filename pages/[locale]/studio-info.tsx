@@ -11,7 +11,7 @@ import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
-import { getCommonStaticPaths, getI18nStaticProps } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
@@ -187,17 +187,18 @@ const Studio: NextPage<StudioInfoProps> = ({ locale, equipmentData, reviewsData 
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const locale = params?.locale || 'ko';
-  const equipmentData = getEquipmentData(locale as Locale);
-  const reviewsData = getReviews(locale as Locale);
-  return {
-    props: {
-      ...getI18nStaticProps(locale),
+  const locale = resolveLocaleParam(params?.locale);
+  const equipmentData = getEquipmentData(locale);
+  const reviewsData = getReviews(locale);
+
+  return buildPageStaticProps(
+    locale,
+    {
       equipmentData,
       reviewsData,
     },
-    revalidate: 86400,
-  };
+    { revalidate: 86400 }
+  );
 };
 
 export default Studio;
