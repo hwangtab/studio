@@ -2,7 +2,6 @@ import React from 'react';
 import { m } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
 import type { Locale } from '../../lib/i18n';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface ImageHeroProps {
   title: React.ReactNode;
@@ -31,8 +30,6 @@ const ImageHero = ({
   locale = 'ko',
   priority = false,
 }: ImageHeroProps) => {
-  const disableMotionEffects = useDisableMotionEffects();
-
   const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
 
   const alignmentClass = textAlign === 'center'
@@ -41,9 +38,7 @@ const ImageHero = ({
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
 
   const verticalAlignClass = 'justify-center pt-32 pb-12';
-  const textMotionProps = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-    : { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay: 0.2 } };
+  const textMotionProps = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay: 0.2 } };
 
   return (
     <section

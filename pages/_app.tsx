@@ -7,7 +7,6 @@ import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
-import { useDisableMotionEffects, useIsIOSSafari } from '../utils/deviceUtils';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -32,8 +31,6 @@ const localeLoadingMessage: Record<Locale, string> = {
 
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
-  const isIOSSafari = useIsIOSSafari();
-  const disableMotionEffects = useDisableMotionEffects();
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
   const routeLocale = router.asPath.split('?')[0].split('/')[1];
@@ -52,13 +49,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    if (isIOSSafari) {
-      document.documentElement.classList.add('ios-safari');
-    }
-    return () => {
-      document.documentElement.classList.remove('ios-safari');
-    };
-  }, [isIOSSafari]);
+  }, []);
 
   useEffect(() => {
     let isCancelled = false;
@@ -125,19 +116,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     );
   }
 
-  const routeTransitionProps = disableMotionEffects
-    ? {
-      initial: false,
-      animate: { opacity: 1 },
-      exit: { opacity: 1 },
-      transition: { duration: 0 },
-    }
-    : {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      exit: { opacity: 0 },
-      transition: { duration: 0.06, ease: 'linear' as const },
-    };
+  const routeTransitionProps = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.06, ease: 'linear' as const },
+  };
 
   return (
     <div className={montserrat.variable}>
@@ -151,7 +135,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>
-            <MotionConfig reducedMotion={isIOSSafari ? 'always' : 'user'}>
+            <MotionConfig reducedMotion="user">
               <Layout hasHero={hasHero} locale={locale}>
                 <AnimatePresence mode="wait" initial={true} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'auto' })}>
                   <m.div
