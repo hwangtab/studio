@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { m } from 'framer-motion';
 import { ArrowRight, Mic2, Music, Disc, Mic, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
+
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import FAQSection from '../../components/ui/FAQSection';
@@ -15,12 +15,13 @@ import MediaGallery from '../../components/ui/MediaGallery';
 import ReviewSection from '../../components/ui/ReviewSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
+import { PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
 import { getHomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
 import { getReviews } from '../../data/reviews'; // Added import
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 import type { NextPageWithLayout } from '../../types';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -39,18 +40,17 @@ interface HomeProps {
 const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, reviewsData }) => { // Added prop
   const { heroContent, homeServices, studioImages, seo } = homeData;
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
+
 
   // Helper to generate locale-aware links
   const getLink = (path: string) => `/${locale}${path}`;
   const homeQuickAnswers = React.useMemo(() => faqData.slice(0, 3), [faqData]);
-  const homeServicesMotionProps = disableMotionEffects
-    ? {
-      initial: false,
-      animate: { opacity: 1 },
-      transition: { duration: 0 },
-    }
-    : PAGE_CONTENT_ANIMATION;
+  const homeServicesMotionProps = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.5 }
+  };
 
   return (
     <div className="overflow-visible">

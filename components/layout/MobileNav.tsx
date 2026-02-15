@@ -25,7 +25,6 @@ interface MobileNavProps {
   locale: Locale;
   isTransparent: boolean;
   navId: string;
-  disableEffects?: boolean;
   expandedGroups: string[];
   toggleGroup: (group: string) => void;
   t: TFunction;
@@ -40,7 +39,6 @@ export const MobileNav = ({
   toggleDarkMode,
   locale,
   navId,
-  disableEffects = false,
   expandedGroups,
   toggleGroup,
   t
@@ -48,15 +46,10 @@ export const MobileNav = ({
   const navRef = useRef<HTMLElement>(null);
   const bodyLockCountRef = useRef(0);
   const isIOSSafari = useIsIOSSafari();
-  const shouldAnimate = !disableEffects;
-  const navInitial = shouldAnimate
-    ? (isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 })
-    : false;
+  const navInitial = isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 };
   const navAnimate = isIOSSafari ? { opacity: 1 } : { opacity: 1, scaleY: 1 };
-  const navExit = shouldAnimate
-    ? (isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 })
-    : navAnimate;
-  const shouldAnimateGroups = shouldAnimate && !isIOSSafari;
+  const navExit = isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 };
+  const shouldAnimateGroups = !isIOSSafari;
 
   const acquireBodyLock = useCallback(() => {
     lockBodyScroll();
@@ -108,19 +101,19 @@ export const MobileNav = ({
 
   return (
     <AnimatePresence initial={false} onExitComplete={handleExitComplete}>
-       {isOpen && (
-         <m.nav
-           id={navId}
-           ref={navRef}
-           role="dialog"
-           aria-modal="true"
-           aria-label={t('nav.mobileMenu')}
-           initial={navInitial}
-           animate={navAnimate}
-           exit={navExit}
-           transition={shouldAnimate ? (isIOSSafari ? { duration: 0, ease: 'linear' as const } : { duration: 0.2, ease: 'easeOut' as const }) : { duration: 0 }}
-           className={`xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 ${disableEffects ? '' : 'backdrop-blur-xl'} shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top ${isIOSSafari ? 'ios-stable-layer' : ''}`}
-         >
+      {isOpen && (
+        <m.nav
+          id={navId}
+          ref={navRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={t('nav.mobileMenu')}
+          initial={navInitial}
+          animate={navAnimate}
+          exit={navExit}
+          transition={isIOSSafari ? { duration: 0, ease: 'linear' as const } : { duration: 0.2, ease: 'easeOut' as const }}
+          className={`xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top ${isIOSSafari ? 'ios-stable-layer' : ''}`}
+        >
           <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Mobile Theme/Language Switcher */}
             <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">

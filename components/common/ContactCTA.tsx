@@ -7,7 +7,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { useDisableMotionEffects, useIsIOSSafari } from '../../utils/deviceUtils';
+import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -36,7 +36,7 @@ const ContactCTA = ({
 }: ContactCTAProps) => {
     const { t } = useTranslation('common', { lng: locale });
     const isIOSSafari = useIsIOSSafari();
-    const disableMotionEffects = useDisableMotionEffects();
+
     const siteConfig = getSiteConfig(locale);
     const isKorean = locale === 'ko';
     const getLink = (path: string) => `/${locale}${path}`;
@@ -46,18 +46,12 @@ const ContactCTA = ({
     const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
     const imageHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
 
-    const contactCtaMotionProps = disableMotionEffects
-        ? {
-            initial: false,
-            animate: { opacity: 1 },
-            transition: { duration: 0 }
-        }
-        : {
-            initial: { opacity: 0, y: 30 },
-            whileInView: { opacity: 1, y: 0 },
-            viewport: { once: true },
-            transition: { duration: 0.8 }
-        };
+    const contactCtaMotionProps = {
+        initial: { opacity: 0, y: 30 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true },
+        transition: { duration: 0.8 }
+    };
 
     return (
         <m.div

@@ -13,7 +13,6 @@ import type { Story } from '../types/story';
 interface StoryCardProps {
   story: Story;
   locale?: Locale;
-  disableEffects?: boolean;
   labels?: {
     defaultCategory: string;
     noDate: string;
@@ -28,8 +27,7 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
-const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, labels }: StoryCardProps) => {
-  const shouldAnimate = !disableEffects;
+const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) => {
   const thumbnailUrl = React.useMemo(() => {
     if (story.thumbnail) return story.thumbnail;
     if (!story.content) return null;
@@ -52,18 +50,18 @@ const StoryCard = React.memo(({ story, locale = 'ko', disableEffects = false, la
   return (
     <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
       <m.div
-        className={`bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full ${shouldAnimate ? 'transition-shadow duration-300 hover:shadow-lg' : ''}`}
+        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full transition-shadow duration-300 hover:shadow-lg"
         variants={cardVariants}
-        initial={disableEffects ? false : "hidden"}
-        whileInView={disableEffects ? undefined : "visible"}
-        viewport={disableEffects ? undefined : { once: true }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
       >
         <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
           {thumbnailUrl ? (
             <ResponsiveImage
               src={thumbnailUrl}
               alt={story.title}
-              className={`object-cover ${shouldAnimate ? 'transition-transform duration-300 hover:scale-105' : ''}`}
+              className="object-cover transition-transform duration-300 hover:scale-105"
               sizes="(min-width: 1024px) 320px, (min-width: 640px) 260px, 100vw"
               fill={true}
             />

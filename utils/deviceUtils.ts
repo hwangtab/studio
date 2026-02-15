@@ -52,7 +52,3 @@ export const useIsIOSSafari = (): boolean => {
     getIOSSafariServerSnapshot
   );
 };
-
-export const useDisableMotionEffects = (): boolean => {
-  return useIsIOSSafari();
-};

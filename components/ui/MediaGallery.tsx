@@ -1,8 +1,7 @@
 import React from 'react';
-import { m, useReducedMotion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface MediaImage {
   src: string;
@@ -15,9 +14,6 @@ interface MediaGalleryProps {
 }
 
 const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
-  const shouldReduceMotion = useReducedMotion();
-  const disableMotionEffects = useDisableMotionEffects();
-  const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = React.useState(false);
   const [showRightArrow, setShowRightArrow] = React.useState(true);
@@ -61,7 +57,7 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
     if (scrollRef.current) {
       const { clientWidth } = scrollRef.current;
       const scrollAmount = direction === 'left' ? -clientWidth : clientWidth;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: shouldAnimate ? 'smooth' : 'auto' });
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -69,8 +65,8 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
     if (scrollRef.current) {
       const { clientWidth } = scrollRef.current;
       // Approximate scroll position based on width
-      const scrollAmount = index * clientWidth * 0.85; 
-      scrollRef.current.scrollTo({ left: scrollAmount, behavior: shouldAnimate ? 'smooth' : 'auto' });
+      const scrollAmount = index * clientWidth * 0.85;
+      scrollRef.current.scrollTo({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -110,8 +106,8 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
             className="flex-none w-[85%] sm:w-[45%] lg:w-[31%] snap-center"
           >
             <m.div
-              whileHover={shouldAnimate ? { scale: 1.02 } : undefined}
-              transition={shouldAnimate ? { duration: 0.3 } : { duration: 0 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
               className="h-full"
             >
               <ResponsiveImage
@@ -138,17 +134,15 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
                 key={i}
                 type="button"
                 onClick={() => scrollToImage(i)}
-                className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${
-                  i === activeIndex 
-                    ? 'text-primary' 
+                className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${i === activeIndex
+                    ? 'text-primary'
                     : 'text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500'
-                }`}
+                  }`}
                 aria-label={`Go to image ${i + 1}`}
               >
                 <span
-                  className={`rounded-full transition-all duration-300 ${
-                    i === activeIndex ? 'w-6 h-2 bg-current' : 'w-2 h-2 bg-current'
-                  }`}
+                  className={`rounded-full transition-all duration-300 ${i === activeIndex ? 'w-6 h-2 bg-current' : 'w-2 h-2 bg-current'
+                    }`}
                 />
               </button>
             ))}

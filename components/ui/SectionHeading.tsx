@@ -2,7 +2,7 @@ import React from 'react';
 import { m } from 'framer-motion';
 import { cn } from '../../lib/utils';
 import { SCROLL_REVEAL } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 
 interface SectionHeadingProps {
   icon?: React.ElementType<{ className?: string }>;
@@ -23,7 +23,7 @@ const SectionHeading = ({
   as: Component = 'h2',
   titleClassName
 }: SectionHeadingProps) => {
-  const disableMotionEffects = useDisableMotionEffects();
+
   const alignmentClasses = {
     center: 'text-center',
     left: 'text-left',
@@ -36,10 +36,10 @@ const SectionHeading = ({
         "mb-12",
         className
       )}
-      initial={disableMotionEffects ? false : "initial"}
-      whileInView={disableMotionEffects ? undefined : "whileInView"}
-      viewport={disableMotionEffects ? undefined : { once: true, margin: "-10% 0px -10% 0px" }}
-      variants={disableMotionEffects ? undefined : SCROLL_REVEAL}
+      initial="initial"
+      whileInView="whileInView"
+      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+      variants={SCROLL_REVEAL}
     >
       {Icon && (
         <div className={cn(

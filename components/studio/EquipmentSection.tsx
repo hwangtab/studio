@@ -1,7 +1,6 @@
 import { m } from 'framer-motion';
 import React from 'react';
-import { FADE_IN_UP, HOVER_Y } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 export interface EquipmentSectionProps {
     title: string;
@@ -10,16 +9,14 @@ export interface EquipmentSectionProps {
 }
 
 const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => {
-    const disableMotionEffects = useDisableMotionEffects();
-    const motionProps = disableMotionEffects
-        ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-        : FADE_IN_UP;
+    const motionProps = createFadeInAnimation();
 
     return (
         <m.div
             className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
             {...motionProps}
-            whileHover={disableMotionEffects ? undefined : HOVER_Y}
+            whileHover={HOVER_SCALE}
+            transition={{ duration: 0.3 }}
         >
             <h3 className="typo-card-title mb-4 flex items-center">
                 <Icon className="mr-2 text-primary dark:text-primary-light" size={20} aria-hidden="true" />

@@ -15,8 +15,8 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
-import { createEnterAnimation, createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+import { createEnterAnimation, createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+
 import type { NextPageWithLayout } from '../../types';
 
 interface StudioInfoProps {
@@ -28,25 +28,14 @@ interface StudioInfoProps {
 const INTRO_SECTION_ANIMATION = createFadeInAnimation();
 const INTRO_IMAGE_ANIMATION = createEnterAnimation({ axis: 'x', distance: -30, duration: 0.6, delay: 0.2 });
 const INTRO_TEXT_ANIMATION = createEnterAnimation({ axis: 'x', distance: 30, duration: 0.6, delay: 0.4 });
-const EQUIPMENT_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
-
 const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
   const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
-  const introSectionAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
-    : INTRO_SECTION_ANIMATION;
-  const introImageAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-    : INTRO_IMAGE_ANIMATION;
-  const introTextAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-    : INTRO_TEXT_ANIMATION;
-  const equipmentSectionAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
-    : EQUIPMENT_SECTION_ANIMATION;
+  const introSectionAnimation = createInViewEnterAnimation({ axis: 'y' });
+  const introImageAnimation = createInViewEnterAnimation({ axis: 'x', distance: -50, delay: 0.2 });
+  const introTextAnimation = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
+  const equipmentSectionAnimation = createInViewEnterAnimation({});
 
   return (
     <>
@@ -80,7 +69,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
               <ResponsiveImage
                 src="/images/hardware2.jpg"
                 alt={t('studioInfo.intro.imageAlt')}
-                className={`w-full h-full object-cover ${disableMotionEffects ? '' : 'transform group-hover:scale-105 transition-transform duration-700'}`}
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -132,8 +121,8 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
               <m.div
                 key={index}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={disableMotionEffects ? undefined : HOVER_SCALE}
-                transition={disableMotionEffects ? { duration: 0 } : { duration: 0.3 }}
+                whileHover={HOVER_SCALE}
+                transition={{ duration: 0.3 }}
               >
                 <ResponsiveImage
                   src={image.src}

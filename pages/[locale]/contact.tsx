@@ -10,7 +10,7 @@ import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic'
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { NextPageWithLayout } from '../../types';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 import { getValidationFallbacks } from '../../utils/contactMessages';
 import { useContactForm } from '../../utils/useContactForm';
 
@@ -47,7 +47,7 @@ const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps)
 
 const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
+
   const validationCopy = getValidationFallbacks(locale);
   const {
     formData,
@@ -63,23 +63,15 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     handleRetrySubmit,
   } = useContactForm({ locale, t });
   const siteConfig = getSiteConfig(locale);
-  const infoCardMotionProps = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-    : { initial: { opacity: 0, x: -50 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.5 } };
-  const directionsMotionProps = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-    : {
-      initial: { opacity: 0, y: 20 },
-      whileInView: { opacity: 1, y: 0 },
-      viewport: { once: true },
-      transition: { duration: 0.5, delay: 0.4 },
-    };
-  const formCardMotionProps = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-    : { initial: { opacity: 0, x: 50 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.5, delay: 0.2 } };
-  const interactiveMotionProps = disableMotionEffects
-    ? {}
-    : { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
+  const infoCardMotionProps = { initial: { opacity: 0, x: -50 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.5 } };
+  const directionsMotionProps = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.5, delay: 0.4 },
+  };
+  const formCardMotionProps = { initial: { opacity: 0, x: 50 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.5, delay: 0.2 } };
+  const interactiveMotionProps = { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
   const noticeList = t('contact.notice.list', { returnObjects: true });
   const resolvedNoticeList = Array.isArray(noticeList) ? noticeList : null;
 

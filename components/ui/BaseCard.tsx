@@ -3,7 +3,6 @@ import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface BaseCardProps {
     children: React.ReactNode;
@@ -30,9 +29,7 @@ const BaseCard = React.memo(({
     hoverEffect = true,
     enableAnimation = true,
 }: BaseCardProps) => {
-    const disableMotionEffects = useDisableMotionEffects();
     const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden";
-
 
     const variants = {
         default: "shadow-md border border-gray-100 dark:border-gray-700",
@@ -40,15 +37,12 @@ const BaseCard = React.memo(({
         outline: "border border-gray-200 dark:border-gray-700 bg-transparent",
     };
 
-    const shouldAnimate = enableAnimation && !disableMotionEffects;
-    const shouldHover = hoverEffect && !disableMotionEffects;
-
-    const animationProps = shouldAnimate ? {
+    const animationProps = enableAnimation ? {
         ...FADE_IN_UP,
-        whileHover: shouldHover ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
+        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
         transition: { ...FADE_IN_UP.transition, delay }
     } : {
-        whileHover: shouldHover ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
+        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
         transition: { duration: 0.2 }
     };
 

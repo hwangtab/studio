@@ -14,7 +14,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 import type { NextPageWithLayout } from '../../types';
 
 interface CurriculumCardProps {
@@ -56,13 +56,9 @@ interface LessonProps {
 
 const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
     const { t } = useTranslation('common', { lng: locale });
-    const disableMotionEffects = useDisableMotionEffects();
-    const whySectionRevealProps = disableMotionEffects
-        ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-        : createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
-    const pricingSectionRevealProps = disableMotionEffects
-        ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-        : createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
+
+    const whySectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
+    const pricingSectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
 
     const lessonQuickAnswers = React.useMemo(() => ([
         {

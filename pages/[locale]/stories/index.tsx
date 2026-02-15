@@ -11,7 +11,7 @@ import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
-import { useDisableMotionEffects } from '../../../utils/deviceUtils';
+
 import type { NextPageWithLayout } from '../../../types';
 
 interface StoriesPageProps {
@@ -23,7 +23,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   const [activeCategory, setActiveCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(8);
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
+
 
   const categories = useMemo(() => {
     const uniqueKeys = new Set(stories.map((story) => story.categoryKey).filter(Boolean));
@@ -123,7 +123,6 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
                   key={story.slug}
                   story={story}
                   locale={locale}
-                  disableEffects={disableMotionEffects}
                   labels={storyCardLabels}
                 />
               ))}

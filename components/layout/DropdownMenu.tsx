@@ -14,7 +14,7 @@ interface DropdownMenuProps {
     isTransparent: boolean;
     currentPath: string;
     onNavigate: () => void;
-    disableEffects?: boolean;
+
 }
 
 export const DropdownMenu = ({
@@ -23,7 +23,6 @@ export const DropdownMenu = ({
     isTransparent,
     currentPath,
     onNavigate,
-    disableEffects = false,
 }: DropdownMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -31,7 +30,7 @@ export const DropdownMenu = ({
     const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const menuId = React.useId();
-    const shouldAnimate = !disableEffects;
+
 
     const handleMouseEnter = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -117,7 +116,7 @@ export const DropdownMenu = ({
                 {label}
                 <m.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={shouldAnimate ? { duration: 0.2 } : { duration: 0 }}
+                    transition={{ duration: 0.2 }}
                 >
                     <ChevronDown size={14} />
                 </m.div>
@@ -127,11 +126,11 @@ export const DropdownMenu = ({
                 {isOpen && (
                     <m.div
                         id={menuId}
-                        initial={shouldAnimate ? { opacity: 0, y: 10, scale: 0.95 } : false}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={shouldAnimate ? { opacity: 0, y: 5, scale: 0.95 } : { opacity: 1, y: 0, scale: 1 }}
-                        transition={shouldAnimate ? { duration: 0.2, ease: "easeOut" } : { duration: 0 }}
-                        className={`absolute left-0 mt-1 w-48 rounded-xl bg-white/95 dark:bg-gray-900/95 ${disableEffects ? '' : 'backdrop-blur-xl'} shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50 origin-top-left`}
+                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute left-0 mt-1 w-48 rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50 origin-top-left"
                     >
                         <div className="py-2" role="menu" aria-orientation="vertical">
                             {items.map((item, index) => {

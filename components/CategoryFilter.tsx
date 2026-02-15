@@ -1,9 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { m, useReducedMotion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { HOVER_SCALE, TAP_SCALE } from '../utils/animationUtils';
-import { useDisableMotionEffects } from '../utils/deviceUtils';
 
 interface CategoryBase {
   id: string;
@@ -47,9 +46,6 @@ const CategoryFilter = ({
   locale
 }: CategoryFilterProps) => {
   const { t } = useTranslation('common', { lng: locale });
-  const shouldReduceMotion = useReducedMotion();
-  const disableMotionEffects = useDisableMotionEffects();
-  const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
   const resolvedTitleText = titleText || t('common.categoryFilter.title');
   const resolvedAllLabel = allLabel || t('common.categoryFilter.all');
   const mappedCategories: CategoryBase[] = propCategories.map(category => {
@@ -89,7 +85,7 @@ const CategoryFilter = ({
       )}
 
       <div className="relative">
-        <div className={`flex ${gap} overflow-x-auto md:flex-wrap md:overflow-x-visible scrollbar-hide pb-2 ${shouldAnimate ? 'scroll-smooth' : ''}`}>
+        <div className={`flex ${gap} overflow-x-auto md:flex-wrap md:overflow-x-visible scrollbar-hide pb-2 scroll-smooth`}>
           {categories.map((category) => {
             const isActive = activeCategory === category.id;
             const customStyle = useCustomColors && isActive && category.color
@@ -101,8 +97,8 @@ const CategoryFilter = ({
                 key={category.id}
                 type="button"
                 onClick={() => setActiveCategory(category.id)}
-                animate={shouldAnimate ? { scale: isActive ? 1.05 : 1 } : undefined}
-                transition={shouldAnimate ? { duration: 0.2, ease: 'easeOut' } : { duration: 0 }}
+                animate={{ scale: isActive ? 1.05 : 1 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 className={`${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow transition-transform duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                   ? useCustomColors && category.color
                     ? 'text-white shadow-lg'
@@ -110,8 +106,8 @@ const CategoryFilter = ({
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 style={customStyle}
-                whileHover={shouldAnimate ? HOVER_SCALE : undefined}
-                whileTap={shouldAnimate ? TAP_SCALE : undefined}
+                whileHover={HOVER_SCALE}
+                whileTap={TAP_SCALE}
                 aria-pressed={isActive}
               >
                 {category.label}

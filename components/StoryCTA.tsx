@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
-import { m, useReducedMotion, useInView } from 'framer-motion';
+import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
-import { useDisableMotionEffects, useIsIOSSafari } from '../utils/deviceUtils';
+import { useIsIOSSafari } from '../utils/deviceUtils';
 
 import type { Locale } from '../lib/i18n';
 
@@ -17,8 +17,6 @@ interface StoryCTAProps {
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
     const { t } = useTranslation('common', { lng: locale });
     const isIOSSafari = useIsIOSSafari();
-    const disableMotionEffects = useDisableMotionEffects();
-    const shouldReduceMotion = useReducedMotion();
 
     const getLink = (path: string) => `/${locale}${path}`;
 
@@ -143,23 +141,15 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
     const current = content[type];
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
-    const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
     const visualRef = useRef<HTMLDivElement>(null);
     const isVisualInView = useInView(visualRef, { amount: 0.35 });
-    const shouldAnimateBars = shouldAnimate && isVisualInView;
 
-    const ctaMotionProps = shouldAnimate
-        ? {
-            initial: { opacity: 0, y: 20 },
-            whileInView: { opacity: 1, y: 0 },
-            viewport: { once: true },
-            transition: { duration: 0.5 }
-        }
-        : {
-            initial: false,
-            animate: { opacity: 1 },
-            transition: { duration: 0 }
-        };
+    const ctaMotionProps = {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true },
+        transition: { duration: 0.5 }
+    };
 
     return (
         <m.div
@@ -208,11 +198,9 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                             {heights.map((h, i) => (
                                 <m.div
                                     key={i}
-                                    initial={shouldAnimate ? { height: '20%' } : false}
-                                    animate={shouldAnimate
-                                        ? (shouldAnimateBars ? { height: `${h}%` } : { height: '20%' })
-                                        : { height: `${h}%` }}
-                                    transition={shouldAnimateBars
+                                    initial={{ height: '20%' }}
+                                    animate={isVisualInView ? { height: `${h}%` } : { height: '20%' }}
+                                    transition={isVisualInView
                                         ? {
                                             repeat: Infinity,
                                             repeatType: "reverse",

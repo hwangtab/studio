@@ -1,10 +1,10 @@
 import React from 'react';
-import { m, useReducedMotion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Disc } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
-import { useDisableMotionEffects, useIsIOSSafari } from '../../utils/deviceUtils';
+
 
 interface Track {
     id: string;
@@ -28,13 +28,8 @@ interface TrackInfoProps {
 
 const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: TrackInfoProps) => {
     const { t } = useTranslation('common', { lng: locale });
-    const shouldReduceMotion = useReducedMotion();
-    const isIOSSafari = useIsIOSSafari();
-    const disableMotionEffects = useDisableMotionEffects();
-    const shouldAnimateNowPlaying = isPlaying && !shouldReduceMotion && !isIOSSafari;
-    const albumMotionProps = disableMotionEffects
-        ? { initial: false, animate: { scale: 1, opacity: 1 }, transition: { duration: 0 } }
-        : { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { duration: 0.5 } };
+    const shouldAnimateNowPlaying = isPlaying;
+    const albumMotionProps = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { duration: 0.5 } };
     const trackNumberLabel = trackNumber < 10 ? `0${trackNumber}` : String(trackNumber);
     return (
         <div className="flex flex-col items-center text-center">

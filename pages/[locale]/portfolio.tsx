@@ -21,7 +21,7 @@ import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/d
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 import { createEnterAnimation } from '../../utils/animationUtils';
 
 interface PortfolioProps {
@@ -42,7 +42,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
+
   const [selectedCategory, setSelectedCategory] = useState<PortfolioCategory>({
     id: 'all',
     name: t('nav.portfolio'),
@@ -51,12 +51,8 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   });
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
-  const sampleTracksAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-    : SAMPLE_TRACKS_ANIMATION;
-  const projectsAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-    : PROJECTS_ANIMATION;
+  const sampleTracksAnimation = SAMPLE_TRACKS_ANIMATION;
+  const projectsAnimation = PROJECTS_ANIMATION;
 
   const filteredItems = useMemo(
     () => filterPortfolioItems(initialPortfolioItems, selectedCategory.id === 'all' ? 'all' : selectedCategory.id),
@@ -203,7 +199,6 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
                   key={item.id}
                   {...item}
                   index={index}
-                  disableEffects={disableMotionEffects}
                   viewProjectLabel={t('portfolio.viewProject')}
                   onClick={() => handleCardClick(item)}
                 />

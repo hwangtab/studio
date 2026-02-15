@@ -9,7 +9,7 @@ import Playlist from './Playlist';
 import type { AudioTrack } from '../../types/data';
 import { FADE_IN_UP } from '../../utils/animationUtils';
 import { defaultLocale, type Locale } from '../../lib/i18n';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 
 interface AudioPlayerProps {
     tracks: readonly AudioTrack[];
@@ -17,10 +17,7 @@ interface AudioPlayerProps {
 }
 
 const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
-    const disableMotionEffects = useDisableMotionEffects();
-    const audioPlayerMotionProps = disableMotionEffects
-        ? { initial: false, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-        : FADE_IN_UP;
+    const audioPlayerMotionProps = FADE_IN_UP;
 
     const {
         currentTrack,

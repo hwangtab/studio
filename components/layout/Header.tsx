@@ -14,10 +14,9 @@ interface HeaderProps {
   hasHero: boolean;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
-  disableEffects?: boolean;
 }
 
-export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isScrolled, hasHero, isDarkMode, toggleDarkMode, disableEffects = false }, ref) => {
+export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isScrolled, hasHero, isDarkMode, toggleDarkMode }, ref) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const router = useRouter();
@@ -70,10 +69,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 py-4 ${disableEffects ? 'transition-[background-color,box-shadow] duration-150 ios-stable-layer' : 'transition-[background-color,backdrop-filter,box-shadow] duration-300 transform-gpu'} ${!isTransparent
-        ? disableEffects
-          ? 'bg-white/95 dark:bg-gray-900/95 shadow-md shadow-gray-200/40 dark:shadow-gray-950/40'
-          : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
+      className={`fixed w-full z-50 py-4 transition-[background-color,backdrop-filter,box-shadow] duration-300 transform-gpu ${!isTransparent
+        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
         : 'bg-transparent'
         }`}
     >
@@ -84,7 +81,6 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               locale={locale}
               isTransparent={isTransparent}
               isDarkMode={isDarkMode}
-              disableEffects={disableEffects}
               siteConfig={siteConfig}
               onLogoClick={() => setIsMenuOpen(false)}
             />
@@ -96,7 +92,6 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               isTransparent={isTransparent}
               currentPath={currentPath}
               onNavigate={handleNavigate}
-              disableEffects={disableEffects}
             />
           </div>
 
@@ -111,7 +106,6 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               isMenuOpen={isMenuOpen}
               setIsMenuOpen={setIsMenuOpen}
               mobileNavId={mobileNavId}
-              disableEffects={disableEffects}
             />
           </div>
         </div>
@@ -127,7 +121,6 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         locale={locale}
         navId={mobileNavId}
         isTransparent={isTransparent}
-        disableEffects={disableEffects}
         expandedGroups={expandedGroups}
         toggleGroup={toggleGroup}
         t={t}

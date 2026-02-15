@@ -18,7 +18,6 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
 import type { NextPageWithLayout } from '../../types';
 
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
@@ -69,7 +68,6 @@ const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
 
 const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
     {
@@ -116,15 +114,9 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     },
     url: `${siteConfig.url}/${locale}/practice-room`,
   }), [t, siteConfig, locale, schemaLanguage]);
-  const painPointsAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
-    : PAIN_POINTS_ANIMATION;
-  const audienceSectionAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
-    : AUDIENCE_SECTION_ANIMATION;
-  const featuresSectionAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1 }, transition: { duration: 0 } }
-    : FEATURES_SECTION_ANIMATION;
+  const painPointsAnimation = PAIN_POINTS_ANIMATION;
+  const audienceSectionAnimation = AUDIENCE_SECTION_ANIMATION;
+  const featuresSectionAnimation = FEATURES_SECTION_ANIMATION;
 
   return (
     <>
@@ -219,13 +211,13 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
               <m.div
                 key={i}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={disableMotionEffects ? undefined : HOVER_SCALE}
-                transition={disableMotionEffects ? { duration: 0 } : { duration: 0.3 }}
+                whileHover={HOVER_SCALE}
+                transition={{ duration: 0.3 }}
               >
                 <ResponsiveImage
                   src={`/images/room${i}.jpg`}
                   alt={t('practiceRoom.gallery.alt', { index: i })}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   pictureClassName="block h-full"
                   loading="lazy"
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"

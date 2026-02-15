@@ -17,7 +17,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { generateHowToSchema } from '../../utils/schemaGenerator';
 import { createEnterAnimation } from '../../utils/animationUtils';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
+
 import type { NextPageWithLayout } from '../../types';
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -45,7 +45,7 @@ const ADVANTAGES_GRID_ANIMATION = createEnterAnimation({ axis: 'x', distance: 50
 
 const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const disableMotionEffects = useDisableMotionEffects();
+
   const { coreServices, productionProcess, advantages } = servicesData;
   const siteConfig = getSiteConfig(locale);
 
@@ -59,9 +59,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
     'P2D',
     locale
   ), [productionProcess, locale, t]);
-  const advantagesGridAnimation = disableMotionEffects
-    ? { initial: false, animate: { opacity: 1, x: 0 }, transition: { duration: 0 } }
-    : ADVANTAGES_GRID_ANIMATION;
+  const advantagesGridAnimation = ADVANTAGES_GRID_ANIMATION;
 
   return (
     <div className="overflow-visible">

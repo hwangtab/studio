@@ -1,9 +1,8 @@
 import React from 'react';
-import { m, useReducedMotion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
-import { useDisableMotionEffects } from '../../utils/deviceUtils';
 
 interface VolumeControlsProps {
     volume: number;
@@ -21,14 +20,11 @@ const VolumeControls = ({
     locale = defaultLocale,
 }: VolumeControlsProps) => {
     const { t } = useTranslation('common', { lng: locale });
-    const shouldReduceMotion = useReducedMotion();
-    const disableMotionEffects = useDisableMotionEffects();
-    const shouldAnimate = !disableMotionEffects && !shouldReduceMotion;
     return (
         <div className="flex items-center justify-center sm:justify-start space-x-2">
             <m.button
-                whileHover={shouldAnimate ? { scale: 1.1 } : undefined}
-                whileTap={shouldAnimate ? { scale: 0.95 } : undefined}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={onToggleMute}
                 className="text-gray-400 hover:text-gray-900 dark:text-white/80 dark:hover:text-white transition-colors p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 aria-label={isMuted ? t('audioPlayer.unmute') : t('audioPlayer.mute')}
