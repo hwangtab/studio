@@ -19,36 +19,4 @@ export const detectIOSSafari = (): boolean => {
   return isIOSDevice && isWebKit && !isExcludedBrowser;
 };
 
-const canDetectInCurrentEnv = typeof window !== 'undefined' && typeof navigator !== 'undefined';
-let cachedIsIOSSafari = canDetectInCurrentEnv ? detectIOSSafari() : false;
-let hasResolvedIOSSafari = canDetectInCurrentEnv;
-const safariStoreListeners = new Set<() => void>();
 
-const subscribeIOSSafariStore = (listener: () => void) => {
-  safariStoreListeners.add(listener);
-  return () => safariStoreListeners.delete(listener);
-};
-
-const getIOSSafariSnapshot = () => cachedIsIOSSafari;
-const getIOSSafariServerSnapshot = () => false;
-
-const resolveIOSSafariOnce = () => {
-  if (hasResolvedIOSSafari || typeof window === 'undefined') {
-    return;
-  }
-  hasResolvedIOSSafari = true;
-  cachedIsIOSSafari = detectIOSSafari();
-  safariStoreListeners.forEach((listener) => listener());
-};
-
-export const useIsIOSSafari = (): boolean => {
-  return useSyncExternalStore(
-    (listener) => {
-      const unsubscribe = subscribeIOSSafariStore(listener);
-      resolveIOSSafariOnce();
-      return unsubscribe;
-    },
-    getIOSSafariSnapshot,
-    getIOSSafariServerSnapshot
-  );
-};

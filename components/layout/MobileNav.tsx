@@ -5,7 +5,6 @@ import { Sun, Moon, ChevronDown } from 'lucide-react';
 import { type TFunction } from 'i18next';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
-import { useIsIOSSafari } from '../../utils/deviceUtils';
 import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
 import { useFocusTrapDialog } from '../../utils/useFocusTrapDialog';
 
@@ -45,11 +44,7 @@ export const MobileNav = ({
 }: MobileNavProps) => {
   const navRef = useRef<HTMLElement>(null);
   const bodyLockCountRef = useRef(0);
-  const isIOSSafari = useIsIOSSafari();
-  const navInitial = isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 };
-  const navAnimate = isIOSSafari ? { opacity: 1 } : { opacity: 1, scaleY: 1 };
-  const navExit = isIOSSafari ? { opacity: 0 } : { opacity: 0, scaleY: 0 };
-  const shouldAnimateGroups = !isIOSSafari;
+
 
   const acquireBodyLock = useCallback(() => {
     lockBodyScroll();
@@ -108,11 +103,11 @@ export const MobileNav = ({
           role="dialog"
           aria-modal="true"
           aria-label={t('nav.mobileMenu')}
-          initial={navInitial}
-          animate={navAnimate}
-          exit={navExit}
-          transition={isIOSSafari ? { duration: 0, ease: 'linear' as const } : { duration: 0.2, ease: 'easeOut' as const }}
-          className={`xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top ${isIOSSafari ? 'ios-stable-layer' : ''}`}
+          initial={{ opacity: 0, scaleY: 0 }}
+          animate={{ opacity: 1, scaleY: 1 }}
+          exit={{ opacity: 0, scaleY: 0 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          className="xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
         >
           <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Mobile Theme/Language Switcher */}
@@ -152,10 +147,10 @@ export const MobileNav = ({
                 <AnimatePresence>
                   {expandedGroups.includes(group.id) && (
                     <m.div
-                      initial={shouldAnimateGroups ? { height: 0, opacity: 0 } : false}
+                      initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
-                      exit={shouldAnimateGroups ? { height: 0, opacity: 0 } : { height: 'auto', opacity: 1 }}
-                      transition={shouldAnimateGroups ? { duration: 0.2, ease: 'easeInOut' } : { duration: 0 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeInOut' }}
                       className="pl-4 space-y-1 overflow-hidden"
                     >
                       {group.items.map((item) => (

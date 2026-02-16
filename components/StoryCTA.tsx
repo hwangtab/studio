@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
-import { useIsIOSSafari } from '../utils/deviceUtils';
+
 
 import type { Locale } from '../lib/i18n';
 
@@ -16,7 +16,7 @@ interface StoryCTAProps {
 
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
     const { t } = useTranslation('common', { lng: locale });
-    const isIOSSafari = useIsIOSSafari();
+
 
     const getLink = (path: string) => `/${locale}${path}`;
 
@@ -154,11 +154,11 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     return (
         <m.div
             {...ctaMotionProps}
-            className={`my-16 relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.gradient} text-white shadow-xl ${isIOSSafari ? 'ios-stable-layer' : ''}`}
+            className={`my-16 relative overflow-hidden rounded-2xl bg-gradient-to-br ${current.gradient} text-white shadow-xl`}
         >
             {/* Background Decor */}
-            <div className={`absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full ${isIOSSafari ? '' : 'blur-2xl'}`} />
-            <div className={`absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/5 rounded-full ${isIOSSafari ? '' : 'blur-2xl'}`} />
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 md:p-10 gap-8">
                 <div className="flex-1 text-center md:text-left">
@@ -184,7 +184,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         </Link>
                         <Link
                             href={current.secondaryLink}
-                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors ${isIOSSafari ? '' : 'backdrop-blur-sm'} border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
+                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
                         >
                             <span className="min-w-0">{current.secondaryText}</span>
                         </Link>
@@ -193,7 +193,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
                 <div className="hidden md:block w-full max-w-xs lg:max-w-sm">
                     {/* Abstract Visual Representation */}
-                    <div ref={visualRef} className={`relative aspect-square rounded-xl overflow-hidden bg-black/20 ${isIOSSafari ? '' : 'backdrop-blur-sm'} border border-white/10 p-6 flex flex-col justify-center items-center`}>
+                    <div ref={visualRef} className="relative aspect-square rounded-xl overflow-hidden bg-black/20 backdrop-blur-sm border border-white/10 p-6 flex flex-col justify-center items-center">
                         <div className="w-full flex justify-between items-end h-32 gap-2 mb-4">
                             {heights.map((h, i) => (
                                 <m.div

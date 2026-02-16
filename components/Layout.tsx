@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
 import { ScrollProgress } from './common/ScrollProgress';
-import { useIsIOSSafari } from '../utils/deviceUtils';
 import { type Locale, defaultLocale } from '../lib/i18n';
 
 interface LayoutProps {
@@ -21,7 +20,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(80);
   const headerRef = useRef<HTMLElement | null>(null);
-  const isIOSSafari = useIsIOSSafari();
+
 
   // Consolidated Theme Management
   useEffect(() => {
@@ -64,14 +63,13 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       const nextHeight = Math.ceil(entries[0]?.contentRect?.height || 0);
       if (nextHeight > 0) {
         setHeaderHeight((prev) => {
-          const threshold = isIOSSafari ? 2 : 0;
-          return Math.abs(prev - nextHeight) > threshold ? nextHeight : prev;
+          return Math.abs(prev - nextHeight) > 0 ? nextHeight : prev;
         });
       }
     });
     observer.observe(headerRef.current);
     return () => observer.disconnect();
-  }, [isIOSSafari]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -82,10 +80,8 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       if (!ticking) {
         rafId = window.requestAnimationFrame(() => {
           const y = window.scrollY;
-          const enterThreshold = isIOSSafari ? 24 : 10;
-          const exitThreshold = isIOSSafari ? 8 : 10;
           setIsScrolled((prev) => {
-            const next = prev ? y > exitThreshold : y > enterThreshold;
+            const next = prev ? y > 10 : y > 10;
             return prev !== next ? next : prev;
           });
           ticking = false;
@@ -98,7 +94,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       window.removeEventListener('scroll', handleScroll);
       if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
-  }, [isIOSSafari]);
+  }, []);
 
   const isHome = router.pathname === '/[locale]';
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';

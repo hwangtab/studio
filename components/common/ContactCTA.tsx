@@ -7,7 +7,6 @@ import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { useIsIOSSafari } from '../../utils/deviceUtils';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -35,7 +34,7 @@ const ContactCTA = ({
     headingAs = 'h2',
 }: ContactCTAProps) => {
     const { t } = useTranslation('common', { lng: locale });
-    const isIOSSafari = useIsIOSSafari();
+
 
     const siteConfig = getSiteConfig(locale);
     const isKorean = locale === 'ko';
@@ -55,7 +54,7 @@ const ContactCTA = ({
 
     return (
         <m.div
-            className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${isIOSSafari ? 'ios-stable-layer' : ''} ${className}`}
+            className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
             {...contactCtaMotionProps}
         >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
