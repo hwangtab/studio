@@ -81,7 +81,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         rafId = window.requestAnimationFrame(() => {
           const y = window.scrollY;
           setIsScrolled((prev) => {
-            const next = prev ? y > 10 : y > 10;
+            const next = y > 10;
             return prev !== next ? next : prev;
           });
           ticking = false;
