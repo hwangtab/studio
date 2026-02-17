@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import { useTranslation } from 'react-i18next';
 import StoryCard from '../../../components/StoryCard';
@@ -25,6 +25,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
+  const sectionRef = useRef<HTMLDivElement>(null);
 
 
   const categories = useMemo(() => {
@@ -74,7 +75,11 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (sectionRef.current) {
+      const yOffset = -100; // Adjust for header
+      const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -99,7 +104,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
       <Section variant="default">
-        <div>
+        <div ref={sectionRef}>
           <div className="mb-8">
             <CategoryFilter
               activeCategory={activeCategory}
