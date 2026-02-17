@@ -62,13 +62,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 py-4 transition-[background-color,backdrop-filter,box-shadow] duration-300 transform-gpu ${!isTransparent
-        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-lg shadow-gray-200/50 dark:shadow-gray-950/50'
-        : 'bg-transparent'
+      className={`fixed w-full z-50 py-4 transition-[background-color,backdrop-filter,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
+        ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl backdrop-saturate-150 shadow-sm border-b border-gray-200/50 dark:border-gray-800/50'
+        : 'bg-transparent border-b border-transparent'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid h-12 grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4">
           <div className="justify-self-start">
             <HeaderBrand
               locale={locale}
