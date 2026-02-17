@@ -110,11 +110,16 @@ export const MobileNav = ({
           animate={{ opacity: 1, scaleY: 1 }}
           exit={{ opacity: 0, scaleY: 0 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          className="xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
+          className="xl:hidden z-40 bg-gradient-to-b from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-black/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
         >
           <div className="px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Mobile Theme/Language Switcher */}
-            <div className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden">
+            <m.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden"
+            >
               <button
                 type="button"
                 className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
@@ -131,10 +136,16 @@ export const MobileNav = ({
                 isFloating={false}
                 variant="inline"
               />
-            </div>
+            </m.div>
 
-            {navGroups.map((group) => (
-              <div key={group.id} className="space-y-2">
+            {navGroups.map((group, groupIndex) => (
+              <m.div 
+                key={group.id} 
+                className="space-y-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 + (groupIndex * 0.1) }}
+              >
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.id)}
@@ -172,7 +183,7 @@ export const MobileNav = ({
                     </m.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </m.div>
             ))}
           </div>
         </m.nav>
