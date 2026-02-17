@@ -20,6 +20,26 @@ export const LanguageSwitcher = ({
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = useCallback(() => {
+    if (variant === 'inline') return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsOpen(true);
+  }, [variant]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (variant === 'inline') return;
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 150);
+  }, [variant]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const getPathForLocale = useCallback((targetLocale: Locale) => {
     const path = router.asPath;
@@ -116,14 +136,18 @@ export const LanguageSwitcher = ({
   }
 
   return (
-    <div className="relative flex items-center">
-       <button
-         ref={buttonRef}
-         type="button"
-         onClick={() => setIsOpen((prev) => !prev)}
-         aria-haspopup="menu"
-         aria-expanded={isOpen}
-         aria-label={t('common.languageSelector')}
+    <div
+      className="relative flex items-center"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-label={t('common.languageSelector')}
         className={`
           inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]
@@ -152,7 +176,7 @@ export const LanguageSwitcher = ({
             shadow-2xl py-2 z-[100]
           `}
         >
-           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
+          <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
             {locales.map((locale) => (
               <li key={locale}>
                 <Link
