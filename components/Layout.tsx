@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
 import { ScrollProgress } from './common/ScrollProgress';
+import { ScrollToTop } from './ui/ScrollToTop';
 import { type Locale, defaultLocale } from '../lib/i18n';
 
 interface LayoutProps {
@@ -130,6 +131,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       <Footer locale={locale} />
+      <ScrollToTop />
     </div>
   );
 };
