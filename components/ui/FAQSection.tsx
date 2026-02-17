@@ -54,7 +54,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 id={`faq-button-${index}`}
                                 type="button"
                                 onClick={() => toggleAccordion(index)}
-                                className="w-full text-left px-6 py-5 flex items-start justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-750 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                                className="w-full text-left px-6 py-5 flex items-center justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-750 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                                 aria-expanded={activeIndex === index}
                                 aria-controls={`faq-panel-${index}`}
                             >
