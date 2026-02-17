@@ -192,6 +192,22 @@ code {
   background: linear-gradient(90deg, transparent, rgba(156, 163, 175, 0.5), transparent);
 }
 
+/* Link Underline Animation */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-bottom: 2px;
+}
+
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
 /* 다크 모드 대응 */
 .dark .prose br {
   background: linear-gradient(90deg, transparent, rgba(75, 85, 99, 0.5), transparent);
