@@ -110,7 +110,7 @@ export const LanguageSwitcher = ({
           <span className={`text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>▾</span>
         </button>
         {isOpen && (
-          <div className="pl-4 mt-1 space-y-1 pb-4">
+          <div className="pl-4 mt-3 space-y-1 pb-4">
             <div className={`grid ${menuGridClass} gap-2`}>
               {locales.map((locale) => (
                 <Link
