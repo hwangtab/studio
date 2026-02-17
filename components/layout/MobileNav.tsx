@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { m, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, ChevronDown } from 'lucide-react';
@@ -24,8 +24,6 @@ interface MobileNavProps {
   locale: Locale;
   isTransparent: boolean;
   navId: string;
-  expandedGroups: string[];
-  toggleGroup: (group: string) => void;
   t: TFunction;
 }
 
@@ -38,12 +36,17 @@ export const MobileNav = ({
   toggleDarkMode,
   locale,
   navId,
-  expandedGroups,
-  toggleGroup,
   t
 }: MobileNavProps) => {
   const navRef = useRef<HTMLElement>(null);
   const bodyLockCountRef = useRef(0);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
+
+  const toggleGroup = useCallback((group: string) => {
+    setExpandedGroups(prev =>
+      prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
+    );
+  }, []);
 
 
   const acquireBodyLock = useCallback(() => {

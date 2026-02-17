@@ -18,18 +18,11 @@ interface HeaderProps {
 
 export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isScrolled, hasHero, isDarkMode, toggleDarkMode }, ref) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const router = useRouter();
   const mobileNavId = React.useId();
   const { t } = useTranslation('common', { lng: locale });
   const currentPath = router.asPath.split('?')[0].split('#')[0];
   const siteConfig = getSiteConfig(locale);
-
-  const toggleGroup = useCallback((group: string) => {
-    setExpandedGroups(prev =>
-      prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
-    );
-  }, []);
 
   const navGroups = useMemo(() => [
     {
@@ -121,8 +114,6 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         locale={locale}
         navId={mobileNavId}
         isTransparent={isTransparent}
-        expandedGroups={expandedGroups}
-        toggleGroup={toggleGroup}
         t={t}
       />
     </header>
