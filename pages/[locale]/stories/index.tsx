@@ -9,6 +9,7 @@ import ContactCTA from '../../../components/common/ContactCTA';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
+import Pagination from '../../../components/ui/Pagination';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 
@@ -21,7 +22,8 @@ interface StoriesPageProps {
 
 const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
 
 
@@ -38,12 +40,14 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
     return stories.filter((story) => story.categoryKey === activeCategory);
   }, [stories, activeCategory]);
 
+  const totalPages = Math.ceil(filteredStories.length / ITEMS_PER_PAGE);
+
   const visibleStories = useMemo(
-    () => filteredStories.slice(0, visibleCount),
-    [filteredStories, visibleCount]
+    () => filteredStories.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE),
+    [filteredStories, currentPage]
   );
 
-  const hasMoreStories = filteredStories.length > visibleCount;
+
   const storyCardLabels = useMemo(
     () => ({
       defaultCategory: t('stories.list.defaultCategory'),
@@ -65,11 +69,12 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
 
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
-    setVisibleCount(8);
+    setCurrentPage(1);
   };
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 8);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -129,15 +134,13 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
             </div>
           )}
 
-          {hasMoreStories && (
-            <div className="mt-8 flex justify-center">
-              <button
-                type="button"
-                onClick={handleLoadMore}
-                className="min-h-[44px] px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-              >
-                {t('actions.more')}
-              </button>
+          {totalPages > 1 && (
+            <div className="mt-12">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </div>
           )}
         </div>
