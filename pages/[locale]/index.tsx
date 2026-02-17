@@ -165,7 +165,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
       />
 
       {/* 하단 CTA 섹션 */}
-      <Section variant="default" className="py-16">
+      <Section variant="default" className="py-24">
         <ContactCTA
           locale={locale}
           title={
