@@ -112,9 +112,9 @@ export const MobileNav = ({
           transition={{ duration: 0.2, ease: 'easeOut' }}
           className="xl:hidden z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
         >
-          <div className="px-4 py-6 space-y-4 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <div className="px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Mobile Theme/Language Switcher */}
-            <div className="flex flex-col gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 sm:hidden">
+            <div className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden">
               <button
                 type="button"
                 className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
