@@ -39,6 +39,10 @@ const ResponsiveImage = React.memo(({
   const [error, setError] = React.useState(false);
   const normalizedSrc = React.useMemo(() => normalizeSrc(src), [src]);
 
+  React.useEffect(() => {
+    setError(false);
+  }, [normalizedSrc]);
+
   if (!normalizedSrc) return null;
 
   const hasDimensions = typeof width === 'number' && typeof height === 'number';

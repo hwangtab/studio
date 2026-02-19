@@ -3,10 +3,10 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { ArrowLeft, Share2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
-import ResponsiveImage from '../../../components/ResponsiveImage';
+import PortfolioDetailSummary from '../../../components/portfolio/PortfolioDetailSummary';
 import { getPortfolioItems, getCategories } from '../../../data/portfolio';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
 import { shareContent } from '../../../utils/shareUtils';
@@ -101,61 +101,24 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
             {...detailContentAnimation}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
           >
-            <div className="relative aspect-square max-w-md mx-auto mt-8">
-              <ResponsiveImage
-                src={item.image}
-                alt={item.title}
-                className="object-cover rounded-lg"
-                pictureClassName="block w-full h-full"
-                sizes="(min-width: 768px) 400px, 100vw"
-                fill
-              />
-            </div>
-
-            <div className="p-8">
-              <div className="mb-4">
-                <span
-                  className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
-                  style={{ backgroundColor: categoryInfo.color }}
-                >
-                  {categoryInfo.name}
-                </span>
-              </div>
-
-              <h1 className="text-heading-2 font-title mb-2">
-                {item.title}
-              </h1>
-
-              <p className="typo-card-body mb-6">
-                {t('portfolio.detail.artistLabel')}: {item.artist}
-              </p>
-
-              <div className="mb-8">
-                <h2 className="typo-card-title mb-3">
-                  {t('portfolio.detail.servicesProvided')}
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {item.services.map((service) => (
-                    <span
-                      key={service}
-                      className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
-                    >
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                >
-                  <ExternalLink size={16} aria-hidden="true" />
-                  {t('portfolio.detail.listenNow')}
-                </a>
+            <PortfolioDetailSummary
+              item={item}
+              categoryName={categoryInfo.name}
+              categoryColor={categoryInfo.color}
+              artistLabel={t('portfolio.detail.artistLabel')}
+              servicesTitle={t('portfolio.detail.servicesProvided')}
+              listenNowLabel={t('portfolio.detail.listenNow')}
+              listenUrl={item.link}
+              titleTag="h1"
+              imageSectionClassName="px-6 pt-8"
+              imageWrapperClassName="relative aspect-square max-w-md mx-auto rounded-xl overflow-hidden shadow-lg"
+              contentSectionClassName="p-8"
+              titleClassName="text-heading-2 font-title mb-2"
+              artistClassName="typo-card-body mb-6"
+              servicesHeadingClassName="typo-card-title mb-3"
+              actionRowClassName="flex flex-col sm:flex-row gap-4"
+              primaryActionClassName="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+              actions={
                 <button
                   type="button"
                   onClick={sharePortfolio}
@@ -164,8 +127,8 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
                   <Share2 size={16} aria-hidden="true" />
                   {t('portfolio.detail.share')}
                 </button>
-              </div>
-            </div>
+              }
+            />
           </m.div>
         </div>
       </Section>

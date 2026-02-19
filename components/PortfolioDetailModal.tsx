@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { m, Variants } from 'framer-motion';
-import { X, Share2, ExternalLink } from 'lucide-react';
+import { X, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import ResponsiveImage from './ResponsiveImage';
 import type { PortfolioItem, PortfolioCategory } from '../types/data';
 import { shareContent } from '../utils/shareUtils';
 import { getCategoryInfo } from '../utils/portfolioDataUtils';
@@ -10,6 +9,7 @@ import { defaultLocale, type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock';
 import { useFocusTrapDialog } from '../utils/useFocusTrapDialog';
+import PortfolioDetailSummary from './portfolio/PortfolioDetailSummary';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -146,68 +146,19 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
           </button>
         </div>
 
-        <div className="px-6 pt-6">
-          <div className="relative aspect-square max-w-xs mx-auto rounded-xl overflow-hidden shadow-lg">
-            <ResponsiveImage
-              src={item.image}
-              alt={item.title}
-              className="object-cover"
-              pictureClassName="block w-full h-full"
-              sizes="320px"
-              fill={true}
-              width={320}
-              height={320}
-            />
-          </div>
+        <div id="modal-title" className="sr-only">
+          {item.title}
         </div>
 
-        <div className="p-6">
-          <div className="mb-3">
-            <span
-              className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
-              style={{ backgroundColor: categoryInfo.color }}
-            >
-              {categoryInfo.name}
-            </span>
-          </div>
-
-          <h2
-            id="modal-title"
-            className="typo-card-title text-gray-900 dark:text-white mb-2"
-          >
-            {item.title}
-          </h2>
-
-          <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-4">
-            {t('portfolio.detail.artistLabel')}: {item.artist}
-          </p>
-
-          <div className="mb-6">
-            <h3 className="typo-card-meta font-medium text-gray-400 dark:text-gray-500 mb-2">
-              {t('portfolio.detail.servicesProvided')}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {item.services.map((service) => (
-                <span
-                  key={service}
-                  className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
-                >
-                  {service}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium"
-          >
-            <ExternalLink size={16} aria-hidden="true" />
-            {t('portfolio.detail.listenNow')}
-          </a>
-        </div>
+        <PortfolioDetailSummary
+          item={item}
+          categoryName={categoryInfo.name}
+          categoryColor={categoryInfo.color}
+          artistLabel={t('portfolio.detail.artistLabel')}
+          servicesTitle={t('portfolio.detail.servicesProvided')}
+          listenNowLabel={t('portfolio.detail.listenNow')}
+          listenUrl={item.link}
+        />
       </m.div>
     </m.div>
   );

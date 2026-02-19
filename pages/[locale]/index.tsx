@@ -15,10 +15,9 @@ import MediaGallery from '../../components/ui/MediaGallery';
 import ReviewSection from '../../components/ui/ReviewSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
-import { PAGE_CONTENT_ANIMATION } from '../../utils/animationUtils';
 import { getHomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
-import { getReviews } from '../../data/reviews'; // Added import
+import { getReviews } from '../../data/reviews';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
 
@@ -34,10 +33,10 @@ interface HomeProps {
   locale: Locale;
   homeData: ReturnType<typeof getHomeData>;
   faqData: ReturnType<typeof getFaqData>;
-  reviewsData: ReturnType<typeof getReviews>; // Added prop type
+  reviewsData: ReturnType<typeof getReviews>;
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, reviewsData }) => { // Added prop
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, reviewsData }) => {
   const { heroContent, homeServices, studioImages, seo } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
@@ -60,7 +59,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
         keywords={seo.keywords}
         includeSchema
         faqItems={faqData}
-        reviewItems={reviewsData} // Updated prop
+        reviewItems={reviewsData}
       />
 
       <ImageHero
@@ -198,14 +197,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const homeData = getHomeData(locale);
   const faqData = getFaqData(locale);
-  const reviewsData = getReviews(locale); // Added fetch
+  const reviewsData = getReviews(locale);
 
   return buildPageStaticProps(
     locale,
     {
       homeData,
       faqData,
-      reviewsData, // Added to props
+      reviewsData,
     },
     { revalidate: 3600 }
   );

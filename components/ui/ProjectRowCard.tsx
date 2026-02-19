@@ -8,7 +8,6 @@ interface ProjectRowCardProps extends PortfolioItem {
     onClick?: () => void;
     index: number;
     viewProjectLabel?: string;
-    priority?: boolean;
 }
 
 const ProjectRowCard = ({
@@ -20,7 +19,6 @@ const ProjectRowCard = ({
     services,
     onClick,
     index,
-    priority = false,
     viewProjectLabel = 'View project',
 }: ProjectRowCardProps) => {
     const isInteractive = Boolean(onClick);

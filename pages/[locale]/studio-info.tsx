@@ -15,7 +15,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
-import { createEnterAnimation, createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -25,9 +25,6 @@ interface StudioInfoProps {
   reviewsData: ReturnType<typeof getReviews>;
 }
 
-const INTRO_SECTION_ANIMATION = createFadeInAnimation();
-const INTRO_IMAGE_ANIMATION = createEnterAnimation({ axis: 'x', distance: -30, duration: 0.6, delay: 0.2 });
-const INTRO_TEXT_ANIMATION = createEnterAnimation({ axis: 'x', distance: 30, duration: 0.6, delay: 0.4 });
 const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });

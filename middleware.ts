@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
-type Locale = (typeof locales)[number];
-const defaultLocale: Locale = 'ko';
+import { defaultLocale, locales, type Locale } from './lib/i18n-config';
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 
 const parseCanonicalSiteUrl = (): URL | null => {

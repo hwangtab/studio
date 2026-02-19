@@ -1,5 +1,5 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
-import Script from 'next/script';
+import { defaultLocale, locales } from '../lib/i18n-config';
 
 type Props = {
   locale: string;
@@ -9,13 +9,17 @@ class MyDocument extends Document<Props> {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps & Props> {
     const initialProps = await Document.getInitialProps(ctx);
     // ctx.query.locale exists because pages are under pages/[locale]/
-    const locale = (ctx.query?.locale as string) || 'ko';
+    const locale = (ctx.query?.locale as string) || defaultLocale;
 
     return { ...initialProps, locale };
   }
 
   render() {
-    const { locale } = this.props;
+    const locale = locales.includes(this.props.locale as typeof locales[number])
+      ? this.props.locale
+      : defaultLocale;
+    const serializedLocales = JSON.stringify(locales);
+    const serializedDefaultLocale = JSON.stringify(defaultLocale);
 
     return (
       <Html
@@ -45,14 +49,15 @@ class MyDocument extends Document<Props> {
               __html: `
                 (function() {
                   try {
-                    var supportedLocales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
+                    var supportedLocales = ${serializedLocales};
+                    var fallbackLocale = ${serializedDefaultLocale};
                     var pathSegments = window.location.pathname.split('/');
                     var pathLocale = pathSegments[1];
                 
                     if (supportedLocales.indexOf(pathLocale) !== -1) {
                       document.documentElement.lang = pathLocale;
                     } else {
-                      document.documentElement.lang = 'ko';
+                      document.documentElement.lang = fallbackLocale;
                     }
                 
                     var storageKey = 'darkMode';

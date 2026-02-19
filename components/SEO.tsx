@@ -11,7 +11,7 @@ import {
   generateCourseSchema,
   generateWebSiteSchema,
 } from '../utils/schemaGenerator';
-import { locales, type Locale } from '../lib/i18n';
+import { defaultLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
 import { getSeoDefaults, getSiteConfig } from '../data/siteConfig';
 
 interface SEOProps {
@@ -204,17 +204,6 @@ const SEO = ({
     };
   }, [schemaItems]);
 
-  // Map locale codes to Open Graph locale format (e.g. ko -> ko_KR)
-  const ogLocaleMap: Record<string, string> = {
-    ko: 'ko_KR',
-    en: 'en_US',
-    zh: 'zh_CN',
-    es: 'es_ES',
-    vi: 'vi_VN',
-    th: 'th_TH',
-    uz: 'uz_UZ',
-  };
-
   const finalSchema = React.useMemo(() => {
     if (!includeSchema || !schemaData) return null;
 
@@ -308,12 +297,12 @@ const SEO = ({
       <meta property="og:image:alt" content="Studio NOL - Music Production Studio" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:locale" content={ogLocaleMap[currentLocale] || 'ko_KR'} />
+      <meta property="og:locale" content={ogLocaleByLocale[currentLocale] || ogLocaleByLocale[defaultLocale]} />
       <meta property="og:site_name" content="Studio NOL" />
 
       {/* Alternate locales in OG */}
       {locales.filter(l => l !== currentLocale).map(locale => (
-        <meta key={`og-locale-alt-${locale}`} property="og:locale:alternate" content={ogLocaleMap[locale]} />
+        <meta key={`og-locale-alt-${locale}`} property="og:locale:alternate" content={ogLocaleByLocale[locale]} />
       ))}
 
       {ogType === 'article' && articlePublishedTime && (

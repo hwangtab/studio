@@ -102,8 +102,20 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     }, [volume, isMuted]);
 
     useEffect(() => {
-        stopPlayback();
-    }, [router.pathname, stopPlayback]);
+        if (!router?.events) return;
+
+        const handleRouteChangeStart = () => {
+            stopPlayback();
+        };
+
+        router.events.on('routeChangeStart', handleRouteChangeStart);
+        router.events.on('hashChangeStart', handleRouteChangeStart);
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChangeStart);
+            router.events.off('hashChangeStart', handleRouteChangeStart);
+        };
+    }, [router.events, stopPlayback]);
 
     useEffect(() => {
         return () => {
