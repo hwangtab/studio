@@ -7,6 +7,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -44,6 +45,21 @@ const ContactCTA = ({
     const secondaryLabel = secondaryButtonLabel ?? t('actions.location');
     const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
     const imageHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
+    const trackPrimaryCta = React.useCallback(() => {
+        trackLeadEvent('lead_click_kakao', {
+            locale,
+            component: 'ContactCTA',
+            cta_id: isKorean ? 'contact_cta_primary_kakao' : 'contact_cta_primary_contact',
+        });
+    }, [isKorean, locale]);
+    const trackImageKakao = React.useCallback(() => {
+        if (!isKorean) return;
+        trackLeadEvent('lead_click_kakao', {
+            locale,
+            component: 'ContactCTA',
+            cta_id: 'contact_cta_image_kakao',
+        });
+    }, [isKorean, locale]);
 
     const contactCtaMotionProps = {
         initial: { opacity: 0, y: 30 },
@@ -79,6 +95,7 @@ const ContactCTA = ({
                                 href={primaryHref}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={trackPrimaryCta}
                                 className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                             >
                                 <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
@@ -87,6 +104,7 @@ const ContactCTA = ({
                         ) : (
                             <Link
                                 href={primaryHref}
+                                onClick={trackPrimaryCta}
                                 className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                             >
                                 <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
@@ -101,6 +119,7 @@ const ContactCTA = ({
                         href={imageHref}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={trackImageKakao}
                         className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                     >
                         <ResponsiveImage

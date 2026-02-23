@@ -13,6 +13,7 @@ import {
   type ContactField,
   type ContactValidationCode,
 } from './contactValidation';
+import { trackLeadEvent } from './analytics';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -107,6 +108,23 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
 
   const submitErrorCopy = useMemo(() => getSubmitErrorMessages(locale), [locale]);
   const errorCount = useMemo(() => Object.values(errors).filter(Boolean).length, [errors]);
+  const trackSubmitEvent = useCallback(
+    (
+      name: 'lead_submit_success' | 'lead_submit_error',
+      extra: Record<string, string | number | boolean | null | undefined> = {}
+    ) => {
+      trackLeadEvent(name, {
+        locale,
+        component: 'ContactForm',
+        cta_id: 'contact_form_submit',
+        utm_source: attribution.utm_source,
+        utm_medium: attribution.utm_medium,
+        utm_campaign: attribution.utm_campaign,
+        ...extra,
+      });
+    },
+    [attribution.utm_campaign, attribution.utm_medium, attribution.utm_source, locale]
+  );
 
   const getValidationMessage = useCallback(
     (code?: ContactValidationCode): string => getContactValidationMessage(code, locale, t),
@@ -163,6 +181,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           setErrors(EMPTY_ERRORS);
           setCanRetrySubmit(false);
           setLastSubmittedData(null);
+          trackSubmitEvent('lead_submit_success');
           return;
         }
 
@@ -179,6 +198,10 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           setSubmitMessage('');
           setIsSubmitSuccess(false);
           setCanRetrySubmit(false);
+          trackSubmitEvent('lead_submit_error', {
+            error_type: 'server_validation',
+            status_code: response.status,
+          });
           return;
         }
 
@@ -187,17 +210,28 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           setSubmitMessage(submitErrorCopy[statusRule.messageKey]);
           setIsSubmitSuccess(false);
           setCanRetrySubmit(statusRule.canRetry);
+          trackSubmitEvent('lead_submit_error', {
+            error_type: statusRule.messageKey,
+            status_code: response.status,
+          });
           return;
         }
 
         setSubmitMessage(result.message || t('contact.form.error'));
         setIsSubmitSuccess(false);
         setCanRetrySubmit(response.status >= 500);
+        trackSubmitEvent('lead_submit_error', {
+          error_type: 'unknown_status',
+          status_code: response.status,
+        });
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {
           setSubmitMessage(submitErrorCopy.timeout);
           setIsSubmitSuccess(false);
           setCanRetrySubmit(true);
+          trackSubmitEvent('lead_submit_error', {
+            error_type: 'timeout',
+          });
           return;
         }
 
@@ -205,12 +239,15 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
         setSubmitMessage(t('contact.form.error'));
         setIsSubmitSuccess(false);
         setCanRetrySubmit(true);
+        trackSubmitEvent('lead_submit_error', {
+          error_type: 'network',
+        });
       } finally {
         window.clearTimeout(timeout);
         setIsSubmitting(false);
       }
     },
-    [attribution, getValidationMessage, submitErrorCopy, t]
+    [attribution, getValidationMessage, submitErrorCopy, t, trackSubmitEvent]
   );
 
   const handleSubmit = useCallback(
@@ -229,6 +266,10 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
 
       if (!validationResult.isValid) {
         const firstError = getFirstContactValidationError(validationResult.errors);
+        trackSubmitEvent('lead_submit_error', {
+          error_type: 'client_validation',
+          first_error_field: firstError?.field || null,
+        });
         if (firstError) {
           document.getElementById(firstError.field)?.focus();
         }
@@ -251,7 +292,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
       setLastSubmittedData(normalizedFormData);
       await submitWithPayload(normalizedFormData);
     },
-    [formData, getValidationMessage, submitWithPayload]
+    [formData, getValidationMessage, submitWithPayload, trackSubmitEvent]
   );
 
   const handleRetrySubmit = useCallback(() => {

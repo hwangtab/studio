@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { trackLeadEvent } from '../../utils/analytics';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -69,6 +70,13 @@ export const Footer = ({ locale }: FooterProps) => {
             </a>
             <a
               href={`tel:${siteConfig.contact.phone}`}
+              onClick={() =>
+                trackLeadEvent('lead_click_phone', {
+                  locale,
+                  component: 'Footer',
+                  cta_id: 'footer_phone',
+                })
+              }
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <Phone className="mr-2 mt-0.5" size={16} aria-hidden="true" />

@@ -13,6 +13,7 @@ import { NextPageWithLayout } from '../../types';
 
 import { getValidationFallbacks } from '../../utils/contactMessages';
 import { useContactForm } from '../../utils/useContactForm';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface ContactProps {
   locale: Locale;
@@ -112,7 +113,17 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{siteConfig.contact.address}</span>
                 </a>
-                <a href={`tel:${siteConfig.contact.phone}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation">
+                <a
+                  href={`tel:${siteConfig.contact.phone}`}
+                  onClick={() =>
+                    trackLeadEvent('lead_click_phone', {
+                      locale,
+                      component: 'ContactPage',
+                      cta_id: 'contact_info_phone',
+                    })
+                  }
+                  className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+                >
                   <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{siteConfig.contact.phone}</span>
                 </a>
@@ -120,7 +131,19 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{siteConfig.contact.email}</span>
                 </a>
-                <a href={siteConfig.contact.kakaoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation">
+                <a
+                  href={siteConfig.contact.kakaoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackLeadEvent('lead_click_kakao', {
+                      locale,
+                      component: 'ContactPage',
+                      cta_id: 'contact_info_kakao',
+                    })
+                  }
+                  className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+                >
                   <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
                   <span className="leading-relaxed">{t('actions.kakao')}</span>
                 </a>
@@ -331,6 +354,13 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                     href={siteConfig.contact.kakaoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      trackLeadEvent('lead_click_kakao', {
+                        locale,
+                        component: 'ContactPage',
+                        cta_id: 'contact_form_kakao',
+                      })
+                    }
                     className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-gray-900 dark:text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 font-title touch-manipulation"
                   >
                     <MessageCircle className="mr-2" size={18} aria-hidden="true" />

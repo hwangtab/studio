@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface HeaderActionsProps {
   isTransparent: boolean;
@@ -61,6 +62,13 @@ export const HeaderActions = ({
           rel="noopener noreferrer"
           aria-label={t('actions.kakaoExternal')}
           className={headerCtaButtonClass}
+          onClick={() =>
+            trackLeadEvent('lead_click_kakao', {
+              locale,
+              component: 'HeaderActions',
+              cta_id: 'header_kakao',
+            })
+          }
         >
           {t('actions.kakao')}
         </a>
