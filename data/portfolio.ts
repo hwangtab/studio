@@ -79,6 +79,20 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
 
     const items: PortfolioItem[] = [
         {
+            "id": "tierliner-bite-me",
+            "title": "티어라이너 <Bite Me>",
+            "description": t(locale, { ko: "레코딩, 믹싱", en: "Recording, Mixing" }),
+            "image": "https://image.bugsm.co.kr/album/images/1000/207900/20790054.jpg",
+            "link": "https://www.youtube.com/watch?v=XEI2TcYs9jU",
+            "category": "single",
+            "services": [
+                getService(services.recording),
+                getService(services.mixing)
+            ],
+            "featured": false,
+            "artist": "티어라이너"
+        },
+        {
             "id": "the-projectors-babu-first-flight",
             "title": "더 프로젝터스 <바보의 첫 비행>",
             "description": t(locale, { ko: "레코딩, 믹싱, 마스터링", en: "Recording, Mixing, Mastering", vi: "Thu âm, Mixing, Mastering", th: "บันทึกเสียง, มิกซ์, มาสเตอริ่ง", uz: "Yozuv, Miks, Mastering" }),
