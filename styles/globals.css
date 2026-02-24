@@ -146,25 +146,6 @@
   }
 }
 
-html.ios-safari {
-  scroll-behavior: auto;
-}
-
-html.ios-safari .backdrop-blur-sm,
-html.ios-safari .backdrop-blur-md,
-html.ios-safari .backdrop-blur-xl,
-html.ios-safari .backdrop-blur-\[2px\] {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-html.ios-safari .ios-stable-layer {
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
 @layer components {}
 
 code {

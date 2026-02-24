@@ -10,13 +10,13 @@ export interface EquipmentSectionProps {
 
 const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => {
     const motionProps = createFadeInAnimation();
+    const cardHoverMotion = { ...HOVER_SCALE, transition: { duration: 0.3 } };
 
     return (
         <m.div
             className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
             {...motionProps}
-            whileHover={HOVER_SCALE}
-            transition={{ duration: 0.3 }}
+            whileHover={cardHoverMotion}
         >
             <h3 className="typo-card-title mb-4 flex items-center">
                 <Icon className="mr-2 text-primary dark:text-primary-light" size={20} aria-hidden="true" />

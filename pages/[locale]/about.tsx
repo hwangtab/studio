@@ -1,6 +1,5 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { m } from 'framer-motion';
 import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ContactCTA from '../../components/common/ContactCTA';
@@ -16,7 +15,6 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { generateHowToSchema } from '../../utils/schemaGenerator';
-import { createEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -41,8 +39,6 @@ interface AboutProps {
   reviewsData: ReturnType<typeof getReviews>;
 }
 
-const ADVANTAGES_GRID_ANIMATION = createEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
-
 const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
 
@@ -59,8 +55,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
     'P2D',
     locale
   ), [productionProcess, locale, t]);
-  const advantagesGridAnimation = ADVANTAGES_GRID_ANIMATION;
-
   return (
     <div className="overflow-visible">
       <SEO
@@ -173,10 +167,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
             </ul>
           </BaseCard>
 
-          <m.div
-            className="grid grid-cols-2 gap-4"
-            {...advantagesGridAnimation}
-          >
+          <div className="grid grid-cols-2 gap-4">
             {advantages.map((advantage, index) => {
               const Icon = ICON_MAP[advantage.icon as string] || Users;
               return (
@@ -194,7 +185,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
                 </BaseCard>
               );
             })}
-          </m.div>
+          </div>
         </div>
       </Section>
 

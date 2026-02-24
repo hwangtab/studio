@@ -23,7 +23,7 @@ const PlayerControls = ({
     return (
         <div className="flex items-center justify-center gap-6">
             <m.button
-                whileHover={{ scale: 1.1, color: '#fff' }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onPrevTrack}
                 className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
@@ -50,7 +50,7 @@ const PlayerControls = ({
             </m.button>
 
             <m.button
-                whileHover={{ scale: 1.1, color: '#fff' }}
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onNextTrack}
                 className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"

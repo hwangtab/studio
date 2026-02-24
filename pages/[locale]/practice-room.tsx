@@ -217,7 +217,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
                 <ResponsiveImage
                   src={`/images/room${i}.jpg`}
                   alt={t('practiceRoom.gallery.alt', { index: i })}
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover"
                   pictureClassName="block h-full"
                   loading="lazy"
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"

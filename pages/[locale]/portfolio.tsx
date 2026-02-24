@@ -3,7 +3,6 @@ import type { NextPageWithLayout } from '../../types';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { m } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import { Music, Headphones } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -22,17 +21,12 @@ import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
-import { createEnterAnimation } from '../../utils/animationUtils';
-
 interface PortfolioProps {
   locale: Locale;
   initialPortfolioItems: readonly PortfolioItem[];
   audioTracks: readonly AudioTrack[];
   categories: readonly PortfolioCategory[];
 }
-
-const SAMPLE_TRACKS_ANIMATION = createEnterAnimation({ delay: 0.2 });
-const PROJECTS_ANIMATION = createEnterAnimation({ delay: 0.3 });
 
 const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   locale,
@@ -51,8 +45,6 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   });
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
-  const sampleTracksAnimation = SAMPLE_TRACKS_ANIMATION;
-  const projectsAnimation = PROJECTS_ANIMATION;
 
   const filteredItems = useMemo(
     () => filterPortfolioItems(initialPortfolioItems, selectedCategory.id === 'all' ? 'all' : selectedCategory.id),
@@ -142,10 +134,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       {audioTracks.length > 0 && (
         <Section variant="default">
-          <m.div
-            id="sample-tracks"
-            {...sampleTracksAnimation}
-          >
+          <div id="sample-tracks">
             <SectionHeading
               icon={Headphones}
               title={t('portfolio.sampleTracks')}
@@ -155,14 +144,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} locale={locale} />
-          </m.div>
+          </div>
         </Section>
       )}
 
       <Section variant="alternate">
-        <m.div
-          {...projectsAnimation}
-        >
+        <div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
             <div className="flex items-center">
               <SectionHeading
@@ -217,7 +204,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               </button>
             </div>
           )}
-        </m.div>
+        </div>
       </Section>
 
       <Section variant="default" className="py-16">

@@ -14,7 +14,6 @@ interface BaseCardProps {
     delay?: number;
     variant?: 'default' | 'highlight' | 'outline';
     hoverEffect?: boolean;
-    enableAnimation?: boolean;
 }
 
 const BaseCard = React.memo(({
@@ -27,7 +26,6 @@ const BaseCard = React.memo(({
     delay = 0,
     variant = 'default',
     hoverEffect = true,
-    enableAnimation = true,
 }: BaseCardProps) => {
     const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden";
 
@@ -37,13 +35,10 @@ const BaseCard = React.memo(({
         outline: "border border-gray-200 dark:border-gray-700 bg-transparent",
     };
 
-    const animationProps = enableAnimation ? {
+    const animationProps = {
         ...FADE_IN_UP,
         whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
         transition: { ...FADE_IN_UP.transition, delay }
-    } : {
-        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
-        transition: { duration: 0.2 }
     };
 
     const isInteractive = Boolean(onClick || href);

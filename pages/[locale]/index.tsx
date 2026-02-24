@@ -20,6 +20,7 @@ import { getFaqData } from '../../data/faq';
 import { getReviews } from '../../data/reviews';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
+import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -44,12 +45,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
   // Helper to generate locale-aware links
   const getLink = (path: string) => `/${locale}${path}`;
   const homeQuickAnswers = React.useMemo(() => faqData.slice(0, 3), [faqData]);
-  const homeServicesMotionProps = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.5 }
-  };
+  const homeServicesMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
   return (
     <div className="overflow-visible">

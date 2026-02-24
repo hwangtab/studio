@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
+import { createInViewEnterAnimation } from '../utils/animationUtils';
 
 
 import type { Locale } from '../lib/i18n';
@@ -143,13 +144,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     const heights = [40, 70, 50, 90, 60, 80, 40, 60];
     const visualRef = useRef<HTMLDivElement>(null);
     const isVisualInView = useInView(visualRef, { amount: 0.35 });
-
-    const ctaMotionProps = {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true },
-        transition: { duration: 0.5 }
-    };
+    const ctaMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
     return (
         <m.div
