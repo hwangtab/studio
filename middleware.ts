@@ -87,8 +87,12 @@ export function middleware(request: NextRequest) {
     }
 
     if (shouldRedirect) {
-        // Language negotiation redirects should be temporary to avoid sticky caching by intermediaries.
-        const redirectStatus = shouldVaryByLanguage ? 307 : 308;
+        // 검색 엔진 봇의 접근일 경우 SEO 점수를 올바르게 이전하기 위해 308(영구 이동)을 사용하고,
+        // 일반 사용자의 언어 기반 리디렉션은 브라우저 캐싱 방지를 위해 307(임시 이동)을 사용합니다.
+        const userAgent = request.headers.get('user-agent') || '';
+        const isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(userAgent);
+        const redirectStatus = !shouldVaryByLanguage || isBot ? 308 : 307;
+
         const response = NextResponse.redirect(redirectUrl, redirectStatus);
         if (shouldVaryByLanguage) {
             response.headers.set('Vary', 'Accept-Language');
