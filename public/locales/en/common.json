@@ -108,7 +108,7 @@
       "titleHighlight": "The Most Reliable Partner",
       "subtitleLine1": "We give our best regardless of project size.",
       "subtitleLine2": "From planning to final mastering, we realize your ideas with perfect sound.",
-      "imageAlt": "Studio NOL production environment"
+      "imageAlt": "Neumann U87AI condenser microphone at Studio NOL"
     },
     "seo": {
       "keywords": "Studio NOL, music production process, music production, recording studio, mixing mastering, music distribution, music planning, analog equipment"
@@ -253,7 +253,7 @@
       "inquiry": "Inquiry"
     },
     "images": {
-      "packageAlt": "Studio NOL pro package recording gear"
+      "packageAlt": "Vocalist recording session in Studio NOL booth"
     }
   },
   "lesson": {
@@ -267,7 +267,7 @@
       "title": "All-in-One Production Masterclass",
       "subtitleLine1": "Turn imagination into sound, ideas into finished tracks.",
       "subtitleLine2": "Learn professional know-how in a professional space.",
-      "alt": "Studio mixing console"
+      "alt": "Studio NOL control room with monitoring speakers and mixing console"
     },
     "intro": {
       "titleLine1": "Beyond just learning,",
@@ -363,7 +363,7 @@
       "subtitleLine2": "First consultation free · 1:1 tailored guidance by active producer",
       "location": "Location",
       "inquiry": "Free Consultation Apply",
-      "imageAlt": "Lesson introduction image"
+      "imageAlt": "Studio NOL production setup with Softube Console 1 and monitoring speakers"
     }
   },
   "practiceRoom": {
@@ -406,7 +406,10 @@
       ]
     },
     "gallery": {
-      "alt": "Practice room image {{index}}"
+      "alt_2": "Yeonsinnae piano practice room - upright piano with soundproofed walls",
+      "alt_3": "Studio NOL Yamaha piano room - soundproof panel practice space",
+      "alt_4": "Studio NOL practice room hallway - individual soundproofed rooms",
+      "alt_5": "Yeonsinnae private practice room - upright piano with acoustic treatment"
     },
     "features": {
       "title": "Perfect System for Musicians",

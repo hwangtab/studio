@@ -30,13 +30,13 @@ const homeData = {
       {
         title: '녹음 & 믹싱',
         description: '고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다.',
-        link: '/about',
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: '홍보 & 마케팅',
         description: '언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다.',
-        link: '/about',
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
@@ -47,19 +47,19 @@ const homeData = {
       },
       {
         src: `/images/studio3.jpg`,
-        alt: "스튜디오 놀 보컬 녹음 부스 - 프로페셔널 마이크와 팝 필터 설치"
+        alt: "스튜디오 놀 라운지 - 소파와 음향 패널이 있는 휴게 공간"
       },
       {
         src: `/images/studio4.jpg`,
-        alt: "연신내 녹음실 믹싱 워크스테이션 - 최신 DAW 시스템과 모니터"
+        alt: "스튜디오 놀 녹음 부스 - 콘트라베이스 녹음 세션"
       },
       {
         src: `/images/studio5.jpg`,
-        alt: "스튜디오 놀 프로덕션 룸 - 전문 음향 처리 완료"
+        alt: "스튜디오 놀 아웃보드 장비 - Vintech X73i 프리앰프와 Tegeler Vari Tube Compressor"
       },
       {
         src: `/images/hardware8.jpg`,
-        alt: "스튜디오 놀 아날로그 아웃보드 장비와 프리앰프 랙"
+        alt: "스튜디오 놀 컨트롤 데스크 - Softube Console 1 Fader와 Proac 모니터링 스피커"
       }
     ]
   },
@@ -67,7 +67,7 @@ const homeData = {
     seo: {
       title: "Professional Music Production & Mixing/Mastering | Studio NOL",
       description: "Professional music production realizing artist's musical vision. We guarantee the best results with high-end equipment and professional engineering.",
-      keywords: "Music Production, Digital Single, Mixing Mastering, Album Release, Music Producing, Recording Studio, Voice Over, Studio NOL"
+      keywords: "Music Production, Digital Single, Mixing Mastering, Album Release, Music Producing, Recording Studio, Voice Over, Studio NOL, Seoul recording studio, K-pop vocal recording, voice over recording Seoul, audiobook recording studio Korea, wedding song recording"
     },
     heroContent: {
       titlePrefix: "Breathing",
@@ -92,22 +92,22 @@ const homeData = {
       {
         title: 'Recording & Mixing',
         description: 'Create the best sound with high-end equipment and experts. We breathe life into your sound.',
-        link: '/about',
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: 'PR & Marketing',
         description: 'We promote your music effectively to the media and support showcases to spread your charm.',
-        link: '/about',
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "Recording room with monitoring speakers" },
-      { src: `/images/studio3.jpg`, alt: "Vocal booth with professional mic" },
-      { src: `/images/studio4.jpg`, alt: "Mixing workstation with latest DAW" },
-      { src: `/images/studio5.jpg`, alt: "Acoustically treated production room" },
-      { src: `/images/hardware8.jpg`, alt: "Analog outboard gear and preamps" }
+      { src: `/images/studio3.jpg`, alt: "Studio NOL lounge area with sofa and acoustic wall panels" },
+      { src: `/images/studio4.jpg`, alt: "Upright bass recording session in studio booth" },
+      { src: `/images/studio5.jpg`, alt: "Vintech X73i preamp and Tegeler Vari Tube Compressor rack" },
+      { src: `/images/hardware8.jpg`, alt: "Control desk with Softube Console 1 Fader and Proac monitoring speakers" }
     ]
   },
   zh: {
@@ -139,22 +139,22 @@ const homeData = {
       {
         title: '录音 & 混音',
         description: '与专家一起使用高级设备创造最佳声音。为您的声音注入生命。',
-        link: '/about',
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: '宣传 & 营销',
         description: '通过媒体有效宣传，并丰富支持展示会，更广泛地传播您音乐的魅力。',
-        link: '/about',
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "录音室" },
-      { src: `/images/studio3.jpg`, alt: "人声录音棚" },
-      { src: `/images/studio4.jpg`, alt: "混音工作站" },
-      { src: `/images/studio5.jpg`, alt: "制作室" },
-      { src: `/images/hardware8.jpg`, alt: "模拟设备" }
+      { src: `/images/studio3.jpg`, alt: "Studio NOL 休息区 - 配有沙发和吸音墙板的休息空间" },
+      { src: `/images/studio4.jpg`, alt: "低音提琴演奏者在录音棚进行录音" },
+      { src: `/images/studio5.jpg`, alt: "Vintech X73i 前置放大器和 Tegeler Vari Tube Compressor 机架" },
+      { src: `/images/hardware8.jpg`, alt: "控制台配备 Softube Console 1 Fader 和 Proac 监听音箱" }
     ]
   },
   es: {
@@ -186,22 +186,22 @@ const homeData = {
       {
         title: 'Grabación y Mezcla',
         description: 'Crea el mejor sonido con equipos de alta gama y expertos. Damos vida a tu sonido.',
-        link: '/about',
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: 'RP y Marketing',
         description: 'Promocionamos tu música eficazmente en los medios y apoyamos showcases para difundir tu encanto.',
-        link: '/about',
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "Sala de grabación" },
-      { src: `/images/studio3.jpg`, alt: "Cabina vocal" },
-      { src: `/images/studio4.jpg`, alt: "Estación de mezcla" },
-      { src: `/images/studio5.jpg`, alt: "Sala de producción" },
-      { src: `/images/hardware8.jpg`, alt: "Equipo analógico" }
+      { src: `/images/studio3.jpg`, alt: "Sala de descanso de Studio NOL con sofá y paneles acústicos" },
+      { src: `/images/studio4.jpg`, alt: "Sesión de grabación de contrabajo en la cabina de estudio" },
+      { src: `/images/studio5.jpg`, alt: "Rack con preamplificador Vintech X73i y Tegeler Vari Tube Compressor" },
+      { src: `/images/hardware8.jpg`, alt: "Mesa de control con Softube Console 1 Fader y monitores Proac" }
     ]
   },
   vi: {
@@ -233,22 +233,22 @@ const homeData = {
       {
         title: 'Thu âm & Mixing',
         description: 'Tạo âm thanh tốt nhất với thiết bị cao cấp và chuyên gia. Thổi sự sống vào âm thanh của bạn.',
-        link: '/about',
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: 'PR & Marketing',
         description: 'Quảng bá hiệu quả trên truyền thông và hỗ trợ showcase để lan tỏa sức hút âm nhạc của bạn.',
-        link: '/about',
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "Phòng thu với loa kiểm âm và bàn điều khiển" },
-      { src: `/images/studio3.jpg`, alt: "Booth thu vocal với micro chuyên nghiệp và pop filter" },
-      { src: `/images/studio4.jpg`, alt: "Trạm làm việc mixing với hệ thống DAW mới nhất" },
-      { src: `/images/studio5.jpg`, alt: "Phòng sản xuất đã xử lý âm học" },
-      { src: `/images/hardware8.jpg`, alt: "Thiết bị outboard analog và rack preamp" }
+      { src: `/images/studio3.jpg`, alt: "Khu vực lounge Studio NOL với sofa và tấm hấp âm" },
+      { src: `/images/studio4.jpg`, alt: "Phiên thu âm đàn bass đứng trong booth thu" },
+      { src: `/images/studio5.jpg`, alt: "Rack thiết bị Vintech X73i preamp và Tegeler Vari Tube Compressor" },
+      { src: `/images/hardware8.jpg`, alt: "Bàn điều khiển với Softube Console 1 Fader và loa monitor Proac" }
     ]
   },
   th: {
@@ -280,22 +280,22 @@ const homeData = {
       {
         title: 'บันทึกเสียง & มิกซ์',
         description: 'สร้างซาวด์ที่ดีที่สุดด้วยอุปกรณ์ไฮเอนด์และผู้เชี่ยวชาญ เราเติมชีวิตให้เสียงของคุณ',
-        link: '/about',
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: 'ประชาสัมพันธ์ & การตลาด',
         description: 'โปรโมตผ่านสื่ออย่างมีประสิทธิภาพและสนับสนุนโชว์เคสเพื่อกระจายเสน่ห์ของเพลงคุณ',
-        link: '/about',
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
-      { src: `/images/studio3.jpg`, alt: "บูธร้องพร้อมไมค์มืออาชีพและป๊อปฟิลเตอร์" },
-      { src: `/images/studio4.jpg`, alt: "เวิร์กสเตชันมิกซ์พร้อมระบบ DAW ล่าสุด" },
-      { src: `/images/studio5.jpg`, alt: "ห้องโปรดักชันที่ปรับอะคูสติกแล้ว" },
-      { src: `/images/hardware8.jpg`, alt: "อุปกรณ์เอาต์บอร์ดอนาล็อกและแร็คพรีแอมป์" }
+      { src: `/images/studio3.jpg`, alt: "พื้นที่พักผ่อนของ Studio NOL พร้อมโซฟาและแผงดูดซับเสียง" },
+      { src: `/images/studio4.jpg`, alt: "การบันทึกเสียงดับเบิลเบสในห้องบูธอัด" },
+      { src: `/images/studio5.jpg`, alt: "แร็คพรีแอมป์ Vintech X73i และ Tegeler Vari Tube Compressor" },
+      { src: `/images/hardware8.jpg`, alt: "โต๊ะควบคุมพร้อม Softube Console 1 Fader และลำโพงมอนิเตอร์ Proac" }
     ]
   },
   uz: {
@@ -326,23 +326,23 @@ const homeData = {
       },
       {
         title: 'Yozuv & Miks',
-        description: 'Yuqori darajadagi uskunalar va mutaxassislar bilan eng yaxshi tovushni yarating. Tovushingizga hayot bag‘ishlaymiz.',
-        link: '/about',
+        description: "Yuqori darajadagi uskunalar va mutaxassislar bilan eng yaxshi tovushni yarating. Tovushingizga hayot bag‘ishlaymiz.",
+        link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: 'PR & Marketing',
-        description: 'OAV orqali samarali targ‘ibot va showcase qo‘llovi bilan musiqangiz jozibasini keng yoyamiz.',
-        link: '/about',
+        description: "OAV orqali samarali targ‘ibot va showcase qo‘llovi bilan musiqangiz jozibasini keng yoyamiz.",
+        link: '/portfolio',
         icon: 'Globe',
       },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "Monitoring karnaylari va boshqaruv stoli bo‘lgan yozuv xonasi" },
-      { src: `/images/studio3.jpg`, alt: "Professional mikrofon va pop filtrli vokal yozuv kabinasi" },
-      { src: `/images/studio4.jpg`, alt: "Eng so‘nggi DAW tizimli miks ish stansiyasi" },
-      { src: `/images/studio5.jpg`, alt: "Akustik ishlov berilgan prodakshn xonasi" },
-      { src: `/images/hardware8.jpg`, alt: "Analog outboard uskunalar va preamp rack" }
+      { src: `/images/studio3.jpg`, alt: "Studio NOL dam olish zonasi - divan va akustik panellar" },
+      { src: `/images/studio4.jpg`, alt: "Kontrabas yozuv seanssi studiya kabinasida" },
+      { src: `/images/studio5.jpg`, alt: "Vintech X73i preamp va Tegeler Vari Tube Compressor rack" },
+      { src: `/images/hardware8.jpg`, alt: "Nazorat pulti Softube Console 1 Fader va Proac monitoring karnaylari bilan" }
     ]
   }
 };

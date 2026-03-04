@@ -48,15 +48,15 @@
     "kakaoExternal": "Consulta por KakaoTalk (abre en una nueva ventana)",
     "skipToContent": "Saltar al contenido"
   },
-   "common": {
-     "categoryFilter": {
-       "title": "Categoría",
-       "all": "Todo"
-     },
-     "siteName": "Studio NOL",
-     "languageSelector": "Selector de idioma",
-     "languageOptions": "Opciones de idioma"
-   },
+  "common": {
+    "categoryFilter": {
+      "title": "Categoría",
+      "all": "Todo"
+    },
+    "siteName": "Studio NOL",
+    "languageSelector": "Selector de idioma",
+    "languageOptions": "Opciones de idioma"
+  },
   "theme": {
     "light": "Claro",
     "dark": "Oscuro"
@@ -108,7 +108,7 @@
       "titleHighlight": "el socio más confiable",
       "subtitleLine1": "Nos esforzamos al máximo sin importar el tamaño del proyecto.",
       "subtitleLine2": "Desde la planificación hasta la masterización final, hacemos realidad tu sonido.",
-      "imageAlt": "Entorno de producción de Studio NOL"
+      "imageAlt": "Micrófono de condensador Neumann U87AI en Studio NOL"
     },
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico"
@@ -116,27 +116,27 @@
     "howToTitle": "Cómo producir música en Studio NOL",
     "howToDescription": "Una guía completa para producir música en un estudio profesional."
   },
-   "portfolio": {
-     "title": "Portafolio",
-     "subtitle": "Presentamos varios proyectos realizados en Studio NOL. Haz clic en cada obra para ver más detalles.",
-     "sampleTracks": "Pistas de muestra",
-     "projects": "Proyectos",
-     "noProjects": "No hay proyectos en la categoría seleccionada.",
-     "viewProject": "Ver proyecto",
-     "detail": {
-       "titleSuffix": "Portafolio de Studio NOL",
-       "metaDescription": "\"{{title}}\" de {{artist}} - {{description}}. Proyecto realizado en Studio NOL.",
-       "backToList": "Volver al portafolio",
-       "artistLabel": "Artista",
-       "servicesProvided": "Servicios proporcionados",
-       "listenNow": "Escuchar ahora",
-       "share": "Compartir"
-     },
-     "heroAlt": "Portafolio de Studio NOL",
-     "seo": {
-       "keywords": "muestras de grabación, comparación antes y después de mezcla, ejemplos de masterización, portafolio del estudio, calidad de producción musical, resultados de grabación, Studio NOL"
-     }
-   },
+  "portfolio": {
+    "title": "Portafolio",
+    "subtitle": "Presentamos varios proyectos realizados en Studio NOL. Haz clic en cada obra para ver más detalles.",
+    "sampleTracks": "Pistas de muestra",
+    "projects": "Proyectos",
+    "noProjects": "No hay proyectos en la categoría seleccionada.",
+    "viewProject": "Ver proyecto",
+    "detail": {
+      "titleSuffix": "Portafolio de Studio NOL",
+      "metaDescription": "\"{{title}}\" de {{artist}} - {{description}}. Proyecto realizado en Studio NOL.",
+      "backToList": "Volver al portafolio",
+      "artistLabel": "Artista",
+      "servicesProvided": "Servicios proporcionados",
+      "listenNow": "Escuchar ahora",
+      "share": "Compartir"
+    },
+    "heroAlt": "Portafolio de Studio NOL",
+    "seo": {
+      "keywords": "muestras de grabación, comparación antes y después de mezcla, ejemplos de masterización, portafolio del estudio, calidad de producción musical, resultados de grabación, Studio NOL"
+    }
+  },
   "contact": {
     "title": "Contacto",
     "subtitle": "Contáctanos para consultas o reservas.",
@@ -156,6 +156,10 @@
       "error": "Error al enviar. Inténtalo de nuevo.",
       "loading": "Enviando…"
     },
+    "directions": {
+      "title": "Cómo llegar",
+      "description": "Studio NOL está ubicado en el piso 3 del edificio junto a la entrada principal del Instituto Dongmyeong. Se tarda unos 5-7 minutos a pie desde la estación Yeonsinnae (líneas 3 y 6) o la estación Bulgwang (línea 6, salida 7). En la planta baja hay una tienda de conveniencia, fácil de encontrar. Se recomienda el transporte público ya que el estacionamiento es limitado."
+    },
     "info": {
       "title": "Información de contacto",
       "kakao": "Chat abierto KakaoTalk",
@@ -174,17 +178,17 @@
       "sunLabel": "Dom",
       "closed": "Cerrado"
     },
-     "notice": {
-       "title": "Antes de consultar",
-       "list": [
-         "Respondemos dentro de 24 horas",
-         "Los detalles específicos ayudan a brindar una consulta precisa",
-         "Para urgencias, usa KakaoTalk"
-       ],
-       "privacyTitle": "Política de Privacidad",
-       "privacyText": "La información personal recopilada se usa solo para responder y se elimina después de la consulta."
-     },
-     "checkNotices": "Revisar avisos",
+    "notice": {
+      "title": "Antes de consultar",
+      "list": [
+        "Respondemos dentro de 24 horas",
+        "Los detalles específicos ayudan a brindar una consulta precisa",
+        "Para urgencias, usa KakaoTalk"
+      ],
+      "privacyTitle": "Política de Privacidad",
+      "privacyText": "La información personal recopilada se usa solo para responder y se elimina después de la consulta."
+    },
+    "checkNotices": "Revisar avisos",
     "seo": {
       "keywords": "contacto de Studio NOL, consulta de producción musical, reserva de grabación, solicitud de mezcla, ubicación del estudio, consulta por KakaoTalk, presupuesto de producción"
     }
@@ -249,7 +253,7 @@
       "inquiry": "Consulta"
     },
     "images": {
-      "packageAlt": "Equipo de grabación del paquete profesional de Studio NOL"
+      "packageAlt": "Sesión de grabación de voz en la cabina de Studio NOL"
     }
   },
   "lesson": {
@@ -263,7 +267,7 @@
       "title": "Masterclass de producción todo en uno",
       "subtitleLine1": "Convierte la imaginación en sonido y las ideas en pistas terminadas.",
       "subtitleLine2": "Aprende conocimientos profesionales en un espacio profesional.",
-      "alt": "Consola de mezcla del estudio"
+      "alt": "Sala de control de Studio NOL con monitores y consola de mezcla"
     },
     "intro": {
       "titleLine1": "Más allá de aprender,",
@@ -359,7 +363,7 @@
       "subtitleLine2": "Primera consulta gratuita · Orientación 1:1 de un productor en activo",
       "location": "Ubicación",
       "inquiry": "Solicitar consulta gratuita",
-      "imageAlt": "Imagen de introducción de la clase"
+      "imageAlt": "Configuración de producción de Studio NOL con Softube Console 1 y monitores"
     }
   },
   "practiceRoom": {
@@ -402,7 +406,10 @@
       ]
     },
     "gallery": {
-      "alt": "Imagen de la sala de práctica {{index}}"
+      "alt_2": "Sala de práctica de piano Yeonsinnae - piano vertical con paredes insonorizadas",
+      "alt_3": "Sala de piano Yamaha Studio NOL - espacio de práctica con paneles acústicos",
+      "alt_4": "Pasillo de salas de práctica Studio NOL - entradas individuales insonorizadas",
+      "alt_5": "Sala de práctica privada Yeonsinnae - piano vertical con tratamiento acústico"
     },
     "features": {
       "title": "Sistema perfecto para músicos",
@@ -487,20 +494,20 @@
         "Desde grabación, mezcla y masterización hasta lanzamiento y promoción, seremos un socio confiable."
       ]
     },
-     "equipment": {
-       "title": "Lista de equipo",
-       "preampsEq": "Preamplificadores y EQ",
-       "compressorsProcessors": "Compresores y procesadores",
-       "interfacesConsoles": "Interfaces y consolas"
-     },
-     "cta": {
-       "titleLine1": "Tu música preciosa,",
-       "titleHighlight": "Con el mejor sonido",
-       "subtitleLine1": "Prometemos los mejores resultados con equipo verificado y know-how experto.",
-       "subtitleLine2": "Reserva una consulta ahora y recorre el estudio.",
-       "imageAlt": "Sala de control de Studio NOL"
-     }
-   },
+    "equipment": {
+      "title": "Lista de equipo",
+      "preampsEq": "Preamplificadores y EQ",
+      "compressorsProcessors": "Compresores y procesadores",
+      "interfacesConsoles": "Interfaces y consolas"
+    },
+    "cta": {
+      "titleLine1": "Tu música preciosa,",
+      "titleHighlight": "Con el mejor sonido",
+      "subtitleLine1": "Prometemos los mejores resultados con equipo verificado y know-how experto.",
+      "subtitleLine2": "Reserva una consulta ahora y recorre el estudio.",
+      "imageAlt": "Sala de control de Studio NOL"
+    }
+  },
   "stories": {
     "seo": {
       "title": "Historias - Registros de proyectos de Studio NOL",
@@ -527,41 +534,41 @@
       "noTitle": "Sin título",
       "noContent": "Sin contenido"
     },
-     "cta": {
-       "recording": {
-         "title": "¿Quieres un mejor sonido?",
-         "descriptionLine1": "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.",
-         "descriptionLine2": "Completamos tu música con el mejor equipo y experiencia.",
-         "primaryText": "Ver Precios",
-         "secondaryText": "Consulta",
-         "visualText": "Audio profesional"
-       },
-       "lesson": {
-    "mobileMenu": "Mobile Menu",
-         "title": "¿Quieres crear tu propia música?",
-         "descriptionLine1": "No luches solo. Te ayudamos con clases personalizadas 1:1.",
-         "descriptionLine2": "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.",
-         "primaryText": "Ver Currículo",
-         "secondaryText": "Solicitar Consulta",
-         "visualText": "Educación musical"
-       },
-       "practice": {
-         "title": "¿Necesitas tu propio espacio para concentrarte?",
-         "descriptionLine1": "Salas de práctica premium disponibles libremente en cualquier momento.",
-         "descriptionLine2": "Ambiente agradable e insonorización perfecta listos.",
-         "primaryText": "Ver Instalaciones",
-         "secondaryText": "Consulta de Reserva",
-         "visualText": "Espacio creativo"
-       },
-       "production": {
-         "title": "¿Quieres producir tu propia música?",
-         "descriptionLine1": "Desde la composición y arreglo hasta la mezcla y masterización.",
-         "descriptionLine2": "Convertimos tus ideas en pistas terminadas.",
-         "primaryText": "Consulta de Producción",
-         "secondaryText": "Ver Costos",
-         "visualText": "Producción musical"
-       }
-     },
+    "cta": {
+      "recording": {
+        "title": "¿Quieres un mejor sonido?",
+        "descriptionLine1": "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.",
+        "descriptionLine2": "Completamos tu música con el mejor equipo y experiencia.",
+        "primaryText": "Ver Precios",
+        "secondaryText": "Consulta",
+        "visualText": "Audio profesional"
+      },
+      "lesson": {
+        "mobileMenu": "Mobile Menu",
+        "title": "¿Quieres crear tu propia música?",
+        "descriptionLine1": "No luches solo. Te ayudamos con clases personalizadas 1:1.",
+        "descriptionLine2": "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.",
+        "primaryText": "Ver Currículo",
+        "secondaryText": "Solicitar Consulta",
+        "visualText": "Educación musical"
+      },
+      "practice": {
+        "title": "¿Necesitas tu propio espacio para concentrarte?",
+        "descriptionLine1": "Salas de práctica premium disponibles libremente en cualquier momento.",
+        "descriptionLine2": "Ambiente agradable e insonorización perfecta listos.",
+        "primaryText": "Ver Instalaciones",
+        "secondaryText": "Consulta de Reserva",
+        "visualText": "Espacio creativo"
+      },
+      "production": {
+        "title": "¿Quieres producir tu propia música?",
+        "descriptionLine1": "Desde la composición y arreglo hasta la mezcla y masterización.",
+        "descriptionLine2": "Convertimos tus ideas en pistas terminadas.",
+        "primaryText": "Consulta de Producción",
+        "secondaryText": "Ver Costos",
+        "visualText": "Producción musical"
+      }
+    },
     "detail": {
       "backToList": "Volver a historias",
       "share": "Compartir",
@@ -573,7 +580,7 @@
       "notice": "Aviso",
       "event": "Evento",
       "lesson": "Clase",
-    "mobileMenu": "Mobile Menu",
+      "mobileMenu": "Mobile Menu",
       "interview": "Entrevista",
       "equipment": "Equipo",
       "review": "Reseña",

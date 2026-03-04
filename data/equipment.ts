@@ -97,37 +97,37 @@ export const getEquipmentData = (locale: Locale) => {
     {
       src: "/images/hardware3.jpg",
       alt: t(locale, {
-        ko: "Neumann U87AI 콘덴서 마이크와 Vintech 프리앰프",
-        en: "Neumann U87AI & Vintech Preamp",
-        zh: "Neumann U87AI 电容麦克风 & Vintech 前置放大器",
-        es: "Micrófono Condensador Neumann U87AI & Preamplificador Vintech",
-        vi: "Micro condenser Neumann U87AI & preamp Vintech",
-        th: "ไมค์คอนเดนเซอร์ Neumann U87AI และพรีแอมป์ Vintech",
-        uz: "Neumann U87AI kondensator mikrofoni va Vintech preamp",
+        ko: "쇼크마운트에 장착된 Neumann U87AI 콘덴서 마이크",
+        en: "Neumann U87AI condenser microphone in shock mount",
+        zh: "安装在防震架上的 Neumann U87AI 电容麦克风",
+        es: "Micrófono de condensador Neumann U87AI en soporte antivibraciones",
+        vi: "Micro condenser Neumann U87AI trên giá chống rung",
+        th: "ไมโครโฟนคอนเดนเซอร์ Neumann U87AI บนช็อกเมาท์",
+        uz: "Shock mount'da Neumann U87AI kondensator mikrofoni",
       })
     },
     {
       src: "/images/hardware4.jpg",
       alt: t(locale, {
-        ko: "Universal Audio Apollo x8p 오디오 인터페이스",
-        en: "Universal Audio Apollo x8p",
-        zh: "Universal Audio Apollo x8p 音频接口",
-        es: "Interfaz de Audio Universal Audio Apollo x8p",
-        vi: "Giao diện âm thanh Universal Audio Apollo x8p",
-        th: "อินเทอร์เฟซเสียง Universal Audio Apollo x8p",
-        uz: "Universal Audio Apollo x8p audio interfeysi",
+        ko: "VOX AC30 기타 앰프",
+        en: "VOX AC30 guitar amplifier",
+        zh: "VOX AC30 吉他音箱",
+        es: "Amplificador de guitarra VOX AC30",
+        vi: "Ampli guitar VOX AC30",
+        th: "แอมป์กีตาร์ VOX AC30",
+        uz: "VOX AC30 gitara amplifikatori",
       })
     },
     {
       src: "/images/hardware5.webp",
       alt: t(locale, {
-        ko: "Adam Audio A7X 모니터 스피커와 믹싱 데스크",
-        en: "Adam Audio A7X & Mixing Desk",
-        zh: "Adam Audio A7X 监听扬声器 & 混音台",
-        es: "Monitores Adam Audio A7X & Mesa de Mezclas",
-        vi: "Loa monitor Adam Audio A7X & bàn mix",
-        th: "ลำโพงมอนิเตอร์ Adam Audio A7X และโต๊ะมิกซ์",
-        uz: "Adam Audio A7X monitor karnaylari va miks pulti",
+        ko: "스탠드 위의 어쿠스틱 기타와 일렉트릭 기타",
+        en: "Acoustic guitar and electric guitar on stand",
+        zh: "架子上的原声吉他和电吉他",
+        es: "Guitarra acústica y eléctrica en soporte",
+        vi: "Đàn guitar acoustic và guitar điện trên giá đỡ",
+        th: "กีตาร์อคูสติกและกีตาร์ไฟฟ้าบนสแตนด์",
+        uz: "Stendda akustik gitara va elektr gitara",
       })
     },
   ];
