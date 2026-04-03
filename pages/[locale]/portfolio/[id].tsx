@@ -35,6 +35,11 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   const siteConfig = getSiteConfig(locale);
 
   const getLink = (path: string) => `/${locale}${path}`;
+
+  if (router.isFallback) {
+    return <LoadingSpinner locale={locale} />;
+  }
+
   const metaDescription = t('portfolio.detail.metaDescription', {
     artist: item.artist,
     title: item.title,
@@ -56,13 +61,8 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   );
   const detailContentAnimation = DETAIL_CONTENT_ANIMATION;
 
-  if (router.isFallback) {
-    return <LoadingSpinner locale={locale} />;
-  }
-
   const sharePortfolio = async () => {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
-    const shareUrl = `${siteUrl}/${locale}/portfolio/${item.id}`;
+    const shareUrl = `${siteConfig.url}/${locale}/portfolio/${item.id}`;
     await shareContent({
       title: `${item.title} - ${t('portfolio.detail.titleSuffix')}`,
       text: metaDescription,
@@ -84,6 +84,11 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         includeSchema
         schema={portfolioSchema}
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}
+        breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
+          { name: item.title, path: `/${locale}/portfolio/${item.id}` },
+        ]}
       />
       <Section variant="default" className="pt-8 pb-12">
         <div className="mb-8">

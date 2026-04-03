@@ -93,9 +93,11 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
 
+  const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}`;
+  const ogImage = story.thumbnail || dynamicOgImage;
+
   const shareStory = async () => {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
-    const shareUrl = `${siteUrl}/${locale}/stories/${story.slug}`;
+    const shareUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
     await shareContent({
       title: story.title,
       text: metaDescription,
@@ -115,11 +117,13 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
         canonical={story.isFallbackTranslation ? `/${story.sourceLocale}/stories/${story.slug}` : undefined}
         disableAlternates={story.isFallbackTranslation}
-        ogImage={story.thumbnail || '/images/hardware2.jpg'}
+        ogImage={ogImage}
         ogType="article"
         robots={story.isFallbackTranslation ? 'noindex, follow' : 'index, follow'}
         articlePublishedTime={story.date}
         articleAuthor={story.author}
+        articleSchemaType="BlogPosting"
+        articleSection={story.category}
         includeSchema
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
@@ -130,6 +134,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 
       <ImageHero
         locale={locale}
+        priority
         title={story.title}
         subtitle={
           <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">

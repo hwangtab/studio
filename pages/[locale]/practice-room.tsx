@@ -135,6 +135,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       />
       <ImageHero
         locale={locale}
+        priority
         title={t('practiceRoom.hero.title')}
         subtitle={
           <>
@@ -216,7 +217,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
               >
                 <ResponsiveImage
                   src={`/images/room${i}.jpg`}
-                  alt={t('practiceRoom.gallery.alt', { index: i })}
+                  alt={t(`practiceRoom.gallery.alt_${i}`)}
                   className="w-full h-full object-cover"
                   pictureClassName="block h-full"
                   loading="lazy"

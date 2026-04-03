@@ -14,7 +14,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
-import { generateHowToSchema } from '../../utils/schemaGenerator';
+import { generateHowToSchema, generateServiceListSchema } from '../../utils/schemaGenerator';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -55,26 +55,34 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
     'P2D',
     locale
   ), [productionProcess, locale, t]);
+
+  const serviceListSchema = React.useMemo(() => generateServiceListSchema(
+    coreServices.map((service) => ({
+      name: service.title,
+      description: service.description,
+    })),
+    siteConfig.url,
+    locale
+  ), [coreServices, locale, siteConfig.url]);
+
   return (
     <div className="overflow-visible">
       <SEO
-        title={t('about.title')}
-        description={t('about.description')}
+        title={t('about.seo.title')}
+        description={t('about.seo.description')}
         keywords={t('about.seo.keywords')}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.about'), path: `/${locale}/about` },
         ]}
         includeSchema={true}
-        reviewItems={reviewsData.filter((r) => {
-          const review = r as { categoryKey?: string };
-          return review.categoryKey === 'production' || review.categoryKey === 'mixing';
-        })}
-        schema={howToSchema}
+        reviewItems={reviewsData.filter((r) => r.categoryKey === 'production' || r.categoryKey === 'mixing')}
+        schema={[howToSchema, serviceListSchema]}
       />
       <ImageHero
         {...{
           locale,
+          priority: true,
           title: siteConfig.name,
           subtitle: (
             <>
@@ -287,7 +295,7 @@ About.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<AboutProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const servicesData = getServicesData(locale);
   const reviewsData = getReviews(locale);

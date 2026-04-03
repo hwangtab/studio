@@ -87,6 +87,14 @@
     "width": 1280,
     "height": 720
   },
+  "/images/og-default.jpg": {
+    "width": 1200,
+    "height": 630
+  },
+  "/images/og-default.webp": {
+    "width": 1200,
+    "height": 630
+  },
   "/images/pcw.png": {
     "width": 1280,
     "height": 721

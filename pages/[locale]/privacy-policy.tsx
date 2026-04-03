@@ -232,6 +232,7 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
       <SEO
         title={`${policyCopy.title} | ${siteConfig.name}`}
         description={policyCopy.subtitle}
+        robots="noindex, follow"
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('footer.privacy'), path: `/${locale}/privacy-policy` },

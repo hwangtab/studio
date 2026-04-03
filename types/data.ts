@@ -108,4 +108,5 @@ export interface ReviewItem {
   rating: number;
   content: string;
   datePublished?: string;
+  categoryKey?: string;
 }

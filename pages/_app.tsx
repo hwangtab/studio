@@ -128,8 +128,10 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#1a56db" />
-        <meta name="theme-color" content="#1e3a8a" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#6d28d9" />
+        <meta name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <I18nextProvider i18n={i18n}>

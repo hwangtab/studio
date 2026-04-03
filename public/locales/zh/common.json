@@ -111,7 +111,9 @@
       "imageAlt": "Studio NOL Neumann U87AI 电容麦克风"
     },
     "seo": {
-      "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备"
+      "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备",
+      "title": "연신내 음악 프로덕션 · 全方位录音·混音·母带 | Studio NOL",
+      "description": "从企划到录音、混音、母带、发行，Studio NOL 提供一站式音乐制作服务。模拟设备与10年经验工程师全程陪伴。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
     "howToDescription": "为您介绍在专业录音室制作音乐的全过程。"
@@ -134,7 +136,9 @@
     },
     "heroAlt": "Studio NOL 作品集",
     "seo": {
-      "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL"
+      "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL",
+      "title": "录音·混音作品集 | Studio NOL",
+      "description": "查看 Studio NOL 完成的录音、混音、母带项目。欣赏多种风格的成品，试听前后对比样本。"
     }
   },
   "contact": {
@@ -190,7 +194,9 @@
     },
     "checkNotices": "查看公告",
     "seo": {
-      "keywords": "Studio NOL 联系方式, 音乐制作咨询, 录音预约, 混音委托, 工作室位置, KakaoTalk 咨询, 制作报价"
+      "keywords": "Studio NOL 联系方式, 音乐制作咨询, 录音预约, 混音委托, 工作室位置, KakaoTalk 咨询, 制作报价",
+      "title": "咨询·预约·交通指引 | Studio NOL",
+      "description": "欢迎咨询录音、混音、母带预约事宜。支持 KakaoTalk·邮件沟通，距延新内站步行5分钟，24小时内回复。"
     }
   },
   "pricing": {
@@ -512,7 +518,7 @@
     "seo": {
       "title": "故事 - Studio NOL 项目记录",
       "description": "了解 Studio NOL 的各种项目故事与回顾。",
-      "keywords": "Studio NOL 故事, 制作 후기, 音乐制作故事",
+      "keywords": "Studio NOL 故事, 制作后记, 音乐制作故事",
       "fallbackKeywords": "Studio NOL, 音乐, 故事"
     },
     "hero": {

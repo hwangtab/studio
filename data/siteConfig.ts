@@ -1,6 +1,13 @@
 import type { SiteConfig, SEODefaults } from '../types/data';
 import type { Locale } from '../lib/i18n';
 
+export const socialProfiles = {
+  instagram: '',
+  youtube: '',
+  facebook: '',
+  twitter: '',
+};
+
 // Translation helper
 const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => {
   return dict[locale] || dict['en'] || dict['ko'];

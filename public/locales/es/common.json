@@ -111,7 +111,9 @@
       "imageAlt": "Micrófono de condensador Neumann U87AI en Studio NOL"
     },
     "seo": {
-      "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico"
+      "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
+      "title": "Producción Musical en Yeonsinnae · Grabación, Mezcla y Masterización | Studio NOL",
+      "description": "Studio NOL ofrece producción musical integral: desde planificación hasta grabación, mezcla, masterización y distribución. Ingenieros con 10 años de experiencia y equipo analógico."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
     "howToDescription": "Una guía completa para producir música en un estudio profesional."
@@ -134,7 +136,9 @@
     },
     "heroAlt": "Portafolio de Studio NOL",
     "seo": {
-      "keywords": "muestras de grabación, comparación antes y después de mezcla, ejemplos de masterización, portafolio del estudio, calidad de producción musical, resultados de grabación, Studio NOL"
+      "keywords": "muestras de grabación, comparación antes y después de mezcla, ejemplos de masterización, portafolio del estudio, calidad de producción musical, resultados de grabación, Studio NOL",
+      "title": "Portafolio de Grabación y Mezcla | Studio NOL",
+      "description": "Explore los proyectos de grabación, mezcla y masterización de Studio NOL. Escuche muestras de antes y después en múltiples géneros."
     }
   },
   "contact": {
@@ -190,7 +194,9 @@
     },
     "checkNotices": "Revisar avisos",
     "seo": {
-      "keywords": "contacto de Studio NOL, consulta de producción musical, reserva de grabación, solicitud de mezcla, ubicación del estudio, consulta por KakaoTalk, presupuesto de producción"
+      "keywords": "contacto de Studio NOL, consulta de producción musical, reserva de grabación, solicitud de mezcla, ubicación del estudio, consulta por KakaoTalk, presupuesto de producción",
+      "title": "Contacto, Reservas e Indicaciones | Studio NOL",
+      "description": "Consulte sobre grabación, mezcla y masterización. Disponible por KakaoTalk y correo electrónico. A 5 minutos de la estación Yeonsinnae. Respuesta en 24 horas."
     }
   },
   "pricing": {

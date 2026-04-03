@@ -12,6 +12,8 @@ import { Section } from '../../../components/ui/Section';
 import Pagination from '../../../components/ui/Pagination';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
+import { generateItemListSchema } from '../../../utils/schemaGenerator';
+import { getSiteConfig } from '../../../data/siteConfig';
 
 import type { NextPageWithLayout } from '../../../types';
 
@@ -25,6 +27,20 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
+  const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
+
+  const storiesItemListSchema = React.useMemo(() => generateItemListSchema(
+    stories.slice(0, 20).map((story) => ({
+      id: story.slug,
+      name: story.title,
+      url: `/${locale}/stories/${story.slug}`,
+      image: story.thumbnail ?? undefined,
+      description: story.summary,
+    })),
+    siteUrl,
+    locale,
+    t('nav.stories')
+  ), [stories, locale, siteUrl, t]);
   const sectionRef = useRef<HTMLDivElement>(null);
 
 
@@ -89,6 +105,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}
         includeSchema
+        schema={storiesItemListSchema}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },
@@ -96,6 +113,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
       />
       <ImageHero
         locale={locale}
+        priority
         title={t('stories.hero.title')}
         subtitle={t('stories.hero.subtitle')}
         backgroundImage="/images/studio1.jpg"

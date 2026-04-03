@@ -1,6 +1,32 @@
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
-import { getSiteConfig } from '../data/siteConfig';
+import { getSiteConfig, socialProfiles } from '../data/siteConfig';
+
+const OFFER_CATALOG_NAMES: Record<Locale, string> = {
+  ko: '스튜디오 서비스', en: 'Studio Services', zh: '工作室服务',
+  es: 'Servicios del Estudio', vi: 'Dịch vụ Studio', th: 'บริการสตูดิโอ', uz: 'Studiya xizmatlari',
+};
+const RECORDING_OFFER_NAMES: Record<Locale, string> = {
+  ko: '레코딩 서비스', en: 'Recording Service', zh: '录音服务',
+  es: 'Servicio de Grabación', vi: 'Dịch vụ thu âm', th: 'บริการบันทึกเสียง', uz: 'Yozuv xizmati',
+};
+const MIXING_OFFER_NAMES: Record<Locale, string> = {
+  ko: '믹싱 & 마스터링', en: 'Mixing & Mastering', zh: '混音与母带',
+  es: 'Mezcla y Masterización', vi: 'Mixing & Mastering', th: 'มิกซ์ & มาสเตอริ่ง', uz: 'Miks & Mastering',
+};
+const PRODUCTION_OFFER_NAMES: Record<Locale, string> = {
+  ko: '음반 기획', en: 'Album Production', zh: '唱片策划',
+  es: 'Producción de Álbum', vi: 'Sản xuất album', th: 'การผลิตอัลบั้ม', uz: 'Albom prodakshn',
+};
+const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
+  ko: '프리미엄 연습실 입주 프로그램', en: 'Premium Practice Room Residency', zh: '高级练习室入驻计划',
+  es: 'Programa de Residencia de Sala Premium', vi: 'Chương trình thuê phòng tập cao cấp',
+  th: 'โปรแกรมเช่าห้องซ้อมระดับพรีเมียม', uz: "Premium mashg'ulot xonasi dasturi",
+};
+const ITEM_LIST_NAMES: Record<Locale, string> = {
+  ko: '포트폴리오', en: 'Portfolio', zh: '作品集',
+  es: 'Portafolio', vi: 'Danh mục tác phẩm', th: 'ผลงาน', uz: 'Portfolio',
+};
 
 const schemaLanguageByLocale: Record<Locale, string> = {
   ko: 'ko-KR',
@@ -23,10 +49,17 @@ export const generateDefaultSchema = (
   const schemaLanguage = getSchemaLanguage(locale);
 
   const localeContactUrl = `${siteUrl}/${locale}/contact`;
-  const sameAsLinks = [config.contact.kakaoUrl, config.contact.naverMapUrl];
+  const socialLinks = Object.values(socialProfiles).filter(url => url && url.trim() !== '');
+  const sameAsLinks = [config.contact.kakaoUrl, config.contact.naverMapUrl, ...socialLinks].filter(url => typeof url === 'string' && url.trim() !== '');
 
   const organizationId = `${siteUrl}/#organization`;
   const studioId = `${siteUrl}/#studio`;
+
+  const offerCatalogName = OFFER_CATALOG_NAMES[locale];
+  const recordingOfferName = RECORDING_OFFER_NAMES[locale];
+  const mixingOfferName = MIXING_OFFER_NAMES[locale];
+  const productionOfferName = PRODUCTION_OFFER_NAMES[locale];
+  const practiceOfferName = PRACTICE_OFFER_NAMES[locale];
 
   return {
     '@context': 'https://schema.org',
@@ -56,7 +89,8 @@ export const generateDefaultSchema = (
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
       },
       {
-        '@type': 'LocalBusiness',
+        '@type': ['LocalBusiness', 'EntertainmentBusiness'],
+        additionalType: 'https://www.wikidata.org/wiki/Q746359',
         '@id': studioId,
         name: 'Studio NOL',
         image: `${siteUrl}/thumbnail.jpg`,
@@ -66,9 +100,9 @@ export const generateDefaultSchema = (
         priceRange: '$$',
         address: {
           '@type': 'PostalAddress',
-          streetAddress: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',
-          addressLocality: '은평구',
-          addressRegion: '서울특별시',
+          streetAddress: config.contact.address,
+          addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
+          addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
           postalCode: '03424',
           addressCountry: 'KR',
         },
@@ -90,17 +124,17 @@ export const generateDefaultSchema = (
         ],
         geo: {
           '@type': 'GeoCoordinates',
-          latitude: '37.614353',
-          longitude: '126.925887',
+          latitude: 37.614353,
+          longitude: 126.925887,
         },
         areaServed: {
           '@type': 'GeoCircle',
           geoMidpoint: {
             '@type': 'GeoCoordinates',
-            latitude: '37.614353',
-            longitude: '126.925887',
+            latitude: 37.614353,
+            longitude: 126.925887,
           },
-          geoRadius: '50000',
+          geoRadius: 50000,
         },
         hasMap: config.contact.naverMapUrl,
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
@@ -138,51 +172,42 @@ export const generateDefaultSchema = (
         },
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
-          name: '스튜디오 서비스',
+          name: offerCatalogName,
           itemListElement: [
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'Service',
-                name: '레코딩 서비스',
-                description: '프로페셔널 레코딩 서비스',
+                name: recordingOfferName,
               },
             },
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'Service',
-                name: '믹싱 & 마스터링',
-                description: '전문 믹싱 및 마스터링 서비스',
+                name: mixingOfferName,
               },
             },
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'Service',
-                name: '음반 기획',
-                description: '음반 제작 전 과정 기획 및 지원',
+                name: productionOfferName,
               },
             },
             {
               '@type': 'Offer',
-              name: '프리미엄 연습실 입주 프로그램',
-              description: '월 40만 원으로 방음 연습실과 입주 고객 전용 혜택을 제공합니다.',
+              name: practiceOfferName,
               priceCurrency: 'KRW',
               price: 400000,
               url: localeContactUrl,
               availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
-                name: '프리미엄 연습실 입주 프로그램',
-                description: '녹음실 할인, 음원 유통, 보도자료 작성, 버스킹 장비 대여, 전문가 피드백, 크라우드 펀딩 컨설팅, 예술지원사업 정보, 공구 대여',
+                name: practiceOfferName,
                 provider: {
                   '@type': 'Organization',
                   '@id': organizationId,
-                },
-                areaServed: {
-                  '@type': 'AdministrativeArea',
-                  name: '서울특별시',
                 },
               },
             },
@@ -202,7 +227,8 @@ export const generateArticleSchema = (
   articlePublishedTime?: string,
   articleModifiedTime?: string,
   articleAuthor?: string,
-  locale: Locale = 'ko'
+  locale: Locale = 'ko',
+  articleType: 'Article' | 'BlogPosting' = 'Article'
 ) => {
   if (!articlePublishedTime) return null;
   const config = getSiteConfig(locale);
@@ -212,7 +238,7 @@ export const generateArticleSchema = (
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': articleType,
     '@id': `${normalizedCanonical}#article`,
     headline: title,
     datePublished: articlePublishedTime,
@@ -306,6 +332,13 @@ export const generateCourseSchema = (
     teaches: isKo
       ? ['음악 프로덕션', '보컬 레코딩', '믹싱 기초']
       : ['Music Production', 'Vocal Recording', 'Mixing Basics'],
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'KRW',
+      price: 350000,
+      availability: 'https://schema.org/InStock',
+      url: normalizedCanonical,
+    },
     hasCourseInstance: {
       '@type': 'CourseInstance',
       courseMode: 'onsite',
@@ -529,5 +562,115 @@ export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') =>
         url: `${config.url}${config.logo}`,
       },
     },
+  };
+};
+
+export interface ItemListInput {
+  id: string;
+  name: string;
+  url: string;
+  image?: string;
+  description?: string;
+}
+
+export const generateItemListSchema = (
+  items: ItemListInput[],
+  siteUrl: string,
+  locale: Locale = 'ko',
+  listName?: string
+) => {
+  const resolvedListName = listName || ITEM_LIST_NAMES[locale];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: resolvedListName,
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
+      ...(item.image && { image: item.image.startsWith('http') ? item.image : `${siteUrl}${item.image}` }),
+      ...(item.description && { description: item.description }),
+    })),
+  };
+};
+
+export interface AudioObjectInput {
+  name: string;
+  contentUrl: string;
+  encodingFormat?: string;
+  description?: string;
+  artist?: string;
+  genre?: string;
+}
+
+export const generateAudioObjectSchema = (
+  tracks: AudioObjectInput[],
+  siteUrl: string,
+  locale: Locale = 'ko'
+) => {
+  const config = getSiteConfig(locale);
+
+  return tracks.map((track) => ({
+    '@context': 'https://schema.org',
+    '@type': 'AudioObject',
+    name: track.name,
+    contentUrl: track.contentUrl.startsWith('http') ? track.contentUrl : `${siteUrl}${track.contentUrl}`,
+    encodingFormat: track.encodingFormat || 'audio/mpeg',
+    ...(track.description && { description: track.description }),
+    ...(track.genre && { genre: track.genre }),
+    ...(track.artist && {
+      creator: {
+        '@type': 'MusicGroup',
+        name: track.artist,
+      },
+    }),
+    publisher: {
+      '@type': 'Organization',
+      name: config.name,
+      url: siteUrl,
+    },
+  }));
+};
+
+export interface ServiceInput {
+  name: string;
+  description: string;
+  url?: string;
+}
+
+export const generateServiceListSchema = (
+  services: ServiceInput[],
+  siteUrl: string,
+  locale: Locale = 'ko'
+) => {
+  const config = getSiteConfig(locale);
+  const organizationId = `${siteUrl}/#organization`;
+
+  const SERVICE_LIST_NAMES: Record<Locale, string> = {
+    ko: '서비스 목록', en: 'Service List', zh: '服务列表',
+    es: 'Lista de Servicios', vi: 'Danh sách dịch vụ', th: 'รายการบริการ', uz: 'Xizmatlar ro\'yxati',
+  };
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: SERVICE_LIST_NAMES[locale],
+    itemListElement: services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        ...(service.url && { url: service.url.startsWith('http') ? service.url : `${siteUrl}${service.url}` }),
+        provider: {
+          '@type': 'Organization',
+          '@id': organizationId,
+          name: config.name,
+        },
+      },
+    })),
   };
 };

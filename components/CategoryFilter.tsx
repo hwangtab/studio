@@ -99,7 +99,7 @@ const CategoryFilter = ({
                 onClick={() => setActiveCategory(category.id)}
                 animate={{ scale: isActive ? 1.05 : 1 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow transition-transform duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+                className={`${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                   ? useCustomColors && category.color
                     ? 'text-white shadow-lg'
                     : 'bg-primary text-white shadow-lg'

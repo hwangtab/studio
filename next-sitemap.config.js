@@ -41,6 +41,19 @@ const getStoryLastmod = (slug, locale) => {
   return mtimes.sort().at(-1);
 };
 
+const getAlternateRefs = (routePath) => {
+  const segments = routePath.split('/').filter(Boolean);
+  if (segments.length === 0) return [];
+  const firstSegment = segments[0];
+  if (!locales.includes(firstSegment)) return [];
+  const restPath = segments.slice(1).join('/');
+  return locales.map(locale => ({
+    href: `${siteUrl}/${locale}${restPath ? `/${restPath}` : ''}`,
+    hreflang: locale,
+    hrefIsAbsolute: true,
+  }));
+};
+
 const getRouteLastmod = (routePath) => {
   const segments = routePath.split('/').filter(Boolean);
   if (segments.length === 0) {
@@ -81,19 +94,24 @@ module.exports = {
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },
+      { userAgent: 'Yeti', allow: '/' },
       { userAgent: 'GPTBot', allow: '/' },
       { userAgent: 'OAI-SearchBot', allow: '/' },
       { userAgent: 'ChatGPT-User', allow: '/' },
     ],
-    additionalSitemaps: [`${siteUrl}/sitemap.xml`],
+    additionalSitemaps: [],
   },
   transform: async (config, routePath) => {
+    if (routePath.includes('/privacy-policy')) {
+      return null;
+    }
+
     const entry = {
       loc: routePath,
       lastmod: getRouteLastmod(routePath),
       changefreq: config.changefreq,
       priority: config.priority,
-      alternateRefs: [],
+      alternateRefs: getAlternateRefs(routePath),
     };
 
     if (routePath === '/' || routePath.match(/^\/[a-z]{2}$/)) {
@@ -110,6 +128,14 @@ module.exports = {
         changefreq: 'weekly',
         priority: 0.8,
       };
+    }
+
+    if (routePath.match(/\/(pricing|contact)(\/|$)/)) {
+      return { ...entry, priority: 0.9 };
+    }
+
+    if (routePath.match(/\/(about|studio-info|lesson|practice-room|portfolio|stories)(\/|$)/) && !routePath.includes('/stories/') && !routePath.includes('/portfolio/')) {
+      return { ...entry, priority: 0.8 };
     }
 
     return entry;

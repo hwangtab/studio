@@ -50,6 +50,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
       />
       <ImageHero
         locale={locale}
+        priority
         title={t('studioInfo.hero.title')}
         subtitle={t('studioInfo.hero.subtitle')}
         backgroundImage="/images/hardware1.jpg"

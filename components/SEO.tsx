@@ -22,6 +22,9 @@ interface SEOProps {
   disableCanonicalAndAlternates?: boolean;
   disableAlternates?: boolean;
   ogImage?: string;
+  ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   ogType?: string;
   includeSchema?: boolean;
   schema?: Record<string, unknown> | Record<string, unknown>[];
@@ -31,6 +34,7 @@ interface SEOProps {
   articleModifiedTime?: string;
   articleAuthor?: string;
   articleSection?: string;
+  articleSchemaType?: 'Article' | 'BlogPosting';
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
   reviewItems?: ReviewItem[] | null;
@@ -44,7 +48,10 @@ const SEO = ({
   canonical,
   disableCanonicalAndAlternates = false,
   disableAlternates = false,
-  ogImage = '/images/hardware2.jpg',
+  ogImage = '/images/og-default.jpg',
+  ogImageAlt,
+  ogImageWidth = 1200,
+  ogImageHeight = 630,
   ogType = 'website',
   includeSchema = false,
   schema,
@@ -54,6 +61,7 @@ const SEO = ({
   articleModifiedTime,
   articleAuthor,
   articleSection,
+  articleSchemaType = 'Article',
   breadcrumbs = null,
   faqItems = null,
   reviewItems = null,
@@ -129,7 +137,8 @@ const SEO = ({
           articlePublishedTime,
           articleModifiedTime,
           articleAuthor,
-          currentLocale
+          currentLocale,
+          articleSchemaType
         )
         : null,
     [
@@ -143,6 +152,7 @@ const SEO = ({
       articleModifiedTime,
       articleAuthor,
       currentLocale,
+      articleSchemaType,
     ]
   );
 
@@ -236,14 +246,9 @@ const SEO = ({
     if (!data) return null;
     let jsonString = '';
     try {
-      if (typeof data === 'string') {
-        JSON.parse(data);
-        jsonString = data;
-      } else {
-        jsonString = JSON.stringify(data);
-      }
+      jsonString = JSON.stringify(data);
     } catch (e) {
-      console.error('Schema parsing error:', e);
+      console.error('Schema serialization error:', e);
       return null;
     }
 
@@ -294,9 +299,9 @@ const SEO = ({
       <meta property="og:title" content={resolvedTitle} />
       <meta property="og:description" content={resolvedDescription} />
       <meta property="og:image" content={absoluteOgImage} />
-      <meta property="og:image:alt" content="Studio NOL - Music Production Studio" />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={ogImageAlt || resolvedTitle} />
+      <meta property="og:image:width" content={String(ogImageWidth)} />
+      <meta property="og:image:height" content={String(ogImageHeight)} />
       <meta property="og:locale" content={ogLocaleByLocale[currentLocale] || ogLocaleByLocale[defaultLocale]} />
       <meta property="og:site_name" content="Studio NOL" />
 
@@ -323,8 +328,7 @@ const SEO = ({
       <meta name="twitter:title" content={resolvedTitle} />
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />
-      <meta name="twitter:image:alt" content="Studio NOL" />
-      <meta name="twitter:site" content="@StudioNOL" />
+      <meta name="twitter:image:alt" content={ogImageAlt || resolvedTitle} />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
 
       {renderSchema(finalSchema)}

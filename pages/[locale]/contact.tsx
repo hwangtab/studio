@@ -75,8 +75,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   return (
     <>
       <SEO
-        title={t('contact.title')}
-        description={t('contact.subtitle')}
+        title={t('contact.seo.title')}
+        description={t('contact.seo.description')}
         keywords={t('contact.seo.keywords')}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
@@ -87,6 +87,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       <ImageHero
         {...{
           locale,
+          priority: true,
           title: t('contact.title'),
           subtitle: t('contact.subtitle'),
           backgroundImage: "/images/hardware5.webp",

@@ -27,6 +27,10 @@ class MyDocument extends Document<Props> {
         prefix="og: https://ogp.me/ns#"
       >
         <Head>
+          {/* Resource hints */}
+          <link rel="dns-prefetch" href="//api.emailjs.com" />
+          <link rel="dns-prefetch" href="//vercel.live" />
+          <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
           {/* Critical fonts for above-the-fold content */}
           <link
             rel="preload"
@@ -67,7 +71,7 @@ class MyDocument extends Document<Props> {
                 
                     document.documentElement.classList.toggle('dark', shouldUseDark);
                 
-                    var themeColor = shouldUseDark ? '#1e3a8a' : '#1a56db';
+                    var themeColor = shouldUseDark ? '#5b21b6' : '#6d28d9';
                     var metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
                     if (metaThemeColor) {
                       metaThemeColor.setAttribute('content', themeColor);

@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { filterPortfolioItems } from '../../utils/portfolioDataUtils';
 import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
+import { generateItemListSchema } from '../../utils/schemaGenerator';
+import { getSiteConfig } from '../../data/siteConfig';
 import ImageHero from '../../components/common/ImageHero';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
@@ -36,6 +38,20 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
+  const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
+
+  const itemListSchema = React.useMemo(() => generateItemListSchema(
+    initialPortfolioItems.slice(0, 20).map((item) => ({
+      id: item.id,
+      name: `${item.artist} - ${item.title}`,
+      url: `/${locale}/portfolio/${item.id}`,
+      image: item.image,
+      description: item.description,
+    })),
+    siteUrl,
+    locale,
+    t('nav.portfolio')
+  ), [initialPortfolioItems, locale, siteUrl, t]);
 
   const [selectedCategory, setSelectedCategory] = useState<PortfolioCategory>({
     id: 'all',
@@ -107,18 +123,20 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   return (
     <>
       <SEO
-        title={t('portfolio.title')}
-        description={t('portfolio.subtitle')}
+        title={t('portfolio.seo.title')}
+        description={t('portfolio.seo.description')}
         keywords={t('portfolio.seo.keywords')}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
         ]}
         includeSchema={true}
+        schema={itemListSchema}
       />
       <ImageHero
         {...{
           locale,
+          priority: true,
           title: t('portfolio.title'),
           subtitle: (
             <>

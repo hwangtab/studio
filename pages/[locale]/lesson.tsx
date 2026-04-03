@@ -27,7 +27,7 @@ interface CurriculumCardProps {
 }
 
 const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
-    <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700">
+    <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group border border-gray-100 dark:border-gray-700">
         <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-primary transition-transform group-hover:scale-110">
             {step}
         </div>
@@ -93,6 +93,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
             />
             <ImageHero
                 locale={locale}
+                priority
                 title={t('lesson.hero.title')}
                 subtitle={
                     <>

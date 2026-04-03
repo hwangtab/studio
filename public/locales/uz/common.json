@@ -111,7 +111,9 @@
       "imageAlt": "Studio NOL Neumann U87AI kondensator mikrofoni"
     },
     "seo": {
-      "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar"
+      "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar",
+      "title": "Yeonsinnae Musiqa Studiyasi · Yozuv, Miks, Mastering | Studio NOL",
+      "description": "Studio NOL rejalashtirish, yozuv, miks, mastering va tarqatishgacha to'liq musiqa ishlab chiqarish xizmatini taqdim etadi. 10 yillik tajribali muhandislar va analog uskunalar."
     },
     "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
     "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
@@ -134,7 +136,9 @@
     },
     "heroAlt": "Studio NOL Portfeli",
     "seo": {
-      "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL"
+      "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL",
+      "title": "Yozuv va Miks Portfolio | Studio NOL",
+      "description": "Studio NOL ning yozuv, miks va mastering loyihalarini ko'ring. Turli janrlarda oldin-keyin namunalarini tinglang."
     }
   },
   "contact": {
@@ -190,7 +194,9 @@
     },
     "checkNotices": "Elon-xabarlari tekshirish",
     "seo": {
-      "keywords": "Studio NOL aloqa, musiqa prodakshn so'rovi, yozuv bron qilish, miks so'rovi, studio manzili, KakaoTalk konsultatsiya, prodakshn narxlari"
+      "keywords": "Studio NOL aloqa, musiqa prodakshn so'rovi, yozuv bron qilish, miks so'rovi, studio manzili, KakaoTalk konsultatsiya, prodakshn narxlari",
+      "title": "Aloqa, Bron va Yo'nalish | Studio NOL",
+      "description": "Yozuv, miks va mastering bo'yicha so'rov va bron uchun murojaat qiling. KakaoTalk va email orqali mavjud. Yeonsinnae bekatidan 5 daqiqa piyoda. 24 soat ichida javob."
     }
   },
   "pricing": {

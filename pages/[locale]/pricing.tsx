@@ -176,6 +176,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
       {/* Hero Section */}
       <ImageHero
         locale={locale}
+        priority
         title={t('pricing.hero.title')}
         subtitle={
           <>
