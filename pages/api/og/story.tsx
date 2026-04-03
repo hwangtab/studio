@@ -1,120 +1,169 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import sharp from 'sharp';
-import path from 'path';
-import fs from 'fs';
+import { ImageResponse } from '@vercel/og';
+import type { NextRequest } from 'next/server';
+
+export const config = { runtime: 'edge' };
 
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
-}
-
-function wrapText(text: string, maxCharsPerLine: number, maxLines: number): string[] {
-  const lines: string[] = [];
-  let remaining = text;
-
-  while (remaining.length > 0 && lines.length < maxLines) {
-    if (remaining.length <= maxCharsPerLine) {
-      lines.push(remaining);
-      break;
-    }
-    let breakIndex = maxCharsPerLine;
-    const spaceIndex = remaining.lastIndexOf(' ', maxCharsPerLine);
-    if (spaceIndex > maxCharsPerLine * 0.4) {
-      breakIndex = spaceIndex;
-    }
-    let line = remaining.substring(0, breakIndex);
-    if (lines.length === maxLines - 1 && remaining.length > breakIndex) {
-      line = line.trimEnd() + '...';
-    }
-    lines.push(line);
-    remaining = remaining.substring(breakIndex).trimStart();
-  }
-
-  return lines;
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextRequest) {
   try {
-    const { title, category, date } = req.query;
+    const { searchParams } = new URL(req.url);
+    const title = searchParams.get('title') || 'Studio NOL';
+    const category = searchParams.get('category') || '';
+    const date = searchParams.get('date') || '';
 
-    const titleText = typeof title === 'string' ? title : 'Studio NOL';
-    const categoryText = typeof category === 'string' ? category : '';
-    const dateText = typeof date === 'string' ? date : '';
+    const metaParts = [category, date].filter(Boolean).join('  ·  ');
 
-    const titleLines = wrapText(titleText, 20, 3);
-    const titleSvgLines = titleLines
-      .map(
-        (line, i) =>
-          `<text x="80" y="${280 + i * 64}" font-family="sans-serif" font-weight="bold" font-size="48" fill="white">${escapeXml(line)}</text>`
-      )
-      .join('\n');
+    // Noto Sans KR 폰트 — Google Fonts에서 직접 fetch (CJK 포함)
+    const fontRes = await fetch(
+      'https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLTq8H4hfeE.woff2'
+    );
+    const fontData = await fontRes.arrayBuffer();
 
-    const metaY = 280 + titleLines.length * 64 + 20;
-    const metaParts = [categoryText, dateText].filter(Boolean).join('  ·  ');
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: WIDTH,
+            height: HEIGHT,
+            display: 'flex',
+            flexDirection: 'column',
+            background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+            fontFamily: '"Noto Sans KR"',
+            position: 'relative',
+          }}
+        >
+          {/* 하단 accent 바 */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: WIDTH,
+              height: 6,
+              background: 'linear-gradient(90deg, #e94560, #ff6b6b)',
+            }}
+          />
 
-    let logoBase64 = '';
-    try {
-      const logoPath = path.join(process.cwd(), 'public', 'logo', 'logo.png');
-      const logoBuffer = fs.readFileSync(logoPath);
-      const resizedLogo = await sharp(logoBuffer).resize(180, null, { fit: 'inside' }).png().toBuffer();
-      logoBase64 = `data:image/png;base64,${resizedLogo.toString('base64')}`;
-    } catch {
-      // Logo not available — continue without it
-    }
+          {/* 데코 원형 */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 40,
+              right: 100,
+              width: 160,
+              height: 160,
+              borderRadius: '50%',
+              border: '2px solid rgba(233,69,96,0.15)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: 10,
+              right: 50,
+              width: 240,
+              height: 240,
+              borderRadius: '50%',
+              border: '2px solid rgba(233,69,96,0.08)',
+            }}
+          />
 
-    const svg = `
-<svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a1a2e"/>
-      <stop offset="50%" stop-color="#16213e"/>
-      <stop offset="100%" stop-color="#0f3460"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#e94560"/>
-      <stop offset="100%" stop-color="#ff6b6b"/>
-    </linearGradient>
-  </defs>
+          {/* 로고 / 사이트명 */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 60,
+              left: 80,
+              color: 'white',
+              fontSize: 28,
+              fontWeight: 700,
+            }}
+          >
+            Studio NOL
+          </div>
 
-  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#bg)"/>
+          {/* accent 바 */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 230,
+              left: 80,
+              width: 60,
+              height: 4,
+              background: 'linear-gradient(90deg, #e94560, #ff6b6b)',
+              borderRadius: 2,
+            }}
+          />
 
-  <!-- Decorative accent bar -->
-  <rect x="80" y="230" width="60" height="4" fill="url(#accent)" rx="2"/>
+          {/* 제목 */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 254,
+              left: 80,
+              right: 80,
+              color: 'white',
+              fontSize: 48,
+              fontWeight: 700,
+              lineHeight: 1.35,
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 3,
+              overflow: 'hidden',
+            }}
+          >
+            {title}
+          </div>
 
-  <!-- Title -->
-  ${titleSvgLines}
+          {/* 카테고리 · 날짜 */}
+          {metaParts && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 50,
+                left: 80,
+                color: '#a0a0b0',
+                fontSize: 22,
+              }}
+            >
+              {metaParts}
+            </div>
+          )}
 
-  <!-- Meta info -->
-  ${metaParts ? `<text x="80" y="${metaY}" font-family="sans-serif" font-size="22" fill="#a0a0b0">${escapeXml(metaParts)}</text>` : ''}
-
-  <!-- Logo area -->
-  ${logoBase64 ? `<image href="${logoBase64}" x="80" y="60" width="180" height="60" preserveAspectRatio="xMinYMid meet"/>` : `<text x="80" y="100" font-family="sans-serif" font-weight="bold" font-size="28" fill="white">Studio NOL</text>`}
-
-  <!-- Bottom line -->
-  <rect x="0" y="${HEIGHT - 6}" width="${WIDTH}" height="6" fill="url(#accent)"/>
-
-  <!-- Decorative circles -->
-  <circle cx="1050" cy="120" r="80" fill="none" stroke="#e94560" stroke-opacity="0.15" stroke-width="2"/>
-  <circle cx="1100" cy="180" r="120" fill="none" stroke="#e94560" stroke-opacity="0.08" stroke-width="2"/>
-
-  <!-- Domain -->
-  <text x="1120" y="${HEIGHT - 30}" font-family="sans-serif" font-size="16" fill="#606070" text-anchor="end">studionol.co.kr</text>
-</svg>`;
-
-    const image = await sharp(Buffer.from(svg)).png().toBuffer();
-
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800');
-    res.status(200).end(image);
+          {/* 도메인 */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 28,
+              right: 80,
+              color: '#606070',
+              fontSize: 16,
+            }}
+          >
+            studionol.co.kr
+          </div>
+        </div>
+      ),
+      {
+        width: WIDTH,
+        height: HEIGHT,
+        fonts: [
+          {
+            name: 'Noto Sans KR',
+            data: fontData,
+            style: 'normal',
+            weight: 400,
+          },
+        ],
+        headers: {
+          'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
+        },
+      }
+    );
   } catch (error) {
     console.error('OG image generation error:', error);
-    res.status(500).json({ error: 'Failed to generate image' });
+    return new Response('Failed to generate image', { status: 500 });
   }
 }
