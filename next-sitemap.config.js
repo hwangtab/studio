@@ -47,11 +47,17 @@ const getAlternateRefs = (routePath) => {
   const firstSegment = segments[0];
   if (!locales.includes(firstSegment)) return [];
   const restPath = segments.slice(1).join('/');
-  return locales.map(locale => ({
+  const refs = locales.map(locale => ({
     href: `${siteUrl}/${locale}${restPath ? `/${restPath}` : ''}`,
     hreflang: locale,
     hrefIsAbsolute: true,
   }));
+  refs.push({
+    href: `${siteUrl}/ko${restPath ? `/${restPath}` : ''}`,
+    hreflang: 'x-default',
+    hrefIsAbsolute: true,
+  });
+  return refs;
 };
 
 const getRouteLastmod = (routePath) => {
@@ -100,6 +106,8 @@ module.exports = {
       { userAgent: 'ChatGPT-User', allow: '/' },
     ],
     additionalSitemaps: [],
+    transformRobotsTxt: async (_config, robotsTxt) =>
+      robotsTxt.replace(/# Host\nHost:.*\n/g, ''),
   },
   transform: async (config, routePath) => {
     if (routePath.includes('/privacy-policy')) {

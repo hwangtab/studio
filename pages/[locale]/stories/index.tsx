@@ -166,6 +166,17 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
               />
             </div>
           )}
+
+          {/* 크롤러용 전체 스토리 링크 (sr-only: 시각적으로 숨김, 크롤러 접근 가능) */}
+          <nav aria-label="All stories" className="sr-only">
+            <ul>
+              {stories.map((story) => (
+                <li key={story.slug}>
+                  <a href={`/${locale}/stories/${story.slug}`}>{story.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </Section>
       <Section variant="alternate" className="py-16">
