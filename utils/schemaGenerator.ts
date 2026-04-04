@@ -67,7 +67,8 @@ export const generateDefaultSchema = (
       {
         '@type': 'Organization',
         '@id': organizationId,
-        name: 'Studio NOL',
+        name: config.name,
+        alternateName: 'Studio NOL',
         url: siteUrl,
         logo: {
           '@type': 'ImageObject',
@@ -454,7 +455,7 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     '@type': 'WebSite',
     '@id': `${siteUrl}/#website`,
     name: config.name,
-    alternateName: 'Studio Nol',
+    alternateName: 'Studio NOL',
     url: siteUrl,
     inLanguage: schemaLanguage,
     publisher: {

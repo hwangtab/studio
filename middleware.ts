@@ -105,6 +105,10 @@ export function middleware(request: NextRequest) {
     }
 
     const response = NextResponse.next();
+    const pathLocale = pathname.split('/')[1];
+    if (locales.includes(pathLocale as Locale)) {
+        response.headers.set('Content-Language', pathLocale);
+    }
     return setSecurityHeaders(response);
 }
 
