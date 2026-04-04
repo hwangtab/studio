@@ -44,7 +44,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     }
 
     // 3. Update theme-color meta tag
-    const themeColor = isDarkMode ? '#1e3a8a' : '#1a56db';
+    const themeColor = isDarkMode ? '#5b21b6' : '#6d28d9';
     const metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', themeColor);

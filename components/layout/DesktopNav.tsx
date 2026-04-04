@@ -21,7 +21,7 @@ export const DesktopNav = ({
   onNavigate,
 }: DesktopNavProps) => {
   return (
-    <nav className="hidden xl:flex items-center gap-x-2">
+    <nav aria-label="Main navigation" className="hidden xl:flex items-center gap-x-2">
       {navGroups.map((group) => (
         <DropdownMenu
           key={group.id}

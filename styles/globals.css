@@ -10,8 +10,8 @@
   font-weight: 400;
   font-display: swap;
   src: local('Gmarket Sans Medium'), local('GmarketSansMedium'),
-    url('/fonts/GmarketSansMedium.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    url('/fonts/GmarketSansMedium.woff2') format('woff2'),
+    url('/fonts/GmarketSansMedium.woff') format('woff');
 }
 
 @font-face {
@@ -19,8 +19,8 @@
   font-weight: 700;
   font-display: swap;
   src: local('Gmarket Sans Bold'), local('GmarketSansBold'),
-    url('/fonts/GmarketSansBold.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    url('/fonts/GmarketSansBold.woff2') format('woff2'),
+    url('/fonts/GmarketSansBold.woff') format('woff');
 }
 
 /* PartialSansKR 폰트 (원본) */

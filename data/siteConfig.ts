@@ -1,11 +1,12 @@
 import type { SiteConfig, SEODefaults } from '../types/data';
 import type { Locale } from '../lib/i18n';
 
+// Social profiles — 계정 개설 시 URL 추가 (schema.org sameAs에 자동 반영됨)
 export const socialProfiles = {
-  instagram: '',
-  youtube: '',
-  facebook: '',
-  twitter: '',
+  instagram: '', // TODO: add when available
+  youtube: '', // TODO: add when available
+  facebook: '', // TODO: add when available
+  twitter: '', // TODO: add when available
 };
 
 // Translation helper
@@ -59,13 +60,13 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
 export const getSeoDefaults = (locale: Locale): SEODefaults => {
   return {
     title: t(locale, {
-      ko: '스튜디오 놀 - 음악 제작 스튜디오',
-      en: 'Studio NOL - Music Production Studio',
-      zh: 'Studio NOL - 音乐制作工作室',
-      es: 'Studio NOL - Estudio de Producción Musical',
-      vi: 'Studio NOL - Studio sản xuất âm nhạc',
-      th: 'Studio NOL - สตูดิโอผลิตเพลง',
-      uz: 'Studio NOL - Musiqa ishlab chiqarish studiyasi'
+      ko: '스튜디오 놀 | 음악 제작 스튜디오',
+      en: 'Studio NOL | Music Production Studio',
+      zh: 'Studio NOL | 音乐制作工作室',
+      es: 'Studio NOL | Estudio de Producción Musical',
+      vi: 'Studio NOL | Studio sản xuất âm nhạc',
+      th: 'Studio NOL | สตูดิโอผลิตเพลง',
+      uz: 'Studio NOL | Musiqa ishlab chiqarish studiyasi'
     }),
     description: t(locale, {
       ko: '연신내역 도보 5분, 스튜디오 놀에서 녹음실·연습실·믹싱/마스터링 서비스를 한 번에 이용하세요.',

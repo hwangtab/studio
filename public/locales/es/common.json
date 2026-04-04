@@ -9,7 +9,7 @@
     "equipment": "Equipo",
     "practiceRoom": "Sala",
     "lesson": "Clases",
-    "mobileMenu": "Mobile Menu",
+    "mobileMenu": "Menú móvil",
     "groups": {
       "recording": "Grabación",
       "practice": "Práctica",
@@ -113,7 +113,7 @@
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
       "title": "Producción Musical en Yeonsinnae · Grabación, Mezcla y Masterización | Studio NOL",
-      "description": "Studio NOL ofrece producción musical integral: desde planificación hasta grabación, mezcla, masterización y distribución. Ingenieros con 10 años de experiencia y equipo analógico."
+      "description": "Studio NOL ofrece producción musical integral: grabación, mezcla, masterización y distribución. 10 años de experiencia con equipo analógico."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
     "howToDescription": "Una guía completa para producir música en un estudio profesional."
@@ -263,7 +263,7 @@
     }
   },
   "lesson": {
-    "mobileMenu": "Mobile Menu",
+    "mobileMenu": "Menú móvil",
     "seo": {
       "title": "Masterclass de producción musical | Studio NOL",
       "description": "Desde consultoría de distribución hasta feedback de mezcla 1:1. Haz realidad tu música con ingeniería profesional.",
@@ -550,7 +550,7 @@
         "visualText": "Audio profesional"
       },
       "lesson": {
-        "mobileMenu": "Mobile Menu",
+        "mobileMenu": "Menú móvil",
         "title": "¿Quieres crear tu propia música?",
         "descriptionLine1": "No luches solo. Te ayudamos con clases personalizadas 1:1.",
         "descriptionLine2": "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.",
@@ -586,7 +586,7 @@
       "notice": "Aviso",
       "event": "Evento",
       "lesson": "Clase",
-      "mobileMenu": "Mobile Menu",
+      "mobileMenu": "Menú móvil",
       "interview": "Entrevista",
       "equipment": "Equipo",
       "review": "Reseña",

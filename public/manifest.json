@@ -3,7 +3,7 @@
   "short_name": "Studio NOL",
   "description": "Music recording, practice room, mixing, mastering, and production studio.",
   "id": "/",
-  "start_url": "/",
+  "start_url": "/ko",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",

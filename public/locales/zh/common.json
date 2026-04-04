@@ -9,7 +9,7 @@
     "equipment": "设备介绍",
     "practiceRoom": "练习室",
     "lesson": "课程",
-    "mobileMenu": "Mobile Menu",
+    "mobileMenu": "移动菜单",
     "groups": {
       "recording": "录音/混音",
       "practice": "练习/课程",
@@ -112,7 +112,7 @@
     },
     "seo": {
       "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备",
-      "title": "연신내 음악 프로덕션 · 全方位录音·混音·母带 | Studio NOL",
+      "title": "Yeonsinnae 音乐制作 · 全方位录音·混音·母带 | Studio NOL",
       "description": "从企划到录音、混音、母带、发行，Studio NOL 提供一站式音乐制作服务。模拟设备与10年经验工程师全程陪伴。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
@@ -263,7 +263,7 @@
     }
   },
   "lesson": {
-    "mobileMenu": "Mobile Menu",
+    "mobileMenu": "移动菜单",
     "seo": {
       "title": "音乐发行咨询 · 混音反馈与短期 MIDI 课程 | Studio NOL",
       "description": "从发行/版权注册咨询到 1:1 混音反馈，帮助你完成音乐。",
@@ -399,7 +399,7 @@
       "items": [
         {
           "title": "本地音乐人",
-          "description": "在延新内、佛光、九山、역촌、응암 附近寻找私人工作室的人"
+          "description": "在延新内、佛光、九山、驿村、鹰岩 附近寻找私人工作室的人"
         },
         {
           "title": "内容创作者",
@@ -444,7 +444,7 @@
       "items": [
         {
           "q": "恩平区离哪些地方近？",
-          "a": "位于东明女高中学旁，距延新内站步行 5 分钟，靠近延新内、佛光、九山、역촌、응암 等区域，交通便利。"
+          "a": "位于东明女高中学旁，距延新内站步行 5 分钟，靠近延新内、佛光、九山、驿村、鹰岩 等区域，交通便利。"
         },
         {
           "q": "练习室可以 24 小时使用吗？",
@@ -550,7 +550,7 @@
         "visualText": "专业音频"
       },
       "lesson": {
-        "mobileMenu": "Mobile Menu",
+        "mobileMenu": "移动菜单",
         "title": "想自己制作音乐吗？",
         "descriptionLine1": "不要独自烦恼。我们提供1:1定制课程。",
         "descriptionLine2": "从基础开始扎实学习 MIDI、混音、声音设计。",
@@ -586,7 +586,7 @@
       "notice": "公告",
       "event": "活动",
       "lesson": "课程",
-      "mobileMenu": "Mobile Menu",
+      "mobileMenu": "移动菜单",
       "interview": "采访",
       "equipment": "设备",
       "review": "评论",

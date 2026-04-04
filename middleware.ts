@@ -80,7 +80,11 @@ export function middleware(request: NextRequest) {
     );
     if (!pathnameHasLocale) {
         // Redirect to locale-prefixed path
-        const locale = getPreferredLocale(request);
+        // 봇(Accept-Language 없음)은 x-default와 일치하도록 /en으로 보냄
+        const userAgent = request.headers.get('user-agent') || '';
+        const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot/i.test(userAgent);
+        const acceptLanguage = request.headers.get('accept-language');
+        const locale = (isBot && !acceptLanguage) ? 'en' as Locale : getPreferredLocale(request);
         redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
         shouldRedirect = true;
         shouldVaryByLanguage = true;

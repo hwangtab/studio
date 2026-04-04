@@ -53,7 +53,7 @@ const getAlternateRefs = (routePath) => {
     hrefIsAbsolute: true,
   }));
   refs.push({
-    href: `${siteUrl}/ko${restPath ? `/${restPath}` : ''}`,
+    href: `${siteUrl}/en${restPath ? `/${restPath}` : ''}`,
     hreflang: 'x-default',
     hrefIsAbsolute: true,
   });
@@ -99,7 +99,7 @@ module.exports = {
   exclude: ['/api/*', '/404', '/500'],
   robotsTxtOptions: {
     policies: [
-      { userAgent: '*', allow: '/' },
+      { userAgent: '*', allow: '/', disallow: '/api/' },
       { userAgent: 'Yeti', allow: '/' },
       { userAgent: 'GPTBot', allow: '/' },
       { userAgent: 'OAI-SearchBot', allow: '/' },

@@ -14,6 +14,7 @@ import ContactCTA from '../../components/common/ContactCTA';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
+import { getSiteConfig } from '../../data/siteConfig';
 import type { NextPageWithLayout } from '../../types';
 
 interface PricingProps {
@@ -44,7 +45,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
     specialPackages
   } = pricingData;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
+  const siteUrl = getSiteConfig(locale).url;
   const pricingUrl = `${siteUrl}/${locale}/pricing`;
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 

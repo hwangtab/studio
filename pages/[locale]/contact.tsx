@@ -9,6 +9,7 @@ import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getFaqData } from '../../data/faq';
 import { NextPageWithLayout } from '../../types';
 
 import { getValidationFallbacks } from '../../utils/contactMessages';
@@ -65,6 +66,13 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     handleRetrySubmit,
   } = useContactForm({ locale, t });
   const siteConfig = getSiteConfig(locale);
+  const contactFaqData = React.useMemo(() => {
+    const allFaq = getFaqData(locale);
+    return allFaq.filter(faq => {
+      const text = (faq.question + faq.answer).toLowerCase();
+      return ['위치', '어디', '영업', '주말', '초보', 'location', 'where', 'hours', 'weekend', 'beginner', '哪里', '位于', 'ở đâu', 'อยู่ที่ไหน', 'qayerda'].some(kw => text.includes(kw));
+    });
+  }, [locale]);
   const infoCardMotionProps = createEnterAnimation({ axis: 'x', distance: -50, duration: 0.5 });
   const directionsMotionProps = createInViewEnterAnimation({ duration: 0.5, delay: 0.4 });
   const formCardMotionProps = createEnterAnimation({ axis: 'x', distance: 50, duration: 0.5, delay: 0.2 });
@@ -83,6 +91,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           { name: t('nav.contact'), path: `/${locale}/contact` },
         ]}
         includeSchema={true}
+        faqItems={contactFaqData}
       />
       <ImageHero
         {...{

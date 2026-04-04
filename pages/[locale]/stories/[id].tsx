@@ -18,7 +18,7 @@ import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/s
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
-import { defaultLocale, type Locale } from '../../../lib/i18n';
+import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
@@ -93,7 +93,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
 
-  const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}`;
+  const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
   const ogImage = story.thumbnail || dynamicOgImage;
 
   const shareStory = async () => {
@@ -112,7 +112,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   return (
     <>
       <SEO
-        title={`${story.title} - ${siteConfig.name}`}
+        title={`${story.title} | ${siteConfig.name}`}
         description={story.summary || metaDescription}
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
         canonical={story.isFallbackTranslation ? `/${story.sourceLocale}/stories/${story.slug}` : undefined}
@@ -213,12 +213,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 StoryDetailPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const preRenderedPaths = getStoryPaths().filter(
-    (path) => path.params.locale === defaultLocale
-  );
-
   return {
-    paths: preRenderedPaths,
+    paths: getStoryPaths(),
     fallback: 'blocking',
   };
 };

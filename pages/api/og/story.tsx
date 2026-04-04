@@ -12,6 +12,10 @@ export default async function handler(req: NextRequest) {
     const title = searchParams.get('title') || 'Studio NOL';
     const category = searchParams.get('category') || '';
     const date = searchParams.get('date') || '';
+    // locale 파라미터 — SNS 플랫폼이 언어별로 별도 OG 이미지를 캐시하도록 URL 구분
+    const _locale = searchParams.get('locale') || 'ko';
+    void _locale; // 현재는 URL 분리 목적, 향후 로케일별 렌더링 확장 가능
+    const domain = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/^https?:\/\//, '');
 
     const metaParts = [category, date].filter(Boolean).join('  ·  ');
 
@@ -142,7 +146,7 @@ export default async function handler(req: NextRequest) {
               fontSize: 16,
             }}
           >
-            studionol.co.kr
+            {domain}
           </div>
         </div>
       ),

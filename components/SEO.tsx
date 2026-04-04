@@ -290,7 +290,7 @@ const SEO = ({
         <link
           rel="alternate"
           hrefLang="x-default"
-          href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+          href={`${siteUrl}/en${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
         />
       )}
 

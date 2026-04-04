@@ -15,7 +15,7 @@ import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
-import { defaultLocale, type Locale } from '../../../lib/i18n';
+import { defaultLocale, locales, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
 
@@ -147,7 +147,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   items
     .filter((item) => item.featured)
     .forEach((item) => {
-      paths.push({ params: { locale: defaultLocale, id: item.id } });
+      locales.forEach((locale) => {
+        paths.push({ params: { locale, id: item.id } });
+      });
     });
 
   return { paths, fallback: 'blocking' };

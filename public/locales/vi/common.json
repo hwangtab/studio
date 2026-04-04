@@ -9,7 +9,7 @@
     "equipment": "Thiết bị",
     "practiceRoom": "Phòng tập",
     "lesson": "Bài học",
-    "mobileMenu": "Mobile Menu",
+    "mobileMenu": "Menu di động",
     "groups": {
       "recording": "Thu âm",
       "practice": "Luyện tập",
@@ -113,7 +113,7 @@
     "seo": {
       "keywords": "Studio NOL, quy trình sản xuất âm nhạc, sản xuất âm nhạc, phòng thu, mixing mastering, phân phối nhạc, lập kế hoạch âm nhạc, thiết bị analog",
       "title": "Sản Xuất Âm Nhạc Yeonsinnae · Thu Âm, Mixing, Mastering | Studio NOL",
-      "description": "Studio NOL cung cấp dịch vụ sản xuất âm nhạc toàn diện: từ lên kế hoạch đến thu âm, mixing, mastering và phân phối. Kỹ sư 10 năm kinh nghiệm cùng thiết bị analog."
+      "description": "Studio NOL cung cấp dịch vụ sản xuất âm nhạc toàn diện: thu âm, mixing, mastering và phân phối. 10 năm kinh nghiệm cùng thiết bị analog."
     },
     "howToTitle": "Cách sản xuất âm nhạc tại Studio NOL",
     "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp."
@@ -263,7 +263,7 @@
     }
   },
   "lesson": {
-    "mobileMenu": "Mobile Menu",
+    "mobileMenu": "Menu di động",
     "seo": {
       "title": "Masterclass sản xuất âm nhạc | Studio NOL",
       "description": "Từ tư vấn phân phối đến phản hồi mixing 1:1. Hiện thực hóa âm nhạc của bạn với kỹ thuật chuyên nghiệp.",
@@ -433,7 +433,7 @@
           "description": "Internet gigabit tốc độ cao, cơ sở âm học chuyên nghiệp."
         },
         {
-          "title": "Vị trí & 접근",
+          "title": "Vị trí & Tiếp cận",
           "description": "Đi bộ 5 phút từ ga, hệ thống an ninh 24h."
         }
       ]
@@ -550,7 +550,7 @@
         "visualText": "Âm thanh chuyên nghiệp"
       },
       "lesson": {
-        "mobileMenu": "Mobile Menu",
+        "mobileMenu": "Menu di động",
         "title": "Bạn muốn tự làm nhạc?",
         "descriptionLine1": "Đừng lo một mình. Chúng tôi hỗ trợ với lớp học 1:1 theo nhu cầu.",
         "descriptionLine2": "Học từ nền tảng đến MIDI, mixing và sound design một cách chắc chắn.",
@@ -586,7 +586,7 @@
       "notice": "Thông báo",
       "event": "Sự kiện",
       "lesson": "Bài học",
-      "mobileMenu": "Mobile Menu",
+      "mobileMenu": "Menu di động",
       "interview": "Phỏng vấn",
       "equipment": "Thiết bị",
       "review": "Review",
