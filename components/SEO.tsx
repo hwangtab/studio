@@ -246,7 +246,7 @@ const SEO = ({
     if (!data) return null;
     let jsonString = '';
     try {
-      jsonString = JSON.stringify(data);
+      jsonString = JSON.stringify(data).replace(/<\//g, '<\\/');
     } catch (e) {
       console.error('Schema serialization error:', e);
       return null;

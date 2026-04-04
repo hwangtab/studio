@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Home",
+    "home": "Trang chủ",
     "about": "Giới thiệu",
     "portfolio": "Portfolio",
     "stories": "Câu chuyện",
@@ -223,7 +223,7 @@
     "mixing": {
       "title": "Mixing",
       "subtitle": "Giá công bằng theo số track. Tạo âm thanh tốt nhất với sự hài hòa analog & digital.",
-      "noticeTitle": "Vocal Tuning/Editing",
+      "noticeTitle": "Chỉnh giọng/Biên tập vocal",
       "noticeBody": "Dịch vụ chỉnh giọng và timing chuyên nghiệp có thêm 150.000 KRW/bài."
     },
     "mastering": {
@@ -522,7 +522,7 @@
       "fallbackKeywords": "Studio NOL, âm nhạc, câu chuyện"
     },
     "hero": {
-      "title": "Stories",
+      "title": "Câu chuyện",
       "subtitle": "Khám phá các câu chuyện về công việc tại studio.",
       "alt": "Stories Studio NOL"
     },
@@ -589,7 +589,7 @@
       "mobileMenu": "Menu di động",
       "interview": "Phỏng vấn",
       "equipment": "Thiết bị",
-      "review": "Review",
+      "review": "Đánh giá",
       "other": "Khác"
     }
   },
