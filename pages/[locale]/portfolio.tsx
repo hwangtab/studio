@@ -39,6 +39,9 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
+  const canonicalOverride = router.query.item
+    ? `${siteUrl}/${locale}/portfolio/${router.query.item}`
+    : undefined;
 
   const itemListSchema = React.useMemo(() => generateItemListSchema(
     initialPortfolioItems.slice(0, 20).map((item) => ({
@@ -139,6 +142,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         title={t('portfolio.seo.title')}
         description={t('portfolio.seo.description')}
         keywords={t('portfolio.seo.keywords')}
+        canonical={canonicalOverride}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
@@ -249,6 +253,17 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           secondaryButtonLabel={t('pricing.cta.location')}
         />
       </Section>
+
+      {/* 크롤러용 전체 포트폴리오 링크 (sr-only: 시각적으로 숨김, 크롤러 접근 가능) */}
+      <nav aria-label="All portfolio items" className="sr-only">
+        <ul>
+          {initialPortfolioItems.map((item) => (
+            <li key={item.id}>
+              <a href={`/${locale}/portfolio/${item.id}`}>{item.artist} - {item.title}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <AnimatePresence>
         {selectedItem && (

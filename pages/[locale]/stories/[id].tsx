@@ -11,6 +11,7 @@ import StoryCard from '../../../components/StoryCard';
 import ImageHero from '../../../components/common/ImageHero';
 import StoryCTA, { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
+import Breadcrumb from '../../../components/ui/Breadcrumb';
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
@@ -121,6 +122,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         ogType="article"
         robots={story.isFallbackTranslation ? 'noindex, follow' : 'index, follow'}
         articlePublishedTime={story.date}
+        articleModifiedTime={story.modifiedDate}
         articleAuthor={story.author}
         articleSchemaType="BlogPosting"
         articleSection={story.category}
@@ -130,6 +132,16 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           { name: t('nav.stories'), path: `/${locale}/stories` },
           { name: story.title, path: `/${locale}/stories/${story.slug}` },
         ]}
+      />
+
+      {/* Visible breadcrumb UI */}
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.stories'), path: `/${locale}/stories` },
+          { name: story.title, path: `/${locale}/stories/${story.slug}` },
+        ]}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4"
       />
 
       <ImageHero

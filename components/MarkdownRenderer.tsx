@@ -115,7 +115,7 @@ const STATIC_OVERRIDES = {
   style: { component: DangerousTagBlock },
   h1: {
     component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
-      <h1
+      <h2
         {...rest}
         className={mergeClassNames(
           'font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
@@ -123,7 +123,7 @@ const STATIC_OVERRIDES = {
         )}
       >
         {children}
-      </h1>
+      </h2>
     ),
   },
   h2: {

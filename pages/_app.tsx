@@ -133,6 +133,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="alternate" type="application/rss+xml" title="Studio NOL Stories" href="/api/rss" />
       </Head>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>

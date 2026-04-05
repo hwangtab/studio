@@ -254,6 +254,8 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   }
 
   const { sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
+  const { filePath } = resolveStoryFile(slug, requestedLocale);
+  const modifiedDate = fs.statSync(filePath).mtime.toISOString();
   const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
   let contentToProcess = content;
 
@@ -270,6 +272,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     content: contentToProcess,
     sourceLocale,
     isFallbackTranslation: sourceLocale !== requestedLocale,
+    modifiedDate,
   };
 
   if (enableCache) {

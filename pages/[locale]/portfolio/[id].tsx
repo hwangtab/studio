@@ -18,6 +18,7 @@ import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic
 import { defaultLocale, locales, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
+import Breadcrumb from '../../../components/ui/Breadcrumb';
 
 
 interface PortfolioDetailPageProps {
@@ -89,6 +90,14 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
           { name: item.title, path: `/${locale}/portfolio/${item.id}` },
         ]}
+      />
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
+          { name: item.title, path: `/${locale}/portfolio/${item.id}` },
+        ]}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4"
       />
       <Section variant="default" className="pt-8 pb-12">
         <div className="mb-8">

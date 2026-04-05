@@ -6,6 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
+  trailingSlash: false,
   outputFileTracingRoot: __dirname,
 
   // Optimized image configuration
