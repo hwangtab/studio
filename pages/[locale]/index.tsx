@@ -53,6 +53,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
         title={seo.title}
         description={seo.description}
         keywords={seo.keywords}
+        ogImage={heroContent.backgroundImage}
+        ogImageAlt={heroContent.imageAlt}
+        ogImageWidth={1280}
+        ogImageHeight={720}
         includeSchema
         faqItems={faqData}
         reviewItems={reviewsData}

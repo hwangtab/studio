@@ -55,7 +55,7 @@ export const Footer = ({ locale }: FooterProps) => {
             </ul>
           </div>
 
-          <div className="flex flex-col">
+          <address className="flex flex-col not-italic">
             <h3 className="typo-footer-heading mb-4">{t('footer.contactTitle')}</h3>
             <div className="h-px w-full bg-white/25 mb-4" />
             <a
@@ -88,7 +88,7 @@ export const Footer = ({ locale }: FooterProps) => {
               <Phone className="mr-2 mt-0.5" size={16} aria-hidden="true" />
               <span className="leading-relaxed">{t('footer.phoneLabel')}: {siteConfig.contact.phone}</span>
             </a>
-          </div>
+          </address>
         </div>
       </div>
     </footer>

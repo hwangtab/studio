@@ -575,6 +575,7 @@ export const generateMusicRecordingSchema = (
   return {
     '@context': 'https://schema.org',
     '@type': 'MusicRecording',
+    ...(item.url && { '@id': `${item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`}#recording` }),
     name: item.title,
     byArtist: {
       '@type': 'MusicGroup',

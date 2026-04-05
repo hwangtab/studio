@@ -137,6 +137,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="color-scheme" content="light dark" />
         <meta name="theme-color" content="#6d28d9" />
         <meta name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
+        <meta name="msapplication-TileColor" content="#6d28d9" />
+        <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link rel="icon" href="/favicon.ico" />
