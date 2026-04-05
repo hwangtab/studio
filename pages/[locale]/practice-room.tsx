@@ -124,6 +124,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         title={t('practiceRoom.seo.title')}
         description={t('practiceRoom.seo.description')}
         keywords={t('practiceRoom.seo.keywords')}
+        ogImage="/images/room5.jpg"
+        ogImageAlt={t('practiceRoom.hero.alt')}
+        ogImageWidth={1440}
+        ogImageHeight={810}
         includeSchema={true}
         faqItems={practiceRoomFaqs}
         schema={practiceRoomSchema}
@@ -297,6 +301,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
           imageAlt={t('practiceRoom.cta.imageAlt')}
           primaryButtonLabel={t('practiceRoom.cta.inquiry')}
           secondaryButtonLabel={t('practiceRoom.cta.location')}
+          headingAs="h3"
         />
       </Section>
     </>

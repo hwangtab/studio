@@ -179,6 +179,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
           imageAlt={heroContent.ctaImageAlt}
           primaryButtonLabel={t('home.cta.inquiry')}
           secondaryButtonLabel={t('home.cta.location')}
+          headingAs="h3"
         />
       </Section>
     </div>

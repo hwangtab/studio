@@ -120,12 +120,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         disableAlternates={story.isFallbackTranslation}
         ogImage={ogImage}
         ogType="article"
-        robots={story.isFallbackTranslation ? 'noindex, follow' : 'index, follow'}
+        author={story.author || undefined}
+        robots={story.isFallbackTranslation ? 'noindex, follow' : undefined}
         articlePublishedTime={story.date}
         articleModifiedTime={story.modifiedDate}
         articleAuthor={story.author}
         articleSchemaType="BlogPosting"
         articleSection={story.category}
+        articleTags={story.tags ?? undefined}
         includeSchema
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },

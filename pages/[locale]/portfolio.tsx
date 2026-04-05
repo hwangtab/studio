@@ -142,6 +142,10 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         title={t('portfolio.seo.title')}
         description={t('portfolio.seo.description')}
         keywords={t('portfolio.seo.keywords')}
+        ogImage="/images/recording1.webp"
+        ogImageAlt={t('portfolio.heroAlt')}
+        ogImageWidth={1920}
+        ogImageHeight={937}
         canonical={canonicalOverride}
         disableAlternates={Boolean(canonicalOverride)}
         breadcrumbs={[
@@ -260,6 +264,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           imageAlt={t('pricing.images.packageAlt')}
           primaryButtonLabel={t('pricing.cta.inquiry')}
           secondaryButtonLabel={t('pricing.cta.location')}
+          headingAs="h3"
         />
       </Section>
 

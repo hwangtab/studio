@@ -28,10 +28,16 @@ class MyDocument extends Document<Props> {
       >
         <Head>
           {/* Resource hints */}
-          <link rel="dns-prefetch" href="//api.emailjs.com" />
-          <link rel="dns-prefetch" href="//vercel.live" />
+          <link rel="dns-prefetch" href="https://api.emailjs.com" />
+          <link rel="dns-prefetch" href="https://vercel.live" />
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://www.google.com" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+          {/* Portfolio image CDN prefetch */}
+          <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
+          <link rel="dns-prefetch" href="https://i.ytimg.com" />
+          <link rel="dns-prefetch" href="https://is1-ssl.mzstatic.com" />
           {/* Critical fonts for above-the-fold content */}
           <link
             rel="preload"

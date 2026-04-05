@@ -86,6 +86,10 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         title={t('contact.seo.title')}
         description={t('contact.seo.description')}
         keywords={t('contact.seo.keywords')}
+        ogImage="/images/hardware5.webp"
+        ogImageAlt={t('contact.heroAlt')}
+        ogImageWidth={1280}
+        ogImageHeight={720}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.contact'), path: `/${locale}/contact` },
@@ -380,7 +384,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
             <div className="mt-6 space-y-4">
               <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                <h4 className="typo-card-subtitle text-blue-800 dark:text-blue-300 mb-2">{t('contact.notice.title')}</h4>
+                <h3 className="typo-card-subtitle text-blue-800 dark:text-blue-300 mb-2">{t('contact.notice.title')}</h3>
                 <ul className="typo-card-body text-blue-700 dark:text-blue-400 space-y-1">
                   {resolvedNoticeList?.map((item, i) => (
                     <li key={`${item}-${i}`}>{item}</li>
@@ -392,7 +396,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
               </div>
 
               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <h4 className="typo-card-subtitle text-gray-800 dark:text-gray-300 mb-2">{t('contact.notice.privacyTitle')}</h4>
+                <h3 className="typo-card-subtitle text-gray-800 dark:text-gray-300 mb-2">{t('contact.notice.privacyTitle')}</h3>
                 <p className="typo-card-body text-gray-600 dark:text-gray-400">
                   {t('contact.notice.privacyText')}
                 </p>

@@ -81,6 +81,9 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         title={`${item.title} - ${t('portfolio.detail.titleSuffix')}`}
         description={metaDescription}
         ogImage={item.image}
+        ogImageAlt={`${item.title} - ${item.artist}`}
+        ogImageWidth={600}
+        ogImageHeight={600}
         ogType="music.album"
         includeSchema
         schema={portfolioSchema}

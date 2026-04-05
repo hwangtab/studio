@@ -10,6 +10,7 @@ import {
   generateFaqSchema,
   generateCourseSchema,
   generateWebSiteSchema,
+  generateWebPageSchema,
 } from '../utils/schemaGenerator';
 import { defaultLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
 import { getSeoDefaults, getSiteConfig } from '../data/siteConfig';
@@ -35,6 +36,7 @@ interface SEOProps {
   articleAuthor?: string;
   articleSection?: string;
   articleSchemaType?: 'Article' | 'BlogPosting';
+  articleTags?: string[];
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
   reviewItems?: ReviewItem[] | null;
@@ -62,6 +64,7 @@ const SEO = ({
   articleAuthor,
   articleSection,
   articleSchemaType = 'Article',
+  articleTags,
   breadcrumbs = null,
   faqItems = null,
   reviewItems = null,
@@ -104,6 +107,14 @@ const SEO = ({
 
   const absoluteOgImage = toAbsoluteUrl(ogImage);
 
+  const ogImageMimeType = React.useMemo(() => {
+    const ext = ogImage.split('?')[0].split('.').pop()?.toLowerCase();
+    if (ext === 'webp') return 'image/webp';
+    if (ext === 'png') return 'image/png';
+    if (ext === 'gif') return 'image/gif';
+    return 'image/jpeg';
+  }, [ogImage]);
+
   // Use provided canonical or generate one based on current path
   const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
   const canonicalUrl = toAbsoluteUrl(derivedCanonical);
@@ -119,10 +130,26 @@ const SEO = ({
     [siteUrl, reviewItems, currentLocale]
   );
 
-
   const websiteSchema = React.useMemo(
     () => generateWebSiteSchema(siteUrl, currentLocale),
     [siteUrl, currentLocale]
+  );
+
+  const webPageSchema = React.useMemo(
+    () =>
+      includeSchema
+        ? generateWebPageSchema(
+          resolvedTitle,
+          resolvedDescription,
+          siteUrl,
+          normalizedCanonical,
+          currentLocale,
+          ogType === 'article' ? `${normalizedCanonical}#article` : undefined,
+          Boolean(breadcrumbs && breadcrumbs.length > 0),
+          absoluteOgImage || undefined
+        )
+        : null,
+    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage]
   );
 
   const articleSchema = React.useMemo(
@@ -138,7 +165,9 @@ const SEO = ({
           articleModifiedTime,
           articleAuthor,
           currentLocale,
-          articleSchemaType
+          articleSchemaType,
+          articleSection,
+          articleTags
         )
         : null,
     [
@@ -153,6 +182,8 @@ const SEO = ({
       articleAuthor,
       currentLocale,
       articleSchemaType,
+      articleSection,
+      articleTags,
     ]
   );
 
@@ -172,8 +203,8 @@ const SEO = ({
   );
 
   const breadcrumbSchema = React.useMemo(
-    () => generateBreadcrumbSchema(breadcrumbs, siteUrl),
-    [breadcrumbs, siteUrl]
+    () => generateBreadcrumbSchema(breadcrumbs, siteUrl, normalizedCanonical),
+    [breadcrumbs, siteUrl, normalizedCanonical]
   );
 
   const faqSchema = React.useMemo(() => generateFaqSchema(faqItems, currentLocale), [faqItems, currentLocale]);
@@ -194,12 +225,13 @@ const SEO = ({
 
     addItems(defaultSchema);
     addItems(websiteSchema);
+    addItems(webPageSchema);
     addItems(articleSchema);
     addItems(courseSchema);
     addItems(schema);
 
     return items.filter(Boolean);
-  }, [defaultSchema, websiteSchema, articleSchema, courseSchema, schema]);
+  }, [defaultSchema, websiteSchema, webPageSchema, articleSchema, courseSchema, schema]);
 
   const schemaData = React.useMemo(() => {
     if (schemaItems.length === 0) return null;
@@ -302,8 +334,9 @@ const SEO = ({
       <meta property="og:image:alt" content={ogImageAlt || resolvedTitle} />
       <meta property="og:image:width" content={String(ogImageWidth)} />
       <meta property="og:image:height" content={String(ogImageHeight)} />
+      <meta property="og:image:type" content={ogImageMimeType} />
       <meta property="og:locale" content={ogLocaleByLocale[currentLocale] || ogLocaleByLocale[defaultLocale]} />
-      <meta property="og:site_name" content="Studio NOL" />
+      <meta property="og:site_name" content={siteConfig.name} />
 
       {/* Alternate locales in OG */}
       {locales.filter(l => l !== currentLocale).map(locale => (
@@ -322,6 +355,9 @@ const SEO = ({
       {ogType === 'article' && articleSection && (
         <meta property="article:section" content={articleSection} />
       )}
+      {ogType === 'article' && articleTags && articleTags.map((tag) => (
+        <meta key={`article-tag-${tag}`} property="article:tag" content={tag} />
+      ))}
 
       <meta name="twitter:card" content="summary_large_image" />
       {!disableCanonicalAndAlternates && <meta name="twitter:url" content={normalizedCanonical} />}

@@ -90,6 +90,9 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },
                 ]}
                 ogImage="/images/lesson1.webp"
+                ogImageAlt={t('lesson.hero.alt')}
+                ogImageWidth={1280}
+                ogImageHeight={720}
             />
             <ImageHero
                 locale={locale}
@@ -141,7 +144,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                 <SectionHeading
                     icon={BookOpen}
                     title={t('lesson.curriculum.title')}
-                    as="h3"
+                    as="h2"
                     className="mb-12"
                     titleClassName="text-heading-3"
                 />
@@ -210,7 +213,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                     >
                         <SectionHeading
                             title={t('lesson.why.title')}
-                            as="h3"
+                            as="h2"
                             align="left"
                             className="mb-8"
                         />
@@ -220,7 +223,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                                     <Mic2 className="text-primary" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
-                                    <h4 className="typo-card-title mb-3">{t('lesson.why.items.0.title')}</h4>
+                                    <h3 className="typo-card-title mb-3">{t('lesson.why.items.0.title')}</h3>
                                     <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         {t('lesson.why.items.0.body')}
                                     </p>
@@ -231,7 +234,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                                     <Disc className="text-primary" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
-                                    <h4 className="typo-card-title mb-3">{t('lesson.why.items.1.title')}</h4>
+                                    <h3 className="typo-card-title mb-3">{t('lesson.why.items.1.title')}</h3>
                                     <p className="typo-card-body text-gray-600 dark:text-gray-300">
                                         {t('lesson.why.items.1.body')}
                                     </p>

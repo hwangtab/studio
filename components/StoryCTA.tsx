@@ -161,9 +161,9 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         {current.icons}
                     </div>
 
-                    <h3 className={`text-2xl md:text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200 break-words [overflow-wrap:anywhere]`}>
+                    <h2 className={`text-2xl md:text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200 break-words [overflow-wrap:anywhere]`}>
                         {current.title}
-                    </h3>
+                    </h2>
 
                     <p className="text-white/90 text-lg leading-relaxed mb-6 break-words [overflow-wrap:anywhere]">
                         {current.description}

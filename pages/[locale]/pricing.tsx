@@ -164,6 +164,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
         keywords={t('pricing.seo.keywords')}
+        ogImage="/images/hardware2.jpg"
+        ogImageAlt={t('pricing.hero.alt')}
+        ogImageWidth={1280}
+        ogImageHeight={720}
         includeSchema
         faqItems={pricingQuickAnswers}
         schema={pricingSchema}
@@ -281,7 +285,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
           <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} aria-hidden="true" />
           <div>
-            <h4 className="typo-card-subtitle mb-1">{t('pricing.mixing.noticeTitle')}</h4>
+            <h3 className="typo-card-subtitle mb-1">{t('pricing.mixing.noticeTitle')}</h3>
             <p className="typo-card-body text-sm">
               {t('pricing.mixing.noticeBody')}
             </p>
@@ -352,6 +356,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
           imageAlt={t('pricing.images.packageAlt')}
           primaryButtonLabel={t('pricing.cta.inquiry')}
           secondaryButtonLabel={t('pricing.cta.location')}
+          headingAs="h3"
         />
       </Section>
     </div>

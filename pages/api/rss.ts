@@ -28,18 +28,24 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const items = stories
     .map((story) => {
       const link = `${siteUrl}/${locale}/stories/${story.slug}`;
+      const thumbnailUrl = story.thumbnail
+        ? (story.thumbnail.startsWith('http') ? story.thumbnail : `${siteUrl}${story.thumbnail}`)
+        : null;
+      const mediaTag = thumbnailUrl
+        ? `\n      <media:content url="${thumbnailUrl}" medium="image" />`
+        : '';
       return `    <item>
       <title>${escapeXml(story.title)}</title>
       <link>${link}</link>
       <description>${escapeXml(story.summary)}</description>
       <pubDate>${new Date(story.date).toUTCString()}</pubDate>
-      <guid isPermaLink="true">${link}</guid>
+      <guid isPermaLink="true">${link}</guid>${mediaTag}
     </item>`;
     })
     .join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>${escapeXml(siteConfig.name)} Stories</title>
     <link>${siteUrl}/${locale}/stories</link>

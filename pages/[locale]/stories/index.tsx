@@ -112,6 +112,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}
+        ogImage="/images/studio1.jpg"
+        ogImageAlt={t('stories.hero.alt')}
+        ogImageWidth={1440}
+        ogImageHeight={809}
         includeSchema
         schema={storiesItemListSchema}
         breadcrumbs={[
@@ -153,16 +157,23 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {visibleStories.map((story) => (
-                <StoryCard
-                  key={story.slug}
-                  story={story}
-                  locale={locale}
-                  labels={storyCardLabels}
-                />
-              ))}
-            </div>
+            <>
+              <h2 className="sr-only">
+                {activeCategory === 'all'
+                  ? t('nav.stories')
+                  : t(`stories.categories.${activeCategory}`)}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {visibleStories.map((story) => (
+                  <StoryCard
+                    key={story.slug}
+                    story={story}
+                    locale={locale}
+                    labels={storyCardLabels}
+                  />
+                ))}
+              </div>
+            </>
           )}
 
           {totalPages > 1 && (
@@ -197,6 +208,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
           imageAlt={t('pricing.images.packageAlt')}
           primaryButtonLabel={t('pricing.cta.inquiry')}
           secondaryButtonLabel={t('pricing.cta.location')}
+          headingAs="h3"
         />
       </Section>
     </>

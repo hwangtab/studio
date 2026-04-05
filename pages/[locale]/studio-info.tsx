@@ -40,6 +40,10 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         title={t('studioInfo.seo.title')}
         description={t('studioInfo.seo.description')}
         keywords={t('studioInfo.seo.keywords')}
+        ogImage="/images/hardware1.jpg"
+        ogImageAlt={t('studioInfo.hero.alt')}
+        ogImageWidth={1280}
+        ogImageHeight={720}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },
@@ -165,6 +169,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
           }
           imageSrc="/images/studio2.jpg"
           imageAlt={t('studioInfo.cta.imageAlt')}
+          headingAs="h3"
         />
       </Section>
     </>

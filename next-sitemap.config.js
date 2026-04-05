@@ -8,6 +8,36 @@ const storiesDir = path.join(process.cwd(), 'content', 'stories');
 const portfolioDataFile = path.join(process.cwd(), 'data', 'portfolio.ts');
 const localePageDir = path.join(process.cwd(), 'pages', '[locale]');
 
+// Map of page paths to their representative OG images
+const pageImageMap = {
+  '/about': '/images/recording15.webp',
+  '/contact': '/images/hardware5.webp',
+  '/index': '/images/og-default.jpg',
+  '/lesson': '/images/lesson1.webp',
+  '/portfolio': '/images/recording1.webp',
+  '/practice-room': '/images/room5.jpg',
+  '/pricing': '/images/hardware2.jpg',
+  '/stories': '/images/studio1.jpg',
+  '/studio-info': '/images/hardware1.jpg',
+};
+
+const getStoryThumbnail = (slug, locale) => {
+  const candidates = [
+    path.join(storiesDir, `${slug}.${locale}.md`),
+    path.join(storiesDir, `${slug}.md`),
+  ];
+  for (const filePath of candidates) {
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const match = content.match(/^---[\s\S]*?^thumbnail:\s*['"]?([^\s'"]+)['"]?/m);
+      if (match && match[1]) return match[1];
+    } catch {
+      // File not found, try next candidate
+    }
+  }
+  return null;
+};
+
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 
 const toIsoMtime = (filePath) => {
@@ -100,10 +130,21 @@ module.exports = {
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/', disallow: '/api/' },
+      // Naver
       { userAgent: 'Yeti', allow: '/' },
+      // OpenAI
       { userAgent: 'GPTBot', allow: '/' },
       { userAgent: 'OAI-SearchBot', allow: '/' },
       { userAgent: 'ChatGPT-User', allow: '/' },
+      // Anthropic
+      { userAgent: 'ClaudeBot', allow: '/' },
+      { userAgent: 'anthropic-ai', allow: '/' },
+      // Perplexity
+      { userAgent: 'PerplexityBot', allow: '/' },
+      // Meta
+      { userAgent: 'FacebookBot', allow: '/' },
+      // Apple
+      { userAgent: 'Applebot', allow: '/' },
     ],
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) =>
@@ -114,12 +155,35 @@ module.exports = {
       return null;
     }
 
+    const segments = routePath.split('/').filter(Boolean);
+    const maybeLocale = segments[0];
+    const locale = locales.includes(maybeLocale) ? maybeLocale : 'ko';
+    const pathWithoutLocale = locales.includes(maybeLocale) ? `/${segments.slice(1).join('/') || 'index'}` : routePath;
+
+    // Determine image for this route
+    let images = [];
+    if (pathWithoutLocale.startsWith('/stories/') && segments.length >= 3) {
+      const slug = segments[2];
+      const thumbnail = getStoryThumbnail(slug, locale);
+      const imageUrl = thumbnail
+        ? (thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`)
+        : `${siteUrl}/api/og/story?title=${encodeURIComponent(slug)}&locale=${locale}`;
+      images = [{ loc: new URL(imageUrl) }];
+    } else {
+      const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;
+      const pageImg = pageImageMap[pageKey];
+      if (pageImg) {
+        images = [{ loc: new URL(`${siteUrl}${pageImg}`) }];
+      }
+    }
+
     const entry = {
       loc: routePath,
       lastmod: getRouteLastmod(routePath),
       changefreq: config.changefreq,
       priority: config.priority,
       alternateRefs: getAlternateRefs(routePath),
+      ...(images.length > 0 && { images }),
     };
 
     if (routePath === '/' || routePath.match(/^\/[a-z]{2}$/)) {

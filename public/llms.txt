@@ -1,21 +1,66 @@
 Studio NOL (studionol.co.kr)
 
-Studio NOL is a music production studio in Seoul, Korea.
-Primary services:
-- Recording
-- Mixing and mastering
-- Practice room residency
-- Music production consulting and lessons
+Studio NOL is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
+Founded in 2024, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
+The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
-Primary pages:
-- Korean home: https://studionol.co.kr/ko
-- English home: https://studionol.co.kr/en
-- Pricing: https://studionol.co.kr/ko/pricing
-- Portfolio: https://studionol.co.kr/ko/portfolio
-- Stories: https://studionol.co.kr/ko/stories
-- Contact: https://studionol.co.kr/ko/contact
+## Primary Services
 
-Business facts:
-- Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR
+- **Recording Studio**: Professional vocal and instrument recording in a fully treated acoustic space
+- **Mixing & Mastering**: Professional mixing and mastering services using industry-standard equipment
+- **Practice Room Residency**: Premium private practice room residency program (monthly subscription)
+- **Music Production Consulting & Lessons**: One-on-one recording/production lessons with studio engineers
+- **Album Production**: Full-service album planning, recording, mixing, and mastering packages
+
+## Business Information
+
+- Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR 03424
 - Phone: +82-2-764-3114
 - Email: contact@kosmart.org
+- Business Hours: Mon–Fri 10:00–18:00, Sat 12:00–18:00, Sun Closed
+- KakaoTalk: https://open.kakao.com/me/nol
+- Naver Map: https://naver.me/5gFZhS3X
+
+## Pages by Language
+
+Korean: https://studionol.co.kr/ko
+English: https://studionol.co.kr/en
+Chinese: https://studionol.co.kr/zh
+Spanish: https://studionol.co.kr/es
+Vietnamese: https://studionol.co.kr/vi
+Thai: https://studionol.co.kr/th
+Uzbek: https://studionol.co.kr/uz
+
+## Key Pages (Korean)
+
+- Pricing: https://studionol.co.kr/ko/pricing
+- Portfolio: https://studionol.co.kr/ko/portfolio
+- Stories & News: https://studionol.co.kr/ko/stories
+- Contact: https://studionol.co.kr/ko/contact
+- Practice Room: https://studionol.co.kr/ko/practice-room
+- Recording Lessons: https://studionol.co.kr/ko/lesson
+- Studio Equipment: https://studionol.co.kr/ko/studio-info
+- About / Services: https://studionol.co.kr/ko/about
+
+## Key Pages (English)
+
+- Pricing: https://studionol.co.kr/en/pricing
+- Portfolio: https://studionol.co.kr/en/portfolio
+- Stories & News: https://studionol.co.kr/en/stories
+- Contact: https://studionol.co.kr/en/contact
+- Practice Room: https://studionol.co.kr/en/practice-room
+- Recording Lessons: https://studionol.co.kr/en/lesson
+- Studio Equipment: https://studionol.co.kr/en/studio-info
+- About / Services: https://studionol.co.kr/en/about
+
+## Key Pages (Chinese)
+
+- Pricing: https://studionol.co.kr/zh/pricing
+- Portfolio: https://studionol.co.kr/zh/portfolio
+- Contact: https://studionol.co.kr/zh/contact
+- Practice Room: https://studionol.co.kr/zh/practice-room
+- Recording Lessons: https://studionol.co.kr/zh/lesson
+
+## Supported Languages
+
+Korean (ko), English (en), Chinese Simplified (zh), Spanish (es), Vietnamese (vi), Thai (th), Uzbek (uz)

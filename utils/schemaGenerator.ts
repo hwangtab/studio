@@ -76,11 +76,14 @@ export const generateDefaultSchema = (
           width: 3350,
           height: 862,
         },
+        email: config.contact.email,
+        telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         contactPoint: [
           {
             '@type': 'ContactPoint',
             contactType: 'Booking & Inquiry',
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
+            email: config.contact.email,
             url: localeContactUrl,
             availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
           },
@@ -96,7 +99,18 @@ export const generateDefaultSchema = (
         additionalType: 'https://www.wikidata.org/wiki/Q746359',
         '@id': studioId,
         name: 'Studio NOL',
-        image: `${siteUrl}/thumbnail.jpg`,
+        image: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/thumbnail.jpg`,
+          width: 1440,
+          height: 809,
+        },
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}${config.logo}`,
+          width: 3350,
+          height: 862,
+        },
         url: siteUrl,
         description: config.description,
 
@@ -111,6 +125,7 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
+        openingHours: ['Mo-Fr 10:00-18:00', 'Sa 12:00-18:00'],
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
@@ -125,6 +140,7 @@ export const generateDefaultSchema = (
             closes: '18:00',
           },
         ],
+        acceptsReservations: `${siteUrl}/${locale}/contact`,
         geo: {
           '@type': 'GeoCoordinates',
           latitude: 37.614353,
@@ -140,6 +156,7 @@ export const generateDefaultSchema = (
           geoRadius: 50000,
         },
         hasMap: config.contact.naverMapUrl,
+        sameAs: [config.contact.naverMapUrl, config.contact.kakaoUrl].filter(Boolean),
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
 
@@ -231,7 +248,9 @@ export const generateArticleSchema = (
   articleModifiedTime?: string,
   articleAuthor?: string,
   locale: Locale = 'ko',
-  articleType: 'Article' | 'BlogPosting' = 'Article'
+  articleType: 'Article' | 'BlogPosting' = 'Article',
+  articleSection?: string,
+  articleKeywords?: string[]
 ) => {
   if (!articlePublishedTime) return null;
   const config = getSiteConfig(locale);
@@ -246,6 +265,8 @@ export const generateArticleSchema = (
     headline: title,
     datePublished: articlePublishedTime,
     dateModified: articleModifiedTime || articlePublishedTime,
+    ...(articleSection && { articleSection }),
+    ...(articleKeywords && articleKeywords.length > 0 && { keywords: articleKeywords.join(', ') }),
     author: {
       '@type': 'Person',
       name: articleAuthor || config.name,
@@ -258,12 +279,12 @@ export const generateArticleSchema = (
         url: `${siteUrl}${config.logo}`,
       },
     },
-    image: absoluteOgImage,
+    image: [{ '@type': 'ImageObject', url: absoluteOgImage, representativeOfPage: true }],
     description: description,
     inLanguage: schemaLanguage,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': normalizedCanonical,
+      '@id': `${normalizedCanonical}#webpage`,
     },
     isPartOf: {
       '@id': websiteId,
@@ -271,12 +292,13 @@ export const generateArticleSchema = (
   };
 };
 
-export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteUrl: string) => {
+export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteUrl: string, canonicalUrl?: string) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    ...(canonicalUrl && { '@id': `${canonicalUrl}#breadcrumb` }),
     itemListElement: breadcrumbs.map((crumb, index) => ({
       '@type': 'ListItem',
       position: index + 1,
@@ -442,6 +464,39 @@ export const generateAggregateOfferSchema = (
   };
 };
 
+export const generateWebPageSchema = (
+  title: string,
+  description: string,
+  siteUrl: string,
+  canonicalUrl: string,
+  locale: Locale = 'ko',
+  articleId?: string,
+  hasBreadcrumb?: boolean,
+  primaryImageUrl?: string
+) => {
+  const schemaLanguage = getSchemaLanguage(locale);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${canonicalUrl}#webpage`,
+    url: canonicalUrl,
+    name: title,
+    description: description,
+    inLanguage: schemaLanguage,
+    isPartOf: { '@id': `${siteUrl}/#website` },
+    about: { '@id': `${siteUrl}/#studio` },
+    ...(primaryImageUrl && {
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: primaryImageUrl,
+      },
+    }),
+    ...(hasBreadcrumb && { breadcrumb: { '@id': `${canonicalUrl}#breadcrumb` } }),
+    ...(articleId && { mainEntity: { '@id': articleId } }),
+  };
+};
+
 export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') => {
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
@@ -453,9 +508,13 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     name: config.name,
     alternateName: 'Studio NOL',
     url: siteUrl,
+    description: config.description,
     inLanguage: schemaLanguage,
     publisher: {
       '@id': `${siteUrl}/#organization`,
+    },
+    about: {
+      '@id': `${siteUrl}/#studio`,
     },
   };
 };

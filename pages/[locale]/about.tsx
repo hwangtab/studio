@@ -71,6 +71,10 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
         title={t('about.seo.title')}
         description={t('about.seo.description')}
         keywords={t('about.seo.keywords')}
+        ogImage="/images/recording15.webp"
+        ogImageAlt={t('about.heroAlt')}
+        ogImageWidth={1280}
+        ogImageHeight={854}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.about'), path: `/${locale}/about` },
@@ -187,7 +191,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
                 >
                   <div className="flex items-center mb-2">
                     <Icon className="text-primary dark:text-primary-light mr-2" aria-hidden="true" />
-                    <h4 className="typo-card-subtitle">{advantage.title}</h4>
+                    <h3 className="typo-card-subtitle">{advantage.title}</h3>
                   </div>
                   <p className="typo-card-body">{advantage.description}</p>
                 </BaseCard>
@@ -285,6 +289,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
           }
           imageSrc="/images/hardware3.jpg"
           imageAlt={t('about.cta.imageAlt')}
+          headingAs="h3"
         />
       </Section>
     </div>
