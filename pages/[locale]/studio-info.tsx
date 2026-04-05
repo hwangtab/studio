@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import Breadcrumb from '../../components/ui/Breadcrumb';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
@@ -61,6 +62,12 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         imageAlt={t('studioInfo.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+      />
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.equipment'), path: `/${locale}/studio-info` },
+        ]}
       />
 
       {/* 스튜디오 소개 섹션 */}

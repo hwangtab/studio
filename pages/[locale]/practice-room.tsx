@@ -7,6 +7,7 @@ import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import Breadcrumb from '../../components/ui/Breadcrumb';
 import BaseCard from '../../components/ui/BaseCard';
 import FAQSection from '../../components/ui/FAQSection';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -152,6 +153,12 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         imageAlt={t('practiceRoom.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+      />
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
+        ]}
       />
 
       <QuickAnswers

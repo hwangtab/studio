@@ -119,6 +119,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         canonical={story.isFallbackTranslation ? `/${story.sourceLocale}/stories/${story.slug}` : undefined}
         disableAlternates={story.isFallbackTranslation}
         ogImage={ogImage}
+        ogImageAlt={story.thumbnail ? story.title : `${story.title} - Studio NOL`}
         ogType="article"
         author={story.author || undefined}
         robots={story.isFallbackTranslation ? 'noindex, follow' : undefined}
