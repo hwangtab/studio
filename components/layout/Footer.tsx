@@ -61,7 +61,7 @@ export const Footer = ({ locale }: FooterProps) => {
             <a
               href={siteConfig.contact.naverMapUrl}
               target="_blank"
-              rel="noopener noreferrer nofollow"
+              rel="noopener noreferrer"
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <MapPin className="mr-2 mt-0.5" size={16} aria-hidden="true" />
