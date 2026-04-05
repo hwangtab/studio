@@ -96,7 +96,7 @@ module.exports = {
   alternateRefs: [],
   changefreq: 'weekly',
   priority: 0.7,
-  exclude: ['/api/*', '/404', '/500'],
+  exclude: ['/api/*', '/404', '/500', '/'],
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/', disallow: '/api/' },

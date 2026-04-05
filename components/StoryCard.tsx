@@ -79,9 +79,9 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
               {categoryText}
             </span>
-            <span className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
+            <time dateTime={story.date} className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
               {dateText}
-            </span>
+            </time>
           </div>
 
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title}>

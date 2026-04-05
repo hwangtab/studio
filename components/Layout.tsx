@@ -124,7 +124,8 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
       <main
         id="main-content"
-        className={`page-main flex-grow ${isHome || hasHero ? 'pt-0' : ''}`}
+        tabIndex={-1}
+        className={`page-main flex-grow outline-none ${isHome || hasHero ? 'pt-0' : ''}`}
         style={isHome || hasHero ? undefined : { paddingTop: headerHeight }}
       >
         {children}

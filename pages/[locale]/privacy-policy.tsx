@@ -242,7 +242,7 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
 
       <Section variant="default" className="py-16 md:py-20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="typo-section-heading mb-4 text-gray-900 dark:text-white">{policyCopy.title}</h1>
+          <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{policyCopy.title}</h1>
           <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-2">{policyCopy.subtitle}</p>
           <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">
             {policyCopy.lastUpdatedLabel}: {policyCopy.lastUpdatedValue}

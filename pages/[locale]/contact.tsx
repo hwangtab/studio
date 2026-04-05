@@ -258,6 +258,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   onChange={handleChange}
                   className="hidden"
                   autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
                 />
 
                 <InputField

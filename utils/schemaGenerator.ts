@@ -86,6 +86,8 @@ export const generateDefaultSchema = (
           },
         ],
         sameAs: sameAsLinks,
+        foundingDate: '2024',
+        description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
       },
@@ -386,7 +388,7 @@ export const generateServiceOfferSchema = (
     seller: {
       '@type': 'LocalBusiness',
       name: config.name,
-      '@id': `${config.url}/#organization`,
+      '@id': `${config.url}/#studio`,
     },
     itemOffered: {
       '@type': 'Service',

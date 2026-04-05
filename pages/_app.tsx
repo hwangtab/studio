@@ -140,7 +140,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion="user">
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="wait" initial={true} onExitComplete={() => window.scrollTo({ top: 0, behavior: 'auto' })}>
+                <AnimatePresence mode="wait" initial={true} onExitComplete={() => { window.scrollTo({ top: 0, behavior: 'auto' }); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     {...routeTransitionProps}

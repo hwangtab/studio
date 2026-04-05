@@ -157,7 +157,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center">
               <Calendar className="mr-2" size={18} aria-hidden="true" />
-              <span>{story.createdAt ? timeAgo(story.createdAt, locale) : story.date}</span>
+              <time dateTime={story.date}>{story.createdAt ? timeAgo(story.createdAt, locale) : story.date}</time>
             </div>
           </div>
         }
@@ -187,12 +187,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           </button>
         </div>
 
-        <m.div
-          {...STORY_BODY_ANIMATION}
-          className="mb-12"
-        >
-          <MarkdownRenderer content={story.content} locale={locale} />
-        </m.div>
+        <article>
+          <m.div
+            {...STORY_BODY_ANIMATION}
+            className="mb-12"
+          >
+            <MarkdownRenderer content={story.content} locale={locale} />
+          </m.div>
+        </article>
 
         <StoryCTA type={ctaType} locale={locale} />
 

@@ -116,6 +116,7 @@ export const LanguageSwitcher = ({
                 <Link
                   key={locale}
                   href={getPathForLocale(locale)}
+                  hrefLang={locale}
                   onClick={() => setIsOpen(false)}
                   className={`
                     flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
@@ -181,6 +182,7 @@ export const LanguageSwitcher = ({
               <li key={locale}>
                 <Link
                   href={getPathForLocale(locale)}
+                  hrefLang={locale}
                   onClick={() => setIsOpen(false)}
                   className={`
                     px-3 py-2 sm:px-2 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation

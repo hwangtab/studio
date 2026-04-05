@@ -31,6 +31,7 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="//api.emailjs.com" />
           <link rel="dns-prefetch" href="//vercel.live" />
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
           {/* Critical fonts for above-the-fold content */}
           <link
             rel="preload"
