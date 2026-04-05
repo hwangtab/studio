@@ -153,13 +153,11 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths: { params: { locale: string; id: string } }[] = [];
   const items = getPortfolioItems(defaultLocale);
-  items
-    .filter((item) => item.featured)
-    .forEach((item) => {
-      locales.forEach((locale) => {
-        paths.push({ params: { locale, id: item.id } });
-      });
+  items.forEach((item) => {
+    locales.forEach((locale) => {
+      paths.push({ params: { locale, id: item.id } });
     });
+  });
 
   return { paths, fallback: 'blocking' };
 };

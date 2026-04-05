@@ -347,14 +347,18 @@ const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => 
 
         // If it's an internal link starting with / and not already having a locale
         let finalHref = href;
-        if (href?.startsWith('/') && !href.startsWith('//')) {
+        const isExternal = href?.startsWith('http://') || href?.startsWith('https://');
+        if (!isExternal && href?.startsWith('/') && !href.startsWith('//')) {
           const pathSegments = href.split('/');
           if (!locales.includes(pathSegments[1] as Locale)) {
             finalHref = `/${currentLocale}${href === '/' ? '' : href}`;
           }
         }
+        const externalProps = isExternal
+          ? { target: '_blank' as const, rel: 'noopener noreferrer nofollow' }
+          : {};
         return (
-          <a href={finalHref} className="text-primary hover:underline underline-offset-4" {...props}>
+          <a href={finalHref} className="text-primary hover:underline underline-offset-4" {...externalProps} {...props}>
             {children}
           </a>
         );

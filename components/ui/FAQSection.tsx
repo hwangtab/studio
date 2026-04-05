@@ -78,11 +78,18 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 animate={activeIndex === index ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                                 className="overflow-hidden"
+                                aria-hidden={activeIndex !== index}
                             >
                                 <div className="px-6 pb-6 pt-6 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
                                     {item.answer}
                                 </div>
                             </m.div>
+                            {/* SSR-visible answer for crawlers (visually hidden when JS loads) */}
+                            <noscript>
+                                <div className="px-6 pb-6 pt-2 text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
+                                    {item.answer}
+                                </div>
+                            </noscript>
                         </m.div>
                     ))}
                 </div>

@@ -179,6 +179,14 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} locale={locale} />
+            {/* SSR-visible track list for crawlers (AudioPlayer is ssr:false) */}
+            <noscript>
+              <ul>
+                {audioTracks.map((track) => (
+                  <li key={track.id}>{track.artist} - {track.title}</li>
+                ))}
+              </ul>
+            </noscript>
           </div>
         </Section>
       )}

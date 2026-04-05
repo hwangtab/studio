@@ -124,12 +124,6 @@ export const generateDefaultSchema = (
             opens: '12:00',
             closes: '18:00',
           },
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: 'Sunday',
-            opens: '00:00',
-            closes: '00:00',
-          },
         ],
         geo: {
           '@type': 'GeoCoordinates',
