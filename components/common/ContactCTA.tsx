@@ -94,7 +94,7 @@ const ContactCTA = ({
                             <a
                                 href={primaryHref}
                                 target="_blank"
-                                rel="noopener noreferrer nofollow"
+                                rel="noopener noreferrer"
                                 onClick={trackPrimaryCta}
                                 className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                             >
@@ -118,7 +118,7 @@ const ContactCTA = ({
                     <a
                         href={imageHref}
                         target="_blank"
-                        rel="noopener noreferrer nofollow"
+                        rel="noopener noreferrer"
                         onClick={trackImageKakao}
                         className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                     >

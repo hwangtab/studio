@@ -260,7 +260,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                             <a
                                 href="https://open.kakao.com/me/nol"
                                 target="_blank"
-                                rel="noopener noreferrer nofollow"
+                                rel="noopener noreferrer"
                                 className="block w-full text-center bg-gray-900 dark:bg-gray-700 hover:bg-primary text-white font-bold py-4 rounded-xl transition-colors duration-300"
                             >
                                 {t('lesson.pricing.cta')}

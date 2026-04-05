@@ -243,7 +243,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
             className="p-6 text-center cursor-pointer"
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
-            rel="noopener noreferrer nofollow"
+            rel="noopener noreferrer"
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
@@ -259,7 +259,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
             className="p-6 text-center cursor-pointer"
             href={siteConfig.contact.naverMapUrl}
             target="_blank"
-            rel="noopener noreferrer nofollow"
+            rel="noopener noreferrer"
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">

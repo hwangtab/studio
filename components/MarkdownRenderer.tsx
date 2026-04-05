@@ -4,6 +4,28 @@ import Image from 'next/image';
 import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
 
+const extractTextContent = (children: React.ReactNode): string => {
+  if (typeof children === 'string') return children;
+  if (typeof children === 'number') return String(children);
+  if (Array.isArray(children)) return children.map(extractTextContent).join('');
+  if (React.isValidElement(children)) {
+    const { children: subChildren } = children.props as { children?: React.ReactNode };
+    return extractTextContent(subChildren);
+  }
+  return '';
+};
+
+const toHeadingId = (children: React.ReactNode): string => {
+  const text = extractTextContent(children);
+  return text
+    .toLowerCase()
+    .replace(/[\s]+/g, '-')
+    .replace(/[^\w\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    || 'section';
+};
+
 let prismLoaderPromise: Promise<typeof import('prismjs')> | null = null;
 const PRISM_THEME_STYLESHEET_ID = 'prism-theme-stylesheet';
 
@@ -116,6 +138,7 @@ const STATIC_OVERRIDES = {
   h1: {
     component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <h2
+        id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
           'font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
@@ -129,6 +152,7 @@ const STATIC_OVERRIDES = {
   h2: {
     component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <h2
+        id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
           'font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
@@ -142,6 +166,7 @@ const STATIC_OVERRIDES = {
   h3: {
     component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <h3
+        id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
           'text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
@@ -155,6 +180,7 @@ const STATIC_OVERRIDES = {
   h4: {
     component: ({ children, className, ...rest }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <h4
+        id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
           'text-xl font-medium mt-6 mb-3 text-gray-900 dark:text-white',

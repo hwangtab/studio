@@ -34,12 +34,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       const mediaTag = thumbnailUrl
         ? `\n      <media:content url="${thumbnailUrl}" medium="image" />`
         : '';
+      const authorTag = story.author
+        ? `\n      <author>${escapeXml(siteConfig.contact.email)} (${escapeXml(story.author)})</author>`
+        : `\n      <author>${escapeXml(siteConfig.contact.email)}</author>`;
+      const categoryTag = story.categoryKey
+        ? `\n      <category>${escapeXml(story.categoryKey)}</category>`
+        : '';
       return `    <item>
       <title>${escapeXml(story.title)}</title>
       <link>${link}</link>
       <description>${escapeXml(story.summary)}</description>
       <pubDate>${new Date(story.date).toUTCString()}</pubDate>
-      <guid isPermaLink="true">${link}</guid>${mediaTag}
+      <guid isPermaLink="true">${link}</guid>${authorTag}${categoryTag}${mediaTag}
     </item>`;
     })
     .join('\n');

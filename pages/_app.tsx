@@ -134,6 +134,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light dark" />
         <meta name="theme-color" content="#6d28d9" />
         <meta name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
         <link rel="manifest" href="/manifest.json" />
