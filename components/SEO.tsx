@@ -108,6 +108,8 @@ const SEO = ({
   const absoluteOgImage = toAbsoluteUrl(ogImage);
 
   const ogImageMimeType = React.useMemo(() => {
+    // @vercel/og API routes return PNG by default
+    if (ogImage.includes('/api/og/')) return 'image/png';
     const ext = ogImage.split('?')[0].split('.').pop()?.toLowerCase();
     if (ext === 'webp') return 'image/webp';
     if (ext === 'png') return 'image/png';

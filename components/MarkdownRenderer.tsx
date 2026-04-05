@@ -1,6 +1,7 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
 
@@ -380,13 +381,17 @@ const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => 
             finalHref = `/${currentLocale}${href === '/' ? '' : href}`;
           }
         }
-        const externalProps = isExternal
-          ? { target: '_blank' as const, rel: 'noopener noreferrer nofollow' }
-          : {};
+        if (isExternal) {
+          return (
+            <a href={finalHref} className="text-primary hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer nofollow" {...props}>
+              {children}
+            </a>
+          );
+        }
         return (
-          <a href={finalHref} className="text-primary hover:underline underline-offset-4" {...externalProps} {...props}>
+          <NextLink href={finalHref ?? '/'} className="text-primary hover:underline underline-offset-4" {...props}>
             {children}
-          </a>
+          </NextLink>
         );
       },
     },

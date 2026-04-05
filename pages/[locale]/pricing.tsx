@@ -88,6 +88,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
     itemOffered: {
       '@type': 'Service',
       name: offer.title,
+      url: `${pricingUrl}#${offer.id}`,
       inLanguage: schemaLanguage,
       provider: {
         '@type': 'Organization',

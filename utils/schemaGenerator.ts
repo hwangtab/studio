@@ -89,7 +89,7 @@ export const generateDefaultSchema = (
           },
         ],
         sameAs: sameAsLinks,
-        foundingDate: '2024',
+        foundingDate: '2024-01-01',
         description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
