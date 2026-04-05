@@ -12,6 +12,7 @@ import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schemaGenerator';
 import { getSiteConfig } from '../../data/siteConfig';
 import ImageHero from '../../components/common/ImageHero';
+import Breadcrumb from '../../components/ui/Breadcrumb';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
@@ -170,6 +171,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/40 via-transparent to-black/20",
         }}
+      />
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
+        ]}
       />
 
       {audioTracks.length > 0 && (

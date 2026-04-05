@@ -10,6 +10,7 @@ import { getReviews } from '../../data/reviews';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
+import Breadcrumb from '../../components/ui/Breadcrumb';
 import ContactCTA from '../../components/common/ContactCTA';
 import QuickAnswers from '../../components/ui/QuickAnswers';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
@@ -195,6 +196,12 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         imageAlt={t('pricing.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+      />
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.pricing'), path: `/${locale}/pricing` },
+        ]}
       />
 
       <QuickAnswers
