@@ -47,6 +47,13 @@ class MyDocument extends Document<Props> {
             type="font/woff2"
             crossOrigin="anonymous"
           />
+          <link
+            rel="preload"
+            href="/fonts/GmarketSansMedium.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
           {/* Other fonts load on demand */}
           <script
             id="theme-init"

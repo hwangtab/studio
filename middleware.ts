@@ -26,6 +26,8 @@ function buildContentSecurityPolicy(): string {
         "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
         "object-src 'none'",
         "base-uri 'self'",
+        "frame-ancestors 'self'",
+        "upgrade-insecure-requests",
     ].join('; ');
 }
 
@@ -119,6 +121,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|robots\\.txt|sitemap.*\\.xml|locales|images|logo.*|audio|styles|fonts).*)',
+        '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|manifest\\.json|sw\\.js|robots\\.txt|sitemap.*\\.xml|locales|images|logo.*|audio|styles|fonts).*)',
     ],
 };

@@ -118,7 +118,7 @@ export const DropdownMenu = ({
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                 >
-                    <ChevronDown size={14} />
+                    <ChevronDown size={14} aria-hidden="true" />
                 </m.div>
             </button>
 

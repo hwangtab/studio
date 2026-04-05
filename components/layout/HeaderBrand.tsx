@@ -52,7 +52,7 @@ export const HeaderBrand = ({
               ? 'brightness(0) invert(1) brightness(1.2)' // Make it white
               : 'none'
           }}
-          priority
+          priority={false}
         />
       </div>
     </Link>

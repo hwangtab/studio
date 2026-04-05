@@ -143,6 +143,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         description={t('portfolio.seo.description')}
         keywords={t('portfolio.seo.keywords')}
         canonical={canonicalOverride}
+        disableAlternates={Boolean(canonicalOverride)}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },

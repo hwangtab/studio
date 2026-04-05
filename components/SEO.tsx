@@ -56,7 +56,7 @@ const SEO = ({
   includeSchema = false,
   schema,
   author,
-  robots = 'index, follow',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   articlePublishedTime,
   articleModifiedTime,
   articleAuthor,
