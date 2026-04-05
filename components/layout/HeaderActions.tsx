@@ -59,7 +59,7 @@ export const HeaderActions = ({
         <a
           href={siteConfig.contact.kakaoUrl}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
           aria-label={t('actions.kakaoExternal')}
           className={headerCtaButtonClass}
           onClick={() =>

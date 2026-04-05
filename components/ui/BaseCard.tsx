@@ -49,7 +49,7 @@ const BaseCard = React.memo(({
     const isExternal = Boolean(href && /^(https?:|mailto:|tel:)/.test(href));
 
     if (href) {
-        const resolvedRel = target === '_blank' ? (rel ?? 'noopener noreferrer') : rel;
+        const resolvedRel = target === '_blank' ? (rel ?? 'noopener noreferrer nofollow') : rel;
         const anchorProps = {
             className: cardClassName,
             onClick,

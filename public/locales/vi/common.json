@@ -608,6 +608,15 @@
     "goHome": "Về trang chủ",
     "contact": "Liên hệ"
   },
+  "serverError": {
+    "seoTitle": "Lỗi máy chủ | Studio NOL",
+    "badge": "500 Server Error",
+    "title": "Đã xảy ra lỗi máy chủ",
+    "messageLine1": "Có lỗi không mong muốn xảy ra trên máy chủ của chúng tôi.",
+    "messageLine2": "Vui lòng thử lại sau hoặc sử dụng các nút bên dưới.",
+    "goHome": "Về trang chủ",
+    "contact": "Liên hệ"
+  },
   "errors": {
     "title": "Đã xảy ra lỗi",
     "description": "Có lỗi khi tải trang. Vui lòng thử lại."

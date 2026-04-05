@@ -608,6 +608,15 @@
     "goHome": "Go Home",
     "contact": "Contact Us"
   },
+  "serverError": {
+    "seoTitle": "Server Error | Studio NOL",
+    "badge": "500 Server Error",
+    "title": "Something Went Wrong",
+    "messageLine1": "An unexpected error occurred on our server.",
+    "messageLine2": "Please try again later or use the buttons below.",
+    "goHome": "Go Home",
+    "contact": "Contact Us"
+  },
   "errors": {
     "title": "Something went wrong",
     "description": "An error occurred while loading the page. Please try again."

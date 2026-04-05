@@ -605,6 +605,15 @@
     "goHome": "홈으로 이동",
     "contact": "문의하기"
   },
+  "serverError": {
+    "seoTitle": "서버 오류 | 스튜디오 놀",
+    "badge": "500 Server Error",
+    "title": "서버 오류가 발생했습니다",
+    "messageLine1": "예상치 못한 오류가 발생했습니다.",
+    "messageLine2": "잠시 후 다시 시도하시거나, 아래 버튼을 이용해 주세요.",
+    "goHome": "홈으로 이동",
+    "contact": "문의하기"
+  },
   "errors": {
     "title": "문제가 발생했습니다",
     "description": "페이지를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."

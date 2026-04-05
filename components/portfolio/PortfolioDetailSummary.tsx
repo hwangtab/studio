@@ -97,7 +97,7 @@ const PortfolioDetailSummary = ({
           <a
             href={listenUrl}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className={primaryActionClassName}
           >
             <ExternalLink size={16} aria-hidden="true" />

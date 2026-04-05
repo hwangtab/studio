@@ -605,6 +605,15 @@
     "goHome": "Bosh sahifaga",
     "contact": "Biz bilan bog'laning"
   },
+  "serverError": {
+    "seoTitle": "Server xatosi | Studio NOL",
+    "badge": "500 Server Error",
+    "title": "Server xatosi yuz berdi",
+    "messageLine1": "Serverimizda kutilmagan xato yuz berdi.",
+    "messageLine2": "Iltimos, keyinroq qayta urinib ko'ring yoki quyidagi tugmalardan foydalaning.",
+    "goHome": "Bosh sahifaga",
+    "contact": "Biz bilan bog'laning"
+  },
   "errors": {
     "title": "Nimadir xato bo'ldi",
     "description": "Sahifani yuklashda xato yuz berdi. Iltimos, qayta urinib ko'ring."

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { filterPortfolioItems } from '../../utils/portfolioDataUtils';
 import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
-import { generateItemListSchema } from '../../utils/schemaGenerator';
+import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schemaGenerator';
 import { getSiteConfig } from '../../data/siteConfig';
 import ImageHero from '../../components/common/ImageHero';
 import ContactCTA from '../../components/common/ContactCTA';
@@ -52,6 +52,19 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
     locale,
     t('nav.portfolio')
   ), [initialPortfolioItems, locale, siteUrl, t]);
+
+  const audioObjectSchemas = React.useMemo(() =>
+    generateAudioObjectSchema(
+      audioTracks.map((track) => ({
+        name: track.title,
+        contentUrl: track.src,
+        description: track.description,
+        artist: track.artist,
+      })),
+      siteUrl,
+      locale
+    ),
+  [audioTracks, siteUrl, locale]);
 
   const [selectedCategory, setSelectedCategory] = useState<PortfolioCategory>({
     id: 'all',
@@ -131,7 +144,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
         ]}
         includeSchema={true}
-        schema={itemListSchema}
+        schema={[itemListSchema, ...audioObjectSchemas]}
       />
       <ImageHero
         {...{

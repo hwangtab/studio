@@ -608,6 +608,15 @@
     "goHome": "返回首页",
     "contact": "联系我们"
   },
+  "serverError": {
+    "seoTitle": "服务器错误 | Studio NOL",
+    "badge": "500 Server Error",
+    "title": "发生了服务器错误",
+    "messageLine1": "服务器发生了意外错误。",
+    "messageLine2": "请稍后重试，或使用下方按钮。",
+    "goHome": "返回首页",
+    "contact": "联系我们"
+  },
   "errors": {
     "title": "出现问题了",
     "description": "页面加载时发生错误，请稍后重试。"

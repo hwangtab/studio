@@ -608,6 +608,15 @@
     "goHome": "Ir al inicio",
     "contact": "Contáctanos"
   },
+  "serverError": {
+    "seoTitle": "Error del servidor | Studio NOL",
+    "badge": "500 Server Error",
+    "title": "Error del servidor",
+    "messageLine1": "Ocurrió un error inesperado en nuestro servidor.",
+    "messageLine2": "Por favor, inténtalo más tarde o usa los botones de abajo.",
+    "goHome": "Ir al inicio",
+    "contact": "Contáctanos"
+  },
   "errors": {
     "title": "Ocurrió un problema",
     "description": "Se produjo un error al cargar la página. Inténtalo de nuevo."
