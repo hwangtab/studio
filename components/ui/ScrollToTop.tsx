@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
-export const ScrollToTop = () => {
+interface ScrollToTopProps {
+  locale?: Locale;
+}
+
+export const ScrollToTop = ({ locale = defaultLocale }: ScrollToTopProps) => {
+  const { t } = useTranslation('common', { lng: locale });
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -40,7 +47,7 @@ export const ScrollToTop = () => {
             size="icon"
             onClick={scrollToTop}
             className="rounded-full shadow-lg hover:shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800"
-            aria-label="Scroll to top"
+            aria-label={t('actions.scrollToTop')}
           >
             <ArrowUp size={20} className="text-gray-600 dark:text-gray-300" />
           </Button>

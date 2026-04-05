@@ -46,7 +46,8 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "kakaoExternal": "KakaoTalk inquiry (opens in new window)",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "scrollToTop": "Scroll to top"
   },
   "common": {
     "categoryFilter": {
@@ -636,6 +637,17 @@
     "paused": "Paused",
     "albumArtAlt": "{{title}} album art",
     "highFidelity": "High Fidelity Audio",
-    "trackLabel": "Track {{number}}"
+    "trackLabel": "Track {{number}}",
+    "volume": "Volume",
+    "playbackProgress": "Playback progress"
+  },
+  "gallery": {
+    "previous": "Previous images",
+    "next": "Next images",
+    "goToImage": "Go to image {{number}}"
+  },
+  "pagination": {
+    "previousPage": "Previous page",
+    "nextPage": "Next page"
   }
 }

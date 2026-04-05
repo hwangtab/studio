@@ -132,7 +132,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       <Footer locale={locale} />
-      <ScrollToTop />
+      <ScrollToTop locale={locale} />
     </div>
   );
 };

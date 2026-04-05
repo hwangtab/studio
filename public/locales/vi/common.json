@@ -46,7 +46,8 @@
     "openMenu": "Mở menu",
     "closeMenu": "Đóng menu",
     "kakaoExternal": "Tư vấn qua KakaoTalk (mở trong cửa sổ mới)",
-    "skipToContent": "Nhảy đến nội dung"
+    "skipToContent": "Nhảy đến nội dung",
+    "scrollToTop": "Cuộn lên đầu"
   },
   "common": {
     "categoryFilter": {
@@ -636,6 +637,17 @@
     "paused": "Đang tạm dừng",
     "albumArtAlt": "Bìa album {{title}}",
     "highFidelity": "Âm thanh Hi‑Fi",
-    "trackLabel": "Track {{number}}"
+    "trackLabel": "Track {{number}}",
+    "volume": "Âm lượng",
+    "playbackProgress": "Tiến trình phát"
+  },
+  "gallery": {
+    "previous": "Hình trước",
+    "next": "Hình tiếp theo",
+    "goToImage": "Đến hình {{number}}"
+  },
+  "pagination": {
+    "previousPage": "Trang trước",
+    "nextPage": "Trang tiếp theo"
   }
 }

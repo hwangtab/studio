@@ -46,7 +46,8 @@
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
     "kakaoExternal": "KakaoTalk 咨询 (在新窗口中打开)",
-    "skipToContent": "跳到主要内容"
+    "skipToContent": "跳到主要内容",
+    "scrollToTop": "返回顶部"
   },
   "common": {
     "categoryFilter": {
@@ -636,6 +637,17 @@
     "paused": "已暂停",
     "albumArtAlt": "{{title}} 专辑封面",
     "highFidelity": "高保真音频",
-    "trackLabel": "第 {{number}} 首"
+    "trackLabel": "第 {{number}} 首",
+    "volume": "音量",
+    "playbackProgress": "播放进度"
+  },
+  "gallery": {
+    "previous": "上一张图片",
+    "next": "下一张图片",
+    "goToImage": "跳转到第 {{number}} 张图片"
+  },
+  "pagination": {
+    "previousPage": "上一页",
+    "nextPage": "下一页"
   }
 }

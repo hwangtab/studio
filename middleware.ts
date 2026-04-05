@@ -23,7 +23,7 @@ function buildContentSecurityPolicy(): string {
         "img-src 'self' data: https:",
         "font-src 'self' data: https://cdn.jsdelivr.net https://fastly.jsdelivr.net https://fonts.gstatic.com",
         "frame-src 'self' https://www.google.com https://www.google.co.kr",
-        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com",
+        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
         "object-src 'none'",
         "base-uri 'self'",
     ].join('; ');
@@ -41,16 +41,21 @@ function getPreferredLocale(request: NextRequest): Locale {
     const languages = acceptLanguage
         .split(',')
         .map((lang) => {
-            const [code, quality] = lang.trim().split(';q=');
+            const [rawCode, quality] = lang.trim().split(';q=');
+            const parts = rawCode.trim().split('-');
+            const langCode = parts[0].toLowerCase();
+            const regionCode = parts[1]?.toLowerCase();
+            // 번체 중국어(zh-TW, zh-HK, zh-Hant)는 간체 zh 매칭에서 제외
+            const isTraditionalChinese = langCode === 'zh' && regionCode && ['tw', 'hk', 'hant'].includes(regionCode);
             return {
-                code: code.split('-')[0].toLowerCase(),
+                code: isTraditionalChinese ? null : langCode,
                 quality: quality ? parseFloat(quality) : 1.0,
             };
         })
         .sort((a, b) => b.quality - a.quality);
 
     for (const { code } of languages) {
-        if (locales.includes(code as Locale)) {
+        if (code && locales.includes(code as Locale)) {
             return code as Locale;
         }
     }

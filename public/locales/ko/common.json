@@ -46,7 +46,8 @@
     "openMenu": "메뉴 열기",
     "closeMenu": "메뉴 닫기",
     "kakaoExternal": "카카오톡 문의 (새 창)",
-    "skipToContent": "본문 바로가기"
+    "skipToContent": "본문 바로가기",
+    "scrollToTop": "맨 위로"
   },
   "common": {
     "categoryFilter": {
@@ -633,6 +634,17 @@
     "paused": "일시정지",
     "albumArtAlt": "{{title}} 앨범 아트",
     "highFidelity": "고음질 오디오",
-    "trackLabel": "트랙 {{number}}"
+    "trackLabel": "트랙 {{number}}",
+    "volume": "볼륨",
+    "playbackProgress": "재생 진행률"
+  },
+  "gallery": {
+    "previous": "이전 이미지",
+    "next": "다음 이미지",
+    "goToImage": "{{number}}번 이미지로 이동"
+  },
+  "pagination": {
+    "previousPage": "이전 페이지",
+    "nextPage": "다음 페이지"
   }
 }

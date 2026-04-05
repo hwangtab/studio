@@ -52,6 +52,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  }, []);
+
+  useEffect(() => {
     let isCancelled = false;
 
     const ensureLocaleReady = async () => {

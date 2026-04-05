@@ -1,7 +1,9 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
 interface MediaImage {
   src: string;
@@ -11,9 +13,11 @@ interface MediaImage {
 interface MediaGalleryProps {
   images: readonly MediaImage[];
   className?: string;
+  locale?: Locale;
 }
 
-const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
+const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaGalleryProps) => {
+  const { t } = useTranslation('common', { lng: locale });
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = React.useState(false);
   const [showRightArrow, setShowRightArrow] = React.useState(true);
@@ -78,7 +82,7 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
           type="button"
           onClick={() => scroll('left')}
           className="absolute left-2 top-1/2 -translate-y-1/2 z-30 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/85 dark:bg-gray-800/85 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          aria-label="Previous images"
+          aria-label={t('gallery.previous')}
         >
           <ChevronLeft className="w-6 h-6 text-primary-dark dark:text-primary-light" />
         </button>
@@ -88,7 +92,7 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
           type="button"
           onClick={() => scroll('right')}
           className="absolute right-2 top-1/2 -translate-y-1/2 z-30 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/85 dark:bg-gray-800/85 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          aria-label="Next images"
+          aria-label={t('gallery.next')}
         >
           <ChevronRight className="w-6 h-6 text-primary-dark dark:text-primary-light" />
         </button>
@@ -138,7 +142,7 @@ const MediaGallery = ({ images, className = '' }: MediaGalleryProps) => {
                     ? 'text-primary'
                     : 'text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500'
                   }`}
-                aria-label={`Go to image ${i + 1}`}
+                aria-label={t('gallery.goToImage', { number: i + 1 })}
               >
                 <span
                   className={`rounded-full transition-all duration-300 ${i === activeIndex ? 'w-6 h-2 bg-current' : 'w-2 h-2 bg-current'

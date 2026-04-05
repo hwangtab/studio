@@ -46,7 +46,8 @@
     "openMenu": "Menyuni ochish",
     "closeMenu": "Menyuni yopish",
     "kakaoExternal": "KakaoTalk orqali so‘rov (yangi oynada ochiladi)",
-    "skipToContent": "Asosiy mazmunga o'tish"
+    "skipToContent": "Asosiy mazmunga o'tish",
+    "scrollToTop": "Tepaga qaytish"
   },
   "common": {
     "categoryFilter": {
@@ -633,6 +634,17 @@
     "paused": "Pauzada",
     "albumArtAlt": "{{title}} albom rasmi",
     "highFidelity": "Yuqori aniqlikdagi audio",
-    "trackLabel": "Trek {{number}}"
+    "trackLabel": "Trek {{number}}",
+    "volume": "Ovoz balandligi",
+    "playbackProgress": "Ijro jarayoni"
+  },
+  "gallery": {
+    "previous": "Oldingi rasmlar",
+    "next": "Keyingi rasmlar",
+    "goToImage": "{{number}}-rasmga o'tish"
+  },
+  "pagination": {
+    "previousPage": "Oldingi sahifa",
+    "nextPage": "Keyingi sahifa"
   }
 }

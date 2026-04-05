@@ -7,9 +7,10 @@ interface ProgressBarProps {
     progressBarRef: React.MutableRefObject<HTMLInputElement | null>;
     onChangeRange: () => void;
     formatTime: (time: number) => string;
+    ariaLabel?: string;
 }
 
-const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChangeRange, formatTime }: ProgressBarProps) => {
+const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChangeRange, formatTime, ariaLabel = 'Playback progress' }: ProgressBarProps) => {
     return (
         <div className="w-full">
             <div className="relative h-1.5 w-full bg-gray-200 dark:bg-white/10 rounded-full group cursor-pointer mb-2">
@@ -19,7 +20,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                     defaultValue="0"
                     onChange={onChangeRange}
                     max={duration || 0}
-                    aria-label="Playback progress"
+                    aria-label={ariaLabel}
                     className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-full"
                 />
 

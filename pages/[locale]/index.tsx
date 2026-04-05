@@ -100,7 +100,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
           title={t('home.sections.galleryTitle')}
           className="mb-12"
         />
-        <MediaGallery images={studioImages} />
+        <MediaGallery images={studioImages} locale={locale} />
       </Section>
 
       {/* 서비스 소개 섹션 */}

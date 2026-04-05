@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
@@ -23,8 +24,9 @@ interface StoriesPageProps {
 }
 
 const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = Number(router.query.page) || 1;
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
@@ -86,13 +88,19 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
 
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
-    setCurrentPage(1);
+    router.push(
+      { pathname: router.pathname, query: { locale: router.query.locale } },
+      undefined,
+      { shallow: true }
+    );
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    const query: Record<string, string | number> = { locale: router.query.locale as string };
+    if (page > 1) query.page = page;
+    router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
     if (sectionRef.current) {
-      const yOffset = -100; // Adjust for header
+      const yOffset = -100;
       const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
@@ -163,6 +171,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
+                locale={locale}
               />
             </div>
           )}

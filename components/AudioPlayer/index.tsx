@@ -1,5 +1,6 @@
 import React from 'react';
 import { m } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useAudioPlayer } from './useAudioPlayer';
 import TrackInfo from './TrackInfo';
 import ProgressBar from './ProgressBar';
@@ -18,6 +19,7 @@ interface AudioPlayerProps {
 
 const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
     const audioPlayerMotionProps = FADE_IN_UP;
+    const { t } = useTranslation('common', { lng: locale });
 
     const {
         currentTrack,
@@ -77,6 +79,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
                             progressBarRef={progressBarRef}
                             onChangeRange={changeRange}
                             formatTime={formatTime}
+                            ariaLabel={t('audioPlayer.playbackProgress')}
                         />
 
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mt-6">

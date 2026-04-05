@@ -46,7 +46,8 @@
     "openMenu": "เปิดเมนู",
     "closeMenu": "ปิดเมนู",
     "kakaoExternal": "สอบถามทาง KakaoTalk (เปิดในหน้าต่างใหม่)",
-    "skipToContent": "ข้ามไปที่เนื้อหาหลัก"
+    "skipToContent": "ข้ามไปที่เนื้อหาหลัก",
+    "scrollToTop": "เลื่อนขึ้นด้านบน"
   },
   "common": {
     "categoryFilter": {
@@ -637,6 +638,17 @@
     "paused": "หยุดชั่วคราว",
     "albumArtAlt": "ภาพปกอัลบั้ม {{title}}",
     "highFidelity": "เสียงความละเอียดสูง",
-    "trackLabel": "แทร็ก {{number}}"
+    "trackLabel": "แทร็ก {{number}}",
+    "volume": "ระดับเสียง",
+    "playbackProgress": "ความคืบหน้าการเล่น"
+  },
+  "gallery": {
+    "previous": "รูปภาพก่อนหน้า",
+    "next": "รูปภาพถัดไป",
+    "goToImage": "ไปที่รูปภาพ {{number}}"
+  },
+  "pagination": {
+    "previousPage": "หน้าก่อนหน้า",
+    "nextPage": "หน้าถัดไป"
   }
 }
