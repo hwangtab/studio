@@ -97,4 +97,4 @@ faq:
 
 연신내역 도보 5분, 스튜디오 놀에서 단체 프로젝트를 완성하세요.
 
-[스튜디오 놀 녹음실 시설 및 장비 안내](/studio-info) | [이용 요금 문의](/pricing) | [합주실 예약 안내](/stories/practice1) | [교회 찬양·성가대 녹음 가이드](/stories/church1) | [녹음 세션 준비 방법](/stories/session1)
+[피아노 녹음 방법 완전 가이드](/stories/piano1) | [합주실 예약 안내](/stories/practice1) | [교회 찬양·성가대 녹음 가이드](/stories/church1) | [녹음 세션 준비 방법](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)
