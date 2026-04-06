@@ -116,4 +116,4 @@ Step 4: 완성 트랙 발표 (지속)
 
 음악 프로듀서는 독학으로도 커리어를 시작할 수 있는 분야입니다. DAW 하나를 깊이 파고, 완성 트랙을 계속 만드는 것이 핵심입니다. 보컬 녹음이 필요한 프로젝트는 스튜디오 놀에서 협업할 수 있습니다.
 
-[비트 메이킹 입문 가이드](/stories/beatmaking1) | [악기 없이 작곡하는 방법](/stories/compose1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [음원 발매 방법 가이드](/stories/release1) | [스튜디오 놀 이용 요금](/pricing)
+[사운드 엔지니어 되는 방법](/stories/sound-engineer1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [악기 없이 작곡하는 방법](/stories/compose1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
