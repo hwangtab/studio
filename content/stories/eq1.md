@@ -100,4 +100,4 @@ EQ 처리 전·후를 번갈아 들으며 더 좋은지 확인합니다. EQ 없�
 
 보컬 EQ는 귀가 가이드입니다. 수치보다 귀로 판단하는 습관을 들이세요. 더 많은 믹싱 기법을 배우고 싶다면 믹싱 강좌 시리즈를 참고하세요.
 
-[믹싱 강좌 시리즈 — EQ 편](/stories/mixing3) | [보컬 컴프레서 사용법](/stories/compress1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [스튜디오 놀 믹싱 서비스](/pricing)
+[믹싱 강좌 시리즈 — EQ 편](/stories/mixing3) | [보컬 컴프레서 사용법](/stories/compress1) | [음정 교정 도구 비교 — Melodyne vs Auto-Tune](/stories/pitchtool1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [스튜디오 놀 믹싱 서비스](/pricing)
