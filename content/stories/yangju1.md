@@ -67,4 +67,4 @@ faq:
 
 양주에서 7호선을 이용하면 약 50분 내로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다.
 
-[동두천에서 서울 녹음실 방문 가이드](/stories/dongducheon1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [연천에서 서울 녹음실 방문 가이드](/stories/yeoncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[양주 덕계·옥정·고읍·회천 녹음실 안내](/stories/yangju-deokgye1) | [동두천에서 서울 녹음실 방문 가이드](/stories/dongducheon1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
