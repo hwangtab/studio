@@ -68,4 +68,4 @@ faq:
 
 서대문구에서 전문 녹음을 원하신다면, 홍대까지 이동하기 전에 더 가까운 연신내 스튜디오 놀을 먼저 고려해보세요. 카카오톡으로 문의하시면 당일 답변과 맞춤 견적을 드립니다.
 
-[스튜디오 놀 시설·장비 안내](/studio-info) | [이용 요금 안내](/pricing) | [예약 방법 가이드](/stories/booking1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[마포구 녹음실 안내](/stories/mapo1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [불광·수색·증산 근거리 안내](/stories/bulgwang1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
