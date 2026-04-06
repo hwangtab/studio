@@ -127,4 +127,4 @@ faq:
 
 최고의 선곡은 자신의 실력과 감정이 가장 자연스럽게 나오는 곡입니다. 스튜디오 놀 세션 전에 충분히 연습하고, 자신 있는 곡을 선택해 최상의 결과물을 만드세요.
 
-[보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [축가 녹음 완전 가이드](/stories/jukga1) | [오디션 준비 완전 가이드](/stories/audition1) | [목소리 유형(보이스 타입) 완전 가이드](/stories/voice-type1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [축가 녹음 완전 가이드](/stories/jukga1) | [오디션 준비 완전 가이드](/stories/audition1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
