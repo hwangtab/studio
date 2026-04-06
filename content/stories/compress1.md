@@ -96,4 +96,4 @@ faq:
 
 컴프레서는 귀가 가이드입니다. 수치를 외우기보다 A/B 비교하며 귀로 판단하는 연습을 하세요. 믹싱 강좌 시리즈에서 더 많은 믹싱 기법을 배울 수 있습니다.
 
-[믹싱 강좌 시리즈 보기](/stories/mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 리버브 가이드](/stories/reverb1) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing)
+[게인 스테이징 완전 가이드](/stories/gain-staging1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 리버브 가이드](/stories/reverb1) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing)
