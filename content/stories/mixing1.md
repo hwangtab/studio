@@ -82,4 +82,4 @@ faq:
 
 **믹싱 강좌 시리즈**: [제2부: 거짓말쟁이 방(Room) 길들이기 →](/stories/mixing2)
 
-[음악 레슨 서비스 보기](/lesson) | [믹싱·마스터링 의뢰 요금](/pricing)
+[음악 레슨 서비스 보기](/lesson) | [믹싱·마스터링 의뢰 요금](/pricing) | [프로듀서 박찬울 인터뷰](/stories/interview1)
