@@ -91,4 +91,4 @@ faq:
 
 음원 발매의 마지막 단계는 유통이지만, 먼저 마스터링 품질의 음원이 완성돼야 합니다. 스튜디오 놀에서 음원 녹음·믹싱·마스터링을 완료하고, 배급사를 통해 전 세계 플랫폼에 발매해보세요.
 
-[EP 제작 완전 가이드](/stories/ep-making1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 발매 가이드](/stories/release1) | [음원 저작권 완전 가이드](/stories/copyright1) | [스트리밍 음압 마스터링 가이드](/stories/loudness1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 마케팅 완전 가이드](/stories/music-marketing1) | [EP 제작 완전 가이드](/stories/ep-making1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
