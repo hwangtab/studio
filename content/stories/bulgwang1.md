@@ -79,4 +79,4 @@ MR + 보컬 스템 통합 믹스. EQ·컴프레서·리버브 처리. 2라운드
 
 연신내·불광·수색·증산·역촌·응암 주민들이 가장 가까이에서 이용할 수 있는 전문 레코딩 스튜디오 — 스튜디오 놀. 카카오톡으로 편하게 문의해주세요.
 
-[은평구 녹음실 전체 안내](/stories/eunpyeong1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1) | [녹음실 처음 방문 가이드](/stories/guide1)
+[은평구 녹음실 전체 안내](/stories/eunpyeong1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
