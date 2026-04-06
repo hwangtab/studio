@@ -109,4 +109,4 @@ faq:
 
 인디 데뷔는 기획사의 지원 없이도 가능합니다. 좋은 곡과 전문적인 프로덕션, 꾸준한 SNS 활동이 조합되면 충분히 팬층을 만들 수 있습니다. 스튜디오 놀에서 첫 음원의 녹음·믹싱·마스터링을 시작하세요.
 
-[음원 유통 방법 완전 가이드](/stories/distribution1) | [음악 저작권 등록 방법](/stories/copyright1) | [음원 발매 가이드](/stories/release1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 계약 주의사항 가이드](/stories/contract1) | [음원 유통 방법 완전 가이드](/stories/distribution1) | [음악 저작권 등록 방법](/stories/copyright1) | [음원 발매 가이드](/stories/release1) | [스튜디오 놀 이용 요금](/pricing)
