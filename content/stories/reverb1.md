@@ -109,4 +109,4 @@ BPM에 맞게 설정합니다. 느린 곡일수록 길게, 빠른 곡일수록 �
 
 리버브는 보컬에 공간감을 주는 도구이지, 보컬을 구하는 도구가 아닙니다. 먼저 드라이 보컬 자체의 퀄리티를 높인 뒤 리버브로 마무리하는 것이 올바른 순서입니다.
 
-[딜레이 vs 리버브 차이 가이드](/stories/delay1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [셀프 믹싱 vs 전문 의뢰](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)
+[스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [딜레이 vs 리버브 차이 가이드](/stories/delay1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [셀프 믹싱 vs 전문 의뢰](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)
