@@ -67,4 +67,4 @@ faq:
 
 경기 북동부 의정부·양주에서 1시간~1시간 30분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[고양시·파주 녹음실 안내](/stories/goyang1) | [노원구·도봉구 녹음실 안내](/stories/nowon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[포천·연천·동두천·양주 녹음실 가이드](/stories/pocheon1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [노원구·도봉구 녹음실 안내](/stories/nowon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing)
