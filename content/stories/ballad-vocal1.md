@@ -92,4 +92,4 @@ Hi-cut: 6~8kHz 이상 롤오프 (리버브 꼬리가 탁해지지 않게)
 
 발라드는 가장 감정이 중요한 장르입니다. 스튜디오 놀에서는 발라드 보컬 세션에서 편안한 환경을 만들어 자연스러운 감정 표현을 이끌어냅니다.
 
-[R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 프레이징 완전 가이드](/stories/phrasing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [커버송 녹음 완전 가이드](/stories/cover-song1) | [스튜디오 놀 이용 요금](/pricing)
+[발라드 프로덕션 완전 가이드](/stories/ballad-production1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 프레이징 완전 가이드](/stories/phrasing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

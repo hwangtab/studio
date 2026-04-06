@@ -55,4 +55,4 @@ faq:
 
 광화문·혜화·을지로에서 지하철 20~35분, 연신내역 도보 5분 거리의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[혜화·대학로·창신·종로5가 녹음실 안내](/stories/hyehwa1) | [인사동·북촌·광화문 녹음실 안내](/stories/insadong1) | [중구 녹음실 안내](/stories/junggu1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[서촌·사직·무악재 녹음실 안내](/stories/seochon1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/hyehwa1) | [인사동·북촌·광화문 녹음실 안내](/stories/insadong1) | [중구 녹음실 안내](/stories/junggu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
