@@ -80,4 +80,4 @@ faq:
 
 남해에서 이동 시간이 길지만 KTX를 이용하면 당일 왕복 세션이 가능합니다. 이동이 부담된다면 온라인 파일 의뢰로 서울 스튜디오 품질의 믹싱·마스터링 서비스를 이용할 수 있습니다.
 
-[사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[하동에서 서울 녹음실 방문 가이드](/stories/hadong1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
