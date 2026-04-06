@@ -214,23 +214,38 @@ export const generateDefaultSchema = (
           itemListElement: [
             {
               '@type': 'Offer',
+              priceCurrency: 'KRW',
+              price: 100000,
+              url: `${siteUrl}/${locale}/pricing`,
+              availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
                 name: recordingOfferName,
+                provider: { '@type': 'Organization', '@id': organizationId },
               },
             },
             {
               '@type': 'Offer',
+              priceCurrency: 'KRW',
+              price: 200000,
+              url: `${siteUrl}/${locale}/pricing`,
+              availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
                 name: mixingOfferName,
+                provider: { '@type': 'Organization', '@id': organizationId },
               },
             },
             {
               '@type': 'Offer',
+              priceCurrency: 'KRW',
+              price: 350000,
+              url: `${siteUrl}/${locale}/pricing`,
+              availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
                 name: productionOfferName,
+                provider: { '@type': 'Organization', '@id': organizationId },
               },
             },
             {

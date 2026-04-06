@@ -16,6 +16,8 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
+import { getSiteConfig } from '../../data/siteConfig';
+import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -30,10 +32,63 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
   const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
+  const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
+  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
   const introSectionAnimation = createInViewEnterAnimation({ axis: 'y' });
   const introImageAnimation = createInViewEnterAnimation({ axis: 'x', distance: -50, delay: 0.2 });
   const introTextAnimation = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
   const equipmentSectionAnimation = createInViewEnterAnimation({});
+
+  const recordingStudioSchema = React.useMemo(() => ({
+    '@type': 'Service',
+    name: t('studioInfo.seo.title'),
+    description: t('studioInfo.seo.description'),
+    inLanguage: schemaLanguage,
+    serviceType: locale === 'ko' ? '녹음실' : 'Recording Studio',
+    areaServed: {
+      '@type': 'AdministrativeArea',
+      name: locale === 'ko' ? '서울특별시' : 'Seoul',
+    },
+    provider: {
+      '@type': 'Organization',
+      '@id': `${siteConfig.url}/#organization`,
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    url: `${siteConfig.url}/${locale}/studio-info`,
+    hoursAvailable: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '10:00',
+        closes: '18:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Saturday',
+        opens: '12:00',
+        closes: '18:00',
+      },
+    ],
+    offers: [
+      {
+        '@type': 'Offer',
+        name: locale === 'ko' ? '시간당 레코딩' : 'Hourly Recording',
+        priceCurrency: 'KRW',
+        price: 100000,
+        availability: 'https://schema.org/InStock',
+        url: `${siteConfig.url}/${locale}/pricing`,
+      },
+      {
+        '@type': 'Offer',
+        name: locale === 'ko' ? 'Day Lock (6시간)' : 'Day Lock (6 hours)',
+        priceCurrency: 'KRW',
+        price: 500000,
+        availability: 'https://schema.org/InStock',
+        url: `${siteConfig.url}/${locale}/pricing`,
+      },
+    ],
+  }), [t, siteConfig, locale, schemaLanguage]);
 
   return (
     <>
@@ -52,6 +107,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         includeSchema={true}
         reviewItems={reviewsData}
         faqItems={studioFaqData}
+        schema={recordingStudioSchema}
       />
       <ImageHero
         locale={locale}

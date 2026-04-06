@@ -244,11 +244,11 @@ module.exports = {
       };
     }
 
-    if (routePath.match(/\/(pricing|contact)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 
-    if (routePath.match(/\/(about|studio-info|lesson|practice-room|portfolio|stories)(\/|$)/) && !routePath.includes('/stories/') && !routePath.includes('/portfolio/')) {
+    if (routePath.match(/\/(about|lesson|portfolio|stories)(\/|$)/) && !routePath.includes('/stories/') && !routePath.includes('/portfolio/')) {
       return { ...entry, priority: 0.8 };
     }
 
