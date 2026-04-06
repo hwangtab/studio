@@ -140,4 +140,4 @@ faq:
 
 음악 마케팅은 지속적인 활동입니다. 발매 한 번으로 끝나는 것이 아니라, 꾸준한 컨텐츠와 팬 소통이 쌓여 청중이 형성됩니다. 스튜디오 놀에서 음질 좋은 음원을 완성하면, 마케팅 활동의 효과도 배가됩니다.
 
-[음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [앨범 아트 제작 가이드](/stories/album-art1) | [음악 저작권 등록 방법](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[정규앨범 발매 완전 가이드](/stories/album-release1) | [EP 발매 완전 가이드](/stories/ep-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
