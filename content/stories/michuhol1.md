@@ -80,4 +80,4 @@ faq:
 
 인천 미추홀구 주안·도화·숭의·용현에서 경인선 60분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[인천·부천 녹음실 안내](/stories/incheon1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [인천 계양·작전·귤현·임학 녹음실 안내](/stories/gyeyang1) | [송도 녹음실 안내](/stories/songdo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천·부천 녹음실 안내](/stories/incheon1) | [인천 남동구 간석·구월 녹음실 안내](/stories/namdong1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [송도 녹음실 안내](/stories/songdo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
