@@ -125,4 +125,4 @@ Band 4 - High Shelf:
 
 FabFilter Pro-Q3는 보컬 EQ의 업계 표준으로, Collision Detection과 다이나믹 EQ로 정밀하고 자연스러운 주파수 처리를 제공합니다. 스튜디오 놀에서는 Pro-Q3를 포함한 전문 플러그인으로 최적의 보컬 사운드를 완성합니다.
 
-[iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [EQ 완전 가이드](/stories/eq-guide1) | [주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[1176 컴프레서 완전 가이드](/stories/comp1176) | [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [EQ 완전 가이드](/stories/eq-guide1) | [주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
