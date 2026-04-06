@@ -89,4 +89,4 @@ faq:
 
 보컬 녹음에는 밀폐형 모니터 헤드폰이 필수입니다. 5만원대 소니 MDR-7506부터 시작해도 충분히 좋은 결과물을 만들 수 있습니다. 스튜디오 놀에서는 전문 헤드폰과 모니터 시스템으로 최적의 녹음 환경을 제공합니다.
 
-[헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [샘플레이트·비트뎁스 가이드](/stories/sample-rate1) | [녹음 당일 완벽 루틴](/stories/recordingday1) | [스튜디오 놀 이용 요금](/pricing)
+[스튜디오 모니터 스피커 완전 가이드](/stories/studio-monitor1) | [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
