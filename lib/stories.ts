@@ -128,6 +128,7 @@ const storyCategoryKeyMap: Record<string, string> = {
   인터뷰: 'interview',
   장비: 'equipment',
   리뷰: 'review',
+  후기: 'review',
 };
 
 const storyCategoryKeys = new Set<string>([
@@ -267,12 +268,20 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     }
   }
 
+  const rawFaq = data?.faq;
+  const faq = Array.isArray(rawFaq)
+    ? (rawFaq as Array<{ q: string; a: string }>).filter(
+        (item) => typeof item?.q === 'string' && typeof item?.a === 'string'
+      )
+    : undefined;
+
   const storyDetail: StoryDetail = {
     ...baseStory,
     content: contentToProcess,
     sourceLocale,
     isFallbackTranslation: sourceLocale !== requestedLocale,
     modifiedDate,
+    ...(faq && faq.length > 0 && { faq }),
   };
 
   if (enableCache) {

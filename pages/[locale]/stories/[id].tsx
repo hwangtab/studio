@@ -21,6 +21,7 @@ import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { generateFaqSchema } from '../../../utils/schemaGenerator';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
@@ -97,6 +98,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
   const ogImage = story.thumbnail || dynamicOgImage;
 
+  const faqSchema = React.useMemo(() => {
+    if (!story.faq || story.faq.length === 0) return null;
+    return generateFaqSchema(
+      story.faq.map((item) => ({ question: item.q, answer: item.a })),
+      locale
+    );
+  }, [story.faq, locale]);
+
   const shareStory = async () => {
     const shareUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
     await shareContent({
@@ -130,6 +139,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         articleSection={story.category}
         articleTags={story.tags ?? undefined}
         includeSchema
+        schema={faqSchema ? [faqSchema] : undefined}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },

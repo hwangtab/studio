@@ -4,6 +4,11 @@ import type { Locale } from '../lib/i18n';
  * Frontmatter interface for Story markdown files
  * Extracted from gray-matter parsing of content/stories/*.md files
  */
+export interface StoryFAQItem {
+  q: string;
+  a: string;
+}
+
 export interface StoryFrontmatter {
   title: string;
   date: string | Date;
@@ -13,6 +18,7 @@ export interface StoryFrontmatter {
   summary?: string;
   thumbnail?: string;
   images?: string[];
+  faq?: StoryFAQItem[];
 }
 
 /**
@@ -45,6 +51,7 @@ export interface StoryDetail extends Story {
   sourceLocale: Locale;
   isFallbackTranslation: boolean;
   modifiedDate?: string; // ISO 8601 from file mtime
+  faq?: StoryFAQItem[];
 }
 
 /**

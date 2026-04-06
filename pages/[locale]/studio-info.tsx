@@ -229,14 +229,26 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
       <Section variant="default" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href={`/${locale}/pricing`}
+            href={`/${locale}/wedding-song`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/voice-acting`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/pricing`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -258,7 +270,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
               {t('studioInfo.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/studio2.jpg"
+          imageSrc="/images/studio2.webp"
           imageAlt={t('studioInfo.cta.imageAlt')}
           headingAs="h3"
         />
