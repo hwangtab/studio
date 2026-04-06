@@ -94,4 +94,4 @@ faq:
 
 마스터링은 완성된 음악의 마지막 보호막입니다. 발매 전 마스터링 없이 업로드하면 작업의 95%가 완성됐지만 5%의 최종 단계에서 청중의 인상이 달라집니다.
 
-[마스터링 팁 완전 가이드](/stories/mastering-tips1) | [믹스 납품 준비 완전 가이드](/stories/mix-delivery1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [음압(LUFS) 스트리밍 마스터링 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[LUFS 완전 가이드](/stories/lufs-guide1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [믹스 납품 준비 완전 가이드](/stories/mix-delivery1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
