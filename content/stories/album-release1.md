@@ -141,4 +141,4 @@ faq:
 
 정규앨범은 아티스트 커리어의 중요한 이정표입니다. 스튜디오 놀에서 전 트랙을 일관된 사운드로 녹음·믹싱·마스터링하여 앨범 발매를 완성하세요.
 
-[EP 발매 완전 가이드](/stories/ep-release1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [EP 발매 완전 가이드](/stories/ep-release1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
