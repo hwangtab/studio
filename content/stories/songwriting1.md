@@ -124,4 +124,4 @@ Dm-Am-Bb-C
 
 작곡은 완벽함을 향한 여정이 아닙니다. 일단 완성하고, 녹음해서 들어보고, 다듬는 과정이 전부입니다. 스튜디오 놀에서 완성된 곡을 전문 녹음으로 남겨보세요.
 
-[녹음 준비 완전 가이드](/stories/recording-preparation1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [EP 제작 완전 가이드](/stories/ep-making1) | [커버송 녹음 완전 가이드](/stories/cover-song1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스튜디오 놀 이용 요금](/pricing)
+[작사 완전 가이드](/stories/lyric-writing1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [EP 제작 완전 가이드](/stories/ep-making1) | [커버송 녹음 완전 가이드](/stories/cover-song1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
