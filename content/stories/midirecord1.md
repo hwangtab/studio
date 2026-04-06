@@ -100,4 +100,4 @@ DAW에서 보컬 트랙을 뮤트하고 전체 믹스를 하나의 WAV 파일로
 
 홈 DAW 편곡 + 전문 스튜디오 보컬의 조합이 인디 음악 제작의 표준이 되고 있습니다. 연신내역 도보 5분 거리 스튜디오 놀에서 카카오톡으로 DAW 파일 현황을 알려주시면 맞춤 안내드립니다.
 
-[음반 제작 전 과정 가이드](/stories/album1) | [음악 작업 의뢰 방법 가이드](/stories/commission1) | [보컬 EQ 완전 가이드](/stories/eq1) | [마스터링이란?](/stories/mastering1) | [셀프 믹싱 vs 전문 믹싱 의뢰](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)
+[편곡(Arrangement) 완전 가이드](/stories/arrangement1) | [음반 제작 전 과정 가이드](/stories/album1) | [음악 작업 의뢰 방법 가이드](/stories/commission1) | [보컬 EQ 완전 가이드](/stories/eq1) | [마스터링이란?](/stories/mastering1) | [셀프 믹싱 vs 전문 믹싱 의뢰](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)
