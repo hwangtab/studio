@@ -105,4 +105,4 @@ MR(반주)과 녹음된 보컬을 통합해 최종 스테레오 믹스를 완성
 
 오디션 데모는 실력을 보여주는 명함입니다. 연신내역 도보 5분 거리 스튜디오 놀에서 전문 장비와 경험 있는 엔지니어의 디렉팅을 받아 최고의 데모를 완성해보세요.
 
-[스튜디오 놀 보컬 녹음 요금 안내](/pricing) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [뮤지컬 보컬 오디션 데모 가이드](/stories/musical1)
+[실용음악과 입시 준비 가이드](/stories/siryummusic1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)

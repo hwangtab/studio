@@ -100,4 +100,4 @@ faq:
 
 피아노 녹음은 악기 종류와 목적에 따라 최적의 방법이 다릅니다. 발매·영상 배경음악·선물용 등 목적에 맞게 선택하세요. 스튜디오 놀에서는 보컬과 건반 동시 녹음, 또는 건반 MR 위에 보컬 오버더빙 서비스를 제공합니다.
 
-[어쿠스틱 기타·밴드 녹음 가이드](/stories/band1) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [DAW 선택 가이드](/stories/daw1) | [오디오 형식 완전 가이드](/stories/audioformat1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 녹음 방법 완전 가이드](/stories/guitar1) | [밴드·합창 단체 녹음 가이드](/stories/band1) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [DAW 선택 가이드](/stories/daw1) | [스튜디오 놀 이용 요금](/pricing)
