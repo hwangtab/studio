@@ -65,4 +65,4 @@ faq:
 
 경기 남부 수원·안양·군포에서 1시간 내외, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[인천·부천 녹음실 안내](/stories/incheon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[인천·부천 녹음실 안내](/stories/incheon1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
