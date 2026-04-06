@@ -90,4 +90,4 @@ faq:
 
 성대 건강은 보컬리스트의 가장 중요한 자산입니다. 일상적인 관리와 녹음 전후 주의가 쌓이면 장기적으로 목소리를 지킬 수 있습니다.
 
-[녹음 전 금지 음식 가이드](/stories/vocalfood1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [스튜디오 놀 이용 요금 안내](/pricing)
+[목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [스튜디오 놀 이용 요금 안내](/pricing)
