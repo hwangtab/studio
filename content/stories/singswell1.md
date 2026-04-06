@@ -107,4 +107,4 @@ faq:
 
 노래 실력은 하루아침에 오르지 않습니다. 올바른 방법으로 꾸준히 연습하고, 주기적으로 스튜디오에서 녹음해 객관적으로 자신의 실력을 확인하세요. 연신내역 도보 5분 스튜디오 놀의 보컬 레슨과 녹음 세션으로 성장을 경험해보세요.
 
-[보컬 호흡법 완전 가이드](/stories/breathing1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 워밍업 루틴](/stories/warmup1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [스튜디오 놀 보컬 레슨 안내](/lesson)
+[고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 워밍업 루틴](/stories/warmup1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [스튜디오 놀 보컬 레슨 안내](/lesson)
