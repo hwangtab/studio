@@ -8,6 +8,7 @@ import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
 import ImageHero from '../../components/common/ImageHero';
 import Breadcrumb from '../../components/ui/Breadcrumb';
+import ReviewSection from '../../components/ui/ReviewSection';
 import { getServicesData } from '../../data/services';
 import { Section } from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -279,6 +280,8 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
           </BaseCard>
         </div>
       </Section>
+
+      <ReviewSection variant="default" locale={locale} />
 
       <Section variant="alternate" className="py-16">
         <ContactCTA

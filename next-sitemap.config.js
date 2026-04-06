@@ -15,12 +15,12 @@ const pageImageMap = {
   '/index': '/images/og-default.jpg',
   '/lesson': '/images/lesson1.webp',
   '/portfolio': '/images/recording1.webp',
-  '/practice-room': '/images/room5.jpg',
-  '/pricing': '/images/hardware2.jpg',
-  '/stories': '/images/studio1.jpg',
-  '/studio-info': '/images/hardware1.jpg',
+  '/practice-room': '/images/room5.webp',
+  '/pricing': '/images/hardware2.webp',
+  '/stories': '/images/studio1.webp',
+  '/studio-info': '/images/hardware1.webp',
   '/wedding-song': '/images/recording3.webp',
-  '/voice-acting': '/images/hardware3.avif',
+  '/voice-acting': '/images/hardware3.webp',
 };
 
 // Parse portfolio item images from TypeScript source at build time
