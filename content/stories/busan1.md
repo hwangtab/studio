@@ -83,4 +83,4 @@ faq:
 
 부산에서 KTX 2.5시간, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다. 카카오톡으로 사전 상담 후 예약해주세요.
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [천안·아산에서 서울 녹음실 방문](/stories/cheonan1) | [원격 보컬 디렉팅 서비스](/stories/remotedir1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [천안·아산에서 서울 녹음실 방문](/stories/cheonan1) | [원격 보컬 디렉팅 서비스](/stories/remotedir1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
