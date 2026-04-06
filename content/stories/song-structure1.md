@@ -142,4 +142,4 @@ faq:
 
 곡 구조를 이해하면 녹음 전에 어떤 감정으로 어떤 강도로 부를지 설계할 수 있습니다. 스튜디오 놀에서 구조 분석부터 감정 표현까지 엔지니어와 함께 최고의 보컬 테이크를 완성해보세요.
 
-[보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [EP 제작 완전 가이드](/stories/ep-making1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [뮤직비디오 제작 완전 가이드](/stories/music-video1) | [스튜디오 놀 이용 요금](/pricing)
+[코드 진행 완전 가이드](/stories/chord-progressions1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
