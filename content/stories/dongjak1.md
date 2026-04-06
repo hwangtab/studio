@@ -80,4 +80,4 @@ faq:
 
 동작구에서 2호선 30~35분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 음원 발매부터 오디션 데모까지 전 과정을 지원합니다.
 
-[서초구 녹음실 안내](/stories/seocho1) | [관악구·동작구 녹음실 안내](/stories/gwanak1) | [강남구 녹음실 안내](/stories/gangnam1) | [영등포·여의도 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[사당·방배·노량진 녹음실 안내](/stories/sadang1) | [서초구 녹음실 안내](/stories/seocho1) | [관악구·동작구 녹음실 안내](/stories/gwanak1) | [강남구 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
