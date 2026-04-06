@@ -118,4 +118,4 @@ faq:
 
 합창·코랄 녹음은 정밀한 파트 관리와 믹싱이 핵심입니다. 스튜디오 놀에서 파트 분리 녹음 방식으로 소규모 합창 음반도 전문적으로 제작할 수 있습니다.
 
-[아카펠라 녹음 완전 가이드](/stories/acapella1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [화음·하모니 녹음 가이드](/stories/harmony1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)
+[아카펠라 녹음 완전 가이드](/stories/acapella1) | [백보컬·코러스 녹음 완전 가이드](/stories/backing-vocal1) | [화음·하모니 녹음 가이드](/stories/harmony1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)
