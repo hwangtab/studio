@@ -127,4 +127,4 @@ Send 방식: Nectar 없이 별도 리버브 플러그인
 
 iZotope Nectar 4는 AI 기반 보컬 처리로 빠르고 전문적인 결과를 얻을 수 있는 올인원 플러그인입니다. 스튜디오 놀에서는 Nectar를 포함한 전문 플러그인 체인으로 최적의 보컬 사운드를 완성합니다.
 
-[Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
