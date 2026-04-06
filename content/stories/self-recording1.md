@@ -114,4 +114,4 @@ faq:
 
 셀프 녹음은 완벽한 환경이 아니어도 시작할 수 있습니다. 깨끗한 드라이 보컬만 확보되면 스튜디오 놀에서 온라인 믹싱으로 전문 음원 품질의 완성 파일을 받을 수 있습니다.
 
-[홈 레코딩 완전 가이드](/stories/home-recording1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [스튜디오 놀 이용 요금](/pricing)
+[마이크 테크닉 완전 가이드](/stories/mic-technique1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [스튜디오 놀 이용 요금](/pricing)
