@@ -119,4 +119,4 @@ faq:
 
 흡음재와 올바른 공간 선택만으로도 홈 레코딩의 음질을 크게 개선할 수 있습니다. 하지만 음원 발매나 중요한 프로젝트라면 전문 스튜디오를 권장합니다. 스튜디오 놀에서는 연신내역 도보 5분 거리에서 전문 흡음 환경을 경험할 수 있습니다.
 
-[홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [스튜디오 vs 홈 레코딩 비교](/stories/homestudio1) | [스튜디오 놀 이용 요금](/pricing)
+[룸 어쿠스틱 완전 가이드](/stories/room-acoustic1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [스튜디오 vs 홈 레코딩 비교](/stories/homestudio1) | [스튜디오 놀 이용 요금](/pricing)
