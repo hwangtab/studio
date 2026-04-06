@@ -113,4 +113,4 @@ faq:
 
 혼자 만든 곡이 멜론·스포티파이에 올라가는 날까지, 스튜디오 놀이 함께합니다. 연신내역 도보 5분 거리에서 데모부터 발매까지 원스톱으로 진행해드립니다.
 
-[음반 제작 전 과정 가이드](/stories/album1) | [음원 발매 방법 안내](/stories/release1) | [스튜디오 놀 녹음 요금](/pricing)
+[음반 제작 전 과정 가이드](/stories/album1) | [음원 발매 방법 안내](/stories/release1) | [스튜디오 놀 녹음 요금](/pricing) | [보컬 피치 교정이란?](/stories/pitch1) | [녹음 비용 가이드](/stories/pricing1)
