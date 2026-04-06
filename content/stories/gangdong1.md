@@ -81,4 +81,4 @@ faq:
 
 강동구에서 5호선 40~55분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 음원 발매부터 오디션 데모까지 전 과정을 지원합니다.
 
-[천호·암사·길동·명일 녹음실 안내](/stories/cheonho1) | [송파구 녹음실 안내](/stories/songpa1) | [강남구 녹음실 안내](/stories/gangnam1) | [광진구·중랑구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[고덕·상일·강일·하남 녹음실 안내](/stories/godeok1) | [천호·암사·길동·명일 녹음실 안내](/stories/cheonho1) | [송파구 녹음실 안내](/stories/songpa1) | [광진구·중랑구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
