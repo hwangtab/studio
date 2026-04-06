@@ -97,4 +97,4 @@ MR 구매 시: "A키 MR" 또는 "-2 MR" 요청
 
 음역대는 고정되어 있지 않습니다. 꾸준한 보컬 트레이닝으로 범위를 넓히고 안정성을 높일 수 있습니다. 스튜디오 놀 녹음 세션에서 엔지니어와 함께 최적의 키를 찾아 녹음을 진행하세요.
 
-[나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [음악 장르 선택 가이드](/stories/genre-choice1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬리스트를 위한 음악 이론 기초](/stories/music-theory1) | [나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)

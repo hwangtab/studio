@@ -66,4 +66,4 @@ faq:
 
 안동에서 KTX로 2시간이면 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[영주·봉화에서 서울 녹음실 방문 가이드](/stories/yeongju1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
