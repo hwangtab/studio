@@ -89,4 +89,4 @@ faq:
 
 경산·영천에서 KTX를 이용하면 약 2시간 30분대로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [포항·경주에서 서울 녹음실 방문 가이드](/stories/pohang1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
