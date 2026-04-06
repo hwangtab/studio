@@ -3,6 +3,16 @@ import { getAllStories } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 
+const storiesLabel: Record<Locale, string> = {
+  ko: '스토리',
+  en: 'Stories',
+  zh: '故事',
+  es: 'Historias',
+  vi: 'Câu chuyện',
+  th: 'เรื่องราว',
+  uz: 'Hikoyalar',
+};
+
 const escapeXml = (str: string): string =>
   str
     .replace(/&/g, '&amp;')
@@ -53,7 +63,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
-    <title>${escapeXml(siteConfig.name)} Stories</title>
+    <title>${escapeXml(siteConfig.name)} ${storiesLabel[locale]}</title>
     <link>${siteUrl}/${locale}/stories</link>
     <description>${escapeXml(siteConfig.description)}</description>
     <language>${locale}</language>

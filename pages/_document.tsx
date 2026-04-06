@@ -41,6 +41,8 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://is1-ssl.mzstatic.com" />
           <link rel="dns-prefetch" href="https://img.tumblbug.com" />
           <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
+          <link rel="dns-prefetch" href="https://cdn.imweb.me" />
+          <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
           {/* Critical fonts for above-the-fold content */}
           <link
             rel="preload"

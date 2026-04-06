@@ -94,6 +94,7 @@ export const generateDefaultSchema = (
             availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
           },
         ],
+        legalName: 'Studio NOL',
         sameAs: sameAsLinks,
         foundingDate: '2024-01-01',
         description: config.description,

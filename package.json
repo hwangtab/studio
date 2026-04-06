@@ -38,7 +38,7 @@
     "lint": "eslint pages components lib data utils middleware.ts next.config.mjs --ext .js,.jsx,.ts,.tsx",
     "type-check": "tsc --noEmit",
     "prebuild": "node scripts/optimizeImages.js",
-    "postbuild": "next-sitemap",
+    "postbuild": "rm -f public/sitemap*.xml public/robots.txt && next-sitemap",
     "test": "jest"
   },
   "browserslist": {

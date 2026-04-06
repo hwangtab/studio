@@ -164,7 +164,7 @@ module.exports = {
   exclude: ['/api/*', '/404', '/500', '/'],
   robotsTxtOptions: {
     policies: [
-      { userAgent: '*', allow: '/', disallow: '/api/' },
+      { userAgent: '*', allow: '/', disallow: ['/api/'] },
       // Naver
       { userAgent: 'Yeti', allow: '/' },
       // OpenAI
@@ -183,7 +183,7 @@ module.exports = {
     ],
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) =>
-      robotsTxt.replace(/# Host\nHost:.*\n/g, ''),
+      robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, ''),
   },
   transform: async (config, routePath) => {
     if (routePath.includes('/privacy-policy')) {
