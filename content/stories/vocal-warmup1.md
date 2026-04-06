@@ -138,4 +138,4 @@ faq:
 
 보컬 워밍업은 좋은 녹음의 절반입니다. 스튜디오 놀 세션 예약 시 워밍업 시간을 포함해 녹음을 시작합니다.
 
-[보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
