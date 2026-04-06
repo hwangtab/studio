@@ -89,4 +89,4 @@ faq:
 
 시흥에서 4호선을 이용하면 약 50~75분 내로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다.
 
-[시흥 은계·정왕·장현·목감 녹음실 안내](/stories/siheung-eungye1) | [안산·시흥 방문 가이드](/stories/ansan1) | [화성·동탄 녹음실 안내](/stories/hwaseong1) | [부천 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[시흥 배곧신도시 녹음실 안내](/stories/siheung-baegot1) | [시흥 은계·정왕·장현·목감 녹음실 안내](/stories/siheung-eungye1) | [안산·시흥 방문 가이드](/stories/ansan1) | [화성·동탄 녹음실 안내](/stories/hwaseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
