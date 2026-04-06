@@ -80,4 +80,4 @@ faq:
 
 김제에서 KTX를 이용하면 약 2시간 30분대로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다.
 
-[부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [정읍에서 서울 녹음실 방문 가이드](/stories/jeongeup1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[임실에서 서울 녹음실 방문 가이드](/stories/imsil1) | [부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [정읍에서 서울 녹음실 방문 가이드](/stories/jeongeup1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
