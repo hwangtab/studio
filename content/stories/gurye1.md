@@ -70,4 +70,4 @@ faq:
 
 구례에서 KTX를 이용하면 당일 왕복 세션이 가능합니다. 방문이 부담된다면 온라인 파일 의뢰로 서울 스튜디오 품질의 믹싱을 받을 수 있습니다.
 
-[나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [하동에서 서울 녹음실 방문 가이드](/stories/hadong1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
+[곡성에서 서울 녹음실 방문 가이드](/stories/gokseong1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [하동에서 서울 녹음실 방문 가이드](/stories/hadong1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
