@@ -123,4 +123,4 @@ faq:
 
 가성과 두성은 보컬의 음역을 확장하는 핵심 도구입니다. 꾸준히 연습하면 진성-가성-두성을 자연스럽게 전환하는 믹스 보이스로 발전합니다. 스튜디오 녹음에서 고음 파트는 가성·두성 발성이 자연스럽게 이루어질 때 가장 아름답게 담깁니다.
 
-[벨팅 발성법 완전 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [비브라토 넣는 방법](/stories/vibrato1) | [스튜디오 놀 이용 요금](/pricing)
+[두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [벨팅 발성법 완전 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [비브라토 넣는 방법](/stories/vibrato1) | [스튜디오 놀 이용 요금](/pricing)
