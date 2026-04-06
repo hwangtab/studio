@@ -138,4 +138,4 @@ faq:
 
 작사는 연습할수록 발전하는 기술입니다. 완성된 가사로 스튜디오 놀에서 녹음하면 작사한 이야기가 음악으로 완성됩니다. 온라인 믹싱 의뢰로 녹음 파일을 보내주시면 전문 믹싱·마스터링으로 완성 음원을 받을 수 있습니다.
 
-[작곡·작사 실전 가이드](/stories/songwriting1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[멜로디 작곡 완전 가이드](/stories/melody-writing1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
