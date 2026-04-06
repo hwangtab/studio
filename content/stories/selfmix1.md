@@ -101,4 +101,4 @@ DAW(Logic Pro, FL Studio, Ableton 등) 보급으로 집에서도 어느 정도 �
 
 셀프 믹싱은 학습의 관점에서 가치 있고, 전문 의뢰는 완성도의 관점에서 효율적입니다. 발매용이라면 전문 믹싱을, 연습용이라면 셀프로 시작하며 강좌를 병행하는 것을 권장합니다.
 
-[스튜디오 놀 믹싱 서비스 요금 안내](/pricing) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [마스터링이란? LUFS 기준 설명](/stories/mastering1) | [보컬 녹음 후 믹싱 연계 안내](/stories/session1)
+[스튜디오 놀 믹싱 서비스 요금 안내](/pricing) | [보컬 믹싱 플러그인 추천](/stories/plugins1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [마스터링이란? LUFS 기준 설명](/stories/mastering1) | [보컬 녹음 후 믹싱 연계 안내](/stories/session1)
