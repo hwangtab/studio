@@ -80,4 +80,4 @@ faq:
 
 장흥에서 이동이 길어 온라인 파일 의뢰를 적극 권장합니다. 장흥 현지에서 드라이 보컬을 녹음하고 파일을 전송하면 서울 스튜디오 품질의 믹싱·마스터링을 받을 수 있습니다.
 
-[함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[고흥에서 서울 녹음실 방문 가이드](/stories/goheung1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)

@@ -103,4 +103,4 @@ faq:
 
 커버 음원은 보컬리스트의 명함입니다. 깨끗한 음질로 실력을 제대로 보여주려면 전문 스튜디오 녹음이 중요합니다. 스튜디오 놀에서 커버 음원 세션부터 믹싱·마스터링까지 원스톱으로 완성해드립니다.
 
-[보컬 포트폴리오 만들기](/stories/portfolio1) | [유튜브 쇼츠로 보컬 활동하는 방법](/stories/youtube-shorts1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [유튜브 쇼츠로 보컬 활동하는 방법](/stories/youtube-shorts1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
