@@ -152,4 +152,4 @@ Mixer → 보컬 트랙 Solo
 
 FL Studio는 비트메이킹에서 보컬 녹음까지 모두 가능한 통합 DAW입니다. 녹음 후 스튜디오 놀에 드라이 보컬 WAV 파일을 전달하면 전문 믹싱·마스터링으로 완성 음원을 받을 수 있습니다.
 
-[Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[스마트폰 보컬 녹음 완전 가이드](/stories/smartphone-recording1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
