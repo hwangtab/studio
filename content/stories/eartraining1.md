@@ -115,4 +115,4 @@ faq:
 
 청음 훈련은 보컬 레슨만큼 중요합니다. 꾸준한 훈련으로 음감이 향상되면 녹음 세션에서 테이크 수가 줄고 더 빠르게 완성도 높은 결과물이 나옵니다. 스튜디오 놀 보컬 레슨에서 청음 훈련을 포함한 맞춤 교육을 받아보세요.
 
-[보컬 레슨 선택 가이드](/stories/lessonguide1) | [노래 잘하는 방법 가이드](/stories/singswell1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [내 보컬 음역대 확인 방법](/stories/vocalrange1) | [음정 교정 도구 비교](/stories/pitchtool1)
+[악보 없이 코드 찾는 방법 — 채보 가이드](/stories/transcription1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [노래 잘하는 방법 가이드](/stories/singswell1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [스튜디오 놀 이용 요금](/pricing)
