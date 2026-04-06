@@ -66,4 +66,4 @@ faq:
 
 홍대·신촌에서 6호선 10분, 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 인디 싱어송라이터부터 K팝 지망생까지 모두 환영합니다.
 
-[마포구에서 스튜디오 놀 방문 가이드](/stories/mapo1) | [은평구에서 스튜디오 놀 방문 가이드](/stories/eunpyeong1) | [서대문구에서 스튜디오 놀 방문 가이드](/stories/seodaemun1) | [연신내 스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1)
+[신촌·연세대 근처 녹음실 안내](/stories/sinchon1) | [마포구에서 스튜디오 놀 방문 가이드](/stories/mapo1) | [은평구에서 스튜디오 놀 방문 가이드](/stories/eunpyeong1) | [서대문구에서 스튜디오 놀 방문 가이드](/stories/seodaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
