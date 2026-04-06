@@ -57,4 +57,4 @@ faq:
 
 영등포·구로·금천에서 2호선 합정역 경유로 25~45분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[신길·문래·양평·당산 녹음실 안내](/stories/singil1) | [여의도·영등포 녹음실 안내](/stories/yeouido1) | [마포구 녹음실 안내](/stories/mapo1) | [양천구·강서구 녹음실 안내](/stories/yangcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대림·남구로 녹음실 안내](/stories/daerim1) | [신길·문래·양평·당산 녹음실 안내](/stories/singil1) | [여의도·영등포 녹음실 안내](/stories/yeouido1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
