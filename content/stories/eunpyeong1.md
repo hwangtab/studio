@@ -71,4 +71,4 @@ faq:
 
 은평구에 사는 분들이 전문 녹음을 위해 먼 곳까지 이동할 필요가 없습니다. 연신내역 도보 5분 거리 스튜디오 놀에서 홍대 수준의 전문 장비와 서비스를 이용하세요.
 
-[스튜디오 놀 시설·장비 상세 안내](/studio-info) | [이용 요금 안내](/pricing) | [연신내·불광 녹음실 선택 가이드](/stories/review6) | [예약 방법 가이드](/stories/booking1)
+[스튜디오 놀 시설·장비 상세 안내](/studio-info) | [이용 요금 안내](/pricing) | [연신내·불광 녹음실 선택 가이드](/stories/review6) | [예약 방법 가이드](/stories/booking1) | [서대문구 녹음실 안내](/stories/seodaemun1)
