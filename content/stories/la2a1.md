@@ -142,4 +142,4 @@ IK Multimedia T-RackS White 2A:
 
 LA-2A는 수십 년간 보컬 녹음의 표준으로 자리 잡은 클래식 Optical 컴프레서입니다. 스튜디오 놀에서는 LA-2A 에뮬레이션을 포함한 전문 플러그인 체인으로 따뜻하고 자연스러운 보컬 컴프레션을 제공합니다.
 
-[1176 컴프레서 완전 가이드](/stories/comp1176) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [컴프레서 완전 가이드](/stories/compressor1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [컴프레서 완전 가이드](/stories/compressor1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
