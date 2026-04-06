@@ -127,4 +127,4 @@ komca.or.kr → 저작물 등록 신청
 
 음악 라이센싱은 완성도 높은 음원을 기반으로 시작됩니다. 스튜디오 놀에서 라이센싱에 적합한 전문적인 사운드로 음원을 완성하세요.
 
-[CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 협업 완전 가이드](/stories/music-collab1) | [영화음악·영상음악 작곡 완전 가이드](/stories/film-scoring1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 싱크 라이센싱 완전 가이드](/stories/sync-licensing1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [영화음악·영상음악 작곡 완전 가이드](/stories/film-scoring1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
