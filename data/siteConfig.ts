@@ -3,10 +3,11 @@ import type { Locale } from '../lib/i18n';
 
 // Social profiles — 계정 개설 시 URL 추가 (schema.org sameAs에 자동 반영됨)
 export const socialProfiles = {
-  instagram: '', // TODO: add when available
-  youtube: '', // TODO: add when available
-  facebook: '', // TODO: add when available
-  twitter: '', // TODO: add when available
+  instagram: 'https://www.instagram.com/studio_nol_',
+  threads: 'https://www.threads.com/@studio_nol_',
+  youtube: '',
+  facebook: '',
+  twitter: '',
 };
 
 // Translation helper
