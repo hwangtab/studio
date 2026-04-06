@@ -120,4 +120,4 @@ faq:
 
 연신내역에서 도보 5분, 스튜디오 놀에서 첫 녹음을 시작해보세요. 카카오톡으로 문의하시면 준비 방법부터 상세히 안내해드립니다.
 
-[스튜디오 놀 녹음실 소개 및 장비 안내](/studio-info) | [이용 요금 안내](/pricing) | [당일 컨디션 관리 체크리스트](/stories/session1) | [노래방 vs 스튜디오 녹음 차이](/stories/karaoke1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [예약 방법 완전 가이드](/stories/booking1)
+[스튜디오 놀 녹음실 소개 및 장비 안내](/studio-info) | [이용 요금 안내](/pricing) | [당일 컨디션 관리 체크리스트](/stories/session1) | [노래방 vs 스튜디오 녹음 차이](/stories/karaoke1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [예약 방법 완전 가이드](/stories/booking1) | [첫 녹음 세션 실제 후기](/stories/tutorial1)
