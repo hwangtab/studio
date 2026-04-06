@@ -80,4 +80,4 @@ faq:
 
 속초에서 서울까지 이동이 있지만, 이른 첫차를 이용하면 당일 왕복 세션이 충분히 가능합니다. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[인제에서 서울 녹음실 방문 가이드](/stories/inje1) | [강릉·강원도에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[고성(강원)에서 서울 녹음실 방문 가이드](/stories/goseong-gangwon1) | [인제에서 서울 녹음실 방문 가이드](/stories/inje1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
