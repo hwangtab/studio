@@ -103,4 +103,4 @@ faq:
 
 K-POP 오디션은 준비된 사람에게 기회가 옵니다. 데모 녹음은 첫 인상입니다. 스튜디오 놀에서 전문 마이크와 엔지니어와 함께 최상의 오디션 데모를 완성하세요.
 
-[오디션 준비 완전 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [EPK 만들기](/stories/epk1) | [스튜디오 놀 이용 요금](/pricing)
+[K팝 연습생 준비 완전 가이드](/stories/kpop-trainee1) | [오디션 준비 완전 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [EPK 만들기](/stories/epk1) | [스튜디오 놀 이용 요금](/pricing)
