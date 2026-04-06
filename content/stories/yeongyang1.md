@@ -70,4 +70,4 @@ faq:
 
 영양에서 안동역 KTX를 이용하면 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 이동 시간이 긴 경우 온라인 파일 의뢰도 적극 추천합니다.
 
-[예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [영덕에서 서울 녹음실 방문 가이드](/stories/yeongdeok1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[봉화에서 서울 녹음실 방문 가이드](/stories/bonghwa1) | [예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
