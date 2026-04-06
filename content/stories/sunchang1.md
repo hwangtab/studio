@@ -80,4 +80,4 @@ faq:
 
 순창에서 전주역 KTX를 이용하면 약 3시간 내로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다.
 
-[임실에서 서울 녹음실 방문 가이드](/stories/imsil1) | [남원에서 서울 녹음실 방문 가이드](/stories/namwon1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
+[무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [임실에서 서울 녹음실 방문 가이드](/stories/imsil1) | [남원에서 서울 녹음실 방문 가이드](/stories/namwon1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
