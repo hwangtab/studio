@@ -139,4 +139,4 @@ MR 레벨: 기준 (너무 크지 않게)
 
 최고의 보컬 테이크는 철저한 준비와 편안한 마음에서 나옵니다. 스튜디오 놀 엔지니어가 최적의 모니터 환경과 디렉팅으로 최고의 테이크를 함께 만들어드립니다.
 
-[보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 컨디션 관리 가이드](/stories/vocal-health1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [녹음 준비 체크리스트](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[스튜디오 방문 체크리스트](/stories/studio-checklist1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 컨디션 관리 가이드](/stories/vocal-health1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
