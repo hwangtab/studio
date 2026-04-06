@@ -95,4 +95,4 @@ K-팝 보컬은 안정적인 발성 기술 위에 트렌디한 표현, 고난도
 
 K-팝 보컬은 전문 트레이닝과 꾸준한 연습으로 단계적으로 발전합니다. 스튜디오 녹음으로 자신의 K-팝 보컬을 객관적으로 모니터링하는 습관이 빠른 성장의 비결입니다.
 
-[K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [아이돌·K팝 보컬 완전 가이드](/stories/idol-vocal1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
