@@ -80,4 +80,4 @@ faq:
 
 무주에서 KTX를 이용하면 당일 왕복 세션이 가능합니다. 방문이 부담된다면 온라인 파일 의뢰로 서울 스튜디오 품질을 경험해보세요.
 
-[순창에서 서울 녹음실 방문 가이드](/stories/sunchang1) | [임실에서 서울 녹음실 방문 가이드](/stories/imsil1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[상주에서 서울 녹음실 방문 가이드](/stories/sangju1) | [순창에서 서울 녹음실 방문 가이드](/stories/sunchang1) | [임실에서 서울 녹음실 방문 가이드](/stories/imsil1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
