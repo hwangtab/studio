@@ -19,6 +19,8 @@ const pageImageMap = {
   '/pricing': '/images/hardware2.jpg',
   '/stories': '/images/studio1.jpg',
   '/studio-info': '/images/hardware1.jpg',
+  '/wedding-song': '/images/recording5.webp',
+  '/voice-acting': '/images/recording10.webp',
 };
 
 // Parse portfolio item images from TypeScript source at build time
@@ -94,6 +96,8 @@ const pageRouteMap = {
   '/privacy-policy': 'privacy-policy.tsx',
   '/stories': path.join('stories', 'index.tsx'),
   '/studio-info': 'studio-info.tsx',
+  '/wedding-song': 'wedding-song.tsx',
+  '/voice-acting': 'voice-acting.tsx',
 };
 
 const getStoryLastmod = (slug, locale) => {
@@ -244,7 +248,7 @@ module.exports = {
       };
     }
 
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 

@@ -14,7 +14,9 @@
       "recording": "Grabación",
       "practice": "Práctica",
       "explore": "Explorar"
-    }
+    },
+    "weddingSong": "Canción de Boda",
+    "voiceActing": "Locución"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -649,5 +651,244 @@
   "pagination": {
     "previousPage": "Página anterior",
     "nextPage": "Página siguiente"
+  },
+  "weddingSong": {
+    "seo": {
+      "title": "Grabación Canción de Boda · Paquete Todo en Uno ₩350,000 | Studio Nol",
+      "description": "A 5 min de Yeonsin-nae. Principiantes bienvenidos. 2h grabación + afinación vocal + mezcla y masterización por ₩350,000. Mezcla básica el mismo día.",
+      "keywords": "grabación canción boda, estudio vocal Seúl, propuesta musical, grabación vocal, Studio Nol"
+    },
+    "hero": {
+      "title": "Exprésate con una Canción",
+      "subtitleLine1": "Principiantes bienvenidos — ingeniero profesional en cada paso",
+      "subtitleLine2": "Grabación, mezcla y masterización en un paquete completo",
+      "alt": "Sesión de grabación vocal en Studio Nol"
+    },
+    "quickAnswers": {
+      "title": "Preguntas sobre Canción de Boda",
+      "subtitle": "Respuestas rápidas a las preguntas más comunes.",
+      "items": [
+        {
+          "q": "¿Puedo grabar aunque no cante bien?",
+          "a": "Por supuesto. Nuestro ingeniero guía tu voz y corrige afinación y ritmo para un resultado natural y emotivo."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "El paquete todo en uno es ₩350,000 (sin IVA): incluye 2h de grabación, afinación vocal, mezcla y masterización."
+        },
+        {
+          "q": "¿Cuándo recibiré el archivo final?",
+          "a": "Una mezcla básica puede estar lista el mismo día. La versión final suele entregarse en 3–5 días hábiles."
+        }
+      ]
+    },
+    "intro": {
+      "title": "¿Por qué grabar tu canción en Studio Nol?",
+      "imageAlt": "Vocalista grabando en Studio Nol",
+      "features": [
+        {
+          "title": "Dirección Vocal Experta",
+          "description": "El ingeniero guía respiración, tono y emoción durante toda la sesión."
+        },
+        {
+          "title": "Ambiente de Grabación Premium",
+          "description": "Neumann U87AI y preamplificadores analógicos para una voz cálida y profesional."
+        },
+        {
+          "title": "Entrega el Mismo Día",
+          "description": "Flexible para plazos ajustados — mezcla básica disponible el mismo día."
+        }
+      ]
+    },
+    "package": {
+      "title": "Paquete Completo Canción de Boda"
+    },
+    "process": {
+      "title": "Cómo Funciona",
+      "subtitle": "4 pasos para tu canción de boda perfecta",
+      "steps": [
+        {
+          "title": "Consulta y Selección de Canción",
+          "description": "Hablamos sobre tu canción por KakaoTalk o teléfono. Podemos recomendar canciones."
+        },
+        {
+          "title": "Sesión de Grabación (~2 horas)",
+          "description": "Varias tomas bajo la guía del ingeniero — los mejores momentos combinados."
+        },
+        {
+          "title": "Afinación Vocal y Mezcla",
+          "description": "Corrección de afinación y ritmo, luego mezcla y masterización profesional."
+        },
+        {
+          "title": "Entrega Final",
+          "description": "Archivos WAV/MP3. Mezcla básica el mismo día disponible bajo pedido."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes - Canción de Boda",
+      "subtitle": "Preguntas frecuentes sobre nuestro servicio de canción de boda.",
+      "items": [
+        {
+          "q": "¿Puedo grabar aunque no sepa cantar?",
+          "a": "Sí, muchos clientes no son cantantes profesionales. La dirección y corrección vocal harán que tu grabación suene natural."
+        },
+        {
+          "q": "¿Necesito traer la pista de acompañamiento (MR)?",
+          "a": "Sí, trae tu archivo MR. Si no tienes uno, podemos producirlo por un costo adicional."
+        },
+        {
+          "q": "¿Son suficientes 2 horas de grabación?",
+          "a": "Para la mayoría de canciones, 2 horas es suficiente. Puedes extender el tiempo si necesitas más."
+        },
+        {
+          "q": "¿Podemos grabar un dúo?",
+          "a": "¡Sí! Pueden venir juntos o grabar pistas individuales por separado para combinarlas en la mezcla."
+        },
+        {
+          "q": "¿Puedo grabar para una propuesta o aniversario?",
+          "a": "¡Claro! Muchos clientes usan este servicio como regalo especial para propuestas, cumpleaños y aniversarios."
+        },
+        {
+          "q": "¿Hay grabaciones disponibles en fines de semana y festivos?",
+          "a": "Sí, aceptamos reservas en fines de semana y festivos. Contáctanos por KakaoTalk o teléfono."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Una canción, un momento,",
+      "titleHighlight": "hazlo inolvidable",
+      "subtitleLine1": "Principiantes bienvenidos · Mezcla el mismo día · Todo en uno",
+      "subtitleLine2": "Contáctanos por KakaoTalk para reservar fácilmente.",
+      "location": "Cómo llegar",
+      "inquiry": "Reservar Grabación Canción de Boda",
+      "imageAlt": "Vocalista en cabina de Studio Nol"
+    }
+  },
+  "voiceActing": {
+    "seo": {
+      "title": "Estudio de Locución · Narración ₩100,000/hora | Studio Nol",
+      "description": "A 5 min de Yeonsin-nae. Neumann U87AI, insonorización perfecta. ₩100,000/h, edición en tiempo real. Narración YouTube, audiolibros, publicidad.",
+      "keywords": "estudio locución Seúl, narración grabación, voiceover estudio, podcast grabación, audiolibro grabación, Studio Nol"
+    },
+    "hero": {
+      "title": "Tu Voz, Grabada Profesionalmente",
+      "subtitleLine1": "Equipos de última generación e insonorización perfecta",
+      "subtitleLine2": "Locución, narración y grabación de podcasts",
+      "alt": "Sesión de grabación de voz en Studio Nol"
+    },
+    "quickAnswers": {
+      "title": "Preguntas sobre Locución",
+      "subtitle": "Respuestas rápidas a las preguntas más comunes.",
+      "items": [
+        {
+          "q": "¿Para qué tipos de grabación es adecuado?",
+          "a": "Narración para YouTube, audiolibros, publicidad, podcasts, doblaje — cualquier trabajo de voice-over es bienvenido."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "₩100,000 por hora (sin IVA). Reserva mínima de 2 horas."
+        },
+        {
+          "q": "¿Qué equipo utilizan?",
+          "a": "Micrófono Neumann U87AI con preamplificadores analógicos para grabaciones vocales claras y cálidas."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Este estudio es para ti",
+      "items": [
+        {
+          "title": "YouTubers y Creadores",
+          "description": "Eleva tu contenido con narración y voice-over profesional."
+        },
+        {
+          "title": "Actores de Voz Profesionales",
+          "description": "Entorno de grabación premium para broadcast, publicidad y videojuegos."
+        },
+        {
+          "title": "Audiolibros y Podcasts",
+          "description": "Ambiente estable y cómodo para producción de contenido de audio largo."
+        },
+        {
+          "title": "Empresas y Anunciantes",
+          "description": "Grabación de voz corporativa para anuncios, videos promocionales y formación."
+        }
+      ]
+    },
+    "environment": {
+      "title": "¿Por qué Studio Nol?",
+      "imageAlt": "Equipo de grabación de voz en Studio Nol",
+      "features": [
+        "Micrófono Neumann U87AI",
+        "Entorno perfectamente insonorizado",
+        "Soporte de edición en tiempo real",
+        "Sala de espera para locutores"
+      ]
+    },
+    "package": {
+      "title": "Precios de Locución y Narración"
+    },
+    "process": {
+      "title": "Cómo Funciona",
+      "subtitle": "4 pasos para una grabación de voz profesional",
+      "steps": [
+        {
+          "title": "Consulta Previa",
+          "description": "Discutimos propósito, duración del guion y horario. Recomendamos compartir el guion con anticipación."
+        },
+        {
+          "title": "Sesión de Grabación",
+          "description": "Grabación con el micrófono U87AI mientras monitorizamos niveles y tono en tiempo real."
+        },
+        {
+          "title": "Edición y Corrección",
+          "description": "Eliminación de ruido, corrección de tono y edición básica incluidas."
+        },
+        {
+          "title": "Entrega de Archivos",
+          "description": "Archivos entregados en WAV/MP3. Se puede negociar edición adicional."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes - Locución",
+      "subtitle": "Preguntas frecuentes sobre nuestro servicio de locución y narración.",
+      "items": [
+        {
+          "q": "¿Necesito contratar un locutor por separado?",
+          "a": "Proveemos el espacio y el equipo. Puedes traer tu propio locutor o contactarnos para referencias."
+        },
+        {
+          "q": "¿Cuál es el tiempo mínimo de reserva?",
+          "a": "Mínimo 2 horas. Para proyectos largos como audiolibros, recomendamos Day Lock (6 horas, ₩500,000)."
+        },
+        {
+          "q": "¿Qué formatos de archivo están disponibles?",
+          "a": "WAV (24bit/48kHz) o MP3 (320kbps). Los formatos especiales se pueden coordinar en la consulta."
+        },
+        {
+          "q": "¿Puede el cliente dirigir remotamente?",
+          "a": "Sí, la dirección remota a través de videollamada o llamada de voz está disponible durante la sesión."
+        },
+        {
+          "q": "¿Pueden grabar varias personas simultáneamente?",
+          "a": "La cabina está optimizada para grabación individual. Para grupos, recomendamos grabación secuencial y mezcla posterior."
+        },
+        {
+          "q": "¿Hay grabaciones disponibles en fines de semana y festivos?",
+          "a": "Sí, hay disponibilidad en fines de semana y festivos. Contáctanos por KakaoTalk o teléfono."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Sonido profesional,",
+      "titleHighlight": "al precio justo",
+      "subtitleLine1": "Equipos premium · Insonorización perfecta · Edición en tiempo real",
+      "subtitleLine2": "Contáctanos por KakaoTalk para reservar fácilmente.",
+      "location": "Cómo llegar",
+      "inquiry": "Reservar Grabación de Voz",
+      "imageAlt": "Equipo de grabación de voz en Studio Nol"
+    }
   }
 }

@@ -14,7 +14,9 @@
       "recording": "Recording",
       "practice": "Practice",
       "explore": "Explore"
-    }
+    },
+    "weddingSong": "Wedding Song",
+    "voiceActing": "Voice Acting"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -649,5 +651,244 @@
   "pagination": {
     "previousPage": "Previous page",
     "nextPage": "Next page"
+  },
+  "weddingSong": {
+    "seo": {
+      "title": "Wedding Song Recording · All-in-One Package ₩350,000 | Studio Nol",
+      "description": "5 min walk from Yeonsin-nae Station. Beginners welcome. 2hr recording + vocal tune + mixing & mastering for ₩350,000. Same-day rough mix available.",
+      "keywords": "wedding song recording, vocal recording studio Seoul, self recording wedding, bridal song studio, propose recording, Studio Nol"
+    },
+    "hero": {
+      "title": "Share Your Heart Through Song",
+      "subtitleLine1": "Beginners welcome — professional engineer guides every step",
+      "subtitleLine2": "Recording, mixing & mastering in one complete package",
+      "alt": "Vocal recording session at Studio Nol"
+    },
+    "quickAnswers": {
+      "title": "Wedding Song FAQ",
+      "subtitle": "Quick answers to the most common questions.",
+      "items": [
+        {
+          "q": "Is it okay if I'm not a great singer?",
+          "a": "Absolutely. Our engineer provides vocal direction and pitch/timing correction to create a natural, heartfelt result."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "The all-in-one package is ₩350,000 (VAT excl.) — includes 2hr recording, vocal tuning, mixing & mastering."
+        },
+        {
+          "q": "When will I receive the final file?",
+          "a": "A rough mix can be ready same day. The final version typically takes 3–5 business days."
+        }
+      ]
+    },
+    "intro": {
+      "title": "Why Record Your Wedding Song at Studio Nol?",
+      "imageAlt": "Vocalist recording in Studio Nol booth",
+      "features": [
+        {
+          "title": "Expert Vocal Direction",
+          "description": "Our engineer coaches breathing, tone, and emotion throughout the session."
+        },
+        {
+          "title": "High-End Recording Environment",
+          "description": "Neumann U87AI and analog preamps deliver warm, studio-quality vocals."
+        },
+        {
+          "title": "Same-Day Delivery Option",
+          "description": "Flexible scheduling for tight timelines — rough mix available same day."
+        }
+      ]
+    },
+    "package": {
+      "title": "Wedding Song Complete Package"
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "4 steps to your perfect wedding song",
+      "steps": [
+        {
+          "title": "Consultation & Song Selection",
+          "description": "We discuss your song via KakaoTalk or phone. Song recommendations available."
+        },
+        {
+          "title": "Recording Session (~2 hours)",
+          "description": "Multiple takes under engineer guidance — best moments combined."
+        },
+        {
+          "title": "Vocal Tuning & Mixing",
+          "description": "Pitch & timing correction, then professional mixing & mastering with the backing track."
+        },
+        {
+          "title": "Final Delivery",
+          "description": "WAV/MP3 files delivered. Same-day rough mix available on request."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Wedding Song Recording FAQ",
+      "subtitle": "Frequently asked questions about our wedding song service.",
+      "items": [
+        {
+          "q": "Can I record even if I'm not a singer?",
+          "a": "Yes, absolutely. Many of our clients are non-singers. Vocal direction and tuning will make your recording sound natural and heartfelt."
+        },
+        {
+          "q": "Do I need to bring the backing track (MR)?",
+          "a": "Yes, please bring your MR file. If you don't have one, we can arrange a separate production for an additional fee."
+        },
+        {
+          "q": "Is 2 hours enough for recording?",
+          "a": "For most songs, 2 hours is sufficient. You can always extend if you need more time or want to record additional songs."
+        },
+        {
+          "q": "Can we record a duet?",
+          "a": "Yes! You can come together or record individual tracks separately which we'll combine in the mix."
+        },
+        {
+          "q": "Can I record for a proposal or anniversary?",
+          "a": "Of course! Many clients use this service as a heartfelt gift for proposals, birthdays, and anniversaries."
+        },
+        {
+          "q": "Is recording available on weekends and holidays?",
+          "a": "Yes, we accept bookings on weekends and holidays. Contact us via KakaoTalk or phone to schedule."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "One song, one moment,",
+      "titleHighlight": "make it unforgettable",
+      "subtitleLine1": "Beginners welcome · Same-day mix · All-in-one package",
+      "subtitleLine2": "Contact us via KakaoTalk for easy booking.",
+      "location": "Get Directions",
+      "inquiry": "Book Wedding Song Recording",
+      "imageAlt": "Vocalist in Studio Nol recording booth"
+    }
+  },
+  "voiceActing": {
+    "seo": {
+      "title": "Voice Acting Studio · Narration Recording ₩100,000/hr | Studio Nol",
+      "description": "5 min walk from Yeonsin-nae Station. Neumann U87AI, perfect soundproofing. ₩100,000/hr, real-time editing. YouTube narration, audiobooks, ad recordings.",
+      "keywords": "voice acting studio Seoul, narration recording, voiceover studio, podcast recording, audiobook recording, YouTube narration, Studio Nol"
+    },
+    "hero": {
+      "title": "Your Voice, Professionally Recorded",
+      "subtitleLine1": "State-of-the-art equipment and perfect soundproofing",
+      "subtitleLine2": "Voice acting, narration & podcast recording",
+      "alt": "Voice recording session at Studio Nol"
+    },
+    "quickAnswers": {
+      "title": "Voice Acting FAQ",
+      "subtitle": "Quick answers to the most common questions.",
+      "items": [
+        {
+          "q": "What types of recording is this suitable for?",
+          "a": "YouTube narration, audiobooks, commercials, podcasts, dubbing — any voiceover work is welcome."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "₩100,000 per hour (VAT excl.). Minimum booking is 2 hours."
+        },
+        {
+          "q": "What equipment do you use?",
+          "a": "Neumann U87AI microphone with analog preamps for clear, warm vocal recordings."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Who This Studio Is For",
+      "items": [
+        {
+          "title": "YouTubers & Creators",
+          "description": "Elevate your content with professional narration and voiceover recordings."
+        },
+        {
+          "title": "Professional Voice Actors",
+          "description": "Premium recording environment for broadcast, commercials, and games."
+        },
+        {
+          "title": "Audiobooks & Podcasts",
+          "description": "Stable, comfortable environment for long-form audio content production."
+        },
+        {
+          "title": "Businesses & Advertisers",
+          "description": "Corporate voice recording for ads, promotional videos, and training content."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Why Studio Nol?",
+      "imageAlt": "Studio Nol voice recording equipment",
+      "features": [
+        "Neumann U87AI microphone",
+        "Perfect noise-controlled environment",
+        "Real-time editing support",
+        "Waiting area for voice actors"
+      ]
+    },
+    "package": {
+      "title": "Voice Acting & Narration Pricing"
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "4 steps to professional voice recording",
+      "steps": [
+        {
+          "title": "Pre-session Consultation",
+          "description": "Discuss purpose, script length, and schedule. We recommend sharing your script in advance."
+        },
+        {
+          "title": "Recording Session",
+          "description": "Record with the U87AI mic while we monitor levels and tone in real time."
+        },
+        {
+          "title": "Editing & Correction",
+          "description": "Noise removal, tone correction, and basic editing included."
+        },
+        {
+          "title": "File Delivery",
+          "description": "Files delivered in WAV/MP3. Additional editing can be discussed."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Voice Acting Recording FAQ",
+      "subtitle": "Frequently asked questions about our voice acting & narration service.",
+      "items": [
+        {
+          "q": "Do I need to hire a voice actor separately?",
+          "a": "We provide the studio space and equipment. You can bring your own voice actor, or we can provide referrals via consultation."
+        },
+        {
+          "q": "What is the minimum booking time?",
+          "a": "Minimum is 2 hours. For longer projects like audiobooks, we recommend Day Lock (6 hours, ₩500,000)."
+        },
+        {
+          "q": "What file formats are available?",
+          "a": "WAV (24bit/48kHz) or MP3 (320kbps). Special formats can be arranged — just let us know during consultation."
+        },
+        {
+          "q": "Can a client direct remotely?",
+          "a": "Yes, remote direction via video or voice call is supported during the session."
+        },
+        {
+          "q": "Can multiple people record simultaneously?",
+          "a": "The booth is optimized for solo recording. For groups, we recommend sequential recording and mixing afterward."
+        },
+        {
+          "q": "Is recording available on weekends and holidays?",
+          "a": "Yes, weekends and holidays are available. Contact us via KakaoTalk or phone to schedule."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Professional sound,",
+      "titleHighlight": "at the right price",
+      "subtitleLine1": "High-end gear · Perfect soundproofing · Real-time editing",
+      "subtitleLine2": "Contact us via KakaoTalk for easy booking.",
+      "location": "Get Directions",
+      "inquiry": "Book Voice Recording",
+      "imageAlt": "Studio Nol voice recording equipment"
+    }
   }
 }

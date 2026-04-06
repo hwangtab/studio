@@ -14,7 +14,9 @@
       "recording": "Yozuv",
       "practice": "Mashg'ulot",
       "explore": "Batafsil"
-    }
+    },
+    "weddingSong": "To'y qo'shig'i",
+    "voiceActing": "Ovoz yozish"
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",
@@ -646,5 +648,244 @@
   "pagination": {
     "previousPage": "Oldingi sahifa",
     "nextPage": "Keyingi sahifa"
+  },
+  "weddingSong": {
+    "seo": {
+      "title": "To'y qo'shig'i yozish · To'liq paket 350,000 ₩ | Studio Nol",
+      "description": "Yeonsin-nae stansiyasidan 5 daqiqa yurish masofa. Yangi boshlovchilar ham xush kelibsiz. 2 soat yozuv + ovoz sozlash + mikslash va mastering 350,000 ₩. O'sha kuni asosiy versiyani olish mumkin.",
+      "keywords": "to'y qo'shig'i yozish, ovoz yozish studiyasi, Seoul ovoz yozish, Studio Nol"
+    },
+    "hero": {
+      "title": "Qo'shiq orqali his-tuyg'ularingizni ulashing",
+      "subtitleLine1": "Yangi boshlovchilar uchun ham qulay — professional muhandis har bosqichda yordamida",
+      "subtitleLine2": "Yozishdan tortib mikslash va masteringgacha to'liq paket",
+      "alt": "Studio Nol'da ovoz yozish sessiyasi"
+    },
+    "quickAnswers": {
+      "title": "To'y qo'shig'i bo'yicha FAQ",
+      "subtitle": "Ko'p beriladigan savollarga tezkor javoblar.",
+      "items": [
+        {
+          "q": "Yaxshi kuylaya olmasam ham bo'ladimi?",
+          "a": "Albatta. Muhandisimiz ovoz yo'naltirish va ohang/ritm tuzatish orqali tabiiy va ta'sirchan natija yaratadi."
+        },
+        {
+          "q": "Narxi qancha?",
+          "a": "Hammasi kiruvchi paket 350,000 ₩ (QQS hisobga olinmagan) — 2 soat yozuv, ovoz sozlash, mikslash va mastering."
+        },
+        {
+          "q": "Yakuniy faylni qachon olaman?",
+          "a": "Asosiy versiya o'sha kuni tayyor bo'lishi mumkin. Yakuniy versiya odatda 3–5 ish kuni ichida yetkaziladi."
+        }
+      ]
+    },
+    "intro": {
+      "title": "Nima uchun Studio Nol'da to'y qo'shig'ingizni yozishingiz kerak?",
+      "imageAlt": "Studio Nol budkasida ovoz yozish",
+      "features": [
+        {
+          "title": "Professional ovoz yo'naltirish",
+          "description": "Muhandis nafas olish, ohang va his-tuyg'uni butun sessiya davomida yo'naltiradi."
+        },
+        {
+          "title": "Yuqori sifatli yozuv muhiti",
+          "description": "Neumann U87AI va analog oldingi kuchaytirgichlar issiq va aniq ovoz beradi."
+        },
+        {
+          "title": "Bir kunda yetkazib berish",
+          "description": "Qisqa muddatli jadvallar uchun moslashuvchan — asosiy versiya o'sha kuni tayyor."
+        }
+      ]
+    },
+    "package": {
+      "title": "To'y qo'shig'i to'liq paketi"
+    },
+    "process": {
+      "title": "Qanday ishlaydi",
+      "subtitle": "Mukammal to'y qo'shig'i uchun 4 qadam",
+      "steps": [
+        {
+          "title": "Maslahat va qo'shiq tanlash",
+          "description": "KakaoTalk yoki telefon orqali qo'shiq haqida gaplashamiz. Qo'shiq tavsiya etish mumkin."
+        },
+        {
+          "title": "Yozuv sessiyasi (~2 soat)",
+          "description": "Muhandis rahbarligida bir nechta olish — eng yaxshi momentlar birlashtiriladi."
+        },
+        {
+          "title": "Ovoz sozlash va mikslash",
+          "description": "Ohang va ritm tuzatilgandan so'ng, professional mikslash va mastering."
+        },
+        {
+          "title": "Yakuniy yetkazib berish",
+          "description": "WAV/MP3 fayllari yetkaziladi. So'rov bo'yicha o'sha kuni asosiy versiya tayyorlanadi."
+        }
+      ]
+    },
+    "faq": {
+      "title": "To'y qo'shig'i yozish bo'yicha FAQ",
+      "subtitle": "To'y qo'shig'i xizmati haqida tez-tez beriladigan savollar.",
+      "items": [
+        {
+          "q": "Umuman kuylaya olmasam ham bo'ladimi?",
+          "a": "Ha, albatta. Ko'plab mijozlarimiz professional qo'shiqchilar emas. Ovoz yo'naltirish va tuzatish yozuvingizni tabiiy qiladi."
+        },
+        {
+          "q": "Jo'rnavoz (MR) faylni o'zim olib kelishim kerakmi?",
+          "a": "Ha, MR faylingizni olib keling. Agar yo'q bo'lsa, qo'shimcha to'lov evaziga alohida tayyorlab beramiz."
+        },
+        {
+          "q": "2 soat yozuv vaqti yetarlimi?",
+          "a": "Ko'pchilik qo'shiqlar uchun 2 soat yetarli. Agar ko'proq vaqt kerak bo'lsa, uzaytirishingiz mumkin."
+        },
+        {
+          "q": "Duet yozish mumkinmi?",
+          "a": "Ha! Birga kelishingiz yoki alohida yozib keyinchalik birlashtirish ham mumkin."
+        },
+        {
+          "q": "Nikoh taklifi yoki yillik to'y uchun ham yozish mumkinmi?",
+          "a": "Albatta! Ko'plab mijozlar bu xizmatdan nikoh taklifi, tug'ilgan kun va yillik to'y uchun maxsus sovg'a sifatida foydalanadi."
+        },
+        {
+          "q": "Dam olish kunlari va bayramlarda ham yozish mumkinmi?",
+          "a": "Ha, dam olish kunlari va bayramlarda ham bron qilish mumkin. KakaoTalk yoki telefon orqali bog'laning."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Dunyoda bitta bo'lgan qo'shiq,",
+      "titleHighlight": "hoziroq band qiling",
+      "subtitleLine1": "Yangi boshlovchilar xush kelibsiz · Bir kunda versiya · To'liq paket",
+      "subtitleLine2": "KakaoTalk orqali oson band qilish uchun bog'laning.",
+      "location": "Yo'nalishni ko'rish",
+      "inquiry": "To'y qo'shig'i yozishni band qilish",
+      "imageAlt": "Studio Nol ovoz yozish budkasi"
+    }
+  },
+  "voiceActing": {
+    "seo": {
+      "title": "Ovoz yozish studiyasi · Naratsiya yozish 100,000 ₩/soat | Studio Nol",
+      "description": "Yeonsin-nae stansiyasidan 5 daqiqa. Neumann U87AI, mukammal tovush izolyatsiyasi. 100,000 ₩/soat, real vaqt tahriri. YouTube naratsiyasi, audio kitoblar, reklama yozishlari.",
+      "keywords": "ovoz yozish studiyasi Seoul, naratsiya yozish, voiceover studiyasi, podcast yozish, audio kitob yozish, Studio Nol"
+    },
+    "hero": {
+      "title": "Ovozingiz, professional yozilgan",
+      "subtitleLine1": "Zamonaviy jihozlar va mukammal tovush izolyatsiyasi",
+      "subtitleLine2": "Ovoz aktyorligi, naratsiya va podcast yozish",
+      "alt": "Studio Nol'da ovoz yozish sessiyasi"
+    },
+    "quickAnswers": {
+      "title": "Ovoz yozish bo'yicha FAQ",
+      "subtitle": "Ko'p beriladigan savollarga tezkor javoblar.",
+      "items": [
+        {
+          "q": "Qanday yozuvlar uchun mos?",
+          "a": "YouTube naratsiyasi, audio kitoblar, reklamalar, podcastlar, dublyaj — har qanday voiceover ishi uchun qulay muhit."
+        },
+        {
+          "q": "Narxi qancha?",
+          "a": "Soatiga 100,000 ₩ (QQS hisobga olinmagan). Minimal bron — 2 soat."
+        },
+        {
+          "q": "Qanday jihozlardan foydalanasizlar?",
+          "a": "Aniq va issiq ovoz uchun Neumann U87AI mikrofon va analog oldingi kuchaytirgichlar."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Bu studiya siz uchun",
+      "items": [
+        {
+          "title": "YouTuberlar va kreatorlar",
+          "description": "Professional naratsiya va voiceover bilan kontentingiz sifatini oshiring."
+        },
+        {
+          "title": "Professional ovoz aktyorlari",
+          "description": "Translyatsiya, reklama va o'yinlar uchun premium yozuv muhiti."
+        },
+        {
+          "title": "Audio kitoblar va Podcastlar",
+          "description": "Uzoq audio kontent ishlab chiqarish uchun barqaror, qulay muhit."
+        },
+        {
+          "title": "Korxonalar va reklamachilar",
+          "description": "Reklamalar, promo videolar va treninglar uchun korporativ ovoz yozish."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Nima uchun Studio Nol?",
+      "imageAlt": "Studio Nol ovoz yozish jihozlari",
+      "features": [
+        "Neumann U87AI mikrofon",
+        "Mukammal tovush izolyatsiyali muhit",
+        "Real vaqt tahrir qo'llab-quvvatlash",
+        "Ovoz aktyorlari uchun kutish xonasi"
+      ]
+    },
+    "package": {
+      "title": "Ovoz aktyorligi va naratsiya narxlari"
+    },
+    "process": {
+      "title": "Qanday ishlaydi",
+      "subtitle": "Professional ovoz yozish uchun 4 qadam",
+      "steps": [
+        {
+          "title": "Oldindan maslahat",
+          "description": "Maqsad, matn uzunligi va jadval muhokama qilinadi. Matnni oldindan yuborishni tavsiya etamiz."
+        },
+        {
+          "title": "Yozuv sessiyasi",
+          "description": "U87AI mikrofon bilan yozuv, real vaqt ovoz darajasi va toni nazorati."
+        },
+        {
+          "title": "Tahrirlash va tuzatish",
+          "description": "Shovqin yo'qotish, ton tuzatish va asosiy tahrirlash."
+        },
+        {
+          "title": "Faylni yetkazib berish",
+          "description": "WAV/MP3 formatida yetkaziladi. Qo'shimcha tahrirlash kelishilishi mumkin."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Ovoz yozish bo'yicha FAQ",
+      "subtitle": "Ovoz aktyorligi va naratsiya xizmati haqida tez-tez beriladigan savollar.",
+      "items": [
+        {
+          "q": "Ovoz aktyorini o'zim topishim kerakmi?",
+          "a": "Biz joy va jihozlarni taqdim etamiz. O'z aktyoringizni olib kelishingiz yoki maslahat orqali tavsiya olishingiz mumkin."
+        },
+        {
+          "q": "Minimal bron vaqti qancha?",
+          "a": "Minimal 2 soat. Audio kitob kabi uzun loyihalar uchun Day Lock (6 soat, 500,000 ₩) ni tavsiya etamiz."
+        },
+        {
+          "q": "Qanday fayl formatlari mavjud?",
+          "a": "WAV (24bit/48kHz) yoki MP3 (320kbps). Maxsus formatlar maslahat vaqtida kelishilishi mumkin."
+        },
+        {
+          "q": "Mijoz masofadan rahbarlik qila oladimi?",
+          "a": "Ha, sessiya davomida video yoki ovozli qo'ng'iroq orqali masofadan rahbarlik qo'llab-quvvatlanadi."
+        },
+        {
+          "q": "Bir vaqtda bir nechta kishi yozishi mumkinmi?",
+          "a": "Budka yakka yozuv uchun optimallashtirилган. Guruhlar uchun ketma-ket yozib keyinchalik miksni tavsiya etamiz."
+        },
+        {
+          "q": "Dam olish kunlari va bayramlarda ham yozish mumkinmi?",
+          "a": "Ha, dam olish kunlari va bayramlarda ham bron mavjud. KakaoTalk yoki telefon orqali bog'laning."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Professional ovoz,",
+      "titleHighlight": "arzon narxda",
+      "subtitleLine1": "Yuqori sifatli jihozlar · Mukammal izolyatsiya · Real vaqt tahriri",
+      "subtitleLine2": "KakaoTalk orqali oson band qilish uchun bog'laning.",
+      "location": "Yo'nalishni ko'rish",
+      "inquiry": "Yozuvni band qilish",
+      "imageAlt": "Studio Nol ovoz yozish jihozlari"
+    }
   }
 }

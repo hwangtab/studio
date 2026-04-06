@@ -14,7 +14,9 @@
       "recording": "Thu âm",
       "practice": "Luyện tập",
       "explore": "Khám phá"
-    }
+    },
+    "weddingSong": "Thu Âm Bài Chúc",
+    "voiceActing": "Lồng Tiếng"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
@@ -649,5 +651,244 @@
   "pagination": {
     "previousPage": "Trang trước",
     "nextPage": "Trang tiếp theo"
+  },
+  "weddingSong": {
+    "seo": {
+      "title": "Thu Âm Bài Chúc Mừng · Gói Trọn Gói ₩350.000 | Studio Nol",
+      "description": "Cách ga Yeonsin-nae 5 phút đi bộ. Người mới bắt đầu được chào đón. 2 giờ thu âm + chỉnh giọng + mix & master trọn gói 350.000₩. Có thể nhận bản mix cơ bản ngay trong ngày.",
+      "keywords": "thu âm bài chúc mừng, phòng thu Seoul, thu âm giọng hát, bài hát đám cưới, Studio Nol"
+    },
+    "hero": {
+      "title": "Truyền Tải Tâm Ý Qua Giai Điệu",
+      "subtitleLine1": "Người mới bắt đầu cũng yên tâm — kỹ sư chuyên nghiệp đồng hành",
+      "subtitleLine2": "Trọn gói từ thu âm đến mix & mastering",
+      "alt": "Phiên thu âm tại Studio Nol"
+    },
+    "quickAnswers": {
+      "title": "FAQ Bài Chúc Mừng",
+      "subtitle": "Giải đáp nhanh những câu hỏi thường gặp.",
+      "items": [
+        {
+          "q": "Hát không hay có được không?",
+          "a": "Hoàn toàn không sao. Kỹ sư sẽ hướng dẫn giọng hát và chỉnh cao độ/nhịp điệu để tạo ra kết quả tự nhiên và cảm xúc."
+        },
+        {
+          "q": "Chi phí là bao nhiêu?",
+          "a": "Gói trọn gói 350.000₩ (chưa VAT) bao gồm 2 giờ thu âm, chỉnh giọng, mix & mastering."
+        },
+        {
+          "q": "Khi nào nhận được file cuối?",
+          "a": "Bản mix cơ bản có thể nhận ngay trong ngày. Phiên bản hoàn chỉnh thường mất 3–5 ngày làm việc."
+        }
+      ]
+    },
+    "intro": {
+      "title": "Tại sao nên thu âm tại Studio Nol?",
+      "imageAlt": "Thu âm giọng hát tại Studio Nol",
+      "features": [
+        {
+          "title": "Hướng dẫn giọng hát chuyên nghiệp",
+          "description": "Kỹ sư hỗ trợ hơi thở, phát âm và cảm xúc trong suốt phiên."
+        },
+        {
+          "title": "Môi trường thu âm đỉnh cao",
+          "description": "Neumann U87AI và tiền khuếch đại analog cho giọng hát ấm áp và sắc nét."
+        },
+        {
+          "title": "Giao hàng trong ngày",
+          "description": "Linh hoạt cho lịch gấp — bản mix cơ bản có thể nhận ngay trong ngày."
+        }
+      ]
+    },
+    "package": {
+      "title": "Gói Hoàn Chỉnh Bài Chúc Mừng"
+    },
+    "process": {
+      "title": "Quy Trình",
+      "subtitle": "4 bước hoàn thành bài chúc mừng của bạn",
+      "steps": [
+        {
+          "title": "Tư vấn & Chọn bài",
+          "description": "Trao đổi qua KakaoTalk hoặc điện thoại. Có thể tư vấn chọn bài."
+        },
+        {
+          "title": "Thu âm (~2 giờ)",
+          "description": "Thu nhiều lần dưới sự hướng dẫn của kỹ sư, chọn lọc các đoạn hay nhất."
+        },
+        {
+          "title": "Chỉnh giọng & Mix",
+          "description": "Chỉnh cao độ/nhịp điệu, sau đó mix & mastering chuyên nghiệp cùng nhạc nền."
+        },
+        {
+          "title": "Giao file cuối",
+          "description": "Giao file WAV/MP3. Có thể nhận bản mix cơ bản ngay trong ngày theo yêu cầu."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ Thu Âm Bài Chúc Mừng",
+      "subtitle": "Câu hỏi thường gặp về dịch vụ bài chúc mừng.",
+      "items": [
+        {
+          "q": "Không biết hát có thu âm được không?",
+          "a": "Được. Nhiều khách hàng của chúng tôi không phải ca sĩ. Hướng dẫn và chỉnh giọng sẽ giúp bản thu âm của bạn tự nhiên và cảm xúc."
+        },
+        {
+          "q": "Cần tự chuẩn bị nhạc đệm (MR) không?",
+          "a": "Có, vui lòng mang file MR theo. Nếu chưa có, chúng tôi có thể sản xuất thêm với chi phí phát sinh."
+        },
+        {
+          "q": "2 giờ thu âm có đủ không?",
+          "a": "Đối với hầu hết các bài, 2 giờ là đủ. Bạn có thể gia hạn nếu cần thêm thời gian."
+        },
+        {
+          "q": "Có thể thu âm song ca không?",
+          "a": "Được! Có thể cùng đến hoặc thu âm riêng lẻ rồi ghép lại trong phần mix."
+        },
+        {
+          "q": "Thu âm cho cầu hôn, kỷ niệm được không?",
+          "a": "Tất nhiên! Nhiều khách hàng sử dụng dịch vụ này làm quà tặng đặc biệt cho cầu hôn, sinh nhật, ngày kỷ niệm."
+        },
+        {
+          "q": "Cuối tuần và ngày lễ có thể thu âm không?",
+          "a": "Có, chúng tôi nhận đặt lịch vào cuối tuần và ngày lễ. Liên hệ qua KakaoTalk hoặc điện thoại."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Một bài hát, một khoảnh khắc,",
+      "titleHighlight": "hãy làm nó đáng nhớ",
+      "subtitleLine1": "Người mới chào đón · Mix ngay trong ngày · Trọn gói",
+      "subtitleLine2": "Liên hệ qua KakaoTalk để đặt lịch dễ dàng.",
+      "location": "Chỉ Đường",
+      "inquiry": "Đặt Lịch Thu Âm Bài Chúc",
+      "imageAlt": "Phòng thu giọng hát Studio Nol"
+    }
+  },
+  "voiceActing": {
+    "seo": {
+      "title": "Phòng Thu Lồng Tiếng · Narration ₩100.000/giờ | Studio Nol",
+      "description": "Cách ga Yeonsin-nae 5 phút đi bộ. Neumann U87AI, cách âm hoàn hảo. 100.000₩/giờ, chỉnh sửa thời gian thực. Narration YouTube, sách nói, quảng cáo.",
+      "keywords": "lồng tiếng Seoul, narration thu âm, phòng thu giọng nói, podcast thu âm, sách nói thu âm, Studio Nol"
+    },
+    "hero": {
+      "title": "Giọng Nói Của Bạn, Chuyên Nghiệp Hóa",
+      "subtitleLine1": "Thiết bị đỉnh cao và môi trường cách âm hoàn hảo",
+      "subtitleLine2": "Lồng tiếng, narration & thu âm podcast",
+      "alt": "Phiên thu âm giọng nói tại Studio Nol"
+    },
+    "quickAnswers": {
+      "title": "FAQ Lồng Tiếng",
+      "subtitle": "Giải đáp nhanh những câu hỏi thường gặp.",
+      "items": [
+        {
+          "q": "Phù hợp với loại thu âm nào?",
+          "a": "Narration YouTube, sách nói, quảng cáo, podcast, lồng tiếng — mọi công việc voiceover đều được chào đón."
+        },
+        {
+          "q": "Chi phí là bao nhiêu?",
+          "a": "100.000₩/giờ (chưa VAT). Đặt tối thiểu 2 giờ."
+        },
+        {
+          "q": "Sử dụng thiết bị gì?",
+          "a": "Micro Neumann U87AI và tiền khuếch đại analog cho giọng nói rõ nét và ấm áp."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Phòng Thu Dành Cho Bạn",
+      "items": [
+        {
+          "title": "YouTuber & Content Creator",
+          "description": "Nâng cao chất lượng nội dung với narration và voiceover chuyên nghiệp."
+        },
+        {
+          "title": "Diễn viên lồng tiếng chuyên nghiệp",
+          "description": "Môi trường thu âm cao cấp cho broadcast, quảng cáo và game."
+        },
+        {
+          "title": "Sách nói & Podcast",
+          "description": "Môi trường ổn định, thoải mái cho sản xuất nội dung âm thanh dài."
+        },
+        {
+          "title": "Doanh nghiệp & Nhà quảng cáo",
+          "description": "Thu âm giọng nói doanh nghiệp cho quảng cáo, video PR và đào tạo."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Tại sao chọn Studio Nol?",
+      "imageAlt": "Thiết bị thu âm giọng nói Studio Nol",
+      "features": [
+        "Micro Neumann U87AI",
+        "Môi trường cách âm hoàn hảo",
+        "Hỗ trợ chỉnh sửa thời gian thực",
+        "Khu vực chờ cho diễn viên lồng tiếng"
+      ]
+    },
+    "package": {
+      "title": "Giá Thu Âm Lồng Tiếng & Narration"
+    },
+    "process": {
+      "title": "Quy Trình",
+      "subtitle": "4 bước hoàn thành phiên thu âm chuyên nghiệp",
+      "steps": [
+        {
+          "title": "Tư vấn trước phiên",
+          "description": "Trao đổi mục đích, độ dài kịch bản và lịch trình. Nên chia sẻ kịch bản trước."
+        },
+        {
+          "title": "Phiên thu âm",
+          "description": "Thu với micro U87AI, theo dõi mức độ và âm sắc thời gian thực."
+        },
+        {
+          "title": "Chỉnh sửa & Hiệu chỉnh",
+          "description": "Loại bỏ tiếng ồn, chỉnh âm sắc và chỉnh sửa cơ bản."
+        },
+        {
+          "title": "Giao file",
+          "description": "Giao file WAV/MP3. Có thể thỏa thuận chỉnh sửa thêm."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ Thu Âm Lồng Tiếng",
+      "subtitle": "Câu hỏi thường gặp về dịch vụ lồng tiếng và narration.",
+      "items": [
+        {
+          "q": "Cần tự tìm diễn viên lồng tiếng không?",
+          "a": "Chúng tôi cung cấp không gian và thiết bị. Bạn có thể tự mang diễn viên hoặc liên hệ để được giới thiệu."
+        },
+        {
+          "q": "Thời gian đặt tối thiểu là bao lâu?",
+          "a": "Tối thiểu 2 giờ. Với dự án dài như sách nói, chúng tôi khuyên dùng Day Lock (6 giờ, 500.000₩)."
+        },
+        {
+          "q": "Có những định dạng file nào?",
+          "a": "WAV (24bit/48kHz) hoặc MP3 (320kbps). Định dạng đặc biệt có thể thỏa thuận khi tư vấn."
+        },
+        {
+          "q": "Khách hàng có thể chỉ đạo từ xa không?",
+          "a": "Có, hỗ trợ chỉ đạo từ xa qua video call hoặc thoại trong suốt phiên thu."
+        },
+        {
+          "q": "Có thể thu âm nhiều người cùng lúc không?",
+          "a": "Phòng thu tối ưu cho thu âm đơn. Với nhóm, chúng tôi khuyên thu lần lượt rồi mix."
+        },
+        {
+          "q": "Cuối tuần và ngày lễ có thể thu âm không?",
+          "a": "Có, nhận đặt lịch vào cuối tuần và ngày lễ. Liên hệ qua KakaoTalk hoặc điện thoại."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Âm thanh chuyên nghiệp,",
+      "titleHighlight": "giá hợp lý",
+      "subtitleLine1": "Thiết bị cao cấp · Cách âm hoàn hảo · Chỉnh sửa thời gian thực",
+      "subtitleLine2": "Liên hệ qua KakaoTalk để đặt lịch dễ dàng.",
+      "location": "Chỉ Đường",
+      "inquiry": "Đặt Lịch Thu Âm",
+      "imageAlt": "Thiết bị thu âm giọng nói Studio Nol"
+    }
   }
 }
