@@ -98,4 +98,4 @@ faq:
 
 준비가 잘 된 보컬리스트는 같은 시간 안에 훨씬 좋은 결과물을 만들어냅니다. 연신내역 도보 5분 거리 스튜디오 놀에서 첫 녹음을 편안하게 시작하세요.
 
-[녹음 세션 예약 방법 보기](/pricing) | [보컬 디렉팅이란?](/stories/direction1) | [음반 제작 전 과정 보기](/stories/album1) | [첫 녹음 방문 후기 읽기](/stories/review1) | [노래방 vs 스튜디오 차이](/stories/karaoke1) | [힙합·래퍼 보컬 녹음 가이드](/stories/hip1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [보컬 녹음 실수 10가지](/stories/mistakes1)
+[녹음 세션 예약 방법 보기](/pricing) | [MR 반주 파일 구하는 방법](/stories/mr-guide1) | [음반 제작 전 과정 보기](/stories/album1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [보컬 녹음 실수 10가지](/stories/mistakes1)
