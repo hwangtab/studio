@@ -88,4 +88,4 @@ faq:
 
 사운드클라우드는 데모 공유, 오디션 포트폴리오, 팬과의 소통에 가장 편리한 플랫폼입니다. 스튜디오 놀에서 전문적으로 녹음한 음원을 사운드클라우드로 공유하거나, 멜론·스포티파이에 정식 발매하세요.
 
-[음원 발매·유통 가이드](/stories/release1) | [유튜브 음원 업로드 가이드](/stories/youtube1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [음원 스트리밍 수익 구조](/stories/streaming1) | [스튜디오 놀 이용 요금](/pricing)
+[인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음원 발매·유통 가이드](/stories/release1) | [유튜브 음원 업로드 가이드](/stories/youtube1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [음원 스트리밍 수익 구조](/stories/streaming1) | [스튜디오 놀 이용 요금](/pricing)
