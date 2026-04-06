@@ -200,10 +200,10 @@ module.exports = {
     if (pathWithoutLocale.startsWith('/stories/') && segments.length >= 3) {
       const slug = segments[2];
       const thumbnail = getStoryThumbnail(slug, locale);
-      const imageUrl = thumbnail
-        ? (thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`)
-        : `${siteUrl}/api/og/story?title=${encodeURIComponent(slug)}&locale=${locale}`;
-      images = [{ loc: new URL(imageUrl) }];
+      if (thumbnail) {
+        const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
+        images = [{ loc: new URL(imageUrl) }];
+      }
     } else if (pathWithoutLocale.startsWith('/portfolio/') && segments.length >= 3) {
       const itemId = segments[2];
       const portfolioImages = getPortfolioImageMap();
