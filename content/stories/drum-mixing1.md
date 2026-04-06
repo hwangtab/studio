@@ -128,4 +128,4 @@ faq:
 
 드럼 믹싱은 킥·스네어 중심의 타격감부터 전체 드럼 버스의 통일감까지 균형이 중요합니다. 스튜디오 놀에서는 라이브 드럼 녹음과 전문 드럼 믹싱으로 완성도 높은 리듬 사운드를 제공합니다.
 
-[베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [사이드체인 완전 가이드](/stories/sidechain1) | [믹싱 레퍼런스 트랙 완전 가이드](/stories/mixing-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [믹싱 레퍼런스 트랙 완전 가이드](/stories/mixing-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
