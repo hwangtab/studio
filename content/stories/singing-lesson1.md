@@ -97,4 +97,4 @@ faq:
 
 보컬 레슨은 가장 빠른 실력 향상 방법입니다. 레슨과 함께 스튜디오 녹음 세션으로 현재 실력을 객관적으로 확인하는 것도 큰 도움이 됩니다.
 
-[음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)
+[목소리 유형(보이스 타입) 완전 가이드](/stories/voice-type1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)
