@@ -119,4 +119,4 @@ faq:
 
 좋은 가사는 많이 쓴 사람에게서 나옵니다. 완벽함보다 진정성이 먼저입니다. 가사가 완성되면 스튜디오 놀에서 녹음해 자신의 창작물을 완성시키세요.
 
-[노래 가사 빨리 외우는 방법](/stories/lyrics-memo1) | [음악 작업 의뢰 방법](/stories/commission1) | [음원 유통 방법 가이드](/stories/distribution1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)
+[악기 없이 작곡하는 방법](/stories/compose1) | [노래 가사 빨리 외우는 방법](/stories/lyrics-memo1) | [음악 작업 의뢰 방법](/stories/commission1) | [음원 유통 방법 가이드](/stories/distribution1) | [스튜디오 놀 이용 요금](/pricing)
