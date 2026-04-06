@@ -125,4 +125,4 @@ faq:
 
 기타 녹음은 마이킹 위치와 신호 체인 선택이 사운드의 70% 이상을 결정합니다. 스튜디오 놀에서는 전문 마이크와 프리앰프로 최상의 기타 사운드를 녹음합니다.
 
-[앰프 시뮬레이터·DI 레코딩 완전 가이드](/stories/amp-simulator1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[국악·전통 음악 레코딩 완전 가이드](/stories/gugak-recording1) | [앰프 시뮬레이터·DI 레코딩 완전 가이드](/stories/amp-simulator1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
