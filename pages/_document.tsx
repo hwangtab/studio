@@ -34,7 +34,9 @@ class MyDocument extends Document<Props> {
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://www.google.com" crossOrigin="anonymous" />
-          <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+          <link rel="preconnect" href="https://maps.googleapis.com" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://maps.gstatic.com" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
           {/* Portfolio image CDN prefetch */}
           <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
           <link rel="dns-prefetch" href="https://i.ytimg.com" />

@@ -29,6 +29,22 @@ interface PortfolioDetailPageProps {
 
 const DETAIL_CONTENT_ANIMATION = createEnterAnimation();
 
+function getImageDimensions(imageUrl: string): { width: number; height: number } {
+  // bugsm.co.kr: /images/SIZE/ in path
+  const bugsmMatch = imageUrl.match(/\/images\/(\d+)\//);
+  if (bugsmMatch) {
+    const size = parseInt(bugsmMatch[1], 10);
+    return { width: size, height: size };
+  }
+  // mzstatic.com / similar CDNs: WIDTHxHEIGHT in filename
+  const dimMatch = imageUrl.match(/\/(\d+)x(\d+)[a-z]+-?[\d]*\.\w+$/);
+  if (dimMatch) {
+    return { width: parseInt(dimMatch[1], 10), height: parseInt(dimMatch[2], 10) };
+  }
+  // default: square album art
+  return { width: 1000, height: 1000 };
+}
+
 const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
@@ -46,6 +62,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
     title: item.title,
     description: item.description,
   });
+  const ogImageDimensions = getImageDimensions(item.image);
 
   const categoryInfo = getCategoryInfo(item.category, categories);
   const schemaImage = item.image.startsWith('http') ? item.image : `${siteConfig.url}${item.image}`;
@@ -82,8 +99,8 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         description={metaDescription}
         ogImage={item.image}
         ogImageAlt={`${item.title} - ${item.artist}`}
-        ogImageWidth={600}
-        ogImageHeight={600}
+        ogImageWidth={ogImageDimensions.width}
+        ogImageHeight={ogImageDimensions.height}
         ogType="music.album"
         includeSchema
         schema={portfolioSchema}

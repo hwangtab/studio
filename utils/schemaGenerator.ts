@@ -295,6 +295,8 @@ export const generateArticleSchema = (
       logo: {
         '@type': 'ImageObject',
         url: `${siteUrl}${config.logo}`,
+        width: 3350,
+        height: 862,
       },
     },
     image: [{ '@type': 'ImageObject', url: absoluteOgImage, representativeOfPage: true }],
@@ -616,6 +618,12 @@ export const generateMusicRecordingSchema = (
     },
     ...(item.image && { image: item.image }),
     ...(item.url && { url: item.url }),
+    ...(item.url && {
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `${item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`}#webpage`,
+      },
+    }),
     ...(item.datePublished && { datePublished: item.datePublished }),
     ...(item.genre && { genre: item.genre }),
   };

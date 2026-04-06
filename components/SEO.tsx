@@ -252,22 +252,24 @@ const SEO = ({
   }, [schemaItems]);
 
   const finalSchema = React.useMemo(() => {
-    if (!includeSchema || !schemaData) return null;
+    if (!includeSchema) return null;
 
-    // Initialize with existing schema items
-    const items = [...schemaItems];
-
-    // Add breadcrumb and FAQ to graph if they aren't already there
+    const extraItems: Record<string, unknown>[] = [];
     if (breadcrumbSchema) {
       const { ['@context']: _, ...rest } = breadcrumbSchema as Record<string, unknown>;
-      items.push(rest);
+      extraItems.push(rest);
     }
     if (faqSchema) {
       const { ['@context']: _, ...rest } = faqSchema as Record<string, unknown>;
-      items.push(rest);
+      extraItems.push(rest);
     }
 
-    if (items.length === 1 && !breadcrumbSchema && !faqSchema) return schemaData;
+    if (!schemaData && extraItems.length === 0) return null;
+
+    const items = [...(schemaData ? schemaItems : []), ...extraItems];
+
+    if (items.length === 0) return null;
+    if (items.length === 1) return items[0];
 
     return {
       '@context': 'https://schema.org',
