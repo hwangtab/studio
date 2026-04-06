@@ -170,4 +170,4 @@ R&B·소울:
 
 보컬 편곡은 가장 경제적인 사운드 강화 방법입니다. 스튜디오 놀에서 하모니·스택 보컬 레코딩과 전문 엔지니어의 보컬 믹싱으로 풍성한 보컬 사운드를 완성해보세요.
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 컴핑 완전 가이드](/stories/comping1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[리버브 완전 가이드](/stories/reverb-guide1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 컴핑 완전 가이드](/stories/comping1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

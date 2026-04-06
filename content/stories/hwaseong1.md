@@ -80,4 +80,4 @@ faq:
 
 화성·시흥·안산에서 대중교통 1시간 내외, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 부담스럽다면 카카오톡으로 온라인 의뢰도 가능합니다.
 
-[화성 봉담·향남·남양 녹음실 안내](/stories/hwaseong-bongdam1) | [안산·시흥 녹음실 방문 가이드](/stories/ansan1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[화성 동탄·동탄2신도시 녹음실 안내](/stories/hwaseong-dongtan1) | [화성 봉담·향남·남양 녹음실 안내](/stories/hwaseong-bongdam1) | [안산·시흥 녹음실 방문 가이드](/stories/ansan1) | [동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
