@@ -93,4 +93,4 @@ faq:
 
 지방·해외 어디서든 보컬 WAV 파일만 있으면 스튜디오 놀의 전문 믹싱·마스터링 서비스를 이용할 수 있습니다. 카카오톡으로 파일 현황과 목적을 알려주시면 맞춤 견적을 안내드립니다.
 
-[셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [보컬 EQ 완전 가이드](/stories/eq1) | [마스터링이란?](/stories/mastering1) | [스트리밍 음원 발매 가이드](/stories/release1) | [스튜디오 놀 이용 요금](/pricing)
+[셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [보컬 EQ 완전 가이드](/stories/eq1) | [마스터링이란?](/stories/mastering1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [스트리밍 음원 발매 가이드](/stories/release1) | [스튜디오 놀 이용 요금](/pricing)
