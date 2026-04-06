@@ -106,4 +106,4 @@ faq:
 
 문의는 카카오톡 오픈채팅으로 편하게 연락 주세요.
 
-[스튜디오 놀 보컬 녹음·믹싱·마스터링 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [뮤직비디오·유튜브 영상 음원 녹음 가이드](/stories/mv1)
+[커버곡 저작권 처리 방법](/stories/coverright1) | [녹음 세션 준비 체크리스트](/stories/session1) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [뮤직비디오·유튜브 영상 음원 녹음 가이드](/stories/mv1) | [스튜디오 놀 이용 요금](/pricing)

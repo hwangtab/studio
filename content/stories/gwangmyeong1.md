@@ -54,4 +54,4 @@ faq:
 
 광명·과천·의왕에서 대중교통 45분~1시간, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[수원·안양·군포 녹음실 안내](/stories/suwon1) | [화성·시흥·안산 녹음실 안내](/stories/hwaseong1) | [인천·부천 녹음실 안내](/stories/incheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[부천·안양·안산 녹음실 가이드](/stories/bucheon1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [화성·시흥·안산 녹음실 안내](/stories/hwaseong1) | [인천 녹음실 안내](/stories/incheon1) | [스튜디오 놀 이용 요금](/pricing)
