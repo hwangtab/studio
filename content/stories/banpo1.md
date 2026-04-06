@@ -90,4 +90,4 @@ faq:
 
 반포·방배·이수·사당에서 지하철 25~35분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [동작구·관악구 녹음실 안내](/stories/gwanak1) | [양재·서초·강남역 녹음실 안내](/stories/yangjae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[서초구 반포·잠원·서초동 녹음실 안내](/stories/seocho-banpo1) | [서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [양재·서초·강남역 녹음실 안내](/stories/yangjae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
