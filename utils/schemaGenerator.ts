@@ -533,6 +533,11 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     about: {
       '@id': `${siteUrl}/#studio`,
     },
+    potentialAction: {
+      '@type': 'ContactAction',
+      name: locale === 'ko' ? '스튜디오 문의하기' : 'Contact Studio NOL',
+      target: `${siteUrl}/${locale}/contact`,
+    },
   };
 };
 

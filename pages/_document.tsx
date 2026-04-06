@@ -39,6 +39,8 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
           <link rel="dns-prefetch" href="https://i.ytimg.com" />
           <link rel="dns-prefetch" href="https://is1-ssl.mzstatic.com" />
+          <link rel="dns-prefetch" href="https://img.tumblbug.com" />
+          <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
           {/* Critical fonts for above-the-fold content */}
           <link
             rel="preload"

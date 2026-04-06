@@ -27,45 +27,98 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Naver Map: https://naver.me/5gFZhS3X
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
 
-## Pages by Language
+## Sitemaps & Feeds
 
-Korean: https://studionol.co.kr/ko
-English: https://studionol.co.kr/en
-Chinese: https://studionol.co.kr/zh
-Spanish: https://studionol.co.kr/es
-Vietnamese: https://studionol.co.kr/vi
-Thai: https://studionol.co.kr/th
-Uzbek: https://studionol.co.kr/uz
+- Sitemap: https://studionol.co.kr/sitemap.xml
+- RSS Feed (Korean): https://studionol.co.kr/api/rss?locale=ko
+- RSS Feed (English): https://studionol.co.kr/api/rss?locale=en
+
+## Pages by Language (Home)
+
+- Korean: https://studionol.co.kr/ko
+- English: https://studionol.co.kr/en
+- Chinese (Simplified): https://studionol.co.kr/zh
+- Spanish: https://studionol.co.kr/es
+- Vietnamese: https://studionol.co.kr/vi
+- Thai: https://studionol.co.kr/th
+- Uzbek: https://studionol.co.kr/uz
 
 ## Key Pages (Korean)
 
-- Pricing: https://studionol.co.kr/ko/pricing
+- About / Services: https://studionol.co.kr/ko/about
 - Portfolio: https://studionol.co.kr/ko/portfolio
 - Stories & News: https://studionol.co.kr/ko/stories
 - Contact: https://studionol.co.kr/ko/contact
+- Pricing: https://studionol.co.kr/ko/pricing
 - Practice Room: https://studionol.co.kr/ko/practice-room
 - Recording Lessons: https://studionol.co.kr/ko/lesson
 - Studio Equipment: https://studionol.co.kr/ko/studio-info
-- About / Services: https://studionol.co.kr/ko/about
 
 ## Key Pages (English)
 
-- Pricing: https://studionol.co.kr/en/pricing
+- About / Services: https://studionol.co.kr/en/about
 - Portfolio: https://studionol.co.kr/en/portfolio
 - Stories & News: https://studionol.co.kr/en/stories
 - Contact: https://studionol.co.kr/en/contact
+- Pricing: https://studionol.co.kr/en/pricing
 - Practice Room: https://studionol.co.kr/en/practice-room
 - Recording Lessons: https://studionol.co.kr/en/lesson
 - Studio Equipment: https://studionol.co.kr/en/studio-info
-- About / Services: https://studionol.co.kr/en/about
 
-## Key Pages (Chinese)
+## Key Pages (Chinese Simplified)
 
-- Pricing: https://studionol.co.kr/zh/pricing
+- About / Services: https://studionol.co.kr/zh/about
 - Portfolio: https://studionol.co.kr/zh/portfolio
+- Stories & News: https://studionol.co.kr/zh/stories
 - Contact: https://studionol.co.kr/zh/contact
+- Pricing: https://studionol.co.kr/zh/pricing
 - Practice Room: https://studionol.co.kr/zh/practice-room
 - Recording Lessons: https://studionol.co.kr/zh/lesson
+- Studio Equipment: https://studionol.co.kr/zh/studio-info
+
+## Key Pages (Spanish)
+
+- About / Services: https://studionol.co.kr/es/about
+- Portfolio: https://studionol.co.kr/es/portfolio
+- Stories & News: https://studionol.co.kr/es/stories
+- Contact: https://studionol.co.kr/es/contact
+- Pricing: https://studionol.co.kr/es/pricing
+- Practice Room: https://studionol.co.kr/es/practice-room
+- Recording Lessons: https://studionol.co.kr/es/lesson
+- Studio Equipment: https://studionol.co.kr/es/studio-info
+
+## Key Pages (Vietnamese)
+
+- About / Services: https://studionol.co.kr/vi/about
+- Portfolio: https://studionol.co.kr/vi/portfolio
+- Stories & News: https://studionol.co.kr/vi/stories
+- Contact: https://studionol.co.kr/vi/contact
+- Pricing: https://studionol.co.kr/vi/pricing
+- Practice Room: https://studionol.co.kr/vi/practice-room
+- Recording Lessons: https://studionol.co.kr/vi/lesson
+- Studio Equipment: https://studionol.co.kr/vi/studio-info
+
+## Key Pages (Thai)
+
+- About / Services: https://studionol.co.kr/th/about
+- Portfolio: https://studionol.co.kr/th/portfolio
+- Stories & News: https://studionol.co.kr/th/stories
+- Contact: https://studionol.co.kr/th/contact
+- Pricing: https://studionol.co.kr/th/pricing
+- Practice Room: https://studionol.co.kr/th/practice-room
+- Recording Lessons: https://studionol.co.kr/th/lesson
+- Studio Equipment: https://studionol.co.kr/th/studio-info
+
+## Key Pages (Uzbek)
+
+- About / Services: https://studionol.co.kr/uz/about
+- Portfolio: https://studionol.co.kr/uz/portfolio
+- Stories & News: https://studionol.co.kr/uz/stories
+- Contact: https://studionol.co.kr/uz/contact
+- Pricing: https://studionol.co.kr/uz/pricing
+- Practice Room: https://studionol.co.kr/uz/practice-room
+- Recording Lessons: https://studionol.co.kr/uz/lesson
+- Studio Equipment: https://studionol.co.kr/uz/studio-info
 
 ## Supported Languages
 
