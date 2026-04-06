@@ -138,4 +138,4 @@ R&B는 소울·재즈·힙합의 교차점에서 태어난 장르로, 풍부한 
 
 R&B 프로덕션은 그루브·화성·보컬 감성의 삼박자입니다. 스튜디오 놀에서 R&B 스타일에 최적화된 보컬 녹음과 믹싱으로 그루비한 R&B 트랙을 완성하세요.
 
-[R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [트랩 비트 제작 가이드](/stories/trap1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[네오소울 프로덕션 완전 가이드](/stories/neo-soul1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
