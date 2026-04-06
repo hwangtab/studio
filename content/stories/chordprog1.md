@@ -109,4 +109,4 @@ Step 4: 편곡
 
 코드 진행은 음악 이론의 핵심이지만, 처음에는 귀로 익히는 것이 중요합니다. 좋아하는 노래를 채보하며 어떤 진행인지 확인하는 습관이 가장 빠른 학습 방법입니다. 코드 진행이 완성되면 스튜디오 놀에서 보컬 녹음으로 곡을 완성하세요.
 
-[악기 없이 작곡하는 방법](/stories/compose1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [음악 프로듀서 되는 방법](/stories/producer1) | [채보 기초 가이드](/stories/transcription1) | [스튜디오 놀 이용 요금](/pricing)
+[노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [악기 없이 작곡하는 방법](/stories/compose1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [음악 프로듀서 되는 방법](/stories/producer1) | [채보 기초 가이드](/stories/transcription1) | [스튜디오 놀 이용 요금](/pricing)

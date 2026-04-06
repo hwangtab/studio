@@ -79,4 +79,4 @@ faq:
 
 청주에서 KTX 오송역을 이용하면 1시간 30분대로 서울 스튜디오 세션이 가능합니다. 충청북도 지역 아티스트도 연신내 스튜디오 놀의 전문 보컬 녹음을 당일 왕복으로 경험해보세요.
 
-[대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
