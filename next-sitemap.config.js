@@ -12,7 +12,7 @@ const localePageDir = path.join(process.cwd(), 'pages', '[locale]');
 const pageImageMap = {
   '/about': '/images/recording15.webp',
   '/contact': '/images/hardware5.webp',
-  '/index': '/images/og-default.jpg',
+  '/index': '/images/og-default.webp',
   '/lesson': '/images/lesson1.webp',
   '/portfolio': '/images/recording1.webp',
   '/practice-room': '/images/room5.webp',

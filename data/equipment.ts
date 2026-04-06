@@ -83,7 +83,7 @@ export const getEquipmentData = (locale: Locale) => {
 
   const studioImages = [
     {
-      src: "/images/hardware2.jpg",
+      src: "/images/hardware2.webp",
       alt: t(locale, {
         ko: "스튜디오 놀 메인 컨트롤 룸",
         en: "Studio NOL Main Control Room",
@@ -95,7 +95,7 @@ export const getEquipmentData = (locale: Locale) => {
       })
     },
     {
-      src: "/images/hardware3.jpg",
+      src: "/images/hardware3.webp",
       alt: t(locale, {
         ko: "쇼크마운트에 장착된 Neumann U87AI 콘덴서 마이크",
         en: "Neumann U87AI condenser microphone in shock mount",
@@ -107,7 +107,7 @@ export const getEquipmentData = (locale: Locale) => {
       })
     },
     {
-      src: "/images/hardware4.jpg",
+      src: "/images/hardware4.webp",
       alt: t(locale, {
         ko: "VOX AC30 기타 앰프",
         en: "VOX AC30 guitar amplifier",

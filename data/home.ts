@@ -48,23 +48,23 @@ const homeData = {
     ],
     studioImages: [
       {
-        src: `/images/studio2.jpg`,
+        src: `/images/studio2.webp`,
         alt: "연신내 녹음실 스튜디오 놀 - 모니터링 스피커와 컨트롤 데스크가 있는 레코딩 룸"
       },
       {
-        src: `/images/studio3.jpg`,
+        src: `/images/studio3.webp`,
         alt: "스튜디오 놀 라운지 - 소파와 음향 패널이 있는 휴게 공간"
       },
       {
-        src: `/images/studio4.jpg`,
+        src: `/images/studio4.webp`,
         alt: "스튜디오 놀 녹음 부스 - 콘트라베이스 녹음 세션"
       },
       {
-        src: `/images/studio5.jpg`,
+        src: `/images/studio5.webp`,
         alt: "스튜디오 놀 아웃보드 장비 - Vintech X73i 프리앰프와 Tegeler Vari Tube Compressor"
       },
       {
-        src: `/images/hardware8.jpg`,
+        src: `/images/hardware8.webp`,
         alt: "스튜디오 놀 컨트롤 데스크 - Softube Console 1 Fader와 Proac 모니터링 스피커"
       }
     ]
@@ -115,11 +115,11 @@ const homeData = {
       },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "Recording room with monitoring speakers" },
-      { src: `/images/studio3.jpg`, alt: "Studio NOL lounge area with sofa and acoustic wall panels" },
-      { src: `/images/studio4.jpg`, alt: "Upright bass recording session in studio booth" },
-      { src: `/images/studio5.jpg`, alt: "Vintech X73i preamp and Tegeler Vari Tube Compressor rack" },
-      { src: `/images/hardware8.jpg`, alt: "Control desk with Softube Console 1 Fader and Proac monitoring speakers" }
+      { src: `/images/studio2.webp`, alt: "Recording room with monitoring speakers" },
+      { src: `/images/studio3.webp`, alt: "Studio NOL lounge area with sofa and acoustic wall panels" },
+      { src: `/images/studio4.webp`, alt: "Upright bass recording session in studio booth" },
+      { src: `/images/studio5.webp`, alt: "Vintech X73i preamp and Tegeler Vari Tube Compressor rack" },
+      { src: `/images/hardware8.webp`, alt: "Control desk with Softube Console 1 Fader and Proac monitoring speakers" }
     ]
   },
   zh: {
@@ -168,11 +168,11 @@ const homeData = {
       },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "录音室" },
-      { src: `/images/studio3.jpg`, alt: "Studio NOL 休息区 - 配有沙发和吸音墙板的休息空间" },
-      { src: `/images/studio4.jpg`, alt: "低音提琴演奏者在录音棚进行录音" },
-      { src: `/images/studio5.jpg`, alt: "Vintech X73i 前置放大器和 Tegeler Vari Tube Compressor 机架" },
-      { src: `/images/hardware8.jpg`, alt: "控制台配备 Softube Console 1 Fader 和 Proac 监听音箱" }
+      { src: `/images/studio2.webp`, alt: "录音室" },
+      { src: `/images/studio3.webp`, alt: "Studio NOL 休息区 - 配有沙发和吸音墙板的休息空间" },
+      { src: `/images/studio4.webp`, alt: "低音提琴演奏者在录音棚进行录音" },
+      { src: `/images/studio5.webp`, alt: "Vintech X73i 前置放大器和 Tegeler Vari Tube Compressor 机架" },
+      { src: `/images/hardware8.webp`, alt: "控制台配备 Softube Console 1 Fader 和 Proac 监听音箱" }
     ]
   },
   es: {
@@ -221,11 +221,11 @@ const homeData = {
       },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "Sala de grabación" },
-      { src: `/images/studio3.jpg`, alt: "Sala de descanso de Studio NOL con sofá y paneles acústicos" },
-      { src: `/images/studio4.jpg`, alt: "Sesión de grabación de contrabajo en la cabina de estudio" },
-      { src: `/images/studio5.jpg`, alt: "Rack con preamplificador Vintech X73i y Tegeler Vari Tube Compressor" },
-      { src: `/images/hardware8.jpg`, alt: "Mesa de control con Softube Console 1 Fader y monitores Proac" }
+      { src: `/images/studio2.webp`, alt: "Sala de grabación" },
+      { src: `/images/studio3.webp`, alt: "Sala de descanso de Studio NOL con sofá y paneles acústicos" },
+      { src: `/images/studio4.webp`, alt: "Sesión de grabación de contrabajo en la cabina de estudio" },
+      { src: `/images/studio5.webp`, alt: "Rack con preamplificador Vintech X73i y Tegeler Vari Tube Compressor" },
+      { src: `/images/hardware8.webp`, alt: "Mesa de control con Softube Console 1 Fader y monitores Proac" }
     ]
   },
   vi: {
@@ -274,11 +274,11 @@ const homeData = {
       },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "Phòng thu với loa kiểm âm và bàn điều khiển" },
-      { src: `/images/studio3.jpg`, alt: "Khu vực lounge Studio NOL với sofa và tấm hấp âm" },
-      { src: `/images/studio4.jpg`, alt: "Phiên thu âm đàn bass đứng trong booth thu" },
-      { src: `/images/studio5.jpg`, alt: "Rack thiết bị Vintech X73i preamp và Tegeler Vari Tube Compressor" },
-      { src: `/images/hardware8.jpg`, alt: "Bàn điều khiển với Softube Console 1 Fader và loa monitor Proac" }
+      { src: `/images/studio2.webp`, alt: "Phòng thu với loa kiểm âm và bàn điều khiển" },
+      { src: `/images/studio3.webp`, alt: "Khu vực lounge Studio NOL với sofa và tấm hấp âm" },
+      { src: `/images/studio4.webp`, alt: "Phiên thu âm đàn bass đứng trong booth thu" },
+      { src: `/images/studio5.webp`, alt: "Rack thiết bị Vintech X73i preamp và Tegeler Vari Tube Compressor" },
+      { src: `/images/hardware8.webp`, alt: "Bàn điều khiển với Softube Console 1 Fader và loa monitor Proac" }
     ]
   },
   th: {
@@ -327,11 +327,11 @@ const homeData = {
       },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
-      { src: `/images/studio3.jpg`, alt: "พื้นที่พักผ่อนของ Studio NOL พร้อมโซฟาและแผงดูดซับเสียง" },
-      { src: `/images/studio4.jpg`, alt: "การบันทึกเสียงดับเบิลเบสในห้องบูธอัด" },
-      { src: `/images/studio5.jpg`, alt: "แร็คพรีแอมป์ Vintech X73i และ Tegeler Vari Tube Compressor" },
-      { src: `/images/hardware8.jpg`, alt: "โต๊ะควบคุมพร้อม Softube Console 1 Fader และลำโพงมอนิเตอร์ Proac" }
+      { src: `/images/studio2.webp`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
+      { src: `/images/studio3.webp`, alt: "พื้นที่พักผ่อนของ Studio NOL พร้อมโซฟาและแผงดูดซับเสียง" },
+      { src: `/images/studio4.webp`, alt: "การบันทึกเสียงดับเบิลเบสในห้องบูธอัด" },
+      { src: `/images/studio5.webp`, alt: "แร็คพรีแอมป์ Vintech X73i และ Tegeler Vari Tube Compressor" },
+      { src: `/images/hardware8.webp`, alt: "โต๊ะควบคุมพร้อม Softube Console 1 Fader และลำโพงมอนิเตอร์ Proac" }
     ]
   },
   uz: {
@@ -380,11 +380,11 @@ const homeData = {
       },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "Monitoring karnaylari va boshqaruv stoli bo'lgan yozuv xonasi" },
-      { src: `/images/studio3.jpg`, alt: "Studio NOL dam olish zonasi - divan va akustik panellar" },
-      { src: `/images/studio4.jpg`, alt: "Kontrabas yozuv seanssi studiya kabinasida" },
-      { src: `/images/studio5.jpg`, alt: "Vintech X73i preamp va Tegeler Vari Tube Compressor rack" },
-      { src: `/images/hardware8.jpg`, alt: "Nazorat pulti Softube Console 1 Fader va Proac monitoring karnaylari bilan" }
+      { src: `/images/studio2.webp`, alt: "Monitoring karnaylari va boshqaruv stoli bo'lgan yozuv xonasi" },
+      { src: `/images/studio3.webp`, alt: "Studio NOL dam olish zonasi - divan va akustik panellar" },
+      { src: `/images/studio4.webp`, alt: "Kontrabas yozuv seanssi studiya kabinasida" },
+      { src: `/images/studio5.webp`, alt: "Vintech X73i preamp va Tegeler Vari Tube Compressor rack" },
+      { src: `/images/hardware8.webp`, alt: "Nazorat pulti Softube Console 1 Fader va Proac monitoring karnaylari bilan" }
     ]
   }
 };

@@ -122,7 +122,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         priority
         title={t('studioInfo.hero.title')}
         subtitle={t('studioInfo.hero.subtitle')}
-        backgroundImage="/images/hardware1.jpg"
+        backgroundImage="/images/hardware1.webp"
         imageAlt={t('studioInfo.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
@@ -140,7 +140,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <m.div {...introImageAnimation} className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group">
               <ResponsiveImage
-                src="/images/hardware2.jpg"
+                src="/images/hardware2.webp"
                 alt={t('studioInfo.intro.imageAlt')}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"

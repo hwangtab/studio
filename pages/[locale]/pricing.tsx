@@ -194,7 +194,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
             {t('pricing.hero.subtitleLine2')}
           </>
         }
-        backgroundImage="/images/hardware2.jpg"
+        backgroundImage="/images/hardware2.webp"
         imageAlt={t('pricing.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"

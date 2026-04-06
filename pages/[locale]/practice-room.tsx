@@ -166,7 +166,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
             {t('practiceRoom.hero.subtitleLine2')}
           </>
         }
-        backgroundImage="/images/room5.jpg"
+        backgroundImage="/images/room5.webp"
         imageAlt={t('practiceRoom.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
@@ -244,7 +244,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
                 transition={{ duration: 0.3 }}
               >
                 <ResponsiveImage
-                  src={`/images/room${i}.jpg`}
+                  src={`/images/room${i}.webp`}
                   alt={t(`practiceRoom.gallery.alt_${i}`)}
                   className="w-full h-full object-cover"
                   pictureClassName="block h-full"
@@ -347,7 +347,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
               {t('practiceRoom.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/room8.jpg"
+          imageSrc="/images/room8.webp"
           imageAlt={t('practiceRoom.cta.imageAlt')}
           primaryButtonLabel={t('practiceRoom.cta.inquiry')}
           secondaryButtonLabel={t('practiceRoom.cta.location')}

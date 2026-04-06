@@ -335,7 +335,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
               {t('about.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/hardware3.jpg"
+          imageSrc="/images/hardware3.webp"
           imageAlt={t('about.cta.imageAlt')}
           headingAs="h3"
         />

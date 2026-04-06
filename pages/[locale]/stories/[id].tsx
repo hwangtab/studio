@@ -174,7 +174,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
             </div>
           </div>
         }
-        backgroundImage={story.thumbnail || '/images/studio1.jpg'}
+        backgroundImage={story.thumbnail || '/images/studio1.webp'}
         imageAlt={story.title}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/70 via-black/40 to-black/70"

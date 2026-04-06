@@ -1,10 +1,10 @@
 ---
 active: true
-iteration: 7
+iteration: 6
 session_id: 
 max_iterations: 0
 completion_promise: null
-started_at: "2026-04-06T02:42:39Z"
+started_at: "2026-04-06T07:10:07Z"
 ---
 
-seo 개선을 완벽하게 진행해줘
+노출 및 클릭 수 증대 관점에서 seo 최적화 진행

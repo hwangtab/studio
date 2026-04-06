@@ -115,7 +115,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}
-        ogImage="/images/studio1.jpg"
+        ogImage="/images/studio1.webp"
         ogImageAlt={t('stories.hero.alt')}
         ogImageWidth={1440}
         ogImageHeight={809}
@@ -132,7 +132,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         priority
         title={t('stories.hero.title')}
         subtitle={t('stories.hero.subtitle')}
-        backgroundImage="/images/studio1.jpg"
+        backgroundImage="/images/studio1.webp"
         imageAlt={t('stories.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
