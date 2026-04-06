@@ -174,8 +174,9 @@ export default StudioNoriApp;
 
 import type { NextWebVitalsMetric } from 'next/app';
 
-export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
+export function reportWebVitals({ name, value }: NextWebVitalsMetric) {
   if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line no-console
     console.log(`[Web Vital] ${name}:`, Math.round(name === 'CLS' ? value * 1000 : value));
   }
 }
