@@ -86,4 +86,4 @@ faq:
 
 홈 레코딩은 접근성이 높고 자유롭다는 장점이 있지만, 음원 발매·축가·성우 녹음처럼 완성도가 중요한 목적이라면 전문 스튜디오가 훨씬 경쟁력 있는 결과물을 만들어줍니다. 연신내역 도보 5분 거리의 스튜디오 놀에서 첫 상담부터 완성까지 함께하세요.
 
-[스튜디오 놀 시설·장비 안내](/studio-info) | [보컬 녹음 요금 안내](/pricing) | [음반 제작 가이드](/stories/album1) | [녹음실 처음 방문 체크리스트](/stories/guide1) | [연신내·불광 녹음실 비교](/stories/review6) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1)
+[스튜디오 놀 시설·장비 안내](/studio-info) | [보컬 녹음 요금 안내](/pricing) | [음반 제작 가이드](/stories/album1) | [녹음실 처음 방문 체크리스트](/stories/guide1) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1)
