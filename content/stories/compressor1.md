@@ -122,4 +122,4 @@ Make-up Gain: GR 발생량 보상
 
 컴프레서는 보컬의 일관성을 높이는 동시에 에너지와 존재감을 더합니다. 스튜디오 놀에서 보컬 특성에 맞는 컴프레서 세팅으로 최적의 믹싱 결과물을 만들어드립니다.
 
-[보컬 EQ 완전 가이드](/stories/eq-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [음정 교정 완전 가이드](/stories/pitch-training1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [음정 교정 완전 가이드](/stories/pitch-training1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [스튜디오 놀 이용 요금](/pricing)
