@@ -114,6 +114,20 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       url: siteConfig.url,
     },
     url: `${siteConfig.url}/${locale}/practice-room`,
+    hoursAvailable: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '00:00',
+      closes: '23:59',
+    },
+    offers: {
+      '@type': 'Offer',
+      name: locale === 'ko' ? '월정액 입주 프로그램' : 'Monthly Residency Program',
+      priceCurrency: 'KRW',
+      price: 400000,
+      availability: 'https://schema.org/InStock',
+      url: `${siteConfig.url}/${locale}/contact`,
+    },
   }), [t, siteConfig, locale, schemaLanguage]);
   const painPointsAnimation = PAIN_POINTS_ANIMATION;
   const audienceSectionAnimation = AUDIENCE_SECTION_ANIMATION;
@@ -130,6 +144,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         ogImageWidth={1440}
         ogImageHeight={810}
         includeSchema={true}
+        webPageType="ItemPage"
         faqItems={practiceRoomFaqs}
         schema={practiceRoomSchema}
         reviewItems={reviewsData.filter((r) => (r as { categoryKey?: string }).categoryKey === 'practice')}

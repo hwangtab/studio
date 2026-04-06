@@ -50,6 +50,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },
         ]}
         includeSchema={true}
+        webPageType="WebPage"
         reviewItems={reviewsData}
         faqItems={studioFaqData}
       />
