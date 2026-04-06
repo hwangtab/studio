@@ -104,4 +104,4 @@ LUFS: -14 LUFS (스트리밍 기준) ~ -10 LUFS (강조 필요 시)
 
 스튜디오 놀에서 오디션·기획사 제출용 데모 녹음을 진행합니다. 보컬 실력이 가장 잘 드러나는 데모를 위해 전문 모니터링 환경과 1:1 보컬 디렉팅을 제공합니다.
 
-[보컬 포트폴리오 만들기](/stories/portfolio1) | [오디션 준비 가이드](/stories/audition1) | [EP 제작 완전 가이드](/stories/ep-making1) | [커버송 녹음 완전 가이드](/stories/cover-song1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스튜디오 놀 이용 요금](/pricing)
+[작곡·작사 실전 가이드](/stories/songwriting1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [오디션 준비 가이드](/stories/audition1) | [EP 제작 완전 가이드](/stories/ep-making1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스튜디오 놀 이용 요금](/pricing)
