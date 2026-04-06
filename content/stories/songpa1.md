@@ -68,4 +68,4 @@ faq:
 
 강남·송파·강동에서 2호선·5호선으로 35~55분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[가락·오금·마천·거여 녹음실 안내](/stories/garak1) | [방이·가락·문정 녹음실 안내](/stories/bangi1) | [잠실·석촌 근처 녹음실 안내](/stories/jamsil1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[문정·장지·위례·복정 녹음실 안내](/stories/munjeong1) | [가락·오금·마천·거여 녹음실 안내](/stories/garak1) | [잠실·석촌 근처 녹음실 안내](/stories/jamsil1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
