@@ -209,7 +209,7 @@ module.exports = {
       const portfolioImages = getPortfolioImageMap();
       const imgUrl = portfolioImages[itemId];
       if (imgUrl) {
-        images = [{ loc: new URL(imgUrl) }];
+        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`) }];
       }
     } else {
       const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;
