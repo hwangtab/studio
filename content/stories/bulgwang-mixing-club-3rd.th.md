@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
 ---
-![](/images/recording16.webp)
+![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 
 ### 🔥 รอบ 3 มาแล้ว! (แต่มีประกาศเปลี่ยนตาราง)
 

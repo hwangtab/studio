@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
 ---
-![](/images/bulgwang-mixing-club-2nd.webp)
+![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 
 ### 🔥 Birinchi uchrashuvning issig'i davom etmoqda! “Bulgwang Mixing Club” 2-raundi boshlandi! 🔥
 Birinchi kechadagi tovuq bilan qizigan kayfiyat hali pasaymadimi? Bu hafta ikkinchi uchrashuv uchun issiq pizza va sovuq pivo bilan yangilaymiz. Gear ko'rsatish, plugin bahsi, reference taqqoslash—nerdcha gaplar davom etsin.

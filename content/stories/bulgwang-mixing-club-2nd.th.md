@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
 ---
-![](/images/bulgwang-mixing-club-2nd.webp)
+![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 
 ### 🔥 ความร้อนจากรอบแรกยังอยู่! รอบ 2 ของ “Bulgwang Mixing Club” เริ่มแล้ว! 🔥
 ยังจำคืนแรกที่ขับเคลื่อนด้วยไก่ได้ไหม สัปดาห์นี้อัปเกรดเป็นพิซซ่าร้อนกับเบียร์เย็นสำหรับนัดครั้งที่สอง คุยเรื่องเกียร์ ดีเบตปลั๊กอิน เทียบเรเฟอเรนซ์—สายเนิร์ดยกต่อได้เลย

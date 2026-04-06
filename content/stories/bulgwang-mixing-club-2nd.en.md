@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Networking", "Meetup"]
 ---
-![](/images/bulgwang-mixing-club-2nd.webp)
+![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 
 ### 🔥 The first meetup’s heat continues! Round 2 of "Bulgwang Mixing Club" starts now! 🔥
 Still feeling the heat from the chicken-fueled first night? This week, we’re upgrading to pizza and cold beer for the second meetup. Gear flexing, plugin debates, reference comparisons—let’s keep the nerdy talk going.

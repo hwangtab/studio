@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
 ---
-![](/images/recording16.webp)
+![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 
 ### 🔥 Round 3 đã lên lịch! (nhưng có thay đổi lịch)
 
