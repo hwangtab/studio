@@ -134,4 +134,4 @@ faq:
 
 레퍼런스 트랙은 믹싱의 방향을 잡고 귀의 피로를 보완하는 필수 도구입니다. 스튜디오 놀에서는 장르별 레퍼런스를 활용해 상업적 수준의 믹스를 완성합니다.
 
-[보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
