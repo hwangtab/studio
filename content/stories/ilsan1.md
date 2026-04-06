@@ -58,4 +58,4 @@ faq:
 
 일산에서 3호선으로 25분, 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 이동이 부담스럽다면 온라인 파일 의뢰도 가능합니다.
 
-[고양시 녹음실 안내](/stories/goyang1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[장기·대화·화정 녹음실 안내](/stories/janggi1) | [고양시 녹음실 안내](/stories/goyang1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
