@@ -39,6 +39,12 @@ const homeData = {
         link: '/portfolio',
         icon: 'Globe',
       },
+      {
+        title: '프리미엄 연습실',
+        description: '24시간 완벽 방음 연습실. 드럼·기타·건반 완비, 월 40만원대 입주 프로그램으로 나만의 창작 공간을 경험하세요.',
+        link: '/practice-room',
+        icon: 'Music',
+      },
     ],
     studioImages: [
       {
@@ -101,6 +107,12 @@ const homeData = {
         link: '/portfolio',
         icon: 'Globe',
       },
+      {
+        title: 'Premium Practice Room',
+        description: '24/7 fully soundproof practice room. Drums, guitar & keyboard ready. Monthly residency from 400,000 KRW — your own creative space.',
+        link: '/practice-room',
+        icon: 'Music',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "Recording room with monitoring speakers" },
@@ -147,6 +159,12 @@ const homeData = {
         description: '通过媒体有效宣传，并丰富支持展示会，更广泛地传播您音乐的魅力。',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: '高端练习室',
+        description: '24小时全隔音练习室，配备架子鼓、吉他、键盘。月租约40万韩元起，打造专属练习空间。',
+        link: '/practice-room',
+        icon: 'Music',
       },
     ],
     studioImages: [
@@ -195,6 +213,12 @@ const homeData = {
         link: '/portfolio',
         icon: 'Globe',
       },
+      {
+        title: 'Sala de práctica premium',
+        description: 'Sala de práctica 24/7 completamente insonorizada. Batería, guitarra y teclado incluidos. Residencia mensual desde 400.000 KRW.',
+        link: '/practice-room',
+        icon: 'Music',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "Sala de grabación" },
@@ -241,6 +265,12 @@ const homeData = {
         description: 'Quảng bá hiệu quả trên truyền thông và hỗ trợ showcase để lan tỏa sức hút âm nhạc của bạn.',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: 'Phòng tập cao cấp',
+        description: 'Phòng tập cách âm hoàn toàn 24/7. Trống, guitar, keyboard đầy đủ. Gói cư trú hàng tháng từ 400.000 KRW — không gian sáng tạo của riêng bạn.',
+        link: '/practice-room',
+        icon: 'Music',
       },
     ],
     studioImages: [
@@ -289,6 +319,12 @@ const homeData = {
         link: '/portfolio',
         icon: 'Globe',
       },
+      {
+        title: 'ห้องซ้อมพรีเมียม',
+        description: 'ห้องซ้อมกันเสียง 24 ชั่วโมง พร้อมกลอง กีตาร์ คีย์บอร์ด ราคาเช่ารายเดือน 400,000 วอน — พื้นที่สร้างสรรค์ส่วนตัวของคุณ',
+        link: '/practice-room',
+        icon: 'Music',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.jpg`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
@@ -300,15 +336,15 @@ const homeData = {
   },
   uz: {
     seo: {
-      title: "Professional musiqa ishlab chiqarish · Mixing/Mastering & voiceover/to‘y qo‘shiqlari yozuvi | Studio NOL",
-      description: "San’atkorning musiqiy tasavvurini hayotga tatbiq etuvchi professional prodakshn. Yuqori darajadagi uskunalar va muhandislik bilan eng yaxshi natija.",
-      keywords: "musiqa ishlab chiqarish, raqamli singl, miks mastering, albom chiqishi, musiqa prodakshn, professional studiya, voiceover yozuvi, to‘y qo‘shig‘i yozuvi, Studio NOL"
+      title: "Professional musiqa ishlab chiqarish · Mixing/Mastering & voiceover/to'y qo'shiqlari yozuvi | Studio NOL",
+      description: "San'atkorning musiqiy tasavvurini hayotga tatbiq etuvchi professional prodakshn. Yuqori darajadagi uskunalar va muhandislik bilan eng yaxshi natija.",
+      keywords: "musiqa ishlab chiqarish, raqamli singl, miks mastering, albom chiqishi, musiqa prodakshn, professional studiya, voiceover yozuvi, to'y qo'shig'i yozuvi, Studio NOL"
     },
     heroContent: {
       titlePrefix: "Musiqangizga",
       titleHighlight: "hayot",
-      titleSuffix: "bag‘ishlaydigan makon",
-      subtitle: "Yuqori darajadagi uskunalar va professional muhandislar bilan o‘ziga xos tovushingizni yarating. Studio NOLda his qiling.",
+      titleSuffix: "bag'ishlaydigan makon",
+      subtitle: "Yuqori darajadagi uskunalar va professional muhandislar bilan o'ziga xos tovushingizni yarating. Studio NOLda his qiling.",
       backgroundImage: "/images/studio2.jpg",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
@@ -326,19 +362,25 @@ const homeData = {
       },
       {
         title: 'Yozuv & Miks',
-        description: "Yuqori darajadagi uskunalar va mutaxassislar bilan eng yaxshi tovushni yarating. Tovushingizga hayot bag‘ishlaymiz.",
+        description: "Yuqori darajadagi uskunalar va mutaxassislar bilan eng yaxshi tovushni yarating. Tovushingizga hayot bag'ishlaymiz.",
         link: '/studio-info',
         icon: 'Mic',
       },
       {
         title: 'PR & Marketing',
-        description: "OAV orqali samarali targ‘ibot va showcase qo‘llovi bilan musiqangiz jozibasini keng yoyamiz.",
+        description: "OAV orqali samarali targ'ibot va showcase qo'llovi bilan musiqangiz jozibasini keng yoyamiz.",
         link: '/portfolio',
         icon: 'Globe',
       },
+      {
+        title: "Premium mashg'ulot xonasi",
+        description: "24/7 to'liq ovoz izolyatsiyali mashg'ulot xonasi. Baraban, gitara, klaviatura mavjud. Oylik to'lov 400,000 KRW dan — o'z ijodiy makoningiz.",
+        link: '/practice-room',
+        icon: 'Music',
+      },
     ],
     studioImages: [
-      { src: `/images/studio2.jpg`, alt: "Monitoring karnaylari va boshqaruv stoli bo‘lgan yozuv xonasi" },
+      { src: `/images/studio2.jpg`, alt: "Monitoring karnaylari va boshqaruv stoli bo'lgan yozuv xonasi" },
       { src: `/images/studio3.jpg`, alt: "Studio NOL dam olish zonasi - divan va akustik panellar" },
       { src: `/images/studio4.jpg`, alt: "Kontrabas yozuv seanssi studiya kabinasida" },
       { src: `/images/studio5.jpg`, alt: "Vintech X73i preamp va Tegeler Vari Tube Compressor rack" },

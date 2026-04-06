@@ -1,12 +1,14 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2 } from 'lucide-react';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import Breadcrumb from '../../components/ui/Breadcrumb';
+import ReviewSection from '../../components/ui/ReviewSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
@@ -213,6 +215,26 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
             <EquipmentSection title={t('studioInfo.equipment.interfacesConsoles')} items={[...equipment.interfaces, ...equipment.consoles]} icon={Laptop} />
           </div>
         </m.div >
+      </Section>
+
+      <ReviewSection variant="alternate" locale={locale} />
+
+      {/* 관련 서비스 바로가기 */}
+      <Section variant="default" className="py-10">
+        <div className="flex flex-wrap justify-center gap-4">
+          <Link
+            href={`/${locale}/pricing`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/practice-room`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
       </Section>
 
       <Section variant="default" className="py-16">

@@ -1,8 +1,10 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
+import ReviewSection from '../../components/ui/ReviewSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getPricingData } from '../../data/pricing';
 import { generateAggregateOfferSchema, getSchemaLanguage } from '../../utils/schemaGenerator';
@@ -351,6 +353,26 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
               delay={0.1 * (index + 1)}
             />
           ))}
+        </div>
+      </Section>
+
+      <ReviewSection variant="default" locale={locale} />
+
+      {/* 관련 서비스 바로가기 */}
+      <Section variant="alternate" className="py-10">
+        <div className="flex flex-wrap justify-center gap-4">
+          <Link
+            href={`/${locale}/studio-info`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/practice-room`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
         </div>
       </Section>
 

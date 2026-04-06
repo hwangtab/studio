@@ -38,6 +38,22 @@ const faqData = {
       question: '초보자도 녹음실을 이용할 수 있나요?',
       answer: '물론입니다. 전문 엔지니어가 녹음 준비부터 진행, 후보정까지 전 과정을 세심하게 도와드리므로 녹음 경험이 없으신 분들도 편안하게 고품질 결과물을 만드실 수 있습니다.',
     },
+    {
+      question: '축가 녹음은 어디서 할 수 있나요?',
+      answer: '스튜디오 놀에서 웨딩·행사 축가 녹음 전문 패키지를 제공합니다. 축가 완성 패키지 350,000원으로 레코딩·믹싱·마스터링을 원스톱으로 진행하며, 연신내역 도보 5분 거리로 접근성도 뛰어납니다.',
+    },
+    {
+      question: '녹음실 예약은 어떻게 하나요?',
+      answer: "카카오톡 채널 \'스튜디오 놀\', 전화(070-8065-6700), 또는 홈페이지 문의 폼을 통해 예약하실 수 있습니다. 당일 예약도 가능하며, 주말·공휴일에도 운영합니다.",
+    },
+    {
+      question: '일반인(셀프 녹음)도 녹음실을 이용할 수 있나요?',
+      answer: '네, 전문가가 아니어도 누구나 환영합니다. 전담 엔지니어가 마이크 세팅부터 보컬 디렉팅, 완성 파일 전달까지 전 과정을 지원하므로 처음 녹음하시는 분도 편안하게 고품질 결과물을 얻으실 수 있습니다.',
+    },
+    {
+      question: '연습실 단기 대여도 가능한가요?',
+      answer: '현재 연습실은 월정액 입주 프로그램(월 40만 원)으로 운영 중입니다. 단기 또는 시간제 이용 문의는 카카오톡·전화로 상담해 주시면 가능 여부를 안내해 드립니다.',
+    },
 
   ],
   en: [
@@ -77,6 +93,22 @@ const faqData = {
       question: 'Can beginners use the recording studio?',
       answer: 'Absolutely. Our professional engineers guide you through the entire process, from preparation to post-production, ensuring high-quality results even for those with no prior recording experience.',
     },
+    {
+      question: 'Where can I record a wedding or event song?',
+      answer: 'Studio NOL offers a dedicated wedding/event vocal recording package for 350,000 KRW — all-inclusive recording, mixing, and mastering in one visit. Located just 5 minutes from Yeonsinnae Station.',
+    },
+    {
+      question: 'How do I book the recording studio?',
+      answer: 'You can book via KakaoTalk (channel: Studio NOL), phone (070-8065-6700), or our website contact form. Same-day bookings are possible, and we are available on weekends and holidays.',
+    },
+    {
+      question: 'Can non-professionals record here (self-recording)?',
+      answer: 'Absolutely. Everyone is welcome regardless of experience. Our dedicated engineer handles mic setup, vocal direction, and delivers finished files — first-timers consistently achieve professional-quality results.',
+    },
+    {
+      question: 'Is short-term rental of the practice room available?',
+      answer: 'Our practice room primarily operates on a monthly residency program (400,000 KRW/month). For short-term or hourly inquiries, please contact us via KakaoTalk or phone and we will advise on availability.',
+    },
 
   ],
   zh: [
@@ -108,6 +140,22 @@ const faqData = {
       question: '提供音乐发行服务吗？',
       answer: '是的，入驻客户可通过 Audioguy 免费发行至 Spotify、Apple Music、YouTube Music 等全球平台，净收益的 70% 分成给艺人。',
     },
+    {
+      question: '在哪里可以录制婚礼祝歌？',
+      answer: 'Studio NOL 提供婚礼/活动祝歌录音专属套餐，350,000韩元含录音、混音和母带处理，一站式完成。距延新内站步行5分钟。',
+    },
+    {
+      question: '如何预约录音室？',
+      answer: '可通过 KakaoTalk 频道"Studio NOL"、电话 070-8065-6700 或网站联系表单预约。支持当天预约，周末及节假日均可使用。',
+    },
+    {
+      question: '普通人（自录）也可以使用录音室吗？',
+      answer: '当然可以，欢迎所有人。专职工程师将协助完成麦克风设置、人声指导及成品交付等全流程，即使是第一次录音也能轻松获得高品质成果。',
+    },
+    {
+      question: '练习室可以短期租用吗？',
+      answer: '练习室目前以月费入驻项目（40万韩元/月）为主。如需短期或按小时使用，请通过 KakaoTalk 或电话咨询，我们将告知具体情况。',
+    },
   ],
   es: [
     {
@@ -137,6 +185,22 @@ const faqData = {
     {
       question: '¿Ofrecen distribución musical?',
       answer: 'Sí, para miembros residentes ofrecemos distribución global gratuita (Spotify, Apple Music, etc.) vía Audioguy, y entregamos el 70% de las ganancias netas al artista.',
+    },
+    {
+      question: '¿Dónde puedo grabar una canción para una boda o evento?',
+      answer: 'Studio NOL ofrece un paquete de grabación vocal para bodas/eventos por 350.000 KRW — grabación, mezcla y masterización incluidas en una sola sesión. A 5 minutos a pie de la estación Yeonsinnae.',
+    },
+    {
+      question: '¿Cómo reservo el estudio de grabación?',
+      answer: 'Puedes reservar a través de KakaoTalk (canal: Studio NOL), por teléfono (070-8065-6700) o el formulario de contacto en nuestra web. Las reservas el mismo día son posibles y estamos disponibles los fines de semana y festivos.',
+    },
+    {
+      question: '¿Pueden grabar personas sin experiencia (grabación propia)?',
+      answer: 'Absolutamente. Todos son bienvenidos. Nuestro ingeniero dedicado se encarga de la configuración del micrófono, la dirección vocal y la entrega de archivos finales, para que los principiantes logren resultados de calidad profesional.',
+    },
+    {
+      question: '¿Está disponible el alquiler a corto plazo de la sala de práctica?',
+      answer: 'Nuestra sala opera principalmente con un programa de residencia mensual (400.000 KRW/mes). Para consultas de uso a corto plazo o por horas, contáctenos vía KakaoTalk o teléfono.',
     },
   ],
   vi: [
@@ -168,6 +232,22 @@ const faqData = {
       question: 'Có dịch vụ phát hành nhạc không?',
       answer: 'Có. Khách cư trú được phát hành toàn cầu miễn phí (Spotify, Apple Music, YouTube Music, v.v.) qua Audioguy và nhận 70% lợi nhuận ròng.',
     },
+    {
+      question: 'Có thể thu âm bài hát chúc mừng đám cưới ở đâu?',
+      answer: 'Studio NOL cung cấp gói thu âm bài chúc mừng đám cưới/sự kiện với giá 350.000 KRW — bao gồm thu âm, mixing và mastering trong một lần. Cách ga Yeonsinnae 5 phút đi bộ.',
+    },
+    {
+      question: 'Làm thế nào để đặt phòng thu?',
+      answer: 'Bạn có thể đặt qua KakaoTalk (kênh: Studio NOL), điện thoại (070-8065-6700) hoặc form liên hệ trên website. Đặt trong ngày được, và chúng tôi mở cửa cả cuối tuần và ngày lễ.',
+    },
+    {
+      question: 'Người không chuyên (tự thu âm) có thể sử dụng phòng thu không?',
+      answer: 'Hoàn toàn có thể. Tất cả mọi người đều được chào đón. Kỹ sư chuyên trách sẽ hỗ trợ cài micro, định hướng giọng hát và bàn giao file hoàn chỉnh, giúp người lần đầu thu âm cũng có kết quả chất lượng cao.',
+    },
+    {
+      question: 'Có thể thuê phòng tập ngắn hạn không?',
+      answer: 'Phòng tập hiện chủ yếu hoạt động theo chương trình cư trú hàng tháng (400.000 KRW/tháng). Nếu có nhu cầu thuê ngắn hạn hoặc theo giờ, hãy liên hệ qua KakaoTalk hoặc điện thoại để được tư vấn.',
+    },
   ],
   th: [
     {
@@ -198,11 +278,27 @@ const faqData = {
       question: 'มีบริการจัดจำหน่ายเพลงไหม?',
       answer: 'มี สำหรับสมาชิกที่พักประจำ เราให้บริการจัดจำหน่ายทั่วโลกฟรีผ่าน Audioguy (Spotify, Apple Music, YouTube Music ฯลฯ) และแบ่งรายได้สุทธิ 70% ให้ศิลปิน',
     },
+    {
+      question: 'จะบันทึกเพลงอวยพรงานแต่งงานได้ที่ไหน?',
+      answer: 'Studio NOL มีแพ็กเกจบันทึกเสียงเพลงอวยพรงานแต่งงาน/งานอีเวนต์ราคา 350,000 วอน ครอบคลุมการอัด มิกซ์ และมาสเตอริ่งในครั้งเดียว ห่างจากสถานี Yeonsinnae เพียง 5 นาที',
+    },
+    {
+      question: 'จะจองห้องอัดได้อย่างไร?',
+      answer: 'จองได้ผ่าน KakaoTalk (ช่อง: Studio NOL), โทรศัพท์ (070-8065-6700) หรือฟอร์มติดต่อบนเว็บไซต์ รับจองในวันเดียวกัน และเปิดให้บริการทั้งวันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์',
+    },
+    {
+      question: 'คนทั่วไป (บันทึกเสียงเอง) ใช้ห้องอัดได้ไหม?',
+      answer: 'ได้แน่นอน ทุกคนยินดีต้อนรับ วิศวกรประจำจะดูแลตั้งแต่เซ็ตอัพไมค์ ชี้แนะการร้อง ไปจนถึงส่งมอบไฟล์สำเร็จ ทำให้แม้แต่มือใหม่ก็ได้ผลลัพธ์ระดับมืออาชีพ',
+    },
+    {
+      question: 'เช่าห้องซ้อมระยะสั้นได้ไหม?',
+      answer: 'ห้องซ้อมของเราส่วนใหญ่ดำเนินการแบบโปรแกรมรายเดือน (400,000 วอน/เดือน) หากสนใจเช่าระยะสั้นหรือรายชั่วโมง ติดต่อสอบถามผ่าน KakaoTalk หรือโทรศัพท์',
+    },
   ],
   uz: [
     {
       question: 'Studio NOL qayerda joylashgan?',
-      answer: 'Biz Seul sh., Eunpyeong-gu, Daejo-dong 84-3, 3‑qavatda joylashganmiz (Dongmyeong qizlar maktabi yonida). 6‑yo‘nalishdagi Bulgwang bekati 7‑chi chiqishidan yoki Yeonsinnae bekatidan 5 daqiqada piyoda.',
+      answer: "Biz Seul sh., Eunpyeong-gu, Daejo-dong 84-3, 3\u2011qavatda joylashganmiz (Dongmyeong qizlar maktabi yonida). 6\u2011yo'nalishdagi Bulgwang bekati 7\u2011chi chiqishidan yoki Yeonsinnae bekatidan 5 daqiqada piyoda.",
     },
     {
       question: 'Yozuv studiyasi narxi qancha?',
@@ -210,15 +306,15 @@ const faqData = {
     },
     {
       question: 'Miks xizmatlari narxi qanday?',
-      answer: 'Track soniga bog‘liq. 10 trackgacha 200,000 KRW, 11–30 track 350,000 KRW, 31+ track 500,000 KRW. 2 ta asosiy tahrir kiritilgan.',
+      answer: "Track soniga bog'liq. 10 trackgacha 200,000 KRW, 11–30 track 350,000 KRW, 31+ track 500,000 KRW. 2 ta asosiy tahrir kiritilgan.",
     },
     {
       question: 'Mastering narxi qancha?',
-      answer: 'Single mastering 100,000 KRW/qo‘shiq, EP/album paketi (4+ qo‘shiq) 80,000 KRW/qo‘shiq. Spotify, Apple Music kabi platformalar standartiga mos.',
+      answer: "Single mastering 100,000 KRW/qo'shiq, EP/album paketi (4+ qo'shiq) 80,000 KRW/qo'shiq. Spotify, Apple Music kabi platformalar standartiga mos.",
     },
     {
-      question: 'Mashg‘ulot xonasi rezident dasturi bormi?',
-      answer: 'Ha. Oyiga 400,000 KRW evaziga premium ovoz izolyatsiyali mashg‘ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo‘llovi, busking uskunalari ijarasi va h.k.) beriladi.',
+      question: "Mashg'ulot xonasi rezident dasturi bormi?",
+      answer: "Ha. Oyiga 400,000 KRW evaziga premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
     },
     {
       question: 'Qanday uskunalar bor?',
@@ -226,7 +322,23 @@ const faqData = {
     },
     {
       question: 'Musiqa tarqatish xizmati ham bormi?',
-      answer: 'Ha. Rezident mijozlar Audioguy orqali global platformalarga (Spotify, Apple Music, YouTube Music va b.) bepul tarqatish xizmatini oladi va sof daromadning 70% san’atkorga beriladi.',
+      answer: "Ha. Rezident mijozlar Audioguy orqali global platformalarga (Spotify, Apple Music, YouTube Music va b.) bepul tarqatish xizmatini oladi va sof daromadning 70% san'atkorga beriladi.",
+    },
+    {
+      question: "To'y qo'shig'ini qayerda yozib olish mumkin?",
+      answer: "Studio NOL to'y/tadbir uchun maxsus vokal yozish paketi taklif etadi — 350,000 KRW, yozish, miks va mastering kiritilgan, bir borish yetarli. Yeonsinnae bekatidan 5 daqiqada.",
+    },
+    {
+      question: "Yozuv studiyasini qanday band qilish mumkin?",
+      answer: "KakaoTalk (kanal: Studio NOL), telefon (070-8065-6700) yoki veb-saytdagi murojaat formasi orqali band qilishingiz mumkin. Bir kunlik band ham mumkin, dam olish va bayram kunlarida ham ishlaydi.",
+    },
+    {
+      question: "Oddiy odamlar (mustaqil yozish) studiyadan foydalana oladimi?",
+      answer: "Ha, albatta. Hamma xush kelibsiz. Muhandis mikrofonni sozlashdan vokal yo'naltirishgacha va tayyor fayllarni topshirishgacha barcha jarayonda yordam beradi, birinchi marta yozayotganlar ham yuqori sifatli natija oladi.",
+    },
+    {
+      question: "Mashg'ulot xonasini qisqa muddatga ijaraga olish mumkinmi?",
+      answer: "Mashg'ulot xonasi asosan oylik rezident dastur (400,000 KRW/oy) asosida ishlaydi. Qisqa muddatli yoki soatbay foydalanish bo'yicha so'rovlar uchun KakaoTalk yoki telefon orqali bog'laning.",
     },
   ]
 };
@@ -266,19 +378,19 @@ export const getStudioFaqData = (locale: Locale) => {
   const allFaq = getFaqData(locale);
   const studioKeywords = [
     // Korean
-    '장비', '스튜디오', '녹음실',
+    '장비', '스튜디오', '녹음실', '축가', '예약', '일반인', '셀프',
     // English
-    'equipment', 'studio', 'gear',
+    'equipment', 'studio', 'gear', 'wedding', 'book', 'non-professional',
     // Chinese
-    '设备', '录音室',
+    '设备', '录音室', '祝歌', '预约',
     // Spanish
-    'equipo', 'estudio',
+    'equipo', 'estudio', 'boda', 'reserv',
     // Vietnamese
-    'thiết bị', 'phòng thu',
+    'thiết bị', 'phòng thu', 'chúc mừng', 'đặt',
     // Thai
-    'อุปกรณ์', 'สตูดิโอ',
+    'อุปกรณ์', 'สตูดิโอ', 'อวยพร', 'จอง',
     // Uzbek
-    'uskunalar', 'studiya'
+    'uskunalar', 'studiya', 'to\'y', 'band'
   ];
   return allFaq.filter(faq =>
     studioKeywords.some(keyword =>
