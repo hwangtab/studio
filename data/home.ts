@@ -4,7 +4,7 @@ const homeData = {
     ko: {
     seo: {
       title: "연신내 녹음실 · 믹싱 마스터링 · 축가·성우 녹음 | 스튜디오 놀",
-      description: "아티스트의 음악적 비전을 소리로 실현하는 프로페셔널 뮤직 프로덕션. 하이엔드 장비와 전문 엔지니어링으로 최고의 결과물을 보장합니다.",
+      description: "연신내역 도보 5분, 전문 엔지니어 상주 녹음실. 축가·성우·오디오북·음원 녹음, 믹싱·마스터링, 24시간 합주실까지 원스톱. 시간당 10만원부터, 무료 견적 상담 후 당일 예약 가능합니다.",
       keywords: "음원 제작, 디지털 싱글, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 오디오북 녹음, 일반인 녹음실, 스튜디오 놀"
     },
     heroContent: {
@@ -12,7 +12,7 @@ const homeData = {
       titleHighlight: "생명",
       titleSuffix: "을 불어넣는 공간",
       subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
         reserve: "예약하기",
@@ -80,7 +80,7 @@ const homeData = {
       titleHighlight: "Life",
       titleSuffix: "into Your Music",
       subtitle: "Complete your unique sound with high-end equipment and professional engineering. Experience it at Studio NOL.",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
         reserve: "Book Now",
@@ -133,7 +133,7 @@ const homeData = {
       titleHighlight: "生命",
       titleSuffix: "的空间",
       subtitle: "通过高端设备和专业工程师的触感，完成您独有的声音。请在 Studio NOL 体验。",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
         reserve: "立即预订",
@@ -186,7 +186,7 @@ const homeData = {
       titleHighlight: "Vida",
       titleSuffix: "a Tu Música",
       subtitle: "Completa tu sonido único con equipos de alta gama e ingeniería profesional. Vívelo en Studio NOL.",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
         reserve: "Reservar",
@@ -239,7 +239,7 @@ const homeData = {
       titleHighlight: "Sự sống",
       titleSuffix: "vào âm nhạc của bạn",
       subtitle: "Hoàn thiện âm thanh riêng của bạn với thiết bị cao cấp và bàn tay của kỹ sư chuyên nghiệp. Trải nghiệm tại Studio NOL.",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
         reserve: "Đặt lịch",
@@ -292,7 +292,7 @@ const homeData = {
       titleHighlight: "ชีวิต",
       titleSuffix: "ให้กับดนตรีของคุณ",
       subtitle: "เติมเต็มซาวด์ของคุณด้วยอุปกรณ์ระดับไฮเอนด์และการดูแลของวิศวกรมืออาชีพ พบกันที่ Studio NOL",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
         reserve: "จองคิว",
@@ -345,7 +345,7 @@ const homeData = {
       titleHighlight: "hayot",
       titleSuffix: "bag'ishlaydigan makon",
       subtitle: "Yuqori darajadagi uskunalar va professional muhandislar bilan o'ziga xos tovushingizni yarating. Studio NOLda his qiling.",
-      backgroundImage: "/images/studio2.jpg",
+      backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
         reserve: "Band qilish",
