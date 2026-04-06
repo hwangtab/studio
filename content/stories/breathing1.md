@@ -116,4 +116,4 @@ faq:
 
 호흡은 하루아침에 개선되지 않습니다. 꾸준한 연습과 전문가 레슨이 함께할 때 빠르게 향상됩니다. 스튜디오 놀 보컬 레슨에서 호흡 교정 상담을 받아보세요.
 
-[보컬 워밍업 루틴](/stories/warmup1) | [보컬 자세 완전 가이드](/stories/posture1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 공명 훈련 완전 가이드](/stories/resonance1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 자세 완전 가이드](/stories/posture1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)

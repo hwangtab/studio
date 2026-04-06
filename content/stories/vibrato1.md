@@ -114,4 +114,4 @@ faq:
 
 비브라토는 몇 달의 꾸준한 훈련이 필요합니다. 억지로 만들려 하지 말고, 충분한 호흡 지지와 이완 속에서 자연스럽게 발생하기를 기다리는 것이 핵심입니다. 스튜디오 놀 녹음 세션에서 본인의 비브라토를 모니터링하며 객관적으로 확인하세요.
 
-[고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 런·애드립 완전 가이드](/stories/runs1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
