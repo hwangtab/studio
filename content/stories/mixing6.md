@@ -4,6 +4,7 @@ date: 2025-11-17
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "미터링", "Metering", "Loudness"]
+summary: "VU미터, 피크미터, LUFS 미터의 차이와 활용법. 믹싱 시 미터를 어떻게 읽고 레벨을 관리해야 하는지 상세히 설명합니다."
 ---
 ![다양한 레벨 미터](/images/console.webp)
 

@@ -4,6 +4,7 @@ date: 2025-11-23
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "템플릿", "Template", "Routing"]
+summary: "믹싱 작업 효율을 극대화하는 나만의 템플릿 구성법. 채널 스트립, 버스 세팅, 마스터 버스를 미리 구성해 두면 얼마나 편해지는지를 소개합니다."
 ---
 ![DAW 믹서 화면](/images/recording13.webp)
 

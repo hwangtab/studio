@@ -4,6 +4,7 @@ date: 2025-11-13
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "모니터링", "Monitoring", "RoomAcoustic"]
+summary: "믹싱에서 가장 먼저 해결해야 할 '방'의 문제. 스튜디오 어쿠스틱이 믹스에 미치는 영향과 홈레코딩 환경에서 방의 문제를 줄이는 실전 방법을 설명합니다."
 ---
 ![스튜디오 모니터 스피커 배치](/images/studio1.webp)
 

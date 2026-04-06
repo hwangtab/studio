@@ -4,6 +4,7 @@ date: 2025-11-18
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "세션정리", "SessionPrep", "Workflow"]
+summary: "믹스 세션을 시작하기 전에 트랙을 정리하는 방법. 채널 컬러링, 그룹핑, 버스 라우팅으로 작업 효율을 높이는 실전 팁을 안내합니다."
 ---
 ![어지러운 케이블과 깔끔한 패치베이](/images/service3.webp)
 

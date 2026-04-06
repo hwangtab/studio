@@ -4,6 +4,7 @@ date: 2025-12-02
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "오토메이션", "Automation", "DynamicMix"]
+summary: "오토메이션으로 믹스에 생명력을 더하는 방법. 볼륨·패닝·플러그인 파라미터를 시간 축에 따라 자동화해 더 표현력 있는 믹스를 만드는 기술입니다."
 ---
 ![오토메이션 라인이 구불구불하게 그려진 DAW 화면](/images/console.webp)
 
