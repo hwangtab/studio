@@ -143,4 +143,4 @@ faq:
 
 인디 음악 제작은 기획 단계에서 명확한 방향성을 설정하는 것이 핵심입니다. 스튜디오 놀에서는 보컬 녹음부터 믹싱·마스터링·배급 컨설팅까지 인디 아티스트에게 필요한 전 과정을 지원합니다.
 
-[EP 앨범 제작 완전 가이드](/stories/ep-album1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[포크 음악 제작 완전 가이드](/stories/folk-music1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
