@@ -118,4 +118,4 @@ faq:
 
 고음은 하루아침에 만들어지지 않습니다. 올바른 자세와 호흡을 기반으로 꾸준히 훈련하면 자연스럽게 확장됩니다. 스튜디오 놀에서 보컬 녹음 전 1:1 엔지니어 모니터링으로 본인 소리를 객관적으로 들어보세요.
 
-[보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [스튜디오 놀 이용 요금](/pricing)
