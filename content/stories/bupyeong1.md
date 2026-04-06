@@ -69,4 +69,4 @@ faq:
 
 부평에서 1호선 또는 7호선으로 연신내까지, 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 어려우시다면 온라인 믹싱 의뢰도 가능합니다.
 
-[인천·부천 녹음실 안내](/stories/incheon1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/michuhol1) | [부천 녹음실 안내](/stories/bucheon1) | [강서구 녹음실 안내](/stories/gangseo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 부평구 갈산·삼산·부개동 녹음실 안내](/stories/incheon-bupyeong1) | [인천·부천 녹음실 안내](/stories/incheon1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/michuhol1) | [부천 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
