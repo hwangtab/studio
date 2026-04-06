@@ -131,4 +131,4 @@ D-0: EP 전체 발매
 
 EP는 인디 아티스트가 팬 베이스를 구축하는 가장 효과적인 형식 중 하나입니다. 스튜디오 놀에서는 녹음·믹싱·마스터링 패키지로 EP 제작을 원스톱으로 지원합니다.
 
-[스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [음반 제작 완전 가이드](/stories/album1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
