@@ -126,4 +126,4 @@ faq:
 
 보컬 레이어링은 단순 녹음에 전문적인 두께감을 더하는 핵심 기법입니다. 스튜디오 놀에서 엔지니어와 함께 코러스, 더블 트래킹, 하모니 레이어를 체계적으로 구성해보세요.
 
-[오버더빙 완전 가이드](/stories/overdubbing1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [백킹 보컬 완전 가이드](/stories/backing-vocal1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 더블링·더블트래킹 완전 가이드](/stories/vocal-doubling1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
