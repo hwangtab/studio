@@ -101,4 +101,4 @@ EP는 아티스트로서 음악 세계를 처음 선보이는 중요한 작업�
 
 첫 EP는 완벽하지 않아도 됩니다. 만들면서 배우는 것이 더 많습니다. 스튜디오 놀에서 EP 녹음 세션과 믹싱·마스터링 패키지로 첫 EP 제작을 시작해보세요.
 
-[음원 유통 완전 가이드](/stories/music-distribution1) | [음반 제작 가이드](/stories/album1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
+[음원 유통 완전 가이드](/stories/music-distribution1) | [뮤직비디오 제작 완전 가이드](/stories/music-video1) | [음반 제작 가이드](/stories/album1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
