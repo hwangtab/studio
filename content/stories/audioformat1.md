@@ -111,4 +111,4 @@ WAV 44.1kHz/24bit = 약 47~50MB
 
 녹음 원본은 항상 WAV로 보관하세요. 배포·공유용으로는 MP3 320kbps가 실용적입니다. 스튜디오 놀에서는 모든 녹음 원본을 WAV로 납품하고, 배포용 MP3도 함께 전달합니다.
 
-[온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [MR 구하는 방법 가이드](/stories/mr-guide1) | [마스터링이란?](/stories/mastering1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)
+[녹음 파일 납품 형식 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [MR 구하는 방법 가이드](/stories/mr-guide1) | [마스터링이란?](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
