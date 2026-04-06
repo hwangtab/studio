@@ -123,4 +123,4 @@ faq:
 
 보컬 콤핑은 단순한 편집이 아니라 아티스트의 최고 순간을 모아 완벽한 퍼포먼스를 만드는 예술적 작업입니다. 스튜디오 놀에서는 수천 시간의 레코딩 경험으로 최고의 보컬 콤핑을 제공합니다.
 
-[Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[믹싱 레퍼런스 트랙 완전 가이드](/stories/mixing-reference1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
