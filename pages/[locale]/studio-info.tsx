@@ -47,6 +47,12 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
     description: t('studioInfo.seo.description'),
     inLanguage: schemaLanguage,
     serviceType: locale === 'ko' ? '녹음실' : 'Recording Studio',
+    image: {
+      '@type': 'ImageObject',
+      url: `${siteConfig.url}/images/hardware1.webp`,
+      width: 1280,
+      height: 720,
+    },
     areaServed: {
       '@type': 'AdministrativeArea',
       name: locale === 'ko' ? '서울특별시' : 'Seoul',
@@ -98,7 +104,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         title={t('studioInfo.seo.title')}
         description={t('studioInfo.seo.description')}
         keywords={t('studioInfo.seo.keywords')}
-        ogImage="/images/hardware1.jpg"
+        ogImage="/images/hardware1.webp"
         ogImageAlt={t('studioInfo.hero.alt')}
         ogImageWidth={1280}
         ogImageHeight={720}
