@@ -70,4 +70,4 @@ faq:
 
 대구에서 KTX로 2~3시간이면 서울 연신내 스튜디오 놀에 도착합니다. 오전에 출발하면 당일로 세션을 마치고 귀가할 수 있습니다. 방문이 어렵다면 온라인 파일 의뢰로 이용하세요.
 
-[부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 디렉팅 서비스](/stories/remotedir1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 디렉팅 서비스](/stories/remotedir1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
