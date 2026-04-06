@@ -81,4 +81,4 @@ faq:
 
 송도에서 전철로 1시간, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 이동이 어렵다면 온라인 믹싱 의뢰도 동일한 품질로 제공됩니다.
 
-[인천 녹음실 안내](/stories/incheon1) | [부천 녹음실 안내](/stories/bucheon1) | [안산 녹음실 안내](/stories/ansan1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 연수구 연수·청학·동춘 녹음실 안내](/stories/yeonsu1) | [인천 녹음실 안내](/stories/incheon1) | [부천 녹음실 안내](/stories/bucheon1) | [안산 녹음실 안내](/stories/ansan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
