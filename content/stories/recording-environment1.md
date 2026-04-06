@@ -141,4 +141,4 @@ faq:
 
 최고의 보컬 녹음은 완벽한 환경에서 나옵니다. 홈 레코딩 환경 개선으로 품질을 높이거나, 스튜디오 놀의 전용 부스에서 레퍼런스급 보컬 녹음을 경험하세요.
 
-[기타 녹음 완전 가이드](/stories/guitar-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[방음·흡음 완전 가이드](/stories/acoustic-treatment1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
