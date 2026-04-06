@@ -90,4 +90,4 @@ faq:
 
 아카펠라는 목소리 앙상블의 정수입니다. 솔로 레이어링이든 그룹 녹음이든, 연신내역 도보 5분 거리 스튜디오 놀에서 전문 엔지니어와 함께 완성도 높은 아카펠라를 만들어보세요.
 
-[듀엣 녹음 가이드](/stories/duet1) | [보컬 하모니 완전 가이드](/stories/eq1) | [음정 교정 도구 비교](/stories/pitchtool1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)
+[코러스·화음 녹음 가이드](/stories/harmony1) | [듀엣 녹음 가이드](/stories/duet1) | [음정 교정 도구 비교](/stories/pitchtool1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)
