@@ -70,4 +70,4 @@ faq:
 
 강남에서 지하철 25분, 연신내역 도보 5분의 스튜디오 놀에서 Neumann U87 AI와 전문 엔지니어로 완성도 높은 보컬 녹음을 경험하세요.
 
-[서초구 녹음실 안내](/stories/seocho1) | [송파·강동에서 방문 가이드](/stories/songpa1) | [마포구 녹음실 안내](/stories/mapo1) | [영등포·여의도 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[압구정·청담 녹음실 안내](/stories/apgujeong1) | [서초구 녹음실 안내](/stories/seocho1) | [잠실·석촌 녹음실 안내](/stories/jamsil1) | [영등포·여의도 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
