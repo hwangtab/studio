@@ -69,4 +69,4 @@ faq:
 
 건대·왕십리·성수에서 전문 스튜디오까지 30~45분, 연신내역 도보 5분 거리 스튜디오 놀을 방문해보세요. 카카오톡으로 먼저 문의해주시면 친절하게 안내드립니다.
 
-[자양·구의·화양·능동 녹음실 안내](/stories/jayang1) | [건대입구·광진구 녹음실 안내](/stories/konkuk1) | [성동구 녹음실 안내](/stories/seongdong1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[화양·구의·광나루·아차산 녹음실 안내](/stories/hwayang1) | [자양·구의·화양·능동 녹음실 안내](/stories/jayang1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
