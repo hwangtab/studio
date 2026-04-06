@@ -111,4 +111,4 @@ faq:
 
 다이나믹 컨트롤은 음정, 음색과 함께 보컬의 3대 요소 중 하나입니다. 스튜디오 놀의 전문 모니터링 시스템에서 본인의 다이나믹을 객관적으로 들으며 교정하세요.
 
-[고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 녹음 헤드폰 모니터링 가이드](/stories/monitoring1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [스튜디오 놀 이용 요금](/pricing)
+[고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 녹음 헤드폰 모니터링 가이드](/stories/monitoring1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
