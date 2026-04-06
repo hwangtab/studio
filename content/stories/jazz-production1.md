@@ -132,4 +132,4 @@ faq:
 
 재즈는 가장 정직한 음악입니다. 연주자의 실력과 감성이 녹음에 그대로 담깁니다. 스튜디오 놀에서 재즈 보컬 세션과 소규모 앙상블 녹음을 경험해보세요.
 
-[포크 음악 제작 완전 가이드](/stories/folk-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
