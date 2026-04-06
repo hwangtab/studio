@@ -85,11 +85,12 @@ export function middleware(request: NextRequest) {
     const pathnameHasLocale = locales.some(
         (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
     );
+    const userAgent = request.headers.get('user-agent') || '';
+    const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot/i.test(userAgent);
+
     if (!pathnameHasLocale) {
         // Redirect to locale-prefixed path
         // 봇(Accept-Language 없음)은 x-default와 일치하도록 /en으로 보냄
-        const userAgent = request.headers.get('user-agent') || '';
-        const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot/i.test(userAgent);
         const acceptLanguage = request.headers.get('accept-language');
         const locale = (isBot && !acceptLanguage) ? 'en' as Locale : getPreferredLocale(request);
         redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
@@ -100,8 +101,6 @@ export function middleware(request: NextRequest) {
     if (shouldRedirect) {
         // 검색 엔진 봇의 접근일 경우 SEO 점수를 올바르게 이전하기 위해 308(영구 이동)을 사용하고,
         // 일반 사용자의 언어 기반 리디렉션은 브라우저 캐싱 방지를 위해 307(임시 이동)을 사용합니다.
-        const userAgent = request.headers.get('user-agent') || '';
-        const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot/i.test(userAgent);
         const redirectStatus = !shouldVaryByLanguage || isBot ? 308 : 307;
 
         const response = NextResponse.redirect(redirectUrl, redirectStatus);

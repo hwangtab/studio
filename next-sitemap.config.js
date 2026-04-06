@@ -164,7 +164,7 @@ module.exports = {
   exclude: ['/api/*', '/404', '/500', '/'],
   robotsTxtOptions: {
     policies: [
-      { userAgent: '*', allow: '/', disallow: ['/api/'] },
+      { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Naver
       { userAgent: 'Yeti', allow: '/' },
       // OpenAI
