@@ -70,4 +70,4 @@ faq:
 
 용산구·강북구에서 6호선으로 30~45분, 연신내역 도보 5분 거리의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [이태원·한남동 근처 녹음실 안내](/stories/itaewon1) | [마포구 녹음실 안내](/stories/mapo1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [이태원·한남동 근처 녹음실 안내](/stories/itaewon1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -102,4 +102,4 @@ True Peak: -1dBFS 이하
 
 스템 마스터링은 믹스에 대한 추가 컨트롤이 필요한 프로젝트에 효과적입니다. 스튜디오 놀에서 스템 믹싱 납품 또는 스템 마스터링 의뢰가 가능합니다. 카카오톡으로 스템 파일과 함께 문의해주세요.
 
-[리미터 완전 가이드](/stories/limiter1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 발매 가이드](/stories/release1) | [스템 파일 가이드](/stories/stemfile1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [스튜디오 놀 이용 요금](/pricing)
+[AI 마스터링 완전 가이드](/stories/ai-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 파일 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
