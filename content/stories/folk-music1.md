@@ -147,4 +147,4 @@ faq:
 
 포크 음악은 사운드 복잡성이 아닌 진정성과 감성이 청중에게 전달됩니다. 스튜디오 놀에서는 Neumann 마이크와 방음 부스에서 자연스러운 포크 보컬과 어쿠스틱 녹음을 지원합니다.
 
-[인디 음악 제작 완전 가이드](/stories/indie-production1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
