@@ -490,13 +490,14 @@ export const generateWebPageSchema = (
   locale: Locale = 'ko',
   articleId?: string,
   hasBreadcrumb?: boolean,
-  primaryImageUrl?: string
+  primaryImageUrl?: string,
+  webPageType?: string
 ) => {
   const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
+    '@type': webPageType || 'WebPage',
     '@id': `${canonicalUrl}#webpage`,
     url: canonicalUrl,
     name: title,

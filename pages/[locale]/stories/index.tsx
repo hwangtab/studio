@@ -118,6 +118,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         ogImageWidth={1440}
         ogImageHeight={809}
         includeSchema
+        webPageType="CollectionPage"
         schema={storiesItemListSchema}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },

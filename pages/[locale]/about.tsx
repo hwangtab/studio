@@ -81,6 +81,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
           { name: t('nav.about'), path: `/${locale}/about` },
         ]}
         includeSchema={true}
+        webPageType="AboutPage"
         reviewItems={reviewsData.filter((r) => r.categoryKey === 'production' || r.categoryKey === 'mixing')}
         schema={[howToSchema, serviceListSchema]}
       />

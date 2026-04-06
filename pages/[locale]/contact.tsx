@@ -97,6 +97,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         ]}
         includeSchema={true}
         faqItems={contactFaqData}
+        webPageType="ContactPage"
       />
       <ImageHero
         {...{

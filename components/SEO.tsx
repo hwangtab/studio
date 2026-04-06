@@ -41,6 +41,7 @@ interface SEOProps {
   faqItems?: FAQItem[] | null;
   reviewItems?: ReviewItem[] | null;
   isCourse?: boolean;
+  webPageType?: string;
 }
 
 const SEO = ({
@@ -69,7 +70,7 @@ const SEO = ({
   faqItems = null,
   reviewItems = null,
   isCourse = false,
-
+  webPageType,
 }: SEOProps) => {
   const router = useRouter();
 
@@ -112,6 +113,7 @@ const SEO = ({
     if (ogImage.includes('/api/og/')) return 'image/png';
     const ext = ogImage.split('?')[0].split('.').pop()?.toLowerCase();
     if (ext === 'webp') return 'image/webp';
+    if (ext === 'avif') return 'image/avif';
     if (ext === 'png') return 'image/png';
     if (ext === 'gif') return 'image/gif';
     return 'image/jpeg';
@@ -148,10 +150,11 @@ const SEO = ({
           currentLocale,
           ogType === 'article' ? `${normalizedCanonical}#article` : undefined,
           Boolean(breadcrumbs && breadcrumbs.length > 0),
-          absoluteOgImage || undefined
+          absoluteOgImage || undefined,
+          webPageType
         )
         : null,
-    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage]
+    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage, webPageType]
   );
 
   const articleSchema = React.useMemo(
