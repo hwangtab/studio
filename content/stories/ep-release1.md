@@ -142,4 +142,4 @@ faq:
 
 EP 발매는 싱글보다 더 깊이 있는 아티스트 정체성을 보여줍니다. 스튜디오 놀에서 EP 전 트랙을 일관된 사운드로 녹음·믹싱·마스터링하세요.
 
-[싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[앨범·EP 트랙 순서 결정 완전 가이드](/stories/track-order1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
