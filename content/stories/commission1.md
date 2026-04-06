@@ -93,4 +93,4 @@ MR 제작을 의뢰할 때 반드시 전달해야 하는 정보:
 
 좋은 MR과 편곡은 보컬 녹음의 절반입니다. 의뢰 전 충분한 사전 정보를 전달하고, 계약서로 저작권을 명확히 처리하세요. 스튜디오 놀에서는 의뢰인이 준비해온 MR로 보컬 녹음을 진행합니다.
 
-[미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [음반 제작 가이드](/stories/album1) | [인디 음원 발매 가이드](/stories/indie1) | [음악 저작권 등록 방법](/stories/copyright1) | [스튜디오 놀 이용 요금](/pricing)
+[미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [DAW 선택 가이드](/stories/daw1) | [음반 제작 가이드](/stories/album1) | [인디 음원 발매 가이드](/stories/indie1) | [스튜디오 놀 이용 요금](/pricing)
