@@ -112,4 +112,4 @@ faq:
 
 성량은 타고나는 것이 아니라 만들어가는 것입니다. 올바른 발성 훈련으로 3~6개월이면 눈에 띄는 변화를 만들 수 있습니다. 스튜디오 놀에서 전문 모니터링으로 본인의 발성을 객관적으로 확인하세요.
 
-[고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
+[목소리 굵어지는 방법](/stories/deepvoice1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [스튜디오 놀 이용 요금](/pricing)
