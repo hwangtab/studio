@@ -99,4 +99,4 @@ faq:
 
 새추레이션은 많이 쓴다고 좋아지는 게 아닙니다. 각 트랙에서 미묘하게 사용하면 전체 믹스가 자연스럽게 통합되는 효과를 얻을 수 있습니다.
 
-[패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [VST 플러그인 완전 가이드](/stories/vst-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[빈티지·아날로그 사운드 제작 완전 가이드](/stories/vintage-sound1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
