@@ -63,4 +63,4 @@ faq:
 
 성북구·동대문구에서 6호선으로 연신내역, 도보 5분이면 전문 스튜디오에서 녹음을 시작할 수 있습니다. 카카오톡으로 먼저 문의해주세요.
 
-[노원구·도봉구 녹음실 안내](/stories/nowon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[노원구·도봉구 녹음실 안내](/stories/nowon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1) | [광진구·성동구 녹음실 안내](/stories/gwangjin1)
