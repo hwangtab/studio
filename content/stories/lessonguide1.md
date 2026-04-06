@@ -107,4 +107,4 @@ faq:
 
 보컬 레슨과 스튜디오 녹음은 따로 생각하지 마세요. 레슨이 이론이라면 녹음은 실전입니다. 연신내역 도보 5분 거리 스튜디오 놀에서 보컬 레슨과 녹음을 함께 경험해보세요.
 
-[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voicetype1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [스튜디오 놀 이용 요금](/pricing)
+[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voicetype1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [스튜디오 놀 이용 요금](/pricing)
