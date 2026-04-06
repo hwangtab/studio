@@ -105,4 +105,4 @@ faq:
 
 전문 스튜디오에서 Neumann U87로 녹음하는 것과 홈 레코딩의 차이는 마이크 성능뿐 아니라 흡음 부스, 프리앰프, 엔지니어의 경험이 모두 포함된 결과입니다. 연신내역 도보 5분 거리 스튜디오 놀에서 레퍼런스급 환경의 보컬 녹음을 경험하세요.
 
-[홈 레코딩 vs 스튜디오 비교](/stories/homestudio1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 EQ 완전 가이드](/stories/eq1) | [스튜디오 놀 시설 안내](/studio-info) | [스튜디오 놀 이용 요금](/pricing)
+[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [홈 레코딩 vs 스튜디오 비교](/stories/homestudio1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 EQ 완전 가이드](/stories/eq1) | [스튜디오 놀 이용 요금](/pricing)
