@@ -126,4 +126,4 @@ Source-Connect: 방송·스튜디오 전문
 
 온라인 협업을 통해 지역 제한 없이 다양한 아티스트와 음악을 만들 수 있습니다. 스튜디오 놀의 온라인 믹싱 의뢰는 파일만 전달하면 전문 믹싱·마스터링이 완성되는 서비스로, 원격 협업 과정에서 가장 편리하게 활용할 수 있습니다.
 
-[뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 온라인 협업 도구 완전 가이드](/stories/collab-tools1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[비트메이커·프로듀서 협업 완전 가이드](/stories/beatmaker1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 온라인 협업 도구 완전 가이드](/stories/collab-tools1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
