@@ -70,4 +70,4 @@ faq:
 
 영암에서 나주역 KTX를 이용하면 약 2시간 30분대로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다.
 
-[나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [완도에서 서울 녹음실 방문 가이드](/stories/wando1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[무안에서 서울 녹음실 방문 가이드](/stories/muan1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [완도에서 서울 녹음실 방문 가이드](/stories/wando1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
