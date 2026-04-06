@@ -104,4 +104,4 @@ T-Pain, 오토튠 랩 스타일을 원한다면:
 
 피치 교정은 좋은 녹음을 완성하는 마지막 단계입니다. 스튜디오 놀에서는 믹싱·마스터링 과정에서 자연스러운 피치 교정을 포함합니다. 강한 오토튠 이펙트나 정밀 피치 교정이 필요하다면 예약 시 요청해 주세요.
 
-[음정 불안정 원인과 해결 방법](/stories/pitchfix1) | [보컬 믹싱 기초 가이드](/stories/vocalmix1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [보컬 셀프 녹음 방법](/stories/selfrecord1) | [스튜디오 놀 이용 요금](/pricing)
+[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocalmix1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
