@@ -112,4 +112,4 @@ faq:
 
 꾸준한 루틴이 최고의 선생님입니다. 스튜디오 놀에서 녹음 세션을 통해 현재 실력을 객관적으로 확인하고, 다음 연습 방향을 설계하는 데 활용해보세요.
 
-[보컬 피로 완전 가이드](/stories/vocal-fatigue1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 리듬 트레이닝 완전 가이드](/stories/rhythm-training1) | [보컬 피로 완전 가이드](/stories/vocal-fatigue1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [스튜디오 놀 이용 요금](/pricing)
