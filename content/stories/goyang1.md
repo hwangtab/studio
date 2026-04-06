@@ -67,4 +67,4 @@ faq:
 
 고양시 일산·화정·삼송에서 3호선으로 10~40분, 파주에서 60~70분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[일산·덕양구 녹음실 안내](/stories/ilsan1) | [파주에서 연신내 녹음실 방문 가이드](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [김포·김포공항 녹음실 안내](/stories/gimpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[능곡·행신·원흥 녹음실 안내](/stories/neunggok1) | [일산·덕양구 녹음실 안내](/stories/ilsan1) | [파주에서 연신내 녹음실 방문 가이드](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
