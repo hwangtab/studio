@@ -134,4 +134,4 @@ Wet/Dry 비율
 
 리버브는 보컬의 공간감을 만드는 핵심 도구입니다. 스튜디오 놀에서는 장르에 맞는 리버브 세팅으로 보컬 믹싱을 완성합니다.
 
-[리버브 믹싱 완전 가이드](/stories/reverb1) | [딜레이 효과 완전 가이드](/stories/delay1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[코러스·플랜저·페이저 완전 가이드](/stories/chorus-effect1) | [리버브 믹싱 완전 가이드](/stories/reverb1) | [딜레이 효과 완전 가이드](/stories/delay1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
