@@ -80,4 +80,4 @@ faq:
 
 보성에서 KTX를 이용하면 당일 왕복 세션이 가능합니다. 이동이 부담된다면 온라인 파일 의뢰로 서울 스튜디오 품질의 믹싱을 받을 수 있습니다.
 
-[화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [고흥에서 서울 녹음실 방문 가이드](/stories/goheung1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[강진에서 서울 녹음실 방문 가이드](/stories/gangjin1) | [화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [고흥에서 서울 녹음실 방문 가이드](/stories/goheung1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
