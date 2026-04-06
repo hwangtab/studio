@@ -101,4 +101,4 @@ faq:
 
 15분의 워밍업이 첫 테이크의 품질을 결정합니다. 충분히 준비된 성대는 세션 전체를 효율적으로 만들고, 결과물의 일관성을 높여줍니다.
 
-[녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 안내](/lesson) | [스튜디오 놀 이용 요금](/pricing)
+[녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 안내](/lesson) | [스튜디오 놀 이용 요금](/pricing) | [보컬 호흡법 완전 가이드](/stories/breathing1)
