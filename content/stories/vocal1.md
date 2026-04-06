@@ -89,4 +89,4 @@ faq:
 
 독학을 하고 있더라도 3개월에 한 번 정도 전문가의 피드백을 받는 것이 습관 고착을 예방합니다. 연신내역 도보 5분 거리 스튜디오 놀에서 보컬 레슨 체험 상담을 진행해보세요.
 
-[보컬 레슨 서비스 안내](/lesson) | [연신내 보컬 레슨 소개](/stories/lesson1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing) | [보컬 레슨 종류별 선택 가이드](/stories/lessonguide1)
+[성악과 보컬의 차이 가이드](/stories/sungak1) | [보컬 레슨 서비스 안내](/lesson) | [연신내 보컬 레슨 소개](/stories/lesson1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing) | [보컬 레슨 종류별 선택 가이드](/stories/lessonguide1)
