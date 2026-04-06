@@ -124,4 +124,4 @@ faq:
 
 음역대 확장은 올바른 훈련과 인내가 핵심입니다. 스튜디오 놀에서 보컬 세션을 통해 현재 음역에서 최상의 표현을 완성하고, 꾸준한 훈련으로 음역을 점진적으로 넓혀보세요.
 
-[두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [목소리 유형(보이스 타입) 완전 가이드](/stories/voice-type1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)
+[패사지오(Passaggio) 완전 가이드](/stories/passaggio1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)
