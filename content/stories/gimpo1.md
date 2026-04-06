@@ -54,4 +54,4 @@ faq:
 
 김포·김포공항에서 5호선·골드라인으로 30~55분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[김포 사우·풍무·고촌·운양 녹음실 안내](/stories/gimpo-sauong1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [양천구·강서구 녹음실 안내](/stories/yangcheon1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[김포 장기·마산·통진 녹음실 안내](/stories/gimpo-janggi1) | [김포 사우·풍무·고촌·운양 녹음실 안내](/stories/gimpo-sauong1) | [고양시 녹음실 안내](/stories/goyang1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
