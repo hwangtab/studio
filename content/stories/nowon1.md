@@ -70,4 +70,4 @@ Neumann U87 AI 마이크와 흡음 처리된 전용 부스에서 1:1 엔지니�
 
 노원구·도봉구에서 조금 멀지만, 전문 장비와 엔지니어가 만들어내는 음질 차이를 경험하기 위해 방문하시는 분들이 꾸준히 이어지고 있습니다. 카카오톡으로 먼저 문의해주세요.
 
-[창동·노원·도봉 녹음실 안내](/stories/changdong1) | [중랑구 녹음실 안내](/stories/jungnang1) | [강북구·도봉구 녹음실 안내](/stories/gangbuk1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[상계·중계·하계·공릉 녹음실 안내](/stories/sanggye1) | [창동·노원·도봉 녹음실 안내](/stories/changdong1) | [강북구·도봉구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
