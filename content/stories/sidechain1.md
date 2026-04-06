@@ -123,4 +123,4 @@ faq:
 
 사이드체인 컴프레션은 EQ만으로 해결하기 어려운 동적 공간 분리를 가능하게 합니다. 스튜디오 놀에서 보컬 명료도를 최우선으로 한 믹싱으로 선명하고 깔끔한 사운드를 완성해드립니다.
 
-[병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
