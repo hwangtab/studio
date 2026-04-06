@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "数字错误", "DigitalError", "Clipping"]
 ---
-![数字故障图像](/images/pcw.png)
+![数字故障图像](/images/pcw.webp)
 
 “数字不是完美的吗？只有 0 和 1，为什么会出错？”
 很多人相信数字音频干净、不会变。但数字世界也有可怕的敌人。

@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "모듈레이션", "Modulation", "Chorus"]
 ---
-![일렁이는 물결이나 오로라의 이미지](/images/pcw.png)
+![일렁이는 물결이나 오로라의 이미지](/images/pcw.webp)
 
 "소리가 살아 움직이기 시작합니다." (일렁일렁-!)
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "EQ", "Equalizer", "Frequency"]
 ---
-![Rangli EQ grafigi](/images/pcw.png)
+![Rangli EQ grafigi](/images/pcw.webp)
 
 “Ovoz juda loyqa.” (Hap.)
 “Vokal shunchalik o'tkirki, quloq og'riydi.” (Ouch!)

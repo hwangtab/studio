@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "EQ", "Equalizer", "Frequency"]
 ---
-![Gráfico de EQ colorido](/images/pcw.png)
+![Gráfico de EQ colorido](/images/pcw.webp)
 
 "El sonido está muy turbio." (Sniff.)
 "La voz está tan brillante que duele." (¡Ay!)

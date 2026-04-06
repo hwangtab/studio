@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "EQ", "Equalizer", "Frequency"]
 ---
-![绚丽的 EQ 曲线图](/images/pcw.png)
+![绚丽的 EQ 曲线图](/images/pcw.webp)
 
 “声音太闷了。”（嗅嗅）
 “人声太尖，耳朵疼。”（哎呀！）

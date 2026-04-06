@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Modulation", "Chorus", "Flanger"]
 ---
-![Mặt nước gợn sóng hoặc cực quang](/images/pcw.png)
+![Mặt nước gợn sóng hoặc cực quang](/images/pcw.webp)
 
 “Âm thanh bắt đầu chuyển động và thở.” (Lượn‑lượn!)
 

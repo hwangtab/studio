@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Modulation", "Chorus", "Flanger"]
 ---
-![To'lqinli suv yoki aurora](/images/pcw.png)
+![To'lqinli suv yoki aurora](/images/pcw.webp)
 
 “Ovoz harakatlana boshladi, nafas oladi.” (Waver‑waver!)
 

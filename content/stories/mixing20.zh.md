@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Modulation", "Chorus", "Flanger"]
 ---
-![波纹或极光](/images/pcw.png)
+![波纹或极光](/images/pcw.webp)
 
 “声音开始活了，开始流动。”（起伏起伏）
 

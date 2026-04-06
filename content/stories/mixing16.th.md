@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "EQ", "Equalizer", "Frequency"]
 ---
-![กราฟ EQ สีสันสด](/images/pcw.png)
+![กราฟ EQ สีสันสด](/images/pcw.webp)
 
 “เสียงขุ่นมาก” (ฮืด)
 “วอยซ์แหลมเจ็บหู” (โอ๊ย!)

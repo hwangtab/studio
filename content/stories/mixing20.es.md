@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Modulation", "Chorus", "Flanger"]
 ---
-![Ondas o aurora](/images/pcw.png)
+![Ondas o aurora](/images/pcw.webp)
 
 "El sonido empieza a moverse y respirar." (¡Ondulante!)
 

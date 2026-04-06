@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "EQ", "Equalizer", "Frequency"]
 ---
-![Colorful EQ graph](/images/pcw.png)
+![Colorful EQ graph](/images/pcw.webp)
 
 "The sound is too muddy." (Sniff.)
 "The vocal is so sharp it hurts." (Ouch!)

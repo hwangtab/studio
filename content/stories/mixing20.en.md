@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Modulation", "Chorus", "Flanger"]
 ---
-![Wavy water or aurora](/images/pcw.png)
+![Wavy water or aurora](/images/pcw.webp)
 
 "The sound starts to move and breathe." (Waver‑waver!)
 

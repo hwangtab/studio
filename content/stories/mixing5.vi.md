@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "DigitalError", "DigitalError", "Clipping"]
 ---
-![Hình ảnh glitch kỹ thuật số](/images/pcw.png)
+![Hình ảnh glitch kỹ thuật số](/images/pcw.webp)
 
 “Digital chẳng phải hoàn hảo sao? Chỉ là 0 và 1—sao lại có lỗi?”
 Nhiều người tin rằng âm thanh số sạch và không đổi. Nhưng thế giới số có những kẻ thù đáng sợ.

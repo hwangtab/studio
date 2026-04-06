@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "DigitalError", "DigitalError", "Clipping"]
 ---
-![Raqamli glitch tasviri](/images/pcw.png)
+![Raqamli glitch tasviri](/images/pcw.webp)
 
 “Digital mukammal emasmi? Faqat 0 va 1-ku — nega xato bo'ladi?”
 Ko'pchilik raqamli audio toza va o'zgarmas deb o'ylaydi. Ammo raqamli dunyoda qo'rqinchli dushmanlar bor.

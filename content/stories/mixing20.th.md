@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Modulation", "Chorus", "Flanger"]
 ---
-![ผิวน้ำเป็นคลื่นหรือแสงเหนือ](/images/pcw.png)
+![ผิวน้ำเป็นคลื่นหรือแสงเหนือ](/images/pcw.webp)
 
 “เสียงเริ่มเคลื่อนไหวและหายใจ” (ไหว‑ไหว!)
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "DigitalError", "DigitalError", "Clipping"]
 ---
-![Digital glitch image](/images/pcw.png)
+![Digital glitch image](/images/pcw.webp)
 
 “Isn’t digital perfect? It’s just 0 and 1—why are there errors?”
 Many people believe digital audio is clean and unchanging. But the digital world has scary enemies.

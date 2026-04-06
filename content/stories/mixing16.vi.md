@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "EQ", "Equalizer", "Frequency"]
 ---
-![Đồ thị EQ nhiều màu](/images/pcw.png)
+![Đồ thị EQ nhiều màu](/images/pcw.webp)
 
 “Âm thanh quá đục.” (Hắt xì.)
 “Vocal sắc đến đau tai.” (Ối!)

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "DigitalError", "DigitalError", "Clipping"]
 ---
-![ภาพ glitch ดิจิทัล](/images/pcw.png)
+![ภาพ glitch ดิจิทัล](/images/pcw.webp)
 
 “ดิจิทัลไม่สมบูรณ์แบบเหรอ? ก็มีแค่ 0 กับ 1 ทำไมมีเออร์เรอร์?”
 หลายคนเชื่อว่าเสียงดิจิทัลสะอาดและไม่เปลี่ยน แต่โลกดิจิทัลมีศัตรูที่น่ากลัว
