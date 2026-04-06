@@ -91,4 +91,4 @@ CCM에서는 감정 표현이 퍼포먼스를 넘어 예배와 연결됩니다. 
 
 CCM·찬양 음원도 전문 레코딩 환경에서 완성해야 그 가치가 온전히 전달됩니다. 연신내역 도보 5분 거리 스튜디오 놀에서 카카오톡으로 교회명, 팀 구성, 곡 수를 알려주시면 맞춤 견적을 안내드립니다.
 
-[스튜디오 놀 이용 요금](/pricing) | [교회 찬양·성가 녹음 가이드](/stories/church1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)
+[CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [교회 찬양·성가 녹음 가이드](/stories/church1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
