@@ -148,4 +148,4 @@ D-Day (공연 당일):
 
 쇼케이스 성공의 첫 번째 조건은 완성도 높은 음악입니다. 스튜디오 놀에서 공연 전 보컬을 점검하고 최고의 컨디션으로 첫 공연을 준비하세요.
 
-[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 투어링·전국 공연 투어 완전 가이드](/stories/music-touring1) | [라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
