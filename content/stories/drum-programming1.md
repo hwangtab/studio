@@ -129,4 +129,4 @@ faq:
 
 드럼 프로그래밍은 벨로시티와 타이밍의 세심한 조작으로 자연스러운 사운드를 만드는 기술입니다. 스튜디오 놀에서는 라이브 드럼 녹음과 드럼 프로그래밍으로 최적화된 리듬 사운드를 제공합니다.
 
-[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [사이드체인 완전 가이드](/stories/sidechain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [사이드체인 완전 가이드](/stories/sidechain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
