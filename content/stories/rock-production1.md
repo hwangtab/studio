@@ -156,4 +156,4 @@ DI 녹음 + 앰프 시뮬레이터:
 
 록 밴드의 보컬 레코딩은 스튜디오 놀에서 진행하고, 나머지 악기는 홈 레코딩·DI 녹음을 결합해 온라인 믹싱으로 완성하는 하이브리드 방식도 많이 활용됩니다.
 
-[전자 음악 제작 완전 가이드](/stories/electronic-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [전자 음악 제작 완전 가이드](/stories/electronic-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -95,4 +95,4 @@ faq:
 
 용인·수지·기흥에서 대중교통 1~1.5시간, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 어렵다면 카카오톡으로 온라인 파일 의뢰도 가능합니다.
 
-[용인 처인구 용인역·동백·남사 녹음실 안내](/stories/yongin-cheoin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[용인 기흥구 기흥·보정·동천 녹음실 안내](/stories/yongin-giheung1) | [용인 처인구 용인역·동백·남사 녹음실 안내](/stories/yongin-cheoin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
