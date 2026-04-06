@@ -105,4 +105,4 @@ faq:
 
 둘이 함께 만드는 특별한 녹음. 연신내역 도보 5분 거리 스튜디오 놀에서 듀엣 세션을 함께 진행합니다. 카카오톡으로 두 분의 목적과 곡을 알려주시면 맞춤 안내드립니다.
 
-[밴드·단체 녹음 가이드](/stories/band1) | [기념일 선물 녹음 가이드](/stories/gift1) | [보컬 녹음 가이드](/stories/guide1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[아카펠라 녹음 가이드](/stories/acapella1) | [밴드·단체 녹음 가이드](/stories/band1) | [기념일 선물 녹음 가이드](/stories/gift1) | [보컬 녹음 가이드](/stories/guide1) | [스튜디오 놀 이용 요금](/pricing)
