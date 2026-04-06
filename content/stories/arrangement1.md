@@ -98,4 +98,4 @@ faq:
 
 편곡은 노래의 감동을 완성시키는 핵심 과정입니다. 스튜디오 놀에서는 편곡이 완성된 MR을 기반으로 최적의 보컬 녹음을 진행합니다. 편곡 의뢰가 필요한 경우 사전 상담을 통해 안내받을 수 있습니다.
 
-[미디 편곡 + 보컬 녹음 가이드](/stories/midirecord1) | [노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [나만의 오리지널 곡 만드는 방법](/stories/original-song1) | [MR 가이드](/stories/mr-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[편곡 팁 완전 가이드](/stories/arrangement-tips1) | [미디 편곡 + 보컬 녹음 가이드](/stories/midirecord1) | [나만의 오리지널 곡 만드는 방법](/stories/original-song1) | [MR 가이드](/stories/mr-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
