@@ -65,4 +65,4 @@ faq:
 
 경기 남부 수원·안양·군포에서 1시간 내외, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[수원 장안구·팔달구·권선구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [안양·군포·의왕 방문 가이드](/stories/anyang1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[수원 팔달구·권선구 녹음실 안내](/stories/suwon-paldal1) | [수원 장안구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
