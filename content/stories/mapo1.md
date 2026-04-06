@@ -75,4 +75,4 @@ faq:
 
 홍대·합정·망원·상암에서 전문 스튜디오를 찾고 계신다면 6호선 연신내역 스튜디오 놀을 방문해보세요. 마포구에서 대중교통으로 30분 이내, 전문 장비와 엔지니어가 기다립니다.
 
-[상암·DMC 근처 녹음실 안내](/stories/sangam1) | [홍대·신촌 근처 녹음실 안내](/stories/hongdae1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[합정·상수·망원 녹음실 안내](/stories/hapjeong1) | [상암·DMC 근처 녹음실 안내](/stories/sangam1) | [홍대·신촌 근처 녹음실 안내](/stories/hongdae1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
