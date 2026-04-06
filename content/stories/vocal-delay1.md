@@ -145,4 +145,4 @@ FabFilter Timeless 3:
 
 보컬 딜레이는 BPM 동기화와 장르에 맞는 타입 선택으로 리듬감과 공간감을 동시에 향상시킵니다. 스튜디오 놀에서는 장르와 템포에 최적화된 딜레이 설정으로 완성도 높은 보컬 사운드를 구현합니다.
 
-[보컬 리버브 완전 가이드](/stories/vocal-reverb1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [보컬 리버브 완전 가이드](/stories/vocal-reverb1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
