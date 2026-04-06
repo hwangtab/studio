@@ -80,4 +80,4 @@ faq:
 
 중구 도심에서 2호선 20~30분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 음원 발매부터 오디션 데모까지 전 과정을 지원합니다.
 
-[을지로·명동 녹음실 안내](/stories/euljiro1) | [종로구 녹음실 안내](/stories/jongno1) | [용산구 녹음실 안내](/stories/yongsan1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[신당·황학·약수·청구 녹음실 안내](/stories/sindang1) | [을지로·명동 녹음실 안내](/stories/euljiro1) | [종로구 녹음실 안내](/stories/jongno1) | [용산구 녹음실 안내](/stories/yongsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
