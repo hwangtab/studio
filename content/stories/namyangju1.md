@@ -68,4 +68,4 @@ faq:
 
 남양주·구리·퇴계원에서 대중교통 1시간 내외, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 부담스럽다면 카카오톡으로 온라인 의뢰도 가능합니다.
 
-[별내·다산·오남·화도 녹음실 안내](/stories/byeolnae1) | [구리에서 서울 녹음실 방문 가이드](/stories/guri1) | [하남·구리·광주 녹음실 안내](/stories/hanam1) | [의정부·양주 녹음실 안내](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[남양주 진접·사능·퇴계원 녹음실 안내](/stories/namyangju-jincheop1) | [별내·다산·오남·화도 녹음실 안내](/stories/byeolnae1) | [구리시 녹음실 안내](/stories/guri1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
