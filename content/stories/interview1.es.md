@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "interview"
 tags: ["Park Chan-woong", "Entrevista", "Golden Hour"]
 ---
-![Productor Park Chan-woong](/images/pcw.png)
+![Productor Park Chan-woong](/images/pcw.webp)
 
 # Entrevista a Park Chan‑woong, productor del nuevo álbum “Golden Hour” de Jai: un tiempo dorado de 25 años completado con “equilibrio” y “comunicación”
 

@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "interview"
 tags: ["Park Chan-woong", "Intervyu", "Golden Hour"]
 ---
-![Producer Park Chan-woong](/images/pcw.png)
+![Producer Park Chan-woong](/images/pcw.webp)
 
 # Jai’ning yangi “Golden Hour” albomi bo‘yicha producer Park Chan-woong bilan intervyu: 25 yillik musiqiy yo‘lning “oltin vaqti” “balans” va “muloqot” orqali yakunlandi
 

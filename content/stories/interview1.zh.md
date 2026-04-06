@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "interview"
 tags: ["朴灿佑", "采访", "Golden Hour"]
 ---
-![制作人朴灿佑](/images/pcw.png)
+![制作人朴灿佑](/images/pcw.webp)
 
 # Jai 新专辑《Golden Hour》制作人朴灿佑专访：用“平衡”和“沟通”完成的 25 年音乐旅程黄金时刻
 
