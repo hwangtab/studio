@@ -72,3 +72,5 @@ EQ에서 **Q(Bandwidth)**는 조절할 범위를 결정합니다.
 
 **믹싱 강좌 시리즈**: [← 제15부: 좌우의 미학, 패닝(Panning)](/stories/mixing15) | [제17부: 음악의 생동감, 컴프레서 →](/stories/mixing17)
 
+[보컬 EQ 완전 가이드 (실전 주파수별 설정법)](/stories/eq1)
+
