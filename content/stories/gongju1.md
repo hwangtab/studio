@@ -79,4 +79,4 @@ faq:
 
 공주에서 KTX를 이용하면 약 1시간 20분대로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 충남 어느 도시보다 서울 접근성이 우수합니다.
 
-[대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[서산·태안에서 서울 녹음실 방문 가이드](/stories/seosan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
