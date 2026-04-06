@@ -134,4 +134,4 @@ faq:
 
 체계적인 믹싱 워크플로우로 방향 없는 작업을 줄이고 효율적으로 완성도를 높일 수 있습니다. 스튜디오 놀에서 전문 엔지니어가 단계별 워크플로우로 최적의 믹스를 만들어드립니다.
 
-[믹스 다운 완전 가이드](/stories/mixdown1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[믹스 버스 라우팅 완전 가이드](/stories/mix-bus1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
