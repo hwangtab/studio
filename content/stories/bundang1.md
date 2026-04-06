@@ -83,4 +83,4 @@ faq:
 
 분당·판교에서 1시간, 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 어려우시다면 온라인 믹싱 의뢰를 통해 동일한 전문 믹싱·마스터링 서비스를 받을 수 있습니다.
 
-[분당 야탑·모란·복정 녹음실 안내](/stories/bundang-yatap1) | [분당 서현·수내·정자 녹음실 안내](/stories/bundang-seohyun1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [용인·수지 녹음실 안내](/stories/yongin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[판교·운중동·삼평동 녹음실 안내](/stories/bundang-pangyo1) | [분당 야탑·모란·복정 녹음실 안내](/stories/bundang-yatap1) | [분당 서현·수내·정자 녹음실 안내](/stories/bundang-seohyun1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

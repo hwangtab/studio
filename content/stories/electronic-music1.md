@@ -148,4 +148,4 @@ LFO (Low Frequency Oscillator):
 
 전자 음악에 라이브 보컬을 더할 때는 스튜디오 놀에서 Neumann 마이크로 전문 보컬 레코딩을 추가하면 음반 완성도가 크게 높아집니다.
 
-[가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [DAW 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[록 음악 제작 완전 가이드](/stories/rock-production1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [DAW 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
