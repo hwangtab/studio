@@ -81,4 +81,4 @@ faq:
 
 구로·금천구에서 1호선 30~40분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 구로디지털단지·가산디지털단지 직장인과 크리에이터를 위한 퇴근 후 세션도 환영합니다.
 
-[가리봉·구로역·구일·개봉 녹음실 안내](/stories/garibong1) | [신도림·구로디지털단지 녹음실 안내](/stories/sindorim1) | [금천구·독산·시흥·가산 녹음실 안내](/stories/geumcheon1) | [영등포·구로구 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[개봉·오류·천왕 녹음실 안내](/stories/gaebong1) | [신도림·구로디지털단지 녹음실 안내](/stories/sindorim1) | [금천구·독산·시흥·가산 녹음실 안내](/stories/geumcheon1) | [영등포·구로구 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
