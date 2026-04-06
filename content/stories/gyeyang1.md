@@ -79,4 +79,4 @@ faq:
 
 인천 계양구 계양·작전·귤현·임학에서 공항철도 45분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[인천 녹음실 안내](/stories/incheon1) | [부평·인천 녹음실 안내](/stories/bupyeong1) | [부천 녹음실 안내](/stories/bucheon1) | [김포 녹음실 안내](/stories/gimpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 녹음실 안내](/stories/incheon1) | [인천 서구 석남·청라 녹음실 안내](/stories/incheon-seo1) | [부평·인천 녹음실 안내](/stories/bupyeong1) | [부천 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
