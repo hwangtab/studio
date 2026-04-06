@@ -131,4 +131,4 @@ CM송 (징글):
 
 CF·광고음악은 짧지만 브랜드의 가장 중요한 소리입니다. 스튜디오 놀에서 보컬 녹음·악기 녹음·믹싱을 통해 전문적인 광고음악을 완성하세요.
 
-[음악 라이센싱 완전 가이드](/stories/music-licensing1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [발라드 프로덕션 완전 가이드](/stories/ballad-production1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
