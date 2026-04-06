@@ -80,4 +80,4 @@ faq:
 
 강서구에서 5호선 35~50분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 음원 발매부터 오디션 데모까지 전 과정을 지원합니다.
 
-[양천구 녹음실 안내](/stories/yangcheon1) | [마포구 녹음실 안내](/stories/mapo1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [인천·부천 녹음실 안내](/stories/incheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[마곡·발산·화곡 녹음실 안내](/stories/magok1) | [양천구 녹음실 안내](/stories/yangcheon1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
