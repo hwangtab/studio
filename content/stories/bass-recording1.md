@@ -123,4 +123,4 @@ DI 트랙: 클린한 저역, 명확한 어택
 
 베이스 녹음은 믹스 전체의 저역 기반을 만듭니다. 스튜디오 놀에서는 전문 DI와 프리앰프로 최상의 베이스 신호를 확보합니다.
 
-[기타 녹음 완전 가이드](/stories/guitar-recording1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 녹음 완전 가이드](/stories/guitar-recording1) | [드럼 녹음 완전 가이드](/stories/drum-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
