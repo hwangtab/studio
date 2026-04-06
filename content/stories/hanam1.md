@@ -54,4 +54,4 @@ faq:
 
 경기 동부 하남·구리·광주에서 약 1시간~1시간 20분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [광진구·성동구 녹음실 안내](/stories/gwangjin1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing)
+[남양주·구리·퇴계원 녹음실 안내](/stories/namyangju1) | [동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing)

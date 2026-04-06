@@ -104,4 +104,4 @@ faq:
 
 음원 발매는 녹음·믹싱·마스터링이 완성된 이후에 유통사를 통해 7~14일이면 완료됩니다. 스튜디오 놀에서는 마스터링 납품 파일 규격부터 유통사 선택까지 컨설팅을 드리고 있습니다.
 
-[스튜디오 놀 녹음·믹싱·마스터링 요금 안내](/pricing) | [음반 제작 가이드 보기](/stories/album1) | [마스터링이란? LUFS 기준 완전 설명](/stories/mastering1)
+[음원 유통 방법 완전 가이드](/stories/distribution1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 제작 가이드 보기](/stories/album1) | [마스터링이란? LUFS 기준 완전 설명](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
