@@ -70,4 +70,4 @@ faq:
 
 영덕에서 포항역 KTX를 이용하면 약 4시간 내로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 이동이 부담스럽다면 온라인 믹싱 의뢰 서비스를 이용해보세요.
 
-[포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [스튜디오 놀 이용 요금](/pricing)
+[포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [논산에서 서울 녹음실 방문 가이드](/stories/nonsan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
