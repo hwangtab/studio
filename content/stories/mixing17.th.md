@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Compressor", "Dynamics", "ParallelCompression"]
 ---
-![ปุ่มหมุนของคอมเพรสเซอร์คลาสสิก](/images/hardware1.jpg)
+![ปุ่มหมุนของคอมเพรสเซอร์คลาสสิก](/images/hardware1.webp)
 
 “คอมเพรสเซอร์ยากที่สุด ฟังไม่ออกว่าเปลี่ยนอะไร” (กรรร์)
 หลายคนติดที่คอมเพรสเซอร์ มันไม่เปลี่ยนเสียงชัดเท่า EQ และถ้าใช้ผิดก็ทำให้เสียงทึบ

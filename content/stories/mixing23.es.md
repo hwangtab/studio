@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Mastering", "FinalStep", "Loudness"]
 ---
-![Forma de onda limpia en un monitor](/images/service3.jpg)
+![Forma de onda limpia en un monitor](/images/service3.webp)
 
 ## "El empaque es tan importante como el contenido." (¡Regalo!)
 

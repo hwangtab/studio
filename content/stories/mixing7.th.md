@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "SessionPrep", "SessionPrep", "Workflow"]
 ---
-![สายเคเบิลรก ๆ และแพตช์เบย์ที่เป็นระเบียบ](/images/service3.jpg)
+![สายเคเบิลรก ๆ และแพตช์เบย์ที่เป็นระเบียบ](/images/service3.webp)
 
 “อยากเริ่มมิกซ์ แต่ช็อก… มี 50 แทร็ก” (ถอนหายใจ)
 หลายคนหมดแรงตั้งแต่ยังไม่เริ่ม เห็น `Audio_01`, `Audio_02` เต็มไปหมดก็รู้สึกมืดมน

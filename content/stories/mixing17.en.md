@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Compressor", "Dynamics", "ParallelCompression"]
 ---
-![Knobs of a classic compressor](/images/hardware1.jpg)
+![Knobs of a classic compressor](/images/hardware1.webp)
 
 "Compressors are the hardest. I can’t hear what’s changing." (Grr.)
 Many people get stuck at the compressor. It doesn’t change sound as dramatically as EQ, and used wrong it just makes things dull.

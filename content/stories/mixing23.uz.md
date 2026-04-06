@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Mastering", "FinalStep", "Loudness"]
 ---
-![Monitorda toza audio waveform](/images/service3.jpg)
+![Monitorda toza audio waveform](/images/service3.webp)
 
 ## “Qadoq ham mazmun kabi muhim.” (Sovg'a!)
 

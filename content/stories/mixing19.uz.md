@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Delay", "Echo", "PingPong"]
 ---
-![Sado beradigan o'rmon yoki tog'lar](/images/service3.jpg)
+![Sado beradigan o'rmon yoki tog'lar](/images/service3.webp)
 
 “Reverb tuman, delay esa soya kabi.” (Kayfiyatli!)
 

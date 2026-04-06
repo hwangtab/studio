@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Reverb", "Space", "PreDelay"]
 ---
-![Grand cathedral with stained glass](/images/service1.jpg)
+![Grand cathedral with stained glass](/images/service1.webp)
 
 "A dry sound is a dead sound." (So dry!)
 

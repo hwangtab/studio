@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
 ---
-![ห้องมิกซ์ของ Bulgwang Mixing Club](/images/hardware2.jpg)
+![ห้องมิกซ์ของ Bulgwang Mixing Club](/images/hardware2.webp)
 
 ### 🔥 สายเสียงมารวมตัว! “นรกมิกซ์” แห่ง Bulgwang-dong เปิดแล้วกับ “Bulgwang Mixing Club”! 🔥
 เราขอชวนทุกคนที่มีชีวิตอยู่กับการมิกซ์มาร่วมปาร์ตี้สุดเร้าใจของ “Bulgwang Mixing Club”!

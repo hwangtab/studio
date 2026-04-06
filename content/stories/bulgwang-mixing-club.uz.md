@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
 ---
-![Bulgwang Mixing Club miks xonasi](/images/hardware2.jpg)
+![Bulgwang Mixing Club miks xonasi](/images/hardware2.webp)
 
 ### 🔥 Ovozni sevuvchilar, Bulgwang-dongdagi “miks jahannami”ga yig'iling! “Bulgwang Mixing Club” eshiklarini ochadi! 🔥
 Miks bilan yashaydiganlar uchun hayajonli kechaga taklif qilamiz: “Bulgwang Mixing Club”!

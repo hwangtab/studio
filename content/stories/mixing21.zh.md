@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Saturation", "Distortion", "Harmonics"]
 ---
-![带有温暖质感的复古模拟设备](/images/service2.jpg)
+![带有温暖质感的复古模拟设备](/images/service2.webp)
 
 ## “干净并不性感。”（坚定）
 

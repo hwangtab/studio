@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Gear", "Gear", "DAW"]
 ---
-![Various audio interfaces and gear](/images/hardware4.jpg)
+![Various audio interfaces and gear](/images/hardware4.webp)
 
 “Which mic is good? Which audio interface will give me a pro sound?”
 Dozens of questions like this appear in music communities every day. We call it **gear addiction**.

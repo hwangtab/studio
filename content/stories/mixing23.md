@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "마스터링", "Mastering", "FinalStep"]
 ---
-![깔끔하게 정돈된 오디오 파형이 모니터 화면에 떠 있는 모습](/images/service3.jpg)
+![깔끔하게 정돈된 오디오 파형이 모니터 화면에 떠 있는 모습](/images/service3.webp)
 
 ## "포장은 내용물만큼 중요합니다." (선물-!)
 

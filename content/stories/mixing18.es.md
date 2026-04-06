@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Reverb", "Space", "PreDelay"]
 ---
-![Catedral con vitrales](/images/service1.jpg)
+![Catedral con vitrales](/images/service1.webp)
 
 "Un sonido dry es un sonido muerto." (¡Seco!)
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "监听", "Monitoring", "RoomAcoustic"]
 ---
-![录音室监听音箱摆位](/images/studio1.jpg)
+![录音室监听音箱摆位](/images/studio1.webp)
 
 “买了贵音箱，为什么声音还是怪？”
 很多入门者会怪设备。以为 100 万韩元的音箱就该有 100 万韩元的声音，结果却闷、糊、轰隆。

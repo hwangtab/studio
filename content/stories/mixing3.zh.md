@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "设备", "Gear", "DAW"]
 ---
-![各种音频接口与设备](/images/hardware4.jpg)
+![各种音频接口与设备](/images/hardware4.webp)
 
 “哪个麦克风好？买什么声卡才有专业的声音？”
 音乐社区里每天都有几十个这样的问题。我们把它称为 **设备病**。

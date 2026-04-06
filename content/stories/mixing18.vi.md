@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Reverb", "Space", "PreDelay"]
 ---
-![Nhà thờ lớn với kính màu](/images/service1.jpg)
+![Nhà thờ lớn với kính màu](/images/service1.webp)
 
 “Một âm khô là một âm chết.” (Khô quá!)
 

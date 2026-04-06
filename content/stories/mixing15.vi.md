@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Panning", "Stereo", "LCR"]
 ---
-![Loa stereo và người nghe](/images/studio1.jpg)
+![Loa stereo và người nghe](/images/studio1.webp)
 
 “Mình mix rồi, nhưng mọi thứ dồn vào giữa. Ngộp quá.” (Ngộp!)
 Điều đó giống như xếp tất cả nhạc công trên sân khấu thành một hàng chật chội.

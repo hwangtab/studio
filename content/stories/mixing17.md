@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "컴프레서", "Dynamics", "Compressor"]
 ---
-![클래식 컴프레서의 노브들](/images/hardware1.jpg)
+![클래식 컴프레서의 노브들](/images/hardware1.webp)
 
 "컴프레서가 제일 어려워요. 도대체 무슨 소리가 변하는지 모르겠어요." (끄응-)
 많은 분들이 컴프레서(Compressor) 앞에서 좌절합니다. EQ처럼 소리가 확확 바뀌는 것도 아니고, 잘못 걸면 소리가 답답해지기만 하니까요.

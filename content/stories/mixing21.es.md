@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Saturation", "Distortion", "Harmonics"]
 ---
-![Equipo analógico vintage con textura cálida](/images/service2.jpg)
+![Equipo analógico vintage con textura cálida](/images/service2.webp)
 
 ## "El sonido limpio no es sexy." (Firme.)
 

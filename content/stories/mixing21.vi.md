@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Saturation", "Distortion", "Harmonics"]
 ---
-![Gear analog vintage với texture ấm](/images/service2.jpg)
+![Gear analog vintage với texture ấm](/images/service2.webp)
 
 ## “Âm sạch không sexy.” (Dứt khoát!)
 

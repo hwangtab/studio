@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Compressor", "Dynamics", "ParallelCompression"]
 ---
-![Núm vặn của compressor cổ điển](/images/hardware1.jpg)
+![Núm vặn của compressor cổ điển](/images/hardware1.webp)
 
 “Compressor là khó nhất. Tôi không nghe ra gì thay đổi.” (Grr.)
 Nhiều người mắc kẹt ở compressor. Nó không thay đổi âm rõ rệt như EQ, và dùng sai thì chỉ làm mọi thứ cùn.

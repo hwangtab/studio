@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Mastering", "FinalStep", "Loudness"]
 ---
-![เวฟฟอร์มสะอาดบนมอนิเตอร์](/images/service3.jpg)
+![เวฟฟอร์มสะอาดบนมอนิเตอร์](/images/service3.webp)
 
 ## “แพ็กเกจสำคัญพอ ๆ กับเนื้อหา” (ของขวัญ!)
 

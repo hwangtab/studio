@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "리버브", "Reverb", "Space"]
 ---
-![화려한 스테인드글라스가 있는 대성당 내부의 웅장한 모습](/images/service1.jpg)
+![화려한 스테인드글라스가 있는 대성당 내부의 웅장한 모습](/images/service1.webp)
 
 "드라이(Dry)한 소리는 죽은 소리입니다." (건조-!)
 

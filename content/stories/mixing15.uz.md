@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Panning", "Stereo", "LCR"]
 ---
-![Stereo karnaylar va tinglovchi](/images/studio1.jpg)
+![Stereo karnaylar va tinglovchi](/images/studio1.webp)
 
 “Miks qildim, lekin hammasi markazga yig'ilib qolgan. Tor va siqilgan.” (Dim!)
 Bu sahnada barcha musiqachilarni bitta tor chiziqqa terib qo'yishga o'xshaydi.

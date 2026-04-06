@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Delay", "Echo", "PingPong"]
 ---
-![回声山林或山脉](/images/service3.jpg)
+![回声山林或山脉](/images/service3.webp)
 
 “混响像雾，延迟像影子。”（氛围感）
 

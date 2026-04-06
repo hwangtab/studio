@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Panning", "Stereo", "LCR"]
 ---
-![立体声扬声器与聆听者](/images/studio1.jpg)
+![立体声扬声器与聆听者](/images/studio1.webp)
 
 “混了之后所有声音都挤在中间，特别憋。”（闷！）
 这就像舞台上所有乐手都挤成一排。

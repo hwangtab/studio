@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Networking", "Encuentro"]
 ---
-![Sala de mezcla de Bulgwang Mixing Club](/images/hardware2.jpg)
+![Sala de mezcla de Bulgwang Mixing Club](/images/hardware2.webp)
 
 ### 🔥 Fans del sonido, ¡reunión en el infierno del mixing de Bulgwang-dong! ¡Abre "Bulgwang Mixing Club"! 🔥
 Invitamos a todos los que viven y respiran mezcla a una fiesta vibrante: "Bulgwang Mixing Club".

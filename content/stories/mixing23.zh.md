@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Mastering", "FinalStep", "Loudness"]
 ---
-![干净整齐的音频波形显示在屏幕上](/images/service3.jpg)
+![干净整齐的音频波形显示在屏幕上](/images/service3.webp)
 
 ## “包装和内容一样重要。”（礼物！）
 

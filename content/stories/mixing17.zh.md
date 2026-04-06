@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "压缩器", "Dynamics", "ParallelCompression"]
 ---
-![经典压缩器的旋钮](/images/hardware1.jpg)
+![经典压缩器的旋钮](/images/hardware1.webp)
 
 “压缩器最难，我听不出变了什么。”（嗯…）
 很多人卡在压缩器上。它不像 EQ 那样立刻变化，弄不好还会变闷。

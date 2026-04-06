@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Mastering", "FinalStep", "Loudness"]
 ---
-![Clean audio waveform on a monitor](/images/service3.jpg)
+![Clean audio waveform on a monitor](/images/service3.webp)
 
 ## "Packaging matters as much as the content." (Gift!)
 

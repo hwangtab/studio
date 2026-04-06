@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Saturation", "Distortion", "Harmonics"]
 ---
-![Vintage analog gear iliq tekstura bilan](/images/service2.jpg)
+![Vintage analog gear iliq tekstura bilan](/images/service2.webp)
 
 ## “Toza ovoz — sexy emas.” (Qat'iy!)
 

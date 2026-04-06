@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "SessionPrep", "SessionPrep", "Workflow"]
 ---
-![Cables desordenados y un patchbay ordenado](/images/service3.jpg)
+![Cables desordenados y un patchbay ordenado](/images/service3.webp)
 
 “Quiero empezar a mezclar, pero me abruma. Hay 50 pistas.” (Suspiro.)
 Muchos se cansan antes de empezar. Ver `Audio_01`, `Audio_02` y más, sin nombres, oscurece todo.

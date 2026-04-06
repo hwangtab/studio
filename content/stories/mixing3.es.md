@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Equipo", "Gear", "DAW"]
 ---
-![Varias interfaces de audio y equipos](/images/hardware4.jpg)
+![Varias interfaces de audio y equipos](/images/hardware4.webp)
 
 “¿Qué micrófono es bueno? ¿Qué interfaz de audio necesito para sonar profesional?”
 Son preguntas que aparecen decenas de veces al día en comunidades musicales. A esto lo llamamos **obsesión por el equipo**.

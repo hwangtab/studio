@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Panning", "Stereo", "LCR"]
 ---
-![Altavoces estéreo y oyente](/images/studio1.jpg)
+![Altavoces estéreo y oyente](/images/studio1.webp)
 
 "Mezclé, pero todo está amontonado en el centro y suena apretado." (¡Apretado!)
 Es como poner a todos los músicos en una sola línea en el escenario.

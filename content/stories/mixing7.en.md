@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "SessionPrep", "SessionPrep", "Workflow"]
 ---
-![Messy cables and a neat patchbay](/images/service3.jpg)
+![Messy cables and a neat patchbay](/images/service3.webp)
 
 “I want to start mixing, but I’m overwhelmed. There are 50 tracks.” (Sigh.)
 Many people burn out before they even begin. Seeing endless `Audio_01`, `Audio_02` tracks makes everything feel dark.

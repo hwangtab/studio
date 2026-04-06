@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
 ---
-![Phòng mix của Bulgwang Mixing Club](/images/hardware2.jpg)
+![Phòng mix của Bulgwang Mixing Club](/images/hardware2.webp)
 
 ### 🔥 Dân mê âm thanh, hãy tụ họp tại “địa ngục mixing” ở Bulgwang-dong! “Bulgwang Mixing Club” mở cửa! 🔥
 Chúng tôi mời bạn đến bữa tiệc đầy kích thích dành cho những người sống cùng mixing: “Bulgwang Mixing Club”!

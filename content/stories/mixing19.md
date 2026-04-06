@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "딜레이", "Delay", "Echo"]
 ---
-![메아리치는 숲이나 산맥의 이미지](/images/service3.jpg)
+![메아리치는 숲이나 산맥의 이미지](/images/service3.webp)
 
 "리버브는 안개 같고, 딜레이는 그림자 같습니다." (그윽-!)
 

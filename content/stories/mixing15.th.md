@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Panning", "Stereo", "LCR"]
 ---
-![ลำโพงสเตอริโอและผู้ฟัง](/images/studio1.jpg)
+![ลำโพงสเตอริโอและผู้ฟัง](/images/studio1.webp)
 
 “มิกซ์แล้ว แต่ทุกอย่างกองตรงกลาง อึดอัดมาก” (อับ!)
 มันเหมือนวางนักดนตรีทุกคนบนเวทีเป็นแถวแคบ ๆ

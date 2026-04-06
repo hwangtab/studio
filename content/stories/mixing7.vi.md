@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "SessionPrep", "SessionPrep", "Workflow"]
 ---
-![Dây cáp lộn xộn và patchbay gọn gàng](/images/service3.jpg)
+![Dây cáp lộn xộn và patchbay gọn gàng](/images/service3.webp)
 
 “Muốn bắt đầu mix, nhưng mình choáng. Có 50 track.” (Thở dài.)
 Nhiều người kiệt sức trước khi bắt đầu. Nhìn hàng loạt `Audio_01`, `Audio_02` là thấy tối tăm.

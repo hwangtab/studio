@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Compresor", "Dynamics", "ParallelCompression"]
 ---
-![Perillas de un compresor clásico](/images/hardware1.jpg)
+![Perillas de un compresor clásico](/images/hardware1.webp)
 
 "El compresor es lo más difícil. No noto qué cambia." (Grr.)
 Muchos se frustran con el compresor. No cambia tanto como un EQ y, si lo usas mal, todo queda apagado.

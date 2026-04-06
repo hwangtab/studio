@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "notice"
 tags: ["ปรับปรุง", "สตูดิโออัดเสียง"]
 ---
-![สตูดิโอบันทึกเสียง Studio NOL](/images/studio1.jpg)
+![สตูดิโอบันทึกเสียง Studio NOL](/images/studio1.webp)
 
 สวัสดีจาก Studio NOL! 🎸🎤
 

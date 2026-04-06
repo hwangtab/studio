@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Monitoring", "Monitoring", "Âm học phòng"]
 ---
-![Bố trí loa monitor trong studio](/images/studio1.jpg)
+![Bố trí loa monitor trong studio](/images/studio1.webp)
 
 “Tôi mua loa đắt tiền—sao nghe vẫn kỳ?”
 Nhiều người mới bắt đầu thường đổ lỗi cho gear. Họ mong loa 1,000,000 KRW sẽ nghe như 1,000,000 KRW, nhưng thực tế lại bị ù và mờ.

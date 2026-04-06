@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "notice"
 tags: ["Renovación", "Estudio de grabación"]
 ---
-![Estudio de grabación de Studio NOL](/images/studio1.jpg)
+![Estudio de grabación de Studio NOL](/images/studio1.webp)
 
 ¡Hola, somos Studio NOL! 🎸🎤
 

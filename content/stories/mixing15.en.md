@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Panning", "Stereo", "LCR"]
 ---
-![Stereo speakers and listener](/images/studio1.jpg)
+![Stereo speakers and listener](/images/studio1.webp)
 
 "I mixed, but everything is piled in the center. It feels cramped." (Stuffy!)
 That’s like putting every musician on stage in one tight line.

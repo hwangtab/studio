@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Gear", "Gear", "DAW"]
 ---
-![Turli audio interfeyslar va gear](/images/hardware4.jpg)
+![Turli audio interfeyslar va gear](/images/hardware4.webp)
 
 “Qaysi mikrofon yaxshi? Qaysi audio interfeys pro ovoz beradi?”
 Musiqa hamjamiyatlarida bunday savollar har kuni paydo bo'ladi. Buni biz **gear qaramligi** deymiz.

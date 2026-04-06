@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "Reverb", "Space", "PreDelay"]
 ---
-![彩色玻璃大教堂内部](/images/service1.jpg)
+![彩色玻璃大教堂内部](/images/service1.webp)
 
 “干声是死的。”（干巴巴）
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Delay", "Echo", "PingPong"]
 ---
-![Khu rừng hoặc núi vọng tiếng](/images/service3.jpg)
+![Khu rừng hoặc núi vọng tiếng](/images/service3.webp)
 
 “Reverb như sương mù, delay như cái bóng.” (Tâm trạng!)
 

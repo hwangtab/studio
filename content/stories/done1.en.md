@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "notice"
 tags: ["Renewal", "Recording Studio"]
 ---
-![Studio NOL recording studio](/images/studio1.jpg)
+![Studio NOL recording studio](/images/studio1.webp)
 
 Hello, this is Studio NOL! 🎸🎤
 

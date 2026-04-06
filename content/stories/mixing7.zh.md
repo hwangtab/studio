@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "SessionPrep", "SessionPrep", "Workflow"]
 ---
-![凌乱的线材与整洁的跳线盘](/images/service3.jpg)
+![凌乱的线材与整洁的跳线盘](/images/service3.webp)
 
 “想开始混音，但完全下不了手。轨道有 50 条。”（长叹）
 很多人还没开始就累了。看到一排 `Audio_01`, `Audio_02` 的无名轨道，眼前一片黑。

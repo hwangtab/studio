@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Monitoreo", "Monitoring", "RoomAcoustic"]
 ---
-![Colocación de monitores de estudio](/images/studio1.jpg)
+![Colocación de monitores de estudio](/images/studio1.webp)
 
 “Compré monitores caros, ¿por qué suena raro?”
 Muchos principiantes culpan al equipo. Esperan que unos monitores de 1.000.000 KRW suenen a ese nivel, pero en cambio todo se vuelve retumbante y borroso.

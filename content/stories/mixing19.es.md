@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mezcla", "Clase", "Delay", "Echo", "PingPong"]
 ---
-![Bosque o montañas con eco](/images/service3.jpg)
+![Bosque o montañas con eco](/images/service3.webp)
 
 "El reverb es como niebla, el delay es como una sombra." (Místico.)
 

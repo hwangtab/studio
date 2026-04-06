@@ -51,7 +51,7 @@ const SEO = ({
   canonical,
   disableCanonicalAndAlternates = false,
   disableAlternates = false,
-  ogImage = '/images/og-default.jpg',
+  ogImage = '/images/og-default.webp',
   ogImageAlt,
   ogImageWidth = 1200,
   ogImageHeight = 630,

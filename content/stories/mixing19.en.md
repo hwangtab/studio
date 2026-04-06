@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Delay", "Echo", "PingPong"]
 ---
-![Echoing forest or mountains](/images/service3.jpg)
+![Echoing forest or mountains](/images/service3.webp)
 
 "Reverb is like fog, delay is like a shadow." (Moody!)
 

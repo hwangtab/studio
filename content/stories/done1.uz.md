@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "notice"
 tags: ["Yangilanish", "Yozuv studiyasi"]
 ---
-![Studio NOL yozuv studiyasi](/images/studio1.jpg)
+![Studio NOL yozuv studiyasi](/images/studio1.webp)
 
 Salom, bu Studio NOL! 🎸🎤
 

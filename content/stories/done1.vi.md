@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "notice"
 tags: ["Làm mới", "Phòng thu âm"]
 ---
-![Phòng thu Studio NOL](/images/studio1.jpg)
+![Phòng thu Studio NOL](/images/studio1.webp)
 
 Xin chào, đây là Studio NOL! 🎸🎤
 

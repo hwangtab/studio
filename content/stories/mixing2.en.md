@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Monitoring", "Monitoring", "RoomAcoustic"]
 ---
-![Studio monitor speaker placement](/images/studio1.jpg)
+![Studio monitor speaker placement](/images/studio1.webp)
 
 “I bought expensive speakers—why does it sound weird?”
 Many beginners blame their gear. They expect a 1,000,000‑KRW speaker to sound like 1,000,000 KRW, but instead it feels boomy and smeared.

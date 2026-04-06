@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Mastering", "FinalStep", "Loudness"]
 ---
-![Dạng sóng sạch trên màn hình](/images/service3.jpg)
+![Dạng sóng sạch trên màn hình](/images/service3.webp)
 
 ## “Gói quà quan trọng như nội dung.” (Quà!)
 

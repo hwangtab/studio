@@ -6,7 +6,7 @@ author: "스튜디오 놀"
 category: "공지"
 tags: ["리뉴얼", "녹음실"]
 ---
-![스튜디오 놀 녹음실](/images/studio1.jpg)
+![스튜디오 놀 녹음실](/images/studio1.webp)
 
 안녕하세요, 스튜디오 놀입니다! 🎸🎤
 

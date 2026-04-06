@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Bài học", "Gear", "Gear", "DAW"]
 ---
-![Các audio interface và gear khác nhau](/images/hardware4.jpg)
+![Các audio interface và gear khác nhau](/images/hardware4.webp)
 
 “Mic nào tốt? Interface nào cho âm thanh chuyên nghiệp?”
 Hàng chục câu hỏi như vậy xuất hiện mỗi ngày trong cộng đồng âm nhạc. Chúng ta gọi đó là **nghiện gear**.

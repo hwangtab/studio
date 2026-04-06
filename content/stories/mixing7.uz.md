@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "SessionPrep", "SessionPrep", "Workflow"]
 ---
-![Chigallashgan kabellar va tartibli patchbay](/images/service3.jpg)
+![Chigallashgan kabellar va tartibli patchbay](/images/service3.webp)
 
 “Miksni boshlamoqchiman, lekin qo'rqib ketdim. 50 ta track bor.” (Uf.)
 Ko'pchilik hatto boshlamasdan charchab qoladi. `Audio_01`, `Audio_02`lar tugamaydi — hammasi qorong'u tuyuladi.

@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "새츄레이션", "Saturation", "Distortion"]
 ---
-![거친 텍스처와 따뜻한 색감이 어우러진 빈티지한 아날로그 장비 이미지](/images/service2.jpg)
+![거친 텍스처와 따뜻한 색감이 어우러진 빈티지한 아날로그 장비 이미지](/images/service2.webp)
 
 ## "깨끗한 소리는 섹시하지 않습니다." (단호!)
 

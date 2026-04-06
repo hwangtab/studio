@@ -6,7 +6,7 @@ author: "Studio NOL"
 category: "notice"
 tags: ["焕新", "录音室"]
 ---
-![Studio NOL 录音室](/images/studio1.jpg)
+![Studio NOL 录音室](/images/studio1.webp)
 
 大家好，这里是 Studio NOL！🎸🎤
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Saturation", "Distortion", "Harmonics"]
 ---
-![Vintage analog gear with warm texture](/images/service2.jpg)
+![Vintage analog gear with warm texture](/images/service2.webp)
 
 ## "Clean sound isn’t sexy." (Firm!)
 

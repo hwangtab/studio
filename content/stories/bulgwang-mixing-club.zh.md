@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "event"
 tags: ["Mixing Club", "社交", "聚会"]
 ---
-![Bulgwang Mixing Club 混音间](/images/hardware2.jpg)
+![Bulgwang Mixing Club 混音间](/images/hardware2.webp)
 
 ### 🔥 声音发烧友集合！不广洞的混音地狱开张了："Bulgwang Mixing Club"！🔥
 我们邀请所有为混音而活的人，加入这个热辣的派对——"Bulgwang Mixing Club"！

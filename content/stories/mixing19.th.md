@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Delay", "Echo", "PingPong"]
 ---
-![ป่าหรือภูเขาที่มีเสียงสะท้อน](/images/service3.jpg)
+![ป่าหรือภูเขาที่มีเสียงสะท้อน](/images/service3.webp)
 
 “Reverb เหมือนหมอก ส่วน delay เหมือนเงา” (อารมณ์!)
 

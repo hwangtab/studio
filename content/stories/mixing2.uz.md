@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Monitoring", "Monitoring", "Xona akustikasi"]
 ---
-![Studio monitor karnaylarining joylashuvi](/images/studio1.jpg)
+![Studio monitor karnaylarining joylashuvi](/images/studio1.webp)
 
 “Qimmat karnay sotib oldim — nega baribir g'alati eshitiladi?”
 Ko'p boshlovchilar gear'ni ayblaydi. 1,000,000 KRW'lik karnay 1,000,000 KRW'lik ovoz beradi deb o'ylashadi, ammo natija g'uvillagan va xiralashgan bo'ladi.

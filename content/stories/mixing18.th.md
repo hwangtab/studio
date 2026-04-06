@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Reverb", "Space", "PreDelay"]
 ---
-![วิหารใหญ่กับกระจกสี](/images/service1.jpg)
+![วิหารใหญ่กับกระจกสี](/images/service1.webp)
 
 “เสียงแห้งคือเสียงตาย” (แห้งมาก!)
 

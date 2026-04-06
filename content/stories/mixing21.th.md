@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "บทเรียน", "Saturation", "Distortion", "Harmonics"]
 ---
-![เกียร์อนาล็อกวินเทจโทนอุ่น](/images/service2.jpg)
+![เกียร์อนาล็อกวินเทจโทนอุ่น](/images/service2.webp)
 
 ## “เสียงสะอาดไม่เซ็กซี่” (ฟันธง!)
 

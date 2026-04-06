@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Reverb", "Space", "PreDelay"]
 ---
-![Rangli vitrajli ulkan sobor](/images/service1.jpg)
+![Rangli vitrajli ulkan sobor](/images/service1.webp)
 
 “Quruq tovush — o'lik tovush.” (Juda quruq!)
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Compressor", "Dynamics", "ParallelCompression"]
 ---
-![Klassik kompressor tugmalari](/images/hardware1.jpg)
+![Klassik kompressor tugmalari](/images/hardware1.webp)
 
 “Kompressor eng qiyini. Nimasi o'zgarganini eshitolmayman.” (Grr.)
 Ko'pchilik kompressorda qotib qoladi. U EQ kabi keskin o'zgartirmaydi, noto'g'ri ishlatilsa hammasini xiralashtiradi.
