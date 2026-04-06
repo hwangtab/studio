@@ -80,4 +80,4 @@ faq:
 
 삼척에서 KTX 동해선을 이용하면 당일 왕복 세션이 가능합니다. 방문이 부담된다면 온라인 파일 의뢰로 서울 스튜디오 품질을 경험해보세요.
 
-[강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[태백에서 서울 녹음실 방문 가이드](/stories/taebaek1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
