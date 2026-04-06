@@ -117,4 +117,4 @@ Cytomic The Glue:
 
 SSL G-Bus 컴프레서는 믹스 버스 컴프레션의 황금 표준으로, Glue 효과로 믹스 전체에 통일감을 부여합니다. 스튜디오 놀에서는 SSL 에뮬레이션을 포함한 전문 플러그인으로 완성도 높은 믹스를 제공합니다.
 
-[1176 컴프레서 완전 가이드](/stories/comp1176) | [LA-2A 컴프레서 완전 가이드](/stories/la2a1) | [컴프레서 완전 가이드](/stories/compressor1) | [믹스 버스 완전 가이드](/stories/mix-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 리버브 완전 가이드](/stories/vocal-reverb1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [LA-2A 컴프레서 완전 가이드](/stories/la2a1) | [믹스 버스 완전 가이드](/stories/mix-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
