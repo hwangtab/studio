@@ -56,4 +56,4 @@ faq:
 
 관악구·동작구에서 2호선 합정역 경유로 35~50분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[동작구 녹음실 안내](/stories/dongjak1) | [구로·금천구 녹음실 안내](/stories/guro1) | [마포구 녹음실 안내](/stories/mapo1) | [서초구 녹음실 안내](/stories/seocho1) | [영등포·구로구 녹음실 안내](/stories/yeongdeungpo1) | [스튜디오 놀 이용 요금](/pricing)
+[신림·서울대입구 녹음실 안내](/stories/sillim1) | [동작구 녹음실 안내](/stories/dongjak1) | [사당·방배 녹음실 안내](/stories/sadang1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
