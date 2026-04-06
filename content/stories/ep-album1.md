@@ -158,4 +158,4 @@ EP 앨범은 인디 뮤지션이 처음 발표하는 가장 적절한 음반 형
 
 EP 앨범은 음악 커리어의 시작점입니다. 스튜디오 놀에서 EP 보컬 녹음부터 믹싱·마스터링까지 원스톱으로 지원합니다. 카카오톡으로 EP 제작 플랜을 문의하세요.
 
-[음원 싱글 발매 완전 가이드](/stories/single-release1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [스트리밍 플랫폼 완전 가이드](/stories/streaming-platforms1) | [스튜디오 놀 이용 요금](/pricing)
+[인디 음악 제작 완전 가이드](/stories/indie-production1) | [음원 싱글 발매 완전 가이드](/stories/single-release1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스트리밍 플랫폼 완전 가이드](/stories/streaming-platforms1) | [스튜디오 놀 이용 요금](/pricing)

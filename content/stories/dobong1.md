@@ -66,4 +66,4 @@ faq:
 
 도봉구에서 지하철 30~40분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[강북구·북한산 방문 가이드](/stories/gangbuk1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1) | [성북구·종로구 녹음실 안내](/stories/jongno1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[도봉구 방학·쌍문·창동 세부 안내](/stories/dobong-banghak1) | [강북구·북한산 방문 가이드](/stories/gangbuk1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
