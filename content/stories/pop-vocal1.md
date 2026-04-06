@@ -111,4 +111,4 @@ faq:
 
 팝 보컬은 선명도와 리듬감이 생명입니다. 스튜디오 놀에서 팝·K팝에 최적화된 마이크 세팅과 전문 믹싱으로 완성도 높은 보컬 녹음을 경험해보세요.
 
-[R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
+[록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
