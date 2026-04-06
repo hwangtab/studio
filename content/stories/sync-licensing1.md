@@ -133,4 +133,4 @@ Pond5:
 
 싱크 라이센싱은 완성도 높은 음원에서 시작됩니다. 스튜디오 놀에서 라이브러리 납품 기준에 맞는 전문적인 사운드로 음원을 완성하세요.
 
-[음악 라이센싱 완전 가이드](/stories/music-licensing1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [영화음악·영상음악 완전 가이드](/stories/film-scoring1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[방송 음악 사용 완전 가이드](/stories/broadcast-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
