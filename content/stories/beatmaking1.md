@@ -116,4 +116,4 @@ Step 5: 믹스다운
 
 첫 비트는 완벽하지 않아도 됩니다. 완성이 목표입니다. 비트 제작 후 보컬 녹음이 필요하다면 스튜디오 놀에서 전문 보컬 세션을 진행하세요.
 
-[로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [신스 프로그래밍 완전 가이드](/stories/synth-programming1) | [음악 프로듀서 되는 방법](/stories/producer1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[트랩 비트 제작 완전 가이드](/stories/trap1) | [로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [신스 프로그래밍 완전 가이드](/stories/synth-programming1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
