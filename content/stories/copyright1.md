@@ -111,4 +111,4 @@ faq:
 
 저작권 등록은 내 음악이 돈을 벌기 시작하는 기반입니다. 발매와 동시에 KOMCA 등록을 챙기세요. 스튜디오 놀에서는 음반 제작 후 유통 및 저작권 절차에 대한 기본 안내도 제공합니다.
 
-[음악 라이센싱 완전 가이드](/stories/music-licensing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 유통 완전 가이드](/stories/distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
