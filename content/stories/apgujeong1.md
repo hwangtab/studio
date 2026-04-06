@@ -61,4 +61,4 @@ faq:
 
 압구정·청담에서 지하철로 40분대, 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[강남 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [잠실·석촌 녹음실 안내](/stories/jamsil1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[신사·가로수길·논현 녹음실 안내](/stories/sinsa1) | [강남 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [잠실·석촌 녹음실 안내](/stories/jamsil1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
