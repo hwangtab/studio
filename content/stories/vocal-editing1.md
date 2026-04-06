@@ -134,4 +134,4 @@ faq:
 
 보컬 편집은 녹음과 믹싱 사이의 중요한 다리입니다. 스튜디오 놀에서 전문 엔지니어가 컴핑·피치 교정·타이밍 교정까지 꼼꼼히 처리하여 믹싱 준비 완료된 보컬을 만들어드립니다.
 
-[믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 컴핑 완전 가이드](/stories/comping1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
