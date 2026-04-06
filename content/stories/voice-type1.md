@@ -114,4 +114,4 @@ faq:
 
 보이스 타입은 자신의 강점을 발견하는 기준입니다. 자신의 음역과 음색을 정확히 파악하고 그에 맞는 장르와 곡을 선택하면 더 자연스럽고 완성도 높은 보컬을 만들 수 있습니다.
 
-[보컬 워밍업 완전 가이드](/stories/warmup1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing)
