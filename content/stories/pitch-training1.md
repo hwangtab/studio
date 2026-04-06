@@ -107,4 +107,4 @@ faq:
 
 음정은 타고난 능력이 아니라 훈련으로 키울 수 있습니다. 꾸준한 청음과 지지 훈련으로 음정 실력을 키운 뒤 스튜디오 놀 세션에서 최상의 결과물을 만들어보세요.
 
-[보컬 호흡 지지(Breath Support) 완전 가이드](/stories/breath-support1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 호흡 지지(Breath Support) 완전 가이드](/stories/breath-support1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [흉성 완전 가이드](/stories/chest-voice1) | [스튜디오 놀 이용 요금](/pricing)
