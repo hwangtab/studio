@@ -80,4 +80,4 @@ faq:
 
 전주에서 KTX로 2~3시간이면 서울 전문 스튜디오 세션이 가능합니다. 전라북도 지역 아티스트도 연신내 스튜디오 놀의 전문 보컬 녹음을 경험해보세요.
 
-[남원에서 서울 녹음실 방문 가이드](/stories/namwon1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 디렉팅 서비스](/stories/remotedir1) | [스튜디오 놀 이용 요금](/pricing)
+[전라북도 녹음실 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
