@@ -106,4 +106,4 @@ faq:
 
 음정 불안정은 교정 가능한 기술적 문제입니다. 꾸준한 청음 훈련과 헤드폰 모니터링 연습으로 3~6개월 안에 뚜렷한 개선을 느낄 수 있습니다. 스튜디오 놀에서 녹음 세션으로 본인의 음정 수준을 객관적으로 점검해보세요.
 
-[청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 피치 교정이란 (Melodyne·Auto-Tune)](/stories/pitch1) | [보컬 포지션 발성 위치 가이드](/stories/placement1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [스튜디오 놀 이용 요금](/pricing)
+[오토튠·피치 교정 완전 가이드](/stories/autotune1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 포지션 발성 위치 가이드](/stories/placement1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [스튜디오 놀 이용 요금](/pricing)
