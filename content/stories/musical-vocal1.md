@@ -104,4 +104,4 @@ faq:
 
 뮤지컬 보컬은 발성과 연기력의 결합입니다. 스튜디오 놀에서 뮤지컬 레퍼토리에 맞는 전문 세팅으로 공연 준비용 데모나 포트폴리오 녹음을 진행해보세요.
 
-[성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [힙합 보컬·랩 녹음 완전 가이드](/stories/hip-hop-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 오디션 완전 가이드](/stories/audition-vocal1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
