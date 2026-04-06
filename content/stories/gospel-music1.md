@@ -129,4 +129,4 @@ faq:
 
 가스펠과 CCM 음악은 메시지를 전달하는 음악입니다. 스튜디오 놀에서 보컬 녹음부터 합창 그룹 세션, 믹싱·마스터링까지 가스펠 음반 제작 전 과정을 지원합니다.
 
-[재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[전자 음악 제작 완전 가이드](/stories/electronic-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
