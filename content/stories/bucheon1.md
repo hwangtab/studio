@@ -99,4 +99,4 @@ faq:
 
 경기 서부(부천·안양·안산·시흥)에서 연신내까지 약 1시간이면 전문 녹음 환경을 경험할 수 있습니다. 지역 내 소규모 스튜디오와 전문 스튜디오의 결과물 차이를 직접 경험해보세요.
 
-[인천 녹음실 방문 가이드](/stories/incheon1) | [광명·과천·의왕 녹음실 가이드](/stories/gwangmyeong1) | [화성·시흥·안산 녹음실 가이드](/stories/hwaseong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
+[부천 소사·심곡·역곡·중동 녹음실 안내](/stories/bucheon-sosa1) | [인천 녹음실 방문 가이드](/stories/incheon1) | [광명·과천·의왕 녹음실 가이드](/stories/gwangmyeong1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
