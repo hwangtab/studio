@@ -80,4 +80,4 @@ faq:
 
 동대문구에서 1호선 25~40분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[이문·외대앞·석계·중화 녹음실 안내](/stories/imun1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[회기·경희대·외대앞·이문동 녹음실 안내](/stories/hoegi1) | [이문·외대앞·석계·중화 녹음실 안내](/stories/imun1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
