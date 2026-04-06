@@ -104,4 +104,4 @@ Side = 좌우 차이 신호 (스테레오 성분)
 
 스테레오 이미징은 패닝부터 시작해 M/S 처리, 스테레오 와이드너까지 단계별로 접근하는 것이 좋습니다. 모든 단계에서 모노 호환성을 확인하는 습관이 프로 품질의 믹스를 만듭니다.
 
-[보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
+[모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
