@@ -27,6 +27,7 @@ class MyDocument extends Document<Props> {
         prefix="og: https://ogp.me/ns#"
       >
         <Head>
+          <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />
           {/* Resource hints */}
           <link rel="dns-prefetch" href="https://api.emailjs.com" />
           <link rel="dns-prefetch" href="https://vercel.live" />

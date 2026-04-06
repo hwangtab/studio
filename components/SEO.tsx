@@ -13,7 +13,7 @@ import {
   generateWebPageSchema,
 } from '../utils/schemaGenerator';
 import { defaultLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
-import { getSeoDefaults, getSiteConfig } from '../data/siteConfig';
+import { getSeoDefaults, getSiteConfig, socialProfiles } from '../data/siteConfig';
 
 interface SEOProps {
   title?: string;
@@ -351,6 +351,9 @@ const SEO = ({
       {ogType === 'article' && articleModifiedTime && (
         <meta property="article:modified_time" content={articleModifiedTime} />
       )}
+      {ogType === 'article' && articleModifiedTime && (
+        <meta property="og:updated_time" content={articleModifiedTime} />
+      )}
       {ogType === 'article' && articleAuthor && (
         <meta property="article:author" content={articleAuthor} />
       )}
@@ -362,6 +365,7 @@ const SEO = ({
       ))}
 
       <meta name="twitter:card" content="summary_large_image" />
+      {socialProfiles.twitter && <meta name="twitter:site" content={socialProfiles.twitter} />}
       {!disableCanonicalAndAlternates && <meta name="twitter:url" content={normalizedCanonical} />}
       <meta name="twitter:title" content={resolvedTitle} />
       <meta name="twitter:description" content={resolvedDescription} />

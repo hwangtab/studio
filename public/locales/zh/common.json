@@ -603,9 +603,9 @@
   "notFound": {
     "seoTitle": "页面未找到 | Studio NOL",
     "badge": "404 Not Found",
-    "title": "找不到页面",
-    "messageLine1": "请求的地址“{{path}}”不存在或已移动。",
-    "messageLine2": "请返回首页或浏览其他页面。",
+    "title": "页面未找到",
+    "messageLine1": "您请求的页面不存在或已被移动。",
+    "messageLine2": "请重新检查地址，或使用下方按钮。",
     "goHome": "返回首页",
     "contact": "联系我们"
   },

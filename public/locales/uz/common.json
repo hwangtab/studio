@@ -599,12 +599,12 @@
   },
   "notFound": {
     "seoTitle": "Sahifa topilmadi | Studio NOL",
-    "badge": "404 Sahifa topilmadi",
+    "badge": "404 Not Found",
     "title": "Sahifa topilmadi",
-    "messageLine1": "So'ralgan URL \"{{path}}\" ushbu serverda topilmadi.",
-    "messageLine2": "Iltimos, bosh sahifaga qayting yoki boshqa sahifani sinab ko'ring.",
-    "goHome": "Bosh sahifaga",
-    "contact": "Biz bilan bog'laning"
+    "messageLine1": "So'ralgan sahifa mavjud emas yoki ko'chirilgan.",
+    "messageLine2": "Manzilni qayta tekshiring yoki quyidagi tugmalardan foydalaning.",
+    "goHome": "Bosh sahifaga o'tish",
+    "contact": "Bog'lanish"
   },
   "serverError": {
     "seoTitle": "Server xatosi | Studio NOL",

@@ -21,6 +21,41 @@ const pageImageMap = {
   '/studio-info': '/images/hardware1.jpg',
 };
 
+// Parse portfolio item images from TypeScript source at build time
+const getPortfolioImageMap = (() => {
+  let cached = null;
+  return () => {
+    if (cached) return cached;
+    try {
+      const content = fs.readFileSync(portfolioDataFile, 'utf8');
+      const map = {};
+      // Match id/image pairs in sequence: "id": "...", then "image": "..."
+      const idRegex = /"id":\s*"([^"]+)"/g;
+      const imageRegex = /"image":\s*"([^"]+)"/g;
+      const ids = [];
+      const images = [];
+      let m;
+      while ((m = idRegex.exec(content)) !== null) ids.push({ index: m.index, id: m[1] });
+      while ((m = imageRegex.exec(content)) !== null) images.push({ index: m.index, url: m[1] });
+      // For each image, find the most recent id that appears before it
+      for (const img of images) {
+        const precedingIds = ids.filter(i => i.index < img.index);
+        if (precedingIds.length > 0) {
+          const closest = precedingIds[precedingIds.length - 1];
+          // Skip category ids (all/album/single/compilation/commercial)
+          if (!['all', 'album', 'single', 'compilation', 'commercial'].includes(closest.id)) {
+            map[closest.id] = img.url;
+          }
+        }
+      }
+      cached = map;
+      return map;
+    } catch {
+      return {};
+    }
+  };
+})();
+
 const getStoryThumbnail = (slug, locale) => {
   const candidates = [
     path.join(storiesDir, `${slug}.${locale}.md`),
@@ -169,6 +204,13 @@ module.exports = {
         ? (thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`)
         : `${siteUrl}/api/og/story?title=${encodeURIComponent(slug)}&locale=${locale}`;
       images = [{ loc: new URL(imageUrl) }];
+    } else if (pathWithoutLocale.startsWith('/portfolio/') && segments.length >= 3) {
+      const itemId = segments[2];
+      const portfolioImages = getPortfolioImageMap();
+      const imgUrl = portfolioImages[itemId];
+      if (imgUrl) {
+        images = [{ loc: new URL(imgUrl) }];
+      }
     } else {
       const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;
       const pageImg = pageImageMap[pageKey];

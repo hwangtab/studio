@@ -604,8 +604,8 @@
     "seoTitle": "Página no encontrada | Studio NOL",
     "badge": "404 Not Found",
     "title": "Página no encontrada",
-    "messageLine1": "La URL solicitada \"{{path}}\" no se encontró en este servidor.",
-    "messageLine2": "Vuelve a la página de inicio o prueba otra página.",
+    "messageLine1": "La página que buscas no existe o ha sido movida.",
+    "messageLine2": "Por favor verifica la dirección o usa los botones de abajo.",
     "goHome": "Ir al inicio",
     "contact": "Contáctanos"
   },

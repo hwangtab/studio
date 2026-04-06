@@ -604,9 +604,9 @@
     "seoTitle": "Page Not Found | Studio NOL",
     "badge": "404 Not Found",
     "title": "Page Not Found",
-    "messageLine1": "The requested URL \"{{path}}\" was not found on this server.",
-    "messageLine2": "Please return to the homepage or try another page.",
-    "goHome": "Go Home",
+    "messageLine1": "The page you're looking for doesn't exist or has been moved.",
+    "messageLine2": "Please check the address or use the buttons below.",
+    "goHome": "Go to Home",
     "contact": "Contact Us"
   },
   "serverError": {

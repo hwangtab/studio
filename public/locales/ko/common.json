@@ -615,6 +615,15 @@
     "goHome": "홈으로 이동",
     "contact": "문의하기"
   },
+  "notFound": {
+    "seoTitle": "페이지를 찾을 수 없음 | 스튜디오 놀",
+    "badge": "404 Not Found",
+    "title": "페이지를 찾을 수 없습니다",
+    "messageLine1": "요청하신 페이지가 존재하지 않거나 이동되었습니다.",
+    "messageLine2": "주소를 다시 확인하시거나, 아래 버튼을 이용해 주세요.",
+    "goHome": "홈으로 이동",
+    "contact": "문의하기"
+  },
   "errors": {
     "title": "문제가 발생했습니다",
     "description": "페이지를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."

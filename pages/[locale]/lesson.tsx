@@ -14,6 +14,7 @@ import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
+import { getSiteConfig } from '../../data/siteConfig';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -57,6 +58,7 @@ interface LessonProps {
 
 const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
     const { t } = useTranslation('common', { lng: locale });
+    const siteConfig = getSiteConfig(locale);
 
     const whySectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
     const pricingSectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
@@ -265,7 +267,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                                 <span className="text-xl text-gray-500 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
                             </div>
                             <a
-                                href="https://open.kakao.com/me/nol"
+                                href={siteConfig.contact.kakaoUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="block w-full text-center bg-gray-900 dark:bg-gray-700 hover:bg-primary text-white font-bold py-4 rounded-xl transition-colors duration-300"

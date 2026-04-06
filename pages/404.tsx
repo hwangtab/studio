@@ -13,14 +13,14 @@ import { getLocaleI18nResourcesServer } from '../lib/i18n.server';
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
 
-  const { locale, path } = useMemo(() => {
+  const { locale } = useMemo(() => {
     const currentPath = router.asPath;
     const segments = currentPath.split('/');
     const potentialLocale = segments[1];
     const detectedLocale = locales.includes(potentialLocale as Locale)
       ? (potentialLocale as Locale)
       : defaultLocale;
-    return { locale: detectedLocale, path: currentPath };
+    return { locale: detectedLocale };
   }, [router.asPath]);
 
   const { t } = useTranslation('common', { lng: locale });
@@ -54,7 +54,7 @@ const NotFoundPage: NextPage = () => {
         {...pageContentMotionProps}
       >
         <>
-          {t('notFound.messageLine1', { path })}
+          {t('notFound.messageLine1')}
           <br className="hidden sm:block" />
           {t('notFound.messageLine2')}
         </>

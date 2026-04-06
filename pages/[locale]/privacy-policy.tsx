@@ -237,7 +237,6 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('footer.privacy'), path: `/${locale}/privacy-policy` },
         ]}
-        includeSchema
       />
 
       <Section variant="default" className="py-16 md:py-20">

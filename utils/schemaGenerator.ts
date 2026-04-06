@@ -76,6 +76,12 @@ export const generateDefaultSchema = (
           width: 3350,
           height: 862,
         },
+        image: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/thumbnail.jpg`,
+          width: 1440,
+          height: 809,
+        },
         email: config.contact.email,
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         contactPoint: [
@@ -141,6 +147,17 @@ export const generateDefaultSchema = (
           },
         ],
         acceptsReservations: `${siteUrl}/${locale}/contact`,
+        potentialAction: {
+          '@type': 'ReserveAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${siteUrl}/${locale}/contact`,
+          },
+          result: {
+            '@type': 'Reservation',
+            name: locale === 'ko' ? '스튜디오 예약' : 'Studio Reservation',
+          },
+        },
         geo: {
           '@type': 'GeoCoordinates',
           latitude: 37.614353,

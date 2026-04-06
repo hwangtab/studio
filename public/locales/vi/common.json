@@ -602,10 +602,10 @@
   },
   "notFound": {
     "seoTitle": "Không tìm thấy trang | Studio NOL",
-    "badge": "404 Không tìm thấy",
+    "badge": "404 Not Found",
     "title": "Không tìm thấy trang",
-    "messageLine1": "URL \"{{path}}\" không tồn tại trên máy chủ.",
-    "messageLine2": "Vui lòng quay lại trang chủ hoặc thử trang khác.",
+    "messageLine1": "Trang bạn yêu cầu không tồn tại hoặc đã được chuyển đi.",
+    "messageLine2": "Vui lòng kiểm tra lại địa chỉ hoặc sử dụng các nút bên dưới.",
     "goHome": "Về trang chủ",
     "contact": "Liên hệ"
   },

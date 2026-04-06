@@ -171,3 +171,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 }
 
 export default StudioNoriApp;
+
+import type { NextWebVitalsMetric } from 'next/app';
+
+export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Web Vital] ${name}:`, Math.round(name === 'CLS' ? value * 1000 : value));
+  }
+}
