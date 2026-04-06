@@ -54,4 +54,4 @@ faq:
 
 성남·분당·판교에서 약 1시간, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[수원·안양·군포 녹음실 안내](/stories/suwon1) | [인천·부천 녹음실 안내](/stories/incheon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[수원·안양·군포 녹음실 안내](/stories/suwon1) | [동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [인천·부천 녹음실 안내](/stories/incheon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing)
