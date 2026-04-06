@@ -126,4 +126,4 @@ Presence 강조로 가사 전달력 향상
 
 발음은 연습으로 반드시 향상됩니다. 스튜디오 놀에서 1:1 보컬 디렉팅으로 발음과 발성을 동시에 케어하며 완성도 높은 녹음을 진행하세요.
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 데모 녹음 완전 가이드](/stories/vocal-demo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 애지리티 완전 가이드](/stories/vocal-agility1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
