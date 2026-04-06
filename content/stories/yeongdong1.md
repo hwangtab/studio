@@ -69,4 +69,4 @@ faq:
 
 영동역 KTX를 이용하면 약 2시간 내로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다.
 
-[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [제천에서 서울 녹음실 방문 가이드](/stories/jecheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[옥천에서 서울 녹음실 방문 가이드](/stories/okcheon1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
