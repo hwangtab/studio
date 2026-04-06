@@ -80,4 +80,4 @@ faq:
 
 평창에서 KTX 강릉선을 이용하면 약 2시간대로 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [원주·강원도에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[정선에서 서울 녹음실 방문 가이드](/stories/jeongseon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주·강원도에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

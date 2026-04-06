@@ -133,4 +133,4 @@ Edit → Correct Pitch
 
 Melodyne은 자연스러운 보컬 피치 교정의 업계 표준입니다. 스튜디오 놀에서는 Melodyne을 활용하여 보컬 음정을 자연스럽고 정밀하게 교정한 뒤 전문 믹싱·마스터링으로 완성 음원을 제공합니다.
 
-[보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
