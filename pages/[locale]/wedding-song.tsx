@@ -131,7 +131,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
         title={t('weddingSong.seo.title')}
         description={t('weddingSong.seo.description')}
         keywords={t('weddingSong.seo.keywords')}
-        ogImage="/images/recording5.webp"
+        ogImage="/images/recording3.webp"
         ogImageAlt={t('weddingSong.hero.alt')}
         ogImageWidth={1280}
         ogImageHeight={720}
@@ -156,7 +156,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
             {t('weddingSong.hero.subtitleLine2')}
           </>
         }
-        backgroundImage="/images/recording5.webp"
+        backgroundImage="/images/recording3.webp"
         imageAlt={t('weddingSong.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
@@ -185,7 +185,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
               className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
             >
               <ResponsiveImage
-                src="/images/recording6.webp"
+                src="/images/recording3.webp"
                 alt={t('weddingSong.intro.imageAlt')}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
@@ -331,7 +331,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
               {t('weddingSong.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/recording5.webp"
+          imageSrc="/images/recording3.webp"
           imageAlt={t('weddingSong.cta.imageAlt')}
           primaryButtonLabel={t('weddingSong.cta.inquiry')}
           secondaryButtonLabel={t('weddingSong.cta.location')}

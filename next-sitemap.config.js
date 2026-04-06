@@ -19,8 +19,8 @@ const pageImageMap = {
   '/pricing': '/images/hardware2.jpg',
   '/stories': '/images/studio1.jpg',
   '/studio-info': '/images/hardware1.jpg',
-  '/wedding-song': '/images/recording5.webp',
-  '/voice-acting': '/images/recording10.webp',
+  '/wedding-song': '/images/recording3.webp',
+  '/voice-acting': '/images/hardware3.avif',
 };
 
 // Parse portfolio item images from TypeScript source at build time

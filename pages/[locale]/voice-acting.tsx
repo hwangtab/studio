@@ -157,7 +157,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         title={t('voiceActing.seo.title')}
         description={t('voiceActing.seo.description')}
         keywords={t('voiceActing.seo.keywords')}
-        ogImage="/images/recording10.webp"
+        ogImage="/images/hardware3.avif"
         ogImageAlt={t('voiceActing.hero.alt')}
         ogImageWidth={1280}
         ogImageHeight={720}
@@ -182,7 +182,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
             {t('voiceActing.hero.subtitleLine2')}
           </>
         }
-        backgroundImage="/images/recording10.webp"
+        backgroundImage="/images/hardware3.avif"
         imageAlt={t('voiceActing.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
@@ -234,7 +234,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
               className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
             >
               <ResponsiveImage
-                src="/images/recording11.webp"
+                src="/images/hardware3.avif"
                 alt={t('voiceActing.environment.imageAlt')}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
@@ -375,7 +375,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
               {t('voiceActing.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/recording10.webp"
+          imageSrc="/images/hardware3.avif"
           imageAlt={t('voiceActing.cta.imageAlt')}
           primaryButtonLabel={t('voiceActing.cta.inquiry')}
           secondaryButtonLabel={t('voiceActing.cta.location')}
