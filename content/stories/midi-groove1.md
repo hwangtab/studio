@@ -136,4 +136,4 @@ Groove Amount: 50~75%
 
 MIDI 그루브는 작은 변화들이 쌓여 큰 차이를 만듭니다. 벨로시티부터 시작해 타이밍 오프셋, 스윙까지 단계적으로 적용하면 더 생동감 있는 음악을 만들 수 있습니다.
 
-[드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [DAW 템플릿 완전 가이드](/stories/daw-template1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [DAW 템플릿 완전 가이드](/stories/daw-template1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
