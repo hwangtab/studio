@@ -88,4 +88,4 @@ faq:
 
 서산에서 고속버스를 이용하면 약 2시간 30분이면 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[공주·논산에서 서울 녹음실 방문 가이드](/stories/gongju1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보령에서 서울 녹음실 방문 가이드](/stories/boryeong1) | [공주·논산에서 서울 녹음실 방문 가이드](/stories/gongju1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
