@@ -102,4 +102,4 @@ faq:
 
 코러스는 메인 보컬을 더 풍성하게 만드는 핵심 요소입니다. 혼자 레이어를 쌓는 보컬 스태킹부터 시작해보세요. 스튜디오 놀에서 엔지니어와 함께 완성도 높은 코러스를 만들어 보세요.
 
-[아카펠라 녹음 가이드](/stories/acapella1) | [듀엣 녹음 가이드](/stories/duet1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 더블 트래킹 가이드](/stories/doubletracking1) | [아카펠라 녹음 가이드](/stories/acapella1) | [듀엣 녹음 가이드](/stories/duet1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [스튜디오 놀 이용 요금](/pricing)
