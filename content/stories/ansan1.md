@@ -80,4 +80,4 @@ faq:
 
 안산·시흥에서 지하철로 1시간 내외면 서울 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 방문이 어렵다면 온라인 파일 의뢰도 가능합니다.
 
-[수원·용인에서 서울 녹음실 방문 가이드](/stories/suwon1) | [화성·동탄에서 서울 녹음실 방문 가이드](/stories/hwaseong1) | [인천·부천 녹음실 안내](/stories/incheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[시흥에서 서울 녹음실 방문 가이드](/stories/siheung1) | [수원·용인에서 서울 녹음실 방문 가이드](/stories/suwon1) | [화성·동탄에서 서울 녹음실 방문 가이드](/stories/hwaseong1) | [인천·부천 녹음실 안내](/stories/incheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
