@@ -124,4 +124,4 @@ faq:
 
 음감 훈련은 보컬의 음정 정확도를 높이는 가장 근본적인 방법입니다. 매일 30분 꾸준한 청음 훈련 후 스튜디오 놀 녹음 세션에서 그 실력을 확인해보세요.
 
-[보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)
+[음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [스튜디오 놀 이용 요금](/pricing)
