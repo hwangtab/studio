@@ -135,4 +135,4 @@ CCM(Contemporary Christian Music) 보컬은 기교적 완성도 이전에 가사
 
 CCM 보컬의 진정성은 준비에서 나옵니다. 스튜디오 놀에서는 CCM·찬양 녹음 경험이 있는 엔지니어와 함께 최고의 음반을 만들어드립니다.
 
-[찬양·CCM 녹음 서비스](/stories/ccm1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [음원 유통 완전 가이드](/stories/distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[교회 찬양·예배 음악 레코딩 가이드](/stories/worship-recording1) | [찬양·CCM 녹음 서비스](/stories/ccm1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
