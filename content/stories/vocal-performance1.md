@@ -112,4 +112,4 @@ faq:
 
 보컬 퍼포먼스는 연습으로 만들어집니다. 스튜디오 놀 녹음 세션에서 발성과 표현을 먼저 다듬고, 무대에서 빛나는 퍼포먼스를 선보이세요.
 
-[보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [콘서트·공연 보컬 준비 가이드](/stories/concert-vocal1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [보컬 음색 개발 가이드](/stories/tone-color1) | [스튜디오 놀 이용 요금](/pricing)
+[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
