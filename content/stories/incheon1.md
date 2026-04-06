@@ -65,4 +65,4 @@ faq:
 
 인천·부천에서 50~70분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 먼 거리를 오시는 만큼 최고의 결과물을 만들어드립니다.
 
-[서울 녹음실 비교 가이드](/stories/studio-compare1) | [마포구 녹음실 안내](/stories/mapo1) | [양천구·강서구 녹음실 안내](/stories/yangcheon1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)
+[서울 녹음실 비교 가이드](/stories/studio-compare1) | [마포구 녹음실 안내](/stories/mapo1) | [양천구·강서구 녹음실 안내](/stories/yangcheon1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [스튜디오 놀 이용 요금](/pricing)
