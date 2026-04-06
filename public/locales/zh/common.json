@@ -114,7 +114,7 @@
     "seo": {
       "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备",
       "title": "Yeonsinnae 音乐制作 · 全方位录音·混音·母带 | Studio NOL",
-      "description": "从企划到录音、混音、母带、发行，Studio NOL 提供一站式音乐制作服务。模拟设备与10年经验工程师全程陪伴。"
+      "description": "从企划到录音、混音、母带、发行，Studio NOL提供一站式音乐制作全流程服务。模拟设备与逾10年经验工程师全程陪伴，助您将音乐梦想化为现实。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
     "howToDescription": "为您介绍在专业录音室制作音乐的全过程。"
@@ -139,7 +139,7 @@
     "seo": {
       "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL",
       "title": "录音·混音作品集 | Studio NOL",
-      "description": "查看 Studio NOL 完成的录音、混音、母带项目。欣赏多种风格的成品，试听前后对比样本。"
+      "description": "欣赏Studio NOL完成的录音、混音、母带项目集。涵盖专辑、单曲、广告等多种风格，免费试听前后对比效果，感受专业声音制作的真实魅力。"
     }
   },
   "contact": {
@@ -197,13 +197,13 @@
     "seo": {
       "keywords": "Studio NOL 联系方式, 音乐制作咨询, 录音预约, 混音委托, 工作室位置, KakaoTalk 咨询, 制作报价",
       "title": "咨询·预约·交通指引 | Studio NOL",
-      "description": "欢迎咨询录音、混音、母带预约事宜。支持 KakaoTalk·邮件沟通，距延新内站步行5分钟，24小时内回复。"
+      "description": "欢迎录音、混音、母带预约咨询。支持KakaoTalk及邮件，延新内站步行5分钟可达，提供免费报价，24小时内快速回复，期待与您合作。"
     }
   },
   "pricing": {
     "seo": {
       "title": "录音费用与录音棚租赁 | Studio NOL",
-      "description": "价格透明。查看婚礼录音、配音与录影棚租赁费用。",
+      "description": "价格公开透明，无隐藏费用。婚礼自唱套餐₩15万起，配音₩3万/小时，混音·母带多种方案，套餐折扣高达30%，欢迎免费咨询报价，24小时内快速回复。",
       "keywords": "录音费用, 配音录音报价, 录音室租赁价格, 混音价格, 母带价格, Studio NOL",
       "schemaTitle": "Studio NOL 服务价格"
     },
@@ -267,7 +267,7 @@
     "mobileMenu": "移动菜单",
     "seo": {
       "title": "音乐发行咨询 · 混音反馈与短期 MIDI 课程 | Studio NOL",
-      "description": "从发行/版权注册咨询到 1:1 混音反馈，帮助你完成音乐。",
+      "description": "现职制作人1:1全程指导，MIDI编曲·混音·母带实战课程，含发行及著作权咨询支持。延新内站步行5分钟，首次咨询免费，月付₩35万定额制。",
       "keywords": "音乐制作咨询, 混音反馈, MIDI 指导, 音乐制作课程, 短期 MIDI 课程, Cubase, Logic Pro"
     },
     "hero": {
@@ -376,7 +376,7 @@
   "practiceRoom": {
     "seo": {
       "title": "恩平区 24 小时高端隔音练习室 | Studio NOL",
-      "description": "位于恩平区主要区域附近，交通便利的高级隔音练习室。",
+      "description": "恩平区优质隔音练习室，24小时全天候使用，鼓组·吉他·键盘完整配备。延新内站步行5分钟，月租₩40万起，首月享9折优惠，欢迎随时咨询。",
       "keywords": "练习室, 隔音练习室, 恩平区练习室, 私人工作室, Studio NOL"
     },
     "hero": {
@@ -482,7 +482,7 @@
   "studioInfo": {
     "seo": {
       "title": "高端录音设备 · Neumann/SSL | Studio NOL",
-      "description": "为最佳声音的大胆投资。查看 Neumann U87AI、Vintech X73i、SSL Fusion 等高端设备与声学环境。",
+      "description": "Neumann U87AI、Vintech X73i、SSL Fusion等顶级设备，配合专业声学处理室，助您打造最佳音质录音。延新内站步行5分钟，欢迎预约参观。",
       "keywords": "高端录音设备, Neumann U87AI, SSL Fusion, 录音室设备清单, 专业音频设备"
     },
     "hero": {
@@ -518,7 +518,7 @@
   "stories": {
     "seo": {
       "title": "故事 - Studio NOL 项目记录",
-      "description": "了解 Studio NOL 的各种项目故事与回顾。",
+      "description": "了解Studio NOL录音·混音工作日志、专业设备评测与艺术家访谈。探索音乐制作背后的真实故事，获取来自专业工程师的宝贵创作经验。",
       "keywords": "Studio NOL 故事, 制作后记, 音乐制作故事",
       "fallbackKeywords": "Studio NOL, 音乐, 故事"
     },

@@ -203,7 +203,7 @@
   "pricing": {
     "seo": {
       "title": "Phí thu âm & thuê studio | Studio NOL",
-      "description": "Giá minh bạch. Xem phí thu âm nhạc cưới, voiceover và thuê studio.",
+      "description": "Giá minh bạch tại Studio NOL. Ghi âm từ ₩20K/giờ, gói nhạc cưới ₩150K, lồng tiếng ₩30K/giờ. Giảm đến 30% khi đặt gói. Báo giá miễn phí 24 giờ.",
       "keywords": "phí thu âm, báo giá thu âm voiceover, giá thuê studio, giá mixing, giá mastering, Studio NOL",
       "schemaTitle": "Bảng giá dịch vụ Studio NOL"
     },
@@ -376,7 +376,7 @@
   "practiceRoom": {
     "seo": {
       "title": "Phòng tập 24h premium tại Eunpyeong | Studio NOL",
-      "description": "Phòng tập cách âm premium, dễ tiếp cận tại Eunpyeong-gu.",
+      "description": "Phòng tập cách âm cao cấp tại Eunpyeong-gu, 5 phút đi bộ từ ga Yeongsinnae. Mở 24/7, đầy đủ trống và nhạc cụ. Gói tháng từ ₩400K, giảm 10% tháng đầu.",
       "keywords": "phòng tập, phòng tập cách âm, phòng tập Eunpyeong, studio riêng, Studio NOL"
     },
     "hero": {
@@ -482,7 +482,7 @@
   "studioInfo": {
     "seo": {
       "title": "Thiết bị thu âm cao cấp | Studio NOL",
-      "description": "Thiết bị cao cấp cho âm thanh tốt nhất. Xem Neumann U87AI, Vintech X73i, SSL Fusion và hơn thế nữa.",
+      "description": "Thiết bị cao cấp cho âm thanh tốt nhất. Khám phá Neumann U87AI, Vintech X73i, SSL Fusion và phòng thu xử lý âm học chuyên nghiệp tại Studio NOL, Seoul.",
       "keywords": "thiết bị thu âm cao cấp, Neumann U87AI, SSL Fusion, gear phòng thu, thiết bị âm thanh chuyên nghiệp"
     },
     "hero": {
@@ -518,7 +518,7 @@
   "stories": {
     "seo": {
       "title": "Stories - Nhật ký dự án Studio NOL",
-      "description": "Khám phá các câu chuyện và review từ các dự án tại Studio NOL.",
+      "description": "Khám phá nhật ký dự án, đánh giá thiết bị và phỏng vấn nghệ sĩ tại Studio NOL. Tìm hiểu quy trình sản xuất âm nhạc chuyên nghiệp từ góc nhìn kỹ sư.",
       "keywords": "stories Studio NOL, review sản xuất, câu chuyện sản xuất âm nhạc",
       "fallbackKeywords": "Studio NOL, âm nhạc, câu chuyện"
     },

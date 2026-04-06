@@ -203,7 +203,7 @@
   "pricing": {
     "seo": {
       "title": "Yozuv narxlari va studio ijarasi | Studio NOL",
-      "description": "Shaffof narxlar. To'y yozuvlari, voiceover va studio ijarasi uchun to'lovlarni tekshiring.",
+      "description": "Studio NOL'da shaffof narxlar. Yozuv ₩20K/soatdan, to'y kuy paketi ₩150K, ovoz yozish ₩30K/soat. Paket chegirmalari 30% gacha. Bepul hisob-kitob taklif etiladi.",
       "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL",
       "schemaTitle": "Studio NOL xizmat narxlari"
     },
@@ -375,7 +375,7 @@
   "practiceRoom": {
     "seo": {
       "title": "Eunpyeongdagi premium 24 soatlik mashg'ulot xonasi | Studio NOL",
-      "description": "Eunpyeong-gu'da qulay joylashuvli, premium tovush izolyatsiyali mashg'ulot xonalari.",
+      "description": "Eunpyeong-gu'da premium tovush izolyatsiyali mashg'ulot xonalari, Yeongsinnae bekatidan 5 daqiqada. 24/7 kirish, barcha cholg'u asboblar bilan. ₩400K/oydan.",
       "keywords": "mashg'ulot xonasi, tovush izolyatsiyali mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, private studio, Studio NOL"
     },
     "hero": {
@@ -517,7 +517,7 @@
   "stories": {
     "seo": {
       "title": "Hikoyalar - Studio NOL loyiha kundaliklari",
-      "description": "Studio NOLdagi loyihalardan turli hikoyalar va sharhlarni kashf eting.",
+      "description": "Studio NOL loyihalari haqida maqolalar, uskunalar sharhlari va san'atkorlar bilan suhbatlar. Professional ovoz muhandisi nuqtai nazaridan musiqa ishlab chiqarishni o'rganing.",
       "keywords": "Studio NOL hikoyalari, prodakshn sharhlari, musiqa prodakshn hikoyalari",
       "fallbackKeywords": "Studio NOL, musiqa, hikoyalar"
     },
