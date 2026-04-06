@@ -95,4 +95,4 @@ faq:
 
 인디 뮤지션에게 가장 중요한 것은 결과물의 퀄리티입니다. 퀄리티가 높은 음원이 청중에게 닿고, 청중이 공유하고, 자연스럽게 인지도가 쌓입니다. 연신내역 도보 5분 거리 스튜디오 놀에서 첫 인디 음반을 시작해보세요.
 
-[음반 제작 전 과정 가이드](/stories/album1) | [음원 발매 가이드](/stories/release1) | [싱어송라이터 녹음 가이드](/stories/singer1) | [마스터링이란?](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
+[음반 제작 전 과정 가이드](/stories/album1) | [음원 발매 가이드](/stories/release1) | [싱어송라이터 녹음 가이드](/stories/singer1) | [마스터링이란?](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing) | [플레이리스트 피칭 전략](/stories/playlist1)
