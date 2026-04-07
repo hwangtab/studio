@@ -128,4 +128,4 @@ faq:
 
 무대 불안은 아티스트가 음악을 진지하게 대한다는 증거입니다. 적절한 긴장을 인정하고, 호흡·준비·경험으로 관리하면 그 에너지가 퍼포먼스의 힘이 됩니다. 스튜디오 놀에서 처음 녹음하는 아티스트도 편안하게 자신의 음색을 발휘할 수 있도록 세션을 진행합니다.
 
-[창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 저작권·저작인접권 완전 가이드](/stories/music-copyright1) | [창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

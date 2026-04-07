@@ -80,4 +80,4 @@ faq:
 
 성동구에서 2호선 또는 6호선으로 30분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[금호·옥수·행당·마장 녹음실 안내](/stories/geumho1) | [행당·왕십리·마장·답십리 녹음실 안내](/stories/haengdang1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[성동구 왕십리·마장·행당 녹음실 안내](/stories/seongdong-wangsimni1) | [금호·옥수·행당·마장 녹음실 안내](/stories/geumho1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
