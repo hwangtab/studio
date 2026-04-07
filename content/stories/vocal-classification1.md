@@ -138,4 +138,4 @@ faq:
 
 자신의 목소리 타입을 아는 것은 더 효율적인 보컬 훈련과 레퍼토리 선택의 출발점입니다. 스튜디오 놀에서 보컬 녹음 시 엔지니어가 아티스트의 음역과 음색에 최적화된 마이크·프리앰프 세팅으로 최고의 사운드를 이끌어냅니다.
 
-[보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1) | [보컬 프레이징 완전 가이드](/stories/vocal-phrasing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
