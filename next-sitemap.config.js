@@ -189,6 +189,43 @@ module.exports = {
     transformRobotsTxt: async (_config, robotsTxt) =>
       robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, ''),
   },
+  sitemapSize: 50000,
+  additionalPaths: async (config) => {
+    const files = fs.readdirSync(storiesDir);
+    const slugs = new Set();
+    files.forEach((file) => {
+      if (!file.endsWith('.md')) return;
+      let name = file.replace(/\.md$/, '');
+      locales.forEach((locale) => {
+        if (name.endsWith(`.${locale}`)) {
+          name = name.replace(new RegExp(`\\.${locale}$`), '');
+        }
+      });
+      slugs.add(name);
+    });
+
+    const results = [];
+    for (const slug of slugs) {
+      for (const locale of locales) {
+        const routePath = `/${locale}/stories/${slug}`;
+        const thumbnail = getStoryThumbnail(slug, locale);
+        let images = [];
+        if (thumbnail) {
+          const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
+          images = [{ loc: new URL(imageUrl) }];
+        }
+        results.push({
+          loc: routePath,
+          lastmod: getStoryLastmod(slug, locale) || new Date().toISOString(),
+          changefreq: 'weekly',
+          priority: 0.8,
+          alternateRefs: getAlternateRefs(routePath),
+          ...(images.length > 0 && { images }),
+        });
+      }
+    }
+    return results;
+  },
   transform: async (config, routePath) => {
     if (routePath.includes('/privacy-policy')) {
       return null;
