@@ -81,4 +81,4 @@ faq:
 
 중랑구에서 6호선 30~40분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요.
 
-[장안동·중화·상봉·면목 녹음실 안내](/stories/jangandong1) | [노원구 녹음실 안내](/stories/nowon1) | [성북구 녹음실 안내](/stories/seongbuk1) | [강북구 녹음실 안내](/stories/gangbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[신내·망우·상봉·묵동 녹음실 안내](/stories/jungnang-sinnae1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/jangandong1) | [노원구 녹음실 안내](/stories/nowon1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

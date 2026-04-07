@@ -143,4 +143,4 @@ faq:
 
 보컬 런은 하루아침에 만들어지지 않습니다. 스튜디오 놀에서 보컬 녹음 시 엔지니어의 디렉팅으로 아티스트의 런이 가장 자연스럽고 감동적으로 표현된 최고의 테이크를 이끌어냅니다.
 
-[보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [보컬 프레이징 완전 가이드](/stories/vocal-phrasing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[랩·힙합 보컬 녹음 완전 가이드](/stories/rap-recording1) | [보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
