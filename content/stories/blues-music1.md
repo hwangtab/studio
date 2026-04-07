@@ -141,4 +141,4 @@ EQ:
 
 블루스 음악은 감성 표현이 기교보다 우선합니다. 스튜디오 놀에서는 블루스의 날 것 같은 감성이 담긴 라이브 질감의 보컬·기타 레코딩을 도와드립니다.
 
-[펑크 음악 제작 완전 가이드](/stories/funk-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [록 음악 제작 완전 가이드](/stories/rock-production1) | [랩·힙합 보컬 녹음 완전 가이드](/stories/rap-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[라틴 음악 제작 완전 가이드](/stories/latin-music1) | [펑크 음악 제작 완전 가이드](/stories/funk-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [록 음악 제작 완전 가이드](/stories/rock-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
