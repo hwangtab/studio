@@ -118,4 +118,6 @@ faq:
 
 녹음실은 처음이어도 엔지니어가 모든 기술적인 부분을 담당합니다.
 
+---
+
 [녹음실 에티켓 완전 가이드](/stories/studio-etiquette1) | [이용 요금 안내](/pricing) | [당일 컨디션 관리 체크리스트](/stories/session1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [예약 방법 완전 가이드](/stories/booking1) | [녹음실 용어 사전](/stories/glossary1)

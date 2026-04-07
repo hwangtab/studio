@@ -124,4 +124,6 @@ faq:
 
 귀는 한번 손상되면 회복이 어렵습니다. 올바른 볼륨·규칙적 휴식·다양한 기기 체크 습관이 장기적으로 더 나은 믹스를 만드는 비결입니다.
 
+---
+
 [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [스튜디오 모니터 스피커 완전 가이드](/stories/studio-monitor1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [홈 레코딩 장비 가이드](/stories/homegear1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

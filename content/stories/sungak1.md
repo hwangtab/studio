@@ -110,4 +110,6 @@ faq:
 
 성악이든 팝 보컬이든, 기초 호흡과 지지력은 공통 핵심입니다. 목표 장르에 맞는 교사와 훈련 방식을 선택하세요.
 
+---
+
 [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [보컬 워밍업 루틴](/stories/warmup1) | [목소리 타입 완전 가이드](/stories/voicetype1) | [스튜디오 놀 이용 요금](/pricing)

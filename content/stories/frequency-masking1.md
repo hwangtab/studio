@@ -131,4 +131,6 @@ faq:
 
 주파수 마스킹 해결은 EQ 부스트보다 카빙(컷)이 우선입니다.
 
+---
+
 [보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [디에서(De-esser) 완전 가이드](/stories/de-esser1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

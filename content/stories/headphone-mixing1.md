@@ -148,4 +148,6 @@ faq:
 
 헤드폰 믹싱은 한계가 있지만 올바른 방법으로 접근하면 충분히 전문적인 결과물을 만들 수 있습니다. 최종 믹스 검토는 스튜디오 놀의 전문 모니터 스피커와 룸 어쿠스틱에서 확인하면 정확한 결과를 보장합니다.
 
+---
+
 [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [컴프레서 완전 가이드](/stories/compression-guide1) | [리버브 완전 가이드](/stories/reverb-guide1) | [모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

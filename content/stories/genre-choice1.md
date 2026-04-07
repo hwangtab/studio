@@ -94,4 +94,6 @@ faq:
 
 자신의 음색과 음역을 알면 어떤 장르에서 빛날지 알 수 있습니다.
 
+---
+
 [K-팝 보컬 스타일 가이드](/stories/kpop-vocal1) | [내 보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 잘하는 방법 가이드](/stories/singswell1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [재즈 보컬 녹음 가이드](/stories/jazz1) | [스튜디오 놀 이용 요금](/pricing)

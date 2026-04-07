@@ -128,4 +128,6 @@ faq:
 
 뮤직비디오는 음악을 더 많은 사람에게 닿게 하는 강력한 도구입니다.
 
+---
+
 [EP 제작 완전 가이드](/stories/ep-making1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [스튜디오 놀 이용 요금](/pricing)

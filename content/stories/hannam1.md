@@ -67,4 +67,6 @@ faq:
 
 한남동·동빙고에서 6호선 직통으로 40~50분 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [용산구 녹음실 안내](/stories/yongsan1) | [이태원·해방촌 녹음실 안내](/stories/itaewon1) | [해방촌 녹음실 안내](/stories/haebangchon1) | [이촌·서빙고 녹음실 안내](/stories/ichon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

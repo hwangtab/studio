@@ -134,4 +134,6 @@ K-Pop:
 
 프레이징은 가장 개인적이고 독창적인 보컬 표현입니다.
 
+---
+
 [보컬 자세 완전 가이드](/stories/vocal-posture1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

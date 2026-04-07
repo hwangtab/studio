@@ -84,4 +84,6 @@ faq:
 
 노래방은 즐거운 노래 공간이고, 녹음실은 기억에 남는 보컬을 만드는 공간입니다.
 
+---
+
 [노래방 연습 방법 가이드](/stories/karaoke-practice1) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [홈 레코딩 vs 스튜디오 비교](/stories/homestudio1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)

@@ -105,4 +105,6 @@ Wet/Dry: 10~25%
 
 리버브와 딜레이는 보컬 믹싱의 핵심 도구입니다. 스튜디오 놀의 엔지니어는 녹음 목적과 장르에 맞게 최적의 공간감을 설정합니다.
 
+---
+
 [딜레이 종류 완전 가이드](/stories/delay-types1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

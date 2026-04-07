@@ -125,4 +125,6 @@ KOMCA (한국음악저작권협회):
 
 음악 저작권은 아티스트의 창작물을 보호하는 가장 강력한 도구입니다. 창작 전에는 다른 사람의 권리를 존중하고, 창작 후에는 자신의 권리를 등록하고 관리하세요.
 
+---
+
 [인스타그램 릴스·유튜브 쇼츠 음악 마케팅 가이드](/stories/shorts-reels-music1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

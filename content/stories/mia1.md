@@ -89,4 +89,6 @@ faq:
 
 강북구 미아·수유·방학·우이에서 지하철 30~50분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [강북구 녹음실 안내](/stories/gangbuk1) | [노원구 녹음실 안내](/stories/nowon1) | [도봉구 녹음실 안내](/stories/dobong1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

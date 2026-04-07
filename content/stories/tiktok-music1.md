@@ -94,4 +94,6 @@ faq:
 
 틱톡은 지금 이 시간도 신진 보컬 아티스트가 발견되는 공간입니다.
 
+---
+
 [유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)

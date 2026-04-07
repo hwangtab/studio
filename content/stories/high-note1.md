@@ -127,4 +127,6 @@ Do-Re-Mi-Fa-Sol (1도씩 올려가며 반복)
 
 고음 발성은 단기간에 무리하면 오히려 성대를 상하게 합니다. 꾸준하고 올바른 방법으로 음역을 넓혀가세요.
 
+---
+
 [믹스 보이스 완전 가이드](/stories/mixvoice1) | [두성 완전 가이드](/stories/head-voice1) | [팔세토 완전 가이드](/stories/falsetto1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

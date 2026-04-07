@@ -135,4 +135,6 @@ faq:
 
 멀티밴드 컴프레서는 강력하지만 과도한 사용은 믹스를 부자연스럽게 만듭니다. 문제가 있는 대역만 최소한으로 처리하는 것이 핵심입니다.
 
+---
+
 [미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

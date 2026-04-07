@@ -92,4 +92,6 @@ faq:
 
 라이브 녹음은 오버더빙으로는 담을 수 없는 음악의 생동감을 포착합니다.
 
+---
+
 [밴드 녹음 완전 가이드](/stories/band-recording1) | [음반 제작 가이드](/stories/album1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [스튜디오 에티켓 가이드](/stories/studio-etiquette1) | [스튜디오 놀 이용 요금](/pricing)

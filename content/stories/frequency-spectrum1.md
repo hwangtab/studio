@@ -132,4 +132,6 @@ faq:
 
 주파수 스펙트럼을 이해하면 EQ 작업이 훨씬 직관적이 됩니다.
 
+---
+
 [보컬 EQ 완전 가이드](/stories/eq1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

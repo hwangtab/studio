@@ -108,4 +108,6 @@ faq:
 
 노래 구조를 이해하면 작곡할 때 청중의 감정을 더 효과적으로 설계할 수 있습니다. 구조를 의식하며 좋아하는 노래를 분석해보세요.
 
+---
+
 [오리지널 곡 만드는 방법 가이드](/stories/original-song1) | [작사 완전 가이드](/stories/lyrics1) | [코드 진행 기초 가이드](/stories/chordprog1) | [작곡 기초 가이드](/stories/compose1) | [스튜디오 놀 이용 요금](/pricing)

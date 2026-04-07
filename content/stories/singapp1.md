@@ -120,4 +120,6 @@ faq:
 
 보컬 연습 앱은 일상의 연습을 지원하는 좋은 도구입니다. 앱으로 음정과 청음 감각을 키우고, 전문 스튜디오에서 녹음해 실제 목소리를 객관적으로 확인하면 성장 속도가 크게 빨라집니다.
 
+---
+
 [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)

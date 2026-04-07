@@ -118,4 +118,6 @@ faq:
 
 성대를 아끼는 것이 결국 더 오래, 더 좋은 보컬로 활동하는 비결입니다. 스튜디오 놀 세션 전후 이 가이드를 참고해 최상의 컨디션으로 녹음하고 회복하세요.
 
+---
+
 [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [스튜디오 놀 이용 요금](/pricing)

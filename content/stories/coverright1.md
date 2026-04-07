@@ -106,4 +106,6 @@ faq:
 
 커버 음악은 원작자에 대한 사랑과 존중에서 시작합니다. 저작권 기초를 알고 올바른 방식으로 커버 활동을 즐기세요.
 
+---
+
 [커버곡 녹음 가이드](/stories/cover1) | [음악 저작권 기초 가이드](/stories/copyright1) | [음원 유통 방법 가이드](/stories/distribution1) | [유튜브·SNS 보컬 활동 가이드](/stories/youtube1) | [스튜디오 놀 이용 요금](/pricing)

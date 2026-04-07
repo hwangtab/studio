@@ -128,4 +128,6 @@ faq:
 
 스캣 보컬은 음악 이론과 즉흥성이 만나는 지점에서 탄생합니다. 처음엔 단순한 음절과 짧은 프레이즈부터 시작해, 점차 자신만의 스캣 언어를 개발해나가세요.
 
+---
+
 [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

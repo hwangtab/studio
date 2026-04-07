@@ -106,4 +106,6 @@ faq:
 
 클래식 성악은 인체 발성 훈련의 정점입니다.
 
+---
+
 [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [가스펠·CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

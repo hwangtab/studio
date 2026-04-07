@@ -82,4 +82,6 @@ Step 4: 저작권료 수령
 
 음악 창작의 결실은 저작권 관리로 완성됩니다. 발매 전 KOMCA 등록과 계약서 검토를 통해 음악 수익을 안전하게 지키세요. 음원 제작부터 발매까지 스튜디오 놀이 도와드립니다.
 
+---
+
 [음원 유통 방법 완전 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1) | [스튜디오 놀 이용 요금](/pricing)

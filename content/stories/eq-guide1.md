@@ -117,4 +117,6 @@ EQ(이퀄라이저)는 보컬의 주파수 밸런스를 조정하는 믹싱의 �
 
 보컬 EQ는 '더하기'보다 '빼기'가 우선입니다. 불필요한 주파수를 제거한 뒤 필요한 대역을 소폭 부스트하는 것이 자연스러운 결과를 만듭니다.
 
+---
+
 [주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [스튜디오 놀 이용 요금](/pricing)

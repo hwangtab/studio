@@ -95,4 +95,6 @@ faq:
 
 리미터 설정은 마스터링의 마지막 단계이지만, 그 전 믹싱과 마스터링 처리가 잘 돼 있어야 리미터도 제 역할을 합니다.
 
+---
+
 [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [음압(LUFS) 스트리밍 마스터링 가이드](/stories/loudness1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [스튜디오 놀 이용 요금](/pricing)

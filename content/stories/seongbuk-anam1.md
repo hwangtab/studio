@@ -77,4 +77,6 @@ faq:
 
 성북구 안암·종암에서 6호선 15분이면 연신내 고려대·성신여대 인근 뮤지션 여러분 환영합니다. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [성북구 전체 녹음실 안내](/stories/seongbuk1) | [돈암·성신여대·삼선 녹음실 안내](/stories/seongbuk-donam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -128,4 +128,6 @@ faq:
 
 최적의 녹음 세팅을 갖추기 어렵다면 전문 스튜디오 놀을 이용하세요. 흡음 처리된 부스, Neumann U87, 전문 엔지니어가 모든 세팅을 완벽하게 갖추고 있습니다.
 
+---
+
 [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 마이크 완전 가이드](/stories/microphone1) | [보컬 녹음 마이크 추천 가이드](/stories/vocal-microphone1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

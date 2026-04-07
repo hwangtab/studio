@@ -64,4 +64,6 @@ faq:
 
 잠실에서 지하철로 45분, 연신내 이동이 부담스럽다면. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
+---
+
 [송파구 녹음실 안내](/stories/songpa1) | [강동구 녹음실 안내](/stories/gangdong1) | [강남 녹음실 안내](/stories/gangnam1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

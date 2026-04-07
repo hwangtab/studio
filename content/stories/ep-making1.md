@@ -101,4 +101,6 @@ EP는 아티스트로서 음악 세계를 처음 선보이는 중요한 작업�
 
 첫 EP는 완벽하지 않아도 됩니다. 만들면서 배우는 것이 더 많습니다.
 
+---
+
 [음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음반 제작 가이드](/stories/album1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)

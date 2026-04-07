@@ -135,4 +135,6 @@ TuneCore: 트랙당 유통비, 저렴한 초기 비용
 
 완성된 믹스·마스터링 파일을 올바른 규격으로 납품해야 음악이 의도한 품질로 재생됩니다.
 
+---
+
 [음원 유통 완전 가이드](/stories/distribution1) | [마스터링 완전 가이드](/stories/mastering1) | [앨범 아트 제작 가이드](/stories/album-art1) | [스트리밍 발매 가이드](/stories/streaming-release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

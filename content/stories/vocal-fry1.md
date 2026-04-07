@@ -112,4 +112,6 @@ faq:
 
 보컬 프라이는 올바르게 사용하면 음악에 독특한 감성과 질감을 더하는 강력한 표현 도구입니다. 긴장을 풀고 자연스럽게 연습하여 음악적으로 활용해보세요.
 
+---
+
 [팔세토 발성법 완전 가이드](/stories/falsetto1) | [두성(헤드 보이스) 훈련 가이드](/stories/headvoice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [벨팅 발성법 가이드](/stories/belting1) | [보컬 레슨 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)

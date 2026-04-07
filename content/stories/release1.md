@@ -104,4 +104,6 @@ faq:
 
 음원 발매는 녹음·믹싱·마스터링이 완성된 이후에 유통사를 통해 7~14일이면 완료됩니다.
 
+---
+
 [음원 유통 완전 가이드](/stories/music-distribution1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [음악 저작권료 받는 방법](/stories/royalty1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 제작 가이드 보기](/stories/album1) | [마스터링이란? LUFS 기준 완전 설명](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)

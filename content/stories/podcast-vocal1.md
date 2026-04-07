@@ -131,4 +131,6 @@ DAW/녹음 소프트웨어:
 
 팟캐스트와 오디오드라마 성공의 핵심은 깨끗하고 명료한 목소리입니다.
 
+---
+
 [나레이션·성우 보컬 녹음 가이드](/stories/narration1) | [팟캐스트 인트로 음악 제작 가이드](/stories/podcast-music1) | [보컬 건강 완전 가이드](/stories/vocalhealth1) | [마이크 선택 완전 가이드](/stories/microphone1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

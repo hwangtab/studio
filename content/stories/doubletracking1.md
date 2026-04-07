@@ -94,4 +94,6 @@ faq:
 
 더블 트래킹은 보컬 사운드를 전문적으로 만드는 가장 효과적인 기술 중 하나입니다.
 
+---
+
 [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [보컬 레이어링·화음 녹음 가이드](/stories/harmony1) | [믹싱 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

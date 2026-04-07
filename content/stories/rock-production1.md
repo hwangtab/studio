@@ -156,4 +156,6 @@ DI 녹음 + 앰프 시뮬레이터:
 
 믹스에서 가장 중요한 건 전체 밸런스를 잃지 않는 것입니다.
 
+---
+
 [보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [전자 음악 제작 완전 가이드](/stories/electronic-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

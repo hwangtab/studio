@@ -120,4 +120,6 @@ faq:
 
 로파이 음악은 복잡한 장비 없이도 따뜻하고 매력적인 사운드를 만들 수 있습니다.
 
+---
+
 [앰비언트 음악 제작 완전 가이드](/stories/ambient-music1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

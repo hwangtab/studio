@@ -81,4 +81,6 @@ faq:
 
 인천 중구 동인천역에서 1호선을 이용하면 약 80분 내로 연신내 방문이 어려운 경우 온라인 믹싱 의뢰도 가능합니다. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
+---
+
 [인천 전체 녹음실 안내](/stories/incheon1) | [인천 부평구 녹음실 안내](/stories/incheon-bupyeong1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [인천 연수구 녹음실 안내](/stories/incheon-yeonsu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -116,4 +116,6 @@ FX → 공간 전체 분산
 
 공간 음향은 헤드폰 청취자에게 새로운 경험을 제공합니다. 아직 표준화가 진행 중이므로, 스테레오 마스터와 함께 애트모스 버전을 추가로 제작하는 방식이 현실적입니다.
 
+---
+
 [마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

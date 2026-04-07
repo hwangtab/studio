@@ -70,4 +70,6 @@ faq:
 
 안산 상록구에서 약 1시간 20분이면 연신내. 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
+---
+
 [안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [안산·시흥 녹음실 안내](/stories/ansan1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [군포 산본·금정 녹음실 안내](/stories/gunpo-sanbon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

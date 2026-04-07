@@ -91,4 +91,6 @@ faq:
 
 케이팝·팝 보컬 녹음은 장르의 기준을 이해하는 엔지니어와 함께할 때 상업 음원 수준의 결과물이 나옵니다.
 
+---
+
 [이용 요금 안내](/pricing) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [알앤비 보컬 녹음 가이드](/stories/rnb1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

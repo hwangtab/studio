@@ -157,4 +157,6 @@ Google Drive 또는 WeTransfer 업로드
 
 Studio One은 직관적인 인터페이스와 강력한 내장 플러그인으로 홈 레코딩에서 전문 믹싱까지 효율적으로 처리할 수 있습니다.
 
+---
+
 [Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -89,4 +89,6 @@ faq:
 
 혜화·대학로·창신·종로5가에서 28~40분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [창신동·숭인동 녹음실 안내](/stories/jongno-changsin1) | [종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

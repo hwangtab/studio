@@ -130,4 +130,6 @@ faq:
 
 기타 믹싱은 장르와 연주 스타일에 따라 접근이 달라지며, 보컬과의 주파수 관계 관리가 핵심입니다.
 
+---
+
 [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

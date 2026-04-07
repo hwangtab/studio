@@ -69,4 +69,6 @@ faq:
 
 춘천에서 ITX로 총 2시간 30분이면 서울 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
+---
+
 [강원도 녹음실 방문 가이드](/stories/gangwon1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

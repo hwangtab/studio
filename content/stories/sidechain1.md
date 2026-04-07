@@ -123,4 +123,6 @@ faq:
 
 사이드체인 컴프레션은 EQ만으로 해결하기 어려운 동적 공간 분리를 가능하게 합니다.
 
+---
+
 [EDM 프로덕션 완전 가이드](/stories/edm-production1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

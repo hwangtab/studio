@@ -106,4 +106,6 @@ faq:
 
 유튜브 음질이 채널 첫인상을 결정합니다.
 
+---
+
 [뮤직비디오·유튜브 영상용 음원 녹음 가이드](/stories/mv1) | [음원 발매 가이드](/stories/release1) | [플레이리스트 피칭 전략](/stories/playlist1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)

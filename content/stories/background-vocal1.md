@@ -100,4 +100,6 @@ faq:
 
 백 보컬은 음반 완성도를 높이는 핵심 요소입니다.
 
+---
+
 [코러스·화음 녹음 가이드](/stories/harmony1) | [보컬 더블 트래킹 가이드](/stories/doubletracking1) | [보컬 녹음 완전 가이드](/stories/vocalrecord1) | [믹싱 완전 가이드](/stories/mixing1) | [스튜디오 놀 이용 요금](/pricing)

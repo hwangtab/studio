@@ -66,4 +66,6 @@ faq:
 
 부산에서 KTX 2.5시간. 방문보다 파일 의뢰가 현실적인 선택입니다. 현지 WAV 녹음 → 카카오톡 전송 → 완성 파일 납품까지 소통합니다.
 
+---
+
 [부산 서면·부산진·연제 녹음실 안내](/stories/busan-seomyeon1) | [해운대·센텀시티·수영 녹음실 안내](/stories/haeundae1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

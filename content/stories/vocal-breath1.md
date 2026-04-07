@@ -127,4 +127,6 @@ faq:
 
 보컬 브레스는 인간미와 감정을 전달하는 요소입니다.
 
+---
+
 [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [보컬 콤핑 완전 가이드](/stories/vocal-comping1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

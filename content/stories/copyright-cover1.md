@@ -104,4 +104,6 @@ faq:
 
 커버 곡 저작권은 복잡해 보이지만, 유튜브 업로드와 SNS 공유는 대부분 문제없이 가능합니다. 수익화나 정식 발매를 원한다면 MR을 직접 제작하고 저작권 처리 절차를 거치는 것이 좋습니다.
 
+---
+
 [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -121,4 +121,6 @@ faq:
 
 디에서는 강하게 걸수록 좋은 것이 아닙니다. 시빌런스가 자연스럽게 사라지는 최소한의 설정이 최고의 결과를 만듭니다.
 
+---
+
 [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [스튜디오 놀 이용 요금](/pricing)

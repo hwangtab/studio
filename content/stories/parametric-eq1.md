@@ -122,4 +122,6 @@ faq:
 
 파라메트릭 EQ는 귀로 들으며 조정하는 것이 가장 중요합니다.
 
+---
+
 [보컬 EQ 완전 가이드](/stories/eq1) | [주파수 스펙트럼 완전 가이드](/stories/frequency-spectrum1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [다이나믹 컴프레서 완전 가이드](/stories/dynamics1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

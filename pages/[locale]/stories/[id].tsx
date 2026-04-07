@@ -153,16 +153,6 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         webPageType="Article"
       />
 
-      {/* Visible breadcrumb UI */}
-      <Breadcrumb
-        items={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.stories'), path: `/${locale}/stories` },
-          { name: story.title, path: `/${locale}/stories/${story.slug}` },
-        ]}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4"
-      />
-
       <ImageHero
         locale={locale}
         priority
@@ -184,6 +174,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         imageAlt={story.title}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/70 via-black/40 to-black/70"
+      />
+
+      <Breadcrumb
+        items={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.stories'), path: `/${locale}/stories` },
+          { name: story.title, path: `/${locale}/stories/${story.slug}` },
+        ]}
       />
 
       <Section variant="default" className="pt-12 pb-12">

@@ -87,4 +87,6 @@ faq:
 
 서대문구 홍제·홍은·남가좌·북가좌에서 10~20분 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
+---
+
 [서대문구 녹음실 안내](/stories/seodaemun1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [마포구 녹음실 안내](/stories/mapo1) | [불광·연신내 녹음실 안내](/stories/bulgwang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

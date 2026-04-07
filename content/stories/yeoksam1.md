@@ -89,4 +89,6 @@ faq:
 
 역삼·선릉·삼성·도곡에서 40~55분 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
+---
+
 [개포·일원·수서·대치 녹음실 안내](/stories/gaepodong1) | [강남구 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [대치·도곡 녹음실 안내](/stories/daechi1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

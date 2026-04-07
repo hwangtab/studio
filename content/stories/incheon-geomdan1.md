@@ -68,4 +68,6 @@ faq:
 
 인천 검단신도시에서 인천2호선과 공항철도로 약 1시간, 연신내. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
+---
+
 [인천 서구 녹음실 안내](/stories/incheon-seo1) | [인천 계양구 녹음실 안내](/stories/gyeyang1) | [인천 부평 녹음실 안내](/stories/bupyeong1) | [인천 녹음실 안내](/stories/incheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

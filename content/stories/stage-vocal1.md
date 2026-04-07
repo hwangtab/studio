@@ -162,4 +162,6 @@ IEM 없을 때 (모니터 스피커):
 
 무대 보컬은 충분한 준비와 사운드 이해가 핵심입니다. 공연 전 레코딩으로 보컬 상태를 점검하고, 공연 후 스튜디오 녹음으로 무대에서 발전한 보컬을 기록하세요.
 
+---
+
 [공연 보컬 완전 가이드](/stories/concert-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocalhealth1) | [보컬 웜업 완전 가이드](/stories/vocal-warmup1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

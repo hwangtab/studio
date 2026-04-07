@@ -124,4 +124,6 @@ AI 마스터링 서비스는 빠르고 편리하지만, 전문 엔지니어와 �
 
 AI 마스터링은 강력한 도구지만 전문 엔지니어를 대체하지 못합니다. 용도에 맞게 활용하고, 정식 발매 음원은 전문 마스터링 엔지니어와 함께 작업하는 것이 최선입니다.
 
+---
+
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

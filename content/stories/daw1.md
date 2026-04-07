@@ -88,4 +88,6 @@ DAW를 구매하거나 배우지 않고 전문 결과물을 얻는 가장 빠른
 
 DAW는 도구입니다. 어떤 도구를 쓰느냐보다 무엇을 만들고 싶은지가 먼저입니다. 보컬 녹음이 목적이라면 전문 스튜디오를 활용하는 것이 DAW를 배우는 것보다 훨씬 빠른 결과를 줍니다.
 
+---
+
 [DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

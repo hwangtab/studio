@@ -72,4 +72,6 @@ faq:
 
 분당 야탑·모란·복정에서 8호선으로 약 1시간이면 연신내. 당일 세션을 마치고 저녁 전 귀가 가능한 거리입니다. 방문 전 카카오톡으로 예약해주세요.
 
+---
+
 [성남·분당·판교 녹음실 안내](/stories/bundang1) | [분당 서현·수내·정자 녹음실 안내](/stories/bundang-seohyun1) | [성남 수정구·중원구 녹음실 안내](/stories/seongnam-sujeong1) | [위례·하남·미사강변 녹음실 안내](/stories/wirye1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

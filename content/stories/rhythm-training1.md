@@ -144,4 +144,6 @@ faq:
 
 리듬 감각은 매일 10분의 메트로놈 훈련으로 꾸준히 키울 수 있습니다.
 
+---
+
 [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [곡 구조 완전 가이드](/stories/song-structure1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)

@@ -124,4 +124,6 @@ faq:
 
 음역대 확장은 올바른 훈련과 인내가 핵심입니다.
 
+---
+
 [패사지오(Passaggio) 완전 가이드](/stories/passaggio1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)

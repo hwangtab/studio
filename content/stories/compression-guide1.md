@@ -164,4 +164,6 @@ VG (Tube) 컴프레서 (Fairchild 670):
 
 컴프레서는 믹싱의 핵심이지만 절제가 미덕입니다.
 
+---
+
 [헤드폰 믹싱 완전 가이드](/stories/headphone-mixing1) | [리버브 완전 가이드](/stories/reverb-guide1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

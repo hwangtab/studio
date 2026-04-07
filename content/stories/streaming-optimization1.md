@@ -152,4 +152,6 @@ faq:
 
 음원을 완성하는 것만큼, 올바른 플랫폼 전략과 메타데이터 관리가 중요합니다.
 
+---
+
 [창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -106,4 +106,6 @@ EP (3~5곡):
 
 음반 제작 비용은 목적과 품질 기대치에 따라 달라집니다.
 
+---
+
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

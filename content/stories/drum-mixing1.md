@@ -128,4 +128,6 @@ faq:
 
 드럼 믹싱은 킥·스네어 중심의 타격감부터 전체 드럼 버스의 통일감까지 균형이 중요합니다.
 
+---
+
 [믹싱 패닝 완전 가이드](/stories/panning-guide1) | [피아노 믹싱 완전 가이드](/stories/piano-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

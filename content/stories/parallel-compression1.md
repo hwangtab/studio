@@ -101,4 +101,6 @@ Mix 20~40% = 패럴렐 효과와 동일
 
 패럴렐 컴프레션은 프로 믹스의 두께감과 생동감을 만드는 핵심 기법입니다. 드라이 레벨과 웨트 레벨의 비율을 조정하며 귀로 판단하는 연습이 중요합니다.
 
+---
+
 [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [새추레이션 완전 가이드](/stories/saturation1) | [컴프레서 완전 가이드](/stories/compress1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [스튜디오 놀 이용 요금](/pricing)

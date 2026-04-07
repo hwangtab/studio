@@ -96,4 +96,6 @@ faq:
 
 노래방은 접근하기 쉬운 연습 공간이지만, 실력 향상의 한계가 있습니다. 주기적으로 스튜디오에서 녹음하며 본인의 실제 소리를 객관적으로 들어보세요.
 
+---
+
 [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)

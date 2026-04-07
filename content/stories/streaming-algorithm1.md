@@ -129,4 +129,6 @@ faq:
 
 스트리밍 알고리즘의 시작은 완성도 높은 음원입니다.
 
+---
+
 [음악 스트리밍 데이터 분석 완전 가이드](/stories/music-analytics1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -112,4 +112,6 @@ MR 파일의 피치를 조정해드립니다.
 
 내 목소리에 맞는 키를 찾으면 노래가 훨씬 자연스럽고 표현력이 높아집니다.
 
+---
+
 [나의 목소리 유형 찾기](/stories/voicetype1) | [보컬 음역대 넓히는 방법](/stories/vocalrange1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [스튜디오 놀 이용 요금](/pricing)

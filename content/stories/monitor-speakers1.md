@@ -134,4 +134,6 @@ Adam Audio A7V:
 
 최고의 모니터 스피커도 방 음향이 나쁘면 정확한 판단이 어렵습니다. 전문 스튜디오 놀의 흡음 처리된 컨트롤 룸에서 엔지니어와 함께 레퍼런스급 모니터링 환경을 경험하세요.
 
+---
+
 [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [음향 흡음 처리 완전 가이드](/stories/acoustic-treatment1) | [프리앰프 완전 가이드](/stories/preamp1) | [DAW 완전 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

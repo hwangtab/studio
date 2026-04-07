@@ -125,4 +125,6 @@ faq:
 
 위상 문제는 모노 체크 하나로 대부분 발견하고 교정할 수 있습니다. 믹싱의 모든 단계에서 주기적으로 모노 체크하는 습관이 위상 문제를 예방하는 가장 효과적인 방법입니다.
 
+---
+
 [미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

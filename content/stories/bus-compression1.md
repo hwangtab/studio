@@ -113,4 +113,6 @@ Knee: Soft Knee
 
 버스 컴프레션은 믹스의 완성도를 높이는 중요한 기법이지만, '덜 쓰는 것이 더 좋다'는 원칙이 적용됩니다.
 
+---
+
 [믹스 버스 완전 가이드](/stories/mix-bus1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

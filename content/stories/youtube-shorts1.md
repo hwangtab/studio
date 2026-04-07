@@ -107,4 +107,6 @@ faq:
 
 유튜브 쇼츠는 보컬리스트가 구독자 없이도 대규모 노출을 얻을 수 있는 강력한 플랫폼입니다.
 
+---
+
 [틱톡 음악 업로드·보컬 활동 가이드](/stories/tiktok-music1) | [인스타그램 음악 업로드·릴스 활용 가이드](/stories/instagram-music1) | [사운드클라우드 음원 업로드·공유 가이드](/stories/soundcloud1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [스튜디오 놀 이용 요금](/pricing)

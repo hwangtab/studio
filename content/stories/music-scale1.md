@@ -146,4 +146,6 @@ C장조 → G장조: 5도 위 전조 (점진적 상승감)
 
 음계를 이해하면 멜로디와 코드 선택이 훨씬 직관적이 됩니다.
 
+---
+
 [코드 진행 완전 가이드](/stories/chord-progressions1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [음악 이론 완전 가이드](/stories/music-theory1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -66,4 +66,6 @@ faq:
 
 수원 팔달구·권선구에서 1호선 60~70분이면 연신내. 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [수원 전체 녹음실 안내](/stories/suwon1) | [수원 장안구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통구 녹음실 안내](/stories/suwon-yeongtong1) | [화성·봉담 녹음실 안내](/stories/hwaseong-bongdam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

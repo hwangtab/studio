@@ -97,4 +97,6 @@ faq:
 
 온라인이든 오프라인이든, 꾸준한 연습이 가장 중요합니다. 레슨 형태에 관계없이 주기적으로 스튜디오 녹음을 통해 성장을 확인하는 습관을 만들어보세요.
 
+---
+
 [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [취미로 노래 배우기 가이드](/stories/hobbymusic1) | [스튜디오 놀 이용 요금](/pricing)

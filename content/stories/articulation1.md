@@ -117,4 +117,6 @@ faq:
 
 아티큘레이션은 단기간 훈련으로 눈에 띄게 개선됩니다. 스튜디오 놀 녹음 세션에서 전문 모니터링 환경으로 자신의 아티큘레이션 상태를 확인해보세요.
 
+---
+
 [보컬 음색 개발 가이드](/stories/tone-color1) | [음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing)

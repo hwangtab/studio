@@ -116,4 +116,6 @@ faq:
 
 딕션은 연습으로 빠르게 개선되는 영역입니다. 2~4주의 집중 훈련으로도 눈에 띄는 변화가 생깁니다.
 
+---
+
 [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [스튜디오 놀 이용 요금](/pricing)

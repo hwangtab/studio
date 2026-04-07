@@ -65,4 +65,6 @@ faq:
 
 성수동에서 40분, 연신내. 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [성동구 녹음실 안내](/stories/seongdong1) | [광진구 녹음실 안내](/stories/gwangjin1) | [홍대·신촌 근처 녹음실 안내](/stories/hongdae1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

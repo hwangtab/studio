@@ -157,4 +157,6 @@ OSC B (레이어용):
 
 퓨처 베이스는 코드 설계와 보컬 처리가 핵심입니다.
 
+---
+
 [EDM 프로덕션 완전 가이드](/stories/edm-production1) | [R&B 보컬 프로덕션 완전 가이드](/stories/rnb-production1) | [네오소울 프로덕션 완전 가이드](/stories/neo-soul1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -67,4 +67,6 @@ faq:
 
 파주·고양에서 지하철 또는 버스로 30~50분이면 서울 연신내. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [파주 금촌·파주읍·문산 녹음실 안내](/stories/paju-geumchon1) | [파주 운정·교하·야당 녹음실 안내](/stories/paju-unjeong1) | [고양·은평 녹음실 안내](/stories/goyang1) | [서울 은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

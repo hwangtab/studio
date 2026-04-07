@@ -108,4 +108,6 @@ faq:
 
 좋은 보컬 코치는 강사가 아니라 파트너입니다. 체험 레슨을 통해 맞는 코치를 찾고, 주기적으로 스튜디오에서 성장을 확인하세요.
 
+---
+
 [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [스튜디오 놀 이용 요금](/pricing)

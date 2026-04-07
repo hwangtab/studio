@@ -92,4 +92,6 @@ faq:
 
 노량진·흑석·상도·대방에서 지하철 30~40분 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
+---
+
 [동작구 녹음실 안내](/stories/dongjak1) | [사당·방배·노량진 녹음실 안내](/stories/sadang1) | [서초구 녹음실 안내](/stories/seocho1) | [관악구 녹음실 안내](/stories/gwanak1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

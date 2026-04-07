@@ -105,4 +105,6 @@ faq:
 
 스튜디오 모니터는 믹싱의 눈입니다. 정확한 청음 환경이 갖춰져야 믹스가 어떤 기기에서도 일관되게 재생됩니다. 스튜디오 놀은 교정된 모니터 환경에서 전문 믹싱·마스터링을 제공합니다.
 
+---
+
 [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [어쿠스틱 트리트먼트 완전 가이드](/stories/acoustic-treatment1) | [홈 레코딩 첫 장비 가이드](/stories/homegear1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

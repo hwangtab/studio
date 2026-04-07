@@ -90,4 +90,6 @@ faq:
 
 스튜디오 놀은 직접 방문 세션과 함께 파일 기반 원격 믹싱·마스터링 서비스도 제공합니다.
 
+---
+
 [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 셀프 녹음 방법 가이드](/stories/selfrecord1) | [녹음 파일 납품 형식 가이드](/stories/stemfile1) | [스튜디오 놀 이용 요금](/pricing)

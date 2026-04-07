@@ -100,4 +100,6 @@ Retune Speed: 0~5ms
 
 오토튠은 단순한 교정 도구를 넘어 현대 팝 음악의 사운드를 정의하는 도구가 되었습니다.
 
+---
+
 [Melodyne 음정 교정 가이드](/stories/pitchtool1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 녹음 완전 가이드](/stories/vocalrecord1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

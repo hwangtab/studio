@@ -100,4 +100,6 @@ Step 3: 볼륨 차이 없이 A/B 비교
 
 레퍼런스 트랙은 모든 믹싱 세션에서 활용해야 하는 필수 도구입니다.
 
+---
+
 [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [믹싱 완전 가이드](/stories/mixing1) | [스튜디오 놀 이용 요금](/pricing)

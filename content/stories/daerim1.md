@@ -78,4 +78,6 @@ faq:
 
 대림·남구로에서 2호선 30~35분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [영등포·구로구 녹음실 안내](/stories/yeongdeungpo1) | [구로·금천구 녹음실 안내](/stories/guro1) | [신도림 녹음실 안내](/stories/sindorim1) | [관악구·신림 녹음실 안내](/stories/gwanak1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

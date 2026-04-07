@@ -95,4 +95,6 @@ faq:
 
 전국 어디서나 스튜디오 놀의 전문 믹싱·마스터링 서비스를 이용할 수 있습니다. 방문 녹음이든 온라인 파일 의뢰든, 카카오톡으로 현황을 알려주시면 맞춤 안내드립니다.
 
+---
+
 [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [원격 보컬 디렉팅 서비스 가이드](/stories/remotedir1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [서울 녹음실 비교 가이드](/stories/studio-compare1) | [스튜디오 놀 이용 요금](/pricing)

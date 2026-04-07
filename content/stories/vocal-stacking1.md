@@ -129,4 +129,6 @@ EQ 처리:
 
 보컬 스태킹은 한 아티스트의 목소리로 앙상블 효과를 만들어내는 강력한 기법입니다.
 
+---
+
 [현악 편곡 완전 가이드](/stories/string-arrangement1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [보컬 더블링 완전 가이드](/stories/vocal-doubling1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

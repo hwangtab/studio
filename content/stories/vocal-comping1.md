@@ -123,4 +123,6 @@ faq:
 
 보컬 콤핑은 단순한 편집이 아니라 아티스트의 최고 순간을 모아 완벽한 퍼포먼스를 만드는 예술적 작업입니다.
 
+---
+
 [보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [보컬 브레스 처리 완전 가이드](/stories/vocal-breath1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

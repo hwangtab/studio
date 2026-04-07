@@ -88,4 +88,6 @@ faq:
 
 게인 스테이징은 화려한 기술이 아니라 기본 습관입니다. 녹음부터 마스터링까지 각 단계에서 적절한 레벨을 유지하면 믹싱이 훨씬 수월해집니다.
 
+---
+
 [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [컴프레서 완전 가이드](/stories/compress1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -110,4 +110,6 @@ Moises: 악기별 분리 + 코드 분석 기능
 
 채보 능력은 청음 훈련과 함께 발전합니다. 코드를 귀로 파악할 수 있게 되면 노래 키를 찾거나, 작곡·편곡을 시작하거나, 스튜디오 세션에서 엔지니어와 소통하는 것이 훨씬 쉬워집니다.
 
+---
+
 [코드 진행 기초 가이드](/stories/chordprog1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [음악 장르 선택 가이드](/stories/genre-choice1) | [DAW 선택 가이드](/stories/daw1) | [음악 작업 의뢰 방법](/stories/commission1) | [스튜디오 놀 이용 요금](/pricing)

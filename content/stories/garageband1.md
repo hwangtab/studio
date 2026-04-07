@@ -155,4 +155,6 @@ Share → Export Song to Disk
 
 GarageBand는 무료이지만 스튜디오 의뢰 가능한 드라이 보컬 녹음에 충분합니다.
 
+---
+
 [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

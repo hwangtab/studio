@@ -90,4 +90,6 @@ faq:
 
 반포·방배·이수·사당에서 지하철 25~35분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [서초구 반포·잠원·서초동 녹음실 안내](/stories/seocho-banpo1) | [서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [양재·서초·강남역 녹음실 안내](/stories/yangjae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

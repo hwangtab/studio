@@ -138,4 +138,6 @@ File → Render (Ctrl+Alt+R)
 
 Reaper는 저렴한 가격에 전문 수준의 보컬 녹음·편집·믹싱이 가능한 DAW입니다.
 
+---
+
 [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

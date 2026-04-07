@@ -117,4 +117,6 @@ Wet: 10~20%
 
 피아노 믹싱은 어쿠스틱과 일렉트릭 타입에 따라 접근이 달라집니다.
 
+---
+
 [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

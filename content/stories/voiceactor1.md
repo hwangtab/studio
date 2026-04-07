@@ -100,4 +100,6 @@ faq:
 
 성우와 내레이터는 훈련과 포트폴리오로 시작합니다. 전문 스튜디오에서 샘플을 녹음하면 지원 시 품질에서 차별화됩니다.
 
+---
+
 [보컬 녹음 세션 준비 가이드](/stories/session1) | [마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [녹음 파일 납품 형식 완전 가이드](/stories/stemfile1) | [스튜디오 놀 이용 요금](/pricing)

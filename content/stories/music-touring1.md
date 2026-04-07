@@ -150,4 +150,6 @@ D-2주: 세부 준비
 
 투어 중 녹음된 음원도 믹싱·마스터링으로 완성도 높게 납품합니다.
 
+---
+
 [라이브 공연 준비 완전 가이드](/stories/live-performance1) | [인디 쇼케이스·미니콘서트 기획 완전 가이드](/stories/indie-showcase1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

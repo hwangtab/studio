@@ -99,4 +99,6 @@ faq:
 
 좋은 목소리는 매일의 작은 습관에서 만들어집니다. 특별한 날만 관리하는 것이 아니라 일상에서 꾸준히 실천하세요.
 
+---
+
 [성대 건강 관리 가이드](/stories/vocalhealth1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [보컬 녹음 전 먹으면 안 되는 음식](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)

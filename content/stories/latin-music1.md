@@ -139,4 +139,6 @@ faq:
 
 라틴 음악의 핵심은 클라베 리듬에서 나오는 그루브와 라이브한 퍼커션 에너지입니다.
 
+---
+
 [트로트 음악 제작 완전 가이드](/stories/trot-music1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [펑크 음악 제작 완전 가이드](/stories/funk-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

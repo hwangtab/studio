@@ -140,4 +140,6 @@ CCM/가스펠: 따뜻한 톤 (크림·베이지)
 
 아티스트 브랜딩은 음악과 함께 지속적으로 발전하는 장기 전략입니다.
 
+---
+
 [뮤지션 브랜드 협업·스폰서십 완전 가이드](/stories/brand-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

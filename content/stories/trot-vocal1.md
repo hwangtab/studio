@@ -106,4 +106,6 @@ faq:
 
 트로트 보컬은 한국 고유의 감성 표현이 담겨 있습니다.
 
+---
+
 [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)

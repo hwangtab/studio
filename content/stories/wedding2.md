@@ -92,4 +92,6 @@ faq:
 
 한 번의 녹음으로 평생 기억될 선물을 만들 수 있습니다.
 
+---
+
 [스튜디오 놀 축가 패키지 상세 안내](/wedding-song) | [녹음 세션 준비 완전 가이드](/stories/session1) | [축가 녹음 후기 읽기](/stories/review1) | [노래 녹음 선물 아이디어](/stories/gift1) | [결혼식 축가 선곡 추천 가이드](/stories/wedding-song1)

@@ -112,4 +112,6 @@ faq:
 
 장비를 갖추는 것보다 먼저 '어떤 목적으로 녹음하는가'를 명확히 하세요. 연습·데모용이라면 홈 레코딩, 발매·오디션용 최종 작업은 전문 스튜디오가 효율적입니다.
 
+---
+
 [녹음 헤드폰 완전 가이드](/stories/headphone1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [셀프 믹싱 vs 전문 믹싱 의뢰](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)

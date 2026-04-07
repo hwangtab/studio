@@ -140,4 +140,6 @@ KOMCA 저작권료:
 
 음악인의 세금 신고는 처음에 복잡하게 느껴지지만 소득 유형을 파악하고 필요경비를 꼼꼼히 챙기면 세금 부담을 줄일 수 있습니다. 스튜디오 놀 녹음비·믹싱비는 모두 필요경비 처리가 가능합니다.
 
+---
+
 [인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약 완전 가이드](/stories/contract1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -79,4 +79,6 @@ faq:
 
 성동구에서 2호선 또는 6호선으로 30분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [성동구 왕십리·마장·행당 녹음실 안내](/stories/seongdong-wangsimni1) | [금호·옥수·행당·마장 녹음실 안내](/stories/geumho1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

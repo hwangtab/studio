@@ -140,4 +140,6 @@ Step 6: 전체 청음하며 미세 조정
 
 오토메이션은 믹스에 생명을 불어넣는 마지막 단계입니다.
 
+---
+
 [믹싱 완전 가이드](/stories/mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

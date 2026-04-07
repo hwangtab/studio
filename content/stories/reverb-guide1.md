@@ -178,4 +178,6 @@ EQ + 리버브:
 
 리버브는 믹스에 공간과 감성을 부여하는 가장 강력한 도구입니다.
 
+---
+
 [컴프레서 완전 가이드](/stories/compression-guide1) | [보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

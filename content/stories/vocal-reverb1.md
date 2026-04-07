@@ -149,4 +149,6 @@ UAD Lexicon 480L:
 
 보컬 리버브는 Pre-delay와 Decay 조정으로 보컬의 공간감을 세밀하게 제어할 수 있습니다.
 
+---
+
 [보컬 딜레이 완전 가이드](/stories/vocal-delay1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

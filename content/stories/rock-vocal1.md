@@ -109,4 +109,6 @@ faq:
 
 록 보컬은 완벽함보다 에너지입니다.
 
+---
+
 [트로트 보컬 녹음 완전 가이드](/stories/trot-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)

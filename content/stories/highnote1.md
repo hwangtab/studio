@@ -118,4 +118,6 @@ faq:
 
 고음은 하루아침에 만들어지지 않습니다. 올바른 자세와 호흡을 기반으로 꾸준히 훈련하면 자연스럽게 확장됩니다.
 
+---
+
 [믹스 보이스 완전 가이드](/stories/mixvoice1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [스튜디오 놀 이용 요금](/pricing)

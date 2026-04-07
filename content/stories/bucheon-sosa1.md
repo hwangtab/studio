@@ -77,4 +77,6 @@ faq:
 
 부천 소사·역곡에서 약 50분이면 연신내. 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
+---
+
 [부천 녹음실 안내](/stories/bucheon1) | [인천·부천 녹음실 안내](/stories/incheon1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

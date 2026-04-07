@@ -113,4 +113,6 @@ C-D-E-D-C (다섯 음) → '아·에·이·오·우' 각 모음
 
 보컬 애지리티는 하루아침에 생기지 않지만, 꾸준한 패턴 연습으로 반드시 향상됩니다.
 
+---
+
 [보컬 발음·발성 완전 가이드](/stories/vocal-diction1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

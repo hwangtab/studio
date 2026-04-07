@@ -62,4 +62,6 @@ faq:
 
 경주에서 신경주역 KTX를 이용하면 약 3시간 내로 서울 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
+---
+
 [경산에서 서울 녹음실 방문 가이드](/stories/gyeongsan1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

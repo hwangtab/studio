@@ -131,4 +131,6 @@ faq:
 
 좋은 콘덴서 마이크는 보컬 녹음의 첫 번째 투자입니다. 홈 레코딩 후 파일을 전달하면 장비에 관계없이 전문 믹싱·마스터링으로 완성 음원을 만들 수 있습니다.
 
+---
+
 [마이크 종류 완전 가이드](/stories/microphone-types1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

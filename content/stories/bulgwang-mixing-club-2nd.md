@@ -35,4 +35,6 @@ faq:
 
 이번 주 금요일, 피맥으로 더 쿨해진 불광믹싱클럽에서 다시 만나요!
 
+---
+
 [불광믹싱클럽 첫 모임 안내](/stories/bulgwang-mixing-club) | [불광믹싱클럽 3회차 안내](/stories/bulgwang-mixing-club-3rd) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing) | [연신내 합주실·연습실 안내](/practice-room)

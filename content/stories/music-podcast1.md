@@ -138,4 +138,6 @@ faq:
 
 팟캐스트 녹음 품질은 청취자 이탈의 가장 큰 요인입니다. 스튜디오 놀의 전문 녹음 환경에서 팟캐스트 에피소드를 고음질로 제작하세요.
 
+---
+
 [음악 마케팅 완전 가이드](/stories/music-marketing1) | [유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [뮤지션 이메일 마케팅·뉴스레터 완전 가이드](/stories/music-newsletter1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

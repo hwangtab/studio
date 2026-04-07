@@ -131,4 +131,6 @@ faq:
 
 축가는 신랑·신부와 하객 모두에게 기억에 남는 선물입니다.
 
+---
+
 [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [콘서트·공연 보컬 준비 가이드](/stories/concert-vocal1) | [스튜디오 놀 이용 요금](/pricing)

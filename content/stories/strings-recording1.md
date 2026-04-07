@@ -153,4 +153,6 @@ ORTF 기법 (프랑스 방송 표준):
 
 현악기·관악기 녹음은 악기 특성에 맞는 마이크 배치와 적절한 룸 어쿠스틱이 핵심입니다.
 
+---
+
 [기타 레코딩 완전 가이드](/stories/guitar-recording1) | [피아노 레코딩 완전 가이드](/stories/piano-recording1) | [드럼 레코딩 완전 가이드](/stories/drum-recording1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

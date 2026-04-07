@@ -139,4 +139,6 @@ faq:
 
 스템 파일을 올바르게 준비하면 원격 믹싱 의뢰가 훨씬 수월해집니다. 스튜디오 놀 온라인 믹싱 서비스를 통해 스템만으로 전문 믹스를 완성해보세요.
 
+---
+
 [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)

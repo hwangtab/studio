@@ -137,4 +137,6 @@ faq:
 
 MIDI 편곡은 현대 음악 제작의 핵심입니다. DAW와 가상악기를 조합하면 혼자서도 완전한 반주를 만들 수 있고, 스튜디오 녹음 세션에서도 더 효율적으로 시간을 활용할 수 있습니다. 스튜디오 놀 방문 시 MIDI 파일을 미리 준비해 오면 세션 시간을 최대한 보컬 녹음에 집중할 수 있습니다.
 
+---
+
 [금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

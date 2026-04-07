@@ -85,4 +85,6 @@ faq:
 
 동대문구에서 1호선 25~40분 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [신설·용두·제기·답십리 녹음실 안내](/stories/dongdaemun-sinseol1) | [회기·경희대·외대앞·이문동 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

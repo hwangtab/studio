@@ -110,4 +110,6 @@ faq:
 
 패닝은 믹스에 공간감을 주면서 악기 간 주파수 충돌을 줄이는 핵심 기법입니다. 모노 호환성을 항상 함께 확인하며 패닝하는 것이 프로 믹스의 기본입니다.
 
+---
+
 [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

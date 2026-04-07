@@ -59,4 +59,6 @@ faq:
 
 신림에서 45분, 연신내. 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [관악구 녹음실 안내](/stories/gwanak1) | [사당·방배 녹음실 안내](/stories/sadang1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

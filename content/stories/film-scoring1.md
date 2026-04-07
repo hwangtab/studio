@@ -116,4 +116,6 @@ Performance Royalty:
 
 영상음악 작곡은 창의성과 기술의 결합입니다.
 
+---
+
 [게임 음악 제작 완전 가이드](/stories/game-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

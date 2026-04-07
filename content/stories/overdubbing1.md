@@ -122,4 +122,6 @@ faq:
 
 오버더빙은 한 번의 녹음으로 불가능한 완성도를 단계적으로 쌓아가는 과정입니다.
 
+---
+
 [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

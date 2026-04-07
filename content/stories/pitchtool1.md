@@ -104,4 +104,6 @@ faq:
 
 음정 교정은 좋은 보컬을 더 좋게 만드는 도구입니다. 가장 좋은 방법은 처음부터 좋은 테이크를 만드는 것입니다.
 
+---
+
 [오토튠 완전 가이드](/stories/auto-tune1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [마스터링이란?](/stories/mastering1) | [녹음실 용어 사전](/stories/glossary1) | [스튜디오 놀 이용 요금](/pricing)

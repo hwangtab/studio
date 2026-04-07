@@ -112,4 +112,6 @@ faq:
 
 라이브 스트리밍의 음질이 방송 품질을 결정합니다.
 
+---
+
 [유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

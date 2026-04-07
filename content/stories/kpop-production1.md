@@ -118,4 +118,6 @@ K-POP은 세계적으로 인정받는 프로덕션 수준을 자랑합니다. �
 
 K-POP 프로덕션은 전문 스튜디오와 엔지니어의 협업으로 완성됩니다.
 
+---
+
 [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [K-POP 보컬 완전 가이드](/stories/kpop-vocal1) | [아이돌·K팝 보컬 가이드](/stories/idol-vocal1) | [K-POP 오디션 준비 가이드](/stories/kpop-audition1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

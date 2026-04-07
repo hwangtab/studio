@@ -80,4 +80,6 @@ faq:
 
 군포 산본에서 4호선과 2호선으로 약 1시간, 연신내. 당일 세션을 마치고 저녁 전 귀가 가능한 거리입니다. 방문 전 카카오톡으로 예약해주세요.
 
+---
+
 [군포 녹음실 안내](/stories/gunpo1) | [안양 만안구 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·산본 녹음실 안내](/stories/pyeongchon1) | [의왕 녹음실 안내](/stories/uiwang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

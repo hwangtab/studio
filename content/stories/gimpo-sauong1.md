@@ -60,4 +60,6 @@ faq:
 
 김포에서 김포골드라인과 공항철도로 약 1시간이면 연신내. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [김포 녹음실 안내](/stories/gimpo1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) | [강서구·양천구 녹음실 안내](/stories/yangcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

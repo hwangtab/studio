@@ -124,4 +124,6 @@ faq:
 
 게임 음악은 반복에도 지루하지 않은 설계와 인터랙티브 반응이 핵심입니다.
 
+---
+
 [영화음악·영상음악 작곡 완전 가이드](/stories/film-scoring1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

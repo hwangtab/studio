@@ -138,4 +138,6 @@ Step 5: 외부 의견 수렴
 
 트랙 순서는 음악 완성 이후의 편집 작업입니다. 모든 트랙이 완성된 뒤 전체 흐름을 설계하는 시간을 충분히 가지세요.
 
+---
+
 [EP·싱글 발매 완전 가이드](/stories/ep-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [앨범 아트 제작 가이드](/stories/album-art1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

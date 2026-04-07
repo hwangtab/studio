@@ -128,4 +128,6 @@ R&B·소울:          -14 ~ -16 LUFS
 
 LUFS 기준에 맞는 마스터링은 스트리밍 음원이 모든 플랫폼에서 일관된 음량으로 재생되도록 합니다.
 
+---
+
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [음압(LUFS) 스트리밍 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

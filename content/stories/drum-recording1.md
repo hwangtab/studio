@@ -116,4 +116,6 @@ faq:
 
 드럼 녹음은 사전 준비(튜닝·마이킹)와 룸 어쿠스틱이 전부입니다.
 
+---
+
 [현악기·관악기 레코딩 완전 가이드](/stories/strings-recording1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

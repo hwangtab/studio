@@ -111,4 +111,6 @@ faq:
 
 주기적인 스튜디오 녹음과 피드백 루프는 보컬 성장을 가장 빠르게 만드는 방법입니다.
 
+---
+
 [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [스튜디오 놀 이용 요금](/pricing)

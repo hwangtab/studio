@@ -81,4 +81,6 @@ faq:
 
 금산에서 KTX로 연신내역, 도보 5분의 방문이 어렵다면 온라인 믹싱 의뢰도 동일한 품질로 제공됩니다. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
+---
+
 [대전 녹음실 안내](/stories/daejeon1) | [논산 녹음실 안내](/stories/nonsan1) | [공주 녹음실 안내](/stories/gongju1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

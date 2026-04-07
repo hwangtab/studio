@@ -118,4 +118,6 @@ faq:
 
 합창·코랄 녹음은 정밀한 파트 관리와 믹싱이 핵심입니다.
 
+---
+
 [아카펠라 녹음 완전 가이드](/stories/acapella1) | [백보컬·코러스 녹음 완전 가이드](/stories/backing-vocal1) | [화음·하모니 녹음 가이드](/stories/harmony1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)

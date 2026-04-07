@@ -130,4 +130,6 @@ faq:
 
 트랩 비트의 핵심은 808과 하이햇 롤의 그루브입니다.
 
+---
+
 [808 베이스 믹싱 완전 가이드](/stories/808-bass1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

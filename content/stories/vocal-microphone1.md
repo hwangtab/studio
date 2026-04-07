@@ -119,4 +119,6 @@ Sony C800G:
 
 최고의 마이크도 전문 스튜디오 환경과 엔지니어 없이는 100% 실력을 발휘하기 어렵습니다. 스튜디오 놀의 Neumann 마이크와 전문 환경에서 최고의 보컬 사운드를 녹음하세요.
 
+---
+
 [마이크 완전 가이드](/stories/microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

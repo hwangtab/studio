@@ -103,4 +103,6 @@ faq:
 
 보컬 프라이는 올바르게 활용하면 감성적인 색깔을 더해주는 강력한 표현 도구입니다. 자연스럽게 발생하는 프라이를 의식적으로 활용해 스튜디오 놀 녹음 세션에서 독창적인 사운드를 만들어보세요.
 
+---
+
 [보컬 음색 개발 가이드](/stories/tone-color1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [스튜디오 놀 이용 요금](/pricing)

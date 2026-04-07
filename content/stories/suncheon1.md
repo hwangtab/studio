@@ -70,4 +70,6 @@ faq:
 
 순천에서 SRT로 약 3시간이면 서울 연신내. 이동이 부담스럽다면 온라인 파일 의뢰를 추천합니다. 현지에서 드라이 보컬 WAV만 녹음해 보내주시면 믹싱·마스터링 후 납품합니다.
 
+---
+
 [광양에서 서울 녹음실 방문 가이드](/stories/gwangyang1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

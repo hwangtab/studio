@@ -111,4 +111,6 @@ faq:
 
 스펙트럼 분석기는 귀를 대체하는 도구가 아니라 보조하는 도구입니다. 항상 귀로 먼저 판단하고, 의심스러운 부분을 스펙트럼으로 확인하는 순서가 올바른 워크플로우입니다.
 
+---
+
 [파라메트릭 EQ 완전 가이드](/stories/parametric-eq1) | [보컬 EQ 완전 가이드](/stories/eq1) | [주파수 스펙트럼 완전 가이드](/stories/frequency-spectrum1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -93,4 +93,6 @@ faq:
 
 흉성은 보컬의 기반입니다. 편안한 음역의 흉성 공명을 먼저 확인하고, 점진적으로 음역을 확장하는 훈련이 가장 안전하고 효과적입니다.
 
+---
+
 [저음 발성 완전 가이드](/stories/low-note1) | [고음 발성 완전 가이드](/stories/high-note1) | [두성 완전 가이드](/stories/head-voice1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

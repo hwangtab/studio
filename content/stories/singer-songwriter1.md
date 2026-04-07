@@ -93,4 +93,6 @@ faq:
 
 싱어송라이터가 꿈꾸는 음반은 혼자 만들기 어렵지 않습니다.
 
+---
+
 [나만의 오리지널 곡 만드는 방법](/stories/original-song1) | [음반 제작 가이드](/stories/album1) | [음원 발매 가이드](/stories/release1) | [보컬 녹음 완전 가이드](/stories/vocalrecord1) | [스튜디오 놀 이용 요금](/pricing)

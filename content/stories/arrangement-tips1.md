@@ -152,4 +152,6 @@ faq:
 
 좋은 편곡은 보컬의 감동을 극대화합니다.
 
+---
+
 [편곡·오케스트레이션 완전 가이드](/stories/orchestration1) | [곡 구조 완전 가이드](/stories/song-structure1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

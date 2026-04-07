@@ -129,4 +129,6 @@ TV 드라마, 유튜브 브이로그, 팟캐스트 배경음악 하나에도 저
 
 방송 음악 제공을 목표로 한다면 먼저 전문 스튜디오에서 고음질 데모를 완성하는 것이 첫 번째입니다.
 
+---
+
 [음악 싱크 라이센싱 완전 가이드](/stories/sync-licensing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [광고 음악 제작 완전 가이드](/stories/advertisement-music1) | [음악 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

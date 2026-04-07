@@ -99,4 +99,6 @@ faq:
 
 하모니 보컬은 음악에 입체감과 감동을 더하는 강력한 도구입니다.
 
+---
+
 [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [백킹 보컬 녹음 완전 가이드](/stories/backing-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [EP 제작 완전 가이드](/stories/ep-making1) | [스튜디오 놀 이용 요금](/pricing)

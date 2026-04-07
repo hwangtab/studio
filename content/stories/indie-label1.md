@@ -134,4 +134,6 @@ faq:
 
 인디 레이블 운영은 창작 자유와 비즈니스 역량을 동시에 요구합니다.
 
+---
+
 [음반사·레이블 계약 완전 가이드](/stories/record-deal1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

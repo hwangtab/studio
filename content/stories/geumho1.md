@@ -89,4 +89,6 @@ faq:
 
 성동구 금호·옥수·행당·마장에서 지하철 35~52분 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
+---
+
 [성동구 녹음실 안내](/stories/seongdong1) | [왕십리·성수·뚝섬 녹음실 안내](/stories/haengdang1) | [중구 녹음실 안내](/stories/junggu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

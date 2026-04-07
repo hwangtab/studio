@@ -114,4 +114,6 @@ faq:
 
 이 10가지만 미리 챙겨도 세션 시간이 30~50% 단축되고 결과물이 달라집니다.
 
+---
+
 [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 헤드폰 모니터링 가이드](/stories/monitoring1) | [녹음 세션 준비 체크리스트](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)

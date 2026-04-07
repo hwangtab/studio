@@ -66,4 +66,6 @@ faq:
 
 광진구 군자·광장·중곡에서 5호선으로 40~55분이면 연신내. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [광진구 전체 녹음실 안내](/stories/gwangjin1) | [화양·구의·광나루 녹음실 안내](/stories/hwayang1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

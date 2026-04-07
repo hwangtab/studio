@@ -125,4 +125,6 @@ faq:
 
 모노 호환성 체크는 믹싱 마지막 단계의 필수 항목입니다.
 
+---
+
 [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [믹싱 레퍼런스 활용법](/stories/mix-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

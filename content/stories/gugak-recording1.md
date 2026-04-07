@@ -141,4 +141,6 @@ MIDI + 국악 라이브 조합:
 
 국악 레코딩은 전통 소리의 정수를 현대 음원으로 기록하는 소중한 작업입니다.
 
+---
+
 [어쿠스틱 기타 레코딩 완전 가이드](/stories/guitar-recording1) | [스트링 레코딩 완전 가이드](/stories/strings-recording1) | [라이브 레코딩 완전 가이드](/stories/live-recording1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

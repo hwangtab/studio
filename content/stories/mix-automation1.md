@@ -122,4 +122,6 @@ faq:
 
 오토메이션은 정적인 믹스에 생동감을 불어넣는 마지막 단계입니다.
 
+---
+
 [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [피아노 믹싱 완전 가이드](/stories/piano-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

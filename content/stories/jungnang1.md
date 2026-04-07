@@ -86,4 +86,6 @@ faq:
 
 중랑구에서 6호선 30~40분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [중랑구 면목·중화·묵동 녹음실 안내](/stories/jungnang-myeonmok1) | [신내·망우·상봉·묵동 녹음실 안내](/stories/jungnang-sinnae1) | [노원구 녹음실 안내](/stories/nowon1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

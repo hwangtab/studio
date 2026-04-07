@@ -172,4 +172,6 @@ EDM은 구조적인 에너지 흐름이 핵심입니다. 빌드업에서 극도�
 
 EDM 프로덕션은 구조적 에너지 설계가 핵심입니다. 드롭과 빌드업의 대비를 극대화하고, 사이드체인으로 그루브를 만드세요.
 
+---
+
 [퓨처 베이스 프로덕션 완전 가이드](/stories/future-bass1) | [사이드체인 완전 가이드](/stories/sidechain1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

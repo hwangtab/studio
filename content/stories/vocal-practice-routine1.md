@@ -112,4 +112,6 @@ faq:
 
 꾸준한 루틴이 최고의 선생님입니다.
 
+---
+
 [보컬 리듬 트레이닝 완전 가이드](/stories/rhythm-training1) | [보컬 피로 완전 가이드](/stories/vocal-fatigue1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [스튜디오 놀 이용 요금](/pricing)

@@ -156,4 +156,6 @@ Blend: 두 IR 믹스 → 자연스러운 스테레오
 
 앰프 시뮬레이터와 DI 레코딩은 현대 홈 레코딩의 핵심입니다. 기타·베이스를 사용하는 모든 음악 제작자에게 필수적인 기술입니다.
 
+---
+
 [인디 록·어쿠스틱 기타 레코딩 가이드](/stories/indie-rock1) | [기타 레코딩 완전 가이드](/stories/guitar-recording1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

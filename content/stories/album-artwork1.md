@@ -148,4 +148,6 @@ AI 이미지 생성:
 
 앨범 커버는 음악과 함께 아티스트의 세계관을 전달합니다. 완성도 높은 음원과 인상적인 아트워크의 조합이 최고의 발매 전략입니다.
 
+---
+
 [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 발매 완전 가이드](/stories/streaming-release1) | [인디 레이블 완전 가이드](/stories/indie-label1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

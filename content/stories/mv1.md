@@ -86,4 +86,6 @@ faq:
 
 카카오톡으로 영상 목적과 일정을 알려주시면 맞춤 안내를 드립니다.
 
+---
+
 [이용 요금 및 서비스 안내](/pricing) | [커버곡 녹음 가이드](/stories/cover1) | [음원 발매 방법 안내](/stories/release1) | [마스터링 기준 완전 설명](/stories/mastering1) | [유튜브 채널 음원 녹음 가이드](/stories/youtube1)

@@ -100,4 +100,6 @@ EQ 처리 전·후를 번갈아 들으며 더 좋은지 확인합니다. EQ 없�
 
 보컬 EQ는 귀가 가이드입니다. 수치보다 귀로 판단하는 습관을 들이세요. 더 많은 믹싱 기법을 배우고 싶다면 믹싱 강좌 시리즈를 참고하세요.
 
+---
+
 [파라메트릭 EQ 완전 가이드](/stories/parametric-eq1) | [주파수 스펙트럼 완전 가이드](/stories/frequency-spectrum1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 컴프레서 사용법](/stories/compress1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

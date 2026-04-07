@@ -138,4 +138,6 @@ SNS 탐색:
 
 비트메이커와 협업한 음원도 스튜디오 놀의 전문 믹싱·마스터링으로 최고 수준의 사운드로 완성할 수 있습니다. 드라이 보컬 파일만 전송하시면 됩니다.
 
+---
+
 [음악 협업 완전 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음악 온라인 협업 도구 완전 가이드](/stories/collab-tools1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

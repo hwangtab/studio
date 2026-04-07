@@ -124,4 +124,6 @@ faq:
 
 트랜지언트 쉐이퍼는 컴프레서로 해결하기 어려운 어택·서스테인 조형에 효과적입니다.
 
+---
+
 [보컬 컴프레서 완전 가이드](/stories/compressor1) | [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [클리퍼·소프트 클리핑 완전 가이드](/stories/clipper1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

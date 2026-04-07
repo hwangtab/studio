@@ -138,4 +138,6 @@ faq:
 
 바이럴 마케팅의 기반은 좋은 음원입니다.
 
+---
+
 [음악 마케팅 완전 가이드](/stories/music-marketing1) | [틱톡 음악 활용 가이드](/stories/tiktok-music1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

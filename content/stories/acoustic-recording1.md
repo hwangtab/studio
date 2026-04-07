@@ -134,4 +134,6 @@ Spaced Pair (AB):
 
 어쿠스틱 기타 녹음은 공간과 마이크 선택이 핵심입니다.
 
+---
+
 [기타 녹음 완전 가이드](/stories/guitar-recording1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [드럼 녹음 완전 가이드](/stories/drum-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

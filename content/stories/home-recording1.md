@@ -107,4 +107,6 @@ faq:
 
 홈 레코딩은 아이디어 캡처와 드라이 보컬 수집에 매우 유용합니다. 하지만 최종 완성도를 위해서는 스튜디오 놀의 전문 믹싱·마스터링을 활용하면 훨씬 높은 품질의 결과물을 얻을 수 있습니다.
 
+---
+
 [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [녹음 환경 완전 가이드](/stories/recording-environment1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

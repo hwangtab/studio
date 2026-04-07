@@ -129,4 +129,6 @@ Step 4: 분기마다 정산 확인
 
 음악 퍼블리싱을 이해하면 창작한 음악에서 나오는 모든 수익을 챙길 수 있습니다.
 
+---
+
 [뮤지션 수입 다각화 완전 가이드](/stories/music-income1) | [인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

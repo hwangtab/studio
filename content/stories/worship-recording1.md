@@ -142,4 +142,6 @@ faq:
 
 교회 찬양팀의 음원은 예배 공동체의 소중한 기록입니다. 소규모 팀도 환영합니다.
 
+---
+
 [CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [합창·코러스 레코딩 완전 가이드](/stories/choir1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

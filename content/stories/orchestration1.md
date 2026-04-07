@@ -128,4 +128,6 @@ Kontakt Factory: 다목적 오케스트라
 
 좋은 편곡은 보컬의 감동을 극대화합니다. 편곡 파일(MIDI·MR)을 가져오시면 더욱 정확한 믹싱이 가능합니다.
 
+---
+
 [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [미디 편곡 완전 가이드](/stories/midi1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

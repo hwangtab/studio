@@ -129,4 +129,6 @@ faq:
 
 좋은 마스터링은 믹스를 더 돋보이게 하지만, 나쁜 믹스를 마스터링으로 고치기는 어렵습니다.
 
+---
+
 [공간 음향·바이노럴·돌비 애트모스 완전 가이드](/stories/spatial-audio1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

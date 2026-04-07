@@ -65,4 +65,6 @@ faq:
 
 안양 만안구 안양·박달·석수에서 1호선과 경의중앙선으로 약 1시간이면 연신내. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
+---
+
 [안양·군포·의왕 녹음실 안내](/stories/anyang1) | [평촌·범계·산본 녹음실 안내](/stories/pyeongchon1) | [군포 녹음실 안내](/stories/gunpo1) | [광명 녹음실 안내](/stories/gwangmyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

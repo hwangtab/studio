@@ -74,5 +74,6 @@ DAW(Digital Audio Workstation)는 컴퓨터 안의 스튜디오입니다. 큐베
 
 **믹싱 강좌 시리즈**: [← 제2부: 거짓말쟁이 방(Room) 길들이기](/stories/mixing2) | [제4부: 디지털 오디오의 해상도 →](/stories/mixing4)
 
-[보컬 EQ 완전 가이드](/stories/eq1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)
+---
 
+[보컬 EQ 완전 가이드](/stories/eq1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)

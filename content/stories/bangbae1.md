@@ -68,4 +68,6 @@ faq:
 
 방배·서초·내방·이수에서 2호선·4호선으로 35~50분 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [동작구 녹음실 안내](/stories/dongjak1) | [역삼·선릉 녹음실 안내](/stories/yeoksam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

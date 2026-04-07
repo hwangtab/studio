@@ -130,4 +130,6 @@ faq:
 
 창작 슬럼프는 아티스트로서의 성장 과정입니다. 막혀있는 시간이 오히려 더 깊은 작업을 준비하는 시간이 될 수 있습니다.
 
+---
+
 [무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -159,4 +159,6 @@ File → Export Audio/Video (Cmd+Shift+R)
 
 Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 강력한 DAW입니다.
 
+---
+
 [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

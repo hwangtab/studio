@@ -118,4 +118,6 @@ faq:
 
 보컬 신호 체인은 정답이 아니라 가이드라인입니다. 귀로 들으며 각 단계를 조정하는 것이 가장 중요합니다.
 
+---
+
 [믹싱 오토메이션 완전 가이드](/stories/mix-automation1) | [노이즈 게이트 완전 가이드](/stories/noise-gate1) | [디에서(De-esser) 완전 가이드](/stories/de-esser1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -134,4 +134,6 @@ faq:
 
 좋은 음악 PR은 좋은 음원에서 시작됩니다.
 
+---
+
 [뮤지션 이메일 마케팅·뉴스레터 완전 가이드](/stories/music-newsletter1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 완전 가이드](/stories/fan-community1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -139,4 +139,6 @@ faq:
 
 이 체크리스트를 모두 통과한 믹스는 마스터링 엔지니어에게 최적의 상태로 전달됩니다. 스튜디오 놀의 믹싱 서비스는 납품 전 이 모든 항목을 포함한 품질 검수를 거칩니다.
 
+---
+
 [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS·음압 완전 가이드](/stories/lufs-guide1) | [믹싱 레퍼런스 트랙 완전 가이드](/stories/mix-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

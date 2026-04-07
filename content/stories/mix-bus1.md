@@ -127,4 +127,6 @@ faq:
 
 버스 라우팅은 복잡한 믹스를 체계적으로 관리하고 전문적인 사운드를 만드는 핵심 방법론입니다.
 
+---
+
 [버스 컴프레션 완전 가이드](/stories/bus-compression1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

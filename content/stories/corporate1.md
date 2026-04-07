@@ -96,4 +96,6 @@ faq:
 
 기업 행사 음원은 단순 녹음이 아닌 브랜드 커뮤니케이션입니다.
 
+---
+
 [결혼식 축가 녹음 안내](/stories/wedding2) | [음반 제작 가이드](/stories/album1) | [음악 저작권 등록 방법](/stories/copyright1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)

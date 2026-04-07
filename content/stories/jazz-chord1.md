@@ -159,4 +159,6 @@ Dm7 → G7 → Cmaj7
 
 재즈 코드 이론은 모든 장르의 음악 작편곡에 풍부한 화성을 더하는 기반입니다.
 
+---
+
 [코드 진행 완전 가이드](/stories/chord-progressions1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [작사·작곡 완전 가이드](/stories/songwriting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

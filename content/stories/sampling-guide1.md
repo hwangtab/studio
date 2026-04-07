@@ -129,4 +129,6 @@ faq:
 
 샘플링은 저작권을 지키며 창의적으로 활용하는 것이 핵심입니다. 로열티 프리 샘플팩을 기반으로 초퍼·루프 기법을 연습하면 독창적인 사운드를 빠르게 만들 수 있습니다.
 
+---
+
 [비트 메이킹 완전 가이드](/stories/beatmaking1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

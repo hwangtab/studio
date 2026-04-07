@@ -115,4 +115,6 @@ Step 4: 음색 확인
 
 본인 보이스 타입을 파악하면 더 효율적인 레퍼토리 선택과 녹음이 가능합니다. 스튜디오 놀 녹음 세션에서 엔지니어가 본인 음역에 맞는 키 설정을 도와드립니다.
 
+---
+
 [성악과 보컬의 차이 가이드](/stories/sungak1) | [랩 잘하는 방법 가이드](/stories/rap1) | [내 보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)

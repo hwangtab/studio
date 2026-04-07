@@ -107,4 +107,6 @@ faq:
 
 노래 실력은 하루아침에 오르지 않습니다. 올바른 방법으로 꾸준히 연습하고, 주기적으로 스튜디오에서 녹음해 객관적으로 자신의 실력을 확인하세요.
 
+---
+
 [보컬 실력 향상 로드맵](/stories/growthplan1) | [취미로 노래 배우기 가이드](/stories/hobbymusic1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 워밍업 루틴](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)

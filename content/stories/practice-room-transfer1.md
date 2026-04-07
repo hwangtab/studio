@@ -108,4 +108,6 @@ faq:
 
 음악연습실 양도·인수는 신중한 현장 점검과 계약서 검토가 성패를 가릅니다. 서울 연신내 지역에서 연습실 운영 경험이 있는 스튜디오 놀에 문의주시면 더 자세한 조언을 드릴 수 있습니다.
 
+---
+
 [음악연습실 창업 가이드](/stories/practice-room-startup1) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [스튜디오 놀 연습실 안내](/practice-room) | [음악 비즈니스 스토리](/stories)

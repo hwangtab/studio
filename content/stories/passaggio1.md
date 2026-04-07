@@ -100,4 +100,6 @@ faq:
 
 패사지오 훈련은 음역 확장의 필수 단계입니다. 브리지를 자연스럽게 통과하는 능력이 생기면 무리 없이 넓은 음역에서 안정적인 발성이 가능합니다.
 
+---
+
 [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [스튜디오 놀 이용 요금](/pricing)

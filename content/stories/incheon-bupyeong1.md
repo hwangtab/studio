@@ -67,4 +67,6 @@ faq:
 
 인천 부평구에서 교통 환승 2~3회로 60~70분이면 연신내. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [인천 전체 녹음실 안내](/stories/incheon1) | [인천 서구·검단 녹음실 안내](/stories/incheon-seo1) | [인천 남동구 녹음실 안내](/stories/incheon-namdong1) | [부천시 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

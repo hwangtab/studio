@@ -66,4 +66,6 @@ faq:
 
 진해에서 KTX로 2시간 30분 방문이 어렵다면 온라인 믹싱 의뢰도 동일한 품질로 제공됩니다. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
+---
+
 [창원 녹음실 안내](/stories/changwon1) | [김해 녹음실 안내](/stories/gimhae1) | [부산 녹음실 안내](/stories/busan1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

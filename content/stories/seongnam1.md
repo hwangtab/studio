@@ -60,4 +60,6 @@ faq:
 
 기초를 탄탄히 해두면 어떤 장르에도 응용할 수 있습니다.
 
+---
+
 [성남 중원구 금광·모란·상대원 녹음실 안내](/stories/seongnam-jungwon1) | [성남 수정구 녹음실 안내](/stories/seongnam-sujeong1) | [분당·판교 녹음실 안내](/stories/bundang1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

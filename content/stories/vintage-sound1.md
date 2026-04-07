@@ -104,4 +104,6 @@ faq:
 
 빈티지 사운드는 과도하게 적용하면 오히려 뭉개지고 지저분해집니다. 각 트랙에 가볍게, 버스에 조금씩 쌓는 것이 자연스러운 아날로그 느낌을 만드는 비결입니다.
 
+---
+
 [새추레이션 완전 가이드](/stories/saturation1) | [로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

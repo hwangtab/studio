@@ -113,4 +113,6 @@ faq:
 
 혼자 만든 곡이 멜론·스포티파이에 올라가는 날까지, 스튜디오 놀이 함께합니다.
 
+---
+
 [싱어송라이터 1인 음반 제작 완전 가이드](/stories/singer-songwriter1) | [음반 제작 전 과정 가이드](/stories/album1) | [음원 발매 방법 안내](/stories/release1) | [스튜디오 놀 녹음 요금](/pricing) | [기획사 데모 트랙 완성 가이드](/stories/demotrack1) | [어쿠스틱 기타·피아노 녹음 가이드](/stories/acoustic1) | [포크·통기타 자작곡 녹음 가이드](/stories/folk1)

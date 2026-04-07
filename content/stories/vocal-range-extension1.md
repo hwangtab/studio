@@ -164,4 +164,6 @@ faq:
 
 보컬 음역대 확장은 꾸준한 올바른 훈련이 핵심입니다. 스튜디오 놀의 1:1 녹음 세션에서 엔지니어의 디렉팅으로 현재 음역에서 최고의 퍼포먼스를 이끌어냅니다.
 
+---
+
 [보컬 레슨·코치 선택 완전 가이드](/stories/vocal-lesson1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

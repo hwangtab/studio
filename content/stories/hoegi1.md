@@ -65,4 +65,6 @@ faq:
 
 동대문구 회기·경희대·외대앞에서 1호선 환승 1회로 25~35분이면 연신내. 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
+---
+
 [동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [이문·외대앞·석계·중화 녹음실 안내](/stories/imun1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

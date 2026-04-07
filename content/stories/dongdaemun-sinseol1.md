@@ -91,4 +91,6 @@ faq:
 
 동대문구 신설동·용두동·제기동에서 1호선 또는 2호선을 이용하면 약 40~50분 내로 연신내. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
+---
+
 [동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [회기·경희대·외대앞 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

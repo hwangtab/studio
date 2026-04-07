@@ -129,4 +129,6 @@ faq:
 
 오디션은 실력의 80%와 준비의 20%입니다. 스튜디오 세션을 통해 무대 전 마지막 점검도 가능합니다.
 
+---
+
 [뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

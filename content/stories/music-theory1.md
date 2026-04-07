@@ -107,4 +107,6 @@ C - Am - F - G (팝 발라드 단골 진행)
 
 음악 이론은 보컬리스트가 더 자유롭게 음악과 소통할 수 있게 해주는 언어입니다. 기본 개념만 이해해도 녹음 세션에서 훨씬 원활한 소통이 가능합니다.
 
+---
+
 [나에게 맞는 노래 키 찾는 방법](/stories/song-key1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 구조 완전 가이드](/stories/songstructure1) | [코드 진행 가이드](/stories/chordprog1) | [스튜디오 놀 이용 요금](/pricing)

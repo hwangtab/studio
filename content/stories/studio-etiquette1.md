@@ -114,4 +114,6 @@ faq:
 
 녹음실은 여러분의 음악을 가장 잘 담아내기 위한 공간입니다. 편안한 분위기 속에서 소통하면 엔지니어도 더 좋은 결과물을 만들기 위해 집중할 수 있습니다.
 
+---
+
 [세션 뮤지션 완전 가이드](/stories/session-musician1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [처음 스튜디오 방문 가이드](/stories/guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

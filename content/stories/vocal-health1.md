@@ -135,4 +135,6 @@ faq:
 
 성대 건강은 보컬리스트의 가장 중요한 자산입니다. 스튜디오 놀 세션 전 워밍업과 충분한 수분 섭취로 최상의 컨디션에서 녹음을 시작하세요.
 
+---
+
 [보컬 수면·성대 휴식 완전 가이드](/stories/vocal-sleep1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

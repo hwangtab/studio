@@ -122,4 +122,6 @@ faq:
 
 처음 스튜디오를 방문하면 엔지니어가 용어를 이해하기 쉽게 설명합니다. 궁금한 게 있으면 언제든 물어보세요.
 
+---
+
 [녹음실 처음 방문 가이드](/stories/guide1) | [마스터링이란?](/stories/mastering1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [스튜디오 놀 이용 요금](/pricing)

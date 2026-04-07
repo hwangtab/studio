@@ -75,4 +75,6 @@ faq:
 
 강남에서 지하철 25분. 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
+---
+
 [논현·신논현 녹음실 안내](/stories/nonhyeon1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [수서·개포·일원 녹음실 안내](/stories/suseo1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

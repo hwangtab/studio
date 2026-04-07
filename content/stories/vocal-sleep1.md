@@ -127,4 +127,6 @@ faq:
 
 성대는 충분한 수면과 휴식으로 회복합니다. 스튜디오 놀 세션 후 성대 관리에 대해 궁금한 점이 있으면 엔지니어에게 언제든지 문의하세요.
 
+---
+
 [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

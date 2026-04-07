@@ -77,4 +77,6 @@ faq:
 
 양주 덕계·옥정에서 약 1~1.5시간이면 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
+---
+
 [양주 녹음실 안내](/stories/yangju1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

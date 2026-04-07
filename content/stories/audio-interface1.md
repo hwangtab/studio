@@ -107,4 +107,6 @@ faq:
 
 좋은 오디오 인터페이스는 홈 레코딩 품질의 기초입니다. 인터페이스와 콘덴서 마이크, 방음 환경을 갖추면 충분히 드라이 보컬을 녹음할 수 있습니다.
 
+---
+
 [모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

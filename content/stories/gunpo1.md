@@ -78,4 +78,6 @@ faq:
 
 군포에서 4호선 45~55분 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
+---
+
 [군포 산본·금정·당동 녹음실 안내](/stories/gunpo-sanbon1) | [안양 녹음실 안내](/stories/anyang1) | [수원 녹음실 안내](/stories/suwon1) | [의왕 녹음실 안내](/stories/uiwang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

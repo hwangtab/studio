@@ -116,4 +116,6 @@ DAW 숙련도 (1개 이상):
 
 음악 프로듀서 커리어의 핵심은 포트폴리오 음원의 완성도입니다.
 
+---
+
 [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [비트메이커·프로듀서 협업 완전 가이드](/stories/beatmaker1) | [DAW 완전 비교 가이드](/stories/daw-comparison1) | [음악 협업 완전 가이드](/stories/music-collab1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

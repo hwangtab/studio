@@ -121,4 +121,6 @@ faq:
 
 잘 준비된 세션은 시간을 절약하고 최고의 결과물을 만듭니다. 스튜디오 놀 세션 전 이 체크리스트를 활용해 최상의 컨디션으로 녹음을 진행해보세요.
 
+---
+
 [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocalhealth1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [스튜디오 놀 이용 요금](/pricing)

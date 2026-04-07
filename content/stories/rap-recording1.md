@@ -146,4 +146,6 @@ EQ:
 
 랩 녹음은 딕션과 플로우가 완성된 상태에서 스튜디오에 입장해야 최고의 결과를 얻습니다.
 
+---
+
 [펑크 음악 제작 완전 가이드](/stories/funk-music1) | [힙합 보컬 믹싱 가이드](/stories/hip-hop-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 딕션 완전 가이드](/stories/diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

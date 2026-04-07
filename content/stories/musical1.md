@@ -103,4 +103,6 @@ faq:
 
 뮤지컬 오디션 데모는 첫 소절부터 심사자의 시선을 잡아야 합니다. 전문 스튜디오 녹음으로 완성도를 높여 도전하세요.
 
+---
+
 [오디션 준비 완전 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)

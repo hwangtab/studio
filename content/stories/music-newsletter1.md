@@ -144,4 +144,6 @@ Stationhead (음악 특화):
 
 이메일 마케팅은 팬과의 가장 직접적인 소통입니다.
 
+---
+
 [음악 PR·홍보 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

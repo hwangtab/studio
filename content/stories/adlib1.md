@@ -136,4 +136,6 @@ Step 4: 실제 곡 적용
 
 애드립·런은 기술이 아닌 감정 표현의 도구입니다.
 
+---
+
 [보컬 기교 완전 가이드](/stories/runs1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

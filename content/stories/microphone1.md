@@ -105,4 +105,6 @@ faq:
 
 전문 스튜디오에서 Neumann U87로 녹음하는 것과 홈 레코딩의 차이는 마이크 성능뿐 아니라 흡음 부스, 프리앰프, 엔지니어의 경험이 모두 포함된 결과입니다.
 
+---
+
 [보컬 녹음 마이크 추천 완전 가이드](/stories/vocal-microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [샘플레이트·비트뎁스 완전 가이드](/stories/sample-rate1) | [보컬 EQ 완전 가이드](/stories/eq1) | [스튜디오 놀 이용 요금](/pricing)

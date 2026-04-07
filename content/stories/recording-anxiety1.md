@@ -118,4 +118,6 @@ faq:
 
 녹음 긴장은 충분한 준비와 편안한 환경으로 크게 줄일 수 있습니다.
 
+---
+
 [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [스튜디오 방문 체크리스트](/stories/studio-checklist1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

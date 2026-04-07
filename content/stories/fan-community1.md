@@ -125,4 +125,6 @@ faq:
 
 팬은 아티스트의 음악을 세상에 전파하는 가장 강력한 채널입니다. 진심 어린 소통과 일관된 콘텐츠로 팬과 함께 성장하세요.
 
+---
+
 [음악 굿즈·머천다이징 완전 가이드](/stories/music-merchandise1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [인스타그램 음악 마케팅 가이드](/stories/instagram-music1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

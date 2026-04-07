@@ -101,4 +101,6 @@ faq:
 
 플러그인을 구매하기 전에 DAW 내장 도구를 완전히 익히는 것이 먼저입니다. 전문 엔지니어가 사용하는 플러그인 환경에서 보컬 녹음을 경험하고 싶다면 스튜디오 놀을 방문하세요.
 
+---
+
 [VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -162,4 +162,6 @@ faq:
 
 힙합 래핑은 반복적인 연습과 자기 녹음 분석으로 빠르게 성장할 수 있습니다.
 
+---
+
 [K-pop 보컬 완전 가이드](/stories/kpop-vocal1) | [록 보컬 완전 가이드](/stories/rock-vocal1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -115,4 +115,6 @@ faq:
 
 악기 없이 시작한 허밍이 완성된 음원이 될 수 있습니다. 아이디어를 바로 녹음하는 습관이 작곡의 첫걸음입니다.
 
+---
+
 [음악 프로듀서 되는 방법](/stories/producer1) | [작사 방법 완전 가이드](/stories/lyrics1) | [채보 기초 가이드 — 코드 찾는 방법](/stories/transcription1) | [음악 작업 의뢰 방법](/stories/commission1) | [DAW 선택 가이드](/stories/daw1) | [스튜디오 놀 이용 요금](/pricing)

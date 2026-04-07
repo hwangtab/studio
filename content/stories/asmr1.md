@@ -86,4 +86,6 @@ Step 4: 내보내기
 
 ASMR 콘텐츠의 핵심은 완벽한 정적과 섬세한 소리입니다. 홈 녹음 환경으로 한계를 느낀다면 스튜디오 놀의 방음 부스와 전문 장비를 활용해보세요.
 
+---
+
 [마이크 테크닉 완전 가이드](/stories/mictechnique1) | [홈 레코딩 방음 방법](/stories/soundproof1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 셀프 녹음 방법](/stories/selfrecord1) | [스튜디오 놀 이용 요금](/pricing)

@@ -126,4 +126,6 @@ faq:
 
 보컬 레이어링은 단순 녹음에 전문적인 두께감을 더하는 핵심 기법입니다.
 
+---
+
 [보컬 더블링·더블트래킹 완전 가이드](/stories/vocal-doubling1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

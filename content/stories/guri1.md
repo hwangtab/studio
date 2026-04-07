@@ -70,4 +70,6 @@ faq:
 
 구리에서 경의중앙선을 이용하면 약 50~60분 내로 서울 연신내. 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
+---
+
 [남양주·구리 녹음실 안내](/stories/namyangju1) | [하남·성남 방문 가이드](/stories/hanam1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
