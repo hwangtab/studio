@@ -68,6 +68,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     <description>${escapeXml(siteConfig.description)}</description>
     <language>${locale}</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
+    <image>
+      <url>${siteUrl}/logo512.png</url>
+      <title>${escapeXml(siteConfig.name)}</title>
+      <link>${siteUrl}</link>
+    </image>
     <atom:link href="${siteUrl}/api/rss?locale=${locale}" rel="self" type="application/rss+xml" />
 ${items}
   </channel>

@@ -305,6 +305,24 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                     >
                         {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
+                    <Link
+                        href={`/${locale}/wedding-song`}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+                    >
+                        {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                    <Link
+                        href={`/${locale}/voice-acting`}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+                    >
+                        {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                    <Link
+                        href={`/${locale}/studio-info`}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+                    >
+                        {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
                 </div>
             </Section>
 

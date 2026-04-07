@@ -175,6 +175,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         ogImageWidth={1280}
         ogImageHeight={720}
         includeSchema
+        webPageType="WebPage"
         faqItems={pricingQuickAnswers}
         schema={pricingSchema}
         reviewItems={reviewsData}

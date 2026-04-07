@@ -75,6 +75,21 @@ const getStoryThumbnail = (slug, locale) => {
   return null;
 };
 
+const getStoryTitle = (slug, locale) => {
+  const candidates = [
+    path.join(storiesDir, `${slug}.${locale}.md`),
+    path.join(storiesDir, `${slug}.md`),
+  ];
+  for (const filePath of candidates) {
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const match = content.match(/^title:\s*"?([^"\n]+)"?/m);
+      if (match && match[1]) return match[1].trim();
+    } catch { /* next */ }
+  }
+  return slug;
+};
+
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 
 const toIsoMtime = (filePath) => {
@@ -212,7 +227,8 @@ module.exports = {
         let images = [];
         if (thumbnail) {
           const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
-          images = [{ loc: new URL(imageUrl) }];
+          const title = getStoryTitle(slug, locale);
+          images = [{ loc: new URL(imageUrl), title, caption: title }];
         }
         results.push({
           loc: routePath,
@@ -243,7 +259,8 @@ module.exports = {
       const thumbnail = getStoryThumbnail(slug, locale);
       if (thumbnail) {
         const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
-        images = [{ loc: new URL(imageUrl) }];
+        const title = getStoryTitle(slug, locale);
+        images = [{ loc: new URL(imageUrl), title, caption: title }];
       }
     } else if (pathWithoutLocale.startsWith('/portfolio/') && segments.length >= 3) {
       const itemId = segments[2];

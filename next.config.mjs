@@ -97,6 +97,12 @@ const nextConfig = {
         ],
       },
       {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+        ],
+      },
+      {
         source: '/:path*',
         headers: [
           { key: 'X-Frame-Options', value: 'DENY' },

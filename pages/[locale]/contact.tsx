@@ -8,10 +8,11 @@ import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import { Section } from '../../components/ui/Section';
-import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getFaqData } from '../../data/faq';
+import { getReviews } from '../../data/reviews';
 import { NextPageWithLayout } from '../../types';
 
 import { getValidationFallbacks } from '../../utils/contactMessages';
@@ -21,6 +22,7 @@ import { createEnterAnimation, createInViewEnterAnimation } from '../../utils/an
 
 interface ContactProps {
   locale: Locale;
+  reviewsData: ReturnType<typeof getReviews>;
 }
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -50,7 +52,7 @@ const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps)
   </div>
 );
 
-const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
+const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
   const { t } = useTranslation('common', { lng: locale });
 
   const validationCopy = getValidationFallbacks(locale);
@@ -99,6 +101,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         includeSchema={true}
         faqItems={contactFaqData}
         webPageType="ContactPage"
+        reviewItems={reviewsData}
       />
       <ImageHero
         {...{
@@ -451,7 +454,10 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 Contact.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
-export const getStaticProps: GetStaticProps = async ({ params }) =>
-  buildPageStaticProps(params?.locale, {}, { revalidate: 86400 });
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const locale = resolveLocaleParam(params?.locale);
+  const reviewsData = getReviews(locale);
+  return buildPageStaticProps(locale, { reviewsData }, { revalidate: 86400 });
+};
 
 export default Contact;

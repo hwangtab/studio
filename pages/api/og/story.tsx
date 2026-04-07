@@ -158,7 +158,7 @@ export default async function handler(req: NextRequest) {
             name: 'Noto Sans KR',
             data: fontData,
             style: 'normal',
-            weight: 400,
+            weight: 700,
           },
         ],
         headers: {
@@ -168,6 +168,9 @@ export default async function handler(req: NextRequest) {
     );
   } catch (error) {
     console.error('OG image generation error:', error);
-    return new Response('Failed to generate image', { status: 500 });
+    return new Response(null, {
+      status: 302,
+      headers: { Location: '/images/og-default.webp' },
+    });
   }
 }

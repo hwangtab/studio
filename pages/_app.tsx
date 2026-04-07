@@ -10,7 +10,8 @@ import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceCli
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { getSiteConfig } from '../data/siteConfig';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -105,6 +106,28 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     };
   }, [hasServerResourceForLocale, i18nResources, locale]);
 
+  const siteNavSchema = useMemo(() => {
+    const sc = getSiteConfig(locale);
+    const base = `${sc.url}/${locale}`;
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'SiteNavigationElement',
+      name: 'Main Navigation',
+      hasPart: [
+        { '@type': 'SiteNavigationElement', name: sc.name, url: base },
+        { '@type': 'SiteNavigationElement', name: 'Pricing', url: `${base}/pricing` },
+        { '@type': 'SiteNavigationElement', name: 'Studio Info', url: `${base}/studio-info` },
+        { '@type': 'SiteNavigationElement', name: 'Practice Room', url: `${base}/practice-room` },
+        { '@type': 'SiteNavigationElement', name: 'Lesson', url: `${base}/lesson` },
+        { '@type': 'SiteNavigationElement', name: 'Wedding Song', url: `${base}/wedding-song` },
+        { '@type': 'SiteNavigationElement', name: 'Voice Acting', url: `${base}/voice-acting` },
+        { '@type': 'SiteNavigationElement', name: 'Portfolio', url: `${base}/portfolio` },
+        { '@type': 'SiteNavigationElement', name: 'Stories', url: `${base}/stories` },
+        { '@type': 'SiteNavigationElement', name: 'Contact', url: `${base}/contact` },
+      ],
+    };
+  }, [locale]);
+
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (
       <div className={montserrat.variable}>
@@ -146,6 +169,10 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <link rel="icon" href="/favicon.ico" />
         <link rel="alternate" type="application/rss+xml" title={locale === 'ko' ? '스튜디오 놀 스토리' : locale === 'zh' ? 'Studio NOL 故事' : locale === 'es' ? 'Studio NOL Historias' : locale === 'vi' ? 'Studio NOL Câu chuyện' : locale === 'th' ? 'Studio NOL เรื่องราว' : locale === 'uz' ? 'Studio NOL Hikoyalar' : 'Studio NOL Stories'} href={`/api/rss?locale=${locale}`} />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema) }}
+        />
       </Head>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>

@@ -60,6 +60,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
         includeSchema
         faqItems={faqData}
         reviewItems={reviewsData}
+        breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
+        ]}
       />
 
       <ImageHero
