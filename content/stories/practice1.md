@@ -104,4 +104,4 @@ faq:
 
 문의는 언제든지 카카오톡으로 편하게 보내주세요. 공실 확인과 견적 안내를 바로 드립니다.
 
-[스튜디오 놀 합주실·연습실 시설 및 요금 안내](/practice-room) | [밴드·단체 녹음 가이드](/stories/band1)
+[스튜디오 놀 합주실·연습실 시설 및 요금 안내](/practice-room) | [연습실 요금 안내](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [밴드·단체 녹음 가이드](/stories/band1)
