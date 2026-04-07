@@ -138,6 +138,6 @@ faq:
 
 ## 마치며
 
-창작 슬럼프는 성장의 과정입니다. 슬럼프를 극복한 작품은 더 깊고 진정성 있는 경우가 많습니다. 작업 준비가 되면 스튜디오 놀에서 전문 보컬 녹음으로 새로운 창작물을 완성하세요.
+창작 슬럼프는 성장의 과정입니다. 슬럼프를 극복한 작품은 더 깊고 진정성 있는 경우가 많습니다.
 
 [작곡 완전 가이드](/stories/songwriting1) | [싱어송라이터 완전 가이드](/stories/singer-songwriter1) | [음악 협업 완전 가이드](/stories/music-collab1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

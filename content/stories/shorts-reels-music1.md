@@ -127,6 +127,6 @@ faq:
 
 ## 마치며
 
-숏폼 플랫폼은 팔로워 없이도 음악을 세상에 알릴 수 있는 가장 강력한 도구입니다. 스튜디오 놀에서 녹음을 마친 후, 후킹 구간 선택부터 쇼츠 활용 전략까지 상담드립니다.
+숏폼 플랫폼은 팔로워 없이도 음악을 세상에 알릴 수 있는 가장 강력한 도구입니다.
 
 [보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [음악 저작권·저작인접권 완전 가이드](/stories/music-copyright1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

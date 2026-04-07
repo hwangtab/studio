@@ -119,6 +119,6 @@ faq:
 
 ## 마치며
 
-마이크 테크닉은 연습과 경험으로 개선됩니다. 스튜디오 놀에서 녹음 전 마이크 세팅과 테스트 시간을 통해 최적의 포지션을 찾아드립니다.
+마이크 테크닉은 연습과 경험으로 개선됩니다.
 
 [녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [스튜디오 놀 이용 요금](/pricing)

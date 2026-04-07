@@ -140,6 +140,6 @@ EQ → 컴프레서 → 스테레오 이미저 → 리미터
 
 ## 마치며
 
-팝 프로덕션은 구조와 사운드 디자인의 균형입니다. 스튜디오 놀에서 팝 스타일 보컬 녹음부터 믹싱·마스터링까지 완성할 수 있습니다.
+팝 프로덕션은 구조와 사운드 디자인의 균형입니다.
 
 [K-POP 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

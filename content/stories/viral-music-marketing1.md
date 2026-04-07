@@ -136,6 +136,6 @@ faq:
 
 ## 마치며
 
-바이럴 마케팅의 기반은 좋은 음원입니다. 스튜디오 놀에서 전문적으로 믹싱·마스터링한 음원으로 바이럴 마케팅 효과를 극대화하세요.
+바이럴 마케팅의 기반은 좋은 음원입니다.
 
 [음악 마케팅 완전 가이드](/stories/music-marketing1) | [틱톡 음악 활용 가이드](/stories/tiktok-music1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

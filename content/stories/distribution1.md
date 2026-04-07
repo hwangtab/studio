@@ -101,6 +101,6 @@ distrokid.com 접속 → 회원 가입
 
 ## 마치며
 
-음원 발매는 녹음만큼 중요한 과정입니다. 스튜디오 놀에서 녹음·믹싱·마스터링까지 완료한 후 디지털 유통사를 통해 내 음악을 전 세계에 공개하세요.
+음원 발매는 녹음만큼 중요한 과정입니다.
 
 [앨범 아트 제작 가이드](/stories/album-art1) | [EP 제작 완전 가이드](/stories/ep-production1) | [스트리밍 음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

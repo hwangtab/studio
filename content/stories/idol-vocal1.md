@@ -154,6 +154,6 @@ Step 4: 전체 안무와 보컬 통합
 
 ## 마치며
 
-K팝 보컬은 기술과 감정, 퍼포먼스가 모두 통합된 분야입니다. 스튜디오 놀에서 오디션 데모부터 음원 발매까지 전 과정을 함께 준비합니다.
+K팝 보컬은 기술과 감정, 퍼포먼스가 모두 통합된 분야입니다.
 
 [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

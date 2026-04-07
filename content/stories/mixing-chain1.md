@@ -128,6 +128,6 @@ EQ 전: -18 ~ -12dBFS
 
 ## 마치며
 
-믹싱 체인은 신호 흐름의 기본기입니다. 스튜디오 놀에서는 장르에 맞는 최적의 보컬 플러그인 체인으로 믹싱을 완성합니다.
+믹싱 체인은 신호 흐름의 기본기입니다.
 
 [게인 스테이징 완전 가이드](/stories/gain-staging1) | [스펙트럼 분석기 완전 가이드](/stories/spectrum-analyzer1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -147,6 +147,6 @@ DAW(Digital Audio Workstation)는 음악 제작의 핵심 소프트웨어입니�
 
 ## 마치며
 
-DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인터페이스, 조용한 녹음 환경입니다. 홈 레코딩 후 스튜디오 놀에 드라이 보컬을 전달하면 DAW에 관계없이 전문 믹싱·마스터링 결과물을 받을 수 있습니다.
+DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인터페이스, 조용한 녹음 환경입니다.
 
 [DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1) | [DAW 믹싱 템플릿 완전 가이드](/stories/daw-template1) | [Ableton 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

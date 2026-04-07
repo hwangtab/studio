@@ -132,6 +132,6 @@ faq:
 
 ## 마치며
 
-완벽한 방음이 없어도 흡음 처리만으로 사용 가능한 드라이 보컬을 녹음할 수 있습니다. 홈 레코딩 후 스튜디오 놀에서 전문 믹싱·마스터링을 받으면, 환경적 한계를 극복한 완성도 높은 음원을 만들 수 있습니다.
+완벽한 방음이 없어도 흡음 처리만으로 사용 가능한 드라이 보컬을 녹음할 수 있습니다.
 
 [녹음 환경 완전 가이드](/stories/recording-environment1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

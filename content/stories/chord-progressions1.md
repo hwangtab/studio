@@ -135,6 +135,6 @@ C - G/B - Am - Am/G - F
 
 ## 마치며
 
-좋은 코드 진행은 멜로디와 편곡의 토대입니다. 스튜디오 놀에서는 완성도 높은 편곡과 함께 최고의 보컬 녹음으로 곡을 완성합니다.
+좋은 코드 진행은 멜로디와 편곡의 토대입니다.
 
 [재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [음계와 조성 완전 가이드](/stories/music-scale1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

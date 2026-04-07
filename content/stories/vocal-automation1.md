@@ -126,6 +126,6 @@ Cubase: 트랙 우클릭 → Add Automation Track
 
 ## 마치며
 
-오토메이션은 정적인 믹스를 생동감 있게 만드는 핵심 기법입니다. 스튜디오 놀에서는 보컬 오토메이션부터 마스터버스 처리까지 세밀하게 작업하여 완성도 높은 믹스를 제공합니다.
+오토메이션은 정적인 믹스를 생동감 있게 만드는 핵심 기법입니다.
 
 [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [믹스 버스 라우팅 완전 가이드](/stories/mix-bus1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

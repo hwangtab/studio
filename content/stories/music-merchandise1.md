@@ -121,6 +121,6 @@ Merch by Amazon:
 
 ## 마치며
 
-굿즈는 음악과 팬을 연결하는 실물 경험입니다. 고음질 음악 콘텐츠를 스튜디오 놀에서 완성하고, 그 아트워크와 감성으로 팬이 간직하고 싶은 굿즈를 만들어보세요.
+굿즈는 음악과 팬을 연결하는 실물 경험입니다.
 
 [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

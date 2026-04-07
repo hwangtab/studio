@@ -132,6 +132,6 @@ Amuse:
 
 ## 마치며
 
-글로벌 배포는 더 이상 어렵지 않습니다. 퀄리티 높은 음원으로 세계 팬에게 도달하세요. 스튜디오 놀에서 글로벌 발매에 걸맞은 사운드를 완성합니다.
+글로벌 배포는 더 이상 어렵지 않습니다. 퀄리티 높은 음원으로 세계 팬에게 도달하세요.
 
 [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

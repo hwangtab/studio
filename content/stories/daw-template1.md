@@ -140,6 +140,6 @@ File → Save as Template
 
 ## 마치며
 
-믹싱 템플릿은 반복 작업을 줄이고 일관된 사운드를 유지하는 핵심 도구입니다. 스튜디오 놀에서는 장르별 최적화된 믹싱 템플릿으로 전문 보컬 믹싱을 제공합니다.
+믹싱 템플릿은 반복 작업을 줄이고 일관된 사운드를 유지하는 핵심 도구입니다.
 
 [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

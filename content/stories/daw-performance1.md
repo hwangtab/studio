@@ -103,6 +103,6 @@ Pro Tools: AudioSuite로 플러그인 렌더링
 
 ## 마치며
 
-DAW 퍼포먼스 최적화는 하드웨어 업그레이드 이전에 소프트웨어 설정으로 먼저 해결할 수 있습니다. 스튜디오 놀에서는 최적화된 전문 장비 환경으로 끊김 없는 녹음·믹싱 세션을 제공합니다.
+DAW 퍼포먼스 최적화는 하드웨어 업그레이드 이전에 소프트웨어 설정으로 먼저 해결할 수 있습니다.
 
 [DAW 비교 완전 가이드](/stories/daw-comparison1) | [DAW 믹싱 템플릿 가이드](/stories/daw-template1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

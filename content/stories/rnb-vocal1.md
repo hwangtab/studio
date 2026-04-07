@@ -88,6 +88,6 @@ Ratio: 3:1~5:1
 
 ## 마치며
 
-R&B 보컬은 기술과 감성의 균형이 중요합니다. 스튜디오 놀에서 R&B 스타일에 최적화된 마이크 세팅과 엔지니어링으로 그루비한 보컬 테이크를 완성할 수 있습니다.
+R&B 보컬은 기술과 감성의 균형이 중요합니다.
 
 [소울 보컬 완전 가이드](/stories/soul-vocal1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

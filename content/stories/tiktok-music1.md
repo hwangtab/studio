@@ -92,6 +92,6 @@ faq:
 
 ## 마치며
 
-틱톡은 지금 이 시간도 신진 보컬 아티스트가 발견되는 공간입니다. 스튜디오 놀에서 전문적으로 녹음한 음원으로 만든 콘텐츠로 더 많은 사람에게 목소리를 알려보세요.
+틱톡은 지금 이 시간도 신진 보컬 아티스트가 발견되는 공간입니다.
 
 [유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)

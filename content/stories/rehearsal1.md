@@ -85,6 +85,6 @@ faq:
 
 ## 마치며
 
-합주실과 녹음실은 목적이 다른 공간입니다. 음원 납품이 목표라면 전문 녹음실을 선택하세요. 연신내역 도보 5분 거리 스튜디오 놀에서 Neumann U87과 전담 엔지니어와 함께 최상의 보컬 녹음을 경험하세요.
+합주실과 녹음실은 목적이 다른 공간입니다. 음원 납품이 목표라면 전문 녹음실을 선택하세요.
 
 [스튜디오 놀 서비스 안내](/pricing) | [연신내 음악연습실 안내](/practice-room) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 활용 가이드](/stories/practice-room-vocal1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [첫 녹음 세션 준비 가이드](/stories/session1)

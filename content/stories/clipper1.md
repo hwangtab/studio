@@ -105,6 +105,6 @@ True Peak Ceiling: -1.0dBTP (스트리밍 기준)
 
 ## 마치며
 
-클리퍼는 올바르게 사용하면 음압을 높이면서 음질을 보존하는 효과적인 도구입니다. 스튜디오 놀에서 전문 마스터링 엔지니어가 클리퍼·리미터를 최적으로 활용해 스트리밍 기준에 맞는 마스터링을 제공합니다.
+클리퍼는 올바르게 사용하면 음압을 높이면서 음질을 보존하는 효과적인 도구입니다.
 
 [LUFS 완전 가이드](/stories/lufs-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

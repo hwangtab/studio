@@ -116,6 +116,6 @@ Pan: L-60 / R+60
 
 ## 마치며
 
-백보컬은 곡의 감정적 깊이를 더하는 핵심 요소입니다. 스튜디오 놀에서는 메인 보컬 녹음과 함께 하모니 레이어 세션도 진행하며, 파트별 믹싱까지 원스톱으로 완성합니다.
+백보컬은 곡의 감정적 깊이를 더하는 핵심 요소입니다.
 
 [하모니 노래 완전 가이드](/stories/harmony-singing1) | [합창·코랄 보컬 녹음 가이드](/stories/choir1) | [더블 트래킹 보컬 가이드](/stories/doubletracking1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [오토튠(Auto-Tune) 완전 가이드](/stories/auto-tune1) | [스튜디오 놀 이용 요금](/pricing)

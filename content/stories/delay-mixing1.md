@@ -118,6 +118,6 @@ BPM 140 → 4분음표: 429ms, 8분음표: 214ms
 
 ## 마치며
 
-딜레이는 리버브와 함께 믹스에 공간과 깊이를 만드는 두 축입니다. 스튜디오 놀에서는 보컬과 악기 각각에 최적화된 딜레이 세팅으로 입체적인 믹스를 완성합니다.
+딜레이는 리버브와 함께 믹스에 공간과 깊이를 만드는 두 축입니다.
 
 [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

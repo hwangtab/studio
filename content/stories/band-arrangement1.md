@@ -126,6 +126,6 @@ faq:
 
 ## 마치며
 
-밴드 편성을 완성한 후 스튜디오 놀에서 보컬 녹음을 진행하면 편성의 공간에 맞는 최적의 보컬 사운드를 완성할 수 있습니다.
+아이디어가 생기면 완성도보다 속도를 먼저 택하세요. 나중에 다듬으면 됩니다.
 
 [세션 뮤지션 완전 가이드](/stories/session-musician1) | [편곡·오케스트레이션 완전 가이드](/stories/orchestration1) | [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [음악 협업 완전 가이드](/stories/music-collab1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

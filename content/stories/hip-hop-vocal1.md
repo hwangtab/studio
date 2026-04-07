@@ -121,6 +121,6 @@ Retune Speed: 100~ (완전 끄기)
 
 ## 마치며
 
-힙합 보컬은 에너지와 딜리버리가 생명입니다. 스튜디오 놀에서 힙합·랩·트랩 장르에 맞는 전문 세팅으로 강렬한 보컬 녹음을 경험해보세요.
+힙합 보컬은 에너지와 딜리버리가 생명입니다.
 
 [힙합 프로덕션 완전 가이드](/stories/hiphop-production1) | [뮤지컬 보컬 녹음 완전 가이드](/stories/musical-vocal1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [백보컬·코러스 녹음 완전 가이드](/stories/backing-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

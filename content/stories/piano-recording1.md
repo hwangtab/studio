@@ -110,6 +110,6 @@ faq:
 
 ## 마치며
 
-피아노 녹음은 마이킹 위치와 피아노 조율이 전부입니다. 스튜디오 놀에서는 전문 마이크로 피아노 사운드를 최상으로 레코딩합니다.
+피아노 녹음은 마이킹 위치와 피아노 조율이 전부입니다.
 
 [기타 녹음 완전 가이드](/stories/guitar-recording1) | [드럼 녹음 완전 가이드](/stories/drum-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

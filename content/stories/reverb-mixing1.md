@@ -116,6 +116,6 @@ faq:
 
 ## 마치며
 
-리버브는 믹스에 공간과 깊이를 더하는 핵심 도구입니다. 스튜디오 놀에서는 장르와 분위기에 맞는 리버브 세팅으로 보컬과 악기 모두 최적의 공간감을 만들어드립니다.
+리버브는 믹스에 공간과 깊이를 더하는 핵심 도구입니다.
 
 [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

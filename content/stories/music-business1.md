@@ -128,6 +128,6 @@ faq:
 
 ## 마치며
 
-음악 비즈니스의 핵심은 좋은 음악을 꾸준히 발표하는 것입니다. 스튜디오 놀에서 음원의 완성도를 높여 스트리밍·라이센싱·공연 활동의 기반을 만드세요.
+음악 비즈니스의 핵심은 좋은 음악을 꾸준히 발표하는 것입니다.
 
 [음악 수익 완전 가이드](/stories/music-income1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [뮤지션 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

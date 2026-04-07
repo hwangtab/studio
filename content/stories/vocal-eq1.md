@@ -156,6 +156,6 @@ Neve 1073 (플러그인):
 
 ## 마치며
 
-보컬 EQ는 불필요한 주파수 제거와 존재감 강조의 균형이 핵심입니다. 스튜디오 놀에서는 FabFilter Pro-Q3를 포함한 전문 EQ 도구로 최적화된 보컬 사운드를 제공합니다.
+보컬 EQ는 불필요한 주파수 제거와 존재감 강조의 균형이 핵심입니다.
 
 [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [EQ 완전 가이드](/stories/eq1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

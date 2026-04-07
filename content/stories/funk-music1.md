@@ -135,6 +135,6 @@ Bruno Mars·Anderson.Paak (Silk Sonic):
 
 ## 마치며
 
-펑크 음악의 핵심은 모든 악기가 함께 만들어내는 그루브입니다. 스튜디오 놀에서 라이브 앙상블 레코딩과 오버더빙을 통해 펑크 특유의 생동감 있는 그루브를 담아드립니다.
+펑크 음악의 핵심은 모든 악기가 함께 만들어내는 그루브입니다.
 
 [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [R&B 음악 제작 완전 가이드](/stories/rnb-production1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [랩·힙합 보컬 녹음 완전 가이드](/stories/rap-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

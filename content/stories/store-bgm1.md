@@ -149,6 +149,6 @@ CC 라이센스 음악:
 
 ## 마치며
 
-매장 BGM은 고객 경험과 브랜드 이미지를 결정하는 중요한 요소입니다. 저작권 문제 없이 매장에 딱 맞는 음악을 원한다면 전문 BGM 제작을 고려하세요. 스튜디오 놀에서 매장 콘셉트에 맞는 BGM 제작을 의뢰할 수 있습니다.
+매장 BGM은 고객 경험과 브랜드 이미지를 결정하는 중요한 요소입니다. 저작권 문제 없이 매장에 딱 맞는 음악을 원한다면 전문 BGM 제작을 고려하세요.
 
 [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

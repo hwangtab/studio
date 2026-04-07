@@ -147,6 +147,6 @@ faq:
 
 ## 마치며
 
-올바른 마이크 선택이 녹음 품질의 절반을 결정합니다. 스튜디오 놀에서는 Neumann U87 AI 라지 다이어프램 콘덴서로 최고 품질의 보컬 녹음을 제공합니다.
+올바른 마이크 선택이 녹음 품질의 절반을 결정합니다.
 
 [콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [프리앰프 완전 가이드](/stories/preamp1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -97,6 +97,6 @@ faq:
 
 ## 마치며
 
-컨트리 보컬은 꾸밈없는 진정성이 핵심입니다. 스튜디오 놀에서 컨트리·포크·아메리카나 스타일의 따뜻한 어쿠스틱 보컬 녹음을 지원합니다.
+컨트리 보컬은 꾸밈없는 진정성이 핵심입니다.
 
 [클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 하모니 완전 가이드](/stories/harmony-singing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

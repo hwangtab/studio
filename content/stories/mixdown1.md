@@ -110,6 +110,6 @@ Share → Export Song to Disk
 
 ## 마치며
 
-올바른 믹스 다운 설정이 마스터링과 유통 품질을 보장합니다. 스튜디오 놀에서 온라인 믹싱 의뢰 시 WAV 마스터 + MP3 고음질 두 가지 형식으로 납품하므로 별도 출력 작업이 필요 없습니다.
+올바른 믹스 다운 설정이 마스터링과 유통 품질을 보장합니다.
 
 [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

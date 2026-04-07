@@ -116,6 +116,6 @@ D-0: 출시일 오전 발매
 
 ## 마치며
 
-스트리밍 음원 출시는 유통사 선택과 파일 준비만 제대로 하면 누구나 할 수 있습니다. 스튜디오 놀에서는 녹음·믹싱·마스터링까지 원스톱으로 진행하여 출시 준비 완료된 음원을 제공합니다.
+스트리밍 음원 출시는 유통사 선택과 파일 준비만 제대로 하면 누구나 할 수 있습니다.
 
 [싱글 발매 완전 가이드](/stories/single-release1) | [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

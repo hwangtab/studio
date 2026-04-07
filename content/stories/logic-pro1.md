@@ -119,6 +119,6 @@ EQ → 컴프레서 → Adaptive Limiter
 
 ## 마치며
 
-Logic Pro는 Mac 홈 레코딩의 표준 DAW입니다. 스튜디오 놀에서는 전문 DAW 환경으로 고품질 보컬 녹음과 믹싱을 진행합니다. 홈 레코딩 후 온라인 파일 의뢰도 가능합니다.
+Logic Pro는 Mac 홈 레코딩의 표준 DAW입니다. 홈 레코딩 후 온라인 파일 의뢰도 가능합니다.
 
 [Ableton 완전 가이드](/stories/ableton1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

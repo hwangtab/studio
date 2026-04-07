@@ -132,6 +132,6 @@ faq:
 
 ## 마치며
 
-좋은 음악 PR은 좋은 음원에서 시작됩니다. 스튜디오 놀에서 완성도 높은 음원을 제작한 후 체계적인 PR 전략으로 최대한 많은 청취자에게 닿으세요.
+좋은 음악 PR은 좋은 음원에서 시작됩니다.
 
 [뮤지션 이메일 마케팅·뉴스레터 완전 가이드](/stories/music-newsletter1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 완전 가이드](/stories/fan-community1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

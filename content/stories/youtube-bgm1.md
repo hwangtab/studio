@@ -137,6 +137,6 @@ faq:
 
 ## 마치며
 
-오리지널 BGM은 채널 브랜드의 소리입니다. 스튜디오 놀에서 라이브 악기 녹음(기타·피아노·퍼커션)을 추가하면 샘플 기반 BGM보다 훨씬 독특하고 따뜻한 사운드를 만들 수 있습니다.
+오리지널 BGM은 채널 브랜드의 소리입니다.
 
 [팟캐스트·유튜브 인트로 음악 제작 가이드](/stories/podcast-music1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

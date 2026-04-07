@@ -141,6 +141,6 @@ Stable Diffusion: 오픈소스
 
 ## 마치며
 
-앨범 아트는 음원 발매의 시각적 정체성입니다. 음악과 비주얼이 일치하는 앨범 아트가 스트리밍 플랫폼에서 클릭률을 높입니다. 스튜디오 놀에서는 보컬 녹음부터 음원 유통까지 전 과정을 안내드립니다.
+앨범 아트는 음원 발매의 시각적 정체성입니다. 음악과 비주얼이 일치하는 앨범 아트가 스트리밍 플랫폼에서 클릭률을 높입니다.
 
 [음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [SNS 음악 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

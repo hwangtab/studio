@@ -125,6 +125,6 @@ R&B·소울:
 
 ## 마치며
 
-브라스 편곡은 음악에 활기와 그루브를 더하는 강력한 도구입니다. 작은 3~4중주 브라스 섹션만으로도 사운드의 에너지가 크게 달라집니다. 스튜디오 놀에서 브라스 포함 종합 음반 제작 상담이 가능합니다.
+브라스 편곡은 음악에 활기와 그루브를 더하는 강력한 도구입니다. 작은 3~4중주 브라스 섹션만으로도 사운드의 에너지가 크게 달라집니다.
 
 [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

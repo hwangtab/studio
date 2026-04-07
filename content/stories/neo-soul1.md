@@ -146,6 +146,6 @@ Am9 → D9 → Gmaj9 → Cmaj7#11
 
 ## 마치며
 
-네오소울은 기술보다 그루브와 감성이 핵심인 장르입니다. 완성된 트랙을 스튜디오 놀에서 전문 믹싱·마스터링으로 마무리하세요.
+네오소울은 기술보다 그루브와 감성이 핵심인 장르입니다.
 
 [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [빈티지·아날로그 사운드 완전 가이드](/stories/vintage-sound1) | [재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

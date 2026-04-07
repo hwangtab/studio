@@ -138,6 +138,6 @@ faq:
 
 ## 마치며
 
-데이터는 다음 음원과 마케팅 전략을 개선하는 가장 정확한 나침반입니다. 스튜디오 놀에서 데이터 분석이 보여주는 팬들이 원하는 바로 그 퀄리티의 음원을 완성하세요.
+데이터는 다음 음원과 마케팅 전략을 개선하는 가장 정확한 나침반입니다.
 
 [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

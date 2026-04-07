@@ -113,6 +113,6 @@ faq:
 
 ## 마치며
 
-앰비언트 음악은 유튜브·스포티파이 플레이리스트 수요가 높은 장르입니다. 스튜디오 놀에서 앰비언트 보컬 또는 텍스처 레이어링 작업을 함께 진행합니다.
+앰비언트 음악은 유튜브·스포티파이 플레이리스트 수요가 높은 장르입니다.
 
 [로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

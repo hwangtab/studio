@@ -130,6 +130,6 @@ faq:
 
 ## 마치며
 
-보컬 실력을 쌓은 후에는 스튜디오 놀에서 전문 녹음으로 결과물을 만들어보세요. 레슨에서 갈고 닦은 발성을 전문 마이크와 환경에서 녹음하면 확연히 다른 결과물을 얻을 수 있습니다.
+레슨에서 갈고 닦은 발성을 전문 마이크와 환경에서 녹음하면 확연히 다른 결과물을 얻을 수 있습니다.
 
 [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -163,6 +163,6 @@ faq:
 
 ## 마치며
 
-보컬 디렉팅은 보컬리스트의 잠재력을 최대로 끌어내는 예술입니다. 스튜디오 놀에서는 경험 있는 엔지니어가 디렉팅과 레코딩을 함께 지원합니다.
+보컬 디렉팅은 보컬리스트의 잠재력을 최대로 끌어내는 예술입니다.
 
 [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 컴핑 완전 가이드](/stories/vocal-comping1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

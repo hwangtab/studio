@@ -125,6 +125,6 @@ faq:
 
 ## 마치며
 
-좋은 계약은 좋은 음원에서 협상력이 생깁니다. 스튜디오 놀에서 완성도 높은 데모와 음원을 만들어 레이블 미팅에서 유리한 위치를 선점하세요.
+좋은 계약은 좋은 음원에서 협상력이 생깁니다.
 
 [인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약서 완전 가이드](/stories/contract1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

@@ -109,6 +109,6 @@ faq:
 
 ## 마치며
 
-팝 보컬은 선명도와 리듬감이 생명입니다. 스튜디오 놀에서 팝·K팝에 최적화된 마이크 세팅과 전문 믹싱으로 완성도 높은 보컬 녹음을 경험해보세요.
+팝 보컬은 선명도와 리듬감이 생명입니다.
 
 [보컬 컴프레서 완전 가이드](/stories/compressor1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)

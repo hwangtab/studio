@@ -130,6 +130,6 @@ WeTransfer, 구글 드라이브, 카카오톡 파일 전송
 
 ## 마치며
 
-준비된 아티스트가 짧은 세션에서도 최고의 결과를 냅니다. 스튜디오 놀에서 첫 세션도 체계적으로 진행해드립니다.
+준비된 아티스트가 짧은 세션에서도 최고의 결과를 냅니다.
 
 [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)

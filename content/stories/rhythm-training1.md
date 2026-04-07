@@ -142,6 +142,6 @@ faq:
 
 ## 마치며
 
-리듬 감각은 매일 10분의 메트로놈 훈련으로 꾸준히 키울 수 있습니다. 스튜디오 놀에서 엔지니어와 함께 클릭 트랙 기반 녹음으로 정확한 타이밍의 보컬을 완성해보세요.
+리듬 감각은 매일 10분의 메트로놈 훈련으로 꾸준히 키울 수 있습니다.
 
 [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [곡 구조 완전 가이드](/stories/song-structure1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)

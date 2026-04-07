@@ -101,6 +101,6 @@ faq:
 
 ## 마치며
 
-녹음과 믹싱은 반드시 WAV로, SNS 공유는 MP3 고음질로, 음원 유통은 유통사 스펙에 맞는 형식으로 제출하세요. 스튜디오 놀에서 믹싱·마스터링 납품 시 WAV 마스터 + MP3 고음질 두 가지 형식으로 모두 납품합니다.
+녹음과 믹싱은 반드시 WAV로, SNS 공유는 MP3 고음질로, 음원 유통은 유통사 스펙에 맞는 형식으로 제출하세요.
 
 [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스튜디오 놀 이용 요금](/pricing)

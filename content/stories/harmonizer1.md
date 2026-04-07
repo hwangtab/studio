@@ -117,6 +117,6 @@ faq:
 
 ## 마치며
 
-하모나이저는 빠르게 화음을 만드는 유용한 도구이지만, 최고의 음질은 실제 보컬 오버더빙입니다. 스튜디오 놀에서는 실제 보컬 하모니 레코딩과 믹싱을 전문적으로 처리합니다.
+하모나이저는 빠르게 화음을 만드는 유용한 도구이지만, 최고의 음질은 실제 보컬 오버더빙입니다.
 
 [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [오버더빙 완전 가이드](/stories/overdubbing1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

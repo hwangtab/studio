@@ -157,6 +157,6 @@ File → Bounce → Project or Section
 
 ## 마치며
 
-Logic Pro는 Flex Pitch, Space Designer, Channel EQ 등 전문 플러그인을 기본 내장하여 홈 레코딩에서 프로급 품질을 실현할 수 있습니다. 녹음 후 스튜디오 놀에 드라이 보컬 WAV 파일을 전달하면 전문 믹싱·마스터링으로 완성 음원을 받을 수 있습니다.
+Logic Pro는 Flex Pitch, Space Designer, Channel EQ 등 전문 플러그인을 기본 내장하여 홈 레코딩에서 프로급 품질을 실현할 수 있습니다.
 
 [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

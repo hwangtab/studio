@@ -108,6 +108,6 @@ faq:
 
 ## 마치며
 
-재즈 보컬은 자연스러움이 생명입니다. 스튜디오 놀에서 재즈 장르에 최적화된 세팅으로 자연스럽고 감성적인 보컬 녹음을 경험해보세요.
+재즈 보컬은 자연스러움이 생명입니다.
 
 [힙합 보컬·랩 녹음 완전 가이드](/stories/hip-hop-vocal1) | [트로트 보컬 녹음 완전 가이드](/stories/trot-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [보컬 음색 개발 가이드](/stories/tone-color1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)

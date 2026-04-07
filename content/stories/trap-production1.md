@@ -138,6 +138,6 @@ H HH HH HH HH HH HH HH                          (3연음 롤)
 
 ## 마치며
 
-트랩 음악은 제작 완성도와 사운드 디자인이 곧 경쟁력입니다. 스튜디오 놀에서 트랩·힙합 보컬 녹음과 믹싱·마스터링을 전문적으로 지원합니다.
+트랩 음악은 제작 완성도와 사운드 디자인이 곧 경쟁력입니다.
 
 [Lo-Fi 음악 제작 완전 가이드](/stories/lofi-music1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [힙합 보컬 녹음 완전 가이드](/stories/hiphop-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

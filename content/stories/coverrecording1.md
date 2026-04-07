@@ -101,6 +101,6 @@ faq:
 
 ## 마치며
 
-커버 녹음은 본인의 보컬 실력을 기록하고 SNS·오디션에 활용하는 가장 좋은 방법입니다. 스튜디오 놀에서 전문 엔지니어와 함께 원곡보다 더 빛나는 커버 버전을 만들어보세요.
+커버 녹음은 본인의 보컬 실력을 기록하고 SNS·오디션에 활용하는 가장 좋은 방법입니다.
 
 [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [오디션 준비 녹음 가이드](/stories/audition1) | [보컬 녹음 완전 가이드](/stories/vocalrecord1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

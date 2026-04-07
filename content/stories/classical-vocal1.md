@@ -104,6 +104,6 @@ faq:
 
 ## 마치며
 
-클래식 성악은 인체 발성 훈련의 정점입니다. 스튜디오 놀에서 성악 전용 마이크 세팅과 자연 공명을 살린 녹음으로 당신의 성악 음색을 최고로 포착합니다.
+클래식 성악은 인체 발성 훈련의 정점입니다.
 
 [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [가스펠·CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

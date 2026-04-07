@@ -107,6 +107,6 @@ GR: 2~4dB 정도만
 
 ## 마치며
 
-인디팝 보컬은 완벽함이 아닌 진정성으로 승부합니다. 스튜디오 놀에서는 인디 감성에 맞는 자연스러운 녹음과 섬세한 믹싱으로 인디 아티스트의 사운드를 완성합니다.
+인디팝 보컬은 완벽함이 아닌 진정성으로 승부합니다.
 
 [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [로파이 음악 제작 가이드](/stories/lofi-production1) | [앰비언트 음악 제작 가이드](/stories/ambient-music1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

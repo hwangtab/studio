@@ -132,6 +132,6 @@ Chorus 훅:
 
 ## 마치며
 
-멜로디는 연습과 시도로 발전합니다. 훅 아이디어를 매일 10개씩 만들어 보는 것이 가장 빠른 성장 방법입니다. 멜로디가 완성되면 스튜디오 놀에서 전문 보컬 녹음으로 완성도를 높이세요.
+멜로디는 연습과 시도로 발전합니다. 훅 아이디어를 매일 10개씩 만들어 보는 것이 가장 빠른 성장 방법입니다.
 
 [가사 쓰는 방법 완전 가이드](/stories/lyric-writing1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

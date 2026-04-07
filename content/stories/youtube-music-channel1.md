@@ -147,6 +147,6 @@ AVD (평균 시청 지속 시간):
 
 ## 마치며
 
-유튜브 음악 채널은 고음질 녹음을 기반으로 시작됩니다. 스튜디오 놀에서 녹음한 전문 보컬 영상으로 채널의 첫 인상을 완성하세요.
+유튜브 음악 채널은 고음질 녹음을 기반으로 시작됩니다.
 
 [뮤지션 라이브 스트리밍 완전 가이드](/stories/live-streaming-music1) | [뮤지션 팟캐스트·오디오 콘텐츠 제작 완전 가이드](/stories/music-podcast1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

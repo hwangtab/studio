@@ -128,6 +128,6 @@ Groover (groover.co):
 
 ## 마치며
 
-플레이리스트 피칭은 발매 전 준비와 꾸준한 아웃리치가 핵심입니다. 스튜디오 놀에서 완성도 높은 음원을 준비해 피칭 성공률을 높이세요.
+플레이리스트 피칭은 발매 전 준비와 꾸준한 아웃리치가 핵심입니다.
 
 [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

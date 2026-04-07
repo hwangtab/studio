@@ -120,6 +120,6 @@ faq:
 
 ## 마치며
 
-차트 진입의 첫 번째 조건은 완성도 높은 음원입니다. 스튜디오 놀에서 멜론 스트리밍 기준에 맞는 전문 믹싱·마스터링으로 음원을 완성하세요.
+차트 진입의 첫 번째 조건은 완성도 높은 음원입니다.
 
 [스트리밍 플랫폼 완전 비교 가이드](/stories/streaming-platforms1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

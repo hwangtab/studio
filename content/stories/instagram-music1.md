@@ -110,6 +110,6 @@ faq:
 
 ## 마치며
 
-인스타그램 릴스로 보컬을 꾸준히 업로드하면 점점 더 많은 사람에게 목소리를 알릴 수 있습니다. 스튜디오 놀에서 전문적으로 녹음한 음원을 기반으로 SNS 활동을 시작해보세요.
+인스타그램 릴스로 보컬을 꾸준히 업로드하면 점점 더 많은 사람에게 목소리를 알릴 수 있습니다.
 
 [틱톡 보컬 활동 가이드](/stories/tiktok-music1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)

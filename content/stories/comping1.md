@@ -133,6 +133,6 @@ faq:
 
 ## 마치며
 
-보컬 컴핑은 녹음만큼 중요한 제작 단계입니다. 스튜디오 놀에서는 녹음 후 엔지니어가 직접 컴핑·피치 교정·타임 교정까지 진행합니다.
+보컬 컴핑은 녹음만큼 중요한 제작 단계입니다.
 
 [보컬 편집 완전 가이드](/stories/vocal-editing1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

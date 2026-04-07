@@ -147,6 +147,6 @@ faq:
 
 ## 마치며
 
-발라드는 보컬의 감성이 가장 직접적으로 전달되는 장르입니다. 스튜디오 놀에서 Neumann U87 AI와 전문 엔지니어의 디렉팅으로 당신의 감성을 음악으로 완성하세요.
+발라드는 보컬의 감성이 가장 직접적으로 전달되는 장르입니다.
 
 [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

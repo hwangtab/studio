@@ -165,6 +165,6 @@ faq:
 
 ## 마치며
 
-보컬 프로듀서는 가수의 가능성을 최대로 끌어내는 음악의 핵심 직군입니다. 스튜디오 놀에서 전문적인 보컬 세션과 1:1 엔지니어 디렉팅 경험을 쌓으세요.
+보컬 프로듀서는 가수의 가능성을 최대로 끌어내는 음악의 핵심 직군입니다.
 
 [음악 프로듀서 입문 완전 가이드](/stories/music-producer1) | [K-POP 보컬 완전 가이드](/stories/kpop-vocal1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

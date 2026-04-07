@@ -140,6 +140,6 @@ faq:
 
 ## 마치며
 
-지원금을 통해 음반 제작 비용을 확보했다면 스튜디오 놀에서 전문 녹음·믹싱·마스터링으로 최고의 결과물을 만들어보세요. 지원금 신청서에 포함할 예산 견적도 문의해드립니다.
+지원금 신청서에 포함할 예산 견적도 문의해드립니다.
 
 [뮤지션 음악 수익 완전 가이드](/stories/music-income1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음악 세금·정산 완전 가이드](/stories/music-tax1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

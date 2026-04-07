@@ -125,6 +125,6 @@ faq:
 
 ## 마치며
 
-음악 SNS 마케팅은 플랫폼 특성에 맞는 콘텐츠와 일관성이 핵심입니다. 스튜디오 놀에서는 완성도 높은 음원으로 SNS 홍보의 토대를 만들어드립니다.
+음악 SNS 마케팅은 플랫폼 특성에 맞는 콘텐츠와 일관성이 핵심입니다.
 
 [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [YouTube 음악 홍보 완전 가이드](/stories/youtube1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
