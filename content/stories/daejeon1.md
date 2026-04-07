@@ -68,4 +68,4 @@ faq:
 
 대전에서 KTX 1시간, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 지방 도시 중 서울 스튜디오 접근성이 가장 좋은 곳 중 하나입니다.
 
-[대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [금산 녹음실 안내](/stories/geumsan1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon-donggu1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
