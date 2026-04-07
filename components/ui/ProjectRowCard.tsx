@@ -48,7 +48,7 @@ const ProjectRowCard = ({
             <div className="relative w-full sm:w-48 h-48 sm:h-full flex-shrink-0 overflow-hidden bg-gray-100 dark:bg-black">
                 <ResponsiveImage
                     src={image}
-                    alt={title}
+                    alt={`${title} — ${artist}`}
                     pictureClassName="w-full h-full"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-100 dark:opacity-90 dark:group-hover:opacity-100"
                     width={200}

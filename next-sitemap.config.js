@@ -222,6 +222,11 @@ module.exports = {
     const results = [];
     for (const slug of slugs) {
       for (const locale of locales) {
+        // Skip if no locale-specific file exists for this locale (would be noindexed fallback)
+        if (locale !== 'ko') {
+          const localeFilePath = path.join(storiesDir, `${slug}.${locale}.md`);
+          if (!fs.existsSync(localeFilePath)) continue;
+        }
         const routePath = `/${locale}/stories/${slug}`;
         const thumbnail = getStoryThumbnail(slug, locale);
         let images = [];

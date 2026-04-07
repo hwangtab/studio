@@ -166,6 +166,22 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           </m.div>
         </div>
       </Section>
+      <Section variant="alternate" className="py-12">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <p className="text-body mb-6 text-gray-600 dark:text-gray-300">{t('portfolio.detail.ctaPrompt', '당신의 음악도 완성해 드립니다.')}</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href={getLink('/pricing')} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors">
+              {t('nav.pricing')}
+            </Link>
+            <Link href={getLink('/contact')} className="inline-flex items-center px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg font-medium transition-colors">
+              {t('nav.contact')}
+            </Link>
+            <Link href={getLink('/studio-info')} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary rounded-lg font-medium transition-colors">
+              {t('nav.equipment')}
+            </Link>
+          </div>
+        </div>
+      </Section>
     </>
   );
 };

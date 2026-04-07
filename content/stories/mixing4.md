@@ -5,6 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "디지털", "SampleRate", "BitDepth"]
 summary: "샘플레이트(44.1kHz·48kHz)와 비트뎁스(16bit·24bit)의 차이와 왜 중요한지 설명합니다. 디지털 오디오의 해상도 개념을 쉽게 풀어냅니다."
+thumbnail: "/images/hardware4.webp"
 faq:
   - q: "샘플레이트 44.1kHz와 48kHz 중 어떤 것을 선택해야 하나요?"
     a: "음악 전용(스트리밍·CD)이라면 44.1kHz, 영상 콘텐츠(유튜브·영화) 연동 목적이라면 48kHz를 권장합니다. 한 프로젝트 내에서 혼용하지 않는 것이 중요합니다."

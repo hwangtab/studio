@@ -97,6 +97,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                 ogImageAlt={t('lesson.hero.alt')}
                 ogImageWidth={1280}
                 ogImageHeight={720}
+                webPageType="ItemPage"
             />
             <ImageHero
                 locale={locale}

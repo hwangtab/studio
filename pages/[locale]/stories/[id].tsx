@@ -150,6 +150,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           { name: t('nav.stories'), path: `/${locale}/stories` },
           { name: story.title, path: `/${locale}/stories/${story.slug}` },
         ]}
+        webPageType="Article"
       />
 
       {/* Visible breadcrumb UI */}

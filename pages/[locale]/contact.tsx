@@ -445,6 +445,24 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
           >
             {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
+          <Link
+            href={`/${locale}/studio-info`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/lesson`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+          >
+            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/practice-room`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
         </div>
       </Section>
     </>

@@ -156,6 +156,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         ]}
         includeSchema={true}
         schema={[itemListSchema, ...audioObjectSchemas]}
+        webPageType="CollectionPage"
       />
       <ImageHero
         {...{

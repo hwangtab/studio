@@ -5,6 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "StaticMix", "Balance", "NoPlugins"]
 summary: "모든 플러그인을 끄고 볼륨·패닝만으로 믹스를 완성하는 스태틱 믹스(Static Mix) 개념. 좋은 스태틱 믹스가 믹스 완성도의 기반임을 설명합니다."
+thumbnail: "/images/recording11.webp"
 faq:
   - q: "스태틱 믹스(Static Mix)란 무엇인가요?"
     a: "모든 플러그인(EQ·컴프·리버브 등)을 끄고 볼륨과 패닝만으로 완성하는 기초 믹스입니다. 좋은 스태틱 믹스가 만들어지면 플러그인을 추가해도 전체적인 밸런스가 무너지지 않습니다."

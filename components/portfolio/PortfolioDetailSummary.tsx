@@ -50,7 +50,7 @@ const PortfolioDetailSummary = ({
         <div className={imageWrapperClassName}>
           <ResponsiveImage
             src={item.image}
-            alt={item.title}
+            alt={`${item.title} — ${item.artist}`}
             className="object-cover"
             pictureClassName="block w-full h-full"
             sizes="(min-width: 768px) 400px, 100vw"

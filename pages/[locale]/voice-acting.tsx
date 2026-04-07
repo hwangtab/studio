@@ -169,6 +169,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.voiceActing'), path: `/${locale}/voice-acting` },
         ]}
+        webPageType="ItemPage"
       />
 
       <ImageHero

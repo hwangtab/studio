@@ -5,6 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["믹싱", "강좌", "미터링", "Metering", "Loudness"]
 summary: "VU미터, 피크미터, LUFS 미터의 차이와 활용법. 믹싱 시 미터를 어떻게 읽고 레벨을 관리해야 하는지 상세히 설명합니다."
+thumbnail: "/images/recording1.webp"
 faq:
   - q: "LUFS란 무엇이고 왜 중요한가요?"
     a: "LUFS(Loudness Units relative to Full Scale)는 인간 귀의 음량 인지 방식을 반영한 음압 단위입니다. 스포티파이·유튜브·멜론은 모두 -14 LUFS 기준으로 음량을 정규화하므로, 마스터링 시 이 기준에 맞추는 것이 중요합니다."

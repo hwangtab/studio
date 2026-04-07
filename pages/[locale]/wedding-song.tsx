@@ -143,6 +143,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.weddingSong'), path: `/${locale}/wedding-song` },
         ]}
+        webPageType="ItemPage"
       />
 
       <ImageHero
