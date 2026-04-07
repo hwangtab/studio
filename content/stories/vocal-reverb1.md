@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 리버브", "리버브 설정", "보컬 공간감", "리버브 타입", "Plate 리버브", "Hall 리버브", "보컬 믹싱 리버브"]
 thumbnail: "/images/room8.webp"
-summary: "보컬 리버브 완전 가이드입니다. Plate·Hall·Room·Chamber 리버브 타입 비교, Pre-delay·Decay·Mix 파라미터 설정, 장르별 보컬 리버브 설정, 센드 방식 활용, 리버브 플러그인 비교를 정리합니다."
+summary: "보컬 리버브 완전 가이드입니다. Plate·Hall·Room·Chamber 리버브 타입 비교, Pre-delay·Decay·Mix 파라미터 설정, 장르별 보컬 리버브 설정..."
 faq:
   - q: "보컬에 가장 많이 사용하는 리버브 타입은?"
     a: "Plate 리버브가 보컬에 가장 널리 사용됩니다. Plate는 매끄럽고 균질한 잔향으로 보컬의 따뜻함을 강화하면서도 선명도를 유지합니다. 발라드·팝에는 Hall, 드라이한 힙합에는 Short Room이 사용됩니다."

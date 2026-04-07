@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Logic Pro 보컬", "로직 프로 녹음", "Logic Pro 설정", "맥 DAW 녹음", "Logic Pro 믹싱", "Logic Pro EQ", "Logic Pro 컴프레서"]
 thumbnail: "/images/room8.webp"
-summary: "Logic Pro 보컬 녹음 완전 가이드입니다. 오디오 인터페이스 연결, 트랙 생성, 게인 설정, Channel EQ·컴프레서 삽입, Flex Pitch 피치 교정, 파일 내보내기 방법을 정리합니다."
+summary: "Logic Pro 보컬 녹음 완전 가이드입니다. 오디오 인터페이스 연결, 트랙 생성, 게인 설정, Channel EQ·컴프레서 삽입, Flex Pitch 피치 교정, 파일..."
 faq:
   - q: "Logic Pro로 고퀄리티 보컬 녹음이 가능한가요?"
     a: "가능합니다. Logic Pro는 전문 스튜디오에서도 사용하는 Mac 전용 DAW로, 고급 EQ·컴프레서·Flex Pitch 피치 교정·Space Designer 리버브 등 전문 녹음에 필요한 모든 기능을 갖추고 있습니다."

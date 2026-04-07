@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "마스터링 가이드"
 tags: ["LUFS", "음압", "스트리밍 음압", "LUFS 기준", "마스터링 음압", "Integrated LUFS", "True Peak"]
 thumbnail: "/images/recording17.webp"
-summary: "LUFS 완전 가이드입니다. Integrated LUFS·Short-term LUFS·Momentary LUFS의 차이, 스포티파이·애플뮤직·유튜브·멜론 플랫폼별 목표값, True Peak 설정, 마스터링 헤드룸 기준을 정리합니다."
+summary: "LUFS 완전 가이드입니다. Integrated LUFS·Short-term LUFS·Momentary LUFS의 차이, 스포티파이·애플뮤직·유튜브·멜론 플랫폼별 목표값..."
 faq:
   - q: "LUFS란 무엇인가요?"
     a: "LUFS(Loudness Units relative to Full Scale)는 인간 청각 특성을 반영한 음량 단위입니다. 스트리밍 플랫폼이 자동 음량 정규화에 사용하는 기준값으로, 스포티파이·유튜브는 -14 LUFS, 애플뮤직은 -16 LUFS를 기준으로 조정합니다."

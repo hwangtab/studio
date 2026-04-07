@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["스트리밍 음원 등록", "Spotify 음원 등록", "멜론 음원 등록", "음원 유통", "인디 음악 출시", "음원 디지털 배포", "애플뮤직 등록"]
 thumbnail: "/images/hardware8.webp"
-summary: "스트리밍 음악 출시 완전 가이드입니다. 디지털 음원 유통사(Distrokid·TuneCore·두드림) 비교, 스트리밍 파일 규격(WAV/MP3), 커버아트 규격, 출시 일정, 저작권 등록을 정리합니다."
+summary: "스트리밍 음악 출시 완전 가이드입니다. 디지털 음원 유통사(Distrokid·TuneCore·두드림) 비교, 스트리밍 파일 규격(WAV/MP3), 커버아트 규격, 출시..."
 faq:
   - q: "인디 아티스트가 Spotify에 음원을 등록하려면?"
     a: "DistroKid, TuneCore, CD Baby 등의 디지털 유통사를 통해 등록합니다. 국내 서비스는 두드림(DoodreamMusic)이 대표적입니다. 유통사에 음원 파일과 커버아트를 업로드하면 Spotify, Apple Music, 멜론 등 전 세계 플랫폼에 배포됩니다."

@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["iZotope Nectar", "넥타 보컬", "Nectar 4 사용법", "AI 보컬 플러그인", "보컬 처리 올인원", "Nectar 하모니", "iZotope 보컬"]
 thumbnail: "/images/recording2.webp"
-summary: "iZotope Nectar 보컬 처리 완전 가이드입니다. Nectar 4 Assistant 활용, 게이트·EQ·컴프레서·De-esser·리버브 모듈, 하모니 생성, 보컬 플레이트 효과 설정을 정리합니다."
+summary: "iZotope Nectar 보컬 처리 완전 가이드입니다. Nectar 4 Assistant 활용, 게이트·EQ·컴프레서·De-esser·리버브 모듈, 하모니 생성, 보컬..."
 faq:
   - q: "iZotope Nectar란 무엇인가요?"
     a: "iZotope가 개발한 올인원 보컬 처리 플러그인입니다. Gate, EQ, Compressor, De-esser, Harmony, Reverb, Pitch 교정 등 보컬 처리에 필요한 모든 모듈을 하나의 플러그인에 통합하고 있습니다."

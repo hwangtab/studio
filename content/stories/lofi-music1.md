@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["Lo-Fi 음악 제작", "Lo-Fi Hip Hop", "Chillhop", "Lo-Fi 비트 만들기", "Lo-Fi 사운드", "Lo-Fi 믹싱", "Lo-Fi 마스터링"]
 thumbnail: "/images/pcw.webp"
-summary: "Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi Hip Hop·Chillhop의 핵심 사운드 요소, 비트 제작 방법, 샘플링 기법, Lo-Fi 효과 플러그인, Lo-Fi 믹싱·마스터링 방법을 정리합니다."
+summary: "Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi Hip Hop·Chillhop의 핵심 사운드 요소, 비트 제작 방법, 샘플링 기법, Lo-Fi 효과 플러그인..."
 faq:
   - q: "Lo-Fi 음악이란 무엇인가요?"
     a: "Lo-Fi(Low Fidelity) 음악은 의도적으로 음질을 낮추거나 빈티지·아날로그 사운드를 재현하는 장르입니다. 바이닐 크랙클링, 테이프 새추레이션, 느린 템포, 재즈·소울 샘플링이 특징입니다. 집중 공부나 휴식용 배경 음악으로 전 세계적 인기를 끌고 있습니다."

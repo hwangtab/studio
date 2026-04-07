@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음악 비즈니스 가이드"
 tags: ["음악 데이터 분석", "Spotify for Artists", "스트리밍 데이터", "음악 분석 도구", "멜론 아티스트", "유튜브 애널리틱스", "음악 마케팅 데이터"]
 thumbnail: "/images/service6.webp"
-summary: "음악 스트리밍 데이터 분석 완전 가이드입니다. Spotify for Artists·Apple Music for Artists·유튜브 애널리틱스·멜론 아티스트 포털 활용 방법과 데이터 기반 음악 마케팅 전략을 정리합니다."
+summary: "음악 스트리밍 데이터 분석 완전 가이드입니다. Spotify for Artists·Apple Music for Artists·유튜브 애널리틱스·멜론 아티스트 포털 활용..."
 faq:
   - q: "Spotify for Artists는 어떻게 사용하나요?"
     a: "artists.spotify.com에서 아티스트 계정을 인증합니다. 스트리밍 수, 청취자 수, 팔로워 수, 플레이리스트 포함 수, 청취자 지역·연령·성별 분포를 확인할 수 있습니다. 발매 전 에디토리얼 플레이리스트 피칭도 여기서 합니다."

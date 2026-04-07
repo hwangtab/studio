@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음악 프로덕션 가이드"
 tags: ["AI 음악", "AI 작곡", "AI 보컬", "AI 믹싱", "Suno AI", "음악 AI 활용", "AI 음악 제작"]
 thumbnail: "/images/recording2.webp"
-summary: "AI 음악 제작 완전 가이드입니다. Suno·Udio·AIVA 등 AI 음악 생성 도구 사용법, AI 보컬 처리, AI 마스터링 활용, AI와 인간 뮤지션의 협업 방법, AI 음악의 저작권 이슈를 정리합니다."
+summary: "AI 음악 제작 완전 가이드입니다. Suno·Udio·AIVA 등 AI 음악 생성 도구 사용법, AI 보컬 처리, AI 마스터링 활용, AI와 인간 뮤지션의 협업 방법..."
 faq:
   - q: "AI로 음악을 만들 수 있나요?"
     a: "가능합니다. Suno, Udio, AIVA 등 AI 음악 생성 도구로 텍스트 프롬프트 입력만으로 음악을 생성할 수 있습니다. 단, 출력된 음악의 완성도는 도구마다 차이가 있으며, 전문적인 발매를 위해서는 추가 편집이 필요한 경우가 많습니다."

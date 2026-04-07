@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Ableton Live 보컬", "에이블톤 녹음", "Ableton Live 설정", "Ableton 보컬 녹음", "Ableton 믹싱", "EDM 보컬 녹음", "Ableton EQ"]
 thumbnail: "/images/service3.webp"
-summary: "Ableton Live 보컬 녹음 완전 가이드입니다. 오디오 인터페이스 연결, Arrangement·Session View 활용, EQ Eight·Compressor 설정, 보컬 워핑, 파일 내보내기 방법을 정리합니다."
+summary: "Ableton Live 보컬 녹음 완전 가이드입니다. 오디오 인터페이스 연결, Arrangement·Session View 활용, EQ Eight·Compressor 설정..."
 faq:
   - q: "Ableton Live로 보컬 녹음이 가능한가요?"
     a: "가능합니다. Ableton Live는 루프·전자음악에 특화된 DAW이지만 전통적인 보컬 녹음·편집도 완벽하게 지원합니다. Arrangement View에서 일반 DAW처럼 보컬 녹음을 진행할 수 있습니다."

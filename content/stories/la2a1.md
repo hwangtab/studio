@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["LA-2A 컴프레서", "Optical 컴프레서", "LA-2A 보컬", "LA-2A 설정", "유니버설오디오 LA-2A", "LA-2A 플러그인", "클래식 컴프레서"]
 thumbnail: "/images/recording4.webp"
-summary: "LA-2A 컴프레서 완전 가이드입니다. LA-2A Optical 컴프레서의 동작 원리, 보컬·베이스 설정법, Peak Reduction·Gain 파라미터 활용, 1176+LA-2A Dueling Compressors 체인, 플러그인 에뮬레이션 비교를 정리합니다."
+summary: "LA-2A 컴프레서 완전 가이드입니다. LA-2A Optical 컴프레서의 동작 원리, 보컬·베이스 설정법, Peak Reduction·Gain 파라미터 활용..."
 faq:
   - q: "LA-2A 컴프레서란 무엇인가요?"
     a: "Teletronix(現 Universal Audio)가 개발한 Optical(광학) 방식 컴프레서입니다. 광전지(T4B)를 이용한 느리고 자연스러운 컴프레션으로 보컬·베이스·어쿠스틱 기타에 따뜻한 색감을 부여하는 클래식 스튜디오 장비입니다."

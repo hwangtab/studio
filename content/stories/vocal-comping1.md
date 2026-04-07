@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 콤핑", "컴핑 기법", "보컬 편집", "테이크 선택", "보컬 레이어링", "Pro Tools 컴핑", "Logic Pro 컴핑"]
 thumbnail: "/images/studio1.webp"
-summary: "보컬 콤핑 완전 가이드입니다. 콤핑 개념, DAW별 컴핑 방식(Pro Tools 플레이리스트·Logic 테이크 레인·Ableton·Studio One), 콤핑 기준과 경계 처리, 크로스페이드 설정을 정리합니다."
+summary: "보컬 콤핑 완전 가이드입니다. 콤핑 개념, DAW별 컴핑 방식(Pro Tools 플레이리스트·Logic 테이크 레인·Ableton·Studio One), 콤핑 기준과 경계..."
 faq:
   - q: "보컬 콤핑이란 무엇인가요?"
     a: "여러 번 녹음한 보컬 테이크 중 각 구간의 최고 테이크를 선택해 하나의 완성된 보컬 트랙으로 조합하는 작업입니다. 예를 들어 1절은 2번째 테이크, 후렴은 3번째 테이크에서 최상의 구간을 선택해 이어붙입니다."
