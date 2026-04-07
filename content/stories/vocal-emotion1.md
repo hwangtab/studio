@@ -126,4 +126,4 @@ faq:
 
 감동적인 보컬은 기술과 감정의 합작입니다. 스튜디오 놀에서 편안한 환경과 전문 엔지니어의 가이드로 당신의 감정을 최고의 녹음으로 담아보세요.
 
-[곡 구조 완전 가이드](/stories/song-structure1) | [노래 선곡 완전 가이드](/stories/song-choice1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [축가 녹음 완전 가이드](/stories/jukga1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
+[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [축가 녹음 완전 가이드](/stories/jukga1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
