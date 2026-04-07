@@ -4,7 +4,7 @@ date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["SSL G-Bus 컴프레서", "믹스 버스 컴프레서", "SSL 버스 컴프레서", "SSL 4000 G", "버스 컴프레션", "SSL 플러그인", "마스터 버스"]
-thumbnail: "/images/recording10.webp"
+thumbnail: "/images/room6.webp"
 summary: "SSL G-Bus 컴프레서 완전 가이드입니다. SSL 4000 G 채널스트립 버스 컴프레서의 파라미터, 마스터 버스·드럼 버스 설정, 믹스 접착 효과(Glue), 플러그인 에뮬레이션 비교를 정리합니다."
 faq:
   - q: "SSL G-Bus 컴프레서란 무엇인가요?"
@@ -16,7 +16,7 @@ faq:
   - q: "SSL G-Bus 플러그인 에뮬레이션 중 어떤 것이 좋은가요?"
     a: "Waves SSL G-Master Buss Compressor, UAD SSL 4000 G Bus Compressor, Solid State Logic Native Bus Compressor가 대표적입니다. Waves 버전은 가성비 최고이며 네이티브 환경에서 널리 사용됩니다."
 ---
-![SSL G-Bus 컴프레서 완전 가이드 — 스튜디오 놀](/images/recording10.webp)
+![SSL G-Bus 컴프레서 완전 가이드 — 스튜디오 놀](/images/room6.webp)
 
 ## SSL G-Bus — 믹스 버스의 황금 표준
 

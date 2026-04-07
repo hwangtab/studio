@@ -4,7 +4,7 @@ date: 2026-04-06
 author: "스튜디오 놀"
 category: "믹싱 가이드"
 tags: ["디에서", "de-esser", "치찰음 제거", "보컬 시빌런스", "보컬 믹싱", "sibilance", "보컬 EQ"]
-thumbnail: "/images/recording12.webp"
+thumbnail: "/images/room7.webp"
 summary: "디에서(De-esser)는 보컬의 치찰음(s, sh, ch 소리)을 줄여주는 믹싱 도구입니다. 사용 시기, 주파수 설정, 인기 플러그인을 정리합니다."
 faq:
   - q: "디에서가 필요한 이유는 무엇인가요?"
@@ -16,7 +16,7 @@ faq:
   - q: "디에서를 과하게 사용하면 어떻게 되나요?"
     a: "과도한 디에서 사용은 보컬의 명료도(articulation)를 해칩니다. 치찰음이 보컬의 선명한 발음을 만들어주는 요소이기도 하므로, 귀에 거슬리는 수준만 줄이고 자연스러운 발음 질감은 유지하는 것이 좋습니다."
 ---
-![디에서(De-esser) 완전 가이드 — 스튜디오 놀](/images/recording12.webp)
+![디에서(De-esser) 완전 가이드 — 스튜디오 놀](/images/room7.webp)
 
 ## 디에서란?
 

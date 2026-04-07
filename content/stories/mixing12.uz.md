@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Dars", "Template", "Routing", "Workflow"]
 ---
-![DAW mikser oynasi](/images/recording13.webp)
+![DAW mikser oynasi](/images/console.webp)
 
 Har safar miks qilganingizda trek yaratish, nomlash, effekt qo'yish... charchatmaysizmi? (Uf.)
 Pro'lar hech qachon noldan boshlamaydi.

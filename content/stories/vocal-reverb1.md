@@ -4,7 +4,7 @@ date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 리버브", "리버브 설정", "보컬 공간감", "리버브 타입", "Plate 리버브", "Hall 리버브", "보컬 믹싱 리버브"]
-thumbnail: "/images/recording12.webp"
+thumbnail: "/images/room8.webp"
 summary: "보컬 리버브 완전 가이드입니다. Plate·Hall·Room·Chamber 리버브 타입 비교, Pre-delay·Decay·Mix 파라미터 설정, 장르별 보컬 리버브 설정, 센드 방식 활용, 리버브 플러그인 비교를 정리합니다."
 faq:
   - q: "보컬에 가장 많이 사용하는 리버브 타입은?"
@@ -16,7 +16,7 @@ faq:
   - q: "보컬 리버브 Decay 시간은 어느 정도가 적당한가요?"
     a: "장르와 템포에 따라 다릅니다. 발라드·팝은 1.5~2.5초, 힙합·R&B는 0.8~1.5초, 록·펑크는 0.5~1초가 일반적입니다. 빠른 템포 곡에서 긴 Decay를 사용하면 음들이 겹쳐 탁해질 수 있습니다."
 ---
-![보컬 리버브 완전 가이드 — 스튜디오 놀](/images/recording12.webp)
+![보컬 리버브 완전 가이드 — 스튜디오 놀](/images/room8.webp)
 
 ## 보컬 리버브 — 공간감과 깊이의 핵심
 

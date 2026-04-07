@@ -4,7 +4,7 @@ date: 2026-04-06
 author: "스튜디오 놀"
 category: "홈 레코딩 가이드"
 tags: ["VST 플러그인", "무료 VST", "보컬 플러그인", "DAW 플러그인", "믹싱 플러그인", "홈 레코딩 플러그인", "VST 추천"]
-thumbnail: "/images/recording7.webp"
+thumbnail: "/images/album2.webp"
 summary: "보컬 녹음·믹싱에 사용하는 VST 플러그인의 종류와 역할을 안내합니다. 무료·유료 필수 플러그인 추천 목록, DAW별 호환성, 설치 방법을 정리합니다."
 faq:
   - q: "VST 플러그인이란 무엇인가요?"
@@ -16,7 +16,7 @@ faq:
   - q: "보컬 믹싱에 가장 먼저 구매해야 할 플러그인은 무엇인가요?"
     a: "DAW 내장 EQ와 컴프레서로 시작하고, 이후 전문 컴프레서(Waves CLA-2A, FabFilter Pro-C 2)와 리버브(Valhalla Room, UAD Lexicon)를 우선 고려해보세요. 디에서와 피치 교정(Melodyne, Auto-Tune)도 보컬 믹싱에서 중요합니다."
 ---
-![VST 플러그인 완전 가이드 — 스튜디오 놀](/images/recording7.webp)
+![VST 플러그인 완전 가이드 — 스튜디오 놀](/images/album2.webp)
 
 ## VST 플러그인 카테고리
 

@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["Mixing", "Lesson", "Template", "Routing", "Workflow"]
 ---
-![DAW mixer window](/images/recording13.webp)
+![DAW mixer window](/images/console.webp)
 
 Every time you mix you create tracks, rename them, insert effects... exhausting, right? (Oof.)
 Pros never start from zero.

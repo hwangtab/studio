@@ -5,7 +5,7 @@ author: "Studio NOL"
 category: "lesson"
 tags: ["混音", "课程", "模板", "Template", "Routing"]
 ---
-![DAW 混音器界面](/images/recording13.webp)
+![DAW 混音器界面](/images/console.webp)
 
 每次混音都要建轨、改名、插效果器……不累吗？（哎呀-）
 专业工程师从不从零开始。

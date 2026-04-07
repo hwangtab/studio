@@ -4,7 +4,7 @@ date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
 tags: ["CCM 보컬", "찬양 보컬", "예배 보컬", "CCM 녹음", "찬양 녹음", "CCM 음반", "CCM 보컬 기법"]
-thumbnail: "/images/recording10.webp"
+thumbnail: "/images/room3.webp"
 summary: "CCM·찬양·예배 보컬을 위한 완전 가이드입니다. CCM 보컬의 감정 표현 원칙, 예배 보컬과 공연 보컬의 차이, CCM 음반 녹음 준비, 장르별 스타일 차이를 정리합니다."
 faq:
   - q: "CCM 보컬의 가장 중요한 특징은 무엇인가요?"
@@ -16,7 +16,7 @@ faq:
   - q: "CCM 음반 발매는 어떻게 하나요?"
     a: "보컬 녹음 → 믹싱·마스터링 → 음원 유통(멜론·유튜브·스포티파이)의 과정을 거칩니다. 교회 앨범이나 개인 CCM 발매 모두 음원 유통 플랫폼을 통해 멜론·지니 등에 올릴 수 있습니다."
 ---
-![CCM 보컬 완전 가이드 — 스튜디오 놀](/images/recording10.webp)
+![CCM 보컬 완전 가이드 — 스튜디오 놀](/images/room3.webp)
 
 ## CCM 보컬 — 기술보다 진정성
 

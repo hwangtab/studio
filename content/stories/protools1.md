@@ -4,7 +4,7 @@ date: 2026-04-07
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Pro Tools 보컬", "프로툴스 녹음", "Pro Tools 설정", "Pro Tools 믹싱", "Pro Tools EQ", "Pro Tools 컴프레서", "업계 표준 DAW"]
-thumbnail: "/images/service7.webp"
+thumbnail: "/images/room4.webp"
 summary: "Pro Tools 보컬 녹음 완전 가이드입니다. 세션 생성, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 플레이리스트 컴핑, 바운스 내보내기 방법을 정리합니다."
 faq:
   - q: "Pro Tools로 보컬 녹음을 할 수 있나요?"
@@ -16,7 +16,7 @@ faq:
   - q: "Pro Tools 보컬 파일을 믹싱 의뢰용으로 어떻게 내보내나요?"
     a: "File → Bounce to → Disk → Format: WAV → Bit Depth: 24 → Sample Rate: 44.1kHz 또는 48kHz로 설정 후 Bounce 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → 바운스합니다."
 ---
-![Pro Tools 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service7.webp)
+![Pro Tools 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/room4.webp)
 
 ## Pro Tools — 전 세계 프로 스튜디오의 표준
 
