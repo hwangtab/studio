@@ -81,4 +81,4 @@ faq:
 
 서초구에서 2호선 25~35분, 연신내역 도보 5분의 스튜디오 놀에서 전문 보컬 녹음을 경험하세요. 음원 발매부터 오디션 데모까지 전 과정을 지원합니다.
 
-[방배·서초·내방·이수 녹음실 안내](/stories/bangbae1) | [반포·방배 녹음실 안내](/stories/banpo1) | [양재·강남역 녹음실 안내](/stories/yangjae1) | [강남구 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[서초구 양재·우면·매봉 녹음실 안내](/stories/seocho-yangjae1) | [방배·서초·내방·이수 녹음실 안내](/stories/bangbae1) | [반포·방배 녹음실 안내](/stories/banpo1) | [강남구 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
