@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Studio NOL 官网焕新完成！"
 date: 2025-06-04
@@ -19,4 +18,3 @@ tags: ["焕新", "录音室"]
 如有任何问题，欢迎随时通过电话（02-764-3114）、短信（010-4255-7893）或 [KakaoTalk](https://open.kakao.com/o/sgTfRiah) 联系我们。Studio NOL 将始终为你的珍贵音乐尽全力。感谢支持与厚爱！
 
 Studio NOL 敬上
-```

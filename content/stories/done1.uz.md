@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Studio NOL veb-sayti yangilandi!"
 date: 2025-06-04
@@ -20,4 +19,3 @@ Savollaringiz bo'lsa, istalgan payt telefon (02-764-3114), SMS (010-4255-7893) y
 
 Hurmat bilan,
 Studio NOL
-```

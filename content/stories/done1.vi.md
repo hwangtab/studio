@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Hoàn tất làm mới website Studio NOL!"
 date: 2025-06-04
@@ -20,4 +19,3 @@ Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ bất cứ lúc nào 
 
 Trân trọng,
 Studio NOL
-```

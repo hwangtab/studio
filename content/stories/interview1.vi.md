@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Phỏng vấn Producer Park Chan-woong"
 date: 2025-06-05
@@ -175,4 +174,3 @@ Cuộc phỏng vấn Park Chan-woong cho thấy cái nhìn sâu về quá trình
 Điều làm cách tiếp cận của anh đặc biệt là sự nhận thức sâu về tầm quan trọng của giao tiếp bên cạnh kỹ thuật. Việc anh nhấn mạnh giao tiếp—giữa nghệ sĩ và producer, và giữa âm nhạc và người nghe—cho thấy anh không chỉ là kỹ thuật viên mà là một người tạo âm nhạc có suy nghĩ.
 
 Kết thúc cuộc phỏng vấn, Park để lại một câu ngắn nhưng đáng nhớ về cốt lõi của sản xuất âm nhạc: “Con người quan trọng. Âm nhạc được tạo bởi con người, không phải máy móc.” Nó cho thấy dù làm việc với công nghệ và thiết bị hiện đại, anh không bao giờ quên lõi cảm xúc và giao tiếp của âm nhạc.
-```

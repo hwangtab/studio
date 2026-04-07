@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Entrevista al productor Park Chan-woong"
 date: 2025-06-05
@@ -175,4 +174,3 @@ La entrevista con Park Chan‑woong ofreció una mirada profunda al proceso comp
 Lo especial de su enfoque no es solo su técnica, sino su profunda conciencia de la importancia de la comunicación. Para él, la comunicación entre artista y productor, y entre la música y el oyente, es esencial. Ese énfasis muestra que no es solo un técnico, sino un creador musical con sensibilidad.
 
 Al final de la entrevista, Park dejó una frase breve pero significativa sobre la esencia de la producción musical: “Lo importante son las personas. Al final, la música no la hacen las máquinas, la hacen las personas.” Con ello demuestra que, aunque trabaje con tecnología avanzada y equipos de alto nivel, nunca olvida que el corazón de la música es la emoción humana y la comunicación.
-```

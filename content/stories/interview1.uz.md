@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Producer Park Chan-woong bilan intervyu"
 date: 2025-06-05
@@ -175,4 +174,3 @@ Park Chan-woong bilan intervyu {Golden Hour} ortidagi murakkab jarayon va zamona
 Uning yondashuvini alohida qiladigan narsa — texnikadan tashqari, muloqotning ahamiyatini chuqur anglashidir. U muloqotni — artist va producer o‘rtasida, hamda musiqa va tinglovchi o‘rtasida — eng muhim element deb biladi. Bu uni faqat texnik emas, balki o‘ylovchi musiqiy yaratuvchiga aylantiradi.
 
 Intervyu oxirida Park musiqiy ishlab chiqarish mohiyati haqida qisqa, ammo mazmunli gap aytdi: “Insonlar muhim. Musiqa odamlar tomonidan yaratiladi, mashinalar tomonidan emas.” Bu, u zamonaviy texnologiya va uskunalar bilan ishlayotgan bo‘lsa ham, musiqaning yadrosi — insoniy hissiyot va muloqot ekanini unutmasligini ko‘rsatadi.
-```

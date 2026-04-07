@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "Interview with Producer Park Chan-woong"
 date: 2025-06-05
@@ -175,4 +174,3 @@ The interview with Park Chan-woong offered insight into the complex process behi
 What makes his approach special is his deep awareness of communication’s importance in addition to technical skill. His emphasis on communication—between artist and producer, and between music and listener—shows him not just as a technician but as a thoughtful music creator.
 
 At the end of the interview, Park left a concise but meaningful statement about the essence of music production: “People matter. Music is made by people, not machines.” This shows that even as a professional who works with advanced technology and equipment, he never forgets that music’s core is human emotion and communication.
-```

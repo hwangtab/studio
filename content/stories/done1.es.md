@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "¡Renovación completa del sitio web de Studio NOL!"
 date: 2025-06-04
@@ -20,4 +19,3 @@ Si tienes preguntas, no dudes en contactarnos por teléfono (02-764-3114), mensa
 
 Atentamente,
 Studio NOL
-```
