@@ -78,4 +78,4 @@ faq:
 
 성북구 안암·종암에서 6호선 15분이면 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 고려대·성신여대 인근 뮤지션 여러분 환영합니다.
 
-[성북구 전체 녹음실 안내](/stories/seongbuk1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [장위·석관·월곡 녹음실 안내](/stories/jangwi1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[성북구 전체 녹음실 안내](/stories/seongbuk1) | [돈암·성신여대·삼선 녹음실 안내](/stories/seongbuk-donam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
