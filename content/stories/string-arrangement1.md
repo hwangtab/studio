@@ -147,4 +147,4 @@ EQ:
 
 현악 편곡은 음악에 깊이와 감성을 더하는 가장 강력한 도구입니다. 샘플로 시작해 실제 녹음으로 발전시켜나가거나, 처음부터 전문 현악 세션을 의뢰해 더 자연스러운 스트링 사운드를 얻을 수 있습니다. 스튜디오 놀에서 현악 포함 종합 음반 제작 상담이 가능합니다.
 
-[보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [영화음악 제작 완전 가이드](/stories/film-music1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
