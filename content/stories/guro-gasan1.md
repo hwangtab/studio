@@ -68,4 +68,4 @@ faq:
 
 가산·구로 디지털단지에서 업무 후 퇴근길에 연신내 스튜디오 놀에서 보컬 녹음을 즐기세요. 1호선으로 40분 이내의 거리입니다.
 
-[구로구 녹음실 안내](/stories/guro1) | [금천구 녹음실 안내](/stories/geumcheon1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [동작구 녹음실 안내](/stories/dongjak1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[구로구 오류·개봉·고척 녹음실 안내](/stories/guro-oryu1) | [구로구 녹음실 안내](/stories/guro1) | [금천구 녹음실 안내](/stories/geumcheon1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
