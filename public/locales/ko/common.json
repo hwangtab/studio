@@ -588,9 +588,14 @@
       "event": "이벤트",
       "lesson": "강좌",
       "interview": "인터뷰",
-      "equipment": "장비",
-      "review": "리뷰",
-      "other": "기타"
+      "review": "후기",
+      "region": "지역 가이드",
+      "vocal": "보컬 가이드",
+      "recording": "녹음 가이드",
+      "production": "음반 제작",
+      "mixing": "믹싱·마스터링",
+      "business": "음악 비즈니스",
+      "guide": "가이드"
     }
   },
   "reviewSection": {

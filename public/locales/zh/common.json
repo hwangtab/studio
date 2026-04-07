@@ -589,11 +589,15 @@
       "notice": "公告",
       "event": "活动",
       "lesson": "课程",
-      "mobileMenu": "移动菜单",
       "interview": "采访",
-      "equipment": "设备",
-      "review": "评论",
-      "other": "其他"
+      "review": "评价",
+      "region": "地区指南",
+      "vocal": "声乐指南",
+      "recording": "录音指南",
+      "production": "音乐制作",
+      "mixing": "混音与母带",
+      "business": "音乐商业",
+      "guide": "指南"
     }
   },
   "reviewSection": {

@@ -122,13 +122,54 @@ const normalizeDate = (value: string | Date | undefined): string => {
 };
 
 const storyCategoryKeyMap: Record<string, string> = {
+  // 공지
   공지: 'notice',
+  // 이벤트
   이벤트: 'event',
+  // 강좌
   강좌: 'lesson',
+  // 인터뷰
   인터뷰: 'interview',
-  장비: 'equipment',
+  // 후기·리뷰
   리뷰: 'review',
   후기: 'review',
+  // 지역 가이드
+  '지역 가이드': 'region',
+  // 보컬 가이드
+  '보컬 가이드': 'vocal',
+  '발성 가이드': 'vocal',
+  '보컬 테크닉 가이드': 'vocal',
+  '보컬 트레이닝 가이드': 'vocal',
+  // 녹음 가이드
+  '녹음 가이드': 'recording',
+  '녹음 기초': 'recording',
+  '홈 레코딩 가이드': 'recording',
+  // 음반 제작
+  '음반 제작 가이드': 'production',
+  '음악 제작 가이드': 'production',
+  '음악 프로덕션 가이드': 'production',
+  '음악 제작': 'production',
+  '작곡 가이드': 'production',
+  // 믹싱·마스터링
+  '믹싱 가이드': 'mixing',
+  '마스터링 가이드': 'mixing',
+  // 음악 비즈니스
+  '음악 비즈니스 가이드': 'business',
+  '음악 비즈니스': 'business',
+  '음악 마케팅': 'business',
+  '음악 마케팅 가이드': 'business',
+  '음악 커리어 가이드': 'business',
+  '음원 배포 가이드': 'business',
+  'SNS 마케팅': 'business',
+  'SNS 가이드': 'business',
+  // 가이드 (일반)
+  가이드: 'guide',
+  '서비스 안내': 'guide',
+  '음악 가이드': 'guide',
+  '음악 이론 가이드': 'guide',
+  '저작권 가이드': 'guide',
+  '장비 가이드': 'guide',
+  장비: 'guide',
 };
 
 const storyCategoryKeys = new Set<string>([
@@ -136,17 +177,22 @@ const storyCategoryKeys = new Set<string>([
   'event',
   'lesson',
   'interview',
-  'equipment',
   'review',
-  'other',
+  'region',
+  'vocal',
+  'recording',
+  'production',
+  'mixing',
+  'business',
+  'guide',
 ]);
 
 const normalizeStoryCategoryKey = (category?: string): string => {
-  if (!category) return 'other';
+  if (!category) return 'guide';
   const trimmed = category.trim();
   if (storyCategoryKeyMap[trimmed]) return storyCategoryKeyMap[trimmed];
   if (storyCategoryKeys.has(trimmed)) return trimmed;
-  return 'other';
+  return 'guide';
 };
 
 const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {

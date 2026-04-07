@@ -588,9 +588,14 @@
       "event": "Tadbir",
       "lesson": "Dars",
       "interview": "Intervyu",
-      "equipment": "Uskuna",
       "review": "Sharh",
-      "other": "Boshqa"
+      "region": "Hudud bo'yicha qo'llanma",
+      "vocal": "Vokal qo'llanmasi",
+      "recording": "Yozib olish qo'llanmasi",
+      "production": "Musiqa ishlab chiqarish",
+      "mixing": "Mikslash va mastering",
+      "business": "Musiqa biznesi",
+      "guide": "Qo'llanma"
     }
   },
   "reviewSection": {

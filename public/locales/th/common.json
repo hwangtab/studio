@@ -589,12 +589,17 @@
     },
     "categories": {
       "notice": "ประกาศ",
-      "event": "อีเวนต์",
-      "lesson": "เรียน",
+      "event": "กิจกรรม",
+      "lesson": "บทเรียน",
       "interview": "สัมภาษณ์",
-      "equipment": "อุปกรณ์",
       "review": "รีวิว",
-      "other": "อื่น ๆ"
+      "region": "คู่มือพื้นที่",
+      "vocal": "คู่มือเสียงร้อง",
+      "recording": "คู่มือการบันทึกเสียง",
+      "production": "การผลิตเพลง",
+      "mixing": "มิกซ์และมาสเตอร์",
+      "business": "ธุรกิจเพลง",
+      "guide": "คู่มือ"
     }
   },
   "reviewSection": {

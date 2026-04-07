@@ -588,12 +588,16 @@
     "categories": {
       "notice": "Thông báo",
       "event": "Sự kiện",
-      "lesson": "Bài học",
-      "mobileMenu": "Menu di động",
+      "lesson": "Khóa học",
       "interview": "Phỏng vấn",
-      "equipment": "Thiết bị",
       "review": "Đánh giá",
-      "other": "Khác"
+      "region": "Hướng dẫn khu vực",
+      "vocal": "Hướng dẫn thanh nhạc",
+      "recording": "Hướng dẫn thu âm",
+      "production": "Sản xuất âm nhạc",
+      "mixing": "Mixing & Mastering",
+      "business": "Kinh doanh âm nhạc",
+      "guide": "Hướng dẫn"
     }
   },
   "reviewSection": {

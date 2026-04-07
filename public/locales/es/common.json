@@ -588,12 +588,16 @@
     "categories": {
       "notice": "Aviso",
       "event": "Evento",
-      "lesson": "Clase",
-      "mobileMenu": "Menú móvil",
+      "lesson": "Curso",
       "interview": "Entrevista",
-      "equipment": "Equipo",
       "review": "Reseña",
-      "other": "Otros"
+      "region": "Guía de área",
+      "vocal": "Guía vocal",
+      "recording": "Guía de grabación",
+      "production": "Producción musical",
+      "mixing": "Mezcla y masterización",
+      "business": "Negocio musical",
+      "guide": "Guía"
     }
   },
   "reviewSection": {

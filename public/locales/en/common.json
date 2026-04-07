@@ -589,11 +589,15 @@
       "notice": "Notice",
       "event": "Event",
       "lesson": "Lesson",
-      "mobileMenu": "Mobile Menu",
       "interview": "Interview",
-      "equipment": "Equipment",
       "review": "Review",
-      "other": "Other"
+      "region": "Area Guide",
+      "vocal": "Vocal Guide",
+      "recording": "Recording Guide",
+      "production": "Music Production",
+      "mixing": "Mixing & Mastering",
+      "business": "Music Business",
+      "guide": "Guide"
     }
   },
   "reviewSection": {
