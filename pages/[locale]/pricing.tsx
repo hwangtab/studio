@@ -48,7 +48,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
     specialPackages
   } = pricingData;
 
-  const siteUrl = getSiteConfig(locale).url;
+  const siteConfig = getSiteConfig(locale);
+  const siteUrl = siteConfig.url;
+  const kakaoUrl = siteConfig.contact.kakaoUrl;
   const pricingUrl = `${siteUrl}/${locale}/pricing`;
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
@@ -235,6 +237,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
               features={offer.features}
               recommended={offer.recommended}
               delay={0.1 * (index + 1)}
+              ctaLabel={t('pricing.cta.inquiry')}
+              ctaHref={kakaoUrl}
             />
           ))}
         </div>
@@ -262,6 +266,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
               features={offer.features}
               recommended={offer.recommended}
               delay={0.1 * (index + 1)}
+              ctaLabel={t('pricing.cta.inquiry')}
+              ctaHref={kakaoUrl}
             />
           ))}
         </div>
@@ -289,6 +295,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
               features={offer.features}
               recommended={offer.recommended}
               delay={0.1 * (index + 1)}
+              ctaLabel={t('pricing.cta.inquiry')}
+              ctaHref={kakaoUrl}
             />
           ))}
         </div>
@@ -325,6 +333,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
               features={offer.features}
               recommended={offer.recommended}
               delay={0.1 * (index + 1)}
+              ctaLabel={t('pricing.cta.inquiry')}
+              ctaHref={kakaoUrl}
             />
           ))}
         </div>
@@ -351,6 +361,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
               description={service.description}
               features={service.note ? [service.note] : []}
               delay={0.1 * (index + 1)}
+              ctaLabel={t('pricing.cta.inquiry')}
+              ctaHref={kakaoUrl}
             />
           ))}
         </div>

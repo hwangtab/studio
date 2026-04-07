@@ -290,6 +290,8 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
               features={voiceoverPackage.features}
               recommended={voiceoverPackage.recommended}
               delay={0.1}
+              ctaLabel={t('voiceActing.cta.inquiry')}
+              ctaHref={siteConfig.contact.kakaoUrl}
             />
           </div>
         )}

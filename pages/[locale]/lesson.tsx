@@ -212,6 +212,16 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                         delay={0.4}
                     />
                 </div>
+                <div className="mt-10 text-center">
+                    <a
+                        href={siteConfig.contact.kakaoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
+                    >
+                        {t('lesson.pricing.cta')}
+                    </a>
+                </div>
             </Section>
 
             {/* Why Choose Us & Pricing */}

@@ -246,6 +246,8 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
               features={weddingPackage.features}
               recommended={weddingPackage.recommended}
               delay={0.1}
+              ctaLabel={t('weddingSong.cta.inquiry')}
+              ctaHref={siteConfig.contact.kakaoUrl}
             />
           </div>
         )}
@@ -281,6 +283,16 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
             ))}
           </div>
         </m.div>
+        <div className="mt-10 text-center">
+          <a
+            href={siteConfig.contact.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
+          >
+            {t('weddingSong.cta.inquiry')}
+          </a>
+        </div>
       </Section>
 
       <FAQSection
