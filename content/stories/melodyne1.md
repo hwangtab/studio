@@ -37,95 +37,107 @@ Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 �
 
 ## Melodyne 기본 워크플로우
 
-```
-[독립형 사용 (Standalone)]
-① Melodyne 실행 → 드라이 보컬 WAV 파일 Import
-② Transfer 버튼 클릭 → 파일 분석 (DNA 처리)
-③ 노트 블록 표시 → 편집 시작
+이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
-[ARA2 플러그인 (DAW 내장)]
-Logic Pro: 클립 우클릭 → Edit with Melodyne
-Pro Tools: 클립 선택 → AudioSuite → Melodyne
-Cubase: 클립 더블클릭 → Extensions → Melodyne
-Studio One: 클립 우클릭 → Edit with Melodyne
-```
+### 독립형 사용 (Standalone)
+
+1. Melodyne 실행 → 드라이 보컬 WAV 파일 Import
+2. Transfer 버튼 클릭 → 파일 분석 (DNA 처리)
+3. 노트 블록 표시 → 편집 시작
+
+### ARA2 플러그인 (DAW 내장)
+
+- **Logic Pro**: 클립 우클릭 → Edit with Melodyne
+- **Pro Tools**: 클립 선택 → AudioSuite → Melodyne
+- **Cubase**: 클립 더블클릭 → Extensions → Melodyne
+- **Studio One**: 클립 우클릭 → Edit with Melodyne
 
 ---
 
 ## Melodyne 기본 조작
 
-```
-[기본 툴]
+아래 설정값은 출발점이며, 곡의 장르와 보컬 특성에 따라 조정이 필요합니다.
+
+### 기본 툴
+
 - 선택(Main) 툴: 노트 선택·이동
 - 피치 모듈레이션 툴: 비브라토 조정
 - Formant 툴: 음색 (포먼트) 조정
 - 진폭(Amplitude) 툴: 볼륨 조정
 
-[노트 이동 (피치 교정)]
+### 노트 이동 (피치 교정)
+
 - 노트 블록 위아래 드래그: 반음 단위 이동
 - Alt+드래그: 미세 조정 (센트 단위)
 - Correct Pitch 버튼: 자동 교정 (수치 설정 후 Apply)
 
-[스냅 설정]
+### 스냅 설정
+
 - Snap to Semitone: 반음 단위 스냅
 - Snap to Note: 음계 내 음표로 자동 스냅
-```
 
 ---
 
 ## Pitch Center 교정
 
-```
-[Pitch Center 조정]
+작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
+
+### Pitch Center 조정
+
 - 노트 중앙 가로선 위아래 드래그
 - 100%: 완벽히 맞는 음정 (자연스러움 감소)
 - 90~95%: 자연스러운 교정 (권장)
 - 70% 이하: 의도적 부자연스러움 (아티스트 선택)
 
-[Pitch Modulation (비브라토)]
+### Pitch Modulation (비브라토)
+
 - 노트 상단 물결선: 비브라토 폭
 - 비브라토 과도 → 폭 줄이기
 - 비브라토 없음 → 적절히 더하기 (인위적)
 
-[Correct Pitch 도구]
+### Correct Pitch 도구
+
 Edit → Correct Pitch
-→ Pitch Center: 70~90% (권장)
-→ Pitch Drift: 50~80%
-→ 선택 노트에만 Apply
-```
+- **Pitch Center**: 70~90% (권장)
+- **Pitch Drift**: 50~80%
+- 선택 노트에만 Apply
 
 ---
 
 ## Formant 교정
 
-```
-[Formant 조정 주의사항]
+모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
+
+### Formant 조정 주의사항
+
 - Formant = 음색의 핵심 (너무 많이 변경 시 로봇 소리)
 - 피치만 교정할 때는 Formant 유지 권장
 - 피치 이동 시 Formant 자동 보정: Scale Formant 설정
 
-[Formant 활용 예시]
+### Formant 활용 예시
+
 - 같은 가수 다른 키: Formant 조정으로 자연스럽게
 - 남성 → 여성 음색: Formant +1~2 반음 이동
 - 옥타브 이동 시: Formant 이동 없이 피치만 변경
-```
 
 ---
 
 ## 타이밍 교정
 
-```
-[Note Editing 모드]
-① Edit → Note Editing 활성화
-② 노트 좌우 드래그: 시작점 이동
-③ 노트 가장자리 드래그: 길이 조정
-④ 자동 타이밍 교정: Edit → Correct Timing
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
-[타이밍 교정 팁]
+### Note Editing 모드
+
+1. Edit → Note Editing 활성화
+2. 노트 좌우 드래그: 시작점 이동
+3. 노트 가장자리 드래그: 길이 조정
+4. 자동 타이밍 교정: Edit → Correct Timing
+
+### 타이밍 교정 팁
+
 - 박자 그리드에 맞추기: Snap to Grid 활성화
 - 과도 교정 방지: 자연스러운 인간적 흔들림 보존
 - 마지막 음절 늘이기/줄이기: 가사 타이밍 조정
-```
 
 ---
 

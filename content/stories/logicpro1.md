@@ -26,79 +26,93 @@ Logic Pro는 Apple 생태계에 최적화된 Mac 전용 유료 DAW로, 전문 �
 
 ## Logic Pro 기본 설정
 
-```
-[오디오 인터페이스 설정]
-① 오디오 인터페이스 USB/Thunderbolt 연결
-② Logic Pro → 환경설정(Preferences) → Audio
-③ 입력 장치: 오디오 인터페이스 선택
+작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
+
+### 오디오 인터페이스 설정
+
+1. 오디오 인터페이스 USB/Thunderbolt 연결
+2. Logic Pro → 환경설정(Preferences) → Audio
+3. 입력 장치: 오디오 인터페이스 선택
    출력 장치: 오디오 인터페이스 또는 헤드폰
 
-[샘플레이트·버퍼 설정]
+### 샘플레이트·버퍼 설정
+
 - 샘플레이트: 48kHz (또는 44.1kHz)
-- 버퍼 사이즈 (I/O Buffer Size):
+
+**- 버퍼 사이즈 (I/O Buffer Size)**
   녹음 시: 64~128 samples (레이턴시 최소화)
   믹싱 시: 256~512 samples (CPU 효율화)
 
-[프로젝트 생성]
+### 프로젝트 생성
+
 File → New Project → 샘플레이트 설정 후 생성
-```
 
 ---
 
 ## 오디오 트랙 생성 및 녹음
 
-```
-[트랙 생성]
-① Track → New Track (Option+Cmd+A)
-② Audio 선택 → 입력 채널 확인
-③ 레코드 Arm 버튼 클릭 (빨간 원)
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
-[게인 설정]
+### 트랙 생성
+
+1. Track → New Track (Option+Cmd+A)
+2. Audio 선택 → 입력 채널 확인
+3. 레코드 Arm 버튼 클릭 (빨간 원)
+
+### 게인 설정
+
 - Input Monitoring ON → 보컬 레벨 확인
 - 보컬 피크: -12dBFS ~ -6dBFS
 - 클리핑(빨간 불) 발생 시 즉시 게인 감소
 
-[다이렉트 모니터링]
+### 다이렉트 모니터링
+
 - 오디오 인터페이스 Direct Monitoring ON
 - Logic Pro 소프트웨어 모니터링 OFF (레이턴시 방지)
 
-[녹음 시작]
-① R 키 또는 녹음 버튼 클릭
-② 1~2소절 Count-in 후 노래 시작
-③ Space 키로 녹음 정지
-```
+### 녹음 시작
+
+1. R 키 또는 녹음 버튼 클릭
+2. 1~2소절 Count-in 후 노래 시작
+3. Space 키로 녹음 정지
 
 ---
 
 ## Logic Pro Channel EQ 설정
 
-```
-[Channel EQ 삽입]
-① 트랙 선택 → Smart Controls (B키)
-② EQ 썸네일 클릭 → Channel EQ 창 열기
+아래 수치는 가이드라인이며, 최종 판단은 항상 귀로 합니다.
 
-[기본 보컬 EQ]
-① HPF(고역 통과 필터): 80~100Hz에 걸기
-② 200~300Hz: 탁한 공명 좁은 Q로 -2~-3dB
-③ 1~3kHz: 명료도 +1~2dB
-④ 10kHz Shelf: +1dB (공기감)
+### Channel EQ 삽입
 
-[EQ 팁]
+1. 트랙 선택 → Smart Controls (B키)
+2. EQ 썸네일 클릭 → Channel EQ 창 열기
+
+### 기본 보컬 EQ
+
+1. HPF(고역 통과 필터): 80~100Hz에 걸기
+2. 200~300Hz: 탁한 공명 좁은 Q로 -2~-3dB
+3. 1~3kHz: 명료도 +1~2dB
+4. 10kHz Shelf: +1dB (공기감)
+
+### EQ 팁
+
 - Analyzer ON → 실시간 주파수 시각화 확인
 - '빼기' 우선: 부스트보다 문제 주파수 컷
 - Q값 좁게 → 서지컬, Q값 넓게 → 음색 조형
-```
 
 ---
 
 ## Logic Pro 컴프레서 설정
 
-```
-[Compressor 삽입]
-① Smart Controls → 플러그인 탭
-② Dynamics → Compressor 추가
+버스로 묶어 처리하면 개별 트랙 조정 없이도 전체 밸런스를 효율적으로 잡을 수 있습니다.
 
-[기본 보컬 컴프레서 값]
+### Compressor 삽입
+
+1. Smart Controls → 플러그인 탭
+2. Dynamics → Compressor 추가
+
+### 기본 보컬 컴프레서 값
+
 - Threshold: -18dBFS
 - Ratio: 3:1
 - Attack: 15ms
@@ -106,52 +120,58 @@ File → New Project → 샘플레이트 설정 후 생성
 - Knee: Soft (2~4)
 - Makeup Gain: +3~5dB
 
-[확인]
+### 확인
+
 - GR 미터에서 -3~-6dB 눌리면 적당
 - Platinum Digital → Vintage VCA (선택 가능)
-```
 
 ---
 
 ## Flex Pitch — 내장 피치 교정
 
-```
-[Flex Pitch 활성화]
-① 트랙 선택 → Track → Show Flex Pitch/Time (Cmd+F)
-② 리전(Region) 더블클릭 → 피치 편집 뷰 열기
+볼륨 자동화를 활용하면 이펙트에 의존하지 않고도 다이나믹을 자연스럽게 만들 수 있습니다.
 
-[피치 교정]
+### Flex Pitch 활성화
+
+1. 트랙 선택 → Track → Show Flex Pitch/Time (Cmd+F)
+2. 리전(Region) 더블클릭 → 피치 편집 뷰 열기
+
+### 피치 교정
+
 - 각 음표 블록 표시 → 드래그로 피치 교정
 - Pitch Correction 슬라이더: 50~70 (자연스러운 교정)
 - 100으로 올리면 Auto-Tune 효과
 
-[주의사항]
+### 주의사항
+
 - 드라이 보컬에만 적용 (리버브 전 단계)
 - 과도 교정 시 로봇 소리 방지 위해 50~80 유지
-```
 
 ---
 
 ## 파일 내보내기 (Bounce)
 
-```
-[믹싱 의뢰용 내보내기]
-File → Bounce → Project or Section
-→ Format: WAV
-→ Bit Depth: 24
-→ Sample Rate: 44.1kHz 또는 48kHz
-→ Dithering: UV22HR
-→ Bounce 클릭
+아래 설정값은 출발점이며, 곡의 장르와 보컬 특성에 따라 조정이 필요합니다.
 
-[드라이 보컬 내보내기]
+### 믹싱 의뢰용 내보내기
+
+File → Bounce → Project or Section
+- **Format**: WAV
+- **Bit Depth**: 24
+- **Sample Rate**: 44.1kHz 또는 48kHz
+- **Dithering**: UV22HR
+- Bounce 클릭
+
+### 드라이 보컬 내보내기
+
 - 플러그인 Bypass 후 Bounce (Dry 상태)
 - 또는 트랙 Solo → Bounce in Place
 
-[믹싱 의뢰 전달]
+### 믹싱 의뢰 전달
+
 - WAV 파일 + MR 파일 함께 전달
 - 구글 드라이브 또는 WeTransfer 업로드
 - 파일명: [아티스트명]_[곡명]_vocal.wav
-```
 
 ---
 

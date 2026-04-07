@@ -41,85 +41,96 @@ Nectar 4는 AI 기반 보컬 처리 플러그인으로, 단 하나의 플러그�
 
 ## Vocal Assistant 활용
 
-```
-[Vocal Assistant 실행]
-① 보컬 트랙에 Nectar 4 삽입
-② Assist 버튼 클릭
-③ Style 선택: Pop / Rock / Jazz / R&B / Country
-④ Analyze 클릭 (보컬 파일 분석)
-⑤ 자동 추천 세팅 적용 → 미세 조정
+작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
 
-[Assistant 이후 수동 조정]
+### Vocal Assistant 실행
+
+1. 보컬 트랙에 Nectar 4 삽입
+2. Assist 버튼 클릭
+3. Style 선택: Pop / Rock / Jazz / R&B / Country
+4. Analyze 클릭 (보컬 파일 분석)
+5. 자동 추천 세팅 적용 → 미세 조정
+
+### Assistant 이후 수동 조정
+
 - EQ: 주파수 분석 후 추가 서지컬 컷
 - Compressor: Threshold 미세 조정
 - De-esser: 치찰음 강도 확인
-```
 
 ---
 
 ## 핵심 모듈 설정
 
-```
-[Gate 설정]
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
+
+### Gate 설정
+
 - Threshold: -40~-60dB (배경 소음 레벨 이하)
 - Floor: -inf (게이트 닫힐 때 완전히 차단)
 - 자동 Lookahead 설정 (보컬 시작 전 게이트 오픈)
 
-[EQ 설정]
+### EQ 설정
+
 - HPF: 80~100Hz
 - Low Mid (300~500Hz): -2~-3dB
 - Presence (2~5kHz): +1~2dB
 - Air (10kHz~): +1dB
 
-[Compressor 설정]
+### Compressor 설정
+
 - Threshold: -18dB
 - Ratio: 3:1~4:1
 - Attack: 10~20ms
 - Release: 100ms
 - Mode: Advanced (세밀 제어)
 
-[De-esser 설정]
+### De-esser 설정
+
 - Frequency: 5~8kHz (치찰음 주파수)
 - Amount: 50~70% (과도 억제 방지)
-```
 
 ---
 
 ## Harmony 모듈 활용
 
-```
-[Harmony 설정]
-① 모듈 활성화 → Voices 수 선택 (1~4성부)
-② Interval: 장3도 / 단3도 / 완전5도 선택
-③ Key: 곡의 조성 선택
-④ Scale: Major / Minor
+아래 설정값은 출발점이며, 곡의 장르와 보컬 특성에 따라 조정이 필요합니다.
 
-[자연스러운 하모니 설정]
+### Harmony 설정
+
+1. 모듈 활성화 → Voices 수 선택 (1~4성부)
+2. Interval: 장3도 / 단3도 / 완전5도 선택
+3. Key: 곡의 조성 선택
+4. Scale: Major / Minor
+
+### 자연스러운 하모니 설정
+
 - Humanize: 50~80% (자연스러운 변동)
 - Level: -3~-6dB (리드보다 낮게)
 - Pan: L·R 분산 (스테레오 확장)
 
-[AI Harmony (Nectar 4 신기능)]
+### AI Harmony (Nectar 4 신기능)
+
 - MIDI 트리거로 코드 정보 입력
 - AI가 음계에 맞는 화음 자동 선택
-```
 
 ---
 
 ## Reverb 모듈 설정
 
-```
-[Reverb 설정]
+고음역 컷이 전체 믹스에 투명감을 더해주는 경우가 많으므로 저역부터 정리하세요.
+
+### Reverb 설정
+
 - Type: Plate (발라드) / Hall (클래식) / Room (팝)
 - Decay: 1.5~2.5초 (장르에 따라)
 - Pre-delay: 20~40ms (리드 보컬과 분리)
 - Mix: 15~25% (보조 역할)
 
-[주의사항]
+### 주의사항
+
 Nectar Reverb는 삽입형 → 센드 채널 활용 권장
-Insert 방식: Mix 낮게 (15~20%)
-Send 방식: Nectar 없이 별도 리버브 플러그인
-```
+- **Insert 방식**: Mix 낮게 (15~20%)
+- **Send 방식**: Nectar 없이 별도 리버브 플러그인
 
 ---
 

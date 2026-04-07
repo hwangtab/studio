@@ -42,9 +42,9 @@ DAW(Digital Audio Workstation)는 음악 녹음·편집·믹싱·마스터링을
 
 ### 보컬 녹음·팝 제작 입문자 (Mac)
 
-```
+아래 워크플로우는 기본 설정 기준이며, 자신의 작업 스타일에 맞게 커스텀하세요.
+
 GarageBand (무료) → Logic Pro (유료 업그레이드)
-```
 
 GarageBand에서 익힌 인터페이스를 그대로 Logic Pro에서 활용할 수 있습니다. 내장 플러그인(EQ, Compressor, Space Designer 리버브)만으로도 완성도 높은 작업이 가능합니다.
 

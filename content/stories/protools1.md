@@ -26,76 +26,89 @@ Pro Tools는 Grammy 수상 스튜디오에서 할리우드 포스트 프로덕�
 
 ## Pro Tools 기본 설정
 
-```
-[오디오 인터페이스 설정]
-① 오디오 인터페이스 연결
-② Setup → Playback Engine
-③ Playback Engine: 오디오 인터페이스 선택
-④ H/W Buffer Size: 녹음 시 256 samples 이하
+기본값에서 출발해 한 번에 하나씩 조절하면 각 파라미터의 역할이 명확하게 들립니다.
 
-[세션 생성]
+### 오디오 인터페이스 설정
+
+1. 오디오 인터페이스 연결
+2. Setup → Playback Engine
+3. Playback Engine: 오디오 인터페이스 선택
+4. H/W Buffer Size: 녹음 시 256 samples 이하
+
+### 세션 생성
+
 File → New Session
-→ Sample Rate: 48kHz (또는 44.1kHz)
-→ Bit Depth: 24-bit
-→ Audio File Type: BWF (.WAV)
+- **Sample Rate**: 48kHz (또는 44.1kHz)
+- **Bit Depth**: 24-bit
+- **Audio File Type**: BWF (.WAV)
 
-[I/O 설정]
+### I/O 설정
+
 Setup → I/O → Input 탭에서 오디오 인터페이스 채널 매핑 확인
-```
 
 ---
 
 ## 트랙 생성 및 녹음
 
-```
-[오디오 트랙 생성]
-① Track → New (Shift+Cmd+N)
-② Mono Audio Track 선택 (보컬 단일 채널)
-③ 트랙 Input: 오디오 인터페이스 입력 채널 선택
-④ Rec Enable 버튼 클릭 (빨간 원)
+볼륨 자동화를 활용하면 이펙트에 의존하지 않고도 다이나믹을 자연스럽게 만들 수 있습니다.
 
-[게인 설정]
+### 오디오 트랙 생성
+
+1. Track → New (Shift+Cmd+N)
+2. Mono Audio Track 선택 (보컬 단일 채널)
+3. 트랙 Input: 오디오 인터페이스 입력 채널 선택
+4. Rec Enable 버튼 클릭 (빨간 원)
+
+### 게인 설정
+
 - 트랙 VU 미터 확인: 피크 -12dBFS ~ -6dBFS
 - 클리핑(빨간 불) 방지
 
-[다이렉트 모니터링]
+### 다이렉트 모니터링
+
 - 오디오 인터페이스 Direct Monitoring ON
 - Pro Tools 소프트웨어 모니터링: OFF (레이턴시 방지)
 
-[녹음 시작]
-① Transport 창 → 녹음 버튼 (F12 또는 Ctrl+Space)
-② Space 키로 녹음 정지
-```
+### 녹음 시작
+
+1. Transport 창 → 녹음 버튼 (F12 또는 Ctrl+Space)
+2. Space 키로 녹음 정지
 
 ---
 
 ## EQ III / Pro-Q3 설정
 
-```
-[EQ III 삽입 (내장)]
-① 트랙 Inserts 슬롯 클릭
-② EQ → EQ III 7-Band 선택
+각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
 
-[기본 보컬 EQ]
-① HPF (High Pass): 80~100Hz
-② Low Mid: 300~500Hz, -2~-3dB (탁함 제거)
-③ Mid: 2~4kHz, +1~2dB (명료도)
-④ High Shelf: 10kHz, +1dB (공기감)
+### EQ III 삽입 (내장)
 
-[서드파티 EQ]
+1. 트랙 Inserts 슬롯 클릭
+2. EQ → EQ III 7-Band 선택
+
+### 기본 보컬 EQ
+
+1. HPF (High Pass): 80~100Hz
+2. Low Mid: 300~500Hz, -2~-3dB (탁함 제거)
+3. Mid: 2~4kHz, +1~2dB (명료도)
+4. High Shelf: 10kHz, +1dB (공기감)
+
+### 서드파티 EQ
+
 - FabFilter Pro-Q3 (권장): 다이나믹 EQ 지원
 - Spectrum Analyzer 실시간 모니터링
-```
 
 ---
 
 ## Dynamics III 컴프레서 설정
 
-```
-[Compressor 삽입]
+같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
+
+### Compressor 삽입
+
 Inserts → Dynamics → Compressor/Limiter Dyn 3
 
-[기본 보컬 컴프레서 값]
+### 기본 보컬 컴프레서 값
+
 - Threshold: -18dB
 - Ratio: 3:1
 - Attack: 15ms
@@ -103,50 +116,55 @@ Inserts → Dynamics → Compressor/Limiter Dyn 3
 - Knee: 10 (Soft)
 - Gain: +3~5dB
 
-[GR 미터 확인]
+### GR 미터 확인
+
 - -3~-6dB 게인 리덕션 목표
-```
 
 ---
 
 ## 플레이리스트 컴핑
 
-```
-[플레이리스트 워크플로우]
-① 보컬 트랙 오른쪽 클릭 → Expand All Playlists
-② 테이크별 녹음 (자동으로 새 플레이리스트 생성)
-③ 각 플레이리스트에서 최적 구간 선택
-   Cmd+클릭으로 범위 선택 → 복사
-④ 메인 플레이리스트에서 구간 붙여넣기
-⑤ 크로스페이드(Fade) 적용으로 자연스럽게 이음
+고음역 컷이 전체 믹스에 투명감을 더해주는 경우가 많으므로 저역부터 정리하세요.
 
-[플레이리스트 단축키]
+### 플레이리스트 워크플로우
+
+1. 보컬 트랙 오른쪽 클릭 → Expand All Playlists
+2. 테이크별 녹음 (자동으로 새 플레이리스트 생성)
+3. 각 플레이리스트에서 최적 구간 선택
+   Cmd+클릭으로 범위 선택 → 복사
+4. 메인 플레이리스트에서 구간 붙여넣기
+5. 크로스페이드(Fade) 적용으로 자연스럽게 이음
+
+### 플레이리스트 단축키
+
 - 새 플레이리스트: 트랙 이름 옆 ▼ 클릭
 - 플레이리스트 전환: 트랙 이름 옆 드롭다운
-```
 
 ---
 
 ## 파일 내보내기 (Bounce)
 
-```
-[믹싱 의뢰용 바운스]
+모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
+
+### 믹싱 의뢰용 바운스
+
 File → Bounce to → Disk
-→ File Type: WAV
-→ Format: Interleaved
-→ Bit Depth: 24-bit
-→ Sample Rate: 44100 또는 48000
-→ Bounce 클릭
+- **File Type**: WAV
+- **Format**: Interleaved
+- **Bit Depth**: 24-bit
+- **Sample Rate**: 44100 또는 48000
+- Bounce 클릭
 
-[드라이 보컬 내보내기]
-① 보컬 트랙 Solo
-② Inserts 플러그인 전체 Bypass
-③ Bounce to Disk → WAV 24bit
+### 드라이 보컬 내보내기
 
-[파일 전달]
+1. 보컬 트랙 Solo
+2. Inserts 플러그인 전체 Bypass
+3. Bounce to Disk → WAV 24bit
+
+### 파일 전달
+
 - 구글 드라이브 또는 WeTransfer 업로드
 - 파일명: [아티스트명]_[곡명]_vocal.wav
-```
 
 ---
 

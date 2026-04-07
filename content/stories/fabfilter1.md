@@ -40,84 +40,93 @@ Pro-Q3는 직관적인 인터페이스와 강력한 기능으로 수많은 Gramm
 
 ## 보컬 EQ 실전 설정
 
-```
-[기본 보컬 EQ 체인 (Pro-Q3)]
-Band 1 - Low Cut:
+레퍼런스 트랙과 A/B 비교하면서 조절하면 과보정을 방지할 수 있습니다.
+
+### 기본 보컬 EQ 체인 (Pro-Q3)
+
+**Band 1 - Low Cut**
   Frequency: 80~100Hz
   Slope: 12~24dB/oct (단단한 컷)
 
-Band 2 - Bell (Narrow Q):
+**Band 2 - Bell (Narrow Q)**
   Frequency: 300~500Hz, -2~-4dB
   Q: 2~3 (서지컬 컷)
   목적: 탁한 공명 제거
 
-Band 3 - Bell:
+**Band 3 - Bell**
   Frequency: 2~5kHz, +1~2dB
   Q: 0.7~1 (넓은 부스트)
   목적: 명료도·존재감
 
-Band 4 - High Shelf:
+**Band 4 - High Shelf**
   Frequency: 10kHz, +1dB
   목적: 공기감(Air)
-```
 
 ---
 
 ## Spectrum Analyzer 활용
 
-```
-[Spectrum 표시 모드]
+각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
+
+### Spectrum 표시 모드
+
 - Pre/Post: EQ 적용 전후 스펙트럼 비교
 - External: 다른 트랙 스펙트럼 오버레이
 - Freeze: 피크 주파수 고정 표시
 
-[EQ Match 기능]
-① 목표 트랙(레퍼런스) 스펙트럼 분석
-② Pro-Q3 EQ Match 버튼 → Apply
-③ 레퍼런스 트랙 주파수 특성 자동 매핑
+### EQ Match 기능
 
-[활용 팁]
+1. 목표 트랙(레퍼런스) 스펙트럼 분석
+2. Pro-Q3 EQ Match 버튼 → Apply
+3. 레퍼런스 트랙 주파수 특성 자동 매핑
+
+### 활용 팁
+
 - Spectrum Analyzer ON 상태에서 문제 주파수 시각 확인
 - 귀로 들으면서 Analyzer 동시 확인
-```
 
 ---
 
 ## Collision Detection (주파수 충돌 감지)
 
-```
-[설정 방법]
-① 보컬 트랙에 Pro-Q3 삽입
-② 충돌 감지할 상대 트랙에도 Pro-Q3 삽입
-③ 보컬 Pro-Q3: Input 버튼 → 상대 트랙 선택
-④ 충돌 구간이 빨간색으로 표시
+작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
 
-[EQ 카빙 활용]
+### 설정 방법
+
+1. 보컬 트랙에 Pro-Q3 삽입
+2. 충돌 감지할 상대 트랙에도 Pro-Q3 삽입
+3. 보컬 Pro-Q3: Input 버튼 → 상대 트랙 선택
+4. 충돌 구간이 빨간색으로 표시
+
+### EQ 카빙 활용
+
 - 충돌 구간: 상대 트랙 EQ를 해당 주파수 -2~-4dB 컷
 - 보컬이 더 선명하게 전면에 자리 잡음
 - Sidechain Collision: 사이드체인으로 동적 카빙 가능
-```
 
 ---
 
 ## 다이나믹 EQ 활용
 
-```
-[다이나믹 밴드 설정]
-① EQ 밴드 선택 → Dynamic 버튼 ON
-② Threshold 설정: 반응 시작 레벨
-③ Range: 최대 압축량 (e.g., -4dB)
+귀가 피로해지기 전에 중요한 판단을 먼저 내리는 것이 좋습니다.
 
-[보컬 다이나믹 EQ 예시]
+### 다이나믹 밴드 설정
+
+1. EQ 밴드 선택 → Dynamic 버튼 ON
+2. Threshold 설정: 반응 시작 레벨
+3. Range: 최대 압축량 (e.g., -4dB)
+
+### 보컬 다이나믹 EQ 예시
+
 - 3~5kHz 치찰음 구간: Dynamic Bell, -3dB, Threshold -15dB
   (치찰음이 튀는 순간만 컷)
 - 200~400Hz 탁함: Dynamic Bell, -3dB
   (탁한 모음 발음 시만 컷)
 
-[다이나믹 EQ vs De-esser]
+### 다이나믹 EQ vs De-esser
+
 - De-esser: 고정 주파수, 빠른 처리
 - Dynamic EQ: 더 정밀한 제어, 자연스러움
-```
 
 ---
 

@@ -26,76 +26,89 @@ Steinberg Cubase는 1989년부터 업계를 이끌어온 DAW로, 유럽 스튜�
 
 ## Cubase 기본 설정
 
-```
-[오디오 인터페이스 설정]
-① 오디오 인터페이스 연결
-② Studio → Studio Setup (F4)
-③ VST Audio System → ASIO Driver(Win) 또는 CoreAudio(Mac) 선택
-④ 오디오 인터페이스 선택
+이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
-[버퍼·샘플레이트 설정]
+### 오디오 인터페이스 설정
+
+1. 오디오 인터페이스 연결
+2. Studio → Studio Setup (F4)
+3. VST Audio System → ASIO Driver(Win) 또는 CoreAudio(Mac) 선택
+4. 오디오 인터페이스 선택
+
+### 버퍼·샘플레이트 설정
+
 Studio Setup → Control Panel (Windows)
 - Buffer Size: 녹음 시 64~256 samples
            믹싱 시 512~1024 samples
 - Sample Rate: 44100Hz 또는 48000Hz
 
-[프로젝트 생성]
+### 프로젝트 생성
+
 File → New Project → Sample Rate 설정 → Create
-```
 
 ---
 
 ## 오디오 트랙 생성 및 녹음
 
-```
-[트랙 생성]
-① Project → Add Track → Audio
-② Configuration: Mono (보컬 단일 채널)
-③ Input Routing: 오디오 인터페이스 입력 채널
-④ Record Enable 버튼 클릭 (빨간 원)
+모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
 
-[게인 설정]
+### 트랙 생성
+
+1. Project → Add Track → Audio
+2. Configuration: Mono (보컬 단일 채널)
+3. Input Routing: 오디오 인터페이스 입력 채널
+4. Record Enable 버튼 클릭 (빨간 원)
+
+### 게인 설정
+
 - Input Level 미터: -12dBFS ~ -6dBFS 피크
 - 클리핑 방지
 
-[다이렉트 모니터링]
+### 다이렉트 모니터링
+
 - 오디오 인터페이스 Direct Monitoring ON
 - Cubase 소프트웨어 모니터링: OFF (레이턴시 방지)
 
-[녹음 시작]
+### 녹음 시작
+
 Numpad * 또는 Transport 녹음 버튼
 Space 키로 정지
-```
 
 ---
 
 ## Channel EQ 설정
 
-```
-[Channel EQ 열기]
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
+
+### Channel EQ 열기
+
 트랙 헤더 → E(Edit Channel Settings) 클릭
-→ EQ 탭 활성화
+- EQ 탭 활성화
 
-[기본 보컬 EQ]
-① Low Cut (HPF): 80~100Hz
-② Low Mid: 300~500Hz, -2~-3dB (탁함)
-③ High Mid: 2~4kHz, +1~2dB (명료도)
-④ High (Shelf): 10kHz, +1dB (공기감)
+### 기본 보컬 EQ
 
-[Spectrum Analyzer]
+1. Low Cut (HPF): 80~100Hz
+2. Low Mid: 300~500Hz, -2~-3dB (탁함)
+3. High Mid: 2~4kHz, +1~2dB (명료도)
+4. High (Shelf): 10kHz, +1dB (공기감)
+
+### Spectrum Analyzer
+
 EQ 창 내 Spectrum 버튼 ON → 실시간 확인
-Q 값: 높을수록 좁은 대역 (서지컬)
-```
+- **Q 값**: 높을수록 좁은 대역 (서지컬)
 
 ---
 
 ## Compressor 설정
 
-```
-[Compressor 삽입]
+같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
+
+### Compressor 삽입
+
 Channel Insert 슬롯 → Dynamics → Compressor
 
-[기본 보컬 컴프레서 값]
+### 기본 보컬 컴프레서 값
+
 - Threshold: -18dB
 - Ratio: 3:1
 - Attack: 15ms
@@ -103,51 +116,57 @@ Channel Insert 슬롯 → Dynamics → Compressor
 - Make-up Gain: +3~5dB
 - Soft Knee 활성화
 
-[GR 미터 확인]
+### GR 미터 확인
+
 - -3~-6dB 게인 리덕션: 적당
 - Live 버튼으로 실시간 모니터링
-```
 
 ---
 
 ## VariAudio — 내장 피치 교정
 
-```
-[VariAudio 활성화]
-① 보컬 클립 더블클릭 → Sample Editor 열기
-② VariAudio 탭 클릭 → Analyze 클릭
+버스로 묶어 처리하면 개별 트랙 조정 없이도 전체 밸런스를 효율적으로 잡을 수 있습니다.
 
-[피치 교정]
+### VariAudio 활성화
+
+1. 보컬 클립 더블클릭 → Sample Editor 열기
+2. VariAudio 탭 클릭 → Analyze 클릭
+
+### 피치 교정
+
 - 각 음표 블록 표시 → 위아래 드래그로 교정
 - Pitch & Warp 툴 선택
 - Straighten Pitch: 0~100% 슬라이더 (100%=Auto-Tune 효과)
 - 자연스러운 교정: 50~70% 권장
 
-[타이밍 교정]
+### 타이밍 교정
+
 - VariAudio Warp 마커로 타이밍 교정 가능
-```
 
 ---
 
 ## 파일 내보내기 (Export)
 
-```
-[Audio Mixdown 내보내기]
+각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
+
+### Audio Mixdown 내보내기
+
 File → Export → Audio Mixdown (Ctrl+Shift+E)
-→ File Format: WAV
-→ Bit Depth: 24 Bit
-→ Sample Rate: 44100Hz 또는 48000Hz
-→ Channel Selection: 트랙 Solo 확인
-→ Export Audio 클릭
+- **File Format**: WAV
+- **Bit Depth**: 24 Bit
+- **Sample Rate**: 44100Hz 또는 48000Hz
+- **Channel Selection**: 트랙 Solo 확인
+- Export Audio 클릭
 
-[드라이 보컬 내보내기]
-① 보컬 트랙 Solo
-② Channel Inserts 전체 Bypass
-③ Audio Mixdown → WAV 24bit
+### 드라이 보컬 내보내기
 
-[파일 전달]
-파일명: [아티스트명]_[곡명]_vocal.wav
-```
+1. 보컬 트랙 Solo
+2. Channel Inserts 전체 Bypass
+3. Audio Mixdown → WAV 24bit
+
+### 파일 전달
+
+- **파일명**: [아티스트명]_[곡명]_vocal.wav
 
 ---
 

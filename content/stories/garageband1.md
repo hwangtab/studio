@@ -26,128 +26,146 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand 기본 설정 (Mac)
 
-```
-[오디오 인터페이스 설정]
-① 오디오 인터페이스 USB 연결
-② GarageBand → 환경설정(Preferences)
-③ Audio/MIDI 탭 열기
-④ 입력 장치: 오디오 인터페이스 선택
+자동화(Automation) 레인을 활용하면 수동 조정 없이 정밀한 다이나믹 변화를 만들 수 있습니다.
+
+### 오디오 인터페이스 설정
+
+1. 오디오 인터페이스 USB 연결
+2. GarageBand → 환경설정(Preferences)
+3. Audio/MIDI 탭 열기
+4. 입력 장치: 오디오 인터페이스 선택
    출력 장치: 오디오 인터페이스 또는 헤드폰
 
-[샘플레이트 설정]
+### 샘플레이트 설정
+
 - 오디오 인터페이스 드라이버에서 48kHz 선택
 - GarageBand 프로젝트 샘플레이트와 일치
 
-[버퍼 크기]
+### 버퍼 크기
+
 - 녹음 시: 64~128 samples (레이턴시 최소화)
 - 믹싱 시: 256~512 samples (CPU 효율화)
-```
 
 ---
 
 ## 오디오 트랙 생성 및 녹음
 
-```
-[트랙 생성]
-① File → New Track (Shift+Cmd+N)
-② Audio 선택 → 입력 장치 확인
-③ 마이크 아이콘 활성화 (녹음 대기)
+같은 기능이라도 DAW에 내장된 도구가 서드파티 플러그인보다 안정적인 경우가 많습니다.
 
-[게인 설정]
+### 트랙 생성
+
+1. File → New Track (Shift+Cmd+N)
+2. Audio 선택 → 입력 장치 확인
+3. 마이크 아이콘 활성화 (녹음 대기)
+
+### 게인 설정
+
 - Smart Controls 하단 Input Level 확인
 - 보컬 피크: -12dBFS ~ -6dBFS 범위
 - 클리핑(빨간 불) = 즉시 게인 감소
 
-[다이렉트 모니터링]
+### 다이렉트 모니터링
+
 - 오디오 인터페이스 Direct Monitoring ON
 - GarageBand 소프트웨어 모니터링 OFF (레이턴시 방지)
 - 헤드폰 볼륨: 오디오 인터페이스에서 조절
 
-[녹음 시작]
-① R 키 또는 녹음 버튼(빨간 원) 클릭
-② 1~2소절 Count-in 후 노래 시작
-③ Space 키로 녹음 정지
-```
+### 녹음 시작
+
+1. R 키 또는 녹음 버튼(빨간 원) 클릭
+2. 1~2소절 Count-in 후 노래 시작
+3. Space 키로 녹음 정지
 
 ---
 
 ## GarageBand EQ 설정
 
-```
-[Channel EQ 삽입]
-① 트랙 선택 → Smart Controls 표시
-② EQ 버튼 클릭 → Channel EQ 창 열기
+고음역 컷이 전체 믹스에 투명감을 더해주는 경우가 많으므로 저역부터 정리하세요.
 
-[기본 보컬 EQ]
-① HPF(고역 통과 필터): 80~100Hz에 걸기
-② 300~500Hz: 탁한 공명 좁은 Q로 -2~-4dB
-③ 2~5kHz: 명료도 +1~2dB
-④ 10kHz 이상: Shelf +1dB (공기감)
+### Channel EQ 삽입
 
-[EQ 팁]
+1. 트랙 선택 → Smart Controls 표시
+2. EQ 버튼 클릭 → Channel EQ 창 열기
+
+### 기본 보컬 EQ
+
+1. HPF(고역 통과 필터): 80~100Hz에 걸기
+2. 300~500Hz: 탁한 공명 좁은 Q로 -2~-4dB
+3. 2~5kHz: 명료도 +1~2dB
+4. 10kHz 이상: Shelf +1dB (공기감)
+
+### EQ 팁
+
 - '빼기' 우선: 부스트보다 불필요 주파수 컷
 - 변화를 들으며 귀로 판단
 - 변화가 작아도 누적 효과 있음
-```
 
 ---
 
 ## GarageBand 컴프레서 설정
 
-```
-[Compressor 삽입]
-① Smart Controls → 플러그인 추가(+)
-② Compressor 선택
+이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
-[기본 보컬 컴프레서 값]
+### Compressor 삽입
+
+1. Smart Controls → 플러그인 추가(+)
+2. Compressor 선택
+
+### 기본 보컬 컴프레서 값
+
 - Threshold: -18dBFS
 - Ratio: 3:1
 - Attack: 15ms
 - Release: 100ms
 - Gain (Makeup): +3~5dB
 
-[컴프레서 확인]
+### 컴프레서 확인
+
 - 게인 리덕션 미터에서 -3~-6dB 정도 눌리면 적당
 - 너무 많이 눌리면 Threshold 높이거나 Ratio 낮추기
-```
 
 ---
 
 ## 파일 내보내기 (Export)
 
-```
-[믹싱 의뢰용 내보내기]
-Share → Export Song to Disk
-→ Format: AIFF (또는 WAV 호환 확인)
-→ Quality: Lossless
-→ 저장 위치 선택 → Export 클릭
+아래 내용은 특정 버전 기준이며, 업데이트 이후 인터페이스가 달라질 수 있습니다.
 
-[공유용 MP3 내보내기]
-Share → Export Song to Disk
-→ Format: MP3
-→ Quality: Highest (320kbps)
+### 믹싱 의뢰용 내보내기
 
-[믹싱 의뢰 전달]
+Share → Export Song to Disk
+- **Format**: AIFF (또는 WAV 호환 확인)
+- **Quality**: Lossless
+- 저장 위치 선택 → Export 클릭
+
+### 공유용 MP3 내보내기
+
+Share → Export Song to Disk
+- **Format**: MP3
+- **Quality**: Highest (320kbps)
+
+### 믹싱 의뢰 전달
+
 - AIFF/WAV 파일 + MR 파일 함께 전달
 - 구글 드라이브 또는 WeTransfer 업로드
 - 파일명: [아티스트명]_[곡명]_vocal.aiff
-```
 
 ---
 
 ## iOS GarageBand 보컬 녹음
 
-```
-[iOS 설정]
-① Lightning/USB-C → 오디오 인터페이스 어댑터 연결
-② GarageBand → 오디오 레코더 트랙 선택
-③ 마이크 아이콘 → 외부 마이크 선택
-④ 입력 레벨 확인 후 녹음
+트랙 색상과 명칭을 체계적으로 관리하면 복잡한 세션도 빠르게 파악할 수 있습니다.
 
-[iOS 파일 내보내기]
+### iOS 설정
+
+1. Lightning/USB-C → 오디오 인터페이스 어댑터 연결
+2. GarageBand → 오디오 레코더 트랙 선택
+3. 마이크 아이콘 → 외부 마이크 선택
+4. 입력 레벨 확인 후 녹음
+
+### iOS 파일 내보내기
+
 공유 버튼 → 노래 → 오디오 → Lossless
-→ 파일 앱 또는 iCloud Drive로 저장
-```
+- 파일 앱 또는 iCloud Drive로 저장
 
 ---
 

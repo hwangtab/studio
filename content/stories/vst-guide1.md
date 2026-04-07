@@ -35,74 +35,86 @@ faq:
 
 ## 무료 VST 플러그인 추천
 
-```
-[EQ]
+세션 관리를 체계화하면 협업 시 다른 엔지니어나 아티스트가 빠르게 작업을 이어받을 수 있습니다.
+
+### EQ
+
 - TDR Nova: 다이나믹 EQ, 전문가도 사용
 - Voxengo Marvel GEQ: 그래픽 EQ
 - Electra X2: 멀티밴드 EQ
 
-[컴프레서]
+### 컴프레서
+
 - Klanghelm MJUC jr.: 빈티지 VCA 스타일
 - Tokyo Dawn Kotelnikov: 투명한 마스터링 컴프
 - BPB Saturator: 컴프+새츄레이션
 
-[리버브]
+### 리버브
+
 - OldSkoolVerb: 간단하고 좋은 실내 리버브
 - Dragonfly Reverb: 홀·룸·플레이트 지원
 - Epicverb: 공간감 풍부
 
-[유틸리티]
+### 유틸리티
+
 - Reaper(DAW, 60일 무료 체험): EQ·컴프·리버브 내장
 - SPAN: 스펙트럼 분석기 (믹싱 시각화)
-```
 
 ---
 
 ## 유료 VST 플러그인 추천 (보컬 특화)
 
-```
-[EQ]
+단축키를 익혀두면 마우스 조작에 비해 작업 속도가 두 배 이상 빨라집니다.
+
+### EQ
+
 - FabFilter Pro-Q 3: 현재 가장 많이 쓰이는 EQ
   가격: $179
 
-[컴프레서]
+### 컴프레서
+
 - Waves CLA-2A: 보컬에 자연스러운 옵티컬 컴프
   가격: $29(세일 자주 있음)
 - FabFilter Pro-C 2: 정밀한 투명 컴프
   가격: $179
 
-[피치 교정]
+### 피치 교정
+
 - Melodyne Essential: 정밀 음정 교정
   가격: $99
 - Auto-Tune Pro: 실시간+그래픽 편집
   가격: 월 $24.99~
 
-[리버브]
+### 리버브
+
 - Valhalla Room: 가성비 최고 알고리즘 리버브
   가격: $50
-```
 
 ---
 
 ## DAW별 내장 플러그인 활용
 
-```
-[Logic Pro X (Mac)]
-내장: Channel EQ, Compressor, Space Designer
-→ 이것만으로도 전문 수준의 보컬 믹싱 가능
+버퍼 사이즈는 녹음 시 작게, 믹싱 시 크게 설정하면 레이턴시와 성능을 최적화할 수 있습니다.
 
-[Ableton Live]
-내장: EQ Eight, Compressor, Reverb
-→ 간결하고 효율적인 내장 도구
+### Logic Pro X (Mac)
 
-[FL Studio]
-내장: Parametric EQ 2, Fruity Compressor
-→ 추가 플러그인 없이도 기본 믹싱 가능
+- **내장**: Channel EQ, Compressor, Space Designer
+- 이것만으로도 전문 수준의 보컬 믹싱 가능
 
-[Reaper (윈도우/맥)]
-내장: ReaEQ, ReaComp, ReaVerbate
-→ 무료 수준에서 최강 내장 도구
-```
+### Ableton Live
+
+- **내장**: EQ Eight, Compressor, Reverb
+- 간결하고 효율적인 내장 도구
+
+### FL Studio
+
+- **내장**: Parametric EQ 2, Fruity Compressor
+- 추가 플러그인 없이도 기본 믹싱 가능
+
+### Reaper (윈도우/맥)
+
+- **내장**: ReaEQ, ReaComp, ReaVerbate
+- 무료 수준에서 최강 내장 도구
 
 ---
 

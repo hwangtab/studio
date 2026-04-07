@@ -39,65 +39,72 @@ SSL 4000 G 콘솔의 버스 컴프레서는 수십 년간 히트 레코드의 �
 
 ## 마스터 버스 설정
 
-```
-[Glue 설정 (마스터 버스 표준)]
+이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
+
+### Glue 설정 (마스터 버스 표준)
+
 - Ratio: 2:1
 - Attack: 30ms (느림 — 트랜지언트 보존)
 - Release: Auto
 - Threshold: -10~-15dB (GR -2~-3dB 목표)
 - Make-up: GR 양만큼 보상
 
-[적극적 버스 컴프레션]
+### 적극적 버스 컴프레션
+
 - Ratio: 4:1
 - Attack: 10ms
 - Release: 100~200ms
 - GR: -4~-6dB
-```
 
 ---
 
 ## 드럼 버스 설정
 
-```
-[드럼 Glue (타격감 + 통일감)]
+각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
+
+### 드럼 Glue (타격감 + 통일감)
+
 - Ratio: 4:1
 - Attack: 3~10ms (빠름 — 스네어 어택 포착)
 - Release: Auto
 - GR: -4~-8dB
 - 결과: 드럼 전체가 하나의 유닛처럼 동작
 
-[드럼 펌핑 효과 (트랩·EDM)]
+### 드럼 펌핑 효과 (트랩·EDM)
+
 - Ratio: 10:1
 - Attack: 1ms (최대 빠름)
 - Release: 100ms (빠름 — 펌핑 리듬 발생)
 - GR: -6~-10dB
-```
 
 ---
 
 ## 보컬 버스 설정
 
-```
-[보컬 버스 Glue]
+귀가 피로해지기 전에 중요한 판단을 먼저 내리는 것이 좋습니다.
+
+### 보컬 버스 Glue
+
 - Ratio: 2:1
 - Attack: 10~20ms (중간)
 - Release: Auto
 - GR: -2~-4dB
 - 복수 보컬 트랙(리드+백킹)을 하나로 통일
-```
 
 ---
 
 ## SSL G-Bus 플러그인 에뮬레이션 비교
 
-```
-[주요 G-Bus 플러그인]
+버스로 묶어 처리하면 개별 트랙 조정 없이도 전체 밸런스를 효율적으로 잡을 수 있습니다.
+
+### 주요 G-Bus 플러그인
+
 Waves SSL G-Master Buss Compressor:
 - 가장 널리 사용되는 에뮬레이션
 - 네이티브 처리, 가성비 최고
 - 드럼·마스터 버스 믹싱 작업에 충분
 
-UAD SSL 4000 G Bus Compressor:
+**UAD SSL 4000 G Bus Compressor**
 - 하드웨어에 가장 충실한 모델링
 - UA Apollo 필요
 - 고급 스튜디오 마스터 버스 표준
@@ -106,10 +113,9 @@ Solid State Logic Native Bus Compressor:
 - SSL 공식 플러그인
 - 하드웨어 회사가 직접 제작한 정확한 에뮬레이션
 
-Cytomic The Glue:
+**Cytomic The Glue**
 - 독립 개발사의 높은 평가 에뮬레이션
 - 다양한 타입 선택 가능
-```
 
 ---
 

@@ -87,13 +87,13 @@ faq:
 
 처음 플러그인을 구매할 때 이 순서를 권장합니다:
 
-```
-1순위: FabFilter Pro-Q 3 (EQ) — 가장 직관적
-2순위: Valhalla Room (리버브) — 가성비 최고
-3순위: Waves CLA-2A 또는 CLA-76 (컴프레서)
-4순위: Melodyne Essential (피치 교정)
-5순위: FabFilter Pro-DS (디에서)
-```
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
+
+- **1순위**: FabFilter Pro-Q 3 (EQ) — 가장 직관적
+- **2순위**: Valhalla Room (리버브) — 가성비 최고
+- **3순위**: Waves CLA-2A 또는 CLA-76 (컴프레서)
+- **4순위**: Melodyne Essential (피치 교정)
+- **5순위**: FabFilter Pro-DS (디에서)
 
 ---
 

@@ -26,63 +26,68 @@ faq:
 
 ## 보컬 믹싱 기본 트랙 구성
 
-```
-[보컬 믹싱 템플릿 트랙 레이아웃]
+아래 워크플로우는 기본 설정 기준이며, 자신의 작업 스타일에 맞게 커스텀하세요.
 
-① 보컬 리드 (Lead Vocal)
-   → Gate → EQ → Compressor → De-esser → EQ → Limiter
-   → Reverb Send / Delay Send
+### 보컬 믹싱 템플릿 트랙 레이아웃
 
-② 보컬 더블 (Double)
-   → EQ → Compressor (리드보다 살짝 더 압축)
-   → 리드 보컬보다 -3~6dB 낮게 레벨 설정
+1. 보컬 리드 (Lead Vocal)
+  - Gate → EQ → Compressor → De-esser → EQ → Limiter
+  - Reverb Send / Delay Send
 
-③ 보컬 하모니 (Harmony)
-   → EQ → Compressor
-   → 파트별 패닝 (L/R 분리)
+2. 보컬 더블 (Double)
+  - EQ → Compressor (리드보다 살짝 더 압축)
+  - 리드 보컬보다 -3~6dB 낮게 레벨 설정
 
-④ MR 트랙 (Instrumental)
-   → EQ (저역 하이패스, 보컬 충돌 대역 컷)
-   → 레벨 밸런스 조절
+3. 보컬 하모니 (Harmony)
+  - EQ → Compressor
+  - 파트별 패닝 (L/R 분리)
 
-⑤ Reverb Aux (Send/Return)
-   → 리버브 플러그인 (Wet 100%)
-   → 보컬·하모니에서 Send 양 조절
+4. MR 트랙 (Instrumental)
+  - EQ (저역 하이패스, 보컬 충돌 대역 컷)
+  - 레벨 밸런스 조절
 
-⑥ Delay Aux (Send/Return)
-   → 딜레이 플러그인 (Wet 100%)
-   → 리드 보컬에서 Send 양 조절
+5. Reverb Aux (Send/Return)
+  - 리버브 플러그인 (Wet 100%)
+  - 보컬·하모니에서 Send 양 조절
 
-⑦ 마스터 버스 (Master)
-   → EQ → Compressor → Limiter
-   → True Peak -1dBTP 이하
-```
+6. Delay Aux (Send/Return)
+  - 딜레이 플러그인 (Wet 100%)
+  - 리드 보컬에서 Send 양 조절
+
+7. 마스터 버스 (Master)
+  - EQ → Compressor → Limiter
+  - True Peak -1dBTP 이하
 
 ---
 
 ## 세션 기본 설정
 
-```
-[Sample Rate & Bit Depth]
-보컬 녹음: 24bit / 44.1kHz (권장)
-또는: 24bit / 48kHz
-스트리밍 마스터링 출력: 24bit / 44.1kHz
+레퍼런스 트랙을 프로젝트에 함께 임포트하면 사운드 방향을 일관되게 유지할 수 있습니다.
 
-[Buffer Size]
-녹음 시: 64~128 samples (저지연)
-믹싱 시: 512~1024 samples (CPU 여유)
+### Sample Rate & Bit Depth
 
-[디스플레이]
-그리드: 1/4 Note (기본)
-스케일: 데시벨(dBFS) 표시
-```
+- **보컬 녹음**: 24bit / 44.1kHz (권장)
+- **또는**: 24bit / 48kHz
+- **스트리밍 마스터링 출력**: 24bit / 44.1kHz
+
+### Buffer Size
+
+- **녹음 시**: 64~128 samples (저지연)
+- **믹싱 시**: 512~1024 samples (CPU 여유)
+
+### 디스플레이
+
+- **그리드**: 1/4 Note (기본)
+- **스케일**: 데시벨(dBFS) 표시
 
 ---
 
 ## 플러그인 체인 미리 설정
 
-```
-[보컬 리드 Insert Chain 예시]
+CPU 사용률을 모니터링하면서 작업하면 갑작스러운 오디오 끊김을 예방할 수 있습니다.
+
+### 보컬 리드 Insert Chain 예시
+
 1. Waves Ns1 (노이즈 게이트)
 2. FabFilter Pro-Q 3 (EQ 보정)
 3. Waves CLA-2A (컴프레서)
@@ -90,51 +95,57 @@ faq:
 5. Waves Renaissance De-esser
 6. FabFilter Pro-L 2 (리미터)
 
-[Reverb Aux 예시]
-Valhalla Room (Wet 100%)
-Decay: 1.5초 / Pre-delay: 20ms
+### Reverb Aux 예시
 
-[Delay Aux 예시]
+Valhalla Room (Wet 100%)
+- **Decay**: 1.5초 / Pre-delay: 20ms
+
+### Delay Aux 예시
+
 Waves H-Delay (Wet 100%)
 1/8 note 템포 싱크 / Feedback: 25%
-```
 
 ---
 
 ## DAW별 템플릿 저장 방법
 
-```
-[Ableton Live]
+세션 관리를 체계화하면 협업 시 다른 엔지니어나 아티스트가 빠르게 작업을 이어받을 수 있습니다.
+
+### Ableton Live
+
 File → Save Live Set as Template
-→ User Library/Templates에 저장
-→ File → New Live Set에서 불러오기
+- User Library/Templates에 저장
+- File → New Live Set에서 불러오기
 
-[Logic Pro]
+### Logic Pro
+
 File → Save as Template
-→ Logic Pro X/Templates에 저장
-→ File → New from Template에서 불러오기
+- Logic Pro X/Templates에 저장
+- File → New from Template에서 불러오기
 
-[Pro Tools]
+### Pro Tools
+
 세션 파일을 별도 폴더에 저장
 새 세션 생성 시 해당 파일 복사해서 사용
 ]
-```
 
 ---
 
 ## 템플릿 활용 팁
 
-```
-[장르별 템플릿 분리 관리]
+같은 기능이라도 DAW에 내장된 도구가 서드파티 플러그인보다 안정적인 경우가 많습니다.
+
+### 장르별 템플릿 분리 관리
+
 - 발라드 믹싱 템플릿 (긴 리버브)
 - K-POP 믹싱 템플릿 (딜레이 중심)
 - R&B 믹싱 템플릿 (슬랩백 딜레이)
 - 힙합 믹싱 템플릿 (드라이 사운드)
 
-[정기적 업데이트]
-→ 새 플러그인 도입 시 템플릿 업데이트
-→ 성공한 믹스 설정을 템플릿에 반영
-```
+### 정기적 업데이트
+
+- 새 플러그인 도입 시 템플릿 업데이트
+- 성공한 믹스 설정을 템플릿에 반영
 
 ---
 

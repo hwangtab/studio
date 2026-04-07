@@ -26,125 +26,143 @@ FL Studio는 비트메이킹과 EDM 제작에 특화된 DAW이지만, Edison과 
 
 ## FL Studio 기본 설정
 
-```
-[오디오 인터페이스 설정]
-① 오디오 인터페이스 USB 연결
-② Options → Audio Settings
-③ Input device: 오디오 인터페이스 선택
+모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
+
+### 오디오 인터페이스 설정
+
+1. 오디오 인터페이스 USB 연결
+2. Options → Audio Settings
+3. Input device: 오디오 인터페이스 선택
    Output device: 오디오 인터페이스 선택
 
-[버퍼·샘플레이트 설정]
-- Buffer length: 
+### 버퍼·샘플레이트 설정
+
+**- Buffer length**
   녹음 시: 64~128 samples
   믹싱 시: 256~512 samples
 - Sample rate: 44100Hz 또는 48000Hz
 
-[다이렉트 모니터링]
+### 다이렉트 모니터링
+
 - 오디오 인터페이스 Direct Monitoring ON
 - FL Studio 소프트웨어 모니터링: OFF (레이턴시 방지)
-```
 
 ---
 
 ## Edison으로 보컬 녹음
 
-```
-[Edison 삽입]
-① Mixer 열기 (F9)
-② 빈 Mixer 트랙 선택 (보컬용)
-③ INSERT 슬롯 클릭 → Edison 선택
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
-[입력 채널 설정]
-① Mixer 트랙 상단 → In 드롭다운 클릭
-② 오디오 인터페이스 입력 채널 선택
+### Edison 삽입
 
-[Edison 녹음]
-① Edison 창에서 레벨 확인 (-12dBFS ~ -6dBFS 피크)
-② 빨간 녹음 버튼(●) 클릭 → 노래
-③ 정지 버튼(■) 클릭 → 녹음 파일 자동 생성
+1. Mixer 열기 (F9)
+2. 빈 Mixer 트랙 선택 (보컬용)
+3. INSERT 슬롯 클릭 → Edison 선택
 
-[파일 저장]
+### 입력 채널 설정
+
+1. Mixer 트랙 상단 → In 드롭다운 클릭
+2. 오디오 인터페이스 입력 채널 선택
+
+### Edison 녹음
+
+1. Edison 창에서 레벨 확인 (-12dBFS ~ -6dBFS 피크)
+2. 빨간 녹음 버튼(●) 클릭 → 노래
+3. 정지 버튼(■) 클릭 → 녹음 파일 자동 생성
+
+### 파일 저장
+
 Edison → File → Save to file 또는
 녹음 파일을 Playlist에 드래그 앤 드롭
-```
 
 ---
 
 ## Playlist 오디오 클립 녹음
 
-```
-[AudioClip 트랙 방식]
-① Playlist (F5) 열기
-② 오른쪽 클릭 → Add audio track
-③ 트랙 입력 채널: Mixer 트랙 선택
-④ 녹음 버튼(●) 클릭 후 노래
+귀가 피로해지기 전에 중요한 판단을 먼저 내리는 것이 좋습니다.
 
-[장점]
+### AudioClip 트랙 방식
+
+1. Playlist (F5) 열기
+2. 오른쪽 클릭 → Add audio track
+3. 트랙 입력 채널: Mixer 트랙 선택
+4. 녹음 버튼(●) 클릭 후 노래
+
+### 장점
+
 - DAW 타임라인에 직접 보컬 클립 생성
 - 파일 자동 저장·관리
 - MR 파일과 타임라인 동기화
-```
 
 ---
 
 ## Parametric EQ 2 설정
 
-```
-[Parametric EQ 2 삽입]
+같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
+
+### Parametric EQ 2 삽입
+
 Mixer → 보컬 트랙 INSERT → Parametric EQ 2
 
-[기본 보컬 EQ]
-① Band 1: HPF (High Pass) — 80~100Hz
-② Band 2: Peaking — 300~500Hz, -2~-3dB
-③ Band 3: Peaking — 2~4kHz, +1~2dB
-④ Band 4: High Shelf — 10kHz, +1dB
+### 기본 보컬 EQ
 
-[EQ 팁]
+1. Band 1: HPF (High Pass) — 80~100Hz
+2. Band 2: Peaking — 300~500Hz, -2~-3dB
+3. Band 3: Peaking — 2~4kHz, +1~2dB
+4. Band 4: High Shelf — 10kHz, +1dB
+
+### EQ 팁
+
 - Spectrum Analyzer ON으로 주파수 시각화
 - 마우스 우클릭으로 밴드 리셋
-```
 
 ---
 
 ## Fruity Compressor 설정
 
-```
-[Fruity Compressor 삽입]
+레퍼런스 트랙과 A/B 비교하면서 조절하면 과보정을 방지할 수 있습니다.
+
+### Fruity Compressor 삽입
+
 Mixer → 보컬 트랙 INSERT → Fruity Compressor
 
-[기본 보컬 컴프레서 값]
+### 기본 보컬 컴프레서 값
+
 - Threshold: -18dB
 - Ratio: 3:1
 - Attack: 15ms
 - Release: 100ms
 - Gain (Makeup): +3~5dB
 
-[또는 Fruity Peak Controller 활용]
+### 또는 Fruity Peak Controller 활용
+
 - 사이드체인 덕킹에 유리
 - EDM·힙합 비트 + 보컬 덕킹 자동화
-```
 
 ---
 
 ## 파일 내보내기 (Export)
 
-```
-[프로젝트 전체 내보내기]
+작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
+
+### 프로젝트 전체 내보내기
+
 File → Export → Audio File
-→ Format: WAV
-→ Bit depth: 24
-→ Sample rate: 44100Hz 또는 48000Hz
-→ Save 클릭
+- **Format**: WAV
+- **Bit depth**: 24
+- **Sample rate**: 44100Hz 또는 48000Hz
+- Save 클릭
 
-[믹서 트랙 개별 내보내기]
+### 믹서 트랙 개별 내보내기
+
 Mixer → 보컬 트랙 Solo
-→ File → Export → Audio File
-→ Mode: Split mixer tracks (선택)
+- File → Export → Audio File
+- **Mode**: Split mixer tracks (선택)
 
-[드라이 보컬 전달용]
+### 드라이 보컬 전달용
+
 보컬 트랙만 Solo + 플러그인 Bypass 후 내보내기
-파일명: [아티스트명]_[곡명]_vocal.wav
-```
+- **파일명**: [아티스트명]_[곡명]_vocal.wav
 
 ---
 

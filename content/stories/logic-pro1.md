@@ -26,94 +26,103 @@ Logic Pro는 Mac에서 사용하는 전문 DAW로, 풍부한 내장 플러그인
 
 ## 보컬 녹음 기본 설정
 
-```
-[시스템 설정]
-① Logic Pro > Preferences > Audio 탭
-② Audio Device: 오디오 인터페이스 선택
-③ I/O Buffer Size: 128~256 (레이턴시 최소화)
-④ Sample Rate: 44.1kHz 또는 48kHz
+반사음 문제는 후반 작업에서 제거하기 매우 어려우므로 녹음 환경 정비가 먼저입니다.
 
-[트랙 설정]
-① 새 트랙 추가 > Audio
-② Input: 마이크 연결 채널 선택
-③ 모니터링 버튼 켜기 (마이크 소리 헤드폰으로 모니터링)
-④ Input Monitoring 옵션 확인
+### 시스템 설정
 
-[레코딩]
-→ R 키 또는 Record 버튼으로 녹음
-→ Quick Punch-in: ⌘ + K
-→ Take Folders로 여러 테이크 관리
-```
+1. Logic Pro > Preferences > Audio 탭
+2. Audio Device: 오디오 인터페이스 선택
+3. I/O Buffer Size: 128~256 (레이턴시 최소화)
+4. Sample Rate: 44.1kHz 또는 48kHz
+
+### 트랙 설정
+
+1. 새 트랙 추가 > Audio
+2. Input: 마이크 연결 채널 선택
+3. 모니터링 버튼 켜기 (마이크 소리 헤드폰으로 모니터링)
+4. Input Monitoring 옵션 확인
+
+### 레코딩
+
+- R 키 또는 Record 버튼으로 녹음
+- **Quick Punch-in**: ⌘ + K
+- Take Folders로 여러 테이크 관리
 
 ---
 
 ## 내장 플러그인 보컬 체인
 
-```
-[추천 보컬 믹싱 체인]
+MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고 자연스러운 연주감을 만들 수 있습니다.
+
+### 추천 보컬 믹싱 체인
+
 1. Channel EQ
-   → High-Pass: 80~100Hz
-   → 문제 주파수 컷
-   → 존재감 부스트
+  - **High-Pass**: 80~100Hz
+  - 문제 주파수 컷
+  - 존재감 부스트
 
 2. Vintage VCA Compressor
-   → Ratio: 3:1~4:1
-   → Attack: 10~20ms
-   → GR: 4~6dB
+  - **Ratio**: 3:1~4:1
+  - **Attack**: 10~20ms
+  - **GR**: 4~6dB
 
 3. DeEsser (치찰음)
-   → Frequency: 6~8kHz
-   → 과도한 'ㅅ·ㅆ·ㅈ' 제거
+  - **Frequency**: 6~8kHz
+  - 과도한 'ㅅ·ㅆ·ㅈ' 제거
 
 4. ChromaVerb (리버브)
-   → 보컬에 공간감 추가
-   → Aux 버스로 사용
+  - 보컬에 공간감 추가
+  - Aux 버스로 사용
 
 5. Tape Delay (딜레이)
-   → BPM 동기 딜레이
-   → Aux 버스로 사용
-```
+  - BPM 동기 딜레이
+  - Aux 버스로 사용
 
 ---
 
 ## Flex Pitch 피치 교정
 
-```
-[Flex Pitch 워크플로우]
-① 보컬 리전 더블클릭 → 오디오 파일 편집기
-② 상단 'Flex' 버튼 켜기
-③ Flex Pitch 모드 선택
-④ 음표별 피치 라인 표시
-⑤ 드래그로 교정
+볼륨 자동화를 활용하면 이펙트에 의존하지 않고도 다이나믹을 자연스럽게 만들 수 있습니다.
 
-[세부 편집]
-→ 음표 선택 후 상하 드래그 (피치 조정)
-→ 음표 시작 드래그 (타이밍 조정)
-→ Q (Pitch Quantize) 슬라이더로 전체 강도 조절
+### Flex Pitch 워크플로우
 
-[자연스러운 교정 팁]
-→ 100% 완벽 교정 피하기
-→ 비브라토 구간 건드리지 않기
-→ 시작음 슬라이드 유지
-```
+1. 보컬 리전 더블클릭 → 오디오 파일 편집기
+2. 상단 'Flex' 버튼 켜기
+3. Flex Pitch 모드 선택
+4. 음표별 피치 라인 표시
+5. 드래그로 교정
+
+### 세부 편집
+
+- 음표 선택 후 상하 드래그 (피치 조정)
+- 음표 시작 드래그 (타이밍 조정)
+- Q (Pitch Quantize) 슬라이더로 전체 강도 조절
+
+### 자연스러운 교정 팁
+
+- 100% 완벽 교정 피하기
+- 비브라토 구간 건드리지 않기
+- 시작음 슬라이드 유지
 
 ---
 
 ## Mastering Assistant 활용
 
-```
-[Logic Pro 10.7.4+ 기능]
-① 믹스 완성 후 마스터 버스 선택
-② 'Mastering' 탭 열기
-③ 'Enable Mastering' 켜기
-④ 분석 후 EQ·다이나믹·음량 제안
-⑤ 각 파라미터 미세 조정
+각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
 
-[수동 마스터링 체인]
-마스터 버스:
+### Logic Pro 10.7.4+ 기능
+
+1. 믹스 완성 후 마스터 버스 선택
+2. 'Mastering' 탭 열기
+3. 'Enable Mastering' 켜기
+4. 분석 후 EQ·다이나믹·음량 제안
+5. 각 파라미터 미세 조정
+
+### 수동 마스터링 체인
+
+**마스터 버스**
 EQ → 컴프레서 → Adaptive Limiter
-→ Adaptive Limiter로 True Peak 설정
-```
+- Adaptive Limiter로 True Peak 설정
 
 ---
 

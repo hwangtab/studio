@@ -38,73 +38,84 @@ faq:
 
 ## 바운스 전 체크리스트
 
-```
-[믹스 확인]
-□ 마스터버스 클리핑 없음 (피크미터 빨간 불 없음)
-□ 마스터버스 리미터 설정 확인
-  → 마스터링 전 납품: 리미터 제거 또는 Ceiling -3~-6dBFS
-  → 최종 마스터: Ceiling -1.0dBFS
-□ 레퍼런스 트랙과 최종 비교
+계약서의 세부 조항을 꼼꼼히 확인하는 습관이 장기적으로 큰 손실을 막아줍니다.
 
-[출력 설정]
-□ 샘플레이트: 48kHz (녹음 소스와 동일) 또는 44.1kHz (유통 목적)
-□ 비트뎁스: 24bit (마스터링 납품) / 16bit (CD 배포)
-□ 파일 형식: WAV (마스터링) / MP3 320kbps (공유)
-□ Dithering: 16bit로 낮출 때만 적용
+### 믹스 확인
 
-[파일 설정]
-□ 파일명: [아티스트명]_[곡명]_mix.wav
-□ 시작 1~2초 여백 (클릭·팝 방지)
-□ 끝 1~2초 여백 (리버브 꼬리 포함)
-□ 저장 위치 확인
-```
+- 마스터버스 클리핑 없음 (피크미터 빨간 불 없음)
+- 마스터버스 리미터 설정 확인
+  - **마스터링 전 납품**: 리미터 제거 또는 Ceiling -3~-6dBFS
+  - **최종 마스터**: Ceiling -1.0dBFS
+- 레퍼런스 트랙과 최종 비교
+
+### 출력 설정
+
+- 샘플레이트: 48kHz (녹음 소스와 동일) 또는 44.1kHz (유통 목적)
+- 비트뎁스: 24bit (마스터링 납품) / 16bit (CD 배포)
+- 파일 형식: WAV (마스터링) / MP3 320kbps (공유)
+- Dithering: 16bit로 낮출 때만 적용
+
+### 파일 설정
+
+- 파일명: [아티스트명]_[곡명]_mix.wav
+- 시작 1~2초 여백 (클릭·팝 방지)
+- 끝 1~2초 여백 (리버브 꼬리 포함)
+- 저장 위치 확인
 
 ---
 
 ## DAW별 출력 방법
 
-```
-[Logic Pro]
+유통사 선택은 수수료뿐만 아니라 지원 서비스와 플랫폼 커버리지도 함께 고려하세요.
+
+### Logic Pro
+
 File → Bounce → Project or Section
-→ PCM 선택: WAV, 24bit, 44.1kHz 또는 48kHz
-→ Normalize: Off (마스터링 전)
+- **PCM 선택**: WAV, 24bit, 44.1kHz 또는 48kHz
+- **Normalize**: Off (마스터링 전)
 
-[Ableton Live]
+### Ableton Live
+
 File → Export Audio/Video
-→ File Type: WAV, Bit Depth: 24, Sample Rate: 44100/48000
-→ Normalize: Off
+- **File Type**: WAV, Bit Depth: 24, Sample Rate: 44100/48000
+- **Normalize**: Off
 
-[Pro Tools]
+### Pro Tools
+
 File → Bounce to → Disk
-→ File Type: WAV, Bit Depth: 24, Sample Rate: 44.1/48kHz
-→ Import After Bounce: 선택
+- **File Type**: WAV, Bit Depth: 24, Sample Rate: 44.1/48kHz
+- **Import After Bounce**: 선택
 
-[GarageBand (Mac)]
+### GarageBand (Mac)
+
 Share → Export Song to Disk
-→ Quality: Lossless (AIFF 24bit)
-```
+- **Quality**: Lossless (AIFF 24bit)
 
 ---
 
 ## 유통사별 권장 스펙
 
-```
-[멜론·지니·벅스 (국내 스트리밍)]
-→ WAV 16bit/44.1kHz 이상 (유통사에서 자체 변환)
-→ FLAC 24bit/44.1kHz 권장
+스트리밍 데이터를 분석하면 마케팅 전략을 더욱 정밀하게 조정할 수 있습니다.
 
-[스포티파이·애플뮤직 (글로벌 스트리밍)]
-→ WAV 24bit/44.1kHz 또는 48kHz
-→ 플랫폼에서 -14 LUFS로 자동 정규화
+### 멜론·지니·벅스 (국내 스트리밍)
 
-[유튜브]
-→ WAV 또는 MP3 320kbps
-→ -14 LUFS(-1dBTP) 기준 자동 조정
+- WAV 16bit/44.1kHz 이상 (유통사에서 자체 변환)
+- FLAC 24bit/44.1kHz 권장
 
-[최종 권장 납품 사양]
-→ WAV 24bit/44.1kHz (마스터링 입력용)
-→ 마스터링 완료 후 유통사 스펙으로 변환
-```
+### 스포티파이·애플뮤직 (글로벌 스트리밍)
+
+- WAV 24bit/44.1kHz 또는 48kHz
+- 플랫폼에서 -14 LUFS로 자동 정규화
+
+### 유튜브
+
+- WAV 또는 MP3 320kbps
+- -14 LUFS(-1dBTP) 기준 자동 조정
+
+### 최종 권장 납품 사양
+
+- WAV 24bit/44.1kHz (마스터링 입력용)
+- 마스터링 완료 후 유통사 스펙으로 변환
 
 ---
 

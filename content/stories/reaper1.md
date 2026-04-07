@@ -26,78 +26,91 @@ Cockos Reaper는 $60의 저렴한 가격으로 전문 수준의 DAW 기능을 �
 
 ## Reaper 기본 설정
 
-```
-[오디오 인터페이스 설정]
-① 오디오 인터페이스 연결
-② Options → Preferences (Ctrl+P) → Audio → Device
-③ Audio system: ASIO(Win) 또는 Core Audio(Mac)
-④ Input device·Output device: 오디오 인터페이스 선택
+작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
 
-[버퍼·샘플레이트 설정]
+### 오디오 인터페이스 설정
+
+1. 오디오 인터페이스 연결
+2. Options → Preferences (Ctrl+P) → Audio → Device
+3. Audio system: ASIO(Win) 또는 Core Audio(Mac)
+4. Input device·Output device: 오디오 인터페이스 선택
+
+### 버퍼·샘플레이트 설정
+
 Preferences → Audio → Device → Buffer size
 - 녹음 시: 64~256 samples
 - 믹싱 시: 512~1024 samples
 - Sample Rate: 44100Hz 또는 48000Hz
 
-[프로젝트 생성]
+### 프로젝트 생성
+
 File → New Project → Project Settings (Alt+Enter)
-→ Sample Rate 설정
-```
+- Sample Rate 설정
 
 ---
 
 ## 오디오 트랙 생성 및 녹음
 
-```
-[트랙 생성]
-① Track → Insert Track (Ctrl+T)
-② 트랙 좌측 패널에서 Input 버튼 클릭
-③ Input: 오디오 인터페이스 입력 채널 선택
-④ Record Arm 버튼 클릭 (빨간 원)
+아래 워크플로우는 기본 설정 기준이며, 자신의 작업 스타일에 맞게 커스텀하세요.
 
-[게인 설정]
+### 트랙 생성
+
+1. Track → Insert Track (Ctrl+T)
+2. 트랙 좌측 패널에서 Input 버튼 클릭
+3. Input: 오디오 인터페이스 입력 채널 선택
+4. Record Arm 버튼 클릭 (빨간 원)
+
+### 게인 설정
+
 - 트랙 VU 미터 확인: -12dBFS ~ -6dBFS 피크
 - 클리핑 방지
 
-[다이렉트 모니터링]
+### 다이렉트 모니터링
+
 - 오디오 인터페이스 Direct Monitoring ON
 - Reaper 소프트웨어 모니터링: OFF (레이턴시 방지)
 
-[녹음 시작]
+### 녹음 시작
+
 R 키 또는 Transport 녹음 버튼
 Space 키로 정지
-```
 
 ---
 
 ## ReaEQ 설정
 
-```
-[ReaEQ 삽입]
-① 트랙 FX 버튼 클릭 → Add FX
-② Reaper Plugins → ReaEQ 선택
+귀가 피로해지기 전에 중요한 판단을 먼저 내리는 것이 좋습니다.
 
-[기본 보컬 EQ]
-① Band 1 (HP Filter): 80~100Hz
-② Band 2 (Peaking): 300~500Hz, -2~-3dB
-③ Band 3 (Peaking): 2~4kHz, +1~2dB
-④ Band 4 (HS Filter): 10kHz, +1dB
+### ReaEQ 삽입
 
-[EQ 팁]
+1. 트랙 FX 버튼 클릭 → Add FX
+2. Reaper Plugins → ReaEQ 선택
+
+### 기본 보컬 EQ
+
+1. Band 1 (HP Filter): 80~100Hz
+2. Band 2 (Peaking): 300~500Hz, -2~-3dB
+3. Band 3 (Peaking): 2~4kHz, +1~2dB
+4. Band 4 (HS Filter): 10kHz, +1dB
+
+### EQ 팁
+
 - Spectrum Analyzer 활성화 버튼 ON
 - 드래그로 직접 EQ 포인트 이동
 - Bandwidth(Q): 낮을수록 넓은 대역
-```
 
 ---
 
 ## ReaComp 설정
 
-```
-[ReaComp 삽입]
+같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
+
+### ReaComp 삽입
+
 Add FX → Reaper Plugins → ReaComp
 
-[기본 보컬 컴프레서 값]
+### 기본 보컬 컴프레서 값
+
 - Threshold: -18dB
 - Ratio: 3:1
 - Attack: 15ms
@@ -105,32 +118,35 @@ Add FX → Reaper Plugins → ReaComp
 - Gain (Makeup): +3~5dB
 - Knee: Soft 체크
 
-[GR 미터 확인]
+### GR 미터 확인
+
 - -3~-6dB 게인 리덕션: 적당
 - Pre-comp 옵션으로 Lookahead 설정 가능
-```
 
 ---
 
 ## 파일 내보내기 (Render)
 
-```
-[렌더링 내보내기]
+바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
+
+### 렌더링 내보내기
+
 File → Render (Ctrl+Alt+R)
-→ Source: Master mix (전체) 또는 Selected tracks (보컬만)
-→ Output format: WAV
-→ Sample rate: 44100Hz 또는 48000Hz
-→ Bit depth: 24 bit
-→ Render 1 file 클릭
+- **Source**: Master mix (전체) 또는 Selected tracks (보컬만)
+- **Output format**: WAV
+- **Sample rate**: 44100Hz 또는 48000Hz
+- **Bit depth**: 24 bit
+- Render 1 file 클릭
 
-[드라이 보컬 내보내기]
-① 보컬 트랙만 Solo
-② FX 전체 Bypass (트랙 FX 버튼 → FX Bypass)
-③ Render → Source: Selected tracks → WAV 24bit
+### 드라이 보컬 내보내기
 
-[파일 전달]
-파일명: [아티스트명]_[곡명]_vocal.wav
-```
+1. 보컬 트랙만 Solo
+2. FX 전체 Bypass (트랙 FX 버튼 → FX Bypass)
+3. Render → Source: Selected tracks → WAV 24bit
+
+### 파일 전달
+
+- **파일명**: [아티스트명]_[곡명]_vocal.wav
 
 ---
 
