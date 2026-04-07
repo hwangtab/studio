@@ -92,4 +92,4 @@ faq:
 
 천안·아산에서 KTX 한 번이면 서울 연신내 스튜디오 놀에 방문할 수 있습니다. 이동 없이 전문 믹싱·마스터링만 원한다면 온라인 파일 의뢰도 가능합니다.
 
-[충남·당진·서산·태안 녹음실 안내](/stories/chungnam1) | [아산에서 서울 녹음실 방문 가이드](/stories/asan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[천안 서북구 불당·두정·직산 녹음실 안내](/stories/cheonan-seobu1) | [충남·당진·서산·태안 녹음실 안내](/stories/chungnam1) | [아산에서 서울 녹음실 방문 가이드](/stories/asan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
