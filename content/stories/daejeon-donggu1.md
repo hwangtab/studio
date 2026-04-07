@@ -91,4 +91,4 @@ faq:
 
 대전 동구·중구 대전역에서 KTX를 이용하면 약 70~80분이면 연신내 스튜디오 놀에서 전문 보컬 녹음을 경험할 수 있습니다. 방문이 어려운 경우 온라인 믹싱 의뢰도 가능합니다.
 
-[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon-daedeok1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
