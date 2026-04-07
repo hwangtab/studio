@@ -88,6 +88,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
     [t]
   );
 
+  const faqSchema = React.useMemo(() => {
+    if (!story.faq || story.faq.length === 0) return null;
+    return generateFaqSchema(
+      story.faq.map((item) => ({ question: item.q, answer: item.a })),
+      locale
+    );
+  }, [story.faq, locale]);
+
   if (router.isFallback) {
     return <LoadingSpinner locale={locale} />;
   }
@@ -97,14 +105,6 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 
   const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
   const ogImage = story.thumbnail || dynamicOgImage;
-
-  const faqSchema = React.useMemo(() => {
-    if (!story.faq || story.faq.length === 0) return null;
-    return generateFaqSchema(
-      story.faq.map((item) => ({ question: item.q, answer: item.a })),
-      locale
-    );
-  }, [story.faq, locale]);
 
   const shareStory = async () => {
     const shareUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
