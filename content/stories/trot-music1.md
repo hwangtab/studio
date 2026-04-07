@@ -125,4 +125,4 @@ faq:
 
 트로트 보컬은 훈련된 장식음과 자연스러운 감성 표현이 핵심입니다. 스튜디오 놀에서 트로트 보컬 녹음 시 아티스트의 특유한 뽕끼와 감성을 최대한 살린 녹음을 도와드립니다.
 
-[라틴 음악 제작 완전 가이드](/stories/latin-music1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [펑크 음악 제작 완전 가이드](/stories/funk-music1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[오디션 데모 녹음 완전 가이드](/stories/demo-recording1) | [라틴 음악 제작 완전 가이드](/stories/latin-music1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
