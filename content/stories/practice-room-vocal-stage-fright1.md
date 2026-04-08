@@ -210,4 +210,6 @@ category: "vocal"
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실](/stories/ko/practice-room-vocal-pop-adlib1)**  
 **→ [보컬 레인지 확장 훈련 음악연습실](/stories/ko/practice-room-vocal-range-extension1)**
 **→ [피아노 리드시트 즉흥반주·코드 읽기 음악연습실 가이드](/stories/ko/practice-room-piano-lead-sheet-improvisation1)**
+**→ [기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-country-chicken-picking1)**
+**→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실 가이드](/stories/ko/practice-room-drum-groove-construction-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)

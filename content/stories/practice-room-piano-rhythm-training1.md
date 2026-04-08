@@ -261,4 +261,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 **→ [기타 하모닉스·인공 하모닉스 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-harmonics1)**
 **→ [피아노 리드시트 즉흥반주·코드 읽기 음악연습실 가이드](/stories/ko/practice-room-piano-lead-sheet-improvisation1)**
 **→ [보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실 가이드](/stories/ko/practice-room-vocal-stage-fright1)**
+**→ [기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-country-chicken-picking1)**
+**→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실 가이드](/stories/ko/practice-room-drum-groove-construction-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)

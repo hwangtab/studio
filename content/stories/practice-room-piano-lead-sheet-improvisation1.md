@@ -212,4 +212,6 @@ Fmaj7 - G7 - Gm7 - C7
 **→ [피아노 팝 반주법·코드 보이싱 음악연습실](/stories/ko/practice-room-piano-pop-accompaniment1)**  
 **→ [피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실](/stories/ko/practice-room-piano-jazz-standard-analysis1)**
 **→ [보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실 가이드](/stories/ko/practice-room-vocal-stage-fright1)**
+**→ [기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-country-chicken-picking1)**
+**→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실 가이드](/stories/ko/practice-room-drum-groove-construction-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)
