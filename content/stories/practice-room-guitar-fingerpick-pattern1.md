@@ -77,4 +77,6 @@ p-i-m-a부터 트래비스까지. 방음 개인실에서 핑거피킹 레퍼토�
 - [피아노 가스펠·R&B 피아노 음악연습실](/stories/ko/practice-room-piano-gospel1)
 - [보컬 흉성·체스트 보이스 강화 훈련 음악연습실](/stories/ko/practice-room-vocal-chest-voice1)
 - [베이스 펑크 그루브·원 드롭 베이스라인 음악연습실](/stories/ko/practice-room-bass-funk-groove1)
+- [드럼 심벌 기법·라이드·크래쉬 활용법 음악연습실](/stories/ko/practice-room-drum-cymbal-techniques1)
+- [기타 컨트리·치킨피킹 기법 음악연습실](/stories/ko/practice-room-guitar-country1)
 [스튜디오 놀 이용 요금](/pricing)
