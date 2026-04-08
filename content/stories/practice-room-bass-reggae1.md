@@ -160,4 +160,6 @@ G → F# → E 하행: 풀오프로 유연한 하행
 - [기타 모달 연주·모드 스케일 활용 음악연습실](/stories/ko/practice-room-guitar-modal-playing1)
 - [드럼 폴리리듬 심화·아프리카 리듬 음악연습실](/stories/ko/practice-room-drum-polyrhythm-advanced1)
 - [피아노 팝 편곡·발라드 반주법 음악연습실](/stories/ko/practice-room-piano-pop-arrangement1)
+- [보컬 발음 훈련·딕션 스피드 연습 음악연습실](/stories/ko/practice-room-vocal-tongue-twisters1)
+- [베이스 메탈·헤비록 베이스라인 음악연습실](/stories/ko/practice-room-bass-metal-rock1)
 [스튜디오 놀 이용 요금](/pricing)
