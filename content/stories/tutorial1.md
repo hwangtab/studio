@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[녹음실 처음 방문 가이드](/stories/guide1) | [녹음 세션 준비 체크리스트](/stories/session1) | [예약 방법 가이드](/stories/booking1) | [스튜디오 놀 이용 요금](/pricing)
+[녹음실 처음 방문 가이드](/stories/guide1) | [녹음 세션 준비 체크리스트](/stories/session1) | [예약 방법 가이드](/stories/booking1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[스튜디오 놀 시설·장비 상세 안내](/studio-info) | [이용 요금 안내](/pricing) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [서울 권역별 녹음실 비교](/stories/studio-compare1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[스튜디오 놀 시설·장비 상세 안내](/studio-info) | [이용 요금 안내](/pricing) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [서울 권역별 녹음실 비교](/stories/studio-compare1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

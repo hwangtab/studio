@@ -93,4 +93,4 @@ MR(반주)과 보컬을 자연스럽게 합성해 완성 음원을 만듭니다.
 
 ---
 
-[스튜디오 놀 녹음 요금 안내](/pricing) | [축가·특별 녹음 패키지](/wedding-song) | [녹음 세션 준비 방법](/stories/session1) | [어린이·청소년 보컬 녹음 가이드](/stories/children1) | [듀엣·커플 녹음 가이드](/stories/duet1)
+[스튜디오 놀 녹음 요금 안내](/pricing) | [축가·특별 녹음 패키지](/wedding-song) | [녹음 세션 준비 방법](/stories/session1) | [어린이·청소년 보컬 녹음 가이드](/stories/children1) | [듀엣·커플 녹음 가이드](/stories/duet1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

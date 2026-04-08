@@ -52,4 +52,4 @@ faq:
 
 ---
 
-[음악 프로덕션 레슨 프로그램](/lesson) | [스튜디오 녹음실 안내](/studio-info) | [인디 음반 제작 가이드](/stories/indie1) | [프로덕션 레슨 강사 인터뷰](/stories/interview4)
+[음악 프로덕션 레슨 프로그램](/lesson) | [스튜디오 녹음실 안내](/studio-info) | [인디 음반 제작 가이드](/stories/indie1) | [프로덕션 레슨 강사 인터뷰](/stories/interview4) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
