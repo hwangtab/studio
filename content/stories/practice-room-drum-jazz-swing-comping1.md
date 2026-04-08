@@ -280,4 +280,6 @@ M4: 해결 (그루브로 복귀)
 **→ [보컬 스캣 즉흥연주·재즈 보컬 음악연습실 가이드](/stories/ko/practice-room-vocal-scat-improvisation1)**
 **→ [기타 핑거피킹·Travis Picking 패턴 음악연습실 가이드](/stories/ko/practice-room-guitar-fingerpicking-travis1)**
 **→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실 가이드](/stories/ko/practice-room-bass-rhythm-locking1)**
+**→ [피아노 팝 반주법·코드 보이싱 음악연습실 가이드](/stories/ko/practice-room-piano-pop-accompaniment1)**
+**→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실 가이드](/stories/ko/practice-room-vocal-acappella-group1)**
 [스튜디오 놀 이용 요금](/pricing)

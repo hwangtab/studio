@@ -172,4 +172,6 @@ D - A - B - F# - G - D - G - A
 **→ [드럼 재즈 스윙 콤핑·4/4 재즈 드럼 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-swing-comping1)**
 **→ [기타 핑거피킹·Travis Picking 패턴 음악연습실 가이드](/stories/ko/practice-room-guitar-fingerpicking-travis1)**
 **→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실 가이드](/stories/ko/practice-room-bass-rhythm-locking1)**
+**→ [피아노 팝 반주법·코드 보이싱 음악연습실 가이드](/stories/ko/practice-room-piano-pop-accompaniment1)**
+**→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실 가이드](/stories/ko/practice-room-vocal-acappella-group1)**
 [스튜디오 놀 이용 요금](/pricing)

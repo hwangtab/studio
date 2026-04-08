@@ -253,4 +253,6 @@ Travis Picking은 **한 대의 기타로 오케스트라를 만드는 기법**�
 **→ [기타 어쿠스틱 핑거스타일·지판 편곡 음악연습실](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**  
 **→ [기타 더블스탑·음정 기타 기법 음악연습실](/stories/ko/practice-room-guitar-double-stop1)**
 **→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실 가이드](/stories/ko/practice-room-bass-rhythm-locking1)**
+**→ [피아노 팝 반주법·코드 보이싱 음악연습실 가이드](/stories/ko/practice-room-piano-pop-accompaniment1)**
+**→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실 가이드](/stories/ko/practice-room-vocal-acappella-group1)**
 [스튜디오 놀 이용 요금](/pricing)
