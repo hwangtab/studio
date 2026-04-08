@@ -164,4 +164,4 @@ faq:
 
 ---
 
-[공연 보컬 완전 가이드](/stories/concert-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocalhealth1) | [보컬 웜업 완전 가이드](/stories/vocal-warmup1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[공연 보컬 완전 가이드](/stories/concert-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocalhealth1) | [보컬 웜업 완전 가이드](/stories/vocal-warmup1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

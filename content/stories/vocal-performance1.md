@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

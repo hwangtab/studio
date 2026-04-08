@@ -234,4 +234,4 @@ faq:
 
 ---
 
-[성우 녹음 안내](/voice-acting) | [보이스액팅 서비스 소개](/voice-acting) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [요금 안내](/pricing)
+[성우 녹음 안내](/voice-acting) | [보이스액팅 서비스 소개](/voice-acting) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [요금 안내](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

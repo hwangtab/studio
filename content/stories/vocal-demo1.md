@@ -127,4 +127,4 @@ faq:
 
 ---
 
-[데모 테이프 제작 가이드](/stories/demo-tape1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[데모 테이프 제작 가이드](/stories/demo-tape1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

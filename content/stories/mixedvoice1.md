@@ -108,4 +108,4 @@ K팝·팝·R&B 가수들이 자연스럽게 고음을 넘나들 수 있는 비�
 
 ---
 
-[흉성 완전 가이드](/stories/chest-voice1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [벨팅 발성법 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [스튜디오 놀 이용 요금](/pricing)
+[흉성 완전 가이드](/stories/chest-voice1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [벨팅 발성법 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

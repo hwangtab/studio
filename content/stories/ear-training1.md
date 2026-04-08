@@ -134,4 +134,4 @@ faq:
 
 ---
 
-[음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [스튜디오 놀 이용 요금](/pricing)
+[음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

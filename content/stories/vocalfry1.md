@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[보컬 음색 개발 가이드](/stories/tone-color1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 음색 개발 가이드](/stories/tone-color1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

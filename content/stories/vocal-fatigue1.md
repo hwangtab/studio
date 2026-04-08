@@ -130,4 +130,4 @@ faq:
 
 ---
 
-[보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

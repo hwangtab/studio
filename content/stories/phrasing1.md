@@ -121,4 +121,4 @@ faq:
 
 ---
 
-[비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 런·애드립 가이드](/stories/runs1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 표현력 높이는 방법](/stories/vocalfeedback1) | [스튜디오 놀 이용 요금](/pricing)
+[비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 런·애드립 가이드](/stories/runs1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 표현력 높이는 방법](/stories/vocalfeedback1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
