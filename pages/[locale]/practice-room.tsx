@@ -312,22 +312,22 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       <Section variant="alternate" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href={`/${locale}/studio-info`}
+            href={`/${locale}/lesson`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
+            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
-            href={`/${locale}/pricing`}
+            href={`/${locale}/stories`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
+            {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
-            href={`/${locale}/lesson`}
+            href={`/${locale}/contact`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
+            {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
