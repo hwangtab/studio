@@ -1,68 +1,68 @@
 ---
-title: "보컬 팔세토·가성 발성 음악연습실 — 팔세토 발성 완성 가이드"
+title: "보컬 팔세토·헤드 보이스 음악연습실 — 보컬 팔세토 완성 가이드"
 date: 2026-04-09
 author: "스튜디오 놀"
 category: "음악연습실 가이드"
-tags: ["보컬 팔세토 발성", "가성 훈련", "팔세토 음악연습실", "음악연습실", "보컬 팔세토 독학", "에어리 팔세토 연습", "팔세토 음악연습실"]
-thumbnail: "/images/room1.webp"
-summary: "보컬 팔세토·가성 발성 연습을 위한 음악연습실 활용 가이드. 팔세토 발성 원리, 클린 팔세토 만들기, 팔세토와 믹스 보이스 연결, 음악연습실에서 팔세토를 완성하는 방법을 안내합니다."
+tags: ["보컬 팔세토", "보컬 헤드보이스", "보컬 팔세토 음악연습실", "음악연습실", "보컬 팔세토 독학", "팔세토 발성", "보컬 팔세토 음악연습실"]
+thumbnail: "/images/room2.webp"
+summary: "보컬 팔세토·헤드 보이스 훈련을 위한 음악연습실 활용 가이드. 팔세토 발성 원리, 헤드 보이스 강화, 팔세토-흉성 전환, 음악연습실에서 보컬 팔세토를 완성하는 방법을 안내합니다."
 faq:
-  - q: "팔세토(falsetto)란 무엇이고 어떻게 내는 건가요?"
-    a: "팔세토 이해: ① 정의 — 성대가 부분적으로만 진동해 나오는 가성 발음 ② 소리 — 가볍고 공기 섞인 듯한 고음 ③ 내는 법 — 긴장 없이 높은 음에서 성대를 살짝 풀기 ④ 비교 — 믹스 보이스(중간 발성)와 달리 흉성 없음 ⑤ 활용 — 팝·R&B·발라드의 고음 처리에 필수. 팔세토는 실제 고음보다 더 높은 음역을 편하게 낼 수 있게 해줍니다. 처음에는 '하이~' 나 '위~' 같은 발음으로 자연스럽게 팔세토 감각을 찾으세요."
-  - q: "팔세토를 클린하고 안정적으로 만드는 방법은?"
-    a: "클린 팔세토 훈련: ① 이완 — 목과 어깨 최대한 이완 ② 과호흡 방지 — 팔세토는 공기가 많이 새므로 호흡 조절 ③ 지지 — 팔세토도 호흡 지지 필요 (복식호흡) ④ 단계적 — 낮은 팔세토부터 점점 높이 ⑤ 음정 안정 — 팔세토는 음정이 흔들리기 쉬워 안정화 필요. 팔세토의 공기가 섞인 느낌은 자연스럽지만 너무 브레시하면 힘이 없어 보입니다. 지지된 팔세토를 목표로 연습하세요."
-  - q: "팔세토와 믹스 보이스의 차이는 무엇인가요?"
-    a: "팔세토 vs 믹스 보이스: ① 팔세토 — 성대 부분 진동, 가볍고 공기 섞임 ② 믹스 보이스 — 흉성+두성 혼합, 팔세토보다 강하고 안정적 ③ 연결 — 믹스 보이스가 팔세토보다 흉성에 더 가까움 ④ 활용 — 팔세토는 감성적 고음, 믹스는 파워 고음 ⑤ 전환 — 두 발성 사이를 자유롭게 전환하는 것이 목표. 완성된 보컬은 팔세토·믹스 보이스·흉성 세 가지 발성을 상황에 따라 자유롭게 전환합니다."
-  - q: "남성 보컬의 팔세토 연습 방법이 다른가요?"
-    a: "남성 팔세토 특징: ① 음역 차이 — 남성 팔세토는 여성보다 훨씬 높은 음역 ② 진입 장벽 — 남성은 팔세토 진입이 더 어렵게 느껴짐 ③ 훈련법 — '피' 나 '히~' 발음으로 가볍게 올라가기 ④ 블렌딩 — 팔세토를 믹스 보이스로 점차 강화 ⑤ 장르 — K-POP·R&B·팝 발라드에서 남성 팔세토 활발. 남성 팔세토는 충분히 익힐 수 있는 발성입니다. 목에 힘을 주지 않고 올라가는 감각을 찾는 것이 핵심입니다."
+  - q: "팔세토와 헤드 보이스의 차이점과 각각의 특성은?"
+    a: "팔세토·헤드 보이스 구분: ① 팔세토 — 성대 가장자리만 진동, 가볍고 에어리한 음색 ② 헤드 보이스 — 성대 전체 진동+두부 공명, 강하고 풍부한 음색 ③ 음역 — 둘 다 고음역 사용하나 헤드 보이스가 더 파워풀 ④ 전환 — 팔세토에서 헤드 보이스로 발전 가능 ⑤ 장르 — 팔세토는 R&B·팝, 헤드 보이스는 뮤지컬·클래식. 팔세토와 헤드 보이스는 종종 혼용되지만 발성 메커니즘이 다릅니다. 팔세토는 성대 가장자리 진동이라 바람 섞인 소리, 헤드 보이스는 성대 전체 진동으로 파워가 있습니다. 훈련 목표에 따라 어떤 음색을 개발할지 선택하세요."
+  - q: "보컬 팔세토를 처음 찾고 발성하는 훈련 방법은?"
+    a: "팔세토 찾기·발성: ① 후와~~ — 바람 빠지는 소리로 가볍게 시작 ② 흥얼거리기 — 높은 음에서 '음~~' 허밍 ③ 올빼미 소리 — '후' 소리로 팔세토 공명 찾기 ④ 성구 전환 — 흉성에서 자연스럽게 팔세토로 넘어가기 ⑤ 강화 훈련 — 팔세토로 노래하며 점점 볼륨 키우기. 팔세토를 처음 찾는 가장 쉬운 방법은 갑자기 높은 음을 내는 것입니다. 자연스럽게 팔세토로 전환됩니다. 이 느낌을 기억하고 의도적으로 재현하는 훈련이 시작점입니다."
+  - q: "보컬 팔세토와 흉성 사이의 성구 전환을 자연스럽게 하는 방법은?"
+    a: "팔세토-흉성 자연스러운 전환: ① 브리지 구간 — 음역 중간 전환점 연습 ② 리프트 훈련 — '릿-다~' 패시지 반복 ③ 믹스 보이스 — 팔세토+흉성 혼합 음색 개발 ④ 슬라이드 — 팔세토에서 흉성으로 글리산도 ⑤ 음색 일치 — 전환 전후 음색 차이 최소화. 성구 전환의 핵심은 '끊김 없는 연결'입니다. 흉성-팔세토 전환에서 소리가 갑자기 바뀌면 청중에게 어색하게 들립니다. 믹스 보이스를 개발하면 자연스러운 전환이 가능합니다. John Legend, Sam Smith의 부드러운 전환을 참고하세요."
+  - q: "보컬 팔세토 음역을 확장하고 강화하는 방법은?"
+    a: "팔세토 음역 확장: ① 상한 훈련 — 현재 팔세토 최고음에서 반음씩 올리기 ② 하한 강화 — 팔세토 하단음을 더 강하게 ③ 롱 톤 — 팔세토로 긴 음 지속해 성대 강화 ④ 멜리스마 — 팔세토로 빠른 음표 연결 ⑤ 음색 다양화 — 밝은 팔세토·어두운 팔세토 양면 훈련. 팔세토 음역 확장은 꾸준한 훈련이 필요합니다. 무리하게 고음을 내다 성대를 다치지 않도록 항상 워밍업 후 진행하세요. 하루 10-15분씩 꾸준한 훈련이 단시간 집중 연습보다 효과적입니다."
 ---
 
-![보컬 팔세토·가성 발성 음악연습실 스튜디오 놀](/images/room1.webp)
+![보컬 팔세토·헤드 보이스 음악연습실 스튜디오 놀](/images/room2.webp)
 
-## 팔세토는 음역대를 하늘까지 열어주는 열쇠입니다
+## 팔세토로 고음의 새로운 세계가 열립니다
 
-가볍고 섬세한 가성. 방음 개인실에서 마이크를 통해 팔세토의 미묘한 질감을 탐색하세요.
+발성 원리 이해부터 성구 전환 자연화까지. 방음 개인실에서 보컬 팔세토를 탐색하세요.
 
-팔세토 연습의 핵심:
-- **이완이 우선**: 목 힘 빼기가 팔세토의 출발점
-- **낮은 팔세토부터**: 무리한 고음보다 안정적인 중음 팔세토
-- **호흡 지지**: 가성도 복식호흡으로 지지
-- **믹스 연결**: 팔세토→믹스 보이스로 이어지는 흐름
-
----
-
-## 팔세토 발성 특성
-
-| 구분 | 팔세토 | 믹스 보이스 | 흉성 |
-|------|--------|-----------|------|
-| 성대 진동 | 부분 | 혼합 | 완전 |
-| 음색 | 가볍고 공기 섞임 | 균형 | 강하고 두터움 |
-| 음역 | 높음 | 중간~높음 | 낮음~중간 |
-| 용도 | 감성 고음 | 파워 고음 | 기본 발성 |
+보컬 팔세토 훈련의 핵심:
+- **팔세토 발견**: 성대 가장자리 진동으로 에어리한 고음 발성
+- **헤드 보이스 발전**: 팔세토에서 파워풀한 헤드 보이스로 강화
+- **성구 전환**: 흉성-팔세토 끊김 없는 자연스러운 전환
+- **음역 확장**: 팔세토 상한을 반음씩 올리는 단계적 훈련
 
 ---
 
-## 팔세토 훈련 단계
+## 팔세토·헤드 보이스 특성 비교
+
+| 음색 | 성대 진동 | 음색 특성 |
+|------|---------|---------|
+| 팔세토 | 가장자리만 | 에어리·가벼움 |
+| 헤드 보이스 | 전체+두부 공명 | 파워풀·풍부 |
+| 믹스 보이스 | 혼합 | 자연스러운 전환 |
+| 흉성 | 전체 진동 | 강하고 두꺼움 |
+
+---
+
+## 보컬 팔세토 훈련 단계
 
 | 단계 | 내용 | 목표 |
 |------|------|------|
-| 입문 | '히~' 발음으로 팔세토 찾기 | 팔세토 감각 |
-| 기초 | 안정된 단음 팔세토 | 음정 유지 |
-| 발전 | 클린 팔세토 + 다이나믹 | 표현력 |
-| 완성 | 팔세토↔믹스 자유 전환 | 발성 유연성 |
+| 기초 | 팔세토 발견·찾기 | 발성 느낌 파악 |
+| 입문 | 팔세토 롱 톤 | 음색 안정화 |
+| 중급 | 성구 전환 자연화 | 끊김 없는 전환 |
+| 고급 | 헤드 보이스 강화 | 파워풀한 고음 |
 
 ---
 
-## 스튜디오 놀 — 팔세토 연습 환경
+## 스튜디오 놀 — 팔세토 훈련 환경
 
 | 항목 | 이용 가치 |
 |-----|----------------|
-| 마이크·PA | 팔세토 질감 실시간 확인 |
-| 방음 개인실 | 이완된 상태로 자유로운 발성 |
-| 무인 운영 | 반복 발성 실험 |
-| 조용한 환경 | 미세한 음색 차이 감지 |
+| 마이크·PA | 팔세토 음색 실시간 확인 |
+| 방음 개인실 | 집중 고음 발성 훈련 |
+| 무인 운영 | 반복 성구 전환 연습 자유 |
+| 녹음 기능 | 팔세토 음색 객관적 확인 |
 | 시간 대여 | 8,000~25,000원/시간 |
 
 ---
 
-[믹스 보이스·팔세토 음악연습실](/stories/practice-room-mix-voice1) | [보컬 믹스 보이스·체스트 헤드 연결 음악연습실](/stories/practice-room-vocal-mix1) | [발성 연습 음악연습실](/stories/practice-room-voice-training1) | [음역대 확장·고음 훈련 음악연습실](/stories/practice-room-vocal-range1) | [보컬 숨소리·브레시 보컬 스타일 음악연습실](/stories/practice-room-vocal-breath21) | [호흡·복식호흡 보컬 연습 음악연습실](/stories/practice-room-breath-control1) | [보컬 파워·성량 키우기 연습 음악연습실](/stories/practice-room-vocal-power1) | [베이스 코드·화음 연주 음악연습실](/stories/practice-room-bass-chord1) | [보컬 팔세토·가성 발성 음악연습실](/stories/practice-room-vocal-falsetto1) | [기타 탭핑·투핸드 태핑 음악연습실](/stories/practice-room-guitar-tapping1) | [피아노 듀엣·앙상블 개인 연습 음악연습실](/stories/practice-room-piano-duet1) | [드럼 폴리리듬·복잡박자 연습 음악연습실](/stories/practice-room-drum-polyrhythm1) | [보컬 어질리티·빠른 음계 훈련 음악연습실](/stories/practice-room-vocal-agility1) | [재즈 피아노 즉흥 솔로·임프로비제이션 음악연습실](/stories/practice-room-piano-jazz-improv1) | [기타 레가토·해머온 풀오프 연습 음악연습실](/stories/practice-room-guitar-legato1) | [베이스 펑크·R&B 그루브 음악연습실](/stories/practice-room-bass-funk1) | [보컬 프로젝션·소리 울림 훈련 음악연습실](/stories/practice-room-vocal-projection1) | [피아노 옥타브·넓은 음정 도약 연습 음악연습실](/stories/practice-room-piano-technique31) | [기타 슬라이드·슬라이드 기타 연습 음악연습실](/stories/practice-room-guitar-slide1) | [보컬 스타일 개발·장르별 창법 음악연습실](/stories/practice-room-vocal-style1) | [통기타 핑거피킹·핑거스타일 입문 음악연습실](/stories/practice-room-guitar-acoustic-fingerpick1) | [드럼 하이햇·심벌 컨트롤 음악연습실](/stories/practice-room-drum-hihat1) | [피아노 트릴·장식음 기법 음악연습실](/stories/practice-room-piano-trills1) | [기타 코드 진행·화성 이해 음악연습실](/stories/practice-room-guitar-chord-prog1) | [장르별 보컬 특성·크로스오버 보컬 음악연습실](/stories/practice-room-vocal-genre1) | [베이스 썸피킹·핑거스타일 혼합 음악연습실](/stories/practice-room-bass-thumb1) | [피아노 발라드 반주·감성 피아노 음악연습실](/stories/practice-room-piano-ballad21) | [기타 아르페지오·분산 화음 연습 음악연습실](/stories/practice-room-guitar-arpeggio1) | [보컬 녹음 준비·레코딩 보컬 음악연습실](/stories/practice-room-vocal-recording1) | [가스펠·CCM 피아노 반주 음악연습실](/stories/practice-room-piano-gospel1) | [기타 핑거스타일 고급·솔로 기타 편곡 음악연습실](/stories/practice-room-guitar-fingerpick-adv1) | [드럼 킥·베이스 드럼 테크닉 음악연습실](/stories/practice-room-drum-kick1) | [보컬 벨팅·파워 벨팅 음악연습실](/stories/practice-room-vocal-belting1) | [피아노 컴핑·재즈 반주 패턴 음악연습실](/stories/practice-room-piano-comping1) | [기타 피치카토·뮤트 주법 음악연습실](/stories/practice-room-guitar-mute1) | [베이스 핑거링·오른손 테크닉 음악연습실](/stories/practice-room-bass-fingering1) | [보컬 스타카토·단음 발성 훈련 음악연습실](/stories/practice-room-vocal-staccato1) | [드럼 심벌·크래쉬·라이드 테크닉 음악연습실](/stories/practice-room-drum-cymbal1) | [피아노 크로스 핸드·교차 손 훈련 음악연습실](/stories/practice-room-piano-crosshand1) | [기타 스케일 연습·포지션 이동 음악연습실](/stories/practice-room-guitar-scale-pos1) | [보컬 레가토·이어 부르기 훈련 음악연습실](/stories/practice-room-vocal-legato1) | [피아노 연탄·네 손 피아노 음악연습실](/stories/practice-room-piano-four-hands1) | [기타 핑거링·왼손 독립 훈련 음악연습실](/stories/practice-room-guitar-left-hand1) | [보컬 오버톤·배음 발성 훈련 음악연습실](/stories/practice-room-vocal-overtone1) | [드럼 스네어·림샷 테크닉 음악연습실](/stories/practice-room-drum-snare1) | [기타 왼손 비브라토·핑거 비브라토 음악연습실](/stories/practice-room-guitar-finger-vibrato1) | [피아노 루바토·음악적 템포 표현 음악연습실](/stories/practice-room-piano-rubato1) | [베이스 이펙터·페달 보드 활용 음악연습실](/stories/practice-room-bass-effects1) | [보컬 크루닝·저음 보컬 테크닉 음악연습실](/stories/practice-room-vocal-crooning1) | [피아노 소나타·클래식 소나타 형식 연습 음악연습실](/stories/practice-room-piano-sonata1) | [기타 재즈 코드·재즈 보이싱 음악연습실](/stories/practice-room-guitar-jazz-chord1) | [드럼 빠른 템포·스피드 훈련 음악연습실](/stories/practice-room-drum-speed1) | [보컬 중음역 강화·미들 보이스 음악연습실](/stories/practice-room-vocal-middle1) | [피아노 에튀드·기법 연습곡 음악연습실](/stories/practice-room-piano-etude1) | [기타 오픈 튜닝·슬라이드 오픈 튜닝 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 앙상블·코러스 개인 파트 훈련 음악연습실](/stories/practice-room-vocal-ensemble1) | [베이스 픽 주법·픽 베이스 연습 음악연습실](/stories/practice-room-bass-pick1) | [드럼 카운트·리듬 카운팅 훈련 음악연습실](/stories/practice-room-drum-count1) | [피아노 반음계·크로매틱 스케일 음악연습실](/stories/practice-room-piano-chromatic1) | [기타 핑거링 스트레칭·손가락 유연성 음악연습실](/stories/practice-room-guitar-stretch1) | [보컬 피치 컨트롤·음정 정확도 고급 훈련 음악연습실](/stories/practice-room-vocal-pitch1) | [베이스 슬라이드·포르타멘토 베이스 음악연습실](/stories/practice-room-bass-slide1) | [피아노 다이나믹·강약 표현 음악연습실](/stories/practice-room-piano-dynamics1) | [드럼 고스트 노트·유령음 훈련 음악연습실](/stories/practice-room-drum-ghost1) | [기타 코드 아르페지오·코드 분산 연주 음악연습실](/stories/practice-room-guitar-chord-arpeggio1) | [보컬 구음·솔페지오 훈련 음악연습실](/stories/practice-room-vocal-solfege1) | [피아노 폴리포니·독립 성부 연주 음악연습실](/stories/practice-room-piano-polyphony1) | [기타 리프·반복 패턴 작성 음악연습실](/stories/practice-room-guitar-riff1) | [드럼 오프비트·엇박 리듬 훈련 음악연습실](/stories/practice-room-drum-offbeat1) | [보컬 호흡 발음·자음 명료도 훈련 음악연습실](/stories/practice-room-vocal-consonant1) | [피아노 전조·조바꿈 연습 음악연습실](/stories/practice-room-piano-modulation1) | [기타 핑거피킹 패턴 다양화 음악연습실](/stories/practice-room-guitar-fingerpick-pattern1) | [베이스 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-muting1) | [드럼 더블킥·더블 베이스 드럼 훈련 음악연습실](/stories/practice-room-drum-doublekick1) | [피아노 재즈 스탠다드·재즈 레퍼토리 음악연습실](/stories/practice-room-piano-jazz-standard1) | [보컬 라이브 퍼포먼스·공연 전 루틴 음악연습실](/stories/practice-room-vocal-live1) | [기타 뮤직 메모리·악보 없이 연주하기 음악연습실](/stories/practice-room-guitar-memory1) | [피아노 연속 도약·넓은 음정 점프 음악연습실](/stories/practice-room-piano-leaps1) | [드럼 크레셴도·다이나믹 빌드업 음악연습실](/stories/practice-room-drum-buildup1) | [베이스 펜타토닉·베이스 스케일 활용 음악연습실](/stories/practice-room-bass-pentatonic1) | [보컬 감정 표현·가사 해석 훈련 음악연습실](/stories/practice-room-vocal-emotion1) | [기타 해머온·풀오프 연속 훈련 음악연습실](/stories/practice-room-guitar-hammer-pull1) | [피아노 내성부·보조 선율 연습 음악연습실](/stories/practice-room-piano-inner-voice1) | [드럼 림샷·크로스스틱 고급 훈련 음악연습실](/stories/practice-room-drum-rimshot-adv1) | [보컬 뮤지컬 스타일·역할 보컬 훈련 음악연습실](/stories/practice-room-vocal-musical-style1) | [베이스 슬랩·팝핑 고급 테크닉 음악연습실](/stories/practice-room-bass-slap-adv1) | [피아노 초견 고급·빠른 악보 읽기 음악연습실](/stories/practice-room-piano-sight-adv1) | [드럼 타이밍·포켓 그루브 훈련 음악연습실](/stories/practice-room-drum-timing1) | [보컬 호흡·성대 컨트롤 고급 훈련 음악연습실](/stories/practice-room-vocal-breath-adv1) | [기타 비브라토·피치 컨트롤 음악연습실](/stories/practice-room-guitar-vibrato1) | [피아노 화성·코드 고급 이론 음악연습실](/stories/practice-room-piano-chord-adv1) | [재즈 베이스·워킹 베이스 고급 음악연습실](/stories/practice-room-bass-jazz1) | [보컬 음색 개발·개성 있는 목소리 훈련 음악연습실](/stories/practice-room-vocal-color-adv1) | [드럼 선형 리듬·리니어 드러밍 음악연습실](/stories/practice-room-drum-linear1) | [피아노 고급 테크닉·연주 기법 종합 음악연습실](/stories/practice-room-piano-technique-adv1) | [기타 코드 고급·확장 코드 연주 음악연습실](/stories/practice-room-guitar-chord-adv1) | [보컬 레지스터·성구 전환 훈련 음악연습실](/stories/practice-room-vocal-register1) | [베이스 루트 노트·코드 읽기 고급 음악연습실](/stories/practice-room-bass-root-adv1) | [피아노 터치·아티큘레이션 훈련 음악연습실](/stories/practice-room-piano-touch1) | [재즈 드럼 고급·스윙 필 심화 음악연습실](/stories/practice-room-drum-jazz-adv1) | [보컬 무대 퍼포먼스 고급·스테이지 존재감 음악연습실](/stories/practice-room-vocal-stage-adv1) | [기타 즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-guitar-improv1) | [성인 피아노 입문·처음 시작하는 어른 음악연습실](/stories/practice-room-piano-beginner-adult1) | [드럼 악센트·강세 패턴 훈련 음악연습실](/stories/practice-room-drum-accent1) | [베이스 옥타브 주법·옥타브 그루브 음악연습실](/stories/practice-room-bass-octave1) | [피아노 음정·인터벌 훈련 음악연습실](/stories/practice-room-piano-interval1) | [보컬 오디션 준비·심사 기준 이해 음악연습실](/stories/practice-room-vocal-audition1) | [기타 핑거스타일 고급 테크닉 음악연습실](/stories/practice-room-guitar-fingerstyle-adv1) | [드럼 브러시 주법·재즈 브러시 음악연습실](/stories/practice-room-drum-brush1) | [베이스 플래절렛·하모닉스 주법 음악연습실](/stories/practice-room-bass-harmonic1) | [피아노 페달 테크닉·소스텐우토 음악연습실](/stories/practice-room-piano-pedal1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [보컬 리듬·박자감 훈련 음악연습실](/stories/practice-room-vocal-rhythm1) | [기타 재즈 보이싱·코드 멜로디 음악연습실](/stories/practice-room-guitar-jazz-voicing1) | [피아노 즉흥 연주·재즈 피아노 음악연습실](/stories/practice-room-piano-jazz1) | [보컬 코러스·하모니 훈련 음악연습실](/stories/practice-room-vocal-harmony1) | [드럼 더블 킥·더블 페달 훈련 음악연습실](/stories/practice-room-drum-double-kick1) | [보컬 마이크 테크닉·PA 활용 음악연습실](/stories/practice-room-vocal-mic1) | [피아노 협주곡·오케스트라 반주 연습 음악연습실](/stories/practice-room-piano-concerto1) | [드럼 필인·트랜지션 고급 훈련 음악연습실](/stories/practice-room-drum-fill-adv1) | [베이스 컨트리·록어빌리 주법 음악연습실](/stories/practice-room-bass-country1) | [기타 피킹 테크닉 고급 훈련 음악연습실](/stories/practice-room-guitar-picking-adv1) | [보컬 발음·딕션 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [드럼 메트로놈·그루브 타이밍 훈련 음악연습실](/stories/practice-room-drum-metronome1) | [베이스 앙상블·밴드 연주 음악연습실](/stories/practice-room-bass-ensemble1) | [기타 블루스 스타일·블루스 표현 음악연습실](/stories/practice-room-guitar-blues1) | [보컬 인디·포크 스타일 음악연습실](/stories/practice-room-vocal-indie1) | [드럼 림샷·고스트노트 테크닉 음악연습실](/stories/practice-room-drum-rimshot1) | [베이스 워킹베이스·재즈 라인 음악연습실](/stories/practice-room-bass-walking1) | [기타 핑거피킹·핑거스타일 입문 음악연습실](/stories/practice-room-guitar-fingerpicking1) | [피아노 리드시트·즉흥 반주 음악연습실](/stories/practice-room-piano-leadsheet1) | [베이스 슬랩·팝핑 테크닉 음악연습실](/stories/practice-room-bass-slap1) | [기타 코드 전환 속도·스무스 체인지 음악연습실](/stories/practice-room-guitar-chord-change1) | [드럼 스네어 튜닝·드럼 헤드 세팅 음악연습실](/stories/practice-room-drum-snare-tuning1) | [보컬 브레스 컨트롤·호흡 훈련 음악연습실](/stories/practice-room-vocal-breath1) | [피아노 조표·조성 이해 음악연습실](/stories/practice-room-piano-key-signature1) | [기타 스트러밍 패턴·리듬 연주 음악연습실](/stories/practice-room-guitar-strumming1) | [드럼 재즈 라이드·스윙 패턴 음악연습실](/stories/practice-room-drum-jazz-ride1) | [베이스 루트·5도 패턴·기초 라인 음악연습실](/stories/practice-room-bass-root-fifth1) | [피아노 리듬 읽기·박자 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 핑거링·왼손 운지 훈련 음악연습실](/stories/practice-room-guitar-fingering1) | [베이스 서스테인·노트 컨트롤 음악연습실](/stories/practice-room-bass-sustain1) | [피아노 트레몰로·옥타브 트레몰로 음악연습실](/stories/practice-room-piano-tremolo1) | [기타 스케일 포지션·넥 전체 활용 음악연습실](/stories/practice-room-guitar-scale-position1) | [드럼 템포 안정·리타르단도 훈련 음악연습실](/stories/practice-room-drum-tempo1) | [베이스 록 그루브·파워 베이스 음악연습실](/stories/practice-room-bass-rock-groove1) | [피아노 왼손 베이스·알베르티 베이스 음악연습실](/stories/practice-room-piano-left-hand1) | [보컬 워밍업·발성 준비 음악연습실](/stories/practice-room-vocal-warmup1) | [기타 핀치 하모닉스·스퀼 테크닉 음악연습실](/stories/practice-room-guitar-pinch-harmonic1) | [드럼 레게·스카 비트 음악연습실](/stories/practice-room-drum-reggae1) | [피아노 음계 병행·두 손 스케일 음악연습실](/stories/practice-room-piano-parallel1) | [드럼 아프로비트·월드 뮤직 리듬 음악연습실](/stories/practice-room-drum-afrobeat1) | [피아노 보이싱·코드 배치 음악연습실](/stories/practice-room-piano-voicing1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 성구 전환·흉성·두성 음악연습실](/stories/practice-room-vocal-register1) | [보컬 피치·음정 교정 훈련 음악연습실](/stories/practice-room-vocal-pitch1) | [보컬 워밍업·발성 준비 음악연습실](/stories/practice-room-vocal-warmup1) | [보컬 브레스 컨트롤·호흡 훈련 음악연습실](/stories/practice-room-vocal-breath1) | [보컬 감정 표현·가사 전달 음악연습실](/stories/practice-room-vocal-emotion1) | [보컬 팔세토·헤드 보이스 음악연습실](/stories/practice-room-vocal-falsetto1) | [베이스 재즈 스타일·재즈 베이스 음악연습실](/stories/practice-room-bass-jazz1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
