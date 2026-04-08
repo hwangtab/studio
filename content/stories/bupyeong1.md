@@ -74,4 +74,4 @@ faq:
 
 ---
 
-[인천 부평구 갈산·삼산·부개동 녹음실 안내](/stories/incheon-bupyeong1) | [인천·부천 녹음실 안내](/stories/incheon1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/michuhol1) | [부천 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 부평구 갈산·삼산·부개동 녹음실 안내](/stories/incheon-bupyeong1) | [인천·부천 녹음실 안내](/stories/incheon1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/michuhol1) | [부천 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

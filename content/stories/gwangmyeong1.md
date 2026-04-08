@@ -56,4 +56,4 @@ faq:
 
 ---
 
-[광명 하안·철산·소하 녹음실 안내](/stories/gwangmyeong-haean1) | [부천·안양·안산 녹음실 가이드](/stories/bucheon1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [화성·시흥·안산 녹음실 안내](/stories/hwaseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[광명 하안·철산·소하 녹음실 안내](/stories/gwangmyeong-haean1) | [부천·안양·안산 녹음실 가이드](/stories/bucheon1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [화성·시흥·안산 녹음실 안내](/stories/hwaseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

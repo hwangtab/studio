@@ -59,4 +59,4 @@ faq:
 
 ---
 
-[남양주시 전체 녹음실 안내](/stories/namyangju1) | [별내·다산·오남·화도 녹음실 안내](/stories/byeolnae1) | [남양주 진접·사능·퇴계원 녹음실 안내](/stories/namyangju-jincheop1) | [구리시 녹음실 안내](/stories/guri1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[남양주시 전체 녹음실 안내](/stories/namyangju1) | [별내·다산·오남·화도 녹음실 안내](/stories/byeolnae1) | [남양주 진접·사능·퇴계원 녹음실 안내](/stories/namyangju-jincheop1) | [구리시 녹음실 안내](/stories/guri1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

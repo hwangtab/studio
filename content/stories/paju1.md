@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[파주 금촌·파주읍·문산 녹음실 안내](/stories/paju-geumchon1) | [파주 운정·교하·야당 녹음실 안내](/stories/paju-unjeong1) | [고양·은평 녹음실 안내](/stories/goyang1) | [서울 은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[파주 금촌·파주읍·문산 녹음실 안내](/stories/paju-geumchon1) | [파주 운정·교하·야당 녹음실 안내](/stories/paju-unjeong1) | [고양·은평 녹음실 안내](/stories/goyang1) | [서울 은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
