@@ -143,7 +143,7 @@ category: "vocal"
 - **24시간 운영** — 목 상태가 최적인 시간에 자유롭게
 - **연신내역 5분**
 
-연습실 예약 및 문의: [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

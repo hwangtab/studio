@@ -129,7 +129,7 @@ category: "piano"
 - **24시간 운영** — 규칙적인 초견 연습 일과 유지 가능
 - **연신내역 5분**
 
-연습실 예약 및 문의: [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
