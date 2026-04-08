@@ -148,4 +148,4 @@ slug: "practice-room-drum-polyrhythm1"
 - [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1)
 - [드럼 아프로비트 리듬 음악연습실](/stories/practice-room-drum-afrobeat1)
 - [드럼 맘보·라틴재즈 비트 음악연습실](/stories/practice-room-drum-latin-jazz1)
-- [베이스 워킹 베이스라인 심화 음악연습실](/stories/practice-room-bass-walking-bass2) | [스튜디오 놀 이용 요금](/pricing)
+- [베이스 워킹 베이스라인 심화 음악연습실](/stories/practice-room-bass-walking-bass2) | [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1) | [기타 코드 진행·전조 기법 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [스튜디오 놀 이용 요금](/pricing)
