@@ -146,4 +146,4 @@ faq:
 
 ---
 
-[두성·헤드보이스 완전 가이드](/stories/head-voice1) | [흉성 완전 가이드](/stories/chest-voice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[두성·헤드보이스 완전 가이드](/stories/head-voice1) | [흉성 완전 가이드](/stories/chest-voice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

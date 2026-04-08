@@ -97,4 +97,4 @@ K-팝 보컬은 전문 트레이닝과 꾸준한 연습으로 단계적으로 �
 
 ---
 
-[힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

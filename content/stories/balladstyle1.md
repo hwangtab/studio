@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 감정 표현 훈련](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 감정 표현 훈련](/stories/singswell1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

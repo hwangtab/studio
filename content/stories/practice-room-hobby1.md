@@ -105,4 +105,4 @@ faq:
 
 ---
 
-[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [보증금 없는 연습실](/stories/practice-room-nodeposit1) | [야간·24시간 연습실 가이드](/stories/practice-room-night1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [보증금 없는 연습실](/stories/practice-room-nodeposit1) | [야간·24시간 연습실 가이드](/stories/practice-room-night1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [레슨·연습실 병행 가이드](/stories/practice-room-lesson1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

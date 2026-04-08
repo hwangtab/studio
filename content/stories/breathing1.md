@@ -118,4 +118,4 @@ faq:
 
 ---
 
-[보컬 공명 훈련 완전 가이드](/stories/resonance1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 자세 완전 가이드](/stories/posture1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 공명 훈련 완전 가이드](/stories/resonance1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 자세 완전 가이드](/stories/posture1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

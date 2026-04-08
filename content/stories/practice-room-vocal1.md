@@ -111,4 +111,4 @@ PA 스피커로 자신의 목소리를 들으면 이어폰 모니터링과는 �
 
 ---
 
-[스튜디오 놀 보컬 연습실 안내](/practice-room) | [보컬 녹음실 요금 안내](/pricing) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 방음 가이드](/stories/practice-room-soundproof1) | [개인 연습실 가이드](/stories/practice-room-private1) | [야간 연습실 가이드](/stories/practice-room-night1) | [녹음 전 연습실 활용법](/stories/practice-room-pre-recording1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 보컬 연습실 안내](/practice-room) | [보컬 녹음실 요금 안내](/pricing) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 방음 가이드](/stories/practice-room-soundproof1) | [개인 연습실 가이드](/stories/practice-room-private1) | [야간 연습실 가이드](/stories/practice-room-night1) | [녹음 전 연습실 활용법](/stories/practice-room-pre-recording1) | [레슨·연습실 병행 가이드](/stories/practice-room-lesson1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)
