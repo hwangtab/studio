@@ -124,4 +124,4 @@ faq:
 
 ---
 
-[GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [마이크 테크닉 완전 가이드](/stories/mic-technique1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [마이크 테크닉 완전 가이드](/stories/mic-technique1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

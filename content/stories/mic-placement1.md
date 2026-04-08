@@ -99,4 +99,4 @@ faq:
 
 ---
 
-[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [룸 어쿠스틱 완전 가이드](/stories/room-acoustic1) | [방음·흡음 처리 가이드](/stories/soundproof1) | [보컬 녹음 완전 가이드](/stories/guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [룸 어쿠스틱 완전 가이드](/stories/room-acoustic1) | [방음·흡음 처리 가이드](/stories/soundproof1) | [보컬 녹음 완전 가이드](/stories/guide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

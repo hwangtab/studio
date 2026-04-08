@@ -191,4 +191,4 @@ DAW 선택이 어렵다면 [DAW 선택 가이드](/stories/daw-choice1)를 참�
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [싱어송라이터 녹음 가이드](/stories/singer-songwriter1) | [EP 제작 가이드](/stories/ep-production1) | [음원 유통 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [싱어송라이터 녹음 가이드](/stories/singer-songwriter1) | [EP 제작 가이드](/stories/ep-production1) | [음원 유통 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [레슨 안내](/lesson) | [요금 안내](/pricing)

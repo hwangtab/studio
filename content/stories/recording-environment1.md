@@ -152,4 +152,4 @@ faq:
 
 ---
 
-[방음·흡음 완전 가이드](/stories/acoustic-treatment1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[방음·흡음 완전 가이드](/stories/acoustic-treatment1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
