@@ -115,7 +115,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     description: t('practiceRoom.seo.description'),
     inLanguage: schemaLanguage,
     serviceType: locale === 'ko' ? '음악연습실' : t('nav.practiceRoom'),
-    areaServed: siteConfig.contact.address,
+    areaServed: [
+      { '@type': 'City', name: locale === 'ko' ? '서울' : 'Seoul' },
+      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
+    ],
     provider: {
       '@type': 'Organization',
       '@id': `${siteConfig.url}/#organization`,
@@ -133,9 +136,9 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       '@type': 'Offer',
       name: locale === 'ko' ? '음악연습실 월정액 입주 프로그램' : 'Monthly Practice Room Residency Program',
       priceCurrency: 'KRW',
-      price: 400000,
+      price: 300000,
       availability: 'https://schema.org/InStock',
-      url: `${siteConfig.url}/${locale}/contact`,
+      url: `${siteConfig.url}/${locale}/practice-room`,
     },
   }), [t, siteConfig, locale, schemaLanguage]);
   const painPointsAnimation = PAIN_POINTS_ANIMATION;

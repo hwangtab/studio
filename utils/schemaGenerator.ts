@@ -252,8 +252,8 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               name: practiceOfferName,
               priceCurrency: 'KRW',
-              price: 400000,
-              url: localeContactUrl,
+              price: 300000,
+              url: `${siteUrl}/${locale}/practice-room`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
                 '@type': 'Service',
