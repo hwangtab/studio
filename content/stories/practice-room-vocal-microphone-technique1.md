@@ -123,7 +123,9 @@ category: "vocal"
 - **완벽 방음** — 클린 보컬 사운드에 집중
 - **연신내역 5분**
 
-연습실 예약 및 문의: [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
+- [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
+[스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

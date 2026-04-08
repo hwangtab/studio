@@ -134,7 +134,9 @@ pp → p → mp → mf → f → ff → f → mf → mp → p → pp
 - **완벽 방음** — ff 포르티시모 연습도 가능
 - **연신내역 5분**
 
-연습실 예약 및 문의: [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
+- [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
+[스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

@@ -143,7 +143,9 @@ category: "vocal"
 - **24시간 운영** — 감정이 풍부한 시간에 자유롭게
 - **연신내역 5분**
 
-연습실 예약 및 문의: [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
+- [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
+[스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
