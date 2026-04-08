@@ -101,4 +101,4 @@ faq:
 
 ---
 
-[팟캐스트·오디오드라마 보컬 녹음 가이드](/stories/podcast-vocal1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[팟캐스트·오디오드라마 보컬 녹음 가이드](/stories/podcast-vocal1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

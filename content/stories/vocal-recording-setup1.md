@@ -132,4 +132,4 @@ faq:
 
 ---
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 마이크 완전 가이드](/stories/microphone1) | [보컬 녹음 마이크 추천 가이드](/stories/vocal-microphone1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 마이크 완전 가이드](/stories/microphone1) | [보컬 녹음 마이크 추천 가이드](/stories/vocal-microphone1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

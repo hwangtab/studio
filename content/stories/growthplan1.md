@@ -123,4 +123,4 @@ faq:
 
 ---
 
-[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
