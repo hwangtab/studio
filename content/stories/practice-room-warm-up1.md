@@ -102,4 +102,6 @@ faq:
 - [피아노 팝 편곡·발라드 반주법 음악연습실](/stories/ko/practice-room-piano-pop-arrangement1)
 - [보컬 발음 훈련·딕션 스피드 연습 음악연습실](/stories/ko/practice-room-vocal-tongue-twisters1)
 - [베이스 메탈·헤비록 베이스라인 음악연습실](/stories/ko/practice-room-bass-metal-rock1)
+- [기타 록 리드·파워풀 솔로 기법 음악연습실](/stories/ko/practice-room-guitar-rock-lead1)
+- [드럼 그루브·포켓 연주·리듬 감각 음악연습실](/stories/ko/practice-room-drum-groove-pocket1)
 [스튜디오 놀 이용 요금](/pricing)
