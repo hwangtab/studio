@@ -191,4 +191,6 @@ G3 → G4 슬라이드:
 **→ [베이스 힙합·로우엔드 그루브·네오소울 음악연습실 가이드](/stories/ko/practice-room-bass-hip-hop1)**
 **→ [기타 팜 뮤팅·헤비 리듬 기타 음악연습실 가이드](/stories/ko/practice-room-guitar-palm-muting1)**
 **→ [보컬 K-Pop 창법·아이돌 보컬 테크닉 음악연습실 가이드](/stories/ko/practice-room-vocal-kpop-technique1)**
+**→ [피아노 영화음악·시네마틱 피아노 연주 음악연습실 가이드](/stories/ko/practice-room-piano-film-score1)**
+**→ [베이스 소울·모타운 그루브·클래식 R&B 음악연습실 가이드](/stories/ko/practice-room-bass-soul-groove1)**
 [스튜디오 놀 이용 요금](/pricing)**
