@@ -145,6 +145,8 @@ Dm7 코드가 지속되는 동안 D 도리안 스케일(D-E-F-G-A-B-C)로 즉흥
 - [드럼 림샷·크로스스틱·림 기법 음악연습실](/stories/ko/practice-room-drum-rim-techniques1)
 - [기타 블루스 리듬·셔플 패턴 음악연습실](/stories/ko/practice-room-guitar-blues-rhythm1)
 - [피아노 가스펠·R&B 피아노 음악연습실](/stories/ko/practice-room-piano-gospel1)
+- [보컬 흉성·체스트 보이스 강화 훈련 음악연습실](/stories/ko/practice-room-vocal-chest-voice1)
+- [베이스 펑크 그루브·원 드롭 베이스라인 음악연습실](/stories/ko/practice-room-bass-funk-groove1)
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
