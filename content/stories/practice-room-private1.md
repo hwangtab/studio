@@ -119,4 +119,4 @@ faq:
 **→ [음악연습실 고르는 법](/stories/practice-room-guide1)**  
 **→ [방음 연습실 선택 가이드](/stories/practice-room-soundproof1)**
 **→ [야간·24시간 연습실 가이드](/stories/practice-room-night1)**  
-**→ [보증금 없는 연습실 가이드](/stories/practice-room-nodeposit1) | [실용음악 연습실 가이드](/stories/practice-room-music-college1) | [홈 스튜디오 vs 음악연습실](/stories/practice-room-vs-home1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
+**→ [보증금 없는 연습실 가이드](/stories/practice-room-nodeposit1) | [실용음악 연습실 가이드](/stories/practice-room-music-college1) | [홈 스튜디오 vs 음악연습실](/stories/practice-room-vs-home1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1)**
