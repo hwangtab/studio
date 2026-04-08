@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [피아노 화성·코드 고급 이론 음악연습실](/stories/practice-room-piano-chord-adv1) | [음악 청음·귀 훈련 음악연습실](/stories/practice-room-ear-training1) | [보컬 코러스·하모니 훈련 음악연습실](/stories/practice-room-vocal-harmony1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [피아노 화성·코드 고급 이론 음악연습실](/stories/practice-room-piano-chord-adv1) | [음악 청음·귀 훈련 음악연습실](/stories/practice-room-ear-training1) | [보컬 코러스·하모니 훈련 음악연습실](/stories/practice-room-vocal-harmony1) | [드럼 더블 킥·더블 페달 훈련 음악연습실](/stories/practice-room-drum-double-kick1) | [베이스 픽 주법·피크 테크닉 음악연습실](/stories/practice-room-bass-pick1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
