@@ -110,11 +110,6 @@ faq:
 
 스튜디오 놀 음악연습실에 대해 궁금하신 점은 카카오톡 오픈채팅이나 전화로 편하게 문의해 주세요. 방문 예약 없이도 평일 상시 견학 가능합니다.
 
-**→ [연신내 음악연습실 입주 상담 신청](/practice-room)**  
-**→ [음악연습실 가격·요금 안내](/pricing)**  
-**→ [음악연습실 고르는 법 가이드](/stories/practice-room-guide1)**  
-**→ [음악연습실 월세 입주 완전 가이드](/stories/practice-room-monthly1)**
-**→ [기타 연습실 가이드](/stories/practice-room-guitar1)**  
-**→ [드럼 연습실 가이드](/stories/practice-room-drum1)**  
-**→ [피아노 연습실 가이드](/stories/practice-room-piano1)**
-**→ [베이스 연습실 가이드](/stories/practice-room-bass1)**
+---
+
+[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [월세 입주 완전 가이드](/stories/practice-room-monthly1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [개인 연습실 완벽 가이드](/stories/practice-room-private1) | [피아노 연습실 가이드](/stories/practice-room-piano1) | [기타 연습실 가이드](/stories/practice-room-guitar1) | [드럼 연습실 가이드](/stories/practice-room-drum1) | [베이스 연습실 가이드](/stories/practice-room-bass1) | [야간·24시간 연습실](/stories/practice-room-night1) | [보증금 없는 연습실](/stories/practice-room-nodeposit1) | [음악연습실 창업 가이드](/stories/practice-room-startup1) | [음악연습실 양도·인수](/stories/practice-room-transfer1) | [스튜디오 놀 이용 요금](/pricing)

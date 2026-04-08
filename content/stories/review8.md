@@ -46,4 +46,4 @@ faq:
 
 ---
 
-[연습실 시설 안내](/practice-room) | [연습실 요금](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1)
+[연습실 시설 안내](/practice-room) | [연습실 요금](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

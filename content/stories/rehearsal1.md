@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[스튜디오 놀 서비스 안내](/pricing) | [연신내 음악연습실 안내](/practice-room) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 활용 가이드](/stories/practice-room-vocal1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [첫 녹음 세션 준비 가이드](/stories/session1)
+[스튜디오 놀 서비스 안내](/pricing) | [연신내 음악연습실 안내](/practice-room) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 활용 가이드](/stories/practice-room-vocal1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

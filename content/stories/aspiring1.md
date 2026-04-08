@@ -103,4 +103,4 @@ SNS에서 꾸준함이 팬을 만듭니다. 완벽한 영상보다 꾸준한 업
 
 ---
 
-[가수 데뷔 준비 완전 가이드](/stories/debut1) | [보컬 레슨 안내](/lesson) | [성우·나레이션 녹음 가이드](/stories/narration1) | [오디션 준비 완전 가이드](/stories/audition1) | [스튜디오 놀 이용 요금](/pricing) | [음악연습실 가이드](/stories/practice-room-guide1)
+[가수 데뷔 준비 완전 가이드](/stories/debut1) | [보컬 레슨 안내](/lesson) | [성우·나레이션 녹음 가이드](/stories/narration1) | [오디션 준비 완전 가이드](/stories/audition1) | [스튜디오 놀 이용 요금](/pricing) | [음악연습실 가이드](/stories/practice-room-guide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
