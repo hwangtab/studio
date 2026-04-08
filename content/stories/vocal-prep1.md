@@ -189,4 +189,4 @@ MR 파일 구하는 방법은 [MR 파일 준비 가이드](/stories/mr-guide1)�
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [보컬 워밍업 가이드](/stories/vocal-warmup1) | [MR 파일 준비 가이드](/stories/mr-guide1) | [보컬 녹음 팁](/stories/vocal-recording-tips1) | [스튜디오 놀 장비 소개](/studio-info) | [요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [보컬 워밍업 가이드](/stories/vocal-warmup1) | [MR 파일 준비 가이드](/stories/mr-guide1) | [보컬 녹음 팁](/stories/vocal-recording-tips1) | [스튜디오 놀 장비 소개](/studio-info) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [녹음 전 연습실 활용법](/stories/practice-room-pre-recording1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
