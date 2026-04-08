@@ -97,4 +97,4 @@ K-POP 연습생, 인디 밴드, 음악인이 집중된 서울 최대 음악연�
 
 ---
 
-[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [방음 음악연습실 선택](/stories/practice-room-soundproof1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 안내](/stories/practice-room-eunpyeong1) | [마포구·홍대 음악연습실 가이드](/stories/practice-room-mapo1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [방음 음악연습실 선택](/stories/practice-room-soundproof1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 안내](/stories/practice-room-eunpyeong1) | [마포구·홍대 음악연습실 가이드](/stories/practice-room-mapo1) | [신촌·이대·서대문구 음악연습실](/stories/practice-room-sinchon1) | [스튜디오 놀 이용 요금](/pricing)
