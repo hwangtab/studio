@@ -79,4 +79,4 @@ faq:
 
 ---
 
-[용산구 전체 녹음실 안내](/stories/yongsan1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [마포구 공덕 녹음실 안내](/stories/mapo-gongdeok1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[용산구 전체 녹음실 안내](/stories/yongsan1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [마포구 공덕 녹음실 안내](/stories/mapo-gongdeok1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

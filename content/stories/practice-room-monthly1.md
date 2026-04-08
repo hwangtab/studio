@@ -93,4 +93,5 @@ faq:
 ---
 
 [연신내 음악연습실 입주 신청](/practice-room) | [입주 요금 안내](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [방음 연습실 가이드](/stories/practice-room-soundproof1)
-**→ [야간·24시간 연습실 가이드](/stories/practice-room-night1)**
+**→ [야간·24시간 연습실 가이드](/stories/practice-room-night1)**  
+**→ [보증금 없는 연습실 가이드](/stories/practice-room-nodeposit1)**

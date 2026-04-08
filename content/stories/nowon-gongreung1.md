@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[노원구 전체 녹음실 안내](/stories/nowon1) | [노원구 상계·중계 녹음실 안내](/stories/sanggye1) | [도봉구 녹음실 안내](/stories/dobong1) | [강북구 녹음실 안내](/stories/gangbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[노원구 전체 녹음실 안내](/stories/nowon1) | [노원구 상계·중계 녹음실 안내](/stories/sanggye1) | [도봉구 녹음실 안내](/stories/dobong1) | [강북구 녹음실 안내](/stories/gangbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -66,4 +66,4 @@ faq:
 
 ---
 
-[강동구 녹음실 안내](/stories/gangdong1) | [고덕·상일·강일·하남 녹음실 안내](/stories/godeok1) | [천호·암사·길동·명일 녹음실 안내](/stories/cheonho1) | [강동구 둔촌·성내 녹음실 안내](/stories/gangdong-dunchon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[강동구 녹음실 안내](/stories/gangdong1) | [고덕·상일·강일·하남 녹음실 안내](/stories/godeok1) | [천호·암사·길동·명일 녹음실 안내](/stories/cheonho1) | [강동구 둔촌·성내 녹음실 안내](/stories/gangdong-dunchon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

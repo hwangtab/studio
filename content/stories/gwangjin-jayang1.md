@@ -79,4 +79,4 @@ faq:
 
 ---
 
-[광진구 전체 녹음실 안내](/stories/gwangjin1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [중랑구 녹음실 안내](/stories/jungnang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[광진구 전체 녹음실 안내](/stories/gwangjin1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [중랑구 녹음실 안내](/stories/jungnang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

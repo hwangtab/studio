@@ -80,4 +80,4 @@ faq:
 
 ---
 
-[중랑구 전체 녹음실 안내](/stories/jungnang1) | [중랑구 신내·망우·상봉 녹음실 안내](/stories/jungnang-sinnae1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[중랑구 전체 녹음실 안내](/stories/jungnang1) | [중랑구 신내·망우·상봉 녹음실 안내](/stories/jungnang-sinnae1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

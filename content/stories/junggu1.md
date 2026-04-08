@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[회현동·남산·충무로 녹음실 안내](/stories/junggu-hoehyeon1) | [명동·회현·충무로·남대문 녹음실 안내](/stories/myeongdong1) | [신당·황학·약수·청구 녹음실 안내](/stories/sindang1) | [을지로·명동 녹음실 안내](/stories/euljiro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[회현동·남산·충무로 녹음실 안내](/stories/junggu-hoehyeon1) | [명동·회현·충무로·남대문 녹음실 안내](/stories/myeongdong1) | [신당·황학·약수·청구 녹음실 안내](/stories/sindang1) | [을지로·명동 녹음실 안내](/stories/euljiro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

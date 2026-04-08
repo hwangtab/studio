@@ -67,4 +67,4 @@ faq:
 
 ---
 
-[양천구 전체 녹음실 안내](/stories/yangcheon1) | [목동·신정 녹음실 안내](/stories/mokdong1) | [신정·신월·화곡 녹음실 안내](/stories/sinjeong1) | [강서구 녹음실 안내](/stories/gangseo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[양천구 전체 녹음실 안내](/stories/yangcheon1) | [목동·신정 녹음실 안내](/stories/mokdong1) | [신정·신월·화곡 녹음실 안내](/stories/sinjeong1) | [강서구 녹음실 안내](/stories/gangseo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
