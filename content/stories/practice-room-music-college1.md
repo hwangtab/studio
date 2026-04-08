@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 연습실 가이드](/stories/practice-room-piano1) | [개인 연습실 완벽 가이드](/stories/practice-room-private1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 연습실 가이드](/stories/practice-room-piano1) | [개인 연습실 완벽 가이드](/stories/practice-room-private1) | [오디션 음악연습실 가이드](/stories/practice-room-audition1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

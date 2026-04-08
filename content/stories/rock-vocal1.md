@@ -121,4 +121,4 @@ faq:
 
 ---
 
-[트로트 보컬 녹음 완전 가이드](/stories/trot-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 놀 이용 요금](/pricing)
+[트로트 보컬 녹음 완전 가이드](/stories/trot-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

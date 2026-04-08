@@ -107,4 +107,4 @@ MR(반주)과 녹음된 보컬을 통합해 최종 스테레오 믹스를 완성
 
 ---
 
-[데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing) | [실용음악 연습실 가이드](/stories/practice-room-music-college1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing) | [오디션 음악연습실 가이드](/stories/practice-room-audition1) | [실용음악 연습실 가이드](/stories/practice-room-music-college1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
