@@ -288,4 +288,6 @@ Skip James는 부드러운 터치가 특징:
 **→ [기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실](/stories/ko/practice-room-guitar-country-chicken-picking1)**  
 **→ [기타 슬라이드 고급·오픈 튜닝 음악연습실](/stories/ko/practice-room-guitar-slide-advanced1)**
 **→ [보컬 리프·멜로디 변주 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-riff-melody1)**
+**→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
+**→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 [스튜디오 놀 이용 요금](/pricing)

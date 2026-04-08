@@ -254,4 +254,6 @@ Jaco Pastorius 이후 일렉트릭도 재즈로:
 **→ [베이스 솔로·그루빙·Victor Wooten 음악연습실](/stories/ko/practice-room-bass-solo-grooving1)**  
 **→ [베이스 리듬 락킹·그루브 포켓 음악연습실](/stories/ko/practice-room-bass-rhythm-locking1)**
 **→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
+**→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
+**→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 [스튜디오 놀 이용 요금](/pricing)

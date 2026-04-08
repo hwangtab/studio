@@ -267,6 +267,8 @@ A → (G#) → G: G#는 크로매틱 패싱 노트
 **→ [보컬 리프·멜로디 변주 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-riff-melody1)**
 **→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
 **→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
+**→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
+**→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -366,4 +368,6 @@ A → (G#) → G: G#는 크로매틱 패싱 노트
 **→ [보컬 리프·멜로디 변주 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-riff-melody1)**
 **→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
 **→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
+**→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
+**→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 [스튜디오 놀 이용 요금](/pricing)
