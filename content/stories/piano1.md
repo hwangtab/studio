@@ -102,4 +102,4 @@ faq:
 
 ---
 
-[기타 녹음 방법 완전 가이드](/stories/guitar1) | [밴드·합창 단체 녹음 가이드](/stories/band1) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [DAW 선택 가이드](/stories/daw1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 녹음 방법 완전 가이드](/stories/guitar1) | [밴드·합창 단체 녹음 가이드](/stories/band1) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [DAW 선택 가이드](/stories/daw1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

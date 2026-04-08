@@ -122,4 +122,4 @@ faq:
 
 ---
 
-[피아노 녹음 방법 가이드](/stories/piano1) | [밴드·합창 단체 녹음 가이드](/stories/band1) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 녹음 방법 가이드](/stories/piano1) | [밴드·합창 단체 녹음 가이드](/stories/band1) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

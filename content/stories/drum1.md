@@ -93,4 +93,4 @@ faq:
 
 ---
 
-[기타 녹음 방법 완전 가이드](/stories/guitar1) | [피아노 녹음 방법 완전 가이드](/stories/piano1) | [밴드 합주 녹음 가이드](/stories/band1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 녹음 방법 완전 가이드](/stories/guitar1) | [피아노 녹음 방법 완전 가이드](/stories/piano1) | [밴드 합주 녹음 가이드](/stories/band1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

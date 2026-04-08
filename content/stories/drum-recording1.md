@@ -127,4 +127,4 @@ faq:
 
 ---
 
-[현악기·관악기 레코딩 완전 가이드](/stories/strings-recording1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[현악기·관악기 레코딩 완전 가이드](/stories/strings-recording1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
