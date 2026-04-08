@@ -153,4 +153,4 @@ G 줄만 변화하고 나머지는 개방현이 지속됩니다. 켈틱 포크 �
 - [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1)
 - [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1)
 - [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1)
-- [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [스튜디오 놀 이용 요금](/pricing)
+- [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [드럼 루디먼트·기초 스트로크 음악연습실](/stories/practice-room-drum-rudiments1) | [스튜디오 놀 이용 요금](/pricing)

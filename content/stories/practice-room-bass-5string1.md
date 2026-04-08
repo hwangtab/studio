@@ -125,4 +125,4 @@ B 줄보다는 포지션 유연성을 위해 사용합니다. 한 포지션에�
 - [베이스 워킹 베이스라인 심화 음악연습실](/stories/practice-room-bass-walking-bass2)
 - [베이스 하모닉스·플래절렛 음악연습실](/stories/practice-room-bass-harmonics1)
 - [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1)
-- [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [스튜디오 놀 이용 요금](/pricing)
+- [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [드럼 루디먼트·기초 스트로크 음악연습실](/stories/practice-room-drum-rudiments1) | [스튜디오 놀 이용 요금](/pricing)
