@@ -110,4 +110,4 @@ Amazing Slow Downer, Moises, Transcribe 등으로 속도를 50~70%로 늦춰서 
 
 ---
 
-[코드 진행 기초 가이드](/stories/chordprog1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [음악 장르 선택 가이드](/stories/genre-choice1) | [DAW 선택 가이드](/stories/daw1) | [음악 작업 의뢰 방법](/stories/commission1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[코드 진행 기초 가이드](/stories/chordprog1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [음악 장르 선택 가이드](/stories/genre-choice1) | [DAW 선택 가이드](/stories/daw1) | [음악 작업 의뢰 방법](/stories/commission1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

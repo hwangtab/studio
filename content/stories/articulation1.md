@@ -127,4 +127,4 @@ faq:
 
 ---
 
-[보컬 음색 개발 가이드](/stories/tone-color1) | [음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[보컬 음색 개발 가이드](/stories/tone-color1) | [음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

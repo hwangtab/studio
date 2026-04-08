@@ -132,4 +132,4 @@ faq:
 
 ---
 
-[딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

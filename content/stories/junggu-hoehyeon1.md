@@ -79,4 +79,4 @@ faq:
 
 ---
 
-[중구 녹음실 안내](/stories/junggu1) | [명동·회현·충무로·남대문 녹음실 안내](/stories/myeongdong1) | [을지로·명동 녹음실 안내](/stories/euljiro1) | [용산구 녹음실 안내](/stories/yongsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[중구 녹음실 안내](/stories/junggu1) | [명동·회현·충무로·남대문 녹음실 안내](/stories/myeongdong1) | [을지로·명동 녹음실 안내](/stories/euljiro1) | [용산구 녹음실 안내](/stories/yongsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

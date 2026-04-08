@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[스튜디오 놀 장비·시설 안내](/studio-info) | [싱어송라이터 자작곡 녹음 가이드](/stories/singer1) | [보컬 + 악기 동시 녹음 팁](/stories/session1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing)
+[스튜디오 놀 장비·시설 안내](/studio-info) | [싱어송라이터 자작곡 녹음 가이드](/stories/singer1) | [보컬 + 악기 동시 녹음 팁](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing)

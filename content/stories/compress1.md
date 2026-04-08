@@ -98,4 +98,4 @@ faq:
 
 ---
 
-[패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 리버브 가이드](/stories/reverb1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing)
+[패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 리버브 가이드](/stories/reverb1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing)

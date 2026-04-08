@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금 상세 안내](/pricing) | [보컬 녹음 가격 가이드](/stories/pricing1) | [녹음 세션 준비 가이드](/stories/session1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)
+[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금 상세 안내](/pricing) | [보컬 녹음 가격 가이드](/stories/pricing1) | [녹음 세션 준비 가이드](/stories/session1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)

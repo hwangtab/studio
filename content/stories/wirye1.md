@@ -84,4 +84,4 @@ faq:
 
 ---
 
-[하남·구리·광주 녹음실 안내](/stories/hanam1) | [송파구 녹음실 안내](/stories/songpa1) | [방이·가락·문정 녹음실 안내](/stories/bangi1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[하남·구리·광주 녹음실 안내](/stories/hanam1) | [송파구 녹음실 안내](/stories/songpa1) | [방이·가락·문정 녹음실 안내](/stories/bangi1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

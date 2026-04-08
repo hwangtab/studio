@@ -144,4 +144,4 @@ faq:
 
 ---
 
-[인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약 완전 가이드](/stories/contract1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약 완전 가이드](/stories/contract1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

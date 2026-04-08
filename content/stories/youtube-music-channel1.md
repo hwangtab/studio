@@ -151,4 +151,4 @@ faq:
 
 ---
 
-[뮤지션 라이브 스트리밍 완전 가이드](/stories/live-streaming-music1) | [뮤지션 팟캐스트·오디오 콘텐츠 제작 완전 가이드](/stories/music-podcast1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[뮤지션 라이브 스트리밍 완전 가이드](/stories/live-streaming-music1) | [뮤지션 팟캐스트·오디오 콘텐츠 제작 완전 가이드](/stories/music-podcast1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

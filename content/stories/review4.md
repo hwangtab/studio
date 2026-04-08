@@ -62,4 +62,4 @@ faq:
 
 ---
 
-[스튜디오 놀 성우·나레이션 녹음 서비스 및 오디오북 제작 안내](/voice-acting) | [팟캐스트·유튜브 오디오 녹음 가이드](/stories/podcast1) | [성우 지망생 첫 녹음 후기](/stories/review2) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 성우·나레이션 녹음 서비스 및 오디오북 제작 안내](/voice-acting) | [팟캐스트·유튜브 오디오 녹음 가이드](/stories/podcast1) | [성우 지망생 첫 녹음 후기](/stories/review2) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

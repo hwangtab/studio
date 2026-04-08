@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[스템 마스터링 완전 가이드](/stories/stem-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [음압(LUFS) 스트리밍 마스터링 가이드](/stories/loudness1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[스템 마스터링 완전 가이드](/stories/stem-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [음압(LUFS) 스트리밍 마스터링 가이드](/stories/loudness1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

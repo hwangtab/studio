@@ -118,4 +118,4 @@ C - Am - F - G (팝 발라드 단골 진행)
 
 ---
 
-[나에게 맞는 노래 키 찾는 방법](/stories/song-key1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 구조 완전 가이드](/stories/songstructure1) | [코드 진행 가이드](/stories/chordprog1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[나에게 맞는 노래 키 찾는 방법](/stories/song-key1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 구조 완전 가이드](/stories/songstructure1) | [코드 진행 가이드](/stories/chordprog1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

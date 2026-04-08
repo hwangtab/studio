@@ -218,4 +218,4 @@ faq:
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

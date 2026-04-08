@@ -140,4 +140,4 @@ faq:
 
 ---
 
-[음악 협업 완전 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음악 온라인 협업 도구 완전 가이드](/stories/collab-tools1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 협업 완전 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음악 온라인 협업 도구 완전 가이드](/stories/collab-tools1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

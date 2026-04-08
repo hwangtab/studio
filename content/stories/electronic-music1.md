@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[록 음악 제작 완전 가이드](/stories/rock-production1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [DAW 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[록 음악 제작 완전 가이드](/stories/rock-production1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [DAW 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

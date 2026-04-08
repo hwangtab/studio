@@ -155,4 +155,4 @@ SoundID Reference 사용 헤드폰 프로파일 선택
 
 ---
 
-[귀 피로 방지 완전 가이드](/stories/ear-fatigue1) | [믹스 레퍼런스 트랙 완전 가이드](/stories/mix-reference1) | [녹음 헤드폰 완전 가이드](/stories/headphone1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[귀 피로 방지 완전 가이드](/stories/ear-fatigue1) | [믹스 레퍼런스 트랙 완전 가이드](/stories/mix-reference1) | [녹음 헤드폰 완전 가이드](/stories/headphone1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

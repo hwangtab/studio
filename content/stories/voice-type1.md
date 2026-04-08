@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

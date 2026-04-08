@@ -130,4 +130,4 @@ faq:
 
 ---
 
-[보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

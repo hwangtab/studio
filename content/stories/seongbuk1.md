@@ -71,4 +71,4 @@ faq:
 
 ---
 
-[성북구 안암·종암·길음 녹음실 안내 (6호선 15분)](/stories/seongbuk-anam1) | [장위·석관·월곡 녹음실 안내](/stories/jangwi1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[성북구 안암·종암·길음 녹음실 안내 (6호선 15분)](/stories/seongbuk-anam1) | [장위·석관·월곡 녹음실 안내](/stories/jangwi1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

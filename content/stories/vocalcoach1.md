@@ -110,4 +110,4 @@ faq:
 
 ---
 
-[보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -154,4 +154,4 @@ faq:
 
 ---
 
-[뮤지션 브랜드 협업·스폰서십 완전 가이드](/stories/brand-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[뮤지션 브랜드 협업·스폰서십 완전 가이드](/stories/brand-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

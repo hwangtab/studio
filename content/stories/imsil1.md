@@ -64,4 +64,4 @@ faq:
 
 ---
 
-[순창에서 서울 녹음실 방문 가이드](/stories/sunchang1) | [김제에서 서울 녹음실 방문 가이드](/stories/gimje1) | [부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [남원에서 서울 녹음실 방문 가이드](/stories/namwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[순창에서 서울 녹음실 방문 가이드](/stories/sunchang1) | [김제에서 서울 녹음실 방문 가이드](/stories/gimje1) | [부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [남원에서 서울 녹음실 방문 가이드](/stories/namwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

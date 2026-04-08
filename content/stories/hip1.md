@@ -97,4 +97,4 @@ faq:
 
 ---
 
-[연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레이어 믹싱 강좌](/stories/mixing1) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [알앤비·소울 보컬 녹음 가이드](/stories/rnb1)
+[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레이어 믹싱 강좌](/stories/mixing1) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [알앤비·소울 보컬 녹음 가이드](/stories/rnb1)

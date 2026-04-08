@@ -135,4 +135,4 @@ DAW마다 용어와 메뉴 위치가 다르지만 기본 원리는 동일합니�
 
 ---
 
-[보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [보컬 브레스 처리 완전 가이드](/stories/vocal-breath1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [보컬 브레스 처리 완전 가이드](/stories/vocal-breath1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

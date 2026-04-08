@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[보컬 호흡법 완전 가이드](/stories/breathing1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 호흡법 완전 가이드](/stories/breathing1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

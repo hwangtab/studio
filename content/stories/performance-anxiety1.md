@@ -130,4 +130,4 @@ faq:
 
 ---
 
-[음악 저작권·저작인접권 완전 가이드](/stories/music-copyright1) | [창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[음악 저작권·저작인접권 완전 가이드](/stories/music-copyright1) | [창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -140,4 +140,4 @@ K팝 연습생의 길은 치열하지만, 철저한 준비로 가능성을 높�
 
 ---
 
-[K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [오디션 준비 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [오디션 준비 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

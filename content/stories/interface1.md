@@ -92,4 +92,4 @@ XLR 케이블 → 인터페이스 마이크 입력 포트 (XLR)
 
 ---
 
-[마이크 프리앰프 완전 가이드](/stories/preamp1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 셀프 녹음 방법](/stories/selfrecord1) | [DAW 선택 가이드](/stories/daw1) | [보컬 녹음 헤드폰 모니터링](/stories/monitoring1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[마이크 프리앰프 완전 가이드](/stories/preamp1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 셀프 녹음 방법](/stories/selfrecord1) | [DAW 선택 가이드](/stories/daw1) | [보컬 녹음 헤드폰 모니터링](/stories/monitoring1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

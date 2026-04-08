@@ -120,4 +120,4 @@ faq:
 
 ---
 
-[보컬 음역대 확인·확장 방법](/stories/vocalrange1) | [MR·반주 제작 의뢰](/stories/mr-guide1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 음역대 확인·확장 방법](/stories/vocalrange1) | [MR·반주 제작 의뢰](/stories/mr-guide1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

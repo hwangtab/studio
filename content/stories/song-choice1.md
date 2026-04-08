@@ -141,4 +141,4 @@ faq:
 
 ---
 
-[보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [축가 녹음 완전 가이드](/stories/jukga1) | [오디션 준비 완전 가이드](/stories/audition1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [축가 녹음 완전 가이드](/stories/jukga1) | [오디션 준비 완전 가이드](/stories/audition1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

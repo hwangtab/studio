@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[보컬 레슨 완전 가이드](/stories/singing-lesson1) | [녹음 당일 완벽 루틴 체크리스트](/stories/recordingday1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing) | [보컬 호흡법 완전 가이드](/stories/breathing1)
+[보컬 레슨 완전 가이드](/stories/singing-lesson1) | [녹음 당일 완벽 루틴 체크리스트](/stories/recordingday1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing) | [보컬 호흡법 완전 가이드](/stories/breathing1)

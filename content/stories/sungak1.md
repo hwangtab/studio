@@ -112,4 +112,4 @@ faq:
 
 ---
 
-[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [보컬 워밍업 루틴](/stories/warmup1) | [목소리 타입 완전 가이드](/stories/voicetype1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [보컬 워밍업 루틴](/stories/warmup1) | [목소리 타입 완전 가이드](/stories/voicetype1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

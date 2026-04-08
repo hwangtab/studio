@@ -59,4 +59,4 @@ faq:
 
 ---
 
-[영등포구 문래·당산·양평 녹음실 안내](/stories/yeongdeungpo-mullae1) | [신길·문래·양평·당산 녹음실 안내](/stories/singil1) | [여의도·영등포 녹음실 안내](/stories/yeouido1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[영등포구 문래·당산·양평 녹음실 안내](/stories/yeongdeungpo-mullae1) | [신길·문래·양평·당산 녹음실 안내](/stories/singil1) | [여의도·영등포 녹음실 안내](/stories/yeouido1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -74,4 +74,4 @@ faq:
 
 ---
 
-[종로구 녹음실 안내](/stories/jongno1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/hyehwa1) | [중랑구 면목·중화 녹음실 안내](/stories/jungnang-myeonmok1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[종로구 녹음실 안내](/stories/jongno1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/hyehwa1) | [중랑구 면목·중화 녹음실 안내](/stories/jungnang-myeonmok1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

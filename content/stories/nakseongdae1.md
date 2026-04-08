@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[관악구·동작구 녹음실 안내](/stories/gwanak1) | [신림·서울대입구 녹음실 안내](/stories/sillim1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[관악구·동작구 녹음실 안내](/stories/gwanak1) | [신림·서울대입구 녹음실 안내](/stories/sillim1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

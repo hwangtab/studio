@@ -95,4 +95,4 @@ MR 제작을 의뢰할 때 반드시 전달해야 하는 정보:
 
 ---
 
-[작사 방법 완전 가이드](/stories/lyrics1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [DAW 선택 가이드](/stories/daw1) | [음반 제작 가이드](/stories/album1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[작사 방법 완전 가이드](/stories/lyrics1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [DAW 선택 가이드](/stories/daw1) | [음반 제작 가이드](/stories/album1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

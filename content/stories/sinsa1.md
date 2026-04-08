@@ -66,4 +66,4 @@ faq:
 
 ---
 
-[강남구 녹음실 안내](/stories/gangnam1) | [압구정·청담 녹음실 안내](/stories/apgujeong1) | [역삼·선릉 녹음실 안내](/stories/yeoksam1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[강남구 녹음실 안내](/stories/gangnam1) | [압구정·청담 녹음실 안내](/stories/apgujeong1) | [역삼·선릉 녹음실 안내](/stories/yeoksam1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

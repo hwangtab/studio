@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[서초구 양재·우면·매봉 녹음실 안내](/stories/seocho-yangjae1) | [방배·서초·내방·이수 녹음실 안내](/stories/bangbae1) | [반포·방배 녹음실 안내](/stories/banpo1) | [강남구 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[서초구 양재·우면·매봉 녹음실 안내](/stories/seocho-yangjae1) | [방배·서초·내방·이수 녹음실 안내](/stories/bangbae1) | [반포·방배 녹음실 안내](/stories/banpo1) | [강남구 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

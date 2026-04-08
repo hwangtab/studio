@@ -63,5 +63,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제10부: 황금 귀 만들기](/stories/mixing10) | [제12부: 나만의 믹싱 템플릿 →](/stories/mixing12) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제10부: 황금 귀 만들기](/stories/mixing10) | [제12부: 나만의 믹싱 템플릿 →](/stories/mixing12) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
 

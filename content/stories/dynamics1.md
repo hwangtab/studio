@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 녹음 헤드폰 모니터링 가이드](/stories/monitoring1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 녹음 헤드폰 모니터링 가이드](/stories/monitoring1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

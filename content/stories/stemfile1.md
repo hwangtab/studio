@@ -113,4 +113,4 @@ MR 스템 파일을 따로 주세요."
 
 ---
 
-[오디오 형식 완전 가이드 (MP3 vs WAV)](/stories/audioformat1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [음원 유통 방법 가이드](/stories/distribution1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[오디오 형식 완전 가이드 (MP3 vs WAV)](/stories/audioformat1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [음원 유통 방법 가이드](/stories/distribution1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

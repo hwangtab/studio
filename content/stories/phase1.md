@@ -139,4 +139,4 @@ faq:
 
 ---
 
-[미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

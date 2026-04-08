@@ -87,4 +87,4 @@ faq:
 
 ---
 
-[마포구 녹음실 안내](/stories/mapo1) | [망원·연남·성산·합정 녹음실 안내](/stories/manwon1) | [상암·DMC 녹음실 안내](/stories/sangam1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[마포구 녹음실 안내](/stories/mapo1) | [망원·연남·성산·합정 녹음실 안내](/stories/manwon1) | [상암·DMC 녹음실 안내](/stories/sangam1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

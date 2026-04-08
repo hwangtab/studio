@@ -97,4 +97,4 @@ faq:
 
 ---
 
-[의정부 녹음실 안내](/stories/uijeongbu1) | [양주 녹음실 안내](/stories/yangju1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[의정부 녹음실 안내](/stories/uijeongbu1) | [양주 녹음실 안내](/stories/yangju1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -191,4 +191,4 @@ MR 파일을 전달하고, 마이크 포지셔닝과 헤드폰 모니터 레벨�
 
 ---
 
-[축가 선곡 추천 가이드](/stories/wedding-song1) | [피로연 축가 녹음 완전 가이드](/stories/wedding2) | [축가 녹음 완전 가이드](/stories/jukga1) | [노래 녹음 선물 가이드](/stories/gift1) | [웨딩송 서비스 안내](/wedding-song) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [녹음·믹싱 요금 안내](/pricing)
+[축가 선곡 추천 가이드](/stories/wedding-song1) | [피로연 축가 녹음 완전 가이드](/stories/wedding2) | [축가 녹음 완전 가이드](/stories/jukga1) | [노래 녹음 선물 가이드](/stories/gift1) | [웨딩송 서비스 안내](/wedding-song) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [녹음·믹싱 요금 안내](/pricing)

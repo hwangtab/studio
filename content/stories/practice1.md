@@ -106,4 +106,4 @@ faq:
 
 ---
 
-[스튜디오 놀 음악연습실 시설 및 요금 안내](/practice-room) | [연습실 요금 안내](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [밴드·단체 녹음 가이드](/stories/band1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 음악연습실 시설 및 요금 안내](/practice-room) | [연습실 요금 안내](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [밴드·단체 녹음 가이드](/stories/band1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

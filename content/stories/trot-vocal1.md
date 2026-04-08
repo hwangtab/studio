@@ -118,4 +118,4 @@ faq:
 
 ---
 
-[재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

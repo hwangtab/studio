@@ -106,4 +106,4 @@ T-Pain, 오토튠 랩 스타일을 원한다면:
 
 ---
 
-[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

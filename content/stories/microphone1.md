@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[보컬 녹음 마이크 추천 완전 가이드](/stories/vocal-microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [샘플레이트·비트뎁스 완전 가이드](/stories/sample-rate1) | [보컬 EQ 완전 가이드](/stories/eq1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 마이크 추천 완전 가이드](/stories/vocal-microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [샘플레이트·비트뎁스 완전 가이드](/stories/sample-rate1) | [보컬 EQ 완전 가이드](/stories/eq1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

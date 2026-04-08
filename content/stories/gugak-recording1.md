@@ -143,4 +143,4 @@ faq:
 
 ---
 
-[어쿠스틱 기타 레코딩 완전 가이드](/stories/guitar-recording1) | [스트링 레코딩 완전 가이드](/stories/strings-recording1) | [라이브 레코딩 완전 가이드](/stories/live-recording1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[어쿠스틱 기타 레코딩 완전 가이드](/stories/guitar-recording1) | [스트링 레코딩 완전 가이드](/stories/strings-recording1) | [라이브 레코딩 완전 가이드](/stories/live-recording1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

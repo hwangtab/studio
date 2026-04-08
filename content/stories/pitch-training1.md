@@ -116,4 +116,4 @@ faq:
 
 ---
 
-[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 호흡 지지(Breath Support) 완전 가이드](/stories/breath-support1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [흉성 완전 가이드](/stories/chest-voice1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 호흡 지지(Breath Support) 완전 가이드](/stories/breath-support1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [흉성 완전 가이드](/stories/chest-voice1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

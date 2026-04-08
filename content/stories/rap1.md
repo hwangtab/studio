@@ -102,4 +102,4 @@ faq:
 
 ---
 
-[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [음악 프로듀서 되는 방법](/stories/producer1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [음악 프로듀서 되는 방법](/stories/producer1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

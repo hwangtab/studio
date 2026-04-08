@@ -115,4 +115,4 @@ faq:
 
 ---
 
-[R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

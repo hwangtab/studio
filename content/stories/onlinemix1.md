@@ -95,4 +95,4 @@ faq:
 
 ---
 
-[보컬 녹음·믹싱 가격 완전 가이드](/stories/recording-price1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [마스터링이란?](/stories/mastering1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음·믹싱 가격 완전 가이드](/stories/recording-price1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [마스터링이란?](/stories/mastering1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
