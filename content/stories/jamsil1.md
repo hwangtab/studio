@@ -68,4 +68,4 @@ faq:
 
 ---
 
-[송파구 녹음실 안내](/stories/songpa1) | [강동구 녹음실 안내](/stories/gangdong1) | [강남 녹음실 안내](/stories/gangnam1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[송파구 녹음실 안내](/stories/songpa1) | [강동구 녹음실 안내](/stories/gangdong1) | [강남 녹음실 안내](/stories/gangnam1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

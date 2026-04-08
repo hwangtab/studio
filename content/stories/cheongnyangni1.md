@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[동대문구 녹음실 안내](/stories/dongdaemun1) | [성동구 녹음실 안내](/stories/seongdong1) | [성북구 녹음실 안내](/stories/seongbuk1) | [종로구 녹음실 안내](/stories/jongno1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[동대문구 녹음실 안내](/stories/dongdaemun1) | [성동구 녹음실 안내](/stories/seongdong1) | [성북구 녹음실 안내](/stories/seongbuk1) | [종로구 녹음실 안내](/stories/jongno1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

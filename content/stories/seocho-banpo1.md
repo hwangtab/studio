@@ -66,4 +66,4 @@ faq:
 
 ---
 
-[서초구 전체 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [양재·강남역 녹음실 안내](/stories/yangjae1) | [방배·사당·이수 녹음실 안내](/stories/bangbae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[서초구 전체 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [양재·강남역 녹음실 안내](/stories/yangjae1) | [방배·사당·이수 녹음실 안내](/stories/bangbae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
