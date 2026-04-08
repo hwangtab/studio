@@ -265,4 +265,6 @@ E4-G4-E4-G4 (셔플 리듬으로)
 **→ [피아노 래그타임·Scott Joplin 스타일 음악연습실](/stories/ko/practice-room-piano-ragtime1)**  
 **→ [피아노 코드 대리·리하모나이제이션 음악연습실](/stories/ko/practice-room-piano-chord-substitution1)**
 **→ [베이스 썸 테크닉·슬랩 베이스 고급 음악연습실 가이드](/stories/ko/practice-room-bass-thumb-technique1)**
+**→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
+**→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 [스튜디오 놀 이용 요금](/pricing)

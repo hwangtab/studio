@@ -222,4 +222,6 @@ faq:
 **→ [보컬 공명·흉성·두성 배치 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance-chest1)**
 **→ [베이스 썸 테크닉·슬랩 베이스 고급 음악연습실 가이드](/stories/ko/practice-room-bass-thumb-technique1)**
 **→ [피아노 블루스 콤핑·블루스 피아노 반주 음악연습실 가이드](/stories/ko/practice-room-piano-blues-comping1)**
+**→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
+**→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 [스튜디오 놀 이용 요금](/pricing)

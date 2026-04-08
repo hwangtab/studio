@@ -277,4 +277,6 @@ Bootsy Collins는 뒤에 치는 것으로 그루브
 **→ [베이스 솔로·그루빙·Victor Wooten 음악연습실](/stories/ko/practice-room-bass-solo-grooving1)**  
 **→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실](/stories/ko/practice-room-bass-jazz-comping1)**
 **→ [기타 비밥·재즈 기타 즉흥·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
+**→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
+**→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 [스튜디오 놀 이용 요금](/pricing)
