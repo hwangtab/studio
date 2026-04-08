@@ -183,4 +183,6 @@ Volume: 7 이상 (앰프 자연 과부하 전 최대치)
 **→ [베이스 투핸드 탭핑·고급 솔로 기법 음악연습실 가이드](/stories/ko/practice-room-bass-two-hand-tapping1)**
 **→ [드럼 리니어 패턴·비트 분산 기법 음악연습실 가이드](/stories/ko/practice-room-drum-linear-patterns1)**
 **→ [기타 아르페지오 고급·스윕 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-arpeggios-advanced1)**
+**→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/ko/practice-room-piano-ballad-technique1)**
+**→ [보컬 레지스터·음역별 발성 전략 음악연습실 가이드](/stories/ko/practice-room-vocal-registers1)**
 [스튜디오 놀 이용 요금](/pricing)
