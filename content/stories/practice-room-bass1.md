@@ -94,4 +94,5 @@ faq:
 **→ [음악연습실 방음 완벽 가이드](/stories/practice-room-soundproof1)**  
 **→ [기타 연습실 가이드](/stories/practice-room-guitar1)**  
 **→ [드럼 연습실 가이드](/stories/practice-room-drum1)**  
-**→ [개인 연습실 완벽 가이드](/stories/practice-room-private1)**
+**→ [개인 연습실 완벽 가이드](/stories/practice-room-private1)**  
+**→ [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
