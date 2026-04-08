@@ -132,4 +132,4 @@ C - C# - D - D# - E - F - F# - G - G# - A - A# - B - C
 - [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1)
 - [보컬 재즈스캣·즉흥 보이싱 음악연습실](/stories/practice-room-vocal-jazz-scat1)
 - [보컬 팝 발성 음악연습실](/stories/practice-room-vocal-pop1)
-- [기타 코드 진행·전조 기법 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [스튜디오 놀 이용 요금](/pricing)
+- [기타 코드 진행·전조 기법 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [스튜디오 놀 이용 요금](/pricing)
