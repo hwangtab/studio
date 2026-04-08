@@ -90,4 +90,4 @@ faq:
 
 ---
 
-[연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [강남·서초구 음악연습실 가이드](/stories/practice-room-gangnam1) | [종로·중구 음악연습실 가이드](/stories/practice-room-jongno1) | [서울 음악연습실 추천 가이드](/stories/practice-room-seoul1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [실용음악 입시 연습실 가이드](/stories/practice-room-entrance1) | [야간·24시간 연습실](/stories/practice-room-night1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [의정부·양주 음악연습실](/stories/practice-room-uijeongbu1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [강남·서초구 음악연습실 가이드](/stories/practice-room-gangnam1) | [종로·중구 음악연습실 가이드](/stories/practice-room-jongno1) | [서울 음악연습실 추천 가이드](/stories/practice-room-seoul1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [실용음악 입시 연습실 가이드](/stories/practice-room-entrance1) | [야간·24시간 연습실](/stories/practice-room-night1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [스튜디오 놀 이용 요금](/pricing)

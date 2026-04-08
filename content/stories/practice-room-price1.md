@@ -98,4 +98,4 @@ faq:
 
 ---
 
-[연신내 음악연습실 시설 안내](/practice-room) | [연습실 요금 상담](/pricing) | [음악연습실 대여 방법 가이드](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [연습실 고르는 법 총정리](/stories/practice-room-guide1) | [음악연습실 방음 가이드](/stories/practice-room-soundproof1) | [서울 음악연습실 추천](/stories/practice-room-seoul1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1) | [개인 연습실 가이드](/stories/practice-room-private1)
+[연신내 음악연습실 시설 안내](/practice-room) | [연습실 요금 상담](/pricing) | [음악연습실 대여 방법 가이드](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [연습실 고르는 법 총정리](/stories/practice-room-guide1) | [음악연습실 방음 가이드](/stories/practice-room-soundproof1) | [서울 음악연습실 추천](/stories/practice-room-seoul1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [의정부·양주 음악연습실](/stories/practice-room-uijeongbu1) | [무인 음악연습실 가이드](/stories/practice-room-unmanned1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1) | [개인 연습실 가이드](/stories/practice-room-private1)

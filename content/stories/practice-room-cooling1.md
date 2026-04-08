@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[음악연습실 고르는 법](/stories/practice-room-guide1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [악기 보관 음악연습실 가이드](/stories/practice-room-storage1) | [음악연습실 에티켓 가이드](/stories/practice-room-etiquette1) | [야간·24시간 연습실](/stories/practice-room-night1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 고르는 법](/stories/practice-room-guide1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [악기 보관 음악연습실 가이드](/stories/practice-room-storage1) | [음악연습실 에티켓 가이드](/stories/practice-room-etiquette1) | [야간·24시간 연습실](/stories/practice-room-night1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
