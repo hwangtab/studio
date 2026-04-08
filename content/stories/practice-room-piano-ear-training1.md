@@ -160,9 +160,13 @@ category: "piano"
 - [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
 - [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
+**→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
 *관련 아티클:*
-[피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [피아노 재즈 보이싱·텐션 코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [피아노 리듬 트레이닝 음악연습실](/stories/practice-room-piano-rhythm-training1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [피아노 재즈 보이싱·텐션 코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [피아노 리듬 트레이닝 음악연습실](/stories/practice-room-piano-rhythm-training1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+[스튜디오 놀 이용 요금](/pricing)

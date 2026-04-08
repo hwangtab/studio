@@ -182,9 +182,13 @@ G7alt: G-B-D♭-F-A♭ (또는 다양한 조합)
 - [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
 - [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
+**→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
 *관련 아티클:*
-[기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [기타 코드 진행·전조 응용 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [기타 코드 진행·전조 응용 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+[스튜디오 놀 이용 요금](/pricing)

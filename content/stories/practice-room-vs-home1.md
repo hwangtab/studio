@@ -149,4 +149,6 @@ faq:
 - [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
 - [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
+**→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 [스튜디오 놀 이용 요금](/pricing)

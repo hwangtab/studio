@@ -158,9 +158,13 @@ category: "vocal"
 - [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
 - [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
+**→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
 *관련 아티클:*
-[보컬 피치 트레이닝·음정 교정 음악연습실](/stories/practice-room-vocal-pitch-training1) | [보컬 호흡 컨트롤·서포트 음악연습실](/stories/practice-room-vocal-breath-control1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [보컬 스테이지 퍼포먼스 음악연습실](/stories/practice-room-vocal-stage-performance1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 피치 트레이닝·음정 교정 음악연습실](/stories/practice-room-vocal-pitch-training1) | [보컬 호흡 컨트롤·서포트 음악연습실](/stories/practice-room-vocal-breath-control1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [보컬 스테이지 퍼포먼스 음악연습실](/stories/practice-room-vocal-stage-performance1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+[스튜디오 놀 이용 요금](/pricing)

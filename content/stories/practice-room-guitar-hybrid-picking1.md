@@ -189,9 +189,13 @@ G 코드 아르페지오
 - [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
 - [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
+**→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
 *관련 아티클:*
-[기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [기타 핑거피킹 패턴 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [기타 블루스 릭·솔로 음악연습실](/stories/practice-room-guitar-blues-licks1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [기타 핑거피킹 패턴 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [기타 블루스 릭·솔로 음악연습실](/stories/practice-room-guitar-blues-licks1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
+**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+[스튜디오 놀 이용 요금](/pricing)
