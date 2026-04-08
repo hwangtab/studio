@@ -211,6 +211,8 @@ G4에서 모음이 자연스럽게 변하는 것을 허용합니다.
 **→ [피아노 리듬 패턴·왼손 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-rhythm-patterns1)**
 **→ [드럼 스피드 트레이닝·빠른 싱글 스트로크 음악연습실 가이드](/stories/ko/practice-room-drum-speed-training1)**
 **→ [보컬 공명·음색 개발 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance1)**
+**→ [베이스 화성 이론·스케일 적용 음악연습실 가이드](/stories/ko/practice-room-bass-theory-harmony1)**
+**→ [기타 슬라이드·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -252,4 +254,6 @@ G4에서 모음이 자연스럽게 변하는 것을 허용합니다.
 **→ [피아노 리듬 패턴·왼손 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-rhythm-patterns1)**
 **→ [드럼 스피드 트레이닝·빠른 싱글 스트로크 음악연습실 가이드](/stories/ko/practice-room-drum-speed-training1)**
 **→ [보컬 공명·음색 개발 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance1)**
+**→ [베이스 화성 이론·스케일 적용 음악연습실 가이드](/stories/ko/practice-room-bass-theory-harmony1)**
+**→ [기타 슬라이드·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide1)**
 [스튜디오 놀 이용 요금](/pricing)
