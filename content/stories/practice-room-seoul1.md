@@ -113,4 +113,6 @@ K-POP 연습생, 인디 밴드, 음악인이 집중된 서울 최대 음악연�
 - [기타 컨트리·치킨피킹 기법 음악연습실](/stories/ko/practice-room-guitar-country1)
 - [피아노 클래식 테크닉·핑거 독립성 훈련 음악연습실](/stories/ko/practice-room-piano-classical-technique1)
 - [보컬 비브라토·트릴 훈련법 음악연습실](/stories/ko/practice-room-vocal-vibrato1)
+- [베이스 라틴·살사·보사노바 베이스라인 음악연습실](/stories/ko/practice-room-bass-latin1)
+- [기타 모달 연주·모드 스케일 활용 음악연습실](/stories/ko/practice-room-guitar-modal-playing1)
 [스튜디오 놀 이용 요금](/pricing)
