@@ -167,4 +167,6 @@ A(5프렛)에서 E(12프렛)까지:
 **→ [베이스 투핸드 탭핑 가이드](/stories/ko/practice-room-bass-two-hand-tapping1)**
 **→ **→ [베이스 프렛리스·인토네이션 훈련 음악연습실 가이드](/stories/ko/practice-room-bass-fretless1)**
 **→ [드럼 루디멘트 고급·스트로크 조합 음악연습실 가이드](/stories/ko/practice-room-drum-rudiments-advanced1)**
+**→ [기타 왐미바·트레몰로 암 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-whammy-bar1)**
+**→ [피아노 리듬 패턴·왼손 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-rhythm-patterns1)**
 [스튜디오 놀 이용 요금](/pricing)**

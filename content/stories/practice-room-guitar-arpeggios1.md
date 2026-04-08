@@ -203,6 +203,8 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [보컬 딕션·발음 명확도 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-diction1)**
 **→ [베이스 프렛리스·인토네이션 훈련 음악연습실 가이드](/stories/ko/practice-room-bass-fretless1)**
 **→ [드럼 루디멘트 고급·스트로크 조합 음악연습실 가이드](/stories/ko/practice-room-drum-rudiments-advanced1)**
+**→ [기타 왐미바·트레몰로 암 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-whammy-bar1)**
+**→ [피아노 리듬 패턴·왼손 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-rhythm-patterns1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -240,4 +242,6 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [보컬 딕션·발음 명확도 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-diction1)**
 **→ [베이스 프렛리스·인토네이션 훈련 음악연습실 가이드](/stories/ko/practice-room-bass-fretless1)**
 **→ [드럼 루디멘트 고급·스트로크 조합 음악연습실 가이드](/stories/ko/practice-room-drum-rudiments-advanced1)**
+**→ [기타 왐미바·트레몰로 암 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-whammy-bar1)**
+**→ [피아노 리듬 패턴·왼손 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-rhythm-patterns1)**
 [스튜디오 놀 이용 요금](/pricing)
