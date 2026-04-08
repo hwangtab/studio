@@ -142,4 +142,6 @@ DAW 업데이트 전에는 현재 프로젝트 파일을 백업해두는 것이 
 **→ [기타 펑크 리듬·치킨 피킹·클린 그루브 음악연습실 가이드](/stories/ko/practice-room-guitar-funk-rhythm1)**
 **→ [보컬 소울·R&B 창법·멜리즈마 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-soul1)**
 **→ [피아노 부기우기·블루스 피아노 기초 음악연습실 가이드](/stories/ko/practice-room-piano-boogie-woogie1)**
+**→ [드럼 보사노바·재즈 브러시 보사 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-brushwork-bossa1)**
+**→ [베이스 힙합·로우엔드 그루브·네오소울 음악연습실 가이드](/stories/ko/practice-room-bass-hip-hop1)**
 [스튜디오 놀 이용 요금](/pricing)
