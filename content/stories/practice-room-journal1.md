@@ -85,4 +85,4 @@ faq:
 
 ---
 
-[집중 연습 음악연습실 가이드](/stories/practice-room-concentration1) | [음악 목표 설정·달성 음악연습실](/stories/practice-room-goal-setting1) | [스마트폰·앱 음악연습실 활용](/stories/practice-room-smart-practice1) | [음악 연습 동기부여 유지 가이드](/stories/practice-room-motivation1) | [셀프 녹음 가이드](/stories/practice-room-recording1) | [취미 음악인을 위한 연습실](/stories/practice-room-hobby1) | [악기 연주 전 워밍업 루틴 음악연습실](/stories/practice-room-warm-up1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[집중 연습 음악연습실 가이드](/stories/practice-room-concentration1) | [음악 목표 설정·달성 음악연습실](/stories/practice-room-goal-setting1) | [스마트폰·앱 음악연습실 활용](/stories/practice-room-smart-practice1) | [음악 연습 동기부여 유지 가이드](/stories/practice-room-motivation1) | [셀프 녹음 가이드](/stories/practice-room-recording1) | [취미 음악인을 위한 연습실](/stories/practice-room-hobby1) | [악기 연주 전 워밍업 루틴 음악연습실](/stories/practice-room-warm-up1) | [발표회·연주회 준비 음악연습실](/stories/practice-room-recital1) | [음악 연습 체력·지구력 관리 음악연습실](/stories/practice-room-stamina1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)

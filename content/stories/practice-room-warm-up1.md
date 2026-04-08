@@ -80,4 +80,4 @@ faq:
 
 ---
 
-[보컬·성대 건강 관리 음악연습실](/stories/practice-room-voice-health1) | [집중 연습 음악연습실 가이드](/stories/practice-room-concentration1) | [음악가 몸 관리·부상 예방 음악연습실](/stories/practice-room-physical1) | [발성 연습 음악연습실](/stories/practice-room-voice-training1) | [리듬·박자 훈련 음악연습실](/stories/practice-room-rhythm1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [음악 연습 일지·기록 방법 가이드](/stories/practice-room-journal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬·성대 건강 관리 음악연습실](/stories/practice-room-voice-health1) | [집중 연습 음악연습실 가이드](/stories/practice-room-concentration1) | [음악가 몸 관리·부상 예방 음악연습실](/stories/practice-room-physical1) | [발성 연습 음악연습실](/stories/practice-room-voice-training1) | [리듬·박자 훈련 음악연습실](/stories/practice-room-rhythm1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [음악 연습 일지·기록 방법 가이드](/stories/practice-room-journal1) | [발표회·연주회 준비 음악연습실](/stories/practice-room-recital1) | [음악 연습 체력·지구력 관리 음악연습실](/stories/practice-room-stamina1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
