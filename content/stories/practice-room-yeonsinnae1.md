@@ -114,3 +114,7 @@ faq:
 **→ [음악연습실 가격·요금 안내](/pricing)**  
 **→ [음악연습실 고르는 법 가이드](/stories/practice-room-guide1)**  
 **→ [음악연습실 월세 입주 완전 가이드](/stories/practice-room-monthly1)**
+**→ [기타 연습실 가이드](/stories/practice-room-guitar1)**  
+**→ [드럼 연습실 가이드](/stories/practice-room-drum1)**  
+**→ [피아노 연습실 가이드](/stories/practice-room-piano1)**
+**→ [베이스 연습실 가이드](/stories/practice-room-bass1)**
