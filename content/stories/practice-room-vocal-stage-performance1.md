@@ -118,4 +118,4 @@ slug: "practice-room-vocal-stage-performance1"
 - [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1)
 - [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1)
 - [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1)
-- [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [스튜디오 놀 이용 요금](/pricing)
+- [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [스튜디오 놀 이용 요금](/pricing)

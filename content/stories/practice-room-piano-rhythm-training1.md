@@ -141,4 +141,4 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 - [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1)
 - [피아노 즉흥 블루스 음악연습실](/stories/practice-room-piano-improv-blues1)
 - [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1)
-- [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [스튜디오 놀 이용 요금](/pricing)
+- [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [스튜디오 놀 이용 요금](/pricing)
