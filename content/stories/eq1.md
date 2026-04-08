@@ -118,4 +118,6 @@ EQ 처리 전·후를 번갈아 들으며 더 좋은지 확인합니다. EQ 없�
 **→ [보컬 음색·목소리 색깔 개발 음악연습실 가이드](/stories/ko/practice-room-vocal-tone-color1)**
 **→ [피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실 가이드](/stories/ko/practice-room-piano-jazz-standard-analysis1)**
 **→ [베이스 확장 음역·5현·6현 베이스 활용법 음악연습실 가이드](/stories/ko/practice-room-bass-extended-range1)**
+**→ [드럼 메탈·블래스트 비트·더블 킥 메탈 음악연습실 가이드](/stories/ko/practice-room-drum-metal-blast-beat1)**
+**→ [기타 앰비언트·텍스처 기타·이펙터 활용 음악연습실 가이드](/stories/ko/practice-room-guitar-ambient-textures1)**
 [스튜디오 놀 이용 요금](/pricing)
