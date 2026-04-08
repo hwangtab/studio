@@ -159,4 +159,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 - [보컬 비브라토·트릴 훈련법 음악연습실](/stories/ko/practice-room-vocal-vibrato1)
 - [베이스 라틴·살사·보사노바 베이스라인 음악연습실](/stories/ko/practice-room-bass-latin1)
 - [기타 모달 연주·모드 스케일 활용 음악연습실](/stories/ko/practice-room-guitar-modal-playing1)
+- [드럼 폴리리듬 심화·아프리카 리듬 음악연습실](/stories/ko/practice-room-drum-polyrhythm-advanced1)
+- [피아노 팝 편곡·발라드 반주법 음악연습실](/stories/ko/practice-room-piano-pop-arrangement1)
 [스튜디오 놀 이용 요금](/pricing)
