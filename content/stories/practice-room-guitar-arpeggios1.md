@@ -189,6 +189,8 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [보컬 레지스터·음역별 발성 전략 음악연습실 가이드](/stories/ko/practice-room-vocal-registers1)**
 **→ [베이스 코드 멜로디·솔로 편곡법 음악연습실 가이드](/stories/ko/practice-room-bass-chord-melody1)**
 **→ [드럼 필·트랜지션 고급 기법 음악연습실 가이드](/stories/ko/practice-room-drum-fills-transitions1)**
+**→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/ko/practice-room-guitar-pentatonic-advanced1)**
+**→ [보컬 마이크 기법·녹음실 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-microphone-technique1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -212,4 +214,6 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [보컬 레지스터·음역별 발성 전략 음악연습실 가이드](/stories/ko/practice-room-vocal-registers1)**
 **→ [베이스 코드 멜로디·솔로 편곡법 음악연습실 가이드](/stories/ko/practice-room-bass-chord-melody1)**
 **→ [드럼 필·트랜지션 고급 기법 음악연습실 가이드](/stories/ko/practice-room-drum-fills-transitions1)**
+**→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/ko/practice-room-guitar-pentatonic-advanced1)**
+**→ [보컬 마이크 기법·녹음실 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-microphone-technique1)**
 [스튜디오 놀 이용 요금](/pricing)
