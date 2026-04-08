@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[기타 연습실 가이드](/stories/practice-room-guitar1) | [즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-improvisation1) | [기타 솔로·리드 기타 연습 음악연습실](/stories/practice-room-guitar-solo1) | [기타 모드 스케일·모달 연주 음악연습실](/stories/practice-room-guitar-pentatonic-modes1) | [기타 즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-guitar-improv1) | [성인 피아노 입문·처음 시작하는 어른 음악연습실](/stories/practice-room-piano-beginner-adult1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 연습실 가이드](/stories/practice-room-guitar1) | [즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-improvisation1) | [기타 솔로·리드 기타 연습 음악연습실](/stories/practice-room-guitar-solo1) | [기타 모드 스케일·모달 연주 음악연습실](/stories/practice-room-guitar-pentatonic-modes1) | [기타 즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-guitar-improv1) | [성인 피아노 입문·처음 시작하는 어른 음악연습실](/stories/practice-room-piano-beginner-adult1) | [드럼 악센트·강세 패턴 훈련 음악연습실](/stories/practice-room-drum-accent1) | [베이스 옥타브 주법·옥타브 그루브 음악연습실](/stories/practice-room-bass-octave1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)

@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 독학 연습실 가이드](/stories/practice-room-piano-beginner1) | [성인 악기 입문자 음악연습실](/stories/practice-room-adult-beginner1) | [음악 다시 시작하는 분을 위한 연습실](/stories/practice-room-comeback1) | [기타 즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-guitar-improv1) | [성인 피아노 입문·처음 시작하는 어른 음악연습실](/stories/practice-room-piano-beginner-adult1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 독학 연습실 가이드](/stories/practice-room-piano-beginner1) | [성인 악기 입문자 음악연습실](/stories/practice-room-adult-beginner1) | [음악 다시 시작하는 분을 위한 연습실](/stories/practice-room-comeback1) | [기타 즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-guitar-improv1) | [성인 피아노 입문·처음 시작하는 어른 음악연습실](/stories/practice-room-piano-beginner-adult1) | [드럼 악센트·강세 패턴 훈련 음악연습실](/stories/practice-room-drum-accent1) | [베이스 옥타브 주법·옥타브 그루브 음악연습실](/stories/practice-room-bass-octave1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
