@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[성악과 보컬의 차이 가이드](/stories/sungak1) | [랩 잘하는 방법 가이드](/stories/rap1) | [내 보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [스튜디오 놀 이용 요금](/pricing)
+[성악과 보컬의 차이 가이드](/stories/sungak1) | [랩 잘하는 방법 가이드](/stories/rap1) | [내 보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
