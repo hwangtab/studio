@@ -110,4 +110,4 @@ STC 50 이상의 방음 설계된 음악연습실이라도 **문을 열어 두�
 
 ---
 
-[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [개인 연습실 완벽 가이드](/stories/practice-room-private1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [보증금 없는 연습실 가이드](/stories/practice-room-nodeposit1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 대여 방법](/stories/practice-room-rental1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [개인 연습실 완벽 가이드](/stories/practice-room-private1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [보증금 없는 연습실 가이드](/stories/practice-room-nodeposit1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [냉난방 쾌적한 음악연습실](/stories/practice-room-cooling1) | [스튜디오 놀 이용 요금](/pricing)
