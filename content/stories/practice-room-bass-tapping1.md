@@ -225,6 +225,8 @@ C 메이저 코드 태핑:
 **→ [피아노 부기우기·블루스 피아노 기초 음악연습실 가이드](/stories/ko/practice-room-piano-boogie-woogie1)**
 **→ [드럼 보사노바·재즈 브러시 보사 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-brushwork-bossa1)**
 **→ [베이스 힙합·로우엔드 그루브·네오소울 음악연습실 가이드](/stories/ko/practice-room-bass-hip-hop1)**
+**→ [기타 팜 뮤팅·헤비 리듬 기타 음악연습실 가이드](/stories/ko/practice-room-guitar-palm-muting1)**
+**→ [보컬 K-Pop 창법·아이돌 보컬 테크닉 음악연습실 가이드](/stories/ko/practice-room-vocal-kpop-technique1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -276,4 +278,6 @@ C 메이저 코드 태핑:
 **→ [피아노 부기우기·블루스 피아노 기초 음악연습실 가이드](/stories/ko/practice-room-piano-boogie-woogie1)**
 **→ [드럼 보사노바·재즈 브러시 보사 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-brushwork-bossa1)**
 **→ [베이스 힙합·로우엔드 그루브·네오소울 음악연습실 가이드](/stories/ko/practice-room-bass-hip-hop1)**
+**→ [기타 팜 뮤팅·헤비 리듬 기타 음악연습실 가이드](/stories/ko/practice-room-guitar-palm-muting1)**
+**→ [보컬 K-Pop 창법·아이돌 보컬 테크닉 음악연습실 가이드](/stories/ko/practice-room-vocal-kpop-technique1)**
 [스튜디오 놀 이용 요금](/pricing)
