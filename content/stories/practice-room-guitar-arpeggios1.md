@@ -193,6 +193,8 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [보컬 마이크 기법·녹음실 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-microphone-technique1)**
 **→ [피아노 리하모나이제이션·화성 재창조 음악연습실 가이드](/stories/ko/practice-room-piano-reharmonization1)**
 **→ [베이스 그루브 구성·리듬 설계 원리 음악연습실 가이드](/stories/ko/practice-room-bass-groove-construction1)**
+**→ [드럼 아프로비트·월드 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-afrobeat1)**
+**→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -220,4 +222,6 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [보컬 마이크 기법·녹음실 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-microphone-technique1)**
 **→ [피아노 리하모나이제이션·화성 재창조 음악연습실 가이드](/stories/ko/practice-room-piano-reharmonization1)**
 **→ [베이스 그루브 구성·리듬 설계 원리 음악연습실 가이드](/stories/ko/practice-room-bass-groove-construction1)**
+**→ [드럼 아프로비트·월드 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-afrobeat1)**
+**→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
 [스튜디오 놀 이용 요금](/pricing)
