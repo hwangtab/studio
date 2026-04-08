@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[알앤비·소울 보컬 녹음 가이드](/stories/rnb1) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [보컬 리버브 가이드](/stories/reverb1) | [보컬 컴프레서 사용법](/stories/compress1) | [스튜디오 놀 이용 요금](/pricing)
+[알앤비·소울 보컬 녹음 가이드](/stories/rnb1) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [보컬 리버브 가이드](/stories/reverb1) | [보컬 컴프레서 사용법](/stories/compress1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

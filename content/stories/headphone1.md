@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[스튜디오 모니터 스피커 완전 가이드](/stories/studio-monitor1) | [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[스튜디오 모니터 스피커 완전 가이드](/stories/studio-monitor1) | [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

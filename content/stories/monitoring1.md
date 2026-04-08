@@ -113,4 +113,4 @@ MR이 너무 작으면: 박자·하모니 유지가 어려움
 
 ---
 
-[첫 녹음 세션 준비 가이드](/stories/session1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 EQ 완전 가이드](/stories/eq1) | [스튜디오 놀 이용 요금](/pricing)
+[첫 녹음 세션 준비 가이드](/stories/session1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 EQ 완전 가이드](/stories/eq1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[발라드 창법 완전 가이드](/stories/balladstyle1) | [이용 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 피치 교정이란?](/stories/pitch1) | [스튜디오 놀 장비·시설 안내](/studio-info)
+[발라드 창법 완전 가이드](/stories/balladstyle1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 피치 교정이란?](/stories/pitch1) | [스튜디오 놀 장비·시설 안내](/studio-info)
