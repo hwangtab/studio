@@ -209,4 +209,6 @@ Off-axis (측면): 둥글고 부드러운 사운드
 **→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
 **→ [베이스 솔로·그루브 솔로잉 기법 음악연습실 가이드](/stories/ko/practice-room-bass-solo-grooving1)**
 **→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
+**→ [기타 오픈 코드·소노리티 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-open-chord-sonority1)**
+**→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
 [스튜디오 놀 이용 요금](/pricing)

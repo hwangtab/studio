@@ -220,4 +220,6 @@ Cmaj7: C-E-G-B
 **→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실](/stories/ko/practice-room-bass-rhythm-locking1)**  
 **→ [베이스 슬랩 고급·Victor Wooten 기법 음악연습실](/stories/ko/practice-room-bass-slap-advanced1)**
 **→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
+**→ [기타 오픈 코드·소노리티 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-open-chord-sonority1)**
+**→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -223,4 +223,6 @@ DAW: Reaper (무료), GarageBand (Mac)
 **→ [드럼 재즈 스윙 콤핑·4/4 재즈 드럼 음악연습실](/stories/ko/practice-room-drum-jazz-swing-comping1)**  
 **→ [드럼 록 필인·트랜지션 기법 음악연습실](/stories/ko/practice-room-drum-rock-fills1)**
 **→ [베이스 솔로·그루브 솔로잉 기법 음악연습실 가이드](/stories/ko/practice-room-bass-solo-grooving1)**
+**→ [기타 오픈 코드·소노리티 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-open-chord-sonority1)**
+**→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
 [스튜디오 놀 이용 요금](/pricing)
