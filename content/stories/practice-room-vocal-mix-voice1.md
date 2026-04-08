@@ -241,4 +241,6 @@ G3 → G4 슬라이드:
 **→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 **→ [기타 비밥·재즈 기타 즉흥·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
 **→ [보컬 공명·흉성·두성 배치 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance-chest1)**
+**→ [베이스 썸 테크닉·슬랩 베이스 고급 음악연습실 가이드](/stories/ko/practice-room-bass-thumb-technique1)**
+**→ [피아노 블루스 콤핑·블루스 피아노 반주 음악연습실 가이드](/stories/ko/practice-room-piano-blues-comping1)**
 [스튜디오 놀 이용 요금](/pricing)**
