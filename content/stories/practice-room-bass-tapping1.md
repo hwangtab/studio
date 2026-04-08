@@ -147,7 +147,7 @@ C 메이저 코드 태핑:
 - **완벽 방음** — 반복 연습에 집중
 - **연신내역 5분**
 
-연습실 예약 및 문의: [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

@@ -141,7 +141,7 @@ Am 아르페지오 (개방 포지션):
 - **완벽 방음** — 반복 연습 없이 마음껏
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
