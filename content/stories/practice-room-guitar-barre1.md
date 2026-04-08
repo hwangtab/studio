@@ -72,4 +72,6 @@ F코드를 넘으면 기타 세계가 열립니다. 방음 개인실에서 매�
 - [보컬 두성·헤드 보이스 발성법 음악연습실](/stories/ko/practice-room-vocal-head-voice1)
 - [베이스 코드·하모닉스 솔로 베이스 음악연습실](/stories/ko/practice-room-bass-chords-harmony1)
 - [드럼 림샷·크로스스틱·림 기법 음악연습실](/stories/ko/practice-room-drum-rim-techniques1)
+- [기타 블루스 리듬·셔플 패턴 음악연습실](/stories/ko/practice-room-guitar-blues-rhythm1)
+- [피아노 가스펠·R&B 피아노 음악연습실](/stories/ko/practice-room-piano-gospel1)
 [스튜디오 놀 이용 요금](/pricing)
