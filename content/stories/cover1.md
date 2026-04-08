@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[커버곡 저작권 처리 방법](/stories/coverright1) | [녹음 세션 준비 체크리스트](/stories/session1) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [뮤직비디오·유튜브 영상 음원 녹음 가이드](/stories/mv1) | [스튜디오 놀 이용 요금](/pricing)
+[커버곡 저작권 처리 방법](/stories/coverright1) | [녹음 세션 준비 체크리스트](/stories/session1) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [뮤직비디오·유튜브 영상 음원 녹음 가이드](/stories/mv1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
