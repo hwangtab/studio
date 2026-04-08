@@ -13,10 +13,10 @@ const buttonVariants = cva(
         secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700",
       },
       size: {
-        sm: "h-9 px-3 text-sm",
+        sm: "h-11 px-3 text-sm",
         md: "h-11 px-5 text-base",
         lg: "h-14 px-8 text-lg",
-        icon: "h-10 w-10",
+        icon: "h-11 w-11",
       },
       fullWidth: {
         true: "w-full",

@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/react';
 import '../styles/globals.css';
 
 import Head from 'next/head';
+import Script from 'next/script';
 import { Montserrat } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -54,7 +55,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((r) => r.unregister());
+      });
     }
   }, []);
 
@@ -188,6 +191,19 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                   </m.div>
                 </AnimatePresence>
                 <Analytics />
+                {/* Google Analytics 4 — afterInteractive: 페이지 인터랙티브 후 로드 */}
+                <Script
+                  src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
+                  strategy="afterInteractive"
+                />
+                <Script id="ga4-init" strategy="afterInteractive">
+                  {`
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-KYGP18G36J');
+                  `}
+                </Script>
               </Layout>
             </MotionConfig>
           </LazyMotion>
