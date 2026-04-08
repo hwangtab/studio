@@ -234,4 +234,6 @@ John Paul Jones와 John Bonham의 리듬 섹션.
 **→ [기타 핑거피킹·Travis Picking 패턴 음악연습실 가이드](/stories/ko/practice-room-guitar-fingerpicking-travis1)**
 **→ [피아노 팝 반주법·코드 보이싱 음악연습실 가이드](/stories/ko/practice-room-piano-pop-accompaniment1)**
 **→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실 가이드](/stories/ko/practice-room-vocal-acappella-group1)**
+**→ [기타 네오소울·코드 멜로디 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-neo-soul1)**
+**→ [드럼 록 필인·트랜지션 기법 음악연습실 가이드](/stories/ko/practice-room-drum-rock-fills1)**
 [스튜디오 놀 이용 요금](/pricing)

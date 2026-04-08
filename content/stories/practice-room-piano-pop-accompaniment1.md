@@ -279,4 +279,6 @@ C-E-G + D(9음) = C-D-E-G
 **→ [피아노 재즈 보이싱 고급·폴리코드 음악연습실](/stories/ko/practice-room-piano-chord-voicings-advanced1)**  
 **→ [피아노 발라드 기법·서정적 연주 음악연습실](/stories/ko/practice-room-piano-ballad-technique1)**
 **→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실 가이드](/stories/ko/practice-room-vocal-acappella-group1)**
+**→ [기타 네오소울·코드 멜로디 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-neo-soul1)**
+**→ [드럼 록 필인·트랜지션 기법 음악연습실 가이드](/stories/ko/practice-room-drum-rock-fills1)**
 [스튜디오 놀 이용 요금](/pricing)
