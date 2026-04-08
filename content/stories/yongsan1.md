@@ -78,4 +78,4 @@ faq:
 
 ---
 
-[효창·청파·원효로 녹음실 안내](/stories/yongsan-hyochang1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [이태원·한남동 근처 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[효창·청파·원효로 녹음실 안내](/stories/yongsan-hyochang1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [이태원·한남동 근처 녹음실 안내](/stories/itaewon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -87,4 +87,4 @@ faq:
 
 ---
 
-[신설·용두·제기·답십리 녹음실 안내](/stories/dongdaemun-sinseol1) | [회기·경희대·외대앞·이문동 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[신설·용두·제기·답십리 녹음실 안내](/stories/dongdaemun-sinseol1) | [회기·경희대·외대앞·이문동 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
