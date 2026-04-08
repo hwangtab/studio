@@ -197,6 +197,8 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
 **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
 **→ [베이스 넥 포지션·전체 지판 활용 음악연습실 가이드](/stories/ko/practice-room-bass-neck-position1)**
+**→ [드럼 재즈 왈츠·3박자 스윙 음악연습실 가이드](/stories/ko/practice-room-drum-brushwork-jazz-waltz1)**
+**→ [기타 모드 이론·7가지 교회 선법 음악연습실 가이드](/stories/ko/practice-room-guitar-theory-modes1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -228,4 +230,6 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 **→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
 **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
 **→ [베이스 넥 포지션·전체 지판 활용 음악연습실 가이드](/stories/ko/practice-room-bass-neck-position1)**
+**→ [드럼 재즈 왈츠·3박자 스윙 음악연습실 가이드](/stories/ko/practice-room-drum-brushwork-jazz-waltz1)**
+**→ [기타 모드 이론·7가지 교회 선법 음악연습실 가이드](/stories/ko/practice-room-guitar-theory-modes1)**
 [스튜디오 놀 이용 요금](/pricing)

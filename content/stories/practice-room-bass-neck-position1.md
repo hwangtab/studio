@@ -178,4 +178,6 @@ E현 8프렛(C)부터 G현 14프렛(C)까지:
 **→ [베이스 재즈 베이스 가이드](/stories/ko/practice-room-bass-jazz-bass1)**
 **→ **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
 **→ [베이스 넥 포지션·전체 지판 활용 음악연습실 가이드](/stories/ko/practice-room-bass-neck-position1)**
+**→ [드럼 재즈 왈츠·3박자 스윙 음악연습실 가이드](/stories/ko/practice-room-drum-brushwork-jazz-waltz1)**
+**→ [기타 모드 이론·7가지 교회 선법 음악연습실 가이드](/stories/ko/practice-room-guitar-theory-modes1)**
 [스튜디오 놀 이용 요금](/pricing)**

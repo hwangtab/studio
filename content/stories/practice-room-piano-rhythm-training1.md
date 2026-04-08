@@ -199,4 +199,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 **→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
 **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
 **→ [베이스 넥 포지션·전체 지판 활용 음악연습실 가이드](/stories/ko/practice-room-bass-neck-position1)**
+**→ [드럼 재즈 왈츠·3박자 스윙 음악연습실 가이드](/stories/ko/practice-room-drum-brushwork-jazz-waltz1)**
+**→ [기타 모드 이론·7가지 교회 선법 음악연습실 가이드](/stories/ko/practice-room-guitar-theory-modes1)**
 [스튜디오 놀 이용 요금](/pricing)
