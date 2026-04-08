@@ -120,4 +120,4 @@ faq:
 
 ---
 
-[보컬 피드백 받는 방법 가이드](/stories/vocalfeedback1) | [보컬 연습 앱 추천](/stories/singapp1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 피드백 받는 방법 가이드](/stories/vocalfeedback1) | [보컬 연습 앱 추천](/stories/singapp1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
