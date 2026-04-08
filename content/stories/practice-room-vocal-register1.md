@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[보컬 연습실 가이드](/stories/practice-room-vocal1) | [믹스 보이스·팔세토 음악연습실](/stories/practice-room-mix-voice1) | [보컬 믹스 보이스·체스트 헤드 연결 음악연습실](/stories/practice-room-vocal-mix1) | [음역대 확장·고음 훈련 음악연습실](/stories/practice-room-vocal-range1) | [기타 코드 고급·확장 코드 연주 음악연습실](/stories/practice-room-guitar-chord-adv1) | [보컬 레지스터·성구 전환 훈련 음악연습실](/stories/practice-room-vocal-register1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 가이드](/stories/practice-room-vocal1) | [믹스 보이스·팔세토 음악연습실](/stories/practice-room-mix-voice1) | [보컬 믹스 보이스·체스트 헤드 연결 음악연습실](/stories/practice-room-vocal-mix1) | [음역대 확장·고음 훈련 음악연습실](/stories/practice-room-vocal-range1) | [기타 코드 고급·확장 코드 연주 음악연습실](/stories/practice-room-guitar-chord-adv1) | [보컬 레지스터·성구 전환 훈련 음악연습실](/stories/practice-room-vocal-register1) | [베이스 루트 노트·코드 읽기 고급 음악연습실](/stories/practice-room-bass-root-adv1) | [피아노 터치·아티큘레이션 훈련 음악연습실](/stories/practice-room-piano-touch1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
