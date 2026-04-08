@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[녹음 노이즈 제거 가이드](/stories/noise-reduction1) | [보컬 셀프 녹음 방법 가이드](/stories/selfrecord1) | [홈 레코딩 방음 방법 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [스튜디오 놀 이용 요금](/pricing)
+[녹음 노이즈 제거 가이드](/stories/noise-reduction1) | [보컬 셀프 녹음 방법 가이드](/stories/selfrecord1) | [홈 레코딩 방음 방법 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
