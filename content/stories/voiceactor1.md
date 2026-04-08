@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[보컬 녹음 세션 준비 가이드](/stories/session1) | [마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [녹음 파일 납품 형식 완전 가이드](/stories/stemfile1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 세션 준비 가이드](/stories/session1) | [마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [녹음 파일 납품 형식 완전 가이드](/stories/stemfile1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

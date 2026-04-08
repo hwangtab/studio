@@ -63,4 +63,4 @@ faq:
 
 ---
 
-[스튜디오 놀 성우·나레이션 녹음 서비스 보기](/voice-acting) | [오디션 데모 녹음 가이드](/stories/audition1) | [유튜브·나레이션 녹음 가이드](/stories/voice1) | [녹음 세션 준비 체크리스트](/stories/session1)
+[스튜디오 놀 성우·나레이션 녹음 서비스 보기](/voice-acting) | [오디션 데모 녹음 가이드](/stories/audition1) | [유튜브·나레이션 녹음 가이드](/stories/voice1) | [녹음 세션 준비 체크리스트](/stories/session1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

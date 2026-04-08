@@ -71,4 +71,4 @@ USB 마이크로 집에서 수십 번 녹음해봤지만, 아무리 처리해도
 
 ---
 
-[스튜디오 놀 녹음·믹싱 요금 안내](/pricing) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [커버곡 녹음 가이드](/stories/cover1)
+[스튜디오 놀 녹음·믹싱 요금 안내](/pricing) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [커버곡 녹음 가이드](/stories/cover1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

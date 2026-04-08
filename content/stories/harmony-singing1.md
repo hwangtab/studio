@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [백킹 보컬 녹음 완전 가이드](/stories/backing-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [EP 제작 완전 가이드](/stories/ep-making1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [백킹 보컬 녹음 완전 가이드](/stories/backing-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [EP 제작 완전 가이드](/stories/ep-making1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

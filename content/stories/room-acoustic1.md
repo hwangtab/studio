@@ -99,4 +99,4 @@ faq:
 
 ---
 
-[홈 스튜디오 첫 구축 가이드](/stories/homestudio1) | [방음·흡음 처리 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)
+[홈 스튜디오 첫 구축 가이드](/stories/homestudio1) | [방음·흡음 처리 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [홈 스튜디오 vs 음악연습실 비교](/stories/practice-room-vs-home1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

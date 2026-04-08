@@ -136,4 +136,4 @@ faq:
 
 ---
 
-[힙합 프로덕션 완전 가이드](/stories/hiphop-production1) | [뮤지컬 보컬 녹음 완전 가이드](/stories/musical-vocal1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [백보컬·코러스 녹음 완전 가이드](/stories/backing-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[힙합 프로덕션 완전 가이드](/stories/hiphop-production1) | [뮤지컬 보컬 녹음 완전 가이드](/stories/musical-vocal1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [백보컬·코러스 녹음 완전 가이드](/stories/backing-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

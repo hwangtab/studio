@@ -146,4 +146,4 @@ faq:
 
 ---
 
-[축가 녹음 준비 가이드 D-30~D-Day](/stories/wedding-song-guide1) | [축가 선곡 추천 가이드](/stories/wedding-song1) | [피로연 축가 녹음 가이드](/stories/wedding2) | [녹음 전날 준비 체크리스트](/stories/vocal-prep1) | [웨딩송 서비스 안내](/wedding-song) | [요금 안내](/pricing)
+[축가 녹음 준비 가이드 D-30~D-Day](/stories/wedding-song-guide1) | [축가 선곡 추천 가이드](/stories/wedding-song1) | [피로연 축가 녹음 가이드](/stories/wedding2) | [녹음 전날 준비 체크리스트](/stories/vocal-prep1) | [웨딩송 서비스 안내](/wedding-song) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)

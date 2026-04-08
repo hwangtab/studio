@@ -50,4 +50,4 @@ faq:
 
 ---
 
-[스튜디오 놀 축가 녹음 패키지 자세히 보기](/wedding-song) | [노래 선물 녹음 가이드](/stories/gift1) | [녹음 세션 준비 방법](/stories/session1) | [트로트·성인가요 녹음 가이드](/stories/trot1) | [결혼식 축가 녹음 완전 가이드](/stories/wedding2)
+[스튜디오 놀 축가 녹음 패키지 자세히 보기](/wedding-song) | [노래 선물 녹음 가이드](/stories/gift1) | [녹음 세션 준비 방법](/stories/session1) | [트로트·성인가요 녹음 가이드](/stories/trot1) | [결혼식 축가 녹음 완전 가이드](/stories/wedding2) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
