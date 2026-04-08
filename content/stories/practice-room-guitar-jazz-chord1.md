@@ -89,4 +89,6 @@ ii-V-I의 흐름, 드롭 2의 풍부함. 방음 개인실에서 재즈 보이싱
 - [베이스 메탈·헤비록 베이스라인 음악연습실](/stories/ko/practice-room-bass-metal-rock1)
 - [기타 록 리드·파워풀 솔로 기법 음악연습실](/stories/ko/practice-room-guitar-rock-lead1)
 - [드럼 그루브·포켓 연주·리듬 감각 음악연습실](/stories/ko/practice-room-drum-groove-pocket1)
+- [피아노 CCM·워십 피아노 반주법 음악연습실](/stories/ko/practice-room-piano-worship1)
+- [보컬 어질리티·멜리스마 훈련 음악연습실](/stories/ko/practice-room-vocal-agility1)
 [스튜디오 놀 이용 요금](/pricing)
