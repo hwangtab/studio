@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[베이스 연습실 가이드](/stories/practice-room-bass1) | [베이스 컨트리·록어빌리 주법 음악연습실](/stories/practice-room-bass-country1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [베이스 재즈·워킹 베이스 음악연습실](/stories/practice-room-bass-jazz1) | [피아노 소나타·클래식 레퍼토리 음악연습실](/stories/practice-room-piano-sonata1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[베이스 연습실 가이드](/stories/practice-room-bass1) | [베이스 컨트리·록어빌리 주법 음악연습실](/stories/practice-room-bass-country1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [베이스 재즈·워킹 베이스 음악연습실](/stories/practice-room-bass-jazz1) | [피아노 소나타·클래식 레퍼토리 음악연습실](/stories/practice-room-piano-sonata1) | [기타 블루스 스타일·블루스 표현 음악연습실](/stories/practice-room-guitar-blues1) | [보컬 인디·포크 스타일 음악연습실](/stories/practice-room-vocal-indie1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
