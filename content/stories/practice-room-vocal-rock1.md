@@ -125,4 +125,4 @@ slug: "practice-room-vocal-rock1"
 - [보컬 팝 발성 음악연습실](/stories/practice-room-vocal-pop1)
 - [보컬 클래식 성악 음악연습실](/stories/practice-room-vocal-classical1)
 - [보컬 뮤지컬 넘버·브로드웨이 스타일 음악연습실](/stories/practice-room-vocal-musical1)
-- [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1) | [스튜디오 놀 이용 요금](/pricing)
+- [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1) | [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1) | [스튜디오 놀 이용 요금](/pricing)
