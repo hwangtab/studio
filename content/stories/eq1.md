@@ -114,4 +114,6 @@ EQ 처리 전·후를 번갈아 들으며 더 좋은지 확인합니다. EQ 없�
 **→ [피아노 미니멀리즘·필립 글래스 스타일 연주 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism1)**
 **→ [베이스 블루스·12마디 블루스 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-blues1)**
 **→ [드럼 셔플·블루스 셔플 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-shuffle1)**
+**→ [기타 코드 대체·리하모니제이션 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-chord-substitution1)**
+**→ [보컬 음색·목소리 색깔 개발 음악연습실 가이드](/stories/ko/practice-room-vocal-tone-color1)**
 [스튜디오 놀 이용 요금](/pricing)

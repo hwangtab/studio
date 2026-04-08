@@ -179,4 +179,6 @@ C장조 → G장조: 5도 위 전조 (점진적 상승감)
 **→ [피아노 미니멀리즘·필립 글래스 스타일 연주 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism1)**
 **→ [베이스 블루스·12마디 블루스 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-blues1)**
 **→ [드럼 셔플·블루스 셔플 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-shuffle1)**
+**→ [기타 코드 대체·리하모니제이션 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-chord-substitution1)**
+**→ [보컬 음색·목소리 색깔 개발 음악연습실 가이드](/stories/ko/practice-room-vocal-tone-color1)**
 [스튜디오 놀 이용 요금](/pricing)
