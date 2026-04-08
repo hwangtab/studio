@@ -149,4 +149,6 @@ G3 → G4 슬라이드:
 **→ [보컬 흉성 발성 완전 가이드](/stories/ko/practice-room-vocal-chest-voice1)**
 **→ **→ [보컬 믹스 보이스·중간 음역 연결 음악연습실 가이드](/stories/ko/practice-room-vocal-mix-voice1)**
 **→ [기타 탭핑·라이트핸드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-tapping1)**
+**→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/ko/practice-room-bass-slap-advanced1)**
+**→ [드럼 홀수박자·변박 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-odd-times1)**
 [스튜디오 놀 이용 요금](/pricing)**
