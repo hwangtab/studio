@@ -70,7 +70,7 @@ export const getSeoDefaults = (locale: Locale): SEODefaults => {
       uz: 'Studio NOL | Musiqa ishlab chiqarish studiyasi'
     }),
     description: t(locale, {
-      ko: '연신내역 도보 5분, 스튜디오 놀에서 녹음실·연습실·믹싱/마스터링 서비스를 한 번에 이용하세요.',
+      ko: '연신내역 도보 5분, 스튜디오 놀에서 녹음실·음악연습실·믹싱/마스터링 서비스를 한 번에 이용하세요.',
       en: '5-min walk from station. Experience recording, practice rooms, and mixing/mastering at Studio NOL.',
       zh: '步行5分钟即到。在 Studio NOL 一站式体验录音、练习、混音/母带服务。',
       es: 'A 5 min a pie de la estación. Experimenta grabación, salas de práctica y mezcla/masterización.',
