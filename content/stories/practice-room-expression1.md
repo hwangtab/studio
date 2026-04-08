@@ -117,4 +117,6 @@ pp → mp → mf → f → ff 순으로 각각 연주
 - [보컬 어질리티·멜리스마 훈련 음악연습실](/stories/ko/practice-room-vocal-agility1)
 - [기타 인디·얼터너티브 기타 사운드 음악연습실](/stories/ko/practice-room-guitar-indie-alternative1)
 - [베이스 레게·덥 베이스라인 음악연습실](/stories/ko/practice-room-bass-reggae-dub1)
+- [드럼 더블 킥·더블 배스 드럼 훈련 음악연습실](/stories/ko/practice-room-drum-double-kick1)
+- [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
 [스튜디오 놀 이용 요금](/pricing)
