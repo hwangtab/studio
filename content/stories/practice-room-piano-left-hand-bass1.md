@@ -143,4 +143,4 @@ BPM 60에서 시작 → 80 → 100 → 120 → 140 순서로 점진적으로 올
 - [피아노 스트라이드 음악연습실](/stories/practice-room-piano-stride1)
 - [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1)
 - [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1)
-- [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [스튜디오 놀 이용 요금](/pricing)
+- [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [스튜디오 놀 이용 요금](/pricing)

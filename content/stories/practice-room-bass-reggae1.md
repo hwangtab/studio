@@ -140,4 +140,4 @@ G → F# → E 하행: 풀오프로 유연한 하행
 - [베이스 라틴 리듬 음악연습실](/stories/practice-room-bass-latin1)
 - [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1)
 - [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1)
-- [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [스튜디오 놀 이용 요금](/pricing)
+- [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [스튜디오 놀 이용 요금](/pricing)

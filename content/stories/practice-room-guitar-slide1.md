@@ -136,4 +136,4 @@ Rolling Stones의 Keith Richards가 즐겨 사용하는 튜닝입니다.
 - [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1)
 - [기타 클린톤·앰프 세팅 음악연습실](/stories/practice-room-guitar-clean-tone1)
 - [기타 코드 진행·전조 기법 음악연습실](/stories/practice-room-guitar-chord-progressions1)
-- [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [스튜디오 놀 이용 요금](/pricing)
+- [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [스튜디오 놀 이용 요금](/pricing)
