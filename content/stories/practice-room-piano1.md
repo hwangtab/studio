@@ -100,4 +100,5 @@ faq:
 **→ [기타 연습실 가이드](/stories/practice-room-guitar1)**  
 **→ [드럼 연습실 가이드](/stories/practice-room-drum1)**  
 **→ [실용음악 연습실 가이드](/stories/practice-room-music-college1)**  
+**→ [음악연습실 장비 가이드](/stories/practice-room-equipment1)**  
 **→ [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**

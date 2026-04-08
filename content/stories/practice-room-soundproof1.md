@@ -102,4 +102,4 @@ STC(Sound Transmission Class)는 벽·바닥·천장이 소리를 얼마나 차�
 
 [스튜디오 놀 방음 연습실 시설 안내](/practice-room) | [연습실 요금 안내](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [음악연습실 고르는 법](/stories/practice-room-guide1)
 [기타 연습실 가이드](/stories/practice-room-guitar1) | [드럼 연습실 가이드](/stories/practice-room-drum1) | [피아노 연습실 가이드](/stories/practice-room-piano1)
-[베이스 연습실 가이드](/stories/practice-room-bass1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)
+[베이스 연습실 가이드](/stories/practice-room-bass1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)
