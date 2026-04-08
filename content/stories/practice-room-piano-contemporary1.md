@@ -136,4 +136,4 @@ slug: "practice-room-piano-contemporary1"
 - [피아노 인상주의·드뷔시 스타일 음악연습실](/stories/practice-room-piano-impressionism1)
 - [피아노 낭만파·쇼팽 스타일 음악연습실](/stories/practice-room-piano-romantic1)
 - [피아노 즉흥 블루스 음악연습실](/stories/practice-room-piano-improv-blues1)
-- [기타 메탈·디스토션 음악연습실](/stories/practice-room-guitar-metal-distortion1) | [드럼 락카빌리·로큰롤 비트 음악연습실](/stories/practice-room-drum-rockabilly1) | [베이스 하모닉스·플래절렛 음악연습실](/stories/practice-room-bass-harmonics1) | [스튜디오 놀 이용 요금](/pricing)
+- [기타 메탈·디스토션 음악연습실](/stories/practice-room-guitar-metal-distortion1) | [드럼 락카빌리·로큰롤 비트 음악연습실](/stories/practice-room-drum-rockabilly1) | [베이스 하모닉스·플래절렛 음악연습실](/stories/practice-room-bass-harmonics1) | [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1) | [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [스튜디오 놀 이용 요금](/pricing)
