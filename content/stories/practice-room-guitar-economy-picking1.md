@@ -177,6 +177,8 @@ Am 아르페지오 (개방 포지션):
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 **→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
 **→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
+**→ [보컬 믹스 보이스·중간 음역 연결 음악연습실 가이드](/stories/ko/practice-room-vocal-mix-voice1)**
+**→ [기타 탭핑·라이트핸드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-tapping1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -186,4 +188,6 @@ Am 아르페지오 (개방 포지션):
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 **→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
 **→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
+**→ [보컬 믹스 보이스·중간 음역 연결 음악연습실 가이드](/stories/ko/practice-room-vocal-mix-voice1)**
+**→ [기타 탭핑·라이트핸드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-tapping1)**
 [스튜디오 놀 이용 요금](/pricing)
