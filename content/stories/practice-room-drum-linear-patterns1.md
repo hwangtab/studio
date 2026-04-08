@@ -206,6 +206,8 @@ Tower of Power의 드러머로, 16비트 리니어 패턴의 대가입니다. "O
 **→ [드럼 홀수박자·변박 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-odd-times1)**
 **→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/ko/practice-room-piano-chord-voicings-advanced1)**
 **→ [기타 하이브리드 피킹·핑거스타일 융합 음악연습실 가이드](/stories/ko/practice-room-guitar-hybrid-picking1)**
+**→ [보컬 호흡 컨트롤·폐활량 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-breath-control1)**
+**→ [베이스 투핸드 탭핑·고급 솔로 기법 음악연습실 가이드](/stories/ko/practice-room-bass-two-hand-tapping1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -221,4 +223,6 @@ Tower of Power의 드러머로, 16비트 리니어 패턴의 대가입니다. "O
 **→ [드럼 홀수박자·변박 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-odd-times1)**
 **→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/ko/practice-room-piano-chord-voicings-advanced1)**
 **→ [기타 하이브리드 피킹·핑거스타일 융합 음악연습실 가이드](/stories/ko/practice-room-guitar-hybrid-picking1)**
+**→ [보컬 호흡 컨트롤·폐활량 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-breath-control1)**
+**→ [베이스 투핸드 탭핑·고급 솔로 기법 음악연습실 가이드](/stories/ko/practice-room-bass-two-hand-tapping1)**
 [스튜디오 놀 이용 요금](/pricing)

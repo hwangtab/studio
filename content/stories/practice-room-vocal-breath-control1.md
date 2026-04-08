@@ -1,171 +1,173 @@
 ---
-title: "보컬 호흡 조절·서스테인 완전 가이드 — 연신내 음악연습실 실전 연습"
+title: "보컬 호흡 컨트롤·폐활량 훈련 — 음악연습실 완전 가이드"
 date: "2026-04-08"
-description: "보컬 호흡 조절과 서스테인 능력을 연신내 음악연습실에서 체계적으로 훈련하세요. 복식호흡 심화·어퍼체스트 제어·긴 프레이즈 연결·다이나믹 크레셴도까지 단계별 완전 가이드."
-tags: ["음악연습실", "보컬", "호흡", "서스테인", "연신내"]
-category: "practice-room"
-slug: "practice-room-vocal-breath-control1"
+excerpt: "복식호흡, 지지(Support), 폐활량 확장 훈련. 보컬 호흡의 기초부터 고급 테크닉까지 은평구 24시간 음악연습실에서 완성하세요."
+tags: ["음악연습실", "보컬", "호흡컨트롤", "복식호흡", "폐활량", "은평구음악연습실"]
+category: "vocal"
 ---
 
-# 보컬 호흡 조절·서스테인 완전 가이드 — 연신내 음악연습실 실전 연습
+# 보컬 호흡 컨트롤·폐활량 훈련 — 음악연습실 완전 가이드
 
-보컬리스트에게 호흡 조절(Breath Control)은 연주자의 활(Bow)과 같습니다. 피치, 음량, 음색, 서스테인이 모두 호흡의 질에 달려 있습니다. 연신내 음악연습실에서 체계적인 호흡 훈련을 통해 발성의 완성도를 높이는 방법을 소개합니다.
+"목소리는 호흡이다"—이 말은 성악에서나 팝보컬에서나 동일하게 적용되는 진리입니다. 아무리 좋은 목소리를 타고났어도 호흡을 지지하지 못하면 긴 프레이즈를 연결하지 못하고, 고음에서 힘이 빠지며, 음정이 흔들립니다. 이 가이드는 보컬 호흡의 과학부터 실제 훈련까지 체계적으로 안내합니다.
 
-## 보컬 호흡의 기초 구조
+---
 
-### 폐·횡격막·복부의 역할
+## 보컬 호흡의 기초
 
-**횡격막(Diaphragm)**은 폐 아래에 위치한 돔 형태의 근육입니다.
-- **흡기**: 횡격막이 아래로 내려가 폐가 확장되어 공기가 들어옴
-- **발성**: 횡격막이 천천히 올라오며 공기를 조절하여 성대에 공급
+### 흉식호흡 vs 복식호흡
 
-**복부 근육(Abdominal Muscles)**:
-- 횡격막의 움직임을 지지하고 조절
-- 복부 근육이 강할수록 호흡 조절이 세밀해짐
+**흉식호흡:**
+- 가슴이 올라가고 어깨가 들썩임
+- 폐의 상단 부분만 활용
+- 금방 공기가 부족해짐 — 보컬에 비효율적
 
-### 잘못된 호흡 패턴
-- **어퍼체스트 브리딩(Upper Chest Breathing)**: 어깨가 올라가고 가슴만 확장되는 얕은 호흡 → 빠르게 공기 소진
-- **긴장 호흡**: 목과 어깨가 경직된 상태의 호흡 → 음색이 경직되고 서스테인이 짧아짐
+**복식호흡 (횡격막 호흡):**
+- 횡격막이 아래로 내려가며 폐 하단이 확장
+- 배가 앞으로 나옴 (복부 팽창)
+- 훨씬 많은 공기 용량, 지속적 지지 가능
 
-## 복식호흡 심화 훈련
+### 복식호흡 확인법
 
-### 기본 복식호흡 확인
-1. 등을 곧게 세우고 서기
-2. 손을 배꼽 아래 복부에 얹기
-3. 숨을 들이쉬면서 배가 앞으로 나오는지 확인
-4. 발성 시 배가 서서히 들어가는지 확인
+```
+1. 누워서 배꼽 위에 책을 올린다
+2. 숨을 들이쉴 때 책이 위로 올라가면 복식호흡
+3. 올라가지 않으면 흉식호흡
+```
 
-이것이 복식호흡의 기본입니다. 배가 아닌 가슴이 먼저 움직이면 교정이 필요합니다.
+---
 
-### 360도 호흡(Rib Cage Expansion)
-복부뿐 아니라 갈비뼈 전체가 팽창하는 더 깊은 호흡 방식입니다.
-1. 배꼽 위 갈비뼈 아래에 양손을 얹기
-2. 숨을 들이쉬며 옆으로, 앞으로, 뒤로 갈비뼈가 팽창하는지 확인
-3. 어깨는 올라가지 않아야 함
+## 지지(Support)와 아포지오(Appoggio)
 
-이 방식으로 폐 용량을 최대로 활용하면 긴 서스테인을 위한 공기 저장량이 늘어납니다.
+### 지지란?
 
-## 서스테인(Sustain) 향상 훈련
+지지는 **들이쉰 호흡을 조절해서 천천히 내보내는 근육 제어**입니다. 성악에서는 아포지오(Appoggio, 이탈리아어)라고 합니다.
 
-서스테인은 단일 음을 얼마나 길게 안정적으로 유지할 수 있는가의 능력입니다.
+**지지의 핵심 근육:**
+- **횡격막**: 호흡의 주역
+- **복횡근**: 복부 깊은 내부 근육
+- **늑간근**: 갈비뼈 사이 근육
 
-### 서스테인 기초 측정
-1. 편안한 중간 음을 한 번 들이쉬고 발성
-2. 스탑워치로 음이 흔들리지 않는 시간 측정
-3. 초급: 10~15초 / 중급: 20~25초 / 고급: 30초 이상
+### 지지 훈련법
 
-### 서스테인 향상 훈련 1: 4초 증가법
-현재 서스테인 기록에서 2~4초를 추가하는 목표로 매일 훈련합니다. 한 번에 20초를 늘리려 하지 말고 조금씩 늘려가세요.
+**카운팅 훈련:**
+```
+1. 복식호흡으로 깊게 들이쉬기 (4카운트)
+2. 내쉴 때 '스ㅡㅡ' 소리로 내보내기
+3. 목표: 한 호흡에 16카운트 → 32카운트 → 64카운트
+```
 
-### 서스테인 향상 훈련 2: 시소 크레셴도
-- 음을 시작할 때 pp(피아니시모)로 시작
-- 서서히 ff(포르티시모)까지 크레셴도
-- 다시 pp로 데크레셴도
+**허기 느낌 훈련:**
+```
+배가 고플 때 복부의 당기는 느낌을 기억하세요.
+그 느낌이 바로 지지 근육이 활성화된 상태입니다.
+긴 프레이즈를 노래할 때 그 느낌을 의식적으로 유지하세요.
+```
 
-이 훈련은 서스테인 능력과 다이나믹 조절 능력을 동시에 강화합니다.
+---
 
-## 긴 프레이즈 연결 훈련
+## 폐활량 확장 훈련
 
-### 숨 포인트(Breath Mark) 계획하기
-긴 구절을 노래하기 전에 악보에 숨을 쉬는 위치를 미리 표시합니다. 프레이즈의 흐름을 끊지 않는 자연스러운 위치를 선택하세요.
+### 스트레칭 훈련
 
-**좋은 숨 포인트**: 구절의 쉼표, 단어 끝, 낮은 음 뒤
-**나쁜 숨 포인트**: 음절 중간, 고음 직전, 강조 단어 앞
+**흉곽 확장 스트레칭:**
+```
+1. 양손을 등 뒤에서 깍지
+2. 가슴을 최대한 앞으로 내밀며 팔을 뒤로 젖힘
+3. 그 상태에서 깊은 복식호흡 5회
+```
 
-### 빠른 흡기(Quick Breath) 훈련
-긴 프레이즈에서는 짧은 순간에 많은 공기를 흡입하는 "스냅 브레스(Snap Breath)"가 필요합니다.
-1. 2박 내에 복식호흡으로 최대한 공기 충전 연습
-2. "후!" 하고 한 번에 공기를 채우는 느낌
-3. 어깨가 올라가지 않도록 주의
+**옆구리 확장:**
+```
+1. 한 팔을 머리 위로 뻗어 옆구리를 당기기
+2. 반대쪽 폐가 넓어지는 느낌으로 깊은 호흡
+3. 양쪽 교대 각 5회
+```
 
-## 다이나믹 컨트롤과 호흡의 관계
+### 4-7-8 호흡법
 
-### 공기 압력과 음량
-- **ff (강하게)**: 복부 근육으로 공기 압력을 높여 성대에 강한 기류 공급
-- **pp (약하게)**: 공기를 매우 천천히, 균일하게 흘려 성대에 섬세하게 공급
+```
+1. 4박자 동안 코로 들이쉬기
+2. 7박자 동안 숨 참기
+3. 8박자 동안 입으로 내쉬기
+반복 4세트
+```
 
-**주의**: 강하게 노래한다고 공기를 많이 쓰는 것이 아닙니다. 오히려 과도한 공기가 성대를 지나치면 소리가 거칠어지고 음정이 불안정해집니다.
+이 훈련은 폐활량 확장과 미주신경 활성화에 효과적입니다.
 
-### 메사 디 보체(Messa di Voce)
-한 음에서 pp→ff→pp를 연속으로 수행하는 고급 호흡 조절 훈련입니다. 클래식 발성에서 유래했지만 모든 장르의 보컬에 유용합니다.
+---
 
-## 연신내 음악연습실에서 호흡 연습 루틴
+## 보컬 호흡 실전 적용
 
-| 시간 | 내용 |
-|-----|------|
-| 0~10분 | 복식호흡 확인 + 360도 호흡 훈련 |
-| 10~20분 | 서스테인 측정 → 4초 증가 목표 훈련 |
-| 20~30분 | 시소 크레셴도 (pp→ff→pp) 3회 반복 |
-| 30~40분 | 빠른 흡기(스냅 브레스) 연습 |
-| 40~50분 | 긴 프레이즈 구간 숨 포인트 계획 후 연습 |
-| 50~60분 | 레퍼토리 곡에 적용 — 호흡 조절 통합 연주 |
+### 긴 프레이즈 연결
 
-## 호흡 연습 시 주의사항
+**단계적 훈련:**
+```
+1단계: 짧은 프레이즈 (4박) 호흡 없이 연결
+2단계: 8박 프레이즈
+3단계: 16박 프레이즈 도전
+4단계: 한 호흡으로 4마디 연결
+```
 
-### 과호흡 방지
-너무 많은 공기를 들이쉬면 오히려 복부 근육의 긴장이 풀립니다. 적당량의 공기로 충분한 지지를 유지하는 것이 핵심입니다.
+### 스타카토 호흡 강화
 
-### 어깨 긴장 해소
-발성 전후로 어깨를 위→뒤→아래→앞으로 천천히 회전하는 어깨 풀기 운동을 합니다. 어깨가 긴장되면 호흡 근육 전체가 영향을 받습니다.
+```
+하, 하, 하, 하 (빠르게 반복)
+배꼽이 안으로 당겨지는 느낌 확인
+이 훈련이 횡격막 근력을 강화
+```
 
-## 추천 레퍼런스
+### 포르타멘토 호흡
 
-- **Barbra Streisand**: 긴 프레이즈 서스테인과 다이나믹 조절의 교과서
-- **Stevie Wonder**: 자연스러운 복식호흡 기반의 그루비한 발성
-- **Andrea Bocelli**: 클래식 호흡 기반의 팝 크로스오버 발성
-- **Whitney Houston**: 다이나믹 크레셴도와 서스테인의 강점
+긴 슬라이드 음정을 한 호흡으로:
+```
+C → G → C' (전체 옥타브 미끄러짐) 한 호흡
+발성은 '아아아ㅡ' 또는 '에에에ㅡ'
+```
+
+---
+
+## 음악연습실 호흡 훈련 루틴
+
+### 매일 15분 호흡 루틴
+
+**1. 스트레칭 (3분)**
+- 흉곽 확장, 옆구리 스트레칭
+- 어깨 롤링, 목 스트레칭
+
+**2. 복식호흡 의식화 (3분)**
+- 누운 자세에서 복식호흡 10회
+- 배꼽 위에 손 올려 움직임 확인
+
+**3. 카운팅 훈련 (5분)**
+- 16카운트 스ㅡ 소리 호흡 5세트
+- 중간에 절대 호흡 유지
+
+**4. 발성 적용 (4분)**
+- '아' '에' '이' '오' '우'를 한 호흡으로
+- 각 모음 8박씩
+
+---
+
+## 보컬 호흡 관련 일반적 오류
+
+| 오류 | 원인 | 해결책 |
+|------|------|--------|
+| 고음에서 힘이 빠짐 | 호흡 지지 부족 | 지지 근육 의식적 사용 |
+| 프레이즈 중간에 끊김 | 폐활량 부족 | 카운팅 훈련으로 폐활량 확장 |
+| 어깨가 들썩임 | 흉식호흡 | 복식호흡 재훈련 |
+| 소리가 쉰 소리 | 과도한 공기 누출 | 성대 지지 강화 |
+
+---
 
 ## 마무리
 
-호흡 훈련은 단기간에 결과가 나타나지 않지만, 꾸준히 훈련하면 발성의 모든 측면이 향상됩니다. 연신내 음악연습실에서 매 연습 시작 전 10분을 호흡 훈련에 투자하는 습관을 만들어보세요. 보컬의 기반이 탄탄해질수록 모든 기술이 더 자연스럽고 안정적으로 발전합니다.
+호흡 훈련은 즉각적 효과보다 **꾸준한 반복이 만드는 근육 기억**입니다. 은평구 24시간 음악연습실에서 매일 15분만 호흡 루틴을 지키면, 한 달 후 놀라운 차이를 경험하게 됩니다.
 
----
+좋은 호흡은 모든 보컬 테크닉의 기반입니다. 고음도, 긴 프레이즈도, 감정 표현도—모두 탄탄한 호흡 지지 위에서 완성됩니다.
 
-**관련 가이드**
-- [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
-- [보컬 팔세토·헤드보이스 음악연습실](/stories/practice-room-vocal-falsetto1)
-- [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1)
-- [보컬 팝 발성 음악연습실](/stories/practice-room-vocal-pop1)
-- [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1) | [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [드럼 폴리리듬·크로스리듬 음악연습실](/stories/practice-room-drum-polyrhythm1) | [베이스 워킹 베이스라인 심화 음악연습실](/stories/practice-room-bass-walking-bass2) | [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1) | [기타 코드 진행·전조 기법 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [드럼 루디먼트·기초 스트로크 음악연습실](/stories/practice-room-drum-rudiments1) | [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [보컬 마이크 테크닉·마이킹 기초 음악연습실](/stories/practice-room-vocal-microphone-technique1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
-- [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
-- [드럼 브러시 고급 주법·재즈 발라드 연주 음악연습실](/stories/ko/practice-room-drum-brushwork-advanced1)
-- [피아노 스트라이드·뉴올리언스 피아노 음악연습실](/stories/ko/practice-room-piano-stride1)
-- [기타 핑거스타일 편곡·솔로 기타 어레인지 음악연습실](/stories/ko/practice-room-guitar-fingerstyle-arrangement1)
-- [보컬 두성·헤드 보이스 발성법 음악연습실](/stories/ko/practice-room-vocal-head-voice1)
-- [베이스 코드·하모닉스 솔로 베이스 음악연습실](/stories/ko/practice-room-bass-chords-harmony1)
-- [드럼 림샷·크로스스틱·림 기법 음악연습실](/stories/ko/practice-room-drum-rim-techniques1)
-- [기타 블루스 리듬·셔플 패턴 음악연습실](/stories/ko/practice-room-guitar-blues-rhythm1)
-- [피아노 가스펠·R&B 피아노 음악연습실](/stories/ko/practice-room-piano-gospel1)
-- [보컬 흉성·체스트 보이스 강화 훈련 음악연습실](/stories/ko/practice-room-vocal-chest-voice1)
-- [베이스 펑크 그루브·원 드롭 베이스라인 음악연습실](/stories/ko/practice-room-bass-funk-groove1)
-- [드럼 심벌 기법·라이드·크래쉬 활용법 음악연습실](/stories/ko/practice-room-drum-cymbal-techniques1)
-- [기타 컨트리·치킨피킹 기법 음악연습실](/stories/ko/practice-room-guitar-country1)
-- [피아노 클래식 테크닉·핑거 독립성 훈련 음악연습실](/stories/ko/practice-room-piano-classical-technique1)
-- [보컬 비브라토·트릴 훈련법 음악연습실](/stories/ko/practice-room-vocal-vibrato1)
-- [베이스 라틴·살사·보사노바 베이스라인 음악연습실](/stories/ko/practice-room-bass-latin1)
-- [기타 모달 연주·모드 스케일 활용 음악연습실](/stories/ko/practice-room-guitar-modal-playing1)
-- [드럼 폴리리듬 심화·아프리카 리듬 음악연습실](/stories/ko/practice-room-drum-polyrhythm-advanced1)
-- [피아노 팝 편곡·발라드 반주법 음악연습실](/stories/ko/practice-room-piano-pop-arrangement1)
-- [보컬 발음 훈련·딕션 스피드 연습 음악연습실](/stories/ko/practice-room-vocal-tongue-twisters1)
-- [베이스 메탈·헤비록 베이스라인 음악연습실](/stories/ko/practice-room-bass-metal-rock1)
-- [기타 록 리드·파워풀 솔로 기법 음악연습실](/stories/ko/practice-room-guitar-rock-lead1)
-- [드럼 그루브·포켓 연주·리듬 감각 음악연습실](/stories/ko/practice-room-drum-groove-pocket1)
-- [피아노 CCM·워십 피아노 반주법 음악연습실](/stories/ko/practice-room-piano-worship1)
-- [보컬 어질리티·멜리스마 훈련 음악연습실](/stories/ko/practice-room-vocal-agility1)
-- [기타 인디·얼터너티브 기타 사운드 음악연습실](/stories/ko/practice-room-guitar-indie-alternative1)
-- [베이스 레게·덥 베이스라인 음악연습실](/stories/ko/practice-room-bass-reggae-dub1)
-- [드럼 더블 킥·더블 배스 드럼 훈련 음악연습실](/stories/ko/practice-room-drum-double-kick1)
-- [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
-- [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
-- [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
-**→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
-**→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
-**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
-**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
-**→ [보컬 믹스 보이스·중간 음역 연결 음악연습실 가이드](/stories/ko/practice-room-vocal-mix-voice1)**
-**→ [기타 탭핑·라이트핸드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-tapping1)**
-**→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/ko/practice-room-bass-slap-advanced1)**
-**→ [드럼 홀수박자·변박 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-odd-times1)**
-**→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/ko/practice-room-piano-chord-voicings-advanced1)**
-**→ [기타 하이브리드 피킹·핑거스타일 융합 음악연습실 가이드](/stories/ko/practice-room-guitar-hybrid-picking1)**
-[스튜디오 놀 이용 요금](/pricing)
+**→ [스튜디오 놀 음악연습실 예약](/practice-room)**
+**→ [보컬 믹스 보이스 가이드](/stories/ko/practice-room-vocal-mix-voice1)**
+**→ [보컬 비브라토 훈련 가이드](/stories/ko/practice-room-vocal-vibrato1)**
+**→ **→ [보컬 호흡 컨트롤·폐활량 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-breath-control1)**
+**→ [베이스 투핸드 탭핑·고급 솔로 기법 음악연습실 가이드](/stories/ko/practice-room-bass-two-hand-tapping1)**
+[스튜디오 놀 이용 요금](/pricing)**
