@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[드럼 연습실 가이드](/stories/practice-room-drum1) | [드럼 브러시 주법·재즈 브러시 음악연습실](/stories/practice-room-drum-brush1) | [재즈 드럼 고급 훈련 음악연습실](/stories/practice-room-drum-jazz-adv1) | [드럼 타이밍·포켓 그루브 훈련 음악연습실](/stories/practice-room-drum-timing1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[드럼 연습실 가이드](/stories/practice-room-drum1) | [드럼 브러시 주법·재즈 브러시 음악연습실](/stories/practice-room-drum-brush1) | [재즈 드럼 고급 훈련 음악연습실](/stories/practice-room-drum-jazz-adv1) | [드럼 타이밍·포켓 그루브 훈련 음악연습실](/stories/practice-room-drum-timing1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [보컬 리듬·박자감 훈련 음악연습실](/stories/practice-room-vocal-rhythm1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
