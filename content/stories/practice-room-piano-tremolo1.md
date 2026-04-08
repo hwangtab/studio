@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [피아노 리듬 읽기·박자 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [피아노 소나타·클래식 레퍼토리 음악연습실](/stories/practice-room-piano-sonata1) | [피아노 조표·조성 이해 음악연습실](/stories/practice-room-piano-key-signature1) | [보컬 감정 표현·가사 전달 음악연습실](/stories/practice-room-vocal-emotion1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [피아노 리듬 읽기·박자 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [피아노 소나타·클래식 레퍼토리 음악연습실](/stories/practice-room-piano-sonata1) | [피아노 조표·조성 이해 음악연습실](/stories/practice-room-piano-key-signature1) | [보컬 감정 표현·가사 전달 음악연습실](/stories/practice-room-vocal-emotion1) | [기타 스케일 포지션·넥 전체 활용 음악연습실](/stories/practice-room-guitar-scale-position1) | [드럼 템포 안정·리타르단도 훈련 음악연습실](/stories/practice-room-drum-tempo1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
