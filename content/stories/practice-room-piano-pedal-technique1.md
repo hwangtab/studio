@@ -131,7 +131,7 @@ category: "piano"
 - **완벽 방음** — 풍성한 서스테인 사운드를 마음껏 내며 연습
 - **연신내역 5분 거리**
 
-연습실 예약 및 문의: [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

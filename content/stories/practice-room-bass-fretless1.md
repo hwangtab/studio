@@ -144,7 +144,7 @@ category: "bass"
 - **완벽 방음** — 느리고 반복적인 인토네이션 훈련도 눈치 없이
 - **연신내역 5분** — 은평구 접근성 최상
 
-연습실 예약 및 문의: [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
