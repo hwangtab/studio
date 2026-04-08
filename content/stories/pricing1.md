@@ -99,4 +99,4 @@ Neumann U87AI 같은 레퍼런스 마이크와 전문 엔지니어의 보컬 디
 
 ---
 
-[스튜디오 놀 시설 및 장비 안내](/studio-info) | [셀프 믹싱 vs 전문 믹싱 의뢰 비교](/stories/selfmix1) | [보컬 녹음 비용 투명 가이드](/stories/recording-cost1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 시설 및 장비 안내](/studio-info) | [셀프 믹싱 vs 전문 믹싱 의뢰 비교](/stories/selfmix1) | [보컬 녹음 비용 투명 가이드](/stories/recording-cost1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [드럼 브러쉬·와이어 브러쉬 연주 음악연습실](/stories/practice-room-drum-brush1) | [피아노 즉흥 반주·코드 반주 음악연습실](/stories/practice-room-piano-sight-play1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

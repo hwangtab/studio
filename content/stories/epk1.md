@@ -107,4 +107,4 @@ EPK는 기회가 왔을 때 '지금 바로 보내드릴 수 있습니다'라고 
 
 ---
 
-[보컬 포트폴리오 만들기](/stories/portfolio1) | [기획사·레이블 데모 트랙 가이드](/stories/demotrack1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 포트폴리오 만들기](/stories/portfolio1) | [기획사·레이블 데모 트랙 가이드](/stories/demotrack1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [드럼 브러쉬·와이어 브러쉬 연주 음악연습실](/stories/practice-room-drum-brush1) | [피아노 즉흥 반주·코드 반주 음악연습실](/stories/practice-room-piano-sight-play1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

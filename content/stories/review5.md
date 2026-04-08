@@ -60,4 +60,4 @@ DAW를 처음 배우면서부터 믹싱도 직접 해왔습니다. 2년 동안 �
 
 ---
 
-[스튜디오 놀 믹싱·마스터링 요금 및 서비스 안내](/pricing) | [음원 발매 가이드](/stories/release1) | [믹싱 강좌 시작하기](/stories/mixing1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 믹싱·마스터링 요금 및 서비스 안내](/pricing) | [음원 발매 가이드](/stories/release1) | [믹싱 강좌 시작하기](/stories/mixing1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [드럼 브러쉬·와이어 브러쉬 연주 음악연습실](/stories/practice-room-drum-brush1) | [피아노 즉흥 반주·코드 반주 음악연습실](/stories/practice-room-piano-sight-play1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

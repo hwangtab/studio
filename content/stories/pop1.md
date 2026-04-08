@@ -93,4 +93,4 @@ faq:
 
 ---
 
-[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [알앤비 보컬 녹음 가이드](/stories/rnb1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)
+[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [드럼 브러쉬·와이어 브러쉬 연주 음악연습실](/stories/practice-room-drum-brush1) | [피아노 즉흥 반주·코드 반주 음악연습실](/stories/practice-room-piano-sight-play1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 안내](/pricing) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [알앤비 보컬 녹음 가이드](/stories/rnb1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

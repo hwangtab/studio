@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[목소리 굵어지는 방법](/stories/deepvoice1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[목소리 굵어지는 방법](/stories/deepvoice1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [드럼 브러쉬·와이어 브러쉬 연주 음악연습실](/stories/practice-room-drum-brush1) | [피아노 즉흥 반주·코드 반주 음악연습실](/stories/practice-room-piano-sight-play1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
