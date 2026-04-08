@@ -123,7 +123,7 @@ category: "vocal"
 - **24시간 운영** — 규칙적인 딕션 훈련 일과
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
