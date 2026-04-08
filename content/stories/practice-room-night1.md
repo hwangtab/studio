@@ -90,4 +90,4 @@ faq:
 **→ [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1)**  
 **→ [개인 연습실 완벽 가이드](/stories/practice-room-private1)**  
 **→ [취미 음악인을 위한 연습실 가이드](/stories/practice-room-hobby1)**  
-**→ [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [의정부·양주 음악연습실](/stories/practice-room-uijeongbu1) | [무인 음악연습실 가이드](/stories/practice-room-unmanned1) | [부천·인천·김포 음악연습실](/stories/practice-room-bucheon1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
+**→ [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [의정부·양주 음악연습실](/stories/practice-room-uijeongbu1) | [무인 음악연습실 가이드](/stories/practice-room-unmanned1) | [부천·인천·김포 음악연습실](/stories/practice-room-bucheon1) | [음악연습실 vs 노래방 비교](/stories/practice-room-vs-karaoke1) | [홍대 vs 연신내 음악연습실 비교](/stories/practice-room-hongdae1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
