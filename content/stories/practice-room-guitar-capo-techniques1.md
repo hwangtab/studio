@@ -138,6 +138,8 @@ category: "guitar"
 - [베이스 펑크 그루브·원 드롭 베이스라인 음악연습실](/stories/ko/practice-room-bass-funk-groove1)
 - [드럼 심벌 기법·라이드·크래쉬 활용법 음악연습실](/stories/ko/practice-room-drum-cymbal-techniques1)
 - [기타 컨트리·치킨피킹 기법 음악연습실](/stories/ko/practice-room-guitar-country1)
+- [피아노 클래식 테크닉·핑거 독립성 훈련 음악연습실](/stories/ko/practice-room-piano-classical-technique1)
+- [보컬 비브라토·트릴 훈련법 음악연습실](/stories/ko/practice-room-vocal-vibrato1)
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
