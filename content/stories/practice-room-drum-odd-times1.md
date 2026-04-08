@@ -244,4 +244,6 @@ Dave Brubeck의 "Take Five"에서 Joe Morello가 사용한 스타일
 **→ [베이스 확장 음역·5현·6현 베이스 활용법 음악연습실 가이드](/stories/ko/practice-room-bass-extended-range1)**
 **→ [드럼 메탈·블래스트 비트·더블 킥 메탈 음악연습실 가이드](/stories/ko/practice-room-drum-metal-blast-beat1)**
 **→ [기타 앰비언트·텍스처 기타·이펙터 활용 음악연습실 가이드](/stories/ko/practice-room-guitar-ambient-textures1)**
+**→ [보컬 하모니·앙상블 합창 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-ensemble1)**
+**→ [피아노 스트라이드 고급 테크닉 음악연습실 가이드](/stories/ko/practice-room-piano-stride-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)**
