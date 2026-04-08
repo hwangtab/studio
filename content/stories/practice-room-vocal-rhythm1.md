@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 피치·음정 교정 훈련 음악연습실](/stories/practice-room-vocal-pitch1) | [보컬 무대 존재감·퍼포먼스 고급 음악연습실](/stories/practice-room-vocal-stage-adv1) | [리듬·박자 훈련 음악연습실](/stories/practice-room-rhythm1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 피치·음정 교정 훈련 음악연습실](/stories/practice-room-vocal-pitch1) | [보컬 무대 존재감·퍼포먼스 고급 음악연습실](/stories/practice-room-vocal-stage-adv1) | [리듬·박자 훈련 음악연습실](/stories/practice-room-rhythm1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [기타 재즈 보이싱·코드 멜로디 음악연습실](/stories/practice-room-guitar-jazz-voicing1) | [드럼 크래시·라이드 심벌 활용 음악연습실](/stories/practice-room-drum-cymbal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
