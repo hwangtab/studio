@@ -126,4 +126,4 @@ slug: "practice-room-vocal-breath-control1"
 - [보컬 팔세토·헤드보이스 음악연습실](/stories/practice-room-vocal-falsetto1)
 - [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1)
 - [보컬 팝 발성 음악연습실](/stories/practice-room-vocal-pop1)
-- [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1) | [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [스튜디오 놀 이용 요금](/pricing)
+- [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1) | [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [드럼 폴리리듬·크로스리듬 음악연습실](/stories/practice-room-drum-polyrhythm1) | [베이스 워킹 베이스라인 심화 음악연습실](/stories/practice-room-bass-walking-bass2) | [스튜디오 놀 이용 요금](/pricing)
