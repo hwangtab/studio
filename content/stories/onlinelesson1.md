@@ -99,4 +99,4 @@ faq:
 
 ---
 
-[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [취미로 노래 배우기 가이드](/stories/hobbymusic1) | [스튜디오 놀 이용 요금](/pricing)
+[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [취미로 노래 배우기 가이드](/stories/hobbymusic1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

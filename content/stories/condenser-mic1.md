@@ -140,4 +140,4 @@ faq:
 
 ---
 
-[마이크 종류 완전 가이드](/stories/microphone-types1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[마이크 종류 완전 가이드](/stories/microphone-types1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
