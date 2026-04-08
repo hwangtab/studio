@@ -81,12 +81,10 @@ faq:
 
 ## 앱 연습 루틴 (하루 20분)
 
-```
-0~5분: Vocal Pitch Monitor로 워밍업 스케일 음정 체크
-5~10분: Vanido 보컬 연습 모듈
-10~15분: Perfect Ear 청음 훈련
-15~20분: 연습 중인 곡 부르며 Vocal Pitch Monitor로 음정 확인
-```
+- **0~5분**: Vocal Pitch Monitor로 워밍업 스케일 음정 체크
+- **5~10분**: Vanido 보컬 연습 모듈
+- **10~15분**: Perfect Ear 청음 훈련
+- **15~20분**: 연습 중인 곡 부르며 Vocal Pitch Monitor로 음정 확인
 
 ---
 

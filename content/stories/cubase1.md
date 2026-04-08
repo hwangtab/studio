@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Cubase 보컬", "큐베이스 녹음", "Cubase 설정", "Steinberg DAW", "Cubase 믹싱", "Cubase EQ", "Cubase 컴프레서"]
 thumbnail: "/images/portfolio2.webp"
-summary: "Cubase 보컬 녹음 완전 가이드입니다. Steinberg Cubase 오디오 설정, 트랙 생성, Channel EQ·Compressor 설정, VariAudio 피치..."
+summary: "Cubase 보컬 녹음 완전 가이드입니다. Cubase 기본 설정·오디오 트랙 생성 및 녹음·Channel EQ 설정·Compressor 설정·VariAudio — 내장 피치 교정·파일 내보내기 (Export)까지 정리합니다."
 faq:
   - q: "Cubase로 보컬 녹음이 가능한가요?"
     a: "가능합니다. Cubase는 Steinberg가 개발한 업계 표준 DAW로 전문 스튜디오에서도 널리 사용됩니다. 강력한 내장 EQ·컴프레서와 VariAudio 피치 교정 기능으로 보컬 녹음·편집을 전문적으로 처리할 수 있습니다."

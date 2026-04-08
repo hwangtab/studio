@@ -50,11 +50,10 @@ faq:
 ## 유튜브 MR 활용법 (연습용)
 
 유튜브 검색 방법:
-```
-"[곡명] MR" 또는 "[곡명] 반주"
-"[곡명] Karaoke Version"
-"[곡명] Instrumental"
-```
+
+- "[곡명] MR" 또는 "[곡명] 반주"
+- "[곡명] Karaoke Version"
+- "[곡명] Instrumental"
 
 유튜브 MR 다운로드 주의사항:
 - 개인 연습 및 비공개 사용만 가능

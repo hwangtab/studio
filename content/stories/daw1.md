@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["DAW 추천", "DAW 선택", "GarageBand", "Logic Pro", "Ableton Live", "FL Studio", "Cubase", "보컬 녹음 DAW"]
 thumbnail: "/images/hardware3.webp"
-summary: "보컬 녹음과 음악 제작에 사용하는 DAW(디지털 오디오 워크스테이션) 완전 비교 가이드. GarageBand, Logic Pro, Ableton Live, FL..."
+summary: "보컬 녹음과 음악 제작에 사용하는 DAW(디지털 오디오 워크스테이션) 완전 비교 가이드. 주요 DAW 비교·용도별 추천 DAW·DAW 없이 보컬 녹음하는 방법까지 정리합니다."
 faq:
   - q: "처음 보컬 녹음을 시작하는데 어떤 DAW를 써야 하나요?"
     a: "Mac 사용자라면 GarageBand(무료)로 시작하세요. 직관적이고 Logic Pro와 호환되어 나중에 업그레이드가 쉽습니다. Windows 사용자라면 Audacity(무료) 또는 Reaper(저렴한 라이선스)로 시작하는 것이 좋습니다."
@@ -50,21 +50,15 @@ GarageBand에서 익힌 인터페이스를 그대로 Logic Pro에서 활용할 �
 
 ### 전자음악·K-POP 프로듀서 (맥/윈)
 
-```
 Ableton Live (전자음악, 퍼포먼스) 또는 Logic Pro (K-POP 트랙)
-```
 
 ### 힙합·비트 메이커
 
-```
 FL Studio (드럼 시퀀서 강점) 또는 Ableton Live
-```
 
 ### 예산 제한 Windows 사용자
 
-```
 Reaper (7만원) 또는 Audacity (무료)
-```
 
 ---
 

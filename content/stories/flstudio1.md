@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["FL Studio 보컬", "FL스튜디오 녹음", "FL Studio 설정", "FL Studio 믹싱", "FL Studio EQ", "힙합 보컬 녹음", "EDM 보컬 녹음"]
 thumbnail: "/images/studio1.webp"
-summary: "FL Studio 보컬 녹음 완전 가이드입니다. Edison 녹음기 활용, Mixer 트랙 라우팅, Parametric EQ 2·Fruity Compressor 설정..."
+summary: "FL Studio 보컬 녹음 완전 가이드입니다. FL Studio 기본 설정·Edison으로 보컬 녹음·Playlist 오디오 클립 녹음·Parametric EQ 2 설정·Fruity Compressor 설정·파일 내보내기 (Export)까지 정리합니다."
 faq:
   - q: "FL Studio로 보컬 녹음이 가능한가요?"
     a: "가능합니다. FL Studio는 힙합·EDM에 특화된 DAW지만 Edison 녹음기와 Mixer 트랙을 활용해 전문적인 보컬 녹음·편집이 가능합니다."

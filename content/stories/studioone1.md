@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Studio One 보컬", "스튜디오원 녹음", "Studio One 설정", "PreSonus DAW", "Studio One 믹싱", "Studio One EQ", "Studio One 컴프레서"]
 thumbnail: "/images/studio5.webp"
-summary: "Studio One 보컬 녹음 완전 가이드입니다. PreSonus Studio One 오디오 설정, 트랙 생성, Pro EQ·컴프레서 설정, Sound Variations..."
+summary: "Studio One 보컬 녹음 완전 가이드입니다. Studio One 기본 설정·오디오 트랙 생성 및 녹음·Pro EQ 설정·Pro Compressor 설정·레이어 녹음 (Take Lane)·파일 내보내기 (Export Mixdown)까지 정리합니다."
 faq:
   - q: "Studio One으로 보컬 녹음이 가능한가요?"
     a: "가능합니다. Studio One은 PreSonus가 개발한 직관적인 DAW로 드래그 앤 드롭 기반의 편리한 인터페이스와 강력한 내장 플러그인으로 보컬 녹음·편집·믹싱을 효율적으로 처리할 수 있습니다."

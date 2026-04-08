@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["EPK", "전자 홍보 자료", "아티스트 EPK", "음악 홍보", "보도자료", "인디 뮤지션 마케팅", "레이블 제출"]
 thumbnail: "/images/portfolio2.webp"
-summary: "인디 뮤지션을 위한 EPK(Electronic Press Kit) 완성 가이드. 구성 요소, 작성 방법, 활용 방법까지 레이블·공연 기획사·미디어에 제출하는 아티스트 홍보..."
+summary: "인디 뮤지션을 위한 EPK(Electronic Press Kit) 완성 가이드. EPK 필수 구성 요소·EPK 제작 플랫폼 비교·EPK 제출 시 주의사항까지 정리합니다."
 faq:
   - q: "EPK가 무엇인가요?"
     a: "EPK(Electronic Press Kit)는 아티스트를 미디어·레이블·공연 기획사에 소개하는 디지털 홍보 자료입니다. 아티스트 바이오, 음원 샘플, 사진, 공연 이력, 연락처를 하나의 문서나 링크로 정리합니다. 과거의 종이 프레스킷이 디지털화된 형태입니다."

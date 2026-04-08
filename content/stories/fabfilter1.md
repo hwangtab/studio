@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["FabFilter Pro-Q3", "프로큐3", "Pro-Q3 보컬", "FabFilter EQ", "Pro-Q3 사용법", "보컬 EQ 플러그인", "다이나믹 EQ"]
 thumbnail: "/images/recording6.webp"
-summary: "FabFilter Pro-Q3 완전 가이드입니다. EQ 밴드 타입, Spectrum Analyzer, EQ Match, Collision Detection, 다이나믹 EQ..."
+summary: "FabFilter Pro-Q3 완전 가이드입니다. EQ 밴드 타입 및 파라미터·보컬 EQ 실전 설정·Spectrum Analyzer 활용·Collision Detection (주파수 충돌 감지)·다이나믹 EQ 활용까지 정리합니다."
 faq:
   - q: "FabFilter Pro-Q3란 무엇인가요?"
     a: "FabFilter가 개발한 최고 수준의 파라메트릭 EQ 플러그인입니다. 직관적인 인터페이스, Spectrum Analyzer, Collision Detection(주파수 충돌 감지), 다이나믹 EQ 등 고급 기능으로 전 세계 믹싱 엔지니어가 선택하는 EQ입니다."
