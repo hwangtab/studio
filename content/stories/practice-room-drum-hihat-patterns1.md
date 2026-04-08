@@ -153,7 +153,7 @@ H H H H  H H H H  H H H H  H H H H
 - **완벽 방음** — 그루브 감각에 집중
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [보컬 마이크 테크닉·마이킹 기초 음악연습실](/stories/practice-room-vocal-microphone-technique1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
