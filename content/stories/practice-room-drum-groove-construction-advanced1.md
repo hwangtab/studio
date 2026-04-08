@@ -253,4 +253,6 @@ H:  x . x . x . x . x . x . x . x .
 **→ [드럼 재즈 스윙 콤핑·리듬 음악연습실](/stories/ko/practice-room-drum-jazz-swing-comping1)**  
 **→ [드럼 록 필인·John Bonham 스타일 음악연습실](/stories/ko/practice-room-drum-rock-fills1)**
 **→ [기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-country-chicken-picking1)**
+**→ [피아노 래그타임·Scott Joplin 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-ragtime1)**
+**→ [보컬 리프·멜로디 변주 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-riff-melody1)**
 [스튜디오 놀 이용 요금](/pricing)

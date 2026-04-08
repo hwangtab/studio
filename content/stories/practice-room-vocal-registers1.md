@@ -244,4 +244,6 @@ G4-F4-E4-D4-C4 (5음 하행, '이' 발음)
 **→ [보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실 가이드](/stories/ko/practice-room-vocal-stage-fright1)**
 **→ [기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-country-chicken-picking1)**
 **→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실 가이드](/stories/ko/practice-room-drum-groove-construction-advanced1)**
+**→ [피아노 래그타임·Scott Joplin 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-ragtime1)**
+**→ [보컬 리프·멜로디 변주 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-riff-melody1)**
 [스튜디오 놀 이용 요금](/pricing)**
