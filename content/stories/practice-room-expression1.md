@@ -155,4 +155,6 @@ pp → mp → mf → f → ff 순으로 각각 연주
 **→ [드럼 루디멘트 고급·스트로크 조합 음악연습실 가이드](/stories/ko/practice-room-drum-rudiments-advanced1)**
 **→ [기타 왐미바·트레몰로 암 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-whammy-bar1)**
 **→ [피아노 리듬 패턴·왼손 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-rhythm-patterns1)**
+**→ [드럼 스피드 트레이닝·빠른 싱글 스트로크 음악연습실 가이드](/stories/ko/practice-room-drum-speed-training1)**
+**→ [보컬 공명·음색 개발 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance1)**
 [스튜디오 놀 이용 요금](/pricing)
