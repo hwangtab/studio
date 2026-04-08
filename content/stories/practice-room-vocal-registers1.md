@@ -170,4 +170,6 @@ G4-F4-E4-D4-C4 (5음 하행, '이' 발음)
 **→ [보컬 호흡 컨트롤 가이드](/stories/ko/practice-room-vocal-breath-control1)**
 **→ **→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/ko/practice-room-piano-ballad-technique1)**
 **→ [보컬 레지스터·음역별 발성 전략 음악연습실 가이드](/stories/ko/practice-room-vocal-registers1)**
+**→ [베이스 코드 멜로디·솔로 편곡법 음악연습실 가이드](/stories/ko/practice-room-bass-chord-melody1)**
+**→ [드럼 필·트랜지션 고급 기법 음악연습실 가이드](/stories/ko/practice-room-drum-fills-transitions1)**
 [스튜디오 놀 이용 요금](/pricing)**

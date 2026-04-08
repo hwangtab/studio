@@ -192,6 +192,8 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 **→ [기타 아르페지오 고급·스윕 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-arpeggios-advanced1)**
 **→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/ko/practice-room-piano-ballad-technique1)**
 **→ [보컬 레지스터·음역별 발성 전략 음악연습실 가이드](/stories/ko/practice-room-vocal-registers1)**
+**→ [베이스 코드 멜로디·솔로 편곡법 음악연습실 가이드](/stories/ko/practice-room-bass-chord-melody1)**
+**→ [드럼 필·트랜지션 고급 기법 음악연습실 가이드](/stories/ko/practice-room-drum-fills-transitions1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -213,4 +215,6 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 **→ [기타 아르페지오 고급·스윕 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-arpeggios-advanced1)**
 **→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/ko/practice-room-piano-ballad-technique1)**
 **→ [보컬 레지스터·음역별 발성 전략 음악연습실 가이드](/stories/ko/practice-room-vocal-registers1)**
+**→ [베이스 코드 멜로디·솔로 편곡법 음악연습실 가이드](/stories/ko/practice-room-bass-chord-melody1)**
+**→ [드럼 필·트랜지션 고급 기법 음악연습실 가이드](/stories/ko/practice-room-drum-fills-transitions1)**
 [스튜디오 놀 이용 요금](/pricing)
