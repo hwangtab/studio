@@ -115,4 +115,4 @@ faq:
 
 ---
 
-[음정 불안정 원인과 해결 방법](/stories/pitchfix1) | [악보 없이 코드 찾는 방법 — 채보 가이드](/stories/transcription1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [노래 잘하는 방법 가이드](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
+[음정 불안정 원인과 해결 방법](/stories/pitchfix1) | [악보 없이 코드 찾는 방법 — 채보 가이드](/stories/transcription1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [노래 잘하는 방법 가이드](/stories/singswell1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -123,4 +123,4 @@ faq:
 
 ---
 
-[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

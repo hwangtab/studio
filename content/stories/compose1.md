@@ -113,4 +113,4 @@ faq:
 
 ---
 
-[음악 프로듀서 되는 방법](/stories/producer1) | [작사 방법 완전 가이드](/stories/lyrics1) | [채보 기초 가이드 — 코드 찾는 방법](/stories/transcription1) | [음악 작업 의뢰 방법](/stories/commission1) | [DAW 선택 가이드](/stories/daw1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 프로듀서 되는 방법](/stories/producer1) | [작사 방법 완전 가이드](/stories/lyrics1) | [채보 기초 가이드 — 코드 찾는 방법](/stories/transcription1) | [음악 작업 의뢰 방법](/stories/commission1) | [DAW 선택 가이드](/stories/daw1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[음악 계약 주의사항 가이드](/stories/contract1) | [음원 유통 방법 완전 가이드](/stories/distribution1) | [음악 저작권 등록 방법](/stories/copyright1) | [음원 발매 가이드](/stories/release1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 계약 주의사항 가이드](/stories/contract1) | [음원 유통 방법 완전 가이드](/stories/distribution1) | [음악 저작권 등록 방법](/stories/copyright1) | [음원 발매 가이드](/stories/release1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

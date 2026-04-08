@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[목소리 굵어지는 방법](/stories/deepvoice1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [스튜디오 놀 이용 요금](/pricing)
+[목소리 굵어지는 방법](/stories/deepvoice1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
