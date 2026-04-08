@@ -153,4 +153,6 @@ p  i  m  a  m  i
 **→ [드럼 라틴 퍼커션·살사·삼바 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-latin-percussion1)**
 **→ [베이스 팝 그루브·차트 팝 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-pop-groove1)**
 **→ [기타 펑크 리듬·치킨 피킹·클린 그루브 음악연습실 가이드](/stories/ko/practice-room-guitar-funk-rhythm1)**
+**→ [보컬 소울·R&B 창법·멜리즈마 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-soul1)**
+**→ [피아노 부기우기·블루스 피아노 기초 음악연습실 가이드](/stories/ko/practice-room-piano-boogie-woogie1)**
 [스튜디오 놀 이용 요금](/pricing)
