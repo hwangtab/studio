@@ -128,4 +128,4 @@ slug: "practice-room-drum-brushes-advanced1"
 - [드럼 브러시워크 재즈 음악연습실](/stories/practice-room-drum-brushwork1)
 - [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1)
 - [드럼 폴리리듬·크로스리듬 음악연습실](/stories/practice-room-drum-polyrhythm1)
-- [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [스튜디오 놀 이용 요금](/pricing)
+- [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [스튜디오 놀 이용 요금](/pricing)

@@ -160,4 +160,4 @@ C 메이저에서만 코드 진행을 익히면 다른 키에서 코드 이름�
 - [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1)
 - [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1)
 - [기타 클린톤·앰프 세팅 음악연습실](/stories/practice-room-guitar-clean-tone1)
-- [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1) | [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [스튜디오 놀 이용 요금](/pricing)
+- [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1) | [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [스튜디오 놀 이용 요금](/pricing)
