@@ -205,4 +205,6 @@ m:   .  2  .  2  .  2  .  2  (연속)
 **→ [베이스 그루브 구성·리듬 설계 원리 음악연습실 가이드](/stories/ko/practice-room-bass-groove-construction1)**
 **→ [드럼 아프로비트·월드 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-afrobeat1)**
 **→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
+**→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
+**→ [베이스 넥 포지션·전체 지판 활용 음악연습실 가이드](/stories/ko/practice-room-bass-neck-position1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -173,4 +173,6 @@ BPM: 90-180
 **→ [드럼 홀수박자·변박 리듬 가이드](/stories/ko/practice-room-drum-odd-times1)**
 **→ **→ [드럼 아프로비트·월드 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-afrobeat1)**
 **→ [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
+**→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
+**→ [베이스 넥 포지션·전체 지판 활용 음악연습실 가이드](/stories/ko/practice-room-bass-neck-position1)**
 [스튜디오 놀 이용 요금](/pricing)**
