@@ -131,4 +131,4 @@ Alan Dawson의 "The Drummer's Complete Vocabulary"나 Gary Chaffee의 "Patterns"
 - [드럼 브러시워크 재즈 음악연습실](/stories/practice-room-drum-brushwork1)
 - [드럼 힙합·트랩 비트 음악연습실](/stories/practice-room-drum-hiphop1)
 - [드럼 맘보·라틴재즈 비트 음악연습실](/stories/practice-room-drum-latin-jazz1)
-- [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1) | [스튜디오 놀 이용 요금](/pricing)
+- [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1) | [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1) | [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [스튜디오 놀 이용 요금](/pricing)
