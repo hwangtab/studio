@@ -103,4 +103,5 @@ faq:
 **→ [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1)**
 **→ [드럼 연습실 가이드](/stories/practice-room-drum1)**
 **→ [베이스 연습실 가이드](/stories/practice-room-bass1)**  
+**→ [악기 보관 음악연습실 가이드](/stories/practice-room-storage1)**
 **→ [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**

@@ -98,4 +98,5 @@ faq:
 **→ [음악연습실 에티켓 가이드](/stories/practice-room-etiquette1)**  
 **→ [음악연습실 계약 완벽 가이드](/stories/practice-room-contract1)**  
 **→ [취미 음악인을 위한 연습실 가이드](/stories/practice-room-hobby1)**  
+**→ [악기 보관 음악연습실 가이드](/stories/practice-room-storage1)**
 **→ [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
