@@ -227,4 +227,6 @@ E-G-A-B 8분음표 패턴
 **→ [베이스 솔로·그루브 솔로잉 기법 음악연습실](/stories/ko/practice-room-bass-solo-grooving1)**  
 **→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실](/stories/ko/practice-room-bass-rhythm-locking1)**
 **→ [피아노 크로스핸드 테크닉·클래식 기교 음악연습실 가이드](/stories/ko/practice-room-piano-cross-hand-technique1)**
+**→ [드럼 포스트펑크·뉴웨이브 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-post-punk1)**
+**→ [기타 하모닉스·인공 하모닉스 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-harmonics1)**
 [스튜디오 놀 이용 요금](/pricing)

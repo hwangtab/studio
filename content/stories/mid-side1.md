@@ -187,4 +187,6 @@ MS 처리는 마스터링의 정밀도를 한 단계 높이는 고급 기법입�
 **→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
 **→ [피아노 크로스핸드 테크닉·클래식 기교 음악연습실 가이드](/stories/ko/practice-room-piano-cross-hand-technique1)**
 **→ [베이스 핑거스타일 vs 픽 주법 비교 음악연습실 가이드](/stories/ko/practice-room-bass-pick-fingerstyle1)**
+**→ [드럼 포스트펑크·뉴웨이브 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-post-punk1)**
+**→ [기타 하모닉스·인공 하모닉스 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-harmonics1)**
 [스튜디오 놀 이용 요금](/pricing)
