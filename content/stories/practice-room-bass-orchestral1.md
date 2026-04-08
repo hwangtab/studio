@@ -220,4 +220,6 @@ G단조: G-G-G-Eb (첫 동기)
 **→ [베이스 재즈 베이스·워킹 베이스라인 음악연습실](/stories/ko/practice-room-bass-walking1)**  
 **→ [베이스 소울 그루브·제임스 재머슨 스타일 음악연습실](/stories/ko/practice-room-bass-soul-groove1)**
 **→ [피아노 가스펠 오르간 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-gospel-organ1)**
+**→ [드럼 아프로큐반 리듬·클라베 음악연습실 가이드](/stories/ko/practice-room-drum-afro-cuban-clave1)**
+**→ [기타 슬라이드 고급·보틀넥 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)
