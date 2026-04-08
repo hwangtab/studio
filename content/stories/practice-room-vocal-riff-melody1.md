@@ -285,4 +285,6 @@ Mariah 버전: A4-C5-Eb5-C5-Bb4-G4-A4
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실](/stories/ko/practice-room-vocal-pop-adlib1)**  
 **→ [보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실](/stories/ko/practice-room-vocal-stage-fright1)**
 **→ [피아노 래그타임·Scott Joplin 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-ragtime1)**
+**→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
+**→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
 [스튜디오 놀 이용 요금](/pricing)

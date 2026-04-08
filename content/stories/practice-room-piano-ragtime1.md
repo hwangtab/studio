@@ -291,4 +291,6 @@ Joplin의 원칙: "Do not play this piece fast"
 **→ [피아노 리드시트 즉흥반주·코드 읽기 음악연습실](/stories/ko/practice-room-piano-lead-sheet-improvisation1)**  
 **→ [피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실](/stories/ko/practice-room-piano-jazz-standard-analysis1)**
 **→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실 가이드](/stories/ko/practice-room-drum-groove-construction-advanced1)**
+**→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
+**→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
 [스튜디오 놀 이용 요금](/pricing)

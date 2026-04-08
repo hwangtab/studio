@@ -265,4 +265,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 **→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실 가이드](/stories/ko/practice-room-drum-groove-construction-advanced1)**
 **→ [피아노 래그타임·Scott Joplin 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-ragtime1)**
 **→ [보컬 리프·멜로디 변주 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-riff-melody1)**
+**→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
+**→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
 [스튜디오 놀 이용 요금](/pricing)
