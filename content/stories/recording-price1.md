@@ -129,4 +129,6 @@ faq:
 **→ [드럼 셔플·블루스 셔플 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-shuffle1)**
 **→ [기타 코드 대체·리하모니제이션 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-chord-substitution1)**
 **→ [보컬 음색·목소리 색깔 개발 음악연습실 가이드](/stories/ko/practice-room-vocal-tone-color1)**
+**→ [피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실 가이드](/stories/ko/practice-room-piano-jazz-standard-analysis1)**
+**→ [베이스 확장 음역·5현·6현 베이스 활용법 음악연습실 가이드](/stories/ko/practice-room-bass-extended-range1)**
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)
