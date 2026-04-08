@@ -171,4 +171,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 - [베이스 레게·덥 베이스라인 음악연습실](/stories/ko/practice-room-bass-reggae-dub1)
 - [드럼 더블 킥·더블 배스 드럼 훈련 음악연습실](/stories/ko/practice-room-drum-double-kick1)
 - [피아노 라틴 리듬·살사 피아노 음악연습실](/stories/ko/practice-room-piano-latin-rhythms1)
+- [보컬 퍼포먼스·무대 기술 고급 음악연습실](/stories/ko/practice-room-vocal-performance-skills1)
+- [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
 [스튜디오 놀 이용 요금](/pricing)
