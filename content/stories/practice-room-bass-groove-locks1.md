@@ -132,7 +132,7 @@ category: "bass"
 - **완벽 방음** — 그루브 락에 집중
 - **연신내역 5분**
 
-연습실 예약 및 문의: [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
