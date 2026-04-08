@@ -164,4 +164,6 @@ DAW 업데이트 전에는 현재 프로젝트 파일을 백업해두는 것이 
 **→ [피아노 스트라이드 고급 테크닉 음악연습실 가이드](/stories/ko/practice-room-piano-stride-advanced1)**
 **→ [보컬 스캣 즉흥연주·재즈 보컬 음악연습실 가이드](/stories/ko/practice-room-vocal-scat-improvisation1)**
 **→ [드럼 재즈 스윙 콤핑·4/4 재즈 드럼 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-swing-comping1)**
+**→ [기타 핑거피킹·Travis Picking 패턴 음악연습실 가이드](/stories/ko/practice-room-guitar-fingerpicking-travis1)**
+**→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실 가이드](/stories/ko/practice-room-bass-rhythm-locking1)**
 [스튜디오 놀 이용 요금](/pricing)

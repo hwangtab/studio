@@ -278,4 +278,6 @@ M4: 해결 (그루브로 복귀)
 **→ [드럼 재즈 브러시 보사노바·왈츠 음악연습실](/stories/ko/practice-room-drum-jazz-brushwork-bossa1)**  
 **→ [드럼 셔플·블루스 셔플 리듬 음악연습실](/stories/ko/practice-room-drum-shuffle1)**
 **→ [보컬 스캣 즉흥연주·재즈 보컬 음악연습실 가이드](/stories/ko/practice-room-vocal-scat-improvisation1)**
+**→ [기타 핑거피킹·Travis Picking 패턴 음악연습실 가이드](/stories/ko/practice-room-guitar-fingerpicking-travis1)**
+**→ [베이스 리듬 락킹·드럼과의 앙상블 음악연습실 가이드](/stories/ko/practice-room-bass-rhythm-locking1)**
 [스튜디오 놀 이용 요금](/pricing)
