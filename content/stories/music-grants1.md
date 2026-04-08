@@ -146,4 +146,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[뮤지션 음악 수익 완전 가이드](/stories/music-income1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음악 세금·정산 완전 가이드](/stories/music-tax1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[뮤지션 음악 수익 완전 가이드](/stories/music-income1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음악 세금·정산 완전 가이드](/stories/music-tax1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

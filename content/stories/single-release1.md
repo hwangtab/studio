@@ -143,4 +143,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[EP 앨범 제작 완전 가이드](/stories/ep-album1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[EP 앨범 제작 완전 가이드](/stories/ep-album1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

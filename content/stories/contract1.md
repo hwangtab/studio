@@ -111,4 +111,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음원 유통 방법 가이드](/stories/distribution1) | [음원 발매 체크리스트](/stories/release1) | [음악 저작권 기초 가이드](/stories/copyright1) | [가수 데뷔 준비 가이드](/stories/debut1) | [스튜디오 놀 이용 요금](/pricing)
+[음원 유통 방법 가이드](/stories/distribution1) | [음원 발매 체크리스트](/stories/release1) | [음악 저작권 기초 가이드](/stories/copyright1) | [가수 데뷔 준비 가이드](/stories/debut1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
