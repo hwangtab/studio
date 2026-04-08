@@ -170,4 +170,6 @@ C → G → C' (전체 옥타브 미끄러짐) 한 호흡
 **→ [보컬 비브라토 훈련 가이드](/stories/ko/practice-room-vocal-vibrato1)**
 **→ **→ [보컬 호흡 컨트롤·폐활량 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-breath-control1)**
 **→ [베이스 투핸드 탭핑·고급 솔로 기법 음악연습실 가이드](/stories/ko/practice-room-bass-two-hand-tapping1)**
+**→ [드럼 리니어 패턴·비트 분산 기법 음악연습실 가이드](/stories/ko/practice-room-drum-linear-patterns1)**
+**→ [기타 아르페지오 고급·스윕 피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-arpeggios-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)**
