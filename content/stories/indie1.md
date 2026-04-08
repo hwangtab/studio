@@ -109,4 +109,6 @@ faq:
 **→ [보컬 K-Pop 창법·아이돌 보컬 테크닉 음악연습실 가이드](/stories/ko/practice-room-vocal-kpop-technique1)**
 **→ [피아노 영화음악·시네마틱 피아노 연주 음악연습실 가이드](/stories/ko/practice-room-piano-film-score1)**
 **→ [베이스 소울·모타운 그루브·클래식 R&B 음악연습실 가이드](/stories/ko/practice-room-bass-soul-groove1)**
+**→ [드럼 삼바·브라질 리듬 드럼셋 음악연습실 가이드](/stories/ko/practice-room-drum-samba1)**
+**→ [기타 더블 스탑·두음 화성 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-double-stop1)**
 [스튜디오 놀 이용 요금](/pricing) | [플레이리스트 피칭 전략](/stories/playlist1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 SNS 마케팅 가이드](/stories/snsmusic1)
