@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 코러스·하모니 훈련 음악연습실](/stories/practice-room-vocal-harmony1) | [보컬 무대 존재감·퍼포먼스 고급 음악연습실](/stories/practice-room-vocal-stage-adv1) | [오디션을 위한 음악연습실](/stories/practice-room-audition1) | [기타 오픈 튜닝·얼터네이트 튜닝 음악연습실](/stories/practice-room-guitar-open-tuning1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 코러스·하모니 훈련 음악연습실](/stories/practice-room-vocal-harmony1) | [보컬 무대 존재감·퍼포먼스 고급 음악연습실](/stories/practice-room-vocal-stage-adv1) | [오디션을 위한 음악연습실](/stories/practice-room-audition1) | [기타 오픈 튜닝·얼터네이트 튜닝 음악연습실](/stories/practice-room-guitar-open-tuning1) | [피아노 협주곡·오케스트라 반주 연습 음악연습실](/stories/practice-room-piano-concerto1) | [드럼 필인·트랜지션 고급 훈련 음악연습실](/stories/practice-room-drum-fill-adv1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
