@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[라이브 녹음 완전 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)
+[라이브 녹음 완전 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

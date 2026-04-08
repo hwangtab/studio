@@ -118,4 +118,4 @@ faq:
 
 ---
 
-[홈 레코딩 완전 가이드](/stories/homestudio1) | [홈 레코딩 방음 방법 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 헤드폰 모니터링](/stories/monitoring1) | [스튜디오 놀 이용 요금](/pricing)
+[홈 레코딩 완전 가이드](/stories/homestudio1) | [홈 레코딩 방음 방법 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 헤드폰 모니터링](/stories/monitoring1) | [홈 스튜디오 vs 음악연습실 비교](/stories/practice-room-vs-home1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
