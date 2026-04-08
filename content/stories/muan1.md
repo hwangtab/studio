@@ -72,4 +72,4 @@ faq:
 
 ---
 
-[신안에서 서울 녹음실 방문 가이드](/stories/sinan1) | [영암에서 서울 녹음실 방문 가이드](/stories/yeongam1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
+[신안에서 서울 녹음실 방문 가이드](/stories/sinan1) | [영암에서 서울 녹음실 방문 가이드](/stories/yeongam1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

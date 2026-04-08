@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[대전 녹음실 안내](/stories/daejeon1) | [논산 녹음실 안내](/stories/nonsan1) | [공주 녹음실 안내](/stories/gongju1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대전 녹음실 안내](/stories/daejeon1) | [논산 녹음실 안내](/stories/nonsan1) | [공주 녹음실 안내](/stories/gongju1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -86,4 +86,4 @@ faq:
 
 ---
 
-[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon-donggu1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [세종시 녹음실 안내](/stories/sejong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon-donggu1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [세종시 녹음실 안내](/stories/sejong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -67,4 +67,4 @@ faq:
 
 ---
 
-[울산 남구·삼산·무거 녹음실 안내](/stories/ulsan-namgu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[울산 남구·삼산·무거 녹음실 안내](/stories/ulsan-namgu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -61,4 +61,4 @@ faq:
 
 ---
 
-[창원 의창구·성산구·마산 녹음실 안내](/stories/changwon-center1) | [경상남도 녹음실 방문 가이드](/stories/gyeongnam1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[창원 의창구·성산구·마산 녹음실 안내](/stories/changwon-center1) | [경상남도 녹음실 방문 가이드](/stories/gyeongnam1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

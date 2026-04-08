@@ -70,4 +70,4 @@ faq:
 
 ---
 
-[포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [의정부에서 서울 녹음실 방문 가이드](/stories/uijeongbu1) | [동두천에서 서울 녹음실 방문 가이드](/stories/dongtan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [의정부에서 서울 녹음실 방문 가이드](/stories/uijeongbu1) | [동두천에서 서울 녹음실 방문 가이드](/stories/dongtan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

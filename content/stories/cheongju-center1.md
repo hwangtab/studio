@@ -82,4 +82,4 @@ faq:
 
 ---
 
-[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산 녹음실 방문 가이드](/stories/cheonan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산 녹음실 방문 가이드](/stories/cheonan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

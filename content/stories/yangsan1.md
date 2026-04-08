@@ -72,4 +72,4 @@ faq:
 
 ---
 
-[밀양에서 서울 녹음실 방문 가이드](/stories/miryang1) | [김해에서 서울 녹음실 방문 가이드](/stories/gimhae1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
+[밀양에서 서울 녹음실 방문 가이드](/stories/miryang1) | [김해에서 서울 녹음실 방문 가이드](/stories/gimhae1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

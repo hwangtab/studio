@@ -91,4 +91,4 @@ faq:
 
 ---
 
-[남양주·구리·퇴계원 녹음실 안내](/stories/namyangju1) | [이천·여주·안성 녹음실 안내](/stories/icheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 서비스 안내](/stories/remotedir1) | [스튜디오 놀 이용 요금](/pricing)
+[남양주·구리·퇴계원 녹음실 안내](/stories/namyangju1) | [이천·여주·안성 녹음실 안내](/stories/icheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 서비스 안내](/stories/remotedir1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -62,4 +62,4 @@ faq:
 
 ---
 
-[종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

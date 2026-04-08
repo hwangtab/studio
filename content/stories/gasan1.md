@@ -86,4 +86,4 @@ faq:
 
 ---
 
-[구로·금천구 녹음실 안내](/stories/guro1) | [신도림·구로디지털단지 녹음실 안내](/stories/sindorim1) | [관악구 녹음실 안내](/stories/gwanak1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[구로·금천구 녹음실 안내](/stories/guro1) | [신도림·구로디지털단지 녹음실 안내](/stories/sindorim1) | [관악구 녹음실 안내](/stories/gwanak1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

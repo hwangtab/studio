@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경산·영천에서 서울 녹음실 방문 가이드](/stories/gyeongsan1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경산·영천에서 서울 녹음실 방문 가이드](/stories/gyeongsan1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

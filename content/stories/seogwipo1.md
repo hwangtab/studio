@@ -67,4 +67,4 @@ faq:
 
 ---
 
-[제주도 녹음실 안내](/stories/jeju1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [음원 유통 완전 가이드](/stories/distribution1) | [스튜디오 놀 이용 요금](/pricing)
+[제주도 녹음실 안내](/stories/jeju1) | [전국 방문 가이드](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [음원 유통 완전 가이드](/stories/distribution1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

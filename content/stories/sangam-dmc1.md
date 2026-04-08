@@ -74,4 +74,4 @@ faq:
 
 ---
 
-[마포구 전체 녹음실 안내](/stories/mapo1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [공덕·도화·용강 녹음실 안내](/stories/mapo-gongdeok1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[마포구 전체 녹음실 안내](/stories/mapo1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [공덕·도화·용강 녹음실 안내](/stories/mapo-gongdeok1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

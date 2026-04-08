@@ -64,4 +64,4 @@ faq:
 
 ---
 
-[곡성에서 서울 녹음실 방문 가이드](/stories/gokseong1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [하동에서 서울 녹음실 방문 가이드](/stories/hadong1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing)
+[곡성에서 서울 녹음실 방문 가이드](/stories/gokseong1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [하동에서 서울 녹음실 방문 가이드](/stories/hadong1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

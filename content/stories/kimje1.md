@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[정읍·김제 방문 가이드](/stories/jeongeup1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[정읍·김제 방문 가이드](/stories/jeongeup1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

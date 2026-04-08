@@ -84,4 +84,4 @@ faq:
 
 ---
 
-[여주에서 서울 녹음실 방문 가이드](/stories/yeoju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [스튜디오 놀 이용 요금](/pricing)
+[여주에서 서울 녹음실 방문 가이드](/stories/yeoju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
