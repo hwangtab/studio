@@ -87,6 +87,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         production: t('stories.categories.production'),
         mixing: t('stories.categories.mixing'),
         business: t('stories.categories.business'),
+        practice: t('stories.categories.practice'),
         guide: t('stories.categories.guide'),
       },
     }),

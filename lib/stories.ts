@@ -162,6 +162,11 @@ const storyCategoryKeyMap: Record<string, string> = {
   '음원 배포 가이드': 'business',
   'SNS 마케팅': 'business',
   'SNS 가이드': 'business',
+  // 음악연습실 가이드
+  '음악연습실 가이드': 'practice',
+  '음악연습실': 'practice',
+  '음악 연습실 가이드': 'practice',
+  '연습실 가이드': 'practice',
   // 가이드 (일반)
   가이드: 'guide',
   '서비스 안내': 'guide',
@@ -184,6 +189,7 @@ const storyCategoryKeys = new Set<string>([
   'production',
   'mixing',
   'business',
+  'practice',
   'guide',
 ]);
 

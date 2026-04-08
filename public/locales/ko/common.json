@@ -584,12 +584,12 @@
         "visualText": "음악 교육"
       },
       "practice": {
-        "title": "몰입할 나만의 공간이 필요한가요?",
-        "descriptionLine1": "언제든 자유롭게 이용할 수 있는 프리미엄 연습실.",
-        "descriptionLine2": "쾌적한 환경과 완벽한 방음 시설이 준비되어 있습니다.",
-        "primaryText": "연습실 시설 보기",
-        "secondaryText": "예약 문의하기",
-        "visualText": "창의적인 공간"
+        "title": "나만의 음악연습실이 필요한가요?",
+        "descriptionLine1": "24시간 방음 음악연습실, 월 30만원대 입주부터 시간 대여까지.",
+        "descriptionLine2": "연신내역 도보 5분, 보컬·피아노·건반 완비 개인 음악연습실.",
+        "primaryText": "음악연습실 시설 보기",
+        "secondaryText": "입주 상담하기",
+        "visualText": "음악연습실"
       },
       "production": {
         "title": "나만의 음원을 제작하고 싶으신가요?",
@@ -619,6 +619,7 @@
       "production": "음반 제작",
       "mixing": "믹싱·마스터링",
       "business": "음악 비즈니스",
+      "practice": "음악연습실 가이드",
       "guide": "가이드"
     }
   },
