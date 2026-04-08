@@ -150,4 +150,4 @@ C - G/B - Am - Am/G - F
 
 ---
 
-[재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [음계와 조성 완전 가이드](/stories/music-scale1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [음계와 조성 완전 가이드](/stories/music-scale1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

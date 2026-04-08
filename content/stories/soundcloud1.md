@@ -90,4 +90,4 @@ faq:
 
 ---
 
-[인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음원 발매·유통 가이드](/stories/release1) | [유튜브 음원 업로드 가이드](/stories/youtube1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [음원 스트리밍 수익 구조](/stories/streaming1) | [스튜디오 놀 이용 요금](/pricing)
+[인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음원 발매·유통 가이드](/stories/release1) | [유튜브 음원 업로드 가이드](/stories/youtube1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [음원 스트리밍 수익 구조](/stories/streaming1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

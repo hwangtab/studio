@@ -177,4 +177,4 @@ faq:
 
 ---
 
-[뮤지션 음악 비즈니스 완전 가이드](/stories/music-business1) | [뮤지션 음악 지원금·창작 지원 제도 완전 가이드](/stories/music-grants1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[뮤지션 음악 비즈니스 완전 가이드](/stories/music-business1) | [뮤지션 음악 지원금·창작 지원 제도 완전 가이드](/stories/music-grants1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

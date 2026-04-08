@@ -127,4 +127,4 @@ Pre-delay: 15~25ms
 
 ---
 
-[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -136,4 +136,4 @@ Make-up Gain: GR 발생량 보상
 
 ---
 
-[트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [스튜디오 놀 이용 요금](/pricing)
+[트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

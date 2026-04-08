@@ -128,4 +128,4 @@ faq:
 
 ---
 
-[Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [오버더빙 완전 가이드](/stories/overdubbing1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [오버더빙 완전 가이드](/stories/overdubbing1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

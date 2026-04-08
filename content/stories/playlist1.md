@@ -136,4 +136,4 @@ Spotify for Artists를 통해 발매 **최소 7일 전**에 피칭합니다.
 
 ---
 
-[인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
+[인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

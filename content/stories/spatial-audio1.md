@@ -125,4 +125,4 @@ FX → 공간 전체 분산
 
 ---
 
-[마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -139,4 +139,4 @@ faq:
 
 ---
 
-[오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [음향 흡음 처리 완전 가이드](/stories/acoustic-treatment1) | [프리앰프 완전 가이드](/stories/preamp1) | [DAW 완전 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [음향 흡음 처리 완전 가이드](/stories/acoustic-treatment1) | [프리앰프 완전 가이드](/stories/preamp1) | [DAW 완전 비교 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

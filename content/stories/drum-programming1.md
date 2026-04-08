@@ -143,4 +143,4 @@ DAW마다 용어와 메뉴 위치가 다르지만 기본 원리는 동일합니�
 
 ---
 
-[미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [사이드체인 완전 가이드](/stories/sidechain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [사이드체인 완전 가이드](/stories/sidechain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

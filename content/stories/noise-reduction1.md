@@ -114,4 +114,4 @@ faq:
 
 ---
 
-[홈 레코딩 vs 스튜디오 녹음 비교](/stories/homestudio1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [샘플레이트·비트뎁스 가이드](/stories/sample-rate1) | [스튜디오 놀 이용 요금](/pricing)
+[홈 레코딩 vs 스튜디오 녹음 비교](/stories/homestudio1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [샘플레이트·비트뎁스 가이드](/stories/sample-rate1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

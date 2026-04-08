@@ -121,4 +121,4 @@ faq:
 
 ---
 
-[인디 뮤지션 음원 발매 가이드](/stories/indie1) | [플레이리스트 피칭 전략](/stories/playlist1) | [유튜브 채널 음원 녹음 가이드](/stories/youtube1) | [버스킹 음원 제작 가이드](/stories/busking1) | [스튜디오 놀 이용 요금](/pricing) | [스트리밍 수익 계산 가이드](/stories/revenue1)
+[인디 뮤지션 음원 발매 가이드](/stories/indie1) | [플레이리스트 피칭 전략](/stories/playlist1) | [유튜브 채널 음원 녹음 가이드](/stories/youtube1) | [버스킹 음원 제작 가이드](/stories/busking1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing) | [스트리밍 수익 계산 가이드](/stories/revenue1)

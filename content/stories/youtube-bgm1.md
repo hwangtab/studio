@@ -142,4 +142,4 @@ faq:
 
 ---
 
-[팟캐스트·유튜브 인트로 음악 제작 가이드](/stories/podcast-music1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[팟캐스트·유튜브 인트로 음악 제작 가이드](/stories/podcast-music1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

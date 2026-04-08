@@ -144,4 +144,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음악 마케팅 완전 가이드](/stories/music-marketing1) | [틱톡 음악 활용 가이드](/stories/tiktok-music1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 마케팅 완전 가이드](/stories/music-marketing1) | [틱톡 음악 활용 가이드](/stories/tiktok-music1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

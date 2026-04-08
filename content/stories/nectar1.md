@@ -140,4 +140,4 @@ iZotope Nectar 4는 AI 기반 보컬 처리로 빠르고 전문적인 결과를 
 
 ---
 
-[FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -149,4 +149,4 @@ faq:
 
 ---
 
-[MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

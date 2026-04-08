@@ -147,4 +147,4 @@ faq:
 
 ---
 
-[강좌 제7부: 정리 정돈](/stories/mixing7) | [강좌 제13부: Static Mix](/stories/mixing13) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹스 버스 라우팅 완전 가이드](/stories/mix-bus1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[강좌 제7부: 정리 정돈](/stories/mixing7) | [강좌 제13부: Static Mix](/stories/mixing13) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹스 버스 라우팅 완전 가이드](/stories/mix-bus1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

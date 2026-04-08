@@ -154,4 +154,4 @@ LA-2A는 수십 년간 보컬 녹음의 표준으로 자리 잡은 클래식 Opt
 
 ---
 
-[SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [컴프레서 완전 가이드](/stories/compressor1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [컴프레서 완전 가이드](/stories/compressor1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

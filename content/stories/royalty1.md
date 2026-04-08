@@ -84,4 +84,4 @@ faq:
 
 ---
 
-[음원 유통 방법 완전 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1) | [스튜디오 놀 이용 요금](/pricing)
+[음원 유통 방법 완전 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

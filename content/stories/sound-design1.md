@@ -174,4 +174,4 @@ faq:
 
 ---
 
-[Lo-Fi 음악 제작 완전 가이드](/stories/lofi-music1) | [AI 음악 제작 완전 가이드](/stories/ai-music1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [신스 프로그래밍 완전 가이드](/stories/synth-programming1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[Lo-Fi 음악 제작 완전 가이드](/stories/lofi-music1) | [AI 음악 제작 완전 가이드](/stories/ai-music1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [신스 프로그래밍 완전 가이드](/stories/synth-programming1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

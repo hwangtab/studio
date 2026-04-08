@@ -136,4 +136,4 @@ DAW 업데이트 전에는 현재 프로젝트 파일을 백업해두는 것이 
 
 ---
 
-[영화음악·영상음악 작곡 완전 가이드](/stories/film-scoring1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[영화음악·영상음악 작곡 완전 가이드](/stories/film-scoring1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

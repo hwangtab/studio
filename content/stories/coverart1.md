@@ -122,4 +122,4 @@ faq:
 
 ---
 
-[인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1) | [스튜디오 놀 이용 요금](/pricing)
+[인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

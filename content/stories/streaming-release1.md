@@ -130,4 +130,4 @@ D-0: 출시일 오전 발매
 
 ---
 
-[싱글 발매 완전 가이드](/stories/single-release1) | [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[싱글 발매 완전 가이드](/stories/single-release1) | [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

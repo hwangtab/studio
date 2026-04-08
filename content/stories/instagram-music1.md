@@ -126,4 +126,4 @@ faq:
 
 ---
 
-[틱톡 보컬 활동 가이드](/stories/tiktok-music1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [스튜디오 놀 이용 요금](/pricing)
+[틱톡 보컬 활동 가이드](/stories/tiktok-music1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

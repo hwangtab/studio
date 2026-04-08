@@ -28,4 +28,4 @@ faq:
 
 ---
 
-[스튜디오 놀 시설·장비 안내](/studio-info) | [이용 요금 및 서비스 보기](/pricing)
+[스튜디오 놀 시설·장비 안내](/studio-info) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [이용 요금 및 서비스 보기](/pricing)

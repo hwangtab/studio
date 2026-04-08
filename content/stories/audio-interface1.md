@@ -116,4 +116,4 @@ faq:
 
 ---
 
-[모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

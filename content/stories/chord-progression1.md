@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[음악 이론 기초 완전 가이드](/stories/music-theory1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 이론 기초 완전 가이드](/stories/music-theory1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

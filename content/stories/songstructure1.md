@@ -113,4 +113,4 @@ faq:
 
 ---
 
-[오리지널 곡 만드는 방법 가이드](/stories/original-song1) | [작사 완전 가이드](/stories/lyrics1) | [코드 진행 기초 가이드](/stories/chordprog1) | [작곡 기초 가이드](/stories/compose1) | [스튜디오 놀 이용 요금](/pricing)
+[오리지널 곡 만드는 방법 가이드](/stories/original-song1) | [작사 완전 가이드](/stories/lyrics1) | [코드 진행 기초 가이드](/stories/chordprog1) | [작곡 기초 가이드](/stories/compose1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

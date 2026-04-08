@@ -151,4 +151,4 @@ faq:
 
 ---
 
-[보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [컴프레서 완전 가이드](/stories/compression-guide1) | [리버브 완전 가이드](/stories/reverb-guide1) | [모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [컴프레서 완전 가이드](/stories/compression-guide1) | [리버브 완전 가이드](/stories/reverb-guide1) | [모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

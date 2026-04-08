@@ -136,4 +136,4 @@ faq:
 
 ---
 
-[음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

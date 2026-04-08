@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [녹음 헤드폰 가이드](/stories/headphone1) | [스튜디오 놀 이용 요금](/pricing)
+[오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [녹음 헤드폰 가이드](/stories/headphone1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

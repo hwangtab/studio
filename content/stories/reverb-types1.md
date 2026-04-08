@@ -143,4 +143,4 @@ Wet/Dry 비율
 
 ---
 
-[코러스·플랜저·페이저 완전 가이드](/stories/chorus-effect1) | [리버브 믹싱 완전 가이드](/stories/reverb1) | [딜레이 효과 완전 가이드](/stories/delay1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[코러스·플랜저·페이저 완전 가이드](/stories/chorus-effect1) | [리버브 믹싱 완전 가이드](/stories/reverb1) | [딜레이 효과 완전 가이드](/stories/delay1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

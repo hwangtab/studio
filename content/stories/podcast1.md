@@ -110,4 +110,4 @@ faq:
 
 ---
 
-[ASMR 녹음 방법 완전 가이드](/stories/asmr1) | [스튜디오 놀 성우·나레이션·팟캐스트 녹음 서비스 보기](/voice-acting) | [성우 첫 녹음 도전기 후기](/stories/review2) | [오디오북 녹음 실전 가이드](/stories/review4)
+[ASMR 녹음 방법 완전 가이드](/stories/asmr1) | [스튜디오 놀 성우·나레이션·팟캐스트 녹음 서비스 보기](/voice-acting) | [성우 첫 녹음 도전기 후기](/stories/review2) | [오디오북 녹음 실전 가이드](/stories/review4) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

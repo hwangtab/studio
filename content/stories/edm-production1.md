@@ -175,4 +175,4 @@ EDM 프로덕션은 구조적 에너지 설계가 핵심입니다. 드롭과 빌
 
 ---
 
-[퓨처 베이스 프로덕션 완전 가이드](/stories/future-bass1) | [사이드체인 완전 가이드](/stories/sidechain1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[퓨처 베이스 프로덕션 완전 가이드](/stories/future-bass1) | [사이드체인 완전 가이드](/stories/sidechain1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

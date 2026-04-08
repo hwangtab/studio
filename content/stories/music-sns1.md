@@ -141,4 +141,4 @@ faq:
 
 ---
 
-[플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [YouTube 음악 홍보 완전 가이드](/stories/youtube1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [YouTube 음악 홍보 완전 가이드](/stories/youtube1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

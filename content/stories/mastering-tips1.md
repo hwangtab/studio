@@ -141,4 +141,4 @@ faq:
 
 ---
 
-[공간 음향·바이노럴·돌비 애트모스 완전 가이드](/stories/spatial-audio1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[공간 음향·바이노럴·돌비 애트모스 완전 가이드](/stories/spatial-audio1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

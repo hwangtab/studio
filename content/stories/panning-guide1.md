@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

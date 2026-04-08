@@ -158,4 +158,4 @@ Waves Abbey Road TG Mastering Chain:
 
 ---
 
-[스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

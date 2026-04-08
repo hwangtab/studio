@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[뮤직비디오·유튜브 영상용 음원 녹음 가이드](/stories/mv1) | [음원 발매 가이드](/stories/release1) | [플레이리스트 피칭 전략](/stories/playlist1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[뮤직비디오·유튜브 영상용 음원 녹음 가이드](/stories/mv1) | [음원 발매 가이드](/stories/release1) | [플레이리스트 피칭 전략](/stories/playlist1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)

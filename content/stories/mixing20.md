@@ -92,5 +92,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제19부: 소리의 그림자, 딜레이(Delay)](/stories/mixing19) | [제21부: 찌그러짐의 미학, 디스토션과 새츄레이션 →](/stories/mixing21) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제19부: 소리의 그림자, 딜레이(Delay)](/stories/mixing19) | [제21부: 찌그러짐의 미학, 디스토션과 새츄레이션 →](/stories/mixing21) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
 

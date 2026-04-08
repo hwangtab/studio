@@ -98,4 +98,4 @@ faq:
 
 ---
 
-[빈티지·아날로그 사운드 제작 완전 가이드](/stories/vintage-sound1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[빈티지·아날로그 사운드 제작 완전 가이드](/stories/vintage-sound1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

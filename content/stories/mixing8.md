@@ -73,5 +73,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제7부: 믹스는 '정리 정돈'에서 시작된다](/stories/mixing7) | [제9부: 투명 인간 같은 적, 위상(Phase) →](/stories/mixing9) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제7부: 믹스는 '정리 정돈'에서 시작된다](/stories/mixing7) | [제9부: 투명 인간 같은 적, 위상(Phase) →](/stories/mixing9) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
 

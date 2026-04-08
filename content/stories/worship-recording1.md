@@ -144,4 +144,4 @@ faq:
 
 ---
 
-[CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [합창·코러스 레코딩 완전 가이드](/stories/choir1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [합창·코러스 레코딩 완전 가이드](/stories/choir1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

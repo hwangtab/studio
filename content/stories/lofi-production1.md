@@ -132,4 +132,4 @@ faq:
 
 ---
 
-[앰비언트 음악 제작 완전 가이드](/stories/ambient-music1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[앰비언트 음악 제작 완전 가이드](/stories/ambient-music1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

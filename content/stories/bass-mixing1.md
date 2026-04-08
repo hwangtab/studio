@@ -128,4 +128,4 @@ Spectrum Analyzer에서 킥과 베이스 스펙트럼
 
 ---
 
-[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [사이드체인 완전 가이드](/stories/sidechain1) | [믹스 버스 완전 가이드](/stories/mix-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [사이드체인 완전 가이드](/stories/sidechain1) | [믹스 버스 완전 가이드](/stories/mix-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

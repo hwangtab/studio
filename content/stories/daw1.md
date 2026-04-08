@@ -84,4 +84,4 @@ DAW는 도구입니다. 어떤 도구를 쓰느냐보다 무엇을 만들고 싶
 
 ---
 
-[DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

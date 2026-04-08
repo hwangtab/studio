@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[커버곡 녹음 가이드](/stories/cover1) | [음악 저작권 기초 가이드](/stories/copyright1) | [음원 유통 방법 가이드](/stories/distribution1) | [유튜브·SNS 보컬 활동 가이드](/stories/youtube1) | [스튜디오 놀 이용 요금](/pricing)
+[커버곡 녹음 가이드](/stories/cover1) | [음악 저작권 기초 가이드](/stories/copyright1) | [음원 유통 방법 가이드](/stories/distribution1) | [유튜브·SNS 보컬 활동 가이드](/stories/youtube1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

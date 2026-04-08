@@ -128,4 +128,4 @@ faq:
 
 ---
 
-[강좌 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [강좌 제23부: 마스터링](/stories/mixing23) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [스튜디오 놀 이용 요금](/pricing)
+[강좌 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [강좌 제23부: 마스터링](/stories/mixing23) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

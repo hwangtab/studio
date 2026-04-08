@@ -141,4 +141,4 @@ MS 처리는 마스터링의 정밀도를 한 단계 높이는 고급 기법입�
 
 ---
 
-[오디오 위상 완전 가이드](/stories/phase1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[오디오 위상 완전 가이드](/stories/phase1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

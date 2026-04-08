@@ -113,4 +113,4 @@ Side = 좌우 차이 신호 (스테레오 성분)
 
 ---
 
-[모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

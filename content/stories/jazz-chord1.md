@@ -171,4 +171,4 @@ Dm7 → G7 → Cmaj7
 
 ---
 
-[코드 진행 완전 가이드](/stories/chord-progressions1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [작사·작곡 완전 가이드](/stories/songwriting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[코드 진행 완전 가이드](/stories/chord-progressions1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [작사·작곡 완전 가이드](/stories/songwriting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

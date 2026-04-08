@@ -53,4 +53,4 @@ faq:
 
 ---
 
-[스튜디오 놀 장비 안내](/studio-info) | [믹싱·마스터링 요금](/pricing) | [믹싱 강좌 시리즈](/stories/mixing1) | [프로듀서 인터뷰](/stories/interview1)
+[스튜디오 놀 장비 안내](/studio-info) | [믹싱·마스터링 요금](/pricing) | [믹싱 강좌 시리즈](/stories/mixing1) | [프로듀서 인터뷰](/stories/interview1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

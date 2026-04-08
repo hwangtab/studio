@@ -144,4 +144,4 @@ faq:
 
 ---
 
-[아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [뮤지션 음악 홍보·미디어 PR 완전 가이드](/stories/music-pr1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [뮤지션 음악 홍보·미디어 PR 완전 가이드](/stories/music-pr1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

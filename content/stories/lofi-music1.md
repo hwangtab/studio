@@ -150,4 +150,4 @@ Lo-Fi 음악은 홈 프로덕션으로도 전문적인 결과물이 가능한 �
 
 ---
 
-[트랩 음악 제작 완전 가이드](/stories/trap-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[트랩 음악 제작 완전 가이드](/stories/trap-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

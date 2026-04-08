@@ -136,4 +136,4 @@ faq:
 
 ---
 
-[비트 메이킹 완전 가이드](/stories/beatmaking1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[비트 메이킹 완전 가이드](/stories/beatmaking1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

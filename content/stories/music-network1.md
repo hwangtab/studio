@@ -139,4 +139,4 @@ faq:
 
 ---
 
-[음악 매니지먼트 완전 가이드](/stories/music-management1) | [뮤지션 협업 완전 가이드](/stories/music-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 매니지먼트 완전 가이드](/stories/music-management1) | [뮤지션 협업 완전 가이드](/stories/music-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
