@@ -181,6 +181,8 @@ C 메이저 코드 태핑:
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
 **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -188,4 +190,6 @@ C 메이저 코드 태핑:
 *관련 아티클:*
 [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [베이스 하모닉스·고급 테크닉 음악연습실](/stories/practice-room-bass-harmonics1) | [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [베이스 슬랩앤팝 테크닉 음악연습실](/stories/practice-room-bass-slap-pop1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
 [스튜디오 놀 이용 요금](/pricing)

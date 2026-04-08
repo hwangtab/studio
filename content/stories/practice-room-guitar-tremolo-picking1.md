@@ -183,6 +183,8 @@ category: "guitar"
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
 **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -190,4 +192,6 @@ category: "guitar"
 *관련 아티클:*
 [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [기타 블루스 릭·솔로 음악연습실](/stories/practice-room-guitar-blues-licks1) | [기타 메탈 디스토션·헤비 리프 음악연습실](/stories/practice-room-guitar-metal-distortion1) | [기타 코드 진행·전조 응용 음악연습실](/stories/practice-room-guitar-chord-progressions1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
 [스튜디오 놀 이용 요금](/pricing)

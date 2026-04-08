@@ -169,6 +169,8 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 - [기타 재즈 리듬·콤핑 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-rhythm1)
 **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
@@ -176,4 +178,6 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 *관련 아티클:*
 [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [피아노 재즈 보이싱·텐션 코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [피아노 리듬 트레이닝 음악연습실](/stories/practice-room-piano-rhythm-training1) | **→ [베이스 핑거스타일 테크닉·터치 향상 음악연습실 가이드](/stories/ko/practice-room-bass-fingerstyle-technique1)**
 **→ [드럼 템포 컨트롤·메트로놈 훈련법 음악연습실 가이드](/stories/ko/practice-room-drum-tempo-control1)**
+**→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [드럼 고스트 노트·다이나믹 컨트롤 음악연습실 가이드](/stories/ko/practice-room-drum-ghost-notes1)**
 [스튜디오 놀 이용 요금](/pricing)
