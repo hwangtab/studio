@@ -137,4 +137,6 @@ K-POP 프로덕션은 전문 스튜디오와 엔지니어의 협업으로 완성
 **→ [베이스 소울·모타운 그루브·클래식 R&B 음악연습실 가이드](/stories/ko/practice-room-bass-soul-groove1)**
 **→ [드럼 삼바·브라질 리듬 드럼셋 음악연습실 가이드](/stories/ko/practice-room-drum-samba1)**
 **→ [기타 더블 스탑·두음 화성 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-double-stop1)**
+**→ [보컬 오페라 창법·벨칸토 발성 기초 음악연습실 가이드](/stories/ko/practice-room-vocal-opera-technique1)**
+**→ [피아노 미니멀리즘·필립 글래스 스타일 연주 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism1)**
 [스튜디오 놀 이용 요금](/pricing)
