@@ -167,4 +167,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 - [드럼 그루브·포켓 연주·리듬 감각 음악연습실](/stories/ko/practice-room-drum-groove-pocket1)
 - [피아노 CCM·워십 피아노 반주법 음악연습실](/stories/ko/practice-room-piano-worship1)
 - [보컬 어질리티·멜리스마 훈련 음악연습실](/stories/ko/practice-room-vocal-agility1)
+- [기타 인디·얼터너티브 기타 사운드 음악연습실](/stories/ko/practice-room-guitar-indie-alternative1)
+- [베이스 레게·덥 베이스라인 음악연습실](/stories/ko/practice-room-bass-reggae-dub1)
 [스튜디오 놀 이용 요금](/pricing)
