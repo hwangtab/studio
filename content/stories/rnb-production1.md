@@ -193,4 +193,6 @@ R&B 프로덕션은 그루브·화성·보컬 감성의 삼박자입니다.
 **→ [베이스 핑거스타일 vs 픽 주법 비교 음악연습실 가이드](/stories/ko/practice-room-bass-pick-fingerstyle1)**
 **→ [드럼 포스트펑크·뉴웨이브 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-post-punk1)**
 **→ [기타 하모닉스·인공 하모닉스 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-harmonics1)**
+**→ [피아노 리드시트 즉흥반주·코드 읽기 음악연습실 가이드](/stories/ko/practice-room-piano-lead-sheet-improvisation1)**
+**→ [보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실 가이드](/stories/ko/practice-room-vocal-stage-fright1)**
 [스튜디오 놀 이용 요금](/pricing)

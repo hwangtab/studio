@@ -224,4 +224,6 @@ Cmaj7 아르페지오를 12프렛 하모닉스로
 **→ [기타 앰비언트·텍스처 기타·이펙터 활용 음악연습실](/stories/ko/practice-room-guitar-ambient-textures1)**  
 **→ [기타 슬라이드 고급·보틀넥 기법 음악연습실](/stories/ko/practice-room-guitar-slide-advanced1)**
 **→ [드럼 포스트펑크·뉴웨이브 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-post-punk1)**
+**→ [피아노 리드시트 즉흥반주·코드 읽기 음악연습실 가이드](/stories/ko/practice-room-piano-lead-sheet-improvisation1)**
+**→ [보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실 가이드](/stories/ko/practice-room-vocal-stage-fright1)**
 [스튜디오 놀 이용 요금](/pricing)
