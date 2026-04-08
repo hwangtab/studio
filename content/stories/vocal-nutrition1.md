@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 건강 완전 가이드](/stories/vocalhealth1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 건강 완전 가이드](/stories/vocalhealth1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

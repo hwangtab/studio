@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[음악 투어링·전국 공연 투어 완전 가이드](/stories/music-touring1) | [라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 투어링·전국 공연 투어 완전 가이드](/stories/music-touring1) | [라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -144,4 +144,4 @@ faq:
 
 ---
 
-[라틴 음악 제작 완전 가이드](/stories/latin-music1) | [펑크 음악 제작 완전 가이드](/stories/funk-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [록 음악 제작 완전 가이드](/stories/rock-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[라틴 음악 제작 완전 가이드](/stories/latin-music1) | [펑크 음악 제작 완전 가이드](/stories/funk-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [록 음악 제작 완전 가이드](/stories/rock-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

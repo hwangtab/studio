@@ -173,4 +173,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[인디 쇼케이스·미니콘서트 기획 완전 가이드](/stories/indie-showcase1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인디 쇼케이스·미니콘서트 기획 완전 가이드](/stories/indie-showcase1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -146,4 +146,4 @@ faq:
 
 ---
 
-[포크 음악 제작 완전 가이드](/stories/folk-music1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[포크 음악 제작 완전 가이드](/stories/folk-music1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

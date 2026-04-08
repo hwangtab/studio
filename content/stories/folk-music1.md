@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [EP 앨범 제작 완전 가이드](/stories/ep-album1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
