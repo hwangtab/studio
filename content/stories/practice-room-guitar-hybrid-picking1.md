@@ -157,7 +157,7 @@ G 코드 아르페지오
 - **완벽 방음** — 큰 소리로 마음껏 연습
 - **연신내역 5분** — 은평구 최적의 접근성
 
-연습실 예약 및 문의: [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

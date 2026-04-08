@@ -150,7 +150,7 @@ category: "drum"
 - **24시간 예약 가능** — 새벽 시간대 집중 연습도 OK
 - **연신내역 5분 거리** — 접근성 최상
 
-연습실 예약 및 문의: [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
