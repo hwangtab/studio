@@ -153,4 +153,4 @@ slug: "practice-room-drum-latin-jazz1"
 - [드럼 아프로비트 리듬 음악연습실](/stories/practice-room-drum-afrobeat1)
 - [드럼 브러시워크 음악연습실](/stories/practice-room-drum-brushwork1)
 - [드럼 컨트리 리듬 음악연습실](/stories/practice-room-drum-country1)
-- [기타 클린톤·앰프 세팅 음악연습실](/stories/practice-room-guitar-clean-tone1) | [스튜디오 놀 이용 요금](/pricing)
+- [기타 클린톤·앰프 세팅 음악연습실](/stories/practice-room-guitar-clean-tone1) | [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1) | [보컬 재즈스캣·즉흥 보이싱 음악연습실](/stories/practice-room-vocal-jazz-scat1) | [스튜디오 놀 이용 요금](/pricing)
