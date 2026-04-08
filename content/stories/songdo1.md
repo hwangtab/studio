@@ -82,4 +82,4 @@ faq:
 
 ---
 
-[인천 연수구 연수·청학·동춘 녹음실 안내](/stories/yeonsu1) | [인천 녹음실 안내](/stories/incheon1) | [부천 녹음실 안내](/stories/bucheon1) | [안산 녹음실 안내](/stories/ansan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 연수구 연수·청학·동춘 녹음실 안내](/stories/yeonsu1) | [인천 녹음실 안내](/stories/incheon1) | [부천 녹음실 안내](/stories/bucheon1) | [안산 녹음실 안내](/stories/ansan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -63,4 +63,4 @@ faq:
 
 ---
 
-[김포 녹음실 안내](/stories/gimpo1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) | [강서구·양천구 녹음실 안내](/stories/yangcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[김포 녹음실 안내](/stories/gimpo1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) | [강서구·양천구 녹음실 안내](/stories/yangcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

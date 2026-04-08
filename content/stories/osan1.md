@@ -121,4 +121,4 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 ---
 
-[수원에서 서울 녹음실 방문 가이드](/stories/suwon1) | [평택에서 서울 녹음실 방문 가이드](/stories/pyeongtaek1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[수원에서 서울 녹음실 방문 가이드](/stories/suwon1) | [평택에서 서울 녹음실 방문 가이드](/stories/pyeongtaek1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -79,4 +79,4 @@ faq:
 
 ---
 
-[남양주 녹음실 안내](/stories/namyangju1) | [구리시 녹음실 안내](/stories/guri1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[남양주 녹음실 안내](/stories/namyangju1) | [구리시 녹음실 안내](/stories/guri1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

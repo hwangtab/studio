@@ -76,4 +76,4 @@ faq:
 
 ---
 
-[용인·수지·기흥 녹음실 안내](/stories/yongin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원 영통·광교 녹음실 안내](/stories/suwon-yeongtong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[용인·수지·기흥 녹음실 안내](/stories/yongin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원 영통·광교 녹음실 안내](/stories/suwon-yeongtong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
