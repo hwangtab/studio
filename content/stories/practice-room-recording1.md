@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[녹음 전 음악연습실 활용법](/stories/practice-room-pre-recording1) | [음악연습실 vs 녹음 스튜디오 비교](/stories/practice-room-vs-studio1) | [셀프 녹음 완전 가이드](/stories/self-recording1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[녹음 전 음악연습실 활용법](/stories/practice-room-pre-recording1) | [음악연습실 vs 녹음 스튜디오 비교](/stories/practice-room-vs-studio1) | [셀프 녹음 완전 가이드](/stories/self-recording1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [방음 연습실 선택](/stories/practice-room-soundproof1) | [음악연습실 장비 가이드](/stories/practice-room-equipment1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [미디 작업실·프로덕션 연습실](/stories/practice-room-midi1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
