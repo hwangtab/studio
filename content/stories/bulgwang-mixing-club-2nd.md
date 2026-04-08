@@ -37,4 +37,4 @@ faq:
 
 ---
 
-[믹싱 강좌 시리즈 시작하기](/stories/mixing1) | [불광믹싱클럽 첫 모임 안내](/stories/bulgwang-mixing-club) | [불광믹싱클럽 3회차 안내](/stories/bulgwang-mixing-club-3rd) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing) | [연신내 합주실·연습실 안내](/practice-room)
+[믹싱 강좌 시리즈 시작하기](/stories/mixing1) | [불광믹싱클럽 첫 모임 안내](/stories/bulgwang-mixing-club) | [불광믹싱클럽 3회차 안내](/stories/bulgwang-mixing-club-3rd) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing) | [연신내 음악연습실 안내](/practice-room)

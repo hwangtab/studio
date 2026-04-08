@@ -218,4 +218,4 @@ faq:
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [합주실 안내](/practice-room) | [요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)
