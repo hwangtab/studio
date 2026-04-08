@@ -74,4 +74,4 @@ faq:
 
 ---
 
-[동작구 녹음실 전체 안내](/stories/dongjak1) | [동작구 흑석동·동작동 안내](/stories/dongjak-heukseok1) | [관악구·동작구 녹음실 안내](/stories/gwanak1) | [서초구 반포·잠원 녹음실 안내](/stories/seocho-banpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[동작구 녹음실 전체 안내](/stories/dongjak1) | [동작구 흑석동·동작동 안내](/stories/dongjak-heukseok1) | [관악구·동작구 녹음실 안내](/stories/gwanak1) | [서초구 반포·잠원 녹음실 안내](/stories/seocho-banpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

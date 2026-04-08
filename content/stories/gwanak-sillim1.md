@@ -72,4 +72,4 @@ faq:
 
 ---
 
-[관악구 전체 녹음실 안내](/stories/gwanak1) | [관악구 봉천 녹음실 안내](/stories/gwanak-bongcheon1) | [동작구 녹음실 안내](/stories/dongjak1) | [금천구 녹음실 안내](/stories/geumcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[관악구 전체 녹음실 안내](/stories/gwanak1) | [관악구 봉천 녹음실 안내](/stories/gwanak-bongcheon1) | [동작구 녹음실 안내](/stories/dongjak1) | [금천구 녹음실 안내](/stories/geumcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
