@@ -67,5 +67,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제11부: 믹싱을 위한 마지막 조각, 에디팅](/stories/mixing11) | [제13부: 멈춰있을 때 가장 아름답다 →](/stories/mixing13)
+**믹싱 강좌 시리즈**: [← 제11부: 믹싱을 위한 마지막 조각, 에디팅](/stories/mixing11) | [제13부: 멈춰있을 때 가장 아름답다 →](/stories/mixing13) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
 

@@ -74,5 +74,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [제3부: 장비병 치유 프로젝트 →](/stories/mixing3)
+**믹싱 강좌 시리즈**: [← 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [제3부: 장비병 치유 프로젝트 →](/stories/mixing3) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
 

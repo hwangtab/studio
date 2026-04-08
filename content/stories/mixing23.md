@@ -116,4 +116,4 @@ faq:
 
 ---
 
-[믹싱·마스터링 의뢰 요금 안내](/pricing) | [음악 레슨 서비스 보기](/lesson) | [불광믹싱클럽 스터디 보기](/stories/bulgwang-mixing-club) | [믹싱 의뢰 후기](/stories/review5)
+[믹싱 vs 마스터링 차이 가이드](/stories/mixing-vs-mastering1) | [믹싱·마스터링 의뢰 요금 안내](/pricing) | [음악 레슨 서비스 보기](/lesson) | [불광믹싱클럽 스터디 보기](/stories/bulgwang-mixing-club) | [믹싱 의뢰 후기](/stories/review5)

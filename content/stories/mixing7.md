@@ -95,5 +95,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제6부: 눈으로 소리 읽기](/stories/mixing6) | [제8부: 플러그인을 위한 밥상 차리기 →](/stories/mixing8)
+**믹싱 강좌 시리즈**: [← 제6부: 눈으로 소리 읽기](/stories/mixing6) | [제8부: 플러그인을 위한 밥상 차리기 →](/stories/mixing8) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
 

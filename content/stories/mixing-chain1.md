@@ -138,4 +138,4 @@ Aux 2 (Reverb Send)
 
 ---
 
-[게인 스테이징 완전 가이드](/stories/gain-staging1) | [스펙트럼 분석기 완전 가이드](/stories/spectrum-analyzer1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[강좌 제8부: 게인 스테이징](/stories/mixing8) | [강좌 제16부: EQ](/stories/mixing16) | [강좌 제17부: 컴프레서](/stories/mixing17) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [스펙트럼 분석기 완전 가이드](/stories/spectrum-analyzer1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)

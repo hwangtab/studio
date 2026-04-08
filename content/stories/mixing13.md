@@ -75,5 +75,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제12부: 나만의 믹싱 템플릿](/stories/mixing12) | [제14부: 믹스의 8할은 볼륨 밸런스 →](/stories/mixing14)
+**믹싱 강좌 시리즈**: [← 제12부: 나만의 믹싱 템플릿](/stories/mixing12) | [제14부: 믹스의 8할은 볼륨 밸런스 →](/stories/mixing14) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
 

@@ -129,4 +129,4 @@ faq:
 
 ---
 
-[보컬 리버브 완전 가이드 — 홀·룸·플레이트 차이와 설정법](/stories/reverb1)
+[보컬 리버브 완전 가이드 — 홀·룸·플레이트 차이와 설정법](/stories/reverb1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
