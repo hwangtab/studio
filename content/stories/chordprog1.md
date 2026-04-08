@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[코드 진행 완전 가이드](/stories/chord-progression1) | [노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [악기 없이 작곡하는 방법](/stories/compose1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [채보 기초 가이드](/stories/transcription1) | [스튜디오 놀 이용 요금](/pricing)
+[코드 진행 완전 가이드](/stories/chord-progression1) | [노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [악기 없이 작곡하는 방법](/stories/compose1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [채보 기초 가이드](/stories/transcription1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
