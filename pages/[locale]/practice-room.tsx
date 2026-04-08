@@ -359,6 +359,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
                   'practice-room-mapo1',
                   'practice-room-sinchon1',
                   'practice-room-vs-karaoke1',
+                  'practice-room-keyboard1',
                 ] as const
               ).map((slug, idx) => (
                 <Link
