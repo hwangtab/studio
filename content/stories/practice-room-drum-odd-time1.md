@@ -144,7 +144,7 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 - **완벽 방음** — 메트로놈 소리와 드럼 소리 정확히 모니터링
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

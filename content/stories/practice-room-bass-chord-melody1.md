@@ -131,7 +131,7 @@ A현: G2 (베이스 루트)
 - **완벽 방음** — 자신의 베이스 소리에만 집중
 - **연신내역 5분**
 
-연습실 예약 및 문의: [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
