@@ -129,4 +129,6 @@ pp → mp → mf → f → ff 순으로 각각 연주
 **→ [기타 탭핑·라이트핸드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-tapping1)**
 **→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/ko/practice-room-bass-slap-advanced1)**
 **→ [드럼 홀수박자·변박 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-odd-times1)**
+**→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/ko/practice-room-piano-chord-voicings-advanced1)**
+**→ [기타 하이브리드 피킹·핑거스타일 융합 음악연습실 가이드](/stories/ko/practice-room-guitar-hybrid-picking1)**
 [스튜디오 놀 이용 요금](/pricing)

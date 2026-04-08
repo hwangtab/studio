@@ -190,4 +190,6 @@ Dave Brubeck의 "Take Five"에서 Joe Morello가 사용한 스타일
 **→ [드럼 템포 컨트롤·메트로놈 훈련 가이드](/stories/ko/practice-room-drum-tempo-control1)**
 **→ **→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/ko/practice-room-bass-slap-advanced1)**
 **→ [드럼 홀수박자·변박 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-odd-times1)**
+**→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/ko/practice-room-piano-chord-voicings-advanced1)**
+**→ [기타 하이브리드 피킹·핑거스타일 융합 음악연습실 가이드](/stories/ko/practice-room-guitar-hybrid-picking1)**
 [스튜디오 놀 이용 요금](/pricing)**
