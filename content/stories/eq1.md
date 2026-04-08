@@ -134,4 +134,6 @@ EQ 처리 전·후를 번갈아 들으며 더 좋은지 확인합니다. EQ 없�
 **→ [베이스 오케스트라·더블베이스 기법 음악연습실 가이드](/stories/ko/practice-room-bass-orchestral1)**
 **→ [드럼 아프로큐반 리듬·클라베 음악연습실 가이드](/stories/ko/practice-room-drum-afro-cuban-clave1)**
 **→ [기타 슬라이드 고급·보틀넥 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-advanced1)**
+**→ [보컬 팝 애드립·스타일링 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-adlib1)**
+**→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
 [스튜디오 놀 이용 요금](/pricing)

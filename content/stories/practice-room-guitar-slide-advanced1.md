@@ -260,4 +260,6 @@ Derek Trucks는 Duane Allman의 계보를 이은 **가장 표현적인 슬라이
 **→ [기타 앰비언트·텍스처 기타·이펙터 활용 음악연습실](/stories/ko/practice-room-guitar-ambient-textures1)**  
 **→ [기타 네오소울·코드 멜로디 기법 음악연습실](/stories/ko/practice-room-guitar-neo-soul1)**
 **→ [드럼 아프로큐반 리듬·클라베 음악연습실 가이드](/stories/ko/practice-room-drum-afro-cuban-clave1)**
+**→ [보컬 팝 애드립·스타일링 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-adlib1)**
+**→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
 [스튜디오 놀 이용 요금](/pricing)

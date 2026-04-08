@@ -235,4 +235,6 @@ Tito Puente는 **팀발레스(Timbales)**의 거장이며 맘보 드러밍의 �
 **→ [드럼 라틴 퍼커션·살사·삼바 리듬 음악연습실](/stories/ko/practice-room-drum-latin-percussion1)**  
 **→ [드럼 삼바·브라질리언 삼바 음악연습실](/stories/ko/practice-room-drum-samba1)**
 **→ [기타 슬라이드 고급·보틀넥 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-advanced1)**
+**→ [보컬 팝 애드립·스타일링 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-adlib1)**
+**→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
 [스튜디오 놀 이용 요금](/pricing)
