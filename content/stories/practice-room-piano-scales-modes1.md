@@ -135,7 +135,7 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 - **완벽 방음** — 모달 즉흥 연주를 마음껏
 - **연신내역 5분**
 
-연습실 예약 및 문의: [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 

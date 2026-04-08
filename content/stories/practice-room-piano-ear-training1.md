@@ -128,7 +128,7 @@ category: "piano"
 - **24시간 운영** — 규칙적인 귀 훈련 일과
 - **연신내역 5분**
 
-연습실 예약 및 문의: [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
