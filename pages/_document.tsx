@@ -27,8 +27,21 @@ class MyDocument extends Document<Props> {
         prefix="og: https://ogp.me/ns#"
       >
         <Head>
+          {/* Google Analytics (gtag.js) */}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-KYGP18G36J');
+              `,
+            }}
+          />
           <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />
           {/* Resource hints */}
+          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           <link rel="dns-prefetch" href="https://api.emailjs.com" />
           <link rel="dns-prefetch" href="https://vercel.live" />
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
