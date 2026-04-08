@@ -84,4 +84,4 @@ MR 없이 예약하고, 세션 전까지 준비해오시면 됩니다. MR 구하
 
 ---
 
-[스튜디오 놀 시설·장비 안내](/studio-info) | [이용 요금 안내](/pricing) | [녹음 세션 준비 가이드](/stories/session1) | [녹음실 처음 방문 가이드](/stories/guide1)
+[스튜디오 놀 시설·장비 안내](/studio-info) | [이용 요금 안내](/pricing) | [녹음 세션 준비 가이드](/stories/session1) | [녹음실 처음 방문 가이드](/stories/guide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

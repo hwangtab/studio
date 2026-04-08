@@ -87,5 +87,6 @@ faq:
 **→ [음악연습실 월세 입주 완전 가이드](/stories/practice-room-monthly1)**  
 **→ [음악연습실 가격 비교 가이드](/stories/practice-room-price1)**  
 **→ [음악연습실 고르는 법 가이드](/stories/practice-room-guide1)**  
+**→ [음악연습실 계약 완벽 가이드](/stories/practice-room-contract1)**  
 **→ [취미 음악인을 위한 연습실 가이드](/stories/practice-room-hobby1)**  
 **→ [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**

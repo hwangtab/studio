@@ -107,4 +107,4 @@ faq:
 
 ---
 
-[아카펠라 녹음 가이드](/stories/acapella1) | [밴드·단체 녹음 가이드](/stories/band1) | [기념일 선물 녹음 가이드](/stories/gift1) | [보컬 녹음 가이드](/stories/guide1) | [스튜디오 놀 이용 요금](/pricing)
+[아카펠라 녹음 가이드](/stories/acapella1) | [밴드·단체 녹음 가이드](/stories/band1) | [기념일 선물 녹음 가이드](/stories/gift1) | [보컬 녹음 가이드](/stories/guide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

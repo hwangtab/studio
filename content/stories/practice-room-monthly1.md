@@ -96,5 +96,6 @@ faq:
 **→ [야간·24시간 연습실 가이드](/stories/practice-room-night1)**  
 **→ [보증금 없는 연습실 가이드](/stories/practice-room-nodeposit1)**  
 **→ [음악연습실 에티켓 가이드](/stories/practice-room-etiquette1)**  
+**→ [음악연습실 계약 완벽 가이드](/stories/practice-room-contract1)**  
 **→ [취미 음악인을 위한 연습실 가이드](/stories/practice-room-hobby1)**  
 **→ [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
