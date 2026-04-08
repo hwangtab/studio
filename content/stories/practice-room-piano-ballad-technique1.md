@@ -181,4 +181,6 @@ category: "piano"
 **→ [기타 슬라이드·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide1)**
 **→ [피아노 에튀드·기술 연습곡 활용법 음악연습실 가이드](/stories/ko/practice-room-piano-etude1)**
 **→ [드럼 라틴 퍼커션·살사·삼바 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-latin-percussion1)**
+**→ [베이스 팝 그루브·차트 팝 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-pop-groove1)**
+**→ [기타 펑크 리듬·치킨 피킹·클린 그루브 음악연습실 가이드](/stories/ko/practice-room-guitar-funk-rhythm1)**
 [스튜디오 놀 이용 요금](/pricing)**
