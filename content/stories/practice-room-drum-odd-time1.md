@@ -144,7 +144,7 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 - **완벽 방음** — 메트로놈 소리와 드럼 소리 정확히 모니터링
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
+연습실 예약 및 문의: [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
 
