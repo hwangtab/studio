@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 리듬 컴핑·재즈 반주 음악연습실](/stories/practice-room-piano-comping1) | [피아노 리듬 읽기·박자 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [피아노 폴리포니·독립 성부 연주 음악연습실](/stories/practice-room-piano-polyphony1) | [피아노 트레몰로·옥타브 트레몰로 음악연습실](/stories/practice-room-piano-tremolo1) | [베이스 록 그루브·파워 베이스 음악연습실](/stories/practice-room-bass-rock-groove1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 리듬 컴핑·재즈 반주 음악연습실](/stories/practice-room-piano-comping1) | [피아노 리듬 읽기·박자 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [피아노 폴리포니·독립 성부 연주 음악연습실](/stories/practice-room-piano-polyphony1) | [피아노 트레몰로·옥타브 트레몰로 음악연습실](/stories/practice-room-piano-tremolo1) | [베이스 록 그루브·파워 베이스 음악연습실](/stories/practice-room-bass-rock-groove1) | [보컬 워밍업·발성 준비 음악연습실](/stories/practice-room-vocal-warmup1) | [기타 핀치 하모닉스·스퀼 테크닉 음악연습실](/stories/practice-room-guitar-pinch-harmonic1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)

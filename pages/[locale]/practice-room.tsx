@@ -712,6 +712,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
                   'practice-room-drum-tempo1',
                   'practice-room-bass-rock-groove1',
                   'practice-room-piano-left-hand1',
+                  'practice-room-vocal-warmup1',
+                  'practice-room-guitar-pinch-harmonic1',
                 ] as const
               ).map((slug, idx) => (
                 <Link
