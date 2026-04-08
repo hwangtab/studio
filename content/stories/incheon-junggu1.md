@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[인천 전체 녹음실 안내](/stories/incheon1) | [인천 부평구 녹음실 안내](/stories/incheon-bupyeong1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [인천 연수구 녹음실 안내](/stories/incheon-yeonsu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 전체 녹음실 안내](/stories/incheon1) | [인천 부평구 녹음실 안내](/stories/incheon-bupyeong1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [인천 연수구 녹음실 안내](/stories/incheon-yeonsu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

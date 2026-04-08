@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[고양 일산·화정·행신 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[고양 일산·화정·행신 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

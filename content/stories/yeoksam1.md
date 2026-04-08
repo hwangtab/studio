@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[개포·일원·수서·대치 녹음실 안내](/stories/gaepodong1) | [강남구 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [대치·도곡 녹음실 안내](/stories/daechi1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[개포·일원·수서·대치 녹음실 안내](/stories/gaepodong1) | [강남구 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [대치·도곡 녹음실 안내](/stories/daechi1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

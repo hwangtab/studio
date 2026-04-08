@@ -81,4 +81,4 @@ faq:
 
 ---
 
-[고양시·파주 녹음실 안내](/stories/goyang1) | [일산동구 녹음실 안내](/stories/ilsan-donggu1) | [능곡·원흥·행신 녹음실 안내](/stories/neunggok1) | [파주 녹음실 안내](/stories/paju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[고양시·파주 녹음실 안내](/stories/goyang1) | [일산동구 녹음실 안내](/stories/ilsan-donggu1) | [능곡·원흥·행신 녹음실 안내](/stories/neunggok1) | [파주 녹음실 안내](/stories/paju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
