@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[베이스 연습실 가이드](/stories/practice-room-bass1) | [베이스 옥타브 주법·옥타브 그루브 음악연습실](/stories/practice-room-bass-octave1) | [베이스 재즈·워킹 베이스 음악연습실](/stories/practice-room-bass-jazz1) | [베이스 펑크·R&B 그루브 음악연습실](/stories/practice-room-bass-funk1) | [피아노 페달 테크닉·소스텐우토 음악연습실](/stories/practice-room-piano-pedal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[베이스 연습실 가이드](/stories/practice-room-bass1) | [베이스 옥타브 주법·옥타브 그루브 음악연습실](/stories/practice-room-bass-octave1) | [베이스 재즈·워킹 베이스 음악연습실](/stories/practice-room-bass-jazz1) | [베이스 펑크·R&B 그루브 음악연습실](/stories/practice-room-bass-funk1) | [피아노 페달 테크닉·소스텐우토 음악연습실](/stories/practice-room-piano-pedal1) | [기타 슬라이드·보틀넥 주법 음악연습실](/stories/practice-room-guitar-slide1) | [보컬 피치·음정 교정 훈련 음악연습실](/stories/practice-room-vocal-pitch1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
