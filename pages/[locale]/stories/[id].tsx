@@ -38,6 +38,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const siteConfig = getSiteConfig(locale);
 
   const getCTAType = (slug: string, categoryKey: string | undefined): CTAType => {
+    if (slug.startsWith('practice-room-')) return 'practice';
+
     let hash = 0;
     for (let i = 0; i < slug.length; i++) {
       hash = (hash << 5) - hash + slug.charCodeAt(i);

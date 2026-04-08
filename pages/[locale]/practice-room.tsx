@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import ContactCTA from '../../components/common/ContactCTA';
@@ -96,6 +96,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       question: t('practiceRoom.faq.items.5.q'),
       answer: t('practiceRoom.faq.items.5.a'),
     },
+    {
+      question: t('practiceRoom.faq.items.6.q'),
+      answer: t('practiceRoom.faq.items.6.a'),
+    },
+    {
+      question: t('practiceRoom.faq.items.7.q'),
+      answer: t('practiceRoom.faq.items.7.a'),
+    },
   ]), [t]);
 
   const practiceRoomQuickAnswers = React.useMemo(() => practiceRoomFaqs.slice(0, 3), [practiceRoomFaqs]);
@@ -106,7 +114,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     name: t('practiceRoom.seo.title'),
     description: t('practiceRoom.seo.description'),
     inLanguage: schemaLanguage,
-    serviceType: t('nav.practiceRoom'),
+    serviceType: locale === 'ko' ? '음악연습실' : t('nav.practiceRoom'),
     areaServed: siteConfig.contact.address,
     provider: {
       '@type': 'Organization',
@@ -123,7 +131,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     },
     offers: {
       '@type': 'Offer',
-      name: locale === 'ko' ? '월정액 입주 프로그램' : 'Monthly Residency Program',
+      name: locale === 'ko' ? '음악연습실 월정액 입주 프로그램' : 'Monthly Practice Room Residency Program',
       priceCurrency: 'KRW',
       price: 400000,
       availability: 'https://schema.org/InStock',
@@ -300,6 +308,42 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       />
 
       <ReviewSection variant="default" locale={locale} />
+
+      {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO) */}
+      {locale === 'ko' && (
+        <Section variant="default" className="py-10">
+          <div className="max-w-5xl mx-auto">
+            <SectionHeading
+              icon={BookOpen}
+              title={t('practiceRoom.relatedGuides.title')}
+              className="mb-6"
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {(
+                [
+                  'practice-room-guide1',
+                  'practice-room-price1',
+                  'practice-room-rental1',
+                  'practice-room-monthly1',
+                  'practice-room-soundproof1',
+                  'practice-room-vocal1',
+                  'practice-room-startup1',
+                  'practice-room-transfer1',
+                ] as const
+              ).map((slug, idx) => (
+                <Link
+                  key={slug}
+                  href={`/${locale}/stories/${slug}`}
+                  className="inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
+                >
+                  <span>{t(`practiceRoom.relatedGuides.items.${idx}`)}</span>
+                  <ArrowRight size={14} className="flex-shrink-0" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Section>
+      )}
 
       {/* 관련 서비스 바로가기 */}
       <Section variant="alternate" className="py-10">

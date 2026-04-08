@@ -468,6 +468,14 @@
         {
           "q": "¿Qué tan buena es la insonorización?",
           "a": "Usamos un diseño STC de nivel broadcast para minimizar el ruido entre salas. Ideal para voces, locuciones y trabajo MIDI."
+        },
+        {
+          "q": "¿Cuánto cuesta alquilar una sala de ensayo musical?",
+          "a": "El alquiler por horas varía entre 8,000 y 25,000 KRW según el tamaño de la sala. La residencia mensual comienza desde 300,000 KRW/mes. Si practicas más de 30 horas al mes, la residencia mensual es mucho más económica."
+        },
+        {
+          "q": "¿Cuáles son las condiciones para la residencia mensual?",
+          "a": "Sin depósito requerido — pago mensual anticipado. Contrato mínimo de 1 mes, con acceso individual 24/7, almacenamiento de instrumentos/equipos y control de climatización individual incluidos. 10% de descuento el primer mes."
         }
       ]
     },

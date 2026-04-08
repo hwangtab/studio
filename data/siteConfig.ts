@@ -79,7 +79,7 @@ export const getSeoDefaults = (locale: Locale): SEODefaults => {
       uz: 'Bekatdan 5 daqiqa piyoda. Studio NOL’da yozuv, mashg‘ulot xonasi va miks/mastering xizmatlarini bir joyda oling.'
     }),
     keywords: t(locale, {
-      ko: '연신내 녹음실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오, 축가 녹음, 성우 녹음, 오디오북 녹음, 일반인 녹음실',
+      ko: '연신내 녹음실, 음악연습실, 은평구 연습실, 스튜디오 놀, 서울 녹음실, 믹싱 마스터링 스튜디오, 음악 제작 스튜디오, 축가 녹음, 성우 녹음, 오디오북 녹음, 일반인 녹음실',
       en: 'Yeonsinnae recording studio, Eunpyeong practice room, Studio NOL, Seoul recording studio, mixing mastering studio, music production studio, wedding song recording, voice over recording, audiobook recording',
       zh: '延新内录音室, 恩平区练习室, Studio NOL, 首尔录音室, 混音母带工作室, 音乐制作工作室, 婚礼歌曲录制, 配音录制, 有声读物录制',
       es: 'estudio de grabación en Yeonsinnae, sala de práctica en Eunpyeong, Studio NOL, estudio de grabación en Seúl, estudio de mezcla y masterización, estudio de producción musical, grabación de canciones de boda, grabación de voz en off, grabación de audiolibros',

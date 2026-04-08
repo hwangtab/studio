@@ -19,7 +19,7 @@ const PRODUCTION_OFFER_NAMES: Record<Locale, string> = {
   es: 'Producción de Álbum', vi: 'Sản xuất album', th: 'การผลิตอัลบั้ม', uz: 'Albom prodakshn',
 };
 const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
-  ko: '프리미엄 연습실 입주 프로그램', en: 'Premium Practice Room Residency', zh: '高级练习室入驻计划',
+  ko: '음악연습실 입주 프로그램', en: 'Premium Practice Room Residency', zh: '高级练习室入驻计划',
   es: 'Programa de Residencia de Sala Premium', vi: 'Chương trình thuê phòng tập cao cấp',
   th: 'โปรแกรมเช่าห้องซ้อมระดับพรีเมียม', uz: "Premium mashg'ulot xonasi dasturi",
 };

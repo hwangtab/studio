@@ -468,6 +468,14 @@
         {
           "q": "How good is the soundproofing?",
           "a": "We use broadcast-grade STC soundproofing to minimize noise between rooms. It provides excellent immersion for vocals, voiceovers, and MIDI work."
+        },
+        {
+          "q": "How much does it cost to rent a music practice room?",
+          "a": "Hourly rates range from 8,000–25,000 KRW depending on room size. Monthly residency starts from 300,000 KRW/month. If you practice more than 30 hours per month, monthly residency is much more economical."
+        },
+        {
+          "q": "What are the conditions for monthly music practice room residency?",
+          "a": "No deposit required — prepaid monthly basis. Minimum contract is 1 month, with 24/7 individual door lock access, instrument/equipment storage, and individual HVAC control included. First month 10% discount available."
         }
       ]
     },

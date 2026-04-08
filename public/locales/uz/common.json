@@ -467,6 +467,14 @@
         {
           "q": "Tovush izolyatsiyasi qanchalik yaxshi?",
           "a": "Xonalar orasidagi shovqinni kamaytirish uchun broadcast darajasidagi STC tovush izolyatsiyasidan foydalanamiz. Vokal, voiceover va MIDI ishlarida juda yaxshi immersion beradi."
+        },
+        {
+          "q": "Musiqa mashg'ulot xonasini ijaraga olish narxi qancha?",
+          "a": "Soatlik ijara xona hajmiga qarab 8,000–25,000 KRW. Oylik ijara 300,000 KRW/oydan boshlanadi. Agar oyda 30 soatdan ko'p mashq qilsangiz, oylik ijara ancha tejamkor."
+        },
+        {
+          "q": "Oylik mashg'ulot xonasi ijarasi shartlari qanday?",
+          "a": "Garovsiz — oldindan to'lanadigan oylik asos. Minimal shartnoma 1 oy, 24/7 individual qulf kirish, asbob/uskunalar saqlash va individual havo nazorati kiritilgan. Birinchi oy 10% chegirma."
         }
       ]
     },
