@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[드럼 연습실 가이드](/stories/practice-room-drum1) | [드럼 필인·트랜지션 고급 훈련 음악연습실](/stories/practice-room-drum-fill-adv1) | [드럼 하이햇 컨트롤·오픈 하이햇 음악연습실](/stories/practice-room-drum-hihat1) | [드럼 타이밍·포켓 그루브 훈련 음악연습실](/stories/practice-room-drum-timing1) | [보컬 발음·딕션 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[드럼 연습실 가이드](/stories/practice-room-drum1) | [드럼 필인·트랜지션 고급 훈련 음악연습실](/stories/practice-room-drum-fill-adv1) | [드럼 하이햇 컨트롤·오픈 하이햇 음악연습실](/stories/practice-room-drum-hihat1) | [드럼 타이밍·포켓 그루브 훈련 음악연습실](/stories/practice-room-drum-timing1) | [보컬 발음·딕션 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [피아노 소나타·클래식 레퍼토리 음악연습실](/stories/practice-room-piano-sonata1) | [베이스 앙상블·밴드 연주 음악연습실](/stories/practice-room-bass-ensemble1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
