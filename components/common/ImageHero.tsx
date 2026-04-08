@@ -42,7 +42,7 @@ const ImageHero = ({
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
 
   const verticalAlignClass = 'justify-center pt-32 pb-12';
-  const textMotionProps = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay: 0.2 } };
+  const textMotionProps = { initial: { opacity: 1, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay: 0.2 } };
 
   return (
     <section
