@@ -83,4 +83,4 @@ faq:
 
 ---
 
-[은평구 녹음실 완전 안내](/stories/eunpyeong1) | [불광·수색 근처 녹음실 안내](/stories/bulgwang1) | [응암·역촌·구산 녹음실 안내](/stories/eungam1) | [진관·구파발·갈현 녹음실 안내](/stories/jingwan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[은평구 녹음실 완전 안내](/stories/eunpyeong1) | [불광·수색 근처 녹음실 안내](/stories/bulgwang1) | [응암·역촌·구산 녹음실 안내](/stories/eungam1) | [진관·구파발·갈현 녹음실 안내](/stories/jingwan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[마포구 전체 녹음실 안내](/stories/mapo1) | [마포구 공덕·대흥 녹음실 안내](/stories/mapo-gongdeok1) | [합정 녹음실 안내](/stories/hapjeong1) | [홍대 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[마포구 전체 녹음실 안내](/stories/mapo1) | [마포구 공덕·대흥 녹음실 안내](/stories/mapo-gongdeok1) | [합정 녹음실 안내](/stories/hapjeong1) | [홍대 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [음악연습실 가이드](/stories/practice-room-guide1)
