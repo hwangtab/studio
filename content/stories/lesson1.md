@@ -106,4 +106,4 @@ faq:
 
 ---
 
-[스튜디오 놀 음악 레슨 서비스 자세히 보기](/lesson) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [보컬 디렉팅이란?](/stories/direction1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1)
+[스튜디오 놀 음악 레슨 서비스 자세히 보기](/lesson) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [보컬 디렉팅이란?](/stories/direction1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [음악연습실 가이드](/stories/practice-room-guide1)

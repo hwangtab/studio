@@ -78,4 +78,4 @@ faq:
 
 ---
 
-[마포구 전체 녹음실 안내](/stories/mapo1) | [망원·성산 녹음실 안내](/stories/seongsan1) | [합정·상수 녹음실 안내](/stories/hapjeong1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[마포구 전체 녹음실 안내](/stories/mapo1) | [망원·성산 녹음실 안내](/stories/seongsan1) | [합정·상수 녹음실 안내](/stories/hapjeong1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

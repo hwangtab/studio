@@ -67,4 +67,4 @@ faq:
 
 ---
 
-[종로구 녹음실 안내](/stories/jongno1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [진관·구파발·갈현 녹음실 안내](/stories/jingwan1) | [홍대·마포 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[종로구 녹음실 안내](/stories/jongno1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [진관·구파발·갈현 녹음실 안내](/stories/jingwan1) | [홍대·마포 녹음실 안내](/stories/hongdae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
