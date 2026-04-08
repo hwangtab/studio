@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[스튜디오 놀 연습실 운영 노하우](/practice-room) | [연습실 요금 구조 참고](/pricing) | [음악연습실 양도 시장 가이드](/stories/practice-room-transfer1) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악 비즈니스 관련 스토리](/stories)
+[스튜디오 놀 연습실 운영 노하우](/practice-room) | [연습실 요금 구조 참고](/pricing) | [음악연습실 고르는 법 가이드](/stories/practice-room-guide1) | [음악연습실 양도 시장 가이드](/stories/practice-room-transfer1) | [음악연습실 가격 가이드](/stories/practice-room-price1)
