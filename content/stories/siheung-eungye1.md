@@ -75,4 +75,4 @@ faq:
 
 ---
 
-[시흥·안산 녹음실 안내](/stories/siheung1) | [안산 고잔·단원 녹음실 안내](/stories/ansan-danseon1) | [부천 녹음실 안내](/stories/bucheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[시흥·안산 녹음실 안내](/stories/siheung1) | [안산 고잔·단원 녹음실 안내](/stories/ansan-danseon1) | [부천 녹음실 안내](/stories/bucheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

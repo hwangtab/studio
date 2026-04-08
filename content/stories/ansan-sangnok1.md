@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [안산·시흥 녹음실 안내](/stories/ansan1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [군포 산본·금정 녹음실 안내](/stories/gunpo-sanbon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [안산·시흥 녹음실 안내](/stories/ansan1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [군포 산본·금정 녹음실 안내](/stories/gunpo-sanbon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

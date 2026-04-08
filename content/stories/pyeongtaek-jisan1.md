@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

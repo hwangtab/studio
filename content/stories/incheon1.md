@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[인천 중구 동인천·신포 녹음실 안내](/stories/incheon-junggu1) | [인천 연수구 연수·청학·동춘 녹음실 안내](/stories/incheon-yeonsu1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [송도 녹음실 안내](/stories/songdo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[인천 중구 동인천·신포 녹음실 안내](/stories/incheon-junggu1) | [인천 연수구 연수·청학·동춘 녹음실 안내](/stories/incheon-yeonsu1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [송도 녹음실 안내](/stories/songdo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

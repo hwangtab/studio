@@ -72,4 +72,4 @@ faq:
 
 ---
 
-[안양·군포·의왕 방문 가이드](/stories/anyang1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[안양·군포·의왕 방문 가이드](/stories/anyang1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
