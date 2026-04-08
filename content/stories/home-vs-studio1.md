@@ -137,4 +137,4 @@ Neumann U87AI 마이크와 방음 부스, 아날로그 장비를 통해 담긴 �
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [보컬 녹음 전날 준비 체크리스트](/stories/vocal-prep1) | [스튜디오 놀 장비 소개](/studio-info) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [녹음·믹싱 요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [보컬 녹음 전날 준비 체크리스트](/stories/vocal-prep1) | [스튜디오 놀 장비 소개](/studio-info) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [녹음·믹싱 요금 안내](/pricing) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
