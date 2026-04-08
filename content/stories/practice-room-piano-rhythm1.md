@@ -1,68 +1,68 @@
 ---
-title: "피아노 리듬감·리듬 훈련 음악연습실 — 피아노 리듬 완성 가이드"
+title: "피아노 리듬 읽기·박자 훈련 음악연습실 — 피아노 리듬 완성 가이드"
 date: 2026-04-09
 author: "스튜디오 놀"
 category: "음악연습실 가이드"
-tags: ["피아노 리듬감 훈련", "피아노 리듬 연습", "피아노 리듬 음악연습실", "음악연습실", "피아노 리듬 독학", "피아노 박자 훈련", "피아노 리듬 음악연습실"]
+tags: ["피아노 리듬 읽기", "피아노 박자 훈련", "피아노 리듬 음악연습실", "음악연습실", "피아노 리듬 독학", "피아노 박자 맞추기", "피아노 리듬 읽기 음악연습실"]
 thumbnail: "/images/room2.webp"
-summary: "피아노 리듬감·리듬 훈련을 위한 음악연습실 활용 가이드. 메트로놈 활용, 싱코페이션, 리듬 패턴 훈련, 음악연습실에서 피아노 리듬감을 완성하는 방법을 안내합니다."
+summary: "피아노 리듬 읽기·박자 훈련을 위한 음악연습실 활용 가이드. 음표 읽기, 당김음, 연음, 음악연습실에서 피아노 리듬을 완성하는 방법을 안내합니다."
 faq:
-  - q: "피아노에서 리듬감이 약한 이유와 해결 방법은?"
-    a: "피아노 리듬 약점 해결: ① 메트로놈 없이 연습 — 내 박자가 맞다고 생각하는 착각 ② 느린 메트로놈 — 60~70bpm에서 정확히 맞추기 ③ 박자 카운팅 — 소리 내어 박자 세며 연주 ④ 녹음 확인 — 자신의 리듬 객관적으로 듣기 ⑤ 드럼 트랙과 합주 — 드럼 리듬에 맞춰 피아노 연주. 리듬이 약한 것은 재능 문제가 아니라 메트로놈 없이 연습한 습관 문제입니다."
-  - q: "피아노에서 싱코페이션을 훈련하는 방법은?"
-    a: "피아노 싱코페이션 훈련: ① 박자 카운팅 — '1-앤-2-앤-3-앤' 소리 내어 ② 박자 사이 강조 — '앤' 박자에서 치는 연습 ③ 느린 속도 — 싱코페이션은 항상 느리게 시작 ④ 기초 곡 적용 — 싱코페이션이 간단한 곡부터 ⑤ 신체 리듬 — 발로 박자 치며 손은 싱코페이션. 싱코페이션은 '박자를 틀리는 것'이 아니라 '의도적으로 엇박에서 강조하는 것'입니다."
-  - q: "피아노 리듬 연습에 메트로놈을 어떻게 효과적으로 활용하나요?"
-    a: "메트로놈 활용법: ① 느리게 시작 — 60bpm 이하로 완벽히 ② 백비트 설정 — 2·4박에 클릭, 1·3박 자신이 맞추기 ③ 오프 비트 — 앤 박에 클릭, 비트 사이를 느끼기 ④ 2박 메트로놈 — 한 클릭에 2박, 더 어려운 리듬 훈련 ⑤ 한 번에 조금씩 — 현재 템포 +5bpm씩. 메트로놈 클릭을 1·3박이 아닌 2·4박에 맞추는 훈련이 실전 리듬감에 더 효과적입니다."
-  - q: "피아노 리듬 훈련에 좋은 장르나 곡이 있나요?"
-    a: "리듬 훈련 좋은 장르: ① 펑크·R&B — 16분음표·싱코페이션 풍부 ② 보사노바 — 섬세한 리듬 훈련 ③ 재즈 발라드 — 느린 템포 정확한 리듬 ④ 클래식 소품 — 리듬 일정한 곡 ⑤ K-POP 댄스곡 — 빠른 비트 리듬 적용. 리듬 훈련은 자신이 좋아하는 장르로 하는 것이 가장 지속성이 높습니다."
+  - q: "피아노 악보에서 리듬을 빠르게 읽는 방법은?"
+    a: "리듬 읽기 기법: ① 박자 단위 파악 — 분모(4분음표=1박)를 기준으로 ② 음표 가치 — 온음표(4박)·2분음표(2박)·4분음표(1박)·8분음표(1/2박) ③ 카운팅 — 숫자로 박자 세기: 1-and-2-and-3-and-4-and ④ 리듬 먼저 — 음정 없이 리듬만 먼저 카운팅하며 손 치기 ⑤ 손뼉 훈련 — 리듬 패턴을 손뼉으로 먼저 연습. 리듬 읽기는 '박자를 숫자로 말하면서 정확한 시점에 음을 치는' 능력입니다. 음정보다 리듬을 먼저 익히면 전체 악보 이해 속도가 크게 빨라집니다."
+  - q: "피아노 연음(tie·slur)과 점음표를 정확히 연주하는 방법은?"
+    a: "연음·점음표 연주: ① 타이(tie) — 같은 음 두 개를 연결, 두 번째 음을 치지 않고 지속 ② 슬러(slur) — 다른 음들을 부드럽게 연결 ③ 점4분음표 — 4분음표+8분음표(1.5박) ④ 점8분음표 — 8분음표+16분음표(3/4박) ⑤ 복합 리듬 — 타이와 점음표가 조합된 복잡한 리듬. 타이와 점음표는 초보자가 가장 많이 실수하는 리듬 기호입니다. 타이는 두 번째 음을 '치지 않고' 첫 음의 지속으로 이해하고, 점음표는 원래 박자의 1.5배로 계산하세요."
+  - q: "피아노 당김음·오프비트를 정확히 연주하는 방법은?"
+    a: "당김음 연주: ① 당김음 정의 — 약박에서 시작해 강박까지 이어지는 음 ② 느낌 — 강박에서 음이 '공중에 뜨는' 느낌 ③ 카운팅 — 약박 '앤' 에서 음 시작, 다음 강박은 침묵 ④ 메트로놈 강박 확인 — 당김음 연주 중 메트로놈 강박이 어디 있는지 의식 ⑤ 풍부한 당김음 — 재즈·팝·R&B에서 자주 등장. 당김음은 '약박에서 시작해 강박을 넘어가는 음'입니다. 이를 정확히 연주하려면 내부적으로 강박의 위치를 정확히 느끼면서 그 위치에서 음을 내지 않는 능력이 필요합니다."
+  - q: "피아노 복잡한 리듬 패턴을 분해하여 연습하는 방법은?"
+    a: "복잡한 리듬 분해: ① 리듬만 먼저 — 음정 없이 리듬만 손뼉·입으로 ② 느린 템포 — BPM 30~40에서 각 음표 확인 ③ 작은 단위 — 마디 단위보다 작은 박자 단위로 분해 ④ 문제 구간 집중 — 어려운 부분만 반복 ⑤ 점진적 합치기 — 각 부분이 정확해진 후 전체 연결. 복잡한 리듬은 '분해→각 부분 훈련→합치기' 순서로 접근해야 합니다. 처음부터 전체를 치려 하면 오류가 쌓이고 잘못된 리듬 패턴이 몸에 굳어질 수 있습니다."
 ---
 
-![피아노 리듬감·리듬 훈련 음악연습실 스튜디오 놀](/images/room2.webp)
+![피아노 리듬 읽기·박자 훈련 음악연습실 스튜디오 놀](/images/room2.webp)
 
-## 리듬이 탄탄한 피아노는 어떤 음도 제자리를 찾습니다
+## 리듬이 정확해질 때 피아노 음악이 살아납니다
 
-음정보다 리듬이 먼저. 방음 개인실에서 메트로놈과 함께 박자를 몸에 새기는 훈련을 하세요.
+음표 읽기부터 당김음 마스터까지. 방음 개인실에서 피아노 리듬 훈련을 탐색하세요.
 
-피아노 리듬 연습의 핵심:
-- **메트로놈 필수**: 리듬 훈련은 메트로놈 없이 불가능
-- **느리게 시작**: 60bpm에서 완벽히, 속도 올리기는 나중
-- **소리 내서 카운팅**: 박자를 입으로 세며 연주
-- **녹음 확인**: 자신의 리듬을 귀로 객관적으로
+피아노 리듬 훈련의 핵심:
+- **음표 카운팅**: 숫자 박자 세기로 정확한 리듬 읽기
+- **연음·점음표**: 타이와 점음표 정확한 지속 시간 계산
+- **당김음 표현**: 약박 시작·강박 침묵의 오프비트 감각
+- **복잡한 리듬 분해**: 작은 단위 분해 후 합치기 전략
 
 ---
 
-## 피아노 리듬 훈련 단계
+## 주요 리듬 기호
 
-| 단계 | 내용 | 기간 |
+| 기호 | 박자 가치 | 주의점 |
+|------|---------|-------|
+| 온음표 | 4박 | 충분한 지속 |
+| 점4분음표 | 1.5박 | 점 계산 |
+| 8분음표 타이 | 지속 | 두 번째 음 치지 않음 |
+| 당김음 | 약박→강박 | 강박 침묵 |
+
+---
+
+## 리듬 훈련 단계
+
+| 단계 | 내용 | 목표 |
 |------|------|------|
-| 기초 | 메트로놈과 4/4 정확히 | 1~2개월 |
-| 중급 | 싱코페이션·16분음표 | 3~6개월 |
-| 발전 | 3/4·6/8 박자 | 3개월+ |
-| 고급 | 폴리리듬·크로스 리듬 | 6개월+ |
+| 기초 | 음표 가치 카운팅 | 박자 숫자 읽기 |
+| 입문 | 연음·점음표 | 지속 시간 정확성 |
+| 중급 | 당김음 연주 | 오프비트 감각 |
+| 고급 | 복잡한 리듬 분해 | 자유로운 리듬 읽기 |
 
 ---
 
-## 리듬 훈련 메트로놈 설정
-
-| 설정 | 방법 | 효과 |
-|------|------|------|
-| 1·3박 클릭 | 기본 박자 | 입문 |
-| 2·4박 클릭 | 백비트 훈련 | 그루브 감각 |
-| 앤 박 클릭 | 오프비트 | 싱코페이션 |
-| 반박자 클릭 | 더 느린 기준 | 고급 안정화 |
-
----
-
-## 스튜디오 놀 — 피아노 리듬 연습 환경
+## 스튜디오 놀 — 리듬 훈련 환경
 
 | 항목 | 이용 가치 |
 |-----|----------------|
-| 업라이트 피아노 | 어쿠스틱 리듬 연습 |
-| PA 스피커 | 드럼 트랙과 합주 |
-| 방음 개인실 | 소리 내어 카운팅 자유롭게 |
-| 무인 운영 | 느린 메트로놈 반복 |
+| 디지털 피아노 | 리듬 소리 직접 확인 |
+| 방음 개인실 | 집중 박자 훈련 |
+| 무인 운영 | 반복 리듬 연습 자유 |
+| 녹음 기능 | 박자 정확성 분석 |
 | 시간 대여 | 8,000~25,000원/시간 |
 
 ---
 
-[리듬·박자 훈련 음악연습실](/stories/practice-room-rhythm1) | [피아노 테크닉·손가락 독립 연습 음악연습실](/stories/practice-room-piano-technique1) | [피아노 스케일·아르페지오 테크닉 음악연습실](/stories/practice-room-piano-technique21) | [음악 이론·악보 읽기 연습 음악연습실](/stories/practice-room-theory1) | [음악 청음·귀 훈련 음악연습실](/stories/practice-room-ear-training1) | [팝 피아노·감성 피아노 연주 음악연습실](/stories/practice-room-piano-pop1) | [피아노 연습실 가이드](/stories/practice-room-piano1) | [재즈 피아노 연습 음악연습실](/stories/practice-room-jazz-piano1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [드럼 브러쉬·와이어 브러쉬 연주 음악연습실](/stories/practice-room-drum-brush1) | [피아노 즉흥 반주·코드 반주 음악연습실](/stories/practice-room-piano-sight-play1) | [베이스 코드·화음 연주 음악연습실](/stories/practice-room-bass-chord1) | [보컬 팔세토·가성 발성 음악연습실](/stories/practice-room-vocal-falsetto1) | [기타 탭핑·투핸드 태핑 음악연습실](/stories/practice-room-guitar-tapping1) | [피아노 듀엣·앙상블 개인 연습 음악연습실](/stories/practice-room-piano-duet1) | [드럼 폴리리듬·복잡박자 연습 음악연습실](/stories/practice-room-drum-polyrhythm1) | [보컬 어질리티·빠른 음계 훈련 음악연습실](/stories/practice-room-vocal-agility1) | [재즈 피아노 즉흥 솔로·임프로비제이션 음악연습실](/stories/practice-room-piano-jazz-improv1) | [기타 레가토·해머온 풀오프 연습 음악연습실](/stories/practice-room-guitar-legato1) | [베이스 펑크·R&B 그루브 음악연습실](/stories/practice-room-bass-funk1) | [보컬 프로젝션·소리 울림 훈련 음악연습실](/stories/practice-room-vocal-projection1) | [피아노 옥타브·넓은 음정 도약 연습 음악연습실](/stories/practice-room-piano-technique31) | [기타 슬라이드·슬라이드 기타 연습 음악연습실](/stories/practice-room-guitar-slide1) | [보컬 스타일 개발·장르별 창법 음악연습실](/stories/practice-room-vocal-style1) | [통기타 핑거피킹·핑거스타일 입문 음악연습실](/stories/practice-room-guitar-acoustic-fingerpick1) | [드럼 하이햇·심벌 컨트롤 음악연습실](/stories/practice-room-drum-hihat1) | [피아노 트릴·장식음 기법 음악연습실](/stories/practice-room-piano-trills1) | [기타 코드 진행·화성 이해 음악연습실](/stories/practice-room-guitar-chord-prog1) | [장르별 보컬 특성·크로스오버 보컬 음악연습실](/stories/practice-room-vocal-genre1) | [베이스 썸피킹·핑거스타일 혼합 음악연습실](/stories/practice-room-bass-thumb1) | [피아노 발라드 반주·감성 피아노 음악연습실](/stories/practice-room-piano-ballad21) | [기타 아르페지오·분산 화음 연습 음악연습실](/stories/practice-room-guitar-arpeggio1) | [보컬 녹음 준비·레코딩 보컬 음악연습실](/stories/practice-room-vocal-recording1) | [가스펠·CCM 피아노 반주 음악연습실](/stories/practice-room-piano-gospel1) | [기타 핑거스타일 고급·솔로 기타 편곡 음악연습실](/stories/practice-room-guitar-fingerpick-adv1) | [드럼 킥·베이스 드럼 테크닉 음악연습실](/stories/practice-room-drum-kick1) | [보컬 벨팅·파워 벨팅 음악연습실](/stories/practice-room-vocal-belting1) | [피아노 컴핑·재즈 반주 패턴 음악연습실](/stories/practice-room-piano-comping1) | [기타 피치카토·뮤트 주법 음악연습실](/stories/practice-room-guitar-mute1) | [베이스 핑거링·오른손 테크닉 음악연습실](/stories/practice-room-bass-fingering1) | [보컬 스타카토·단음 발성 훈련 음악연습실](/stories/practice-room-vocal-staccato1) | [드럼 심벌·크래쉬·라이드 테크닉 음악연습실](/stories/practice-room-drum-cymbal1) | [피아노 크로스 핸드·교차 손 훈련 음악연습실](/stories/practice-room-piano-crosshand1) | [기타 스케일 연습·포지션 이동 음악연습실](/stories/practice-room-guitar-scale-pos1) | [보컬 레가토·이어 부르기 훈련 음악연습실](/stories/practice-room-vocal-legato1) | [피아노 연탄·네 손 피아노 음악연습실](/stories/practice-room-piano-four-hands1) | [기타 핑거링·왼손 독립 훈련 음악연습실](/stories/practice-room-guitar-left-hand1) | [보컬 오버톤·배음 발성 훈련 음악연습실](/stories/practice-room-vocal-overtone1) | [드럼 스네어·림샷 테크닉 음악연습실](/stories/practice-room-drum-snare1) | [기타 왼손 비브라토·핑거 비브라토 음악연습실](/stories/practice-room-guitar-finger-vibrato1) | [피아노 루바토·음악적 템포 표현 음악연습실](/stories/practice-room-piano-rubato1) | [베이스 이펙터·페달 보드 활용 음악연습실](/stories/practice-room-bass-effects1) | [보컬 크루닝·저음 보컬 테크닉 음악연습실](/stories/practice-room-vocal-crooning1) | [피아노 소나타·클래식 소나타 형식 연습 음악연습실](/stories/practice-room-piano-sonata1) | [기타 재즈 코드·재즈 보이싱 음악연습실](/stories/practice-room-guitar-jazz-chord1) | [드럼 빠른 템포·스피드 훈련 음악연습실](/stories/practice-room-drum-speed1) | [보컬 중음역 강화·미들 보이스 음악연습실](/stories/practice-room-vocal-middle1) | [피아노 에튀드·기법 연습곡 음악연습실](/stories/practice-room-piano-etude1) | [기타 오픈 튜닝·슬라이드 오픈 튜닝 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 앙상블·코러스 개인 파트 훈련 음악연습실](/stories/practice-room-vocal-ensemble1) | [베이스 픽 주법·픽 베이스 연습 음악연습실](/stories/practice-room-bass-pick1) | [드럼 카운트·리듬 카운팅 훈련 음악연습실](/stories/practice-room-drum-count1) | [피아노 반음계·크로매틱 스케일 음악연습실](/stories/practice-room-piano-chromatic1) | [기타 핑거링 스트레칭·손가락 유연성 음악연습실](/stories/practice-room-guitar-stretch1) | [보컬 피치 컨트롤·음정 정확도 고급 훈련 음악연습실](/stories/practice-room-vocal-pitch1) | [베이스 슬라이드·포르타멘토 베이스 음악연습실](/stories/practice-room-bass-slide1) | [피아노 다이나믹·강약 표현 음악연습실](/stories/practice-room-piano-dynamics1) | [드럼 고스트 노트·유령음 훈련 음악연습실](/stories/practice-room-drum-ghost1) | [기타 코드 아르페지오·코드 분산 연주 음악연습실](/stories/practice-room-guitar-chord-arpeggio1) | [보컬 구음·솔페지오 훈련 음악연습실](/stories/practice-room-vocal-solfege1) | [피아노 폴리포니·독립 성부 연주 음악연습실](/stories/practice-room-piano-polyphony1) | [기타 리프·반복 패턴 작성 음악연습실](/stories/practice-room-guitar-riff1) | [드럼 오프비트·엇박 리듬 훈련 음악연습실](/stories/practice-room-drum-offbeat1) | [보컬 호흡 발음·자음 명료도 훈련 음악연습실](/stories/practice-room-vocal-consonant1) | [피아노 전조·조바꿈 연습 음악연습실](/stories/practice-room-piano-modulation1) | [기타 핑거피킹 패턴 다양화 음악연습실](/stories/practice-room-guitar-fingerpick-pattern1) | [베이스 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-muting1) | [드럼 더블킥·더블 베이스 드럼 훈련 음악연습실](/stories/practice-room-drum-doublekick1) | [피아노 재즈 스탠다드·재즈 레퍼토리 음악연습실](/stories/practice-room-piano-jazz-standard1) | [보컬 라이브 퍼포먼스·공연 전 루틴 음악연습실](/stories/practice-room-vocal-live1) | [기타 뮤직 메모리·악보 없이 연주하기 음악연습실](/stories/practice-room-guitar-memory1) | [피아노 연속 도약·넓은 음정 점프 음악연습실](/stories/practice-room-piano-leaps1) | [드럼 크레셴도·다이나믹 빌드업 음악연습실](/stories/practice-room-drum-buildup1) | [베이스 펜타토닉·베이스 스케일 활용 음악연습실](/stories/practice-room-bass-pentatonic1) | [보컬 감정 표현·가사 해석 훈련 음악연습실](/stories/practice-room-vocal-emotion1) | [기타 해머온·풀오프 연속 훈련 음악연습실](/stories/practice-room-guitar-hammer-pull1) | [피아노 내성부·보조 선율 연습 음악연습실](/stories/practice-room-piano-inner-voice1) | [드럼 림샷·크로스스틱 고급 훈련 음악연습실](/stories/practice-room-drum-rimshot-adv1) | [보컬 뮤지컬 스타일·역할 보컬 훈련 음악연습실](/stories/practice-room-vocal-musical-style1) | [베이스 슬랩·팝핑 고급 테크닉 음악연습실](/stories/practice-room-bass-slap-adv1) | [피아노 초견 고급·빠른 악보 읽기 음악연습실](/stories/practice-room-piano-sight-adv1) | [드럼 타이밍·포켓 그루브 훈련 음악연습실](/stories/practice-room-drum-timing1) | [보컬 호흡·성대 컨트롤 고급 훈련 음악연습실](/stories/practice-room-vocal-breath-adv1) | [기타 비브라토·피치 컨트롤 음악연습실](/stories/practice-room-guitar-vibrato1) | [피아노 화성·코드 고급 이론 음악연습실](/stories/practice-room-piano-chord-adv1) | [재즈 베이스·워킹 베이스 고급 음악연습실](/stories/practice-room-bass-jazz1) | [보컬 음색 개발·개성 있는 목소리 훈련 음악연습실](/stories/practice-room-vocal-color-adv1) | [드럼 선형 리듬·리니어 드러밍 음악연습실](/stories/practice-room-drum-linear1) | [피아노 고급 테크닉·연주 기법 종합 음악연습실](/stories/practice-room-piano-technique-adv1) | [기타 코드 고급·확장 코드 연주 음악연습실](/stories/practice-room-guitar-chord-adv1) | [보컬 레지스터·성구 전환 훈련 음악연습실](/stories/practice-room-vocal-register1) | [베이스 루트 노트·코드 읽기 고급 음악연습실](/stories/practice-room-bass-root-adv1) | [피아노 터치·아티큘레이션 훈련 음악연습실](/stories/practice-room-piano-touch1) | [재즈 드럼 고급·스윙 필 심화 음악연습실](/stories/practice-room-drum-jazz-adv1) | [보컬 무대 퍼포먼스 고급·스테이지 존재감 음악연습실](/stories/practice-room-vocal-stage-adv1) | [기타 즉흥 연주·임프로비제이션 음악연습실](/stories/practice-room-guitar-improv1) | [성인 피아노 입문·처음 시작하는 어른 음악연습실](/stories/practice-room-piano-beginner-adult1) | [드럼 악센트·강세 패턴 훈련 음악연습실](/stories/practice-room-drum-accent1) | [베이스 옥타브 주법·옥타브 그루브 음악연습실](/stories/practice-room-bass-octave1) | [피아노 음정·인터벌 훈련 음악연습실](/stories/practice-room-piano-interval1) | [보컬 오디션 준비·심사 기준 이해 음악연습실](/stories/practice-room-vocal-audition1) | [기타 핑거스타일 고급 테크닉 음악연습실](/stories/practice-room-guitar-fingerstyle-adv1) | [베이스 플래절렛·하모닉스 주법 음악연습실](/stories/practice-room-bass-harmonic1) | [피아노 페달 테크닉·소스텐우토 음악연습실](/stories/practice-room-piano-pedal1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [베이스 타핑·투핸드 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [보컬 리듬·박자감 훈련 음악연습실](/stories/practice-room-vocal-rhythm1) | [기타 재즈 보이싱·코드 멜로디 음악연습실](/stories/practice-room-guitar-jazz-voicing1) | [피아노 즉흥 연주·재즈 피아노 음악연습실](/stories/practice-room-piano-jazz1) | [보컬 코러스·하모니 훈련 음악연습실](/stories/practice-room-vocal-harmony1) | [드럼 더블 킥·더블 페달 훈련 음악연습실](/stories/practice-room-drum-double-kick1) | [보컬 마이크 테크닉·PA 활용 음악연습실](/stories/practice-room-vocal-mic1) | [피아노 협주곡·오케스트라 반주 연습 음악연습실](/stories/practice-room-piano-concerto1) | [드럼 필인·트랜지션 고급 훈련 음악연습실](/stories/practice-room-drum-fill-adv1) | [베이스 컨트리·록어빌리 주법 음악연습실](/stories/practice-room-bass-country1) | [기타 피킹 테크닉 고급 훈련 음악연습실](/stories/practice-room-guitar-picking-adv1) | [보컬 발음·딕션 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [드럼 메트로놈·그루브 타이밍 훈련 음악연습실](/stories/practice-room-drum-metronome1) | [베이스 앙상블·밴드 연주 음악연습실](/stories/practice-room-bass-ensemble1) | [기타 블루스 스타일·블루스 표현 음악연습실](/stories/practice-room-guitar-blues1) | [보컬 인디·포크 스타일 음악연습실](/stories/practice-room-vocal-indie1) | [드럼 림샷·고스트노트 테크닉 음악연습실](/stories/practice-room-drum-rimshot1) | [베이스 워킹베이스·재즈 라인 음악연습실](/stories/practice-room-bass-walking1) | [기타 핑거피킹·핑거스타일 입문 음악연습실](/stories/practice-room-guitar-fingerpicking1) | [피아노 리드시트·즉흥 반주 음악연습실](/stories/practice-room-piano-leadsheet1) | [베이스 슬랩·팝핑 테크닉 음악연습실](/stories/practice-room-bass-slap1) | [기타 코드 전환 속도·스무스 체인지 음악연습실](/stories/practice-room-guitar-chord-change1) | [드럼 스네어 튜닝·드럼 헤드 세팅 음악연습실](/stories/practice-room-drum-snare-tuning1) | [보컬 브레스 컨트롤·호흡 훈련 음악연습실](/stories/practice-room-vocal-breath1) | [피아노 조표·조성 이해 음악연습실](/stories/practice-room-piano-key-signature1) | [기타 스트러밍 패턴·리듬 연주 음악연습실](/stories/practice-room-guitar-strumming1) | [드럼 재즈 라이드·스윙 패턴 음악연습실](/stories/practice-room-drum-jazz-ride1) | [베이스 루트·5도 패턴·기초 라인 음악연습실](/stories/practice-room-bass-root-fifth1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 조표·조성 이해 음악연습실](/stories/practice-room-piano-key-signature1) | [피아노 음정·인터벌 훈련 음악연습실](/stories/practice-room-piano-interval1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [피아노 리드시트·즉흥 반주 음악연습실](/stories/practice-room-piano-leadsheet1) | [드럼 메트로놈·그루브 타이밍 훈련 음악연습실](/stories/practice-room-drum-metronome1) | [기타 핑거링·왼손 운지 훈련 음악연습실](/stories/practice-room-guitar-fingering1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
