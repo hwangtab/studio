@@ -318,7 +318,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
               title={t('practiceRoom.relatedGuides.title')}
               className="mb-6"
             />
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {(
                 [
                   'practice-room-guide1',
@@ -331,6 +331,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
                   'practice-room-transfer1',
                   'practice-room-piano1',
                   'practice-room-yeonsinnae1',
+                  'practice-room-private1',
                 ] as const
               ).map((slug, idx) => (
                 <Link
