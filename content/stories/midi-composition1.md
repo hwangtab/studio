@@ -219,4 +219,6 @@ MIDI 작곡·편곡은 아이디어를 빠르게 음악으로 구현하는 현�
 **→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
 **→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
 **→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
+**→ [기타 비밥·재즈 기타 즉흥·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
+**→ [보컬 공명·흉성·두성 배치 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance-chest1)**
 [스튜디오 놀 이용 요금](/pricing)

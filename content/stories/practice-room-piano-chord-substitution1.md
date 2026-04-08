@@ -266,4 +266,6 @@ Ebmaj7 - E7 (트리톤서브 Bbm7→E7, 반음상행) - Abmaj7 - ...
 **→ [피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실](/stories/ko/practice-room-piano-jazz-standard-analysis1)**  
 **→ [피아노 리드시트 즉흥반주·코드 읽기 음악연습실](/stories/ko/practice-room-piano-lead-sheet-improvisation1)**
 **→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
+**→ [기타 비밥·재즈 기타 즉흥·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
+**→ [보컬 공명·흉성·두성 배치 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance-chest1)**
 [스튜디오 놀 이용 요금](/pricing)

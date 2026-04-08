@@ -250,4 +250,6 @@ Blakey는 "밴드를 몰아붙이는 드러머":
 **→ [드럼 재즈 스윙 콤핑·리듬 음악연습실](/stories/ko/practice-room-drum-jazz-swing-comping1)**  
 **→ [드럼 그루브 구성 고급·포켓·레이어링 음악연습실](/stories/ko/practice-room-drum-groove-construction-advanced1)**
 **→ [베이스 재즈 콤핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
+**→ [기타 비밥·재즈 기타 즉흥·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
+**→ [보컬 공명·흉성·두성 배치 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-resonance-chest1)**
 [스튜디오 놀 이용 요금](/pricing)
