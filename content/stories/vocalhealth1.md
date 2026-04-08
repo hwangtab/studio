@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[보컬 식단·영양 관리 완전 가이드](/stories/vocal-nutrition1) | [목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금 안내](/pricing)
+[보컬 식단·영양 관리 완전 가이드](/stories/vocal-nutrition1) | [목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금 안내](/pricing)

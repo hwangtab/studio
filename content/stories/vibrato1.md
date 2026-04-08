@@ -110,4 +110,4 @@ faq:
 
 ---
 
-[보컬 프레이징 완전 가이드](/stories/phrasing1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 프레이징 완전 가이드](/stories/phrasing1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -116,4 +116,4 @@ faq:
 
 ---
 
-[믹스 보이스 완전 가이드](/stories/mixvoice1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [스튜디오 놀 이용 요금](/pricing)
+[믹스 보이스 완전 가이드](/stories/mixvoice1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

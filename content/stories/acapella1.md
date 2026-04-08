@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[합창·코랄 보컬 녹음 가이드](/stories/choir1) | [코러스·화음 녹음 가이드](/stories/harmony1) | [듀엣 녹음 가이드](/stories/duet1) | [음정 교정 도구 비교](/stories/pitchtool1) | [음반 제작 가이드](/stories/album1) | [스튜디오 놀 이용 요금](/pricing)
+[합창·코랄 보컬 녹음 가이드](/stories/choir1) | [코러스·화음 녹음 가이드](/stories/harmony1) | [듀엣 녹음 가이드](/stories/duet1) | [음정 교정 도구 비교](/stories/pitchtool1) | [음반 제작 가이드](/stories/album1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

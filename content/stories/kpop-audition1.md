@@ -105,4 +105,4 @@ K-POP 오디션은 준비된 사람에게 기회가 옵니다. 데모 녹음은 
 
 ---
 
-[K팝 연습생 준비 완전 가이드](/stories/kpop-trainee1) | [오디션 준비 완전 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [EPK 만들기](/stories/epk1) | [스튜디오 놀 이용 요금](/pricing)
+[K팝 연습생 준비 완전 가이드](/stories/kpop-trainee1) | [오디션 준비 완전 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [EPK 만들기](/stories/epk1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[고음 내는 방법 완전 가이드](/stories/highnote1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [스튜디오 놀 이용 요금](/pricing)
+[고음 내는 방법 완전 가이드](/stories/highnote1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

@@ -85,4 +85,4 @@ faq:
 
 ---
 
-[스튜디오 놀 이용 요금 안내](/pricing) | [노래 녹음 선물 가이드](/stories/gift1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레슨 안내](/lesson)
+[스튜디오 놀 이용 요금 안내](/pricing) | [노래 녹음 선물 가이드](/stories/gift1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레슨 안내](/lesson) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

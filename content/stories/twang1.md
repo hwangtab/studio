@@ -80,4 +80,4 @@ faq:
 
 ---
 
-[벨팅 발성법 완전 가이드](/stories/belting1) | [마스크 공명·보컬 포지션 가이드](/stories/placement1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [스튜디오 놀 이용 요금](/pricing)
+[벨팅 발성법 완전 가이드](/stories/belting1) | [마스크 공명·보컬 포지션 가이드](/stories/placement1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
