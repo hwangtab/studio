@@ -241,4 +241,6 @@ D/F#: 2-0-0-2-3-2
 **→ [기타 핑거피킹·Travis Picking 패턴 음악연습실](/stories/ko/practice-room-guitar-fingerpicking-travis1)**  
 **→ [기타 어쿠스틱 핑거스타일·지판 편곡 음악연습실](/stories/ko/practice-room-guitar-acoustic-fingerstyle1)**
 **→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
+**→ [피아노 크로스핸드 테크닉·클래식 기교 음악연습실 가이드](/stories/ko/practice-room-piano-cross-hand-technique1)**
+**→ [베이스 핑거스타일 vs 픽 주법 비교 음악연습실 가이드](/stories/ko/practice-room-bass-pick-fingerstyle1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -220,4 +220,6 @@ Cubase는 VariAudio 피치 교정과 정밀한 오디오 편집 기능으로 전
 **→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
 **→ [기타 오픈 코드·소노리티 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-open-chord-sonority1)**
 **→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
+**→ [피아노 크로스핸드 테크닉·클래식 기교 음악연습실 가이드](/stories/ko/practice-room-piano-cross-hand-technique1)**
+**→ [베이스 핑거스타일 vs 픽 주법 비교 음악연습실 가이드](/stories/ko/practice-room-bass-pick-fingerstyle1)**
 [스튜디오 놀 이용 요금](/pricing)

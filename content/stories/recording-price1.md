@@ -153,4 +153,6 @@ faq:
 **→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
 **→ [기타 오픈 코드·소노리티 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-open-chord-sonority1)**
 **→ [보컬 레인지 확장 훈련 음악연습실 가이드](/stories/ko/practice-room-vocal-range-extension1)**
+**→ [피아노 크로스핸드 테크닉·클래식 기교 음악연습실 가이드](/stories/ko/practice-room-piano-cross-hand-technique1)**
+**→ [베이스 핑거스타일 vs 픽 주법 비교 음악연습실 가이드](/stories/ko/practice-room-bass-pick-fingerstyle1)**
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

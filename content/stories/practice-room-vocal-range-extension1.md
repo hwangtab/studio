@@ -235,4 +235,6 @@ category: "vocal"
 **→ [보컬 믹스보이스·전환점 훈련 음악연습실](/stories/ko/practice-room-vocal-mix-voice1)**  
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실](/stories/ko/practice-room-vocal-pop-adlib1)**
 **→ [기타 오픈 코드·소노리티 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-open-chord-sonority1)**
+**→ [피아노 크로스핸드 테크닉·클래식 기교 음악연습실 가이드](/stories/ko/practice-room-piano-cross-hand-technique1)**
+**→ [베이스 핑거스타일 vs 픽 주법 비교 음악연습실 가이드](/stories/ko/practice-room-bass-pick-fingerstyle1)**
 [스튜디오 놀 이용 요금](/pricing)
