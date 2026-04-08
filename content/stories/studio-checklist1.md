@@ -148,4 +148,4 @@ WeTransfer, 구글 드라이브, 카카오톡 파일 전송
 
 ---
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [음악연습실 활용법](/stories/practice-room-pre-recording1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)

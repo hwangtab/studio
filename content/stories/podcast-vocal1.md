@@ -133,4 +133,4 @@ faq:
 
 ---
 
-[나레이션·성우 보컬 녹음 가이드](/stories/narration1) | [팟캐스트 인트로 음악 제작 가이드](/stories/podcast-music1) | [보컬 건강 완전 가이드](/stories/vocalhealth1) | [마이크 선택 완전 가이드](/stories/microphone1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing)
+[나레이션·성우 보컬 녹음 가이드](/stories/narration1) | [팟캐스트 인트로 음악 제작 가이드](/stories/podcast-music1) | [보컬 건강 완전 가이드](/stories/vocalhealth1) | [마이크 선택 완전 가이드](/stories/microphone1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
