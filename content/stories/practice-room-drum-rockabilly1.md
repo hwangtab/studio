@@ -133,4 +133,4 @@ slug: "practice-room-drum-rockabilly1"
 - [드럼 컨트리 리듬 음악연습실](/stories/practice-room-drum-country1)
 - [드럼 브러시워크 재즈 음악연습실](/stories/practice-room-drum-brushwork1)
 - [드럼 힙합·트랩 비트 음악연습실](/stories/practice-room-drum-hiphop1)
-- [베이스 하모닉스·플래절렛 음악연습실](/stories/practice-room-bass-harmonics1) | [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1) | [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [스튜디오 놀 이용 요금](/pricing)
+- [베이스 하모닉스·플래절렛 음악연습실](/stories/practice-room-bass-harmonics1) | [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1) | [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1) | [스튜디오 놀 이용 요금](/pricing)

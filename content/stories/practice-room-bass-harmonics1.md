@@ -110,4 +110,4 @@ E 줄 12프렛 하모닉 + A 줄 12프렛 하모닉 동시 발음
 - [베이스 핑거스타일 고급 기법 음악연습실](/stories/practice-room-bass-fingerstyle1)
 - [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1)
 - [베이스 재즈 워킹 베이스라인 음악연습실](/stories/practice-room-bass-jazz1)
-- [드럼 락카빌리·로큰롤 비트 음악연습실](/stories/practice-room-drum-rockabilly1) | [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1) | [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [스튜디오 놀 이용 요금](/pricing)
+- [드럼 락카빌리·로큰롤 비트 음악연습실](/stories/practice-room-drum-rockabilly1) | [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1) | [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1) | [스튜디오 놀 이용 요금](/pricing)
