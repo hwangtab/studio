@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[보컬 연습실 활용법](/stories/practice-room-vocal1) | [음악연습실 vs 녹음 스튜디오 비교](/stories/practice-room-vs-studio1) | [홈 스튜디오 vs 음악연습실](/stories/practice-room-vs-home1) | [음악연습실 예약 방법 가이드](/stories/practice-room-booking1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [홍대 vs 연신내 음악연습실 비교](/stories/practice-room-hongdae1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 활용법](/stories/practice-room-vocal1) | [음악연습실 vs 녹음 스튜디오 비교](/stories/practice-room-vs-studio1) | [홈 스튜디오 vs 음악연습실](/stories/practice-room-vs-home1) | [음악연습실 예약 방법 가이드](/stories/practice-room-booking1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [홍대 vs 연신내 음악연습실 비교](/stories/practice-room-hongdae1) | [보컬 독학·처음 노래 배우는 연습실](/stories/practice-room-vocal-beginner1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
