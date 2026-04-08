@@ -99,4 +99,4 @@ faq:
 
 ---
 
-[음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [은평구 음악연습실 안내](/stories/practice-room-eunpyeong1) | [고양·일산 음악연습실 안내](/stories/practice-room-goyang1) | [강서구·양천구 음악연습실 가이드](/stories/practice-room-gangseo1) | [서울 음악연습실 추천 가이드](/stories/practice-room-seoul1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [야간·24시간 연습실](/stories/practice-room-night1) | [무인 음악연습실 가이드](/stories/practice-room-unmanned1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [수원·안양·의왕 음악연습실](/stories/practice-room-suwon1) | [구로·금천·영등포 음악연습실](/stories/practice-room-guro1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [은평구 음악연습실 안내](/stories/practice-room-eunpyeong1) | [고양·일산 음악연습실 안내](/stories/practice-room-goyang1) | [강서구·양천구 음악연습실 가이드](/stories/practice-room-gangseo1) | [서울 음악연습실 추천 가이드](/stories/practice-room-seoul1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [야간·24시간 연습실](/stories/practice-room-night1) | [무인 음악연습실 가이드](/stories/practice-room-unmanned1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
