@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[스튜디오 놀 연습실 운영 노하우](/practice-room) | [연습실 요금 구조 참고](/pricing) | [음악연습실 고르는 법 가이드](/stories/practice-room-guide1) | [음악연습실 양도 시장 가이드](/stories/practice-room-transfer1) | [음악연습실 가격 가이드](/stories/practice-room-price1)
+[스튜디오 놀 연습실 운영 노하우](/practice-room) | [연습실 요금 구조 참고](/pricing) | [음악연습실 고르는 법 가이드](/stories/practice-room-guide1) | [음악연습실 양도 시장 가이드](/stories/practice-room-transfer1) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)
