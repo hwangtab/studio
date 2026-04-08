@@ -357,8 +357,9 @@ export const getStoryPaths = (): StoryPath[] => {
 };
 
 export const getRelatedStories = (locale: string, slug: string, limit = 3): Story[] => {
-  const current = getAllStories(locale).find((item) => item.slug === slug);
-  const candidates = getAllStories(locale).filter((item) => item.slug !== slug);
+  const all = getAllStories(locale);
+  const current = all.find((item) => item.slug === slug);
+  const candidates = all.filter((item) => item.slug !== slug);
 
   if (!current) return candidates.slice(0, limit);
 
