@@ -208,4 +208,6 @@ faq:
 **→ [기타 앰비언트·텍스처 기타·이펙터 활용 음악연습실 가이드](/stories/ko/practice-room-guitar-ambient-textures1)**
 **→ [보컬 하모니·앙상블 합창 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-ensemble1)**
 **→ [피아노 스트라이드 고급 테크닉 음악연습실 가이드](/stories/ko/practice-room-piano-stride-advanced1)**
+**→ [보컬 스캣 즉흥연주·재즈 보컬 음악연습실 가이드](/stories/ko/practice-room-vocal-scat-improvisation1)**
+**→ [드럼 재즈 스윙 콤핑·4/4 재즈 드럼 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-swing-comping1)**
 [스튜디오 놀 이용 요금](/pricing)
