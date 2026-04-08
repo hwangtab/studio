@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 오디션 준비·심사 기준 이해 음악연습실](/stories/practice-room-vocal-audition1) | [보컬 음색 개발·음성 개성 훈련 음악연습실](/stories/practice-room-vocal-color-adv1) | [보컬 호흡·지지 고급 훈련 음악연습실](/stories/practice-room-vocal-breath-adv1) | [기타 슬라이드·보틀넥 주법 음악연습실](/stories/practice-room-guitar-slide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 가이드](/stories/practice-room-vocal1) | [보컬 오디션 준비·심사 기준 이해 음악연습실](/stories/practice-room-vocal-audition1) | [보컬 음색 개발·음성 개성 훈련 음악연습실](/stories/practice-room-vocal-color-adv1) | [보컬 호흡·지지 고급 훈련 음악연습실](/stories/practice-room-vocal-breath-adv1) | [기타 슬라이드·보틀넥 주법 음악연습실](/stories/practice-room-guitar-slide1) | [드럼 하이햇 컨트롤·오픈 하이햇 음악연습실](/stories/practice-room-drum-hihat1) | [피아노 스케일·아르페지오 고급 훈련 음악연습실](/stories/practice-room-piano-scale-adv1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
