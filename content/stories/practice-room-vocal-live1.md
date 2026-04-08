@@ -65,4 +65,4 @@ faq:
 
 ---
 
-[보컬 연습실 가이드](/stories/practice-room-vocal1) | [무대 공포증 극복 연습실](/stories/practice-room-anxiety1) | [보컬·연주자 무대 매너 연습 음악연습실](/stories/practice-room-stage-manner1) | [보컬 무대 퍼포먼스·스테이지 연기 음악연습실](/stories/practice-room-vocal-stage1) | [보컬 라이브 퍼포먼스·공연 전 루틴 음악연습실](/stories/practice-room-vocal-live1) | [기타 뮤직 메모리·악보 없이 연주하기 음악연습실](/stories/practice-room-guitar-memory1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 가이드](/stories/practice-room-vocal1) | [무대 공포증 극복 연습실](/stories/practice-room-anxiety1) | [보컬·연주자 무대 매너 연습 음악연습실](/stories/practice-room-stage-manner1) | [보컬 무대 퍼포먼스·스테이지 연기 음악연습실](/stories/practice-room-vocal-stage1) | [보컬 라이브 퍼포먼스·공연 전 루틴 음악연습실](/stories/practice-room-vocal-live1) | [기타 뮤직 메모리·악보 없이 연주하기 음악연습실](/stories/practice-room-guitar-memory1) | [피아노 연속 도약·넓은 음정 점프 음악연습실](/stories/practice-room-piano-leaps1) | [드럼 크레셴도·다이나믹 빌드업 음악연습실](/stories/practice-room-drum-buildup1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)

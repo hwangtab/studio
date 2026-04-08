@@ -54,4 +54,4 @@ faq:
 
 ---
 
-[기타 연습실 가이드](/stories/practice-room-guitar1) | [기타 리프·반복 패턴 작성 음악연습실](/stories/practice-room-guitar-riff1) | [기타 솔로·리드 기타 연습 음악연습실](/stories/practice-room-guitar-solo1) | [음악 암기·악보 없이 연주하기 가이드](/stories/practice-room-memory1) | [보컬 라이브 퍼포먼스·공연 전 루틴 음악연습실](/stories/practice-room-vocal-live1) | [기타 뮤직 메모리·악보 없이 연주하기 음악연습실](/stories/practice-room-guitar-memory1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[기타 연습실 가이드](/stories/practice-room-guitar1) | [기타 리프·반복 패턴 작성 음악연습실](/stories/practice-room-guitar-riff1) | [기타 솔로·리드 기타 연습 음악연습실](/stories/practice-room-guitar-solo1) | [음악 암기·악보 없이 연주하기 가이드](/stories/practice-room-memory1) | [보컬 라이브 퍼포먼스·공연 전 루틴 음악연습실](/stories/practice-room-vocal-live1) | [기타 뮤직 메모리·악보 없이 연주하기 음악연습실](/stories/practice-room-guitar-memory1) | [피아노 연속 도약·넓은 음정 점프 음악연습실](/stories/practice-room-piano-leaps1) | [드럼 크레셴도·다이나믹 빌드업 음악연습실](/stories/practice-room-drum-buildup1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
