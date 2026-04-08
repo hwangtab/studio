@@ -570,12 +570,12 @@
         "visualText": "音乐教育"
       },
       "practice": {
-        "title": "需要沉浸的专属空间吗？",
-        "descriptionLine1": "随时可以自由使用的高级练习室。",
-        "descriptionLine2": "准备了舒适的环境和完美的隔音设施。",
-        "primaryText": "查看设施",
-        "secondaryText": "预约咨询",
-        "visualText": "创意空间"
+        "title": "需要属于自己的音乐练习室吗？",
+        "descriptionLine1": "24小时防音音乐练习室，月租从30万韩元起，也可按小时租用。",
+        "descriptionLine2": "延新内站步行5分钟，声乐·钢琴·键盘齐备的个人音乐练习室。",
+        "primaryText": "查看音乐练习室",
+        "secondaryText": "入驻咨询",
+        "visualText": "音乐练习室"
       },
       "production": {
         "title": "想制作自己的音源吗？",
@@ -605,7 +605,8 @@
       "production": "音乐制作",
       "mixing": "混音与母带",
       "business": "音乐商业",
-      "guide": "指南"
+      "guide": "指南",
+      "practice": "音乐练习室指南"
     }
   },
   "reviewSection": {

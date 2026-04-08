@@ -568,12 +568,12 @@
         "visualText": "Musiqa ta'limi"
       },
       "practice": {
-        "title": "Diqqat jamlash uchun o'zingizga xos joy kerakmi?",
-        "descriptionLine1": "Istalgan vaqtda erkin foydalaniladigan premium mashg'ulot xonalari.",
-        "descriptionLine2": "Qulay muhit va mukammal ovoz izolyatsiyasi tayyor.",
-        "primaryText": "Jihozlarni ko'rish",
-        "secondaryText": "Bron bo'yicha so'rov",
-        "visualText": "Ijodiy fazo"
+        "title": "O'zingizning musiqa mashg'ulot xonangiz kerakmi?",
+        "descriptionLine1": "24 soatlik ovoz izolyatsiyali musiqa mashg'ulot xonasi — oylik ₩300,000 dan yoki soatlik ijara.",
+        "descriptionLine2": "Yeonsinnae bekatidan 5 daqiqa piyoda. Vokal, pianino va klaviatura jihozlangan shaxsiy musiqa mashg'ulot xonasi.",
+        "primaryText": "Musiqa mashg'ulot xonasini ko'rish",
+        "secondaryText": "Yashash bo'yicha so'rov",
+        "visualText": "Musiqa mashg'ulot xonasi"
       },
       "production": {
         "title": "O'zingizning treklaringizni yaratmoqchimisiz?",
@@ -603,7 +603,8 @@
       "production": "Musiqa ishlab chiqarish",
       "mixing": "Mikslash va mastering",
       "business": "Musiqa biznesi",
-      "guide": "Qo'llanma"
+      "guide": "Qo'llanma",
+      "practice": "Musiqa mashg'ulot xonasi bo'yicha qo'llanma"
     }
   },
   "reviewSection": {

@@ -570,12 +570,12 @@
         "visualText": "Music Education"
       },
       "practice": {
-        "title": "Need your own space to focus?",
-        "descriptionLine1": "Premium practice rooms available freely anytime.",
-        "descriptionLine2": "Comfortable environment and perfect soundproofing ready.",
-        "primaryText": "View Facilities",
-        "secondaryText": "Booking Inquiry",
-        "visualText": "Creative Space"
+        "title": "Need Your Own Music Practice Room?",
+        "descriptionLine1": "24-hour soundproof music practice room — monthly from ₩300,000 or hourly rental.",
+        "descriptionLine2": "5-min walk from Yeonsinnae Station. Private music practice room with vocal, piano & keyboard.",
+        "primaryText": "View Music Practice Room",
+        "secondaryText": "Residency Inquiry",
+        "visualText": "Music Practice Room"
       },
       "production": {
         "title": "Want to produce your own music?",
@@ -605,7 +605,8 @@
       "production": "Music Production",
       "mixing": "Mixing & Mastering",
       "business": "Music Business",
-      "guide": "Guide"
+      "guide": "Guide",
+      "practice": "Practice Room Guide"
     }
   },
   "reviewSection": {

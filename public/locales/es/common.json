@@ -570,12 +570,12 @@
         "visualText": "Educación musical"
       },
       "practice": {
-        "title": "¿Necesitas tu propio espacio para concentrarte?",
-        "descriptionLine1": "Salas de práctica premium disponibles libremente en cualquier momento.",
-        "descriptionLine2": "Ambiente agradable e insonorización perfecta listos.",
-        "primaryText": "Ver Instalaciones",
-        "secondaryText": "Consulta de Reserva",
-        "visualText": "Espacio creativo"
+        "title": "¿Necesitas tu propia sala de práctica musical?",
+        "descriptionLine1": "Sala de práctica musical insonorizada 24h — mensual desde ₩300,000 o por horas.",
+        "descriptionLine2": "A 5 min andando de la estación Yeonsinnae. Sala de práctica individual con vocal, piano y teclado.",
+        "primaryText": "Ver sala de práctica musical",
+        "secondaryText": "Consulta de residencia",
+        "visualText": "Sala de práctica musical"
       },
       "production": {
         "title": "¿Quieres producir tu propia música?",
@@ -605,7 +605,8 @@
       "production": "Producción musical",
       "mixing": "Mezcla y masterización",
       "business": "Negocio musical",
-      "guide": "Guía"
+      "guide": "Guía",
+      "practice": "Guía de Sala de Práctica Musical"
     }
   },
   "reviewSection": {

@@ -570,12 +570,12 @@
         "visualText": "Giáo dục âm nhạc"
       },
       "practice": {
-        "title": "Bạn cần không gian riêng để tập trung?",
-        "descriptionLine1": "Phòng tập cao cấp có thể sử dụng tự do bất cứ lúc nào.",
-        "descriptionLine2": "Môi trường thoải mái và cách âm hoàn hảo đã sẵn sàng.",
-        "primaryText": "Xem cơ sở vật chất",
-        "secondaryText": "Hỏi về đặt chỗ",
-        "visualText": "Không gian sáng tạo"
+        "title": "Bạn cần phòng tập âm nhạc riêng của mình?",
+        "descriptionLine1": "Phòng tập âm nhạc cách âm 24h — thuê tháng từ ₩300,000 hoặc theo giờ.",
+        "descriptionLine2": "Cách ga Yeonsinnae 5 phút đi bộ. Phòng tập âm nhạc cá nhân đầy đủ vocal, piano và keyboard.",
+        "primaryText": "Xem phòng tập âm nhạc",
+        "secondaryText": "Tư vấn thuê phòng",
+        "visualText": "Phòng tập âm nhạc"
       },
       "production": {
         "title": "Bạn muốn sản xuất bản thu của riêng mình?",
@@ -605,7 +605,8 @@
       "production": "Sản xuất âm nhạc",
       "mixing": "Mixing & Mastering",
       "business": "Kinh doanh âm nhạc",
-      "guide": "Hướng dẫn"
+      "guide": "Hướng dẫn",
+      "practice": "Hướng Dẫn Phòng Tập Âm Nhạc"
     }
   },
   "reviewSection": {
