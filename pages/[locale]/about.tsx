@@ -8,7 +8,6 @@ import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
 import ImageHero from '../../components/common/ImageHero';
-import Breadcrumb from '../../components/ui/Breadcrumb';
 import ReviewSection from '../../components/ui/ReviewSection';
 import { getServicesData } from '../../data/services';
 import { Section } from '../../components/ui/Section';
@@ -105,12 +104,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
           overlayGradient: "from-black/40 via-transparent to-black/20",
         }}
       />
-      <Breadcrumb
-        items={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.about'), path: `/${locale}/about` },
-        ]}
-      />
+
 
       <Section variant="alternate">
         <SectionHeading

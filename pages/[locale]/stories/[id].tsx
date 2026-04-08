@@ -11,7 +11,6 @@ import StoryCard from '../../../components/StoryCard';
 import ImageHero from '../../../components/common/ImageHero';
 import StoryCTA, { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
-import Breadcrumb from '../../../components/ui/Breadcrumb';
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
@@ -174,10 +173,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         imageAlt={story.title}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/70 via-black/40 to-black/70"
-      />
-
-      <Breadcrumb
-        items={[
+        breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },
           { name: story.title, path: `/${locale}/stories/${story.slug}` },

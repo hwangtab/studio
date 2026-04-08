@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import Breadcrumb from '../../components/ui/Breadcrumb';
 import ReviewSection from '../../components/ui/ReviewSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import FAQSection from '../../components/ui/FAQSection';
@@ -189,12 +188,6 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         overlayGradient="from-black/40 via-transparent to-black/20"
       />
 
-      <Breadcrumb
-        items={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.voiceActing'), path: `/${locale}/voice-acting` },
-        ]}
-      />
 
       <QuickAnswers
         title={t('voiceActing.quickAnswers.title')}

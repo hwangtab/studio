@@ -117,7 +117,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
           { name: item.title, path: `/${locale}/portfolio/${item.id}` },
         ]}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 border-b border-gray-100 dark:border-gray-800"
       />
       <Section variant="default" className="pt-8 pb-12">
         <div className="mb-8">

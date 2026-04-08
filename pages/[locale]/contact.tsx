@@ -6,7 +6,6 @@ import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle, ArrowRight
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import Breadcrumb from '../../components/ui/Breadcrumb';
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -114,12 +113,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/50 via-black/30 to-black/50",
         }}
-      />
-      <Breadcrumb
-        items={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.contact'), path: `/${locale}/contact` },
-        ]}
       />
 
       <Section variant="default">

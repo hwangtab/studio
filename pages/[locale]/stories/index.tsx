@@ -8,7 +8,6 @@ import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
-import Breadcrumb from '../../../components/ui/Breadcrumb';
 import ContactCTA from '../../../components/common/ContactCTA';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
@@ -141,12 +140,6 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         imageAlt={t('stories.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
-      />
-      <Breadcrumb
-        items={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.stories'), path: `/${locale}/stories` },
-        ]}
       />
       <Section variant="default">
         <div ref={sectionRef}>

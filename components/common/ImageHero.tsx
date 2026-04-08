@@ -1,7 +1,9 @@
 import React from 'react';
 import { m } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
+import Breadcrumb from '../ui/Breadcrumb';
 import type { Locale } from '../../lib/i18n';
+import type { Breadcrumb as BreadcrumbItem } from '../../types/data';
 
 interface ImageHeroProps {
   title: React.ReactNode;
@@ -15,6 +17,7 @@ interface ImageHeroProps {
   className?: string;
   locale?: Locale;
   priority?: boolean;
+  breadcrumbItems?: BreadcrumbItem[];
 }
 
 const ImageHero = ({
@@ -29,6 +32,7 @@ const ImageHero = ({
   className = "",
   locale = 'ko',
   priority = false,
+  breadcrumbItems,
 }: ImageHeroProps) => {
   const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
 
@@ -98,6 +102,17 @@ const ImageHero = ({
           )}
         </m.div>
       </div>
+
+      {breadcrumbItems && breadcrumbItems.length > 1 && (
+        <div className="absolute bottom-0 left-0 right-0 z-20 bg-black/25 backdrop-blur-sm">
+          <div className="container mx-auto px-4">
+            <Breadcrumb
+              items={breadcrumbItems}
+              className="py-2 text-white/70 [&_span]:text-white [&_a]:text-white/70 [&_a:hover]:text-white [&_svg]:text-white/50"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
