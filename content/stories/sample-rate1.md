@@ -105,4 +105,4 @@ faq:
 
 ---
 
-[보컬 녹음 완전 가이드](/stories/vocalrecord1) | [홈 레코딩 마이크 가이드](/stories/homemic1) | [믹싱 의뢰용 파일 납품 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [홈 레코딩 마이크 가이드](/stories/vocal-microphone1) | [믹싱 의뢰용 파일 납품 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [스튜디오 놀 이용 요금](/pricing)
