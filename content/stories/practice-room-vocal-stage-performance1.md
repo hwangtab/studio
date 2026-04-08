@@ -118,4 +118,4 @@ slug: "practice-room-vocal-stage-performance1"
 - [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1)
 - [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1)
 - [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1)
-- [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [스튜디오 놀 이용 요금](/pricing)
+- [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [스튜디오 놀 이용 요금](/pricing)
