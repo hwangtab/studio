@@ -1,69 +1,133 @@
 ---
-title: "피아노 스트라이드·부기우기 음악연습실 — 피아노 스트라이드 완성 가이드"
-date: 2026-04-09
-author: "스튜디오 놀"
-category: "음악연습실 가이드"
-tags: ["피아노 스트라이드", "피아노 부기우기", "피아노 스트라이드 음악연습실", "음악연습실", "피아노 스트라이드 독학", "스트라이드 피아노", "피아노 스트라이드 음악연습실"]
-thumbnail: "/images/room2.webp"
-summary: "피아노 스트라이드·부기우기 훈련을 위한 음악연습실 활용 가이드. 스트라이드 왼손, 부기우기 베이스, 오른손 즉흥, 음악연습실에서 피아노 스트라이드를 완성하는 방법을 안내합니다."
-faq:
-  - q: "피아노 스트라이드에서 왼손 점프 패턴을 완성하는 방법은?"
-    a: "스트라이드 왼손: ① 기본 패턴 — 낮은 단음·옥타브(1박)→중간 코드(2박) 교대 ② 점프 훈련 — 왼손이 넓은 음역을 정확히 점프 ③ 정확도 우선 — 처음엔 느리게, 정확한 위치 익히기 ④ 속도 향상 — 정확도 확보 후 메트로놈으로 속도 올리기 ⑤ 리듬 안정 — 점프 중에도 일정한 리듬 유지. 스트라이드 피아노의 핵심은 '왼손의 정확한 도약'입니다. 낮은 베이스에서 높은 코드로 1박 안에 정확히 이동해야 합니다. Art Tatum, Fats Waller의 스트라이드가 얼마나 완벽한지 들으면 이것이 기술적으로 얼마나 어려운지 알 수 있습니다."
-  - q: "피아노 부기우기에서 왼손 베이스 패턴을 구현하는 방법은?"
-    a: "부기우기 베이스: ① 오스티나토 — 반복되는 8분음표 베이스 패턴 ② 기본 패턴 — 1-3-5-6-5-3 음표 반복 ③ 롤링 베이스 — 옥타브 오르내리며 롤링 ④ 셔플 베이스 — 점음표+8분음표 셔플 감각 ⑤ 패턴 변형 — 기본 패턴에서 다양하게 변형. 부기우기 베이스는 블루스 피아노의 왼손입니다. 같은 패턴을 지칠 때까지 반복하면서도 그루브를 유지하는 것이 관건입니다. 처음에는 느리게 패턴을 익힌 후, 빠른 템포에서도 일정함을 유지하는 훈련이 필요합니다."
-  - q: "피아노 스트라이드에서 오른손 즉흥을 왼손 패턴 위에 얹는 방법은?"
-    a: "스트라이드 즉흥: ① 왼손 자동화 — 오른손 즉흥의 전제는 왼손의 자동화 ② 코드 따르기 — 오른손은 왼손 코드 진행에 맞게 즉흥 ③ 블루스 스케일 — 스트라이드 즉흥에서 블루스 스케일 ④ 리프 반복 — 짧은 멜로디 리프를 반복해 그루브 형성 ⑤ 대화 형식 — 왼손 패턴과 오른손 멜로디가 대화. 스트라이드 즉흥은 왼손이 자동화되지 않으면 불가능합니다. 왼손 패턴이 무의식적으로 나와야 오른손이 자유롭게 즉흥할 수 있습니다. 왼손 완전 자동화에 충분한 시간을 투자하세요."
-  - q: "피아노 스트라이드와 부기우기의 차이점과 각각의 특성은?"
-    a: "스트라이드·부기우기 차이: ① 스트라이드 — 1920-30년대 재즈, 넓은 왼손 점프 특징 ② 부기우기 — 블루스 기반, 반복적인 왼손 오스티나토 ③ 스트라이드 음색 — 클래식에서 영향받은 정교한 화성 ④ 부기우기 음색 — 원초적이고 강렬한 블루스 감성 ⑤ 공통점 — 둘 다 왼손이 독립적이고 오른손이 즉흥. 스트라이드는 재즈 초기의 피아노 스타일로 클래식 테크닉과 재즈를 결합합니다. 부기우기는 더 블루지하고 원초적입니다. Jelly Roll Morton의 스트라이드, Meade Lux Lewis의 부기우기를 비교해 들어보세요."
+title: "피아노 스트라이드·뉴올리언스 피아노 — 음악연습실 완전 가이드"
+date: "2026-04-08"
+excerpt: "왼손 스트라이드 기법과 뉴올리언스 부기우기 피아노 스타일. 재즈 피아노의 역사적 뿌리를 은평구 24시간 음악연습실에서 탐구하세요."
+tags: ["음악연습실", "피아노", "스트라이드피아노", "뉴올리언스", "부기우기", "은평구음악연습실"]
+category: "piano"
 ---
 
-![피아노 스트라이드·부기우기 음악연습실 스튜디오 놀](/images/room2.webp)
+# 피아노 스트라이드·뉴올리언스 피아노 — 음악연습실 완전 가이드
 
-## 스트라이드·부기우기가 피아노에 블루스의 혼을 심습니다
-
-왼손 점프 패턴부터 오른손 즉흥까지. 방음 개인실에서 피아노 스트라이드를 탐색하세요.
-
-피아노 스트라이드 훈련의 핵심:
-- **왼손 도약**: 낮은 베이스에서 중간 코드로 정확히 1박 안에 점프
-- **부기우기 오스티나토**: 반복적인 8분음표 베이스 패턴의 그루브
-- **왼손 자동화**: 오른손 즉흥을 위한 왼손 완전 자동화 훈련
-- **스타일 구분**: 재즈 스트라이드와 블루스 부기우기의 음악적 차이
+스트라이드 피아노는 재즈 피아노의 가장 오래된 형식 중 하나입니다. 1920-30년대 뉴욕에서 발전한 이 스타일은 **왼손이 베이스와 코드를 번갈아가며 걸어다니는(stride)** 것이 특징입니다. 피아노 한 대로 베이스·드럼·리듬 기타의 역할을 모두 소화하는 이 기법은 재즈 피아노의 독립성을 극한까지 끌어올립니다.
 
 ---
 
-## 스트라이드·부기우기 특성 비교
+## 스트라이드 기법의 기본 원리
 
-| 스타일 | 왼손 패턴 | 장르 기반 |
-|--------|---------|---------|
-| 스트라이드 | 넓은 점프 | 재즈 |
-| 부기우기 | 오스티나토 반복 | 블루스 |
-| 공통 | 독립적 왼손 | 두 스타일 모두 |
+### 왼손의 역할
+
+스트라이드에서 왼손은 두 가지 역할을 번갈아 수행합니다:
+
+**박 1, 3 (강박)**: 낮은 베이스 음 (루트 또는 5도)
+**박 2, 4 (약박)**: 중간 음역대 코드 (3성부 또는 4성부)
+
+```
+4/4박자 C7 스트라이드:
+박 1: C2 (낮은 C)
+박 2: E4-Bb4-G4 (중간 코드)
+박 3: G2 (5도)
+박 4: E4-Bb4-G4 (코드 반복)
+```
+
+### 왼손 도약의 기술
+
+스트라이드의 핵심 난이도는 낮은 베이스음과 중간 코드 사이의 **큰 도약**입니다.
+
+**거리:** 보통 1-2 옥타브 이상 도약
+**속도:** BPM 160-200에서도 정확하게
+**정확성:** 음을 미스하면 사운드가 무너짐
+
+**연습 방법:**
+1. 느린 템포(BPM 60)에서 도약 연습
+2. 눈을 감고 도약 연습 (촉각으로 위치 파악)
+3. 점진적 속도 증가
 
 ---
 
-## 피아노 스트라이드 훈련 단계
+## 스트라이드 왼손 패턴 유형
 
-| 단계 | 내용 | 목표 |
-|------|------|------|
-| 기초 | 왼손 점프 정확도 | 위치 정확성 |
-| 입문 | 부기우기 오스티나토 | 리듬 유지 |
-| 중급 | 왼손 자동화 | 속도·일관성 |
-| 고급 | 오른손 즉흥 | 동시 연주 |
+### 기본 루트-코드 패턴
+
+```
+C 장조 I-IV-V-I:
+Cmaj: C2 - C4E4G4 - G2 - C4E4G4
+Fmaj: F2 - F4A4C5 - C3 - F4A4C5
+G7:   G2 - G4B4D5F5 - D3 - G4B4D5F5
+Cmaj: C2 - C4E4G4 - G2 - C4E4G4
+```
+
+### 10도 패턴
+
+빅밴드 스트라이드 피아니스트들이 즐겨 사용. 베이스음과 코드의 맨 위 음 사이가 10도 관계.
+
+**C 장조 10도 패턴:**
+```
+C2 + E4 (10도) → 사이에 코드 음 채우기
+```
+
+### 크로매틱 접근음 패턴
+
+베이스음에 반음 위 또는 아래에서 접근하는 패턴:
+
+```
+G7로 진행 시:
+박 1: F#2 (크로매틱 어프로치)
+박 2: B4-D5-F5 (G7 코드)
+박 3: G2 (루트 도착)
+박 4: B4-D5-F5 (코드)
+```
 
 ---
 
-## 스튜디오 놀 — 스트라이드·부기우기 연습 환경
+## 뉴올리언스 피아노 스타일
 
-| 항목 | 이용 가치 |
-|-----|----------------|
-| 디지털 피아노 | 스트라이드 터치 훈련 |
-| 방음 개인실 | 집중 왼손 패턴 훈련 |
-| 무인 운영 | 반복 부기우기 연습 자유 |
-| 녹음 기능 | 왼손 정확도 객관적 확인 |
-| 시간 대여 | 8,000~25,000원/시간 |
+### 부기우기 (Boogie-Woogie)
+
+뉴올리언스에서 시작해 1930-40년대 전국으로 퍼진 스타일.
+
+**기본 부기우기 베이스 패턴 (C 블루스):**
+```
+C7: C3-E3-G3-Bb3-C4-Bb3-G3-E3 (8분음표)
+F7: F3-A3-C4-Eb4-F4-Eb4-C4-A3
+G7: G3-B3-D4-F4-G4-F4-D4-B3
+```
 
 ---
 
-[피아노 연습실 가이드](/stories/practice-room-piano1) | [피아노 즉흥 연주·재즈 피아노 음악연습실](/stories/practice-room-piano-jazz1) | [피아노 블루스 즉흥·블루스 스케일 음악연습실](/stories/practice-room-piano-improv-blues1) | [피아노 리듬 컴핑·재즈 반주 음악연습실](/stories/practice-room-piano-comping1) | [피아노 왼손 베이스·알베르티 베이스 음악연습실](/stories/practice-room-piano-left-hand1) | [피아노 보이싱·코드 배치 음악연습실](/stories/practice-room-piano-voicing1) | [피아노 스트라이드·부기우기 음악연습실](/stories/practice-room-piano-stride1) | [보컬 R&B·리듬앤블루스 스타일 음악연습실](/stories/practice-room-vocal-rnb1) | [기타 스윕 피킹·아르페지오 속주 음악연습실](/stories/practice-room-guitar-sweep-picking1) | [베이스 라틴·보사노바 그루브 음악연습실](/stories/practice-room-bass-latin1) | [드럼 컨트리·블루그래스 비트 음악연습실](/stories/practice-room-drum-country1) | [피아노 인상주의·드뷔시 스타일 음악연습실](/stories/practice-room-piano-impressionism1) | [보컬 클래식·성악 발성 음악연습실](/stories/practice-room-vocal-classical1) | [기타 이코노미 피킹·효율적 피킹 음악연습실](/stories/practice-room-guitar-economy-picking1) | [베이스 코드·코드 주법 음악연습실](/stories/practice-room-bass-chord1) | [드럼 록·하드록 비트 음악연습실](/stories/practice-room-drum-rock1) | [피아노 낭만파·쇼팽 스타일 음악연습실](/stories/practice-room-piano-romantic1) | [보컬 뮤지컬 넘버·브로드웨이 스타일 음악연습실](/stories/practice-room-vocal-musical1) | [기타 클린톤·앰프 세팅 음악연습실](/stories/practice-room-guitar-clean-tone1) | [드럼 맘보·라틴재즈 비트 음악연습실](/stories/practice-room-drum-latin-jazz1) | [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1) | [보컬 재즈스캣·즉흥 보이싱 음악연습실](/stories/practice-room-vocal-jazz-scat1) | [기타 메탈·디스토션 음악연습실](/stories/practice-room-guitar-metal-distortion1) | [피아노 현대음악·무조성 음악연습실](/stories/practice-room-piano-contemporary1) | [드럼 락카빌리·로큰롤 비트 음악연습실](/stories/practice-room-drum-rockabilly1) | [베이스 하모닉스·플래절렛 음악연습실](/stories/practice-room-bass-harmonics1) | [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1) | [피아노 탱고·피아졸라 스타일 음악연습실](/stories/practice-room-piano-tango1) | [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1) | [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1) | [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1) | [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1) | [기타 블루스 릭·스케일 음악연습실](/stories/practice-room-guitar-blues-licks1) | [피아노 재즈 보이싱·코드 음악연습실](/stories/practice-room-piano-jazz-voicings1) | [드럼 폴리리듬·크로스리듬 음악연습실](/stories/practice-room-drum-polyrhythm1) | [베이스 워킹 베이스라인 심화 음악연습실](/stories/practice-room-bass-walking-bass2) | [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1) | [기타 코드 진행·전조 기법 음악연습실](/stories/practice-room-guitar-chord-progressions1) | [피아노 리듬 훈련·박자감 음악연습실](/stories/practice-room-piano-rhythm-training1) | [드럼 브러시 고급 기법·재즈 발라드 음악연습실](/stories/practice-room-drum-brushes-advanced1) | [베이스 레게·스카 음악연습실](/stories/practice-room-bass-reggae1) | [보컬 무대 퍼포먼스·마이크 기법 음악연습실](/stories/practice-room-vocal-stage-performance1) | [기타 슬라이드·보틀넥 음악연습실](/stories/practice-room-guitar-slide1) | [피아노 왼손 베이스·스트라이드 강화 음악연습실](/stories/practice-room-piano-left-hand-bass1) | [드럼 고스트노트·스네어 섬세함 음악연습실](/stories/practice-room-drum-ghost-notes1) | [베이스 5현·저음 확장 음악연습실](/stories/practice-room-bass-5string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [기타 오픈 튜닝·드론 코드 음악연습실](/stories/practice-room-guitar-open-tuning1) | [보컬 워밍업 루틴·발성 준비 음악연습실](/stories/practice-room-vocal-warmup-routine1) | [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [드럼 루디먼트·기초 스트로크 음악연습실](/stories/practice-room-drum-rudiments1) | [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [보컬 마이크 테크닉·마이킹 기초 음악연습실](/stories/practice-room-vocal-microphone-technique1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
-- [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
-[스튜디오 놀 이용 요금](/pricing)
+## 유명 스트라이드 피아니스트 스타일
+
+| 피아니스트 | 특징 | 대표곡 |
+|-----------|------|--------|
+| Fats Waller | 정확한 도약, 유머러스한 오른손 | Ain't Misbehavin' |
+| James P. Johnson | 스트라이드의 창시자, 클래식 영향 | Carolina Shout |
+| Art Tatum | 초월적 속도, 풍부한 화성 | Tea for Two |
+| Oscar Peterson | 현대적 스트라이드 응용 | Hymn to Freedom |
+
+---
+
+## 음악연습실 스트라이드 연습 루틴
+
+### 기초 단계 (60분)
+
+**왼손 훈련 (30분):**
+1. C 장조 스트라이드 패턴 BPM 60
+2. G 장조로 이조
+3. 12 키 순환
+4. 도약 정확도 훈련: 눈 감고
+
+**양손 합치기 (30분):**
+1. "Ain't Misbehavin'" A 섹션 천천히
+2. 전체 코러스
+3. BPM 80 → 100 점진 증가
+
+---
+
+## 마무리
+
+스트라이드 피아노는 현대 재즈 피아니스트에게도 중요한 기초입니다. 왼손의 도약을 훈련하고 뉴올리언스의 역사적 사운드를 손에 익히면 자신만의 재즈 피아노 언어가 풍부해집니다.
+
+은평구 24시간 음악연습실에서 스트라이드의 역동적인 에너지를 마스터하세요.
+
+**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
+**→ [재즈 피아노 보이싱·텐션 코드 연습](/stories/ko/practice-room-piano-jazz-voicings1)**  
+**→ [피아노 즉흥 연주·재즈 피아노 가이드](/stories/ko/practice-room-piano-improvisation1)**

@@ -136,6 +136,8 @@ pp → p → mp → mf → f → ff → f → mf → mp → p → pp
 
 연습실 예약 및 문의: [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
 - [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
+- [드럼 브러시 고급 주법·재즈 발라드 연주 음악연습실](/stories/ko/practice-room-drum-brushwork-advanced1)
+- [피아노 스트라이드·뉴올리언스 피아노 음악연습실](/stories/ko/practice-room-piano-stride1)
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---

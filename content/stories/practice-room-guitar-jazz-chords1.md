@@ -152,6 +152,8 @@ G7alt: G-B-D♭-F-A♭ (또는 다양한 조합)
 - **연신내역 5분**
 
 연습실 예약 및 문의: - [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
+- [드럼 브러시 고급 주법·재즈 발라드 연주 음악연습실](/stories/ko/practice-room-drum-brushwork-advanced1)
+- [피아노 스트라이드·뉴올리언스 피아노 음악연습실](/stories/ko/practice-room-piano-stride1)
 [스튜디오 놀 이용 요금](/pricing) | [연신내 음악연습실](/ko/practice-room)
 
 ---
