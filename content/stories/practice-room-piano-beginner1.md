@@ -82,4 +82,4 @@ faq:
 
 ---
 
-[피아노 연습실 가이드](/stories/practice-room-piano1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [건반·키보드 연습실 가이드](/stories/practice-room-keyboard1) | [취미 음악인을 위한 연습실](/stories/practice-room-hobby1) | [음악 다시 시작하는 분을 위한 연습실](/stories/practice-room-comeback1) | [직장인 음악연습실 가이드](/stories/practice-room-office-worker1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [보증금 없는 연습실](/stories/practice-room-nodeposit1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[피아노 연습실 가이드](/stories/practice-room-piano1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [건반·키보드 연습실 가이드](/stories/practice-room-keyboard1) | [취미 음악인을 위한 연습실](/stories/practice-room-hobby1) | [음악 다시 시작하는 분을 위한 연습실](/stories/practice-room-comeback1) | [직장인 음악연습실 가이드](/stories/practice-room-office-worker1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [보증금 없는 연습실](/stories/practice-room-nodeposit1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [어린이·청소년 음악연습실](/stories/practice-room-kids1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

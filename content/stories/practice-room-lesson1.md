@@ -105,4 +105,4 @@ faq:
 
 ---
 
-[보컬 연습실 활용법](/stories/practice-room-vocal1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [녹음 전 연습실 활용법](/stories/practice-room-pre-recording1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [취미 음악인을 위한 연습실](/stories/practice-room-hobby1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [싱어송라이터 음악연습실](/stories/practice-room-singer-songwriter1) | [발성 연습 음악연습실](/stories/practice-room-voice-training1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 연습실 활용법](/stories/practice-room-vocal1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [녹음 전 연습실 활용법](/stories/practice-room-pre-recording1) | [음악연습실 가격 비교](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [취미 음악인을 위한 연습실](/stories/practice-room-hobby1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [싱어송라이터 음악연습실](/stories/practice-room-singer-songwriter1) | [발성 연습 음악연습실](/stories/practice-room-voice-training1) | [어린이·청소년 음악연습실](/stories/practice-room-kids1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
