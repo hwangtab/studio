@@ -74,4 +74,4 @@ faq:
 
 ---
 
-[현악기 방음 연습실 가이드](/stories/practice-room-string1) | [바이올린 연습 음악연습실](/stories/practice-room-violin1) | [클래식 음악연습실 가이드](/stories/practice-room-classical1) | [음악 독학자를 위한 음악연습실](/stories/practice-room-self-study1) | [성인 악기 입문자 음악연습실](/stories/practice-room-adult-beginner1) | [음악가 몸 관리·부상 예방 음악연습실](/stories/practice-room-physical1) | [음악 청음·귀 훈련 음악연습실](/stories/practice-room-ear-training1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
+[현악기 방음 연습실 가이드](/stories/practice-room-string1) | [바이올린 연습 음악연습실](/stories/practice-room-violin1) | [클래식 음악연습실 가이드](/stories/practice-room-classical1) | [음악 독학자를 위한 음악연습실](/stories/practice-room-self-study1) | [성인 악기 입문자 음악연습실](/stories/practice-room-adult-beginner1) | [음악가 몸 관리·부상 예방 음악연습실](/stories/practice-room-physical1) | [음악 청음·귀 훈련 음악연습실](/stories/practice-room-ear-training1) | [색소폰 연습 음악연습실](/stories/practice-room-saxophone1) | [핑거스타일 기타 연습 음악연습실](/stories/practice-room-fingerstyle1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [스튜디오 놀 이용 요금](/pricing)
