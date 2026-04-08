@@ -141,4 +141,6 @@ EPK는 기회가 왔을 때 '지금 바로 보내드릴 수 있습니다'라고 
 **→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실 가이드](/stories/ko/practice-room-vocal-acappella-group1)**
 **→ [기타 네오소울·코드 멜로디 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-neo-soul1)**
 **→ [드럼 록 필인·트랜지션 기법 음악연습실 가이드](/stories/ko/practice-room-drum-rock-fills1)**
+**→ [피아노 가스펠 오르간 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-gospel-organ1)**
+**→ [베이스 오케스트라·더블베이스 기법 음악연습실 가이드](/stories/ko/practice-room-bass-orchestral1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -248,4 +248,6 @@ Keith Moon은 전통을 무시한 자유로운 드러밍.
 **→ [드럼 셔플·블루스 셔플 리듬 음악연습실](/stories/ko/practice-room-drum-shuffle1)**  
 **→ [드럼 메탈·블래스트 비트·더블 킥 메탈 음악연습실](/stories/ko/practice-room-drum-metal-blast-beat1)**
 **→ [기타 네오소울·코드 멜로디 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-neo-soul1)**
+**→ [피아노 가스펠 오르간 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-gospel-organ1)**
+**→ [베이스 오케스트라·더블베이스 기법 음악연습실 가이드](/stories/ko/practice-room-bass-orchestral1)**
 [스튜디오 놀 이용 요금](/pricing)

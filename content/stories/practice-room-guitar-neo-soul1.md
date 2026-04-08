@@ -211,4 +211,6 @@ Hiatus Kaiyote의 프론트우먼 Nai Palm은 독특한 네오소울 기타로 �
 **→ [기타 재즈 코드·Chord Melody 기법 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)**  
 **→ [기타 더블스탑·음정 기타 기법 음악연습실](/stories/ko/practice-room-guitar-double-stop1)**
 **→ [드럼 록 필인·트랜지션 기법 음악연습실 가이드](/stories/ko/practice-room-drum-rock-fills1)**
+**→ [피아노 가스펠 오르간 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-gospel-organ1)**
+**→ [베이스 오케스트라·더블베이스 기법 음악연습실 가이드](/stories/ko/practice-room-bass-orchestral1)**
 [스튜디오 놀 이용 요금](/pricing)

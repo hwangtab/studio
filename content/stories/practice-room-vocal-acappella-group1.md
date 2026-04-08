@@ -239,4 +239,6 @@ Kevin Olusola (셀로/퍼커션): 비트박스 + 첼로
 **→ [피아노 팝 반주법·코드 보이싱 음악연습실 가이드](/stories/ko/practice-room-piano-pop-accompaniment1)**
 **→ [기타 네오소울·코드 멜로디 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-neo-soul1)**
 **→ [드럼 록 필인·트랜지션 기법 음악연습실 가이드](/stories/ko/practice-room-drum-rock-fills1)**
+**→ [피아노 가스펠 오르간 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-gospel-organ1)**
+**→ [베이스 오케스트라·더블베이스 기법 음악연습실 가이드](/stories/ko/practice-room-bass-orchestral1)**
 [스튜디오 놀 이용 요금](/pricing)
