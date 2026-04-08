@@ -172,4 +172,6 @@ Cmaj7 1박: C (목표음)
 **→ [베이스 그루브 구성 가이드](/stories/ko/practice-room-bass-groove-construction1)**
 **→ **→ [베이스 화성 이론·스케일 적용 음악연습실 가이드](/stories/ko/practice-room-bass-theory-harmony1)**
 **→ [기타 슬라이드·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide1)**
+**→ [피아노 에튀드·기술 연습곡 활용법 음악연습실 가이드](/stories/ko/practice-room-piano-etude1)**
+**→ [드럼 라틴 퍼커션·살사·삼바 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-latin-percussion1)**
 [스튜디오 놀 이용 요금](/pricing)**
