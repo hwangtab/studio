@@ -95,4 +95,4 @@ faq:
 **→ [기타 연습실 가이드](/stories/practice-room-guitar1)**  
 **→ [드럼 연습실 가이드](/stories/practice-room-drum1)**  
 **→ [개인 연습실 완벽 가이드](/stories/practice-room-private1)**  
-**→ [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [악기 보관 음악연습실 가이드](/stories/practice-room-storage1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
+**→ [합주실 vs 음악연습실 차이](/stories/practice-room-vs-rehearsal1) | [음악연습실 처음 이용 가이드](/stories/practice-room-first1) | [악기 보관 음악연습실 가이드](/stories/practice-room-storage1) | [버스킹 준비 음악연습실](/stories/practice-room-busking1) | [연신내 음악연습실 추천](/stories/practice-room-yeonsinnae1)**
