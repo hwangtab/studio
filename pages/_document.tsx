@@ -46,7 +46,7 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
           <link rel="dns-prefetch" href="https://cdn.imweb.me" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-          {/* Critical fonts for above-the-fold content */}
+          {/* Critical font for above-the-fold content — others load on demand */}
           <link
             rel="preload"
             href="/fonts/Pretendard-Regular.woff2"
@@ -54,21 +54,6 @@ class MyDocument extends Document<Props> {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          <link
-            rel="preload"
-            href="/fonts/PartialSansKR-Regular.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/GmarketSansMedium.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          {/* Other fonts load on demand */}
           <script
             id="theme-init"
             dangerouslySetInnerHTML={{

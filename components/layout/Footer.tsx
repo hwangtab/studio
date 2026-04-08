@@ -12,6 +12,14 @@ interface FooterProps {
   locale: Locale;
 }
 
+const LINK_CLASS = "typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
+
+const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <li className="min-h-[44px] flex items-center">
+    <Link href={href} className={LINK_CLASS}>{children}</Link>
+  </li>
+);
+
 export const Footer = ({ locale }: FooterProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
@@ -42,16 +50,16 @@ export const Footer = ({ locale }: FooterProps) => {
           <div className="flex flex-col">
             <h3 className="typo-footer-heading mb-4">{t('footer.linksTitle')}</h3>
             <div className="h-px w-full bg-white/25 mb-4" />
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <li><Link href={`/${locale}`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.home')}</Link></li>
-              <li><Link href={`/${locale}/about`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.about')}</Link></li>
-              <li><Link href={`/${locale}/portfolio`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.portfolio')}</Link></li>
-              <li><Link href={`/${locale}/stories`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.stories')}</Link></li>
-              <li><Link href={`/${locale}/pricing`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.pricing')}</Link></li>
-              <li><Link href={`/${locale}/lesson`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.lesson')}</Link></li>
-              <li><Link href={`/${locale}/practice-room`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.practiceRoom')}</Link></li>
-              <li><Link href={`/${locale}/studio-info`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.equipment')}</Link></li>
-              <li><Link href={`/${locale}/contact`} className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary">{t('nav.contact')}</Link></li>
+            <ul className="grid grid-cols-2 gap-x-4">
+              <FooterLink href={`/${locale}`}>{t('nav.home')}</FooterLink>
+              <FooterLink href={`/${locale}/about`}>{t('nav.about')}</FooterLink>
+              <FooterLink href={`/${locale}/portfolio`}>{t('nav.portfolio')}</FooterLink>
+              <FooterLink href={`/${locale}/stories`}>{t('nav.stories')}</FooterLink>
+              <FooterLink href={`/${locale}/pricing`}>{t('nav.pricing')}</FooterLink>
+              <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
+              <FooterLink href={`/${locale}/practice-room`}>{t('nav.practiceRoom')}</FooterLink>
+              <FooterLink href={`/${locale}/studio-info`}>{t('nav.equipment')}</FooterLink>
+              <FooterLink href={`/${locale}/contact`}>{t('nav.contact')}</FooterLink>
             </ul>
           </div>
 

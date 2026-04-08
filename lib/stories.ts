@@ -357,7 +357,20 @@ export const getStoryPaths = (): StoryPath[] => {
 };
 
 export const getRelatedStories = (locale: string, slug: string, limit = 3): Story[] => {
-  return getAllStories(locale)
-    .filter((item) => item.slug !== slug)
+  const current = getAllStories(locale).find((item) => item.slug === slug);
+  const candidates = getAllStories(locale).filter((item) => item.slug !== slug);
+
+  if (!current) return candidates.slice(0, limit);
+
+  const currentTags = new Set(current.tags ?? []);
+
+  return candidates
+    .map((item) => {
+      const tagOverlap = (item.tags ?? []).filter((t) => currentTags.has(t)).length;
+      const categoryMatch = item.categoryKey === current.categoryKey ? 2 : 0;
+      return { item, score: categoryMatch + tagOverlap };
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(({ item }) => item)
     .slice(0, limit);
 };
