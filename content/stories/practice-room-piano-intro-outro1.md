@@ -231,4 +231,6 @@ Em7 - Am7 - D7 - Gmaj7
 **→ [피아노 팝 반주법·코드 보이싱 음악연습실](/stories/ko/practice-room-piano-pop-accompaniment1)**  
 **→ [피아노 리하모니제이션·코드 대체 음악연습실](/stories/ko/practice-room-piano-reharmonization1)**
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-adlib1)**
+**→ [베이스 솔로·그루브 솔로잉 기법 음악연습실 가이드](/stories/ko/practice-room-bass-solo-grooving1)**
+**→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
 [스튜디오 놀 이용 요금](/pricing)

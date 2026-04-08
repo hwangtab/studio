@@ -149,4 +149,6 @@ faq:
 **→ [기타 슬라이드 고급·보틀넥 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-advanced1)**
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-adlib1)**
 **→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
+**→ [베이스 솔로·그루브 솔로잉 기법 음악연습실 가이드](/stories/ko/practice-room-bass-solo-grooving1)**
+**→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

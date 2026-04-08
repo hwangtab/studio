@@ -173,4 +173,6 @@ LUFS 기준에 맞는 마스터링은 스트리밍 음원이 모든 플랫폼에
 **→ [기타 슬라이드 고급·보틀넥 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-advanced1)**
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-adlib1)**
 **→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
+**→ [베이스 솔로·그루브 솔로잉 기법 음악연습실 가이드](/stories/ko/practice-room-bass-solo-grooving1)**
+**→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
 [스튜디오 놀 이용 요금](/pricing)

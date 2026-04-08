@@ -237,4 +237,6 @@ C-E-G-C-E (코드 톤 위아래)
 **→ [보컬 아카펠라 그룹 퍼포먼스 음악연습실](/stories/ko/practice-room-vocal-acappella-group1)**  
 **→ [보컬 스캣 즉흥연주·재즈 보컬 음악연습실](/stories/ko/practice-room-vocal-scat-improvisation1)**
 **→ [피아노 인트로·아웃트로 작곡법 음악연습실 가이드](/stories/ko/practice-room-piano-intro-outro1)**
+**→ [베이스 솔로·그루브 솔로잉 기법 음악연습실 가이드](/stories/ko/practice-room-bass-solo-grooving1)**
+**→ [드럼 레코딩·오버더빙 기법 음악연습실 가이드](/stories/ko/practice-room-drum-recording-overdub1)**
 [스튜디오 놀 이용 요금](/pricing)
