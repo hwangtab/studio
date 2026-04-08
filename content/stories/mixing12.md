@@ -67,5 +67,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제11부: 믹싱을 위한 마지막 조각, 에디팅](/stories/mixing11) | [제13부: 멈춰있을 때 가장 아름답다 →](/stories/mixing13) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제11부: 믹싱을 위한 마지막 조각, 에디팅](/stories/mixing11) | [제13부: 멈춰있을 때 가장 아름답다 →](/stories/mixing13) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
 

@@ -88,4 +88,4 @@ ASMR 콘텐츠의 핵심은 완벽한 정적과 섬세한 소리입니다. 홈 �
 
 ---
 
-[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [홈 레코딩 방음 방법](/stories/soundproof1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 셀프 녹음 방법](/stories/selfrecord1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [홈 레코딩 방음 방법](/stories/soundproof1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 셀프 녹음 방법](/stories/selfrecord1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

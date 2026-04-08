@@ -96,4 +96,4 @@ R&B 보컬은 기술과 감성의 균형이 중요합니다.
 
 ---
 
-[소울 보컬 완전 가이드](/stories/soul-vocal1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[소울 보컬 완전 가이드](/stories/soul-vocal1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

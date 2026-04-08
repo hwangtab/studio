@@ -167,4 +167,4 @@ Off-axis (측면): 둥글고 부드러운 사운드
 
 ---
 
-[인디 록·어쿠스틱 기타 레코딩 가이드](/stories/indie-rock1) | [기타 레코딩 완전 가이드](/stories/guitar-recording1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[인디 록·어쿠스틱 기타 레코딩 가이드](/stories/indie-rock1) | [기타 레코딩 완전 가이드](/stories/guitar-recording1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

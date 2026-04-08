@@ -121,4 +121,4 @@ MR 파일의 피치를 조정해드립니다.
 
 ---
 
-[나의 목소리 유형 찾기](/stories/voicetype1) | [보컬 음역대 넓히는 방법](/stories/vocalrange1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[나의 목소리 유형 찾기](/stories/voicetype1) | [보컬 음역대 넓히는 방법](/stories/vocalrange1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

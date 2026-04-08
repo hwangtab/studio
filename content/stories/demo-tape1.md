@@ -114,4 +114,4 @@ faq:
 
 ---
 
-[보컬 데모 녹음 완전 가이드](/stories/vocal-demo1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[보컬 데모 녹음 완전 가이드](/stories/vocal-demo1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 연습실 활용법](/stories/practice-room-vocal1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

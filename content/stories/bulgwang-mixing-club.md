@@ -37,4 +37,4 @@ faq:
 
 ---
 
-[2회 모임 후기 보기](/stories/bulgwang-mixing-club-2nd) | [3회 모임 후기 보기](/stories/bulgwang-mixing-club-3rd) | [믹싱 강좌 시리즈 시작하기](/stories/mixing1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[2회 모임 후기 보기](/stories/bulgwang-mixing-club-2nd) | [3회 모임 후기 보기](/stories/bulgwang-mixing-club-3rd) | [믹싱 강좌 시리즈 시작하기](/stories/mixing1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

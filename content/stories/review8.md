@@ -46,4 +46,4 @@ faq:
 
 ---
 
-[연습실 시설 안내](/practice-room) | [연습실 요금](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[연습실 시설 안내](/practice-room) | [연습실 요금](/pricing) | [음악연습실 가격 가이드](/stories/practice-room-price1) | [음악연습실 월세 입주 가이드](/stories/practice-room-monthly1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

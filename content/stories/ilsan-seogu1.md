@@ -63,4 +63,4 @@ faq:
 
 ---
 
-[일산동구 백석·마두 녹음실 안내](/stories/ilsan-donggu1) | [일산·덕양구 녹음실 안내](/stories/ilsan1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[일산동구 백석·마두 녹음실 안내](/stories/ilsan-donggu1) | [일산·덕양구 녹음실 안내](/stories/ilsan1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

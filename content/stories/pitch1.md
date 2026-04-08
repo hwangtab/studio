@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 보컬 녹음 요금 안내](/pricing) | [믹싱 강좌 시리즈 — EQ편](/stories/mixing16) | [녹음 세션 준비 체크리스트](/stories/session1) | [인디 보컬리스트 녹음 후기](/stories/review3)
+[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 보컬 녹음 요금 안내](/pricing) | [믹싱 강좌 시리즈 — EQ편](/stories/mixing16) | [녹음 세션 준비 체크리스트](/stories/session1) | [인디 보컬리스트 녹음 후기](/stories/review3)

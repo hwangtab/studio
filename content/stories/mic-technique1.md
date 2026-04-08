@@ -135,4 +135,4 @@ faq:
 
 ---
 
-[녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

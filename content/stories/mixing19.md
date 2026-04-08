@@ -88,5 +88,5 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제18부: 음악에 공기를 불어넣다, 리버브](/stories/mixing18) | [제20부: 일렁이는 소리의 마법, 모듈레이션 →](/stories/mixing20) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제18부: 음악에 공기를 불어넣다, 리버브](/stories/mixing18) | [제20부: 일렁이는 소리의 마법, 모듈레이션 →](/stories/mixing20) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [요금 안내](/pricing)
 

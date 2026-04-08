@@ -71,4 +71,4 @@ USB 마이크로 집에서 수십 번 녹음해봤지만, 아무리 처리해도
 
 ---
 
-[스튜디오 놀 녹음·믹싱 요금 안내](/pricing) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [커버곡 녹음 가이드](/stories/cover1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 녹음·믹싱 요금 안내](/pricing) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [커버곡 녹음 가이드](/stories/cover1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

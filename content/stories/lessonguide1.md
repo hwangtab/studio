@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voicetype1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voicetype1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -131,4 +131,4 @@ EQ(이퀄라이저)는 보컬의 주파수 밸런스를 조정하는 믹싱의 �
 
 ---
 
-[주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

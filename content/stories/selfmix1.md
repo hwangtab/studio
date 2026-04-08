@@ -103,4 +103,4 @@ DAW(Logic Pro, FL Studio, Ableton 등) 보급으로 집에서도 어느 정도 �
 
 ---
 
-[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 믹싱 서비스 요금 안내](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 믹싱 플러그인 추천](/stories/plugins1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [마스터링이란? LUFS 기준 설명](/stories/mastering1)
+[피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 믹싱 서비스 요금 안내](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 믹싱 플러그인 추천](/stories/plugins1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [마스터링이란? LUFS 기준 설명](/stories/mastering1)

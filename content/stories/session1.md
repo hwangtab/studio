@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[라이브 공연 음향 기초 가이드](/stories/livesound1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [녹음 세션 예약 방법 보기](/pricing) | [MR 반주 파일 구하는 방법](/stories/mr-guide1) | [음반 제작 전 과정 보기](/stories/album1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [보컬 녹음 실수 10가지](/stories/mistakes1)
+[라이브 공연 음향 기초 가이드](/stories/livesound1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [녹음 세션 예약 방법 보기](/pricing) | [MR 반주 파일 구하는 방법](/stories/mr-guide1) | [음반 제작 전 과정 보기](/stories/album1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [보컬 녹음 실수 10가지](/stories/mistakes1)

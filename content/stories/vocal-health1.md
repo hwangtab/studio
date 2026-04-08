@@ -148,4 +148,4 @@ faq:
 
 ---
 
-[보컬 수면·성대 휴식 완전 가이드](/stories/vocal-sleep1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[보컬 수면·성대 휴식 완전 가이드](/stories/vocal-sleep1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

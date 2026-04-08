@@ -116,4 +116,4 @@ Moises 앱의 키 조정 기능을 이용해 실시간으로 반음 단위 변�
 
 ---
 
-[음악 작업 의뢰 방법](/stories/commission1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [MP3 vs WAV 파일 형식 가이드](/stories/audioformat1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음악 작업 의뢰 방법](/stories/commission1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [MP3 vs WAV 파일 형식 가이드](/stories/audioformat1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

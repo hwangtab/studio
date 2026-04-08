@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[스튜디오 놀 서비스 안내](/pricing) | [연신내 음악연습실 안내](/practice-room) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 활용 가이드](/stories/practice-room-vocal1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[스튜디오 놀 서비스 안내](/pricing) | [연신내 음악연습실 안내](/practice-room) | [음악연습실 고르는 법](/stories/practice-room-guide1) | [보컬 연습실 활용 가이드](/stories/practice-room-vocal1) | [노래방 vs 녹음실 차이](/stories/karaoke-vs-studio1) | [첫 녹음 세션 준비 가이드](/stories/session1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

@@ -160,4 +160,4 @@ DALL-E 3 (ChatGPT): 텍스트 프롬프트로 이미지 생성
 
 ---
 
-[음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [SNS 음악 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [SNS 음악 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

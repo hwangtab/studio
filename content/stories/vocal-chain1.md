@@ -133,4 +133,4 @@ faq:
 
 ---
 
-[믹싱 오토메이션 완전 가이드](/stories/mix-automation1) | [노이즈 게이트 완전 가이드](/stories/noise-gate1) | [디에서(De-esser) 완전 가이드](/stories/de-esser1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)
+[믹싱 오토메이션 완전 가이드](/stories/mix-automation1) | [노이즈 게이트 완전 가이드](/stories/noise-gate1) | [디에서(De-esser) 완전 가이드](/stories/de-esser1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1) | [스튜디오 놀 이용 요금](/pricing)

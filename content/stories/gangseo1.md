@@ -87,4 +87,4 @@ faq:
 
 ---
 
-[강서구 가양·등촌·염창 녹음실 안내](/stories/gangseo-gayang1) | [강서구 화곡·등촌·가양동 녹음실 안내](/stories/gangseo-hwagok1) | [양천구 녹음실 안내](/stories/yangcheon1) | [방화·개화·김포공항·가양 녹음실 안내](/stories/banghwa1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[강서구 가양·등촌·염창 녹음실 안내](/stories/gangseo-gayang1) | [강서구 화곡·등촌·가양동 녹음실 안내](/stories/gangseo-hwagok1) | [양천구 녹음실 안내](/stories/yangcheon1) | [방화·개화·김포공항·가양 녹음실 안내](/stories/banghwa1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스튜디오 놀 이용 요금](/pricing) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)

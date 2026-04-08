@@ -184,4 +184,4 @@ faq:
 
 ---
 
-[믹싱 강좌 시리즈 보기](/stories/mixing1) | [스튜디오 놀 시설·장비 안내](/studio-info) | [불광믹싱클럽 스터디 모임](/stories/bulgwang-mixing-club) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
+[믹싱 강좌 시리즈 보기](/stories/mixing1) | [스튜디오 놀 시설·장비 안내](/studio-info) | [불광믹싱클럽 스터디 모임](/stories/bulgwang-mixing-club) | [피아노 리듬감·리듬 훈련 음악연습실](/stories/practice-room-piano-rhythm1) | [기타 트레몰로·웜바 암 테크닉 음악연습실](/stories/practice-room-guitar-whammy1) | [보컬 다이나믹스·크레셴도 데크레셴도 음악연습실](/stories/practice-room-vocal-dynamics1) | [기타 줄 교체·스트링 선택 음악연습실](/stories/practice-room-guitar-string1) | [연신내 음악연습실 안내](/stories/practice-room-yeonsinnae1)
