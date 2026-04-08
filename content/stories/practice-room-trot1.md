@@ -141,4 +141,6 @@ TV 트로트 경연 프로그램이 큰 인기를 끌며, 트로트를 배우고
 **→ [드럼 필·트랜지션 고급 기법 음악연습실 가이드](/stories/ko/practice-room-drum-fills-transitions1)**
 **→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/ko/practice-room-guitar-pentatonic-advanced1)**
 **→ [보컬 마이크 기법·녹음실 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-microphone-technique1)**
+**→ [피아노 리하모나이제이션·화성 재창조 음악연습실 가이드](/stories/ko/practice-room-piano-reharmonization1)**
+**→ [베이스 그루브 구성·리듬 설계 원리 음악연습실 가이드](/stories/ko/practice-room-bass-groove-construction1)**
 [스튜디오 놀 이용 요금](/pricing)
