@@ -1,9 +1,9 @@
 ---
-title: "기타 델타 블루스·Robert Johnson 오픈 튜닝 — 음악연습실 완전 가이드"
+title: "기타 델타 블루스·Robert Johnson 오픈 튜닝 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "기타 델타 블루스·Robert Johnson·Skip James·Son House 스타일. 오픈 튜닝·병행 주법·슬라이드로 은평구 24시간 음악연습실에서 블루스의 뿌리 완성."
 tags: ["음악연습실", "기타", "델타블루스", "RobertJohnson", "오픈튜닝", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 기타 델타 블루스·Robert Johnson 오픈 튜닝 — 음악연습실 완전 가이드

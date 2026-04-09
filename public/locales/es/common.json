@@ -594,19 +594,12 @@
       "viewAll": "Ver todas las historias"
     },
     "categories": {
-      "notice": "Aviso",
-      "event": "Evento",
+      "news": "Noticias",
       "lesson": "Curso",
-      "interview": "Entrevista",
-      "review": "Reseña",
+      "feedback": "Reseñas",
       "region": "Guía de área",
-      "vocal": "Guía vocal",
-      "recording": "Guía de grabación",
-      "production": "Producción musical",
-      "mixing": "Mezcla y masterización",
-      "business": "Negocio musical",
-      "guide": "Guía",
-      "practice": "Guía de Sala de Práctica Musical"
+      "instrument": "Práctica de instrumento",
+      "music-guide": "Guía musical"
     }
   },
   "reviewSection": {

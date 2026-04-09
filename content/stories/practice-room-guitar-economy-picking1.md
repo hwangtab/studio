@@ -1,9 +1,9 @@
 ---
-title: "기타 이코노미 피킹·스위핑 기초 — 음악연습실 완전 가이드"
+title: "기타 이코노미 피킹·스위핑 기초 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "이코노미 피킹과 스윕 피킹의 핵심 원리와 기초 연습법. 현 이동을 최소화하여 최대 속도를 내는 테크닉을 은평구 24시간 음악연습실에서 익히세요."
 tags: ["음악연습실", "기타", "이코노미피킹", "스윕피킹", "기타속주", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 기타 이코노미 피킹·스위핑 기초 — 음악연습실 완전 가이드
@@ -141,7 +141,6 @@ Am 아르페지오 (개방 포지션):
 - **완벽 방음** — 반복 연습 없이 마음껏
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [보컬 마이크 테크닉·마이킹 기초 음악연습실](/stories/practice-room-vocal-microphone-technique1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
 
 ---
 

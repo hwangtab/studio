@@ -1,9 +1,9 @@
 ---
-title: "피아노 재즈 스탠다드 분석·All the Things You Are — 음악연습실 완전 가이드"
+title: "피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드"
 date: "2026-04-08"
 excerpt: "재즈 스탠다드의 왕 'All the Things You Are'를 피아노로 분석. 코드 진행, 보이싱, 즉흥 접근법까지 은평구 24시간 음악연습실에서 완성하세요."
 tags: ["음악연습실", "피아노", "재즈스탠다드", "코드진행분석", "재즈피아노", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 피아노 재즈 스탠다드 분석·All the Things You Are — 음악연습실 완전 가이드

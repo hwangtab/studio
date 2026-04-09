@@ -1,9 +1,9 @@
 ---
-title: "프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 — 음악연습실 완전 가이드"
+title: "프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "프렛리스 베이스·Jaco Pastorius·마이크로토날 슬라이드·글라이드. 프렛리스 베이스 특유의 표현을 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "베이스", "프렛리스", "JacoPastorius", "마이크로토날", "은평구음악연습실"]
-category: "bass"
+category: "악기 연습"
 ---
 
 # 프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 — 음악연습실 완전 가이드

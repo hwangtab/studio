@@ -594,19 +594,12 @@
       "viewAll": "查看所有故事"
     },
     "categories": {
-      "notice": "公告",
-      "event": "活动",
+      "news": "资讯",
       "lesson": "课程",
-      "interview": "采访",
-      "review": "评价",
+      "feedback": "评价",
       "region": "地区指南",
-      "vocal": "声乐指南",
-      "recording": "录音指南",
-      "production": "音乐制作",
-      "mixing": "混音与母带",
-      "business": "音乐商业",
-      "guide": "指南",
-      "practice": "音乐练习室指南"
+      "instrument": "乐器练习",
+      "music-guide": "音乐指南"
     }
   },
   "reviewSection": {

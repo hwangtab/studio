@@ -1,9 +1,9 @@
 ---
-title: "드럼 폴리리듬·크로스리듬 완전 가이드 — 연신내 음악연습실 실전 연습"
+title: "드럼 폴리리듬·크로스리듬 완전 가이드 — 실전 연습"
 date: "2026-04-08"
 description: "드럼 폴리리듬과 크로스리듬의 개념과 실전 연습법을 연신내 음악연습실에서 마스터하세요. 3-against-2·4-against-3·아프리카 리듬 구조·현대 드럼 응용까지 단계별 완전 가이드."
 tags: ["음악연습실", "드럼", "폴리리듬", "크로스리듬", "연신내"]
-category: "practice-room"
+category: "악기 연습"
 slug: "practice-room-drum-polyrhythm1"
 ---
 

@@ -1,9 +1,9 @@
 ---
-title: "드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 음악연습실 완전 가이드"
+title: "드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "드럼 펑크 포켓·타이트 그루브·Clyde Stubblefield·Questlove. James Brown 스타일 펑크 드러밍을 은평구 24시간 음악연습실에서 완성."
 tags: ["음악연습실", "드럼", "펑크드러밍", "포켓그루브", "JamesBrown", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 음악연습실 완전 가이드

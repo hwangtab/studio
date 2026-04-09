@@ -1,9 +1,9 @@
 ---
-title: "기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 음악연습실 완전 가이드"
+title: "기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "기타 올터네이트 튜닝·DADGAD·Drop D·오픈 코드 탐구. Pierre Bensusan·Jimmy Page·Joni Mitchell 스타일로 은평구 24시간 음악연습실에서 기타 신세계 발견."
 tags: ["음악연습실", "기타", "올터네이트튜닝", "DADGAD", "DropD", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 음악연습실 완전 가이드

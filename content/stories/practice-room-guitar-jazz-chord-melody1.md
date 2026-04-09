@@ -1,9 +1,9 @@
 ---
-title: "재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 음악연습실 완전 가이드"
+title: "재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "재즈 기타 코드 멜로디·솔로 기타·Joe Pass·Wes Montgomery·George Benson 스타일. 코드 멜로디를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "재즈기타", "코드멜로디", "JoePass", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 음악연습실 완전 가이드

@@ -1,9 +1,9 @@
 ---
-title: "팝 벨팅·고음 파워·Mix Voice·두성 전환 — 음악연습실 완전 가이드"
+title: "팝 벨팅·고음 파워·Mix Voice·두성 전환 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "팝 벨팅·고음 파워·Mix Voice·흉성-두성 전환·Mariah Carey·Whitney Houston 스타일. 팝 벨팅을 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "보컬", "벨팅", "MixVoice", "고음", "은평구음악연습실"]
-category: "vocal"
+category: "악기 연습"
 ---
 
 # 팝 벨팅·고음 파워·Mix Voice·두성 전환 — 음악연습실 완전 가이드

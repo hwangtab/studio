@@ -592,19 +592,12 @@
       "viewAll": "Barcha hikoyalarni ko'rish"
     },
     "categories": {
-      "notice": "E'lon",
-      "event": "Tadbir",
+      "news": "Yangiliklar",
       "lesson": "Dars",
-      "interview": "Intervyu",
-      "review": "Sharh",
+      "feedback": "Sharhlar",
       "region": "Hudud bo'yicha qo'llanma",
-      "vocal": "Vokal qo'llanmasi",
-      "recording": "Yozib olish qo'llanmasi",
-      "production": "Musiqa ishlab chiqarish",
-      "mixing": "Mikslash va mastering",
-      "business": "Musiqa biznesi",
-      "guide": "Qo'llanma",
-      "practice": "Musiqa mashg'ulot xonasi bo'yicha qo'llanma"
+      "instrument": "Cholg'u mashqi",
+      "music-guide": "Musiqa qo'llanmasi"
     }
   },
   "reviewSection": {

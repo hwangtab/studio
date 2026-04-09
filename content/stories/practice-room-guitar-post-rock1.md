@@ -1,9 +1,9 @@
 ---
-title: "포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 — 음악연습실 완전 가이드"
+title: "포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "포스트록 기타·빌드업·Explosions in the Sky·Mogwai·Godspeed You! Black Emperor 스타일. 포스트록 기타를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "포스트록", "빌드업", "ExplosionsInTheSky", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 — 음악연습실 완전 가이드

@@ -1,9 +1,9 @@
 ---
-title: "드럼 루디먼트·기초 스트로크 — 음악연습실 완전 가이드"
+title: "드럼 루디먼트·기초 스트로크 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "드럼 루디먼트 40가지의 핵심 원리와 연습법. 싱글 스트로크, 더블 스트로크, 패러디들, 플래밍을 은평구 24시간 음악연습실에서 체계적으로 완성하세요."
 tags: ["음악연습실", "드럼", "루디먼트", "스트로크", "드럼기초", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 드럼 루디먼트·기초 스트로크 — 음악연습실 완전 가이드
@@ -150,7 +150,6 @@ category: "drum"
 - **24시간 예약 가능** — 새벽 시간대 집중 연습도 OK
 - **연신내역 5분 거리** — 접근성 최상
 
-연습실 예약 및 문의: [피아노 크로스핸드·손 교차 연주 음악연습실](/stories/practice-room-piano-crosshand1) | [베이스 프렛리스·인토네이션 트레이닝 음악연습실](/stories/practice-room-bass-fretless1) | [기타 하이브리드 피킹·핑거+피크 음악연습실](/stories/practice-room-guitar-hybrid-picking1) | [보컬 팔세토·두성 트레이닝 음악연습실](/stories/practice-room-vocal-falsetto1) | [피아노 페달 테크닉·서스테인 페달 음악연습실](/stories/practice-room-piano-pedal-technique1) | [드럼 홀수박자·7/8·5/4 박자 트레이닝 음악연습실](/stories/practice-room-drum-odd-time1) | [베이스 코드·멜로디 동시 연주 음악연습실](/stories/practice-room-bass-chord-melody1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실](/stories/practice-room-guitar-tremolo-picking1) | [보컬 모음 수정·고음 발성법 음악연습실](/stories/practice-room-vocal-vowel-modification1) | [피아노 초견·악보 읽기 훈련 음악연습실](/stories/practice-room-piano-sight-reading1) | [드럼 리니어 패턴·겹치지 않는 비트 음악연습실](/stories/practice-room-drum-linear-patterns1) | [베이스 태핑·양손 태핑 테크닉 음악연습실](/stories/practice-room-bass-tapping1) | [기타 이코노미 피킹·스위핑 기초 음악연습실](/stories/practice-room-guitar-economy-picking1) | [보컬 공명·보이스 플레이스먼트 음악연습실](/stories/practice-room-vocal-resonance1) | [피아노 모드 스케일·교회선법 음악연습실](/stories/practice-room-piano-scales-modes1) | [드럼 하이햇 패턴·개폐 컨트롤 음악연습실](/stories/practice-room-drum-hihat-patterns1) | [베이스 그루브 락·킥드럼 동조 음악연습실](/stories/practice-room-bass-groove-locks1) | [기타 벤딩·비브라토 테크닉 음악연습실](/stories/practice-room-guitar-bends1) | [피아노 귀 훈련·청음 음악연습실](/stories/practice-room-piano-ear-training1) | [보컬 딕션·발음 훈련 음악연습실](/stories/practice-room-vocal-diction1) | [베이스 펜타토닉·블루스 스케일 응용 음악연습실](/stories/practice-room-bass-pentatonic1) | [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [드럼 발 테크닉·더블 베이스 페달 음악연습실](/stories/practice-room-drum-foot-technique1) | [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [보컬 마이크 테크닉·마이킹 기초 음악연습실](/stories/practice-room-vocal-microphone-technique1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
 
 ---
 

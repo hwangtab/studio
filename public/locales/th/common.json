@@ -596,19 +596,12 @@
       "viewAll": "ดูเรื่องราวทั้งหมด"
     },
     "categories": {
-      "notice": "ประกาศ",
-      "event": "กิจกรรม",
+      "news": "ข่าวสาร",
       "lesson": "บทเรียน",
-      "interview": "สัมภาษณ์",
-      "review": "รีวิว",
+      "feedback": "รีวิว",
       "region": "คู่มือพื้นที่",
-      "vocal": "คู่มือเสียงร้อง",
-      "recording": "คู่มือการบันทึกเสียง",
-      "production": "การผลิตเพลง",
-      "mixing": "มิกซ์และมาสเตอร์",
-      "business": "ธุรกิจเพลง",
-      "guide": "คู่มือ",
-      "practice": "คู่มือห้องซ้อมดนตรี"
+      "instrument": "ฝึกเครื่องดนตรี",
+      "music-guide": "คู่มือดนตรี"
     }
   },
   "reviewSection": {

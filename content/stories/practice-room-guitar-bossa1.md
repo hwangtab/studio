@@ -1,9 +1,9 @@
 ---
-title: "보사노바 기타·삼바 리듬·João Gilberto 스타일 — 음악연습실 완전 가이드"
+title: "보사노바 기타·삼바 리듬·João Gilberto 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "보사노바 기타·삼바 리듬·João Gilberto·Tom Jobim 스타일. 브라질 보사노바 기타 리듬을 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "보사노바", "삼바리듬", "JoãoGilberto", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 보사노바 기타·삼바 리듬·João Gilberto 스타일 — 음악연습실 완전 가이드

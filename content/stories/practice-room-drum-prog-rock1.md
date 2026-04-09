@@ -1,9 +1,9 @@
 ---
-title: "프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 완전 가이드"
+title: "프로그레시브 록 드럼·Neil Peart·John Bonham·변박 완전 가이드"
 date: "2026-04-08"
 excerpt: "프로그레시브 록 드럼·Neil Peart·John Bonham·Keith Moon·변박자·복잡한 리듬. 프로그레시브 록 드럼을 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "드럼", "프로그레시브록드럼", "NeilPeart", "JohnBonham", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 완전 가이드

@@ -1,9 +1,9 @@
 ---
-title: "피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 음악연습실 완전 가이드"
+title: "피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "피아노 비밥·Bud Powell·Thelonious Monk·비밥 코드 보이싱. 재즈 비밥 피아노를 은평구 24시간 음악연습실에서 완성."
 tags: ["음악연습실", "피아노", "비밥", "BudPowell", "TheloniousMonk", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 음악연습실 완전 가이드

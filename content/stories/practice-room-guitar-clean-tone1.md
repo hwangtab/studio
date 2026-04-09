@@ -1,9 +1,9 @@
 ---
-title: "기타 클린톤 완벽 세팅법 — 연신내 음악연습실에서 앰프 소리 만들기"
+title: "기타 클린톤 완벽 세팅법 — 앰프 소리 만들기"
 date: "2026-04-08"
 description: "기타 클린톤과 앰프 세팅의 핵심 원리를 연신내 음악연습실에서 실습하세요. 픽업 선택·EQ 조정·컴프레서 활용까지 단계별로 익힙니다."
 tags: ["음악연습실", "기타", "클린톤", "앰프세팅", "연신내"]
-category: "practice-room"
+category: "악기 연습"
 slug: "practice-room-guitar-clean-tone1"
 ---
 

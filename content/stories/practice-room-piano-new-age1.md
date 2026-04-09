@@ -1,9 +1,9 @@
 ---
-title: "피아노 뉴에이지·Einaudi·George Winston 스타일 — 음악연습실 완전 가이드"
+title: "피아노 뉴에이지·Einaudi·George Winston 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "피아노 뉴에이지·Ludovico Einaudi·George Winston·Yann Tiersen 스타일. 힐링 뉴에이지 피아노를 은평구 24시간 음악연습실에서 완성."
 tags: ["음악연습실", "피아노", "뉴에이지", "Einaudi", "GeorgeWinston", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 피아노 뉴에이지·Einaudi·George Winston 스타일 — 음악연습실 완전 가이드
