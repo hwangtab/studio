@@ -201,4 +201,6 @@ Polyphia:
 **→ [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-chord-melody1)**  
 **→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 **→ [드럼 홀수 박자·오드 타임·변박 음악연습실 가이드](/stories/ko/practice-room-drum-odd-time1)**
+**→ [교회 피아노·찬양 반주·코드 반주법·예배 피아노 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
+**→ [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
 [스튜디오 놀 이용 요금](/pricing)

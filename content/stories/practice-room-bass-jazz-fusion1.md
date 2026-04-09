@@ -191,4 +191,6 @@ Alembic 베이스: 밝고 선명한 톤
 **→ [베이스 프렛리스·재즈·Jaco Pastorius 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**  
 **→ [베이스 재즈 컴핑·워킹 라인 고급 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-comping1)**
 **→ [수학록 기타·폴리리듬·Animals as Leaders 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
+**→ [교회 피아노·찬양 반주·코드 반주법·예배 피아노 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
+**→ [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
 [스튜디오 놀 이용 요금](/pricing)

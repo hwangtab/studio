@@ -235,4 +235,6 @@ Pre-delay: 15~25ms
 **→ [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**
 **→ [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
 **→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
+**→ [교회 피아노·찬양 반주·코드 반주법·예배 피아노 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
+**→ [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
 [스튜디오 놀 이용 요금](/pricing)
