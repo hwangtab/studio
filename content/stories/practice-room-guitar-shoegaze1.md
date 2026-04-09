@@ -199,4 +199,6 @@ Asus4: x-0-2-2-0-0
 **→ [포스트록 기타·빌드업·Explosions in the Sky 음악연습실 가이드](/stories/ko/practice-room-guitar-post-rock1)**  
 **→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 **→ [인디팝 기타·The Strokes·Vampire Weekend 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
+**→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**
+**→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
 [스튜디오 놀 이용 요금](/pricing)

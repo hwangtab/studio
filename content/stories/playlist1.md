@@ -252,4 +252,6 @@ Spotify for Artists를 통해 발매 **최소 7일 전**에 피칭합니다.
 **→ [힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hip-hop-lofi1)**
 **→ [슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-shoegaze1)**
 **→ [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism-glass1)**
+**→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**
+**→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -192,4 +192,6 @@ Glass의 미니멀리즘 + 팝 감성
 **→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**  
 **→ [피아노 인상주의·드뷔시·라벨·색채 화성 음악연습실 가이드](/stories/ko/practice-room-piano-impressionist1)**
 **→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
+**→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**
+**→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
 [스튜디오 놀 이용 요금](/pricing)
