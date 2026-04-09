@@ -329,4 +329,6 @@ BPM 30~40에서 메트로놈을 클릭하면 박자 사이의 공간이 매우 �
 **→ [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism-glass1)**
 **→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**
 **→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
+**→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
+**→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
 [스튜디오 놀 이용 요금](/pricing)

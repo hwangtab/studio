@@ -227,4 +227,6 @@ faq:
 **→ [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism-glass1)**
 **→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**
 **→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
+**→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
+**→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

@@ -192,4 +192,6 @@ Keith Moon:
 **→ [데스메탈 드럼·블라스트비트·더블 베이스 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**  
 **→ [드럼 홀수 박자·오드 타임·변박 음악연습실 가이드](/stories/ko/practice-room-drum-odd-time1)**
 **→ [보사노바 드럼·브라질 리듬·클라베 음악연습실 가이드](/stories/ko/practice-room-drum-bossa-nova1)**
+**→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
+**→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
 [스튜디오 놀 이용 요금](/pricing)

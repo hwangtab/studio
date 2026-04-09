@@ -192,4 +192,6 @@ Django가 사용한 D-hole 기타
 **→ [기타 아치탑·Joe Pass·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**  
 **→ [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-chord-melody1)**
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
+**→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
+**→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
 [스튜디오 놀 이용 요금](/pricing)
