@@ -224,4 +224,6 @@ E7: E 마이너 펜타토닉 (또는 A 펜타토닉 유지)
 **→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 **→ [기타 델타 블루스·Robert Johnson·오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
 **→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
+**→ [베이스 컨트리·블루그래스·루트-5도 라인 음악연습실 가이드](/stories/ko/practice-room-bass-country-bluegrass1)**
+**→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
 [스튜디오 놀 이용 요금](/pricing)

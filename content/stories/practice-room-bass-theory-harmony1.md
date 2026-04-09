@@ -268,4 +268,6 @@ Cmaj7 1박: C (목표음)
 **→ [바리톤 기타·다운 튜닝·헤비 사운드 음악연습실 가이드](/stories/ko/practice-room-guitar-baritone1)**
 **→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
 **→ [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**
+**→ [베이스 컨트리·블루그래스·루트-5도 라인 음악연습실 가이드](/stories/ko/practice-room-bass-country-bluegrass1)**
+**→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
 [스튜디오 놀 이용 요금](/pricing)**

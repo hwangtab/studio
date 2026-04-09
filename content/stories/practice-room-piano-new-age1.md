@@ -219,4 +219,6 @@ C-G-Am-F 반복 진행
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 **→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
 **→ [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**
+**→ [베이스 컨트리·블루그래스·루트-5도 라인 음악연습실 가이드](/stories/ko/practice-room-bass-country-bluegrass1)**
+**→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
 [스튜디오 놀 이용 요금](/pricing)
