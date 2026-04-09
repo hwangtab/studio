@@ -159,4 +159,6 @@ faq:
 **→ [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 음악연습실 가이드](/stories/ko/practice-room-bass-walking-lines1)**
 **→ [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**
 **→ [보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
+**→ [보사노바 기타·삼바 리듬·João Gilberto 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-bossa1)**
+**→ [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-world1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -228,4 +228,6 @@ Cmaj7: X-3-2-0-0-0 (열린 현 활용)
 **→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 **→ [보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
+**→ [보사노바 기타·삼바 리듬·João Gilberto 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-bossa1)**
+**→ [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-world1)**
 [스튜디오 놀 이용 요금](/pricing)

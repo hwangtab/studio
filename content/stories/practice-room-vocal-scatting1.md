@@ -246,4 +246,6 @@ Ella Fitzgerald 녹음과 비교
 **→ [보컬 팔세토 고급·위스퍼·팔세토 강화 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-advanced1)**
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 **→ [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**
+**→ [보사노바 기타·삼바 리듬·João Gilberto 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-bossa1)**
+**→ [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-world1)**
 [스튜디오 놀 이용 요금](/pricing)
