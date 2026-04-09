@@ -192,25 +192,5 @@ A 현 7 프렛 + G 현 9 프렛 = 옥타브 E
 은평구 24시간 음악연습실에서 멜로디 단음 암기부터 시작하세요. 첫 코드가 멜로디와 함께 울리는 날, 재즈 기타의 문이 활짝 열립니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 아치탑·Joe Pass·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**  
-**→ [기타 재즈 비밥·즉흥 연주·비밥 스케일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
-**→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
-**→ [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
-**→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
-**→ [교회 피아노·찬양 반주·코드 반주법·예배 피아노 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
-**→ [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
-**→ [팝 벨팅·고음 파워·Mix Voice·두성 전환 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-belting1)**
-**→ [포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-post-rock1)**
-**→ [인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
-**→ [힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hip-hop-lofi1)**
-**→ [슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-shoegaze1)**
-**→ [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism-glass1)**
-**→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**
-**→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
-**→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
-**→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
-**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
-**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
-**→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
-**→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
 [스튜디오 놀 이용 요금](/pricing)

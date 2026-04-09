@@ -189,13 +189,5 @@ Keith Moon:
 은평구 24시간 음악연습실에서 5/4박자 박수부터 시작하세요. 이상한 박자가 자연스러워지는 순간, 프로그레시브 록의 세계가 펼쳐집니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [데스메탈 드럼·블라스트비트·더블 베이스 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**  
-**→ [드럼 홀수 박자·오드 타임·변박 음악연습실 가이드](/stories/ko/practice-room-drum-odd-time1)**
-**→ [보사노바 드럼·브라질 리듬·클라베 음악연습실 가이드](/stories/ko/practice-room-drum-bossa-nova1)**
-**→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
-**→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
-**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
-**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
-**→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
-**→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
 [스튜디오 놀 이용 요금](/pricing)

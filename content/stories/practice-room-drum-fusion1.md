@@ -196,7 +196,5 @@ Vinnie·Weckl의 핵심 기술
 은평구 24시간 음악연습실에서 고스트 노트 연습부터 시작하세요. 들릴 듯 말 듯한 그 음이 퓨전 그루브의 깊이를 만듭니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [재즈펑크 드럼·David Garibaldi·Omar Hakim·시너지 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**  
-**→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
-**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
 [스튜디오 놀 이용 요금](/pricing)

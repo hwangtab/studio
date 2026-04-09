@@ -189,11 +189,5 @@ C-B-Bb-A (워크다운) → Dm7 → G7 → C
 은평구 24시간 음악연습실에서 C7 분산 그루브부터 시작하세요. 베이스 라인이 노래하기 시작하면, 가스펠의 영혼이 깃듭니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 소울 그루브·펑크 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-soul-groove1)**  
-**→ [네오소울 베이스·D'Angelo·Erykah Badu 음악연습실 가이드](/stories/ko/practice-room-bass-neo-soul1)**
-**→ [교회 피아노·찬양 반주·코드 반주법 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
-**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
-**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
-**→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
-**→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
 [스튜디오 놀 이용 요금](/pricing)

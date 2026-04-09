@@ -222,7 +222,5 @@ Duane Allman이 선호
 은평구 24시간 음악연습실에서 오픈 G 튜닝으로 슬라이드를 얹어보세요. 처음 내는 슬라이드 비브라토 한 음이, 블루스 100년을 담고 있습니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-gypsy-jazz1)**  
-**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
-**→ [기타 아치탑·Joe Pass·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
 [스튜디오 놀 이용 요금](/pricing)
