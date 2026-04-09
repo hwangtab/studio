@@ -239,4 +239,6 @@ category: "drum"
 **→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
 **→ [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**
 **→ [바리톤 기타·다운 튜닝·헤비 사운드 음악연습실 가이드](/stories/ko/practice-room-guitar-baritone1)**
+**→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
+**→ [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -226,4 +226,6 @@ Drop D + 폴리리듬
 **→ [기타 재즈 비밥·즉흥 연주·비밥 스케일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
 **→ [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**
 **→ [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-hand-technique1)**
+**→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
+**→ [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**
 [스튜디오 놀 이용 요금](/pricing)
