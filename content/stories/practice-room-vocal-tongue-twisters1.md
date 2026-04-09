@@ -191,5 +191,5 @@ BPM 160: 박당 4음절
 은평구 24시간 음악연습실에서 녹음을 통해 자신의 딕션을 객관적으로 모니터링하며 집중적으로 훈련하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 딕션·발음 기초 가이드](/stories/ko/practice-room-vocal-diction1)**  
-**→ [보컬 비브라토·트릴 훈련법](/stories/ko/practice-room-vocal-vibrato1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

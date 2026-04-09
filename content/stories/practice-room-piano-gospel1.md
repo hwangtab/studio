@@ -187,5 +187,5 @@ C5-D5 트릴 (매우 빠르게)
 은평구 24시간 음악연습실에서 클러스터 보이싱과 런을 연습하며 당신만의 소울이 담긴 피아노 사운드를 만들어가세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 스트라이드·뉴올리언스 피아노](/stories/ko/practice-room-piano-stride1)**  
-**→ [피아노 즉흥 연주·재즈 피아노 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

@@ -218,5 +218,5 @@ A - - - - - - (2마디, 홀드)
 은평구 24시간 음악연습실에서 J Dilla와 디 안젤로의 음반을 틀어놓고, 그 레이드백 그루브를 몸으로 느끼며 연습하세요. 완벽한 타이밍이 아닌, 진정한 느낌을 먼저 찾는 것이 힙합 베이스의 시작입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 펑크 그루브·싱코페이션](/stories/ko/practice-room-bass-funk-groove1)**  
-**→ [베이스 팝 그루브·차트 팝 베이스라인](/stories/ko/practice-room-bass-pop-groove1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

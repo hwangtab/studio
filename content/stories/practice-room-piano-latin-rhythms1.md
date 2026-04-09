@@ -181,5 +181,5 @@ Cmaj7 보사노바:
 은평구 24시간 음악연습실에서 살사 음원을 틀어놓고 몽투노 패턴을 반복 연습하세요. 라틴 리듬이 피에 흐르는 날이 반드시 옵니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 가스펠·R&B 피아노 가이드](/stories/ko/practice-room-piano-gospel1)**  
-**→ [피아노 CCM·워십 피아노 반주법](/stories/ko/practice-room-piano-worship1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

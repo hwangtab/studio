@@ -207,5 +207,5 @@ Whammy: 피치 쉬프터로 ±1 옥타브 변조
 은평구 24시간 음악연습실에서 시간 제한 없이 소리를 탐구하세요. 앰비언트는 서두르지 않는 예술입니다—충분히 듣고, 충분히 공간을 만들고, 그 공간 안에서 숨쉬세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 이펙터·페달보드 구성법](/stories/ko/practice-room-guitar-clean-tone1)**  
-**→ [기타 인디·얼터너티브 리듬 기타](/stories/ko/practice-room-guitar-indie-alternative1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

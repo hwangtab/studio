@@ -209,5 +209,5 @@ Am7 - Dm7 - G9 - Cmaj7
 은평구 24시간 음악연습실에서 메트로놈과 함께 뮤트 스트럼부터 시작하세요. 처음엔 느리게, 그루브가 손에 익으면 템포를 올리는 것이 핵심입니다. Nile Rodgers처럼—단순하게, 그러나 완벽하게.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 인디·얼터너티브 리듬 기타](/stories/ko/practice-room-guitar-indie-alternative1)**  
-**→ [기타 블루스 리듬·셔플 그루브](/stories/ko/practice-room-guitar-blues-rhythm1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

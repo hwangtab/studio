@@ -187,5 +187,5 @@ Em7:    0-2-2-0-3-0 (토닉 대체)
 은평구 24시간 음악연습실에서 익숙한 곡에 하나씩 코드를 바꿔가며 실험해보세요. "이건 어떤 소리지?"라는 탐구심이 코드 대체 마스터의 시작입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 재즈 코드·보이싱 심화](/stories/ko/practice-room-guitar-jazz-chords1)**  
-**→ [피아노 리하모니제이션·화성 재구성](/stories/ko/practice-room-piano-reharmonization1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

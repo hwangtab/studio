@@ -162,5 +162,5 @@ Bill Evans Trio의 Scott LaFaro는 피아노·드럼과 대화하며 베이스�
 은평구 24시간 음악연습실에서 방해 없이 하모닉스 사운드를 탐구하고 자신만의 솔로 베이스 언어를 개발하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 탭핑·양손 주법 가이드](/stories/ko/practice-room-bass-tapping1)**  
-**→ [베이스 슬랩팝 기법 가이드](/stories/ko/practice-room-bass-slap-pop1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

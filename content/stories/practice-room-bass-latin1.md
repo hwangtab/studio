@@ -200,5 +200,5 @@ Gm7: G2 - . - G2 - D3 - .
 은평구 24시간 음악연습실에서 클라베 음원을 틀어놓고 투쿰베와 보사노바 패턴을 반복 연습하세요. 라틴 리듬이 몸에 배는 날 라틴 음악의 진정한 맛을 느낄 수 있습니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 펑크 그루브·원 드롭 베이스라인](/stories/ko/practice-room-bass-funk-groove1)**  
-**→ [베이스 재즈 베이스·스윙 그루브](/stories/ko/practice-room-bass-jazz-bass1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

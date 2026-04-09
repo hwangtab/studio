@@ -188,5 +188,5 @@ category: "drum"
 은평구 24시간 음악연습실에서 다양한 심벌 기법을 자유롭게 탐구하고 자신만의 심벌 어휘를 완성하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 하이햇 패턴 심화 가이드](/stories/ko/practice-room-drum-hihat-patterns1)**  
-**→ [드럼 림샷·크로스스틱 기법](/stories/ko/practice-room-drum-rim-techniques1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

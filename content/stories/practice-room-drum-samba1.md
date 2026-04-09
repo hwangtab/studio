@@ -217,5 +217,5 @@ X X - X X X - X
 은평구 24시간 음악연습실에서 처음에는 각 파트를 분리하여 연습하고, 하나씩 더해가면서 삼바 그루브를 완성해 가세요. 브라질 타악기 앙상블의 소리를 귀로 충분히 듣고 나서 드럼셋으로 재현하는 것이 가장 효과적인 방법입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 라틴 퍼커션·살사·삼바 리듬](/stories/ko/practice-room-drum-latin-percussion1)**  
-**→ [드럼 보사노바·재즈 브러시 보사](/stories/ko/practice-room-drum-jazz-brushwork-bossa1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

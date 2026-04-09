@@ -197,5 +197,5 @@ Abmaj7: C - G
 은평구 24시간 음악연습실에서 충분한 시간을 갖고 단계적으로 접근하세요. 32마디의 코드를 외우는 것부터—그것이 모든 것의 시작입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 재즈 보이싱·컴핑](/stories/ko/practice-room-piano-jazz-voicings1)**  
-**→ [피아노 즉흥 연주·블루스 피아노 기초](/stories/ko/practice-room-piano-improv-blues1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

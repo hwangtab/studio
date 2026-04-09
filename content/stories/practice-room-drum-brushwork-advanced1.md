@@ -177,5 +177,5 @@ category: "drum"
 가장 중요한 것은 **음악을 들으면서** 연습하는 것입니다. 빌 에반스 트리오, 오스카 피터슨 트리오의 음반을 들으며 브러시 드러머의 뉘앙스를 귀로 먼저 익히세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [재즈 드럼 고급 기법 가이드](/stories/ko/practice-room-drum-jazz-coordination1)**  
-**→ [드럼 하이햇 패턴 심화](/stories/ko/practice-room-drum-hihat-patterns1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

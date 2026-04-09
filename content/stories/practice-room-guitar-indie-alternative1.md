@@ -170,5 +170,5 @@ A-D-E (4도 포함, 3도 없음)
 은평구 24시간 음악연습실에서 다양한 이펙터와 기법을 자유롭게 탐구하고 자신만의 인디 사운드를 만들어가세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 록 리드·파워풀 솔로 기법](/stories/ko/practice-room-guitar-rock-lead1)**  
-**→ [기타 클린톤·컴프레서 기타 세팅](/stories/ko/practice-room-guitar-clean-tone1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

@@ -173,5 +173,5 @@ category: "drum"
 은평구 24시간 음악연습실에서 다양한 림 기법을 집중 연습하고 장르에 맞는 스네어 사운드를 마스터하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 스네어 테크닉·다이나믹 컨트롤](/stories/ko/practice-room-drum-snare-techniques1)**  
-**→ [드럼 브러시 주법 가이드](/stories/ko/practice-room-drum-brushwork-advanced1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

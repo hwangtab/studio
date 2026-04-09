@@ -205,5 +205,5 @@ K-Pop 보컬의 완성은 **기술과 퍼포먼스의 균형**입니다. 완벽�
 은평구 24시간 음악연습실에서 보컬 테크닉을 갈고닦으며, 동시에 자신만의 퍼포먼스 스타일을 개발해나가세요. 기술이 몸에 배면, 무대 위에서 자연스럽게 빛날 수 있습니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 믹스 보이스·연결 발성 훈련](/stories/ko/practice-room-vocal-mix-voice1)**  
-**→ [보컬 마이크 테크닉·녹음 준비](/stories/ko/practice-room-vocal-microphone-technique1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

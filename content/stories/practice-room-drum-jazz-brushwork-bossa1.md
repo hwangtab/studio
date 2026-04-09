@@ -210,5 +210,5 @@ X - - X - X - X
 은평구 24시간 음악연습실에서 보사노바 음반을 틀어놓고, 그 위에 아주 조용한 브러시 보사노바를 연주해보세요. 당신의 드럼이 음악에 녹아드는 순간, 보사노바의 진수를 느끼게 될 것입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 브러시 고급 주법·재즈 발라드](/stories/ko/practice-room-drum-brushwork-advanced1)**  
-**→ [드럼 재즈 코디네이션·4웨이 독립 연습](/stories/ko/practice-room-drum-jazz-coordination1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

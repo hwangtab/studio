@@ -218,5 +218,5 @@ Treble: 0dB
 은평구 24시간 음악연습실에서 블루스 음반을 들으며 베이스를 따라 연주해보세요. BB King의 기타 아래에서 Willie Dixon의 베이스를 타고 가는 느낌—그것이 블루스 베이스의 진정한 맛입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 소울·모타운 그루브·클래식 R&B](/stories/ko/practice-room-bass-soul-groove1)**  
-**→ [베이스 재즈 베이스·스윙 그루브](/stories/ko/practice-room-bass-jazz-bass1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

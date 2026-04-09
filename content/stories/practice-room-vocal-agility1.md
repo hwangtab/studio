@@ -186,5 +186,5 @@ R&B에서 즉흥적으로 나오는 "감으로 하는" 런:
 은평구 24시간 음악연습실에서 매일 20분의 어질리티 훈련으로 차츰차츰 R&B 보컬의 아름다운 장식음을 완성하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 발음 훈련·딕션 스피드 연습](/stories/ko/practice-room-vocal-tongue-twisters1)**  
-**→ [보컬 비브라토·트릴 훈련법](/stories/ko/practice-room-vocal-vibrato1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

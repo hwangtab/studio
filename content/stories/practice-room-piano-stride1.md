@@ -129,5 +129,5 @@ G7: G3-B3-D4-F4-G4-F4-D4-B3
 은평구 24시간 음악연습실에서 스트라이드의 역동적인 에너지를 마스터하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [재즈 피아노 보이싱·텐션 코드 연습](/stories/ko/practice-room-piano-jazz-voicings1)**  
-**→ [피아노 즉흥 연주·재즈 피아노 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

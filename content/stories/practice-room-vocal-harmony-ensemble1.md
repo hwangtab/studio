@@ -223,5 +223,5 @@ category: "vocal"
 은평구 24시간 음악연습실에서 파트너와 함께 또는 혼자 루프를 이용해 하모니 훈련을 해보세요. 처음에는 어색하고 음정이 맞지 않아도—반복하면 반드시 귀와 목이 맞춰집니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 K-Pop 창법·아이돌 보컬 테크닉](/stories/ko/practice-room-vocal-kpop-technique1)**  
-**→ [보컬 소울·R&B 창법·멜리즈마 기법](/stories/ko/practice-room-vocal-soul1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

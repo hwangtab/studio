@@ -229,5 +229,5 @@ O  O   O   X  O   O   O  X
 라틴 드럼의 핵심은 **클라베를 내면화하는 것**입니다. 클라베를 몸으로 느끼기 시작하면, 살사든 삼바든 리듬이 자연스럽게 흘러나옵니다. 은평구 24시간 음악연습실에서 라틴 퍼커션 레코딩을 틀어놓고, 그 위에 드럼셋을 얹는 연습부터 시작해보세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 폴리리듬·복합박자 고급 패턴](/stories/ko/practice-room-drum-polyrhythm-advanced1)**  
-**→ [드럼 아프로비트·월드 뮤직 리듬](/stories/ko/practice-room-drum-afrobeat1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

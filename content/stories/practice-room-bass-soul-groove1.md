@@ -218,5 +218,5 @@ E - G# - B - D# (메이저 7th 코드 톤)
 은평구 24시간 음악연습실에서 모타운 음반을 귀로 충분히 들으며, 그 베이스라인을 손으로 따라 배우세요. 耳와 손이 동시에 훈련될 때, 진정한 소울 그루브가 탄생합니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 힙합·로우엔드 그루브·네오소울](/stories/ko/practice-room-bass-hip-hop1)**  
-**→ [베이스 펑크 그루브·싱코페이션](/stories/ko/practice-room-bass-funk-groove1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

@@ -169,5 +169,5 @@ E4-D4-C#4-C4-B3
 은평구 24시간 음악연습실에서 마음껏 셔플을 연습하고 당신만의 블루스 리듬 어휘를 만들어가세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 블루스 릭·리드 기법 가이드](/stories/ko/practice-room-guitar-blues-licks1)**  
-**→ [기타 코드 진행·하모니 가이드](/stories/ko/practice-room-guitar-chord-progressions1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

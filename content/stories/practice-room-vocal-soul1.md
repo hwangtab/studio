@@ -181,5 +181,5 @@ C4(풀보이스) → G4(팔세토) → C5(팔세토) → G5(팔세토)
 은평구 24시간 음악연습실에서 기술을 연마하되, 항상 음악의 감정적 의미를 생각하며 노래하세요. 위대한 소울 가수들처럼—기술이 감정을 섬기게.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 팔세토 테크닉·고음 발성](/stories/ko/practice-room-vocal-falsetto-technique1)**  
-**→ [보컬 벨팅·고음 파워 발성](/stories/ko/practice-room-vocal-belting1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

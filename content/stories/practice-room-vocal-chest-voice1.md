@@ -185,5 +185,5 @@ A3 (강한 흉성) → B3 (흉성) → C4 (믹스 진입) → D4 (믹스)
 은평구 24시간 음악연습실에서 충분한 시간을 들여 흉성을 단련하고 당신만의 독보적인 보컬 사운드를 만들어가세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 두성·헤드 보이스 발성법](/stories/ko/practice-room-vocal-head-voice1)**  
-**→ [보컬 믹스 보이스·팔세토 가이드](/stories/ko/practice-room-vocal-falsetto1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

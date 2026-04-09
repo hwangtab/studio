@@ -195,5 +195,5 @@ category: "vocal"
 은평구 24시간 음악연습실에서 혼자 또는 소수와 함께 마음껏 퍼포먼스를 연습하세요. 관객 앞에서 빛나는 보컬리스트가 되기 위한 가장 효과적인 준비는 연습입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 무대 공연·스테이지 매너 가이드](/stories/ko/practice-room-vocal-stage-performance1)**  
-**→ [보컬 어질리티·멜리스마 훈련](/stories/ko/practice-room-vocal-agility1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

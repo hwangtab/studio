@@ -190,5 +190,5 @@ Gmaj7 → Dmaj7 → Gmaj7 → Dmaj7 → ...
 은평구 24시간 음악연습실에서 메트로놈 없이, 눈을 감고 Am 아르페지오를 50회 반복해보세요. 20회 즈음부터 뭔가가 달라지기 시작합니다. 100회 이후에는 손과 마음이 분리되어, 음악이 저절로 흘러나오는 경험을 하게 됩니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 영화음악·시네마틱 피아노 연주](/stories/ko/practice-room-piano-film-score1)**  
-**→ [피아노 인상주의·현대 음악 기법](/stories/ko/practice-room-piano-impressionism1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

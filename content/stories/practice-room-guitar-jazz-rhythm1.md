@@ -186,5 +186,5 @@ B7 보이싱 (반음 아래) → Cmaj7로 해결
 은평구 24시간 음악연습실에서 재즈 음원과 함께 콤핑을 연습하고 자신만의 리스펀스 언어를 개발하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 재즈 코드·텐션 코드 보이싱](/stories/ko/practice-room-guitar-jazz-chords1)**  
-**→ [기타 모달 연주·모드 스케일 활용](/stories/ko/practice-room-guitar-modal-playing1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

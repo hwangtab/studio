@@ -160,5 +160,5 @@ category: "drum"
 은평구 24시간 음악연습실에서 다양한 타이밍 느낌을 탐구하고, 자신만의 그루브 정체성을 만들어가세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 폴리리듬 심화·아프리카 리듬](/stories/ko/practice-room-drum-polyrhythm-advanced1)**  
-**→ [드럼 심벌 기법·라이드·크래쉬 활용법](/stories/ko/practice-room-drum-cymbal-techniques1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

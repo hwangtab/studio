@@ -273,5 +273,5 @@ Am7b5 → D7 → Gm (G단조)
 은평구 24시간 음악연습실에서 시간 제한 없이 왼손 도약을 훈련하세요. 스트라이드는 많은 반복이 필요한 스타일입니다—인내심을 갖고, 천천히, 정확하게.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실](/stories/ko/practice-room-piano-jazz-standard-analysis1)**  
-**→ [피아노 부기우기·블루스 피아노 음악연습실](/stories/ko/practice-room-piano-boogie-woogie1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

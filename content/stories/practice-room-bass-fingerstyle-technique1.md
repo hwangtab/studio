@@ -171,5 +171,5 @@ BPM 110: 도전
 은평구 24시간 음악연습실에서 매일 30분씩 기초 핑거스타일 훈련을 지속하면 6개월 후 믿을 수 없는 변화를 경험하게 됩니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 메탈·헤비록 베이스라인](/stories/ko/practice-room-bass-metal-rock1)**  
-**→ [베이스 코드·하모닉스 솔로 베이스](/stories/ko/practice-room-bass-chords-harmony1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

@@ -195,5 +195,5 @@ CCM 워십 피아노는 기술만으로 되지 않습니다. 음악을 통해 �
 은평구 24시간 음악연습실에서 기술적 기초를 닦고, 마음에서 흘러나오는 워십 피아노를 개발하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 가스펠·R&B 피아노 가이드](/stories/ko/practice-room-piano-gospel1)**  
-**→ [피아노 팝 편곡·발라드 반주법](/stories/ko/practice-room-piano-pop-arrangement1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

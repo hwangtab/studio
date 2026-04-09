@@ -189,5 +189,5 @@ A - E - I - O - U (하나의 음으로 각 모음 전환)
 은평구 24시간 음악연습실에서 부담 없이 큰 소리로 오페라 발성을 연습해보세요. 방음이 완벽한 공간에서 마음껏 성대를 열 수 있습니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 클래식·성악 기초 발성](/stories/ko/practice-room-vocal-classical1)**  
-**→ [보컬 공명·음색 개발 훈련](/stories/ko/practice-room-vocal-resonance1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

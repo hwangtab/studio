@@ -230,5 +230,5 @@ Cmaj7: C - - - G - - -
 워킹 베이스라인은 악보를 외우는 것이 아닙니다. 화성의 논리를 이해하고 그 안에서 즉흥적으로 선율을 만드는 능력입니다. 은평구 24시간 음악연습실에서 충분한 시간을 들여 귀와 손을 동시에 훈련하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 워킹 베이스 고급 연습법](/stories/ko/practice-room-bass-walking-bass2-1)**  
-**→ [재즈 피아노 보이싱과 함께하는 합주 연습](/stories/ko/practice-room-piano-jazz-voicings1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

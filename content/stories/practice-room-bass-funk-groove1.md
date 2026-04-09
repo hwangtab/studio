@@ -189,5 +189,5 @@ A2            (명확한 음)
 은평구 24시간 음악연습실에서 드럼 루프와 함께 펑크 베이스 패턴을 반복 연습하며 당신만의 그루브를 완성하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 슬랩팝·펌핑 기법](/stories/ko/practice-room-bass-slap-pop1)**  
-**→ [베이스 코드·하모닉스 솔로 베이스](/stories/ko/practice-room-bass-chords-harmony1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

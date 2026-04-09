@@ -188,5 +188,5 @@ G2 - G2 - G2 - G2 (단순 반복)
 은평구 24시간 음악연습실에서 마음껏 볼륨을 높이고 메탈 베이스의 파워를 발산하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 펑크 그루브·원 드롭 베이스라인](/stories/ko/practice-room-bass-funk-groove1)**  
-**→ [베이스 코드·하모닉스 솔로 베이스](/stories/ko/practice-room-bass-chords-harmony1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

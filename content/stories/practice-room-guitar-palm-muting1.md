@@ -200,5 +200,5 @@ F5: Low D 3rd fret + A 3rd fret
 은평구 24시간 음악연습실에서 처음에는 천천히, 각 음이 명확하게 들릴 때까지 연습하세요. 완벽한 팜 뮤팅이 몸에 배면, 그 이후부터는 속도와 강도를 마음껏 올릴 수 있습니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 록 리드·솔로 연주 기법](/stories/ko/practice-room-guitar-rock-lead1)**  
-**→ [기타 메탈·디스토션 톤 세팅](/stories/ko/practice-room-guitar-metal-distortion1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

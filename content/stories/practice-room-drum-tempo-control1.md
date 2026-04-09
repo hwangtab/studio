@@ -148,5 +148,5 @@ BPM 80: 4박 중 1박에만 클릭
 은평구 24시간 음악연습실에서 매일 메트로놈과 함께 기초 훈련을 지속하고 내면의 완벽한 박자감을 완성하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 그루브·포켓 연주·리듬 감각](/stories/ko/practice-room-drum-groove-pocket1)**  
-**→ [드럼 더블 킥·더블 배스 드럼 훈련](/stories/ko/practice-room-drum-double-kick1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

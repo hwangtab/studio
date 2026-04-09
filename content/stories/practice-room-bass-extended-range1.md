@@ -216,5 +216,5 @@ E(B줄 7프렛) - F#(B줄 9프렛) - G#(B줄 11프렛) - A(B줄 12프렛)
 은평구 24시간 음악연습실에서 5현 베이스를 충분히 탐색하세요. B현이 열어주는 낮은 음역은 4현으로는 경험할 수 없는 새로운 가능성입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 플렛리스·벤딩 표현법](/stories/ko/practice-room-bass-fretless1)**  
-**→ [베이스 코드 멜로디·하모닉스](/stories/ko/practice-room-bass-chord-melody1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

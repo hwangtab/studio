@@ -180,5 +180,5 @@ A3-B3 트릴: A와 B를 1초에 8번 이상 빠르게 번갈아
 은평구 24시간 음악연습실에서 매일 15-20분씩 꾸준히 훈련하고, 비브라토가 서서히 자연스럽게 나타나는 과정을 즐기세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 흉성·체스트 보이스 강화](/stories/ko/practice-room-vocal-chest-voice1)**  
-**→ [보컬 두성·헤드 보이스 발성법](/stories/ko/practice-room-vocal-head-voice1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

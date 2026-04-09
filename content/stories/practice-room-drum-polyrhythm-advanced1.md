@@ -197,5 +197,5 @@ X - X - X - X - (8개)
 은평구 24시간 음악연습실에서 방해 없이 폴리리듬에 몰입하고, 혼자만의 리듬 실험실을 만들어보세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 폴리리듬 기초 가이드](/stories/ko/practice-room-drum-polyrhythm1)**  
-**→ [드럼 심벌 기법·라이드·크래쉬 활용법](/stories/ko/practice-room-drum-cymbal-techniques1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

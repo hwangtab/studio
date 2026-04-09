@@ -228,5 +228,5 @@ X  x  X  -  X  x  X  -
 은평구 24시간 음악연습실에서 메트로놈과 함께 천천히, 정확하게 연습하며 팝 그루브를 몸에 익히세요. 정확한 타이밍이 모든 것의 기초입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [베이스 펑크 그루브·싱코페이션 심화](/stories/ko/practice-room-bass-funk-groove1)**  
-**→ [베이스 R&B·소울 그루브 연습법](/stories/ko/practice-room-bass-groove-construction1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

@@ -218,5 +218,5 @@ SRV(Stevie Ray Vaughan) 밴드의 드러머 Chris Layton 스타일.
 은평구 24시간 음악연습실에서 블루스 음원을 틀어놓고 함께 셔플을 연주해보세요. 메트로놈보다 음악 자체를 더 많이 듣고 따라가는 것이 셔플을 익히는 가장 좋은 방법입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 라틴 퍼커션·살사·삼바 리듬](/stories/ko/practice-room-drum-latin-percussion1)**  
-**→ [드럼 그루브 포켓·타이밍 훈련](/stories/ko/practice-room-drum-groove-pocket1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

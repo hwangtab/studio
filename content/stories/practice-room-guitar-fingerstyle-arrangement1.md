@@ -169,5 +169,5 @@ G2 - A2 - B2 - C3 (반음씩 상행)
 은평구 24시간 음악연습실에서 방해받지 않고 집중 연습하며 자신만의 솔로 기타 세계를 만들어가세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 핑거피킹 패턴 심화 가이드](/stories/ko/practice-room-fingerpicking-patterns1)**  
-**→ [기타 아르페지오 기법 가이드](/stories/ko/practice-room-guitar-arpeggios1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

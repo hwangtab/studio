@@ -211,5 +211,5 @@ G 줄 0 홀드 + B 줄 2프렛 벤딩
 은평구 24시간 음악연습실에서 처음에는 3도 더블 스탑부터 시작하여 천천히 다양한 인터벌로 확장하세요. 척 베리처럼 단순하게, 그러나 폭발적으로—더블 스탑의 매력을 온몸으로 느끼게 될 것입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 컨트리·텔레캐스터 스타일](/stories/ko/practice-room-guitar-country1)**  
-**→ [기타 블루스 리듬·셔플 그루브](/stories/ko/practice-room-guitar-blues-rhythm1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

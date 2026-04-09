@@ -207,5 +207,5 @@ category: "piano"
 은평구 24시간 음악연습실에서 좋아하는 영화 음악을 틀어놓고, 그 위에 피아노를 얹어보세요. 선율을 따라가는 것이 아니라, 음악의 **감정**을 피아노로 재표현하는 연습이 시네마틱 피아노의 진정한 시작입니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 즉흥 연주·감성 표현 훈련](/stories/ko/practice-room-piano-improvisation1)**  
-**→ [피아노 인상주의·현대 음악 기법](/stories/ko/practice-room-piano-impressionism1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

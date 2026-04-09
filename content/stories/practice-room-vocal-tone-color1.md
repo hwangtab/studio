@@ -240,5 +240,5 @@ category: "vocal"
 은평구 24시간 음악연습실에서 반복적으로 녹음하고 듣고 조절하는 과정을 거치면, 자신만의 음색이 조금씩 완성되어갑니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [보컬 공명·음색 개발 훈련](/stories/ko/practice-room-vocal-resonance1)**  
-**→ [보컬 소울·R&B 창법·멜리즈마 기법](/stories/ko/practice-room-vocal-soul1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

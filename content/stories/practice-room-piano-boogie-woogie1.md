@@ -217,5 +217,5 @@ C4-C5 → D4-D5 → E4-E5
 기술이 아직 서툴러도 괜찮습니다. 부기우기의 정신은 **즐기는 것**입니다. 마음이 먼저 흔들리면, 손가락이 따라옵니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 즉흥 연주·블루스 피아노 기초](/stories/ko/practice-room-piano-improv-blues1)**  
-**→ [피아노 스트라이드·스윙 피아노](/stories/ko/practice-room-piano-stride1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

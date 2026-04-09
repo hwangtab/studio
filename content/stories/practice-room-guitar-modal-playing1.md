@@ -166,5 +166,5 @@ G-A-B-C-D-C-B-F-G
 은평구 24시간 음악연습실에서 백킹 트랙을 틀어놓고 도리안과 믹소리디안부터 집중 연습하세요. 모달 즉흥 연주가 익숙해지면 기타 솔로의 세계가 완전히 달라집니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 재즈 코드·텐션 코드 보이싱](/stories/ko/practice-room-guitar-jazz-chords1)**  
-**→ [기타 이코노미 피킹·이코노미 기법](/stories/ko/practice-room-guitar-economy-picking1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

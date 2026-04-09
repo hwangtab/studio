@@ -187,5 +187,5 @@ C-E-G-C (1-2-3-5) 또는 (1-2-3-4)
 은평구 24시간 음악연습실에서 방해받지 않고 집중적인 테크닉 훈련에 몰입하세요. 작은 진보도 꾸준히 기록하고 자신의 성장을 확인하며 동기부여를 유지하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [피아노 스케일·모드 연습 가이드](/stories/ko/practice-room-piano-scales-modes1)**  
-**→ [피아노 사이트 리딩·초견 연습](/stories/ko/practice-room-piano-sight-reading1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

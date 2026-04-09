@@ -185,5 +185,5 @@ E4(풀오프)D4(풀오프)C4 : 한 번만 피킹
 은평구 24시간 음악연습실에서 볼륨을 높이고 자신만의 록 솔로 언어를 개발하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [기타 블루스 릭·리드 기법 가이드](/stories/ko/practice-room-guitar-blues-licks1)**  
-**→ [기타 모달 연주·모드 스케일 활용](/stories/ko/practice-room-guitar-modal-playing1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

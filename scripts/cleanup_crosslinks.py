@@ -63,12 +63,57 @@ def filter_pipe_line(line: str) -> str | None:
     return " | ".join(kept) if kept else None
 
 
+STANDARD_FOOTER = "\n".join([
+    "**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  ",
+    "**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**",
+    "[스튜디오 놀 이용 요금](/pricing)",
+])
+
+
+def process_file_no_anchor(path: str) -> bool:
+    """
+    For practice-room files that lack the pricing anchor:
+    Trim all trailing arrow/pipe/dash-link lines from EOF,
+    then append the standard 3-line footer.
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    lines = content.split("\n")
+
+    # Find last non-footer line by scanning backwards
+    last_content_idx = len(lines) - 1
+    while last_content_idx >= 0:
+        line = lines[last_content_idx]
+        s = line.strip()
+        if not s:  # blank line
+            last_content_idx -= 1
+            continue
+        if is_bulk_arrow_line(line) or is_dash_practice_link(line) or is_pipe_line(line):
+            last_content_idx -= 1
+            continue
+        break
+
+    new_lines = lines[: last_content_idx + 1]
+    new_content = "\n".join(new_lines).rstrip() + "\n\n" + STANDARD_FOOTER + "\n"
+
+    if new_content == content:
+        return False
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(new_content)
+    return True
+
+
 def process_file(path: str, is_practice: bool) -> bool:
     """Process a single file. Returns True if the file was modified."""
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
 
     if PRICING_ANCHOR not in content:
+        # For practice-room files without pricing anchor, use EOF-based trimming
+        if is_practice:
+            return process_file_no_anchor(path)
         return False
 
     lines = content.split("\n")

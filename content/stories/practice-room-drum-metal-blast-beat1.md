@@ -231,5 +231,5 @@ X - X - X X - - X - X - X X - -
 은평구 24시간 음악연습실의 방음 공간에서 마음껏 폭발해보세요. 메탈의 에너지는 억압될 때가 아닌 해방될 때 진정한 힘을 발휘합니다.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 더블 킥·풋워크 스피드 훈련](/stories/ko/practice-room-drum-double-kick1)**  
-**→ [드럼 스피드 트레이닝·빠른 싱글 스트로크](/stories/ko/practice-room-drum-speed-training1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)

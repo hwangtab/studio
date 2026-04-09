@@ -183,5 +183,5 @@ BPM 90: 쉬어가기 후 도전
 은평구 24시간 음악연습실에서 페달 앞에 충분한 시간을 투자하고 더블 킥의 파워를 완성하세요.
 
 **→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [드럼 발 테크닉·페달 컨트롤 가이드](/stories/ko/practice-room-drum-foot-technique1)**  
-**→ [드럼 그루브·포켓 연주·리듬 감각](/stories/ko/practice-room-drum-groove-pocket1)**
+**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
+[스튜디오 놀 이용 요금](/pricing)
