@@ -304,4 +304,6 @@ R&B·소울에 적합
 **→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
 **→ [베이스 왼손 기법·레가토·슬라이드·비브라토 음악연습실 가이드](/stories/ko/practice-room-bass-left-hand1)**
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
+**→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
+**→ [보컬 팝 런·멜리스마·빠른 패시지 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-runs1)**
 [스튜디오 놀 이용 요금](/pricing)
