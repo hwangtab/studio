@@ -1,9 +1,9 @@
 ---
-title: "블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 음악연습실 완전 가이드"
+title: "블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "블루스 록 기타·SRV·Eric Clapton·펜타토닉 블루스 스케일. 블루스 록 기타 솔로를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "블루스록", "SRV", "EricClapton", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 음악연습실 완전 가이드

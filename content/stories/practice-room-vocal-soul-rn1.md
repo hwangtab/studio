@@ -1,9 +1,9 @@
 ---
-title: "보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 음악연습실 완전 가이드"
+title: "보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "보컬 소울·R&B 그루브·어택·Aretha Franklin·Stevie Wonder 스타일. 소울 보컬의 정수를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "보컬", "소울", "R&B보컬", "ArethaFranklin", "은평구음악연습실"]
-category: "vocal"
+category: "악기 연습"
 ---
 
 # 보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 음악연습실 완전 가이드

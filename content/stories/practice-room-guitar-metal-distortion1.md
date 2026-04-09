@@ -1,9 +1,9 @@
 ---
-title: "기타 메탈·디스토션 완벽 세팅 가이드 — 연신내 음악연습실 실전 연습"
+title: "기타 메탈·디스토션 완벽 세팅 가이드 — 실전 연습"
 date: "2026-04-08"
 description: "기타 메탈 사운드와 디스토션 세팅의 모든 것을 연신내 음악연습실에서 마스터하세요. 게인 구조·팜뮤트 리프·피킹 각도·앰프 EQ까지 단계별 완전 해설."
 tags: ["음악연습실", "기타", "메탈", "디스토션", "연신내"]
-category: "practice-room"
+category: "악기 연습"
 slug: "practice-room-guitar-metal-distortion1"
 ---
 

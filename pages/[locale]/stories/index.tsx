@@ -25,6 +25,8 @@ interface StoriesPageProps {
   stories: Story[];
 }
 
+const storyCategoryKeys = ['news', 'lesson', 'feedback', 'region', 'instrument', 'music-guide'] as const;
+
 const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
@@ -75,21 +77,9 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
       noDate: t('stories.list.noDate'),
       noTitle: t('stories.list.noTitle'),
       noContent: t('stories.list.noContent'),
-      categoryByKey: {
-        notice: t('stories.categories.notice'),
-        event: t('stories.categories.event'),
-        lesson: t('stories.categories.lesson'),
-        interview: t('stories.categories.interview'),
-        review: t('stories.categories.review'),
-        region: t('stories.categories.region'),
-        vocal: t('stories.categories.vocal'),
-        recording: t('stories.categories.recording'),
-        production: t('stories.categories.production'),
-        mixing: t('stories.categories.mixing'),
-        business: t('stories.categories.business'),
-        practice: t('stories.categories.practice'),
-        guide: t('stories.categories.guide'),
-      },
+      categoryByKey: Object.fromEntries(
+        storyCategoryKeys.map((key) => [key, t(`stories.categories.${key}`)])
+      ),
     }),
     [t]
   );

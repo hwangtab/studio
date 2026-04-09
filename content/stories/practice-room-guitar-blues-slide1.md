@@ -1,9 +1,9 @@
 ---
-title: "블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 음악연습실 완전 가이드"
+title: "블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥·오픈 튜닝·슬라이드 테크닉. 블루스 슬라이드 기타를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "블루스슬라이드", "DuaneAllman", "DerekTrucks", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 음악연습실 완전 가이드

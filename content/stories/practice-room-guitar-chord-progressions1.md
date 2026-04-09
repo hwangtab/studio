@@ -1,9 +1,9 @@
 ---
-title: "기타 코드 진행·전조 기법 완전 가이드 — 연신내 음악연습실 실전 연습"
+title: "기타 코드 진행·전조 기법 완전 가이드 — 실전 연습"
 date: "2026-04-08"
 description: "기타 코드 진행과 전조 기법의 핵심을 연신내 음악연습실에서 집중 연습하세요. ii-V-I·피벗 코드 전조·평행단조 전조·코드 대리까지 단계별 완전 해설."
 tags: ["음악연습실", "기타", "코드진행", "전조", "연신내"]
-category: "practice-room"
+category: "악기 연습"
 slug: "practice-room-guitar-chord-progressions1"
 ---
 

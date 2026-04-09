@@ -1,9 +1,9 @@
 ---
-title: "재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 음악연습실 완전 가이드"
+title: "재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "재즈펑크 드럼·James Brown·The Meters·뉴올리언스 세컨드라인·클라이드 스터블필드. 재즈펑크 드럼을 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "드럼", "재즈펑크드럼", "JamesBrown", "뉴올리언스", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 음악연습실 완전 가이드

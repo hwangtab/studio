@@ -1,9 +1,9 @@
 ---
-title: "퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 음악연습실 완전 가이드"
+title: "퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "퓨전 드럼·Weather Report·Vinnie Colaiuta·Dave Weckl·폴리리듬·복잡한 퓨전 그루브. 퓨전 드럼을 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "드럼", "퓨전드럼", "VinnieColaiuta", "DaveWeckl", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 음악연습실 완전 가이드

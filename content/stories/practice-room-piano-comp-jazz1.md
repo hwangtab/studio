@@ -1,9 +1,9 @@
 ---
-title: "재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 음악연습실 완전 가이드"
+title: "재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "재즈 피아노 컴핑·밴드 앙상블·Red Garland·Wynton Kelly 스타일. 밴드 안에서 피아노 역할을 은평구 24시간 음악연습실에서 완성."
 tags: ["음악연습실", "피아노", "재즈컴핑", "RedGarland", "앙상블", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 음악연습실 완전 가이드

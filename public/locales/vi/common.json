@@ -594,19 +594,12 @@
       "viewAll": "Xem tất cả stories"
     },
     "categories": {
-      "notice": "Thông báo",
-      "event": "Sự kiện",
+      "news": "Tin tức",
       "lesson": "Khóa học",
-      "interview": "Phỏng vấn",
-      "review": "Đánh giá",
+      "feedback": "Đánh giá",
       "region": "Hướng dẫn khu vực",
-      "vocal": "Hướng dẫn thanh nhạc",
-      "recording": "Hướng dẫn thu âm",
-      "production": "Sản xuất âm nhạc",
-      "mixing": "Mixing & Mastering",
-      "business": "Kinh doanh âm nhạc",
-      "guide": "Hướng dẫn",
-      "practice": "Hướng Dẫn Phòng Tập Âm Nhạc"
+      "instrument": "Luyện tập nhạc cụ",
+      "music-guide": "Cẩm nang âm nhạc"
     }
   },
   "reviewSection": {

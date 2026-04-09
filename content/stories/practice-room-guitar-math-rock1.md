@@ -1,9 +1,9 @@
 ---
-title: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 — 음악연습실 완전 가이드"
+title: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "수학록 기타·폴리리듬·7박자·Animals as Leaders·Tosin Abasi 스타일. 수학록 기타를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "수학록", "폴리리듬", "AnimalsAsLeaders", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 — 음악연습실 완전 가이드

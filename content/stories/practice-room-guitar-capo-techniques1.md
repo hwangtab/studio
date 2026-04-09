@@ -1,9 +1,9 @@
 ---
-title: "기타 카포·키 변환 활용법 — 음악연습실 완전 가이드"
+title: "기타 카포·키 변환 활용법 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "카포를 활용한 키 변환과 코드 형태 변환의 원리. 카포 없이 어렵던 코드를 쉽게 연주하고 음색을 변화시키는 방법을 은평구 24시간 음악연습실에서 익히세요."
 tags: ["음악연습실", "기타", "카포", "키변환", "기타코드", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 기타 카포·키 변환 활용법 — 음악연습실 완전 가이드
@@ -124,7 +124,6 @@ category: "guitar"
 - **완벽 방음** — 다양한 키와 코드 자유롭게 시도
 - **연신내역 5분**
 
-연습실 예약 및 문의: [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
 
 ---
 

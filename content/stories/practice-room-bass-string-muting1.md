@@ -1,9 +1,9 @@
 ---
-title: "베이스 스트링 뮤팅·노이즈 컨트롤 — 음악연습실 완전 가이드"
+title: "베이스 스트링 뮤팅·노이즈 컨트롤 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "팜 뮤트·손가락 뮤트·언더커런트 뮤팅의 원리와 훈련법. 깔끔하고 명료한 베이스 사운드를 만드는 노이즈 컨트롤 기술을 은평구 24시간 음악연습실에서 완성하세요."
 tags: ["음악연습실", "베이스", "스트링뮤팅", "노이즈컨트롤", "베이스테크닉", "은평구음악연습실"]
-category: "bass"
+category: "악기 연습"
 ---
 
 # 베이스 스트링 뮤팅·노이즈 컨트롤 — 음악연습실 완전 가이드
@@ -125,7 +125,6 @@ category: "bass"
 - **완벽 방음** — 미세한 노이즈도 정확히 들음
 - **연신내역 5분**
 
-연습실 예약 및 문의: [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
 
 ---
 

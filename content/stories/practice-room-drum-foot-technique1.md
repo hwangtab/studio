@@ -1,9 +1,9 @@
 ---
-title: "드럼 발 테크닉·더블 베이스 페달 — 음악연습실 완전 가이드"
+title: "드럼 발 테크닉·더블 베이스 페달 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "힐-토 주법·힐-업·더블 킥의 원리와 기초 훈련법. 드럼 페달 컨트롤을 업그레이드하는 발 테크닉을 은평구 24시간 음악연습실에서 마스터하세요."
 tags: ["음악연습실", "드럼", "발테크닉", "더블베이스페달", "킥드럼", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 드럼 발 테크닉·더블 베이스 페달 — 음악연습실 완전 가이드
@@ -162,7 +162,6 @@ RR LL (정지) RR LL (정지) RR LL...
 - **완벽 방음** — 강한 킥 연습도 문제없음
 - **연신내역 5분**
 
-연습실 예약 및 문의: [기타 아르페지오·클래식 패턴 음악연습실](/stories/practice-room-guitar-arpeggios1) | [피아노 즉흥 연주·코드 기반 임프로바이제이션 음악연습실](/stories/practice-room-piano-improvisation1) | [보컬 마이크 테크닉·마이킹 기초 음악연습실](/stories/practice-room-vocal-microphone-technique1) | [기타 카포·키 변환 활용법 음악연습실](/stories/practice-room-guitar-capo-techniques1) | [베이스 스트링 뮤팅·노이즈 컨트롤 음악연습실](/stories/practice-room-bass-string-muting1) | [드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실](/stories/practice-room-drum-snare-techniques1) | [보컬 노래 해석·감정 표현 음악연습실](/stories/practice-room-vocal-song-interpretation1) | - [기타 재즈 코드·텐션 코드 보이싱 음악연습실](/stories/ko/practice-room-guitar-jazz-chords1)
 
 ---
 

@@ -1,9 +1,9 @@
 ---
-title: "피아노 래그타임·Scott Joplin 스타일 — 음악연습실 완전 가이드"
+title: "피아노 래그타임·Scott Joplin 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "피아노 래그타임 마스터·Scott Joplin·James Scott·Joseph Lamb 스타일. 싱코페이션·왼손 베이스 패턴·스트라이드 연결로 은평구 24시간 음악연습실에서 완성."
 tags: ["음악연습실", "피아노", "래그타임", "ScottJoplin", "싱코페이션", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 피아노 래그타임·Scott Joplin 스타일 — 음악연습실 완전 가이드

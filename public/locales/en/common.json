@@ -594,19 +594,12 @@
       "viewAll": "View all stories"
     },
     "categories": {
-      "notice": "Notice",
-      "event": "Event",
+      "news": "News",
       "lesson": "Lesson",
-      "interview": "Interview",
-      "review": "Review",
+      "feedback": "Reviews",
       "region": "Area Guide",
-      "vocal": "Vocal Guide",
-      "recording": "Recording Guide",
-      "production": "Music Production",
-      "mixing": "Mixing & Mastering",
-      "business": "Music Business",
-      "guide": "Guide",
-      "practice": "Practice Room Guide"
+      "instrument": "Instrument Practice",
+      "music-guide": "Music Guide"
     }
   },
   "reviewSection": {

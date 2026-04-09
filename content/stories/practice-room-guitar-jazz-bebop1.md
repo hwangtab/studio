@@ -1,9 +1,9 @@
 ---
-title: "기타 비밥·재즈 기타 즉흥·Wes Montgomery — 음악연습실 완전 가이드"
+title: "기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드"
 date: "2026-04-08"
 excerpt: "기타 비밥·재즈 기타 즉흥연주 완전 가이드. Wes Montgomery·Joe Pass·Jim Hall 스타일로 은평구 24시간 음악연습실에서 재즈 기타 마스터."
 tags: ["음악연습실", "기타", "재즈기타", "WosMontgomery", "비밥기타", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 기타 비밥·재즈 기타 즉흥·Wes Montgomery — 음악연습실 완전 가이드

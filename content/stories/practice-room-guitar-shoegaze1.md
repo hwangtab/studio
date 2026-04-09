@@ -1,9 +1,9 @@
 ---
-title: "슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 — 음악연습실 완전 가이드"
+title: "슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive·Cocteau Twins 스타일. 슈게이징 기타를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "슈게이징", "WallOfSound", "MyBloodyValentine", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 — 음악연습실 완전 가이드

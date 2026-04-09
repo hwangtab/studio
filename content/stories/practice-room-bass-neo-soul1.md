@@ -1,9 +1,9 @@
 ---
-title: "네오소울 베이스·D'Angelo·Erykah Badu·그루브 음악연습실 완전 가이드"
+title: "네오소울 베이스·D'Angelo·Erykah Badu·그루브 완전 가이드"
 date: "2026-04-08"
 excerpt: "네오소울 베이스·D'Angelo·Erykah Badu·Pino Palladino·레잉 백 그루브. 네오소울 베이스를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "베이스", "네오소울", "D'Angelo", "PinoPalladino", "은평구음악연습실"]
-category: "bass"
+category: "악기 연습"
 ---
 
 # 네오소울 베이스·D'Angelo·Erykah Badu·그루브 — 음악연습실 완전 가이드

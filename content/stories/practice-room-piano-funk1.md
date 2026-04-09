@@ -1,9 +1,9 @@
 ---
-title: "피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 — 음악연습실 완전 가이드"
+title: "피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "피아노 펑크·클라비넷 스타일·Herbie Hancock·'Superstition' 그루브. 펑키한 피아노 리듬과 보이싱을 은평구 24시간 음악연습실에서 완성."
 tags: ["음악연습실", "피아노", "펑크피아노", "HerbieHancock", "클라비넷", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 — 음악연습실 완전 가이드

@@ -1,9 +1,9 @@
 ---
-title: "기타 핑거피킹·Travis Picking 패턴 — 음악연습실 완전 가이드"
+title: "기타 핑거피킹·Travis Picking 패턴 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "Travis Picking·Carter Family 스타일 핑거피킹 패턴. 엄지-검지 독립 운동·컨트리·포크 패턴을 은평구 24시간 음악연습실에서 완성하세요."
 tags: ["음악연습실", "기타", "핑거피킹", "Travis Picking", "컨트리기타", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 기타 핑거피킹·Travis Picking 패턴 — 음악연습실 완전 가이드

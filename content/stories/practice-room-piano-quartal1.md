@@ -1,9 +1,9 @@
 ---
-title: "피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner — 음악연습실 완전 가이드"
+title: "피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner — 완전 가이드"
 date: "2026-04-08"
 excerpt: "피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner·Bill Evans 스타일. 모던 재즈 피아노 보이싱으로 은평구 24시간 음악연습실에서 현대 화성어법 완성."
 tags: ["음악연습실", "피아노", "쿼탈하모니", "4도보이싱", "McCoyTyner", "은평구음악연습실"]
-category: "piano"
+category: "악기 연습"
 ---
 
 # 피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner — 음악연습실 완전 가이드

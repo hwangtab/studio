@@ -1,9 +1,9 @@
 ---
-title: "드럼 고급 필인·전환 기법·John Bonham — 음악연습실 완전 가이드"
+title: "드럼 고급 필인·전환 기법·John Bonham — 완전 가이드"
 date: "2026-04-08"
 excerpt: "드럼 고급 필인·전환 기법·John Bonham·Neil Peart·Dave Grohl 스타일. 4마디·8마디 필인으로 은평구 24시간 음악연습실에서 드럼 표현력 완성."
 tags: ["음악연습실", "드럼", "필인", "JohnBonham", "전환기법", "은평구음악연습실"]
-category: "drum"
+category: "악기 연습"
 ---
 
 # 드럼 고급 필인·전환 기법·John Bonham — 음악연습실 완전 가이드

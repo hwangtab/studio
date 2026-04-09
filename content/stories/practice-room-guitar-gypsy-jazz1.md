@@ -1,9 +1,9 @@
 ---
-title: "집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 — 음악연습실 완전 가이드"
+title: "집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 — 완전 가이드"
 date: "2026-04-08"
 excerpt: "집시 재즈 기타·Django Reinhardt·라 뽕프 리듬·Manouche 솔로·Stéphane Grappelli 스타일. 집시 재즈 기타를 은평구 24시간 음악연습실에서 마스터."
 tags: ["음악연습실", "기타", "집시재즈", "DjangoReinhardt", "ManoucheJazz", "은평구음악연습실"]
-category: "guitar"
+category: "악기 연습"
 ---
 
 # 집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 — 음악연습실 완전 가이드

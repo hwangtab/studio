@@ -32,6 +32,7 @@ interface StoryDetailPageProps {
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
+const storyCategoryKeys = ['news', 'lesson', 'feedback', 'region', 'instrument', 'music-guide'] as const;
 
 const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -54,7 +55,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
       return 'production';
     }
 
-    if (categoryKey === 'equipment' || categoryKey === 'review') {
+    if (categoryKey === 'equipment' || categoryKey === 'feedback') {
       if (seed < 0.6) return 'practice';
       if (seed < 0.8) return 'recording';
       return 'lesson';
@@ -76,20 +77,9 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
       noDate: t('stories.list.noDate'),
       noTitle: t('stories.list.noTitle'),
       noContent: t('stories.list.noContent'),
-      categoryByKey: {
-        notice: t('stories.categories.notice'),
-        event: t('stories.categories.event'),
-        lesson: t('stories.categories.lesson'),
-        interview: t('stories.categories.interview'),
-        review: t('stories.categories.review'),
-        region: t('stories.categories.region'),
-        vocal: t('stories.categories.vocal'),
-        recording: t('stories.categories.recording'),
-        production: t('stories.categories.production'),
-        mixing: t('stories.categories.mixing'),
-        business: t('stories.categories.business'),
-        guide: t('stories.categories.guide'),
-      },
+      categoryByKey: Object.fromEntries(
+        storyCategoryKeys.map((key) => [key, t(`stories.categories.${key}`)])
+      ),
     }),
     [t]
   );
