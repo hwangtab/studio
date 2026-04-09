@@ -237,4 +237,6 @@ E: E-E-B-E-G-E-B-E (스티프 느낌)
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
 **→ [레게 기타·스카·록스테디·오프비트 리듬 음악연습실 가이드](/stories/ko/practice-room-guitar-reggae1)**
 **→ [네오소울 베이스·D'Angelo·Erykah Badu·그루브 음악연습실 가이드](/stories/ko/practice-room-bass-neo-soul1)**
+**→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**
+**→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 [스튜디오 놀 이용 요금](/pricing)

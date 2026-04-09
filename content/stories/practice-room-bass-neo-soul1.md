@@ -202,4 +202,6 @@ Motown 베이스 (James Jamerson 레거시)
 **→ [베이스 프렛리스·재즈·Jaco Pastorius 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**  
 **→ [베이스 소울 그루브·펑크 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-soul-groove1)**
 **→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
+**→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**
+**→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 [스튜디오 놀 이용 요금](/pricing)

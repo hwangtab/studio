@@ -197,4 +197,6 @@ faq:
 **→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
 **→ [레게 기타·스카·록스테디·오프비트 리듬 음악연습실 가이드](/stories/ko/practice-room-guitar-reggae1)**
 **→ [네오소울 베이스·D'Angelo·Erykah Badu·그루브 음악연습실 가이드](/stories/ko/practice-room-bass-neo-soul1)**
+**→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**
+**→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 [스튜디오 놀 이용 요금](/pricing) | [플레이리스트 피칭 전략](/stories/playlist1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 SNS 마케팅 가이드](/stories/snsmusic1)

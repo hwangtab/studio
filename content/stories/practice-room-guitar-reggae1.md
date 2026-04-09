@@ -244,4 +244,6 @@ E 코드 업스트로크 강하게
 **→ [기타 블루스 록·SRV·Eric Clapton 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**  
 **→ [기타 델타 블루스·Robert Johnson·오픈 튜닝 음악연습실 가이드](/stories/ko/practice-room-guitar-delta-blues1)**
 **→ [베이스 레게·덥·루트-5도 음악연습실 가이드](/stories/ko/practice-room-bass-reggae1)**
+**→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**
+**→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 [스튜디오 놀 이용 요금](/pricing)
