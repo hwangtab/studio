@@ -110,4 +110,4 @@ faq:
 ---
 
 [보컬 포트폴리오 만들기](/stories/portfolio1) | [음원 발매 가이드](/stories/release1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1)
-[스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[스튜디오 놀 이용 요금](/pricing)

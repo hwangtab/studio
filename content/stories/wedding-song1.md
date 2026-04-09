@@ -109,4 +109,4 @@ faq:
 ---
 
 [결혼식 피로연 축가 녹음 가이드](/stories/wedding2) | [노래 녹음 선물 가이드](/stories/gift1) | [보컬 녹음 가이드](/stories/guide1)
-[스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[스튜디오 놀 이용 요금](/pricing)

@@ -106,4 +106,4 @@ faq:
 ---
 
 [오디션 준비 완전 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [발라드 보컬 녹음 가이드](/stories/ballad1)
-[스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[스튜디오 놀 이용 요금](/pricing)

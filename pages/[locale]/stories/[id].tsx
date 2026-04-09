@@ -15,6 +15,7 @@ import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
+import { getStoryRedirectTarget } from '../../../lib/storyRedirects';
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
@@ -240,9 +241,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
+  const slug = params?.id as string;
   try {
-    const story = await getStoryDetail(params!.id as string, locale);
-    const relatedStories = getRelatedStories(locale, params!.id as string, 3);
+    const story = await getStoryDetail(slug, locale);
+    const relatedStories = getRelatedStories(locale, slug, 3);
 
     return buildPageStaticProps(
       locale,
@@ -253,6 +255,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       { revalidate: 3600 }
     );
   } catch (error) {
+    const redirectTarget = getStoryRedirectTarget(slug);
+
+    if (redirectTarget && redirectTarget !== slug) {
+      try {
+        await getStoryDetail(redirectTarget, locale);
+        return {
+          redirect: {
+            destination: `/${locale}/stories/${redirectTarget}`,
+            permanent: true,
+          },
+        };
+      } catch {
+        // Fall through to 404 when the redirect target is also missing.
+      }
+    }
+
     console.error('Story detail error:', error);
     return {
       notFound: true,

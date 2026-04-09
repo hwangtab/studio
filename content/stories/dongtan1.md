@@ -63,4 +63,4 @@ faq:
 ---
 
 [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1)
-[스튜디오 놀 이용 요금](/pricing) | [예약 방법 안내](/stories/booking1)
+[스튜디오 놀 이용 요금](/pricing)

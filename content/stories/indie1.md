@@ -98,4 +98,4 @@ faq:
 ---
 
 [음반 제작 전 과정 가이드](/stories/album1) | [음원 발매 가이드](/stories/release1) | [싱어송라이터 녹음 가이드](/stories/singer1) | [마스터링이란?](/stories/mastering1)
-[스튜디오 놀 이용 요금](/pricing) | [플레이리스트 피칭 전략](/stories/playlist1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 SNS 마케팅 가이드](/stories/snsmusic1)
+[스튜디오 놀 이용 요금](/pricing)

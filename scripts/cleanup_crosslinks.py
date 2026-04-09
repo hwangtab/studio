@@ -24,8 +24,14 @@ PRACTICE_FOOTER = [
 
 
 def is_bulk_arrow_line(line: str) -> bool:
-    """Matches **→ [ cross-link lines."""
-    return line.strip().startswith("**→ [")
+    """Matches bulk footer/cross-link lines, including malformed double-arrow leftovers."""
+    return bool(re.match(r"^\*\*→(?:\s+\*\*→)?\s+\[", line.strip()))
+
+
+def is_pricing_line(line: str) -> bool:
+    """Matches the pricing footer line, even when stray markdown remains."""
+    s = line.strip()
+    return "스튜디오 놀 이용 요금" in s and "/pricing" in s
 
 
 def is_dash_practice_link(line: str) -> bool:
@@ -89,7 +95,7 @@ def process_file_no_anchor(path: str) -> bool:
         if not s:  # blank line
             last_content_idx -= 1
             continue
-        if is_bulk_arrow_line(line) or is_dash_practice_link(line) or is_pipe_line(line):
+        if is_bulk_arrow_line(line) or is_dash_practice_link(line) or is_pipe_line(line) or is_pricing_line(line):
             last_content_idx -= 1
             continue
         break
@@ -176,6 +182,19 @@ def process_file(path: str, is_practice: bool) -> bool:
                     new_lines.append(fl)
                 modified = True  # always mark modified for practice articles
             new_lines.append(line)
+            pricing_done = True
+            continue
+
+        if is_pricing_line(line):
+            if is_practice:
+                for fl in PRACTICE_FOOTER:
+                    new_lines.append(fl)
+                new_lines.append(PRICING_ANCHOR)
+                pricing_done = True
+                modified = True
+                continue
+            modified = True
+            new_lines.append(PRICING_ANCHOR)
             pricing_done = True
             continue
 
