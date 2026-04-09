@@ -199,4 +199,6 @@ C-D-E-F-G (아래서 위로)
 **→ [보컬 소울·R&B·다이나믹 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 **→ [인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
 **→ [힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hip-hop-lofi1)**
+**→ [슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-shoegaze1)**
+**→ [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism-glass1)**
 [스튜디오 놀 이용 요금](/pricing)

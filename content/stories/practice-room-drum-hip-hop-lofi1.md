@@ -199,4 +199,6 @@ Ahmir "Questlove" Thompson:
 **→ [드럼 펑크 포켓·Clyde Stubblefield 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**  
 **→ [드럼 힙합·R&B 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hiphop1)**
 **→ [재즈펑크 드럼·James Brown·The Meters 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
+**→ [슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-shoegaze1)**
+**→ [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 가이드](/stories/ko/practice-room-piano-minimalism-glass1)**
 [스튜디오 놀 이용 요금](/pricing)
