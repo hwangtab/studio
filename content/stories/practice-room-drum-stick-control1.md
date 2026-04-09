@@ -295,4 +295,6 @@ pp로 시작 → 8마디 동안 ff로 서서히
 **→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실](/stories/ko/practice-room-drum-fills-advanced1)**  
 **→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실](/stories/ko/practice-room-drum-jazz-bebop1)**
 **→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
+**→ [베이스 왼손 기법·레가토·슬라이드·비브라토 음악연습실 가이드](/stories/ko/practice-room-bass-left-hand1)**
+**→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 [스튜디오 놀 이용 요금](/pricing)

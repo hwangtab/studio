@@ -175,4 +175,6 @@ EPK는 기회가 왔을 때 '지금 바로 보내드릴 수 있습니다'라고 
 **→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
 **→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
 **→ [보컬 팔세토 고급·위스퍼·팔세토 강화 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-advanced1)**
+**→ [베이스 왼손 기법·레가토·슬라이드·비브라토 음악연습실 가이드](/stories/ko/practice-room-bass-left-hand1)**
+**→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 [스튜디오 놀 이용 요금](/pricing)
