@@ -191,4 +191,6 @@ Fmaj7 - G7 - Gm7 - Fmaj7 반복
 **→ [드럼 삼바·라틴 퍼커션·아프로비트 음악연습실 가이드](/stories/ko/practice-room-drum-samba1)**  
 **→ [드럼 재즈·브러시·스윙 음악연습실 가이드](/stories/ko/practice-room-drum-jazz1)**
 **→ [기타 보사노바·João Gilberto·재즈 기타 음악연습실 가이드](/stories/ko/practice-room-guitar-bossa1)**
+**→ [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-chord-melody1)**
+**→ [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**
 [스튜디오 놀 이용 요금](/pricing)

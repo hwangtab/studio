@@ -251,4 +251,6 @@ C: C - G - C' - G (반복)
 **→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
 **→ [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-bossa-nova1)**
 **→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
+**→ [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-chord-melody1)**
+**→ [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**
 [스튜디오 놀 이용 요금](/pricing)
