@@ -265,4 +265,6 @@ RRLLRRLL (더블 스트로크)
 **→ [드럼 록 필인·John Bonham 스타일 음악연습실](/stories/ko/practice-room-drum-rock-fills1)**  
 **→ [드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실](/stories/ko/practice-room-drum-jazz-bebop1)**
 **→ [피아노 블루스 콤핑·블루스 피아노 반주 음악연습실 가이드](/stories/ko/practice-room-piano-blues-comping1)**
+**→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
+**→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
 [스튜디오 놀 이용 요금](/pricing)

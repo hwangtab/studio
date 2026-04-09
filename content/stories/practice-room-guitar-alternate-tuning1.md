@@ -281,4 +281,6 @@ E 기반의 DADGAD 음색
 **→ [기타 오픈 코드·Add9·Sus 음악연습실](/stories/ko/practice-room-guitar-open-chord-sonority1)**  
 **→ [기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실](/stories/ko/practice-room-guitar-delta-blues1)**
 **→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
+**→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
+**→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
 [스튜디오 놀 이용 요금](/pricing)

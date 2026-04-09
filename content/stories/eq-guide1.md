@@ -195,4 +195,6 @@ EQ(이퀄라이저)는 보컬의 주파수 밸런스를 조정하는 믹싱의 �
 **→ [피아노 블루스 콤핑·블루스 피아노 반주 음악연습실 가이드](/stories/ko/practice-room-piano-blues-comping1)**
 **→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
 **→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
+**→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
+**→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
 [스튜디오 놀 이용 요금](/pricing)
