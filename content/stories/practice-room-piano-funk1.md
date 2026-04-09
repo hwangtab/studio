@@ -223,4 +223,6 @@ James Brown 밴드의 피아노:
 **→ [피아노 블루스 컴핑·블루스 피아노 음악연습실 가이드](/stories/ko/practice-room-piano-blues-comping1)**
 **→ [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**
 **→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
+**→ [12현 기타·코러스 효과·Roger McGuinn 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-12string1)**
+**→ [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-comp-jazz1)**
 [스튜디오 놀 이용 요금](/pricing)

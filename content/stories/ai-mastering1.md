@@ -222,4 +222,6 @@ AI 마스터링은 강력한 도구지만 전문 엔지니어를 대체하지 �
 **→ [보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
 **→ [피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 음악연습실 가이드](/stories/ko/practice-room-piano-funk1)**
 **→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
+**→ [12현 기타·코러스 효과·Roger McGuinn 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-12string1)**
+**→ [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-comp-jazz1)**
 [스튜디오 놀 이용 요금](/pricing)
