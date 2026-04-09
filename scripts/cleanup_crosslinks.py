@@ -35,9 +35,9 @@ def is_dash_practice_link(line: str) -> bool:
 
 
 def is_pipe_line(line: str) -> bool:
-    """Matches long pipe-separated link lines."""
+    """Matches long pipe-separated link lines (various starting formats)."""
     s = line.strip()
-    return s.startswith("[") and " | " in s and "[" in s
+    return " | " in s and "[" in s and ("](/stories/" in s or "](/pricing" in s)
 
 
 def filter_pipe_line(line: str) -> str | None:
@@ -105,16 +105,57 @@ def process_file_no_anchor(path: str) -> bool:
     return True
 
 
+def process_non_practice_no_anchor(path: str) -> bool:
+    """
+    For non-practice-room files that lack the exact pricing anchor:
+    Find pipe-separated lines and filter practice-room links from them.
+    Also remove any **→ bulk links.
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    lines = content.split("\n")
+    new_lines: list[str] = []
+    modified = False
+
+    for line in lines:
+        # Remove bulk arrow lines
+        if is_bulk_arrow_line(line):
+            modified = True
+            continue
+        # Remove dash-format practice-room links
+        if is_dash_practice_link(line):
+            modified = True
+            continue
+        # Filter pipe-separated lines
+        if is_pipe_line(line):
+            filtered = filter_pipe_line(line)
+            if filtered != line.strip():
+                modified = True
+            if filtered:
+                new_lines.append(filtered)
+            continue
+        new_lines.append(line)
+
+    if not modified:
+        return False
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(new_lines))
+    return True
+
+
 def process_file(path: str, is_practice: bool) -> bool:
     """Process a single file. Returns True if the file was modified."""
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
 
     if PRICING_ANCHOR not in content:
-        # For practice-room files without pricing anchor, use EOF-based trimming
         if is_practice:
             return process_file_no_anchor(path)
-        return False
+        # Non-practice-room files without exact pricing anchor:
+        # use EOF-based trimming to clean practice-room links from pipe lines
+        return process_non_practice_no_anchor(path)
 
     lines = content.split("\n")
     new_lines: list[str] = []
