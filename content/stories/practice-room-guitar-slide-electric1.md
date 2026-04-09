@@ -231,4 +231,6 @@ Komet 앰프: 작고 뜨거운 클린 앰프
 **→ [도브로·레조네이터 기타·슬라이드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-dobro1)**
 **→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 **→ [보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
+**→ [피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 음악연습실 가이드](/stories/ko/practice-room-piano-funk1)**
+**→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
 [스튜디오 놀 이용 요금](/pricing)

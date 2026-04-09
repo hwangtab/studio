@@ -193,4 +193,6 @@ K-POP 오디션은 준비된 사람에게 기회가 옵니다. 데모 녹음은 
 **→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 **→ [일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-electric1)**
 **→ [보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
+**→ [피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 음악연습실 가이드](/stories/ko/practice-room-piano-funk1)**
+**→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -197,4 +197,6 @@ faq:
 **→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 **→ [일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-electric1)**
 **→ [보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
+**→ [피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 음악연습실 가이드](/stories/ko/practice-room-piano-funk1)**
+**→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

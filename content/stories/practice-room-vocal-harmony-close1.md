@@ -211,4 +211,6 @@ Beach Boys의 복합 화음:
 **→ [보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
 **→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 **→ [일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-electric1)**
+**→ [피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 음악연습실 가이드](/stories/ko/practice-room-piano-funk1)**
+**→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
 [스튜디오 놀 이용 요금](/pricing)
