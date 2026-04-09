@@ -204,4 +204,6 @@ Motown 베이스 (James Jamerson 레거시)
 **→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
 **→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**
 **→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
+**→ [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-bossa-nova1)**
+**→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
 [스튜디오 놀 이용 요금](/pricing)

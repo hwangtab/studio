@@ -223,4 +223,6 @@ category: "vocal"
 **→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**  
 **→ [보컬 소울·R&B·다이나믹 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 **→ [보컬 스캣·Ella Fitzgerald·즉흥 표현 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
+**→ [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-bossa-nova1)**
+**→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
 [스튜디오 놀 이용 요금](/pricing)

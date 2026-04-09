@@ -218,4 +218,6 @@ B.B. King, Chet Atkins
 **→ [기타 레게·스카·록스테디·오프비트 음악연습실 가이드](/stories/ko/practice-room-guitar-reggae1)**  
 **→ [기타 블루스 록·SRV·Eric Clapton 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**
 **→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
+**→ [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-bossa-nova1)**
+**→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
 [스튜디오 놀 이용 요금](/pricing)
