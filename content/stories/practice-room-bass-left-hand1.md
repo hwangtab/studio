@@ -284,4 +284,6 @@ A-B-A-B-A-B (빠르게)
 **→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
 **→ [보컬 팝 런·멜리스마·빠른 패시지 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-runs1)**
+**→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
+**→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 [스튜디오 놀 이용 요금](/pricing)

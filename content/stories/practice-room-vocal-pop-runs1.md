@@ -302,4 +302,6 @@ G4 시작 → D 시작 → A 시작 등
 **→ [보컬 팝 애드립·스타일링 기법 음악연습실](/stories/ko/practice-room-vocal-pop-adlib1)**  
 **→ [보컬 리프·멜로디 변주 기법 음악연습실](/stories/ko/practice-room-vocal-riff-melody1)**
 **→ [기타 켈틱·아이리쉬 핑거피킹 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
+**→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
+**→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 [스튜디오 놀 이용 요금](/pricing)

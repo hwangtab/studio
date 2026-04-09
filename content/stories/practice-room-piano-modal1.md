@@ -282,4 +282,6 @@ D 도리안 (D-E-F-G-A-B-C)
 **→ [베이스 왼손 기법·레가토·슬라이드·비브라토 음악연습실 가이드](/stories/ko/practice-room-bass-left-hand1)**
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
 **→ [보컬 팝 런·멜리스마·빠른 패시지 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-runs1)**
+**→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
+**→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 [스튜디오 놀 이용 요금](/pricing)
