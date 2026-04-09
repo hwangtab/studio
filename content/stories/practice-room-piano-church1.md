@@ -210,4 +210,6 @@ C: G-C-E (G 유지, B→C, F→E)
 **→ [피아노 가스펠·오르간 스타일·코드 반주 음악연습실 가이드](/stories/ko/practice-room-piano-gospel-organ1)**  
 **→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
 **→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
+**→ [팝 벨팅·고음 파워·Mix Voice·두성 전환 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-belting1)**
+**→ [포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-post-rock1)**
 [스튜디오 놀 이용 요금](/pricing)

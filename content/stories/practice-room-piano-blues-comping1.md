@@ -313,4 +313,6 @@ E4-G4-E4-G4 (셔플 리듬으로)
 **→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
 **→ [교회 피아노·찬양 반주·코드 반주법·예배 피아노 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
 **→ [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
+**→ [팝 벨팅·고음 파워·Mix Voice·두성 전환 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-belting1)**
+**→ [포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-post-rock1)**
 [스튜디오 놀 이용 요금](/pricing)
