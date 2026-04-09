@@ -283,4 +283,6 @@ E 기반의 DADGAD 음색
 **→ [드럼 고급 필인·전환 기법·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
 **→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
 **→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
+**→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
+**→ [보컬 팔세토 고급·위스퍼·팔세토 강화 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)

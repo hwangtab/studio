@@ -163,4 +163,6 @@ faq:
 **→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 **→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
 **→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
+**→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
+**→ [보컬 팔세토 고급·위스퍼·팔세토 강화 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-advanced1)**
 [스튜디오 놀 이용 요금](/pricing) | [플레이리스트 피칭 전략](/stories/playlist1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 SNS 마케팅 가이드](/stories/snsmusic1)

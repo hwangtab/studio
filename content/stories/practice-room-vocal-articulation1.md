@@ -290,4 +290,6 @@ s: 마이크를 약간 위로
 **→ [보컬 공명·흉성·두성 배치 기법 음악연습실](/stories/ko/practice-room-vocal-resonance-chest1)**  
 **→ [보컬 리프·멜로디 변주 기법 음악연습실](/stories/ko/practice-room-vocal-riff-melody1)**
 **→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
+**→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
+**→ [보컬 팔세토 고급·위스퍼·팔세토 강화 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)

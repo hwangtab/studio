@@ -243,4 +243,6 @@ MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고
 **→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 **→ [피아노 스트라이드 입문·왼손 점프 기초 음악연습실 가이드](/stories/ko/practice-room-piano-stride-beginner1)**
 **→ [보컬 아티큘레이션·발음·자음 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-articulation1)**
+**→ [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 가이드](/stories/ko/practice-room-drum-stick-control1)**
+**→ [보컬 팔세토 고급·위스퍼·팔세토 강화 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-advanced1)**
 [스튜디오 놀 이용 요금](/pricing)
