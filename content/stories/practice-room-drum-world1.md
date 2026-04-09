@@ -219,4 +219,6 @@ Carlos Santana의 드러머 Michael Shrieve:
 **→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
 **→ [드럼 재즈 비밥·스윙 리듬·컴핑 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
 **→ [보사노바 기타·삼바 리듬·João Gilberto 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-bossa1)**
+**→ [피아노 비밥·Bud Powell·Thelonious Monk 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-bebop1)**
+**→ [나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 가이드](/stories/ko/practice-room-guitar-nylon1)**
 [스튜디오 놀 이용 요금](/pricing)

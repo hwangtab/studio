@@ -222,4 +222,6 @@ Gm7 - C7 - Fmaj7
 **→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 **→ [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-world1)**
+**→ [피아노 비밥·Bud Powell·Thelonious Monk 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-bebop1)**
+**→ [나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 가이드](/stories/ko/practice-room-guitar-nylon1)**
 [스튜디오 놀 이용 요금](/pricing)

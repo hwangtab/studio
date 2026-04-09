@@ -248,4 +248,6 @@ Ella Fitzgerald 녹음과 비교
 **→ [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**
 **→ [보사노바 기타·삼바 리듬·João Gilberto 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-bossa1)**
 **→ [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-world1)**
+**→ [피아노 비밥·Bud Powell·Thelonious Monk 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-bebop1)**
+**→ [나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 가이드](/stories/ko/practice-room-guitar-nylon1)**
 [스튜디오 놀 이용 요금](/pricing)
