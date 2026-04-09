@@ -228,4 +228,6 @@ Questlove(The Roots):
 **→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
 **→ [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 가이드](/stories/ko/practice-room-drum-world1)**
 **→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
+**→ [일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-electric1)**
+**→ [보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
 [스튜디오 놀 이용 요금](/pricing)

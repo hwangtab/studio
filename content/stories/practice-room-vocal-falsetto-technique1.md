@@ -265,4 +265,6 @@ category: "vocal"
 **→ [나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 가이드](/stories/ko/practice-room-guitar-nylon1)**
 **→ [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**
 **→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
+**→ [일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-slide-electric1)**
+**→ [보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
 [스튜디오 놀 이용 요금](/pricing)**
