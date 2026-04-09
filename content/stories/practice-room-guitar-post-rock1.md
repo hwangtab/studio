@@ -190,4 +190,6 @@ Fsus2: F-G-C
 **→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**  
 **→ [수학록 기타·폴리리듬·Animals as Leaders 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
 **→ [피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-new-age1)**
+**→ [인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
+**→ [힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hip-hop-lofi1)**
 [스튜디오 놀 이용 요금](/pricing)

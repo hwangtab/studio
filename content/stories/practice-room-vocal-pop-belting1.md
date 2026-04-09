@@ -197,4 +197,6 @@ C-D-E-F-G (아래서 위로)
 **→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**  
 **→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
 **→ [보컬 소울·R&B·다이나믹 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
+**→ [인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
+**→ [힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hip-hop-lofi1)**
 [스튜디오 놀 이용 요금](/pricing)

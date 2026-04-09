@@ -253,4 +253,6 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 **→ [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-funk1)**
 **→ [팝 벨팅·고음 파워·Mix Voice·두성 전환 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-belting1)**
 **→ [포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-post-rock1)**
+**→ [인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
+**→ [힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-hip-hop-lofi1)**
 [스튜디오 놀 이용 요금](/pricing)
