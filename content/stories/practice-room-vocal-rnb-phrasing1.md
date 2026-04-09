@@ -249,4 +249,6 @@ R&B 보컬 프레이징은 **박자를 아는 것과 느끼는 것의 차이**�
 **→ [보컬 소울·R&B·다이나믹 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**  
 **→ [보컬 스캣·Ella Fitzgerald·즉흥 표현 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
 **→ [보컬 클로즈 하모니·바버샵·4성부 음악연습실 가이드](/stories/ko/practice-room-vocal-harmony-close1)**
+**→ [레게 기타·스카·록스테디·오프비트 리듬 음악연습실 가이드](/stories/ko/practice-room-guitar-reggae1)**
+**→ [네오소울 베이스·D'Angelo·Erykah Badu·그루브 음악연습실 가이드](/stories/ko/practice-room-bass-neo-soul1)**
 [스튜디오 놀 이용 요금](/pricing)

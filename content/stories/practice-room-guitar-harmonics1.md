@@ -274,4 +274,6 @@ Cmaj7 아르페지오를 12프렛 하모닉스로
 **→ [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-rock1)**
 **→ [베이스 컨트리·블루그래스·루트-5도 라인 음악연습실 가이드](/stories/ko/practice-room-bass-country-bluegrass1)**
 **→ [보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 가이드](/stories/ko/practice-room-vocal-rnb-phrasing1)**
+**→ [레게 기타·스카·록스테디·오프비트 리듬 음악연습실 가이드](/stories/ko/practice-room-guitar-reggae1)**
+**→ [네오소울 베이스·D'Angelo·Erykah Badu·그루브 음악연습실 가이드](/stories/ko/practice-room-bass-neo-soul1)**
 [스튜디오 놀 이용 요금](/pricing)
