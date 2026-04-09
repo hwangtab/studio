@@ -283,4 +283,6 @@ R-L-R-R-L-R-L-L 패러디들
 **→ [드럼 고급 필인·폴리리듬·오프비트 음악연습실 가이드](/stories/ko/practice-room-drum-fills-advanced1)**
 **→ [드럼 재즈 비밥·스윙 리듬·컴핑 음악연습실 가이드](/stories/ko/practice-room-drum-jazz-bebop1)**
 **→ [도브로·레조네이터 기타·슬라이드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-dobro1)**
+**→ [피아노 인상주의·드뷔시·라벨·색채 화성 음악연습실 가이드](/stories/ko/practice-room-piano-impressionist1)**
+**→ [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 음악연습실 가이드](/stories/ko/practice-room-bass-walking-lines1)**
 [스튜디오 놀 이용 요금](/pricing)

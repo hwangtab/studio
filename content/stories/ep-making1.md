@@ -181,4 +181,6 @@ EP는 아티스트로서 음악 세계를 처음 선보이는 중요한 작업�
 **→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
 **→ [도브로·레조네이터 기타·슬라이드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-dobro1)**
 **→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
+**→ [피아노 인상주의·드뷔시·라벨·색채 화성 음악연습실 가이드](/stories/ko/practice-room-piano-impressionist1)**
+**→ [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 음악연습실 가이드](/stories/ko/practice-room-bass-walking-lines1)**
 [스튜디오 놀 이용 요금](/pricing)

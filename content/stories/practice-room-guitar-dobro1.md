@@ -273,4 +273,6 @@ a(1번)-m(2번)-i(3번)-p(4번)
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
 **→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 **→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
+**→ [피아노 인상주의·드뷔시·라벨·색채 화성 음악연습실 가이드](/stories/ko/practice-room-piano-impressionist1)**
+**→ [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 음악연습실 가이드](/stories/ko/practice-room-bass-walking-lines1)**
 [스튜디오 놀 이용 요금](/pricing)
