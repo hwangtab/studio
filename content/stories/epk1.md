@@ -181,4 +181,6 @@ EPK는 기회가 왔을 때 '지금 바로 보내드릴 수 있습니다'라고 
 **→ [보컬 팝 런·멜리스마·빠른 패시지 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-runs1)**
 **→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
 **→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
+**→ [도브로·레조네이터 기타·슬라이드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-dobro1)**
+**→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
 [스튜디오 놀 이용 요금](/pricing)

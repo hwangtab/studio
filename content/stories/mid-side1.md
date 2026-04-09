@@ -215,4 +215,6 @@ MS 처리는 마스터링의 정밀도를 한 단계 높이는 고급 기법입�
 **→ [보컬 팝 런·멜리스마·빠른 패시지 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-runs1)**
 **→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
 **→ [기타 플라멩코·라스게아도·피카도 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-flamenco1)**
+**→ [도브로·레조네이터 기타·슬라이드 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-dobro1)**
+**→ [드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 가이드](/stories/ko/practice-room-drum-paradiddle1)**
 [스튜디오 놀 이용 요금](/pricing)
