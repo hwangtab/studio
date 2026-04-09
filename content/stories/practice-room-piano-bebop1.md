@@ -218,4 +218,6 @@ C-E-G-B-A-G-E-C
 **→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
 **→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 **→ [나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 가이드](/stories/ko/practice-room-guitar-nylon1)**
+**→ [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**
+**→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 [스튜디오 놀 이용 요금](/pricing)

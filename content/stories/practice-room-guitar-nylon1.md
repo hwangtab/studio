@@ -255,4 +255,6 @@ a-m-i: 같은 음 반복 (초고속)
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
 **→ [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 가이드](/stories/ko/practice-room-guitar-alternate-tuning1)**
 **→ [피아노 비밥·Bud Powell·Thelonious Monk 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-bebop1)**
+**→ [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-funk-pocket1)**
+**→ [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
 [스튜디오 놀 이용 요금](/pricing)
