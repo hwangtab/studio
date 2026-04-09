@@ -288,4 +288,6 @@ ii-V-I의 각 코드에서 코드 톤 4개 선택
 **→ [베이스 왼손 기법·레가토·슬라이드·비브라토 음악연습실 가이드](/stories/ko/practice-room-bass-left-hand1)**
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 **→ [피아노 인상주의·드뷔시·라벨·색채 화성 음악연습실 가이드](/stories/ko/practice-room-piano-impressionist1)**
+**→ [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**
+**→ [보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
 [스튜디오 놀 이용 요금](/pricing)

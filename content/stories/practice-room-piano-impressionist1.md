@@ -267,4 +267,6 @@ Db → Eb → Ab 진행 (기능 화성보다 색채 강조)
 **→ [피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-modal1)**
 **→ [피아노 코드 대리·리하모나이제이션 음악연습실 가이드](/stories/ko/practice-room-piano-chord-substitution1)**
 **→ [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 음악연습실 가이드](/stories/ko/practice-room-bass-walking-lines1)**
+**→ [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**
+**→ [보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 음악연습실 가이드](/stories/ko/practice-room-vocal-scatting1)**
 [스튜디오 놀 이용 요금](/pricing)
