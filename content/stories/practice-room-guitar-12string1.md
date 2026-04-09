@@ -219,4 +219,6 @@ Martin D12-20 어쿠스틱
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
 **→ [나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 가이드](/stories/ko/practice-room-guitar-nylon1)**
 **→ [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-comp-jazz1)**
+**→ [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-hand-technique1)**
+**→ [바리톤 기타·다운 튜닝·헤비 사운드 음악연습실 가이드](/stories/ko/practice-room-guitar-baritone1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -201,4 +201,6 @@ faq:
 **→ [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 가이드](/stories/ko/practice-room-bass-fretless-jazz1)**
 **→ [12현 기타·코러스 효과·Roger McGuinn 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-12string1)**
 **→ [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 음악연습실 가이드](/stories/ko/practice-room-piano-comp-jazz1)**
+**→ [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 음악연습실 가이드](/stories/ko/practice-room-drum-hand-technique1)**
+**→ [바리톤 기타·다운 튜닝·헤비 사운드 음악연습실 가이드](/stories/ko/practice-room-guitar-baritone1)**
 [스튜디오 놀 이용 요금](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 준비 가이드](/stories/studio-checklist1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [음원 발매 방법 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)
