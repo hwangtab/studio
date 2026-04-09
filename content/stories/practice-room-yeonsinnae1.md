@@ -306,4 +306,6 @@ faq:
 **→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
 **→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
 **→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
+**→ [뮤지컬 씨어터 보컬·브로드웨이·레미제라블·드라마틱 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-musical-theatre1)**
+**→ [카혼 드럼·플라멩코·어쿠스틱 세션·바스·스네어 카혼 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-cajon1)**
 [스튜디오 놀 이용 요금](/pricing)
