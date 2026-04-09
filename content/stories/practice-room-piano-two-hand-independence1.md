@@ -217,4 +217,6 @@ Op.10 No.1: 오른손 넓은 아르페지오 + 왼손 멜로디
 **→ [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 가이드](/stories/ko/practice-room-piano-quartal1)**
 **→ [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-chord-melody1)**
 **→ [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**
+**→ [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
+**→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)

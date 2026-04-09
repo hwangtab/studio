@@ -195,4 +195,6 @@ A 현 7 프렛 + G 현 9 프렛 = 옥타브 E
 **→ [기타 아치탑·Joe Pass·Wes Montgomery 음악연습실 가이드](/stories/ko/practice-room-guitar-archtop1)**  
 **→ [기타 재즈 비밥·즉흥 연주·비밥 스케일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-bebop1)**
 **→ [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 가이드](/stories/ko/practice-room-guitar-volume-swell1)**
+**→ [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
+**→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)

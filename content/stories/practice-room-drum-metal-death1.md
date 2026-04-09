@@ -214,4 +214,6 @@ SD:    x        x
 **→ [드럼 더블킥·풋 테크닉·발 독립 음악연습실 가이드](/stories/ko/practice-room-drum-double-kick1)**  
 **→ [드럼 메탈 블라스트비트·익스트림 음악연습실 가이드](/stories/ko/practice-room-drum-metal-blast-beat1)**
 **→ [드럼 스피드 트레이닝·루디먼트 음악연습실 가이드](/stories/ko/practice-room-drum-speed-training1)**
+**→ [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
+**→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)

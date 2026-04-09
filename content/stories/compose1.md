@@ -219,4 +219,6 @@ faq:
 **→ [피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 가이드](/stories/ko/practice-room-piano-two-hand-independence1)**
 **→ [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-jazz-chord-melody1)**
 **→ [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-metal-death1)**
+**→ [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
+**→ [재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)
