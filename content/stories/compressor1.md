@@ -258,4 +258,6 @@ Make-up Gain: GR 발생량 보상
 **→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
 **→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
 **→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
+**→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
+**→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)

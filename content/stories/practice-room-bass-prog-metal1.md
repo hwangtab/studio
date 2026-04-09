@@ -194,4 +194,6 @@ B♭ 튜닝: B♭-E♭-A♭-D♭ (반음 낮춤 × 2)
 **→ [재즈퓨전 베이스·Stanley Clarke·Weather Report 음악연습실 가이드](/stories/ko/practice-room-bass-jazz-fusion1)**  
 **→ [수학록 기타·폴리리듬·Animals as Leaders 음악연습실 가이드](/stories/ko/practice-room-guitar-math-rock1)**
 **→ [프로그레시브 록 드럼·Neil Peart·John Bonham 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
+**→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
+**→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)

@@ -200,4 +200,6 @@ D 코드 오픈 튜닝
 **→ [포스트록 기타·빌드업·Explosions in the Sky 음악연습실 가이드](/stories/ko/practice-room-guitar-post-rock1)**  
 **→ [인디팝 기타·The Strokes·Vampire Weekend 음악연습실 가이드](/stories/ko/practice-room-guitar-indie-pop1)**
 **→ [기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 가이드](/stories/ko/practice-room-guitar-celtic1)**
+**→ [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 가이드](/stories/ko/practice-room-guitar-blues-slide1)**
+**→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
 [스튜디오 놀 이용 요금](/pricing)
