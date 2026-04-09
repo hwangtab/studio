@@ -192,4 +192,6 @@ C-B-Bb-A (워크다운) → Dm7 → G7 → C
 **→ [베이스 소울 그루브·펑크 베이스라인 음악연습실 가이드](/stories/ko/practice-room-bass-soul-groove1)**  
 **→ [네오소울 베이스·D'Angelo·Erykah Badu 음악연습실 가이드](/stories/ko/practice-room-bass-neo-soul1)**
 **→ [교회 피아노·찬양 반주·코드 반주법 음악연습실 가이드](/stories/ko/practice-room-piano-church1)**
+**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
+**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
 [스튜디오 놀 이용 요금](/pricing)

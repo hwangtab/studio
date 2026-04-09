@@ -218,4 +218,6 @@ category: "vocal"
 **→ [팝 벨팅·고음 파워·Mix Voice·두성 전환 음악연습실 가이드](/stories/ko/practice-room-vocal-pop-belting1)**  
 **→ [보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-breathing1)**
 **→ [보컬 소울·R&B·다이나믹 음악연습실 가이드](/stories/ko/practice-room-vocal-soul-rn1)**
+**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
+**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
 [스튜디오 놀 이용 요금](/pricing)

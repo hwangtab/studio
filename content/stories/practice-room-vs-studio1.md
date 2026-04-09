@@ -300,4 +300,6 @@ faq:
 **→ [프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 가이드](/stories/ko/practice-room-drum-prog-rock1)**
 **→ [한국 발라드 보컬·감정 표현·직접적 감성·이모션 음악연습실 가이드](/stories/ko/practice-room-vocal-korean-ballad1)**
 **→ [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 가이드](/stories/ko/practice-room-bass-gospel1)**
+**→ [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 가이드](/stories/ko/practice-room-guitar-neofolk1)**
+**→ [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 가이드](/stories/ko/practice-room-bass-prog-metal1)**
 [스튜디오 놀 이용 요금](/pricing)
