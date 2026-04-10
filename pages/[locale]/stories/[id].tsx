@@ -12,7 +12,7 @@ import ImageHero from '../../../components/common/ImageHero';
 import StoryCTA, { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { shareContent } from '../../../utils/shareUtils';
-import { stripMarkdown } from '../../../utils/textUtils';
+import { summarizeText } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { extractHowToSteps, getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import { getStoryRedirectTarget } from '../../../lib/storyRedirects';
@@ -99,10 +99,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   }
 
   const getLink = (path: string) => `/${locale}${path}`;
-  const _rawDescription = stripMarkdown(story.content || '');
-  const metaDescription = _rawDescription.length <= 160
-    ? _rawDescription
-    : _rawDescription.substring(0, 160).replace(/\s+\S*$/, '');
+  const metaDescription = summarizeText(story.content, 160, { stripMarkdown: true });
 
   const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
   const ogImage = story.thumbnail || dynamicOgImage;
@@ -151,7 +148,6 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           { name: t('nav.stories'), path: `/${locale}/stories` },
           { name: story.title, path: `/${locale}/stories/${story.slug}` },
         ]}
-        webPageType="Article"
       />
 
       <ImageHero

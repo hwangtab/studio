@@ -181,7 +181,7 @@ export const generateDefaultSchema = (
         ...(reviewItems && reviewItems.length > 0 && {
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: (reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length).toFixed(1),
+            ratingValue: Math.round((reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length) * 10) / 10,
             reviewCount: reviewItems.length,
             bestRating: 5,
             worstRating: 1
@@ -484,12 +484,7 @@ export const generateAggregateOfferSchema = (
     '@id': `${config.url}/#pricing-catalog`,
     name: catalogName,
     ...(description && { description }),
-    image: {
-      '@type': 'ImageObject',
-      url: `${config.url}/images/hardware2.webp`,
-      width: 1280,
-      height: 720,
-    },
+    image: [`${config.url}/images/hardware2.webp`],
     inLanguage: schemaLanguage,
     brand: {
       '@type': 'Organization',
@@ -647,16 +642,12 @@ export const generateMusicRecordingSchema = (
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'MusicRecording',
-    ...(item.url && { '@id': `${item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`}#recording` }),
+    '@type': 'MusicAlbum',
+    ...(item.url && { '@id': `${item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`}#album` }),
     name: item.title,
     byArtist: {
       '@type': 'MusicGroup',
       name: item.artist,
-    },
-    recordingOf: {
-      '@type': 'MusicComposition',
-      name: item.title,
     },
     producer: {
       '@type': 'Organization',

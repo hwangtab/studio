@@ -187,7 +187,7 @@ module.exports = {
       // Google
       { userAgent: 'Googlebot', allow: '/' },
       // Bing
-      { userAgent: 'Bingbot', allow: '/' },
+      { userAgent: 'bingbot', allow: '/' },
       // Naver
       { userAgent: 'Yeti', allow: '/' },
       // OpenAI

@@ -171,7 +171,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="alternate" type="application/rss+xml" title={locale === 'ko' ? '스튜디오 놀 스토리' : locale === 'zh' ? 'Studio NOL 故事' : locale === 'es' ? 'Studio NOL Historias' : locale === 'vi' ? 'Studio NOL Câu chuyện' : locale === 'th' ? 'Studio NOL เรื่องราว' : locale === 'uz' ? 'Studio NOL Hikoyalar' : 'Studio NOL Stories'} href={`/api/rss?locale=${locale}`} />
+        <link rel="alternate" type="application/rss+xml" title={`${getSiteConfig(locale).name} ${i18n.t('nav.stories', { lng: locale, defaultValue: 'Stories' })}`} href={`/api/rss?locale=${locale}`} />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         <script
           type="application/ld+json"

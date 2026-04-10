@@ -73,7 +73,7 @@ const SEO = ({
   articleWordCount,
   breadcrumbs = null,
   faqItems = null,
-  reviewItems = null,
+  reviewItems: _reviewItems = null,
   isCourse = false,
   webPageType,
   paginationPrev,
