@@ -185,24 +185,24 @@ module.exports = {
     policies: [
       { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Google
-      { userAgent: 'Googlebot', allow: '/' },
+      { userAgent: 'Googlebot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Bing
-      { userAgent: 'bingbot', allow: '/' },
+      { userAgent: 'bingbot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Naver
-      { userAgent: 'Yeti', allow: '/' },
+      { userAgent: 'Yeti', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // OpenAI
-      { userAgent: 'GPTBot', allow: '/' },
-      { userAgent: 'OAI-SearchBot', allow: '/' },
-      { userAgent: 'ChatGPT-User', allow: '/' },
+      { userAgent: 'GPTBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
+      { userAgent: 'OAI-SearchBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
+      { userAgent: 'ChatGPT-User', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Anthropic
-      { userAgent: 'ClaudeBot', allow: '/' },
-      { userAgent: 'anthropic-ai', allow: '/' },
+      { userAgent: 'ClaudeBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
+      { userAgent: 'anthropic-ai', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Perplexity
-      { userAgent: 'PerplexityBot', allow: '/' },
+      { userAgent: 'PerplexityBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Meta
-      { userAgent: 'FacebookBot', allow: '/' },
+      { userAgent: 'FacebookBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
       // Apple
-      { userAgent: 'Applebot', allow: '/' },
+      { userAgent: 'Applebot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
     ],
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) =>

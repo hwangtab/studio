@@ -44,6 +44,7 @@ export const storyRedirects: Record<string, string> = {
   "cheonho1": "seongdong1",
   "cheorwon1": "wonju1",
   "chilgok1": "daegu1",
+  "chord-progressions1": "chord-progression1",
   "chungbuk1": "cheongju1",
   "chungju1": "cheongju1",
   "chungnam1": "daejeon1",

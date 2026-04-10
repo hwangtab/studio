@@ -11,7 +11,7 @@ import { getPortfolioItems, getCategories } from '../../../data/portfolio';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
 import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
-import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
+import { generateMusicAlbumSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
@@ -66,7 +66,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 
   const categoryInfo = getCategoryInfo(item.category, categories);
   const schemaImage = item.image.startsWith('http') ? item.image : `${siteConfig.url}${item.image}`;
-  const portfolioSchema = generateMusicRecordingSchema(
+  const portfolioSchema = generateMusicAlbumSchema(
     {
       title: item.title,
       artist: item.artist,

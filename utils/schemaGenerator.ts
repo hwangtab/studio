@@ -509,7 +509,7 @@ export const generateAggregateOfferSchema = (
     ...(reviewItems && reviewItems.length > 0 && {
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: (reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length).toFixed(1),
+        ratingValue: Math.round((reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length) * 10) / 10,
         reviewCount: reviewItems.length,
         bestRating: 5,
         worstRating: 1,
@@ -633,7 +633,7 @@ export interface MusicRecordingInput {
   genre?: string;
 }
 
-export const generateMusicRecordingSchema = (
+export const generateMusicAlbumSchema = (
   item: MusicRecordingInput,
   siteUrl: string,
   locale: Locale = 'ko'

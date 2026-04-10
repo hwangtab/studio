@@ -175,7 +175,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema).replace(/<\//g, '<\\/') }}
         />
       </Head>
       <I18nextProvider i18n={i18n}>
