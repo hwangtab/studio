@@ -252,6 +252,14 @@ module.exports = {
       return null;
     }
 
+    // 페이지네이션 및 카테고리 필터 페이지는 저가치 중복 콘텐츠 → 사이트맵 제외
+    if (
+      /\/stories\/page\//.test(routePath) ||
+      /\/stories\/category\//.test(routePath)
+    ) {
+      return null;
+    }
+
     const segments = routePath.split('/').filter(Boolean);
     const maybeLocale = segments[0];
     const locale = locales.includes(maybeLocale) ? maybeLocale : 'ko';

@@ -36,6 +36,8 @@ const StoriesCollectionPage = ({
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
   const sectionRef = useRef<HTMLDivElement>(null);
   const canonicalPath = buildStoriesPath(locale, activeCategory, currentPage);
+  const paginationPrev = currentPage > 1 ? buildStoriesPath(locale, activeCategory, currentPage - 1) : undefined;
+  const paginationNext = currentPage < totalPages ? buildStoriesPath(locale, activeCategory, currentPage + 1) : undefined;
   const activeCategoryId = activeCategory ?? 'all';
   const activeCategoryLabel = activeCategory ? t(`stories.categories.${activeCategory}`) : null;
 
@@ -96,6 +98,8 @@ const StoriesCollectionPage = ({
     [t]
   );
 
+  const shouldNoIndex = currentPage > 1 || activeCategory !== null;
+
   return (
     <>
       <SEO
@@ -110,6 +114,9 @@ const StoriesCollectionPage = ({
         includeSchema
         webPageType="CollectionPage"
         schema={storiesItemListSchema}
+        robots={shouldNoIndex ? 'noindex, follow' : undefined}
+        paginationPrev={paginationPrev}
+        paginationNext={paginationNext}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },

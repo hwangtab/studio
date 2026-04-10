@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { defaultLocale, locales, type Locale } from './lib/i18n-config';
+import { storyRedirects } from './lib/storyRedirects';
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 
 const parseCanonicalSiteUrl = (): URL | null => {
@@ -71,6 +72,8 @@ export function middleware(request: NextRequest) {
     let shouldVaryByLanguage = false;
     const pathnameLocale = pathname.split('/')[1];
     const hasKnownLocalePrefix = locales.includes(pathnameLocale as Locale);
+    const userAgent = request.headers.get('user-agent') || '';
+    const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot/i.test(userAgent);
 
     if (
         shouldEnforceCanonicalHost &&
@@ -83,12 +86,26 @@ export function middleware(request: NextRequest) {
         shouldRedirect = true;
     }
 
+    // 삭제된 스토리 slug 리디렉트: 2-hop 체인(locale 추가 → ISR 리디렉트)을 1-hop으로 단축
+    const storySlugMatch = pathname.match(/^(?:\/([a-z]{2}))?\/stories\/([^/]+)$/);
+    if (storySlugMatch) {
+        const [, urlLocale, slug] = storySlugMatch;
+        const redirectTarget = storyRedirects[slug];
+        if (redirectTarget) {
+            const acceptLanguage = request.headers.get('accept-language');
+            const targetLocale: Locale = urlLocale && locales.includes(urlLocale as Locale)
+                ? urlLocale as Locale
+                : (isBot && !acceptLanguage ? 'en' : getPreferredLocale(request));
+            redirectUrl.pathname = `/${targetLocale}/stories/${redirectTarget}`;
+            const response = NextResponse.redirect(redirectUrl, 308);
+            return setSecurityHeaders(response);
+        }
+    }
+
     // Skip if path already has a locale prefix
     const pathnameHasLocale = locales.some(
         (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
     );
-    const userAgent = request.headers.get('user-agent') || '';
-    const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot/i.test(userAgent);
 
     if (!pathnameHasLocale) {
         // Redirect to locale-prefixed path

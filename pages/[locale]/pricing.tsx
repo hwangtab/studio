@@ -121,9 +121,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
     generateAggregateOfferSchema(
       t('pricing.seo.schemaTitle'),
       allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
+      reviewsData,
       locale
     ),
-    [allOffers, locale, t]
+    [allOffers, locale, reviewsData, t]
   );
 
   const pricingSchema = React.useMemo(() => ({

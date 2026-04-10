@@ -141,82 +141,12 @@ const normalizeDate = (value: string | Date | undefined): string => {
 };
 
 const storyCategoryKeyMap: Record<string, StoryCategoryKey> = {
-  // New category keys
   news: 'news',
   lesson: 'lesson',
   feedback: 'feedback',
   region: 'region',
   instrument: 'instrument',
   'music-guide': 'music-guide',
-  // Legacy category keys
-  notice: 'news',
-  event: 'news',
-  interview: 'feedback',
-  review: 'feedback',
-  vocal: 'music-guide',
-  recording: 'music-guide',
-  production: 'music-guide',
-  mixing: 'music-guide',
-  business: 'music-guide',
-  practice: 'instrument',
-  guide: 'music-guide',
-  // 공지
-  공지: 'news',
-  소식: 'news',
-  // 이벤트
-  이벤트: 'news',
-  // 강좌
-  강좌: 'lesson',
-  // 인터뷰 / 후기
-  인터뷰: 'feedback',
-  리뷰: 'feedback',
-  후기: 'feedback',
-  '후기·인터뷰': 'feedback',
-  // 지역 가이드
-  '지역 가이드': 'region',
-  // 악기 연습
-  '악기 연습': 'instrument',
-  // 보컬 가이드
-  '보컬 가이드': 'music-guide',
-  '발성 가이드': 'music-guide',
-  '보컬 테크닉 가이드': 'music-guide',
-  '보컬 트레이닝 가이드': 'music-guide',
-  // 녹음 가이드
-  '녹음 가이드': 'music-guide',
-  '녹음 기초': 'music-guide',
-  '홈 레코딩 가이드': 'music-guide',
-  // 음반 제작
-  '음반 제작 가이드': 'music-guide',
-  '음악 제작 가이드': 'music-guide',
-  '음악 프로덕션 가이드': 'music-guide',
-  '음악 제작': 'music-guide',
-  '작곡 가이드': 'music-guide',
-  // 믹싱·마스터링
-  '믹싱 가이드': 'music-guide',
-  '마스터링 가이드': 'music-guide',
-  // 음악 비즈니스
-  '음악 비즈니스 가이드': 'music-guide',
-  '음악 비즈니스': 'music-guide',
-  '음악 마케팅': 'music-guide',
-  '음악 마케팅 가이드': 'music-guide',
-  '음악 커리어 가이드': 'music-guide',
-  '음원 배포 가이드': 'music-guide',
-  'SNS 마케팅': 'music-guide',
-  'SNS 가이드': 'music-guide',
-  // 음악연습실 가이드
-  '음악연습실 가이드': 'instrument',
-  '음악연습실': 'instrument',
-  '음악 연습실 가이드': 'instrument',
-  '연습실 가이드': 'instrument',
-  // 가이드 (일반)
-  가이드: 'music-guide',
-  '서비스 안내': 'music-guide',
-  '음악 가이드': 'music-guide',
-  '음악 이론 가이드': 'music-guide',
-  '저작권 가이드': 'music-guide',
-  '장비 가이드': 'music-guide',
-  장비: 'music-guide',
-  '보이스액팅 가이드': 'music-guide',
 };
 
 const storyCategoryKeys = new Set<string>(STORY_CATEGORY_KEYS);
@@ -444,7 +374,12 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
 
   const { sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
   const { filePath } = resolveStoryFile(slug, requestedLocale);
-  const modifiedDate = fs.statSync(filePath).mtime.toISOString();
+  let modifiedDate: string;
+  try {
+    modifiedDate = fs.statSync(filePath).mtime.toISOString();
+  } catch {
+    modifiedDate = new Date().toISOString();
+  }
   const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
   let contentToProcess = content;
 

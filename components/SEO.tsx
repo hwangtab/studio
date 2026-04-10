@@ -42,6 +42,8 @@ interface SEOProps {
   reviewItems?: ReviewItem[] | null;
   isCourse?: boolean;
   webPageType?: string;
+  paginationPrev?: string;
+  paginationNext?: string;
 }
 
 const SEO = ({
@@ -71,6 +73,8 @@ const SEO = ({
   reviewItems = null,
   isCourse = false,
   webPageType,
+  paginationPrev,
+  paginationNext,
 }: SEOProps) => {
   const router = useRouter();
 
@@ -313,6 +317,8 @@ const SEO = ({
       <meta name="ICBM" content="37.614353, 126.925887" />
 
       {!disableCanonicalAndAlternates && <link rel="canonical" href={normalizedCanonical} />}
+      {paginationPrev && <link rel="prev" href={toAbsoluteUrl(paginationPrev)} />}
+      {paginationNext && <link rel="next" href={toAbsoluteUrl(paginationNext)} />}
 
       {/* Hreflang tags for SEO */}
       {shouldRenderAlternates && (

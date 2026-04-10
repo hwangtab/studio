@@ -102,7 +102,7 @@ export const generateDefaultSchema = (
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
       },
       {
-        '@type': ['LocalBusiness', 'EntertainmentBusiness'],
+        '@type': 'LocalBusiness',
         additionalType: 'https://www.wikidata.org/wiki/Q746359',
         '@id': studioId,
         name: 'Studio NOL',
@@ -188,6 +188,10 @@ export const generateDefaultSchema = (
           },
           review: reviewItems.slice(0, 10).map((item) => ({
             '@type': 'Review',
+            itemReviewed: {
+              '@type': 'LocalBusiness',
+              '@id': studioId,
+            },
             author: {
               '@type': 'Person',
               name: item.author,
@@ -460,6 +464,7 @@ export interface AggregateOfferInput {
 export const generateAggregateOfferSchema = (
   catalogName: string,
   offers: AggregateOfferInput[],
+  reviewItems?: ReviewItem[] | null,
   locale: Locale = 'ko'
 ) => {
   const prices = offers.map((o) => o.priceValue).filter((p) => p > 0);
@@ -496,6 +501,28 @@ export const generateAggregateOfferSchema = (
         priceCurrency: 'KRW',
       })),
     },
+    ...(reviewItems && reviewItems.length > 0 && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: (reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length).toFixed(1),
+        reviewCount: reviewItems.length,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      review: reviewItems.slice(0, 10).map((item) => ({
+        '@type': 'Review',
+        author: { '@type': 'Person', name: item.author },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: item.rating,
+          bestRating: 5,
+          worstRating: 1,
+        },
+        reviewBody: item.content,
+        inLanguage: schemaLanguage,
+        ...(item.datePublished && { datePublished: item.datePublished }),
+      })),
+    }),
   };
 };
 
