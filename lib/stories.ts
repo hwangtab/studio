@@ -34,7 +34,18 @@ export interface StoriesPageData {
   totalItems: number;
   activeCategory: StoryCategoryKey | null;
   availableCategories: StoryCategoryKey[];
+  activeTag: string | null;
 }
+
+const calculateReadingTime = (content: string): number => {
+  const cleaned = content
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/[#*>`~_-]/g, '');
+  const koreanChars = (cleaned.match(/[\uac00-\ud7af]/g) || []).length;
+  const englishWords = cleaned.replace(/[\uac00-\ud7af]/g, '').split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil((koreanChars / 400) + (englishWords / 200)));
+};
 
 const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { filePath: string; sourceLocale: Locale } => {
   const cacheKey = `${locale}:${slug}`;
@@ -202,6 +213,8 @@ const mapStoryListItemFrontmatter = (
     categoryKey,
     summary: (frontmatter?.summary as string) || summarizeText(content, 150, { stripMarkdown: true }),
     thumbnail: derivedThumbnail || null,
+    tags: Array.isArray(frontmatter?.tags) ? (frontmatter.tags as string[]) : [],
+    readingTime: calculateReadingTime(content),
   };
 };
 
@@ -233,6 +246,8 @@ const toStoryListItem = (story: Story): StoryListItem => ({
   categoryKey: story.categoryKey,
   summary: story.summary,
   thumbnail: story.thumbnail,
+  tags: story.tags,
+  readingTime: story.readingTime,
 });
 
 export const getAllStoryListItems = (locale: string = defaultLocale): StoryListItem[] => {
@@ -314,7 +329,8 @@ export const getStoriesPage = (
   locale: string = defaultLocale,
   categoryKey: string | null = null,
   page = 1,
-  pageSize = STORIES_PAGE_SIZE
+  pageSize = STORIES_PAGE_SIZE,
+  tag: string | null = null
 ): StoriesPageData | null => {
   if (!Number.isInteger(page) || page < 1) {
     return null;
@@ -337,9 +353,13 @@ export const getStoriesPage = (
     return null;
   }
 
-  const filteredStories = activeCategory
+  const afterCategoryFilter = activeCategory
     ? allStories.filter((story) => story.categoryKey === activeCategory)
     : allStories;
+
+  const filteredStories = tag
+    ? afterCategoryFilter.filter((story) => story.tags.includes(tag))
+    : afterCategoryFilter;
 
   if (filteredStories.length === 0) {
     return null;
@@ -361,6 +381,7 @@ export const getStoriesPage = (
     totalItems,
     activeCategory,
     availableCategories,
+    activeTag: tag,
   };
 };
 
@@ -433,22 +454,76 @@ export const getStoryPaths = (): StoryPath[] => {
   return paths;
 };
 
-export const getRelatedStories = (locale: string, slug: string, limit = 3): StoryListItem[] => {
+export const getRelatedStories = (locale: string, slug: string, limit = 4): StoryListItem[] => {
   const all = getAllStories(locale);
   const current = all.find((item) => item.slug === slug);
   const candidates = all.filter((item) => item.slug !== slug);
 
   if (!current) return candidates.slice(0, limit).map(toStoryListItem);
 
+  // IDF-like tag weighting: rarer tags score higher than common ones
+  const tagFrequency = new Map<string, number>();
+  for (const story of all) {
+    for (const tag of story.tags ?? []) {
+      tagFrequency.set(tag, (tagFrequency.get(tag) ?? 0) + 1);
+    }
+  }
+  const totalStories = all.length;
   const currentTags = new Set(current.tags ?? []);
 
   return candidates
     .map((item) => {
-      const tagOverlap = (item.tags ?? []).filter((t) => currentTags.has(t)).length;
+      let tagScore = 0;
+      for (const tag of item.tags ?? []) {
+        if (currentTags.has(tag)) {
+          const freq = tagFrequency.get(tag) ?? 1;
+          tagScore += Math.log(totalStories / freq);
+        }
+      }
       const categoryMatch = item.categoryKey === current.categoryKey ? 2 : 0;
-      return { item, score: categoryMatch + tagOverlap };
+      return { item, score: categoryMatch + tagScore };
     })
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) =>
+      b.score - a.score ||
+      new Date(b.item.date).getTime() - new Date(a.item.date).getTime()
+    )
     .map(({ item }) => toStoryListItem(item))
     .slice(0, limit);
+};
+
+export const getAllTags = (locale: string = defaultLocale): string[] => {
+  const allStories = getAllStoryListItems(locale);
+  const tagSet = new Set<string>();
+  for (const story of allStories) {
+    for (const tag of story.tags) {
+      tagSet.add(tag);
+    }
+  }
+  return Array.from(tagSet).sort();
+};
+
+export const extractHowToSteps = (content: string): Array<{ name: string; text: string }> => {
+  const lines = content.split('\n');
+  const steps: Array<{ name: string; text: string }> = [];
+  let currentName = '';
+  let currentText = '';
+
+  for (const line of lines) {
+    const h2Match = line.match(/^##\s+(.+)/);
+    if (h2Match) {
+      if (currentName) {
+        steps.push({ name: currentName, text: currentText.trim() || currentName });
+      }
+      currentName = h2Match[1].trim();
+      currentText = '';
+    } else if (currentName && line.trim() && !line.startsWith('#') && !line.startsWith('!') && !line.startsWith('|') && !line.startsWith('-')) {
+      if (!currentText) {
+        currentText = line.replace(/[*_`[\]]/g, '').trim();
+      }
+    }
+  }
+  if (currentName) {
+    steps.push({ name: currentName, text: currentText.trim() || currentName });
+  }
+  return steps;
 };

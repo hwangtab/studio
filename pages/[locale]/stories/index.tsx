@@ -18,6 +18,7 @@ const StoriesIndexPage: NextPageWithLayout<StoriesIndexPageProps> = ({
   stories,
   availableCategories,
   activeCategory,
+  activeTag,
   currentPage,
   totalPages,
 }) => (
@@ -26,6 +27,7 @@ const StoriesIndexPage: NextPageWithLayout<StoriesIndexPageProps> = ({
     stories={stories}
     availableCategories={availableCategories}
     activeCategory={activeCategory}
+    activeTag={activeTag}
     currentPage={currentPage}
     totalPages={totalPages}
   />

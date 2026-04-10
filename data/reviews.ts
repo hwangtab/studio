@@ -25,7 +25,7 @@ export const getReviews = (locale: Locale) => {
     },
     {
       author: t(locale, { ko: "이*정", en: "Lee *Jeong", zh: "Lee *Jeong", es: "Lee *Jeong", vi: "Lee *Jeong", th: "Lee *Jeong", uz: "Lee *Jeong" }),
-      rating: 5,
+      rating: 4,
       categoryKey: 'wedding',
       category: t(locale, { ko: "셀프 축가 녹음", en: "Self Wedding Recording", zh: "自助婚礼祝歌录音", es: "Grabación de Boda", vi: "Thu âm nhạc cưới tự thực hiện", th: "อัดเพลงงานแต่งด้วยตัวเอง", uz: "O‘z to‘y qo‘shig‘ini yozish" }),
       content: t(locale, {
@@ -57,7 +57,7 @@ export const getReviews = (locale: Locale) => {
     },
     {
       author: t(locale, { ko: "최*민", en: "Choi *Min", zh: "Choi *Min", es: "Choi *Min", vi: "Choi *Min", th: "Choi *Min", uz: "Choi *Min" }),
-      rating: 5,
+      rating: 4,
       categoryKey: 'practice',
       category: t(locale, { ko: "음악연습실", en: "Music Practice Room", zh: "音乐练习室", es: "Sala de Práctica Musical", vi: "Phòng tập nhạc", th: "ห้องซ้อมดนตรี", uz: "Musiqa mashg’ulot xonasi" }),
       content: t(locale, {

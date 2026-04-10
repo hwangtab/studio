@@ -42,6 +42,8 @@ export interface StoryListItem {
   categoryKey: StoryCategoryKey;
   summary: string;
   thumbnail: string | null;
+  tags: string[];
+  readingTime: number; // Estimated minutes to read
 }
 
 /**

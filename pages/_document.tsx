@@ -46,10 +46,17 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
           <link rel="dns-prefetch" href="https://cdn.imweb.me" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-          {/* Critical font for above-the-fold content — others load on demand */}
+          {/* Critical fonts for above-the-fold content — others load on demand */}
           <link
             rel="preload"
             href="/fonts/Pretendard-Regular.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            href="/fonts/GmarketSansBold.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"

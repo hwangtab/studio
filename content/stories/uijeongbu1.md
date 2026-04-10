@@ -69,6 +69,8 @@ faq:
 
 ## 마치며
 
+방문 전 카카오톡으로 예약해두시면 준비 상태를 미리 맞출 수 있습니다.
+
 ---
 
 [의정부 가능·의정부·회룡·흥선 녹음실 안내](/stories/uijeongbu-ganeung1) | [의정부 민락·호원·장암 녹음실 안내](/stories/uijeongbu-ganeung1) | [양주에서 서울 녹음실 방문 가이드](/stories/uijeongbu-ganeung1) | [노원구·도봉구 녹음실 안내](/stories/nowon1)

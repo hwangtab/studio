@@ -112,21 +112,22 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const siteNavSchema = useMemo(() => {
     const sc = getSiteConfig(locale);
     const base = `${sc.url}/${locale}`;
+    const tNav = i18n.getFixedT(locale, 'common');
     return {
       '@context': 'https://schema.org',
       '@type': 'SiteNavigationElement',
-      name: 'Main Navigation',
+      name: tNav('nav.home'),
       hasPart: [
         { '@type': 'SiteNavigationElement', name: sc.name, url: base },
-        { '@type': 'SiteNavigationElement', name: 'Pricing', url: `${base}/pricing` },
-        { '@type': 'SiteNavigationElement', name: 'Studio Info', url: `${base}/studio-info` },
-        { '@type': 'SiteNavigationElement', name: 'Practice Room', url: `${base}/practice-room` },
-        { '@type': 'SiteNavigationElement', name: 'Lesson', url: `${base}/lesson` },
-        { '@type': 'SiteNavigationElement', name: 'Wedding Song', url: `${base}/wedding-song` },
-        { '@type': 'SiteNavigationElement', name: 'Voice Acting', url: `${base}/voice-acting` },
-        { '@type': 'SiteNavigationElement', name: 'Portfolio', url: `${base}/portfolio` },
-        { '@type': 'SiteNavigationElement', name: 'Stories', url: `${base}/stories` },
-        { '@type': 'SiteNavigationElement', name: 'Contact', url: `${base}/contact` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.pricing'), url: `${base}/pricing` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.equipment'), url: `${base}/studio-info` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.practiceRoom'), url: `${base}/practice-room` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.lesson'), url: `${base}/lesson` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.weddingSong'), url: `${base}/wedding-song` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.voiceActing'), url: `${base}/voice-acting` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.portfolio'), url: `${base}/portfolio` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.stories'), url: `${base}/stories` },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.contact'), url: `${base}/contact` },
       ],
     };
   }, [locale]);

@@ -3,7 +3,7 @@ import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
@@ -14,14 +14,15 @@ import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
-import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
+import { extractHowToSteps, getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import { getStoryRedirectTarget } from '../../../lib/storyRedirects';
 import { STORY_CATEGORY_KEYS, type StoryDetail, type StoryListItem } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { generateFaqSchema } from '../../../utils/schemaGenerator';
+import { generateFaqSchema, generateHowToSchema } from '../../../utils/schemaGenerator';
+import TableOfContents from '../../../components/stories/TableOfContents';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
@@ -30,11 +31,12 @@ interface StoryDetailPageProps {
   locale: Locale;
   story: StoryDetail;
   relatedStories: StoryListItem[];
+  howToSchema: Record<string, unknown> | null;
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
 
-const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
+const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories, howToSchema }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
 
@@ -55,7 +57,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
       return 'production';
     }
 
-    if (categoryKey === 'equipment' || categoryKey === 'feedback') {
+    if (categoryKey === 'instrument' || categoryKey === 'feedback') {
       if (seed < 0.6) return 'practice';
       if (seed < 0.8) return 'recording';
       return 'lesson';
@@ -97,7 +99,10 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   }
 
   const getLink = (path: string) => `/${locale}${path}`;
-  const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
+  const _rawDescription = stripMarkdown(story.content || '');
+  const metaDescription = _rawDescription.length <= 160
+    ? _rawDescription
+    : _rawDescription.substring(0, 160).replace(/\s+\S*$/, '');
 
   const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
   const ogImage = story.thumbnail || dynamicOgImage;
@@ -134,8 +139,13 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         articleSchemaType="BlogPosting"
         articleSection={story.category}
         articleTags={story.tags ?? undefined}
+        articleWordCount={story.readingTime ? story.readingTime * 400 : undefined}
         includeSchema
-        schema={faqSchema ? [faqSchema] : undefined}
+        schema={
+          [...(faqSchema ? [faqSchema] : []), ...(howToSchema ? [howToSchema] : [])].length > 0
+            ? ([...(faqSchema ? [faqSchema] : []), ...(howToSchema ? [howToSchema] : [])] as Record<string, unknown>[])
+            : undefined
+        }
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },
@@ -149,16 +159,36 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         priority
         title={story.title}
         subtitle={
-          <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">
-            <div className="flex items-center">
-              <Tag className="mr-2" size={18} aria-hidden="true" />
-              <span>{story.category}</span>
+          <div>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">
+              <div className="flex items-center">
+                <Tag className="mr-2" size={18} aria-hidden="true" />
+                <span>{story.category}</span>
+              </div>
+              <span className="hidden sm:inline">•</span>
+              <div className="flex items-center">
+                <Calendar className="mr-2" size={18} aria-hidden="true" />
+                <time dateTime={story.date}>{story.createdAt ? timeAgo(story.createdAt, locale) : story.date}</time>
+              </div>
+              <span className="hidden sm:inline">·</span>
+              <div className="flex items-center">
+                <Clock className="mr-1.5 opacity-80" size={16} aria-hidden="true" />
+                <span>{story.readingTime}{t('stories.detail.readingTimeUnit')}</span>
+              </div>
             </div>
-            <span className="hidden sm:inline">•</span>
-            <div className="flex items-center">
-              <Calendar className="mr-2" size={18} aria-hidden="true" />
-              <time dateTime={story.date}>{story.createdAt ? timeAgo(story.createdAt, locale) : story.date}</time>
-            </div>
+            {story.tags && story.tags.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2">
+                {story.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/${locale}/stories/tag/${encodeURIComponent(tag)}`}
+                    className="text-xs px-2.5 py-1 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         }
         backgroundImage={story.thumbnail || '/images/studio1.webp'}
@@ -172,41 +202,50 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         ]}
       />
 
-      <Section variant="default" className="pt-12 pb-12">
-        <div className="mb-12 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-6">
-          <Link
-            href={getLink("/stories")}
-            className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-          >
-            <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
-            {t('stories.detail.backToList')}
-          </Link>
+      <div className="sticky top-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 md:relative md:bg-transparent md:backdrop-blur-none md:border-0">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="py-3 flex items-center justify-between">
+            <Link
+              href={getLink("/stories")}
+              className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            >
+              <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
+              {t('stories.detail.backToList')}
+            </Link>
 
-          <button
-            type="button"
-            onClick={shareStory}
-            className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-          >
-            <Share2 className="mr-2" size={16} aria-hidden="true" />
-            {t('stories.detail.share')}
-          </button>
+            <button
+              type="button"
+              onClick={shareStory}
+              className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            >
+              <Share2 className="mr-2" size={16} aria-hidden="true" />
+              {t('stories.detail.share')}
+            </button>
+          </div>
         </div>
+      </div>
 
-        <article>
-          <m.div
-            {...STORY_BODY_ANIMATION}
-            className="mb-12"
-          >
-            <MarkdownRenderer content={story.content} locale={locale} />
-          </m.div>
-        </article>
+      <Section variant="default" className="pt-12 pb-12">
+        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-10 xl:gap-16">
+          <article>
+            <m.div
+              {...STORY_BODY_ANIMATION}
+              className="mb-12"
+            >
+              <MarkdownRenderer content={story.content} locale={locale} />
+            </m.div>
+          </article>
+          <aside className="hidden lg:block">
+            <TableOfContents content={story.content} locale={locale} />
+          </aside>
+        </div>
 
         <StoryCTA type={ctaType} locale={locale} />
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <h2 className="typo-card-title mb-6">{t('stories.detail.moreTitle')}</h2>
           {relatedStories.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
               {relatedStories.map((related) => (
                 <StoryCard
                   key={related.slug}
@@ -243,13 +282,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.id as string;
   try {
     const story = await getStoryDetail(slug, locale);
-    const relatedStories = getRelatedStories(locale, slug, 3);
+    const relatedStories = getRelatedStories(locale, slug, 4);
+
+    let howToSchema: Record<string, unknown> | null = null;
+    if ((story.categoryKey === 'lesson' || story.categoryKey === 'music-guide') && story.content) {
+      const steps = extractHowToSteps(story.content);
+      if (steps.length >= 2) {
+        howToSchema = generateHowToSchema(story.title, story.summary || '', steps, undefined, locale) as Record<string, unknown>;
+      }
+    }
 
     return buildPageStaticProps(
       locale,
       {
         story,
         relatedStories,
+        howToSchema,
       },
       { revalidate: 3600 }
     );

@@ -9,7 +9,7 @@ import ImageHero from '../common/ImageHero';
 import ContactCTA from '../common/ContactCTA';
 import { Section } from '../ui/Section';
 import Pagination from '../ui/Pagination';
-import { buildStoriesPath } from '../../lib/storyRoutes';
+import { buildStoriesPath, buildTagPath } from '../../lib/storyRoutes';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { generateItemListSchema } from '../../utils/schemaGenerator';
@@ -20,6 +20,7 @@ interface StoriesCollectionPageProps {
   stories: StoryListItem[];
   availableCategories: StoryCategoryKey[];
   activeCategory: StoryCategoryKey | null;
+  activeTag?: string | null;
   currentPage: number;
   totalPages: number;
 }
@@ -29,6 +30,7 @@ const StoriesCollectionPage = ({
   stories,
   availableCategories,
   activeCategory,
+  activeTag = null,
   currentPage,
   totalPages,
 }: StoriesCollectionPageProps) => {
@@ -42,11 +44,13 @@ const StoriesCollectionPage = ({
   const activeCategoryLabel = activeCategory ? t(`stories.categories.${activeCategory}`) : null;
 
   const seoTitleBase = t('stories.seo.title');
-  const seoTitle = activeCategoryLabel
-    ? `${activeCategoryLabel} | ${seoTitleBase}${currentPage > 1 ? ` #${currentPage}` : ''}`
-    : currentPage > 1
-      ? `${seoTitleBase} #${currentPage}`
-      : seoTitleBase;
+  const seoTitle = activeTag
+    ? `#${activeTag} | ${seoTitleBase}`
+    : activeCategoryLabel
+      ? `${activeCategoryLabel} | ${seoTitleBase}${currentPage > 1 ? ` #${currentPage}` : ''}`
+      : currentPage > 1
+        ? `${seoTitleBase} #${currentPage}`
+        : seoTitleBase;
 
   const seoDescription = activeCategoryLabel
     ? `${activeCategoryLabel} · ${t('stories.hero.subtitle')}`
@@ -98,7 +102,7 @@ const StoriesCollectionPage = ({
     [t]
   );
 
-  const shouldNoIndex = currentPage > 1 || activeCategory !== null;
+  const shouldNoIndex = currentPage > 1 || activeCategory !== null || activeTag !== null;
 
   return (
     <>
@@ -123,6 +127,7 @@ const StoriesCollectionPage = ({
           ...(activeCategoryLabel
             ? [{ name: activeCategoryLabel, path: buildStoriesPath(locale, activeCategory, 1) }]
             : []),
+          ...(activeTag ? [{ name: `#${activeTag}`, path: buildTagPath(locale, activeTag) }] : []),
         ]}
       />
 

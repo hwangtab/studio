@@ -287,7 +287,8 @@ export const generateArticleSchema = (
   locale: Locale = 'ko',
   articleType: 'Article' | 'BlogPosting' = 'Article',
   articleSection?: string,
-  articleKeywords?: string[]
+  articleKeywords?: string[],
+  wordCount?: number
 ) => {
   if (!articlePublishedTime) return null;
   const config = getSiteConfig(locale);
@@ -304,6 +305,7 @@ export const generateArticleSchema = (
     dateModified: articleModifiedTime || articlePublishedTime,
     ...(articleSection && { articleSection }),
     ...(articleKeywords && articleKeywords.length > 0 && { keywords: articleKeywords.join(', ') }),
+    ...(wordCount && wordCount > 0 && { wordCount }),
     author: {
       '@type': 'Person',
       name: articleAuthor || config.name,
@@ -465,7 +467,8 @@ export const generateAggregateOfferSchema = (
   catalogName: string,
   offers: AggregateOfferInput[],
   reviewItems?: ReviewItem[] | null,
-  locale: Locale = 'ko'
+  locale: Locale = 'ko',
+  description?: string
 ) => {
   const prices = offers.map((o) => o.priceValue).filter((p) => p > 0);
   if (prices.length === 0) return null;
@@ -480,6 +483,13 @@ export const generateAggregateOfferSchema = (
     '@type': 'Product',
     '@id': `${config.url}/#pricing-catalog`,
     name: catalogName,
+    ...(description && { description }),
+    image: {
+      '@type': 'ImageObject',
+      url: `${config.url}/images/hardware2.webp`,
+      width: 1280,
+      height: 720,
+    },
     inLanguage: schemaLanguage,
     brand: {
       '@type': 'Organization',
@@ -578,11 +588,6 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     },
     about: {
       '@id': `${siteUrl}/#studio`,
-    },
-    potentialAction: {
-      '@type': 'ContactAction',
-      name: locale === 'ko' ? '스튜디오 문의하기' : 'Contact Studio NOL',
-      target: `${siteUrl}/${locale}/contact`,
     },
   };
 };

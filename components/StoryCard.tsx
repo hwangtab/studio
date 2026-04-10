@@ -79,9 +79,17 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
             <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
               {categoryText}
             </span>
-            <time dateTime={story.date} className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
-              {dateText}
-            </time>
+            <div className="flex items-center flex-shrink-0 typo-card-meta text-gray-500 dark:text-gray-400">
+              <time dateTime={story.date}>
+                {dateText}
+              </time>
+              {story.readingTime > 0 && (
+                <>
+                  <span className="text-gray-400 dark:text-gray-500 mx-1" aria-hidden="true">·</span>
+                  <span className="flex-shrink-0 text-gray-500 dark:text-gray-400">{story.readingTime}분</span>
+                </>
+              )}
+            </div>
           </div>
 
           <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title}>
@@ -91,6 +99,19 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
           <div className="typo-card-body leading-snug line-clamp-4 flex-none">
             {contentText}
           </div>
+
+          {story.tags && story.tags.length > 0 && (
+            <div className="mt-auto pt-3 flex flex-wrap gap-1.5">
+              {story.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </m.div>
     </Link>

@@ -122,7 +122,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
       t('pricing.seo.schemaTitle'),
       allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
       reviewsData,
-      locale
+      locale,
+      t('pricing.seo.description')
     ),
     [allOffers, locale, reviewsData, t]
   );

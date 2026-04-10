@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import fs from 'fs';
+import path from 'path';
 import { getAllStories } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
+import { defaultLocale } from '../../lib/i18n-config';
 
 const storiesLabel: Record<Locale, string> = {
   ko: '스토리',
@@ -29,7 +32,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const siteConfig = getSiteConfig(locale);
   const siteUrl = siteConfig.url;
-  const stories = getAllStories(locale);
+  const storiesDir = path.join(process.cwd(), 'content', 'stories');
+  const allStories = getAllStories(locale);
+  const stories = locale === defaultLocale
+    ? allStories
+    : allStories.filter((s) => fs.existsSync(path.join(storiesDir, `${s.slug}.${locale}.md`)));
 
   const lastBuildDate = stories.length > 0
     ? new Date(stories[0].date).toUTCString()

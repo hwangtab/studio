@@ -3,6 +3,7 @@ import Head from 'next/head';
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
+import { getReviews } from '../data/reviews';
 import {
   generateDefaultSchema,
   generateArticleSchema,
@@ -37,6 +38,7 @@ interface SEOProps {
   articleSection?: string;
   articleSchemaType?: 'Article' | 'BlogPosting';
   articleTags?: string[];
+  articleWordCount?: number;
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
   reviewItems?: ReviewItem[] | null;
@@ -68,6 +70,7 @@ const SEO = ({
   articleSection,
   articleSchemaType = 'Article',
   articleTags,
+  articleWordCount,
   breadcrumbs = null,
   faqItems = null,
   reviewItems = null,
@@ -134,8 +137,8 @@ const SEO = ({
       : canonicalUrl;
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl, reviewItems, currentLocale),
-    [siteUrl, reviewItems, currentLocale]
+    () => generateDefaultSchema(siteUrl, getReviews(currentLocale), currentLocale),
+    [siteUrl, currentLocale]
   );
 
   const websiteSchema = React.useMemo(
@@ -176,7 +179,8 @@ const SEO = ({
           currentLocale,
           articleSchemaType,
           articleSection,
-          articleTags
+          articleTags,
+          articleWordCount
         )
         : null,
     [
@@ -193,6 +197,7 @@ const SEO = ({
       articleSchemaType,
       articleSection,
       articleTags,
+      articleWordCount,
     ]
   );
 

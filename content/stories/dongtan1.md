@@ -56,6 +56,8 @@ faq:
 
 ## 마치며
 
+방문 전 카카오톡으로 예약해두시면 준비 상태를 미리 맞출 수 있습니다.
+
 ---
 
 [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [서울 녹음실 비교 가이드](/stories/studio-compare1)

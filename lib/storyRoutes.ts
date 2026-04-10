@@ -18,3 +18,11 @@ export const buildStoriesPath = (
     ? `/${normalizedLocale}/stories/page/${page}`
     : `/${normalizedLocale}/stories`;
 };
+
+export const buildTagPath = (locale: string, tag: string, page = 1): string => {
+  const normalizedLocale = (locale as Locale) || defaultLocale;
+  const encodedTag = encodeURIComponent(tag);
+  return page > 1
+    ? `/${normalizedLocale}/stories/tag/${encodedTag}/page/${page}`
+    : `/${normalizedLocale}/stories/tag/${encodedTag}`;
+};

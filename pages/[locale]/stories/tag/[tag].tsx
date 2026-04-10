@@ -3,17 +3,18 @@ import StoriesCollectionPage from '../../../../components/stories/StoriesCollect
 import {
   STORIES_PAGE_SIZE,
   getStoriesPage,
+  getAllTags,
   type StoriesPageData,
 } from '../../../../lib/stories';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../../lib/getStatic';
 import { locales, type Locale } from '../../../../lib/i18n';
 import type { NextPageWithLayout } from '../../../../types';
 
-interface StoriesPaginatedPageProps extends StoriesPageData {
+interface StoriesTagPageProps extends StoriesPageData {
   locale: Locale;
 }
 
-const StoriesPaginatedPage: NextPageWithLayout<StoriesPaginatedPageProps> = ({
+const StoriesTagPage: NextPageWithLayout<StoriesTagPageProps> = ({
   locale,
   stories,
   availableCategories,
@@ -33,17 +34,15 @@ const StoriesPaginatedPage: NextPageWithLayout<StoriesPaginatedPageProps> = ({
   />
 );
 
-StoriesPaginatedPage.hasHero = true;
+StoriesTagPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = locales.flatMap((locale) => {
-    const pageData = getStoriesPage(locale, null, 1, STORIES_PAGE_SIZE);
-    const totalPages = pageData?.totalPages ?? 1;
-
-    return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => ({
+    const tags = getAllTags(locale);
+    return tags.map((tag) => ({
       params: {
         locale,
-        page: String(index + 2),
+        tag,
       },
     }));
   });
@@ -54,12 +53,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<StoriesPaginatedPageProps> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<StoriesTagPageProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  const page = Number(params?.page);
-  const pageData = getStoriesPage(locale, null, page, STORIES_PAGE_SIZE);
+  const tag = decodeURIComponent(params?.tag as string);
+  const pageData = getStoriesPage(locale, null, 1, STORIES_PAGE_SIZE, tag);
 
-  if (!pageData || page <= 1) {
+  if (!pageData) {
     return {
       notFound: true,
     };
@@ -72,4 +71,4 @@ export const getStaticProps: GetStaticProps<StoriesPaginatedPageProps> = async (
   );
 };
 
-export default StoriesPaginatedPage;
+export default StoriesTagPage;

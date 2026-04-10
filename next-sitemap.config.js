@@ -184,6 +184,10 @@ module.exports = {
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
+      // Google
+      { userAgent: 'Googlebot', allow: '/' },
+      // Bing
+      { userAgent: 'Bingbot', allow: '/' },
       // Naver
       { userAgent: 'Yeti', allow: '/' },
       // OpenAI
@@ -252,10 +256,11 @@ module.exports = {
       return null;
     }
 
-    // 페이지네이션 및 카테고리 필터 페이지는 저가치 중복 콘텐츠 → 사이트맵 제외
+    // 페이지네이션, 카테고리, 태그 필터 페이지는 noindex 중복 콘텐츠 → 사이트맵 제외
     if (
       /\/stories\/page\//.test(routePath) ||
-      /\/stories\/category\//.test(routePath)
+      /\/stories\/category\//.test(routePath) ||
+      /\/stories\/tag\//.test(routePath)
     ) {
       return null;
     }
