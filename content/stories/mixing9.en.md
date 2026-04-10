@@ -3,7 +3,7 @@ title: "Mixing Course - Part 9: The Invisible Enemy, Phase"
 date: 2025-11-20
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Phase", "DrumMixing", "Polarity"]
+tags: ["믹싱", "강좌"]
 ---
 ![Drum miking photo](/images/recording1.webp)
 

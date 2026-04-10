@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제10부: 황금 귀 만들기 (Ear Training & Studio Wisdom)"
 date: 2025-11-21
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "청음훈련", "EarTraining", "Reference"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "레퍼런스 모니터링과 귀 훈련 방법. 믹싱 엔지니어가 좋은 귀를 키우는 구체적인 훈련법과 레퍼런스 트랙 활용법을 안내합니다."
 thumbnail: "/images/recording6.webp"
 faq:

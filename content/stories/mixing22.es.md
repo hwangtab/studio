@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 22: Dibujar sobre el tiempo, automatización"
 date: 2025-12-02
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Automation", "DynamicMix", "FaderRide"]
+tags: ["믹싱", "강좌", "오토메이션"]
 ---
 ![Pantalla de DAW con líneas de automatización](/images/console.webp)
 

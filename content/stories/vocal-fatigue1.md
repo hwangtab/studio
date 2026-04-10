@@ -1,9 +1,9 @@
 ---
 title: "보컬 피로 가이드 — 목이 지친 날 회복하는 방법과 예방법"
-date: 2026-04-06
+date: 2026-03-09
 author: "스튜디오 놀"
-category: "발성 가이드"
-tags: ["보컬 피로", "성대 피로", "목 피로 회복", "녹음 후 성대", "공연 후 목 관리", "보컬 피로 예방", "성대 회복"]
+category: "music-guide"
+tags: ["보컬", "보컬 건강", "실전"]
 thumbnail: "/images/studio1.webp"
 summary: "보컬 피로와 성대 회복에 관한 가이드입니다. 피로의 원인, 즉각적인 회복법, 다음 날 녹음 전 컨디션 회복, 장기적인 피로 예방 루틴을 정리합니다."
 faq:
@@ -130,4 +130,4 @@ faq:
 
 ---
 
-[보컬 워밍업 가이드](/stories/warmup1) | [보컬 연습 루틴 가이드](/stories/vocal-practice-routine1) | [녹음 준비 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocalhealth1)
+[보컬 워밍업 가이드](/stories/warmup1) | [보컬 연습 루틴 가이드](/stories/vocal-practice-routine1) | [녹음 준비 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocal-health1)

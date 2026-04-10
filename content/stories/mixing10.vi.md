@@ -1,9 +1,9 @@
 ---
-title: "Khóa học Mixing - Phần 10: Xây dựng đôi tai vàng (Ear Training & Studio Wisdom)"
+title: "Khóa học Mixing - Phần 10: Xây dựng đôi tai vàng (Ear Training & St..."
 date: 2025-11-21
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "EarTraining", "Reference", "Listening"]
+tags: ["믹싱", "강좌"]
 ---
 ![Nghe tập trung bằng tai nghe](/images/recording2.webp)
 

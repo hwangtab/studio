@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 11: Mảnh ghép cuối trước khi mix, Ed
 date: 2025-11-22
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Editing", "Comping", "Timing"]
+tags: ["믹싱", "강좌"]
 ---
 ![Màn hình chỉnh waveform](/images/recording11.webp)
 

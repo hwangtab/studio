@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 16: El escultor del sonido, EQ"
 date: 2025-11-26
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "EQ", "Equalizer", "Frequency"]
+tags: ["믹싱", "강좌", "EQ"]
 ---
 ![Gráfico de EQ colorido](/images/pcw.webp)
 

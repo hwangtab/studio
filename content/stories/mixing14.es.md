@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 14: El 80% de la mezcla es balance de volumen"
 date: 2025-11-24
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Balance", "Fader", "Headroom"]
+tags: ["믹싱", "강좌"]
 ---
 ![Consola de mezcla y faders](/images/console.webp)
 

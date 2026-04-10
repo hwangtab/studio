@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제17부: 음악의 생동감, 컴프레서로 길들이기"
 date: 2025-11-27
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "컴프레서", "Dynamics", "Compressor"]
+category: "lesson"
+tags: ["믹싱", "강좌", "컴프레서"]
 summary: "컴프레서의 작동 원리와 어택·릴리즈·스레숄드·레이쇼 파라미터 설명. 보컬·드럼·베이스에서 컴프레서를 자연스럽게 사용하는 실전 방법을 안내합니다."
 thumbnail: "/images/hardware1.webp"
 faq:

@@ -3,7 +3,7 @@ title: "混音课程 - 第 23 部：大长征的句号——母带"
 date: 2025-12-03
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Mastering", "FinalStep", "Loudness"]
+tags: ["믹싱", "강좌", "마스터링"]
 ---
 ![干净整齐的音频波形显示在屏幕上](/images/service3.webp)
 

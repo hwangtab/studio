@@ -3,7 +3,7 @@ title: "混音课程 - 第 3 部：设备病治愈计划"
 date: 2025-11-14
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "设备", "Gear", "DAW"]
+tags: ["믹싱", "강좌", "장비", "DAW"]
 ---
 ![各种音频接口与设备](/images/hardware4.webp)
 

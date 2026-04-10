@@ -3,7 +3,7 @@ title: "Mixing Course - Part 3: The Gear-Addiction Detox Project"
 date: 2025-11-14
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Gear", "Gear", "DAW"]
+tags: ["믹싱", "강좌", "장비", "DAW"]
 ---
 ![Various audio interfaces and gear](/images/hardware4.webp)
 

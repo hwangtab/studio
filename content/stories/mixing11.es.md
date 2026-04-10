@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 11: La última pieza antes de mezclar, edición"
 date: 2025-11-22
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Edicion", "Editing", "Comping"]
+tags: ["믹싱", "강좌"]
 ---
 ![Pantalla de edición de ondas](/images/recording11.webp)
 

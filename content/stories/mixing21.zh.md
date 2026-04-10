@@ -3,7 +3,7 @@ title: "混音课程 - 第 21 部：失真的美学——饱和与失真"
 date: 2025-12-01
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Saturation", "Distortion", "Harmonics"]
+tags: ["믹싱", "강좌"]
 ---
 ![带有温暖质感的复古模拟设备](/images/service2.webp)
 

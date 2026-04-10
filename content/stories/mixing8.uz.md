@@ -3,7 +3,7 @@ title: "Miks kursi - 8-qism: Pluginlar uchun dasturxon (Gain Staging)"
 date: 2025-11-19
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "GainStaging", "Headroom", "InputLevel"]
+tags: ["믹싱", "강좌", "게인 스테이징"]
 ---
 ![Analog VU meter](/images/hardware5.webp)
 

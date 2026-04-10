@@ -2,8 +2,8 @@
 title: "'\"Bulgwang Mixing Club\" birinchi uchrashuv e''loni'"
 date: 2025-11-03
 author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
+category: "news"
+tags: ["믹싱", "녹음실"]
 ---
 ![Bulgwang Mixing Club miks xonasi](/images/hardware2.webp)
 

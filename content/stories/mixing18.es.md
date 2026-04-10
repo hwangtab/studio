@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 18: Dar aire a la música, reverb"
 date: 2025-11-28
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Reverb", "Space", "PreDelay"]
+tags: ["믹싱", "강좌", "리버브", "딜레이"]
 ---
 ![Catedral con vitrales](/images/service1.webp)
 

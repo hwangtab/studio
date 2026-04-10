@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 16: ประติ�
 date: 2025-11-26
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "EQ", "Equalizer", "Frequency"]
+tags: ["믹싱", "강좌", "EQ"]
 ---
 ![กราฟ EQ สีสันสด](/images/pcw.webp)
 

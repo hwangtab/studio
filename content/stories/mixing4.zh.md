@@ -3,7 +3,7 @@ title: "混音课程 - 第 4 部：数字音频的分辨率（采样率 & 位深
 date: 2025-11-15
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "数字", "SampleRate", "BitDepth"]
+tags: ["믹싱", "강좌"]
 ---
 ![数字音频波形](/images/recording8.webp)
 

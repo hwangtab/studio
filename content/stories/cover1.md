@@ -1,9 +1,9 @@
 ---
 title: "커버곡 녹음 가이드 — 유튜브·SNS용 음원을 준비할 때 보는 기준"
-date: 2026-04-06
+date: 2025-09-06
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["커버곡 녹음", "유튜브 커버", "커버 음원", "보컬 녹음", "MR 준비", "SNS 음원"]
+category: "lesson"
+tags: ["커버"]
 thumbnail: "/images/recording15.webp"
 summary: "유튜브·인스타그램·틱톡에 올릴 커버 음원을 준비할 때 필요한 실전 기준을 정리했습니다. MR 준비, 키 선택, 세션 흐름, 업로드 전 체크 포인트까지 한 번에 볼 수 있어요."
 faq:
@@ -64,5 +64,5 @@ faq:
 
 - [커버곡 저작권 처리 방법](/stories/coverright1)
 - [녹음 세션 준비 체크리스트](/stories/session1)
-- [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1)
+- [홈 레코딩 vs 전문 스튜디오 비교](/stories/home-vs-studio1)
 - [뮤직비디오·유튜브 영상 음원 녹음 가이드](/stories/mv1)

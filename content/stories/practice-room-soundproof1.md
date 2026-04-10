@@ -1,9 +1,9 @@
 ---
 title: "방음 연습실 고르는 법 — STC와 현장 확인 포인트"
-date: 2026-04-07
+date: 2026-01-08
 author: "스튜디오 놀"
-category: "악기 연습"
-tags: ["방음 연습실", "방음 작업실", "연습실 방음", "STC 방음 등급"]
+category: "instrument"
+tags: ["연습실", "장비"]
 thumbnail: "/images/room5.webp"
 summary: "연습실을 볼 때 방음은 가장 먼저 확인해야 할 조건입니다. STC의 의미, 방음과 흡음의 차이, 현장에서 직접 테스트하는 방법을 정리했습니다."
 faq:

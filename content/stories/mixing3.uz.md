@@ -3,7 +3,7 @@ title: "Miks kursi - 3-qism: Gearga qaramlikni davolash loyihasi"
 date: 2025-11-14
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Gear", "Gear", "DAW"]
+tags: ["믹싱", "강좌", "장비", "DAW"]
 ---
 ![Turli audio interfeyslar va gear](/images/hardware4.webp)
 

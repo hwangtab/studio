@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제14부: 믹스의 8할은 볼륨 밸런스"
 date: 2025-11-24
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "볼륨", "Balance", "Fader"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "믹스의 8할은 볼륨 밸런스에서 결정됩니다. 킥·베이스·보컬·기타를 어떤 순서와 방법으로 밸런스를 잡는지 실전 과정을 상세히 안내합니다."
 thumbnail: "/images/recording14.webp"
 faq:

@@ -3,7 +3,7 @@ title: "混音课程 - 第 9 部：透明人般的敌人——相位"
 date: 2025-11-20
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "相位", "Phase", "DrumMixing"]
+tags: ["믹싱", "강좌"]
 ---
 ![鼓组拾音照片](/images/recording1.webp)
 

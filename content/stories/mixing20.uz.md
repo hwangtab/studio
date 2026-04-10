@@ -3,7 +3,7 @@ title: "Miks kursi - 20-qism: Modulationning to'lqinli sehri"
 date: 2025-11-30
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Modulation", "Chorus", "Flanger"]
+tags: ["믹싱", "강좌"]
 ---
 ![To'lqinli suv yoki aurora](/images/pcw.webp)
 

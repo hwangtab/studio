@@ -3,7 +3,7 @@ title: "Miks kursi - 14-qism: Miksning 80% i volume balansidir"
 date: 2025-11-24
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Balance", "Fader", "Headroom"]
+tags: ["믹싱", "강좌"]
 ---
 ![Miks pulti va faderlar](/images/console.webp)
 

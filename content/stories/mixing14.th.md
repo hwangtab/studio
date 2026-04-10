@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 14: 80% ของม
 date: 2025-11-24
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Balance", "Fader", "Headroom"]
+tags: ["믹싱", "강좌"]
 ---
 ![คอนโซลมิกซ์และ fader](/images/console.webp)
 

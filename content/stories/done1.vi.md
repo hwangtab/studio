@@ -2,8 +2,8 @@
 title: "Hoàn tất làm mới website Studio NOL!"
 date: 2025-06-04
 author: "Studio NOL"
-category: "notice"
-tags: ["Làm mới", "Phòng thu âm"]
+category: "news"
+tags: ["녹음실"]
 ---
 ![Phòng thu Studio NOL](/images/studio1.webp)
 

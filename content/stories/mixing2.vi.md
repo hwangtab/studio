@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 2: Thuần hóa căn phòng biết nói dố
 date: 2025-11-13
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Monitoring", "Monitoring", "Âm học phòng"]
+tags: ["믹싱", "강좌"]
 ---
 ![Bố trí loa monitor trong studio](/images/studio1.webp)
 

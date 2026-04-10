@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 1: El inicio de la mezcla como cocina"
 date: 2025-11-12
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Principiante", "Mixing", "Introducción"]
+tags: ["믹싱", "강좌"]
 ---
 ![Consola de mezcla y vista del estudio](/images/console.webp)
 

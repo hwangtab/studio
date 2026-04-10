@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제9부: 투명 인간 같은 적, 위상(Phase)"
 date: 2025-11-20
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "위상", "Phase", "DrumMixing"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "위상(Phase) 문제가 믹스에 미치는 영향과 해결법. 드럼 멀티마이킹, 보컬 더블 트래킹에서 자주 발생하는 위상 충돌 원인과 체크 방법을 설명합니다."
 thumbnail: "/images/recording4.webp"
 faq:

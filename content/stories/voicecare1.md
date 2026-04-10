@@ -1,9 +1,9 @@
 ---
 title: "목소리 관리 생활 습관 가이드 — 보컬리스트의 일상 루틴"
-date: 2026-04-06
+date: 2026-03-23
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["목소리 관리", "성대 관리", "보컬리스트 생활 습관", "목소리 건강", "성대 건강 루틴", "보컬 컨디션 관리", "노래하는 사람 관리"]
+category: "lesson"
+tags: ["강좌", "보컬 건강", "보컬"]
 thumbnail: "/images/portfolio3.webp"
 summary: "보컬리스트에게 목소리는 악기입니다. 매일의 생활 습관이 성대 건강과 보컬 컨디션을 결정합니다. 수분 섭취, 수면, 식단, 환경 관리까지 보컬리스트가 지켜야 할 일상 루틴을 정리합니다."
 faq:
@@ -101,4 +101,4 @@ faq:
 
 ---
 
-[성대 건강 관리 가이드](/stories/vocalhealth1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [보컬 녹음 전 먹으면 안 되는 음식](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1)
+[성대 건강 관리 가이드](/stories/vocal-health1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [보컬 녹음 전 먹으면 안 되는 음식](/stories/vocal-food1) | [보컬 워밍업 루틴](/stories/warmup1)

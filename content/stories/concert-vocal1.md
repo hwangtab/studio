@@ -1,9 +1,9 @@
 ---
 title: "콘서트·공연 보컬 준비 가이드 — 무대 전날부터 당일 관리까지"
-date: 2026-04-06
+date: 2025-09-02
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["콘서트 보컬 준비", "공연 보컬 관리", "무대 전 목 관리", "보컬 컨디션", "라이브 보컬", "공연 전날 루틴", "보컬 스테이지 준비"]
+category: "lesson"
+tags: ["보컬", "강좌"]
 thumbnail: "/images/service8.webp"
 summary: "콘서트·공연 전날부터 당일 사운드체크까지 보컬 컨디션을 최상으로 유지하는 가이드. 수면·식이·워밍업·무대 모니터 세팅까지 라이브 퍼포먼스를 위한 실전 루틴."
 faq:
@@ -61,6 +61,8 @@ faq:
 ---
 
 ## D-day (공연 당일)
+
+다음 내용에서 D-day (공연 당일)을 자세히 다룹니다.
 
 ### 오전~오후
 
@@ -122,6 +124,8 @@ faq:
 
 공연은 준비가 90%입니다.
 
+보컬 실력은 하루아침에 완성되지 않습니다. 꾸준한 연습과 피드백 반복이 가장 확실한 방법입니다.
+
 ---
 
-[무대 보컬·공연 보컬 가이드](/stories/stage-vocal1) | [보컬 퍼포먼스 가이드](/stories/vocal-performance1) | [보컬 워밍업 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocalhealth1)
+[무대 보컬·공연 보컬 가이드](/stories/stage-vocal1) | [보컬 퍼포먼스 가이드](/stories/vocal-performance1) | [보컬 워밍업 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocal-health1)

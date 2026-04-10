@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 20: Phép màu lượn sóng của Modulatio
 date: 2025-11-30
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Modulation", "Chorus", "Flanger"]
+tags: ["믹싱", "강좌"]
 ---
 ![Mặt nước gợn sóng hoặc cực quang](/images/pcw.webp)
 

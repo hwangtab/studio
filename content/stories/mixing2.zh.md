@@ -3,7 +3,7 @@ title: "混音课程 - 第 2 部：驯服会说谎的房间"
 date: 2025-11-13
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "监听", "Monitoring", "RoomAcoustic"]
+tags: ["믹싱", "강좌"]
 ---
 ![录音室监听音箱摆位](/images/studio1.webp)
 

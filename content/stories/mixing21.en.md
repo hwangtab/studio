@@ -3,7 +3,7 @@ title: "Mixing Course - Part 21: The Aesthetics of Distortion & Saturation"
 date: 2025-12-01
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Saturation", "Distortion", "Harmonics"]
+tags: ["믹싱", "강좌"]
 ---
 ![Vintage analog gear with warm texture](/images/service2.webp)
 

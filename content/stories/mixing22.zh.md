@@ -3,7 +3,7 @@ title: "混音课程 - 第 22 部：在时间上作画——自动化"
 date: 2025-12-02
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Automation", "DynamicMix", "FaderRide"]
+tags: ["믹싱", "강좌", "오토메이션"]
 ---
 ![DAW 上的自动化曲线](/images/console.webp)
 

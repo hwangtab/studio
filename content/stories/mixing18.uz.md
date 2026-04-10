@@ -3,7 +3,7 @@ title: "Miks kursi - 18-qism: Musiqaga nafas berish — Reverb"
 date: 2025-11-28
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Reverb", "Space", "PreDelay"]
+tags: ["믹싱", "강좌", "리버브", "딜레이"]
 ---
 ![Rangli vitrajli ulkan sobor](/images/service1.webp)
 

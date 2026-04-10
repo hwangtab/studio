@@ -3,7 +3,7 @@ title: "Miks kursi - 4-qism: Raqamli audio aniqligi (Sample Rate & Bit Depth)"
 date: 2025-11-15
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Digital", "SampleRate", "BitDepth"]
+tags: ["믹싱", "강좌"]
 ---
 ![Raqamli audio to'lqin shakli](/images/recording8.webp)
 

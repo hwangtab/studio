@@ -1,9 +1,9 @@
 ---
 title: "동작구 녹음실 가이드 — 노량진·사당·이수 생활권에서 볼 기준"
-date: 2026-04-06
+date: 2025-09-17
 author: "스튜디오 놀"
-category: "지역 가이드"
-tags: ["동작구 녹음실", "노량진 녹음실", "사당 녹음실", "이수 녹음실", "대방 녹음실", "상도 녹음실"]
+category: "region"
+tags: ["녹음실", "보컬 녹음", "음반 제작"]
 thumbnail: "/images/hardware1.webp"
 summary: "노량진·사당·이수·대방 생활권에서 녹음실을 찾을 때 출발역, 환승 횟수, 세션 전후 일정까지 함께 보는 기준을 정리했습니다. 동작구 안에서 가까운 선택지와 다른 권역을 비교할 때도 참고할 수 있어요."
 faq:
@@ -56,7 +56,4 @@ faq:
 
 ## 관련 링크
 
-- [동작구 노량진·대방·신대방 녹음실 안내](/stories/dongjak-noryangjin1)
-- [동작구 사당·방배·상도·이수 녹음실 안내](/stories/dongjak-sadang1)
-- [동작구 흑석동·동작동 녹음실 안내](/stories/dongjak-heukseok1)
 - [관악구·동작구 녹음실 가이드](/stories/gwanak1)

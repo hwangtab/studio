@@ -3,7 +3,7 @@ title: "混音课程 - 第 10 部：打造黄金耳（听力训练与录音室�
 date: 2025-11-21
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "听力训练", "EarTraining", "Reference"]
+tags: ["믹싱", "강좌"]
 ---
 ![戴着耳机专注聆听](/images/recording2.webp)
 

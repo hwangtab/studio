@@ -1,9 +1,9 @@
 ---
-title: "Khóa học Mixing - Phần 4: Độ phân giải âm thanh số (Sample Rate & Bit Depth)"
+title: "Khóa học Mixing - Phần 4: Độ phân giải âm thanh số (Sample Rate & B..."
 date: 2025-11-15
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Digital", "SampleRate", "BitDepth"]
+tags: ["믹싱", "강좌"]
 ---
 ![Dạng sóng âm thanh số](/images/recording8.webp)
 

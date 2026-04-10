@@ -2,8 +2,8 @@
 title: "Studio NOL Website Renewal Complete!"
 date: 2025-06-04
 author: "Studio NOL"
-category: "notice"
-tags: ["Renewal", "Recording Studio"]
+category: "news"
+tags: ["녹음실", "녹음"]
 ---
 ![Studio NOL recording studio](/images/studio1.webp)
 

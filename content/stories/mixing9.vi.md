@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 9: Kẻ thù vô hình, Phase"
 date: 2025-11-20
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Phase", "DrumMixing", "Polarity"]
+tags: ["믹싱", "강좌"]
 ---
 ![Ảnh micro trống](/images/recording1.webp)
 

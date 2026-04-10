@@ -3,7 +3,7 @@ title: "Miks kursi - 23-qism: Katta yakun — Mastering"
 date: 2025-12-03
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Mastering", "FinalStep", "Loudness"]
+tags: ["믹싱", "강좌", "마스터링"]
 ---
 ![Monitorda toza audio waveform](/images/service3.webp)
 

@@ -1,9 +1,9 @@
 ---
 title: "MR(반주) 구하는 방법 가이드 — 유료 사이트부터 키 조정까지"
-date: 2026-04-06
+date: 2025-11-24
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["MR 구하는 방법", "반주 파일", "MR 다운로드", "MR 사이트", "키 조정 MR", "녹음 반주", "보컬 녹음 준비"]
+category: "lesson"
+tags: ["강좌"]
 thumbnail: "/images/hardware5.webp"
 summary: "보컬 녹음 전 MR(반주) 파일을 구하는 방법. 유료 MR 사이트, 유튜브 MR 활용, 직접 제작 의뢰, 키 조정 방법까지 녹음 준비를 위한 MR 가이드."
 faq:
@@ -86,8 +86,6 @@ MR 사이트에서 원하는 키(예: A 키, Bb 키)의 MR을 구매합니다. �
 
 ### 방법 2: DAW에서 피치 조정
 
-녹음 전 게인과 마이크 위치를 정확히 잡아두면 후반 작업이 크게 줄어듭니다.
-
 - **GarageBand**: 트랙 피치 조정 (좌측 트랙 설정 → 피치)
 - **Audacity**: Effects → Change Pitch
 - **Logic Pro**: 리전 → 피치 조정
@@ -99,8 +97,6 @@ Moises 앱의 키 조정 기능을 이용해 실시간으로 반음 단위 변�
 ---
 
 ## 스튜디오 방문 시 MR 준비사항
-
-아래 설정은 일반적인 권장 사항이며 장비 특성과 공간에 따라 조정이 필요합니다.
 
 - MR 파일 형식: WAV 44.1kHz/16bit 이상 (MP3 320kbps도 가능)
 - MR 파일명: 명확하게 저장 (곡명_키_BPM.wav)
@@ -116,4 +112,4 @@ Moises 앱의 키 조정 기능을 이용해 실시간으로 반음 단위 변�
 
 ---
 
-[음악 작업 의뢰 방법](/stories/commission1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [MP3 vs WAV 파일 형식 가이드](/stories/audioformat1) | [첫 녹음 세션 준비 가이드](/stories/session1)
+[음악 작업 의뢰 방법](/stories/commission1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [MP3 vs WAV 파일 형식 가이드](/stories/audio-format1) | [첫 녹음 세션 준비 가이드](/stories/session1)

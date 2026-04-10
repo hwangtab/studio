@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 12: Tu propio template de mezcla (Secreto de estudio)"
+title: "Curso de Mezcla - Parte 12: Tu propio template de mezcla (Secreto d..."
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Plantilla", "Template", "Routing"]
+tags: ["믹싱", "강좌"]
 ---
 ![Ventana del mezclador en el DAW](/images/portfolio3.webp)
 

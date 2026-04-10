@@ -3,7 +3,7 @@ title: "Mixing Course - Part 14: 80% of a Mix Is Volume Balance"
 date: 2025-11-24
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Balance", "Fader", "Headroom"]
+tags: ["믹싱", "강좌"]
 ---
 ![Mixing console and faders](/images/console.webp)
 

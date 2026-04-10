@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 11: ชิ้นส�
 date: 2025-11-22
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Editing", "Comping", "Timing"]
+tags: ["믹싱", "강좌"]
 ---
 ![หน้าจอแก้ไขเวฟฟอร์ม](/images/recording11.webp)
 

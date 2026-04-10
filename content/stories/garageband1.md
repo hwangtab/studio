@@ -1,9 +1,9 @@
 ---
 title: "GarageBand 보컬 녹음 가이드 — 무료 DAW로 고퀄리티 녹음"
-date: 2026-04-07
+date: 2025-10-04
 author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["GarageBand 보컬", "가라지밴드 녹음", "GarageBand 설정", "맥 보컬 녹음", "무료 DAW 녹음", "GarageBand 믹싱", "iOS GarageBand"]
+category: "music-guide"
+tags: ["보컬", "밴드", "GarageBand"]
 thumbnail: "/images/room6.webp"
 summary: "GarageBand 보컬 녹음 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다."
 faq:
@@ -26,7 +26,7 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand 기본 설정 (Mac)
 
-자동화(Automation) 레인을 활용하면 수동 조정 없이 정밀한 다이나믹 변화를 만들 수 있습니다.
+GarageBand 기본 설정 (Mac) 방법을 단계별로 정리했습니다.
 
 ### 오디오 인터페이스 설정
 
@@ -50,7 +50,7 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## 오디오 트랙 생성 및 녹음
 
-같은 기능이라도 DAW에 내장된 도구가 서드파티 플러그인보다 안정적인 경우가 많습니다.
+오디오 트랙 생성 및 녹음의 핵심 포인트를 단계별로 설명합니다.
 
 ### 트랙 생성
 
@@ -80,7 +80,7 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand EQ 설정
 
-고음역 컷이 전체 믹스에 투명감을 더해주는 경우가 많으므로 저역부터 정리하세요.
+GarageBand EQ 설정 방법을 단계별로 정리했습니다.
 
 ### Channel EQ 삽입
 
@@ -104,7 +104,7 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand 컴프레서 설정
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
+GarageBand 컴프레서 설정 방법을 단계별로 정리했습니다.
 
 ### Compressor 삽입
 
@@ -128,7 +128,7 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## 파일 내보내기 (Export)
 
-아래 내용은 특정 버전 기준이며, 업데이트 이후 인터페이스가 달라질 수 있습니다.
+파일 내보내기 (Export)을 구체적으로 살펴봅니다.
 
 ### 믹싱 의뢰용 내보내기
 
@@ -172,6 +172,8 @@ Share → Export Song to Disk
 ## 마치며
 
 GarageBand는 무료이지만 스튜디오 의뢰 가능한 드라이 보컬 녹음에 충분합니다.
+
+새로운 기능을 하나씩 실험해보는 것이 가장 빠른 학습 방법입니다. 오늘 한 가지 새 기능에 도전해보세요.
 
 ---
 

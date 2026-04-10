@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 17: Thuần hóa động lực với Compres
 date: 2025-11-27
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Compressor", "Dynamics", "ParallelCompression"]
+tags: ["믹싱", "강좌", "컴프레서"]
 ---
 ![Núm vặn của compressor cổ điển](/images/hardware1.webp)
 

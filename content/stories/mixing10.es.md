@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 10: Crear oídos de oro (Ear Training & Sabiduría de estudio)"
+title: "Curso de Mezcla - Parte 10: Crear oídos de oro (Ear Training & Sabi..."
 date: 2025-11-21
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "EntrenamientoAuditivo", "EarTraining", "Reference"]
+tags: ["믹싱", "강좌"]
 ---
 ![Persona concentrada con auriculares](/images/recording2.webp)
 

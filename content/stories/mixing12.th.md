@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 12: เทมเพ�
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Template", "Routing", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![หน้าต่างมิกเซอร์ของ DAW](/images/portfolio3.webp)
 

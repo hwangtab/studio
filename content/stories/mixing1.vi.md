@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 1: Bắt đầu mixing như nấu ăn"
 date: 2025-11-12
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Cơ bản", "Mixing", "Giới thiệu"]
+tags: ["믹싱", "강좌"]
 ---
 ![Bàn điều khiển mixing và toàn cảnh studio](/images/console.webp)
 

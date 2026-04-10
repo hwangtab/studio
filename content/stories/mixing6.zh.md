@@ -3,7 +3,7 @@ title: "混音课程 - 第 6 部：用眼睛读声音（米特的全部）"
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "计量", "Metering", "Loudness"]
+tags: ["믹싱", "강좌"]
 ---
 ![多种电平表](/images/console.webp)
 

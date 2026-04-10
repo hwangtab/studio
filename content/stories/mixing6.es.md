@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 6: Leer el sonido con los ojos (todo sobre el metering)"
+title: "Curso de Mezcla - Parte 6: Leer el sonido con los ojos (todo sobre ..."
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Metering", "Metering", "Loudness"]
+tags: ["믹싱", "강좌"]
 ---
 ![Varios medidores de nivel](/images/console.webp)
 

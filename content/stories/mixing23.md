@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제23부: 대장정의 마침표, 마스터링(Mastering)"
 date: 2025-12-03
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "마스터링", "Mastering", "FinalStep"]
+category: "lesson"
+tags: ["믹싱", "강좌", "마스터링"]
 summary: "마스터링의 역할과 믹싱과의 차이, 스포티파이·멜론·유튜브 음압 기준(-14 LUFS), 최종 납품 파일 포맷까지. 음원 발매 준비를 위한 마스터링 전 과정을 설명합니다."
 thumbnail: "/images/recording2.webp"
 faq:

@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 6: อ่านเ�
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Metering", "Metering", "Loudness"]
+tags: ["믹싱", "강좌"]
 ---
 ![มิเตอร์ระดับเสียงหลากหลายแบบ](/images/console.webp)
 

@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 7: Bản mix bắt đầu từ việc sắp 
 date: 2025-11-18
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "SessionPrep", "SessionPrep", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![Dây cáp lộn xộn và patchbay gọn gàng](/images/service3.webp)
 

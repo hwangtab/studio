@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 19: La sombra del sonido, delay"
 date: 2025-11-29
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Delay", "Echo", "PingPong"]
+tags: ["믹싱", "강좌", "딜레이"]
 ---
 ![Bosque o montañas con eco](/images/service3.webp)
 

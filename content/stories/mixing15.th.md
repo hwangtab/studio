@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 15: ศิลปะ�
 date: 2025-11-25
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Panning", "Stereo", "LCR"]
+tags: ["믹싱", "강좌", "패닝"]
 ---
 ![ลำโพงสเตอริโอและผู้ฟัง](/images/studio1.webp)
 

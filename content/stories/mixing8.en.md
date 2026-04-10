@@ -3,7 +3,7 @@ title: "Mixing Course - Part 8: Setting the Table for Plugins (Gain Staging)"
 date: 2025-11-19
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "GainStaging", "Headroom", "InputLevel"]
+tags: ["믹싱", "강좌", "게인 스테이징"]
 ---
 ![Analog VU meter](/images/hardware5.webp)
 

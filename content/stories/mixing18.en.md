@@ -3,7 +3,7 @@ title: "Mixing Course - Part 18: Breathing Air into Music, Reverb"
 date: 2025-11-28
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Reverb", "Space", "PreDelay"]
+tags: ["믹싱", "강좌", "리버브", "딜레이"]
 ---
 ![Grand cathedral with stained glass](/images/service1.webp)
 

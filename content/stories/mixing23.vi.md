@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 23: Đại kết, Mastering"
 date: 2025-12-03
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Mastering", "FinalStep", "Loudness"]
+tags: ["믹싱", "강좌", "마스터링"]
 ---
 ![Dạng sóng sạch trên màn hình](/images/service3.webp)
 

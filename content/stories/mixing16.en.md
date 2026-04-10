@@ -3,7 +3,7 @@ title: "Mixing Course - Part 16: The Sculptor of Sound, EQ"
 date: 2025-11-26
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "EQ", "Equalizer", "Frequency"]
+tags: ["믹싱", "강좌", "EQ"]
 ---
 ![Colorful EQ graph](/images/pcw.webp)
 

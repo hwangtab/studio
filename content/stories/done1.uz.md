@@ -2,8 +2,8 @@
 title: "Studio NOL veb-sayti yangilandi!"
 date: 2025-06-04
 author: "Studio NOL"
-category: "notice"
-tags: ["Yangilanish", "Yozuv studiyasi"]
+category: "news"
+tags: ["녹음실"]
 ---
 ![Studio NOL yozuv studiyasi](/images/studio1.webp)
 

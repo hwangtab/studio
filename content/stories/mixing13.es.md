@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 13: Lo más hermoso cuando está quieto (Static Mix)"
+title: "Curso de Mezcla - Parte 13: Lo más hermoso cuando está quieto (Stat..."
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "StaticMix", "Balance", "NoPlugins"]
+tags: ["믹싱", "강좌", "플러그인"]
 ---
 ![Ingeniero con la mano en el fader](/images/console.webp)
 

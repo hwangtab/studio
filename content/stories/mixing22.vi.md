@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 22: Vẽ trên thời gian, Automation"
 date: 2025-12-02
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Automation", "DynamicMix", "FaderRide"]
+tags: ["믹싱", "강좌", "오토메이션"]
 ---
 ![Màn hình DAW với đường automation](/images/console.webp)
 

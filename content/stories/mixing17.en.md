@@ -3,7 +3,7 @@ title: "Mixing Course - Part 17: Taming Dynamics with a Compressor"
 date: 2025-11-27
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Compressor", "Dynamics", "ParallelCompression"]
+tags: ["믹싱", "강좌", "컴프레서"]
 ---
 ![Knobs of a classic compressor](/images/hardware1.webp)
 

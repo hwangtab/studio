@@ -3,7 +3,7 @@ title: "混音课程 - 第 11 部：混音前的最后一块拼图——编辑"
 date: 2025-11-22
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "编辑", "Editing", "Comping"]
+tags: ["믹싱", "강좌"]
 ---
 ![波形编辑界面](/images/recording11.webp)
 

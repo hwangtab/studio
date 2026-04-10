@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 20: เวทมน�
 date: 2025-11-30
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Modulation", "Chorus", "Flanger"]
+tags: ["믹싱", "강좌"]
 ---
 ![ผิวน้ำเป็นคลื่นหรือแสงเหนือ](/images/pcw.webp)
 

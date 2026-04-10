@@ -1,9 +1,9 @@
 ---
 title: "보컬 레슨 선택 가이드 — 온라인 vs 오프라인, 개인 레슨 vs 그룹 레슨 비교"
-date: 2026-04-06
+date: 2025-11-03
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["보컬 레슨 선택", "보컬 코치 찾기", "온라인 보컬 레슨", "오프라인 보컬 레슨", "개인 레슨", "그룹 레슨", "연신내 보컬 레슨"]
+category: "lesson"
+tags: ["보컬"]
 thumbnail: "/images/portfolio5.webp"
 summary: "보컬 레슨을 시작하기 전 알아야 할 것들. 온라인 vs 오프라인, 개인 vs 그룹, 장르별 레슨 방식의 차이와 목적에 따른 선택 기준을 정리합니다."
 faq:
@@ -52,6 +52,8 @@ faq:
 ---
 
 ## 목적별 레슨 선택
+
+목적별 레슨 선택에서 고려해야 할 기준을 살펴봅니다.
 
 ### 취미 목적
 
@@ -107,6 +109,8 @@ faq:
 
 보컬 레슨과 스튜디오 녹음은 따로 생각하지 마세요. 레슨이 이론이라면 녹음은 실전입니다.
 
+연습할 때 반드시 녹음해서 들어보세요. 부르는 느낌과 실제 소리는 생각보다 많이 다릅니다.
+
 ---
 
-[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voicetype1) | [청음 훈련 가이드](/stories/eartraining1)
+[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voice-type1) | [청음 훈련 가이드](/stories/eartraining1)

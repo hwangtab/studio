@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제12부: 나만의 믹싱 템플릿 (Studio Secret)"
 date: 2025-11-23
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "템플릿", "Template", "Routing"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "믹싱 작업 효율을 극대화하는 나만의 템플릿 구성법. 채널 스트립, 버스 세팅, 마스터 버스를 미리 구성해 두면 얼마나 편해지는지를 소개합니다."
 thumbnail: "/images/recording9.webp"
 faq:

@@ -3,7 +3,7 @@ title: "Mixing Course - Part 12: Your Own Mixing Template (Studio Secret)"
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Template", "Routing", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![DAW mixer window](/images/console.webp)
 

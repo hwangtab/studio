@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제3부: 장비병 치유 프로젝트"
 date: 2025-11-14
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "장비", "Gear", "DAW"]
+category: "lesson"
+tags: ["믹싱", "강좌", "장비", "DAW"]
 summary: "비싼 장비가 좋은 믹스를 보장하지 않는 이유. 장비 구입보다 스킬·귀 훈련·환경 개선이 우선인 이유를 설명합니다."
 thumbnail: "/images/hardware3.webp"
 faq:

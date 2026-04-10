@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 3: Proyecto de desintoxicación de la obsesión por el equipo"
+title: "Curso de Mezcla - Parte 3: Proyecto de desintoxicación de la obsesi..."
 date: 2025-11-14
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Equipo", "Gear", "DAW"]
+tags: ["믹싱", "강좌", "장비", "DAW"]
 ---
 ![Varias interfaces de audio y equipos](/images/hardware4.webp)
 

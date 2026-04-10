@@ -2,8 +2,8 @@
 title: "'\"Bulgwang Mixing Club\" uchinchi uchrashuv e''loni'"
 date: 2025-11-18
 author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
+category: "news"
+tags: ["믹싱", "녹음실"]
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

@@ -3,7 +3,7 @@ title: "Miks kursi - 13-qism: Harakatsiz bo'lsa eng chiroyli (Static Mix)"
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "StaticMix", "Balance", "NoPlugins"]
+tags: ["믹싱", "강좌", "플러그인"]
 ---
 ![Injyener faderga qo'l qo'ygan](/images/console.webp)
 

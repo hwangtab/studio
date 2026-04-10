@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제21부: 찌그러짐의 미학, 디스토션과 새츄레이션"
 date: 2025-12-01
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "새츄레이션", "Saturation", "Distortion"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "디스토션과 새츄레이션의 차이와 믹싱에서의 활용법. 드럼·베이스·보컬에 테이프 새츄레이션을 적용해 아날로그 따뜻함을 더하는 방법을 설명합니다."
 thumbnail: "/images/hardware5.webp"
 faq:

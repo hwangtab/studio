@@ -3,7 +3,7 @@ title: "混音课程 - 第 1 部：以料理开始的混音"
 date: 2025-11-12
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "入门", "Mixing", "Introduction"]
+tags: ["믹싱", "강좌"]
 ---
 ![混音控制台与录音室全景](/images/console.webp)
 

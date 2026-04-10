@@ -1,9 +1,9 @@
 ---
 title: "음감 훈련(Ear Training) 가이드 — 인터벌·코드·리듬 청음으로 보컬 음정 잡기"
-date: 2026-04-06
+date: 2025-09-22
 author: "스튜디오 놀"
-category: "보컬 가이드"
-tags: ["음감 훈련", "ear training", "청음", "인터벌 훈련", "상대음감", "절대음감", "보컬 음정"]
+category: "music-guide"
+tags: ["실전"]
 thumbnail: "/images/recording11.webp"
 summary: "음감 훈련(Ear Training)은 인터벌·코드·리듬을 귀로 인식하는 능력을 키우는 훈련입니다. 보컬의 음정 정확도와 하모니 능력을 높이는 실전 청음 트레이닝 가이드."
 faq:
@@ -74,7 +74,7 @@ faq:
 
 ## 일일 음감 훈련 루틴
 
-핵심 원칙을 이해하면 구체적인 방법이 달라져도 유연하게 대응할 수 있습니다.
+다음 내용에서 일일 음감 훈련 루틴을 자세히 다룹니다.
 
 ### 워밍업 — 5분
 
@@ -134,4 +134,4 @@ faq:
 
 ---
 
-[음정 교정 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 가이드](/stories/singing-lesson1) | [흉성 가이드](/stories/chest-voice1)
+[음정 교정 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocal-range1) | [보컬 레슨 가이드](/stories/singing-lesson1) | [흉성 가이드](/stories/chest-voice1)

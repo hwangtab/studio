@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 8: Poner la mesa para los plugins (Gain Staging)"
+title: "Curso de Mezcla - Parte 8: Poner la mesa para los plugins (Gain Sta..."
 date: 2025-11-19
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "GainStaging", "Headroom", "InputLevel"]
+tags: ["믹싱", "강좌", "게인 스테이징"]
 ---
 ![Medidor VU analógico](/images/hardware5.webp)
 

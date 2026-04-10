@@ -1,9 +1,9 @@
 ---
 title: "프로덕션 레슨 강사 인터뷰 — \"MIDI 한 마디에서 완성된 음원까지\""
-date: 2026-04-07
+date: 2025-10-26
 author: "스튜디오 놀"
-category: "인터뷰"
-tags: ["프로덕션 레슨", "인터뷰", "MIDI 작곡 레슨", "믹싱 레슨", "음악 프로듀서", "작곡 레슨", "스튜디오 놀"]
+category: "feedback"
+tags: ["녹음실", "작곡"]
 thumbnail: "/images/recording4.webp"
 summary: "스튜디오 놀 프로덕션 레슨 강사 인터뷰. MIDI 작곡부터 믹싱·마스터링·음원 발매까지, 현직 프로듀서가 전하는 레슨 철학과 커리큘럼을 들려드립니다."
 faq:

@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 3: โปรเจ�
 date: 2025-11-14
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Gear", "Gear", "DAW"]
+tags: ["믹싱", "강좌", "장비", "DAW"]
 ---
 ![ออดิโออินเทอร์เฟซและเกียร์หลากหลาย](/images/hardware4.webp)
 

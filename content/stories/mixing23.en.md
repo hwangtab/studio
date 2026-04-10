@@ -3,7 +3,7 @@ title: "Mixing Course - Part 23: The Grand Finale, Mastering"
 date: 2025-12-03
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Mastering", "FinalStep", "Loudness"]
+tags: ["믹싱", "강좌", "마스터링"]
 ---
 ![Clean audio waveform on a monitor](/images/service3.webp)
 

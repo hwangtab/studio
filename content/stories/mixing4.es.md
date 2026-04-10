@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 4: Resolución del audio digital (Sample Rate & Bit Depth)"
+title: "Curso de Mezcla - Parte 4: Resolución del audio digital (Sample Rat..."
 date: 2025-11-15
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Digital", "SampleRate", "BitDepth"]
+tags: ["믹싱", "강좌"]
 ---
 ![Forma de onda de audio digital](/images/recording8.webp)
 

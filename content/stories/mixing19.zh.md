@@ -3,7 +3,7 @@ title: "混音课程 - 第 19 部：声音的影子——延迟"
 date: 2025-11-29
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Delay", "Echo", "PingPong"]
+tags: ["믹싱", "강좌", "딜레이"]
 ---
 ![回声山林或山脉](/images/service3.webp)
 

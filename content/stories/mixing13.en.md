@@ -3,7 +3,7 @@ title: "Mixing Course - Part 13: The Most Beautiful When Still (Static Mix)"
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "StaticMix", "Balance", "NoPlugins"]
+tags: ["믹싱", "강좌", "플러그인"]
 ---
 ![Engineer with a hand on the fader](/images/console.webp)
 

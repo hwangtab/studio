@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 21: Mỹ học của Distortion & Saturation
 date: 2025-12-01
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Saturation", "Distortion", "Harmonics"]
+tags: ["믹싱", "강좌"]
 ---
 ![Gear analog vintage với texture ấm](/images/service2.webp)
 

@@ -3,7 +3,7 @@ title: "Mixing Course - Part 1: The Start of Mixing as Cooking"
 date: 2025-11-12
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Beginner", "Mixing", "Introduction"]
+tags: ["믹싱", "강좌", "입문"]
 ---
 ![Mixing console and studio view](/images/console.webp)
 

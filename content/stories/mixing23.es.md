@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 23: El gran final, mastering"
 date: 2025-12-03
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Mastering", "FinalStep", "Loudness"]
+tags: ["믹싱", "강좌", "마스터링"]
 ---
 ![Forma de onda limpia en un monitor](/images/service3.webp)
 

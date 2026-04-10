@@ -3,7 +3,7 @@ title: "混音课程 - 第 13 部：静止时最美（静态混音）"
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "StaticMix", "Balance", "NoPlugins"]
+tags: ["믹싱", "강좌", "플러그인"]
 ---
 ![把手放在推子上的工程师](/images/console.webp)
 

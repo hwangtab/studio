@@ -1,9 +1,9 @@
 ---
 title: "앨범 믹싱·마스터링 의뢰 후기 — \"디지털 싱글이 완전히 달라졌습니다\""
-date: 2026-04-07
+date: 2026-01-23
 author: "스튜디오 놀"
-category: "후기"
-tags: ["믹싱 의뢰 후기", "마스터링 후기", "디지털 싱글", "음원 발매 후기", "스튜디오 놀 후기", "믹싱 마스터링", "음반 제작 후기"]
+category: "feedback"
+tags: ["믹싱", "마스터링", "음반 제작"]
 thumbnail: "/images/hardware2.webp"
 summary: "홈레코딩으로 녹음한 보컬을 스튜디오 놀에 믹싱·마스터링 의뢰한 후기. 사운드 변화와 작업 과정을 솔직하게 공유합니다."
 faq:
@@ -44,4 +44,4 @@ faq:
 
 ---
 
-[홈레코딩 vs 스튜디오 비교](/stories/homestudio1) | [음원 발매 가이드](/stories/album1)
+[홈레코딩 vs 스튜디오 비교](/stories/home-vs-studio1) | [음원 발매 가이드](/stories/album1)

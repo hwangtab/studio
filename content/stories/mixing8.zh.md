@@ -3,7 +3,7 @@ title: "混音课程 - 第 8 部：为插件摆好餐桌（增益分级）"
 date: 2025-11-19
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "增益分级", "GainStaging", "Headroom"]
+tags: ["믹싱", "강좌", "게인 스테이징"]
 ---
 ![模拟 VU 表](/images/hardware5.webp)
 

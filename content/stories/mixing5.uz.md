@@ -3,7 +3,7 @@ title: "Miks kursi - 5-qism: Raqamli dushmanlar (xatolar va shovqin)"
 date: 2025-11-16
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "DigitalError", "DigitalError", "Clipping"]
+tags: ["믹싱", "강좌"]
 ---
 ![Raqamli glitch tasviri](/images/pcw.webp)
 

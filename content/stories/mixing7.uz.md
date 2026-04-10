@@ -3,7 +3,7 @@ title: "Miks kursi - 7-qism: Miks tartibdan boshlanadi"
 date: 2025-11-18
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "SessionPrep", "SessionPrep", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![Chigallashgan kabellar va tartibli patchbay](/images/service3.webp)
 

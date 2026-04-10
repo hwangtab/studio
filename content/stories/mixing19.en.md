@@ -3,7 +3,7 @@ title: "Mixing Course - Part 19: The Shadow of Sound, Delay"
 date: 2025-11-29
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Delay", "Echo", "PingPong"]
+tags: ["믹싱", "강좌", "딜레이"]
 ---
 ![Echoing forest or mountains](/images/service3.webp)
 

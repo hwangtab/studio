@@ -2,8 +2,8 @@
 title: "성우 지망생의 첫 녹음 도전기 — 연신내 스튜디오 놀 방문 후기"
 date: 2026-02-28
 author: "스튜디오 놀"
-category: "후기"
-tags: ["성우 녹음", "성우 지망생", "연신내 스튜디오", "내레이션 녹음", "성우 녹음 후기"]
+category: "feedback"
+tags: ["성우", "서울", "녹음실"]
 thumbnail: "/images/recording3.webp"
 summary: "성우 지망생이 포트폴리오 제작을 위해 스튜디오 놀에서 내레이션과 캐릭터 보이스 녹음을 진행한 경험을 공유합니다."
 faq:

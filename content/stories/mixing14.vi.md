@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 14: 80% của mix là cân bằng volume"
 date: 2025-11-24
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Balance", "Fader", "Headroom"]
+tags: ["믹싱", "강좌"]
 ---
 ![Bàn mixer và fader](/images/console.webp)
 

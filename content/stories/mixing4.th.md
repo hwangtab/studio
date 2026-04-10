@@ -1,9 +1,9 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 4: ความละเอียดเสียงดิจิทัล (Sample Rate & Bit Depth)"
+title: "คอร์สมิกซ์ - ตอนที่ 4: ความละเอียดเสียงดิจิทัล (Sample Rate & Bit D..."
 date: 2025-11-15
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Digital", "SampleRate", "BitDepth"]
+tags: ["믹싱", "강좌"]
 ---
 ![รูปคลื่นเสียงดิจิทัล](/images/recording8.webp)
 

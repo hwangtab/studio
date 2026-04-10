@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 18: เติมอ�
 date: 2025-11-28
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Reverb", "Space", "PreDelay"]
+tags: ["믹싱", "강좌", "리버브", "딜레이"]
 ---
 ![วิหารใหญ่กับกระจกสี](/images/service1.webp)
 

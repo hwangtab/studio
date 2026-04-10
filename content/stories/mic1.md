@@ -1,9 +1,9 @@
 ---
 title: "마이크 종류별 보컬 녹음 차이 — USB·다이나믹·콘덴서 마이크를 비교합니다"
-date: 2026-04-06
+date: 2025-11-13
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["마이크 종류", "콘덴서 마이크", "USB 마이크", "다이나믹 마이크", "보컬 녹음", "Neumann U87", "마이크 추천"]
+category: "lesson"
+tags: ["마이크"]
 thumbnail: "/images/hardware3.webp"
 summary: "보컬 녹음에서 마이크 종류(USB, 다이나믹, 콘덴서)가 결과물에 미치는 차이를 설명합니다. 홈레코딩과 전문 스튜디오 마이크의 실질적인 차이, Neumann U87AI가 표준인 이유를 정리했습니다."
 faq:
@@ -25,6 +25,8 @@ faq:
 ---
 
 ## 마이크 3종 비교
+
+마이크 3종 비교에서 고려해야 할 기준을 살펴봅니다.
 
 ### USB 마이크
 > Rode NT-USB, Audio-Technica AT2020 USB+ 등

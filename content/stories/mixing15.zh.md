@@ -3,7 +3,7 @@ title: "混音课程 - 第 15 部：左右的美学——声像（Panning）"
 date: 2025-11-25
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Panning", "Stereo", "LCR"]
+tags: ["믹싱", "강좌", "패닝"]
 ---
 ![立体声扬声器与聆听者](/images/studio1.webp)
 

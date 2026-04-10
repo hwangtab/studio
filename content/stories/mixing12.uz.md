@@ -3,7 +3,7 @@ title: "Miks kursi - 12-qism: O'zingizning miks templatingiz (studio siri)"
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Template", "Routing", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![DAW mikser oynasi](/images/console.webp)
 

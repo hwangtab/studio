@@ -3,7 +3,7 @@ title: "Miks kursi - 22-qism: Vaqtga chizish — Automation"
 date: 2025-12-02
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Automation", "DynamicMix", "FaderRide"]
+tags: ["믹싱", "강좌", "오토메이션"]
 ---
 ![Automation chiziqlari tushirilgan DAW ekrani](/images/console.webp)
 

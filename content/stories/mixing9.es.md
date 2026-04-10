@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 9: El enemigo invisible, la fase"
 date: 2025-11-20
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Fase", "Phase", "DrumMixing"]
+tags: ["믹싱", "강좌"]
 ---
 ![Foto de microfonía de batería](/images/recording1.webp)
 

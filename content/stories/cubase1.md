@@ -1,9 +1,9 @@
 ---
 title: "Cubase 보컬 녹음 가이드 — Steinberg DAW로 스튜디오급 보컬"
-date: 2026-04-07
+date: 2025-09-08
 author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Cubase 보컬", "큐베이스 녹음", "Cubase 설정", "Steinberg DAW", "Cubase 믹싱", "Cubase EQ", "Cubase 컴프레서"]
+category: "music-guide"
+tags: ["보컬", "실전", "Cubase"]
 thumbnail: "/images/portfolio2.webp"
 summary: "Cubase 보컬 녹음 가이드입니다. Cubase 기본 설정·오디오 트랙 생성 및 녹음·Channel EQ 설정·Compressor 설정·VariAudio — 내장 피치 교정·파일 내보내기 (Export)까지 정리합니다."
 faq:
@@ -26,7 +26,7 @@ Steinberg Cubase는 1989년부터 업계를 이끌어온 DAW로, 유럽 스튜�
 
 ## Cubase 기본 설정
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
+Cubase 기본 설정 방법을 단계별로 정리했습니다.
 
 ### 오디오 인터페이스 설정
 
@@ -50,7 +50,7 @@ File → New Project → Sample Rate 설정 → Create
 
 ## 오디오 트랙 생성 및 녹음
 
-모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
+오디오 트랙 생성 및 녹음의 핵심 포인트를 단계별로 설명합니다.
 
 ### 트랙 생성
 
@@ -78,7 +78,7 @@ Space 키로 정지
 
 ## Channel EQ 설정
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
+Channel EQ 설정 방법을 단계별로 정리했습니다.
 
 ### Channel EQ 열기
 
@@ -101,7 +101,7 @@ EQ 창 내 Spectrum 버튼 ON → 실시간 확인
 
 ## Compressor 설정
 
-같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
+Compressor 설정 방법을 단계별로 정리했습니다.
 
 ### Compressor 삽입
 
@@ -125,7 +125,7 @@ Channel Insert 슬롯 → Dynamics → Compressor
 
 ## VariAudio — 내장 피치 교정
 
-버스로 묶어 처리하면 개별 트랙 조정 없이도 전체 밸런스를 효율적으로 잡을 수 있습니다.
+VariAudio — 내장 피치 교정에 대해 자세히 알아보겠습니다.
 
 ### VariAudio 활성화
 
@@ -147,7 +147,7 @@ Channel Insert 슬롯 → Dynamics → Compressor
 
 ## 파일 내보내기 (Export)
 
-각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
+다음 내용에서 파일 내보내기 (Export)을 자세히 다룹니다.
 
 ### Audio Mixdown 내보내기
 
@@ -173,6 +173,8 @@ File → Export → Audio Mixdown (Ctrl+Shift+E)
 ## 마치며
 
 Cubase는 VariAudio 피치 교정과 정밀한 오디오 편집 기능으로 전문적인 보컬 작업에 최적화된 DAW입니다.
+
+모든 기능을 처음부터 다 알 필요는 없습니다. 지금 작업에 필요한 것부터 하나씩 익혀가세요.
 
 ---
 

@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 7: La mezcla empieza con el orden"
 date: 2025-11-18
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "SessionPrep", "SessionPrep", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![Cables desordenados y un patchbay ordenado](/images/service3.webp)
 

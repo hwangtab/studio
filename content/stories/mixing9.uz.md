@@ -3,7 +3,7 @@ title: "Miks kursi - 9-qism: Ko'rinmas dushman — faza"
 date: 2025-11-20
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Phase", "DrumMixing", "Polarity"]
+tags: ["믹싱", "강좌"]
 ---
 ![Baraban miklash surati](/images/recording1.webp)
 

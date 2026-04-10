@@ -1,9 +1,9 @@
 ---
-title: "Mixing Course - Part 4: Digital Audio Resolution (Sample Rate & Bit Depth)"
+title: "Mixing Course - Part 4: Digital Audio Resolution (Sample Rate & Bit..."
 date: 2025-11-15
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Digital", "SampleRate", "BitDepth"]
+tags: ["믹싱", "강좌"]
 ---
 ![Digital audio waveform](/images/recording8.webp)
 

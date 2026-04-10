@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 2: Domar la habitación mentirosa"
 date: 2025-11-13
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Monitoreo", "Monitoring", "RoomAcoustic"]
+tags: ["믹싱", "강좌"]
 ---
 ![Colocación de monitores de estudio](/images/studio1.webp)
 

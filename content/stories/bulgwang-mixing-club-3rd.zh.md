@@ -2,8 +2,8 @@
 title: "\"Bulgwang Mixing Club\" 第三次聚会公告"
 date: 2025-11-18
 author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "社交", "聚会"]
+category: "news"
+tags: ["믹싱", "녹음실"]
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

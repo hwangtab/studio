@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제1부: 믹싱이라는 요리의 시작"
 date: 2025-11-12
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "입문", "Mixing", "Introduction"]
+category: "lesson"
+tags: ["믹싱", "강좌", "입문"]
 summary: "믹싱을 처음 시작하는 분들을 위한 입문 강좌 1부. 믹싱이 무엇인지, 왜 필요한지를 쉽고 재미있게 설명합니다. 스튜디오 놀 믹싱 강좌 시리즈의 시작입니다."
 thumbnail: "/images/hardware1.webp"
 faq:

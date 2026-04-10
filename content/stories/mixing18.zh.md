@@ -3,7 +3,7 @@ title: "混音课程 - 第 18 部：给音乐注入空气——混响"
 date: 2025-11-28
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Reverb", "Space", "PreDelay"]
+tags: ["믹싱", "강좌", "리버브", "딜레이"]
 ---
 ![彩色玻璃大教堂内部](/images/service1.webp)
 

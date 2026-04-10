@@ -1,9 +1,9 @@
 ---
-title: "Khóa học Mixing - Phần 12: Template mixing của riêng bạn (Bí mật studio)"
+title: "Khóa học Mixing - Phần 12: Template mixing của riêng bạn (Bí mật st..."
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Template", "Routing", "Workflow"]
+tags: ["믹싱", "강좌"]
 ---
 ![Cửa sổ mixer DAW](/images/portfolio3.webp)
 

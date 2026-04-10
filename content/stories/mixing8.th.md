@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 8: จัดโต�
 date: 2025-11-19
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "GainStaging", "Headroom", "InputLevel"]
+tags: ["믹싱", "강좌", "게인 스테이징"]
 ---
 ![VU meter แบบอนาล็อก](/images/hardware5.webp)
 

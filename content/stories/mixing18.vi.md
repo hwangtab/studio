@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 18: Thổi hơi vào nhạc, Reverb"
 date: 2025-11-28
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Reverb", "Space", "PreDelay"]
+tags: ["믹싱", "강좌", "리버브", "딜레이"]
 ---
 ![Nhà thờ lớn với kính màu](/images/service1.webp)
 

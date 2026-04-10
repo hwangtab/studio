@@ -1,9 +1,9 @@
 ---
-title: "Miks kursi - 10-qism: Oltin quloqni yaratish (Ear Training & Studio Wisdom)"
+title: "Miks kursi - 10-qism: Oltin quloqni yaratish (Ear Training & Studio..."
 date: 2025-11-21
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "EarTraining", "Reference", "Listening"]
+tags: ["믹싱", "강좌"]
 ---
 ![Quloqchin bilan diqqatli tinglash](/images/recording2.webp)
 

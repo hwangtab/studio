@@ -3,7 +3,7 @@ title: "Miks kursi - 16-qism: Ovoz haykaltaroshi — EQ"
 date: 2025-11-26
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "EQ", "Equalizer", "Frequency"]
+tags: ["믹싱", "강좌", "EQ"]
 ---
 ![Rangli EQ grafigi](/images/pcw.webp)
 

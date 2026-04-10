@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 15: Nghệ thuật trái phải, Panning"
 date: 2025-11-25
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Panning", "Stereo", "LCR"]
+tags: ["믹싱", "강좌", "패닝"]
 ---
 ![Loa stereo và người nghe](/images/studio1.webp)
 

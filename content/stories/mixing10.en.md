@@ -1,9 +1,9 @@
 ---
-title: "Mixing Course - Part 10: Building Golden Ears (Ear Training & Studio Wisdom)"
+title: "Mixing Course - Part 10: Building Golden Ears (Ear Training & Studi..."
 date: 2025-11-21
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "EarTraining", "Reference", "Listening"]
+tags: ["믹싱", "강좌"]
 ---
 ![Focused listening with headphones](/images/recording2.webp)
 

@@ -2,8 +2,8 @@
 title: "\"Bulgwang Mixing Club\" ประกาศนัดพบครั้งแรก"
 date: 2025-11-03
 author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
+category: "news"
+tags: ["믹싱", "녹음실"]
 ---
 ![ห้องมิกซ์ของ Bulgwang Mixing Club](/images/hardware2.webp)
 

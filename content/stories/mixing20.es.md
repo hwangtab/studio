@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 20: La magia ondulante de la modulación"
 date: 2025-11-30
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Modulation", "Chorus", "Flanger"]
+tags: ["믹싱", "강좌"]
 ---
 ![Ondas o aurora](/images/pcw.webp)
 

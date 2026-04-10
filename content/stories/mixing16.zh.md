@@ -3,7 +3,7 @@ title: "混音课程 - 第 16 部：声音的雕刻家——EQ"
 date: 2025-11-26
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "EQ", "Equalizer", "Frequency"]
+tags: ["믹싱", "강좌", "EQ"]
 ---
 ![绚丽的 EQ 曲线图](/images/pcw.webp)
 

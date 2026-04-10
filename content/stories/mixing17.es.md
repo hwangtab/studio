@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 17: Domar la dinámica con el compresor"
 date: 2025-11-27
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Compresor", "Dynamics", "ParallelCompression"]
+tags: ["믹싱", "강좌", "컴프레서"]
 ---
 ![Perillas de un compresor clásico](/images/hardware1.webp)
 

@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 15: La estética de izquierda y derecha, panning"
+title: "Curso de Mezcla - Parte 15: La estética de izquierda y derecha, pan..."
 date: 2025-11-25
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Panning", "Stereo", "LCR"]
+tags: ["믹싱", "강좌", "패닝"]
 ---
 ![Altavoces estéreo y oyente](/images/studio1.webp)
 

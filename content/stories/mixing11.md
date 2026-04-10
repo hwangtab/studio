@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제11부: 믹싱을 위한 마지막 조각, 에디팅 (Editing)"
 date: 2025-11-22
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "에디팅", "Editing", "Comping"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "믹싱 전에 반드시 해야 하는 오디오 에디팅. 타이밍 교정, 피치 교정, 클릭 제거 등 믹스 품질을 결정하는 에디팅 기술을 설명합니다."
 thumbnail: "/images/recording8.webp"
 faq:

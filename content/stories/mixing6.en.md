@@ -1,9 +1,9 @@
 ---
-title: "Mixing Course - Part 6: Reading Sound with Your Eyes (All About Metering)"
+title: "Mixing Course - Part 6: Reading Sound with Your Eyes (All About Met..."
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Metering", "Metering", "Loudness"]
+tags: ["믹싱", "강좌"]
 ---
 ![Various level meters](/images/console.webp)
 

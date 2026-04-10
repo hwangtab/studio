@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 5: Kẻ thù của digital (Lỗi và nhiễ
 date: 2025-11-16
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "DigitalError", "DigitalError", "Clipping"]
+tags: ["믹싱", "강좌"]
 ---
 ![Hình ảnh glitch kỹ thuật số](/images/pcw.webp)
 

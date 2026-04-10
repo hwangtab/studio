@@ -3,7 +3,7 @@ title: "Miks kursi - 19-qism: Tovushning soyasi — Delay"
 date: 2025-11-29
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Delay", "Echo", "PingPong"]
+tags: ["믹싱", "강좌", "딜레이"]
 ---
 ![Sado beradigan o'rmon yoki tog'lar](/images/service3.webp)
 

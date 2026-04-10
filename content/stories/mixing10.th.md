@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 10: สร้าง�
 date: 2025-11-21
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "EarTraining", "Reference", "Listening"]
+tags: ["믹싱", "강좌"]
 ---
 ![การฟังอย่างตั้งใจด้วยหูฟัง](/images/recording2.webp)
 

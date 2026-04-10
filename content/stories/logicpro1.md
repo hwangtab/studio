@@ -1,9 +1,9 @@
 ---
 title: "Logic Pro 보컬 녹음 가이드 — Mac에서 첫 보컬 세션을 잡는 순서"
-date: 2026-04-07
+date: 2025-11-07
 author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Logic Pro 보컬", "로직 프로 녹음", "Logic Pro 설정", "맥 DAW 녹음", "Logic Pro EQ", "Logic Pro 컴프레서", "Flex Pitch"]
+category: "music-guide"
+tags: ["보컬", "실전", "Logic Pro"]
 thumbnail: "/images/room8.webp"
 summary: "Logic Pro로 보컬을 녹음할 때 처음부터 순서를 잘 잡는 것이 중요해요. 오디오 설정, 트랙 준비, 기본 EQ와 컴프레서, Flex Pitch, 파일 내보내기까지 실제로 많이 쓰는 흐름대로 정리했습니다."
 faq:

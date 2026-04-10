@@ -3,7 +3,7 @@ title: "Mixing Course - Part 15: The Art of Left and Right, Panning"
 date: 2025-11-25
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Panning", "Stereo", "LCR"]
+tags: ["믹싱", "강좌", "패닝"]
 ---
 ![Stereo speakers and listener](/images/studio1.webp)
 

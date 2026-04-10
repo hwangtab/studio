@@ -3,7 +3,7 @@ title: "Miks kursi - 15-qism: Chap‑o'ng san'ati — Panning"
 date: 2025-11-25
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Panning", "Stereo", "LCR"]
+tags: ["믹싱", "강좌", "패닝"]
 ---
 ![Stereo karnaylar va tinglovchi](/images/studio1.webp)
 

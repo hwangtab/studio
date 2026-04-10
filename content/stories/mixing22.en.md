@@ -3,7 +3,7 @@ title: "Mixing Course - Part 22: Painting on Time, Automation"
 date: 2025-12-02
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Automation", "DynamicMix", "FaderRide"]
+tags: ["믹싱", "강좌", "오토메이션"]
 ---
 ![DAW screen with automation lines](/images/console.webp)
 

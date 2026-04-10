@@ -1,9 +1,9 @@
 ---
-title: "Miks kursi - 6-qism: Ovozni ko'z bilan o'qish (metering haqida hamma narsa)"
+title: "Miks kursi - 6-qism: Ovozni ko'z bilan o'qish (metering haqida hamm..."
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Metering", "Metering", "Loudness"]
+tags: ["믹싱", "강좌"]
 ---
 ![Turli daraja meterlari](/images/console.webp)
 

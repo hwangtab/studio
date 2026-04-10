@@ -2,8 +2,8 @@
 title: "Studio NOL 官网焕新完成！"
 date: 2025-06-04
 author: "Studio NOL"
-category: "notice"
-tags: ["焕新", "录音室"]
+category: "news"
+tags: ["녹음실"]
 ---
 ![Studio NOL 录音室](/images/studio1.webp)
 

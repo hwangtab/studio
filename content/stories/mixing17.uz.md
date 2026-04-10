@@ -3,7 +3,7 @@ title: "Miks kursi - 17-qism: Kompressor bilan dinamika jilovlash"
 date: 2025-11-27
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Compressor", "Dynamics", "ParallelCompression"]
+tags: ["믹싱", "강좌", "컴프레서"]
 ---
 ![Klassik kompressor tugmalari](/images/hardware1.webp)
 

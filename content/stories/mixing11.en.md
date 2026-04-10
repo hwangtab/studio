@@ -3,7 +3,7 @@ title: "Mixing Course - Part 11: The Final Piece Before Mixing, Editing"
 date: 2025-11-22
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Editing", "Comping", "Timing"]
+tags: ["믹싱", "강좌"]
 ---
 ![Waveform editing screen](/images/recording11.webp)
 

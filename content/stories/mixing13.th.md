@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 13: สวยที�
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "StaticMix", "Balance", "NoPlugins"]
+tags: ["믹싱", "강좌", "플러그인"]
 ---
 ![วิศวกรวางมือบน fader](/images/console.webp)
 

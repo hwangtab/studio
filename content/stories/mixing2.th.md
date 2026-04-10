@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 2: ทำให้�
 date: 2025-11-13
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Monitoring", "Monitoring", "อะคูสติกห้อง"]
+tags: ["믹싱", "강좌"]
 ---
 ![การจัดวางลำโพงมอนิเตอร์](/images/studio1.webp)
 

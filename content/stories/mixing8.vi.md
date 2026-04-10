@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 8: Dọn bàn cho plugin (Gain Staging)"
 date: 2025-11-19
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "GainStaging", "Headroom", "InputLevel"]
+tags: ["믹싱", "강좌", "게인 스테이징"]
 ---
 ![VU meter analog](/images/hardware5.webp)
 

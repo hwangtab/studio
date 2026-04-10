@@ -2,8 +2,8 @@
 title: "制作人朴灿佑专访"
 date: 2025-06-05
 author: "Studio NOL"
-category: "interview"
-tags: ["朴灿佑", "采访", "Golden Hour"]
+category: "feedback"
+tags: ["녹음실"]
 ---
 ![制作人朴灿佑](/images/pcw.webp)
 

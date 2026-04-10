@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 23: ตอนจบ�
 date: 2025-12-03
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Mastering", "FinalStep", "Loudness"]
+tags: ["믹싱", "강좌", "마스터링"]
 ---
 ![เวฟฟอร์มสะอาดบนมอนิเตอร์](/images/service3.webp)
 

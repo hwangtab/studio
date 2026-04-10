@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 5: Enemigos de lo digital (errores y ruido)"
 date: 2025-11-16
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "ErrorDigital", "DigitalError", "Clipping"]
+tags: ["믹싱", "강좌"]
 ---
 ![Imagen de glitch digital](/images/pcw.webp)
 

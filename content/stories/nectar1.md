@@ -1,9 +1,9 @@
 ---
 title: "iZotope Nectar 보컬 처리 가이드 — AI 올인원 보컬 플러그인"
-date: 2026-04-07
+date: 2025-12-06
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
-tags: ["iZotope Nectar", "넥타 보컬", "Nectar 4 사용법", "AI 보컬 플러그인", "보컬 처리 올인원", "Nectar 하모니", "iZotope 보컬"]
+category: "music-guide"
+tags: ["실전", "보컬"]
 thumbnail: "/images/recording2.webp"
 summary: "iZotope Nectar 보컬 처리 가이드입니다. Nectar 4 모듈 구성·Vocal Assistant 활용·핵심 모듈 설정·Harmony 모듈 활용·Reverb 모듈 설정까지 정리합니다."
 faq:
@@ -41,7 +41,7 @@ Nectar 4는 AI 기반 보컬 처리 플러그인으로, 단 하나의 플러그�
 
 ## Vocal Assistant 활용
 
-작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
+Vocal Assistant 활용의 실전 활용 사례를 살펴봅니다.
 
 ### Vocal Assistant 실행
 
@@ -61,7 +61,7 @@ Nectar 4는 AI 기반 보컬 처리 플러그인으로, 단 하나의 플러그�
 
 ## 핵심 모듈 설정
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
+핵심 모듈 설정 방법을 단계별로 정리했습니다.
 
 ### Gate 설정
 
@@ -93,7 +93,7 @@ Nectar 4는 AI 기반 보컬 처리 플러그인으로, 단 하나의 플러그�
 
 ## Harmony 모듈 활용
 
-아래 설정값은 출발점이며, 곡의 장르와 보컬 특성에 따라 조정이 필요합니다.
+Harmony 모듈 활용의 실전 활용 사례를 살펴봅니다.
 
 ### Harmony 설정
 
@@ -117,7 +117,7 @@ Nectar 4는 AI 기반 보컬 처리 플러그인으로, 단 하나의 플러그�
 
 ## Reverb 모듈 설정
 
-고음역 컷이 전체 믹스에 투명감을 더해주는 경우가 많으므로 저역부터 정리하세요.
+Reverb 모듈 설정 방법을 단계별로 정리했습니다.
 
 ### Reverb 설정
 
@@ -137,6 +137,8 @@ Nectar Reverb는 삽입형 → 센드 채널 활용 권장
 ## 마치며
 
 iZotope Nectar 4는 AI 기반 보컬 처리로 빠르고 전문적인 결과를 얻을 수 있는 올인원 플러그인입니다.
+
+목소리는 개인마다 다릅니다. 다른 사람의 방법을 참고하되, 자신의 목소리 특성에 맞게 조율해가세요.
 
 ---
 

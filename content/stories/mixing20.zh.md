@@ -3,7 +3,7 @@ title: "混音课程 - 第 20 部：起伏的魔法——调制"
 date: 2025-11-30
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "Modulation", "Chorus", "Flanger"]
+tags: ["믹싱", "강좌"]
 ---
 ![波纹或极光](/images/pcw.webp)
 

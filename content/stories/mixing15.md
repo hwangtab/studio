@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제15부: 좌우의 미학, 패닝(Panning)"
 date: 2025-11-25
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "팬", "Panning", "Stereo"]
+category: "lesson"
+tags: ["믹싱", "강좌", "패닝"]
 summary: "패닝(Panning)으로 스테레오 공간을 설계하는 방법. 킥·스네어·베이스는 센터에, 기타·신디는 좌우로 배치하는 기본 원칙과 응용 기법을 설명합니다."
 thumbnail: "/images/recording15.webp"
 faq:

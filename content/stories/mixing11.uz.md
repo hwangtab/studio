@@ -3,7 +3,7 @@ title: "Miks kursi - 11-qism: Miksdan oldingi so'nggi bo'lak — Editing"
 date: 2025-11-22
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Editing", "Comping", "Timing"]
+tags: ["믹싱", "강좌"]
 ---
 ![Waveform tahrirlash ekrani](/images/recording11.webp)
 

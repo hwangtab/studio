@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제4부: 디지털 오디오의 해상도 (Sample Rate & Bit Depth)"
 date: 2025-11-15
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "디지털", "SampleRate", "BitDepth"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "샘플레이트(44.1kHz·48kHz)와 비트뎁스(16bit·24bit)의 차이와 왜 중요한지 설명합니다. 디지털 오디오의 해상도 개념을 쉽게 풀어냅니다."
 thumbnail: "/images/hardware4.webp"
 faq:

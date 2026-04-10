@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 19: Bóng của âm thanh, Delay"
 date: 2025-11-29
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Delay", "Echo", "PingPong"]
+tags: ["믹싱", "강좌", "딜레이"]
 ---
 ![Khu rừng hoặc núi vọng tiếng](/images/service3.webp)
 

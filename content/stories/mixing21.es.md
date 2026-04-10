@@ -1,9 +1,9 @@
 ---
-title: "Curso de Mezcla - Parte 21: La estética de la distorsión y la saturación"
+title: "Curso de Mezcla - Parte 21: La estética de la distorsión y la satur..."
 date: 2025-12-01
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Saturation", "Distortion", "Harmonics"]
+tags: ["믹싱", "강좌"]
 ---
 ![Equipo analógico vintage con textura cálida](/images/service2.webp)
 

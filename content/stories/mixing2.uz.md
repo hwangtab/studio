@@ -3,7 +3,7 @@ title: "Miks kursi - 2-qism: Yolg'onchi xonani jilovlash"
 date: 2025-11-13
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Monitoring", "Monitoring", "Xona akustikasi"]
+tags: ["믹싱", "강좌"]
 ---
 ![Studio monitor karnaylarining joylashuvi](/images/studio1.webp)
 

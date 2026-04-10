@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 9: ศัตรู�
 date: 2025-11-20
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Phase", "DrumMixing", "Polarity"]
+tags: ["믹싱", "강좌"]
 ---
 ![ภาพการไมค์กลอง](/images/recording1.webp)
 

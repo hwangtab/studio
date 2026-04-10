@@ -3,7 +3,7 @@ title: "混音课程 - 第 12 部：打造你的混音模板（录音室秘技�
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "模板", "Template", "Routing"]
+tags: ["믹싱", "강좌"]
 ---
 ![DAW 混音器界面](/images/console.webp)
 

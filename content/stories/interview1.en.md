@@ -2,8 +2,8 @@
 title: "Interview with Producer Park Chan-woong"
 date: 2025-06-05
 author: "Studio NOL"
-category: "interview"
-tags: ["Park Chan-woong", "Interview", "Golden Hour"]
+category: "feedback"
+tags: ["녹음실"]
 ---
 ![Producer Park Chan-woong](/images/pcw.webp)
 

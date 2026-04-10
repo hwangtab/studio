@@ -2,8 +2,8 @@
 title: "เว็บไซต์ Studio NOL ปรับปรุงใหม่เสร็จสมบูรณ์!"
 date: 2025-06-04
 author: "Studio NOL"
-category: "notice"
-tags: ["ปรับปรุง", "สตูดิโออัดเสียง"]
+category: "news"
+tags: ["녹음실"]
 ---
 ![สตูดิโอบันทึกเสียง Studio NOL](/images/studio1.webp)
 

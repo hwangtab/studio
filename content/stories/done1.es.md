@@ -2,8 +2,8 @@
 title: "¡Renovación completa del sitio web de Studio NOL!"
 date: 2025-06-04
 author: "Studio NOL"
-category: "notice"
-tags: ["Renovación", "Estudio de grabación"]
+category: "news"
+tags: ["녹음실"]
 ---
 ![Estudio de grabación de Studio NOL](/images/studio1.webp)
 

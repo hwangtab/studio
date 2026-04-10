@@ -1,9 +1,9 @@
 ---
 title: "VST 플러그인 가이드 — 보컬 녹음·믹싱 필수 플러그인 무료·유료 추천"
-date: 2026-04-06
+date: 2026-03-24
 author: "스튜디오 놀"
-category: "홈 레코딩 가이드"
-tags: ["VST 플러그인", "무료 VST", "보컬 플러그인", "DAW 플러그인", "믹싱 플러그인", "홈 레코딩 플러그인", "VST 추천"]
+category: "music-guide"
+tags: ["플러그인", "보컬"]
 thumbnail: "/images/album2.webp"
 summary: "보컬 녹음·믹싱에 사용하는 VST 플러그인의 종류와 역할을 안내합니다. 무료·유료 필수 플러그인 추천 목록, DAW별 호환성, 설치 방법을 정리합니다."
 faq:

@@ -1,9 +1,9 @@
 ---
-title: "Khóa học Mixing - Phần 6: Đọc âm thanh bằng mắt (Tất tần tật về metering)"
+title: "Khóa học Mixing - Phần 6: Đọc âm thanh bằng mắt (Tất tần tật về met..."
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Metering", "Metering", "Loudness"]
+tags: ["믹싱", "강좌"]
 ---
 ![Các loại meter mức](/images/console.webp)
 

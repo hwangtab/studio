@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제6부: 눈으로 소리 읽기 (미터링의 모든 것)"
 date: 2025-11-17
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "미터링", "Metering", "Loudness"]
+category: "lesson"
+tags: ["믹싱", "강좌"]
 summary: "VU미터, 피크미터, LUFS 미터의 차이와 활용법. 믹싱 시 미터를 어떻게 읽고 레벨을 관리해야 하는지 상세히 설명합니다."
 thumbnail: "/images/recording1.webp"
 faq:

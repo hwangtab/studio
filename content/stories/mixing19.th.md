@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 19: เงาขอ�
 date: 2025-11-29
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Delay", "Echo", "PingPong"]
+tags: ["믹싱", "강좌", "딜레이"]
 ---
 ![ป่าหรือภูเขาที่มีเสียงสะท้อน](/images/service3.webp)
 

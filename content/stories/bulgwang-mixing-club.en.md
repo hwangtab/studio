@@ -2,8 +2,8 @@
 title: "\"Bulgwang Mixing Club\" First Meetup Announcement"
 date: 2025-11-03
 author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Networking", "Meetup"]
+category: "news"
+tags: ["믹싱", "녹음실"]
 ---
 ![Bulgwang Mixing Club mixing room](/images/hardware2.webp)
 

@@ -3,7 +3,7 @@ title: "Mixing Course - Part 20: The Wavy Magic of Modulation"
 date: 2025-11-30
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Modulation", "Chorus", "Flanger"]
+tags: ["믹싱", "강좌"]
 ---
 ![Wavy water or aurora](/images/pcw.webp)
 

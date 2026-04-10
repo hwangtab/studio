@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 17: คุมได�
 date: 2025-11-27
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Compressor", "Dynamics", "ParallelCompression"]
+tags: ["믹싱", "강좌", "컴프레서"]
 ---
 ![ปุ่มหมุนของคอมเพรสเซอร์คลาสสิก](/images/hardware1.webp)
 

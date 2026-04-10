@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 5: ศัตรู�
 date: 2025-11-16
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "DigitalError", "DigitalError", "Clipping"]
+tags: ["믹싱", "강좌"]
 ---
 ![ภาพ glitch ดิจิทัล](/images/pcw.webp)
 

@@ -3,7 +3,7 @@ title: "Mixing Course - Part 5: Enemies of Digital (Errors and Noise)"
 date: 2025-11-16
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "DigitalError", "DigitalError", "Clipping"]
+tags: ["믹싱", "강좌"]
 ---
 ![Digital glitch image](/images/pcw.webp)
 

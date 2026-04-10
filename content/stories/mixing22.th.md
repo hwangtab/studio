@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 22: วาดบน�
 date: 2025-12-02
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Automation", "DynamicMix", "FaderRide"]
+tags: ["믹싱", "강좌", "오토메이션"]
 ---
 ![หน้าจอ DAW กับเส้น automation](/images/console.webp)
 

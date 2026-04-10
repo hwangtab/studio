@@ -3,7 +3,7 @@ title: "混音课程 - 第 14 部：混音 8 成是音量平衡"
 date: 2025-11-24
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "音量", "Balance", "Headroom"]
+tags: ["믹싱", "강좌"]
 ---
 ![混音台与推子](/images/console.webp)
 

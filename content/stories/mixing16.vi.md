@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 16: Nhà điêu khắc âm thanh, EQ"
 date: 2025-11-26
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "EQ", "Equalizer", "Frequency"]
+tags: ["믹싱", "강좌", "EQ"]
 ---
 ![Đồ thị EQ nhiều màu](/images/pcw.webp)
 

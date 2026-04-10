@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 13: Đẹp nhất khi đứng yên (Static M
 date: 2025-11-23
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "StaticMix", "Balance", "NoPlugins"]
+tags: ["믹싱", "강좌", "플러그인"]
 ---
 ![Kỹ sư đặt tay lên fader](/images/console.webp)
 

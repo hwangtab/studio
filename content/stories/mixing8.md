@@ -2,8 +2,8 @@
 title: "믹싱 강좌 - 제8부: 플러그인을 위한 밥상 차리기 (Gain Staging)"
 date: 2025-11-19
 author: "스튜디오 놀"
-category: "강좌"
-tags: ["믹싱", "강좌", "게인스테이징", "GainStaging", "Headroom"]
+category: "lesson"
+tags: ["믹싱", "강좌", "게인 스테이징"]
 summary: "믹싱에서 가장 중요한 기초, 게인 스테이징. 각 플러그인 입력 레벨을 올바르게 설정해 클리핑과 노이즈 없이 최적의 처리 환경을 만드는 방법입니다."
 thumbnail: "/images/recording3.webp"
 faq:

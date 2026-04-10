@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 21: สุนทร�
 date: 2025-12-01
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "Saturation", "Distortion", "Harmonics"]
+tags: ["믹싱", "강좌"]
 ---
 ![เกียร์อนาล็อกวินเทจโทนอุ่น](/images/service2.webp)
 
