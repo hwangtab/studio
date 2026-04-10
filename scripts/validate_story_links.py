@@ -9,6 +9,7 @@ STORIES_DIR = ROOT / "content" / "stories"
 REDIRECTS_FILE = ROOT / "lib" / "storyRedirects.ts"
 LINK_RE = re.compile(r"\((/stories(?:/(?:ko|en|zh|es|vi|th|uz))?/[^)#?\s]+)\)")
 REDIRECT_RE = re.compile(r'"([^"]+)":\s*"[^"]+"')
+LOCALIZED_LINK_RE = re.compile(r"^/stories/(ko|en|zh|es|vi|th|uz)/")
 
 
 def normalize_slug(filename: str) -> str:
@@ -56,6 +57,9 @@ def main(argv: list[str]) -> int:
         for lineno, line in enumerate(path.read_text().splitlines(), start=1):
             for match in LINK_RE.finditer(line):
                 href = match.group(1)
+                if LOCALIZED_LINK_RE.match(href):
+                    problems.append((path, lineno, href, "localized story path"))
+                    continue
                 slug = href.split("/")[-1]
                 if slug in redirect_only_slugs:
                     problems.append((path, lineno, href, "redirect-only slug"))

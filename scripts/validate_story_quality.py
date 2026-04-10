@@ -14,6 +14,20 @@ STORIES_DIR = ROOT / "content" / "stories"
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n?", re.S)
 TITLE_RE = re.compile(r'^title:\s*"(.*)"\s*$', re.M)
 SUMMARY_RE = re.compile(r'^summary:\s*"(.*)"\s*$', re.M)
+LOCALIZED_LINK_RE = re.compile(r"\(/stories/(?:ko|en|zh|es|vi|th|uz)/[^)#?\s]+\)")
+SERVICE_LINK_RE = re.compile(r"\(/(?:pricing|studio-info)\)")
+CONTACT_MENTION_RE = re.compile(r"카카오톡 문의")
+DIRECT_CTA_RE = re.compile(
+    r"무료 견적|당일 답변|문의해 주세요|문의하세요|문의 주세요|문의주시면|문의 주세요|카카오톡으로 문의"
+)
+STRICT_REGION_FILES = {"gwanak1.md", "dongjak1.md", "jinhae1.md"}
+STRICT_KNOWLEDGE_FILES = {
+    "booking1.md",
+    "cover1.md",
+    "lesson1.md",
+    "logicpro1.md",
+    "pricing1.md",
+}
 
 
 def validate_gray_matter() -> list[dict[str, str]]:
@@ -48,6 +62,33 @@ def get_frontmatter_value(text: str, pattern: re.Pattern[str]) -> str:
     return match.group(1) if match else ""
 
 
+def check_region_quality(filename: str, text: str) -> list[str]:
+    failures: list[str] = []
+    service_links = len(SERVICE_LINK_RE.findall(text))
+    contact_mentions = len(CONTACT_MENTION_RE.findall(text))
+    soft_cta_units = service_links + contact_mentions
+
+    if DIRECT_CTA_RE.search(text):
+        failures.append(f"{filename}: 지역 가이드에 직접 전환 문구가 남아 있음")
+    if soft_cta_units > 1:
+        failures.append(f"{filename}: 지역 가이드 soft CTA {soft_cta_units}회")
+    return failures
+
+
+def check_knowledge_quality(filename: str, text: str) -> list[str]:
+    failures: list[str] = []
+    service_links = len(SERVICE_LINK_RE.findall(text))
+    contact_mentions = len(CONTACT_MENTION_RE.findall(text))
+
+    if service_links:
+        failures.append(f"{filename}: 지식형 글에 서비스 링크 {service_links}개")
+    if contact_mentions:
+        failures.append(f"{filename}: 지식형 글에 문의 유도 {contact_mentions}회")
+    if DIRECT_CTA_RE.search(text):
+        failures.append(f"{filename}: 지식형 글에 직접 전환 문구가 남아 있음")
+    return failures
+
+
 def main() -> int:
     files = sorted(STORIES_DIR.glob("*.md"))
     failures: list[str] = []
@@ -62,6 +103,8 @@ def main() -> int:
     openchat_hits = []
     onlinemix_label_hits = []
     onlinemix_href_hits = []
+    localized_link_hits = []
+    strict_quality_hits = []
 
     for path in files:
         text = path.read_text(encoding="utf-8", errors="ignore")
@@ -78,6 +121,13 @@ def main() -> int:
             onlinemix_label_hits.append(path.name)
         if "/stories/onlinemix1" in text:
             onlinemix_href_hits.append(path.name)
+        if LOCALIZED_LINK_RE.search(text):
+            localized_link_hits.append(path.name)
+
+        if path.name in STRICT_REGION_FILES:
+            strict_quality_hits.extend(check_region_quality(path.name, text))
+        if path.name in STRICT_KNOWLEDGE_FILES:
+            strict_quality_hits.extend(check_knowledge_quality(path.name, text))
 
     if title_hits:
         failures.append(f"title contains '완전 가이드': {len(title_hits)}")
@@ -94,6 +144,12 @@ def main() -> int:
     if onlinemix_href_hits:
         failures.append(f"'/stories/onlinemix1' remains: {len(onlinemix_href_hits)}")
         failures.extend(onlinemix_href_hits[:20])
+    if localized_link_hits:
+        failures.append(f"localized story href remains: {len(localized_link_hits)}")
+        failures.extend(localized_link_hits[:20])
+    if strict_quality_hits:
+        failures.append(f"strict quality regressions: {len(strict_quality_hits)}")
+        failures.extend(strict_quality_hits[:20])
 
     if failures:
         print("\n".join(failures))

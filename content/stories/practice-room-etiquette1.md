@@ -78,5 +78,5 @@ faq:
 ## 관련 링크
 
 - [연습실 예약 페이지](/practice-room)
-- [연신내 연습실 가이드](/stories/ko/practice-room-yeonsinnae1)
+- [연신내 연습실 가이드](/stories/practice-room-yeonsinnae1)
 - [이용 요금 보기](/pricing)

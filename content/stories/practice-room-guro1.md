@@ -54,6 +54,6 @@ faq:
 
 ## 관련 링크
 
-- [연신내 지역 가이드](/stories/ko/practice-room-yeonsinnae1)
+- [연신내 지역 가이드](/stories/practice-room-yeonsinnae1)
 - [연습실 이용 안내](/practice-room)
 - [이용 요금](/pricing)
