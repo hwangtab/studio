@@ -1,11 +1,11 @@
 ---
-title: "DAW 퍼포먼스 최적화 완전 가이드 — CPU·레이턴시·버퍼 설정"
+title: "DAW 퍼포먼스 최적화 가이드 — CPU·레이턴시·버퍼 설정"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["DAW 최적화", "DAW CPU", "레이턴시", "버퍼 사이즈", "ASIO", "DAW 속도", "오디오 버퍼", "플러그인 CPU"]
 thumbnail: "/images/recording11.webp"
-summary: "DAW 퍼포먼스 최적화 완전 가이드입니다. 버퍼 사이즈 설정, 레이턴시 최소화, CPU 절약을 위한 트랙 프리징·바운싱, DAW별 퍼포먼스 팁을 정리합니다."
+summary: "DAW 퍼포먼스 최적화 가이드입니다. 버퍼 사이즈 설정, 레이턴시 최소화, CPU 절약을 위한 트랙 프리징·바운싱, DAW별 퍼포먼스 팁을 정리합니다."
 faq:
   - q: "DAW에서 CPU 과부하가 발생하는 이유는?"
     a: "플러그인 수 과다, 버퍼 사이즈 너무 낮음, 실시간 처리 트랙 수 과다, 소프트웨어 신스 다수 사용이 주요 원인입니다. 특히 리버브·컨볼루션 플러그인과 멀티밴드 컴프레서는 CPU를 많이 사용합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "DAW 성능을 높이기 위한 컴퓨터 업그레이드 우선순위는?"
     a: "RAM 추가 (16GB → 32GB 이상), SSD 업그레이드(샘플 라이브러리 고속 로딩), CPU 업그레이드 순서입니다. M1/M2/M4 맥의 경우 이미 높은 성능이므로 RAM과 스토리지가 병목인 경우가 많습니다."
 ---
-![DAW 퍼포먼스 최적화 완전 가이드 — 스튜디오 놀](/images/recording11.webp)
+![DAW 퍼포먼스 최적화 가이드 — 스튜디오 놀](/images/recording11.webp)
 
 ## DAW 퍼포먼스 최적화 — 더 빠르고 안정적인 작업 환경
 
@@ -116,5 +116,4 @@ DAW 퍼포먼스 최적화는 하드웨어 업그레이드 이전에 소프트�
 
 ---
 
-[DAW 비교 완전 가이드](/stories/daw-comparison1) | [DAW 믹싱 템플릿 가이드](/stories/daw-template1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[DAW 비교 가이드](/stories/daw-comparison1) | [DAW 믹싱 템플릿 가이드](/stories/daw-template1) | [게인 스테이징 가이드](/stories/gain-staging1) | [오디오 인터페이스 가이드](/stories/interface1)

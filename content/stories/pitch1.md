@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[스튜디오 놀 보컬 녹음 요금 안내](/pricing) | [믹싱 강좌 시리즈 — EQ편](/stories/mixing16) | [녹음 세션 준비 체크리스트](/stories/session1) | [인디 보컬리스트 녹음 후기](/stories/review3)
+[믹싱 강좌 시리즈 — EQ편](/stories/mixing16) | [녹음 세션 준비 체크리스트](/stories/session1) | [인디 보컬리스트 녹음 후기](/stories/review3)

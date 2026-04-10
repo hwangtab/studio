@@ -156,4 +156,4 @@ DAW는 기능이 워낙 많아서 독학으로 배우면 시간이 오래 걸립
 
 ---
 
-[DAW 비교 완전 가이드](/stories/daw-comparison1) | [큐베이스 보컬 녹음 가이드](/stories/cubase1) | [로직 프로 보컬 녹음 가이드](/stories/logicpro1) | [에이블톤 보컬 녹음 가이드](/stories/ableton1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [1:1 음악 레슨 안내](/lesson) | [요금 안내](/pricing)
+[DAW 비교 가이드](/stories/daw-comparison1) | [큐베이스 보컬 녹음 가이드](/stories/cubase1) | [로직 프로 보컬 녹음 가이드](/stories/logicpro1) | [에이블톤 보컬 녹음 가이드](/stories/ableton1)

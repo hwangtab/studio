@@ -1,11 +1,11 @@
 ---
-title: "음원 유통 방법 완전 가이드 — DistroKid·카카오엔터·뮤직카우 디지털 유통사 비교"
+title: "음원 유통 방법 가이드 — DistroKid·카카오엔터·뮤직카우 디지털 유통사 비교"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["음원 유통", "DistroKid 사용법", "음원 발매 방법", "디지털 유통사", "멜론 음원 올리기", "스포티파이 발매", "인디 음원 유통"]
 thumbnail: "/images/service1.webp"
-summary: "인디 아티스트가 음원을 멜론·스포티파이·유튜브 뮤직에 올리는 방법. 국내외 디지털 유통사(DistroKid, 카카오엔터, 지니뮤직, 예스24 등) 비교와 유통 절차 완전 가이드."
+summary: "인디 아티스트가 음원을 멜론·스포티파이·유튜브 뮤직에 올리는 방법. 국내외 디지털 유통사(DistroKid, 카카오엔터, 지니뮤직, 예스24 등) 비교와 유통 절차 가이드."
 faq:
   - q: "개인 아티스트도 멜론·스포티파이에 음원을 올릴 수 있나요?"
     a: "네, 가능합니다. DistroKid·TuneCore·카카오엔터테인먼트 등 디지털 유통사를 통해 개인 아티스트도 멜론·스포티파이·유튜브 뮤직·애플 뮤직 등 주요 플랫폼에 음원을 발매할 수 있습니다."
@@ -105,5 +105,4 @@ distrokid.com 접속 → 회원 가입
 
 ---
 
-[앨범 아트 제작 가이드](/stories/album-art1) | [EP 제작 완전 가이드](/stories/ep-production1) | [스트리밍 음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[앨범 아트 제작 가이드](/stories/album-art1) | [EP 제작 가이드](/stories/ep-production1) | [스트리밍 음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1)

@@ -1,5 +1,5 @@
 ---
-title: "ASMR 녹음 방법 완전 가이드 — ASMR 제작을 위한 마이크·환경·편집 기초"
+title: "ASMR 녹음 방법 가이드 — ASMR 제작을 위한 마이크·환경·편집 기초"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "전문 스튜디오에서 ASMR을 녹음하면 어떤 장점이 있나요?"
     a: "방음 처리가 된 조용한 녹음 부스, 고품질 콘덴서 마이크와 프리앰프, 전문 노이즈 처리가 제공됩니다. 홈 환경에서 해결하기 어려운 배경 소음 문제를 근본적으로 해결할 수 있습니다."
 ---
-![ASMR 녹음 방법 완전 가이드 — 스튜디오 놀](/images/service6.webp)
+![ASMR 녹음 방법 가이드 — 스튜디오 놀](/images/service6.webp)
 
 ## ASMR은 '소리의 질'이 전부
 
@@ -88,5 +88,4 @@ ASMR 콘텐츠의 핵심은 완벽한 정적과 섬세한 소리입니다. 홈 �
 
 ---
 
-[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [홈 레코딩 방음 방법](/stories/soundproof1) | [오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 셀프 녹음 방법](/stories/selfrecord1)
-[스튜디오 놀 이용 요금](/pricing)
+[마이크 테크닉 가이드](/stories/mictechnique1) | [홈 레코딩 방음 방법](/stories/soundproof1) | [오디오 인터페이스 가이드](/stories/interface1) | [보컬 셀프 녹음 방법](/stories/selfrecord1)

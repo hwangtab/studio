@@ -1,5 +1,5 @@
 ---
-title: "딜레이 vs 리버브 차이 완전 가이드 — 보컬 믹싱에서 올바르게 사용하는 방법"
+title: "딜레이 vs 리버브 차이 가이드 — 보컬 믹싱에서 올바르게 사용하는 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -107,5 +107,4 @@ Pre-Delay: 20~40ms (보컬이 먼저 들리고 리버브가 따라오게)
 
 ---
 
-[딜레이 종류 완전 가이드](/stories/delay-types1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[딜레이 종류 가이드](/stories/delay-types1) | [리버브 종류 가이드](/stories/reverb-types1) | [딜레이 믹싱 가이드](/stories/delay-mixing1) | [보컬 믹싱 가이드](/stories/vocal-mixing1)

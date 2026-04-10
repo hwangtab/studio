@@ -1,11 +1,11 @@
 ---
-title: "음악 스트리밍 데이터 분석 완전 가이드 — Spotify for Artists·멜론·유튜브 분석 활용법"
+title: "음악 스트리밍 데이터 분석 가이드 — Spotify for Artists·멜론·유튜브 분석 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 비즈니스 가이드"
 tags: ["음악 데이터 분석", "Spotify for Artists", "스트리밍 데이터", "음악 분석 도구", "멜론 아티스트", "유튜브 애널리틱스", "음악 마케팅 데이터"]
 thumbnail: "/images/service6.webp"
-summary: "음악 스트리밍 데이터 분석 완전 가이드입니다. Spotify for Artists 분석·Apple Music for Artists 분석·YouTube Analytics 분석·멜론·지니 아티스트 포털 분석·데이터 기반 마케팅 전략까지 정리합니다."
+summary: "음악 스트리밍 데이터 분석 가이드입니다. Spotify for Artists 분석·Apple Music for Artists 분석·YouTube Analytics 분석·멜론·지니 아티스트 포털 분석·데이터 기반 마케팅 전략까지 정리합니다."
 faq:
   - q: "Spotify for Artists는 어떻게 사용하나요?"
     a: "artists.spotify.com에서 아티스트 계정을 인증합니다. 스트리밍 수, 청취자 수, 팔로워 수, 플레이리스트 포함 수, 청취자 지역·연령·성별 분포를 확인할 수 있습니다. 발매 전 에디토리얼 플레이리스트 피칭도 여기서 합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "데이터를 어떻게 마케팅에 활용하나요?"
     a: "청취자 지역 데이터 → 해당 지역 중심 SNS 광고 집행. 인구통계 데이터 → 타깃 오디언스 설정 최적화. 트래픽 소스 → 효과적인 채널 집중 투자. 이탈 시점 데이터 → 다음 곡 구성 개선."
 ---
-![음악 스트리밍 데이터 분석 완전 가이드 — 스튜디오 놀](/images/service6.webp)
+![음악 스트리밍 데이터 분석 가이드 — 스튜디오 놀](/images/service6.webp)
 
 ## 데이터로 음악 마케팅 최적화하기
 
@@ -144,5 +144,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[스트리밍 알고리즘 가이드](/stories/streaming-algorithm1) | [플레이리스트 피칭 가이드](/stories/playlist-pitch1) | [음악 마케팅 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 가이드](/stories/music-sns1)

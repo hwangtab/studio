@@ -48,4 +48,4 @@ faq:
 
 ---
 
-[음악 프로덕션 레슨 프로그램](/lesson) | [스튜디오 녹음실 장비 안내](/studio-info) | [인디 음반 제작 가이드](/stories/indie1) | [믹싱 엔지니어 인터뷰](/stories/interview2)
+[인디 음반 제작 가이드](/stories/indie1) | [믹싱 엔지니어 인터뷰](/stories/interview2)

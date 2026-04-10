@@ -1,11 +1,11 @@
 ---
-title: "기타 믹싱 완전 가이드 — 일렉·어쿠스틱 기타 EQ·컴프레서 실전 설정"
+title: "기타 믹싱 가이드 — 일렉·어쿠스틱 기타 EQ·컴프레서 실전 설정"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["기타 믹싱", "일렉기타 EQ", "어쿠스틱기타 EQ", "기타 컴프레서", "기타 레이어링", "기타 스테레오", "기타 리버브"]
 thumbnail: "/images/portfolio4.webp"
-summary: "기타 믹싱 완전 가이드입니다. 일렉기타·어쿠스틱기타 EQ 포인트, 컴프레서 설정, 스테레오 더블 트래킹, 리버브·딜레이 처리, 보컬과의 주파수 관계를 정리합니다."
+summary: "기타 믹싱 가이드입니다. 일렉기타·어쿠스틱기타 EQ 포인트, 컴프레서 설정, 스테레오 더블 트래킹, 리버브·딜레이 처리, 보컬과의 주파수 관계를 정리합니다."
 faq:
   - q: "일렉기타 믹싱에서 가장 중요한 EQ 포인트는?"
     a: "100~200Hz의 탁한 공명 컷, 2~4kHz의 어택·존재감, 3~6kHz의 크런치·하모닉스입니다. 앰프 사운드가 탁하면 300~500Hz를 컷하고, 너무 날카로우면 4~6kHz를 약간 줄입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "기타 리버브는 어느 정도 사용해야 하나요?"
     a: "장르에 따라 다릅니다. 록·얼터너티브는 리버브 최소화(짧은 Room), 클린 팝·재즈는 Short Plate, 발라드는 Hall 1~2초 정도가 일반적입니다. 기타 리버브가 너무 많으면 보컬 공간을 가립니다."
 ---
-![기타 믹싱 완전 가이드 — 스튜디오 놀](/images/portfolio4.webp)
+![기타 믹싱 가이드 — 스튜디오 놀](/images/portfolio4.webp)
 
 ## 기타 믹싱 — 일렉과 어쿠스틱의 핵심
 
@@ -142,5 +142,4 @@ faq:
 
 ---
 
-[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[드럼 믹싱 가이드](/stories/drum-mixing1) | [베이스 믹싱 가이드](/stories/bass-mixing1) | [보컬 믹싱 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 가이드](/stories/fabfilter1)

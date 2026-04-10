@@ -1,5 +1,5 @@
 ---
-title: "보컬 EQ 완전 가이드 — 주파수별 역할과 보컬 믹싱에서의 EQ 설정법"
+title: "보컬 EQ 가이드 — 주파수별 역할과 보컬 믹싱에서의 EQ 설정법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -96,5 +96,4 @@ EQ 처리 전·후를 번갈아 들으며 더 좋은지 확인합니다. EQ 없�
 
 ---
 
-[파라메트릭 EQ 완전 가이드](/stories/parametric-eq1) | [주파수 스펙트럼 완전 가이드](/stories/frequency-spectrum1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 컴프레서 사용법](/stories/compress1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[파라메트릭 EQ 가이드](/stories/parametric-eq1) | [주파수 스펙트럼 가이드](/stories/frequency-spectrum1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [보컬 컴프레서 사용법](/stories/compress1)

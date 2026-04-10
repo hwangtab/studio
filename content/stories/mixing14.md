@@ -97,5 +97,4 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제13부: 멈춰있을 때 가장 아름답다](/stories/mixing13) | [제15부: 좌우의 미학, 패닝(Panning) →](/stories/mixing15) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
-
+**믹싱 강좌 시리즈**: [← 제13부: 멈춰있을 때 가장 아름답다](/stories/mixing13) | [제15부: 좌우의 미학, 패닝(Panning) →](/stories/mixing15) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [레슨 안내](/lesson) | [요금 안내](/pricing)

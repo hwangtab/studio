@@ -1,11 +1,11 @@
 ---
-title: "믹싱 오토메이션 완전 가이드 — 볼륨·팬·이펙트 자동화로 살아있는 믹스 만들기"
+title: "믹싱 오토메이션 가이드 — 볼륨·팬·이펙트 자동화로 살아있는 믹스 만들기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["믹싱 오토메이션", "볼륨 오토메이션", "팬 오토메이션", "플러그인 오토메이션", "DAW 오토메이션", "믹스 자동화", "보컬 오토메이션"]
 thumbnail: "/images/hardware5.webp"
-summary: "믹싱 오토메이션 완전 가이드입니다. 볼륨·팬·플러그인 파라미터 오토메이션의 개념과 DAW별 사용법, 보컬 라이드·필터 스위프·빌드업 자동화 실전 기법을 정리합니다."
+summary: "믹싱 오토메이션 가이드입니다. 볼륨·팬·플러그인 파라미터 오토메이션의 개념과 DAW별 사용법, 보컬 라이드·필터 스위프·빌드업 자동화 실전 기법을 정리합니다."
 faq:
   - q: "믹싱 오토메이션이란 무엇인가요?"
     a: "오토메이션은 볼륨, 팬, 이펙트 파라미터 등을 시간 축에 따라 자동으로 변화시키는 기능입니다. 정적인 믹스에 생동감을 더하고, 곡 구간별로 다른 음향 처리를 자동화합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "오토메이션 모드(Touch/Latch/Write)의 차이는?"
     a: "Write 모드는 재생 중 모든 움직임을 기록합니다. Touch 모드는 컨트롤을 건드릴 때만 기록하고 놓으면 이전 값으로 복귀합니다. Latch 모드는 건드릴 때부터 끝까지 새 값을 유지합니다. 보컬 라이드는 Touch 모드가 편리합니다."
 ---
-![믹싱 오토메이션 완전 가이드 — 스튜디오 놀](/images/hardware5.webp)
+![믹싱 오토메이션 가이드 — 스튜디오 놀](/images/hardware5.webp)
 
 ## 믹싱 오토메이션 — 정적인 믹스에 생명을 불어넣다
 
@@ -151,5 +151,4 @@ faq:
 
 ---
 
-[강좌 제14부: 볼륨 밸런스](/stories/mixing14) | [강좌 제22부: 오토메이션](/stories/mixing22) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [믹싱 완전 가이드](/stories/mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[강좌 제14부: 볼륨 밸런스](/stories/mixing14) | [강좌 제22부: 오토메이션](/stories/mixing22) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1)

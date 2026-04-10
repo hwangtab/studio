@@ -1,11 +1,11 @@
 ---
-title: "오디오 인터페이스 완전 가이드 — 보컬 녹음용 인터페이스 선택·설정·추천"
+title: "오디오 인터페이스 가이드 — 보컬 녹음용 인터페이스 선택·설정·추천"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["오디오 인터페이스", "오디오 인터페이스 추천", "홈 레코딩 인터페이스", "보컬 녹음 인터페이스", "Focusrite Scarlett", "오디오 인터페이스 설정", "인터페이스 선택 가이드"]
 thumbnail: "/images/studio2.webp"
-summary: "오디오 인터페이스 완전 가이드입니다. 보컬 녹음용 인터페이스 선택 기준, 채널 수·프리앰프 품질·레이턴시 설명, Focusrite Scarlett 등 입문~중급 추천 제품을 정리합니다."
+summary: "오디오 인터페이스 가이드입니다. 보컬 녹음용 인터페이스 선택 기준, 채널 수·프리앰프 품질·레이턴시 설명, Focusrite Scarlett 등 입문~중급 추천 제품을 정리합니다."
 faq:
   - q: "오디오 인터페이스는 왜 필요한가요?"
     a: "컴퓨터의 내장 사운드카드는 마이크 직접 연결이 불가능하고 레이턴시(지연)가 높습니다. 오디오 인터페이스는 마이크→XLR 연결, 팬텀 파워(48V), 낮은 레이턴시, 고품질 A/D 변환을 제공합니다. 보컬 녹음에 필수 장비입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "인터페이스 연결 후 소리가 안 나면 어떻게 하나요?"
     a: "첫째, 팬텀 파워(48V) 스위치가 켜져 있는지 확인하세요. 둘째, DAW의 오디오 설정에서 입력 장치를 인터페이스로 변경합니다. 셋째, 인터페이스의 입력 게인(Gain) 노브를 시계 방향으로 돌려 신호를 올리세요."
 ---
-![오디오 인터페이스 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
+![오디오 인터페이스 가이드 — 스튜디오 놀](/images/studio2.webp)
 
 ## 오디오 인터페이스 — 홈 레코딩의 핵심 장비
 
@@ -116,5 +116,4 @@ faq:
 
 ---
 
-[모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[모니터 스피커 가이드](/stories/monitor-speakers1) | [홈 레코딩 가이드](/stories/home-recording1) | [마이크 종류 가이드](/stories/microphone-types1) | [DAW 비교 가이드](/stories/daw-comparison1)

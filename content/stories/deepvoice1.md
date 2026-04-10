@@ -114,5 +114,4 @@ faq:
 
 ---
 
-[성량 키우는 방법 가이드](/stories/volume1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 음역대 확인·확장 방법](/stories/vocalrange1)
-[스튜디오 놀 이용 요금](/pricing)
+[성량 키우는 방법 가이드](/stories/volume1) | [보컬 호흡법 가이드](/stories/breathing1) | [보컬 자세 가이드](/stories/posture1) | [보컬 음역대 확인·확장 방법](/stories/vocalrange1)

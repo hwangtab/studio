@@ -1,5 +1,5 @@
 ---
-title: "밴드 녹음 완전 가이드 — 스튜디오 밴드 세션 준비부터 믹싱까지"
+title: "밴드 녹음 가이드 — 스튜디오 밴드 세션 준비부터 믹싱까지"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "밴드 데모 녹음과 정규 앨범 녹음의 차이는 무엇인가요?"
     a: "데모 녹음은 빠른 시간 내에 곡의 전체적인 구성과 편곡을 확인하는 것이 목적입니다. 정규 앨범 녹음은 각 파트를 완벽하게 연주하고 세밀한 믹싱·마스터링까지 진행하는 높은 완성도를 추구합니다."
 ---
-![밴드 녹음 완전 가이드 — 스튜디오 놀](/images/recording3.webp)
+![밴드 녹음 가이드 — 스튜디오 놀](/images/recording3.webp)
 
 ## 밴드 스튜디오 세션이란?
 
@@ -109,5 +109,5 @@ faq:
 
 ---
 
-[라이브 녹음 완전 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1)
-[스튜디오 놀 이용 요금](/pricing)
+[라이브 녹음 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1)
+[이용 요금 보기](/pricing)

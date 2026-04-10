@@ -1,5 +1,5 @@
 ---
-title: "인스타그램 음악 업로드·릴스 활용 완전 가이드 — 보컬 아티스트를 위한 SNS 전략"
+title: "인스타그램 음악 업로드·릴스 활용 가이드 — 보컬 아티스트를 위한 SNS 전략"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "SNS 마케팅"
@@ -126,5 +126,4 @@ faq:
 
 ---
 
-[틱톡 보컬 활동 가이드](/stories/tiktok-music1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1)
-[스튜디오 놀 이용 요금](/pricing)
+[틱톡 보컬 활동 가이드](/stories/tiktok-music1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [커버 곡 저작권 가이드](/stories/copyright-cover1) | [커버 곡 녹음 가이드](/stories/coverrecording1)

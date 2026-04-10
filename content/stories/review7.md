@@ -44,4 +44,4 @@ faq:
 
 ---
 
-[믹싱·마스터링 요금 안내](/pricing) | [스튜디오 놀 포트폴리오](/portfolio) | [홈레코딩 vs 스튜디오 비교](/stories/homestudio1) | [음원 발매 가이드](/stories/album1)
+[홈레코딩 vs 스튜디오 비교](/stories/homestudio1) | [음원 발매 가이드](/stories/album1)

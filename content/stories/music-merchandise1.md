@@ -1,5 +1,5 @@
 ---
-title: "음악 굿즈·머천다이징 완전 가이드 — 뮤지션 수익 다각화와 팬 경험 강화"
+title: "음악 굿즈·머천다이징 가이드 — 뮤지션 수익 다각화와 팬 경험 강화"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 비즈니스"
@@ -16,7 +16,7 @@ faq:
   - q: "POD(Print-on-Demand) 서비스란 무엇인가요?"
     a: "POD는 주문이 들어올 때마다 개별 제작하는 방식입니다. 재고 부담 없이 시작할 수 있어 초기 뮤지션에게 이상적입니다. Printful, Redbubble, 국내 마플샵 등이 대표적입니다. 마진은 일반 제작보다 낮지만 리스크가 없습니다."
 ---
-![음악 굿즈·머천다이징 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
+![음악 굿즈·머천다이징 가이드 — 스튜디오 놀](/images/recording2.webp)
 
 ## 굿즈 — 팬과의 물리적 연결고리
 
@@ -125,5 +125,4 @@ faq:
 
 ---
 
-[팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[팬 커뮤니티 구축 가이드](/stories/fan-community1) | [음악 마케팅 가이드](/stories/music-marketing1) | [아티스트 브랜딩 가이드](/stories/artist-branding1) | [음악 크라우드펀딩 가이드](/stories/music-crowdfunding1)

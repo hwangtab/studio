@@ -1,5 +1,5 @@
 ---
-title: "음원 스트리밍 수익 구조 완전 가이드 — 멜론·스포티파이 정산 방법"
+title: "음원 스트리밍 수익 구조 가이드 — 멜론·스포티파이 정산 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "가이드"
@@ -96,5 +96,4 @@ faq:
 
 ---
 
-[음원 유통 방법 완전 가이드](/stories/distribution1) | [음악 저작권료 받는 방법](/stories/royalty1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1)
-[스튜디오 놀 이용 요금](/pricing)
+[음원 유통 방법 가이드](/stories/distribution1) | [음악 저작권료 받는 방법](/stories/royalty1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1)

@@ -1,11 +1,11 @@
 ---
-title: "EP 제작 완전 가이드 — 인디 아티스트를 위한 미니 앨범 제작 과정"
+title: "EP 제작 가이드 — 인디 아티스트를 위한 미니 앨범 제작 과정"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["EP 제작", "미니 앨범 제작", "인디 EP", "EP 트랙 수", "EP 발매 전략", "EP vs 싱글", "인디 음반 제작"]
 thumbnail: "/images/studio2.webp"
-summary: "EP 제작 완전 가이드입니다. EP 트랙 수와 구성, 제작 예산 계획, 녹음·믹싱·마스터링·커버아트 제작, EP vs 싱글 발매 전략을 정리합니다."
+summary: "EP 제작 가이드입니다. EP 트랙 수와 구성, 제작 예산 계획, 녹음·믹싱·마스터링·커버아트 제작, EP vs 싱글 발매 전략을 정리합니다."
 faq:
   - q: "EP는 보통 몇 곡이 적당한가요?"
     a: "EP(Extended Play)는 일반적으로 3~6곡, 총 재생 시간 15~30분을 기준으로 합니다. 인디 아티스트는 4~5곡이 제작 부담과 임팩트의 균형을 잡기 좋습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "EP 커버아트는 어떻게 준비하나요?"
     a: "3000x3000px 이상 JPEG/PNG 파일이 스트리밍 표준입니다. 디자이너 의뢰 또는 Canva·Adobe Express로 직접 제작 가능합니다. 아티스트 브랜딩 컬러와 일관성이 중요합니다."
 ---
-![EP 제작 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
+![EP 제작 가이드 — 스튜디오 놀](/images/studio2.webp)
 
 ## EP 제작 — 인디 아티스트의 첫 번째 앨범 전략
 
@@ -142,5 +142,4 @@ EP는 인디 아티스트가 팬 베이스를 구축하는 가장 효과적인 �
 
 ---
 
-[아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[아티스트 브랜딩 가이드](/stories/artist-branding1) | [스트리밍 음악 출시 가이드](/stories/streaming-release1) | [음원 유통 가이드](/stories/distribution1) | [음악 SNS 마케팅 가이드](/stories/music-sns1)

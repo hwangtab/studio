@@ -108,4 +108,3 @@ EPK는 기회가 왔을 때 '지금 바로 보내드릴 수 있습니다'라고 
 ---
 
 [보컬 포트폴리오 만들기](/stories/portfolio1) | [기획사·레이블 데모 트랙 가이드](/stories/demotrack1) | [음반 커버 아트 가이드](/stories/coverart1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1)
-[스튜디오 놀 이용 요금](/pricing)

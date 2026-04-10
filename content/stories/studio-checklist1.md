@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["스튜디오 방문", "녹음 세션 준비", "스튜디오 체크리스트", "녹음 준비물", "보컬 녹음 준비", "처음 스튜디오", "스튜디오 이용 방법"]
 thumbnail: "/images/studio3.webp"
-summary: "스튜디오 방문 체크리스트 완전 가이드입니다. 예약부터 MR 준비, 가사 암기, 당일 컨디션 관리, 세션 중 커뮤니케이션까지 처음 스튜디오를 방문하는 분들을 위한 안내입니다."
+summary: "스튜디오 방문 체크리스트 가이드입니다. 예약부터 MR 준비, 가사 암기, 당일 컨디션 관리, 세션 중 커뮤니케이션까지 처음 스튜디오를 방문하는 분들을 위한 안내입니다."
 faq:
   - q: "스튜디오 예약 시 무엇을 알려줘야 하나요?"
     a: "원하는 날짜·시간, 곡 수, MR 보유 여부, 녹음 목적(음원 발매·오디션·데모)을 알려주세요. MR 파일은 예약 전날까지 전송하면 엔지니어가 사전 확인하고 세션을 효율적으로 진행할 수 있습니다."
@@ -148,5 +148,5 @@ WeTransfer, 구글 드라이브, 카카오톡 파일 전송
 
 ---
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 팁 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 가이드](/stories/vocal-warmup1) | [녹음 준비 가이드](/stories/recording-preparation1)
+[이용 요금 보기](/pricing)

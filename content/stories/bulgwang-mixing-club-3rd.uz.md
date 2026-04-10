@@ -1,5 +1,5 @@
 ---
-title: '"Bulgwang Mixing Club" uchinchi uchrashuv e''loni'
+title: "'\"Bulgwang Mixing Club\" uchinchi uchrashuv e''loni'"
 date: 2025-11-18
 author: "Studio NOL"
 category: "event"

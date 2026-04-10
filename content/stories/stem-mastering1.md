@@ -1,11 +1,11 @@
 ---
-title: "스템 마스터링 완전 가이드 — 스템별 분리 납품과 마스터링 방법"
+title: "스템 마스터링 가이드 — 스템별 분리 납품과 마스터링 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["스템 마스터링", "stem mastering", "스템 파일", "마스터링 가이드", "음원 납품", "스템 믹싱", "마스터링 파일"]
 thumbnail: "/images/hardware5.webp"
-summary: "스템 마스터링 완전 가이드. 스템 파일 구성 방법, 스템별 처리 전략, 풀 믹스 마스터링과의 차이점, 납품 규격까지 음원 발매를 앞둔 제작자를 위한 가이드."
+summary: "스템 마스터링 가이드. 스템 파일 구성 방법, 스템별 처리 전략, 풀 믹스 마스터링과의 차이점, 납품 규격까지 음원 발매를 앞둔 제작자를 위한 가이드."
 faq:
   - q: "스템 마스터링이란 무엇인가요?"
     a: "스템 마스터링은 완성된 풀 믹스 파일 대신 악기·트랙 그룹별로 분리된 스템 파일을 사용해 마스터링하는 방법입니다. 마스터링 엔지니어가 각 파트를 개별 조정할 수 있어 더 정밀한 음압·음색 컨트롤이 가능합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "스템 마스터링 납품 파일은 어떻게 정리하나요?"
     a: "각 스템 WAV 파일(24bit 44.1kHz 또는 48kHz)과 함께 마스터 버전(스테레오 2-mix) WAV를 함께 납품합니다. 파일명 규칙: 아티스트명_곡명_Drums.wav, 아티스트명_곡명_Bass.wav 등."
 ---
-![스템 마스터링 완전 가이드 — 스튜디오 놀](/images/hardware5.webp)
+![스템 마스터링 가이드 — 스튜디오 놀](/images/hardware5.webp)
 
 ## 스템 마스터링이 필요한 순간
 
@@ -107,5 +107,4 @@ faq:
 
 ---
 
-[AI 마스터링 완전 가이드](/stories/ai-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 파일 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[AI 마스터링 가이드](/stories/ai-mastering1) | [마스터링 가이드](/stories/mastering1) | [LUFS 가이드](/stories/lufs-guide1) | [스템 파일 가이드](/stories/stemfile1)

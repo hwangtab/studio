@@ -1,11 +1,11 @@
 ---
-title: "정규앨범 발매 완전 가이드 — 인디 아티스트 풀앨범 제작·출시 전략"
+title: "정규앨범 발매 가이드 — 인디 아티스트 풀앨범 제작·출시 전략"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["정규앨범 발매", "풀앨범 제작", "앨범 발매 방법", "인디 앨범 출시", "앨범 제작 순서", "앨범 유통", "앨범 발매 전략"]
 thumbnail: "/images/hardware1.webp"
-summary: "정규앨범(풀앨범) 발매 완전 가이드입니다. 앨범 트랙 구성, 제작 순서, 유통사 선택, 발매 타임라인, 홍보 전략, KOMCA 저작권 등록 방법을 정리합니다."
+summary: "정규앨범(풀앨범) 발매 가이드입니다. 앨범 트랙 구성, 제작 순서, 유통사 선택, 발매 타임라인, 홍보 전략, KOMCA 저작권 등록 방법을 정리합니다."
 faq:
   - q: "정규앨범은 트랙 몇 곡부터인가요?"
     a: "일반적으로 정규앨범(Full Album)은 7곡 이상이 기준입니다. 7~12곡이 가장 일반적이며, 10곡 전후가 스트리밍 시대의 표준입니다. 3~6곡은 EP, 1~2곡은 싱글로 분류됩니다."
@@ -16,7 +16,7 @@ faq:
   - q: "정규앨범 유통 비용은 싱글과 다른가요?"
     a: "DistroKid 같은 연간 구독 서비스는 트랙 수 무관하게 동일 요금입니다. TuneCore는 앨범($29.99/년)이 싱글($9.99/년)보다 높습니다. 국내 유통사는 트랙 수·서비스 범위에 따라 별도 협의합니다."
 ---
-![정규앨범 발매 완전 가이드 — 스튜디오 놀](/images/hardware1.webp)
+![정규앨범 발매 가이드 — 스튜디오 놀](/images/hardware1.webp)
 
 ## 정규앨범 발매 — 아티스트의 세계를 완성하는 프로젝트
 
@@ -158,5 +158,4 @@ faq:
 
 ---
 
-[음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [EP 발매 완전 가이드](/stories/ep-release1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음원 발매 타임라인 가이드](/stories/release-timeline1) | [EP 발매 가이드](/stories/ep-release1) | [싱글 발매 가이드](/stories/single-release1) | [음원 유통 가이드](/stories/music-distribution1)

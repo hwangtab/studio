@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["녹음실 처음", "보컬 녹음 준비물", "녹음실 이용 방법", "녹음 팁", "처음 녹음", "연신내 녹음실"]
 thumbnail: "/images/recording2.webp"
-summary: "녹음실을 처음 방문하는 분들을 위한 완전 가이드. 예약 전 준비할 것부터 당일 녹음 순서, 파일 납품까지 전 과정을 단계별로 안내합니다."
+summary: "녹음실을 처음 방문하는 분들을 위한 가이드. 예약 전 준비할 것부터 당일 녹음 순서, 파일 납품까지 전 과정을 단계별로 안내합니다."
 faq:
   - q: "MR 파일을 USB로 가져가야 하나요?"
     a: "카카오톡이나 구글 드라이브로 미리 공유해주시면 편합니다. USB로 가져오셔도 됩니다."
@@ -120,4 +120,5 @@ faq:
 
 ---
 
-[녹음실 에티켓 완전 가이드](/stories/studio-etiquette1) | [이용 요금 안내](/pricing) | [당일 컨디션 관리 체크리스트](/stories/session1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [예약 방법 완전 가이드](/stories/booking1) | [녹음실 용어 사전](/stories/glossary1)
+[녹음실 에티켓 가이드](/stories/studio-etiquette1) | [당일 컨디션 관리 체크리스트](/stories/session1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [예약 방법 가이드](/stories/booking1)
+[이용 요금 보기](/pricing)

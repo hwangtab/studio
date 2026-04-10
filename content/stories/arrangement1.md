@@ -1,5 +1,5 @@
 ---
-title: "편곡(Arrangement) 완전 가이드 — 보컬 중심 곡을 풍성하게 만드는 방법"
+title: "편곡(Arrangement) 가이드 — 보컬 중심 곡을 풍성하게 만드는 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음악 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "편곡 비용은 얼마나 드나요?"
     a: "미디 편곡은 곡당 30~100만 원(장르·복잡도에 따라)이 일반적입니다. 라이브 세션 편곡은 참여 연주자 수에 따라 더 높아질 수 있습니다. 가볍게 시작하려면 미디 편곡에서 핵심 파트(피아노, 드럼, 베이스)만 포함한 간단한 편곡을 먼저 시도해볼 수 있습니다."
 ---
-![편곡(Arrangement) 완전 가이드 — 스튜디오 놀](/images/album1.webp)
+![편곡(Arrangement) 가이드 — 스튜디오 놀](/images/album1.webp)
 
 ## 편곡이 보컬을 살린다
 
@@ -103,5 +103,4 @@ faq:
 
 ---
 
-[편곡 팁 완전 가이드](/stories/arrangement-tips1) | [미디 편곡 + 보컬 녹음 가이드](/stories/midirecord1) | [나만의 오리지널 곡 만드는 방법](/stories/original-song1) | [MR 가이드](/stories/mr-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[편곡 팁 가이드](/stories/arrangement-tips1) | [미디 편곡 + 보컬 녹음 가이드](/stories/midirecord1) | [나만의 오리지널 곡 만드는 방법](/stories/original-song1) | [MR 가이드](/stories/mr-guide1)

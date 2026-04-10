@@ -56,7 +56,6 @@ faq:
 | 회덕역 (경부선) | 경부선→대전역→KTX→서울역 | 약 85~100분 |
 | 법동·대화동 (버스) | 버스→대전역→KTX→서울역 | 약 90~110분 |
 
-
 ---
 
 ## 당일 왕복 일정 예시 (신탄진 기준)
@@ -76,7 +75,7 @@ faq:
 
 ---
 
-온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다. [자세한 안내](/stories/onlinemix1)
+온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다.
 
 ---
 
@@ -86,5 +85,5 @@ faq:
 
 ---
 
-[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon-donggu1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [세종시 녹음실 안내](/stories/sejong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon-donggu1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [세종시 녹음실 안내](/stories/sejong1)
+[이용 요금 보기](/pricing)

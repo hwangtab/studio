@@ -1,5 +1,5 @@
 ---
-title: "노래 구조(송 폼) 완전 가이드 — 버스·코러스·브릿지·프리코러스"
+title: "노래 구조(송 폼) 가이드 — 버스·코러스·브릿지·프리코러스"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "작곡 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "프리코러스가 꼭 필요한가요?"
     a: "필수는 아니지만 버스에서 코러스로 바로 이어질 때 너무 갑작스럽다면 프리코러스로 긴장감을 쌓아주면 코러스 진입이 훨씬 강렬해집니다. 짧게 4~8마디로 구성됩니다."
 ---
-![노래 구조(송 폼) 완전 가이드 — 스튜디오 놀](/images/recording14.webp)
+![노래 구조(송 폼) 가이드 — 스튜디오 놀](/images/recording14.webp)
 
 ## 송 폼(Song Form)이란?
 
@@ -113,5 +113,4 @@ faq:
 
 ---
 
-[오리지널 곡 만드는 방법 가이드](/stories/original-song1) | [작사 완전 가이드](/stories/lyrics1) | [코드 진행 기초 가이드](/stories/chordprog1) | [작곡 기초 가이드](/stories/compose1)
-[스튜디오 놀 이용 요금](/pricing)
+[오리지널 곡 만드는 방법 가이드](/stories/original-song1) | [작사 가이드](/stories/lyrics1) | [코드 진행 기초 가이드](/stories/chordprog1) | [작곡 기초 가이드](/stories/compose1)

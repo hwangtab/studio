@@ -120,5 +120,5 @@ faq:
 
 ---
 
-[동작구 녹음실 안내](/stories/dongjak1) | [관악구 녹음실 안내](/stories/gwanak1) | [서초구 녹음실 안내](/stories/seocho1) | [강남 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[동작구 녹음실 안내](/stories/dongjak1) | [관악구 녹음실 안내](/stories/gwanak1) | [서초구 녹음실 안내](/stories/seocho1) | [강남 녹음실 안내](/stories/gangnam1)
+[이용 요금 보기](/pricing)

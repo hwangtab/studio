@@ -1,5 +1,5 @@
 ---
-title: "힙합 보컬·랩 녹음 완전 가이드 — 플로우·딜리버리·훅 레코딩 기법"
+title: "힙합 보컬·랩 녹음 가이드 — 플로우·딜리버리·훅 레코딩 기법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "힙합 마이크 세팅은 어떻게 하나요?"
     a: "힙합 보컬은 다이내믹 마이크(Shure SM7B, Electro-Voice RE20) 또는 특정 콘덴서 마이크를 사용합니다. 마이크를 입에서 5~15cm로 매우 가깝게 두어 친밀하고 강력한 사운드를 포착합니다."
 ---
-![힙합 보컬·랩 녹음 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
+![힙합 보컬·랩 녹음 가이드 — 스튜디오 놀](/images/studio2.webp)
 
 ## 힙합 보컬 사운드의 핵심
 
@@ -136,5 +136,4 @@ faq:
 
 ---
 
-[힙합 프로덕션 완전 가이드](/stories/hiphop-production1) | [뮤지컬 보컬 녹음 완전 가이드](/stories/musical-vocal1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [백보컬·코러스 녹음 완전 가이드](/stories/backing-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[힙합 프로덕션 가이드](/stories/hiphop-production1) | [뮤지컬 보컬 녹음 가이드](/stories/musical-vocal1) | [재즈 보컬 녹음 가이드](/stories/jazz-vocal1) | [백보컬·코러스 녹음 가이드](/stories/backing-vocal1)

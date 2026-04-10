@@ -1,5 +1,5 @@
 ---
-title: "보컬 녹음 팁 완전 가이드 — 녹음 당일 최고의 테이크를 위한 준비"
+title: "보컬 녹음 팁 가이드 — 녹음 당일 최고의 테이크를 위한 준비"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "이어폰 모니터 믹스는 어떻게 설정하나요?"
     a: "자신의 보컬을 이어폰에서 살짝 작게 설정하고 MR을 기준으로 맞추면 음정이 더 정확해집니다. 보컬을 너무 크게 들으면 박자가 빨라지고, 너무 작으면 음정이 불안정해집니다. 리버브를 약간 추가하면 편안하게 부를 수 있습니다."
 ---
-![보컬 녹음 팁 완전 가이드 — 스튜디오 놀](/images/recording3.webp)
+![보컬 녹음 팁 가이드 — 스튜디오 놀](/images/recording3.webp)
 
 ## 보컬 녹음 — 최고의 테이크는 준비에서 나온다
 
@@ -156,5 +156,4 @@ P·B·T 발음 시 살짝 마이크 옆으로 각도 조절
 
 ---
 
-[보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 레슨·코치 선택 완전 가이드](/stories/vocal-lesson1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 세팅 가이드](/stories/vocal-recording-setup1) | [보컬 레슨·코치 선택 가이드](/stories/vocal-lesson1) | [보컬 워밍업 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 가이드](/stories/vocal-health1)

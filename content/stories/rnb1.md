@@ -91,4 +91,4 @@ faq:
 
 ---
 
-[이용 요금 안내](/pricing) | [힙합·래퍼 보컬 녹음 가이드](/stories/hip1) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [녹음 세션 준비 체크리스트](/stories/session1) | [마이크 종류별 보컬 차이](/stories/mic1) | [재즈 보컬 녹음 가이드](/stories/jazz1)
+[힙합·래퍼 보컬 녹음 가이드](/stories/hip1) | [발라드 보컬 녹음 가이드](/stories/ballad1) | [녹음 세션 준비 체크리스트](/stories/session1) | [마이크 종류별 보컬 차이](/stories/mic1)

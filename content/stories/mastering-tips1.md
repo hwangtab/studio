@@ -1,11 +1,11 @@
 ---
-title: "마스터링 팁 완전 가이드 — 스트리밍 최적화·LUFS·리미터 실전 설정"
+title: "마스터링 팁 가이드 — 스트리밍 최적화·LUFS·리미터 실전 설정"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["마스터링 팁", "스트리밍 마스터링", "LUFS 설정", "마스터 리미터", "마스터링 EQ", "마스터링 체인", "음반 마스터링"]
 thumbnail: "/images/recording8.webp"
-summary: "마스터링 팁 완전 가이드입니다. 스트리밍 플랫폼 LUFS 기준, 마스터 EQ·컴프레서·리미터 설정값, 레퍼런스 트랙 활용법, 최종 납품 파일 포맷을 정리합니다."
+summary: "마스터링 팁 가이드입니다. 스트리밍 플랫폼 LUFS 기준, 마스터 EQ·컴프레서·리미터 설정값, 레퍼런스 트랙 활용법, 최종 납품 파일 포맷을 정리합니다."
 faq:
   - q: "스포티파이·멜론·유튜브 마스터링 LUFS 기준은?"
     a: "스포티파이는 -14 LUFS, 애플뮤직 -16 LUFS, 유튜브 -14 LUFS, 멜론·지니 등 한국 스트리밍은 -14 LUFS 전후가 표준입니다. 플랫폼들은 라우드니스 노멀라이제이션으로 기준보다 큰 음원은 자동으로 볼륨을 낮춥니다."
@@ -16,7 +16,7 @@ faq:
   - q: "마스터링 후 납품 파일 포맷은 무엇인가요?"
     a: "스트리밍용은 WAV 44.1kHz 16-bit 또는 24-bit, 스트리밍 업로드용 MP3 320kbps가 표준입니다. 음반 CD 제작은 Red Book 규격(44.1kHz 16-bit WAV)이 필요합니다."
 ---
-![마스터링 팁 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
+![마스터링 팁 가이드 — 스튜디오 놀](/images/recording8.webp)
 
 ## 마스터링 — 믹스를 완성하는 마지막 단계
 
@@ -141,5 +141,4 @@ faq:
 
 ---
 
-[공간 음향·바이노럴·돌비 애트모스 완전 가이드](/stories/spatial-audio1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[공간 음향·바이노럴·돌비 애트모스 가이드](/stories/spatial-audio1) | [마스터링 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 가이드](/stories/mix-prep1) | [LUFS 가이드](/stories/lufs-guide1)

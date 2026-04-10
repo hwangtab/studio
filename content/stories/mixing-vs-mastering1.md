@@ -1,11 +1,11 @@
 ---
-title: "믹싱 vs 마스터링 차이 완전 가이드 — 음원 후반 작업 두 단계 완벽 이해"
+title: "믹싱 vs 마스터링 차이 가이드 — 음원 후반 작업 두 단계 완벽 이해"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["믹싱 마스터링 차이", "믹싱이란", "마스터링이란", "음원 후반 작업", "믹싱 마스터링 순서", "음악 믹싱", "음악 마스터링"]
 thumbnail: "/images/portfolio2.webp"
-summary: "믹싱 vs 마스터링 차이 완전 가이드입니다. 믹싱과 마스터링의 목적·작업 내용·순서·비용 차이를 정리합니다. 음원 발매 전 두 단계를 명확히 이해하세요."
+summary: "믹싱 vs 마스터링 차이 가이드입니다. 믹싱과 마스터링의 목적·작업 내용·순서·비용 차이를 정리합니다. 음원 발매 전 두 단계를 명확히 이해하세요."
 faq:
   - q: "믹싱과 마스터링은 무엇이 다른가요?"
     a: "믹싱은 여러 트랙(보컬·악기·드럼 등)의 볼륨·EQ·팬·이펙트를 조정해 하나의 완성된 스테레오 파일을 만드는 작업입니다. 마스터링은 완성된 믹스 파일을 스트리밍 플랫폼 기준에 맞게 음량·음색을 최종 최적화하는 작업입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "온라인 믹싱·마스터링 의뢰 시 어떤 파일을 제출해야 하나요?"
     a: "믹싱 의뢰 시: 트랙별 드라이(이펙트 없는) WAV 파일(스템 파일). 마스터링 의뢰 시: 완성된 믹스 파일 WAV(최소 24bit/44.1kHz 이상). 파일 포맷은 의뢰 전 엔지니어와 확인하세요."
 ---
-![믹싱 vs 마스터링 차이 완전 가이드 — 스튜디오 놀](/images/portfolio2.webp)
+![믹싱 vs 마스터링 차이 가이드 — 스튜디오 놀](/images/portfolio2.webp)
 
 ## 믹싱과 마스터링 — 음원 후반 작업의 두 단계
 
@@ -128,5 +128,4 @@ faq:
 
 ---
 
-[강좌 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [강좌 제23부: 마스터링](/stories/mixing23) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)
-[스튜디오 놀 이용 요금](/pricing)
+[강좌 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [강좌 제23부: 마스터링](/stories/mixing23) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1)

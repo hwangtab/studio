@@ -1,5 +1,5 @@
 ---
-title: "록 보컬 녹음 완전 가이드 — 파워 록·메탈·인디 록 보컬 레코딩 기법"
+title: "록 보컬 녹음 가이드 — 파워 록·메탈·인디 록 보컬 레코딩 기법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "벨팅 록 보컬이 성대에 해롭지 않나요?"
     a: "올바른 벨팅 발성은 지지(Breath Support)와 혼합 발성(Mixed Voice)이 기반이 됩니다. 순수한 흉성으로 극한까지 쥐어짜는 것은 성대에 해롭습니다. 전문 보컬 코치 지도 하에 훈련하는 것이 안전합니다."
 ---
-![록 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service4.webp)
+![록 보컬 녹음 가이드 — 스튜디오 놀](/images/service4.webp)
 
 ## 록 보컬 사운드의 핵심
 
@@ -121,5 +121,4 @@ faq:
 
 ---
 
-[트로트 보컬 녹음 완전 가이드](/stories/trot-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [녹음 준비 완전 가이드](/stories/recording-preparation1)
-[스튜디오 놀 이용 요금](/pricing)
+[트로트 보컬 녹음 가이드](/stories/trot-vocal1) | [팝 보컬 녹음 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [혼합 발성 가이드](/stories/mixedvoice1)

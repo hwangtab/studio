@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[스튜디오 놀 보컬 녹음 서비스 및 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레슨 서비스 안내](/stories/lesson1)
+[녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레슨 서비스 안내](/stories/lesson1)

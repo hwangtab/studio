@@ -1,5 +1,5 @@
 ---
-title: "음감 훈련(Ear Training) 완전 가이드 — 인터벌·코드·리듬 청음으로 보컬 음정 잡기"
+title: "음감 훈련(Ear Training) 가이드 — 인터벌·코드·리듬 청음으로 보컬 음정 잡기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "음감 훈련이 보컬에 어떤 도움이 되나요?"
     a: "음정 정확도가 높아져 녹음 테이크 수가 줄어듭니다. 코드를 귀로 들으면서 자연스럽게 하모니를 만들 수 있고, 멜로디를 한 번 듣고 바로 부를 수 있는 초견 능력도 향상됩니다."
 ---
-![음감 훈련(Ear Training) 완전 가이드 — 스튜디오 놀](/images/recording11.webp)
+![음감 훈련(Ear Training) 가이드 — 스튜디오 놀](/images/recording11.webp)
 
 ## 음감 훈련이 보컬에게 필요한 이유
 
@@ -134,5 +134,4 @@ faq:
 
 ---
 
-[음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1)
-[스튜디오 놀 이용 요금](/pricing)
+[음정 교정 가이드](/stories/pitch-training1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 레슨 가이드](/stories/singing-lesson1) | [흉성 가이드](/stories/chest-voice1)

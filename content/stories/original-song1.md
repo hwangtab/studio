@@ -1,5 +1,5 @@
 ---
-title: "나만의 오리지널 곡 만드는 방법 — 작사·작곡·녹음까지 완전 가이드"
+title: "나만의 오리지널 곡 만드는 방법 — 작사·작곡·녹음까지 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "작곡 가이드"
@@ -99,5 +99,4 @@ faq:
 
 ---
 
-[작사 완전 가이드](/stories/lyrics1) | [노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [코드 진행 기초 가이드](/stories/chordprog1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[작사 가이드](/stories/lyrics1) | [노래 구조(송 폼) 가이드](/stories/songstructure1) | [코드 진행 기초 가이드](/stories/chordprog1) | [보컬 녹음 가이드](/stories/vocal-recording-tips1)

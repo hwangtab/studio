@@ -1,11 +1,11 @@
 ---
-title: "DAW 비교 완전 가이드 — Ableton·Logic Pro·Pro Tools·FL Studio·GarageBand 차이"
+title: "DAW 비교 가이드 — Ableton·Logic Pro·Pro Tools·FL Studio·GarageBand 차이"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["DAW 비교", "Ableton vs Logic Pro", "Pro Tools 비교", "FL Studio 비교", "DAW 추천", "보컬 녹음 DAW", "DAW 선택 가이드"]
 thumbnail: "/images/recording17.webp"
-summary: "DAW 비교 완전 가이드입니다. Ableton Live, Logic Pro, Pro Tools, FL Studio, GarageBand의 특징·장단점을 보컬 녹음·믹싱·작곡 목적별로 비교합니다."
+summary: "DAW 비교 가이드입니다. Ableton Live, Logic Pro, Pro Tools, FL Studio, GarageBand의 특징·장단점을 보컬 녹음·믹싱·작곡 목적별로 비교합니다."
 faq:
   - q: "보컬 녹음에 가장 좋은 DAW는 무엇인가요?"
     a: "보컬 녹음 목적으로는 Pro Tools가 업계 표준이며, 맥 사용자라면 Logic Pro가 가성비 최고입니다. GarageBand는 무료이며 입문자에게 충분합니다. 중요한 것은 DAW보다 마이크·인터페이스·방음 환경입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "무료 DAW로 전문적인 결과물을 만들 수 있나요?"
     a: "GarageBand(맥 무료)로 충분히 전문적인 보컬 녹음이 가능합니다. 단, 최종 믹싱·마스터링은 전문 스튜디오에 의뢰하면 DAW에 관계없이 완성도 높은 음원을 만들 수 있습니다."
 ---
-![DAW 비교 완전 가이드 — 스튜디오 놀](/images/recording17.webp)
+![DAW 비교 가이드 — 스튜디오 놀](/images/recording17.webp)
 
 ## DAW란? — Digital Audio Workstation
 
@@ -150,5 +150,4 @@ DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인�
 
 ---
 
-[DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1) | [DAW 믹싱 템플릿 완전 가이드](/stories/daw-template1) | [Ableton 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1) | [DAW 믹싱 템플릿 가이드](/stories/daw-template1) | [Ableton 보컬 녹음 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음·믹싱 가이드](/stories/logic-pro1)

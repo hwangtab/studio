@@ -64,7 +64,6 @@ faq:
 | 평택역 (1호선) | 1호선 → 영등포 → 경의중앙선 → DMC → 6호선 | 약 1.5~2시간 |
 | 안중·고덕 | 버스 → 평택역 → 상기 경로 | 약 1.5~2시간+ |
 
-
 ---
 
 ## 마치며
@@ -73,5 +72,5 @@ faq:
 
 ---
 
-[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1)
+[이용 요금 보기](/pricing)

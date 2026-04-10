@@ -1,11 +1,11 @@
 ---
-title: "GarageBand 보컬 녹음 완전 가이드 — 무료 DAW로 고퀄리티 녹음"
+title: "GarageBand 보컬 녹음 가이드 — 무료 DAW로 고퀄리티 녹음"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["GarageBand 보컬", "가라지밴드 녹음", "GarageBand 설정", "맥 보컬 녹음", "무료 DAW 녹음", "GarageBand 믹싱", "iOS GarageBand"]
 thumbnail: "/images/room6.webp"
-summary: "GarageBand 보컬 녹음 완전 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다."
+summary: "GarageBand 보컬 녹음 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다."
 faq:
   - q: "GarageBand로 고퀄리티 보컬 녹음이 가능한가요?"
     a: "가능합니다. GarageBand는 전문 DAW 수준의 녹음·편집 기능을 무료로 제공합니다. 좋은 마이크와 오디오 인터페이스, 방음 처리가 갖춰지면 스튜디오 의뢰 수준의 드라이 보컬을 얻을 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "GarageBand 녹음 파일을 믹싱 의뢰용으로 어떻게 내보내나요?"
     a: "Share → Export Song to Disk → Lossless(AIFF 또는 WAV)로 내보냅니다. 믹싱 의뢰 시에는 무손실 파일(WAV 또는 AIFF 24bit)로 내보내서 전달하세요."
 ---
-![GarageBand 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/room6.webp)
+![GarageBand 보컬 녹음 가이드 — 스튜디오 놀](/images/room6.webp)
 
 ## GarageBand — Mac·iOS에서 무료로 전문 녹음
 
@@ -175,5 +175,4 @@ GarageBand는 무료이지만 스튜디오 의뢰 가능한 드라이 보컬 녹
 
 ---
 
-[Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Logic Pro 보컬 녹음 가이드](/stories/logicpro1) | [셀프 보컬 녹음 가이드](/stories/self-recording1) | [홈 레코딩 가이드](/stories/home-recording1) | [음원 파일 형식 가이드](/stories/audio-format1)

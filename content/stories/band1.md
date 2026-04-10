@@ -99,5 +99,5 @@ faq:
 
 ---
 
-[드럼 녹음 방법 완전 가이드](/stories/drum1) | [피아노 녹음 방법 완전 가이드](/stories/piano1) | [합주실 예약 안내](/stories/practice1) | [교회 찬양·성가대 녹음 가이드](/stories/church1) | [녹음 세션 준비 방법](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)
+[드럼 녹음 방법 가이드](/stories/drum1) | [피아노 녹음 방법 가이드](/stories/piano1) | [합주실 예약 안내](/stories/practice1) | [교회 찬양·성가대 녹음 가이드](/stories/church1)
+[이용 요금 보기](/pricing)

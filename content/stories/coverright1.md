@@ -109,4 +109,4 @@ faq:
 ---
 
 [커버곡 녹음 가이드](/stories/cover1) | [음악 저작권 기초 가이드](/stories/copyright1) | [음원 유통 방법 가이드](/stories/distribution1) | [유튜브·SNS 보컬 활동 가이드](/stories/youtube1)
-[스튜디오 놀 이용 요금](/pricing)
+[이용 요금 보기](/pricing)

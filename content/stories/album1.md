@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[밴드 녹음 완전 가이드](/stories/band-recording1) | [스튜디오 놀 녹음·믹싱·마스터링 요금 안내](/pricing) | [음원 발매 가이드 보기](/stories/release1) | [싱어송라이터 녹음 가이드](/stories/singer1) | [녹음 비용 완전 가이드](/stories/pricing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1)
+[밴드 녹음 가이드](/stories/band-recording1) | [음원 발매 가이드 보기](/stories/release1) | [싱어송라이터 녹음 가이드](/stories/singer1) | [녹음 비용 가이드](/stories/pricing1)

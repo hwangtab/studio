@@ -95,7 +95,7 @@ DAW 선택이 어렵다면 [DAW 선택 가이드](/stories/daw-choice1)를 참�
 - 리버브·딜레이 등 공간감 추가
 - 보컬 튠(피치 보정) 필요 시 적용
 
-직접 믹싱하려면 상당한 학습이 필요합니다. 처음이라면 전문 엔지니어에게 맡기는 것을 권장합니다. 스튜디오 놀에서는 녹음과 함께 믹싱을 진행하거나, [온라인 믹싱 의뢰](/stories/onlinemix1)로 파일만 보내서 작업할 수도 있습니다.
+직접 믹싱하려면 상당한 학습이 필요합니다. 처음이라면 전문 엔지니어에게 맡기는 것을 권장합니다. 스튜디오 놀에서는 녹음과 함께 믹싱을 진행하거나,로 파일만 보내서 작업할 수도 있습니다.
 
 ---
 
@@ -147,7 +147,7 @@ DAW 선택이 어렵다면 [DAW 선택 가이드](/stories/daw-choice1)를 참�
 
 발매 신청 후 각 플랫폼에 등록되기까지 보통 **1~3주**가 소요됩니다. 발매 예정일을 잡고 역산해서 신청하세요.
 
-음원 유통 과정에 대한 더 자세한 내용은 [음원 유통 완전 가이드](/stories/music-distribution1)를 참고하세요.
+음원 유통 과정에 대한 더 자세한 내용은 [음원 유통 가이드](/stories/music-distribution1)를 참고하세요.
 
 ---
 
@@ -191,4 +191,4 @@ DAW 선택이 어렵다면 [DAW 선택 가이드](/stories/daw-choice1)를 참�
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [싱어송라이터 녹음 가이드](/stories/singer-songwriter1) | [EP 제작 가이드](/stories/ep-production1) | [음원 유통 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [싱어송라이터 녹음 가이드](/stories/singer-songwriter1) | [EP 제작 가이드](/stories/ep-production1)

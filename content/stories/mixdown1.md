@@ -1,11 +1,11 @@
 ---
-title: "믹스 다운 완전 가이드 — DAW 최종 출력 설정과 유통사 스펙"
+title: "믹스 다운 가이드 — DAW 최종 출력 설정과 유통사 스펙"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["믹스 다운", "DAW 출력", "바운스", "음원 출력 설정", "샘플레이트 설정", "비트뎁스 설정", "음원 납품 형식"]
 thumbnail: "/images/recording6.webp"
-summary: "믹스 다운 완전 가이드입니다. DAW 최종 출력 설정(샘플레이트·비트뎁스·형식), 바운스 전 체크리스트, 유통사별 스펙, WAV·MP3·FLAC 선택 기준을 정리합니다."
+summary: "믹스 다운 가이드입니다. DAW 최종 출력 설정(샘플레이트·비트뎁스·형식), 바운스 전 체크리스트, 유통사별 스펙, WAV·MP3·FLAC 선택 기준을 정리합니다."
 faq:
   - q: "믹스 다운(Mix Down)이란 무엇인가요?"
     a: "DAW에서 작업한 여러 트랙을 하나의 스테레오 오디오 파일로 합치는 작업입니다. 바운스(Bounce) 또는 익스포트(Export)라고도 하며, 마스터링 단계 전 최종 믹스 파일을 만드는 과정입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "스트리밍 유통 시 어떤 LUFS로 출력해야 하나요?"
     a: "마스터링 후 기준으로 스포티파이·애플뮤직은 -14 LUFS, 유튜브는 -14 LUFS(-1dBTP)가 권장 기준입니다. 믹스 다운 단계에서는 헤드룸을 남겨두고, 마스터링에서 최종 음량을 맞추는 것이 원칙입니다."
 ---
-![믹스 다운 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
+![믹스 다운 가이드 — 스튜디오 놀](/images/recording6.webp)
 
 ## 믹스 다운 — 완성 파일을 만드는 마지막 단계
 
@@ -125,5 +125,4 @@ Share → Export Song to Disk
 
 ---
 
-[믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [음원 파일 형식 가이드](/stories/audio-format1) | [마스터링 가이드](/stories/mastering1) | [음원 유통 가이드](/stories/music-distribution1)

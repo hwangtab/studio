@@ -70,7 +70,6 @@ faq:
 | 고읍면 | 버스 → 양주역 → 1호선 → 환승 | 약 1시간 10~30분 |
 | 회천읍 | 버스 → 양주역(1호선) → 창동 → 4호선 | 약 1시간~1시간 20분 |
 
-
 ---
 
 ## 마치며
@@ -79,5 +78,5 @@ faq:
 
 ---
 
-[양주 녹음실 안내](/stories/yangju1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[양주 녹음실 안내](/stories/yangju1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [노원·도봉구 녹음실 안내](/stories/nowon1)
+[이용 요금 보기](/pricing)

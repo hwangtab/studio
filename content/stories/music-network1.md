@@ -1,5 +1,5 @@
 ---
-title: "뮤지션 네트워크·인맥 구축 완전 가이드 — 음악 업계 연결망 만드는 법"
+title: "뮤지션 네트워크·인맥 구축 가이드 — 음악 업계 연결망 만드는 법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 비즈니스"
@@ -16,7 +16,7 @@ faq:
   - q: "음악 업계 이벤트는 어떤 것들이 있나요?"
     a: "뮤직 컨퍼런스(서울뮤직위크, SXSW 온라인), 오픈마이크, 지역 공연 네트워크, 스튜디오 오픈데이, 비트메이커 캠프, 음악 해커톤 등 다양한 형태가 있습니다. 국내에서는 홍대·마포·강남 클럽 씬 참여도 효과적입니다."
 ---
-![뮤지션 네트워크·인맥 구축 완전 가이드 — 스튜디오 놀](/images/hardware4.webp)
+![뮤지션 네트워크·인맥 구축 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
 ## 뮤지션에게 네트워크가 중요한 이유
 
@@ -139,5 +139,4 @@ faq:
 
 ---
 
-[음악 매니지먼트 완전 가이드](/stories/music-management1) | [뮤지션 협업 완전 가이드](/stories/music-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 매니지먼트 가이드](/stories/music-management1) | [뮤지션 협업 가이드](/stories/music-collab1) | [음악 마케팅 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 가이드](/stories/fan-community1)

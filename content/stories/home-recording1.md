@@ -1,11 +1,11 @@
 ---
-title: "홈 레코딩 완전 가이드 — 자택 녹음 환경 구축과 보컬 녹음 퀄리티 높이기"
+title: "홈 레코딩 가이드 — 자택 녹음 환경 구축과 보컬 녹음 퀄리티 높이기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["홈 레코딩", "자택 녹음", "홈 스튜디오", "DIY 녹음", "보컬 홈 레코딩", "DAW 녹음", "오디오 인터페이스"]
 thumbnail: "/images/room8.webp"
-summary: "홈 레코딩 환경을 구축하고 품질을 높이는 완전 가이드입니다. 필수 장비 선택, 공간 어쿠스틱 처리, DAW 세팅, 마이크 배치, 녹음 팁까지 정리합니다."
+summary: "홈 레코딩 환경을 구축하고 품질을 높이는 가이드입니다. 필수 장비 선택, 공간 어쿠스틱 처리, DAW 세팅, 마이크 배치, 녹음 팁까지 정리합니다."
 faq:
   - q: "홈 레코딩을 시작하려면 최소 어떤 장비가 필요한가요?"
     a: "오디오 인터페이스(예: Focusrite Scarlett Solo), 콘덴서 마이크(예: Audio-Technica AT2020), 헤드폰(모니터용), DAW 소프트웨어(Garageband 무료)가 기본 세트입니다. 총 30~50만 원대로 시작 가능합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "홈 녹음과 스튜디오 녹음은 어떻게 다른가요?"
     a: "스튜디오는 전문 어쿠스틱 환경, 고급 마이크, 콘솔, 경험 많은 엔지니어가 있어 더 높은 품질을 보장합니다. 홈 녹음은 드라이 보컬을 녹음한 뒤 스튜디오에 믹싱·마스터링을 의뢰하는 방식으로 활용하면 비용 효율적입니다."
 ---
-![홈 레코딩 완전 가이드 — 스튜디오 놀](/images/room8.webp)
+![홈 레코딩 가이드 — 스튜디오 놀](/images/room8.webp)
 
 ## 홈 레코딩의 가능성과 한계
 
@@ -118,5 +118,4 @@ faq:
 
 ---
 
-[오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [녹음 환경 완전 가이드](/stories/recording-environment1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[오디오 인터페이스 가이드](/stories/audio-interface1) | [녹음 환경 가이드](/stories/recording-environment1) | [셀프 보컬 녹음 가이드](/stories/self-recording1) | [DAW 비교 가이드](/stories/daw-comparison1)

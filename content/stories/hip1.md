@@ -97,4 +97,4 @@ faq:
 
 ---
 
-[이용 요금 안내](/pricing) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레이어 믹싱 강좌](/stories/mixing1) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [알앤비·소울 보컬 녹음 가이드](/stories/rnb1)
+[녹음 세션 준비 체크리스트](/stories/session1) | [보컬 레이어 믹싱 강좌](/stories/mixing1) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [알앤비·소울 보컬 녹음 가이드](/stories/rnb1)

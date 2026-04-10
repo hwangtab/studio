@@ -1,11 +1,11 @@
 ---
-title: "iZotope Nectar 보컬 처리 완전 가이드 — AI 올인원 보컬 플러그인"
+title: "iZotope Nectar 보컬 처리 가이드 — AI 올인원 보컬 플러그인"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["iZotope Nectar", "넥타 보컬", "Nectar 4 사용법", "AI 보컬 플러그인", "보컬 처리 올인원", "Nectar 하모니", "iZotope 보컬"]
 thumbnail: "/images/recording2.webp"
-summary: "iZotope Nectar 보컬 처리 완전 가이드입니다. Nectar 4 모듈 구성·Vocal Assistant 활용·핵심 모듈 설정·Harmony 모듈 활용·Reverb 모듈 설정까지 정리합니다."
+summary: "iZotope Nectar 보컬 처리 가이드입니다. Nectar 4 모듈 구성·Vocal Assistant 활용·핵심 모듈 설정·Harmony 모듈 활용·Reverb 모듈 설정까지 정리합니다."
 faq:
   - q: "iZotope Nectar란 무엇인가요?"
     a: "iZotope가 개발한 올인원 보컬 처리 플러그인입니다. Gate, EQ, Compressor, De-esser, Harmony, Reverb, Pitch 교정 등 보컬 처리에 필요한 모든 모듈을 하나의 플러그인에 통합하고 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Nectar의 Vocal Assistant와 Relay의 차이는?"
     a: "Nectar는 보컬 트랙에 삽입하는 처리 플러그인이고, Relay는 iZotope의 라우팅 플러그인으로 Nectar와 다른 iZotope 플러그인 간 통신을 가능하게 합니다. 함께 사용하면 트랙 간 협업 처리가 가능합니다."
 ---
-![iZotope Nectar 보컬 처리 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
+![iZotope Nectar 보컬 처리 가이드 — 스튜디오 놀](/images/recording2.webp)
 
 ## iZotope Nectar — 보컬 처리를 하나로
 
@@ -140,5 +140,4 @@ iZotope Nectar 4는 AI 기반 보컬 처리로 빠르고 전문적인 결과를 
 
 ---
 
-[FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[FabFilter Pro-Q3 가이드](/stories/fabfilter1) | [Melodyne 피치 교정 가이드](/stories/melodyne1) | [보컬 하모나이저 가이드](/stories/harmonizer1) | [보컬 편집 가이드](/stories/vocal-editing1)

@@ -1,5 +1,5 @@
 ---
-title: "보컬 공명 훈련 완전 가이드 — 풍성하고 울리는 목소리 만드는 방법"
+title: "보컬 공명 훈련 가이드 — 풍성하고 울리는 목소리 만드는 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -16,7 +16,7 @@ faq:
   - q: "공명이 좋아지면 목소리가 어떻게 바뀌나요?"
     a: "같은 음량으로도 더 멀리, 더 풍성하게 들립니다. 성대에 가하는 압력을 줄이면서도 더 큰 소리를 낼 수 있어 성대 피로가 줄어듭니다. 음색이 풍부해지고 청중에게 더 인상적으로 전달됩니다."
 ---
-![보컬 공명 훈련 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
+![보컬 공명 훈련 가이드 — 스튜디오 놀](/images/recording8.webp)
 
 ## 목소리의 힘은 성대가 아닌 공간에서
 
@@ -94,5 +94,4 @@ faq:
 
 ---
 
-[보컬 호흡법 완전 가이드](/stories/breathing1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 워밍업 루틴](/stories/warmup1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 호흡법 가이드](/stories/breathing1) | [믹스 보이스 가이드](/stories/mixvoice1) | [보컬 자세 가이드](/stories/posture1) | [보컬 워밍업 루틴](/stories/warmup1)

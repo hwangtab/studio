@@ -116,5 +116,4 @@ faq:
 
 ---
 
-[청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 레슨 선택 가이드](/stories/lessonguide1)
-[스튜디오 놀 이용 요금](/pricing)
+[청음 훈련 가이드](/stories/eartraining1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 레슨 선택 가이드](/stories/lessonguide1)

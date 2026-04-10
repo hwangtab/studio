@@ -1,5 +1,5 @@
 ---
-title: "디에서(De-esser) 완전 가이드 — 보컬 치찰음 제거 방법"
+title: "디에서(De-esser) 가이드 — 보컬 치찰음 제거 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "믹싱 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "디에서를 과하게 사용하면 어떻게 되나요?"
     a: "과도한 디에서 사용은 보컬의 명료도(articulation)를 해칩니다. 치찰음이 보컬의 선명한 발음을 만들어주는 요소이기도 하므로, 귀에 거슬리는 수준만 줄이고 자연스러운 발음 질감은 유지하는 것이 좋습니다."
 ---
-![디에서(De-esser) 완전 가이드 — 스튜디오 놀](/images/room7.webp)
+![디에서(De-esser) 가이드 — 스튜디오 놀](/images/room7.webp)
 
 ## 디에서란?
 
@@ -96,5 +96,4 @@ faq:
 
 ---
 
-[보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [컴프레서 보컬 적용 가이드](/stories/compress1) | [믹싱 완전 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 믹싱 가이드](/stories/vocal-mixing1) | [보컬 EQ 가이드](/stories/eq1) | [컴프레서 보컬 적용 가이드](/stories/compress1) | [믹싱 가이드](/stories/mixing1)

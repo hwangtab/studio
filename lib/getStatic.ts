@@ -45,7 +45,7 @@ export const getI18nStaticProps = (localeParam: unknown) => {
   };
 };
 
-export const buildPageStaticProps = <TProps extends Record<string, unknown>>(
+export const buildPageStaticProps = <TProps extends object>(
   localeParam: unknown,
   extraProps: TProps = {} as TProps,
   options: BuildPageStaticPropsOptions = {}

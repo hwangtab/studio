@@ -1,11 +1,11 @@
 ---
-title: "콘덴서 마이크 완전 가이드 — 보컬 녹음용 콘덴서 마이크 선택·추천·사용법"
+title: "콘덴서 마이크 가이드 — 보컬 녹음용 콘덴서 마이크 선택·추천·사용법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["콘덴서 마이크", "콘덴서 마이크 추천", "보컬 녹음 마이크", "라지 다이어프램", "스몰 다이어프램", "Neumann U87", "콘덴서 마이크 사용법"]
 thumbnail: "/images/studio4.webp"
-summary: "콘덴서 마이크 완전 가이드입니다. 라지·스몰 다이어프램의 차이, 팬텀 파워 필요성, 보컬 녹음용 콘덴서 마이크 입문~전문가 추천, 올바른 사용법과 보관 방법을 정리합니다."
+summary: "콘덴서 마이크 가이드입니다. 라지·스몰 다이어프램의 차이, 팬텀 파워 필요성, 보컬 녹음용 콘덴서 마이크 입문~전문가 추천, 올바른 사용법과 보관 방법을 정리합니다."
 faq:
   - q: "콘덴서 마이크와 다이나믹 마이크의 차이는 무엇인가요?"
     a: "콘덴서 마이크는 고감도·광대역 주파수 응답으로 보컬의 디테일과 공기감을 잘 잡습니다. 다이나믹 마이크는 음압에 강하고 험한 환경에서 내구성이 좋습니다. 스튜디오 보컬 녹음에는 콘덴서 마이크가 표준입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "입문용 콘덴서 마이크로 무엇이 좋은가요?"
     a: "Audio-Technica AT2020, Rode NT1, Sennheiser MK4가 10~20만원대 입문용으로 많이 추천됩니다. 예산이 더 있다면 Neumann TLM 102나 sE Electronics sE4400a도 좋은 선택입니다."
 ---
-![콘덴서 마이크 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
+![콘덴서 마이크 가이드 — 스튜디오 놀](/images/studio4.webp)
 
 ## 콘덴서 마이크 — 보컬 녹음의 표준
 
@@ -140,5 +140,4 @@ faq:
 
 ---
 
-[마이크 종류 완전 가이드](/stories/microphone-types1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[마이크 종류 가이드](/stories/microphone-types1) | [오디오 인터페이스 가이드](/stories/audio-interface1) | [마이크 배치 가이드](/stories/mic-placement1) | [홈 레코딩 가이드](/stories/home-recording1)

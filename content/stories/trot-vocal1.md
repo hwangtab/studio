@@ -1,5 +1,5 @@
 ---
-title: "트로트 보컬 녹음 완전 가이드 — 꺾기·시김새·바이브레이션 표현과 녹음 기법"
+title: "트로트 보컬 녹음 가이드 — 꺾기·시김새·바이브레이션 표현과 녹음 기법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "트로트 믹싱에서 주의할 점은 무엇인가요?"
     a: "꺾기와 시김새가 자동 피치 교정(Auto-Tune)에 의해 지워지지 않도록 주의해야 합니다. 트로트는 음 장식이 감성의 핵심이므로 피치 교정을 최소화하고 자연스러운 굴곡을 살려야 합니다."
 ---
-![트로트 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service6.webp)
+![트로트 보컬 녹음 가이드 — 스튜디오 놀](/images/service6.webp)
 
 ## 트로트 발성의 핵심 — 감정의 굴곡
 
@@ -118,5 +118,4 @@ faq:
 
 ---
 
-[재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1)
-[스튜디오 놀 이용 요금](/pricing)
+[재즈 보컬 녹음 가이드](/stories/jazz-vocal1) | [록 보컬 녹음 가이드](/stories/rock-vocal1) | [팝 보컬 녹음 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 가이드](/stories/ballad-vocal1)

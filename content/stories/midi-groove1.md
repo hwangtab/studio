@@ -1,11 +1,11 @@
 ---
-title: "미디 그루브·휴머나이제이션 완전 가이드 — MIDI를 인간적으로 만드는 법"
+title: "미디 그루브·휴머나이제이션 가이드 — MIDI를 인간적으로 만드는 법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["미디 그루브", "MIDI 휴머나이제이션", "미디 타이밍", "벨로시티 조절", "드럼 그루브", "MIDI 느낌", "DAW 그루브"]
 thumbnail: "/images/recording4.webp"
-summary: "미디 그루브·휴머나이제이션 완전 가이드입니다. 정확한 MIDI를 인간적으로 만드는 벨로시티 조절, 타이밍 랜덤화, 그루브 퀀타이즈, 스윙 설정 방법을 정리합니다."
+summary: "미디 그루브·휴머나이제이션 가이드입니다. 정확한 MIDI를 인간적으로 만드는 벨로시티 조절, 타이밍 랜덤화, 그루브 퀀타이즈, 스윙 설정 방법을 정리합니다."
 faq:
   - q: "MIDI 휴머나이제이션이란 무엇인가요?"
     a: "완벽히 정확한 MIDI 음표를 인간 연주자처럼 자연스럽게 만드는 과정입니다. 타이밍을 미묘하게 늦추거나 앞당기고, 벨로시티(음량)를 미세하게 변화시켜 기계적인 느낌을 줄입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "드럼 그루브 퀀타이즈란 무엇인가요?"
     a: "실제 녹음된 드럼 연주에서 추출한 타이밍 패턴을 MIDI에 적용하는 기법입니다. Ableton의 Extract Groove, Logic Pro의 Groove Track 기능으로 유명 레코딩의 그루브를 내 MIDI에 입힐 수 있습니다."
 ---
-![미디 그루브·휴머나이제이션 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
+![미디 그루브·휴머나이제이션 가이드 — 스튜디오 놀](/images/recording4.webp)
 
 ## MIDI 그루브 — 기계적인 패턴을 인간적으로
 
@@ -147,5 +147,4 @@ MIDI 그루브는 작은 변화들이 쌓여 큰 차이를 만듭니다. 벨로�
 
 ---
 
-[오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [DAW 템플릿 완전 가이드](/stories/daw-template1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[오케스트라 샘플링 가이드](/stories/orchestral-sampling1) | [드럼 프로그래밍 가이드](/stories/drum-programming1) | [비트 메이킹 가이드](/stories/beatmaking1) | [DAW 템플릿 가이드](/stories/daw-template1)

@@ -1,11 +1,11 @@
 ---
-title: "버스 컴프레션 완전 가이드 — 믹스 버스 컴프레서 설정과 활용법"
+title: "버스 컴프레션 가이드 — 믹스 버스 컴프레서 설정과 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "믹싱 가이드"
 tags: ["버스 컴프레션", "믹스 버스 컴프레서", "마스터 버스 컴프레서", "믹스 접착제", "글루 컴프레서", "버스 컴프레서 설정", "전체 믹스 컴프레션"]
 thumbnail: "/images/recording15.webp"
-summary: "버스 컴프레션 완전 가이드입니다. 버스 컴프레션의 역할·글루 컴프레서 설정법·버스 컴프레션 유형·버스 컴프레션 주의사항까지 정리합니다."
+summary: "버스 컴프레션 가이드입니다. 버스 컴프레션의 역할·글루 컴프레서 설정법·버스 컴프레션 유형·버스 컴프레션 주의사항까지 정리합니다."
 faq:
   - q: "버스 컴프레션이란 무엇인가요?"
     a: "버스 컴프레션은 여러 트랙이 합쳐지는 버스(그룹 채널) 또는 마스터 버스에 컴프레서를 적용하는 기법입니다. 각 트랙을 하나로 묶어주는 '접착제(Glue)' 역할을 하며, 전체 믹스의 일체감과 다이나믹을 조절합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "글루 컴프레서로 유명한 플러그인은?"
     a: "대표적인 글루 컴프레서 플러그인으로는 UAD SSL G-Bus Compressor, Waves SSL G-Master Buss Compressor, Cytomic The Glue, Ableton Glue Compressor 등이 있습니다. 아날로그 SSL 콘솔 버스 컴프레서를 모델링한 제품이 가장 많이 사용됩니다."
 ---
-![버스 컴프레션 완전 가이드 — 스튜디오 놀](/images/recording15.webp)
+![버스 컴프레션 가이드 — 스튜디오 놀](/images/recording15.webp)
 
 ## 버스 컴프레션 — 믹스를 하나로 묶는 접착제
 
@@ -121,5 +121,4 @@ faq:
 
 ---
 
-[믹스 버스 완전 가이드](/stories/mix-bus1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[믹스 버스 가이드](/stories/mix-bus1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [게인 스테이징 가이드](/stories/gain-staging1) | [마스터링 가이드](/stories/mastering1)

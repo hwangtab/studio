@@ -1,11 +1,11 @@
 ---
-title: "금관·목관 편곡 완전 가이드 — 팝·재즈·R&B를 위한 브라스 어레인지먼트"
+title: "금관·목관 편곡 가이드 — 팝·재즈·R&B를 위한 브라스 어레인지먼트"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["금관 편곡", "브라스 어레인지먼트", "목관 편곡", "재즈 브라스", "팝 브라스", "R&B 호른 섹션", "트럼펫 편곡"]
 thumbnail: "/images/studio4.webp"
-summary: "금관·목관 편곡 완전 가이드입니다. 팝·재즈·R&B·소울을 위한 브라스 섹션 구성, 트럼펫·트롬본·색소폰 파트 배분, 브라스 보이싱, 샘플 vs 실제 녹음 비교를 정리합니다."
+summary: "금관·목관 편곡 가이드입니다. 팝·재즈·R&B·소울을 위한 브라스 섹션 구성, 트럼펫·트롬본·색소폰 파트 배분, 브라스 보이싱, 샘플 vs 실제 녹음 비교를 정리합니다."
 faq:
   - q: "브라스 섹션이란 무엇인가요?"
     a: "재즈·R&B·소울·팝 음악에서 트럼펫·트롬본·색소폰(알토·테너) 등 금관·목관악기가 함께 연주하는 섹션을 브라스 섹션이라고 합니다. 짧고 강한 리프(Riff)나 부드러운 패드(Pad)로 사운드에 두께와 에너지를 더합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "브라스 샘플 라이브러리 중 추천하는 것은 무엇인가요?"
     a: "Spitfire BBC Symphony Orchestra, Sample Modeling(The Trumpet·The Trombone), Project SAM Orchestral Brass 등이 높은 평가를 받습니다. 재즈·R&B 스타일엔 Heavyocity의 Forzo나 8Dio의 Studio Brasses도 좋습니다."
 ---
-![금관·목관 편곡 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
+![금관·목관 편곡 가이드 — 스튜디오 놀](/images/studio4.webp)
 
 ## 브라스 섹션 — 음악에 에너지와 활기를 더하는 힘
 
@@ -129,5 +129,4 @@ faq:
 
 ---
 
-[스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[스트리밍 플랫폼 최적화 가이드](/stories/streaming-optimization1) | [MIDI 편곡 가이드](/stories/midi-arrangement1) | [현악 편곡 가이드](/stories/string-arrangement1) | [재즈 음악 제작 가이드](/stories/jazz-production1)

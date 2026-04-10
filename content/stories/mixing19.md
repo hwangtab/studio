@@ -88,5 +88,4 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제18부: 음악에 공기를 불어넣다, 리버브](/stories/mixing18) | [제20부: 일렁이는 소리의 마법, 모듈레이션 →](/stories/mixing20) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
-
+**믹싱 강좌 시리즈**: [← 제18부: 음악에 공기를 불어넣다, 리버브](/stories/mixing18) | [제20부: 일렁이는 소리의 마법, 모듈레이션 →](/stories/mixing20) | [믹싱 체인 가이드](/stories/mixing-chain1) | [레슨 안내](/lesson) | [요금 안내](/pricing)

@@ -1,11 +1,11 @@
 ---
-title: "파라메트릭 EQ 완전 가이드 — Q값·주파수·게인 설정과 보컬·악기 활용법"
+title: "파라메트릭 EQ 가이드 — Q값·주파수·게인 설정과 보컬·악기 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["파라메트릭 EQ", "EQ Q값", "EQ 주파수", "EQ 게인", "서지컬 EQ", "부스트 컷", "다이나믹 EQ", "FabFilter Pro-Q"]
 thumbnail: "/images/recording17.webp"
-summary: "파라메트릭 EQ 완전 가이드입니다. Q값·주파수·게인 설정의 관계, 서지컬 EQ vs 음색 EQ, 부스트보다 컷이 먼저인 이유, 다이나믹 EQ 활용법을 정리합니다."
+summary: "파라메트릭 EQ 가이드입니다. Q값·주파수·게인 설정의 관계, 서지컬 EQ vs 음색 EQ, 부스트보다 컷이 먼저인 이유, 다이나믹 EQ 활용법을 정리합니다."
 faq:
   - q: "파라메트릭 EQ란 무엇인가요?"
     a: "파라메트릭 EQ는 주파수(Frequency), 게인(Gain), 대역폭(Q/Bandwidth) 3가지 파라미터를 자유롭게 조정할 수 있는 이퀄라이저입니다. 그래픽 EQ보다 정밀한 주파수 처리가 가능해 전문 믹싱의 표준입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "다이나믹 EQ란 무엇인가요?"
     a: "다이나믹 EQ는 신호 레벨에 따라 EQ 작동량이 자동으로 변하는 이퀄라이저입니다. 특정 주파수가 너무 클 때만 컷이 작동하고, 조용할 때는 작동하지 않습니다. 보컬 시빌런스 처리, 저역 공명 제어에 특히 유용합니다."
 ---
-![파라메트릭 EQ 완전 가이드 — 스튜디오 놀](/images/recording17.webp)
+![파라메트릭 EQ 가이드 — 스튜디오 놀](/images/recording17.webp)
 
 ## 파라메트릭 EQ — 정밀한 주파수 조각
 
@@ -127,5 +127,4 @@ faq:
 
 ---
 
-[보컬 EQ 완전 가이드](/stories/eq1) | [주파수 스펙트럼 완전 가이드](/stories/frequency-spectrum1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [다이나믹 컴프레서 완전 가이드](/stories/dynamics1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 EQ 가이드](/stories/eq1) | [주파수 스펙트럼 가이드](/stories/frequency-spectrum1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [다이나믹 컴프레서 가이드](/stories/dynamics1)

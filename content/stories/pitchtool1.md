@@ -1,5 +1,5 @@
 ---
-title: "음정 교정 도구 완전 가이드 — Melodyne vs Auto-Tune 차이와 보컬 피치 교정 방법"
+title: "음정 교정 도구 가이드 — Melodyne vs Auto-Tune 차이와 보컬 피치 교정 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -106,5 +106,4 @@ faq:
 
 ---
 
-[오토튠 완전 가이드](/stories/auto-tune1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [마스터링이란?](/stories/mastering1) | [녹음실 용어 사전](/stories/glossary1)
-[스튜디오 놀 이용 요금](/pricing)
+[오토튠 가이드](/stories/auto-tune1) | [보컬 EQ 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [마스터링이란?](/stories/mastering1)

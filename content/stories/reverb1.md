@@ -1,5 +1,5 @@
 ---
-title: "보컬 리버브 완전 가이드 — 홀·룸·플레이트 차이와 보컬 믹싱 리버브 설정"
+title: "보컬 리버브 가이드 — 홀·룸·플레이트 차이와 보컬 믹싱 리버브 설정"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -111,5 +111,4 @@ BPM에 맞게 설정합니다. 느린 곡일수록 길게, 빠른 곡일수록 �
 
 ---
 
-[리버브 종류 완전 가이드](/stories/reverb-types1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [딜레이 vs 리버브 차이 가이드](/stories/delay1) | [보컬 EQ 완전 가이드](/stories/eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[리버브 종류 가이드](/stories/reverb-types1) | [스테레오 이미징 가이드](/stories/stereo-imaging1) | [딜레이 vs 리버브 차이 가이드](/stories/delay1) | [보컬 EQ 가이드](/stories/eq1)

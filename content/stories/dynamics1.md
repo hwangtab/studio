@@ -1,5 +1,5 @@
 ---
-title: "보컬 다이나믹 컨트롤 완전 가이드 — 소리 크기를 자유자재로 다루는 발성 기술"
+title: "보컬 다이나믹 컨트롤 가이드 — 소리 크기를 자유자재로 다루는 발성 기술"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -111,5 +111,4 @@ faq:
 
 ---
 
-[고음 내는 방법 완전 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 녹음 헤드폰 모니터링 가이드](/stories/monitoring1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1)
-[스튜디오 놀 이용 요금](/pricing)
+[고음 내는 방법 가이드](/stories/highnote1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 녹음 헤드폰 모니터링 가이드](/stories/monitoring1) | [노래 잘하는 방법 가이드](/stories/singswell1)

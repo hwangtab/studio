@@ -1,5 +1,5 @@
 ---
-title: "보컬 아티큘레이션 완전 가이드 — 발음 명료성과 자음·모음 컨트롤 트레이닝"
+title: "보컬 아티큘레이션 가이드 — 발음 명료성과 자음·모음 컨트롤 트레이닝"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "한국어 발음에서 특히 주의할 점은 무엇인가요?"
     a: "받침 자음 처리가 중요합니다. 받침 자음을 너무 강하게 닫으면 다음 음절과 연결이 끊어집니다. 또한 경음(ㄲ, ㄸ, ㅃ, ㅆ, ㅉ)과 격음(ㅋ, ㅌ, ㅍ, ㅊ)의 공기 처리도 노래에서 중요한 아티큘레이션 포인트입니다."
 ---
-![보컬 아티큘레이션 완전 가이드 — 스튜디오 놀](/images/hardware4.webp)
+![보컬 아티큘레이션 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
 ## 아티큘레이션이 가사 전달력을 결정한다
 
@@ -127,5 +127,4 @@ faq:
 
 ---
 
-[보컬 음색 개발 가이드](/stories/tone-color1) | [음정 교정 완전 가이드](/stories/pitch-training1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 레슨 완전 가이드](/stories/singing-lesson1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 음색 개발 가이드](/stories/tone-color1) | [음정 교정 가이드](/stories/pitch-training1) | [보컬 호흡 지지 가이드](/stories/breath-support1) | [보컬 워밍업 가이드](/stories/warmup1)

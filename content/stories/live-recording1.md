@@ -1,5 +1,5 @@
 ---
-title: "라이브 녹음 완전 가이드 — 공연·라이브 세션 녹음 방법과 활용"
+title: "라이브 녹음 가이드 — 공연·라이브 세션 녹음 방법과 활용"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "라이브 녹음본을 음반으로 발매할 수 있나요?"
     a: "가능합니다. 녹음 후 믹싱·마스터링을 거쳐 라이브 음반으로 발매할 수 있습니다. 라이브 특유의 공간감과 에너지를 살리면서도 음질을 높이는 믹싱이 중요합니다."
 ---
-![라이브 녹음 완전 가이드 — 스튜디오 놀](/images/recording11.webp)
+![라이브 녹음 가이드 — 스튜디오 놀](/images/recording11.webp)
 
 ## 라이브 녹음의 매력
 
@@ -98,5 +98,5 @@ faq:
 
 ---
 
-[밴드 녹음 완전 가이드](/stories/band-recording1) | [음반 제작 가이드](/stories/album1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [스튜디오 에티켓 가이드](/stories/studio-etiquette1)
-[스튜디오 놀 이용 요금](/pricing)
+[밴드 녹음 가이드](/stories/band-recording1) | [음반 제작 가이드](/stories/album1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [스튜디오 에티켓 가이드](/stories/studio-etiquette1)
+[이용 요금 보기](/pricing)

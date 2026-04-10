@@ -1,11 +1,11 @@
 ---
-title: "Melodyne 보컬 피치 교정 완전 가이드 — 자연스럽고 정밀한 음정 보정"
+title: "Melodyne 보컬 피치 교정 가이드 — 자연스럽고 정밀한 음정 보정"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["Melodyne 사용법", "멜로다인 피치 교정", "Melodyne 보컬", "Melodyne ARA2", "보컬 음정 교정", "Melodyne Editor", "피치 보정 플러그인"]
 thumbnail: "/images/hardware8.webp"
-summary: "Melodyne 보컬 피치 교정 완전 가이드입니다. Melodyne 버전 비교, 기본 조작 (노트 이동·피치 센터·Formant), ARA2 DAW 통합 사용법, 자연스러운 교정 팁을 정리합니다."
+summary: "Melodyne 보컬 피치 교정 가이드입니다. Melodyne 버전 비교, 기본 조작 (노트 이동·피치 센터·Formant), ARA2 DAW 통합 사용법, 자연스러운 교정 팁을 정리합니다."
 faq:
   - q: "Melodyne이란 무엇인가요?"
     a: "Celemony가 개발한 업계 최고의 피치·타이밍 교정 소프트웨어입니다. DNA Direct Note Access 기술로 화음 속 개별 음표를 추출·편집할 수 있으며, 전 세계 전문 스튜디오의 표준 도구입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Melodyne로 자연스러운 피치 교정을 하는 방법은?"
     a: "Pitch Center를 100%로 맞추지 않고 90~95%로 유지하면 자연스럽습니다. Pitch Modulation(비브라토)은 최소한으로 줄이거나 보존하고, Formant는 건드리지 않는 것이 기본입니다."
 ---
-![Melodyne 보컬 피치 교정 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
+![Melodyne 보컬 피치 교정 가이드 — 스튜디오 놀](/images/hardware8.webp)
 
 ## Melodyne — 업계 최고의 피치 교정 도구
 
@@ -147,5 +147,4 @@ Melodyne은 자연스러운 보컬 피치 교정의 업계 표준입니다.
 
 ---
 
-[iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[iZotope Nectar 보컬 처리 가이드](/stories/nectar1) | [보컬 편집 가이드](/stories/vocal-editing1) | [보컬 하모나이저 가이드](/stories/harmonizer1) | [보컬 오토메이션 가이드](/stories/vocal-automation1)

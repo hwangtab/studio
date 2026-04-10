@@ -69,6 +69,8 @@ export function middleware(request: NextRequest) {
     const redirectUrl = request.nextUrl.clone();
     let shouldRedirect = false;
     let shouldVaryByLanguage = false;
+    const pathnameLocale = pathname.split('/')[1];
+    const hasKnownLocalePrefix = locales.includes(pathnameLocale as Locale);
 
     if (
         shouldEnforceCanonicalHost &&
@@ -98,7 +100,20 @@ export function middleware(request: NextRequest) {
         shouldVaryByLanguage = true;
     }
 
-    if (shouldRedirect) {
+    if (hasKnownLocalePrefix && pathname === `/${pathnameLocale}/stories`) {
+        const pageParam = redirectUrl.searchParams.get('page');
+        if (pageParam && /^\d+$/.test(pageParam)) {
+            redirectUrl.searchParams.delete('page');
+            redirectUrl.pathname = pageParam === '1'
+                ? `/${pathnameLocale}/stories`
+                : `/${pathnameLocale}/stories/page/${pageParam}`;
+            shouldRedirect = true;
+        }
+    }
+
+    const redirectTargetUnchanged = redirectUrl.href === request.nextUrl.href;
+
+    if (shouldRedirect && !redirectTargetUnchanged) {
         // 검색 엔진 봇의 접근일 경우 SEO 점수를 올바르게 이전하기 위해 308(영구 이동)을 사용하고,
         // 일반 사용자의 언어 기반 리디렉션은 브라우저 캐싱 방지를 위해 307(임시 이동)을 사용합니다.
         const redirectStatus = !shouldVaryByLanguage || isBot ? 308 : 307;

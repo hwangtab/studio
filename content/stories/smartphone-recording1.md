@@ -1,11 +1,11 @@
 ---
-title: "스마트폰 보컬 녹음 완전 가이드 — iPhone·Galaxy로 고퀄리티 녹음"
+title: "스마트폰 보컬 녹음 가이드 — iPhone·Galaxy로 고퀄리티 녹음"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["스마트폰 녹음", "아이폰 보컬 녹음", "갤럭시 보컬 녹음", "핸드폰 녹음", "스마트폰 마이크", "iOS GarageBand", "모바일 DAW 녹음"]
 thumbnail: "/images/studio3.webp"
-summary: "스마트폰으로 고퀄리티 보컬을 녹음하는 완전 가이드입니다. iPhone·Galaxy 기본 녹음 앱 활용, 외부 마이크 연결, iOS GarageBand 설정, 파일 전달 방법을 정리합니다."
+summary: "스마트폰으로 고퀄리티 보컬을 녹음하는 가이드입니다. iPhone·Galaxy 기본 녹음 앱 활용, 외부 마이크 연결, iOS GarageBand 설정, 파일 전달 방법을 정리합니다."
 faq:
   - q: "스마트폰으로 고퀄리티 보컬 녹음이 가능한가요?"
     a: "가능합니다. 외부 마이크와 오디오 어댑터를 활용하면 스마트폰에서도 믹싱 의뢰가 가능한 수준의 드라이 보컬을 얻을 수 있습니다. 방음 환경이 핵심입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "스마트폰 녹음 파일을 믹싱 의뢰용으로 어떻게 내보내나요?"
     a: "iOS GarageBand: 공유 → 노래 → 오디오 → Lossless(무손실)로 내보낸 뒤 iCloud Drive 또는 Google Drive 업로드. 가능하면 WAV/AIFF 무손실 형식으로 전달하세요."
 ---
-![스마트폰 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio3.webp)
+![스마트폰 보컬 녹음 가이드 — 스튜디오 놀](/images/studio3.webp)
 
 ## 스마트폰 — 언제 어디서나 녹음 가능한 포터블 스튜디오
 
@@ -136,5 +136,4 @@ n-Track: 믹스다운 → WAV 24bit
 
 ---
 
-[Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Studio One 보컬 녹음 가이드](/stories/studioone1) | [GarageBand 보컬 녹음 가이드](/stories/garageband1) | [셀프 보컬 녹음 가이드](/stories/self-recording1) | [홈 레코딩 가이드](/stories/home-recording1)

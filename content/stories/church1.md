@@ -100,4 +100,4 @@ CCM 자작곡을 정식으로 발매하면 교인 외에도 더 많은 분들과
 
 ---
 
-[밴드·단체 녹음 가이드](/stories/band1) | [음원 발매 가이드](/stories/release1) | [스튜디오 놀 녹음 요금 안내](/pricing) | [합주실·연습 공간 안내](/stories/practice1) | [CCM·찬양 스트리밍 발매 가이드](/stories/ccm1)
+[밴드·단체 녹음 가이드](/stories/band1) | [음원 발매 가이드](/stories/release1) | [합주실·연습 공간 안내](/stories/practice1) | [CCM·찬양 스트리밍 발매 가이드](/stories/ccm1)

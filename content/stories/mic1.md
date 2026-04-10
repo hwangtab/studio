@@ -112,4 +112,4 @@ faq:
 
 ---
 
-[스튜디오 놀 장비·시설 안내](/studio-info) | [연신내·불광 녹음실 선택 가이드](/stories/review6) | [보컬 녹음 요금 안내](/pricing) | [힙합·래퍼 보컬 녹음 가이드](/stories/hip1)
+[연신내·불광 녹음실 선택 가이드](/stories/review6) | [힙합·래퍼 보컬 녹음 가이드](/stories/hip1)

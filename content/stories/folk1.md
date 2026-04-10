@@ -115,4 +115,3 @@ faq:
 ---
 
 [어쿠스틱 기타·피아노 녹음 가이드](/stories/acoustic1) | [싱어송라이터 녹음 가이드](/stories/singer1) | [보컬 녹음 가이드](/stories/guide1)
-[스튜디오 놀 이용 요금](/pricing)

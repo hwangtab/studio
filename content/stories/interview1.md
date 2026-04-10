@@ -184,4 +184,4 @@ faq:
 
 ---
 
-[믹싱 강좌 시리즈 보기](/stories/mixing1) | [스튜디오 놀 시설·장비 안내](/studio-info) | [불광믹싱클럽 스터디 모임](/stories/bulgwang-mixing-club)
+[믹싱 강좌 시리즈 보기](/stories/mixing1) | [불광믹싱클럽 스터디 모임](/stories/bulgwang-mixing-club)

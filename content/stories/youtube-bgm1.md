@@ -1,11 +1,11 @@
 ---
-title: "유튜브·크리에이터 BGM 제작 완전 가이드 — 저작권 없는 배경음악 직접 만들기"
+title: "유튜브·크리에이터 BGM 제작 가이드 — 저작권 없는 배경음악 직접 만들기"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 프로덕션 가이드"
 tags: ["유튜브 BGM", "크리에이터 음악", "배경음악 제작", "저작권 없는 음악", "유튜브 음악 제작", "영상 배경음악", "콘텐츠 BGM"]
 thumbnail: "/images/portfolio4.webp"
-summary: "유튜브·크리에이터 BGM 제작 완전 가이드입니다. 저작권 없는 배경음악 직접 제작법, 장르별 BGM 설계, 루프 구조 제작, 음악 길이 기준, 유튜브 Content ID 대응 방법을 정리합니다."
+summary: "유튜브·크리에이터 BGM 제작 가이드입니다. 저작권 없는 배경음악 직접 제작법, 장르별 BGM 설계, 루프 구조 제작, 음악 길이 기준, 유튜브 Content ID 대응 방법을 정리합니다."
 faq:
   - q: "유튜브 영상에 사용할 BGM을 직접 만들려면 무엇이 필요한가요?"
     a: "DAW(Logic Pro, GarageBand, FL Studio 등)와 샘플 라이브러리 또는 신디사이저 플러그인이 기본입니다. GarageBand는 무료로 macOS/iOS에서 사용 가능해 입문자에게 적합합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "BGM 볼륨은 보이스오버(VO) 대비 얼마가 적당한가요?"
     a: "BGM은 보이스오버 대비 -20~-25dB 낮게 설정하는 것이 일반적입니다. 보이스오버가 명확하게 들리면서 BGM이 분위기를 서포트하는 비율입니다. 최종 믹스에서 VO -12dBFS, BGM -32~-35dBFS가 기준점입니다."
 ---
-![유튜브·크리에이터 BGM 제작 완전 가이드 — 스튜디오 놀](/images/portfolio4.webp)
+![유튜브·크리에이터 BGM 제작 가이드 — 스튜디오 놀](/images/portfolio4.webp)
 
 ## 유튜브 BGM — 직접 만드는 저작권 자유 배경음악
 
@@ -142,5 +142,4 @@ faq:
 
 ---
 
-[팟캐스트·유튜브 인트로 음악 제작 가이드](/stories/podcast-music1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[팟캐스트·유튜브 인트로 음악 제작 가이드](/stories/podcast-music1) | [CF·광고음악 가이드](/stories/advertisement-music1) | [음악 라이센싱 가이드](/stories/music-licensing1) | [사운드 디자인 가이드](/stories/sound-design1)

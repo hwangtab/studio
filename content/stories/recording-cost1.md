@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[스튜디오 놀 이용 요금 상세 안내](/pricing) | [보컬 녹음 가격 가이드](/stories/pricing1) | [녹음 세션 준비 가이드](/stories/session1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)
+[보컬 녹음 가격 가이드](/stories/pricing1) | [녹음 세션 준비 가이드](/stories/session1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)

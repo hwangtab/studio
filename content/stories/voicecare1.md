@@ -1,5 +1,5 @@
 ---
-title: "목소리 관리 생활 습관 완전 가이드 — 보컬리스트의 일상 루틴"
+title: "목소리 관리 생활 습관 가이드 — 보컬리스트의 일상 루틴"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -102,4 +102,3 @@ faq:
 ---
 
 [성대 건강 관리 가이드](/stories/vocalhealth1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [보컬 녹음 전 먹으면 안 되는 음식](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1)
-[스튜디오 놀 이용 요금](/pricing)

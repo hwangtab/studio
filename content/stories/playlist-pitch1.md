@@ -1,11 +1,11 @@
 ---
-title: "플레이리스트 피칭 완전 가이드 — Spotify·멜론·인디 큐레이터에게 음원 제출하기"
+title: "플레이리스트 피칭 가이드 — Spotify·멜론·인디 큐레이터에게 음원 제출하기"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["플레이리스트 피칭", "Spotify 플레이리스트", "멜론 플레이리스트", "음악 큐레이터", "Spotify for Artists", "스트리밍 플레이리스트", "인디 음악 홍보"]
 thumbnail: "/images/studio3.webp"
-summary: "플레이리스트 피칭 완전 가이드입니다. Spotify for Artists 에디토리얼 제출, 멜론·지니 플레이리스트 신청, 인디 큐레이터 피칭, 피칭 메시지 작성법을 정리합니다."
+summary: "플레이리스트 피칭 가이드입니다. Spotify for Artists 에디토리얼 제출, 멜론·지니 플레이리스트 신청, 인디 큐레이터 피칭, 피칭 메시지 작성법을 정리합니다."
 faq:
   - q: "Spotify 에디토리얼 플레이리스트에 등록하는 방법은?"
     a: "Spotify for Artists 계정에서 음원 발매 최소 7일 전에 Pitch a Song 기능을 사용해 에디토리얼 팀에 신청합니다. 장르, 분위기, 비하인드 스토리를 상세히 작성하는 것이 중요합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "멜론·지니에서 플레이리스트에 등록되려면 어떻게 하나요?"
     a: "국내 플랫폼은 유통사를 통해 에디토리얼 팀에 신청하거나, 스트리밍 차트 진입 후 자연스럽게 큐레이션되는 경우가 많습니다. 발매 초기 Pre-save와 스트리밍 집중 기간이 중요합니다."
 ---
-![플레이리스트 피칭 완전 가이드 — 스튜디오 놀](/images/studio3.webp)
+![플레이리스트 피칭 가이드 — 스튜디오 놀](/images/studio3.webp)
 
 ## 플레이리스트 피칭 — 스트리밍 노출을 높이는 전략
 
@@ -142,5 +142,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 SNS 마케팅 가이드](/stories/music-sns1) | [스트리밍 음악 출시 가이드](/stories/streaming-release1) | [음원 유통 가이드](/stories/distribution1) | [EP 제작 가이드](/stories/ep-production1)

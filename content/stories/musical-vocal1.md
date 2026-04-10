@@ -1,5 +1,5 @@
 ---
-title: "뮤지컬 보컬 녹음 완전 가이드 — 벨칸토·팝 오페라·뮤지컬 발성 레코딩 기법"
+title: "뮤지컬 보컬 녹음 가이드 — 벨칸토·팝 오페라·뮤지컬 발성 레코딩 기법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "뮤지컬 녹음에서 벨팅과 레지티밋 보이스 차이는 무엇인가요?"
     a: "레지티밋(클래식·벨칸토) 보이스는 두성 공명을 활용한 둥글고 풍성한 소리이며, 벨팅은 혼합 발성으로 고음역까지 파워풀하게 올라가는 뮤지컬 팝 스타일 발성입니다. 현대 뮤지컬은 두 가지를 혼용합니다."
 ---
-![뮤지컬 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
+![뮤지컬 보컬 녹음 가이드 — 스튜디오 놀](/images/studio4.webp)
 
 ## 뮤지컬 보컬 사운드의 핵심
 
@@ -116,5 +116,4 @@ faq:
 
 ---
 
-[보컬 오디션 완전 가이드](/stories/audition-vocal1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 오디션 가이드](/stories/audition-vocal1) | [성우 보이스 레코딩 가이드](/stories/voice-acting1) | [팝 보컬 녹음 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1)

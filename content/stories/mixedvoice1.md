@@ -1,5 +1,5 @@
 ---
-title: "혼합 발성(Mixed Voice) 완전 가이드 — 흉성과 두성 사이를 자유롭게"
+title: "혼합 발성(Mixed Voice) 가이드 — 흉성과 두성 사이를 자유롭게"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "혼합 발성을 훈련하는 방법은 무엇인가요?"
     a: "낮은 음에서 높은 음으로 부드럽게 이어 올라가는 스케일 연습이 기본입니다. '응~' 또는 '오' 모음으로 목에 힘을 빼고 자연스럽게 이어지는 연습을 합니다. 전문 보컬 코치의 지도를 받으면 잘못된 습관 없이 빠르게 발전할 수 있습니다."
 ---
-![혼합 발성(Mixed Voice) 완전 가이드 — 스튜디오 놀](/images/room4.webp)
+![혼합 발성(Mixed Voice) 가이드 — 스튜디오 놀](/images/room4.webp)
 
 ## 혼합 발성이 현대 팝의 표준인 이유
 
@@ -108,5 +108,4 @@ K팝·팝·R&B 가수들이 자연스럽게 고음을 넘나들 수 있는 비�
 
 ---
 
-[흉성 완전 가이드](/stories/chest-voice1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [벨팅 발성법 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 방법](/stories/vocalrange1)
-[스튜디오 놀 이용 요금](/pricing)
+[흉성 가이드](/stories/chest-voice1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [벨팅 발성법 가이드](/stories/belting1) | [고음 내는 방법 가이드](/stories/highnote1)

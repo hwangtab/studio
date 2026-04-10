@@ -3,7 +3,14 @@ import path from 'path';
 import matter from 'gray-matter';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
-import type { Story, StoryDetail, StoryPath } from '../types/story';
+import {
+  STORY_CATEGORY_KEYS,
+  type Story,
+  type StoryCategoryKey,
+  type StoryDetail,
+  type StoryListItem,
+  type StoryPath,
+} from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
 
@@ -15,7 +22,19 @@ const storyFileResolutionCache = new Map<string, { filePath: string; sourceLocal
 const parsedStoryFileCache = new Map<string, { data: Record<string, unknown>; content: string }>();
 const storyCategoryLabelCache = new Map<string, string>();
 const allStoriesCache = new Map<Locale, Story[]>();
+const allStoryListCache = new Map<Locale, StoryListItem[]>();
 const storyDetailCache = new Map<string, StoryDetail>();
+
+export const STORIES_PAGE_SIZE = 12;
+
+export interface StoriesPageData {
+  stories: StoryListItem[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  activeCategory: StoryCategoryKey | null;
+  availableCategories: StoryCategoryKey[];
+}
 
 const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { filePath: string; sourceLocale: Locale } => {
   const cacheKey = `${locale}:${slug}`;
@@ -121,7 +140,7 @@ const normalizeDate = (value: string | Date | undefined): string => {
   return date.toISOString();
 };
 
-const storyCategoryKeyMap: Record<string, string> = {
+const storyCategoryKeyMap: Record<string, StoryCategoryKey> = {
   // New category keys
   news: 'news',
   lesson: 'lesson',
@@ -200,20 +219,16 @@ const storyCategoryKeyMap: Record<string, string> = {
   '보이스액팅 가이드': 'music-guide',
 };
 
-const storyCategoryKeys = new Set<string>([
-  'news',
-  'lesson',
-  'feedback',
-  'region',
-  'instrument',
-  'music-guide',
-]);
+const storyCategoryKeys = new Set<string>(STORY_CATEGORY_KEYS);
 
-const normalizeStoryCategoryKey = (category?: string): string => {
+export const isStoryCategoryKey = (value?: string | null): value is StoryCategoryKey =>
+  Boolean(value && storyCategoryKeys.has(value));
+
+const normalizeStoryCategoryKey = (category?: string): StoryCategoryKey => {
   if (!category) return 'music-guide';
   const trimmed = category.trim();
   if (storyCategoryKeyMap[trimmed]) return storyCategoryKeyMap[trimmed];
-  if (storyCategoryKeys.has(trimmed)) return trimmed;
+  if (isStoryCategoryKey(trimmed)) return trimmed;
   return 'music-guide';
 };
 
@@ -235,12 +250,12 @@ const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
   return label;
 };
 
-const mapStoryFrontmatter = (
+const mapStoryListItemFrontmatter = (
   slug: string,
   frontmatter: Record<string, unknown>,
   content: string,
   locale: Locale
-): Story => {
+): StoryListItem => {
   const isoDate = normalizeDate(frontmatter?.date as string | Date | undefined);
   const derivedThumbnail = (frontmatter?.thumbnail as string | undefined) || extractFirstImageUrl(content);
   const rawCategory = (frontmatter?.category as string | undefined) || '';
@@ -253,15 +268,66 @@ const mapStoryFrontmatter = (
     title: (frontmatter?.title as string) || slug,
     date: isoDate,
     createdAt: isoDate,
-    author: (frontmatter?.author as string) || '스튜디오 놀',
     category: categoryLabel,
     categoryKey,
-    tags: Array.isArray(frontmatter?.tags) ? (frontmatter.tags as string[]) : ['기본'],
     summary: (frontmatter?.summary as string) || summarizeText(content, 150, { stripMarkdown: true }),
     thumbnail: derivedThumbnail || null,
+  };
+};
+
+const mapStoryFrontmatter = (
+  slug: string,
+  frontmatter: Record<string, unknown>,
+  content: string,
+  locale: Locale
+): Story => {
+  const baseStory = mapStoryListItemFrontmatter(slug, frontmatter, content, locale);
+  const derivedThumbnail = (frontmatter?.thumbnail as string | undefined) || extractFirstImageUrl(content);
+
+  return {
+    ...baseStory,
+    author: (frontmatter?.author as string) || '스튜디오 놀',
+    tags: Array.isArray(frontmatter?.tags) ? (frontmatter.tags as string[]) : ['기본'],
     thumbnailDerived: !(frontmatter?.thumbnail) && Boolean(derivedThumbnail),
     images: Array.isArray(frontmatter?.images) ? (frontmatter.images as string[]) : [],
   };
+};
+
+const toStoryListItem = (story: Story): StoryListItem => ({
+  id: story.id,
+  slug: story.slug,
+  title: story.title,
+  date: story.date,
+  createdAt: story.createdAt,
+  category: story.category,
+  categoryKey: story.categoryKey,
+  summary: story.summary,
+  thumbnail: story.thumbnail,
+});
+
+export const getAllStoryListItems = (locale: string = defaultLocale): StoryListItem[] => {
+  const normalizedLocale = (locale as Locale) || defaultLocale;
+  const cached = enableCache ? allStoryListCache.get(normalizedLocale) : undefined;
+  if (cached && enableCache) {
+    return cached;
+  }
+
+  const stories = getAllStorySlugs()
+    .map((slug: string) => {
+      try {
+        const { data, content } = getParsedStoryFile(slug, normalizedLocale);
+        return mapStoryListItemFrontmatter(slug, data, content, normalizedLocale);
+      } catch {
+        return null;
+      }
+    })
+    .filter((story): story is StoryListItem => story !== null)
+    .sort((a: StoryListItem, b: StoryListItem) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  if (enableCache) {
+    allStoryListCache.set(normalizedLocale, stories);
+  }
+  return stories;
 };
 
 const getParsedStoryFile = (slug: string, locale: Locale): {
@@ -312,6 +378,60 @@ export const getAllStories = (locale: string = defaultLocale): Story[] => {
     allStoriesCache.set(normalizedLocale, stories);
   }
   return stories;
+};
+
+export const getStoriesPage = (
+  locale: string = defaultLocale,
+  categoryKey: string | null = null,
+  page = 1,
+  pageSize = STORIES_PAGE_SIZE
+): StoriesPageData | null => {
+  if (!Number.isInteger(page) || page < 1) {
+    return null;
+  }
+
+  if (!Number.isInteger(pageSize) || pageSize < 1) {
+    return null;
+  }
+
+  const allStories = getAllStoryListItems(locale);
+  const availableCategories = STORY_CATEGORY_KEYS.filter((key) =>
+    allStories.some((story) => story.categoryKey === key)
+  );
+
+  const activeCategory = categoryKey
+    ? (isStoryCategoryKey(categoryKey) ? categoryKey : null)
+    : null;
+
+  if (categoryKey && !activeCategory) {
+    return null;
+  }
+
+  const filteredStories = activeCategory
+    ? allStories.filter((story) => story.categoryKey === activeCategory)
+    : allStories;
+
+  if (filteredStories.length === 0) {
+    return null;
+  }
+
+  const totalItems = filteredStories.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  if (page > totalPages) {
+    return null;
+  }
+
+  const stories = filteredStories.slice((page - 1) * pageSize, page * pageSize);
+
+  return {
+    stories,
+    currentPage: page,
+    totalPages,
+    totalItems,
+    activeCategory,
+    availableCategories,
+  };
 };
 
 export const getStoryDetail = async (slug: string, locale: string = defaultLocale): Promise<StoryDetail> => {
@@ -378,12 +498,12 @@ export const getStoryPaths = (): StoryPath[] => {
   return paths;
 };
 
-export const getRelatedStories = (locale: string, slug: string, limit = 3): Story[] => {
+export const getRelatedStories = (locale: string, slug: string, limit = 3): StoryListItem[] => {
   const all = getAllStories(locale);
   const current = all.find((item) => item.slug === slug);
   const candidates = all.filter((item) => item.slug !== slug);
 
-  if (!current) return candidates.slice(0, limit);
+  if (!current) return candidates.slice(0, limit).map(toStoryListItem);
 
   const currentTags = new Set(current.tags ?? []);
 
@@ -394,6 +514,6 @@ export const getRelatedStories = (locale: string, slug: string, limit = 3): Stor
       return { item, score: categoryMatch + tagOverlap };
     })
     .sort((a, b) => b.score - a.score)
-    .map(({ item }) => item)
+    .map(({ item }) => toStoryListItem(item))
     .slice(0, limit);
 };

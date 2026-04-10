@@ -103,5 +103,4 @@ faq:
 
 ---
 
-[유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [보컬 포트폴리오 만들기](/stories/portfolio1)
-[스튜디오 놀 이용 요금](/pricing)
+[유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [커버 곡 녹음 가이드](/stories/coverrecording1)

@@ -1,5 +1,5 @@
 ---
-title: "두성(헤드 보이스) 훈련 완전 가이드 — 밝고 풍성한 고음 발성법"
+title: "두성(헤드 보이스) 훈련 가이드 — 밝고 풍성한 고음 발성법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -16,7 +16,7 @@ faq:
   - q: "두성이 강해지면 어떤 장점이 있나요?"
     a: "고음 음역이 확장되고, 같은 고음을 낼 때 성대에 가하는 부담이 줄어듭니다. 또한 믹스 보이스 발달의 기반이 되어 중간 음역에서 더 자연스럽고 풍성한 소리를 낼 수 있게 됩니다."
 ---
-![두성(헤드 보이스) 훈련 완전 가이드 — 스튜디오 놀](/images/service5.webp)
+![두성(헤드 보이스) 훈련 가이드 — 스튜디오 놀](/images/service5.webp)
 
 ## 머리로 울리는 소리
 
@@ -84,5 +84,4 @@ faq:
 
 ---
 
-[믹스 보이스 완전 가이드](/stories/mixvoice1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1)
-[스튜디오 놀 이용 요금](/pricing)
+[믹스 보이스 가이드](/stories/mixvoice1) | [가성(팔세토) 가이드](/stories/falsetto1) | [고음 내는 방법 가이드](/stories/highnote1) | [보컬 공명 훈련 가이드](/stories/resonance1)

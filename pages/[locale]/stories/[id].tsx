@@ -16,7 +16,7 @@ import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import { getStoryRedirectTarget } from '../../../lib/storyRedirects';
-import type { Story, StoryDetail } from '../../../types/story';
+import { STORY_CATEGORY_KEYS, type StoryDetail, type StoryListItem } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
@@ -29,11 +29,10 @@ import type { NextPageWithLayout } from '../../../types';
 interface StoryDetailPageProps {
   locale: Locale;
   story: StoryDetail;
-  relatedStories: Story[];
+  relatedStories: StoryListItem[];
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
-const storyCategoryKeys = ['news', 'lesson', 'feedback', 'region', 'instrument', 'music-guide'] as const;
 
 const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -79,7 +78,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
       noTitle: t('stories.list.noTitle'),
       noContent: t('stories.list.noContent'),
       categoryByKey: Object.fromEntries(
-        storyCategoryKeys.map((key) => [key, t(`stories.categories.${key}`)])
+        STORY_CATEGORY_KEYS.map((key) => [key, t(`stories.categories.${key}`)])
       ),
     }),
     [t]

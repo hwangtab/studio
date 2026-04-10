@@ -1,11 +1,11 @@
 ---
-title: "팟캐스트·유튜브 인트로 음악 제작 완전 가이드 — 브랜드 사운드 아이덴티티 만들기"
+title: "팟캐스트·유튜브 인트로 음악 제작 가이드 — 브랜드 사운드 아이덴티티 만들기"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 프로덕션 가이드"
 tags: ["팟캐스트 인트로 음악", "유튜브 인트로 음악", "브랜드 음악", "소닉 브랜딩", "채널 테마 음악", "팟캐스트 BGM", "유튜브 오프닝 음악"]
 thumbnail: "/images/recording16.webp"
-summary: "팟캐스트·유튜브 인트로 음악 제작 완전 가이드입니다. 채널 테마 음악 기획 방법, 소닉 브랜딩 전략, 인트로·아웃트로·BGM 제작 방법, 저작권 없는 음악 선택법을 정리합니다."
+summary: "팟캐스트·유튜브 인트로 음악 제작 가이드입니다. 채널 테마 음악 기획 방법, 소닉 브랜딩 전략, 인트로·아웃트로·BGM 제작 방법, 저작권 없는 음악 선택법을 정리합니다."
 faq:
   - q: "팟캐스트 인트로 음악을 직접 만들 수 있나요?"
     a: "가능합니다. DAW(Logic, GarageBand, Ableton 등)로 직접 제작하거나, 전문 작곡가에게 의뢰할 수 있습니다. 직접 만들기 어렵다면 저작권 없는 음악 라이브러리(유튜브 오디오 라이브러리, Epidemic Sound)를 활용하세요."
@@ -141,5 +141,4 @@ faq:
 
 ---
 
-[유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [매장 BGM·환경 음악 가이드](/stories/store-bgm1) | [CF·광고음악 가이드](/stories/advertisement-music1) | [음악 라이센싱 가이드](/stories/music-licensing1)

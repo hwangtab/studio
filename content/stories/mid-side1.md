@@ -1,11 +1,11 @@
 ---
-title: "미드사이드(Mid-Side) 처리 완전 가이드 — 스테레오 폭 정밀 조절"
+title: "미드사이드(Mid-Side) 처리 가이드 — 스테레오 폭 정밀 조절"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["미드사이드", "MS 처리", "MS EQ", "스테레오 폭", "모노 호환성", "마스터링 고급", "스테레오 이미징"]
 thumbnail: "/images/recording14.webp"
-summary: "미드사이드(MS) 처리 완전 가이드입니다. Mid-Side 신호 원리, MS EQ로 스테레오 폭 조절, MS 컴프레서 활용, 마스터링에서의 MS 활용, 모노 호환성 체크를 정리합니다."
+summary: "미드사이드(MS) 처리 가이드입니다. Mid-Side 신호 원리, MS EQ로 스테레오 폭 조절, MS 컴프레서 활용, 마스터링에서의 MS 활용, 모노 호환성 체크를 정리합니다."
 faq:
   - q: "미드사이드(Mid-Side) 처리란 무엇인가요?"
     a: "스테레오 신호를 Mid(좌우 공통 신호)와 Side(좌우 차이 신호)로 분리하여 독립적으로 처리하는 기법입니다. Mid는 모노 호환 신호, Side는 스테레오 폭을 담당합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "스테레오 폭을 넓히는 게 항상 좋은가요?"
     a: "아닙니다. 스테레오 폭이 지나치면 모노 호환성이 떨어지고 믹스가 불안정해집니다. 보컬과 저음 악기는 Mid(모노)로 유지하고, 패드·이펙트는 Side(스테레오)로 넓히는 것이 균형 잡힌 접근입니다."
 ---
-![미드사이드(Mid-Side) 처리 완전 가이드 — 스튜디오 놀](/images/recording14.webp)
+![미드사이드(Mid-Side) 처리 가이드 — 스튜디오 놀](/images/recording14.webp)
 
 ## Mid-Side — 스테레오를 해부하는 고급 기법
 
@@ -141,5 +141,4 @@ MS 처리는 마스터링의 정밀도를 한 단계 높이는 고급 기법입�
 
 ---
 
-[오디오 위상 완전 가이드](/stories/phase1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[오디오 위상 가이드](/stories/phase1) | [멀티밴드 컴프레서 가이드](/stories/multiband1) | [스테레오 이미징 가이드](/stories/stereo-imaging1) | [마스터링 가이드](/stories/mastering1)

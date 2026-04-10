@@ -1,5 +1,5 @@
 ---
-title: "팝 보컬 녹음 완전 가이드 — K팝·팝 장르 보컬 레코딩 세팅과 표현 전략"
+title: "팝 보컬 녹음 가이드 — K팝·팝 장르 보컬 레코딩 세팅과 표현 전략"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "팝 보컬 믹싱에서 가장 중요한 것은 무엇인가요?"
     a: "보컬이 트랙의 중심에 선명하게 들리는 것이 최우선입니다. EQ로 불필요한 저역을 컷하고 3~5kHz 선명도를 살리고, 컴프레서로 다이나믹을 안정화하고, 드라이한 리버브로 공간감을 더합니다."
 ---
-![팝 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service2.webp)
+![팝 보컬 녹음 가이드 — 스튜디오 놀](/images/service2.webp)
 
 ## 팝 보컬 사운드의 핵심
 
@@ -123,5 +123,4 @@ faq:
 
 ---
 
-[보컬 컴프레서 완전 가이드](/stories/compressor1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 컴프레서 가이드](/stories/compressor1) | [록 보컬 녹음 가이드](/stories/rock-vocal1) | [R&B 보컬 녹음 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 가이드](/stories/ballad-vocal1)

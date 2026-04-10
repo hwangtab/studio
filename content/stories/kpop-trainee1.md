@@ -1,5 +1,5 @@
 ---
-title: "K팝 연습생 준비 완전 가이드 — 트레이닝부터 데뷔까지 로드맵"
+title: "K팝 연습생 준비 가이드 — 트레이닝부터 데뷔까지 로드맵"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -16,7 +16,7 @@ faq:
   - q: "연습생 기간 동안 데모 녹음이 필요한가요?"
     a: "네, 기획사 내부 평가와 외부 쇼케이스 준비를 위해 고퀄리티 데모 녹음이 필요합니다. 전문 스튜디오에서 녹음한 데모는 자신의 보컬 실력을 객관적으로 확인하고 기획사에 어필하는 데 효과적입니다."
 ---
-![K팝 연습생 준비 완전 가이드 — 스튜디오 놀](/images/service1.webp)
+![K팝 연습생 준비 가이드 — 스튜디오 놀](/images/service1.webp)
 
 ## K팝 연습생 시스템이란?
 
@@ -140,5 +140,4 @@ K팝 연습생의 길은 치열하지만, 철저한 준비로 가능성을 높�
 
 ---
 
-[K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [오디션 준비 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1)
-[스튜디오 놀 이용 요금](/pricing)
+[K-POP 오디션 준비 가이드](/stories/kpop-audition1) | [오디션 준비 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1)

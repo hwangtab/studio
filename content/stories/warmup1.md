@@ -103,5 +103,4 @@ faq:
 
 ---
 
-[보컬 레슨 완전 가이드](/stories/singing-lesson1) | [녹음 당일 완벽 루틴 체크리스트](/stories/recordingday1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 레슨 가이드](/stories/singing-lesson1) | [녹음 당일 완벽 루틴 체크리스트](/stories/recordingday1) | [녹음 세션 준비 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1)

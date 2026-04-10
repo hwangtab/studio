@@ -1,11 +1,11 @@
 ---
-title: "스테레오 이미징 완전 가이드 — 믹스 폭·깊이·공간감 만드는 실전 기법"
+title: "스테레오 이미징 가이드 — 믹스 폭·깊이·공간감 만드는 실전 기법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["스테레오 이미징", "stereo imaging", "스테레오 폭", "패닝", "미드사이드 처리", "공간감 믹싱", "믹스 넓이"]
 thumbnail: "/images/service6.webp"
-summary: "스테레오 이미징 완전 가이드. 패닝 전략, 스테레오 와이드너 활용법, Mid/Side 처리, 모노 호환성 확인까지 믹스의 폭과 깊이를 만드는 실전 기법."
+summary: "스테레오 이미징 가이드. 패닝 전략, 스테레오 와이드너 활용법, Mid/Side 처리, 모노 호환성 확인까지 믹스의 폭과 깊이를 만드는 실전 기법."
 faq:
   - q: "스테레오 이미징이란 무엇인가요?"
     a: "좌우(폭)와 앞뒤(깊이) 공간에서 각 악기·보컬이 배치되는 위치를 제어하는 믹싱 기법입니다. 패닝, 리버브·딜레이 조합, 스테레오 와이드너 등을 통해 믹스가 좁고 단조롭지 않고 입체감 있게 들리도록 만듭니다."
@@ -16,7 +16,7 @@ faq:
   - q: "스테레오 이미징 플러그인 추천이 있나요?"
     a: "Waves S1 Stereo Imager, iZotope Ozone Imager(무료), Brainworx bx_control V2 등이 대표적입니다. Mid/Side EQ는 FabFilter Pro-Q3의 M/S 모드로 간편하게 활용할 수 있습니다."
 ---
-![스테레오 이미징 완전 가이드 — 스튜디오 놀](/images/service6.webp)
+![스테레오 이미징 가이드 — 스튜디오 놀](/images/service6.webp)
 
 ## 입체적인 믹스를 만드는 스테레오 이미징
 
@@ -113,5 +113,4 @@ Side = 좌우 차이 신호 (스테레오 성분)
 
 ---
 
-[모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[모노 호환성 믹싱 가이드](/stories/mono-compat1) | [보컬 믹싱 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 가이드](/stories/parallel-compression1) | [리버브 가이드](/stories/reverb1)

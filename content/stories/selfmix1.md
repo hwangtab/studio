@@ -66,7 +66,7 @@ DAW(Logic Pro, FL Studio, Ableton 등) 보급으로 집에서도 어느 정도 �
 
 ---
 
-## 온라인 믹싱 의뢰 방법
+## 온라인 믹싱 가이드
 
 스튜디오 놀에서는 **원격 믹싱 의뢰**도 가능합니다. 직접 방문 없이 진행하는 과정:
 
@@ -103,4 +103,4 @@ DAW(Logic Pro, FL Studio, Ableton 등) 보급으로 집에서도 어느 정도 �
 
 ---
 
-[스튜디오 놀 믹싱 서비스 요금 안내](/pricing) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 믹싱 플러그인 추천](/stories/plugins1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [마스터링이란? LUFS 기준 설명](/stories/mastering1)
+[보컬 믹싱 플러그인 추천](/stories/plugins1) | [믹싱 강좌 시리즈 보기](/stories/mixing1) | [마스터링이란? LUFS 기준 설명](/stories/mastering1)

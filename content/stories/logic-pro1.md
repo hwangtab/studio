@@ -1,11 +1,11 @@
 ---
-title: "Logic Pro 보컬 녹음·믹싱 완전 가이드 — 맥 홈 레코딩 필수 팁"
+title: "Logic Pro 보컬 녹음·믹싱 가이드 — 맥 홈 레코딩 필수 팁"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["Logic Pro", "Logic Pro 보컬 녹음", "Logic Pro 믹싱", "맥 홈 레코딩", "Logic Pro 팁", "Logic Pro X", "DAW 보컬 녹음"]
 thumbnail: "/images/recording14.webp"
-summary: "Logic Pro 보컬 녹음·믹싱 완전 가이드입니다. Logic Pro 보컬 레코딩 설정, 주요 내장 플러그인 활용법, 보컬 믹싱 체인, Flex Pitch(피치 교정) 사용법을 정리합니다."
+summary: "Logic Pro 보컬 녹음·믹싱 가이드입니다. Logic Pro 보컬 레코딩 설정, 주요 내장 플러그인 활용법, 보컬 믹싱 체인, Flex Pitch(피치 교정) 사용법을 정리합니다."
 faq:
   - q: "Logic Pro로 보컬 녹음할 때 기본 설정은 무엇인가요?"
     a: "오디오 인터페이스 연결 후 Logic Pro 설정(Preferences)에서 오디오 장치를 인터페이스로 설정합니다. 새 트랙 추가 시 Audio 타입을 선택하고, 입력 소스를 마이크 채널로 지정합니다. Buffer Size는 128~256 사이로 설정해 레이턴시를 줄입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Logic Pro로 마스터링도 가능한가요?"
     a: "가능합니다. Mastering Assistant 기능(Logic Pro 10.7.4+)으로 자동 마스터링 제안을 받거나, 마스터 버스에 EQ·컴프레서·리미터 체인을 직접 구성해 수동 마스터링도 가능합니다."
 ---
-![Logic Pro 보컬 녹음·믹싱 완전 가이드 — 스튜디오 놀](/images/recording14.webp)
+![Logic Pro 보컬 녹음·믹싱 가이드 — 스튜디오 놀](/images/recording14.webp)
 
 ## Logic Pro — 맥 사용자를 위한 전문 DAW
 
@@ -132,5 +132,4 @@ Logic Pro는 Mac 홈 레코딩의 표준 DAW입니다. 홈 레코딩 후 온라�
 
 ---
 
-[Ableton 완전 가이드](/stories/ableton1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Ableton 가이드](/stories/ableton1) | [보컬 녹음 팁 가이드](/stories/vocal-recording-tips1) | [피치 교정 가이드](/stories/pitch-correction1) | [홈 레코딩 가이드](/stories/home-recording1)

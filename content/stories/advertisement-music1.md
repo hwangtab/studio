@@ -1,11 +1,11 @@
 ---
-title: "CF·광고음악 완전 가이드 — 광고 BGM 제작·싱크 라이센싱·CM송 작곡"
+title: "CF·광고음악 가이드 — 광고 BGM 제작·싱크 라이센싱·CM송 작곡"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 프로덕션 가이드"
 tags: ["광고음악", "CF 음악", "BGM 제작", "싱크 라이센싱", "CM송", "광고 배경음악", "음악 라이센싱"]
 thumbnail: "/images/portfolio2.webp"
-summary: "CF·광고음악 완전 가이드입니다. 광고 BGM 제작 방법, CM송 작곡 전략, 싱크 라이센싱 절차, 음악 길이·포맷 기준, 음악 저작권 등록을 정리합니다."
+summary: "CF·광고음악 가이드입니다. 광고 BGM 제작 방법, CM송 작곡 전략, 싱크 라이센싱 절차, 음악 길이·포맷 기준, 음악 저작권 등록을 정리합니다."
 faq:
   - q: "광고음악(BGM)을 직접 제작하려면 무엇이 필요한가요?"
     a: "DAW와 샘플 라이브러리, 필요 시 라이브 녹음 장비가 기본입니다. 광고의 브랜드 톤, 타겟 연령층, 분위기를 먼저 파악한 뒤 이에 맞는 악기 편성과 멜로디를 설계합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "광고음악 싱크 라이센싱 비용은 어떻게 되나요?"
     a: "사용 매체(TV·유튜브·SNS), 방영 기간, 지역, 곡의 유명도에 따라 크게 다릅니다. 일반적으로 유명 곡의 TV 전국 광고는 수백만~수천만 원 이상, 인디 음악은 수십만~수백만 원 수준입니다."
 ---
-![CF·광고음악 완전 가이드 — 스튜디오 놀](/images/portfolio2.webp)
+![CF·광고음악 가이드 — 스튜디오 놀](/images/portfolio2.webp)
 
 ## CF·광고음악 — 브랜드의 감성을 소리로 표현하기
 
@@ -133,5 +133,4 @@ CF·광고음악은 짧지만 브랜드의 가장 중요한 소리입니다.
 
 ---
 
-[매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[매장 BGM·환경 음악 가이드](/stories/store-bgm1) | [음악 라이센싱 가이드](/stories/music-licensing1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [팝 음악 프로덕션 가이드](/stories/pop-production1)

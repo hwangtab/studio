@@ -1,5 +1,5 @@
 ---
-title: "악기 없이 작곡하는 방법 — 보컬 멜로디 중심 작곡 완전 가이드"
+title: "악기 없이 작곡하는 방법 — 보컬 멜로디 중심 작곡 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -113,5 +113,4 @@ faq:
 
 ---
 
-[음악 프로듀서 되는 방법](/stories/producer1) | [작사 방법 완전 가이드](/stories/lyrics1) | [채보 기초 가이드 — 코드 찾는 방법](/stories/transcription1) | [음악 작업 의뢰 방법](/stories/commission1) | [DAW 선택 가이드](/stories/daw1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 프로듀서 되는 방법](/stories/producer1) | [작사 방법 가이드](/stories/lyrics1) | [채보 기초 가이드 — 코드 찾는 방법](/stories/transcription1) | [음악 작업 의뢰 방법](/stories/commission1)

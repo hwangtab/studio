@@ -1,11 +1,11 @@
 ---
-title: "해외 음원 발매·글로벌 배포 완전 가이드 — K-pop·인디 음악 해외 스트리밍 진출 방법"
+title: "해외 음원 발매·글로벌 배포 가이드 — K-pop·인디 음악 해외 스트리밍 진출 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 비즈니스 가이드"
 tags: ["해외 음원 발매", "글로벌 음악 배포", "K-pop 해외 진출", "스포티파이 글로벌", "해외 스트리밍", "음악 글로벌 유통", "인디 해외 발매"]
 thumbnail: "/images/service8.webp"
-summary: "해외 음원 발매·글로벌 배포 완전 가이드입니다. 글로벌 유통 플랫폼 선택, 해외 스트리밍 최적화, 해외 플레이리스트 피칭, 국가별 음악 시장 진입 전략을 정리합니다."
+summary: "해외 음원 발매·글로벌 배포 가이드입니다. 글로벌 유통 플랫폼 선택, 해외 스트리밍 최적화, 해외 플레이리스트 피칭, 국가별 음악 시장 진입 전략을 정리합니다."
 faq:
   - q: "한국 인디 아티스트도 스포티파이 글로벌에 음원을 등록할 수 있나요?"
     a: "가능합니다. DistroKid·TuneCore·Amuse 등 글로벌 DIY 유통 플랫폼을 이용하면 스포티파이·애플뮤직·유튜브 뮤직 등 전 세계 80개 이상 플랫폼에 배포할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "해외 음악 시장 중 K-pop이 강세인 곳은 어디인가요?"
     a: "동남아시아(인도네시아·태국·필리핀·베트남), 일본, 미국, 브라질, 멕시코 등이 K-pop 청취자 비율이 높습니다. Spotify for Artists 청취자 지역 데이터를 보면 자신의 팬이 어디 있는지 파악할 수 있습니다."
 ---
-![해외 음원 발매·글로벌 배포 완전 가이드 — 스튜디오 놀](/images/service8.webp)
+![해외 음원 발매·글로벌 배포 가이드 — 스튜디오 놀](/images/service8.webp)
 
 ## 해외 발매 — 국경 없는 음악 배포
 
@@ -136,5 +136,4 @@ faq:
 
 ---
 
-[음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음원 유통 가이드](/stories/music-distribution1) | [스트리밍 알고리즘 가이드](/stories/streaming-algorithm1) | [음원 발매 타임라인 가이드](/stories/release-timeline1) | [플레이리스트 피칭 가이드](/stories/playlist-pitch1)

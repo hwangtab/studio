@@ -78,5 +78,5 @@ faq:
 
 ---
 
-[안양 만안구 안양·박달·석수 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·산본 녹음실 안내](/stories/pyeongchon1) | [군포 녹음실 안내](/stories/gunpo1) | [광명 하안·철산 녹음실 안내](/stories/gwangmyeong-haean1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[안양 만안구 안양·박달·석수 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·산본 녹음실 안내](/stories/pyeongchon1) | [군포 녹음실 안내](/stories/gunpo1) | [광명 하안·철산 녹음실 안내](/stories/gwangmyeong-haean1)
+[이용 요금 보기](/pricing)

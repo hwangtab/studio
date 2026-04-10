@@ -1,5 +1,5 @@
 ---
-title: "뮤지션 이메일 마케팅·뉴스레터 완전 가이드 — 팬과 직접 소통하는 채널 구축법"
+title: "뮤지션 이메일 마케팅·뉴스레터 가이드 — 팬과 직접 소통하는 채널 구축법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 마케팅"
@@ -16,7 +16,7 @@ faq:
   - q: "무료로 시작할 수 있는 이메일 마케팅 플랫폼은?"
     a: "Mailchimp (구독자 500명까지 무료), Substack (무료 + 유료 구독 기능 포함), ConvertKit (뮤지션 특화, 기본 무료)이 대표적입니다. 초기에는 Substack이 가장 간단하고 팬 유료 구독 기능도 내장되어 있어 추천합니다."
 ---
-![뮤지션 이메일 마케팅·뉴스레터 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
+![뮤지션 이메일 마케팅·뉴스레터 가이드 — 스튜디오 놀](/images/recording8.webp)
 
 ## 이메일 리스트 — 아티스트가 직접 소유하는 팬 채널
 
@@ -146,5 +146,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음악 PR·홍보 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 PR·홍보 가이드](/stories/music-pr1) | [팬 커뮤니티 구축 가이드](/stories/fan-community1) | [음악 바이럴 마케팅 가이드](/stories/viral-music-marketing1) | [음악 마케팅 가이드](/stories/music-marketing1)

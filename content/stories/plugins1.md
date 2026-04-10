@@ -1,5 +1,5 @@
 ---
-title: "보컬 믹싱 플러그인 추천 — EQ·컴프레서·리버브·피치 교정 도구 완전 가이드"
+title: "보컬 믹싱 플러그인 추천 — EQ·컴프레서·리버브·피치 교정 도구 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -103,5 +103,4 @@ faq:
 
 ---
 
-[VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)
-[스튜디오 놀 이용 요금](/pricing)
+[VST 플러그인 가이드](/stories/vst-guide1) | [보컬 EQ 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [음정 교정 도구 비교](/stories/pitchtool1)

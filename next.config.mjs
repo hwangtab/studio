@@ -55,6 +55,21 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/stories/page/1',
+        destination: '/:locale/stories',
+        permanent: true,
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/stories/category/:category/page/1',
+        destination: '/:locale/stories/category/:category',
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       // Sitemap & robots.txt Content-Type 헤더

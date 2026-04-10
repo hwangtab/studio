@@ -75,4 +75,4 @@ EQ에서 **Q(Bandwidth)**는 조절할 범위를 결정합니다.
 
 ---
 
-[보컬 EQ 완전 가이드 (실전 주파수별 설정법)](/stories/eq1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+[보컬 EQ 가이드 (실전 주파수별 설정법)](/stories/eq1) | [믹싱 체인 가이드](/stories/mixing-chain1)

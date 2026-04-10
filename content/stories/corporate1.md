@@ -99,4 +99,3 @@ faq:
 ---
 
 [결혼식 축가 녹음 안내](/stories/wedding2) | [음반 제작 가이드](/stories/album1) | [음악 저작권 등록 방법](/stories/copyright1)
-[스튜디오 놀 이용 요금](/pricing)

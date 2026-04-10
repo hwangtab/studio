@@ -1,11 +1,11 @@
 ---
-title: "노이즈 게이트 완전 가이드 — Threshold·Attack·Hold·Release 설정법"
+title: "노이즈 게이트 가이드 — Threshold·Attack·Hold·Release 설정법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["노이즈 게이트", "게이트 설정", "Threshold 게이트", "보컬 노이즈 게이트", "드럼 게이트", "노이즈 제거", "게이트 플러그인"]
 thumbnail: "/images/album3.webp"
-summary: "노이즈 게이트 완전 가이드입니다. Threshold·Attack·Hold·Release 파라미터 설명, 보컬·드럼·기타 적용법, 사이드체인 게이팅, 플러그인 비교를 정리합니다."
+summary: "노이즈 게이트 가이드입니다. Threshold·Attack·Hold·Release 파라미터 설명, 보컬·드럼·기타 적용법, 사이드체인 게이팅, 플러그인 비교를 정리합니다."
 faq:
   - q: "노이즈 게이트와 익스팬더의 차이는?"
     a: "노이즈 게이트는 Threshold 이하의 신호를 완전히 차단(Ratio 무한대)하는 방식입니다. 익스팬더는 Threshold 이하의 신호를 점진적으로 줄이는 방식으로 더 자연스럽게 처리됩니다. 보컬에는 익스팬더나 낮은 Ratio의 게이트가 자연스럽습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "보컬 녹음에 노이즈 게이트가 필요한가요?"
     a: "홈 레코딩처럼 배경 소음이 있는 환경에서는 게이트가 유용합니다. 단, Attack 시간이 너무 짧으면 보컬 어택을 자르고, Hold가 짧으면 음 끝이 급하게 닫히는 아티팩트가 생기므로 부드러운 설정이 필요합니다."
 ---
-![노이즈 게이트 완전 가이드 — 스튜디오 놀](/images/album3.webp)
+![노이즈 게이트 가이드 — 스튜디오 놀](/images/album3.webp)
 
 ## 노이즈 게이트 — 불필요한 소음을 차단하다
 
@@ -169,5 +169,4 @@ faq:
 
 ---
 
-[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [컴프레서 완전 가이드](/stories/compress1) | [사이드체인 완전 가이드](/stories/sidechain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 EQ 가이드](/stories/vocal-eq1) | [보컬 믹싱 가이드](/stories/vocal-mixing1) | [컴프레서 가이드](/stories/compress1) | [사이드체인 가이드](/stories/sidechain1)

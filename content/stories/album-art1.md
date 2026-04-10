@@ -1,5 +1,5 @@
 ---
-title: "앨범 아트·재킷 제작 가이드 — 음원 발매를 위한 커버 아트 완전 가이드"
+title: "앨범 아트·재킷 제작 가이드 — 음원 발매를 위한 커버 아트 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
@@ -160,5 +160,4 @@ DALL-E 3 (ChatGPT): 텍스트 프롬프트로 이미지 생성
 
 ---
 
-[음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1) | [아티스트 브랜딩 완전 가이드](/stories/artist-branding1) | [SNS 음악 마케팅 완전 가이드](/stories/music-sns1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음원 유통 가이드](/stories/distribution1) | [EP 제작 가이드](/stories/ep-production1) | [아티스트 브랜딩 가이드](/stories/artist-branding1) | [SNS 음악 마케팅 가이드](/stories/music-sns1)

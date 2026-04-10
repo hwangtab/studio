@@ -1,11 +1,11 @@
 ---
-title: "MR(반주) 구하는 방법 완전 가이드 — 유료 사이트부터 키 조정까지"
+title: "MR(반주) 구하는 방법 가이드 — 유료 사이트부터 키 조정까지"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["MR 구하는 방법", "반주 파일", "MR 다운로드", "MR 사이트", "키 조정 MR", "녹음 반주", "보컬 녹음 준비"]
 thumbnail: "/images/hardware5.webp"
-summary: "보컬 녹음 전 MR(반주) 파일을 구하는 방법. 유료 MR 사이트, 유튜브 MR 활용, 직접 제작 의뢰, 키 조정 방법까지 녹음 준비를 위한 MR 완전 가이드."
+summary: "보컬 녹음 전 MR(반주) 파일을 구하는 방법. 유료 MR 사이트, 유튜브 MR 활용, 직접 제작 의뢰, 키 조정 방법까지 녹음 준비를 위한 MR 가이드."
 faq:
   - q: "MR(반주)은 어디서 구할 수 있나요?"
     a: "유료 MR 사이트(MR마트, 반주닷컴, 스타MR 등), 유튜브 MR 채널, Karaoke 버전 앱(Moises, Karaoke One), 스튜디오 자체 DB, 직접 제작 의뢰 등의 방법이 있습니다. 음원 발매용이라면 저작권 처리가 가능한 유료 MR을 구매하거나 직접 제작하는 것을 권장합니다."
@@ -117,4 +117,3 @@ Moises 앱의 키 조정 기능을 이용해 실시간으로 반음 단위 변�
 ---
 
 [음악 작업 의뢰 방법](/stories/commission1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [MP3 vs WAV 파일 형식 가이드](/stories/audioformat1) | [첫 녹음 세션 준비 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)

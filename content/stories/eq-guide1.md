@@ -1,11 +1,11 @@
 ---
-title: "보컬 EQ 완전 가이드 — 주파수 대역별 역할과 믹싱 실전 세팅"
+title: "보컬 EQ 가이드 — 주파수 대역별 역할과 믹싱 실전 세팅"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "믹싱 가이드"
 tags: ["보컬 EQ", "이퀄라이저 설정", "EQ 믹싱", "보컬 주파수", "믹싱 EQ", "보컬 믹싱 EQ", "EQ 가이드"]
 thumbnail: "/images/portfolio5.webp"
-summary: "보컬 믹싱을 위한 EQ 완전 가이드입니다. 주파수 대역별 역할, 컷·부스트 기법, 파라메트릭 EQ 세팅, 장르별 보컬 EQ 전략을 정리합니다."
+summary: "보컬 믹싱을 위한 EQ 가이드입니다. 주파수 대역별 역할, 컷·부스트 기법, 파라메트릭 EQ 세팅, 장르별 보컬 EQ 전략을 정리합니다."
 faq:
   - q: "보컬 EQ에서 가장 먼저 해야 할 작업은 무엇인가요?"
     a: "하이패스 필터(HPF) 적용이 우선입니다. 80~120Hz 이하 저음을 컷하면 방울 소리, 발소리, 공조 소음 등 불필요한 저역 노이즈를 제거해 보컬 명료성이 높아집니다."
@@ -16,7 +16,7 @@ faq:
   - q: "보컬 EQ에서 컷이 먼저인가요, 부스트가 먼저인가요?"
     a: "일반적으로 컷(Cut) 우선을 권장합니다. 불필요한 주파수를 먼저 제거한 후 필요한 대역을 소량 부스트하는 방식이 자연스러운 결과를 만듭니다."
 ---
-![보컬 EQ 완전 가이드 — 스튜디오 놀](/images/portfolio5.webp)
+![보컬 EQ 가이드 — 스튜디오 놀](/images/portfolio5.webp)
 
 ## 보컬 EQ — 주파수를 다듬어 보컬을 살리는 기술
 
@@ -131,5 +131,4 @@ EQ(이퀄라이저)는 보컬의 주파수 밸런스를 조정하는 믹싱의 �
 
 ---
 
-[주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1)
-[스튜디오 놀 이용 요금](/pricing)
+[주파수 마스킹 가이드](/stories/frequency-masking1) | [보컬 컴프레서 가이드](/stories/compressor1) | [마스터링 가이드](/stories/mastering1) | [홈 레코딩 가이드](/stories/home-recording1)

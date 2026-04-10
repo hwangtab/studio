@@ -88,7 +88,7 @@ faq:
 | 모니터 | ProAc Tablett 50, EVE Audio SC207 |
 | 방음 | 완전 방음 부스, 흡음재 처리 완비 |
 | 운영 | 상주 전문 엔지니어 10년+ 경력 |
-| 예약 | 카카오톡 오픈채팅 (당일 답변) |
+| 예약 | 카카오톡 문의 (당일 답변) |
 
 ---
 
@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[스튜디오 놀 시설·장비 상세 안내](/studio-info) | [이용 요금 안내](/pricing) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [서울 권역별 녹음실 비교](/stories/studio-compare1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[마이크 종류별 보컬 녹음 차이](/stories/mic1) | [서울 권역별 녹음실 비교](/stories/studio-compare1) | [은평구 녹음실 안내](/stories/eunpyeong1)

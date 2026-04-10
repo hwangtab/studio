@@ -1,11 +1,11 @@
 ---
-title: "코드 진행 완전 가이드 — 장르별 코드 진행과 작곡 활용법"
+title: "코드 진행 가이드 — 장르별 코드 진행과 작곡 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["코드 진행", "화성 진행", "팝 코드", "R&B 코드", "작곡 코드", "I-IV-V", "ii-V-I 코드"]
 thumbnail: "/images/portfolio1.webp"
-summary: "코드 진행 완전 가이드입니다. 기본 코드 진행 공식, 장르별(팝·R&B·힙합·CCM) 코드 패턴, 차용 화음, 분수 코드, 작곡에 활용하는 방법을 정리합니다."
+summary: "코드 진행 가이드입니다. 기본 코드 진행 공식, 장르별(팝·R&B·힙합·CCM) 코드 패턴, 차용 화음, 분수 코드, 작곡에 활용하는 방법을 정리합니다."
 faq:
   - q: "가장 기본적인 코드 진행은 무엇인가요?"
     a: "I-IV-V-I (예: C-F-G-C)가 가장 기본적인 진행입니다. 팝에서는 I-V-vi-IV (C-G-Am-F)가 가장 많이 사용되며, 재즈·R&B에서는 ii-V-I (Dm7-G7-Cmaj7)가 핵심입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "코드 진행에서 전조(Modulation)란?"
     a: "곡 중간에 조성이 바뀌는 것입니다. 반음 위 전조(Semi-tone Modulation)는 가장 자주 사용되는 기법으로, 마지막 코러스를 반음 올려 에너지와 감정을 높이는 데 많이 활용됩니다."
 ---
-![코드 진행 완전 가이드 — 스튜디오 놀](/images/portfolio1.webp)
+![코드 진행 가이드 — 스튜디오 놀](/images/portfolio1.webp)
 
 ## 코드 진행 — 좋은 음악의 화성적 토대
 
@@ -150,5 +150,4 @@ C - G/B - Am - Am/G - F
 
 ---
 
-[재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [음계와 조성 완전 가이드](/stories/music-scale1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[재즈 코드 진행 가이드](/stories/jazz-chord1) | [음계와 조성 가이드](/stories/music-scale1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 가이드](/stories/song-structure1)

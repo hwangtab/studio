@@ -1,11 +1,11 @@
 ---
-title: "새추레이션(Saturation) 완전 가이드 — 보컬·믹스에 아날로그 따뜻함 더하기"
+title: "새추레이션(Saturation) 가이드 — 보컬·믹스에 아날로그 따뜻함 더하기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["새추레이션", "saturation", "테이프 새추레이션", "하모닉 왜곡", "아날로그 사운드", "믹싱 기법", "보컬 새추레이션"]
 thumbnail: "/images/service1.webp"
-summary: "새추레이션(Saturation) 완전 가이드. 테이프·튜브·트랜지스터 새추레이션 차이, 보컬·드럼·믹스버스에 적용하는 방법, 추천 플러그인까지 아날로그 따뜻함을 더하는 실전 가이드."
+summary: "새추레이션(Saturation) 가이드. 테이프·튜브·트랜지스터 새추레이션 차이, 보컬·드럼·믹스버스에 적용하는 방법, 추천 플러그인까지 아날로그 따뜻함을 더하는 실전 가이드."
 faq:
   - q: "새추레이션이란 무엇인가요?"
     a: "신호에 고조파(Harmonics, 배음)를 추가해 아날로그 장비 특유의 따뜻하고 두꺼운 소리를 만드는 처리입니다. 테이프, 진공관(튜브), 트랜지스터 회로가 신호를 살짝 왜곡할 때 나타나는 현상을 디지털에서 모델링한 것입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "새추레이션 플러그인 추천이 있나요?"
     a: "무료: Softube Saturation Knob, Klanghelm IVGI. 유료: Soundtoys Decapitator, Waves J37 Tape, Slate Digital Virtual Tape Machines. 보컬에는 Decapitator와 IVGI가 특히 인기 있습니다."
 ---
-![새추레이션 완전 가이드 — 스튜디오 놀](/images/service1.webp)
+![새추레이션 가이드 — 스튜디오 놀](/images/service1.webp)
 
 ## 디지털이 가지는 '차가움'을 없애는 방법
 
@@ -98,5 +98,4 @@ faq:
 
 ---
 
-[빈티지·아날로그 사운드 제작 완전 가이드](/stories/vintage-sound1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[빈티지·아날로그 사운드 제작 가이드](/stories/vintage-sound1) | [패럴렐 컴프레션 가이드](/stories/parallel-compression1) | [보컬 믹싱 가이드](/stories/vocal-mixing1) | [마스터링 가이드](/stories/mastering1)

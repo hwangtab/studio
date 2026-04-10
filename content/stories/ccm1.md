@@ -93,5 +93,4 @@ CCM·찬양 음원도 전문 레코딩 환경에서 완성해야 그 가치가 �
 
 ---
 
-[CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [교회 찬양·성가 녹음 가이드](/stories/church1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[CCM 보컬 가이드](/stories/ccm-vocal1) | [교회 찬양·성가 녹음 가이드](/stories/church1) | [음원 발매 가이드](/stories/release1) | [마스터링이란?](/stories/mastering1)

@@ -1,11 +1,11 @@
 ---
-title: "스트리밍 음악 출시 완전 가이드 — Spotify·Apple Music·멜론에 음원 등록하는 방법"
+title: "스트리밍 음악 출시 가이드 — Spotify·Apple Music·멜론에 음원 등록하는 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["스트리밍 음원 등록", "Spotify 음원 등록", "멜론 음원 등록", "음원 유통", "인디 음악 출시", "음원 디지털 배포", "애플뮤직 등록"]
 thumbnail: "/images/hardware8.webp"
-summary: "스트리밍 음악 출시 완전 가이드입니다. 디지털 유통사 비교·스트리밍 파일 준비·출시 일정 계획·저작권 등록·스트리밍 수익 구조까지 정리합니다."
+summary: "스트리밍 음악 출시 가이드입니다. 디지털 유통사 비교·스트리밍 파일 준비·출시 일정 계획·저작권 등록·스트리밍 수익 구조까지 정리합니다."
 faq:
   - q: "인디 아티스트가 Spotify에 음원을 등록하려면?"
     a: "DistroKid, TuneCore, CD Baby 등의 디지털 유통사를 통해 등록합니다. 국내 서비스는 두드림(DoodreamMusic)이 대표적입니다. 유통사에 음원 파일과 커버아트를 업로드하면 Spotify, Apple Music, 멜론 등 전 세계 플랫폼에 배포됩니다."
@@ -16,7 +16,7 @@ faq:
   - q: "음원 출시부터 스트리밍 게재까지 얼마나 걸리나요?"
     a: "DistroKid는 최소 24~48시간(한국 서비스는 7~14일 소요 가능), 멜론·지니 등 국내 플랫폼은 7~14일이 일반적입니다. 특정 날짜에 출시를 원한다면 최소 2~3주 전에 신청하는 것이 좋습니다."
 ---
-![스트리밍 음악 출시 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
+![스트리밍 음악 출시 가이드 — 스튜디오 놀](/images/hardware8.webp)
 
 ## 스트리밍 음원 출시 — 인디 아티스트 완전 가이드
 
@@ -130,5 +130,4 @@ D-0: 출시일 오전 발매
 
 ---
 
-[싱글 발매 완전 가이드](/stories/single-release1) | [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[싱글 발매 가이드](/stories/single-release1) | [마스터링 체인 가이드](/stories/mastering-chain1) | [음원 유통 가이드](/stories/music-distribution1) | [음악 마케팅 가이드](/stories/music-marketing1)

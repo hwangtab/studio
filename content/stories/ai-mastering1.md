@@ -1,11 +1,11 @@
 ---
-title: "AI 마스터링 완전 가이드 — LANDR·eMastered·Ozone AI 비교와 한계"
+title: "AI 마스터링 가이드 — LANDR·eMastered·Ozone AI 비교와 한계"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["AI 마스터링", "LANDR", "eMastered", "Ozone AI", "자동 마스터링", "AI vs 전문 마스터링", "스트리밍 마스터링"]
 thumbnail: "/images/recording2.webp"
-summary: "AI 마스터링 완전 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점, 전문 마스터링 엔지니어가 필요한 경우를 정리합니다."
+summary: "AI 마스터링 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점, 전문 마스터링 엔지니어가 필요한 경우를 정리합니다."
 faq:
   - q: "AI 마스터링이란 무엇인가요?"
     a: "머신러닝 알고리즘이 음악을 분석해 EQ·컴프레서·리미터를 자동 적용하는 마스터링 서비스입니다. LANDR, eMastered, iZotope Ozone AI Mastering 등이 대표적입니다. 몇 초~수 분 내에 마스터링된 파일을 받을 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "iZotope Ozone AI와 Matchbox는 어떤 차이가 있나요?"
     a: "Ozone Master Assistant는 트랙을 분석해 EQ·다이나믹스 설정을 제안하지만, 최종 적용 여부는 엔지니어가 결정합니다. Matchbox는 레퍼런스 트랙에 맞게 EQ를 자동 매칭합니다. 두 기능 모두 AI 보조 도구로, 완전 자동 서비스(LANDR 등)와는 다릅니다."
 ---
-![AI 마스터링 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
+![AI 마스터링 가이드 — 스튜디오 놀](/images/recording2.webp)
 
 ## AI 마스터링 — 빠르고 저렴하지만 한계가 있다
 
@@ -132,5 +132,4 @@ AI 마스터링은 강력한 도구지만 전문 엔지니어를 대체하지 �
 
 ---
 
-[마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[마스터링 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 가이드](/stories/mix-prep1) | [LUFS 가이드](/stories/lufs-guide1) | [스템 마스터링 가이드](/stories/stem-mastering1)

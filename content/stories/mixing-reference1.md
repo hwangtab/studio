@@ -1,11 +1,11 @@
 ---
-title: "믹싱 레퍼런스 트랙 완전 가이드 — 프로처럼 A/B 비교하는 방법"
+title: "믹싱 레퍼런스 트랙 가이드 — 프로처럼 A/B 비교하는 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["믹싱 레퍼런스", "레퍼런스 트랙", "A/B 비교", "믹스 비교", "레퍼런스 믹싱", "믹싱 기준", "상업 레퍼런스"]
 thumbnail: "/images/studio3.webp"
-summary: "믹싱 레퍼런스 트랙 완전 가이드입니다. 레퍼런스 트랙 선택 기준, DAW 레퍼런스 임포트 방법, LUFS 레벨 매칭, EQ·컴프레서·스테레오 이미지 A/B 비교, 장르별 레퍼런스 추천을 정리합니다."
+summary: "믹싱 레퍼런스 트랙 가이드입니다. 레퍼런스 트랙 선택 기준, DAW 레퍼런스 임포트 방법, LUFS 레벨 매칭, EQ·컴프레서·스테레오 이미지 A/B 비교, 장르별 레퍼런스 추천을 정리합니다."
 faq:
   - q: "믹싱 레퍼런스 트랙이란 무엇인가요?"
     a: "믹싱 중 목표로 하는 상업적으로 완성된 곡입니다. 내 믹스와 레퍼런스를 A/B 비교해 EQ 밸런스, 컴프레션 양, 스테레오 이미지, 음량 등을 객관적으로 평가하는 데 사용합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "레퍼런스 트랙 저작권 문제는 없나요?"
     a: "DAW 세션 내에서 개인 작업 참고용으로 사용하는 것은 문제가 없습니다. 단, 레퍼런스 트랙이 포함된 세션 파일을 외부에 공유하거나 레퍼런스 음원을 직접 배포하는 것은 저작권 위반입니다."
 ---
-![믹싱 레퍼런스 트랙 완전 가이드 — 스튜디오 놀](/images/studio3.webp)
+![믹싱 레퍼런스 트랙 가이드 — 스튜디오 놀](/images/studio3.webp)
 
 ## 믹싱 레퍼런스 — 프로 사운드로 가는 나침반
 
@@ -151,5 +151,4 @@ faq:
 
 ---
 
-[강좌 제6부: 눈으로 소리 읽기](/stories/mixing6) | [강좌 제10부: 황금 귀 만들기](/stories/mixing10) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[강좌 제6부: 눈으로 소리 읽기](/stories/mixing6) | [강좌 제10부: 황금 귀 만들기](/stories/mixing10) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1)

@@ -1,11 +1,11 @@
 ---
-title: "복식호흡·횡격막 발성 완전 가이드 — 보컬 호흡 훈련법"
+title: "복식호흡·횡격막 발성 가이드 — 보컬 호흡 훈련법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "보컬 가이드"
 tags: ["복식호흡", "횡격막 발성", "보컬 호흡법", "다이어프램 호흡", "보컬 호흡 훈련", "흉식호흡 차이", "노래 호흡법"]
 thumbnail: "/images/lesson1.webp"
-summary: "복식호흡·횡격막 발성 완전 가이드입니다. 복식호흡과 흉식호흡의 차이, 횡격막 발성 훈련 방법, 호흡 지지(Breath Support), 보컬 스태미나 향상 연습법을 정리합니다."
+summary: "복식호흡·횡격막 발성 가이드입니다. 복식호흡과 흉식호흡의 차이, 횡격막 발성 훈련 방법, 호흡 지지(Breath Support), 보컬 스태미나 향상 연습법을 정리합니다."
 faq:
   - q: "복식호흡이란 무엇이고 왜 중요한가요?"
     a: "복식호흡(Diaphragmatic Breathing)은 횡격막(다이어프램)을 이용해 배를 팽창시키며 호흡하는 방식입니다. 노래에서 복식호흡을 사용하면 ①더 많은 호흡량 확보, ②안정적인 음정·음색 유지, ③장시간 노래에도 피로 감소 효과가 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "노래할 때 복식호흡이 안 되는 이유는?"
     a: "일상에서는 흉식호흡이 습관화되어 있기 때문입니다. 또한 노래 중 감정이 올라오거나 긴장하면 자동으로 흉식호흡으로 돌아갑니다. 복식호흡은 의도적인 훈련으로 근육 기억(Muscle Memory)을 형성해야 합니다."
 ---
-![복식호흡·횡격막 발성 완전 가이드 — 스튜디오 놀](/images/lesson1.webp)
+![복식호흡·횡격막 발성 가이드 — 스튜디오 놀](/images/lesson1.webp)
 
 ## 복식호흡 — 보컬의 모든 것을 결정하는 호흡 기초
 
@@ -143,5 +143,4 @@ faq:
 
 ---
 
-[호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 공명 완전 가이드](/stories/vocal-resonance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 발음·발성 완전 가이드](/stories/vocal-diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[호흡 지지 가이드](/stories/breath-support1) | [보컬 공명 가이드](/stories/vocal-resonance1) | [보컬 워밍업 가이드](/stories/vocal-warmup1) | [보컬 발음·발성 가이드](/stories/vocal-diction1)

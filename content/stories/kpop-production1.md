@@ -1,11 +1,11 @@
 ---
-title: "K-POP 프로덕션 완전 가이드 — 아이돌 음반 제작 흐름과 보컬 제작"
+title: "K-POP 프로덕션 가이드 — 아이돌 음반 제작 흐름과 보컬 제작"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["K-POP 프로덕션", "케이팝 음반 제작", "아이돌 음반", "K-POP 보컬 제작", "K-POP 믹싱", "케이팝 마스터링", "보컬 프로덕션"]
 thumbnail: "/images/lesson1.webp"
-summary: "K-POP 프로덕션 완전 가이드입니다. K-POP 음반 제작 흐름(작곡·편곡·보컬 레코딩·믹싱·마스터링), 보컬 프로세싱, 오토튠 활용, K-POP 믹싱 사운드 특징을 정리합니다."
+summary: "K-POP 프로덕션 가이드입니다. K-POP 음반 제작 흐름(작곡·편곡·보컬 레코딩·믹싱·마스터링), 보컬 프로세싱, 오토튠 활용, K-POP 믹싱 사운드 특징을 정리합니다."
 faq:
   - q: "K-POP 음반 제작 흐름은 어떻게 되나요?"
     a: "작곡·작사 → 편곡(프로듀싱) → 데모 녹음 → 보컬 디렉팅·레코딩 → 믹싱 → 마스터링 → 유통/발매 순서입니다. 인디 아티스트나 솔로는 작곡부터 발매까지 스튜디오 1~2곳에서 진행할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "K-POP 오토튠은 어떻게 사용하나요?"
     a: "Auto-Tune(Melodyne) Retune Speed를 빠르게 설정하면 'T-Pain 스타일' 강한 오토튠, 느리게 설정하면 자연스러운 피치 보정이 됩니다. K-POP 메인스트림은 자연스러운 피치 보정에 가까운 설정을 주로 사용하며, 후렴에서는 더 선명하게 처리합니다."
 ---
-![K-POP 프로덕션 완전 가이드 — 스튜디오 놀](/images/lesson1.webp)
+![K-POP 프로덕션 가이드 — 스튜디오 놀](/images/lesson1.webp)
 
 ## K-POP 프로덕션 — 완성도 높은 케이팝 음반 만들기
 
@@ -123,5 +123,4 @@ K-POP 프로덕션은 전문 스튜디오와 엔지니어의 협업으로 완성
 
 ---
 
-[보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [K-POP 보컬 완전 가이드](/stories/kpop-vocal1) | [아이돌·K팝 보컬 가이드](/stories/idol-vocal1) | [K-POP 오디션 준비 가이드](/stories/kpop-audition1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 프로듀서 가이드](/stories/vocal-producer1) | [K-POP 보컬 가이드](/stories/kpop-vocal1) | [아이돌·K팝 보컬 가이드](/stories/idol-vocal1) | [K-POP 오디션 준비 가이드](/stories/kpop-audition1)

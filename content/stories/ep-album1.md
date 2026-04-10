@@ -1,11 +1,11 @@
 ---
-title: "EP 앨범 제작 완전 가이드 — 인디 EP 기획·녹음·믹싱·발매까지"
+title: "EP 앨범 제작 가이드 — 인디 EP 기획·녹음·믹싱·발매까지"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["EP 앨범 제작", "EP 만들기", "인디 EP", "EP 발매", "앨범 제작 가이드", "EP 기획", "인디 음반 제작"]
 thumbnail: "/images/hardware8.webp"
-summary: "EP 앨범 제작 완전 가이드입니다. EP 기획·트랙 선정·예산 계획·녹음·믹싱·마스터링·아트워크·스트리밍 발매까지 처음 EP를 제작하는 뮤지션을 위한 단계별 가이드입니다."
+summary: "EP 앨범 제작 가이드입니다. EP 기획·트랙 선정·예산 계획·녹음·믹싱·마스터링·아트워크·스트리밍 발매까지 처음 EP를 제작하는 뮤지션을 위한 단계별 가이드입니다."
 faq:
   - q: "EP 앨범이란 무엇인가요?"
     a: "EP(Extended Play)는 싱글(1~2곡)보다 많고 정규 앨범(10곡 이상)보다 적은 형태의 음반입니다. 일반적으로 3~6곡, 10~25분 분량입니다. 인디 뮤지션이 처음 발표하는 음반 형식으로 가장 적합합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "EP는 어디에 발매하나요?"
     a: "멜론·스포티파이·애플뮤직 등 주요 스트리밍 플랫폼에는 음악 배급사(뮤직카우, 소리바다, KAKAOM 등)를 통해 등록합니다. Distrokid, TuneCore 같은 국제 배급사도 이용 가능합니다. 발매 2~3주 전에 배급 신청해야 합니다."
 ---
-![EP 앨범 제작 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
+![EP 앨범 제작 가이드 — 스튜디오 놀](/images/hardware8.webp)
 
 ## EP 앨범 — 음악 커리어의 첫 번째 이정표
 
@@ -160,5 +160,4 @@ EP 앨범은 음악 커리어의 시작점입니다. 카카오톡으로 EP 제�
 
 ---
 
-[인디 음악 제작 완전 가이드](/stories/indie-production1) | [음원 싱글 발매 완전 가이드](/stories/single-release1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스트리밍 플랫폼 완전 가이드](/stories/streaming-platforms1)
-[스튜디오 놀 이용 요금](/pricing)
+[인디 음악 제작 가이드](/stories/indie-production1) | [음원 싱글 발매 가이드](/stories/single-release1) | [음악 배급·유통 가이드](/stories/music-distribution1) | [스트리밍 플랫폼 가이드](/stories/streaming-platforms1)

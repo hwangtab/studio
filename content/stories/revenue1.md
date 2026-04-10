@@ -107,4 +107,3 @@ faq:
 ---
 
 [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [플레이리스트 피칭 전략](/stories/playlist1) | [음악 저작권 등록 방법](/stories/copyright1) | [인디 뮤지션 SNS 마케팅](/stories/snsmusic1)
-[스튜디오 놀 이용 요금](/pricing)

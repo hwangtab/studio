@@ -1,11 +1,11 @@
 ---
-title: "드럼 녹음 완전 가이드 — 마이킹 배치·룸 어쿠스틱·드럼 EQ 실전 방법"
+title: "드럼 녹음 가이드 — 마이킹 배치·룸 어쿠스틱·드럼 EQ 실전 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["드럼 녹음", "드럼 마이킹", "킥 마이킹", "스네어 마이킹", "오버헤드 마이킹", "드럼 EQ", "드럼 레코딩"]
 thumbnail: "/images/hardware4.webp"
-summary: "드럼 녹음 완전 가이드입니다. 킥·스네어·오버헤드·룸 마이크 배치, 드럼 주파수별 EQ 설정값, 드럼 튜닝 체크리스트, 전자 드럼 녹음 방법을 정리합니다."
+summary: "드럼 녹음 가이드입니다. 킥·스네어·오버헤드·룸 마이크 배치, 드럼 주파수별 EQ 설정값, 드럼 튜닝 체크리스트, 전자 드럼 녹음 방법을 정리합니다."
 faq:
   - q: "드럼 녹음에 최소 몇 개의 마이크가 필요한가요?"
     a: "최소 2개(오버헤드 스테레오)로 전체 드럼 사운드를 잡을 수 있습니다. 3개라면 킥 + 오버헤드 2개(3-mic 세팅)가 가장 효율적입니다. 전문 스튜디오는 8~12개로 각 드럼을 개별 녹음합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "전자 드럼을 녹음할 때 주의사항은 무엇인가요?"
     a: "전자 드럼은 드럼 패드의 MIDI 신호를 DAW에서 받아 VST 드럼 샘플로 트리거합니다. 이때 MIDI 벨로시티와 다이나믹이 자연스럽게 표현되는지 확인하고, 레이턴시(Latency) 최소화가 중요합니다."
 ---
-![드럼 녹음 완전 가이드 — 스튜디오 놀](/images/hardware4.webp)
+![드럼 녹음 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
 ## 드럼 녹음 — 밴드 사운드의 심장 레코딩
 
@@ -127,5 +127,4 @@ faq:
 
 ---
 
-[현악기·관악기 레코딩 완전 가이드](/stories/strings-recording1) | [기타 녹음 완전 가이드](/stories/guitar-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[현악기·관악기 레코딩 가이드](/stories/strings-recording1) | [기타 녹음 가이드](/stories/guitar-recording1) | [베이스 녹음 가이드](/stories/bass-recording1) | [마이크 종류 가이드](/stories/microphone-types1)

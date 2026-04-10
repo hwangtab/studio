@@ -1,11 +1,11 @@
 ---
-title: "베이스 녹음 완전 가이드 — DI·앰프 마이킹·베이스 EQ 실전 방법"
+title: "베이스 녹음 가이드 — DI·앰프 마이킹·베이스 EQ 실전 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["베이스 녹음", "베이스 DI 녹음", "베이스 앰프 마이킹", "베이스 EQ", "베이스 믹싱", "일렉 베이스 레코딩", "베이스 프리앰프"]
 thumbnail: "/images/portfolio2.webp"
-summary: "베이스 녹음 완전 가이드입니다. DI 베이스 녹음 vs 앰프 마이킹, 베이스 주파수 특성, 베이스 EQ·컴프레서 설정값, DI+앰프 블렌드 기법을 정리합니다."
+summary: "베이스 녹음 가이드입니다. DI 베이스 녹음 vs 앰프 마이킹, 베이스 주파수 특성, 베이스 EQ·컴프레서 설정값, DI+앰프 블렌드 기법을 정리합니다."
 faq:
   - q: "베이스는 DI로 녹음하는 것이 좋나요, 앰프로 녹음하는 것이 좋나요?"
     a: "DI 녹음은 클린하고 일관된 신호를 얻을 수 있어 홈 레코딩에 유리합니다. 앰프 마이킹은 앰프 특유의 질감과 따뜻함을 잡을 수 있습니다. 전문 스튜디오에서는 DI와 앰프 마이킹을 동시에 하여 믹싱 시 블렌딩하는 방식을 자주 사용합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "베이스와 킥 드럼이 겹치는 문제를 어떻게 해결하나요?"
     a: "사이드체인 컴프레서를 활용해 킥 드럼이 타격할 때 베이스 볼륨을 잠깐 줄이거나, 베이스와 킥 드럼의 주파수 영역을 EQ로 구분합니다. 킥은 60~80Hz를 강조하고 베이스는 그 위에, 또는 반대로 역할을 나누는 것이 일반적입니다."
 ---
-![베이스 녹음 완전 가이드 — 스튜디오 놀](/images/portfolio2.webp)
+![베이스 녹음 가이드 — 스튜디오 놀](/images/portfolio2.webp)
 
 ## 베이스 — 믹스의 기반을 만드는 저역 악기 녹음
 
@@ -132,5 +132,4 @@ faq:
 
 ---
 
-[기타 녹음 완전 가이드](/stories/guitar-recording1) | [드럼 녹음 완전 가이드](/stories/drum-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[기타 녹음 가이드](/stories/guitar-recording1) | [드럼 녹음 가이드](/stories/drum-recording1) | [마이크 종류 가이드](/stories/microphone-types1) | [믹싱 오토메이션 가이드](/stories/mixing-automation1)

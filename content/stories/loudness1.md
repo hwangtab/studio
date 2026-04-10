@@ -1,5 +1,5 @@
 ---
-title: "음압(LUFS)과 스트리밍 마스터링 완전 가이드"
+title: "음압(LUFS)과 스트리밍 마스터링 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "마스터링 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "True Peak은 무엇인가요?"
     a: "True Peak은 디지털 신호를 아날로그로 변환할 때 발생할 수 있는 최대 피크 레벨입니다. 스트리밍 마스터링에서는 True Peak을 -1 dBTP 이하로 설정하는 것이 표준입니다. 이를 초과하면 변환 과정에서 클리핑(왜곡)이 발생할 수 있습니다."
 ---
-![음압(LUFS)과 스트리밍 마스터링 완전 가이드 — 스튜디오 놀](/images/hardware1.webp)
+![음압(LUFS)과 스트리밍 마스터링 가이드 — 스튜디오 놀](/images/hardware1.webp)
 
 ## 스트리밍 시대의 마스터링
 
@@ -96,5 +96,4 @@ faq:
 
 ---
 
-[마스터링 완전 가이드](/stories/mastering1) | [믹싱 완전 가이드](/stories/mixing1) | [음원 발매·유통 가이드](/stories/release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[마스터링 가이드](/stories/mastering1) | [믹싱 가이드](/stories/mixing1) | [음원 발매·유통 가이드](/stories/release1)

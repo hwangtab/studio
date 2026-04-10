@@ -1,5 +1,5 @@
 ---
-title: "트왕(Twang) 발성 완전 가이드 — 밝고 날카로운 목소리를 내는 발성 기술"
+title: "트왕(Twang) 발성 가이드 — 밝고 날카로운 목소리를 내는 발성 기술"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -16,7 +16,7 @@ faq:
   - q: "트왕을 사용하면 어떤 장점이 있나요?"
     a: "같은 힘으로 더 선명하고 멀리 들리는 소리를 만들 수 있습니다. 고음 발성 시 성대 부담이 줄고 투명한 음색이 됩니다. 벨팅과 결합하면 강력하면서도 명료한 고음을 만들 수 있습니다."
 ---
-![트왕 발성 완전 가이드 — 스튜디오 놀](/images/service4.webp)
+![트왕 발성 가이드 — 스튜디오 놀](/images/service4.webp)
 
 ## 작은 힘으로 더 멀리 전달하는 기술
 
@@ -80,5 +80,4 @@ faq:
 
 ---
 
-[벨팅 발성법 완전 가이드](/stories/belting1) | [마스크 공명·보컬 포지션 가이드](/stories/placement1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1) | [믹스 보이스 완전 가이드](/stories/mixvoice1)
-[스튜디오 놀 이용 요금](/pricing)
+[벨팅 발성법 가이드](/stories/belting1) | [마스크 공명·보컬 포지션 가이드](/stories/placement1) | [보컬 공명 훈련 가이드](/stories/resonance1) | [믹스 보이스 가이드](/stories/mixvoice1)

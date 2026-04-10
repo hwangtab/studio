@@ -1,5 +1,5 @@
 ---
-title: "MP3 vs WAV 차이 완전 가이드 — 녹음·발매·유튜브에 맞는 파일 형식 선택"
+title: "MP3 vs WAV 차이 가이드 — 녹음·발매·유튜브에 맞는 파일 형식 선택"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -113,5 +113,4 @@ WAV 44.1kHz/24bit = 약 47~50MB
 
 ---
 
-[녹음 파일 납품 형식 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [MR 구하는 방법 가이드](/stories/mr-guide1) | [마스터링이란?](/stories/mastering1)
-[스튜디오 놀 이용 요금](/pricing)
+[녹음 파일 납품 형식 가이드](/stories/stemfile1) | [MR 구하는 방법 가이드](/stories/mr-guide1) | [마스터링이란?](/stories/mastering1)

@@ -21,22 +21,36 @@ export interface StoryFrontmatter {
   faq?: StoryFAQItem[];
 }
 
-/**
- * Processed story object with computed fields
- * Returned by getAllStories() and getStoryDetail()
- */
-export interface Story {
+export const STORY_CATEGORY_KEYS = [
+  'news',
+  'lesson',
+  'feedback',
+  'region',
+  'instrument',
+  'music-guide',
+] as const;
+
+export type StoryCategoryKey = typeof STORY_CATEGORY_KEYS[number];
+
+export interface StoryListItem {
   id: string;
   slug: string;
   title: string;
   date: string; // ISO 8601 format
   createdAt: string; // ISO 8601 format
-  author: string;
   category: string;
-  categoryKey: string;
-  tags: string[];
+  categoryKey: StoryCategoryKey;
   summary: string;
   thumbnail: string | null;
+}
+
+/**
+ * Processed story object with computed fields
+ * Returned by getAllStories() and getStoryDetail()
+ */
+export interface Story extends StoryListItem {
+  author: string;
+  tags: string[];
   thumbnailDerived: boolean;
   images: string[];
   content?: string;

@@ -1,11 +1,11 @@
 ---
-title: "스튜디오 모니터 스피커 완전 가이드 — 니어필드 모니터 선택과 청음 환경 세팅"
+title: "스튜디오 모니터 스피커 가이드 — 니어필드 모니터 선택과 청음 환경 세팅"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "장비 가이드"
 tags: ["스튜디오 모니터", "모니터 스피커", "니어필드 모니터", "믹싱 스피커", "젠렉", "야마하 HS", "KRK", "모니터 스피커 추천"]
 thumbnail: "/images/recording1.webp"
-summary: "스튜디오 모니터 스피커 완전 가이드입니다. 니어필드 모니터의 역할, 소비자용 스피커와의 차이, 청음 환경 세팅법, 모니터 볼륨 기준, 가격대별 추천 모델을 정리합니다."
+summary: "스튜디오 모니터 스피커 가이드입니다. 니어필드 모니터의 역할, 소비자용 스피커와의 차이, 청음 환경 세팅법, 모니터 볼륨 기준, 가격대별 추천 모델을 정리합니다."
 faq:
   - q: "스튜디오 모니터 스피커가 왜 필요한가요?"
     a: "소비자용 스피커는 저음을 인위적으로 강조하거나 소리를 좋게 만드는 이퀄라이징이 적용되어 있습니다. 스튜디오 모니터는 최대한 평탄한 주파수 응답을 목표로 해 믹스의 문제점을 정확하게 파악하고 보정할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "모니터 스피커 추천 모델은?"
     a: "입문~중급: 야마하 HS5/HS7, KRK Rokit 5 G4, Presonus Eris E5 XT. 중급~전문: 젠렉(Genelec) 8020/8030, 이브 오디오(Eve Audio) SC205/SC207, Adam Audio A5X/A7X. 예산과 방 크기에 맞게 선택하세요."
 ---
-![스튜디오 모니터 스피커 완전 가이드 — 스튜디오 놀](/images/recording1.webp)
+![스튜디오 모니터 스피커 가이드 — 스튜디오 놀](/images/recording1.webp)
 
 ## 스튜디오 모니터 스피커 — 정확한 청음의 시작
 
@@ -114,5 +114,4 @@ faq:
 
 ---
 
-[헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [어쿠스틱 트리트먼트 완전 가이드](/stories/acoustic-treatment1) | [홈 레코딩 첫 장비 가이드](/stories/homegear1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[헤드폰 믹싱 가이드](/stories/headphone-mix1) | [어쿠스틱 트리트먼트 가이드](/stories/acoustic-treatment1) | [홈 레코딩 첫 장비 가이드](/stories/homegear1) | [믹싱 체인 가이드](/stories/mixing-chain1)

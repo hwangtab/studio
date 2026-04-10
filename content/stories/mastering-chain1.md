@@ -1,11 +1,11 @@
 ---
-title: "마스터링 체인 완전 가이드 — 스트리밍 시대의 마스터링 신호 체인"
+title: "마스터링 체인 가이드 — 스트리밍 시대의 마스터링 신호 체인"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["마스터링 체인", "마스터링 신호 체인", "마스터링 EQ", "마스터링 컴프레서", "마스터링 리미터", "LUFS 마스터링", "스트리밍 마스터링"]
 thumbnail: "/images/hardware2.webp"
-summary: "마스터링 체인 완전 가이드입니다. 스트리밍 시대 마스터링 신호 체인 구성, EQ·컴프레서·스테레오 이미저·리미터 순서, LUFS 목표치, 마스터링 플러그인 비교를 정리합니다."
+summary: "마스터링 체인 가이드입니다. 스트리밍 시대 마스터링 신호 체인 구성, EQ·컴프레서·스테레오 이미저·리미터 순서, LUFS 목표치, 마스터링 플러그인 비교를 정리합니다."
 faq:
   - q: "마스터링 신호 체인의 기본 순서는?"
     a: "일반적으로 EQ → 컴프레서(SSL G-Bus 또는 1176) → 스테레오 이미저 → EQ(최종) → 리미터 순서입니다. 새추레이션을 사용하는 경우 컴프레서 전후에 배치하기도 합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "마스터링 리미터로 어떤 플러그인이 좋은가요?"
     a: "FabFilter Pro-L 2, iZotope Ozone Maximizer, Waves L3-LL Multimaximizer, Sonnox Oxford Limiter가 대표적입니다. FabFilter Pro-L 2는 투명한 리미팅과 LUFS 미터 내장으로 업계 표준으로 사용됩니다."
 ---
-![마스터링 체인 완전 가이드 — 스튜디오 놀](/images/hardware2.webp)
+![마스터링 체인 가이드 — 스튜디오 놀](/images/hardware2.webp)
 
 ## 마스터링 체인 — 최종 사운드를 완성하다
 
@@ -158,5 +158,4 @@ Waves Abbey Road TG Mastering Chain:
 
 ---
 
-[스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[스트리밍 음악 출시 가이드](/stories/streaming-release1) | [SSL G-Bus 컴프레서 가이드](/stories/ssl-bus1) | [FabFilter Pro-Q3 가이드](/stories/fabfilter1) | [스템 마스터링 가이드](/stories/stem-mastering1)

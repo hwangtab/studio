@@ -1,5 +1,5 @@
 ---
-title: "사운드클라우드 음원 업로드·공유 완전 가이드 — 인디 아티스트를 위한 활용법"
+title: "사운드클라우드 음원 업로드·공유 가이드 — 인디 아티스트를 위한 활용법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음원 배포 가이드"
@@ -90,5 +90,4 @@ faq:
 
 ---
 
-[인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음원 발매·유통 가이드](/stories/release1) | [유튜브 음원 업로드 가이드](/stories/youtube1) | [커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [음원 스트리밍 수익 구조](/stories/streaming1)
-[스튜디오 놀 이용 요금](/pricing)
+[인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음원 발매·유통 가이드](/stories/release1) | [유튜브 음원 업로드 가이드](/stories/youtube1) | [커버 곡 저작권 가이드](/stories/copyright-cover1)

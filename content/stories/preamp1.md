@@ -1,5 +1,5 @@
 ---
-title: "마이크 프리앰프 완전 가이드 — 보컬 녹음 음색에 미치는 영향"
+title: "마이크 프리앰프 가이드 — 보컬 녹음 음색에 미치는 영향"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "장비 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "홈 레코딩에서 외장 프리앰프가 필요한가요?"
     a: "입문~중급 단계에서는 필수가 아닙니다. UA Apollo, Focusrite Scarlett 4세대, MOTU M2 등 최신 인터페이스의 내장 프리앰프 품질이 크게 향상되었습니다. 마이크와 공간 환경이 더 중요합니다."
 ---
-![마이크 프리앰프 완전 가이드 — 스튜디오 놀](/images/room5.webp)
+![마이크 프리앰프 가이드 — 스튜디오 놀](/images/room5.webp)
 
 ## 프리앰프란?
 
@@ -94,5 +94,4 @@ faq:
 
 ---
 
-[오디오 인터페이스 완전 가이드](/stories/interface1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [녹음 헤드폰 가이드](/stories/headphone1)
-[스튜디오 놀 이용 요금](/pricing)
+[오디오 인터페이스 가이드](/stories/interface1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [녹음 헤드폰 가이드](/stories/headphone1)

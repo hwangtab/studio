@@ -8,10 +8,10 @@ import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
 import type { Locale } from '../lib/i18n';
 
-import type { Story } from '../types/story';
+import type { Story, StoryListItem } from '../types/story';
 
 interface StoryCardProps {
-  story: Story;
+  story: Story | StoryListItem;
   locale?: Locale;
   labels?: {
     defaultCategory: string;
@@ -30,15 +30,15 @@ const cardVariants = {
 const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) => {
   const thumbnailUrl = React.useMemo(() => {
     if (story.thumbnail) return story.thumbnail;
-    if (!story.content) return null;
+    if (!('content' in story) || !story.content) return null;
     return extractFirstImageUrl(story.content);
-  }, [story.content, story.thumbnail]);
+  }, [story]);
 
   const plainSummary = React.useMemo(() => {
     if (story.summary) return story.summary;
-    if (!story.content) return '';
+    if (!('content' in story) || !story.content) return '';
     return summarizeText(story.content, 120, { stripMarkdown: true });
-  }, [story.content, story.summary]);
+  }, [story]);
 
   const slug = story.slug || story.id;
   const href = `/${locale}/stories/${slug}`;

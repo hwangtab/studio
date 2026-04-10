@@ -1,5 +1,5 @@
 ---
-title: "커버 곡 저작권 완전 가이드 — 유튜브·SNS 업로드 시 주의사항"
+title: "커버 곡 저작권 가이드 — 유튜브·SNS 업로드 시 주의사항"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "저작권 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "커버 곡 음원을 스트리밍 플랫폼에 발매할 수 있나요?"
     a: "가능합니다. 단, 저작권자에게 기계적 복제 허락(mechanical license)을 받아야 합니다. 국내의 경우 KOMCA에 신청하거나 유통사를 통해 처리할 수 있습니다. MR을 직접 제작해야 원반 권리도 본인에게 귀속됩니다."
 ---
-![커버 곡 저작권 완전 가이드 — 스튜디오 놀](/images/hardware3.webp)
+![커버 곡 저작권 가이드 — 스튜디오 놀](/images/hardware3.webp)
 
 ## 커버 곡과 저작권
 
@@ -104,5 +104,4 @@ faq:
 
 ---
 
-[커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[커버 곡 녹음 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1)

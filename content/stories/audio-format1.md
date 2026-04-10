@@ -1,11 +1,11 @@
 ---
-title: "음원 파일 형식 완전 가이드 — WAV·MP3·FLAC·AAC 차이와 선택법"
+title: "음원 파일 형식 가이드 — WAV·MP3·FLAC·AAC 차이와 선택법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["음원 파일 형식", "WAV MP3 차이", "FLAC 오디오", "음원 형식 선택", "비트레이트", "오디오 품질", "마스터 파일 형식"]
 thumbnail: "/images/studio5.webp"
-summary: "음원 파일 형식 완전 가이드입니다. WAV·MP3·FLAC·AAC·AIFF의 차이점, 용도별 최적 형식 선택, 녹음·믹싱·유통별 권장 스펙, 샘플레이트·비트뎁스 이해를 정리합니다."
+summary: "음원 파일 형식 가이드입니다. WAV·MP3·FLAC·AAC·AIFF의 차이점, 용도별 최적 형식 선택, 녹음·믹싱·유통별 권장 스펙, 샘플레이트·비트뎁스 이해를 정리합니다."
 faq:
   - q: "녹음·믹싱 시 어떤 파일 형식을 사용해야 하나요?"
     a: "녹음과 믹싱에는 반드시 WAV(PCM, 24bit/48kHz 이상)를 사용해야 합니다. MP3는 손실 압축 포맷으로 편집·믹싱에 사용하면 음질이 손상됩니다."
@@ -16,7 +16,7 @@ faq:
   - q: "비트레이트(bitrate)와 비트뎁스(bit depth)는 다른가요?"
     a: "다릅니다. 비트레이트(kbps)는 MP3 같은 압축 포맷의 품질 수치입니다. 비트뎁스(16bit/24bit)는 WAV 등 무손실 포맷에서 음의 다이나믹 레인지를 결정합니다. 24bit가 16bit보다 다이나믹 레인지가 넓어 녹음·믹싱에 적합합니다."
 ---
-![음원 파일 형식 완전 가이드 — 스튜디오 놀](/images/studio5.webp)
+![음원 파일 형식 가이드 — 스튜디오 놀](/images/studio5.webp)
 
 ## 파일 형식 — 같은 음악, 다른 품질
 
@@ -125,5 +125,4 @@ MP3 최고 품질 (일반 배포 권장)
 
 ---
 
-[온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 유통 완전 가이드](/stories/music-distribution1)
-[스튜디오 놀 이용 요금](/pricing)
+[마스터링 가이드](/stories/mastering1) | [셀프 보컬 녹음 가이드](/stories/self-recording1) | [홈 레코딩 가이드](/stories/home-recording1) | [음원 유통 가이드](/stories/music-distribution1)

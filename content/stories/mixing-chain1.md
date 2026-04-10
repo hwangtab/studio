@@ -1,11 +1,11 @@
 ---
-title: "믹싱 체인 완전 가이드 — 보컬 플러그인 순서·신호 흐름 최적화"
+title: "믹싱 체인 가이드 — 보컬 플러그인 순서·신호 흐름 최적화"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "믹싱 가이드"
 tags: ["믹싱 체인", "플러그인 순서", "신호 흐름", "보컬 플러그인 체인", "믹싱 워크플로우", "Insert FX 순서", "믹싱 기본"]
 thumbnail: "/images/portfolio3.webp"
-summary: "믹싱 체인 완전 가이드입니다. 보컬 Insert FX 플러그인 순서(EQ·컴프레서·딜레이·리버브), Send/Return 활용법, 게인 스테이징, 믹싱 신호 흐름을 정리합니다."
+summary: "믹싱 체인 가이드입니다. 보컬 Insert FX 플러그인 순서(EQ·컴프레서·딜레이·리버브), Send/Return 활용법, 게인 스테이징, 믹싱 신호 흐름을 정리합니다."
 faq:
   - q: "보컬 믹싱 플러그인 순서는 어떻게 되나요?"
     a: "일반적인 보컬 Insert FX 순서: ①노이즈 게이트 → ②EQ(보정용) → ③컴프레서 → ④EQ(조색용) → ⑤디에서/하모닉 익스사이터 → ⑥리미터입니다. 딜레이·리버브는 Send/Return 방식으로 별도 처리가 권장됩니다."
@@ -16,7 +16,7 @@ faq:
   - q: "믹싱 체인에서 게인 스테이징은 왜 중요한가요?"
     a: "각 플러그인 단계에서 신호 레벨이 너무 크거나 작으면 왜곡이나 노이즈가 발생합니다. 일반적으로 각 플러그인 출력 레벨을 -18 ~ -12dBFS 범위에서 관리하면 클리핑 없이 안정적인 믹싱이 가능합니다."
 ---
-![믹싱 체인 완전 가이드 — 스튜디오 놀](/images/portfolio3.webp)
+![믹싱 체인 가이드 — 스튜디오 놀](/images/portfolio3.webp)
 
 ## 믹싱 체인 — 신호 흐름이 사운드 품질을 결정한다
 
@@ -138,5 +138,4 @@ Aux 2 (Reverb Send)
 
 ---
 
-[강좌 제8부: 게인 스테이징](/stories/mixing8) | [강좌 제16부: EQ](/stories/mixing16) | [강좌 제17부: 컴프레서](/stories/mixing17) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [스펙트럼 분석기 완전 가이드](/stories/spectrum-analyzer1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[강좌 제8부: 게인 스테이징](/stories/mixing8) | [강좌 제16부: EQ](/stories/mixing16) | [강좌 제17부: 컴프레서](/stories/mixing17) | [믹싱 오토메이션 가이드](/stories/mixing-automation1)

@@ -87,4 +87,3 @@ faq:
 ---
 
 [노래방 연습 방법 가이드](/stories/karaoke-practice1) | [합주실 vs 녹음실 차이](/stories/rehearsal1) | [홈 레코딩 vs 스튜디오 비교](/stories/homestudio1) | [첫 녹음 세션 준비 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)

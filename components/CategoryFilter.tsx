@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import { m } from 'framer-motion';
@@ -8,19 +9,21 @@ interface CategoryBase {
   id: string;
   label: string;
   color?: string;
+  href?: string;
 }
 
 interface CategoryObject {
   id: string;
   name: string;
   color?: string;
+  href?: string;
 }
 
 type CategoryInput = string | CategoryObject | CategoryBase;
 
 interface CategoryFilterProps {
   activeCategory: string;
-  setActiveCategory: (category: string) => void;
+  setActiveCategory?: (category: string) => void;
   categories: readonly CategoryInput[];
   showTitle?: boolean;
   titleIcon?: React.ElementType<{ className?: string }> | null;
@@ -53,7 +56,8 @@ const CategoryFilter = ({
       return {
         id: category.id,
         label: category.name,
-        color: category.color
+        color: category.color,
+        href: category.href,
       };
     }
     if (typeof category === 'string') {
@@ -91,20 +95,42 @@ const CategoryFilter = ({
             const customStyle = useCustomColors && isActive && category.color
               ? { backgroundColor: category.color }
               : {};
+            const className = `${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+              ? useCustomColors && category.color
+                ? 'text-white shadow-lg'
+                : 'bg-primary text-white shadow-lg'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`;
+
+            if (category.href) {
+              return (
+                <m.div
+                  key={category.id}
+                  animate={{ scale: isActive ? 1.05 : 1 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  whileHover={HOVER_SCALE}
+                  whileTap={TAP_SCALE}
+                >
+                  <Link
+                    href={category.href}
+                    className={`inline-flex items-center justify-center ${className}`}
+                    style={customStyle}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {category.label}
+                  </Link>
+                </m.div>
+              );
+            }
 
             return (
               <m.button
                 key={category.id}
                 type="button"
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => setActiveCategory?.(category.id)}
                 animate={{ scale: isActive ? 1.05 : 1 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
-                  ? useCustomColors && category.color
-                    ? 'text-white shadow-lg'
-                    : 'bg-primary text-white shadow-lg'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
+                className={className}
                 style={customStyle}
                 whileHover={HOVER_SCALE}
                 whileTap={TAP_SCALE}

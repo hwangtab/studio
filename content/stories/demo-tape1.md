@@ -1,5 +1,5 @@
 ---
-title: "데모 녹음·데모 테이프 완전 가이드 — 오디션·기획사 제출용 데모 제작 방법"
+title: "데모 녹음·데모 테이프 가이드 — 오디션·기획사 제출용 데모 제작 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "데모 녹음에 풀 프로덕션(MR)이 필요한가요?"
     a: "기획사나 제출처에 따라 다릅니다. 일부는 피아노 반주 또는 드라이 보컬만으로도 충분합니다. 오히려 과한 프로덕션보다 순수한 보컬 실력이 드러나는 것을 선호하는 경우도 많습니다."
 ---
-![데모 녹음·데모 테이프 완전 가이드 — 스튜디오 놀](/images/room2.webp)
+![데모 녹음·데모 테이프 가이드 — 스튜디오 놀](/images/room2.webp)
 
 ## 데모 녹음의 목적은 '실력 어필'
 
@@ -114,5 +114,4 @@ faq:
 
 ---
 
-[보컬 데모 녹음 완전 가이드](/stories/vocal-demo1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 데모 녹음 가이드](/stories/vocal-demo1) | [오디션 보컬 가이드](/stories/audition-vocal1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 가이드](/stories/music-distribution1)

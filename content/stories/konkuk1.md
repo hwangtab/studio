@@ -81,9 +81,9 @@ faq:
 
 ## 마치며
 
-건대입구·광진구에서 40분대, 연신내 스튜디오 놀에서 전문 보컬 녹음과 음반 제작을 경험하세요. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
+건대입구·광진구에서 40분대, 연신내 스튜디오 놀에서 전문 보컬 녹음과 음반 제작을 경험하세요. 세션 일정은 카카오톡 문의로 미리 확인해두는 편이 좋습니다.
 
 ---
 
-[광진구 녹음실 안내](/stories/gwangjin1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [성동구 녹음실 안내](/stories/seongdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[광진구 녹음실 안내](/stories/gwangjin1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [성동구 녹음실 안내](/stories/seongdong1)
+[이용 요금 보기](/pricing)

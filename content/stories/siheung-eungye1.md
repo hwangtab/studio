@@ -66,7 +66,6 @@ faq:
 | 목감역 (서해선) | 서해선 → 소사 → 1호선 → 영등포 → 경의중앙선 → DMC → 6호선 | 약 1시간 10분~1시간 25분 |
 | 정왕역 (4호선) | 4호선 → 서울역 → 경의중앙선 → DMC → 6호선 | 약 1시간 10~25분 |
 
-
 ---
 
 ## 마치며
@@ -75,5 +74,5 @@ faq:
 
 ---
 
-[시흥·안산 녹음실 안내](/stories/siheung1) | [안산 고잔·단원 녹음실 안내](/stories/ansan-danseon1) | [부천 녹음실 안내](/stories/bucheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[시흥·안산 녹음실 안내](/stories/siheung1) | [안산 고잔·단원 녹음실 안내](/stories/ansan-danseon1) | [부천 녹음실 안내](/stories/bucheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1)
+[이용 요금 보기](/pricing)

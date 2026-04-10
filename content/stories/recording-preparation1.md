@@ -1,5 +1,5 @@
 ---
-title: "녹음 준비 완전 가이드 — 스튜디오 세션 전날부터 당일까지 완벽 체크리스트"
+title: "녹음 준비 가이드 — 스튜디오 세션 전날부터 당일까지 완벽 체크리스트"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "MR 파일은 어떤 포맷으로 가져가야 하나요?"
     a: "WAV 44.1kHz/16bit 또는 24bit가 가장 좋습니다. MP3도 가능하지만 WAV가 더 선명한 믹싱 결과를 줍니다. 파일명에 곡명과 키(예: 사랑해_G장조)를 포함하면 편리합니다."
 ---
-![녹음 준비 완전 가이드 — 스튜디오 놀](/images/room6.webp)
+![녹음 준비 가이드 — 스튜디오 놀](/images/room6.webp)
 
 ## 준비된 보컬이 최고의 결과를 만든다
 
@@ -130,5 +130,5 @@ faq:
 
 ---
 
-[홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocalhealth1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1)
-[스튜디오 놀 이용 요금](/pricing)
+[홈 레코딩 가이드](/stories/home-recording1) | [보컬 워밍업 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocalhealth1) | [데모 녹음·데모 테이프 가이드](/stories/demo-tape1)
+[이용 요금 보기](/pricing)

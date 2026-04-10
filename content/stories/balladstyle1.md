@@ -1,5 +1,5 @@
 ---
-title: "발라드 창법 완전 가이드 — 감성 발라드 보컬 스타일과 훈련법"
+title: "발라드 창법 가이드 — 감성 발라드 보컬 스타일과 훈련법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -16,7 +16,7 @@ faq:
   - q: "발라드 고음 처리는 어떻게 하나요?"
     a: "발라드의 고음은 억지로 지르지 않고 '열어서' 내는 것이 좋습니다. 후두를 낮추고 공명을 확보한 후 자연스럽게 믹스 보이스로 접근하면 발라드 고음 특유의 풍성하면서도 감성적인 표현이 나옵니다."
 ---
-![발라드 창법 완전 가이드 — 스튜디오 놀](/images/service2.webp)
+![발라드 창법 가이드 — 스튜디오 놀](/images/service2.webp)
 
 ## 발라드는 '절제'의 예술
 
@@ -94,5 +94,4 @@ faq:
 
 ---
 
-[보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 감정 표현 훈련](/stories/singswell1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [믹스 보이스 가이드](/stories/mixvoice1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 감정 표현 훈련](/stories/singswell1)

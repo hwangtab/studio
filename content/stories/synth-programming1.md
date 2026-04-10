@@ -1,11 +1,11 @@
 ---
-title: "신스 프로그래밍 완전 가이드 — ADSR·오실레이터·필터·LFO 활용법"
+title: "신스 프로그래밍 가이드 — ADSR·오실레이터·필터·LFO 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["신스 프로그래밍", "신디사이저 파라미터", "ADSR 엔벨로프", "오실레이터", "필터 신스", "LFO", "소프트 신디사이저"]
 thumbnail: "/images/portfolio3.webp"
-summary: "신스 프로그래밍 완전 가이드입니다. ADSR 엔벨로프, 오실레이터 파형, 로우패스 필터, LFO 활용, 아날로그·디지털 신스 비교, 장르별 신스 사운드 만들기를 정리합니다."
+summary: "신스 프로그래밍 가이드입니다. ADSR 엔벨로프, 오실레이터 파형, 로우패스 필터, LFO 활용, 아날로그·디지털 신스 비교, 장르별 신스 사운드 만들기를 정리합니다."
 faq:
   - q: "ADSR이란 무엇인가요?"
     a: "ADSR은 Attack(어택), Decay(디케이), Sustain(서스테인), Release(릴리즈)의 약자입니다. 신스 소리의 시간에 따른 음량 변화를 제어합니다. Attack은 소리가 시작되는 속도, Decay는 피크에서 Sustain 레벨까지 떨어지는 시간, Sustain은 건반을 누르는 동안 유지되는 레벨, Release는 건반에서 손을 떼고 소리가 사라지는 속도입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "LFO는 어디에 사용하나요?"
     a: "LFO(Low Frequency Oscillator)는 주로 Pitch(비브라토), Amplitude(트레몰로), Filter Cutoff(와우와우 효과)에 연결해 음악적 모듈레이션을 만듭니다. LFO Rate로 속도, Depth로 변조 깊이를 조정합니다."
 ---
-![신스 프로그래밍 완전 가이드 — 스튜디오 놀](/images/portfolio3.webp)
+![신스 프로그래밍 가이드 — 스튜디오 놀](/images/portfolio3.webp)
 
 ## 신스 프로그래밍 — 소리를 디자인하다
 
@@ -172,5 +172,4 @@ Pan → 자동 패닝 효과
 
 ---
 
-[사운드 디자인 완전 가이드](/stories/sound-design1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[사운드 디자인 가이드](/stories/sound-design1) | [비트 메이킹 가이드](/stories/beatmaking1) | [드럼 프로그래밍 가이드](/stories/drum-programming1) | [코드 진행 가이드](/stories/chord-progressions1)

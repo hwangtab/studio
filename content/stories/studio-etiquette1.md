@@ -1,5 +1,5 @@
 ---
-title: "녹음실 에티켓 완전 가이드 — 스튜디오 방문 시 매너와 주의사항"
+title: "녹음실 에티켓 가이드 — 스튜디오 방문 시 매너와 주의사항"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -116,5 +116,5 @@ faq:
 
 ---
 
-[세션 뮤지션 완전 가이드](/stories/session-musician1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [처음 스튜디오 방문 가이드](/stories/guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[세션 뮤지션 가이드](/stories/session-musician1) | [녹음 세션 준비 체크리스트](/stories/session1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [처음 스튜디오 방문 가이드](/stories/guide1)
+[이용 요금 보기](/pricing)

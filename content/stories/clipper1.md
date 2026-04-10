@@ -1,11 +1,11 @@
 ---
-title: "클리퍼·소프트 클리핑 완전 가이드 — 믹스 음압 높이기와 클리핑 방지"
+title: "클리퍼·소프트 클리핑 가이드 — 믹스 음압 높이기와 클리핑 방지"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "마스터링 가이드"
 tags: ["클리퍼", "소프트 클리핑", "하드 클리핑", "클리핑 방지", "True Peak", "믹스 음압", "마스터링 클리퍼"]
 thumbnail: "/images/service2.webp"
-summary: "클리퍼·소프트 클리핑 완전 가이드입니다. 하드 클리핑 vs 소프트 클리핑의 차이, 마스터링 단계에서 클리퍼 활용법, True Peak 관리, 클리핑이 음질에 미치는 영향을 정리합니다."
+summary: "클리퍼·소프트 클리핑 가이드입니다. 하드 클리핑 vs 소프트 클리핑의 차이, 마스터링 단계에서 클리퍼 활용법, True Peak 관리, 클리핑이 음질에 미치는 영향을 정리합니다."
 faq:
   - q: "클리핑(Clipping)이란 무엇인가요?"
     a: "클리핑은 오디오 신호가 최대 허용 레벨(0dBFS 또는 디지털 풀스케일)을 초과할 때 신호가 잘리는 현상입니다. 하드 클리핑은 파형이 갑작스럽게 잘려 거친 왜곡 노이즈를 만들고, 소프트 클리핑은 곡선으로 제한해 더 자연스러운 새추레이션 느낌을 줍니다."
@@ -16,7 +16,7 @@ faq:
   - q: "소프트 클리퍼 추천 플러그인은?"
     a: "주요 소프트 클리퍼 플러그인: Sonnox Inflator, Kazrog KClip 3, Waves L2/L3(리미터+소프트 클립), iZotope Ozone 리미터의 Soft 모드. 무료 대안으로 Loudmax(리미터), Limiter No6 등도 있습니다."
 ---
-![클리퍼·소프트 클리핑 완전 가이드 — 스튜디오 놀](/images/service2.webp)
+![클리퍼·소프트 클리핑 가이드 — 스튜디오 놀](/images/service2.webp)
 
 ## 클리퍼 — 음압을 높이는 마지막 비밀 무기
 
@@ -117,5 +117,4 @@ faq:
 
 ---
 
-[LUFS 완전 가이드](/stories/lufs-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[LUFS 가이드](/stories/lufs-guide1) | [마스터링 가이드](/stories/mastering1) | [마스터링 팁 가이드](/stories/mastering-tips1) | [스템 마스터링 가이드](/stories/stem-mastering1)

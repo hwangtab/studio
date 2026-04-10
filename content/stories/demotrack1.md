@@ -113,4 +113,4 @@ faq:
 
 ---
 
-[이용 요금 및 문의](/pricing) | [오디션 데모 녹음 가이드](/stories/audition1) | [보컬 피치 교정이란?](/stories/pitch1) | [녹음 세션 준비 체크리스트](/stories/session1) | [싱어송라이터 자작곡 녹음](/stories/singer1)
+[오디션 데모 녹음 가이드](/stories/audition1) | [보컬 피치 교정이란?](/stories/pitch1) | [녹음 세션 준비 체크리스트](/stories/session1) | [싱어송라이터 자작곡 녹음](/stories/singer1)

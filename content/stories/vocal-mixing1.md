@@ -1,5 +1,5 @@
 ---
-title: "보컬 믹싱 완전 가이드 — EQ·컴프레서·리버브 세팅 실전 노하우"
+title: "보컬 믹싱 가이드 — EQ·컴프레서·리버브 세팅 실전 노하우"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "믹싱 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "보컬이 음악 안에서 앞으로 들리게 하는 방법은?"
     a: "2~4kHz 선명도 부스트, 보컬 볼륨 자동화(automation), 소량의 새츄레이션(Saturation), 사이드체인 컴프레서로 반주를 살짝 눌러주는 방법 등을 조합합니다. 보컬이 앞에 있는 믹스는 반주보다 보컬이 항상 명확히 들립니다."
 ---
-![보컬 믹싱 완전 가이드 — 스튜디오 놀](/images/album2.webp)
+![보컬 믹싱 가이드 — 스튜디오 놀](/images/album2.webp)
 
 ## 왜 보컬 믹싱이 중요한가
 
@@ -126,5 +126,4 @@ Pre-delay: 20~30ms (보컬과 리버브 분리)
 
 ---
 
-[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 EQ 가이드](/stories/vocal-eq1) | [보컬 컴프레서 가이드](/stories/vocal-compression1) | [리버브 믹싱 가이드](/stories/reverb-mixing1) | [디에서 가이드](/stories/deesser1)

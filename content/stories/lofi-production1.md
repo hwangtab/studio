@@ -1,11 +1,11 @@
 ---
-title: "로파이 음악 제작 완전 가이드 — Lo-Fi Hip Hop·Lo-Fi 팝 사운드 만들기"
+title: "로파이 음악 제작 가이드 — Lo-Fi Hip Hop·Lo-Fi 팝 사운드 만들기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["로파이 음악", "로파이 힙합", "lo-fi 제작", "로파이 사운드", "로파이 비트", "빈티지 사운드 제작", "로파이 믹싱"]
 thumbnail: "/images/portfolio4.webp"
-summary: "로파이 음악 제작 완전 가이드입니다. Lo-Fi Hip Hop·Lo-Fi 팝의 사운드 특성, 빈티지 질감 만들기, 레코드 노이즈·테이프 새츄레이션·드럼 루프 활용법을 정리합니다."
+summary: "로파이 음악 제작 가이드입니다. Lo-Fi Hip Hop·Lo-Fi 팝의 사운드 특성, 빈티지 질감 만들기, 레코드 노이즈·테이프 새츄레이션·드럼 루프 활용법을 정리합니다."
 faq:
   - q: "로파이(Lo-Fi) 음악의 가장 큰 특징은 무엇인가요?"
     a: "로파이는 High Fidelity(고음질)의 반대 개념으로, 의도적으로 음질을 낮추거나 빈티지한 질감을 가미한 사운드입니다. 레코드 크랙클(vinyl noise), 테이프 워블, 약간 샤프·플랫된 피치, 드라이하고 가까운 믹스, 느린 BPM이 특징입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "로파이 사운드에 어울리는 악기 세팅은 무엇인가요?"
     a: "피아노(살짝 딜레이 + 넉넉한 리버브), 재즈 기타(약간 디튠), 베이스(따뜻하고 뭉근한 저역), 드럼(림 샷 강조, 타이트한 스네어), 현악 또는 플루트 샘플이 잘 어울립니다. 모든 요소에 약간의 새츄레이션을 걸어줍니다."
 ---
-![로파이 음악 제작 완전 가이드 — 스튜디오 놀](/images/portfolio4.webp)
+![로파이 음악 제작 가이드 — 스튜디오 놀](/images/portfolio4.webp)
 
 ## 로파이 음악 — 의도적인 불완전함의 미학
 
@@ -132,5 +132,4 @@ faq:
 
 ---
 
-[앰비언트 음악 제작 완전 가이드](/stories/ambient-music1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[앰비언트 음악 제작 가이드](/stories/ambient-music1) | [비트메이킹 가이드](/stories/beatmaking1) | [사운드 디자인 가이드](/stories/sound-design1) | [믹싱 오토메이션 가이드](/stories/mixing-automation1)

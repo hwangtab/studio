@@ -121,9 +121,9 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 ## 마치며
 
-흑석동·중앙대에서 9호선으로 30~40분이면 연신내입니다. 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
+흑석동·중앙대에서 9호선으로 30~40분이면 연신내입니다. 방문 전에는 카카오톡 문의로 일정과 준비 사항을 미리 확인해두는 편이 좋습니다.
 
 ---
 
-[동작구 전체 녹음실 안내](/stories/dongjak1) | [노량진 녹음실 안내](/stories/noryangjin1) | [사당·방배 녹음실 안내](/stories/sadang1) | [여의도 녹음실 안내](/stories/yeouido1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[동작구 전체 녹음실 안내](/stories/dongjak1) | [노량진 녹음실 안내](/stories/noryangjin1) | [사당·방배 녹음실 안내](/stories/sadang1) | [여의도 녹음실 안내](/stories/yeouido1)
+[이용 요금 보기](/pricing)

@@ -1,5 +1,5 @@
 ---
-title: "내 보컬 음역대 확인 방법 — 소프라노·테너·바리톤 음역 찾는 완전 가이드"
+title: "내 보컬 음역대 확인 방법 — 소프라노·테너·바리톤 음역 찾는 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -99,5 +99,4 @@ faq:
 
 ---
 
-[보컬리스트를 위한 음악 이론 기초](/stories/music-theory1) | [나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 레슨 선택 가이드](/stories/lessonguide1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬리스트를 위한 음악 이론 기초](/stories/music-theory1) | [나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1)

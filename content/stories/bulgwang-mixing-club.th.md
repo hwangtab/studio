@@ -1,5 +1,5 @@
 ---
-title: '"Bulgwang Mixing Club" ประกาศนัดพบครั้งแรก'
+title: "\"Bulgwang Mixing Club\" ประกาศนัดพบครั้งแรก"
 date: 2025-11-03
 author: "Studio NOL"
 category: "event"

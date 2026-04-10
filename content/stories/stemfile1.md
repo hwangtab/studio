@@ -1,5 +1,5 @@
 ---
-title: "녹음 파일 납품 형식 완전 가이드 — WAV·스템·믹스다운 파일 이해하기"
+title: "녹음 파일 납품 형식 가이드 — WAV·스템·믹스다운 파일 이해하기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "가이드"
@@ -113,5 +113,4 @@ MR 스템 파일을 따로 주세요."
 
 ---
 
-[오디오 형식 완전 가이드 (MP3 vs WAV)](/stories/audioformat1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [음원 유통 방법 가이드](/stories/distribution1) | [첫 녹음 세션 준비 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)
+[오디오 형식 가이드 (MP3 vs WAV)](/stories/audioformat1) | [음원 유통 방법 가이드](/stories/distribution1) | [첫 녹음 세션 준비 가이드](/stories/session1)

@@ -1,11 +1,11 @@
 ---
-title: "피치 교정 완전 가이드 — 오토튠·멜로다인 보컬 피치 수정 방법과 설정값"
+title: "피치 교정 가이드 — 오토튠·멜로다인 보컬 피치 수정 방법과 설정값"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["피치 교정", "오토튠", "멜로다인", "보컬 피치 수정", "피치 보정", "보컬 편집", "Antares Auto-Tune"]
 thumbnail: "/images/portfolio1.webp"
-summary: "피치 교정 완전 가이드입니다. 오토튠(Auto-Tune)과 멜로다인(Melodyne)의 차이와 사용법, 자연스러운 피치 교정 방법, K팝 보컬 피치 수정 기법, 과도한 교정의 문제점을 정리합니다."
+summary: "피치 교정 가이드입니다. 오토튠(Auto-Tune)과 멜로다인(Melodyne)의 차이와 사용법, 자연스러운 피치 교정 방법, K팝 보컬 피치 수정 기법, 과도한 교정의 문제점을 정리합니다."
 faq:
   - q: "오토튠과 멜로다인의 차이는 무엇인가요?"
     a: "오토튠(Auto-Tune)은 실시간 피치 교정에 강하며 라이브·실시간 모니터링과 특유의 '로봇' 이펙트 사운드로 유명합니다. 멜로다인(Melodyne)은 오디오 파일을 분석해 음표 단위로 수정하는 방식으로 더 세밀하고 자연스러운 피치 편집이 가능합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "피치 교정은 믹싱 체인의 어느 단계에서 사용하나요?"
     a: "피치 교정은 보통 믹싱 체인의 맨 처음(EQ, 컴프레서 이전)에 사용합니다. 피치가 안정된 상태에서 EQ와 컴프레서를 적용해야 처리가 일관되게 작동합니다."
 ---
-![피치 교정 완전 가이드 — 스튜디오 놀](/images/portfolio1.webp)
+![피치 교정 가이드 — 스튜디오 놀](/images/portfolio1.webp)
 
 ## 피치 교정 — 보컬을 더 선명하게 만드는 기술
 
@@ -133,5 +133,4 @@ faq:
 
 ---
 
-[오토튠 완전 가이드](/stories/autotune1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[오토튠 가이드](/stories/autotune1) | [멜로다인 가이드](/stories/melodyne1) | [보컬 녹음 팁 가이드](/stories/vocal-recording-tips1) | [보컬 컴프레서 가이드](/stories/vocal-compression1)

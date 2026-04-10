@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["처음 보컬 녹음", "보컬 녹음 준비", "처음 녹음하는 법", "스튜디오 녹음 과정", "녹음실 예약", "보컬 녹음 비용", "녹음 초보"]
 thumbnail: "/images/recording5.webp"
-summary: "처음 보컬 녹음을 준비하는 분을 위한 완전 가이드. 스튜디오 예약 방법, 준비물, 녹음 당일 세션 흐름, 흔한 실수 5가지, 셀프 녹음과 엔지니어 세션의 차이, 비용 현실까지 한 번에 정리했습니다."
+summary: "처음 보컬 녹음을 준비하는 분을 위한 가이드. 스튜디오 예약 방법, 준비물, 녹음 당일 세션 흐름, 흔한 실수 5가지, 셀프 녹음과 엔지니어 세션의 차이, 비용 현실까지 한 번에 정리했습니다."
 faq:
   - q: "처음 녹음하는데 뭘 준비해야 하나요?"
     a: "가장 중요한 건 MR 파일(반주)입니다. WAV 포맷을 권장하며, MP3도 가능합니다. 가사는 출력하거나 스마트폰에 띄워두세요. 마이크, 헤드폰, 오디오 장비는 스튜디오에 모두 구비되어 있어 별도로 챙길 필요 없습니다. 물 한 병(상온)을 챙기시면 좋습니다."
@@ -184,4 +184,5 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서 표준으로 사�
 
 ---
 
-[홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 가이드](/stories/vocal-recording-setup1) | [MR 파일 준비 가이드](/stories/mr-guide1) | [스튜디오 놀 장비 소개](/studio-info) | [녹음·믹싱 요금 안내](/pricing)
+[홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [보컬 녹음 팁 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 가이드](/stories/vocal-recording-setup1) | [MR 파일 준비 가이드](/stories/mr-guide1)
+[이용 요금 보기](/pricing)

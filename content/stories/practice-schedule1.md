@@ -1,5 +1,5 @@
 ---
-title: "보컬 연습 스케줄 완전 가이드 — 하루 30분으로 목소리를 바꾸는 트레이닝 루틴"
+title: "보컬 연습 스케줄 가이드 — 하루 30분으로 목소리를 바꾸는 트레이닝 루틴"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -120,5 +120,4 @@ faq:
 
 ---
 
-[보컬 피드백 받는 방법 가이드](/stories/vocalfeedback1) | [보컬 연습 앱 추천](/stories/singapp1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [고음 내는 방법 완전 가이드](/stories/highnote1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 피드백 받는 방법 가이드](/stories/vocalfeedback1) | [보컬 연습 앱 추천](/stories/singapp1) | [노래 잘하는 방법 가이드](/stories/singswell1) | [고음 내는 방법 가이드](/stories/highnote1)

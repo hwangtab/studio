@@ -1,5 +1,5 @@
 ---
-title: "오토튠(Auto-Tune) 완전 가이드 — 음정 교정부터 보컬 이펙트까지"
+title: "오토튠(Auto-Tune) 가이드 — 음정 교정부터 보컬 이펙트까지"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "믹싱 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "T-Pain 이펙트(극단적 오토튠 효과)는 어떻게 만드나요?"
     a: "오토튠에서 Retune Speed를 0ms로 설정하면 매우 빠른 음정 스냅 효과가 납니다. 이것이 T-Pain, 칸예 웨스트, 한국 힙합에서 사용되는 극단적 오토튠 이펙트입니다."
 ---
-![오토튠(Auto-Tune) 완전 가이드 — 스튜디오 놀](/images/recording1.webp)
+![오토튠(Auto-Tune) 가이드 — 스튜디오 놀](/images/recording1.webp)
 
 ## 오토튠이란?
 
@@ -104,5 +104,4 @@ Flex-Tune: 30~50% (음정 변화 유연성 조절)
 
 ---
 
-[Melodyne 음정 교정 가이드](/stories/pitchtool1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Melodyne 음정 교정 가이드](/stories/pitchtool1) | [보컬 믹싱 가이드](/stories/vocal-mixing1) | [보컬 녹음 가이드](/stories/vocal-recording-tips1)

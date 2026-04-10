@@ -1,5 +1,5 @@
 ---
-title: "녹음 노이즈 제거 완전 가이드 — 배경 소음·전기 잡음 없애는 방법"
+title: "녹음 노이즈 제거 가이드 — 배경 소음·전기 잡음 없애는 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 기초"
@@ -16,7 +16,7 @@ faq:
   - q: "사후에 노이즈를 제거할 수 있는 플러그인이 있나요?"
     a: "iZotope RX(전문용), Audacity의 노이즈 제거 필터(무료), Adobe Audition의 Noise Print 기능 등이 있습니다. 단, 사후 노이즈 제거는 음질 손상을 동반할 수 있어 예방이 최선입니다."
 ---
-![녹음 노이즈 제거 완전 가이드 — 스튜디오 놀](/images/room3.webp)
+![녹음 노이즈 제거 가이드 — 스튜디오 놀](/images/room3.webp)
 
 ## 노이즈가 없어야 좋은 녹음이다
 
@@ -115,4 +115,3 @@ faq:
 ---
 
 [홈 레코딩 vs 스튜디오 녹음 비교](/stories/homestudio1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [샘플레이트·비트뎁스 가이드](/stories/sample-rate1)
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,5 +1,5 @@
 ---
-title: "좋은 보컬 코치 찾는 방법 — 보컬 선생님 선택 기준 완전 가이드"
+title: "좋은 보컬 코치 찾는 방법 — 보컬 선생님 선택 기준 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "가이드"
@@ -111,4 +111,3 @@ faq:
 ---
 
 [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1)
-[스튜디오 놀 이용 요금](/pricing)

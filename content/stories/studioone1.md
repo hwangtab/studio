@@ -1,11 +1,11 @@
 ---
-title: "Studio One 보컬 녹음 완전 가이드 — PreSonus DAW로 직관적인 녹음"
+title: "Studio One 보컬 녹음 가이드 — PreSonus DAW로 직관적인 녹음"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Studio One 보컬", "스튜디오원 녹음", "Studio One 설정", "PreSonus DAW", "Studio One 믹싱", "Studio One EQ", "Studio One 컴프레서"]
 thumbnail: "/images/studio5.webp"
-summary: "Studio One 보컬 녹음 완전 가이드입니다. Studio One 기본 설정·오디오 트랙 생성 및 녹음·Pro EQ 설정·Pro Compressor 설정·레이어 녹음 (Take Lane)·파일 내보내기 (Export Mixdown)까지 정리합니다."
+summary: "Studio One 보컬 녹음 가이드입니다. Studio One 기본 설정·오디오 트랙 생성 및 녹음·Pro EQ 설정·Pro Compressor 설정·레이어 녹음 (Take Lane)·파일 내보내기 (Export Mixdown)까지 정리합니다."
 faq:
   - q: "Studio One으로 보컬 녹음이 가능한가요?"
     a: "가능합니다. Studio One은 PreSonus가 개발한 직관적인 DAW로 드래그 앤 드롭 기반의 편리한 인터페이스와 강력한 내장 플러그인으로 보컬 녹음·편집·믹싱을 효율적으로 처리할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Studio One 보컬 파일을 어떻게 내보내나요?"
     a: "Song → Export Mixdown (Ctrl+E) → Format: WAV → Sample Rate: 44100/48000 → Bit Depth: 24 → Export 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → Export Mixdown합니다."
 ---
-![Studio One 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio5.webp)
+![Studio One 보컬 녹음 가이드 — 스튜디오 놀](/images/studio5.webp)
 
 ## Studio One — 직관적인 드래그 앤 드롭 DAW
 
@@ -178,5 +178,4 @@ Studio One은 직관적인 인터페이스와 강력한 내장 플러그인으�
 
 ---
 
-[Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Cubase 보컬 녹음 가이드](/stories/cubase1) | [FL Studio 보컬 녹음 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 가이드](/stories/ableton1) | [음원 파일 형식 가이드](/stories/audio-format1)

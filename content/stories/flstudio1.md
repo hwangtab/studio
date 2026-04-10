@@ -1,11 +1,11 @@
 ---
-title: "FL Studio 보컬 녹음 완전 가이드 — 힙합·EDM 프로듀서를 위한 보컬 세팅"
+title: "FL Studio 보컬 녹음 가이드 — 힙합·EDM 프로듀서를 위한 보컬 세팅"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["FL Studio 보컬", "FL스튜디오 녹음", "FL Studio 설정", "FL Studio 믹싱", "FL Studio EQ", "힙합 보컬 녹음", "EDM 보컬 녹음"]
 thumbnail: "/images/studio1.webp"
-summary: "FL Studio 보컬 녹음 완전 가이드입니다. FL Studio 기본 설정·Edison으로 보컬 녹음·Playlist 오디오 클립 녹음·Parametric EQ 2 설정·Fruity Compressor 설정·파일 내보내기 (Export)까지 정리합니다."
+summary: "FL Studio 보컬 녹음 가이드입니다. FL Studio 기본 설정·Edison으로 보컬 녹음·Playlist 오디오 클립 녹음·Parametric EQ 2 설정·Fruity Compressor 설정·파일 내보내기 (Export)까지 정리합니다."
 faq:
   - q: "FL Studio로 보컬 녹음이 가능한가요?"
     a: "가능합니다. FL Studio는 힙합·EDM에 특화된 DAW지만 Edison 녹음기와 Mixer 트랙을 활용해 전문적인 보컬 녹음·편집이 가능합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "FL Studio 보컬 파일을 어떻게 내보내나요?"
     a: "File → Export → Audio File → MP3/OGG/WAV 중 WAV 선택 → Bit depth 24 → Save. 또는 Mixer 트랙 개별 내보내기: Mixer → 트랙 선택 → Export tracks. 드라이 보컬은 플러그인 Bypass 후 내보냅니다."
 ---
-![FL Studio 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio1.webp)
+![FL Studio 보컬 녹음 가이드 — 스튜디오 놀](/images/studio1.webp)
 
 ## FL Studio — 힙합·EDM 프로듀서의 선택
 
@@ -172,5 +172,4 @@ FL Studio는 비트메이킹에서 보컬 녹음까지 모두 가능한 통합 D
 
 ---
 
-[스마트폰 보컬 녹음 완전 가이드](/stories/smartphone-recording1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[스마트폰 보컬 녹음 가이드](/stories/smartphone-recording1) | [Pro Tools 보컬 녹음 가이드](/stories/protools1) | [Ableton Live 보컬 녹음 가이드](/stories/ableton1) | [음원 파일 형식 가이드](/stories/audio-format1)

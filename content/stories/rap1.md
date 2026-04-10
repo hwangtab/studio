@@ -1,5 +1,5 @@
 ---
-title: "랩 잘하는 방법 — 플로우·딕션·녹음까지 입문 완전 가이드"
+title: "랩 잘하는 방법 — 플로우·딕션·녹음까지 입문 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -102,5 +102,4 @@ faq:
 
 ---
 
-[마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [음악 프로듀서 되는 방법](/stories/producer1) | [비트 메이킹 입문 가이드](/stories/beatmaking1)
-[스튜디오 놀 이용 요금](/pricing)
+[마이크 테크닉 가이드](/stories/mictechnique1) | [보컬 딕션 훈련 가이드](/stories/diction1) | [음악 프로듀서 되는 방법](/stories/producer1) | [비트 메이킹 입문 가이드](/stories/beatmaking1)

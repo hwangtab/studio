@@ -1,11 +1,11 @@
 ---
-title: "보컬 새추레이션 완전 가이드 — 하모닉 디스토션으로 보컬 존재감 강화"
+title: "보컬 새추레이션 가이드 — 하모닉 디스토션으로 보컬 존재감 강화"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 새추레이션", "Saturation 보컬", "하모닉 디스토션", "보컬 따뜻함", "테이프 새추레이션", "튜브 새추레이션", "보컬 믹싱"]
 thumbnail: "/images/recording16.webp"
-summary: "보컬 새추레이션 완전 가이드입니다. Tape·Tube·Transformer 새추레이션 타입 비교, 보컬 존재감과 따뜻함 강화 설정, 과도한 새추레이션 주의사항, 플러그인 비교를 정리합니다."
+summary: "보컬 새추레이션 가이드입니다. Tape·Tube·Transformer 새추레이션 타입 비교, 보컬 존재감과 따뜻함 강화 설정, 과도한 새추레이션 주의사항, 플러그인 비교를 정리합니다."
 faq:
   - q: "보컬에 새추레이션을 사용하는 이유는?"
     a: "디지털 레코딩의 차갑고 건조한 음색에 하모닉 배음(Harmonic Distortion)을 추가해 따뜻하고 두꺼운 아날로그 질감을 만듭니다. 보컬의 존재감(Presence)과 믹스 내 포지션도 향상됩니다."
@@ -16,7 +16,7 @@ faq:
   - q: "새추레이션과 컴프레서의 순서는?"
     a: "일반적으로 컴프레서 후단에 새추레이션을 배치합니다. 컴프레서로 레벨을 안정화한 후 새추레이션을 적용하면 일관된 하모닉 추가가 가능합니다. 단, 새추레이션 전 EQ로 고역을 약간 줄이면 치찰음 부각을 방지할 수 있습니다."
 ---
-![보컬 새추레이션 완전 가이드 — 스튜디오 놀](/images/recording16.webp)
+![보컬 새추레이션 가이드 — 스튜디오 놀](/images/recording16.webp)
 
 ## 보컬 새추레이션 — 아날로그 질감의 비밀
 
@@ -140,5 +140,4 @@ faq:
 
 ---
 
-[보컬 콤핑 완전 가이드](/stories/vocal-comping1) | [보컬 딜레이 완전 가이드](/stories/vocal-delay1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 콤핑 가이드](/stories/vocal-comping1) | [보컬 딜레이 가이드](/stories/vocal-delay1) | [보컬 신호 체인 가이드](/stories/vocal-chain1) | [SSL G-Bus 컴프레서 가이드](/stories/ssl-bus1)

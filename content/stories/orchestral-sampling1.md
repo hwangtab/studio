@@ -1,11 +1,11 @@
 ---
-title: "오케스트라 샘플링 완전 가이드 — 스트링·브라스·목관 샘플 라이브러리 활용법"
+title: "오케스트라 샘플링 가이드 — 스트링·브라스·목관 샘플 라이브러리 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["오케스트라 샘플링", "오케스트라 VST", "Spitfire Audio", "스트링 샘플", "브라스 샘플", "오케스트라 미디", "영화 음악 제작"]
 thumbnail: "/images/recording16.webp"
-summary: "오케스트라 샘플링 완전 가이드입니다. Spitfire·EastWest·NI 등 주요 샘플 라이브러리 비교, 스트링·브라스·목관 레이어링, 오케스트라 믹싱·팬닝, MIDI 표현력 향상법을 정리합니다."
+summary: "오케스트라 샘플링 가이드입니다. Spitfire·EastWest·NI 등 주요 샘플 라이브러리 비교, 스트링·브라스·목관 레이어링, 오케스트라 믹싱·팬닝, MIDI 표현력 향상법을 정리합니다."
 faq:
   - q: "오케스트라 샘플 라이브러리를 시작하려면 무엇부터 해야 하나요?"
     a: "먼저 목적을 결정하세요. 영화·TV 음악이라면 Spitfire Audio LABS (무료)부터 시작해 CSS(Cinematic Studio Strings) 또는 Spitfire Chamber Strings로 확장합니다. 일반 팝·발라드 오케스트레이션은 Native Instruments SESSION STRINGS PRO 2가 접근하기 쉽습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "오케스트라 팬닝(Panning)은 어떻게 설정하나요?"
     a: "실제 오케스트라 좌석 배치를 참고합니다. 제1바이올린(왼쪽), 제2바이올린(중앙왼쪽), 비올라(중앙), 첼로(중앙오른쪽), 더블베이스(오른쪽), 목관(중앙 뒤쪽), 브라스(중앙~오른쪽 뒤), 타악기(맨 뒤)가 표준 배치입니다."
 ---
-![오케스트라 샘플링 완전 가이드 — 스튜디오 놀](/images/recording16.webp)
+![오케스트라 샘플링 가이드 — 스튜디오 놀](/images/recording16.webp)
 
 ## 오케스트라 샘플링 — 실제 오케스트라처럼 들리는 MIDI 제작
 
@@ -177,5 +177,4 @@ MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고
 
 ---
 
-[미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [샘플링·샘플팩 완전 가이드](/stories/sampling-guide1) | [공간 음향·바이노럴 완전 가이드](/stories/spatial-audio1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[미디 그루브·휴머나이제이션 가이드](/stories/midi-groove1) | [샘플링·샘플팩 가이드](/stories/sampling-guide1) | [공간 음향·바이노럴 가이드](/stories/spatial-audio1) | [리버브 믹싱 가이드](/stories/reverb-mixing1)

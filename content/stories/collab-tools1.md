@@ -1,5 +1,5 @@
 ---
-title: "음악 온라인 협업 도구 완전 가이드 — Splice·Soundtrap·BandLab·Ninjam 비교"
+title: "음악 온라인 협업 도구 가이드 — Splice·Soundtrap·BandLab·Ninjam 비교"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 제작"
@@ -16,7 +16,7 @@ faq:
   - q: "실시간 온라인 잼 세션은 어떻게 하나요?"
     a: "Ninjam은 오픈소스 실시간 잼 소프트웨어로 각 참가자의 연주가 한 루프 후 재생되는 비동기 방식입니다. JamKazam은 실시간 저레이턴시 잼을 지원하지만 인터넷 속도에 민감합니다. 국내에서는 Source-Connect가 방송·스튜디오 원격 세션 표준으로 사용됩니다."
 ---
-![음악 온라인 협업 도구 완전 가이드 — 스튜디오 놀](/images/room8.webp)
+![음악 온라인 협업 도구 가이드 — 스튜디오 놀](/images/room8.webp)
 
 ## 온라인 협업 — 거리의 한계를 없애다
 
@@ -145,5 +145,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음악 협업 완전 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 협업 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 가이드](/stories/music-network1) | [음원 유통 가이드](/stories/music-distribution1) | [보컬 녹음 팁 가이드](/stories/vocal-recording-tips1)

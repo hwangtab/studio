@@ -54,7 +54,6 @@ faq:
 | 은행동·선화동 (대전역 경유) | 버스 → 대전역 KTX → 서울역 | 약 80~90분 |
 | 동대전역 (일반열차) | 일반열차 → 수원역 → 1호선 → 신도림 | 약 100~120분 |
 
-
 ---
 
 ## 당일 왕복 일정 예시 (KTX 대전역 기준)
@@ -72,7 +71,7 @@ faq:
 
 ---
 
-온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다. [자세한 안내](/stories/onlinemix1)
+온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다.
 
 ---
 
@@ -82,5 +81,5 @@ faq:
 
 ---
 
-[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon-daedeok1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon-daedeok1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1)
+[이용 요금 보기](/pricing)

@@ -1,5 +1,5 @@
 ---
-title: "녹음 헤드폰 완전 가이드 — 모니터 헤드폰 선택과 보컬 녹음 시 주의사항"
+title: "녹음 헤드폰 가이드 — 모니터 헤드폰 선택과 보컬 녹음 시 주의사항"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "장비 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "녹음 헤드폰 예산은 얼마가 적당한가요?"
     a: "입문용으로 5~10만원대(소니 MDR-7506, 오디오테크니카 ATH-M20x 등), 중급으로 10~20만원대(ATH-M50x, 슈어 SRH440 등)를 추천합니다. 믹싱용으로는 베이어다이나믹 DT770 Pro(80Ω), 젠하이저 HD600 계열이 인기 있습니다."
 ---
-![녹음 헤드폰 완전 가이드 — 스튜디오 놀](/images/room1.webp)
+![녹음 헤드폰 가이드 — 스튜디오 놀](/images/room1.webp)
 
 ## 보컬 녹음에 헤드폰이 중요한 이유
 
@@ -94,5 +94,4 @@ faq:
 
 ---
 
-[스튜디오 모니터 스피커 완전 가이드](/stories/studio-monitor1) | [헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[스튜디오 모니터 스피커 가이드](/stories/studio-monitor1) | [헤드폰 믹싱 가이드](/stories/headphone-mix1) | [보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1)

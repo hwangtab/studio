@@ -8,7 +8,7 @@ summary: "연신내·불광 뮤지션 네트워킹 '불광믹싱클럽' 3회 차
 thumbnail: "/images/recording6.webp"
 faq:
   - q: "불광믹싱클럽 모임에 참가하려면 어떻게 하나요?"
-    a: "카카오톡 오픈채팅(연신내 스튜디오 놀)으로 문의주시면 다음 모임 일정과 참가 방법을 안내해드립니다."
+    a: "카카오톡 문의(연신내 스튜디오 놀)으로 문의주시면 다음 모임 일정과 참가 방법을 안내해드립니다."
   - q: "모임에 어떤 것을 가져와야 하나요?"
     a: "자신이 작업 중인 믹스 파일, 고민 중인 밸런스 문제, 또는 공유하고 싶은 레퍼런스 트랙이 있으면 좋습니다. 아무것도 준비 못 해도 듣고 배우는 것만으로도 충분히 가치 있습니다."
 ---
@@ -50,4 +50,4 @@ faq:
 
 ---
 
-[믹싱 강좌 시리즈 시작하기](/stories/mixing1) | [불광믹싱클럽 첫 모임 안내](/stories/bulgwang-mixing-club) | [불광믹싱클럽 2회차 안내](/stories/bulgwang-mixing-club-2nd) | [스튜디오 놀 믹싱·마스터링 서비스](/pricing) | [연신내 음악연습실 안내](/practice-room)
+[믹싱 강좌 시리즈 시작하기](/stories/mixing1) | [불광믹싱클럽 첫 모임 안내](/stories/bulgwang-mixing-club) | [불광믹싱클럽 2회차 안내](/stories/bulgwang-mixing-club-2nd)

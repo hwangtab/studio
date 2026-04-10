@@ -1,11 +1,11 @@
 ---
-title: "보컬 EQ 완전 가이드 — 주파수 대역별 보컬 처리 방법"
+title: "보컬 EQ 가이드 — 주파수 대역별 보컬 처리 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 EQ", "보컬 이퀄라이저", "보컬 주파수", "보컬 EQ 설정", "High Pass Filter 보컬", "보컬 존재감", "FabFilter Pro-Q3 보컬"]
 thumbnail: "/images/hardware4.webp"
-summary: "보컬 EQ 완전 가이드입니다. 주파수 대역별 역할, High-Pass Filter 설정, 존재감 강조, 치찰음 제어, 장르별 보컬 EQ 설정, 플러그인 비교를 정리합니다."
+summary: "보컬 EQ 가이드입니다. 주파수 대역별 역할, High-Pass Filter 설정, 존재감 강조, 치찰음 제어, 장르별 보컬 EQ 설정, 플러그인 비교를 정리합니다."
 faq:
   - q: "보컬 EQ에서 가장 먼저 해야 할 것은?"
     a: "High-Pass Filter(HPF)를 100~120Hz에 설정해 불필요한 저역 공기음·바닥 진동을 제거합니다. 그 다음 200~300Hz 대역의 탁한 소리를 확인하고 필요시 약간 컷합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "보컬 EQ는 다이나믹 EQ와 정적 EQ 중 어느 것이 좋나요?"
     a: "둘 다 사용하는 것이 이상적입니다. 정적 EQ로 기본 음색을 조정하고, 치찰음·공명처럼 불규칙하게 발생하는 문제는 다이나믹 EQ(FabFilter Pro-Q3의 Dynamic EQ 모드)로 처리합니다."
 ---
-![보컬 EQ 완전 가이드 — 스튜디오 놀](/images/hardware4.webp)
+![보컬 EQ 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
 ## 보컬 EQ — 주파수 대역별 처리
 
@@ -174,5 +174,4 @@ faq:
 
 ---
 
-[보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [EQ 완전 가이드](/stories/eq1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 컴프레서 가이드](/stories/vocal-compression1) | [보컬 믹싱 가이드](/stories/vocal-mixing1) | [EQ 가이드](/stories/eq1) | [디에서 가이드](/stories/deesser1)

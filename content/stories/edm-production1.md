@@ -1,11 +1,11 @@
 ---
-title: "EDM 프로덕션 완전 가이드 — 일렉트로닉 댄스 뮤직 제작·드롭·빌드업 전략"
+title: "EDM 프로덕션 가이드 — 일렉트로닉 댄스 뮤직 제작·드롭·빌드업 전략"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 프로덕션 가이드"
 tags: ["EDM 프로덕션", "일렉트로닉 뮤직", "EDM 제작", "드롭 만들기", "빌드업 전략", "EDM 믹싱", "신디사이저 프로그래밍"]
 thumbnail: "/images/room8.webp"
-summary: "EDM 프로덕션 완전 가이드입니다. 하우스·테크노·드럼앤베이스·트랩 일렉트로닉 장르별 구조, 드롭과 빌드업 설계, 사이드체인 압축, 신디사이저 레이어링, EDM 믹싱 전략을 정리합니다."
+summary: "EDM 프로덕션 가이드입니다. 하우스·테크노·드럼앤베이스·트랩 일렉트로닉 장르별 구조, 드롭과 빌드업 설계, 사이드체인 압축, 신디사이저 레이어링, EDM 믹싱 전략을 정리합니다."
 faq:
   - q: "EDM 프로덕션을 시작하려면 무엇이 필요한가요?"
     a: "DAW(Ableton Live, FL Studio, Logic Pro 등), 신디사이저 플러그인(Serum, Massive 등), 드럼 샘플 팩이 기본입니다. 좋은 모니터 스피커 또는 레퍼런스 헤드폰도 필수입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "EDM에서 주로 사용하는 BPM은 몇 인가요?"
     a: "장르마다 다릅니다. 하우스: 120~130 BPM, 테크노: 130~145 BPM, 드럼앤베이스: 160~180 BPM, 트랩: 65~75 BPM(하이햇은 2배), 더브스텝: 138~142 BPM이 일반적입니다."
 ---
-![EDM 프로덕션 완전 가이드 — 스튜디오 놀](/images/room8.webp)
+![EDM 프로덕션 가이드 — 스튜디오 놀](/images/room8.webp)
 
 ## EDM 프로덕션 — 댄스 플로어를 흔드는 음악 만들기
 
@@ -175,5 +175,4 @@ EDM 프로덕션은 구조적 에너지 설계가 핵심입니다. 드롭과 빌
 
 ---
 
-[퓨처 베이스 프로덕션 완전 가이드](/stories/future-bass1) | [사이드체인 완전 가이드](/stories/sidechain1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[퓨처 베이스 프로덕션 가이드](/stories/future-bass1) | [사이드체인 가이드](/stories/sidechain1) | [드럼 프로그래밍 가이드](/stories/drum-programming1) | [비트메이킹 가이드](/stories/beatmaking1)

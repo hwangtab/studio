@@ -1,11 +1,11 @@
 ---
-title: "사이드체인 컴프레션 완전 가이드 — 보컬과 반주의 공간 분리"
+title: "사이드체인 컴프레션 가이드 — 보컬과 반주의 공간 분리"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["사이드체인", "사이드체인 컴프레션", "덕킹", "보컬 사이드체인", "EDM 펌핑", "믹싱 공간", "보컬 명료도"]
 thumbnail: "/images/recording8.webp"
-summary: "사이드체인 컴프레션 완전 가이드입니다. 덕킹 원리, 보컬 명료도 향상을 위한 실전 설정, EDM 펌핑 이펙트, 킥-베이스 사이드체인 구성 방법을 정리합니다."
+summary: "사이드체인 컴프레션 가이드입니다. 덕킹 원리, 보컬 명료도 향상을 위한 실전 설정, EDM 펌핑 이펙트, 킥-베이스 사이드체인 구성 방법을 정리합니다."
 faq:
   - q: "사이드체인 컴프레션이란 무엇인가요?"
     a: "한 트랙의 신호를 기준으로 다른 트랙의 컴프레서를 작동시키는 기법입니다. 예를 들어 보컬이 들어올 때 반주 볼륨을 자동으로 줄여 보컬이 더 선명하게 들리도록 만드는 '덕킹(Ducking)'이 대표적 활용입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "사이드체인 설정 시 주의사항은 무엇인가요?"
     a: "과도한 덕킹은 부자연스러운 음량 변동을 만들어 청취감을 해칩니다. Release 타임을 BPM에 맞게 설정하고, 감소량(Ratio·Threshold)을 미묘하게 유지하는 것이 핵심입니다."
 ---
-![사이드체인 컴프레션 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
+![사이드체인 컴프레션 가이드 — 스튜디오 놀](/images/recording8.webp)
 
 ## 사이드체인 — 소리가 서로 양보하는 기법
 
@@ -133,5 +133,4 @@ faq:
 
 ---
 
-[EDM 프로덕션 완전 가이드](/stories/edm-production1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[EDM 프로덕션 가이드](/stories/edm-production1) | [멀티밴드 컴프레서 가이드](/stories/multiband1) | [병렬 컴프레션 가이드](/stories/parallel-compression1) | [보컬 컴프레서 가이드](/stories/compressor1)

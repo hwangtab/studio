@@ -1,5 +1,5 @@
 ---
-title: "보컬 피드백 받는 방법 — 본인 노래를 객관적으로 평가하는 완전 가이드"
+title: "보컬 피드백 받는 방법 — 본인 노래를 객관적으로 평가하는 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -113,5 +113,4 @@ faq:
 
 ---
 
-[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [청음 훈련 가이드](/stories/eartraining1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1)

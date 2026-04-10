@@ -55,7 +55,7 @@ faq:
 
 ---
 
-온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다. [자세한 안내](/stories/onlinemix1)
+온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다.
 
 ---
 
@@ -65,5 +65,5 @@ faq:
 
 ---
 
-[정읍·김제 방문 가이드](/stories/jeongeup1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[정읍·김제 방문 가이드](/stories/jeongeup1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1)
+[이용 요금 보기](/pricing)

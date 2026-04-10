@@ -60,4 +60,5 @@ DAW를 처음 배우면서부터 믹싱도 직접 해왔습니다. 2년 동안 �
 
 ---
 
-[스튜디오 놀 믹싱·마스터링 요금 및 서비스 안내](/pricing) | [음원 발매 가이드](/stories/release1) | [믹싱 강좌 시작하기](/stories/mixing1)
+[음원 발매 가이드](/stories/release1) | [믹싱 강좌 시작하기](/stories/mixing1)
+[이용 요금 보기](/pricing)

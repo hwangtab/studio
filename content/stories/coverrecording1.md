@@ -1,11 +1,11 @@
 ---
-title: "커버 곡 녹음 완전 가이드 — 원곡보다 나은 커버 만들기"
+title: "커버 곡 녹음 가이드 — 원곡보다 나은 커버 만들기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["커버 곡 녹음", "커버송 녹음", "커버 보컬 녹음", "MR 녹음", "유튜브 커버", "SNS 커버 업로드", "커버 버전 제작"]
 thumbnail: "/images/recording16.webp"
-summary: "커버 곡 녹음을 위한 완전 가이드. 키 조정, MR 선택, 편곡 포인트, 저작권 처리, 유튜브·SNS 업로드까지 단계별로 정리합니다."
+summary: "커버 곡 녹음을 위한 가이드. 키 조정, MR 선택, 편곡 포인트, 저작권 처리, 유튜브·SNS 업로드까지 단계별로 정리합니다."
 faq:
   - q: "커버 곡을 녹음하기 전에 준비할 것이 있나요?"
     a: "먼저 본인의 음역에 맞게 키를 조정하세요. MR(반주)은 유튜브 무료 MR 또는 MR 전문 사이트에서 구할 수 있습니다. 원곡의 멜로디와 가사를 완벽하게 외운 후 녹음에 들어가야 세션 시간을 효율적으로 쓸 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "커버 녹음을 위해 어떤 MR을 구해야 하나요?"
     a: "유튜브에서 'MR' 또는 'instrumental' 검색, MR 전문 사이트(mr.song, MR존 등), 또는 반주기 어플 활용이 가능합니다. 스튜디오 세션에서는 본인이 원하는 키의 MR 파일을 미리 준비해 가져오세요."
 ---
-![커버 곡 녹음 완전 가이드 — 스튜디오 놀](/images/recording16.webp)
+![커버 곡 녹음 가이드 — 스튜디오 놀](/images/recording16.webp)
 
 ## 커버 녹음이란?
 
@@ -111,5 +111,4 @@ faq:
 
 ---
 
-[커버 곡 저작권 완전 가이드](/stories/copyright-cover1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [오디션 준비 녹음 가이드](/stories/audition1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[커버 곡 저작권 가이드](/stories/copyright-cover1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [오디션 준비 녹음 가이드](/stories/audition1) | [보컬 녹음 가이드](/stories/vocal-recording-tips1)

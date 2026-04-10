@@ -108,5 +108,4 @@ faq:
 
 ---
 
-[작사 방법 완전 가이드](/stories/lyrics1) | [보컬 딕션 완전 가이드](/stories/diction1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [녹음 세션 준비 완전 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)
+[작사 방법 가이드](/stories/lyrics1) | [보컬 딕션 가이드](/stories/diction1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [녹음 세션 준비 가이드](/stories/session1)

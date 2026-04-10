@@ -1,11 +1,11 @@
 ---
-title: "Ableton Live 보컬 녹음 완전 가이드 — 루프·전자음악 중심 DAW 활용"
+title: "Ableton Live 보컬 녹음 가이드 — 루프·전자음악 중심 DAW 활용"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["Ableton Live 보컬", "에이블톤 녹음", "Ableton Live 설정", "Ableton 보컬 녹음", "Ableton 믹싱", "EDM 보컬 녹음", "Ableton EQ"]
 thumbnail: "/images/service3.webp"
-summary: "Ableton Live 보컬 녹음 완전 가이드입니다. Ableton Live 기본 설정·Arrangement View 보컬 녹음·EQ Eight 설정·Compressor 설정·Warp (타이밍 교정)·파일 내보내기 (Export)까지 정리합니다."
+summary: "Ableton Live 보컬 녹음 가이드입니다. Ableton Live 기본 설정·Arrangement View 보컬 녹음·EQ Eight 설정·Compressor 설정·Warp (타이밍 교정)·파일 내보내기 (Export)까지 정리합니다."
 faq:
   - q: "Ableton Live로 보컬 녹음이 가능한가요?"
     a: "가능합니다. Ableton Live는 루프·전자음악에 특화된 DAW이지만 전통적인 보컬 녹음·편집도 완벽하게 지원합니다. Arrangement View에서 일반 DAW처럼 보컬 녹음을 진행할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Ableton Live 보컬 파일을 어떻게 내보내나요?"
     a: "File → Export Audio/Video (Cmd+Shift+R) → WAV, 24bit, 44.1kHz 또는 48kHz로 설정 후 Export 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → 내보내기합니다."
 ---
-![Ableton Live 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service3.webp)
+![Ableton Live 보컬 녹음 가이드 — 스튜디오 놀](/images/service3.webp)
 
 ## Ableton Live — 루프와 전통 녹음을 하나로
 
@@ -181,5 +181,4 @@ Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경
 
 ---
 
-[Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Logic Pro 보컬 녹음·믹싱 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 가이드](/stories/protools1) | [GarageBand 보컬 녹음 가이드](/stories/garageband1) | [음원 파일 형식 가이드](/stories/audio-format1)

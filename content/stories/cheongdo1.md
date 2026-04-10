@@ -54,7 +54,7 @@ faq:
 
 ---
 
-온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다. [자세한 안내](/stories/onlinemix1)
+온라인 파일 의뢰도 가능합니다. 현지에서 드라이 보컬 WAV를 녹음해 파일로 보내주시면 믹싱·마스터링 후 납품합니다.
 
 ---
 
@@ -64,5 +64,5 @@ faq:
 
 ---
 
-[의성에서 서울 녹음실 방문 가이드](/stories/uiseong1) | [칠곡에서 서울 녹음실 방문 가이드](/stories/chilgok1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
-[스튜디오 놀 이용 요금](/pricing)
+[의성에서 서울 녹음실 방문 가이드](/stories/uiseong1) | [칠곡에서 서울 녹음실 방문 가이드](/stories/chilgok1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1)
+[이용 요금 보기](/pricing)

@@ -1,11 +1,11 @@
 ---
-title: "헤드폰 믹싱 완전 가이드 — 헤드폰으로 정확한 믹스 만들기"
+title: "헤드폰 믹싱 가이드 — 헤드폰으로 정확한 믹스 만들기"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["헤드폰 믹싱", "헤드폰 믹스", "헤드폰 보정 플러그인", "크로스피드", "헤드폰 모니터링", "홈 레코딩 믹싱", "헤드폰 믹스 체크"]
 thumbnail: "/images/recording4.webp"
-summary: "헤드폰 믹싱 완전 가이드입니다. 헤드폰 믹스의 한계, 크로스피드 보정 플러그인, 믹스 체크 방법, 레퍼런스 비교, 스피커 번역 확인 방법을 정리합니다."
+summary: "헤드폰 믹싱 가이드입니다. 헤드폰 믹스의 한계, 크로스피드 보정 플러그인, 믹스 체크 방법, 레퍼런스 비교, 스피커 번역 확인 방법을 정리합니다."
 faq:
   - q: "헤드폰으로 믹싱해도 괜찮은가요?"
     a: "가능하지만 주의가 필요합니다. 헤드폰 믹싱은 스테레오 이미지가 과장되고 저역이 왜곡되는 경향이 있습니다. 크로스피드 플러그인과 충분한 레퍼런스 트랙 비교로 보완할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "헤드폰 믹싱에 좋은 보정 플러그인은?"
     a: "Sonarworks SoundID Reference, Waves Nx, Tonality (Head Acoustics) 등이 대표적입니다. Sonarworks는 특정 헤드폰 모델의 주파수 특성을 측정해 플랫하게 보정합니다."
 ---
-![헤드폰 믹싱 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
+![헤드폰 믹싱 가이드 — 스튜디오 놀](/images/recording4.webp)
 
 ## 헤드폰 믹싱 — 정확한 믹스를 위한 전략
 
@@ -155,5 +155,4 @@ SoundID Reference 사용 헤드폰 프로파일 선택
 
 ---
 
-[귀 피로 방지 완전 가이드](/stories/ear-fatigue1) | [믹스 레퍼런스 트랙 완전 가이드](/stories/mix-reference1) | [녹음 헤드폰 완전 가이드](/stories/headphone1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[귀 피로 방지 가이드](/stories/ear-fatigue1) | [믹스 레퍼런스 트랙 가이드](/stories/mix-reference1) | [녹음 헤드폰 가이드](/stories/headphone1) | [보컬 믹싱 가이드](/stories/vocal-mixing1)

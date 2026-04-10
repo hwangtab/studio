@@ -1,5 +1,5 @@
 ---
-title: "오토튠·피치 교정 완전 가이드 — 자연스러운 보컬 음정 수정 방법"
+title: "오토튠·피치 교정 가이드 — 자연스러운 보컬 음정 수정 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "스튜디오에서 피치 교정을 받을 수 있나요?"
     a: "네, 스튜디오 놀에서는 믹싱 과정에서 자연스러운 피치 교정 처리를 포함합니다. 별도 요청 시 정밀 피치 교정도 가능합니다. 원하는 스타일(자연스러운 교정 / 이펙트 목적 강한 교정)을 말씀해 주시면 맞춤 처리합니다."
 ---
-![오토튠·피치 교정 완전 가이드 — 스튜디오 놀](/images/room6.webp)
+![오토튠·피치 교정 가이드 — 스튜디오 놀](/images/room6.webp)
 
 ## 오토튠은 도구이지 마법이 아닙니다
 
@@ -106,5 +106,4 @@ T-Pain, 오토튠 랩 스타일을 원한다면:
 
 ---
 
-[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[피치 교정 가이드](/stories/pitch-correction1) | [멜로다인 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 가이드](/stories/mixing1)

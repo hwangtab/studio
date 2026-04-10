@@ -1,5 +1,5 @@
 ---
-title: "보컬 퍼포먼스 완전 가이드 — 무대 위 노래 실력을 극대화하는 퍼포먼스 전략"
+title: "보컬 퍼포먼스 가이드 — 무대 위 노래 실력을 극대화하는 퍼포먼스 전략"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "마이크 기술이 퍼포먼스에 영향을 미치나요?"
     a: "크게 영향을 미칩니다. 마이크 거리, 각도, 고음 시 멀리 당기는 기술 등을 익히면 음량 조절이 자연스러워지고 피드백(하울링)도 방지할 수 있습니다."
 ---
-![보컬 퍼포먼스 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
+![보컬 퍼포먼스 가이드 — 스튜디오 놀](/images/hardware8.webp)
 
 ## 퍼포먼스가 노래를 완성한다
 
@@ -125,5 +125,4 @@ faq:
 
 ---
 
-[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[라이브 공연 준비 가이드](/stories/live-performance1) | [보컬 워밍업 가이드](/stories/vocal-warmup1) | [보컬 감정 표현 가이드](/stories/vocal-emotion1) | [보컬 아티큘레이션 가이드](/stories/articulation1)

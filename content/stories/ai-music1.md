@@ -1,11 +1,11 @@
 ---
-title: "AI 음악 제작 완전 가이드 — AI 작곡·AI 보컬·AI 믹싱 활용법과 한계"
+title: "AI 음악 제작 가이드 — AI 작곡·AI 보컬·AI 믹싱 활용법과 한계"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 프로덕션 가이드"
 tags: ["AI 음악", "AI 작곡", "AI 보컬", "AI 믹싱", "Suno AI", "음악 AI 활용", "AI 음악 제작"]
 thumbnail: "/images/recording2.webp"
-summary: "AI 음악 제작 완전 가이드입니다. AI 음악 생성 도구 비교·AI를 활용한 작곡 워크플로우·AI 보컬 도구·AI 마스터링 서비스·AI 음악과 저작권까지 정리합니다."
+summary: "AI 음악 제작 가이드입니다. AI 음악 생성 도구 비교·AI를 활용한 작곡 워크플로우·AI 보컬 도구·AI 마스터링 서비스·AI 음악과 저작권까지 정리합니다."
 faq:
   - q: "AI로 음악을 만들 수 있나요?"
     a: "가능합니다. Suno, Udio, AIVA 등 AI 음악 생성 도구로 텍스트 프롬프트 입력만으로 음악을 생성할 수 있습니다. 단, 출력된 음악의 완성도는 도구마다 차이가 있으며, 전문적인 발매를 위해서는 추가 편집이 필요한 경우가 많습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "AI로 만든 음악도 음원 발매를 할 수 있나요?"
     a: "현재(2026년 기준) 많은 유통사에서 AI 생성 음악의 발매를 허용하고 있지만, AI 생성 음악임을 명시해야 하는 경우가 있습니다. 플랫폼별 정책이 빠르게 변화하고 있으므로 유통사 약관을 반드시 확인하세요."
 ---
-![AI 음악 제작 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
+![AI 음악 제작 가이드 — 스튜디오 놀](/images/recording2.webp)
 
 ## AI 음악 — 도구를 이해하고 창의적으로 활용하기
 
@@ -156,5 +156,4 @@ AI 음악 도구는 작곡·제작의 파트너로 활용할 때 가장 강력�
 
 ---
 
-[EDM 프로덕션 완전 가이드](/stories/edm-production1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [AI 마스터링 vs 전문 마스터링 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[EDM 프로덕션 가이드](/stories/edm-production1) | [팝 음악 프로덕션 가이드](/stories/pop-production1) | [사운드 디자인 가이드](/stories/sound-design1) | [AI 마스터링 vs 전문 마스터링 가이드](/stories/mastering1)

@@ -88,7 +88,6 @@ faq:
 | 정자역 (수인분당선) | 수인분당선 → 왕십리 → 5호선 → 공덕 → 6호선 | 약 65~75분 |
 | 미금역 (수인분당선) | 수인분당선 → 왕십리 → 5호선 → 공덕 → 6호선 | 약 60~70분 |
 
-
 ---
 
 ## 마치며
@@ -97,5 +96,5 @@ faq:
 
 ---
 
-[성남·분당·판교 녹음실 안내](/stories/bundang1) | [성남 수정구·중원구 녹음실 안내](/stories/seongnam-sujeong1) | [용인·수지 녹음실 안내](/stories/yongin1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[성남·분당·판교 녹음실 안내](/stories/bundang1) | [성남 수정구·중원구 녹음실 안내](/stories/seongnam-sujeong1) | [용인·수지 녹음실 안내](/stories/yongin1) | [수원·안양·군포 녹음실 안내](/stories/suwon1)
+[이용 요금 보기](/pricing)

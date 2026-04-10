@@ -109,4 +109,4 @@ faq:
 ---
 
 [뮤직비디오·유튜브 영상용 음원 녹음 가이드](/stories/mv1) | [음원 발매 가이드](/stories/release1) | [플레이리스트 피칭 전략](/stories/playlist1)
-[스튜디오 놀 이용 요금](/pricing)
+[이용 요금 보기](/pricing)

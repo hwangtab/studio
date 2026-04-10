@@ -1,5 +1,5 @@
 ---
-title: "노래 키 맞추는 방법 — 전조(Key Change)와 본인 키 찾기 완전 가이드"
+title: "노래 키 맞추는 방법 — 전조(Key Change)와 본인 키 찾기 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -120,5 +120,4 @@ faq:
 
 ---
 
-[보컬 음역대 확인·확장 방법](/stories/vocalrange1) | [MR·반주 제작 의뢰](/stories/mr-guide1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [첫 녹음 세션 준비 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 음역대 확인·확장 방법](/stories/vocalrange1) | [MR·반주 제작 의뢰](/stories/mr-guide1) | [청음 훈련 가이드](/stories/eartraining1) | [첫 녹음 세션 준비 가이드](/stories/session1)

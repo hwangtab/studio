@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[이용 요금 안내](/pricing) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [알앤비 보컬 녹음 가이드](/stories/rnb1) | [케이팝·팝 보컬 녹음 가이드](/stories/pop1) | [마이크 종류별 보컬 녹음 차이](/stories/mic1)
+[보컬 녹음 세션 준비 가이드](/stories/session1) | [알앤비 보컬 녹음 가이드](/stories/rnb1) | [케이팝·팝 보컬 녹음 가이드](/stories/pop1) | [마이크 종류별 보컬 녹음 차이](/stories/mic1)

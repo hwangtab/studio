@@ -1,5 +1,5 @@
 ---
-title: "K-팝 보컬 스타일 완전 가이드 — K-POP 창법의 특징과 훈련법"
+title: "K-팝 보컬 스타일 가이드 — K-POP 창법의 특징과 훈련법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -16,7 +16,7 @@ faq:
   - q: "K-팝 스타일 녹음은 팝 발라드와 어떻게 다른가요?"
     a: "K-팝 레코딩은 음정 교정(피치 교정)과 압축(컴프레서) 처리가 더 적극적으로 활용되며, 에너지 있는 어택감과 선명한 딕션이 강조됩니다. 퍼포먼스 에너지를 살리면서도 음정이 안정적으로 유지되어야 합니다."
 ---
-![K-팝 보컬 스타일 완전 가이드 — 스튜디오 놀](/images/service3.webp)
+![K-팝 보컬 스타일 가이드 — 스튜디오 놀](/images/service3.webp)
 
 ## K-팝 보컬은 기술과 표현의 집약체
 
@@ -97,5 +97,4 @@ K-팝 보컬은 전문 트레이닝과 꾸준한 연습으로 단계적으로 �
 
 ---
 
-[힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[힙합 래핑·플로우 보컬 가이드](/stories/hiphop-vocal1) | [K-POP 프로덕션 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 가이드](/stories/kpop-audition1) | [보컬 런·애드립 가이드](/stories/runs1)

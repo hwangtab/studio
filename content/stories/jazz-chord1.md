@@ -1,11 +1,11 @@
 ---
-title: "재즈 코드 진행 완전 가이드 — ii-V-I·재즈 화성·보이싱 기법"
+title: "재즈 코드 진행 가이드 — ii-V-I·재즈 화성·보이싱 기법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["재즈 코드 진행", "ii-V-I", "재즈 화성", "재즈 보이싱", "재즈 작곡", "재즈 코드", "재즈 이론"]
 thumbnail: "/images/studio1.webp"
-summary: "재즈 코드 진행 완전 가이드입니다. ii-V-I 진행, 재즈 터닝, 확장 코드(9th·11th·13th), 보이싱 기법, 모달 재즈 코드, 실전 재즈 스탠다드 분석을 정리합니다."
+summary: "재즈 코드 진행 가이드입니다. ii-V-I 진행, 재즈 터닝, 확장 코드(9th·11th·13th), 보이싱 기법, 모달 재즈 코드, 실전 재즈 스탠다드 분석을 정리합니다."
 faq:
   - q: "재즈 코드 진행의 가장 기본은 무엇인가요?"
     a: "ii-V-I 진행이 재즈의 핵심입니다. C장조에서 Dm7 → G7 → Cmaj7로 진행하는 패턴이 대부분의 재즈 스탠다드에 반복됩니다. 이 진행을 모든 조성에서 자유롭게 사용하는 것이 재즈 음악가의 기본 역량입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "재즈 이론을 처음 배우는 사람에게 추천하는 순서는?"
     a: "1. 7화음 종류 이해 (Maj7, m7, 7, m7b5, dim7), 2. ii-V-I 진행 암기, 3. 전조(Turnaround) 패턴, 4. 확장 코드(9·11·13), 5. 대리 코드(Substitution), 6. 모달 재즈 순으로 진행하세요."
 ---
-![재즈 코드 진행 완전 가이드 — 스튜디오 놀](/images/studio1.webp)
+![재즈 코드 진행 가이드 — 스튜디오 놀](/images/studio1.webp)
 
 ## 재즈 코드 진행 — 세련된 화성의 핵심
 
@@ -171,5 +171,4 @@ Dm7 → G7 → Cmaj7
 
 ---
 
-[코드 진행 완전 가이드](/stories/chord-progressions1) | [재즈 보컬 녹음 완전 가이드](/stories/jazz-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [작사·작곡 완전 가이드](/stories/songwriting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[코드 진행 가이드](/stories/chord-progressions1) | [재즈 보컬 녹음 가이드](/stories/jazz-vocal1) | [멜로디 작곡 가이드](/stories/melody-writing1) | [작사·작곡 가이드](/stories/songwriting1)

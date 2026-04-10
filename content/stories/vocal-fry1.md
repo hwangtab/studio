@@ -1,5 +1,5 @@
 ---
-title: "보컬 프라이(크리피 보이스) 발성법 완전 가이드"
+title: "보컬 프라이(크리피 보이스) 발성법 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "보컬 프라이와 흉성의 차이는 무엇인가요?"
     a: "흉성(체스트 보이스)은 성대가 두껍고 강하게 진동하는 레지스터인 반면, 보컬 프라이는 성대를 가장 느슨하게 붙여 불규칙하게 진동시키는 레지스터입니다. 보컬 프라이는 피치가 매우 낮고 독특한 질감이 있습니다."
 ---
-![보컬 프라이 발성법 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
+![보컬 프라이 발성법 가이드 — 스튜디오 놀](/images/recording8.webp)
 
 ## 보컬 프라이란?
 
@@ -100,5 +100,4 @@ faq:
 
 ---
 
-[팔세토 발성법 완전 가이드](/stories/falsetto1) | [두성(헤드 보이스) 훈련 가이드](/stories/headvoice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [벨팅 발성법 가이드](/stories/belting1) | [보컬 레슨 가이드](/stories/lessonguide1)
-[스튜디오 놀 이용 요금](/pricing)
+[팔세토 발성법 가이드](/stories/falsetto1) | [두성(헤드 보이스) 훈련 가이드](/stories/headvoice1) | [믹스 보이스 가이드](/stories/mixvoice1) | [벨팅 발성법 가이드](/stories/belting1)

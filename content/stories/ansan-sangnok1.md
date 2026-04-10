@@ -64,7 +64,6 @@ faq:
 | 상록수역 (4호선) | 4호선 → 금정 → 1호선 → 영등포 → 경의중앙선 | 약 70~80분 |
 | 한대앞역 (4호선) | 4호선 → 금정 → 1호선 → 영등포 → 경의중앙선 | 약 75~85분 |
 
-
 ---
 
 ## 마치며
@@ -73,5 +72,5 @@ faq:
 
 ---
 
-[안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [안산·시흥 녹음실 안내](/stories/ansan1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [군포 산본·금정 녹음실 안내](/stories/gunpo-sanbon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [안산·시흥 녹음실 안내](/stories/ansan1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [군포 산본·금정 녹음실 안내](/stories/gunpo-sanbon1)
+[이용 요금 보기](/pricing)

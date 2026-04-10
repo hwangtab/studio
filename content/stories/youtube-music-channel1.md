@@ -1,5 +1,5 @@
 ---
-title: "유튜브 음악 채널 운영 완전 가이드 — 뮤지션이 구독자를 늘리는 방법"
+title: "유튜브 음악 채널 운영 가이드 — 뮤지션이 구독자를 늘리는 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 마케팅"
@@ -16,7 +16,7 @@ faq:
   - q: "유튜브 알고리즘에서 음악 채널이 성장하려면?"
     a: "CTR(클릭률)과 시청 지속 시간이 핵심입니다. 썸네일과 제목으로 클릭을 유도하고, 영상 초반 30초 안에 하이라이트를 넣어 이탈률을 낮춥니다. 정기 업로드(주 1~2회)로 알고리즘 주기를 맞추는 것이 중요합니다."
 ---
-![유튜브 음악 채널 운영 완전 가이드 — 스튜디오 놀](/images/album2.webp)
+![유튜브 음악 채널 운영 가이드 — 스튜디오 놀](/images/album2.webp)
 
 ## 유튜브 — 뮤지션의 가장 강력한 포트폴리오
 
@@ -151,5 +151,4 @@ faq:
 
 ---
 
-[뮤지션 라이브 스트리밍 완전 가이드](/stories/live-streaming-music1) | [뮤지션 팟캐스트·오디오 콘텐츠 제작 완전 가이드](/stories/music-podcast1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[뮤지션 라이브 스트리밍 가이드](/stories/live-streaming-music1) | [뮤지션 팟캐스트·오디오 콘텐츠 제작 가이드](/stories/music-podcast1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [음악 마케팅 가이드](/stories/music-marketing1)

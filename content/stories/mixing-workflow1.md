@@ -1,11 +1,11 @@
 ---
-title: "믹싱 워크플로우 완전 가이드 — 보컬 믹싱 시작부터 납품까지"
+title: "믹싱 워크플로우 가이드 — 보컬 믹싱 시작부터 납품까지"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["믹싱 워크플로우", "믹싱 순서", "보컬 믹싱 과정", "믹싱 단계", "레퍼런스 트랙", "믹싱 납품", "DAW 믹싱"]
 thumbnail: "/images/recording4.webp"
-summary: "믹싱 워크플로우 완전 가이드입니다. 믹싱 세션 준비, 단계별 순서(클리닝→레벨→EQ→다이나믹→공간감→마스터버스), 레퍼런스 트랙 활용, 납품 형식을 정리합니다."
+summary: "믹싱 워크플로우 가이드입니다. 믹싱 세션 준비, 단계별 순서(클리닝→레벨→EQ→다이나믹→공간감→마스터버스), 레퍼런스 트랙 활용, 납품 형식을 정리합니다."
 faq:
   - q: "믹싱은 어떤 순서로 진행하나요?"
     a: "일반적으로 클리닝(노이즈 제거) → 레벨 밸런스 → EQ → 다이나믹(컴프레서) → 공간감(리버브·딜레이) → 마스터버스 처리 순서로 진행합니다. 각 단계를 순서대로 다져야 다음 단계가 명확해집니다."
@@ -16,7 +16,7 @@ faq:
   - q: "믹싱 전에 보컬 파일을 어떻게 준비해야 하나요?"
     a: "드라이(Dry) 보컬 WAV(24bit/48kHz)로 녹음하고, 파일명에 곡명과 아티스트명을 표기해 전달합니다. MR(반주) 파일도 WAV 또는 MP3(320kbps)로 함께 전달하세요."
 ---
-![믹싱 워크플로우 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
+![믹싱 워크플로우 가이드 — 스튜디오 놀](/images/recording4.webp)
 
 ## 믹싱 — 소리를 완성하는 체계적인 과정
 
@@ -147,5 +147,4 @@ faq:
 
 ---
 
-[강좌 제7부: 정리 정돈](/stories/mixing7) | [강좌 제13부: Static Mix](/stories/mixing13) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹스 버스 라우팅 완전 가이드](/stories/mix-bus1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[강좌 제7부: 정리 정돈](/stories/mixing7) | [강좌 제13부: Static Mix](/stories/mixing13) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1)

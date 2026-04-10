@@ -1,5 +1,5 @@
 ---
-title: "마이크 테크닉 완전 가이드 — 마이크 앞에서 더 잘 들리는 보컬 퍼포먼스"
+title: "마이크 테크닉 가이드 — 마이크 앞에서 더 잘 들리는 보컬 퍼포먼스"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -123,5 +123,4 @@ faq:
 
 ---
 
-[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [보컬 자세 완전 가이드](/stories/posture1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [첫 녹음 세션 준비 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [보컬 자세 가이드](/stories/posture1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [첫 녹음 세션 준비 가이드](/stories/session1)

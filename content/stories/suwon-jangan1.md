@@ -62,7 +62,6 @@ faq:
 | 수원역 (1호선) | 1호선 → 영등포 → 경의중앙선 → DMC → 6호선 | 약 75~90분 |
 | 성균관대역 (1호선) | 1호선 → 영등포 → 경의중앙선 → DMC → 6호선 | 약 65~80분 |
 
-
 ---
 
 ## 마치며
@@ -71,5 +70,5 @@ faq:
 
 ---
 
-[수원·안양·군포 녹음실 안내](/stories/suwon1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [안양 만안구 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·군포 녹음실 안내](/stories/pyeongchon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[수원·안양·군포 녹음실 안내](/stories/suwon1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [안양 만안구 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·군포 녹음실 안내](/stories/pyeongchon1)
+[이용 요금 보기](/pricing)

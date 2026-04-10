@@ -1,11 +1,11 @@
 ---
-title: "리버브 믹싱 완전 가이드 — 보컬·악기별 리버브 설정과 활용법"
+title: "리버브 믹싱 가이드 — 보컬·악기별 리버브 설정과 활용법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
 tags: ["리버브 믹싱", "보컬 리버브", "리버브 설정", "공간감 믹싱", "홀 리버브", "플레이트 리버브", "룸 리버브"]
 thumbnail: "/images/service6.webp"
-summary: "리버브 믹싱 완전 가이드입니다. 리버브의 종류(홀·룸·플레이트·스프링), 보컬과 악기별 리버브 설정값, Aux Send 방식 활용법, 리버브 전처리 EQ 기법을 정리합니다."
+summary: "리버브 믹싱 가이드입니다. 리버브의 종류(홀·룸·플레이트·스프링), 보컬과 악기별 리버브 설정값, Aux Send 방식 활용법, 리버브 전처리 EQ 기법을 정리합니다."
 faq:
   - q: "보컬에 리버브를 얼마나 걸어야 하나요?"
     a: "보컬 리버브는 '느껴지지만 명확하게는 들리지 않는' 수준이 이상적입니다. Aux 센드 레벨을 점진적으로 올리다가 보컬이 뒤로 물러나기 시작하면 그 직전 레벨이 적당합니다. K팝·팝은 짧고 빠른 리버브, 발라드는 길고 넓은 리버브를 사용합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Insert 리버브와 Aux Send 리버브의 차이는?"
     a: "Insert는 해당 채널에만 직접 리버브를 걸어 Wet/Dry 비율을 조절합니다. Aux Send는 여러 채널을 하나의 리버브 버스로 보내 동일한 공간감을 공유합니다. Aux Send 방식이 믹스 응집력이 높고 CPU 효율도 좋습니다."
 ---
-![리버브 믹싱 완전 가이드 — 스튜디오 놀](/images/service6.webp)
+![리버브 믹싱 가이드 — 스튜디오 놀](/images/service6.webp)
 
 ## 리버브 — 믹스에 공간을 입히는 기술
 
@@ -132,5 +132,4 @@ faq:
 
 ---
 
-[딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[딜레이 믹싱 가이드](/stories/delay-mixing1) | [보컬 컴프레서 가이드](/stories/vocal-compression1) | [보컬 EQ 가이드](/stories/vocal-eq1) | [보컬 믹싱 가이드](/stories/vocal-mixing1)

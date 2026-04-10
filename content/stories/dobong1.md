@@ -70,9 +70,9 @@ faq:
 
 ## 마치며
 
-도봉구에서 지하철 30~40분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
+도봉구에서 지하철 30~40분 세션 일정과 준비 사항은 카카오톡 문의로 미리 확인해두는 편이 좋습니다. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
 
 ---
 
-[도봉구 방학·쌍문·창동 세부 안내](/stories/dobong-banghak1) | [강북구·북한산 방문 가이드](/stories/gangbuk1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[도봉구 방학·쌍문·창동 세부 안내](/stories/dobong-banghak1) | [강북구·북한산 방문 가이드](/stories/gangbuk1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1)
+[이용 요금 보기](/pricing)

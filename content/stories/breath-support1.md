@@ -1,5 +1,5 @@
 ---
-title: "보컬 호흡 지지(Breath Support) 완전 가이드 — 복식호흡과 아포지오 트레이닝"
+title: "보컬 호흡 지지(Breath Support) 가이드 — 복식호흡과 아포지오 트레이닝"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "보컬 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "지지가 부족하면 어떤 문제가 생기나요?"
     a: "음정이 불안정해지고, 고음에서 목을 쥐어짜게 됩니다. 롱 노트에서 소리가 점점 작아지거나 흔들리고, 조기 성대 피로가 생깁니다."
 ---
-![보컬 호흡 지지(Breath Support) 완전 가이드 — 스튜디오 놀](/images/recording15.webp)
+![보컬 호흡 지지(Breath Support) 가이드 — 스튜디오 놀](/images/recording15.webp)
 
 ## 호흡 지지가 보컬의 모든 것을 결정하는 이유
 
@@ -116,5 +116,4 @@ faq:
 
 ---
 
-[복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [보컬 공명 완전 가이드](/stories/vocal-resonance1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [흉성 완전 가이드](/stories/chest-voice1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[복식호흡·횡격막 발성 가이드](/stories/diaphragm1) | [보컬 공명 가이드](/stories/vocal-resonance1) | [보컬 호흡법 가이드](/stories/breathing1) | [흉성 가이드](/stories/chest-voice1)

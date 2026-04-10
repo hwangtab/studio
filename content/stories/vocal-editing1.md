@@ -1,11 +1,11 @@
 ---
-title: "보컬 편집 완전 가이드 — DAW에서 보컬 다듬기와 컴핑"
+title: "보컬 편집 가이드 — DAW에서 보컬 다듬기와 컴핑"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 편집", "보컬 컴핑", "DAW 보컬", "피치 교정", "타이밍 교정", "보컬 클린업", "멜로다인"]
 thumbnail: "/images/recording2.webp"
-summary: "보컬 편집 완전 가이드입니다. 컴핑(Comping), 피치 수정(Melodyne·Auto-Tune), 타이밍 교정(워프), 브레스 처리, 팝 노이즈 클리닝 방법을 정리합니다."
+summary: "보컬 편집 가이드입니다. 컴핑(Comping), 피치 수정(Melodyne·Auto-Tune), 타이밍 교정(워프), 브레스 처리, 팝 노이즈 클리닝 방법을 정리합니다."
 faq:
   - q: "보컬 컴핑(Comping)이란 무엇인가요?"
     a: "여러 테이크 중 각 구간별로 가장 좋은 부분을 선택·편집하여 하나의 완성된 보컬 트랙을 만드는 작업입니다. 한 테이크에서 완벽한 보컬을 얻기 어렵기 때문에, 컴핑으로 최고의 결과물을 조합합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "브레스(호흡 소리) 처리는 어떻게 하나요?"
     a: "가사 시작 전 브레스 소리를 볼륨 페이드로 줄이거나 게이트·오토메이션으로 처리합니다. 완전히 제거하면 부자연스럽게 들릴 수 있으므로, -10dB~-15dB 정도 줄이는 것을 권장합니다."
 ---
-![보컬 편집 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
+![보컬 편집 가이드 — 스튜디오 놀](/images/recording2.webp)
 
 ## 보컬 편집 — 녹음과 믹싱 사이의 핵심 단계
 
@@ -148,5 +148,4 @@ faq:
 
 ---
 
-[보컬 컴핑 완전 가이드](/stories/comping1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 컴핑 가이드](/stories/comping1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [보컬 신호 체인 가이드](/stories/vocal-chain1) | [보컬 EQ 가이드](/stories/eq-guide1)

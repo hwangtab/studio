@@ -1,5 +1,5 @@
 ---
-title: "음악 저작권료 받는 방법 — KOMCA 등록과 저작인접권 완전 가이드"
+title: "음악 저작권료 받는 방법 — KOMCA 등록과 저작인접권 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "가이드"
@@ -84,5 +84,4 @@ faq:
 
 ---
 
-[음원 유통 방법 완전 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1)
-[스튜디오 놀 이용 요금](/pricing)
+[음원 유통 방법 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1)

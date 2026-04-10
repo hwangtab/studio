@@ -90,4 +90,4 @@ faq:
 ---
 
 [녹음실 처음 방문 가이드](/stories/guide1) | [녹음 세션 준비 체크리스트](/stories/session1) | [예약 방법 가이드](/stories/booking1)
-[스튜디오 놀 이용 요금](/pricing)
+[이용 요금 보기](/pricing)

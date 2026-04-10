@@ -91,4 +91,4 @@ faq:
 
 ---
 
-[스튜디오 놀 시설·장비 상세 안내](/studio-info) | [연신내·불광 녹음실 선택 가이드](/stories/review6) | [이용 요금 안내](/pricing) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [마포구 녹음실 안내](/stories/mapo1)
+[연신내·불광 녹음실 선택 가이드](/stories/review6) | [마이크 종류별 보컬 녹음 차이](/stories/mic1) | [마포구 녹음실 안내](/stories/mapo1)

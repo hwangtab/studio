@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: "강좌"
 tags: ["음악 저작권", "KOMCA 등록", "저작권 등록", "작사 저작권", "작곡 저작권", "인디 뮤지션", "음원 저작권"]
 thumbnail: "/images/service2.webp"
-summary: "인디 뮤지션과 작곡가를 위한 음악 저작권 완전 가이드. KOMCA(한국음악저작권협회) 등록 방법, 저작권 범위, 커버곡 저작권 처리, 유튜브·방송 사용 시 저작권료 수령까지 정리합니다."
+summary: "인디 뮤지션과 작곡가를 위한 음악 저작권 가이드. KOMCA(한국음악저작권협회) 등록 방법, 저작권 범위, 커버곡 저작권 처리, 유튜브·방송 사용 시 저작권료 수령까지 정리합니다."
 faq:
   - q: "KOMCA에 저작권을 등록하면 어떤 혜택이 있나요?"
     a: "방송(TV·라디오)·온라인 스트리밍·공연·영상 사용 등 다양한 경로에서 발생하는 저작권료를 KOMCA가 대신 수거해 분배합니다. 등록하지 않으면 방송에서 내 곡이 사용되어도 저작권료를 받을 수 없습니다."
@@ -113,5 +113,4 @@ faq:
 
 ---
 
-[음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 유통 완전 가이드](/stories/distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 퍼블리싱 가이드](/stories/music-publishing1) | [음악 라이센싱 가이드](/stories/music-licensing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 유통 가이드](/stories/distribution1)

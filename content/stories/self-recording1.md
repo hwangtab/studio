@@ -1,11 +1,11 @@
 ---
-title: "셀프 보컬 녹음 완전 가이드 — 혼자서 고퀄리티 보컬 녹음하기"
+title: "셀프 보컬 녹음 가이드 — 혼자서 고퀄리티 보컬 녹음하기"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["셀프 녹음", "혼자 녹음", "보컬 셀프 레코딩", "홈 레코딩 보컬", "DAW 보컬 녹음", "셀프 엔지니어링", "보컬 자가 녹음"]
 thumbnail: "/images/portfolio3.webp"
-summary: "혼자서 고퀄리티 보컬을 녹음하는 셀프 레코딩 완전 가이드입니다. 장비 세팅, DAW 설정, 자가 모니터링, 테이크 관리, 믹싱 의뢰 전 파일 정리법을 정리합니다."
+summary: "혼자서 고퀄리티 보컬을 녹음하는 셀프 레코딩 가이드입니다. 장비 세팅, DAW 설정, 자가 모니터링, 테이크 관리, 믹싱 의뢰 전 파일 정리법을 정리합니다."
 faq:
   - q: "혼자서 고퀄리티 보컬 녹음이 가능한가요?"
     a: "가능합니다. 적절한 마이크, 오디오 인터페이스, 방음 처리, DAW 설정을 갖추면 셀프 녹음으로 스튜디오에서 믹싱·마스터링 의뢰할 수 있는 수준의 드라이 보컬을 얻을 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "셀프 녹음에 필요한 최소 장비는 무엇인가요?"
     a: "콘덴서 마이크, 오디오 인터페이스, DAW 소프트웨어(GarageBand 무료 포함), 팝 필터, 헤드폰이 기본 구성입니다. 추가로 간단한 방음 처리(이불·어쿠스틱 폼)를 하면 크게 개선됩니다."
 ---
-![셀프 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/portfolio3.webp)
+![셀프 보컬 녹음 가이드 — 스튜디오 놀](/images/portfolio3.webp)
 
 ## 셀프 녹음 — 혼자서도 가능한 고퀄리티 보컬
 
@@ -124,5 +124,4 @@ faq:
 
 ---
 
-[GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [마이크 테크닉 완전 가이드](/stories/mic-technique1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[GarageBand 보컬 녹음 가이드](/stories/garageband1) | [음원 파일 형식 가이드](/stories/audio-format1) | [마이크 테크닉 가이드](/stories/mic-technique1) | [홈 레코딩 가이드](/stories/home-recording1)

@@ -1,5 +1,5 @@
 ---
-title: "샘플레이트·비트뎁스 완전 가이드 — 44.1kHz vs 48kHz, 16bit vs 24bit"
+title: "샘플레이트·비트뎁스 가이드 — 44.1kHz vs 48kHz, 16bit vs 24bit"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 기초"
@@ -16,7 +16,7 @@ faq:
   - q: "스트리밍 플랫폼에 납품하는 최종 음원 포맷은 무엇인가요?"
     a: "멜론·지니·스포티파이 등 스트리밍 플랫폼 납품용 최종 마스터는 WAV 44.1kHz/16bit(CD 규격)가 표준입니다. 일부 플랫폼은 24bit도 허용합니다. 유통사 지침을 확인하세요."
 ---
-![샘플레이트·비트뎁스 완전 가이드 — 스튜디오 놀](/images/hardware5.webp)
+![샘플레이트·비트뎁스 가이드 — 스튜디오 놀](/images/hardware5.webp)
 
 ## 오디오 해상도란?
 
@@ -105,5 +105,4 @@ faq:
 
 ---
 
-[보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [홈 레코딩 마이크 가이드](/stories/vocal-microphone1) | [믹싱 의뢰용 파일 납품 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 녹음 가이드](/stories/vocal-recording-tips1) | [홈 레코딩 마이크 가이드](/stories/vocal-microphone1) | [마스터링 가이드](/stories/mastering1)

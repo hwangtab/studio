@@ -1,5 +1,5 @@
 ---
-title: "음반사·레이블 계약 완전 가이드 — 뮤지션이 알아야 할 레코드 딜의 모든 것"
+title: "음반사·레이블 계약 가이드 — 뮤지션이 알아야 할 레코드 딜의 모든 것"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 비즈니스"
@@ -16,7 +16,7 @@ faq:
   - q: "계약서를 검토할 때 법률 전문가가 필요한가요?"
     a: "반드시 필요합니다. 음악 저작권 전문 변호사에게 검토를 의뢰해야 합니다. 계약서 한 줄이 수년간의 음악 활동 전체에 영향을 미칠 수 있습니다. 국내 한국음악저작권협회(KMCA), 문화체육관광부 산하 기관에서 무료 법률 상담 서비스도 제공합니다."
 ---
-![음반사·레이블 계약 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
+![음반사·레이블 계약 가이드 — 스튜디오 놀](/images/recording6.webp)
 
 ## 레코드 딜 — 기회인가, 함정인가
 
@@ -129,5 +129,4 @@ faq:
 
 ---
 
-[인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약서 완전 가이드](/stories/contract1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[인디 레이블·자체 발매 가이드](/stories/indie-label1) | [음악 퍼블리싱 가이드](/stories/music-publishing1) | [음원 저작권 가이드](/stories/copyright1) | [음악 계약서 가이드](/stories/contract1)

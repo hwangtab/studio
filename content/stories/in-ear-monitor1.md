@@ -1,5 +1,5 @@
 ---
-title: "인이어 모니터 완전 가이드 — 무대·녹음 시 IEM 선택과 사용 방법"
+title: "인이어 모니터 가이드 — 무대·녹음 시 IEM 선택과 사용 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "장비 가이드"
@@ -16,7 +16,7 @@ faq:
   - q: "보컬리스트에게 맞는 IEM 가격대는 어떻게 되나요?"
     a: "입문용: 5~10만 원 (범용 이어폰 수준), 중급: 10~30만 원 (보컬 청취에 충분), 전문 무대용: 50만 원 이상 (개인 맞춤 제작 포함). 처음 무대를 경험한다면 10~20만 원 대 IEM으로 시작해보세요."
 ---
-![인이어 모니터 완전 가이드 — 스튜디오 놀](/images/recording9.webp)
+![인이어 모니터 가이드 — 스튜디오 놀](/images/recording9.webp)
 
 ## 인이어 모니터가 필요한 이유
 
@@ -97,5 +97,4 @@ faq:
 
 ---
 
-[녹음 헤드폰 완전 가이드](/stories/headphone1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [홈 레코딩 장비 가이드](/stories/homegear1) | [오디오 인터페이스 가이드](/stories/interface1)
-[스튜디오 놀 이용 요금](/pricing)
+[녹음 헤드폰 가이드](/stories/headphone1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [홈 레코딩 장비 가이드](/stories/homegear1) | [오디오 인터페이스 가이드](/stories/interface1)

@@ -1,5 +1,5 @@
 ---
-title: "오디오북 제작 방법 — 녹음부터 유통까지 완전 가이드"
+title: "오디오북 제작 방법 — 녹음부터 유통까지 가이드"
 date: 2026-04-08
 author: "스튜디오 놀"
 category: "보이스액팅 가이드"
@@ -234,4 +234,4 @@ faq:
 
 ---
 
-[성우 녹음 안내](/voice-acting) | [보이스액팅 서비스 소개](/voice-acting) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [요금 안내](/pricing)
+[홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1)

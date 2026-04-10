@@ -1,11 +1,11 @@
 ---
-title: "리미터 완전 가이드 — 마스터링 리미터 설정과 스트리밍 음압 확보"
+title: "리미터 가이드 — 마스터링 리미터 설정과 스트리밍 음압 확보"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "녹음 가이드"
 tags: ["리미터", "limiter", "마스터링 리미터", "트루피크", "LUFS", "음압 확보", "스트리밍 마스터링"]
 thumbnail: "/images/service3.webp"
-summary: "마스터링 리미터 완전 가이드. 리미터와 컴프레서의 차이, True Peak 설정, 스트리밍 플랫폼 LUFS 기준, 추천 리미터 플러그인까지 마스터링 마지막 단계를 완벽히 안내합니다."
+summary: "마스터링 리미터 가이드. 리미터와 컴프레서의 차이, True Peak 설정, 스트리밍 플랫폼 LUFS 기준, 추천 리미터 플러그인까지 마스터링 마지막 단계를 정리합니다."
 faq:
   - q: "리미터와 컴프레서는 어떻게 다른가요?"
     a: "컴프레서는 Ratio를 2:1~8:1 정도로 설정해 다이나믹을 부드럽게 줄이고, 리미터는 Ratio를 무한대(∞:1)로 설정해 설정한 천장(Ceiling) 이상으로 신호가 절대 넘어가지 않게 막습니다. 마스터링 마지막 단계에서 음압을 최대화할 때 사용합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "추천 리미터 플러그인은 무엇인가요?"
     a: "무료: TDR Limiter 6 GE (데모), Limiter No6. 유료: FabFilter Pro-L2, iZotope Ozone Maximizer, Waves L2. 입문자에게는 FabFilter Pro-L2가 시각적 피드백이 직관적이어서 추천합니다."
 ---
-![리미터 완전 가이드 — 스튜디오 놀](/images/service3.webp)
+![리미터 가이드 — 스튜디오 놀](/images/service3.webp)
 
 ## 마스터링의 마지막 문지기
 
@@ -100,5 +100,4 @@ faq:
 
 ---
 
-[스템 마스터링 완전 가이드](/stories/stem-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [음압(LUFS) 스트리밍 마스터링 가이드](/stories/loudness1) | [게인 스테이징 완전 가이드](/stories/gain-staging1)
-[스튜디오 놀 이용 요금](/pricing)
+[스템 마스터링 가이드](/stories/stem-mastering1) | [마스터링 가이드](/stories/mastering1) | [음압(LUFS) 스트리밍 마스터링 가이드](/stories/loudness1) | [게인 스테이징 가이드](/stories/gain-staging1)

@@ -1,11 +1,11 @@
 ---
-title: "보컬 컴핑 완전 가이드 — 최고의 보컬 테이크 선택·편집·조합 방법"
+title: "보컬 컴핑 가이드 — 최고의 보컬 테이크 선택·편집·조합 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["보컬 컴핑", "컴핑", "보컬 편집", "테이크 선택", "보컬 레코딩 편집", "DAW 컴핑", "보컬 조합"]
 thumbnail: "/images/console.webp"
-summary: "보컬 컴핑 완전 가이드입니다. 컴핑 기본 워크플로우·DAW별 컴핑 방법·좋은 테이크 선택 기준·컴핑 편집 팁까지 정리합니다."
+summary: "보컬 컴핑 가이드입니다. 컴핑 기본 워크플로우·DAW별 컴핑 방법·좋은 테이크 선택 기준·컴핑 편집 팁까지 정리합니다."
 faq:
   - q: "컴핑(Comping)이란 무엇인가요?"
     a: "컴핑(Comping)은 여러 번 녹음한 보컬 테이크 중 각 구간의 최선 부분을 선택해 하나의 완성된 보컬 트랙으로 조합하는 작업입니다. 음절 하나 단위로 다른 테이크의 감정·음정·박자를 골라 붙여 이상적인 퍼포먼스를 만들어냅니다."
@@ -16,7 +16,7 @@ faq:
   - q: "컴핑 후 피치 교정이 필요한가요?"
     a: "대부분의 경우 컴핑 후 피치 교정(Melodyne 또는 Auto-Tune)을 추가로 진행합니다. 컴핑으로 최선의 테이크를 골랐더라도 피치 교정으로 정확도를 높이는 것이 완성도를 높이는 표준 워크플로우입니다."
 ---
-![보컬 컴핑 완전 가이드 — 스튜디오 놀](/images/console.webp)
+![보컬 컴핑 가이드 — 스튜디오 놀](/images/console.webp)
 
 ## 컴핑 — 여러 테이크에서 최고의 퍼포먼스를 만드는 기술
 
@@ -140,5 +140,4 @@ faq:
 
 ---
 
-[보컬 편집 완전 가이드](/stories/vocal-editing1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 편집 가이드](/stories/vocal-editing1) | [피치 교정 가이드](/stories/pitch-correction1) | [보컬 프로듀서 가이드](/stories/vocal-producer1) | [보컬 녹음 팁 가이드](/stories/vocal-recording-tips1)

@@ -1,5 +1,5 @@
 ---
-title: "보컬 긴장 극복 방법 — 무대 불안과 녹음 긴장을 이기는 완전 가이드"
+title: "보컬 긴장 극복 방법 — 무대 불안과 녹음 긴장을 이기는 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
@@ -109,5 +109,4 @@ faq:
 
 ---
 
-[콘서트·공연 보컬 준비 가이드](/stories/concert-vocal1) | [공연·무대 전 보컬 컨디션 관리](/stories/performance-prep1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [첫 녹음 세션 준비 가이드](/stories/session1)
-[스튜디오 놀 이용 요금](/pricing)
+[콘서트·공연 보컬 준비 가이드](/stories/concert-vocal1) | [공연·무대 전 보컬 컨디션 관리](/stories/performance-prep1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 호흡법 가이드](/stories/breathing1)

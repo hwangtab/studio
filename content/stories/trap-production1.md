@@ -1,11 +1,11 @@
 ---
-title: "트랩 음악 제작 완전 가이드 — 트랩 비트 만들기·808·하이햇 프로그래밍"
+title: "트랩 음악 제작 가이드 — 트랩 비트 만들기·808·하이햇 프로그래밍"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["트랩 음악 제작", "트랩 비트", "808 베이스", "트랩 드럼", "트랩 하이햇", "힙합 프로덕션", "한국 트랩"]
 thumbnail: "/images/hardware4.webp"
-summary: "트랩 음악 제작 완전 가이드입니다. 트랩 비트의 핵심 요소(808 베이스·하이햇 롤·스네어)와 드럼 패턴, 트랩 멜로디 제작, FL Studio·Ableton에서의 트랩 제작 방법을 정리합니다."
+summary: "트랩 음악 제작 가이드입니다. 트랩 비트의 핵심 요소(808 베이스·하이햇 롤·스네어)와 드럼 패턴, 트랩 멜로디 제작, FL Studio·Ableton에서의 트랩 제작 방법을 정리합니다."
 faq:
   - q: "트랩 음악이란 무엇인가요?"
     a: "트랩(Trap)은 2000년대 미국 남부 힙합에서 발전한 장르로 롤링 하이햇, 무거운 808 킥/서브 베이스, 슬로우 스네어, 어두운 멜로디가 특징입니다. 한국에서는 랩·힙합과 결합해 K-트랩이라는 독자적인 스타일이 발전했습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "트랩 제작에 추천하는 DAW와 플러그인은?"
     a: "FL Studio가 트랩 제작의 업계 표준입니다. Step Sequencer로 직관적인 드럼 패턴 제작이 가능합니다. 플러그인은 Nexus(멜로디 신스), 3xOsc(808 베이스), Gross Beat(하이햇 효과), RC-20 Retro Color(음색 처리)가 인기입니다."
 ---
-![트랩 음악 제작 완전 가이드 — 스튜디오 놀](/images/hardware4.webp)
+![트랩 음악 제작 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
 ## 트랩 — 현대 힙합의 지배적 문법
 
@@ -143,5 +143,4 @@ H HH HH HH HH HH HH HH                          (3연음 롤)
 
 ---
 
-[Lo-Fi 음악 제작 완전 가이드](/stories/lofi-music1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [힙합 보컬 녹음 완전 가이드](/stories/hiphop-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[Lo-Fi 음악 제작 가이드](/stories/lofi-music1) | [사운드 디자인 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [힙합 보컬 녹음 가이드](/stories/hiphop-vocal1)

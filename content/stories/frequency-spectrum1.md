@@ -1,11 +1,11 @@
 ---
-title: "주파수 스펙트럼 완전 가이드 — EQ로 보컬·악기 주파수 대역 이해하기"
+title: "주파수 스펙트럼 가이드 — EQ로 보컬·악기 주파수 대역 이해하기"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "믹싱 가이드"
 tags: ["주파수 스펙트럼", "EQ 주파수", "보컬 주파수 대역", "저역 중역 고역", "주파수 마스킹", "믹싱 EQ 이론", "사운드 스펙트럼"]
 thumbnail: "/images/portfolio5.webp"
-summary: "주파수 스펙트럼 완전 가이드입니다. 저역·중역·고역 주파수 대역별 특성, 보컬·악기 주파수 분포, EQ 처리 시 마스킹 방지, 주파수 충돌 해결 방법을 정리합니다."
+summary: "주파수 스펙트럼 가이드입니다. 저역·중역·고역 주파수 대역별 특성, 보컬·악기 주파수 분포, EQ 처리 시 마스킹 방지, 주파수 충돌 해결 방법을 정리합니다."
 faq:
   - q: "보컬의 주파수 대역은 어디인가요?"
     a: "보컬의 기본음(Fundamental)은 남성 80~300Hz, 여성 160~500Hz 범위입니다. 배음(Harmonic)과 프레즌스는 1~5kHz, 공기감(Air)은 8~16kHz 영역입니다. EQ 작업 시 이 대역을 기준으로 음색을 조정합니다."
@@ -16,7 +16,7 @@ faq:
   - q: "머디(Muddy)한 사운드는 어떤 주파수 때문인가요?"
     a: "200~400Hz 대역(저중역)이 과다하면 사운드가 뭉개지고 탁해지는 '머디(Muddy)' 현상이 발생합니다. 이 대역을 EQ로 1~3dB 줄이면 믹스가 깔끔해집니다."
 ---
-![주파수 스펙트럼 완전 가이드 — 스튜디오 놀](/images/portfolio5.webp)
+![주파수 스펙트럼 가이드 — 스튜디오 놀](/images/portfolio5.webp)
 
 ## 주파수 스펙트럼 — EQ 작업의 기초
 
@@ -142,5 +142,4 @@ faq:
 
 ---
 
-[보컬 EQ 완전 가이드](/stories/eq1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[보컬 EQ 가이드](/stories/eq1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [게인 스테이징 가이드](/stories/gain-staging1) | [보컬 믹싱 가이드](/stories/vocal-mixing1)

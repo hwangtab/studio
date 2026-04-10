@@ -1,11 +1,11 @@
 ---
-title: "LA-2A 컴프레서 완전 가이드 — 클래식 Optical 컴프레서 활용법"
+title: "LA-2A 컴프레서 가이드 — 클래식 Optical 컴프레서 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["LA-2A 컴프레서", "Optical 컴프레서", "LA-2A 보컬", "LA-2A 설정", "유니버설오디오 LA-2A", "LA-2A 플러그인", "클래식 컴프레서"]
 thumbnail: "/images/recording4.webp"
-summary: "LA-2A 컴프레서 완전 가이드입니다. LA-2A 파라미터 이해·LA-2A 특성 — 자동 시간 상수·기본 보컬 설정·베이스·어쿠스틱 기타 설정·1176 + LA-2A 체인 (Dueling Compressors)·LA-2A 플러그인 에뮬레이션 비교까지 정리합니다."
+summary: "LA-2A 컴프레서 가이드입니다. LA-2A 파라미터 이해·LA-2A 특성 — 자동 시간 상수·기본 보컬 설정·베이스·어쿠스틱 기타 설정·1176 + LA-2A 체인 (Dueling Compressors)·LA-2A 플러그인 에뮬레이션 비교까지 정리합니다."
 faq:
   - q: "LA-2A 컴프레서란 무엇인가요?"
     a: "Teletronix(現 Universal Audio)가 개발한 Optical(광학) 방식 컴프레서입니다. 광전지(T4B)를 이용한 느리고 자연스러운 컴프레션으로 보컬·베이스·어쿠스틱 기타에 따뜻한 색감을 부여하는 클래식 스튜디오 장비입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "LA-2A 플러그인 에뮬레이션 중 어떤 것이 좋은가요?"
     a: "Universal Audio UAD LA-2A Classic Audio Leveler, Waves CLA-2A, UAD Manley Variable Mu가 대표적입니다. UAD 버전이 하드웨어에 가장 가깝지만 UA Apollo가 필요합니다. Waves CLA-2A는 가성비가 뛰어나 네이티브 환경에서 널리 사용됩니다."
 ---
-![LA-2A 컴프레서 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
+![LA-2A 컴프레서 가이드 — 스튜디오 놀](/images/recording4.webp)
 
 ## LA-2A — 따뜻한 음색의 클래식 Optical 컴프레서
 
@@ -154,5 +154,4 @@ LA-2A는 수십 년간 보컬 녹음의 표준으로 자리 잡은 클래식 Opt
 
 ---
 
-[SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [컴프레서 완전 가이드](/stories/compressor1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[SSL G-Bus 컴프레서 가이드](/stories/ssl-bus1) | [1176 컴프레서 가이드](/stories/comp1176) | [컴프레서 가이드](/stories/compressor1) | [패러럴 컴프레션 가이드](/stories/parallel-compression1)

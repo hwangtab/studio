@@ -121,9 +121,9 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 ## 마치며
 
-관악구·동작구에서 2호선으로 합정, 6호선으로 연신내까지 30~50분. 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
+관악구·동작구에서 2호선으로 합정, 6호선으로 연신내까지 30~50분. 방문 전에는 카카오톡 문의로 일정과 준비 사항을 미리 확인해두는 편이 좋습니다.
 
 ---
 
-[관악구 신림·서원·미성 녹음실 안내](/stories/gwanak-sillim1) | [봉천동·서원동 녹음실 안내](/stories/gwanak-bongcheon1) | [낙성대·신림 녹음실 안내](/stories/nakseongdae1) | [동작구 녹음실 안내](/stories/dongjak1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[관악구 신림·서원·미성 녹음실 안내](/stories/gwanak-sillim1) | [봉천동·서원동 녹음실 안내](/stories/gwanak-bongcheon1) | [낙성대·신림 녹음실 안내](/stories/nakseongdae1) | [동작구 녹음실 안내](/stories/dongjak1)
+[이용 요금 보기](/pricing)

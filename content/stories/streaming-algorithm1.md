@@ -1,11 +1,11 @@
 ---
-title: "스트리밍 알고리즘 완전 가이드 — 스포티파이·유튜브 뮤직·멜론 추천 알고리즘 공략법"
+title: "스트리밍 알고리즘 가이드 — 스포티파이·유튜브 뮤직·멜론 추천 알고리즘 공략법"
 date: 2026-04-07
 author: "스튜디오 놀"
 category: "음악 비즈니스 가이드"
 tags: ["스트리밍 알고리즘", "스포티파이 알고리즘", "유튜브 뮤직 알고리즘", "멜론 알고리즘", "음악 추천 알고리즘", "스트리밍 노출 전략", "음악 스트리밍 수익"]
 thumbnail: "/images/service2.webp"
-summary: "스트리밍 알고리즘 완전 가이드입니다. 스포티파이·유튜브 뮤직·멜론 추천 알고리즘 작동 원리와 인디 아티스트가 알고리즘 노출을 극대화하는 전략을 정리합니다."
+summary: "스트리밍 알고리즘 가이드입니다. 스포티파이·유튜브 뮤직·멜론 추천 알고리즘 작동 원리와 인디 아티스트가 알고리즘 노출을 극대화하는 전략을 정리합니다."
 faq:
   - q: "스포티파이 알고리즘은 어떻게 작동하나요?"
     a: "스포티파이는 청취자의 스킵률, 완청률, 저장률, 재생 목록 추가 등 행동 데이터를 기반으로 Discover Weekly·Release Radar 등 개인화 플레이리스트를 생성합니다. 발매 초기 첫 48시간 성과가 알고리즘 노출에 결정적입니다."
@@ -16,7 +16,7 @@ faq:
   - q: "Spotify for Artists 에디토리얼 플레이리스트는 어떻게 피칭하나요?"
     a: "발매 최소 7일 전(이상적으로 28일 전), Spotify for Artists 대시보드의 'Upcoming' 탭에서 피칭합니다. 장르, 분위기, 도시, 인스트루멘털 여부 등을 상세히 기재할수록 선정 확률이 높아집니다."
 ---
-![스트리밍 알고리즘 완전 가이드 — 스튜디오 놀](/images/service2.webp)
+![스트리밍 알고리즘 가이드 — 스튜디오 놀](/images/service2.webp)
 
 ## 스트리밍 알고리즘 — 노출이 곧 수익
 
@@ -136,5 +136,4 @@ faq:
 
 ---
 
-[음악 스트리밍 데이터 분석 완전 가이드](/stories/music-analytics1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)
+[음악 스트리밍 데이터 분석 가이드](/stories/music-analytics1) | [플레이리스트 피칭 가이드](/stories/playlist-pitch1) | [음원 발매 타임라인 가이드](/stories/release-timeline1) | [스트리밍 수익 가이드](/stories/streaming-revenue1)

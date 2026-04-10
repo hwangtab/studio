@@ -1,11 +1,11 @@
 ---
-title: "뮤직비디오 제작 완전 가이드 — 기획·촬영·편집·유통까지"
+title: "뮤직비디오 제작 가이드 — 기획·촬영·편집·유통까지"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "음반 제작 가이드"
 tags: ["뮤직비디오 제작", "MV 촬영", "뮤직비디오 기획", "유튜브 뮤직비디오", "저예산 MV", "뮤직비디오 편집", "음악 영상 제작"]
 thumbnail: "/images/portfolio1.webp"
-summary: "뮤직비디오 기획부터 촬영·편집·유통까지 완전 가이드입니다. 저예산 MV 제작 전략, 촬영 준비, 편집 포인트, 유튜브·SNS 최적화 배포 방법을 정리합니다."
+summary: "뮤직비디오 기획부터 촬영·편집·유통까지 가이드입니다. 저예산 MV 제작 전략, 촬영 준비, 편집 포인트, 유튜브·SNS 최적화 배포 방법을 정리합니다."
 faq:
   - q: "뮤직비디오를 저예산으로 제작할 수 있나요?"
     a: "가능합니다. 자연광을 활용한 야외 촬영, 스마트폰 또는 미러리스 카메라, 무료 편집 소프트웨어(DaVinci Resolve)를 조합하면 완성도 있는 저예산 MV를 제작할 수 있습니다."
@@ -16,7 +16,7 @@ faq:
   - q: "뮤직비디오 음원은 어떻게 준비하나요?"
     a: "믹싱·마스터링이 완료된 최종 마스터 음원(WAV 또는 고음질 MP3)을 촬영 전에 확보해야 합니다. 현장에서 음원을 틀어가며 싱크를 맞추므로 음원 완성이 선행되어야 합니다."
 ---
-![뮤직비디오 제작 완전 가이드 — 스튜디오 놀](/images/portfolio1.webp)
+![뮤직비디오 제작 가이드 — 스튜디오 놀](/images/portfolio1.webp)
 
 ## 뮤직비디오 — 음악을 시각으로 확장하는 콘텐츠
 
@@ -141,5 +141,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[EP 제작 완전 가이드](/stories/ep-making1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [홈 레코딩 완전 가이드](/stories/home-recording1)
-[스튜디오 놀 이용 요금](/pricing)
+[EP 제작 가이드](/stories/ep-making1) | [음원 유통 가이드](/stories/music-distribution1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [작곡·작사 실전 가이드](/stories/songwriting1)
