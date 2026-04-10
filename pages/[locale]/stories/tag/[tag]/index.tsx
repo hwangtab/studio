@@ -1,14 +1,14 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import StoriesCollectionPage from '../../../../components/stories/StoriesCollectionPage';
+import StoriesCollectionPage from '../../../../../components/stories/StoriesCollectionPage';
 import {
   STORIES_PAGE_SIZE,
   getStoriesPage,
   getAllTags,
   type StoriesPageData,
-} from '../../../../lib/stories';
-import { buildPageStaticProps, resolveLocaleParam } from '../../../../lib/getStatic';
-import { locales, type Locale } from '../../../../lib/i18n';
-import type { NextPageWithLayout } from '../../../../types';
+} from '../../../../../lib/stories';
+import { buildPageStaticProps, resolveLocaleParam } from '../../../../../lib/getStatic';
+import { locales, type Locale } from '../../../../../lib/i18n';
+import type { NextPageWithLayout } from '../../../../../types';
 
 interface StoriesTagPageProps extends StoriesPageData {
   locale: Locale;
