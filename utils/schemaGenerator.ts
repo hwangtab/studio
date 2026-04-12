@@ -27,6 +27,15 @@ const ITEM_LIST_NAMES: Record<Locale, string> = {
   ko: '포트폴리오', en: 'Portfolio', zh: '作品集',
   es: 'Portafolio', vi: 'Danh mục tác phẩm', th: 'ผลงาน', uz: 'Portfolio',
 };
+const SLOGANS: Record<Locale, string> = {
+  ko: '소리로 아티스트의 음악적 비전을 실현합니다',
+  en: "Realizing artists' musical vision through sound",
+  zh: '用声音实现艺术家的音乐愿景',
+  es: 'Realizando la visión musical de los artistas a través del sonido',
+  vi: 'Hiện thực hóa tầm nhìn âm nhạc của nghệ sĩ qua âm thanh',
+  th: 'สร้างสรรค์วิสัยทัศน์ทางดนตรีของศิลปินผ่านเสียง',
+  uz: "Ovoz orqali rassomlarning musiqiy tasavvurini amalga oshirish",
+};
 
 const schemaLanguageByLocale: Record<Locale, string> = {
   ko: 'ko-KR',
@@ -98,7 +107,7 @@ export const generateDefaultSchema = (
         sameAs: sameAsLinks,
         foundingDate: '2024-01-01',
         description: config.description,
-        slogan: 'Realizing artists\' musical vision through sound',
+        slogan: SLOGANS[locale],
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
       },
       {
@@ -147,7 +156,7 @@ export const generateDefaultSchema = (
             closes: '18:00',
           },
         ],
-        acceptsReservations: `${siteUrl}/${locale}/contact`,
+        acceptsReservations: true,
         potentialAction: {
           '@type': 'ReserveAction',
           target: {
@@ -219,7 +228,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 100000,
+              price: '100000',
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -231,7 +240,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 200000,
+              price: '200000',
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -243,7 +252,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 350000,
+              price: '350000',
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -256,7 +265,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               name: practiceOfferName,
               priceCurrency: 'KRW',
-              price: 300000,
+              price: '300000',
               url: `${siteUrl}/${locale}/practice-room`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -344,7 +353,7 @@ export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteU
       '@type': 'ListItem',
       position: index + 1,
       name: crumb.name,
-      item: `${siteUrl}${crumb.path}`,
+      ...(index < breadcrumbs.length - 1 && { item: `${siteUrl}${crumb.path}` }),
     })),
   };
 };
@@ -401,7 +410,7 @@ export const generateCourseSchema = (
     offers: {
       '@type': 'Offer',
       priceCurrency: 'KRW',
-      price: 350000,
+      price: '350000',
       availability: 'https://schema.org/InStock',
       url: normalizedCanonical,
     },
@@ -437,7 +446,7 @@ export const generateServiceOfferSchema = (
     name: service.name,
     description: service.description,
     priceCurrency: 'KRW',
-    price: service.priceValue,
+    price: String(service.priceValue),
     priceValidUntil: priceValidUntil.toISOString().split('T')[0],
     availability: 'https://schema.org/InStock',
     url: service.url,
@@ -493,8 +502,8 @@ export const generateAggregateOfferSchema = (
     },
     offers: {
       '@type': 'AggregateOffer',
-      lowPrice: Math.min(...prices),
-      highPrice: Math.max(...prices),
+      lowPrice: String(Math.min(...prices)),
+      highPrice: String(Math.max(...prices)),
       priceCurrency: 'KRW',
       offerCount: offers.length,
       priceValidUntil: priceValidUntil.toISOString().split('T')[0],
@@ -502,7 +511,7 @@ export const generateAggregateOfferSchema = (
       offers: offers.map((offer) => ({
         '@type': 'Offer',
         name: offer.name,
-        price: offer.priceValue,
+        price: String(offer.priceValue),
         priceCurrency: 'KRW',
       })),
     },
