@@ -84,6 +84,10 @@
     "faq": {
       "title": "Ko'p so'raladigan savollar",
       "subtitle": "Studiodan foydalanish bo'yicha eng ko'p beriladigan savollarni jamladik."
+    },
+    "quickAnswers": {
+      "title": "Tezkor tekshiruv",
+      "subtitle": "Asosiy javoblarni bir qarashda ko'ring."
     }
   },
   "about": {

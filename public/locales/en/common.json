@@ -84,6 +84,10 @@
     "faq": {
       "title": "Frequently Asked Questions",
       "subtitle": "We collected common questions about using the studio."
+    },
+    "quickAnswers": {
+      "title": "Quick Check",
+      "subtitle": "Browse key answers at a glance."
     }
   },
   "about": {

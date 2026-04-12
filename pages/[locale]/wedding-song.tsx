@@ -111,7 +111,8 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
         t('weddingSong.process.subtitle'),
         howToSteps,
         'PT2H',
-        locale
+        locale,
+        { name: locale === 'ko' ? '전문 녹음 장비' : 'Professional Recording Equipment' }
       ),
     [t, howToSteps, locale]
   );

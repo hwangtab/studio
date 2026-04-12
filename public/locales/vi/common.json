@@ -84,6 +84,10 @@
     "faq": {
       "title": "Câu hỏi thường gặp",
       "subtitle": "Chúng tôi tổng hợp các câu hỏi thường gặp khi sử dụng studio."
+    },
+    "quickAnswers": {
+      "title": "Kiểm tra nhanh",
+      "subtitle": "Xem câu trả lời chính trong nháy mắt."
     }
   },
   "about": {

@@ -13,7 +13,7 @@ import {
   generateWebSiteSchema,
   generateWebPageSchema,
 } from '../utils/schemaGenerator';
-import { defaultLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
+import { defaultLocale, locales, ogLocaleByLocale, hreflangByLocale, type Locale } from '../lib/i18n-config';
 import { getSeoDefaults, getSiteConfig, socialProfiles } from '../data/siteConfig';
 
 interface SEOProps {
@@ -331,7 +331,7 @@ const SEO = ({
           <link
             key={`hreflang-${locale}`}
             rel="alternate"
-            hrefLang={locale}
+            hrefLang={hreflangByLocale[locale]}
             href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
           />
         ))

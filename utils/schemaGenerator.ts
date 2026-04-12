@@ -598,9 +598,9 @@ export const generateHowToSchema = (
   description: string,
   steps: HowToStep[],
   totalTime?: string,
-  locale: Locale = 'ko'
+  locale: Locale = 'ko',
+  tool?: { name: string }
 ) => {
-  const isKo = locale === 'ko';
   const schemaLanguage = getSchemaLanguage(locale);
 
   return {
@@ -617,10 +617,7 @@ export const generateHowToSchema = (
       text: step.text,
       ...(step.image && { image: step.image }),
     })),
-    tool: {
-      '@type': 'HowToTool',
-      name: isKo ? '전문 녹음 장비' : 'Professional Recording Equipment',
-    },
+    ...(tool && { tool: { '@type': 'HowToTool', name: tool.name } }),
   };
 };
 

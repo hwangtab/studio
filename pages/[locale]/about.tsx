@@ -55,7 +55,8 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
       text: step.description,
     })),
     'P2D',
-    locale
+    locale,
+    { name: locale === 'ko' ? '전문 녹음 장비' : 'Professional Recording Equipment' }
   ), [productionProcess, locale, t]);
 
   const serviceListSchema = React.useMemo(() => generateServiceListSchema(

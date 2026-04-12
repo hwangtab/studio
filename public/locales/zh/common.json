@@ -84,6 +84,10 @@
     "faq": {
       "title": "常见问题",
       "subtitle": "汇总了关于使用录音室的常见疑问。"
+    },
+    "quickAnswers": {
+      "title": "快速确认",
+      "subtitle": "以卡片形式查看核心内容。"
     }
   },
   "about": {

@@ -12,6 +12,16 @@ export const ogLocaleByLocale: Record<Locale, string> = {
   uz: 'uz_UZ',
 };
 
+export const hreflangByLocale: Record<Locale, string> = {
+  ko: 'ko',
+  en: 'en',
+  zh: 'zh-Hans',
+  es: 'es',
+  vi: 'vi',
+  th: 'th',
+  uz: 'uz',
+};
+
 export const localeNames: Record<Locale, string> = {
   ko: '한국어',
   en: 'English',

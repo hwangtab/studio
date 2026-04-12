@@ -154,8 +154,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
       {/* FAQ 섹션 */}
       <QuickAnswers
         items={homeQuickAnswers}
-        title={t('home.faq.title')}
-        subtitle={t('home.faq.subtitle')}
+        title={t('home.quickAnswers.title')}
+        subtitle={t('home.quickAnswers.subtitle')}
         variant="default"
       />
 

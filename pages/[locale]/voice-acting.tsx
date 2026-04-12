@@ -135,7 +135,8 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         t('voiceActing.process.subtitle'),
         howToSteps,
         undefined,
-        locale
+        locale,
+        { name: locale === 'ko' ? '전문 녹음 장비' : 'Professional Recording Equipment' }
       ),
     [t, howToSteps, locale]
   );

@@ -91,6 +91,7 @@ const getStoryTitle = (slug, locale) => {
 };
 
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
+const hreflangByLocale = { ko: 'ko', en: 'en', zh: 'zh-Hans', es: 'es', vi: 'vi', th: 'th', uz: 'uz' };
 
 const toIsoMtime = (filePath) => {
   try {
@@ -125,19 +126,20 @@ const getStoryLastmod = (slug, locale) => {
   return mtimes.sort().at(-1);
 };
 
-const getAlternateRefs = (routePath) => {
+const getAlternateRefs = (routePath, availableLocales = locales) => {
   const segments = routePath.split('/').filter(Boolean);
   if (segments.length === 0) return [];
   const firstSegment = segments[0];
   if (!locales.includes(firstSegment)) return [];
   const restPath = segments.slice(1).join('/');
-  const refs = locales.map(locale => ({
+  const refs = availableLocales.map(locale => ({
     href: `${siteUrl}/${locale}${restPath ? `/${restPath}` : ''}`,
-    hreflang: locale,
+    hreflang: hreflangByLocale[locale] || locale,
     hrefIsAbsolute: true,
   }));
+  const xDefaultLocale = availableLocales.includes('en') ? 'en' : availableLocales[0];
   refs.push({
-    href: `${siteUrl}/en${restPath ? `/${restPath}` : ''}`,
+    href: `${siteUrl}/${xDefaultLocale}${restPath ? `/${restPath}` : ''}`,
     hreflang: 'x-default',
     hrefIsAbsolute: true,
   });
@@ -225,12 +227,11 @@ module.exports = {
 
     const results = [];
     for (const slug of slugs) {
-      for (const locale of locales) {
-        // Skip if no locale-specific file exists for this locale (would be noindexed fallback)
-        if (locale !== 'ko') {
-          const localeFilePath = path.join(storiesDir, `${slug}.${locale}.md`);
-          if (!fs.existsSync(localeFilePath)) continue;
-        }
+      // Determine which locales have actual content files for this slug
+      const availableLocales = locales.filter(locale =>
+        locale === 'ko' || fs.existsSync(path.join(storiesDir, `${slug}.${locale}.md`))
+      );
+      for (const locale of availableLocales) {
         const routePath = `/${locale}/stories/${slug}`;
         const thumbnail = getStoryThumbnail(slug, locale);
         let images = [];
@@ -244,7 +245,7 @@ module.exports = {
           lastmod: getStoryLastmod(slug, locale) || new Date().toISOString(),
           changefreq: 'weekly',
           priority: 0.8,
-          alternateRefs: getAlternateRefs(routePath),
+          alternateRefs: getAlternateRefs(routePath, availableLocales),
           ...(images.length > 0 && { images }),
         });
       }

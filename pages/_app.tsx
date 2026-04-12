@@ -49,9 +49,6 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-  }, []);
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -118,7 +115,8 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       '@type': 'SiteNavigationElement',
       name: tNav('nav.home'),
       hasPart: [
-        { '@type': 'SiteNavigationElement', name: sc.name, url: base },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.home'), url: base },
+        { '@type': 'SiteNavigationElement', name: tNav('nav.about'), url: `${base}/about` },
         { '@type': 'SiteNavigationElement', name: tNav('nav.pricing'), url: `${base}/pricing` },
         { '@type': 'SiteNavigationElement', name: tNav('nav.equipment'), url: `${base}/studio-info` },
         { '@type': 'SiteNavigationElement', name: tNav('nav.practiceRoom'), url: `${base}/practice-room` },
