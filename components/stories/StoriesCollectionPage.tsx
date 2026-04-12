@@ -95,6 +95,7 @@ const StoriesCollectionPage = ({
       noDate: t('stories.list.noDate'),
       noTitle: t('stories.list.noTitle'),
       noContent: t('stories.list.noContent'),
+      readingTimeUnit: t('stories.detail.readingTimeUnit'),
       categoryByKey: Object.fromEntries(
         STORY_CATEGORY_KEYS.map((key) => [key, t(`stories.categories.${key}`)])
       ),

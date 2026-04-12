@@ -139,7 +139,8 @@
       "artistLabel": "Artista",
       "servicesProvided": "Servicios proporcionados",
       "listenNow": "Escuchar ahora",
-      "share": "Compartir"
+      "share": "Compartir",
+      "ctaPrompt": "También podemos completar tu música."
     },
     "heroAlt": "Portafolio de Studio NOL",
     "seo": {
@@ -491,6 +492,9 @@
       "location": "Ubicación",
       "inquiry": "Consulta",
       "imageAlt": "Sala de práctica de Studio NOL"
+    },
+    "relatedGuides": {
+      "title": "Guías relacionadas con salas de práctica"
     }
   },
   "studioInfo": {
@@ -595,7 +599,11 @@
       "share": "Compartir",
       "moreTitle": "Más historias",
       "noRelated": "No hay historias relacionadas.",
-      "viewAll": "Ver todas las historias"
+      "viewAll": "Ver todas las historias",
+      "readingTimeUnit": " min",
+      "toc": {
+        "title": "Tabla de Contenidos"
+      }
     },
     "categories": {
       "news": "Noticias",

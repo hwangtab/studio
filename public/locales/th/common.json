@@ -139,7 +139,8 @@
       "artistLabel": "ศิลปิน",
       "servicesProvided": "บริการที่ให้",
       "listenNow": "ฟังตอนนี้",
-      "share": "แชร์"
+      "share": "แชร์",
+      "ctaPrompt": "เราสามารถทำเพลงของคุณให้สมบูรณ์ได้เช่นกัน"
     },
     "heroAlt": "พอร์ตโฟลิโอ Studio NOL",
     "seo": {
@@ -494,6 +495,9 @@
       "location": "ที่ตั้ง",
       "inquiry": "สอบถาม",
       "imageAlt": "ห้องซ้อม Studio NOL"
+    },
+    "relatedGuides": {
+      "title": "คู่มือที่เกี่ยวข้องกับห้องซ้อม"
     }
   },
   "studioInfo": {
@@ -597,7 +601,11 @@
       "share": "แชร์",
       "moreTitle": "เรื่องราวเพิ่มเติม",
       "noRelated": "ไม่มีเรื่องราวที่เกี่ยวข้อง.",
-      "viewAll": "ดูเรื่องราวทั้งหมด"
+      "viewAll": "ดูเรื่องราวทั้งหมด",
+      "readingTimeUnit": " นาที",
+      "toc": {
+        "title": "สารบัญ"
+      }
     },
     "categories": {
       "news": "ข่าวสาร",

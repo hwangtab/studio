@@ -18,6 +18,7 @@ interface StoryCardProps {
     noDate: string;
     noTitle: string;
     noContent: string;
+    readingTimeUnit: string;
     categoryByKey: Record<string, string>;
   };
 }
@@ -86,7 +87,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
               {story.readingTime > 0 && (
                 <>
                   <span className="text-gray-400 dark:text-gray-500 mx-1" aria-hidden="true">·</span>
-                  <span className="flex-shrink-0 text-gray-500 dark:text-gray-400">{story.readingTime}분</span>
+                  <span className="flex-shrink-0 text-gray-500 dark:text-gray-400">{story.readingTime}{labels?.readingTimeUnit ?? '분'}</span>
                 </>
               )}
             </div>

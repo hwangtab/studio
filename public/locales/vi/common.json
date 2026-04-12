@@ -139,7 +139,8 @@
       "artistLabel": "Nghệ sĩ",
       "servicesProvided": "Dịch vụ đã cung cấp",
       "listenNow": "Nghe ngay",
-      "share": "Chia sẻ"
+      "share": "Chia sẻ",
+      "ctaPrompt": "Chúng tôi cũng có thể hoàn thiện âm nhạc của bạn."
     },
     "heroAlt": "Portfolio Studio NOL",
     "seo": {
@@ -491,6 +492,9 @@
       "location": "Địa điểm",
       "inquiry": "Liên hệ",
       "imageAlt": "Phòng tập Studio NOL"
+    },
+    "relatedGuides": {
+      "title": "Hướng dẫn liên quan đến phòng tập"
     }
   },
   "studioInfo": {
@@ -595,7 +599,11 @@
       "share": "Chia sẻ",
       "moreTitle": "Câu chuyện khác",
       "noRelated": "Không có câu chuyện liên quan.",
-      "viewAll": "Xem tất cả stories"
+      "viewAll": "Xem tất cả stories",
+      "readingTimeUnit": " phút",
+      "toc": {
+        "title": "Mục lục"
+      }
     },
     "categories": {
       "news": "Tin tức",

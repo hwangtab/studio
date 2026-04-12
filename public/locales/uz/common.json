@@ -139,7 +139,8 @@
       "artistLabel": "Artist",
       "servicesProvided": "Ko'rsatilgan xizmatlar",
       "listenNow": "Hozir tinglang",
-      "share": "Ulashish"
+      "share": "Ulashish",
+      "ctaPrompt": "Biz sizning musiqangizni ham yakunlay olamiz."
     },
     "heroAlt": "Studio NOL Portfeli",
     "seo": {
@@ -490,6 +491,9 @@
       "location": "Manzil",
       "inquiry": "So'rov",
       "imageAlt": "Studio NOL mashg'ulot xonasi"
+    },
+    "relatedGuides": {
+      "title": "Mashg'ulot xonasi bo'yicha qo'llanmalar"
     }
   },
   "studioInfo": {
@@ -593,7 +597,11 @@
       "share": "Ulashish",
       "moreTitle": "Yana hikoyalar",
       "noRelated": "O'xshash hikoyalar yo'q.",
-      "viewAll": "Barcha hikoyalarni ko'rish"
+      "viewAll": "Barcha hikoyalarni ko'rish",
+      "readingTimeUnit": " daqiqa",
+      "toc": {
+        "title": "Mundarija"
+      }
     },
     "categories": {
       "news": "Yangiliklar",

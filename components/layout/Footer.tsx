@@ -59,6 +59,8 @@ export const Footer = ({ locale }: FooterProps) => {
               <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
               <FooterLink href={`/${locale}/practice-room`}>{t('nav.practiceRoom')}</FooterLink>
               <FooterLink href={`/${locale}/studio-info`}>{t('nav.equipment')}</FooterLink>
+              <FooterLink href={`/${locale}/wedding-song`}>{t('nav.weddingSong')}</FooterLink>
+              <FooterLink href={`/${locale}/voice-acting`}>{t('nav.voiceActing')}</FooterLink>
               <FooterLink href={`/${locale}/contact`}>{t('nav.contact')}</FooterLink>
             </ul>
           </div>

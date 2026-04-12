@@ -139,7 +139,8 @@
       "artistLabel": "艺人",
       "servicesProvided": "提供的服务",
       "listenNow": "立即收听",
-      "share": "分享"
+      "share": "分享",
+      "ctaPrompt": "我们也能完成您的音乐。"
     },
     "heroAlt": "Studio NOL 作品集",
     "seo": {
@@ -491,6 +492,9 @@
       "location": "位置",
       "inquiry": "KakaoTalk 咨询",
       "imageAlt": "Studio NOL 练习室"
+    },
+    "relatedGuides": {
+      "title": "练习室相关指南"
     }
   },
   "studioInfo": {
@@ -534,7 +538,7 @@
       "title": "故事 - Studio NOL 项目记录",
       "description": "了解Studio NOL录音·混音工作日志、专业设备评测与艺术家访谈。探索音乐制作背后的真实故事，获取来自专业工程师的宝贵创作经验。",
       "keywords": "Studio NOL 故事, 制作后记, 音乐制作故事",
-      "fallbackKeywords": "Studio NOL, 연신내录音室, 音乐制作, 声乐课, 混音母带, 排练室"
+      "fallbackKeywords": "Studio NOL, 延新内录音室, 音乐制作, 声乐课, 混音母带, 排练室"
     },
     "hero": {
       "title": "故事",
@@ -595,7 +599,11 @@
       "share": "分享",
       "moreTitle": "更多故事",
       "noRelated": "没有相关故事。",
-      "viewAll": "查看所有故事"
+      "viewAll": "查看所有故事",
+      "readingTimeUnit": "分钟",
+      "toc": {
+        "title": "目录"
+      }
     },
     "categories": {
       "news": "资讯",

@@ -139,7 +139,8 @@
       "artistLabel": "Artist",
       "servicesProvided": "Services Provided",
       "listenNow": "Listen Now",
-      "share": "Share"
+      "share": "Share",
+      "ctaPrompt": "We can complete your music too."
     },
     "heroAlt": "Studio NOL Portfolio",
     "seo": {
@@ -491,6 +492,9 @@
       "location": "Location",
       "inquiry": "Inquiry",
       "imageAlt": "Studio NOL Practice Room"
+    },
+    "relatedGuides": {
+      "title": "Practice Room Related Guides"
     }
   },
   "studioInfo": {
