@@ -18,7 +18,20 @@ import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getSchemaLanguage } from '../../utils/schemaGenerator';
+import { getSchemaLanguage, ADDRESS_REGION } from '../../utils/schemaGenerator';
+
+const SERVICE_TYPE: Record<string, string> = {
+  ko: '녹음실', en: 'Recording Studio', zh: '录音室',
+  es: 'Estudio de grabación', vi: 'Phòng thu âm', th: 'ห้องอัดเสียง', uz: 'Yozuv studiyasi',
+};
+const HOURLY_RECORDING: Record<string, string> = {
+  ko: '시간당 레코딩', en: 'Hourly Recording', zh: '按小时录音',
+  es: 'Grabación por hora', vi: 'Thu âm theo giờ', th: 'บันทึกเสียงรายชั่วโมง', uz: 'Soatlik yozuv',
+};
+const DAY_LOCK: Record<string, string> = {
+  ko: 'Day Lock (6시간)', en: 'Day Lock (6 hours)', zh: 'Day Lock（6小时）',
+  es: 'Day Lock (6 horas)', vi: 'Day Lock (6 giờ)', th: 'Day Lock (6 ชั่วโมง)', uz: 'Day Lock (6 soat)',
+};
 import { createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -45,7 +58,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
     name: t('studioInfo.seo.title'),
     description: t('studioInfo.seo.description'),
     inLanguage: schemaLanguage,
-    serviceType: locale === 'ko' ? '녹음실' : 'Recording Studio',
+    serviceType: SERVICE_TYPE[locale],
     image: {
       '@type': 'ImageObject',
       url: `${siteConfig.url}/images/hardware1.webp`,
@@ -54,7 +67,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
     },
     areaServed: {
       '@type': 'AdministrativeArea',
-      name: locale === 'ko' ? '서울특별시' : 'Seoul',
+      name: ADDRESS_REGION[locale],
     },
     provider: {
       '@type': 'Organization',
@@ -80,7 +93,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
     offers: [
       {
         '@type': 'Offer',
-        name: locale === 'ko' ? '시간당 레코딩' : 'Hourly Recording',
+        name: HOURLY_RECORDING[locale],
         priceCurrency: 'KRW',
         price: '100000',
         availability: 'https://schema.org/InStock',
@@ -88,7 +101,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
       },
       {
         '@type': 'Offer',
-        name: locale === 'ko' ? 'Day Lock (6시간)' : 'Day Lock (6 hours)',
+        name: DAY_LOCK[locale],
         priceCurrency: 'KRW',
         price: '500000',
         availability: 'https://schema.org/InStock',

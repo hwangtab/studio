@@ -16,7 +16,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
-import { generateHowToSchema, generateServiceListSchema } from '../../utils/schemaGenerator';
+import { generateHowToSchema, generateServiceListSchema, RECORDING_TOOL_NAME } from '../../utils/schemaGenerator';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -56,7 +56,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
     })),
     'P2D',
     locale,
-    { name: locale === 'ko' ? '전문 녹음 장비' : 'Professional Recording Equipment' }
+    { name: RECORDING_TOOL_NAME[locale] }
   ), [productionProcess, locale, t]);
 
   const serviceListSchema = React.useMemo(() => generateServiceListSchema(

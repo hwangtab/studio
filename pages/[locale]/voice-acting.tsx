@@ -20,7 +20,18 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { getPricingData } from '../../data/pricing';
-import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
+import { getSchemaLanguage, generateHowToSchema, RECORDING_TOOL_NAME } from '../../utils/schemaGenerator';
+
+const VOICE_SERVICE_TYPE: Record<string, string> = {
+  ko: '성우 녹음', en: 'Voice Acting & Narration Recording', zh: '配音与解说录音',
+  es: 'Grabación de doblaje y narración', vi: 'Thu âm lồng tiếng và thuyết minh',
+  th: 'บันทึกเสียงพากย์และบรรยาย', uz: 'Ovoz berish va diktor yozuvi',
+};
+const VOICE_OFFER_NAME: Record<string, string> = {
+  ko: '성우/나레이션 녹음', en: 'Voiceover & Narration', zh: '配音/解说录音',
+  es: 'Doblaje y narración', vi: 'Lồng tiếng & thuyết minh',
+  th: 'พากย์เสียงและบรรยาย', uz: 'Ovoz berish va diktor',
+};
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
@@ -107,7 +118,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
       name: t('voiceActing.seo.title'),
       description: t('voiceActing.seo.description'),
       inLanguage: schemaLanguage,
-      serviceType: locale === 'ko' ? '성우 녹음' : 'Voice Acting & Narration Recording',
+      serviceType: VOICE_SERVICE_TYPE[locale],
       areaServed: siteConfig.contact.address,
       provider: {
         '@type': 'Organization',
@@ -118,7 +129,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
       url: pageUrl,
       offers: {
         '@type': 'Offer',
-        name: voiceoverPackage?.title ?? (locale === 'ko' ? '성우/나레이션 녹음' : 'Voiceover & Narration'),
+        name: voiceoverPackage?.title ?? VOICE_OFFER_NAME[locale],
         priceCurrency: 'KRW',
         price: '100000',
         availability: 'https://schema.org/InStock',
@@ -136,7 +147,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         howToSteps,
         undefined,
         locale,
-        { name: locale === 'ko' ? '전문 녹음 장비' : 'Professional Recording Equipment' }
+        { name: RECORDING_TOOL_NAME[locale] }
       ),
     [t, howToSteps, locale]
   );

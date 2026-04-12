@@ -18,7 +18,20 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
-import { getSchemaLanguage } from '../../utils/schemaGenerator';
+import { getSchemaLanguage, ADDRESS_LOCALITY } from '../../utils/schemaGenerator';
+
+const PRACTICE_SERVICE_TYPE: Record<string, string> = {
+  ko: '음악연습실', en: 'Music Practice Room', zh: '音乐练习室',
+  es: 'Sala de práctica musical', vi: 'Phòng luyện tập âm nhạc', th: 'ห้องซ้อมดนตรี', uz: "Musiqa mashq xonasi",
+};
+const PRACTICE_PROGRAM_NAME: Record<string, string> = {
+  ko: '음악연습실 월정액 입주 프로그램', en: 'Monthly Practice Room Residency Program', zh: '音乐练习室月租入驻计划',
+  es: 'Programa mensual de residencia en sala de práctica', vi: 'Chương trình thuê phòng tập nhạc hàng tháng',
+  th: 'โปรแกรมเช่าห้องซ้อมดนตรีรายเดือน', uz: "Oylik musiqa mashq xonasi dasturi",
+};
+const SEOUL_CITY: Record<string, string> = {
+  ko: '서울', en: 'Seoul', zh: '首尔', es: 'Seúl', vi: 'Seoul', th: 'โซล', uz: 'Seul',
+};
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
@@ -156,10 +169,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     name: t('practiceRoom.seo.title'),
     description: t('practiceRoom.seo.description'),
     inLanguage: schemaLanguage,
-    serviceType: locale === 'ko' ? '음악연습실' : t('nav.practiceRoom'),
+    serviceType: PRACTICE_SERVICE_TYPE[locale],
     areaServed: [
-      { '@type': 'City', name: locale === 'ko' ? '서울' : 'Seoul' },
-      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
+      { '@type': 'City', name: SEOUL_CITY[locale] },
+      { '@type': 'AdministrativeArea', name: ADDRESS_LOCALITY[locale] },
     ],
     provider: {
       '@type': 'Organization',
@@ -176,7 +189,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     },
     offers: {
       '@type': 'Offer',
-      name: locale === 'ko' ? '음악연습실 월정액 입주 프로그램' : 'Monthly Practice Room Residency Program',
+      name: PRACTICE_PROGRAM_NAME[locale],
       priceCurrency: 'KRW',
       price: '300000',
       availability: 'https://schema.org/InStock',

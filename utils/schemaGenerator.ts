@@ -27,6 +27,43 @@ const ITEM_LIST_NAMES: Record<Locale, string> = {
   ko: '포트폴리오', en: 'Portfolio', zh: '作品集',
   es: 'Portafolio', vi: 'Danh mục tác phẩm', th: 'ผลงาน', uz: 'Portfolio',
 };
+export const ADDRESS_LOCALITY: Record<Locale, string> = {
+  ko: '은평구', en: 'Eunpyeong-gu', zh: '恩平区', es: 'Eunpyeong-gu',
+  vi: 'Eunpyeong-gu', th: 'อึนพย็อง-กู', uz: 'Eunpyeong-gu',
+};
+export const ADDRESS_REGION: Record<Locale, string> = {
+  ko: '서울특별시', en: 'Seoul', zh: '首尔', es: 'Seúl',
+  vi: 'Seoul', th: 'โซล', uz: 'Seul',
+};
+const RESERVATION_NAME: Record<Locale, string> = {
+  ko: '스튜디오 예약', en: 'Studio Reservation', zh: '工作室预约',
+  es: 'Reserva de estudio', vi: 'Đặt phòng thu', th: 'จองสตูดิโอ', uz: 'Studiya bron qilish',
+};
+const EDUCATIONAL_LEVEL: Record<Locale, string> = {
+  ko: '초급부터 고급까지', en: 'Beginner to Advanced', zh: '从初级到高级',
+  es: 'De principiante a avanzado', vi: 'Từ cơ bản đến nâng cao',
+  th: 'ตั้งแต่เริ่มต้นจนถึงขั้นสูง', uz: "Boshlang'ichdan yuqori darajagacha",
+};
+const TEACHES: Record<Locale, string[]> = {
+  ko: ['음악 프로덕션', '보컬 레코딩', '믹싱 기초'],
+  en: ['Music Production', 'Vocal Recording', 'Mixing Basics'],
+  zh: ['音乐制作', '人声录音', '混音基础'],
+  es: ['Producción musical', 'Grabación vocal', 'Fundamentos de mezcla'],
+  vi: ['Sản xuất âm nhạc', 'Thu âm giọng hát', 'Cơ bản mixing'],
+  th: ['การผลิตเพลง', 'การบันทึกเสียงร้อง', 'พื้นฐานการมิกซ์'],
+  uz: ['Musiqa prodakshn', 'Vokal yozish', 'Miks asoslari'],
+};
+const INSTRUCTOR_NAME: Record<Locale, string> = {
+  ko: '스튜디오 놀 엔지니어', en: 'Studio NOL Engineer', zh: 'Studio NOL 工程师',
+  es: 'Ingeniero de Studio NOL', vi: 'Kỹ sư Studio NOL',
+  th: 'วิศวกร Studio NOL', uz: 'Studio NOL muhandisi',
+};
+export const RECORDING_TOOL_NAME: Record<Locale, string> = {
+  ko: '전문 녹음 장비', en: 'Professional Recording Equipment', zh: '专业录音设备',
+  es: 'Equipo de grabación profesional', vi: 'Thiết bị thu âm chuyên nghiệp',
+  th: 'อุปกรณ์บันทึกเสียงระดับมืออาชีพ', uz: 'Professional yozuv uskunalari',
+};
+
 const SLOGANS: Record<Locale, string> = {
   ko: '소리로 아티스트의 음악적 비전을 실현합니다',
   en: "Realizing artists' musical vision through sound",
@@ -134,8 +171,8 @@ export const generateDefaultSchema = (
         address: {
           '@type': 'PostalAddress',
           streetAddress: config.contact.address,
-          addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
-          addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
+          addressLocality: ADDRESS_LOCALITY[locale],
+          addressRegion: ADDRESS_REGION[locale],
           postalCode: '03424',
           addressCountry: 'KR',
         },
@@ -165,7 +202,7 @@ export const generateDefaultSchema = (
           },
           result: {
             '@type': 'Reservation',
-            name: locale === 'ko' ? '스튜디오 예약' : 'Studio Reservation',
+            name: RESERVATION_NAME[locale],
           },
         },
         geo: {
@@ -385,7 +422,6 @@ export const generateCourseSchema = (
   normalizedCanonical: string,
   locale: Locale = 'ko'
 ) => {
-  const isKo = locale === 'ko';
   const schemaLanguage = getSchemaLanguage(locale);
   const organizationId = `${siteUrl}/#organization`;
 
@@ -403,10 +439,8 @@ export const generateCourseSchema = (
     },
     image: absoluteOgImage,
     url: normalizedCanonical,
-    educationalLevel: isKo ? '초급부터 고급까지' : 'Beginner to Advanced',
-    teaches: isKo
-      ? ['음악 프로덕션', '보컬 레코딩', '믹싱 기초']
-      : ['Music Production', 'Vocal Recording', 'Mixing Basics'],
+    educationalLevel: EDUCATIONAL_LEVEL[locale],
+    teaches: TEACHES[locale],
     offers: {
       '@type': 'Offer',
       priceCurrency: 'KRW',
@@ -419,7 +453,7 @@ export const generateCourseSchema = (
       courseMode: 'onsite',
       instructor: {
         '@type': 'Person',
-        name: isKo ? '스튜디오 놀 엔지니어' : 'Studio NOL Engineer',
+        name: INSTRUCTOR_NAME[locale],
       },
     },
   };

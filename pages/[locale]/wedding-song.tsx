@@ -19,7 +19,18 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import { getPricingData } from '../../data/pricing';
-import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
+import { getSchemaLanguage, generateHowToSchema, RECORDING_TOOL_NAME } from '../../utils/schemaGenerator';
+
+const WEDDING_SERVICE_TYPE: Record<string, string> = {
+  ko: '축가 녹음', en: 'Wedding Song Recording', zh: '婚礼歌曲录音',
+  es: 'Grabación de canción de boda', vi: 'Thu âm bài hát đám cưới',
+  th: 'บันทึกเสียงเพลงงานแต่งงาน', uz: 'To\'y qo\'shig\'ini yozish',
+};
+const WEDDING_PACKAGE_NAME: Record<string, string> = {
+  ko: '축가 완성 패키지', en: 'Wedding Song Package', zh: '婚礼歌曲完整套餐',
+  es: 'Paquete de canción de boda', vi: 'Gói hoàn thiện bài hát đám cưới',
+  th: 'แพ็กเกจเพลงงานแต่งงาน', uz: 'To\'y qo\'shig\'i paketi',
+};
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
@@ -83,7 +94,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
       name: t('weddingSong.seo.title'),
       description: t('weddingSong.seo.description'),
       inLanguage: schemaLanguage,
-      serviceType: locale === 'ko' ? '축가 녹음' : 'Wedding Song Recording',
+      serviceType: WEDDING_SERVICE_TYPE[locale],
       areaServed: siteConfig.contact.address,
       provider: {
         '@type': 'Organization',
@@ -94,7 +105,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
       url: pageUrl,
       offers: {
         '@type': 'Offer',
-        name: weddingPackage?.title ?? (locale === 'ko' ? '축가 완성 패키지' : 'Wedding Song Package'),
+        name: weddingPackage?.title ?? WEDDING_PACKAGE_NAME[locale],
         priceCurrency: 'KRW',
         price: '350000',
         availability: 'https://schema.org/InStock',
@@ -112,7 +123,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
         howToSteps,
         'PT2H',
         locale,
-        { name: locale === 'ko' ? '전문 녹음 장비' : 'Professional Recording Equipment' }
+        { name: RECORDING_TOOL_NAME[locale] }
       ),
     [t, howToSteps, locale]
   );
