@@ -7,8 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
+import type { Resource } from 'i18next';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
-import { getLocaleI18nResourcesServer } from '../lib/i18n.server';
+import { loadCommonResourceServer } from '../lib/i18n.server';
 
 const ServerErrorPage: NextPage = () => {
   const router = useRouter();
@@ -83,11 +84,11 @@ const ServerErrorPage: NextPage = () => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {
-      i18nResources: getLocaleI18nResourcesServer(defaultLocale),
-    },
-  };
+  const i18nResources: Resource = {};
+  for (const loc of locales) {
+    i18nResources[loc] = { common: loadCommonResourceServer(loc) };
+  }
+  return { props: { i18nResources } };
 };
 
 export default ServerErrorPage;
