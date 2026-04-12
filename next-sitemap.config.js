@@ -185,26 +185,7 @@ module.exports = {
   exclude: ['/api/*', '/404', '/500', '/'],
   robotsTxtOptions: {
     policies: [
-      { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Google
-      { userAgent: 'Googlebot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Bing
-      { userAgent: 'bingbot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Naver
-      { userAgent: 'Yeti', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // OpenAI
-      { userAgent: 'GPTBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      { userAgent: 'OAI-SearchBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      { userAgent: 'ChatGPT-User', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Anthropic
-      { userAgent: 'ClaudeBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      { userAgent: 'anthropic-ai', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Perplexity
-      { userAgent: 'PerplexityBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Meta
-      { userAgent: 'FacebookBot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Apple
-      { userAgent: 'Applebot', allow: ['/', '/api/rss'], disallow: ['/api/'] },
+      { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/', '/_next/'] },
     ],
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) =>
@@ -292,7 +273,7 @@ module.exports = {
       const portfolioImages = getPortfolioImageMap();
       const imgUrl = portfolioImages[itemId];
       if (imgUrl) {
-        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`) }];
+        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl.startsWith('/') ? imgUrl : '/' + imgUrl}`) }];
       }
     } else {
       const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;

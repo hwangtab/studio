@@ -1,5 +1,5 @@
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
-import { type Locale } from '../lib/i18n';
+import { type Locale, locales } from '../lib/i18n';
 import { getSiteConfig, socialProfiles } from '../data/siteConfig';
 
 const OFFER_CATALOG_NAMES: Record<Locale, string> = {
@@ -137,7 +137,7 @@ export const generateDefaultSchema = (
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
             email: config.contact.email,
             url: localeContactUrl,
-            availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
+            availableLanguage: [...locales],
           },
         ],
         legalName: 'Studio NOL',
@@ -145,7 +145,7 @@ export const generateDefaultSchema = (
         foundingDate: '2024-01-01',
         description: config.description,
         slogan: SLOGANS[locale],
-        knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
+        knowsLanguage: [...locales],
       },
       {
         '@type': 'LocalBusiness',
@@ -379,12 +379,14 @@ export const generateArticleSchema = (
   };
 };
 
-export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteUrl: string, canonicalUrl?: string) => {
+export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteUrl: string, canonicalUrl?: string, locale: Locale = 'ko') => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    inLanguage: schemaLanguage,
     ...(canonicalUrl && { '@id': `${canonicalUrl}#breadcrumb` }),
     itemListElement: breadcrumbs.map((crumb, index) => ({
       '@type': 'ListItem',
@@ -757,11 +759,13 @@ export const generateItemListSchema = (
   listName?: string
 ) => {
   const resolvedListName = listName || ITEM_LIST_NAMES[locale];
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: resolvedListName,
+    inLanguage: schemaLanguage,
     itemListElement: items.map((item, index) => {
       const absoluteUrl = item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`;
       return {
@@ -833,6 +837,7 @@ export const generateServiceListSchema = (
 ) => {
   const config = getSiteConfig(locale);
   const organizationId = `${siteUrl}/#organization`;
+  const schemaLanguage = getSchemaLanguage(locale);
 
   const SERVICE_LIST_NAMES: Record<Locale, string> = {
     ko: '서비스 목록', en: 'Service List', zh: '服务列表',
@@ -843,6 +848,7 @@ export const generateServiceListSchema = (
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: SERVICE_LIST_NAMES[locale],
+    inLanguage: schemaLanguage,
     itemListElement: services.map((service, index) => ({
       '@type': 'ListItem',
       position: index + 1,

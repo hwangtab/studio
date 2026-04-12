@@ -24,7 +24,7 @@ function buildContentSecurityPolicy(): string {
         "img-src 'self' data: https:",
         "font-src 'self' data: https://cdn.jsdelivr.net https://fastly.jsdelivr.net https://fonts.gstatic.com",
         "frame-src 'self' https://www.google.com https://www.google.co.kr",
-        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://region1.google-analytics.com",
+        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com",
         "object-src 'none'",
         "base-uri 'self'",
         "frame-ancestors 'self'",

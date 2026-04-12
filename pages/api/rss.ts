@@ -25,7 +25,7 @@ const escapeXml = (str: string): string =>
     .replace(/'/g, '&apos;');
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const localeParam = (req.query.locale as string) || 'ko';
+  const localeParam = (req.query.locale as string) || defaultLocale;
   const locale: Locale = locales.includes(localeParam as Locale)
     ? (localeParam as Locale)
     : 'ko';

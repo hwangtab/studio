@@ -277,6 +277,11 @@ const validationCodeMessageMap: Record<ContactValidationCode, string> = {
 const toOptionalString = (value: unknown): string | undefined =>
     typeof value === 'string' ? value : undefined;
 
+const sanitizeOptional = (value: unknown, maxLen = 200): string | undefined => {
+    const str = toOptionalString(value);
+    return str ? validator.escape(str).slice(0, maxLen) : undefined;
+};
+
 const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<string, unknown> | null => {
     if (req.method !== 'POST') {
         res.status(405).json({ message: 'Method not allowed' });
@@ -358,10 +363,10 @@ const validateAndSanitizeContactPayload = (
             email: validator.normalizeEmail(validationResult.normalized.email) || validationResult.normalized.email,
             message: validator.escape(validationResult.normalized.message),
             phone: validator.escape(validationResult.normalized.phone),
-            utm_source: toOptionalString(payload.utm_source),
-            utm_medium: toOptionalString(payload.utm_medium),
-            utm_campaign: toOptionalString(payload.utm_campaign),
-            referrer: toOptionalString(payload.referrer),
+            utm_source: sanitizeOptional(payload.utm_source),
+            utm_medium: sanitizeOptional(payload.utm_medium),
+            utm_campaign: sanitizeOptional(payload.utm_campaign),
+            referrer: sanitizeOptional(payload.referrer, 500),
         },
     };
 };

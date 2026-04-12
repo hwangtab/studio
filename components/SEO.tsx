@@ -81,7 +81,7 @@ const SEO = ({
 }: SEOProps) => {
   const router = useRouter();
 
-  const currentPath = router.asPath.split('?')[0];
+  const currentPath = router.asPath.split('?')[0].split('#')[0];
   const segments = currentPath.split('/');
   let pathWithoutLocale = currentPath;
   let currentLocale: Locale = 'ko';
@@ -217,8 +217,8 @@ const SEO = ({
   );
 
   const breadcrumbSchema = React.useMemo(
-    () => generateBreadcrumbSchema(breadcrumbs, siteUrl, normalizedCanonical),
-    [breadcrumbs, siteUrl, normalizedCanonical]
+    () => generateBreadcrumbSchema(breadcrumbs, siteUrl, normalizedCanonical, currentLocale),
+    [breadcrumbs, siteUrl, normalizedCanonical, currentLocale]
   );
 
   const faqSchema = React.useMemo(() => generateFaqSchema(faqItems, currentLocale), [faqItems, currentLocale]);

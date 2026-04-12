@@ -22,9 +22,13 @@ export default async function handler(req: NextRequest) {
     const truncatedTitle = title.length > 52 ? title.slice(0, 52) + '…' : title;
 
     // Noto Sans KR 폰트 — Google Fonts에서 직접 fetch (CJK 포함)
+    const fontController = new AbortController();
+    const fontTimeout = setTimeout(() => fontController.abort(), 3000);
     const fontRes = await fetch(
-      'https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLTq8H4hfeE.woff2'
+      'https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLTq8H4hfeE.woff2',
+      { signal: fontController.signal }
     );
+    clearTimeout(fontTimeout);
     const fontData = await fontRes.arrayBuffer();
 
     return new ImageResponse(
@@ -168,7 +172,7 @@ export default async function handler(req: NextRequest) {
     console.error('OG image generation error:', error);
     return new Response(null, {
       status: 302,
-      headers: { Location: '/images/og-default.webp' },
+      headers: { Location: '/images/og-default.jpg' },
     });
   }
 }
