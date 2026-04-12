@@ -257,6 +257,12 @@ module.exports = {
       return null;
     }
 
+    // Story detail pages are generated via additionalPaths (with per-slug alternateRefs).
+    // Exclude them here to prevent duplicate sitemap entries.
+    if (/\/stories\/[^/]+$/.test(routePath) && !routePath.endsWith('/stories')) {
+      return null;
+    }
+
     // 페이지네이션, 카테고리, 태그 필터 페이지는 noindex 중복 콘텐츠 → 사이트맵 제외
     if (
       /\/stories\/page\//.test(routePath) ||

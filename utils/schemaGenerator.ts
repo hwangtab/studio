@@ -679,10 +679,12 @@ export const generateMusicAlbumSchema = (
   locale: Locale = 'ko'
 ) => {
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'MusicAlbum',
+    inLanguage: schemaLanguage,
     ...(item.url && { '@id': `${item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`}#album` }),
     name: item.title,
     byArtist: {
@@ -718,9 +720,11 @@ export interface VideoInput {
 
 export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') => {
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
+    inLanguage: schemaLanguage,
     name: video.name,
     description: video.description,
     thumbnailUrl: video.thumbnailUrl,
@@ -758,14 +762,21 @@ export const generateItemListSchema = (
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: resolvedListName,
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      url: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
-      ...(item.image && { image: item.image.startsWith('http') ? item.image : `${siteUrl}${item.image}` }),
-      ...(item.description && { description: item.description }),
-    })),
+    itemListElement: items.map((item, index) => {
+      const absoluteUrl = item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`;
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'CreativeWork',
+          '@id': absoluteUrl,
+          name: item.name,
+          url: absoluteUrl,
+          ...(item.image && { image: item.image.startsWith('http') ? item.image : `${siteUrl}${item.image}` }),
+          ...(item.description && { description: item.description }),
+        },
+      };
+    }),
   };
 };
 
@@ -784,10 +795,12 @@ export const generateAudioObjectSchema = (
   locale: Locale = 'ko'
 ) => {
   const config = getSiteConfig(locale);
+  const schemaLanguage = getSchemaLanguage(locale);
 
   return tracks.map((track) => ({
     '@context': 'https://schema.org',
     '@type': 'AudioObject',
+    inLanguage: schemaLanguage,
     name: track.name,
     contentUrl: track.contentUrl.startsWith('http') ? track.contentUrl : `${siteUrl}${track.contentUrl}`,
     encodingFormat: track.encodingFormat || 'audio/mpeg',

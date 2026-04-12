@@ -387,7 +387,7 @@ const SEO = ({
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content={ogImageAlt || resolvedTitle} />
-      {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
+      {/* twitter:creator requires a @handle — omitted until a Twitter account is configured */}
 
       {renderSchema(finalSchema)}
     </Head>

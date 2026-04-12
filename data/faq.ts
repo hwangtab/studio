@@ -137,6 +137,14 @@ const faqData = {
       answer: '配备 Neumann U87AI、AKG C414 XLS 麦克风、Vintech X73i 前级、Prism Sound Lyra 2 接口、SSL Fusion 处理器等高端模拟/数字设备。',
     },
     {
+      question: 'Studio NOL 周末或节假日也营业吗？',
+      answer: '是的，Studio NOL 采用 100% 预约制，提前预约即可在周末、节假日及深夜时段使用。',
+    },
+    {
+      question: '延新内站附近有录音室或练习室吗？',
+      answer: '是的，Studio NOL 距延新内站和佛光站步行均约 5 分钟，在恩平区交通十分便利。',
+    },
+    {
       question: '提供音乐发行服务吗？',
       answer: '是的，入驻客户可通过 Audioguy 免费发行至 Spotify、Apple Music、YouTube Music 等全球平台，净收益的 70% 分成给艺人。',
     },
@@ -181,6 +189,14 @@ const faqData = {
     {
       question: '¿Qué equipo tienen?',
       answer: 'Contamos con equipo premium como Neumann U87AI, AKG C414 XLS, preamplificador Vintech X73i, interfaz Prism Sound Lyra 2 y procesador SSL Fusion.',
+    },
+    {
+      question: '¿Studio NOL abre los fines de semana o en días festivos?',
+      answer: 'Sí, Studio NOL opera con un sistema de reservas al 100%. Con reserva previa, el servicio está disponible los fines de semana, festivos y en horario nocturno.',
+    },
+    {
+      question: '¿Hay algún estudio de grabación o sala de práctica cerca de la estación Yeonsinnae?',
+      answer: 'Sí, Studio NOL se encuentra a tan solo 5 minutos a pie de la estación Yeonsinnae y la estación Bulgwang, en Eunpyeong-gu.',
     },
     {
       question: '¿Ofrecen distribución musical?',
@@ -229,6 +245,14 @@ const faqData = {
       answer: 'Trang bị Neumann U87AI, AKG C414 XLS, preamp Vintech X73i, interface Prism Sound Lyra 2, bộ xử lý SSL Fusion, v.v.',
     },
     {
+      question: 'Studio NOL có mở cửa vào cuối tuần hoặc ngày lễ không?',
+      answer: 'Có, Studio NOL hoạt động hoàn toàn theo hệ thống đặt lịch trước. Nếu đặt trước, bạn có thể sử dụng dịch vụ vào cuối tuần, ngày lễ và ban đêm.',
+    },
+    {
+      question: 'Có phòng thu âm hoặc phòng tập gần ga Yeonsinnae không?',
+      answer: 'Có, Studio NOL cách ga Yeonsinnae và ga Bulgwang ở Eunpyeong-gu chỉ khoảng 5 phút đi bộ, rất thuận tiện di chuyển.',
+    },
+    {
       question: 'Có dịch vụ phát hành nhạc không?',
       answer: 'Có. Khách cư trú được phát hành toàn cầu miễn phí (Spotify, Apple Music, YouTube Music, v.v.) qua Audioguy và nhận 70% lợi nhuận ròng.',
     },
@@ -275,6 +299,14 @@ const faqData = {
       answer: 'มีอุปกรณ์ระดับพรีเมียม เช่น ไมค์ Neumann U87AI, AKG C414 XLS, พรีแอมป์ Vintech X73i, อินเทอร์เฟซ Prism Sound Lyra 2 และโปรเซสเซอร์ SSL Fusion เป็นต้น',
     },
     {
+      question: 'Studio NOL เปิดบริการในวันหยุดสุดสัปดาห์หรือวันหยุดนักขัตฤกษ์ไหม?',
+      answer: 'เปิดค่ะ Studio NOL ดำเนินการแบบจองล่วงหน้า 100% หากจองล่วงหน้าสามารถใช้บริการได้ทั้งวันหยุดสุดสัปดาห์ วันหยุดนักขัตฤกษ์ และช่วงดึก',
+    },
+    {
+      question: 'มีห้องอัดเสียงหรือห้องซ้อมใกล้สถานี Yeonsinnae ไหม?',
+      answer: 'มีค่ะ Studio NOL อยู่ห่างจากสถานี Yeonsinnae และสถานี Bulgwang ในเขต Eunpyeong-gu เพียง 5 นาทีเดินเท้า สะดวกสบายมาก',
+    },
+    {
       question: 'มีบริการจัดจำหน่ายเพลงไหม?',
       answer: 'มี สำหรับสมาชิกที่พักประจำ เราให้บริการจัดจำหน่ายทั่วโลกฟรีผ่าน Audioguy (Spotify, Apple Music, YouTube Music ฯลฯ) และแบ่งรายได้สุทธิ 70% ให้ศิลปิน',
     },
@@ -319,6 +351,14 @@ const faqData = {
     {
       question: 'Qanday uskunalar bor?',
       answer: 'Neumann U87AI, AKG C414 XLS mikrofonlari, Vintech X73i preamp, Prism Sound Lyra 2 interfeys, SSL Fusion protsessori kabi premium analog/raqamli uskunalar mavjud.',
+    },
+    {
+      question: "Studio NOL dam olish kunlari va bayramlarda ham ishlaydimi?",
+      answer: "Ha. Studio NOL 100% oldindan bron asosida ishlaydi. Oldindan bron qilinsa, dam olish kunlari, bayramlar va kech tungi soatlarda ham xizmatdan foydalanish mumkin.",
+    },
+    {
+      question: "Yeonsinnae bekati yaqinida yozuv studiyasi yoki mashg'ulot xonasi bormi?",
+      answer: "Ha, Studio NOL Eunpyeong-gudagi Yeonsinnae va Bulgwang bekatlaridan piyoda atigi 5 daqiqa masofada joylashgan.",
     },
     {
       question: 'Musiqa tarqatish xizmati ham bormi?',

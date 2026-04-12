@@ -18,6 +18,8 @@ export default async function handler(req: NextRequest) {
     const domain = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/^https?:\/\//, '');
 
     const metaParts = [category, date].filter(Boolean).join('  ·  ');
+    // Satori does not support WebkitLineClamp — truncate title in JS instead
+    const truncatedTitle = title.length > 52 ? title.slice(0, 52) + '…' : title;
 
     // Noto Sans KR 폰트 — Google Fonts에서 직접 fetch (CJK 포함)
     const fontRes = await fetch(
@@ -112,13 +114,9 @@ export default async function handler(req: NextRequest) {
               fontSize: 48,
               fontWeight: 700,
               lineHeight: 1.35,
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 3,
-              overflow: 'hidden',
             }}
           >
-            {title}
+            {truncatedTitle}
           </div>
 
           {/* 카테고리 · 날짜 */}
