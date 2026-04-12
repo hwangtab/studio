@@ -120,7 +120,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         '@type': 'Offer',
         name: voiceoverPackage?.title ?? (locale === 'ko' ? '성우/나레이션 녹음' : 'Voiceover & Narration'),
         priceCurrency: 'KRW',
-        price: 100000,
+        price: '100000',
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing#special-packages`,
       },

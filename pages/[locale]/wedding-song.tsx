@@ -96,7 +96,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
         '@type': 'Offer',
         name: weddingPackage?.title ?? (locale === 'ko' ? '축가 완성 패키지' : 'Wedding Song Package'),
         priceCurrency: 'KRW',
-        price: 350000,
+        price: '350000',
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing#special-packages`,
       },

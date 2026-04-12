@@ -178,7 +178,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       '@type': 'Offer',
       name: locale === 'ko' ? '음악연습실 월정액 입주 프로그램' : 'Monthly Practice Room Residency Program',
       priceCurrency: 'KRW',
-      price: 300000,
+      price: '300000',
       availability: 'https://schema.org/InStock',
       url: `${siteConfig.url}/${locale}/practice-room`,
     },

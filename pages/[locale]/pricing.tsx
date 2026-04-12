@@ -80,7 +80,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
     description: offer.description,
     inLanguage: schemaLanguage,
     priceCurrency: 'KRW',
-    price: offer.priceValue,
+    price: String(offer.priceValue),
     priceValidUntil,
     availability: 'https://schema.org/InStock',
     url: `${pricingUrl}#${offer.id}`,
