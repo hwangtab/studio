@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 솔로·그루브 솔로잉 기법 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 베이스 솔로·그루브 솔로잉 기법 — 음악연습실 완전 가이드
 
 베이스 솔로는 **베이스가 음악의 전면으로 나오는 순간**입니다. 단순한 반주 악기를 넘어서, 멜로디·화성·리듬을 동시에 구사하며 관객을 매료시킵니다. Victor Wooten, Jaco Pastorius, Marcus Miller의 솔로 기법을 탐구합니다.
@@ -241,3 +240,6 @@ Cmaj7: C-E-G-B
 
 은평구 24시간 음악연습실에서 루프 페달을 활용해 베이스 솔로를 탐구하세요.
 
+---
+
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 투핸드 탭핑·고급 솔로 기법 — 완전 가이드](/stories/practice-room-bass-two-hand-tapping1) | [베이스 코드 멜로디·솔로 편곡법 — 완전 가이드](/stories/practice-room-bass-chord-melody1)

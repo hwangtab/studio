@@ -28,7 +28,6 @@ summary: 베이스 워킹 라인 구성·크로매틱 접근·가이드 톤·코
 ---
 ![베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 음악연습실 완전 가이드
 
 워킹 베이스 라인(Walking Bass Line)은 **재즈 베이스의 심장**입니다. 각 코드 위에서 4분음표로 걸어가는 베이스 라인은 리듬·하모니·멜로디를 동시에 담당합니다. Ray Brown, Paul Chambers, Ron Carter — 위대한 재즈 베이시스트들은 워킹 라인을 음악적 대화로 만들었습니다.
@@ -306,3 +305,6 @@ ii-V-I의 각 코드에서 코드 톤 4개 선택
 
 은평구 24시간 음악연습실에서 ii-V-I 라인부터 시작하세요. 하루에 하나의 키에서 자연스러운 워킹 라인이 나오면, 그날의 연습은 성공입니다.
 
+---
+
+[베이스 재즈 콤핑·워킹 라인 고급 — 완전 가이드](/stories/practice-room-bass-jazz-comping1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass-prog-metal1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 컨트리·블루그래스·루트-5도 라인 — 완전 가이드](/stories/practice-room-bass-country-bluegrass1)

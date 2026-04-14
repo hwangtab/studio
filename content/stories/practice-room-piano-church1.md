@@ -28,7 +28,6 @@ summary: 교회 피아노·찬양 반주·코드 반주법·예배 반주·찬�
 ---
 ![교회 피아노·찬양 반주·코드 반주법·예배 피아노 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 음악연습실 완전 가이드
 
 교회 피아노(Church Piano)는 **예배와 찬양을 음악으로 섬기는 반주법**입니다. 악보 그대로 따르는 클래식 피아노와 달리, 교회 피아노는 코드 기반의 즉흥 반주, 다양한 찬양팀 스타일 적응, 회중의 호흡에 맞추는 섬김의 음악입니다. 현대 워십 밴드부터 전통 성가대까지, 교회 피아노는 다양한 상황에 유연하게 적응해야 합니다.
@@ -229,3 +228,6 @@ C: G-C-E (G 유지, B→C, F→E)
 
 은평구 24시간 음악연습실에서 G-D-Em-C 코드 반주부터 시작하세요. 손이 코드를 자연스럽게 찾는 날, 예배 반주가 자유로워집니다.
 
+---
+
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 팝 반주법·코드 보이싱 — 완전 가이드](/stories/practice-room-piano-pop-accompaniment1) | [피아노 CCM·워십 피아노 반주법 — 완전 가이드](/stories/practice-room-piano-worship1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 코드 대리·리하모나이제이션 — 완전 가이드](/stories/practice-room-piano-chord-substitution1)

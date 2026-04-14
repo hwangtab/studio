@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 K-Pop 창법·아이돌 보컬 테크닉 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 보컬 K-Pop 창법·아이돌 보컬 테크닉 — 음악연습실 완전 가이드
 
 K-Pop 보컬은 단순히 노래를 잘하는 것이 아닙니다. **댄스와 노래의 동시 수행, 완벽한 그룹 하모니, 라이브 퍼포먼스 퀄리티 유지**—이 세 가지가 K-Pop 보컬리스트의 핵심 역량입니다. 이 가이드에서는 K-Pop 보컬 특유의 기법과 훈련 방법을 체계적으로 정리합니다.
@@ -229,3 +228,6 @@ K-Pop 보컬의 완성은 **기술과 퍼포먼스의 균형**입니다. 완벽�
 
 은평구 24시간 음악연습실에서 보컬 테크닉을 갈고닦으며, 동시에 자신만의 퍼포먼스 스타일을 개발해나가세요. 기술이 몸에 배면, 무대 위에서 자연스럽게 빛날 수 있습니다.
 
+---
+
+[보컬 오페라 창법·벨칸토 발성 기초 — 완전 가이드](/stories/practice-room-vocal-opera-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 소울·R&B 창법·멜리즈마 기법 — 완전 가이드](/stories/practice-room-vocal-soul1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

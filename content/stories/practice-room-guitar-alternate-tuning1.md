@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 음악연습실 완전 가이드
 
 올터네이트 튜닝(Alternate Tuning)은 **표준 EADGBE 튜닝 외에 다른 방식으로 현을 조율하는 것**입니다. 새로운 코드 보이싱, 드론 음, 독특한 음색이 탄생합니다. Pierre Bensusan(DADGAD), Jimmy Page(DADGAD), Joni Mitchell(다양한 올터네이트)이 이 세계를 탐구했습니다.
@@ -302,3 +301,6 @@ E 기반의 DADGAD 음색
 
 은평구 24시간 음악연습실에서 Drop D부터 시작하여 DADGAD로 나아가세요. 각 튜닝이 발견하게 해줄 새로운 코드와 멜로디를 기대하세요.
 
+---
+
+[기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 델타 블루스·Robert Johnson 오픈 튜닝 — 완전 가이드](/stories/practice-room-guitar-delta-blues1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 오픈 코드·소노리티 기법 — 완전 가이드](/stories/practice-room-guitar-open-chord-sonority1)

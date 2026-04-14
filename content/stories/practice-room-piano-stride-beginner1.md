@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 스트라이드 입문·왼손 점프 기초 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 피아노 스트라이드 입문·왼손 점프 기초 — 음악연습실 완전 가이드
 
 스트라이드 피아노(Stride Piano)는 **왼손이 베이스와 코드 사이를 빠르게 오가는 재즈 피아노 기법**입니다. James P. Johnson, Fats Waller, Willie "The Lion" Smith가 1920-30년대 할렘에서 완성했습니다. 왼손이 혼자 베이스·화음을 담당하고 오른손이 자유롭게 멜로디를 연주합니다.
@@ -291,3 +290,6 @@ C2 → B1 → Bb1 → A1
 
 은평구 24시간 음악연습실에서 왼손 점프부터 시작하세요. 천천히, 정확하게—한 박 한 박 스트라이드를 완성하다 보면 어느 순간 음악이 됩니다.
 
+---
+
+[피아노 스트라이드 고급 테크닉 — 완전 가이드](/stories/practice-room-piano-stride-advanced1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)

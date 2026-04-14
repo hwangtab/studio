@@ -30,7 +30,6 @@ summary: >-
 ---
 ![12현 기타·코러스 효과·Roger McGuinn 스타일 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 12현 기타·코러스 효과·Roger McGuinn 스타일 — 음악연습실 완전 가이드
 
 12현 기타(12-String Guitar)는 **6현 기타의 모든 현에 옥타브 또는 유니즌 현을 더한 악기**입니다. 두 배의 현이 만드는 자연적인 코러스(chorus) 효과와 풍부한 배음은 The Byrds의 Roger McGuinn, Led Zeppelin의 Jimmy Page가 록 역사에 刻印했습니다. 하나의 현 대신 두 개의 현이 동시에 울릴 때 생기는 미세한 음정 차이가 코러스의 마법을 만듭니다.
@@ -239,3 +238,6 @@ Martin D12-20 어쿠스틱
 
 은평구 24시간 음악연습실에서 오픈 G 코드부터 시작해보세요. 12현의 코러스가 공기를 채우는 순간, 당신의 음악이 넓어집니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1) | [보사노바 기타·삼바 리듬·João Gilberto 스타일 — 완전 가이드](/stories/practice-room-guitar-bossa1)

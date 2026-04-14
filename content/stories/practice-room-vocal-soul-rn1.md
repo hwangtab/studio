@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 음악연습실 완전 가이드
 
 소울 보컬(Soul Vocal)은 **영혼에서 나오는 음악**입니다. 가스펠의 열정, 블루스의 고통, 재즈의 화성이 만나 탄생한 소울은 Aretha Franklin, Stevie Wonder, Ray Charles가 극한까지 끌어올렸습니다. 소울 보컬은 기교보다 감정, 완벽한 음정보다 진심이 먼저입니다.
@@ -257,3 +256,6 @@ Stevie Wonder:
 
 은평구 24시간 음악연습실에서 몸을 흔들며 노래해보세요. 그루브가 몸에서 나올 때, 목소리도 소울로 변합니다.
 
+---
+
+[보컬 R&B 프레이징·그루브·어택 포인트 — 완전 가이드](/stories/practice-room-vocal-rnb-phrasing1) | [보컬 소울·R&B 창법·멜리즈마 기법 — 완전 가이드](/stories/practice-room-vocal-soul1) | [보컬 어질리티·멜리스마 훈련 — 완전 가이드](/stories/practice-room-vocal-agility1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1)

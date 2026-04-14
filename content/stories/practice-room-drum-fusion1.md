@@ -30,7 +30,6 @@ summary: >-
 ---
 ![퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 음악연습실 완전 가이드
 
 퓨전 드럼(Fusion Drum)은 **재즈의 복잡한 화성과 록의 강력한 그루브, 그리고 월드 뮤직의 리듬이 결합된 드럼 스타일**입니다. Vinnie Colaiuta의 테크니컬 그루브, Dave Weckl의 정밀한 다이나믹, Steve Gadd의 패턴 — 퓨전 드럼은 세계 최고 드러머들의 전쟁터입니다.
@@ -220,3 +219,6 @@ Vinnie·Weckl의 핵심 기술
 
 은평구 24시간 음악연습실에서 고스트 노트 연습부터 시작하세요. 들릴 듯 말 듯한 그 음이 퓨전 그루브의 깊이를 만듭니다.
 
+---
+
+[드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [힙합·로파이 드럼·붐뱁·드럼머신 그루브 — 완전 가이드](/stories/practice-room-drum-hip-hop-lofi1) | [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드](/stories/practice-room-drum-jazz-funk1)

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 스트라이드 고급 테크닉 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 피아노 스트라이드 고급 테크닉 — 음악연습실 완전 가이드
 
 스트라이드 피아노는 **왼손이 오케스트라**인 양식입니다. 낮은 베이스 음에서 높은 코드로 도약하는 왼손이 베이스·드럼·하모니를 동시에 담당하며, 오른손은 그 위에서 자유롭게 멜로디와 즉흥연주를 펼칩니다. Art Tatum, Fats Waller, James P. Johnson의 전설적 스타일을 분석합니다.
@@ -297,3 +296,6 @@ Am7b5 → D7 → Gm (G단조)
 
 은평구 24시간 음악연습실에서 시간 제한 없이 왼손 도약을 훈련하세요. 스트라이드는 많은 반복이 필요한 스타일입니다—인내심을 갖고, 천천히, 정확하게.
 
+---
+
+[피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 스트라이드 입문·왼손 점프 기초 — 완전 가이드](/stories/practice-room-piano-stride-beginner1) | [피아노 스트라이드·뉴올리언스 피아노 — 완전 가이드](/stories/practice-room-piano-stride1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)

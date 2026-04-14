@@ -45,7 +45,6 @@ Steinberg Cubase는 1989년부터 업계를 이끌어온 DAW로, 유럽 스튜�
 
 ## Cubase 기본 설정
 
-
 ### 오디오 인터페이스 설정
 
 1. 오디오 인터페이스 연결
@@ -67,8 +66,6 @@ File → New Project → Sample Rate 설정 → Create
 ---
 
 ## 오디오 트랙 생성 및 녹음
-
-모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
 
 ### 트랙 생성
 
@@ -95,7 +92,6 @@ Space 키로 정지
 ---
 
 ## Channel EQ 설정
-
 
 ### Channel EQ 열기
 

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 태핑·양손 태핑 테크닉 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 베이스 태핑·양손 태핑 테크닉 — 음악연습실 완전 가이드
 
 베이스 태핑(Bass Tapping)은 피킹 없이 손가락을 지판에 직접 두드려(Tap) 소리를 내는 기법입니다. 오른손이 지판을 두드리고 왼손이 프렛을 짚는 방식으로, 두 손이 독립적으로 지판 위에서 움직입니다. 이 기법은 재코 파스토리우스, 빅터 우튼, 마이클 맨링 같은 베이스의 거장들이 발전시켜 베이스를 단순한 리듬 악기에서 멜로디·화성까지 표현하는 악기로 확장시켰습니다.
@@ -172,7 +171,10 @@ C 메이저 코드 태핑:
 - **완벽 방음** — 반복 연습에 집중
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[베이스 스트링 뮤팅·노이즈 컨트롤 — 완전 가이드](/stories/practice-room-bass-string-muting1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 핑거스타일 테크닉·터치 향상 — 완전 가이드](/stories/practice-room-bass-fingerstyle-technique1)

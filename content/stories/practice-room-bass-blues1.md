@@ -28,7 +28,6 @@ summary: '12마디 블루스의 베이스라인 구성과 셔플 그루브. 워�
 ---
 ![베이스 블루스·12마디 블루스 베이스라인 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 베이스 블루스·12마디 블루스 베이스라인 — 음악연습실 완전 가이드
 
 블루스 베이스는 **모든 대중음악 베이스의 뿌리**입니다. 12마디 블루스 진행과 셔플 그루브—이 두 가지를 완전히 이해하면, 록, 팝, 재즈, 소울 어느 장르에서도 흔들리지 않는 베이스 실력의 기반이 됩니다.
@@ -240,3 +239,6 @@ Treble: 0dB
 
 은평구 24시간 음악연습실에서 블루스 음반을 들으며 베이스를 따라 연주해보세요. BB King의 기타 아래에서 Willie Dixon의 베이스를 타고 가는 느낌—그것이 블루스 베이스의 진정한 맛입니다.
 
+---
+
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

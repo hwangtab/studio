@@ -30,7 +30,6 @@ summary: >-
 ---
 ![아치탑 기타·재즈 기타 톤·할로우 바디 세팅 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 음악연습실 완전 가이드
 
 아치탑 기타(Archtop Guitar)는 **재즈의 소리를 정의하는 악기**입니다. Gibson L-5, ES-175, D'Angelico — 이 기타들의 따뜻하고 둥근 톤이 Joe Pass, Wes Montgomery, Jim Hall의 음악을 만들었습니다. 플랫탑과 다른 공명 구조, 험버커 픽업의 따뜻함, 무거운 현 — 이 모든 것이 재즈 기타 톤의 비밀입니다.
@@ -248,3 +247,6 @@ Cmaj7: X-3-2-0-0-0 (열린 현 활용)
 
 은평구 24시간 음악연습실에서 Drop 2 보이싱부터 시작하세요. 재즈 코드 하나씩 손에 익히면, 어느 날 자신만의 코드 멜로디가 흘러나옵니다.
 
+---
+
+[기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1)

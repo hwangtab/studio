@@ -28,7 +28,6 @@ summary: 바리톤 기타·다운 튜닝·Drop D·Drop C·헤비 리프. 저음�
 ---
 ![바리톤 기타·다운 튜닝·헤비 사운드 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 바리톤 기타·다운 튜닝·헤비 사운드 — 음악연습실 완전 가이드
 
 바리톤 기타(Baritone Guitar)는 **표준 기타보다 낮게 조율된 저음역 기타**입니다. 스케일 길이가 더 길고, 표준 기타보다 4도 또는 5도 낮게 튜닝됩니다. 헤비 메탈·프로그레시브 록·컨트리에서 독특한 존재감을 보여줍니다. 또한 Drop D, Drop C 등 다운 튜닝은 파워 코드의 세계를 열어줍니다.
@@ -244,3 +243,6 @@ Drop D + 폴리리듬
 
 은평구 24시간 음악연습실에서 Drop D 파워 코드부터 시작하세요. 팜 뮤팅과 함께 첫 리프가 나오는 순간, 헤비 기타의 세계가 열립니다.
 
+---
+
+[기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 완전 가이드](/stories/practice-room-guitar-alternate-tuning1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

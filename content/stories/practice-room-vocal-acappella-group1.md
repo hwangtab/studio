@@ -28,7 +28,6 @@ summary: 아카펠라 그룹 편곡·보컬 퍼커션·4성부 하모니 퍼포�
 ---
 ![보컬 아카펠라 그룹 퍼포먼스 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 보컬 아카펠라 그룹 퍼포먼스 — 음악연습실 완전 가이드
 
 아카펠라(A cappella)는 **악기 없이 목소리만으로 완전한 음악을 만드는 예술**입니다. 보컬 그룹이 멜로디·하모니·베이스·퍼커션을 동시에 담당하며, 그 합이 오케스트라를 능가하는 아름다움을 만들어냅니다. Pentatonix, Straight No Chaser, Home Free의 스타일을 분석합니다.
@@ -256,3 +255,6 @@ Kevin Olusola (셀로/퍼커션): 비트박스 + 첼로
 
 은평구 24시간 음악연습실에서 그룹과 함께 또는 혼자 멀티트랙으로 아카펠라를 탐구하세요.
 
+---
+
+[보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal-stage-fright1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

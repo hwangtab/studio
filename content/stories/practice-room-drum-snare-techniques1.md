@@ -28,7 +28,6 @@ summary: 림샷·크로스 스틱·다이나믹 범위 컨트롤의 핵심 기�
 ---
 ![드럼 스네어 테크닉·다이나믹 컨트롤 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 드럼 스네어 테크닉·다이나믹 컨트롤 — 음악연습실 완전 가이드
 
 드럼 세트에서 스네어 드럼(Snare Drum)은 리듬의 핵심입니다. 2박과 4박에 울리는 스네어가 그루브를 정의하고, 필인에서 스네어의 표현이 음악적 긴장과 해소를 만듭니다. 스네어를 치는 방법은 한 가지가 아닙니다. **림샷(Rimshot), 크로스 스틱(Cross Stick), 다이나믹 컨트롤**— 이 세 가지 스네어 테크닉만 완성해도 연주의 다양성이 크게 향상됩니다.
@@ -157,7 +156,10 @@ pp → p → mp → mf → f → ff → f → mf → mp → p → pp
 - **완벽 방음** — ff 포르티시모 연습도 가능
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[드럼 림샷·크로스스틱·림 기법 완전 가이드](/stories/practice-room-drum-rim-techniques1) | [카혼 드럼·플라멩코·어쿠스틱 세션·바스·스네어 카혼 테크닉 — 완전 가이드](/stories/practice-room-drum-cajon1) | [드럼 발 테크닉·더블 베이스 페달 — 완전 가이드](/stories/practice-room-drum-foot-technique1) | [드럼 고스트 노트·다이나믹 컨트롤 — 완전 가이드](/stories/practice-room-drum-ghost-notes1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1)

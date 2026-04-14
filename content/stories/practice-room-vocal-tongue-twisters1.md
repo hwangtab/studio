@@ -28,7 +28,6 @@ summary: '빠른 딕션과 자음 정확성을 위한 발음 훈련법. 혀 트�
 ---
 ![보컬 발음 훈련·딕션 스피드 연습 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 보컬 발음 훈련·딕션 스피드 연습 — 음악연습실 완전 가이드
 
 아무리 아름다운 목소리도 발음이 불명확하면 청중에게 전달되지 않습니다. **딕션(Diction)**은 각 음절을 정확하고 명확하게 발음하는 능력입니다. 특히 빠른 템포의 곡, 랩 섹션, 멜리스마—이 모든 상황에서 딕션 능력이 보컬의 수준을 결정합니다.
@@ -213,3 +212,6 @@ BPM 160: 박당 4음절
 
 은평구 24시간 음악연습실에서 녹음을 통해 자신의 딕션을 객관적으로 모니터링하며 집중적으로 훈련하세요.
 
+---
+
+[보컬 딕션·발음 명확도 훈련 — 완전 가이드](/stories/practice-room-vocal-diction1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 레인지 확장 훈련 — 완전 가이드](/stories/practice-room-vocal-range-extension1)

@@ -112,7 +112,6 @@ Share → Export Song to Disk
 
 ## 유통사별 권장 스펙
 
-
 ### 멜론·지니·벅스 (국내 스트리밍)
 
 - WAV 16bit/44.1kHz 이상 (유통사에서 자체 변환)

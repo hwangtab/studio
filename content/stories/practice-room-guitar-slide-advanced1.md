@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 슬라이드 고급·보틀넥 기법 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 기타 슬라이드 고급·보틀넥 기법 — 음악연습실 완전 가이드
 
 슬라이드 기타는 **음과 음 사이를 끊임없이 흐르는 표현의 예술**입니다. 보틀넥이나 금속 슬라이드로 현을 누르지 않고 미끄러지며, 기타가 목소리처럼 신음하고 노래합니다. Duane Allman, Ry Cooder, Derek Trucks의 고급 슬라이드 기법을 탐구합니다.
@@ -281,3 +280,6 @@ Derek Trucks는 Duane Allman의 계보를 이은 **가장 표현적인 슬라이
 
 은평구 24시간 음악연습실에서 오픈 튜닝으로 슬라이드의 세계를 탐구하세요. 처음엔 부정확해도—반복할수록 귀가 정확해집니다.
 
+---
+
+[일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 — 완전 가이드](/stories/practice-room-guitar-slide-electric1) | [기타 슬라이드·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-slide1) | [도브로·레조네이터 기타·슬라이드 기법 — 완전 가이드](/stories/practice-room-guitar-dobro1) | [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-blues-slide1) | [기타 델타 블루스·Robert Johnson 오픈 튜닝 — 완전 가이드](/stories/practice-room-guitar-delta-blues1)

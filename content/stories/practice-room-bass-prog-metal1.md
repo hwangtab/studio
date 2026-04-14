@@ -31,7 +31,6 @@ summary: >-
 ---
 ![프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 음악연습실 완전 가이드
 
 프로그레시브 메탈 베이스(Prog Metal Bass)는 **복잡한 박자 구조, 테크니컬 베이스 라인, 그리고 헤비한 사운드가 결합된 가장 도전적인 베이스 스타일 중 하나**입니다. Justin Chancellor(Tool)의 묵직한 변박 베이스, Les Claypool(Primus)의 슬랩·타핑 퍼포먼스, Geddy Lee(Rush)의 워킹 베이스 + 멜로디 — 이들이 프로그 메탈 베이스의 전설입니다.
@@ -216,3 +215,6 @@ B♭ 튜닝: B♭-E♭-A♭-D♭ (반음 낮춤 × 2)
 
 은평구 24시간 음악연습실에서 5/4 박자 루트 연주부터 시작하세요. 변박이 자연스러워지는 순간, 프로그레시브 메탈의 문이 활짝 열립니다.
 
+---
+
+[베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 컨트리·블루그래스·루트-5도 라인 — 완전 가이드](/stories/practice-room-bass-country-bluegrass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

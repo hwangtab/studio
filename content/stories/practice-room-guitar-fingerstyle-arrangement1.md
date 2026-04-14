@@ -28,7 +28,6 @@ summary: 팝·재즈 곡을 솔로 핑거스타일 기타로 편곡하는 기법
 ---
 ![기타 핑거스타일 편곡·솔로 기타 어레인지 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 기타 핑거스타일 편곡·솔로 기타 어레인지 — 음악연습실 완전 가이드
 
 솔로 핑거스타일 기타는 **단 하나의 악기로 밴드 전체의 음악을 표현**하는 예술입니다. 멜로디는 위에서 노래하고, 코드는 중간에서 하모니를 만들고, 베이스는 아래에서 리듬을 지탱합니다. 이 세 가지 층위를 동시에 컨트롤하는 것이 솔로 기타 어레인지의 핵심입니다.
@@ -191,3 +190,6 @@ G2 - A2 - B2 - C3 (반음씩 상행)
 
 은평구 24시간 음악연습실에서 방해받지 않고 집중 연습하며 자신만의 솔로 기타 세계를 만들어가세요.
 
+---
+
+[기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 아르페지오·클래식 패턴 완전 가이드](/stories/practice-room-guitar-arpeggios1) | [기타 하이브리드 피킹·핑거스타일 융합 — 완전 가이드](/stories/practice-room-guitar-hybrid-picking1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

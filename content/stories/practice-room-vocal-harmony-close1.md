@@ -28,7 +28,6 @@ summary: 보컬 클로즈 하모니·바버샵 4성부·역전위 화음·잠금
 ---
 ![보컬 클로즈 하모니·바버샵·4성부 합창 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 보컬 클로즈 하모니·바버샵·4성부 합창 — 음악연습실 완전 가이드
 
 클로즈 하모니(Close Harmony)는 **여러 목소리가 밀접한 음정 간격으로 화음을 이루는 기법**입니다. 바버샵(Barbershop) 사중창은 테너·리드·바리톤·베이스 4성부가 완벽한 확장 화음을 이루며 "잠금(lock)"을 만들어냅니다. Eagles, Crosby Stills Nash, Beach Boys — 팝에서도 클로즈 하모니가 마법을 부립니다.
@@ -229,3 +228,6 @@ Beach Boys의 복합 화음:
 
 은평구 24시간 음악연습실에서 두 성부부터 시작해보세요. 3도 화음 하나가 완벽히 맞는 순간, 클로즈 하모니의 세계가 열립니다.
 
+---
+
+[보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

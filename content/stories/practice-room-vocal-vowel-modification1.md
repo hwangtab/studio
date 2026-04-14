@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 모음 수정·고음 발성법 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 보컬 모음 수정·고음 발성법 — 음악연습실 완전 가이드
 
 "아"라고 소리 내며 음을 올리다 보면, 어느 순간 소리가 막히거나 억지로 짜내는 느낌이 납니다. 이 현상의 원인 중 하나가 **모음의 위치 고정**입니다. 낮은 음에서 "아"를 발음하는 방식 그대로 고음을 낼 수 없습니다. 성악 이론에서 **Vowel Modification(모음 수정)**은 음이 높아질수록 모음의 발성 방식을 자연스럽게 조정하는 기법입니다. 이 개념을 이해하고 적용하면 고음역이 극적으로 편안해집니다.
@@ -168,7 +167,10 @@ G4에서 모음이 자연스럽게 변하는 것을 허용합니다.
 - **24시간 운영** — 목 컨디션이 좋은 시간에 자유롭게
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1)

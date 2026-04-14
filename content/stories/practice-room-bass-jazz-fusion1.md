@@ -31,7 +31,6 @@ summary: >-
 ---
 ![재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 — 음악연습실 완전 가이드
 
 재즈퓨전 베이스(Jazz Fusion Bass)는 **재즈의 화성적 복잡함과 록·펑크의 에너지, 그리고 월드뮤직의 리듬이 폭발적으로 결합된 베이스 스타일**입니다. Stanley Clarke의 솔로 베이스 퍼포먼스, Weather Report의 Jaco Pastorius 프렛리스 베이스, Return to Forever의 그루비한 라인 — 이들이 재즈퓨전 베이스의 전설을 썼습니다.
@@ -213,3 +212,6 @@ Alembic 베이스: 밝고 선명한 톤
 
 은평구 24시간 음악연습실에서 Cm9 퓨전 그루브부터 시작하세요. 확장 코드 위를 자유롭게 날아다니는 순간, 재즈퓨전의 문이 열립니다.
 
+---
+
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 — 완전 가이드](/stories/practice-room-bass-fretless-jazz1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

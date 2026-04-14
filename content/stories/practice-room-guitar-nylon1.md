@@ -28,7 +28,6 @@ summary: 나일론 현 기타·클래식 기타 자세·포지션 연주·우완
 ---
 ![나일론 현 기타·클래식 기타 자세·포지션 연주 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 나일론 현 기타·클래식 기타 자세·포지션 연주 — 음악연습실 완전 가이드
 
 나일론 현 기타(Nylon String Guitar)는 **클래식 음악의 전통에서 탄생한 악기**입니다. 스틸 현 기타보다 부드럽고 따뜻한 소리, 넓은 넥, 다른 연주 자세 — 클래식 기타는 완전히 다른 음악 세계로 안내합니다. Andrés Segovia, Julian Bream, John Williams가 이 악기를 오케스트라 수준으로 끌어올렸습니다.
@@ -273,3 +272,6 @@ a-m-i: 같은 음 반복 (초고속)
 
 은평구 24시간 음악연습실에서 자세부터 바로잡으세요. 자세가 올바르면 기술은 자연스럽게 따라옵니다. 나일론의 따뜻한 울림이 클래식 세계로 당신을 이끌 것입니다.
 
+---
+
+[기타 아르페지오·클래식 패턴 완전 가이드](/stories/practice-room-guitar-arpeggios1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1)

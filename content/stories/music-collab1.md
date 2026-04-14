@@ -82,7 +82,6 @@ artistname_songname_MR_v1.wav
 
 ## 원격 협업 도구
 
-
 ### 파일 공유
 
 - **Google Drive**: 대용량, 무료 15GB

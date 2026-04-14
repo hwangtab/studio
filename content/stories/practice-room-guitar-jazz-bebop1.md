@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 비밥·재즈 기타 즉흥·Wes Montgomery 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 기타 비밥·재즈 기타 즉흥·Wes Montgomery — 음악연습실 완전 가이드
 
 재즈 기타는 **피아노와 호른의 즉흥 언어를 6줄 위에 구현**하는 예술입니다. Wes Montgomery의 옥타브 주법, Joe Pass의 솔로 기타, Jim Hall의 서정적 접근—각각 재즈 기타의 다른 차원을 보여줍니다.
@@ -276,3 +275,6 @@ Cmaj7#11: C-E-G-B-F# (#11 추가)
 
 은평구 24시간 음악연습실에서 ii-V-I를 완벽히 익히고, 스탠다드 곡에 즉흥연주를 탐구하세요. 재즈 기타의 세계는 배울수록 깊어집니다.
 
+---
+
+[아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1)

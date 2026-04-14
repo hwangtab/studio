@@ -28,7 +28,6 @@ summary: 베이스와 드럼의 리듬 섹션 앙상블. 킥드럼 락킹·그�
 ---
 ![베이스 리듬 락킹·드럼과의 앙상블 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 베이스 리듬 락킹·드럼과의 앙상블 — 음악연습실 완전 가이드
 
 리듬 락킹(Rhythm Locking)은 **베이스와 드럼이 하나의 리듬 단위**로 움직이는 기법입니다. 베이시스트와 드러머가 서로의 파트를 깊이 이해하고 호흡을 맞출 때, 밴드 전체의 그루브가 단단해집니다. James Jamerson, Bootsy Collins, Paul McCartney가 드러머와 어떻게 락킹했는지 탐구합니다.
@@ -251,3 +250,6 @@ John Paul Jones와 John Bonham의 리듬 섹션.
 
 은평구 24시간 음악연습실에서 드럼 루프와 함께 락킹을 연습하세요. 그루브는 반복으로만 만들어집니다.
 
+---
+
+[가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 그루브 구성·리듬 설계 원리 — 완전 가이드](/stories/practice-room-bass-groove-construction1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

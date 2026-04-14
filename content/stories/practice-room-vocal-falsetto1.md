@@ -28,7 +28,6 @@ summary: 팔세토와 두성의 원리부터 믹스 보이스 전환까지. 보�
 ---
 ![보컬 팔세토·두성 트레이닝 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 보컬 팔세토·두성 트레이닝 — 음악연습실 완전 가이드
 
 많은 보컬리스트가 고음역에 도달하는 방법을 고민합니다. 흉성(Chest Voice)으로 억지로 밀어 올리다가 성대에 무리를 주거나, 팔세토(Falsetto)를 사용하지만 흉성과의 단절이 눈에 띄게 드러나는 경우가 많습니다. 이 문제를 해결하는 핵심이 **믹스 보이스(Mixed Voice)** 또는 **두성(Head Voice)**의 올바른 개발입니다. 이 가이드에서는 팔세토와 두성의 차이부터 실전 연습법까지 체계적으로 안내합니다.
@@ -149,7 +148,10 @@ summary: 팔세토와 두성의 원리부터 믹스 보이스 전환까지. 보�
 - **24시간 운영** — 목 상태가 좋은 시간대에 자유롭게 예약
 - **연신내역 5분 거리**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1)

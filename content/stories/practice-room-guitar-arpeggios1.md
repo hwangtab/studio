@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 아르페지오·클래식 패턴 완전 가이드 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 기타 아르페지오·클래식 패턴 완전 가이드 — 음악연습실
 
 **아르페지오(Arpeggio)**는 이탈리아어로 "하프처럼"이라는 뜻입니다. 코드의 음들을 동시에 치지 않고 순서대로 하나씩 연주하는 기법입니다. 코드 전체를 스트러밍하는 것과 달리, 아르페지오는 각 음이 독립적으로 들리면서 동시에 화성을 만들어 아름다운 텍스처를 만듭니다. 이 가이드에서는 클래식 기타의 pima 패턴부터 팝·포크·재즈에서 사용되는 다양한 아르페지오 패턴까지 완전히 안내합니다.
@@ -164,7 +163,10 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 - **완벽 방음** — 섬세한 아르페지오 소리에 집중
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1) | [기타 아르페지오 고급·스윕 피킹 — 완전 가이드](/stories/practice-room-guitar-arpeggios-advanced1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

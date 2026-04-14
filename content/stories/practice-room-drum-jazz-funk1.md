@@ -31,7 +31,6 @@ summary: >-
 ---
 ![재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 음악연습실 완전 가이드
 
 재즈펑크 드럼(Jazz-Funk Drums)은 **재즈의 스윙 느낌과 펑크의 강력한 그루브가 합쳐진 스타일**입니다. Clyde Stubblefield의 "Funky Drummer", Zigaboo Modeliste(The Meters)의 뉴올리언스 세컨드라인, Bernard Purdie의 "Purdie Shuffle" — 이들이 재즈펑크 드럼의 전설을 만들었습니다.
@@ -219,3 +218,6 @@ John Bonham이 Purdie Shuffle 활용
 
 은평구 24시간 음악연습실에서 "Funky Drummer" 패턴부터 시작하세요. 비트가 뒤로 앉는 그 순간, 재즈펑크의 그루브가 찾아옵니다.
 
+---
+
+[드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 완전 가이드](/stories/practice-room-drum-fusion1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [힙합·로파이 드럼·붐뱁·드럼머신 그루브 — 완전 가이드](/stories/practice-room-drum-hip-hop-lofi1)

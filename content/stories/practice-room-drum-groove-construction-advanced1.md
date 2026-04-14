@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 그루브 구성 고급·포켓·레이어링 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 드럼 그루브 구성 고급·포켓·레이어링 — 음악연습실 완전 가이드
 
 그루브(Groove)는 **음악을 움직이게 하는 리듬의 힘**입니다. 기술적인 패턴이 아니라 느낌—그 느낌이 청중을 춤추게 만들고 밴드를 하나로 묶습니다. Questlove, Clyde Stubblefield, Bernard Purdie가 그 느낌의 마스터입니다.
@@ -274,3 +273,6 @@ H:  x . x . x . x . x . x . x . x .
 
 은평구 24시간 음악연습실에서 포켓을 찾고, 레이어를 쌓고, 자신만의 그루브를 발견하세요.
 
+---
+
+[드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1)

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![팝 벨팅·고음 파워·Mix Voice·두성 전환 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 팝 벨팅·고음 파워·Mix Voice·두성 전환 — 음악연습실 완전 가이드
 
 팝 벨팅(Pop Belting)은 **고음 영역에서 가슴 공명을 유지하며 파워풀하게 노래하는 기법**입니다. Whitney Houston의 "I Will Always Love You" 마지막 고음, Mariah Carey의 클라이맥스 파워 노트, Celine Dion의 "My Heart Will Go On" — 이들이 팝 벨팅의 전설입니다. 단순히 크게 지르는 것이 아니라, 올바른 발성으로 안전하게 고음을 내는 것이 벨팅의 핵심입니다.
@@ -218,3 +217,6 @@ C-D-E-F-G (아래서 위로)
 
 은평구 24시간 음악연습실에서 복식 호흡 지지부터 시작하세요. 고음이 힘이 아닌 공명으로 나오는 날, 파워풀한 벨팅의 문이 열립니다.
 
+---
+
+[보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 모음 수정·고음 발성법 — 완전 가이드](/stories/practice-room-vocal-vowel-modification1)

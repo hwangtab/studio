@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 컨트리 치킨 피킹·하이브리드 피킹 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 기타 컨트리 치킨 피킹·하이브리드 피킹 — 음악연습실 완전 가이드
 
 치킨 피킹(Chicken Picking)은 **피크와 손가락을 동시에 사용하는 컨트리 기타의 핵심 기법**입니다. 닭 울음소리처럼 날카롭고 퍼커시브한 톤이 특징입니다. Brent Mason, Albert Lee, Vince Gill이 대표적인 마스터입니다.
@@ -272,3 +271,6 @@ Albert Lee는 **믿을 수 없는 속도의 치킨 피킹**으로 유명:
 
 은평구 24시간 음악연습실에서 Brent Mason, Albert Lee의 스타일을 천천히 분석하고 익히세요. 느리게 완벽하게—그것이 치킨 피킹 마스터의 길입니다.
 
+---
+
+[기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [기타 하이브리드 피킹·핑거스타일 융합 — 완전 가이드](/stories/practice-room-guitar-hybrid-picking1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 — 완전 가이드](/stories/practice-room-guitar-tremolo-picking1)

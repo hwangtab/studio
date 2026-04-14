@@ -28,7 +28,6 @@ summary: 피아노 인상주의·드뷔시·라벨·전음음계·색채 화성.
 ---
 ![피아노 인상주의·드뷔시·라벨·색채 화성 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 피아노 인상주의·드뷔시·라벨·색채 화성 — 음악연습실 완전 가이드
 
 인상주의 피아노(Impressionist Piano)는 **빛, 색깔, 분위기를 음악으로 그리는 예술**입니다. Claude Debussy와 Maurice Ravel이 낭만주의의 두꺼운 화성에서 벗어나, 전음음계·빈 5도·교회 선법으로 새로운 음악 언어를 창조했습니다. 선명한 선율 대신 흐릿한 인상, 해결 대신 떠도는 분위기.
@@ -285,3 +284,6 @@ Db → Eb → Ab 진행 (기능 화성보다 색채 강조)
 
 은평구 24시간 음악연습실에서 전음음계를 처음 연주해보세요. 그 특이한 떠도는 느낌이 인상주의의 세계로 초대합니다.
 
+---
+
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 라틴 리듬·살사 피아노 — 완전 가이드](/stories/practice-room-piano-latin-rhythms1)

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner — 음악연습실 완전 가이드
 
 쿼탈 하모니(Quartal Harmony)는 **3도 스택 대신 4도 스택으로 코드를 구성하는 현대 재즈 화성**입니다. 전통 재즈가 3도 쌓기(C-E-G-B = Cmaj7)를 사용한다면, 쿼탈 하모니는 4도 쌓기(C-F-Bb-Eb)를 사용합니다. McCoy Tyner(John Coltrane Quartet)가 이 접근법의 마스터입니다.
@@ -284,3 +283,6 @@ D2-G2-C3 (낮은 4도 스택)
 
 은평구 24시간 음악연습실에서 "So What" 보이싱부터 시작하세요. 4도 스택을 몸에 새기면, 모든 코드가 다르게 들리기 시작합니다.
 
+---
+
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

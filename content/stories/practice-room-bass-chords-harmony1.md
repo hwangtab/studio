@@ -28,7 +28,6 @@ summary: 베이스로 코드를 연주하는 기법과 솔로 베이스 어레�
 ---
 ![베이스 코드·하모닉스 솔로 베이스 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 베이스 코드·하모닉스 솔로 베이스 — 음악연습실 완전 가이드
 
 베이스는 보통 단선율 악기로 인식되지만, 현대 베이시스트들은 **코드와 하모닉스**를 활용해 훨씬 풍부한 표현을 합니다. Jaco Pastorius가 일렉 베이스로 펼쳐 보인 솔로 베이스의 세계—멜로디, 코드, 베이스라인을 동시에 소화하는 기술—를 이 가이드에서 체계적으로 안내합니다.
@@ -184,3 +183,6 @@ Bill Evans Trio의 Scott LaFaro는 피아노·드럼과 대화하며 베이스�
 
 은평구 24시간 음악연습실에서 방해 없이 하모닉스 사운드를 탐구하고 자신만의 솔로 베이스 언어를 개발하세요.
 
+---
+
+[베이스 코드 멜로디·솔로 편곡법 — 완전 가이드](/stories/practice-room-bass-chord-melody1) | [베이스 투핸드 탭핑·고급 솔로 기법 — 완전 가이드](/stories/practice-room-bass-two-hand-tapping1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

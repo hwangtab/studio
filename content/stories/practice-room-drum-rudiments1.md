@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 루디먼트·기초 스트로크 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 드럼 루디먼트·기초 스트로크 — 음악연습실 완전 가이드
 
 드럼을 배울 때 "루디먼트(Rudiment)"라는 단어를 처음 들으면 낯설게 느껴지지만, 루디먼트는 드럼 연주의 알파벳과 같습니다. 모든 드럼 연주 패턴은 몇 가지 기본 스트로크 조합으로 이루어져 있으며, 이 기초를 탄탄히 쌓은 드러머는 어떤 장르든 빠르게 적응할 수 있습니다. 이 글에서는 드럼 루디먼트의 개념부터 단계별 습득법, 실전 적용까지 완전히 다룹니다.
@@ -175,7 +174,10 @@ summary: >-
 - **24시간 예약 가능** — 새벽 시간대 집중 연습도 OK
 - **연신내역 5분 거리** — 접근성 최상
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 완전 가이드](/stories/practice-room-drum-paradiddle1) | [드럼 루디멘트 고급·스트로크 조합 — 완전 가이드](/stories/practice-room-drum-rudiments-advanced1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 스피드 트레이닝·빠른 싱글 스트로크 — 완전 가이드](/stories/practice-room-drum-speed-training1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

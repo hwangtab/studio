@@ -28,7 +28,6 @@ summary: '라이드 심벌 패턴, 크래쉬 타이밍, 차이나·스플래쉬 
 ---
 ![드럼 심벌 기법·라이드·크래쉬 활용법 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 드럼 심벌 기법·라이드·크래쉬 활용법 — 음악연습실 완전 가이드
 
 심벌은 드럼 셋의 "색채"를 담당합니다. 같은 비트라도 어떤 심벌을 어떻게 치느냐에 따라 음악의 분위기가 완전히 달라집니다. **라이드의 부드러운 핑, 크래쉬의 강렬한 폭발, 하이햇의 섬세한 개폐**—이 모든 심벌 기법이 드러머의 언어입니다.
@@ -210,3 +209,6 @@ summary: '라이드 심벌 패턴, 크래쉬 타이밍, 차이나·스플래쉬 
 
 은평구 24시간 음악연습실에서 다양한 심벌 기법을 자유롭게 탐구하고 자신만의 심벌 어휘를 완성하세요.
 
+---
+
+[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1) | [드럼 레코딩·오버더빙 기법 — 완전 가이드](/stories/practice-room-drum-recording-overdub1)

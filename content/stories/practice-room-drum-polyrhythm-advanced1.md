@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 폴리리듬 심화·아프리카 리듬 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 드럼 폴리리듬 심화·아프리카 리듬 — 음악연습실 완전 가이드
 
 폴리리듬은 두 개 이상의 다른 리듬이 동시에 진행되는 현상입니다. 기초 폴리리듬(3:2)을 마스터한 드러머가 다음으로 도전해야 할 **3:4, 4:3, 2:3 폴리리듬**과 아프리카 퍼커션에서 파생된 복잡한 리듬 패턴들을 이 가이드에서 안내합니다.
@@ -221,3 +220,6 @@ X - X - X - X - (8개)
 
 은평구 24시간 음악연습실에서 방해 없이 폴리리듬에 몰입하고, 혼자만의 리듬 실험실을 만들어보세요.
 
+---
+
+[드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 — 완전 가이드](/stories/practice-room-drum-world1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

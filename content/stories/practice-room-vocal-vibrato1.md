@@ -28,7 +28,6 @@ summary: 자연스러운 비브라토와 성악적 트릴 훈련법. 후두 비�
 ---
 ![보컬 비브라토·트릴 훈련법 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 보컬 비브라토·트릴 훈련법 — 음악연습실 완전 가이드
 
 비브라토는 음정을 규칙적으로 흔들어 풍부하고 아름다운 음색을 만드는 기술입니다. 자연스러운 비브라토는 **성대가 완전히 릴랙스된 상태에서 횡격막의 자연스러운 진동**으로 만들어집니다. 억지로 흔드는 "가짜 비브라토"와 자연스러운 비브라토를 구분하고 올바른 방법으로 개발하는 것이 핵심입니다.
@@ -202,3 +201,6 @@ A3-B3 트릴: A와 B를 1초에 8번 이상 빠르게 번갈아
 
 은평구 24시간 음악연습실에서 매일 15-20분씩 꾸준히 훈련하고, 비브라토가 서서히 자연스럽게 나타나는 과정을 즐기세요.
 
+---
+
+[보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [기타 벤딩·비브라토 테크닉 — 완전 가이드](/stories/practice-room-guitar-bends1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

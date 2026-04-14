@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 델타 블루스·Robert Johnson 오픈 튜닝 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 기타 델타 블루스·Robert Johnson 오픈 튜닝 — 음악연습실 완전 가이드
 
 델타 블루스(Delta Blues)는 **미시시피 델타 지역에서 1920-30년대 탄생한 블루스의 원형**입니다. Robert Johnson, Son House, Skip James가 이 음악을 세상에 남겼습니다. 어쿠스틱 기타 한 대로 멜로디·베이스·리듬을 동시에 연주하는 **자기완결적 음악**입니다.
@@ -309,3 +308,6 @@ Skip James는 부드러운 터치가 특징:
 
 은평구 24시간 음악연습실에서 오픈 튜닝을 탐구하고, 병행 주법을 익히세요. 한 대의 기타로 음악의 우주를 만드는 것—그것이 델타 블루스의 정수입니다.
 
+---
+
+[기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 완전 가이드](/stories/practice-room-guitar-alternate-tuning1) | [기타 슬라이드 고급·보틀넥 기법 — 완전 가이드](/stories/practice-room-guitar-slide-advanced1) | [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

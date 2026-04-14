@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 초견 연습·악보 읽기 훈련 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 피아노 초견 연습·악보 읽기 훈련 — 음악연습실 완전 가이드
 
 초견(初見, Sight Reading)은 처음 보는 악보를 즉석에서 연주하는 능력입니다. 피아노를 배우는 많은 사람이 특정 곡은 잘 치지만, 새로운 악보를 보면 더듬더듬하는 경험을 합니다. 초견 능력은 단순히 타고나는 재능이 아니라 체계적인 훈련으로 빠르게 향상시킬 수 있습니다. 이 가이드에서는 초견의 핵심 원리부터 단계별 훈련법까지 완전히 안내합니다.
@@ -154,7 +153,10 @@ summary: >-
 - **24시간 운영** — 규칙적인 초견 연습 일과 유지 가능
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 클래식 테크닉·핑거 독립성 훈련 — 완전 가이드](/stories/practice-room-piano-classical-technique1) | [피아노 귀 훈련·청음 완전 가이드](/stories/practice-room-piano-ear-training1)

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 — 음악연습실 완전 가이드
 
 미니멀리즘 피아노(Minimalism Piano)는 **단순한 패턴의 반복과 미세한 변화로 음악적 최면 효과를 만드는 현대 클래식 스타일**입니다. Philip Glass의 "Metamorphosis"의 아르페지오 반복, Steve Reich의 위상음악(Phasing), Ludovico Einaudi의 현대적 미니멀리즘 — 이들이 미니멀리즘 피아노의 다양한 얼굴을 보여줍니다.
@@ -213,3 +212,6 @@ Glass의 미니멀리즘 + 팝 감성
 
 은평구 24시간 음악연습실에서 Am 아르페지오 4음부터 시작하세요. 반복이 음악이 되는 순간, 미니멀리즘의 마법이 시작됩니다.
 
+---
+
+[피아노 미니멀리즘·필립 글래스 스타일 연주 — 완전 가이드](/stories/practice-room-piano-minimalism1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

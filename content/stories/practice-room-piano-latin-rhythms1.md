@@ -28,7 +28,6 @@ summary: '살사 피아노의 몽투노 패턴, 차차 리듬, 보사노바 피�
 ---
 ![피아노 라틴 리듬·살사 피아노 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 피아노 라틴 리듬·살사 피아노 — 음악연습실 완전 가이드
 
 라틴 피아노는 **리듬과 하모니가 동시에 춤을 추는** 음악입니다. 살사의 몽투노(Montuno), 차차의 싱코페이션, 보사노바의 부드러운 반주—각 스타일마다 독특한 피아노 패턴이 있습니다. 이 가이드에서는 라틴 피아노의 핵심 패턴을 체계적으로 안내합니다.
@@ -203,3 +202,6 @@ Cmaj7 보사노바:
 
 은평구 24시간 음악연습실에서 살사 음원을 틀어놓고 몽투노 패턴을 반복 연습하세요. 라틴 리듬이 피에 흐르는 날이 반드시 옵니다.
 
+---
+
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 리듬 패턴·왼손 반주 기법 — 완전 가이드](/stories/practice-room-piano-rhythm-patterns1)

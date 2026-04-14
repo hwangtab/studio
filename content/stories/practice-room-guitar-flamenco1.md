@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 플라멩코·라스게아도·피카도 기법 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 기타 플라멩코·라스게아도·피카도 기법 — 음악연습실 완전 가이드
 
 플라멩코 기타(Flamenco Guitar)는 **스페인 안달루시아 지방의 열정적인 기타 전통**입니다. Paco de Lucía, Vicente Amigo, Tomatito가 현대 플라멩코 기타를 세계적으로 알렸습니다. 라스게아도(Rasgueado)의 폭풍 같은 스트로크와 피카도(Picado)의 선명한 단음이 플라멩코의 두 얼굴입니다.
@@ -306,3 +305,6 @@ Paco de Lucía의 특징:
 
 은평구 24시간 음악연습실에서 라스게아도를 익히고, 피카도를 단련하세요. 언젠가 E 프리지안 스케일 위에서 자신만의 플라멩코가 흘러나올 것입니다.
 
+---
+
+[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [도브로·레조네이터 기타·슬라이드 기법 — 완전 가이드](/stories/practice-room-guitar-dobro1)

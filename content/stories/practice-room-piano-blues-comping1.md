@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 블루스 콤핑·블루스 피아노 반주 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 피아노 블루스 콤핑·블루스 피아노 반주 — 음악연습실 완전 가이드
 
 블루스 피아노 콤핑(Comping)은 **블루스 밴드에서 피아니스트의 역할**입니다. 기타, 하모니카, 보컬을 지지하면서도 자신만의 그루브를 유지합니다. Otis Spann, Memphis Slim, Dr. John이 블루스 피아노의 황금기를 만들었습니다.
@@ -286,3 +285,6 @@ E4-G4-E4-G4 (셔플 리듬으로)
 
 은평구 24시간 음악연습실에서 블루스 스케일을 완벽히 익히고, 12마디 구조 안에서 자유롭게 표현하세요. 블루스를 이해하면 모든 음악이 보입니다.
 
+---
+
+[피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 콤핑·리듬 반주 기법 — 완전 가이드](/stories/practice-room-piano-comping1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 즉흥연주·블루스 스케일 — 완전 가이드](/stories/practice-room-piano-improvisation1)

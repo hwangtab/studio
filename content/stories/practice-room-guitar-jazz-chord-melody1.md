@@ -30,7 +30,6 @@ summary: >-
 ---
 ![재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 음악연습실 완전 가이드
 
 재즈 기타 코드 멜로디(Chord Melody)는 **멜로디와 화성을 동시에 연주하는 솔로 기타 기법**입니다. Joe Pass의 "Virtuoso" 앨범 — 완전히 혼자서 베이스, 코드, 멜로디를 모두 담당하는 기타. Wes Montgomery의 옥타브 주법, George Benson의 유연한 코드 보이싱 — 코드 멜로디는 재즈 기타의 궁극적인 목표입니다.
@@ -216,3 +215,6 @@ A 현 7 프렛 + G 현 9 프렛 = 옥타브 E
 
 은평구 24시간 음악연습실에서 멜로디 단음 암기부터 시작하세요. 첫 코드가 멜로디와 함께 울리는 날, 재즈 기타의 문이 활짝 열립니다.
 
+---
+
+[기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1)

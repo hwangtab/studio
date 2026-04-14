@@ -28,7 +28,6 @@ summary: 베이스 핑거스타일과 픽(피크) 주법의 차이·장단점·�
 ---
 ![베이스 핑거스타일 vs 픽 주법 비교 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 베이스 핑거스타일 vs 픽 주법 비교 — 음악연습실 완전 가이드
 
 베이스를 핑거스타일로 칠지, 픽(피크)으로 칠지—이 선택이 베이스 사운드의 전반적 성격을 결정합니다. Paul McCartney는 대부분 픽을, Jaco Pastorius는 손가락으로, Roger Waters는 두 방법을 병행했습니다. 두 주법의 특성, 장단점, 전환 기법을 탐구합니다.
@@ -246,3 +245,6 @@ E-G-A-B 8분음표 패턴
 
 은평구 24시간 음악연습실에서 두 주법 모두 충분히 연습하세요. 더 많은 선택지가 더 많은 음악적 자유입니다.
 
+---
+
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 핑거스타일 테크닉·터치 향상 — 완전 가이드](/stories/practice-room-bass-fingerstyle-technique1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

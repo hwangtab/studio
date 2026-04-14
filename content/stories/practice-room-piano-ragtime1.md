@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 래그타임·Scott Joplin 스타일 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 피아노 래그타임·Scott Joplin 스타일 — 음악연습실 완전 가이드
 
 래그타임(Ragtime)은 **재즈와 클래식의 교차점**에서 탄생한 미국의 피아노 음악입니다. 1890년대~1920년대 Scott Joplin의 "Maple Leaf Rag", "The Entertainer"로 세계적으로 알려졌습니다. 규칙적인 왼손 베이스 위에 싱코페이션(엇박)된 오른손 멜로디가 결합합니다.
@@ -312,3 +311,6 @@ Joplin의 원칙: "Do not play this piece fast"
 
 은평구 24시간 음악연습실에서 Joplin의 래그타임을 배우세요. 왼손의 안정적인 베이스와 오른손의 자유로운 싱코페이션—그 사이에서 음악의 즐거움을 발견할 것입니다.
 
+---
+
+[피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드](/stories/practice-room-piano-comp-jazz1)

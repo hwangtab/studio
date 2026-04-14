@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 가스펠 오르간 스타일 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 피아노 가스펠 오르간 스타일 — 음악연습실 완전 가이드
 
 가스펠 피아노는 **교회의 에너지와 하나님을 향한 열정이 손끝에서 폭발**하는 스타일입니다. 클러스터 코드, 레이드백 리듬, 샤우팅 섹션의 절정—Ray Charles, Stevie Wonder, Aretha Franklin의 음악에서 들을 수 있는 오르간 스타일 피아노를 탐구합니다.
@@ -275,3 +274,6 @@ F maj: F-A-C → C maj: C-E-G
 
 은평구 24시간 음악연습실에서 서스테인 페달을 가득 밟고 클러스터 코드를 폭발시켜 보세요. 가스펠의 에너지는 연습실에서도 느껴집니다.
 
+---
+
+[피아노 가스펠·R&B 피아노 — 완전 가이드](/stories/practice-room-piano-gospel1) | [피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1)

@@ -28,7 +28,6 @@ summary: 보컬 공명·흉성·두성 배치·비강 공명 기법. 성종 전�
 ---
 ![보컬 공명·흉성·두성 배치 기법 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 보컬 공명·흉성·두성 배치 기법 — 음악연습실 완전 가이드
 
 보컬의 **공명(Resonance)**은 소리의 크기와 음질을 결정합니다. 같은 호흡량으로도 공명을 잘 활용하면 훨씬 크고 아름다운 소리가 납니다. 흉성, 두성, 비강 공명의 원리를 이해하면 목의 긴장 없이 풍부한 보컬 사운드를 만들 수 있습니다.
@@ -306,3 +305,6 @@ m에서 비강 진동 → a로 넘어가며 유지
 
 은평구 24시간 음악연습실에서 천천히, 조심스럽게 공명을 탐구하세요. 목에 힘주지 않고 크게 울리는 소리—그것이 보컬 공명 마스터의 목표입니다.
 
+---
+
+[보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

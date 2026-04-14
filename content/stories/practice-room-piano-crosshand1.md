@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 크로스핸드·손 교차 연주 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 피아노 크로스핸드·손 교차 연주 — 음악연습실 완전 가이드
 
 피아노를 배우다 보면 언젠가 두 손이 서로 교차되는 악보를 만나게 됩니다. 크로스핸드(Cross-Hand) 또는 손 교차 연주는 단순한 테크닉처럼 보이지만, 신체 조율·시각적 판단·리듬 독립성이 동시에 요구되는 고급 기술입니다. 이 글에서는 크로스핸드의 원리부터 단계별 연습법, 대표 레퍼토리까지 체계적으로 안내합니다.
@@ -158,7 +157,10 @@ summary: >-
 - **다양한 건반 악기** — 어쿠스틱/디지털 피아노, 키보드 완비
 - **넓은 연습 공간** — 악보대·메트로놈 비치, 여유로운 공간
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[피아노 크로스핸드 테크닉·클래식 기교 — 완전 가이드](/stories/practice-room-piano-cross-hand-technique1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 발라드 연주 기법·감성 표현 — 완전 가이드](/stories/practice-room-piano-ballad-technique1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1)

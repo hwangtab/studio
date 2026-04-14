@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 — 음악연습실 완전 가이드
 
 스캣 싱잉(Scat Singing)은 **말 없는 언어로 즉흥하는 재즈 보컬 예술**입니다. 의미 없는 음절("doo-wah", "bop-bah", "da-da-dit")로 악기처럼 즉흥 연주하는 기법입니다. Ella Fitzgerald, Louis Armstrong, Sarah Vaughan — 이들이 스캣으로 재즈 역사를 썼습니다.
@@ -266,3 +265,6 @@ Ella Fitzgerald 녹음과 비교
 
 은평구 24시간 음악연습실에서 "doo-doo-doo" 스윙 리듬부터 시작하세요. 코드 진행이 들리기 시작하면, 스캣이 자연스럽게 흘러나옵니다.
 
+---
+
+[보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 리프·멜로디 변주 기법 — 완전 가이드](/stories/practice-room-vocal-riff-melody1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1)

@@ -28,7 +28,6 @@ summary: 자연 하모닉스·인공 하모닉스·태핑 하모닉스 기법. �
 ---
 ![기타 하모닉스·인공 하모닉스 기법 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 기타 하모닉스·인공 하모닉스 기법 — 음악연습실 완전 가이드
 
 기타 하모닉스(Harmonics)는 **현의 배음을 독립적으로 울리게 하는 기법**입니다. 유리처럼 맑고 투명한 소리, 오케스트라 현악기 같은 음색—하모닉스는 기타에서만 가능한 신비로운 영역입니다. Steve Howe, Alex Lifeson, Kaki King의 하모닉스 기법을 탐구합니다.
@@ -243,3 +242,6 @@ Cmaj7 아르페지오를 12프렛 하모닉스로
 
 은평구 24시간 음악연습실에서 조용히 하모닉스를 탐구하세요. 첫 클린한 하모닉스 소리가 나는 순간의 기쁨을 기억하게 될 것입니다.
 
+---
+
+[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [도브로·레조네이터 기타·슬라이드 기법 — 완전 가이드](/stories/practice-room-guitar-dobro1)

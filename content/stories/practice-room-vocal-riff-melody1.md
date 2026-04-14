@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 리프·멜로디 변주 기법 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 보컬 리프·멜로디 변주 기법 — 음악연습실 완전 가이드
 
 보컬 리프(Riff)는 **반복적으로 사용되는 짧은 멜로디 모티프**입니다. 단순한 애드립과 달리, 리프는 곡의 구조와 연관된 **의도적인 멜로딕 아이디어**입니다. Whitney Houston, Beyoncé, Mariah Carey는 리프를 자신만의 음악 언어로 발전시킨 마스터입니다.
@@ -306,3 +305,6 @@ Mariah 버전: A4-C5-Eb5-C5-Bb4-G4-A4
 
 은평구 24시간 음악연습실에서 리프 라이브러리를 쌓고, 변주 능력을 키우세요. 곡을 분석하고, 아이디어를 모으고, 자신만의 보컬 언어를 만드는 여정입니다.
 
+---
+
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

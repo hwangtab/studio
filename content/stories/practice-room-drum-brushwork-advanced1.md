@@ -28,7 +28,6 @@ summary: '재즈 발라드에서의 브러시 스윕, 탭, 서클링 기법. 스
 ---
 ![드럼 브러시 고급 주법·재즈 발라드 연주 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 드럼 브러시 고급 주법·재즈 발라드 연주 — 음악연습실 완전 가이드
 
 브러시는 재즈 드러머의 가장 섬세한 도구입니다. 스틱으로는 표현할 수 없는 **살랑거리는 텍스처, 부드러운 다이나믹, 속삭이는 듯한 사운드**—이것이 브러시의 세계입니다. 특히 재즈 발라드에서 브러시는 피아노·베이스와 함께 조용하고 깊은 스윙을 만들어냅니다.
@@ -199,3 +198,6 @@ summary: '재즈 발라드에서의 브러시 스윕, 탭, 서클링 기법. 스
 
 가장 중요한 것은 **음악을 들으면서** 연습하는 것입니다. 빌 에반스 트리오, 오스카 피터슨 트리오의 음반을 들으며 브러시 드러머의 뉘앙스를 귀로 먼저 익히세요.
 
+---
+
+[드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 브러시 고급 기법·재즈 발라드 완전 가이드 — 실전 연습](/stories/practice-room-drum-brushes-advanced1) | [드럼 비밥·재즈 비밥 드러밍·Max Roach — 완전 가이드](/stories/practice-room-drum-jazz-bebop1) | [드럼 보사노바·재즈 브러시 보사 — 완전 가이드](/stories/practice-room-drum-jazz-brushwork-bossa1) | [드럼 재즈 왈츠·3박자 스윙 — 완전 가이드](/stories/practice-room-drum-brushwork-jazz-waltz1)

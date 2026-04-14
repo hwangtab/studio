@@ -28,7 +28,6 @@ summary: 도리안·믹소리디안·리디안 모드를 기타에서 활용하�
 ---
 ![기타 모달 연주·모드 스케일 활용 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 기타 모달 연주·모드 스케일 활용 — 음악연습실 완전 가이드
 
 모달 연주는 기타 즉흥 연주의 새로운 지평을 엽니다. **마이너 펜타토닉**만 사용하던 기타리스트가 모드를 마스터하면 훨씬 다양하고 색채감 있는 솔로를 만들어낼 수 있습니다. 이 가이드에서는 기타에서 가장 많이 사용하는 모드의 원리와 실전 활용법을 안내합니다.
@@ -188,3 +187,6 @@ G-A-B-C-D-C-B-F-G
 
 은평구 24시간 음악연습실에서 백킹 트랙을 틀어놓고 도리안과 믹소리디안부터 집중 연습하세요. 모달 즉흥 연주가 익숙해지면 기타 솔로의 세계가 완전히 달라집니다.
 
+---
+
+[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1)

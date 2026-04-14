@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 네오소울·코드 멜로디 기법 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 기타 네오소울·코드 멜로디 기법 — 음악연습실 완전 가이드
 
 네오소울 기타는 **R&B의 감성과 재즈의 화성이 만나는 지점**입니다. 단순한 코드를 풍부하게 보이싱하고, 멜로디를 코드 안에 통합하며, 레이드백된 그루브로 연주하는 것—이것이 네오소울 기타의 미학입니다. Erykah Badu, D'Angelo, Hiatus Kaiyote의 음악에서 찾을 수 있는 기타 사운드를 탐구합니다.
@@ -232,3 +231,6 @@ Hiatus Kaiyote의 프론트우먼 Nai Palm은 독특한 네오소울 기타로 �
 
 은평구 24시간 음악연습실에서 클린한 앰프 소리로 네오소울 보이싱과 그루브를 탐구하세요.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

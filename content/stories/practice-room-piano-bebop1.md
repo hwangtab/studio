@@ -28,7 +28,6 @@ summary: 피아노 비밥·Bud Powell·Thelonious Monk·비밥 코드 보이싱.
 ---
 ![피아노 비밥·Bud Powell·Thelonious Monk 스타일 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 음악연습실 완전 가이드
 
 비밥 피아노(Bebop Piano)는 **1940년대 재즈 혁명의 중심**에 있었습니다. 스윙의 댄스 음악에서 벗어나, 빠른 템포·복잡한 화성·즉흥 연주를 전면에 내세웠습니다. Bud Powell의 폭발적 속도와 Thelonious Monk의 독창적 불협화음이 비밥 피아노의 두 극단을 보여줍니다.
@@ -236,3 +235,6 @@ C-E-G-B-A-G-E-C
 
 은평구 24시간 음악연습실에서 쉘 보이싱부터 시작하세요. 3도+7도가 손에 익으면, 오른손이 자유롭게 비밥 라인을 날 수 있습니다.
 
+---
+
+[드럼 비밥·재즈 비밥 드러밍·Max Roach — 완전 가이드](/stories/practice-room-drum-jazz-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드](/stories/practice-room-piano-comp-jazz1)

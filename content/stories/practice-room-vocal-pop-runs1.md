@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 팝 런·멜리스마·빠른 패시지 기법 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 보컬 팝 런·멜리스마·빠른 패시지 기법 — 음악연습실 완전 가이드
 
 팝 런(Pop Run)은 **한 음절에 여러 음을 연결하는 빠른 보컬 패시지**입니다. 멜리스마(Melisma)라고도 합니다. Mariah Carey, Christina Aguilera, Whitney Houston이 이 기법을 현대 팝의 표준으로 만들었습니다.
@@ -323,3 +322,6 @@ G4 시작 → D 시작 → A 시작 등
 
 은평구 24시간 음악연습실에서 런 라이브러리를 만들고, 천천히 속도를 올리세요. 각 음이 선명한 런이 만들어질 때 — 그것이 진정한 팝 보컬리스트의 기술입니다.
 
+---
+
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

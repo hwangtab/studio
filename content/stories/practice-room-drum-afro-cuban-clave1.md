@@ -28,7 +28,6 @@ summary: 아프로큐반 클라베·손 클라베·mambo·cha cha cha 드럼 패
 ---
 ![드럼 아프로큐반 리듬·클라베 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 드럼 아프로큐반 리듬·클라베 — 음악연습실 완전 가이드
 
 아프로큐반 음악은 **아프리카의 폴리리듬과 쿠바의 유럽 전통이 만난 리듬의 보물창고**입니다. 클라베는 이 모든 것의 핵심—아프로큐반 음악에서 모든 악기는 클라베에 맞춰 연주됩니다. Tito Puente, Celia Cruz, Irakere의 음악을 분석합니다.
@@ -254,3 +253,6 @@ Tito Puente는 **팀발레스(Timbales)**의 거장이며 맘보 드러밍의 �
 
 은평구 24시간 음악연습실에서 클라베를 마음속에 새기며 아프로큐반의 세계로 들어오세요.
 
+---
+
+[보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1) | [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1)

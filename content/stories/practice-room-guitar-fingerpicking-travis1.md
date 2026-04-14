@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 핑거피킹·Travis Picking 패턴 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 기타 핑거피킹·Travis Picking 패턴 — 음악연습실 완전 가이드
 
 Travis Picking은 **엄지손가락이 베이스 라인을 연주하고 나머지 손가락이 멜로디를 담당**하는 핑거피킹 스타일입니다. Merle Travis, Chet Atkins, Tommy Emmanuel이 완성한 이 기법은 한 대의 기타로 기타·베이스·드럼을 동시에 표현합니다.
@@ -274,3 +273,6 @@ Travis Picking은 **한 대의 기타로 오케스트라를 만드는 기법**�
 
 은평구 24시간 음악연습실에서 천천히, 정확하게 엄지 독립성을 훈련하세요. 시간이 걸리지만 일단 손에 익으면 평생의 자산이 됩니다.
 
+---
+
+[기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 — 완전 가이드](/stories/practice-room-guitar-celtic1) | [기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

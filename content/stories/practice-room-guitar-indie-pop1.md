@@ -30,7 +30,6 @@ summary: >-
 ---
 ![인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 — 음악연습실 완전 가이드
 
 인디팝 기타(Indie Pop Guitar)는 **클린하고 독특한 코드 보이싱과 리듬감이 특징인 현대 팝·록 기타 스타일**입니다. The Strokes의 인터로킹 기타, Vampire Weekend의 아프로팝 영향 기타, Tame Impala의 사이키델릭 클린 기타 — 인디팝 기타는 단순함 속에서 개성 있는 사운드를 만드는 예술입니다.
@@ -212,3 +211,6 @@ Dsus2: x-0-0-2-3-0
 
 은평구 24시간 음악연습실에서 Csus2 코드부터 시작하세요. 자신만의 인디팝 리프가 만들어지는 날, 음악의 개성이 피어납니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 완전 가이드](/stories/practice-room-guitar-alternate-tuning1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

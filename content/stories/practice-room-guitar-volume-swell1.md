@@ -28,7 +28,6 @@ summary: 기타 볼륨 스웰·바이올린 주법·볼륨 페달·앰비언트 
 ---
 ![기타 볼륨 스웰·바이올린 주법·앰비언트 표현 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 기타 볼륨 스웰·바이올린 주법·앰비언트 표현 — 음악연습실 완전 가이드
 
 볼륨 스웰(Volume Swell)은 **기타로 바이올린처럼 부드럽게 소리를 시작하는 기법**입니다. 피크 어택 없이 부드럽게 페이드인 되는 소리 — B.B. King의 볼륨 노브 테크닉, U2의 The Edge의 딜레이 볼륨 스웰, Sigur Rós의 활을 이용한 앰비언트 — 이들이 볼륨 스웰의 다양한 아름다움을 보여줍니다.
@@ -237,3 +236,6 @@ B.B. King, Chet Atkins
 
 은평구 24시간 음악연습실에서 볼륨 노브 기법부터 시작하세요. 어택 없이 음이 피어나는 순간, 기타가 바이올린이 됩니다.
 
+---
+
+[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-blues-slide1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1)

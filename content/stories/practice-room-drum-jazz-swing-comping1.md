@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 재즈 스윙 콤핑 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 음악연습실 완전 가이드
 
 재즈 드럼은 **대화하는 악기**입니다. 고정된 비트를 반복하는 것이 아니라, 솔리스트·베이시스트·피아니스트와 실시간으로 상호작용합니다. Elvin Jones, Tony Williams, Art Blakey—재즈 드럼의 거장들이 어떻게 스윙을 만들었는지 탐구합니다.
@@ -299,3 +298,6 @@ M4: 해결 (그루브로 복귀)
 
 은평구 24시간 음악연습실에서 재즈 앨범을 들으며 함께 연주하는 연습을 해보세요. 귀로 배우는 것이 재즈의 방법입니다.
 
+---
+
+[드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [드럼 비밥·재즈 비밥 드러밍·Max Roach — 완전 가이드](/stories/practice-room-drum-jazz-bebop1) | [드럼 재즈 왈츠·3박자 스윙 — 완전 가이드](/stories/practice-room-drum-brushwork-jazz-waltz1) | [드럼 보사노바·재즈 브러시 보사 — 완전 가이드](/stories/practice-room-drum-jazz-brushwork-bossa1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

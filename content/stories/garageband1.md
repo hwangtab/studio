@@ -121,7 +121,6 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand 컴프레서 설정
 
-
 ### Compressor 삽입
 
 1. Smart Controls → 플러그인 추가(+)

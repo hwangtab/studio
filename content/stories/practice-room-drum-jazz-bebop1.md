@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 비밥·재즈 비밥 드러밍·Max Roach 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 드럼 비밥·재즈 비밥 드러밍·Max Roach — 음악연습실 완전 가이드
 
 비밥(Bebop)은 **1940년대 탄생한 모던 재즈의 혁명**입니다. Charlie Parker, Dizzy Gillespie의 빠른 멜로딕 라인을 지지하기 위해 드럼도 혁명적으로 변했습니다. Kenny Clarke, Max Roach, Art Blakey가 비밥 드러밍을 정의했습니다.
@@ -271,3 +270,6 @@ Blakey는 "밴드를 몰아붙이는 드러머":
 
 은평구 24시간 음악연습실에서 라이드 심벌을 중심으로, 자유로운 킥과 스네어를 탐구하세요. 빠른 템포에서도 흔들리지 않는 박자감—그것이 비밥 드러머의 기반입니다.
 
+---
+
+[드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [드럼 재즈 왈츠·3박자 스윙 — 완전 가이드](/stories/practice-room-drum-brushwork-jazz-waltz1) | [드럼 보사노바·재즈 브러시 보사 — 완전 가이드](/stories/practice-room-drum-jazz-brushwork-bossa1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

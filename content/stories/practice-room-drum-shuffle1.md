@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 셔플·블루스 셔플 리듬 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 드럼 셔플·블루스 셔플 리듬 — 음악연습실 완전 가이드
 
 셔플(Shuffle) 리듬은 블루스의 **심장박동**입니다. 스트레이트한 8분음표가 아닌, **긴-짧음 패턴**으로 리듬이 흔들리고 끌리는 느낌—이것이 셔플입니다. "The Thrill Is Gone", "Pride and Joy", "Johnny Be Good"—위대한 블루스 곡들 뒤에는 항상 완벽한 셔플 그루브가 있습니다.
@@ -242,3 +241,6 @@ SRV(Stevie Ray Vaughan) 밴드의 드러머 Chris Layton 스타일.
 
 은평구 24시간 음악연습실에서 블루스 음원을 틀어놓고 함께 셔플을 연주해보세요. 메트로놈보다 음악 자체를 더 많이 듣고 따라가는 것이 셔플을 익히는 가장 좋은 방법입니다.
 
+---
+
+[드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 퍼포먼스·무대 기술 고급 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 보컬 퍼포먼스·무대 기술 고급 — 음악연습실 완전 가이드
 
 훌륭한 목소리만으로는 관객을 사로잡을 수 없습니다. **무대 에너지, 마이크 컨트롤, 눈 맞춤, 즉흥 애드리브**—이 모든 요소가 결합될 때 진정한 퍼포머가 탄생합니다. 이 가이드에서는 무대에서 빛나는 보컬리스트를 위한 고급 퍼포먼스 기술을 안내합니다.
@@ -219,3 +218,6 @@ summary: >-
 
 은평구 24시간 음악연습실에서 혼자 또는 소수와 함께 마음껏 퍼포먼스를 연습하세요. 관객 앞에서 빛나는 보컬리스트가 되기 위한 가장 효과적인 준비는 연습입니다.
 
+---
+
+[보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal-stage-fright1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

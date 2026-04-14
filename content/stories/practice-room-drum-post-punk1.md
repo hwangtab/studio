@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 포스트펑크·뉴웨이브 리듬 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 드럼 포스트펑크·뉴웨이브 리듬 — 음악연습실 완전 가이드
 
 포스트펑크 드럼은 **단순함 안에서의 절박한 에너지**입니다. 복잡한 기교 없이 일관된 비트로 어두운 분위기를 만들어냅니다. Joy Division의 Stephen Morris, The Cure의 Lol Tolhurst, Bauhaus의 Kevin Haskins—포스트펑크 드러머들은 최소한의 것으로 최대의 분위기를 만들었습니다.
@@ -233,3 +232,6 @@ Bauhaus는 포스트펑크+고딕록의 경계.
 
 은평구 24시간 음악연습실에서 조용히 어두운 분위기를 탐구해보세요.
 
+---
+
+[드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1)

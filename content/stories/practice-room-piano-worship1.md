@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 CCM·워십 피아노 반주법 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 피아노 CCM·워십 피아노 반주법 — 음악연습실 완전 가이드
 
 CCM 워십 피아노는 교회 음악에서 회중을 이끄는 핵심 악기입니다. **힐송(Hillsong), 베델(Bethel), 엘레베이션(Elevation)** 스타일의 현대 워십 피아노는 가스펠의 풍성함과 팝의 세련됨이 결합된 독특한 스타일입니다. 이 가이드에서는 CCM 워십 피아노의 핵심 기법을 안내합니다.
@@ -219,3 +218,6 @@ CCM 워십 피아노는 기술만으로 되지 않습니다. 음악을 통해 �
 
 은평구 24시간 음악연습실에서 기술적 기초를 닦고, 마음에서 흘러나오는 워십 피아노를 개발하세요.
 
+---
+
+[교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 라틴 리듬·살사 피아노 — 완전 가이드](/stories/practice-room-piano-latin-rhythms1)

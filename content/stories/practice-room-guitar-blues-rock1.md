@@ -28,7 +28,6 @@ summary: 블루스 록 기타·SRV·Eric Clapton·펜타토닉 블루스 스케�
 ---
 ![블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 음악연습실 완전 가이드
 
 블루스 록 기타(Blues Rock Guitar)는 **블루스의 감정과 록의 에너지가 만나는 지점**입니다. Stevie Ray Vaughan(SRV)의 텍사스 블루스 파워, Eric Clapton의 영국식 우아한 블루스, B.B. King의 비브라토 — 이들이 블루스 록 기타의 기둥을 세웠습니다. 마이너 펜타토닉 스케일과 블루 노트가 이 음악의 알파벳입니다.
@@ -242,3 +241,6 @@ E7: E 마이너 펜타토닉 (또는 A 펜타토닉 유지)
 
 은평구 24시간 음악연습실에서 A 마이너 펜타토닉부터 시작하세요. 첫 벤드가 제대로 나오는 날, 블루스의 문이 활짝 열립니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 블루스 리듬·셔플 패턴 — 완전 가이드](/stories/practice-room-guitar-blues-rhythm1)

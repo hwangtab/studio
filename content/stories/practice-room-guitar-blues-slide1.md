@@ -30,7 +30,6 @@ summary: >-
 ---
 ![블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 음악연습실 완전 가이드
 
 블루스 슬라이드 기타(Blues Slide Guitar)는 **유리병 목이나 금속 튜브를 손가락에 끼워 기타 줄을 밀어 연주하는 가장 원초적인 블루스 표현법**입니다. Duane Allman의 서던 록 슬라이드, Derek Trucks의 힌두스타니 영향 슬라이드, Robert Johnson의 미시시피 델타 슬라이드 — 슬라이드 기타는 100년 블루스 역사의 심장입니다.
@@ -246,3 +245,6 @@ Duane Allman이 선호
 
 은평구 24시간 음악연습실에서 오픈 G 튜닝으로 슬라이드를 얹어보세요. 처음 내는 슬라이드 비브라토 한 음이, 블루스 100년을 담고 있습니다.
 
+---
+
+[일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 — 완전 가이드](/stories/practice-room-guitar-slide-electric1) | [기타 슬라이드 고급·보틀넥 기법 — 완전 가이드](/stories/practice-room-guitar-slide-advanced1) | [기타 슬라이드·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-slide1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

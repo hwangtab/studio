@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 하이햇 패턴·개폐 컨트롤 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 드럼 하이햇 패턴·개폐 컨트롤 — 음악연습실 완전 가이드
 
 드럼 세트에서 하이햇(Hi-Hat)은 단순히 박자를 세는 악기가 아닙니다. 하이햇의 개폐(Open/Close) 정도, 발 하이햇의 타이밍, 하프오픈 활용 — 이 모든 요소가 합쳐져 드러머만의 고유한 그루브를 만듭니다. 기술적으로 정확한 드러머와 진정한 그루브를 가진 드러머의 차이는 종종 하이햇 컨트롤에서 갈립니다.
@@ -178,7 +177,10 @@ H H H H  H H H H  H H H H  H H H H
 - **완벽 방음** — 그루브 감각에 집중
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1)

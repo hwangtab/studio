@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 — 음악연습실 완전 가이드
 
 펑크 피아노(Funk Piano)는 **리듬 악기로서의 피아노**입니다. Herbie Hancock이 "Head Hunters"에서 클라비넷으로 창조한 그루브, Stevie Wonder가 피아노로 만든 펑크 라인 — 이들이 피아노를 리듬 섹션의 핵심으로 만들었습니다. 코드 보이싱보다 리듬 패턴, 선율보다 그루브가 먼저인 음악 세계입니다.
@@ -243,3 +242,6 @@ James Brown 밴드의 피아노:
 
 은평구 24시간 음악연습실에서 Bb7 위 스타카토 리프부터 시작하세요. 몸이 움직이기 시작하면, 그것이 진짜 펑크입니다.
 
+---
+
+[피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드](/stories/practice-room-piano-comp-jazz1)

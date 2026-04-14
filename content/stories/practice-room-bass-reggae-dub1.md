@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 레게·덥 베이스라인 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 베이스 레게·덥 베이스라인 — 음악연습실 완전 가이드
 
 레게 베이스는 **느리고 무겁고 깊다**. 자메이카에서 탄생한 이 스타일은 박자의 세 번째 박(원드롭)에 강조를 두고, 서브베이스로 대지를 진동시키는 특유의 사운드를 만듭니다. 밥 말리, 스틸 펄스, 더 크래시의 레게—그 뿌리에는 항상 굵고 깊은 베이스라인이 있습니다.
@@ -213,3 +212,6 @@ I - VII - IV - I: E - D - A - E (자메이카 클래식)
 
 은평구 24시간 음악연습실에서 레게와 덥의 깊고 묵직한 세계를 탐구하세요.
 
+---
+
+[베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

@@ -136,3 +136,6 @@ CCTV와 개인 도어록은 기본입니다. 장비 도난 사고는 생각보�
 
 ---
 
+---
+
+[베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [무인 연습실 완벽 가이드 — 24시간 무인 운영 연습실 선택 기준](/stories/practice-room-unmanned1) | [연습실 vs 노래방 — 보컬 연습 공간 완전 비교 가이드](/stories/practice-room-vs-karaoke1)

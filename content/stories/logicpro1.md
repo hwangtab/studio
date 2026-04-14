@@ -69,7 +69,6 @@ File → New Project → 샘플레이트 설정 후 생성
 
 ## 오디오 트랙 생성 및 녹음
 
-
 ### 트랙 생성
 
 1. Track → New Track (Option+Cmd+A)

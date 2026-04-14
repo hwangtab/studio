@@ -28,7 +28,6 @@ summary: 뮤지컬 씨어터 보컬·브로드웨이 발성법·레미제라블�
 ---
 ![뮤지컬 씨어터 보컬·브로드웨이·레미제라블·막강한 드라마틱 발성 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 뮤지컬 씨어터 보컬·브로드웨이·레미제라블·드라마틱 발성 — 음악연습실 완전 가이드
 
 뮤지컬 씨어터 보컬(Musical Theatre Vocal)은 **클래식 성악의 지지력과 팝 보컬의 직접성, 그리고 연기 감정을 하나로 융합한 브로드웨이식 발성**입니다. "I Dreamed a Dream", "Defying Gravity", "The Music of the Night" — 뮤지컬 보컬은 노래이면서 동시에 연기이고, 관객과의 대화입니다.
@@ -222,3 +221,6 @@ T, D, K, G — 명확하게 발음
 
 은평구 24시간 음악연습실에서 16마디 오디션 컷을 완벽하게 다듬어 보세요. 목소리로 무대를 지배하는 그 순간이 뮤지컬 보컬의 진짜 시작입니다.
 
+---
+
+[보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1) | [보컬 오페라 창법·벨칸토 발성 기초 — 완전 가이드](/stories/practice-room-vocal-opera-technique1) | [보컬 레지스터·음역별 발성 전략 — 완전 가이드](/stories/practice-room-vocal-registers1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1)

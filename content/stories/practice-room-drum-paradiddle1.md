@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 패러디들·루디먼트·스틱 컨트롤 심화 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 음악연습실 완전 가이드
 
 패러디들(Paradiddle)은 **드럼 루디먼트의 핵심**입니다. R-L-R-R / L-R-L-L의 단순한 스트로크 조합이지만, 이것을 마스터하면 드럼의 모든 고급 기법이 열립니다. Buddy Rich, Gene Krupa, Billy Cobham — 모든 위대한 드러머는 루디먼트 위에 세워졌습니다.
@@ -303,3 +302,6 @@ R-L-R-R-L-R-L-L 패러디들
 
 은평구 24시간 음악연습실에서 매트 위에 싱글 패러디들부터 시작하세요. 속도보다 균일함이 먼저입니다. 균일함이 완성되면 속도는 저절로 따라옵니다.
 
+---
+
+[드럼 스틱 컨트롤·모엘러 기법·속도 훈련 — 완전 가이드](/stories/practice-room-drum-stick-control1) | [드럼 루디먼트·기초 스트로크 — 완전 가이드](/stories/practice-room-drum-rudiments1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1) | [드럼 루디멘트 고급·스트로크 조합 — 완전 가이드](/stories/practice-room-drum-rudiments-advanced1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1)

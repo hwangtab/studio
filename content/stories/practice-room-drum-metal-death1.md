@@ -28,7 +28,6 @@ summary: 데스메탈 드럼·블라스트비트·더블 베이스 드럼·익�
 ---
 ![데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 — 음악연습실 완전 가이드
 
 데스메탈 드럼(Death Metal Drums)은 **익스트림 금속 음악의 최전선에 있는 테크니컬 드럼 연주**입니다. Morbid Angel의 Pete Sandoval, Cryptopsy의 Flo Mounier, Suffocation의 Mike Smith — 이들이 데스메탈 드럼의 기술적 경지를 보여줍니다. 블라스트비트부터 폴리리듬 브레이크다운까지, 데스메탈 드럼은 신체의 한계에 도전합니다.
@@ -233,3 +232,6 @@ SD:    x        x
 
 은평구 24시간 음악연습실에서 ♩= 80 더블 베이스 교대부터 시작하세요. 발이 독립적으로 움직이기 시작하면, 블라스트비트의 문이 열립니다.
 
+---
+
+[드럼 발 테크닉·더블 베이스 페달 — 완전 가이드](/stories/practice-room-drum-foot-technique1) | [드럼 더블 킥·더블 배스 드럼 훈련 — 완전 가이드](/stories/practice-room-drum-double-kick1) | [카혼 드럼·플라멩코·어쿠스틱 세션·바스·스네어 카혼 테크닉 — 완전 가이드](/stories/practice-room-drum-cajon1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

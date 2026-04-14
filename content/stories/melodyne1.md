@@ -54,7 +54,6 @@ Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 �
 
 ## Melodyne 기본 워크플로우
 
-
 ### 독립형 사용 (Standalone)
 
 1. Melodyne 실행 → 드라이 보컬 WAV 파일 Import
@@ -122,8 +121,6 @@ Edit → Correct Pitch
 
 ## Formant 교정
 
-모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
-
 ### Formant 조정 주의사항
 
 - Formant = 음색의 핵심 (너무 많이 변경 시 로봇 소리)
@@ -139,7 +136,6 @@ Edit → Correct Pitch
 ---
 
 ## 타이밍 교정
-
 
 ### Note Editing 모드
 

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 음색·목소리 색깔 개발 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 보컬 음색·목소리 색깔 개발 — 음악연습실 완전 가이드
 
 목소리의 음색(Tone Color/Timbre)은 **보컬리스트의 정체성**입니다. 같은 음정을 노래해도 성악가의 소리와 재즈 가수의 소리가 다르고, K-Pop 보컬과 인디 싱어의 소리가 다릅니다. 이 차이가 바로 음색—그리고 음색은 타고나는 것만이 아닌, **훈련과 의도**로 개발할 수 있습니다.
@@ -264,3 +263,6 @@ summary: >-
 
 은평구 24시간 음악연습실에서 반복적으로 녹음하고 듣고 조절하는 과정을 거치면, 자신만의 음색이 조금씩 완성되어갑니다.
 
+---
+
+[보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

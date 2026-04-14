@@ -68,7 +68,6 @@ Options → Audio Setup → Processing → Block Size
 
 ## 오디오 트랙 생성 및 녹음
 
-
 ### 트랙 생성
 
 1. Song → Add Track → Audio Track
@@ -96,8 +95,6 @@ Options → Audio Setup → Processing → Block Size
 
 ## Pro EQ 설정
 
-모노로 확인하면 스테레오에서 감춰진 문제를 더 빨리 발견할 수 있습니다.
-
 ### Pro EQ 삽입
 
 1. 트랙 Inserts 클릭 → FX
@@ -118,7 +115,6 @@ Options → Audio Setup → Processing → Block Size
 ---
 
 ## Pro Compressor 설정
-
 
 ### Pro Compressor 삽입
 
@@ -163,8 +159,6 @@ Inserts → Dynamics → Pro Compressor
 ---
 
 ## 파일 내보내기 (Export Mixdown)
-
-레퍼런스 트랙과 A/B 비교하면서 조절하면 과보정을 방지할 수 있습니다.
 
 ### 믹싱 의뢰용 내보내기
 

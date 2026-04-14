@@ -28,7 +28,6 @@ summary: 록 드럼 필인·트랜지션·섹션 전환. John Bonham·Neil Peart
 ---
 ![드럼 록 필인·트랜지션 기법 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 드럼 록 필인·트랜지션 기법 — 음악연습실 완전 가이드
 
 드럼 필인(Fill-In)은 **섹션과 섹션 사이를 연결하는 드라마틱한 드럼 패시지**입니다. 버스-코러스 전환, 솔로 진입, 곡의 절정—이 모든 순간에 올바른 필인은 음악 전체를 살립니다. John Bonham, Neil Peart, Keith Moon의 필인 기법을 체계적으로 탐구합니다.
@@ -267,3 +266,6 @@ Keith Moon은 전통을 무시한 자유로운 드러밍.
 
 은평구 24시간 음악연습실에서 드럼 루프 위에 필인을 탐구하세요. 리듬 안에서 비어있는 공간을 찾고, 그 공간에 감동을 넣으세요.
 
+---
+
+[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1)

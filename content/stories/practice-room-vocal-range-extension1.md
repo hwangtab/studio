@@ -28,7 +28,6 @@ summary: 보컬 음역 확장·상단 레인지·저음 개발 훈련법. 안전
 ---
 ![보컬 레인지 확장 훈련 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 보컬 레인지 확장 훈련 — 음악연습실 완전 가이드
 
 보컬 레인지(음역)은 **훈련으로 확장할 수 있습니다.** 타고난 음역을 최대화하고, 새로운 음역에 접근하는 방법—안전하고 효율적인 음역 확장 훈련을 체계적으로 정리합니다. 단, 무리한 훈련은 성대 손상을 일으킬 수 있으므로 신중하게 접근합니다.
@@ -254,3 +253,6 @@ summary: 보컬 음역 확장·상단 레인지·저음 개발 훈련법. 안전
 
 은평구 24시간 음악연습실에서 부담 없이, 꾸준히 음역 확장을 훈련하세요.
 
+---
+
+[보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 발음 훈련·딕션 스피드 연습 — 완전 가이드](/stories/practice-room-vocal-tongue-twisters1)

@@ -28,7 +28,6 @@ summary: 베이스 컨트리·블루그래스·루트-5도 라인·스트링 베
 ---
 ![베이스 컨트리·블루그래스·루트-5도 라인 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 베이스 컨트리·블루그래스·루트-5도 라인 — 음악연습실 완전 가이드
 
 컨트리·블루그래스 베이스는 **심플함 속의 완벽한 그루브**입니다. 재즈 워킹 베이스처럼 복잡하지 않지만, 루트-5도를 정확하게 연주하는 것이 컨트리 밴드를 살아있게 만듭니다. Edgar Meyer의 어쿠스틱 베이스, Bill Monroe의 블루그래스 리듬 — 이들이 컨트리 베이스의 아름다움을 보여줍니다.
@@ -254,3 +253,6 @@ E: E-E-B-E-G-E-B-E (스티프 느낌)
 
 은평구 24시간 음악연습실에서 G 코드 루트-5도부터 시작하세요. 2박자 느낌이 손에 익으면, 블루그래스 밴드가 춤추기 시작합니다.
 
+---
+
+[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass-prog-metal1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

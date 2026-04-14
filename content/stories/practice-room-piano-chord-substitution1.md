@@ -28,7 +28,6 @@ summary: 피아노 코드 대리·리하모나이제이션·트리톤 서브스�
 ---
 ![피아노 코드 대리·리하모나이제이션 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 피아노 코드 대리·리하모나이제이션 — 음악연습실 완전 가이드
 
 리하모나이제이션(Reharmonization)은 **기존 멜로디에 새로운 코드를 붙이는 예술**입니다. 같은 멜로디도 다른 코드 진행으로 전혀 다른 감정을 만들어냅니다. 재즈 피아니스트가 스탠다드 곡을 매번 다르게 연주할 수 있는 이유입니다.
@@ -285,3 +284,6 @@ Ebmaj7 - E7 (트리톤서브 Bbm7→E7, 반음상행) - Abmaj7 - ...
 
 은평구 24시간 음악연습실에서 트리톤 서브스티튜션, 패싱 코드, 모달 인터체인지를 탐구하세요. 화성의 세계는 탐험할수록 넓어집니다.
 
+---
+
+[피아노 리하모나이제이션·화성 재창조 — 완전 가이드](/stories/practice-room-piano-reharmonization1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1)

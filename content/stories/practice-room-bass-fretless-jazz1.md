@@ -30,7 +30,6 @@ summary: >-
 ---
 ![프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 프렛리스 베이스·Jaco Pastorius·마이크로토날 글라이드 — 음악연습실 완전 가이드
 
 프렛리스 베이스(Fretless Bass)는 **목소리처럼 노래하는 베이스**입니다. 프렛(fret)이 없어 인토네이션을 완전히 자신이 결정하며, 음 사이를 부드럽게 미끄러지는 글라이드가 가능합니다. Jaco Pastorius는 이 악기로 재즈 퓨전의 역사를 바꿨습니다.
@@ -226,3 +225,6 @@ B음에서 Bb음으로 갈 때
 
 은평구 24시간 음악연습실에서 드론 음 틀고 천천히 스케일부터 시작하세요. 정확한 음정이 귀에 박히는 날, 베이스가 노래하기 시작합니다.
 
+---
+
+[베이스 프렛리스·인토네이션 훈련 — 완전 가이드](/stories/practice-room-bass-fretless1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

@@ -28,7 +28,6 @@ summary: 보컬 호흡법·복식호흡·횡격막 지지·아포지오. 올바�
 ---
 ![보컬 호흡법·복식호흡·지지·버팀 기법 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 보컬 호흡법·복식호흡·지지·버팀 기법 — 음악연습실 완전 가이드
 
 보컬 호흡(Vocal Breathing)은 **노래의 가장 기본적인 기초이자 가장 중요한 기술**입니다. 모든 발성 기술 — 비브라토, 고음, 지속음 — 은 올바른 호흡 위에서만 작동합니다. Luciano Pavarotti의 폐활량, Whitney Houston의 끊임없는 롱톤, Celine Dion의 강력한 클라이맥스 — 이들 모두 완벽한 호흡 관리에서 나옵니다.
@@ -242,3 +241,6 @@ summary: 보컬 호흡법·복식호흡·횡격막 지지·아포지오. 올바�
 
 은평구 24시간 음악연습실에서 복식 호흡 확인부터 시작하세요. 배가 팽창하는 그 순간, 진짜 보컬 트레이닝이 시작됩니다.
 
+---
+
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡 컨트롤·폐활량 훈련 — 완전 가이드](/stories/practice-room-vocal-breath-control1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 스캣 즉흥연주 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 보컬 스캣 즉흥연주 — 재즈 보컬 음악연습실 완전 가이드
 
 스캣(Scat)은 **목소리로 악기를 모방하는 재즈 즉흥연주**입니다. "ba-doo-bee-dah"처럼 의미 없는 음절로 멜로디와 리듬을 자유롭게 즉흥 창조합니다. Ella Fitzgerald, Sarah Vaughan, Louis Armstrong—재즈 역사를 빛낸 스캣 마스터들의 기법을 분석합니다.
@@ -275,3 +274,6 @@ C-B-Bb-A-Ab-G-F#-F-E-Eb-D-Db-C
 
 은평구 24시간 음악연습실에서 큰 소리로 실수를 두려워하지 않고 스캣을 탐구하세요. 재즈의 언어는 많이 말할수록 유창해집니다.
 
+---
+
+[보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 — 완전 가이드](/stories/practice-room-vocal-scatting1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [피아노 즉흥연주·블루스 스케일 — 완전 가이드](/stories/practice-room-piano-improvisation1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1)

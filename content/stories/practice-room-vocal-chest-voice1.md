@@ -28,7 +28,6 @@ summary: 흉성(체스트 보이스)의 파워와 안정성을 높이는 훈련�
 ---
 ![보컬 흉성·체스트 보이스 강화 훈련 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 보컬 흉성·체스트 보이스 강화 훈련 — 음악연습실 완전 가이드
 
 흉성(胸聲, Chest Voice)은 가장 자연스럽고 강력한 발성입니다. 일상 대화에서 사용하는 이 발성이 노래에서 완전히 발달되면 **깊고 충만한 저음, 강렬한 중음역, 듣는 이의 가슴을 울리는 파워**가 나옵니다. 많은 보컬리스트들이 고음 개발에 집중하지만, 흉성의 강화는 전체 음역대 향상의 토대가 됩니다.
@@ -207,3 +206,6 @@ A3 (강한 흉성) → B3 (흉성) → C4 (믹스 진입) → D4 (믹스)
 
 은평구 24시간 음악연습실에서 충분한 시간을 들여 흉성을 단련하고 당신만의 독보적인 보컬 사운드를 만들어가세요.
 
+---
+
+[보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1)

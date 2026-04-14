@@ -28,7 +28,6 @@ summary: >-
 ---
 ![네오소울 베이스·D 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 네오소울 베이스·D'Angelo·Erykah Badu·그루브 — 음악연습실 완전 가이드
 
 네오소울 베이스(Neo-Soul Bass)는 **클래식 소울의 감정과 현대 R&B의 그루브가 만나는 지점**입니다. Pino Palladino의 D'Angelo "Voodoo" 앨범 베이스, Meshell Ndegeocello의 어쿠스틱 베이스, Erykah Badu의 세션 베이시스트들 — 네오소울 베이스는 단순함 속에서 깊은 그루브를 만듭니다.
@@ -221,3 +220,6 @@ Motown 베이스 (James Jamerson 레거시)
 
 은평구 24시간 음악연습실에서 Am7 한 코드로 레잉 백 연습부터 시작하세요. 비트 뒤로 밀리는 그 순간, 소울의 문이 열립니다.
 
+---
+
+[베이스 힙합·로우엔드 그루브·네오소울 — 완전 가이드](/stories/practice-room-bass-hip-hop1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

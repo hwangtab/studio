@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 썸 테크닉·슬랩 베이스 고급 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 베이스 썸 테크닉·슬랩 베이스 고급 — 음악연습실 완전 가이드
 
 썸 테크닉(Thumb Technique)은 **엄지손가락을 사용한 슬랩 베이스의 고급 기법**입니다. 기본 슬랩(엄지로 치고 검지로 당기기)을 넘어, 더블 썸핑·상하향 스트로크·썸 아르페지오 등 Victor Wooten이 완성한 현대 슬랩 베이스의 세계입니다.
@@ -298,3 +297,6 @@ Bootsy Collins는 뒤에 치는 것으로 그루브
 
 은평구 24시간 음악연습실에서 더블 썸핑을 천천히, 완벽하게 익히세요. 속도는 나중에—리듬과 아티큘레이션이 먼저입니다.
 
+---
+
+[베이스 슬랩·팝 고급 기법 — 완전 가이드](/stories/practice-room-bass-slap-advanced1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 핑거스타일 테크닉·터치 향상 — 완전 가이드](/stories/practice-room-bass-fingerstyle-technique1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

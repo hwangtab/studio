@@ -30,7 +30,6 @@ summary: >-
 ---
 ![일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 — 음악연습실 완전 가이드
 
 일렉트릭 슬라이드 기타(Electric Slide Guitar)는 **블루스의 절규와 노래**입니다. 보틀넥(Bottleneck) 또는 유리·크롬 슬라이드로 현 위를 미끄러지며 만드는 소리는 기타가 말하는 것처럼 들립니다. Duane Allman의 "Layla" 슬라이드, Derek Trucks의 인도 음악 영향 — 이들이 일렉 슬라이드를 예술의 경지로 끌어올렸습니다.
@@ -251,3 +250,6 @@ Komet 앰프: 작고 뜨거운 클린 앰프
 
 은평구 24시간 음악연습실에서 E 오픈 튜닝을 맞추고, 첫 슬라이드 라인을 연습해보세요. 프렛 위에 정확히 슬라이드가 올라가는 순간, 블루스의 문이 열립니다.
 
+---
+
+[블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-blues-slide1) | [기타 슬라이드 고급·보틀넥 기법 — 완전 가이드](/stories/practice-room-guitar-slide-advanced1) | [기타 슬라이드·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-slide1) | [도브로·레조네이터 기타·슬라이드 기법 — 완전 가이드](/stories/practice-room-guitar-dobro1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1)

@@ -28,7 +28,6 @@ summary: 팝 피아노 반주 패턴·아르페지오·오스티나토. K-Pop·�
 ---
 ![피아노 팝 반주법·코드 보이싱 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 피아노 팝 반주법·코드 보이싱 — 음악연습실 완전 가이드
 
 팝 피아노 반주는 **보컬과 멜로디를 지지하는 음악적 기반**입니다. 단순한 코드를 아름답게 배치하고, 장르에 맞는 반주 패턴을 구사하는 것—이것이 팝 반주 피아노의 핵심입니다. K-Pop, 발라드, 팝록, 어쿠스틱 팝의 피아노 반주법을 체계적으로 정리합니다.
@@ -298,3 +297,6 @@ C-E-G + D(9음) = C-D-E-G
 
 은평구 24시간 음악연습실에서 좋아하는 팝 곡의 반주를 천천히 완성해 보세요. 코드를 외우는 것보다 패턴을 몸에 익히는 것이 핵심입니다.
 
+---
+
+[피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 CCM·워십 피아노 반주법 — 완전 가이드](/stories/practice-room-piano-worship1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1)

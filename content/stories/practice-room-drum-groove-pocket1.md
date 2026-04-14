@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 그루브·포켓 연주·리듬 감각 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 드럼 그루브·포켓 연주·리듬 감각 — 음악연습실 완전 가이드
 
 '포켓에 들어간다(In The Pocket)'는 표현은 음악에서 가장 중요한 개념 중 하나입니다. **박자가 정확하면서도 음악적으로 완벽한 느낌**—이것이 포켓입니다. 메트로놈처럼 기계적으로 정확한 것과는 다른, 인간적이고 음악적인 타이밍 감각입니다.
@@ -184,3 +183,6 @@ summary: >-
 
 은평구 24시간 음악연습실에서 다양한 타이밍 느낌을 탐구하고, 자신만의 그루브 정체성을 만들어가세요.
 
+---
+
+[드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

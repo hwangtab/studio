@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 스틱 컨트롤·모엘러 기법·속도 훈련 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 드럼 스틱 컨트롤·모엘러 기법·속도 훈련 — 음악연습실 완전 가이드
 
 드럼 스틱 컨트롤(Stick Control)은 **드럼 테크닉의 가장 기초적인 토대**입니다. 아무리 복잡한 패턴을 알아도 스틱을 제대로 컨트롤하지 못하면 표현할 수 없습니다. 모엘러 기법, 리바운드 활용, 그립 — 이 세 가지가 스틱 컨트롤의 핵심입니다.
@@ -316,3 +315,6 @@ pp로 시작 → 8마디 동안 ff로 서서히
 
 은평구 24시간 음악연습실에서 모엘러 기법을 마스터하고, 리바운드를 체득하세요. 스틱이 자연스럽게 움직이는 날—그것이 진정한 드러머의 시작입니다.
 
+---
+
+[드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 완전 가이드](/stories/practice-room-drum-paradiddle1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 더블 킥·더블 배스 드럼 훈련 — 완전 가이드](/stories/practice-room-drum-double-kick1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1)

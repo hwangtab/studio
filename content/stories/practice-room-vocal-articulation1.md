@@ -28,7 +28,6 @@ summary: 보컬 아티큘레이션·발음·자음 명확성 기법. 영어·한
 ---
 ![보컬 아티큘레이션·발음·자음 기법 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 보컬 아티큘레이션·발음·자음 기법 — 음악연습실 완전 가이드
 
 보컬 아티큘레이션(Articulation)은 **단어와 음절을 명확하게 발음하는 기법**입니다. 아무리 목소리가 좋아도 발음이 불명확하면 청중이 가사를 이해하지 못합니다. 반대로 명확한 아티큘레이션은 보컬 표현력을 극적으로 높입니다.
@@ -309,3 +308,6 @@ s: 마이크를 약간 위로
 
 은평구 24시간 음악연습실에서 텅 트위스터와 자음 훈련을 매일 하세요. 발음이 명확해질수록 가사가 살아나고, 가사가 살아나면 노래 전체가 빛납니다.
 
+---
+
+[보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1)

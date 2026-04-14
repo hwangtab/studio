@@ -28,7 +28,6 @@ summary: 드럼 레코딩 준비·마이크 배치·오버더빙·DAW 활용. �
 ---
 ![드럼 레코딩·오버더빙 기법 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 드럼 레코딩·오버더빙 기법 — 음악연습실 완전 가이드
 
 드럼 레코딩은 **음악 제작의 가장 복잡한 단계 중 하나**입니다. 여러 마이크, 음향 처리, 타이밍 정확도—모든 것이 완벽해야 좋은 드럼 사운드가 탄생합니다. 음악연습실에서 홈 레코딩 수준의 드럼 녹음을 완성하는 방법을 탐구합니다.
@@ -242,3 +241,6 @@ DAW: Reaper (무료), GarageBand (Mac)
 
 은평구 24시간 음악연습실에서 레코딩 셋업을 가져와 자신의 드럼 세션을 기록해 보세요. 자신의 연주를 객관적으로 들을 때 발전이 빨라집니다.
 
+---
+
+[드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1)

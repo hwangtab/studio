@@ -28,7 +28,6 @@ summary: 기타 벤딩과 비브라토의 원리부터 블루스·록 표현법�
 ---
 ![기타 벤딩·비브라토 테크닉 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 기타 벤딩·비브라토 테크닉 — 음악연습실 완전 가이드
 
 기타 연주에서 "표현력"을 결정하는 가장 중요한 두 가지 테크닉이 **벤딩(Bending)**과 **비브라토(Vibrato)**입니다. 정확한 음을 치는 것은 기본이지만, 그 음을 어떻게 구부리고(벤딩), 어떻게 진동시키느냐(비브라토)에 따라 같은 음도 완전히 다른 감정을 담습니다. BB King의 울부짖는 벤딩, Jimi Hendrix의 광폭한 비브라토, Eric Clapton의 감성 벤딩 — 이 거장들의 개성은 모두 이 두 기법에서 나옵니다.
@@ -147,7 +146,10 @@ summary: 기타 벤딩과 비브라토의 원리부터 블루스·록 표현법�
 - **완벽 방음** — 큰 소리로 마음껏 표현
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

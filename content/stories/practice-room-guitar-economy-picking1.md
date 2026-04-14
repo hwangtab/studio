@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 이코노미 피킹·스위핑 기초 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 기타 이코노미 피킹·스위핑 기초 — 음악연습실 완전 가이드
 
 기타 속주 테크닉 중에서 이코노미 피킹(Economy Picking)과 스윕 피킹(Sweep Picking)은 동작의 효율성을 극대화하는 기법입니다. 얼터네이트 피킹이 현을 위아래로 번갈아 치는 것이라면, 이코노미 피킹은 "같은 방향으로 넘어가는 현은 계속 같은 방향으로 쓸어주는" 방식입니다. 이 원칙에서 나오는 스윕 피킹은 빠른 아르페지오 연주의 필수 테크닉입니다.
@@ -166,7 +165,10 @@ Am 아르페지오 (개방 포지션):
 - **완벽 방음** — 반복 연습 없이 마음껏
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[기타 아르페지오 고급·스윕 피킹 — 완전 가이드](/stories/practice-room-guitar-arpeggios-advanced1) | [기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 — 완전 가이드](/stories/practice-room-guitar-tremolo-picking1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

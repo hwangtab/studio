@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 뉴에이지·Einaudi·George Winston 스타일 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 피아노 뉴에이지·Einaudi·George Winston 스타일 — 음악연습실 완전 가이드
 
 뉴에이지 피아노(New Age Piano)는 **명상·치유·자연을 주제로 한 현대 기악 음악**입니다. Ludovico Einaudi의 미니멀하고 서정적인 "Nuvole Bianche", George Winston의 아메리칸 포크 피아노, Yann Tiersen의 낭만적인 프랑스 풍경 — 이들이 뉴에이지 피아노의 다양한 얼굴을 보여줍니다.
@@ -239,3 +238,6 @@ C-G-Am-F 반복 진행
 
 은평구 24시간 음악연습실에서 C 장조 아르페지오부터 시작해보세요. 페달을 밟고 아르페지오를 연주하는 순간, 공간이 음악으로 채워집니다.
 
+---
+
+[피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드](/stories/practice-room-piano-comp-jazz1)

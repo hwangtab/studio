@@ -28,7 +28,6 @@ summary: 기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 기법. DADG
 ---
 ![기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 기타 켈틱·아이리쉬 핑거피킹·전통 멜로디 — 음악연습실 완전 가이드
 
 켈틱 기타(Celtic Guitar)는 **아일랜드, 스코틀랜드, 웨일즈 등 켈트족 음악 전통을 기타로 표현**하는 장르입니다. Davy Graham, Martin Simpson, Tony McManus가 켈틱 기타를 세계적으로 알렸습니다. DADGAD 튜닝, 드론 현, 오르나멘테이션이 켈틱 기타의 핵심입니다.
@@ -298,3 +297,6 @@ A4-B4-A4-G4-A4 (매우 빠르게)
 
 은평구 24시간 음악연습실에서 DADGAD를 튜닝하고, 드론 현을 울리고, 릴 리듬을 익히세요. 켈틱의 심장이 뛰는 소리를 들을 것입니다.
 
+---
+
+[기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1)

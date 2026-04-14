@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 재즈 리듬·콤핑 기법 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 기타 재즈 리듬·콤핑 기법 — 음악연습실 완전 가이드
 
 재즈 리듬 기타는 솔로 기타와 완전히 다릅니다. **콤핑(Comping)**은 솔리스트를 지지하고 대화하면서도 자신의 음악적 발언을 하는 기술입니다. 피아노가 없는 재즈 트리오나 쿼텟에서 기타 리듬은 하모니·리듬·대위를 동시에 담당합니다.
@@ -210,3 +209,6 @@ B7 보이싱 (반음 아래) → Cmaj7로 해결
 
 은평구 24시간 음악연습실에서 재즈 음원과 함께 콤핑을 연습하고 자신만의 리스펀스 언어를 개발하세요.
 
+---
+
+[기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [베이스 재즈 콤핑·워킹 라인 고급 — 완전 가이드](/stories/practice-room-bass-jazz-comping1)

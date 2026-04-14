@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 코드 대체·리하모니제이션 기법 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 기타 코드 대체·리하모니제이션 기법 — 음악연습실 완전 가이드
 
 코드 대체(Chord Substitution)는 **같은 기능을 가진 다른 코드로 교체**하는 화성 기법입니다. 흔한 코드 진행을 더 풍부하고 독창적으로 만드는 이 기법은 재즈 기타의 핵심이며, 팝과 록에서도 창의적인 편곡에 사용됩니다.
@@ -211,3 +210,6 @@ Em7:    0-2-2-0-3-0 (토닉 대체)
 
 은평구 24시간 음악연습실에서 익숙한 곡에 하나씩 코드를 바꿔가며 실험해보세요. "이건 어떤 소리지?"라는 탐구심이 코드 대체 마스터의 시작입니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

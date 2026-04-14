@@ -28,7 +28,6 @@ summary: '힙합과 네오소울의 베이스라인: 레이드백 그루브, 사
 ---
 ![베이스 힙합·로우엔드 그루브·네오소울 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 베이스 힙합·로우엔드 그루브·네오소울 — 음악연습실 완전 가이드
 
 힙합과 네오소울의 베이스는 **공간과 무게감**이 핵심입니다. 록이나 펑크처럼 쉬지 않고 움직이는 것이 아니라, 적재적소에 배치된 **굵고 깊은 음표**가 비트 전체를 지배합니다. 디 안젤로, J Dilla, Erykah Badu의 세계를 베이스 관점에서 분석합니다.
@@ -240,3 +239,6 @@ A - - - - - - (2마디, 홀드)
 
 은평구 24시간 음악연습실에서 J Dilla와 디 안젤로의 음반을 틀어놓고, 그 레이드백 그루브를 몸으로 느끼며 연습하세요. 완벽한 타이밍이 아닌, 진정한 느낌을 먼저 찾는 것이 힙합 베이스의 시작입니다.
 
+---
+
+[네오소울 베이스·D'Angelo·Erykah Badu·그루브 완전 가이드](/stories/practice-room-bass-neo-soul1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

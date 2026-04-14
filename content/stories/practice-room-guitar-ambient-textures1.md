@@ -28,7 +28,6 @@ summary: '리버브, 딜레이, 루프로 만드는 앰비언트 기타 텍스�
 ---
 ![기타 앰비언트·텍스처 기타·이펙터 활용 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 기타 앰비언트·텍스처 기타·이펙터 활용 — 음악연습실 완전 가이드
 
 앰비언트 기타는 **소리 그 자체가 풍경**입니다. 음표를 연주하는 것이 아니라 **소리의 질감, 공간, 분위기**를 만드는 것—이것이 앰비언트 기타의 세계입니다. Mogwai, Sigur Rós, Explosions in the Sky, My Bloody Valentine의 사운드를 분석하며 앰비언트 기타의 기법을 탐구합니다.
@@ -229,3 +228,6 @@ Whammy: 피치 쉬프터로 ±1 옥타브 변조
 
 은평구 24시간 음악연습실에서 시간 제한 없이 소리를 탐구하세요. 앰비언트는 서두르지 않는 예술입니다—충분히 듣고, 충분히 공간을 만들고, 그 공간 안에서 숨쉬세요.
 
+---
+
+[기타 볼륨 스웰·바이올린 주법·앰비언트 표현 — 완전 가이드](/stories/practice-room-guitar-volume-swell1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

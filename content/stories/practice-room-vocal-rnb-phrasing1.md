@@ -28,7 +28,6 @@ summary: 보컬 R&B 프레이징·그루브·어택 포인트·멜리스마. R&B
 ---
 ![보컬 R&B 프레이징·그루브·어택 포인트 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 보컬 R&B 프레이징·그루브·어택 포인트 — 음악연습실 완전 가이드
 
 R&B 보컬(Rhythm & Blues Vocal)은 **리듬과 감정이 함께 흐르는 노래**입니다. Stevie Wonder의 그루비한 멜리스마, D'Angelo의 네오소울 속삭임, Alicia Keys의 파워풀한 어택 — 이들이 R&B 보컬의 아름다움을 보여줍니다. 단순히 음을 맞추는 것이 아니라, 비트 위에서 리듬과 감정을 동시에 표현하는 것이 R&B 보컬의 핵심입니다.
@@ -268,3 +267,6 @@ R&B 보컬 프레이징은 **박자를 아는 것과 느끼는 것의 차이**�
 
 은평구 24시간 음악연습실에서 레잉 백 연습부터 시작하세요. 비트 뒤로 밀리는 그 순간, R&B의 그루브가 시작됩니다.
 
+---
+
+[보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [보컬 소울·R&B 창법·멜리즈마 기법 — 완전 가이드](/stories/practice-room-vocal-soul1) | [보컬 어질리티·멜리스마 훈련 — 완전 가이드](/stories/practice-room-vocal-agility1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1)

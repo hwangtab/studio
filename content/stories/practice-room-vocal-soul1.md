@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 소울·R&B 창법·멜리즈마 기법 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 보컬 소울·R&B 창법·멜리즈마 기법 — 음악연습실 완전 가이드
 
 소울 보컬은 단순한 음정의 나열이 아닙니다. **감정의 진정성, 기술적 기교, 그루브 감각**이 하나로 합쳐진 예술입니다. 아레사 프랭클린의 감동적인 필, 비욘세의 완벽한 멜리즈마, 알 그린의 서정적인 팔세토—이 모든 것이 소울의 세계입니다.
@@ -205,3 +204,6 @@ C4(풀보이스) → G4(팔세토) → C5(팔세토) → G5(팔세토)
 
 은평구 24시간 음악연습실에서 기술을 연마하되, 항상 음악의 감정적 의미를 생각하며 노래하세요. 위대한 소울 가수들처럼—기술이 감정을 섬기게.
 
+---
+
+[보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [보컬 R&B 프레이징·그루브·어택 포인트 — 완전 가이드](/stories/practice-room-vocal-rnb-phrasing1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 어질리티·멜리스마 훈련 — 완전 가이드](/stories/practice-room-vocal-agility1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

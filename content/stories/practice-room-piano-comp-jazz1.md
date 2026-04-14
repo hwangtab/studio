@@ -30,7 +30,6 @@ summary: >-
 ---
 ![재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 음악연습실 완전 가이드
 
 재즈 피아노 컴핑(Comping)은 **반주하면서 동시에 즉흥적으로 대화하는 기술**입니다. 독주 피아노와 달리, 밴드 안의 피아노는 솔로이스트를 지지하고, 드러머와 대화하고, 베이시스트의 워킹 라인에 화답합니다. Red Garland, Wynton Kelly, Herbie Hancock이 밴드 컴핑의 예술을 극한까지 끌어올렸습니다.
@@ -254,3 +253,6 @@ G7: B-F (3도+7도)
 
 은평구 24시간 음악연습실에서 2박·4박 가이드 톤 컴핑부터 시작하세요. 밴드와 함께 연주할 때 소리가 하나로 합쳐지는 순간, 컴핑의 기쁨을 알게 됩니다.
 
+---
+
+[피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

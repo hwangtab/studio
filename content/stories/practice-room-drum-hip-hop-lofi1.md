@@ -28,7 +28,6 @@ summary: 힙합·로파이 드럼·붐뱁·드럼머신 그루브·Questlove·J 
 ---
 ![힙합·로파이 드럼·붐뱁·드럼머신 그루브 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 힙합·로파이 드럼·붐뱁·드럼머신 그루브 — 음악연습실 완전 가이드
 
 힙합·로파이 드럼(Hip-Hop/Lo-Fi Drums)은 **드럼머신의 프로그래밍 패턴을 실제 드럼으로 재현하는 독특한 스타일**입니다. J Dilla의 타이트하지 않은 드럼 그루브, Questlove의 힙합 드럼, ?uestlove의 The Roots 라이브 드럼 — 힙합 드럼은 완벽한 박자보다 "휴먼 필(Human Feel)"을 추구합니다.
@@ -218,3 +217,6 @@ Ahmir "Questlove" Thompson:
 
 은평구 24시간 음악연습실에서 붐뱁 기본 패턴부터 시작하세요. 킥과 스네어가 교대하는 순간, 힙합의 그루브가 탄생합니다.
 
+---
+
+[드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 완전 가이드](/stories/practice-room-drum-fusion1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드](/stories/practice-room-drum-jazz-funk1)

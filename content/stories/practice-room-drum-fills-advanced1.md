@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 고급 필인·전환 기법·John Bonham 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 드럼 고급 필인·전환 기법·John Bonham — 음악연습실 완전 가이드
 
 드럼 필인(Fill)은 **그루브 사이의 감탄사**입니다. 훌륭한 필인은 다음 섹션을 예고하고, 긴장을 해소하며, 밴드 전체를 이끕니다. John Bonham의 파워풀한 필인, Neil Peart의 복잡한 필인, Dave Grohl의 에너지 넘치는 필인—각각 다른 철학을 보여줍니다.
@@ -286,3 +285,6 @@ RRLLRRLL (더블 스트로크)
 
 은평구 24시간 음악연습실에서 다양한 필인을 탐구하고, 음악적 맥락에서 사용하는 연습을 하세요. 필인은 많이 치는 것이 아니라 **적절한 때 적절하게** 치는 것입니다.
 
+---
+
+[프로그레시브 록 드럼·Neil Peart·John Bonham·변박 완전 가이드](/stories/practice-room-drum-prog-rock1) | [드럼 록 필인·트랜지션 기법 — 완전 가이드](/stories/practice-room-drum-rock-fills1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1)

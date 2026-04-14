@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 모드 스케일·교회선법 완전 가이드 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 피아노 모드 스케일·교회선법 완전 가이드 — 음악연습실
 
 재즈, 클래식, 록, 팝에서 가장 중요한 음악 이론 중 하나가 **모드(Mode, 교회선법)**입니다. 장조와 단조만 알고 있다면 음악의 절반밖에 이해하지 못한 것입니다. 모드를 익히면 Miles Davis의 "So What", John Coltrane의 "Impressions", Led Zeppelin의 특유한 사운드가 왜 그렇게 들리는지 비로소 이해할 수 있습니다. 이 가이드에서는 7가지 교회선법의 원리, 각 모드의 음색 특성, 피아노에서의 실전 연습법을 안내합니다.
@@ -160,7 +159,10 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 - **완벽 방음** — 모달 즉흥 연주를 마음껏
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[피아노 모달 재즈·마일스 데이비스·모드 스케일 — 완전 가이드](/stories/practice-room-piano-modal1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

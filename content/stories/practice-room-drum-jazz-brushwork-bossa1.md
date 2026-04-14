@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 보사노바·재즈 브러시 보사 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 드럼 보사노바·재즈 브러시 보사 — 음악연습실 완전 가이드
 
 보사노바 드럼은 **섬세함과 그루브의 완벽한 균형**입니다. 스틱보다 브러시로 연주할 때 보사노바의 진정한 질감이 나오고, 피아노·기타·베이스와 함께 누비아(Nuvem) 같은 부드러운 그루브가 형성됩니다. 이 가이드에서는 보사노바 드럼 패턴과 재즈 브러시를 결합하는 방법을 체계적으로 안내합니다.
@@ -234,3 +233,6 @@ X - - X - X - X
 
 은평구 24시간 음악연습실에서 보사노바 음반을 틀어놓고, 그 위에 아주 조용한 브러시 보사노바를 연주해보세요. 당신의 드럼이 음악에 녹아드는 순간, 보사노바의 진수를 느끼게 될 것입니다.
 
+---
+
+[드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 재즈 왈츠·3박자 스윙 — 완전 가이드](/stories/practice-room-drum-brushwork-jazz-waltz1) | [드럼 비밥·재즈 비밥 드러밍·Max Roach — 완전 가이드](/stories/practice-room-drum-jazz-bebop1)

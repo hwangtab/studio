@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 트레몰로 피킹·고속 얼터네이트 피킹 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 기타 트레몰로 피킹·고속 얼터네이트 피킹 — 음악연습실 완전 가이드
 
 기타를 빠르게 연주하는 것은 많은 기타리스트의 꿈입니다. 그러나 단순히 빠른 속도를 추구하다 보면 긴장이 누적되어 부상을 당하거나, 음정과 리듬이 흐트러질 수 있습니다. **트레몰로 피킹(Tremolo Picking)**과 **얼터네이트 피킹(Alternate Picking)**은 기타 속주의 기반이 되는 테크닉으로, 올바른 방법으로 훈련하면 빠른 속도와 정확한 음정을 동시에 얻을 수 있습니다. 이 가이드에서는 원리부터 체계적인 속도 훈련법까지 안내합니다.
@@ -174,7 +173,10 @@ summary: >-
 - **완벽 방음** — 고속 피킹 연습을 눈치 없이
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 아르페지오 고급·스윕 피킹 — 완전 가이드](/stories/practice-room-guitar-arpeggios-advanced1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1)

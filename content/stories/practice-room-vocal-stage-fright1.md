@@ -28,7 +28,6 @@ summary: 보컬 무대 공포증·퍼포먼스 불안 극복법. 마인드셋·�
 ---
 ![보컬 무대 공포증 극복·퍼포먼스 자신감 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 보컬 무대 공포증 극복·퍼포먼스 자신감 — 음악연습실 완전 가이드
 
 무대 공포증(Stage Fright 또는 Performance Anxiety)은 **대부분의 보컬리스트가 경험하는 자연스러운 현상**입니다. Adele, Barbra Streisand, Carly Simon까지도 무대 공포증과 싸웠습니다. 중요한 것은 공포를 없애는 것이 아니라 **공포와 함께 공연하는 방법**을 배우는 것입니다.
@@ -229,3 +228,6 @@ summary: 보컬 무대 공포증·퍼포먼스 불안 극복법. 마인드셋·�
 
 은평구 24시간 음악연습실에서 안전하게, 반복적으로 무대를 시뮬레이션하세요. 익숙함이 자신감을 만들고, 자신감이 공연을 빛나게 합니다.
 
+---
+
+[보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

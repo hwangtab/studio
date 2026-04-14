@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 펑크 그루브·원 드롭 베이스라인 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 베이스 펑크 그루브·원 드롭 베이스라인 — 음악연습실 완전 가이드
 
 펑크 베이스는 **그루브가 전부**입니다. 멜로디나 솔로보다 정확한 리듬, 드라이빙하는 16분음표, 드럼과 완벽히 맞물리는 고스트 노트—이것이 펑크 베이스의 핵심입니다. James Brown, Parliament-Funkadelic, Sly & the Family Stone의 사운드는 모두 강력한 베이스 그루브 위에 세워졌습니다.
@@ -213,3 +212,6 @@ A2            (명확한 음)
 
 은평구 24시간 음악연습실에서 드럼 루프와 함께 펑크 베이스 패턴을 반복 연습하며 당신만의 그루브를 완성하세요.
 
+---
+
+[가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 팝 그루브·차트 팝 베이스라인 — 완전 가이드](/stories/practice-room-bass-pop-groove1) | [베이스 슬랩·팝 고급 기법 — 완전 가이드](/stories/practice-room-bass-slap-advanced1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1)

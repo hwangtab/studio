@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 재즈 콤핑·워킹 라인 고급 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 베이스 재즈 콤핑·워킹 라인 고급 — 음악연습실 완전 가이드
 
 재즈 베이스의 핵심은 **워킹 베이스 라인(Walking Bass Line)**입니다. 4/4박자에서 4분음표를 끊임없이 연주하면서 코드 진행을 안내하고, 솔로이스트를 지지하며, 드러머와 리듬 섹션을 구성합니다. Ray Brown, Paul Chambers, Ron Carter가 이 예술의 최고봉입니다.
@@ -275,3 +274,6 @@ Jaco Pastorius 이후 일렉트릭도 재즈로:
 
 은평구 24시간 음악연습실에서 ii-V-I를 완벽히 익히고, 스탠다드 곡에 워킹 베이스를 연습하세요. 한 음 한 음이 코드 진행을 설명하는 것—그것이 재즈 베이스의 예술입니다.
 
+---
+
+[베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass-prog-metal1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 워킹 베이스라인 심화편 — 재즈 워킹 완전 가이드](/stories/practice-room-bass-walking-bass2)

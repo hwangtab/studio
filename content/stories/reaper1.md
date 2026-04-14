@@ -145,7 +145,6 @@ Add FX → Reaper Plugins → ReaComp
 
 ## 파일 내보내기 (Render)
 
-
 ### 렌더링 내보내기
 
 File → Render (Ctrl+Alt+R)

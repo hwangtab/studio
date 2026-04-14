@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 어질리티·멜리스마 훈련 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 보컬 어질리티·멜리스마 훈련 — 음악연습실 완전 가이드
 
 **어질리티(Agility)**는 성대가 빠르게 다양한 음정을 정확하게 이동하는 능력입니다. 마리아 캐리, 휘트니 휴스턴, 비욘세의 화려한 런과 멜리스마—이 모든 것이 오랜 어질리티 훈련의 결과입니다. 이 가이드에서는 단계적인 어질리티 개발 방법을 안내합니다.
@@ -210,3 +209,6 @@ R&B에서 즉흥적으로 나오는 "감으로 하는" 런:
 
 은평구 24시간 음악연습실에서 매일 20분의 어질리티 훈련으로 차츰차츰 R&B 보컬의 아름다운 장식음을 완성하세요.
 
+---
+
+[보컬 R&B 프레이징·그루브·어택 포인트 — 완전 가이드](/stories/practice-room-vocal-rnb-phrasing1) | [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [보컬 소울·R&B 창법·멜리즈마 기법 — 완전 가이드](/stories/practice-room-vocal-soul1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

@@ -28,7 +28,6 @@ summary: 가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이�
 ---
 ![가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 음악연습실 완전 가이드
 
 가스펠 베이스(Gospel Bass)는 **아프리카계 미국인 교회 음악에서 발전한 소울풀하고 그루비한 베이스 스타일**입니다. James Jamerson의 Motown 가스펠 느낌 베이스, Stanley Clarke의 가스펠 퓨전, 현대 찬양팀의 워십 베이스 — 가스펠 베이스는 단순한 반주를 넘어 예배의 일부가 되는 음악입니다.
@@ -211,3 +210,6 @@ C-B-Bb-A (워크다운) → Dm7 → G7 → C
 
 은평구 24시간 음악연습실에서 C7 분산 그루브부터 시작하세요. 베이스 라인이 노래하기 시작하면, 가스펠의 영혼이 깃듭니다.
 
+---
+
+[베이스 그루브 구성·리듬 설계 원리 — 완전 가이드](/stories/practice-room-bass-groove-construction1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 소울·모타운 그루브·클래식 R&B — 완전 가이드](/stories/practice-room-bass-soul-groove1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

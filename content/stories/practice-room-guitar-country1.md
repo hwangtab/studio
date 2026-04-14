@@ -28,7 +28,6 @@ summary: '컨트리 기타의 치킨피킹, 스트링 벤딩, 텔레캐스터 �
 ---
 ![기타 컨트리·치킨피킹 기법 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 기타 컨트리·치킨피킹 기법 — 음악연습실 완전 가이드
 
 컨트리 기타는 독특하고 매력적인 스타일입니다. **치킨피킹(하이브리드 피킹의 클릭 사운드), 개방 스트링 런, 피들 라인 어레인지**—이 기법들이 컨트리 기타를 다른 장르와 구별 짓는 특징입니다. 텔레캐스터의 밝고 선명한 사운드와 결합하면 컨트리의 완벽한 음색이 탄생합니다.
@@ -185,3 +184,6 @@ B3-G3에서 C4-A3으로 슬라이드+밴드
 
 은평구 24시간 음악연습실에서 텔레캐스터 스타일 클린 사운드로 컨트리 기타 기법을 마스터하세요.
 
+---
+
+[기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

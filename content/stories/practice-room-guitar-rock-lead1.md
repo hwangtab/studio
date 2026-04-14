@@ -28,7 +28,6 @@ summary: '록 리드 기타의 펜타토닉 솔로, 와미 바 기법, 스크리
 ---
 ![기타 록 리드·파워풀 솔로 기법 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 기타 록 리드·파워풀 솔로 기법 — 음악연습실 완전 가이드
 
 록 리드 기타는 음악의 가장 극적인 표현 중 하나입니다. **에디 밴 헤일런의 스피드, 슬래쉬의 블루지함, 지미 페이지의 야성적 에너지**—록 기타리스트들은 솔로로 청중을 사로잡습니다. 이 가이드에서는 록 리드 기타의 핵심 기법을 안내합니다.
@@ -207,3 +206,6 @@ E4(풀오프)D4(풀오프)C4 : 한 번만 피킹
 
 은평구 24시간 음악연습실에서 볼륨을 높이고 자신만의 록 솔로 언어를 개발하세요.
 
+---
+
+[기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1)

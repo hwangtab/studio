@@ -31,7 +31,6 @@ summary: >-
 ---
 ![포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일 — 음악연습실 완전 가이드
 
 포스트록 기타(Post-Rock Guitar)는 **가사 없이 기타의 음색과 다이나믹만으로 감동적인 이야기를 만드는 음악**입니다. Explosions in the Sky의 에픽 빌드업, Mogwai의 조용함에서 폭발로 가는 여정, Godspeed You! Black Emperor의 오케스트라 같은 기타 — 포스트록은 록 기타의 가장 시적인 형태입니다.
@@ -212,3 +211,6 @@ Fsus2: F-G-C
 
 은평구 24시간 음악연습실에서 Csus2 아르페지오부터 시작하세요. 볼륨 스웰이 공간을 채우는 순간, 포스트록의 세계가 펼쳐집니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1)

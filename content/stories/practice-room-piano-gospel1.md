@@ -28,7 +28,6 @@ summary: '가스펠 피아노의 클러스터 보이싱, R&B 그루브 피아노
 ---
 ![피아노 가스펠·R&B 피아노 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 피아노 가스펠·R&B 피아노 — 음악연습실 완전 가이드
 
 가스펠 피아노는 영혼을 움직이는 힘을 가집니다. **클러스터 보이싱, 런(run), 워크업/워크다운, 트릴**—이 기법들이 만들어내는 에너지는 소울·R&B·펑크의 뿌리입니다. 현대 팝과 CCM에서도 가스펠 피아노의 영향은 절대적입니다.
@@ -209,3 +208,6 @@ C5-D5 트릴 (매우 빠르게)
 
 은평구 24시간 음악연습실에서 클러스터 보이싱과 런을 연습하며 당신만의 소울이 담긴 피아노 사운드를 만들어가세요.
 
+---
+
+[피아노 가스펠 오르간 스타일 — 완전 가이드](/stories/practice-room-piano-gospel-organ1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

@@ -31,7 +31,6 @@ summary: >-
 ---
 ![프로그레시브 록 드럼·Neil Peart·John Bonham·변박 완전 가이드 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 프로그레시브 록 드럼·Neil Peart·John Bonham·변박 음악연습실 완전 가이드
 
 프로그레시브 록 드럼(Prog Rock Drums)은 **클래식 오케스트라의 복잡함과 록의 에너지를 결합한 드럼 스타일**입니다. Neil Peart(Rush)의 거대한 드럼 킷과 복잡한 솔로, John Bonham(Led Zeppelin)의 원시적 파워, Keith Moon(The Who)의 카오스 같은 에너지 — 이들이 프로그레시브 록 드럼의 전설입니다.
@@ -214,3 +213,6 @@ Keith Moon:
 
 은평구 24시간 음악연습실에서 5/4박자 박수부터 시작하세요. 이상한 박자가 자연스러워지는 순간, 프로그레시브 록의 세계가 펼쳐집니다.
 
+---
+
+[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1)

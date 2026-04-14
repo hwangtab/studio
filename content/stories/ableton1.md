@@ -69,7 +69,6 @@ Ableton Live는 전자음악·EDM·힙합 프로듀서에게 특히 인기 있�
 
 ## Arrangement View 보컬 녹음
 
-
 ### 트랙 생성
 
 1. Arrangement View (Tab 키로 전환)
@@ -144,7 +143,6 @@ Audio Effects → Dynamics → Compressor
 
 ## Warp (타이밍 교정)
 
-
 ### Warp 활성화
 
 1. 보컬 클립 더블클릭 → Clip View 열기
@@ -165,8 +163,6 @@ Audio Effects → Dynamics → Compressor
 ---
 
 ## 파일 내보내기 (Export)
-
-레퍼런스 트랙과 A/B 비교하면서 조절하면 과보정을 방지할 수 있습니다.
 
 ### 믹싱 의뢰용 내보내기
 

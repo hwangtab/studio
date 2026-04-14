@@ -37,7 +37,6 @@ summary: >-
 ---
 ![슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 — 음악연습실 완전 가이드
 
 슈게이징 기타(Shoegaze Guitar)는 **이펙터와 피드백으로 "소리의 벽(Wall of Sound)"을 만드는 영국 인디 록 스타일**입니다. My Bloody Valentine의 Kevin Shields의 무아지경 기타, Slowdive의 몽환적 드리밍, Cocteau Twins의 텍스처 기타 — 슈게이징은 기타가 악기가 아닌 소리 풍경(soundscape)이 되는 음악입니다.
@@ -227,3 +226,6 @@ Asus4: x-0-2-2-0-0
 
 은평구 24시간 음악연습실에서 리버브 긴 세팅부터 시작하세요. 소리가 공간에 녹아드는 순간, 슈게이징의 세계가 펼쳐집니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1)

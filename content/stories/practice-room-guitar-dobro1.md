@@ -30,7 +30,6 @@ summary: >-
 ---
 ![도브로·레조네이터 기타·슬라이드 기법 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 도브로·레조네이터 기타·슬라이드 기법 — 음악연습실 완전 가이드
 
 도브로(Dobro)는 **금속 공명판(Resonator)으로 소리를 증폭하는 슬라이드 기타**입니다. 블루그래스(Bluegrass)와 컨트리(Country) 음악의 핵심 악기로, Jerry Douglas, Josh Graves, Mike Auldridge가 도브로의 가능성을 극대화했습니다. 일반 기타와 달리 무릎 위에 눕혀 놓고 슬라이드(바)로 연주합니다.
@@ -293,3 +292,6 @@ a(1번)-m(2번)-i(3번)-p(4번)
 
 은평구 24시간 음악연습실에서 G 오픈 튜닝을 맞추고, 첫 슬라이드 라인을 연습해보세요. 도브로의 울음소리는 반드시 당신의 음악을 바꿀 것입니다.
 
+---
+
+[기타 슬라이드 고급·보틀넥 기법 — 완전 가이드](/stories/practice-room-guitar-slide-advanced1) | [일렉 슬라이드 기타·보틀넥·Duane Allman 스타일 — 완전 가이드](/stories/practice-room-guitar-slide-electric1) | [기타 슬라이드·보틀넥 주법 — 완전 가이드](/stories/practice-room-guitar-slide1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

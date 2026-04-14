@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 모달 재즈·마일스 데이비스·모드 스케일 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 피아노 모달 재즈·마일스 데이비스·모드 스케일 — 음악연습실 완전 가이드
 
 모달 재즈(Modal Jazz)는 **코드 진행 대신 모드(Mode)를 중심으로 즉흥연주하는 재즈**입니다. Miles Davis의 "Kind of Blue" (1959)가 기점. 빠른 코드 변화 대신 하나의 모드 위에서 자유롭게 멜로디를 탐구합니다. Bill Evans, John Coltrane이 이 접근을 완성했습니다.
@@ -301,3 +300,6 @@ D 도리안 (D-E-F-G-A-B-C)
 
 은평구 24시간 음악연습실에서 도리안 모드부터 시작하세요. 8마디 동안 하나의 모드만 — 그 안에서 발견하는 멜로디가 여러분의 음악이 됩니다.
 
+---
+
+[피아노 모드 스케일·교회선법 완전 가이드](/stories/practice-room-piano-scales-modes1) | [피아노 즉흥연주·블루스 스케일 — 완전 가이드](/stories/practice-room-piano-improvisation1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1)

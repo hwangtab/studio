@@ -30,7 +30,6 @@ summary: >-
 ---
 ![베이스 펜타토닉·블루스 스케일 응용 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 베이스 펜타토닉·블루스 스케일 응용 — 음악연습실 완전 가이드
 
 **펜타토닉 스케일(Pentatonic Scale)**은 5음으로 구성된 스케일로, 전 세계 음악 장르에서 가장 보편적으로 사용됩니다. 특히 베이시스트에게 펜타토닉은 즉흥 연주(Improvisation)와 창의적인 베이스라인 작성의 기반이 됩니다. 여기에 블루노트(Blue Note)를 더한 **블루스 스케일(Blues Scale)**은 소울·블루스·재즈·록의 핵심 언어입니다. 이 가이드에서는 두 스케일의 원리부터 베이스에서의 실전 응용까지 완전히 안내합니다.
@@ -166,7 +165,10 @@ A → (G#) → G: G#는 크로매틱 패싱 노트
 - **완벽 방음** — 실험적인 즉흥 연주도 부담 없이
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

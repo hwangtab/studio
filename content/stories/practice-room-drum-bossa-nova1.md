@@ -28,7 +28,6 @@ summary: 보사노바 드럼·브라질 리듬·클라베·이파네마 패턴·
 ---
 ![보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 음악연습실 완전 가이드
 
 보사노바 드럼(Bossa Nova Drums)은 **브라질 삼바의 복잡한 리듬을 드럼 킷 하나로 압축한 예술**입니다. João Gilberto의 핑거스냅과 기타 리듬, Milton Banana의 브러시 드럼, Airto Moreira의 타악기 — 이들이 보사노바 드럼의 섬세한 세계를 보여줍니다. 조용하지만 내부적으로 복잡한 폴리리듬이 보사노바의 매력입니다.
@@ -210,3 +209,6 @@ Fmaj7 - G7 - Gm7 - Fmaj7 반복
 
 은평구 24시간 음악연습실에서 3+3+2 클라베부터 시작하세요. 리듬이 춤추기 시작하면, 이파네마의 해변이 눈앞에 펼쳐집니다.
 
+---
+
+[드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [드럼 삼바·브라질 리듬 드럼셋 — 완전 가이드](/stories/practice-room-drum-samba1) | [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 — 완전 가이드](/stories/practice-room-drum-world1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1)

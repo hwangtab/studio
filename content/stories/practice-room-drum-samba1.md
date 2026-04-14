@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 삼바·브라질 리듬 드럼셋 음악연습실 스튜디오 놀](/images/room7.webp)
 
-
 # 드럼 삼바·브라질 리듬 드럼셋 — 음악연습실 완전 가이드
 
 삼바(Samba)는 **브라질의 심장**입니다. 리우 카니발의 폭발적인 에너지, 삼바 엔호도(Samba Enredo)의 장대한 행진, 삼바 자즈(Samba Jazz)의 세련된 그루브—이 모든 삼바의 다양성을 드럼셋 하나로 표현하는 방법을 정리합니다.
@@ -241,3 +240,6 @@ X X - X X X - X
 
 은평구 24시간 음악연습실에서 처음에는 각 파트를 분리하여 연습하고, 하나씩 더해가면서 삼바 그루브를 완성해 가세요. 브라질 타악기 앙상블의 소리를 귀로 충분히 듣고 나서 드럼셋으로 재현하는 것이 가장 효과적인 방법입니다.
 
+---
+
+[보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

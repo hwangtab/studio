@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 카포·키 변환 활용법 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 기타 카포·키 변환 활용법 — 음악연습실 완전 가이드
 
 **카포(Capo)**는 기타 지판에 클립처럼 고정하는 소형 장치로, 모든 현의 음정을 동시에 올려줍니다. 카포는 단순히 음을 올리는 것이 아니라, 기타리스트에게 다양한 코드 보이싱과 독특한 음색을 제공합니다. 단 하나의 카포로 어렵던 코드를 쉽게 만들고, 같은 곡도 완전히 다른 음색으로 연주할 수 있습니다. 이 가이드에서는 카포의 원리부터 실전 활용법까지 완전히 안내합니다.
@@ -149,7 +148,10 @@ summary: >-
 - **완벽 방음** — 다양한 키와 코드 자유롭게 시도
 - **연신내역 5분**
 
-
 ---
 
 *관련 아티클:*
+
+---
+
+[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

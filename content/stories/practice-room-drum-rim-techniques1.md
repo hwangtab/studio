@@ -28,7 +28,6 @@ summary: '스네어 림샷, 크로스스틱, 림 클릭의 정확한 기법과 �
 ---
 ![드럼 림샷·크로스스틱·림 기법 완전 가이드 음악연습실 스튜디오 놀](/images/room2.webp)
 
-
 # 드럼 림샷·크로스스틱·림 기법 완전 가이드 — 음악연습실
 
 스네어 드럼은 가장 다양한 소리를 내는 타악기 중 하나입니다. **림샷, 크로스스틱(사이드스틱), 오픈 림샷, 림 클릭**—이 기법들은 각각 완전히 다른 음색을 만들어내며 장르와 상황에 따라 선택적으로 활용됩니다. 이 가이드에서는 각 림 기법의 원리와 응용을 체계적으로 안내합니다.
@@ -195,3 +194,6 @@ summary: '스네어 림샷, 크로스스틱, 림 클릭의 정확한 기법과 �
 
 은평구 24시간 음악연습실에서 다양한 림 기법을 집중 연습하고 장르에 맞는 스네어 사운드를 마스터하세요.
 
+---
+
+[드럼 스네어 테크닉·다이나믹 컨트롤 — 완전 가이드](/stories/practice-room-drum-snare-techniques1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

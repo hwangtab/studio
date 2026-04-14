@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 오픈 코드·소노리티 기법 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 기타 오픈 코드·소노리티 기법 — 음악연습실 완전 가이드
 
 오픈 코드와 소노리티(Sonority)는 **기타만이 만들 수 있는 특별한 음향 세계**입니다. 열린 현이 울리며 만들어내는 배음, Add9와 Sus 코드의 개방적인 느낌, Joni Mitchell과 Nick Drake가 즐겨 쓰던 변형 튜닝—이것들이 어쿠스틱 기타의 고유한 소노리티를 만듭니다.
@@ -262,3 +261,6 @@ D/F#: 2-0-0-2-3-2
 
 은평구 24시간 음악연습실에서 어쿠스틱 기타의 자연 울림으로 소노리티를 탐구하세요. 전기 증폭 없이 순수한 어쿠스틱 소리에서 시작하는 것이 핵심입니다.
 
+---
+
+[기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 올터네이트 튜닝·DADGAD·오픈 코드 탐구 — 완전 가이드](/stories/practice-room-guitar-alternate-tuning1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1)

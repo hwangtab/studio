@@ -30,7 +30,6 @@ summary: >-
 ---
 ![기타 펑크 리듬·치킨 피킹·클린 그루브 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 기타 펑크 리듬·치킨 피킹·클린 그루브 — 음악연습실 완전 가이드
 
 펑크 기타는 기타의 **리듬 악기로서의 완성형**입니다. 단순히 코드를 긁는 것이 아니라, 16분음표 분할과 뮤트, 싱코페이션을 통해 베이스·드럼과 함께 완벽한 리듬 앙상블을 만들어냅니다. Nile Rodgers, Prince, John Frusciante의 펑크 리듬 기타를 분석하며 그루브를 체계적으로 익혀봅니다.
@@ -233,3 +232,6 @@ Am7 - Dm7 - G9 - Cmaj7
 
 은평구 24시간 음악연습실에서 메트로놈과 함께 뮤트 스트럼부터 시작하세요. 처음엔 느리게, 그루브가 손에 익으면 템포를 올리는 것이 핵심입니다. Nile Rodgers처럼—단순하게, 그러나 완벽하게.
 
+---
+
+[기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 — 완전 가이드](/stories/practice-room-guitar-tremolo-picking1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

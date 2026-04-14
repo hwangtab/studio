@@ -28,7 +28,6 @@ summary: '벨칸토 발성의 핵심: 포르타멘토, 레가토, 마에스트�
 ---
 ![보컬 오페라 창법·벨칸토 발성 기초 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 보컬 오페라 창법·벨칸토 발성 기초 — 음악연습실 완전 가이드
 
 오페라 창법, 특히 **벨칸토(Bel Canto — 아름다운 노래)** 기법은 모든 보컬 장르의 기초입니다. 팝 가수도, 뮤지컬 배우도, 재즈 보컬리스트도—훌륭한 발성의 뿌리에는 항상 벨칸토의 원리가 있습니다. 오페라 기법을 일반 음악 연습에 어떻게 활용할 수 있는지 체계적으로 안내합니다.
@@ -211,3 +210,6 @@ A - E - I - O - U (하나의 음으로 각 모음 전환)
 
 은평구 24시간 음악연습실에서 부담 없이 큰 소리로 오페라 발성을 연습해보세요. 방음이 완벽한 공간에서 마음껏 성대를 열 수 있습니다.
 
+---
+
+[보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1) | [뮤지컬 씨어터 보컬·브로드웨이·레미제라블·막강한 드라마틱 발성 — 완전 가이드](/stories/practice-room-vocal-musical-theatre1) | [보컬 레지스터·음역별 발성 전략 — 완전 가이드](/stories/practice-room-vocal-registers1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1)

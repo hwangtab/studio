@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 음악연습실 스튜디오 놀](/images/room5.webp)
 
-
 # 드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 — 음악연습실 완전 가이드
 
 월드 드러밍(World Drumming)은 **전 세계의 다양한 리듬 전통을 드럼셋에 통합**하는 접근법입니다. 아프리카의 폴리리듬, 쿠반의 클라베, 인도의 탈라, 브라질의 삼바 — 이 리듬들이 현대 드러밍을 더 풍부하게 만들었습니다. Tony Allen의 아프로비트, Tito Puente의 쿠반 재즈가 드럼 세계를 확장했습니다.
@@ -239,3 +238,6 @@ Carlos Santana의 드러머 Michael Shrieve:
 
 은평구 24시간 음악연습실에서 12/8 아프리카 패턴부터 시작하세요. 삼중 폴리리듬이 몸에 스며들면, 그루브가 완전히 달라집니다.
 
+---
+
+[드럼 아프로비트·월드 그루브 — 완전 가이드](/stories/practice-room-drum-afrobeat1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 폴리리듬 심화·아프리카 리듬 — 완전 가이드](/stories/practice-room-drum-polyrhythm-advanced1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1)

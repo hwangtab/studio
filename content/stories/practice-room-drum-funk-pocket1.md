@@ -30,7 +30,6 @@ summary: >-
 ---
 ![드럼 펑크 포켓·타이트 그루브·James Brown 스타일 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 음악연습실 완전 가이드
 
 펑크 포켓(Funk Pocket)은 **밴드 전체가 함께 안착하는 리듬의 홈**입니다. James Brown의 "The Godfather of Soul"이라는 칭호는 드러머 Clyde Stubblefield 없이는 불가능했습니다. "Funky Drummer"의 그 타이트한 스네어 패턴, "Sex Machine"의 강박 1박 킥 — 이것이 펑크 드러밍의 심장입니다.
@@ -248,3 +247,6 @@ Questlove(The Roots):
 
 은평구 24시간 음악연습실에서 킥+스네어 기본부터 시작하세요. 타이트한 16분음표 하이햇이 손발에 익으면, 포켓이 느껴지기 시작합니다.
 
+---
+
+[재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드](/stories/practice-room-drum-jazz-funk1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 완전 가이드](/stories/practice-room-drum-fusion1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1)

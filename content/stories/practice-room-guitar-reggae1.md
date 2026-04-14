@@ -30,7 +30,6 @@ summary: >-
 ---
 ![레게 기타·스카·록스테디·오프비트 리듬 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 레게 기타·스카·록스테디·오프비트 리듬 — 음악연습실 완전 가이드
 
 레게 기타(Reggae Guitar)는 **업비트(upbeat)의 예술**입니다. 1, 2, 3, 4박이 아닌 2박 반과 4박 반에서 터지는 클린 코드 스트로크 — 이것이 레게의 심장입니다. Bob Marley의 "No Woman No Cry", Peter Tosh의 "Legalize It", The Wailers의 리듬 기타 — 레게 기타는 단순하지만 완벽한 그루브의 언어입니다.
@@ -265,3 +264,6 @@ E 코드 업스트로크 강하게
 
 은평구 24시간 음악연습실에서 E 코드 업스트로크부터 시작하세요. 메트로놈 클릭이 뒤로 밀리는 순간, 자메이카의 그루브가 찾아옵니다.
 
+---
+
+[기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 블루스 리듬·셔플 패턴 — 완전 가이드](/stories/practice-room-guitar-blues-rhythm1) | [보사노바 기타·삼바 리듬·João Gilberto 스타일 — 완전 가이드](/stories/practice-room-guitar-bossa1)

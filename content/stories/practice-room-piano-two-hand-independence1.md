@@ -28,7 +28,6 @@ summary: '피아노 양손 독립·폴리리듬·3:2·4:3 리듬 분할·손 협
 ---
 ![피아노 양손 독립·폴리리듬·손 협응 훈련 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 피아노 양손 독립·폴리리듬·손 협응 훈련 — 음악연습실 완전 가이드
 
 피아노 양손 독립(Hand Independence)은 **왼손과 오른손이 각자의 리듬·멜로디·다이나믹을 독립적으로 연주하는 능력**입니다. Oscar Peterson의 왼손 보행 베이스 + 오른손 빠른 솔로, Erroll Garner의 오케스트라 같은 피아노 — 양손 독립은 재즈·클래식 모두에서 최고 수준의 피아노 기술입니다.
@@ -234,3 +233,6 @@ Op.10 No.1: 오른손 넓은 아르페지오 + 왼손 멜로디
 
 은평구 24시간 음악연습실에서 4분음표 + 8분음표부터 시작하세요. 두 손이 각자의 목소리로 노래하기 시작하면, 피아노가 오케스트라가 됩니다.
 
+---
+
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 클래식 테크닉·핑거 독립성 훈련 — 완전 가이드](/stories/practice-room-piano-classical-technique1) | [피아노 귀 훈련·청음 완전 가이드](/stories/practice-room-piano-ear-training1)

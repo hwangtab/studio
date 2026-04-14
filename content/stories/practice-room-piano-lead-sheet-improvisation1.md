@@ -28,7 +28,6 @@ summary: 리드시트 코드 기호 읽기·즉흥 반주법·재즈 리드시�
 ---
 ![피아노 리드시트 즉흥반주·코드 읽기 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 피아노 리드시트 즉흥반주·코드 읽기 — 음악연습실 완전 가이드
 
 리드시트(Lead Sheet)는 **멜로디와 코드 기호만 있는 악보**입니다. 어떻게 반주할지는 연주자가 즉흥으로 결정합니다. 재즈 스탠다드, 팝 곡, 찬양 반주—리드시트를 읽고 즉흥반주할 수 있으면 어떤 상황에서도 음악가로 활약할 수 있습니다.
@@ -231,3 +230,6 @@ Fmaj7 - G7 - Gm7 - C7
 
 은평구 24시간 음악연습실에서 다양한 리드시트로 즉흥반주를 탐구하세요. 처음에는 단순하게, 점점 복잡하게—자신만의 피아노 언어를 개발하는 여정입니다.
 
+---
+
+[피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리하모나이제이션·화성 재창조 — 완전 가이드](/stories/practice-room-piano-reharmonization1) | [피아노 스트라이드 고급 테크닉 — 완전 가이드](/stories/practice-room-piano-stride-advanced1)

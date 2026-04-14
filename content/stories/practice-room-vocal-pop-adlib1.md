@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보컬 팝 애드립·스타일링 기법 음악연습실 스튜디오 놀](/images/room8.webp)
 
-
 # 보컬 팝 애드립·스타일링 기법 — 음악연습실 완전 가이드
 
 팝 보컬 애드립(Ad lib)은 **악보에 없는 즉흥적인 보컬 장식**입니다. 멜로디 끝에 작은 필인, 고음 절정에서의 감탄사, 가사 사이의 "oh", "yeah"—이 작은 스타일링이 보컬을 살아있게 만들고 개성을 만들어냅니다. Beyoncé, Ariana Grande, Bruno Mars의 애드립 기법을 분석합니다.
@@ -258,3 +257,6 @@ C-E-G-C-E (코드 톤 위아래)
 
 은평구 24시간 음악연습실에서 실수를 두려워하지 않고 자신만의 애드립 언어를 만들어보세요. 개성은 연습에서 나옵니다.
 
+---
+
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

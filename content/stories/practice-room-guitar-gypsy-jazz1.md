@@ -30,7 +30,6 @@ summary: >-
 ---
 ![집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 음악연습실 스튜디오 놀](/images/room4.webp)
 
-
 # 집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 — 음악연습실 완전 가이드
 
 집시 재즈 기타(Gypsy Jazz Guitar)는 **유럽 집시 음악과 미국 재즈가 융합된 독특한 스타일**입니다. Django Reinhardt — 두 손가락만 사용하면서 기타 역사상 가장 빠른 솔로를 연주한 레전드. Hot Club de France의 라 뽕프 리듬, Stéphane Grappelli와의 바이올린-기타 듀엣 — 집시 재즈는 재즈 기타의 가장 낭만적인 형태입니다.
@@ -213,3 +212,6 @@ Django가 사용한 D-hole 기타
 
 은평구 24시간 음악연습실에서 라 뽕프 리듬부터 시작하세요. "쿵-차-쿵-차" 리듬이 자연스러워지는 날, 파리의 카페가 눈앞에 펼쳐집니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

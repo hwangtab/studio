@@ -30,7 +30,6 @@ summary: >-
 ---
 ![보사노바 기타·삼바 리듬·João Gilberto 스타일 음악연습실 스튜디오 놀](/images/room3.webp)
 
-
 # 보사노바 기타·삼바 리듬·João Gilberto 스타일 — 음악연습실 완전 가이드
 
 보사노바(Bossa Nova)는 **삼바 리듬과 쿨 재즈가 만나 탄생한 브라질 음악**입니다. João Gilberto가 기타 하나로 노래하는 방식 — 조용하고 섬세하게, 리듬과 코드와 멜로디를 동시에 — 이것이 보사노바 기타의 혁명이었습니다. Tom Jobim의 화성과 João의 기타 리듬이 "Girl from Ipanema", "Garota de Ipanema"를 만들었습니다.
@@ -242,3 +241,6 @@ Gm7 - C7 - Fmaj7
 
 은평구 24시간 음악연습실에서 첫 보사노바 리듬 패턴을 익혀보세요. B-D-U-D-U가 손에 익으면, 이파네마 해변의 바람이 느껴집니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

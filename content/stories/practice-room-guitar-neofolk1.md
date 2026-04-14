@@ -30,7 +30,6 @@ summary: >-
 ---
 ![네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 — 음악연습실 완전 가이드
 
 네오포크 기타(Neofolk Guitar)는 **전통 포크 음악의 자연스러운 어쿠스틱 사운드에 현대적 감성과 실험적 요소를 더한 기타 스타일**입니다. Bon Iver의 오픈 튜닝 아르페지오, Iron and Wine의 섬세한 핑거피킹, Fleet Foxes의 화음 풍부한 포크 기타 — 네오포크는 어쿠스틱 기타의 가장 서정적인 현대 형태입니다.
@@ -221,3 +220,6 @@ D 코드 오픈 튜닝
 
 은평구 24시간 음악연습실에서 Am 핑거피킹부터 시작하세요. 손가락이 현 위에서 노래하기 시작하면, 네오포크의 세계가 열립니다.
 
+---
+
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1)

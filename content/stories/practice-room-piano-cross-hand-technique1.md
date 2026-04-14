@@ -28,7 +28,6 @@ summary: 피아노 크로스핸드·손 교차 기법·도약·클래식 기교.
 ---
 ![피아노 크로스핸드 테크닉·클래식 기교 음악연습실 스튜디오 놀](/images/room6.webp)
 
-
 # 피아노 크로스핸드 테크닉·클래식 기교 — 음악연습실 완전 가이드
 
 크로스핸드(Cross-Hand) 테크닉은 **두 손이 교차하며 피아노 전체 음역을 자유롭게 활용**하는 기법입니다. 왼손이 오른손 위를 넘어가거나 오른손이 왼손 아래를 통과하며 드라마틱한 음향 효과를 만들어냅니다. Chopin, Liszt, Scarlatti의 고급 기교를 탐구합니다.
@@ -235,3 +234,6 @@ R-H-R-H-R-H 교대 (32분음표 또는 더 빠르게)
 
 은평구 24시간 음악연습실에서 느리게, 정확하게 크로스핸드를 연습하세요. 속도는 정확성 다음입니다.
 
+---
+
+[피아노 클래식 테크닉·핑거 독립성 훈련 — 완전 가이드](/stories/practice-room-piano-classical-technique1) | [피아노 크로스핸드·손 교차 연주 — 완전 가이드](/stories/practice-room-piano-crosshand1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1)

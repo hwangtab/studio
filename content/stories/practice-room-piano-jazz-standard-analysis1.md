@@ -30,7 +30,6 @@ summary: >-
 ---
 ![피아노 재즈 스탠다드 분석·All the Things You Are 음악연습실 스튜디오 놀](/images/room1.webp)
 
-
 # 피아노 재즈 스탠다드 분석·All the Things You Are — 음악연습실 완전 가이드
 
 "All the Things You Are"는 **재즈 스탠다드의 교과서**입니다. Jerome Kern이 1939년에 작곡한 이 곡은 복잡한 전조(Modulation)와 풍부한 화성 언어로 인해 재즈 뮤지션들의 필수 학습 곡이 되었습니다. 이 곡을 피아노로 완전히 분석하고 연주하는 방법을 단계적으로 안내합니다.
@@ -221,3 +220,6 @@ Abmaj7: C - G
 
 은평구 24시간 음악연습실에서 충분한 시간을 갖고 단계적으로 접근하세요. 32마디의 코드를 외우는 것부터—그것이 모든 것의 시작입니다.
 
+---
+
+[피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1) | [피아노 리하모나이제이션·화성 재창조 — 완전 가이드](/stories/practice-room-piano-reharmonization1) | [피아노 스트라이드 고급 테크닉 — 완전 가이드](/stories/practice-room-piano-stride-advanced1) | [피아노 스트라이드 입문·왼손 점프 기초 — 완전 가이드](/stories/practice-room-piano-stride-beginner1)
