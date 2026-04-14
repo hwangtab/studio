@@ -1,5 +1,5 @@
 ---
-title: 음정 교정 도구 완전 가이드 — Melodyne vs Auto-Tune 차이와 보컬 피치 교정 방법
+title: 음정 교정 도구 완전 가이드
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
 category: 강좌

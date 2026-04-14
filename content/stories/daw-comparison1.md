@@ -1,5 +1,5 @@
 ---
-title: DAW 비교 완전 가이드 — Ableton·Logic Pro·Pro Tools·FL Studio·GarageBand 차이
+title: DAW 비교 완전 가이드
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
 category: 강좌

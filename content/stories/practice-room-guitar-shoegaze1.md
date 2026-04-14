@@ -1,5 +1,5 @@
 ---
-title: 슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 — 완전 가이드
+title: 슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive
 date: '2026-04-08'
 tags:
   - 음악 연습실

@@ -311,7 +311,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       )
     : undefined;
 
-  const isThinContent = contentToProcess.replace(/\s+/g, '').length < 500;
+  const isThinContent = contentToProcess.replace(/\s+/g, '').length < 1000;
 
   const storyDetail: StoryDetail = {
     ...baseStory,

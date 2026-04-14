@@ -1,5 +1,5 @@
 ---
-title: '샘플레이트·비트뎁스 완전 가이드 — 44.1kHz vs 48kHz, 16bit vs 24bit'
+title: 샘플레이트·비트뎁스 완전 가이드
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
 category: 녹음 가이드
