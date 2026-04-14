@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 7: มิกซ์�
 date: 2025-11-18
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "SessionPrep", "SessionPrep", "Workflow"]
+tags: ["Mixing", "บทเรียน", "SessionPrep", "Workflow"]
 ---
 ![สายเคเบิลรก ๆ และแพตช์เบย์ที่เป็นระเบียบ](/images/service3.webp)
 

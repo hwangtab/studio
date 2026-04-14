@@ -83,6 +83,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
         ]}
         includeSchema={true}
         webPageType="AboutPage"
+        canonical={`/${locale}/about`}
         reviewItems={reviewsData.filter((r) => r.categoryKey === 'production' || r.categoryKey === 'mixing')}
         schema={[howToSchema, serviceListSchema]}
       />
@@ -102,6 +103,10 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
           imageAlt: t('about.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/40 via-transparent to-black/20",
+          breadcrumbItems: [
+            { name: t('nav.home'), path: `/${locale}` },
+            { name: t('nav.about'), path: `/${locale}/about` },
+          ],
         }}
       />
 

@@ -2,7 +2,7 @@
 title: "ASMR 녹음 방법 완전 가이드 — ASMR 제작을 위한 마이크·환경·편집 기초"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "가이드"
+category: "녹음 가이드"
 tags: ["ASMR 녹음", "ASMR 마이크", "ASMR 제작", "ASMR 방법", "바이노럴 마이크", "ASMR 환경", "ASMR 편집"]
 thumbnail: "/images/service6.webp"
 summary: "ASMR 콘텐츠를 만들려면 조용한 환경, 민감한 마이크, 적절한 편집이 핵심입니다. ASMR에 적합한 마이크 종류, 녹음 공간 셋업, 편집 기초를 정리합니다."

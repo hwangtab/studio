@@ -44,6 +44,9 @@ const nextConfig = {
     ],
     minimumCacheTTL: 31536000, // 1 year for external images
     formats: ['image/avif', 'image/webp'],
+    // Tailwind breakpoints 기반 최적 이미지 사이즈 생성
+    deviceSizes: [640, 768, 1024, 1280, 1536, 1920],
+    imageSizes: [16, 32, 64, 96, 128, 256, 384],
   },
 
   // Experimental optimizations
@@ -57,6 +60,13 @@ const nextConfig = {
 
   async headers() {
     return [
+      // API 라우트 크롤링 차단
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
       // Sitemap & robots.txt Content-Type 헤더
       {
         source: '/sitemap(-[0-9]+)?.xml',

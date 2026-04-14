@@ -2,7 +2,7 @@
 title: "보컬 새추레이션 완전 가이드 — 하모닉 디스토션으로 보컬 존재감 강화"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["보컬 새추레이션", "Saturation 보컬", "하모닉 디스토션", "보컬 따뜻함", "테이프 새추레이션", "튜브 새추레이션", "보컬 믹싱"]
 thumbnail: "/images/recording16.webp"
 summary: "보컬 새추레이션 완전 가이드입니다. Tape·Tube·Transformer 새추레이션 타입 비교, 보컬 존재감과 따뜻함 강화 설정, 과도한 새추레이션 주의사항, 플러그인 비교를 정리합니다."

@@ -113,6 +113,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         ]}
         includeSchema={true}
         webPageType="ItemPage"
+        canonical={`/${locale}/studio-info`}
         reviewItems={reviewsData}
         faqItems={studioFaqData}
         schema={recordingStudioSchema}
@@ -126,6 +127,10 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         imageAlt={t('studioInfo.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+        breadcrumbItems={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.equipment'), path: `/${locale}/studio-info` },
+        ]}
       />
 
       {/* 스튜디오 소개 섹션 */}
@@ -245,6 +250,12 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/lesson`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>

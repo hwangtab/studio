@@ -2,7 +2,7 @@
 title: "AI 마스터링 완전 가이드 — LANDR·eMastered·Ozone AI 비교와 한계"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["AI 마스터링", "LANDR", "eMastered", "Ozone AI", "자동 마스터링", "AI vs 전문 마스터링", "스트리밍 마스터링"]
 thumbnail: "/images/recording2.webp"
 summary: "AI 마스터링 완전 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점, 전문 마스터링 엔지니어가 필요한 경우를 정리합니다."

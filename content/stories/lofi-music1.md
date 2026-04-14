@@ -2,7 +2,7 @@
 title: "Lo-Fi 음악 제작 완전 가이드 — Lo-Fi Hip Hop·Chillhop 제작 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["Lo-Fi 음악 제작", "Lo-Fi Hip Hop", "Chillhop", "Lo-Fi 비트 만들기", "Lo-Fi 사운드", "Lo-Fi 믹싱", "Lo-Fi 마스터링"]
 thumbnail: "/images/pcw.webp"
 summary: "Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi 사운드의 핵심 요소·Lo-Fi 비트 제작 방법·Lo-Fi 믹싱·마스터링·Lo-Fi 음악으로 수익 창출까지 정리합니다."

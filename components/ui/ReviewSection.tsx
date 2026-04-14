@@ -38,48 +38,67 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                 {reviews.map((review, index) => (
-                    <BaseCard
+                    <div
                         key={`${review.author}-${review.categoryKey}-${review.datePublished}`}
-                        variant="default"
-                        delay={index * 0.08}
-                        className="p-8 h-full relative group"
+                        itemScope
+                        itemType="https://schema.org/Review"
                     >
-                        <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors" aria-hidden="true">
-                            <Quote size={60} />
+                        <meta itemProp="datePublished" content={review.datePublished} />
+                        <div itemProp="itemReviewed" itemScope itemType="https://schema.org/LocalBusiness">
+                            <meta itemProp="name" content="Studio NOL" />
                         </div>
-
-                        <div className="relative z-10">
-                            <div
-                                className="flex items-center mb-4"
-                                aria-label={t('reviewSection.ratingAria', {
-                                    rating: review.rating,
-                                    defaultValue: `평점 ${review.rating}점`,
-                                })}
-                            >
-                                {FIVE_STARS.slice(0, review.rating).map((i) => (
-                                    <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" aria-hidden="true" />
-                                ))}
+                        <BaseCard
+                            variant="default"
+                            delay={index * 0.08}
+                            className="p-8 h-full relative group"
+                        >
+                            <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors" aria-hidden="true">
+                                <Quote size={60} />
                             </div>
 
-                            <p className={`typo-card-body text-lg leading-relaxed mb-8 font-pretendard ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
-                                &quot;{review.content}&quot;
-                            </p>
-
-                            <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
-                                <div>
-                                    <span className="block font-bold typo-card-title text-base mb-1">
-                                        {review.author}
-                                    </span>
-                                    <span className="text-sm text-primary font-semibold">
-                                        {review.category}
-                                    </span>
+                            <div className="relative z-10">
+                                <div
+                                    itemProp="reviewRating"
+                                    itemScope
+                                    itemType="https://schema.org/Rating"
+                                    className="flex items-center mb-4"
+                                    aria-label={t('reviewSection.ratingAria', {
+                                        rating: review.rating,
+                                        defaultValue: `평점 ${review.rating}점`,
+                                    })}
+                                >
+                                    <meta itemProp="ratingValue" content={String(review.rating)} />
+                                    <meta itemProp="bestRating" content="5" />
+                                    {FIVE_STARS.slice(0, review.rating).map((i) => (
+                                        <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" aria-hidden="true" />
+                                    ))}
                                 </div>
-                                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary" aria-hidden="true">
-                                    <MessageSquare size={20} />
+
+                                <p itemProp="reviewBody" className={`typo-card-body text-lg leading-relaxed mb-8 font-pretendard ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                                    &quot;{review.content}&quot;
+                                </p>
+
+                                <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
+                                    <div>
+                                        <span
+                                            itemProp="author"
+                                            itemScope
+                                            itemType="https://schema.org/Person"
+                                            className="block font-bold typo-card-title text-base mb-1"
+                                        >
+                                            <span itemProp="name">{review.author}</span>
+                                        </span>
+                                        <span className="text-sm text-primary font-semibold">
+                                            {review.category}
+                                        </span>
+                                    </div>
+                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary" aria-hidden="true">
+                                        <MessageSquare size={20} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </BaseCard>
+                        </BaseCard>
+                    </div>
                 ))}
             </div>
         </Section >

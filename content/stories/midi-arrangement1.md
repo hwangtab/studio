@@ -2,7 +2,7 @@
 title: "MIDI 편곡 완전 가이드 — DAW에서 MIDI로 완성하는 음악 제작"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["MIDI 편곡", "MIDI 음악 제작", "DAW 편곡", "MIDI 프로그래밍", "가상악기 편곡", "MIDI 보컬 반주", "음악 편곡 기초"]
 thumbnail: "/images/studio2.webp"
 summary: "MIDI 편곡 완전 가이드입니다. DAW에서 MIDI를 이용해 음악을 제작하는 기초 원리, 드럼·베이스·코드·멜로디 파트 배치, 가상악기 활용, 보컬 반주 제작 방법을 정리합니다."

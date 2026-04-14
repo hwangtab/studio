@@ -2,7 +2,7 @@
 title: "MIDI 작곡·편곡 완전 가이드 — DAW로 MIDI 시퀀싱·편곡하는 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음악 프로덕션 가이드"
+category: "음악 제작"
 tags: ["MIDI 작곡", "MIDI 편곡", "MIDI 시퀀싱", "DAW MIDI", "MIDI 드럼", "MIDI 베이스", "MIDI 활용법"]
 thumbnail: "/images/recording6.webp"
 summary: "MIDI 작곡·편곡 완전 가이드입니다. DAW에서 MIDI 시퀀싱, MIDI 드럼·베이스·멜로디 입력, 피아노롤 활용, 벨로시티·모듈레이션 표현, MIDI 편곡 팁을 정리합니다."

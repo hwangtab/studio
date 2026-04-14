@@ -2,7 +2,7 @@
 title: "보컬 편집 완전 가이드 — DAW에서 보컬 다듬기와 컴핑"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["보컬 편집", "보컬 컴핑", "DAW 보컬", "피치 교정", "타이밍 교정", "보컬 클린업", "멜로다인"]
 thumbnail: "/images/recording2.webp"
 summary: "보컬 편집 완전 가이드입니다. 컴핑(Comping), 피치 수정(Melodyne·Auto-Tune), 타이밍 교정(워프), 브레스 처리, 팝 노이즈 클리닝 방법을 정리합니다."

@@ -2,7 +2,7 @@
 title: "LA-2A 컴프레서 완전 가이드 — 클래식 Optical 컴프레서 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["LA-2A 컴프레서", "Optical 컴프레서", "LA-2A 보컬", "LA-2A 설정", "유니버설오디오 LA-2A", "LA-2A 플러그인", "클래식 컴프레서"]
 thumbnail: "/images/recording4.webp"
 summary: "LA-2A 컴프레서 완전 가이드입니다. LA-2A 파라미터 이해·LA-2A 특성 — 자동 시간 상수·기본 보컬 설정·베이스·어쿠스틱 기타 설정·1176 + LA-2A 체인 (Dueling Compressors)·LA-2A 플러그인 에뮬레이션 비교까지 정리합니다."

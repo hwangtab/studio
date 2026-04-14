@@ -2,7 +2,7 @@
 title: "오케스트라 샘플링 완전 가이드 — 스트링·브라스·목관 샘플 라이브러리 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["오케스트라 샘플링", "오케스트라 VST", "Spitfire Audio", "스트링 샘플", "브라스 샘플", "오케스트라 미디", "영화 음악 제작"]
 thumbnail: "/images/recording16.webp"
 summary: "오케스트라 샘플링 완전 가이드입니다. Spitfire·EastWest·NI 등 주요 샘플 라이브러리 비교, 스트링·브라스·목관 레이어링, 오케스트라 믹싱·팬닝, MIDI 표현력 향상법을 정리합니다."

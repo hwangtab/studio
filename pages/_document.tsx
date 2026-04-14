@@ -30,6 +30,9 @@ class MyDocument extends Document<Props> {
           <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />
           {/* Resource hints */}
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+          <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+          <link rel="dns-prefetch" href="https://analytics.google.com" />
           <link rel="dns-prefetch" href="https://api.emailjs.com" />
           <link rel="dns-prefetch" href="https://vercel.live" />
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />

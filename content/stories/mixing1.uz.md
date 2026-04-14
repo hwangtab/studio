@@ -3,7 +3,7 @@ title: "Miks kursi - 1-qism: Miksni oshpazlikdan boshlash"
 date: 2025-11-12
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Dars", "Boshlovchi", "Mixing", "Kirish"]
+tags: ["Mixing", "Dars", "Boshlovchi", "Kirish"]
 ---
 ![Miks pulti va studio ko'rinishi](/images/console.webp)
 

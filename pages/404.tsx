@@ -31,7 +31,7 @@ const NotFoundPage: NextPage = () => {
       <SEO
         title={t('notFound.seoTitle')}
         description="404 Not Found"
-        robots="noindex, nofollow"
+        robots="noindex, nofollow, noarchive, nosnippet"
         disableCanonicalAndAlternates
       />
 

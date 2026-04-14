@@ -2,7 +2,7 @@
 title: "보컬 EQ 완전 가이드 — 주파수 대역별 역할과 믹싱 실전 세팅"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "믹싱 가이드"
+category: "믹싱·마스터링"
 tags: ["보컬 EQ", "이퀄라이저 설정", "EQ 믹싱", "보컬 주파수", "믹싱 EQ", "보컬 믹싱 EQ", "EQ 가이드"]
 thumbnail: "/images/portfolio5.webp"
 summary: "보컬 믹싱을 위한 EQ 완전 가이드입니다. 주파수 대역별 역할, 컷·부스트 기법, 파라메트릭 EQ 세팅, 장르별 보컬 EQ 전략을 정리합니다."

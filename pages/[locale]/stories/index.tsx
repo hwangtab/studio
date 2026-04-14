@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +26,7 @@ interface StoriesPageProps {
   stories: Story[];
 }
 
-const storyCategoryKeys = ['news', 'lesson', 'feedback', 'region', 'instrument', 'music-guide'] as const;
+const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'] as const;
 
 const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
   const router = useRouter();
@@ -36,10 +37,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
 
   const storiesItemListSchema = React.useMemo(() => generateItemListSchema(
-    stories.slice(0, 20).map((story) => ({
+    stories.slice(0, 50).map((story) => ({
       id: story.slug,
       name: story.title,
-      url: `/${locale}/stories/${story.slug}`,
+      url: `${siteUrl}/${locale}/stories/${story.slug}`,
       image: story.thumbnail ?? undefined,
       description: story.summary,
     })),
@@ -104,6 +105,15 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
     }
   };
 
+  const canonicalUrl = `/${locale}/stories`;
+
+  const prevUrl = currentPage > 1
+    ? `${siteUrl}/${locale}/stories${currentPage - 1 > 1 ? `?page=${currentPage - 1}` : ''}`
+    : null;
+  const nextUrl = currentPage < totalPages
+    ? `${siteUrl}/${locale}/stories?page=${currentPage + 1}`
+    : null;
+
   return (
     <>
       <SEO
@@ -117,11 +127,18 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         includeSchema
         webPageType="CollectionPage"
         schema={storiesItemListSchema}
+        canonical={canonicalUrl}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },
         ]}
       />
+      {(prevUrl || nextUrl) && (
+        <Head>
+          {prevUrl && <link rel="prev" href={prevUrl} />}
+          {nextUrl && <link rel="next" href={nextUrl} />}
+        </Head>
+      )}
       <ImageHero
         locale={locale}
         priority
@@ -131,6 +148,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         imageAlt={t('stories.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+        breadcrumbItems={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.stories'), path: `/${locale}/stories` },
+        ]}
       />
       <Section variant="default">
         <div ref={sectionRef}>

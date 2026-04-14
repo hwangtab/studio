@@ -2,7 +2,7 @@
 title: "음원 파일 형식 완전 가이드 — WAV·MP3·FLAC·AAC 차이와 선택법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["음원 파일 형식", "WAV MP3 차이", "FLAC 오디오", "음원 형식 선택", "비트레이트", "오디오 품질", "마스터 파일 형식"]
 thumbnail: "/images/studio5.webp"
 summary: "음원 파일 형식 완전 가이드입니다. WAV·MP3·FLAC·AAC·AIFF의 차이점, 용도별 최적 형식 선택, 녹음·믹싱·유통별 권장 스펙, 샘플레이트·비트뎁스 이해를 정리합니다."

@@ -2,7 +2,7 @@
 title: "틱톡 음악 업로드·보컬 활동 가이드 — 팔로워 없어도 노출되는 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "SNS 마케팅"
+category: "음악 비즈니스"
 tags: ["틱톡 음악", "틱톡 보컬", "틱톡 커버", "TikTok 음악 업로드", "틱톡 가수", "틱톡 노래", "보컬 틱톡"]
 thumbnail: "/images/studio2.webp"
 summary: "틱톡(TikTok)에서 보컬 영상을 업로드하고 팔로워를 늘리는 방법, 음악 저작권 처리, 알고리즘 활용 전략을 안내합니다."

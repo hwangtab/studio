@@ -9,9 +9,9 @@ const HEIGHT = 630;
 export default async function handler(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const title = searchParams.get('title') || 'Studio NOL';
-    const category = searchParams.get('category') || '';
-    const date = searchParams.get('date') || '';
+    const title = (searchParams.get('title') || 'Studio NOL').substring(0, 100);
+    const category = (searchParams.get('category') || '').substring(0, 40);
+    const date = (searchParams.get('date') || '').substring(0, 20);
     // locale 파라미터 — SNS 플랫폼이 언어별로 별도 OG 이미지를 캐시하도록 URL 구분
     const _locale = searchParams.get('locale') || 'ko';
     void _locale; // 현재는 URL 분리 목적, 향후 로케일별 렌더링 확장 가능

@@ -198,7 +198,7 @@
     "checkNotices": "Check our notices",
     "seo": {
       "title": "Contact, Booking & Directions | Studio NOL",
-      "description": "Contact Studio NOL for recording, mixing, and mastering inquiries. Reach us via KakaoTalk or email — 5 min from Yeonsinnae Station.",
+      "description": "Contact Studio NOL for recording, mixing, and mastering inquiries. Reach us via KakaoTalk or email — 5 min from Yeonsinnae Station. Free quote, 24h reply.",
       "keywords": "Studio NOL contact, music production inquiry, recording reservation, mixing request, studio location, KakaoTalk consultation, production quote"
     }
   },
@@ -269,7 +269,7 @@
     "mobileMenu": "Mobile Menu",
     "seo": {
       "title": "Music Production Masterclass | Studio NOL",
-      "description": "1:1 lessons with a pro producer: MIDI, mixing, mastering & distribution consulting at Studio NOL. First consult free. ₩350K/month.",
+      "description": "1:1 pro producer lessons at Studio NOL, 5 min from Yeonsinnae. MIDI, mixing, mastering, distribution consulting. First consult free. ₩350K/month.",
       "keywords": "music production consulting, mixing feedback, MIDI mentoring, music production coaching, short-term MIDI lessons, Cubase, Logic Pro"
     },
     "hero": {
@@ -378,7 +378,7 @@
   "practiceRoom": {
     "seo": {
       "title": "Premium 24h Practice Room in Eunpyeong | Studio NOL",
-      "description": "Premium soundproof practice rooms 5 min from Yeongsinnae Station. Open 24/7, drums and full gear included. Monthly residency from ₩400K. First month 10% off.",
+      "description": "Premium soundproof practice rooms 5 min from Yeonsinnae Station. Open 24/7, drums and full gear included. Monthly residency from ₩400K. First month 10% off.",
       "keywords": "practice room, soundproof practice room, Eunpyeong practice room, private studio, Studio NOL"
     },
     "hero": {
@@ -492,8 +492,8 @@
   "studioInfo": {
     "seo": {
       "title": "Professional Recording Studio Seoul | Studio NOL",
-      "description": "Professional recording studio in Eunpyeong-gu, Seoul — 5 min walk from Yeongsinnae Station. Neumann U87AI, SSL Fusion gear. From 100,000 KRW/hour with expert engineer.",
-      "keywords": "Seoul recording studio, Yeongsinnae recording studio, professional recording studio Korea, music recording Seoul, vocal recording, mixing mastering Seoul, Studio NOL"
+      "description": "Professional recording studio, 5 min from Yeonsinnae Station. Neumann U87AI, SSL Fusion gear. From 100,000 KRW/hour with expert engineer on-site.",
+      "keywords": "Seoul recording studio, Yeonsinnae recording studio, professional recording studio Korea, music recording Seoul, vocal recording, mixing mastering Seoul, Studio NOL"
     },
     "hero": {
       "title": "Our Equipment",
@@ -534,7 +534,7 @@
     },
     "hero": {
       "title": "Stories",
-      "subtitle": "Explore various stories about studio work.",
+      "subtitle": "Recording, mixing, mastering, vocal lesson & practice room reviews — real experiences and music production tips.",
       "alt": "Studio NOL Stories"
     },
     "filters": {
@@ -594,12 +594,16 @@
       "viewAll": "View all stories"
     },
     "categories": {
-      "news": "News",
-      "lesson": "Lesson",
-      "feedback": "Reviews",
-      "region": "Area Guide",
       "instrument": "Instrument Practice",
-      "music-guide": "Music Guide"
+      "region": "Area Guide",
+      "lesson": "Lesson",
+      "production": "Music Production",
+      "recording": "Recording Guide",
+      "vocal": "Vocal Guide",
+      "feedback": "Reviews",
+      "mixing": "Mixing & Mastering",
+      "business": "Music Business",
+      "event": "Events"
     }
   },
   "reviewSection": {
@@ -661,7 +665,7 @@
   "weddingSong": {
     "seo": {
       "title": "Wedding Song Recording — All-in-One ₩350,000 | Studio NOL",
-      "description": "5 min walk from Yeonsin-nae Station. Beginners welcome. 2hr recording + vocal tune + mixing & mastering for ₩350,000. Same-day rough mix available.",
+      "description": "5 min walk from Yeonsinnae Station. Beginners welcome. 2hr recording + vocal tune + mixing & mastering for ₩350,000. Same-day rough mix available.",
       "keywords": "wedding song recording, vocal recording studio Seoul, self recording wedding, bridal song studio, propose recording, Studio Nol"
     },
     "hero": {
@@ -774,7 +778,7 @@
   "voiceActing": {
     "seo": {
       "title": "Voice Acting Studio — Narration Recording | Studio NOL",
-      "description": "5 min walk from Yeonsin-nae Station. Neumann U87AI, perfect soundproofing. ₩100,000/hr, real-time editing. YouTube narration, audiobooks, ad recordings.",
+      "description": "5 min walk from Yeonsinnae Station. Neumann U87AI, perfect soundproofing. ₩100,000/hr, real-time editing. YouTube narration, audiobooks, ad recordings.",
       "keywords": "voice acting studio Seoul, narration recording, voiceover studio, podcast recording, audiobook recording, YouTube narration, Studio Nol"
     },
     "hero": {

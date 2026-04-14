@@ -58,6 +58,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
         ogImageWidth={1280}
         ogImageHeight={720}
         includeSchema
+        webPageType="WebSite"
+        canonical={`/${locale}`}
         faqItems={faqData}
         reviewItems={reviewsData}
         breadcrumbs={[

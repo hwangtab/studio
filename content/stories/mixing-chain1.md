@@ -2,7 +2,7 @@
 title: "믹싱 체인 완전 가이드 — 보컬 플러그인 순서·신호 흐름 최적화"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "믹싱 가이드"
+category: "믹싱·마스터링"
 tags: ["믹싱 체인", "플러그인 순서", "신호 흐름", "보컬 플러그인 체인", "믹싱 워크플로우", "Insert FX 순서", "믹싱 기본"]
 thumbnail: "/images/portfolio3.webp"
 summary: "믹싱 체인 완전 가이드입니다. 보컬 Insert FX 플러그인 순서(EQ·컴프레서·딜레이·리버브), Send/Return 활용법, 게인 스테이징, 믹싱 신호 흐름을 정리합니다."

@@ -116,9 +116,27 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
     inLanguage: schemaLanguage,
     serviceType: locale === 'ko' ? '음악연습실' : t('nav.practiceRoom'),
     areaServed: [
-      { '@type': 'City', name: locale === 'ko' ? '서울' : 'Seoul' },
+      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
       { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
+      { '@type': 'Neighborhood', name: 'Yeonsinnae' },
+      { '@type': 'Neighborhood', name: 'Bulgwang' },
     ],
+    location: {
+      '@type': 'Place',
+      name: siteConfig.name,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
+        addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
+        postalCode: '03424',
+        addressCountry: 'KR',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 37.614353,
+        longitude: 126.925887,
+      },
+    },
     provider: {
       '@type': 'Organization',
       '@id': `${siteConfig.url}/#organization`,
@@ -157,6 +175,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         ogImageHeight={810}
         includeSchema={true}
         webPageType="ItemPage"
+        canonical={`/${locale}/practice-room`}
         faqItems={practiceRoomFaqs}
         schema={practiceRoomSchema}
         reviewItems={reviewsData.filter((r) => (r as { categoryKey?: string }).categoryKey === 'practice')}
@@ -180,6 +199,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         imageAlt={t('practiceRoom.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+        breadcrumbItems={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
+        ]}
       />
 
       <QuickAnswers
@@ -1028,14 +1051,20 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
-            href={`/${locale}/stories`}
+            href={`/${locale}/pricing`}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/${locale}/stories`}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
             {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/contact`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
           </Link>

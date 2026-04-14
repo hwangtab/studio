@@ -3,7 +3,7 @@ title: "Curso de Mezcla - Parte 6: Leer el sonido con los ojos (todo sobre el me
 date: 2025-11-17
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mezcla", "Clase", "Metering", "Metering", "Loudness"]
+tags: ["Mezcla", "Clase", "Metering", "Loudness"]
 ---
 ![Varios medidores de nivel](/images/console.webp)
 

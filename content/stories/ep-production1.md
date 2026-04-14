@@ -2,7 +2,7 @@
 title: "EP 제작 완전 가이드 — 인디 아티스트를 위한 미니 앨범 제작 과정"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["EP 제작", "미니 앨범 제작", "인디 EP", "EP 트랙 수", "EP 발매 전략", "EP vs 싱글", "인디 음반 제작"]
 thumbnail: "/images/studio2.webp"
 summary: "EP 제작 완전 가이드입니다. EP 트랙 수와 구성, 제작 예산 계획, 녹음·믹싱·마스터링·커버아트 제작, EP vs 싱글 발매 전략을 정리합니다."

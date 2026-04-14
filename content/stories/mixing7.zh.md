@@ -3,7 +3,7 @@ title: "混音课程 - 第 7 部：混音从整理开始"
 date: 2025-11-18
 author: "Studio NOL"
 category: "lesson"
-tags: ["混音", "课程", "SessionPrep", "SessionPrep", "Workflow"]
+tags: ["混音", "课程", "SessionPrep", "Workflow"]
 ---
 ![凌乱的线材与整洁的跳线盘](/images/service3.webp)
 

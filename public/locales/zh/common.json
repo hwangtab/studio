@@ -115,7 +115,7 @@
     },
     "seo": {
       "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备",
-      "title": "Yeonsinnae 音乐制作 · 全方位录音·混音·母带 | Studio NOL",
+      "title": "延新内 音乐制作 · 录音混音母带一站式 | Studio NOL",
       "description": "从企划到录音、混音、母带、发行，Studio NOL提供一站式音乐制作全流程服务。模拟设备与逾10年经验工程师全程陪伴，助您将音乐梦想化为现实。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
@@ -198,13 +198,13 @@
     "checkNotices": "查看公告",
     "seo": {
       "keywords": "Studio NOL 联系方式, 音乐制作咨询, 录音预约, 混音委托, 工作室位置, KakaoTalk 咨询, 制作报价",
-      "title": "咨询·预约·交通指引 | Studio NOL",
-      "description": "欢迎录音、混音、母带预约咨询。支持KakaoTalk及邮件，延新内站步行5分钟可达，提供免费报价，24小时内快速回复，期待与您合作。"
+      "title": "录音预约·报价咨询·交通指引 | Studio NOL",
+      "description": "预约Studio NOL录音、混音、母带及配音。延新内站步行5分钟，KakaoTalk及邮件咨询，免费报价，24小时内回复。"
     }
   },
   "pricing": {
     "seo": {
-      "title": "录音费用与录音棚租赁 | Studio NOL",
+      "title": "录音·混音·母带·练习室费用一览 | Studio NOL",
       "description": "价格公开透明，无隐藏费用。婚礼自唱套餐₩15万起，配音₩3万/小时，混音·母带多种方案，套餐折扣高达30%，欢迎免费咨询报价，24小时内快速回复。",
       "keywords": "录音费用, 配音录音报价, 录音室租赁价格, 混音价格, 母带价格, Studio NOL",
       "schemaTitle": "Studio NOL 服务价格"
@@ -269,7 +269,7 @@
     "mobileMenu": "移动菜单",
     "seo": {
       "title": "音乐发行咨询 · 混音反馈与短期 MIDI 课程 | Studio NOL",
-      "description": "现职制作人1:1全程指导，MIDI编曲·混音·母带实战课程，含发行及著作权咨询支持。延新内站步行5分钟，首次咨询免费，月付₩35万定额制。",
+      "description": "延新内站步行5分钟。现职制作人1:1指导，MIDI·混音·母带实战课程，含发行咨询。首次免费，月付₩35万，欢迎预约。",
       "keywords": "音乐制作咨询, 混音反馈, MIDI 指导, 音乐制作课程, 短期 MIDI 课程, Cubase, Logic Pro"
     },
     "hero": {
@@ -378,7 +378,7 @@
   "practiceRoom": {
     "seo": {
       "title": "恩平区 24 小时高端隔音练习室 | Studio NOL",
-      "description": "恩平区优质隔音练习室，24小时全天候使用，鼓组·吉他·键盘完整配备。延新内站步行5分钟，月租₩40万起，首月享9折优惠，欢迎随时咨询。",
+      "description": "延新内站步行5分钟。高品质隔音练习室，24小时开放。鼓组·吉他·键盘齐全，月租₩40万起，首月9折，欢迎咨询预约。",
       "keywords": "练习室, 隔音练习室, 恩平区练习室, 私人工作室, Studio NOL"
     },
     "hero": {
@@ -491,8 +491,8 @@
   },
   "studioInfo": {
     "seo": {
-      "title": "首尔专业录音室 · 延新内站步行5分钟 | Neumann U87AI · SSL Fusion | Studio NOL",
-      "description": "首尔恩平区专业录音室，延新内站步行5分钟。配备Neumann U87AI、SSL Fusion等顶级设备，专业工程师常驻。录音每小时10万韩元起，提供混音·母带制作一站式服务。",
+      "title": "首尔录音室·延新内 | Neumann U87AI | Studio NOL",
+      "description": "首尔恩平区录音室，延新内站步行5分钟。Neumann U87AI、SSL Fusion等顶级设备，专业工程师常驻。录音₩10万/小时，混音·母带一站式服务。",
       "keywords": "首尔录音室, 韩国录音室, 专业录音室, 音乐录音, 人声录音, 混音母带, Studio NOL"
     },
     "hero": {
@@ -527,14 +527,14 @@
   },
   "stories": {
     "seo": {
-      "title": "故事 - Studio NOL 项目记录",
-      "description": "了解Studio NOL录音·混音工作日志、专业设备评测与艺术家访谈。探索音乐制作背后的真实故事，获取来自专业工程师的宝贵创作经验。",
+      "title": "录音后记·混音技巧·制作案例 | Studio NOL",
+      "description": "了解Studio NOL录音室工作日志、专业设备评测与艺术家访谈。探索声乐录制、混音制作、音乐连习背后的真实故事，获取专业工程师的宝贵创作经验与实用技巧。",
       "keywords": "Studio NOL 故事, 制作后记, 音乐制作故事",
       "fallbackKeywords": "Studio NOL, 연신내录音室, 音乐制作, 声乐课, 混音母带, 排练室"
     },
     "hero": {
       "title": "故事",
-      "subtitle": "探索与工作室制作相关的各种故事。",
+      "subtitle": "录音、混音、母带、声乐课、排练室使用心得与音乐制作技巧合集。",
       "alt": "Studio NOL 故事"
     },
     "filters": {
@@ -594,13 +594,17 @@
       "viewAll": "查看所有故事"
     },
     "categories": {
-      "news": "资讯",
-      "lesson": "课程",
-      "feedback": "评价",
-      "region": "地区指南",
       "instrument": "乐器练习",
-      "music-guide": "音乐指南"
-    }
+      "region": "地区指南",
+      "lesson": "课程",
+      "production": "音乐制作",
+      "recording": "录音指南",
+      "vocal": "声乐指南",
+      "feedback": "评价",
+      "mixing": "混音·母带",
+      "business": "音乐商业",
+      "event": "活动"
+      }
   },
   "reviewSection": {
     "titlePrefix": "共同创造:",
@@ -661,7 +665,7 @@
   "weddingSong": {
     "seo": {
       "title": "婚礼祝歌录音 · 全套套餐 35万韩元 | Studio Nol",
-      "description": "延新内站步行5分钟，新手也放心。录音2小时+人声调音+混音母带一体套餐35万韩元，当天可收到修正版。",
+      "description": "延新内站步行5分钟，专业婚礼歌曲录制服务。录音2小时+人声调音+混音母带一体套餐₩35万，当天可收到修正版。新手友好，让您的婚礼留下最美的声音纪念。",
       "keywords": "婚礼祝歌录音, 自录婚礼歌曲, 录音室首尔, 人声录音, 婚礼录音, Studio Nol"
     },
     "hero": {
@@ -774,7 +778,7 @@
   "voiceActing": {
     "seo": {
       "title": "配音录音室 · 旁白录音 10万韩元/小时 | Studio Nol",
-      "description": "延新内站步行5分钟，Neumann U87AI等高端设备。每小时10万韩元，完美隔音，实时剪辑。YouTube旁白、有声书、广告录音。",
+      "description": "延新内站步行5分钟。Neumann U87AI，完美隔音，实时剪辑。₩10万/小时，YouTube旁白·有声书·广告·游戏配音，欢迎预约。",
       "keywords": "配音录音, 旁白录音, 配音录音室首尔, YouTube录音, 有声书录音, 播客录音, 广告录音, Studio Nol"
     },
     "hero": {

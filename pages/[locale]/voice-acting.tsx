@@ -108,7 +108,26 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
       description: t('voiceActing.seo.description'),
       inLanguage: schemaLanguage,
       serviceType: locale === 'ko' ? '성우 녹음' : 'Voice Acting & Narration Recording',
-      areaServed: siteConfig.contact.address,
+      areaServed: {
+        '@type': 'City',
+        name: locale === 'ko' ? '서울특별시 은평구' : 'Eunpyeong-gu, Seoul',
+      },
+      location: {
+        '@type': 'Place',
+        name: siteConfig.name,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
+          addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
+          postalCode: '03424',
+          addressCountry: 'KR',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: 37.614353,
+          longitude: 126.925887,
+        },
+      },
       provider: {
         '@type': 'Organization',
         '@id': `${siteConfig.url}/#organization`,
@@ -161,6 +180,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         ogImageWidth={1280}
         ogImageHeight={720}
         includeSchema
+        canonical={`/${locale}/voice-acting`}
         faqItems={faqItems}
         schema={pageSchema}
         reviewItems={reviewsData}
@@ -186,6 +206,10 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, reviewsData
         imageAlt={t('voiceActing.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+        breadcrumbItems={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.voiceActing'), path: `/${locale}/voice-acting` },
+        ]}
       />
 
 

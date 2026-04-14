@@ -3,7 +3,7 @@ title: "Khóa học Mixing - Phần 3: Dự án cai nghiện gear"
 date: 2025-11-14
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Bài học", "Gear", "Gear", "DAW"]
+tags: ["Mixing", "Bài học", "Gear", "DAW"]
 ---
 ![Các audio interface và gear khác nhau](/images/hardware4.webp)
 

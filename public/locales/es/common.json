@@ -115,7 +115,7 @@
     },
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
-      "title": "Producción Musical en Yeonsinnae · Grabación, Mezcla y Masterización | Studio NOL",
+      "title": "Grabación · Mezcla & Mastering Yeonsinnae | Studio NOL",
       "description": "Studio NOL ofrece producción musical integral: grabación, mezcla, masterización y distribución. 10 años de experiencia con equipo analógico."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
@@ -269,7 +269,7 @@
     "mobileMenu": "Menú móvil",
     "seo": {
       "title": "Masterclass de producción musical | Studio NOL",
-      "description": "Desde consultoría de distribución hasta feedback de mezcla 1:1. Haz realidad tu música con ingeniería profesional.",
+      "description": "Clases 1:1 con productor pro, 5 min de Yeonsinnae. MIDI, mezcla, masterización y consultoría de distribución. Primera consulta gratis. ₩350K/mes.",
       "keywords": "consultoría de producción musical, feedback de mezcla, mentoría MIDI, clases de producción musical, clases cortas de MIDI, Cubase, Logic Pro"
     },
     "hero": {
@@ -378,7 +378,7 @@
   "practiceRoom": {
     "seo": {
       "title": "Sala de práctica premium 24h en Eunpyeong | Studio NOL",
-      "description": "Salas de práctica insonorizadas en Eunpyeong-gu, a 5 min de la estación Yeongsinnae. Acceso 24/7, batería y equipo completo incluidos. Plan mensual desde ₩400K.",
+      "description": "Salas de práctica insonorizadas en Eunpyeong-gu, a 5 min de la estación Yeonsinnae. Acceso 24/7, batería y equipo completo incluidos. Plan mensual desde ₩400K.",
       "keywords": "sala de práctica, sala insonorizada, sala de práctica en Eunpyeong, estudio privado, Studio NOL"
     },
     "hero": {
@@ -491,8 +491,8 @@
   },
   "studioInfo": {
     "seo": {
-      "title": "Estudio de grabación profesional en Seúl | Neumann U87AI · SSL Fusion | Studio NOL",
-      "description": "Estudio de grabación profesional en Eunpyeong-gu, Seúl — a 5 min de la estación Yeongsinnae. Equipo Neumann U87AI y SSL Fusion. Desde 100.000 KRW/hora con ingeniero profesional.",
+      "title": "Estudio Profesional · Neumann U87AI | Studio NOL",
+      "description": "Estudio profesional en Seúl, a 5 min de Yeonsinnae. Equipo Neumann U87AI y SSL Fusion. Desde 100.000 KRW/hora con ingeniero profesional.",
       "keywords": "estudio de grabación Seúl, estudio de grabación profesional Corea, grabación musical, mezcla y masterización, Studio NOL"
     },
     "hero": {
@@ -528,13 +528,13 @@
   "stories": {
     "seo": {
       "title": "Historias - Registros de proyectos de Studio NOL",
-      "description": "Descubre historias de proyectos, reseñas de equipos y entrevistas de artistas en Studio NOL. Conoce el proceso de producción musical desde la perspectiva de un ingeniero profesional.",
+      "description": "Historias de proyectos, reseñas de equipos y entrevistas de artistas en Studio NOL. Aprende sobre producción musical desde la perspectiva de un ingeniero.",
       "keywords": "historias de Studio NOL, reseñas de producción, historias de producción musical",
       "fallbackKeywords": "Studio NOL, estudio de grabación, producción musical, clases de canto, mezcla masterización, sala de ensayo"
     },
     "hero": {
       "title": "Historias",
-      "subtitle": "Explora historias sobre el trabajo del estudio.",
+      "subtitle": "Reseñas de grabación, mezcla, masterización, clases vocales y sala de ensayo con consejos reales de producción musical.",
       "alt": "Historias de Studio NOL"
     },
     "filters": {
@@ -594,13 +594,17 @@
       "viewAll": "Ver todas las historias"
     },
     "categories": {
-      "news": "Noticias",
+      "instrument": "Práctica instrumental",
+      "region": "Guía de zona",
       "lesson": "Curso",
+      "production": "Producción musical",
+      "recording": "Guía de grabación",
+      "vocal": "Guía vocal",
       "feedback": "Reseñas",
-      "region": "Guía de área",
-      "instrument": "Práctica de instrumento",
-      "music-guide": "Guía musical"
-    }
+      "mixing": "Mezcla y masterización",
+      "business": "Negocio musical",
+      "event": "Eventos"
+      }
   },
   "reviewSection": {
     "titlePrefix": "Creando Juntos:",
@@ -660,8 +664,8 @@
   },
   "weddingSong": {
     "seo": {
-      "title": "Grabación Canción de Boda · Paquete Todo en Uno ₩350,000 | Studio Nol",
-      "description": "A 5 min de Yeonsin-nae. Principiantes bienvenidos. 2h grabación + afinación vocal + mezcla y masterización por ₩350,000. Mezcla básica el mismo día.",
+      "title": "Grabación Canción de Boda · Paquete ₩350,000 | Studio NOL",
+      "description": "A 5 min de Yeonsinnae. Principiantes bienvenidos. 2h grabación + afinación vocal + mezcla y masterización por ₩350,000. Mezcla básica el mismo día.",
       "keywords": "grabación canción boda, estudio vocal Seúl, propuesta musical, grabación vocal, Studio Nol"
     },
     "hero": {
@@ -774,7 +778,7 @@
   "voiceActing": {
     "seo": {
       "title": "Estudio de Locución · Narración ₩100,000/hora | Studio Nol",
-      "description": "A 5 min de Yeonsin-nae. Neumann U87AI, insonorización perfecta. ₩100,000/h, edición en tiempo real. Narración YouTube, audiolibros, publicidad.",
+      "description": "A 5 min de Yeonsinnae. Neumann U87AI, insonorización perfecta. ₩100,000/h, edición en tiempo real. Narración YouTube, audiolibros, publicidad.",
       "keywords": "estudio locución Seúl, narración grabación, voiceover estudio, podcast grabación, audiolibro grabación, Studio Nol"
     },
     "hero": {

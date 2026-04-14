@@ -49,13 +49,17 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
 
   return (
     <Link href={href} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
-      <m.div
+      <m.article
+        itemScope
+        itemType="https://schema.org/BlogPosting"
         className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full transition-shadow duration-300 hover:shadow-lg"
         variants={cardVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
       >
+        {story.date && <meta itemProp="datePublished" content={story.date} />}
+        <link itemProp="url" href={href} />
         <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
           {thumbnailUrl ? (
             <ResponsiveImage
@@ -64,6 +68,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
               className="object-cover transition-transform duration-300 hover:scale-105"
               sizes="(min-width: 1024px) 320px, (min-width: 640px) 260px, 100vw"
               fill={true}
+              itemProp="image"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
@@ -76,23 +81,23 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
 
         <div className="p-4 flex flex-col flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
-            <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words">
+            <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words" itemProp="articleSection">
               {categoryText}
             </span>
-            <time dateTime={story.date} className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0">
+            <time dateTime={story.date} className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0" itemProp="datePublished">
               {dateText}
             </time>
           </div>
 
-          <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title}>
+          <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title} itemProp="headline">
             {titleText}
           </h3>
 
-          <div className="typo-card-body leading-snug line-clamp-4 flex-none">
+          <div className="typo-card-body leading-snug line-clamp-4 flex-none" itemProp="description">
             {contentText}
           </div>
         </div>
-      </m.div>
+      </m.article>
     </Link>
   );
 });

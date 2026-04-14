@@ -2,7 +2,7 @@
 title: "미드사이드(Mid-Side) 처리 완전 가이드 — 스테레오 폭 정밀 조절"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["미드사이드", "MS 처리", "MS EQ", "스테레오 폭", "모노 호환성", "마스터링 고급", "스테레오 이미징"]
 thumbnail: "/images/recording14.webp"
 summary: "미드사이드(MS) 처리 완전 가이드입니다. Mid-Side 신호 원리, MS EQ로 스테레오 폭 조절, MS 컴프레서 활용, 마스터링에서의 MS 활용, 모노 호환성 체크를 정리합니다."

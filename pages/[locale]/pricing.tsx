@@ -94,13 +94,17 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
       name: offer.title,
       url: `${pricingUrl}#${offer.id}`,
       inLanguage: schemaLanguage,
+      areaServed: [
+        { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
+        { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
+      ],
       provider: {
         '@type': 'Organization',
         '@id': `${siteUrl}/#organization`,
         name: t('common.siteName'),
       },
     },
-  }), [pricingUrl, priceValidUntil, schemaLanguage, siteUrl, t]);
+  }), [locale, pricingUrl, priceValidUntil, schemaLanguage, siteUrl, t]);
 
   const catalogToSchema = React.useCallback((name: string, offers: Offer[]) => ({
     '@type': 'OfferCatalog',
@@ -175,6 +179,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         ogImageHeight={720}
         includeSchema
         webPageType="WebPage"
+        canonical={`/${locale}/pricing`}
         faqItems={pricingQuickAnswers}
         schema={pricingSchema}
         reviewItems={reviewsData}
@@ -200,6 +205,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         imageAlt={t('pricing.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
+        breadcrumbItems={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.pricing'), path: `/${locale}/pricing` },
+        ]}
       />
 
 

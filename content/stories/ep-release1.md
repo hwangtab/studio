@@ -2,7 +2,7 @@
 title: "EP 발매 완전 가이드 — 미니앨범 제작·출시 절차·타임라인"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["EP 발매", "미니앨범 제작", "EP 출시 방법", "인디 EP 발매", "EP 발매 절차", "EP 유통", "EP 마케팅"]
 thumbnail: "/images/portfolio5.webp"
 summary: "EP(미니앨범) 발매 완전 가이드입니다. EP 트랙 수 기준, 발매 전 체크리스트, 유통사 선택, 발매 타임라인, 저작권 등록, 발매 후 홍보 전략을 정리합니다."

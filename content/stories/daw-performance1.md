@@ -2,8 +2,8 @@
 title: "DAW 퍼포먼스 최적화 완전 가이드 — CPU·레이턴시·버퍼 설정"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
-tags: ["DAW 최적화", "DAW CPU", "레이턴시", "버퍼 사이즈", "ASIO", "DAW 속도", "오디오 버퍼", "플러그인 CPU"]
+category: "음악 제작"
+tags: ["DAW 최적화", "DAW CPU", "레이턴시", "버퍼 사이즈", "ASIO", "DAW 속도", "오디오 버퍼"]
 thumbnail: "/images/recording11.webp"
 summary: "DAW 퍼포먼스 최적화 완전 가이드입니다. 버퍼 사이즈 설정, 레이턴시 최소화, CPU 절약을 위한 트랙 프리징·바운싱, DAW별 퍼포먼스 팁을 정리합니다."
 faq:

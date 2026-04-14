@@ -137,7 +137,7 @@ const getAlternateRefs = (routePath) => {
     hrefIsAbsolute: true,
   }));
   refs.push({
-    href: `${siteUrl}/en${restPath ? `/${restPath}` : ''}`,
+    href: `${siteUrl}/ko${restPath ? `/${restPath}` : ''}`,
     hreflang: 'x-default',
     hrefIsAbsolute: true,
   });
@@ -201,8 +201,10 @@ module.exports = {
       { userAgent: 'Applebot', allow: '/' },
     ],
     additionalSitemaps: [],
-    transformRobotsTxt: async (_config, robotsTxt) =>
-      robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, ''),
+    transformRobotsTxt: async (_config, robotsTxt) => {
+      const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
+      return `Host: ${siteUrl}\n${cleaned}`;
+    },
   },
   sitemapSize: 50000,
   additionalPaths: async (config) => {
@@ -233,7 +235,7 @@ module.exports = {
         if (thumbnail) {
           const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
           const title = getStoryTitle(slug, locale);
-          images = [{ loc: new URL(imageUrl), title, caption: title }];
+          images = [{ loc: new URL(imageUrl), title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
         }
         results.push({
           loc: routePath,
@@ -265,20 +267,20 @@ module.exports = {
       if (thumbnail) {
         const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
         const title = getStoryTitle(slug, locale);
-        images = [{ loc: new URL(imageUrl), title, caption: title }];
+        images = [{ loc: new URL(imageUrl), title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     } else if (pathWithoutLocale.startsWith('/portfolio/') && segments.length >= 3) {
       const itemId = segments[2];
       const portfolioImages = getPortfolioImageMap();
       const imgUrl = portfolioImages[itemId];
       if (imgUrl) {
-        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`) }];
+        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`), geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     } else {
       const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;
       const pageImg = pageImageMap[pageKey];
       if (pageImg) {
-        images = [{ loc: new URL(`${siteUrl}${pageImg}`) }];
+        images = [{ loc: new URL(`${siteUrl}${pageImg}`), geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     }
 
@@ -299,7 +301,15 @@ module.exports = {
       };
     }
 
-    if (routePath.includes('/stories/') || routePath.includes('/portfolio/')) {
+    if (routePath.includes('/portfolio/')) {
+      return {
+        ...entry,
+        changefreq: 'weekly',
+        priority: 0.9,
+      };
+    }
+
+    if (routePath.includes('/stories/')) {
       return {
         ...entry,
         changefreq: 'weekly',
@@ -307,11 +317,11 @@ module.exports = {
       };
     }
 
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|lesson)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 
-    if (routePath.match(/\/(about|lesson|portfolio|stories)(\/|$)/) && !routePath.includes('/stories/') && !routePath.includes('/portfolio/')) {
+    if (routePath.match(/\/(about|portfolio|stories)(\/|$)/) && !routePath.includes('/stories/') && !routePath.includes('/portfolio/')) {
       return { ...entry, priority: 0.8 };
     }
 

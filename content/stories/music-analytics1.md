@@ -2,7 +2,7 @@
 title: "음악 스트리밍 데이터 분석 완전 가이드 — Spotify for Artists·멜론·유튜브 분석 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음악 비즈니스 가이드"
+category: "음악 비즈니스"
 tags: ["음악 데이터 분석", "Spotify for Artists", "스트리밍 데이터", "음악 분석 도구", "멜론 아티스트", "유튜브 애널리틱스", "음악 마케팅 데이터"]
 thumbnail: "/images/service6.webp"
 summary: "음악 스트리밍 데이터 분석 완전 가이드입니다. Spotify for Artists 분석·Apple Music for Artists 분석·YouTube Analytics 분석·멜론·지니 아티스트 포털 분석·데이터 기반 마케팅 전략까지 정리합니다."

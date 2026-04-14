@@ -268,7 +268,10 @@ const STATIC_OVERRIDES = {
       if (!src) return null;
       const metadata = (imageMetadataMap as Record<string, { width: number; height: number }>)[src];
       const hasDimensions = metadata?.width && metadata?.height;
-      const altText = typeof alt === 'string' && alt.trim().length > 0 ? alt : '';
+      const altText = typeof alt === 'string' && alt.trim().length > 0
+        ? alt
+        : src ? src.split('/').pop()?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || ''
+        : '';
 
       if (hasDimensions) {
         return (

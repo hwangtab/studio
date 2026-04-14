@@ -71,9 +71,9 @@ const homeData = {
   },
   en: {
     seo: {
-      title: "Professional Music Production & Mixing/Mastering | Studio NOL",
-      description: "Professional music production realizing artist's musical vision. We guarantee the best results with high-end equipment and professional engineering.",
-      keywords: "Music Production, Digital Single, Mixing Mastering, Album Release, Music Producing, Recording Studio, Voice Over, Studio NOL, Seoul recording studio, K-pop vocal recording, voice over recording Seoul, audiobook recording studio Korea, wedding song recording"
+      title: "Seoul Recording Studio · Mixing & Mastering | Studio NOL",
+      description: "Seoul recording studio 5 min from Yeonsinnae Station. Wedding songs, voiceovers, mixing & mastering. Professional engineer on-site. From ₩100K/hr.",
+      keywords: "Seoul recording studio, Yeonsinnae recording studio, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, audiobook recording Korea, Studio NOL, Eunpyeong-gu studio"
     },
     heroContent: {
       titlePrefix: "Breathing",
@@ -124,9 +124,9 @@ const homeData = {
   },
   zh: {
     seo: {
-      title: "专业音乐制作 · 混音 & 母带处理 | Studio NOL",
-      description: "实现艺术家音乐愿景的专业音乐制作。我们用高端设备和专业工程保证最佳结果。",
-      keywords: "音乐制作, 数字单曲, 混音母带, 专辑发行, 音乐制作, 录音室, 配音, Studio NOL"
+      title: "首尔录音室·延新内站步行5分钟 | 混音母带一站式 | Studio NOL",
+      description: "首尔恩平区专业录音室，延新内站步行5分钟。婚礼歌曲、配音、混音母带一站式服务，专业工程师常驻，每小时10万韩元起，欢迎咨询预约。",
+      keywords: "首尔录音室, 延新内录音室, 专业录音, 混音母带, 婚礼歌曲录音, 配音录音, Studio NOL, 恩平区音乐制作"
     },
     heroContent: {
       titlePrefix: "为您的音乐注入",
@@ -177,9 +177,9 @@ const homeData = {
   },
   es: {
     seo: {
-      title: "Producción Musical Profesional y Mezcla/Masterización | Studio NOL",
-      description: "Producción musical profesional que hace realidad la visión musical del artista. Garantizamos los mejores resultados con equipos de alta gama.",
-      keywords: "Producción Musical, Sencillo Digital, Mezcla Masterización, Lanzamiento de Álbum, Producción Musical, Estudio de Grabación, Studio NOL"
+      title: "Estudio de Grabación Seúl · Mezcla & Masterización | Studio NOL",
+      description: "Estudio en Seúl, a 5 min de Yeonsinnae. Canción de boda, locución, mezcla y masterización. Ingeniero profesional. Desde ₩100K/hora.",
+      keywords: "estudio de grabación Seúl, Yeonsinnae estudio, mezcla masterización, canción boda, locución Seúl, producción musical, Studio NOL"
     },
     heroContent: {
       titlePrefix: "Dando",
@@ -230,15 +230,15 @@ const homeData = {
   },
   vi: {
     seo: {
-      title: "Sản xuất âm nhạc chuyên nghiệp · Mixing/Mastering & thu âm voiceover/nhạc cưới | Studio NOL",
-      description: "Sản xuất âm nhạc chuyên nghiệp hiện thực hóa tầm nhìn của nghệ sĩ. Bảo đảm kết quả tốt nhất với thiết bị cao cấp và kỹ thuật chuyên môn.",
-      keywords: "Sản xuất âm nhạc, đĩa đơn số, mixing mastering, phát hành album, sản xuất âm nhạc, phòng thu chuyên nghiệp, thu âm voiceover, thu âm nhạc cưới, Studio NOL"
+      title: "Phòng thu Yeonsinnae · Mix & Mastering Seoul | Studio NOL",
+      description: "Phòng thu Seoul cách ga Yeonsinnae 5 phút. Thu âm nhạc cưới, lồng tiếng, mixing mastering. Kỹ sư chuyên nghiệp. Từ ₩100K/giờ.",
+      keywords: "phòng thu Seoul, Yeonsinnae phòng thu, mixing mastering, thu âm nhạc cưới, thu âm lồng tiếng, sản xuất âm nhạc, Studio NOL"
     },
     heroContent: {
       titlePrefix: "Thổi",
       titleHighlight: "Sự sống",
       titleSuffix: "vào âm nhạc của bạn",
-      subtitle: "Hoàn thiện âm thanh riêng của bạn với thiết bị cao cấp và bàn tay của kỹ sư chuyên nghiệp. Trải nghiệm tại Studio NOL.",
+      subtitle: "Hoàn thiện âm thanh với thiết bị cao cấp và kỹ sư chuyên nghiệp tại Yeonsinnae, Seoul. Trải nghiệm tại Studio NOL.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
@@ -283,15 +283,15 @@ const homeData = {
   },
   th: {
     seo: {
-      title: "ผลิตเพลงมืออาชีพ · มิกซ์/มาสเตอริ่ง & อัดเสียงพากย์/เพลงงานแต่ง | Studio NOL",
-      description: "สตูดิโอผลิตเพลงมืออาชีพที่ทำให้วิสัยทัศน์ของศิลปินเป็นจริง ด้วยอุปกรณ์ไฮเอนด์และวิศวกรรมระดับมืออาชีพ",
-      keywords: "การผลิตเพลง, ซิงเกิลดิจิทัล, มิกซ์มาสเตอริ่ง, ออกอัลบั้ม, โปรดิวซ์เพลง, สตูดิโอบันทึกเสียง, อัดเสียงพากย์, อัดเพลงงานแต่ง, Studio NOL"
+      title: "สตูดิโอดนตรี Yeonsinnae · อัดเสียง มิกซ์ มาสเตอริ่ง | Studio NOL",
+      description: "สตูดิโอบันทึกเสียงโซล เดิน 5 นาทีจากสถานี Yeonsinnae อัดเพลงงานแต่ง พากย์เสียง มิกซ์และมาสเตอริ่ง วิศวกรมืออาชีพ เริ่มต้น ₩100K/ชั่วโมง",
+      keywords: "สตูดิโอบันทึกเสียงโซล, Yeonsinnae สตูดิโอ, มิกซ์มาสเตอริ่ง, อัดเพลงงานแต่ง, อัดเสียงพากย์, ผลิตเพลง, Studio NOL"
     },
     heroContent: {
       titlePrefix: "เติม",
       titleHighlight: "ชีวิต",
       titleSuffix: "ให้กับดนตรีของคุณ",
-      subtitle: "เติมเต็มซาวด์ของคุณด้วยอุปกรณ์ระดับไฮเอนด์และการดูแลของวิศวกรมืออาชีพ พบกันที่ Studio NOL",
+      subtitle: "เติมเต็มซาวด์ด้วยอุปกรณ์ไฮเอนด์และวิศวกรมืออาชีพ ใน Yeonsinnae, Seoul · Studio NOL",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
@@ -336,15 +336,15 @@ const homeData = {
   },
   uz: {
     seo: {
-      title: "Professional musiqa ishlab chiqarish · Mixing/Mastering & voiceover/to'y qo'shiqlari yozuvi | Studio NOL",
-      description: "San'atkorning musiqiy tasavvurini hayotga tatbiq etuvchi professional prodakshn. Yuqori darajadagi uskunalar va muhandislik bilan eng yaxshi natija.",
-      keywords: "musiqa ishlab chiqarish, raqamli singl, miks mastering, albom chiqishi, musiqa prodakshn, professional studiya, voiceover yozuvi, to'y qo'shig'i yozuvi, Studio NOL"
+      title: "Yeonsinnae musiqa studiyasi · Yozuv, Miks, Mastering | Studio NOL",
+      description: "Seul yozuv studiyasi, Yeonsinnae bekatidan 5 daqiqa. To'y qo'shiqlari, ovoz aktyorligi, miks va mastering. Professional muhandis. ₩100K/soatdan.",
+      keywords: "Seul yozuv studiyasi, Yeonsinnae studiya, miks mastering, to'y qo'shig'i yozuvi, ovoz aktyorligi, musiqa prodakshn, Studio NOL"
     },
     heroContent: {
       titlePrefix: "Musiqangizga",
       titleHighlight: "hayot",
       titleSuffix: "bag'ishlaydigan makon",
-      subtitle: "Yuqori darajadagi uskunalar va professional muhandislar bilan o'ziga xos tovushingizni yarating. Studio NOLda his qiling.",
+      subtitle: "Yeonsinnae, Seul shahrida professional muhandislar va yuqori sifatli uskunalar bilan o'z tovushingizni yarating.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {

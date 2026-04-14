@@ -2,8 +2,8 @@
 title: "앰프 시뮬레이터·DI 레코딩 완전 가이드 — 집에서 기타·베이스 전문 사운드 만들기"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
-tags: ["앰프 시뮬레이터", "DI 레코딩", "기타 레코딩", "베이스 레코딩", "Neural DSP", "Kemper", "Line6 Helix", "앰프 플러그인"]
+category: "음악 제작"
+tags: ["기타 레코딩", "앰프 시뮬레이터", "DI 레코딩", "베이스 레코딩", "Neural DSP", "Kemper", "Line6 Helix"]
 thumbnail: "/images/recording14.webp"
 summary: "앰프 시뮬레이터·DI 레코딩 완전 가이드입니다. 앰프 시뮬레이터 종류·선택 기준, DI 박스 사용법, 임펄스 응답(IR) 활용, 기타·베이스 레코딩 체인, 리앰프 기법을 정리합니다."
 faq:

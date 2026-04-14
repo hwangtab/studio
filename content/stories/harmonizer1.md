@@ -2,7 +2,7 @@
 title: "보컬 하모나이저 완전 가이드 — 플러그인으로 자동 하모니 만들기"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["보컬 하모나이저", "하모나이저 플러그인", "자동 하모니", "Antares Harmony Engine", "iZotope Nectar 하모니", "보컬 하모니 생성", "하모나이저 설정"]
 thumbnail: "/images/hardware4.webp"
 summary: "보컬 하모나이저 완전 가이드입니다. 하모나이저 플러그인 종류, 피치 인터벌 선택 (3도·5도·옥타브), 자연스러운 하모나이저 설정, 하모나이저 vs 실제 하모니 비교를 정리합니다."

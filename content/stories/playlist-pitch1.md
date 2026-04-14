@@ -2,7 +2,7 @@
 title: "플레이리스트 피칭 완전 가이드 — Spotify·멜론·인디 큐레이터에게 음원 제출하기"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["플레이리스트 피칭", "Spotify 플레이리스트", "멜론 플레이리스트", "음악 큐레이터", "Spotify for Artists", "스트리밍 플레이리스트", "인디 음악 홍보"]
 thumbnail: "/images/studio3.webp"
 summary: "플레이리스트 피칭 완전 가이드입니다. Spotify for Artists 에디토리얼 제출, 멜론·지니 플레이리스트 신청, 인디 큐레이터 피칭, 피칭 메시지 작성법을 정리합니다."

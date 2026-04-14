@@ -2,8 +2,8 @@
 title: "파라메트릭 EQ 완전 가이드 — Q값·주파수·게인 설정과 보컬·악기 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
-tags: ["파라메트릭 EQ", "EQ Q값", "EQ 주파수", "EQ 게인", "서지컬 EQ", "부스트 컷", "다이나믹 EQ", "FabFilter Pro-Q"]
+category: "음악 제작"
+tags: ["다이나믹 EQ", "EQ 주파수", "파라메트릭 EQ", "EQ Q값", "EQ 게인", "서지컬 EQ", "부스트 컷"]
 thumbnail: "/images/recording17.webp"
 summary: "파라메트릭 EQ 완전 가이드입니다. Q값·주파수·게인 설정의 관계, 서지컬 EQ vs 음색 EQ, 부스트보다 컷이 먼저인 이유, 다이나믹 EQ 활용법을 정리합니다."
 faq:

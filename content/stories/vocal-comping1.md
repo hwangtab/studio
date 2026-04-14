@@ -2,7 +2,7 @@
 title: "보컬 콤핑 완전 가이드 — 최고의 테이크를 골라 완벽한 보컬 만들기"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["보컬 콤핑", "컴핑 기법", "보컬 편집", "테이크 선택", "보컬 레이어링", "Pro Tools 컴핑", "Logic Pro 컴핑"]
 thumbnail: "/images/studio1.webp"
 summary: "보컬 콤핑 완전 가이드입니다. 콤핑 워크플로우·DAW별 컴핑 방법·콤핑 기준·크로스페이드 처리·콤핑 후 처리까지 정리합니다."

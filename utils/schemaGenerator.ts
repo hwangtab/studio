@@ -97,9 +97,17 @@ export const generateDefaultSchema = (
         legalName: 'Studio NOL',
         sameAs: sameAsLinks,
         foundingDate: '2024-01-01',
+        numberOfEmployees: { '@type': 'QuantitativeValue', value: 5 },
         description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
         knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
+        knowsAbout: [
+          'Music Recording', 'Audio Mixing', 'Audio Mastering', 'Music Production',
+          'Vocal Recording', 'Voice Acting Recording', 'Wedding Song Recording',
+          'Music Lesson', 'Practice Room', 'Home Recording',
+          locale === 'ko' ? '녹음 제작' : 'Sound Engineering',
+          locale === 'ko' ? '음반 기획' : 'Album Production',
+        ],
       },
       {
         '@type': ['LocalBusiness', 'EntertainmentBusiness'],
@@ -132,7 +140,6 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
-        openingHours: ['Mo-Fr 10:00-18:00', 'Sa 12:00-18:00'],
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
@@ -142,7 +149,7 @@ export const generateDefaultSchema = (
           },
           {
             '@type': 'OpeningHoursSpecification',
-            dayOfWeek: 'Saturday',
+            dayOfWeek: ['Saturday'],
             opens: '12:00',
             closes: '18:00',
           },
@@ -173,8 +180,17 @@ export const generateDefaultSchema = (
           },
           geoRadius: 50000,
         },
-        hasMap: config.contact.naverMapUrl,
-        sameAs: [config.contact.naverMapUrl, config.contact.kakaoUrl].filter(Boolean),
+        hasMap: [
+          config.contact.naverMapUrl,
+          'https://maps.google.com/?q=37.614353,126.925887',
+        ].filter(Boolean),
+        sameAs: [
+          config.contact.naverMapUrl,
+          config.contact.kakaoUrl,
+          'https://maps.google.com/?q=37.614353,126.925887',
+          socialProfiles.instagram,
+          socialProfiles.threads,
+        ].filter(Boolean),
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
 
@@ -266,6 +282,40 @@ export const generateDefaultSchema = (
             },
           ],
         },
+        makesOffer: [
+          {
+            '@type': 'Offer',
+            priceCurrency: 'KRW',
+            price: 100000,
+            url: `${siteUrl}/${locale}/pricing`,
+            availability: 'https://schema.org/InStock',
+            itemOffered: { '@type': 'Service', name: recordingOfferName },
+          },
+          {
+            '@type': 'Offer',
+            priceCurrency: 'KRW',
+            price: 200000,
+            url: `${siteUrl}/${locale}/pricing`,
+            availability: 'https://schema.org/InStock',
+            itemOffered: { '@type': 'Service', name: mixingOfferName },
+          },
+          {
+            '@type': 'Offer',
+            priceCurrency: 'KRW',
+            price: 350000,
+            url: `${siteUrl}/${locale}/pricing`,
+            availability: 'https://schema.org/InStock',
+            itemOffered: { '@type': 'Service', name: productionOfferName },
+          },
+          {
+            '@type': 'Offer',
+            priceCurrency: 'KRW',
+            price: 300000,
+            url: `${siteUrl}/${locale}/practice-room`,
+            availability: 'https://schema.org/InStock',
+            itemOffered: { '@type': 'Service', name: practiceOfferName },
+          },
+        ],
       },
     ],
   };
@@ -283,7 +333,8 @@ export const generateArticleSchema = (
   locale: Locale = 'ko',
   articleType: 'Article' | 'BlogPosting' = 'Article',
   articleSection?: string,
-  articleKeywords?: string[]
+  articleKeywords?: string[],
+  wordCount?: number
 ) => {
   if (!articlePublishedTime) return null;
   const config = getSiteConfig(locale);
@@ -300,6 +351,7 @@ export const generateArticleSchema = (
     dateModified: articleModifiedTime || articlePublishedTime,
     ...(articleSection && { articleSection }),
     ...(articleKeywords && articleKeywords.length > 0 && { keywords: articleKeywords.join(', ') }),
+    ...(wordCount && wordCount > 0 && { wordCount }),
     author: {
       '@type': 'Person',
       name: articleAuthor || config.name,
@@ -314,7 +366,7 @@ export const generateArticleSchema = (
         height: 862,
       },
     },
-    image: [{ '@type': 'ImageObject', url: absoluteOgImage, representativeOfPage: true }],
+    image: [{ '@type': 'ImageObject', url: absoluteOgImage, width: 1200, height: 630, representativeOfPage: true }],
     description: description,
     inLanguage: schemaLanguage,
     mainEntityOfPage: {
@@ -399,12 +451,27 @@ export const generateCourseSchema = (
       availability: 'https://schema.org/InStock',
       url: normalizedCanonical,
     },
+    availableLanguage: [schemaLanguage],
     hasCourseInstance: {
       '@type': 'CourseInstance',
       courseMode: 'onsite',
+      courseWorkload: 'PT1H',
+      inLanguage: schemaLanguage,
       instructor: {
         '@type': 'Person',
         name: isKo ? '스튜디오 놀 엔지니어' : 'Studio NOL Engineer',
+        worksFor: { '@type': 'Organization', '@id': organizationId },
+      },
+      location: {
+        '@type': 'Place',
+        name: 'Studio NOL',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: isKo ? '연신내역 도보 5분' : '5 min walk from Yeonsinnae Station',
+          addressLocality: isKo ? '은평구' : 'Eunpyeong-gu',
+          addressRegion: isKo ? '서울특별시' : 'Seoul',
+          addressCountry: 'KR',
+        },
       },
     },
   };
@@ -546,6 +613,10 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     url: siteUrl,
     description: config.description,
     inLanguage: schemaLanguage,
+    availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'].map(lang => ({
+      '@type': 'Language',
+      name: lang,
+    })),
     publisher: {
       '@id': `${siteUrl}/#organization`,
     },
@@ -555,7 +626,14 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     potentialAction: {
       '@type': 'ContactAction',
       name: locale === 'ko' ? '스튜디오 문의하기' : 'Contact Studio NOL',
-      target: `${siteUrl}/${locale}/contact`,
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteUrl}/${locale}/contact`,
+        actionPlatform: [
+          'https://schema.org/DesktopWebPlatform',
+          'https://schema.org/MobileWebPlatform',
+        ],
+      },
     },
   };
 };
@@ -604,6 +682,7 @@ export interface MusicRecordingInput {
   url?: string;
   datePublished?: string;
   genre?: string;
+  duration?: string;
 }
 
 export const generateMusicRecordingSchema = (
@@ -641,6 +720,7 @@ export const generateMusicRecordingSchema = (
     }),
     ...(item.datePublished && { datePublished: item.datePublished }),
     ...(item.genre && { genre: item.genre }),
+    ...(item.duration && { duration: item.duration }),
   };
 };
 
@@ -713,6 +793,7 @@ export interface AudioObjectInput {
   description?: string;
   artist?: string;
   genre?: string;
+  duration?: string;
 }
 
 export const generateAudioObjectSchema = (
@@ -724,23 +805,28 @@ export const generateAudioObjectSchema = (
 
   return tracks.map((track) => ({
     '@context': 'https://schema.org',
-    '@type': 'AudioObject',
+    '@type': 'MusicRecording',
     name: track.name,
-    contentUrl: track.contentUrl.startsWith('http') ? track.contentUrl : `${siteUrl}${track.contentUrl}`,
+    url: track.contentUrl.startsWith('http') ? track.contentUrl : `${siteUrl}${track.contentUrl}`,
     encodingFormat: track.encodingFormat || 'audio/mpeg',
     ...(track.description && { description: track.description }),
     ...(track.genre && { genre: track.genre }),
     ...(track.artist && {
-      creator: {
+      byArtist: {
         '@type': 'MusicGroup',
         name: track.artist,
       },
     }),
+    recordingOf: {
+      '@type': 'MusicComposition',
+      name: track.name,
+    },
     publisher: {
       '@type': 'Organization',
       name: config.name,
       url: siteUrl,
     },
+    ...(track.duration && { duration: track.duration }),
   }));
 };
 

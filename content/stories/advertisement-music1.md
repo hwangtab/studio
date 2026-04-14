@@ -2,7 +2,7 @@
 title: "CF·광고음악 완전 가이드 — 광고 BGM 제작·싱크 라이센싱·CM송 작곡"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음악 프로덕션 가이드"
+category: "음악 제작"
 tags: ["광고음악", "CF 음악", "BGM 제작", "싱크 라이센싱", "CM송", "광고 배경음악", "음악 라이센싱"]
 thumbnail: "/images/portfolio2.webp"
 summary: "CF·광고음악 완전 가이드입니다. 광고 BGM 제작 방법, CM송 작곡 전략, 싱크 라이센싱 절차, 음악 길이·포맷 기준, 음악 저작권 등록을 정리합니다."

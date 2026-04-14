@@ -2,7 +2,7 @@
 title: "LUFS 완전 가이드 — 스트리밍 음압 기준과 마스터링 목표값 설정"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "마스터링 가이드"
+category: "믹싱·마스터링"
 tags: ["LUFS", "음압", "스트리밍 음압", "LUFS 기준", "마스터링 음압", "Integrated LUFS", "True Peak"]
 thumbnail: "/images/recording17.webp"
 summary: "LUFS 완전 가이드입니다. LUFS 유형별 차이·플랫폼별 LUFS 기준·장르별 권장 LUFS·True Peak 설정·마스터링 헤드룸과 LUFS·LUFS 측정 플러그인까지 정리합니다."

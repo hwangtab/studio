@@ -37,6 +37,7 @@ interface SEOProps {
   articleSection?: string;
   articleSchemaType?: 'Article' | 'BlogPosting';
   articleTags?: string[];
+  articleWordCount?: number;
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
   reviewItems?: ReviewItem[] | null;
@@ -66,6 +67,7 @@ const SEO = ({
   articleSection,
   articleSchemaType = 'Article',
   articleTags,
+  articleWordCount,
   breadcrumbs = null,
   faqItems = null,
   reviewItems = null,
@@ -74,7 +76,7 @@ const SEO = ({
 }: SEOProps) => {
   const router = useRouter();
 
-  const currentPath = router.asPath.split('?')[0];
+  const currentPath = router.asPath.split('?')[0].split('#')[0];
   const segments = currentPath.split('/');
   let pathWithoutLocale = currentPath;
   let currentLocale: Locale = 'ko';
@@ -172,7 +174,8 @@ const SEO = ({
           currentLocale,
           articleSchemaType,
           articleSection,
-          articleTags
+          articleTags,
+          articleWordCount
         )
         : null,
     [
@@ -189,6 +192,7 @@ const SEO = ({
       articleSchemaType,
       articleSection,
       articleTags,
+      articleWordCount,
     ]
   );
 
@@ -329,7 +333,7 @@ const SEO = ({
         <link
           rel="alternate"
           hrefLang="x-default"
-          href={`${siteUrl}/en${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+          href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
         />
       )}
 
@@ -377,6 +381,18 @@ const SEO = ({
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content={ogImageAlt || resolvedTitle} />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
+      {ogType === 'article' && articleAuthor && (
+        <meta name="twitter:label1" content={currentLocale === 'ko' ? '작성자' : 'Written by'} />
+      )}
+      {ogType === 'article' && articleAuthor && (
+        <meta name="twitter:data1" content={articleAuthor} />
+      )}
+      {ogType === 'article' && articleSection && (
+        <meta name="twitter:label2" content={currentLocale === 'ko' ? '카테고리' : 'Category'} />
+      )}
+      {ogType === 'article' && articleSection && (
+        <meta name="twitter:data2" content={articleSection} />
+      )}
 
       {renderSchema(finalSchema)}
     </Head>

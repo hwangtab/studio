@@ -2,7 +2,7 @@
 title: "Melodyne 보컬 피치 교정 완전 가이드 — 자연스럽고 정밀한 음정 보정"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["Melodyne 사용법", "멜로다인 피치 교정", "Melodyne 보컬", "Melodyne ARA2", "보컬 음정 교정", "Melodyne Editor", "피치 보정 플러그인"]
 thumbnail: "/images/hardware8.webp"
 summary: "Melodyne 보컬 피치 교정 완전 가이드입니다. Melodyne 버전 비교, 기본 조작 (노트 이동·피치 센터·Formant), ARA2 DAW 통합 사용법, 자연스러운 교정 팁을 정리합니다."

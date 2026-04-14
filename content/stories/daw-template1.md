@@ -2,7 +2,7 @@
 title: "DAW 믹싱 템플릿 완전 가이드 — 보컬 녹음·믹싱 세션 파일 세팅 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "믹싱 가이드"
+category: "믹싱·마스터링"
 tags: ["DAW 믹싱 템플릿", "보컬 녹음 세션", "믹싱 세션 세팅", "DAW 프로젝트 파일", "Ableton 템플릿", "Logic Pro 템플릿", "믹싱 워크플로우"]
 thumbnail: "/images/recording1.webp"
 summary: "DAW 믹싱 템플릿 완전 가이드입니다. 보컬 녹음·믹싱용 DAW 세션 파일 구성, 트랙 레이아웃, 버스/Aux 라우팅, 플러그인 체인 미리 설정하는 방법을 정리합니다."

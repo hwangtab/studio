@@ -2,7 +2,7 @@
 title: "스튜디오 놀 웹사이트 리뉴얼 완료!"
 date: 2025-06-04
 author: "스튜디오 놀"
-category: "공지"
+category: "이벤트"
 tags: ["리뉴얼", "녹음실"]
 summary: "스튜디오 놀 웹사이트 새 단장 완료 안내. 녹음·믹싱·마스터링·보컬 레슨·합주실 서비스 정보를 새롭게 정비했습니다."
 thumbnail: "/images/hardware3.webp"

@@ -32,7 +32,7 @@ interface StoryDetailPageProps {
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
-const storyCategoryKeys = ['news', 'lesson', 'feedback', 'region', 'instrument', 'music-guide'] as const;
+const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'] as const;
 
 const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -92,6 +92,12 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
     );
   }, [story.faq, locale]);
 
+  const wordCount = React.useMemo(() => {
+    if (!story.content) return undefined;
+    const plainText = stripMarkdown(story.content);
+    return plainText.split(/\s+/).filter(Boolean).length;
+  }, [story.content]);
+
   if (router.isFallback) {
     return <LoadingSpinner locale={locale} />;
   }
@@ -125,15 +131,18 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         disableAlternates={story.isFallbackTranslation}
         ogImage={ogImage}
         ogImageAlt={story.thumbnail ? story.title : `${story.title} - ${siteConfig.name}`}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         ogType="article"
         author={story.author || undefined}
-        robots={story.isFallbackTranslation ? 'noindex, follow' : undefined}
+        robots={(story.isFallbackTranslation || story.isThinContent) ? 'noindex, follow' : undefined}
         articlePublishedTime={story.date}
         articleModifiedTime={story.modifiedDate}
         articleAuthor={story.author}
         articleSchemaType="BlogPosting"
         articleSection={story.category}
         articleTags={story.tags ?? undefined}
+        articleWordCount={wordCount}
         includeSchema
         schema={faqSchema ? [faqSchema] : undefined}
         breadcrumbs={[
@@ -192,8 +201,11 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           </button>
         </div>
 
-        <article>
+        <article itemScope itemType="https://schema.org/BlogPosting">
+          <meta itemProp="headline" content={story.title} />
+          {story.date && <meta itemProp="datePublished" content={story.date} />}
           <m.div
+            itemProp="articleBody"
             {...STORY_BODY_ANIMATION}
             className="mb-12"
           >

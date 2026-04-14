@@ -15,6 +15,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getReviews } from '../../data/reviews';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -63,6 +64,44 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
     const whySectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
     const pricingSectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
 
+    const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
+
+    const lessonServiceSchema = React.useMemo(() => ({
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: t('lesson.seo.title'),
+        description: t('lesson.seo.description'),
+        inLanguage: schemaLanguage,
+        serviceType: locale === 'ko' ? '음악 레슨' : 'Music Lesson',
+        areaServed: [
+            { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
+            { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
+            { '@type': 'Neighborhood', name: 'Yeonsinnae' },
+        ],
+        location: {
+            '@type': 'Place',
+            name: siteConfig.name,
+            address: {
+                '@type': 'PostalAddress',
+                addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
+                addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
+                postalCode: '03424',
+                addressCountry: 'KR',
+            },
+            geo: {
+                '@type': 'GeoCoordinates',
+                latitude: 37.614353,
+                longitude: 126.925887,
+            },
+        },
+        url: `${siteConfig.url}/${locale}/lesson`,
+        provider: {
+            '@type': 'Organization',
+            '@id': `${siteConfig.url}/#organization`,
+            name: siteConfig.name,
+        },
+    }), [t, siteConfig, locale, schemaLanguage]);
+
     const lessonQuickAnswers = React.useMemo(() => ([
         {
             question: t('lesson.quickAnswers.items.0.q'),
@@ -97,6 +136,8 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                 ogImageWidth={1280}
                 ogImageHeight={720}
                 webPageType="ItemPage"
+                canonical={`/${locale}/lesson`}
+                schema={lessonServiceSchema}
             />
             <ImageHero
                 locale={locale}
@@ -113,6 +154,10 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                 imageAlt={t('lesson.hero.alt')}
                 minHeight="min-h-[60vh]"
                 overlayGradient="from-black/40 via-transparent to-black/20"
+                breadcrumbItems={[
+                    { name: t('nav.home'), path: `/${locale}` },
+                    { name: t('nav.lesson'), path: `/${locale}/lesson` },
+                ]}
             />
 
             <QuickAnswers
@@ -300,8 +345,14 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                         {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                     <Link
-                        href={`/${locale}/contact`}
+                        href={`/${locale}/pricing`}
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+                    >
+                        {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
+                    </Link>
+                    <Link
+                        href={`/${locale}/contact`}
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
                     >
                         {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>

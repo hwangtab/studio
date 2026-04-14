@@ -2,7 +2,7 @@
 title: "SSL G-Bus 컴프레서 완전 가이드 — 믹스 버스 컴프레션의 표준"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["SSL G-Bus 컴프레서", "믹스 버스 컴프레서", "SSL 버스 컴프레서", "SSL 4000 G", "버스 컴프레션", "SSL 플러그인", "마스터 버스"]
 thumbnail: "/images/room6.webp"
 summary: "SSL G-Bus 컴프레서 완전 가이드입니다. SSL G-Bus 파라미터 이해·마스터 버스 설정·드럼 버스 설정·보컬 버스 설정·SSL G-Bus 플러그인 에뮬레이션 비교까지 정리합니다."

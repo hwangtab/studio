@@ -1,9 +1,9 @@
 {
-  "name": "Studio NOL",
-  "short_name": "Studio NOL",
-  "description": "Music recording, practice room, mixing, mastering, and production studio.",
-  "id": "/",
-  "start_url": "/",
+  "name": "스튜디오 놀",
+  "short_name": "스튜디오 놀",
+  "description": "연신내 녹음실·음악연습실·믹싱/마스터링 스튜디오. 연신내역 도보 5분.",
+  "id": "/ko/",
+  "start_url": "/ko/",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "browser"],
@@ -14,6 +14,29 @@
   "dir": "ltr",
   "categories": ["music", "entertainment", "business"],
   "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/images/studio2.webp",
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "type": "image/webp",
+      "label": "스튜디오 놀 메인 콘솔"
+    },
+    {
+      "src": "/images/hardware1.webp",
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "type": "image/webp",
+      "label": "스튜디오 놀 하드웨어"
+    },
+    {
+      "src": "/images/studio1.webp",
+      "sizes": "1280x720",
+      "form_factor": "narrow",
+      "type": "image/webp",
+      "label": "스튜디오 놀 전경"
+    }
+  ],
   "shortcuts": [
     {
       "name": "문의하기",

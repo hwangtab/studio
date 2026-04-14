@@ -2,7 +2,7 @@
 title: "음압(LUFS)과 스트리밍 마스터링 완전 가이드"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "마스터링 가이드"
+category: "믹싱·마스터링"
 tags: ["LUFS", "음압 마스터링", "스트리밍 마스터링", "loudness normalization", "마스터링 음압", "스포티파이 음압", "유튜브 음압 기준"]
 thumbnail: "/images/hardware1.webp"
 summary: "스포티파이·유튜브·애플뮤직 등 스트리밍 플랫폼의 음압 기준(LUFS)을 이해하고 최적의 마스터링 레벨을 설정하는 방법을 정리합니다."

@@ -17,13 +17,13 @@ const shouldEnforceCanonicalHost = process.env.NODE_ENV === 'production' && Bool
 function buildContentSecurityPolicy(): string {
     return [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com",
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com",
         "script-src-attr 'none'",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' data: https://cdn.jsdelivr.net https://fastly.jsdelivr.net https://fonts.gstatic.com",
         "frame-src 'self' https://www.google.com https://www.google.co.kr",
-        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
         "frame-ancestors 'self'",
@@ -90,9 +90,9 @@ export function middleware(request: NextRequest) {
 
     if (!pathnameHasLocale) {
         // Redirect to locale-prefixed path
-        // 봇(Accept-Language 없음)은 x-default와 일치하도록 /en으로 보냄
+        // 봇(Accept-Language 없음)은 x-default와 일치하도록 /ko로 보냄
         const acceptLanguage = request.headers.get('accept-language');
-        const locale = (isBot && !acceptLanguage) ? 'en' as Locale : getPreferredLocale(request);
+        const locale = (isBot && !acceptLanguage) ? 'ko' as Locale : getPreferredLocale(request);
         redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
         shouldRedirect = true;
         shouldVaryByLanguage = true;

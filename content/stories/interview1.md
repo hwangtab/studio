@@ -2,7 +2,7 @@
 title: "박찬울 프로듀서 인터뷰"
 date: 2025-06-05
 author: "스튜디오 놀"
-category: "인터뷰"
+category: "후기"
 tags: ["박찬울", "인터뷰", "Golden Hour"]
 summary: "자이(Jai) 앨범 'Golden Hour' 프로듀서 박찬울 인터뷰. 25년 음악 여정, 록·재즈·팝을 넘나드는 사운드 완성기, 스튜디오 놀에서 진행한 레코딩 작업 비하인드를 공개합니다."
 thumbnail: "/images/recording8.webp"

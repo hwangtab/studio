@@ -3,7 +3,7 @@ title: "คอร์สมิกซ์ - ตอนที่ 1: จุดเร�
 date: 2025-11-12
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "บทเรียน", "ผู้เริ่มต้น", "Mixing", "บทนำ"]
+tags: ["Mixing", "บทเรียน", "ผู้เริ่มต้น", "บทนำ"]
 ---
 ![คอนโซลมิกซ์และมุมมองสตูดิโอ](/images/console.webp)
 

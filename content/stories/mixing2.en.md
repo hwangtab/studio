@@ -3,7 +3,7 @@ title: "Mixing Course - Part 2: Taming the Lying Room"
 date: 2025-11-13
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "Monitoring", "Monitoring", "RoomAcoustic"]
+tags: ["Mixing", "Lesson", "Monitoring", "RoomAcoustic"]
 ---
 ![Studio monitor speaker placement](/images/studio1.webp)
 

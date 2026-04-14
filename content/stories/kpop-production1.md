@@ -2,7 +2,7 @@
 title: "K-POP 프로덕션 완전 가이드 — 아이돌 음반 제작 흐름과 보컬 제작"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["K-POP 프로덕션", "케이팝 음반 제작", "아이돌 음반", "K-POP 보컬 제작", "K-POP 믹싱", "케이팝 마스터링", "보컬 프로덕션"]
 thumbnail: "/images/lesson1.webp"
 summary: "K-POP 프로덕션 완전 가이드입니다. K-POP 음반 제작 흐름(작곡·편곡·보컬 레코딩·믹싱·마스터링), 보컬 프로세싱, 오토튠 활용, K-POP 믹싱 사운드 특징을 정리합니다."

@@ -2,7 +2,7 @@
 title: "디에서(De-esser) 완전 가이드 — 보컬 치찰음 제거 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "믹싱 가이드"
+category: "믹싱·마스터링"
 tags: ["디에서", "de-esser", "치찰음 제거", "보컬 시빌런스", "보컬 믹싱", "sibilance", "보컬 EQ"]
 thumbnail: "/images/room7.webp"
 summary: "디에서(De-esser)는 보컬의 치찰음(s, sh, ch 소리)을 줄여주는 믹싱 도구입니다. 사용 시기, 주파수 설정, 인기 플러그인을 정리합니다."

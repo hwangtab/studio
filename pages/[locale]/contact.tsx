@@ -83,6 +83,36 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
   const noticeList = t('contact.notice.list', { returnObjects: true });
   const resolvedNoticeList = Array.isArray(noticeList) ? noticeList : null;
 
+  const contactPageSchema = React.useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${siteConfig.url}/#organization`,
+    name: siteConfig.name,
+    url: `${siteConfig.url}/${locale}/contact`,
+    telephone: `+82-${siteConfig.contact.phone.replace(/^0/, '')}`,
+    email: siteConfig.contact.email,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
+      addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
+      postalCode: '03424',
+      addressCountry: 'KR',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 37.614353,
+      longitude: 126.925887,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      telephone: `+82-${siteConfig.contact.phone.replace(/^0/, '')}`,
+      email: siteConfig.contact.email,
+      url: `${siteConfig.url}/${locale}/contact`,
+      availableLanguage: ['Korean', 'English'],
+    },
+  }), [siteConfig, locale]);
+
   return (
     <>
       <SEO
@@ -98,9 +128,11 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
           { name: t('nav.contact'), path: `/${locale}/contact` },
         ]}
         includeSchema={true}
+        canonical={`/${locale}/contact`}
         faqItems={contactFaqData}
         webPageType="ContactPage"
         reviewItems={reviewsData}
+        schema={contactPageSchema}
       />
       <ImageHero
         {...{
@@ -112,6 +144,10 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
           imageAlt: t('contact.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/50 via-black/30 to-black/50",
+          breadcrumbItems: [
+            { name: t('nav.home'), path: `/${locale}` },
+            { name: t('nav.contact'), path: `/${locale}/contact` },
+          ],
         }}
       />
 

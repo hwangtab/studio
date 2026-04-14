@@ -112,21 +112,22 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const siteNavSchema = useMemo(() => {
     const sc = getSiteConfig(locale);
     const base = `${sc.url}/${locale}`;
+    const tNav = (key: string) => i18n.t(`nav.${key}`, { lng: locale });
     return {
       '@context': 'https://schema.org',
       '@type': 'SiteNavigationElement',
-      name: 'Main Navigation',
+      name: tNav('home'),
       hasPart: [
         { '@type': 'SiteNavigationElement', name: sc.name, url: base },
-        { '@type': 'SiteNavigationElement', name: 'Pricing', url: `${base}/pricing` },
-        { '@type': 'SiteNavigationElement', name: 'Studio Info', url: `${base}/studio-info` },
-        { '@type': 'SiteNavigationElement', name: 'Practice Room', url: `${base}/practice-room` },
-        { '@type': 'SiteNavigationElement', name: 'Lesson', url: `${base}/lesson` },
-        { '@type': 'SiteNavigationElement', name: 'Wedding Song', url: `${base}/wedding-song` },
-        { '@type': 'SiteNavigationElement', name: 'Voice Acting', url: `${base}/voice-acting` },
-        { '@type': 'SiteNavigationElement', name: 'Portfolio', url: `${base}/portfolio` },
-        { '@type': 'SiteNavigationElement', name: 'Stories', url: `${base}/stories` },
-        { '@type': 'SiteNavigationElement', name: 'Contact', url: `${base}/contact` },
+        { '@type': 'SiteNavigationElement', name: tNav('pricing'), url: `${base}/pricing` },
+        { '@type': 'SiteNavigationElement', name: tNav('equipment'), url: `${base}/studio-info` },
+        { '@type': 'SiteNavigationElement', name: tNav('practiceRoom'), url: `${base}/practice-room` },
+        { '@type': 'SiteNavigationElement', name: tNav('lesson'), url: `${base}/lesson` },
+        { '@type': 'SiteNavigationElement', name: tNav('weddingSong'), url: `${base}/wedding-song` },
+        { '@type': 'SiteNavigationElement', name: tNav('voiceActing'), url: `${base}/voice-acting` },
+        { '@type': 'SiteNavigationElement', name: tNav('portfolio'), url: `${base}/portfolio` },
+        { '@type': 'SiteNavigationElement', name: tNav('stories'), url: `${base}/stories` },
+        { '@type': 'SiteNavigationElement', name: tNav('contact'), url: `${base}/contact` },
       ],
     };
   }, [locale]);
@@ -167,8 +168,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="msapplication-TileColor" content="#6d28d9" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <link rel="manifest" href="/manifest.json" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="스튜디오 놀" />
+        <link rel="manifest" href={`/api/manifest?locale=${locale}`} />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="alternate" type="application/rss+xml" title={locale === 'ko' ? '스튜디오 놀 스토리' : locale === 'zh' ? 'Studio NOL 故事' : locale === 'es' ? 'Studio NOL Historias' : locale === 'vi' ? 'Studio NOL Câu chuyện' : locale === 'th' ? 'Studio NOL เรื่องราว' : locale === 'uz' ? 'Studio NOL Hikoyalar' : 'Studio NOL Stories'} href={`/api/rss?locale=${locale}`} />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />

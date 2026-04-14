@@ -115,7 +115,7 @@
     },
     "seo": {
       "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar",
-      "title": "Yeonsinnae Musiqa Studiyasi · Yozuv, Miks, Mastering | Studio NOL",
+      "title": "Yeonsinnae Studiyasi · Yozuv, Miks, Mastering | Studio NOL",
       "description": "Studio NOL yozuv, miks, mastering va tarqatishgacha to'liq musiqa xizmatini taqdim etadi. 10 yillik tajriba va analog uskunalar."
     },
     "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
@@ -141,7 +141,7 @@
     "seo": {
       "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL",
       "title": "Yozuv va Miks Portfolio | Studio NOL",
-      "description": "Studio NOL ning yozuv, miks va mastering loyihalarini ko'ring. Turli janrlarda oldin-keyin namunalarini tinglang."
+      "description": "Studio NOL Yeonsinnae ning yozuv, miks va mastering loyihalarini ko'ring. Turli janrlarda oldin-keyin namunalarini tinglang va professional sifatni his qiling."
     }
   },
   "contact": {
@@ -199,7 +199,7 @@
     "seo": {
       "keywords": "Studio NOL aloqa, musiqa prodakshn so'rovi, yozuv bron qilish, miks so'rovi, studio manzili, KakaoTalk konsultatsiya, prodakshn narxlari",
       "title": "Aloqa, Bron va Yo'nalish | Studio NOL",
-      "description": "Yozuv, miks va mastering bo'yicha murojaat qiling. KakaoTalk va email orqali mavjud. Yeonsinnae bekatidan 5 daqiqa piyoda."
+      "description": "Yozuv, miks va mastering bo'yicha murojaat qiling. KakaoTalk va email orqali mavjud. Yeonsinnae bekatidan 5 daqiqa. 24 soat ichida javob."
     }
   },
   "pricing": {
@@ -268,13 +268,13 @@
   "lesson": {
     "seo": {
       "title": "Musiqa prodakshn masterklass | Studio NOL",
-      "description": "Tarqatish bo'yicha konsultatsiyadan 1:1 miks fikr-mulohazagacha. Musiqangizni pro muhandislik bilan ro'yobga chiqarish.",
+      "description": "Yeonsinnae bekatidan 5 daqiqa, professional producer bilan 1:1 dars. MIDI, miks, mastering va tarqatish. Birinchi maslahat bepul. ₩350K/oy.",
       "keywords": "musiqa prodakshn konsultatsiyasi, miks fikr-mulohaza, MIDI mentoring, musiqa prodakshn coaching, qisqa muddatli MIDI darslari, Cubase, Logic Pro"
     },
     "hero": {
       "title": "All-in-One prodakshn masterklass",
       "subtitleLine1": "Tasavvurni ovozga, g'oyani tayyor trekka aylantiring.",
-      "subtitleLine2": "Professional makonda professional bilimlarni o'rganing.",
+      "subtitleLine2": "Professional bilim · Yeonsinnae bekatidan 5 daqiqa piyoda.",
       "alt": "Studio NOL nazorat xonasi monitoring karnaylari va miks pulti bilan"
     },
     "intro": {
@@ -376,8 +376,8 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Eunpyeongdagi premium 24 soatlik mashg'ulot xonasi | Studio NOL",
-      "description": "Eunpyeong-gu'da premium tovush izolyatsiyali mashg'ulot xonalari, Yeongsinnae bekatidan 5 daqiqada. 24/7 kirish, barcha cholg'u asboblar bilan. ₩400K/oydan.",
+      "title": "Premium 24h Mashg'ulot Xonasi Yeonsinnae | Studio NOL",
+      "description": "Eunpyeong-gu'da premium tovush izolyatsiyali mashg'ulot xonalari, Yeonsinnae bekatidan 5 daqiqada. 24/7 kirish, barcha cholg'u asboblar bilan. ₩400K/oydan.",
       "keywords": "mashg'ulot xonasi, tovush izolyatsiyali mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, private studio, Studio NOL"
     },
     "hero": {
@@ -490,8 +490,8 @@
   },
   "studioInfo": {
     "seo": {
-      "title": "Seuldagi professional yozuv studiyasi | Neumann U87AI · SSL Fusion | Studio NOL",
-      "description": "Seul Eunpyeong-gu'dagi professional yozuv studiyasi — Yeongsinnae stansiyasidan 5 daqiqa yurish. Neumann U87AI, SSL Fusion. Soatiga 100,000 vondan, professional muhandis bilan.",
+      "title": "Professional Yozuv Studiyasi | Neumann U87AI | Studio NOL",
+      "description": "Seoul Eunpyeong-gu, Yeonsinnae stansiyasidan 5 daqiqa. Neumann U87AI, SSL Fusion. Soatiga 100,000 vondan, professional muhandis bilan.",
       "keywords": "Seul yozuv studiyasi, Koreya yozuv studiyasi, professional yozuv, mikslash mastering, Studio NOL"
     },
     "hero": {
@@ -527,13 +527,13 @@
   "stories": {
     "seo": {
       "title": "Hikoyalar - Studio NOL loyiha kundaliklari",
-      "description": "Studio NOL loyihalari haqida maqolalar, uskunalar sharhlari va san'atkorlar bilan suhbatlar. Professional ovoz muhandisi nuqtai nazaridan musiqa ishlab chiqarishni o'rganing.",
+      "description": "Studio NOL loyihalari, uskunalar sharhlari va san'atkorlar bilan suhbatlar. Professional muhandis nuqtai nazaridan musiqa ishlab chiqarishni o'rganing.",
       "keywords": "Studio NOL hikoyalari, prodakshn sharhlari, musiqa prodakshn hikoyalari",
       "fallbackKeywords": "Studio NOL, yozuv studiyasi, musiqa prodakshn, vokal darslari, miks mastering, mashg'ulot xonasi"
     },
     "hero": {
       "title": "Hikoyalar",
-      "subtitle": "Studio ishlariga oid turli hikoyalarni ko'ring.",
+      "subtitle": "Yozib olish, miksing, mastering, vokal darslari va mashq xonasi sharhlari — real tajribalar va musiqa tavsiyalari.",
       "alt": "Studio NOL hikoyalari"
     },
     "filters": {
@@ -592,13 +592,17 @@
       "viewAll": "Barcha hikoyalarni ko'rish"
     },
     "categories": {
-      "news": "Yangiliklar",
+      "instrument": "Asbob mashqlari",
+      "region": "Hudud yoʻriqnomasi",
       "lesson": "Dars",
+      "production": "Musiqa ishlab chiqarish",
+      "recording": "Yozuv yoʻriqnomasi",
+      "vocal": "Vokal yoʻriqnomasi",
       "feedback": "Sharhlar",
-      "region": "Hudud bo'yicha qo'llanma",
-      "instrument": "Cholg'u mashqi",
-      "music-guide": "Musiqa qo'llanmasi"
-    }
+      "mixing": "Miks va mastering",
+      "business": "Musiqa biznesi",
+      "event": "Tadbirlar"
+      }
   },
   "reviewSection": {
     "titlePrefix": "Birga yaratamiz:",
@@ -659,13 +663,13 @@
   "weddingSong": {
     "seo": {
       "title": "To'y qo'shig'i yozish · To'liq paket 350,000 ₩ | Studio Nol",
-      "description": "Yeonsin-nae stansiyasidan 5 daqiqa yurish masofa. Yangi boshlovchilar ham xush kelibsiz. 2 soat yozuv + ovoz sozlash + mikslash va mastering 350,000 ₩. O'sha kuni asosiy versiyani olish mumkin.",
+      "description": "Yeonsinnae stansiyasidan 5 daqiqa. Yangi boshlovchilar xush kelibsiz. Yozuv + ovoz sozlash + mikslash va mastering 350,000 ₩. O'sha kuni versiya olish mumkin.",
       "keywords": "to'y qo'shig'i yozish, ovoz yozish studiyasi, Seoul ovoz yozish, Studio Nol"
     },
     "hero": {
       "title": "Qo'shiq orqali his-tuyg'ularingizni ulashing",
       "subtitleLine1": "Yangi boshlovchilar uchun ham qulay — professional muhandis har bosqichda yordamida",
-      "subtitleLine2": "Yozishdan tortib mikslash va masteringgacha to'liq paket",
+      "subtitleLine2": "Yozishdan masteringgacha to'liq paket · Yeonsinnae bekati yaqinida",
       "alt": "Studio Nol'da ovoz yozish sessiyasi"
     },
     "quickAnswers": {
@@ -771,14 +775,14 @@
   },
   "voiceActing": {
     "seo": {
-      "title": "Ovoz yozish studiyasi · Naratsiya yozish 100,000 ₩/soat | Studio Nol",
-      "description": "Yeonsin-nae stansiyasidan 5 daqiqa. Neumann U87AI, mukammal tovush izolyatsiyasi. 100,000 ₩/soat, real vaqt tahriri. YouTube naratsiyasi, audio kitoblar, reklama yozishlari.",
+      "title": "Ovoz Yozish Studiyasi · Naratsiya 100,000₩/soat | Studio NOL",
+      "description": "Yeonsinnae stansiyasidan 5 daqiqa. Neumann U87AI, mukammal izolyatsiya. 100,000 ₩/soat, real vaqt tahriri. YouTube, audio kitob, reklama yozishlari.",
       "keywords": "ovoz yozish studiyasi Seoul, naratsiya yozish, voiceover studiyasi, podcast yozish, audio kitob yozish, Studio Nol"
     },
     "hero": {
       "title": "Ovozingiz, professional yozilgan",
       "subtitleLine1": "Zamonaviy jihozlar va mukammal tovush izolyatsiyasi",
-      "subtitleLine2": "Ovoz aktyorligi, naratsiya va podcast yozish",
+      "subtitleLine2": "Ovoz aktyorligi, naratsiya & podcast · Yeonsinnae bekatidan 5 daqiqa",
       "alt": "Studio Nol'da ovoz yozish sessiyasi"
     },
     "quickAnswers": {

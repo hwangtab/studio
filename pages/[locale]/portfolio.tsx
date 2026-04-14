@@ -41,11 +41,11 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
   const canonicalOverride = router.query.item
-    ? `${siteUrl}/${locale}/portfolio/${router.query.item}`
-    : undefined;
+    ? `/${locale}/portfolio/${router.query.item}`
+    : `/${locale}/portfolio`;
 
   const itemListSchema = React.useMemo(() => generateItemListSchema(
-    initialPortfolioItems.slice(0, 20).map((item) => ({
+    initialPortfolioItems.map((item) => ({
       id: item.id,
       name: `${item.artist} - ${item.title}`,
       url: `/${locale}/portfolio/${item.id}`,
@@ -148,7 +148,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         ogImageWidth={1920}
         ogImageHeight={937}
         canonical={canonicalOverride}
-        disableAlternates={Boolean(canonicalOverride)}
+        disableAlternates={Boolean(router.query.item)}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
@@ -171,6 +171,10 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           imageAlt: t('portfolio.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/40 via-transparent to-black/20",
+          breadcrumbItems: [
+            { name: t('nav.home'), path: `/${locale}` },
+            { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
+          ],
         }}
       />
 

@@ -2,7 +2,7 @@
 title: "모니터 스피커 완전 가이드 — 스튜디오 모니터 선택·추천·비교"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["모니터 스피커", "스튜디오 모니터", "모니터 스피커 추천", "Yamaha HS8", "Genelec 8020", "Adam Audio", "믹싱 스피커"]
 thumbnail: "/images/portfolio6.webp"
 summary: "스튜디오 모니터 스피커 완전 가이드입니다. 모니터 스피커 유형·주요 모니터 스피커 비교·모니터 스피커 설치 가이드·모니터 스피커 캘리브레이션까지 정리합니다."

@@ -3,7 +3,7 @@ title: "Mixing Course - Part 7: A Mix Starts with Organization"
 date: 2025-11-18
 author: "Studio NOL"
 category: "lesson"
-tags: ["Mixing", "Lesson", "SessionPrep", "SessionPrep", "Workflow"]
+tags: ["Mixing", "Lesson", "SessionPrep", "Workflow"]
 ---
 ![Messy cables and a neat patchbay](/images/service3.webp)
 

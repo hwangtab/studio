@@ -2,7 +2,7 @@
 title: "커버 곡 저작권 완전 가이드 — 유튜브·SNS 업로드 시 주의사항"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "저작권 가이드"
+category: "음악 비즈니스"
 tags: ["커버 곡 저작권", "유튜브 커버 저작권", "커버송 저작권", "KOMCA 커버", "음악 저작권 정리", "SNS 음악 저작권", "커버 업로드 방법"]
 thumbnail: "/images/hardware3.webp"
 summary: "커버 곡을 유튜브·인스타그램·틱톡에 올릴 때 알아야 할 저작권 기초. KOMCA, Content ID, 안전하게 커버를 올리는 방법을 정리합니다."

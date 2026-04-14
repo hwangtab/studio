@@ -2,7 +2,7 @@
 title: "노이즈 게이트 완전 가이드 — Threshold·Attack·Hold·Release 설정법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["노이즈 게이트", "게이트 설정", "Threshold 게이트", "보컬 노이즈 게이트", "드럼 게이트", "노이즈 제거", "게이트 플러그인"]
 thumbnail: "/images/album3.webp"
 summary: "노이즈 게이트 완전 가이드입니다. Threshold·Attack·Hold·Release 파라미터 설명, 보컬·드럼·기타 적용법, 사이드체인 게이팅, 플러그인 비교를 정리합니다."

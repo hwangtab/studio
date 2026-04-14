@@ -2,8 +2,8 @@
 title: "샘플레이트·비트뎁스 완전 가이드 — 44.1kHz vs 48kHz, 16bit vs 24bit"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 기초"
-tags: ["샘플레이트", "비트뎁스", "44.1kHz", "48kHz", "24bit", "WAV 설정", "녹음 품질", "오디오 해상도"]
+category: "녹음 가이드"
+tags: ["샘플레이트", "비트뎁스", "44.1kHz", "48kHz", "24bit", "WAV 설정", "녹음 품질"]
 thumbnail: "/images/hardware5.webp"
 summary: "보컬 녹음 전에 알아야 할 샘플레이트(44.1kHz·48kHz)와 비트뎁스(16bit·24bit) 차이. 스트리밍 납품 표준과 홈 레코딩 권장 설정을 정리합니다."
 faq:

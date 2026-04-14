@@ -2,7 +2,7 @@
 title: "오토튠(Auto-Tune) 완전 가이드 — 음정 교정부터 보컬 이펙트까지"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "믹싱 가이드"
+category: "믹싱·마스터링"
 tags: ["오토튠", "Auto-Tune", "음정 교정", "보컬 피치 교정", "오토튠 사용법", "팝 보컬 이펙트", "T-Pain 이펙트"]
 thumbnail: "/images/recording1.webp"
 summary: "오토튠(Auto-Tune)의 동작 원리, 자연스러운 음정 교정 모드와 극단적 이펙트 모드의 차이, 장르별 활용 방법을 안내합니다. 올바른 사용과 흔한 실수도 정리합니다."

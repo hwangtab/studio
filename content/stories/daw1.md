@@ -3,7 +3,7 @@ title: "DAW 선택 가이드 — GarageBand·Logic·Ableton·FL Studio 비교"
 date: 2026-04-06
 author: "스튜디오 놀"
 category: "강좌"
-tags: ["DAW 추천", "DAW 선택", "GarageBand", "Logic Pro", "Ableton Live", "FL Studio", "Cubase", "보컬 녹음 DAW"]
+tags: ["DAW 추천", "DAW 선택", "Logic Pro", "보컬 녹음 DAW", "GarageBand", "Ableton Live", "FL Studio"]
 thumbnail: "/images/hardware3.webp"
 summary: "보컬 녹음과 음악 제작에 사용하는 DAW(디지털 오디오 워크스테이션) 완전 비교 가이드. 주요 DAW 비교·용도별 추천 DAW·DAW 없이 보컬 녹음하는 방법까지 정리합니다."
 faq:

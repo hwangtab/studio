@@ -2,7 +2,7 @@
 title: "스펙트럼 분석기 완전 가이드 — 믹싱·마스터링에서 주파수 시각화 활용법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["스펙트럼 분석기", "주파수 분석", "믹싱 시각화", "FFT 분석", "마스터링 스펙트럼", "주파수 밸런스", "Span 플러그인"]
 thumbnail: "/images/service6.webp"
 summary: "스펙트럼 분석기 완전 가이드입니다. FFT 원리, 믹싱·마스터링에서의 활용법, 주파수 밸런스 체크, 마스킹 발견, SPAN·iZotope Insight 등 추천 플러그인을 정리합니다."

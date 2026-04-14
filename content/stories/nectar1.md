@@ -2,7 +2,7 @@
 title: "iZotope Nectar 보컬 처리 완전 가이드 — AI 올인원 보컬 플러그인"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["iZotope Nectar", "넥타 보컬", "Nectar 4 사용법", "AI 보컬 플러그인", "보컬 처리 올인원", "Nectar 하모니", "iZotope 보컬"]
 thumbnail: "/images/recording2.webp"
 summary: "iZotope Nectar 보컬 처리 완전 가이드입니다. Nectar 4 모듈 구성·Vocal Assistant 활용·핵심 모듈 설정·Harmony 모듈 활용·Reverb 모듈 설정까지 정리합니다."

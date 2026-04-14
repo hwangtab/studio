@@ -2,7 +2,7 @@
 title: "보컬 EQ 완전 가이드 — 주파수 대역별 보컬 처리 방법"
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "음반 제작 가이드"
+category: "음악 제작"
 tags: ["보컬 EQ", "보컬 이퀄라이저", "보컬 주파수", "보컬 EQ 설정", "High Pass Filter 보컬", "보컬 존재감", "FabFilter Pro-Q3 보컬"]
 thumbnail: "/images/hardware4.webp"
 summary: "보컬 EQ 완전 가이드입니다. 주파수 대역별 역할, High-Pass Filter 설정, 존재감 강조, 치찰음 제어, 장르별 보컬 EQ 설정, 플러그인 비교를 정리합니다."
