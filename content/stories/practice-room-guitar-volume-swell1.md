@@ -237,6 +237,3 @@ B.B. King, Chet Atkins
 
 은평구 24시간 음악연습실에서 볼륨 노브 기법부터 시작하세요. 어택 없이 음이 피어나는 순간, 기타가 바이올린이 됩니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

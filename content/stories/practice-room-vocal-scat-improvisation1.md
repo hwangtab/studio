@@ -275,6 +275,3 @@ C-B-Bb-A-Ab-G-F#-F-E-Eb-D-Db-C
 
 은평구 24시간 음악연습실에서 큰 소리로 실수를 두려워하지 않고 스캣을 탐구하세요. 재즈의 언어는 많이 말할수록 유창해집니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

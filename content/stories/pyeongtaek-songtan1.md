@@ -90,7 +90,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -124,4 +123,3 @@ faq:
 ---
 
 [평택시 전체 녹음실 안내](/stories/pyeongtaek1) | [평택 지산·서정·안중·고덕 녹음실 안내](/stories/pyeongtaek-jisan1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [오산에서 서울 녹음실 방문 가이드](/stories/osan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

@@ -243,6 +243,3 @@ James Brown 밴드의 피아노:
 
 은평구 24시간 음악연습실에서 Bb7 위 스타카토 리프부터 시작하세요. 몸이 움직이기 시작하면, 그것이 진짜 펑크입니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

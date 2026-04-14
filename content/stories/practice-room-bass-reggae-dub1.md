@@ -213,6 +213,3 @@ I - VII - IV - I: E - D - A - E (자메이카 클래식)
 
 은평구 24시간 음악연습실에서 레게와 덥의 깊고 묵직한 세계를 탐구하세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

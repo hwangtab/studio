@@ -232,6 +232,3 @@ Hiatus Kaiyote의 프론트우먼 Nai Palm은 독특한 네오소울 기타로 �
 
 은평구 24시간 음악연습실에서 클린한 앰프 소리로 네오소울 보이싱과 그루브를 탐구하세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

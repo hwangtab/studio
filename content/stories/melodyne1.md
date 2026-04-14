@@ -1,20 +1,37 @@
 ---
-title: "Melodyne 보컬 피치 교정 완전 가이드 — 자연스럽고 정밀한 음정 보정"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["Melodyne 사용법", "멜로다인 피치 교정", "Melodyne 보컬", "Melodyne ARA2", "보컬 음정 교정", "Melodyne Editor", "피치 보정 플러그인"]
-thumbnail: "/images/hardware8.webp"
-summary: "Melodyne 보컬 피치 교정 완전 가이드입니다. Melodyne 버전 비교, 기본 조작 (노트 이동·피치 센터·Formant), ARA2 DAW 통합 사용법, 자연스러운 교정 팁을 정리합니다."
+title: Melodyne 보컬 피치 교정 완전 가이드 — 자연스럽고 정밀한 음정 보정
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - Melodyne 사용법
+  - 멜로다인 피치 교정
+  - Melodyne 보컬
+  - Melodyne ARA2
+  - 보컬 음정 교정
+  - Melodyne Editor
+  - 피치 보정 플러그인
+thumbnail: /images/hardware8.webp
+summary: >-
+  Melodyne 보컬 피치 교정 완전 가이드입니다. Melodyne 버전 비교, 기본 조작 (노트 이동·피치 센터·Formant), ARA2
+  DAW 통합 사용법, 자연스러운 교정 팁을 정리합니다.
 faq:
-  - q: "Melodyne이란 무엇인가요?"
-    a: "Celemony가 개발한 업계 최고의 피치·타이밍 교정 소프트웨어입니다. DNA Direct Note Access 기술로 화음 속 개별 음표를 추출·편집할 수 있으며, 전 세계 전문 스튜디오의 표준 도구입니다."
-  - q: "Melodyne 버전 중 보컬 녹음에는 어떤 버전이 적합한가요?"
-    a: "보컬 피치·타이밍 교정은 Melodyne Assistant 또는 Editor로 충분합니다. Essential은 단선율만 지원하여 화음 편집이 불가합니다. Studio는 화음·드럼 등 모든 기능을 지원합니다."
-  - q: "Melodyne ARA2 통합이란 무엇인가요?"
-    a: "Melodyne을 DAW 내에서 플러그인처럼 직접 사용하는 방식입니다. Logic Pro, Pro Tools, Cubase, Studio One에서 별도 전송 없이 DAW 타임라인에서 바로 Melodyne 편집이 가능합니다."
-  - q: "Melodyne로 자연스러운 피치 교정을 하는 방법은?"
-    a: "Pitch Center를 100%로 맞추지 않고 90~95%로 유지하면 자연스럽습니다. Pitch Modulation(비브라토)은 최소한으로 줄이거나 보존하고, Formant는 건드리지 않는 것이 기본입니다."
+  - q: Melodyne이란 무엇인가요?
+    a: >-
+      Celemony가 개발한 업계 최고의 피치·타이밍 교정 소프트웨어입니다. DNA Direct Note Access 기술로 화음 속
+      개별 음표를 추출·편집할 수 있으며, 전 세계 전문 스튜디오의 표준 도구입니다.
+  - q: Melodyne 버전 중 보컬 녹음에는 어떤 버전이 적합한가요?
+    a: >-
+      보컬 피치·타이밍 교정은 Melodyne Assistant 또는 Editor로 충분합니다. Essential은 단선율만 지원하여 화음
+      편집이 불가합니다. Studio는 화음·드럼 등 모든 기능을 지원합니다.
+  - q: Melodyne ARA2 통합이란 무엇인가요?
+    a: >-
+      Melodyne을 DAW 내에서 플러그인처럼 직접 사용하는 방식입니다. Logic Pro, Pro Tools, Cubase,
+      Studio One에서 별도 전송 없이 DAW 타임라인에서 바로 Melodyne 편집이 가능합니다.
+  - q: Melodyne로 자연스러운 피치 교정을 하는 방법은?
+    a: >-
+      Pitch Center를 100%로 맞추지 않고 90~95%로 유지하면 자연스럽습니다. Pitch Modulation(비브라토)은
+      최소한으로 줄이거나 보존하고, Formant는 건드리지 않는 것이 기본입니다.
 ---
 ![Melodyne 보컬 피치 교정 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
 
@@ -37,7 +54,6 @@ Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 �
 
 ## Melodyne 기본 워크플로우
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
 ### 독립형 사용 (Standalone)
 
@@ -124,7 +140,6 @@ Edit → Correct Pitch
 
 ## 타이밍 교정
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 ### Note Editing 모드
 
@@ -148,4 +163,3 @@ Melodyne은 자연스러운 보컬 피치 교정의 업계 표준입니다.
 ---
 
 [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

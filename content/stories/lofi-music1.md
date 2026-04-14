@@ -1,20 +1,38 @@
 ---
-title: "Lo-Fi 음악 제작 완전 가이드 — Lo-Fi Hip Hop·Chillhop 제작 방법"
-date: 2026-04-06
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["Lo-Fi 음악 제작", "Lo-Fi Hip Hop", "Chillhop", "Lo-Fi 비트 만들기", "Lo-Fi 사운드", "Lo-Fi 믹싱", "Lo-Fi 마스터링"]
-thumbnail: "/images/pcw.webp"
-summary: "Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi 사운드의 핵심 요소·Lo-Fi 비트 제작 방법·Lo-Fi 믹싱·마스터링·Lo-Fi 음악으로 수익 창출까지 정리합니다."
+title: Lo-Fi 음악 제작 완전 가이드 — Lo-Fi Hip Hop·Chillhop 제작 방법
+date: 2026-04-06T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - Lo-Fi 음악 제작
+  - Lo-Fi Hip Hop
+  - Chillhop
+  - Lo-Fi 비트 만들기
+  - Lo-Fi 사운드
+  - Lo-Fi 믹싱
+  - Lo-Fi 마스터링
+thumbnail: /images/pcw.webp
+summary: >-
+  Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi 사운드의 핵심 요소·Lo-Fi 비트 제작 방법·Lo-Fi 믹싱·마스터링·Lo-Fi
+  음악으로 수익 창출까지 정리합니다.
 faq:
-  - q: "Lo-Fi 음악이란 무엇인가요?"
-    a: "Lo-Fi(Low Fidelity) 음악은 의도적으로 음질을 낮추거나 빈티지·아날로그 사운드를 재현하는 장르입니다. 바이닐 크랙클링, 테이프 새추레이션, 느린 템포, 재즈·소울 샘플링이 특징입니다. 집중 공부나 휴식용 배경 음악으로 전 세계적 인기를 끌고 있습니다."
-  - q: "Lo-Fi 비트 제작에 필요한 장비·소프트웨어는?"
-    a: "기본적인 DAW(Ableton Live, FL Studio, Logic Pro)와 Lo-Fi 샘플 팩이면 충분합니다. iZotope Vinyl, Waves J37 같은 테이프 새추레이터, RC-20 Retro Color, Cassette 플러그인이 Lo-Fi 특유의 음색을 만드는 데 사용됩니다."
-  - q: "Lo-Fi 음악에서 샘플링은 어떻게 하나요?"
-    a: "재즈·소울·R&B 바이닐 레코드를 샘플링하는 것이 전통적인 방법이지만 저작권 문제가 있습니다. 현재는 저작권 프리 샘플 팩(Looperman, Splice)을 활용하거나 직접 연주한 재즈 루프를 사용하는 방식이 일반적입니다."
-  - q: "Lo-Fi 음악의 BPM 범위는 어느 정도인가요?"
-    a: "Lo-Fi Hip Hop의 표준 BPM은 70~90BPM입니다. Chillhop은 85~100BPM 범위가 많습니다. 느린 템포가 핵심이며, 스윙(Swing) 그루브를 50~60% 적용해 흘러가는 느낌을 만듭니다."
+  - q: Lo-Fi 음악이란 무엇인가요?
+    a: >-
+      Lo-Fi(Low Fidelity) 음악은 의도적으로 음질을 낮추거나 빈티지·아날로그 사운드를 재현하는 장르입니다. 바이닐 크랙클링,
+      테이프 새추레이션, 느린 템포, 재즈·소울 샘플링이 특징입니다. 집중 공부나 휴식용 배경 음악으로 전 세계적 인기를 끌고 있습니다.
+  - q: Lo-Fi 비트 제작에 필요한 장비·소프트웨어는?
+    a: >-
+      기본적인 DAW(Ableton Live, FL Studio, Logic Pro)와 Lo-Fi 샘플 팩이면 충분합니다. iZotope
+      Vinyl, Waves J37 같은 테이프 새추레이터, RC-20 Retro Color, Cassette 플러그인이 Lo-Fi 특유의
+      음색을 만드는 데 사용됩니다.
+  - q: Lo-Fi 음악에서 샘플링은 어떻게 하나요?
+    a: >-
+      재즈·소울·R&B 바이닐 레코드를 샘플링하는 것이 전통적인 방법이지만 저작권 문제가 있습니다. 현재는 저작권 프리 샘플
+      팩(Looperman, Splice)을 활용하거나 직접 연주한 재즈 루프를 사용하는 방식이 일반적입니다.
+  - q: Lo-Fi 음악의 BPM 범위는 어느 정도인가요?
+    a: >-
+      Lo-Fi Hip Hop의 표준 BPM은 70~90BPM입니다. Chillhop은 85~100BPM 범위가 많습니다. 느린 템포가
+      핵심이며, 스윙(Swing) 그루브를 50~60% 적용해 흘러가는 느낌을 만듭니다.
 ---
 ![Lo-Fi 음악 제작 완전 가이드 — 스튜디오 놀](/images/pcw.webp)
 
@@ -151,4 +169,3 @@ Lo-Fi 음악은 홈 프로덕션으로도 전문적인 결과물이 가능한 �
 ---
 
 [트랩 음악 제작 완전 가이드](/stories/trap-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트메이커·프로듀서 협업 가이드](/stories/beatmaker1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

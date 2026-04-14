@@ -251,6 +251,3 @@ John Paul Jones와 John Bonham의 리듬 섹션.
 
 은평구 24시간 음악연습실에서 드럼 루프와 함께 락킹을 연습하세요. 그루브는 반복으로만 만들어집니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

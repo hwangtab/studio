@@ -302,6 +302,3 @@ E 기반의 DADGAD 음색
 
 은평구 24시간 음악연습실에서 Drop D부터 시작하여 DADGAD로 나아가세요. 각 튜닝이 발견하게 해줄 새로운 코드와 멜로디를 기대하세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

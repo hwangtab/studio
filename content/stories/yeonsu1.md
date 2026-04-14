@@ -90,7 +90,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -128,4 +127,3 @@ faq:
 ---
 
 [인천·부천 녹음실 안내](/stories/incheon1) | [송도 녹음실 안내](/stories/songdo1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/michuhol1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

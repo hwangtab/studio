@@ -1,20 +1,38 @@
 ---
-title: "DAW 믹싱 템플릿 완전 가이드 — 보컬 녹음·믹싱 세션 파일 세팅 방법"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "믹싱·마스터링"
-tags: ["DAW 믹싱 템플릿", "보컬 녹음 세션", "믹싱 세션 세팅", "DAW 프로젝트 파일", "Ableton 템플릿", "Logic Pro 템플릿", "믹싱 워크플로우"]
-thumbnail: "/images/recording1.webp"
-summary: "DAW 믹싱 템플릿 완전 가이드입니다. 보컬 녹음·믹싱용 DAW 세션 파일 구성, 트랙 레이아웃, 버스/Aux 라우팅, 플러그인 체인 미리 설정하는 방법을 정리합니다."
+title: DAW 믹싱 템플릿 완전 가이드 — 보컬 녹음·믹싱 세션 파일 세팅 방법
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 믹싱·마스터링
+tags:
+  - DAW 믹싱 템플릿
+  - 보컬 녹음 세션
+  - 믹싱 세션 세팅
+  - DAW 프로젝트 파일
+  - Ableton 템플릿
+  - Logic Pro 템플릿
+  - 믹싱 워크플로우
+thumbnail: /images/recording1.webp
+summary: >-
+  DAW 믹싱 템플릿 완전 가이드입니다. 보컬 녹음·믹싱용 DAW 세션 파일 구성, 트랙 레이아웃, 버스/Aux 라우팅, 플러그인 체인 미리
+  설정하는 방법을 정리합니다.
 faq:
-  - q: "DAW 믹싱 템플릿이란 무엇인가요?"
-    a: "믹싱 템플릿은 자주 사용하는 트랙 레이아웃·플러그인 체인·라우팅을 미리 설정해 저장한 DAW 세션 파일입니다. 새 프로젝트를 시작할 때 템플릿을 불러오면 반복 설정 없이 바로 작업할 수 있습니다."
-  - q: "보컬 믹싱 템플릿에 어떤 트랙이 필요한가요?"
-    a: "기본 보컬 믹싱 템플릿에는 ①보컬 리드 트랙, ②보컬 더블 트랙, ③보컬 하모니 트랙, ④MR 트랙, ⑤Reverb Aux, ⑥Delay Aux, ⑦마스터 버스 트랙이 필요합니다. 각 트랙에 기본 플러그인 체인을 미리 설정합니다."
-  - q: "샘플레이트와 비트뎁스는 어떻게 설정해야 하나요?"
-    a: "녹음 기준: 24bit/44.1kHz 또는 24bit/48kHz를 권장합니다. 스트리밍 배포 기준은 24bit/44.1kHz입니다. 영상·방송 작업은 48kHz를 사용합니다. 비트뎁스는 최소 24bit 이상을 유지하세요."
-  - q: "템플릿을 DAW별로 저장하는 방법은?"
-    a: "Ableton: File → Save Live Set as Template. Logic Pro: File → Save as Template. Pro Tools: 세션 파일을 Templates 폴더에 저장. 각 DAW에서 템플릿을 불러올 때 New Project 메뉴에 나타납니다."
+  - q: DAW 믹싱 템플릿이란 무엇인가요?
+    a: >-
+      믹싱 템플릿은 자주 사용하는 트랙 레이아웃·플러그인 체인·라우팅을 미리 설정해 저장한 DAW 세션 파일입니다. 새 프로젝트를 시작할
+      때 템플릿을 불러오면 반복 설정 없이 바로 작업할 수 있습니다.
+  - q: 보컬 믹싱 템플릿에 어떤 트랙이 필요한가요?
+    a: >-
+      기본 보컬 믹싱 템플릿에는 ①보컬 리드 트랙, ②보컬 더블 트랙, ③보컬 하모니 트랙, ④MR 트랙, ⑤Reverb Aux,
+      ⑥Delay Aux, ⑦마스터 버스 트랙이 필요합니다. 각 트랙에 기본 플러그인 체인을 미리 설정합니다.
+  - q: 샘플레이트와 비트뎁스는 어떻게 설정해야 하나요?
+    a: >-
+      녹음 기준: 24bit/44.1kHz 또는 24bit/48kHz를 권장합니다. 스트리밍 배포 기준은 24bit/44.1kHz입니다.
+      영상·방송 작업은 48kHz를 사용합니다. 비트뎁스는 최소 24bit 이상을 유지하세요.
+  - q: 템플릿을 DAW별로 저장하는 방법은?
+    a: >-
+      Ableton: File → Save Live Set as Template. Logic Pro: File → Save as
+      Template. Pro Tools: 세션 파일을 Templates 폴더에 저장. 각 DAW에서 템플릿을 불러올 때 New
+      Project 메뉴에 나타납니다.
 ---
 ![DAW 믹싱 템플릿 완전 가이드 — 스튜디오 놀](/images/recording1.webp)
 
@@ -156,4 +174,3 @@ File → Save as Template
 ---
 
 [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

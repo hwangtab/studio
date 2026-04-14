@@ -233,6 +233,3 @@ Bauhaus는 포스트펑크+고딕록의 경계.
 
 은평구 24시간 음악연습실에서 조용히 어두운 분위기를 탐구해보세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

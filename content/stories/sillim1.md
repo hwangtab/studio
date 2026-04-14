@@ -142,7 +142,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -180,4 +179,3 @@ faq:
 ---
 
 [관악구 녹음실 안내](/stories/gwanak1) | [사당·방배 녹음실 안내](/stories/sadang1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,20 +1,39 @@
 ---
-title: "보컬 믹싱 플러그인 추천 — EQ·컴프레서·리버브·피치 교정 도구 완전 가이드"
-date: 2026-04-06
-author: "스튜디오 놀"
-category: "강좌"
-tags: ["오디오 플러그인", "믹싱 플러그인", "보컬 플러그인", "FabFilter", "Waves", "Melodyne", "DAW 플러그인 추천"]
-thumbnail: "/images/hardware4.webp"
-summary: "보컬 믹싱에 사용하는 필수 오디오 플러그인 추천. EQ·컴프레서·리버브·딜레이·디에서·피치 교정까지 장르별·용도별 플러그인 선택 가이드와 무료 대안도 함께 정리합니다."
+title: 보컬 믹싱 플러그인 추천 — EQ·컴프레서·리버브·피치 교정 도구 완전 가이드
+date: 2026-04-06T00:00:00.000Z
+author: 스튜디오 놀
+category: 강좌
+tags:
+  - 오디오 플러그인
+  - 믹싱 플러그인
+  - 보컬 플러그인
+  - FabFilter
+  - Waves
+  - Melodyne
+  - DAW 플러그인 추천
+thumbnail: /images/hardware4.webp
+summary: >-
+  보컬 믹싱에 사용하는 필수 오디오 플러그인 추천. EQ·컴프레서·리버브·딜레이·디에서·피치 교정까지 장르별·용도별 플러그인 선택 가이드와
+  무료 대안도 함께 정리합니다.
 faq:
-  - q: "보컬 믹싱에 꼭 필요한 플러그인은 무엇인가요?"
-    a: "EQ(이퀄라이저), 컴프레서, 디에서(De-esser), 리버브 4가지가 핵심입니다. FabFilter Pro-Q 3(EQ), FabFilter Pro-C 2(컴프레서), Waves DeEsser, Valhalla Room(리버브)을 갖추면 대부분의 보컬 믹싱이 가능합니다."
-  - q: "무료 플러그인으로도 전문적인 믹싱이 가능한가요?"
-    a: "가능합니다. DAW에 내장된 무료 플러그인(Logic Pro의 내장 EQ·Compressor, Ableton의 내장 도구)만으로도 좋은 결과를 낼 수 있습니다. 유료 플러그인은 워크플로우를 빠르게 하고 특정 사운드를 내기 쉽게 해주지만, 귀를 키우는 것이 우선입니다."
-  - q: "FabFilter Pro-Q 3와 Waves SSL-E Channel 중 어느 것이 더 좋나요?"
-    a: "목적에 따라 다릅니다. FabFilter Pro-Q 3는 시각적으로 직관적이고 정밀한 EQ 조정에 적합합니다. Waves SSL-E Channel은 아날로그 감성의 따뜻한 EQ 처리에 강점이 있습니다. 초보자에게는 FabFilter Pro-Q 3를 추천합니다."
-  - q: "플러그인이 많을수록 더 좋은 믹싱이 나오나요?"
-    a: "아닙니다. 플러그인 수보다 각 플러그인을 제대로 사용하는 것이 중요합니다. 프로 엔지니어들도 3~5개의 핵심 플러그인만으로 대부분의 작업을 처리합니다. '좋은 결과를 내는 귀'가 플러그인보다 훨씬 중요합니다."
+  - q: 보컬 믹싱에 꼭 필요한 플러그인은 무엇인가요?
+    a: >-
+      EQ(이퀄라이저), 컴프레서, 디에서(De-esser), 리버브 4가지가 핵심입니다. FabFilter Pro-Q 3(EQ),
+      FabFilter Pro-C 2(컴프레서), Waves DeEsser, Valhalla Room(리버브)을 갖추면 대부분의 보컬
+      믹싱이 가능합니다.
+  - q: 무료 플러그인으로도 전문적인 믹싱이 가능한가요?
+    a: >-
+      가능합니다. DAW에 내장된 무료 플러그인(Logic Pro의 내장 EQ·Compressor, Ableton의 내장 도구)만으로도
+      좋은 결과를 낼 수 있습니다. 유료 플러그인은 워크플로우를 빠르게 하고 특정 사운드를 내기 쉽게 해주지만, 귀를 키우는 것이
+      우선입니다.
+  - q: FabFilter Pro-Q 3와 Waves SSL-E Channel 중 어느 것이 더 좋나요?
+    a: >-
+      목적에 따라 다릅니다. FabFilter Pro-Q 3는 시각적으로 직관적이고 정밀한 EQ 조정에 적합합니다. Waves SSL-E
+      Channel은 아날로그 감성의 따뜻한 EQ 처리에 강점이 있습니다. 초보자에게는 FabFilter Pro-Q 3를 추천합니다.
+  - q: 플러그인이 많을수록 더 좋은 믹싱이 나오나요?
+    a: >-
+      아닙니다. 플러그인 수보다 각 플러그인을 제대로 사용하는 것이 중요합니다. 프로 엔지니어들도 3~5개의 핵심 플러그인만으로 대부분의
+      작업을 처리합니다. '좋은 결과를 내는 귀'가 플러그인보다 훨씬 중요합니다.
 ---
 ![오디오 플러그인 — 스튜디오 놀](/images/hardware4.webp)
 
@@ -87,7 +106,6 @@ faq:
 
 처음 플러그인을 구매할 때 이 순서를 권장합니다:
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 - **1순위**: FabFilter Pro-Q 3 (EQ) — 가장 직관적
 - **2순위**: Valhalla Room (리버브) — 가성비 최고
@@ -104,4 +122,3 @@ faq:
 ---
 
 [VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,20 +1,38 @@
 ---
-title: "VST 플러그인 완전 가이드 — 보컬 녹음·믹싱 필수 플러그인 무료·유료 추천"
-date: 2026-04-06
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["VST 플러그인", "무료 VST", "보컬 플러그인", "DAW 플러그인", "믹싱 플러그인", "홈 레코딩 플러그인", "VST 추천"]
-thumbnail: "/images/album2.webp"
-summary: "보컬 녹음·믹싱에 사용하는 VST 플러그인의 종류와 역할을 안내합니다. 무료·유료 필수 플러그인 추천 목록, DAW별 호환성, 설치 방법을 정리합니다."
+title: VST 플러그인 완전 가이드 — 보컬 녹음·믹싱 필수 플러그인 무료·유료 추천
+date: 2026-04-06T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - VST 플러그인
+  - 무료 VST
+  - 보컬 플러그인
+  - DAW 플러그인
+  - 믹싱 플러그인
+  - 홈 레코딩 플러그인
+  - VST 추천
+thumbnail: /images/album2.webp
+summary: >-
+  보컬 녹음·믹싱에 사용하는 VST 플러그인의 종류와 역할을 안내합니다. 무료·유료 필수 플러그인 추천 목록, DAW별 호환성, 설치 방법을
+  정리합니다.
 faq:
-  - q: "VST 플러그인이란 무엇인가요?"
-    a: "DAW(디지털 오디오 워크스테이션)에서 사용하는 소프트웨어 도구입니다. EQ, 컴프레서, 리버브, 딜레이 등 오디오 처리 기능을 제공합니다. VST는 Steinberg가 개발한 표준 포맷으로 거의 모든 DAW에서 지원합니다."
-  - q: "무료 VST 플러그인으로도 충분히 좋은 믹싱이 가능한가요?"
-    a: "네, 현재 무료 플러그인 수준이 매우 높아 상업 수준의 결과물이 가능합니다. 특히 Reaper, LADSPA, TDR Nova 등 무료 플러그인은 전문가들도 사용할 만큼 성능이 뛰어납니다. 처음에는 DAW 내장 플러그인과 무료 플러그인으로 시작해보세요."
-  - q: "DAW를 바꿔도 기존 VST 플러그인을 계속 쓸 수 있나요?"
-    a: "VST 포맷 플러그인은 대부분의 Windows DAW에서 호환됩니다. Mac에서는 AU(Audio Units) 또는 VST3 포맷이 필요할 수 있습니다. 구매 전 본인의 DAW와 OS 호환 여부를 반드시 확인하세요."
-  - q: "보컬 믹싱에 가장 먼저 구매해야 할 플러그인은 무엇인가요?"
-    a: "DAW 내장 EQ와 컴프레서로 시작하고, 이후 전문 컴프레서(Waves CLA-2A, FabFilter Pro-C 2)와 리버브(Valhalla Room, UAD Lexicon)를 우선 고려해보세요. 디에서와 피치 교정(Melodyne, Auto-Tune)도 보컬 믹싱에서 중요합니다."
+  - q: VST 플러그인이란 무엇인가요?
+    a: >-
+      DAW(디지털 오디오 워크스테이션)에서 사용하는 소프트웨어 도구입니다. EQ, 컴프레서, 리버브, 딜레이 등 오디오 처리 기능을
+      제공합니다. VST는 Steinberg가 개발한 표준 포맷으로 거의 모든 DAW에서 지원합니다.
+  - q: 무료 VST 플러그인으로도 충분히 좋은 믹싱이 가능한가요?
+    a: >-
+      네, 현재 무료 플러그인 수준이 매우 높아 상업 수준의 결과물이 가능합니다. 특히 Reaper, LADSPA, TDR Nova 등
+      무료 플러그인은 전문가들도 사용할 만큼 성능이 뛰어납니다. 처음에는 DAW 내장 플러그인과 무료 플러그인으로 시작해보세요.
+  - q: DAW를 바꿔도 기존 VST 플러그인을 계속 쓸 수 있나요?
+    a: >-
+      VST 포맷 플러그인은 대부분의 Windows DAW에서 호환됩니다. Mac에서는 AU(Audio Units) 또는 VST3 포맷이
+      필요할 수 있습니다. 구매 전 본인의 DAW와 OS 호환 여부를 반드시 확인하세요.
+  - q: 보컬 믹싱에 가장 먼저 구매해야 할 플러그인은 무엇인가요?
+    a: >-
+      DAW 내장 EQ와 컴프레서로 시작하고, 이후 전문 컴프레서(Waves CLA-2A, FabFilter Pro-C 2)와
+      리버브(Valhalla Room, UAD Lexicon)를 우선 고려해보세요. 디에서와 피치 교정(Melodyne,
+      Auto-Tune)도 보컬 믹싱에서 중요합니다.
 ---
 ![VST 플러그인 완전 가이드 — 스튜디오 놀](/images/album2.webp)
 
@@ -125,4 +143,3 @@ faq:
 ---
 
 [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [컴프레서 사용법](/stories/compress1) | [DAW 선택 가이드](/stories/daw1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

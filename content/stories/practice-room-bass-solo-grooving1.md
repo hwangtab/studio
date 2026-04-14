@@ -241,6 +241,3 @@ Cmaj7: C-E-G-B
 
 은평구 24시간 음악연습실에서 루프 페달을 활용해 베이스 솔로를 탐구하세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,20 +1,37 @@
 ---
-title: "Pro Tools 보컬 녹음 완전 가이드 — 업계 표준 DAW로 스튜디오급 녹음"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Pro Tools 보컬", "프로툴스 녹음", "Pro Tools 설정", "Pro Tools 믹싱", "Pro Tools EQ", "Pro Tools 컴프레서", "업계 표준 DAW"]
-thumbnail: "/images/room4.webp"
-summary: "Pro Tools 보컬 녹음 완전 가이드입니다. 세션 생성, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 플레이리스트 컴핑, 바운스 내보내기 방법을 정리합니다."
+title: Pro Tools 보컬 녹음 완전 가이드 — 업계 표준 DAW로 스튜디오급 녹음
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - Pro Tools 보컬
+  - 프로툴스 녹음
+  - Pro Tools 설정
+  - Pro Tools 믹싱
+  - Pro Tools EQ
+  - Pro Tools 컴프레서
+  - 업계 표준 DAW
+thumbnail: /images/room4.webp
+summary: >-
+  Pro Tools 보컬 녹음 완전 가이드입니다. 세션 생성, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 플레이리스트 컴핑,
+  바운스 내보내기 방법을 정리합니다.
 faq:
-  - q: "Pro Tools로 보컬 녹음을 할 수 있나요?"
-    a: "가능합니다. Pro Tools는 전 세계 대부분의 프로 스튜디오에서 사용하는 업계 표준 DAW입니다. 보컬 녹음·편집·믹싱 등 모든 오디오 작업에 최적화되어 있습니다."
-  - q: "Pro Tools에서 오디오 인터페이스를 설정하는 방법은?"
-    a: "Setup → Playback Engine에서 오디오 인터페이스를 선택합니다. Pro Tools는 Avid 하드웨어와 가장 잘 호환되지만 ASIO(Windows)/Core Audio(Mac) 기반 인터페이스도 지원합니다."
-  - q: "Pro Tools 플레이리스트 컴핑이란 무엇인가요?"
-    a: "여러 테이크를 하나의 트랙에 플레이리스트 레이어로 쌓아 놓고, 최적의 구간을 골라 합쳐 하나의 완성 보컬을 만드는 편집 방식입니다. Pro Tools의 대표적인 보컬 편집 워크플로우입니다."
-  - q: "Pro Tools 보컬 파일을 믹싱 의뢰용으로 어떻게 내보내나요?"
-    a: "File → Bounce to → Disk → Format: WAV → Bit Depth: 24 → Sample Rate: 44.1kHz 또는 48kHz로 설정 후 Bounce 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → 바운스합니다."
+  - q: Pro Tools로 보컬 녹음을 할 수 있나요?
+    a: >-
+      가능합니다. Pro Tools는 전 세계 대부분의 프로 스튜디오에서 사용하는 업계 표준 DAW입니다. 보컬 녹음·편집·믹싱 등 모든
+      오디오 작업에 최적화되어 있습니다.
+  - q: Pro Tools에서 오디오 인터페이스를 설정하는 방법은?
+    a: >-
+      Setup → Playback Engine에서 오디오 인터페이스를 선택합니다. Pro Tools는 Avid 하드웨어와 가장 잘
+      호환되지만 ASIO(Windows)/Core Audio(Mac) 기반 인터페이스도 지원합니다.
+  - q: Pro Tools 플레이리스트 컴핑이란 무엇인가요?
+    a: >-
+      여러 테이크를 하나의 트랙에 플레이리스트 레이어로 쌓아 놓고, 최적의 구간을 골라 합쳐 하나의 완성 보컬을 만드는 편집 방식입니다.
+      Pro Tools의 대표적인 보컬 편집 워크플로우입니다.
+  - q: Pro Tools 보컬 파일을 믹싱 의뢰용으로 어떻게 내보내나요?
+    a: >-
+      File → Bounce to → Disk → Format: WAV → Bit Depth: 24 → Sample Rate:
+      44.1kHz 또는 48kHz로 설정 후 Bounce 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → 바운스합니다.
 ---
 ![Pro Tools 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/room4.webp)
 
@@ -175,4 +192,3 @@ Pro Tools는 전 세계 프로 스튜디오의 표준으로, 플레이리스트 
 ---
 
 [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

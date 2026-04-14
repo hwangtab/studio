@@ -1,20 +1,40 @@
 ---
-title: "MIDI 편곡 완전 가이드 — DAW에서 MIDI로 완성하는 음악 제작"
-date: 2026-04-06
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["MIDI 편곡", "MIDI 음악 제작", "DAW 편곡", "MIDI 프로그래밍", "가상악기 편곡", "MIDI 보컬 반주", "음악 편곡 기초"]
-thumbnail: "/images/studio2.webp"
-summary: "MIDI 편곡 완전 가이드입니다. DAW에서 MIDI를 이용해 음악을 제작하는 기초 원리, 드럼·베이스·코드·멜로디 파트 배치, 가상악기 활용, 보컬 반주 제작 방법을 정리합니다."
+title: MIDI 편곡 완전 가이드 — DAW에서 MIDI로 완성하는 음악 제작
+date: 2026-04-06T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - MIDI 편곡
+  - MIDI 음악 제작
+  - DAW 편곡
+  - MIDI 프로그래밍
+  - 가상악기 편곡
+  - MIDI 보컬 반주
+  - 음악 편곡 기초
+thumbnail: /images/studio2.webp
+summary: >-
+  MIDI 편곡 완전 가이드입니다. DAW에서 MIDI를 이용해 음악을 제작하는 기초 원리, 드럼·베이스·코드·멜로디 파트 배치, 가상악기
+  활용, 보컬 반주 제작 방법을 정리합니다.
 faq:
-  - q: "MIDI 편곡이란 무엇인가요?"
-    a: "MIDI(Musical Instrument Digital Interface)는 음 높이·길이·세기 등 음악 정보를 디지털 신호로 전달하는 표준 규약입니다. MIDI 편곡은 DAW에서 MIDI 데이터를 입력해 가상악기(VST/AU)를 제어하고 음악을 완성하는 작업을 말합니다."
-  - q: "MIDI 편곡을 배우려면 무엇이 필요한가요?"
-    a: "DAW(Ableton Live·Logic Pro·Cubase·FL Studio 등), MIDI 키보드(선택사항이지만 강력 추천), 가상악기 플러그인이 기본 준비물입니다. MIDI 키보드 없이도 마우스로 피아노 롤에 음표를 입력할 수 있지만, 키보드가 있으면 제작 속도와 감성 표현이 크게 향상됩니다."
-  - q: "보컬 반주용 MR을 MIDI로 제작할 수 있나요?"
-    a: "가능합니다. 드럼·베이스·피아노·스트링 등 모든 악기 파트를 MIDI로 제작하면 키 변경이 간단하고, 보컬리스트의 키에 맞춰 반주를 조정하기 쉽습니다. 녹음 스튜디오에 MIDI 파일과 함께 방문하면 더 효율적인 세션이 가능합니다."
-  - q: "MIDI로 제작한 음악을 실제 악기 연주처럼 만들려면?"
-    a: "벨로시티(velocity)와 익스프레션(expression) 편집이 핵심입니다. 같은 음정이라도 세기를 조금씩 다르게 하고, 스윙 타임 처리와 휴머나이즈(humanize) 기능을 활용하면 기계적인 느낌이 줄어듭니다. 고급 샘플 라이브러리(Spitfire, EastWest 등)도 큰 도움이 됩니다."
+  - q: MIDI 편곡이란 무엇인가요?
+    a: >-
+      MIDI(Musical Instrument Digital Interface)는 음 높이·길이·세기 등 음악 정보를 디지털 신호로
+      전달하는 표준 규약입니다. MIDI 편곡은 DAW에서 MIDI 데이터를 입력해 가상악기(VST/AU)를 제어하고 음악을 완성하는
+      작업을 말합니다.
+  - q: MIDI 편곡을 배우려면 무엇이 필요한가요?
+    a: >-
+      DAW(Ableton Live·Logic Pro·Cubase·FL Studio 등), MIDI 키보드(선택사항이지만 강력 추천),
+      가상악기 플러그인이 기본 준비물입니다. MIDI 키보드 없이도 마우스로 피아노 롤에 음표를 입력할 수 있지만, 키보드가 있으면 제작
+      속도와 감성 표현이 크게 향상됩니다.
+  - q: 보컬 반주용 MR을 MIDI로 제작할 수 있나요?
+    a: >-
+      가능합니다. 드럼·베이스·피아노·스트링 등 모든 악기 파트를 MIDI로 제작하면 키 변경이 간단하고, 보컬리스트의 키에 맞춰 반주를
+      조정하기 쉽습니다. 녹음 스튜디오에 MIDI 파일과 함께 방문하면 더 효율적인 세션이 가능합니다.
+  - q: MIDI로 제작한 음악을 실제 악기 연주처럼 만들려면?
+    a: >-
+      벨로시티(velocity)와 익스프레션(expression) 편집이 핵심입니다. 같은 음정이라도 세기를 조금씩 다르게 하고, 스윙
+      타임 처리와 휴머나이즈(humanize) 기능을 활용하면 기계적인 느낌이 줄어듭니다. 고급 샘플 라이브러리(Spitfire,
+      EastWest 등)도 큰 도움이 됩니다.
 ---
 ![MIDI 편곡 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
 
@@ -140,4 +160,3 @@ MIDI 편곡은 현대 음악 제작의 핵심입니다. DAW와 가상악기를 �
 ---
 
 [금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

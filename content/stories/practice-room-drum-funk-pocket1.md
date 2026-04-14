@@ -248,6 +248,3 @@ Questlove(The Roots):
 
 은평구 24시간 음악연습실에서 킥+스네어 기본부터 시작하세요. 타이트한 16분음표 하이햇이 손발에 익으면, 포켓이 느껴지기 시작합니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

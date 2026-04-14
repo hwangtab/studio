@@ -92,7 +92,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -130,4 +129,3 @@ faq:
 ---
 
 [종로구 녹음실 안내](/stories/jongno1) | [서촌·사직·무악재 녹음실 안내](/stories/seochon1) | [혜화·대학로 녹음실 안내](/stories/hyehwa1) | [인사동·북촌·광화문 녹음실 안내](/stories/insadong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

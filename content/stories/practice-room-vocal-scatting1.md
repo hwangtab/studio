@@ -266,6 +266,3 @@ Ella Fitzgerald 녹음과 비교
 
 은평구 24시간 음악연습실에서 "doo-doo-doo" 스윙 리듬부터 시작하세요. 코드 진행이 들리기 시작하면, 스캣이 자연스럽게 흘러나옵니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

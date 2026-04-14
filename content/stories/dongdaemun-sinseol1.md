@@ -95,7 +95,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -133,4 +132,3 @@ faq:
 ---
 
 [동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [회기·경희대·외대앞 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

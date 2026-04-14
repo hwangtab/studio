@@ -219,6 +219,3 @@ John Bonham이 Purdie Shuffle 활용
 
 은평구 24시간 음악연습실에서 "Funky Drummer" 패턴부터 시작하세요. 비트가 뒤로 앉는 그 순간, 재즈펑크의 그루브가 찾아옵니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

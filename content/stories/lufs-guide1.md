@@ -1,20 +1,41 @@
 ---
-title: "LUFS 완전 가이드 — 스트리밍 음압 기준과 마스터링 목표값 설정"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "믹싱·마스터링"
-tags: ["LUFS", "음압", "스트리밍 음압", "LUFS 기준", "마스터링 음압", "Integrated LUFS", "True Peak"]
-thumbnail: "/images/recording17.webp"
-summary: "LUFS 완전 가이드입니다. LUFS 유형별 차이·플랫폼별 LUFS 기준·장르별 권장 LUFS·True Peak 설정·마스터링 헤드룸과 LUFS·LUFS 측정 플러그인까지 정리합니다."
+title: LUFS 완전 가이드 — 스트리밍 음압 기준과 마스터링 목표값 설정
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 믹싱·마스터링
+tags:
+  - LUFS
+  - 음압
+  - 스트리밍 음압
+  - LUFS 기준
+  - 마스터링 음압
+  - Integrated LUFS
+  - True Peak
+thumbnail: /images/recording17.webp
+summary: >-
+  LUFS 완전 가이드입니다. LUFS 유형별 차이·플랫폼별 LUFS 기준·장르별 권장 LUFS·True Peak 설정·마스터링 헤드룸과
+  LUFS·LUFS 측정 플러그인까지 정리합니다.
 faq:
-  - q: "LUFS란 무엇인가요?"
-    a: "LUFS(Loudness Units relative to Full Scale)는 인간 청각 특성을 반영한 음량 단위입니다. 스트리밍 플랫폼이 자동 음량 정규화에 사용하는 기준값으로, 스포티파이·유튜브는 -14 LUFS, 애플뮤직은 -16 LUFS를 기준으로 조정합니다."
-  - q: "Integrated LUFS와 Short-term LUFS의 차이는?"
-    a: "Integrated LUFS는 곡 전체 구간의 평균 음량을 측정합니다. 스트리밍 정규화에 사용되는 값입니다. Short-term LUFS는 3초 단위 이동 평균, Momentary LUFS는 400ms 단위로 실시간 음량을 측정합니다. 마스터링 목표는 Integrated LUFS 기준입니다."
-  - q: "마스터링 시 권장 LUFS 목표값은?"
-    a: "일반적으로 스트리밍용 마스터링은 -14 LUFS (Integrated)를 기준으로 합니다. 단, 다이나믹이 중요한 클래식·재즈는 -18~-16 LUFS, 댄스·일렉트로닉은 -10~-8 LUFS로 장르에 따라 다릅니다. True Peak는 -1.0dBTP 이하가 원칙입니다."
-  - q: "LUFS 측정 플러그인 추천은?"
-    a: "대표적인 LUFS 측정 툴로는 Youlean Loudness Meter(무료), iZotope Insight, TC Electronic LM2n, Waves WLM Plus 등이 있습니다. DAW에 내장된 Loudness 미터도 활용 가능합니다. 측정 후 목표 LUFS에 맞게 마스터 리미터를 조정합니다."
+  - q: LUFS란 무엇인가요?
+    a: >-
+      LUFS(Loudness Units relative to Full Scale)는 인간 청각 특성을 반영한 음량 단위입니다. 스트리밍
+      플랫폼이 자동 음량 정규화에 사용하는 기준값으로, 스포티파이·유튜브는 -14 LUFS, 애플뮤직은 -16 LUFS를 기준으로
+      조정합니다.
+  - q: Integrated LUFS와 Short-term LUFS의 차이는?
+    a: >-
+      Integrated LUFS는 곡 전체 구간의 평균 음량을 측정합니다. 스트리밍 정규화에 사용되는 값입니다. Short-term
+      LUFS는 3초 단위 이동 평균, Momentary LUFS는 400ms 단위로 실시간 음량을 측정합니다. 마스터링 목표는
+      Integrated LUFS 기준입니다.
+  - q: 마스터링 시 권장 LUFS 목표값은?
+    a: >-
+      일반적으로 스트리밍용 마스터링은 -14 LUFS (Integrated)를 기준으로 합니다. 단, 다이나믹이 중요한 클래식·재즈는
+      -18~-16 LUFS, 댄스·일렉트로닉은 -10~-8 LUFS로 장르에 따라 다릅니다. True Peak는 -1.0dBTP 이하가
+      원칙입니다.
+  - q: LUFS 측정 플러그인 추천은?
+    a: >-
+      대표적인 LUFS 측정 툴로는 Youlean Loudness Meter(무료), iZotope Insight, TC
+      Electronic LM2n, Waves WLM Plus 등이 있습니다. DAW에 내장된 Loudness 미터도 활용 가능합니다.
+      측정 후 목표 LUFS에 맞게 마스터 리미터를 조정합니다.
 ---
 ![LUFS 완전 가이드 — 스튜디오 놀](/images/recording17.webp)
 
@@ -134,4 +155,3 @@ LUFS 기준에 맞는 마스터링은 스트리밍 음원이 모든 플랫폼에
 ---
 
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [음압(LUFS) 스트리밍 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

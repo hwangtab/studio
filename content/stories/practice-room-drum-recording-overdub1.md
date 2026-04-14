@@ -242,6 +242,3 @@ DAW: Reaper (무료), GarageBand (Mac)
 
 은평구 24시간 음악연습실에서 레코딩 셋업을 가져와 자신의 드럼 세션을 기록해 보세요. 자신의 연주를 객관적으로 들을 때 발전이 빨라집니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

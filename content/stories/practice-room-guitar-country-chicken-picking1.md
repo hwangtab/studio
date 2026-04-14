@@ -272,6 +272,3 @@ Albert Lee는 **믿을 수 없는 속도의 치킨 피킹**으로 유명:
 
 은평구 24시간 음악연습실에서 Brent Mason, Albert Lee의 스타일을 천천히 분석하고 익히세요. 느리게 완벽하게—그것이 치킨 피킹 마스터의 길입니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

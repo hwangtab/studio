@@ -1,20 +1,38 @@
 ---
-title: "Reaper 보컬 녹음 완전 가이드 — 저렴하고 강력한 DAW로 고퀄리티 녹음"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Reaper 보컬", "리퍼 녹음", "Reaper 설정", "Cockos DAW", "Reaper 믹싱", "Reaper EQ", "저렴한 DAW 녹음"]
-thumbnail: "/images/portfolio5.webp"
-summary: "Reaper 보컬 녹음 완전 가이드입니다. Cockos Reaper 오디오 설정, 트랙 생성, ReaEQ·ReaComp 설정, 트랙 렌더링(내보내기) 방법을 정리합니다."
+title: Reaper 보컬 녹음 완전 가이드 — 저렴하고 강력한 DAW로 고퀄리티 녹음
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - Reaper 보컬
+  - 리퍼 녹음
+  - Reaper 설정
+  - Cockos DAW
+  - Reaper 믹싱
+  - Reaper EQ
+  - 저렴한 DAW 녹음
+thumbnail: /images/portfolio5.webp
+summary: >-
+  Reaper 보컬 녹음 완전 가이드입니다. Cockos Reaper 오디오 설정, 트랙 생성, ReaEQ·ReaComp 설정, 트랙
+  렌더링(내보내기) 방법을 정리합니다.
 faq:
-  - q: "Reaper로 보컬 녹음이 가능한가요?"
-    a: "가능합니다. Reaper는 Cockos가 개발한 저렴하고 강력한 DAW($60 라이선스)로 전문 수준의 보컬 녹음·편집·믹싱이 가능합니다. 인디 아티스트와 홈 레코딩 엔지니어에게 특히 인기 있습니다."
-  - q: "Reaper에서 오디오 인터페이스를 설정하는 방법은?"
-    a: "Options → Preferences (Ctrl+P) → Audio → Device에서 ASIO(Windows) 또는 Core Audio(Mac) 드라이버를 선택하고 오디오 인터페이스를 Input/Output으로 설정합니다."
-  - q: "Reaper ReaEQ와 ReaComp는 무엇인가요?"
-    a: "Reaper에 무료로 내장된 플러그인입니다. ReaEQ는 파라메트릭 EQ, ReaComp는 컴프레서로 전문 수준의 보컬 처리가 가능합니다. VST/AU 플러그인도 호환됩니다."
-  - q: "Reaper 보컬 파일을 어떻게 내보내나요?"
-    a: "File → Render (Ctrl+Alt+R) → Output format: WAV → Sample Rate: 44100/48000 → Bit depth: 24 bit → Render 클릭. Source: Selected tracks로 보컬 트랙만 선택해 내보낼 수 있습니다."
+  - q: Reaper로 보컬 녹음이 가능한가요?
+    a: >-
+      가능합니다. Reaper는 Cockos가 개발한 저렴하고 강력한 DAW($60 라이선스)로 전문 수준의 보컬 녹음·편집·믹싱이
+      가능합니다. 인디 아티스트와 홈 레코딩 엔지니어에게 특히 인기 있습니다.
+  - q: Reaper에서 오디오 인터페이스를 설정하는 방법은?
+    a: >-
+      Options → Preferences (Ctrl+P) → Audio → Device에서 ASIO(Windows) 또는 Core
+      Audio(Mac) 드라이버를 선택하고 오디오 인터페이스를 Input/Output으로 설정합니다.
+  - q: Reaper ReaEQ와 ReaComp는 무엇인가요?
+    a: >-
+      Reaper에 무료로 내장된 플러그인입니다. ReaEQ는 파라메트릭 EQ, ReaComp는 컴프레서로 전문 수준의 보컬 처리가
+      가능합니다. VST/AU 플러그인도 호환됩니다.
+  - q: Reaper 보컬 파일을 어떻게 내보내나요?
+    a: >-
+      File → Render (Ctrl+Alt+R) → Output format: WAV → Sample Rate: 44100/48000
+      → Bit depth: 24 bit → Render 클릭. Source: Selected tracks로 보컬 트랙만 선택해 내보낼 수
+      있습니다.
 ---
 ![Reaper 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/portfolio5.webp)
 
@@ -127,7 +145,6 @@ Add FX → Reaper Plugins → ReaComp
 
 ## 파일 내보내기 (Render)
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 ### 렌더링 내보내기
 
@@ -157,4 +174,3 @@ Reaper는 저렴한 가격에 전문 수준의 보컬 녹음·편집·믹싱이 
 ---
 
 [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

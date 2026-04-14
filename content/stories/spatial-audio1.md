@@ -1,20 +1,38 @@
 ---
-title: "공간 음향·바이노럴·돌비 애트모스 완전 가이드 — 입체 사운드 믹싱"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["공간 음향", "바이노럴 오디오", "돌비 애트모스", "Apple Spatial Audio", "입체 믹싱", "3D 오디오", "이머시브 오디오"]
-thumbnail: "/images/portfolio4.webp"
-summary: "공간 음향·바이노럴·돌비 애트모스 완전 가이드입니다. 2D 스테레오와 3D 이머시브 오디오의 차이, 스트리밍 플랫폼의 공간 음향 지원 현황, 애트모스 믹싱 기초를 정리합니다."
+title: 공간 음향·바이노럴·돌비 애트모스 완전 가이드 — 입체 사운드 믹싱
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - 공간 음향
+  - 바이노럴 오디오
+  - 돌비 애트모스
+  - Apple Spatial Audio
+  - 입체 믹싱
+  - 3D 오디오
+  - 이머시브 오디오
+thumbnail: /images/portfolio4.webp
+summary: >-
+  공간 음향·바이노럴·돌비 애트모스 완전 가이드입니다. 2D 스테레오와 3D 이머시브 오디오의 차이, 스트리밍 플랫폼의 공간 음향 지원 현황,
+  애트모스 믹싱 기초를 정리합니다.
 faq:
-  - q: "공간 음향(Spatial Audio)이란 무엇인가요?"
-    a: "소리가 3차원 공간에서 발생하는 것처럼 들리게 하는 기술입니다. 일반 스테레오(2채널)와 달리 위·아래·앞·뒤·옆 방향감을 줄 수 있습니다. Apple Spatial Audio, Dolby Atmos, Sony 360 Reality Audio가 주요 포맷입니다."
-  - q: "돌비 애트모스 믹싱은 어떻게 하나요?"
-    a: "DAW에 돌비 애트모스 렌더러(Dolby Atmos Production Suite)를 설치하고 채널을 오브젝트 기반으로 배치합니다. 각 오브젝트는 3D 좌표(X/Y/Z)로 위치를 지정하며, 최종 렌더링 시 ADM BWF 또는 Dolby AC-4 포맷으로 출력합니다."
-  - q: "Apple Music에서 공간 음향을 지원하려면?"
-    a: "Dolby Atmos 포맷으로 믹싱한 ADM BWF 파일을 음원 유통사(TuneCore, DistroKid, Kakao Music 등)를 통해 납품하면 Apple Music에서 공간 음향 재생이 가능합니다. AirPods 또는 헤드폰 사용자에게 공간 음향 태그가 표시됩니다."
-  - q: "바이노럴 오디오란 무엇인가요?"
-    a: "두 귀(바이노럴)의 청취 특성을 모방해 헤드폰으로 3D 공간감을 만드는 기술입니다. HRTF(머리 전달 함수)를 적용한 플러그인으로 처리하며, 헤드폰에서 소리가 머릿속이 아닌 외부 공간에서 들리는 느낌을 줍니다."
+  - q: 공간 음향(Spatial Audio)이란 무엇인가요?
+    a: >-
+      소리가 3차원 공간에서 발생하는 것처럼 들리게 하는 기술입니다. 일반 스테레오(2채널)와 달리 위·아래·앞·뒤·옆 방향감을 줄 수
+      있습니다. Apple Spatial Audio, Dolby Atmos, Sony 360 Reality Audio가 주요 포맷입니다.
+  - q: 돌비 애트모스 믹싱은 어떻게 하나요?
+    a: >-
+      DAW에 돌비 애트모스 렌더러(Dolby Atmos Production Suite)를 설치하고 채널을 오브젝트 기반으로 배치합니다.
+      각 오브젝트는 3D 좌표(X/Y/Z)로 위치를 지정하며, 최종 렌더링 시 ADM BWF 또는 Dolby AC-4 포맷으로 출력합니다.
+  - q: Apple Music에서 공간 음향을 지원하려면?
+    a: >-
+      Dolby Atmos 포맷으로 믹싱한 ADM BWF 파일을 음원 유통사(TuneCore, DistroKid, Kakao Music
+      등)를 통해 납품하면 Apple Music에서 공간 음향 재생이 가능합니다. AirPods 또는 헤드폰 사용자에게 공간 음향 태그가
+      표시됩니다.
+  - q: 바이노럴 오디오란 무엇인가요?
+    a: >-
+      두 귀(바이노럴)의 청취 특성을 모방해 헤드폰으로 3D 공간감을 만드는 기술입니다. HRTF(머리 전달 함수)를 적용한 플러그인으로
+      처리하며, 헤드폰에서 소리가 머릿속이 아닌 외부 공간에서 들리는 느낌을 줍니다.
 ---
 ![공간 음향·바이노럴·돌비 애트모스 완전 가이드 — 스튜디오 놀](/images/portfolio4.webp)
 
@@ -90,7 +108,6 @@ FX → 공간 전체 분산
 
 ## 바이노럴 오디오 처리
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 ### 바이노럴 처리 방법
 
@@ -126,4 +143,3 @@ FX → 공간 전체 분산
 ---
 
 [마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

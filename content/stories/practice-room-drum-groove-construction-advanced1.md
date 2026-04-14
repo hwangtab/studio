@@ -274,6 +274,3 @@ H:  x . x . x . x . x . x . x . x .
 
 은평구 24시간 음악연습실에서 포켓을 찾고, 레이어를 쌓고, 자신만의 그루브를 발견하세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

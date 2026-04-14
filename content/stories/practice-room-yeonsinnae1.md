@@ -126,7 +126,6 @@ faq:
 스튜디오 놀 음악연습실에 대해 궁금하신 점은 카카오톡 오픈채팅이나 전화로 편하게 문의해 주세요. 방문 예약 없이도 평일 상시 견학 가능합니다.
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -355,4 +354,3 @@ faq:
 **→ [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-fusion1)**
 **→ [뮤지컬 씨어터 보컬·브로드웨이·레미제라블·드라마틱 발성 음악연습실 가이드](/stories/ko/practice-room-vocal-musical-theatre1)**
 **→ [카혼 드럼·플라멩코·어쿠스틱 세션·바스·스네어 카혼 테크닉 음악연습실 가이드](/stories/ko/practice-room-drum-cajon1)**
-[스튜디오 놀 이용 요금](/pricing)

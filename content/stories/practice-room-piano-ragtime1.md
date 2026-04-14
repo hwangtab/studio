@@ -312,6 +312,3 @@ Joplin의 원칙: "Do not play this piece fast"
 
 은평구 24시간 음악연습실에서 Joplin의 래그타임을 배우세요. 왼손의 안정적인 베이스와 오른손의 자유로운 싱코페이션—그 사이에서 음악의 즐거움을 발견할 것입니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,20 +1,38 @@
 ---
-title: "Studio One 보컬 녹음 완전 가이드 — PreSonus DAW로 직관적인 녹음"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Studio One 보컬", "스튜디오원 녹음", "Studio One 설정", "PreSonus DAW", "Studio One 믹싱", "Studio One EQ", "Studio One 컴프레서"]
-thumbnail: "/images/studio5.webp"
-summary: "Studio One 보컬 녹음 완전 가이드입니다. Studio One 기본 설정·오디오 트랙 생성 및 녹음·Pro EQ 설정·Pro Compressor 설정·레이어 녹음 (Take Lane)·파일 내보내기 (Export Mixdown)까지 정리합니다."
+title: Studio One 보컬 녹음 완전 가이드 — PreSonus DAW로 직관적인 녹음
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - Studio One 보컬
+  - 스튜디오원 녹음
+  - Studio One 설정
+  - PreSonus DAW
+  - Studio One 믹싱
+  - Studio One EQ
+  - Studio One 컴프레서
+thumbnail: /images/studio5.webp
+summary: >-
+  Studio One 보컬 녹음 완전 가이드입니다. Studio One 기본 설정·오디오 트랙 생성 및 녹음·Pro EQ 설정·Pro
+  Compressor 설정·레이어 녹음 (Take Lane)·파일 내보내기 (Export Mixdown)까지 정리합니다.
 faq:
-  - q: "Studio One으로 보컬 녹음이 가능한가요?"
-    a: "가능합니다. Studio One은 PreSonus가 개발한 직관적인 DAW로 드래그 앤 드롭 기반의 편리한 인터페이스와 강력한 내장 플러그인으로 보컬 녹음·편집·믹싱을 효율적으로 처리할 수 있습니다."
-  - q: "Studio One에서 오디오 인터페이스를 설정하는 방법은?"
-    a: "Studio One → Options (Ctrl+,) → Audio Setup → Audio Device를 오디오 인터페이스로 설정합니다. Block Size(버퍼)는 녹음 시 64~128 samples로 낮춥니다."
-  - q: "Studio One의 Pro EQ와 Channel Strip은 무엇인가요?"
-    a: "Pro EQ는 Studio One에 내장된 파라메트릭 EQ로 Spectrum Analyzer를 내장하고 있습니다. Channel Strip은 EQ·컴프레서·게이트를 하나의 플러그인으로 처리하는 올인원 채널 모듈입니다."
-  - q: "Studio One 보컬 파일을 어떻게 내보내나요?"
-    a: "Song → Export Mixdown (Ctrl+E) → Format: WAV → Sample Rate: 44100/48000 → Bit Depth: 24 → Export 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → Export Mixdown합니다."
+  - q: Studio One으로 보컬 녹음이 가능한가요?
+    a: >-
+      가능합니다. Studio One은 PreSonus가 개발한 직관적인 DAW로 드래그 앤 드롭 기반의 편리한 인터페이스와 강력한 내장
+      플러그인으로 보컬 녹음·편집·믹싱을 효율적으로 처리할 수 있습니다.
+  - q: Studio One에서 오디오 인터페이스를 설정하는 방법은?
+    a: >-
+      Studio One → Options (Ctrl+,) → Audio Setup → Audio Device를 오디오 인터페이스로
+      설정합니다. Block Size(버퍼)는 녹음 시 64~128 samples로 낮춥니다.
+  - q: Studio One의 Pro EQ와 Channel Strip은 무엇인가요?
+    a: >-
+      Pro EQ는 Studio One에 내장된 파라메트릭 EQ로 Spectrum Analyzer를 내장하고 있습니다. Channel
+      Strip은 EQ·컴프레서·게이트를 하나의 플러그인으로 처리하는 올인원 채널 모듈입니다.
+  - q: Studio One 보컬 파일을 어떻게 내보내나요?
+    a: >-
+      Song → Export Mixdown (Ctrl+E) → Format: WAV → Sample Rate: 44100/48000 →
+      Bit Depth: 24 → Export 클릭. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → Export
+      Mixdown합니다.
 ---
 ![Studio One 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio5.webp)
 
@@ -50,7 +68,6 @@ Options → Audio Setup → Processing → Block Size
 
 ## 오디오 트랙 생성 및 녹음
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
 ### 트랙 생성
 
@@ -102,7 +119,6 @@ Options → Audio Setup → Processing → Block Size
 
 ## Pro Compressor 설정
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 ### Pro Compressor 삽입
 
@@ -179,4 +195,3 @@ Studio One은 직관적인 인터페이스와 강력한 내장 플러그인으�
 ---
 
 [Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

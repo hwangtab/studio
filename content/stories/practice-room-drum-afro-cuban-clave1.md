@@ -254,6 +254,3 @@ Tito Puente는 **팀발레스(Timbales)**의 거장이며 맘보 드러밍의 �
 
 은평구 24시간 음악연습실에서 클라베를 마음속에 새기며 아프로큐반의 세계로 들어오세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

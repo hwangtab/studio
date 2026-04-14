@@ -91,7 +91,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -129,4 +128,3 @@ faq:
 ---
 
 [송파구 녹음실 안내](/stories/songpa1) | [잠실·석촌 녹음실 안내](/stories/jamsil1) | [강동구 녹음실 안내](/stories/gangdong1) | [강남구 녹음실 안내](/stories/gangnam1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

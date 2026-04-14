@@ -1,20 +1,39 @@
 ---
-title: "Cubase 보컬 녹음 완전 가이드 — Steinberg DAW로 스튜디오급 보컬"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Cubase 보컬", "큐베이스 녹음", "Cubase 설정", "Steinberg DAW", "Cubase 믹싱", "Cubase EQ", "Cubase 컴프레서"]
-thumbnail: "/images/portfolio2.webp"
-summary: "Cubase 보컬 녹음 완전 가이드입니다. Cubase 기본 설정·오디오 트랙 생성 및 녹음·Channel EQ 설정·Compressor 설정·VariAudio — 내장 피치 교정·파일 내보내기 (Export)까지 정리합니다."
+title: Cubase 보컬 녹음 완전 가이드 — Steinberg DAW로 스튜디오급 보컬
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - Cubase 보컬
+  - 큐베이스 녹음
+  - Cubase 설정
+  - Steinberg DAW
+  - Cubase 믹싱
+  - Cubase EQ
+  - Cubase 컴프레서
+thumbnail: /images/portfolio2.webp
+summary: >-
+  Cubase 보컬 녹음 완전 가이드입니다. Cubase 기본 설정·오디오 트랙 생성 및 녹음·Channel EQ 설정·Compressor
+  설정·VariAudio — 내장 피치 교정·파일 내보내기 (Export)까지 정리합니다.
 faq:
-  - q: "Cubase로 보컬 녹음이 가능한가요?"
-    a: "가능합니다. Cubase는 Steinberg가 개발한 업계 표준 DAW로 전문 스튜디오에서도 널리 사용됩니다. 강력한 내장 EQ·컴프레서와 VariAudio 피치 교정 기능으로 보컬 녹음·편집을 전문적으로 처리할 수 있습니다."
-  - q: "Cubase에서 오디오 인터페이스를 설정하는 방법은?"
-    a: "Studio Setup (F4 또는 Studio → Studio Setup) → Audio System → ASIO Driver(Windows) 또는 Core Audio(Mac)를 오디오 인터페이스로 설정합니다. Studio → Studio Setup → VST Audio System에서도 확인합니다."
-  - q: "Cubase VariAudio란 무엇인가요?"
-    a: "Cubase에 내장된 피치 교정 도구입니다. Sample Editor에서 활성화하면 보컬 음표를 시각적으로 편집할 수 있으며, Melodyne과 유사한 기능을 Cubase 내에서 별도 구매 없이 사용할 수 있습니다."
-  - q: "Cubase 보컬 파일을 어떻게 내보내나요?"
-    a: "File → Export → Audio Mixdown (Ctrl+Shift+E) → Format: WAV → Bit Depth: 24 bit → Sample Rate: 44100/48000 → Export Audio를 클릭합니다. 드라이 보컬은 플러그인 Bypass 후 트랙 Solo → Export합니다."
+  - q: Cubase로 보컬 녹음이 가능한가요?
+    a: >-
+      가능합니다. Cubase는 Steinberg가 개발한 업계 표준 DAW로 전문 스튜디오에서도 널리 사용됩니다. 강력한 내장
+      EQ·컴프레서와 VariAudio 피치 교정 기능으로 보컬 녹음·편집을 전문적으로 처리할 수 있습니다.
+  - q: Cubase에서 오디오 인터페이스를 설정하는 방법은?
+    a: >-
+      Studio Setup (F4 또는 Studio → Studio Setup) → Audio System → ASIO
+      Driver(Windows) 또는 Core Audio(Mac)를 오디오 인터페이스로 설정합니다. Studio → Studio
+      Setup → VST Audio System에서도 확인합니다.
+  - q: Cubase VariAudio란 무엇인가요?
+    a: >-
+      Cubase에 내장된 피치 교정 도구입니다. Sample Editor에서 활성화하면 보컬 음표를 시각적으로 편집할 수 있으며,
+      Melodyne과 유사한 기능을 Cubase 내에서 별도 구매 없이 사용할 수 있습니다.
+  - q: Cubase 보컬 파일을 어떻게 내보내나요?
+    a: >-
+      File → Export → Audio Mixdown (Ctrl+Shift+E) → Format: WAV → Bit Depth: 24
+      bit → Sample Rate: 44100/48000 → Export Audio를 클릭합니다. 드라이 보컬은 플러그인 Bypass
+      후 트랙 Solo → Export합니다.
 ---
 ![Cubase 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/portfolio2.webp)
 
@@ -26,7 +45,6 @@ Steinberg Cubase는 1989년부터 업계를 이끌어온 DAW로, 유럽 스튜�
 
 ## Cubase 기본 설정
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
 ### 오디오 인터페이스 설정
 
@@ -78,7 +96,6 @@ Space 키로 정지
 
 ## Channel EQ 설정
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 ### Channel EQ 열기
 
@@ -177,4 +194,3 @@ Cubase는 VariAudio 피치 교정과 정밀한 오디오 편집 기능으로 전
 ---
 
 [Reaper 보컬 녹음 완전 가이드](/stories/reaper1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

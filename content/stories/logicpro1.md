@@ -1,20 +1,38 @@
 ---
-title: "Logic Pro 보컬 녹음 완전 가이드 — Mac 전용 DAW로 프로급 녹음"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["Logic Pro 보컬", "로직 프로 녹음", "Logic Pro 설정", "맥 DAW 녹음", "Logic Pro 믹싱", "Logic Pro EQ", "Logic Pro 컴프레서"]
-thumbnail: "/images/room8.webp"
-summary: "Logic Pro 보컬 녹음 완전 가이드입니다. Logic Pro 기본 설정·오디오 트랙 생성 및 녹음·Logic Pro Channel EQ 설정·Logic Pro 컴프레서 설정·Flex Pitch — 내장 피치 교정·파일 내보내기 (Bounce)까지 정리합니다."
+title: Logic Pro 보컬 녹음 완전 가이드 — Mac 전용 DAW로 프로급 녹음
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - Logic Pro 보컬
+  - 로직 프로 녹음
+  - Logic Pro 설정
+  - 맥 DAW 녹음
+  - Logic Pro 믹싱
+  - Logic Pro EQ
+  - Logic Pro 컴프레서
+thumbnail: /images/room8.webp
+summary: >-
+  Logic Pro 보컬 녹음 완전 가이드입니다. Logic Pro 기본 설정·오디오 트랙 생성 및 녹음·Logic Pro Channel EQ
+  설정·Logic Pro 컴프레서 설정·Flex Pitch — 내장 피치 교정·파일 내보내기 (Bounce)까지 정리합니다.
 faq:
-  - q: "Logic Pro로 고퀄리티 보컬 녹음이 가능한가요?"
-    a: "가능합니다. Logic Pro는 전문 스튜디오에서도 사용하는 Mac 전용 DAW로, 고급 EQ·컴프레서·Flex Pitch 피치 교정·Space Designer 리버브 등 전문 녹음에 필요한 모든 기능을 갖추고 있습니다."
-  - q: "Logic Pro에서 오디오 인터페이스를 연결하는 방법은?"
-    a: "오디오 인터페이스를 USB/Thunderbolt로 Mac에 연결 후, Logic Pro → 환경설정(Preferences) → Audio 탭에서 입력·출력 장치를 오디오 인터페이스로 설정합니다."
-  - q: "Logic Pro Flex Pitch는 무엇인가요?"
-    a: "Logic Pro에 내장된 피치 교정 도구입니다. Melodyne과 유사하게 각 음표의 피치를 시각적으로 편집할 수 있으며, 별도 구매 없이 Logic Pro에 포함되어 있습니다."
-  - q: "Logic Pro 보컬 파일을 믹싱 의뢰용으로 어떻게 내보내나요?"
-    a: "File → Bounce → Project or Section → Format: WAV → Bit Depth: 24 → Sample Rate: 44.1kHz 또는 48kHz로 설정 후 Bounce 클릭. 믹싱 의뢰 시 플러그인 없는 드라이(Dry) 보컬 WAV 파일로 내보내세요."
+  - q: Logic Pro로 고퀄리티 보컬 녹음이 가능한가요?
+    a: >-
+      가능합니다. Logic Pro는 전문 스튜디오에서도 사용하는 Mac 전용 DAW로, 고급 EQ·컴프레서·Flex Pitch 피치
+      교정·Space Designer 리버브 등 전문 녹음에 필요한 모든 기능을 갖추고 있습니다.
+  - q: Logic Pro에서 오디오 인터페이스를 연결하는 방법은?
+    a: >-
+      오디오 인터페이스를 USB/Thunderbolt로 Mac에 연결 후, Logic Pro → 환경설정(Preferences) →
+      Audio 탭에서 입력·출력 장치를 오디오 인터페이스로 설정합니다.
+  - q: Logic Pro Flex Pitch는 무엇인가요?
+    a: >-
+      Logic Pro에 내장된 피치 교정 도구입니다. Melodyne과 유사하게 각 음표의 피치를 시각적으로 편집할 수 있으며, 별도
+      구매 없이 Logic Pro에 포함되어 있습니다.
+  - q: Logic Pro 보컬 파일을 믹싱 의뢰용으로 어떻게 내보내나요?
+    a: >-
+      File → Bounce → Project or Section → Format: WAV → Bit Depth: 24 → Sample
+      Rate: 44.1kHz 또는 48kHz로 설정 후 Bounce 클릭. 믹싱 의뢰 시 플러그인 없는 드라이(Dry) 보컬 WAV
+      파일로 내보내세요.
 ---
 ![Logic Pro 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/room8.webp)
 
@@ -51,7 +69,6 @@ File → New Project → 샘플레이트 설정 후 생성
 
 ## 오디오 트랙 생성 및 녹음
 
-바이패스로 전후 비교하는 습관이 과처리를 막는 가장 효과적인 방법입니다.
 
 ### 트랙 생성
 
@@ -182,4 +199,3 @@ Logic Pro는 Flex Pitch, Space Designer, Channel EQ 등 전문 플러그인을 �
 ---
 
 [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

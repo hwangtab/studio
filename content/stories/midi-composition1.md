@@ -1,20 +1,38 @@
 ---
-title: "MIDI 작곡·편곡 완전 가이드 — DAW로 MIDI 시퀀싱·편곡하는 방법"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["MIDI 작곡", "MIDI 편곡", "MIDI 시퀀싱", "DAW MIDI", "MIDI 드럼", "MIDI 베이스", "MIDI 활용법"]
-thumbnail: "/images/recording6.webp"
-summary: "MIDI 작곡·편곡 완전 가이드입니다. DAW에서 MIDI 시퀀싱, MIDI 드럼·베이스·멜로디 입력, 피아노롤 활용, 벨로시티·모듈레이션 표현, MIDI 편곡 팁을 정리합니다."
+title: MIDI 작곡·편곡 완전 가이드 — DAW로 MIDI 시퀀싱·편곡하는 방법
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - MIDI 작곡
+  - MIDI 편곡
+  - MIDI 시퀀싱
+  - DAW MIDI
+  - MIDI 드럼
+  - MIDI 베이스
+  - MIDI 활용법
+thumbnail: /images/recording6.webp
+summary: >-
+  MIDI 작곡·편곡 완전 가이드입니다. DAW에서 MIDI 시퀀싱, MIDI 드럼·베이스·멜로디 입력, 피아노롤 활용, 벨로시티·모듈레이션
+  표현, MIDI 편곡 팁을 정리합니다.
 faq:
-  - q: "MIDI 작곡이란 무엇인가요?"
-    a: "MIDI(Musical Instrument Digital Interface)는 악기·소프트웨어 간 음악 신호를 주고받는 프로토콜입니다. MIDI 작곡은 실제 악기 대신 DAW 피아노롤에 음표 정보를 입력해 가상 악기(VST)를 연주하는 방식으로 음악을 제작하는 것을 말합니다."
-  - q: "MIDI 작곡을 위해 꼭 필요한 장비는?"
-    a: "컴퓨터와 DAW(Logic, Ableton, Cubase 등)만 있으면 기본은 됩니다. MIDI 키보드(컨트롤러)가 있으면 입력이 편리하고 표현이 풍부해집니다. 키보드 없이 마우스만으로도 피아노롤 편집이 가능합니다."
-  - q: "MIDI로 현악기·관악기 편곡이 가능한가요?"
-    a: "가능합니다. 오케스트라 샘플 라이브러리(Spitfire Audio, EastWest 등)를 활용하면 MIDI로 현악기·관악기·목관악기 편곡이 가능합니다. 실제 연주와 비슷한 표현을 위해 벨로시티, 모듈레이션, 피치벤드를 세밀하게 조정해야 합니다."
-  - q: "MIDI 편곡 후 실제 악기 녹음으로 교체해야 하나요?"
-    a: "용도에 따라 다릅니다. 데모·배경음악용은 MIDI 그대로 사용해도 됩니다. 상업 발매용 완성 음원은 핵심 악기(보컬, 드럼, 기타 등)를 실제 녹음으로 교체하면 완성도가 높아집니다. 스튜디오 놀에서 MIDI 기반 편곡 위에 보컬을 녹음할 수 있습니다."
+  - q: MIDI 작곡이란 무엇인가요?
+    a: >-
+      MIDI(Musical Instrument Digital Interface)는 악기·소프트웨어 간 음악 신호를 주고받는
+      프로토콜입니다. MIDI 작곡은 실제 악기 대신 DAW 피아노롤에 음표 정보를 입력해 가상 악기(VST)를 연주하는 방식으로 음악을
+      제작하는 것을 말합니다.
+  - q: MIDI 작곡을 위해 꼭 필요한 장비는?
+    a: >-
+      컴퓨터와 DAW(Logic, Ableton, Cubase 등)만 있으면 기본은 됩니다. MIDI 키보드(컨트롤러)가 있으면 입력이
+      편리하고 표현이 풍부해집니다. 키보드 없이 마우스만으로도 피아노롤 편집이 가능합니다.
+  - q: MIDI로 현악기·관악기 편곡이 가능한가요?
+    a: >-
+      가능합니다. 오케스트라 샘플 라이브러리(Spitfire Audio, EastWest 등)를 활용하면 MIDI로 현악기·관악기·목관악기
+      편곡이 가능합니다. 실제 연주와 비슷한 표현을 위해 벨로시티, 모듈레이션, 피치벤드를 세밀하게 조정해야 합니다.
+  - q: MIDI 편곡 후 실제 악기 녹음으로 교체해야 하나요?
+    a: >-
+      용도에 따라 다릅니다. 데모·배경음악용은 MIDI 그대로 사용해도 됩니다. 상업 발매용 완성 음원은 핵심 악기(보컬, 드럼, 기타
+      등)를 실제 녹음으로 교체하면 완성도가 높아집니다. 스튜디오 놀에서 MIDI 기반 편곡 위에 보컬을 녹음할 수 있습니다.
 ---
 ![MIDI 작곡·편곡 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
 
@@ -162,4 +180,3 @@ MIDI 작곡·편곡은 아이디어를 빠르게 음악으로 구현하는 현�
 ---
 
 [비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [편곡 완전 가이드](/stories/arrangement1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

@@ -94,7 +94,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -128,4 +127,3 @@ faq:
 ---
 
 [시흥시 전체 녹음실 안내](/stories/siheung1) | [시흥 은계·정왕·장현·목감 녹음실 안내](/stories/siheung-eungye1) | [안산에서 서울 녹음실 방문 가이드](/stories/ansan1) | [광명에서 서울 녹음실 방문 가이드](/stories/gwangmyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

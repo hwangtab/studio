@@ -256,6 +256,3 @@ Kevin Olusola (셀로/퍼커션): 비트박스 + 첼로
 
 은평구 24시간 음악연습실에서 그룹과 함께 또는 혼자 멀티트랙으로 아카펠라를 탐구하세요.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

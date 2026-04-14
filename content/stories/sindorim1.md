@@ -95,7 +95,6 @@ faq:
 ---
 
 
-
 ---
 
 ## 서울에서 연신내 스튜디오 방문 팁
@@ -133,4 +132,3 @@ faq:
 ---
 
 [구로구 녹음실 안내](/stories/guro1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [관악구 녹음실 안내](/stories/gwanak1) | [강서구 녹음실 안내](/stories/gangseo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,20 +1,39 @@
 ---
-title: "마스터링 체인 완전 가이드 — 스트리밍 시대의 마스터링 신호 체인"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["마스터링 체인", "마스터링 신호 체인", "마스터링 EQ", "마스터링 컴프레서", "마스터링 리미터", "LUFS 마스터링", "스트리밍 마스터링"]
-thumbnail: "/images/hardware2.webp"
-summary: "마스터링 체인 완전 가이드입니다. 스트리밍 시대 마스터링 신호 체인 구성, EQ·컴프레서·스테레오 이미저·리미터 순서, LUFS 목표치, 마스터링 플러그인 비교를 정리합니다."
+title: 마스터링 체인 완전 가이드 — 스트리밍 시대의 마스터링 신호 체인
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - 마스터링 체인
+  - 마스터링 신호 체인
+  - 마스터링 EQ
+  - 마스터링 컴프레서
+  - 마스터링 리미터
+  - LUFS 마스터링
+  - 스트리밍 마스터링
+thumbnail: /images/hardware2.webp
+summary: >-
+  마스터링 체인 완전 가이드입니다. 스트리밍 시대 마스터링 신호 체인 구성, EQ·컴프레서·스테레오 이미저·리미터 순서, LUFS 목표치,
+  마스터링 플러그인 비교를 정리합니다.
 faq:
-  - q: "마스터링 신호 체인의 기본 순서는?"
-    a: "일반적으로 EQ → 컴프레서(SSL G-Bus 또는 1176) → 스테레오 이미저 → EQ(최종) → 리미터 순서입니다. 새추레이션을 사용하는 경우 컴프레서 전후에 배치하기도 합니다."
-  - q: "스트리밍 마스터링 LUFS 목표치는?"
-    a: "Spotify와 Apple Music은 -14 LUFS Integrated를 권장합니다. 클럽·EDM은 -10 LUFS까지 허용합니다. True Peak는 -1dBTP 이하를 유지해야 스트리밍 플랫폼의 라우드니스 노멀라이제이션에서 클리핑이 발생하지 않습니다."
-  - q: "마스터링에서 리미터만 사용하면 안 되나요?"
-    a: "리미터만으로도 기본 마스터링이 가능하지만, 최상의 결과를 위해서는 EQ와 컴프레서로 음색과 다이나믹을 먼저 정교하게 처리한 후 리미터로 최종 음압을 설정하는 것이 좋습니다."
-  - q: "마스터링 리미터로 어떤 플러그인이 좋은가요?"
-    a: "FabFilter Pro-L 2, iZotope Ozone Maximizer, Waves L3-LL Multimaximizer, Sonnox Oxford Limiter가 대표적입니다. FabFilter Pro-L 2는 투명한 리미팅과 LUFS 미터 내장으로 업계 표준으로 사용됩니다."
+  - q: 마스터링 신호 체인의 기본 순서는?
+    a: >-
+      일반적으로 EQ → 컴프레서(SSL G-Bus 또는 1176) → 스테레오 이미저 → EQ(최종) → 리미터 순서입니다. 새추레이션을
+      사용하는 경우 컴프레서 전후에 배치하기도 합니다.
+  - q: 스트리밍 마스터링 LUFS 목표치는?
+    a: >-
+      Spotify와 Apple Music은 -14 LUFS Integrated를 권장합니다. 클럽·EDM은 -10 LUFS까지
+      허용합니다. True Peak는 -1dBTP 이하를 유지해야 스트리밍 플랫폼의 라우드니스 노멀라이제이션에서 클리핑이 발생하지
+      않습니다.
+  - q: 마스터링에서 리미터만 사용하면 안 되나요?
+    a: >-
+      리미터만으로도 기본 마스터링이 가능하지만, 최상의 결과를 위해서는 EQ와 컴프레서로 음색과 다이나믹을 먼저 정교하게 처리한 후
+      리미터로 최종 음압을 설정하는 것이 좋습니다.
+  - q: 마스터링 리미터로 어떤 플러그인이 좋은가요?
+    a: >-
+      FabFilter Pro-L 2, iZotope Ozone Maximizer, Waves L3-LL Multimaximizer,
+      Sonnox Oxford Limiter가 대표적입니다. FabFilter Pro-L 2는 투명한 리미팅과 LUFS 미터 내장으로 업계
+      표준으로 사용됩니다.
 ---
 ![마스터링 체인 완전 가이드 — 스튜디오 놀](/images/hardware2.webp)
 
@@ -110,7 +129,6 @@ GR -1~-3dB 이내가 일반적.
 
 ## 리미터 & LUFS 목표치
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
 ### 스트리밍 LUFS 목표
 
@@ -159,4 +177,3 @@ Waves Abbey Road TG Mastering Chain:
 ---
 
 [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

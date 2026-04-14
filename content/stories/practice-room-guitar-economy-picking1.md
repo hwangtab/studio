@@ -170,6 +170,3 @@ Am 아르페지오 (개방 포지션):
 ---
 
 *관련 아티클:*
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

@@ -221,6 +221,3 @@ Motown 베이스 (James Jamerson 레거시)
 
 은평구 24시간 음악연습실에서 Am7 한 코드로 레잉 백 연습부터 시작하세요. 비트 뒤로 밀리는 그 순간, 소울의 문이 열립니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)

@@ -1,20 +1,39 @@
 ---
-title: "신스 프로그래밍 완전 가이드 — ADSR·오실레이터·필터·LFO 활용법"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["신스 프로그래밍", "신디사이저 파라미터", "ADSR 엔벨로프", "오실레이터", "필터 신스", "LFO", "소프트 신디사이저"]
-thumbnail: "/images/portfolio3.webp"
-summary: "신스 프로그래밍 완전 가이드입니다. ADSR 엔벨로프, 오실레이터 파형, 로우패스 필터, LFO 활용, 아날로그·디지털 신스 비교, 장르별 신스 사운드 만들기를 정리합니다."
+title: 신스 프로그래밍 완전 가이드 — ADSR·오실레이터·필터·LFO 활용법
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - 신스 프로그래밍
+  - 신디사이저 파라미터
+  - ADSR 엔벨로프
+  - 오실레이터
+  - 필터 신스
+  - LFO
+  - 소프트 신디사이저
+thumbnail: /images/portfolio3.webp
+summary: >-
+  신스 프로그래밍 완전 가이드입니다. ADSR 엔벨로프, 오실레이터 파형, 로우패스 필터, LFO 활용, 아날로그·디지털 신스 비교, 장르별
+  신스 사운드 만들기를 정리합니다.
 faq:
-  - q: "ADSR이란 무엇인가요?"
-    a: "ADSR은 Attack(어택), Decay(디케이), Sustain(서스테인), Release(릴리즈)의 약자입니다. 신스 소리의 시간에 따른 음량 변화를 제어합니다. Attack은 소리가 시작되는 속도, Decay는 피크에서 Sustain 레벨까지 떨어지는 시간, Sustain은 건반을 누르는 동안 유지되는 레벨, Release는 건반에서 손을 떼고 소리가 사라지는 속도입니다."
-  - q: "신스의 오실레이터 파형 종류는?"
-    a: "사인파(Sine): 부드럽고 순수한 음색. 삼각파(Triangle): 약한 배음. 톱니파(Sawtooth): 풍부한 배음, 현악기·리드 사운드. 사각파(Square): 공허한 배음, 베이스. 화이트노이즈: 모든 주파수를 포함, 퍼커션·효과음에 사용합니다."
-  - q: "로우패스 필터의 Cutoff와 Resonance란?"
-    a: "Cutoff 주파수는 필터가 고역을 차단하기 시작하는 주파수입니다. Cutoff를 낮추면 소리가 어두워지고, 높이면 밝아집니다. Resonance(Emphasis)는 Cutoff 주파수 근처를 강조해 공명음이 생깁니다. 높은 Resonance는 자기 발진을 일으킬 수 있습니다."
-  - q: "LFO는 어디에 사용하나요?"
-    a: "LFO(Low Frequency Oscillator)는 주로 Pitch(비브라토), Amplitude(트레몰로), Filter Cutoff(와우와우 효과)에 연결해 음악적 모듈레이션을 만듭니다. LFO Rate로 속도, Depth로 변조 깊이를 조정합니다."
+  - q: ADSR이란 무엇인가요?
+    a: >-
+      ADSR은 Attack(어택), Decay(디케이), Sustain(서스테인), Release(릴리즈)의 약자입니다. 신스 소리의
+      시간에 따른 음량 변화를 제어합니다. Attack은 소리가 시작되는 속도, Decay는 피크에서 Sustain 레벨까지 떨어지는
+      시간, Sustain은 건반을 누르는 동안 유지되는 레벨, Release는 건반에서 손을 떼고 소리가 사라지는 속도입니다.
+  - q: 신스의 오실레이터 파형 종류는?
+    a: >-
+      사인파(Sine): 부드럽고 순수한 음색. 삼각파(Triangle): 약한 배음. 톱니파(Sawtooth): 풍부한 배음,
+      현악기·리드 사운드. 사각파(Square): 공허한 배음, 베이스. 화이트노이즈: 모든 주파수를 포함, 퍼커션·효과음에 사용합니다.
+  - q: 로우패스 필터의 Cutoff와 Resonance란?
+    a: >-
+      Cutoff 주파수는 필터가 고역을 차단하기 시작하는 주파수입니다. Cutoff를 낮추면 소리가 어두워지고, 높이면 밝아집니다.
+      Resonance(Emphasis)는 Cutoff 주파수 근처를 강조해 공명음이 생깁니다. 높은 Resonance는 자기 발진을
+      일으킬 수 있습니다.
+  - q: LFO는 어디에 사용하나요?
+    a: >-
+      LFO(Low Frequency Oscillator)는 주로 Pitch(비브라토), Amplitude(트레몰로), Filter
+      Cutoff(와우와우 효과)에 연결해 음악적 모듈레이션을 만듭니다. LFO Rate로 속도, Depth로 변조 깊이를 조정합니다.
 ---
 ![신스 프로그래밍 완전 가이드 — 스튜디오 놀](/images/portfolio3.webp)
 
@@ -147,7 +166,6 @@ Pan → 자동 패닝 효과
 
 ## 장르별 신스 사운드
 
-스트리밍 데이터를 분석하면 마케팅 전략을 더욱 정밀하게 조정할 수 있습니다.
 
 ### 팝/팝 R&B
 
@@ -173,4 +191,3 @@ Pan → 자동 패닝 효과
 ---
 
 [사운드 디자인 완전 가이드](/stories/sound-design1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

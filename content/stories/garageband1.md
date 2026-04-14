@@ -1,20 +1,37 @@
 ---
-title: "GarageBand 보컬 녹음 완전 가이드 — 무료 DAW로 고퀄리티 녹음"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "녹음 가이드"
-tags: ["GarageBand 보컬", "가라지밴드 녹음", "GarageBand 설정", "맥 보컬 녹음", "무료 DAW 녹음", "GarageBand 믹싱", "iOS GarageBand"]
-thumbnail: "/images/room6.webp"
-summary: "GarageBand 보컬 녹음 완전 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다."
+title: GarageBand 보컬 녹음 완전 가이드 — 무료 DAW로 고퀄리티 녹음
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 녹음 가이드
+tags:
+  - GarageBand 보컬
+  - 가라지밴드 녹음
+  - GarageBand 설정
+  - 맥 보컬 녹음
+  - 무료 DAW 녹음
+  - GarageBand 믹싱
+  - iOS GarageBand
+thumbnail: /images/room6.webp
+summary: >-
+  GarageBand 보컬 녹음 완전 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성,
+  EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다.
 faq:
-  - q: "GarageBand로 고퀄리티 보컬 녹음이 가능한가요?"
-    a: "가능합니다. GarageBand는 전문 DAW 수준의 녹음·편집 기능을 무료로 제공합니다. 좋은 마이크와 오디오 인터페이스, 방음 처리가 갖춰지면 스튜디오 의뢰 수준의 드라이 보컬을 얻을 수 있습니다."
-  - q: "GarageBand에서 오디오 인터페이스를 연결하는 방법은?"
-    a: "오디오 인터페이스를 USB로 Mac에 연결 후, GarageBand 환경설정(Preferences) → Audio/MIDI 탭에서 입력·출력 장치를 오디오 인터페이스로 설정합니다. iOS는 Lightning/USB-C 어댑터를 통해 연결합니다."
-  - q: "GarageBand에서 EQ와 컴프레서를 어떻게 사용하나요?"
-    a: "트랙 헤더 영역에서 'Smart Controls' 또는 플러그인 메뉴(+)를 열고 EQ, Compressor를 추가합니다. Channel EQ(그래픽 EQ)와 Compressor는 GarageBand에 기본 내장되어 있습니다."
-  - q: "GarageBand 녹음 파일을 믹싱 의뢰용으로 어떻게 내보내나요?"
-    a: "Share → Export Song to Disk → Lossless(AIFF 또는 WAV)로 내보냅니다. 믹싱 의뢰 시에는 무손실 파일(WAV 또는 AIFF 24bit)로 내보내서 전달하세요."
+  - q: GarageBand로 고퀄리티 보컬 녹음이 가능한가요?
+    a: >-
+      가능합니다. GarageBand는 전문 DAW 수준의 녹음·편집 기능을 무료로 제공합니다. 좋은 마이크와 오디오 인터페이스, 방음
+      처리가 갖춰지면 스튜디오 의뢰 수준의 드라이 보컬을 얻을 수 있습니다.
+  - q: GarageBand에서 오디오 인터페이스를 연결하는 방법은?
+    a: >-
+      오디오 인터페이스를 USB로 Mac에 연결 후, GarageBand 환경설정(Preferences) → Audio/MIDI 탭에서
+      입력·출력 장치를 오디오 인터페이스로 설정합니다. iOS는 Lightning/USB-C 어댑터를 통해 연결합니다.
+  - q: GarageBand에서 EQ와 컴프레서를 어떻게 사용하나요?
+    a: >-
+      트랙 헤더 영역에서 'Smart Controls' 또는 플러그인 메뉴(+)를 열고 EQ, Compressor를 추가합니다.
+      Channel EQ(그래픽 EQ)와 Compressor는 GarageBand에 기본 내장되어 있습니다.
+  - q: GarageBand 녹음 파일을 믹싱 의뢰용으로 어떻게 내보내나요?
+    a: >-
+      Share → Export Song to Disk → Lossless(AIFF 또는 WAV)로 내보냅니다. 믹싱 의뢰 시에는 무손실
+      파일(WAV 또는 AIFF 24bit)로 내보내서 전달하세요.
 ---
 ![GarageBand 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/room6.webp)
 
@@ -104,7 +121,6 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand 컴프레서 설정
 
-이펙트를 추가하기 전에 원음의 문제를 먼저 해결하는 것이 올바른 순서입니다.
 
 ### Compressor 삽입
 
@@ -176,4 +192,3 @@ GarageBand는 무료이지만 스튜디오 의뢰 가능한 드라이 보컬 녹
 ---
 
 [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

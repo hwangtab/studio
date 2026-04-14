@@ -1,20 +1,38 @@
 ---
-title: "AI 마스터링 완전 가이드 — LANDR·eMastered·Ozone AI 비교와 한계"
-date: 2026-04-07
-author: "스튜디오 놀"
-category: "음악 제작"
-tags: ["AI 마스터링", "LANDR", "eMastered", "Ozone AI", "자동 마스터링", "AI vs 전문 마스터링", "스트리밍 마스터링"]
-thumbnail: "/images/recording2.webp"
-summary: "AI 마스터링 완전 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점, 전문 마스터링 엔지니어가 필요한 경우를 정리합니다."
+title: AI 마스터링 완전 가이드 — LANDR·eMastered·Ozone AI 비교와 한계
+date: 2026-04-07T00:00:00.000Z
+author: 스튜디오 놀
+category: 음악 제작
+tags:
+  - AI 마스터링
+  - LANDR
+  - eMastered
+  - Ozone AI
+  - 자동 마스터링
+  - AI vs 전문 마스터링
+  - 스트리밍 마스터링
+thumbnail: /images/recording2.webp
+summary: >-
+  AI 마스터링 완전 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점,
+  전문 마스터링 엔지니어가 필요한 경우를 정리합니다.
 faq:
-  - q: "AI 마스터링이란 무엇인가요?"
-    a: "머신러닝 알고리즘이 음악을 분석해 EQ·컴프레서·리미터를 자동 적용하는 마스터링 서비스입니다. LANDR, eMastered, iZotope Ozone AI Mastering 등이 대표적입니다. 몇 초~수 분 내에 마스터링된 파일을 받을 수 있습니다."
-  - q: "AI 마스터링 품질이 전문 엔지니어와 같은가요?"
-    a: "아닙니다. AI 마스터링은 알고리즘이 학습한 평균적 기준을 적용합니다. 곡의 감정·의도·장르 뉘앙스를 이해하는 전문 엔지니어의 섬세한 판단을 대체하기 어렵습니다. 단, 데모·연습용이나 예산이 없는 경우 충분한 선택지가 됩니다."
-  - q: "AI 마스터링 서비스를 언제 쓰면 좋은가요?"
-    a: "SNS 업로드·홈 레코딩 데모·연습 목적이면 AI 마스터링으로 충분합니다. 상업 음원 발매·앨범 제작·기획사 납품·방송용 음원은 전문 마스터링 엔지니어에게 의뢰하는 것이 권장됩니다."
-  - q: "iZotope Ozone AI와 Matchbox는 어떤 차이가 있나요?"
-    a: "Ozone Master Assistant는 트랙을 분석해 EQ·다이나믹스 설정을 제안하지만, 최종 적용 여부는 엔지니어가 결정합니다. Matchbox는 레퍼런스 트랙에 맞게 EQ를 자동 매칭합니다. 두 기능 모두 AI 보조 도구로, 완전 자동 서비스(LANDR 등)와는 다릅니다."
+  - q: AI 마스터링이란 무엇인가요?
+    a: >-
+      머신러닝 알고리즘이 음악을 분석해 EQ·컴프레서·리미터를 자동 적용하는 마스터링 서비스입니다. LANDR, eMastered,
+      iZotope Ozone AI Mastering 등이 대표적입니다. 몇 초~수 분 내에 마스터링된 파일을 받을 수 있습니다.
+  - q: AI 마스터링 품질이 전문 엔지니어와 같은가요?
+    a: >-
+      아닙니다. AI 마스터링은 알고리즘이 학습한 평균적 기준을 적용합니다. 곡의 감정·의도·장르 뉘앙스를 이해하는 전문 엔지니어의 섬세한
+      판단을 대체하기 어렵습니다. 단, 데모·연습용이나 예산이 없는 경우 충분한 선택지가 됩니다.
+  - q: AI 마스터링 서비스를 언제 쓰면 좋은가요?
+    a: >-
+      SNS 업로드·홈 레코딩 데모·연습 목적이면 AI 마스터링으로 충분합니다. 상업 음원 발매·앨범 제작·기획사 납품·방송용 음원은 전문
+      마스터링 엔지니어에게 의뢰하는 것이 권장됩니다.
+  - q: iZotope Ozone AI와 Matchbox는 어떤 차이가 있나요?
+    a: >-
+      Ozone Master Assistant는 트랙을 분석해 EQ·다이나믹스 설정을 제안하지만, 최종 적용 여부는 엔지니어가 결정합니다.
+      Matchbox는 레퍼런스 트랙에 맞게 EQ를 자동 매칭합니다. 두 기능 모두 AI 보조 도구로, 완전 자동 서비스(LANDR
+      등)와는 다릅니다.
 ---
 ![AI 마스터링 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
 
@@ -133,4 +151,3 @@ AI 마스터링은 강력한 도구지만 전문 엔지니어를 대체하지 �
 ---
 
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
-[스튜디오 놀 이용 요금](/pricing)

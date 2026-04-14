@@ -239,6 +239,3 @@ Carlos Santana의 드러머 Michael Shrieve:
 
 은평구 24시간 음악연습실에서 12/8 아프리카 패턴부터 시작하세요. 삼중 폴리리듬이 몸에 스며들면, 그루브가 완전히 달라집니다.
 
-**→ [스튜디오 놀 음악연습실 예약](/practice-room)**  
-**→ [연신내 음악연습실 추천 가이드](/stories/ko/practice-room-yeonsinnae1)**
-[스튜디오 놀 이용 요금](/pricing)
