@@ -213,4 +213,4 @@ C: X . . - X . X -
 
 가장 단순한 루트만의 라인에서도 타이밍과 다이나믹이 완벽하면 그것이 훌륭한 그루브입니다. 복잡한 것보다 간단하고 강력한 것을 먼저 완성하세요.
 
-**→ **→ [피아노 리하모나이제이션·화성 재창조 음악연습실 가이드](/stories/ko/practice-room-piano-reharmonization1)**
+**→ **→ [피아노 리하모나이제이션·화성 재창조 음악연습실 가이드](/stories/practice-room-piano-reharmonization1)**

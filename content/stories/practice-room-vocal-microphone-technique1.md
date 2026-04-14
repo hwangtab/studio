@@ -167,4 +167,4 @@ S, Sh 소음이 과도하게 강조되는 현상:
 
 라이브 경험이 많아질수록 마이크와의 관계가 더 자연스럽고 본능적으로 됩니다. 연습실에서 충분히 시뮬레이션하고 무대에 오르세요.
 
-**→ **→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/ko/practice-room-guitar-pentatonic-advanced1)**
+**→ **→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/practice-room-guitar-pentatonic-advanced1)**

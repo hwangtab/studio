@@ -111,6 +111,4 @@ faq:
 
 ---
 
----
-
 [연습실 월세 입주 완전 가이드 — 장점·비용·계약 주의사항](/stories/practice-room-monthly1) | [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1)

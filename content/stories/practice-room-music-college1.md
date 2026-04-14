@@ -128,6 +128,4 @@ faq:
 
 ---
 
----
-
 [대학생 — 대학생·실용음악과 재학생을 위한 연습 공간 가이드](/stories/practice-room-college-student1) | [실용음악 입시생을 위한 — 입시 준비 연습 공간 완벽 가이드](/stories/practice-room-entrance1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [무인 연습실 완벽 가이드 — 24시간 무인 운영 연습실 선택 기준](/stories/practice-room-unmanned1) | [보컬 연습실 완전 활용법 — 노래 실력 빠르게 키우는 환경 가이드](/stories/practice-room-vocal1)

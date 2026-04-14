@@ -69,8 +69,6 @@ faq:
 
 ---
 
----
-
 ## 청송 음악 씬과 서울 스튜디오
 
 청송은 주왕산국립공원이 있는 경북 산간 도시입니다. 안동이나 포항을 경유해 KTX를 이용하는 방식이 일반적입니다.
@@ -124,4 +122,4 @@ faq:
 
 ---
 
-[예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

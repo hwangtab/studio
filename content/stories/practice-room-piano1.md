@@ -109,6 +109,4 @@ faq:
 
 ---
 
----
-
 [건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1)

@@ -95,8 +95,6 @@ faq:
 
 ---
 
----
-
 ## 서산 음악 씬과 서울 스튜디오
 
 서산은 서해안의 주요 도시로 서산마애삼존불상, 간월도 등 관광지가 있습니다. KTX 해미역(서해선)까지 이동해 서울과 연결할 수 있습니다. 공군 제20전투비행단이 주둔해 있어 군 문화공연 수요도 있습니다.
@@ -131,4 +129,4 @@ faq:
 
 ---
 
-[보령에서 서울 녹음실 방문 가이드](/stories/boryeong1) | [공주·논산에서 서울 녹음실 방문 가이드](/stories/gongju1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보령에서 서울 녹음실 방문 가이드](/stories/boryeong1) | [공주·논산에서 서울 녹음실 방문 가이드](/stories/gongju1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

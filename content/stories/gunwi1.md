@@ -82,8 +82,6 @@ faq:
 
 ---
 
----
-
 ## 군위 음악 씬과 서울 스튜디오
 
 군위는 대구 북부에 편입된 경북 군 지역입니다. 대구에 인접해 대구역·동대구역 KTX를 이용하면 서울까지 빠르게 도달할 수 있습니다.
@@ -139,4 +137,4 @@ faq:
 
 ---
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [김천에서 서울 녹음실 방문 가이드](/stories/gimcheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [김천에서 서울 녹음실 방문 가이드](/stories/gimcheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

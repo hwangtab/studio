@@ -144,8 +144,6 @@ EQ → 컴프레서 → Adaptive Limiter
 
 ---
 
----
-
 ## 마치며
 
 Logic Pro는 Mac 홈 레코딩의 표준 DAW입니다. 홈 레코딩 후 온라인 파일 의뢰도 가능합니다.

@@ -166,4 +166,4 @@ D 도리안 스케일로 자유 즉흥
 
 은평구 24시간 음악연습실에서 각 모드를 대표하는 곡을 들으며 해당 스케일을 연주해보세요. 이론이 아닌 음악으로 모드를 배우는 것이 가장 효과적입니다.
 
-**→ **→ [드럼 재즈 왈츠·3박자 스윙 음악연습실 가이드](/stories/ko/practice-room-drum-brushwork-jazz-waltz1)**
+**→ **→ [드럼 재즈 왈츠·3박자 스윙 음악연습실 가이드](/stories/practice-room-drum-brushwork-jazz-waltz1)**

@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 의령 음악 씬과 서울 스튜디오
 
 의령은 경남 내륙의 소도시로 곽재우 의병 활동으로 유명합니다. 마산·창원을 경유해 서울로 이동하며, 지역 문화 행사에서 음악 공연이 이루어집니다.
@@ -126,4 +124,4 @@ faq:
 
 ---
 
-[창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [함안에서 서울 녹음실 방문 가이드](/stories/haman1) | [합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [함안에서 서울 녹음실 방문 가이드](/stories/haman1) | [합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

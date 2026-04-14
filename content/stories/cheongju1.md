@@ -133,4 +133,4 @@ KTX 오송역 → 서울역 30분, 지하철 연신내 60분 이내.
 
 ---
 
-[청주 흥덕구·상당구·서원구 녹음실 안내](/stories/cheongju-center1) | [충청북도 녹음실 방문 가이드](/stories/chungbuk1) | [영동에서 서울 녹음실 방문 가이드](/stories/yeongdong1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[청주 흥덕구·상당구·서원구 녹음실 안내](/stories/cheongju-center1) | [충청북도 녹음실 방문 가이드](/stories/chungbuk1) | [영동에서 서울 녹음실 방문 가이드](/stories/yeongdong1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) 

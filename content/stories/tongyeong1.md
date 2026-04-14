@@ -96,8 +96,6 @@ faq:
 
 ---
 
----
-
 ## 통영 음악 씬과 서울 스튜디오
 
 통영은 작곡가 윤이상의 고향으로 음악 예술의 도시입니다. 통영국제음악제가 매년 열리며 국내외 음악인들이 모이는 문화 허브입니다. 고성버스터미널이나 마산역을 통해 서울까지 이동합니다.
@@ -130,4 +128,4 @@ faq:
 
 ---
 
-[고성(경남)에서 서울 녹음실 방문 가이드](/stories/goseong-gyeongnam1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[고성(경남)에서 서울 녹음실 방문 가이드](/stories/goseong-gyeongnam1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -163,8 +163,6 @@ faq:
 
 ---
 
----
-
 ### 보컬 기본 워밍업 루틴
 
 **5분 기본 루틴**
@@ -184,5 +182,9 @@ faq:
 애드립·런은 기술이 아닌 감정 표현의 도구입니다.
 
 ---
-
+ | [컨트리 음악 보컬 완전 가이드 — 컨트리 창법·트윙·감성 표현](/stories/country-vocal1)
 [보컬 기교 완전 가이드](/stories/runs1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+
+---
+
+[녹음 긴장·무대공포증 완전 가이드 — 스튜디오에서 편안하게 노래하는 방법](/stories/recording-anxiety1)

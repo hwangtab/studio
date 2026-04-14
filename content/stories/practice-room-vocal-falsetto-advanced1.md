@@ -323,5 +323,5 @@ R&B·소울에 적합
 은평구 24시간 음악연습실에서 팔세토를 탐구하세요. 자신의 팔세토 음역을 발견하고, 비브라토를 발전시키고, 전환을 익히는 과정—그것이 보컬 고음 테크닉의 완성입니다.
 
 ---
-
+ | [팝 벨팅·고음 파워·Mix Voice·두성 전환 — 완전 가이드](/stories/practice-room-vocal-pop-belting1)
 [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1)

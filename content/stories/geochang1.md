@@ -76,8 +76,6 @@ faq:
 
 ---
 
----
-
 ## 거창 음악 씬과 서울 스튜디오
 
 거창은 경남 내륙 산간 도시로 거창국제연극제가 열리는 문화 도시입니다. 진주나 대구를 경유해 KTX를 이용하며, 연극·공연 예술인들의 서울 네트워킹이 활발합니다.
@@ -131,4 +129,4 @@ faq:
 
 ---
 
-[합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [함양에서 서울 녹음실 방문 가이드](/stories/hamyang1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [함양에서 서울 녹음실 방문 가이드](/stories/hamyang1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

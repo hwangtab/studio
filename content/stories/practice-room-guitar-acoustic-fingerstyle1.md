@@ -192,4 +192,4 @@ DADGAD + 카포 5 = GCGCGC (G 중심)
 
 은평구 24시간 음악연습실에서 조용히 어쿠스틱 기타를 잡고 DADGAD로 재조율해보세요. 개방현 사운드 하나만으로도 영감이 넘쳐납니다.
 
-**→ **→ [드럼 아프로비트·월드 그루브 음악연습실 가이드](/stories/ko/practice-room-drum-afrobeat1)**
+**→ **→ [드럼 아프로비트·월드 그루브 음악연습실 가이드](/stories/practice-room-drum-afrobeat1)**

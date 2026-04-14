@@ -215,4 +215,4 @@ G|--9-h12--|
 
 은평구 24시간 음악연습실에서 매일 즉흥연주 시간을 갖고, 한 포지션에만 머물지 말고 가로·세로·대각선으로 자유롭게 이동하세요. 그 자유로움이 진정한 기타 즉흥연주의 출발점입니다.
 
-**→ **→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/ko/practice-room-guitar-pentatonic-advanced1)**
+**→ **→ [기타 펜타토닉 고급·포지션 연결 음악연습실 가이드](/stories/practice-room-guitar-pentatonic-advanced1)**

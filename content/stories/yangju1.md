@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[양주 덕계·옥정·고읍·회천 녹음실 안내](/stories/yangju-deokgye1) | [동두천에서 서울 녹음실 방문 가이드](/stories/dongducheon1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[양주 덕계·옥정·고읍·회천 녹음실 안내](/stories/yangju-deokgye1) | [동두천에서 서울 녹음실 방문 가이드](/stories/dongducheon1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [의정부 녹음실 안내](/stories/uijeongbu1) 

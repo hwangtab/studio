@@ -67,8 +67,6 @@ faq:
 
 ---
 
----
-
 ## 증평 음악 씬과 서울 스튜디오
 
 증평은 충북의 작은 군 도시입니다. 청주·충주를 경유하는 대중교통을 이용하거나 자가용으로 이동합니다. 지역 사회복지시설 문화공연 등에서 음악 활동이 이루어집니다.
@@ -111,4 +109,4 @@ faq:
 
 ---
 
-[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [진천에서 서울 녹음실 방문 가이드](/stories/jincheon1) | [음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [진천에서 서울 녹음실 방문 가이드](/stories/jincheon1) | [음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -196,4 +196,4 @@ C . G . C . G C .
 
 은평구 24시간 음악연습실에서 먼저 왼손만 단독으로 완성하세요. 왼손이 자동화되면 오른손 멜로디에 집중할 여유가 생깁니다.
 
-**→ **→ [기타 왐미바·트레몰로 암 기법 음악연습실 가이드](/stories/ko/practice-room-guitar-whammy-bar1)**
+**→ **→ [기타 왐미바·트레몰로 암 기법 음악연습실 가이드](/stories/practice-room-guitar-whammy-bar1)**

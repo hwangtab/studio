@@ -81,8 +81,6 @@ faq:
 
 ---
 
----
-
 ## 제천 음악 씬과 서울 스튜디오
 
 제천은 의림지·청풍호 등 자연 경관과 함께 제천국제음악영화제로 음악 문화가 주목받는 도시입니다. 제천역 KTX-이음으로 서울 청량리까지 약 1시간 30분이면 도달합니다.
@@ -138,4 +136,4 @@ faq:
 
 ---
 
-[충주에서 서울 녹음실 방문 가이드](/stories/chungju1) | [단양에서 서울 녹음실 방문 가이드](/stories/danyang1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[충주에서 서울 녹음실 방문 가이드](/stories/chungju1) | [단양에서 서울 녹음실 방문 가이드](/stories/danyang1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

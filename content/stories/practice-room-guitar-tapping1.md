@@ -193,4 +193,4 @@ e|--T12p9h5-T12p9h5-T12p9h5--|
 
 핵심은 **속도보다 명확도**입니다. 각 탭이 명확하게 울릴 때까지 느린 템포에서 완성한 후 속도를 올리세요.
 
-**→ **→ [보컬 믹스 보이스·중간 음역 연결 음악연습실 가이드](/stories/ko/practice-room-vocal-mix-voice1)**
+**→ **→ [보컬 믹스 보이스·중간 음역 연결 음악연습실 가이드](/stories/practice-room-vocal-mix-voice1)**

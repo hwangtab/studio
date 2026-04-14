@@ -134,4 +134,4 @@ KTX 전주역 → 서울역 1시간 10분, 지하철 연신내 총 90분.
 
 ---
 
-[전라북도 녹음실 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[전라북도 녹음실 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

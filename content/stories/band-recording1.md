@@ -116,8 +116,6 @@ faq:
 
 ---
 
----
-
 ### 밴드 녹음 준비 체크리스트
 
 **사전 준비**
@@ -147,5 +145,5 @@ faq:
 밴드 녹음은 철저한 준비가 스튜디오 시간을 최대한 효율적으로 사용하게 합니다.
 
 ---
-
+ | [밴드 레코딩 준비 가이드 — 합주실에서 스튜디오까지](/stories/band-recording-guide1)
 [라이브 녹음 완전 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1)

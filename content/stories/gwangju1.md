@@ -120,4 +120,4 @@ KTX 광주송정역 → 서울역 1시간 30분, 지하철 연신내 총 100분.
 
 ---
 
-[광주 상무지구·충장로 녹음실 안내](/stories/gwangju-sangmu1) | [전라남도 녹음실 방문 가이드](/stories/jeonnam1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [목포에서 서울 녹음실 방문 가이드](/stories/mokpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[광주 상무지구·충장로 녹음실 안내](/stories/gwangju-sangmu1) | [전라남도 녹음실 방문 가이드](/stories/jeonnam1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [목포에서 서울 녹음실 방문 가이드](/stories/mokpo1) 

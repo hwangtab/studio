@@ -77,8 +77,6 @@ faq:
 
 ---
 
----
-
 ## 고성(강원) 음악 씬과 서울 스튜디오
 
 강원도 고성은 통일전망대·해금강 등 최북단 관광지입니다. 속초나 강릉을 경유해 KTX 또는 고속버스로 서울까지 이동하며, 주로 자가용으로 속초터미널까지 이동 후 버스를 이용합니다.
@@ -132,4 +130,4 @@ faq:
 
 ---
 
-[속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

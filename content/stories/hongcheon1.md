@@ -76,8 +76,6 @@ faq:
 
 ---
 
----
-
 ## 강원 지역 아티스트와 서울 방문 가이드
 
 강원도는 ITX·KTX 강릉선이 연결되어 춘천·원주·강릉 등 주요 도시에서 서울까지 1시간~2시간 30분 내로 이동할 수 있습니다. 일부 산간 지역은 이동 시간이 더 걸릴 수 있으나 당일 왕복이 가능합니다.
@@ -117,4 +115,4 @@ faq:
 
 ---
 
-[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -207,4 +207,4 @@ X  .  X  X  X  .  X  X
 
 은평구 24시간 음악연습실에서 혼자 연습할 때도 iReal Pro의 솔로 트랙을 틀고 그 솔로에 응답하는 콤핑을 연습하세요. 상상 속의 솔리스트와 대화하는 훈련입니다.
 
-**→ **→ [피아노 콤핑·리듬 반주 기법 음악연습실 가이드](/stories/ko/practice-room-piano-comping1)**
+**→ **→ [피아노 콤핑·리듬 반주 기법 음악연습실 가이드](/stories/practice-room-piano-comping1)**

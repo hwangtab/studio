@@ -173,7 +173,7 @@ G7alt: G-B-D♭-F-A♭ (또는 다양한 조합)
 - **완벽 방음** — 복잡한 코드 탐색에 집중
 - **연신내역 5분**
 
-연습실 예약 및 문의: - [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/ko/practice-room-bass-jazz-bass1)
+연습실 예약 및 문의: - [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/practice-room-bass-jazz-bass1)
 
 ---
 

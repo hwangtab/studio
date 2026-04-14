@@ -67,8 +67,6 @@ faq:
 
 ---
 
----
-
 ## 고성(경남) 음악 씬과 서울 스튜디오
 
 경남 고성은 공룡화석지로 유명한 해안 도시입니다. 진주역 KTX를 이용하거나 마산·창원까지 이동 후 경전선을 이용합니다.
@@ -122,4 +120,4 @@ faq:
 
 ---
 
-[통영에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[통영에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

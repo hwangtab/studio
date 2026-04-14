@@ -197,4 +197,4 @@ E현 8프렛(C)부터 G현 14프렛(C)까지:
 
 은평구 24시간 음악연습실에서 매일 지판 연습 시간을 따로 할당하세요. 한 달 후 지판이 손에 익어 자유롭게 움직일 수 있습니다.
 
-**→ **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
+**→ **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/practice-room-vocal-falsetto-technique1)**

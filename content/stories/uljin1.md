@@ -80,8 +80,6 @@ faq:
 
 ---
 
----
-
 ## 울진 음악 씬과 서울 스튜디오
 
 울진은 동해안 원전 도시로 덕구온천·망양정 등 관광지가 있습니다. KTX 포항역까지 이동 후 서울로 향하거나 동서울터미널 고속버스를 이용합니다.
@@ -135,4 +133,4 @@ faq:
 
 ---
 
-[영덕에서 서울 녹음실 방문 가이드](/stories/yeongdeok1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[영덕에서 서울 녹음실 방문 가이드](/stories/yeongdeok1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 예산 음악 씬과 서울 스튜디오
 
 예산은 충남 서북부에 위치한 소도시로 윤봉길 의사의 고향입니다. KTX 예산역(서해선)이 개통되어 서울까지 약 1시간 20분으로 단축되었습니다. 규모는 작지만 지역 문화재단과 청소년 음악 프로그램이 활성화되어 있습니다.
@@ -128,4 +126,4 @@ faq:
 
 ---
 
-[홍성에서 서울 녹음실 방문 가이드](/stories/hongseong1) | [청양에서 서울 녹음실 방문 가이드](/stories/cheongyang1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[홍성에서 서울 녹음실 방문 가이드](/stories/hongseong1) | [청양에서 서울 녹음실 방문 가이드](/stories/cheongyang1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

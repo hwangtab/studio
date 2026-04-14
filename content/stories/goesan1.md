@@ -72,8 +72,6 @@ faq:
 
 ---
 
----
-
 ## 괴산 음악 씬과 서울 스튜디오
 
 괴산은 충북 산간 지역으로 청정한 자연환경이 특징입니다. 청주를 경유해 KTX를 이용하거나 시외버스로 서울까지 이동합니다. 지역 문화재단의 음악 프로그램이 소규모로 운영됩니다.
@@ -129,4 +127,4 @@ faq:
 
 ---
 
-[진천에서 서울 녹음실 방문 가이드](/stories/jincheon1) | [음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[진천에서 서울 녹음실 방문 가이드](/stories/jincheon1) | [음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

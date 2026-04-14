@@ -191,4 +191,4 @@ Cmaj7 1박: C (목표음)
 
 은평구 24시간 음악연습실에서 이론을 공부한 후 바로 지판에 적용하세요. 이론과 실전이 연결될 때 비로소 진정한 음악적 자유가 생깁니다.
 
-**→ **→ [베이스 화성 이론·스케일 적용 음악연습실 가이드](/stories/ko/practice-room-bass-theory-harmony1)**
+**→ **→ [베이스 화성 이론·스케일 적용 음악연습실 가이드](/stories/practice-room-bass-theory-harmony1)**

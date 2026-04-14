@@ -79,8 +79,6 @@ faq:
 
 ---
 
----
-
 ## 영월 음악 씬과 서울 스튜디오
 
 영월은 단종의 유배지이자 고씨동굴·별마로천문대 등 관광지가 있는 강원도 소도시입니다. 제천역 KTX-이음을 이용하거나 동서울터미널 버스로 서울까지 이동합니다.
@@ -134,4 +132,4 @@ faq:
 
 ---
 
-[정선에서 서울 녹음실 방문 가이드](/stories/jeongseon1) | [횡성에서 서울 녹음실 방문 가이드](/stories/hoengseong1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[정선에서 서울 녹음실 방문 가이드](/stories/jeongseon1) | [횡성에서 서울 녹음실 방문 가이드](/stories/hoengseong1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -69,8 +69,6 @@ faq:
 
 ---
 
----
-
 ## 영덕 음악 씬과 서울 스튜디오
 
 영덕은 대게로 유명한 경북 동해안 도시입니다. KTX 포항역까지 이동 후 서울로 향하는 방식이 일반적이며, 관광 시즌 공연 활동이 있습니다.
@@ -124,4 +122,4 @@ faq:
 
 ---
 
-[울진에서 서울 녹음실 방문 가이드](/stories/uljin1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[울진에서 서울 녹음실 방문 가이드](/stories/uljin1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

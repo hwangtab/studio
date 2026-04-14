@@ -223,5 +223,5 @@ Polyphia:
 은평구 24시간 음악연습실에서 5/4박자 박수 치기부터 시작하세요. 이상한 박자가 자연스러워지는 순간, 수학록의 아름다움이 시작됩니다.
 
 ---
-
+ | [피아노 양손 독립·폴리리듬·손 협응 훈련 — 완전 가이드](/stories/practice-room-piano-two-hand-independence1)
 [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1)

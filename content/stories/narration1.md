@@ -112,12 +112,10 @@ faq:
 
 ---
 
----
-
 ## 마치며
 
 성우·나레이션 녹음도 보컬 녹음과 동일하게 흡음 부스·전문 마이크가 필요합니다.
 
 ---
-
+ | [오디오북 제작 방법 — 녹음부터 유통까지 완전 가이드](/stories/audiobook-guide1)
 [팟캐스트·오디오드라마 보컬 녹음 가이드](/stories/podcast-vocal1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

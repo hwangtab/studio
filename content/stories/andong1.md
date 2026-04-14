@@ -121,7 +121,7 @@ faq:
 
 ---
 
-[경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [영주에서 서울 녹음실 방문 가이드](/stories/yeongju1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [영주에서 서울 녹음실 방문 가이드](/stories/yeongju1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) 
 ---
 
 ## 스튜디오 놀을 선택하는 이유
@@ -133,3 +133,6 @@ faq:
 - **합리적 가격**: 녹음 시간당 33,000원부터
 - **편리한 접근**: 연신내역 도보 5분
 
+---
+ | [군위에서 서울 녹음실 방문 가이드 — 대구 경유 KTX로 3시간](/stories/gunwi1)
+[강화에서 서울 녹음실 방문 가이드 — 버스로 신촌까지 당일 왕복](/stories/ganghwa1)

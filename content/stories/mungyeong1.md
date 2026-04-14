@@ -78,8 +78,6 @@ faq:
 
 ---
 
----
-
 ## 문경 음악 씬과 서울 스튜디오
 
 문경은 문경새재·석탄박물관 등 역사 관광지가 있는 경북 도시입니다. 점촌역에서 KTX-이음(중부내륙선)을 이용하면 서울까지 약 1시간이면 도달합니다.
@@ -135,4 +133,4 @@ faq:
 
 ---
 
-[상주에서 서울 녹음실 방문 가이드](/stories/sangju1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[상주에서 서울 녹음실 방문 가이드](/stories/sangju1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

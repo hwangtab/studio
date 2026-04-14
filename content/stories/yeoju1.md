@@ -77,8 +77,6 @@ faq:
 
 ---
 
----
-
 ## 연신내까지 접근 경로
 
 수도권에서 지하철·버스를 이용하면 45~90분 내에 도착할 수 있습니다. 위에 안내된 이동 경로를 참고해 출발 시간을 미리 계산해두세요.
@@ -110,4 +108,4 @@ faq:
 
 ---
 
-[이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [가평에서 서울 녹음실 방문 가이드](/stories/gapyeong1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [수도권 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [가평에서 서울 녹음실 방문 가이드](/stories/gapyeong1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [수도권 녹음실 이용 방법](/stories/nationwide1) 

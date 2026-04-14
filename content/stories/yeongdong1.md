@@ -70,8 +70,6 @@ faq:
 
 ---
 
----
-
 ## 영동 음악 씬과 서울 스튜디오
 
 영동은 충북 남부의 포도·와인으로 유명한 도시입니다. 난계 박연의 고향으로 국악 전통이 깊으며, 영동역에서 경부선 기차를 이용해 대전·서울로 이동합니다.
@@ -114,4 +112,4 @@ faq:
 
 ---
 
-[옥천에서 서울 녹음실 방문 가이드](/stories/okcheon1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[옥천에서 서울 녹음실 방문 가이드](/stories/okcheon1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

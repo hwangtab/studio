@@ -67,8 +67,6 @@ faq:
 
 ---
 
----
-
 ## 옥천 음악 씬과 서울 스튜디오
 
 옥천은 시인 정지용의 고향으로 문화적 전통이 있는 충북 소도시입니다. 옥천역에서 무궁화호로 대전까지 15분 이동 후 KTX를 이용하면 서울까지 빠르게 도달합니다.
@@ -111,4 +109,4 @@ faq:
 
 ---
 
-[보은에서 서울 녹음실 방문 가이드](/stories/boeun1) | [영동에서 서울 녹음실 방문 가이드](/stories/yeongdong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보은에서 서울 녹음실 방문 가이드](/stories/boeun1) | [영동에서 서울 녹음실 방문 가이드](/stories/yeongdong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

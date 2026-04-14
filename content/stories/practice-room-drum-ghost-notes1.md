@@ -201,4 +201,4 @@ Level 1 (Ghost):  거의 들리지 않는 고스트 노트
 
 그루브를 만드는 것은 크게 치는 것이 아닙니다. 강약의 대비, 그리고 그 사이 공간을 채우는 섬세한 고스트 노트—이것이 위대한 드러머를 평범한 드러머와 구분하는 요소입니다.
 
-**→ **→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/ko/practice-room-piano-improvisation1)**
+**→ **→ [피아노 즉흥연주·블루스 스케일 음악연습실 가이드](/stories/practice-room-piano-improvisation1)**

@@ -69,8 +69,6 @@ faq:
 
 ---
 
----
-
 ## 영천 음악 씬과 서울 스튜디오
 
 영천은 포도와 와인으로 유명한 경북 도시로 보현산천문과학관이 있습니다. 신경주역이나 대구역 KTX를 이용해 서울까지 이동합니다.
@@ -126,4 +124,4 @@ faq:
 
 ---
 
-[칠곡에서 서울 녹음실 방문 가이드](/stories/chilgok1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[칠곡에서 서울 녹음실 방문 가이드](/stories/chilgok1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

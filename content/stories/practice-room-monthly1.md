@@ -109,6 +109,4 @@ faq:
 
 ---
 
----
-
 [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [보증금 없는 — 부담 없이 시작하는 입주 연습실 가이드](/stories/practice-room-nodeposit1)

@@ -199,4 +199,4 @@ summary: '하농, 체르니, 쇼팽 에튀드의 올바른 활용법. 기술 연
 
 은평구 24시간 음악연습실에서 하논은 워밍업으로, 체르니는 기술 훈련으로, 쇼팽 에튀드는 예술적 목표로 단계별 활용하세요.
 
-**→ **→ [드럼 라틴 퍼커션·살사·삼바 리듬 음악연습실 가이드](/stories/ko/practice-room-drum-latin-percussion1)**
+**→ **→ [드럼 라틴 퍼커션·살사·삼바 리듬 음악연습실 가이드](/stories/practice-room-drum-latin-percussion1)**

@@ -67,8 +67,6 @@ faq:
 
 ---
 
----
-
 ## 예천 음악 씬과 서울 스튜디오
 
 예천은 경북 내륙의 소도시로 한국의 귀네스북 명소 등을 보유합니다. KTX-이음 예천역(중부내륙선)에서 서울 청량리까지 약 1시간이면 도달합니다.
@@ -122,4 +120,4 @@ faq:
 
 ---
 
-[청송에서 서울 녹음실 방문 가이드](/stories/cheongsong1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[청송에서 서울 녹음실 방문 가이드](/stories/cheongsong1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

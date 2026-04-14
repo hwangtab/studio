@@ -163,5 +163,5 @@ YouTube Music / YouTube (Content ID):
 스트리밍 수익은 단기 폭발보다 장기 노출의 누적이 핵심입니다. 좋은 곡과 지속적인 홍보로 스트리밍 수익을 키우세요.
 
 ---
-
+ | [스트리밍 수익 계산 방법 — 멜론·스포티파이 음원 수익 현실적으로 알기](/stories/revenue1)
 [스트리밍 플랫폼 완전 비교 가이드](/stories/streaming-platforms1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

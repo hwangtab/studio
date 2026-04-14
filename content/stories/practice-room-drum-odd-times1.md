@@ -209,4 +209,8 @@ Dave Brubeck의 "Take Five"에서 Joe Morello가 사용한 스타일
 
 홀수박자를 마스터한 드러머는 **모든 박자에서 자유롭고**, 음악적 표현 범위가 무한히 넓어집니다.
 
-**→ **→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/ko/practice-room-bass-slap-advanced1)**
+**→ **→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/practice-room-bass-slap-advanced1)**
+
+---
+
+[드럼 홀수박자·7/8·5/4 박자 트레이닝 — 완전 가이드](/stories/practice-room-drum-odd-time1)

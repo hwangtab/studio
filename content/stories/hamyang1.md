@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 함양 음악 씬과 서울 스튜디오
 
 함양은 지리산 서쪽 경남 내륙 산간 도시입니다. 진주나 장수를 경유해 이동하며, 조용한 자연 환경에서 음악 창작 활동을 하는 아티스트들이 있습니다.
@@ -126,4 +124,4 @@ faq:
 
 ---
 
-[산청에서 서울 녹음실 방문 가이드](/stories/sancheong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[산청에서 서울 녹음실 방문 가이드](/stories/sancheong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

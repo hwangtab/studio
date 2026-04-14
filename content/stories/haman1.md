@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 함안 음악 씬과 서울 스튜디오
 
 함안은 경남 내륙의 말이산고분군으로 유명한 역사 도시입니다. 창원·마산을 경유해 KTX를 이용하면 서울까지 이동할 수 있습니다.
@@ -128,4 +126,4 @@ faq:
 
 ---
 
-[거제에서 서울 녹음실 방문 가이드](/stories/geoje1) | [의령에서 서울 녹음실 방문 가이드](/stories/uiryeong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[거제에서 서울 녹음실 방문 가이드](/stories/geoje1) | [의령에서 서울 녹음실 방문 가이드](/stories/uiryeong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

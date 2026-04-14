@@ -135,8 +135,6 @@ Solid State Logic Native Bus Compressor:
 
 ---
 
----
-
 ## 마치며
 
 SSL G-Bus 컴프레서는 믹스 버스 컴프레션의 황금 표준으로, Glue 효과로 믹스 전체에 통일감을 부여합니다.

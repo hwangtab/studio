@@ -67,8 +67,6 @@ faq:
 
 ---
 
----
-
 ## 진천 음악 씬과 서울 스튜디오
 
 진천은 충북 중부의 농업 도시로 "인물의 고장"으로 불립니다. 청주역이나 오송역을 통해 KTX를 이용할 수 있으며 서울까지 약 50분~1시간이면 도달합니다.
@@ -111,4 +109,4 @@ faq:
 
 ---
 
-[괴산에서 서울 녹음실 방문 가이드](/stories/goesan1) | [음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[괴산에서 서울 녹음실 방문 가이드](/stories/goesan1) | [음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

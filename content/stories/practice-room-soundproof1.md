@@ -113,6 +113,4 @@ STC(Sound Transmission Class)는 벽·바닥·천장이 소리를 얼마나 차�
 
 ---
 
----
-
 [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [무인 연습실 완벽 가이드 — 24시간 무인 운영 연습실 선택 기준](/stories/practice-room-unmanned1)

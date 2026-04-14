@@ -76,8 +76,6 @@ faq:
 
 ---
 
----
-
 ## 단양 음악 씬과 서울 스튜디오
 
 단양은 도담삼봉·고수동굴 등 석회암 지형의 관광지로 유명합니다. 대중교통보다 제천역을 경유해 KTX를 이용하는 방식이 일반적이며, 관광 시즌 버스킹 활동이 꾸준합니다.
@@ -120,4 +118,4 @@ faq:
 
 ---
 
-[제천에서 서울 녹음실 방문 가이드](/stories/jecheon1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[제천에서 서울 녹음실 방문 가이드](/stories/jecheon1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -174,4 +174,20 @@ summary: '피아노 발라드의 루바토, 페달 기법, 다이나믹 쉐이�
 
 루바토는 처음엔 어색하지만, 자신의 감성을 믿고 표현하다 보면 어느 순간 자연스러운 음악적 호흡이 생깁니다. 기술이 아닌 마음으로 연주하는 것—그것이 발라드의 본질입니다.
 
-**→ **→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/ko/practice-room-piano-ballad-technique1)**
+**→ **→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/practice-room-piano-ballad-technique1)**
+
+---
+ | [피아노 인상주의·드뷔시·라벨·색채 화성 — 완전 가이드](/stories/practice-room-piano-impressionist1)
+[피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 — 완전 가이드](/stories/practice-room-piano-funk1)
+
+---
+ | [피아노 뉴에이지·Einaudi·George Winston 스타일 — 완전 가이드](/stories/practice-room-piano-new-age1)
+[피아노 인트로·아웃트로 작곡법 — 완전 가이드](/stories/practice-room-piano-intro-outro1)
+
+---
+ | [피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner — 완전 가이드](/stories/practice-room-piano-quartal1)
+[피아노 팝 편곡·발라드 반주법 — 완전 가이드](/stories/practice-room-piano-pop-arrangement1)
+
+---
+
+[피아노 래그타임·Scott Joplin 스타일 — 완전 가이드](/stories/practice-room-piano-ragtime1)

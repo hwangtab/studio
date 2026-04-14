@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 거제 음악 씬과 서울 스튜디오
 
 거제는 조선업으로 유명한 해양 도시로 외도·해금강 등 관광지도 있습니다. 마산·창원에서 KTX를 이용하거나 거제~서울 고속버스로 이동합니다.
@@ -126,4 +124,4 @@ faq:
 
 ---
 
-[함안에서 서울 녹음실 방문 가이드](/stories/haman1) | [의령에서 서울 녹음실 방문 가이드](/stories/uiryeong1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[함안에서 서울 녹음실 방문 가이드](/stories/haman1) | [의령에서 서울 녹음실 방문 가이드](/stories/uiryeong1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

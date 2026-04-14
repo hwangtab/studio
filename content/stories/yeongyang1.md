@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 영양 음악 씬과 서울 스튜디오
 
 영양은 경북 최오지로 불리는 산간 군 도시입니다. 청정 자연환경 속에서 음악 작업을 하는 아티스트도 있으며, 안동을 경유해 서울까지 이동합니다.
@@ -115,4 +113,4 @@ faq:
 
 ---
 
-[봉화에서 서울 녹음실 방문 가이드](/stories/bonghwa1) | [예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[봉화에서 서울 녹음실 방문 가이드](/stories/bonghwa1) | [예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

@@ -184,4 +184,4 @@ summary: '팔세토 발성의 원리와 훈련법, 자연스러운 성구 전환
 
 은평구 24시간 음악연습실에서 매일 조금씩 팔세토와 두성의 경계를 탐색하세요. 두 발성이 하나로 연결되는 순간 보컬로서 새로운 차원이 열립니다.
 
-**→ **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/ko/practice-room-vocal-falsetto-technique1)**
+**→ **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/practice-room-vocal-falsetto-technique1)**

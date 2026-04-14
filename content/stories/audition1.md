@@ -119,12 +119,10 @@ MR(반주)과 녹음된 보컬을 통합해 최종 스테레오 믹스를 완성
 
 ---
 
----
-
 ## 마치며
 
 오디션 데모는 실력을 보여주는 명함입니다.
 
 ---
-
+ | [노래방 vs 스튜디오 녹음 — 뭐가 다른가요? 목적별 선택 기준](/stories/karaoke1)
 [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [실용음악과 입시 준비 가이드](/stories/siryummusic1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1)

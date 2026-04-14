@@ -69,8 +69,6 @@ faq:
 
 ---
 
----
-
 ## 논산 음악 씬과 서울 스튜디오
 
 논산은 논산훈련소로 유명한 도시이지만 관촉사·명재고택 등 문화재도 풍부합니다. 논산역 무궁화호나 버스로 대전까지 이동 후 KTX를 이용하면 서울까지 접근할 수 있습니다.
@@ -113,4 +111,4 @@ faq:
 
 ---
 
-[계룡에서 서울 녹음실 방문 가이드](/stories/gyeryong1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[계룡에서 서울 녹음실 방문 가이드](/stories/gyeryong1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

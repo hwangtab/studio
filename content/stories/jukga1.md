@@ -153,8 +153,6 @@ faq:
 
 ---
 
----
-
 ### 녹음 세션 공통 체크리스트
 
 **준비 단계**
@@ -182,5 +180,9 @@ faq:
 축가는 신랑·신부와 하객 모두에게 기억에 남는 선물입니다.
 
 ---
-
+ | [노래 선곡 완전 가이드 — 녹음·오디션·공연에 맞는 곡 고르는 법](/stories/song-choice1)
 [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [콘서트·공연 보컬 준비 가이드](/stories/concert-vocal1)
+
+---
+
+[축가 녹음 실패하는 이유 TOP 5 — 스튜디오 엔지니어가 본 공통점](/stories/wedding-song-fail1)

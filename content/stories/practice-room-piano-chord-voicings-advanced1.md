@@ -208,4 +208,4 @@ Cmaj7: E-B-D-G (A형)
 
 각 보이싱을 모든 12개 조성에서 익히는 것이 목표입니다. 그러면 어떤 곡에서도 유연하게 보이싱을 선택할 수 있는 진정한 재즈 피아니스트가 됩니다.
 
-**→ **→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/ko/practice-room-piano-chord-voicings-advanced1)**
+**→ **→ [피아노 코드 보이싱 고급·텐션 노트 음악연습실 가이드](/stories/practice-room-piano-chord-voicings-advanced1)**

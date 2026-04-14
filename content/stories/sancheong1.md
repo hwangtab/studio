@@ -71,8 +71,6 @@ faq:
 
 ---
 
----
-
 ## 산청 음악 씬과 서울 스튜디오
 
 산청은 지리산 동쪽 자락의 약초·한의학으로 유명한 경남 도시입니다. 진주나 원지역을 통해 이동하며, 한방 문화 행사에서 국악·전통음악 공연이 활발합니다.
@@ -126,4 +124,4 @@ faq:
 
 ---
 
-[합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [함양에서 서울 녹음실 방문 가이드](/stories/hamyang1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [함양에서 서울 녹음실 방문 가이드](/stories/hamyang1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 

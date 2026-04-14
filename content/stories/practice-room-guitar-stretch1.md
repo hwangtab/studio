@@ -131,5 +131,5 @@ faq:
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
 ---
-
+ | [악기 연주 전 완벽한 워밍업 루틴 — 준비된 연주가 다르다](/stories/practice-room-warm-up1)
 [기타 핑거링·왼손 운지 훈련 — 기타 핑거링 완성 가이드](/stories/practice-room-guitar-fingering1) | [기타 핑거링·왼손 독립 훈련 — 기타 왼손 완성 가이드](/stories/practice-room-guitar-left-hand1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1)
