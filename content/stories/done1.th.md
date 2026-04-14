@@ -1,9 +1,13 @@
 ---
-title: "เว็บไซต์ Studio NOL ปรับปรุงใหม่เสร็จสมบูรณ์!"
-date: 2025-06-04
-author: "Studio NOL"
-category: "notice"
-tags: ["ปรับปรุง", "สตูดิโออัดเสียง"]
+title: เว็บไซต์ Studio NOL ปรับปรุงใหม่เสร็จสมบูรณ์!
+date: 2025-06-04T00:00:00.000Z
+author: Studio NOL
+category: notice
+tags:
+  - ปรับปรุง
+  - สตูดิโออัดเสียง
+summary: "สวัสดีจาก Studio NOL! \U0001F3B8\U0001F3A4 เว็บไซต์ของเราได้รับการปรับปรุงใหม่ทั้งหมด! เราตั้งใจทำให้ข้อมูลดูสะอาดและใช้งานได้มากขึ้น ผ่านการรีโนเวตครั้งนี้ คุณจะได้เ"
+thumbnail: /images/hardware3.webp
 ---
 ![สตูดิโอบันทึกเสียง Studio NOL](/images/studio1.webp)
 

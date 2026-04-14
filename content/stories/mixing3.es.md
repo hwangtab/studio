@@ -1,9 +1,21 @@
 ---
-title: "Curso de Mezcla - Parte 3: Proyecto de desintoxicación de la obsesión por el equipo"
-date: 2025-11-14
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Equipo", "Gear", "DAW"]
+title: >-
+  Curso de Mezcla - Parte 3: Proyecto de desintoxicación de la obsesión por el
+  equipo
+date: 2025-11-14T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Equipo
+  - Gear
+  - DAW
+summary: >-
+  “¿Qué micrófono es bueno? ¿Qué interfaz de audio necesito para sonar
+  profesional?” Son preguntas que aparecen decenas de veces al día en
+  comunidades m
+thumbnail: /images/hardware3.webp
 ---
 ![Varias interfaces de audio y equipos](/images/hardware4.webp)
 

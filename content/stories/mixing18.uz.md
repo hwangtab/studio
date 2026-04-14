@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 18-qism: Musiqaga nafas berish — Reverb"
-date: 2025-11-28
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Reverb", "Space", "PreDelay"]
+title: 'Miks kursi - 18-qism: Musiqaga nafas berish — Reverb'
+date: 2025-11-28T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Reverb
+  - Space
+  - PreDelay
+summary: >-
+  “Quruq tovush — o'lik tovush.” (Juda quruq!) Haqiqiy hayotdagi har bir tovush
+  makon bilan keladi. Xonada gapirish, hammomda kuylash, bog'da qichqirish
+thumbnail: /images/hardware2.webp
 ---
 ![Rangli vitrajli ulkan sobor](/images/service1.webp)
 

@@ -1,9 +1,17 @@
 ---
-title: "Miks kursi - 6-qism: Ovozni ko'z bilan o'qish (metering haqida hamma narsa)"
-date: 2025-11-17
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Metering", "Loudness"]
+title: 'Miks kursi - 6-qism: Ovozni ko''z bilan o''qish (metering haqida hamma narsa)'
+date: 2025-11-17T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Metering
+  - Loudness
+summary: >-
+  “Qulog'imga ishonolmayman.” Unda sizga ishonchli do'st kerak: level meter.
+  Meter yolg'on gapirmaydi. Lekin u nima deyayotganini tushunish kerak. (Diqq
+thumbnail: /images/recording1.webp
 ---
 ![Turli daraja meterlari](/images/console.webp)
 

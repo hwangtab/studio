@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 10-qism: Oltin quloqni yaratish (Ear Training & Studio Wisdom)"
-date: 2025-11-21
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "EarTraining", "Reference", "Listening"]
+title: 'Miks kursi - 10-qism: Oltin quloqni yaratish (Ear Training & Studio Wisdom)'
+date: 2025-11-21T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - EarTraining
+  - Reference
+  - Listening
+summary: >-
+  “Qulog'im yomon, shuning uchun miks qila olmayman.” (Xafa.) Yo'q — qulog'ingiz
+  yomon emas. Siz hali nimani tinglashni bilmayapsiz. Sommelier vino tati
+thumbnail: /images/recording6.webp
 ---
 ![Quloqchin bilan diqqatli tinglash](/images/recording2.webp)
 

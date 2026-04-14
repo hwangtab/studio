@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 7-qism: Miks tartibdan boshlanadi"
-date: 2025-11-18
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "SessionPrep", "Workflow"]
+title: 'Miks kursi - 7-qism: Miks tartibdan boshlanadi'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - SessionPrep
+  - Workflow
+summary: >-
+  “Miksni boshlamoqchiman, lekin qo'rqib ketdim. 50 ta track bor.” (Uf.)
+  Ko'pchilik hatto boshlamasdan charchab qoladi. Audio01, Audio02lar tugamaydi
+  — 
+thumbnail: /images/recording2.webp
 ---
 ![Chigallashgan kabellar va tartibli patchbay](/images/service3.webp)
 

@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 10: สร้างหูทอง (Ear Training & Studio Wisdom)"
-date: 2025-11-21
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "EarTraining", "Reference", "Listening"]
+title: 'คอร์สมิกซ์ - ตอนที่ 10: สร้างหูทอง (Ear Training & Studio Wisdom)'
+date: 2025-11-21T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - EarTraining
+  - Reference
+  - Listening
+summary: >-
+  “หูฉันไม่ดี มิกซ์ไม่ได้หรอก” (หน้าเศร้า) ไม่ใช่—คุณไม่ได้หูไม่ดี
+  แค่ยังไม่รู้ว่า ต้องฟังอะไร เหมือนซอมเมลิเยร์ชิมไวน์
+  วิศวกรฝึกตัวเองให้ชิมเสียง (เงี่
+thumbnail: /images/recording6.webp
 ---
 ![การฟังอย่างตั้งใจด้วยหูฟัง](/images/recording2.webp)
 

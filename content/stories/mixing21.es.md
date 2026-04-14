@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 21: La estética de la distorsión y la saturación"
-date: 2025-12-01
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Saturation", "Distortion", "Harmonics"]
+title: 'Curso de Mezcla - Parte 21: La estética de la distorsión y la saturación'
+date: 2025-12-01T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Saturation
+  - Distortion
+  - Harmonics
+summary: >-
+  "El sonido limpio no es sexy." (Firme.) Hasta ahora aprendimos a limpiar:
+  quitar ruido, ordenar frecuencias, crear espacio transparente. (¡Brilla!) Pe
+thumbnail: /images/hardware5.webp
 ---
 ![Equipo analógico vintage con textura cálida](/images/service2.webp)
 

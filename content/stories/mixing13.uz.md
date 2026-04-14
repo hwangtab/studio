@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 13-qism: Harakatsiz bo'lsa eng chiroyli (Static Mix)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "StaticMix", "Balance", "NoPlugins"]
+title: 'Miks kursi - 13-qism: Harakatsiz bo''lsa eng chiroyli (Static Mix)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - StaticMix
+  - Balance
+  - NoPlugins
+summary: >-
+  Barcha tayyorgarlik tugadi. (Chuqur nafas.) Xona tayyor (Session Prep) Editing
+  tugadi (Editing) Template ochiq (Ta‑da!) Endi chiroyli pluginlarni tash
+thumbnail: /images/recording11.webp
 ---
 ![Injyener faderga qo'l qo'ygan](/images/console.webp)
 

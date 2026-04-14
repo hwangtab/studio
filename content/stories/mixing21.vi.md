@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 21: Mỹ học của Distortion & Saturation"
-date: 2025-12-01
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Saturation", "Distortion", "Harmonics"]
+title: 'Khóa học Mixing - Phần 21: Mỹ học của Distortion & Saturation'
+date: 2025-12-01T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Saturation
+  - Distortion
+  - Harmonics
+summary: >-
+  “Âm sạch không sexy.” (Dứt khoát!) Đến nay ta đã học cách làm sạch âm—loại
+  nhiễu, gọn tần số, tạo không gian trong. (Lấp lánh!) Thế nhưng “ấm,” “dày,”
+thumbnail: /images/hardware5.webp
 ---
 ![Gear analog vintage với texture ấm](/images/service2.webp)
 

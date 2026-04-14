@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 8: Dọn bàn cho plugin (Gain Staging)"
-date: 2025-11-19
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "GainStaging", "Headroom", "InputLevel"]
+title: 'Khóa học Mixing - Phần 8: Dọn bàn cho plugin (Gain Staging)'
+date: 2025-11-19T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - GainStaging
+  - Headroom
+  - InputLevel
+summary: >-
+  “Tôi chèn plugin rồi âm thanh bị méo kỳ lạ.” “Compressor của tôi không hoạt
+  động.” (Hả? Sao vậy?) Plugin của bạn không hỏng. Bạn đang nhồi cho chúng q
+thumbnail: /images/recording3.webp
 ---
 ![VU meter analog](/images/hardware5.webp)
 

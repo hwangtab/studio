@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 9: Kẻ thù vô hình, Phase"
-date: 2025-11-20
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Phase", "DrumMixing", "Polarity"]
+title: 'Khóa học Mixing - Phần 9: Kẻ thù vô hình, Phase'
+date: 2025-11-20T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Phase
+  - DrumMixing
+  - Polarity
+summary: >-
+  “Kick nghe rất to, nhưng khi bật cùng overhead thì nó biến mất!” (Hả?) Đó
+  không phải ma. Đó là khoa học: phase cancellation. Nhiều người mới chỉnh EQ 
+thumbnail: /images/recording4.webp
 ---
 ![Ảnh micro trống](/images/recording1.webp)
 

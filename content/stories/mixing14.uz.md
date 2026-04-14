@@ -1,9 +1,19 @@
 ---
-title: "Miks kursi - 14-qism: Miksning 80% i volume balansidir"
-date: 2025-11-24
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Balance", "Fader", "Headroom"]
+title: 'Miks kursi - 14-qism: Miksning 80% i volume balansidir'
+date: 2025-11-24T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Balance
+  - Fader
+  - Headroom
+summary: >-
+  “Miks juda qiyin. Qaysi pluginni ishlatishni bilmayman.” (Xafa.) Bu
+  boshlovchilardan eng ko'p eshitadigan shikoyat. YouTube pluginlarni sehrdek
+  ko'rsa
+thumbnail: /images/recording14.webp
 ---
 ![Miks pulti va faderlar](/images/console.webp)
 

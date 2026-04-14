@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 12: เทมเพลตมิกซ์ของคุณเอง (ความลับสตูดิโอ)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Template", "Routing", "Workflow"]
+title: 'คอร์สมิกซ์ - ตอนที่ 12: เทมเพลตมิกซ์ของคุณเอง (ความลับสตูดิโอ)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Template
+  - Routing
+  - Workflow
+summary: >-
+  ทุกครั้งที่มิกซ์ต้องสร้างแทร็ก เปลี่ยนชื่อ ใส่เอฟเฟกต์… เหนื่อยไหม? (อืม)
+  โปรไม่เคยเริ่มจากศูนย์ พวกเขาสร้าง เทมเพลต แล้วเริ่มจากตรงนั้น (เซ็ตอัพในไม่
+thumbnail: /images/recording9.webp
 ---
 ![หน้าต่างมิกเซอร์ของ DAW](/images/portfolio3.webp)
 

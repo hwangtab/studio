@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 20: La magia ondulante de la modulación"
-date: 2025-11-30
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Modulation", "Chorus", "Flanger"]
+title: 'Curso de Mezcla - Parte 20: La magia ondulante de la modulación'
+date: 2025-11-30T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Modulation
+  - Chorus
+  - Flanger
+summary: >-
+  "El sonido empieza a moverse y respirar." (¡Ondulante!) Hasta ahora aprendimos
+  dinámica, pan y espacio. La modulación añade movimiento y densidad: el 
+thumbnail: /images/hardware4.webp
 ---
 ![Ondas o aurora](/images/pcw.webp)
 

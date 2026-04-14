@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 21-qism: Distortion & Saturation estetikasi"
-date: 2025-12-01
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Saturation", "Distortion", "Harmonics"]
+title: 'Miks kursi - 21-qism: Distortion & Saturation estetikasi'
+date: 2025-12-01T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Saturation
+  - Distortion
+  - Harmonics
+summary: >-
+  “Toza ovoz — sexy emas.” (Qat'iy!) Hozirgacha biz ovozni tozalashni o'rgandik
+  — shovqinni olib tashlash, chastotalarni tartibga solish, shaffof makon 
+thumbnail: /images/hardware5.webp
 ---
 ![Vintage analog gear iliq tekstura bilan](/images/service2.webp)
 

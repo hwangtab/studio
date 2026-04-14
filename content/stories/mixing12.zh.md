@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 12 部：打造你的混音模板（录音室秘技）"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "模板", "Template", "Routing"]
+title: 混音课程 - 第 12 部：打造你的混音模板（录音室秘技）
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 模板
+  - Template
+  - Routing
+summary: >-
+  每次混音都要建轨、改名、插效果器……不累吗？（哎呀-） 专业工程师从不从零开始。 他们会先做一套
+  模板（Template），然后从那里起步。（瞬间完成设置！） 今天公开能让你混音时间减半的 录音室秘技。 1. 为什么需要模板？ 速度：原本要 1
+  小时的设置，5 分钟搞定。（嗖！） 一致性：保持你的标
+thumbnail: /images/recording9.webp
 ---
 ![DAW 混音器界面](/images/console.webp)
 

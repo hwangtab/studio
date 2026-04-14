@@ -1,9 +1,20 @@
 ---
-title: "Curso de Mezcla - Parte 4: Resolución del audio digital (Sample Rate & Bit Depth)"
-date: 2025-11-15
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Digital", "SampleRate", "BitDepth"]
+title: >-
+  Curso de Mezcla - Parte 4: Resolución del audio digital (Sample Rate & Bit
+  Depth)
+date: 2025-11-15T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Digital
+  - SampleRate
+  - BitDepth
+summary: >-
+  “¿Debo grabar a 44.1 kHz o 48 kHz?” “¿Qué diferencia hay entre 16‑bit y
+  24‑bit?” ¿Los números te marean? No te preocupes. Es igual que la imagen. Así 
+thumbnail: /images/hardware4.webp
 ---
 ![Forma de onda de audio digital](/images/recording8.webp)
 

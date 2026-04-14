@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 11 部：混音前的最后一块拼图——编辑"
-date: 2025-11-22
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "编辑", "Editing", "Comping"]
+title: 混音课程 - 第 11 部：混音前的最后一块拼图——编辑
+date: 2025-11-22T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 编辑
+  - Editing
+  - Comping
+summary: >-
+  “开始混音吧！”（好嘞！） 等等——在推子拉起来之前，有一道必经关卡：编辑（Editing）。 编辑就像盖房前先平地、除草。（咔嚓‑咔嚓） 今天分享
+  录音室级编辑秘技，让你的混音质量提升 200%。 1. 人声 Comping：把最佳瞬间拼起来 歌手一次就唱得完美的情况很少。（我也几乎没见过…） 通
+thumbnail: /images/recording8.webp
 ---
 ![波形编辑界面](/images/recording11.webp)
 

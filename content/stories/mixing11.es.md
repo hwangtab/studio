@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 11: La última pieza antes de mezclar, edición"
-date: 2025-11-22
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Edicion", "Editing", "Comping"]
+title: 'Curso de Mezcla - Parte 11: La última pieza antes de mezclar, edición'
+date: 2025-11-22T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Edicion
+  - Editing
+  - Comping
+summary: >-
+  "¡Empieza la mezcla, por favor!" (¡Claro!) Espera—antes de subir un fader, hay
+  una puerta obligatoria: la edición. Editar es como nivelar el terreno y
+thumbnail: /images/recording8.webp
 ---
 ![Pantalla de edición de ondas](/images/recording11.webp)
 

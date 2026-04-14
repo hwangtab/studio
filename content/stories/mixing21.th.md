@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 21: สุนทรียะของ Distortion & Saturation"
-date: 2025-12-01
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Saturation", "Distortion", "Harmonics"]
+title: 'คอร์สมิกซ์ - ตอนที่ 21: สุนทรียะของ Distortion & Saturation'
+date: 2025-12-01T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Saturation
+  - Distortion
+  - Harmonics
+summary: >-
+  “เสียงสะอาดไม่เซ็กซี่” (ฟันธง!) จนถึงตอนนี้เราเรียนการทำเสียงให้สะอาด—ตัด
+  noise จัดความถี่ ทำให้พื้นที่โปร่ง (Sparkle!) แต่ “ความอุ่น,” “ความหนา,” และ
+thumbnail: /images/hardware5.webp
 ---
 ![เกียร์อนาล็อกวินเทจโทนอุ่น](/images/service2.webp)
 

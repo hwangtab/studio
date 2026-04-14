@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 11: ชิ้นสุดท้ายก่อนมิกซ์—การแก้ไข (Editing)"
-date: 2025-11-22
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Editing", "Comping", "Timing"]
+title: 'คอร์สมิกซ์ - ตอนที่ 11: ชิ้นสุดท้ายก่อนมิกซ์—การแก้ไข (Editing)'
+date: 2025-11-22T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Editing
+  - Comping
+  - Timing
+summary: >-
+  “เริ่มมิกซ์เลย!” (ได้!) เดี๋ยวก่อน—ก่อนจะยก fader มีประตูบังคับ: editing
+  Editing เหมือนปรับหน้าดินและถอนวัชพืชก่อนสร้างบ้าน (Clack‑clack!) วันนี้ผมจะแ
+thumbnail: /images/recording8.webp
 ---
 ![หน้าจอแก้ไขเวฟฟอร์ม](/images/recording11.webp)
 

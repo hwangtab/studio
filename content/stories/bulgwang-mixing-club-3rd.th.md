@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" ประกาศนัดพบครั้งที่สาม'
-date: 2025-11-18
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - เครือข่าย
+  - พบปะ
+summary: "\U0001F525 รอบ 3 มาแล้ว! (แต่มีประกาศเปลี่ยนตาราง) สวัสดีจาก Bulgwang Mixing Club! เดิมเราวางแผนนัดครั้งที่สามไว้วันศุกร์นี้ (21/11) แต่มีข่าวดี สัปดาห์ที่สาม"
+thumbnail: /images/recording6.webp
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

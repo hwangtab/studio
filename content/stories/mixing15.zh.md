@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 15 部：左右的美学——声像（Panning）"
-date: 2025-11-25
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Panning", "Stereo", "LCR"]
+title: 混音课程 - 第 15 部：左右的美学——声像（Panning）
+date: 2025-11-25T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Panning
+  - Stereo
+  - LCR
+summary: >-
+  “混了之后所有声音都挤在中间，特别憋。”（闷！） 这就像舞台上所有乐手都挤成一排。 今天我们要把舞台打开，给每个乐器 安排座位——这就是
+  声像（Panning） 的魔法。（来展开！） 1. 什么是 Pan？ Panning 决定声音在左（L）和右（R）之间的位置。
+  我们有两只耳朵，如果左边更响，大脑
+thumbnail: /images/recording15.webp
 ---
 ![立体声扬声器与聆听者](/images/studio1.webp)
 

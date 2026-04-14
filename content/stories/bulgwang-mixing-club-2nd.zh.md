@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\" 第二次聚会公告"
-date: 2025-11-10
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "社交", "聚会"]
+title: '"Bulgwang Mixing Club" 第二次聚会公告'
+date: 2025-11-10T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - 社交
+  - 聚会
+summary: "\U0001F525 首场热度不减！\"Bulgwang Mixing Club\" 第二轮开始！\U0001F525 鸡肉点燃的第一场还热着呢？本周升级为披萨+冰啤的第二次聚会。设备炫技、插件讨论、参考曲对比——继续把混音宅的热情拉满。 \U0001F3A7 混音名店模式再次开启 本次关键词是“分享”和“实验”。带上你最近的项目或纠结的平衡问题，现"
+thumbnail: /images/recording4.webp
 ---
 ![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 

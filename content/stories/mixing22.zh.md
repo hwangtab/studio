@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 22 部：在时间上作画——自动化"
-date: 2025-12-02
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Automation", "DynamicMix", "FaderRide"]
+title: 混音课程 - 第 22 部：在时间上作画——自动化
+date: 2025-12-02T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Automation
+  - DynamicMix
+  - FaderRide
+summary: >-
+  “混音不是被钉住的照片，而是一部会动的电影。”（Action！） 我们已经学会了做出优秀的 静态混音。（一步一步）
+  但音乐会流动：主歌轻声细语，副歌爆发。（啊啊！） 混音也必须跟着情绪变化。 这就是 自动化（Automation） 的艺术。（起伏起伏） --- 1.
+  什么是自动化？ 自动化让音量、声
+thumbnail: /images/recording1.webp
 ---
 ![DAW 上的自动化曲线](/images/console.webp)
 

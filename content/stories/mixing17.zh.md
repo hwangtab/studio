@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 17 部：用压缩器驯服动态"
-date: 2025-11-27
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "压缩器", "Dynamics", "ParallelCompression"]
+title: 混音课程 - 第 17 部：用压缩器驯服动态
+date: 2025-11-27T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 压缩器
+  - Dynamics
+  - ParallelCompression
+summary: >-
+  “压缩器最难，我听不出变了什么。”（嗯…） 很多人卡在压缩器上。它不像 EQ 那样立刻变化，弄不好还会变闷。 但原理其实很简单，别想太复杂。
+  “声音太大时，自动把音量压下来。” 就这么简单。 1. 压缩器四大参数 搞懂这四个，压缩器就是你的玩具。（开始玩！）
+  Threshold（门槛）：“过线就要被
+thumbnail: /images/hardware1.webp
 ---
 ![经典压缩器的旋钮](/images/hardware1.webp)
 

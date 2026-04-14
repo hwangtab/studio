@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 14 部：混音 8 成是音量平衡"
-date: 2025-11-24
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "音量", "Balance", "Headroom"]
+title: 混音课程 - 第 14 部：混音 8 成是音量平衡
+date: 2025-11-24T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 音量
+  - Balance
+  - Headroom
+summary: >-
+  “混音太难了，不知道该用哪个插件。”（沮丧） 这是新手最常见的抱怨。 YouTube 上插件像魔法，为什么自己的混音还是闷？ 这时候我会把推子都拉下来说：
+  “先别碰插件，我们把推子重新做一遍。” 很难相信，但只要音量平衡抓好，混音已经完成 80%。 先暂时抵抗花哨插件的诱惑，我们来认真聊聊最基础也最
+thumbnail: /images/recording14.webp
 ---
 ![混音台与推子](/images/console.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 6 部：用眼睛读声音（米特的全部）"
-date: 2025-11-17
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "计量", "Metering", "Loudness"]
+title: 混音课程 - 第 6 部：用眼睛读声音（米特的全部）
+date: 2025-11-17T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 计量
+  - Metering
+  - Loudness
+summary: >-
+  “我不敢相信自己的耳朵。” 那你需要一个可靠的朋友：电平表（Level Meter）。 它们不会撒谎，但我们要听懂它们在说什么。（竖起耳朵！） 1.
+  峰值表（Peak Meter）：一瞬的刹那 DAW 里上下跳动的那根柱子就是峰值表。 它显示 “最响瞬间的数值”。哪怕只有 0.001 秒超过 0 d
+thumbnail: /images/recording1.webp
 ---
 ![多种电平表](/images/console.webp)
 

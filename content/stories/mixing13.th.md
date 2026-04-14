@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 13: สวยที่สุดเมื่ออยู่นิ่ง (Static Mix)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "StaticMix", "Balance", "NoPlugins"]
+title: 'คอร์สมิกซ์ - ตอนที่ 13: สวยที่สุดเมื่ออยู่นิ่ง (Static Mix)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - StaticMix
+  - Balance
+  - NoPlugins
+summary: >-
+  ทุกอย่างพร้อมแล้ว (สูดลมหายใจลึก) ห้องจัดเรียบร้อย (Session Prep) Editing
+  เสร็จ (Editing) Template เปิดแล้ว (Ta‑da!) ตอนนี้อยากใส่ปลั๊กอินเจ๋ง ๆ ใช่ไห
+thumbnail: /images/recording11.webp
 ---
 ![วิศวกรวางมือบน fader](/images/console.webp)
 

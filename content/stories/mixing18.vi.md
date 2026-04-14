@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 18: Thổi hơi vào nhạc, Reverb"
-date: 2025-11-28
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Reverb", "Space", "PreDelay"]
+title: 'Khóa học Mixing - Phần 18: Thổi hơi vào nhạc, Reverb'
+date: 2025-11-28T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Reverb
+  - Space
+  - PreDelay
+summary: >-
+  “Một âm khô là một âm chết.” (Khô quá!) Mọi âm thanh ngoài đời đều đi kèm
+  không gian. Nói trong phòng, hát trong nhà tắm, hét trong công viên… (Yoo‑ho
+thumbnail: /images/hardware2.webp
 ---
 ![Nhà thờ lớn với kính màu](/images/service1.webp)
 

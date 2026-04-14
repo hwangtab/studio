@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 13: Lo más hermoso cuando está quieto (Static Mix)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "StaticMix", "Balance", "NoPlugins"]
+title: 'Curso de Mezcla - Parte 13: Lo más hermoso cuando está quieto (Static Mix)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - StaticMix
+  - Balance
+  - NoPlugins
+summary: >-
+  Ya está todo listo. (Respira hondo.) Sala preparada (Session Prep) Edición
+  terminada (Editing) Plantilla abierta (¡Ta‑dá!) Ahora quieres poner plug‑in
+thumbnail: /images/recording11.webp
 ---
 ![Ingeniero con la mano en el fader](/images/console.webp)
 

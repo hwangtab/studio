@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 20-qism: Modulationning to'lqinli sehri"
-date: 2025-11-30
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Modulation", "Chorus", "Flanger"]
+title: 'Miks kursi - 20-qism: Modulationning to''lqinli sehri'
+date: 2025-11-30T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Modulation
+  - Chorus
+  - Flanger
+summary: >-
+  “Ovoz harakatlana boshladi, nafas oladi.” (Waver‑waver!) Hozirgacha biz
+  dynamics, panning va makonni o'rgandik. Modulation harakat va boylik qo'shadi 
+thumbnail: /images/hardware4.webp
 ---
 ![To'lqinli suv yoki aurora](/images/pcw.webp)
 

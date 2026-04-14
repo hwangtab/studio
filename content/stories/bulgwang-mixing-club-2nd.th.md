@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" ประกาศนัดพบครั้งที่สอง'
-date: 2025-11-10
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
+date: 2025-11-10T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - เครือข่าย
+  - พบปะ
+summary: "\U0001F525 ความร้อนจากรอบแรกยังอยู่! รอบ 2 ของ “Bulgwang Mixing Club” เริ่มแล้ว! \U0001F525 ยังจำคืนแรกที่ขับเคลื่อนด้วยไก่ได้ไหม สัปดาห์นี้อัปเกรดเป็นพิซซ่าร้อนกับเบ"
+thumbnail: /images/recording4.webp
 ---
 ![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 

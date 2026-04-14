@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 8 部：为插件摆好餐桌（增益分级）"
-date: 2025-11-19
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "增益分级", "GainStaging", "Headroom"]
+title: 混音课程 - 第 8 部：为插件摆好餐桌（增益分级）
+date: 2025-11-19T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 增益分级
+  - GainStaging
+  - Headroom
+summary: >-
+  "插了插件之后声音怎么怪怪地失真了。" "压缩器完全不动。"（咦？怎么回事？） 不是插件坏了。 而是你给它们 喂了太多饭（输入电平）。（嗝——撑了！） 1.
+  什么是增益分级（Gain Staging）？ 简单说，就是 “在进入下一环节之前把音量调到合适的程度。” 音频信号会经过很多阶段（一步一步来）
+thumbnail: /images/recording3.webp
 ---
 ![模拟 VU 表](/images/hardware5.webp)
 

@@ -1,9 +1,17 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 6: อ่านเสียงด้วยตา (เจาะลึกเรื่องเมตริก)"
-date: 2025-11-17
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Metering", "Loudness"]
+title: 'คอร์สมิกซ์ - ตอนที่ 6: อ่านเสียงด้วยตา (เจาะลึกเรื่องเมตริก)'
+date: 2025-11-17T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Metering
+  - Loudness
+summary: >-
+  “ฉันเชื่อหูตัวเองไม่ได้เลย” งั้นคุณต้องมีเพื่อนที่ไว้ใจได้: level meter
+  มิเตอร์ไม่โกหก แต่เราต้องเข้าใจว่ามันกำลังบอกอะไร (ฟังดี ๆ!) 1. Peak meter: ชั
+thumbnail: /images/recording1.webp
 ---
 ![มิเตอร์ระดับเสียงหลากหลายแบบ](/images/console.webp)
 

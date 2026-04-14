@@ -1,9 +1,17 @@
 ---
-title: "Khóa học Mixing - Phần 6: Đọc âm thanh bằng mắt (Tất tần tật về metering)"
-date: 2025-11-17
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Metering", "Loudness"]
+title: 'Khóa học Mixing - Phần 6: Đọc âm thanh bằng mắt (Tất tần tật về metering)'
+date: 2025-11-17T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Metering
+  - Loudness
+summary: >-
+  “Tôi không thể tin vào tai mình.” Vậy bạn cần một người bạn đáng tin: level
+  meter. Meter không nói dối. Nhưng chúng ta phải hiểu nó nói gì. (Nghe kỹ!)
+thumbnail: /images/recording1.webp
 ---
 ![Các loại meter mức](/images/console.webp)
 

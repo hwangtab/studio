@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 14: 80% của mix là cân bằng volume"
-date: 2025-11-24
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Balance", "Fader", "Headroom"]
+title: 'Khóa học Mixing - Phần 14: 80% của mix là cân bằng volume'
+date: 2025-11-24T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Balance
+  - Fader
+  - Headroom
+summary: >-
+  “Mixing quá khó. Mình không biết dùng plugin nào.” (Buồn.) Đó là lời than phổ
+  biến nhất tôi nghe từ người mới. YouTube khiến plugin trông như phép thu
+thumbnail: /images/recording14.webp
 ---
 ![Bàn mixer và fader](/images/console.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 14: El 80% de la mezcla es balance de volumen"
-date: 2025-11-24
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Balance", "Fader", "Headroom"]
+title: 'Curso de Mezcla - Parte 14: El 80% de la mezcla es balance de volumen'
+date: 2025-11-24T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Balance
+  - Fader
+  - Headroom
+summary: >-
+  "Mezclar es muy difícil. No sé qué plug‑in usar." (Triste.) Es la queja más
+  común que escucho de principiantes. En YouTube los plug‑ins parecen magia…
+thumbnail: /images/recording14.webp
 ---
 ![Consola de mezcla y faders](/images/console.webp)
 

@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 5 部：数字的敌人（错误与噪声）"
-date: 2025-11-16
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "数字错误", "DigitalError", "Clipping"]
+title: 混音课程 - 第 5 部：数字的敌人（错误与噪声）
+date: 2025-11-16T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 数字错误
+  - DigitalError
+  - Clipping
+summary: >-
+  “数字不是完美的吗？只有 0 和 1，为什么会出错？” 很多人相信数字音频干净、不会变。但数字世界也有可怕的敌人。
+  它们会毁掉我们珍贵的录音，让成品不专业。（叮——错误） 最有名的两大反派是 抖动（Jitter） 和 削波（Clipping）。 1.
+  削波（Clipping）：被“砍头”的声音 最常
+thumbnail: /images/hardware5.webp
 ---
 ![数字故障图像](/images/pcw.webp)
 

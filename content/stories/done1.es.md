@@ -1,9 +1,13 @@
 ---
-title: "¡Renovación completa del sitio web de Studio NOL!"
-date: 2025-06-04
-author: "Studio NOL"
-category: "notice"
-tags: ["Renovación", "Estudio de grabación"]
+title: ¡Renovación completa del sitio web de Studio NOL!
+date: 2025-06-04T00:00:00.000Z
+author: Studio NOL
+category: notice
+tags:
+  - Renovación
+  - Estudio de grabación
+summary: "¡Hola, somos Studio NOL! \U0001F3B8\U0001F3A4 ¡Nuestro sitio web se ha renovado por completo! Nos esforzamos para ofrecer información más clara y útil. Con esta renov"
+thumbnail: /images/hardware3.webp
 ---
 ![Estudio de grabación de Studio NOL](/images/studio1.webp)
 

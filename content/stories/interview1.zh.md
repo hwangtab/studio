@@ -1,9 +1,16 @@
 ---
-title: "制作人朴灿佑专访"
-date: 2025-06-05
-author: "Studio NOL"
-category: "interview"
-tags: ["朴灿佑", "采访", "Golden Hour"]
+title: 制作人朴灿佑专访
+date: 2025-06-05T00:00:00.000Z
+author: Studio NOL
+category: interview
+tags:
+  - 朴灿佑
+  - 采访
+  - Golden Hour
+summary: >-
+  Jai 新专辑《Golden Hour》制作人朴灿佑专访：用“平衡”和“沟通”完成的 25 年音乐旅程黄金时刻 Jai 的新专辑《Golden
+  Hour》记录了其 25 年音乐旅程中的黄金时刻。曾是奠定韩国独立音乐一代风貌的摇滚乐队“헤디마마（Hedimama）”主唱，如今作为独立艺人构建出独特音乐
+thumbnail: /images/recording8.webp
 ---
 ![制作人朴灿佑](/images/pcw.webp)
 

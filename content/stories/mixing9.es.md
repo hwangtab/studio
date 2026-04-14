@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 9: El enemigo invisible, la fase"
-date: 2025-11-20
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Fase", "Phase", "DrumMixing"]
+title: 'Curso de Mezcla - Parte 9: El enemigo invisible, la fase'
+date: 2025-11-20T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Fase
+  - Phase
+  - DrumMixing
+summary: >-
+  "El bombo sonaba enorme, pero al mezclarlo con los overheads desaparece."
+  (¿Qué?) No es un fantasma. Es ciencia: cancelación de fase. Muchos principia
+thumbnail: /images/recording4.webp
 ---
 ![Foto de microfonía de batería](/images/recording1.webp)
 

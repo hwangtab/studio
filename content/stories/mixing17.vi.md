@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 17: Thuần hóa động lực với Compressor"
-date: 2025-11-27
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Compressor", "Dynamics", "ParallelCompression"]
+title: 'Khóa học Mixing - Phần 17: Thuần hóa động lực với Compressor'
+date: 2025-11-27T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Compressor
+  - Dynamics
+  - ParallelCompression
+summary: >-
+  “Compressor là khó nhất. Tôi không nghe ra gì thay đổi.” (Grr.) Nhiều người
+  mắc kẹt ở compressor. Nó không thay đổi âm rõ rệt như EQ, và dùng sai thì 
+thumbnail: /images/hardware1.webp
 ---
 ![Núm vặn của compressor cổ điển](/images/hardware1.webp)
 

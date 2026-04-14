@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" ประกาศนัดพบครั้งแรก'
-date: 2025-11-03
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "เครือข่าย", "พบปะ"]
+date: 2025-11-03T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - เครือข่าย
+  - พบปะ
+summary: "\U0001F525 สายเสียงมารวมตัว! “นรกมิกซ์” แห่ง Bulgwang-dong เปิดแล้วกับ “Bulgwang Mixing Club”! \U0001F525 เราขอชวนทุกคนที่มีชีวิตอยู่กับการมิกซ์มาร่วมปาร์ตี้สุดเร้าใจ"
+thumbnail: /images/recording3.webp
 ---
 ![ห้องมิกซ์ของ Bulgwang Mixing Club](/images/hardware2.webp)
 

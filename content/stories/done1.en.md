@@ -1,9 +1,13 @@
 ---
-title: "Studio NOL Website Renewal Complete!"
-date: 2025-06-04
-author: "Studio NOL"
-category: "notice"
-tags: ["Renewal", "Recording Studio"]
+title: Studio NOL Website Renewal Complete!
+date: 2025-06-04T00:00:00.000Z
+author: Studio NOL
+category: notice
+tags:
+  - Renewal
+  - Recording Studio
+summary: "Hello, this is Studio NOL! \U0001F3B8\U0001F3A4 Our website has been fully renewed! We worked hard to provide cleaner, more useful information. Through this renewal, "
+thumbnail: /images/hardware3.webp
 ---
 ![Studio NOL recording studio](/images/studio1.webp)
 

@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 18: เติมอากาศให้ดนตรี—Reverb"
-date: 2025-11-28
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Reverb", "Space", "PreDelay"]
+title: 'คอร์สมิกซ์ - ตอนที่ 18: เติมอากาศให้ดนตรี—Reverb'
+date: 2025-11-28T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Reverb
+  - Space
+  - PreDelay
+summary: >-
+  “เสียงแห้งคือเสียงตาย” (แห้งมาก!) เสียงในชีวิตจริงมาพร้อม พื้นที่ เสมอ
+  คุยในห้อง ร้องในห้องน้ำ ตะโกนในสวน… (โย่ว‑ฮู!) เสียงจะมี reverb จากผนัง พื้น
+  แล
+thumbnail: /images/hardware2.webp
 ---
 ![วิหารใหญ่กับกระจกสี](/images/service1.webp)
 

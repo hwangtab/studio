@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" Thông báo buổi gặp mặt đầu tiên'
-date: 2025-11-03
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
+date: 2025-11-03T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Kết nối
+  - Gặp mặt
+summary: "\U0001F525 Dân mê âm thanh, hãy tụ họp tại “địa ngục mixing” ở Bulgwang-dong! “Bulgwang Mixing Club” mở cửa! \U0001F525 Chúng tôi mời bạn đến bữa tiệc đầy kích thích "
+thumbnail: /images/recording3.webp
 ---
 ![Phòng mix của Bulgwang Mixing Club](/images/hardware2.webp)
 

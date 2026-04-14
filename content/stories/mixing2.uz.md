@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 2-qism: Yolg'onchi xonani jilovlash"
-date: 2025-11-13
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Monitoring", "Xona akustikasi"]
+title: 'Miks kursi - 2-qism: Yolg''onchi xonani jilovlash'
+date: 2025-11-13T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Monitoring
+  - Xona akustikasi
+summary: >-
+  “Qimmat karnay sotib oldim — nega baribir g'alati eshitiladi?” Ko'p
+  boshlovchilar gear'ni ayblaydi. 1,000,000 KRW'lik karnay 1,000,000 KRW'lik
+  ovoz be
+thumbnail: /images/hardware2.webp
 ---
 ![Studio monitor karnaylarining joylashuvi](/images/studio1.webp)
 

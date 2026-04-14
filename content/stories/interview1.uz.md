@@ -1,9 +1,16 @@
 ---
-title: "Producer Park Chan-woong bilan intervyu"
-date: 2025-06-05
-author: "Studio NOL"
-category: "interview"
-tags: ["Park Chan-woong", "Intervyu", "Golden Hour"]
+title: Producer Park Chan-woong bilan intervyu
+date: 2025-06-05T00:00:00.000Z
+author: Studio NOL
+category: interview
+tags:
+  - Park Chan-woong
+  - Intervyu
+  - Golden Hour
+summary: >-
+  Jai’ning yangi “Golden Hour” albomi bo‘yicha producer Park Chan-woong bilan
+  intervyu: 25 yillik musiqiy yo‘lning “oltin vaqti” “balans” va “muloqot” o
+thumbnail: /images/recording8.webp
 ---
 ![Producer Park Chan-woong](/images/pcw.webp)
 

@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" ikkinchi uchrashuv e''loni'
-date: 2025-11-10
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
+date: 2025-11-10T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Tanishuv
+  - Uchrashuv
+summary: "\U0001F525 Birinchi uchrashuvning issig'i davom etmoqda! “Bulgwang Mixing Club” 2-raundi boshlandi! \U0001F525 Birinchi kechadagi tovuq bilan qizigan kayfiyat hali pa"
+thumbnail: /images/recording4.webp
 ---
 ![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 

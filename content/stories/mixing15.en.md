@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 15: The Art of Left and Right, Panning"
-date: 2025-11-25
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Panning", "Stereo", "LCR"]
+title: 'Mixing Course - Part 15: The Art of Left and Right, Panning'
+date: 2025-11-25T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Panning
+  - Stereo
+  - LCR
+summary: >-
+  "I mixed, but everything is piled in the center. It feels cramped." (Stuffy!)
+  That’s like putting every musician on stage in one tight line. Today we’
+thumbnail: /images/recording15.webp
 ---
 ![Stereo speakers and listener](/images/studio1.webp)
 

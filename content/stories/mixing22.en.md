@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 22: Painting on Time, Automation"
-date: 2025-12-02
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Automation", "DynamicMix", "FaderRide"]
+title: 'Mixing Course - Part 22: Painting on Time, Automation'
+date: 2025-12-02T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Automation
+  - DynamicMix
+  - FaderRide
+summary: >-
+  "Mixing isn’t a pinned photo, it’s a living film." (Action!) We’ve learned how
+  to make a great static mix. (Step by step!) But music flows. Verses whi
+thumbnail: /images/recording1.webp
 ---
 ![DAW screen with automation lines](/images/console.webp)
 

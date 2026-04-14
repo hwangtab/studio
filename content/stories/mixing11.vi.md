@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 11: Mảnh ghép cuối trước khi mix, Editing"
-date: 2025-11-22
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Editing", "Comping", "Timing"]
+title: 'Khóa học Mixing - Phần 11: Mảnh ghép cuối trước khi mix, Editing'
+date: 2025-11-22T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Editing
+  - Comping
+  - Timing
+summary: >-
+  “Bắt đầu mix nhé!” (Ok!) Khoan đã—trước khi đẩy một fader, có một cổng bắt
+  buộc: editing. Editing giống như san nền và nhổ cỏ trước khi xây nhà. (Clac
+thumbnail: /images/recording8.webp
 ---
 ![Màn hình chỉnh waveform](/images/recording11.webp)
 

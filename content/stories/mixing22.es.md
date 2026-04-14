@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 22: Dibujar sobre el tiempo, automatización"
-date: 2025-12-02
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Automation", "DynamicMix", "FaderRide"]
+title: 'Curso de Mezcla - Parte 22: Dibujar sobre el tiempo, automatización'
+date: 2025-12-02T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Automation
+  - DynamicMix
+  - FaderRide
+summary: >-
+  "La mezcla no es una foto congelada, es una película viva." (¡Acción!) Ya
+  aprendimos a crear un gran static mix. (Paso a paso.) Pero la música fluye: 
+thumbnail: /images/recording1.webp
 ---
 ![Pantalla de DAW con líneas de automatización](/images/console.webp)
 

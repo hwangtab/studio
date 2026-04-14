@@ -1,9 +1,20 @@
 ---
-title: "Curso de Mezcla - Parte 10: Crear oídos de oro (Ear Training & Sabiduría de estudio)"
-date: 2025-11-21
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "EntrenamientoAuditivo", "EarTraining", "Reference"]
+title: >-
+  Curso de Mezcla - Parte 10: Crear oídos de oro (Ear Training & Sabiduría de
+  estudio)
+date: 2025-11-21T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - EntrenamientoAuditivo
+  - EarTraining
+  - Reference
+summary: >-
+  "Tengo oído malo, no puedo mezclar." (Cabizbajo.) No. No tienes oído malo;
+  simplemente no sabes qué escuchar todavía. Así como un sommelier distingue 
+thumbnail: /images/recording6.webp
 ---
 ![Persona concentrada con auriculares](/images/recording2.webp)
 

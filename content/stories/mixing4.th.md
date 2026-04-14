@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 4: ความละเอียดเสียงดิจิทัล (Sample Rate & Bit Depth)"
-date: 2025-11-15
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Digital", "SampleRate", "BitDepth"]
+title: 'คอร์สมิกซ์ - ตอนที่ 4: ความละเอียดเสียงดิจิทัล (Sample Rate & Bit Depth)'
+date: 2025-11-15T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Digital
+  - SampleRate
+  - BitDepth
+summary: >-
+  “ควรอัดที่ 44.1 kHz หรือ 48 kHz?” “16‑bit กับ 24‑bit ต่างกันยังไง?”
+  ตัวเลขทำให้ปวดหัวไหม? ไม่ต้องกังวล มันเหมือนรูปภาพ การบันทึกเสียงเข้าเครื่อง
+  (แปลง
+thumbnail: /images/hardware4.webp
 ---
 ![รูปคลื่นเสียงดิจิทัล](/images/recording8.webp)
 

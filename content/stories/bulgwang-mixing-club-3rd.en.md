@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\" Third Meetup Announcement"
-date: 2025-11-18
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Networking", "Meetup"]
+title: '"Bulgwang Mixing Club" Third Meetup Announcement'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Networking
+  - Meetup
+summary: "\U0001F525 Round 3 scheduled! (But a schedule change notice) Hello from Bulgwang Mixing Club! We were originally planning the third meetup for this Friday (11"
+thumbnail: /images/recording6.webp
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

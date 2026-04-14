@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" Thông báo buổi gặp mặt lần 2'
-date: 2025-11-10
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
+date: 2025-11-10T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Kết nối
+  - Gặp mặt
+summary: "\U0001F525 Nhiệt của buổi đầu vẫn còn! Round 2 của “Bulgwang Mixing Club” bắt đầu! \U0001F525 Vẫn còn nóng sau đêm đầu với gà rán? Tuần này nâng cấp lên pizza nóng và"
+thumbnail: /images/recording4.webp
 ---
 ![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 

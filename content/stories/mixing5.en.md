@@ -1,9 +1,17 @@
 ---
-title: "Mixing Course - Part 5: Enemies of Digital (Errors and Noise)"
-date: 2025-11-16
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "DigitalError", "Clipping"]
+title: 'Mixing Course - Part 5: Enemies of Digital (Errors and Noise)'
+date: 2025-11-16T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - DigitalError
+  - Clipping
+summary: >-
+  “Isn’t digital perfect? It’s just 0 and 1—why are there errors?” Many people
+  believe digital audio is clean and unchanging. But the digital world has 
+thumbnail: /images/hardware5.webp
 ---
 ![Digital glitch image](/images/pcw.webp)
 

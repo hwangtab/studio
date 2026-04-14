@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 8: Poner la mesa para los plugins (Gain Staging)"
-date: 2025-11-19
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "GainStaging", "Headroom", "InputLevel"]
+title: 'Curso de Mezcla - Parte 8: Poner la mesa para los plugins (Gain Staging)'
+date: 2025-11-19T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - GainStaging
+  - Headroom
+  - InputLevel
+summary: >-
+  "Puse un plug‑in y el sonido se distorsiona raro." "El compresor no hace
+  nada." (¿Eh? ¿Qué pasa?) Tus plug‑ins no están rotos. El problema es que les 
+thumbnail: /images/recording3.webp
 ---
 ![Medidor VU analógico](/images/hardware5.webp)
 

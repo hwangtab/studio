@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 1: El inicio de la mezcla como cocina"
-date: 2025-11-12
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Principiante", "Mixing", "Introducción"]
+title: 'Curso de Mezcla - Parte 1: El inicio de la mezcla como cocina'
+date: 2025-11-12T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Principiante
+  - Mixing
+  - Introducción
+summary: >-
+  El proceso de crear música a menudo se compara con “cocinar”. No se me ocurre
+  una mejor metáfora. Para quienes empiezan con la mezcla, hoy seré su che
+thumbnail: /images/hardware1.webp
 ---
 ![Consola de mezcla y vista del estudio](/images/console.webp)
 

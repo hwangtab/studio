@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" birinchi uchrashuv e''loni'
-date: 2025-11-03
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
+date: 2025-11-03T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Tanishuv
+  - Uchrashuv
+summary: "\U0001F525 Ovozni sevuvchilar, Bulgwang-dongdagi “miks jahannami”ga yig'iling! “Bulgwang Mixing Club” eshiklarini ochadi! \U0001F525 Miks bilan yashaydiganlar uchun h"
+thumbnail: /images/recording3.webp
 ---
 ![Bulgwang Mixing Club miks xonasi](/images/hardware2.webp)
 

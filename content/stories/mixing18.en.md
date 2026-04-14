@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 18: Breathing Air into Music, Reverb"
-date: 2025-11-28
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Reverb", "Space", "PreDelay"]
+title: 'Mixing Course - Part 18: Breathing Air into Music, Reverb'
+date: 2025-11-28T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Reverb
+  - Space
+  - PreDelay
+summary: >-
+  "A dry sound is a dead sound." (So dry!) Every sound we hear in real life
+  comes with space. Talking in a room, singing in a bathroom, shouting in a pa
+thumbnail: /images/hardware2.webp
 ---
 ![Grand cathedral with stained glass](/images/service1.webp)
 

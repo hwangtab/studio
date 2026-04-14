@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 4: Digital Audio Resolution (Sample Rate & Bit Depth)"
-date: 2025-11-15
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Digital", "SampleRate", "BitDepth"]
+title: 'Mixing Course - Part 4: Digital Audio Resolution (Sample Rate & Bit Depth)'
+date: 2025-11-15T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Digital
+  - SampleRate
+  - BitDepth
+summary: >-
+  “Should I record at 44.1 kHz or 48 kHz?” “What’s the difference between 16‑bit
+  and 24‑bit?” Do numbers make your head hurt? Don’t worry. It’s the same
+thumbnail: /images/hardware4.webp
 ---
 ![Digital audio waveform](/images/recording8.webp)
 

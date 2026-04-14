@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 10: Building Golden Ears (Ear Training & Studio Wisdom)"
-date: 2025-11-21
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "EarTraining", "Reference", "Listening"]
+title: 'Mixing Course - Part 10: Building Golden Ears (Ear Training & Studio Wisdom)'
+date: 2025-11-21T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - EarTraining
+  - Reference
+  - Listening
+summary: >-
+  "I have bad ears, so I can’t mix." (Sad face.) No—you don’t have bad ears. You
+  just don’t know what to listen for yet. Like a sommelier tasting wine, 
+thumbnail: /images/recording6.webp
 ---
 ![Focused listening with headphones](/images/recording2.webp)
 

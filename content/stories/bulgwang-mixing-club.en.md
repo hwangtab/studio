@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\" First Meetup Announcement"
-date: 2025-11-03
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Networking", "Meetup"]
+title: '"Bulgwang Mixing Club" First Meetup Announcement'
+date: 2025-11-03T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Networking
+  - Meetup
+summary: "\U0001F525 Sound nerds, gather in Bulgwang-dong's mixing hell! \"Bulgwang Mixing Club\" opens its doors! \U0001F525 We invite you to the thrilling party for those who l"
+thumbnail: /images/recording3.webp
 ---
 ![Bulgwang Mixing Club mixing room](/images/hardware2.webp)
 

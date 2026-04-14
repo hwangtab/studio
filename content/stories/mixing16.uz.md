@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 16-qism: Ovoz haykaltaroshi — EQ"
-date: 2025-11-26
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "EQ", "Equalizer", "Frequency"]
+title: 'Miks kursi - 16-qism: Ovoz haykaltaroshi — EQ'
+date: 2025-11-26T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - EQ
+  - Equalizer
+  - Frequency
+summary: >-
+  “Ovoz juda loyqa.” (Hap.) “Vokal shunchalik o'tkirki, quloq og'riydi.” (Ouch!)
+  Bu muammolarni hal qiladigan sehrli tayoq — EQ. EQ ma'lum chastota diap
+thumbnail: /images/recording16.webp
 ---
 ![Rangli EQ grafigi](/images/pcw.webp)
 

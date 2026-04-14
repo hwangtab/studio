@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 23: El gran final, mastering"
-date: 2025-12-03
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Mastering", "FinalStep", "Loudness"]
+title: 'Curso de Mezcla - Parte 23: El gran final, mastering'
+date: 2025-12-03T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Mastering
+  - FinalStep
+  - Loudness
+summary: >-
+  "El empaque es tan importante como el contenido." (¡Regalo!) Llegaste hasta
+  aquí. (¡Clap‑clap!) Preparaste ingredientes (Editing), cocinaste el sabor 
+thumbnail: /images/recording2.webp
 ---
 ![Forma de onda limpia en un monitor](/images/service3.webp)
 

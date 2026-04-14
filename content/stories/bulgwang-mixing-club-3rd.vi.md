@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" Thông báo buổi gặp mặt lần 3'
-date: 2025-11-18
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Kết nối", "Gặp mặt"]
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Kết nối
+  - Gặp mặt
+summary: "\U0001F525 Round 3 đã lên lịch! (nhưng có thay đổi lịch) Xin chào từ Bulgwang Mixing Club! Ban đầu chúng tôi định tổ chức buổi gặp lần 3 vào thứ Sáu tuần này "
+thumbnail: /images/recording6.webp
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 22: วาดบนเวลา—Automation"
-date: 2025-12-02
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Automation", "DynamicMix", "FaderRide"]
+title: 'คอร์สมิกซ์ - ตอนที่ 22: วาดบนเวลา—Automation'
+date: 2025-12-02T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Automation
+  - DynamicMix
+  - FaderRide
+summary: >-
+  “มิกซ์ไม่ใช่รูปนิ่ง มันคือหนังที่มีชีวิต” (แอ็กชัน!) เราเรียนทำ static mix
+  ให้ดีแล้ว (ทีละขั้น!) แต่มิวสิกไหล—เวิร์สกระซิบ คอรัสระเบิด (อ๊า!) มิกซ์ต้อ
+thumbnail: /images/recording1.webp
 ---
 ![หน้าจอ DAW กับเส้น automation](/images/console.webp)
 

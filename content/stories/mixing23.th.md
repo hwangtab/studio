@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 23: ตอนจบยิ่งใหญ่—Mastering"
-date: 2025-12-03
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Mastering", "FinalStep", "Loudness"]
+title: 'คอร์สมิกซ์ - ตอนที่ 23: ตอนจบยิ่งใหญ่—Mastering'
+date: 2025-12-03T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Mastering
+  - FinalStep
+  - Loudness
+summary: >-
+  “แพ็กเกจสำคัญพอ ๆ กับเนื้อหา” (ของขวัญ!) คุณมาถึงตรงนี้แล้ว (ปรบมือ!)
+  คุณเตรียมวัตถุดิบ (Editing) ปรุงรส (Mixing) และจัดจาน (Automation) ก่อนเสิร์ฟ
+  คุ
+thumbnail: /images/recording2.webp
 ---
 ![เวฟฟอร์มสะอาดบนมอนิเตอร์](/images/service3.webp)
 

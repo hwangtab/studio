@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 4: Độ phân giải âm thanh số (Sample Rate & Bit Depth)"
-date: 2025-11-15
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Digital", "SampleRate", "BitDepth"]
+title: 'Khóa học Mixing - Phần 4: Độ phân giải âm thanh số (Sample Rate & Bit Depth)'
+date: 2025-11-15T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Digital
+  - SampleRate
+  - BitDepth
+summary: >-
+  “Nên thu ở 44.1 kHz hay 48 kHz?” “Khác nhau giữa 16‑bit và 24‑bit là gì?” Nhìn
+  số là đau đầu? Đừng lo. Nó giống như hình ảnh. Ghi âm vào máy tính (chu
+thumbnail: /images/hardware4.webp
 ---
 ![Dạng sóng âm thanh số](/images/recording8.webp)
 

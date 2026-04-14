@@ -1,9 +1,17 @@
 ---
-title: "Curso de Mezcla - Parte 7: La mezcla empieza con el orden"
-date: 2025-11-18
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "SessionPrep", "Workflow"]
+title: 'Curso de Mezcla - Parte 7: La mezcla empieza con el orden'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - SessionPrep
+  - Workflow
+summary: >-
+  “Quiero empezar a mezclar, pero me abruma. Hay 50 pistas.” (Suspiro.) Muchos
+  se cansan antes de empezar. Ver Audio01, Audio02 y más, sin nombres, oscu
+thumbnail: /images/recording2.webp
 ---
 ![Cables desordenados y un patchbay ordenado](/images/service3.webp)
 

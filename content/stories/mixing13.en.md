@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 13: The Most Beautiful When Still (Static Mix)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "StaticMix", "Balance", "NoPlugins"]
+title: 'Mixing Course - Part 13: The Most Beautiful When Still (Static Mix)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - StaticMix
+  - Balance
+  - NoPlugins
+summary: >-
+  All preparations are done. (Deep breath.) Room is treated (Session Prep)
+  Editing is done (Editing) Template is open (Ta‑da!) Now you want to throw on 
+thumbnail: /images/recording11.webp
 ---
 ![Engineer with a hand on the fader](/images/console.webp)
 

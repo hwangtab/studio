@@ -1,9 +1,17 @@
 ---
-title: "Mixing Course - Part 3: The Gear-Addiction Detox Project"
-date: 2025-11-14
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Gear", "DAW"]
+title: 'Mixing Course - Part 3: The Gear-Addiction Detox Project'
+date: 2025-11-14T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Gear
+  - DAW
+summary: >-
+  “Which mic is good? Which audio interface will give me a pro sound?” Dozens of
+  questions like this appear in music communities every day. We call it g
+thumbnail: /images/hardware3.webp
 ---
 ![Various audio interfaces and gear](/images/hardware4.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 20: เวทมนตร์คลื่นของ Modulation"
-date: 2025-11-30
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Modulation", "Chorus", "Flanger"]
+title: 'คอร์สมิกซ์ - ตอนที่ 20: เวทมนตร์คลื่นของ Modulation'
+date: 2025-11-30T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Modulation
+  - Chorus
+  - Flanger
+summary: >-
+  “เสียงเริ่มเคลื่อนไหวและหายใจ” (ไหว‑ไหว!) จนถึงตอนนี้เราเรียน dynamics,
+  panning และ space แล้ว Modulation เพิ่ม การเคลื่อนไหว และ ความชุ่มชื่น—เป็นเคร
+thumbnail: /images/hardware4.webp
 ---
 ![ผิวน้ำเป็นคลื่นหรือแสงเหนือ](/images/pcw.webp)
 

@@ -1,9 +1,17 @@
 ---
-title: "Khóa học Mixing - Phần 5: Kẻ thù của digital (Lỗi và nhiễu)"
-date: 2025-11-16
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "DigitalError", "Clipping"]
+title: 'Khóa học Mixing - Phần 5: Kẻ thù của digital (Lỗi và nhiễu)'
+date: 2025-11-16T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - DigitalError
+  - Clipping
+summary: >-
+  “Digital chẳng phải hoàn hảo sao? Chỉ là 0 và 1—sao lại có lỗi?” Nhiều người
+  tin rằng âm thanh số sạch và không đổi. Nhưng thế giới số có những kẻ thù
+thumbnail: /images/hardware5.webp
 ---
 ![Hình ảnh glitch kỹ thuật số](/images/pcw.webp)
 

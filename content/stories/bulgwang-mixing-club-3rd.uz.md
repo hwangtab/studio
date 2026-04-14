@@ -1,9 +1,14 @@
 ---
 title: '"Bulgwang Mixing Club" uchinchi uchrashuv e''loni'
-date: 2025-11-18
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Tanishuv", "Uchrashuv"]
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Tanishuv
+  - Uchrashuv
+summary: "\U0001F525 3-raund belgilandi! (Ammo jadvalda o'zgarish bor) Bulgwang Mixing Clubdan salom! Dastlab uchinchi uchrashuvni shu juma (11/21)ga rejalashtirgandik,"
+thumbnail: /images/recording6.webp
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

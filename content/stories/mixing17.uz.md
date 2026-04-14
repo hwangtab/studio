@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 17-qism: Kompressor bilan dinamika jilovlash"
-date: 2025-11-27
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Compressor", "Dynamics", "ParallelCompression"]
+title: 'Miks kursi - 17-qism: Kompressor bilan dinamika jilovlash'
+date: 2025-11-27T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Compressor
+  - Dynamics
+  - ParallelCompression
+summary: >-
+  “Kompressor eng qiyini. Nimasi o'zgarganini eshitolmayman.” (Grr.) Ko'pchilik
+  kompressorda qotib qoladi. U EQ kabi keskin o'zgartirmaydi, noto'g'ri is
+thumbnail: /images/hardware1.webp
 ---
 ![Klassik kompressor tugmalari](/images/hardware1.webp)
 

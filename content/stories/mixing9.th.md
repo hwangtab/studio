@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 9: ศัตรูที่มองไม่เห็น—เฟส"
-date: 2025-11-20
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Phase", "DrumMixing", "Polarity"]
+title: 'คอร์สมิกซ์ - ตอนที่ 9: ศัตรูที่มองไม่เห็น—เฟส'
+date: 2025-11-20T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Phase
+  - DrumMixing
+  - Polarity
+summary: >-
+  “คิกดังมาก แต่พอเปิดกับโอเวอร์เฮดกลับหายไป!” (เอ๊ะ?) นี่ไม่ใช่ผี
+  แต่เป็นวิทยาศาสตร์: phase cancellation มือใหม่หลายคนแก้ EQ
+  วนไปวนมาเพราะศัตรูที่มองไม
+thumbnail: /images/recording4.webp
 ---
 ![ภาพการไมค์กลอง](/images/recording1.webp)
 

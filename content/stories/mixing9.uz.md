@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 9-qism: Ko'rinmas dushman — faza"
-date: 2025-11-20
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Phase", "DrumMixing", "Polarity"]
+title: 'Miks kursi - 9-qism: Ko''rinmas dushman — faza'
+date: 2025-11-20T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Phase
+  - DrumMixing
+  - Polarity
+summary: >-
+  “Kick juda katta edi, lekin overhead bilan birga eshitsam yo'qolib qoladi!”
+  (Ha?) Bu arvoh emas. Bu fan: phase cancellation. Ko'p boshlovchilar shu “k
+thumbnail: /images/recording4.webp
 ---
 ![Baraban miklash surati](/images/recording1.webp)
 

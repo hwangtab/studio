@@ -1,9 +1,16 @@
 ---
-title: "สัมภาษณ์โปรดิวเซอร์ Park Chan-woong"
-date: 2025-06-05
-author: "Studio NOL"
-category: "interview"
-tags: ["Park Chan-woong", "สัมภาษณ์", "Golden Hour"]
+title: สัมภาษณ์โปรดิวเซอร์ Park Chan-woong
+date: 2025-06-05T00:00:00.000Z
+author: Studio NOL
+category: interview
+tags:
+  - Park Chan-woong
+  - สัมภาษณ์
+  - Golden Hour
+summary: >-
+  สัมภาษณ์โปรดิวเซอร์ Park Chan-woong เกี่ยวกับอัลบั้มใหม่ของ Jai “Golden Hour”:
+  ช่วงเวลาทองในเส้นทางดนตรี 25 ปีที่ถูกทำให้สมบูรณ์ด้วย “ความสมดุล” และ “
+thumbnail: /images/recording8.webp
 ---
 ![Producer Park Chan-woong](/images/pcw.webp)
 

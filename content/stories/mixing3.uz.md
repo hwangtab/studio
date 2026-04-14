@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 3-qism: Gearga qaramlikni davolash loyihasi"
-date: 2025-11-14
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Gear", "DAW"]
+title: 'Miks kursi - 3-qism: Gearga qaramlikni davolash loyihasi'
+date: 2025-11-14T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Gear
+  - DAW
+summary: >-
+  “Qaysi mikrofon yaxshi? Qaysi audio interfeys pro ovoz beradi?” Musiqa
+  hamjamiyatlarida bunday savollar har kuni paydo bo'ladi. Buni biz gear
+  qaramlig
+thumbnail: /images/hardware3.webp
 ---
 ![Turli audio interfeyslar va gear](/images/hardware4.webp)
 

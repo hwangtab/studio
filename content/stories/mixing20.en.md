@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 20: The Wavy Magic of Modulation"
-date: 2025-11-30
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Modulation", "Chorus", "Flanger"]
+title: 'Mixing Course - Part 20: The Wavy Magic of Modulation'
+date: 2025-11-30T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Modulation
+  - Chorus
+  - Flanger
+summary: >-
+  "The sound starts to move and breathe." (Waver‑waver!) So far we’ve learned
+  dynamics, panning, and space. Modulation adds movement and lushness—a seas
+thumbnail: /images/hardware4.webp
 ---
 ![Wavy water or aurora](/images/pcw.webp)
 

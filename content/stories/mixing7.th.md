@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 7: มิกซ์เริ่มจากการจัดระเบียบ"
-date: 2025-11-18
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "SessionPrep", "Workflow"]
+title: 'คอร์สมิกซ์ - ตอนที่ 7: มิกซ์เริ่มจากการจัดระเบียบ'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - SessionPrep
+  - Workflow
+summary: >-
+  “อยากเริ่มมิกซ์ แต่ช็อก… มี 50 แทร็ก” (ถอนหายใจ)
+  หลายคนหมดแรงตั้งแต่ยังไม่เริ่ม เห็น Audio01, Audio02 เต็มไปหมดก็รู้สึกมืดมน
+  คุณทำอาหารดีได้ในครัวรกไห
+thumbnail: /images/recording2.webp
 ---
 ![สายเคเบิลรก ๆ และแพตช์เบย์ที่เป็นระเบียบ](/images/service3.webp)
 

@@ -1,9 +1,19 @@
 ---
-title: "Curso de Mezcla - Parte 15: La estética de izquierda y derecha, panning"
-date: 2025-11-25
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Panning", "Stereo", "LCR"]
+title: 'Curso de Mezcla - Parte 15: La estética de izquierda y derecha, panning'
+date: 2025-11-25T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Panning
+  - Stereo
+  - LCR
+summary: >-
+  "Mezclé, pero todo está amontonado en el centro y suena apretado."
+  (¡Apretado!) Es como poner a todos los músicos en una sola línea en el
+  escenario. H
+thumbnail: /images/recording15.webp
 ---
 ![Altavoces estéreo y oyente](/images/studio1.webp)
 

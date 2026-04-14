@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 1 部：以料理开始的混音"
-date: 2025-11-12
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "入门", "Mixing", "Introduction"]
+title: 混音课程 - 第 1 部：以料理开始的混音
+date: 2025-11-12T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 入门
+  - Mixing
+  - Introduction
+summary: >-
+  制作音乐的过程常常被比作“做菜”。 我觉得再合适不过了。为了初学混音的你们，我从今天开始当你们的主厨。（心跳加速！）
+  有没有精心做了一道菜却觉得味道不对？或者加了太多材料反而失去原味？混音也是一样。满怀期待开始，但有时会迷路、会沮丧。别担心，我也经历过无数次糊锅与过咸，才走到今天。
+  1. 什么是混音
+thumbnail: /images/hardware1.webp
 ---
 ![混音控制台与录音室全景](/images/console.webp)
 

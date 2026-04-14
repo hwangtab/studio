@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 16: ประติมากรแห่งเสียง EQ"
-date: 2025-11-26
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "EQ", "Equalizer", "Frequency"]
+title: 'คอร์สมิกซ์ - ตอนที่ 16: ประติมากรแห่งเสียง EQ'
+date: 2025-11-26T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - EQ
+  - Equalizer
+  - Frequency
+summary: >-
+  “เสียงขุ่นมาก” (ฮืด) “วอยซ์แหลมเจ็บหู” (โอ๊ย!) ไม้กายสิทธิ์ที่แก้ปัญหานี้คือ
+  EQ EQ ช่วยตัดหรือเพิ่มย่านความถี่เฉพาะ เหมือนปั้นดิน เราแกะสลักเสียงด้วย 
+thumbnail: /images/recording16.webp
 ---
 ![กราฟ EQ สีสันสด](/images/pcw.webp)
 

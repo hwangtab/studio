@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\" Second Meetup Announcement"
-date: 2025-11-10
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Networking", "Meetup"]
+title: '"Bulgwang Mixing Club" Second Meetup Announcement'
+date: 2025-11-10T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Networking
+  - Meetup
+summary: "\U0001F525 The first meetup’s heat continues! Round 2 of \"Bulgwang Mixing Club\" starts now! \U0001F525 Still feeling the heat from the chicken-fueled first night? Thi"
+thumbnail: /images/recording4.webp
 ---
 ![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 

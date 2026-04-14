@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\": anuncio del segundo encuentro"
-date: 2025-11-10
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Networking", "Encuentro"]
+title: '"Bulgwang Mixing Club": anuncio del segundo encuentro'
+date: 2025-11-10T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Networking
+  - Encuentro
+summary: "\U0001F525 ¡Sigue el calor del primer encuentro! Empieza la ronda 2 de \"Bulgwang Mixing Club\" \U0001F525 ¿Aún sientes el calor de la primera reunión con pollo? Esta s"
+thumbnail: /images/recording4.webp
 ---
 ![Bulgwang Mixing Club 2nd Meeting — Studio NOL](/images/bulgwang-mixing-club-2nd.webp)
 

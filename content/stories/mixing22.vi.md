@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 22: Vẽ trên thời gian, Automation"
-date: 2025-12-02
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Automation", "DynamicMix", "FaderRide"]
+title: 'Khóa học Mixing - Phần 22: Vẽ trên thời gian, Automation'
+date: 2025-12-02T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Automation
+  - DynamicMix
+  - FaderRide
+summary: >-
+  “Mixing không phải ảnh đóng khung, nó là một bộ phim sống.” (Action!) Ta đã
+  tạo một static mix tốt. (Từng bước!) Nhưng âm nhạc chảy—verse thì thầm, ch
+thumbnail: /images/recording1.webp
 ---
 ![Màn hình DAW với đường automation](/images/console.webp)
 

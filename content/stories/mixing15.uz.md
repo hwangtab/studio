@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 15-qism: Chap‑o'ng san'ati — Panning"
-date: 2025-11-25
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Panning", "Stereo", "LCR"]
+title: 'Miks kursi - 15-qism: Chap‑o''ng san''ati — Panning'
+date: 2025-11-25T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Panning
+  - Stereo
+  - LCR
+summary: >-
+  “Miks qildim, lekin hammasi markazga yig'ilib qolgan. Tor va siqilgan.” (Dim!)
+  Bu sahnada barcha musiqachilarni bitta tor chiziqqa terib qo'yishga o'x
+thumbnail: /images/recording15.webp
 ---
 ![Stereo karnaylar va tinglovchi](/images/studio1.webp)
 

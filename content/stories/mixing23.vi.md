@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 23: Đại kết, Mastering"
-date: 2025-12-03
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Mastering", "FinalStep", "Loudness"]
+title: 'Khóa học Mixing - Phần 23: Đại kết, Mastering'
+date: 2025-12-03T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Mastering
+  - FinalStep
+  - Loudness
+summary: >-
+  “Gói quà quan trọng như nội dung.” (Quà!) Bạn đã đi đến đây. (Vỗ tay!) Bạn
+  chuẩn bị nguyên liệu (Editing), nấu hương vị (Mixing), và bày đẹp (Automati
+thumbnail: /images/recording2.webp
 ---
 ![Dạng sóng sạch trên màn hình](/images/service3.webp)
 

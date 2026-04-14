@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 4 部：数字音频的分辨率（采样率 & 位深）"
-date: 2025-11-15
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "数字", "SampleRate", "BitDepth"]
+title: 混音课程 - 第 4 部：数字音频的分辨率（采样率 & 位深）
+date: 2025-11-15T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 数字
+  - SampleRate
+  - BitDepth
+summary: >-
+  “录 44.1kHz 还是 48kHz？” “16 位和 24 位有什么区别？” 看到数字就头大吗？别担心。这和图像是一样的。
+  就像用数码相机拍下你看到的世界，理解把声音存入电脑（AD 转换）的过程就会很简单。 1. 采样率（Sample Rate）：视频的帧率 采样率是
+  时间的分辨率，也就是 1 
+thumbnail: /images/hardware4.webp
 ---
 ![数字音频波形](/images/recording8.webp)
 

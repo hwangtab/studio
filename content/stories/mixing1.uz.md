@@ -1,9 +1,17 @@
 ---
-title: "Miks kursi - 1-qism: Miksni oshpazlikdan boshlash"
-date: 2025-11-12
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Boshlovchi", "Kirish"]
+title: 'Miks kursi - 1-qism: Miksni oshpazlikdan boshlash'
+date: 2025-11-12T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Boshlovchi
+  - Kirish
+summary: >-
+  Musiqa yaratish jarayoni ko'pincha “ovqat pishirish”ga qiyoslanadi. Bundan
+  yaxshiroq o'xshatish topa olmayman. Miksni endi boshlayotganlar uchun bugun
+thumbnail: /images/hardware1.webp
 ---
 ![Miks pulti va studio ko'rinishi](/images/console.webp)
 

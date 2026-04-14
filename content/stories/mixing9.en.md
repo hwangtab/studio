@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 9: The Invisible Enemy, Phase"
-date: 2025-11-20
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Phase", "DrumMixing", "Polarity"]
+title: 'Mixing Course - Part 9: The Invisible Enemy, Phase'
+date: 2025-11-20T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Phase
+  - DrumMixing
+  - Polarity
+summary: >-
+  "The kick sounded huge, but when I play it with the overheads, it disappears!"
+  (Huh?) This isn’t a ghost. It’s science: phase cancellation. Many begin
+thumbnail: /images/recording4.webp
 ---
 ![Drum miking photo](/images/recording1.webp)
 

@@ -1,18 +1,33 @@
 ---
-title: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 — 완전 가이드"
-date: "2026-04-08"
-excerpt: "수학록 기타·폴리리듬·7박자·Animals as Leaders·Tosin Abasi 스타일. 수학록 기타를 은평구 24시간 음악연습실에서 마스터."
-tags: ["음악 연습실", "기타", "수학록", "폴리리듬", "AnimalsAsLeaders", "은평구 음악 연습실"]
-category: "악기 연습"
-author: "스튜디오 놀"
-thumbnail: "/images/room5.webp"
+title: 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 — 완전 가이드
+date: '2026-04-08'
+tags:
+  - 음악 연습실
+  - 기타
+  - 수학록
+  - 폴리리듬
+  - AnimalsAsLeaders
+  - 은평구 음악 연습실
+category: 악기 연습
+author: 스튜디오 놀
+thumbnail: /images/room5.webp
 faq:
-  - q: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?"
-    a: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습은 수학록이란?, 비정규 박자 (Odd Time Signatures), 폴리리듬 기타 순서로 진행하는 것을 추천합니다. 기초 단계를 충분히 소화한 후 다음 단계로 넘어가세요."
-  - q: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습 시 가장 중요한 포인트는 무엇인가요?"
-    a: "수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습에서 가장 중요한 것은 정확한 손 포지션과 리듬감입니다. 메트로놈을 활용해 느린 템포부터 연습하고, 깨끗한 음 하나하나에 집중하세요."
-  - q: "음악연습실에서 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습하면 어떤 장점이 있나요?"
-    a: "방음 개인실에서 소음 걱정 없이 충분한 볼륨으로 연습할 수 있습니다. 스튜디오 놀은 24시간 무인 운영 방음 연습실을 시간당 8,000원부터 제공합니다."
+  - q: 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?
+    a: >-
+      수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습은 수학록이란?, 비정규 박자 (Odd
+      Time Signatures), 폴리리듬 기타 순서로 진행하는 것을 추천합니다. 기초 단계를 충분히 소화한 후 다음 단계로
+      넘어가세요.
+  - q: 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습 시 가장 중요한 포인트는 무엇인가요?
+    a: >-
+      수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습에서 가장 중요한 것은 정확한 손 포지션과
+      리듬감입니다. 메트로놈을 활용해 느린 템포부터 연습하고, 깨끗한 음 하나하나에 집중하세요.
+  - q: 음악연습실에서 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 연습하면 어떤 장점이 있나요?
+    a: >-
+      방음 개인실에서 소음 걱정 없이 충분한 볼륨으로 연습할 수 있습니다. 스튜디오 놀은 24시간 무인 운영 방음 연습실을 시간당
+      8,000원부터 제공합니다.
+summary: >-
+  수학록 기타·폴리리듬·7박자·Animals as Leaders·Tosin Abasi 스타일. 수학록 기타를 은평구 24시간 음악연습실에서
+  마스터.
 ---
 ![수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 스튜디오 놀](/images/room5.webp)
 

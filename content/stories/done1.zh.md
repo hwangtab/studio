@@ -1,9 +1,13 @@
 ---
-title: "Studio NOL 官网焕新完成！"
-date: 2025-06-04
-author: "Studio NOL"
-category: "notice"
-tags: ["焕新", "录音室"]
+title: Studio NOL 官网焕新完成！
+date: 2025-06-04T00:00:00.000Z
+author: Studio NOL
+category: notice
+tags:
+  - 焕新
+  - 录音室
+summary: "大家好，这里是 Studio NOL！\U0001F3B8\U0001F3A4 我们的官网全新改版完成！为了给大家提供更清晰、更有用的信息，我们做了大量准备。通过这次改版，你可以更详细地了解我们追求的模拟声音价值，以及使用顶级模拟设备所提供的高端服务。感受我们执着选择的模拟设备——Vintech X73i、Tegeler Vari"
+thumbnail: /images/hardware3.webp
 ---
 ![Studio NOL 录音室](/images/studio1.webp)
 

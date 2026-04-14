@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 17: คุมไดนามิกด้วยคอมเพรสเซอร์"
-date: 2025-11-27
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Compressor", "Dynamics", "ParallelCompression"]
+title: 'คอร์สมิกซ์ - ตอนที่ 17: คุมไดนามิกด้วยคอมเพรสเซอร์'
+date: 2025-11-27T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Compressor
+  - Dynamics
+  - ParallelCompression
+summary: >-
+  “คอมเพรสเซอร์ยากที่สุด ฟังไม่ออกว่าเปลี่ยนอะไร” (กรรร์)
+  หลายคนติดที่คอมเพรสเซอร์ มันไม่เปลี่ยนเสียงชัดเท่า EQ
+  และถ้าใช้ผิดก็ทำให้เสียงทึบ แต่หลักการง่
+thumbnail: /images/hardware1.webp
 ---
 ![ปุ่มหมุนของคอมเพรสเซอร์คลาสสิก](/images/hardware1.webp)
 

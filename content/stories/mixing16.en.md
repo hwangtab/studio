@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 16: The Sculptor of Sound, EQ"
-date: 2025-11-26
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "EQ", "Equalizer", "Frequency"]
+title: 'Mixing Course - Part 16: The Sculptor of Sound, EQ'
+date: 2025-11-26T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - EQ
+  - Equalizer
+  - Frequency
+summary: >-
+  "The sound is too muddy." (Sniff.) "The vocal is so sharp it hurts." (Ouch!)
+  The magic wand that solves these worries is EQ. EQ lets you cut or boost 
+thumbnail: /images/recording16.webp
 ---
 ![Colorful EQ graph](/images/pcw.webp)
 

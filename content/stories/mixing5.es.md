@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 5: Enemigos de lo digital (errores y ruido)"
-date: 2025-11-16
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "ErrorDigital", "DigitalError", "Clipping"]
+title: 'Curso de Mezcla - Parte 5: Enemigos de lo digital (errores y ruido)'
+date: 2025-11-16T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - ErrorDigital
+  - DigitalError
+  - Clipping
+summary: >-
+  “¿No es digital perfecto? Son 0 y 1, ¿por qué hay errores?” Mucha gente cree
+  que el audio digital es limpio e inmutable. Pero en el mundo digital tamb
+thumbnail: /images/hardware5.webp
 ---
 ![Imagen de glitch digital](/images/pcw.webp)
 

@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 18 部：给音乐注入空气——混响"
-date: 2025-11-28
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Reverb", "Space", "PreDelay"]
+title: 混音课程 - 第 18 部：给音乐注入空气——混响
+date: 2025-11-28T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Reverb
+  - Space
+  - PreDelay
+summary: >-
+  “干声是死的。”（干巴巴） 我们日常听到的所有声音都带着 空间。 在房间里说话、在浴室里唱歌、在公园里喊叫…（哟呼！）
+  声音都会带着墙面、地板、天花反射回来的 混响。 但麦克风录到的源或虚拟乐器刚出来的声音呢？（平） 就像漂在真空里，干、平、二维。
+  混响的作用，就是把二维声音拉进三维空间。（沙——）
+thumbnail: /images/hardware2.webp
 ---
 ![彩色玻璃大教堂内部](/images/service1.webp)
 

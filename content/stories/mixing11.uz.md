@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 11-qism: Miksdan oldingi so'nggi bo'lak — Editing"
-date: 2025-11-22
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Editing", "Comping", "Timing"]
+title: 'Miks kursi - 11-qism: Miksdan oldingi so''nggi bo''lak — Editing'
+date: 2025-11-22T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Editing
+  - Comping
+  - Timing
+summary: >-
+  “Miksni boshlaymiz!” (Bo'ldi!) Biroz kuting — biror faderni ko'tarishdan oldin
+  majburiy darvoza bor: editing. Editing uy qurishdan oldin yer tekislash
+thumbnail: /images/recording8.webp
 ---
 ![Waveform tahrirlash ekrani](/images/recording11.webp)
 

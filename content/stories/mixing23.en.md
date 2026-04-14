@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 23: The Grand Finale, Mastering"
-date: 2025-12-03
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Mastering", "FinalStep", "Loudness"]
+title: 'Mixing Course - Part 23: The Grand Finale, Mastering'
+date: 2025-12-03T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Mastering
+  - FinalStep
+  - Loudness
+summary: >-
+  "Packaging matters as much as the content." (Gift!) You made it this far.
+  (Clap‑clap!) You prepped the ingredients (Editing), cooked the flavor (Mixin
+thumbnail: /images/recording2.webp
 ---
 ![Clean audio waveform on a monitor](/images/service3.webp)
 

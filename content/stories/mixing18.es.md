@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 18: Dar aire a la música, reverb"
-date: 2025-11-28
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Reverb", "Space", "PreDelay"]
+title: 'Curso de Mezcla - Parte 18: Dar aire a la música, reverb'
+date: 2025-11-28T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Reverb
+  - Space
+  - PreDelay
+summary: >-
+  "Un sonido dry es un sonido muerto." (¡Seco!) Todos los sonidos de la vida
+  vienen con espacio. Hablar en una habitación, cantar en un baño, gritar en 
+thumbnail: /images/hardware2.webp
 ---
 ![Catedral con vitrales](/images/service1.webp)
 

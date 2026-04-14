@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 19: เงาของเสียง—Delay"
-date: 2025-11-29
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Delay", "Echo", "PingPong"]
+title: 'คอร์สมิกซ์ - ตอนที่ 19: เงาของเสียง—Delay'
+date: 2025-11-29T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Delay
+  - Echo
+  - PingPong
+summary: >-
+  “Reverb เหมือนหมอก ส่วน delay เหมือนเงา” (อารมณ์!) Reverb กับ delay ต่างสร้าง
+  พื้นที่ แต่ต่างกันมาก Reverb ห่อเสียงเหมือนหมอก ส่วน delay คือการก็อปปี้
+thumbnail: /images/hardware3.webp
 ---
 ![ป่าหรือภูเขาที่มีเสียงสะท้อน](/images/service3.webp)
 

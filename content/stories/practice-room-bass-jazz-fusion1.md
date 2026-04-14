@@ -1,18 +1,33 @@
 ---
-title: "재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 — 완전 가이드"
-date: "2026-04-08"
-excerpt: "재즈퓨전 베이스·Stanley Clarke·Weather Report·Return to Forever·펑크퓨전. 재즈퓨전 베이스를 은평구 24시간 음악연습실에서 마스터."
-tags: ["음악 연습실", "베이스", "재즈퓨전", "StanleyClarke", "WeatherReport", "은평구 음악 연습실"]
-category: "악기 연습"
-author: "스튜디오 놀"
-thumbnail: "/images/room3.webp"
+title: 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 — 완전 가이드
+date: '2026-04-08'
+tags:
+  - 음악 연습실
+  - 베이스
+  - 재즈퓨전
+  - StanleyClarke
+  - WeatherReport
+  - 은평구 음악 연습실
+category: 악기 연습
+author: 스튜디오 놀
+thumbnail: /images/room3.webp
 faq:
-  - q: "재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?"
-    a: "재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습은 재즈퓨전이란?, Stanley Clarke 스타일, Jaco Pastorius (Weather Report) 순서로 진행하는 것을 추천합니다. 기초 단계를 충분히 소화한 후 다음 단계로 넘..."
-  - q: "재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습 시 가장 중요한 포인트는 무엇인가요?"
-    a: "재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습에서 가장 중요한 것은 정확한 리듬감과 톤 컨트롤입니다. 드럼 트랙과 함께 연습하며 그루브 감각을 키우세요."
-  - q: "음악연습실에서 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습하면 어떤 장점이 있나요?"
-    a: "방음 개인실에서 소음 걱정 없이 충분한 볼륨으로 연습할 수 있습니다. 스튜디오 놀은 24시간 무인 운영 방음 연습실을 시간당 8,000원부터 제공합니다."
+  - q: 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?
+    a: >-
+      재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습은 재즈퓨전이란?, Stanley
+      Clarke 스타일, Jaco Pastorius (Weather Report) 순서로 진행하는 것을 추천합니다. 기초 단계를 충분히
+      소화한 후 다음 단계로 넘...
+  - q: 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습 시 가장 중요한 포인트는 무엇인가요?
+    a: >-
+      재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습에서 가장 중요한 것은 정확한 리듬감과 톤
+      컨트롤입니다. 드럼 트랙과 함께 연습하며 그루브 감각을 키우세요.
+  - q: 음악연습실에서 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 연습하면 어떤 장점이 있나요?
+    a: >-
+      방음 개인실에서 소음 걱정 없이 충분한 볼륨으로 연습할 수 있습니다. 스튜디오 놀은 24시간 무인 운영 방음 연습실을 시간당
+      8,000원부터 제공합니다.
+summary: >-
+  재즈퓨전 베이스·Stanley Clarke·Weather Report·Return to Forever·펑크퓨전. 재즈퓨전 베이스를 은평구
+  24시간 음악연습실에서 마스터.
 ---
 ![재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 스튜디오 놀](/images/room3.webp)
 

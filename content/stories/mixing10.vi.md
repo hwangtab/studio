@@ -1,9 +1,20 @@
 ---
-title: "Khóa học Mixing - Phần 10: Xây dựng đôi tai vàng (Ear Training & Studio Wisdom)"
-date: 2025-11-21
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "EarTraining", "Reference", "Listening"]
+title: >-
+  Khóa học Mixing - Phần 10: Xây dựng đôi tai vàng (Ear Training & Studio
+  Wisdom)
+date: 2025-11-21T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - EarTraining
+  - Reference
+  - Listening
+summary: >-
+  “Tôi tai kém nên không mix được.” (Mặt buồn.) Không—bạn không có tai kém. Bạn
+  chỉ chưa biết cần nghe gì thôi. Giống như sommelier nếm rượu, kỹ sư âm t
+thumbnail: /images/recording6.webp
 ---
 ![Nghe tập trung bằng tai nghe](/images/recording2.webp)
 

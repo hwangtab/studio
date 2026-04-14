@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 15: ศิลปะแห่งซ้าย‑ขวา Panning"
-date: 2025-11-25
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Panning", "Stereo", "LCR"]
+title: 'คอร์สมิกซ์ - ตอนที่ 15: ศิลปะแห่งซ้าย‑ขวา Panning'
+date: 2025-11-25T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Panning
+  - Stereo
+  - LCR
+summary: >-
+  “มิกซ์แล้ว แต่ทุกอย่างกองตรงกลาง อึดอัดมาก” (อับ!)
+  มันเหมือนวางนักดนตรีทุกคนบนเวทีเป็นแถวแคบ ๆ วันนี้เราจะเปิดเวทีให้กว้าง
+  และให้เครื่องดนตรี มีที่นั่
+thumbnail: /images/recording15.webp
 ---
 ![ลำโพงสเตอริโอและผู้ฟัง](/images/studio1.webp)
 

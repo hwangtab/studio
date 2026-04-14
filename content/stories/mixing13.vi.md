@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 13: Đẹp nhất khi đứng yên (Static Mix)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "StaticMix", "Balance", "NoPlugins"]
+title: 'Khóa học Mixing - Phần 13: Đẹp nhất khi đứng yên (Static Mix)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - StaticMix
+  - Balance
+  - NoPlugins
+summary: >-
+  Mọi chuẩn bị đã xong. (Hít sâu.) Phòng đã xử lý (Session Prep) Editing đã xong
+  (Editing) Template đã mở (Ta‑da!) Giờ bạn muốn ném plugin xịn vào, đúng
+thumbnail: /images/recording11.webp
 ---
 ![Kỹ sư đặt tay lên fader](/images/console.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 12: Template mixing của riêng bạn (Bí mật studio)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Template", "Routing", "Workflow"]
+title: 'Khóa học Mixing - Phần 12: Template mixing của riêng bạn (Bí mật studio)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Template
+  - Routing
+  - Workflow
+summary: >-
+  Mỗi lần mix bạn lại tạo track, đổi tên, chèn hiệu ứng... mệt đúng không?
+  (Oof.) Pro không bao giờ bắt đầu từ số 0. Họ tạo template và bắt đầu từ đó. (
+thumbnail: /images/recording9.webp
 ---
 ![Cửa sổ mixer DAW](/images/portfolio3.webp)
 

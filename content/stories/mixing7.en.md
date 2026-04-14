@@ -1,9 +1,17 @@
 ---
-title: "Mixing Course - Part 7: A Mix Starts with Organization"
-date: 2025-11-18
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "SessionPrep", "Workflow"]
+title: 'Mixing Course - Part 7: A Mix Starts with Organization'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - SessionPrep
+  - Workflow
+summary: >-
+  “I want to start mixing, but I’m overwhelmed. There are 50 tracks.” (Sigh.)
+  Many people burn out before they even begin. Seeing endless Audio01, Audio
+thumbnail: /images/recording2.webp
 ---
 ![Messy cables and a neat patchbay](/images/service3.webp)
 

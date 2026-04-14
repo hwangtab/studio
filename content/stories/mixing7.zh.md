@@ -1,9 +1,17 @@
 ---
-title: "混音课程 - 第 7 部：混音从整理开始"
-date: 2025-11-18
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "SessionPrep", "Workflow"]
+title: 混音课程 - 第 7 部：混音从整理开始
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - SessionPrep
+  - Workflow
+summary: >-
+  “想开始混音，但完全下不了手。轨道有 50 条。”（长叹） 很多人还没开始就累了。看到一排 Audio01, Audio02 的无名轨道，眼前一片黑。
+  在乱糟糟的厨房里能做出好菜吗？ 找刀要 10 分钟，盐罐里装着糖？（啊啊啊） 混音也是一样。Session Prep（整理） 是混音的一半。 1. 
+thumbnail: /images/recording2.webp
 ---
 ![凌乱的线材与整洁的跳线盘](/images/service3.webp)
 

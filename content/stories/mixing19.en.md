@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 19: The Shadow of Sound, Delay"
-date: 2025-11-29
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Delay", "Echo", "PingPong"]
+title: 'Mixing Course - Part 19: The Shadow of Sound, Delay'
+date: 2025-11-29T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Delay
+  - Echo
+  - PingPong
+summary: >-
+  "Reverb is like fog, delay is like a shadow." (Moody!) Reverb and delay both
+  create space, but they’re very different. Reverb wraps the sound like mis
+thumbnail: /images/hardware3.webp
 ---
 ![Echoing forest or mountains](/images/service3.webp)
 

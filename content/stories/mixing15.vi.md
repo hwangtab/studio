@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 15: Nghệ thuật trái phải, Panning"
-date: 2025-11-25
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Panning", "Stereo", "LCR"]
+title: 'Khóa học Mixing - Phần 15: Nghệ thuật trái phải, Panning'
+date: 2025-11-25T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Panning
+  - Stereo
+  - LCR
+summary: >-
+  “Mình mix rồi, nhưng mọi thứ dồn vào giữa. Ngộp quá.” (Ngộp!) Điều đó giống
+  như xếp tất cả nhạc công trên sân khấu thành một hàng chật chội. Hôm nay t
+thumbnail: /images/recording15.webp
 ---
 ![Loa stereo và người nghe](/images/studio1.webp)
 

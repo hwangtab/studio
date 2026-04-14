@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 16: Nhà điêu khắc âm thanh, EQ"
-date: 2025-11-26
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "EQ", "Equalizer", "Frequency"]
+title: 'Khóa học Mixing - Phần 16: Nhà điêu khắc âm thanh, EQ'
+date: 2025-11-26T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - EQ
+  - Equalizer
+  - Frequency
+summary: >-
+  “Âm thanh quá đục.” (Hắt xì.) “Vocal sắc đến đau tai.” (Ối!) Cây đũa phép giải
+  quyết những lo lắng này là EQ. EQ cho phép cắt hoặc tăng những dải tần 
+thumbnail: /images/recording16.webp
 ---
 ![Đồ thị EQ nhiều màu](/images/pcw.webp)
 

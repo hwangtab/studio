@@ -1,9 +1,17 @@
 ---
-title: "Mixing Course - Part 6: Reading Sound with Your Eyes (All About Metering)"
-date: 2025-11-17
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Metering", "Loudness"]
+title: 'Mixing Course - Part 6: Reading Sound with Your Eyes (All About Metering)'
+date: 2025-11-17T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Metering
+  - Loudness
+summary: >-
+  “I can’t trust my ears.” Then you need a reliable friend: the level meter.
+  Meters don’t lie. But we need to understand what they’re saying. (Listen cl
+thumbnail: /images/recording1.webp
 ---
 ![Various level meters](/images/console.webp)
 

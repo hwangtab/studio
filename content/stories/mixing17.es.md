@@ -1,9 +1,19 @@
 ---
-title: "Curso de Mezcla - Parte 17: Domar la dinámica con el compresor"
-date: 2025-11-27
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Compresor", "Dynamics", "ParallelCompression"]
+title: 'Curso de Mezcla - Parte 17: Domar la dinámica con el compresor'
+date: 2025-11-27T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Compresor
+  - Dynamics
+  - ParallelCompression
+summary: >-
+  "El compresor es lo más difícil. No noto qué cambia." (Grr.) Muchos se
+  frustran con el compresor. No cambia tanto como un EQ y, si lo usas mal, todo
+  q
+thumbnail: /images/hardware1.webp
 ---
 ![Perillas de un compresor clásico](/images/hardware1.webp)
 

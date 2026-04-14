@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 12: Tu propio template de mezcla (Secreto de estudio)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Plantilla", "Template", "Routing"]
+title: 'Curso de Mezcla - Parte 12: Tu propio template de mezcla (Secreto de estudio)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Plantilla
+  - Template
+  - Routing
+summary: >-
+  Cada vez que mezclas creas pistas, cambias nombres, insertas efectos... ¿no
+  cansa? (Uff.) Los pros jamás parten desde cero. Ellos preparan una plantil
+thumbnail: /images/recording9.webp
 ---
 ![Ventana del mezclador en el DAW](/images/portfolio3.webp)
 

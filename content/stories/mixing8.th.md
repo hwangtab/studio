@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 8: จัดโต๊ะให้ปลั๊กอิน (Gain Staging)"
-date: 2025-11-19
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "GainStaging", "Headroom", "InputLevel"]
+title: 'คอร์สมิกซ์ - ตอนที่ 8: จัดโต๊ะให้ปลั๊กอิน (Gain Staging)'
+date: 2025-11-19T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - GainStaging
+  - Headroom
+  - InputLevel
+summary: >-
+  “ผมใส่ปลั๊กอินแล้วเสียงแตกแปลก ๆ” “คอมเพรสเซอร์ไม่ทำงานเลย” (เอ๊ะ?
+  เกิดอะไรขึ้น?) ปลั๊กอินไม่ได้พัง คุณกำลังป้อน อาหารมากเกินไป (input level)
+  ให้มัน (
+thumbnail: /images/recording3.webp
 ---
 ![VU meter แบบอนาล็อก](/images/hardware5.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 8-qism: Pluginlar uchun dasturxon (Gain Staging)"
-date: 2025-11-19
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "GainStaging", "Headroom", "InputLevel"]
+title: 'Miks kursi - 8-qism: Pluginlar uchun dasturxon (Gain Staging)'
+date: 2025-11-19T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - GainStaging
+  - Headroom
+  - InputLevel
+summary: >-
+  “Plugin qo'ydim, ovoz g'alati buzilib ketdi.” “Kompressori ishlamayapti.” (Ha?
+  Nima bo'lyapti?) Pluginlaringiz buzilmagan. Siz ularga juda ko'p ovqat 
+thumbnail: /images/recording3.webp
 ---
 ![Analog VU meter](/images/hardware5.webp)
 

@@ -1,9 +1,17 @@
 ---
-title: "Khóa học Mixing - Phần 7: Bản mix bắt đầu từ việc sắp xếp"
-date: 2025-11-18
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "SessionPrep", "Workflow"]
+title: 'Khóa học Mixing - Phần 7: Bản mix bắt đầu từ việc sắp xếp'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - SessionPrep
+  - Workflow
+summary: >-
+  “Muốn bắt đầu mix, nhưng mình choáng. Có 50 track.” (Thở dài.) Nhiều người
+  kiệt sức trước khi bắt đầu. Nhìn hàng loạt Audio01, Audio02 là thấy tối tăm
+thumbnail: /images/recording2.webp
 ---
 ![Dây cáp lộn xộn và patchbay gọn gàng](/images/service3.webp)
 

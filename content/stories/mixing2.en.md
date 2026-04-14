@@ -1,9 +1,17 @@
 ---
-title: "Mixing Course - Part 2: Taming the Lying Room"
-date: 2025-11-13
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Monitoring", "RoomAcoustic"]
+title: 'Mixing Course - Part 2: Taming the Lying Room'
+date: 2025-11-13T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Monitoring
+  - RoomAcoustic
+summary: >-
+  “I bought expensive speakers—why does it sound weird?” Many beginners blame
+  their gear. They expect a 1,000,000‑KRW speaker to sound like 1,000,000 KR
+thumbnail: /images/hardware2.webp
 ---
 ![Studio monitor speaker placement](/images/studio1.webp)
 

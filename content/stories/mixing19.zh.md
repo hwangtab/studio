@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 19 部：声音的影子——延迟"
-date: 2025-11-29
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Delay", "Echo", "PingPong"]
+title: 混音课程 - 第 19 部：声音的影子——延迟
+date: 2025-11-29T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Delay
+  - Echo
+  - PingPong
+summary: >-
+  “混响像雾，延迟像影子。”（氛围感） 混响和延迟都能制造 空间，但性格很不同。 混响像雾一样包裹，而延迟会复制原声，跟在后面 “你好…你好…”（哒‑哒）
+  今天深入聊延迟——决定混音立体感的关键一招。 --- 1. 延迟的三大核心旋钮 延迟插件看起来很复杂，但核心只有三个。 (专注!) Time（时间
+thumbnail: /images/hardware3.webp
 ---
 ![回声山林或山脉](/images/service3.webp)
 

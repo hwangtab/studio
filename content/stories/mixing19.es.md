@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 19: La sombra del sonido, delay"
-date: 2025-11-29
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Delay", "Echo", "PingPong"]
+title: 'Curso de Mezcla - Parte 19: La sombra del sonido, delay'
+date: 2025-11-29T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Delay
+  - Echo
+  - PingPong
+summary: >-
+  "El reverb es como niebla, el delay es como una sombra." (Místico.) Reverb y
+  delay crean espacio, pero son distintos. El reverb envuelve como neblina;
+thumbnail: /images/hardware3.webp
 ---
 ![Bosque o montañas con eco](/images/service3.webp)
 

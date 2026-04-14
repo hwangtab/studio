@@ -1,9 +1,17 @@
 ---
-title: "Khóa học Mixing - Phần 3: Dự án cai nghiện gear"
-date: 2025-11-14
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Gear", "DAW"]
+title: 'Khóa học Mixing - Phần 3: Dự án cai nghiện gear'
+date: 2025-11-14T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Gear
+  - DAW
+summary: >-
+  “Mic nào tốt? Interface nào cho âm thanh chuyên nghiệp?” Hàng chục câu hỏi như
+  vậy xuất hiện mỗi ngày trong cộng đồng âm nhạc. Chúng ta gọi đó là nghi
+thumbnail: /images/hardware3.webp
 ---
 ![Các audio interface và gear khác nhau](/images/hardware4.webp)
 

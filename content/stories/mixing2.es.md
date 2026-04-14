@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 2: Domar la habitación mentirosa"
-date: 2025-11-13
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Monitoreo", "Monitoring", "RoomAcoustic"]
+title: 'Curso de Mezcla - Parte 2: Domar la habitación mentirosa'
+date: 2025-11-13T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Monitoreo
+  - Monitoring
+  - RoomAcoustic
+summary: >-
+  “Compré monitores caros, ¿por qué suena raro?” Muchos principiantes culpan al
+  equipo. Esperan que unos monitores de 1.000.000 KRW suenen a ese nivel, 
+thumbnail: /images/hardware2.webp
 ---
 ![Colocación de monitores de estudio](/images/studio1.webp)
 

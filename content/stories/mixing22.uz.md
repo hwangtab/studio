@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 22-qism: Vaqtga chizish — Automation"
-date: 2025-12-02
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Automation", "DynamicMix", "FaderRide"]
+title: 'Miks kursi - 22-qism: Vaqtga chizish — Automation'
+date: 2025-12-02T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Automation
+  - DynamicMix
+  - FaderRide
+summary: >-
+  “Miks ramkaga qotirilgan surat emas, u tirik film.” (Action!) Biz yaxshi
+  static mix yasashni o'rgandik. (Bosqichma‑bosqich!) Ammo musiqa oqadi. Verse 
+thumbnail: /images/recording1.webp
 ---
 ![Automation chiziqlari tushirilgan DAW ekrani](/images/console.webp)
 

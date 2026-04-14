@@ -1,9 +1,18 @@
 ---
-title: "Khóa học Mixing - Phần 19: Bóng của âm thanh, Delay"
-date: 2025-11-29
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Delay", "Echo", "PingPong"]
+title: 'Khóa học Mixing - Phần 19: Bóng của âm thanh, Delay'
+date: 2025-11-29T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Delay
+  - Echo
+  - PingPong
+summary: >-
+  “Reverb như sương mù, delay như cái bóng.” (Tâm trạng!) Reverb và delay đều
+  tạo không gian, nhưng rất khác nhau. Reverb bao âm như sương, còn delay là
+thumbnail: /images/hardware3.webp
 ---
 ![Khu rừng hoặc núi vọng tiếng](/images/service3.webp)
 

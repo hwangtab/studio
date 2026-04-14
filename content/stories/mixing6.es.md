@@ -1,9 +1,19 @@
 ---
-title: "Curso de Mezcla - Parte 6: Leer el sonido con los ojos (todo sobre el metering)"
-date: 2025-11-17
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "Metering", "Loudness"]
+title: >-
+  Curso de Mezcla - Parte 6: Leer el sonido con los ojos (todo sobre el
+  metering)
+date: 2025-11-17T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - Metering
+  - Loudness
+summary: >-
+  “No puedo confiar en mis oídos.” Entonces necesitas un amigo confiable: el
+  medidor de nivel. Los medidores no mienten. Pero hay que entender lo que di
+thumbnail: /images/recording1.webp
 ---
 ![Varios medidores de nivel](/images/console.webp)
 

@@ -1,9 +1,16 @@
 ---
-title: "混音课程 - 第 21 部：失真的美学——饱和与失真"
-date: 2025-12-01
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Saturation", "Distortion", "Harmonics"]
+title: 混音课程 - 第 21 部：失真的美学——饱和与失真
+date: 2025-12-01T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Saturation
+  - Distortion
+  - Harmonics
+summary: "“干净并不性感。”（坚定） 我们一直在学习让声音更干净：去噪、整理频率、创造透明空间。（闪闪） 但专业混音里的“温暖”“厚度”“存在感”却来自相反方向： 把声音弄脏。（诶？） 这就是 饱和（Saturation）。 今天聊聊为什么“失真”会让声音 更好听。 --- 1. 泛音的魔法：填满频谱 \U0001FA84 "
+thumbnail: /images/hardware5.webp
 ---
 ![带有温暖质感的复古模拟设备](/images/service2.webp)
 

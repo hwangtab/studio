@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\": anuncio del tercer encuentro"
-date: 2025-11-18
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "Networking", "Encuentro"]
+title: '"Bulgwang Mixing Club": anuncio del tercer encuentro'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - Networking
+  - Encuentro
+summary: "\U0001F525 ¡Tercera ronda programada! (Pero aviso de cambio de fecha) ¡Hola desde Bulgwang Mixing Club! Originalmente planeábamos el tercer encuentro para est"
+thumbnail: /images/recording6.webp
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

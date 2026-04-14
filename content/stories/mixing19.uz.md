@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 19-qism: Tovushning soyasi — Delay"
-date: 2025-11-29
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Delay", "Echo", "PingPong"]
+title: 'Miks kursi - 19-qism: Tovushning soyasi — Delay'
+date: 2025-11-29T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Delay
+  - Echo
+  - PingPong
+summary: >-
+  “Reverb tuman, delay esa soya kabi.” (Kayfiyatli!) Reverb va delay ikkalasi
+  ham makon yaratadi, ammo ular juda farq qiladi. Reverb tovushni tuman kabi
+thumbnail: /images/hardware3.webp
 ---
 ![Sado beradigan o'rmon yoki tog'lar](/images/service3.webp)
 

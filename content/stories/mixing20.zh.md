@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 20 部：起伏的魔法——调制"
-date: 2025-11-30
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Modulation", "Chorus", "Flanger"]
+title: 混音课程 - 第 20 部：起伏的魔法——调制
+date: 2025-11-30T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Modulation
+  - Chorus
+  - Flanger
+summary: >-
+  “声音开始活了，开始流动。”（起伏起伏） 到目前为止，我们学了动态、声像和空间。 调制（Modulation） 会给声音加上 运动感 和
+  丰满度，让平凡声音变梦幻、立体、性感。（哦哦！） --- 1. 调制三兄弟 调制类效果的原理很简单：复制声音，并不断改变时间或相位。（咕噜咕噜） ①
+  Chorus
+thumbnail: /images/hardware4.webp
 ---
 ![波纹或极光](/images/pcw.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 11: The Final Piece Before Mixing, Editing"
-date: 2025-11-22
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Editing", "Comping", "Timing"]
+title: 'Mixing Course - Part 11: The Final Piece Before Mixing, Editing'
+date: 2025-11-22T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Editing
+  - Comping
+  - Timing
+summary: >-
+  "Start the mix, please!" (Sure!) Hold on—before you raise a single fader,
+  there’s a mandatory gate: editing. Editing is like leveling the ground and p
+thumbnail: /images/recording8.webp
 ---
 ![Waveform editing screen](/images/recording11.webp)
 

@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 21: The Aesthetics of Distortion & Saturation"
-date: 2025-12-01
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Saturation", "Distortion", "Harmonics"]
+title: 'Mixing Course - Part 21: The Aesthetics of Distortion & Saturation'
+date: 2025-12-01T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Saturation
+  - Distortion
+  - Harmonics
+summary: >-
+  "Clean sound isn’t sexy." (Firm!) So far we’ve learned to clean sound—remove
+  noise, tidy frequencies, make transparent space. (Sparkle!) Yet the “warm
+thumbnail: /images/hardware5.webp
 ---
 ![Vintage analog gear with warm texture](/images/service2.webp)
 

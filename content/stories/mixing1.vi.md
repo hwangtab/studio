@@ -1,9 +1,17 @@
 ---
-title: "Khóa học Mixing - Phần 1: Bắt đầu mixing như nấu ăn"
-date: 2025-11-12
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Cơ bản", "Giới thiệu"]
+title: 'Khóa học Mixing - Phần 1: Bắt đầu mixing như nấu ăn'
+date: 2025-11-12T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Cơ bản
+  - Giới thiệu
+summary: >-
+  Quá trình làm nhạc thường được ví như “nấu ăn”. Mình không nghĩ ra ẩn dụ nào
+  hay hơn. Với những bạn mới bắt đầu mixing, từ hôm nay tôi sẽ là đầu bếp c
+thumbnail: /images/hardware1.webp
 ---
 ![Bàn điều khiển mixing và toàn cảnh studio](/images/console.webp)
 

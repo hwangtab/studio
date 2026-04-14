@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 14: 80% of a Mix Is Volume Balance"
-date: 2025-11-24
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Balance", "Fader", "Headroom"]
+title: 'Mixing Course - Part 14: 80% of a Mix Is Volume Balance'
+date: 2025-11-24T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Balance
+  - Fader
+  - Headroom
+summary: >-
+  "Mixing is too hard. I don’t know which plug‑in to use." (Sad.) That’s the
+  most common complaint I hear from beginners. YouTube makes plug‑ins look li
+thumbnail: /images/recording14.webp
 ---
 ![Mixing console and faders](/images/console.webp)
 

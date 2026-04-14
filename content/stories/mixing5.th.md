@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 5: ศัตรูของดิจทัล (ข้อผิดพลาดและสัญญาณรบกวน)"
-date: 2025-11-16
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "DigitalError", "Clipping"]
+title: 'คอร์สมิกซ์ - ตอนที่ 5: ศัตรูของดิจทัล (ข้อผิดพลาดและสัญญาณรบกวน)'
+date: 2025-11-16T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - DigitalError
+  - Clipping
+summary: >-
+  “ดิจิทัลไม่สมบูรณ์แบบเหรอ? ก็มีแค่ 0 กับ 1 ทำไมมีเออร์เรอร์?”
+  หลายคนเชื่อว่าเสียงดิจิทัลสะอาดและไม่เปลี่ยน แต่โลกดิจิทัลมีศัตรูที่น่ากลัว
+  มันทำลายการบ
+thumbnail: /images/hardware5.webp
 ---
 ![ภาพ glitch ดิจิทัล](/images/pcw.webp)
 

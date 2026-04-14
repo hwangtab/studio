@@ -1,9 +1,18 @@
 ---
-title: "Curso de Mezcla - Parte 16: El escultor del sonido, EQ"
-date: 2025-11-26
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mezcla", "Clase", "EQ", "Equalizer", "Frequency"]
+title: 'Curso de Mezcla - Parte 16: El escultor del sonido, EQ'
+date: 2025-11-26T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mezcla
+  - Clase
+  - EQ
+  - Equalizer
+  - Frequency
+summary: >-
+  "El sonido está muy turbio." (Sniff.) "La voz está tan brillante que duele."
+  (¡Ay!) La varita mágica para esto es el EQ. El EQ corta o realza bandas d
+thumbnail: /images/recording16.webp
 ---
 ![Gráfico de EQ colorido](/images/pcw.webp)
 

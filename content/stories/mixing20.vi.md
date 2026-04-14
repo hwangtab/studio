@@ -1,9 +1,19 @@
 ---
-title: "Khóa học Mixing - Phần 20: Phép màu lượn sóng của Modulation"
-date: 2025-11-30
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Bài học", "Modulation", "Chorus", "Flanger"]
+title: 'Khóa học Mixing - Phần 20: Phép màu lượn sóng của Modulation'
+date: 2025-11-30T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Bài học
+  - Modulation
+  - Chorus
+  - Flanger
+summary: >-
+  “Âm thanh bắt đầu chuyển động và thở.” (Lượn‑lượn!) Đến giờ ta đã học
+  dynamics, panning và không gian. Modulation thêm chuyển động và độ mượt—một
+  gia 
+thumbnail: /images/hardware4.webp
 ---
 ![Mặt nước gợn sóng hoặc cực quang](/images/pcw.webp)
 

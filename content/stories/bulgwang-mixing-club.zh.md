@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\" 第一次聚会公告"
-date: 2025-11-03
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "社交", "聚会"]
+title: '"Bulgwang Mixing Club" 第一次聚会公告'
+date: 2025-11-03T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - 社交
+  - 聚会
+summary: "\U0001F525 声音发烧友集合！不广洞的混音地狱开张了：\"Bulgwang Mixing Club\"！\U0001F525 我们邀请所有为混音而活的人，加入这个热辣的派对——\"Bulgwang Mixing Club\"！ 不要再独自苦思混音了，来一起分享技巧、升级实力，享受过程吧。 \U0001F3A7 这里就是混音名店！ \"Bulgwan"
+thumbnail: /images/recording3.webp
 ---
 ![Bulgwang Mixing Club 混音间](/images/hardware2.webp)
 

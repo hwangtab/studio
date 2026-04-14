@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 23 部：大长征的句号——母带"
-date: 2025-12-03
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "Mastering", "FinalStep", "Loudness"]
+title: 混音课程 - 第 23 部：大长征的句号——母带
+date: 2025-12-03T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - Mastering
+  - FinalStep
+  - Loudness
+summary: >-
+  “包装和内容一样重要。”（礼物！） 你终于走到这里了。（鼓掌！）
+  处理原料（Editing）、调味（Mixing）、漂亮摆盘（Automation）都完成了。 现在要上桌之前，最后擦盘子、包装。 这就是
+  母带（Mastering）。（句号） 很多人以为母带是“把声音变得超级大”。 但母带的本质是 平
+thumbnail: /images/recording2.webp
 ---
 ![干净整齐的音频波形显示在屏幕上](/images/service3.webp)
 

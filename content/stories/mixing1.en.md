@@ -1,9 +1,17 @@
 ---
-title: "Mixing Course - Part 1: The Start of Mixing as Cooking"
-date: 2025-11-12
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Beginner", "Introduction"]
+title: 'Mixing Course - Part 1: The Start of Mixing as Cooking'
+date: 2025-11-12T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Beginner
+  - Introduction
+summary: >-
+  The process of making music is often compared to “cooking.” I can’t think of a
+  better metaphor. For those new to mixing, I’ll be your chef starting to
+thumbnail: /images/hardware1.webp
 ---
 ![Mixing console and studio view](/images/console.webp)
 

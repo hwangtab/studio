@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 23-qism: Katta yakun — Mastering"
-date: 2025-12-03
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Mastering", "FinalStep", "Loudness"]
+title: 'Miks kursi - 23-qism: Katta yakun — Mastering'
+date: 2025-12-03T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Mastering
+  - FinalStep
+  - Loudness
+summary: >-
+  “Qadoq ham mazmun kabi muhim.” (Sovg'a!) Siz bu yerga yetdingiz. (Qarsak!) Siz
+  masalliqlarni tayyorladingiz (Editing), ta'mni pishirdingiz (Mixing) va
+thumbnail: /images/recording2.webp
 ---
 ![Monitorda toza audio waveform](/images/service3.webp)
 

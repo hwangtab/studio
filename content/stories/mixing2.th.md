@@ -1,9 +1,18 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 2: ทำให้ห้องที่โกหกเชื่อง"
-date: 2025-11-13
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Monitoring", "อะคูสติกห้อง"]
+title: 'คอร์สมิกซ์ - ตอนที่ 2: ทำให้ห้องที่โกหกเชื่อง'
+date: 2025-11-13T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Monitoring
+  - อะคูสติกห้อง
+summary: >-
+  “ผมซื้อลำโพงแพง—ทำไมยังฟังแปลก ๆ?” มือใหม่หลายคนโทษเกียร์
+  พวกเขาหวังว่าลำโพงราคา 1,000,000 KRW จะให้เสียงระดับ 1,000,000 KRW
+  แต่กลับบวมและเละ ผมยืนยัน
+thumbnail: /images/hardware2.webp
 ---
 ![การจัดวางลำโพงมอนิเตอร์](/images/studio1.webp)
 

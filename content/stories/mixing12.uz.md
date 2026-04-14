@@ -1,9 +1,19 @@
 ---
-title: "Miks kursi - 12-qism: O'zingizning miks templatingiz (studio siri)"
-date: 2025-11-23
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Template", "Routing", "Workflow"]
+title: 'Miks kursi - 12-qism: O''zingizning miks templatingiz (studio siri)'
+date: 2025-11-23T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Template
+  - Routing
+  - Workflow
+summary: >-
+  Har safar miks qilganingizda trek yaratish, nomlash, effekt qo'yish...
+  charchatmaysizmi? (Uf.) Pro'lar hech qachon noldan boshlamaydi. Ular template
+  y
+thumbnail: /images/recording9.webp
 ---
 ![DAW mikser oynasi](/images/console.webp)
 

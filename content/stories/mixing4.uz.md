@@ -1,9 +1,18 @@
 ---
-title: "Miks kursi - 4-qism: Raqamli audio aniqligi (Sample Rate & Bit Depth)"
-date: 2025-11-15
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "Digital", "SampleRate", "BitDepth"]
+title: 'Miks kursi - 4-qism: Raqamli audio aniqligi (Sample Rate & Bit Depth)'
+date: 2025-11-15T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - Digital
+  - SampleRate
+  - BitDepth
+summary: >-
+  “44.1 kHz'da yozaymi yoki 48 kHz'da?” “16‑bit bilan 24‑bit nimasi bilan farq
+  qiladi?” Raqamlar boshingizni og'ritadimi? Xavotir olmang. Bu rasmga o'xs
+thumbnail: /images/hardware4.webp
 ---
 ![Raqamli audio to'lqin shakli](/images/recording8.webp)
 

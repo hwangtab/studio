@@ -1,9 +1,18 @@
 ---
-title: "Mixing Course - Part 17: Taming Dynamics with a Compressor"
-date: 2025-11-27
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Lesson", "Compressor", "Dynamics", "ParallelCompression"]
+title: 'Mixing Course - Part 17: Taming Dynamics with a Compressor'
+date: 2025-11-27T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Lesson
+  - Compressor
+  - Dynamics
+  - ParallelCompression
+summary: >-
+  "Compressors are the hardest. I can’t hear what’s changing." (Grr.) Many
+  people get stuck at the compressor. It doesn’t change sound as dramatically a
+thumbnail: /images/hardware1.webp
 ---
 ![Knobs of a classic compressor](/images/hardware1.webp)
 

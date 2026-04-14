@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 10 部：打造黄金耳（听力训练与录音室智慧）"
-date: 2025-11-21
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "听力训练", "EarTraining", "Reference"]
+title: 混音课程 - 第 10 部：打造黄金耳（听力训练与录音室智慧）
+date: 2025-11-21T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 听力训练
+  - EarTraining
+  - Reference
+summary: >-
+  “我耳朵不行，混不了音。”（沮丧） 不，你不是“木耳”，只是还不知道 该听什么。 就像品酒师分辨味道一样，工程师也要训练自己分辨声音的味道。（竖起耳朵！）
+  今天不教混音技巧，而是学习 聆听的技术，以及我在录音室里悟到的 耳朵哲学。 1. 参考曲（Reference Track）的重要性 混音迷路时，
+thumbnail: /images/recording6.webp
 ---
 ![戴着耳机专注聆听](/images/recording2.webp)
 

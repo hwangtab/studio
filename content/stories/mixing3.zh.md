@@ -1,9 +1,18 @@
 ---
-title: "混音课程 - 第 3 部：设备病治愈计划"
-date: 2025-11-14
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "设备", "Gear", "DAW"]
+title: 混音课程 - 第 3 部：设备病治愈计划
+date: 2025-11-14T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 设备
+  - Gear
+  - DAW
+summary: >-
+  “哪个麦克风好？买什么声卡才有专业的声音？” 音乐社区里每天都有几十个这样的问题。我们把它称为 设备病。 当然好设备会有好声音，但并没有你想得那么绝对。
+  1. DAW：选择料理工具 DAW（Digital Audio Workstation）是电脑里的录音室。Cubase、Logic、Ableton
+thumbnail: /images/hardware3.webp
 ---
 ![各种音频接口与设备](/images/hardware4.webp)
 

@@ -1,9 +1,17 @@
 ---
-title: "Miks kursi - 5-qism: Raqamli dushmanlar (xatolar va shovqin)"
-date: 2025-11-16
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "Dars", "DigitalError", "Clipping"]
+title: 'Miks kursi - 5-qism: Raqamli dushmanlar (xatolar va shovqin)'
+date: 2025-11-16T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - Dars
+  - DigitalError
+  - Clipping
+summary: >-
+  “Digital mukammal emasmi? Faqat 0 va 1-ku — nega xato bo'ladi?” Ko'pchilik
+  raqamli audio toza va o'zgarmas deb o'ylaydi. Ammo raqamli dunyoda qo'rqinc
+thumbnail: /images/hardware5.webp
 ---
 ![Raqamli glitch tasviri](/images/pcw.webp)
 

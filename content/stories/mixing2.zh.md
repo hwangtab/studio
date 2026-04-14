@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 2 部：驯服会说谎的房间"
-date: 2025-11-13
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "监听", "Monitoring", "RoomAcoustic"]
+title: 混音课程 - 第 2 部：驯服会说谎的房间
+date: 2025-11-13T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 监听
+  - Monitoring
+  - RoomAcoustic
+summary: >-
+  “买了贵音箱，为什么声音还是怪？” 很多入门者会怪设备。以为 100 万韩元的音箱就该有 100 万韩元的声音，结果却闷、糊、轰隆。
+  我可以保证：问题不在音箱。 罪魁祸首是你工作的 房间（Room）。 1. 房间会说谎 声音不仅从音箱直接进入耳朵，还会 在墙壁、天花板、地板、桌面反射后
+  进入耳朵。 
+thumbnail: /images/hardware2.webp
 ---
 ![录音室监听音箱摆位](/images/studio1.webp)
 

@@ -1,9 +1,14 @@
 ---
-title: "\"Bulgwang Mixing Club\" 第三次聚会公告"
-date: 2025-11-18
-author: "Studio NOL"
-category: "event"
-tags: ["Mixing Club", "社交", "聚会"]
+title: '"Bulgwang Mixing Club" 第三次聚会公告'
+date: 2025-11-18T00:00:00.000Z
+author: Studio NOL
+category: event
+tags:
+  - Mixing Club
+  - 社交
+  - 聚会
+summary: "\U0001F525 第三轮即将到来！（但有时间变更通知） 大家好，这里是 Bulgwang Mixing Club！原本计划在本周五（11/21）举办第三次聚会，但有个好消息。 11 月第三周的录音与混音档期已经全部排满了！ \U0001F389 录音室很忙，说明有很多音乐人在做出好作品吧？我们也正全力支持大家的项目。 \U0001F4C5 更"
+thumbnail: /images/recording6.webp
 ---
 ![Bulgwang Mixing Club 3rd Meeting — Studio NOL](/images/recording16.webp)
 

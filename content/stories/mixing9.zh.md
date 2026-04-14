@@ -1,9 +1,19 @@
 ---
-title: "混音课程 - 第 9 部：透明人般的敌人——相位"
-date: 2025-11-20
-author: "Studio NOL"
-category: "lesson"
-tags: ["混音", "课程", "相位", "Phase", "DrumMixing"]
+title: 混音课程 - 第 9 部：透明人般的敌人——相位
+date: 2025-11-20T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - 混音
+  - 课程
+  - 相位
+  - Phase
+  - DrumMixing
+summary: >-
+  "踢鼓明明很大，一和吊麦一起放就消失了！"（咦？） 这不是闹鬼，而是科学现象：相位抵消。 很多初学者会因为这个“看不见的敌人”整晚调
+  EQ，痛苦不堪。（抓头！） 1. 相位到底是什么？ 想象小学学过的波浪。（哗啦哗啦）
+  同相（In‑phase）：两道波同时上升，会变成更大的波。（声音更大，+6 dB
+thumbnail: /images/recording4.webp
 ---
 ![鼓组拾音照片](/images/recording1.webp)
 

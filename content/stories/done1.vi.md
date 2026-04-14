@@ -1,9 +1,13 @@
 ---
-title: "Hoàn tất làm mới website Studio NOL!"
-date: 2025-06-04
-author: "Studio NOL"
-category: "notice"
-tags: ["Làm mới", "Phòng thu âm"]
+title: Hoàn tất làm mới website Studio NOL!
+date: 2025-06-04T00:00:00.000Z
+author: Studio NOL
+category: notice
+tags:
+  - Làm mới
+  - Phòng thu âm
+summary: "Xin chào, đây là Studio NOL! \U0001F3B8\U0001F3A4 Website của chúng tôi đã được làm mới hoàn toàn! Chúng tôi đã nỗ lực để cung cấp thông tin sạch hơn, hữu ích hơn. Qu"
+thumbnail: /images/hardware3.webp
 ---
 ![Phòng thu Studio NOL](/images/studio1.webp)
 

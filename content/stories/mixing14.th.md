@@ -1,9 +1,19 @@
 ---
-title: "คอร์สมิกซ์ - ตอนที่ 14: 80% ของมิกซ์คือบาลานซ์โวลุ่ม"
-date: 2025-11-24
-author: "Studio NOL"
-category: "lesson"
-tags: ["Mixing", "บทเรียน", "Balance", "Fader", "Headroom"]
+title: 'คอร์สมิกซ์ - ตอนที่ 14: 80% ของมิกซ์คือบาลานซ์โวลุ่ม'
+date: 2025-11-24T00:00:00.000Z
+author: Studio NOL
+category: lesson
+tags:
+  - Mixing
+  - บทเรียน
+  - Balance
+  - Fader
+  - Headroom
+summary: >-
+  “มิกซ์ยากเกินไป ไม่รู้จะใช้ปลั๊กอินอะไร” (เศร้า)
+  นี่คือคำบ่นที่ได้ยินบ่อยที่สุดจากมือใหม่ YouTube ทำให้ปลั๊กอินดูเหมือนเวทมนตร์
+  แต่ทำไมมิกซ์คุณยังจืด?
+thumbnail: /images/recording14.webp
 ---
 ![คอนโซลมิกซ์และ fader](/images/console.webp)
 
