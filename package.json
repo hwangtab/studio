@@ -39,7 +39,9 @@
     "type-check": "tsc --noEmit",
     "prebuild": "node scripts/optimizeImages.js",
     "postbuild": "rm -f public/sitemap*.xml public/robots.txt && next-sitemap",
-    "test": "jest"
+    "test": "jest",
+    "content-check": "node scripts/content-quality-check.js --korean",
+    "content-check:ci": "node scripts/content-quality-check.js --korean --ci"
   },
   "browserslist": {
     "production": [

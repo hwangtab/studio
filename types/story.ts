@@ -51,6 +51,7 @@ export interface StoryDetail extends Story {
   sourceLocale: Locale;
   isFallbackTranslation: boolean;
   isThinContent?: boolean;
+  robots?: string;
   modifiedDate?: string; // ISO 8601 from file mtime
   faq?: StoryFAQItem[];
 }

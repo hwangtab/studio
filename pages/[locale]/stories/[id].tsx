@@ -135,7 +135,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         ogImageHeight={630}
         ogType="article"
         author={story.author || undefined}
-        robots={(story.isFallbackTranslation || story.isThinContent) ? 'noindex, follow' : undefined}
+        robots={story.robots || ((story.isFallbackTranslation || story.isThinContent) ? 'noindex, follow' : undefined)}
         articlePublishedTime={story.date}
         articleModifiedTime={story.modifiedDate}
         articleAuthor={story.author}
@@ -209,7 +209,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
             {...STORY_BODY_ANIMATION}
             className="mb-12"
           >
-            <MarkdownRenderer content={story.content} locale={locale} />
+            <MarkdownRenderer content={story.content} locale={locale} currentSlug={story.slug} />
           </m.div>
         </article>
 

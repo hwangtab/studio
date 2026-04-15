@@ -311,7 +311,17 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       )
     : undefined;
 
-  const isThinContent = contentToProcess.replace(/\s+/g, '').length < 1000;
+  // Estimate rendered shortcode content length so boilerplate-replaced pages
+  // are not unfairly penalized. Each shortcode token contributes an estimated
+  // character count equivalent to its rendered output.
+  const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
+    'online-fallback': 120,
+    'session-checklist': 420,
+  };
+  const shortcodeBonus = [...contentToProcess.matchAll(/%%([a-z-]+)%%/g)]
+    .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? 80), 0);
+  const rawNonWhitespace = contentToProcess.replace(/\s+/g, '').length;
+  const isThinContent = rawNonWhitespace + shortcodeBonus < 1000;
 
   const storyDetail: StoryDetail = {
     ...baseStory,
@@ -319,6 +329,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     sourceLocale,
     isFallbackTranslation: sourceLocale !== requestedLocale,
     isThinContent,
+    ...(typeof data?.robots === 'string' && { robots: data.robots }),
     modifiedDate,
     ...(faq && faq.length > 0 && { faq }),
   };

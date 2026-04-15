@@ -4,6 +4,28 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
+import OnlineFallback from './story/OnlineFallback';
+import SessionChecklist from './story/SessionChecklist';
+import { topicLinks, MAX_AUTO_LINKS } from '../data/internalLinks';
+
+type ShortcodeSegment = { type: 'shortcode'; name: string };
+type MarkdownSegment = { type: 'markdown'; value: string };
+type ContentSegment = ShortcodeSegment | MarkdownSegment;
+
+function splitContentByShortcodes(content: string): ContentSegment[] {
+  const segments: ContentSegment[] = [];
+  // Split on %%shortcode-name%% markers that appear on their own line
+  const parts = content.split(/\n%%([\w-]+)%%(?:\n|$)/);
+  // parts[0], parts[2], parts[4]... are markdown; parts[1], parts[3]... are shortcode names
+  for (let i = 0; i < parts.length; i++) {
+    if (i % 2 === 0) {
+      if (parts[i].trim()) segments.push({ type: 'markdown', value: parts[i] });
+    } else {
+      segments.push({ type: 'shortcode', name: parts[i] });
+    }
+  }
+  return segments;
+}
 
 const extractTextContent = (children: React.ReactNode): string => {
   if (typeof children === 'string') return children;
@@ -348,12 +370,58 @@ const STATIC_OVERRIDES = {
   },
 };
 
+/**
+ * 본문에서 topicLinks 키워드의 첫 등장을 자동으로 내부 링크로 변환합니다.
+ * - 기사당 최대 MAX_AUTO_LINKS개
+ * - 이미 마크다운 링크 안에 있는 키워드는 건너뜀
+ * - 자기 자신 slug으로의 링크는 제외
+ */
+function autoLinkKeywords(text: string, currentSlug?: string): string {
+  let result = text;
+  let count = 0;
+  const linkedSlugs = new Set<string>();
+
+  // 키워드를 길이 역순으로 정렬 (긴 키워드 우선 매칭)
+  const sortedKeywords = Object.keys(topicLinks).sort((a, b) => b.length - a.length);
+
+  for (const keyword of sortedKeywords) {
+    if (count >= MAX_AUTO_LINKS) break;
+    const { slug, anchorText } = topicLinks[keyword];
+    if (slug === currentSlug) continue;
+    if (linkedSlugs.has(slug)) continue;
+
+    // 이미 링크 안에 있는 키워드는 스킵: [text](url) 패턴 내부 제외
+    // 간단한 휴리스틱: 키워드 앞에 [, ( 가 없고 뒤에 ], ) 가 없는 위치에서만 매칭
+    const idx = result.indexOf(keyword);
+    if (idx === -1) continue;
+
+    // 키워드가 마크다운 링크 내부에 있는지 확인
+    const before50 = result.slice(Math.max(0, idx - 50), idx);
+    const after50 = result.slice(idx + keyword.length, idx + keyword.length + 50);
+    const isInsideLink = (before50.includes('[') && !before50.includes(']')) ||
+                         (after50.includes(')') && !after50.includes('('));
+    if (isInsideLink) continue;
+
+    // 첫 등장만 링크로 변환
+    result = result.slice(0, idx) +
+      `[${anchorText}](/stories/${slug})` +
+      result.slice(idx + keyword.length);
+
+    linkedSlugs.add(slug);
+    count++;
+  }
+
+  return result;
+}
+
 interface MarkdownRendererProps {
   content: string;
   locale?: Locale;
+  /** 현재 스토리의 slug (자기 자신 링크 방지) */
+  currentSlug?: string;
 }
 
-const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => {
+const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRendererProps) => {
   const currentLocale = locale;
 
   React.useEffect(() => {
@@ -400,9 +468,18 @@ const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => 
     },
   }), [currentLocale]);
 
-  return (
-    <div className="markdown-content">
+  const processedContent = React.useMemo(() => autoLinkKeywords(content, currentSlug), [content, currentSlug]);
+  const segments = React.useMemo(() => splitContentByShortcodes(processedContent), [processedContent]);
+
+  const renderSegment = (segment: ContentSegment, index: number) => {
+    if (segment.type === 'shortcode') {
+      if (segment.name === 'online-fallback') return <OnlineFallback key={index} locale={currentLocale} />;
+      if (segment.name === 'session-checklist') return <SessionChecklist key={index} locale={currentLocale} />;
+      return null;
+    }
+    return (
       <Markdown
+        key={index}
         options={{
           overrides,
           disableParsingRawHTML: true,
@@ -415,8 +492,14 @@ const MarkdownRenderer = ({ content, locale = 'ko' }: MarkdownRendererProps) => 
           ),
         }}
       >
-        {content}
+        {segment.value}
       </Markdown>
+    );
+  };
+
+  return (
+    <div className="markdown-content">
+      {segments.map(renderSegment)}
     </div>
   );
 };

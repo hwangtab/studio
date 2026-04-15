@@ -69,7 +69,7 @@ faq:
 
 ---
 
-방문이 어려우면 [온라인 파일 의뢰](/stories/onlinemix1)도 가능합니다.
+%%online-fallback%%
 
 **파일 요구사항**
 - 보컬: WAV 44.1kHz/24bit (에코·리버브 없는 드라이 파일)

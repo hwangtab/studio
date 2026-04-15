@@ -11,6 +11,7 @@ summary: >-
   연신내·불광 지역 뮤지션·엔지니어 네트워킹 모임 '불광믹싱클럽' 첫 모임 안내. 믹싱 노하우 공유와 레퍼런스 비교, 피드백을 함께하는 음악
   커뮤니티 행사입니다.
 thumbnail: /images/recording3.webp
+robots: noindex
 faq:
   - q: 불광믹싱클럽 첫 모임은 어떻게 시작됐나요?
     a: >-
