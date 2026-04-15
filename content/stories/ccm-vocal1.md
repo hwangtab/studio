@@ -67,8 +67,6 @@ CCM(Contemporary Christian Music) 보컬은 기교적 완성도 이전에 가사
 
 ## CCM 장르별 보컬 스타일
 
-신호 경로 전체를 점검해두면 녹음 중 예상치 못한 문제를 방지할 수 있습니다.
-
 ### Contemporary Worship (현대 예배)
 
 - **특징**: 팝·록 기반, 에너지 있는 예배 분위기

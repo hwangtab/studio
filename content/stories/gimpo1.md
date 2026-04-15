@@ -97,8 +97,6 @@ faq:
 
 ## 마치며
 
-기초를 탄탄히 해두면 어떤 장르에도 응용할 수 있습니다.
-
 ---
 
 [김포 장기·마산·통진 녹음실 안내](/stories/gimpo-janggi1) | [김포 사우·풍무·고촌·운양 녹음실 안내](/stories/gimpo-sauong1) | [고양시 녹음실 안내](/stories/goyang1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

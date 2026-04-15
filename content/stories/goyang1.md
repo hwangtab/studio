@@ -108,8 +108,6 @@ faq:
 
 ## 마치며
 
-기초를 탄탄히 해두면 어떤 장르에도 응용할 수 있습니다.
-
 ---
 
 [고양 덕양구 능곡·원당·원흥 녹음실 안내](/stories/goyang-deokyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주에서 연신내 녹음실 방문 가이드](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

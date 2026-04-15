@@ -77,8 +77,6 @@ ASMR은 촉감·소리의 자극을 통한 편안한 반응(자율 감각 절정
 
 ## ASMR 편집 기초
 
-신호 경로 전체를 점검해두면 녹음 중 예상치 못한 문제를 방지할 수 있습니다.
-
 - **Step 1**: 노이즈 리덕션
 - Audacity Noise Reduction
 - Adobe Audition Adaptive Noise Reduction

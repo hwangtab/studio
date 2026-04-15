@@ -98,8 +98,6 @@ faq:
 
 ## 마치며
 
-기초를 탄탄히 해두면 어떤 장르에도 응용할 수 있습니다.
-
 ---
 
 [오목교·신정·목4동 녹음실 안내](/stories/yangcheon-omokgyo1) | [신정·신월·화곡·까치산 녹음실 안내](/stories/sinjeong1) | [목동·신정 녹음실 안내](/stories/mokdong1) | [강서구 녹음실 안내](/stories/gangseo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

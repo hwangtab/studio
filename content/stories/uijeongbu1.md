@@ -110,8 +110,6 @@ faq:
 
 ## 마치며
 
-기초를 탄탄히 해두면 어떤 장르에도 응용할 수 있습니다.
-
 ---
 
 [의정부 가능·의정부·회룡·흥선 녹음실 안내](/stories/uijeongbu-ganeung1) | [의정부 민락·호원·장암 녹음실 안내](/stories/uijeongbu-minjak1) | [양주에서 서울 녹음실 방문 가이드](/stories/yangju1) | [노원구·도봉구 녹음실 안내](/stories/nowon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

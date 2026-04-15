@@ -108,8 +108,6 @@ faq:
 
 ## 마치며
 
-기초를 탄탄히 해두면 어떤 장르에도 응용할 수 있습니다.
-
 ---
 
 [수원 권선구 녹음실 안내](/stories/suwon-gwonseon1) | [수원 팔달구·권선구 녹음실 안내](/stories/suwon-paldal1) | [수원 장안구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
