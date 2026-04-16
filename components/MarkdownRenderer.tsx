@@ -347,23 +347,37 @@ const STATIC_OVERRIDES = {
   },
   table: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.TableHTMLAttributes<HTMLTableElement>) => (
-      <div className="overflow-x-auto my-6">
-        <table className="w-full border-collapse" {...props}>
+      <div className="overflow-x-auto my-6 rounded-lg border border-gray-300 dark:border-gray-600">
+        <table {...props} className="w-full border-collapse text-sm">
           {children}
         </table>
       </div>
     ),
   },
+  thead: {
+    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLTableSectionElement>) => (
+      <thead {...props} className="bg-gray-100 dark:bg-gray-800">
+        {children}
+      </thead>
+    ),
+  },
+  tr: {
+    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLTableRowElement>) => (
+      <tr {...props} className="border-b border-gray-300 dark:border-gray-600 even:bg-gray-50 dark:even:bg-gray-800/50">
+        {children}
+      </tr>
+    ),
+  },
   th: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.ThHTMLAttributes<HTMLTableCellElement>) => (
-      <th className="border border-gray-200 dark:border-gray-700 px-4 py-2 text-left bg-gray-50 dark:bg-gray-800" {...props}>
+      <th {...props} className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-gray-100 border-b-2 border-gray-300 dark:border-gray-600">
         {children}
       </th>
     ),
   },
   td: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.TdHTMLAttributes<HTMLTableCellElement>) => (
-      <td className="border border-gray-200 dark:border-gray-700 px-4 py-2" {...props}>
+      <td {...props} className="px-4 py-2.5 text-gray-700 dark:text-gray-300">
         {children}
       </td>
     ),
