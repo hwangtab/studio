@@ -175,7 +175,6 @@ summary: >-
 
 루바토는 처음엔 어색하지만, 자신의 감성을 믿고 표현하다 보면 어느 순간 자연스러운 음악적 호흡이 생깁니다. 기술이 아닌 마음으로 연주하는 것—그것이 발라드의 본질입니다.
 
-**→ **→ [피아노 발라드 연주 기법·감성 표현 음악연습실 가이드](/stories/practice-room-piano-ballad-technique1)**
 
 ---
  | [피아노 인상주의·드뷔시·라벨·색채 화성 — 완전 가이드](/stories/practice-room-piano-impressionist1)

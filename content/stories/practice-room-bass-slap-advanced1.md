@@ -211,4 +211,6 @@ and: 뮤팅
 
 슬랩 베이스는 처음 접할 때 어려워 보이지만 기본 동작을 반복 훈련하면 의외로 빠르게 익힐 수 있습니다. 엄지로 줄을 치는 썸핑과 검지로 줄을 당기는 풀링을 분리해서 연습한 뒤 결합하는 순서로 진행하면 효율적입니다. 슬랩 특유의 펀치감 있는 사운드는 펑크, 알앤비, 팝 음악에서 베이스에 생동감을 더해줍니다. 일정한 BPM에서 슬랩 패턴을 반복 훈련하면 자연스럽게 손목의 탄성이 생겨 연주가 훨씬 편해집니다.
 
-**→ **→ [베이스 슬랩·팝 고급 기법 음악연습실 가이드](/stories/practice-room-bass-slap-advanced1)**
+---
+
+[베이스 이펙터·페달 보드 활용 — 베이스 이펙터 완성 가이드](/stories/practice-room-bass-effects1) | [베이스 그루브 락·킥드럼 동조 — 완전 가이드](/stories/practice-room-bass-groove-locks1) | [베이스 넥 포지션·전체 지판 활용 — 완전 가이드](/stories/practice-room-bass-neck-position1) | [베이스 루트 노트·코드 읽기 고급 — 베이스 루트 완성 가이드](/stories/practice-room-bass-root-adv1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1)

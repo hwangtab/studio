@@ -188,4 +188,6 @@ summary: >-
 
 보컬 워밍업은 본격 연습 전 10분 이상 충분히 해야 목소리 부상을 예방할 수 있습니다. 립 트릴과 허밍으로 성대를 부드럽게 풀어준 뒤 모음 스케일로 음역대를 확장하는 루틴이 효과적입니다. 연습 중 목에서 통증이 느껴지면 즉시 멈추고 충분히 쉬어야 합니다. 수분 섭취를 충분히 유지하고 공기가 너무 건조한 환경에서는 가습기를 활용하는 것이 성대 건강에 도움이 됩니다. 과도한 목 긴장 없이 자연스럽게 소리를 내는 것이 장기적으로 목소리를 보호합니다.
 
-**→ **→ [보컬 팔세토·성구 전환 기법 음악연습실 가이드](/stories/practice-room-vocal-falsetto-technique1)**
+---
+
+[보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 스타일·장르별 보컬 표현 — 보컬 스타일 완성 가이드](/stories/practice-room-vocal-style1) | [보컬 벨팅·파워 벨팅 — 벨팅 발성 완성 가이드](/stories/practice-room-vocal-belting1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1)

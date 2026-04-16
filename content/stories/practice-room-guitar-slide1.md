@@ -221,4 +221,6 @@ Keith Richards의 오픈 G 슬라이드 스타일
 
 기타 연습에서 코드 전환 속도를 높이는 것은 초보자가 가장 먼저 넘어야 할 과제입니다. 코드를 하나씩 정확하게 짚은 뒤 느린 BPM에서 코드 전환을 반복하면 자연스럽게 속도가 붙습니다. 손가락 끝 단련도 병행해 프렛을 확실히 누르는 힘을 키워야 깨끗한 소리를 낼 수 있습니다. 스케일 연습은 단순한 음계 암기가 아닌 음악적 표현을 위한 도구로 활용할 때 의미가 있습니다. 좋아하는 곡의 기타 솔로를 천천히 카피해 보는 것이 기술과 음악성을 동시에 키우는 가장 효과적인 방법입니다.
 
-**→ **→ [베이스 화성 이론·스케일 적용 음악연습실 가이드](/stories/practice-room-bass-theory-harmony1)**
+---
+
+[기타 핑거피킹 패턴·아르페지오 완전 마스터 — 실전 가이드](/stories/practice-room-guitar-fingerpicking-patterns1) | [기타 재즈 보이싱·코드 멜로디 — 재즈 기타 완성 가이드](/stories/practice-room-guitar-jazz-voicing1) | [기타 리프·반복 패턴 작성 — 기타 리프 완성 가이드](/stories/practice-room-guitar-riff1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 카포 활용·카포 테크닉 — 기타 카포 완성 가이드](/stories/practice-room-guitar-capo1)
