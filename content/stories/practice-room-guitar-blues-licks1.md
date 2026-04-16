@@ -175,4 +175,7 @@ e|--7\5--|  (\ = 슬라이드 다운)
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [기타 클린톤·앰프 세팅 음악연습실](/stories/practice-room-guitar-clean-tone1)
 - [기타 핑거피킹 패턴·아르페지오 음악연습실](/stories/practice-room-guitar-fingerpicking-patterns1)
+
+일렉트릭 기타에서 피킹 각도와 깊이는 톤에 직접적인 영향을 미칩니다. 픽을 줄에 대해 약간 비스듬히 잡으면 마찰음이 줄고 부드러운 톤을 얻을 수 있습니다. 얼터네이트 피킹을 정확하게 구현하기 위해 느린 BPM에서 다운·업 스트로크를 교대하는 훈련이 필수적입니다. 이펙터 조합을 다양하게 실험해보면 오버드라이브, 딜레이, 리버브 등 각 이펙트가 사운드에 미치는 영향을 직접 파악할 수 있습니다. 앰프 볼륨과 이펙터 레벨의 적절한 조화를 찾는 과정이 자신만의 톤을 만들어갑니다.
+
 - [기타 하이브리드 피킹 음악연습실](/stories/practice-room-guitar-hybrid-picking1)

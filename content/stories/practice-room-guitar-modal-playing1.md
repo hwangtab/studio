@@ -189,4 +189,7 @@ G-A-B-C-D-C-B-F-G
 
 ---
 
+
+기타 솔로 연주에서 벤딩의 정확도는 음악적 표현의 핵심 요소입니다. 목표 음정까지 정확히 올려야 하므로 귀로 확인하며 연습하는 것이 중요합니다. 비브라토는 처음에는 너무 빠르거나 얕게 만들기 쉬운데, 일정한 폭과 속도를 유지하는 훈련이 필요합니다. 해머온과 풀오프를 활용한 레가토 주법은 피킹 없이도 유려한 선율을 만들어주며, 프레이즈에 다양성을 더합니다. 슬라이드 기법을 자연스럽게 결합하면 블루스적 표현이 한층 풍부해집니다.
+
 [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1)

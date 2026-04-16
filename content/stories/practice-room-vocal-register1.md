@@ -129,10 +129,6 @@ faq:
 
 ---
 
-
-보컬 레지스터는 흉성(Chest Voice), 믹스 보이스(Mixed Voice), 두성(Head Voice), 팔세토(Falsetto)로 구분됩니다. 각 레지스터의 전환점(Break)을 매끄럽게 연결하는 훈련이 풀 레인지 보컬 능력의 핵심입니다. 음계 연습을 통해 각 레지스터의 경계를 정확히 파악하고 전환 구간에서 긴장 없이 이동하는 연습을 반복하세요.
-
-
 보컬 레지스터는 흉성(Chest Voice), 믹스 보이스(Mixed Voice), 두성(Head Voice), 팔세토(Falsetto)로 구분됩니다. 각 레지스터의 전환점(Break)을 매끄럽게 연결하는 훈련이 풀 레인지 보컬 능력의 핵심입니다. 음계 연습을 통해 각 레지스터의 경계를 정확히 파악하고 전환 구간에서 긴장 없이 이동하는 연습을 반복하세요.
 
 [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1)

@@ -276,4 +276,7 @@ Jaco Pastorius 이후 일렉트릭도 재즈로:
 
 ---
 
+
+베이스 연주에서 가장 중요한 것은 일정한 타이밍과 그루브입니다. 메트로놈에 맞춰 천천히 연습하다 보면 자연스럽게 리듬 감각이 몸에 배어들게 됩니다. 드럼 트랙과 함께 연습하면 밴드 앙상블에서 베이스의 역할을 직접 체험할 수 있어 훨씬 빠르게 실력이 향상됩니다. 오른손 두 손가락을 균등하게 사용하는 훈련을 꾸준히 하면 스피드와 다이나믹 조절 능력이 동시에 발전합니다. 연주 후 스스로 녹음을 들어보는 습관을 들이면 미처 인식하지 못했던 실수를 발견하고 빠르게 교정할 수 있습니다.
+
 [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass-prog-metal1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 워킹 베이스라인 심화편 — 재즈 워킹 완전 가이드](/stories/practice-room-bass-walking-bass2)

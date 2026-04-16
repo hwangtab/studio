@@ -117,10 +117,6 @@ faq:
 
 ---
 
-
-마이너·메이저 펜타토닉 스케일은 장르를 불문하고 가장 많이 사용되는 기타 솔로 재료입니다. 같은 포지션이라도 어느 음을 루트로 강조하느냐에 따라 장조·단조 느낌이 달라지며, 두 펜타토닉을 혼합하면 블루지한 표현이 가능해집니다.
-
-
 마이너·메이저 펜타토닉 스케일은 장르를 불문하고 가장 많이 사용되는 기타 솔로 재료입니다. 같은 포지션이라도 어느 음을 루트로 강조하느냐에 따라 장조·단조 느낌이 달라지며, 두 펜타토닉을 혼합하면 블루지한 표현이 가능해집니다.
 
 [기타 모달 연주·모드 스케일 활용 — 완전 가이드](/stories/practice-room-guitar-modal-playing1) | [블루스 스케일·펜타토닉 기타 연습 — 블루스 기타 솔로 완성 가이드](/stories/practice-room-guitar-blues-scale1) | [기타 즉흥 연주·임프로비제이션 — 기타 즉흥 연주 완성 가이드](/stories/practice-room-guitar-improv1) | [기타 스케일 연습·포지션 이동 — 기타 스케일 완성 가이드](/stories/practice-room-guitar-scale-pos1) | [기타 스케일 포지션·넥 전체 활용 — 기타 스케일 포지션 완성 가이드](/stories/practice-room-guitar-scale-position1)

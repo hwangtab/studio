@@ -243,4 +243,7 @@ E - G# - B - D# (메이저 7th 코드 톤)
 
 ---
 
+
+슬랩 베이스는 처음 접할 때 어려워 보이지만 기본 동작을 반복 훈련하면 의외로 빠르게 익힐 수 있습니다. 엄지로 줄을 치는 썸핑과 검지로 줄을 당기는 풀링을 분리해서 연습한 뒤 결합하는 순서로 진행하면 효율적입니다. 슬랩 특유의 펀치감 있는 사운드는 펑크, 알앤비, 팝 음악에서 베이스에 생동감을 더해줍니다. 일정한 BPM에서 슬랩 패턴을 반복 훈련하면 자연스럽게 손목의 탄성이 생겨 연주가 훨씬 편해집니다.
+
 [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1)
