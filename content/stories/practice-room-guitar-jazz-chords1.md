@@ -178,4 +178,4 @@ G7alt: G-B-D♭-F-A♭ (또는 다양한 조합)
 
 ---
 
-*관련 아티클:*
+[기타 연습 시리즈 더보기](/stories/practice-room-guitar-chord-melody1) | [재즈 기타 코드 멜로디 완전 가이드](/stories/practice-room-guitar-jazz-chord1)
