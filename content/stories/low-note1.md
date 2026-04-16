@@ -143,4 +143,4 @@ faq:
 
 ---
 
-[흉성 완전 가이드](/stories/chest-voice1) | [고음 발성 완전 가이드](/stories/high-note1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [보컬 음역대 완전 가이드](/stories/vocal-range1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[흉성 완전 가이드](/stories/chest-voice1) | [고음 발성 완전 가이드](/stories/high-note1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [보컬 음역대 완전 가이드](/stories/vocal-range1)

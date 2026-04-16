@@ -146,4 +146,4 @@ faq:
 
 ---
 
-[보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [음악 저작권·저작인접권 완전 가이드](/stories/music-copyright1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [음악 저작권·저작인접권 완전 가이드](/stories/music-copyright1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [음원 배포 완전 가이드](/stories/music-distribution1)

@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[새추레이션 완전 가이드](/stories/saturation1) | [로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[새추레이션 완전 가이드](/stories/saturation1) | [로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1)

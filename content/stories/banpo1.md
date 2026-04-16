@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[서초구 반포·잠원·서초동 녹음실 안내](/stories/seocho-banpo1) | [서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [양재·서초·강남역 녹음실 안내](/stories/yangjae1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[서초구 반포·잠원·서초동 녹음실 안내](/stories/seocho-banpo1) | [서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [양재·서초·강남역 녹음실 안내](/stories/yangjae1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

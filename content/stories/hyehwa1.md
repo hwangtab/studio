@@ -110,4 +110,4 @@ faq:
 
 ---
 
-[창신동·숭인동 녹음실 안내](/stories/jongno-changsin1) | [종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[창신동·숭인동 녹음실 안내](/stories/jongno-changsin1) | [종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [동대문구 녹음실 안내](/stories/dongdaemun1)

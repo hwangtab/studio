@@ -155,4 +155,4 @@ faq:
 
 ---
 
-[보컬 콤핑 완전 가이드](/stories/vocal-comping1) | [보컬 딜레이 완전 가이드](/stories/vocal-delay1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 콤핑 완전 가이드](/stories/vocal-comping1) | [보컬 딜레이 완전 가이드](/stories/vocal-delay1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1)

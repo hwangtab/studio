@@ -91,4 +91,4 @@ faq:
 
 ---
 
-[부산 서면·부산진·연제 녹음실 안내](/stories/busan-seomyeon1) | [해운대·센텀시티·수영 녹음실 안내](/stories/haeundae1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) 
+[부산 서면·부산진·연제 녹음실 안내](/stories/busan-seomyeon1) | [해운대·센텀시티·수영 녹음실 안내](/stories/haeundae1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [울산에서 서울 녹음실 방문 가이드](/stories/ulsan1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

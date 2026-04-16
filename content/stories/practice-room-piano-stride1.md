@@ -152,4 +152,7 @@ G7: G3-B3-D4-F4-G4-F4-D4-B3
 
 ---
 
+
+완성형 스트라이드 피아노는 왼손의 도약 운동과 오른손의 복잡한 멜로디·화성 처리가 동시에 이루어지는 고난도 기법입니다. 페츠 월러나 제임스 P. 존슨의 레코딩을 반복 청취하고 채보하는 과정이 스트라이드 어법을 체화하는 가장 효율적인 방법입니다.
+
 [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 스트라이드 고급 테크닉 — 완전 가이드](/stories/practice-room-piano-stride-advanced1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

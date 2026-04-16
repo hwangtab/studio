@@ -133,4 +133,4 @@ faq:
 
 ---
 
-[백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [보컬 레이어링·화음 녹음 가이드](/stories/harmony1) | [믹싱 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [보컬 레이어링·화음 녹음 가이드](/stories/harmony1) | [믹싱 가이드](/stories/mixing1)

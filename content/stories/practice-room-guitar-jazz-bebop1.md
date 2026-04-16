@@ -277,4 +277,7 @@ Cmaj7#11: C-E-G-B-F# (#11 추가)
 
 ---
 
+
+재즈 비밥 기타의 핵심은 코드 보이싱과 즉흥 솔로 멜로디 라인을 유기적으로 연결하는 능력입니다. 챨리 크리스찬과 웨스 몽고메리의 솔로를 채보하고 직접 연주해보는 것이 비밥 어법을 이해하는 가장 효율적인 방법입니다. 연습실에서는 리얼 북의 스탠다드 곡들을 바탕으로 코드 멜로디 연주와 솔로를 번갈아 연습하세요.
+
 [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1)

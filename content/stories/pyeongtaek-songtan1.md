@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[평택시 전체 녹음실 안내](/stories/pyeongtaek1) | [평택 지산·서정·안중·고덕 녹음실 안내](/stories/pyeongtaek-jisan1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [오산에서 서울 녹음실 방문 가이드](/stories/osan1) 
+[평택시 전체 녹음실 안내](/stories/pyeongtaek1) | [평택 지산·서정·안중·고덕 녹음실 안내](/stories/pyeongtaek-jisan1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [오산에서 서울 녹음실 방문 가이드](/stories/osan1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

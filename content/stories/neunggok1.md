@@ -102,4 +102,4 @@ faq:
 
 ---
 
-[고양시 녹음실 안내](/stories/goyang1) | [일산 녹음실 안내](/stories/ilsan1) | [장기·대화·화정 녹음실 안내](/stories/janggi1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[고양시 녹음실 안내](/stories/goyang1) | [일산 녹음실 안내](/stories/ilsan1) | [장기·대화·화정 녹음실 안내](/stories/janggi1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1)

@@ -149,4 +149,4 @@ faq:
 
 ---
 
-[보컬 오디션 완전 가이드](/stories/audition-vocal1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 오디션 완전 가이드](/stories/audition-vocal1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1)

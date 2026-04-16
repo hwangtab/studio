@@ -147,4 +147,4 @@ T-Pain, 오토튠 랩 스타일을 원한다면:
 
 ---
 
-[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1)

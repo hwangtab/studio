@@ -129,4 +129,4 @@ faq:
 
 ---
 
-[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 하모니 완전 가이드](/stories/harmony-singing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 하모니 완전 가이드](/stories/harmony-singing1)

@@ -138,4 +138,4 @@ High-Pass: 100~120Hz (팝보다 조금 높게)
 
 ---
 
-[팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [로파이 음악 제작 가이드](/stories/lofi-production1) | [앰비언트 음악 제작 가이드](/stories/ambient-music1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [로파이 음악 제작 가이드](/stories/lofi-production1) | [앰비언트 음악 제작 가이드](/stories/ambient-music1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1)

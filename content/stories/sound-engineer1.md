@@ -130,4 +130,4 @@ faq:
 
 ---
 
-[음악 프로듀서 되는 방법](/stories/producer1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[음악 프로듀서 되는 방법](/stories/producer1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1)

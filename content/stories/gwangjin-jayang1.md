@@ -86,4 +86,4 @@ faq:
 
 ---
 
-[광진구 전체 녹음실 안내](/stories/gwangjin1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [중랑구 녹음실 안내](/stories/jungnang1) 
+[광진구 전체 녹음실 안내](/stories/gwangjin1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [중랑구 녹음실 안내](/stories/jungnang1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

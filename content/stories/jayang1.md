@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[건대입구·광진구 녹음실 안내](/stories/konkuk1) | [광진구·성동구 녹음실 안내](/stories/gwangjin1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[건대입구·광진구 녹음실 안내](/stories/konkuk1) | [광진구·성동구 녹음실 안내](/stories/gwangjin1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1)

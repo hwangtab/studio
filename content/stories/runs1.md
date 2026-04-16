@@ -104,4 +104,4 @@ faq:
 
 ---
 
-[애드립·런 완전 가이드](/stories/adlib1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[애드립·런 완전 가이드](/stories/adlib1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 다이나믹 컨트롤 가이드](/stories/dynamics1) | [가성(팔세토) 완전 가이드](/stories/falsetto1)

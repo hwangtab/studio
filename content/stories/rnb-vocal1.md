@@ -135,4 +135,4 @@ R&B 보컬은 기술과 감성의 균형이 중요합니다.
 
 ---
 
-[소울 보컬 완전 가이드](/stories/soul-vocal1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[소울 보컬 완전 가이드](/stories/soul-vocal1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1)

@@ -221,4 +221,7 @@ Vinnie·Weckl의 핵심 기술
 
 ---
 
+
+퓨전 드럼은 재즈의 즉흥성과 록의 파워, 펑크의 그루브가 결합된 복합 장르입니다. 폴리리듬과 변박자를 자유롭게 넘나드는 유연성이 핵심이며, 드럼 키트 전체를 균형 있게 활용하는 테크닉이 요구됩니다. 연습 시 빈스 카루소나 데이브 웨클의 연습 패드 루틴을 참고하면 퓨전 드럼에 필요한 기초 체계를 효율적으로 쌓을 수 있습니다.
+
 [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [힙합·로파이 드럼·붐뱁·드럼머신 그루브 — 완전 가이드](/stories/practice-room-drum-hip-hop-lofi1) | [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드](/stories/practice-room-drum-jazz-funk1)

@@ -299,4 +299,7 @@ Bootsy Collins는 뒤에 치는 것으로 그루브
 
 ---
 
+
+엄지 기법(Thumb Technique)은 클래식 베이스부터 재즈·R&B까지 다양한 장르에서 사용되는 고급 주법입니다. 엄지로 현을 아래로 쳐서 따뜻한 톤을 만들거나, 슬랩처럼 활용하면 독특한 음색을 연출할 수 있습니다. 처음에는 느린 템포에서 엄지의 힘과 각도를 조절하는 연습부터 시작하는 것이 좋습니다.
+
 [베이스 슬랩·팝 고급 기법 — 완전 가이드](/stories/practice-room-bass-slap-advanced1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 핑거스타일 테크닉·터치 향상 — 완전 가이드](/stories/practice-room-bass-fingerstyle-technique1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

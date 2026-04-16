@@ -87,4 +87,4 @@ faq:
 
 ---
  | [가리봉·구로역·구일·개봉 녹음실 — 구로구 남부에서 연신내 스튜디오 놀 방문 가이드](/stories/garibong1)
-[구로구 오류·개봉·고척 녹음실 안내](/stories/guro-oryu1) | [구로구 녹음실 안내](/stories/guro1) | [금천구 녹음실 안내](/stories/geumcheon1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[구로구 오류·개봉·고척 녹음실 안내](/stories/guro-oryu1) | [구로구 녹음실 안내](/stories/guro1) | [금천구 녹음실 안내](/stories/geumcheon1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

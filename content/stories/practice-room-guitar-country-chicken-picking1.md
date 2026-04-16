@@ -273,4 +273,10 @@ Albert Lee는 **믿을 수 없는 속도의 치킨 피킹**으로 유명:
 
 ---
 
+
+치킨 피킹은 피크와 손가락을 동시에 활용하는 하이브리드 피킹 기법으로 컨트리 기타의 독특한 끊김 있는 음색을 만들어냅니다. 피크로 다운 스트로크를 하면서 중지나 약지로 다른 현을 튕기는 조합이 기본이며, 처음에는 느린 템포에서 정확한 핑거 컨트롤을 익히는 것이 중요합니다.
+
+
+치킨 피킹은 피크와 손가락을 동시에 활용하는 하이브리드 피킹 기법으로 컨트리 기타의 독특한 끊김 있는 음색을 만들어냅니다. 피크로 다운 스트로크를 하면서 중지나 약지로 다른 현을 튕기는 조합이 기본이며, 처음에는 느린 템포에서 정확한 핑거 컨트롤을 익히는 것이 중요합니다.
+
 [기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [기타 하이브리드 피킹·핑거스타일 융합 — 완전 가이드](/stories/practice-room-guitar-hybrid-picking1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 트레몰로 피킹·고속 얼터네이트 피킹 — 완전 가이드](/stories/practice-room-guitar-tremolo-picking1)

@@ -154,4 +154,4 @@ faq:
 
 ---
 
-[밴드 편성·세션 구성 완전 가이드](/stories/band-arrangement1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 에티켓 완전 가이드](/stories/studio-etiquette1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[밴드 편성·세션 구성 완전 가이드](/stories/band-arrangement1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 에티켓 완전 가이드](/stories/studio-etiquette1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1)

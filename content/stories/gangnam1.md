@@ -93,4 +93,4 @@ faq:
 
 ---
 
-[논현·신논현 녹음실 안내](/stories/nonhyeon1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [수서·개포·일원 녹음실 안내](/stories/suseo1) | [서초구 녹음실 안내](/stories/seocho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[논현·신논현 녹음실 안내](/stories/nonhyeon1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [수서·개포·일원 녹음실 안내](/stories/suseo1) | [서초구 녹음실 안내](/stories/seocho1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

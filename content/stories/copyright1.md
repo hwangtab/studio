@@ -138,4 +138,4 @@ faq:
 
 ---
 
-[음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 유통 완전 가이드](/stories/distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [인디 뮤지션 음원 발매 가이드](/stories/indie1) | [음원 유통 완전 가이드](/stories/distribution1)

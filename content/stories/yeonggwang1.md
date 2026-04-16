@@ -112,4 +112,4 @@ faq:
 
 ---
 
-[장성에서 서울 녹음실 방문 가이드](/stories/jangseong1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[장성에서 서울 녹음실 방문 가이드](/stories/jangseong1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

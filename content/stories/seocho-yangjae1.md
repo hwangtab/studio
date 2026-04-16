@@ -87,4 +87,4 @@ faq:
 
 ---
 
-[서초구 녹음실 안내](/stories/seocho1) | [서초구 방배 녹음실 안내](/stories/bangbae1) | [강남구 녹음실 안내](/stories/gangnam1) | [강남구 대치 녹음실 안내](/stories/daechi1) 
+[서초구 녹음실 안내](/stories/seocho1) | [서초구 방배 녹음실 안내](/stories/bangbae1) | [강남구 녹음실 안내](/stories/gangnam1) | [강남구 대치 녹음실 안내](/stories/daechi1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

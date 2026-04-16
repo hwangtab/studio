@@ -152,4 +152,4 @@ DAW마다 용어와 메뉴 위치가 다르지만 기본 원리는 동일합니�
 
 ---
 
-[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1)

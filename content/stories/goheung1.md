@@ -109,4 +109,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 ---
 
-[화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [장흥에서 서울 녹음실 방문 가이드](/stories/jangheung1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [순천에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [장흥에서 서울 녹음실 방문 가이드](/stories/jangheung1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [순천에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

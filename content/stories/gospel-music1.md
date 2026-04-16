@@ -148,4 +148,4 @@ faq:
 
 ---
 
-[전자 음악 제작 완전 가이드](/stories/electronic-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[전자 음악 제작 완전 가이드](/stories/electronic-music1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [포크 음악 제작 완전 가이드](/stories/folk-music1) | [인디 음악 제작 완전 가이드](/stories/indie-production1)

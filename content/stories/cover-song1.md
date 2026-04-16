@@ -147,4 +147,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [유튜브 쇼츠로 보컬 활동하는 방법](/stories/youtube-shorts1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [유튜브 쇼츠로 보컬 활동하는 방법](/stories/youtube-shorts1) | [음원 저작권 완전 가이드](/stories/copyright1)

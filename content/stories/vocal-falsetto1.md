@@ -172,4 +172,4 @@ faq:
 
 ---
 
-[보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [보컬 프레이징 완전 가이드](/stories/vocal-phrasing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 음역 분류 완전 가이드](/stories/vocal-classification1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [보컬 프레이징 완전 가이드](/stories/vocal-phrasing1)

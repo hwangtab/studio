@@ -144,4 +144,4 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 ---
  | [흑석·노들·본동·신대방 녹음실 — 동작구 서부에서 연신내 스튜디오 놀 방문 가이드](/stories/heukseok1)
-[동작구 전체 녹음실 안내](/stories/dongjak1) | [노량진 녹음실 안내](/stories/noryangjin1) | [사당·방배 녹음실 안내](/stories/sadang1) | [여의도 녹음실 안내](/stories/yeouido1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[동작구 전체 녹음실 안내](/stories/dongjak1) | [노량진 녹음실 안내](/stories/noryangjin1) | [사당·방배 녹음실 안내](/stories/sadang1) | [여의도 녹음실 안내](/stories/yeouido1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

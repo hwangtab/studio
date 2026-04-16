@@ -137,4 +137,4 @@ faq:
 
 ---
 
-[로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[로파이 음악 제작 완전 가이드](/stories/lofi-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1)

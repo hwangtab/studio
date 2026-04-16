@@ -286,4 +286,7 @@ Ebmaj7 - E7 (트리톤서브 Bbm7→E7, 반음상행) - Abmaj7 - ...
 
 ---
 
+
+코드 대리화음은 기존 진행의 화음을 유사한 기능의 다른 화음으로 교체하여 음악에 새로운 색채를 더하는 재즈 화성 기법입니다. 트라이톤 대리화음은 도미넌트 7th 코드를 증4도(감5도) 위의 도미넌트 7th로 교체하는 가장 대표적인 방법으로, 반음 하강하는 매끄러운 베이스 라인이 만들어집니다.
+
 [피아노 리하모나이제이션·화성 재창조 — 완전 가이드](/stories/practice-room-piano-reharmonization1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1)

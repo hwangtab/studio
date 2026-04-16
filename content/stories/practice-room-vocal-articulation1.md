@@ -310,4 +310,7 @@ s: 마이크를 약간 위로
 
 ---
 
+
+보컬 아티큘레이션은 자음과 모음의 정확한 발음을 통해 가사 전달력을 높이는 기술입니다. 혀의 위치, 입 모양, 턱의 개방 정도가 각 음절의 명확도를 결정합니다. 연습실에서 마이크 없이 과장된 입 모양으로 가사를 천천히 읽는 연습이 아티큘레이션 개선에 효과적입니다.
+
 [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1)

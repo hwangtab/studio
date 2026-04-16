@@ -106,4 +106,4 @@ faq:
 
 ---
 
-[미아·수유·방학·우이 녹음실 안내](/stories/mia1) | [도봉구 방문 가이드](/stories/dobong1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [성북구·종로구 녹음실 안내](/stories/jongno1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[미아·수유·방학·우이 녹음실 안내](/stories/mia1) | [도봉구 방문 가이드](/stories/dobong1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [성북구·종로구 녹음실 안내](/stories/jongno1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

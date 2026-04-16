@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[인천 전체 녹음실 안내](/stories/incheon1) | [인천 남동구 구월·만수·논현 녹음실 안내](/stories/incheon-namdong1) | [송도 녹음실 안내](/stories/songdo1) | [인천 서구 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[인천 전체 녹음실 안내](/stories/incheon1) | [인천 남동구 구월·만수·논현 녹음실 안내](/stories/incheon-namdong1) | [송도 녹음실 안내](/stories/songdo1) | [인천 서구 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

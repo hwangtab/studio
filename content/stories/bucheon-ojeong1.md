@@ -85,4 +85,4 @@ faq:
 
 ---
 
-[부천·소사 녹음실 안내](/stories/bucheon-sosa1) | [부천 전체 녹음실 안내](/stories/bucheon1) | [인천·부천 녹음실 안내](/stories/incheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) 
+[부천·소사 녹음실 안내](/stories/bucheon-sosa1) | [부천 전체 녹음실 안내](/stories/bucheon1) | [인천·부천 녹음실 안내](/stories/incheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

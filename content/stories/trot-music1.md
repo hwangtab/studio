@@ -141,4 +141,4 @@ faq:
 
 ---
 
-[오디션 데모 녹음 완전 가이드](/stories/demo-recording1) | [라틴 음악 제작 완전 가이드](/stories/latin-music1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[오디션 데모 녹음 완전 가이드](/stories/demo-recording1) | [라틴 음악 제작 완전 가이드](/stories/latin-music1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 음악 제작 완전 가이드](/stories/gospel-music1)

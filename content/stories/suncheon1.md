@@ -97,4 +97,4 @@ KTX 순천역 → 서울역 2시간, 지하철 연신내 총 110분.
 
 ---
 
-[광양에서 서울 녹음실 방문 가이드](/stories/gwangyang1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[광양에서 서울 녹음실 방문 가이드](/stories/gwangyang1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

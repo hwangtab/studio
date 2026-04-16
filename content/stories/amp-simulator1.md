@@ -180,4 +180,4 @@ Off-axis (측면): 둥글고 부드러운 사운드
 
 ---
 
-[인디 록·어쿠스틱 기타 레코딩 가이드](/stories/indie-rock1) | [기타 레코딩 완전 가이드](/stories/guitar-recording1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[인디 록·어쿠스틱 기타 레코딩 가이드](/stories/indie-rock1) | [기타 레코딩 완전 가이드](/stories/guitar-recording1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1)

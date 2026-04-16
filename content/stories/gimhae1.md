@@ -95,4 +95,4 @@ faq:
 
 ---
 
-[양산에서 서울 녹음실 방문 가이드](/stories/yangsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[양산에서 서울 녹음실 방문 가이드](/stories/yangsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

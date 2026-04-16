@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [믹싱 레퍼런스 활용법](/stories/mix-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [믹싱 레퍼런스 활용법](/stories/mix-reference1)

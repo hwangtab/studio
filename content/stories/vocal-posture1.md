@@ -170,4 +170,4 @@ faq:
 
 ---
 
-[보컬 프레이징 완전 가이드](/stories/vocal-phrasing1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 프레이징 완전 가이드](/stories/vocal-phrasing1) | [보컬 비브라토 완전 가이드](/stories/vocal-vibrato1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1)

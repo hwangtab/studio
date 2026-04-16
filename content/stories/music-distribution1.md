@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[해외 음원 발매·글로벌 배포 완전 가이드](/stories/global-release1) | [음반 아트워크·앨범 커버 디자인 완전 가이드](/stories/album-artwork1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[해외 음원 발매·글로벌 배포 완전 가이드](/stories/global-release1) | [음반 아트워크·앨범 커버 디자인 완전 가이드](/stories/album-artwork1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음원 저작권 완전 가이드](/stories/copyright1)

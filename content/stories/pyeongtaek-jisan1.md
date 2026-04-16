@@ -1,5 +1,5 @@
 ---
-title: 평택 지산·서정·안중·고덕 녹음실
+title: 평택 지산·서정·안중·고덕 녹음실 스튜디오 방문 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 지역 가이드
@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -1,5 +1,5 @@
 ---
-title: 음악 온라인 협업 도구 완전 가이드
+title: 음악 온라인 협업 도구 완전 가이드 협업 도구 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 음악 제작
@@ -161,4 +161,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음악 협업 완전 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1)
+[음악 협업 완전 가이드](/stories/music-collab1) | [뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1)

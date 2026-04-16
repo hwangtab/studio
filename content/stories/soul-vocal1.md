@@ -143,4 +143,4 @@ faq:
 
 ---
 
-[R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [블루스 음악 제작 완전 가이드](/stories/blues-music1) | [가스펠·CCM 보컬 완전 가이드](/stories/ccm-vocal1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1)

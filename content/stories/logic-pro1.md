@@ -150,4 +150,4 @@ Logic Pro는 Mac 홈 레코딩의 표준 DAW입니다. 홈 레코딩 후 온라�
 
 ---
 
-[Ableton 완전 가이드](/stories/ableton1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[Ableton 완전 가이드](/stories/ableton1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [홈 레코딩 완전 가이드](/stories/home-recording1)

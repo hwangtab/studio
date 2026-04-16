@@ -161,4 +161,4 @@ Dm-Am-Bb-C
 
 ---
 
-[창작 슬럼프 극복 완전 가이드](/stories/creative-block1) | [작사 완전 가이드](/stories/lyric-writing1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [싱어송라이터 완전 가이드](/stories/singer-songwriter1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[창작 슬럼프 극복 완전 가이드](/stories/creative-block1) | [작사 완전 가이드](/stories/lyric-writing1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [싱어송라이터 완전 가이드](/stories/singer-songwriter1)

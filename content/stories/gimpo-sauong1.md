@@ -1,5 +1,5 @@
 ---
-title: 김포 사우·풍무·고촌·운양 녹음실
+title: 김포 사우·풍무·고촌·운양 녹음실 스튜디오 방문 안내
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 지역 가이드
@@ -84,4 +84,4 @@ faq:
 
 ---
 
-[김포 녹음실 안내](/stories/gimpo1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) | [강서구·양천구 녹음실 안내](/stories/yangcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[김포 녹음실 안내](/stories/gimpo1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) | [강서구·양천구 녹음실 안내](/stories/yangcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

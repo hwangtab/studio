@@ -101,4 +101,4 @@ faq:
 
 ---
 
-[강남구 녹음실 안내](/stories/gangnam1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [서초구 녹음실 안내](/stories/seocho1) | [송파구 녹음실 안내](/stories/songpa1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[강남구 녹음실 안내](/stories/gangnam1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [서초구 녹음실 안내](/stories/seocho1) | [송파구 녹음실 안내](/stories/songpa1)

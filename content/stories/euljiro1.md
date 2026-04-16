@@ -106,4 +106,4 @@ faq:
 
 ---
 
-[중구 녹음실 안내](/stories/junggu1) | [종로구 녹음실 안내](/stories/jongno1) | [용산구 녹음실 안내](/stories/yongsan1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[중구 녹음실 안내](/stories/junggu1) | [종로구 녹음실 안내](/stories/jongno1) | [용산구 녹음실 안내](/stories/yongsan1) | [마포구 녹음실 안내](/stories/mapo1)

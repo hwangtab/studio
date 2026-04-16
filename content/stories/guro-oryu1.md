@@ -83,4 +83,4 @@ faq:
 
 ---
 
-[구로구·가산 녹음실 안내](/stories/guro-gasan1) | [금천구 녹음실 안내](/stories/geumcheon1) | [양천구 녹음실 안내](/stories/yangcheon1) | [강서구 녹음실 안내](/stories/gangseo1) 
+[구로구·가산 녹음실 안내](/stories/guro-gasan1) | [금천구 녹음실 안내](/stories/geumcheon1) | [양천구 녹음실 안내](/stories/yangcheon1) | [강서구 녹음실 안내](/stories/gangseo1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

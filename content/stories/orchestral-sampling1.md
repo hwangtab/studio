@@ -196,4 +196,4 @@ MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고
 
 ---
 
-[미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [샘플링·샘플팩 완전 가이드](/stories/sampling-guide1) | [공간 음향·바이노럴 완전 가이드](/stories/spatial-audio1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [샘플링·샘플팩 완전 가이드](/stories/sampling-guide1) | [공간 음향·바이노럴 완전 가이드](/stories/spatial-audio1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1)

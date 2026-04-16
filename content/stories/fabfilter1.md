@@ -153,4 +153,4 @@ FabFilter Pro-Q3는 보컬 EQ의 업계 표준으로, Collision Detection과 다
 
 ---
 
-[1176 컴프레서 완전 가이드](/stories/comp1176) | [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [EQ 완전 가이드](/stories/eq-guide1) | [주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[1176 컴프레서 완전 가이드](/stories/comp1176) | [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [EQ 완전 가이드](/stories/eq-guide1) | [주파수 마스킹 완전 가이드](/stories/frequency-masking1)

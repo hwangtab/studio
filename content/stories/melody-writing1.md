@@ -161,4 +161,4 @@ faq:
 
 ---
 
-[가사 쓰는 방법 완전 가이드](/stories/lyric-writing1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[가사 쓰는 방법 완전 가이드](/stories/lyric-writing1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1)

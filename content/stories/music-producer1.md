@@ -137,4 +137,4 @@ faq:
 
 ---
 
-[보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [비트메이커·프로듀서 협업 완전 가이드](/stories/beatmaker1) | [DAW 완전 비교 가이드](/stories/daw-comparison1) | [음악 협업 완전 가이드](/stories/music-collab1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [비트메이커·프로듀서 협업 완전 가이드](/stories/beatmaker1) | [DAW 완전 비교 가이드](/stories/daw-comparison1) | [음악 협업 완전 가이드](/stories/music-collab1)

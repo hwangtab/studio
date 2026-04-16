@@ -106,4 +106,4 @@ faq:
 
 ---
  | [상암동·DMC·수색동 녹음실 — 6호선으로 연신내 스튜디오 놀 방문 가이드](/stories/sangam-dmc1)
-[은평구 녹음실 안내](/stories/eunpyeong1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1) | [불광·연신내 녹음실 안내](/stories/bulgwang1) | [마포구 녹음실 안내](/stories/mapo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[은평구 녹음실 안내](/stories/eunpyeong1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1) | [불광·연신내 녹음실 안내](/stories/bulgwang1) | [마포구 녹음실 안내](/stories/mapo1)

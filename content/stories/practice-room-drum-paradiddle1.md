@@ -304,4 +304,7 @@ R-L-R-R-L-R-L-L 패러디들
 
 ---
 
+
+파라디들(RLRR LRLL)은 드럼 루디먼트의 핵심 패턴으로, 양손의 균형 개발과 스틱 컨트롤에 가장 효과적인 훈련법 중 하나입니다. 느린 BPM에서 정확한 악센트 위치와 다이나믹을 유지하면서 연습한 뒤 점진적으로 템포를 높여가는 방식이 기초를 단단히 다지는 최선의 접근법입니다.
+
 [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 — 완전 가이드](/stories/practice-room-drum-stick-control1) | [드럼 루디먼트·기초 스트로크 — 완전 가이드](/stories/practice-room-drum-rudiments1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1) | [드럼 루디멘트 고급·스트로크 조합 — 완전 가이드](/stories/practice-room-drum-rudiments-advanced1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1)

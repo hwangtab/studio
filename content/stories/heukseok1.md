@@ -112,4 +112,4 @@ faq:
 
 ---
 
-[동작구 녹음실 안내](/stories/dongjak1) | [노량진·사당 녹음실 안내](/stories/noryangjin1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [관악구 녹음실 안내](/stories/gwanak1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[동작구 녹음실 안내](/stories/dongjak1) | [노량진·사당 녹음실 안내](/stories/noryangjin1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [관악구 녹음실 안내](/stories/gwanak1)

@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

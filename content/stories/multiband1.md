@@ -158,4 +158,4 @@ faq:
 
 ---
 
-[미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1)

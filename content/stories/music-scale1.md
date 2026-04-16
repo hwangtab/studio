@@ -179,4 +179,4 @@ C장조 → G장조: 5도 위 전조 (점진적 상승감)
 
 ---
 
-[코드 진행 완전 가이드](/stories/chord-progressions1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [음악 이론 완전 가이드](/stories/music-theory1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[코드 진행 완전 가이드](/stories/chord-progressions1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [곡 구조 완전 가이드](/stories/song-structure1) | [음악 이론 완전 가이드](/stories/music-theory1)

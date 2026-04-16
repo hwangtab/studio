@@ -148,4 +148,4 @@ WAV 44.1kHz 24bit 또는 48kHz 24bit
 
 ---
 
-[보컬 포트폴리오 만들기](/stories/portfolio1) | [오디션 준비 완전 가이드](/stories/audition1) | [음반 제작 가이드](/stories/album1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 포트폴리오 만들기](/stories/portfolio1) | [오디션 준비 완전 가이드](/stories/audition1) | [음반 제작 가이드](/stories/album1)

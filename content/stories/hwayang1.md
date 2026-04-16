@@ -96,4 +96,7 @@ faq:
 
 ---
 
-[광진구 녹음실 안내](/stories/gwangjin1) | [자양·능동·중곡 녹음실 안내](/stories/jayang1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+
+화양동·자양동에서 연신내까지는 건대입구역에서 2호선을 타고 합정역에서 6호선으로 환승하거나, 7호선 이용 시 가좌역 경유로 디지털미디어시티에서 6호선으로 환승하는 루트를 활용합니다. 약 35~45분 소요되며 대학가 특성상 음악 동아리와 실용음악과 학생들의 방문이 많습니다.
+
+[광진구 녹음실 안내](/stories/gwangjin1) | [자양·능동·중곡 녹음실 안내](/stories/jayang1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1)

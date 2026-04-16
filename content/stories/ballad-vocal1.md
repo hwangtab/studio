@@ -139,4 +139,4 @@ Hi-cut: 6~8kHz 이상 롤오프 (리버브 꼬리가 탁해지지 않게)
 
 ---
 
-[발라드 프로덕션 완전 가이드](/stories/ballad-production1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 프레이징 완전 가이드](/stories/phrasing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[발라드 프로덕션 완전 가이드](/stories/ballad-production1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [보컬 프레이징 완전 가이드](/stories/phrasing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1)

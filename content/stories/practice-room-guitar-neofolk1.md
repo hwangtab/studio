@@ -222,4 +222,7 @@ D 코드 오픈 튜닝
 
 ---
 
+
+네오포크 기타는 핑거피킹과 스트러밍의 균형, 분위기 있는 오픈 코드 보이싱, 레이어드 텍스처가 특징입니다. 어쿠스틱 기타에 카포를 활용한 높은 레지스터 멜로디와 드론 베이스 노트를 조합하면 장르 특유의 몽환적인 분위기를 만들 수 있습니다.
+
 [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1)

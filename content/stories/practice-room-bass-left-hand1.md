@@ -302,4 +302,7 @@ A-B-A-B-A-B (빠르게)
 
 ---
 
+
+베이스 왼손 기술의 핵심은 힘의 최소화와 정확한 프레팅입니다. 과도한 힘을 주면 빠르게 피로해지고 음정이 틀어지므로, 손가락 끝의 살 부분으로 가볍게 눌러 깨끗한 음을 내는 연습이 기본입니다. 슬라이드, 해머온, 풀오프를 부드럽게 연결하는 레가토 주법도 왼손 테크닉의 완성도를 높이는 중요한 요소입니다.
+
 [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 오케스트라·더블베이스 기법 — 완전 가이드](/stories/practice-room-bass-orchestral1)

@@ -169,4 +169,4 @@ faq:
 
 ---
 
-[발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1) | [멜로디 작곡 완전 가이드](/stories/melody-writing1) | [마스터링 완전 가이드](/stories/mastering1)

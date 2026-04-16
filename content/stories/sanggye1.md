@@ -114,4 +114,4 @@ faq:
 
 ---
 
-[노원구·도봉구 녹음실 안내](/stories/nowon1) | [창동·노원 녹음실 안내](/stories/changdong1) | [강북구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[노원구·도봉구 녹음실 안내](/stories/nowon1) | [창동·노원 녹음실 안내](/stories/changdong1) | [강북구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

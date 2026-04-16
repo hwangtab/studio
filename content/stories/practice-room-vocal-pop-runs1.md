@@ -324,4 +324,7 @@ G4 시작 → D 시작 → A 시작 등
 
 ---
 
+
+팝 런(Pop Runs)은 빠른 음계 이동이나 아르페지오 패턴을 유려하게 연주하는 보컬 기법으로 R&B와 팝에서 감성적 클라이맥스를 만드는 데 자주 활용됩니다. 처음에는 느린 BPM에서 정확한 음정을 유지하며 각 음을 또렷하게 연습한 뒤 점진적으로 템포를 높이는 방법이 효과적입니다.
+
 [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

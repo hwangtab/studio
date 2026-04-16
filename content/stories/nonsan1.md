@@ -82,4 +82,4 @@ faq:
 
 ---
 
-[계룡에서 서울 녹음실 방문 가이드](/stories/gyeryong1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[계룡에서 서울 녹음실 방문 가이드](/stories/gyeryong1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

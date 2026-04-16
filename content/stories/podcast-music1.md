@@ -154,4 +154,4 @@ faq:
 
 ---
 
-[유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1)

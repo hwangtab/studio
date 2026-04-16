@@ -230,4 +230,7 @@ Beach Boys의 복합 화음:
 
 ---
 
+
+보컬 클로즈 하모니는 리드 멜로디와 3도 또는 6도 간격으로 정확하게 병행하는 화음 기법입니다. 귀로 리드 성부를 들으면서 자신의 하모니 파트를 유지하는 청음 능력이 필수적이며, 스튜디오 녹음에서는 리드 트랙을 헤드폰으로 듣고 자신의 성부만 분리하여 녹음하는 방식이 일반적입니다.
+
 [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

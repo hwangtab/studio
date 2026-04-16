@@ -317,4 +317,7 @@ pp로 시작 → 8마디 동안 ff로 서서히
 
 ---
 
+
+스틱 컨트롤은 모든 드럼 테크닉의 기반이 되는 기초 훈련입니다. 조지 로렌스 스톤의 「Stick Control」 교본을 기준으로 싱글 스트로크, 더블 스트로크, 루디먼트를 반복 연습하면 양손의 균형과 속도·정확도가 균등하게 발전합니다.
+
 [드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 완전 가이드](/stories/practice-room-drum-paradiddle1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 더블 킥·더블 배스 드럼 훈련 — 완전 가이드](/stories/practice-room-drum-double-kick1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1)

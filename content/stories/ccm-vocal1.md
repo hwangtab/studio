@@ -165,4 +165,4 @@ CCM 보컬의 진정성은 준비에서 나옵니다.
 
 ---
 
-[교회 찬양·예배 음악 레코딩 가이드](/stories/worship-recording1) | [찬양·CCM 녹음 서비스](/stories/ccm1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[교회 찬양·예배 음악 레코딩 가이드](/stories/worship-recording1) | [찬양·CCM 녹음 서비스](/stories/ccm1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1)

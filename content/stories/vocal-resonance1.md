@@ -155,4 +155,4 @@ faq:
 
 ---
 
-[두성·헤드보이스 완전 가이드](/stories/head-voice1) | [흉성 완전 가이드](/stories/chest-voice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[두성·헤드보이스 완전 가이드](/stories/head-voice1) | [흉성 완전 가이드](/stories/chest-voice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1)

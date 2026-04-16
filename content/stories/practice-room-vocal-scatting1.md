@@ -267,4 +267,7 @@ Ella Fitzgerald 녹음과 비교
 
 ---
 
+
+스캣은 가사 없이 즉흥적인 음절을 이용해 즉흥 멜로디를 부르는 재즈 보컬 기법입니다. 코드 스케일을 귀로 인식하고 즉흥적으로 음표를 선택하는 능력이 핵심이며, 처음에는 다장조 스케일 안에서 단순한 음형으로 시작해 점진적으로 크로매틱 음들을 통합해가는 연습이 효과적입니다.
+
 [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 리프·멜로디 변주 기법 — 완전 가이드](/stories/practice-room-vocal-riff-melody1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1)

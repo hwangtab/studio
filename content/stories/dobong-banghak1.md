@@ -103,4 +103,4 @@ Neumann U87 AI 마이크와 방음 처리된 전용 부스에서 1:1 엔지니�
 
 ---
 
-[도봉구·노원구 녹음실 안내](/stories/dobong1) | [강북구·도봉구 녹음실 안내](/stories/gangbuk1) | [노원구 전체 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[도봉구·노원구 녹음실 안내](/stories/dobong1) | [강북구·도봉구 녹음실 안내](/stories/gangbuk1) | [노원구 전체 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

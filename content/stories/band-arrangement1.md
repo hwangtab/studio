@@ -148,4 +148,4 @@ faq:
 
 ---
 
-[세션 뮤지션 완전 가이드](/stories/session-musician1) | [편곡·오케스트레이션 완전 가이드](/stories/orchestration1) | [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [음악 협업 완전 가이드](/stories/music-collab1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[세션 뮤지션 완전 가이드](/stories/session-musician1) | [편곡·오케스트레이션 완전 가이드](/stories/orchestration1) | [편곡 팁 완전 가이드](/stories/arrangement-tips1) | [음악 협업 완전 가이드](/stories/music-collab1)

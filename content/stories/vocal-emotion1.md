@@ -168,4 +168,4 @@ faq:
 
 ---
 
-[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [축가 녹음 완전 가이드](/stories/jukga1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [소울 보컬 완전 가이드](/stories/soul-vocal1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [축가 녹음 완전 가이드](/stories/jukga1)

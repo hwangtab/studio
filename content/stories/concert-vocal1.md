@@ -152,4 +152,4 @@ faq:
 
 ---
 
-[무대 보컬·공연 보컬 완전 가이드](/stories/stage-vocal1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocalhealth1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[무대 보컬·공연 보컬 완전 가이드](/stories/stage-vocal1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocalhealth1)

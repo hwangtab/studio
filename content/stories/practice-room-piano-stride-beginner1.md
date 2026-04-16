@@ -292,4 +292,7 @@ C2 → B1 → Bb1 → A1
 
 ---
 
+
+스트라이드 피아노는 왼손이 낮은 베이스 음과 높은 코드를 번갈아 연주하며 마치 혼자서 밴드 전체 사운드를 만들어내는 장르입니다. 입문 단계에서는 낮은 BPM에서 왼손 박자 이동에 익숙해지는 것이 우선이며, 오른손 멜로디와의 조합은 왼손이 안정된 후에 시작하는 것이 좋습니다.
+
 [피아노 스트라이드 고급 테크닉 — 완전 가이드](/stories/practice-room-piano-stride-advanced1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)

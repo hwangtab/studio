@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [이문·외대앞·석계·중화 녹음실 안내](/stories/imun1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [이문·외대앞·석계·중화 녹음실 안내](/stories/imun1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

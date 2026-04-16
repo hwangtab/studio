@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[고양시·파주 녹음실 안내](/stories/goyang1) | [일산동구 녹음실 안내](/stories/ilsan-donggu1) | [능곡·원흥·행신 녹음실 안내](/stories/neunggok1) | [파주 녹음실 안내](/stories/paju1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[고양시·파주 녹음실 안내](/stories/goyang1) | [일산동구 녹음실 안내](/stories/ilsan-donggu1) | [능곡·원흥·행신 녹음실 안내](/stories/neunggok1) | [파주 녹음실 안내](/stories/paju1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

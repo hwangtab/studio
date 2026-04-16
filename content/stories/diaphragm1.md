@@ -166,4 +166,4 @@ faq:
 
 ---
 
-[호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 공명 완전 가이드](/stories/vocal-resonance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 발음·발성 완전 가이드](/stories/vocal-diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 공명 완전 가이드](/stories/vocal-resonance1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 발음·발성 완전 가이드](/stories/vocal-diction1)

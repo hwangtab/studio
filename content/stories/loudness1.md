@@ -110,4 +110,4 @@ faq:
 
 ---
  | [리미터 완전 가이드 — 마스터링 리미터 설정과 스트리밍 음압 확보](/stories/limiter1)
-[마스터링 완전 가이드](/stories/mastering1) | [믹싱 완전 가이드](/stories/mixing1) | [음원 발매·유통 가이드](/stories/release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[마스터링 완전 가이드](/stories/mastering1) | [믹싱 완전 가이드](/stories/mixing1) | [음원 발매·유통 가이드](/stories/release1)

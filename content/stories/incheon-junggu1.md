@@ -97,4 +97,4 @@ faq:
 
 ---
 
-[인천 전체 녹음실 안내](/stories/incheon1) | [인천 부평구 녹음실 안내](/stories/incheon-bupyeong1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [인천 연수구 녹음실 안내](/stories/incheon-yeonsu1) 
+[인천 전체 녹음실 안내](/stories/incheon1) | [인천 부평구 녹음실 안내](/stories/incheon-bupyeong1) | [인천 남동구 구월·만수 녹음실 안내](/stories/incheon-namdong1) | [인천 연수구 녹음실 안내](/stories/incheon-yeonsu1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

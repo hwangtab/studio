@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[파주·고양에서 서울 녹음실 방문 가이드](/stories/paju1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [능곡·행신·원흥 녹음실 안내](/stories/neunggok1) | [일산·덕양구 녹음실 안내](/stories/ilsan1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[파주·고양에서 서울 녹음실 방문 가이드](/stories/paju1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [능곡·행신·원흥 녹음실 안내](/stories/neunggok1) | [일산·덕양구 녹음실 안내](/stories/ilsan1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -124,4 +124,4 @@ faq:
 
 ---
 
-[저음 발성 완전 가이드](/stories/low-note1) | [고음 발성 완전 가이드](/stories/high-note1) | [두성 완전 가이드](/stories/head-voice1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[저음 발성 완전 가이드](/stories/low-note1) | [고음 발성 완전 가이드](/stories/high-note1) | [두성 완전 가이드](/stories/head-voice1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1)

@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[동작구 전체 녹음실 안내](/stories/dongjak1) | [동작구 사당 녹음실 안내](/stories/dongjak-sadang1) | [동작구 흑석 녹음실 안내](/stories/dongjak-heukseok1) | [관악구 녹음실 안내](/stories/gwanak1) 
+[동작구 전체 녹음실 안내](/stories/dongjak1) | [동작구 사당 녹음실 안내](/stories/dongjak-sadang1) | [동작구 흑석 녹음실 안내](/stories/dongjak-heukseok1) | [관악구 녹음실 안내](/stories/gwanak1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -189,4 +189,4 @@ Pan → 자동 패닝 효과
 
 ---
 
-[사운드 디자인 완전 가이드](/stories/sound-design1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [코드 진행 완전 가이드](/stories/chord-progressions1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[사운드 디자인 완전 가이드](/stories/sound-design1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [코드 진행 완전 가이드](/stories/chord-progressions1)

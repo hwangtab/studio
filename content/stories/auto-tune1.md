@@ -121,4 +121,4 @@ Flex-Tune: 30~50% (음정 변화 유연성 조절)
 
 ---
 
-[Melodyne 음정 교정 가이드](/stories/pitchtool1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[Melodyne 음정 교정 가이드](/stories/pitchtool1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1)

@@ -158,4 +158,4 @@ Melodyne은 자연스러운 보컬 피치 교정의 업계 표준입니다.
 
 ---
 
-[iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1)

@@ -155,4 +155,4 @@ faq:
 
 ---
 
-[보컬 데모 녹음 완전 가이드](/stories/vocal-demo1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 데모 녹음 완전 가이드](/stories/vocal-demo1) | [오디션 보컬 완전 가이드](/stories/audition-vocal1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/music-distribution1)

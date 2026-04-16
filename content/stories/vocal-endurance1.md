@@ -166,4 +166,4 @@ faq:
 
 ---
 
-[보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [오디션 데모 녹음 완전 가이드](/stories/demo-recording1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [오디션 데모 녹음 완전 가이드](/stories/demo-recording1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1)

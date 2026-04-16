@@ -1,5 +1,5 @@
 ---
-title: 의정부 민락·호원·장암·송산 녹음실
+title: 의정부 민락·호원·장암·송산 녹음실 스튜디오 방문 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 지역 가이드
@@ -114,4 +114,4 @@ faq:
 
 ---
 
-[의정부 녹음실 안내](/stories/uijeongbu1) | [양주 녹음실 안내](/stories/yangju1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[의정부 녹음실 안내](/stories/uijeongbu1) | [양주 녹음실 안내](/stories/yangju1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

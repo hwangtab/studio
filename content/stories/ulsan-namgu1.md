@@ -1,5 +1,5 @@
 ---
-title: 울산 남구·삼산·무거·신정 녹음실
+title: 울산 남구·삼산·무거·신정 녹음실 스튜디오 방문 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 지역 가이드
@@ -123,4 +123,4 @@ faq:
 
 ---
 
-[울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

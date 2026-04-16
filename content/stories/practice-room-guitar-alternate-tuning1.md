@@ -303,4 +303,7 @@ E 기반의 DADGAD 음색
 
 ---
 
+
+얼터네이트 튜닝은 스탠다드 EADGBe 이외의 튜닝으로 기타를 세팅하여 새로운 코드 보이싱과 사운드 텍스처를 탐구하는 방법입니다. DADGAD 튜닝은 켈틱·포크 음악에, 오픈 G나 오픈 D는 블루스와 슬라이드 기타에 주로 활용됩니다. 처음 얼터네이트 튜닝을 시도할 때는 음정 안정화 시간이 필요하므로 충분히 스트링을 길들인 뒤 연주를 시작하세요.
+
 [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 델타 블루스·Robert Johnson 오픈 튜닝 — 완전 가이드](/stories/practice-room-guitar-delta-blues1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 오픈 코드·소노리티 기법 — 완전 가이드](/stories/practice-room-guitar-open-chord-sonority1)

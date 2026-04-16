@@ -91,4 +91,4 @@ KTX 아산역 → 서울역 40분, 지하철 환승 연신내 80~90분.
 
 ---
  | [증평에서 서울 녹음실 방문 가이드 — KTX 오송역 경유로 당일 왕복](/stories/jeungpyeong1)
-[금산 녹음실 — 충남 금산에서 연신내 스튜디오 놀까지](/stories/geumsan1)
+[금산 녹음실 — 충남 금산에서 연신내 스튜디오 놀까지](/stories/geumsan1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

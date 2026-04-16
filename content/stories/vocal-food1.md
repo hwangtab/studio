@@ -148,4 +148,4 @@ faq:
 
 ---
 
-[재즈 화성학 기초 완전 가이드](/stories/jazz-harmony1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[재즈 화성학 기초 완전 가이드](/stories/jazz-harmony1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1)

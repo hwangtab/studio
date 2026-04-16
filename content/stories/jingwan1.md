@@ -85,4 +85,7 @@ faq:
 
 ---
 
-[은평구 녹음실 안내](/stories/eunpyeong1) | [응암·역촌·구산·수색 녹음실 안내](/stories/eungam1) | [불광·수색·증산 녹음실 안내](/stories/bulgwang1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+
+진관동은 은평구 북부에 위치한 주거 지역으로 연신내역과 불과 1~2 정거장 거리에 있습니다. 버스나 자전거로도 스튜디오에 접근할 수 있는 사실상 인근 지역이므로 은평 뉴타운 거주 아티스트들에게 가장 편리한 전문 녹음 환경을 제공합니다.
+
+[은평구 녹음실 안내](/stories/eunpyeong1) | [응암·역촌·구산·수색 녹음실 안내](/stories/eungam1) | [불광·수색·증산 녹음실 안내](/stories/bulgwang1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1)

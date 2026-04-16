@@ -313,4 +313,7 @@ Joplin의 원칙: "Do not play this piece fast"
 
 ---
 
+
+래그타임 피아노는 왼손의 리듬감 있는 베이스 라인과 오른손의 당김음(syncopation) 멜로디가 결합된 초기 미국 대중음악 장르입니다. 스콧 조플린의 「Maple Leaf Rag」처럼 명확한 박자 구조 안에서 왼손과 오른손이 리듬적으로 대비를 이루는 것이 이 장르의 매력입니다.
+
 [피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드](/stories/practice-room-piano-comp-jazz1)

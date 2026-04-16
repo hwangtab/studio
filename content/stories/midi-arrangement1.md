@@ -159,4 +159,4 @@ MIDI 편곡은 현대 음악 제작의 핵심입니다. DAW와 가상악기를 �
 
 ---
 
-[금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1)

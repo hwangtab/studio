@@ -110,4 +110,4 @@ faq:
 
 ---
 
-[성동구 녹음실 안내](/stories/seongdong1) | [왕십리·성수·뚝섬 녹음실 안내](/stories/haengdang1) | [중구 녹음실 안내](/stories/junggu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[성동구 녹음실 안내](/stories/seongdong1) | [왕십리·성수·뚝섬 녹음실 안내](/stories/haengdang1) | [중구 녹음실 안내](/stories/junggu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

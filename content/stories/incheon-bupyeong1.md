@@ -93,4 +93,4 @@ faq:
 
 ---
 
-[인천 전체 녹음실 안내](/stories/incheon1) | [인천 서구·검단 녹음실 안내](/stories/incheon-seo1) | [인천 남동구 녹음실 안내](/stories/incheon-namdong1) | [부천시 녹음실 안내](/stories/bucheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[인천 전체 녹음실 안내](/stories/incheon1) | [인천 서구·검단 녹음실 안내](/stories/incheon-seo1) | [인천 남동구 녹음실 안내](/stories/incheon-namdong1) | [부천시 녹음실 안내](/stories/bucheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

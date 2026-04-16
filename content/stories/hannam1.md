@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[용산구 녹음실 안내](/stories/yongsan1) | [이태원·해방촌 녹음실 안내](/stories/itaewon1) | [해방촌 녹음실 안내](/stories/haebangchon1) | [이촌·서빙고 녹음실 안내](/stories/ichon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[용산구 녹음실 안내](/stories/yongsan1) | [이태원·해방촌 녹음실 안내](/stories/itaewon1) | [해방촌 녹음실 안내](/stories/haebangchon1) | [이촌·서빙고 녹음실 안내](/stories/ichon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

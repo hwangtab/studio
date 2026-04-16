@@ -287,4 +287,7 @@ E4-G4-E4-G4 (셔플 리듬으로)
 
 ---
 
+
+블루스 피아노 컴핑은 셔플 리듬의 왼손 베이스 라인과 오른손의 즉흥 코드 보이싱이 유기적으로 어우러지는 기술입니다. 기본 12바 블루스 진행을 다양한 키에서 연습하면서 왼손 베이스와 오른손 리듬을 독립적으로 조절하는 능력을 키우는 것이 핵심입니다.
+
 [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 콤핑·리듬 반주 기법 — 완전 가이드](/stories/practice-room-piano-comping1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 즉흥연주·블루스 스케일 — 완전 가이드](/stories/practice-room-piano-improvisation1)

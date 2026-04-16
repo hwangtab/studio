@@ -251,4 +251,7 @@ Em7 - Am7 - D7 - Gmaj7
 
 ---
 
+
+음악의 인트로와 아웃트로는 청자의 첫인상과 여운을 결정하는 중요한 요소입니다. 피아노 인트로에서는 곡의 주요 모티프를 간결하게 제시하거나 분위기를 설정하는 코드 진행을 활용하고, 아웃트로에서는 긴장이 해소되는 감소형 진행이나 피아니시모로 페이드하는 방식이 효과적입니다.
+
 [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 라틴 리듬·살사 피아노 — 완전 가이드](/stories/practice-room-piano-latin-rhythms1)

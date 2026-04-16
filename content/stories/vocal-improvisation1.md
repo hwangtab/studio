@@ -160,4 +160,4 @@ faq:
 
 ---
 
-[보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [스캣 보컬 완전 가이드](/stories/scat-singing1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 스태킹·코러스 보컬 완전 가이드](/stories/vocal-stacking1) | [스캣 보컬 완전 가이드](/stories/scat-singing1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1)

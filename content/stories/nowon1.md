@@ -115,4 +115,4 @@ Neumann U87 AI 마이크와 흡음 처리된 전용 부스에서 1:1 엔지니�
 
 ---
 
-[노원구 공릉·월계·수락산 녹음실 안내](/stories/nowon-gongreung1) | [상계·중계·하계·공릉 녹음실 안내](/stories/sanggye1) | [창동·노원·도봉 녹음실 안내](/stories/changdong1) | [강북구·도봉구 녹음실 안내](/stories/gangbuk1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[노원구 공릉·월계·수락산 녹음실 안내](/stories/nowon-gongreung1) | [상계·중계·하계·공릉 녹음실 안내](/stories/sanggye1) | [창동·노원·도봉 녹음실 안내](/stories/changdong1) | [강북구·도봉구 녹음실 안내](/stories/gangbuk1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

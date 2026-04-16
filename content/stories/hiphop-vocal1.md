@@ -175,4 +175,4 @@ faq:
 
 ---
 
-[K-pop 보컬 완전 가이드](/stories/kpop-vocal1) | [록 보컬 완전 가이드](/stories/rock-vocal1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[K-pop 보컬 완전 가이드](/stories/kpop-vocal1) | [록 보컬 완전 가이드](/stories/rock-vocal1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [비트메이킹 완전 가이드](/stories/beatmaking1)

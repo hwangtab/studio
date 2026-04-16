@@ -153,4 +153,4 @@ faq:
 
 ---
 
-[마이크 완전 가이드](/stories/microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 체인 완전 가이드](/stories/vocal-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[마이크 완전 가이드](/stories/microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 체인 완전 가이드](/stories/vocal-chain1)

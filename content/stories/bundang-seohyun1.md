@@ -115,4 +115,4 @@ faq:
 
 ---
 
-[성남·분당·판교 녹음실 안내](/stories/bundang1) | [성남 수정구·중원구 녹음실 안내](/stories/seongnam-sujeong1) | [용인·수지 녹음실 안내](/stories/yongin1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[성남·분당·판교 녹음실 안내](/stories/bundang1) | [성남 수정구·중원구 녹음실 안내](/stories/seongnam-sujeong1) | [용인·수지 녹음실 안내](/stories/yongin1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

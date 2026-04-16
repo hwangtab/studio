@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[노원구 녹음실 안내](/stories/nowon1) | [도봉구·강북구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[노원구 녹음실 안내](/stories/nowon1) | [도봉구·강북구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [은평구 녹음실 안내](/stories/eunpyeong1)

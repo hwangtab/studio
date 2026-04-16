@@ -307,4 +307,7 @@ m에서 비강 진동 → a로 넘어가며 유지
 
 ---
 
+
+흉성 공명을 최대화하기 위해서는 후두 포지션을 자연스럽게 낮추고 가슴 앞부분에 손을 얹어 진동을 느끼는 확인 연습이 효과적입니다. 흉성은 감정적 무게감과 따뜻한 음색의 기반이 되므로 모든 보컬 연습에서 의식적으로 활용해야 합니다.
+
 [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

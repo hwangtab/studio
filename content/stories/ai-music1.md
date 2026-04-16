@@ -169,4 +169,4 @@ AI 음악 도구는 작곡·제작의 파트너로 활용할 때 가장 강력�
 
 ---
 
-[EDM 프로덕션 완전 가이드](/stories/edm-production1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [AI 마스터링 vs 전문 마스터링 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[EDM 프로덕션 완전 가이드](/stories/edm-production1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [사운드 디자인 완전 가이드](/stories/sound-design1) | [AI 마스터링 vs 전문 마스터링 가이드](/stories/mastering1)

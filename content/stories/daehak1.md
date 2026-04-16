@@ -84,7 +84,7 @@ faq:
 
 ---
 
-[종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1)
 ---
 
 ## 스튜디오 놀을 선택하는 이유

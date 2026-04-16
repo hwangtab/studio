@@ -222,4 +222,7 @@ X - X - X - X - (8개)
 
 ---
 
+
+고급 폴리리듬 연습은 양손과 양발이 각각 다른 박자 구조를 동시에 연주하는 독립적인 리듬 감각을 요구합니다. 3 대 4, 4 대 5, 3 대 2 같은 기본 폴리리듬을 충분히 체화한 뒤 더 복잡한 조합으로 나아가는 단계적 접근이 중요합니다.
+
 [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 — 완전 가이드](/stories/practice-room-drum-world1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

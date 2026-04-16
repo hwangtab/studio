@@ -106,4 +106,4 @@ faq:
 
 ---
 
-[경기 광주 오포읍·곤지암·퇴촌 녹음실 안내](/stories/gwangju-opoong1) | [이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [하남에서 서울 녹음실 방문 가이드](/stories/hanam1) | [성남에서 서울 녹음실 방문 가이드](/stories/seongnam1) 
+[경기 광주 오포읍·곤지암·퇴촌 녹음실 안내](/stories/gwangju-opoong1) | [이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [하남에서 서울 녹음실 방문 가이드](/stories/hanam1) | [성남에서 서울 녹음실 방문 가이드](/stories/seongnam1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

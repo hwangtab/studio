@@ -228,4 +228,7 @@ Asus4: x-0-2-2-0-0
 
 ---
 
+
+슈게이징 기타 사운드는 드라이브와 리버브, 모듈레이션 이펙트를 겹쳐 만드는 두꺼운 앰비언트 월이 특징입니다. 볼륨 스웰과 피드백 노트를 활용하면 음표와 소음의 경계가 허물어지는 독특한 텍스처를 연출할 수 있습니다. 연습실에서는 각 이펙트를 하나씩 추가하면서 소리의 변화를 귀로 확인하는 실험적인 접근이 슈게이징 사운드 메이킹의 핵심입니다.
+
 [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드](/stories/practice-room-guitar-12string1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1)

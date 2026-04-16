@@ -164,4 +164,4 @@ MIDI 그루브는 작은 변화들이 쌓여 큰 차이를 만듭니다. 벨로�
 
 ---
 
-[오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [DAW 템플릿 완전 가이드](/stories/daw-template1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [비트 메이킹 완전 가이드](/stories/beatmaking1) | [DAW 템플릿 완전 가이드](/stories/daw-template1)

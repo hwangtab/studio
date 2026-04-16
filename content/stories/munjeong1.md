@@ -101,4 +101,4 @@ faq:
 
 ---
 
-[송파구 녹음실 안내](/stories/songpa1) | [잠실·석촌·오금 녹음실 안내](/stories/jamsil1) | [가락·오금·마천·거여 녹음실 안내](/stories/garak1) | [강동구 녹음실 안내](/stories/gangdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[송파구 녹음실 안내](/stories/songpa1) | [잠실·석촌·오금 녹음실 안내](/stories/jamsil1) | [가락·오금·마천·거여 녹음실 안내](/stories/garak1) | [강동구 녹음실 안내](/stories/gangdong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

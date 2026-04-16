@@ -187,4 +187,4 @@ Pro Tools는 전 세계 프로 스튜디오의 표준으로, 플레이리스트 
 
 ---
 
-[FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)

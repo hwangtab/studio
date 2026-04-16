@@ -211,4 +211,7 @@ Fmaj7 - G7 - Gm7 - Fmaj7 반복
 
 ---
 
+
+보사노바 드럼의 핵심은 부드럽고 섬세한 다이나믹 컨트롤입니다. 브러시 스틱을 이용한 스네어 모션과 클로즈 하이햇의 리듬이 어우러지며 그루브를 만들어냅니다. 연습실에서 느린 BPM으로 브러시 테크닉을 충분히 숙달한 뒤 템포를 점진적으로 올려가는 방식으로 접근하면 효율적입니다.
+
 [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [드럼 삼바·브라질 리듬 드럼셋 — 완전 가이드](/stories/practice-room-drum-samba1) | [드럼 월드 리듬·아프리카·아프로비트·쿠반 패턴 — 완전 가이드](/stories/practice-room-drum-world1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1)

@@ -130,4 +130,4 @@ WAV 44.1kHz/24bit = 약 47~50MB
 
 ---
 
-[녹음 파일 납품 형식 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [MR 구하는 방법 가이드](/stories/mr-guide1) | [마스터링이란?](/stories/mastering1)
+[녹음 파일 납품 형식 가이드](/stories/stemfile1) | [MR 구하는 방법 가이드](/stories/mr-guide1) | [마스터링이란?](/stories/mastering1)

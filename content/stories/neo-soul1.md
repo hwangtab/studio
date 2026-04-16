@@ -173,4 +173,4 @@ Am9 → D9 → Gmaj9 → Cmaj7#11
 
 ---
 
-[R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [빈티지·아날로그 사운드 완전 가이드](/stories/vintage-sound1) | [재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [빈티지·아날로그 사운드 완전 가이드](/stories/vintage-sound1) | [재즈 코드 진행 완전 가이드](/stories/jazz-chord1) | [보컬 퍼포먼스 완전 가이드](/stories/vocal-performance1)

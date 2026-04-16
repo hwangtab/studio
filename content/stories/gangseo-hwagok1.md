@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[강서구 전체 녹음실 안내](/stories/gangseo1) | [마곡·발산·화곡 녹음실 안내](/stories/magok1) | [방화·개화·가양 녹음실 안내](/stories/banghwa1) | [양천구 녹음실 안내](/stories/yangcheon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[강서구 전체 녹음실 안내](/stories/gangseo1) | [마곡·발산·화곡 녹음실 안내](/stories/magok1) | [방화·개화·가양 녹음실 안내](/stories/banghwa1) | [양천구 녹음실 안내](/stories/yangcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

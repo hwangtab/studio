@@ -240,4 +240,7 @@ C-G-Am-F 반복 진행
 
 ---
 
+
+뉴에이지 피아노는 단순하고 아름다운 멜로디와 넓은 코드 보이싱을 기반으로 명상적인 분위기를 만드는 장르입니다. 과도한 다이나믹 변화보다는 부드럽고 일관된 터치로 소리를 흘러가게 하는 것이 중요합니다. 리버브와 서스테인 페달을 활용하면 뉴에이지 특유의 공간감 넘치는 피아노 사운드를 구현할 수 있습니다.
+
 [피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드](/stories/practice-room-piano-comp-jazz1)

@@ -107,4 +107,4 @@ faq:
 
 ---
 
-[광진구 녹음실 안내](/stories/gwangjin1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [성동구 녹음실 안내](/stories/seongdong1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[광진구 녹음실 안내](/stories/gwangjin1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [성동구 녹음실 안내](/stories/seongdong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

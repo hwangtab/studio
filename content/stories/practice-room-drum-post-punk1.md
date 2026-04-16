@@ -234,4 +234,10 @@ Bauhaus는 포스트펑크+고딕록의 경계.
 
 ---
 
+
+포스트 펑크 드럼은 최소한의 킥-스네어 패턴에 불규칙한 하이햇과 탐 필인을 더해 긴장감과 불안정성을 의도적으로 연출하는 스타일입니다. 로봇처럼 딱딱한 기계적 정확도와 원초적인 에너지가 공존하는 것이 이 장르 드럼의 핵심 매력입니다.
+
+
+포스트 펑크 드럼은 최소한의 킥-스네어 패턴에 불규칙한 하이햇과 탐 필인을 더해 긴장감과 불안정성을 의도적으로 연출하는 스타일입니다. 로봇처럼 딱딱한 기계적 정확도와 원초적인 에너지가 공존하는 것이 이 장르 드럼의 핵심 매력입니다.
+
 [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1)

@@ -212,4 +212,7 @@ C-B-Bb-A (워크다운) → Dm7 → G7 → C
 
 ---
 
+
+가스펠 베이스 라인은 그루브와 동시에 화음을 지지하는 역할을 수행하므로 코드 톤을 정확히 파악하는 것이 핵심입니다. 벽스(walking) 베이스 라인과 가스펠 특유의 당김음(syncopation)을 결합하면 예배 현장에서 강력한 에너지를 만들어낼 수 있습니다.
+
 [베이스 그루브 구성·리듬 설계 원리 — 완전 가이드](/stories/practice-room-bass-groove-construction1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 소울·모타운 그루브·클래식 R&B — 완전 가이드](/stories/practice-room-bass-soul-groove1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

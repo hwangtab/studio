@@ -1,5 +1,5 @@
 ---
-title: 뮤지션 라이브 스트리밍 완전 가이드
+title: 뮤지션 라이브 스트리밍 완전 가이드 완전 가이드
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
 category: 음악 제작
@@ -135,4 +135,4 @@ faq:
 
 ---
 
-[유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[유튜브 음악 채널 운영 완전 가이드](/stories/youtube-music-channel1) | [유튜브 쇼츠 보컬 활동 가이드](/stories/youtube-shorts1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)

@@ -242,4 +242,7 @@ Cmaj7: C-E-G-B
 
 ---
 
+
+솔로 그루빙은 베이스 하나만으로 리듬과 멜로디를 동시에 표현하는 고급 기술입니다. 엄지 슬랩과 손가락 팝을 결합한 슬랩 베이스, 뮤트 노트를 활용한 치킨 픽킹 등 다양한 주법을 익히면 반주 없이도 완결된 퍼포먼스를 선보일 수 있습니다.
+
 [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 투핸드 탭핑·고급 솔로 기법 — 완전 가이드](/stories/practice-room-bass-two-hand-tapping1) | [베이스 코드 멜로디·솔로 편곡법 — 완전 가이드](/stories/practice-room-bass-chord-melody1)

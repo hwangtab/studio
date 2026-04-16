@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[대구 달서구·서구·남구 녹음실 안내](/stories/daegu-dalseo1) | [수성구·동대구·범어 녹음실 안내](/stories/suseong1) | [경산·영천에서 서울 녹음실 방문 가이드](/stories/gyeongsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) 
+[대구 달서구·서구·남구 녹음실 안내](/stories/daegu-dalseo1) | [수성구·동대구·범어 녹음실 안내](/stories/suseong1) | [경산·영천에서 서울 녹음실 방문 가이드](/stories/gyeongsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

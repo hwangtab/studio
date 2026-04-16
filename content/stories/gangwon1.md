@@ -90,4 +90,4 @@ faq:
 
 ---
 
-[춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1)

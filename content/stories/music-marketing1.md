@@ -172,4 +172,4 @@ faq:
 
 ---
 
-[음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [뮤지션 음악 홍보·미디어 PR 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 완전 가이드](/stories/fan-community1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [뮤지션 음악 홍보·미디어 PR 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 완전 가이드](/stories/fan-community1) | [음원 유통 완전 가이드](/stories/music-distribution1)

@@ -106,4 +106,4 @@ faq:
 
 ---
 
-[성북구 안암·종암·길음 녹음실 안내 (6호선 15분)](/stories/seongbuk-anam1) | [장위·석관·월곡 녹음실 안내](/stories/jangwi1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[성북구 안암·종암·길음 녹음실 안내 (6호선 15분)](/stories/seongbuk-anam1) | [장위·석관·월곡 녹음실 안내](/stories/jangwi1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

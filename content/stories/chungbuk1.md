@@ -121,4 +121,4 @@ faq:
 
 ---
 
-[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

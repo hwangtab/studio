@@ -128,4 +128,4 @@ faq:
 
 ---
 
-[창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

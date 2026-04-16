@@ -168,4 +168,4 @@ D-2주: 세부 준비
 
 ---
 
-[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [인디 쇼케이스·미니콘서트 기획 완전 가이드](/stories/indie-showcase1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[라이브 공연 준비 완전 가이드](/stories/live-performance1) | [인디 쇼케이스·미니콘서트 기획 완전 가이드](/stories/indie-showcase1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1)

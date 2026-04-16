@@ -104,4 +104,4 @@ faq:
 
 ---
 
-[인천 검단신도시·원당·계양 녹음실 안내](/stories/incheon-geomdan1) | [인천·부천 녹음실 안내](/stories/incheon1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [인천 계양·작전·귤현·임학 녹음실 안내](/stories/gyeyang1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[인천 검단신도시·원당·계양 녹음실 안내](/stories/incheon-geomdan1) | [인천·부천 녹음실 안내](/stories/incheon1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [인천 계양·작전·귤현·임학 녹음실 안내](/stories/gyeyang1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

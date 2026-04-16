@@ -176,4 +176,4 @@ faq:
 
 ---
 
-[코드 진행 완전 가이드](/stories/chord-progressions1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[코드 진행 완전 가이드](/stories/chord-progressions1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [음원 유통 완전 가이드](/stories/distribution1)

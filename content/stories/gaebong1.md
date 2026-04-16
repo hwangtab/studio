@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[구로구 녹음실 안내](/stories/guro1) | [신도림 녹음실 안내](/stories/sindorim1) | [금천구 녹음실 안내](/stories/geumcheon1) | [관악구·신림 녹음실 안내](/stories/gwanak1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[구로구 녹음실 안내](/stories/guro1) | [신도림 녹음실 안내](/stories/sindorim1) | [금천구 녹음실 안내](/stories/geumcheon1) | [관악구·신림 녹음실 안내](/stories/gwanak1)

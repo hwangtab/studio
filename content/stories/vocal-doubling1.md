@@ -174,4 +174,4 @@ faq:
 
 ---
 
-[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1)

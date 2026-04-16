@@ -244,4 +244,7 @@ Cmaj7 아르페지오를 12프렛 하모닉스로
 
 ---
 
+
+기타 하모닉스는 자연 배음(Natural Harmonics)과 인공 배음(Artificial Harmonics)으로 나뉩니다. 자연 하모닉스는 12, 7, 5 프렛 위 현에 가볍게 손가락을 대고 피킹하면 피아노 종소리 같은 벨 톤이 만들어집니다. 인공 하모닉스는 원하는 음 위에 12프렛 간격으로 엄지를 대고 검지로 피킹하는 기법으로 더 많은 음역대에서 활용 가능합니다.
+
 [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 코드 대체·리하모니제이션 기법 — 완전 가이드](/stories/practice-room-guitar-chord-substitution1) | [기타 컨트리·치킨피킹 기법 — 완전 가이드](/stories/practice-room-guitar-country1) | [도브로·레조네이터 기타·슬라이드 기법 — 완전 가이드](/stories/practice-room-guitar-dobro1)

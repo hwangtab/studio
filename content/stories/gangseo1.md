@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[강서구 가양·등촌·염창 녹음실 안내](/stories/gangseo-gayang1) | [강서구 화곡·등촌·가양동 녹음실 안내](/stories/gangseo-hwagok1) | [양천구 녹음실 안내](/stories/yangcheon1) | [방화·개화·김포공항·가양 녹음실 안내](/stories/banghwa1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[강서구 가양·등촌·염창 녹음실 안내](/stories/gangseo-gayang1) | [강서구 화곡·등촌·가양동 녹음실 안내](/stories/gangseo-hwagok1) | [양천구 녹음실 안내](/stories/yangcheon1) | [방화·개화·김포공항·가양 녹음실 안내](/stories/banghwa1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

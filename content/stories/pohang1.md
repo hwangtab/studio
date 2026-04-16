@@ -91,4 +91,4 @@ faq:
 
 ---
 
-[울릉도 녹음실 안내](/stories/ulleungdo1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[울릉도 녹음실 안내](/stories/ulleungdo1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

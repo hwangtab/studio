@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[인천·부천 녹음실 안내](/stories/incheon1) | [인천 남동구 간석·구월 녹음실 안내](/stories/namdong1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [송도 녹음실 안내](/stories/songdo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[인천·부천 녹음실 안내](/stories/incheon1) | [인천 남동구 간석·구월 녹음실 안내](/stories/namdong1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [송도 녹음실 안내](/stories/songdo1)

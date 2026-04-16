@@ -149,4 +149,4 @@ faq:
 
 ---
 
-[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[클래식 성악·오페라 보컬 완전 가이드](/stories/classical-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1) | [보컬 가성(팔세토) 완전 가이드](/stories/vocal-falsetto1)

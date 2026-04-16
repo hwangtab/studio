@@ -104,4 +104,4 @@ faq:
 
 ---
 
-[구로구 녹음실 안내](/stories/guro1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [관악구 녹음실 안내](/stories/gwanak1) | [강서구 녹음실 안내](/stories/gangseo1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[구로구 녹음실 안내](/stories/guro1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [관악구 녹음실 안내](/stories/gwanak1) | [강서구 녹음실 안내](/stories/gangseo1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

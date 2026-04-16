@@ -73,4 +73,4 @@ faq:
 
 ---
 
-[김포 전체 녹음실 안내](/stories/gimpo1) | [김포 사우·풍무·고촌·운양 녹음실 안내](/stories/gimpo-sauong1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) 
+[김포 전체 녹음실 안내](/stories/gimpo1) | [김포 사우·풍무·고촌·운양 녹음실 안내](/stories/gimpo-sauong1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -307,4 +307,7 @@ Mariah 버전: A4-C5-Eb5-C5-Bb4-G4-A4
 
 ---
 
+
+보컬 리프는 리드 멜로디를 장식하거나 특정 구간에서 반복되는 독자적인 멜로디 패턴입니다. 자신만의 리프를 개발하려면 좋아하는 보컬리스트의 리프를 귀로 채보하고 직접 따라 부르는 과정에서 패턴을 분석하고 변형하는 연습이 효과적입니다.
+
 [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

@@ -134,4 +134,4 @@ faq:
 
 ---
 
-[기타 레코딩 완전 가이드](/stories/guitar-recording1) | [앰프 시뮬레이터·DI 레코딩 가이드](/stories/amp-simulator1) | [밴드 레코딩 완전 가이드](/stories/band-recording1) | [흡음재·방음 완전 가이드](/stories/acoustic-treatment1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[기타 레코딩 완전 가이드](/stories/guitar-recording1) | [앰프 시뮬레이터·DI 레코딩 가이드](/stories/amp-simulator1) | [밴드 레코딩 완전 가이드](/stories/band-recording1) | [흡음재·방음 완전 가이드](/stories/acoustic-treatment1)

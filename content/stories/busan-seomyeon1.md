@@ -1,5 +1,5 @@
 ---
-title: 부산 서면·부산진·연제 녹음실
+title: 부산 서면·부산진·연제 녹음실 스튜디오 방문 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 지역 가이드
@@ -108,4 +108,4 @@ faq:
 
 ---
 
-[부산 해운대·수영·광안리 녹음실 안내](/stories/haeundae1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[부산 해운대·수영·광안리 녹음실 안내](/stories/haeundae1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

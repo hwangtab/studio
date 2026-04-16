@@ -159,4 +159,4 @@ NFT·Web3 음악 플랫폼은 빠르게 변화하므로 최신 정보를 지속�
 
 ---
 
-[음악 PR·홍보 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[음악 PR·홍보 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 구축 완전 가이드](/stories/fan-community1) | [음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)

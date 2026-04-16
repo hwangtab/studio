@@ -159,4 +159,4 @@ faq:
 
 ---
 
-[작곡 완전 가이드](/stories/songwriting1) | [싱어송라이터 완전 가이드](/stories/singer-songwriter1) | [음악 협업 완전 가이드](/stories/music-collab1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[작곡 완전 가이드](/stories/songwriting1) | [싱어송라이터 완전 가이드](/stories/singer-songwriter1) | [음악 협업 완전 가이드](/stories/music-collab1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1)

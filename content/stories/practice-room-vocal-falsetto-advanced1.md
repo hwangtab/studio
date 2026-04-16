@@ -324,4 +324,10 @@ R&B·소울에 적합
 
 ---
  | [팝 벨팅·고음 파워·Mix Voice·두성 전환 — 완전 가이드](/stories/practice-room-vocal-pop-belting1)
+
+고급 팔세토는 단순한 헤드 보이스를 넘어 가슴 보이스의 공명감을 팔세토 발성에 더하는 혼합 발성으로 발전합니다. 팔세토와 혼성 발성 사이를 매끄럽게 전환하는 연습이 현대 팝·R&B에서 자주 요구되는 고급 보컬 기법의 핵심입니다.
+
+
+고급 팔세토는 단순한 헤드 보이스를 넘어 가슴 보이스의 공명감을 팔세토 발성에 더하는 혼합 발성으로 발전합니다. 팔세토와 혼성 발성 사이를 매끄럽게 전환하는 연습이 현대 팝·R&B에서 자주 요구되는 고급 보컬 기법의 핵심입니다.
+
 [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1)

@@ -88,4 +88,4 @@ faq:
 
 ---
 
-[강남구 전체 녹음실 안내](/stories/gangnam1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [신사·압구정 녹음실 안내](/stories/sinsa1) | [서초구 반포·잠원 녹음실 안내](/stories/seocho-banpo1) 
+[강남구 전체 녹음실 안내](/stories/gangnam1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [신사·압구정 녹음실 안내](/stories/sinsa1) | [서초구 반포·잠원 녹음실 안내](/stories/seocho-banpo1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

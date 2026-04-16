@@ -144,4 +144,4 @@ faq:
 
 ---
 
-[인스타그램 릴스·유튜브 쇼츠 음악 마케팅 가이드](/stories/shorts-reels-music1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[인스타그램 릴스·유튜브 쇼츠 음악 마케팅 가이드](/stories/shorts-reels-music1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1)

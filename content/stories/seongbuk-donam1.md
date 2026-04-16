@@ -86,4 +86,4 @@ faq:
 
 ---
 
-[성북구 전체 녹음실 안내](/stories/seongbuk1) | [성북구 안암·종암·길음 녹음실 안내](/stories/seongbuk-anam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) 
+[성북구 전체 녹음실 안내](/stories/seongbuk1) | [성북구 안암·종암·길음 녹음실 안내](/stories/seongbuk-anam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

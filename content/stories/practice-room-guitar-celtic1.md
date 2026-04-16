@@ -299,4 +299,10 @@ A4-B4-A4-G4-A4 (매우 빠르게)
 
 ---
 
+
+켈틱 기타는 아이리시와 스코틀랜드 전통 음악을 기반으로 독주 멜로디와 리듬 반주를 동시에 구사하는 스타일입니다. DADGAD 얼터네이트 튜닝과 드론 현 활용이 켈틱 사운드의 핵심이며, 장식음(모르든트, 롤)을 자유롭게 구사하는 훈련이 필요합니다.
+
+
+켈틱 기타는 아이리시와 스코틀랜드 전통 음악을 기반으로 독주 멜로디와 리듬 반주를 동시에 구사하는 스타일입니다. DADGAD 얼터네이트 튜닝과 드론 현 활용이 켈틱 사운드의 핵심이며, 장식음(모르든트, 롤)을 자유롭게 구사하는 훈련이 필요합니다.
+
 [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1)

@@ -86,4 +86,4 @@ faq:
 
 ---
 
-[신촌·연세대 근처 녹음실 안내](/stories/sinchon1) | [마포구에서 스튜디오 놀 방문 가이드](/stories/mapo1) | [은평구에서 스튜디오 놀 방문 가이드](/stories/eunpyeong1) | [서대문구에서 스튜디오 놀 방문 가이드](/stories/seodaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[신촌·연세대 근처 녹음실 안내](/stories/sinchon1) | [마포구에서 스튜디오 놀 방문 가이드](/stories/mapo1) | [은평구에서 스튜디오 놀 방문 가이드](/stories/eunpyeong1) | [서대문구에서 스튜디오 놀 방문 가이드](/stories/seodaemun1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

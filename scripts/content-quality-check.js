@@ -100,7 +100,7 @@ function stripMarkdownSyntax(text) {
     .replace(/^[-*]\s+/gm, '')          // list items
     .replace(/^---+$/gm, '')            // hr
     .replace(/`[^`]+`/g, '')            // inline code
-    .replace(/\|[^|]*\|/g, '')          // table rows
+    .replace(/\|[^|\n]*\|/g, '')         // table rows (same-line only)
     .replace(/\n+/g, ' ')              // newlines → space
     .trim();
 }
@@ -220,7 +220,7 @@ function run() {
   // Output
   if (!SUMMARY_ONLY && results.violations.length > 0) {
     console.log(`\n❌ 위반 (${results.violations.length}개 파일):`);
-    for (const { slug, violations, wordCount } of results.violations.slice(0, 50)) {
+    for (const { slug, violations, wordCount } of results.violations) {
       console.log(`  ${slug} (${wordCount}단어):`);
       for (const v of violations) console.log(`    • ${v}`);
     }

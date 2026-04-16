@@ -93,4 +93,4 @@ faq:
 
 ---
 
-[성북구 전체 녹음실 안내](/stories/seongbuk1) | [돈암·성신여대·삼선 녹음실 안내](/stories/seongbuk-donam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[성북구 전체 녹음실 안내](/stories/seongbuk1) | [돈암·성신여대·삼선 녹음실 안내](/stories/seongbuk-donam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

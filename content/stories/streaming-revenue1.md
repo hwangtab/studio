@@ -164,4 +164,4 @@ YouTube Music / YouTube (Content ID):
 
 ---
  | [스트리밍 수익 계산 방법 — 멜론·스포티파이 음원 수익 현실적으로 알기](/stories/revenue1)
-[스트리밍 플랫폼 완전 비교 가이드](/stories/streaming-platforms1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[스트리밍 플랫폼 완전 비교 가이드](/stories/streaming-platforms1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)

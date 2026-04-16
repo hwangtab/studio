@@ -173,4 +173,4 @@ EP 앨범은 음악 커리어의 시작점입니다. 카카오톡으로 EP 제�
 
 ---
 
-[인디 음악 제작 완전 가이드](/stories/indie-production1) | [음원 싱글 발매 완전 가이드](/stories/single-release1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스트리밍 플랫폼 완전 가이드](/stories/streaming-platforms1)
+[인디 음악 제작 완전 가이드](/stories/indie-production1) | [음원 싱글 발매 완전 가이드](/stories/single-release1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [스트리밍 플랫폼 완전 가이드](/stories/streaming-platforms1)

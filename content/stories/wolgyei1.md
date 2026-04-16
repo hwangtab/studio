@@ -89,4 +89,4 @@ faq:
 
 ---
 
-[노원구 전체 녹음실 안내](/stories/nowon1) | [상계·중계·하계·공릉 녹음실 안내](/stories/sanggye1) | [성북구 녹음실 안내](/stories/seongbuk1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[노원구 전체 녹음실 안내](/stories/nowon1) | [상계·중계·하계·공릉 녹음실 안내](/stories/sanggye1) | [성북구 녹음실 안내](/stories/seongbuk1) | [동대문구 녹음실 안내](/stories/dongdaemun1)

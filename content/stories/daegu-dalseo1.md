@@ -1,5 +1,5 @@
 ---
-title: 대구 달서구·서구·남구 녹음실
+title: 대구 달서구·서구·남구 녹음실 스튜디오 방문 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
 category: 지역 가이드
@@ -109,4 +109,4 @@ faq:
 
 ---
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [대구 수성구·동대구 녹음실 안내](/stories/suseong1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [대구 수성구·동대구 녹음실 안내](/stories/suseong1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

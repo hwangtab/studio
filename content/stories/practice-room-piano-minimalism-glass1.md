@@ -214,4 +214,7 @@ Glass의 미니멀리즘 + 팝 감성
 
 ---
 
+
+필립 글래스 스타일의 미니멀리즘 피아노는 반복되는 아르페지오 패턴과 단순한 화성 변화 사이의 미묘한 색채 이동에서 아름다움을 만들어냅니다. 균일한 다이나믹과 정확한 박자 유지가 핵심이며, 각 패턴 반복 사이에서 발생하는 화성 변화의 순간을 섬세하게 표현하는 것이 연주의 핵심입니다.
+
 [피아노 미니멀리즘·필립 글래스 스타일 연주 — 완전 가이드](/stories/practice-room-piano-minimalism1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

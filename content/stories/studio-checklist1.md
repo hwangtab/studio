@@ -183,4 +183,4 @@ WeTransfer, 구글 드라이브, 카카오톡 파일 전송
 
 ---
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [녹음 준비 완전 가이드](/stories/recording-preparation1)

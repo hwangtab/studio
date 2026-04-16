@@ -97,4 +97,4 @@ faq:
 
 ---
 
-[양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [남양주에서 서울 녹음실 방문 가이드](/stories/namyangju1) | [수도권 녹음실 이용 방법](/stories/nationwide1) 
+[양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [남양주에서 서울 녹음실 방문 가이드](/stories/namyangju1) | [수도권 녹음실 이용 방법](/stories/nationwide1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

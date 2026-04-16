@@ -148,4 +148,4 @@ faq:
 
 ---
 
-[오토튠 완전 가이드](/stories/autotune1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[오토튠 완전 가이드](/stories/autotune1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1)

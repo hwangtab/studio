@@ -101,4 +101,10 @@ DAW는 도구입니다. 어떤 도구를 쓰느냐보다 무엇을 만들고 싶
 
 ---
 
+
+DAW(Digital Audio Workstation)는 레코딩, 편집, 믹싱, 마스터링을 하나의 소프트웨어로 처리하는 음악 제작의 핵심 도구입니다. Ableton Live는 전자 음악과 라이브 퍼포먼스에, Logic Pro는 맥 사용자와 보컬 프로듀싱에, Cubase는 미디 편집과 영상 음악에 강점이 있습니다. 첫 DAW를 선택할 때는 자신의 장르와 예산, 사용 환경(맥/윈도우)을 기준으로 무료 체험판을 충분히 활용해보는 것이 좋습니다.
+
+
+DAW(Digital Audio Workstation)는 레코딩, 편집, 믹싱, 마스터링을 하나의 소프트웨어로 처리하는 음악 제작의 핵심 도구입니다. Ableton Live는 전자 음악과 라이브 퍼포먼스에, Logic Pro는 맥 사용자와 보컬 프로듀싱에, Cubase는 미디 편집과 영상 음악에 강점이 있습니다. 첫 DAW를 선택할 때는 자신의 장르와 예산, 사용 환경(맥/윈도우)을 기준으로 무료 체험판을 충분히 활용해보는 것이 좋습니다.
+
 [DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

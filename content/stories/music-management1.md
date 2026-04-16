@@ -149,4 +149,4 @@ faq:
 
 ---
 
-[뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음악 협업 완전 가이드](/stories/music-collab1) | [인디 레이블 설립 완전 가이드](/stories/indie-label1) | [음악 법률·계약 완전 가이드](/stories/contract1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[뮤지션 네트워크·인맥 구축 완전 가이드](/stories/music-network1) | [음악 협업 완전 가이드](/stories/music-collab1) | [인디 레이블 설립 완전 가이드](/stories/indie-label1) | [음악 법률·계약 완전 가이드](/stories/contract1)

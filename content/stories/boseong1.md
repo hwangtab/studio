@@ -116,4 +116,4 @@ faq:
 
 ---
 
-[강진에서 서울 녹음실 방문 가이드](/stories/gangjin1) | [화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [고흥에서 서울 녹음실 방문 가이드](/stories/goheung1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[강진에서 서울 녹음실 방문 가이드](/stories/gangjin1) | [화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [고흥에서 서울 녹음실 방문 가이드](/stories/goheung1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

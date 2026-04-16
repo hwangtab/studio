@@ -162,4 +162,4 @@ faq:
 
 ---
 
-[녹음 환경 완전 가이드](/stories/recording-environment1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[녹음 환경 완전 가이드](/stories/recording-environment1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [콘덴서 마이크 완전 가이드](/stories/condenser-mic1)
