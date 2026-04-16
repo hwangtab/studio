@@ -13,8 +13,7 @@ tags:
   - 레이블 제출
 thumbnail: /images/portfolio2.webp
 summary: >-
-  인디 뮤지션을 위한 EPK(Electronic Press Kit) 완성 가이드. EPK 필수 구성 요소·EPK 제작 플랫폼 비교·EPK 제출
-  시 주의사항까지 정리합니다.
+  인디 뮤지션을 위한 EPK(Electronic Press Kit) 완성 가이드. EPK 필수 구성 요소·EPK 제작 플랫폼 비교·EPK 제출 시 주의사항까지 정리합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
 faq:
   - q: EPK가 무엇인가요?
     a: >-

@@ -13,8 +13,7 @@ tags:
   - FabFilter Pro-Q3 보컬
 thumbnail: /images/hardware4.webp
 summary: >-
-  보컬 EQ 완전 가이드입니다. 주파수 대역별 역할, High-Pass Filter 설정, 존재감 강조, 치찰음 제어, 장르별 보컬 EQ
-  설정, 플러그인 비교를 정리합니다.
+  보컬 EQ 완전 가이드입니다. 주파수 대역별 역할, High-Pass Filter 설정, 존재감 강조, 치찰음 제어, 장르별 보컬 EQ 설정, 플러그인 비교를 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다.
 faq:
   - q: 보컬 EQ에서 가장 먼저 해야 할 것은?
     a: >-

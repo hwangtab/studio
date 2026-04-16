@@ -13,8 +13,7 @@ tags:
   - 저렴한 DAW 녹음
 thumbnail: /images/portfolio5.webp
 summary: >-
-  Reaper 보컬 녹음 완전 가이드입니다. Cockos Reaper 오디오 설정, 트랙 생성, ReaEQ·ReaComp 설정, 트랙
-  렌더링(내보내기) 방법을 정리합니다.
+  Reaper 보컬 녹음 완전 가이드입니다. Cockos Reaper 오디오 설정, 트랙 생성, ReaEQ·ReaComp 설정, 트랙 렌더링(내보내기) 방법을 정리합니다. 스튜디오 녹음 전 준비사항부터 세션 후 파일 전달까지 연신내 스튜디오 놀의 실전 경험을 바탕으로 안
 faq:
   - q: Reaper로 보컬 녹음이 가능한가요?
     a: >-

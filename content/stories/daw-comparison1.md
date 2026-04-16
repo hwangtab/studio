@@ -13,8 +13,7 @@ tags:
   - DAW 선택 가이드
 thumbnail: /images/recording17.webp
 summary: >-
-  DAW 비교 완전 가이드입니다. Ableton Live, Logic Pro, Pro Tools, FL Studio, GarageBand의
-  특징·장단점을 보컬 녹음·믹싱·작곡 목적별로 비교합니다.
+  DAW 비교 완전 가이드입니다. Ableton Live, Logic Pro, Pro Tools, FL Studio, GarageBand의 특징·장단점을 보컬 녹음·믹싱·작곡 목적별로 비교합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
 faq:
   - q: 보컬 녹음에 가장 좋은 DAW는 무엇인가요?
     a: >-

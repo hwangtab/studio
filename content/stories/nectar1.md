@@ -13,8 +13,7 @@ tags:
   - iZotope 보컬
 thumbnail: /images/recording2.webp
 summary: >-
-  iZotope Nectar 보컬 처리 완전 가이드입니다. Nectar 4 모듈 구성·Vocal Assistant 활용·핵심 모듈
-  설정·Harmony 모듈 활용·Reverb 모듈 설정까지 정리합니다.
+  iZotope Nectar 보컬 처리 완전 가이드입니다. Nectar 4 모듈 구성·Vocal Assistant 활용·핵심 모듈 설정·Harmony 모듈 활용·Reverb 모듈 설정까지 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적
 faq:
   - q: iZotope Nectar란 무엇인가요?
     a: >-

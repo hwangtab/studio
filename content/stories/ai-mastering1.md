@@ -13,8 +13,7 @@ tags:
   - 스트리밍 마스터링
 thumbnail: /images/recording2.webp
 summary: >-
-  AI 마스터링 완전 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점,
-  전문 마스터링 엔지니어가 필요한 경우를 정리합니다.
+  AI 마스터링 완전 가이드입니다. LANDR·eMastered·iZotope Ozone AI 등 주요 서비스 비교, AI 마스터링의 장단점, 전문 마스터링 엔지니어가 필요한 경우를 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 
 faq:
   - q: AI 마스터링이란 무엇인가요?
     a: >-

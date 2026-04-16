@@ -13,8 +13,7 @@ tags:
   - True Peak
 thumbnail: /images/recording17.webp
 summary: >-
-  LUFS 완전 가이드입니다. LUFS 유형별 차이·플랫폼별 LUFS 기준·장르별 권장 LUFS·True Peak 설정·마스터링 헤드룸과
-  LUFS·LUFS 측정 플러그인까지 정리합니다.
+  LUFS 완전 가이드입니다. LUFS 유형별 차이·플랫폼별 LUFS 기준·장르별 권장 LUFS·True Peak 설정·마스터링 헤드룸과 LUFS·LUFS 측정 플러그인까지 정리합니다. 연신내 스튜디오 놀의 아날로그 하드웨어와 함께 최적의 믹싱·마스터링 결과물을 만들어 
 faq:
   - q: LUFS란 무엇인가요?
     a: >-

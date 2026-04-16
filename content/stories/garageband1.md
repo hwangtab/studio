@@ -13,8 +13,7 @@ tags:
   - iOS GarageBand
 thumbnail: /images/room6.webp
 summary: >-
-  GarageBand 보컬 녹음 완전 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성,
-  EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다.
+  GarageBand 보컬 녹음 완전 가이드입니다. Mac·iOS GarageBand 기본 설정, 오디오 인터페이스 연결, 트랙 생성, EQ·컴프레서 삽입, 파일 공유 방법을 정리합니다. 스튜디오 녹음 전 준비사항부터 세션 후 파일 전달까지 연신내 스튜디오 놀의 실전 경
 faq:
   - q: GarageBand로 고퀄리티 보컬 녹음이 가능한가요?
     a: >-

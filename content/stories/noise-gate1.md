@@ -13,8 +13,7 @@ tags:
   - 게이트 플러그인
 thumbnail: /images/album3.webp
 summary: >-
-  노이즈 게이트 완전 가이드입니다. Threshold·Attack·Hold·Release 파라미터 설명, 보컬·드럼·기타 적용법, 사이드체인
-  게이팅, 플러그인 비교를 정리합니다.
+  노이즈 게이트 완전 가이드입니다. Threshold·Attack·Hold·Release 파라미터 설명, 보컬·드럼·기타 적용법, 사이드체인 게이팅, 플러그인 비교를 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합
 faq:
   - q: 노이즈 게이트와 익스팬더의 차이는?
     a: >-

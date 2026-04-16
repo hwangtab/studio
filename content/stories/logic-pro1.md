@@ -13,8 +13,7 @@ tags:
   - DAW 보컬 녹음
 thumbnail: /images/recording14.webp
 summary: >-
-  Logic Pro 보컬 녹음·믹싱 완전 가이드입니다. Logic Pro 보컬 레코딩 설정, 주요 내장 플러그인 활용법, 보컬 믹싱 체인,
-  Flex Pitch(피치 교정) 사용법을 정리합니다.
+  Logic Pro 보컬 녹음·믹싱 완전 가이드입니다. Logic Pro 보컬 레코딩 설정, 주요 내장 플러그인 활용법, 보컬 믹싱 체인, Flex Pitch(피치 교정) 사용법을 정리합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
 faq:
   - q: Logic Pro로 보컬 녹음할 때 기본 설정은 무엇인가요?
     a: >-
