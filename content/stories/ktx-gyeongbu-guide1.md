@@ -10,7 +10,7 @@ tags:
   - 부산 녹음실
   - 서울 스튜디오 방문
   - KTX 당일 왕복
-thumbnail: /images/portfolio6.webp
+thumbnail: /images/recording1.webp
 summary: >-
   경부선 KTX로 대전·대구·부산 등에서 서울 연신내 스튜디오 놀까지 당일 왕복이 가능합니다. 도시별 소요 시간 비교, 환승 안내, 세션 시간표를 제공합니다. Neumann U87AI 마이크와 10년 경력 엔지니어의 프리미엄 녹음 서비스를 합리적 요금으로 이용하세요.
 faq:
@@ -22,7 +22,7 @@ faq:
     a: 부산역에서 KTX로 약 2시간 30분이면 서울역 도착. 오전 출발하면 4~5시간 세션 후 당일 귀가가 충분히 가능합니다.
 ---
 
-![경부선 KTX 도시별 녹음실 방문 가이드 — 스튜디오 놀](/images/portfolio6.webp)
+![경부선 KTX 도시별 녹음실 방문 가이드 — 스튜디오 놀](/images/recording1.webp)
 
 ## 경부선 KTX로 서울 스튜디오 당일 방문
 

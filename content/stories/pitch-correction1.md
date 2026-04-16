@@ -11,7 +11,7 @@ tags:
   - 피치 보정
   - 보컬 편집
   - Antares Auto-Tune
-thumbnail: /images/portfolio1.webp
+thumbnail: /images/hardware8.webp
 summary: >-
   피치 교정 완전 가이드입니다. 오토튠(Auto-Tune)과 멜로다인(Melodyne)의 차이와 사용법, 자연스러운 피치 교정 방법, K팝 보컬 피치 수정 기법, 과도한 교정의 문제점을 정리합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
 faq:
@@ -32,7 +32,7 @@ faq:
       피치 교정은 보통 믹싱 체인의 맨 처음(EQ, 컴프레서 이전)에 사용합니다. 피치가 안정된 상태에서 EQ와 컴프레서를 적용해야 처리가
       일관되게 작동합니다.
 ---
-![피치 교정 완전 가이드 — 스튜디오 놀](/images/portfolio1.webp)
+![피치 교정 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
 
 ## 피치 교정 — 보컬을 더 선명하게 만드는 기술
 

@@ -11,7 +11,7 @@ tags:
   - Cubase 믹싱
   - Cubase EQ
   - Cubase 컴프레서
-thumbnail: /images/portfolio2.webp
+thumbnail: /images/recording6.webp
 summary: >-
   Cubase 보컬 녹음 완전 가이드입니다. Cubase 기본 설정·오디오 트랙 생성 및 녹음·Channel EQ 설정·Compressor
   설정·VariAudio — 내장 피치 교정·파일 내보내기 (Export)까지 정리합니다.
@@ -35,7 +35,7 @@ faq:
       bit → Sample Rate: 44100/48000 → Export Audio를 클릭합니다. 드라이 보컬은 플러그인 Bypass
       후 트랙 Solo → Export합니다.
 ---
-![Cubase 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/portfolio2.webp)
+![Cubase 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
 
 ## Cubase — 30년 역사의 전문 DAW
 

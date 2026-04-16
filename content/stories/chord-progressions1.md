@@ -11,7 +11,7 @@ tags:
   - 작곡 코드
   - I-IV-V
   - ii-V-I 코드
-thumbnail: /images/portfolio1.webp
+thumbnail: /images/recording4.webp
 summary: >-
   코드 진행 완전 가이드입니다. 기본 코드 진행 공식, 장르별(팝·R&B·힙합·CCM) 코드 패턴, 차용 화음, 분수 코드, 작곡에 활용하는 방법을 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다.
 faq:
@@ -32,7 +32,7 @@ faq:
       곡 중간에 조성이 바뀌는 것입니다. 반음 위 전조(Semi-tone Modulation)는 가장 자주 사용되는 기법으로, 마지막
       코러스를 반음 올려 에너지와 감정을 높이는 데 많이 활용됩니다.
 ---
-![코드 진행 완전 가이드 — 스튜디오 놀](/images/portfolio1.webp)
+![코드 진행 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
 
 ## 코드 진행 — 좋은 음악의 화성적 토대
 

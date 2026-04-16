@@ -11,7 +11,7 @@ tags:
   - Reaper 믹싱
   - Reaper EQ
   - 저렴한 DAW 녹음
-thumbnail: /images/portfolio5.webp
+thumbnail: /images/studio4.webp
 summary: >-
   Reaper 보컬 녹음 완전 가이드입니다. Cockos Reaper 오디오 설정, 트랙 생성, ReaEQ·ReaComp 설정, 트랙 렌더링(내보내기) 방법을 정리합니다. 스튜디오 녹음 전 준비사항부터 세션 후 파일 전달까지 연신내 스튜디오 놀의 실전 경험을 바탕으로 안
 faq:
@@ -33,7 +33,7 @@ faq:
       → Bit depth: 24 bit → Render 클릭. Source: Selected tracks로 보컬 트랙만 선택해 내보낼 수
       있습니다.
 ---
-![Reaper 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/portfolio5.webp)
+![Reaper 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
 
 ## Reaper — 가성비 최고의 전문 DAW
 

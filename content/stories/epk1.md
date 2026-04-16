@@ -11,7 +11,7 @@ tags:
   - 보도자료
   - 인디 뮤지션 마케팅
   - 레이블 제출
-thumbnail: /images/portfolio2.webp
+thumbnail: /images/recording16.webp
 summary: >-
   인디 뮤지션을 위한 EPK(Electronic Press Kit) 완성 가이드. EPK 필수 구성 요소·EPK 제작 플랫폼 비교·EPK 제출 시 주의사항까지 정리합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
 faq:
@@ -32,7 +32,7 @@ faq:
       네. Google Sites, Notion, Canva, Wix 무료 플랜으로 EPK 페이지를 제작할 수 있습니다. 음원 샘플은
       SoundCloud, 동영상은 YouTube 비공개 링크로 첨부합니다. 비용 없이 24시간 이내 완성이 가능합니다.
 ---
-![EPK 전자 홍보 자료 — 스튜디오 놀](/images/portfolio2.webp)
+![EPK 전자 홍보 자료 — 스튜디오 놀](/images/recording16.webp)
 
 ## EPK — 아티스트의 디지털 명함
 

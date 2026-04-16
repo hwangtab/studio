@@ -14,7 +14,7 @@ summary: >-
   cansa? (Uff.) Los pros jamás parten desde cero. Ellos preparan una plantil
 thumbnail: /images/recording9.webp
 ---
-![Ventana del mezclador en el DAW](/images/portfolio3.webp)
+![Ventana del mezclador en el DAW](/images/recording12.webp)
 
 Cada vez que mezclas creas pistas, cambias nombres, insertas efectos... ¿no cansa? (Uff.)
 Los pros jamás parten desde cero.

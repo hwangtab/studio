@@ -11,7 +11,7 @@ tags:
   - 유튜브 음악 제작
   - 영상 배경음악
   - 콘텐츠 BGM
-thumbnail: /images/portfolio4.webp
+thumbnail: /images/hardware1.webp
 summary: >-
   유튜브·크리에이터 BGM 제작 완전 가이드입니다. 저작권 없는 배경음악 직접 제작법, 장르별 BGM 설계, 루프 구조 제작, 음악 길이 기준, 유튜브 Content ID 대응 방법을 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할
 faq:
@@ -32,7 +32,7 @@ faq:
       BGM은 보이스오버 대비 -20~-25dB 낮게 설정하는 것이 일반적입니다. 보이스오버가 명확하게 들리면서 BGM이 분위기를
       서포트하는 비율입니다. 최종 믹스에서 VO -12dBFS, BGM -32~-35dBFS가 기준점입니다.
 ---
-![유튜브·크리에이터 BGM 제작 완전 가이드 — 스튜디오 놀](/images/portfolio4.webp)
+![유튜브·크리에이터 BGM 제작 완전 가이드 — 스튜디오 놀](/images/hardware1.webp)
 
 ## 유튜브 BGM — 직접 만드는 저작권 자유 배경음악
 

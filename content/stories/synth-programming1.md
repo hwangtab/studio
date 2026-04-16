@@ -11,7 +11,7 @@ tags:
   - 필터 신스
   - LFO
   - 소프트 신디사이저
-thumbnail: /images/portfolio3.webp
+thumbnail: /images/recording3.webp
 summary: >-
   신스 프로그래밍 완전 가이드입니다. ADSR 엔벨로프, 오실레이터 파형, 로우패스 필터, LFO 활용, 아날로그·디지털 신스 비교, 장르별 신스 사운드 만들기를 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다
 faq:
@@ -34,7 +34,7 @@ faq:
       LFO(Low Frequency Oscillator)는 주로 Pitch(비브라토), Amplitude(트레몰로), Filter
       Cutoff(와우와우 효과)에 연결해 음악적 모듈레이션을 만듭니다. LFO Rate로 속도, Depth로 변조 깊이를 조정합니다.
 ---
-![신스 프로그래밍 완전 가이드 — 스튜디오 놀](/images/portfolio3.webp)
+![신스 프로그래밍 완전 가이드 — 스튜디오 놀](/images/recording3.webp)
 
 ## 신스 프로그래밍 — 소리를 디자인하다
 

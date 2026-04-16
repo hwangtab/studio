@@ -11,7 +11,7 @@ tags:
   - TLM 102 마이크
   - 보컬 마이크 선택
   - 녹음실 마이크
-thumbnail: /images/portfolio4.webp
+thumbnail: /images/recording8.webp
 summary: >-
   보컬 녹음에 최적화된 마이크를 선택하는 완전 가이드입니다. 마이크 유형별 특징·주요 보컬 마이크 비교·마이크 선택 시 고려사항까지 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다.
 faq:
@@ -35,7 +35,7 @@ faq:
       방음이 충분하다면 Audio-Technica AT2020이나 Rode NT1 같은 입문용 콘덴서 마이크로 시작하세요. 방음이
       부족하다면 Shure SM7B(다이나믹) 또는 Rode NT1-A를 방음 패널과 함께 사용하는 것이 효과적입니다.
 ---
-![보컬 녹음 마이크 추천 완전 가이드 — 스튜디오 놀](/images/portfolio4.webp)
+![보컬 녹음 마이크 추천 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
 
 ## 마이크 선택 — 보컬 사운드의 70%를 결정한다
 

@@ -11,7 +11,7 @@ tags:
   - 믹싱 워크플로우
   - Insert FX 순서
   - 믹싱 기본
-thumbnail: /images/portfolio3.webp
+thumbnail: /images/recording10.webp
 summary: >-
   믹싱 체인 완전 가이드입니다. 보컬 Insert FX 플러그인 순서(EQ·컴프레서·딜레이·리버브), Send/Return 활용법, 게인 스테이징, 믹싱 신호 흐름을 정리합니다. 연신내 스튜디오 놀의 아날로그 하드웨어와 함께 최적의 믹싱·마스터링 결과물을 만들어 보세요.
 faq:
@@ -32,7 +32,7 @@ faq:
       각 플러그인 단계에서 신호 레벨이 너무 크거나 작으면 왜곡이나 노이즈가 발생합니다. 일반적으로 각 플러그인 출력 레벨을 -18 ~
       -12dBFS 범위에서 관리하면 클리핑 없이 안정적인 믹싱이 가능합니다.
 ---
-![믹싱 체인 완전 가이드 — 스튜디오 놀](/images/portfolio3.webp)
+![믹싱 체인 완전 가이드 — 스튜디오 놀](/images/recording10.webp)
 
 ## 믹싱 체인 — 신호 흐름이 사운드 품질을 결정한다
 

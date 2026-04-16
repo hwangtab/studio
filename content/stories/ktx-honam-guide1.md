@@ -10,7 +10,7 @@ tags:
   - 목포 녹음실
   - 서울 스튜디오 방문
   - KTX 당일 왕복
-thumbnail: /images/portfolio5.webp
+thumbnail: /images/recording2.webp
 summary: >-
   호남선 KTX·SRT로 광주·전주·익산·목포·순천·여수 등에서 서울 연신내 스튜디오 놀까지 당일 왕복이 가능합니다. 도시별 소요 시간 비교, 용산역 환승 안내, 맞춤 세션 시간표를 제공합니다. Neumann U87AI 마이크와 10년 경력 엔지니어의 프리미엄 녹음 서비
 faq:
@@ -22,7 +22,7 @@ faq:
     a: 목포역에서 KTX로 약 2시간 40분이면 용산역 도착. 오전 일찍 출발하면 3~4시간 세션 후 당일 귀가가 가능합니다.
 ---
 
-![호남선 KTX 도시별 녹음실 방문 가이드 — 스튜디오 놀](/images/portfolio5.webp)
+![호남선 KTX 도시별 녹음실 방문 가이드 — 스튜디오 놀](/images/recording2.webp)
 
 ## 호남선 KTX·SRT로 서울 스튜디오 당일 방문
 

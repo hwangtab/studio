@@ -14,7 +14,7 @@ summary: >-
   (Oof.) Pro không bao giờ bắt đầu từ số 0. Họ tạo template và bắt đầu từ đó. (
 thumbnail: /images/recording9.webp
 ---
-![Cửa sổ mixer DAW](/images/portfolio3.webp)
+![Cửa sổ mixer DAW](/images/recording14.webp)
 
 Mỗi lần mix bạn lại tạo track, đổi tên, chèn hiệu ứng... mệt đúng không? (Oof.)
 Pro không bao giờ bắt đầu từ số 0.

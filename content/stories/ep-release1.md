@@ -11,7 +11,7 @@ tags:
   - EP 발매 절차
   - EP 유통
   - EP 마케팅
-thumbnail: /images/portfolio5.webp
+thumbnail: /images/recording15.webp
 summary: >-
   EP(미니앨범) 발매 완전 가이드입니다. EP 트랙 수 기준, 발매 전 체크리스트, 유통사 선택, 발매 타임라인, 저작권 등록, 발매 후 홍보 전략을 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다.
 faq:
@@ -32,7 +32,7 @@ faq:
       DistroKid 같은 연간 구독 서비스는 곡 수 제한 없이 동일 요금입니다. TuneCore는 싱글($9.99/년)과
       앨범($29.99/년)으로 구분됩니다. 국내 유통사는 트랙 수에 따라 별도 협의합니다.
 ---
-![EP 발매 완전 가이드 — 스튜디오 놀](/images/portfolio5.webp)
+![EP 발매 완전 가이드 — 스튜디오 놀](/images/recording15.webp)
 
 ## EP 발매 — 미니앨범으로 아티스트 정체성 구축하기
 

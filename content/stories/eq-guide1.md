@@ -11,7 +11,7 @@ tags:
   - 믹싱 EQ
   - 보컬 믹싱 EQ
   - EQ 가이드
-thumbnail: /images/portfolio5.webp
+thumbnail: /images/recording17.webp
 summary: >-
   보컬 믹싱을 위한 EQ 완전 가이드입니다. 주파수 대역별 역할, 컷·부스트 기법, 파라메트릭 EQ 세팅, 장르별 보컬 EQ 전략을 정리합니다. 연신내 스튜디오 놀의 아날로그 하드웨어와 함께 최적의 믹싱·마스터링 결과물을 만들어 보세요.
 faq:
@@ -32,7 +32,7 @@ faq:
       일반적으로 컷(Cut) 우선을 권장합니다. 불필요한 주파수를 먼저 제거한 후 필요한 대역을 소량 부스트하는 방식이 자연스러운 결과를
       만듭니다.
 ---
-![보컬 EQ 완전 가이드 — 스튜디오 놀](/images/portfolio5.webp)
+![보컬 EQ 완전 가이드 — 스튜디오 놀](/images/recording17.webp)
 
 ## 보컬 EQ — 주파수를 다듬어 보컬을 살리는 기술
 
