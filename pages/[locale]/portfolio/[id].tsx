@@ -11,7 +11,7 @@ import { getPortfolioItems, getCategories } from '../../../data/portfolio';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
 import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
-import { generateMusicRecordingSchema, generateVideoSchema, extractYouTubeId } from '../../../utils/schemaGenerator';
+import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
@@ -66,7 +66,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
 
   const categoryInfo = getCategoryInfo(item.category, categories);
   const schemaImage = item.image.startsWith('http') ? item.image : `${siteConfig.url}${item.image}`;
-  const musicSchema = generateMusicRecordingSchema(
+  const portfolioSchema = generateMusicRecordingSchema(
     {
       title: item.title,
       artist: item.artist,
@@ -77,21 +77,6 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
     siteConfig.url,
     locale
   );
-  const youTubeId = extractYouTubeId(item.link);
-  const videoSchema = youTubeId
-    ? generateVideoSchema(
-        {
-          name: `${item.title} - ${item.artist}`,
-          description: metaDescription,
-          thumbnailUrl: `https://i.ytimg.com/vi/${youTubeId}/maxresdefault.jpg`,
-          contentUrl: `https://www.youtube.com/watch?v=${youTubeId}`,
-          embedUrl: `https://www.youtube.com/embed/${youTubeId}`,
-          uploadDate: new Date().toISOString().split('T')[0],
-        },
-        locale
-      )
-    : null;
-  const portfolioSchema = videoSchema ? [musicSchema, videoSchema] : musicSchema;
   const detailContentAnimation = DETAIL_CONTENT_ANIMATION;
 
   const sharePortfolio = async () => {

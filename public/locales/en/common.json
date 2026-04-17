@@ -593,6 +593,12 @@
       "noRelated": "No related stories.",
       "viewAll": "View all stories"
     },
+    "categoryHub": {
+      "seoTitle": "{{category}} Stories | Studio NOL",
+      "seoDescription": "{{count}} Studio NOL stories about {{category}}. Field-tested insights, production know-how, and the latest updates in one place.",
+      "subtitle": "{{count}} stories about {{category}}",
+      "browseAll": "Browse all {{total}} stories."
+    },
     "categories": {
       "instrument": "Instrument Practice",
       "region": "Area Guide",

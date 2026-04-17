@@ -595,6 +595,12 @@
       "noRelated": "ไม่มีเรื่องราวที่เกี่ยวข้อง.",
       "viewAll": "ดูเรื่องราวทั้งหมด"
     },
+    "categoryHub": {
+      "seoTitle": "เรื่องราวเกี่ยวกับ{{category}} | Studio NOL",
+      "seoDescription": "{{count}} เรื่องราวของ Studio NOL เกี่ยวกับ{{category}} ประสบการณ์จริง เทคนิคการผลิต และข่าวสารล่าสุดในที่เดียว",
+      "subtitle": "{{count}} เรื่องราวเกี่ยวกับ{{category}}",
+      "browseAll": "ดูเรื่องราวทั้งหมด {{total}} เรื่อง"
+    },
     "categories": {
       "instrument": "ฝึกซ้อมเครื่องดนตรี",
       "region": "คู่มือพื้นที่",

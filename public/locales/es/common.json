@@ -593,6 +593,12 @@
       "noRelated": "No hay historias relacionadas.",
       "viewAll": "Ver todas las historias"
     },
+    "categoryHub": {
+      "seoTitle": "Historias sobre {{category}} | Studio NOL",
+      "seoDescription": "{{count}} historias de Studio NOL sobre {{category}}. Experiencia práctica, know-how de producción y novedades, en un solo lugar.",
+      "subtitle": "{{count}} historias sobre {{category}}",
+      "browseAll": "Ver las {{total}} historias."
+    },
     "categories": {
       "instrument": "Práctica instrumental",
       "region": "Guía de zona",

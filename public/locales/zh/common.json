@@ -593,6 +593,12 @@
       "noRelated": "没有相关故事。",
       "viewAll": "查看所有故事"
     },
+    "categoryHub": {
+      "seoTitle": "{{category}} 相关故事 | Studio NOL",
+      "seoDescription": "Studio NOL 关于 {{category}} 的 {{count}} 篇故事。一站式获取实战经验、制作诀窍与最新动态。",
+      "subtitle": "关于 {{category}} 的 {{count}} 篇故事",
+      "browseAll": "查看全部 {{total}} 篇故事。"
+    },
     "categories": {
       "instrument": "乐器练习",
       "region": "地区指南",

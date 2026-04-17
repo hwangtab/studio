@@ -45,14 +45,14 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const categoryLabel = t(`stories.categories.${categoryKey}`);
-  const seoTitle = t('stories.category.seoTitle', {
+  const seoTitle = t('stories.categoryHub.seoTitle', {
     category: categoryLabel,
-    defaultValue: `${categoryLabel} | ${t('nav.stories')} | ${t('common.siteName', { defaultValue: 'Studio NOL' })}`,
+    defaultValue: `${categoryLabel} | ${t('nav.stories')} | Studio NOL`,
   });
-  const seoDescription = t('stories.category.seoDescription', {
+  const seoDescription = t('stories.categoryHub.seoDescription', {
     category: categoryLabel,
     count: stories.length,
-    defaultValue: `${categoryLabel} 관련 ${stories.length}개의 스튜디오 놀 스토리. 실무 경험, 제작 노하우, 최신 소식을 한곳에서 확인하세요.`,
+    defaultValue: `${stories.length} Studio NOL stories about ${categoryLabel}.`,
   });
 
   const totalPages = Math.ceil(stories.length / ITEMS_PER_PAGE);
@@ -136,10 +136,10 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         locale={locale}
         priority
         title={categoryLabel}
-        subtitle={t('stories.category.subtitle', {
+        subtitle={t('stories.categoryHub.subtitle', {
           category: categoryLabel,
           count: stories.length,
-          defaultValue: `${categoryLabel} 관련 스토리 ${stories.length}편`,
+          defaultValue: `${stories.length} stories about ${categoryLabel}`,
         })}
         backgroundImage="/images/studio1.webp"
         imageAlt={t('stories.hero.alt')}
@@ -209,9 +209,9 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
 
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
             <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-4">
-              {t('stories.category.browseAll', {
+              {t('stories.categoryHub.browseAll', {
                 total: allStoriesCount,
-                defaultValue: `전체 ${allStoriesCount}편의 스토리도 확인해 보세요.`,
+                defaultValue: `Browse all ${allStoriesCount} stories.`,
               })}
             </p>
             <Link

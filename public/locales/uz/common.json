@@ -591,6 +591,12 @@
       "noRelated": "O'xshash hikoyalar yo'q.",
       "viewAll": "Barcha hikoyalarni ko'rish"
     },
+    "categoryHub": {
+      "seoTitle": "{{category}} haqida hikoyalar | Studio NOL",
+      "seoDescription": "Studio NOL'ning {{category}} haqida {{count}} ta hikoyasi. Amaliy tajriba, prodakshn sirlari va so'nggi yangiliklar.",
+      "subtitle": "{{category}} haqida {{count}} ta hikoya",
+      "browseAll": "Barcha {{total}} ta hikoyani ko'ring."
+    },
     "categories": {
       "instrument": "Asbob mashqlari",
       "region": "Hudud yoʻriqnomasi",

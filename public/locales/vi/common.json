@@ -593,6 +593,12 @@
       "noRelated": "Không có câu chuyện liên quan.",
       "viewAll": "Xem tất cả stories"
     },
+    "categoryHub": {
+      "seoTitle": "Câu chuyện về {{category}} | Studio NOL",
+      "seoDescription": "{{count}} câu chuyện của Studio NOL về {{category}}. Kinh nghiệm thực chiến, bí quyết sản xuất và tin tức mới nhất.",
+      "subtitle": "{{count}} câu chuyện về {{category}}",
+      "browseAll": "Xem tất cả {{total}} câu chuyện."
+    },
     "categories": {
       "instrument": "Luyện tập nhạc cụ",
       "region": "Hướng dẫn khu vực",
