@@ -40,11 +40,11 @@ faq:
 
 Logic Pro는 Apple 생태계에 최적화된 Mac 전용 유료 DAW로, 전문 스튜디오와 홈 레코딩 모두에서 널리 사용됩니다.
 
+Logic Pro의 역사는 1993년 독일 Emagic이 Logic Audio로 출시하면서 시작됩니다. 당초 Atari ST·Macintosh용 MIDI 시퀀서로 출발했고, 1999년 오디오 멀티트랙 기능이 강화되면서 유럽 음악 프로덕션 씬에서 Pro Tools의 대안으로 자리잡았습니다. 2002년 Apple이 Emagic을 인수해 Logic을 Mac 전용으로 전환하고 Windows 버전을 단종했으며, 2004년 Logic Pro 7에서 Space Designer 리버브와 Sculpture 신시사이저를 내장해 스튜디오 품질의 플러그인 번들을 제공했습니다. 2013년 Logic Pro X 출시로 드럼머신 Drummer·악보 편집·Flex Pitch 피치 교정이 통합됐고, 현재 한국의 K-POP 제작사·인디 아티스트·영상 음악 작업자들이 Final Cut Pro와의 통합 워크플로우로 Logic Pro를 사용합니다.
+
 ---
 
 ## Logic Pro 기본 설정
-
-작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
 
 ### 오디오 인터페이스 설정
 
@@ -96,8 +96,6 @@ File → New Project → 샘플레이트 설정 후 생성
 
 ## Logic Pro Channel EQ 설정
 
-아래 수치는 가이드라인이며, 최종 판단은 항상 귀로 합니다.
-
 ### Channel EQ 삽입
 
 1. 트랙 선택 → Smart Controls (B키)
@@ -119,8 +117,6 @@ File → New Project → 샘플레이트 설정 후 생성
 ---
 
 ## Logic Pro 컴프레서 설정
-
-버스로 묶어 처리하면 개별 트랙 조정 없이도 전체 밸런스를 효율적으로 잡을 수 있습니다.
 
 ### Compressor 삽입
 
@@ -145,8 +141,6 @@ File → New Project → 샘플레이트 설정 후 생성
 
 ## Flex Pitch — 내장 피치 교정
 
-볼륨 자동화를 활용하면 이펙트에 의존하지 않고도 다이나믹을 자연스럽게 만들 수 있습니다.
-
 ### Flex Pitch 활성화
 
 1. 트랙 선택 → Track → Show Flex Pitch/Time (Cmd+F)
@@ -166,8 +160,6 @@ File → New Project → 샘플레이트 설정 후 생성
 ---
 
 ## 파일 내보내기 (Bounce)
-
-아래 설정값은 출발점이며, 곡의 장르와 보컬 특성에 따라 조정이 필요합니다.
 
 ### 믹싱 의뢰용 내보내기
 
@@ -193,8 +185,8 @@ File → Bounce → Project or Section
 
 ## 마치며
 
-Logic Pro는 Flex Pitch, Space Designer, Channel EQ 등 전문 플러그인을 기본 내장하여 홈 레코딩에서 프로급 품질을 실현할 수 있습니다.
+Logic Pro는 Flex Pitch·Space Designer·Channel EQ 등 전문 플러그인을 기본 내장해 홈 레코딩에서 프로급 품질을 실현할 수 있습니다. 녹음 시 버퍼 사이즈를 64~128 samples로 설정해 레이턴시를 최소화하고, 믹싱 단계에서는 256~512 samples로 높여 CPU 부하를 줄이는 것이 표준 워크플로우입니다. 오디오 인터페이스의 Direct Monitoring을 켜고 Logic Pro 소프트웨어 모니터링은 끄면 레이턴시 없이 실시간 모니터링이 가능합니다.
 
----
+Flex Pitch로 피치를 교정할 때는 Pitch Correction 슬라이더를 50~70 수준으로 유지하면 자연스러운 교정이 됩니다. 100으로 올리면 Auto-Tune 이펙트가 발생합니다. 믹싱 의뢰용 드라이 보컬 파일은 플러그인을 Bypass한 뒤 File → Bounce → WAV/24bit/48kHz로 내보내고, 파일명은 [아티스트명]_[곡명]_vocal.wav 형식으로 저장해 MR 파일과 함께 전달합니다.
 
 [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
