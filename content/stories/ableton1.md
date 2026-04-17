@@ -39,11 +39,9 @@ faq:
 
 Ableton Live는 전자음악·EDM·힙합 프로듀서에게 특히 인기 있는 DAW로, 보컬 녹음·편집도 전문적으로 지원합니다.
 
----
+Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처음 출시한 버전 1.0에서 시작됩니다. 기존 DAW가 타임라인 기반 선형 녹음에 집중했던 것과 달리, Ableton은 클립 단위로 루프를 즉흥 재생하는 Session View를 최초로 도입해 라이브 퍼포먼스와 즉흥 창작의 새로운 패러다임을 열었습니다. 2004년 Live 4에서 VST 플러그인 지원이 추가됐고, Daft Punk·Radiohead 등이 Ableton을 라이브 공연 도구로 채택하면서 EDM·전자음악 씬의 표준 DAW로 자리 잡았습니다. 2011년 Push 컨트롤러 출시로 하드웨어 통합이 강화됐고, 현재 Ableton Live 12는 MIDI 2.0을 지원하며 전통적인 보컬 녹음부터 전자음악 라이브 퍼포먼스까지 하나의 환경에서 처리합니다.
 
 ## Ableton Live 기본 설정
-
-같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
 
 ### 오디오 인터페이스 설정
 
@@ -96,8 +94,6 @@ Ableton Live는 전자음악·EDM·힙합 프로듀서에게 특히 인기 있�
 
 ## EQ Eight 설정
 
-플러그인을 추가하기 전에 게인 스테이징이 올바른지 먼저 확인합니다.
-
 ### EQ Eight 삽입
 
 1. 보컬 트랙 선택 → 트랙 하단 Device View
@@ -118,8 +114,6 @@ Ableton Live는 전자음악·EDM·힙합 프로듀서에게 특히 인기 있�
 ---
 
 ## Compressor 설정
-
-각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
 
 ### Compressor 삽입
 
@@ -188,8 +182,6 @@ File → Export Audio/Video (Cmd+Shift+R)
 
 ## 마치며
 
-Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 강력한 DAW입니다.
+Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 강력한 DAW입니다. 보컬 녹음에서 핵심 설정은 버퍼 크기입니다. 녹음 시에는 64~128 samples로 설정해 레이턴시를 5ms 이하로 유지하고, 믹싱 시에는 256~512 samples로 높여 CPU 부하를 줄이는 방식으로 전환하는 것이 표준 워크플로우입니다. 드라이 보컬은 EQ Eight과 Compressor를 Bypass한 상태로 내보내야 믹싱 의뢰 시 원본 파일로 활용할 수 있으며, 내보내기 설정은 WAV 24bit/44100Hz가 기본입니다. Warp 기능은 타이밍 교정 외에도 보컬 멜로디를 BPM에 맞게 동기화하는 데 유용하지만, Complex Pro 모드는 CPU를 많이 소모하므로 최종 믹싱 이전 단계에서만 활용하는 것을 권장합니다.
 
----
- | [기업 행사·회사 기념 음원 제작 — 창립기념일·시상식·홍보 영상 음원 가이드](/stories/corporate1)
 [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
