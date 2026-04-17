@@ -145,6 +145,4 @@ Epidemic Sound (epidemicsound.com):
 
 싱크 라이센싱은 완성도 높은 음원에서 시작됩니다. Musicbed·Artlist 같은 글로벌 라이브러리는 심사 과정이 있으며, WAV 44.1kHz/24bit의 고음질과 인스트루멘탈 버전 동봉이 심사 통과의 기본 조건입니다. 국내 광고·드라마 제작사를 직접 공략하려면 장르·무드·BPM 키워드가 정확히 태깅된 음원 카탈로그와 싱크 에이전시를 통한 네트워크 구축이 현실적인 접근입니다. KOMCA 저작물 등록을 먼저 완료해야 싱크 이후 발생하는 퍼포먼스 로열티를 빠짐없이 수납할 수 있습니다.
 
----
-
 [방송 음악 사용 완전 가이드](/stories/broadcast-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음원 저작권 완전 가이드](/stories/copyright1)
