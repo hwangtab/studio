@@ -38,11 +38,9 @@ faq:
 
 GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 중급자까지 바로 사용할 수 있는 강력한 녹음 환경을 제공합니다.
 
----
+GarageBand의 역사는 2004년 Apple이 Mac용 iLife 번들 소프트웨어로 처음 출시하면서 시작됩니다. Steve Jobs가 Macworld Expo에서 직접 시연했으며, 기존 프로 DAW에 비해 직관적인 인터페이스로 비전문가가 바로 음악 제작을 시작할 수 있게 했습니다. 2011년 iOS용 GarageBand가 출시되면서 스마트폰으로 음악 제작이 가능해졌고, 2012년부터 Mac App Store에서 무료로 배포되기 시작했습니다. Billie Eilish·Tones and I 등 글로벌 아티스트들이 GarageBand를 제작 도구로 사용했다고 밝히면서 무료 DAW의 가능성이 재평가됐으며, 현재 GarageBand로 녹음한 드라이 보컬 파일이 전문 스튜디오 믹싱 의뢰 납품 파일로 활용되는 사례도 많습니다.
 
 ## GarageBand 기본 설정 (Mac)
-
-자동화(Automation) 레인을 활용하면 수동 조정 없이 정밀한 다이나믹 변화를 만들 수 있습니다.
 
 ### 오디오 인터페이스 설정
 
@@ -94,8 +92,6 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## GarageBand EQ 설정
 
-고음역 컷이 전체 믹스에 투명감을 더해주는 경우가 많으므로 저역부터 정리하세요.
-
 ### Channel EQ 삽입
 
 1. 트랙 선택 → Smart Controls 표시
@@ -140,8 +136,6 @@ GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 �
 
 ## 파일 내보내기 (Export)
 
-아래 내용은 특정 버전 기준이며, 업데이트 이후 인터페이스가 달라질 수 있습니다.
-
 ### 믹싱 의뢰용 내보내기
 
 Share → Export Song to Disk
@@ -165,8 +159,6 @@ Share → Export Song to Disk
 
 ## iOS GarageBand 보컬 녹음
 
-트랙 색상과 명칭을 체계적으로 관리하면 복잡한 세션도 빠르게 파악할 수 있습니다.
-
 ### iOS 설정
 
 1. Lightning/USB-C → 오디오 인터페이스 어댑터 연결
@@ -183,8 +175,8 @@ Share → Export Song to Disk
 
 ## 마치며
 
-GarageBand는 무료이지만 스튜디오 의뢰 가능한 드라이 보컬 녹음에 충분합니다.
+GarageBand는 무료이지만 스튜디오 의뢰용 드라이 보컬 녹음에 충분한 기능을 갖추고 있습니다. 녹음 시 버퍼 크기를 64~128 samples로 설정해 레이턴시를 최소화하고, 믹싱 단계에서는 256~512 samples로 높여 CPU 부하를 줄이는 것이 표준 워크플로우입니다. 오디오 인터페이스의 Direct Monitoring을 켜고 GarageBand 소프트웨어 모니터링은 끄면 레이턴시 없이 실시간 모니터링이 가능합니다.
 
----
+EQ 설정에서는 HPF를 80~100Hz에 걸어 불필요한 저역을 정리한 뒤, 2~5kHz 대역을 +1~2dB 부스트해 명료도를 높이고 10kHz 이상 Shelf를 +1dB 올려 공기감을 더하는 것이 기본입니다. 컴프레서는 Threshold -18dBFS·Ratio 3:1·Attack 15ms·Release 100ms로 설정하면 게인 리덕션 미터에서 -3~-6dB 수준으로 눌려 자연스러운 다이나믹이 유지됩니다. 믹싱 의뢰용 드라이 보컬 파일은 Share → Export Song to Disk → AIFF/WAV Lossless로 내보내어 전달하고, iOS에서는 Lightning 또는 USB-C 어댑터로 오디오 인터페이스를 연결한 뒤 '공유 → 노래 → 오디오 → Lossless' 경로로 무손실 파일을 저장할 수 있습니다.
 
 [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
