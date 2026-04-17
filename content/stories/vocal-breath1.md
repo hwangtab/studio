@@ -132,6 +132,4 @@ Gate Threshold 설정으로 조용한 브레스를 자동으로 게이팅합니�
 
 보컬 브레스는 인간미와 감정을 전달하는 요소입니다. 기계적으로 모든 브레스를 제거하는 것보다 음악의 흐름과 장르 특성에 맞게 판단하는 것이 중요합니다. 처음에는 레퍼런스 트랙과 비교하면서 완전 제거와 레벨 축소 사이에서 자신만의 기준을 만들어가세요.
 
----
-
 [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [보컬 콤핑 완전 가이드](/stories/vocal-comping1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1)
