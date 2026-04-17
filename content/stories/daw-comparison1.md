@@ -38,7 +38,7 @@ faq:
 
 DAW(Digital Audio Workstation)는 음악 제작의 핵심 소프트웨어입니다. 보컬 녹음, 편집, 믹싱, 마스터링을 하나의 환경에서 처리합니다.
 
----
+DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight CMI로 거슬러 올라갑니다. 이 기기들은 수천만 원대여서 대형 스튜디오만 접근 가능했습니다. 1989년 Avid의 Pro Tools 1.0이 Mac에서 최초의 하드디스크 기반 디지털 레코딩을 실용화했고, 1993년 Steinberg Cubase가 MIDI+오디오 통합 환경을 대중화했습니다. 2001년 Ableton Live가 루프 기반의 새로운 음악 제작 패러다임을 제시했고, 2004년 Apple이 Logic을 인수해 가격을 대폭 낮추면서 DAW 민주화가 가속됐습니다. 현재 GarageBand(Mac/iOS 무료)부터 Pro Tools Ultimate(전문가용)까지 목적에 맞는 DAW를 선택할 수 있는 환경이 됐습니다.
 
 ## 주요 DAW 한눈에 비교
 
@@ -55,8 +55,6 @@ DAW(Digital Audio Workstation)는 음악 제작의 핵심 소프트웨어입니�
 ---
 
 ## 목적별 DAW 추천
-
-MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고 자연스러운 연주감을 만들 수 있습니다.
 
 ### 보컬 녹음 중심
 
@@ -86,8 +84,6 @@ MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고
 ## DAW별 상세 비교
 
 ### Pro Tools
-
-프리셋은 출발점으로 활용하되, 곡의 특성에 맞게 반드시 조정해야 합니다.
 
 **장점**
 - 업계 표준 → 스튜디오 간 세션 호환
@@ -162,6 +158,6 @@ MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고
 
 DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인터페이스, 조용한 녹음 환경입니다.
 
----
+어떤 DAW를 선택해도 드라이(무처리) WAV 24bit/44.1kHz 파일로 내보내면 전문 스튜디오에 믹싱을 의뢰하는 데 아무 문제가 없습니다. 보컬 녹음이 목적이라면 Logic Pro의 Flex Pitch와 내장 Vintage 플러그인으로 스튜디오 수준의 보컬 체인을 구성할 수 있으며, 비트메이킹이 목적이라면 FL Studio의 패턴 기반 워크플로우와 평생 무료 업데이트 정책이 장점입니다. 처음 DAW를 시작한다면 GarageBand로 시작해 Logic Pro로 업그레이드하는 Apple 경로가 학습 비용을 최소화하는 가장 효율적인 선택입니다.
 
 [DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1) | [DAW 믹싱 템플릿 완전 가이드](/stories/daw-template1) | [Ableton 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
