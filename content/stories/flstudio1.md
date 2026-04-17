@@ -40,7 +40,7 @@ faq:
 
 FL Studio는 비트메이킹과 EDM 제작에 특화된 DAW이지만, Edison과 Mixer를 활용하면 전문 보컬 녹음도 충분히 가능합니다.
 
----
+FL Studio의 역사는 1997년 벨기에의 Image-Line이 FruityLoops라는 이름으로 출시하면서 시작됩니다. 처음에는 드럼 패턴 시퀀서로 출발했지만 2003년 FL Studio로 리브랜딩하면서 완전한 DAW로 성장했습니다. Just Blaze·Lex Luger 등 힙합 프로듀서들이 FL Studio로 제작한 비트가 알려지면서 힙합·R&B 씬의 표준 툴이 됐고, 한국에서는 2000년대 중반 인터넷 음악 커뮤니티를 통해 확산됐습니다. FL Studio의 평생 무료 업데이트 정책은 다른 DAW와의 차별점으로, 한 번 구매로 이후 모든 버전 업그레이드를 무상으로 이용할 수 있습니다. 현재 K-POP 레이블의 외주 프로듀서부터 인디 비트메이커까지 폭넓게 사용됩니다.
 
 ## FL Studio 기본 설정
 
@@ -93,8 +93,6 @@ Edison → File → Save to file 또는
 
 ## Playlist 오디오 클립 녹음
 
-귀가 피로해지기 전에 중요한 판단을 먼저 내리는 것이 좋습니다.
-
 ### AudioClip 트랙 방식
 
 1. Playlist (F5) 열기
@@ -111,8 +109,6 @@ Edison → File → Save to file 또는
 ---
 
 ## Parametric EQ 2 설정
-
-같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
 
 ### Parametric EQ 2 삽입
 
@@ -155,8 +151,6 @@ Mixer → 보컬 트랙 INSERT → Fruity Compressor
 
 ## 파일 내보내기 (Export)
 
-작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
-
 ### 프로젝트 전체 내보내기
 
 File → Export → Audio File
@@ -180,8 +174,8 @@ Mixer → 보컬 트랙 Solo
 
 ## 마치며
 
-FL Studio는 비트메이킹에서 보컬 녹음까지 모두 가능한 통합 DAW입니다.
+FL Studio는 비트메이킹에서 보컬 녹음까지 모두 가능한 통합 DAW입니다. 보컬 녹음 시 버퍼 크기를 64~128 samples로 설정해 레이턴시를 최소화하고, 믹싱 단계에서는 256~512 samples로 높여 CPU 부하를 줄이는 것이 표준 워크플로우입니다. 오디오 인터페이스의 Direct Monitoring을 켜고 FL Studio 소프트웨어 모니터링은 끄면 레이턴시 없이 실시간 모니터링이 가능합니다.
 
----
+Edison 녹음 시 레벨은 -12dBFS~-6dBFS 피크 범위를 목표로 설정합니다. 파형이 트랙 창 높이의 50~70% 수준이면 적절하며, 파형 상단이 잘려 있다면 클리핑이 발생한 것이므로 게인을 낮추고 재녹음해야 합니다. 믹싱 의뢰용 드라이 보컬은 Parametric EQ 2와 Fruity Compressor를 Bypass한 후 보컬 트랙만 Solo하여 WAV 24bit/44.1kHz로 내보내야 엔지니어가 이펙트를 독립적으로 처리할 수 있습니다.
 
 [스마트폰 보컬 녹음 완전 가이드](/stories/smartphone-recording1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
