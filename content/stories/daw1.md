@@ -38,6 +38,8 @@ faq:
 
 DAW(Digital Audio Workstation)는 음악 녹음·편집·믹싱·마스터링을 위한 소프트웨어입니다. Pro Tools, Logic Pro, Ableton Live, FL Studio 등 다양한 DAW가 있으며 각각 강점과 적합한 사용 목적이 다릅니다.
 
+DAW의 역사는 1989년 Digidesign(현 Avid)이 Mac용 「Sound Tools」를 출시하면서 시작됩니다. 이후 1991년 Pro Tools가 등장해 멀티트랙 디지털 녹음을 전문 스튜디오에서 가능하게 했습니다. 2000년대 초반 Steinberg Cubase와 Emagic Logic이 경쟁하던 시기에 Apple이 Logic을 인수(2002년)하면서 Mac 생태계에서 Logic Pro가 표준으로 자리 잡았습니다. Ableton Live는 2001년 출시 이후 전자음악 퍼포먼스의 판도를 바꿨고, FL Studio(구 FruityLoops)는 1997년 출시 이후 힙합·트랩 비트 메이킹의 대명사가 되었습니다. 오늘날 DAW 시장은 전문 스튜디오용(Pro Tools)과 홈 스튜디오용(Logic, Ableton, FL Studio) 사이의 경계가 사실상 사라졌습니다.
+
 ---
 
 ## 주요 DAW 비교
@@ -52,29 +54,29 @@ DAW(Digital Audio Workstation)는 음악 녹음·편집·믹싱·마스터링을
 | Reaper | 맥/윈 | 약 7만원 | 가성비, 커스터마이징 |
 | Pro Tools | 맥/윈 | 구독제 | 방송·영화 업계 표준 |
 
+Logic Pro는 원 구매(약 30만원) 후 영구 사용이 가능한 모델로, 구독제로 전환한 Pro Tools와 비교해 장기 비용 측면에서 크게 유리합니다. 또한 내장 플러그인(Space Designer 리버브, Vintage EQ, Alchemy 신스 등)의 품질이 높아 추가 플러그인 구매 없이도 프로 수준의 작업이 가능합니다. Reaper는 저렴한 가격(비상업용 약 6만원, 상업용 약 20만원)에 높은 커스터마이징 자유도를 제공해 예산이 제한된 홈 스튜디오에서 강력한 대안입니다.
+
 ---
 
 ## 용도별 추천 DAW
 
 ### 보컬 녹음·팝 제작 입문자 (Mac)
 
-아래 워크플로우는 기본 설정 기준이며, 자신의 작업 스타일에 맞게 커스텀하세요.
-
 GarageBand (무료) → Logic Pro (유료 업그레이드)
 
-GarageBand에서 익힌 인터페이스를 그대로 Logic Pro에서 활용할 수 있습니다. 내장 플러그인(EQ, Compressor, Space Designer 리버브)만으로도 완성도 높은 작업이 가능합니다.
+GarageBand에서 익힌 인터페이스를 그대로 Logic Pro에서 활용할 수 있습니다. 내장 플러그인(EQ, Compressor, Space Designer 리버브)만으로도 완성도 높은 작업이 가능합니다. 보컬 녹음에 필요한 레코딩·편집·믹싱 워크플로우가 직관적으로 설계되어 있어 DAW를 처음 배우는 보컬리스트에게 가장 적합한 선택입니다.
 
 ### 전자음악·K-POP 프로듀서 (맥/윈)
 
-Ableton Live (전자음악, 퍼포먼스) 또는 Logic Pro (K-POP 트랙)
+Ableton Live(전자음악, 퍼포먼스) 또는 Logic Pro(K-POP 트랙). Ableton의 Session View는 루프와 패턴을 실시간으로 트리거하는 전자음악 퍼포먼스 작업에 독보적입니다.
 
 ### 힙합·비트 메이커
 
-FL Studio (드럼 시퀀서 강점) 또는 Ableton Live
+FL Studio(드럼 시퀀서 강점) 또는 Ableton Live. FL Studio의 Step Sequencer와 Piano Roll은 힙합·트랩 비트 제작에 특화된 UI입니다.
 
 ### 예산 제한 Windows 사용자
 
-Reaper (7만원) 또는 Audacity (무료)
+Reaper(7만원) 또는 Audacity(무료).
 
 ---
 
@@ -86,6 +88,8 @@ DAW를 구매하거나 배우지 않고 전문 결과물을 얻는 가장 빠른
 2. **파일 납품**: 완성된 WAV·MP3 파일을 받아 즉시 사용
 3. **온라인 믹싱 의뢰**: 홈 녹음 파일을 전문 믹서에게 의뢰
 
+DAW를 배우는 데는 기본 워크플로우 숙지에만 수주에서 수개월이 걸립니다. 보컬 녹음이 주 목적이라면 전문 스튜디오를 활용해 고품질 결과물을 얻는 것이 시간과 비용 면에서 훨씬 효율적입니다.
+
 ---
 
 ## 스튜디오 놀 사용 DAW
@@ -96,10 +100,8 @@ DAW를 구매하거나 배우지 않고 전문 결과물을 얻는 가장 빠른
 
 ## 마치며
 
-DAW는 도구입니다. 어떤 도구를 쓰느냐보다 무엇을 만들고 싶은지가 먼저입니다. 보컬 녹음이 목적이라면 전문 스튜디오를 활용하는 것이 DAW를 배우는 것보다 훨씬 빠른 결과를 줍니다.
+DAW는 도구입니다. 어떤 도구를 쓰느냐보다 무엇을 만들고 싶은지가 먼저입니다. 보컬 녹음이 목적이라면 전문 스튜디오를 활용하는 것이 DAW를 배우는 것보다 훨씬 빠른 결과를 줍니다. DAW를 직접 배우고 싶다면 GarageBand에서 시작해 Logic Pro로 이어지는 경로가 Mac 사용자에게 가장 자연스러운 학습 경로입니다.
 
 ---
-
-DAW(Digital Audio Workstation)는 레코딩, 편집, 믹싱, 마스터링을 하나의 소프트웨어로 처리하는 음악 제작의 핵심 도구입니다. Ableton Live는 전자 음악과 라이브 퍼포먼스에, Logic Pro는 맥 사용자와 보컬 프로듀싱에, Cubase는 미디 편집과 영상 음악에 강점이 있습니다. 첫 DAW를 선택할 때는 자신의 장르와 예산, 사용 환경(맥/윈도우)을 기준으로 무료 체험판을 충분히 활용해보는 것이 좋습니다.
 
 [DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
