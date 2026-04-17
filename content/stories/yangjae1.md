@@ -109,6 +109,4 @@ faq:
 
 양재·서초에서 2·3호선 35~45분 강남·서초 직장인의 퇴근 후 세션도 환영합니다. 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
----
-
 [서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [송파구 녹음실 안내](/stories/songpa1) | [전국 방문 가이드](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
