@@ -148,6 +148,4 @@ Splice, Loopmasters 등의 상업 샘플 팩은 기본적으로 Royalty Free이�
 
 오리지널 BGM은 채널 브랜드의 소리입니다. 처음에는 단순한 루프부터 시작해 채널이 성장하면서 BGM도 함께 발전시키는 과정이 현실적입니다. 직접 제작한 BGM을 정기적으로 업데이트하면 채널 브랜드도 함께 진화합니다.
 
----
-
 [팟캐스트·유튜브 인트로 음악 제작 가이드](/stories/podcast-music1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [사운드 디자인 완전 가이드](/stories/sound-design1)

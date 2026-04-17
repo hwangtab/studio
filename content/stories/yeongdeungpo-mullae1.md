@@ -85,6 +85,4 @@ faq:
 
 영등포구 문래·당산에서 2호선 합정 환승으로 연신내 스튜디오 놀에 방문할 수 있습니다. 방문이 어려운 경우 온라인 믹싱 의뢰도 가능합니다. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
----
-
 [영등포구 전체 녹음실 안내](/stories/yeongdeungpo1) | [영등포구 신길 녹음실 안내](/stories/singil1) | [구로구 녹음실 안내](/stories/guro-gasan1) | [양천구 녹음실 안내](/stories/yangcheon1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
