@@ -145,6 +145,4 @@ Melodyne의 작업 방식은 Auto-Tune과 근본적으로 다릅니다. 오디�
 
 피치 교정은 보이지 않게 작동할 때 가장 효과적입니다. Auto-Tune Retune Speed 50~80으로 자연스러운 교정을 유지하고, 반음 이상 벗어난 음정만 Melodyne으로 세밀하게 편집하는 조합이 K-pop 보컬 제작의 현실적인 표준입니다. 비브라토와 음절 시작 부분의 피치 슬라이드는 건드리지 않는 것이 자연스러운 보컬을 만드는 가장 중요한 원칙이며, 교정 후 원본과 비교하는 A/B 테스트가 과교정을 방지하는 마지막 안전망입니다.
 
----
-
 [오토튠 완전 가이드](/stories/autotune1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1)
