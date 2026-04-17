@@ -41,7 +41,7 @@ faq:
 
 Steinberg Cubase는 1989년부터 업계를 이끌어온 DAW로, 유럽 스튜디오와 클래식 음악 프로덕션에서 특히 많이 사용됩니다.
 
----
+Cubase의 역사는 1989년 독일 Steinberg Media Technologies가 Atari ST 컴퓨터용 MIDI 시퀀서로 첫 버전을 출시하면서 시작됩니다. 1996년 VST(Virtual Studio Technology) 포맷을 세계 최초로 개발해 소프트웨어 플러그인 생태계의 기반을 만들었고, 이 VST 표준이 현재 전 세계 모든 DAW에서 사용하는 플러그인 포맷의 원형이 됐습니다. 2000년대 Cubase SX가 오디오 녹음·편집 기능을 강화하면서 유럽 클래식·영화 음악 스튜디오의 표준 DAW로 자리잡았습니다. 한국에서는 2000년대 중반부터 방송국·뮤지컬 제작사를 중심으로 도입됐고, 내장 피치 교정 도구 VariAudio와 Channel EQ의 정밀함이 K-POP 보컬 믹싱 환경에서도 인정받고 있습니다.
 
 ## Cubase 기본 설정
 
@@ -114,8 +114,6 @@ EQ 창 내 Spectrum 버튼 ON → 실시간 확인
 
 ## Compressor 설정
 
-같은 플러그인이라도 신호 체인의 어느 위치에 두느냐에 따라 결과가 크게 달라집니다.
-
 ### Compressor 삽입
 
 Channel Insert 슬롯 → Dynamics → Compressor
@@ -138,8 +136,6 @@ Channel Insert 슬롯 → Dynamics → Compressor
 
 ## VariAudio — 내장 피치 교정
 
-버스로 묶어 처리하면 개별 트랙 조정 없이도 전체 밸런스를 효율적으로 잡을 수 있습니다.
-
 ### VariAudio 활성화
 
 1. 보컬 클립 더블클릭 → Sample Editor 열기
@@ -159,8 +155,6 @@ Channel Insert 슬롯 → Dynamics → Compressor
 ---
 
 ## 파일 내보내기 (Export)
-
-각 파라미터가 사운드에 미치는 영향을 이해하면 설정값을 외우지 않아도 귀로 판단할 수 있습니다.
 
 ### Audio Mixdown 내보내기
 
@@ -185,8 +179,10 @@ File → Export → Audio Mixdown (Ctrl+Shift+E)
 
 ## 마치며
 
-Cubase는 VariAudio 피치 교정과 정밀한 오디오 편집 기능으로 전문적인 보컬 작업에 최적화된 DAW입니다.
+Cubase는 VariAudio 피치 교정과 정밀한 오디오 편집 기능으로 전문적인 보컬 작업에 최적화된 DAW입니다. 보컬 녹음 시 버퍼 크기는 64~256 samples로 설정해 레이턴시를 최소화하고, 믹싱 단계에서는 512~1024 samples로 높여 CPU 부하를 줄이는 것이 표준 워크플로우입니다. 다이렉트 모니터링은 오디오 인터페이스의 Direct Monitoring을 켜고 Cubase 소프트웨어 모니터링은 끄는 방식으로 설정해야 레이턴시 없이 실시간 모니터링이 가능합니다.
 
----
+VariAudio에서 피치 교정 시 Straighten Pitch 슬라이더는 50~70% 수준을 권장합니다. 100%로 설정하면 Auto-Tune처럼 강한 피치 교정 효과가 나타나 부자연스러워집니다. 각 음표 블록을 직접 드래그해 이탈이 큰 음절만 선택적으로 교정하는 방식이 자연스러운 결과를 만듭니다.
+
+믹싱 의뢰용 드라이 보컬 내보내기 시 Channel Inserts를 모두 Bypass하고 트랙을 Solo한 후 WAV 24bit/44.1kHz로 내보내는 것이 기본입니다. 이펙트가 적용된 상태로 내보내면 엔지니어가 EQ·컴프레서를 독립적으로 조정할 수 없어 믹싱 퀄리티에 제한이 생깁니다.
 
 [Reaper 보컬 녹음 완전 가이드](/stories/reaper1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
