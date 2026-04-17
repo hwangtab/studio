@@ -143,6 +143,4 @@ faq:
 
 보컬 포트폴리오는 실력을 '증명'하는 문서입니다. 카카오톡으로 지원 목적과 곡 수를 알려주시면 맞춤 패키지로 안내해드립니다.
 
----
-
 [커버송 녹음 완전 가이드](/stories/cover-song1) | [드라마·영화 OST 녹음 가이드](/stories/drama-ost1) | [기획사·레이블 제출용 데모 트랙 가이드](/stories/demotrack1) | [오디션 준비 완전 가이드](/stories/audition1) | [보컬 녹음 가이드](/stories/guide1)

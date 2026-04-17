@@ -139,6 +139,4 @@ p  i  m  a  m  i
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerpicking1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [기타 핑거스타일 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [기타 솔로·리드 기타 연습 — 솔로 연주 완성 가이드](/stories/practice-room-guitar-solo1)

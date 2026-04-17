@@ -104,6 +104,4 @@ faq:
 
 송도에서 전철로 1시간. 이동이 어렵다면 온라인 믹싱 의뢰도 동일한 품질로 제공됩니다. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
----
-
 [인천 연수구 연수·청학·동춘 녹음실 안내](/stories/yeonsu1) | [인천 녹음실 안내](/stories/incheon1) | [부천 녹음실 안내](/stories/bucheon1) | [안산 녹음실 안내](/stories/ansan1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

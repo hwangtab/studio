@@ -173,6 +173,4 @@ faq:
 
 EP 발매는 싱글보다 더 깊이 있는 아티스트 정체성을 보여줍니다.
 
----
-
 [앨범·EP 트랙 순서 결정 완전 가이드](/stories/track-order1) | [스트리밍 수익 극대화 완전 가이드](/stories/streaming-revenue1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1)

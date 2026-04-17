@@ -213,6 +213,4 @@ BPM 160: 박당 4음절
 
 은평구 24시간 음악연습실에서 녹음을 통해 자신의 딕션을 객관적으로 모니터링하며 집중적으로 훈련하세요.
 
----
-
 [보컬 딕션·발음 명확도 훈련 — 완전 가이드](/stories/practice-room-vocal-diction1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 레인지 확장 훈련 — 완전 가이드](/stories/practice-room-vocal-range-extension1)

@@ -145,6 +145,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [취미 음악인을 위한 연습실 완벽 가이드 — 직장인·성인 연습생 필독](/stories/practice-room-hobby1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [주말 연습실 이용 가이드 — 직장인·학생을 위한 주말 연습 전략](/stories/practice-room-weekend1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [무인 연습실 완벽 가이드 — 24시간 무인 운영 연습실 선택 기준](/stories/practice-room-unmanned1)

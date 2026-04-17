@@ -239,6 +239,4 @@ G단조: G-G-G-Eb (첫 동기)
 
 은평구 24시간 음악연습실에서 클래식 베이스의 세계를 탐구하세요. 다이나믹과 레가토의 원칙은 모든 음악에 적용됩니다.
 
----
-
 [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 왼손 기법·레가토·슬라이드·비브라토 — 완전 가이드](/stories/practice-room-bass-left-hand1)

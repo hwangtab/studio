@@ -133,6 +133,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [버스킹 준비 — 거리 공연 전 연습 공간 완벽 가이드](/stories/practice-room-busking1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습](/stories/practice-room-competition1) | [실용음악 입시생을 위한 — 입시 준비 연습 공간 완벽 가이드](/stories/practice-room-entrance1)

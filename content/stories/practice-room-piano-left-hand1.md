@@ -129,6 +129,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
----
-
 [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass-funk1)

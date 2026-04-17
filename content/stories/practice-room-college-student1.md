@@ -120,6 +120,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [실용연습실 완전 가이드 — 음대 입시·실용음악과 준비생을 위한 선택 기준](/stories/practice-room-music-college1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1) | [실용음악 입시생을 위한 — 입시 준비 연습 공간 완벽 가이드](/stories/practice-room-entrance1) | [기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1)

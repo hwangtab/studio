@@ -122,6 +122,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [일렉기타·전기기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-electric-guitar1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1)

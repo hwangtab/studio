@@ -136,6 +136,4 @@ faq:
 
 사당·방배에서 40분, 노량진에서 35분이면 연신내 스튜디오 놀에 도달합니다. Neumann U87AI 마이크와 10년 경력 엔지니어가 당신의 목소리를 최상의 상태로 담아드립니다. 첫 방문 전 카카오톡으로 편하게 문의해 주세요.
 
----
-
 [동작구 녹음실 안내](/stories/dongjak1) | [관악구 녹음실 안내](/stories/gwanak1) | [서초구 녹음실 안내](/stories/seocho1) | [강남 녹음실 안내](/stories/gangnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

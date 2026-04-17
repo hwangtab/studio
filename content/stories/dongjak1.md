@@ -147,6 +147,4 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 동작구에서 30~40분이면 연신내까지 도달합니다. 음원 발매부터 오디션 데모까지 전 과정을 지원합니다. 세션 일정은 카카오톡으로 미리 조율해두시면 도착 즉시 바로 세션에 들어갈 수 있습니다.
 
----
-
 [동작구 노량진·대방·신대방 녹음실 안내](/stories/dongjak-noryangjin1) | [동작구 사당·방배·상도·이수 녹음실 안내](/stories/dongjak-sadang1) | [동작구 흑석동·동작동 녹음실 안내](/stories/dongjak-heukseok1) | [관악구·동작구 녹음실 안내](/stories/gwanak1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -102,6 +102,4 @@ faq:
 
 안양·군포·의왕에서 지하철로 약 1시간이면 서울 연신내. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
----
-
 [안양 만안구 안양·박달·석수 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·산본 녹음실 안내](/stories/pyeongchon1) | [군포 녹음실 안내](/stories/gunpo1) | [광명 하안·철산 녹음실 안내](/stories/gwangmyeong-haean1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

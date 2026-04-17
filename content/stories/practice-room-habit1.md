@@ -124,6 +124,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [음악 연습 동기부여 유지 가이드 — 꾸준한 연습을 위한 심리 전략](/stories/practice-room-motivation1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

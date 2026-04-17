@@ -152,6 +152,4 @@ Spotify의 에디토리얼 플레이리스트 시스템은 2015년경 본격화�
 
 플레이리스트 피칭은 발매 전 준비와 꾸준한 아웃리치가 핵심입니다. Spotify for Artists 에디토리얼 피칭은 발매 7일 전이 마감이므로 반드시 발매 전에 신청해야 하고, SubmitHub와 Groover를 통한 인디 큐레이터 피칭은 발매 이후에도 지속적으로 진행할 수 있습니다. 발매 첫 주 팬들의 완청률과 스트리밍 집중이 Discover Weekly 등 알고리즘 플레이리스트 등재를 결정하므로, Pre-save 링크를 발매 전에 공유해 팬들의 발매일 스트리밍을 유도하는 것이 초기 노출의 핵심 전략입니다.
 
----
-
 [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [EP 제작 완전 가이드](/stories/ep-production1)

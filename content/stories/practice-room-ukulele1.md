@@ -110,6 +110,4 @@ faq:
 - 드럼·보컬 MR에 맞춰 앙상블 포지션 파악
 - 최대 다이나믹 폭으로 표현력 훈련
 
----
-
 [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1) | [핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드](/stories/practice-room-fingerstyle1)

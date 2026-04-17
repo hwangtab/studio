@@ -125,6 +125,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [아이돌 준비생 — 보컬·댄스·퍼포먼스 연습 공간 가이드](/stories/practice-room-idol1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [재즈 — 재즈 보컬·피아노·기타 연습 공간 가이드](/stories/practice-room-jazz1) | [K-POP — K-POP 보컬·댄스보컬 연습 공간 가이드](/stories/practice-room-kpop1)

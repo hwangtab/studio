@@ -252,6 +252,4 @@ Cmaj7: C - - - G - - -
 
 워킹 베이스라인은 악보를 외우는 것이 아닙니다. 화성의 논리를 이해하고 그 안에서 즉흥적으로 선율을 만드는 능력입니다. 은평구 24시간 음악연습실에서 충분한 시간을 들여 귀와 손을 동시에 훈련하세요.
 
----
-
 [베이스 재즈 콤핑·워킹 라인 고급 — 완전 가이드](/stories/practice-room-bass-jazz-comping1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

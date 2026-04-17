@@ -146,6 +146,4 @@ STC 50 이상의 방음 설계된 음악연습실이라도 **문을 열어 두�
 - [ ] 어려운 구간을 분리해서 집중적으로 반복했는가?
 - [ ] 연습 후 무엇이 개선되었는지 구체적으로 인식하는가?
 
----
-
 [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1) | [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [취미 음악인을 위한 연습실 완벽 가이드 — 직장인·성인 연습생 필독](/stories/practice-room-hobby1) | [개인 연습실 완벽 가이드 — 나만의 음악 공간을 갖는 가장 현명한 방법](/stories/practice-room-private1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1)

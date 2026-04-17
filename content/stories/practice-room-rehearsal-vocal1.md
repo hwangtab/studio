@@ -122,6 +122,4 @@ faq:
 - 감정·다이나믹 폭이 큰 표현 훈련
 - 자신의 소리를 방 울림과 함께 객관적으로 청취
 
----
-
 [버스킹 준비 — 거리 공연 전 연습 공간 완벽 가이드](/stories/practice-room-busking1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [무대 공포증 극복 — 사람 앞에서 노래하기 연습 가이드](/stories/practice-room-anxiety1) | [예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1)

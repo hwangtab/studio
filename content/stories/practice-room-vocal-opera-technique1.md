@@ -211,6 +211,4 @@ A - E - I - O - U (하나의 음으로 각 모음 전환)
 
 은평구 24시간 음악연습실에서 부담 없이 큰 소리로 오페라 발성을 연습해보세요. 방음이 완벽한 공간에서 마음껏 성대를 열 수 있습니다.
 
----
-
 [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1) | [뮤지컬 씨어터 보컬·브로드웨이·레미제라블·막강한 드라마틱 발성 — 완전 가이드](/stories/practice-room-vocal-musical-theatre1) | [보컬 레지스터·음역별 발성 전략 — 완전 가이드](/stories/practice-room-vocal-registers1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1)

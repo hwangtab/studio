@@ -131,6 +131,4 @@ faq:
 - 페달 없이 레가토 연습 후 페달 추가 비교
 - 본인 연주를 스마트폰으로 녹음 → 왼손/오른손 밸런스 객관적 확인
 
----
-
 [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [피아노 발라드 연주 연습 — 감성 피아노 완성 가이드](/stories/practice-room-piano-ballad1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [피아노 터치·아티큘레이션 훈련 — 피아노 터치 완성 가이드](/stories/practice-room-piano-touch1)

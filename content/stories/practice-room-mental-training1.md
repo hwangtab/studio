@@ -142,6 +142,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1)

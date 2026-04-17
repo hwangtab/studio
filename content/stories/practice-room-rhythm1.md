@@ -116,6 +116,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [피아노 리듬 읽기·박자 훈련 — 피아노 리듬 완성 가이드](/stories/practice-room-piano-rhythm1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1) | [음악 속도 향상·빠른 템포 연습 — BPM을 끌어올리는 체계적 방법](/stories/practice-room-speed1) | [보컬 리듬·박자감 훈련 — 보컬 리듬 완성 가이드](/stories/practice-room-vocal-rhythm1) | [베이스 프렛리스·인토네이션 훈련 — 완전 가이드](/stories/practice-room-bass-fretless1)

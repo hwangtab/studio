@@ -1,5 +1,5 @@
 ---
-title: "믹싱 강좌 - 제23부: 대장정의 마침표, 마스터링(Mastering)"
+title: "마스터링 뜻·믹싱과 차이·라우드니스·필수 단계 | 믹싱 강좌 23부"
 date: 2025-12-03
 author: "스튜디오 놀"
 category: "강좌"
@@ -114,7 +114,5 @@ faq:
 ---
 
 **믹싱 강좌 시리즈**: [← 제22부: 시간 위에 그리는 그림, 오토메이션](/stories/mixing22)
-
----
 
 [믹싱 vs 마스터링 차이 가이드](/stories/mixing-vs-mastering1) | [믹싱·마스터링 의뢰 요금 안내](/pricing) | [음악 레슨 서비스 보기](/lesson) | [불광믹싱클럽 스터디 보기](/stories/bulgwang-mixing-club) | [믹싱 의뢰 후기](/stories/review5)

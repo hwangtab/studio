@@ -203,6 +203,4 @@ A4: 흉성 2초 → 두성 2초 → 흉성 2초
 
 은평구 24시간 음악연습실에서 매일 30분씩 두성 트레이닝을 지속하면 반드시 성과가 나타납니다. 특히 **녹음**을 통해 자신의 발성을 객관적으로 들어보는 것이 두성 훈련의 가장 빠른 지름길입니다.
 
----
-
 [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

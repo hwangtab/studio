@@ -183,6 +183,4 @@ faq:
  | [발성 연습 — 올바른 발성 훈련을 위한 방음 공간 가이드](/stories/practice-room-voice-training1)
 [휘슬 레지스터·초고음 보컬 연습 — 초고음 발성 완성 가이드](/stories/practice-room-vocal-whistle1)
 
----
-
 [결혼식 축가 연습 — 축가 준비 완벽 가이드](/stories/practice-room-wedding1)

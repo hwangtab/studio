@@ -245,6 +245,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 파트너와 함께 또는 혼자 루프를 이용해 하모니 훈련을 해보세요. 처음에는 어색하고 음정이 맞지 않아도—반복하면 반드시 귀와 목이 맞춰집니다.
 
----
-
 [보컬 클로즈 하모니·바버샵·4성부 합창 — 완전 가이드](/stories/practice-room-vocal-harmony-close1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

@@ -140,6 +140,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [녹음 가능한 — 연습실 내 셀프 녹음 완벽 가이드](/stories/practice-room-recording1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1)

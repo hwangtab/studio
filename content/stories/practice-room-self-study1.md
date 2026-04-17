@@ -122,6 +122,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [음악 목표 설정·달성 — 실력 향상을 위한 연습 전략](/stories/practice-room-goal-setting1) | [음악 교사·강사 레슨 준비 — 레슨 시범·교재 연습 공간](/stories/practice-room-teacher1) | [음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습](/stories/practice-room-competition1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1)

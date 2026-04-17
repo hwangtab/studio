@@ -189,6 +189,4 @@ RR LL (정지) RR LL (정지) RR LL...
 
 *관련 아티클:*
 
----
-
 [드럼 더블 킥·더블 배스 드럼 훈련 — 완전 가이드](/stories/practice-room-drum-double-kick1) | [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 — 완전 가이드](/stories/practice-room-drum-metal-death1) | [카혼 드럼·플라멩코·어쿠스틱 세션·바스·스네어 카혼 테크닉 — 완전 가이드](/stories/practice-room-drum-cajon1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)

@@ -117,6 +117,4 @@ K-POP 마스터링은 -8~-10 LUFS 수준의 높은 음압을 목표로 합니다
 
 K-POP 프로덕션은 전문 스튜디오와 엔지니어의 협업으로 완성됩니다. 보컬 소스의 품질이 최종 믹스 품질을 결정하기 때문에, 클린하게 녹음된 보컬이 K-POP 사운드 실현의 출발점입니다. 스튜디오 놀에서 K-POP 스타일 보컬 세션과 믹싱을 진행할 수 있습니다.
 
----
-
 [보컬 프로듀서 완전 가이드](/stories/vocal-producer1) | [K-POP 보컬 완전 가이드](/stories/kpop-vocal1) | [아이돌·K팝 보컬 가이드](/stories/idol-vocal1) | [K-POP 오디션 준비 가이드](/stories/kpop-audition1)

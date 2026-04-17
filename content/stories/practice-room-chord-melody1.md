@@ -114,6 +114,4 @@ faq:
 - 실제 악기로 아이디어 즉흥 연주 후 MIDI 녹음
 - 반향음·잔향이 없는 환경에서 어레인지먼트 점검
 
----
-
 [기타 코드 멜로디·솔로 기타 편곡 — 기타 코드 멜로디 완성 가이드](/stories/practice-room-guitar-chord-melody1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerpick-adv1) | [기타 솔로·리드 기타 연습 — 솔로 연주 완성 가이드](/stories/practice-room-guitar-solo1)

@@ -129,6 +129,4 @@ faq:
 - 감정·다이나믹 폭이 큰 표현 훈련
 - 자신의 소리를 방 울림과 함께 객관적으로 청취
 
----
-
 [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [대학생 — 대학생·실용음악과 재학생을 위한 연습 공간 가이드](/stories/practice-room-college-student1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1) | [일렉기타·전기기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-electric-guitar1)

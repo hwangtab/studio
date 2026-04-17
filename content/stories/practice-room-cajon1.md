@@ -131,6 +131,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 세 가지 음색 명확히 구분 / 2주차: 메트로놈 BPM 80 일정 유지 / 3주차: 필인 후 박자 복귀 자연스럽게 / 4주차: 앙상블에서 드라이버 역할
 
----
-
 [퍼커션·손 드럼 타악기 연습 — 핸드퍼커션 완성 가이드](/stories/practice-room-percussion1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1) | [트럼펫·금관악기 연습 — 방음 환경에서 금관 연습 가이드](/stories/practice-room-trumpet1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1)

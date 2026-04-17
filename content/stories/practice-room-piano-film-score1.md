@@ -229,6 +229,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 좋아하는 영화 음악을 틀어놓고, 그 위에 피아노를 얹어보세요. 선율을 따라가는 것이 아니라, 음악의 **감정**을 피아노로 재표현하는 연습이 시네마틱 피아노의 진정한 시작입니다.
 
----
-
 [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [피아노 발라드 연주 기법·감성 표현 — 완전 가이드](/stories/practice-room-piano-ballad-technique1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 라틴 리듬·살사 피아노 — 완전 가이드](/stories/practice-room-piano-latin-rhythms1)

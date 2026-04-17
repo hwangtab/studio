@@ -99,6 +99,4 @@ faq:
 
 성남 수정구·중원구에서 약 1시간이면 연신내. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
----
-
 [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [분당·판교 녹음실 안내](/stories/bundang1) | [하남·구리·광주 녹음실 안내](/stories/hanam1) | [수원 녹음실 안내](/stories/suwon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

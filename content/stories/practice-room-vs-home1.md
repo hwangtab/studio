@@ -131,6 +131,4 @@ faq:
 3. **계약 유연성** — 월 단위 해지로 부담 없이 시작
 4. **실력 향상 후 홈 스튜디오 전환** — 확신이 생기면 그때 투자해도 늦지 않음
 
----
-
 [연습실 vs 녹음 스튜디오 — 무엇이 다르고 어떻게 선택할까?](/stories/practice-room-vs-studio1) | [베이스 핑거스타일 vs 픽 주법 비교 — 완전 가이드](/stories/practice-room-bass-pick-fingerstyle1) | [연습실 고르는 법 — 2026년 체크리스트 완벽 가이드](/stories/practice-room-guide1) | [방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리](/stories/practice-room-soundproof1) | [연습실 vs 노래방 — 보컬 연습 공간 완전 비교 가이드](/stories/practice-room-vs-karaoke1)

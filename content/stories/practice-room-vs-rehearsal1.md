@@ -117,6 +117,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [개인 연습실 완벽 가이드 — 나만의 음악 공간을 갖는 가장 현명한 방법](/stories/practice-room-private1) | [방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리](/stories/practice-room-soundproof1) | [베이스 핑거스타일 vs 픽 주법 비교 — 완전 가이드](/stories/practice-room-bass-pick-fingerstyle1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [냉난방 — 여름·겨울 쾌적한 연습 공간 선택 가이드](/stories/practice-room-cooling1)

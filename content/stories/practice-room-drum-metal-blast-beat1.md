@@ -253,6 +253,4 @@ X - X - X X - - X - X - X X - -
 
 은평구 24시간 음악연습실의 방음 공간에서 마음껏 폭발해보세요. 메탈의 에너지는 억압될 때가 아닌 해방될 때 진정한 힘을 발휘합니다.
 
----
-
 [드럼 더블 킥·더블 배스 드럼 훈련 — 완전 가이드](/stories/practice-room-drum-double-kick1) | [드럼 발 테크닉·더블 베이스 페달 — 완전 가이드](/stories/practice-room-drum-foot-technique1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1) | [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 — 완전 가이드](/stories/practice-room-drum-metal-death1)

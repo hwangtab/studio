@@ -127,6 +127,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드](/stories/practice-room-fingerstyle1) | [기타 핑거피킹·핑거스타일 입문 — 핑거피킹 완성 가이드](/stories/practice-room-guitar-fingerpicking1) | [기타 아르페지오·분산 화음 연습 — 기타 아르페지오 완성 가이드](/stories/practice-room-guitar-arpeggio1) | [기타 핑거피킹 패턴 다양화 — 핑거피킹 완성 가이드](/stories/practice-room-guitar-fingerpick-pattern1)

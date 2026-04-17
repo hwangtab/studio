@@ -250,6 +250,4 @@ X  x  X  -  X  x  X  -
 
 은평구 24시간 음악연습실에서 메트로놈과 함께 천천히, 정확하게 연습하며 팝 그루브를 몸에 익히세요. 정확한 타이밍이 모든 것의 기초입니다.
 
----
-
 [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1)

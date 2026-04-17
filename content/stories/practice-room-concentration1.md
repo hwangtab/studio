@@ -140,6 +140,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [무대 공포증 극복 — 사람 앞에서 노래하기 연습 가이드](/stories/practice-room-anxiety1) | [음악 번아웃 극복·재도약 — 연습이 싫어졌을 때 다시 시작하는 법](/stories/practice-room-burnout1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1)

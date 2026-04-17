@@ -105,6 +105,4 @@ faq:
 
 일산에서 3호선으로 25분, 연신내 이동이 부담스럽다면. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
----
-
 [일산동구 백석·마두 녹음실 안내](/stories/ilsan-donggu1) | [일산서구 정발산·주엽·대화 녹음실 안내](/stories/ilsan-seogu1) | [고양시 녹음실 안내](/stories/goyang1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

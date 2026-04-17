@@ -126,6 +126,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [보컬 레슨과 연습실 병행하는 방법 — 레슨 효과를 극대화하는 연습실 활용 전략](/stories/practice-room-lesson1) | [미디 작업실·음악 프로덕션 연습실 — DAW 작업에 최적화된 연습실 가이드](/stories/practice-room-midi1) | [뮤지컬 연습실 — 뮤지컬 배우·지망생을 위한 연습실 가이드](/stories/practice-room-musical1)

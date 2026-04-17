@@ -173,6 +173,4 @@ DAW에서는 EQ·컴프레서·리버브·딜레이 등 거의 모든 플러그�
 
 오토메이션은 믹스에 생명을 불어넣는 마지막 단계입니다. 처음에는 보컬 라이드 한 가지부터 시작해 점진적으로 필터 스위프, 구간별 볼륨 전환으로 넓혀가세요. 오토메이션을 잘 쓰면 믹스가 정적인 스냅샷이 아니라 시간과 함께 움직이는 살아있는 음악이 됩니다.
 
----
-
 [강좌 제14부: 볼륨 밸런스](/stories/mixing14) | [강좌 제22부: 오토메이션](/stories/mixing22) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [믹싱 완전 가이드](/stories/mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [곡 구조 완전 가이드](/stories/song-structure1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

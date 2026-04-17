@@ -136,6 +136,4 @@ PA 스피커 또는 모니터 스피커가 구비된 음악연습실에서는 �
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [가족 음악 취미 연습실 — 온 가족이 함께하는 음악 생활](/stories/practice-room-family1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1)

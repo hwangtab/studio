@@ -122,6 +122,4 @@ K-POP 보컬 연습의 핵심:
 - 감정·표현 폭이 큰 연기+보컬 동시 훈련
 - 자신의 무대를 영상으로 촬영하여 전체적인 퍼포먼스 점검
 
----
-
 [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [커버 연습실 — 팝·K-POP 커버 연습 공간 가이드](/stories/practice-room-cover1) | [아이돌 준비생 — 보컬·댄스·퍼포먼스 연습 공간 가이드](/stories/practice-room-idol1)

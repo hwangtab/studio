@@ -91,6 +91,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 김제에서 KTX 익산역 경유로 약 2시간 10분 KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
----
-
 [정읍·김제 방문 가이드](/stories/jeongeup1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

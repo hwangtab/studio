@@ -128,6 +128,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 메트로놈 맞추며 4마디 연속 / 2주차: 발-손 동시 안정적 유지 / 3주차: 필인 후 박자 복귀 자연스럽게 / 4주차: 음악과 함께 드럼 전곡 완주
 
----
-
 [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1)

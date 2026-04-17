@@ -130,6 +130,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
----
-
 [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerpick-adv1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드](/stories/practice-room-fingerstyle1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [기타 피킹 테크닉 고급 훈련 — 기타 피킹 완성 가이드](/stories/practice-room-guitar-picking-adv1)

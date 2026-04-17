@@ -222,6 +222,4 @@ F5: Low D 3rd fret + A 3rd fret
 
 은평구 24시간 음악연습실에서 처음에는 천천히, 각 음이 명확하게 들릴 때까지 연습하세요. 완벽한 팜 뮤팅이 몸에 배면, 그 이후부터는 속도와 강도를 마음껏 올릴 수 있습니다.
 
----
-
 [기타 재즈 리듬·콤핑 기법 — 완전 가이드](/stories/practice-room-guitar-jazz-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [바리톤 기타·다운 튜닝·헤비 사운드 — 완전 가이드](/stories/practice-room-guitar-baritone1) | [기타 블루스 리듬·셔플 패턴 — 완전 가이드](/stories/practice-room-guitar-blues-rhythm1)

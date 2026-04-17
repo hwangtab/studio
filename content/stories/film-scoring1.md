@@ -140,6 +140,4 @@ faq:
 
 영상음악 작곡은 창의성과 기술의 결합입니다. 영상의 감정을 이해하고 그것을 음악 언어로 번역하는 능력이 핵심입니다. 데모 릴을 꾸준히 업데이트하고 Artlist, Musicbed 같은 라이브러리에 작품을 등록하는 것이 싱크 라이센싱 시장 진입의 실질적 첫 단계입니다.
 
----
-
 [게임 음악 제작 완전 가이드](/stories/game-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [사운드 디자인 완전 가이드](/stories/sound-design1)

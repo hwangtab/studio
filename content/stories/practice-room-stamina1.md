@@ -145,6 +145,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [음악가 몸 관리·부상 예방 — 건강하게 오래 연주하기](/stories/practice-room-physical1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

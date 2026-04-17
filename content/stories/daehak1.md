@@ -98,6 +98,4 @@ faq:
 
 세션 일정은 카카오톡으로 미리 조율하고, 도착 전 15~20분 허밍 워밍업 시간을 확보하는 것이 중요합니다. 연신내역 3번 출구 도보 5분 거리입니다.
 
----
-
 [종로구 녹음실 안내](/stories/jongno1) | [성북구 녹음실 안내](/stories/seongbuk1) | [뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1)

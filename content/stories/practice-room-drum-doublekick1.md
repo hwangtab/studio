@@ -128,6 +128,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 메트로놈 맞추며 4마디 연속 / 2주차: 발-손 동시 안정적 유지 / 3주차: 필인 후 박자 복귀 자연스럽게 / 4주차: 음악과 함께 드럼 전곡 완주
 
----
-
 [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [드럼 더블 킥·더블 배스 드럼 훈련 — 완전 가이드](/stories/practice-room-drum-double-kick1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 킥·베이스 드럼 테크닉 — 킥 드럼 완성 가이드](/stories/practice-room-drum-kick1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1)

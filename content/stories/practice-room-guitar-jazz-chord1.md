@@ -126,6 +126,4 @@ ii-V-I의 흐름, 드롭 2의 풍부함. 방음 개인실에서 재즈 보이싱
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
----
-
 [기타 재즈 보이싱·코드 멜로디 — 재즈 기타 완성 가이드](/stories/practice-room-guitar-jazz-voicing1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1)

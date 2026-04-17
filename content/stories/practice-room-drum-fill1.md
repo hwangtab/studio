@@ -126,6 +126,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 메트로놈 맞추며 4마디 연속 / 2주차: 발-손 동시 안정적 유지 / 3주차: 필인 후 박자 복귀 자연스럽게 / 4주차: 음악과 함께 드럼 전곡 완주
 
----
-
 [드럼 필인·트랜지션 고급 훈련 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill-adv1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 루디먼트·스틱 컨트롤 연습 — 드럼 기초 완성 가이드](/stories/practice-room-drum-rudiment1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1)

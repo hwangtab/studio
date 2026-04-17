@@ -185,6 +185,4 @@ A(5프렛)에서 E(12프렛)까지:
 
 자코 파스토리우스처럼 프렛리스로 노래하는 베이스 라인을 꿈꾼다면, 인내심을 갖고 매일 조금씩 귀와 손의 연결고리를 강화하세요.
 
----
-
 [베이스 이펙터·페달 보드 활용 — 베이스 이펙터 완성 가이드](/stories/practice-room-bass-effects1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [네오소울 베이스·D'Angelo·Erykah Badu·그루브 완전 가이드](/stories/practice-room-bass-neo-soul1) | [베이스 루트·5도 패턴·기초 라인 — 베이스 기초 라인 완성 가이드](/stories/practice-room-bass-root-fifth1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1)

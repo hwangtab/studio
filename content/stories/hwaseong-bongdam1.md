@@ -94,6 +94,4 @@ faq:
 
 화성 봉담·향남에서 약 1~1.5시간이면 연신내. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
----
-
 [화성·시흥·안산 녹음실 안내](/stories/hwaseong1) | [동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [수원 녹음실 안내](/stories/suwon1) | [평택 녹음실 안내](/stories/pyeongtaek1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

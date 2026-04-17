@@ -169,6 +169,4 @@ G3 → G4 슬라이드:
 
 믹스 보이스는 흉성과 두성의 공명이 균형 있게 혼합된 중간 음역 발성으로, 자연스럽고 지속 가능한 고음역 발성을 가능하게 합니다. 후두를 낮추고 연구개를 들어올리면서 복식호흡으로 안정적인 에어 서포트를 확보하는 것이 믹스 보이스 발성의 삼각 구도입니다.
 
----
-
 [보컬 코러스·하모니 훈련 — 보컬 하모니 완성 가이드](/stories/practice-room-vocal-harmony1) | [보컬 오버톤·배음 발성 훈련 — 배음 보컬 완성 가이드](/stories/practice-room-vocal-overtone1) | [보컬 리듬·박자감 훈련 — 보컬 리듬 완성 가이드](/stories/practice-room-vocal-rhythm1) | [보컬 테크닉·런·멜리스마 연습 — 화려한 보컬 기술 완성](/stories/practice-room-vocal-technique1) | [보컬 호흡 컨트롤·폐활량 훈련 — 완전 가이드](/stories/practice-room-vocal-breath-control1)

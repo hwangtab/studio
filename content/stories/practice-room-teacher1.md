@@ -132,6 +132,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [버스킹 준비 — 거리 공연 전 연습 공간 완벽 가이드](/stories/practice-room-busking1) | [음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습](/stories/practice-room-competition1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1) | [음악 유튜버·SNS 크리에이터 — 커버 영상 촬영 연습 공간](/stories/practice-room-content-creator1)

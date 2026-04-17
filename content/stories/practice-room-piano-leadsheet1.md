@@ -129,6 +129,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
----
-
 [피아노 즉흥 반주·코드 반주 — 피아노 코드 반주 완성 가이드](/stories/practice-room-piano-sight-play1) | [피아노 발라드 반주·감성 피아노 — 피아노 발라드 반주 완성 가이드](/stories/practice-room-piano-ballad21) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [피아노 블루스 즉흥·블루스 스케일 — 피아노 블루스 즉흥 완성 가이드](/stories/practice-room-piano-improv-blues1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1)

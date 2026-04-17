@@ -126,6 +126,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
----
-
 [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [기타 하이브리드 피킹·치킨 피킹 — 하이브리드 피킹 완성 가이드](/stories/practice-room-guitar-hybrid1) | [기타 피킹 테크닉 고급 훈련 — 기타 피킹 완성 가이드](/stories/practice-room-guitar-picking-adv1) | [기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1) | [기타 스윕 피킹·아르페지오 속주 — 기타 스윕 피킹 완성 가이드](/stories/practice-room-guitar-sweep-picking1)

@@ -101,6 +101,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 군산에서 KTX 익산역 경유로 약 2시간 30분 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
----
-
 [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [정읍·김제 방문 가이드](/stories/jeongeup1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

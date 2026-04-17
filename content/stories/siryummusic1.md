@@ -158,6 +158,4 @@ faq:
 
 실용음악과 입시는 단기간에 준비되지 않습니다. 꾸준한 발성 훈련과 음악 이론 기초가 쌓여야 실전에서 빛납니다.
 
----
-
 [보컬 레슨 선택 가이드](/stories/lessonguide1) | [오디션 준비 완전 가이드](/stories/audition1) | [가수 데뷔 준비 가이드](/stories/debut1) | [보컬 포트폴리오 만들기](/stories/portfolio1)

@@ -129,6 +129,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [음악 목표 설정·달성 — 실력 향상을 위한 연습 전략](/stories/practice-room-goal-setting1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 포트폴리오·오디션 영상 준비 — 내 음악 기록 완성](/stories/practice-room-music-portfolio1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

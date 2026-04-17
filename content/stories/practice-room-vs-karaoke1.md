@@ -140,6 +140,4 @@ faq:
 - [ ] 어려운 구간을 분리해서 집중적으로 반복했는가?
 - [ ] 연습 후 무엇이 개선되었는지 구체적으로 인식하는가?
 
----
-
 [보컬 연습실 완전 활용법 — 노래 실력 빠르게 키우는 환경 가이드](/stories/practice-room-vocal1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [베이스 핑거스타일 vs 픽 주법 비교 — 완전 가이드](/stories/practice-room-bass-pick-fingerstyle1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1)

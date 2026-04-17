@@ -192,6 +192,4 @@ A-D-E (4도 포함, 3도 없음)
 
 은평구 24시간 음악연습실에서 다양한 이펙터와 기법을 자유롭게 탐구하고 자신만의 인디 사운드를 만들어가세요.
 
----
-
 [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [바리톤 기타·다운 튜닝·헤비 사운드 — 완전 가이드](/stories/practice-room-guitar-baritone1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

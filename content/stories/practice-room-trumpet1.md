@@ -131,6 +131,4 @@ faq:
 - 관악기 특유의 방 울림 속에서 음정·음색 청취
 - 반주 MR과 함께 독주 파트 실전 연습
 
----
-
 [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1)

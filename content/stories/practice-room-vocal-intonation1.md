@@ -127,6 +127,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 배에서 소리 나오는 느낌 확인 / 2주차: 고음에서 힘 빼기 성공 여부 / 3주차: 문제 음정 3회 연속 성공 / 4주차: 녹음 후 자기 모니터링
 
----
-
 [비브라토·음정 안정화 연습 — 보컬·현악기 비브라토 가이드](/stories/practice-room-vibrato1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 피치·음정 교정 훈련 — 보컬 음정 완성 가이드](/stories/practice-room-vocal-pitch1)

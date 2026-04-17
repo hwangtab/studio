@@ -133,6 +133,4 @@ faq:
 - 감정·다이나믹 폭이 큰 표현 훈련
 - 자신의 소리를 방 울림과 함께 객관적으로 청취
 
----
-
 [R&B·소울 보컬 연습 — 멜리스마·애드립 완성 가이드](/stories/practice-room-rnb1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [피아노 테크닉·손가락 독립 연습 — 기술 완성 집중 가이드](/stories/practice-room-piano-technique1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)

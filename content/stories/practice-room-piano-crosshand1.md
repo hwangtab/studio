@@ -160,6 +160,4 @@ summary: >-
 
 *관련 아티클:*
 
----
-
 [피아노 크로스핸드 테크닉·클래식 기교 — 완전 가이드](/stories/practice-room-piano-cross-hand-technique1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 발라드 연주 기법·감성 표현 — 완전 가이드](/stories/practice-room-piano-ballad-technique1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1)

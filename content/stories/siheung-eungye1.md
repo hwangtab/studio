@@ -96,6 +96,4 @@ faq:
 
 시흥에서 서해선 또는 4호선으로 약 1시간이면 연신내. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
----
-
 [시흥·안산 녹음실 안내](/stories/siheung1) | [안산 고잔·단원 녹음실 안내](/stories/ansan-danseon1) | [부천 녹음실 안내](/stories/bucheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

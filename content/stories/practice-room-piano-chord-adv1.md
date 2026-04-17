@@ -129,6 +129,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
----
-
 [피아노 코드 보이싱·화성 배치 — 피아노 보이싱 완성 가이드](/stories/practice-room-piano-chord-voicing1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1)

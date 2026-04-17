@@ -152,6 +152,4 @@ K-pop이 글로벌 시장에서 성공한 것은 팬덤 시스템과 디지털 �
 
 글로벌 배포는 더 이상 어렵지 않습니다. DistroKid 연간 $19.99로 80개 이상 플랫폼에 동시 배포하고, Spotify for Artists에서 발매 7~28일 전 에디토리얼 피칭을 신청하며, Spotify Canvas와 아티스트 프로필을 완성하는 것이 해외 노출의 기본 체크리스트입니다. Spotify for Artists 청취자 국가 데이터를 주기적으로 확인해 반응이 오는 시장을 파악하고, 해당 지역 팬들에게 맞는 언어와 SNS 콘텐츠를 보강하면 첫 해외 팬베이스를 형성할 수 있습니다. 퀄리티 높은 음원이 전제조건이며, 그 위에 꾸준한 플레이리스트 피칭과 SNS 활동이 더해질 때 글로벌 스트리밍이 실질적인 수익 채널이 됩니다.
 
----
-
 [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1)

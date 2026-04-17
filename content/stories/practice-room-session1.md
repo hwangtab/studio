@@ -116,6 +116,4 @@ faq:
 - 마이크 거리·각도 테스트 (어쿠스틱 피드백 포함)
 - 가장 어려운 구간만 집중 반복 훈련
 
----
-
 [카혼 드럼·플라멩코·어쿠스틱 세션·바스·스네어 카혼 테크닉 — 완전 가이드](/stories/practice-room-drum-cajon1) | [인디 뮤지션·독립 음악가 — 혼자 음악 만드는 공간 가이드](/stories/practice-room-indie1) | [보컬·연주자 무대 매너 연습 — 공연 전 퍼포먼스 완성](/stories/practice-room-stage-manner1) | [보컬 파워·성량 키우기 연습 — 강한 목소리 완성 가이드](/stories/practice-room-vocal-power1) | [피아노 반주자·반주 연습 — 솔리스트와 함께하는 반주 완성법](/stories/practice-room-accompanist1)

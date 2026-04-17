@@ -102,6 +102,4 @@ faq:
 
 인천 서구 석남·신현·가좌·청라에서 공항철도 55분 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
----
-
 [인천 검단신도시·원당·계양 녹음실 안내](/stories/incheon-geomdan1) | [인천·부천 녹음실 안내](/stories/incheon1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [인천 계양·작전·귤현·임학 녹음실 안내](/stories/gyeyang1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

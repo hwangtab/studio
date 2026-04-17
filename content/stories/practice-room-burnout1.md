@@ -118,6 +118,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1) | [가족 음악 취미 연습실 — 온 가족이 함께하는 음악 생활](/stories/practice-room-family1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1)

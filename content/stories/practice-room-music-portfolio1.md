@@ -129,6 +129,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [오디션 영상·포트폴리오 촬영 준비 — 완성된 영상으로 합격하기](/stories/practice-room-video-audition1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal-audition1) | [예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1)

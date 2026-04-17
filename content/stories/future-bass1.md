@@ -168,6 +168,4 @@ faq:
 
 마스터링 목표 레벨을 -7~-6 LUFS로 스트리밍 표준(-14 LUFS)보다 높게 설정하는 것은 퓨처 베이스 장르의 EDM 특성 때문입니다. SoundCloud와 유튜브는 라우드니스 노멀라이제이션이 다른 플랫폼보다 덜 엄격하게 적용되는 경우가 있어 댄스·EDM 트랙에서는 다소 높은 음압이 허용됩니다. 단, Spotify(-14 LUFS) 배포를 포함한다면 -14 LUFS 마스터를 별도 준비하는 것이 가장 안전합니다.
 
----
-
 [EDM 프로덕션 완전 가이드](/stories/edm-production1) | [R&B 보컬 프로덕션 완전 가이드](/stories/rnb-production1) | [네오소울 프로덕션 완전 가이드](/stories/neo-soul1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1)

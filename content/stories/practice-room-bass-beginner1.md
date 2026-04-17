@@ -121,6 +121,4 @@ faq:
 - 최대 다이나믹 폭(핑거 vs 슬랩) 비교 연습
 - 드럼·기타 MR에 맞춘 밴드 상황 시뮬레이션
 
----
-
 [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass-funk1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1)

@@ -188,6 +188,4 @@ G4-F4-E4-D4-C4 (5음 하행, '이' 발음)
 
 음역별 강점을 키우고, 취약한 전환 구간을 집중 공략하는 전략적 훈련—이것이 프로 보컬리스트로 가는 가장 확실한 길입니다.
 
----
-
 [보컬 파워·성량 키우기 연습 — 강한 목소리 완성 가이드](/stories/practice-room-vocal-power1) | [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [휘슬 레지스터·초고음 보컬 연습 — 초고음 발성 완성 가이드](/stories/practice-room-vocal-whistle1) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [한국 발라드 보컬·감정 표현·직접적 감성·이모션 완전 가이드](/stories/practice-room-vocal-korean-ballad1)

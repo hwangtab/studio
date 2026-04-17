@@ -171,6 +171,4 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 
 *관련 아티클:*
 
----
-
 [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 스피드 트레이닝·빠른 싱글 스트로크 — 완전 가이드](/stories/practice-room-drum-speed-training1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1)

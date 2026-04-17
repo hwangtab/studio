@@ -240,6 +240,4 @@ A - - - - - - (2마디, 홀드)
 
 은평구 24시간 음악연습실에서 J Dilla와 디 안젤로의 음반을 틀어놓고, 그 레이드백 그루브를 몸으로 느끼며 연습하세요. 완벽한 타이밍이 아닌, 진정한 느낌을 먼저 찾는 것이 힙합 베이스의 시작입니다.
 
----
-
 [네오소울 베이스·D'Angelo·Erykah Badu·그루브 완전 가이드](/stories/practice-room-bass-neo-soul1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

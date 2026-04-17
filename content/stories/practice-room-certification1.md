@@ -121,6 +121,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [음악 포트폴리오·오디션 영상 준비 — 내 음악 기록 완성](/stories/practice-room-music-portfolio1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습](/stories/practice-room-competition1)

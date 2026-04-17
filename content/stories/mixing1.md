@@ -1,5 +1,5 @@
 ---
-title: '믹싱 강좌 - 제1부: 믹싱이라는 요리의 시작'
+title: '믹싱이란? 초보자를 위한 과정·준비물·워크플로 | 믹싱 강좌 1부'
 date: 2025-11-12T00:00:00.000Z
 author: 스튜디오 놀
 category: 강좌
@@ -96,7 +96,5 @@ faq:
 스튜디오 놀에서는 믹싱 실전 레슨과 믹싱 의뢰 서비스를 함께 제공합니다.
 
 **믹싱 강좌 시리즈**: [제2부: 거짓말쟁이 방(Room) 길들이기 →](/stories/mixing2)
-
----
 
 [믹싱 vs 마스터링 차이 완전 가이드](/stories/mixing-vs-mastering1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)

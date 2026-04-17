@@ -124,6 +124,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [K-POP — K-POP 보컬·댄스보컬 연습 공간 가이드](/stories/practice-room-kpop1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [일렉기타·전기기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-electric-guitar1) | [기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1)

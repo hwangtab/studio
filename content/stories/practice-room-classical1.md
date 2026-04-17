@@ -125,6 +125,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [피아노 발라드 연주 연습 — 감성 피아노 완성 가이드](/stories/practice-room-piano-ballad1)

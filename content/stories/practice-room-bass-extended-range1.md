@@ -238,6 +238,4 @@ E(B줄 7프렛) - F#(B줄 9프렛) - G#(B줄 11프렛) - A(B줄 12프렛)
 
 은평구 24시간 음악연습실에서 5현 베이스를 충분히 탐색하세요. B현이 열어주는 낮은 음역은 4현으로는 경험할 수 없는 새로운 가능성입니다.
 
----
-
 [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass-prog-metal1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1)

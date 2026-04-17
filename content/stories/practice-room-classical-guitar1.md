@@ -122,6 +122,4 @@ a (anular)  = 약지 — 1번 줄
 - 최대 볼륨에서 다이나믹 컨트롤 연습
 - 밴드 MR에 맞춰 기타 파트 실전 연습
 
----
-
 [핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드](/stories/practice-room-fingerstyle1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [블루스 스케일·펜타토닉 기타 연습 — 블루스 기타 솔로 완성 가이드](/stories/practice-room-guitar-blues-scale1) | [나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1) | [기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1)

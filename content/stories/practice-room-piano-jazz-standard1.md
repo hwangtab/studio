@@ -121,6 +121,4 @@ Autumn Leaves부터 시작하는 재즈 레퍼토리. 방음 개인실에서 재
 - [ ] 왼손 보이싱이 루트 없이도 코드를 명확히 전달하는가?
 - [ ] 짧은 멜로딕 라인 즉흥을 1-2코드 위에서 시도했는가?
 
----
-
 [피아노 즉흥 연주·재즈 피아노 — 재즈 피아노 완성 가이드](/stories/practice-room-piano-jazz1) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [재즈 피아노 즉흥 솔로·임프로비제이션 — 재즈 피아노 즉흥 완성 가이드](/stories/practice-room-piano-jazz-improv1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1)

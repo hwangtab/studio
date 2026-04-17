@@ -199,6 +199,4 @@ summary: >-
 
 가장 중요한 것은 **음악을 들으면서** 연습하는 것입니다. 빌 에반스 트리오, 오스카 피터슨 트리오의 음반을 들으며 브러시 드러머의 뉘앙스를 귀로 먼저 익히세요.
 
----
-
 [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 브러시 고급 기법·재즈 발라드 완전 가이드 — 실전 연습](/stories/practice-room-drum-brushes-advanced1) | [드럼 비밥·재즈 비밥 드러밍·Max Roach — 완전 가이드](/stories/practice-room-drum-jazz-bebop1) | [드럼 보사노바·재즈 브러시 보사 — 완전 가이드](/stories/practice-room-drum-jazz-brushwork-bossa1) | [드럼 재즈 왈츠·3박자 스윙 — 완전 가이드](/stories/practice-room-drum-brushwork-jazz-waltz1)

@@ -114,6 +114,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [보컬 브레스 컨트롤·호흡 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath-adv1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)

@@ -134,6 +134,4 @@ faq:
 - 감정·표현 폭이 큰 연기+보컬 동시 훈련
 - 자신의 무대를 영상으로 촬영하여 전체적인 퍼포먼스 점검
 
----
-
 [음악 포트폴리오·오디션 영상 준비 — 내 음악 기록 완성](/stories/practice-room-music-portfolio1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [음악 유튜버·SNS 크리에이터 — 커버 영상 촬영 연습 공간](/stories/practice-room-content-creator1) | [데모 녹음·오디션 데모 준비 — 첫 데모 테이프 만들기](/stories/practice-room-demo1) | [보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal-audition1)

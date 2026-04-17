@@ -153,6 +153,4 @@ faq:
 - [ ] 어려운 구간을 분리해서 집중적으로 반복했는가?
 - [ ] 연습 후 무엇이 개선되었는지 구체적으로 인식하는가?
 
----
-
 [연습실 월세 입주 완전 가이드 — 장점·비용·계약 주의사항](/stories/practice-room-monthly1) | [취미 음악인을 위한 연습실 완벽 가이드 — 직장인·성인 연습생 필독](/stories/practice-room-hobby1) | [개인 연습실 완벽 가이드 — 나만의 음악 공간을 갖는 가장 현명한 방법](/stories/practice-room-private1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1)

@@ -131,6 +131,4 @@ e줄: 5·8
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
----
-
 [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [기타 솔로·리드 기타 연습 — 솔로 연주 완성 가이드](/stories/practice-room-guitar-solo1) | [기타 블루스 스타일·블루스 표현 — 블루스 기타 완성 가이드](/stories/practice-room-guitar-blues1) | [기타 스케일 연습·포지션 이동 — 기타 스케일 완성 가이드](/stories/practice-room-guitar-scale-pos1)

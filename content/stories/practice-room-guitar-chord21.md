@@ -127,6 +127,4 @@ C·G·D·Em·Am·E·A. 방음 개인실에서 이 7개를 완벽히 익히고 �
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
----
-
 [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1) | [기타 코드 멜로디·솔로 기타 편곡 — 기타 코드 멜로디 완성 가이드](/stories/practice-room-guitar-chord-melody1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1)

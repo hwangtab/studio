@@ -128,6 +128,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 올바른 왼손 폼 확인 / 2주차: BPM 80 박자 일정 유지 / 3주차: 펜타토닉 박스 포지션 암보 / 4주차: MR에 맞춰 16마디 연속
 
----
-
 [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1)

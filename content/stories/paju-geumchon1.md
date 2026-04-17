@@ -90,6 +90,4 @@ faq:
 
 파주 금촌·파주읍에서 경의중앙선으로 약 45~50분, 문산에서도 약 1시간이면 연신내. 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
----
-
 [파주 녹음실 안내](/stories/paju1) | [파주 운정·교하·야당 녹음실 안내](/stories/paju-unjeong1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

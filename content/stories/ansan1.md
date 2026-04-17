@@ -110,6 +110,4 @@ faq:
 
 안산·시흥에서 지하철로 1시간 내외면 서울 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
----
-
 [안산 상록구 사동·본오동·성포동 녹음실 안내](/stories/ansan-sangnok1) | [안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [시흥에서 서울 녹음실 방문 가이드](/stories/siheung1) | [수원·용인에서 서울 녹음실 방문 가이드](/stories/suwon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

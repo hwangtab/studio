@@ -166,6 +166,4 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 
 *관련 아티클:*
 
----
-
 [나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1) | [기타 아르페지오 고급·스윕 피킹 — 완전 가이드](/stories/practice-room-guitar-arpeggios-advanced1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

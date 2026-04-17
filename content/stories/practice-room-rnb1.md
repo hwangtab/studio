@@ -133,6 +133,4 @@ R&B 보컬 연습의 특징:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [보컬 테크닉·런·멜리스마 연습 — 화려한 보컬 기술 완성](/stories/practice-room-vocal-technique1) | [보컬 가스펠·소울 스타일 — 보컬 가스펠 완성 가이드](/stories/practice-room-vocal-gospel1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)

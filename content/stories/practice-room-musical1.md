@@ -122,6 +122,4 @@ faq:
 - 감정·표현 폭이 큰 연기+보컬 동시 훈련
 - 자신의 무대를 영상으로 촬영하여 전체적인 퍼포먼스 점검
 
----
-
 [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1)

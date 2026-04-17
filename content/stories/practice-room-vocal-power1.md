@@ -122,6 +122,4 @@ faq:
 - 감정·다이나믹 폭이 큰 표현 훈련
 - 자신의 소리를 방 울림과 함께 객관적으로 청취
 
----
-
 [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

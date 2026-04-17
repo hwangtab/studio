@@ -125,6 +125,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1) | [기타 솔로·리드 기타 연습 — 솔로 연주 완성 가이드](/stories/practice-room-guitar-solo1)

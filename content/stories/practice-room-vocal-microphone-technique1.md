@@ -168,6 +168,4 @@ S, Sh 소음이 과도하게 강조되는 현상:
 
 라이브 경험이 많아질수록 마이크와의 관계가 더 자연스럽고 본능적으로 됩니다. 연습실에서 충분히 시뮬레이션하고 무대에 오르세요.
 
----
-
 [보컬 성구 전환·흉성·두성 — 보컬 성구 전환 완성 가이드](/stories/practice-room-vocal-register1) | [보컬 무대 퍼포먼스·마이크 기법 완전 가이드 — 실전 연습](/stories/practice-room-vocal-stage-performance1) | [보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal-audition1) | [보컬 앙상블·코러스 개인 파트 훈련 — 코러스 보컬 완성 가이드](/stories/practice-room-vocal-ensemble1) | [보컬 마이크 테크닉·PA 활용 — 보컬 마이크 완성 가이드](/stories/practice-room-vocal-mic1)

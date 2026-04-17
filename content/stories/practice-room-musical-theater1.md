@@ -130,6 +130,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 가사 100% 암기 / 2주차: 벨팅 구간 안정적 처리 / 3주차: 중간 끊지 않고 감정 유지 완주 / 4주차: 오디션 복장·마인드셋 점검
 
----
-
 [보컬 뮤지컬 스타일·역할 보컬 훈련 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-vocal-musical-style1) | [보컬 뮤지컬 넘버·브로드웨이 스타일 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-vocal-musical1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)

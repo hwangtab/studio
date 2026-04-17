@@ -193,6 +193,4 @@ BPM 80: 4박 중 1박에만 클릭
 - [ ] Paradiddle을 양손에서 균일한 볼륨으로 칠 수 있는가?
 - [ ] 연습 후 손목·팔꿈치에 통증이 없는가?
 
----
-
 [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 완전 가이드](/stories/practice-room-drum-paradiddle1) | [드럼 스네어 테크닉·다이나믹 컨트롤 — 완전 가이드](/stories/practice-room-drum-snare-techniques1) | [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 — 완전 가이드](/stories/practice-room-drum-stick-control1)

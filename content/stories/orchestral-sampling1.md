@@ -193,6 +193,4 @@ MIDI 편집에서 벨로시티 변화를 주면 기계적인 느낌을 줄이고
 
 오케스트라 샘플링은 세심한 MIDI 표현과 자연스러운 아티큘레이션 선택이 핵심입니다.
 
----
-
 [미디 그루브·휴머나이제이션 완전 가이드](/stories/midi-groove1) | [샘플링·샘플팩 완전 가이드](/stories/sampling-guide1) | [공간 음향·바이노럴 완전 가이드](/stories/spatial-audio1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1)

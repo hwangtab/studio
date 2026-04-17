@@ -130,6 +130,4 @@ faq:
 - [ ] 어려운 구간을 분리해서 집중적으로 반복했는가?
 - [ ] 연습 후 무엇이 개선되었는지 구체적으로 인식하는가?
 
----
-
 [온라인 레슨 연계 연습실 활용 — 화상 레슨 효과를 극대화하는 방법](/stories/practice-room-online-lesson1) | [녹음 전 연습실 활용법 — 스튜디오 세션 준비를 위한 연습실 전략](/stories/practice-room-pre-recording1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1)

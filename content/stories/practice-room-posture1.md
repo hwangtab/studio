@@ -124,6 +124,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1) | [음악 표현력·감정 표현 훈련 — 기술을 넘어 감동을 주는 연주](/stories/practice-room-expression1) | [가족 음악 취미 연습실 — 온 가족이 함께하는 음악 생활](/stories/practice-room-family1) | [나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1)

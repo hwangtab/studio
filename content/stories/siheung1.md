@@ -89,6 +89,4 @@ faq:
 
 시흥에서 4호선을 이용하면 약 50~75분 내로 서울 연신내. 세션 일정은 카카오톡으로 미리 잡아두시면 대기 없이 바로 시작합니다.
 
----
-
 [시흥 배곧신도시 녹음실 안내](/stories/siheung-baegot1) | [시흥 은계·정왕·장현·목감 녹음실 안내](/stories/siheung-eungye1) | [안산·시흥 방문 가이드](/stories/ansan1) | [화성·동탄 녹음실 안내](/stories/hwaseong1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

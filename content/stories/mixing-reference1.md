@@ -165,6 +165,4 @@ faq:
 
 레퍼런스 트랙은 믹싱의 방향을 잡고 귀의 피로를 보완하는 필수 도구입니다. 장르·템포·악기 구성이 유사한 최근 3~5년 내 상업 곡을 선택하고, Youlean Loudness Meter로 LUFS를 동일하게 맞춘 뒤 주파수 밸런스·다이나믹·스테레오 이미지·음색 순서로 체계적으로 A/B 비교하는 습관이 믹싱 귀를 빠르게 키우는 가장 효율적인 방법입니다. 믹싱 중 1~2시간마다 레퍼런스와 A/B를 반복해 귀의 순응(ear fatigue)을 보완하면 전체 세션에서 일관된 판단을 유지할 수 있습니다.
 
----
-
 [강좌 제6부: 눈으로 소리 읽기](/stories/mixing6) | [강좌 제10부: 황금 귀 만들기](/stories/mixing10) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

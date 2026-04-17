@@ -217,6 +217,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 혼자 또는 소수와 함께 마음껏 퍼포먼스를 연습하세요. 관객 앞에서 빛나는 보컬리스트가 되기 위한 가장 효과적인 준비는 연습입니다.
 
----
-
 [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal-stage-fright1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

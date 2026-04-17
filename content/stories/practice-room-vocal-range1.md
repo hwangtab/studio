@@ -126,6 +126,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 배에서 소리 나오는 느낌 확인 / 2주차: 고음에서 힘 빼기 성공 여부 / 3주차: 문제 음정 3회 연속 성공 / 4주차: 녹음 후 자기 모니터링
 
----
-
 [믹스 보이스·팔세토 — 고음 발성 기법 완전 정복](/stories/practice-room-mix-voice1) | [보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드](/stories/practice-room-vocal-rasp1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [오페라·성악 연습 — 클래식 성악 발성 완성 가이드](/stories/practice-room-opera1)

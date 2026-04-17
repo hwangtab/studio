@@ -147,6 +147,4 @@ faq:
 
 음색은 하루아침에 만들어지지 않지만, 공명 위치 훈련과 꾸준한 녹음 모니터링으로 개발할 수 있습니다. 스튜디오 놀의 전문 모니터링 환경에서 자신의 최적 음색을 확인해보세요.
 
----
-
 [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [보컬 프라이(Vocal Fry) 가이드](/stories/vocalfry1) | [흉성 완전 가이드](/stories/chest-voice1) | [혼합 발성 완전 가이드](/stories/mixedvoice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1)

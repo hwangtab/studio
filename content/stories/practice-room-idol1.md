@@ -123,6 +123,4 @@ faq:
 - 감정·표현 폭이 큰 연기+보컬 동시 훈련
 - 자신의 무대를 영상으로 촬영하여 전체적인 퍼포먼스 점검
 
----
-
 [보컬 무대 퍼포먼스·스테이지 연기 — 보컬 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [재즈 — 재즈 보컬·피아노·기타 연습 공간 가이드](/stories/practice-room-jazz1)

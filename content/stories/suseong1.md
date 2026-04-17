@@ -100,6 +100,4 @@ faq:
 
 수성구·동대구에서 KTX 약 2시간 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
----
-
 [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경산·영천에서 서울 녹음실 방문 가이드](/stories/gyeongsan1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

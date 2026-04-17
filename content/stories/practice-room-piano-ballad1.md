@@ -126,6 +126,4 @@ C: C - G - C' - G (반복)
 - 페달 없이 레가토 연습 후 페달 추가 비교
 - 본인 연주를 스마트폰으로 녹음 → 왼손/오른손 밸런스 객관적 확인
 
----
-
 [피아노 발라드 반주·감성 피아노 — 피아노 발라드 반주 완성 가이드](/stories/practice-room-piano-ballad21) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1)

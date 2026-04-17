@@ -124,6 +124,4 @@ faq:
 - 실제 악기로 아이디어 즉흥 연주 후 MIDI 녹음
 - 반향음·잔향이 없는 환경에서 어레인지먼트 점검
 
----
-
 [싱어송라이터 — 자작곡 작업·작사·작곡 연습 공간 가이드](/stories/practice-room-singer-songwriter1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [대학생 — 대학생·실용음악과 재학생을 위한 연습 공간 가이드](/stories/practice-room-college-student1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [실용음악 입시생을 위한 — 입시 준비 연습 공간 완벽 가이드](/stories/practice-room-entrance1)

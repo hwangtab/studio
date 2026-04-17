@@ -94,6 +94,4 @@ faq:
 
 가평에서 ITX-청춘을 이용하면 약 2시간 내외로 서울 연신내. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
----
-
 [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [남양주에서 서울 녹음실 방문 가이드](/stories/namyangju1) | [수도권 녹음실 이용 방법](/stories/nationwide1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

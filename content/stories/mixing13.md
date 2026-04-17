@@ -1,5 +1,5 @@
 ---
-title: "믹싱 강좌 - 제13부: 멈춰있을 때 가장 아름답다 (Static Mix)"
+title: "스태틱 믹스(Static Mix) 뜻·첫 레벨 세팅법·순서 | 믹싱 강좌 13부"
 date: 2025-11-23
 author: "스튜디오 놀"
 category: "강좌"

@@ -151,6 +151,4 @@ faq:
 
 기술 사양에서는 팟캐스트 음악을 -14 LUFS 통합 음량으로 마스터링하면 Apple Podcasts·Spotify 팟캐스트의 라우드니스 정규화 처리 후에도 음량 변동 없이 재생됩니다. 유튜브의 경우도 -14 LUFS 기준을 적용하므로 같은 마스터를 양쪽에 사용할 수 있습니다. BGM으로 깔릴 음악은 대화 보컬 대역(200Hz~3kHz)을 EQ로 6~8dB 낮춰 제작하거나, 라이선스 라이브러리에서 "Underscore" 또는 "Bed" 태그가 붙은 트랙을 선택하는 것이 현실적입니다. 보컬 포함 채널 시그니처 사운드는 스튜디오에 맞춤 의뢰해 저작권을 완전히 소유하는 방식이 장기적으로 가장 안전합니다.
 
----
-
 [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [CF·광고음악 완전 가이드](/stories/advertisement-music1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1)

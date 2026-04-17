@@ -261,6 +261,4 @@ Martin D12-20 어쿠스틱
  | [슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive](/stories/practice-room-guitar-shoegaze1)
 [기타 록 리드·파워풀 솔로 기법 — 완전 가이드](/stories/practice-room-guitar-rock-lead1)
 
----
-
 [기타 모드 이론·7가지 교회 선법 — 완전 가이드](/stories/practice-room-guitar-theory-modes1)

@@ -177,6 +177,4 @@ summary: >-
 
 *관련 아티클:*
 
----
-
 [드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 완전 가이드](/stories/practice-room-drum-paradiddle1) | [드럼 루디멘트 고급·스트로크 조합 — 완전 가이드](/stories/practice-room-drum-rudiments-advanced1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 스피드 트레이닝·빠른 싱글 스트로크 — 완전 가이드](/stories/practice-room-drum-speed-training1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

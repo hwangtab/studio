@@ -118,6 +118,4 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [보컬 클래식·성악 발성 — 보컬 클래식 완성 가이드](/stories/practice-room-vocal-classical1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [클래식 피아노 연습 — 소나타·에튀드 완성 가이드](/stories/practice-room-piano-classical1)

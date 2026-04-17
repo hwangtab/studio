@@ -119,6 +119,4 @@ faq:
 - [ ] 왼손 보이싱이 루트 없이도 코드를 명확히 전달하는가?
 - [ ] 짧은 멜로딕 라인 즉흥을 1-2코드 위에서 시도했는가?
 
----
-
 [기타 재즈 코드·재즈 보이싱 — 기타 재즈 코드 완성 가이드](/stories/practice-room-guitar-jazz-chord1) | [피아노 코드 보이싱·화성 배치 — 피아노 보이싱 완성 가이드](/stories/practice-room-piano-chord-voicing1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [재즈 피아노 연습 — 보이싱·즉흥 연주 완성 가이드](/stories/practice-room-jazz-piano1)

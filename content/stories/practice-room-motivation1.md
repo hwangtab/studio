@@ -110,6 +110,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1) | [음악 목표 설정·달성 — 실력 향상을 위한 연습 전략](/stories/practice-room-goal-setting1) | [음악 연습 습관 만들기 — 꾸준히 연습하는 루틴 설계](/stories/practice-room-habit1) | [주말 연습실 이용 가이드 — 직장인·학생을 위한 주말 연습 전략](/stories/practice-room-weekend1)

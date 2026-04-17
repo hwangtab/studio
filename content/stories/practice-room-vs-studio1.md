@@ -135,6 +135,4 @@ faq:
 - [ ] 어려운 구간을 분리해서 집중적으로 반복했는가?
 - [ ] 연습 후 무엇이 개선되었는지 구체적으로 인식하는가?
 
----
-
 [녹음 전 연습실 활용법 — 스튜디오 세션 준비를 위한 연습실 전략](/stories/practice-room-pre-recording1) | [녹음 가능한 — 연습실 내 셀프 녹음 완벽 가이드](/stories/practice-room-recording1) | [홈 스튜디오 vs — 어떤 선택이 더 현명할까?](/stories/practice-room-vs-home1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 고르는 법 — 2026년 체크리스트 완벽 가이드](/stories/practice-room-guide1)

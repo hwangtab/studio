@@ -133,6 +133,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 약점 구간 3개 목록 작성 / 2주차: 각 구간 느린 템포 100% 달성 / 3주차: 전곡 끊김 없이 완주 / 4주차: 청중 앞 또는 녹음으로 최종 확인
 
----
-
 [현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [바이올린 연습 — 방음 개인실에서 현악기 집중 연습](/stories/practice-room-violin1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1)

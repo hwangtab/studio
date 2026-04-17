@@ -130,6 +130,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 배에서 소리 나오는 느낌 확인 / 2주차: 고음에서 힘 빼기 성공 여부 / 3주차: 문제 음정 3회 연속 성공 / 4주차: 녹음 후 자기 모니터링
 
----
-
 [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 스타일·장르별 보컬 표현 — 보컬 스타일 완성 가이드](/stories/practice-room-vocal-style1) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1)

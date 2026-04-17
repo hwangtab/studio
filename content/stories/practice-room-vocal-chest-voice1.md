@@ -207,6 +207,4 @@ A3 (강한 흉성) → B3 (흉성) → C4 (믹스 진입) → D4 (믹스)
 
 은평구 24시간 음악연습실에서 충분한 시간을 들여 흉성을 단련하고 당신만의 독보적인 보컬 사운드를 만들어가세요.
 
----
-
 [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1)

@@ -117,6 +117,4 @@ faq:
 - [ ] 손목·어깨에 긴장 없이 편안하게 연주할 수 있는가?
 - [ ] 목표 구간을 느린 속도(BPM -30%)에서 완벽하게 연주했는가?
 
----
-
 [피아노 소나타·클래식 레퍼토리 — 피아노 소나타 완성 가이드](/stories/practice-room-piano-sonata1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1) | [피아노 발라드 연주 연습 — 감성 피아노 완성 가이드](/stories/practice-room-piano-ballad1)

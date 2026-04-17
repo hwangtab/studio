@@ -203,6 +203,4 @@ C4(풀보이스) → G4(팔세토) → C5(팔세토) → G5(팔세토)
 
 은평구 24시간 음악연습실에서 기술을 연마하되, 항상 음악의 감정적 의미를 생각하며 노래하세요. 위대한 소울 가수들처럼—기술이 감정을 섬기게.
 
----
-
 [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [보컬 R&B 프레이징·그루브·어택 포인트 — 완전 가이드](/stories/practice-room-vocal-rnb-phrasing1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 어질리티·멜리스마 훈련 — 완전 가이드](/stories/practice-room-vocal-agility1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

@@ -139,6 +139,4 @@ faq:
 - 실내 반향음에 맞춰 드럼 배치·튜닝 실험
 - 밴드 MR과 함께 전체 드럼 파트 실전 연습
 
----
-
 [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [재즈 — 재즈 보컬·피아노·기타 연습 공간 가이드](/stories/practice-room-jazz1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1)

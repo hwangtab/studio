@@ -132,6 +132,4 @@ D - A - B - F# - G - D - G - A
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
----
-
 [피아노 즉흥 반주·코드 반주 — 피아노 코드 반주 완성 가이드](/stories/practice-room-piano-sight-play1) | [피아노 발라드 반주·감성 피아노 — 피아노 발라드 반주 완성 가이드](/stories/practice-room-piano-ballad21) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1) | [피아노 발라드 연주 연습 — 감성 피아노 완성 가이드](/stories/practice-room-piano-ballad1) | [피아노 협주곡·오케스트라 반주 연습 — 피아노 협주곡 완성 가이드](/stories/practice-room-piano-concerto1)

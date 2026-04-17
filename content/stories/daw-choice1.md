@@ -157,6 +157,4 @@ DAW는 기능이 워낙 많아서 독학으로 배우면 시간이 오래 걸립
 
 하나를 골라서 3개월만 집중하면 기본 작업은 충분히 할 수 있게 됩니다.
 
----
-
 [DAW 비교 완전 가이드](/stories/daw-comparison1) | [큐베이스 보컬 녹음 가이드](/stories/cubase1) | [로직 프로 보컬 녹음 가이드](/stories/logicpro1) | [에이블톤 보컬 녹음 가이드](/stories/ableton1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [게인 스테이징 완전 가이드](/stories/gain-staging1)

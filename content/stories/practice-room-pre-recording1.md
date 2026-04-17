@@ -149,6 +149,4 @@ faq:
 - [ ] MR과 레퍼런스 트랙을 USB·Google Drive에 저장해서 지참했는가?
 - [ ] 원하는 사운드를 엔지니어에게 레퍼런스로 설명할 수 있는가?
 
----
-
 [보컬 레슨과 연습실 병행하는 방법 — 레슨 효과를 극대화하는 연습실 활용 전략](/stories/practice-room-lesson1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [뮤지컬 연습실 — 뮤지컬 배우·지망생을 위한 연습실 가이드](/stories/practice-room-musical1)

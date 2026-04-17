@@ -135,6 +135,4 @@ pp → mp → mf → f → ff 순으로 각각 연주
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
----
-
 [즉흥 연주·임프로비제이션 — 자유로운 음악 표현 훈련](/stories/practice-room-improvisation1) | [보컬 감정 표현·가사 전달 — 보컬 감정 표현 완성 가이드](/stories/practice-room-vocal-emotion1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1) | [음악 청음·귀 훈련 — 음악적 귀를 키우는 방법](/stories/practice-room-ear-training1)

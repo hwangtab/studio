@@ -127,6 +127,4 @@ faq:
 | 시간 대여 | 8,000~25,000원/시간 |
 | 월세 입주 | 월 30만원대~, 보증금 없음 |
 
----
-
 [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [신디사이저·전자 키보드 연주 연습 — 신스 사운드 완성 가이드](/stories/practice-room-keyboard-synth1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1)

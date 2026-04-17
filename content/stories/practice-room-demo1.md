@@ -122,6 +122,4 @@ faq:
 - 마이크 거리·각도 테스트 (어쿠스틱 피드백 포함)
 - 가장 어려운 구간만 집중 반복 훈련
 
----
-
 [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [음악 포트폴리오·오디션 영상 준비 — 내 음악 기록 완성](/stories/practice-room-music-portfolio1) | [녹음 가능한 — 연습실 내 셀프 녹음 완벽 가이드](/stories/practice-room-recording1) | [오디션 영상·포트폴리오 촬영 준비 — 완성된 영상으로 합격하기](/stories/practice-room-video-audition1) | [보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal-audition1)

@@ -126,6 +126,4 @@ faq:
 - 방음 환경이 외부 방해 없는 집중력 확보
 - 정해진 예약 시간이 연습 규율을 자연스럽게 강제
 
----
-
 [음악 연습 체력·지구력 관리 — 오래 연습해도 지치지 않는 법](/stories/practice-room-stamina1) | [인디 뮤지션·독립 음악가 — 혼자 음악 만드는 공간 가이드](/stories/practice-room-indie1) | [음악 암기·악보 없이 연주하기 연습 — 외워서 연주하는 법](/stories/practice-room-memory1) | [보컬·성대 건강 관리 — 올바른 발성으로 목 건강 지키기](/stories/practice-room-voice-health1) | [피아노 반주자·반주 연습 — 솔리스트와 함께하는 반주 완성법](/stories/practice-room-accompanist1)

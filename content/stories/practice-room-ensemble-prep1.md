@@ -115,6 +115,4 @@ faq:
 - 드럼·베이스 라인과 함께 빠른 리얼타임 피드백
 - 실제 공연 세팅과 유사한 환경에서 전곡 런스루
 
----
-
 [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [합창단·중창단 개인 파트 연습 — 혼자 파트 완성하고 합창 나가기](/stories/practice-room-choir1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1)

@@ -128,6 +128,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 2-5-1 진행 4개 조성에서 연주 / 2주차: 스윙 느낌 메트로놈 없이도 유지 / 3주차: 블루스 스케일 솔로 8마디 즉흥 / 4주차: 리얼 북 곡 1개 멤버들과 합주
 
----
-
 [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1) | [베이스 화성 이론·스케일 적용 — 완전 가이드](/stories/practice-room-bass-theory-harmony1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

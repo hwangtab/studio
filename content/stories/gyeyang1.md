@@ -103,6 +103,4 @@ faq:
 
 인천 계양구 계양·작전·귤현·임학에서 공항철도 45분 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
----
-
 [인천 녹음실 안내](/stories/incheon1) | [인천 서구 석남·청라 녹음실 안내](/stories/incheon-seo1) | [부평·인천 녹음실 안내](/stories/bupyeong1) | [부천 녹음실 안내](/stories/bucheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
