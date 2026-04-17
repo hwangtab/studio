@@ -164,6 +164,17 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
             />
           </div>
 
+          {/* 크롤러용 카테고리 허브 링크 (시각적으로는 CategoryFilter가 주 UX, 여기는 SEO 내부 링크) */}
+          <nav aria-label="Story categories" className="sr-only">
+            <ul>
+              {categories.map((cat) => (
+                <li key={cat.id}>
+                  <a href={`/${locale}/stories/category/${cat.id}`}>{cat.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
           {filteredStories.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-gray-400 text-2xl mb-4">📭</div>

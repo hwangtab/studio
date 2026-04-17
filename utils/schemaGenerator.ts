@@ -369,6 +369,10 @@ export const generateArticleSchema = (
     image: [{ '@type': 'ImageObject', url: absoluteOgImage, width: 1200, height: 630, representativeOfPage: true }],
     description: description,
     inLanguage: schemaLanguage,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '[itemprop="headline"]', '[itemprop="description"]'],
+    },
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `${normalizedCanonical}#webpage`,
@@ -731,6 +735,7 @@ export interface VideoInput {
   contentUrl: string;
   uploadDate: string;
   duration?: string;
+  embedUrl?: string;
 }
 
 export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') => {
@@ -743,6 +748,7 @@ export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') =>
     thumbnailUrl: video.thumbnailUrl,
     contentUrl: video.contentUrl,
     uploadDate: video.uploadDate,
+    ...(video.embedUrl && { embedUrl: video.embedUrl }),
     ...(video.duration && { duration: video.duration }),
     publisher: {
       '@type': 'Organization',
@@ -753,6 +759,13 @@ export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') =>
       },
     },
   };
+};
+
+const YOUTUBE_ID_REGEX = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/;
+export const extractYouTubeId = (url?: string): string | null => {
+  if (!url) return null;
+  const match = url.match(YOUTUBE_ID_REGEX);
+  return match ? match[1] : null;
 };
 
 export interface ItemListInput {

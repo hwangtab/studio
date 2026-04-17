@@ -1,5 +1,6 @@
 import type { AppPropsWithLayout } from '../types';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '../styles/globals.css';
 
 import Head from 'next/head';
@@ -196,6 +197,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                   </m.div>
                 </AnimatePresence>
                 <Analytics />
+                <SpeedInsights />
                 {/* Google Analytics 4 — afterInteractive: 페이지 인터랙티브 후 로드 */}
                 <Script
                   src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"

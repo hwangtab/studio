@@ -203,7 +203,8 @@ module.exports = {
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
-      return `Host: ${siteUrl}\n${cleaned}`;
+      const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${siteUrl}/llms.txt\n# llms-full.txt: ${siteUrl}/llms-full.txt\n`;
+      return `Host: ${siteUrl}\n${cleaned}${llmsHint}`;
     },
   },
   sitemapSize: 50000,
@@ -222,6 +223,21 @@ module.exports = {
     });
 
     const results = [];
+
+    // Story category hub pages — keep in sync with pages/[locale]/stories/category/[key].tsx
+    const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'];
+    for (const locale of locales) {
+      for (const key of storyCategoryKeys) {
+        const routePath = `/${locale}/stories/category/${key}`;
+        results.push({
+          loc: routePath,
+          lastmod: buildTimestamp,
+          changefreq: 'weekly',
+          priority: 0.7,
+          alternateRefs: getAlternateRefs(routePath),
+        });
+      }
+    }
     for (const slug of slugs) {
       for (const locale of locales) {
         // Skip if no locale-specific file exists for this locale (would be noindexed fallback)

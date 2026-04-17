@@ -342,6 +342,9 @@ const SEO = ({
       <meta property="og:title" content={resolvedTitle} />
       <meta property="og:description" content={resolvedDescription} />
       <meta property="og:image" content={absoluteOgImage} />
+      {absoluteOgImage.startsWith('https://') && (
+        <meta property="og:image:secure_url" content={absoluteOgImage} />
+      )}
       <meta property="og:image:alt" content={ogImageAlt || resolvedTitle} />
       <meta property="og:image:width" content={String(ogImageWidth)} />
       <meta property="og:image:height" content={String(ogImageHeight)} />

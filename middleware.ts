@@ -120,6 +120,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|manifest\\.json|sw\\.js|robots\\.txt|sitemap.*\\.xml|locales|images|logo.*|audio|styles|fonts).*)',
+        '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|manifest\\.json|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full\\.txt|locales|images|logo.*|audio|styles|fonts).*)',
     ],
 };

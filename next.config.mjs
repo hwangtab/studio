@@ -58,6 +58,13 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
 
+  async rewrites() {
+    return [
+      { source: '/llms.txt', destination: '/api/llms' },
+      { source: '/llms-full.txt', destination: '/api/llms-full' },
+    ];
+  },
+
   async headers() {
     return [
       // API 라우트 크롤링 차단
@@ -80,6 +87,13 @@ const nextConfig = {
         headers: [
           { key: 'Content-Type', value: 'text/plain' },
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=43200' },
+        ],
+      },
+      {
+        source: '/llms(-full)?.txt',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
+          { key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=86400' },
         ],
       },
       {

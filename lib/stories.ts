@@ -360,7 +360,7 @@ export const getStoryPaths = (): StoryPath[] => {
   return paths;
 };
 
-export const getRelatedStories = (locale: string, slug: string, limit = 3): Story[] => {
+export const getRelatedStories = (locale: string, slug: string, limit = 6): Story[] => {
   const all = getAllStories(locale);
   const current = all.find((item) => item.slug === slug);
   const candidates = all.filter((item) => item.slug !== slug);
@@ -368,14 +368,23 @@ export const getRelatedStories = (locale: string, slug: string, limit = 3): Stor
   if (!current) return candidates.slice(0, limit);
 
   const currentTags = new Set(current.tags ?? []);
+  const toTime = (s: Story) => new Date(s.date).getTime() || 0;
 
-  return candidates
+  const scored = candidates
     .map((item) => {
       const tagOverlap = (item.tags ?? []).filter((t) => currentTags.has(t)).length;
       const categoryMatch = item.categoryKey === current.categoryKey ? 2 : 0;
       return { item, score: categoryMatch + tagOverlap };
     })
-    .sort((a, b) => b.score - a.score)
-    .map(({ item }) => item)
-    .slice(0, limit);
+    .sort((a, b) => b.score - a.score || toTime(b.item) - toTime(a.item));
+
+  const relevant = scored.filter(({ score }) => score > 0).map(({ item }) => item);
+  if (relevant.length >= limit) return relevant.slice(0, limit);
+
+  const seen = new Set(relevant.map((s) => s.slug));
+  const fallback = candidates
+    .filter((s) => !seen.has(s.slug))
+    .sort((a, b) => toTime(b) - toTime(a));
+
+  return [...relevant, ...fallback].slice(0, limit);
 };

@@ -254,7 +254,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   try {
     const story = await getStoryDetail(params!.id as string, locale);
-    const relatedStories = getRelatedStories(locale, params!.id as string, 3);
+    const relatedStories = getRelatedStories(locale, params!.id as string, 6);
 
     return buildPageStaticProps(
       locale,
