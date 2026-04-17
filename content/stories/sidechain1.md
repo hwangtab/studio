@@ -143,6 +143,4 @@ faq:
 
 EDM 펌핑 이펙트에서는 킥 드럼의 실제 신호 대신 사이드체인 전용 킥 신호(킥 패턴만 담긴 단독 트랙)를 사용하면 원래 킥 사운드와 독립적으로 펌핑 강도를 조절할 수 있습니다. 킥에 딜레이나 리버브가 걸려 있을 경우 사이드체인 소스로는 드라이 킥을 사용해야 정확한 타이밍에 컴프레서가 작동합니다.
 
----
-
 [EDM 프로덕션 완전 가이드](/stories/edm-production1) | [멀티밴드 컴프레서 완전 가이드](/stories/multiband1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
