@@ -113,6 +113,4 @@ faq:
 
 보컬에 튜브 새추레이션을 적용할 때는 드라이브보다 타입 선택이 더 중요합니다. 동일한 Drive 설정에서도 튜브(tube) 타입은 짝수 배음을 더해 부드럽고 따뜻하며, 트랜지스터(transistor) 타입은 홀수 배음을 더해 밝고 공격적입니다. 발라드 보컬에는 튜브, EDM이나 록 보컬에는 트랜지스터나 Decapitator의 'Punish' 설정이 맞습니다. 믹스버스에 적용할 때는 Drive를 5~10%로 최소화하고, 출력 레벨이 입력보다 높아지지 않도록 Output Gain을 조정해 음량 착각으로 인한 과도 적용을 방지하세요.
 
----
-
 [빈티지·아날로그 사운드 제작 완전 가이드](/stories/vintage-sound1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1)
