@@ -10,7 +10,8 @@ tags:
   - Introduction
 summary: >-
   The process of making music is often compared to “cooking.” I can’t think of a
-  better metaphor. For those new to mixing, I’ll be your chef starting to
+  better metaphor. For those new to mixing, I’ll be your chef — guiding you from
+  recording ingredients to a finished, well-seasoned mix.
 thumbnail: /images/hardware1.webp
 ---
 ![Mixing console and studio view](/images/console.webp)

@@ -14,6 +14,7 @@ import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'fram
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
+import { navLabels } from '../lib/navLabels';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -110,25 +111,27 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     };
   }, [hasServerResourceForLocale, i18nResources, locale]);
 
+  // 정적 nav 라벨 매핑을 사용해 SSR/SSG에서도 JSON-LD가 보장되도록 한다.
+  // i18n.t()는 useEffect 내 applyI18nResources 이후에만 안정적이라 SSR 시 빈 값 위험.
   const siteNavSchema = useMemo(() => {
     const sc = getSiteConfig(locale);
     const base = `${sc.url}/${locale}`;
-    const tNav = (key: string) => i18n.t(`nav.${key}`, { lng: locale });
+    const labels = navLabels[locale] || navLabels[defaultLocale];
     return {
       '@context': 'https://schema.org',
       '@type': 'SiteNavigationElement',
-      name: tNav('home'),
+      name: labels.home,
       hasPart: [
         { '@type': 'SiteNavigationElement', name: sc.name, url: base },
-        { '@type': 'SiteNavigationElement', name: tNav('pricing'), url: `${base}/pricing` },
-        { '@type': 'SiteNavigationElement', name: tNav('equipment'), url: `${base}/studio-info` },
-        { '@type': 'SiteNavigationElement', name: tNav('practiceRoom'), url: `${base}/practice-room` },
-        { '@type': 'SiteNavigationElement', name: tNav('lesson'), url: `${base}/lesson` },
-        { '@type': 'SiteNavigationElement', name: tNav('weddingSong'), url: `${base}/wedding-song` },
-        { '@type': 'SiteNavigationElement', name: tNav('voiceActing'), url: `${base}/voice-acting` },
-        { '@type': 'SiteNavigationElement', name: tNav('portfolio'), url: `${base}/portfolio` },
-        { '@type': 'SiteNavigationElement', name: tNav('stories'), url: `${base}/stories` },
-        { '@type': 'SiteNavigationElement', name: tNav('contact'), url: `${base}/contact` },
+        { '@type': 'SiteNavigationElement', name: labels.pricing, url: `${base}/pricing` },
+        { '@type': 'SiteNavigationElement', name: labels.equipment, url: `${base}/studio-info` },
+        { '@type': 'SiteNavigationElement', name: labels.practiceRoom, url: `${base}/practice-room` },
+        { '@type': 'SiteNavigationElement', name: labels.lesson, url: `${base}/lesson` },
+        { '@type': 'SiteNavigationElement', name: labels.weddingSong, url: `${base}/wedding-song` },
+        { '@type': 'SiteNavigationElement', name: labels.voiceActing, url: `${base}/voice-acting` },
+        { '@type': 'SiteNavigationElement', name: labels.portfolio, url: `${base}/portfolio` },
+        { '@type': 'SiteNavigationElement', name: labels.stories, url: `${base}/stories` },
+        { '@type': 'SiteNavigationElement', name: labels.contact, url: `${base}/contact` },
       ],
     };
   }, [locale]);

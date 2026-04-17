@@ -97,6 +97,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
       <SEO
         title={`${item.title} - ${t('portfolio.detail.titleSuffix')}`}
         description={metaDescription}
+        canonical={`/${locale}/portfolio/${item.id}`}
         ogImage={item.image}
         ogImageAlt={`${item.title} - ${item.artist}`}
         ogImageWidth={ogImageDimensions.width}

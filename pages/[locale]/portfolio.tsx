@@ -40,9 +40,9 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
-  const canonicalOverride = router.query.item
-    ? `/${locale}/portfolio/${router.query.item}`
-    : `/${locale}/portfolio`;
+  // canonical은 항상 목록 페이지로 고정. 모달은 클라이언트 UX이며 SSR 단계에서
+  // 아이템 상세 URL이 canonical로 인식되면 색인이 오염됨.
+  const canonicalOverride = `/${locale}/portfolio`;
 
   const itemListSchema = React.useMemo(() => generateItemListSchema(
     initialPortfolioItems.map((item) => ({
@@ -148,7 +148,6 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         ogImageWidth={1920}
         ogImageHeight={937}
         canonical={canonicalOverride}
-        disableAlternates={Boolean(router.query.item)}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },

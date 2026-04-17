@@ -627,18 +627,6 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     about: {
       '@id': `${siteUrl}/#studio`,
     },
-    potentialAction: {
-      '@type': 'ContactAction',
-      name: locale === 'ko' ? '스튜디오 문의하기' : 'Contact Studio NOL',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/${locale}/contact`,
-        actionPlatform: [
-          'https://schema.org/DesktopWebPlatform',
-          'https://schema.org/MobileWebPlatform',
-        ],
-      },
-    },
   };
 };
 

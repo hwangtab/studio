@@ -67,9 +67,9 @@ const nextConfig = {
 
   async headers() {
     return [
-      // API 라우트 크롤링 차단
+      // API 라우트 크롤링 차단 (단, llms.txt rewrite 대상은 제외)
       {
-        source: '/api/:path*',
+        source: '/api/:path((?!llms$|llms-full$).*)',
         headers: [
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],

@@ -107,6 +107,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 
   const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
   const ogImage = story.thumbnail || dynamicOgImage;
+  // 동적 OG는 1200x630 보장. thumbnail은 실제 크기를 알 수 없으므로 메타에 크기 명시 안 함.
+  const isDynamicOg = !story.thumbnail;
 
   const shareStory = async () => {
     const shareUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
@@ -127,12 +129,12 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         title={`${story.title} | ${siteConfig.name}`}
         description={story.summary || metaDescription}
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
-        canonical={story.isFallbackTranslation ? `/${story.sourceLocale}/stories/${story.slug}` : undefined}
+        canonical={story.isFallbackTranslation ? `/${story.sourceLocale}/stories/${story.slug}` : `/${locale}/stories/${story.slug}`}
         disableAlternates={story.isFallbackTranslation}
         ogImage={ogImage}
         ogImageAlt={story.thumbnail ? story.title : `${story.title} - ${siteConfig.name}`}
-        ogImageWidth={1200}
-        ogImageHeight={630}
+        ogImageWidth={isDynamicOg ? 1200 : undefined}
+        ogImageHeight={isDynamicOg ? 630 : undefined}
         ogType="article"
         author={story.author || undefined}
         robots={story.robots || ((story.isFallbackTranslation || story.isThinContent) ? 'noindex, follow' : undefined)}

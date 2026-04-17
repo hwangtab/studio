@@ -92,6 +92,17 @@ const getStoryTitle = (slug, locale) => {
 
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 
+// Google 공식 hreflang 코드 매핑 — lib/i18n-config.ts의 hreflangByLocale과 동기화 유지
+const hreflangByLocale = {
+  ko: 'ko',
+  en: 'en',
+  zh: 'zh-Hans',
+  es: 'es',
+  vi: 'vi',
+  th: 'th',
+  uz: 'uz',
+};
+
 const toIsoMtime = (filePath) => {
   try {
     return fs.statSync(filePath).mtime.toISOString();
@@ -125,6 +136,34 @@ const getStoryLastmod = (slug, locale) => {
   return mtimes.sort().at(-1);
 };
 
+const getStoryCategory = (slug, locale) => {
+  const candidates = [
+    path.join(storiesDir, `${slug}.${locale}.md`),
+    path.join(storiesDir, `${slug}.md`),
+  ];
+  for (const filePath of candidates) {
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const match = content.match(/^category:\s*['"]?([^\s'"]+)['"]?/m);
+      if (match && match[1]) return match[1].trim();
+    } catch { /* next */ }
+  }
+  return null;
+};
+
+// 카테고리별 최신 스토리 mtime을 계산 — buildTimestamp 고정으로 인한 freshness 신호 왜곡 방지
+const getCategoryLastmod = (categoryKey, slugs, locale) => {
+  const mtimes = [];
+  for (const slug of slugs) {
+    if (getStoryCategory(slug, locale) === categoryKey) {
+      const mtime = getStoryLastmod(slug, locale);
+      if (mtime) mtimes.push(mtime);
+    }
+  }
+  if (mtimes.length === 0) return null;
+  return mtimes.sort().at(-1);
+};
+
 const getAlternateRefs = (routePath) => {
   const segments = routePath.split('/').filter(Boolean);
   if (segments.length === 0) return [];
@@ -133,7 +172,7 @@ const getAlternateRefs = (routePath) => {
   const restPath = segments.slice(1).join('/');
   const refs = locales.map(locale => ({
     href: `${siteUrl}/${locale}${restPath ? `/${restPath}` : ''}`,
-    hreflang: locale,
+    hreflang: hreflangByLocale[locale],
     hrefIsAbsolute: true,
   }));
   refs.push({
@@ -180,7 +219,7 @@ module.exports = {
   alternateRefs: [],
   changefreq: 'weekly',
   priority: 0.7,
-  exclude: ['/api/*', '/404', '/500', '/'],
+  exclude: ['/api/*', '/404', '/500', '/', '/*/privacy-policy'],
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
@@ -223,6 +262,7 @@ module.exports = {
     });
 
     const results = [];
+    const slugList = Array.from(slugs);
 
     // Story category hub pages — keep in sync with pages/[locale]/stories/category/[key].tsx
     const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'];
@@ -231,7 +271,7 @@ module.exports = {
         const routePath = `/${locale}/stories/category/${key}`;
         results.push({
           loc: routePath,
-          lastmod: buildTimestamp,
+          lastmod: getCategoryLastmod(key, slugList, locale) || buildTimestamp,
           changefreq: 'weekly',
           priority: 0.7,
           alternateRefs: getAlternateRefs(routePath),
@@ -251,7 +291,7 @@ module.exports = {
         if (thumbnail) {
           const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
           const title = getStoryTitle(slug, locale);
-          images = [{ loc: new URL(imageUrl), title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+          images = [{ loc: imageUrl, title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
         }
         results.push({
           loc: routePath,
@@ -283,20 +323,20 @@ module.exports = {
       if (thumbnail) {
         const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
         const title = getStoryTitle(slug, locale);
-        images = [{ loc: new URL(imageUrl), title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+        images = [{ loc: imageUrl, title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     } else if (pathWithoutLocale.startsWith('/portfolio/') && segments.length >= 3) {
       const itemId = segments[2];
       const portfolioImages = getPortfolioImageMap();
       const imgUrl = portfolioImages[itemId];
       if (imgUrl) {
-        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`), geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+        images = [{ loc: imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     } else {
       const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;
       const pageImg = pageImageMap[pageKey];
       if (pageImg) {
-        images = [{ loc: new URL(`${siteUrl}${pageImg}`), geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+        images = [{ loc: `${siteUrl}${pageImg}`, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     }
 

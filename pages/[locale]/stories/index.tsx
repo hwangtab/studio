@@ -105,7 +105,11 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
     }
   };
 
-  const canonicalUrl = `/${locale}/stories`;
+  // 페이지별 self-referencing canonical — Google이 rel=prev/next를 더 이상 공식 지원하지 않으므로
+  // 각 페이지 고유 콘텐츠가 색인되도록 canonical을 페이지마다 분리한다.
+  const canonicalUrl = currentPage > 1
+    ? `/${locale}/stories?page=${currentPage}`
+    : `/${locale}/stories`;
 
   const prevUrl = currentPage > 1
     ? `${siteUrl}/${locale}/stories${currentPage - 1 > 1 ? `?page=${currentPage - 1}` : ''}`

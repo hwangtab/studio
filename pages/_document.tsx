@@ -18,8 +18,6 @@ class MyDocument extends Document<Props> {
     const locale = locales.includes(this.props.locale as typeof locales[number])
       ? this.props.locale
       : defaultLocale;
-    const serializedLocales = JSON.stringify(locales);
-    const serializedDefaultLocale = JSON.stringify(defaultLocale);
 
     return (
       <Html
@@ -49,10 +47,18 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
           <link rel="dns-prefetch" href="https://cdn.imweb.me" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-          {/* Critical font for above-the-fold content — others load on demand */}
+          {/* Critical fonts for above-the-fold content — others load on demand */}
           <link
             rel="preload"
             href="/fonts/Pretendard-Regular.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          {/* 히어로 영역 로고 폰트(font-logo). PartialSansKR-Logo는 동일 파일을 별칭으로 사용 */}
+          <link
+            rel="preload"
+            href="/fonts/PartialSansKR-Regular.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
@@ -63,17 +69,6 @@ class MyDocument extends Document<Props> {
               __html: `
                 (function() {
                   try {
-                    var supportedLocales = ${serializedLocales};
-                    var fallbackLocale = ${serializedDefaultLocale};
-                    var pathSegments = window.location.pathname.split('/');
-                    var pathLocale = pathSegments[1];
-                
-                    if (supportedLocales.indexOf(pathLocale) !== -1) {
-                      document.documentElement.lang = pathLocale;
-                    } else {
-                      document.documentElement.lang = fallbackLocale;
-                    }
-                
                     var storageKey = 'darkMode';
                     var storedPreference = localStorage.getItem(storageKey);
                     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

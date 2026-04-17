@@ -12,7 +12,7 @@ import {
   generateWebSiteSchema,
   generateWebPageSchema,
 } from '../utils/schemaGenerator';
-import { defaultLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
+import { defaultLocale, hreflangByLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
 import { getSeoDefaults, getSiteConfig, socialProfiles } from '../data/siteConfig';
 
 interface SEOProps {
@@ -54,8 +54,8 @@ const SEO = ({
   disableAlternates = false,
   ogImage = '/images/og-default.webp',
   ogImageAlt,
-  ogImageWidth = 1200,
-  ogImageHeight = 630,
+  ogImageWidth,
+  ogImageHeight,
   ogType = 'website',
   includeSchema = false,
   schema,
@@ -324,7 +324,7 @@ const SEO = ({
           <link
             key={`hreflang-${locale}`}
             rel="alternate"
-            hrefLang={locale}
+            hrefLang={hreflangByLocale[locale]}
             href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
           />
         ))
@@ -346,8 +346,12 @@ const SEO = ({
         <meta property="og:image:secure_url" content={absoluteOgImage} />
       )}
       <meta property="og:image:alt" content={ogImageAlt || resolvedTitle} />
-      <meta property="og:image:width" content={String(ogImageWidth)} />
-      <meta property="og:image:height" content={String(ogImageHeight)} />
+      {typeof ogImageWidth === 'number' && ogImageWidth > 0 && (
+        <meta property="og:image:width" content={String(ogImageWidth)} />
+      )}
+      {typeof ogImageHeight === 'number' && ogImageHeight > 0 && (
+        <meta property="og:image:height" content={String(ogImageHeight)} />
+      )}
       <meta property="og:image:type" content={ogImageMimeType} />
       <meta property="og:locale" content={ogLocaleByLocale[currentLocale] || ogLocaleByLocale[defaultLocale]} />
       <meta property="og:site_name" content={siteConfig.name} />

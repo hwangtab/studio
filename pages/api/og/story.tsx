@@ -19,10 +19,10 @@ export default async function handler(req: NextRequest) {
 
     const metaParts = [category, date].filter(Boolean).join('  ·  ');
 
-    // Noto Sans KR 폰트 — Google Fonts에서 직접 fetch (CJK 포함)
-    const fontRes = await fetch(
-      'https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLTq8H4hfeE.woff2'
-    );
+    // 자체 도메인의 Pretendard-Bold(한글 지원)를 사용해 외부 폰트 서버 의존 제거.
+    // 외부 폰트 서버 장애 시 OG 생성 실패 → 302 fallback이 SNS 크롤러에 전달되지 않는 문제 회피.
+    const origin = new URL(req.url).origin;
+    const fontRes = await fetch(`${origin}/fonts/Pretendard-Bold.woff2`);
     const fontData = await fontRes.arrayBuffer();
 
     return new ImageResponse(
@@ -34,7 +34,7 @@ export default async function handler(req: NextRequest) {
             display: 'flex',
             flexDirection: 'column',
             background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-            fontFamily: '"Noto Sans KR"',
+            fontFamily: '"Pretendard"',
             position: 'relative',
           }}
         >
@@ -155,7 +155,7 @@ export default async function handler(req: NextRequest) {
         height: HEIGHT,
         fonts: [
           {
-            name: 'Noto Sans KR',
+            name: 'Pretendard',
             data: fontData,
             style: 'normal',
             weight: 700,
