@@ -38,7 +38,7 @@ faq:
 
 Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 속 개별 음표까지 편집합니다.
 
----
+Melodyne의 역사는 2001년 독일 Celemony가 처음 출시한 독립형 피치 교정 소프트웨어에서 시작됩니다. 당시 대부분의 피치 교정이 전체 오디오 파형을 처리하던 방식과 달리, Melodyne은 멜로디를 음표 단위로 분리해 개별 편집하는 개념을 처음으로 상업화했습니다. 2008년 Celemony는 폴리포닉 화음 오디오에서 개별 음표를 추출하는 DNA(Direct Note Access) 기술을 공개해 업계를 충격에 빠뜨렸고, 2009년 Melodyne 3.0에서 정식 탑재됐습니다. 2016년 ARA(Audio Random Access) 2 규격이 도입되면서 Logic Pro·Pro Tools·Cubase·Studio One에서 DAW 타임라인과 완전히 통합된 실시간 편집이 가능해졌으며, 별도 파일 전송 없이 클립 수준에서 직접 Melodyne을 열 수 있게 됐습니다. 현재 K-POP 제작 현장에서 보컬 피치 교정은 Auto-Tune과 Melodyne을 병행하거나 Melodyne Editor 단독으로 처리하는 방식이 표준입니다.
 
 ## Melodyne 버전 비교
 
@@ -70,8 +70,6 @@ Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 �
 
 ## Melodyne 기본 조작
 
-아래 설정값은 출발점이며, 곡의 장르와 보컬 특성에 따라 조정이 필요합니다.
-
 ### 기본 툴
 
 - 선택(Main) 툴: 노트 선택·이동
@@ -93,8 +91,6 @@ Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 �
 ---
 
 ## Pitch Center 교정
-
-작은 조정이 전체 믹스 밸런스에 예상보다 큰 영향을 줄 수 있으니 단계적으로 적용하세요.
 
 ### Pitch Center 조정
 
@@ -153,8 +149,6 @@ Edit → Correct Pitch
 
 ## 마치며
 
-Melodyne은 자연스러운 보컬 피치 교정의 업계 표준입니다.
-
----
+Melodyne은 자연스러운 보컬 피치 교정의 업계 표준입니다. 핵심 원칙은 Pitch Center를 100%로 맞추지 않는 것입니다. 90~95%로 유지하면 음정은 안정되면서도 사람이 노래할 때 생기는 미세한 피치 변동이 살아남아 자연스러움이 유지됩니다. 교정 범위는 1/4음(50센트) 이내의 어긋남만 처리하고, 반음 이상 벗어난 노트는 Melodyne으로 교정하기 전에 재녹음을 먼저 검토하는 것이 실무 원칙입니다. Formant는 피치를 이동할 때만 함께 조정하되, 음색을 의도적으로 바꾸는 목적으로 과도하게 사용하면 로봇 음성처럼 들릴 수 있어 ±0.5반음 이내가 안전합니다. 타이밍 교정은 Melodyne의 Note Editing 모드보다 DAW 클립 분할·이동 방식이 위상 아티팩트를 줄이는 데 유리하며, Melodyne 타이밍 기능은 마지막 음절 늘이기·줄이기처럼 세밀한 조정에 한정하는 것이 표준입니다.
 
 [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1)
