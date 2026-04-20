@@ -54,22 +54,31 @@ faq:
 ### 부드러운 음절 (소프트 어택)
 
 ```
+
 da, doo, du, lu, la, ya, yo, wu, whoo
+
 ```
+
 슬러(slur), 장음, 부드러운 멜로디 라인에 사용합니다.
 
 ### 날카로운 음절 (하드 어택)
 
 ```
+
 bop, dip, dit, bat, zat, ska, shu, dot
+
 ```
+
 리듬을 강조하거나 어택감을 주는 구절에 사용합니다.
 
 ### 타악기적 음절 (리듬 중심)
 
 ```
+
 shoo-be-doo-be, dee-dah, bah-dee-bah, zoot-n-doot
+
 ```
+
 드럼처럼 리듬 패턴을 표현하는 데 사용합니다.
 
 **연습 팁**: 처음에는 단 3~4개의 음절만 정해두고 (예: da, doo, bop, dit) 그 음절로만 스캣을 시도하세요. 음절 수를 제한하면 멜로디 구성에 더 집중할 수 있습니다.
@@ -105,8 +114,11 @@ shoo-be-doo-be, dee-dah, bah-dee-bah, zoot-n-doot
 ### C 메이저 블루 스케일
 
 ```
+
 C - Eb - F - Gb - G - Bb - C
+
 ```
+
 일반 장조 스케일에 Eb, Gb, Bb이 추가된 형태입니다.
 
 **스캣 적용**: 멜로디 라인 중간에 블루 노트를 삽입하면 재즈 특유의 "흘림" 느낌이 납니다.
@@ -131,11 +143,14 @@ C - Eb - F - Gb - G - Bb - C
 치찰음 계열: "tss, shk, ch-ch"
 
 **리듬 스캣 연습 예**:
+
 ```
+
 박자: 1  +  2  +  3  +  4  +
 킥:   bum . kat . bum . kat .
 하이햇: . tss . tss . tss . tss
 합성: bum(tss) . kat(tss) bum(tss) . kat(tss)
+
 ```
 
 ## 즉흥 보이싱(Improvised Voicing)

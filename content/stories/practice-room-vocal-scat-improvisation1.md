@@ -61,15 +61,18 @@ summary: >-
 
 **스윙 스캣 연습:**
 ```
+
 악보상: 1 & 2 & 3 & 4 &
 실제:   doo-bah doo-bah doo-bah doo-bah
         (긴-짧 긴-짧 긴-짧 긴-짧)
+
 ```
 
 **C 메이저 스케일로 스캣 스윙 연습:**
 ```
 "Doo-bah doo-bah, dee-dah doo-bah"
 C-D   E-F    G-A   B-C
+
 ```
 
 ### 비밥 리듬 패턴
@@ -83,6 +86,7 @@ C-D   E-F    G-A   B-C
 ```
 "Doo-bah-diddly-dah, skoo-wee-doo-bah"
 (8분음표 연속 + 싱코페이션)
+
 ```
 
 ---
@@ -95,14 +99,18 @@ C-D   E-F    G-A   B-C
 
 **C 장조 트라이어드 코드 톤:**
 ```
+
 C (근음), E (3음), G (5음)
 이 음들에서 스캣을 시작하거나 끝냄
+
 ```
 
 **C7 코드 (도미넌트 7th):**
 ```
+
 C (근음), E (3음), G (5음), Bb (7음)
 특히 3음(E)과 7음(Bb)이 코드의 색깔
+
 ```
 
 ### ii-V-I 진행 스캣
@@ -111,15 +119,18 @@ C (근음), E (3음), G (5음), Bb (7음)
 
 **코드 톤 연결:**
 ```
+
 Dm7: D-F-A-C
 G7:  G-B-D-F (B와 F가 핵심 가이드 톤)
 CMaj7: C-E-G-B
+
 ```
 
 **스캣으로 표현:**
 ```
 "Doo-dee-dah / bee-doo-wah / daaaaah"
 Dm7 코드톤  / G7 가이드톤 / CMaj7 해결
+
 ```
 
 ---
@@ -139,6 +150,7 @@ Dm7 코드톤  / G7 가이드톤 / CMaj7 해결
 ```
 "Shoo-bee-doo-wah, doo-dat-doo-dee-dah"
 (비밥 8분음표 연속, 싱코페이션)
+
 ```
 
 ### Ella의 "How High the Moon" 스캣
@@ -165,6 +177,7 @@ Dm7 코드톤  / G7 가이드톤 / CMaj7 해결
 ```
 "Waaah-dee-dah, skoo-wee-yah-doo"
 (폭넓은 음역 도약 + 블루노트)
+
 ```
 
 ### 블루노트 스캣
@@ -173,9 +186,11 @@ C 장조에서 블루노트: **Eb (b3), Gb (b5), Bb (b7)**
 
 **블루노트 스캣 연습:**
 ```
+
 C-Eb-E-G (b3 스크레이프)
 G-Gb-F-Eb (b5 하강)
 Bb-B-C (b7에서 해결)
+
 ```
 
 ---
@@ -188,18 +203,22 @@ Bb-B-C (b7에서 해결)
 
 **기본 4마디 구조:**
 ```
+
 마디 1: 주제 제시 (call)
 마디 2: 발전
 마디 3: 긴장 고조
 마디 4: 해결 (response)
+
 ```
 
 **예시 (C 블루스 12마디 중 첫 4마디):**
 ```
+
 M1: "Doo-bah-dee-dah" (C7 코드톤)
 M2: "Skoo-wee-doo-wah" (C7 크로매틱)
 M3: "Dit-diddly-dah-dee" (F7로 이동 준비)
 M4: "Doooooo-wah" (F7 해결)
+
 ```
 
 ### 콜-앤-리스폰스
@@ -207,8 +226,10 @@ M4: "Doooooo-wah" (F7 해결)
 솔로와 반응 — 스스로 묻고 답하기.
 
 ```
+
 Call: "Bee-doo-wah?" (올라가는 느낌)
 Response: "Skoo-dee-dah!" (내려오는 해결)
+
 ```
 
 ---
@@ -232,8 +253,10 @@ Response: "Skoo-dee-dah!" (내려오는 해결)
 
 **C에서 비밥 패시지:**
 ```
+
 C-B-Bb-A-Ab-G-F#-F-E-Eb-D-Db-C
 (크로매틱 하강)
+
 ```
 
 ### 4단계: 자유 즉흥
