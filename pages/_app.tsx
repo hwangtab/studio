@@ -79,9 +79,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         ['SemiBold', '600'],
         ['Bold', '700'],
       ];
+      // font-display: optional — 이미 시스템 폰트로 페인트가 끝난 뒤 주입되므로
+      // 폰트 도착 후의 강제 repaint/layout을 방지(TBT 폭증 해소).
+      // 현재 세션에서 캐시 미스면 fallback 유지, 재방문 시 캐시된 Pretendard 적용.
       style.textContent = weights
         .map(
-          ([name, weight]) => `@font-face{font-family:'Pretendard';font-weight:${weight};font-display:swap;src:local('Pretendard ${name}'),local('Pretendard-${name}'),url('/fonts/Pretendard-${name}.woff2') format('woff2'),url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-${name}.subset.woff2') format('woff2');}`
+          ([name, weight]) => `@font-face{font-family:'Pretendard';font-weight:${weight};font-display:optional;src:local('Pretendard ${name}'),local('Pretendard-${name}'),url('/fonts/Pretendard-${name}.woff2') format('woff2'),url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-${name}.subset.woff2') format('woff2');}`
         )
         .join('');
       document.head.appendChild(style);
