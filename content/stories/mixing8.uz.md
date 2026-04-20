@@ -69,6 +69,7 @@ Ular sizni eng yaxshi ovoz bilan mukofotlaydi. (Nom‑nom!)
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🍱
+
 * **“Faqat fader bilan balanslash”**: Waveform juda katta bo'lgani uchun faderni pastga tortasiz. Fader rezolyutsiyasini isrof qilasiz. Avval clip gain'ni to'g'rilab, faderni 0 atrofida ushlang.
 * **“Qancha baland bo'lsa, shuncha yaxshi”**: Qulog'imiz baland ovozni yaxshi ko'radi. “Vau, plugin ovozni katta qildi!” Yo'q — u faqat balandlashdi. Bypass qilib, darajalarni moslab keyin baholang.
 * **“Manfiy gain staging”**: Juda past yozib, shovqin “shhh” bo'ladi, keyin ustiga pluginlar qatlaysiz. Bu changli linzadan suratga olishdek. Balans muhim!

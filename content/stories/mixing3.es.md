@@ -71,6 +71,7 @@ Ahí puede estar el “sonido pro” que estás buscando.
 ---
 
 ### [Errores comunes de principiantes] 🎸
+
 * **“Comprar primero, pensar después.”** Te compras un micrófono de 1.000.000 KRW porque lo usa un YouTuber famoso, pero en tu habitación se oye el tráfico y el aire acondicionado. Los micrófonos caros también graban esos ruidos con claridad.
 * **“Cambiar de DAW.”** Crees que usar el DAW de otro pro hará tu música más elegante. No. Cambiar herramientas no mejora tu cocina. La mejor herramienta es la que ya conoces. (La que te queda bien.)
 * **“Ignorar los plugins básicos.”** Piensas que el EQ y el compresor básicos son malos. ¡Para nada! Muchos pros terminan mezclas completas con plugins de fábrica.

@@ -46,18 +46,22 @@ Những harmonic này lấp khoảng trống. Không cần tăng peak, âm vẫn
 Saturation có nhiều vị. Hãy chọn theo ngữ cảnh.
 
 #### ① Tube: “ấm” 🔥
+
 * **Đặc tính**: chủ yếu harmonic chẵn (2nd). Mượt và tròn.
 * **Dùng**: vocal, bass, guitar acoustic. Tốt để làm ấm nguồn số lạnh.
 
 #### ② Tape: “glue” 📼
+
 * **Đặc tính**: làm mềm transient sắc, siết low end.
 * **Dùng**: drum bus, master bus. Keo dính tuyệt vời cho toàn mix.
 
 #### ③ Transistor: “aggression” 🥊
+
 * **Đặc tính**: harmonic lẻ mạnh (3rd). Cứng và gắt.
 * **Dùng**: guitar rock, snare, rap vocal. Hét “Tôi ở đây!”
 
 #### ④ Bitcrusher: “phá hoại” 💥
+
 * **Đặc tính**: hạ độ phân giải số, tạo nhiễu gritty.
 * **Dùng**: trống lo‑fi, bass dubstep.
 
@@ -101,6 +105,7 @@ Kế tiếp là nghệ thuật **automation**, điệu nhảy theo thời gian.
 ---
 
 ### [Lỗi người mới hay gặp] 🌋
+
 * **“Chỉ còn nhiễu bẩn”**: saturation quá tay phá hỏng tone gốc. Giữ tính cách, chỉ thêm texture.
 * **“Nhầm với digital clipping”**: đẩy master đỏ không phải nghệ thuật. Đó là tai nạn.
 * **“Distortion cho mọi thứ”**: nếu mọi âm đều gắt, tai sẽ mệt. Tương phản mới tạo presence.

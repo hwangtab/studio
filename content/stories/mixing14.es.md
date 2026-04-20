@@ -43,6 +43,7 @@ Ahora sube los faders. Apaga EQ y compresores en esta etapa. (¡Hasta luego!)
 Confía solo en **tu oído y los faders**. (Sube‑baja.)
 
 ### Orden recomendado (Jerarquía de mezcla)
+
 Empieza por lo más importante:
 1. **Kick y caja**: los pilares del ritmo. (¡Boom‑crack!)
 2. **Voz principal**: el protagonista. Clara sobre la batería, pero sin separarse.
@@ -86,6 +87,7 @@ Ahí entran **grupos** y **VCA**.
 ---
 
 ### Práctica: reto de 10 minutos Faders Up
+
 Prueba esto hoy:
 1. Abre tu proyecto actual.
 2. **Bypass en todos los plug‑ins** y baja todos los faders a **‑∞**. (¡Tabula rasa!)
@@ -98,6 +100,7 @@ Cuando termine el tiempo, escucha. Puede que suene más natural que horas de plu
 ---
 
 ### [Errores comunes de principiantes] 🎚️
+
 * **"No puedo mezclar sin plug‑ins"**: si el kick muere sin compresión o la voz suena apagada sin EQ, el problema es el balance. Los plug‑ins no hacen magia.
 * **"Solo bajar el master"**: el mix clippea y bajas el master tranquilo. Pero el clipping ya pasó antes. Bajar el grifo no limpia el agua.
 * **"Balance fijo"**: los faders no se mueven en toda la canción. La música está viva, los faders también deberían bailar.

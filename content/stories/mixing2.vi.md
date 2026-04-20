@@ -39,16 +39,19 @@ Có booth và xử lý âm học đầy đủ thì tuyệt, nhưng chúng ta kh�
 Dưới đây là mẹo tune phòng thực tế cho nhạc sĩ thu tại nhà.
 
 ### (1) Quy tắc tam giác đều
+
 Không tốn một đồng.
 * Loa trái, loa phải và đầu bạn (vị trí nghe) tạo thành **tam giác đều**.
 * Lấy thước đo. Nếu khoảng cách giữa hai loa là 1 mét, từ mỗi loa đến tai cũng phải đúng 1 mét.
 * Đặt tweeter của loa ngang **tầm tai** (chỉ khi đó dải cao mới rõ!).
 
 ### (2) Kéo loa ra khỏi tường
+
 Nếu loa sát tường, dải trầm sẽ quấn lại gây **ù**.
 Dù bàn nhỏ, hãy cách tường ít nhất **20–30 cm**. Âm sẽ sạch hơn nhiều.
 
 ### (3) Sức mạnh của chăn và tủ quần áo
+
 Không có bass trap? Bạn có chăn.
 * Góc phòng là nơi trầm dồn lại. Cuộn chăn dày hoặc quần áo mùa đông và xếp ở đó. Hiệu quả bass‑trap đáng ngạc nhiên. (Xếp cho nặng!)
 * Treo rèm dày trước cửa sổ để giảm phản xạ chói từ kính.
@@ -69,6 +72,7 @@ Kính bẩn thì thế giới bẩn. (Hãy lau sạch!)
 ---
 
 ### [Lỗi người mới hay gặp] 🏠
+
 * **“Say mê âm lượng loa.”** Vặn to và nói “Wow, nghe đã!” Đó là **hưng phấn giả** do cộng hưởng phòng. Kỹ năng thật là khi balance vẫn tốt ở âm lượng nhỏ.
 * **“Vỉ trứng thần kỳ.”** Dán khay trứng lên tường không làm âm tốt hơn. Thậm chí nó còn làm đục vì chỉ hấp thụ một số tần số.
 * **“Dính sát tường.”** Nếu loa hôn tường, bass sẽ ù và phá bản mix. Kéo ra ít nhất một gang tay.

@@ -21,14 +21,17 @@ Xin chào từ Bulgwang Mixing Club! Ban đầu chúng tôi định tổ chức 
 Studio bận rộn nghĩa là nhiều nghệ sĩ đang làm nhạc tuyệt vời, đúng không? Tuần này chúng tôi tập trung hết sức cho các dự án.
 
 ### 📅 Lịch mới
+
 Vì vậy buổi Bulgwang Mixing Club lần 3 sẽ là **Thứ Sáu, ngày 28/11, 7:00 tối**.
 
 Tối thứ Sáu vẫn là mixing + pizza & bia! 🎧
 
 ### 🎧 Chế độ hot spot mixing: ON lần nữa
+
 “Chia sẻ” và “thử nghiệm” vẫn là từ khóa. Hãy mang dự án hiện tại hoặc điểm mixing bạn đang băn khoăn, chúng tôi sẽ nghe cùng và góp ý ngay tại chỗ. Gear talk, nerd plugin, so sánh reference—năng lượng như cũ.
 
 ### 📢 Thông tin buổi gặp lần 3
+
 * **Khi nào?** Thứ Sáu, 28/11/2025, 7:00 tối (Tối thứ Sáu là mixing + pizza & bia!)
 * **Ở đâu?** Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 84-3 Daejo-dong, Eunpyeong-gu)
 * **Phí:** 18,000 KRW (pizza nóng + bia lạnh trọn bộ)
@@ -36,6 +39,7 @@ Tối thứ Sáu vẫn là mixing + pizza & bia! 🎧
 * **Sức chứa:** Tối đa 6 người, nhỏ và tập trung
 
 ### 🚀 Cách tham gia
+
 Nhắn tin 0507-1384-3144 với câu “I’m in for the 11/28 mixing club!” Nếu bạn có track hoặc vấn đề mixing muốn chia sẻ, hãy thêm ghi chú ngắn.
 
 Xin lỗi vì thay đổi lịch, nhưng đó cũng là dấu hiệu studio đang rất bận rộn. Chúng tôi sẽ làm cho ngày 28 còn tuyệt hơn!

@@ -67,6 +67,7 @@ Một nút nhỏ có thể hồi sinh một nhịp đang chết.
 ---
 
 ### [Lỗi người mới hay gặp] 🌊
+
 * **“Càng nhiều mic càng tốt”**: Mic càng nhiều, càng nhiều vấn đề phase cần kiểm soát. Không kiểm soát được thì giảm số mic.
 * **“Boost low kick bằng EQ”**: Low end đang bị triệt mà bạn cứ +10 dB. Bản mix bẩn hơn và headroom biến mất.
 * **“Không bao giờ bấm nút phase”**: “Thu tốt rồi mà”—và bỏ qua. Đặc biệt với trống, bỏ qua có thể làm mất nửa năng lượng bản mix.

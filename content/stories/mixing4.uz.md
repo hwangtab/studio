@@ -73,6 +73,7 @@ Rang chuqurligi yaxshi (24‑bit) va kadrlar yetarli (48 kHz) bo'lgan “kamera�
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🔢
+
 * **“Raqam qancha baland bo'lsa, shuncha yaxshi!”** Hammasini 192 kHz'da yozish. Fayl hajmi portlaydi, kompyuter baqiradi (vuu‑vuu), lekin quloq 48 kHz'dan farqni sezmaydi.
 * **“16‑bit tuzog'i.”** Ish jarayonida tasodifan 16‑bitni qo'yasiz. Keyin reverb tail "qirt‑qirt" bo'lib eshitilib, yig'lagudek bo'lasiz. Har doim 24‑bit yoki undan yuqorida ishlang.
 * **“O'rtada o'zgartirish.”** Ish vaqtida sample rate'ni 48 dan 44 ga almashtirasiz. Qo'shiq cho'zilib ketadi yoki sincapga o'xshaydi. Bu operatsiyada bemorning qonini almashtirishdek xavfli.

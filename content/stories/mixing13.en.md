@@ -75,6 +75,7 @@ Now the real mixing begins. (Go!)
 ---
 
 ### [Common Beginner Mistakes] 🎚️
+
 * **"Opening EQ first"**: If you can’t hear it, raise the fader. If the tone feels off, adjust pan. Plug‑ins are the last resort.
 * **"Skipping mono check"**: Stereo width can trick you. The moment you switch to mono, the vocal vanishes. Magic—and not the good kind.
 * **"Listening loud the whole time"**: Loud volume excites you but ruins judgment. The real skill is balance at low volume.

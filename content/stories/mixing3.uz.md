@@ -68,6 +68,7 @@ Siz qidirayotgan “pro sound” balki shu yerda yashiringandir.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🎸
+
 * **“Avval sotib olib, keyin o'ylash.”** Mashhur YouTuber ishlatgani uchun 1,000,000 KRW'lik mikrofonga shoshilasiz. Lekin xonangizda ko'cha shovqini va konditsioner g'uvillashi bor. Qimmat mic ularni ham aniq yozadi.
 * **“DAW almashtirish.”** Boshqa pro'ning DAW'i sizning musiqangizni darhol jilo qiladi deb o'ylaysiz. Yo'q — asbobni almashtirish ovqatni mazali qilmaydi. Qo'lingizdagi asbob eng yaxshisi. (Sizga mos bo'lsa, shunisi eng yaxshi.)
 * **“Stock pluginlarni mensimaslik.”** Standart EQ va kompressor yomon deb o'ylaysiz. Bu noto'g'ri! Ko'p pro'lar faqat stock pluginlar bilan miksni yakunlaydi.

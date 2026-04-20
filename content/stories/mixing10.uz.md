@@ -80,6 +80,7 @@ Shunday fikr qilsangiz — tabriklaymiz, qulog'ingiz allaqachon injyener qulog'i
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 👂
+
 * **“Reference'siz miks”**: Kompassiz suzishdek. “Quloqlarim mukammal” degan zahoti miks yo'ldan chiqadi.
 * **“Marafon miks”**: Besh soat uzluksiz — quloq uvishadi. O'sha paytdagi qarorlarning 90%i ertasi kuni afsus bo'ladi.
 * **“Ertaga yaxshi bo'ladi”**: Hozir noto'g'ri bo'lsa, noto'g'ri. “Keyin tuzaladi” deb o'zingizni gipnoz qilmang.

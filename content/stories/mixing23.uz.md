@@ -43,16 +43,19 @@ Lekin mohiyat — **balans** va **translation**: musiqangiz **quloqchin, mashina
 Uy sharoitida ishlatish uchun minimal, ammo kuchli tartib:
 
 #### ① Linear Phase EQ
+
 * Oddiy EQga qaraganda faza buzilishi kam, mastering uchun yaxshi.
 * **Low Cut**: 30 Hz dan pastni kesib, keraksiz energiyani olib tashlang. (Kes!)
 * **Tone shaping**: juda qorong'i bo'lsa 1 dB high shelf qo'shing; juda o'tkir bo'lsa 2 kHz atrofida biroz pasaytiring. (0.5–1 dB yetarli!)
 
 #### ② Bus Compressor (Glue)
+
 * Hammasini bir‑biriga yopishtiradi.
 * **Sozlamalar**: Ratio 1.5:1–2:1, Attack 30 ms (sekin), Release Auto.
 * Gain reduction 1–2 dB atrofida bo'lsin.
 
 #### ③ Limiter: yakuniy darvoza
+
 * Loudness uchun eng muhim asbob.
 * **Ceiling**: ‑0.1 dB yoki ‑1.0 dB ga qo'ying. (Streaming xavfsiz)
 * **Threshold**: eshitiladigan distortion bo'lmasdan kerakli loudnessga yetguncha pasaytiring.
@@ -99,6 +102,7 @@ Musiqangiz dunyo bo'ylab jaranglasin.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🏁
+
 * **“Miksni masteringda tuzatish”**: Snare kichik bo'lsa, masteringda highsni ko'tarasiz. Shunda hamma narsa o'tkir bo'ladi. Miksga qayting.
 * **“Loudnessga berilish”**: Limiterni urib, qo'shnidan balandroq bo'lishga urinasiz. Ovoz g'ishtga aylanadi, quloq tez charchaydi. Sifat — balandlikdan ustun.
 * **“Monitoringni e'tiborsiz qoldirish”**: Akustikasi yomon xonada master qilasiz. Boshqa tizimda bas portlaydi yoki high yo'qoladi. Har doim bir nechta tizimda tekshiring.

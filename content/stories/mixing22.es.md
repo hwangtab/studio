@@ -39,14 +39,17 @@ El computador graba tus movimientos y luego los reproduce. (¡Inteligente!)
 ### 2. ¿Qué automatizar?
 
 #### ① Volumen: lo básico
+
 * **Vocal riding**: ajusta sílaba por sílaba para que la letra se entienda. Más natural que comprimir demasiado.
 * **Contraste de secciones**: sube el coro un poco respecto al verso. (¡Boom!)
 
 #### ② Pan: expansión del espacio
+
 * Abre una guitarra solo durante el solo. (¡Wow!)
 * Mueve un sonido de izquierda a derecha para misterio. (¡Swoosh!)
 
 #### ③ FX: efectos dramáticos
+
 * Sube el reverb solo al final de una frase. (¡Húmedo!)
 * Pon delay en una palabra: “hola… hola…” (¡Sombra!)
 
@@ -83,6 +86,7 @@ La próxima, el gran final: **Mastering**. (¡Redoble!)
 ---
 
 ### [Errores comunes de principiantes] ✍️
+
 * **"Lo dejo fijo"**: mismo balance de principio a fin = aburrimiento. Los faders deben moverse.
 * **"Líneas demasiado finas"**: micro‑zigzags pueden sonar artificiales. Empieza con movimientos grandes.
 * **"La tragedia del modo Write"**: dejar Write activado y borrar automatización importante. Vuelve a Read o Touch después.

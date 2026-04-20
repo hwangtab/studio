@@ -67,6 +67,7 @@ Trước khi mua thêm plugin, sao không đọc lại manual của các stock p
 ---
 
 ### [Lỗi người mới hay gặp] 🎸
+
 * **“Mua trước, nghĩ sau.”** Bạn mua vội mic 1,000,000 KRW vì YouTuber nổi tiếng dùng. Nhưng phòng bạn có tiếng xe và tiếng điều hòa. Mic đắt cũng thu rõ những tiếng đó.
 * **“Đổi DAW liên tục.”** Bạn nghĩ dùng DAW của pro sẽ khiến nhạc mình tự nhiên tinh tế hơn. Không—đổi dụng cụ không làm món ăn ngon hơn. Dụng cụ trong tay bạn là tốt nhất. (Hợp bạn là tốt nhất.)
 * **“Bỏ qua stock plugin.”** Bạn nghĩ EQ và compressor mặc định dở. Không hề! Nhiều pro hoàn thiện bản mix chỉ với stock plugin.

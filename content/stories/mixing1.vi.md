@@ -73,6 +73,7 @@ Giờ thì, buộc tạp dề và bước vào bếp thôi. (Hào hứng!)
 ---
 
 ### [Lỗi người mới hay gặp] 🧂
+
 * **“Không có gear nên không thể hay.”** Một miếng steak không dở chỉ vì bạn không có dao xịn. Nếu nguyên liệu (bản thu) tốt, chỉ cần muối (volume) là đủ ngon. Đổ lỗi cho gear là sự hèn nhát ngọt ngào nhất khi bản mix không ổn.
 * **“Đổ hết vào một lượt.”** Đừng ném EQ, compressor, reverb ngay từ đầu. Thứ tự là nếm hương vị gốc trước, rồi mới nêm.
 * **“Dọn ra mà không nếm.”** Đừng chỉ tin vào con số vì “YouTube nói thế.” Bạn phải nếm (nghe) thì mới biết vị!

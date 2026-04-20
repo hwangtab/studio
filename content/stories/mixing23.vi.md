@@ -43,16 +43,19 @@ Nhưng bản chất là **cân bằng** và **translation**—đảm bảo nhạ
 Đây là thứ tự tối giản nhưng mạnh cho người làm tại nhà:
 
 #### ① Linear Phase EQ
+
 * Méo phase ít hơn EQ thường, rất hợp cho mastering.
 * **Low Cut**: cắt dưới 30 Hz để loại năng lượng vô ích. (Cắt!)
 * **Tone shaping**: nếu quá tối, tăng high shelf 1 dB; nếu quá gắt, giảm nhẹ quanh 2 kHz. (Chỉ 0.5–1 dB!)
 
 #### ② Bus Compressor (Glue)
+
 * Gắn kết toàn bộ nhạc cụ.
 * **Cài đặt**: Ratio 1.5:1–2:1, Attack 30 ms (chậm), Release Auto.
 * Giữ gain reduction khoảng 1–2 dB.
 
 #### ③ Limiter: cổng cuối
+
 * Công cụ quan trọng nhất cho loudness.
 * **Ceiling**: đặt ‑0.1 dB hoặc ‑1.0 dB. (An toàn streaming)
 * **Threshold**: hạ đến khi đạt loudness mong muốn mà không nghe méo.
@@ -99,6 +102,7 @@ Chúc âm nhạc của bạn vang khắp thế giới.
 ---
 
 ### [Lỗi người mới hay gặp] 🏁
+
 * **“Sửa mix trong mastering”**: Snare nhỏ nên bạn boost highs ở mastering. Thế là mọi thứ gắt theo. Hãy quay lại mix.
 * **“Ám ảnh loudness”**: Bạn đập limiter để to hơn hàng xóm. Âm thành “viên gạch” và tai mệt nhanh. Chất lượng hơn âm lượng.
 * **“Bỏ qua monitoring”**: Master trong phòng chưa xử lý. Lên loa khác thì bass nổ hoặc high biến mất. Luôn kiểm nhiều hệ thống.

@@ -32,17 +32,20 @@ Shu oddiy printsip bilan 2D miksga **kenglik** beramiz. (Keng!)
 Yagona to'g'ri javob yo'q, lekin vaqt sinovidan o'tgan **oltin joylashuv** bor. (Klassika!)
 
 ### (1) Markaz: ustunlar
+
 Eng kuchli va muhim tovushlar markazda bo'lishi kerak.
 * **Kick & snare**: ritm yadrosi.
 * **Bass**: poydevor. (Past chastotalar yo'nalishni kam beradi; markaz miksi mustahkam qiladi.)
 * **Lead vokal**: bosh qahramon.
 
 ### (2) Qattiq L/R: keng yoyish
+
 Oxirigacha qo'rqmang!
 * **Double‑tracked gitaralar**: Ikki marta yozib 100% chap/o'ngga pan qiling. Miks birdan katta bo'lib eshitiladi. (Wow!)
 * **Overheads**: baraban makonini yoying.
 
 ### (3) O'rta pozitsiyalar: ziravor va fon
+
 * **Piano, synth, akustik gitara**: 30–70% atrofida vokal bilan urushmaydigan joy toping.
 * **Percussion (shaker, tambourine)**: hayot va yaltirash uchun bir tomonga otib yuboring. (Chime!)
 
@@ -81,6 +84,7 @@ Pan knopkalari shu sahnani suratga oladi. (Klik!)
 ---
 
 ### [Boshlovchilar qiladigan xatolar] ↔️
+
 * **“Hamma bosh qahramon”**: Kick, bass, vokal, chorus, gitaralar — hammasi markazda. Ular urishadi va vokal yo'qoladi. (Janjal yo'q!)
 * **“Juda kichik pan”**: Atigi 10–20% pan. Miks kengaymaydi, faqat chalkashadi. Pan qilsangiz, dadil bo'ling (64–100%).
 * **“Tengsiz miks”**: Chapda uchta gitara, o'ngda bo'sh. Tinglovchi tez charchaydi. Vaznni balanslang.

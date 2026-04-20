@@ -74,6 +74,7 @@ For home recording, remember just this: **Use a good interface and keep your dri
 ---
 
 ### [Common Beginner Mistakes] 💥
+
 * **“It’s only good when the red light hits.”** Some people feel pleasure when the meter turns red (0 dB). That’s not pleasure—it’s the scream of tearing sound. (Zzzzt!)
 * **“Ignoring gain staging.”** You recorded too loud and already clipped, then turn down plugin volume and say “It’s fine now.” If the head is chopped off, putting a hat on it doesn’t grow it back.
 * **“Pop filters are just for style?”** They’re not for looks. They protect the mic from burst air on “p, t, ts.” Skip it and you’ll suffer through “puh‑puh” pops in mixing.

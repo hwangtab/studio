@@ -28,16 +28,19 @@ La **modulación** añade **movimiento** y **densidad**: el condimento que vuelv
 Estos efectos son simples si entiendes la idea: copian la señal y cambian ligeramente tiempo o fase. (Wiggle‑wiggle.)
 
 #### ① Chorus: “No estoy solo”
+
 * **Cómo funciona**: copia la señal y la desafina/retarda un poco, como si varias personas cantaran.
 * **Sensación**: más grueso y ancho. Clave en sonido 80s o guitarras acústicas densas. (¡Brillo!)
 * **Tip**: un toque en coros vocales los hace suaves y llenos.
 
 #### ② Flanger: “Un jet está volando”
+
 * **Cómo funciona**: modula un delay muy corto y crea barridos metálicos.
 * **Sensación**: efecto “whooosh” de succión metálica.
 * **Uso**: fills de batería o guitarras psicodélicas. Ideal para cambios dramáticos. (¡Sorpresa!)
 
 #### ③ Phaser: “Sonido del espacio”
+
 * **Cómo funciona**: gira la fase para crear muescas móviles.
 * **Sensación**: ondulante y misterioso. Más etéreo que el chorus.
 * **Uso**: piano eléctrico (Rhodes), guitarra rítmica funky.
@@ -87,6 +90,7 @@ La próxima: **Distorsión y Saturación**, para agregar textura y presencia.
 ---
 
 ### [Errores comunes de principiantes] 🌊
+
 * **"Mezcla mareante"**: rate demasiado alto hace que todo tiemble. Eso es tortura, no arte.
 * **"Todo ondula"**: chorus en guitarras, voces, piano… se pierde el centro. Deja el elemento principal dry.
 * **"Mix al 100%"**: solo efecto, nada de señal seca. Se pierde claridad. Mezcla dry y wet.

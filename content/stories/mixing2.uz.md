@@ -40,16 +40,19 @@ Kabina va to'liq akustik ishlov ideal, lekin bizda bunday byudjet yo'q.
 Quyida uyda yozadigan musiqachilar uchun amaliy xona sozlash maslahatlari.
 
 ### (1) Teng tomonli uchburchak qoidasi
+
 Bu hech narsa turmaydi.
 * Chap karnay, o'ng karnay va bosh (tinglash pozitsiyasi) **teng tomonli uchburchak** hosil qilishi kerak.
 * O'lchagich oling. Karnaylar orasidagi masofa 1 metr bo'lsa, har bir karnaydan qulog'ingizgacha ham 1 metr bo'lsin.
 * Tweeter balandligini **quloq balandligiga** tenglang. (Shunda yuqori chastotalar aniq bo'ladi!)
 
 ### (2) Karnaylarni devordan uzoqroq qo'ying
+
 Karnaylar devorga yopishsa, past chastotalar qaytib **g'uvillaydi**.
 Stolingiz kichik bo'lsa ham, devordan kamida **20–30 sm** uzoqroq qiling. Ovoz ancha toza bo'ladi.
 
 ### (3) Adyol va shkaflarning kuchi
+
 Bass trap yo'qmi? Sizda adyol bor.
 * Xonaning burchaklarida bas to'planadi. Qalin qishki kiyim yoki adyolni o'rab u yerga qo'ying. Kutilmagan darajada bass‑trap effekti beradi. (Og'irroq qilib to'plang!)
 * Oynalarga qalin qoraout (blackout) pardalar osib, shishadan qaytadigan o'tkir aks-sadoni kamaytiring.
@@ -70,6 +73,7 @@ Toza ko'zoynak taqish — yaxshi miksning birinchi qadami.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🏠
+
 * **“Karnayga mast bo'lish.”** Ovozini baland qilib “Vau, zo'r!” deyish — bu xonadagi rezonansdan kelgan **soxta hayajon**. Haqiqiy mahorat — past ovozda ham balans yaxshi bo'lishi.
 * **“Sehrli tuxum qutilari.”** Tuxum qutilarini devorga yopishtirish tovushni yaxshilamaydi. Hatto faqat ayrim chastotalarni yutib, ovozni xiralashtirishi mumkin.
 * **“Devorga yopishish.”** Karnay devorga yopishsa, bas g'uvillab, miksni buzadi. Kamida bir kaft masofaga torting.

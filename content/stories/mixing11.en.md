@@ -59,6 +59,7 @@ The result? Even without touching the mix, the track sounded tighter and more po
 ---
 
 ### [Common Beginner Mistakes] ✂️
+
 * **"I’ll fix it while mixing"**: Editing and mixing use different brain modes. Editing is logic, mixing is emotion. Separate them.
 * **"Skipping fades"**: You cut audio hard and leave it. Later you hear a "pop" and waste time hunting the cause. Every edit needs fades.
 * **"Over‑quantizing"**: You erase all human feel. If everything is too perfect, listeners get tired. Love a little intentional imperfection.

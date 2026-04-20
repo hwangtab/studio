@@ -67,6 +67,7 @@ No subas graves con EQ: **recupera** los graves que se cancelaron. (¡Sólido!)
 ---
 
 ### [Errores comunes de principiantes] 🌊
+
 * **"Cuantos más micros, mejor"**: más micros = más problemas de fase. Si no lo puedes controlar, reduce el número.
 * **"Subir el grave del bombo con EQ"**: el grave está cancelado y tú sumas +10 dB. La mezcla se ensucia y se come el headroom.
 * **"Nunca probar el botón de fase"**: "Seguro quedó bien" y sigues. En batería, saltarte esto puede cortar la energía de la mezcla a la mitad.

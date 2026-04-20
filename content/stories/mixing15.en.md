@@ -32,17 +32,20 @@ Using this simple principle, we give a 2D mix **width**. (Wide!)
 There’s no single correct answer, but there is a timeless **golden placement**. (Classic!)
 
 ### (1) Center: the pillars
+
 The most powerful and important sounds must stay in the center.
 * **Kick & snare**: the rhythmic core.
 * **Bass**: the foundation. (Low end is less directional; center makes the mix solid.)
 * **Lead vocal**: the protagonist.
 
 ### (2) Hard L/R: spread wide
+
 Don’t be afraid to go all the way!
 * **Double‑tracked guitars**: Record twice and pan 100% left/right. The mix suddenly feels huge. (Wow!)
 * **Overheads**: spread the drum space.
 
 ### (3) Mid positions: seasoning and background
+
 * **Piano, synth, acoustic guitar**: find a place around 30–70% that doesn’t fight the vocal.
 * **Percussion (shaker, tambourine)**: toss to one side for life and sparkle. (Chime!)
 
@@ -81,6 +84,7 @@ Your pan knobs will take a photo of that stage. (Click!)
 ---
 
 ### [Common Beginner Mistakes] ↔️
+
 * **"Everyone is the main character"**: Kick, bass, vocal, chorus, guitars—all in the center. They fight, and the vocal disappears. (No brawls!)
 * **"Tiny pan moves"**: Only 10–20% pans. The mix doesn’t get wider; it just gets messy. If you pan, be bold (64–100%).
 * **"Lopsided mix"**: Three guitars on the left, empty on the right. Listeners get tired fast. Balance the weight.

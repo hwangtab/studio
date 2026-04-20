@@ -36,21 +36,25 @@ Mở reverb plugin, bạn sẽ thấy preset: Hall, Room, Plate, Spring...
 Đây không chỉ là tên. Nó là **lựa chọn sân khấu**. (Chọn đi!)
 
 #### ① Hall: đại sảnh (Boom!)
+
 * **Cảm giác**: lớn, rộng, sâu. Tail dài, bao mượt.
 * **Dùng**: dàn nhạc, ballad chậm, piano, pad hoành tráng.
 * **Lưu ý**: quá tay là biến mix thành nhà tắm. (Oops.)
 
 #### ② Room: căn phòng quen thuộc (Tap‑tap)
+
 * **Cảm giác**: nhỏ, ngắn, thực. “Ngay bên cạnh.”
 * **Dùng**: trống (đặc biệt snare), guitar rhythm, vocal nhanh.
 * **Tip**: room reverb tăng presence hơn là đẩy lùi.
 
 #### ③ Plate: vũ khí bí mật của vocal pop ⭐
+
 * **Cảm giác**: không phải phòng thật. Tấm kim loại rung. Ít cộng hưởng phòng, tail **dày, sáng, bóng**.
 * **Dùng**: **vocal** và **snare**.
 * **Chìa khóa**: đuôi vocal “shaa‑” trong pop gần như luôn là Plate. Sạch hơn Hall. (Shine!)
 
 #### ④ Spring: rung lắc cổ điển (Boing!)
+
 * **Cảm giác**: lò xo trong amp guitar. Kim loại “boing‑boing.”
 * **Dùng**: guitar điện, vocal retro.
 
@@ -117,6 +121,7 @@ Lần sau ta khám phá **Delay**, phép màu của tiếng vọng.
 ---
 
 ### [Lỗi người mới hay gặp] 🛁
+
 * **“Mix kiểu phòng tắm”**: Reverb quá nhiều khiến như phòng xông hơi. Năng lượng biến mất. Reverb nặng thường để che lỗi.
 * **“Giữ low‑end reverb”**: Reverb của kick lẫn vào bass. EQ reverb không phải tùy chọn.
 * **“Cùng một không gian cho mọi thứ”**: Một preset Hall cho mọi nhạc cụ. Như nhốt tất cả vào một hang. Hãy cho mỗi nhạc cụ độ sâu riêng.

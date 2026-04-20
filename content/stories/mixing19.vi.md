@@ -84,6 +84,7 @@ Lần sau: **Modulation**, hiệu ứng làm âm chuyển động và lấp lán
 ---
 
 ### [Lỗi người mới hay gặp] 👥
+
 * **“Delay lệch tempo”**: bỏ qua BPM làm echo đánh nhau với groove. Luôn dùng Sync.
 * **“Feedback tràn”**: echo đè lên lời kế tiếp. Hãy đặt feedback để không chồng lên câu.
 * **“Stereo rỗng”**: delay mono làm mix hẹp. Thử ping‑pong hoặc stereo delay để mở rộng.

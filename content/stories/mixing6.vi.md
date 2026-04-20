@@ -37,11 +37,13 @@ Nên nếu chỉ tin peak meter, bạn sẽ tự hỏi: “Sao bài mình nghe n
 Tai chúng ta cảm nhận độ to dựa trên **năng lượng trung bình theo thời gian**, không phải đỉnh nhỏ.
 
 ### RMS (Root Mean Square)
+
 * Tính năng lượng trung bình (điện áp). (Vững!)
 * Gần với cảm nhận độ to hơn peak meter.
 * Vai trò tương tự VU meter analog cũ.
 
 ### LUFS (Loudness Units Full Scale)
+
 * **Chuẩn hiện nay**. Cao cấp hơn RMS.
 * Phản ánh thính giác con người (đường Fletcher‑Munson, v.v.), cho số đo **độ to cảm nhận** chính xác nhất. (Rõ!)
 * YouTube, Spotify, Apple Music—tất cả nền tảng streaming chuẩn hóa âm lượng theo LUFS.
@@ -51,9 +53,11 @@ Tai chúng ta cảm nhận độ to dựa trên **năng lượng trung bình the
 Quên thuật ngữ khó đi. Cứ theo đây.
 
 ### (1) Cân bằng từng track: tin peak và tai
+
 Với kick, vocal… giữ peak quanh **‑6 dB đến ‑10 dB**. (An toàn!)
 
 ### (2) Mix bus: nhìn LUFS
+
 Chèn plugin LUFS miễn phí (Youlean Loudness Meter, v.v.) vào master.
 
 * **Short‑term LUFS**: trung bình ~3 giây. Khi chorus vào, bạn ở khoảng **‑10 đến ‑8 LUFS** chứ? (Boom!)
@@ -76,6 +80,7 @@ Meter chính xác nhất vẫn là **đôi tai**. (Hãy nghe!)
 ---
 
 ### [Lỗi người mới hay gặp] 👁️
+
 * **“Mix bằng mắt.”** Bạn ngừng nghe và ám ảnh với waveform hay con số ‑14. Nếu số quyết định tất cả, AI đã làm hết rồi. (Ding!)
 * **“Sống vì integrated value.”** Bạn bóp nát cả bài chỉ để khớp integrated LUFS, làm mất build‑up và release. Chorus phải nổ—đừng phạm tội đó.
 * **“Tin tuyệt đối peak meter.”** “Không đỏ là ổn.” Nhưng nếu RMS quá cao, tai sẽ mệt và người nghe bỏ sau 30 giây.

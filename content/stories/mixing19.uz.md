@@ -84,6 +84,7 @@ Keyingi safar: **Modulation** — tovushni harakatga keltirib, yaltiratadigan ef
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 👥
+
 * **“Tempo'dan tashqari delay”**: BPMni e'tiborsiz qoldirish echo'ni groove bilan urishtiradi. Har doim Sync ishlating.
 * **“Feedback qochishi”**: echo keyingi so'zga yopishib ketadi. Feedback'ni so'zlar ustiga chiqmaydigan darajada sozlang.
 * **“Stereo bo'sh”**: mono delay miksni tor qiladi. Ping‑pong yoki stereo delay bilan kenglik bering.

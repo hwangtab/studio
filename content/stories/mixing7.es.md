@@ -90,6 +90,7 @@ Abre ese proyecto desordenado ahora y empieza a limpiar. El sonido cambiará. (�
 ---
 
 ### [Errores comunes de principiantes] 🧹
+
 * **“Luego ordeno.”** Terminas una mezcla caótica y luego vas soloando pistas para encontrar la voz. Pérdida de tiempo total.
 * **“Dejar el nombre del archivo.”** Nombres como `REC_0001_1.wav` matan la creatividad. Nombra para que se pueda imaginar el sonido de inmediato.
 * **“Fiesta de colores.”** El objetivo no es un arcoíris bonito; es claridad. Demasiados colores cansan los ojos.

@@ -59,6 +59,7 @@ Natija? Miksga tegmasdan ham trek ancha tig'iz va sayqallangan eshitildi. Asbobl
 ---
 
 ### [Boshlovchilar qiladigan xatolar] ✂️
+
 * **“Miks vaqtida tuzataman”**: Editing va mixing turli miya rejimlari. Editing — mantiq, mixing — hissiyot. Ularni ajrating.
 * **“Fade'ni o'tkazib yuborish”**: Audio'ni kesib qo'yasiz, keyin “pop” eshitasiz va sababini izlab vaqt yo'qotasiz. Har bir edit uchun fade kerak.
 * **“Haddan tashqari quantize”**: Insoniy hisni yo'q qilasiz. Juda mukammal bo'lsa, tinglovchi charchaydi. Bir oz ongli nomukammallikni seving.

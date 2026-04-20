@@ -43,16 +43,19 @@ Pero la esencia es **balance** y **traducción**: que suene consistente en **aur
 Orden mínimo pero potente para home studios:
 
 #### ① Linear Phase EQ
+
 * Menos distorsión de fase que un EQ normal.
 * **Low Cut**: corta debajo de 30 Hz para limpiar energía inútil. (Corte.)
 * **Tone shaping**: si está muy oscuro, sube 1 dB de agudos; si está muy filoso, baja un poco 2 kHz. (Movimientos de 0.5–1 dB.)
 
 #### ② Bus Compressor (Glue)
+
 * Pega todos los instrumentos.
 * **Ajustes**: Ratio 1.5:1–2:1, Attack 30 ms (lento), Release Auto.
 * Reducción de 1–2 dB máximo.
 
 #### ③ Limiter: el último guardia
+
 * La herramienta más importante para el volumen.
 * **Ceiling**: ‑0.1 dB o ‑1.0 dB. (Seguro para streaming)
 * **Threshold**: baja hasta lograr loudness sin distorsión.
@@ -99,6 +102,7 @@ Que tu música suene en el mundo.
 ---
 
 ### [Errores comunes de principiantes] 🏁
+
 * **"Arreglar la mezcla en mastering"**: si la caja está baja, subes agudos en mastering y todo se vuelve áspero. Vuelve a la mezcla.
 * **"Obsesión por el volumen"**: aplastas el limiter para sonar más fuerte que el vecino. El sonido queda como ladrillo y el oído se fatiga. La calidad importa más.
 * **"Ignorar el monitoreo"**: masterizar en una sala sin tratar. Luego en otros equipos explotan los graves o desaparecen los agudos. Escucha en varios sistemas.

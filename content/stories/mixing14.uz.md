@@ -44,6 +44,7 @@ Endi faderlarni ko'taring. Bu bosqichda EQ va compressionni o'chiring. (Hozir em
 Faqat **quloq va fader**ga ishoning. (Slide‑slide.)
 
 ### Tavsiya etilgan tartib (Mix ierarxiyasi)
+
 Eng muhim elementlardan boshlang:
 1. **Kick & snare**: Ritm ustunlari. (Boom‑crack!)
 2. **Lead vokal**: Bosh qahramon. Barabandan aniq, lekin ajralib ketmasin.
@@ -87,6 +88,7 @@ Shu yerda **group** va **VCA** porlaydi.
 ---
 
 ### Amaliyot: 10 daqiqalik Faders Up chaqirig'i
+
 Bugun sessioningizda sinab ko'ring:
 1. Hozirgi loyihani oching.
 2. **Barcha pluginlarni bypass qiling** va barcha faderlarni **‑∞** ga tushiring. (Toza varaq!)
@@ -99,6 +101,7 @@ Vaqt tugagach tinglang. Hayron bo'lishingiz mumkin — u pluginlarni soatlab soz
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🎚️
+
 * **“Pluginsiz miks bo'lmaydi”**: Kompressorsiz kick o'lsa va EQsiz vokal xira bo'lsa, balans noto'g'ri. Pluginlar yomon balansni sehr bilan tuzatmaydi.
 * **“Faqat master faderni tushirish”**: Miks 0 dBda clip bo'lib turganda masterni tushirib tinchlanasiz. Ammo clipping allaqachon yuqorida bo'lgan. Kranni pasaytirish suvni tozalab qo'ymaydi.
 * **“Balans o'zgarmaydi”**: Faderlar boshidan oxirigacha qimirlamaydi. Musiqa tirik; faderlaringiz ham raqsga tushsin.

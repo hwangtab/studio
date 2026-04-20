@@ -67,6 +67,7 @@ The “pro sound” you’re looking for may already be hidden there.
 ---
 
 ### [Common Beginner Mistakes] 🎸
+
 * **“Buy first, think later.”** You impulsively buy a 1,000,000‑KRW mic because a famous YouTuber uses it. But your room has traffic noise and AC hum. Expensive mics record those noises clearly, too.
 * **“Switching DAWs.”** You think using another pro’s DAW will suddenly make your music refined. No—changing tools doesn’t improve your cooking. The tool in your hand is best. (What fits you is best.)
 * **“Ignoring stock plugins.”** You think the default EQ and compressor are bad. Not true! Many pros finish mixes using stock plugins alone.

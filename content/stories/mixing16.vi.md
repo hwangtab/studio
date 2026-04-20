@@ -59,6 +59,7 @@ Trong EQ, **Q (bandwidth)** xác định vùng bạn tác động rộng đến 
 ---
 
 ### Mẹo thực hành: kỹ thuật sweep
+
 1. Boost một band khoảng +10 dB.
 2. Quét tần số chậm từ trái sang phải. (Swoooosh.)
 3. Khi nghe “ugh, kinh quá,” hãy dừng.
@@ -68,6 +69,7 @@ Trong EQ, **Q (bandwidth)** xác định vùng bạn tác động rộng đến 
 ---
 
 ### [Lỗi người mới hay gặp] ✂️
+
 * **“Nghiện boost”**: Bạn boost mọi thứ, track đánh nhau, headroom biến mất. Cắt trước! (Dứt khoát.)
 * **“EQ bằng mắt”**: Bạn vẽ đường cong đẹp rồi nghĩ âm thanh đẹp. Nhắm mắt lại. Hình đẹp không đảm bảo âm đẹp.
 * **“EQ solo mãi”**: Bạn EQ vocal một mình cả tiếng. Solo thì hay, nhưng vào mix thì hỏng. Luôn EQ trong ngữ cảnh. (Cùng nhau!)

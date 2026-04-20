@@ -90,6 +90,7 @@ Mở dự án bừa bộn ngay bây giờ và dọn dẹp. Bản mix của bạn
 ---
 
 ### [Lỗi người mới hay gặp] 🧹
+
 * **“Để sau rồi sắp xếp.”** Bạn hoàn thành bản mix bừa bộn, rồi solo từng track để tìm vocal. Lãng phí thời gian tối thượng.
 * **“Giữ nguyên tên file.”** Những tên như `REC_0001_1.wav` giết chết sáng tạo. Hãy đặt tên để bạn hình dung âm thanh ngay.
 * **“Tiệc màu.”** Mục tiêu không phải là cầu vồng. Mục tiêu là rõ ràng. Quá nhiều màu chỉ làm mỏi mắt.

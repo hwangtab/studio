@@ -73,6 +73,7 @@ A camera with good color depth (24‑bit) shooting enough frames per second (48 
 ---
 
 ### [Common Beginner Mistakes] 🔢
+
 * **“Higher numbers are always better!”** Recording everything at 192 kHz. File size explodes and the computer screams (whirrr), but your ears can’t even tell the difference from 48 kHz.
 * **“The 16‑bit trap.”** You accidentally set 16‑bit while working. Later you hear your reverb tail crackle and cry. Always work at 24‑bit or higher.
 * **“Changing mid‑project.”** You switch sample rate from 48 to 44 mid‑work. Suddenly the song stretches or becomes chipmunk‑like. It’s as dangerous as changing a patient’s blood during surgery.

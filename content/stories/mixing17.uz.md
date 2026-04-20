@@ -80,6 +80,7 @@ Zichlikning o'zgarishini his qiling — bo'sh ovoz tig'izlashadi, ritm groove qi
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🥊
+
 * **“Ignasi qimirlamayapti”**: Threshold juda yuqori, ammo siz baribir yaxshi deb o'ylaysiz. Avval GR meterni tekshiring.
 * **“Hamma narsani bo'g'ish”**: Ratio 10:1 hamma treklarda dinamikaning nafasini o'ldiradi. Agar miks nafas olmasa, release'ni tekshiring.
 * **“Attack'ni e'tiborsiz qoldirish”**: Tez attack baraban punchini yo'q qiladi. Baraban yo'qolsa, attack'ni sekinlashtiring. (Muloyim!)

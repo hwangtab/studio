@@ -36,21 +36,25 @@ Abres un reverb y ves presets: Hall, Room, Plate, Spring...
 No son solo nombres: son **escenarios**. (¡Elige!)
 
 #### ① Hall: gran sala de conciertos (¡Boom!)
+
 * **Sensación**: grande, ancha, profunda. Colas largas y suaves.
 * **Uso**: orquesta, baladas lentas, piano, pads épicos.
 * **Cuidado**: demasiado y la mezcla se vuelve “baño”. (Ups.)
 
 #### ② Room: tu habitación cercana (Tap‑tap)
+
 * **Sensación**: pequeña, corta, realista. “Tocando al lado.”
 * **Uso**: batería (sobre todo caja), guitarra rítmica, voces rápidas.
 * **Tip**: el room da presencia más que empujar hacia atrás.
 
 #### ③ Plate: arma secreta del pop ⭐
+
 * **Sensación**: no es un espacio real. Es una placa metálica vibrando. Menos resonancia, colas **densas, brillantes, nítidas**.
 * **Uso**: **voces** y **caja**.
 * **Clave**: ese “shaa‑” elegante del pop casi siempre es Plate. Más limpio que Hall. (¡Shine!)
 
 #### ④ Spring: vibración vintage (¡Boing!)
+
 * **Sensación**: el resorte dentro de un ampli de guitarra. Sonido metálico “boing‑boing”.
 * **Uso**: guitarra eléctrica, voces retro.
 
@@ -117,6 +121,7 @@ En la próxima clase veremos **Delay**, la magia del eco.
 ---
 
 ### [Errores comunes de principiantes] 🛁
+
 * **"Mezcla de baño"**: demasiado reverb, todo suena a sauna. Se va la energía. Reverb excesivo suele ser un maquillaje.
 * **"Reverb de graves sin cortar"**: el reverb del kick se mezcla con el bajo y ensucia. El EQ en el reverb no es opcional.
 * **"Mismo espacio para todo"**: un preset Hall igual para todos. Es como meterlos en la misma cueva. Ajusta la profundidad por instrumento.

@@ -91,6 +91,7 @@ Hozir tartibsiz loyihangizni oching va tozalashni boshlang. Miksingiz o'zgaradi.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🧹
+
 * **“Keyin tartiblayman.”** Tartibsiz miksni tugatasiz, so'ng vokalni topish uchun har bir trackni solo qilasiz. Vaqt isrofi.
 * **“Fayl nomini o'zgartirmaslik.”** `REC_0001_1.wav` kabi nomlar ijodkorlikni o'ldiradi. Ovoz tasavvurini darhol uyg'otadigan nom qo'ying.
 * **“Ranglar ziyofati.”** Maqsad kamalak emas. Maqsad — aniqlik. Juda ko'p rang ko'zni charchatadi.

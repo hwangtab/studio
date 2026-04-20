@@ -43,6 +43,7 @@ Giờ hãy kéo fader lên. Tắt EQ và compression ở bước này. (Tạm bi
 Chỉ tin vào **tai và fader**. (Trượt‑trượt.)
 
 ### Thứ tự khuyến nghị (Hierarchy of Mix)
+
 Bắt đầu từ yếu tố quan trọng nhất:
 1. **Kick & snare**: Trụ nhịp. (Boom‑crack!)
 2. **Lead vocal**: Nhân vật chính. Rõ trên nền trống nhưng không tách rời.
@@ -86,6 +87,7 @@ Với 50–100 track, điều khiển từng fader là bất khả thi. (Ahh!)
 ---
 
 ### Thực hành: thử thách 10 phút Faders Up
+
 Hãy thử ngay trong session của bạn:
 1. Mở project hiện tại.
 2. **Bypass mọi plugin** và kéo tất cả fader xuống **‑∞**. (Trang trắng!)
@@ -98,6 +100,7 @@ Hết giờ, nghe lại. Bạn có thể bất ngờ—nó nghe tự nhiên hơn
 ---
 
 ### [Lỗi người mới hay gặp] 🎚️
+
 * **“Không có plugin là không mix được”**: Nếu kick chết khi bỏ compression và vocal đục khi bỏ EQ, balance của bạn đang sai. Plugin không phép màu hóa balance tệ.
 * **“Chỉ hạ master fader”**: Mix clip ở 0 dB nên bạn kéo master xuống rồi yên tâm. Nhưng clipping đã xảy ra từ trước. Hạ vòi không làm nước sạch hơn.
 * **“Balance cố định”**: Fader không bao giờ di chuyển. Âm nhạc sống; fader của bạn cũng nên nhảy theo.

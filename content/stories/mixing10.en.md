@@ -80,6 +80,7 @@ If you think like that, congratulations—your ears are already engineering ears
 ---
 
 ### [Common Beginner Mistakes] 👂
+
 * **"Mixing without a reference"**: It’s like sailing without a compass. The moment you think “my ears are perfect,” your mix drifts off course.
 * **"Marathon mixing"**: Five hours straight and your ears are numb. Decisions made then are 90% regret the next day.
 * **"It’ll sound good tomorrow"**: If it sounds wrong now, it’s wrong. Don’t hypnotize yourself with “it’ll be fine later.”

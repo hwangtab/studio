@@ -81,6 +81,7 @@ Siente cómo cambia la densidad: lo flojo se tensa, el ritmo se acomoda. (¡Tens
 ---
 
 ### [Errores comunes de principiantes] 🥊
+
 * **"La aguja no se mueve"**: el threshold está alto y aun así dices “suena mejor”. Mira el GR primero.
 * **"Asfixiar todo"**: Ratio 10:1 en todas las pistas mata la dinámica. Si la mezcla no respira, revisa el release.
 * **"Ignorar el ataque"**: un ataque rápido mata el golpe de la batería. Si el punch desaparece, retrasa el ataque. (Suave.)

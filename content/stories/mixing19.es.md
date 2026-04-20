@@ -84,6 +84,7 @@ La próxima: **Modulación**, el efecto que hace que el sonido se mueva y brille
 ---
 
 ### [Errores comunes de principiantes] 👥
+
 * **"Delay fuera de tempo"**: ignorar el BPM rompe el groove. Usa Sync.
 * **"Feedback desbocado"**: los ecos pisan la siguiente frase. Ajusta el feedback.
 * **"Estéreo vacío"**: delay mono deja el mix estrecho. Prueba ping‑pong o delay estéreo.

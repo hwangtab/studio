@@ -64,6 +64,7 @@ Doim ishlatadigan effektlaringizni oldindan qo'ying. (Potensial ochiladi!)
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 📁
+
 * **“Template'ga ko'r‑ko'rona ishonish”**: Har bir qo'shiqda bir xil EQ sozlamasini ishlatasiz. “O'tgan safar ishladi!” Lekin har bir manba boshqacha. Template — ramka, natija emas.
 * **“Haddan tashqari murakkab template”**: Oldindan 200 trek yaratib, faqat 10 tasini ishlatasiz. Shishirilgan template ijodkorlikni o'ldiradi.
 * **“Hech qachon yangilamaslik”**: Doim bir template'dan foydalanish. Asboblar o'zgaradi, quloq ham o'zgaradi. Har 6 oyda yangilang.

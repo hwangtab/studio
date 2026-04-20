@@ -28,6 +28,7 @@ faq:
 ## 마이크 3종 비교
 
 ### USB 마이크
+
 > Rode NT-USB, Audio-Technica AT2020 USB+ 등
 
 **장점**: 컴퓨터에 직접 꽂아 사용, 추가 장비 불필요, 가격 접근성
@@ -42,6 +43,7 @@ faq:
 ---
 
 ### 다이나믹 마이크
+
 > Shure SM7B, Shure SM58, EV RE20 등
 
 **장점**:
@@ -58,6 +60,7 @@ faq:
 ---
 
 ### 콘덴서 마이크 (Large Diaphragm)
+
 > Neumann U87AI, AKG C414 XLS, Rode NT1-A 등
 
 **장점**:

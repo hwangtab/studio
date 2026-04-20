@@ -74,6 +74,7 @@ Now, tie on your apron and step into the kitchen. (Excited!)
 ---
 
 ### [Common Beginner Mistakes] 🧂
+
 * **“I don’t have gear, so it can’t sound good.”** A steak doesn’t taste bad because you don’t have a luxury knife. If the ingredients (recordings) are good, even just salt (volume) can taste great. Blaming gear is the sweetest cowardice when a mix isn’t working.
 * **“Dump it all in at once.”** Don’t throw in EQ, compressors, and reverb from the start. The order is to taste the original flavor first, then season.
 * **“Serve without tasting.”** Don’t rely only on numbers because “YouTube said so.” You must taste (listen) to know the flavor!

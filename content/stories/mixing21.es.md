@@ -46,18 +46,22 @@ Eso es la “calidez” analógica.
 La saturación tiene muchos sabores. Elige según el contexto.
 
 #### ① Tube: “calidez” 🔥
+
 * **Característica**: armónicos pares (2nd), suave y redondo.
 * **Uso**: voces, bajo, acústica. Ideal para calentar fuentes digitales frías.
 
 #### ② Tape: “pegamento” 📼
+
 * **Característica**: suaviza transientes y junta los graves.
 * **Uso**: bus de batería, master. Excelente glue para todo el mix.
 
 #### ③ Transistor: “agresión” 🥊
+
 * **Característica**: armónicos impares (3rd), más duro y agresivo.
 * **Uso**: guitarras rock, caja, voces rap. Grita “¡aquí estoy!”.
 
 #### ④ Bitcrusher: “destrucción” 💥
+
 * **Característica**: baja la resolución digital para generar ruido áspero.
 * **Uso**: baterías lo‑fi, bajos dubstep.
 
@@ -101,6 +105,7 @@ Siguiente: el arte de la **automatización**, la danza del mix en el tiempo.
 ---
 
 ### [Errores comunes de principiantes] 🌋
+
 * **"Solo ruido sucio"**: demasiada saturación destruye el tono original. Conserva la identidad y añade textura.
 * **"Confundir con clipping digital"**: llevar el master a rojo no es arte. Es un accidente.
 * **"Distorsión en todo"**: si todo es áspero, el oído se cansa. El contraste crea presencia.

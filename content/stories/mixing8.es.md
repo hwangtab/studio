@@ -69,6 +69,7 @@ Te devolverán su mejor sonido. (¡Ñam ñam!)
 ---
 
 ### [Errores comunes de principiantes] 🍱
+
 * **"Equilibrar solo con faders"**: La forma de onda está enorme y bajas el fader al mínimo. Estás desperdiciando la resolución del fader. Ajusta primero el clip gain.
 * **"Más fuerte = mejor"**: Nuestro oído ama lo más fuerte. "¡Wow, el plug‑in lo hizo gigante!" No, solo está más alto. Compara con bypass al mismo nivel.
 * **"Gain staging demasiado bajo"**: Grabas muy bajo, aparece ruido "ssss" y luego llenas de plug‑ins. Es como fotografiar con un lente sucio. Todo es cuestión de equilibrio.

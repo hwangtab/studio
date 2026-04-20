@@ -63,6 +63,7 @@ Deja listos tus efectos favoritos. (¡Potencial desbloqueado!)
 ---
 
 ### [Errores comunes de principiantes] 📁
+
 * **"Confiar ciegamente en la plantilla"**: usar los mismos ajustes de EQ en cada canción. “¡Funcionó antes!” Pero cada fuente es distinta. La plantilla es un marco, no el resultado.
 * **"Plantillas demasiado complejas"**: crear 200 pistas y usar 10. Las plantillas enormes matan la creatividad.
 * **"Nunca actualizar"**: usar la misma plantilla para siempre. Cambian las herramientas y cambia tu oído. Renuévala cada seis meses.

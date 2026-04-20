@@ -74,6 +74,7 @@ Ahora, ponte el delantal y entra a la cocina. (¡Emoción!)
 ---
 
 ### [Errores comunes de principiantes] 🧂
+
 * **“No tengo equipo, así que no puede sonar bien.”** Un bistec no sabe mal porque no tengas un cuchillo de lujo. Si los ingredientes (las tomas) son buenos, incluso con sal (volumen) pueden saber bien. Culpar al equipo es la excusa más dulce cuando una mezcla no funciona.
 * **“Poner todo de una vez.”** No metas EQ, compresores y reverb desde el inicio. Primero prueba el sabor original y luego sazona.
 * **“Servir sin probar.”** No dependas solo de números porque “lo vi en YouTube”. Hay que probar (escuchar) para saber el sabor.

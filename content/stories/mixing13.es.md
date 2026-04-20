@@ -75,6 +75,7 @@ Ahora sí empieza la mezcla real. (¡Vamos!)
 ---
 
 ### [Errores comunes de principiantes] 🎚️
+
 * **"Abrir el EQ primero"**: si no se oye, sube el fader. Si el tono molesta, ajusta el pan. El plug‑in es el último recurso.
 * **"Saltarse la comprobación en mono"**: el estéreo ancho te engaña. En mono, la voz desaparece por arte de magia.
 * **"Escuchar fuerte todo el tiempo"**: el volumen alto emociona pero arruina el juicio. El verdadero equilibrio se demuestra a volumen bajo.

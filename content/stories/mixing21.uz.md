@@ -46,18 +46,22 @@ Bu — analog gearning “warmth”i.
 Saturationning turli lazzatlari bor. Kontekstga qarab tanlang.
 
 #### ① Tube: “iliqlik” 🔥
+
 * **Xususiyat**: asosan juft harmoniklar (2nd). Yumshoq va yumaloq.
 * **Ishlatish**: vokal, bas, akustik gitara. Sovuq raqamli manbalarni isitish uchun.
 
 #### ② Tape: “glue” 📼
+
 * **Xususiyat**: o'tkir transientlarni yumshatadi, low endni tig'izlaydi.
 * **Ishlatish**: drum bus, master bus. Butun miksni “yopishtiradi”.
 
 #### ③ Transistor: “tajovuz” 🥊
+
 * **Xususiyat**: kuchli toq harmoniklar (3rd). Qattiq va o'tkir.
 * **Ishlatish**: rock gitaralar, snare, rap vokal. “Men shu yerdaman!” deydi.
 
 #### ④ Bitcrusher: “yo'q qilish” 💥
+
 * **Xususiyat**: raqamli aniqlikni pasaytirib, g'ijim shovqin beradi.
 * **Ishlatish**: lo‑fi barabanlar, dubstep bas.
 
@@ -101,6 +105,7 @@ Keyingi bosqich — **automation** san'ati, vaqt bo'ylab raqs.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🌋
+
 * **“Faqat iflos shovqin”**: saturation ko'p bo'lsa asl tovush yo'qoladi. Xarakterini saqlang, faqat tekstura qo'shing.
 * **“Digital clipping bilan adashtirish”**: masterni qizilga haydash san'at emas. Bu avariya.
 * **“Hammasiga distortion”**: hamma tovush qo'pol bo'lsa quloq charchaydi. Kontrast presence yaratadi.

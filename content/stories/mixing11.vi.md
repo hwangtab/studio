@@ -59,6 +59,7 @@ Kết quả? Chưa đụng mix, track đã chặt và sáng hơn. Khi nhạc c�
 ---
 
 ### [Lỗi người mới hay gặp] ✂️
+
 * **“Sẽ sửa trong lúc mix”**: Editing và mixing dùng hai chế độ não khác nhau. Editing là logic, mixing là cảm xúc. Hãy tách chúng.
 * **“Bỏ qua fade”**: Bạn cắt cứng rồi để đó. Sau này nghe “pop” và mất thời gian tìm nguyên nhân. Mọi chỉnh sửa đều cần fade.
 * **“Quantize quá mức”**: Xóa hết cảm giác người. Quá hoàn hảo làm người nghe mệt. Hãy giữ một chút không hoàn hảo có chủ đích.

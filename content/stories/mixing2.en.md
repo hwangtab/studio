@@ -39,16 +39,19 @@ A booth and full acoustic treatment would be great, but we don’t have that bud
 Here are realistic room‑tuning tips for home‑recording musicians.
 
 ### (1) The equilateral triangle rule
+
 This doesn’t cost anything.
 * The left speaker, right speaker, and your head (listening position) should form an **equilateral triangle**.
 * Grab a tape measure. If the distance between speakers is 1 meter, the distance from each speaker to your ears should also be exactly 1 meter.
 * Match the height of the speaker tweeters to your **ear height**. (Only then will the highs be clear!)
 
 ### (2) Pull speakers away from the wall
+
 If your speakers are right against the wall, the low end wraps around and creates **booming**.
 Even if your desk is small, keep at least **20–30 cm** from the wall. The sound gets much cleaner.
 
 ### (3) The power of blankets and closets
+
 No bass traps? You’ve got blankets.
 * Room corners are where low end piles up. Roll up thick winter clothes or blankets and stack them there. You’ll get a surprisingly good bass‑trap effect. (Stack them heavy!)
 * Hang thick blackout curtains on windows to reduce harsh reflections from glass.
@@ -69,6 +72,7 @@ Putting on clean glasses is the first step to good mixing.
 ---
 
 ### [Common Beginner Mistakes] 🏠
+
 * **“Getting drunk on speaker hype.”** Cranking the volume and saying “Wow, this sounds amazing!” That’s a **fake thrill** added by room resonance. Real skill is when the balance is good at low volume.
 * **“Magic egg cartons.”** Sticking egg cartons on the wall doesn’t make the sound better. It can even make it dull by absorbing only certain frequencies.
 * **“Pressed against the wall.”** If your speakers are kissing the wall, the bass will boom and ruin the mix. Pull them at least a hand’s width away.

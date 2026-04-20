@@ -69,6 +69,7 @@ Chúng sẽ thưởng bạn bằng âm thanh tốt nhất. (Nom‑nom!)
 ---
 
 ### [Lỗi người mới hay gặp] 🍱
+
 * **“Chỉ cân bằng bằng fader”**: Waveform quá lớn nên bạn kéo fader xuống sâu. Bạn lãng phí độ phân giải fader. Sửa clip gain trước để fader ở gần 0.
 * **“Nghĩ lớn hơn là hay hơn”**: Tai ta thích âm to. “Wow, plugin làm to lên!” Không—nó chỉ to hơn. Hãy bypass và match level trước khi đánh giá.
 * **“Gain staging âm”**: Bạn thu quá nhỏ nên noise “shhh”, rồi chồng plugin lên. Như chụp qua ống kính bụi. Cân bằng là quan trọng!

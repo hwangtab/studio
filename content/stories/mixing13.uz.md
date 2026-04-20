@@ -75,6 +75,7 @@ Endi haqiqiy miks boshlanadi. (Go!)
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🎚️
+
 * **“Avval EQ ochish”**: Eshitilmasa, faderni ko'taring. Rang noto'g'ri bo'lsa, pan'ni sozlang. Plugin — eng oxirgi chora.
 * **“Mono tekshiruvni o'tkazib yuborish”**: Stereo kenglik aldaydi. Mono'ga o'tsangiz, vokal yo'qoladi. Sehr — lekin yaxshi emas.
 * **“Doimo baland eshitish”**: Baland ovoz hayajon beradi, lekin qarorni buzadi. Haqiqiy mahorat — past ovozda balans.

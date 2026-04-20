@@ -46,18 +46,22 @@ That’s the “warmth” of analog gear.
 Saturation comes in many flavors. Choose by context.
 
 #### ① Tube: “warmth” 🔥
+
 * **Characteristic**: mostly even harmonics (2nd). Smooth and round.
 * **Use**: vocals, bass, acoustic guitar. Great for warming cold digital sources.
 
 #### ② Tape: “glue” 📼
+
 * **Characteristic**: softens sharp transients, tightens low end.
 * **Use**: drum bus, master bus. Excellent glue for the whole mix.
 
 #### ③ Transistor: “aggression” 🥊
+
 * **Characteristic**: strong odd harmonics (3rd). Hard and edgy.
 * **Use**: rock guitars, snare, rap vocals. Shouts “I’m here!”
 
 #### ④ Bitcrusher: “destruction” 💥
+
 * **Characteristic**: lowers digital resolution for gritty noise.
 * **Use**: lo‑fi drums, dubstep bass.
 
@@ -101,6 +105,7 @@ Next we enter the art of **automation**, the dance of mixing over time.
 ---
 
 ### [Common Beginner Mistakes] 🌋
+
 * **"Just dirty noise"**: too much saturation destroys the original tone. Keep the character, just add texture.
 * **"Confusing with digital clipping"**: pushing the master into red isn’t art. It’s an accident.
 * **"Distortion on everything"**: if all sounds are rough, ears get tired. Contrast is what creates presence.

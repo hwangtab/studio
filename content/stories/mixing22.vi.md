@@ -39,14 +39,17 @@ Máy tính ghi lại thao tác của bạn và phát lại. (Thông minh!)
 ### 2. Nên tự động hóa cái gì?
 
 #### ① Volume: cốt lõi
+
 * **Vocal riding**: chỉnh từng âm tiết để lời rõ. Tự nhiên hơn nén mạnh.
 * **Tương phản đoạn**: nâng chorus nhẹ so với verse. (Boom!)
 
 #### ② Pan: mở không gian
+
 * Cho guitar rộng ra chỉ khi solo. (Wow!)
 * Di chuyển âm qua trái‑phải để bí ẩn. (Swoosh!)
 
 #### ③ FX: hiệu ứng kịch tính
+
 * Tăng reverb chỉ ở cuối câu. (Wet!)
 * Ném delay vào một từ: “hello... hello...” (Bóng!)
 
@@ -83,6 +86,7 @@ Lần sau, đại kết: **Mastering**. (Trống dồn!)
 ---
 
 ### [Lỗi người mới hay gặp] ✍️
+
 * **“Đặt một lần rồi thôi”**: giữ balance y hệt từ đầu tới cuối = nhàm. Fader phải đi cùng bài.
 * **“Vẽ quá chi tiết”**: zig‑zag nhỏ làm âm thiếu tự nhiên. Bắt đầu với chuyển động lớn trước.
 * **“Bi kịch Write mode”**: để Write và ghi đè automation quý giá. Viết xong hãy về Read hoặc Touch.

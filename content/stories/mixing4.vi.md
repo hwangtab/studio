@@ -73,6 +73,7 @@ Máy ảnh có độ sâu màu tốt (24‑bit) chụp đủ khung hình mỗi g
 ---
 
 ### [Lỗi người mới hay gặp] 🔢
+
 * **“Số càng cao càng tốt!”** Thu tất cả ở 192 kHz. File phình to, máy gào (vù vù), nhưng tai bạn cũng chẳng phân biệt nổi với 48 kHz.
 * **“Bẫy 16‑bit.”** Bạn vô tình đặt 16‑bit khi làm. Về sau nghe tail reverb lạo xạo rồi muốn khóc. Luôn làm việc ở 24‑bit trở lên.
 * **“Đổi giữa chừng.”** Bạn đổi sample rate từ 48 sang 44 khi đang làm. Bài hát bỗng kéo dài hoặc thành giọng sóc. Nguy hiểm như thay máu cho bệnh nhân giữa ca mổ.

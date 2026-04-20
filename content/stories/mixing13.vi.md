@@ -75,6 +75,7 @@ Giờ thì mixing thật sự bắt đầu. (Go!)
 ---
 
 ### [Lỗi người mới hay gặp] 🎚️
+
 * **“Mở EQ trước”**: Nếu không nghe thấy, hãy kéo fader. Nếu màu sắc sai, chỉnh pan. Plugin là lựa chọn cuối.
 * **“Bỏ qua mono check”**: Stereo rộng có thể lừa bạn. Chuyển mono là vocal biến mất. Ma thuật—nhưng không tốt.
 * **“Nghe to suốt”**: Âm lượng lớn làm bạn hưng phấn nhưng phá phán đoán. Kỹ năng thật là cân bằng ở âm lượng nhỏ.

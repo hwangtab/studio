@@ -40,16 +40,19 @@ Sería ideal tener cabina y tratamiento acústico, pero no siempre hay presupues
 Aquí van consejos realistas de ajuste de sala para músicos de home recording.
 
 ### (1) Regla del triángulo equilátero
+
 No cuesta nada.
 * El monitor izquierdo, el derecho y tu cabeza (punto de escucha) deben formar un **triángulo equilátero**.
 * Saca una cinta métrica. Si los monitores están a 1 m entre sí, tus oídos también deben estar a 1 m de cada monitor.
 * Alinea los tweeters (los pequeños que emiten agudos) con la **altura de tus oídos**. (Así los agudos se oyen claros.)
 
 ### (2) Separa los monitores de la pared
+
 Si los monitores están pegados a la pared, el grave se acumula y aparece el **booming**.
 Aunque el escritorio sea pequeño, aléjalos al menos **20–30 cm** de la pared. El sonido se limpia mucho.
 
 ### (3) El poder de las mantas y el armario
+
 ¿No tienes bass traps? Tienes mantas.
 * Las esquinas son donde más se acumulan los graves. Enrolla ropa gruesa o mantas y apílalas allí. Obtendrás un efecto de bass trap sorprendente. (¡Apila pesado!)
 * Cuelga cortinas opacas y gruesas en las ventanas para reducir reflejos duros del vidrio.
@@ -70,6 +73,7 @@ Ponerte gafas limpias es el primer paso para una buena mezcla.
 ---
 
 ### [Errores comunes de principiantes] 🏠
+
 * **“Emborracharse con el hype de los monitores.”** Subir el volumen y decir “¡suena brutal!” Eso es una emoción falsa creada por la resonancia de la sala. El verdadero equilibrio se demuestra a volumen bajo.
 * **“La bandeja de huevos mágica.”** Pegar bandejas de huevos en la pared no mejora el sonido. Incluso puede volverlo más tonto al absorber solo ciertas frecuencias.
 * **“Pegados a la pared.”** Si los monitores están “besando” la pared, el grave se hincha y arruina la mezcla. Aléjalos al menos un palmo.

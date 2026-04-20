@@ -84,6 +84,7 @@ Next time: **Modulation**, the effect that makes sound move and shimmer.
 ---
 
 ### [Common Beginner Mistakes] 👥
+
 * **"Off‑tempo delay"**: ignoring BPM makes echoes fight the groove. Always use Sync.
 * **"Feedback runaway"**: echoes overlap the next lyric. Set feedback so it doesn’t step on words.
 * **"Empty stereo"**: mono delay keeps the mix narrow. Try ping‑pong or stereo delay for width.

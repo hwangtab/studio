@@ -82,6 +82,7 @@ Si piensas eso, felicidades: ya tienes oído de ingeniero.
 ---
 
 ### [Errores comunes de principiantes] 👂
+
 * **"Mezclar sin referencia"**: es navegar sin brújula. En cuanto dices “mi oído es perfecto”, tu mezcla se pierde.
 * **"Maratón de mezcla"**: cinco horas seguidas y tu oído queda anestesiado. Las decisiones allí casi siempre se lamentan al día siguiente.
 * **"Mañana sonará bien"**: si suena raro ahora, está raro. No te autoengañes.

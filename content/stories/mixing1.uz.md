@@ -73,6 +73,7 @@ Endi fartukni bog'lab, oshxonaga kiring. (Hayajon!)
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🧂
+
 * **“Gear yo'q, demak ovoz ham yaxshi chiqmaydi.”** Steak qimmat pichoqsiz yomon bo'lib qolmaydi. Agar masalliq (yozuv) yaxshi bo'lsa, faqat tuz (volume) bilan ham mazali. Miks ishlamasa gear'ni ayblash — eng shirin qo'rqoqlik.
 * **“Hammasini bir yo'la tashlash.”** EQ, kompressor va reverb'ni boshidan tashlamang. Avval asl ta'mni tatib ko'ring, keyin ziravorlang.
 * **“Tatib ko'rmasdan taqdim etish.”** “YouTube shunday dedi” deb faqat raqamlarga ishonmang. Ta'mini (eshitishni) tekshirmasangiz bo'lmaydi!

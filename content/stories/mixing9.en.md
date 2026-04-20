@@ -67,6 +67,7 @@ Don’t boost the low end with EQ—**recover** the low end that disappeared. (S
 ---
 
 ### [Common Beginner Mistakes] 🌊
+
 * **"More mics = better"**: The more mics you add, the more phase problems you must manage. If you can’t control it, reduce the mic count.
 * **"Boosting kick lows with EQ"**: The low end is cancelling, and you keep adding +10 dB. The mix gets dirtier and your headroom disappears.
 * **"Never pressing the phase button"**: "It was recorded well"—and you move on. Especially on drums, skipping this can cut your mix energy in half.

@@ -82,6 +82,7 @@ Nếu bạn nghĩ như vậy—chúc mừng, tai bạn đã là tai kỹ sư r�
 ---
 
 ### [Lỗi người mới hay gặp] 👂
+
 * **“Mix không có reference”**: Như đi biển không có la bàn. Khoảnh khắc bạn nghĩ “tai mình hoàn hảo”, bản mix sẽ lạc hướng.
 * **“Mix kiểu marathon”**: Năm giờ liền và tai tê. Quyết định lúc đó 90% là hối hận ngày hôm sau.
 * **“Ngày mai sẽ hay”**: Nếu giờ nghe sai, thì sai. Đừng tự thôi miên “để mai sẽ ổn.”

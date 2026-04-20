@@ -64,6 +64,7 @@ Insert your go‑to effects in advance. (Potential unlocked!)
 ---
 
 ### [Common Beginner Mistakes] 📁
+
 * **"Blindly trusting the template"**: Reusing the exact EQ settings for every song. "It worked last time!" But every source is different. A template is a frame, not the result.
 * **"Over‑complicated templates"**: You pre‑create 200 tracks but use only 10. Bloated templates kill creativity.
 * **"Never updating"**: You use the same template forever. Tools change, your ears change. Refresh it every six months.

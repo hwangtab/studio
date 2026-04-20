@@ -74,6 +74,7 @@ Với thu tại nhà, chỉ cần nhớ: **Dùng interface tốt và cập nhậ
 ---
 
 ### [Lỗi người mới hay gặp] 💥
+
 * **“Chỉ khi đèn đỏ mới hay.”** Có người thấy meter đỏ (0 dB) là khoái. Không—đó là tiếng thét của âm thanh rách. (Zzzzt!)
 * **“Bỏ qua gain staging.”** Bạn thu quá lớn đã clip, rồi giảm volume plugin và nói “Ổn rồi.” Đầu đã bị chặt, đội mũ lên cũng không mọc lại.
 * **“Pop filter chỉ để đẹp?”** Không phải để trang trí. Nó bảo vệ mic khỏi hơi bật ở “p, t, ts.” Bỏ qua là bạn sẽ khổ với “puh‑puh” trong mix.

@@ -59,6 +59,7 @@ Detuve la mezcla y volví a la edición. Durante tres horas alineé cada palabra
 ---
 
 ### [Errores comunes de principiantes] ✂️
+
 * **"Lo arreglo en la mezcla"**: mezclar y editar usan cerebros distintos. Edición = lógica, mezcla = emoción. Sepáralo.
 * **"Saltarse los fades"**: cortas la onda a lo bruto y la dejas así. Luego aparece un "pop" y pierdes tiempo buscándolo. Todo corte necesita fades.
 * **"Cuantizar en exceso"**: borras la humanidad. Si todo está demasiado perfecto, el oyente se cansa. Ama un poco de imperfección intencional.

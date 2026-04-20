@@ -43,16 +43,19 @@ But the essence is **balance** and **translation**—making sure your music soun
 Here’s a minimal but powerful order for home users:
 
 #### ① Linear Phase EQ
+
 * Less phase distortion than regular EQ, great for mastering.
 * **Low Cut**: cut below 30 Hz to remove useless energy. (Slice!)
 * **Tone shaping**: if it’s too dark, add 1 dB of high shelf; if too sharp, slightly reduce around 2 kHz. (0.5–1 dB moves!)
 
 #### ② Bus Compressor (Glue)
+
 * Glues all instruments together.
 * **Settings**: Ratio 1.5:1–2:1, Attack 30 ms (slow), Release Auto.
 * Keep gain reduction around 1–2 dB.
 
 #### ③ Limiter: the final gate
+
 * The most important tool for loudness.
 * **Ceiling**: set to ‑0.1 dB or ‑1.0 dB. (Streaming safe)
 * **Threshold**: lower until you hit desired loudness without audible distortion.
@@ -99,6 +102,7 @@ May your music ring across the world.
 ---
 
 ### [Common Beginner Mistakes] 🏁
+
 * **"Fixing the mix in mastering"**: The snare is small, so you boost highs in mastering. Then everything else gets harsh too. Go back to the mix.
 * **"Obsession with loudness"**: You smash the limiter to be louder than your neighbor. The sound turns into a brick and ears get tired fast. Quality beats volume.
 * **"Ignoring monitoring"**: You master in an untreated room. Then on other speakers, bass explodes or highs vanish. Always check multiple systems.

@@ -43,6 +43,7 @@ Now bring up the faders. Turn off EQ and compression for this step. (Bye for now
 Trust only **your ears and the faders**. (Slide‑slide.)
 
 ### Recommended order (The Hierarchy of Mix)
+
 Start with the most important elements:
 1. **Kick & snare**: The pillars of rhythm. (Boom‑crack!)
 2. **Lead vocal**: The main character. Clear above drums, but not detached.
@@ -86,6 +87,7 @@ That’s where **groups** and **VCA** shine.
 ---
 
 ### Practice: 10‑minute Faders Up challenge
+
 Try this in your session today:
 1. Open your current project.
 2. **Bypass all plug‑ins** and pull all faders to **‑∞**. (Clean slate!)
@@ -98,6 +100,7 @@ When time’s up, listen. You might be surprised—it could sound more natural t
 ---
 
 ### [Common Beginner Mistakes] 🎚️
+
 * **"I can’t mix without plug‑ins"**: If the kick dies without compression and the vocal feels dull without EQ, your balance is wrong. Plug‑ins don’t magically fix bad balance.
 * **"Just lowering the master fader"**: The mix clips at 0 dB, so you pull down the master and relax. But clipping already happened upstream. Turning down the faucet doesn’t clean the water.
 * **"Fixed balance"**: The faders never move from start to finish. Music is alive; your faders should dance with it.

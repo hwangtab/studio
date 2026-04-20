@@ -74,6 +74,7 @@ Uyda yozishda shuni yodda tuting: **Yaxshi interfeys ishlating va drayverlarni y
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 💥
+
 * **“Qizil yonsa, shundagina yaxshi.”** Ba'zilar meter qizilga (0 dB) kirganda zavqlanadi. Bu zavq emas — yirtilayotgan tovushning qichqirig'i. (Zzzzt!)
 * **“Gain staging'ni e'tiborsiz qoldirish.”** Juda baland yozib, allaqachon clip qilib qo'yasiz, keyin plugin volume'ni pasaytirib “endi yaxshi” deysiz. Bosh kesilgan bo'lsa, qalpoq kiyish bilan qayta o'smaydi.
 * **“Pop filter faqat ko'rinish uchunmi?”** Yo'q. U “p, t, ts”dagi havo portlashidan mikrofonni himoya qiladi. Ishlatmasangiz, miksda “puh‑puh” bilan qiynalasiz.

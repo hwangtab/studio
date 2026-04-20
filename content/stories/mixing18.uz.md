@@ -36,21 +36,25 @@ Reverb pluginini ochsangiz, Hall, Room, Plate, Spring kabi presetlarni ko'rasiz.
 Bu faqat nom emas. Bu — **sahna tanlovi**. (Tanlang!)
 
 #### ① Hall: katta konsert zali (Boom!)
+
 * **His**: katta, keng, chuqur. Uzun tail, silliq o'ram.
 * **Ishlatish**: orkestr, sekin ballada vokal, pianino, epik pad.
 * **Ehtiyot**: ko'p bo'lsa, miks hammomga aylanadi. (Oops.)
 
 #### ② Room: tanish xona (Tap‑tap)
+
 * **His**: kichik, qisqa, real. “Yonida turgandek.”
 * **Ishlatish**: baraban (ayniqsa snare), ritm gitara, tez vokal.
 * **Maslahat**: room reverb narsani orqaga surishdan ko'ra presence qo'shadi.
 
 #### ③ Plate: pop vokalining yashirin quroli ⭐
+
 * **His**: haqiqiy xona emas. Titroq metall plastina. Xona rezonansi kam, **zich, yorqin, yaltiroq** tail.
 * **Ishlatish**: **vokal** va **snare**.
 * **Kalit**: Popdagi jiloli “shaa‑” vokal dumi deyarli har doim Plate. Hall'dan tozaroq. (Shine!)
 
 #### ④ Spring: vintage tebranish (Boing!)
+
 * **His**: gitara amplifikatoridagi prujina. Metall “boing‑boing.”
 * **Ishlatish**: elektr gitara, retro vokal.
 
@@ -117,6 +121,7 @@ Keyingi safar **Delay** — aks sado sehrini ko'ramiz.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🛁
+
 * **“Hammom miks”**: Reverb ko'p bo'lsa sauna kabi bo'ladi. Energiya yo'qoladi. Og'ir reverb ko'pincha kamchilikni yopish uchun.
 * **“Past reverbni qoldirish”**: Kick reverb bas bilan loyqalashadi. Reverb EQ shart.
 * **“Hammasi bir makon”**: Har asbobga bitta Hall preset. Bu hammani bir g'or ichiga tiqishdek. Har bir asbobga o'z chuqurligini bering.

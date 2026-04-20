@@ -39,14 +39,17 @@ Kompyuter sizning harakatlaringizni yozib olib, qayta ijro etadi. (Aqlli!)
 ### 2. Nimani avtomatlashtirish kerak?
 
 #### ① Volume: asos
+
 * **Vokal riding**: har bir bo'g'inni aniq qilish. Qattiq kompressiyadan ko'ra tabiiy.
 * **Bo'lim kontrasti**: chorusni verse'ga qaraganda biroz ko'taring. (Boom!)
 
 #### ② Pan: makonni kengaytirish
+
 * Gitara faqat solo paytida keng yoyilsin. (Wow!)
 * Tovushni chap‑o'ng bo'ylab harakatlantirib, sirli effekt yarating. (Swoosh!)
 
 #### ③ FX: dramatik effektlar
+
 * Reverbni faqat fraza oxirida ko'taring. (Wet!)
 * Bitta so'zga delay tashlang: “salom... salom...” (Soya!)
 
@@ -83,6 +86,7 @@ Keyingi safar, katta yakun: **Mastering**. (Baraban ruleti!)
 ---
 
 ### [Boshlovchilar qiladigan xatolar] ✍️
+
 * **“Bir marta sozlab qo'ydim”**: boshidan oxirigacha bir xil balans = zerikarli. Faderlar qo'shiq bilan birga harakat qilishi kerak.
 * **“Haddan tashqari mayda chiziqlar”**: juda mayda zig‑zaglar tovushni sun'iy qiladi. Avval katta harakatlardan boshlang.
 * **“Write mode fojiasi”**: Write rejimini yoqib qo'yib, qimmatli automationni ustiga yozib yuborish. Yozgach, Read yoki Touchga qayting.

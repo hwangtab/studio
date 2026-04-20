@@ -63,6 +63,7 @@ Chèn sẵn hiệu ứng bạn hay dùng. (Mở khóa tiềm năng!)
 ---
 
 ### [Lỗi người mới hay gặp] 📁
+
 * **“Tin mù quáng vào template”**: Dùng y nguyên EQ cho mọi bài. “Lần trước ổn!” Nhưng nguồn nào cũng khác. Template là khung, không phải kết quả.
 * **“Template quá phức tạp”**: Tạo sẵn 200 track nhưng chỉ dùng 10. Template nặng làm chết sáng tạo.
 * **“Không bao giờ cập nhật”**: Dùng một template mãi. Công cụ đổi, tai bạn cũng đổi. Hãy làm mới mỗi 6 tháng.

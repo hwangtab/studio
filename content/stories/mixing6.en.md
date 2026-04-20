@@ -37,11 +37,13 @@ So if you trust only the peak meter, you’ll wonder: “Why does my song feel q
 Our ears perceive loudness based on **average energy over time**, not tiny peaks.
 
 ### RMS (Root Mean Square)
+
 * Calculates average energy (voltage). (Solid!)
 * Much closer to perceived loudness than peak meters.
 * Similar role to the old analog VU meter.
 
 ### LUFS (Loudness Units Full Scale)
+
 * Today’s **standard**. More advanced than RMS.
 * Reflects human hearing (Fletcher‑Munson curve, etc.), giving the most accurate **perceived loudness** in numbers. (Crisp!)
 * YouTube, Spotify, Apple Music—all streaming platforms normalize volume based on LUFS.
@@ -51,9 +53,11 @@ Our ears perceive loudness based on **average energy over time**, not tiny peaks
 Forget the hard terms. Just follow this.
 
 ### (1) Track balancing: trust peaks and your ears
+
 For individual tracks like kick and vocal, keep peaks around **‑6 dB to ‑10 dB**. (Safe!)
 
 ### (2) Mix bus: look at LUFS
+
 Insert a free LUFS meter plugin (Youlean Loudness Meter, etc.) on the master.
 
 * **Short‑term LUFS**: average over ~3 seconds. When the chorus hits, are you around **‑10 to ‑8 LUFS**? (Boom!)
@@ -76,6 +80,7 @@ The most accurate meter is still your **ears**. (Listen!)
 ---
 
 ### [Common Beginner Mistakes] 👁️
+
 * **“Mixing with your eyes.”** You stop listening and obsess over waveforms or whether the meter says ‑14. If numbers were everything, AI would have already taken over. (Ding!)
 * **“Living for the integrated value.”** You crush the whole song just to match integrated LUFS, killing the buildup and release. A chorus should explode—don’t commit that crime.
 * **“Blind trust in peak meters.”** “No red, so it’s fine.” But if RMS is too high, ears fatigue and people stop listening in 30 seconds.

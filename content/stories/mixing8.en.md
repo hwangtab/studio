@@ -69,6 +69,7 @@ They’ll reward you with their best sound. (Nom‑nom!)
 ---
 
 ### [Common Beginner Mistakes] 🍱
+
 * **"Balancing with faders only"**: The waveform is huge, so you pull the fader way down. You waste all the fader resolution. Fix clip gain first so your fader lives near 0.
 * **"Thinking louder = better"**: Our ears love louder sounds. "Wow, the plug‑in made it huge!" Nope—it just got louder. Use bypass and match levels before judging.
 * **"Negative gain staging"**: You record too quietly so noise goes "shhh," then pile on plug‑ins. It’s like shooting through a dusty lens. Balance matters!

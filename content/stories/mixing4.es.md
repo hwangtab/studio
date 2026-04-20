@@ -75,6 +75,7 @@ Una cámara con buen color (24‑bit) y suficientes “frames” por segundo (48
 ---
 
 ### [Errores comunes de principiantes] 🔢
+
 * **“¡Más alto = mejor!”** Grabar todo a 192 kHz. El tamaño se dispara y el ordenador grita (¡fiuuu!), pero tus oídos no distinguen de 48 kHz.
 * **“La trampa de 16‑bit.”** Trabajas sin querer en 16‑bit. Luego tu cola de reverb cruje y lloras. Trabaja siempre en 24‑bit o más.
 * **“Cambiar a mitad.”** Cambias el sample rate de 48 a 44 en medio del proyecto. De repente todo se estira o suena como ardilla. Es tan peligroso como cambiar la sangre de un paciente durante una cirugía.

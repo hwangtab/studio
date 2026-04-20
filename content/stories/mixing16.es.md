@@ -59,6 +59,7 @@ En EQ, **Q (ancho de banda)** define qué tan amplio es el ajuste.
 ---
 
 ### Tip práctico: técnica de sweeping
+
 1. Sube una banda +10 dB.
 2. Barre la frecuencia lentamente de izquierda a derecha. (Swoooosh.)
 3. Cuando escuches “¡ugh, qué feo!”, detente.
@@ -68,6 +69,7 @@ En EQ, **Q (ancho de banda)** define qué tan amplio es el ajuste.
 ---
 
 ### [Errores comunes de principiantes] ✂️
+
 * **"Adicción al boost"**: subes todo, las pistas pelean y el headroom desaparece. ¡Primero recorta!
 * **"EQ con los ojos"**: ves una curva bonita y crees que suena bonito. Cierra los ojos. La forma bonita no garantiza buen sonido.
 * **"EQ en solo eterno"**: ecualizas la voz sola por una hora. Sola es excelente, en mezcla fracasa. Ecualiza siempre en contexto. (¡Juntos!)

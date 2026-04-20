@@ -39,11 +39,13 @@ Si confías solo en el medidor de picos, acabarás preguntando: “¿Por qué mi
 Nuestros oídos perciben la sonoridad según la **energía promedio a lo largo del tiempo**, no según picos breves.
 
 ### RMS (Root Mean Square)
+
 * Calcula la energía promedio (voltaje). (¡Sólido!)
 * Mucho más cercano a lo que sentimos que el medidor de picos.
 * Similar al rol del viejo medidor VU analógico.
 
 ### LUFS (Loudness Units Full Scale)
+
 * El **estándar actual**. Más avanzado que RMS.
 * Refleja la percepción humana (curva Fletcher‑Munson), mostrando con mayor precisión la **sonoridad percibida**. (¡Exacto!)
 * YouTube, Spotify, Apple Music y demás normalizan el volumen con LUFS.
@@ -53,9 +55,11 @@ Nuestros oídos perciben la sonoridad según la **energía promedio a lo largo d
 Olvida los términos complicados. Haz esto.
 
 ### (1) Balance por pista: confía en picos y oído
+
 Para pistas individuales (kick, voz), mantén picos alrededor de **‑6 dB a ‑10 dB**. (¡Seguro!)
 
 ### (2) Bus de mezcla: mira LUFS
+
 Inserta un medidor LUFS gratuito (Youlean Loudness Meter, etc.) en el master.
 
 * **Short‑term LUFS**: promedio de unos 3 s. En el estribillo, ¿estás alrededor de **‑10 a ‑8 LUFS**? (¡Boom!)
@@ -78,6 +82,7 @@ El medidor más preciso sigue siendo tu **oído**. (¡Escucha!)
 ---
 
 ### [Errores comunes de principiantes] 👁️
+
 * **“Mezclar con los ojos.”** No escuchas, solo te obsesionas con la forma de onda o con que el medidor diga ‑14. Si los números fueran la verdad, la IA ya habría conquistado el mundo. (¡Ding!)
 * **“Obsesión con el integrado.”** Recortas toda la dinámica para cuadrar el LUFS integrado, matando el clímax. El estribillo debe explotar; no lo mates por un promedio.
 * **“Fe ciega en el pico.”** “No hay rojo, está bien.” Pero si el RMS es alto, el oído se fatiga y la gente apaga la canción en 30 segundos.

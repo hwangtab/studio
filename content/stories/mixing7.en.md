@@ -90,6 +90,7 @@ Open that messy project right now and start cleaning. Your mix will change. (Spa
 ---
 
 ### [Common Beginner Mistakes] 🧹
+
 * **“I’ll organize later.”** You finish a messy mix, then solo every track to find the vocal. Ultimate time‑waster.
 * **“Keep file names as‑is.”** Names like `REC_0001_1.wav` kill your creativity. Make names that let you imagine the sound instantly.
 * **“Color party.”** The goal isn’t a rainbow. It’s clarity. Too many colors just strain your eyes.

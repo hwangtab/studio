@@ -29,16 +29,19 @@ thumbnail: /images/hardware4.webp
 Hiệu ứng modulation rất đơn giản khi bạn hiểu ý tưởng: nó nhân bản tín hiệu rồi liên tục dịch thời gian hoặc phase. (Lắc‑lắc.)
 
 #### ① Chorus: “Tôi không cô đơn”
+
 * **Cách hoạt động**: copy âm thanh, detune và delay nhẹ để cảm giác như nhiều giọng.
 * **Cảm giác**: dày và rộng hơn. Rất hợp vibe 80s hoặc guitar acoustic dày. (Shimmer!)
 * **Tip**: thêm chút cho backing vocal làm chúng mềm và đầy.
 
 #### ② Flanger: “Máy bay phản lực bay qua”
+
 * **Cách hoạt động**: điều chế delay siêu ngắn tạo comb sweep.
 * **Cảm giác**: kim loại, “whooosh” hút vào.
 * **Dùng**: fill trống, guitar psychedelic. Tuyệt cho đổi mood đột ngột. (Bất ngờ!)
 
 #### ③ Phaser: “Âm thanh từ vũ trụ”
+
 * **Cách hoạt động**: xoắn phase tạo notch xoay vòng.
 * **Cảm giác**: xoáy, mơ. Bí ẩn hơn chorus.
 * **Dùng**: electric piano (Rhodes), guitar rhythm funk.
@@ -88,6 +91,7 @@ Lần sau: **Distortion & Saturation** để thêm grit và presence.
 ---
 
 ### [Lỗi người mới hay gặp] 🌊
+
 * **“Mix gây say sóng”**: Rate quá cao làm mọi thứ lắc. Đó là tra tấn, không phải nghệ thuật.
 * **“Cái gì cũng lượn”**: chorus lên guitar, vocal, piano… mix mất trung tâm. Hãy giữ các yếu tố chính khô.
 * **“Mix 100%”**: chỉ effect, không có dry. Độ rõ biến mất. Hãy trộn dry và wet để chuyển động tự nhiên.

@@ -80,6 +80,7 @@ Feel the density shift—the loose sound tightens, the rhythm grooves. (Tight!)
 ---
 
 ### [Common Beginner Mistakes] 🥊
+
 * **"The needle isn’t moving"**: Threshold is too high, but you still think it sounds better. Check the GR meter first.
 * **"Choking everything"**: Ratio 10:1 on every track kills dynamics. If it feels like the mix can’t breathe, check release.
 * **"Ignoring attack"**: Fast attack kills drum punch. If drums disappear, slow the attack. (Gentle!)

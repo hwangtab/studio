@@ -80,6 +80,7 @@ Cảm nhận độ đặc thay đổi—âm lỏng trở nên chặt, nhịp tr�
 ---
 
 ### [Lỗi người mới hay gặp] 🥊
+
 * **“Kim không nhúc nhích”**: Threshold quá cao nhưng bạn vẫn nghĩ hay. Hãy kiểm GR meter trước.
 * **“Bóp nghẹt mọi thứ”**: Ratio 10:1 cho mọi track giết dynamics. Nếu mix không thở, kiểm release.
 * **“Bỏ qua attack”**: Attack nhanh giết punch của trống. Nếu trống biến mất, hãy làm attack chậm lại. (Nhẹ!)

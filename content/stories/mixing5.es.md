@@ -75,6 +75,7 @@ Para home recording, solo recuerda esto: **usa una buena interfaz y mantén los 
 ---
 
 ### [Errores comunes de principiantes] 💥
+
 * **“Cuando se enciende la luz roja es lo mejor.”** Algunos sienten placer cuando el medidor se pone rojo. No es placer, es el grito de un sonido roto. (¡Zzzzt!)
 * **“Ignorar el gain staging.”** Grabaste demasiado fuerte y ya clippeó, luego bajas el volumen en un plugin y dices “ya no clippea”. Si la cabeza ya se cortó, ponerle un sombrero no la devuelve.
 * **“¿El pop filter es solo para verse cool?”** No. Protege el micrófono del aire en “p, t, ts”. Si no lo usas, sufrirás esos “puh‑puh” al mezclar.

@@ -32,17 +32,20 @@ Dùng nguyên lý này, ta cho bản mix 2D **chiều rộng**. (Rộng!)
 Không có đáp án tuyệt đối, nhưng có **vị trí vàng** kinh điển. (Classic!)
 
 ### (1) Trung tâm: trụ cột
+
 Âm thanh mạnh và quan trọng nhất phải ở giữa.
 * **Kick & snare**: lõi nhịp.
 * **Bass**: nền móng. (Low end ít định hướng; để giữa giúp mix chắc.)
 * **Lead vocal**: nhân vật chính.
 
 ### (2) Hard L/R: mở thật rộng
+
 Đừng sợ đẩy hết cỡ!
 * **Guitar double‑track**: Thu hai lần và pan 100% trái/phải. Mix bỗng rất rộng. (Wow!)
 * **Overheads**: trải không gian trống.
 
 ### (3) Vị trí giữa: gia vị và nền
+
 * **Piano, synth, guitar thùng**: tìm vị trí 30–70% không đánh nhau với vocal.
 * **Percussion (shaker, tambourine)**: hất sang một bên để thêm sống động và lấp lánh. (Chime!)
 
@@ -81,6 +84,7 @@ Núm pan sẽ chụp một bức ảnh của sân khấu đó. (Click!)
 ---
 
 ### [Lỗi người mới hay gặp] ↔️
+
 * **“Ai cũng là nhân vật chính”**: Kick, bass, vocal, chorus, guitar—đều ở giữa. Chúng đánh nhau và vocal biến mất. (Không đánh nhau!)
 * **“Pan tí xíu”**: Chỉ pan 10–20%. Mix không rộng hơn, chỉ rối hơn. Nếu pan, hãy mạnh dạn (64–100%).
 * **“Mix lệch”**: Ba guitar bên trái, bên phải trống rỗng. Người nghe mệt rất nhanh. Hãy cân trọng lượng.

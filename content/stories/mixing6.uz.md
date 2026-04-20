@@ -37,11 +37,13 @@ Shuning uchun faqat peak meterga ishonsangiz: “Nega qo'shig'im past eshitilyap
 Biz tovush balandligini **vaqt bo'yicha o'rtacha energiya**ga qarab his qilamiz, mayda cho'qqilarga emas.
 
 ### RMS (Root Mean Square)
+
 * O'rtacha energiyani (kuchlanishni) hisoblaydi. (Barqaror!)
 * Peak meterga qaraganda hissiy balandlikka yaqinroq.
 * Eski analog VU meterlarga o'xshash vazifani bajaradi.
 
 ### LUFS (Loudness Units Full Scale)
+
 * Bugungi **standart**. RMS'dan ham ilg'or.
 * Inson eshitishini (Fletcher‑Munson egri chizig'i va h.k.) hisobga olib, **hissiy balandlik**ni eng aniq raqamlarda beradi. (Aniq!)
 * YouTube, Spotify, Apple Music — barcha streaming platformalar LUFS bo'yicha ovozni normallashtiradi.
@@ -51,9 +53,11 @@ Biz tovush balandligini **vaqt bo'yicha o'rtacha energiya**ga qarab his qilamiz,
 Qiyin terminlarni unuting. Shunga amal qiling.
 
 ### (1) Track balanslash: peak va quloqqa ishonish
+
 Kick, vokal kabi individual treklar uchun peak'larni **‑6 dB dan ‑10 dB** atrofida saqlang. (Xavfsiz!)
 
 ### (2) Mix bus: LUFS'ga qarang
+
 Masterga bepul LUFS meter pluginini qo'ying (Youlean Loudness Meter va h.k.).
 
 * **Short‑term LUFS**: ~3 soniya o'rtacha. Refrenda **‑10 dan ‑8 LUFS** atrofidamisiz? (Boom!)

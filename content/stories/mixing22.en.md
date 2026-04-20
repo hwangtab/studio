@@ -39,14 +39,17 @@ The computer records your moves and plays them back. (Smart!)
 ### 2. What should you automate?
 
 #### ① Volume: the core
+
 * **Vocal riding**: adjust syllable by syllable so lyrics are clear. More natural than heavy compression.
 * **Section contrast**: lift the chorus slightly compared to the verse. (Boom!)
 
 #### ② Pan: widening space
+
 * Let a guitar spread wide only during a solo. (Wow!)
 * Move a sound across left and right for mystery. (Swoosh!)
 
 #### ③ FX: dramatic effects
+
 * Raise reverb only at the end of a phrase. (Wet!)
 * Throw delay on a single word: “hello... hello...” (Shadow!)
 
@@ -83,6 +86,7 @@ Next time, the grand finale: **Mastering**. (Drum roll!)
 ---
 
 ### [Common Beginner Mistakes] ✍️
+
 * **"Set it once and done"**: keeping the same balance from start to finish = boredom. Faders should move with the song.
 * **"Over‑detailed lines"**: drawing tiny zig‑zags makes the sound unnatural. Start with big movements first.
 * **"Write mode tragedy"**: leaving Write on and overwriting precious automation. After writing, switch back to Read or Touch.

@@ -67,6 +67,7 @@ EQ bilan low end'ni ko'tarmang — yo'qolgan low end'ni **qaytaring**. (Mustahka
 ---
 
 ### [Boshlovchilar qiladigan xatolar] 🌊
+
 * **“Ko'p mic = yaxshiroq”**: Mic ko'paygan sayin faza muammolari ham ko'payadi. Boshqara olmasangiz, mic sonini kamaytiring.
 * **“EQ bilan kick basini ko'tarish”**: Low end bekor bo'layotgan paytda siz +10 dB qo'shasiz. Miks ifloslashadi va headroom yo'qoladi.
 * **“Phase tugmasini bosmaslik”**: “Yaxshi yozilgan” deb o'tib ketasiz. Ayniqsa barabanda, buni o'tkazib yuborsangiz, miks energiyasi yarmiga tushadi.

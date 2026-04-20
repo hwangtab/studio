@@ -36,21 +36,25 @@ Open a reverb plug‑in and you’ll see presets: Hall, Room, Plate, Spring...
 These aren’t just names. They’re **choices of stage**. (Pick one!)
 
 #### ① Hall: big concert hall (Boom!)
+
 * **Feel**: large, wide, deep. Long tails, smooth wrap.
 * **Use**: orchestras, slow ballad vocals, piano, epic pads.
 * **Caution**: too much and your mix turns into a bathroom. (Oops.)
 
 #### ② Room: your familiar room (Tap‑tap)
+
 * **Feel**: small, short, realistic. “Right next to you.”
 * **Use**: drums (especially snare), rhythm guitar, fast vocals.
 * **Tip**: room reverb adds presence rather than pushing things back.
 
 #### ③ Plate: the secret weapon of pop vocals ⭐
+
 * **Feel**: not a real room. It’s a vibrating metal plate. Less room resonance, **dense, bright, glossy** tails.
 * **Use**: **vocals** and **snare**.
 * **Key**: That polished “shaa‑” vocal tail in pop is almost always Plate. Cleaner than Hall. (Shine!)
 
 #### ④ Spring: vintage wobble (Boing!)
+
 * **Feel**: the spring inside a guitar amp. Metallic “boing‑boing.”
 * **Use**: electric guitar, retro vocals.
 
@@ -117,6 +121,7 @@ Next time we’ll explore **Delay**, the magic of echoes.
 ---
 
 ### [Common Beginner Mistakes] 🛁
+
 * **"Bathroom mixing"**: Too much reverb makes it sound like a sauna. Energy disappears. Heavy reverb is often a cover‑up.
 * **"Leaving low‑end reverb"**: Kick reverb muddles with bass. Reverb EQ is not optional.
 * **"Same space for everything"**: One Hall preset on every instrument. That’s like throwing everyone into the same cave. Give each instrument its own depth.

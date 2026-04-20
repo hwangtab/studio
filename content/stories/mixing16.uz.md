@@ -59,6 +59,7 @@ EQda **Q (bandwidth)** ta'sir doirasini belgilaydi.
 ---
 
 ### Amaliy maslahat: sweep texnikasi
+
 1. Bir bandni +10 dB atrofida ko'taring.
 2. Chastotani sekin chapdan o'ngga sweep qiling. (Swoooosh.)
 3. “Uff, bu yomon” degan joyda to'xtang.
@@ -68,6 +69,7 @@ EQda **Q (bandwidth)** ta'sir doirasini belgilaydi.
 ---
 
 ### [Boshlovchilar qiladigan xatolar] ✂️
+
 * **“Boost qaramligi”**: Hammasini ko'tarib yuborasiz, treklarga urush boshlanadi, headroom yo'qoladi. Avval kesing! (Qat'iy.)
 * **“Ko'z bilan EQ qilish”**: Chiroyli egri chizib, chiroyli eshitadi deb o'ylaysiz. Ko'zingizni yuming. Chiroyli shakl chiroyli ovoz kafolati emas.
 * **“Solo EQ”**: Vokalni alohida soatlab EQ qilasiz. Solo'da a'lo, miksda esa yiqiladi. Har doim kontekstda EQ qiling. (Birga!)

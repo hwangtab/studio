@@ -33,17 +33,20 @@ Con este principio, damos **anchura** a una mezcla 2D. (¡Wide!)
 No hay una respuesta única, pero sí una **colocación clásica** que funciona siempre. (¡Regla!)
 
 ### (1) Centro: los pilares
+
 Los sonidos más importantes deben ir al centro.
 * **Kick y caja**: el corazón del ritmo.
 * **Bajo**: la base. (Los graves son poco direccionales; al centro suenan sólidos.)
 * **Voz principal**: el protagonista.
 
 ### (2) Hard L/R: abrir al máximo
+
 ¡No tengas miedo de abrir!
 * **Guitarras dobladas**: graba dos tomas y panea 100% L/R. La mezcla se vuelve enorme. (¡Wow!)
 * **Overheads**: expanden el espacio de la batería.
 
 ### (3) Posiciones medias: condimento y fondo
+
 * **Piano, sintetizadores, acústica**: encuentra un lugar entre 30–70% sin pelear con la voz.
 * **Percusión (shaker, pandereta)**: lánzala a un lado para dar vida. (¡Chas!)
 
@@ -82,6 +85,7 @@ Tus pan knobs le sacarán una foto a ese escenario. (¡Click!)
 ---
 
 ### [Errores comunes de principiantes] ↔️
+
 * **"Todos son protagonistas"**: kick, bajo, voz, coros, guitarras… todos al centro. Se pelean y la voz desaparece. (¡No peleen!)
 * **"Pan tímido"**: solo 10–20% de apertura. La mezcla no se ensancha, se ensucia. Si vas a abrir, abre de verdad (64–100%).
 * **"Mezcla desequilibrada"**: tres guitarras a la izquierda y nada a la derecha. El oyente se cansa. Equilibra el peso.

@@ -59,6 +59,7 @@ In EQ, **Q (bandwidth)** defines how wide you affect.
 ---
 
 ### Practical tip: sweeping technique
+
 1. Boost a band by about +10 dB.
 2. Sweep the frequency slowly left to right. (Swoooosh.)
 3. When you hear “ugh, that’s nasty,” stop.
@@ -68,6 +69,7 @@ In EQ, **Q (bandwidth)** defines how wide you affect.
 ---
 
 ### [Common Beginner Mistakes] ✂️
+
 * **"Boost addiction"**: You boost everything, tracks fight, headroom disappears. Cut first! (Firm.)
 * **"EQ with your eyes"**: You shape a pretty curve and think it sounds pretty. Close your eyes. Pretty shapes don’t guarantee pretty sound.
 * **"Solo EQ forever"**: You EQ a vocal alone for an hour. Solo it’s top of class, but in the mix it fails. Always EQ in context. (Together!)
