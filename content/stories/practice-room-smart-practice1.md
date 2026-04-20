@@ -52,6 +52,7 @@ faq:
 ## 연습 목적별 추천 앱
 
 ### 악기 연습
+
 | 악기 | 무료 앱 | 유료 앱 |
 |-----|-------|-------|
 | 피아노 | Flowkey (기초) | Simply Piano |
@@ -60,6 +61,7 @@ faq:
 | 공통 | GarageBand (iOS) | BandLab |
 
 ### 연습 도구
+
 | 기능 | 추천 앱 |
 |-----|-------|
 | 메트로놈 | Pro Metronome, Soundbrenner |
