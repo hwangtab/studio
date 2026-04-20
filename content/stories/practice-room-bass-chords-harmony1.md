@@ -194,7 +194,6 @@ Bill Evans Trio의 Scott LaFaro는 피아노·드럼과 대화하며 베이스�
 
 ---
 
-
 베이스 연습 시 음량 밸런스에 주의를 기울이는 것이 중요합니다. 앰프 EQ를 활용해 미드를 적절히 조절하면 밴드 믹스에서 존재감 있는 베이스 톤을 만들 수 있습니다. 저음 강조에만 치우치면 오히려 다른 악기와 겹쳐 묻히는 경우가 많습니다. 연습실에서 실제 앰프를 연결해 다양한 EQ 세팅을 실험해보면 자신만의 톤을 찾는 데 큰 도움이 됩니다. 뮤트 기법을 철저히 익혀두면 불필요한 개방현 울림을 방지하고 깔끔한 연주를 구현할 수 있습니다.
 
 [베이스 코드 멜로디·솔로 편곡법 — 완전 가이드](/stories/practice-room-bass-chord-melody1) | [베이스 투핸드 탭핑·고급 솔로 기법 — 완전 가이드](/stories/practice-room-bass-two-hand-tapping1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)

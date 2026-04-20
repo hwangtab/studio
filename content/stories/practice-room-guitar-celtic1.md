@@ -333,7 +333,6 @@ A4-B4-A4-G4-A4 (매우 빠르게)
 
 켈틱 기타는 아이리시와 스코틀랜드 전통 음악을 기반으로 독주 멜로디와 리듬 반주를 동시에 구사하는 스타일입니다. DADGAD 얼터네이트 튜닝과 드론 현 활용이 켈틱 사운드의 핵심이며, 장식음(모르든트, 롤)을 자유롭게 구사하는 훈련이 필요합니다.
 
-
 기타 연습에서 코드 전환 속도를 높이는 것은 초보자가 가장 먼저 넘어야 할 과제입니다. 코드를 하나씩 정확하게 짚은 뒤 느린 BPM에서 코드 전환을 반복하면 자연스럽게 속도가 붙습니다. 손가락 끝 단련도 병행해 프렛을 확실히 누르는 힘을 키워야 깨끗한 소리를 낼 수 있습니다. 스케일 연습은 단순한 음계 암기가 아닌 음악적 표현을 위한 도구로 활용할 때 의미가 있습니다. 좋아하는 곡의 기타 솔로를 천천히 카피해 보는 것이 기술과 음악성을 동시에 키우는 가장 효과적인 방법입니다.
 
 [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1)

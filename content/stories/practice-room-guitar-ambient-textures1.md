@@ -244,7 +244,6 @@ Whammy: 피치 쉬프터로 ±1 옥타브 변조
 
 ---
 
-
 어쿠스틱 기타에서 핑거피킹의 오른손 독립성을 키우는 것이 핵심 과제입니다. 엄지는 저음현, 검지·중지·약지는 고음현을 담당하는 기본 배치에서 시작해 점차 복잡한 아르페지오 패턴으로 발전합니다. 손가락 끝의 각도를 일정하게 유지하면 음량 균형이 자연스럽게 맞춰집니다. 스트러밍과 핑거피킹을 한 곡 안에서 자연스럽게 전환하는 능력을 키우면 표현 범위가 크게 확장됩니다. 카포를 활용해 다양한 키에서 같은 코드 보이싱을 연습하면 응용력이 빠르게 향상됩니다.
 
 [기타 볼륨 스웰·바이올린 주법·앰비언트 표현 — 완전 가이드](/stories/practice-room-guitar-volume-swell1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

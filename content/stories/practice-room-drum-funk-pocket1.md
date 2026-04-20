@@ -282,7 +282,6 @@ Questlove(The Roots):
 
 ---
 
-
 드럼 연습에서 기초 루디먼트는 절대 간과해서는 안 될 핵심 요소입니다. 싱글 스트로크, 더블 스트로크, 패러디들을 꾸준히 연습하면 양손 밸런스가 균등하게 발전합니다. 메트로놈 없이 연습하는 습관은 박자 안정성을 해치므로 항상 클릭 트랙을 활용하는 것이 좋습니다. 처음에는 느린 템포부터 시작해 정확도가 높아지면 점차 BPM을 올려가는 방식이 효과적입니다. 드럼 패드에서 충분히 익힌 뒤 실제 드럼 세트로 전환하면 습득 속도가 크게 빨라집니다. 규칙적인 연습 루틴을 만들고 꾸준히 유지하는 것이 단기간의 집중 연습보다 장기적으로 더 큰 효과를 만들어냅니다. 하루 30분씩 매일 연습하는 것이 주말에만 3시간씩 연습하는 것보다 신체 기억과 음악적 감각 형성에 훨씬 유리합니다. 연습 중 어려운 부분에 막힐 때는 천천히, 더 작은 단위로 나눠 반복하는 것이 돌파구가 됩니다. 목표 악기와 음악 스타일에 맞는 연습 방법을 지속적으로 탐구하고 실험하는 자세가 장기적인 성장의 원동력입니다.
 
 [재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드](/stories/practice-room-drum-jazz-funk1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 완전 가이드](/stories/practice-room-drum-fusion1) | [드럼 핸드 테크닉·그립·프렌치·독일·아메리칸 스타일 — 완전 가이드](/stories/practice-room-drum-hand-technique1)

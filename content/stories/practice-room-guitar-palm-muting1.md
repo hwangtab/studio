@@ -133,7 +133,6 @@ D5: x-0-0 (팜 뮤팅)
 
 ```
 
-
 Iron Maiden의 "The Trooper"가 대표적인 갈로핑 리프입니다.
 
 ### 싱코페이션 팜 뮤팅
@@ -175,7 +174,6 @@ E5: Low D 2nd fret + A 2nd fret
 F5: Low D 3rd fret + A 3rd fret
 
 ```
-
 
 드롭 D에서 팜 뮤팅은 훨씬 두껍고 중저음 느낌이 납니다.
 
