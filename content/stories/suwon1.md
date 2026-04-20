@@ -80,6 +80,7 @@ faq:
 ## 수원에서 스튜디오 놀을 이용한다면
 
 수원에서는 지하철 또는 버스로 약 1시간~1시간 20분 거리입니다. 경기 남부 지역 아마추어 뮤지션들의 주말 세션 이용이 꾸준합니다. 방문이 어려울 때는 드라이 보컬 WAV를 보내서 온라인으로 믹싱 의뢰를 진행하는 방법도 있습니다.
+
 ## 마치며
 
 [수원 권선구 녹음실 안내](/stories/suwon-gwonseon1) | [수원 팔달구·권선구 녹음실 안내](/stories/suwon-paldal1) | [수원 장안구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
