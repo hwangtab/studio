@@ -334,7 +334,9 @@ export const generateArticleSchema = (
   articleType: 'Article' | 'BlogPosting' = 'Article',
   articleSection?: string,
   articleKeywords?: string[],
-  wordCount?: number
+  wordCount?: number,
+  imageWidth?: number,
+  imageHeight?: number
 ) => {
   if (!articlePublishedTime) return null;
   const config = getSiteConfig(locale);
@@ -366,7 +368,13 @@ export const generateArticleSchema = (
         height: 862,
       },
     },
-    image: [{ '@type': 'ImageObject', url: absoluteOgImage, width: 1200, height: 630, representativeOfPage: true }],
+    image: [{
+      '@type': 'ImageObject',
+      url: absoluteOgImage,
+      ...(typeof imageWidth === 'number' && imageWidth > 0 && { width: imageWidth }),
+      ...(typeof imageHeight === 'number' && imageHeight > 0 && { height: imageHeight }),
+      representativeOfPage: true,
+    }],
     description: description,
     inLanguage: schemaLanguage,
     speakable: {
