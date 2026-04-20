@@ -14,9 +14,12 @@ interface FooterProps {
 
 const LINK_CLASS = "typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
 
+// 푸터 링크는 보조 네비게이션이므로 prefetch 비활성화 — 초기 로드 시 다수
+// 페이지 청크 prefetch를 막아 미사용 JS를 줄인다. (Next.js는 기본적으로 뷰포트 내
+// 모든 Link를 prefetch함)
 const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <li className="min-h-[44px] flex items-center">
-    <Link href={href} className={LINK_CLASS}>{children}</Link>
+    <Link href={href} prefetch={false} className={LINK_CLASS}>{children}</Link>
   </li>
 );
 

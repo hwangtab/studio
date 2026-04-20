@@ -57,6 +57,15 @@ export interface StoryDetail extends Story {
 }
 
 /**
+ * StoryCard 컴포넌트가 실제로 사용하는 최소 필드 집합.
+ * 목록 페이지는 이 경량 타입만 직렬화해 __NEXT_DATA__ 크기를 줄인다.
+ */
+export type StoryCardData = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'category' | 'summary' | 'thumbnail'> & {
+  id?: string;
+  content?: string;
+};
+
+/**
  * Static path params for Next.js getStaticPaths
  */
 export interface StoryPath {

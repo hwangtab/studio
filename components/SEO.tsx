@@ -175,7 +175,9 @@ const SEO = ({
           articleSchemaType,
           articleSection,
           articleTags,
-          articleWordCount
+          articleWordCount,
+          ogImageWidth,
+          ogImageHeight
         )
         : null,
     [
@@ -193,6 +195,8 @@ const SEO = ({
       articleSection,
       articleTags,
       articleWordCount,
+      ogImageWidth,
+      ogImageHeight,
     ]
   );
 

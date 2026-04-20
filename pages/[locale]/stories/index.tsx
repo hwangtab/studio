@@ -21,9 +21,14 @@ import { getSiteConfig } from '../../../data/siteConfig';
 
 import type { NextPageWithLayout } from '../../../types';
 
+// 목록 페이지에 필요한 최소 필드만 포함하는 경량 Story 타입 — 1707개를 이 shape로
+// 직렬화해 __NEXT_DATA__ 크기와 하이드레이션 처리량을 줄인다.
+// (tags, images, author, id, createdAt, thumbnailDerived, content 제외)
+type StoryListItem = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'category' | 'summary' | 'thumbnail'>;
+
 interface StoriesPageProps {
   locale: Locale;
-  stories: Story[];
+  stories: StoryListItem[];
 }
 
 const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'] as const;
@@ -290,7 +295,19 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  const stories = getAllStories(locale);
+  const fullStories = getAllStories(locale);
+
+  // 목록 페이지에 필요한 필드만 추출 — 불필요한 tags/images/author 등을 떨궈
+  // 클라이언트로 전송되는 JSON 크기와 하이드레이션 비용을 축소.
+  const stories: StoryListItem[] = fullStories.map((s) => ({
+    slug: s.slug,
+    title: s.title,
+    date: s.date,
+    categoryKey: s.categoryKey,
+    category: s.category,
+    summary: s.summary,
+    thumbnail: s.thumbnail,
+  }));
 
   return buildPageStaticProps(
     locale,

@@ -75,6 +75,7 @@ export const HeaderActions = ({
       ) : (
         <Link
           href={`/${locale}/contact`}
+          prefetch={false}
           className={headerCtaButtonClass}
         >
           {t('nav.contact')}

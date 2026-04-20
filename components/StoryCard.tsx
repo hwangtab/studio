@@ -8,10 +8,10 @@ import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
 import type { Locale } from '../lib/i18n';
 
-import type { Story } from '../types/story';
+import type { StoryCardData } from '../types/story';
 
 interface StoryCardProps {
-  story: Story;
+  story: StoryCardData;
   locale?: Locale;
   labels?: {
     defaultCategory: string;
