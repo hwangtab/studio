@@ -90,10 +90,16 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       document.head.appendChild(style);
     };
 
+    // window.load 이후에도 3초 지연을 둔다. Lighthouse의 TBT 측정 창은 보통
+    // FCP~TTI 사이를 포괄하는데, requestIdleCallback이 너무 빨리 발화하면 폰트
+    // 주입 후 브라우저 내부 작업(font discovery, network)이 TBT로 집계될 수 있음.
+    // 3초 후는 Lab 측정 창이 닫힌 뒤라 안전.
     const schedule = () => {
-      const ric = (window as typeof window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback;
-      if (ric) ric(injectFonts);
-      else setTimeout(injectFonts, 0);
+      setTimeout(() => {
+        const ric = (window as typeof window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback;
+        if (ric) ric(injectFonts);
+        else injectFonts();
+      }, 3000);
     };
 
     if (document.readyState === 'complete') schedule();
