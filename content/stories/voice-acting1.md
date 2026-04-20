@@ -78,6 +78,7 @@ faq:
 
 - 클리어한 딕션용: 대형 다이어프램 콘덴서
   (Neumann TLM 102, AKG 414)
+
 - 따뜻한 내레이션: Warm Audio WA-87, Rode NT1A
 - 마이크 거리: 15~20cm
 

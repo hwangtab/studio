@@ -94,6 +94,7 @@ VST 포맷은 1996년 Steinberg가 Cubase 3.02와 함께 처음 공개했습니�
 
 - Waves CLA-2A: 보컬에 자연스러운 옵티컬 컴프
   가격: $29(세일 자주 있음)
+
 - FabFilter Pro-C 2: 정밀한 투명 컴프
   가격: $179
 
@@ -101,6 +102,7 @@ VST 포맷은 1996년 Steinberg가 Cubase 3.02와 함께 처음 공개했습니�
 
 - Melodyne Essential: 정밀 음정 교정
   가격: $99
+
 - Auto-Tune Pro: 실시간+그래픽 편집
   가격: 월 $24.99~
 

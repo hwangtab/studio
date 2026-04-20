@@ -48,27 +48,21 @@ DAW 템플릿의 개념은 1990년대 Digidesign(현 Avid)의 Pro Tools가 세�
 1. 보컬 리드 (Lead Vocal)
   - Gate → EQ → Compressor → De-esser → EQ → Limiter
   - Reverb Send / Delay Send
-
 2. 보컬 더블 (Double)
   - EQ → Compressor (리드보다 살짝 더 압축)
   - 리드 보컬보다 -3~6dB 낮게 레벨 설정
-
 3. 보컬 하모니 (Harmony)
   - EQ → Compressor
   - 파트별 패닝 (L/R 분리)
-
 4. MR 트랙 (Instrumental)
   - EQ (저역 하이패스, 보컬 충돌 대역 컷)
   - 레벨 밸런스 조절
-
 5. Reverb Aux (Send/Return)
   - 리버브 플러그인 (Wet 100%)
   - 보컬·하모니에서 Send 양 조절
-
 6. Delay Aux (Send/Return)
   - 딜레이 플러그인 (Wet 100%)
   - 리드 보컬에서 Send 양 조절
-
 7. 마스터 버스 (Master)
   - EQ → Compressor → Limiter
   - True Peak -1dBTP 이하
@@ -109,6 +103,7 @@ DAW 템플릿의 개념은 1990년대 Digidesign(현 Avid)의 Pro Tools가 세�
 ### Reverb Aux 예시
 
 Valhalla Room (Wet 100%)
+
 - **Decay**: 1.5초 / Pre-delay: 20ms
 
 ### Delay Aux 예시
@@ -123,12 +118,14 @@ Waves H-Delay (Wet 100%)
 ### Ableton Live
 
 File → Save Live Set as Template
+
 - User Library/Templates에 저장
 - File → New Live Set에서 불러오기
 
 ### Logic Pro
 
 File → Save as Template
+
 - Logic Pro X/Templates에 저장
 - File → New from Template에서 불러오기
 

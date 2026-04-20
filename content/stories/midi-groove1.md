@@ -130,6 +130,7 @@ Channel Rack → Swing 노브
 ### Ableton 스윙
 
 Groove Pool → 기본 Swing 그루브 적용
+
 - **Groove Amount**: 50~75%
 
 ---
@@ -140,6 +141,7 @@ Groove Pool → 기본 Swing 그루브 적용
 
 - 코드 음표를 동시에 치지 않기
   : 아르페지에이트 미세 오프셋 (0~15ms)
+
 - **강약 표현**: 멜로디 최고음 벨로시티 높게
 - **반복 패시지**: 매 반복마다 벨로시티 약간 다르게
 

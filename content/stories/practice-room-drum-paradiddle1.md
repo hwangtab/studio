@@ -44,6 +44,7 @@ summary: >-
 **40 Essential Drum Rudiments:**
 ```
 NARD(National Association of Rudimental Drummers)에서 정의
+
 - 싱글 스트로크 계열
 - 더블 스트로크 계열
 - 패러디들 계열

@@ -96,15 +96,12 @@ faq:
 1. 플레이리스트 등록 신청
   - Spotify for Artists, Apple Music for Artists 가입
   - 발매 전 Spotify 에디토리얼 플레이리스트 피칭
-
 2. 꾸준한 음원 발매
   - 단곡보다 EP/싱글 시리즈 전략
   - 발매 주기 유지 (팬 유지)
-
 3. SNS 마케팅
   - 유튜브·인스타·틱톡에서 신곡 프로모션
   - 짧은 클립(Shorts/Reels)으로 청취 유도
-
 4. 저작권 등록
   - KOMCA 등록으로 방송·공연 추가 수익
   - 유튜브 Content ID 설정

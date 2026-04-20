@@ -139,6 +139,7 @@ GarageBand의 역사는 2004년 Apple이 Mac용 iLife 번들 소프트웨어로 
 ### 믹싱 의뢰용 내보내기
 
 Share → Export Song to Disk
+
 - **Format**: AIFF (또는 WAV 호환 확인)
 - **Quality**: Lossless
 - 저장 위치 선택 → Export 클릭
@@ -146,6 +147,7 @@ Share → Export Song to Disk
 ### 공유용 MP3 내보내기
 
 Share → Export Song to Disk
+
 - **Format**: MP3
 - **Quality**: Highest (320kbps)
 
@@ -169,6 +171,7 @@ Share → Export Song to Disk
 ### iOS 파일 내보내기
 
 공유 버튼 → 노래 → 오디오 → Lossless
+
 - 파일 앱 또는 iCloud Drive로 저장
 
 ---

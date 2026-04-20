@@ -62,11 +62,13 @@ faq:
 
 Unsplash (unsplash.com): 고해상도 라이선스 프리
 Pexels (pexels.com): CC0 라이선스 사진
+
 - **Pixabay**: 사진·일러스트·벡터
 
 ### 무료 일러스트·아이콘
 
 Freepik (freepik.com): 무료 플랜 있음 (출처 표기 필요)
+
 - **Flaticon**: 아이콘 중심
 
 ### AI 이미지 생성
@@ -74,6 +76,7 @@ Freepik (freepik.com): 무료 플랜 있음 (출처 표기 필요)
 - **Midjourney**: 유료이지만 독창적 비주얼 생성
 - **Adobe Firefly**: 상업 이용 가능 AI 이미지
 DALL-E 3 (ChatGPT): 텍스트 프롬프트로 이미지 생성
+
 - **Stable Diffusion**: 오픈소스
 
 ### 주의

@@ -99,12 +99,14 @@ faq:
 ## 예산별 홈 레코딩 세팅 예시
 
 ### 입문 세팅 (20~30만원)
+
 - AT2020 마이크 (7만원대)
 - Focusrite Scarlett Solo (12만원대)
 - GarageBand (무료, Mac)
 - 마이크 스탠드 + 팝필터 (5만원)
 
 ### 중급 세팅 (50~100만원)
+
 - Rode NT1 마이크 (20만원대)
 - Focusrite Scarlett 2i2 (17만원대)
 - Logic Pro 또는 Ableton Live Intro

@@ -49,30 +49,36 @@ faq:
 ### 무료 라이브러리
 
 Spitfire Audio LABS
+
 - 무료, 스트링·브라스·목관·타악기 포함
 - 팝·발라드·배경음악에 적합
 
 BBC Symphony Orchestra Discover
+
 - 무료, Spitfire Audio 제공
 - 실제 런던 심포니 오케스트라 샘플
 
 ### 입문~중급
 
 Native Instruments SESSION STRINGS PRO 2
+
 - 팝·재즈 스트링에 특화
 - 직관적인 UI, 자동 보이싱 기능
 
 Cinematic Studio Strings (CSS)
+
 - 레가토 표현이 강점
 - 영화 음악·드라마 OST 제작자 애용
 
 ### 전문가급
 
 Spitfire Audio BBC Symphony Orchestra Complete
+
 - 런던 심포니 오케스트라 전 파트 포함
 - 최고 수준의 자연스러운 표현
 
 EastWest Hollywood Orchestra
+
 - Hollywood 녹음실 사운드
 - 스탠다드~다이아몬드 에디션
 
@@ -87,10 +93,8 @@ DAW마다 용어와 메뉴 위치가 다르지만 기본 원리는 동일합니�
 - **CC1 (Modulation)**: 비브라토·다이나믹 강도
 - 크레셴도/디크레셴도 자동화
 - 미디 키보드 모듈레이션 휠 사용
-
 - **CC11 (Expression)**: 전체 음량 다이나믹
 - CC1과 함께 사용해 자연스러운 강약 표현
-
 - **CC64 (Sustain Pedal)**: 레가토 연결
 - 스트링 레가토 구간에 활용
 
@@ -102,6 +106,7 @@ DAW마다 용어와 메뉴 위치가 다르지만 기본 원리는 동일합니�
 - **최강음(ff)**: 110~127
 
 균일한 베로시티는 로봇처럼 들림
+
 - 실제처럼 들리려면 베로시티 변화 필수
 
 ---
@@ -114,16 +119,12 @@ DAW마다 용어와 메뉴 위치가 다르지만 기본 원리는 동일합니�
 
 - **Legato (레가토)**: 부드럽게 이어지는 선율
 - 멜로디·감성적 구간
-
 - **Staccato (스타카토)**: 짧고 끊어지는 음
 - 활기차고 리드미컬한 구간
-
 - **Marcato (마르카토)**: 강하게 악센트
 - 드라마틱한 강조 구간
-
 - **Tremolo (트레몰로)**: 빠른 활 떨림
 - 긴장감·공포 장면
-
 - **Pizzicato (피치카토)**: 손가락으로 튕김
 - 가볍고 유머러스한 구간
 

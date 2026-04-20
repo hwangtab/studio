@@ -104,15 +104,14 @@ vi - IV - I - V
 
 - **bVII (Flat Seven)**: C장조에서 Bb
 - C - Bb - F - C (록·팝에서 인기)
-
 - **iv minor**: C장조에서 Fm
 - C - F - Fm - C (감성적 색채)
-
 - **bVI (Flat Six)**: C장조에서 Ab
 - C - Ab - Bb - C (장엄한 느낌)
 
 **Secondary Dominant (이중 지배음)**
 V7/V → V → I
+
 - **G장조에서**: D7 - G7 - C
 
 ---
@@ -136,6 +135,7 @@ Am/G - 베이스 라인 하강 (C - G/B - Am/G - F)
 
 C - B - Am - G - F
 C - G/B - Am - Am/G - F
+
 - 발라드에서 감성적 효과
 
 ---

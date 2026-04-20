@@ -130,16 +130,19 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 ## 홀수박자가 사용된 대표 곡
 
 ### 5/4박자
+
 - **"Take Five" - Dave Brubeck Quartet**: 재즈 5/4의 교과서
 - **"Mission: Impossible Theme" - Lalo Schifrin**: 5/4의 대중적 활용
 - **"Living in the Past" - Jethro Tull**: 록 5/4의 대표곡
 
 ### 7/8박자
+
 - **"Money" - Pink Floyd**: 도입부는 7/4 (킥이 7박 패턴)
 - **"Ants Marching" - Dave Matthews Band**: 7/4 기반 록
 - **발칸 민속 음악**: 수많은 7/8 전통 리듬
 
 ### 11/8박자
+
 - **"Schism" - Tool**: 6.5/8 + 4.5/8의 복잡한 구조
 - **"Lateralus" - Tool**: 피보나치 수열 기반 박자
 

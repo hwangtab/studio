@@ -47,6 +47,7 @@ faq:
 ### ii-V-I 기본 진행 (C 장조)
 
 Dm7 (ii) → G7 (V) → Cmaj7 (I)
+
 - 긴장(ii) → 강한 긴장(V) → 해소(I)
 
 ### 모든 조성의 ii-V-I
@@ -142,11 +143,13 @@ Cmaj7 → Am7 → Dm7 → G7 → (Cmaj7)
 **확장 터닝 (Coltrane Turnaround)**
 I → bVII7 → bVI7 → V7 → I
 Cmaj7 → Bb7 → Ab7 → G7 → Cmaj7
+
 - 콜트레인 식 반음 하강 도미넌트
 
 ### 대리 코드 (Tritone Substitution)
 
 G7 → Db7 (3음 위의 증4도 대리)
+
 - 베이스 반음 하강 효과
 - 같은 화성 긴장감, 다른 색채
 
@@ -162,6 +165,7 @@ Dm7 → G7 → Cmaj7
 ### 모달 재즈의 핵심
 
 마일스 데이비스 Kind of Blue에서 시작
+
 - ii-V-I 진행 대신 하나의 스케일(모드) 유지
 - 긴 시간 하나의 코드 위에서 즉흥연주
 
@@ -170,11 +174,9 @@ Dm7 → G7 → Cmaj7
 - **도리안 (D Dorian)**: Dm7 + 9th·11th·13th
 - D E F G A B C D (D단조 + 장6도)
 - 마이너 재즈의 가장 일반적인 모드
-
 - **리디안 (F Lydian)**: Fmaj7#11
 - F G A B C D E F (F장조 + 증4도)
 - 밝고 몽환적인 장조 색채
-
 - **믹소리디안 (G Mixolydian)**: G7
 - G A B C D E F G (G장조 + 단7도)
 - 블루스·팝·재즈 도미넌트의 기본

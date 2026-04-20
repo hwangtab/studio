@@ -90,6 +90,7 @@ True Peak는 디지털-아날로그 변환(DAC) 과정에서 실제로 발생하
 
 - Sample Peak가 0dBFS 이하여도
   DAC 과정에서 실제 ISP 발생 가능
+
 - 특히 High-frequency 콘텐츠에서 빈번
 
 ### True Peak 측정 툴
@@ -123,6 +124,7 @@ True Peak는 디지털-아날로그 변환(DAC) 과정에서 실제로 발생하
 ### 올바른 마스터링 흐름
 
 믹스 납품 (-6dBFS 헤드룸 확보)
+
 - 마스터 버스 처리 (EQ → 컴프 → 소프트 클리퍼)
 - True Peak 리미터 (-1.0dBTP)
 - LUFS 확인 (-14 LUFS 스트리밍 기준)

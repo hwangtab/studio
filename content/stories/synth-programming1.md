@@ -47,6 +47,7 @@ faq:
 ### 가산 합성 신스 신호 흐름
 
 오실레이터(Oscillator)
+
 - 필터(Filter)
 - 앰플리파이어(Amplifier)
 - ADSR 엔벨로프 적용

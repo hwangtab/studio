@@ -164,6 +164,7 @@ File → New Project → 샘플레이트 설정 후 생성
 ### 믹싱 의뢰용 내보내기
 
 File → Bounce → Project or Section
+
 - **Format**: WAV
 - **Bit Depth**: 24
 - **Sample Rate**: 44.1kHz 또는 48kHz

@@ -72,8 +72,8 @@ faq:
 
 - **Step 1**: 마이크 연결
 XLR 케이블 → 인터페이스 마이크 입력 포트 (XLR)
-- **콘덴서 마이크**: 48V 팬텀 파워 버튼 ON
 
+- **콘덴서 마이크**: 48V 팬텀 파워 버튼 ON
 - **Step 2**: PC 연결
 인터페이스 USB → PC/Mac
 
@@ -81,7 +81,6 @@ XLR 케이블 → 인터페이스 마이크 입력 포트 (XLR)
 - **Focusrite**: Focusrite Control 소프트웨어 설치
 - **Windows**: ASIO4ALL 또는 제조사 ASIO 드라이버
 - **Mac**: 별도 드라이버 불필요 (Core Audio 지원)
-
 - **Step 4**: DAW 설정
 - **오디오 장치**: 인터페이스 선택
 - **입력**: 마이크 연결 채널 선택

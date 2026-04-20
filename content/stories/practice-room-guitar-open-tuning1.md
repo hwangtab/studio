@@ -54,6 +54,7 @@ faq:
 - Keith Richards(Rolling Stones) 사용 (5현 제거 방식)
 
 ### 오픈 C 튜닝
+
 - CGCGCE
 - 웅장하고 낮은 드론 사운드
 - Nick Drake, John Fahey 등이 사용
@@ -135,6 +136,7 @@ G 줄만 변화하고 나머지는 개방현이 지속됩니다. 켈틱 포크 �
 오픈 D는 슬라이드 기타에서 앞서 설명한 대로(practice-room-guitar-slide1 참조) 매우 강력하지만, 핑거피킹 블루스에서도 활용도가 높습니다.
 
 ### 오픈 D 코드 포지션
+
 - 개방현: D 메이저
 - 5프렛 바레: G 메이저
 - 7프렛 바레: A 메이저

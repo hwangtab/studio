@@ -55,8 +55,10 @@ Cubase의 역사는 1989년 독일 Steinberg Media Technologies가 Atari ST 컴�
 ### 버퍼·샘플레이트 설정
 
 Studio Setup → Control Panel (Windows)
+
 - Buffer Size: 녹음 시 64~256 samples
            믹싱 시 512~1024 samples
+
 - Sample Rate: 44100Hz 또는 48000Hz
 
 ### 프로젝트 생성
@@ -96,6 +98,7 @@ Space 키로 정지
 ### Channel EQ 열기
 
 트랙 헤더 → E(Edit Channel Settings) 클릭
+
 - EQ 탭 활성화
 
 ### 기본 보컬 EQ
@@ -108,6 +111,7 @@ Space 키로 정지
 ### Spectrum Analyzer
 
 EQ 창 내 Spectrum 버튼 ON → 실시간 확인
+
 - **Q 값**: 높을수록 좁은 대역 (서지컬)
 
 ---
@@ -159,6 +163,7 @@ Channel Insert 슬롯 → Dynamics → Compressor
 ### Audio Mixdown 내보내기
 
 File → Export → Audio Mixdown (Ctrl+Shift+E)
+
 - **File Format**: WAV
 - **Bit Depth**: 24 Bit
 - **Sample Rate**: 44100Hz 또는 48000Hz

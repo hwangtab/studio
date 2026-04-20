@@ -121,6 +121,7 @@ faq:
 ### iOS GarageBand 내보내기
 
 공유 버튼 → 노래 → 오디오 → Lossless
+
 - 파일 앱 또는 iCloud Drive 저장
 
 ### Android 내보내기

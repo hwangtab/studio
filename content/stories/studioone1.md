@@ -56,6 +56,7 @@ PreSonus Studio One은 2009년 버전 1이 출시된 상대적으로 신생 DAW�
 ### 버퍼 설정
 
 Options → Audio Setup → Processing → Block Size
+
 - 녹음 시: 64~128 samples
 - 믹싱 시: 256~512 samples
 
@@ -161,6 +162,7 @@ Inserts → Dynamics → Pro Compressor
 ### 믹싱 의뢰용 내보내기
 
 Song → Export Mixdown (Ctrl+E)
+
 - **Format**: WAV
 - **Sample Rate**: 44100Hz 또는 48000Hz
 - **Bit Depth**: 24 Bit

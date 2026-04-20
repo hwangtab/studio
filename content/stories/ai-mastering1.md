@@ -104,16 +104,13 @@ AI 마스터링 서비스의 상용화는 2014년 캐나다 몬트리올에서 �
 2. Master Assistant 실행
 - Streaming / CD / High Definition 선택
 - Ozone가 트랙 분석 후 체인 제안
-
 3. 제안 검토
 - EQ 제안 확인
 - Dynamics 설정 확인
 - Limiter Ceiling 확인
-
 4. 수동 조정
 - AI 제안을 기반으로 세부 조정
 - 귀로 들으며 과도한 처리 수정
-
 5. 레퍼런스 비교
 - 상업 음원과 LUFS 비교
 - True Peak 확인

@@ -56,6 +56,7 @@ FL Studio의 역사는 1997년 벨기에의 Image-Line이 FruityLoops라는 이�
 **- Buffer length**
   녹음 시: 64~128 samples
   믹싱 시: 256~512 samples
+
 - Sample rate: 44100Hz 또는 48000Hz
 
 ### 다이렉트 모니터링
@@ -154,6 +155,7 @@ Mixer → 보컬 트랙 INSERT → Fruity Compressor
 ### 프로젝트 전체 내보내기
 
 File → Export → Audio File
+
 - **Format**: WAV
 - **Bit depth**: 24
 - **Sample rate**: 44100Hz 또는 48000Hz
@@ -162,12 +164,14 @@ File → Export → Audio File
 ### 믹서 트랙 개별 내보내기
 
 Mixer → 보컬 트랙 Solo
+
 - File → Export → Audio File
 - **Mode**: Split mixer tracks (선택)
 
 ### 드라이 보컬 전달용
 
 보컬 트랙만 Solo + 플러그인 Bypass 후 내보내기
+
 - **파일명**: [아티스트명]_[곡명]_vocal.wav
 
 ---

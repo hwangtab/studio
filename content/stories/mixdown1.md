@@ -85,24 +85,28 @@ faq:
 ### Logic Pro
 
 File → Bounce → Project or Section
+
 - **PCM 선택**: WAV, 24bit, 44.1kHz 또는 48kHz
 - **Normalize**: Off (마스터링 전)
 
 ### Ableton Live
 
 File → Export Audio/Video
+
 - **File Type**: WAV, Bit Depth: 24, Sample Rate: 44100/48000
 - **Normalize**: Off
 
 ### Pro Tools
 
 File → Bounce to → Disk
+
 - **File Type**: WAV, Bit Depth: 24, Sample Rate: 44.1/48kHz
 - **Import After Bounce**: 선택
 
 ### GarageBand (Mac)
 
 Share → Export Song to Disk
+
 - **Quality**: Lossless (AIFF 24bit)
 
 ---

@@ -108,6 +108,7 @@ Melodyne의 역사는 2001년 독일 Celemony가 처음 출시한 독립형 피�
 ### Correct Pitch 도구
 
 Edit → Correct Pitch
+
 - **Pitch Center**: 70~90% (권장)
 - **Pitch Drift**: 50~80%
 - 선택 노트에만 Apply

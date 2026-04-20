@@ -161,6 +161,7 @@ Audio Effects → Dynamics → Compressor
 ### 믹싱 의뢰용 내보내기
 
 File → Export Audio/Video (Cmd+Shift+R)
+
 - **Rendered Track**: Master 또는 개별 트랙
 - **File Type**: WAV
 - **Bit Depth**: 24

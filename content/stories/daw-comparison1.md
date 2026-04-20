@@ -94,7 +94,6 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 - 가격 비쌈 (구독제)
 - 학습 곡선 높음
 - MIDI·비트메이킹 약함
-
 - **추천 대상**: 전문 레코딩 엔지니어, 스튜디오 취업 목표
 
 ### Logic Pro
@@ -108,7 +107,6 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 **단점**
 - Mac 전용
 - 클라우드 협업 제한적
-
 - **추천 대상**: Mac 사용자, 보컬 녹음·팝·발라드
 
 ### Ableton Live
@@ -121,7 +119,6 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 **단점**
 - 전통 편집 워크플로우 익숙하지 않음
 - 가격 비교적 높음
-
 - **추천 대상**: DJ, 일렉트로닉, 라이브 퍼포머
 
 ### FL Studio
@@ -134,7 +131,6 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 **단점**
 - 오디오 클립 편집 복잡
 - 보컬 워크플로우 직관적이지 않음
-
 - **추천 대상**: 힙합·트랩·EDM 비트메이커
 
 ---
@@ -148,7 +144,6 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 2. 24bit / 44.1kHz 또는 48kHz
 3. 플러그인 바이패스 후 Export
 4. MR 파일도 동일 포맷으로 준비
-
 - 위 파일만 있으면 DAW에 관계없이
   전문 스튜디오에서 믹싱 의뢰 가능
 

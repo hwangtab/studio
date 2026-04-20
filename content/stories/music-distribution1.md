@@ -69,6 +69,7 @@ faq:
 
 - WAV 16bit 44.1kHz (마스터링 완료)
    또는 WAV 24bit 44.1kHz
+
 - MP3 320kbps (일부 배급사 요구)
 - -14 LUFS 이하, True Peak -1dBFS 이하
 

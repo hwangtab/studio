@@ -55,6 +55,7 @@ Reaper는 2004년 윈앰프(Winamp) 개발자 Justin Frankel이 설립한 Cockos
 ### 버퍼·샘플레이트 설정
 
 Preferences → Audio → Device → Buffer size
+
 - 녹음 시: 64~256 samples
 - 믹싱 시: 512~1024 samples
 - Sample Rate: 44100Hz 또는 48000Hz
@@ -62,6 +63,7 @@ Preferences → Audio → Device → Buffer size
 ### 프로젝트 생성
 
 File → New Project → Project Settings (Alt+Enter)
+
 - Sample Rate 설정
 
 ---
@@ -141,6 +143,7 @@ Add FX → Reaper Plugins → ReaComp
 ### 렌더링 내보내기
 
 File → Render (Ctrl+Alt+R)
+
 - **Source**: Master mix (전체) 또는 Selected tracks (보컬만)
 - **Output format**: WAV
 - **Sample rate**: 44100Hz 또는 48000Hz

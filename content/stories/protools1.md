@@ -52,6 +52,7 @@ Pro Tools는 Grammy 수상 스튜디오에서 할리우드 포스트 프로덕�
 ### 세션 생성
 
 File → New Session
+
 - **Sample Rate**: 48kHz (또는 44.1kHz)
 - **Bit Depth**: 24-bit
 - **Audio File Type**: BWF (.WAV)
@@ -161,6 +162,7 @@ Inserts → Dynamics → Compressor/Limiter Dyn 3
 ### 믹싱 의뢰용 바운스
 
 File → Bounce to → Disk
+
 - **File Type**: WAV
 - **Format**: Interleaved
 - **Bit Depth**: 24-bit
