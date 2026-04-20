@@ -78,6 +78,7 @@ Waves WLM (유료)
 
 - **Integrated LUFS**: -14 LUFS ± 1
 - **True Peak**: -1dBTP 이하 (스포티파이 기준)
+
 Short-term LUFS: 타겟보다 2~4 LUFS 높을 수 있음
 
 ---

@@ -75,6 +75,7 @@ Freepik (freepik.com): 무료 플랜 있음 (출처 표기 필요)
 
 - **Midjourney**: 유료이지만 독창적 비주얼 생성
 - **Adobe Firefly**: 상업 이용 가능 AI 이미지
+
 DALL-E 3 (ChatGPT): 텍스트 프롬프트로 이미지 생성
 
 - **Stable Diffusion**: 오픈소스

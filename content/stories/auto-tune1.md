@@ -62,6 +62,7 @@ Auto-Tune을 발명한 Andy Hildebrand는 원래 지진 데이터를 분석하�
 
 - **Retune Speed**: 25~40ms
 - **Humanize**: 30~50% (긴 음표의 자연스러운 흔들림 유지)
+
 Flex-Tune: 30~50% (음정 변화 유연성 조절)
 
 ### 이펙트 세팅

@@ -64,6 +64,7 @@ faq:
 - **Attack**: 10~15ms (자음 트랜지언트 보존)
 - **Release**: 80~150ms (자연스러운 해제)
 - **Knee**: Soft
+
 Make-up Gain: GR 발생량 보상
 
 ### 확인 방법
