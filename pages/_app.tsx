@@ -63,6 +63,40 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, []);
 
+  // Pretendard 폰트 지연 로드 — window.load 이후 @font-face를 주입하여
+  // 크리티컬 패스에서 폰트 다운로드가 JS/CSS 대역폭을 잠식하지 않도록 함.
+  // 주입 후 브라우저는 자동으로 Pretendard를 발견하고 font-display: swap으로 적용.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (document.getElementById('pretendard-deferred')) return;
+
+    const injectFonts = () => {
+      if (document.getElementById('pretendard-deferred')) return;
+      const style = document.createElement('style');
+      style.id = 'pretendard-deferred';
+      const weights: Array<[string, string]> = [
+        ['Regular', '400'],
+        ['SemiBold', '600'],
+        ['Bold', '700'],
+      ];
+      style.textContent = weights
+        .map(
+          ([name, weight]) => `@font-face{font-family:'Pretendard';font-weight:${weight};font-display:swap;src:local('Pretendard ${name}'),local('Pretendard-${name}'),url('/fonts/Pretendard-${name}.woff2') format('woff2'),url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-${name}.subset.woff2') format('woff2');}`
+        )
+        .join('');
+      document.head.appendChild(style);
+    };
+
+    const schedule = () => {
+      const ric = (window as typeof window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback;
+      if (ric) ric(injectFonts);
+      else setTimeout(injectFonts, 0);
+    };
+
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
+  }, []);
+
   useEffect(() => {
     let isCancelled = false;
 

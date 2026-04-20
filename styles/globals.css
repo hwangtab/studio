@@ -4,36 +4,10 @@
 
 /* Montserrat is now loaded via next/font in _app.js */
 
-/* Pretendard 폰트 (본문/타이틀/로고 전반) - 한글 subset 버전 사용으로 파일당 ~260KB.
-   v1.3.9 고정. Fallback CDN URL도 동일 subset 파일을 지정해 용량 일관성 유지.
-   font-display: optional — 100ms 블록 후 미도착 시 fallback 유지, 폰트 다운로드가
-   FCP/LCP를 블로킹하지 않음. 재방문 시 캐시된 Pretendard 적용. */
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 400;
-  font-display: optional;
-  src: local('Pretendard Regular'), local('Pretendard-Regular'),
-    url('/fonts/Pretendard-Regular.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-Regular.subset.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 600;
-  font-display: optional;
-  src: local('Pretendard SemiBold'), local('Pretendard-SemiBold'),
-    url('/fonts/Pretendard-SemiBold.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-SemiBold.subset.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 700;
-  font-display: optional;
-  src: local('Pretendard Bold'), local('Pretendard-Bold'),
-    url('/fonts/Pretendard-Bold.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-Bold.subset.woff2') format('woff2');
-}
+/* Pretendard @font-face는 _app.tsx의 useEffect에서 window.load 이후 지연 주입한다.
+   초기 CSS에 선언하면 브라우저가 VeryHigh 우선순위로 즉시 다운로드하여 JS/CSS
+   대역폭을 잠식, FCP/LCP를 블로킹함. 지연 주입 시 첫 페인트는 시스템 폰트로,
+   이후 Pretendard로 자연스럽게 swap됨. */
 
 /* 기본 스타일 */
 @layer base {
