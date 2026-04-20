@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,11 +10,13 @@ import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
-import ContactCTA from '../../../components/common/ContactCTA';
 import { getAllStories } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import Pagination from '../../../components/ui/Pagination';
+
+// Below-fold CTA는 코드 스플리팅. 페이지 하단 노출 전까진 JS 로드 지연.
+const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { generateItemListSchema } from '../../../utils/schemaGenerator';
