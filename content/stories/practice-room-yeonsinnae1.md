@@ -126,9 +126,4 @@ faq:
 
 ---
 
-## 방문 전 세션 준비 가이드
-
-수도권 이동 거리에 맞춰 준비를 체계화하면 세션 시간을 최대로 활용할 수 있습니다.
-
-%%session-checklist%%
 [불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/practice-room-hongdae1)
