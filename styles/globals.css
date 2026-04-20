@@ -4,25 +4,6 @@
 
 /* Montserrat is now loaded via next/font in _app.js */
 
-/* GmarketSans 폰트 (일반 텍스트용) */
-@font-face {
-  font-family: 'GmarketSans';
-  font-weight: 400;
-  font-display: swap;
-  src: local('Gmarket Sans Medium'), local('GmarketSansMedium'),
-    url('/fonts/GmarketSansMedium.woff2') format('woff2'),
-    url('/fonts/GmarketSansMedium.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'GmarketSans';
-  font-weight: 700;
-  font-display: swap;
-  src: local('Gmarket Sans Bold'), local('GmarketSansBold'),
-    url('/fonts/GmarketSansBold.woff2') format('woff2'),
-    url('/fonts/GmarketSansBold.woff') format('woff');
-}
-
 /* PartialSansKR 폰트 (원본) */
 @font-face {
   font-family: 'PartialSansKR-Regular';
