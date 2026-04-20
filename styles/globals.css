@@ -49,14 +49,15 @@
   line-gap-override: 0%;
 }
 
-/* Pretendard 폰트 (보조 폰트) - 주요 weight만 로드 */
+/* Pretendard 폰트 (보조 폰트) - 한글 subset 버전 사용으로 파일당 ~260KB.
+   v1.3.9 고정. Fallback CDN URL도 동일 subset 파일을 지정해 용량 일관성 유지. */
 @font-face {
   font-family: 'Pretendard';
   font-weight: 400;
   font-display: swap;
   src: local('Pretendard Regular'), local('Pretendard-Regular'),
     url('/fonts/Pretendard-Regular.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2');
+    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-Regular.subset.woff2') format('woff2');
 }
 
 @font-face {
@@ -65,7 +66,7 @@
   font-display: swap;
   src: local('Pretendard SemiBold'), local('Pretendard-SemiBold'),
     url('/fonts/Pretendard-SemiBold.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-SemiBold.woff2') format('woff2');
+    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-SemiBold.subset.woff2') format('woff2');
 }
 
 @font-face {
@@ -74,7 +75,7 @@
   font-display: swap;
   src: local('Pretendard Bold'), local('Pretendard-Bold'),
     url('/fonts/Pretendard-Bold.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2');
+    url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-Bold.subset.woff2') format('woff2');
 }
 
 /* 기본 스타일 */
