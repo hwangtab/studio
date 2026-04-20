@@ -72,10 +72,8 @@ KTX 아산역 → 서울역 40분, 지하철 환승 연신내 80~90분.
 
 아산에서 KTX를 이용하면 서울 연신내 스튜디오 놀까지 약 1시간 30분대로 당일 왕복이 매우 편리합니다. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
----
- | [철원에서 서울 녹음실 방문 가이드 — 버스로 의정부 경유 당일 왕복](/stories/cheorwon1)
+[철원에서 서울 녹음실 방문 가이드 — 버스로 의정부 경유 당일 왕복](/stories/cheorwon1)
 [당진에서 서울 녹음실 방문 가이드](/stories/dangjin1) | [천안에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [서산에서 서울 녹음실 방문 가이드](/stories/seosan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
 
----
- | [증평에서 서울 녹음실 방문 가이드 — KTX 오송역 경유로 당일 왕복](/stories/jeungpyeong1)
+[증평에서 서울 녹음실 방문 가이드 — KTX 오송역 경유로 당일 왕복](/stories/jeungpyeong1)
 [금산 녹음실 — 충남 금산에서 연신내 스튜디오 놀까지](/stories/geumsan1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

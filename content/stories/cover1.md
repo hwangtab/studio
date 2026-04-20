@@ -121,6 +121,5 @@ faq:
 
 문의는 카카오톡 오픈채팅으로 편하게 연락 주세요.
 
----
- | [뮤지컬 보컬 녹음 가이드 — 오디션 데모·캐스팅 포트폴리오 완성하기](/stories/musical1)
+[뮤지컬 보컬 녹음 가이드 — 오디션 데모·캐스팅 포트폴리오 완성하기](/stories/musical1)
 [커버곡 저작권 처리 방법](/stories/coverright1) | [녹음 세션 준비 체크리스트](/stories/session1) | [홈 레코딩 vs 전문 스튜디오 비교](/stories/homestudio1) | [뮤직비디오·유튜브 영상 음원 녹음 가이드](/stories/mv1)

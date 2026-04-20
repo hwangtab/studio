@@ -127,6 +127,5 @@ faq:
 
 처음 방문하시면 직접 방음 테스트와 시설 확인이 가능합니다. 카카오톡 오픈채팅으로 편하게 문의 주세요.
 
----
- | [합주실 vs — 차이점과 목적별 선택 가이드](/stories/practice-room-vs-rehearsal1)
+[합주실 vs — 차이점과 목적별 선택 가이드](/stories/practice-room-vs-rehearsal1)
 [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [취미 음악인을 위한 연습실 완벽 가이드 — 직장인·성인 연습생 필독](/stories/practice-room-hobby1)
