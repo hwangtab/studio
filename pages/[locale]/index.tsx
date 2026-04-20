@@ -1,5 +1,6 @@
 import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { ArrowRight, Mic2, Music, Disc, Mic, Globe } from 'lucide-react';
@@ -7,14 +8,18 @@ import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
-import FAQSection from '../../components/ui/FAQSection';
-import QuickAnswers from '../../components/ui/QuickAnswers';
 import SectionHeading from '../../components/ui/SectionHeading';
 import ImageHero from '../../components/common/ImageHero';
 import MediaGallery from '../../components/ui/MediaGallery';
-import ReviewSection from '../../components/ui/ReviewSection';
-import ContactCTA from '../../components/common/ContactCTA';
 import { Section } from '../../components/ui/Section';
+
+// Below-fold 컴포넌트는 코드 스플리팅으로 초기 번들에서 분리.
+// ssr:true(기본)라 서버 렌더링 HTML은 그대로 나오고, 클라이언트 JS 청크만 지연 로드됨.
+// → 초기 JS 다운로드/파싱/하이드레이션 비용 감소 (TBT 개선 기대).
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
+const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getHomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
 import { getReviews } from '../../data/reviews';
