@@ -105,4 +105,5 @@ faq:
 ## 마치며
 
 전라남도에서 KTX 2시간 30분~3시간 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
+
 [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [목포에서 서울 녹음실 방문 가이드](/stories/mokpo1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

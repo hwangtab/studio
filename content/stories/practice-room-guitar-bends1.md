@@ -152,4 +152,5 @@ summary: >-
 *관련 아티클:*
 
 [보컬 비브라토·트릴 훈련법 — 완전 가이드](/stories/practice-room-vocal-vibrato1)
+
 [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

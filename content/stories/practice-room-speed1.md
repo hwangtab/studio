@@ -140,4 +140,5 @@ faq:
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
 [리듬·박자 훈련 — 정확한 박자감으로 실력 도약](/stories/practice-room-rhythm1)
+
 [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [초견·악보 읽기 실전 연습 — 악보 읽기 속도 향상 가이드](/stories/practice-room-sight-reading1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

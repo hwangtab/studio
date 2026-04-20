@@ -104,4 +104,5 @@ faq:
 ## 마치며
 
 낙성대·봉천·관악·신림에서 지하철 30~42분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
+
 [관악구·동작구 녹음실 안내](/stories/gwanak1) | [신림·서울대입구 녹음실 안내](/stories/sillim1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seocho1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

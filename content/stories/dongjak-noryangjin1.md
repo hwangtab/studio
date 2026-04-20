@@ -83,4 +83,5 @@ faq:
 ## 마치며
 
 동작구 노량진·대방에서 9호선 한 번으로 연신내 스튜디오 놀에 방문할 수 있습니다. 방문이 어려운 경우 온라인 믹싱 의뢰도 가능합니다. 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
+
 [동작구 전체 녹음실 안내](/stories/dongjak1) | [동작구 사당 녹음실 안내](/stories/dongjak-sadang1) | [동작구 흑석 녹음실 안내](/stories/dongjak-heukseok1) | [관악구 녹음실 안내](/stories/gwanak1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

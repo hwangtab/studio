@@ -241,6 +241,7 @@ Treble: 0dB
 은평구 24시간 음악연습실에서 블루스 음반을 들으며 베이스를 따라 연주해보세요. BB King의 기타 아래에서 Willie Dixon의 베이스를 타고 가는 느낌—그것이 블루스 베이스의 진정한 맛입니다.
 
 [베이스 그루브 락·킥드럼 동조 — 완전 가이드](/stories/practice-room-bass-groove-locks1)
+
 [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)
 
 [베이스 메탈·헤비록 베이스라인 — 완전 가이드](/stories/practice-room-bass-metal-rock1)

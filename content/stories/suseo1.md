@@ -108,4 +108,5 @@ faq:
 ## 마치며
 
 수서·개포·일원·세곡에서 지하철 40~55분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
+
 [강남 녹음실 방문 가이드](/stories/gangnam1) | [대치·개포·도곡 녹음실 안내](/stories/daechi1) | [서초구 녹음실 안내](/stories/seocho1) | [송파구 녹음실 안내](/stories/songpa1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

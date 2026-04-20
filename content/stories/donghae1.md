@@ -92,4 +92,5 @@ faq:
 ## 마치며
 
 동해에서 KTX로 2시간 30분 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
+
 [강릉 녹음실 안내](/stories/gangneung1) | [속초 녹음실 안내](/stories/sokcho1) | [삼척 녹음실 안내](/stories/samcheok1) | [전국 방문 가이드](/stories/nationwide1)

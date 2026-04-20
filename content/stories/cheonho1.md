@@ -101,4 +101,5 @@ faq:
 ## 마치며
 
 천호·암사·길동·명일에서 지하철 40~55분 세션 일정은 카카오톡으로 미리 조율해주세요. 도착 전 워밍업 시간을 여유 있게 잡는 걸 권장합니다.
+
 [강동구 녹음실 안내](/stories/gangdong1) | [송파구 녹음실 안내](/stories/songpa1) | [강남구 녹음실 안내](/stories/gangnam1) | [광진구 녹음실 안내](/stories/gwangjin1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
