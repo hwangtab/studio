@@ -97,4 +97,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 진안에서 전주역 KTX를 이용하면 약 3시간 30분 내로 서울 연신내. 이동이 부담스럽다면 온라인 파일 의뢰를 추천합니다. 현지에서 드라이 보컬 WAV만 녹음해 보내주시면 믹싱·마스터링 후 납품합니다.
 
-[장수에서 서울 녹음실 방문 가이드](/stories/jangsu1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[장수에서 서울 녹음실 방문 가이드](/stories/jangsu1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

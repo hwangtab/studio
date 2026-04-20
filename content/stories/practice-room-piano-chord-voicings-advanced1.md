@@ -54,9 +54,9 @@ summary: >-
 **Cmaj7 텐션:**
 ```
 
-Cmaj9:   C-E-G-B-D (9th 추가)
-Cmaj11:  C-E-G-B-D-F (11th 추가)
-Cmaj13:  C-E-G-B-D-F-A (13th 추가)
+Cmaj9: C-E-G-B-D (9th 추가)
+Cmaj11: C-E-G-B-D-F (11th 추가)
+Cmaj13: C-E-G-B-D-F-A (13th 추가)
 
 ```
 
@@ -198,7 +198,7 @@ Cmaj7#11 크러스터:
 ```
 
 Dm7: F-A-C-E (A형 전위)
-G7:  B-F-A-D (B형)
+G7: B-F-A-D (B형)
 Cmaj7: E-B-D-G (A형)
 
 ```

@@ -87,4 +87,4 @@ faq:
 
 담양에서 KTX를 이용하면 약 2시간 40분대로 서울 연신내. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
-[장성에서 서울 녹음실 방문 가이드](/stories/jangseong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[장성에서 서울 녹음실 방문 가이드](/stories/jangseong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [화순에서 서울 녹음실 방문 가이드](/stories/hwasun1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

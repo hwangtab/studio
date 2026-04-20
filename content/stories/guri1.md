@@ -75,4 +75,4 @@ faq:
 
 구리에서 연신내까지는 경의중앙선을 이용하는 것이 가장 효율적입니다. 구리역에서 탑승하여 디지털미디어시티역에서 6호선으로 환승하면 약 45~55분이면 도착합니다. 남양주·구리권 아티스트들이 주말 오전 세션으로 당일 왕복하기에 적합한 이동 거리입니다.
 
-[남양주·구리 녹음실 안내](/stories/namyangju1) | [하남·성남 방문 가이드](/stories/hanam1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[남양주·구리 녹음실 안내](/stories/namyangju1) | [하남·성남 방문 가이드](/stories/hanam1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

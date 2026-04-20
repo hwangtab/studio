@@ -82,4 +82,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 고창에서 정읍역 KTX를 이용하면 약 3시간 내로 서울 연신내까지 이동할 수 있습니다. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
-[정읍에서 서울 녹음실 방문 가이드](/stories/jeongeup1) | [부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[정읍에서 서울 녹음실 방문 가이드](/stories/jeongeup1) | [부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

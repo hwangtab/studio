@@ -72,4 +72,4 @@ faq:
 
 영등포구 문래·당산에서 2호선을 타고 합정역에서 6호선으로 환승하면 연신내 스튜디오 놀까지 25~35분이면 도착합니다. 서울 서남부권 중에서도 접근성이 좋아 퇴근 후 평일 저녁 세션이나 주말 낮 시간대 이용이 활발합니다. 문래동 창작촌과 가까운 뮤지션·밴드의 데모 녹음, 음원 발매용 마스터, SNS 커버 제작까지 다양한 목적에 맞는 블록을 운영합니다. 방문이 어려운 경우 온라인 믹싱 의뢰도 가능하며, 예약 문의는 카카오톡으로 주시면 곡 수·소요 시간에 맞춰 일정과 견적을 안내드립니다.
 
-[영등포구 전체 녹음실 안내](/stories/yeongdeungpo1) | [영등포구 신길 녹음실 안내](/stories/singil1) | [구로구 녹음실 안내](/stories/guro-gasan1) | [양천구 녹음실 안내](/stories/yangcheon1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[영등포구 전체 녹음실 안내](/stories/yeongdeungpo1) | [영등포구 신길 녹음실 안내](/stories/singil1) | [구로구 녹음실 안내](/stories/guro-gasan1) | [양천구 녹음실 안내](/stories/yangcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

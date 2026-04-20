@@ -115,7 +115,7 @@ C 장조: I=C, II=Dm, III=Em, IV=F, V=G, VI=Am, VII=Bdim
 ```
 
 Dm7 - G7 - Cmaj7
-II  - V  - I
+II - V - I
 
 ```
 

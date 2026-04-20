@@ -74,4 +74,4 @@ faq:
 
 평택시 송탄·서정리에서 1호선 급행을 이용하면 약 90분 내로 연신내에 도착합니다. 방문이 어려운 경우 온라인 믹싱 의뢰도 가능합니다. 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
-[평택시 전체 녹음실 안내](/stories/pyeongtaek1) | [평택 지산·서정·안중·고덕 녹음실 안내](/stories/pyeongtaek-jisan1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [오산에서 서울 녹음실 방문 가이드](/stories/osan1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[평택시 전체 녹음실 안내](/stories/pyeongtaek1) | [평택 지산·서정·안중·고덕 녹음실 안내](/stories/pyeongtaek-jisan1) | [안성에서 서울 녹음실 방문 가이드](/stories/anseong1) | [오산에서 서울 녹음실 방문 가이드](/stories/osan1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

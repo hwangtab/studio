@@ -146,8 +146,8 @@ C - Eb - F - Gb - G - Bb - C
 
 ```
 
-박자: 1  +  2  +  3  +  4  +
-킥:   bum . kat . bum . kat .
+박자: 1 +  2 +  3 +  4 +
+킥: bum . kat . bum . kat .
 하이햇: . tss . tss . tss . tss
 합성: bum(tss) . kat(tss) bum(tss) . kat(tss)
 

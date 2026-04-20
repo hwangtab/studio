@@ -72,4 +72,4 @@ KTX 목포역 → 서울역 2시간 10분, 지하철 연신내 총 110분.
 
 목포에서 KTX 호남고속선을 이용하면 약 3시간이면 서울 연신내에 도착합니다. 편도 3시간 일정이므로 오전 첫 KTX로 출발해 점심 전 도착, 오후 세션 후 저녁 귀가가 가장 여유로운 블록입니다. 이동이 부담스럽다면 온라인 파일 의뢰를 추천합니다. 목포 현지 녹음실에서 드라이 보컬 WAV만 녹음해 카카오톡으로 보내주시면 믹싱·마스터링 후 완성 파일로 납품합니다.
 
-[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

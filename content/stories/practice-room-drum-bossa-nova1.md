@@ -74,9 +74,9 @@ João Gilberto + Antônio Carlos Jobim
 
 **3+3+2 클라베 패턴:**
 ```
-1  2  3  4  5  6  7  8
-×     ×     ×  ×     ×
-(3)  (3)  (2)
+1 2  3 4  5 6  7 8
+× ×     × ×     ×
+(3) (3) (2)
 = 첫번째 박, 3번째, 5번째, 6번째, 8번째
 
 ```
@@ -104,10 +104,10 @@ João Gilberto + Antônio Carlos Jobim
 
 **16분음표로 표시:**
 ```
-1  e  +  a  2  e  +  a  3  e  +  a  4  e  +  a
+1 e  + a  2 e  + a  3 e  + a  4 e  + a
 HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH HH
-RS          RS          RS RS          RS
-BD                BD
+RS RS RS RS RS
+BD BD
 
 ```
 

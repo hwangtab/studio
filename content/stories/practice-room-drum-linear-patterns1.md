@@ -44,7 +44,7 @@ summary: >-
 
 하이햇: X X X X X X X X
 스네어: . . X . . . X .
-킥:     X . . . X . . .
+킥: X . . . X . . .
 → 하이햇과 킥이 동시에 울림
 → 하이햇과 스네어가 동시에 울림
 
@@ -75,8 +75,8 @@ summary: >-
 
 **4박자 리니어 (K=킥, S=스네어, H=하이햇):**
 ```
-1  e  +  a  2  e  +  a  3  e  +  a  4  e  +  a
-K  H  .  H  S  H  .  H  K  H  .  H  S  H  .  H
+1 e  + a  2 e  + a  3 e  + a  4 e  + a
+K H  . H  S H  . H  K H  . H  S H  . H
 
 ```
 
@@ -85,8 +85,8 @@ K  H  .  H  S  H  .  H  K  H  .  H  S  H  .  H
 ### 16비트 리니어 기초
 
 ```
-1  e  +  a  2  e  +  a  3  e  +  a  4  e  +  a
-K  H  S  H  K  S  H  K  S  H  K  H  S  H  K  S
+1 e  + a  2 e  + a  3 e  + a  4 e  + a
+K H  S H  K S  H K  S H  K H  S H  K S
 
 ```
 
@@ -101,7 +101,7 @@ K  H  S  H  K  S  H  K  S  H  K  H  S  H  K  S
 **The New Breed 패턴 A:**
 ```
 
-킥:   X . . X . . X . X . . X . . X .
+킥: X . . X . . X . X . . X . . X .
 스네어: . X . . X . . . . X . . X . . .
 하이햇: . . X . . X . X . . X . . X . X
 
@@ -153,9 +153,9 @@ K  H  S  H  K  S  H  K  S  H  K  H  S  H  K  S
 다이나믹 변화가 많은 퓨전 스타일:
 
 ```
-1  +  2  +  3  +  4  +
-K  H  S  .  K  H  S  H
-pp ff pp    ff pp pp mp
+1 +  2 +  3 +  4 +
+K H  S .  K H  S H
+pp ff pp ff pp pp mp
 (다이나믹 변화)
 
 ```

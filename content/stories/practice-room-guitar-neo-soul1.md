@@ -97,7 +97,7 @@ Cmaj7 셸: E+B (3음과 7음만)
 ```
 
 Cmaj7: E-G-B-C
-Am7:   E-G-A-C
+Am7: E-G-A-C
 (E, G, C는 그대로, B만 A로 이동)
 
 ```

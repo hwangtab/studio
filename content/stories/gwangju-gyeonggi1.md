@@ -88,4 +88,4 @@ faq:
 
 경기 광주에서 경강선을 이용하면 약 1시간 30분 내로 서울 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[경기 광주 오포읍·곤지암·퇴촌 녹음실 안내](/stories/gwangju-opoong1) | [이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [하남에서 서울 녹음실 방문 가이드](/stories/hanam1) | [성남에서 서울 녹음실 방문 가이드](/stories/seongnam1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[경기 광주 오포읍·곤지암·퇴촌 녹음실 안내](/stories/gwangju-opoong1) | [이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [하남에서 서울 녹음실 방문 가이드](/stories/hanam1) | [성남에서 서울 녹음실 방문 가이드](/stories/seongnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

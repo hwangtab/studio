@@ -68,8 +68,8 @@ summary: >-
 ```
 
 카운트: 3e+a 4e+a
-HT:      X X . . X X . .
-MT:      . . X X . . X X
+HT: X X . . X X . .
+MT: . . X X . . X X
 
 ```
 (HT=하이탐, MT=미드탐)
@@ -90,10 +90,10 @@ MT:      . . X X . . X X
 ```
 
 카운트: 3e+a 4e+a
-FT:      X X . . . . . .
-MT:      . . X X . . . .
-HT:      . . . . X X . .
-SD:      . . . . . . X X
+FT: X X . . . . . .
+MT: . . X X . . . .
+HT: . . . . X X . .
+SD: . . . . . . X X
 
 ```
 
@@ -108,8 +108,8 @@ SD:      . . . . . . X X
 ```
 
 카운트: 3 트리 플렛 4 트리 플렛
-손:    R  L   R  L  R   L
-탐:    HT MT FT HT MT  FT
+손: R  L R  L R   L
+탐: HT MT FT HT MT FT
 
 ```
 

@@ -68,9 +68,9 @@ summary: >-
 **4/4 기본 비트:**
 ```
 
-박자: 1   2   3   4
-킥:  Buh     Buh
-스네어:   Ka      Ka
+박자: 1 2   3 4
+킥: Buh Buh
+스네어: Ka Ka
 하이햇: Ts Ts Ts Ts (8분음표)
 
 ```

@@ -82,4 +82,4 @@ KTX 전주역 → 서울역 1시간 10분, 지하철 연신내 총 90분.
 
 전주에서 KTX로 2~3시간이면 서울 전문 스튜디오 세션이 가능합니다. 전라북도 지역 아티스트도 연신내 스튜디오 놀의. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[전라북도 녹음실 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[전라북도 녹음실 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

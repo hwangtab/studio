@@ -72,4 +72,4 @@ faq:
 
 영천에서 동대구역 KTX를 이용하면 약 3시간 내로 서울 연신내까지 이동할 수 있습니다. 영천에서 동대구역까지는 시외버스로 약 40~50분, 이후 경부고속선 KTX 탑승이 가장 빠릅니다. 오전 첫 KTX로 출발하면 점심 전 도착, 오후 세션 후 저녁 막차로 귀가하는 당일 왕복 블록이 가능합니다. 이동이 부담스럽다면 영천 현지에서 드라이 보컬 WAV만 녹음해 파일로 전송하는 원격 의뢰도 운영합니다. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[칠곡에서 서울 녹음실 방문 가이드](/stories/chilgok1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[칠곡에서 서울 녹음실 방문 가이드](/stories/chilgok1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

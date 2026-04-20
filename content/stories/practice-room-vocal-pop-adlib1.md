@@ -42,7 +42,7 @@ summary: >-
 **멜로디 사이 빈 공간을 채우는 짧은 패시지.**
 
 **예:**
-- 메인 멜로디: "I love you [  빈 공간  ] baby"
+- 메인 멜로디: "I love you [ 빈 공간 ] baby"
 - 애드립: "I love you [oh-oh-oh] baby"
 
 **필인 음절:**

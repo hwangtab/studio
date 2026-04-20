@@ -78,4 +78,4 @@ faq:
 
 광진구 자양·화양 지역에서 2호선 한 번 환승으로 연신내 스튜디오 놀에 방문할 수 있습니다. 방문이 어려운 경우 온라인 믹싱 의뢰도 가능합니다. 방문 전 카카오톡으로 예약 시간을 먼저 잡아두시면 대기 없이 바로 세션에 들어갈 수 있습니다.
 
-[광진구 전체 녹음실 안내](/stories/gwangjin1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [중랑구 녹음실 안내](/stories/jungnang1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[광진구 전체 녹음실 안내](/stories/gwangjin1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [중랑구 녹음실 안내](/stories/jungnang1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

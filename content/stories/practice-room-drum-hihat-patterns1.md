@@ -72,7 +72,7 @@ summary: >-
 ```
 16분음표 하이햇:
 x x x x | x x x x | x x x x | x x x x
-H H H H  H H H H  H H H H  H H H H
+H H H H H H H H H H H H H H H H
 
 ```
 

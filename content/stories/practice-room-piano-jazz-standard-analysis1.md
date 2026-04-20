@@ -198,9 +198,9 @@ Bbm7 - Eb7 - Abmaj7
 **A 섹션 가이드 톤:**
 ```
 
-Fm7:  Ab - Eb
+Fm7: Ab - Eb
 Bbm7: Db - Ab
-Eb7:  G - Db
+Eb7: G - Db
 Abmaj7: C - G
 
 ```

@@ -73,4 +73,4 @@ faq:
 
 여주에서 경강선을 이용하면 약 2시간 내로 서울 연신내까지 이동할 수 있습니다. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
-[이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [가평에서 서울 녹음실 방문 가이드](/stories/gapyeong1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [수도권 녹음실 이용 방법](/stories/nationwide1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [가평에서 서울 녹음실 방문 가이드](/stories/gapyeong1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [수도권 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

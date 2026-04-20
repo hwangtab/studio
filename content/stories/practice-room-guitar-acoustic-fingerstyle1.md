@@ -50,9 +50,9 @@ summary: >-
 **Travis Picking 기본:**
 ```
 
-박자: 1  +  2  +  3  +  4  +
-현:   E  G  E  B  E  G  E  B
-손가락: p i  p  m  p  i  p  m
+박자: 1 +  2 +  3 +  4 +
+현: E  G E  B E  G E  B
+손가락: p i p  m p  i p  m
 
 ```
 
@@ -60,8 +60,8 @@ summary: >-
 ```
 
 C 코드:
-박자: 1  2  3  4
-저음: E  A  E  A (교대)
+박자: 1 2  3 4
+저음: E A  E A (교대)
 
 ```
 

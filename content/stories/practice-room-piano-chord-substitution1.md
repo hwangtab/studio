@@ -59,7 +59,7 @@ summary: >-
 ```
 
 Cmaj7: C-E-G-B
-Em7:   E-G-B-D
+Em7: E-G-B-D
 공통음: E, G, B (3개!)
 Em7는 Cmaj7의 3번째 음에서 시작 = 기능 비슷
 
@@ -80,7 +80,7 @@ Em7는 Cmaj7의 3번째 음에서 시작 = 기능 비슷
 ```
 
 Cmaj7: C-E-G-B
-Am7:   A-C-E-G
+Am7: A-C-E-G
 공통음: C, E, G (3개!)
 
 ```
@@ -104,7 +104,7 @@ Am7:   A-C-E-G
 ```
 
 Fmaj7: F-A-C-E
-Dm7:   D-F-A-C
+Dm7: D-F-A-C
 공통음: F, A, C (3개!)
 
 ```
@@ -128,12 +128,12 @@ G7의 트리톤 대리 = Db7
 
 ```
 
-G7:   G-B-D-F    (3음=B, 7음=F)
-Db7:  Db-F-Ab-Cb (3음=F, 7음=Cb=B)
+G7: G-B-D-F (3음=B, 7음=F)
+Db7: Db-F-Ab-Cb (3음=F, 7음=Cb=B)
 
 핵심 발견:
-G7의 3음(B)   = Db7의 7음(B)
-G7의 7음(F)   = Db7의 3음(F)
+G7의 3음(B) = Db7의 7음(B)
+G7의 7음(F) = Db7의 3음(F)
 → 두 코드의 핵심 긴장음이 같다!
 
 ```
@@ -221,7 +221,7 @@ Db7 → Cmaj7: 베이스가 반음씩 하행 (Db → C)
 ```
 
 C 메이저: C-D-E-F-G-A-B
-C 단조:   C-D-Eb-F-G-Ab-Bb
+C 단조: C-D-Eb-F-G-Ab-Bb
 
 빌린 코드 예:
 bIII: Eb 메이저 (C 단조에서)

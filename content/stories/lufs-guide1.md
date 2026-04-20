@@ -81,8 +81,8 @@ LUFS 표준의 역사는 2010년 ITU-R BS.1770 국제 방송 음량 표준 제�
 
 ### 장르별 Integrated LUFS 목표값
 
-팝·K-POP:          -14 LUFS ± 1
-R&B·소울:          -14 ~ -16 LUFS
+팝·K-POP: -14 LUFS ± 1
+R&B·소울: -14 ~ -16 LUFS
 
 - **힙합**: -12 ~ -14 LUFS
 - **댄스·EDM**: -10 ~ -12 LUFS

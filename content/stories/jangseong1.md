@@ -85,4 +85,4 @@ faq:
 
 장성에서 광주역 KTX를 이용하면 약 3시간 내로 서울 연신내까지 이동할 수 있습니다. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[담양에서 서울 녹음실 방문 가이드](/stories/damyang1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[담양에서 서울 녹음실 방문 가이드](/stories/damyang1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

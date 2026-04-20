@@ -77,4 +77,4 @@ faq:
 
 대전 동구·중구 대전역에서 KTX를 이용하면 약 70~80분이면 연신내에 도착합니다. 경부고속선 빈번 운행 덕분에 당일 왕복 블록을 비교적 유연하게 잡을 수 있으며, 오전에 출발해 오후 세션을 마치고 저녁 귀가하는 일정이 일반적입니다. 방문이 어려운 경우 드라이 보컬 WAV 파일을 전송해 믹싱·마스터링만 의뢰하는 원격 방식도 동일 품질로 운영합니다. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
-[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon-daedeok1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon-daedeok1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

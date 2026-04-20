@@ -45,8 +45,8 @@ summary: >-
 ```
 
 일반 스네어 (accent): fffff
-보통 스네어:          mf
-고스트 노트:          pp ~ ppp
+보통 스네어: mf
+고스트 노트: pp ~ ppp
 
 ```
 
@@ -94,11 +94,11 @@ summary: >-
 
 ```
 16비트 카운트:
-1  e  +  a  2  e  +  a  3  e  +  a  4  e  +  a
+1 e  + a  2 e  + a  3 e  + a  4 e  + a
 
 스네어:
 (x) . X . (x)(x) X . (x) . X . (x)(x) X .
-고스트  악센트  고스트 고스트 악센트  고스트 고스트 악센트
+고스트 악센트 고스트 고스트 악센트 고스트 고스트 악센트
 
 ```
 
@@ -109,7 +109,7 @@ summary: >-
 
 ```
 
-킥:   X . . . . . X . . . X . . . . .
+킥: X . . . . . X . . . X . . . . .
 스네어: (x) . X . (x)(x)X . (x) . X . (x)(x)X .
 하이햇: X X X X X X X X X X X X X X X X
 
@@ -129,8 +129,8 @@ summary: >-
 
 Level 4 (Accent): 최대 파워, 2박·4박 주 악센트
 Level 3 (Normal): 보통 스네어, 일반 박자
-Level 2 (Soft):   약한 스네어, 필인 디크레셴도
-Level 1 (Ghost):  거의 들리지 않는 고스트 노트
+Level 2 (Soft): 약한 스네어, 필인 디크레셴도
+Level 1 (Ghost): 거의 들리지 않는 고스트 노트
 
 ```
 

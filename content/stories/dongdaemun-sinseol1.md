@@ -86,4 +86,4 @@ faq:
 
 동대문·신설동에서 연신내까지는 5호선을 타고 공덕역에서 6호선으로 환승하거나, 1호선을 타고 종로3가에서 3호선으로 환승 후 불광에서 6호선을 이용하는 두 가지 루트가 편리합니다. 평균 이동 시간은 40~50분으로, 동서울을 아우르는 창신·신설동 예술 커뮤니티 아티스트들이 정기적으로 방문하고 있습니다.
 
-[동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [회기·경희대·외대앞 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[동대문구 전체 녹음실 안내](/stories/dongdaemun1) | [회기·경희대·외대앞 녹음실 안내](/stories/hoegi1) | [청량리·왕십리 녹음실 안내](/stories/cheongnyangni1) | [성북구 녹음실 안내](/stories/seongbuk1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

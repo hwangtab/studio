@@ -83,4 +83,4 @@ faq:
 
 성남 뮤지션들이 스튜디오 놀을 선택하는 이유 중 하나는 연신내역이라는 교통 요충지에 위치해 있기 때문입니다. 6호선 연신내역은 서울 북서부 방향에서 접근하기 쉬우며, 경기 북부나 인천 방면에서도 환승 없이 또는 한 번 환승으로 도착할 수 있습니다. 성남에서 출발해 세션을 마치고 귀가하는 당일 일정이 부담스럽지 않도록 스튜디오 측에서는 세션 시간 조율에 최대한 협조해드리고 있습니다. 방문 전 예약 시 출발 지역을 알려주시면 추천 도착 시간을 안내받을 수 있습니다.
 
-[성남·분당·판교 녹음실 안내](/stories/seongnam1) | [성남 수정구 녹음실 안내](/stories/seongnam-sujeong1) | [분당 야탑·모란·복정 녹음실 안내](/stories/bundang-yatap1) | [하남·위례 녹음실 안내](/stories/wirye1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성남·분당·판교 녹음실 안내](/stories/seongnam1) | [성남 수정구 녹음실 안내](/stories/seongnam-sujeong1) | [분당 야탑·모란·복정 녹음실 안내](/stories/bundang-yatap1) | [하남·위례 녹음실 안내](/stories/wirye1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

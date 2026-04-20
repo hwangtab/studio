@@ -90,8 +90,8 @@ ding-ding-da-ding: 기본 비밥 리듬
 (8분-8분-16분-8분 = 스윙 3연음 변형)
 
 표기:
-1  +  2  +  3  +  4  +
-ding    ding da ding    (스윙 느낌)
+1 +  2 +  3 +  4 +
+ding ding da ding (스윙 느낌)
 
 ```
 

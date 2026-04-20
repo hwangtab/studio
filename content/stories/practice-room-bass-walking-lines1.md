@@ -110,8 +110,8 @@ C-B-G-E (하향)
 **ii-V-I 가이드 톤:**
 ```
 
-Dm7:  F(3도) - C(7도)
-G7:   B(3도) - F(7도)
+Dm7: F(3도) - C(7도)
+G7: B(3도) - F(7도)
 Cmaj7: E(3도) - B(7도)
 
 F→B→E (3도 진행): 반음씩 이동
@@ -195,7 +195,7 @@ C - D - E - G (D가 패싱 톤)
 ```
 
 Dm7: D - F - A - C
-G7:  G - B - D - F
+G7: G - B - D - F
 Cmaj7: C - E - G - B
 
 ```
@@ -204,7 +204,7 @@ Cmaj7: C - E - G - B
 ```
 
 Dm7: D - F - A - C#(크로매틱)
-G7:  D(해결) - B - F - Ab(크로매틱)
+G7: D(해결) - B - F - Ab(크로매틱)
 Cmaj7: G(해결) - E - B - D
 
 ```
@@ -213,7 +213,7 @@ Cmaj7: G(해결) - E - B - D
 ```
 
 Dm7: D - A - F - E(크로매틱)
-G7:  F(해결!) - D - B - Ab
+G7: F(해결!) - D - B - Ab
 Cmaj7: G - E - C - B
 
 ```
@@ -259,7 +259,7 @@ Paul Chambers(Miles Davis Quintet):
 ```
 
 Dm7: D - F - Ab(크로매틱) - G
-G7:  G(해결) - B - D - F
+G7: G(해결) - B - D - F
 = 마지막 박 크로매틱→다음 코드 근음
 
 ```

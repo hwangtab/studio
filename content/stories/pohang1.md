@@ -77,4 +77,4 @@ faq:
 
 포항에서 KTX 약 2시간이면 서울 연신내. 거리가 있는 만큼 카카오톡으로 미리 충분히 소통해두세요. 온라인 의뢰도 동일한 결과물로 납품합니다. 포항 방향 막차를 고려해 세션 종료 예정 시간 기준 30분 전에 마무리할 수 있도록 일정 여유를 두는 것을 권장하며, 당일 완성된 파일은 즉시 온라인으로 전송드립니다.
 
-[울릉도 녹음실 안내](/stories/ulleungdo1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[울릉도 녹음실 안내](/stories/ulleungdo1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

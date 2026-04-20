@@ -53,7 +53,7 @@ X - - X - X - X
 
 ```
 
-박자: 1  e  and  a  2  e  and  a
+박자: 1 e  and a  2 e  and a
      X  -   X   -  -  X   -   X
 
 ```

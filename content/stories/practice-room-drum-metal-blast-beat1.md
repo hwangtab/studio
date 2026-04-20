@@ -45,7 +45,7 @@ summary: >-
 ```
 
 스네어: X - X - X - X - X - X - X - X
-킥:    - X - X - X - X - X - X - X -
+킥: - X - X - X - X - X - X - X -
 하이햇: X X X X X X X X X X X X X X X X (16분음표 연속)
 
 ```
@@ -100,7 +100,7 @@ summary: >-
 ```
 
 킥킥킥킥 킥킥킥킥 (16분음표)
-R L R L  R L R L
+R L R L R L R L
 
 ```
 
@@ -108,7 +108,7 @@ R L R L  R L R L
 ```
 
 킥킥 킥 킥킥 킥 (3련음표 갈로핑)
-R L  R  L R  L
+R L R  L R L
 
 ```
 
@@ -121,7 +121,7 @@ Metallica, Slayer, Megadeth 스타일.
 
 하이햇: X - X - X - X - (8분음표)
 스네어: - - X - - - X - (2, 4박)
-킥:    X X - X X X - X (빠른 더블 킥)
+킥: X X - X X X - X (빠른 더블 킥)
 
 ```
 
@@ -139,7 +139,7 @@ X - X - X X - - X - X - X X - -
 ```
 
 스네어: X X X X X X X X (연속 블래스트)
-킥:    X X X X X X X X (스네어와 교대 또는 유니즌)
+킥: X X X X X X X X (스네어와 교대 또는 유니즌)
 
 ```
 

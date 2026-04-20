@@ -76,4 +76,4 @@ faq:
 
 고양 덕양구(화정·원당·행신)에서 연신내까지는 경의중앙선 화전역 또는 능곡역에서 디지털미디어시티역을 거쳐 6호선으로 환승하거나, 3호선 화정역에서 직접 연신내로 이동하는 방법이 있습니다. 3호선을 이용하면 환승 없이 약 20~30분 내에 도착할 수 있어 고양 일산 지역에서 가장 편리한 스튜디오 접근 노선입니다.
 
-[고양 일산·화정·행신 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[고양 일산·화정·행신 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

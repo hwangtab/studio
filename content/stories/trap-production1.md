@@ -63,10 +63,10 @@ faq:
 
 ### 기본 패턴 표기 (130BPM)
 
-1  e  +  a  2  e  +  a  3  e  +  a  4  e  +  a
-K  .  .  .  S  .  .  .  K  .  .  .  S  .  .  .  (기본)
-H  .  H  .  H  .  H  .  H  .  H  .  H  .  H  .  (16분)
-H HH HH HH HH HH HH HH                          (3연음 롤)
+1 e  + a  2 e  + a  3 e  + a  4 e  + a
+K .  . .  S .  . .  K .  . .  S .  . .  (기본)
+H .  H .  H .  H .  H .  H .  H .  H .  (16분)
+H HH HH HH HH HH HH HH (3연음 롤)
 
 ---
 

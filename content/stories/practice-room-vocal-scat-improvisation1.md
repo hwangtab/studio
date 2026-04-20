@@ -63,7 +63,7 @@ summary: >-
 ```
 
 악보상: 1 & 2 & 3 & 4 &
-실제:   doo-bah doo-bah doo-bah doo-bah
+실제: doo-bah doo-bah doo-bah doo-bah
         (긴-짧 긴-짧 긴-짧 긴-짧)
 
 ```
@@ -71,7 +71,7 @@ summary: >-
 **C 메이저 스케일로 스캣 스윙 연습:**
 ```
 "Doo-bah doo-bah, dee-dah doo-bah"
-C-D   E-F    G-A   B-C
+C-D E-F G-A B-C
 
 ```
 
@@ -121,7 +121,7 @@ C (근음), E (3음), G (5음), Bb (7음)
 ```
 
 Dm7: D-F-A-C
-G7:  G-B-D-F (B와 F가 핵심 가이드 톤)
+G7: G-B-D-F (B와 F가 핵심 가이드 톤)
 CMaj7: C-E-G-B
 
 ```
@@ -129,7 +129,7 @@ CMaj7: C-E-G-B
 **스캣으로 표현:**
 ```
 "Doo-dee-dah / bee-doo-wah / daaaaah"
-Dm7 코드톤  / G7 가이드톤 / CMaj7 해결
+Dm7 코드톤 / G7 가이드톤 / CMaj7 해결
 
 ```
 

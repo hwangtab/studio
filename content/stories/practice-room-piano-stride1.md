@@ -77,7 +77,7 @@ summary: >-
 C 장조 I-IV-V-I:
 Cmaj: C2 - C4E4G4 - G2 - C4E4G4
 Fmaj: F2 - F4A4C5 - C3 - F4A4C5
-G7:   G2 - G4B4D5F5 - D3 - G4B4D5F5
+G7: G2 - G4B4D5F5 - D3 - G4B4D5F5
 Cmaj: C2 - C4E4G4 - G2 - C4E4G4
 
 ```

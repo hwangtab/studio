@@ -73,4 +73,4 @@ faq:
 
 동두천에서 1호선을 이용하면 약 1시간 30분 내로 서울 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[양주에서 서울 녹음실 방문 가이드](/stories/yangju1) | [의정부에서 서울 녹음실 방문 가이드](/stories/uijeongbu1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)  | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[양주에서 서울 녹음실 방문 가이드](/stories/yangju1) | [의정부에서 서울 녹음실 방문 가이드](/stories/uijeongbu1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

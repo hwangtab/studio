@@ -56,10 +56,10 @@ faq:
 
 ```
 
-p (pulgar)  = 엄지 — 4·5·6번 줄
-i (indice)  = 검지 — 3번 줄
-m (medio)   = 중지 — 2번 줄
-a (anular)  = 약지 — 1번 줄
+p (pulgar) = 엄지 — 4·5·6번 줄
+i (indice) = 검지 — 3번 줄
+m (medio) = 중지 — 2번 줄
+a (anular) = 약지 — 1번 줄
 
 ```
 
