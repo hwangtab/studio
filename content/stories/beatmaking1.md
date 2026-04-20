@@ -2,7 +2,7 @@
 title: 비트 메이킹 입문 가이드 — 처음 시작하는 DAW 음악 제작
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 음악 제작
 tags:
   - 비트 메이킹
   - DAW 입문

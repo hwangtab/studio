@@ -2,7 +2,7 @@
 title: 편곡(Arrangement) 완전 가이드 — 보컬 중심 곡을 풍성하게 만드는 방법
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 녹음 가이드
+category: 음악 제작
 tags:
   - 편곡
   - 어레인지먼트

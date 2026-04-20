@@ -2,7 +2,7 @@
 title: 보컬 편집 완전 가이드 — DAW에서 보컬 다듬기와 컴핑
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 녹음 가이드
 tags:
   - 보컬 편집
   - 보컬 컴핑

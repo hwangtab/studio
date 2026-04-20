@@ -2,7 +2,7 @@
 title: 스트리밍 음악 출시 완전 가이드 완전 가이드
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 음악 비즈니스
 tags:
   - 스트리밍 음원 등록
   - Spotify 음원 등록

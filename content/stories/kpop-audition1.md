@@ -2,7 +2,7 @@
 title: K-POP 오디션 준비 완전 가이드 — 기획사 오디션 곡 선택부터 데모 녹음까지
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - K-POP 오디션
   - 기획사 오디션

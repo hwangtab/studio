@@ -2,7 +2,7 @@
 title: FabFilter Pro-Q3 완전 가이드 — 보컬 믹싱을 위한 최고의 EQ 플러그인
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 믹싱·마스터링
 tags:
   - FabFilter Pro-Q3
   - 프로큐3

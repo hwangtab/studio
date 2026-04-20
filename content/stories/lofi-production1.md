@@ -2,7 +2,7 @@
 title: 로파이 음악 제작 완전 가이드 — Lo-Fi Hip Hop·Lo-Fi 팝 사운드 만들기
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 음악 제작
 tags:
   - 로파이 음악
   - 로파이 힙합

@@ -2,7 +2,7 @@
 title: "싱어송라이터 녹음 가이드 — 혼자 만든 곡을 완성도 있는 음원으로 만드는 법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["싱어송라이터", "자작곡 녹음", "인디 음악", "홈레코딩", "자작곡 발매", "보컬 녹음", "음원 제작"]
 thumbnail: "/images/lesson1.webp"
 summary: >-

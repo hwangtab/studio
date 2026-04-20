@@ -2,7 +2,7 @@
 title: 커버곡 녹음 가이드 — 유튜브·SNS용 고음질 커버 음원 만드는 법
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 녹음 가이드
 tags:
   - 커버곡 녹음
   - 유튜브 커버

@@ -2,7 +2,7 @@
 title: 오디오 위상(Phase) 완전 가이드 — 문제 식별과 교정
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 믹싱·마스터링
 tags:
   - 오디오 위상
   - 위상 문제

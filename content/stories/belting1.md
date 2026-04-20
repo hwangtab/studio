@@ -2,7 +2,7 @@
 title: 벨팅 발성법 완전 가이드 — 강한 고음을 내는 보컬 기술
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - 벨팅
   - 벨팅 발성

@@ -2,7 +2,7 @@
 title: DAW 퍼포먼스 최적화 완전 가이드 — CPU·레이턴시·버퍼 설정
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 녹음 가이드
 tags:
   - DAW 최적화
   - DAW CPU

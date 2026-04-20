@@ -2,7 +2,7 @@
 title: "어린이·청소년 보컬 녹음 가이드 — 아이의 목소리를 담는 특별한 경험"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["어린이 녹음", "청소년 보컬", "어린이 노래 녹음", "가족 녹음 선물", "어린이 성우", "녹음실 추천"]
 thumbnail: "/images/recording1.webp"
 summary: >-

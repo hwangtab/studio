@@ -2,7 +2,7 @@
 title: MR(반주) 구하는 방법 완전 가이드 — 유료 사이트부터 키 조정까지
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 녹음 가이드
 tags:
   - MR 구하는 방법
   - 반주 파일

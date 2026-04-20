@@ -2,7 +2,7 @@
 title: "케이팝·팝 보컬 녹음 가이드 — 상업 음원 기준의 보컬 레코딩 완성하기"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["팝 보컬 녹음", "케이팝 녹음", "K-POP 녹음", "상업 음원 녹음", "팝 보컬", "보컬 녹음", "연신내 음악 스튜디오"]
 thumbnail: "/images/service6.webp"
 summary: >-

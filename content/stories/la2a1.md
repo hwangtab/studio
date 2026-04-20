@@ -2,7 +2,7 @@
 title: LA-2A 컴프레서 완전 가이드 — 클래식 Optical 컴프레서 활용법
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 믹싱·마스터링
 tags:
   - LA-2A 컴프레서
   - Optical 컴프레서

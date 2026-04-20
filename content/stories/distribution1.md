@@ -2,7 +2,7 @@
 title: 음원 유통 방법 완전 가이드 — DistroKid·카카오엔터·뮤직카우 디지털 유통사 비교
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 음악 비즈니스
 tags:
   - 음원 유통
   - DistroKid 사용법

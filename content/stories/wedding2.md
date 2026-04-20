@@ -2,7 +2,7 @@
 title: "결혼식 피로연 축가 녹음 완전 가이드 — 선곡부터 식장 납품까지"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["결혼식 축가", "피로연 축가", "축가 녹음", "결혼식 음악", "축가 선곡", "녹음실 추천", "축가 패키지"]
 thumbnail: "/images/recording3.webp"
 summary: >-

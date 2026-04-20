@@ -2,7 +2,7 @@
 title: "팟캐스트 녹음 스튜디오 — 연신내에서 고음질 팟캐스트·유튜브 오디오 제작하기"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "후기"
+category: "녹음 가이드"
 tags: ["팟캐스트 녹음", "팟캐스트 스튜디오", "유튜브 나레이션", "오디오 콘텐츠", "서울 보컬 녹음실", "팟캐스트 제작"]
 thumbnail: "/images/recording16.webp"
 summary: >-

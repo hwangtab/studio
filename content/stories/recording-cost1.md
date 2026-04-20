@@ -2,7 +2,7 @@
 title: "보컬 녹음 비용 투명하게 알기 — 시간당·곡당·패키지별 요금 구조 설명"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "음악 비즈니스"
 tags: ["보컬 녹음 비용", "녹음실 비용", "스튜디오 요금", "녹음 가격", "믹싱 비용", "마스터링 비용", "은평구 녹음실"]
 thumbnail: "/images/service1.webp"
 summary: >-

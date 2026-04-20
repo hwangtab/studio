@@ -2,7 +2,7 @@
 title: 쉰 목소리 원인과 치료법 — 성대 보호 응급 가이드
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - 쉰 목소리
   - 목 쉰 원인

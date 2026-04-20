@@ -2,7 +2,7 @@
 title: 흉성(Chest Voice) 완전 가이드 — 두껍고 파워풀한 저음역 발성 트레이닝
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - 흉성
   - chest voice

@@ -2,7 +2,7 @@
 title: "보컬 피치 교정이란? — Melodyne·Auto-Tune 차이와 자연스러운 편집 기준"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "믹싱·마스터링"
 tags: ["보컬 피치 교정", "멜로다인", "오토튠", "보컬 편집", "피치 수정", "믹싱", "보컬 녹음"]
 thumbnail: "/images/service2.webp"
 summary: "보컬 녹음 후 진행되는 피치 교정(Melodyne, Auto-Tune) 작업의 차이와 자연스러운 적용 기준을 설명합니다. 음정 보정이 어느 수준까지 가능한지, 언제... Melodyne vs Auto-Tune 비교·피치 교정이 가능한 범위까지 정리합니다."

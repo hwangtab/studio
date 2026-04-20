@@ -2,7 +2,7 @@
 title: 트왕(Twang) 발성 완전 가이드 — 밝고 날카로운 목소리를 내는 발성 기술
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - 트왕
   - 트왕 발성

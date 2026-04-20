@@ -2,7 +2,7 @@
 title: "발라드 보컬 녹음 가이드 — 감정 표현과 롱 노트를 완성하는 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["발라드 녹음", "발라드 보컬", "감정 표현 녹음", "롱 노트 녹음", "보컬 녹음 팁", "은평구 보컬 녹음"]
 thumbnail: "/images/service4.webp"
 summary: >-

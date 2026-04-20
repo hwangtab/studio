@@ -2,7 +2,7 @@
 title: 보컬 EQ 완전 가이드 — 주파수별 역할과 보컬 믹싱에서의 EQ 설정법
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 믹싱·마스터링
 tags:
   - 보컬 EQ
   - EQ 설정

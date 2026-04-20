@@ -2,7 +2,7 @@
 title: 보컬 독학 vs 레슨 — 어느 쪽이 더 빠르게 실력을 올릴 수 있을까?
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - 보컬 독학
   - 보컬 레슨

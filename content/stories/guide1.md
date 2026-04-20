@@ -2,7 +2,7 @@
 title: "녹음실 처음 방문 전 체크리스트 — 보컬 녹음 준비물과 당일 진행 순서"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "녹음 가이드"
 tags: ["녹음실 처음", "보컬 녹음 준비물", "녹음실 이용 방법", "녹음 팁", "처음 녹음", "연신내 녹음실"]
 thumbnail: "/images/recording2.webp"
 summary: >-

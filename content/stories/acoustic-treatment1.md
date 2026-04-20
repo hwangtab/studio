@@ -2,7 +2,7 @@
 title: 방음·흡음 완전 가이드 — 홈 레코딩 공간 어쿠스틱 처리 방법
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 녹음 가이드
 tags:
   - 방음
   - 흡음

@@ -2,7 +2,7 @@
 title: "연신내에서 음반 제작하기 — 디지털 싱글부터 EP·정규 앨범까지 원스톱 프로세스"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "음악 비즈니스"
 tags: ["음반 제작", "앨범 제작", "디지털 싱글", "EP 제작", "은평구 녹음실", "인디 음반", "음원 발매"]
 thumbnail: "/images/album1.webp"
 summary: >-

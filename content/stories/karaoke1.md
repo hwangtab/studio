@@ -2,7 +2,7 @@
 title: "노래방 vs 스튜디오 녹음 — 뭐가 다른가요? 목적별 선택 기준"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "녹음 가이드"
 tags: ["노래방 녹음", "스튜디오 녹음 차이", "코인노래방 녹음", "녹음실 vs 노래방", "보컬 녹음", "서울 보컬 녹음실"]
 thumbnail: "/images/recording4.webp"
 summary: >-

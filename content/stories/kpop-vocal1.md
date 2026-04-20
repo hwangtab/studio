@@ -2,7 +2,7 @@
 title: K-팝 보컬 스타일 완전 가이드 — K-POP 창법의 특징과 훈련법
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 보컬 가이드
 tags:
   - K팝 보컬
   - 케이팝 창법

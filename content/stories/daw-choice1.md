@@ -2,7 +2,7 @@
 title: "큐베이스 vs 로직 프로 vs 에이블톤 — 나에게 맞는 DAW 선택 가이드"
 date: 2026-04-08
 author: "스튜디오 놀"
-category: "음악 제작"
+category: "녹음 가이드"
 tags: ["큐베이스 레슨", "로직 프로 레슨", "에이블톤 레슨", "DAW 선택", "DAW 비교", "음악 제작 소프트웨어", "큐베이스 vs 로직"]
 thumbnail: "/images/recording12.webp"
 summary: >-

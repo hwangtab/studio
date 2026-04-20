@@ -2,7 +2,7 @@
 title: 보컬 EQ 완전 가이드 — 주파수 대역별 보컬 처리 방법
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 믹싱·마스터링
 tags:
   - 보컬 EQ
   - 보컬 이퀄라이저

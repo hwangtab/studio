@@ -2,7 +2,7 @@
 title: "연신내 보컬 레슨 — 성인 입문자부터 발매 준비 싱어까지, 무엇이 다른가"
 date: 2026-04-03
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["보컬 레슨", "연신내 보컬 레슨", "은평구 보컬 레슨", "성인 보컬 레슨", "보컬 트레이닝", "녹음실 레슨"]
 thumbnail: "/images/recording9.webp"
 summary: >-

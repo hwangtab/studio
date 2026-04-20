@@ -2,7 +2,7 @@
 title: "교회 찬양·성가 녹음 가이드 — 찬양팀·성가대 음원 제작부터 예배 음원 발매까지"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "녹음 가이드"
 tags: ["교회 녹음", "찬양 녹음", "성가대 녹음", "CCM 녹음", "찬양팀 음원", "예배 음원", "연신내 보컬 녹음"]
 thumbnail: "/images/recording8.webp"
 summary: >-

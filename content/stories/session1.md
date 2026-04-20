@@ -2,7 +2,7 @@
 title: "녹음 세션 준비 완전 가이드 — 스튜디오 첫 방문 전 꼭 알아야 할 것들"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "녹음 가이드"
 tags: ["녹음 준비", "스튜디오 녹음", "보컬 녹음 팁", "녹음 체크리스트", "첫 녹음", "스튜디오 예약"]
 thumbnail: "/images/room8.webp"
 summary: >-

@@ -2,7 +2,7 @@
 title: "서울 녹음실 비교 — 홍대·합정·연신내·강남 스튜디오 선택 기준"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "후기"
+category: "녹음 가이드"
 tags: ["서울 녹음실", "홍대 녹음실", "합정 녹음실", "강남 녹음실", "녹음실 비교", "연신내 스튜디오", "서울 스튜디오"]
 thumbnail: "/images/studio2.webp"
 summary: >-

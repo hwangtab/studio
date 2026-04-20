@@ -2,7 +2,7 @@
 title: EP 제작 완전 가이드 — 인디 아티스트를 위한 미니앨범 제작 전 과정
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 음악 제작
 tags:
   - EP 제작
   - 미니앨범 제작

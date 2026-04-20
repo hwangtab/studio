@@ -2,7 +2,7 @@
 title: MP3 vs WAV 차이 완전 가이드 — 녹음·발매·유튜브에 맞는 파일 형식 선택
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 녹음 가이드
 tags:
   - MP3 vs WAV
   - 오디오 파일 형식

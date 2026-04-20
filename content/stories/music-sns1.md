@@ -2,7 +2,7 @@
 title: 음악 SNS 마케팅 완전 가이드 — 인스타그램·틱톡·유튜브 활용법
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 음악 비즈니스
 tags:
   - 음악 SNS 마케팅
   - 인스타그램 음악

@@ -2,7 +2,7 @@
 title: Logic Pro 보컬 녹음·믹싱 완전 가이드 — 맥 홈 레코딩 필수 팁
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 녹음 가이드
 tags:
   - Logic Pro
   - Logic Pro 보컬 녹음

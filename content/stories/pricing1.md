@@ -2,7 +2,7 @@
 title: "보컬 녹음 가격 완전 가이드 — 스튜디오 비용 결정 요인과 합리적인 선택 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "음악 비즈니스"
 tags: ["보컬 녹음 가격", "녹음 비용", "녹음실 비용", "스튜디오 요금", "연신내 보컬 녹음", "믹싱 비용"]
 thumbnail: "/images/hardware5.webp"
 summary: >-

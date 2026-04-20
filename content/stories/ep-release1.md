@@ -2,7 +2,7 @@
 title: EP 발매 완전 가이드 — 미니앨범 제작·출시 절차·타임라인
 date: 2026-04-07T00:00:00.000Z
 author: 스튜디오 놀
-category: 음악 제작
+category: 음악 비즈니스
 tags:
   - EP 발매
   - 미니앨범 제작

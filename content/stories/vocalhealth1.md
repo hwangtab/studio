@@ -2,7 +2,7 @@
 title: "성대 건강 관리 — 보컬리스트가 꼭 알아야 할 성대 보호와 회복 방법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "강좌"
+category: "보컬 가이드"
 tags: ["성대 건강", "성대 관리", "보컬 건강", "성대 결절", "목 관리", "녹음 전 관리", "보컬 팁"]
 thumbnail: "/images/service5.webp"
 summary: >-

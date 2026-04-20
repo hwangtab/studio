@@ -2,7 +2,7 @@
 title: 코드 진행 기초 가이드 — 팝·발라드·R&B 코드 패턴 입문
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 강좌
+category: 음악 제작
 tags:
   - 코드 진행
   - 코드 진행 기초
