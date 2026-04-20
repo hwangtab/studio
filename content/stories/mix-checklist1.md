@@ -46,8 +46,6 @@ faq:
 
 ### 레벨 체크
 
-### 레벨 체크
-
 - 마스터 아웃풋 True Peak: -1dBTP 이하
 - 어떤 트랙에도 클리핑 없음 (빨간 LED 없음)
 - 전체 Integrated LUFS: 마스터링 전 -18~-20 LUFS
