@@ -4,33 +4,7 @@
 
 /* Montserrat is now loaded via next/font in _app.js */
 
-/* PartialSansKR 폰트 (원본) */
-@font-face {
-  font-family: 'PartialSansKR-Regular';
-  src: local('PartialSansKR-Regular'),
-    url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),
-    url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* PartialSansKR 폰트 (로고용 - 메트릭 조정) */
-@font-face {
-  font-family: 'PartialSansKR-Logo';
-  src: local('PartialSansKR-Regular'),
-    url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),
-    url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  /* 상단 여백 줄이기: ascender가 큰 폰트 특성 보정 */
-  ascent-override: 80%;
-  descent-override: 20%;
-  line-gap-override: 0%;
-}
-
-/* Pretendard 폰트 (보조 폰트) - 한글 subset 버전 사용으로 파일당 ~260KB.
+/* Pretendard 폰트 (본문/타이틀/로고 전반) - 한글 subset 버전 사용으로 파일당 ~260KB.
    v1.3.9 고정. Fallback CDN URL도 동일 subset 파일을 지정해 용량 일관성 유지. */
 @font-face {
   font-family: 'Pretendard';

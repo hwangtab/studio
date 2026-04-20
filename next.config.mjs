@@ -51,7 +51,15 @@ const nextConfig = {
 
   // Experimental optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      'react-i18next',
+      'markdown-to-jsx',
+      'clsx',
+      'tailwind-merge',
+      'class-variance-authority',
+    ],
   },
 
   eslint: {

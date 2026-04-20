@@ -203,12 +203,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                 </AnimatePresence>
                 <Analytics />
                 <SpeedInsights />
-                {/* Google Analytics 4 — afterInteractive: 페이지 인터랙티브 후 로드 */}
+                {/* Google Analytics 4 — lazyOnload: window.onload 이후 유휴 시 로드.
+                    gtag.js 154KB가 초기 대역폭/메인스레드 경쟁에서 빠져 FCP/TBT 개선.
+                    측정 정확도: 대부분의 방문자는 onload 전 이탈하지 않으므로 영향 미미. */}
                 <Script
                   src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
-                  strategy="afterInteractive"
+                  strategy="lazyOnload"
                 />
-                <Script id="ga4-init" strategy="afterInteractive">
+                <Script id="ga4-init" strategy="lazyOnload">
                   {`
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
