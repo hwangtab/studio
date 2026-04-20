@@ -97,6 +97,4 @@ faq:
 
 응암·역촌·구산·수색에서 6호선 3~15분 서울에서 가장 가까운 전문 녹음 스튜디오입니다. 가까운 거리인 만큼 부담 없이 들러보세요. 예약 문의는 카카오톡으로 주시면 됩니다.
 
-[상암동·DMC·수색동 녹음실 — 6호선으로 연신내 스튜디오 놀 방문 가이드](/stories/sangam-dmc1)
-
-[은평구 녹음실 안내](/stories/eunpyeong1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1) | [불광·연신내 녹음실 안내](/stories/bulgwang1) | [마포구 녹음실 안내](/stories/mapo1)
+[상암동·DMC·수색동 녹음실 — 6호선으로 연신내 스튜디오 놀 방문 가이드](/stories/sangam-dmc1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1) | [불광·연신내 녹음실 안내](/stories/bulgwang1) | [마포구 녹음실 안내](/stories/mapo1)
