@@ -76,7 +76,7 @@ C - G - E - G - C - G - E - G...
 
 C5 (C + G):
 왼손: 두 음 동시 | 쉼 | 두 음 | 쉼
-     C G         .   C G         .
+     C G         . C G         .
 
 ```
 
@@ -91,7 +91,7 @@ C - G - G - E - A - A (아르페지오)
 
 ```
 1 e  + a  2 e  + a  3 e  + a  4 e  + a
-C .  G .  C .  G .  C .  G .  C .  G .
+C . G . C . G . C . G . C . G .
 
 ```
 

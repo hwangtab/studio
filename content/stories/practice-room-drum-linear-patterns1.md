@@ -154,7 +154,7 @@ K H  S H  K S  H K  S H  K H  S H  K S
 
 ```
 1 +  2 +  3 +  4 +
-K H  S .  K H  S H
+K H  S . K H  S H
 pp ff pp ff pp pp mp
 (다이나믹 변화)
 
