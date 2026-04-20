@@ -191,7 +191,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion="user">
               <Layout hasHero={hasHero} locale={locale}>
-                <AnimatePresence mode="wait" initial={true} onExitComplete={() => { window.scrollTo({ top: 0, behavior: 'auto' }); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
+                {/* initial={false}: 첫 방문 시 opacity:0 스타일이 SSR에 박히는 것을 막아 FCP/LCP를 즉시 페인트.
+                    페이지 전환(route change) 때만 페이드 애니메이션이 작동한다. */}
+                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { window.scrollTo({ top: 0, behavior: 'auto' }); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
                   <m.div
                     key={router.asPath.split('?')[0]}
                     {...routeTransitionProps}

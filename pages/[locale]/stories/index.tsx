@@ -36,18 +36,21 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
 
-  const storiesItemListSchema = React.useMemo(() => generateItemListSchema(
-    stories.slice(0, 50).map((story) => ({
-      id: story.slug,
-      name: story.title,
-      url: `${siteUrl}/${locale}/stories/${story.slug}`,
-      image: story.thumbnail ?? undefined,
-      description: story.summary,
-    })),
-    siteUrl,
-    locale,
-    t('nav.stories')
-  ), [stories, locale, siteUrl, t]);
+  const storiesItemListSchema = React.useMemo(() => {
+    const top = stories.slice(0, 50);
+    return generateItemListSchema(
+      top.map((story) => ({
+        id: story.slug,
+        name: story.title,
+        url: `${siteUrl}/${locale}/stories/${story.slug}`,
+        image: story.thumbnail ?? undefined,
+        description: story.summary,
+      })),
+      siteUrl,
+      locale,
+      t('nav.stories')
+    );
+  }, [stories, locale, siteUrl, t]);
   const sectionRef = useRef<HTMLDivElement>(null);
 
 
@@ -222,10 +225,11 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
             </div>
           )}
 
-          {/* 크롤러용 전체 스토리 링크 (sr-only: 시각적으로 숨김, 크롤러 접근 가능) */}
-          <nav aria-label="All stories" className="sr-only">
+          {/* 크롤러용 최근 스토리 링크 — sitemap.xml이 전체 색인을 담당하므로
+              여기는 허브 신호 강화용 상위 50개만 렌더한다. (성능: DOM 1707→50, TBT 대폭 감소) */}
+          <nav aria-label="Recent stories" className="sr-only">
             <ul>
-              {stories.map((story) => (
+              {stories.slice(0, 50).map((story) => (
                 <li key={story.slug}>
                   <a href={`/${locale}/stories/${story.slug}`}>{story.title}</a>
                 </li>

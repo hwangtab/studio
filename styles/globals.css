@@ -148,6 +148,19 @@
 
 @layer components {}
 
+@keyframes hero-zoom-kf {
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+.hero-zoom {
+  transform: scale(1.1);
+  animation: hero-zoom-kf 10s ease-out forwards;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom { animation: none; transform: none; }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

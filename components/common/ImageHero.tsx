@@ -48,28 +48,20 @@ const ImageHero = ({
     <section
       className={`relative overflow-hidden ${minHeight} flex flex-col ${verticalAlignClass} ${className}`}
     >
-      <m.div
-        className="absolute inset-0 z-0"
-      >
-        <m.div
-          className="w-full h-full"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, ease: "easeOut" }}
-        >
-          <ResponsiveImage
-            src={backgroundImage}
-            alt={imageAlt}
-            fill={true}
-            priority={priority}
-            className="object-cover"
-            pictureClassName="absolute inset-0 block h-full w-full"
-            width={1920}
-            height={1080}
-            sizes="100vw"
-          />
-        </m.div>
-      </m.div>
+      {/* LCP 요소: framer-motion 래퍼 없이 즉시 페인트. 줌 애니메이션은 CSS로 처리(hero-zoom). */}
+      <div className="absolute inset-0 z-0 hero-zoom">
+        <ResponsiveImage
+          src={backgroundImage}
+          alt={imageAlt}
+          fill={true}
+          priority={priority}
+          className="object-cover"
+          pictureClassName="absolute inset-0 block h-full w-full"
+          width={1920}
+          height={1080}
+          sizes="100vw"
+        />
+      </div>
 
       <div
         className={`absolute inset-0 z-10 ${overlayGradient ? `bg-gradient-to-b ${overlayGradient}` : cinematicOverlay}`}
