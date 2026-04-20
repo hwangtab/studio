@@ -2,7 +2,7 @@
 title: 게인 스테이징 완전 가이드 — 클리핑 없는 깨끗한 레코딩과 믹스 세팅
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 녹음 가이드
+category: 믹싱·마스터링
 tags:
   - 게인 스테이징
   - gain staging

@@ -2,7 +2,7 @@
 title: VST 플러그인 완전 가이드 — 보컬 녹음·믹싱 필수 플러그인 무료·유료 추천
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 녹음 가이드
+category: 믹싱·마스터링
 tags:
   - VST 플러그인
   - 무료 VST

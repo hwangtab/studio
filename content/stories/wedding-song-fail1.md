@@ -2,7 +2,7 @@
 title: "축가 녹음 실패하는 이유 TOP 5 — 스튜디오 엔지니어가 본 공통점"
 date: 2026-04-08
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: "보컬 가이드"
 tags: ["축가 녹음 실패", "축가 실패 사례", "축가 녹음 주의사항", "축가 녹음 팁", "웨딩 축가 준비", "축가 녹음 비용", "결혼식 축가"]
 thumbnail: "/images/recording3.webp"
 summary: >-

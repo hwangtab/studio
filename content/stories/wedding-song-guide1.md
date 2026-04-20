@@ -2,7 +2,7 @@
 title: "결혼식 축가 녹음 준비 가이드 — D-30일부터 당일까지"
 date: 2026-04-08
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: "보컬 가이드"
 tags: ["결혼식 축가 녹음", "축가 준비 방법", "축가 녹음 준비", "셀프 축가", "축가 녹음 비용", "웨딩송 녹음", "축가 실패"]
 thumbnail: "/images/recording7.webp"
 summary: >-

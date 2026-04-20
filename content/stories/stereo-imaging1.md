@@ -2,7 +2,7 @@
 title: 스테레오 이미징 완전 가이드 — 믹스 폭·깊이·공간감 만드는 실전 기법
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 녹음 가이드
+category: 믹싱·마스터링
 tags:
   - 스테레오 이미징
   - stereo imaging

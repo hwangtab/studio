@@ -2,7 +2,7 @@
 title: 패럴렐 컴프레션 완전 가이드 — 다이나믹을 살리면서 펀치감 더하기
 date: 2026-04-06T00:00:00.000Z
 author: 스튜디오 놀
-category: 녹음 가이드
+category: 믹싱·마스터링
 tags:
   - 패럴렐 컴프레션
   - parallel compression
