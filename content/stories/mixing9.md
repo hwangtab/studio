@@ -82,4 +82,3 @@ EQ로 저음을 올리지 말고, 사라진 저음을 되찾으세요. (듬직-!
 ---
 
 **믹싱 강좌 시리즈**: [← 제8부: 플러그인을 위한 밥상 차리기](/stories/mixing8) | [제10부: 황금 귀 만들기 →](/stories/mixing10) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
-

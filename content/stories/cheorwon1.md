@@ -93,4 +93,4 @@ faq:
 
 철원에서 의정부역 버스를 이용하면 약 3시간 내로 서울 연신내까지 이동할 수 있습니다. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
-[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

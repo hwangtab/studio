@@ -97,4 +97,4 @@ faq:
 
 인제에서 춘천역 ITX-청춘을 이용하면 약 3시간 50분 내로 서울 연신내 이동이 부담스럽다면 온라인 파일 의뢰를 이용해보세요. 이동이 부담스럽다면 온라인 파일 의뢰를 추천합니다. 현지에서 드라이 보컬 WAV만 녹음해 보내주시면 믹싱·마스터링 후 납품합니다.
 
-[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

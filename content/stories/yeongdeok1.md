@@ -87,4 +87,4 @@ faq:
 
 영덕에서 포항역 KTX를 이용하면 약 4시간 내로 서울 연신내 이동이 부담스럽다면 온라인 믹싱 의뢰 서비스를 이용해보세요. 방문보다 파일 의뢰가 현실적인 선택입니다. 현지 WAV 녹음 → 카카오톡 전송 → 완성 파일 납품까지 소통합니다.
 
-[울진에서 서울 녹음실 방문 가이드](/stories/uljin1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[울진에서 서울 녹음실 방문 가이드](/stories/uljin1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

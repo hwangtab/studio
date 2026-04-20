@@ -89,4 +89,4 @@ faq:
 
 평창에서 KTX 강릉선을 이용하면 약 2시간대로 서울 연신내. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[정선에서 서울 녹음실 방문 가이드](/stories/jeongseon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주·강원도에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[정선에서 서울 녹음실 방문 가이드](/stories/jeongseon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주·강원도에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

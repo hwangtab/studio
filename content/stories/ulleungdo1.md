@@ -95,4 +95,4 @@ faq:
 
 울릉도에서 서울까지 거리가 멀기 때문에 온라인 믹싱 의뢰를 강력히 추천합니다. 방문이 필요한 경우 포항 KTX를 이용하면 가장 효율적입니다. 카카오톡으로 사전 상담 후 예약해 주세요. 이동이 부담스럽다면 온라인 파일 의뢰를 추천합니다. 현지에서 드라이 보컬 WAV만 녹음해 보내주시면 믹싱·마스터링 후 납품합니다.
 
-[동해시 녹음실 안내](/stories/donghae1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [강릉 녹음실 안내](/stories/gangneung1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[동해시 녹음실 안내](/stories/donghae1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [강릉 녹음실 안내](/stories/gangneung1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

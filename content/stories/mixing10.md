@@ -103,4 +103,3 @@ EQ 플러그인을 열고, 아무 음악이나 튼 다음 특정 주파수를 +1
 ---
 
 **믹싱 강좌 시리즈**: [← 제9부: 투명 인간 같은 적, 위상(Phase)](/stories/mixing9) | [제11부: 믹싱을 위한 마지막 조각, 에디팅 →](/stories/mixing11) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
-

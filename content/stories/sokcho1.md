@@ -105,4 +105,4 @@ faq:
 
 속초에서 서울까지 이동이 있지만, 이른 첫차를 이용하면 당일 왕복 세션이 충분히 가능합니다. 방문보다 파일 의뢰가 현실적인 선택입니다. 현지 WAV 녹음 → 카카오톡 전송 → 완성 파일 납품까지 소통합니다.
 
-[고성(강원)에서 서울 녹음실 방문 가이드](/stories/goseong-gangwon1) | [인제에서 서울 녹음실 방문 가이드](/stories/inje1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[고성(강원)에서 서울 녹음실 방문 가이드](/stories/goseong-gangwon1) | [인제에서 서울 녹음실 방문 가이드](/stories/inje1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

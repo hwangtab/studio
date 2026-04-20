@@ -88,4 +88,4 @@ faq:
 
 중랑구 신내·망우 지역에서 연신내까지는 경의중앙선 망우역에서 탑승하여 디지털미디어시티에서 6호선으로 환승하는 방법이 가장 빠릅니다. 약 40~50분 소요되며, 신내 도시철도를 이용하면 접근이 더욱 편리합니다.
 
-[중랑구 전체 녹음실 안내](/stories/jungnang1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/jangandong1) | [노원구 녹음실 안내](/stories/nowon1) | [성북구 녹음실 안내](/stories/seongbuk1) 
+[중랑구 전체 녹음실 안내](/stories/jungnang1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/jangandong1) | [노원구 녹음실 안내](/stories/nowon1) | [성북구 녹음실 안내](/stories/seongbuk1)

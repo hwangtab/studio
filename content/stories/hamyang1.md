@@ -87,4 +87,4 @@ faq:
 
 함양에서 전주역 KTX를 이용하면 약 3시간 30분~4시간 내로 서울 연신내. 방문보다 파일 의뢰가 현실적인 선택입니다. 현지 WAV 녹음 → 카카오톡 전송 → 완성 파일 납품까지 소통합니다.
 
-[산청에서 서울 녹음실 방문 가이드](/stories/sancheong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[산청에서 서울 녹음실 방문 가이드](/stories/sancheong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

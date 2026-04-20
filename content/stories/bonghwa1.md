@@ -95,4 +95,4 @@ faq:
 
 봉화는 이동 시간이 상당합니다. 방문보다 파일 의뢰가 현실적인 선택입니다. 현지 WAV 녹음 → 카카오톡 전송 → 완성 파일 납품까지 소통합니다.
 
-[영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

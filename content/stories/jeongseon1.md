@@ -97,4 +97,4 @@ faq:
 
 정선에서 원주역 KTX를 이용하면 약 3시간 30분 내로 서울 연신내 이동이 부담스럽다면 온라인 파일 의뢰를 이용해보세요. 거리가 있는 만큼 카카오톡으로 미리 충분히 소통해두세요. 온라인 의뢰도 동일한 결과물로 납품합니다.
 
-[영월에서 서울 녹음실 방문 가이드](/stories/yeongwol1) | [평창에서 서울 녹음실 방문 가이드](/stories/pyeongchang1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) 
+[영월에서 서울 녹음실 방문 가이드](/stories/yeongwol1) | [평창에서 서울 녹음실 방문 가이드](/stories/pyeongchang1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
