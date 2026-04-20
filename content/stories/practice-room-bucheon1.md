@@ -114,16 +114,4 @@ faq:
 - 인천 → 공항철도·경의중앙선 경유 → 연신내: 약 1시간 30분
 - 분당 → 신분당선·3호선·6호선 경유 → 연신내: 약 1시간 15분
 
----
-
----
- | [강서구·양천구 음악연습실 — 목동·화곡·가양 24시간 방음 연습실 가이드](/stories/practice-room-gangseo1)
-[동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/practice-room-dongdaemun1) | [강북·도봉·노원구 음악연습실 — 서울 북동권 24시간 방음 연습실 가이드](/stories/practice-room-gangbuk1) | [강남·서초구 음악연습실 — 서울 강남권 24시간 방음 연습실 가이드](/stories/practice-room-gangnam1) | [구로·금천·영등포 음악연습실 — 서울 서남권 24시간 방음 연습실 가이드](/stories/practice-room-guro1) | [종로구·중구 음악연습실 — 서울 도심권 24시간 방음 연습실 가이드](/stories/practice-room-jongno1)
-
----
- | [신촌·이대·서대문구 음악연습실 — 24시간 방음 연습실 완전 가이드](/stories/practice-room-sinchon1)
-[관악구·동작구 음악연습실 — 신림·서울대입구·사당 24시간 방음 연습실 가이드](/stories/practice-room-gwanak1)
-
----
- | [용산·이태원·한남 음악연습실 — 서울 중심부 24시간 방음 연습실 가이드](/stories/practice-room-yongsan1)
-[송파구·잠실 음악연습실 — 서울 동남권 24시간 방음 연습실 가이드](/stories/practice-room-songpa1)
+[강서구·양천구 음악연습실](/stories/practice-room-gangseo1) | [동대문·성동·광진구 음악연습실](/stories/practice-room-dongdaemun1) | [강북·도봉·노원구 음악연습실](/stories/practice-room-gangbuk1) | [강남·서초구 음악연습실](/stories/practice-room-gangnam1) | [구로·금천·영등포 음악연습실](/stories/practice-room-guro1) | [종로구·중구 음악연습실](/stories/practice-room-jongno1) | [신촌·이대·서대문구 음악연습실](/stories/practice-room-sinchon1) | [관악구·동작구 음악연습실](/stories/practice-room-gwanak1) | [용산·이태원·한남 음악연습실](/stories/practice-room-yongsan1) | [송파구·잠실 음악연습실](/stories/practice-room-songpa1)

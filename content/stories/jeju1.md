@@ -64,8 +64,6 @@ faq:
 
 ---
 
-%%online-fallback%%
-
 **파일 요구사항**
 - 보컬: WAV 44.1kHz/24bit (에코·리버브 없는 드라이 파일)
 - MR: WAV 44.1kHz/16bit 이상
