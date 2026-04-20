@@ -11,7 +11,7 @@ tags:
   - Frequency
 summary: >-
   "The sound is too muddy." (Sniff.) "The vocal is so sharp it hurts." (Ouch!)
-  The magic wand that solves these worries is EQ. EQ lets you cut or boost 
+  The magic wand that solves these worries is EQ. EQ lets you cut or boost
 thumbnail: /images/recording16.webp
 ---
 ![Colorful EQ graph](/images/pcw.webp)

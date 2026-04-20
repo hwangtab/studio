@@ -10,7 +10,7 @@ tags:
   - Clipping
 summary: >-
   “Isn’t digital perfect? It’s just 0 and 1—why are there errors?” Many people
-  believe digital audio is clean and unchanging. But the digital world has 
+  believe digital audio is clean and unchanging. But the digital world has
 thumbnail: /images/hardware5.webp
 ---
 ![Digital glitch image](/images/pcw.webp)

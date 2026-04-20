@@ -11,7 +11,7 @@ tags:
   - Loudness
 summary: >-
   "El empaque es tan importante como el contenido." (¡Regalo!) Llegaste hasta
-  aquí. (¡Clap‑clap!) Preparaste ingredientes (Editing), cocinaste el sabor 
+  aquí. (¡Clap‑clap!) Preparaste ingredientes (Editing), cocinaste el sabor
 thumbnail: /images/recording2.webp
 ---
 ![Forma de onda limpia en un monitor](/images/service3.webp)

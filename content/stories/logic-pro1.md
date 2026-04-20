@@ -132,7 +132,7 @@ Logic Pro의 Flex Pitch는 Melodyne에 필적하는 직관적 피치 교정 도�
 
 ## Mastering Assistant 활용
 
-Logic Pro 10.7.4 이후 버전에 추가된 Mastering Assistant는 AI 기반 자동 마스터링 제안 기능입니다. 완성된 믹스를 분석해 EQ 커브, 다이나믹 처리, 출력 레벨을 자동 제안합니다. 
+Logic Pro 10.7.4 이후 버전에 추가된 Mastering Assistant는 AI 기반 자동 마스터링 제안 기능입니다. 완성된 믹스를 분석해 EQ 커브, 다이나믹 처리, 출력 레벨을 자동 제안합니다.
 
 ### Logic Pro 10.7.4+ 기능
 

@@ -12,7 +12,7 @@ tags:
 summary: >-
   “Âm thanh bắt đầu chuyển động và thở.” (Lượn‑lượn!) Đến giờ ta đã học
   dynamics, panning và không gian. Modulation thêm chuyển động và độ mượt—một
-  gia 
+  gia
 thumbnail: /images/hardware4.webp
 ---
 ![Mặt nước gợn sóng hoặc cực quang](/images/pcw.webp)

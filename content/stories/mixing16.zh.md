@@ -11,7 +11,7 @@ tags:
   - Frequency
 summary: >-
   “声音太闷了。”（嗅嗅） “人声太尖，耳朵疼。”（哎呀！） 解决这些烦恼的魔法棒就是 EQ。 EQ 通过提升或削减频段来塑形，就像雕刻黏土一样，我们用 EQ
-  打磨声音。（嗖‑嗖） 1. EQ 的第一使命：清理（Subtractive EQ） 新手最常见的错误就是不停 Boost。 但真正的高手先从 
+  打磨声音。（嗖‑嗖） 1. EQ 的第一使命：清理（Subtractive EQ） 新手最常见的错误就是不停 Boost。 但真正的高手先从
 thumbnail: /images/recording16.webp
 ---
 ![绚丽的 EQ 曲线图](/images/pcw.webp)

@@ -11,7 +11,7 @@ tags:
   - InputLevel
 summary: >-
   “Plugin qo'ydim, ovoz g'alati buzilib ketdi.” “Kompressori ishlamayapti.” (Ha?
-  Nima bo'lyapti?) Pluginlaringiz buzilmagan. Siz ularga juda ko'p ovqat 
+  Nima bo'lyapti?) Pluginlaringiz buzilmagan. Siz ularga juda ko'p ovqat
 thumbnail: /images/recording3.webp
 ---
 ![Analog VU meter](/images/hardware5.webp)

@@ -11,7 +11,7 @@ tags:
   - NoPlugins
 summary: >-
   All preparations are done. (Deep breath.) Room is treated (Session Prep)
-  Editing is done (Editing) Template is open (Ta‑da!) Now you want to throw on 
+  Editing is done (Editing) Template is open (Ta‑da!) Now you want to throw on
 thumbnail: /images/recording11.webp
 ---
 ![Engineer with a hand on the fader](/images/console.webp)

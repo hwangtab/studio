@@ -11,7 +11,7 @@ tags:
   - RoomAcoustic
 summary: >-
   “Compré monitores caros, ¿por qué suena raro?” Muchos principiantes culpan al
-  equipo. Esperan que unos monitores de 1.000.000 KRW suenen a ese nivel, 
+  equipo. Esperan que unos monitores de 1.000.000 KRW suenen a ese nivel,
 thumbnail: /images/hardware2.webp
 ---
 ![Colocación de monitores de estudio](/images/studio1.webp)

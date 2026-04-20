@@ -11,7 +11,7 @@ tags:
   - Frequency
 summary: >-
   “Âm thanh quá đục.” (Hắt xì.) “Vocal sắc đến đau tai.” (Ối!) Cây đũa phép giải
-  quyết những lo lắng này là EQ. EQ cho phép cắt hoặc tăng những dải tần 
+  quyết những lo lắng này là EQ. EQ cho phép cắt hoặc tăng những dải tần
 thumbnail: /images/recording16.webp
 ---
 ![Đồ thị EQ nhiều màu](/images/pcw.webp)

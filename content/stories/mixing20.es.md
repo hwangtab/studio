@@ -11,7 +11,7 @@ tags:
   - Flanger
 summary: >-
   "El sonido empieza a moverse y respirar." (¡Ondulante!) Hasta ahora aprendimos
-  dinámica, pan y espacio. La modulación añade movimiento y densidad: el 
+  dinámica, pan y espacio. La modulación añade movimiento y densidad: el
 thumbnail: /images/hardware4.webp
 ---
 ![Ondas o aurora](/images/pcw.webp)

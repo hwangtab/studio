@@ -11,7 +11,7 @@ tags:
 summary: >-
   “Miksni boshlamoqchiman, lekin qo'rqib ketdim. 50 ta track bor.” (Uf.)
   Ko'pchilik hatto boshlamasdan charchab qoladi. Audio01, Audio02lar tugamaydi
-  — 
+  —
 thumbnail: /images/recording2.webp
 ---
 ![Chigallashgan kabellar va tartibli patchbay](/images/service3.webp)

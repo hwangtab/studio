@@ -11,7 +11,7 @@ tags:
   - Polarity
 summary: >-
   “Kick nghe rất to, nhưng khi bật cùng overhead thì nó biến mất!” (Hả?) Đó
-  không phải ma. Đó là khoa học: phase cancellation. Nhiều người mới chỉnh EQ 
+  không phải ma. Đó là khoa học: phase cancellation. Nhiều người mới chỉnh EQ
 thumbnail: /images/recording4.webp
 ---
 ![Ảnh micro trống](/images/recording1.webp)

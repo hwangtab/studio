@@ -11,7 +11,7 @@ tags:
   - FaderRide
 summary: >-
   "La mezcla no es una foto congelada, es una película viva." (¡Acción!) Ya
-  aprendimos a crear un gran static mix. (Paso a paso.) Pero la música fluye: 
+  aprendimos a crear un gran static mix. (Paso a paso.) Pero la música fluye:
 thumbnail: /images/recording1.webp
 ---
 ![Pantalla de DAW con líneas de automatización](/images/console.webp)

@@ -11,7 +11,7 @@ tags:
   - FaderRide
 summary: >-
   “Miks ramkaga qotirilgan surat emas, u tirik film.” (Action!) Biz yaxshi
-  static mix yasashni o'rgandik. (Bosqichma‑bosqich!) Ammo musiqa oqadi. Verse 
+  static mix yasashni o'rgandik. (Bosqichma‑bosqich!) Ammo musiqa oqadi. Verse
 thumbnail: /images/recording1.webp
 ---
 ![Automation chiziqlari tushirilgan DAW ekrani](/images/console.webp)

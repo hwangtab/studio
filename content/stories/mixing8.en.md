@@ -11,7 +11,7 @@ tags:
   - InputLevel
 summary: >-
   "I inserted a plug-in and the sound is weirdly distorted." "My compressor
-  isn’t working." (Huh? What’s going on?) Your plug-ins aren’t broken. You’re 
+  isn’t working." (Huh? What’s going on?) Your plug-ins aren’t broken. You’re
 thumbnail: /images/recording3.webp
 ---
 ![Analog VU meter](/images/hardware5.webp)

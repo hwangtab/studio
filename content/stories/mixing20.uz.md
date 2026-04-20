@@ -11,7 +11,7 @@ tags:
   - Flanger
 summary: >-
   “Ovoz harakatlana boshladi, nafas oladi.” (Waver‑waver!) Hozirgacha biz
-  dynamics, panning va makonni o'rgandik. Modulation harakat va boylik qo'shadi 
+  dynamics, panning va makonni o'rgandik. Modulation harakat va boylik qo'shadi
 thumbnail: /images/hardware4.webp
 ---
 ![To'lqinli suv yoki aurora](/images/pcw.webp)

@@ -42,10 +42,10 @@ summary: >-
 ```
 1. 모음(Vowel): 소리의 색깔·지속
    a, e, i, o, u
-   
+
 2. 자음(Consonant): 소리의 시작·끝
    b, d, f, g, h, j, k, l, m...
-   
+
 3. 연결(Connection): 음절과 음절 사이
    legato vs staccato
 

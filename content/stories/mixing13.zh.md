@@ -12,7 +12,7 @@ tags:
 summary: >-
   准备工作都完成了。（深呼吸） 房间整理完毕（Session Prep） 编辑完成（Editing） 模板已打开（登场！）
   现在是不是手痒想上插件？停！(等等) 该做混音最重要的第一步：静态混音（Static Mix）。 1. 什么是静态混音？
-  “不使用插件和自动化，只用推子和声像把平衡做到最好。” 
+  “不使用插件和自动化，只用推子和声像把平衡做到最好。”
 thumbnail: /images/recording11.webp
 ---
 ![把手放在推子上的工程师](/images/console.webp)

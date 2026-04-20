@@ -11,7 +11,7 @@ tags:
   - PreDelay
 summary: >-
   "Un sonido dry es un sonido muerto." (¡Seco!) Todos los sonidos de la vida
-  vienen con espacio. Hablar en una habitación, cantar en un baño, gritar en 
+  vienen con espacio. Hablar en una habitación, cantar en un baño, gritar en
 thumbnail: /images/hardware2.webp
 ---
 ![Catedral con vitrales](/images/service1.webp)

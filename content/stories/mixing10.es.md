@@ -13,7 +13,7 @@ tags:
   - Reference
 summary: >-
   "Tengo oído malo, no puedo mezclar." (Cabizbajo.) No. No tienes oído malo;
-  simplemente no sabes qué escuchar todavía. Así como un sommelier distingue 
+  simplemente no sabes qué escuchar todavía. Así como un sommelier distingue
 thumbnail: /images/recording6.webp
 ---
 ![Persona concentrada con auriculares](/images/recording2.webp)

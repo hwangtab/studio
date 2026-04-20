@@ -11,7 +11,7 @@ tags:
   - InputLevel
 summary: >-
   "Puse un plug‑in y el sonido se distorsiona raro." "El compresor no hace
-  nada." (¿Eh? ¿Qué pasa?) Tus plug‑ins no están rotos. El problema es que les 
+  nada." (¿Eh? ¿Qué pasa?) Tus plug‑ins no están rotos. El problema es que les
 thumbnail: /images/recording3.webp
 ---
 ![Medidor VU analógico](/images/hardware5.webp)

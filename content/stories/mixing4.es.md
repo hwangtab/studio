@@ -13,7 +13,7 @@ tags:
   - BitDepth
 summary: >-
   “¿Debo grabar a 44.1 kHz o 48 kHz?” “¿Qué diferencia hay entre 16‑bit y
-  24‑bit?” ¿Los números te marean? No te preocupes. Es igual que la imagen. Así 
+  24‑bit?” ¿Los números te marean? No te preocupes. Es igual que la imagen. Así
 thumbnail: /images/hardware4.webp
 ---
 ![Forma de onda de audio digital](/images/recording8.webp)

@@ -11,7 +11,7 @@ tags:
   - Listening
 summary: >-
   "I have bad ears, so I can’t mix." (Sad face.) No—you don’t have bad ears. You
-  just don’t know what to listen for yet. Like a sommelier tasting wine, 
+  just don’t know what to listen for yet. Like a sommelier tasting wine,
 thumbnail: /images/recording6.webp
 ---
 ![Focused listening with headphones](/images/recording2.webp)
