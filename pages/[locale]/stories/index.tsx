@@ -24,10 +24,12 @@ import { getSiteConfig } from '../../../data/siteConfig';
 
 import type { NextPageWithLayout } from '../../../types';
 
-// 목록 페이지에 필요한 최소 필드만 포함하는 경량 Story 타입 — 1707개를 이 shape로
-// 직렬화해 __NEXT_DATA__ 크기와 하이드레이션 처리량을 줄인다.
-// (tags, images, author, id, createdAt, thumbnailDerived, content 제외)
-type StoryListItem = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'category' | 'summary' | 'thumbnail'>;
+// 목록 페이지에 필요한 최소 필드만 포함하는 경량 Story 타입.
+// category(라벨)는 제거 — i18n 번역(stories.categories[key])으로 대체.
+// summary는 선택적 — 상위 50개(스키마 + 첫 페이지 카드)만 포함, 나머지는 payload 축소 위해 생략.
+type StoryListItem = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'thumbnail'> & {
+  summary?: string;
+};
 
 interface StoriesPageProps {
   locale: Locale;
@@ -300,16 +302,17 @@ export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params 
   const locale = resolveLocaleParam(params?.locale);
   const fullStories = getAllStories(locale);
 
-  // 목록 페이지에 필요한 필드만 추출 — 불필요한 tags/images/author 등을 떨궈
-  // 클라이언트로 전송되는 JSON 크기와 하이드레이션 비용을 축소.
-  const stories: StoryListItem[] = fullStories.map((s) => ({
+  // 목록 페이지에 필요한 필드만 추출.
+  // - summary: 상위 50개만 포함(스키마 + 첫 페이지 카드용). 나머지는 생략하여 payload 대폭 축소.
+  //   JSON 전체 크기가 ~540KB → ~250KB 예상. Hydration TBT 대폭 감소.
+  // - category 라벨은 제거 (StoryCard가 i18n labels.categoryByKey를 우선 사용).
+  const stories: StoryListItem[] = fullStories.map((s, idx) => ({
     slug: s.slug,
     title: s.title,
     date: s.date,
     categoryKey: s.categoryKey,
-    category: s.category,
-    summary: s.summary,
     thumbnail: s.thumbnail,
+    ...(idx < 50 && s.summary ? { summary: s.summary } : {}),
   }));
 
   return buildPageStaticProps(
