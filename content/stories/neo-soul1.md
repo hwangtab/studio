@@ -79,6 +79,7 @@ faq:
 - **7sus4·9sus4**: 해결을 미루는 서스펜디드 느낌
 
 **대표 코드 진행 예시**
+
 Fmaj9 → Dm11 → Gm9 → C13sus4
 Bbmaj7 → Gm9 → Ebmaj9 → F7#9
 Am9 → D9 → Gmaj9 → Cmaj7#11

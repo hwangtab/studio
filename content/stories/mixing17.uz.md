@@ -21,6 +21,7 @@ Ko'pchilik kompressorda qotib qoladi. U EQ kabi keskin o'zgartirmaydi, noto'g'ri
 
 Ammo tamoyil juda sodda. Ko'p o'ylamang.
 **“Ovoz haddan oshsa, u avtomatik pasaytiriladi.”**
+
 Xolos. Rostdan ham.
 
 ## 1. Kompressorning to'rtta asosiy termini

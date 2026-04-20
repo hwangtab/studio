@@ -52,6 +52,7 @@ Antes de mezclar (o al grabar), revisa el nivel de cada pista. (¡Con lupa!)
 3. **Iguala la salida del plug‑in**: Si al insertar el plug‑in sube el volumen, baja el **Output Gain** hasta que suene igual que en bypass.
 
 **"Volume in = Volume out"**
+
 Si cumples eso, tu mezcla será mucho más limpia y relajada.
 
 ## 4. La estética del sonido pequeño

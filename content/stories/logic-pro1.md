@@ -141,6 +141,7 @@ Logic Pro 10.7.4 이후 버전에 추가된 Mastering Assistant는 AI 기반 자
 ### 수동 마스터링 체인
 
 **마스터 버스**
+
 Channel EQ → Vintage VCA or Multipressor → Adaptive Limiter
 
 Adaptive Limiter의 Gain을 조정해 최종 음량을 -14 LUFS(Spotify 기준) 또는 -16 LUFS(Apple Music 기준)에 맞춥니다.

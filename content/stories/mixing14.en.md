@@ -51,6 +51,7 @@ Start with the most important elements:
 4. **Harmony instruments (piano, guitar)**: The walls and interior. Fill space without covering vocals.
 
 **Tip: Pink Noise Mixing**
+
 If you’re lost, try pink noise. Play it around ‑12 dB, then raise each instrument until it barely pokes through the noise.
 Surprisingly, you’ll get a solid balance. (Nice!)
 

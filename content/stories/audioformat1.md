@@ -63,6 +63,7 @@ faq:
 - 스튜디오 규격: 48kHz 또는 96kHz / 24bit
 
 **용량 예시 (3분 곡)**
+
 WAV 44.1kHz/16bit = 약 30~32MB
 WAV 44.1kHz/24bit = 약 47~50MB
 

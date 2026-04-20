@@ -84,6 +84,7 @@ La razón #1 por la que el reverb ensucia es el **reverb en graves y agudos**.
 * **Reverb en agudos**: exagera las sibilancias (“sss”).
 
 **Solución: EQ al reverb**
+
 Usa el EQ del reverb o coloca uno después:
 
 1. **Low Cut (High‑Pass)**: corta por debajo de 600 Hz. Sí, tan alto. (Se limpia rápido.)

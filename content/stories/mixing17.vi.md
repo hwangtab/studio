@@ -21,6 +21,7 @@ Nhiều người mắc kẹt ở compressor. Nó không thay đổi âm rõ rệ
 
 Nhưng nguyên lý rất đơn giản. Đừng nghĩ quá.
 **“Khi âm quá lớn, nó tự động hạ xuống.”**
+
 Thế thôi. Thật đó.
 
 ## 1. Bốn thuật ngữ lớn của compressor

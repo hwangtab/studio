@@ -159,6 +159,7 @@ summary: >-
 - 12프렛 바레 = G (높은 옥타브)
 
 **롤링 스톤스 "Honky Tonk Women" 슬라이드 리프:**
+
 Keith Richards의 오픈 G 슬라이드 스타일
 
 ### 오픈 D (DADF#AD)

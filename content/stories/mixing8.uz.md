@@ -52,6 +52,7 @@ Miksdan oldin (yoki yozishda) har bir track darajasini tekshiring. (Ehtiyot!)
 3. **Plugin chiqishini moslashtiring**: Plugin qo'shgach ovoz sakrab ketsa, **Output Gain**ni pasaytirib bypass signaliga tenglashtiring.
 
 **“Volume kirishi = Volume chiqishi”**
+
 Shu qoidaga amal qilsangiz, miksingiz toza va xotirjam eshitiladi.
 
 ## 4. Kichik tovushlarning go'zalligi

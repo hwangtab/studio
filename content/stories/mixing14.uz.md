@@ -52,6 +52,7 @@ Eng muhim elementlardan boshlang:
 4. **Garmoniya asboblari (piano, gitara)**: Devor va ichki qism. Vokalni bosmasdan bo'shliqni to'ldirsin.
 
 **Maslahat: Pink Noise Mixing**
+
 Agar adashsangiz, pink noise qo'llang. Uni ‑12 dB atrofida qo'yib, har bir asbobni shovqindan biroz chiqguncha ko'taring.
 Kutilmaganda mustahkam balans chiqadi. (Nice!)
 

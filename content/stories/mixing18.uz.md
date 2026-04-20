@@ -84,6 +84,7 @@ Reverbning loyqalanishidagi #1 sabab — **past va yuqori reverb to'planishi**.
 * **Yuqori reverb**: sibilance (“sss”)ni kuchaytiradi.
 
 **Yechim: reverb EQ**
+
 Reverb ichidagi EQ yoki undan keyin qo'shilgan EQni ishlating:
 
 1. **Low cut (High‑Pass)**: 600 Hz'dan pastni kesing. Ha, shuncha yuqori. (Tez tozalanadi.)

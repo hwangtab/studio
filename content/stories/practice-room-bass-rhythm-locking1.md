@@ -152,6 +152,7 @@ James Jamerson의 베이스는 Benny Benjamin의 드럼과 항상 대화했습�
 ### 록 락킹
 
 **Led Zeppelin 스타일:**
+
 John Paul Jones와 John Bonham의 리듬 섹션.
 
 **특징:**

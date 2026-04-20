@@ -137,10 +137,12 @@ Dm7 (ii) → G7 (V) → Cmaj7 (I)
 ### II-V-I 기반 터닝
 
 **기본형**
+
 I → vi → ii → V → (I)
 Cmaj7 → Am7 → Dm7 → G7 → (Cmaj7)
 
 **확장 터닝 (Coltrane Turnaround)**
+
 I → bVII7 → bVI7 → V7 → I
 Cmaj7 → Bb7 → Ab7 → G7 → Cmaj7
 

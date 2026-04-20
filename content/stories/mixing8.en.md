@@ -52,6 +52,7 @@ Before you mix (or while recording), check the level of every track. (Carefully!
 3. **Match plug‑in output**: If the volume jumps after inserting a plug‑in, lower the plug‑in’s **Output Gain** so the level matches the bypassed signal.
 
 **"Volume in = Volume out"**
+
 Follow this, and your mix will sound cleaner and more relaxed.
 
 ## 4. The beauty of small sounds

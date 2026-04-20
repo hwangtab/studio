@@ -84,6 +84,7 @@ Lý do #1 khiến reverb bẩn là **tích tụ low và high**.
 * **High reverb**: phóng đại sibilance (“sss”).
 
 **Cách sửa: EQ reverb**
+
 Dùng EQ trong reverb hoặc chèn EQ sau nó:
 
 1. **Low cut (High‑Pass)**: cắt dưới 600 Hz. Vâng, cao vậy. (Sạch nhanh.)

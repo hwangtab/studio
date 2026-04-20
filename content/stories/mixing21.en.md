@@ -76,6 +76,7 @@ Why? Phone speakers can’t reproduce deep lows (<60 Hz).
 Turning up just makes it distort.
 
 **Solution: saturation**
+
 Drive the 808 with distortion or saturation to generate **harmonics** (200–400 Hz).
 Phones can play those mids, and our brains perceive “bass” from them. (Psychoacoustic trick!)
 

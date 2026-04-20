@@ -51,6 +51,7 @@ Empieza por lo más importante:
 4. **Armonía (piano, guitarra)**: paredes e interior. Llena el espacio sin tapar la voz.
 
 **Tip: Mezcla con ruido rosa**
+
 Si estás perdido, prueba con ruido rosa. Suena a ‑12 dB y sube cada instrumento hasta que apenas sobresalga.
 Sorprendentemente logras un buen balance. (¡Bien!)
 

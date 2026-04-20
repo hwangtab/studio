@@ -176,6 +176,7 @@ Joni Mitchell은 수십 가지 비표준 튜닝을 사용.
 - DADGBE (drop D의 변형)
 
 **Joni의 코드:**
+
 표준 튜닝과 다른 손가락 위치에서 더 풍부한 개방음.
 
 **"Big Yellow Taxi" 스타일 (오픈 튜닝):**

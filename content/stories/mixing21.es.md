@@ -76,6 +76,7 @@ Problema típico:
 Subir volumen solo distorsiona.
 
 **Solución: saturación**
+
 Satura o distorsiona el 808 para crear **armónicos** (200–400 Hz).
 El teléfono reproduce esos medios y el cerebro “imagina” el bajo. (Truco psicoacústico.)
 

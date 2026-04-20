@@ -110,6 +110,7 @@ vi - IV - I - V
 - C - Ab - Bb - C (장엄한 느낌)
 
 **Secondary Dominant (이중 지배음)**
+
 V7/V → V → I
 
 - **G장조에서**: D7 - G7 - C

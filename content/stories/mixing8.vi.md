@@ -52,6 +52,7 @@ Trước khi mix (hoặc khi thu), hãy kiểm tra mức của từng track. (C�
 3. **Match output plugin**: Nếu volume nhảy sau khi chèn plugin, giảm **Output Gain** để mức khớp với tín hiệu bypass.
 
 **“Volume vào = Volume ra”**
+
 Làm theo vậy, bản mix sẽ sạch và dễ thở hơn.
 
 ## 4. Vẻ đẹp của âm nhỏ

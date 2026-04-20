@@ -51,6 +51,7 @@ Bắt đầu từ yếu tố quan trọng nhất:
 4. **Nhạc cụ hòa âm (piano, guitar)**: Tường và nội thất. Lấp không gian nhưng không đè vocal.
 
 **Tip: Pink Noise Mixing**
+
 Nếu bí, hãy thử pink noise. Mở khoảng ‑12 dB, rồi nâng từng nhạc cụ đến khi vừa nhô qua tiếng nhiễu.
 Ngạc nhiên là bạn sẽ có balance tốt. (Nice!)
 

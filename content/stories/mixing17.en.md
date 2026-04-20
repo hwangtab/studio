@@ -21,6 +21,7 @@ Many people get stuck at the compressor. It doesn’t change sound as dramatical
 
 But the principle is simple. Don’t overthink it.
 **"When the sound gets too loud, it automatically turns it down."**
+
 That’s it. Really.
 
 ## 1. The big four compressor terms

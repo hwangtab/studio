@@ -22,6 +22,7 @@ Muchos se frustran con el compresor. No cambia tanto como un EQ y, si lo usas ma
 
 Pero el principio es muy simple. No lo compliques.
 **"Cuando el sonido se pasa de fuerte, baja el volumen automáticamente."**
+
 Eso es todo. De verdad.
 
 ## 1. Los 4 parámetros principales

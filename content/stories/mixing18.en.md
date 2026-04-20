@@ -84,6 +84,7 @@ The #1 reason reverb gets messy is **low and high reverb build‑up**.
 * **High reverb**: exaggerates sibilance (“sss”).
 
 **Fix: EQ your reverb**
+
 Use the reverb’s EQ or insert one after it:
 
 1. **Low cut (High‑Pass)**: Cut below 600 Hz. Yes, that high. (It gets clean fast.)
