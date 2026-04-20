@@ -47,22 +47,8 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
           <link rel="dns-prefetch" href="https://cdn.imweb.me" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-          {/* Critical fonts for above-the-fold content — others load on demand */}
-          <link
-            rel="preload"
-            href="/fonts/Pretendard-Regular.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          {/* 히어로 영역 로고 폰트(font-logo). PartialSansKR-Logo는 동일 파일을 별칭으로 사용 */}
-          <link
-            rel="preload"
-            href="/fonts/PartialSansKR-Regular.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
+          {/* 폰트 preload 제거: Slow 4G에서 1MB 폰트가 preload로 CSS/JS 다운로드를 블로킹하던 현상 해소.
+              font-display: swap 으로 시스템 폰트 즉시 렌더 → 폰트 도착 후 swap. FCP 대폭 단축. */}
           <script
             id="theme-init"
             dangerouslySetInnerHTML={{
