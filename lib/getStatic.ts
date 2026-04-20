@@ -1,10 +1,12 @@
 import i18n, { applyI18nResources, defaultLocale, locales, type Locale } from './i18n';
-import { getLocaleI18nResourcesServer } from './i18n.server';
+import { getLocaleI18nResourcesServer, getLocaleI18nSectionsServer } from './i18n.server';
 
-const initializeServerI18n = (locale: Locale) => {
+const initializeServerI18n = (locale: Locale, sections?: readonly string[]) => {
   if (typeof window !== 'undefined') return;
 
-  const resources = getLocaleI18nResourcesServer(locale);
+  const resources = sections
+    ? getLocaleI18nSectionsServer(locale, sections)
+    : getLocaleI18nResourcesServer(locale);
   applyI18nResources(resources);
 
   if (i18n.language !== locale && i18n.hasResourceBundle(locale, 'common')) {
@@ -16,6 +18,9 @@ const initializeServerI18n = (locale: Locale) => {
 
 interface BuildPageStaticPropsOptions {
   revalidate?: number;
+  /** 페이지 전용 i18n 섹션 (common.json의 top-level key). CORE는 자동 포함.
+   *  생략 시 기존 동작(전체 common.json 직렬화) 유지 — 호환성 위해. */
+  i18nSections?: readonly string[];
 }
 
 export const getCommonStaticPaths = async () => {
@@ -35,9 +40,10 @@ export const resolveLocaleParam = (localeParam: unknown): Locale => {
     : defaultLocale;
 };
 
-export const getI18nStaticProps = (localeParam: unknown) => {
+export const getI18nStaticProps = (localeParam: unknown, sections?: readonly string[]) => {
   const locale = resolveLocaleParam(localeParam);
-  const i18nResources = initializeServerI18n(locale) || getLocaleI18nResourcesServer(locale);
+  const i18nResources = initializeServerI18n(locale, sections)
+    || (sections ? getLocaleI18nSectionsServer(locale, sections) : getLocaleI18nResourcesServer(locale));
 
   return {
     locale,
@@ -50,7 +56,7 @@ export const buildPageStaticProps = <TProps extends Record<string, unknown>>(
   extraProps: TProps = {} as TProps,
   options: BuildPageStaticPropsOptions = {}
 ) => {
-  const baseProps = getI18nStaticProps(localeParam);
+  const baseProps = getI18nStaticProps(localeParam, options.i18nSections);
 
   return {
     props: {

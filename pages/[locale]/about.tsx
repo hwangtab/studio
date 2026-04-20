@@ -358,7 +358,7 @@ export const getStaticProps: GetStaticProps<AboutProps> = async ({ params }) => 
       servicesData,
       reviewsData,
     },
-    { revalidate: 86400 }
+    { revalidate: 86400, i18nSections: ['about', 'contact'] }
   );
 };
 

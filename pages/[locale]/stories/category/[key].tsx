@@ -267,7 +267,7 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
       stories,
       allStoriesCount: allStories.length,
     },
-    { revalidate: 3600 }
+    { revalidate: 3600, i18nSections: ['stories', 'pricing'] }
   );
 };
 

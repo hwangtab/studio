@@ -397,7 +397,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         {
             reviewsData,
         },
-        { revalidate: 86400 }
+        { revalidate: 86400, i18nSections: ['lesson'] }
     );
 };
 

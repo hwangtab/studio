@@ -317,7 +317,7 @@ export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params 
     {
       stories,
     },
-    { revalidate: 1800 }
+    { revalidate: 1800, i18nSections: ['stories', 'pricing'] }
   );
 };
 

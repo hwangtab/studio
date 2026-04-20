@@ -346,7 +346,7 @@ export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params })
       audioTracks,
       categories,
     },
-    { revalidate: 3600 }
+    { revalidate: 3600, i18nSections: ['portfolio', 'pricing', 'stories'] }
   );
 };
 

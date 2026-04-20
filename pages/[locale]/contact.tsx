@@ -504,7 +504,7 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const reviewsData = getReviews(locale);
-  return buildPageStaticProps(locale, { reviewsData }, { revalidate: 86400 });
+  return buildPageStaticProps(locale, { reviewsData }, { revalidate: 86400, i18nSections: ['contact'] });
 };
 
 export default Contact;

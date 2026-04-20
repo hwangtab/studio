@@ -265,6 +265,6 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps = async ({ params }) =>
-  buildPageStaticProps(params?.locale, {}, { revalidate: 86400 });
+  buildPageStaticProps(params?.locale, {}, { revalidate: 86400, i18nSections: [] });
 
 export default PrivacyPolicyPage;

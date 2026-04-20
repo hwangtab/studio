@@ -253,7 +253,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       faqData,
       reviewsData,
     },
-    { revalidate: 3600 }
+    { revalidate: 3600, i18nSections: ['home'] }
   );
 };
 

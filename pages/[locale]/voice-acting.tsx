@@ -416,7 +416,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return buildPageStaticProps(
     locale,
     { reviewsData, pricingData },
-    { revalidate: 86400 }
+    { revalidate: 86400, i18nSections: ['voiceActing'] }
   );
 };
 

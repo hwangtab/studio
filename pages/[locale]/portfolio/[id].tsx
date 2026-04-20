@@ -215,7 +215,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       item,
       categories,
     },
-    { revalidate: 3600 }
+    { revalidate: 3600, i18nSections: ['portfolio'] }
   );
 };
 

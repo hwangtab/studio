@@ -264,7 +264,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         story,
         relatedStories,
       },
-      { revalidate: 3600 }
+      { revalidate: 3600, i18nSections: ['stories'] }
     );
   } catch (error) {
     console.error('Story detail error:', error);
