@@ -62,6 +62,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                     itemScope
                                     itemType="https://schema.org/Rating"
                                     className="flex items-center mb-4"
+                                    role="img"
                                     aria-label={t('reviewSection.ratingAria', {
                                         rating: review.rating,
                                         defaultValue: `평점 ${review.rating}점`,

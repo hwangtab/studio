@@ -42,7 +42,8 @@ const QuickAnswers = ({
               variant="outline"
               className="p-6 h-full flex flex-col"
             >
-              <div className="text-xs font-semibold uppercase tracking-widest text-primary/70 mb-3">
+              {/* text-primary/70은 WCAG AA 미달(3.82:1) — text-primary-dark로 대비 확보. */}
+              <div className="text-xs font-semibold uppercase tracking-widest text-primary-dark dark:text-primary-light mb-3">
                 Q{index + 1}
               </div>
               <h3 className="typo-card-title mb-3 text-gray-900 dark:text-gray-100 min-h-[3.5rem]">

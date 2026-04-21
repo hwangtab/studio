@@ -30,8 +30,10 @@ const config: Config = {
         },
         accent: {
           light: '#10b981', // 밝은 에메랄드
-          DEFAULT: '#059669', // 에메랄드
-          dark: '#047857', // 진한 에메랄드
+          // #059669(emerald-600)는 흰 배경 대비 3.76:1로 WCAG AA(4.5) 미달.
+          // text-accent/border-accent를 흰 배경 버튼에 자주 쓰므로 emerald-700로 승격.
+          DEFAULT: '#047857', // 에메랄드 (AA 통과: 5.64:1)
+          dark: '#065f46', // 진한 에메랄드
         },
         gray: {
           50: '#f9fafb',

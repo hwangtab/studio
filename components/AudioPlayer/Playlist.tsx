@@ -46,7 +46,6 @@ const Playlist = ({
                                 }`}
                             onClick={() => onSelectTrack(index)}
                             aria-pressed={isActive}
-                            aria-label={`${track.title} ${track.artist}`}
                         >
                             <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0 mr-4 shadow-sm">
                                 <Image
