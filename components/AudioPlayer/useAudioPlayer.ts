@@ -38,15 +38,21 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
 
         if (!audioRef.current) {
             audioRef.current = new Audio(tracks[currentTrack].src);
+            // preload='none' — 사용자가 재생 버튼을 누를 때까지 파일을 다운로드하지 않음.
+            // 기본값 'auto'면 3MB+ 오디오가 페이지 로드 즉시 다운로드되어 LCP/대역폭을
+            // 잠식(/ko/portfolio LCP 21s 사고 원인).
+            audioRef.current.preload = 'none';
         }
 
         const audio = audioRef.current;
 
-        // If track changed, reset and load
+        // If track changed, reset and load (재생 중이거나 사용자가 트랙 바꿨을 때만 load).
         if (audio.src !== new URL(tracks[currentTrack].src, window.location.href).href) {
             audio.pause();
             audio.src = tracks[currentTrack].src;
-            audio.load();
+            // 트랙 교체 직후에도 preload='none' 유지 — 재생 버튼 누르면 자동으로 가져옴.
+            audio.preload = 'none';
+            if (isPlaying) audio.load();
         }
 
         const setAudioData = () => {
