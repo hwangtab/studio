@@ -66,13 +66,17 @@ export const DEFERRED_FONTS: readonly DeferredFontDef[] = [
   })),
 
   // PartialSansKR — 히어로 타이틀(font-logo) 전용 브랜드 폰트.
+  // display: swap — 히어로 h1 단 하나에만 쓰이므로 도착 시 repaint 비용이 미미.
+  // optional이면 첫 방문자는 캐시 미스로 영원히 안 보이는 문제가 있어 swap 선택.
   // -Regular와 -Logo 두 별칭: Logo는 ascent/descent override로 상단 여백 조정.
   {
     family: 'PartialSansKR-Regular',
+    display: 'swap',
     sources: partialSansSources,
   },
   {
     family: 'PartialSansKR-Logo',
+    display: 'swap',
     sources: partialSansSources,
     ascentOverride: '80%',
     descentOverride: '20%',
