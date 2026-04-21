@@ -25,8 +25,10 @@ const config: Config = {
         },
         secondary: {
           light: '#ec4899', // 밝은 핑크
-          DEFAULT: '#db2777', // 핑크
-          dark: '#be185d', // 진한 핑크
+          // #db2777(pink-600)은 gray-50 배경 대비 4.39:1로 WCAG AA(4.5) 간발의 차로 미달.
+          // accent와 동일하게 pink-700로 승격하여 흰/회색 배경 버튼 모두 통과.
+          DEFAULT: '#be185d', // 핑크 (AA 통과: 5.88:1)
+          dark: '#9d174d', // 진한 핑크
         },
         accent: {
           light: '#10b981', // 밝은 에메랄드
