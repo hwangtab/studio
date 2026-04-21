@@ -41,10 +41,10 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
             </div>
 
             <div className="flex items-center justify-between px-1">
-                <span className="text-[10px] font-mono font-medium text-gray-400 dark:text-white/50 tracking-wider">
+                <span className="text-[10px] font-mono font-medium text-gray-600 dark:text-white/60 tracking-wider">
                     {formatTime(currentTime)}
                 </span>
-                <span className="text-[10px] font-mono font-medium text-gray-400 dark:text-white/50 tracking-wider">
+                <span className="text-[10px] font-mono font-medium text-gray-600 dark:text-white/60 tracking-wider">
                     {formatTime(duration)}
                 </span>
             </div>

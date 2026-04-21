@@ -47,7 +47,7 @@ const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps)
         {...props}
       />
     </div>
-    {error && <span id={`${id}-error`} role="alert" className="text-xs text-red-500 mt-1 pl-10 block">{error}</span>}
+    {error && <span id={`${id}-error`} role="alert" className="text-xs text-red-600 mt-1 pl-10 block">{error}</span>}
   </div>
 );
 
@@ -243,7 +243,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.sunLabel')}</span>
-                    <span className="text-red-500 dark:text-red-400">{t('contact.hours.closed')}</span>
+                    <span className="text-red-600 dark:text-red-400">{t('contact.hours.closed')}</span>
                   </div>
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
@@ -373,7 +373,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
                     ></textarea>
                   </div>
                   {errors.message && (
-                    <span id="message-error" role="alert" className="text-xs text-red-500 mt-1 pl-10 block">
+                    <span id="message-error" role="alert" className="text-xs text-red-600 mt-1 pl-10 block">
                       {errors.message}
                     </span>
                   )}
