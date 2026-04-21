@@ -295,9 +295,12 @@ const STATIC_OVERRIDES = {
         : src ? src.split('/').pop()?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || ''
         : '';
 
+      // markdown-to-jsx가 <img>를 <p> 내부에 배치하므로 래퍼가 <div>면 HTML 무효 →
+      // 브라우저가 <p>를 자동 닫음 → SSR/하이드레이션 DOM 불일치(React #418 HTML mismatch).
+      // <span> + display:block 으로 같은 레이아웃 유지하되 <p> 내부에서도 유효한 태그 구조 보장.
       if (hasDimensions) {
         return (
-          <div className="my-6">
+          <span className="block my-6">
             <Image
               src={src}
               alt={altText}
@@ -306,13 +309,13 @@ const STATIC_OVERRIDES = {
               sizes="(max-width: 768px) 100vw, 768px"
               className="w-full h-auto rounded-lg shadow-md"
             />
-          </div>
+          </span>
         );
       }
 
       return (
-        <div className="my-6">
-          <div className="relative w-full overflow-hidden rounded-lg shadow-md" style={{ aspectRatio: '16 / 9' }}>
+        <span className="block my-6">
+          <span className="relative w-full overflow-hidden rounded-lg shadow-md block" style={{ aspectRatio: '16 / 9' }}>
             <Image
               src={src}
               alt={altText}
@@ -320,8 +323,8 @@ const STATIC_OVERRIDES = {
               sizes="(max-width: 768px) 100vw, 768px"
               className="object-contain"
             />
-          </div>
-        </div>
+          </span>
+        </span>
       );
     },
   },
