@@ -23,14 +23,16 @@ const ProjectRowCard = ({
 }: ProjectRowCardProps) => {
     const isInteractive = Boolean(onClick);
 
-    // 카테고리에 따른 뱃지 색상 (Light/Dark 대응)
+    // 카테고리에 따른 뱃지 색상 (Light/Dark 대응).
+    // 10px 볼드 텍스트 + 연한 50 배경 조합이라 text-*-600은 WCAG AA 미달(3.3~4.4:1).
+    // text-*-700로 통일해 4.5:1 이상 확보.
     const getCategoryColor = (cat: string) => {
         switch (cat) {
-            case 'album': return 'bg-pink-50 text-pink-600 border-pink-200 dark:bg-pink-500/20 dark:text-pink-400 dark:border-pink-500/30';
-            case 'single': return 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30';
-            case 'compilation': return 'bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-500/20 dark:text-violet-400 dark:border-violet-500/30';
-            case 'commercial': return 'bg-orange-50 text-orange-600 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30';
-            default: return 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-500/20 dark:text-gray-400 dark:border-gray-500/30';
+            case 'album': return 'bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-500/20 dark:text-pink-400 dark:border-pink-500/30';
+            case 'single': return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30';
+            case 'compilation': return 'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-500/20 dark:text-violet-400 dark:border-violet-500/30';
+            case 'commercial': return 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30';
+            default: return 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-500/20 dark:text-gray-400 dark:border-gray-500/30';
         }
     };
 
