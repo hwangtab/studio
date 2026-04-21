@@ -39,7 +39,7 @@
     "lint": "eslint pages components lib data utils middleware.ts next.config.mjs --ext .js,.jsx,.ts,.tsx",
     "type-check": "tsc --noEmit",
     "prebuild": "node scripts/optimizeImages.js",
-    "postbuild": "rm -f public/sitemap*.xml public/robots.txt && next-sitemap",
+    "postbuild": "rm -f public/sitemap*.xml public/robots.txt && next-sitemap && node scripts/normalize-sitemap-hreflang.js",
     "test": "jest",
     "content-check": "node scripts/content-quality-check.js --korean",
     "content-check:ci": "node scripts/content-quality-check.js --korean --ci"

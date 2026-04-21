@@ -72,9 +72,9 @@ export const generateDefaultSchema = (
         url: siteUrl,
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}${config.logo}`,
-          width: 3350,
-          height: 862,
+          url: `${siteUrl}/logo512.png`,
+          width: 512,
+          height: 512,
         },
         image: {
           '@type': 'ImageObject',
@@ -122,9 +122,9 @@ export const generateDefaultSchema = (
         },
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}${config.logo}`,
-          width: 3350,
-          height: 862,
+          url: `${siteUrl}/logo512.png`,
+          width: 512,
+          height: 512,
         },
         url: siteUrl,
         description: config.description,
@@ -152,6 +152,12 @@ export const generateDefaultSchema = (
             dayOfWeek: ['Saturday'],
             opens: '12:00',
             closes: '18:00',
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Sunday'],
+            opens: '00:00',
+            closes: '00:00',
           },
         ],
         acceptsReservations: `${siteUrl}/${locale}/contact`,
@@ -363,9 +369,9 @@ export const generateArticleSchema = (
       '@id': organizationId,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}${config.logo}`,
-        width: 3350,
-        height: 862,
+        url: `${siteUrl}/logo512.png`,
+        width: 512,
+        height: 512,
       },
     },
     image: [{
@@ -751,7 +757,7 @@ export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') =>
       name: config.name,
       logo: {
         '@type': 'ImageObject',
-        url: `${config.url}${config.logo}`,
+        url: `${config.url}/logo512.png`,
       },
     },
   };

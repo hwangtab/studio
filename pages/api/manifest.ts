@@ -2,14 +2,18 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { locales, defaultLocale, type Locale } from '../../lib/i18n-config';
 import { getSiteConfig } from '../../data/siteConfig';
 
-const shortcutLabels: Record<Locale, { contact: string; contactShort: string; contactDesc: string; pricing: string; pricingShort: string; pricingDesc: string }> = {
-  ko: { contact: '문의하기', contactShort: '문의', contactDesc: '스튜디오 예약 및 문의', pricing: '가격 안내', pricingShort: '가격', pricingDesc: '레코딩·연습실 가격 확인' },
-  en: { contact: 'Contact', contactShort: 'Contact', contactDesc: 'Studio booking & inquiries', pricing: 'Pricing', pricingShort: 'Pricing', pricingDesc: 'Recording & practice room pricing' },
-  zh: { contact: '联系我们', contactShort: '联系', contactDesc: '工作室预约与咨询', pricing: '价格', pricingShort: '价格', pricingDesc: '录音·练习室价格查询' },
-  es: { contact: 'Contacto', contactShort: 'Contacto', contactDesc: 'Reservas y consultas del estudio', pricing: 'Precios', pricingShort: 'Precios', pricingDesc: 'Precios de grabación y sala de práctica' },
-  vi: { contact: 'Liên hệ', contactShort: 'Liên hệ', contactDesc: 'Đặt phòng & liên hệ studio', pricing: 'Bảng giá', pricingShort: 'Giá', pricingDesc: 'Giá phòng thu & phòng tập' },
-  th: { contact: 'ติดต่อ', contactShort: 'ติดต่อ', contactDesc: 'จองและสอบถามสตูดิโอ', pricing: 'ราคา', pricingShort: 'ราคา', pricingDesc: 'ราคาห้องบันทึกเสียงและห้องซ้อม' },
-  uz: { contact: 'Aloqa', contactShort: 'Aloqa', contactDesc: 'Studiya band qilish va so\'rovlar', pricing: 'Narxlar', pricingShort: 'Narxlar', pricingDesc: 'Yozuv va mashg\'ulot xonasi narxlari' },
+const shortcutLabels: Record<Locale, {
+  contact: string; contactShort: string; contactDesc: string;
+  pricing: string; pricingShort: string; pricingDesc: string;
+  screenshotConsole: string; screenshotHardware: string; screenshotOverview: string;
+}> = {
+  ko: { contact: '문의하기', contactShort: '문의', contactDesc: '스튜디오 예약 및 문의', pricing: '가격 안내', pricingShort: '가격', pricingDesc: '레코딩·연습실 가격 확인', screenshotConsole: '스튜디오 놀 메인 콘솔', screenshotHardware: '스튜디오 놀 하드웨어', screenshotOverview: '스튜디오 놀 전경' },
+  en: { contact: 'Contact', contactShort: 'Contact', contactDesc: 'Studio booking & inquiries', pricing: 'Pricing', pricingShort: 'Pricing', pricingDesc: 'Recording & practice room pricing', screenshotConsole: 'Studio NOL Main Console', screenshotHardware: 'Studio NOL Hardware', screenshotOverview: 'Studio NOL Overview' },
+  zh: { contact: '联系我们', contactShort: '联系', contactDesc: '工作室预约与咨询', pricing: '价格', pricingShort: '价格', pricingDesc: '录音·练习室价格查询', screenshotConsole: 'Studio NOL 主控台', screenshotHardware: 'Studio NOL 硬件', screenshotOverview: 'Studio NOL 工作室一览' },
+  es: { contact: 'Contacto', contactShort: 'Contacto', contactDesc: 'Reservas y consultas del estudio', pricing: 'Precios', pricingShort: 'Precios', pricingDesc: 'Precios de grabación y sala de práctica', screenshotConsole: 'Consola principal de Studio NOL', screenshotHardware: 'Equipamiento de Studio NOL', screenshotOverview: 'Vista general de Studio NOL' },
+  vi: { contact: 'Liên hệ', contactShort: 'Liên hệ', contactDesc: 'Đặt phòng & liên hệ studio', pricing: 'Bảng giá', pricingShort: 'Giá', pricingDesc: 'Giá phòng thu & phòng tập', screenshotConsole: 'Bàn điều khiển chính Studio NOL', screenshotHardware: 'Thiết bị Studio NOL', screenshotOverview: 'Toàn cảnh Studio NOL' },
+  th: { contact: 'ติดต่อ', contactShort: 'ติดต่อ', contactDesc: 'จองและสอบถามสตูดิโอ', pricing: 'ราคา', pricingShort: 'ราคา', pricingDesc: 'ราคาห้องบันทึกเสียงและห้องซ้อม', screenshotConsole: 'คอนโซลหลัก Studio NOL', screenshotHardware: 'อุปกรณ์ Studio NOL', screenshotOverview: 'ภาพรวม Studio NOL' },
+  uz: { contact: 'Aloqa', contactShort: 'Aloqa', contactDesc: 'Studiya band qilish va so\'rovlar', pricing: 'Narxlar', pricingShort: 'Narxlar', pricingDesc: 'Yozuv va mashg\'ulot xonasi narxlari', screenshotConsole: 'Studio NOL asosiy konsoli', screenshotHardware: 'Studio NOL uskunalari', screenshotOverview: 'Studio NOL umumiy ko\'rinishi' },
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -35,9 +39,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     categories: ['music', 'entertainment', 'business'],
     prefer_related_applications: false,
     screenshots: [
-      { src: '/images/studio2.webp', sizes: '1280x720', form_factor: 'wide', type: 'image/webp', label: 'Studio NOL Main Console' },
-      { src: '/images/hardware1.webp', sizes: '1280x720', form_factor: 'wide', type: 'image/webp', label: 'Studio NOL Hardware' },
-      { src: '/images/studio1.webp', sizes: '1280x720', form_factor: 'narrow', type: 'image/webp', label: 'Studio NOL Overview' },
+      { src: '/images/studio2.webp', sizes: '1280x720', form_factor: 'wide', type: 'image/webp', label: labels.screenshotConsole },
+      { src: '/images/hardware1.webp', sizes: '1280x720', form_factor: 'wide', type: 'image/webp', label: labels.screenshotHardware },
+      { src: '/images/studio1.webp', sizes: '1280x720', form_factor: 'narrow', type: 'image/webp', label: labels.screenshotOverview },
     ],
     shortcuts: [
       {

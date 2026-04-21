@@ -110,6 +110,12 @@ const SEO = ({
 
   const absoluteOgImage = toAbsoluteUrl(ogImage);
 
+  // og-default.webp는 1200x630으로 고정 생성. 페이지가 width/height를 명시하지 않았을 때
+  // 소셜 크롤러가 aspect를 재협상하지 않도록 기본값을 자동 주입.
+  const isDefaultOgImage = ogImage === '/images/og-default.webp';
+  const effectiveOgImageWidth = ogImageWidth ?? (isDefaultOgImage ? 1200 : undefined);
+  const effectiveOgImageHeight = ogImageHeight ?? (isDefaultOgImage ? 630 : undefined);
+
   const ogImageMimeType = React.useMemo(() => {
     // @vercel/og API routes return PNG by default
     if (ogImage.includes('/api/og/')) return 'image/png';
@@ -350,11 +356,11 @@ const SEO = ({
         <meta property="og:image:secure_url" content={absoluteOgImage} />
       )}
       <meta property="og:image:alt" content={ogImageAlt || resolvedTitle} />
-      {typeof ogImageWidth === 'number' && ogImageWidth > 0 && (
-        <meta property="og:image:width" content={String(ogImageWidth)} />
+      {typeof effectiveOgImageWidth === 'number' && effectiveOgImageWidth > 0 && (
+        <meta property="og:image:width" content={String(effectiveOgImageWidth)} />
       )}
-      {typeof ogImageHeight === 'number' && ogImageHeight > 0 && (
-        <meta property="og:image:height" content={String(ogImageHeight)} />
+      {typeof effectiveOgImageHeight === 'number' && effectiveOgImageHeight > 0 && (
+        <meta property="og:image:height" content={String(effectiveOgImageHeight)} />
       )}
       <meta property="og:image:type" content={ogImageMimeType} />
       <meta property="og:locale" content={ogLocaleByLocale[currentLocale] || ogLocaleByLocale[defaultLocale]} />
