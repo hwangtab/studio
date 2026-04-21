@@ -71,9 +71,10 @@ const ImageHero = ({
         <m.div
           {...textMotionProps}
         >
-          {/* PartialSansKR 제거에 따라 font-logo → Pretendard. 대형 타이틀 시인성 위해 font-bold로 승격. */}
+          {/* font-logo = PartialSansKR (지연 주입) → Pretendard (fallback).
+              브랜드 정체성 유지 위해 원본 font-normal 복원. */}
           <m.h1
-            className={`font-logo text-heading-1 font-bold md:text-6xl lg:text-7xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
           >
             {title}
           </m.h1>

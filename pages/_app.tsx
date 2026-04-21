@@ -81,12 +81,17 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       ];
       // font-display: optional — 이미 시스템 폰트로 페인트가 끝난 뒤 주입되므로
       // 폰트 도착 후의 강제 repaint/layout을 방지(TBT 폭증 해소).
-      // 현재 세션에서 캐시 미스면 fallback 유지, 재방문 시 캐시된 Pretendard 적용.
-      style.textContent = weights
+      // 현재 세션에서 캐시 미스면 fallback 유지, 재방문 시 캐시된 폰트 적용.
+      const pretendard = weights
         .map(
           ([name, weight]) => `@font-face{font-family:'Pretendard';font-weight:${weight};font-display:optional;src:local('Pretendard ${name}'),local('Pretendard-${name}'),url('/fonts/Pretendard-${name}.woff2') format('woff2'),url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-${name}.subset.woff2') format('woff2');}`
         )
         .join('');
+      // PartialSansKR — 히어로 타이틀(font-logo) 전용 브랜드 폰트. Pretendard와 동일한
+      // 지연 주입 + font-display: optional 전략으로 크리티컬 패스에 영향 없음.
+      // PartialSansKR-Logo는 메트릭 조정을 위한 별칭(ascent/descent override).
+      const partialSans = "@font-face{font-family:'PartialSansKR-Regular';font-display:optional;font-weight:normal;font-style:normal;src:local('PartialSansKR-Regular'),url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');}@font-face{font-family:'PartialSansKR-Logo';font-display:optional;font-weight:normal;font-style:normal;src:local('PartialSansKR-Regular'),url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');ascent-override:80%;descent-override:20%;line-gap-override:0%;}";
+      style.textContent = pretendard + partialSans;
       document.head.appendChild(style);
     };
 
@@ -94,11 +99,20 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     // FCP~TTI 사이를 포괄하는데, requestIdleCallback이 너무 빨리 발화하면 폰트
     // 주입 후 브라우저 내부 작업(font discovery, network)이 TBT로 집계될 수 있음.
     // 3초 후는 Lab 측정 창이 닫힌 뒤라 안전.
+    const safeInject = () => {
+      try {
+        injectFonts();
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('[Pretendard] Failed to inject deferred fonts:', err);
+      }
+    };
+
     const schedule = () => {
       setTimeout(() => {
         const ric = (window as typeof window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback;
-        if (ric) ric(injectFonts);
-        else injectFonts();
+        if (ric) ric(safeInject);
+        else safeInject();
       }, 3000);
     };
 
