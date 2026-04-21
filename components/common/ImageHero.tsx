@@ -79,12 +79,15 @@ const ImageHero = ({
             {title}
           </m.h1>
 
+          {/* subtitle은 단순 텍스트뿐 아니라 JSX(div 포함)도 받기 때문에 <p> 대신 <div>를 사용.
+              <p> 내부에 <div>가 들어가면 HTML 스펙 위반으로 브라우저가 자동 교정 →
+              React 하이드레이션 HTML 불일치(#418) 유발 (stories/[id] 등에서 재현). */}
           {subtitle && (
-            <m.p
+            <m.div
               className={`font-pretendard text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 ${textAlign === 'center' ? 'mx-auto' : ''}`}
             >
               {subtitle}
-            </m.p>
+            </m.div>
           )}
 
           {ctaButtons && (
