@@ -96,7 +96,7 @@ const Playlist = ({
                                 </p>
                             </div>
 
-                            <div className="text-xs text-gray-400 dark:text-white/40 font-mono ml-2">
+                            <div className="text-xs text-gray-600 dark:text-white/60 font-mono ml-2">
                                 {track.duration}
                             </div>
                         </m.button>
