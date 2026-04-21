@@ -9,34 +9,6 @@
    대역폭을 잠식, FCP/LCP를 블로킹함. 지연 주입 시 첫 페인트는 시스템 폰트로,
    이후 Pretendard로 자연스럽게 swap됨. */
 
-/* PartialSansKR — 히어로 타이틀(font-logo) 전용 브랜드 폰트.
-   단일 파일 302KB로 작고, 지연 주입하면 첫 방문자에게 4~6초 뒤에나 나타나
-   UX가 어색해 정식 @font-face로 선언. font-display: swap 으로 도착 시
-   히어로 h1 한 곳만 repaint → TBT/LCP 영향 미미.
-   -Regular와 -Logo 두 별칭: Logo는 히어로 상단 여백 조정용 메트릭 오버라이드. */
-@font-face {
-  font-family: 'PartialSansKR-Regular';
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  src: local('PartialSansKR-Regular'),
-    url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),
-    url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'PartialSansKR-Logo';
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  src: local('PartialSansKR-Regular'),
-    url('/fonts/PartialSansKR-Regular.woff2') format('woff2'),
-    url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
-  ascent-override: 80%;
-  descent-override: 20%;
-  line-gap-override: 0%;
-}
-
 /* 기본 스타일 */
 @layer base {
   :root {

@@ -40,19 +40,19 @@ const PRETENDARD_WEIGHTS = [
 const pretendardCdnSubset = (name: string) =>
   `https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-${name}.subset.woff2`;
 
+const partialSansCdn =
+  'https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2';
+
+const partialSansSources: readonly DeferredFontSource[] = [
+  { localNames: ['PartialSansKR-Regular'], url: '/fonts/PartialSansKR-Regular.woff2' },
+  { url: partialSansCdn },
+] as const;
+
 /**
  * 모든 deferred 폰트의 선언 목록.
- *
- * PartialSansKR은 히어로 h1에만 쓰이는 브랜드 폰트로, 첫 방문자에게도 즉시
- * 노출되어야 UX상 자연스럽다. 지연 주입 + optional은 캐시 미스로 영원히
- * 안 보이고, 지연 주입 + swap은 4~6초 뒤에야 나타남. 그래서 PartialSansKR만
- * styles/globals.css의 정식 @font-face(display: swap)로 분리했다.
- * 여기 DEFERRED_FONTS에는 포함하지 않는다.
  */
 export const DEFERRED_FONTS: readonly DeferredFontDef[] = [
   // Pretendard — 본문/타이틀 전반의 주 폰트. 3 weight.
-  // display: optional — 본문 전역 사용이라 swap 시 대규모 repaint → TBT 회귀 위험.
-  // 재방문 시 캐시된 Pretendard 즉시 적용, 첫 방문은 시스템 폰트 유지.
   ...PRETENDARD_WEIGHTS.map<DeferredFontDef>(({ name, weight }) => ({
     family: 'Pretendard',
     weight,
@@ -64,6 +64,24 @@ export const DEFERRED_FONTS: readonly DeferredFontDef[] = [
       { url: pretendardCdnSubset(name) },
     ],
   })),
+
+  // PartialSansKR — 히어로 타이틀(font-logo) 전용 브랜드 폰트.
+  // display: swap — 히어로 h1 단 하나에만 쓰이므로 도착 시 repaint 비용이 미미.
+  // optional이면 첫 방문자는 캐시 미스로 영원히 안 보이는 문제가 있어 swap 선택.
+  // -Regular와 -Logo 두 별칭: Logo는 ascent/descent override로 상단 여백 조정.
+  {
+    family: 'PartialSansKR-Regular',
+    display: 'swap',
+    sources: partialSansSources,
+  },
+  {
+    family: 'PartialSansKR-Logo',
+    display: 'swap',
+    sources: partialSansSources,
+    ascentOverride: '80%',
+    descentOverride: '20%',
+    lineGapOverride: '0%',
+  },
 ];
 
 /**
