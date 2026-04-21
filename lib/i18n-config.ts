@@ -1,3 +1,5 @@
+import hreflangData from './hreflang.json';
+
 export const defaultLocale = 'ko';
 export const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
 export type Locale = typeof locales[number];
@@ -9,20 +11,12 @@ export const ogLocaleByLocale: Record<Locale, string> = {
   es: 'es_ES',
   vi: 'vi_VN',
   th: 'th_TH',
-  uz: 'uz_UZ',
+  uz: 'uz_Latn_UZ',
 };
 
-// Google 공식 hreflang 코드 매핑
-// 'zh' 단독 코드는 Google이 무시하므로 'zh-Hans'(간체) 사용
-export const hreflangByLocale: Record<Locale, string> = {
-  ko: 'ko',
-  en: 'en',
-  zh: 'zh-Hans',
-  es: 'es',
-  vi: 'vi',
-  th: 'th',
-  uz: 'uz',
-};
+// Google 공식 hreflang 코드 매핑 — lib/hreflang.json 단일 소스
+// next-sitemap.config.js(CJS)와 공유하기 위해 JSON으로 추출
+export const hreflangByLocale: Record<Locale, string> = hreflangData;
 
 export const localeNames: Record<Locale, string> = {
   ko: '한국어',

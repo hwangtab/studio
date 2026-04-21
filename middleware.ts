@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { defaultLocale, locales, type Locale } from './lib/i18n-config';
+import { BOT_PATTERN } from './lib/bot-detection';
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 
 const parseCanonicalSiteUrl = (): URL | null => {
@@ -33,6 +34,12 @@ function buildContentSecurityPolicy(): string {
 
 function setSecurityHeaders(response: NextResponse): NextResponse {
     response.headers.set('Content-Security-Policy', buildContentSecurityPolicy());
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set(
+        'Permissions-Policy',
+        'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+    );
     return response;
 }
 
@@ -86,16 +93,16 @@ export function middleware(request: NextRequest) {
         (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
     );
     const userAgent = request.headers.get('user-agent') || '';
-    const isBot = /bot|googlebot|crawler|spider|robot|crawling|yeti|bingpreview|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot/i.test(userAgent);
+    const isBot = BOT_PATTERN.test(userAgent);
 
     if (!pathnameHasLocale) {
         // Redirect to locale-prefixed path
-        // 봇(Accept-Language 없음)은 x-default와 일치하도록 /ko로 보냄
-        const acceptLanguage = request.headers.get('accept-language');
-        const locale = (isBot && !acceptLanguage) ? 'ko' as Locale : getPreferredLocale(request);
+        // 봇은 Accept-Language 유무와 관계없이 항상 x-default(/ko)로 보내 canonical 신호를 /ko로 집중
+        // 일반 사용자는 Accept-Language 기반 감지 유지
+        const locale = isBot ? defaultLocale : getPreferredLocale(request);
         redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
         shouldRedirect = true;
-        shouldVaryByLanguage = true;
+        shouldVaryByLanguage = !isBot;
     }
 
     if (shouldRedirect) {
@@ -115,11 +122,12 @@ export function middleware(request: NextRequest) {
     if (locales.includes(pathLocale as Locale)) {
         response.headers.set('Content-Language', pathLocale);
     }
-    return setSecurityHeaders(response);
+    setSecurityHeaders(response);
+    return response;
 }
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|manifest\\.json|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full\\.txt|locales|images|logo.*|audio|styles|fonts).*)',
+        '/((?!api|_next|favicon\\.ico|manifest\\.json|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full\\.txt|locales|images|logo.*|audio|styles|fonts).*)',
     ],
 };
