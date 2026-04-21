@@ -1,5 +1,6 @@
 import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
@@ -9,8 +10,11 @@ import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
 import StoryCard from '../../../components/StoryCard';
 import ImageHero from '../../../components/common/ImageHero';
-import StoryCTA, { CTAType } from '../../../components/StoryCTA';
+import type { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
+
+// StoryCTA는 article 본문 아래 below-fold 영역 → 코드 스플리팅.
+const StoryCTA = dynamic(() => import('../../../components/StoryCTA'));
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
@@ -25,10 +29,13 @@ import { generateFaqSchema } from '../../../utils/schemaGenerator';
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
 
+// 관련 스토리 카드에 필요한 필드만. author/tags/images/createdAt/thumbnailDerived/content 제외.
+type RelatedStoryItem = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'thumbnail' | 'summary'>;
+
 interface StoryDetailPageProps {
   locale: Locale;
   story: StoryDetail;
-  relatedStories: Story[];
+  relatedStories: RelatedStoryItem[];
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
@@ -256,7 +263,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   try {
     const story = await getStoryDetail(params!.id as string, locale);
-    const relatedStories = getRelatedStories(locale, params!.id as string, 6);
+    const fullRelated = getRelatedStories(locale, params!.id as string, 6);
+
+    // 관련 스토리 경량화 — StoryCard 렌더에 필요한 필드만 전달.
+    const relatedStories: RelatedStoryItem[] = fullRelated.map((s) => ({
+      slug: s.slug,
+      title: s.title,
+      date: s.date,
+      categoryKey: s.categoryKey,
+      thumbnail: s.thumbnail,
+      summary: s.summary,
+    }));
 
     return buildPageStaticProps(
       locale,
