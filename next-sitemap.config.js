@@ -9,18 +9,19 @@ const portfolioDataFile = path.join(process.cwd(), 'data', 'portfolio.ts');
 const localePageDir = path.join(process.cwd(), 'pages', '[locale]');
 
 // Map of page paths to their representative OG images
+// title/caption은 Google Image Search용 메타. Studio NOL 브랜드+페이지 주제를 포함.
 const pageImageMap = {
-  '/about': '/images/recording15.webp',
-  '/contact': '/images/hardware5.webp',
-  '/index': '/images/og-default.webp',
-  '/lesson': '/images/lesson1.webp',
-  '/portfolio': '/images/recording1.webp',
-  '/practice-room': '/images/room5.webp',
-  '/pricing': '/images/hardware2.webp',
-  '/stories': '/images/studio1.webp',
-  '/studio-info': '/images/hardware1.webp',
-  '/wedding-song': '/images/recording3.webp',
-  '/voice-acting': '/images/hardware3.webp',
+  '/about': { url: '/images/recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
+  '/contact': { url: '/images/hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
+  '/index': { url: '/images/og-default.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },
+  '/lesson': { url: '/images/lesson1.webp', title: 'Studio NOL Music Lessons - Vocal & Production', caption: 'One-on-one vocal, mixing, and music production lessons at Studio NOL.' },
+  '/portfolio': { url: '/images/recording1.webp', title: 'Studio NOL Portfolio - Recording & Mixing Works', caption: 'Albums, singles, and commercial works produced at Studio NOL.' },
+  '/practice-room': { url: '/images/room5.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
+  '/pricing': { url: '/images/hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩20K/hr, wedding vocal ₩150K, voiceover ₩30K/hr.' },
+  '/stories': { url: '/images/studio1.webp', title: 'Studio NOL Stories - Mixing & Recording Guides', caption: 'Production guides, engineering tutorials, and studio stories by Studio NOL.' },
+  '/studio-info': { url: '/images/hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
+  '/wedding-song': { url: '/images/recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
+  '/voice-acting': { url: '/images/hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩30K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
 };
 
 // Parse portfolio item images from TypeScript source at build time
@@ -92,16 +93,8 @@ const getStoryTitle = (slug, locale) => {
 
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 
-// Google 공식 hreflang 코드 매핑 — lib/i18n-config.ts의 hreflangByLocale과 동기화 유지
-const hreflangByLocale = {
-  ko: 'ko',
-  en: 'en',
-  zh: 'zh-Hans',
-  es: 'es',
-  vi: 'vi',
-  th: 'th',
-  uz: 'uz',
-};
+// Google 공식 hreflang 코드 매핑 — lib/hreflang.json 단일 소스
+const hreflangByLocale = require('./lib/hreflang.json');
 
 const toIsoMtime = (filePath) => {
   try {
@@ -291,7 +284,7 @@ module.exports = {
         if (thumbnail) {
           const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
           const title = getStoryTitle(slug, locale);
-          images = [{ loc: imageUrl, title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+          images = [{ loc: new URL(imageUrl), title, caption: title, geoLocation: 'Seoul, Eunpyeong-gu, South Korea' }];
         }
         results.push({
           loc: routePath,
@@ -323,20 +316,25 @@ module.exports = {
       if (thumbnail) {
         const imageUrl = thumbnail.startsWith('http') ? thumbnail : `${siteUrl}${thumbnail.startsWith('/') ? thumbnail : '/' + thumbnail}`;
         const title = getStoryTitle(slug, locale);
-        images = [{ loc: imageUrl, title, caption: title, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+        images = [{ loc: new URL(imageUrl), title, caption: title, geoLocation: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     } else if (pathWithoutLocale.startsWith('/portfolio/') && segments.length >= 3) {
       const itemId = segments[2];
       const portfolioImages = getPortfolioImageMap();
       const imgUrl = portfolioImages[itemId];
       if (imgUrl) {
-        images = [{ loc: imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+        images = [{ loc: new URL(imgUrl.startsWith('http') ? imgUrl : `${siteUrl}${imgUrl}`), geoLocation: 'Seoul, Eunpyeong-gu, South Korea' }];
       }
     } else {
       const pageKey = pathWithoutLocale === '/index' ? '/index' : pathWithoutLocale;
       const pageImg = pageImageMap[pageKey];
       if (pageImg) {
-        images = [{ loc: `${siteUrl}${pageImg}`, geo_location: 'Seoul, Eunpyeong-gu, South Korea' }];
+        images = [{
+          loc: new URL(`${siteUrl}${pageImg.url}`),
+          title: pageImg.title,
+          caption: pageImg.caption,
+          geoLocation: 'Seoul, Eunpyeong-gu, South Korea',
+        }];
       }
     }
 
