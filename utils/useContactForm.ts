@@ -13,7 +13,7 @@ import {
   type ContactField,
   type ContactValidationCode,
 } from './contactValidation';
-import { trackLeadEvent } from './analytics';
+import { trackLeadEvent, type LeadEventName } from './analytics';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -105,18 +105,20 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
   const [canRetrySubmit, setCanRetrySubmit] = useState(false);
   const [lastSubmittedData, setLastSubmittedData] = useState<ContactFormData | null>(null);
   const [attribution, setAttribution] = useState<ContactAttribution>({});
+  // Funnel 추적 상태 — 세션당 한 번만 form_start, 그리고 abandon 판단에 사용.
+  const [hasStartedForm, setHasStartedForm] = useState(false);
 
   const submitErrorCopy = useMemo(() => getSubmitErrorMessages(locale), [locale]);
   const errorCount = useMemo(() => Object.values(errors).filter(Boolean).length, [errors]);
-  const trackSubmitEvent = useCallback(
+  const trackFormEvent = useCallback(
     (
-      name: 'lead_submit_success' | 'lead_submit_error',
+      name: LeadEventName,
       extra: Record<string, string | number | boolean | null | undefined> = {}
     ) => {
       trackLeadEvent(name, {
         locale,
         component: 'ContactForm',
-        cta_id: 'contact_form_submit',
+        cta_id: name.startsWith('lead_submit') ? 'contact_form_submit' : 'contact_form',
         utm_source: attribution.utm_source,
         utm_medium: attribution.utm_medium,
         utm_campaign: attribution.utm_campaign,
@@ -125,6 +127,8 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
     },
     [attribution.utm_campaign, attribution.utm_medium, attribution.utm_source, locale]
   );
+  // 기존 submit 이벤트도 동일 helper로 일원화 (시그니처 호환).
+  const trackSubmitEvent = trackFormEvent;
 
   const getValidationMessage = useCallback(
     (code?: ContactValidationCode): string => getContactValidationMessage(code, locale, t),
@@ -143,18 +147,57 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
     });
   }, []);
 
+  // 폼 이탈 추적 — pagehide(가장 안정)에서 폼 시작했으나 성공 전 떠나면 abandon 전송.
+  // bfcache 상황을 고려해 beforeunload 대신 pagehide 채택.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handlePageHide = () => {
+      if (!hasStartedForm || isSubmitSuccess) return;
+      trackFormEvent('lead_form_abandon', {
+        name_filled: Boolean(formData.name),
+        email_filled: Boolean(formData.email),
+        phone_filled: Boolean(formData.phone),
+        message_filled: Boolean(formData.message),
+        error_count: errorCount,
+      });
+    };
+
+    window.addEventListener('pagehide', handlePageHide);
+    return () => window.removeEventListener('pagehide', handlePageHide);
+  }, [hasStartedForm, isSubmitSuccess, formData, errorCount, trackFormEvent]);
+
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = event.target;
+
+      // 폼 첫 입력 시점에 form_start 이벤트 (세션당 1회).
+      if (!hasStartedForm && value.length > 0) {
+        setHasStartedForm(true);
+        trackFormEvent('lead_form_start', { first_field: name });
+      }
+
       const nextFormData = { ...formData, [name]: value };
       setFormData(nextFormData);
 
       if (isContactField(name)) {
         const code = validateContactField(name, toContactFormFields(nextFormData));
-        setErrors((prev) => ({ ...prev, [name]: getValidationMessage(code) }));
+        const nextMessage = getValidationMessage(code);
+        setErrors((prev) => {
+          const prevMessage = prev[name];
+          // 신규 에러가 발생했거나 에러 종류가 변경된 경우에만 이벤트 전송
+          // (같은 에러 지속 중 입력 이어갈 때 반복 발사 방지).
+          if (nextMessage && nextMessage !== prevMessage) {
+            trackFormEvent('lead_form_field_error', {
+              field: name,
+              error_code: code,
+            });
+          }
+          return { ...prev, [name]: nextMessage };
+        });
       }
     },
-    [formData, getValidationMessage]
+    [formData, getValidationMessage, hasStartedForm, trackFormEvent]
   );
 
   const submitWithPayload = useCallback(

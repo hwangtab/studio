@@ -7,7 +7,11 @@ export type LeadEventName =
   | 'lead_click_kakao'
   | 'lead_click_phone'
   | 'lead_submit_success'
-  | 'lead_submit_error';
+  | 'lead_submit_error'
+  // 폼 funnel 분석용 — 방문자가 어느 단계에서 이탈하는지 추적.
+  | 'lead_form_start'        // 첫 필드 입력 시작
+  | 'lead_form_field_error'  // 필드 검증 실패 (어느 필드에서 막히는지)
+  | 'lead_form_abandon';     // 폼 시작했으나 성공 전 페이지 이탈
 
 export type LeadEventProps = {
   locale?: Locale | string;
