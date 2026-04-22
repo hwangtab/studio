@@ -115,8 +115,8 @@
     },
     "seo": {
       "keywords": "Studio NOL, quy trình sản xuất âm nhạc, sản xuất âm nhạc, phòng thu, mixing mastering, phân phối nhạc, lập kế hoạch âm nhạc, thiết bị analog",
-      "title": "Thu Âm · Mixing · Mastering Yeonsinnae | Studio NOL",
-      "description": "Studio NOL cung cấp dịch vụ sản xuất âm nhạc toàn diện: thu âm, mixing, mastering và phân phối. 10 năm kinh nghiệm cùng thiết bị analog."
+      "title": "Kỹ sư 10 năm · Analog · 5 phút từ ga Yeonsinnae | Studio NOL",
+      "description": "Studio NOL tại Eunpyeong-gu, Seoul — 5 phút đi bộ từ ga Yeonsinnae. Kỹ sư với hơn 10 năm kinh nghiệm cùng thiết bị analog vintage cung cấp sản xuất âm nhạc toàn diện: lập kế hoạch, thu âm, mixing, mastering và phân phối. Tư vấn miễn phí qua KakaoTalk."
     },
     "howToTitle": "Cách sản xuất âm nhạc tại Studio NOL",
     "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp."
@@ -438,6 +438,81 @@
         {
           "title": "Vị trí & Tiếp cận",
           "description": "Đi bộ 5 phút từ ga, hệ thống an ninh 24h."
+        }
+      ]
+    },
+    "residentBenefits": {
+      "title": "Đặc quyền dành riêng cho khách thuê tháng Studio NOL",
+      "subtitle": "8 dịch vụ cao cấp chỉ dành cho khách thuê theo tháng",
+      "calendarLinkLabel": "kosmart.co.kr/calendar",
+      "calendarLinkUrl": "https://kosmart.co.kr/calendar",
+      "items": [
+        {
+          "title": "Ưu đãi phòng thu cao cấp",
+          "points": [
+            "Miễn phí 1 giờ phòng thu mỗi tháng (giá thường: 200.000 KRW cho 3 giờ)",
+            "Ghi lại âm nhạc của bạn với thiết bị chuyên nghiệp hàng đầu"
+          ]
+        },
+        {
+          "title": "Phát hành nhạc miễn phí",
+          "points": [
+            "Phát hành toàn cầu trên mọi nền tảng qua AudioGuy & The Orchard",
+            "70% lợi nhuận ròng trả cho nghệ sĩ (mức cao nhất ngành)"
+          ]
+        },
+        {
+          "title": "Soạn thảo và phát hành thông cáo báo chí miễn phí",
+          "points": [
+            "Soạn thông cáo chuyên nghiệp cho ra mắt album, biểu diễn, v.v.",
+            "Đăng trên báo nghệ thuật chuyên ngành NewsArt và phân phối tới các báo lớn",
+            "Bao gồm cả dịch vụ viết hồ sơ nghệ sĩ"
+          ]
+        },
+        {
+          "title": "Cho mượn thiết bị âm thanh busking miễn phí",
+          "points": [
+            "2 amply Roland CUBE Street EX2 (tổng 100W)",
+            "Mic + cáp + chân micro đầy đủ",
+            "3 vali có bánh xe tiện di chuyển",
+            "Pin sạc dự phòng 180W cho 20 giờ biểu diễn không cần ổ điện"
+          ]
+        },
+        {
+          "title": "Phản hồi và tư vấn chuyên gia",
+          "points": [
+            "Kinh nghiệm từ nhà sản xuất từng được đề cử và đoạt giải Korean Music Award",
+            "Phân tích chi tiết trong môi trường monitor cao cấp",
+            "Đề xuất sound design, mixing, mastering theo từng thể loại",
+            "Tư vấn định hướng sự nghiệp dưới góc nhìn A&R"
+          ]
+        },
+        {
+          "title": "Tư vấn gọi vốn cộng đồng",
+          "points": [
+            "Đề xuất nền tảng phù hợp (Tumblbug, Wadiz, v.v.) theo dự án",
+            "Lên kế hoạch mục tiêu, phần thưởng và thời gian",
+            "Hướng dẫn xây dựng câu chuyện chạm tới người ủng hộ",
+            "Tư vấn chiến lược marketing để chiến dịch thành công",
+            "Phân tích case study của các nghệ sĩ cùng thể loại"
+          ]
+        },
+        {
+          "title": "Thông tin chương trình hỗ trợ nghệ thuật",
+          "points": [
+            "Thông tin mới nhất từ KOCCA, Arts Council Korea, Quỹ Nghệ thuật Seoul, v.v.",
+            "Đề xuất chương trình phù hợp với hoạt động và hồ sơ của bạn",
+            "Thông tin về hỗ trợ sáng tác, biểu diễn, vươn ra quốc tế",
+            "Tư vấn hồ sơ và hướng chuẩn bị",
+            "Cập nhật liên tục tại kosmart.co.kr/calendar"
+          ]
+        },
+        {
+          "title": "Cho mượn dụng cụ miễn phí",
+          "points": [
+            "Khoan điện, kìm, tua vít và nhiều dụng cụ khác",
+            "Sẵn sàng dùng bất cứ khi nào cần lắp đặt hoặc sửa chữa thiết bị"
+          ]
         }
       ]
     },

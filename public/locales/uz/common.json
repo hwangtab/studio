@@ -115,8 +115,8 @@
     },
     "seo": {
       "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar",
-      "title": "Yeonsinnae Studiyasi · Yozuv, Miks, Mastering | Studio NOL",
-      "description": "Studio NOL yozuv, miks, mastering va tarqatishgacha to'liq musiqa xizmatini taqdim etadi. 10 yillik tajriba va analog uskunalar."
+      "title": "10 yillik muhandislar · Analog uskuna · Yeonsinnae'dan 5 daqiqa | Studio NOL",
+      "description": "Seul Eunpyeong-gu'dagi Studio NOL — Yeonsinnae bekatidan 5 daqiqa. 10+ yillik tajribaga ega muhandislar va analog uskunalar bilan musiqa ishlab chiqarishning to‘liq xizmatini taqdim etamiz: rejalashtirish, yozuv, miksing, mastering va tarqatish. KakaoTalk orqali bepul maslahat."
     },
     "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
     "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
@@ -204,8 +204,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Yozuv narxlari va studio ijarasi | Studio NOL",
-      "description": "Studio NOL'da shaffof narxlar. Yozuv ₩20K/soatdan, to'y kuy paketi ₩150K, ovoz yozish ₩30K/soat. Paket chegirmalari 30% gacha. Bepul hisob-kitob taklif etiladi.",
+      "title": "Mashg‘ulot ₩20K·To‘y qo‘shig‘i ₩150K·Ovoz aktyori ₩30K | Studio NOL Seul",
+      "description": "Seul Eunpyeong-gu Studio NOL shaffof narxlari: mashg‘ulot xonasi ₩20K/soat·oylik ijara, to‘y qo‘shig‘i to‘plami ₩150K dan, ovoz aktyori ₩30K/soat, miksing va mastering xizmatlari. To‘plam chegirmalari 30% gacha, KakaoTalk orqali bepul narx taklifi.",
       "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL",
       "schemaTitle": "Studio NOL xizmat narxlari"
     },
@@ -437,6 +437,81 @@
         {
           "title": "Joylashuv va qulay kirish",
           "description": "Stansiyalardan 5 daqiqa piyoda, 24/7 xavfsizlik tizimi."
+        }
+      ]
+    },
+    "residentBenefits": {
+      "title": "Studio NOL oylik ijarachilari uchun maxsus imtiyozlar",
+      "subtitle": "Faqat oylik ijarachilar uchun 8 ta premium xizmat",
+      "calendarLinkLabel": "kosmart.co.kr/calendar",
+      "calendarLinkUrl": "https://kosmart.co.kr/calendar",
+      "items": [
+        {
+          "title": "Premium yozuv studiyasi katta chegirma bilan",
+          "points": [
+            "Har oy yozuv studiyasidan 1 soat bepul foydalanish (oddiy narx: 3 soatga 200 000 KRW)",
+            "Musiqangizni eng yuqori darajadagi professional jihozlar bilan yozing"
+          ]
+        },
+        {
+          "title": "Bepul musiqa tarqatish xizmati",
+          "points": [
+            "AudioGuy va The Orchard orqali butun dunyodagi barcha platformalarda tarqatish",
+            "Sof daromadning 70% sanoatkorga to'lanadi (sohada eng yuqori ko'rsatkich)"
+          ]
+        },
+        {
+          "title": "Bepul press-reliz tayyorlash va OAVga tarqatish",
+          "points": [
+            "Albom chiqarish, konsert va boshqa musiqiy yangiliklar uchun professional press-reliz",
+            "San'at sohasidagi NewsArt nashrida e'lon qilish va asosiy OAVga tarqatish",
+            "Shuningdek, ijodkor profilini yozish xizmati ham mavjud"
+          ]
+        },
+        {
+          "title": "Busking uchun ovoz jihozlarini bepul ijaraga berish",
+          "points": [
+            "Roland CUBE Street EX2 amplifikator 2 dona (jami 100W)",
+            "Mikrofon + kabel + stand to'plami",
+            "Olib yurish uchun 3 ta g'ildirakli sumka",
+            "180W zaryadlovchi bilan rozetkasiz joyda ham 20 soat chiqishlar"
+          ]
+        },
+        {
+          "title": "Mutaxassisdan fikr-mulohaza va maslahat",
+          "points": [
+            "Korean Music Award nominantlari va sovrindorlarini tayyorlagan prodyuserdan tajriba",
+            "Yuqori sifatli monitoring sharoitida musiqani batafsil tahlil qilish",
+            "Janr bo'yicha moslashtirilgan ovoz dizayni, miks va mastering bo'yicha maslahat",
+            "A&R nuqtai nazaridan kasbiy yo'nalish bo'yicha konsalting"
+          ]
+        },
+        {
+          "title": "Crowdfunding bo'yicha konsalting",
+          "points": [
+            "Loyihangizga mos platformalar (Tumblbug, Wadiz va h.k.) tavsiyasi",
+            "Maqsad summasi, mukofotlar va muddatlarni rejalashtirish",
+            "Qo'llab-quvvatlovchilarni jalb qiluvchi hikoya tuzish bo'yicha qo'llanma",
+            "Muvaffaqiyatli kampaniyaga marketing strategiyasi maslahati",
+            "Shu janrdagi ijodkorlarning muvaffaqiyatli tajribalarini tahlil qilish"
+          ]
+        },
+        {
+          "title": "San'at qo'llab-quvvatlash dasturlari haqida ma'lumot",
+          "points": [
+            "KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture va boshqalardan eng so'nggi ma'lumotlar",
+            "Faoliyatingiz va tajribangizga mos dasturlar tavsiyasi",
+            "Ijodiy, konsert va xalqaro chiqish bo'yicha turli yordam ma'lumotlari",
+            "Hujjatlar va tayyorgarlik yo'nalishi bo'yicha maslahat",
+            "kosmart.co.kr/calendar sahifasida doimiy yangilanib turadi"
+          ]
+        },
+        {
+          "title": "Asboblarni bepul ijaraga olish",
+          "points": [
+            "Elektr drel, ombir, otvyortka va boshqa ko'plab asboblar",
+            "Jihozni o'rnatish yoki ta'mirlash kerak bo'lganda istalgan vaqt foydalanish mumkin"
+          ]
         }
       ]
     },

@@ -38,6 +38,15 @@ const URLS = [
   `${SITE}/ko/stories/ableton1`,
   `${SITE}/ko/stories/acoustic-recording1`,
   `${SITE}/en/stories/ableton1`,
+  // 추가 페이지 전수 체크 — B (미측정 페이지 확인)
+  `${SITE}/ko/practice-room`,
+  `${SITE}/ko/pricing`,
+  `${SITE}/ko/lesson`,
+  `${SITE}/ko/portfolio`,
+  `${SITE}/ko/wedding-song`,
+  `${SITE}/ko/voice-acting`,
+  `${SITE}/ko/about`,
+  `${SITE}/ko/studio-info`,
 ];
 
 const args = process.argv.slice(2);

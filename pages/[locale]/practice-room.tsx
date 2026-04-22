@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -65,6 +65,84 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
   </BaseCard>
 );
 
+interface BenefitItem {
+  title: string;
+  points: string[];
+}
+
+const BenefitCard = ({
+  icon: Icon,
+  title,
+  points,
+  delay = 0,
+  locale,
+  calendarLinkLabel,
+  calendarLinkUrl,
+}: {
+  icon: LucideIcon;
+  title: string;
+  points: string[];
+  delay?: number;
+  locale: Locale;
+  calendarLinkLabel?: string;
+  calendarLinkUrl?: string;
+}) => (
+  <BaseCard variant="default" delay={delay} className="p-6 h-full">
+    <div className="flex items-center mb-4">
+      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
+        <Icon size={22} aria-hidden="true" />
+      </div>
+      <h3 className="typo-card-title">{title}</h3>
+    </div>
+    <ul className="space-y-2">
+      {points.map((point, idx) => {
+        const showLink =
+          calendarLinkLabel && calendarLinkUrl && point.includes(calendarLinkLabel);
+        return (
+          <li key={idx} className="flex items-start gap-2">
+            <Check
+              className="text-primary dark:text-primary-light mt-1 flex-shrink-0"
+              size={16}
+              aria-hidden="true"
+            />
+            <span
+              className={`typo-card-body ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+            >
+              {showLink ? (
+                <>
+                  {point.split(calendarLinkLabel)[0]}
+                  <a
+                    href={calendarLinkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline hover:text-primary-dark"
+                  >
+                    {calendarLinkLabel}
+                  </a>
+                  {point.split(calendarLinkLabel)[1]}
+                </>
+              ) : (
+                point
+              )}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  </BaseCard>
+);
+
+const BENEFIT_ICONS: LucideIcon[] = [
+  Mic,
+  Globe2,
+  Newspaper,
+  Speaker,
+  MessageCircle,
+  HandCoins,
+  ClipboardList,
+  Wrench,
+];
+
 interface PracticeRoomProps {
   locale: Locale;
   reviewsData: ReturnType<typeof getReviews>;
@@ -77,6 +155,7 @@ interface PracticeRoomProps {
 const PAIN_POINTS_ANIMATION = createFadeInAnimation();
 const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
+const RESIDENT_BENEFITS_ANIMATION = createFadeInAnimation();
 
 const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsData, relatedGuidesHtml }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -117,6 +196,29 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
   ]), [t]);
 
   const practiceRoomQuickAnswers = React.useMemo(() => practiceRoomFaqs.slice(0, 3), [practiceRoomFaqs]);
+
+  const residentBenefits = React.useMemo<BenefitItem[]>(() => {
+    const raw = t('practiceRoom.residentBenefits.items', { returnObjects: true });
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((entry): BenefitItem | null => {
+        if (
+          entry &&
+          typeof entry === 'object' &&
+          typeof (entry as { title?: unknown }).title === 'string' &&
+          Array.isArray((entry as { points?: unknown }).points)
+        ) {
+          const points = ((entry as { points: unknown[] }).points).filter(
+            (p): p is string => typeof p === 'string'
+          );
+          return { title: (entry as { title: string }).title, points };
+        }
+        return null;
+      })
+      .filter((b): b is BenefitItem => b !== null);
+  }, [t]);
+  const residentBenefitsCalendarLabel = t('practiceRoom.residentBenefits.calendarLinkLabel');
+  const residentBenefitsCalendarUrl = t('practiceRoom.residentBenefits.calendarLinkUrl');
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   const practiceRoomSchema = React.useMemo(() => ({
@@ -335,6 +437,34 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
           </div>
         </m.div>
       </Section>
+
+      {residentBenefits.length > 0 && (
+        <Section variant="default" defer>
+          <m.div {...RESIDENT_BENEFITS_ANIMATION}>
+            <SectionHeading
+              icon={Gift}
+              title={t('practiceRoom.residentBenefits.title')}
+              subtitle={t('practiceRoom.residentBenefits.subtitle')}
+              titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+              className="mb-12"
+            />
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {residentBenefits.map((benefit, idx) => (
+                <BenefitCard
+                  key={idx}
+                  icon={BENEFIT_ICONS[idx] ?? Sparkles}
+                  title={benefit.title}
+                  points={benefit.points}
+                  delay={0.05 * idx}
+                  locale={locale}
+                  calendarLinkLabel={residentBenefitsCalendarLabel}
+                  calendarLinkUrl={residentBenefitsCalendarUrl}
+                />
+              ))}
+            </div>
+          </m.div>
+        </Section>
+      )}
 
       <FAQSection
         items={practiceRoomFaqs}

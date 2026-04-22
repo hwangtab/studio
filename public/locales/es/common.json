@@ -115,8 +115,8 @@
     },
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
-      "title": "Grabación · Mezcla & Mastering Yeonsinnae | Studio NOL",
-      "description": "Studio NOL ofrece producción musical integral: grabación, mezcla, masterización y distribución. 10 años de experiencia con equipo analógico."
+      "title": "Ingenieros 10 años · Analógico · 5 min de Yeonsinnae | Studio NOL",
+      "description": "Studio NOL en Eunpyeong-gu, Seúl — 5 min de la estación Yeonsinnae. Ingenieros con 10+ años y equipo analógico vintage ofrecen producción musical integral: planificación, grabación, mezcla, masterización y distribución. Consulta gratuita por KakaoTalk."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
     "howToDescription": "Una guía completa para producir música en un estudio profesional."
@@ -438,6 +438,81 @@
         {
           "title": "Ubicación y accesibilidad",
           "description": "A 5 min a pie de estaciones, seguridad 24h."
+        }
+      ]
+    },
+    "residentBenefits": {
+      "title": "Beneficios exclusivos para residentes de Studio NOL",
+      "subtitle": "8 servicios premium solo para residentes mensuales",
+      "calendarLinkLabel": "kosmart.co.kr/calendar",
+      "calendarLinkUrl": "https://kosmart.co.kr/calendar",
+      "items": [
+        {
+          "title": "Descuento en estudio de grabación premium",
+          "points": [
+            "1 hora de estudio de grabación gratis al mes (precio normal: 200 000 KRW por 3 horas)",
+            "Capta tu música con equipo profesional de gama alta"
+          ]
+        },
+        {
+          "title": "Distribución musical gratuita",
+          "points": [
+            "Distribución mundial en todas las plataformas a través de AudioGuy & The Orchard",
+            "70% del beneficio neto para el artista (la tasa más alta del sector)"
+          ]
+        },
+        {
+          "title": "Notas de prensa y difusión gratuitas",
+          "points": [
+            "Redacción profesional de notas de prensa para lanzamientos y conciertos",
+            "Publicación en el medio artístico NewsArt y difusión a medios principales",
+            "Servicio de redacción de perfil de artista incluido"
+          ]
+        },
+        {
+          "title": "Alquiler gratuito de equipo de sonido para busking",
+          "points": [
+            "2 amplificadores Roland CUBE Street EX2 (100W en total)",
+            "Micrófonos, cables y soportes incluidos",
+            "3 maletas con ruedas para fácil transporte",
+            "Batería externa de 180W para 20 horas de actuación sin enchufe"
+          ]
+        },
+        {
+          "title": "Asesoría y feedback profesional",
+          "points": [
+            "Experiencia de un productor con varias nominaciones y premios Korean Music Award",
+            "Análisis detallado en un entorno de monitorización de alta calidad",
+            "Diseño de sonido, mezcla y masterización adaptados al género",
+            "Consultoría de carrera con visión A&R"
+          ]
+        },
+        {
+          "title": "Asesoría de crowdfunding",
+          "points": [
+            "Recomendación de plataformas (Tumblbug, Wadiz, etc.) según tu proyecto",
+            "Definición de meta, recompensas y duración",
+            "Guía narrativa para conectar con los mecenas",
+            "Estrategia de marketing para el éxito de la campaña",
+            "Análisis de casos de éxito de artistas similares"
+          ]
+        },
+        {
+          "title": "Información sobre subvenciones artísticas",
+          "points": [
+            "Información actualizada de KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture, etc.",
+            "Recomendaciones de ayudas según tu trayectoria",
+            "Información sobre creación, conciertos y proyección internacional",
+            "Asesoría sobre documentos y preparación de la solicitud",
+            "Actualizado de forma continua en kosmart.co.kr/calendar"
+          ]
+        },
+        {
+          "title": "Préstamo gratuito de herramientas",
+          "points": [
+            "Taladros eléctricos, alicates, destornilladores y más",
+            "Disponibles en cualquier momento para instalar o reparar equipo"
+          ]
         }
       ]
     },
