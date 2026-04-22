@@ -32,6 +32,10 @@ export const HeaderBrand = ({
           alt={siteConfig.name}
           height={40}
           width={200}
+          // sizes 미지정 시 Next.js가 deviceSizes 기준 srcset을 생성해 640w 변종을 요청하던 문제
+          // (Lighthouse: 124×32 display에 640×165 image = 12KB 낭비) → 200px 고정으로 imageSizes
+          // 기반 srcset 사용하도록 힌트. DPR=2에서 256~384w 변종이 선택됨.
+          sizes="200px"
           className="h-full w-auto object-contain"
           style={{
             clipPath: 'inset(0 0 0 52.3%)', // Show only the right part (NOL)
@@ -45,6 +49,7 @@ export const HeaderBrand = ({
           aria-hidden="true"
           height={40}
           width={200}
+          sizes="200px"
           className="h-full w-auto object-contain absolute top-0 left-0 transition-[filter] duration-300"
           style={{
             clipPath: 'inset(0 47.7% 0 0)', // Show only the left part (studio)

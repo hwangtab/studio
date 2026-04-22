@@ -1,5 +1,4 @@
 import React from 'react';
-import { m } from 'framer-motion';
 import ResponsiveImage from '../ResponsiveImage';
 import Breadcrumb from '../ui/Breadcrumb';
 import type { Locale } from '../../lib/i18n';
@@ -42,7 +41,6 @@ const ImageHero = ({
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
 
   const verticalAlignClass = 'justify-center pt-32 pb-12';
-  const textMotionProps = { initial: { opacity: 1, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay: 0.2 } };
 
   return (
     <section
@@ -68,26 +66,29 @@ const ImageHero = ({
       />
 
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
-        <m.div
-          {...textMotionProps}
-        >
+        {/* framer-motion 래퍼 제거: 모바일 Lighthouse에서 LCP element(H1 내 span)의
+            element render delay가 1.6s로 측정됨. `initial={{ y:30 }} → animate:{ y:0 }`
+            애니메이션이 하이드레이션 완료까지 LCP 후보의 최종 위치 결정을 지연시킨 것이
+            원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
+            줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
+        <div>
           {/* font-logo = PartialSansKR (지연 주입) → Pretendard (fallback).
               브랜드 정체성 유지 위해 원본 font-normal 복원. */}
-          <m.h1
+          <h1
             className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
           >
             {title}
-          </m.h1>
+          </h1>
 
           {/* subtitle은 단순 텍스트뿐 아니라 JSX(div 포함)도 받기 때문에 <p> 대신 <div>를 사용.
               <p> 내부에 <div>가 들어가면 HTML 스펙 위반으로 브라우저가 자동 교정 →
               React 하이드레이션 HTML 불일치(#418) 유발 (stories/[id] 등에서 재현). */}
           {subtitle && (
-            <m.div
+            <div
               className={`font-pretendard text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 ${textAlign === 'center' ? 'mx-auto' : ''}`}
             >
               {subtitle}
-            </m.div>
+            </div>
           )}
 
           {ctaButtons && (
@@ -97,7 +98,7 @@ const ImageHero = ({
               {ctaButtons}
             </div>
           )}
-        </m.div>
+        </div>
       </div>
 
       {breadcrumbItems && breadcrumbItems.length > 1 && (
