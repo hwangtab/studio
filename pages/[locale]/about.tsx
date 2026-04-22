@@ -1,14 +1,17 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
 import ImageHero from '../../components/common/ImageHero';
-import ReviewSection from '../../components/ui/ReviewSection';
+
+// Below-fold 컴포넌트 code-splitting
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 import { getServicesData } from '../../data/services';
 import { Section } from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';

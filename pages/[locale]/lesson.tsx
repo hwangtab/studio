@@ -1,15 +1,18 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import ContactCTA from '../../components/common/ContactCTA';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
-import QuickAnswers from '../../components/ui/QuickAnswers';
+
+// Below-fold 컴포넌트 code-splitting
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';

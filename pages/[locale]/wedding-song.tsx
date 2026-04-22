@@ -1,5 +1,6 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { Heart, Package, ListChecks, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -7,13 +8,15 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import ReviewSection from '../../components/ui/ReviewSection';
 import SectionHeading from '../../components/ui/SectionHeading';
-import FAQSection from '../../components/ui/FAQSection';
-import QuickAnswers from '../../components/ui/QuickAnswers';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
-import ContactCTA from '../../components/common/ContactCTA';
+
+// Below-fold 컴포넌트 code-splitting
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
+const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';

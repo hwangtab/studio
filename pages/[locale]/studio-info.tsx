@@ -1,5 +1,6 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2, ArrowRight } from 'lucide-react';
@@ -7,11 +8,13 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import ReviewSection from '../../components/ui/ReviewSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
-import ContactCTA from '../../components/common/ContactCTA';
+
+// Below-fold 컴포넌트 code-splitting
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';

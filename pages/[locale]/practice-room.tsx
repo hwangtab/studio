@@ -1,18 +1,22 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
-import ContactCTA from '../../components/common/ContactCTA';
-import ReviewSection from '../../components/ui/ReviewSection';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
-import FAQSection from '../../components/ui/FAQSection';
 import SectionHeading from '../../components/ui/SectionHeading';
-import QuickAnswers from '../../components/ui/QuickAnswers';
+
+// Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
+// ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
+const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
+const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';

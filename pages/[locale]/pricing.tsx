@@ -1,10 +1,10 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
-import ReviewSection from '../../components/ui/ReviewSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getPricingData } from '../../data/pricing';
 import { generateAggregateOfferSchema, getSchemaLanguage } from '../../utils/schemaGenerator';
@@ -12,8 +12,11 @@ import { getReviews } from '../../data/reviews';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 import ImageHero from '../../components/common/ImageHero';
-import ContactCTA from '../../components/common/ContactCTA';
-import QuickAnswers from '../../components/ui/QuickAnswers';
+
+// Below-fold 컴포넌트 code-splitting (초기 JS 번들 감소 → TBT 단축)
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
