@@ -26,19 +26,24 @@ class MyDocument extends Document<Props> {
       >
         <Head>
           <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />
-          {/* Resource hints */}
+          {/*
+            Resource hints — 모바일 LCP를 해치지 않도록 최소화.
+            - preconnect 0개로 유지: 모든 3rd-party 스크립트(GA4, Vercel Analytics)는 lazyOnload 또는 window.load 이후 발화.
+              초기 preconnect는 LCP 이미지·CSS·JS와 소켓/대역폭을 놓고 경쟁하므로 가성비가 나쁨.
+            - dns-prefetch만 남김: 라우팅 후 실제 요청 시 DNS lookup 대기를 줄여주는 값싼 힌트(비용 <1KB, 소켓 미점유).
+            - contact 페이지 전용 maps.*·www.google.com 프리커넥트는 contact 페이지에서만 주입(향후 필요시).
+            - jsdelivr 폴백(Pretendard)은 window.load + 3초 후 주입되므로 초기 preconnect 불필요.
+            - vercel.live 는 프리뷰 환경 Comments bar 전용 → 제거.
+          */}
+          {/* Analytics & form endpoints */}
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-          <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
           <link rel="dns-prefetch" href="https://www.google-analytics.com" />
           <link rel="dns-prefetch" href="https://analytics.google.com" />
           <link rel="dns-prefetch" href="https://api.emailjs.com" />
-          <link rel="dns-prefetch" href="https://vercel.live" />
-          <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://fastly.jsdelivr.net" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://www.google.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://maps.googleapis.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://maps.gstatic.com" crossOrigin="anonymous" />
           <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
+          <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
+          {/* Pretendard CDN fallback (load + 3s 이후에만 사용) */}
+          <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
           {/* Portfolio image CDN prefetch */}
           <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
           <link rel="dns-prefetch" href="https://i.ytimg.com" />
@@ -46,7 +51,6 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://img.tumblbug.com" />
           <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
           <link rel="dns-prefetch" href="https://cdn.imweb.me" />
-          <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
           {/* 폰트 preload 제거: Slow 4G에서 1MB 폰트가 preload로 CSS/JS 다운로드를 블로킹하던 현상 해소.
               font-display: swap 으로 시스템 폰트 즉시 렌더 → 폰트 도착 후 swap. FCP 대폭 단축. */}
           <script

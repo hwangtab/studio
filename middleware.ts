@@ -128,6 +128,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/((?!api|_next|favicon\\.ico|manifest\\.json|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full\\.txt|locales|images|logo.*|audio|styles|fonts).*)',
+        // icons / browserconfig.xml 추가: /icons/icon-192.png이 로케일 미들웨어에 걸려
+        // /ko/icons/icon-192.png로 307 → 404가 발생하던 PWA/Apple touch icon 요청 수정.
+        '/((?!api|_next|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full\\.txt|locales|images|icons|logo.*|audio|styles|fonts).*)',
     ],
 };

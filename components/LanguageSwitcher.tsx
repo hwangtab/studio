@@ -148,7 +148,10 @@ export const LanguageSwitcher = ({
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-label={t('common.languageSelector')}
+        // WCAG 2.5.3 (Label in Name): 접근 가능한 이름은 보이는 텍스트로 시작해야 한다.
+        // 기존 aria-label={t('common.languageSelector')}는 보이는 텍스트(localeNames[currentLocale])와
+        // 불일치하여 Lighthouse a11y에서 label-content-name-mismatch로 실패.
+        aria-label={`${localeNames[currentLocale]} — ${t('common.languageSelector')}`}
         className={`
           inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]

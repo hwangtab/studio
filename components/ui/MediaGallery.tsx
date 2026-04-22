@@ -122,7 +122,13 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
                 loading="lazy"
                 width={600}
                 height={400}
-                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+                // 카드 실제 렌더 폭:
+                //   lg:w-[31%] + container(max-w-screen-xl=1280, px-4) ≈ 377px
+                //   sm:w-[45%] + container ≈ 320px (md~lg)
+                //   w-[85%] (모바일) ≈ viewport * 0.85
+                // 기존 30vw/45vw는 vw 기반이라 container 폭보다 과대 계산되어
+                // 768w 변종이 선택되던 문제(Lighthouse: 384×256 표시에 624×512 이미지)를 수정.
+                sizes="(min-width: 1280px) 384px, (min-width: 768px) 320px, 85vw"
               />
             </m.div>
           </div>
