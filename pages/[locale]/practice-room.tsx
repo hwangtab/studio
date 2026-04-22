@@ -217,7 +217,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       />
 
       {/* 고민 섹션 */}
-      <Section variant="default">
+      <Section variant="default" defer>
         <m.div {...painPointsAnimation}>
           <SectionHeading
             icon={HelpCircle}
@@ -235,7 +235,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       </Section>
 
       {/* 타겟 오디언스 섹션 */}
-      <Section variant="alternate">
+      <Section variant="alternate" defer>
         <m.div {...audienceSectionAnimation}>
           <SectionHeading
             icon={Target}
@@ -289,7 +289,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         </m.div>
       </Section>
 
-      <Section variant="default">
+      <Section variant="default" defer>
         <m.div {...featuresSectionAnimation}>
           <SectionHeading
             icon={ShieldCheck}
@@ -341,7 +341,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
 
       {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO) */}
       {locale === 'ko' && (
-        <Section variant="default" className="py-10">
+        <Section variant="default" className="py-10" defer>
           <div className="max-w-5xl mx-auto">
             <SectionHeading
               icon={BookOpen}
@@ -1046,7 +1046,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
       )}
 
       {/* 관련 서비스 바로가기 */}
-      <Section variant="alternate" className="py-10">
+      <Section variant="alternate" className="py-10" defer>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/lesson`}
@@ -1075,7 +1075,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         </div>
       </Section>
 
-      <Section variant="default" className="py-16">
+      <Section variant="default" className="py-16" defer>
         <ContactCTA
           locale={locale}
           title={
