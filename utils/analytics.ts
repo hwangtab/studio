@@ -75,6 +75,8 @@ const toFlatProperties = (
     {}
   );
 
+type GtagFn = (command: 'event', eventName: string, params: Record<string, unknown>) => void;
+
 export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void => {
   if (typeof window === 'undefined') return;
 
@@ -91,5 +93,13 @@ export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void
     utm_campaign: props.utm_campaign ?? getSearchParam('utm_campaign'),
   });
 
+  // 1) Vercel Analytics — 항상 전송 (페이지 즉시 집계)
   track(name, payload);
+
+  // 2) Google Analytics 4 — gtag.js가 lazyOnload라 페이지 로드 초반엔 없음.
+  //    존재할 때만 동일 payload 전송. GA4 Conversions·Funnels 설정 가능.
+  const gtag = (window as typeof window & { gtag?: GtagFn }).gtag;
+  if (typeof gtag === 'function') {
+    gtag('event', name, payload);
+  }
 };

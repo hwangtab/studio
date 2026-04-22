@@ -26,6 +26,14 @@ class MyDocument extends Document<Props> {
       >
         <Head>
           <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />
+          {/* Google Search Console 사이트 인증 — 환경변수 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+              (GSC에서 발급받은 meta 태그 content 값)을 Vercel에 등록하면 자동 주입. */}
+          {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+            <meta
+              name="google-site-verification"
+              content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}
+            />
+          )}
           {/* Resource hints */}
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />

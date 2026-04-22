@@ -261,6 +261,20 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                     gtag('config', 'G-KYGP18G36J');
                   `}
                 </Script>
+                {/* Microsoft Clarity — 히트맵 + 세션 리플레이 + rage click 자동 수집.
+                    NEXT_PUBLIC_CLARITY_PROJECT_ID 환경변수가 설정된 경우에만 로드.
+                    lazyOnload로 CWV 영향 최소화. */}
+                {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID && (
+                  <Script id="clarity-init" strategy="lazyOnload">
+                    {`
+                      (function(c,l,a,r,i,t,y){
+                        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                      })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
+                    `}
+                  </Script>
+                )}
               </Layout>
             </MotionConfig>
           </LazyMotion>
