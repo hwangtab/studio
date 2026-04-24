@@ -31,3 +31,9 @@ yarn-error.log*
 public/images/**/*.webp
 public/images/**/*.avif
 
+# build caches / debug artifacts
+tsconfig.tsbuildinfo
+.playwright-mcp/
+reports/
+table-check.png
+
