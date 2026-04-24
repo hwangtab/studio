@@ -92,7 +92,14 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "티어라이너",
             "productionNotes": {
-                "ko": "티어라이너의 <Bite Me>는 달콤한 멜로디 아래 자의식과 날 선 감정을 함께 얹은 팝 싱글입니다. 장르적으로는 신스 팝과 알앤비의 경계에 있고, 쫀쫀한 보컬과 가볍게 튀는 비트가 곡 전체의 인상을 결정짓는 곡이라 레코딩 단계부터 이 두 요소의 존재감을 어떻게 분리해 살릴지를 가장 먼저 고민했습니다.\n\n보컬 레코딩은 Neumann TLM 103으로 중역의 두께를 먼저 확보한 뒤, 소곤대는 구간과 임팩트 있는 훅을 따로 테이크로 나눠 진행했습니다. 감정을 과하게 밀어붙이기보다 말을 건네듯 자연스럽게 뱉는 쪽을 택했고, 숨소리와 입술 움직임 같은 작은 디테일을 일정 부분 그대로 살려 친밀감을 만들었습니다. 애드립 라인은 별도 트랙으로 쌓아 좌우 공간에 얇게 펼쳐두었어요.\n\n믹싱에서는 보컬의 미드 대역을 비워두는 방향으로 리듬 소스를 정리하고, 킥과 베이스의 로우 엔드는 단단하되 과하게 부풀지 않도록 절제했습니다. 리버브는 짧은 플레이트와 1/8 딜레이를 레이어해 곡의 BPM을 깨지 않도록 했고, 마스터링은 스트리밍 기준 라우드니스를 맞추되 다이내믹을 과하게 뭉개지 않는 쪽으로 마무리했습니다.\n\n완성된 트랙은 이어폰에서 가사의 뉘앙스가 잘 전달되고, 작은 블루투스 스피커에서도 훅이 선명하게 들리는 정도의 균형을 목표로 했습니다. 출근길이나 산책 중처럼 혼자 듣는 환경과 잘 맞아떨어지는 인상의 싱글입니다."
+                "ko": "티어라이너의 <Bite Me>는 달콤한 멜로디 아래 자의식과 날 선 감정을 함께 얹은 팝 싱글입니다. 장르적으로는 신스 팝과 알앤비의 경계에 있고, 쫀쫀한 보컬과 가볍게 튀는 비트가 곡 전체의 인상을 결정짓는 곡이라 레코딩 단계부터 이 두 요소의 존재감을 어떻게 분리해 살릴지를 가장 먼저 고민했습니다.\n\n보컬 레코딩은 Neumann TLM 103으로 중역의 두께를 먼저 확보한 뒤, 소곤대는 구간과 임팩트 있는 훅을 따로 테이크로 나눠 진행했습니다. 감정을 과하게 밀어붙이기보다 말을 건네듯 자연스럽게 뱉는 쪽을 택했고, 숨소리와 입술 움직임 같은 작은 디테일을 일정 부분 그대로 살려 친밀감을 만들었습니다. 애드립 라인은 별도 트랙으로 쌓아 좌우 공간에 얇게 펼쳐두었어요.\n\n믹싱에서는 보컬의 미드 대역을 비워두는 방향으로 리듬 소스를 정리하고, 킥과 베이스의 로우 엔드는 단단하되 과하게 부풀지 않도록 절제했습니다. 리버브는 짧은 플레이트와 1/8 딜레이를 레이어해 곡의 BPM을 깨지 않도록 했고, 마스터링은 스트리밍 기준 라우드니스를 맞추되 다이내믹을 과하게 뭉개지 않는 쪽으로 마무리했습니다.\n\n완성된 트랙은 이어폰에서 가사의 뉘앙스가 잘 전달되고, 작은 블루투스 스피커에서도 훅이 선명하게 들리는 정도의 균형을 목표로 했습니다. 출근길이나 산책 중처럼 혼자 듣는 환경과 잘 맞아떨어지는 인상의 싱글입니다.",
+                "en": "Tierliner's 'Bite Me' is a pop single layering self-awareness and sharpened emotion beneath a sweet melody. Sitting on the border between synth-pop and R&B, the tightly-voiced vocal and lightly-bouncing beat define the track's overall impression, so from the recording stage the primary concern was how to separate and preserve the presence of these two elements.\n\nVocal recording started with Neumann TLM 103 to secure thickness in the mid-range, then split the whispered sections and impact-driven hook into separate takes. Rather than pushing the emotion too hard, we opted for a natural, conversational delivery — preserving small details like breath and lip movement to build intimacy. Ad-lib lines were stacked on separate tracks and spread thinly across the stereo field.\n\nDuring mixing, rhythm sources were arranged to leave the vocal mid-range uncluttered, and the kick and bass low-end was kept tight without excessive bloat. Reverb layered a short plate with a 1/8 delay to keep the song's BPM intact, and mastering matched streaming loudness standards while avoiding heavy dynamic compression.\n\nThe finished track aims for a balance where lyric nuance comes through on earphones and the hook stays clear even on small Bluetooth speakers. A single well-suited to solo listening environments like a morning commute or a walk."
+            },
+            "releaseDate": "2026-02-22",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["티어라이너 (Vocal)"],
+                "gear": ["Neumann TLM 103"]
             }
         },
         {
@@ -138,7 +145,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "Guitar Choi",
             "productionNotes": {
-                "ko": "Guitar Choi의 <Dementia>는 기타리스트가 중심이 된 인스트루멘털 싱글로, 제목처럼 기억이 천천히 흐려지는 듯한 몽환적인 질감을 의도한 곡입니다. 빠른 전개 대신 느린 호흡과 공기감에 무게가 실려 있어, 사운드를 쌓는 밀도보다 비우는 타이밍을 설계하는 쪽이 곡의 분위기를 좌우했습니다.\n\n레코딩 데이터는 아티스트 측에서 받은 트랙 파일을 기반으로 작업했고, 이를 토대로 편집과 톤 정리, 공간 배치를 다시 설계했습니다. 메인 기타 라인은 중역의 단단함을 유지하되 고역의 피킹 노이즈를 과하지 않게 다듬었고, 레이어된 클린 톤과 앰비언트 기타는 좌우에 얇게 펼쳐 곡의 입체감을 만들었습니다. 자극적인 이펙트보다 담담한 리버브와 긴 딜레이로 여운을 길게 끌어주는 쪽을 선택했어요.\n\n믹싱에서는 기타끼리 주파수가 부딪히지 않도록 대역을 정리하고, 곡 후반부로 갈수록 자연스럽게 스테레오 폭이 넓어지도록 오토메이션을 그었습니다. 마스터링은 라우드니스를 무리하게 올리지 않고 다이내믹을 살려, 조용한 구간과 절정 구간의 대비가 그대로 전해지는 방향으로 마무리했습니다.\n\n완성본은 늦은 밤 이어폰으로 천천히 듣기에 잘 어울리는 질감입니다. 아트워크와 홍보 톤도 이 정서를 해치지 않도록 단정하게 통일했습니다."
+                "ko": "Guitar Choi의 <Dementia>는 기타리스트가 중심이 된 인스트루멘털 싱글로, 제목처럼 기억이 천천히 흐려지는 듯한 몽환적인 질감을 의도한 곡입니다. 빠른 전개 대신 느린 호흡과 공기감에 무게가 실려 있어, 사운드를 쌓는 밀도보다 비우는 타이밍을 설계하는 쪽이 곡의 분위기를 좌우했습니다.\n\n레코딩 데이터는 아티스트 측에서 받은 트랙 파일을 기반으로 작업했고, 이를 토대로 편집과 톤 정리, 공간 배치를 다시 설계했습니다. 메인 기타 라인은 중역의 단단함을 유지하되 고역의 피킹 노이즈를 과하지 않게 다듬었고, 레이어된 클린 톤과 앰비언트 기타는 좌우에 얇게 펼쳐 곡의 입체감을 만들었습니다. 자극적인 이펙트보다 담담한 리버브와 긴 딜레이로 여운을 길게 끌어주는 쪽을 선택했어요.\n\n믹싱에서는 기타끼리 주파수가 부딪히지 않도록 대역을 정리하고, 곡 후반부로 갈수록 자연스럽게 스테레오 폭이 넓어지도록 오토메이션을 그었습니다. 마스터링은 라우드니스를 무리하게 올리지 않고 다이내믹을 살려, 조용한 구간과 절정 구간의 대비가 그대로 전해지는 방향으로 마무리했습니다.\n\n완성본은 늦은 밤 이어폰으로 천천히 듣기에 잘 어울리는 질감입니다. 아트워크와 홍보 톤도 이 정서를 해치지 않도록 단정하게 통일했습니다.",
+                "en": "Guitar Choi's 'Dementia' is an instrumental single centered on the guitarist, intended — as the title suggests — to evoke a dreamlike texture of slowly fading memory. Weight rests on slow breathing and air rather than quick development, so designing the timing of emptiness mattered more than density of layering.\n\nRecording data came from tracks provided by the artist, and from there we reworked the editing, tone, and spatial placement. The main guitar line maintained mid-range firmness while smoothing high-frequency picking noise to a moderate level, and layered clean tones and ambient guitars were spread thinly left and right to build dimensionality. Rather than aggressive effects, restrained reverb and long delay were chosen to draw out a long lingering tail.\n\nIn mixing, we cleared frequency space between the guitar layers, and automation gradually widened the stereo image toward the second half of the track. Mastering preserved dynamics rather than forcing loudness, keeping the contrast between quiet sections and the climax fully intact.\n\nThe finished work suits slow, late-night earphone listening. Artwork and promotional tone were kept cohesive so they wouldn't disturb this mood."
+            },
+            "releaseDate": "2025-09-08",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["Guitar Choi (Guitar)"]
             }
         },
         {
@@ -305,7 +318,14 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "이서영",
             "productionNotes": {
-                "ko": "이서영의 <우리>는 담백한 어쿠스틱 편성을 바탕으로 가사의 서사를 천천히 들려주는 포크 팝 싱글입니다. 화려한 장식을 덜어낸 자리에 아티스트 고유의 목소리와 숨결이 중심을 잡도록 설계했고, 곡 전반의 호흡을 긴 편으로 가져가 가사 한 줄 한 줄이 제대로 남도록 기획했습니다.\n\n보컬 녹음은 Neumann U87Ai를 기본으로 사용해 중역의 풍성함을 확보했고, 말하듯 부르는 저음부 구간과 멜로디가 뻗어나가는 후렴을 구분해 여러 테이크로 쌓았습니다. 디렉션 포인트는 '힘을 빼는 용기'였어요. 음을 정확히 누르기보다 자연스러운 발성과 자신의 말투에 가까운 억양을 그대로 유지해달라고 요청했고, 발음이 과하게 또렷해지지 않도록 편집에서도 조심했습니다.\n\n어쿠스틱 기타는 두 본 스테레오 마이킹으로 기록해 공간감을 확보했고, 믹싱에서는 보컬이 중앙에서 또렷이 들리도록 1kHz 부근을 가볍게 비워주고 저역의 울림은 단정하게 정리했습니다. 리버브는 짧은 룸과 자연스러운 플레이트를 섞어 과장되지 않는 공간을 만들었습니다.\n\n결과적으로 이 트랙은 통근 시간의 차 안이나 작업실 모니터처럼 조용한 환경에서 차분하게 들을 때 가장 잘 어울립니다. 가사의 온도가 청자에게 그대로 전해지는 것을 목표로 한 싱글입니다."
+                "ko": "이서영의 <우리>는 담백한 어쿠스틱 편성을 바탕으로 가사의 서사를 천천히 들려주는 포크 팝 싱글입니다. 화려한 장식을 덜어낸 자리에 아티스트 고유의 목소리와 숨결이 중심을 잡도록 설계했고, 곡 전반의 호흡을 긴 편으로 가져가 가사 한 줄 한 줄이 제대로 남도록 기획했습니다.\n\n보컬 녹음은 Neumann U87Ai를 기본으로 사용해 중역의 풍성함을 확보했고, 말하듯 부르는 저음부 구간과 멜로디가 뻗어나가는 후렴을 구분해 여러 테이크로 쌓았습니다. 디렉션 포인트는 '힘을 빼는 용기'였어요. 음을 정확히 누르기보다 자연스러운 발성과 자신의 말투에 가까운 억양을 그대로 유지해달라고 요청했고, 발음이 과하게 또렷해지지 않도록 편집에서도 조심했습니다.\n\n어쿠스틱 기타는 두 본 스테레오 마이킹으로 기록해 공간감을 확보했고, 믹싱에서는 보컬이 중앙에서 또렷이 들리도록 1kHz 부근을 가볍게 비워주고 저역의 울림은 단정하게 정리했습니다. 리버브는 짧은 룸과 자연스러운 플레이트를 섞어 과장되지 않는 공간을 만들었습니다.\n\n결과적으로 이 트랙은 통근 시간의 차 안이나 작업실 모니터처럼 조용한 환경에서 차분하게 들을 때 가장 잘 어울립니다. 가사의 온도가 청자에게 그대로 전해지는 것을 목표로 한 싱글입니다.",
+                "en": "Lee Seo-young's 'Woori' is a folk-pop single that unfolds the lyrical narrative slowly over a stripped-back acoustic arrangement. We designed the space left by removing ornate decoration to center the artist's voice and breath, and intentionally kept a long breathing rhythm so each line of lyric would land properly.\n\nVocal recording used Neumann U87Ai as the base to secure mid-range richness, stacking multiple takes that separated the spoken-word low register from the reaching melodic choruses. The direction was 'the courage to let go of strength' — we asked for a natural vocal close to her speaking intonation rather than hitting notes precisely, and were careful in editing not to let enunciation become overly sharp.\n\nAcoustic guitar was captured with two-microphone stereo miking to secure spatial depth, and in mixing we gently scooped around 1kHz so the vocal could sit clearly center, while tidying the low-frequency resonance. Reverb blended a short room with a natural plate to create a space that isn't exaggerated.\n\nThe track sits best in quiet environments like a commute inside the car or a studio monitor setup. A single aimed at delivering the temperature of the lyrics directly to the listener."
+            },
+            "releaseDate": "2024-11-29",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["이서영 (Vocal)"],
+                "gear": ["Neumann U87Ai"]
             }
         },
         {
@@ -323,7 +343,14 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": true,
             "artist": "자이 x HANASH",
             "productionNotes": {
-                "ko": "자이와 HANASH가 함께한 <분홍색 패딩 소녀>는 겨울의 어느 한 장면을 장르 혼합으로 풀어낸 싱글입니다. 자이의 팝 감성과 HANASH의 힙합 톤이 한 곡에서 자연스럽게 교차하기 위해서는 보컬 톤과 리듬 사운드의 대비가 너무 강해지지 않도록 섬세한 조율이 필요했고, 기획 단계부터 두 아티스트의 색을 어떻게 공존시킬지를 핵심 과제로 삼았습니다.\n\n레코딩은 각 아티스트의 구간을 나눠 별도 세션으로 진행했어요. 자이의 멜로디 파트는 Neumann U87Ai로 중역의 공기감을 살리고, HANASH의 랩 파트는 조금 더 가까이 붙어 드라이한 질감을 확보하기 위해 근접 발성 위주로 녹음했습니다. 두 파트가 이어지는 구간은 톤 차이가 단절로 느껴지지 않도록 발성과 딕션 페이스를 맞춰 여러 테이크를 뽑았습니다.\n\n믹싱에서는 보컬 두 명이 같은 주파수 대역에서 싸우지 않도록 미드 영역의 역할을 나눠주고, 랩 구간에서는 드럼의 펀치가 강하게 튀어나오고 팝 구간에서는 신스와 코러스의 공간이 더 넓어지도록 오토메이션을 걸었습니다. 홍보 믹스용 짧은 버전과 정식 버전의 라우드니스 밸런스도 별도로 정리했습니다.\n\n완성본은 이어폰에서 두 아티스트의 음색 차이가 선명하게 느껴지되, 자동차 스테레오나 카페 플레이리스트에서는 하나의 팝 송으로 자연스럽게 이어지는 것을 목표로 했습니다."
+                "ko": "자이와 HANASH가 함께한 <분홍색 패딩 소녀>는 겨울의 어느 한 장면을 장르 혼합으로 풀어낸 싱글입니다. 자이의 팝 감성과 HANASH의 힙합 톤이 한 곡에서 자연스럽게 교차하기 위해서는 보컬 톤과 리듬 사운드의 대비가 너무 강해지지 않도록 섬세한 조율이 필요했고, 기획 단계부터 두 아티스트의 색을 어떻게 공존시킬지를 핵심 과제로 삼았습니다.\n\n레코딩은 각 아티스트의 구간을 나눠 별도 세션으로 진행했어요. 자이의 멜로디 파트는 Neumann U87Ai로 중역의 공기감을 살리고, HANASH의 랩 파트는 조금 더 가까이 붙어 드라이한 질감을 확보하기 위해 근접 발성 위주로 녹음했습니다. 두 파트가 이어지는 구간은 톤 차이가 단절로 느껴지지 않도록 발성과 딕션 페이스를 맞춰 여러 테이크를 뽑았습니다.\n\n믹싱에서는 보컬 두 명이 같은 주파수 대역에서 싸우지 않도록 미드 영역의 역할을 나눠주고, 랩 구간에서는 드럼의 펀치가 강하게 튀어나오고 팝 구간에서는 신스와 코러스의 공간이 더 넓어지도록 오토메이션을 걸었습니다. 홍보 믹스용 짧은 버전과 정식 버전의 라우드니스 밸런스도 별도로 정리했습니다.\n\n완성본은 이어폰에서 두 아티스트의 음색 차이가 선명하게 느껴지되, 자동차 스테레오나 카페 플레이리스트에서는 하나의 팝 송으로 자연스럽게 이어지는 것을 목표로 했습니다.",
+                "en": "'Pink Padding Girl' by Jai and HANASH is a single that unpacks a winter scene through genre blending. For Jai's pop sensibility and HANASH's hip-hop tone to cross naturally within one track, the contrast between vocal tone and rhythm sound could not become too strong — so from the planning stage, coexisting two artists' colors was the core challenge.\n\nRecording split each artist's sections into separate sessions. Jai's melodic parts were tracked with Neumann U87Ai to preserve mid-range air, while HANASH's rap parts were recorded in closer proximity to secure a drier texture. Transitions where the two parts connect were carefully take-matched in breath and diction pacing so the tonal shift wouldn't feel like a break.\n\nIn mixing, we divided mid-range roles so both vocals wouldn't fight in the same frequency band, and automation was applied so the drum punch stands out during rap sections while the synth and chorus space widens during pop sections. A separate short promo version was balanced for loudness independently from the final release.\n\nThe finished track aims to make the tonal difference between the two artists clearly felt on earphones while reading as a single cohesive pop song on car stereos or café playlists."
+            },
+            "releaseDate": "2024-12-03",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["자이 (Vocal)", "HANASH (Rap)"],
+                "gear": ["Neumann U87Ai"]
             }
         },
         {
@@ -342,7 +369,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "모모",
             "productionNotes": {
-                "ko": "모모의 <If this can't be tolerated, what can't be?>는 긴 제목만큼이나 직설적인 감정을 담은 싱글릿입니다. 참을 수 없는 상황에 대한 항의를 담담한 톤의 곡으로 풀어낸 작품으로, 과격한 사운드로 감정을 증폭시키기보다 절제된 편곡 안에서 가사의 무게가 자연스럽게 드러나도록 방향을 잡았습니다.\n\n보컬 녹음은 모모의 평소 말투에 가까운 발성을 유지할 수 있도록 디렉션을 맞췄습니다. 목에 힘을 주는 대신 말하듯 뱉는 구간과, 후반부에서 감정이 차오르는 구간을 나누어 테이크를 따로 쌓았고, 시옷과 히읗의 마찰음이 과하게 강조되지 않도록 편집에서 디에싱을 섬세하게 적용했습니다. 보컬 더블링은 최소한으로 쓰고 메인 한 줄의 명료함을 지키는 쪽을 택했습니다.\n\n믹싱에서는 중역의 보컬 에너지를 방해하지 않는 선에서 드럼과 기타의 공간을 분리했고, 리버브는 짧게 걸어 방 안에서 이야기를 듣는 듯한 거리감을 유지했습니다. 마스터링은 음압을 과하게 올리지 않는 방향으로 정리해 조용한 구간의 여백이 그대로 느껴지도록 했어요.\n\n완성된 트랙은 가사의 의미를 곱씹으며 듣는 청자에게 잘 어울립니다. 늦은 밤 모니터 스피커로 들을 때 뉘앙스가 가장 또렷하게 살아나는 구성의 싱글입니다."
+                "ko": "모모의 <If this can't be tolerated, what can't be?>는 긴 제목만큼이나 직설적인 감정을 담은 싱글릿입니다. 참을 수 없는 상황에 대한 항의를 담담한 톤의 곡으로 풀어낸 작품으로, 과격한 사운드로 감정을 증폭시키기보다 절제된 편곡 안에서 가사의 무게가 자연스럽게 드러나도록 방향을 잡았습니다.\n\n보컬 녹음은 모모의 평소 말투에 가까운 발성을 유지할 수 있도록 디렉션을 맞췄습니다. 목에 힘을 주는 대신 말하듯 뱉는 구간과, 후반부에서 감정이 차오르는 구간을 나누어 테이크를 따로 쌓았고, 시옷과 히읗의 마찰음이 과하게 강조되지 않도록 편집에서 디에싱을 섬세하게 적용했습니다. 보컬 더블링은 최소한으로 쓰고 메인 한 줄의 명료함을 지키는 쪽을 택했습니다.\n\n믹싱에서는 중역의 보컬 에너지를 방해하지 않는 선에서 드럼과 기타의 공간을 분리했고, 리버브는 짧게 걸어 방 안에서 이야기를 듣는 듯한 거리감을 유지했습니다. 마스터링은 음압을 과하게 올리지 않는 방향으로 정리해 조용한 구간의 여백이 그대로 느껴지도록 했어요.\n\n완성된 트랙은 가사의 의미를 곱씹으며 듣는 청자에게 잘 어울립니다. 늦은 밤 모니터 스피커로 들을 때 뉘앙스가 가장 또렷하게 살아나는 구성의 싱글입니다.",
+                "en": "Momo's 'If this can't be tolerated, what can't be?' is a single that carries emotion as direct as its long title. Rather than amplifying the feeling with aggressive sound, we aimed for the weight of the lyrics to emerge naturally within a restrained arrangement — an objection delivered in calm tone.\n\nVocal recording maintained a delivery close to Momo's natural speaking voice. Rather than forcing the throat, we separated the conversational sections from the emotionally rising final portion into different takes, and applied de-essing carefully in editing so sibilant and fricative consonants wouldn't be overemphasized. Doubling was used minimally to preserve the clarity of a single main line.\n\nDuring mixing, drum and guitar spaces were separated without intruding on the mid-range vocal energy, and reverb was kept short to maintain the distance of listening to a story inside a room. Mastering pushed loudness only moderately so the quiet-section air would remain intact.\n\nThe finished track pairs well with listeners who chew on the meaning of the lyrics. A single whose nuance emerges most clearly on studio monitors late at night."
+            },
+            "releaseDate": "2024-11-26",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["모모 (Vocal)"]
             }
         },
         {
@@ -360,7 +393,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "여유",
             "productionNotes": {
-                "ko": "여유의 <서울의 밤 (feat. 정수민)>은 제목 그대로 밤 시간대의 도시 감성을 담은 어반 팝 싱글입니다. 여유의 부드러운 메인 보컬과 정수민의 결이 다른 음색이 한 곡에서 교차하며, 밤의 여러 단면을 다른 톤으로 번갈아 보여주는 구성입니다. 레코딩 단계부터 두 보컬의 존재감을 해치지 않는 편곡 밀도가 중요했습니다.\n\n녹음은 두 아티스트를 각각 다른 세션으로 나눠 진행했고, 메인 보컬은 중역의 벨벳 감이 잘 살아나는 마이크 조합으로 담백하게 기록했습니다. 피처링 파트는 좀 더 공기감이 있는 셋업으로 잡아 같은 곡 안에서도 음색의 레이어가 자연스럽게 느껴지도록 했습니다. 듀엣이 겹치는 구간은 한 명이 들어오면 다른 한 명이 살짝 공간을 내어주는 식으로 발성과 타이밍을 맞춰 여러 테이크를 조합했어요.\n\n믹싱에서는 밤의 질감을 강조하기 위해 킥과 베이스의 서브 영역을 두껍게 가져가되, 중역은 말소리가 또렷이 전달될 수 있도록 정돈했습니다. 리버브는 넓은 홀 대신 중간 길이의 플레이트를 사용해 도시의 실내 공간 같은 감도를 만들었고, 홍보 믹스는 짧은 티저용 섹션을 따로 정리했습니다.\n\n결과적으로 차 안이나 밤 시간대의 이어폰 청취처럼 주변이 조용해진 환경과 잘 어울리는 싱글입니다. 여백의 사용이 곡의 정서를 결정하는 트랙이에요."
+                "ko": "여유의 <서울의 밤 (feat. 정수민)>은 제목 그대로 밤 시간대의 도시 감성을 담은 어반 팝 싱글입니다. 여유의 부드러운 메인 보컬과 정수민의 결이 다른 음색이 한 곡에서 교차하며, 밤의 여러 단면을 다른 톤으로 번갈아 보여주는 구성입니다. 레코딩 단계부터 두 보컬의 존재감을 해치지 않는 편곡 밀도가 중요했습니다.\n\n녹음은 두 아티스트를 각각 다른 세션으로 나눠 진행했고, 메인 보컬은 중역의 벨벳 감이 잘 살아나는 마이크 조합으로 담백하게 기록했습니다. 피처링 파트는 좀 더 공기감이 있는 셋업으로 잡아 같은 곡 안에서도 음색의 레이어가 자연스럽게 느껴지도록 했습니다. 듀엣이 겹치는 구간은 한 명이 들어오면 다른 한 명이 살짝 공간을 내어주는 식으로 발성과 타이밍을 맞춰 여러 테이크를 조합했어요.\n\n믹싱에서는 밤의 질감을 강조하기 위해 킥과 베이스의 서브 영역을 두껍게 가져가되, 중역은 말소리가 또렷이 전달될 수 있도록 정돈했습니다. 리버브는 넓은 홀 대신 중간 길이의 플레이트를 사용해 도시의 실내 공간 같은 감도를 만들었고, 홍보 믹스는 짧은 티저용 섹션을 따로 정리했습니다.\n\n결과적으로 차 안이나 밤 시간대의 이어폰 청취처럼 주변이 조용해진 환경과 잘 어울리는 싱글입니다. 여백의 사용이 곡의 정서를 결정하는 트랙이에요.",
+                "en": "Yeoyu's 'Seoul Night (feat. Jung Su-min)' is an urban pop single that captures night-time city mood exactly as the title suggests. Yeoyu's soft lead vocal and Jung Su-min's contrasting tone cross paths within the track, alternating different aspects of the night in different tones. From the recording stage, arrangement density was key — it had to not undermine the presence of either voice.\n\nThe two artists were recorded in separate sessions. The lead vocal was captured with a microphone combination bringing out mid-range velvet quality, while the featuring part used a setup with more air so the tonal layers would feel natural within the same song. In duet overlaps, we built the take combinations so each voice yields a little space when the other enters.\n\nIn mixing, to emphasize night texture, we kept the kick and bass sub-range thick while tidying the mid-range so speech would carry clearly. Rather than wide halls, medium-length plate reverb was used to create the feel of an urban interior, and a separate short teaser cut was finalized for promotion.\n\nA single that works well with quiet-environment listening such as inside a car or late-night earphone use. A track where the use of negative space determines the emotional feel."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["여유 (Vocal)", "정수민 (Vocal, Featuring)"]
             }
         },
         {
@@ -379,7 +417,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "나뭇잎들",
             "productionNotes": {
-                "ko": "나뭇잎들의 <눈 앞의 마음>은 밴드의 초기 질감을 잘 살린 인디 포크 싱글입니다. 제목에서 느껴지는 것처럼 가까이에 있는 마음, 일상 속에서 놓치기 쉬운 감정을 잔잔하게 꺼내어 얹는 곡이라, 편곡과 사운드 전체를 조용한 어쿠스틱 기반 위에 필요한 만큼만 쌓는 방향으로 설계했습니다.\n\n녹음은 어쿠스틱 기타, 보컬, 가벼운 리듬 섹션 순으로 레이어링했습니다. 기타는 두 본 마이크 스테레오 배치로 공간을 먼저 확보한 뒤, 보컬은 Neumann 계열 콘덴서로 중역의 따뜻함을 살리면서 저역의 부풀림은 하이패스로 다듬었습니다. 코러스는 두 명 이상의 보컬이 나뭇잎이 겹치듯 얇게 쌓이도록 테이크를 여러 번 달리해 녹음했어요.\n\n믹싱에서는 기타의 줄 마찰음, 보컬의 숨소리 같은 작은 디테일을 너무 지우지 않는 쪽을 택했습니다. 이런 소리들이 살아 있어야 이 곡의 밀도가 느껴지기 때문입니다. 리버브는 작은 룸 공간 위주로 설정하고, 넓은 홀은 후렴에서만 짧게 들어왔다 사라지도록 오토메이션을 걸었습니다.\n\n완성된 트랙은 야외에서 이어폰으로 걸으며 듣거나, 작은 스피커로 거실에 틀어 놓고 배경처럼 흘릴 때 잘 어울립니다. 과한 가공 없이 편안하게 스며드는 것을 목표로 한 싱글입니다."
+                "ko": "나뭇잎들의 <눈 앞의 마음>은 밴드의 초기 질감을 잘 살린 인디 포크 싱글입니다. 제목에서 느껴지는 것처럼 가까이에 있는 마음, 일상 속에서 놓치기 쉬운 감정을 잔잔하게 꺼내어 얹는 곡이라, 편곡과 사운드 전체를 조용한 어쿠스틱 기반 위에 필요한 만큼만 쌓는 방향으로 설계했습니다.\n\n녹음은 어쿠스틱 기타, 보컬, 가벼운 리듬 섹션 순으로 레이어링했습니다. 기타는 두 본 마이크 스테레오 배치로 공간을 먼저 확보한 뒤, 보컬은 Neumann 계열 콘덴서로 중역의 따뜻함을 살리면서 저역의 부풀림은 하이패스로 다듬었습니다. 코러스는 두 명 이상의 보컬이 나뭇잎이 겹치듯 얇게 쌓이도록 테이크를 여러 번 달리해 녹음했어요.\n\n믹싱에서는 기타의 줄 마찰음, 보컬의 숨소리 같은 작은 디테일을 너무 지우지 않는 쪽을 택했습니다. 이런 소리들이 살아 있어야 이 곡의 밀도가 느껴지기 때문입니다. 리버브는 작은 룸 공간 위주로 설정하고, 넓은 홀은 후렴에서만 짧게 들어왔다 사라지도록 오토메이션을 걸었습니다.\n\n완성된 트랙은 야외에서 이어폰으로 걸으며 듣거나, 작은 스피커로 거실에 틀어 놓고 배경처럼 흘릴 때 잘 어울립니다. 과한 가공 없이 편안하게 스며드는 것을 목표로 한 싱글입니다.",
+                "en": "Namutipdeul's 'Heart Before My Eyes' is an indie folk single that preserves the band's early texture well. As the title suggests — a feeling that's close at hand, an emotion easily missed in daily life — the whole arrangement was designed to stack only what's needed over a quiet acoustic base.\n\nRecording layered acoustic guitar, vocals, then light rhythm in sequence. The guitar was first captured with a two-microphone stereo arrangement to establish space, then the vocal was recorded with a Neumann-family condenser to preserve mid-range warmth while high-passing out low-frequency bloat. Chorus harmonies were built from multiple varied takes so two or more voices would stack thinly like overlapping leaves.\n\nIn mixing, we chose not to erase small details like guitar string friction and vocal breath — these sounds must stay alive for the track's density to feel right. Reverb was primarily set on small rooms, while a wide hall entered and faded only briefly in the chorus via automation.\n\nThe finished track suits walking outdoors with earphones or playing in the background through a small living-room speaker. A single aimed at settling in comfortably without excessive processing."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["나뭇잎들"]
             }
         },
         {
@@ -398,7 +441,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": true,
             "artist": "모레도토요일",
             "productionNotes": {
-                "ko": "모레도토요일의 <We will sail for your freedom>은 밴드가 전하고 싶은 연대의 메시지를 담은 싱글입니다. 제목처럼 누군가의 자유를 향해 함께 항해하겠다는 선언이 곡 전반에 담겨 있고, 그 의지를 과장되지 않게 담아내기 위해 편곡과 사운드 모두 밴드 합주의 질감을 최대한 살리는 방향으로 잡았습니다.\n\n레코딩은 밴드 합주 기반으로 진행하되, 베이직 트랙을 먼저 라이브 세션으로 잡고 보컬과 추가 레이어를 오버더빙하는 방식이었습니다. 드럼은 룸 마이크까지 포함해 공간의 울림을 적극적으로 활용했고, 기타는 앰프 캐비닛 앞과 룸 두 지점을 동시에 받아 질감을 혼합했습니다. 보컬은 선언적인 훅 구간에서 한 발 더 밀어붙이는 톤을 요청했고, 절의 서정적인 구간은 오히려 힘을 빼고 읊조리듯 기록했어요.\n\n믹싱에서는 밴드의 와이드한 질감을 유지하기 위해 드럼 오버헤드와 기타 양쪽 채널을 넓게 펼치고, 베이스는 센터를 단단하게 고정했습니다. 후렴에서 합창이 터질 때 보컬이 묻히지 않도록 미드의 컴프레싱을 세밀하게 걸고, 마스터링은 라이브 공연처럼 다이내믹이 살아 있는 질감을 목표로 정리했습니다.\n\n완성본은 밖에서 걸으며 이어폰으로 듣거나 공연장 PA로 큰 볼륨에서 재생될 때 가장 잘 어울립니다. 연대의 메시지가 에너지로 전해지는 것을 목표로 한 싱글이에요."
+                "ko": "모레도토요일의 <We will sail for your freedom>은 밴드가 전하고 싶은 연대의 메시지를 담은 싱글입니다. 제목처럼 누군가의 자유를 향해 함께 항해하겠다는 선언이 곡 전반에 담겨 있고, 그 의지를 과장되지 않게 담아내기 위해 편곡과 사운드 모두 밴드 합주의 질감을 최대한 살리는 방향으로 잡았습니다.\n\n레코딩은 밴드 합주 기반으로 진행하되, 베이직 트랙을 먼저 라이브 세션으로 잡고 보컬과 추가 레이어를 오버더빙하는 방식이었습니다. 드럼은 룸 마이크까지 포함해 공간의 울림을 적극적으로 활용했고, 기타는 앰프 캐비닛 앞과 룸 두 지점을 동시에 받아 질감을 혼합했습니다. 보컬은 선언적인 훅 구간에서 한 발 더 밀어붙이는 톤을 요청했고, 절의 서정적인 구간은 오히려 힘을 빼고 읊조리듯 기록했어요.\n\n믹싱에서는 밴드의 와이드한 질감을 유지하기 위해 드럼 오버헤드와 기타 양쪽 채널을 넓게 펼치고, 베이스는 센터를 단단하게 고정했습니다. 후렴에서 합창이 터질 때 보컬이 묻히지 않도록 미드의 컴프레싱을 세밀하게 걸고, 마스터링은 라이브 공연처럼 다이내믹이 살아 있는 질감을 목표로 정리했습니다.\n\n완성본은 밖에서 걸으며 이어폰으로 듣거나 공연장 PA로 큰 볼륨에서 재생될 때 가장 잘 어울립니다. 연대의 메시지가 에너지로 전해지는 것을 목표로 한 싱글이에요.",
+                "en": "Moredo Toyoil's 'We will sail for your freedom' is a single carrying the band's message of solidarity. A declaration of sailing together toward someone's freedom runs throughout the track, and to carry that resolve without exaggeration, both the arrangement and sound prioritized preserving the texture of live band performance.\n\nRecording was based on live band tracking — basic tracks were captured as a live session, with vocals and additional layers overdubbed afterward. Drums included room microphones to actively utilize spatial ambience, and guitars were captured simultaneously from the amp cabinet front and the room to blend textures. On declarative hook sections we asked the vocalist to push slightly further, while the more lyrical verse sections were recorded with relaxed, almost spoken delivery.\n\nIn mixing, to maintain the band's wide texture, drum overheads and guitar channels were spread wide while bass was anchored firmly at center. Mid-range compression was carefully applied so vocals wouldn't be buried when chorus vocals burst in, and mastering aimed for a live-performance-style dynamic liveliness.\n\nThe finished work suits walking outside with earphones or being played loud through a venue PA. A single aimed at delivering the message of solidarity as energy."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["모레도토요일"]
             }
         },
         {
@@ -418,7 +466,14 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "김인",
             "productionNotes": {
-                "ko": "김인의 <별을 보러 간 사람>은 제목처럼 어둠 속에서 빛을 찾아 떠난 이의 마음을 그려낸 포크 계열의 싱글입니다. 과장된 편곡 대신 아티스트의 음성과 어쿠스틱 악기의 맞물림을 중심에 두었고, 기획 단계부터 '별빛 아래에서 혼자 부르는 노래'라는 이미지를 기준점으로 삼아 사운드의 밀도를 조절했습니다.\n\n편곡은 어쿠스틱 기타와 스트링 계열의 패드, 최소한의 퍼커션으로 단순하게 구성했습니다. 보컬은 Neumann TLM 103으로 담백하게 받았고, 발성 자체보다 가사의 의미 전달에 집중하도록 디렉션을 맞췄습니다. 긴 호흡의 구간에서는 숨소리를 그대로 남겨 친밀감을 더했고, 하모니는 한 번만 얇게 얹어 본선율을 해치지 않는 선에서 썼습니다.\n\n믹싱에서는 보컬을 중앙 전면에 두고, 기타는 좌우로 적당히 펼쳐 광활한 공간감을 만들되 과도한 리버브는 피했습니다. 대신 테일이 긴 플레이트를 아주 낮은 레벨로 섞어 별이 흩어진 듯한 은은한 잔향을 확보했어요. 마스터링은 조용한 환경에서의 다이내믹이 그대로 살아나도록 라우드니스를 과하게 밀지 않았습니다.\n\n완성된 트랙은 밤늦은 이어폰 청취나 드라이브용 플레이리스트에 잘 어울립니다. 가사의 온도를 아주 가까이서 느끼고 싶은 순간과 잘 맞는 싱글이에요."
+                "ko": "김인의 <별을 보러 간 사람>은 제목처럼 어둠 속에서 빛을 찾아 떠난 이의 마음을 그려낸 포크 계열의 싱글입니다. 과장된 편곡 대신 아티스트의 음성과 어쿠스틱 악기의 맞물림을 중심에 두었고, 기획 단계부터 '별빛 아래에서 혼자 부르는 노래'라는 이미지를 기준점으로 삼아 사운드의 밀도를 조절했습니다.\n\n편곡은 어쿠스틱 기타와 스트링 계열의 패드, 최소한의 퍼커션으로 단순하게 구성했습니다. 보컬은 Neumann TLM 103으로 담백하게 받았고, 발성 자체보다 가사의 의미 전달에 집중하도록 디렉션을 맞췄습니다. 긴 호흡의 구간에서는 숨소리를 그대로 남겨 친밀감을 더했고, 하모니는 한 번만 얇게 얹어 본선율을 해치지 않는 선에서 썼습니다.\n\n믹싱에서는 보컬을 중앙 전면에 두고, 기타는 좌우로 적당히 펼쳐 광활한 공간감을 만들되 과도한 리버브는 피했습니다. 대신 테일이 긴 플레이트를 아주 낮은 레벨로 섞어 별이 흩어진 듯한 은은한 잔향을 확보했어요. 마스터링은 조용한 환경에서의 다이내믹이 그대로 살아나도록 라우드니스를 과하게 밀지 않았습니다.\n\n완성된 트랙은 밤늦은 이어폰 청취나 드라이브용 플레이리스트에 잘 어울립니다. 가사의 온도를 아주 가까이서 느끼고 싶은 순간과 잘 맞는 싱글이에요.",
+                "en": "Kim In's 'A Person Who Went to See the Stars' is a folk-leaning single depicting someone who set out to find light in the dark, exactly as the title suggests. Rather than exaggerated arrangement, we centered the meeting of the artist's voice with acoustic instruments, and from the planning stage we calibrated sound density against the reference image of 'a song sung alone under starlight.'\n\nThe arrangement was kept simple — acoustic guitar, string-pad elements, and minimal percussion. Vocals were captured cleanly with Neumann TLM 103, with direction focused on lyrical meaning over vocal projection. In long-breath sections we left the breath intact to add intimacy, and harmonies were layered only once, thinly, so the main melody would not be obscured.\n\nIn mixing, we placed the vocal center-forward and spread the guitar moderately left and right to create spatial openness without excessive reverb. Instead, a long-tailed plate was mixed in at very low levels to secure a faint afterglow like scattered stars. Mastering did not push loudness hard, so dynamics in quiet environments would come through directly.\n\nThe finished track suits late-night earphone listening or a driving playlist. A single that aligns well with moments of wanting to feel the temperature of the lyrics up close."
+            },
+            "releaseDate": "2025-01-09",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["김인 (Vocal)"],
+                "gear": ["Neumann TLM 103"]
             }
         },
         {
@@ -438,7 +493,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": true,
             "artist": "까르",
             "productionNotes": {
-                "ko": "까르의 <TRANSITION>은 아티스트의 이름만큼이나 개성 있는 색을 가진 싱글로, 감정이 한 지점에서 다른 지점으로 넘어가는 과정을 음악적 전환으로 풀어낸 곡입니다. 전반부의 차분한 질감과 후반부의 확장되는 에너지를 모두 담아야 했기에, 편곡 단계부터 곡의 흐름 설계가 가장 공을 들인 지점이었습니다.\n\n보컬 녹음은 두 가지 접근을 병행했습니다. 전반부의 읊조리는 구간은 Shure SM7B로 가까이 붙어 친밀한 톤을 확보했고, 후반부 확장 구간은 Neumann U87Ai로 바꿔 중고역의 깨끗함을 살렸습니다. 이렇게 마이크를 나누면 이질감이 생기지 않도록 EQ에서 두 구간의 주파수 커브를 매끄럽게 이어주는 작업이 필요했어요. 편곡에 추가된 신스 패드와 리듬 엘리먼트는 전환점을 극적으로 보이게 하면서도 보컬의 자리를 침범하지 않도록 배치했습니다.\n\n믹싱에서는 곡의 다이내믹을 설계적으로 설계했습니다. 전반부에서 저역을 일부러 가볍게 유지하다가 전환점 직후 서브 베이스가 자연스럽게 내려앉도록 오토메이션을 걸었고, 리버브와 딜레이의 비율도 후반부에서 점차 넓어지도록 조정했습니다. 마스터링은 스트리밍 표준에 맞추되 전환점의 임팩트를 희생하지 않는 쪽으로 정리했어요.\n\n완성본은 큰 볼륨에서 들을 때 전환의 카타르시스가 가장 잘 느껴집니다. 카 오디오나 모니터 스피커 환경에 어울리는 싱글입니다."
+                "ko": "까르의 <TRANSITION>은 아티스트의 이름만큼이나 개성 있는 색을 가진 싱글로, 감정이 한 지점에서 다른 지점으로 넘어가는 과정을 음악적 전환으로 풀어낸 곡입니다. 전반부의 차분한 질감과 후반부의 확장되는 에너지를 모두 담아야 했기에, 편곡 단계부터 곡의 흐름 설계가 가장 공을 들인 지점이었습니다.\n\n보컬 녹음은 두 가지 접근을 병행했습니다. 전반부의 읊조리는 구간은 Shure SM7B로 가까이 붙어 친밀한 톤을 확보했고, 후반부 확장 구간은 Neumann U87Ai로 바꿔 중고역의 깨끗함을 살렸습니다. 이렇게 마이크를 나누면 이질감이 생기지 않도록 EQ에서 두 구간의 주파수 커브를 매끄럽게 이어주는 작업이 필요했어요. 편곡에 추가된 신스 패드와 리듬 엘리먼트는 전환점을 극적으로 보이게 하면서도 보컬의 자리를 침범하지 않도록 배치했습니다.\n\n믹싱에서는 곡의 다이내믹을 설계적으로 설계했습니다. 전반부에서 저역을 일부러 가볍게 유지하다가 전환점 직후 서브 베이스가 자연스럽게 내려앉도록 오토메이션을 걸었고, 리버브와 딜레이의 비율도 후반부에서 점차 넓어지도록 조정했습니다. 마스터링은 스트리밍 표준에 맞추되 전환점의 임팩트를 희생하지 않는 쪽으로 정리했어요.\n\n완성본은 큰 볼륨에서 들을 때 전환의 카타르시스가 가장 잘 느껴집니다. 카 오디오나 모니터 스피커 환경에 어울리는 싱글입니다.",
+                "en": "Kkar's 'TRANSITION' is a single as distinctive as the artist's name — a track that expresses the process of emotion moving from one point to another as musical transition. Since we had to contain both the first half's calm texture and the second half's expanding energy, designing the song's flow was the point we invested the most care in from the arrangement stage.\n\nVocal recording combined two approaches. The whispering first-half sections were captured close with a Shure SM7B to secure intimate tone, while the expanded second half switched to Neumann U87Ai to bring out mid-high clarity. Splitting microphones like this required EQ work to smoothly join the frequency curves of the two sections so the transition wouldn't feel disjointed. Added synth pads and rhythm elements were placed to dramatize the turning point without invading the vocal's space.\n\nIn mixing, we engineered the song's dynamics architecturally. The low end was deliberately kept light in the first half, with automation bringing sub-bass down naturally just after the transition point, and the reverb-to-delay ratio was adjusted to widen progressively in the second half. Mastering met streaming standards without sacrificing the transition impact.\n\nThe catharsis of the transition is felt most clearly at high listening volumes. A single that suits car audio or monitor speaker environments."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["까르 (Vocal)"],
+                "gear": ["Shure SM7B", "Neumann U87Ai"]
             }
         },
         {
@@ -457,7 +518,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "남수",
             "productionNotes": {
-                "ko": "남수의 <안녕 (먼 곳의 그대에게)>는 이름처럼 간결한 인사와 함께 먼 곳의 누군가에게 말을 건네는 싱글입니다. 편곡은 피아노와 기타 중심의 담백한 발라드 형식을 택했고, 화려한 장식보다 가사의 울림이 또렷이 전달되도록 사운드 전체를 절제된 밀도로 설계했습니다.\n\n보컬 녹음에서 가장 신경 쓴 부분은 음정보다 '어조'였습니다. 편지를 읽어 내려가듯 자연스럽게 뱉는 톤을 유지하기 위해, 한 번에 길게 이어지는 테이크와 구간별로 나눠 집중해서 뽑은 테이크를 각각 확보했습니다. Neumann 계열 콘덴서 마이크로 중역의 존재감을 살리되, 저역은 근접 효과가 과하지 않도록 로우컷으로 정리했어요. 코러스는 한 번만 얇게 쌓아 원곡의 외로운 분위기를 해치지 않도록 했습니다.\n\n믹싱에서는 피아노를 스테레오 이미지 전반에 넓게 펼치고, 보컬은 중앙에서 가까이 들려오는 거리감으로 배치했습니다. 리버브는 중간 길이의 홀을 아주 낮은 비율로 섞어 공간이 비어 있는 듯한 느낌을 만들었고, 딜레이는 훅 끝에서만 짧게 살려 여운을 남겼어요. 마스터링은 라우드니스를 과하게 올리지 않고 조용한 환경의 청취를 기준으로 정리했습니다.\n\n완성된 트랙은 혼자 있는 늦은 시간이나 비 오는 오후처럼 조용한 순간에 잘 어울리는 싱글입니다. 편지처럼 천천히 읽혀야 의미가 살아나는 곡이에요."
+                "ko": "남수의 <안녕 (먼 곳의 그대에게)>는 이름처럼 간결한 인사와 함께 먼 곳의 누군가에게 말을 건네는 싱글입니다. 편곡은 피아노와 기타 중심의 담백한 발라드 형식을 택했고, 화려한 장식보다 가사의 울림이 또렷이 전달되도록 사운드 전체를 절제된 밀도로 설계했습니다.\n\n보컬 녹음에서 가장 신경 쓴 부분은 음정보다 '어조'였습니다. 편지를 읽어 내려가듯 자연스럽게 뱉는 톤을 유지하기 위해, 한 번에 길게 이어지는 테이크와 구간별로 나눠 집중해서 뽑은 테이크를 각각 확보했습니다. Neumann 계열 콘덴서 마이크로 중역의 존재감을 살리되, 저역은 근접 효과가 과하지 않도록 로우컷으로 정리했어요. 코러스는 한 번만 얇게 쌓아 원곡의 외로운 분위기를 해치지 않도록 했습니다.\n\n믹싱에서는 피아노를 스테레오 이미지 전반에 넓게 펼치고, 보컬은 중앙에서 가까이 들려오는 거리감으로 배치했습니다. 리버브는 중간 길이의 홀을 아주 낮은 비율로 섞어 공간이 비어 있는 듯한 느낌을 만들었고, 딜레이는 훅 끝에서만 짧게 살려 여운을 남겼어요. 마스터링은 라우드니스를 과하게 올리지 않고 조용한 환경의 청취를 기준으로 정리했습니다.\n\n완성된 트랙은 혼자 있는 늦은 시간이나 비 오는 오후처럼 조용한 순간에 잘 어울리는 싱글입니다. 편지처럼 천천히 읽혀야 의미가 살아나는 곡이에요.",
+                "en": "Namsu's 'Hello (To You in a Distant Place)' is a single that, as its name suggests, speaks to someone far away with a simple greeting. The arrangement chose a stripped-back ballad form centered on piano and guitar, and the entire sound was designed at restrained density so the lyrical resonance would come through clearly rather than through decoration.\n\nThe most careful concern during vocal recording was 'tone of voice' more than pitch. To preserve the delivery of reading a letter aloud naturally, we secured both a single long continuous take and takes focused on individual sections. Neumann-family condensers preserved mid-range presence while the low end was tidied with a high-pass so proximity effect wouldn't dominate. Harmonies were stacked only once, thinly, to avoid undermining the original lonely mood.\n\nIn mixing, the piano was spread wide across the stereo image while the vocal was placed with a close, near-distance feel at center. Reverb blended a medium-length hall at very low ratio to create a sense of empty space, and delay was used briefly only at hook endings to leave a lingering tail. Mastering optimized for quiet-environment listening rather than pushing loudness.\n\nThe finished track suits quiet moments like being alone late at night or a rainy afternoon. A song whose meaning emerges when read slowly, like a letter."
+            },
+            "releaseDate": "2024-11-21",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["남수 (Vocal)"]
             }
         },
         {
@@ -476,7 +543,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "김동산과 블루이웃",
             "productionNotes": {
-                "ko": "김동산과 블루이웃의 <물결>은 밴드 구성원 각자의 개성이 물결처럼 교차하며 하나의 흐름을 만드는 포크 록 싱글입니다. 라이브 밴드 합주의 질감을 최대한 살리면서도 보컬의 서사가 중심을 잃지 않도록, 편곡과 레코딩 모두 합주의 에너지와 가사의 밀도를 동시에 만족시키는 지점을 찾아 진행했습니다.\n\n레코딩은 리듬 섹션의 베이직 트랙을 라이브로 잡고, 보컬과 솔로 라인을 별도로 오버더빙하는 방식이었습니다. 드럼은 오버헤드 중심의 스테레오 마이킹으로 공간을 먼저 확보했고, 어쿠스틱 기타는 두 본 마이크로 폭을 넓혀 '흐르는' 느낌의 리듬감을 만들었어요. 보컬은 중역의 따뜻함을 가진 마이크로 받아 가사의 한 글자 한 글자가 분명하게 들리도록 디렉션을 맞췄습니다.\n\n믹싱에서는 드럼과 베이스의 저역이 서로 간섭하지 않도록 대역을 나눠주고, 기타는 스테레오 좌우로 적당히 펼쳐 보컬의 자리를 비웠습니다. 리버브는 중간 길이의 플레이트와 짧은 룸을 섞어 밴드가 한 공간에 모여 연주하는 듯한 현장감을 확보했습니다. 마스터링은 차에서 들을 때와 이어폰에서 들을 때의 밸런스를 모두 고려해 정리했어요.\n\n완성된 트랙은 드라이브 플레이리스트나 밴드 사운드를 즐기는 청취 환경에 잘 어울립니다. 합주의 질감이 살아 있는 싱글이에요."
+                "ko": "김동산과 블루이웃의 <물결>은 밴드 구성원 각자의 개성이 물결처럼 교차하며 하나의 흐름을 만드는 포크 록 싱글입니다. 라이브 밴드 합주의 질감을 최대한 살리면서도 보컬의 서사가 중심을 잃지 않도록, 편곡과 레코딩 모두 합주의 에너지와 가사의 밀도를 동시에 만족시키는 지점을 찾아 진행했습니다.\n\n레코딩은 리듬 섹션의 베이직 트랙을 라이브로 잡고, 보컬과 솔로 라인을 별도로 오버더빙하는 방식이었습니다. 드럼은 오버헤드 중심의 스테레오 마이킹으로 공간을 먼저 확보했고, 어쿠스틱 기타는 두 본 마이크로 폭을 넓혀 '흐르는' 느낌의 리듬감을 만들었어요. 보컬은 중역의 따뜻함을 가진 마이크로 받아 가사의 한 글자 한 글자가 분명하게 들리도록 디렉션을 맞췄습니다.\n\n믹싱에서는 드럼과 베이스의 저역이 서로 간섭하지 않도록 대역을 나눠주고, 기타는 스테레오 좌우로 적당히 펼쳐 보컬의 자리를 비웠습니다. 리버브는 중간 길이의 플레이트와 짧은 룸을 섞어 밴드가 한 공간에 모여 연주하는 듯한 현장감을 확보했습니다. 마스터링은 차에서 들을 때와 이어폰에서 들을 때의 밸런스를 모두 고려해 정리했어요.\n\n완성된 트랙은 드라이브 플레이리스트나 밴드 사운드를 즐기는 청취 환경에 잘 어울립니다. 합주의 질감이 살아 있는 싱글이에요.",
+                "en": "Kim Dong-san and Blue Neighbors' 'Ripple' is a folk-rock single where each band member's character crosses like ripples to form one current. To preserve live band ensemble texture while keeping the vocal narrative centered, both arrangement and recording sought the point where ensemble energy and lyrical density satisfy simultaneously.\n\nRecording captured the rhythm section's basic tracks live, then overdubbed vocals and solo lines separately. Drums were primarily captured with overhead-focused stereo miking to establish spatial depth, and acoustic guitar was widened via two-microphone capture to create a 'flowing' rhythmic feel. Vocals were captured with a microphone offering mid-range warmth, with direction focused on clear articulation of every syllable.\n\nIn mixing, we divided the low-frequency bands so the drums and bass wouldn't interfere, and guitars were spread moderately across the stereo field to leave room for the vocal. Reverb blended medium-length plate with a short room to capture the immediacy of a band gathered in one space. Mastering balanced car-listening and earphone-listening considerations.\n\nThe finished track suits driving playlists or listening environments that enjoy band sound. A single where the texture of ensemble playing stays alive."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["김동산과 블루이웃"]
             }
         },
         {
@@ -496,7 +568,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "정진석",
             "productionNotes": {
-                "ko": "정진석의 <이 땅이 니 땅이가>는 제목부터 사회적 메시지가 또렷한 싱글로, 민중가요 계열의 정서를 동시대 감각으로 다시 풀어낸 곡입니다. 이 프로젝트에서는 메시지를 담는 그릇으로서 사운드의 진정성이 가장 중요했기에, 편곡부터 마이크 선택까지 담백한 접근을 우선했습니다.\n\n보컬 녹음은 아티스트의 말하는 듯한 발성과 선언적인 구간의 힘 있는 발성을 모두 담을 수 있도록 테이크를 여러 번 나눠 진행했습니다. 저역과 중역의 존재감이 든든한 마이크로 받아 가사의 무게를 그대로 전달했고, 발음이 과장되지 않도록 편집에서도 조심스럽게 다듬었어요. 편곡에서는 어쿠스틱 기타와 단단한 베이스, 담백한 드럼의 조합에 브라스 계열의 악센트를 필요한 구간에만 얹어 곡의 파동을 만들었습니다.\n\n믹싱은 '외침의 선명함'에 초점을 맞췄습니다. 후렴 구간에서 보컬이 악기 사이에서 묻히지 않도록 컴프레싱을 안정적으로 걸고, 리듬 섹션의 로우 엔드는 단단하되 뭉개지지 않도록 정리했습니다. 리버브는 좁은 룸 계열을 사용해 집회 현장의 실내 공간 같은 거리감을 만들었고, 마스터링은 다이내믹을 살리되 낭독처럼 듣기에도 어색하지 않은 라우드니스로 마무리했어요.\n\n완성된 트랙은 공연장 PA와 이어폰 양쪽에서 가사의 전달력이 모두 유지되는 것을 목표로 했습니다. 메시지의 무게가 전면에 서는 싱글이에요."
+                "ko": "정진석의 <이 땅이 니 땅이가>는 제목부터 사회적 메시지가 또렷한 싱글로, 민중가요 계열의 정서를 동시대 감각으로 다시 풀어낸 곡입니다. 이 프로젝트에서는 메시지를 담는 그릇으로서 사운드의 진정성이 가장 중요했기에, 편곡부터 마이크 선택까지 담백한 접근을 우선했습니다.\n\n보컬 녹음은 아티스트의 말하는 듯한 발성과 선언적인 구간의 힘 있는 발성을 모두 담을 수 있도록 테이크를 여러 번 나눠 진행했습니다. 저역과 중역의 존재감이 든든한 마이크로 받아 가사의 무게를 그대로 전달했고, 발음이 과장되지 않도록 편집에서도 조심스럽게 다듬었어요. 편곡에서는 어쿠스틱 기타와 단단한 베이스, 담백한 드럼의 조합에 브라스 계열의 악센트를 필요한 구간에만 얹어 곡의 파동을 만들었습니다.\n\n믹싱은 '외침의 선명함'에 초점을 맞췄습니다. 후렴 구간에서 보컬이 악기 사이에서 묻히지 않도록 컴프레싱을 안정적으로 걸고, 리듬 섹션의 로우 엔드는 단단하되 뭉개지지 않도록 정리했습니다. 리버브는 좁은 룸 계열을 사용해 집회 현장의 실내 공간 같은 거리감을 만들었고, 마스터링은 다이내믹을 살리되 낭독처럼 듣기에도 어색하지 않은 라우드니스로 마무리했어요.\n\n완성된 트랙은 공연장 PA와 이어폰 양쪽에서 가사의 전달력이 모두 유지되는 것을 목표로 했습니다. 메시지의 무게가 전면에 서는 싱글이에요.",
+                "en": "Jeong Jin-seok's 'Is This Land Yours' is a single whose socially-charged message is clear from the title — a song that reinterprets folk-protest sensibility for a contemporary feel. For this project, the authenticity of the sound as a vessel for the message mattered most, so from arrangement to microphone choice we prioritized a restrained approach.\n\nVocal recording captured both the artist's conversational delivery and forceful projection on declarative sections in multiple separate takes. We used a microphone with solid low and mid-range presence to carry the weight of the lyrics directly, and in editing we worked carefully so enunciation wouldn't become exaggerated. The arrangement built waves in the song by layering brass accents onto an acoustic guitar, firm bass, and understated drums only in select sections.\n\nMixing focused on 'clarity of outcry.' On chorus sections, compression was applied stably so the vocal wouldn't sink into the instruments, and the rhythm section's low-end was kept firm without becoming muddy. Reverb used short room-type spaces to create a feel like an indoor rally, and mastering preserved dynamics while landing at a loudness that doesn't feel awkward even in spoken-word-like listening.\n\nThe finished track aims to maintain lyrical clarity on both venue PAs and earphones. A single where the weight of the message stands at the forefront."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["정진석 (Vocal)"]
             }
         },
         {
@@ -608,7 +685,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "희우",
             "productionNotes": {
-                "ko": "희우의 <잊음>은 제목처럼 흘러가는 기억을 담담히 놓아주는 정서의 싱글입니다. 편곡은 담백한 어쿠스틱 기반을 유지하되, 후반부로 갈수록 잔잔한 스트링 계열 요소가 슬며시 더해지는 구조로 잡아 '잊어가는 과정'이 음악적으로 자연스럽게 드러나도록 설계했습니다.\n\n녹음 데이터는 아티스트 측에서 제공받은 자료를 바탕으로 편곡과 편집을 다시 정리하고, 필요한 추가 녹음만 선택적으로 진행했습니다. 보컬 라인은 발음과 호흡의 디테일을 살리되 지나친 강조는 피해 편집에서 톤을 섬세하게 다듬었고, 어쿠스틱 기타는 줄의 결이 느껴질 정도로 자연스러운 질감을 유지했습니다. 코러스는 거의 속삭이는 수준으로만 남겨 중심이 흐트러지지 않도록 했어요.\n\n믹싱에서는 보컬의 가까운 거리감과 악기의 여백을 모두 살리기 위해 리버브를 층층이 달리 적용했습니다. 보컬에는 짧은 플레이트를 가볍게만 걸고, 배경의 기타와 패드에는 좀 더 긴 홀을 써 공간의 원근감을 분리했습니다. 마스터링은 라우드니스를 무리하지 않게 올리고 다이내믹의 자연스러운 감쇠를 그대로 살렸습니다.\n\n완성된 트랙은 고요한 시간, 이어폰이나 작은 스피커로 듣기에 잘 어울리는 싱글입니다. 조용히 옆에 두고 흘려듣는 청취 경험에 최적화된 곡이에요."
+                "ko": "희우의 <잊음>은 제목처럼 흘러가는 기억을 담담히 놓아주는 정서의 싱글입니다. 편곡은 담백한 어쿠스틱 기반을 유지하되, 후반부로 갈수록 잔잔한 스트링 계열 요소가 슬며시 더해지는 구조로 잡아 '잊어가는 과정'이 음악적으로 자연스럽게 드러나도록 설계했습니다.\n\n녹음 데이터는 아티스트 측에서 제공받은 자료를 바탕으로 편곡과 편집을 다시 정리하고, 필요한 추가 녹음만 선택적으로 진행했습니다. 보컬 라인은 발음과 호흡의 디테일을 살리되 지나친 강조는 피해 편집에서 톤을 섬세하게 다듬었고, 어쿠스틱 기타는 줄의 결이 느껴질 정도로 자연스러운 질감을 유지했습니다. 코러스는 거의 속삭이는 수준으로만 남겨 중심이 흐트러지지 않도록 했어요.\n\n믹싱에서는 보컬의 가까운 거리감과 악기의 여백을 모두 살리기 위해 리버브를 층층이 달리 적용했습니다. 보컬에는 짧은 플레이트를 가볍게만 걸고, 배경의 기타와 패드에는 좀 더 긴 홀을 써 공간의 원근감을 분리했습니다. 마스터링은 라우드니스를 무리하지 않게 올리고 다이내믹의 자연스러운 감쇠를 그대로 살렸습니다.\n\n완성된 트랙은 고요한 시간, 이어폰이나 작은 스피커로 듣기에 잘 어울리는 싱글입니다. 조용히 옆에 두고 흘려듣는 청취 경험에 최적화된 곡이에요.",
+                "en": "Hee Woo's 'Forgetting' is a single carrying the emotion of calmly releasing flowing memory, as its title suggests. The arrangement kept a stripped-back acoustic base while string elements gently layered in toward the second half — the musical structure itself reveals the 'process of forgetting' naturally.\n\nRecording data was based on material provided by the artist; we reorganized the arrangement and editing, and added only selective additional recording where needed. The vocal line preserved articulation and breath detail without excessive emphasis, finely shaping tone in editing, and acoustic guitar kept a natural texture where the grain of the strings could be felt. Harmonies were left at near-whisper level so the center wouldn't waver.\n\nIn mixing, to preserve both the vocal's close proximity and the instrumental air, reverbs were applied in layered differentiation. Vocals got a light short plate, while background guitar and pads used longer halls to separate spatial perspective. Mastering raised loudness modestly and preserved the natural dynamic fall.\n\nThe finished track suits quiet moments with earphones or small speakers. A song optimized for the experience of leaving it quietly playing beside you."
+            },
+            "releaseDate": "2024-04-02",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["희우 (Vocal)"]
             }
         },
         {
@@ -628,7 +711,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "희우",
             "productionNotes": {
-                "ko": "희우의 <그대는>은 <잊음>과 이어지는 결을 가진 싱글로, 이번에는 떠난 이가 아닌 지금 마주보고 있는 상대에게 건네는 문장을 담고 있습니다. 편곡은 잔잔한 미디엄 템포의 포크 팝 방향으로 잡고, 아티스트 특유의 담담한 톤이 중심에서 이탈하지 않도록 주변 악기의 밀도를 조절했습니다.\n\n레코딩은 보컬 테이크를 집중적으로 여러 번 뽑는 방식으로 진행했습니다. 하나의 테이크에서 완성된 선언을 만들기보다, 절마다 조금씩 달라지는 감정선을 각기 다른 테이크로 쌓아 편집에서 조합하는 방향을 택했어요. 어쿠스틱 기타는 피킹 소리가 또렷이 들리도록 두 본 마이크로 가까운 거리에서 잡았고, 후반부에는 편곡을 풍성하게 하기 위한 간단한 현악 소스를 얇게 더했습니다.\n\n믹싱에서는 보컬의 숨소리와 기타의 줄 마찰음을 남기되 불필요한 잡음은 정돈하는 균형이 관건이었습니다. EQ에서는 보컬의 중역이 다른 악기에 묻히지 않도록 1kHz 부근을 가볍게 비워주고, 리버브는 짧은 플레이트를 기본으로 쓰되 후렴에서만 길이를 살짝 늘려 공간이 자연스럽게 넓어지도록 했습니다. 마스터링은 다이내믹이 너무 압축되지 않도록 보수적인 설정으로 마무리했어요.\n\n완성된 트랙은 혼자 있는 시간의 플레이리스트에 잘 어울립니다. 고요한 거실이나 작업실에서 낮은 볼륨으로 틀어두기에 적합한 싱글이에요."
+                "ko": "희우의 <그대는>은 <잊음>과 이어지는 결을 가진 싱글로, 이번에는 떠난 이가 아닌 지금 마주보고 있는 상대에게 건네는 문장을 담고 있습니다. 편곡은 잔잔한 미디엄 템포의 포크 팝 방향으로 잡고, 아티스트 특유의 담담한 톤이 중심에서 이탈하지 않도록 주변 악기의 밀도를 조절했습니다.\n\n레코딩은 보컬 테이크를 집중적으로 여러 번 뽑는 방식으로 진행했습니다. 하나의 테이크에서 완성된 선언을 만들기보다, 절마다 조금씩 달라지는 감정선을 각기 다른 테이크로 쌓아 편집에서 조합하는 방향을 택했어요. 어쿠스틱 기타는 피킹 소리가 또렷이 들리도록 두 본 마이크로 가까운 거리에서 잡았고, 후반부에는 편곡을 풍성하게 하기 위한 간단한 현악 소스를 얇게 더했습니다.\n\n믹싱에서는 보컬의 숨소리와 기타의 줄 마찰음을 남기되 불필요한 잡음은 정돈하는 균형이 관건이었습니다. EQ에서는 보컬의 중역이 다른 악기에 묻히지 않도록 1kHz 부근을 가볍게 비워주고, 리버브는 짧은 플레이트를 기본으로 쓰되 후렴에서만 길이를 살짝 늘려 공간이 자연스럽게 넓어지도록 했습니다. 마스터링은 다이내믹이 너무 압축되지 않도록 보수적인 설정으로 마무리했어요.\n\n완성된 트랙은 혼자 있는 시간의 플레이리스트에 잘 어울립니다. 고요한 거실이나 작업실에서 낮은 볼륨으로 틀어두기에 적합한 싱글이에요.",
+                "en": "Hee Woo's 'You Are' is a single continuous in feel with 'Forgetting' — this time not addressing someone departed, but someone standing face to face. The arrangement chose a calm mid-tempo folk-pop direction, regulating the density of surrounding instruments so the artist's characteristic quiet tone wouldn't stray from center.\n\nRecording concentrated on pulling multiple vocal takes intensively. Rather than completing a declaration in a single take, we stacked takes where emotion shifts slightly across each verse, combining them through editing. Acoustic guitar was captured up close with two microphones so the picking sound would come through clearly, and a simple thin string source was added in the second half to enrich the arrangement.\n\nIn mixing, the balance between preserving vocal breath and guitar string friction while tidying unwanted noise was the key. EQ scooped lightly around 1kHz so the vocal mid-range wouldn't be buried, and reverb used short plate as the baseline while slightly lengthening tail in the chorus to widen space naturally. Mastering finished with conservative settings so dynamics wouldn't compress excessively.\n\nThe finished track pairs well with solo playlists. A single suited to being played at low volume in a quiet living room or studio."
+            },
+            "releaseDate": "2024-08-05",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["희우 (Vocal)"]
             }
         },
         {
@@ -646,7 +735,14 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "Jinu Konda",
             "productionNotes": {
-                "ko": "Jinu Konda의 <Burn In Hell>은 제목처럼 직선적인 에너지를 담은 얼터너티브 록 계열의 싱글입니다. 분노에 가까운 감정을 거침없이 뱉는 보컬과 단단한 기타 리프가 중심에 놓이는 곡이라, 레코딩부터 마스터링까지 '에너지를 잃지 않는 것'이 전 과정의 기준선이었습니다.\n\n보컬 녹음은 Shure SM7B를 사용해 근접 발성의 두께를 확보했습니다. 고음 구간에서 목소리가 깨지기 직전의 질감을 살리는 것이 디렉션의 핵심이었고, 여러 테이크를 다른 게인 스테이지로 확보해 편집에서 가장 거친 결의 테이크를 메인으로 삼았습니다. 기타는 앰프 앞에 다이나믹 마이크와 리본 마이크를 함께 걸어 두 가지 성격의 질감을 동시에 잡았고, 믹스에서 두 소스를 비율로 섞어 중역의 밀도를 설계했어요.\n\n믹싱에서는 드럼 룸 마이크의 게인을 의도적으로 과하게 받아 자연스러운 디스토션 톤을 섞었고, 베이스는 픽 어택이 선명하게 들리도록 고역을 살렸습니다. 리버브는 거의 쓰지 않고 짧은 룸 감각만 남겨 밀폐된 공간에서 소리치는 듯한 질감을 만들었습니다. 마스터링은 라우드니스를 충분히 확보하되, 림프가 뭉개지지 않는 선에서 정리했습니다.\n\n완성된 트랙은 카 오디오나 헤드폰 고음량 재생에서 가장 잘 어울립니다. 에너지를 그대로 받아내는 청취 환경을 전제로 한 싱글입니다."
+                "ko": "Jinu Konda의 <Burn In Hell>은 제목처럼 직선적인 에너지를 담은 얼터너티브 록 계열의 싱글입니다. 분노에 가까운 감정을 거침없이 뱉는 보컬과 단단한 기타 리프가 중심에 놓이는 곡이라, 레코딩부터 마스터링까지 '에너지를 잃지 않는 것'이 전 과정의 기준선이었습니다.\n\n보컬 녹음은 Shure SM7B를 사용해 근접 발성의 두께를 확보했습니다. 고음 구간에서 목소리가 깨지기 직전의 질감을 살리는 것이 디렉션의 핵심이었고, 여러 테이크를 다른 게인 스테이지로 확보해 편집에서 가장 거친 결의 테이크를 메인으로 삼았습니다. 기타는 앰프 앞에 다이나믹 마이크와 리본 마이크를 함께 걸어 두 가지 성격의 질감을 동시에 잡았고, 믹스에서 두 소스를 비율로 섞어 중역의 밀도를 설계했어요.\n\n믹싱에서는 드럼 룸 마이크의 게인을 의도적으로 과하게 받아 자연스러운 디스토션 톤을 섞었고, 베이스는 픽 어택이 선명하게 들리도록 고역을 살렸습니다. 리버브는 거의 쓰지 않고 짧은 룸 감각만 남겨 밀폐된 공간에서 소리치는 듯한 질감을 만들었습니다. 마스터링은 라우드니스를 충분히 확보하되, 림프가 뭉개지지 않는 선에서 정리했습니다.\n\n완성된 트랙은 카 오디오나 헤드폰 고음량 재생에서 가장 잘 어울립니다. 에너지를 그대로 받아내는 청취 환경을 전제로 한 싱글입니다.",
+                "en": "Jinu Konda's 'Burn In Hell' is an alternative-rock single carrying linear energy like its title. With vocals that spit emotion bordering on anger and firm guitar riffs at the center, 'not losing energy' was the baseline across every process from recording to mastering.\n\nVocal recording used a Shure SM7B to secure the thickness of close proximity delivery. The directional core was preserving the texture right before the voice cracks on high-note sections, and we captured multiple takes at varying gain stages, selecting the roughest-grained take as the main in editing. Guitar was simultaneously miked with a dynamic and a ribbon microphone in front of the amp, and mid-range density was designed in the mix by ratio-blending the two sources.\n\nIn mixing, we intentionally gain-staged the drum room microphones high to blend natural distortion tone, and bass highs were preserved so pick attack would stay clear. Reverb was used almost not at all — only short room sensation remained — creating the texture of shouting in an enclosed space. Mastering secured sufficient loudness while avoiding clipping of transients.\n\nThe finished track is best suited to car audio or high-volume headphone playback. A single premised on a listening environment that absorbs energy directly."
+            },
+            "releaseDate": "2024-03-26",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["Jinu Konda (Vocal, Guitar)"],
+                "gear": ["Shure SM7B"]
             }
         },
         {
@@ -665,7 +761,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "남자애",
             "productionNotes": {
-                "ko": "남자애의 <하란>은 아티스트의 이전 작업에서 보여준 내러티브 감각을 싱글 포맷으로 압축한 곡입니다. 밴드 편성의 에너지를 유지하면서도 한 곡 안에서 기승전결이 분명하게 드러나도록 구성되어 있어, 편곡과 레코딩의 합이 곡의 성패를 결정하는 프로젝트였습니다.\n\n드럼은 룸 마이크 포함 멀티 마이킹으로 공간의 울림을 확보했고, 베이스는 앰프 마이킹과 DI를 병행해 저역의 단단함과 중역의 어택을 동시에 잡았습니다. 기타는 두 대를 스테레오로 배치하되 각각 다른 앰프 캐릭터를 사용해 리듬 기타의 좌우 폭을 넓혔고, 솔로 라인은 별도 트랙으로 여러 번 뽑아 가장 표현력이 좋은 구간을 조합했습니다. 보컬은 절의 차분한 구간과 후렴의 강한 구간을 나눠 테이크를 관리했어요.\n\n믹싱에서는 드럼과 베이스의 저역 정리에 가장 많은 시간을 썼습니다. 라이브 합주의 질감을 지키면서도 각 악기의 어택이 분명하게 들리도록 트랜지언트를 세밀하게 다뤘고, 기타 레이어는 공간을 겹치지 않게 배치했습니다. 마스터링은 록 편성의 다이내믹이 뭉개지지 않는 선에서 라우드니스를 확보해 스트리밍 환경에 맞췄습니다.\n\n완성본은 이어폰과 공연장 PA 양쪽에서 에너지가 살아 있도록 설계했습니다. 밴드 사운드 애호가의 플레이리스트와 자연스럽게 어우러지는 싱글이에요."
+                "ko": "남자애의 <하란>은 아티스트의 이전 작업에서 보여준 내러티브 감각을 싱글 포맷으로 압축한 곡입니다. 밴드 편성의 에너지를 유지하면서도 한 곡 안에서 기승전결이 분명하게 드러나도록 구성되어 있어, 편곡과 레코딩의 합이 곡의 성패를 결정하는 프로젝트였습니다.\n\n드럼은 룸 마이크 포함 멀티 마이킹으로 공간의 울림을 확보했고, 베이스는 앰프 마이킹과 DI를 병행해 저역의 단단함과 중역의 어택을 동시에 잡았습니다. 기타는 두 대를 스테레오로 배치하되 각각 다른 앰프 캐릭터를 사용해 리듬 기타의 좌우 폭을 넓혔고, 솔로 라인은 별도 트랙으로 여러 번 뽑아 가장 표현력이 좋은 구간을 조합했습니다. 보컬은 절의 차분한 구간과 후렴의 강한 구간을 나눠 테이크를 관리했어요.\n\n믹싱에서는 드럼과 베이스의 저역 정리에 가장 많은 시간을 썼습니다. 라이브 합주의 질감을 지키면서도 각 악기의 어택이 분명하게 들리도록 트랜지언트를 세밀하게 다뤘고, 기타 레이어는 공간을 겹치지 않게 배치했습니다. 마스터링은 록 편성의 다이내믹이 뭉개지지 않는 선에서 라우드니스를 확보해 스트리밍 환경에 맞췄습니다.\n\n완성본은 이어폰과 공연장 PA 양쪽에서 에너지가 살아 있도록 설계했습니다. 밴드 사운드 애호가의 플레이리스트와 자연스럽게 어우러지는 싱글이에요.",
+                "en": "Namjae's 'Haran' is a single that compresses the narrative sense shown in the artist's prior work into single format. Structured so that clear exposition, development, and resolution emerge within one track while maintaining band-ensemble energy, the fit between arrangement and recording determined the project's success.\n\nDrums were multi-miked with room microphones included to secure spatial resonance, and bass combined amp miking with DI to capture both low-end firmness and mid-range attack. Guitars placed two performances in stereo using different amp characters to widen the rhythm guitar's stereo spread, while solo lines were pulled multiple times on separate tracks to compile the most expressive sections. Vocals separated the verse's calm sections from the chorus's powerful sections in take management.\n\nIn mixing, the most time went to tidying drum and bass low-end. While preserving live ensemble texture, transients were handled finely so each instrument's attack would come through clearly, and guitar layers were placed not to overlap in space. Mastering secured loudness suitable for streaming without crushing rock-ensemble dynamics.\n\nThe finished work was designed so energy stays alive on both earphones and venue PAs. A single that naturally blends into the playlists of band-sound enthusiasts."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["남자애"]
             }
         },
         {
@@ -684,7 +785,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "남자애",
             "productionNotes": {
-                "ko": "남자애의 <해방>은 제목처럼 답답한 상황에서 벗어나고자 하는 충동을 밴드 사운드로 표현한 싱글입니다. 이전 작업들과 같은 밴드 포맷이지만, 이 곡에서는 특히 리듬 섹션의 추진력이 중심에 서도록 편곡과 믹스의 방향을 맞췄습니다.\n\n드럼은 킥과 스네어의 어택이 직선적으로 드러나도록 클로즈 마이크 비율을 조금 더 높였고, 오버헤드에서는 심벌의 선명함을 담담하게 받았습니다. 베이스는 그루브의 움직임이 분명하게 느껴지도록 픽 플레이 톤과 핑거 플레이 톤을 따로 테이크로 뽑아 곡 구간별로 교체해 썼어요. 기타는 리듬 파트와 리드 파트를 명확히 분리하고, 보컬은 절의 서사적 구간과 후렴의 해방감 있는 구간을 다른 거리감으로 녹음했습니다.\n\n믹싱에서는 리듬 섹션을 중심축으로 두고 나머지 요소를 배치했습니다. 킥의 저역은 단단하게, 베이스는 그 위에서 선명하게 노래할 수 있도록 주파수 분할을 세밀히 했고, 기타 레이어는 좌우로 펼쳐 공간을 만들었습니다. 리버브는 거의 드라이한 편으로 유지해 곡의 직선적인 에너지를 해치지 않았습니다. 마스터링은 음압을 충분히 가져가되 다이내믹이 살아있는 선에서 정리했어요.\n\n완성된 트랙은 운동할 때나 차 안에서 큰 볼륨으로 들을 때 가장 잘 맞습니다. 해방감이 실제 에너지로 전해지는 것을 목표로 한 싱글이에요."
+                "ko": "남자애의 <해방>은 제목처럼 답답한 상황에서 벗어나고자 하는 충동을 밴드 사운드로 표현한 싱글입니다. 이전 작업들과 같은 밴드 포맷이지만, 이 곡에서는 특히 리듬 섹션의 추진력이 중심에 서도록 편곡과 믹스의 방향을 맞췄습니다.\n\n드럼은 킥과 스네어의 어택이 직선적으로 드러나도록 클로즈 마이크 비율을 조금 더 높였고, 오버헤드에서는 심벌의 선명함을 담담하게 받았습니다. 베이스는 그루브의 움직임이 분명하게 느껴지도록 픽 플레이 톤과 핑거 플레이 톤을 따로 테이크로 뽑아 곡 구간별로 교체해 썼어요. 기타는 리듬 파트와 리드 파트를 명확히 분리하고, 보컬은 절의 서사적 구간과 후렴의 해방감 있는 구간을 다른 거리감으로 녹음했습니다.\n\n믹싱에서는 리듬 섹션을 중심축으로 두고 나머지 요소를 배치했습니다. 킥의 저역은 단단하게, 베이스는 그 위에서 선명하게 노래할 수 있도록 주파수 분할을 세밀히 했고, 기타 레이어는 좌우로 펼쳐 공간을 만들었습니다. 리버브는 거의 드라이한 편으로 유지해 곡의 직선적인 에너지를 해치지 않았습니다. 마스터링은 음압을 충분히 가져가되 다이내믹이 살아있는 선에서 정리했어요.\n\n완성된 트랙은 운동할 때나 차 안에서 큰 볼륨으로 들을 때 가장 잘 맞습니다. 해방감이 실제 에너지로 전해지는 것을 목표로 한 싱글이에요.",
+                "en": "Namjae's 'Liberation' is a single that expresses the impulse to escape a stifling situation through band sound, as the title suggests. Although it shares the band format with previous work, this track specifically oriented arrangement and mix so the rhythm section's momentum would stand at center.\n\nDrums raised the close-microphone ratio slightly higher so the kick and snare attack would come through linearly, while overheads captured cymbal clarity calmly. Bass was captured in separate takes for pick and finger tone so the groove's movement would feel distinct, swapping tones by section. Guitars cleanly separated rhythm and lead parts, and vocals recorded the verse's narrative sections and the chorus's liberating sections with different proximity.\n\nIn mixing, the rhythm section was placed as the central axis with everything else arranged around it. Kick low-end was kept firm, and frequency division was finely engineered so bass could sing clearly above it, with guitar layers spread left and right to create space. Reverb was kept nearly dry to preserve the song's linear energy. Mastering carried ample sound pressure while preserving dynamics.\n\nThe finished track fits best with high-volume listening during exercise or inside the car. A single aimed at delivering the sense of liberation as actual energy."
+            },
+            "releaseDate": "2023-06-30",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["남자애"]
             }
         },
         {
@@ -703,7 +810,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "세민",
             "productionNotes": {
-                "ko": "세민의 <여린 잎>은 싱어송라이터의 첫 앨범 포지션에 해당하는 작품으로, 제목이 암시하듯 이제 막 돋아난 감정들을 담아낸 작업입니다. 편곡은 어쿠스틱 위주의 포크 프레임 안에 각 트랙이 서로 다른 질감을 가지되, 앨범 전체를 관통하는 담백한 사운드 통일성이 흐르도록 설계했습니다.\n\n이 프로젝트에서 Studio NOL은 기획과 믹싱, 마스터링을 담당했습니다. 녹음 데이터를 인계받은 뒤 트랙별 편집과 톤 정리, 그리고 앨범 전체의 흐름을 재구성하는 작업을 거쳤어요. 보컬은 가능한 선에서 숨소리와 호흡 타이밍을 그대로 살리고, 악기 소스는 각 트랙의 장르적 뉘앙스를 해치지 않는 범위에서 공간감을 정돈했습니다.\n\n믹싱에서는 앨범 흐름을 가장 중요한 기준으로 삼았습니다. 초반 트랙은 가까운 거리의 친밀한 질감으로, 중반부는 조금 더 넓은 공간감이 열리도록, 후반부는 다시 따뜻한 거리로 수렴하도록 리버브와 EQ의 방향을 설계했어요. 트랙 간 음량 편차도 스트리밍에서 연속 재생했을 때 이질감이 없도록 마스터링에서 세밀하게 맞췄습니다.\n\n완성된 앨범은 처음부터 끝까지 한 번에 들었을 때 감정선의 결이 잘 살아납니다. 혼자 있는 저녁 시간의 이어폰 청취나 작업 중 백그라운드 플레이에 잘 어울리는 작품이에요."
+                "ko": "세민의 <여린 잎>은 싱어송라이터의 첫 앨범 포지션에 해당하는 작품으로, 제목이 암시하듯 이제 막 돋아난 감정들을 담아낸 작업입니다. 편곡은 어쿠스틱 위주의 포크 프레임 안에 각 트랙이 서로 다른 질감을 가지되, 앨범 전체를 관통하는 담백한 사운드 통일성이 흐르도록 설계했습니다.\n\n이 프로젝트에서 Studio NOL은 기획과 믹싱, 마스터링을 담당했습니다. 녹음 데이터를 인계받은 뒤 트랙별 편집과 톤 정리, 그리고 앨범 전체의 흐름을 재구성하는 작업을 거쳤어요. 보컬은 가능한 선에서 숨소리와 호흡 타이밍을 그대로 살리고, 악기 소스는 각 트랙의 장르적 뉘앙스를 해치지 않는 범위에서 공간감을 정돈했습니다.\n\n믹싱에서는 앨범 흐름을 가장 중요한 기준으로 삼았습니다. 초반 트랙은 가까운 거리의 친밀한 질감으로, 중반부는 조금 더 넓은 공간감이 열리도록, 후반부는 다시 따뜻한 거리로 수렴하도록 리버브와 EQ의 방향을 설계했어요. 트랙 간 음량 편차도 스트리밍에서 연속 재생했을 때 이질감이 없도록 마스터링에서 세밀하게 맞췄습니다.\n\n완성된 앨범은 처음부터 끝까지 한 번에 들었을 때 감정선의 결이 잘 살아납니다. 혼자 있는 저녁 시간의 이어폰 청취나 작업 중 백그라운드 플레이에 잘 어울리는 작품이에요.",
+                "en": "Semin's 'Tender Leaves' occupies the position of a singer-songwriter's first album — a work that, as the title implies, captures emotions that have just begun to sprout. The arrangement was designed so each track within an acoustic-forward folk frame carries a different texture while a restrained, unifying sound color runs through the whole album.\n\nFor this project, Studio NOL handled planning, mixing, and mastering. After receiving the recording data, we processed per-track editing and tone balancing, and reconfigured the album's overall flow. Vocals preserved breath and breathing timing intact as much as possible, while instrument sources had their spatial depth organized within the range that wouldn't damage each track's genre nuances.\n\nMixing treated album flow as the most important standard. Early tracks carried close, intimate texture; mid-album opened into slightly wider spatial feel; later tracks converged back to warm proximity — reverb and EQ directions were designed accordingly. Loudness differences between tracks were finely matched in mastering so continuous streaming playback wouldn't feel uneven.\n\nThe finished album reveals its emotional arc best when listened to from beginning to end at once. A work that pairs well with solo evening earphone listening or background playback during creative work."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["세민 (Vocal)"]
             }
         },
         {
@@ -720,27 +832,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "영인",
             "productionNotes": {
-                "ko": "영인의 <빨간 점>은 작은 흔적에서 시작되는 감정의 번짐을 소재로 한 싱글입니다. Studio NOL은 이 프로젝트에서 믹싱과 마스터링을 담당했고, 아티스트 측에서 완성한 편곡과 녹음 데이터를 바탕으로 전체 사운드의 밀도와 공간감을 정리하는 역할을 맡았습니다.\n\n인계받은 트랙에서 가장 먼저 살핀 것은 보컬의 존재감이었습니다. 원본 녹음의 톤이 이미 좋은 결을 가지고 있어, 큰 수정 없이 중역의 따뜻함을 해치지 않는 선에서 EQ로 다른 악기와의 간섭을 정리했어요. 작은 호흡과 입술 움직임은 거의 그대로 남겨 친밀한 거리감을 유지했습니다. 악기 소스들은 각자의 대역 역할이 분명해지도록 하이패스와 미드 EQ를 세밀하게 조정했습니다.\n\n공간계 처리에서는 보컬에 짧은 플레이트를 낮은 비율로 얹고, 배경 악기에는 중간 길이의 홀을 더해 원근감을 분리했습니다. 보컬과 악기가 같은 공간에 있는 듯하면서도 보컬이 한 발 앞에 나와 있는 인상을 만들었어요. 마스터링은 스트리밍 플랫폼의 라우드니스 기준에 맞추되, 다이내믹을 지나치게 누르지 않는 선에서 정리했습니다.\n\n완성된 트랙은 이어폰 청취 환경에서 가사와 호흡의 디테일이 가장 잘 전달됩니다. 조용한 순간에 반복해서 듣기 좋은 질감의 싱글이에요."
-            }
-        },
-        {
-            "id": "namjae-wi-inmul",
-            "title": "남자애 <위 인물은 X를 겪고 깨달음을 얻음>",
-            "description": t(locale, { ko: "편곡, 레코딩, 믹싱, 마스터링, 홍보", en: "Arrangement, Recording, Mixing, Mastering, Promotion", vi: "Hòa âm/Arr., Thu âm, Mixing, Mastering, PR/Quảng bá", th: "เรียบเรียง, บันทึกเสียง, มิกซ์, มาสเตอริ่ง, ประชาสัมพันธ์", uz: "Aranjim, Yozuv, Miks, Mastering, Targ‘ibot" }),
-            "image": "https://cdn.imweb.me/thumbnail/20221109/0132edb19f0bf.jpg",
-            "link": "https://music.bugs.co.kr/album/30859733?wl_ref=M_contents_01_04",
-            "category": "album",
-            "services": [
-                getService(services.arrangement),
-                getService(services.recording),
-                getService(services.mixing),
-                getService(services.mastering),
-                getService(services.promotion)
-            ],
-            "featured": true,
-            "artist": "남자애",
-            "productionNotes": {
-                "ko": "남자애의 앨범 <위 인물은 X를 겪고 깨달음을 얻음>은 한 인물의 내면 변화를 트랙별로 따라가는 서사적 구성의 작품입니다. Studio NOL에서는 편곡부터 레코딩, 믹싱, 마스터링까지 제작의 중심 공정을 함께 진행했고, 각 트랙이 독립된 장면이면서도 하나의 이야기로 이어지도록 사운드 설계에 공을 들였습니다.\n\n녹음은 밴드 합주 베이스를 먼저 라이브 세션으로 확보한 뒤, 보컬과 추가 레이어를 오버더빙하는 순서로 진행되었습니다. 드럼은 룸 톤을 포함한 멀티 마이킹으로 공간을 확보했고, 보컬은 트랙별로 서로 다른 거리감과 감정선을 요구하는 구성이었기에 테이크 디렉션을 세밀하게 나눴어요. 편곡에서는 모든 트랙에 공통으로 등장하는 톤 컬러를 하나 설정해, 앨범을 통청할 때 흐름이 끊기지 않도록 했습니다.\n\n믹싱은 앨범 전체의 아크를 먼저 그린 뒤 각 트랙의 세부 작업으로 내려갔습니다. 초반 트랙은 직선적인 사운드로, 중반은 점점 공간을 열어가며, 후반부는 여백이 많아지는 방향으로 공간감을 설계했어요. 마스터링은 트랙 간 음량과 톤이 연속 재생에서 자연스럽게 이어지도록 정리했고, 라우드니스는 스트리밍 기준에 맞추되 다이내믹을 과하게 누르지 않았습니다.\n\n완성본은 한 번에 처음부터 끝까지 들을 때 앨범의 설계가 가장 잘 드러납니다. 집중해서 듣는 환경을 전제로 한 작업이에요."
+                "ko": "영인의 <빨간 점>은 작은 흔적에서 시작되는 감정의 번짐을 소재로 한 싱글입니다. Studio NOL은 이 프로젝트에서 믹싱과 마스터링을 담당했고, 아티스트 측에서 완성한 편곡과 녹음 데이터를 바탕으로 전체 사운드의 밀도와 공간감을 정리하는 역할을 맡았습니다.\n\n인계받은 트랙에서 가장 먼저 살핀 것은 보컬의 존재감이었습니다. 원본 녹음의 톤이 이미 좋은 결을 가지고 있어, 큰 수정 없이 중역의 따뜻함을 해치지 않는 선에서 EQ로 다른 악기와의 간섭을 정리했어요. 작은 호흡과 입술 움직임은 거의 그대로 남겨 친밀한 거리감을 유지했습니다. 악기 소스들은 각자의 대역 역할이 분명해지도록 하이패스와 미드 EQ를 세밀하게 조정했습니다.\n\n공간계 처리에서는 보컬에 짧은 플레이트를 낮은 비율로 얹고, 배경 악기에는 중간 길이의 홀을 더해 원근감을 분리했습니다. 보컬과 악기가 같은 공간에 있는 듯하면서도 보컬이 한 발 앞에 나와 있는 인상을 만들었어요. 마스터링은 스트리밍 플랫폼의 라우드니스 기준에 맞추되, 다이내믹을 지나치게 누르지 않는 선에서 정리했습니다.\n\n완성된 트랙은 이어폰 청취 환경에서 가사와 호흡의 디테일이 가장 잘 전달됩니다. 조용한 순간에 반복해서 듣기 좋은 질감의 싱글이에요.",
+                "en": "Young In's 'Red Dot' is a single whose subject is the spreading of emotion that starts from a small trace. Studio NOL handled mixing and mastering for this project, taking on the role of organizing overall sound density and spatial depth based on the arrangement and recording data completed by the artist.\n\nThe first thing we examined in the delivered tracks was the vocal's presence. Since the original recording tone already had a good grain, we organized EQ interference with other instruments without major modification, preserving mid-range warmth. Small breaths and lip movements were left nearly intact to maintain intimate proximity. Instrument sources had their high-pass and mid-range EQ finely adjusted so each one's frequency role would become distinct.\n\nFor spatial processing, a short plate was applied to vocals at low ratio, while background instruments got medium-length halls to separate perspective. We created the impression that vocal and instruments inhabit the same space but the vocal stands one step forward. Mastering met streaming platform loudness standards without excessively compressing dynamics.\n\nThe finished track delivers lyric and breath detail most effectively in earphone listening environments. A single with texture worth repeat listening in quiet moments."
+            },
+            "releaseDate": "2023-03-13",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["영인 (Vocal)"]
             }
         },
         {
@@ -759,7 +857,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "류형수",
             "productionNotes": {
-                "ko": "류형수의 <하루>는 하루라는 시간 단위를 통해 평범한 일상의 결을 드러내는 앨범입니다. 트랙마다 다른 시간대의 장면을 담고 있어, 앨범 전체가 아침부터 밤까지의 흐름으로 읽히는 구성을 가집니다. Studio NOL은 이 프로젝트의 기획부터 레코딩, 믹싱까지 참여했고, 일상의 질감을 그대로 담는 사운드 방향을 일찍부터 공유했습니다.\n\n녹음은 어쿠스틱 기반의 편성을 중심에 두고, 각 트랙이 요구하는 악기 구성만 최소한으로 추가하는 방식으로 진행했어요. 기타와 피아노는 두 본 스테레오 마이킹으로 공기감을 확보했고, 보컬은 가사의 생활 언어 같은 뉘앙스를 살려 말하듯 뱉는 톤을 유지했습니다. 피처 보컬이 들어오는 구간은 메인 보컬과의 거리감을 일부러 다르게 설정해 대화처럼 들리도록 디렉션을 맞췄어요.\n\n믹싱에서는 트랙 간 공간감의 변화가 앨범의 '시간의 흐름'을 드러내도록 설계했습니다. 아침에 해당하는 트랙은 짧고 밝은 리버브로, 한낮 트랙은 좀 더 드라이하게, 저녁 트랙은 공간을 넓혀 여백을 만드는 식이었어요. 홍보용 짧은 편집본은 원곡의 분위기를 희생하지 않는 선에서 별도로 정리했습니다.\n\n완성된 앨범은 하루 중 여러 시간대에 나눠 듣거나, 통째로 한 번 들을 때 각각 다른 맛이 납니다. 배경처럼 자연스럽게 흐르는 청취 경험에 잘 어울리는 작업이에요."
+                "ko": "류형수의 <하루>는 하루라는 시간 단위를 통해 평범한 일상의 결을 드러내는 앨범입니다. 트랙마다 다른 시간대의 장면을 담고 있어, 앨범 전체가 아침부터 밤까지의 흐름으로 읽히는 구성을 가집니다. Studio NOL은 이 프로젝트의 기획부터 레코딩, 믹싱까지 참여했고, 일상의 질감을 그대로 담는 사운드 방향을 일찍부터 공유했습니다.\n\n녹음은 어쿠스틱 기반의 편성을 중심에 두고, 각 트랙이 요구하는 악기 구성만 최소한으로 추가하는 방식으로 진행했어요. 기타와 피아노는 두 본 스테레오 마이킹으로 공기감을 확보했고, 보컬은 가사의 생활 언어 같은 뉘앙스를 살려 말하듯 뱉는 톤을 유지했습니다. 피처 보컬이 들어오는 구간은 메인 보컬과의 거리감을 일부러 다르게 설정해 대화처럼 들리도록 디렉션을 맞췄어요.\n\n믹싱에서는 트랙 간 공간감의 변화가 앨범의 '시간의 흐름'을 드러내도록 설계했습니다. 아침에 해당하는 트랙은 짧고 밝은 리버브로, 한낮 트랙은 좀 더 드라이하게, 저녁 트랙은 공간을 넓혀 여백을 만드는 식이었어요. 홍보용 짧은 편집본은 원곡의 분위기를 희생하지 않는 선에서 별도로 정리했습니다.\n\n완성된 앨범은 하루 중 여러 시간대에 나눠 듣거나, 통째로 한 번 들을 때 각각 다른 맛이 납니다. 배경처럼 자연스럽게 흐르는 청취 경험에 잘 어울리는 작업이에요.",
+                "en": "Ryu Hyeong-su's 'Haru (One Day)' is an album that reveals the grain of ordinary daily life through the time-unit of a single day. Each track captures scenes from different times, so the whole album reads as a flow from morning to night. Studio NOL participated from planning through recording and mixing, sharing the direction of capturing everyday texture as-is from early on.\n\nRecording placed acoustic-based instrumentation at the center, adding only the minimum instruments required per track. Guitar and piano were captured with two-microphone stereo to secure air, and vocals maintained a spoken-delivery tone preserving the nuance of daily spoken language from the lyrics. Sections where featured vocals enter were intentionally recorded at different proximity from the main vocal so they'd sound like conversation.\n\nIn mixing, changes in spatial feel between tracks were designed to reveal the album's 'flow of time.' Morning-corresponding tracks used short, bright reverbs; midday tracks were drier; evening tracks widened space to create air. Short promotional edits were separately finalized without sacrificing the original mood.\n\nThe finished album yields different flavors whether listened to in segments across different times of day or through in one continuous listen. A work well-suited to listening experiences that flow naturally like background."
+            },
+            "releaseDate": "2023-06-20",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["류형수 (Vocal)"]
             }
         },
         {
@@ -779,7 +883,12 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "엉아들",
             "productionNotes": {
-                "ko": "엉아들의 셀프 타이틀 앨범은 밴드가 자신들의 이름을 처음으로 내세우는 작품으로, 멤버 각자의 색깔과 밴드라는 하나의 합체를 모두 담아내야 했습니다. 기획 단계부터 '멤버 소개 앨범'에 가까운 방향으로 잡고, 각 트랙마다 특정 멤버의 성격이 드러나도록 편곡 방향을 나눠 설계했어요.\n\n레코딩은 합주실의 공간감을 살리는 방향으로 진행했습니다. 드럼과 베이스, 기타는 라이브 베이직 트랙으로 먼저 잡고, 각 멤버가 솔로로 전면에 드러나는 구간은 별도 오버더빙으로 추가했어요. 보컬은 트랙마다 다른 멤버가 메인을 맡아 마이크 선택과 발성 디렉션도 그에 맞춰 조정했고, 코러스는 전원이 함께 녹음해 밴드 특유의 합창 질감을 확보했습니다.\n\n믹싱에서는 각 트랙의 개성이 흐려지지 않도록 EQ 방향을 다르게 잡되, 앨범 전체를 통청했을 때 연결감이 끊어지지 않도록 공통 컴프레싱 체인을 뒷단에 걸었습니다. 공간계는 트랙별로 달리 설정해 짧은 룸, 긴 홀 등을 적절히 섞었고, 마스터링에서는 멤버별 구간의 음량이 들쑥날쑥하지 않도록 섬세하게 조정했어요.\n\n완성된 앨범은 라이브 공연을 그대로 옮긴 듯한 질감이 살아 있어, 밴드 사운드를 좋아하는 청취 환경에 잘 어울립니다. 멤버들의 얼굴이 차례로 떠오르는 구성의 앨범이에요."
+                "ko": "엉아들의 셀프 타이틀 앨범은 밴드가 자신들의 이름을 처음으로 내세우는 작품으로, 멤버 각자의 색깔과 밴드라는 하나의 합체를 모두 담아내야 했습니다. 기획 단계부터 '멤버 소개 앨범'에 가까운 방향으로 잡고, 각 트랙마다 특정 멤버의 성격이 드러나도록 편곡 방향을 나눠 설계했어요.\n\n레코딩은 합주실의 공간감을 살리는 방향으로 진행했습니다. 드럼과 베이스, 기타는 라이브 베이직 트랙으로 먼저 잡고, 각 멤버가 솔로로 전면에 드러나는 구간은 별도 오버더빙으로 추가했어요. 보컬은 트랙마다 다른 멤버가 메인을 맡아 마이크 선택과 발성 디렉션도 그에 맞춰 조정했고, 코러스는 전원이 함께 녹음해 밴드 특유의 합창 질감을 확보했습니다.\n\n믹싱에서는 각 트랙의 개성이 흐려지지 않도록 EQ 방향을 다르게 잡되, 앨범 전체를 통청했을 때 연결감이 끊어지지 않도록 공통 컴프레싱 체인을 뒷단에 걸었습니다. 공간계는 트랙별로 달리 설정해 짧은 룸, 긴 홀 등을 적절히 섞었고, 마스터링에서는 멤버별 구간의 음량이 들쑥날쑥하지 않도록 섬세하게 조정했어요.\n\n완성된 앨범은 라이브 공연을 그대로 옮긴 듯한 질감이 살아 있어, 밴드 사운드를 좋아하는 청취 환경에 잘 어울립니다. 멤버들의 얼굴이 차례로 떠오르는 구성의 앨범이에요.",
+                "en": "Eongadeul's self-titled album is the work where the band presents their own name for the first time — it had to carry both each member's individual color and the unified body of the band. From the planning stage we aimed close to a 'member introduction album,' designing each track's arrangement direction so a particular member's personality would emerge.\n\nRecording proceeded in the direction of preserving rehearsal-room spatial feel. Drums, bass, and guitars were first captured as live basic tracks, while sections where each member emerges in solo at the front were added via separate overdub. Vocals had different members taking the lead per track, so microphone selection and vocal direction were adjusted accordingly, and chorus harmonies were recorded with everyone together to secure the band's characteristic choral texture.\n\nIn mixing, EQ directions were set differently so each track's personality wouldn't blur, but a common compression chain was applied at the end so connection wouldn't break when the album is heard through. Spatial processing was set differently per track — short room, long hall, etc. — and mastering finely adjusted so member-section volumes wouldn't fluctuate.\n\nThe finished album carries a texture that feels like transporting a live performance directly, pairing well with listening environments that enjoy band sound. An album structured so members' faces surface one by one."
+            },
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["엉아들"]
             }
         },
         {
@@ -799,27 +908,13 @@ export const getPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "featured": false,
             "artist": "강호중",
             "productionNotes": {
-                "ko": "강호중의 셀프 타이틀 앨범은 싱어송라이터의 본격적인 정규작에 해당합니다. 이름을 그대로 타이틀로 내건 만큼, 아티스트의 정체성을 드러내는 기준선이 되는 작업이었고, 기획부터 편곡과 레코딩, 믹싱까지 담당하며 이후 이어질 그의 디스코그래피가 참조할 수 있는 사운드 컬러를 설계하는 것이 목표였습니다.\n\n편곡은 어쿠스틱 기타와 피아노를 기본 축으로 두고, 트랙마다 하나의 악기 레이어만 추가하는 절제된 접근을 택했습니다. 보컬 녹음은 아티스트의 발성이 자연스럽게 나오는 거리와 발음 페이스를 찾는 데 시간을 들였어요. 긴 호흡의 구간이 많아 한 번에 길게 이어지는 테이크를 여러 개 확보해 편집에서 가장 안정적인 결의 테이크를 메인으로 골랐습니다. 코러스는 얇게 한 줄만 얹어 메인의 중심이 흐트러지지 않도록 했습니다.\n\n믹싱에서는 트랙 간 사운드의 균일성을 우선했습니다. 앨범을 처음부터 끝까지 들었을 때 특정 트랙만 튀지 않도록 EQ 커브를 맞추고, 리버브의 성격도 크게 두 가지 범주 안에서만 사용해 통일감을 확보했어요. 마스터링은 싱어송라이터 장르의 일반적인 라우드니스 기준보다 보수적으로 잡아 다이내믹을 살렸습니다.\n\n완성된 앨범은 밤 시간대의 조용한 청취 환경에 잘 어울립니다. 집중해서 가사와 멜로디를 따라가며 들을 때 가장 진가가 드러나는 작업이에요."
-            }
-        },
-        {
-            "id": "various-artists-fish-die",
-            "title": "Various Artists <물고기는 물이 없으면 죽어요>",
-            "description": t(locale, { ko: "기획, 레코딩, 믹싱, 마스터링, 홍보", en: "Planning, Recording, Mixing, Mastering, Promotion", vi: "Lên kế hoạch, Thu âm, Mixing, Mastering, PR/Quảng bá", th: "วางแผน, บันทึกเสียง, มิกซ์, มาสเตอริ่ง, ประชาสัมพันธ์", uz: "Rejalash, Yozuv, Miks, Mastering, Targ‘ibot" }),
-            "image": "/images/portfolio5.jpg",
-            "link": "https://www.melon.com/album/detail.htm?albumId=11109846",
-            "category": "compilation",
-            "services": [
-                getService(services.planning),
-                getService(services.recording),
-                getService(services.mixing),
-                getService(services.mastering),
-                getService(services.promotion)
-            ],
-            "featured": true,
-            "artist": "Various Artists",
-            "productionNotes": {
-                "ko": "<물고기는 물이 없으면 죽어요>는 다양한 아티스트가 참여한 컴필레이션 앨범으로, 제목에서 드러나듯 환경과 생명에 관한 메시지를 음악으로 엮어낸 작업입니다. Studio NOL은 이 프로젝트의 기획부터 레코딩, 믹싱, 마스터링, 홍보까지 전반을 맡아 여러 아티스트의 색깔을 하나의 앨범 안에 균형 있게 담는 역할을 수행했습니다.\n\n여러 팀을 한 앨범에 모으는 컴필레이션의 가장 큰 과제는 각 아티스트 고유의 색을 유지하면서도 앨범 전체의 통일감을 확보하는 것입니다. 녹음 단계에서 마이크 셋업과 톤 방향에 대한 공통 레퍼런스를 먼저 공유하고, 참여 아티스트들이 동일한 사운드 환경에서 작업할 수 있도록 스튜디오 세션 스케줄을 조율했어요. 보컬 위주의 트랙과 밴드 편성 트랙이 섞여 있어 각자의 녹음 접근도 유연하게 나눴습니다.\n\n믹싱은 각 트랙의 개성을 지키되 주파수 밸런스와 톤의 무게가 앨범 안에서 극단적으로 벌어지지 않도록 기준선을 잡고 움직였습니다. 공간계 처리도 앨범 중반과 후반에 자연스럽게 호흡이 달라지도록 배치했어요. 마스터링은 컴필레이션 특성상 연속 재생에서의 이질감을 줄이는 것이 중요해, 트랙 간 음량과 톤의 연결을 세밀하게 조정했습니다.\n\n완성된 앨범은 환경 메시지에 공감하는 청취자부터 참여 아티스트들의 팬까지 폭넓게 소화할 수 있도록 설계했습니다. 관통해서 한 번 듣는 경험이 가장 잘 어울리는 작업이에요."
+                "ko": "강호중의 셀프 타이틀 앨범은 싱어송라이터의 본격적인 정규작에 해당합니다. 이름을 그대로 타이틀로 내건 만큼, 아티스트의 정체성을 드러내는 기준선이 되는 작업이었고, 기획부터 편곡과 레코딩, 믹싱까지 담당하며 이후 이어질 그의 디스코그래피가 참조할 수 있는 사운드 컬러를 설계하는 것이 목표였습니다.\n\n편곡은 어쿠스틱 기타와 피아노를 기본 축으로 두고, 트랙마다 하나의 악기 레이어만 추가하는 절제된 접근을 택했습니다. 보컬 녹음은 아티스트의 발성이 자연스럽게 나오는 거리와 발음 페이스를 찾는 데 시간을 들였어요. 긴 호흡의 구간이 많아 한 번에 길게 이어지는 테이크를 여러 개 확보해 편집에서 가장 안정적인 결의 테이크를 메인으로 골랐습니다. 코러스는 얇게 한 줄만 얹어 메인의 중심이 흐트러지지 않도록 했습니다.\n\n믹싱에서는 트랙 간 사운드의 균일성을 우선했습니다. 앨범을 처음부터 끝까지 들었을 때 특정 트랙만 튀지 않도록 EQ 커브를 맞추고, 리버브의 성격도 크게 두 가지 범주 안에서만 사용해 통일감을 확보했어요. 마스터링은 싱어송라이터 장르의 일반적인 라우드니스 기준보다 보수적으로 잡아 다이내믹을 살렸습니다.\n\n완성된 앨범은 밤 시간대의 조용한 청취 환경에 잘 어울립니다. 집중해서 가사와 멜로디를 따라가며 들을 때 가장 진가가 드러나는 작업이에요.",
+                "en": "Kang Ho-jung's self-titled album corresponds to the singer-songwriter's proper full-length work. Bearing his own name as the title, this was the baseline work revealing the artist's identity, and handling planning, arrangement, recording, and mixing meant our goal was designing a sound color his subsequent discography could reference.\n\nThe arrangement placed acoustic guitar and piano at the base, taking a restrained approach of adding only one instrumental layer per track. Vocal recording invested time in finding the proximity and articulation pace where the artist's natural delivery emerges. With many long-breath sections, we secured multiple takes of long continuous performance and selected the most stable-grained take as the main in editing. Harmonies were layered only thinly in a single line so the main wouldn't waver.\n\nIn mixing, track-to-track sonic consistency was prioritized. EQ curves were matched so no single track would stand out when the album plays start-to-finish, and reverb characters were kept within two broad categories for unity. Mastering stayed conservative relative to typical loudness standards for the singer-songwriter genre, preserving dynamics.\n\nThe finished album pairs well with quiet-environment late-night listening. A work whose value emerges most when listened to with attention, following the lyrics and melody closely."
+            },
+            "releaseDate": "2022-03-07",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["강호중 (Vocal)"]
             }
         },
         {

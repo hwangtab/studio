@@ -9,6 +9,7 @@ tags:
   - Encuentro
 summary: "\U0001F525 Fans del sonido, ¡reunión en el infierno del mixing de Bulgwang-dong! ¡Abre \"Bulgwang Mixing Club\"! \U0001F525 Invitamos a todos los que viven y respiran m"
 thumbnail: /images/recording3.webp
+robots: noindex
 ---
 ![Sala de mezcla de Bulgwang Mixing Club](/images/hardware2.webp)
 

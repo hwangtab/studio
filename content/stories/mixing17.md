@@ -91,6 +91,6 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제16부: 소리의 조각가, 이퀄라이저(EQ)](/stories/mixing16) | [제18부: 음악에 공기를 불어넣다, 리버브 →](/stories/mixing18)
+**믹싱 강좌 시리즈**: [← 제16부: 소리의 조각가, 이퀄라이저(EQ)](/stories/mixing16) | [제18부: 음악에 공기를 불어넣다, 리버브 →](/stories/mixing18) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)
 
 [보컬 컴프레서 사용법 — 어택·릴리즈·레시오 설정](/stories/compress1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)

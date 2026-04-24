@@ -64,28 +64,44 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
     description: item.description,
   });
 
-  // Thin-content gate: only index pages that have productionNotes in the current locale.
-  // Items without productionNotes will be noindexed until data is populated.
-  // WARNING: Only enable this gate AFTER all 30 portfolio items have productionNotes.
-  const hasProductionNotes = item.productionNotes && item.productionNotes[locale];
-  const isThinPortfolio = !hasProductionNotes;
+  // Locale availability + fallback chain.
+  // availableLocales: only locales with native productionNotes get hreflang pointers.
+  // notesForLocale: show English/Korean content when this locale lacks native copy,
+  //   but flag the page so we can apply noindex — same pattern as stories fallback.
+  const availableLocales = (Object.keys(item.productionNotes ?? {}) as Locale[])
+    .filter((l) => locales.includes(l));
+  const hasNativeNotes = Boolean(item.productionNotes?.[locale]);
+  const notesForLocale =
+    item.productionNotes?.[locale]
+    ?? item.productionNotes?.en
+    ?? item.productionNotes?.ko;
+  const isFallbackTranslation = Boolean(notesForLocale) && !hasNativeNotes;
+  const isThinPortfolio = !notesForLocale;
+  const shouldNoindex = isThinPortfolio || isFallbackTranslation;
+
+  // Build a locale-resolved item so PortfolioDetailBody and MusicRecording schema
+  // render fallback content without mutating the original data object.
+  const resolvedItem: PortfolioItem = notesForLocale && !hasNativeNotes
+    ? { ...item, productionNotes: { ...item.productionNotes, [locale]: notesForLocale } }
+    : item;
+
   const ogImageDimensions = getImageDimensions(item.image);
 
   const categoryInfo = getCategoryInfo(item.category, categories);
   const schemaImage = item.image.startsWith('http') ? item.image : `${siteConfig.url}${item.image}`;
   const portfolioSchema = generateMusicRecordingSchema(
     {
-      title: item.title,
-      artist: item.artist,
+      title: resolvedItem.title,
+      artist: resolvedItem.artist,
       image: schemaImage,
-      url: `${siteConfig.url}/${locale}/portfolio/${item.id}`,
+      url: `${siteConfig.url}/${locale}/portfolio/${resolvedItem.id}`,
       genre: categoryInfo.name,
       // Pass production metadata for richer schema (only when available)
-      ...(item.productionNotes && { productionNotes: item.productionNotes }),
-      ...(item.credits && { credits: item.credits }),
-      ...(item.releaseDate && { datePublished: item.releaseDate }),
-      ...(item.label && { label: item.label }),
-      ...(item.trackList && { trackList: item.trackList }),
+      ...(resolvedItem.productionNotes && { productionNotes: resolvedItem.productionNotes }),
+      ...(resolvedItem.credits && { credits: resolvedItem.credits }),
+      ...(resolvedItem.releaseDate && { datePublished: resolvedItem.releaseDate }),
+      ...(resolvedItem.label && { label: resolvedItem.label }),
+      ...(resolvedItem.trackList && { trackList: resolvedItem.trackList }),
     },
     siteConfig.url,
     locale
@@ -110,7 +126,9 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
       <SEO
         title={`${item.title} - ${t('portfolio.detail.titleSuffix')}`}
         description={metaDescription}
-        canonical={`/${locale}/portfolio/${item.id}`}
+        canonical={isFallbackTranslation ? undefined : `/${locale}/portfolio/${item.id}`}
+        disableCanonicalAndAlternates={isFallbackTranslation}
+        availableLocales={availableLocales.length > 0 ? availableLocales : undefined}
         ogImage={item.image}
         ogImageAlt={`${item.title} - ${item.artist}`}
         ogImageWidth={ogImageDimensions.width}
@@ -119,9 +137,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         includeSchema
         schema={portfolioSchema}
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}
-        // Thin-content gate: noindex pages without productionNotes.
-        // Enable this line only after all 30 portfolio items have productionNotes.
-        {...(isThinPortfolio && { robots: 'noindex, follow' })}
+        {...(shouldNoindex && { robots: 'noindex, follow' })}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
@@ -182,7 +198,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
             />
           </m.div>
           <PortfolioDetailBody
-            item={item}
+            item={resolvedItem}
             locale={locale}
             labels={{
               productionNotesTitle: t('portfolio.detail.productionNotes', '프로덕션 노트'),

@@ -8,6 +8,7 @@ tags:
   - Recording Studio
 summary: "Hello, this is Studio NOL! \U0001F3B8\U0001F3A4 Our website has been fully renewed! We worked hard to provide cleaner, more useful information. Through this renewal, "
 thumbnail: /images/hardware3.webp
+robots: "noindex"
 ---
 ![Studio NOL recording studio](/images/studio1.webp)
 

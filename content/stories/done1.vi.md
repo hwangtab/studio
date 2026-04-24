@@ -8,6 +8,7 @@ tags:
   - Phòng thu âm
 summary: "Xin chào, đây là Studio NOL! \U0001F3B8\U0001F3A4 Website của chúng tôi đã được làm mới hoàn toàn! Chúng tôi đã nỗ lực để cung cấp thông tin sạch hơn, hữu ích hơn. Qu"
 thumbnail: /images/hardware3.webp
+robots: "noindex"
 ---
 ![Phòng thu Studio NOL](/images/studio1.webp)
 

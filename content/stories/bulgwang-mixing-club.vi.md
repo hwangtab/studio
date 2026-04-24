@@ -9,6 +9,7 @@ tags:
   - Gặp mặt
 summary: "\U0001F525 Dân mê âm thanh, hãy tụ họp tại “địa ngục mixing” ở Bulgwang-dong! “Bulgwang Mixing Club” mở cửa! \U0001F525 Chúng tôi mời bạn đến bữa tiệc đầy kích thích "
 thumbnail: /images/recording3.webp
+robots: noindex
 ---
 ![Phòng mix của Bulgwang Mixing Club](/images/hardware2.webp)
 

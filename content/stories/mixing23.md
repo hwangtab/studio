@@ -124,6 +124,6 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제22부: 시간 위에 그리는 그림, 오토메이션](/stories/mixing22)
+**믹싱 강좌 시리즈**: [← 제22부: 시간 위에 그리는 그림, 오토메이션](/stories/mixing22) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)
 
 [믹싱 vs 마스터링 차이 가이드](/stories/mixing-vs-mastering1) | [믹싱·마스터링 의뢰 요금 안내](/pricing) | [음악 레슨 서비스 보기](/lesson) | [불광믹싱클럽 스터디 보기](/stories/bulgwang-mixing-club) | [믹싱 의뢰 후기](/stories/review5)

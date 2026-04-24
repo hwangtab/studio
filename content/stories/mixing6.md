@@ -93,4 +93,4 @@ DAW에 기본으로 달려있는, 위아래로 춤추는 막대기가 바로 피
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제5부: 디지털의 적들](/stories/mixing5) | [제7부: 믹스는 '정리 정돈'에서 시작된다 →](/stories/mixing7) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제5부: 디지털의 적들](/stories/mixing5) | [제7부: 믹스는 '정리 정돈'에서 시작된다 →](/stories/mixing7) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)

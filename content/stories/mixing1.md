@@ -105,6 +105,6 @@ faq:
 
 스튜디오 놀에서는 믹싱 실전 레슨과 믹싱 의뢰 서비스를 함께 제공합니다.
 
-**믹싱 강좌 시리즈**: [제2부: 거짓말쟁이 방(Room) 길들이기 →](/stories/mixing2)
+**믹싱 강좌 시리즈**: [제2부: 거짓말쟁이 방(Room) 길들이기 →](/stories/mixing2) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)
 
 [믹싱 vs 마스터링 차이 완전 가이드](/stories/mixing-vs-mastering1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)

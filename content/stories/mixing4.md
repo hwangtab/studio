@@ -94,4 +94,4 @@ faq:
 
 ---
 
-**믹싱 강좌 시리즈**: [← 제3부: 장비병 치유 프로젝트](/stories/mixing3) | [제5부: 디지털의 적들 →](/stories/mixing5) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)
+**믹싱 강좌 시리즈**: [← 제3부: 장비병 치유 프로젝트](/stories/mixing3) | [제5부: 디지털의 적들 →](/stories/mixing5) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)

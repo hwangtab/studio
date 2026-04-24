@@ -9,6 +9,7 @@ tags:
   - Uchrashuv
 summary: "\U0001F525 Ovozni sevuvchilar, Bulgwang-dongdagi “miks jahannami”ga yig'iling! “Bulgwang Mixing Club” eshiklarini ochadi! \U0001F525 Miks bilan yashaydiganlar uchun h"
 thumbnail: /images/recording3.webp
+robots: noindex
 ---
 ![Bulgwang Mixing Club miks xonasi](/images/hardware2.webp)
 

@@ -8,6 +8,7 @@ tags:
   - Estudio de grabación
 summary: "¡Hola, somos Studio NOL! \U0001F3B8\U0001F3A4 ¡Nuestro sitio web se ha renovado por completo! Nos esforzamos para ofrecer información más clara y útil. Con esta renov"
 thumbnail: /images/hardware3.webp
+robots: "noindex"
 ---
 ![Estudio de grabación de Studio NOL](/images/studio1.webp)
 

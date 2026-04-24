@@ -9,6 +9,7 @@ tags:
   - 聚会
 summary: "\U0001F525 声音发烧友集合！不广洞的混音地狱开张了：\"Bulgwang Mixing Club\"！\U0001F525 我们邀请所有为混音而活的人，加入这个热辣的派对——\"Bulgwang Mixing Club\"！ 不要再独自苦思混音了，来一起分享技巧、升级实力，享受过程吧。 \U0001F3A7 这里就是混音名店！ \"Bulgwan"
 thumbnail: /images/recording3.webp
+robots: noindex
 ---
 ![Bulgwang Mixing Club 混音间](/images/hardware2.webp)
 

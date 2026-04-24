@@ -8,6 +8,7 @@ tags:
   - Yozuv studiyasi
 summary: "Salom, bu Studio NOL! \U0001F3B8\U0001F3A4 Veb-saytimiz to'liq yangilandi! Biz yanada toza va foydali ma'lumot berish uchun ko'p mehnat qildik. Bu yangilanish orqali "
 thumbnail: /images/hardware3.webp
+robots: "noindex"
 ---
 ![Studio NOL yozuv studiyasi](/images/studio1.webp)
 

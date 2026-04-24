@@ -45,3 +45,26 @@ Juma kechasi baribir miks + pizza & pivo! 🎧
 Jadval o'zgargani uchun uzr, ammo bu studioning to'liq ishlayotganini ham ko'rsatadi. 28-kunini yanada zo'r qilamiz!
 
 Noyabrning to'rtinchi jumasida Bulgwang Mixing Clubda ko'rishamiz! 🎵
+
+---
+
+### Studio NOL va Bulgwang Mixing Club haqida
+
+Studio NOL — Seulning shimoli-gʻarbida, Yeonsinnae bekatidan 5 daqiqa piyoda masofada joylashgan butik yozib olish va miksovka studiyasi. Ochilganidan beri mustaqil musiqachilar, vokalchilar va prodyuserlarga xizmat qilib keladi. R03 miksovka xonasi Genelec monitoring zanjiri va akustik ishlov bilan sozlangan, bu sizga bass, reverb quyruqlari va stereo kenglik boʻyicha qarorlarni uyda chiqarib boʻlmaydigan aniqlik darajasida qabul qilish imkonini beradi. Bulgwang Mixing Club aynan sessiyalardan keyingi tabiiy suhbatlardan oʻsib chiqdi — muhandislar, bedroom studio prodyuserlari va qiziquvchan vokalchilar oʻz loyihalarini ochish, referens treklarni solishtirish va ijtimoiy tarmoq filtrisiz halol feedback olish uchun joy izlayotgan edi.
+
+### Ishtirokchilar nima oladi
+
+* Kichik, ishonchli guruh (har sessiyada koʻpi bilan 6 kishi) — har bir trek rostakamiga tinglanadi va muhokama qilinadi.
+* Haqiqiy monitoring: balans, reverb quyruqlari va pastki chastotalar — naushnik, avtomobil dinamiklari va telefon dinamigiga toʻgʻri oʻtadigan qaror.
+* Turli nuqtai nazarlardan feedback — prodyuser, vokalchi va muhandislar, turli tajriba darajalari qorishgan.
+* Oʻsha kechaning oʻzida DAW ga qaytib ishlashga yaraydigan aniq keyingi qadamlar.
+
+### Bog‘liq materiallar va xizmatlar
+
+* [Miksovka kursi seriyasi — shu yerdan boshlang](/stories/mixing1)
+* [Bulgwang Mixing Club birinchi uchrashuvi sharhi](/stories/bulgwang-mixing-club)
+* [Miks va mastering xizmati narxlari](/pricing)
+* [Yeonsinnae mashq xonalari katalogi](/practice-room)
+
+Uchrashuvlar haqida savollar bo‘yicha Studio NOL Yeonsinnae ning KakaoTalk ochiq kanalidan foydalaning yoki 0507-1384-3144 raqamiga SMS yuboring. Dushanba e’lonlari haftaning ro‘yxatini yopadi, joylar tez to‘ladi.
+

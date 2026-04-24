@@ -45,3 +45,26 @@ Nhắn tin 0507-1384-3144 với câu “I’m in for the 11/28 mixing club!” N
 Xin lỗi vì thay đổi lịch, nhưng đó cũng là dấu hiệu studio đang rất bận rộn. Chúng tôi sẽ làm cho ngày 28 còn tuyệt hơn!
 
 Hẹn gặp bạn vào thứ Sáu tuần thứ tư của tháng 11 tại Bulgwang Mixing Club! 🎵
+
+---
+
+### Giới thiệu Studio NOL và Bulgwang Mixing Club
+
+Studio NOL là studio thu âm - mix boutique nằm cách ga Yeonsinnae 5 phút đi bộ ở phía tây bắc Seoul. Kể từ khi khai trương, studio liên tục phục vụ nhạc sĩ độc lập, ca sĩ và nhà sản xuất. Phòng mix R03 được trang bị hệ thống giám sát Genelec cùng xử lý âm học chuyên nghiệp, giúp bạn đưa ra quyết định về bass, đuôi reverb và độ rộng stereo mà setup tại nhà không thể tin tưởng được. Bulgwang Mixing Club ra đời từ chính những cuộc trò chuyện sau các buổi ghi âm — kỹ sư, nhà sản xuất bedroom studio và ca sĩ tò mò muốn có một nơi để mở dự án của mình, so sánh track tham chiếu và nhận phản hồi thật lòng, không bị lọc qua mạng xã hội.
+
+### Người tham gia nhận được gì
+
+* Nhóm nhỏ, tin cậy (tối đa 6 người mỗi buổi) để mọi track thực sự được lắng nghe và bàn luận.
+* Môi trường monitor thật: balance, đuôi reverb và dải trầm sẽ dịch chuẩn sang tai nghe, loa xe hơi và loa điện thoại.
+* Phản hồi từ nhiều góc nhìn khác nhau — nhà sản xuất, ca sĩ, kỹ sư với nhiều mức kinh nghiệm.
+* Những bước tiếp theo cụ thể bạn có thể đem về DAW ngay trong đêm.
+
+### Nội dung và dịch vụ liên quan
+
+* [Chuỗi bài học mix — bắt đầu tại đây](/stories/mixing1)
+* [Nhìn lại buổi đầu tiên của Bulgwang Mixing Club](/stories/bulgwang-mixing-club)
+* [Bảng giá dịch vụ mix và mastering](/pricing)
+* [Danh mục phòng tập Yeonsinnae](/practice-room)
+
+Để hỏi về các buổi gặp, hãy dùng kênh chat mở KakaoTalk của Studio NOL Yeonsinnae, hoặc nhắn tin SMS đến 0507-1384-3144 để xác nhận chỗ. Thông báo thứ Hai khóa danh sách của tuần và các suất trống rất nhanh hết.
+

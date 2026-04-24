@@ -9,6 +9,7 @@ tags:
   - พบปะ
 summary: "\U0001F525 สายเสียงมารวมตัว! “นรกมิกซ์” แห่ง Bulgwang-dong เปิดแล้วกับ “Bulgwang Mixing Club”! \U0001F525 เราขอชวนทุกคนที่มีชีวิตอยู่กับการมิกซ์มาร่วมปาร์ตี้สุดเร้าใจ"
 thumbnail: /images/recording3.webp
+robots: noindex
 ---
 ![ห้องมิกซ์ของ Bulgwang Mixing Club](/images/hardware2.webp)
 

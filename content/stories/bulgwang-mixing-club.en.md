@@ -9,6 +9,7 @@ tags:
   - Meetup
 summary: "\U0001F525 Sound nerds, gather in Bulgwang-dong's mixing hell! \"Bulgwang Mixing Club\" opens its doors! \U0001F525 We invite you to the thrilling party for those who l"
 thumbnail: /images/recording3.webp
+robots: noindex
 ---
 ![Bulgwang Mixing Club mixing room](/images/hardware2.webp)
 

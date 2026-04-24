@@ -144,6 +144,82 @@ const getStoryCategory = (slug, locale) => {
   return null;
 };
 
+/**
+ * Thin-content quality gate for sitemap inclusion.
+ * Mirrors the logic in lib/stories.ts:343 (threshold 1500).
+ * Returns true if the story should be excluded from the sitemap.
+ */
+const THIN_CONTENT_THRESHOLD = 1500;
+const SHORTCODE_CHAR_ESTIMATES = {
+  'online-fallback': 120,
+  'session-checklist': 420,
+};
+
+const isStoryThin = (slug, locale) => {
+  const candidates = [
+    path.join(storiesDir, `${slug}.${locale}.md`),
+    path.join(storiesDir, `${slug}.md`),
+  ];
+  for (const filePath of candidates) {
+    try {
+      const raw = fs.readFileSync(filePath, 'utf8');
+      // Strip YAML frontmatter to get pure content
+      const contentMatch = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/m);
+      if (!contentMatch) return true; // malformed → exclude
+      const frontmatter = contentMatch[1] || '';
+      const content = contentMatch[2] || '';
+      // Exclude pages explicitly marked noindex (e.g., promotional event pages)
+      if (/^robots:\s*['"]?[^'"\n]*noindex/mi.test(frontmatter)) return true;
+      const rawNonWhitespace = content.replace(/\s+/g, '').length;
+      const shortcodeBonus = [...content.matchAll(/%%([a-z-]+)%%/g)]
+        .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? 80), 0);
+      return (rawNonWhitespace + shortcodeBonus) < THIN_CONTENT_THRESHOLD;
+    } catch {
+      // File not found — fall through to next candidate
+    }
+  }
+  return true; // no file found → exclude
+};
+
+/**
+ * Check if a portfolio item is thin for a given locale.
+ * Returns true when the item has no productionNotes at all, OR the requested
+ * locale lacks a native productionNotes entry. Fallback-rendered pages emit
+ * `noindex` at runtime, so excluding them from the sitemap avoids pointing
+ * Google at URLs that will only waste crawl budget.
+ */
+const isPortfolioThin = (itemId, locale = 'ko') => {
+  try {
+    const content = fs.readFileSync(portfolioDataFile, 'utf8');
+    const idMarker = `"id": "${itemId}"`;
+    const start = content.indexOf(idMarker);
+    if (start < 0) return true;
+
+    const rest = content.slice(start + idMarker.length);
+    const nextIdRelative = rest.search(/"id":\s*"/);
+    const blockEnd = nextIdRelative >= 0 ? start + idMarker.length + nextIdRelative : content.length;
+    const block = content.slice(start, blockEnd);
+
+    if (!block.includes('productionNotes')) return true;
+
+    const pnStart = block.indexOf('"productionNotes"');
+    if (pnStart < 0) return true;
+    const braceOpen = block.indexOf('{', pnStart);
+    if (braceOpen < 0) return true;
+    let depth = 0;
+    let braceClose = -1;
+    for (let i = braceOpen; i < block.length; i++) {
+      if (block[i] === '{') depth++;
+      else if (block[i] === '}') { depth--; if (depth === 0) { braceClose = i; break; } }
+    }
+    if (braceClose < 0) return true;
+    const pnBlock = block.slice(braceOpen, braceClose + 1);
+    return !new RegExp(`"${locale}"\\s*:`).test(pnBlock);
+  } catch {
+    return true;
+  }
+};
+
 // 카테고리별 최신 스토리 mtime을 계산 — buildTimestamp 고정으로 인한 freshness 신호 왜곡 방지
 const getCategoryLastmod = (categoryKey, slugs, locale) => {
   const mtimes = [];
@@ -278,6 +354,9 @@ module.exports = {
           const localeFilePath = path.join(storiesDir, `${slug}.${locale}.md`);
           if (!fs.existsSync(localeFilePath)) continue;
         }
+        // Thin-content quality gate: exclude from sitemap if content < 1500 chars
+        if (isStoryThin(slug, locale)) continue;
+
         const routePath = `/${locale}/stories/${slug}`;
         const thumbnail = getStoryThumbnail(slug, locale);
         let images = [];
@@ -356,6 +435,15 @@ module.exports = {
     }
 
     if (routePath.includes('/portfolio/')) {
+      // Thin-content gate: exclude portfolio pages when productionNotes are missing
+      // for this specific locale. Pages fall back to en/ko at runtime but carry
+      // `noindex`, so keeping them out of the sitemap is the correct signal.
+      if (segments.length >= 3) {
+        const itemId = segments[2];
+        if (isPortfolioThin(itemId, locale)) {
+          return null;
+        }
+      }
       return {
         ...entry,
         changefreq: 'weekly',
@@ -364,6 +452,13 @@ module.exports = {
     }
 
     if (routePath.includes('/stories/')) {
+      // Thin-content gate: already filtered in additionalPaths, but defensive check for transform
+      if (segments.length >= 3) {
+        const slug = segments[2];
+        if (isStoryThin(slug, locale)) {
+          return null;
+        }
+      }
       return {
         ...entry,
         changefreq: 'weekly',
