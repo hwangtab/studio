@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen, ArrowRight } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
@@ -27,12 +27,13 @@ interface CurriculumCardProps {
     step: string;
     title: string;
     subtitle: string;
+    phaseLabel?: string;
     description: string[];
     icon: LucideIcon;
     delay?: number;
 }
 
-const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
+const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
     <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group border border-gray-100 dark:border-gray-700">
         <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-primary transition-transform group-hover:scale-110">
             {step}
@@ -41,6 +42,11 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
             <div className="bg-primary/10 dark:bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary dark:text-primary-light">
                 <Icon size={32} />
             </div>
+            {phaseLabel && (
+                <span className="inline-block mb-3 px-3 py-1 rounded-full bg-primary/10 dark:bg-primary/20 text-xs font-bold text-primary tracking-wide uppercase">
+                    {phaseLabel}
+                </span>
+            )}
             <h3 className="typo-card-title mb-1">{title}</h3>
             <p className="text-sm font-semibold text-primary mb-4">{subtitle}</p>
             <ul className="space-y-2">
@@ -53,6 +59,44 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
             </ul>
         </div>
     </BaseCard>
+);
+
+interface FormatCardProps {
+    icon: LucideIcon;
+    label: string;
+    value: string;
+    caption: string;
+}
+
+const FormatCard = ({ icon: Icon, label, value, caption }: FormatCardProps) => (
+    <BaseCard variant="default" className="p-6 h-full border border-gray-100 dark:border-gray-700">
+        <div className="flex items-start gap-4">
+            <div className="bg-primary/10 dark:bg-primary/20 w-12 h-12 rounded-xl flex items-center justify-center text-primary dark:text-primary-light flex-shrink-0">
+                <Icon size={24} aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+                <p className="text-xs font-semibold text-primary tracking-wide uppercase mb-1">{label}</p>
+                <p className="typo-card-title mb-1 break-keep">{value}</p>
+                <p className="text-body-2 text-gray-600 dark:text-gray-300 break-keep">{caption}</p>
+            </div>
+        </div>
+    </BaseCard>
+);
+
+interface PhaseHeaderProps {
+    label: string;
+    title: string;
+    caption: string;
+}
+
+const PhaseHeader = ({ label, title, caption }: PhaseHeaderProps) => (
+    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6 border-l-4 border-primary pl-4">
+        <div>
+            <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-1">{label}</span>
+            <h3 className="typo-card-title">{title}</h3>
+        </div>
+        <p className="text-body-2 text-gray-600 dark:text-gray-300 md:text-right break-keep max-w-lg">{caption}</p>
+    </div>
 );
 
 interface LessonProps {
@@ -118,6 +162,41 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
             question: t('lesson.quickAnswers.items.2.q'),
             answer: t('lesson.quickAnswers.items.2.a'),
         },
+        {
+            question: t('lesson.quickAnswers.items.3.q'),
+            answer: t('lesson.quickAnswers.items.3.a'),
+        },
+        {
+            question: t('lesson.quickAnswers.items.4.q'),
+            answer: t('lesson.quickAnswers.items.4.a'),
+        },
+    ]), [t]);
+
+    const lessonFormatItems = React.useMemo(() => ([
+        {
+            icon: CalendarDays,
+            label: t('lesson.format.items.0.label'),
+            value: t('lesson.format.items.0.value'),
+            caption: t('lesson.format.items.0.caption'),
+        },
+        {
+            icon: Clock,
+            label: t('lesson.format.items.1.label'),
+            value: t('lesson.format.items.1.value'),
+            caption: t('lesson.format.items.1.caption'),
+        },
+        {
+            icon: CalendarRange,
+            label: t('lesson.format.items.2.label'),
+            value: t('lesson.format.items.2.value'),
+            caption: t('lesson.format.items.2.caption'),
+        },
+        {
+            icon: Wallet,
+            label: t('lesson.format.items.3.label'),
+            value: t('lesson.format.items.3.value'),
+            caption: t('lesson.format.items.3.caption'),
+        },
     ]), [t]);
 
     return (
@@ -147,9 +226,13 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 title={t('lesson.hero.title')}
                 subtitle={
                     <>
-                        {t('lesson.hero.subtitleLine1')}
+                        <span className="break-keep">{t('lesson.hero.subtitleLine1')}</span>
                         <br />
-                        {t('lesson.hero.subtitleLine2')}
+                        <span className="break-keep">{t('lesson.hero.subtitleLine2')}</span>
+                        <br />
+                        <span className="inline-block mt-3 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-base md:text-lg font-semibold break-keep">
+                            {t('lesson.hero.subtitleLine3')}
+                        </span>
                     </>
                 }
                 backgroundImage="/images/lesson1.webp"
@@ -168,6 +251,32 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 items={lessonQuickAnswers}
                 variant="default"
             />
+
+            {/* Lesson Format — 주 1회 · 60분 · 6개월 · 월 35만원 한눈에 */}
+            <Section variant="alternate">
+                <SectionHeading
+                    icon={CalendarDays}
+                    title={t('lesson.format.title')}
+                    subtitle={t('lesson.format.subtitle')}
+                    as="h2"
+                    className="mb-10"
+                    titleClassName="text-heading-3"
+                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+                    {lessonFormatItems.map((item) => (
+                        <FormatCard
+                            key={item.label}
+                            icon={item.icon}
+                            label={item.label}
+                            value={item.value}
+                            caption={item.caption}
+                        />
+                    ))}
+                </div>
+                <p className="mt-6 text-center text-body-2 text-gray-600 dark:text-gray-300 break-keep">
+                    {t('lesson.format.note')}
+                </p>
+            </Section>
 
             {/* Locale-specific content block (non-KO hubs only) */}
             {hubLocaleContent && (
@@ -209,70 +318,96 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 />
             </Section>
 
-            {/* Curriculum Grid */}
+            {/* Curriculum Roadmap — 기본 3개월 + 심화 3개월 */}
             <Section variant="alternate">
                 <SectionHeading
                     icon={BookOpen}
                     title={t('lesson.curriculum.title')}
+                    subtitle={t('lesson.curriculum.subtitle')}
                     as="h2"
                     className="mb-12"
                     titleClassName="text-heading-3"
                 />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <CurriculumCard
-                        step="01"
-                        title={t('lesson.curriculum.step1.title')}
-                        subtitle={t('lesson.curriculum.step1.subtitle')}
-                        icon={Music}
-                        description={[
-                            t('lesson.curriculum.step1.items.0'),
-                            t('lesson.curriculum.step1.items.1'),
-                            t('lesson.curriculum.step1.items.2'),
-                            t('lesson.curriculum.step1.items.3'),
-                        ]}
-                        delay={0.1}
+
+                {/* Phase 1 — 기본 3개월 과정 */}
+                <div className="mb-12">
+                    <PhaseHeader
+                        label={t('lesson.curriculum.phase1.label')}
+                        title={t('lesson.curriculum.phase1.title')}
+                        caption={t('lesson.curriculum.phase1.caption')}
                     />
-                    <CurriculumCard
-                        step="02"
-                        title={t('lesson.curriculum.step2.title')}
-                        subtitle={t('lesson.curriculum.step2.subtitle')}
-                        icon={Mic2}
-                        description={[
-                            t('lesson.curriculum.step2.items.0'),
-                            t('lesson.curriculum.step2.items.1'),
-                            t('lesson.curriculum.step2.items.2'),
-                            t('lesson.curriculum.step2.items.3'),
-                        ]}
-                        delay={0.2}
-                    />
-                    <CurriculumCard
-                        step="03"
-                        title={t('lesson.curriculum.step3.title')}
-                        subtitle={t('lesson.curriculum.step3.subtitle')}
-                        icon={Sliders}
-                        description={[
-                            t('lesson.curriculum.step3.items.0'),
-                            t('lesson.curriculum.step3.items.1'),
-                            t('lesson.curriculum.step3.items.2'),
-                            t('lesson.curriculum.step3.items.3'),
-                        ]}
-                        delay={0.3}
-                    />
-                    <CurriculumCard
-                        step="04"
-                        title={t('lesson.curriculum.step4.title')}
-                        subtitle={t('lesson.curriculum.step4.subtitle')}
-                        icon={Disc}
-                        description={[
-                            t('lesson.curriculum.step4.items.0'),
-                            t('lesson.curriculum.step4.items.1'),
-                            t('lesson.curriculum.step4.items.2'),
-                            t('lesson.curriculum.step4.items.3'),
-                        ]}
-                        delay={0.4}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <CurriculumCard
+                            step="01"
+                            title={t('lesson.curriculum.step1.title')}
+                            subtitle={t('lesson.curriculum.step1.subtitle')}
+                            phaseLabel={t('lesson.curriculum.step1.phaseLabel')}
+                            icon={Music}
+                            description={[
+                                t('lesson.curriculum.step1.items.0'),
+                                t('lesson.curriculum.step1.items.1'),
+                                t('lesson.curriculum.step1.items.2'),
+                                t('lesson.curriculum.step1.items.3'),
+                            ]}
+                            delay={0.1}
+                        />
+                        <CurriculumCard
+                            step="02"
+                            title={t('lesson.curriculum.step2.title')}
+                            subtitle={t('lesson.curriculum.step2.subtitle')}
+                            phaseLabel={t('lesson.curriculum.step2.phaseLabel')}
+                            icon={Mic2}
+                            description={[
+                                t('lesson.curriculum.step2.items.0'),
+                                t('lesson.curriculum.step2.items.1'),
+                                t('lesson.curriculum.step2.items.2'),
+                                t('lesson.curriculum.step2.items.3'),
+                            ]}
+                            delay={0.2}
+                        />
+                    </div>
                 </div>
-                <div className="mt-10 text-center">
+
+                {/* Phase 2 — 심화 3개월 과정 */}
+                <div>
+                    <PhaseHeader
+                        label={t('lesson.curriculum.phase2.label')}
+                        title={t('lesson.curriculum.phase2.title')}
+                        caption={t('lesson.curriculum.phase2.caption')}
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <CurriculumCard
+                            step="03"
+                            title={t('lesson.curriculum.step3.title')}
+                            subtitle={t('lesson.curriculum.step3.subtitle')}
+                            phaseLabel={t('lesson.curriculum.step3.phaseLabel')}
+                            icon={Sliders}
+                            description={[
+                                t('lesson.curriculum.step3.items.0'),
+                                t('lesson.curriculum.step3.items.1'),
+                                t('lesson.curriculum.step3.items.2'),
+                                t('lesson.curriculum.step3.items.3'),
+                            ]}
+                            delay={0.3}
+                        />
+                        <CurriculumCard
+                            step="04"
+                            title={t('lesson.curriculum.step4.title')}
+                            subtitle={t('lesson.curriculum.step4.subtitle')}
+                            phaseLabel={t('lesson.curriculum.step4.phaseLabel')}
+                            icon={Disc}
+                            description={[
+                                t('lesson.curriculum.step4.items.0'),
+                                t('lesson.curriculum.step4.items.1'),
+                                t('lesson.curriculum.step4.items.2'),
+                                t('lesson.curriculum.step4.items.3'),
+                            ]}
+                            delay={0.4}
+                        />
+                    </div>
+                </div>
+
+                <div className="mt-12 text-center">
                     <a
                         href={siteConfig.contact.kakaoUrl}
                         target="_blank"
@@ -333,10 +468,27 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                             <p className="opacity-90">{t('lesson.pricing.subtitle')}</p>
                         </div>
                         <div className="p-8">
-                            <div className="flex justify-center items-end mb-6">
+                            <div className="flex justify-center items-end mb-2">
                                 <span className="text-4xl font-bold text-gray-800 dark:text-white">350,000</span>
                                 <span className="text-xl text-gray-500 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
                             </div>
+                            <p className="text-center text-body-2 text-gray-600 dark:text-gray-300 mb-6 break-keep">
+                                {t('lesson.pricing.breakdown')}
+                            </p>
+                            <ul className="space-y-2 mb-6 text-body-2 text-gray-700 dark:text-gray-200">
+                                <li className="flex items-start">
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <span className="break-keep">{t('lesson.format.items.0.label')}: <strong>{t('lesson.format.items.0.value')}</strong></span>
+                                </li>
+                                <li className="flex items-start">
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <span className="break-keep">{t('lesson.format.items.1.label')}: <strong>{t('lesson.format.items.1.value')}</strong></span>
+                                </li>
+                                <li className="flex items-start">
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <span className="break-keep">{t('lesson.format.items.2.label')}: <strong>{t('lesson.format.items.2.value')}</strong></span>
+                                </li>
+                            </ul>
                             <a
                                 href={siteConfig.contact.kakaoUrl}
                                 target="_blank"
