@@ -4,7 +4,7 @@ const homeData = {
     ko: {
     seo: {
       title: "연신내 녹음실 · 음악연습실 · 믹싱 마스터링 | 스튜디오 놀",
-      description: "연신내역 도보 5분, 전문 엔지니어 상주 녹음실. 축가·성우·오디오북·음원 녹음, 믹싱·마스터링, 24시간 음악연습실까지 원스톱. 시간당 10만원부터, 무료 견적 상담 후 당일 예약 가능합니다.",
+      description: "연신내역 도보 5분, 전문 엔지니어 상주 녹음실. 축가·성우·오디오북·음원 녹음, 믹싱·마스터링, 24시간 숙식 가능한 월 30만원대 음악연습실까지 원스톱. 시간당 10만원부터, 무료 견적 상담 후 당일 예약 가능합니다.",
       keywords: "음원 제작, 디지털 싱글, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 오디오북 녹음, 일반인 녹음실, 스튜디오 놀, 음악연습실, 24시간 음악연습실"
     },
     heroContent: {
@@ -41,7 +41,7 @@ const homeData = {
       },
       {
         title: '음악연습실',
-        description: '24시간 완벽 방음 음악연습실. 보컬·피아노·건반 완비, 월 30만원대 입주 프로그램으로 나만의 창작 공간을 경험하세요.',
+        description: '24시간 완벽 방음·숙식 가능 음악연습실. 보컬·피아노·건반 완비, 은평구 최저가 월 30만원대 입주로 나만의 창작 공간을 확보하세요.',
         link: '/practice-room',
         icon: 'Music',
       },
@@ -109,7 +109,7 @@ const homeData = {
       },
       {
         title: 'Premium Practice Room',
-        description: '24/7 fully soundproof practice room. Drums, guitar & keyboard ready. Monthly residency from 400,000 KRW — your own creative space.',
+        description: '24/7 fully soundproof practice room — overnight stays welcome. Vocal, piano & keyboard ready. Monthly residency from ₩300K — the most affordable in Eunpyeong-gu.',
         link: '/practice-room',
         icon: 'Music',
       },
@@ -169,7 +169,7 @@ const homeData = {
       },
       {
         title: '高端练习室',
-        description: '24小时全隔音练习室，配备架子鼓、吉他、键盘。月租约40万韩元起，打造专属练习空间。',
+        description: '24小时全隔音练习室，可过夜住宿。配备声乐、钢琴、键盘。月租30万韩元起，恩平区最划算的价格，打造专属创作空间。',
         link: '/practice-room',
         icon: 'Music',
       },
@@ -247,7 +247,7 @@ const homeData = {
       },
       {
         title: 'Sala de práctica premium',
-        description: 'Sala de práctica 24/7 completamente insonorizada. Batería, guitarra y teclado incluidos. Residencia mensual desde 400.000 KRW.',
+        description: 'Sala de práctica 24/7 completamente insonorizada — pernocta permitida. Voz, piano y teclado incluidos. Residencia mensual desde 300.000 KRW — la más accesible de Eunpyeong-gu.',
         link: '/practice-room',
         icon: 'Music',
       },
@@ -325,7 +325,7 @@ const homeData = {
       },
       {
         title: 'Phòng tập cao cấp',
-        description: 'Phòng tập cách âm hoàn toàn 24/7. Trống, guitar, keyboard đầy đủ. Gói cư trú hàng tháng từ 400.000 KRW — không gian sáng tạo của riêng bạn.',
+        description: 'Phòng tập cách âm hoàn toàn 24/7 — ở qua đêm được. Thanh nhạc, piano, keyboard đầy đủ. Thuê tháng từ 300.000 KRW — giá hợp lý nhất Eunpyeong-gu.',
         link: '/practice-room',
         icon: 'Music',
       },
@@ -403,7 +403,7 @@ const homeData = {
       },
       {
         title: 'ห้องซ้อมพรีเมียม',
-        description: 'ห้องซ้อมกันเสียง 24 ชั่วโมง พร้อมกลอง กีตาร์ คีย์บอร์ด ราคาเช่ารายเดือน 400,000 วอน — พื้นที่สร้างสรรค์ส่วนตัวของคุณ',
+        description: 'ห้องซ้อมกันเสียง 24 ชั่วโมง พักค้างคืนได้ พร้อมร้อง เปียโน คีย์บอร์ด เช่ารายเดือน 300,000 วอน ราคาคุ้มที่สุดใน Eunpyeong-gu',
         link: '/practice-room',
         icon: 'Music',
       },
@@ -481,7 +481,7 @@ const homeData = {
       },
       {
         title: "Premium mashg'ulot xonasi",
-        description: "24/7 to'liq ovoz izolyatsiyali mashg'ulot xonasi. Baraban, gitara, klaviatura mavjud. Oylik to'lov 400,000 KRW dan — o'z ijodiy makoningiz.",
+        description: "24/7 to'liq ovoz izolyatsiyali mashg'ulot xonasi — tunab qolish mumkin. Vokal, pianino, klaviatura mavjud. Oylik ijara 300,000 KRW'dan — Eunpyeong-gu'dagi eng qulay narx.",
         link: '/practice-room',
         icon: 'Music',
       },
