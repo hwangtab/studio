@@ -389,8 +389,9 @@
     },
     "hero": {
       "title": "From ₩300K/mo — Eunpyeong-gu 24/7 Soundproof Practice Room",
-      "subtitleLine1": "The most affordable monthly residency in Eunpyeong-gu. ₩0 deposit · First month 10% off · Overnight stays welcome.",
-      "subtitleLine2": "Vocal · keyboard · recording — a premium monthly residency.",
+      "subtitleLine1": "The most affordable monthly residency in Eunpyeong-gu.",
+      "subtitleLine2": "₩0 deposit · First month 10% off · Overnight stays welcome.",
+      "subtitleLine3": "Vocal · keyboard · recording — a premium monthly residency.",
       "alt": "Studio NOL Practice Room"
     },
     "pricing": {

@@ -389,8 +389,9 @@
     },
     "hero": {
       "title": "Desde ₩300K/mes · Sala de ensayo insonorizada 24h en Eunpyeong-gu",
-      "subtitleLine1": "La residencia mensual más accesible de Eunpyeong-gu. Sin depósito · 10% dto. primer mes · Pernocta permitida.",
-      "subtitleLine2": "Voz · teclado · enlace de grabación — una residencia mensual premium.",
+      "subtitleLine1": "La residencia mensual más accesible de Eunpyeong-gu.",
+      "subtitleLine2": "Sin depósito · 10% dto. primer mes · Pernocta permitida.",
+      "subtitleLine3": "Voz · teclado · enlace de grabación — residencia mensual premium.",
       "alt": "Sala de práctica de Studio NOL"
     },
     "pricing": {

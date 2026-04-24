@@ -404,6 +404,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             {t('practiceRoom.hero.subtitleLine1')}
             <br />
             {t('practiceRoom.hero.subtitleLine2')}
+            <br />
+            {t('practiceRoom.hero.subtitleLine3')}
           </>
         }
         backgroundImage="/images/room5.webp"

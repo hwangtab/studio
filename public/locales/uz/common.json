@@ -388,8 +388,9 @@
     },
     "hero": {
       "title": "Oyiga ₩300K'dan · Eunpyeong-gu'da 24/7 tovush izolyatsiyali xona",
-      "subtitleLine1": "Eunpyeong-gu'dagi eng qulay oylik ijara. Zakaladsiz · Birinchi oyga 10% chegirma · Tunab qolish mumkin.",
-      "subtitleLine2": "Vokal · klaviatura · yozuv — premium oylik ijara.",
+      "subtitleLine1": "Eunpyeong-gu'dagi eng qulay oylik ijara.",
+      "subtitleLine2": "Zakaladsiz · Birinchi oyga 10% chegirma · Tunab qolish mumkin.",
+      "subtitleLine3": "Vokal · klaviatura · yozuv — premium oylik ijara.",
       "alt": "Studio NOL mashg'ulot xonasi"
     },
     "pricing": {

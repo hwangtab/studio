@@ -85,7 +85,7 @@ const ImageHero = ({
               React 하이드레이션 HTML 불일치(#418) 유발 (stories/[id] 등에서 재현). */}
           {subtitle && (
             <div
-              className={`font-pretendard text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 ${textAlign === 'center' ? 'mx-auto' : ''}`}
+              className={`font-pretendard text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 ${textBreakClass} ${textAlign === 'center' ? 'mx-auto' : ''}`}
             >
               {subtitle}
             </div>
