@@ -3,7 +3,7 @@ import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe } from 'lucide-react';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -20,9 +20,8 @@ const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'))
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
-import { getHomeData } from '../../data/home';
+import { getHomeData, type HomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
-import { getReviews } from '../../data/reviews';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
@@ -37,13 +36,12 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 interface HomeProps {
   locale: Locale;
-  homeData: ReturnType<typeof getHomeData>;
+  homeData: HomeData;
   faqData: ReturnType<typeof getFaqData>;
-  reviewsData: ReturnType<typeof getReviews>;
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, reviewsData }) => {
-  const { heroContent, homeServices, studioImages, seo } = homeData;
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
+  const { heroContent, homeServices, studioImages, seo, localeUsps, featuredLinks } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
 
@@ -66,7 +64,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
         webPageType="WebSite"
         canonical={`/${locale}`}
         faqItems={faqData}
-        reviewItems={reviewsData}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
         ]}
@@ -116,6 +113,70 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, review
         />
         <MediaGallery images={studioImages} locale={locale} />
       </Section>
+
+      {/* Locale-specific USP block (zh, es, vi, th only) */}
+      {localeUsps && locale !== 'ko' && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={Globe}
+            title={localeUsps.title}
+            className="mb-8"
+          />
+          <div className="max-w-4xl mx-auto space-y-6">
+            {localeUsps.items.map((item: { heading: string; body: string }, index: number) => (
+              <m.div
+                key={item.heading}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700"
+              >
+                <h3 className="text-heading-4 font-title mb-3 text-primary">{item.heading}</h3>
+                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+              </m.div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* Featured This Month — curated internal links for non-KO locales */}
+      {featuredLinks && featuredLinks.length > 0 && (
+        <Section variant="default">
+          <SectionHeading
+            icon={Sparkles}
+            title={t('home.sections.featuredTitle', 'Featured This Month')}
+            className="mb-8"
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredLinks.map((link, index) => (
+              <m.div
+                key={link.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+              >
+                <Link
+                  href={getLink(link.href)}
+                  className="group block bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                      {link.type === 'portfolio' ? t('home.featured.typePortfolio', 'Portfolio') : link.type === 'story' ? t('home.featured.typeStory', 'Story') : t('home.featured.typePage', 'Page')}
+                    </span>
+                    <ArrowRight size={16} className="text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" aria-hidden="true" />
+                  </div>
+                  <h3 className="text-heading-5 font-title mb-2 text-gray-900 dark:text-gray-100 group-hover:text-primary transition-colors duration-300">
+                    {link.title}
+                  </h3>
+                  <p className="typo-card-body text-gray-600 dark:text-gray-300">{link.description}</p>
+                </Link>
+              </m.div>
+            ))}
+          </div>
+        </Section>
+      )}
 
       {/* 서비스 소개 섹션 */}
       <Section variant="alternate">
@@ -244,14 +305,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const homeData = getHomeData(locale);
   const faqData = getFaqData(locale);
-  const reviewsData = getReviews(locale);
 
   return buildPageStaticProps(
     locale,
     {
       homeData,
       faqData,
-      reviewsData,
     },
     { revalidate: 3600, i18nSections: ['home'] }
   );

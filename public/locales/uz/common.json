@@ -71,7 +71,13 @@
     "sections": {
       "galleryTitle": "Siz uchun joy va uskunalar",
       "servicesTitle": "Xizmatlarimiz",
-      "servicesCta": "Batafsil"
+      "servicesCta": "Batafsil",
+      "featuredTitle": "Oyning Tanlovlari"
+    },
+    "featured": {
+      "typePortfolio": "Portfel",
+      "typeStory": "Hikoya",
+      "typePage": "Sahifa"
     },
     "cta": {
       "titleLine1": "Tasavvur qilgan ovoz,",
@@ -115,8 +121,8 @@
     },
     "seo": {
       "keywords": "Studio NOL, musiqa ishlab chiqarish jarayoni, musiqa prodakshn, yozuv studiyasi, miks mastering, musiqa tarqatish, musiqa rejalashtirish, analog uskunalar",
-      "title": "10 yillik muhandislar · Analog uskuna · Yeonsinnae'dan 5 daqiqa | Studio NOL",
-      "description": "Seul Eunpyeong-gu'dagi Studio NOL — Yeonsinnae bekatidan 5 daqiqa. 10+ yillik tajribaga ega muhandislar va analog uskunalar bilan musiqa ishlab chiqarishning to‘liq xizmatini taqdim etamiz: rejalashtirish, yozuv, miksing, mastering va tarqatish. KakaoTalk orqali bepul maslahat."
+      "title": "Seul Yozuv Studiyasi · 10 yillik muhandislar | Studio NOL",
+      "description": "Seul Eunpyeong-gu Studio NOL: 10+ yillik muhandislar, analog uskunalar, to’liq musiqa prodakshn xizmati. KakaoTalk orqali bepul maslahat."
     },
     "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
     "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
@@ -204,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Mashg‘ulot ₩20K·To‘y qo‘shig‘i ₩150K·Ovoz aktyori ₩30K | Studio NOL Seul",
-      "description": "Seul Eunpyeong-gu Studio NOL shaffof narxlari: mashg‘ulot xonasi ₩20K/soat·oylik ijara, to‘y qo‘shig‘i to‘plami ₩150K dan, ovoz aktyori ₩30K/soat, miksing va mastering xizmatlari. To‘plam chegirmalari 30% gacha, KakaoTalk orqali bepul narx taklifi.",
+      "title": "To’y qo’shig’i ₩150K · Ovoz aktyori ₩30K | Studio NOL",
+      "description": "Studio NOL shaffof narxlari: mashg’ulot ₩20K/soat, to’y qo’shig’i ₩150K, ovoz aktyori ₩30K/soat, miks va mastering. To’plamga 30% chegirma.",
       "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL",
       "schemaTitle": "Studio NOL xizmat narxlari"
     },
@@ -601,8 +607,8 @@
   },
   "stories": {
     "seo": {
-      "title": "Hikoyalar - Studio NOL loyiha kundaliklari",
-      "description": "Studio NOL loyihalari, uskunalar sharhlari va san'atkorlar bilan suhbatlar. Professional muhandis nuqtai nazaridan musiqa ishlab chiqarishni o'rganing.",
+      "title": "Yozuv, Miks va Vokal Prodakshn Qo'llanmalari | Studio NOL",
+      "description": "Vokal yozuv, miks, mastering, EQ va K-pop prodakshn bo'yicha 1,500+ amaliy qo'llanma — Studio NOL muhandislaridan.",
       "keywords": "Studio NOL hikoyalari, prodakshn sharhlari, musiqa prodakshn hikoyalari",
       "fallbackKeywords": "Studio NOL, yozuv studiyasi, musiqa prodakshn, vokal darslari, miks mastering, mashg'ulot xonasi"
     },

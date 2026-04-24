@@ -71,7 +71,13 @@
     "sections": {
       "galleryTitle": "为你准备的录音空间与设备",
       "servicesTitle": "我们的服务",
-      "servicesCta": "了解更多"
+      "servicesCta": "了解更多",
+      "featuredTitle": "本月精选"
+    },
+    "featured": {
+      "typePortfolio": "作品集",
+      "typeStory": "故事",
+      "typePage": "页面"
     },
     "cta": {
       "titleLine1": "你想象的声音，",
@@ -115,7 +121,7 @@
     },
     "seo": {
       "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备",
-      "title": "10年经验工程师·模拟设备·延新内站5分钟 | Studio NOL 介绍",
+      "title": "首尔录音室·10年经验工程师 | Studio NOL 介绍",
       "description": "首尔恩平区 Studio NOL 距延新内站步行5分钟。10年以上资深工程师与老式模拟设备提供一站式音乐制作：企划·录音·混音·母带·音源发行。KakaoTalk 免费咨询。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
@@ -603,7 +609,7 @@
   "stories": {
     "seo": {
       "title": "录音后记·混音技巧·制作案例 | Studio NOL",
-      "description": "了解Studio NOL录音室工作日志、专业设备评测与艺术家访谈。探索声乐录制、混音制作、音乐连习背后的真实故事，获取专业工程师的宝贵创作经验与实用技巧。",
+      "description": "Studio NOL 1,500+ 篇实战指南：声乐录音、混音、母带、EQ、压缩、K-pop 制作技巧。延新内首尔录音室工程师亲授。",
       "keywords": "Studio NOL 故事, 制作后记, 音乐制作故事",
       "fallbackKeywords": "Studio NOL, 연신내录音室, 音乐制作, 声乐课, 混音母带, 排练室"
     },

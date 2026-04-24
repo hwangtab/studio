@@ -32,9 +32,14 @@ export const topicLinks: Record<string, TopicLink> = {
   // ─── 녹음 기초 ───
   '녹음실 처음': { slug: 'guide1', anchorText: '녹음실 처음 방문 가이드' },
   '보컬 녹음 준비': { slug: 'vocal-prep1', anchorText: '보컬 녹음 준비 체크리스트' },
+  '처음 보컬 녹음': { slug: 'vocal-recording-guide1', anchorText: '처음 보컬 녹음하는 법' },
+  '1인 보컬 녹음': { slug: 'vocal-solo-recording1', anchorText: '1인 보컬 녹음 가이드' },
+  '솔로 보컬': { slug: 'vocal-solo-recording1', anchorText: '솔로 보컬 녹음 가이드' },
   '홈레코딩': { slug: 'home-vs-studio1', anchorText: '홈레코딩 vs 스튜디오 비교' },
 
   // ─── 믹싱 & 마스터링 ───
+  '믹싱 강좌': { slug: 'mixing-complete-guide', anchorText: '믹싱 완전 가이드 — 23편 로드맵' },
+  '믹싱 로드맵': { slug: 'mixing-complete-guide', anchorText: '믹싱 학습 로드맵' },
   '보컬 EQ': { slug: 'eq-guide1', anchorText: '보컬 EQ 가이드' },
   '컴프레서 설정': { slug: 'compression-guide1', anchorText: '컴프레서 완전 가이드' },
   '디에서': { slug: 'de-esser1', anchorText: '디에서(De-esser) 가이드' },
@@ -59,6 +64,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '오디오북 녹음': { slug: 'audiobook-guide1', anchorText: '오디오북 제작 가이드' },
   '합창 녹음': { slug: 'choir1', anchorText: '합창 녹음 가이드' },
   '축가 녹음': { slug: 'wedding-song-guide1', anchorText: '축가 녹음 준비 가이드' },
+  '성우 데모': { slug: 'voice-actor-demo1', anchorText: '성우 데모 녹음 가이드' },
+  '오디션 데모': { slug: 'voice-actor-demo1', anchorText: '오디션 데모 녹음 가이드' },
 
   // ─── 음악 제작 & 발매 ───
   '편곡 팁': { slug: 'arrangement-tips1', anchorText: '편곡 팁 가이드' },
@@ -67,6 +74,10 @@ export const topicLinks: Record<string, TopicLink> = {
   '커버 아트': { slug: 'album-art1', anchorText: '앨범 아트 제작 가이드' },
   'AI 음악': { slug: 'ai-music1', anchorText: 'AI 음악 제작 가이드' },
   '808 베이스': { slug: '808-bass1', anchorText: '808 베이스 믹싱 가이드' },
+  '혼자 앨범': { slug: 'solo-album1', anchorText: '혼자 앨범 내는 방법' },
+  '1인 음반': { slug: 'solo-album1', anchorText: '1인 음반 제작 가이드' },
+  '인디 뮤지션': { slug: 'indie-musician-studio1', anchorText: '인디 뮤지션 녹음실 가이드' },
+  '인디 EP': { slug: 'indie-musician-studio1', anchorText: '인디 EP 제작 가이드' },
 
   // ─── 비즈니스 & 프로모션 ───
   '아티스트 브랜딩': { slug: 'artist-branding1', anchorText: '아티스트 브랜딩 가이드' },
@@ -79,6 +90,13 @@ export const topicLinks: Record<string, TopicLink> = {
   '앰프 시뮬레이터': { slug: 'amp-simulator1', anchorText: '앰프 시뮬레이터 가이드' },
   'MP3 vs WAV': { slug: 'audioformat1', anchorText: 'MP3 vs WAV 차이 가이드' },
   '방음 처리': { slug: 'acoustic-treatment1', anchorText: '방음·흡음 가이드' },
+  '방음 합주실': { slug: 'soundproof-rehearsal-seoul1', anchorText: '서울 방음 합주실 가이드' },
+  '서울 합주실': { slug: 'soundproof-rehearsal-seoul1', anchorText: '서울 합주실 선택 가이드' },
+  '합주실 예약': { slug: 'practice-room-booking1', anchorText: '합주실 예약 가이드' },
+  '연습실 예약': { slug: 'practice-room-booking1', anchorText: '연습실 예약 가이드' },
+  '마스터링 시점': { slug: 'mastering1', anchorText: '마스터링 의뢰 시점 가이드' },
+  '스트리밍 LUFS': { slug: 'loudness1', anchorText: '스트리밍 LUFS 가이드' },
+  '라우드니스': { slug: 'loudness1', anchorText: '라우드니스 정규화 가이드' },
 
   // ─── 오디션 & 입시 ───
   '보컬 오디션': { slug: 'audition-vocal1', anchorText: '보컬 오디션 가이드' },

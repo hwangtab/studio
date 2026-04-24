@@ -8,9 +8,10 @@ import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getPricingData } from '../../data/pricing';
 import { generateAggregateOfferSchema, getSchemaLanguage } from '../../utils/schemaGenerator';
-import { getReviews } from '../../data/reviews';
+import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import BaseCard from '../../components/ui/BaseCard';
 import ImageHero from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting (초기 JS 번들 감소 → TBT 단축)
@@ -25,7 +26,7 @@ import type { NextPageWithLayout } from '../../types';
 interface PricingProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
-  reviewsData: ReturnType<typeof getReviews>;
+  hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
 }
 
 interface Offer {
@@ -39,7 +40,7 @@ interface Offer {
   recommended?: boolean;
 }
 
-const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, reviewsData }) => {
+const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLocaleContent }) => {
   const { t } = useTranslation('common', { lng: locale });
   const {
     VAT_NOTICE,
@@ -185,7 +186,6 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         canonical={`/${locale}/pricing`}
         faqItems={pricingQuickAnswers}
         schema={pricingSchema}
-        reviewItems={reviewsData}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.pricing'), path: `/${locale}/pricing` },
@@ -221,6 +221,25 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, review
         items={pricingQuickAnswers}
         variant="default"
       />
+
+      {/* Locale-specific content block (non-KO hubs only) */}
+      {hubLocaleContent && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={Info}
+            title={hubLocaleContent.title}
+            className="mb-8"
+          />
+          <div className="max-w-4xl mx-auto space-y-6">
+            {hubLocaleContent.items.map((item) => (
+              <BaseCard key={item.heading} variant="default" className="p-6">
+                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
+                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+              </BaseCard>
+            ))}
+          </div>
+        </Section>
+      )}
 
       {/* Special Packages Section */}
       <Section id="special-packages" variant="alternate">
@@ -430,12 +449,12 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const pricingData = getPricingData(locale);
-  const reviewsData = getReviews(locale);
+  const hubLocaleContent = getHubLocaleContent(locale, 'pricing');
   return buildPageStaticProps(
     locale,
     {
       pricingData,
-      reviewsData,
+      hubLocaleContent,
     },
     { revalidate: 86400, i18nSections: ['pricing'] }
   );

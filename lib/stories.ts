@@ -17,6 +17,26 @@ const storyCategoryLabelCache = new Map<string, string>();
 const allStoriesCache = new Map<Locale, Story[]>();
 const storyDetailCache = new Map<string, StoryDetail>();
 
+const storyAvailableLocalesCache = new Map<string, Locale[]>();
+
+export const getStoryAvailableLocales = (slug: string): Locale[] => {
+  const cached = enableCache ? storyAvailableLocalesCache.get(slug) : undefined;
+  if (cached && enableCache) return cached;
+
+  const available: Locale[] = [];
+  if (fs.existsSync(path.join(storiesDirectory, `${slug}.md`))) {
+    available.push(defaultLocale);
+  }
+  for (const locale of locales) {
+    if (locale === defaultLocale) continue;
+    if (fs.existsSync(path.join(storiesDirectory, `${slug}.${locale}.md`))) {
+      available.push(locale);
+    }
+  }
+  if (enableCache) storyAvailableLocalesCache.set(slug, available);
+  return available;
+};
+
 const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { filePath: string; sourceLocale: Locale } => {
   const cacheKey = `${locale}:${slug}`;
   const cached = enableCache ? storyFileResolutionCache.get(cacheKey) : undefined;
@@ -321,7 +341,10 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   const shortcodeBonus = [...contentToProcess.matchAll(/%%([a-z-]+)%%/g)]
     .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? 80), 0);
   const rawNonWhitespace = contentToProcess.replace(/\s+/g, '').length;
-  const isThinContent = rawNonWhitespace + shortcodeBonus < 1000;
+  // Raise threshold from 1000 to 1500 to prevent thin pages from being indexed.
+  // Pages like `bulgwang-mixing-club` (5,016B ≈ 1,700 chars) barely passed 1000
+  // but were still rejected by Google. 1500 chars provides a safer buffer.
+  const isThinContent = rawNonWhitespace + shortcodeBonus < 1500;
 
   const storyDetail: StoryDetail = {
     ...baseStory,
@@ -332,6 +355,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     ...(typeof data?.robots === 'string' && { robots: data.robots }),
     modifiedDate,
     ...(faq && faq.length > 0 && { faq }),
+    availableLocales: getStoryAvailableLocales(slug),
   };
 
   if (enableCache) {

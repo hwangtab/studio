@@ -7,6 +7,7 @@ import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Build
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
+import BaseCard from '../../components/ui/BaseCard';
 import ImageHero from '../../components/common/ImageHero';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
@@ -18,7 +19,7 @@ const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
-import { getReviews } from '../../data/reviews';
+import { getHubLocaleContent } from '../../data/faq';
 import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
@@ -29,10 +30,10 @@ import type { NextPageWithLayout } from '../../types';
 interface StudioInfoProps {
   locale: Locale;
   equipmentData: ReturnType<typeof getEquipmentData>;
-  reviewsData: ReturnType<typeof getReviews>;
+  hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
 }
 
-const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, reviewsData }) => {
+const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hubLocaleContent }) => {
   const { categories, equipment, studioImages } = equipmentData;
   const { t } = useTranslation('common', { lng: locale });
   const studioFaqData = React.useMemo(() => getStudioFaqData(locale), [locale]);
@@ -117,7 +118,6 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         includeSchema={true}
         webPageType="ItemPage"
         canonical={`/${locale}/studio-info`}
-        reviewItems={reviewsData}
         faqItems={studioFaqData}
         schema={recordingStudioSchema}
       />
@@ -225,6 +225,25 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, re
         </m.div >
       </Section>
 
+      {/* Locale-specific content block (non-KO hubs only) */}
+      {hubLocaleContent && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={Headphones}
+            title={hubLocaleContent.title}
+            className="mb-8"
+          />
+          <div className="max-w-4xl mx-auto space-y-6">
+            {hubLocaleContent.items.map((item) => (
+              <BaseCard key={item.heading} variant="default" className="p-6">
+                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
+                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+              </BaseCard>
+            ))}
+          </div>
+        </Section>
+      )}
+
       <ReviewSection variant="alternate" locale={locale} />
 
       {/* 관련 서비스 바로가기 */}
@@ -293,13 +312,13 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const equipmentData = getEquipmentData(locale);
-  const reviewsData = getReviews(locale);
+  const hubLocaleContent = getHubLocaleContent(locale, 'studio-info');
 
   return buildPageStaticProps(
     locale,
     {
       equipmentData,
-      reviewsData,
+      hubLocaleContent,
     },
     { revalidate: 86400, i18nSections: ['studioInfo'] }
   );

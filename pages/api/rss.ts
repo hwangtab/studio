@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAllStories } from '../../lib/stories';
+import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 
@@ -29,7 +29,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const siteConfig = getSiteConfig(locale);
   const siteUrl = siteConfig.url;
-  const stories = getAllStories(locale);
+  // Non-ko RSS feeds should only list stories that have a native translation.
+  // Otherwise we syndicate URLs that render with `noindex` (fallback pages),
+  // which wastes crawl budget and leaks low-quality links.
+  const stories = getAllStories(locale).filter((story) =>
+    locale === 'ko' ? true : getStoryAvailableLocales(story.slug).includes(locale)
+  );
 
   const lastBuildDate = stories.length > 0
     ? new Date(stories[0].date).toUTCString()
@@ -79,6 +84,7 @@ ${items}
 </rss>`;
 
   res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
+  res.setHeader('X-Robots-Tag', 'noindex');
   res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
   res.status(200).send(xml);
 }

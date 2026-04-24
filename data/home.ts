@@ -120,6 +120,13 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "Upright bass recording session in studio booth" },
       { src: `/images/studio5.webp`, alt: "Vintech X73i preamp and Tegeler Vari Tube Compressor rack" },
       { src: `/images/hardware8.webp`, alt: "Control desk with Softube Console 1 Fader and Proac monitoring speakers" }
+    ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Full album recorded and mixed at Studio NOL', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Album production with a focus on vocal textures', type: 'portfolio' },
+      { title: 'EQ Fundamentals Guide', href: '/stories/eq1', description: 'Equalization basics for clear mixes', type: 'story' },
+      { title: 'K-pop Vocal Techniques', href: '/stories/idol-vocal1', description: 'How to achieve the Korean K-pop vocal sound', type: 'story' },
+      { title: 'Studio Info', href: '/studio-info', description: 'Equipment, rooms, and technical specifications', type: 'page' },
     ]
   },
   zh: {
@@ -173,7 +180,32 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "低音提琴演奏者在录音棚进行录音" },
       { src: `/images/studio5.webp`, alt: "Vintech X73i 前置放大器和 Tegeler Vari Tube Compressor 机架" },
       { src: `/images/hardware8.webp`, alt: "控制台配备 Softube Console 1 Fader 和 Proac 监听音箱" }
-    ]
+    ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: '在 Studio NOL 录制和混音的完整专辑', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: '以人声质感为核心的专辑制作', type: 'portfolio' },
+      { title: 'EQ 基础指南', href: '/stories/eq1', description: '清晰混音的均衡器基础知识', type: 'story' },
+      { title: 'K-pop 人声技巧', href: '/stories/idol-vocal1', description: '如何打造韩国 K-pop 人声风格', type: 'story' },
+      { title: '工作室信息', href: '/studio-info', description: '设备、录音室与技术规格', type: 'page' },
+    ],
+    // Locale-specific USP block for Chinese-speaking audience
+    localeUsps: {
+      title: "中国音乐人 위한 스튜디오 놀",
+      items: [
+        {
+          heading: "위챗 결제 · 한국어 커뮤니케이션",
+          body: "중국 현지 위챗페이 결제를 지원하며, 중국어 가능 스태프가 상주합니다. 한국 음악 시장 경험이 풍부한 엔지니어가 프로젝트 전반을 안내합니다."
+        },
+        {
+          heading: "한국 체류 아티스트 전용 패키지",
+          body: "비자 기간에 맞춘 단기·장기 예약 옵션. 공항 픽업부터 스튜디오 이동, 현지 음식 추천까지 한국 음악 활동에 필요한 모든 것을 지원합니다."
+        },
+        {
+          heading: "중국 플랫폼 배포 지원",
+          body: "NetEase Cloud Music, QQ Music, Kugou 등 중국 주요 음원 플랫폼에 앨범을 배포합니다. 중국 내 음악 활동의 첫걸음을 Studio NOL에서 시작하세요."
+        }
+      ]
+    }
   },
   es: {
     seo: {
@@ -226,7 +258,32 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "Sesión de grabación de contrabajo en la cabina de estudio" },
       { src: `/images/studio5.webp`, alt: "Rack con preamplificador Vintech X73i y Tegeler Vari Tube Compressor" },
       { src: `/images/hardware8.webp`, alt: "Mesa de control con Softube Console 1 Fader y monitores Proac" }
-    ]
+    ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'Álbum completo grabado y mezclado en Studio NOL', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Producción de álbum con enfoque en texturas vocales', type: 'portfolio' },
+      { title: 'Guía de EQ para principiantes', href: '/stories/eq1', description: 'Fundamentos de ecualización para mezclas claras', type: 'story' },
+      { title: 'Técnicas vocales para K-pop', href: '/stories/idol-vocal1', description: 'Cómo lograr el sonido vocal del K-pop coreano', type: 'story' },
+      { title: 'Información del estudio', href: '/studio-info', description: 'Equipos, salas, y especificaciones técnicas', type: 'page' },
+    ],
+    // Locale-specific USP block for Spanish-speaking audience (Latin America)
+    localeUsps: {
+      title: "Para Artistas Latinoamericanos en Corea",
+      items: [
+        {
+          heading: "FAQ para artistas latinos en Seúl",
+          body: "¿Cómo obtener visa de artista? ¿Dónde encontrar músicos coreanos para colaborar? Nuestro equipo te guía en todo el proceso: desde la visa C-4 hasta el registro en Korean Music Copyright Association (KOMCA)."
+        },
+        {
+          heading: "Producción musical para K-pop y Latin Pop",
+          body: "Combinamos experiencias en producción de K-pop y Latin Pop. Si buscas fusionar ritmos latinos con sonido coreano, nuestro equipo puede ayudarte a crear un sonido único que conecte ambos mercados."
+        },
+        {
+          heading: "Testimonios de artistas hispanohablantes",
+          body: "Múltiples artistas de México, Colombia y Argentina han grabado álbumes completos en Studio NOL. Lee sus experiencias y descubre por qué Studio NOL es la elección número uno para artistas hispanohablantes en Corea."
+        }
+      ]
+    }
   },
   vi: {
     seo: {
@@ -279,7 +336,32 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "Phiên thu âm đàn bass đứng trong booth thu" },
       { src: `/images/studio5.webp`, alt: "Rack thiết bị Vintech X73i preamp và Tegeler Vari Tube Compressor" },
       { src: `/images/hardware8.webp`, alt: "Bàn điều khiển với Softube Console 1 Fader và loa monitor Proac" }
-    ]
+    ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'Album đầy đủ thu âm và mixing tại Studio NOL', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Sản xuất album tập trung vào chất lượng giọng hát', type: 'portfolio' },
+      { title: 'Hướng dẫn EQ cơ bản', href: '/stories/eq1', description: 'Kiến thức cơ bản về cân bằng âm thanh', type: 'story' },
+      { title: 'Kỹ thuật thanh nhạc K-pop', href: '/stories/idol-vocal1', description: 'Cách đạt được âm thanh giọng hát K-pop', type: 'story' },
+      { title: 'Thông tin phòng thu', href: '/studio-info', description: 'Thiết bị, phòng thu, và thông số kỹ thuật', type: 'page' },
+    ],
+    // Locale-specific USP block for Vietnamese/K-pop trainee audience
+    localeUsps: {
+      title: "Cho Nghệ Sĩ Việt Nam Tại Hàn Quốc",
+      items: [
+        {
+          heading: "Hướng dẫn visa nghệ sĩ & KOMCA",
+          body: "Làm thế nào để xin visa C-4 (nghệ sĩ)? Đăng ký quyền tác giả âm nhạc tại Korean Music Copyright Association (KOMCA) ra sao? Chúng tôi đồng hành bạn từ khâu xin visa đến khi hoàn tất đăng ký quyền tác giả."
+        },
+        {
+          heading: "Đào tạo thanh nhạc phong cách K-pop",
+          body: "Khác với phòng thu thông thường, Studio NOL hiểu rõ yêu cầu đặc biệt của thị trường K-pop. Từ kỹ thuật thanh nhạc, biểu cảm đến phong cách trình diễn — chúng tôi giúp bạn chuẩn bị hồ sơ âm nhạc hoàn hảo cho thị trường Hàn Quốc."
+        },
+        {
+          heading: "Phân phối âm nhạc tại Hàn Quốc",
+          body: "Chúng tôi hỗ trợ phân phối album lên Melon, Genie, Bugs, Naver Music và các nền tảng âm nhạc hàng đầu Hàn Quốc. Bắt đầu sự nghiệp âm nhạc tại Hàn Quốc với Studio NOL."
+        }
+      ]
+    }
   },
   th: {
     seo: {
@@ -332,7 +414,32 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "การบันทึกเสียงดับเบิลเบสในห้องบูธอัด" },
       { src: `/images/studio5.webp`, alt: "แร็คพรีแอมป์ Vintech X73i และ Tegeler Vari Tube Compressor" },
       { src: `/images/hardware8.webp`, alt: "โต๊ะควบคุมพร้อม Softube Console 1 Fader และลำโพงมอนิเตอร์ Proac" }
-    ]
+    ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'อัลบั้มเต็มบันทึกเสียงและมิกซ์ที่ Studio NOL', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'การผลิตอัลบั้มเน้นที่เนื้อเสียงร้อง', type: 'portfolio' },
+      { title: 'คู่มือ EQ พื้นฐาน', href: '/stories/eq1', description: 'พื้นฐานการปรับสมดุลเสียงสำหรับมิกซ์ที่ชัดเจน', type: 'story' },
+      { title: 'เทคนิคการร้องเพลง K-pop', href: '/stories/idol-vocal1', description: 'วิธีสร้างเสียงร้องสไตล์ K-pop ของเกาหลี', type: 'story' },
+      { title: 'ข้อมูลสตูดิโอ', href: '/studio-info', description: 'อุปกรณ์ ห้องบันทึกเสียง และข้อมูลจำเพาะทางเทคนิค', type: 'page' },
+    ],
+    // Locale-specific USP block for Thai audience
+    localeUsps: {
+      title: "สำหรับศิลปินไทยในเกาหลี",
+      items: [
+        {
+          heading: "คำแนะนำวีซ่าศิลปิน & KOMCA",
+          body: "วิธีขอวีซ่า C-4 (ศิลปิน) ทำอย่างไร? ลงทะเบียนลิขสิทธิ์เพลงที่ Korean Music Copyright Association (KOMCA) อย่างไร? ทีมงานของเราพร้อมช่วยเหลือคุณตั้งแต่ขั้นตอนขอวีซ่าจนถึงการจดทะเบียนลิขสิทธิ์เสร็จสมบูรณ์"
+        },
+        {
+          heading: "การผลิตเพลงสไตล์ K-pop",
+          body: "ต่างจากสตูดิโอทั่วไป Studio NOL เข้าใจความต้องการพิเศษของตลาด K-pop ตั้งแต่เทคนิคการร้อง การแสดง ไปจนถึงสไตล์การนำเสนอ — เราช่วยคุณเตรียมผลงาน âm nhạcที่สมบูรณ์แบบสำหรับตลาดเกาหลี"
+        },
+        {
+          heading: "รีวิวจากศิลปินไทย",
+          body: "ศิลปินไทยหลายท่านได้บันทึกอัลบั้มเต็มที่ Studio NOL อ่านประสบการณ์ของพวกเขาและค้นพบว่าทำไม Studio NOL จึงเป็นตัวเลือกอันดับหนึ่งสำหรับศิลปินไทยในเกาหลี"
+        }
+      ]
+    }
   },
   uz: {
     seo: {
@@ -385,6 +492,13 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "Kontrabas yozuv seanssi studiya kabinasida" },
       { src: `/images/studio5.webp`, alt: "Vintech X73i preamp va Tegeler Vari Tube Compressor rack" },
       { src: `/images/hardware8.webp`, alt: "Nazorat pulti Softube Console 1 Fader va Proac monitoring karnaylari bilan" }
+    ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'Studio NOL da yozilgan va mikslangan toʻliq albom', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Vokal teksturalarga eʼtibor qaratgan albom prodakshn', type: 'portfolio' },
+      { title: 'EQ asoslari qoʻllanma', href: '/stories/eq1', description: 'Aniq mikslar uchun ekvalayzer asoslari', type: 'story' },
+      { title: 'K-pop vokal texnikalari', href: '/stories/idol-vocal1', description: 'Koreya K-pop vokal ovoziga erishish', type: 'story' },
+      { title: 'Studiya maʼlumotlari', href: '/studio-info', description: 'Uskunalar, xonalar, va texnik spetsifikatsiyalar', type: 'page' },
     ]
   }
 };
@@ -392,3 +506,36 @@ const homeData = {
 export const getHomeData = (locale: Locale) => {
   return homeData[locale] || homeData['ko'];
 };
+
+/** Type for locale-specific USP block rendered on home pages */
+export interface LocaleUspsBlock {
+  title: string;
+  items: { heading: string; body: string }[];
+}
+
+/** Type for the full home data object */
+export interface HomeData {
+  seo: { title: string; description: string; keywords: string };
+  heroContent: {
+    titlePrefix: string;
+    titleHighlight: string;
+    titleSuffix: string;
+    subtitle: string;
+    backgroundImage: string;
+    imageAlt: string;
+    cta: { reserve: string; portfolio: string };
+    ctaImageAlt: string;
+  };
+  homeServices: { title: string; description: string; link: string; icon: string }[];
+  studioImages: { src: string; alt: string }[];
+  localeUsps?: LocaleUspsBlock;
+  featuredLinks?: FeaturedLink[];
+}
+
+/** Type for curated internal links displayed on home pages */
+export interface FeaturedLink {
+  title: string;
+  href: string;
+  description: string;
+  type: 'story' | 'portfolio' | 'page';
+}

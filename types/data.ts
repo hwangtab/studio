@@ -1,4 +1,6 @@
 // Portfolio types
+import type { Locale } from '../lib/i18n';
+
 export interface PortfolioCategory {
   id: string;
   name: string;
@@ -16,6 +18,20 @@ export interface PortfolioItem {
   services: readonly string[];
   featured: boolean;
   artist: string;
+  /** 3–5 paragraph production notes (partial locale-map). When present, enables indexing. */
+  productionNotes?: Partial<Record<Locale, string>>;
+  /** Credit block: engineer, musicians, gear */
+  credits?: {
+    engineer?: string;
+    musicians?: string[];
+    gear?: string[];
+  };
+  /** ISO 8601 release date */
+  releaseDate?: string;
+  /** Record label */
+  label?: string;
+  /** Track list with optional duration */
+  trackList?: { no: number; title: string; duration?: string }[];
 }
 
 export interface AudioTrack {

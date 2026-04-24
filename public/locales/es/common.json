@@ -71,7 +71,13 @@
     "sections": {
       "galleryTitle": "Espacio y equipo para ti",
       "servicesTitle": "Nuestros servicios",
-      "servicesCta": "Ver más"
+      "servicesCta": "Ver más",
+      "featuredTitle": "Destacados del Mes"
+    },
+    "featured": {
+      "typePortfolio": "Portafolio",
+      "typeStory": "Historia",
+      "typePage": "Página"
     },
     "cta": {
       "titleLine1": "El sonido que imaginaste,",
@@ -115,8 +121,8 @@
     },
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
-      "title": "Ingenieros 10 años · Analógico · 5 min de Yeonsinnae | Studio NOL",
-      "description": "Studio NOL en Eunpyeong-gu, Seúl — 5 min de la estación Yeonsinnae. Ingenieros con 10+ años y equipo analógico vintage ofrecen producción musical integral: planificación, grabación, mezcla, masterización y distribución. Consulta gratuita por KakaoTalk."
+      "title": "Estudio de Grabación Seúl · Ingenieros 10 años | Studio NOL",
+      "description": "Studio NOL en Eunpyeong-gu, Seúl: 10+ años de ingeniería, equipo analógico vintage, producción musical integral. Consulta gratuita por KakaoTalk."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
     "howToDescription": "Una guía completa para producir música en un estudio profesional."
@@ -602,8 +608,8 @@
   },
   "stories": {
     "seo": {
-      "title": "Historias - Registros de proyectos de Studio NOL",
-      "description": "Historias de proyectos, reseñas de equipos y entrevistas de artistas en Studio NOL. Aprende sobre producción musical desde la perspectiva de un ingeniero.",
+      "title": "Guías de Grabación, Mezcla y Producción Vocal | Studio NOL",
+      "description": "1,500+ guías prácticas de grabación vocal, mezcla, masterización, EQ y producción K-pop por ingenieros de Studio NOL en Seúl.",
       "keywords": "historias de Studio NOL, reseñas de producción, historias de producción musical",
       "fallbackKeywords": "Studio NOL, estudio de grabación, producción musical, clases de canto, mezcla masterización, sala de ensayo"
     },

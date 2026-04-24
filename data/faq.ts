@@ -451,3 +451,397 @@ export const getDistributionFaqData = (locale: Locale) => {
     )
   );
 };
+
+// Hub page locale-specific content blocks for thin-content mitigation
+export interface HubLocaleContentItem {
+  heading: string;
+  body: string;
+}
+
+export interface HubLocaleContent {
+  hubKey: string;
+  title: string;
+  items: HubLocaleContentItem[];
+}
+
+const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
+  ko: [], // Korean hub pages use full native content — no locale block needed
+  en: [
+    {
+      hubKey: 'about',
+      title: 'For International Artists in Seoul',
+      items: [
+        {
+          heading: 'Artist Visa (C-4) & KOMCA Registration',
+          body: 'Navigating Korean immigration and copyright law can be complex. We guide you through the C-4 artist visa process and Korean Music Copyright Association (KOMCA) registration, so you can focus on making music.'
+        },
+        {
+          heading: 'Bilingual Studio Experience',
+          body: 'All communication is in clear English. Our engineers document every session in writing, and we provide contract templates in English for your peace of mind.'
+        },
+        {
+          heading: 'Global Distribution Included',
+          body: 'Every production package includes free distribution to Spotify, Apple Music, YouTube Music, and more through our Audioguy partnership. Keep 70% of your streaming revenue.'
+        }
+      ]
+    },
+    {
+      hubKey: 'lesson',
+      title: 'Music Lessons Tailored for Foreign Artists',
+      items: [
+        {
+          heading: 'K-pop Vocal Technique & Korean Language',
+          body: 'Our curriculum covers K-pop vocal techniques, Korean pronunciation for lyrics, and performance styling. Whether you\'re preparing for a debut or recording your first single, we build the skills you need.'
+        },
+        {
+          heading: 'Flexible Scheduling for Touring Artists',
+          body: 'We offer weekend and evening lessons to accommodate touring schedules. Intensive crash courses are available for artists preparing for an upcoming release.'
+        }
+      ]
+    },
+    {
+      hubKey: 'pricing',
+      title: 'Transparent Pricing for International Clients',
+      items: [
+        {
+          heading: 'Multiple Payment Options',
+          body: 'Pay by bank transfer (local Korean banks), credit card, or PayPal. We provide detailed invoices in English for your accounting and tax records.'
+        },
+        {
+          heading: 'No Hidden Fees',
+          body: 'All prices include professional engineering. Session photos and a summary report are included with every booking. What you see is what you pay.'
+        }
+      ]
+    },
+    {
+      hubKey: 'studio-info',
+      title: 'Equipment You\'ll Actually Use',
+      items: [
+        {
+          heading: 'Microphone Selection Guide',
+          body: 'Not sure which mic is right for your voice? Our engineers provide a free 15-minute consultation to match your vocal style with the perfect microphone — from the Neumann U87AI for warm vocals to the AKG C414 for bright acoustic instruments.'
+        },
+        {
+          heading: 'Genre-Specific Setup Recommendations',
+          body: 'Whether you\'re recording hip-hop, ballad, rock, or electronic music, we have genre-tailored equipment setups. Tell us your genre and we\'ll prepare the optimal signal chain before you arrive.'
+        }
+      ]
+    }
+  ],
+  zh: [
+    {
+      hubKey: 'about',
+      title: '在韩中国音乐人专属服务',
+      items: [
+        {
+          heading: '签证与KOMCA版权登记支持',
+          body: '从C-4艺术家签证申请到韩国音乐著作权协会(KOMCA)登记，我们全程协助。让您安心专注于音乐创作。'
+        },
+        {
+          heading: '微信付款 · 中文服务',
+          body: '支持微信支付和支付宝。中文工作人员常驻，合同、会话记录全部提供中文版本。'
+        },
+        {
+          heading: '中国平台发行',
+          body: '支持网易云音乐、QQ音乐、酷狗等中国主流平台发行。让您的音乐触达中国听众。'
+        }
+      ]
+    },
+    {
+      hubKey: 'lesson',
+      title: '中国音乐人专属课程',
+      items: [
+        {
+          heading: 'K-pop声乐技巧与韩语发音',
+          body: '课程涵盖K-pop声乐技巧、韩语歌词发音、舞台表演风格。无论您是准备出道还是录制第一首单曲，我们帮您建立所需技能。'
+        },
+        {
+          heading: '巡演艺术家灵活安排',
+          body: '提供周末和晚间课程，适应巡演日程。为即将发行的艺术家提供强化速成课程。'
+        }
+      ]
+    },
+    {
+      hubKey: 'pricing',
+      title: '中国客户专属价格方案',
+      items: [
+        {
+          heading: '中国支付方式',
+          body: '支持微信支付、支付宝、银联卡付款。提供中文发票，方便您的财务和税务记录。'
+        },
+        {
+          heading: '中国平台发行套餐',
+          body: '新增网易云音乐、QQ音乐、酷狗平台发行套餐。让您的音乐触达中国数亿听众。'
+        }
+      ]
+    },
+    {
+      hubKey: 'studio-info',
+      title: '适合中国音乐人的设备配置',
+      items: [
+        {
+          heading: '中文设备使用指南',
+          body: '提供中文设备使用手册。从麦克风选择到效果器设置，中文工作人员全程指导。'
+        },
+        {
+          heading: '华语流行音乐专用设置',
+          body: '针对华语流行音乐特点，我们准备了专门的麦克风、前置放大器和效果器组合，还原您想要的声音。'
+        }
+      ]
+    }
+  ],
+  es: [
+    {
+      hubKey: 'about',
+      title: 'Para Artistas Latinoamericanos en Corea',
+      items: [
+        {
+          heading: 'Visa de Artista (C-4) y Registro KOMCA',
+          body: 'El proceso de inmigración coreano y el registro de derechos de autor pueden ser complejos. Le guiamos desde la visa C-4 hasta el registro en la Korean Music Copyright Association (KOMCA), para que pueda concentrarse en crear música.'
+        },
+        {
+          heading: 'Experiencia en Estudio en Español',
+          body: 'Toda la comunicación es en español. Nuestros ingenieros documentan cada sesión por escrito, y proporcionamos plantillas de contrato en español para su tranquilidad.'
+        },
+        {
+          heading: 'Distribución Global Incluida',
+          body: 'Cada paquete de producción incluye distribución gratuita a Spotify, Apple Music, YouTube Music y más a través de nuestra asociación con Audioguy. Quedarse con el 70% de sus ingresos por streaming.'
+        }
+      ]
+    },
+    {
+      hubKey: 'lesson',
+      title: 'Lecciones de Música para Artistas Extranjeros',
+      items: [
+        {
+          heading: 'Técnica Vocal K-pop y Español',
+          body: 'Nuestro currículo cubre técnicas vocales de K-pop, pronunciación coreana para letras, y estilo de actuación. Si se prepara para un debut o grabando su primer sencillo, construimos las habilidades que necesita.'
+        },
+        {
+          heading: 'Horarios Flexibles para Artistas en Giro',
+          body: 'Ofrecemos lecciones de fines de semana y noches para adaptarse a horarios de gira. Cursos intensivos disponibles para artistas que se preparan para un lanzamiento próximo.'
+        }
+      ]
+    },
+    {
+      hubKey: 'pricing',
+      title: 'Precios Transparentes para Clientes Internacionales',
+      items: [
+        {
+          heading: 'Múltiples Opciones de Pago',
+          body: 'Pague por transferencia bancaria (bancos coreanos locales), tarjeta de crédito o PayPal. Proporcionamos facturas detalladas en español para su contabilidad y registros fiscales.'
+        },
+        {
+          heading: 'Sin Costos Ocultos',
+          body: 'Todos los precios incluyen ingeniería profesional. Fotos de sesión y un informe de resumen se incluyen con cada reserva. Lo que ve es lo que paga.'
+        }
+      ]
+    },
+    {
+      hubKey: 'studio-info',
+      title: 'Equipo que Realmente Usarás',
+      items: [
+        {
+          heading: 'Guía de Selección de Micrófono',
+          body: '¿No sabe qué micrófono es adecuado para su voz? Nuestros ingenieros brindan una consulta gratuita de 15 minutos para emparejar su estilo vocal con el micrófono perfecto.'
+        },
+        {
+          heading: 'Recomendaciones por Género Musical',
+          body: 'Ya sea que grabe reggaetón, balada, rock o música electrónica, tenemos configuraciones de equipo adaptadas por género. Dinos tu género y prepararemos la cadena de señal óptima antes de tu llegada.'
+        }
+      ]
+    }
+  ],
+  vi: [
+    {
+      hubKey: 'about',
+      title: 'Cho Nghệ Sĩ Việt Nam Tại Hàn Quốc',
+      items: [
+        {
+          heading: 'Hướng dẫn Visa Nghệ sĩ & KOMCA',
+          body: 'Quy trình nhập cư Hàn Quốc và đăng ký quyền tác giả có thể phức tạp. Chúng tôi đồng hành bạn từ visa C-4 đến đăng ký tại Korean Music Copyright Association (KOMCA), để bạn tập trung sáng tạo âm nhạc.'
+        },
+        {
+          heading: 'Trải nghiệm Studio bằng Tiếng Việt',
+          body: 'Mọi giao tiếp đều bằng tiếng Việt. Kỹ sư của chúng tôi ghi chép mọi buổi session, cung cấp hợp đồng tiếng Việt để bạn an tâm.'
+        },
+        {
+          heading: 'Phân phối Toàn cầu Miễn phí',
+          body: 'Mỗi gói sản xuất bao gồm phân phối miễn phí đến Spotify, Apple Music, YouTube Music qua đối tác Audioguy. Giữ 70% doanh thu streaming của bạn.'
+        }
+      ]
+    },
+    {
+      hubKey: 'lesson',
+      title: 'Bài học Âm nhạc cho Nghệ sĩ Nước ngoài',
+      items: [
+        {
+          heading: 'Kỹ thuật Hát K-pop & Tiếng Hàn',
+          body: 'Chương trình giảng dạy bao gồm kỹ thuật thanh nhạc K-pop, phát âm tiếng Hàn cho lời bài hát, và phong cách biểu diễn. Dù bạn chuẩn bị ra mắt hay thu âm single đầu tiên, chúng tôi xây dựng kỹ năng bạn cần.'
+        },
+        {
+          heading: 'Lịch học Linh hoạt cho Nghệ sĩ Lưu động',
+          body: 'Chúng tôi cung cấp buổi học cuối tuần và buổi tối để phù hợp với lịch biểu diễn. Khóa học intensives có sẵn cho nghệ sĩ chuẩn bị phát hành.'
+        }
+      ]
+    },
+    {
+      hubKey: 'pricing',
+      title: 'Giá Minh bạch cho Khách quốc tế',
+      items: [
+        {
+          heading: 'Nhiều Phương thức Thanh toán',
+          body: 'Thanh toán bằng chuyển khoản ngân hàng (ngân hàng Hàn Quốc), thẻ tín dụng hoặc PayPal. Chúng tôi cung cấp hóa đơn chi tiết bằng tiếng Việt cho kế toán và hồ sơ thuế.'
+        },
+        {
+          heading: 'Không Chi phí Ẩn',
+          body: 'Tất cả giá đã bao gồm kỹ thuật chuyên nghiệp. Ảnh session và báo cáo tóm tắt được bao gồm với mỗi đặt lịch. Thấy giá nào trả giá đó.'
+        }
+      ]
+    },
+    {
+      hubKey: 'studio-info',
+      title: 'Thiết bị Bạn sẽ Thực sự Sử dụng',
+      items: [
+        {
+          heading: 'Hướng dẫn Chọn Micro',
+          body: 'Không biết micro nào phù hợp với giọng hát? Kỹ sư tư vấn miễn phí 15 phút để chọn micro hoàn hảo cho phong cách giọng hát của bạn.'
+        },
+        {
+          heading: 'Đề xuất theo Thể loại Âm nhạc',
+          body: 'Dù bạn thu hip-hop, ballad, rock hay electronic, chúng tôi có thiết bị chuẩn bị sẵn theo thể loại. Hãy cho chúng tôi biết thể loại của bạn và chúng tôi sẽ chuẩn bị chuỗi tín hiệu tối ưu trước khi bạn đến.'
+        }
+      ]
+    }
+  ],
+  th: [
+    {
+      hubKey: 'about',
+      title: 'สำหรับศิลปินไทยในเกาหลี',
+      items: [
+        {
+          heading: 'คำแนะนำวีซ่าศิลปิน & KOMCA',
+          body: 'กระบวนการเข้าเมืองเกาหลีและการจดทะเบียนลิขสิทธิ์อาจซับซ้อน เราช่วยเหลือคุณตั้งแต่วีซ่า C-4 จนถึงการจดทะเบียนที่ Korean Music Copyright Association (KOMCA) เพื่อให้คุณมุ่งเน้นการสร้างดนตรี'
+        },
+        {
+          heading: 'ประสบการณ์สตูดิโอภาษาไทย',
+          body: 'การสื่อสารทั้งหมดเป็นภาษาไทย วิศวกรของเราบันทึกทุกเซสชันเป็นลายลักษณ์อักษร และจัดเตรียมสัญญาเป็นภาษาไทยเพื่อความสบายใจของคุณ'
+        },
+        {
+          heading: 'จัดจำหน่ายทั่วโลกฟรี',
+          body: 'ทุกแพ็กเกจการผลิตมาพร้อมจัดจำหน่ายฟรีไปยัง Spotify, Apple Music, YouTube Music ผ่านพันธมิตร Audioguy เก็บรายได้สตรีมมิ่ง 70% ของคุณ'
+        }
+      ]
+    },
+    {
+      hubKey: 'lesson',
+      title: 'บทเรียนดนตรีสำหรับศิลปินต่างชาติ',
+      items: [
+        {
+          heading: 'เทคนิคการร้อง K-pop & ภาษาเกาหลี',
+          body: 'หลักสูตรครอบคลุมเทคนิคการร้อง K-pop การออกเสียงภาษาเกาหลีสำหรับเนื้อเพลง และสไตล์การแสดง ไม่ว่าคุณกำลังเตรียมเดบิวต์หรืออัดซิงเกิลแรก เราสร้างทักษะที่คุณต้องการ'
+        },
+        {
+          heading: 'ตารางเรียนยืดหยุ่นสำหรับศิลปินทัวร์',
+          body: 'มีบทเรียนวันหยุดสุดสัปดาห์และตอนเย็นเพื่อรองรับตารางทัวร์ มีคอร์สเข้มข้นสำหรับศิลปินที่กำลังเตรียมปล่อยผลงาน'
+        }
+      ]
+    },
+    {
+      hubKey: 'pricing',
+      title: 'ราคาโปร่งใสสำหรับลูกค้าต่างชาติ',
+      items: [
+        {
+          heading: 'หลายตัวเลือกการชำระเงิน',
+          body: 'ชำระเงินด้วยการโอนธนาคาร (ธนาคารเกาหลี), บัตรเครดิต หรือ PayPal เราออกใบแจ้งหนี้โดยละเอียดเป็นภาษาไทยสำหรับบัญชีและบันทึกภาษี'
+        },
+        {
+          heading: 'ไม่มีค่าใช้จ่ายแอบแฝง',
+          body: 'ราคาทั้งหมดรวมวิศวกรมืออาชีพ มีภาพเซสชันและรายงานสรุปทุกครั้งที่คุณจอง เห็นราคาไหนจ่ายราคา đó'
+        }
+      ]
+    },
+    {
+      hubKey: 'studio-info',
+      title: 'อุปกรณ์ที่คุณจะได้ใช้จริง',
+      items: [
+        {
+          heading: 'คู่มือเลือกไมโครโฟน',
+          body: 'ไม่รู้ว่าไมโครโฟนไหนเหมาะกับเสียงของคุณ? วิศวกรให้คำปรึกษาฟรี 15 นาที เพื่อจับคู่สไตล์เสียงของคุณกับไมโครโฟนที่สมบูรณ์แบบ'
+        },
+        {
+          heading: 'คำแนะนำตามแนวเพลง',
+          body: 'ไม่ว่าคุณจะอัดฮิปฮอป บัลลาด ร็อก หรืออิเล็กทรอนิกส์ เรามีอุปกรณ์เตรียมไว้ตามแนวเพลง บอกแนวเพลงของคุณและเราจะเตรียมสัญญาณที่เหมาะสมก่อนคุณมาถึง'
+        }
+      ]
+    }
+  ],
+  uz: [
+    {
+      hubKey: 'about',
+      title: "Koreyada San'atkorlar Uchun",
+      items: [
+        {
+          heading: "C-4 Vizasi va KOMCA Ro'yxatdan o'tish",
+          body: "Koreya immigratsiya va mualliflik huquqini ro'yxatga olish jarayoni murakkab bo'lishi mumkin. Biz sizni C-4 vizasidan Korean Music Copyright Association (KOMCA) ro'yxatigacha yo'l-yo'riq beramiz."
+        },
+        {
+          heading: "O'zbek tilida Studiya Tajribasi",
+          body: "Barcha muloqot o'zbek tilida. Muhandislarimiz har bir sessiyani yozma shaklda hujjatlashtiradi va xavfsizligingiz uchun o'zbek tilida shartnoma shablonlarini taqdim etadi."
+        },
+        {
+          heading: "Global Tarqatish Bepul",
+          body: "Har bir prodakshn paketi Audioguy hamkorligi orqali Spotify, Apple Music, YouTube Music ga bepul tarqatishni o'z ichiga oladi. Streaming daromadingizning 70% ni ushlab qoling."
+        }
+      ]
+    },
+    {
+      hubKey: 'lesson',
+      title: "Chet ellik San'atkorlar Uchun Musiqa Darslari",
+      items: [
+        {
+          heading: "K-pop Vokal Texnikasi va Koreys Tili",
+          body: "Dastur K-pop vokal texnikasi, koreys tilida so'zlar talaffuzi va sahna uslubini qamrab oladi."
+        },
+        {
+          heading: "G'arbiy San'atkorlar Uchun Moslashuvchan Jadval",
+          body: "G'arbiy san'atkorlar uchun dam olish kunlari va kechki darslar mavjud."
+        }
+      ]
+    },
+    {
+      hubKey: 'pricing',
+      title: "Chet Ellik Mijozlar Uchun Shaffof Narxlar",
+      items: [
+        {
+          heading: "Bir nechto To'lov Variantlari",
+          body: "Bank o'tkazmasi (mahalliy Koreya banklari), kredit karta yoki PayPal orqali to'lang."
+        },
+        {
+          heading: "Yashirin Xarajatlar Yo'q",
+          body: "Barcha narxlar professional muhandislikni o'z ichiga oladi."
+        }
+      ]
+    },
+    {
+      hubKey: 'studio-info',
+      title: "Aslida Foydalanadigan Uskunalar",
+      items: [
+        {
+          heading: "Mikrofon Tanlash Qo'llanmasi",
+          body: "Qaysi mikrofon sizning ovozingizga mos? Muhandislarimiz 15 daqiqalik bepul maslahat beradi."
+        },
+        {
+          heading: "Janr bo'yicha Tavsiyalar",
+          body: "Gip-hop, ballada, rok yoki elektron musiqa yozayotganingizdan qat'iy nazar, bizda janrga mos uskunalar mavjud."
+        }
+      ]
+    }
+  ]
+};
+
+/** Get locale-specific content blocks for hub pages (about, lesson, pricing, studio-info) */
+export const getHubLocaleContent = (locale: Locale, hubKey: string): HubLocaleContent | null => {
+  const allContent = hubLocaleContentData[locale] || [];
+  return allContent.find(c => c.hubKey === hubKey) || null;
+};

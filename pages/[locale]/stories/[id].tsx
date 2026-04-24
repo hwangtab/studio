@@ -138,6 +138,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
         canonical={story.isFallbackTranslation ? undefined : `/${locale}/stories/${story.slug}`}
         disableCanonicalAndAlternates={story.isFallbackTranslation}
+        availableLocales={story.availableLocales}
         ogImage={ogImage}
         ogImageAlt={story.thumbnail ? story.title : `${story.title} - ${siteConfig.name}`}
         ogImageWidth={isDynamicOg ? 1200 : undefined}

@@ -13,12 +13,12 @@ import ImageHero from '../../components/common/ImageHero';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 import { getServicesData } from '../../data/services';
+import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getReviews } from '../../data/reviews';
 import { generateHowToSchema, generateServiceListSchema } from '../../utils/schemaGenerator';
 
 import type { NextPageWithLayout } from '../../types';
@@ -41,10 +41,10 @@ const ICON_MAP: Record<string, LucideIcon> = {
 interface AboutProps {
   locale: Locale;
   servicesData: ReturnType<typeof getServicesData>;
-  reviewsData: ReturnType<typeof getReviews>;
+  hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
 }
 
-const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsData }) => {
+const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocaleContent }) => {
   const { t } = useTranslation('common', { lng: locale });
 
   const { coreServices, productionProcess, advantages } = servicesData;
@@ -87,7 +87,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
         includeSchema={true}
         webPageType="AboutPage"
         canonical={`/${locale}/about`}
-        reviewItems={reviewsData.filter((r) => r.categoryKey === 'production' || r.categoryKey === 'mixing')}
         schema={[howToSchema, serviceListSchema]}
       />
       <ImageHero
@@ -113,6 +112,25 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, reviewsDa
         }}
       />
 
+
+      {/* Locale-specific content block (non-KO hubs only) */}
+      {hubLocaleContent && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={Globe}
+            title={hubLocaleContent.title}
+            className="mb-8"
+          />
+          <div className="max-w-4xl mx-auto space-y-6">
+            {hubLocaleContent.items.map((item) => (
+              <BaseCard key={item.heading} variant="default" className="p-6">
+                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
+                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+              </BaseCard>
+            ))}
+          </div>
+        </Section>
+      )}
 
       <Section variant="alternate">
         <SectionHeading
@@ -353,13 +371,13 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<AboutProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const servicesData = getServicesData(locale);
-  const reviewsData = getReviews(locale);
+  const hubLocaleContent = getHubLocaleContent(locale, 'about');
 
   return buildPageStaticProps(
     locale,
     {
       servicesData,
-      reviewsData,
+      hubLocaleContent,
     },
     { revalidate: 86400, i18nSections: ['about', 'contact'] }
   );

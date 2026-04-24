@@ -22,7 +22,6 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import { loadCommonResourceServer } from '../../lib/i18n.server';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getReviews } from '../../data/reviews';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
@@ -145,7 +144,6 @@ const BENEFIT_ICONS: LucideIcon[] = [
 
 interface PracticeRoomProps {
   locale: Locale;
-  reviewsData: ReturnType<typeof getReviews>;
   /** 서버에서 미리 렌더한 관련 가이드 섹션 HTML (678개 내부 링크).
    *  React 트리에 포함되지 않아 하이드레이션 비용이 0이다.
    *  locale !== 'ko'면 빈 문자열. */
@@ -157,7 +155,7 @@ const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
 const RESIDENT_BENEFITS_ANIMATION = createFadeInAnimation();
 
-const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsData, relatedGuidesHtml }) => {
+const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGuidesHtml }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const practiceRoomFaqs = React.useMemo(() => ([
@@ -290,7 +288,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, reviewsDa
         canonical={`/${locale}/practice-room`}
         faqItems={practiceRoomFaqs}
         schema={practiceRoomSchema}
-        reviewItems={reviewsData.filter((r) => (r as { categoryKey?: string }).categoryKey === 'practice')}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
@@ -555,7 +552,6 @@ PracticeRoom.hasHero = true;
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  const reviewsData = getReviews(locale);
 
   // 서버에서 "관련 가이드" 678개 링크의 HTML 문자열을 미리 생성해 클라이언트로 전달.
   // 동시에 i18n의 practiceRoom.relatedGuides.items 배열(17KB)을 __NEXT_DATA__에서
@@ -589,7 +585,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const result = buildPageStaticProps(
     locale,
     {
-      reviewsData,
       relatedGuidesHtml,
     },
     { revalidate: 86400, i18nSections: ['practiceRoom'] }

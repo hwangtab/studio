@@ -16,7 +16,7 @@ const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
-import { getReviews } from '../../data/reviews';
+import { getHubLocaleContent } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
@@ -57,10 +57,10 @@ const CurriculumCard = ({ step, title, subtitle, description, icon: Icon, delay 
 
 interface LessonProps {
     locale: Locale;
-    reviewsData: ReturnType<typeof getReviews>;
+    hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
 }
 
-const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
+const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) => {
     const { t } = useTranslation('common', { lng: locale });
     const siteConfig = getSiteConfig(locale);
 
@@ -129,7 +129,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                 includeSchema={true}
                 isCourse
                 faqItems={lessonQuickAnswers}
-                reviewItems={reviewsData}
                 breadcrumbs={[
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },
@@ -169,6 +168,25 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, reviewsData }) => {
                 items={lessonQuickAnswers}
                 variant="default"
             />
+
+            {/* Locale-specific content block (non-KO hubs only) */}
+            {hubLocaleContent && (
+              <Section variant="alternate">
+                <SectionHeading
+                  icon={BookOpen}
+                  title={hubLocaleContent.title}
+                  className="mb-8"
+                />
+                <div className="max-w-4xl mx-auto space-y-6">
+                  {hubLocaleContent.items.map((item) => (
+                    <BaseCard key={item.heading} variant="default" className="p-6">
+                      <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
+                      <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+                    </BaseCard>
+                  ))}
+                </div>
+              </Section>
+            )}
 
             {/* Intro Section */}
             <Section variant="default">
@@ -394,11 +412,11 @@ Lesson.hasHero = true;
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const locale = resolveLocaleParam(params?.locale);
-    const reviewsData = getReviews(locale);
+    const hubLocaleContent = getHubLocaleContent(locale, 'lesson');
     return buildPageStaticProps(
         locale,
         {
-            reviewsData,
+            hubLocaleContent,
         },
         { revalidate: 86400, i18nSections: ['lesson'] }
     );

@@ -54,6 +54,7 @@ export interface StoryDetail extends Story {
   robots?: string;
   modifiedDate?: string; // ISO 8601 from file mtime
   faq?: StoryFAQItem[];
+  availableLocales: Locale[]; // Locales with a native translation file — used to gate hreflang alternates
 }
 
 /**

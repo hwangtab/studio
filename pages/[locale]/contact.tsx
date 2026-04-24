@@ -11,7 +11,6 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getFaqData } from '../../data/faq';
-import { getReviews } from '../../data/reviews';
 import { NextPageWithLayout } from '../../types';
 
 import { getValidationFallbacks } from '../../utils/contactMessages';
@@ -21,7 +20,6 @@ import { createEnterAnimation, createInViewEnterAnimation } from '../../utils/an
 
 interface ContactProps {
   locale: Locale;
-  reviewsData: ReturnType<typeof getReviews>;
 }
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -51,7 +49,7 @@ const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps)
   </div>
 );
 
-const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
+const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
 
   const validationCopy = getValidationFallbacks(locale);
@@ -131,7 +129,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale, reviewsData }) => {
         canonical={`/${locale}/contact`}
         faqItems={contactFaqData}
         webPageType="ContactPage"
-        reviewItems={reviewsData}
         schema={contactPageSchema}
       />
       <ImageHero
@@ -503,8 +500,7 @@ Contact.hasHero = true;
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  const reviewsData = getReviews(locale);
-  return buildPageStaticProps(locale, { reviewsData }, { revalidate: 86400, i18nSections: ['contact'] });
+  return buildPageStaticProps(locale, {}, { revalidate: 86400, i18nSections: ['contact'] });
 };
 
 export default Contact;

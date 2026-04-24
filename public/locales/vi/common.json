@@ -71,7 +71,13 @@
     "sections": {
       "galleryTitle": "Không gian & thiết bị dành cho bạn",
       "servicesTitle": "Dịch vụ của chúng tôi",
-      "servicesCta": "Tìm hiểu thêm"
+      "servicesCta": "Tìm hiểu thêm",
+      "featuredTitle": "Nổi Bật Tháng Này"
+    },
+    "featured": {
+      "typePortfolio": "Portfolio",
+      "typeStory": "Câu chuyện",
+      "typePage": "Trang"
     },
     "cta": {
       "titleLine1": "Âm thanh bạn tưởng tượng,",
@@ -116,7 +122,7 @@
     "seo": {
       "keywords": "Studio NOL, quy trình sản xuất âm nhạc, sản xuất âm nhạc, phòng thu, mixing mastering, phân phối nhạc, lập kế hoạch âm nhạc, thiết bị analog",
       "title": "Kỹ sư 10 năm · Analog · 5 phút từ ga Yeonsinnae | Studio NOL",
-      "description": "Studio NOL tại Eunpyeong-gu, Seoul — 5 phút đi bộ từ ga Yeonsinnae. Kỹ sư với hơn 10 năm kinh nghiệm cùng thiết bị analog vintage cung cấp sản xuất âm nhạc toàn diện: lập kế hoạch, thu âm, mixing, mastering và phân phối. Tư vấn miễn phí qua KakaoTalk."
+      "description": "Studio NOL Eunpyeong-gu, Seoul — 5 phút từ ga Yeonsinnae. Kỹ sư 10+ năm cùng thiết bị analog, sản xuất âm nhạc trọn gói. Tư vấn KakaoTalk miễn phí."
     },
     "howToTitle": "Cách sản xuất âm nhạc tại Studio NOL",
     "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp."
@@ -602,8 +608,8 @@
   },
   "stories": {
     "seo": {
-      "title": "Stories - Nhật ký dự án Studio NOL",
-      "description": "Khám phá nhật ký dự án, đánh giá thiết bị và phỏng vấn nghệ sĩ tại Studio NOL. Tìm hiểu quy trình sản xuất âm nhạc chuyên nghiệp từ góc nhìn kỹ sư.",
+      "title": "Hướng Dẫn Thu Âm, Mixing & Sản Xuất Vocal | Studio NOL",
+      "description": "1,500+ bài hướng dẫn thực chiến về thu âm vocal, mixing, mastering, EQ và sản xuất K-pop từ kỹ sư Studio NOL tại Seoul.",
       "keywords": "stories Studio NOL, review sản xuất, câu chuyện sản xuất âm nhạc",
       "fallbackKeywords": "Studio NOL, phòng thu âm, sản xuất âm nhạc, học thanh nhạc, mixing mastering, phòng tập nhạc"
     },

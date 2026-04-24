@@ -7,6 +7,7 @@ import { ArrowLeft, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import PortfolioDetailSummary from '../../../components/portfolio/PortfolioDetailSummary';
+import PortfolioDetailBody from '../../../components/portfolio/PortfolioDetailBody';
 import { getPortfolioItems, getCategories } from '../../../data/portfolio';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
 import { shareContent } from '../../../utils/shareUtils';
@@ -62,6 +63,12 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
     title: item.title,
     description: item.description,
   });
+
+  // Thin-content gate: only index pages that have productionNotes in the current locale.
+  // Items without productionNotes will be noindexed until data is populated.
+  // WARNING: Only enable this gate AFTER all 30 portfolio items have productionNotes.
+  const hasProductionNotes = item.productionNotes && item.productionNotes[locale];
+  const isThinPortfolio = !hasProductionNotes;
   const ogImageDimensions = getImageDimensions(item.image);
 
   const categoryInfo = getCategoryInfo(item.category, categories);
@@ -73,6 +80,12 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
       image: schemaImage,
       url: `${siteConfig.url}/${locale}/portfolio/${item.id}`,
       genre: categoryInfo.name,
+      // Pass production metadata for richer schema (only when available)
+      ...(item.productionNotes && { productionNotes: item.productionNotes }),
+      ...(item.credits && { credits: item.credits }),
+      ...(item.releaseDate && { datePublished: item.releaseDate }),
+      ...(item.label && { label: item.label }),
+      ...(item.trackList && { trackList: item.trackList }),
     },
     siteConfig.url,
     locale
@@ -106,6 +119,9 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         includeSchema
         schema={portfolioSchema}
         keywords={`${item.artist}, ${item.title}, ${item.services.join(', ')}, ${siteConfig.name}`}
+        // Thin-content gate: noindex pages without productionNotes.
+        // Enable this line only after all 30 portfolio items have productionNotes.
+        {...(isThinPortfolio && { robots: 'noindex, follow' })}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
@@ -165,6 +181,20 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
               }
             />
           </m.div>
+          <PortfolioDetailBody
+            item={item}
+            locale={locale}
+            labels={{
+              productionNotesTitle: t('portfolio.detail.productionNotes', '프로덕션 노트'),
+              creditsTitle: t('portfolio.detail.credits', '크레딧'),
+              creditsEngineer: t('portfolio.detail.creditsEngineer', '엔지니어'),
+              creditsMusicians: t('portfolio.detail.creditsMusicians', '연주자'),
+              creditsGear: t('portfolio.detail.creditsGear', '사용 장비'),
+              trackListTitle: t('portfolio.detail.trackList', '트랙 리스트'),
+              releaseDateLabel: t('portfolio.detail.releaseDate', '발매일'),
+              labelLabel: t('portfolio.detail.label', '레이블'),
+            }}
+          />
         </div>
       </Section>
       <Section variant="alternate" className="py-12">

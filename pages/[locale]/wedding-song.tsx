@@ -20,7 +20,6 @@ const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getReviews } from '../../data/reviews';
 import { getPricingData } from '../../data/pricing';
 import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
@@ -28,7 +27,6 @@ import type { NextPageWithLayout } from '../../types';
 
 interface WeddingSongProps {
   locale: Locale;
-  reviewsData: ReturnType<typeof getReviews>;
   pricingData: ReturnType<typeof getPricingData>;
 }
 
@@ -37,7 +35,7 @@ const INTRO_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 
 const INTRO_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
 const PROCESS_ANIMATION = createFadeInAnimation({ delay: 0.2 });
 
-const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData, pricingData }) => {
+const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
@@ -160,7 +158,6 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, reviewsData
         canonical={`/${locale}/wedding-song`}
         faqItems={faqItems}
         schema={pageSchema}
-        reviewItems={reviewsData}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.weddingSong'), path: `/${locale}/wedding-song` },
@@ -380,11 +377,10 @@ WeddingSong.hasHero = true;
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  const reviewsData = getReviews(locale);
   const pricingData = getPricingData(locale);
   return buildPageStaticProps(
     locale,
-    { reviewsData, pricingData },
+    { pricingData },
     { revalidate: 86400, i18nSections: ['weddingSong'] }
   );
 };

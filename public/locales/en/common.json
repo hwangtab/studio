@@ -71,7 +71,13 @@
     "sections": {
       "galleryTitle": "Space & Equipment for You",
       "servicesTitle": "Our Services",
-      "servicesCta": "Learn More"
+      "servicesCta": "Learn More",
+      "featuredTitle": "Featured This Month"
+    },
+    "featured": {
+      "typePortfolio": "Portfolio",
+      "typeStory": "Story",
+      "typePage": "Page"
     },
     "cta": {
       "titleLine1": "The Sound You Imagined,",
@@ -114,8 +120,8 @@
       "imageAlt": "Neumann U87AI condenser microphone at Studio NOL"
     },
     "seo": {
-      "title": "10-Year Engineers · Analog Gear · 5 min from Yeonsinnae | About Studio NOL",
-      "description": "Studio NOL in Eunpyeong-gu, Seoul — 5 min from Yeonsinnae Station. 10+ years of engineering expertise and vintage analog gear deliver end-to-end music production: planning, recording, mixing, mastering, and distribution. Free KakaoTalk consultation.",
+      "title": "Seoul Recording Studio · 10-Year Engineers | Studio NOL",
+      "description": "Studio NOL in Eunpyeong-gu, Seoul — 5 min from Yeonsinnae. 10+ years of engineering, vintage analog gear, end-to-end music production. Free KakaoTalk consult.",
       "keywords": "Studio NOL, music production process, music production, recording studio, mixing mastering, music distribution, music planning, analog equipment"
     },
     "howToTitle": "How to Produce Music at Studio NOL",
@@ -204,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Practice ₩20K/hr · Wedding Vocal ₩150K · Voiceover ₩30K | Studio NOL Seoul",
-      "description": "Transparent pricing at Studio NOL, Seoul (Eunpyeong-gu): practice room ₩20K/hr with monthly lease, recording from ₩20K/hr, wedding vocal package ₩150K+, voiceover ₩30K/hr, full mixing & mastering plans. Up to 30% package discount. Free estimate via KakaoTalk.",
+      "title": "Wedding Vocal ₩150K · Voiceover ₩30K/hr | Studio NOL",
+      "description": "Studio NOL Seoul transparent pricing: practice room ₩20K/hr, wedding vocal ₩150K+, voiceover ₩30K/hr, mixing & mastering. Up to 30% package off. Free quote.",
       "keywords": "recording fees, voiceover recording quote, studio rental price, mixing price, mastering price, Studio NOL",
       "schemaTitle": "Studio NOL Service Pricing"
     },
@@ -602,8 +608,8 @@
   },
   "stories": {
     "seo": {
-      "title": "Music Production Reviews & Studio Stories | Studio NOL",
-      "description": "Discover recording and mixing project reviews, gear insights, artist interviews, and behind-the-scenes music production stories from Studio NOL.",
+      "title": "Recording, Mixing & Vocal Production Guides | Studio NOL",
+      "description": "1,500+ practical guides on vocal recording, mixing, mastering, EQ, compression, and K-pop production by Studio NOL engineers in Seoul.",
       "keywords": "Studio NOL stories, production reviews, music production stories",
       "fallbackKeywords": "Studio NOL, Yeonsinnae recording studio, music production, vocal lesson, mixing mastering, practice room"
     },

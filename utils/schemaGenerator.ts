@@ -1,6 +1,7 @@
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
 import { getSiteConfig, socialProfiles } from '../data/siteConfig';
+import { getReviews } from '../data/reviews';
 
 const OFFER_CATALOG_NAMES: Record<Locale, string> = {
   ko: '스튜디오 서비스', en: 'Studio Services', zh: '工作室服务',
@@ -42,11 +43,14 @@ export const getSchemaLanguage = (locale: Locale): string => schemaLanguageByLoc
 
 export const generateDefaultSchema = (
   siteUrl: string,
-  reviewItems?: ReviewItem[] | null,
   locale: Locale = 'ko'
 ) => {
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
+
+  // LocalBusiness aggregateRating must reflect the business as a whole, so always
+  // sourced from the canonical full review set — independent of any per-page filter.
+  const reviewItems: ReviewItem[] = getReviews(locale);
 
   const localeContactUrl = `${siteUrl}/${locale}/contact`;
   const socialLinks = Object.values(socialProfiles).filter(url => url && url.trim() !== '');
@@ -689,6 +693,18 @@ export interface MusicRecordingInput {
   datePublished?: string;
   genre?: string;
   duration?: string;
+  /** 3–5 paragraph production notes (partial locale-map). When present, enables indexing. */
+  productionNotes?: Partial<Record<Locale, string>>;
+  /** Credit block: engineer, musicians, gear */
+  credits?: {
+    engineer?: string;
+    musicians?: string[];
+    gear?: string[];
+  };
+  /** Record label */
+  label?: string;
+  /** Track list with optional duration */
+  trackList?: { no: number; title: string; duration?: string }[];
 }
 
 export const generateMusicRecordingSchema = (
@@ -697,6 +713,26 @@ export const generateMusicRecordingSchema = (
   locale: Locale = 'ko'
 ) => {
   const config = getSiteConfig(locale);
+
+  // Build workExample from trackList if available
+  const workExample = item.trackList && item.trackList.length > 0
+    ? item.trackList.map(track => ({
+        '@type': 'MusicRecording' as const,
+        name: track.title,
+        duration: track.duration,
+      }))
+    : undefined;
+
+  // Build performer from credits
+  const performer = item.credits
+    ? {
+        '@type': 'MusicGroup' as const,
+        name: item.artist,
+        hasMember: item.credits.musicians
+          ? item.credits.musicians.map(name => ({ '@type': 'MusicGroup' as const, name }))
+          : undefined,
+      }
+    : undefined;
 
   return {
     '@context': 'https://schema.org',
@@ -727,6 +763,21 @@ export const generateMusicRecordingSchema = (
     ...(item.datePublished && { datePublished: item.datePublished }),
     ...(item.genre && { genre: item.genre }),
     ...(item.duration && { duration: item.duration }),
+    ...(item.label && { license: `${siteUrl}/#${item.label}` }),
+    ...(item.productionNotes?.[locale] && { description: item.productionNotes[locale] }),
+    ...(item.credits && {
+      contributor: item.credits.engineer
+        ? { '@type': 'Organization', name: item.credits.engineer }
+        : undefined,
+    }),
+    ...(item.credits?.gear && item.credits.gear.length > 0 && {
+      instrument: item.credits.gear.map((name) => ({
+        '@type': 'MusicalInstrument' as const,
+        name,
+      })),
+    }),
+    ...(workExample && { workExample }),
+    ...(performer && { performer }),
   };
 };
 

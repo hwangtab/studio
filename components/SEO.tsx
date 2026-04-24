@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import Head from 'next/head';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
+import { Breadcrumb, FAQItem } from '../types/data';
 import {
   generateDefaultSchema,
   generateArticleSchema,
@@ -40,9 +40,15 @@ interface SEOProps {
   articleWordCount?: number;
   breadcrumbs?: Breadcrumb[] | null;
   faqItems?: FAQItem[] | null;
-  reviewItems?: ReviewItem[] | null;
   isCourse?: boolean;
   webPageType?: string;
+  /**
+   * Restrict hreflang alternates to this list of locales.
+   * Use for pages that exist only in some locales (e.g. a story with native translations
+   * only for ko/en) to avoid pointing Google at fallback-noindex URLs.
+   * If omitted, hreflang is emitted for every configured locale.
+   */
+  availableLocales?: readonly Locale[];
 }
 
 const SEO = ({
@@ -70,9 +76,9 @@ const SEO = ({
   articleWordCount,
   breadcrumbs = null,
   faqItems = null,
-  reviewItems = null,
   isCourse = false,
   webPageType,
+  availableLocales,
 }: SEOProps) => {
   const router = useRouter();
 
@@ -138,8 +144,8 @@ const SEO = ({
       : canonicalUrl;
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl, reviewItems, currentLocale),
-    [siteUrl, reviewItems, currentLocale]
+    () => generateDefaultSchema(siteUrl, currentLocale),
+    [siteUrl, currentLocale]
   );
 
   const websiteSchema = React.useMemo(
@@ -328,18 +334,22 @@ const SEO = ({
 
       {!disableCanonicalAndAlternates && <link rel="canonical" href={normalizedCanonical} />}
 
-      {/* Hreflang tags for SEO */}
+      {/* Hreflang tags for SEO.
+          Limit to locales that actually have native content to avoid directing Google
+          at fallback-noindex pages (e.g. stories without full translations). */}
       {shouldRenderAlternates && (
-        locales.map((locale) => (
-          <link
-            key={`hreflang-${locale}`}
-            rel="alternate"
-            hrefLang={hreflangByLocale[locale]}
-            href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
-          />
-        ))
+        locales
+          .filter((locale) => !availableLocales || availableLocales.includes(locale))
+          .map((locale) => (
+            <link
+              key={`hreflang-${locale}`}
+              rel="alternate"
+              hrefLang={hreflangByLocale[locale]}
+              href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+            />
+          ))
       )}
-      {shouldRenderAlternates && (
+      {shouldRenderAlternates && (!availableLocales || availableLocales.includes(defaultLocale)) && (
         <link
           rel="alternate"
           hrefLang="x-default"
