@@ -42,7 +42,9 @@
     "postbuild": "rm -f public/sitemap*.xml public/robots.txt && next-sitemap && node scripts/normalize-sitemap-hreflang.js",
     "test": "jest",
     "content-check": "node scripts/content-quality-check.js --korean",
-    "content-check:ci": "node scripts/content-quality-check.js --korean --ci"
+    "content-check:ci": "node scripts/content-quality-check.js --korean --ci",
+    "audit:thin": "node scripts/audit-thin-content.js --summary",
+    "audit:thin:ci": "node scripts/audit-thin-content.js --fail"
   },
   "browserslist": {
     "production": [

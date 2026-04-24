@@ -278,7 +278,7 @@ uz 42,395B  (45%)
 | Phase 0.1-D (zh/es/vi/th/uz productionNotes) | ⏳ 보류 | 기계 번역 품질 리스크 |
 | Phase 1 (locale 언어 일관성 복구) | ✅ 완료 | zh localeUsps 3개 블록 한국어 혼재 제거 · th localeUsps 베트남어 오타 수정 · zh fallbackKeywords 한글 지명 음차 |
 | Phase 2 (믹싱 시리즈 pillar 링크 보강) | ✅ 완료 | 23편 전부 `mixing-complete-guide` 허브 연결 |
-| Phase 3 (품질 감사 스크립트) | ✅ 완료 | `npm run audit:thin` 등록, 222건 thin 감지 작동 |
+| Phase 3 (품질 감사 스크립트) | ✅ 완료 | `npm run audit:thin`/`audit:thin:ci` 등록, 의도적 noindex 분리 로직 추가. **현재 actionable thin 0건** (14건 전체가 의도적 noindex) |
 
 ## 9. 변경 이력
 
@@ -287,3 +287,4 @@ uz 42,395B  (45%)
 | 2026-04-22 | 초안 작성. Phase -1 (hreflang·RSS 필터) 선행 커밋 반영 |
 | 2026-04-24 | Phase 0.1-A/B/C 완료. 포트폴리오 en 번역 100% · credits 100% · 중복 제거. 믹싱 23편에 pillar 허브 역링크 주입. audit:thin npm script 등록 |
 | 2026-04-24 (2) | Phase 1 완료. zh 홈 localeUsps에 섞여있던 한국어 100% 중국어화. th localeUsps의 베트남어 단어 오타 수정. 비-KO locale 허브 언어 일관성 시그널 회복 |
+| 2026-04-24 (3) | Phase 3 감사 스크립트 고도화. `robots: noindex` 페이지를 actionable thin에서 분리. 최종 상태: actionable thin 0건 · 의도적 noindex 14건 (`done1`·`bulgwang-mixing-club` 공지 locale 번역본) |
