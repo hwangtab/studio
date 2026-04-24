@@ -382,15 +382,42 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Premium 24h Mashg'ulot Xonasi Yeonsinnae | Studio NOL",
-      "description": "Eunpyeong-gu'da premium tovush izolyatsiyali mashg'ulot xonalari, Yeonsinnae bekatidan 5 daqiqada. 24/7 kirish, barcha cholg'u asboblar bilan. ₩400K/oydan.",
-      "keywords": "mashg'ulot xonasi, tovush izolyatsiyali mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, private studio, Studio NOL"
+      "title": "Eunpyeong-gu'dagi eng arzon mashgʻulot xonasi · Oyiga 300 000 KRW'dan | Studio Nol Yeonsinnae",
+      "description": "Eunpyeong-gu'dagi eng qulay oylik mashgʻulot xonasi. Zakaladsiz · Birinchi oyga 10% chegirma · 24/7 tovush izolyatsiyasi · Tunab qolish mumkin · Yeonsinnae bekatidan 5 daqiqada.",
+      "keywords": "Seul mashgʻulot xonasi, Eunpyeong mashgʻulot xonasi, Yeonsinnae mashgʻulot xonasi, oylik mashgʻulot xonasi, 24/7 mashgʻulot xonasi, tovush izolyatsiyali xona, shaxsiy mashgʻulot xonasi, eng arzon mashgʻulot xonasi, vokal xonasi, klaviatura xonasi"
     },
     "hero": {
-      "title": "Premium tovush izolyatsiyali mashg'ulot xonasi",
-      "subtitleLine1": "Musiqangizni optimal muhitda mashq qiling.",
-      "subtitleLine2": "Turli uskunalar va qulayliklarga ega premium studioda musiqadan bahramand bo'ling.",
+      "title": "Oyiga ₩300K'dan · Eunpyeong-gu'da 24/7 tovush izolyatsiyali xona",
+      "subtitleLine1": "Eunpyeong-gu'dagi eng qulay oylik ijara. Zakaladsiz · Birinchi oyga 10% chegirma · Tunab qolish mumkin.",
+      "subtitleLine2": "Vokal · klaviatura · yozuv — premium oylik ijara.",
       "alt": "Studio NOL mashg'ulot xonasi"
+    },
+    "pricing": {
+      "eyebrow": "Eunpyeong-gu'da eng past narx",
+      "title": "Oyiga 300 000 KRW'dan, Eunpyeong-gu'dagi eng qulay xona",
+      "subtitle": "Zakaladsiz · Birinchi oyga 10% · 24/7 foydalanish + tunab qolish",
+      "priceLabel": "Oylik",
+      "priceValue": "₩300K'dan",
+      "priceCaption": "QQS kiritilmagan · kommunal kiritilgan",
+      "badges": [
+        {
+          "label": "Zakalad yoʻq",
+          "caption": "Qoʻshimcha yuk yoʻq, oldindan oylik"
+        },
+        {
+          "label": "Birinchi oyga 10%",
+          "caption": "Faqat yangi ijarachilar uchun"
+        },
+        {
+          "label": "24/7 + tunab qolish",
+          "caption": "Uzoq mashgʻulot · shaxsiy qulf"
+        },
+        {
+          "label": "Oylik shartnoma",
+          "caption": "1 oydan boshlab"
+        }
+      ],
+      "note": "1 oydan boshlang — yengil boshlash va zakaladsiz."
     },
     "painPoints": {
       "title": "Quyidagi muammolar sizda bormi?",
@@ -454,6 +481,7 @@
       "items": [
         {
           "title": "Premium yozuv studiyasi katta chegirma bilan",
+          "valueBadge": "Yiliga 800K KRW qiymatida",
           "points": [
             "Har oy yozuv studiyasidan 1 soat bepul foydalanish (oddiy narx: 3 soatga 200 000 KRW)",
             "Musiqangizni eng yuqori darajadagi professional jihozlar bilan yozing"
@@ -461,6 +489,7 @@
         },
         {
           "title": "Bepul musiqa tarqatish xizmati",
+          "valueBadge": "Sof foydaning 70%i sanʼatkorga",
           "points": [
             "AudioGuy va The Orchard orqali butun dunyodagi barcha platformalarda tarqatish",
             "Sof daromadning 70% sanoatkorga to'lanadi (sohada eng yuqori ko'rsatkich)"
@@ -468,6 +497,7 @@
         },
         {
           "title": "Bepul press-reliz tayyorlash va OAVga tarqatish",
+          "valueBadge": "Har bir relizga 300K KRW qiymatida",
           "points": [
             "Albom chiqarish, konsert va boshqa musiqiy yangiliklar uchun professional press-reliz",
             "San'at sohasidagi NewsArt nashrida e'lon qilish va asosiy OAVga tarqatish",
@@ -476,6 +506,7 @@
         },
         {
           "title": "Busking uchun ovoz jihozlarini bepul ijaraga berish",
+          "valueBadge": "2M KRW qiymatidagi jihoz",
           "points": [
             "Roland CUBE Street EX2 amplifikator 2 dona (jami 100W)",
             "Mikrofon + kabel + stand to'plami",
@@ -485,6 +516,7 @@
         },
         {
           "title": "Mutaxassisdan fikr-mulohaza va maslahat",
+          "valueBadge": "Har bir sessiyaga 100K KRW qiymatida",
           "points": [
             "Korean Music Award nominantlari va sovrindorlarini tayyorlagan prodyuserdan tajriba",
             "Yuqori sifatli monitoring sharoitida musiqani batafsil tahlil qilish",
@@ -494,6 +526,7 @@
         },
         {
           "title": "Crowdfunding bo'yicha konsalting",
+          "valueBadge": "Cheksiz konsultatsiya",
           "points": [
             "Loyihangizga mos platformalar (Tumblbug, Wadiz va h.k.) tavsiyasi",
             "Maqsad summasi, mukofotlar va muddatlarni rejalashtirish",
@@ -504,6 +537,7 @@
         },
         {
           "title": "San'at qo'llab-quvvatlash dasturlari haqida ma'lumot",
+          "valueBadge": "Real vaqt yangilanishlar",
           "points": [
             "KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture va boshqalardan eng so'nggi ma'lumotlar",
             "Faoliyatingiz va tajribangizga mos dasturlar tavsiyasi",
@@ -514,6 +548,7 @@
         },
         {
           "title": "Asboblarni bepul ijaraga olish",
+          "valueBadge": "Bepul ijara",
           "points": [
             "Elektr drel, ombir, otvyortka va boshqa ko'plab asboblar",
             "Jihozni o'rnatish yoki ta'mirlash kerak bo'lganda istalgan vaqt foydalanish mumkin"
@@ -550,20 +585,24 @@
           "a": "Xonalar orasidagi shovqinni kamaytirish uchun broadcast darajasidagi STC tovush izolyatsiyasidan foydalanamiz. Vokal, voiceover va MIDI ishlarida juda yaxshi immersion beradi."
         },
         {
-          "q": "Musiqa mashg'ulot xonasini ijaraga olish narxi qancha?",
-          "a": "Soatlik ijara xona hajmiga qarab 8,000–25,000 KRW. Oylik ijara 300,000 KRW/oydan boshlanadi. Agar oyda 30 soatdan ko'p mashq qilsangiz, oylik ijara ancha tejamkor."
+          "q": "Mashgʻulot xonasi narxi qancha?",
+          "a": "Oylik paket 300 000 KRW'dan boshlanadi (zakaladsiz), Eunpyeong-gu'dagi eng qulay narx. Birinchi oyga 10% chegirma. 24/7 shaxsiy qulf, isitish/sovutish va asbob-uskuna saqlash kiritilgan."
         },
         {
           "q": "Oylik mashg'ulot xonasi ijarasi shartlari qanday?",
           "a": "Garovsiz — oldindan to'lanadigan oylik asos. Minimal shartnoma 1 oy, 24/7 individual qulf kirish, asbob/uskunalar saqlash va individual havo nazorati kiritilgan. Birinchi oy 10% chegirma."
+        },
+        {
+          "q": "Mashgʻulot xonasida tunab qolish mumkinmi?",
+          "a": "Ha — oylik ijarachilar uzoq mashgʻulotlar, konsertga tayyorgarlik yoki tungi yozuvlar uchun xonada uzoq vaqt qolishlari mumkin. Shaxsiy qulf, alohida iqlim va 24/7 kirish bilan tunab qolish mumkin. Jihozlardan foydalanish haqida batafsil maʼlumot ijara suhbatida beriladi."
         }
       ]
     },
     "cta": {
-      "titleLine1": "Optimal fokus,",
-      "titleHighlight": "Eng yaxshi natija",
-      "subtitleLine1": "Qulay muhitda 24/7 faqat musiqaga e'tibor qarating.",
-      "subtitleLine2": "Bugun kelib ko'zdan kechiring.",
+      "titleLine1": "Eunpyeong-gu'dagi eng qulay 300 000 KRW/oy'dan",
+      "titleHighlight": "24/7 professional muhit eksklyuziv",
+      "subtitleLine1": "Yuqori darajadagi tovush izolyatsiyasi · iqlim · hi-end monitoring · oylik cheksiz foydalanish",
+      "subtitleLine2": "Hoziroq maslahat oling va birinchi oyga 10% chegirma oling.",
       "location": "Manzil",
       "inquiry": "So'rov",
       "imageAlt": "Studio NOL mashg'ulot xonasi"
@@ -650,7 +689,7 @@
       },
       "practice": {
         "title": "O'zingizning musiqa mashg'ulot xonangiz kerakmi?",
-        "descriptionLine1": "24 soatlik ovoz izolyatsiyali musiqa mashg'ulot xonasi — oylik ₩300,000 dan yoki soatlik ijara.",
+        "descriptionLine1": "24 soatlik tovush izolyatsiyali musiqa mashgʻulot xonasi — oylik ₩300,000'dan. Eunpyeong-gu'dagi eng qulay narx.",
         "descriptionLine2": "Yeonsinnae bekatidan 5 daqiqa piyoda. Vokal, pianino va klaviatura jihozlangan shaxsiy musiqa mashg'ulot xonasi.",
         "primaryText": "Musiqa mashg'ulot xonasini ko'rish",
         "secondaryText": "Yashash bo'yicha so'rov",
@@ -689,7 +728,7 @@
       "mixing": "Miks va mastering",
       "business": "Musiqa biznesi",
       "event": "Tadbirlar"
-      }
+    }
   },
   "reviewSection": {
     "titlePrefix": "Birga yaratamiz:",

@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -67,12 +67,14 @@ const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: 
 interface BenefitItem {
   title: string;
   points: string[];
+  valueBadge?: string;
 }
 
 const BenefitCard = ({
   icon: Icon,
   title,
   points,
+  valueBadge,
   delay = 0,
   locale,
   calendarLinkLabel,
@@ -81,6 +83,7 @@ const BenefitCard = ({
   icon: LucideIcon;
   title: string;
   points: string[];
+  valueBadge?: string;
   delay?: number;
   locale: Locale;
   calendarLinkLabel?: string;
@@ -93,6 +96,14 @@ const BenefitCard = ({
       </div>
       <h3 className="typo-card-title">{title}</h3>
     </div>
+    {valueBadge && (
+      <div className="mb-3">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary/10 to-secondary/10 text-primary dark:text-primary-light border border-primary/20">
+          <Sparkles size={12} aria-hidden="true" />
+          {valueBadge}
+        </span>
+      </div>
+    )}
     <ul className="space-y-2">
       {points.map((point, idx) => {
         const showLink =
@@ -142,12 +153,98 @@ const BENEFIT_ICONS: LucideIcon[] = [
   Wrench,
 ];
 
+const PRICING_BADGE_ICONS: LucideIcon[] = [Wallet, Gift, Lock, CalendarDays];
+
+interface PricingBadge {
+  label: string;
+  caption: string;
+}
+
+const PriceLeader = ({
+  eyebrow,
+  title,
+  subtitle,
+  priceLabel,
+  priceValue,
+  priceCaption,
+  badges,
+  note,
+  locale,
+}: {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  priceLabel: string;
+  priceValue: string;
+  priceCaption: string;
+  badges: PricingBadge[];
+  note: string;
+  locale: Locale;
+}) => (
+  <Section variant="default" className="py-12">
+    <div className="max-w-5xl mx-auto">
+      <div className="text-center mb-8">
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold shadow-sm">
+          <Trophy size={14} aria-hidden="true" />
+          {eyebrow}
+        </span>
+        <h2
+          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+        >
+          {title}
+        </h2>
+        <p className={`typo-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+          {subtitle}
+        </p>
+      </div>
+      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-6 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-2xl p-6 md:p-8 border border-primary/10">
+        <div className="text-center md:text-left md:border-r md:border-primary/20 md:pr-6">
+          <p className="typo-caption text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+            {priceLabel}
+          </p>
+          <p className="text-4xl md:text-5xl font-bold text-primary dark:text-primary-light leading-tight">
+            {priceValue}
+          </p>
+          <p className="typo-caption text-gray-500 dark:text-gray-400 mt-2">
+            {priceCaption}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {badges.map((badge, idx) => {
+            const BadgeIcon = PRICING_BADGE_ICONS[idx] ?? Check;
+            return (
+              <div key={idx} className="flex items-start gap-3">
+                <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-full text-primary dark:text-primary-light flex-shrink-0">
+                  <BadgeIcon size={16} aria-hidden="true" />
+                </div>
+                <div>
+                  <p className={`font-semibold text-gray-900 dark:text-gray-100 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                    {badge.label}
+                  </p>
+                  <p className={`typo-caption text-gray-600 dark:text-gray-400 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                    {badge.caption}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <p className={`text-center typo-caption text-gray-500 dark:text-gray-400 mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+        {note}
+      </p>
+    </div>
+  </Section>
+);
+
 interface PracticeRoomProps {
   locale: Locale;
-  /** 서버에서 미리 렌더한 관련 가이드 섹션 HTML (678개 내부 링크).
-   *  React 트리에 포함되지 않아 하이드레이션 비용이 0이다.
-   *  locale !== 'ko'면 빈 문자열. */
-  relatedGuidesHtml: string;
+  /** 초기 노출 32개 가이드의 서버 렌더 HTML. locale !== 'ko'면 빈 문자열. */
+  relatedGuidesVisibleHtml: string;
+  /** 접힘 상태로 렌더되는 나머지 가이드 HTML. 크롤러는 HTML로 그대로 탐색 가능. */
+  relatedGuidesHiddenHtml: string;
+  /** 접힘 안에 들어있는 가이드 개수 (0이면 더보기 토글 숨김). */
+  relatedGuidesHiddenCount: number;
 }
 
 const PAIN_POINTS_ANIMATION = createFadeInAnimation();
@@ -155,43 +252,22 @@ const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
 const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
 const RESIDENT_BENEFITS_ANIMATION = createFadeInAnimation();
 
-const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGuidesHtml }) => {
+const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
+  locale,
+  relatedGuidesVisibleHtml,
+  relatedGuidesHiddenHtml,
+  relatedGuidesHiddenCount,
+}) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
-  const practiceRoomFaqs = React.useMemo(() => ([
-    {
-      question: t('practiceRoom.faq.items.0.q'),
-      answer: t('practiceRoom.faq.items.0.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.1.q'),
-      answer: t('practiceRoom.faq.items.1.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.2.q'),
-      answer: t('practiceRoom.faq.items.2.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.3.q'),
-      answer: t('practiceRoom.faq.items.3.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.4.q'),
-      answer: t('practiceRoom.faq.items.4.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.5.q'),
-      answer: t('practiceRoom.faq.items.5.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.6.q'),
-      answer: t('practiceRoom.faq.items.6.a'),
-    },
-    {
-      question: t('practiceRoom.faq.items.7.q'),
-      answer: t('practiceRoom.faq.items.7.a'),
-    },
-  ]), [t]);
+  const practiceRoomFaqs = React.useMemo(
+    () =>
+      Array.from({ length: 9 }, (_, i) => ({
+        question: t(`practiceRoom.faq.items.${i}.q`),
+        answer: t(`practiceRoom.faq.items.${i}.a`),
+      })),
+    [t]
+  );
 
   const practiceRoomQuickAnswers = React.useMemo(() => practiceRoomFaqs.slice(0, 3), [practiceRoomFaqs]);
 
@@ -209,11 +285,37 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGu
           const points = ((entry as { points: unknown[] }).points).filter(
             (p): p is string => typeof p === 'string'
           );
-          return { title: (entry as { title: string }).title, points };
+          const vb = (entry as { valueBadge?: unknown }).valueBadge;
+          return {
+            title: (entry as { title: string }).title,
+            points,
+            valueBadge: typeof vb === 'string' ? vb : undefined,
+          };
         }
         return null;
       })
       .filter((b): b is BenefitItem => b !== null);
+  }, [t]);
+
+  const pricingBadges = React.useMemo<PricingBadge[]>(() => {
+    const raw = t('practiceRoom.pricing.badges', { returnObjects: true });
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((entry): PricingBadge | null => {
+        if (
+          entry &&
+          typeof entry === 'object' &&
+          typeof (entry as { label?: unknown }).label === 'string' &&
+          typeof (entry as { caption?: unknown }).caption === 'string'
+        ) {
+          return {
+            label: (entry as { label: string }).label,
+            caption: (entry as { caption: string }).caption,
+          };
+        }
+        return null;
+      })
+      .filter((b): b is PricingBadge => b !== null);
   }, [t]);
   const residentBenefitsCalendarLabel = t('practiceRoom.residentBenefits.calendarLinkLabel');
   const residentBenefitsCalendarUrl = t('practiceRoom.residentBenefits.calendarLinkUrl');
@@ -279,10 +381,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGu
         title={t('practiceRoom.seo.title')}
         description={t('practiceRoom.seo.description')}
         keywords={t('practiceRoom.seo.keywords')}
-        ogImage="/images/room5.webp"
+        ogImage="/images/room7.webp"
         ogImageAlt={t('practiceRoom.hero.alt')}
         ogImageWidth={1440}
-        ogImageHeight={810}
+        ogImageHeight={809}
         includeSchema={true}
         webPageType="ItemPage"
         canonical={`/${locale}/practice-room`}
@@ -313,6 +415,20 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGu
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
         ]}
       />
+
+      {pricingBadges.length > 0 && (
+        <PriceLeader
+          eyebrow={t('practiceRoom.pricing.eyebrow')}
+          title={t('practiceRoom.pricing.title')}
+          subtitle={t('practiceRoom.pricing.subtitle')}
+          priceLabel={t('practiceRoom.pricing.priceLabel')}
+          priceValue={t('practiceRoom.pricing.priceValue')}
+          priceCaption={t('practiceRoom.pricing.priceCaption')}
+          badges={pricingBadges}
+          note={t('practiceRoom.pricing.note')}
+          locale={locale}
+        />
+      )}
 
       <QuickAnswers
         title={t('practiceRoom.faq.title')}
@@ -452,6 +568,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGu
                   icon={BENEFIT_ICONS[idx] ?? Sparkles}
                   title={benefit.title}
                   points={benefit.points}
+                  valueBadge={benefit.valueBadge}
                   delay={0.05 * idx}
                   locale={locale}
                   calendarLinkLabel={residentBenefitsCalendarLabel}
@@ -472,7 +589,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGu
 
       <ReviewSection variant="default" locale={locale} />
 
-      {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO) */}
+      {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO)
+          초기 32개 노출, 나머지는 <details> JS-free 접기 패턴.
+          서버사이드 렌더 HTML이라 크롤러는 접힌 링크도 전부 탐색 가능.
+          HTML 문자열은 getStaticProps에서 escapeHtml + 고정 slug 배열로 생성 — 외부 입력 없음. */}
       {locale === 'ko' && (
         <Section variant="default" className="py-10" defer>
           <div className="max-w-5xl mx-auto">
@@ -481,12 +601,31 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({ locale, relatedGu
               title={t('practiceRoom.relatedGuides.title')}
               className="mb-6"
             />
+            {/* eslint-disable-next-line react/no-danger */}
             <div
               className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-              // 678개 관련 가이드 링크 — 서버사이드에서 미리 HTML 문자열로 렌더링되어
-              // React 트리에 포함되지 않음. 하이드레이션 비용 0. 크롤러는 HTML 링크 그대로 탐색.
-              dangerouslySetInnerHTML={{ __html: relatedGuidesHtml }}
+              dangerouslySetInnerHTML={{ __html: relatedGuidesVisibleHtml }}
             />
+            {relatedGuidesHiddenCount > 0 && (
+              <details className="mt-6 group">
+                <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light transition-colors">
+                  <span className="group-open:hidden">
+                    가이드 +{relatedGuidesHiddenCount}개 더 보기
+                  </span>
+                  <span className="hidden group-open:inline">접기</span>
+                  <ChevronDown
+                    size={16}
+                    className="transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </summary>
+                {/* eslint-disable-next-line react/no-danger */}
+                <div
+                  className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3"
+                  dangerouslySetInnerHTML={{ __html: relatedGuidesHiddenHtml }}
+                />
+              </details>
+            )}
           </div>
         </Section>
       )}
@@ -554,9 +693,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
 
   // 서버에서 "관련 가이드" 678개 링크의 HTML 문자열을 미리 생성해 클라이언트로 전달.
+  // 초기 32개(visible) + 나머지(hidden)로 split — hidden은 <details>로 접힘.
+  // 크롤러는 HTML 링크 그대로 탐색하므로 SEO 가치는 유지되고, 초기 뷰포트는 가벼워진다.
   // 동시에 i18n의 practiceRoom.relatedGuides.items 배열(17KB)을 __NEXT_DATA__에서
-  // 제외해 페이로드를 줄인다. React 트리에 반영되지 않으므로 하이드레이션 비용도 0.
-  let relatedGuidesHtml = '';
+  // 제외해 페이로드를 줄인다.
+  const VISIBLE_GUIDES = 32;
+  let relatedGuidesVisibleHtml = '';
+  let relatedGuidesHiddenHtml = '';
+  let relatedGuidesHiddenCount = 0;
+
   if (locale === 'ko') {
     const full = loadCommonResourceServer('ko');
     const items = ((full as Record<string, unknown>).practiceRoom as
@@ -573,19 +718,31 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           .replace(/'/g, '&#39;');
       const cls = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200';
       const arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>';
-      relatedGuidesHtml = PRACTICE_ROOM_RELATED_SLUGS
-        .map((slug, idx) => {
-          const title = escapeHtml(items[idx] ?? slug);
-          return `<a href="/ko/stories/${slug}" class="${cls}"><span>${title}</span>${arrowSvg}</a>`;
-        })
+      const renderLink = (slug: string, idx: number): string => {
+        const title = escapeHtml(items[idx] ?? slug);
+        return `<a href="/ko/stories/${slug}" class="${cls}"><span>${title}</span>${arrowSvg}</a>`;
+      };
+      const total = PRACTICE_ROOM_RELATED_SLUGS.length;
+      relatedGuidesVisibleHtml = PRACTICE_ROOM_RELATED_SLUGS
+        .slice(0, VISIBLE_GUIDES)
+        .map((slug, idx) => renderLink(slug, idx))
         .join('');
+      if (total > VISIBLE_GUIDES) {
+        relatedGuidesHiddenHtml = PRACTICE_ROOM_RELATED_SLUGS
+          .slice(VISIBLE_GUIDES)
+          .map((slug, idx) => renderLink(slug, idx + VISIBLE_GUIDES))
+          .join('');
+        relatedGuidesHiddenCount = total - VISIBLE_GUIDES;
+      }
     }
   }
 
   const result = buildPageStaticProps(
     locale,
     {
-      relatedGuidesHtml,
+      relatedGuidesVisibleHtml,
+      relatedGuidesHiddenHtml,
+      relatedGuidesHiddenCount,
     },
     { revalidate: 86400, i18nSections: ['practiceRoom'] }
   );

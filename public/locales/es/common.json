@@ -383,15 +383,42 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Sala de práctica premium 24h en Eunpyeong | Studio NOL",
-      "description": "Salas de práctica insonorizadas en Eunpyeong-gu, a 5 min de la estación Yeonsinnae. Acceso 24/7, batería y equipo completo incluidos. Plan mensual desde ₩400K.",
-      "keywords": "sala de práctica, sala insonorizada, sala de práctica en Eunpyeong, estudio privado, Studio NOL"
+      "title": "Sala de ensayo más barata de Eunpyeong-gu · Desde 300.000 KRW/mes | Studio Nol Yeonsinnae",
+      "description": "La sala de ensayo mensual más accesible en Eunpyeong-gu. Sin depósito · 10% dto. primer mes · Insonorizada 24h · Pernocta permitida · A 5 min de Yeonsinnae.",
+      "keywords": "sala de ensayo Seúl, sala de ensayo Eunpyeong, sala de ensayo Yeonsinnae, sala de ensayo mensual, sala 24h, sala insonorizada, sala privada, sala más barata Seúl, sala de voz, sala de teclado"
     },
     "hero": {
-      "title": "Sala de práctica insonorizada premium",
-      "subtitleLine1": "Practica tu música en un entorno óptimo.",
-      "subtitleLine2": "Disfruta de un estudio premium con diversos equipos e instalaciones.",
+      "title": "Desde ₩300K/mes · Sala de ensayo insonorizada 24h en Eunpyeong-gu",
+      "subtitleLine1": "La residencia mensual más accesible de Eunpyeong-gu. Sin depósito · 10% dto. primer mes · Pernocta permitida.",
+      "subtitleLine2": "Voz · teclado · enlace de grabación — una residencia mensual premium.",
       "alt": "Sala de práctica de Studio NOL"
+    },
+    "pricing": {
+      "eyebrow": "Mejor precio de Eunpyeong-gu",
+      "title": "Desde 300.000 KRW/mes, la sala de ensayo más razonable de Eunpyeong-gu",
+      "subtitle": "Sin depósito · 10% dto. primer mes · Acceso 24/7 + pernocta",
+      "priceLabel": "Mensual",
+      "priceValue": "Desde ₩300K",
+      "priceCaption": "IVA no incl. · servicios incluidos",
+      "badges": [
+        {
+          "label": "Sin depósito",
+          "caption": "Sin carga extra, pago mensual anticipado"
+        },
+        {
+          "label": "10% dto. primer mes",
+          "caption": "Solo nuevos residentes"
+        },
+        {
+          "label": "24/7 + pernocta",
+          "caption": "Estancias largas · cerradura individual"
+        },
+        {
+          "label": "Contrato mensual",
+          "caption": "Desde solo 1 mes"
+        }
+      ],
+      "note": "Empieza con un solo mes, sin compromiso y sin depósito."
     },
     "painPoints": {
       "title": "¿Tienes estos problemas?",
@@ -455,6 +482,7 @@
       "items": [
         {
           "title": "Descuento en estudio de grabación premium",
+          "valueBadge": "Valor: ₩800K/año",
           "points": [
             "1 hora de estudio de grabación gratis al mes (precio normal: 200 000 KRW por 3 horas)",
             "Capta tu música con equipo profesional de gama alta"
@@ -462,6 +490,7 @@
         },
         {
           "title": "Distribución musical gratuita",
+          "valueBadge": "70% del beneficio para el artista",
           "points": [
             "Distribución mundial en todas las plataformas a través de AudioGuy & The Orchard",
             "70% del beneficio neto para el artista (la tasa más alta del sector)"
@@ -469,6 +498,7 @@
         },
         {
           "title": "Notas de prensa y difusión gratuitas",
+          "valueBadge": "Valor: ₩300K por release",
           "points": [
             "Redacción profesional de notas de prensa para lanzamientos y conciertos",
             "Publicación en el medio artístico NewsArt y difusión a medios principales",
@@ -477,6 +507,7 @@
         },
         {
           "title": "Alquiler gratuito de equipo de sonido para busking",
+          "valueBadge": "Valor: ₩2M en equipo",
           "points": [
             "2 amplificadores Roland CUBE Street EX2 (100W en total)",
             "Micrófonos, cables y soportes incluidos",
@@ -486,6 +517,7 @@
         },
         {
           "title": "Asesoría y feedback profesional",
+          "valueBadge": "Valor: ₩100K por sesión",
           "points": [
             "Experiencia de un productor con varias nominaciones y premios Korean Music Award",
             "Análisis detallado en un entorno de monitorización de alta calidad",
@@ -495,6 +527,7 @@
         },
         {
           "title": "Asesoría de crowdfunding",
+          "valueBadge": "Consulta ilimitada",
           "points": [
             "Recomendación de plataformas (Tumblbug, Wadiz, etc.) según tu proyecto",
             "Definición de meta, recompensas y duración",
@@ -505,6 +538,7 @@
         },
         {
           "title": "Información sobre subvenciones artísticas",
+          "valueBadge": "Actualizaciones en tiempo real",
           "points": [
             "Información actualizada de KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture, etc.",
             "Recomendaciones de ayudas según tu trayectoria",
@@ -515,6 +549,7 @@
         },
         {
           "title": "Préstamo gratuito de herramientas",
+          "valueBadge": "Préstamo gratuito",
           "points": [
             "Taladros eléctricos, alicates, destornilladores y más",
             "Disponibles en cualquier momento para instalar o reparar equipo"
@@ -551,20 +586,24 @@
           "a": "Usamos un diseño STC de nivel broadcast para minimizar el ruido entre salas. Ideal para voces, locuciones y trabajo MIDI."
         },
         {
-          "q": "¿Cuánto cuesta alquilar una sala de ensayo musical?",
-          "a": "El alquiler por horas varía entre 8,000 y 25,000 KRW según el tamaño de la sala. La residencia mensual comienza desde 300,000 KRW/mes. Si practicas más de 30 horas al mes, la residencia mensual es mucho más económica."
+          "q": "¿Cuánto cuesta la sala de ensayo?",
+          "a": "Los planes mensuales comienzan desde 300.000 KRW (sin depósito), el precio más razonable de Eunpyeong-gu. 10% de descuento el primer mes. Incluye acceso 24h con cerradura individual, climatización y almacenamiento de instrumentos."
         },
         {
           "q": "¿Cuáles son las condiciones para la residencia mensual?",
           "a": "Sin depósito requerido — pago mensual anticipado. Contrato mínimo de 1 mes, con acceso individual 24/7, almacenamiento de instrumentos/equipos y control de climatización individual incluidos. 10% de descuento el primer mes."
+        },
+        {
+          "q": "¿Se puede pernoctar en la sala de ensayo?",
+          "a": "Sí — los residentes pueden extender su estancia para sesiones largas, preparación de shows o grabaciones nocturnas. Con cerradura individual, climatización privada y acceso 24/7, se permite pernoctar. Los detalles de las instalaciones se explican durante la consulta de residencia."
         }
       ]
     },
     "cta": {
-      "titleLine1": "Enfoque óptimo,",
-      "titleHighlight": "mejores resultados",
-      "subtitleLine1": "Concéntrate solo en la música en un entorno cómodo 24/7.",
-      "subtitleLine2": "Visítanos hoy para un recorrido.",
+      "titleLine1": "Desde los 300.000 KRW/mes más razonables de Eunpyeong-gu",
+      "titleHighlight": "Acceso 24/7 a un entorno profesional",
+      "subtitleLine1": "Insonorización de primer nivel · climatización · monitoreo hi-end · uso mensual ilimitado",
+      "subtitleLine2": "Consulta ahora y obtén un 10% de descuento el primer mes.",
       "location": "Ubicación",
       "inquiry": "Consulta",
       "imageAlt": "Sala de práctica de Studio NOL"
@@ -652,7 +691,7 @@
       },
       "practice": {
         "title": "¿Necesitas tu propia sala de práctica musical?",
-        "descriptionLine1": "Sala de práctica musical insonorizada 24h — mensual desde ₩300,000 o por horas.",
+        "descriptionLine1": "Sala de práctica musical insonorizada 24h — mensual desde ₩300,000. El precio más razonable de Eunpyeong-gu.",
         "descriptionLine2": "A 5 min andando de la estación Yeonsinnae. Sala de práctica individual con vocal, piano y teclado.",
         "primaryText": "Ver sala de práctica musical",
         "secondaryText": "Consulta de residencia",
@@ -691,7 +730,7 @@
       "mixing": "Mezcla y masterización",
       "business": "Negocio musical",
       "event": "Eventos"
-      }
+    }
   },
   "reviewSection": {
     "titlePrefix": "Creando Juntos:",

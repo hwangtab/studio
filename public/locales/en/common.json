@@ -383,15 +383,42 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Premium 24h Practice Room in Eunpyeong | Studio NOL",
-      "description": "Premium soundproof practice rooms 5 min from Yeonsinnae Station. Open 24/7, drums and full gear included. Monthly residency from ₩400K. First month 10% off.",
-      "keywords": "practice room, soundproof practice room, Eunpyeong practice room, private studio, Studio NOL"
+      "title": "Cheapest Practice Room in Eunpyeong-gu · From ₩300K/mo | Studio Nol Yeonsinnae",
+      "description": "The most affordable monthly music practice room in Eunpyeong-gu. ₩0 deposit · First month 10% off · 24/7 soundproof access · Overnight stays welcome · 5 min from Yeonsinnae Station.",
+      "keywords": "music practice room Seoul, Eunpyeong practice room, Yeonsinnae practice room, monthly practice room, cheapest practice room Seoul, no deposit practice room, 24/7 practice room, soundproof practice room, private practice room, vocal practice room, keyboard practice room"
     },
     "hero": {
-      "title": "Premium Soundproof Practice Room",
-      "subtitleLine1": "Practice your music in an optimal environment.",
-      "subtitleLine2": "Enjoy music in a premium studio with various equipment and facilities.",
+      "title": "From ₩300K/mo — Eunpyeong-gu 24/7 Soundproof Practice Room",
+      "subtitleLine1": "The most affordable monthly residency in Eunpyeong-gu. ₩0 deposit · First month 10% off · Overnight stays welcome.",
+      "subtitleLine2": "Vocal · keyboard · recording — a premium monthly residency.",
       "alt": "Studio NOL Practice Room"
+    },
+    "pricing": {
+      "eyebrow": "Lowest Price in Eunpyeong-gu",
+      "title": "From ₩300K/mo — the most reasonable practice room in Eunpyeong-gu",
+      "subtitle": "₩0 deposit · 10% off first month · 24/7 access + overnight stays",
+      "priceLabel": "Monthly",
+      "priceValue": "From ₩300K",
+      "priceCaption": "VAT excl. · utilities included",
+      "badges": [
+        {
+          "label": "₩0 deposit",
+          "caption": "No extra burden, prepaid monthly"
+        },
+        {
+          "label": "10% off first month",
+          "caption": "For new residents only"
+        },
+        {
+          "label": "24/7 + Overnight",
+          "caption": "Extended stays · Individual door lock"
+        },
+        {
+          "label": "1-month contract",
+          "caption": "Start from just 1 month"
+        }
+      ],
+      "note": "Start with a single month — low-commitment and deposit-free."
     },
     "painPoints": {
       "title": "Are you having these troubles?",
@@ -455,6 +482,7 @@
       "items": [
         {
           "title": "Premium Recording Studio Discount",
+          "valueBadge": "Worth ₩800K/yr",
           "points": [
             "1 hour of recording studio use free every month (regular price: KRW 200,000 for 3 hours)",
             "Capture your music with top-tier professional equipment"
@@ -462,6 +490,7 @@
         },
         {
           "title": "Free Music Distribution",
+          "valueBadge": "70% net profit to artist",
           "points": [
             "Worldwide distribution to all major platforms via AudioGuy & The Orchard",
             "70% of net profits paid to the artist (highest rate in the industry)"
@@ -469,6 +498,7 @@
         },
         {
           "title": "Free Press Release & Media Outreach",
+          "valueBadge": "Worth ₩300K per release",
           "points": [
             "Professional press releases for album releases, performances, and more",
             "Published on the arts journal NewsArt and distributed to major media outlets",
@@ -477,6 +507,7 @@
         },
         {
           "title": "Free Busking Sound Equipment Rental",
+          "valueBadge": "Worth ₩2M in gear",
           "points": [
             "2 × Roland CUBE Street EX2 amps (100W total)",
             "Microphones, cables, and stands fully included",
@@ -486,6 +517,7 @@
         },
         {
           "title": "Expert Feedback & Consulting",
+          "valueBadge": "Worth ₩100K per session",
           "points": [
             "Know-how from a producer with multiple Korean Music Award nominations and wins",
             "Detailed analysis in a high-end monitoring environment",
@@ -495,6 +527,7 @@
         },
         {
           "title": "Crowdfunding Consulting",
+          "valueBadge": "Unlimited consulting",
           "points": [
             "Platform recommendations (Tumblbug, Wadiz, etc.) based on your project",
             "Goal setting, reward design, and timeline planning",
@@ -505,6 +538,7 @@
         },
         {
           "title": "Arts Grant Program Information",
+          "valueBadge": "Real-time updates",
           "points": [
             "Latest grant info from KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture, and more",
             "Grant recommendations matched to your career and activities",
@@ -515,6 +549,7 @@
         },
         {
           "title": "Free Tool Rental",
+          "valueBadge": "Free to borrow",
           "points": [
             "Power drills, nippers, pliers, screwdriver sets, and more",
             "Available anytime for equipment installation or repairs"
@@ -551,20 +586,24 @@
           "a": "We use broadcast-grade STC soundproofing to minimize noise between rooms. It provides excellent immersion for vocals, voiceovers, and MIDI work."
         },
         {
-          "q": "How much does it cost to rent a music practice room?",
-          "a": "Hourly rates range from 8,000–25,000 KRW depending on room size. Monthly residency starts from 300,000 KRW/month. If you practice more than 30 hours per month, monthly residency is much more economical."
+          "q": "How much does the practice room cost?",
+          "a": "Monthly plans start from ₩300K (no deposit), the most reasonable price in Eunpyeong-gu. First month 10% off. Includes 24/7 door-lock access, HVAC, and instrument storage."
         },
         {
           "q": "What are the conditions for monthly music practice room residency?",
           "a": "No deposit required — prepaid monthly basis. Minimum contract is 1 month, with 24/7 individual door lock access, instrument/equipment storage, and individual HVAC control included. First month 10% discount available."
+        },
+        {
+          "q": "Can I stay overnight at the practice room?",
+          "a": "Yes — residents can extend their stay for long sessions, show prep, or late-night recording. With individual door-lock access, private HVAC, and 24/7 entry, overnight stays are welcome. Detailed facilities will be explained during the residency inquiry."
         }
       ]
     },
     "cta": {
-      "titleLine1": "Optimal Focus,",
-      "titleHighlight": "Best Results",
-      "subtitleLine1": "Focus only on music in a comfortable environment 24/7.",
-      "subtitleLine2": "Visit us today to take a tour.",
+      "titleLine1": "From the most reasonable ₩300K/mo in Eunpyeong-gu",
+      "titleHighlight": "24/7 Pro Studio Exclusive",
+      "subtitleLine1": "Top-tier soundproofing · HVAC · hi-end monitoring · unlimited monthly access",
+      "subtitleLine2": "Inquire now and get 10% off your first month.",
       "location": "Location",
       "inquiry": "Inquiry",
       "imageAlt": "Studio NOL Practice Room"
@@ -652,7 +691,7 @@
       },
       "practice": {
         "title": "Need Your Own Music Practice Room?",
-        "descriptionLine1": "24-hour soundproof music practice room — monthly from ₩300,000 or hourly rental.",
+        "descriptionLine1": "24-hour soundproof music practice room — monthly from ₩300,000. The most reasonable price in Eunpyeong-gu.",
         "descriptionLine2": "5-min walk from Yeonsinnae Station. Private music practice room with vocal, piano & keyboard.",
         "primaryText": "View Music Practice Room",
         "secondaryText": "Residency Inquiry",

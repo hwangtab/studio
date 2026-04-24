@@ -383,15 +383,42 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Phòng tập 24h premium tại Eunpyeong | Studio NOL",
-      "description": "Phòng tập cách âm cao cấp tại Eunpyeong-gu, 5 phút đi bộ từ ga Yeonsinnae. Mở 24/7, đầy đủ trống và nhạc cụ. Gói tháng từ ₩400K, giảm 10% tháng đầu.",
-      "keywords": "phòng tập, phòng tập cách âm, phòng tập Eunpyeong, studio riêng, Studio NOL"
+      "title": "Phòng tập rẻ nhất Eunpyeong-gu · Từ 300.000 KRW/tháng | Studio Nol Yeonsinnae",
+      "description": "Phòng tập nhạc thuê tháng hợp lý nhất Eunpyeong-gu. Không cọc · Giảm 10% tháng đầu · Cách âm 24h · Ở qua đêm được · 5 phút từ ga Yeonsinnae.",
+      "keywords": "phòng tập nhạc Seoul, phòng tập Eunpyeong, phòng tập Yeonsinnae, thuê tháng phòng tập, phòng tập 24h, phòng tập cách âm, phòng tập riêng, phòng tập rẻ nhất, phòng tập thanh nhạc, phòng tập phím"
     },
     "hero": {
-      "title": "Phòng tập cách âm premium",
-      "subtitleLine1": "Luyện tập trong môi trường tối ưu cho âm nhạc.",
-      "subtitleLine2": "Tận hưởng studio premium với nhiều thiết bị và tiện ích.",
+      "title": "Từ 300K KRW/tháng · Phòng tập cách âm 24h Eunpyeong-gu",
+      "subtitleLine1": "Thuê tháng hợp lý nhất Eunpyeong-gu. Không cọc · Giảm 10% tháng đầu · Ở qua đêm được.",
+      "subtitleLine2": "Thanh nhạc · phím · thu âm — trải nghiệm thuê tháng cao cấp.",
       "alt": "Phòng tập Studio NOL"
+    },
+    "pricing": {
+      "eyebrow": "Giá thấp nhất Eunpyeong-gu",
+      "title": "Từ 300.000 KRW/tháng, phòng tập hợp lý nhất Eunpyeong-gu",
+      "subtitle": "Không cọc · Giảm 10% tháng đầu · 24/7 + ở qua đêm",
+      "priceLabel": "Hàng tháng",
+      "priceValue": "Từ ₩300K",
+      "priceCaption": "Chưa VAT · Đã gồm phí quản lý",
+      "badges": [
+        {
+          "label": "Không cọc",
+          "caption": "Không gánh nặng, thanh toán tháng trước"
+        },
+        {
+          "label": "Giảm 10% tháng đầu",
+          "caption": "Chỉ dành cho người mới"
+        },
+        {
+          "label": "24/7 + ở qua đêm",
+          "caption": "Làm việc dài · khóa riêng"
+        },
+        {
+          "label": "Hợp đồng theo tháng",
+          "caption": "Bắt đầu từ 1 tháng"
+        }
+      ],
+      "note": "Bắt đầu từ 1 tháng, không áp lực và không cần cọc."
     },
     "painPoints": {
       "title": "Bạn có gặp những vấn đề này?",
@@ -455,6 +482,7 @@
       "items": [
         {
           "title": "Ưu đãi phòng thu cao cấp",
+          "valueBadge": "Trị giá 800K KRW/năm",
           "points": [
             "Miễn phí 1 giờ phòng thu mỗi tháng (giá thường: 200.000 KRW cho 3 giờ)",
             "Ghi lại âm nhạc của bạn với thiết bị chuyên nghiệp hàng đầu"
@@ -462,6 +490,7 @@
         },
         {
           "title": "Phát hành nhạc miễn phí",
+          "valueBadge": "70% lợi nhuận cho nghệ sĩ",
           "points": [
             "Phát hành toàn cầu trên mọi nền tảng qua AudioGuy & The Orchard",
             "70% lợi nhuận ròng trả cho nghệ sĩ (mức cao nhất ngành)"
@@ -469,6 +498,7 @@
         },
         {
           "title": "Soạn thảo và phát hành thông cáo báo chí miễn phí",
+          "valueBadge": "Trị giá 300K KRW/lần",
           "points": [
             "Soạn thông cáo chuyên nghiệp cho ra mắt album, biểu diễn, v.v.",
             "Đăng trên báo nghệ thuật chuyên ngành NewsArt và phân phối tới các báo lớn",
@@ -477,6 +507,7 @@
         },
         {
           "title": "Cho mượn thiết bị âm thanh busking miễn phí",
+          "valueBadge": "Thiết bị trị giá 2M KRW",
           "points": [
             "2 amply Roland CUBE Street EX2 (tổng 100W)",
             "Mic + cáp + chân micro đầy đủ",
@@ -486,6 +517,7 @@
         },
         {
           "title": "Phản hồi và tư vấn chuyên gia",
+          "valueBadge": "Trị giá 100K KRW/buổi",
           "points": [
             "Kinh nghiệm từ nhà sản xuất từng được đề cử và đoạt giải Korean Music Award",
             "Phân tích chi tiết trong môi trường monitor cao cấp",
@@ -495,6 +527,7 @@
         },
         {
           "title": "Tư vấn gọi vốn cộng đồng",
+          "valueBadge": "Tư vấn không giới hạn",
           "points": [
             "Đề xuất nền tảng phù hợp (Tumblbug, Wadiz, v.v.) theo dự án",
             "Lên kế hoạch mục tiêu, phần thưởng và thời gian",
@@ -505,6 +538,7 @@
         },
         {
           "title": "Thông tin chương trình hỗ trợ nghệ thuật",
+          "valueBadge": "Cập nhật thời gian thực",
           "points": [
             "Thông tin mới nhất từ KOCCA, Arts Council Korea, Quỹ Nghệ thuật Seoul, v.v.",
             "Đề xuất chương trình phù hợp với hoạt động và hồ sơ của bạn",
@@ -515,6 +549,7 @@
         },
         {
           "title": "Cho mượn dụng cụ miễn phí",
+          "valueBadge": "Mượn miễn phí",
           "points": [
             "Khoan điện, kìm, tua vít và nhiều dụng cụ khác",
             "Sẵn sàng dùng bất cứ khi nào cần lắp đặt hoặc sửa chữa thiết bị"
@@ -551,20 +586,24 @@
           "a": "Sử dụng cách âm chuẩn STC phát sóng để giảm tối đa tiếng ồn giữa các phòng. Rất phù hợp cho vocal, voiceover và công việc MIDI."
         },
         {
-          "q": "Chi phí thuê phòng tập nhạc là bao nhiêu?",
-          "a": "Thuê theo giờ từ 8,000–25,000 KRW tùy kích thước phòng. Thuê tháng bắt đầu từ 300,000 KRW/tháng. Nếu bạn tập hơn 30 giờ mỗi tháng, thuê tháng sẽ tiết kiệm hơn nhiều."
+          "q": "Chi phí phòng tập là bao nhiêu?",
+          "a": "Gói tháng từ 300.000 KRW (không cọc), giá hợp lý nhất Eunpyeong-gu. Giảm 10% tháng đầu. Bao gồm ra vào khóa riêng 24h, điều hòa và bảo quản nhạc cụ."
         },
         {
           "q": "Điều kiện thuê phòng tập nhạc theo tháng là gì?",
           "a": "Không cần đặt cọc — thanh toán hàng tháng trước. Hợp đồng tối thiểu 1 tháng, bao gồm khóa cửa riêng 24/7, lưu trữ nhạc cụ/thiết bị và điều hòa riêng biệt. Giảm 10% tháng đầu tiên."
+        },
+        {
+          "q": "Tôi có thể ở qua đêm tại phòng tập không?",
+          "a": "Có — khách thuê tháng có thể kéo dài thời gian cho các buổi làm việc dài, chuẩn bị biểu diễn hoặc thu âm khuya. Với khóa riêng, điều hòa riêng và ra vào 24/7, bạn có thể ở qua đêm. Chi tiết tiện ích sẽ được giải thích khi tư vấn thuê tháng."
         }
       ]
     },
     "cta": {
-      "titleLine1": "Tập trung tối ưu,",
-      "titleHighlight": "Kết quả tốt nhất",
-      "subtitleLine1": "Tập trung vào âm nhạc trong môi trường thoải mái 24/7.",
-      "subtitleLine2": "Hãy đến thăm và tham quan ngay hôm nay.",
+      "titleLine1": "Với mức 300K KRW/tháng hợp lý nhất Eunpyeong-gu",
+      "titleHighlight": "Độc quyền studio pro 24/7",
+      "subtitleLine1": "Cách âm đỉnh cao · điều hòa · giám sát hi-end · sử dụng không giới hạn hàng tháng",
+      "subtitleLine2": "Tư vấn ngay để nhận giảm 10% tháng đầu.",
       "location": "Địa điểm",
       "inquiry": "Liên hệ",
       "imageAlt": "Phòng tập Studio NOL"
@@ -652,7 +691,7 @@
       },
       "practice": {
         "title": "Bạn cần phòng tập âm nhạc riêng của mình?",
-        "descriptionLine1": "Phòng tập âm nhạc cách âm 24h — thuê tháng từ ₩300,000 hoặc theo giờ.",
+        "descriptionLine1": "Phòng tập âm nhạc cách âm 24h — thuê tháng từ ₩300,000. Giá hợp lý nhất Eunpyeong-gu.",
         "descriptionLine2": "Cách ga Yeonsinnae 5 phút đi bộ. Phòng tập âm nhạc cá nhân đầy đủ vocal, piano và keyboard.",
         "primaryText": "Xem phòng tập âm nhạc",
         "secondaryText": "Tư vấn thuê phòng",
@@ -691,7 +730,7 @@
       "mixing": "Mixing & Mastering",
       "business": "Kinh doanh âm nhạc",
       "event": "Sự kiện"
-      }
+    }
   },
   "reviewSection": {
     "titlePrefix": "Cùng tạo nên:",
