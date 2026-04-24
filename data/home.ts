@@ -127,7 +127,25 @@ const homeData = {
       { title: 'EQ Fundamentals Guide', href: '/stories/eq1', description: 'Equalization basics for clear mixes', type: 'story' },
       { title: 'K-pop Vocal Techniques', href: '/stories/idol-vocal1', description: 'How to achieve the Korean K-pop vocal sound', type: 'story' },
       { title: 'Studio Info', href: '/studio-info', description: 'Equipment, rooms, and technical specifications', type: 'page' },
-    ]
+    ],
+    // Locale-specific USP block for English-speaking foreign musicians living in Korea
+    localeUsps: {
+      title: "For Foreign Musicians Living in Korea",
+      items: [
+        {
+          heading: "English-speaking engineers & transparent workflow",
+          body: "Our engineers communicate in English and walk you through the recording, mixing, and mastering process step by step. Whether you are an exchange student, K-pop trainee, or expat artist, you will never be lost in translation. Transparent pricing, no hidden fees — quotes confirmed before the session begins."
+        },
+        {
+          heading: "K-pop trainees · C-4 artist visa · KOMCA support",
+          body: "We understand the specific needs of foreign artists preparing for the Korean music market. From vocal direction tuned for K-pop phrasing to guidance on registering your work with Korean Music Copyright Association (KOMCA) and navigating the C-4 artist visa, we help you get studio-ready and release-ready."
+        },
+        {
+          heading: "Release on Melon · Genie · Bugs · Spotify Korea",
+          body: "After the mix and master, we help you distribute to Korea's major streaming platforms alongside Spotify and Apple Music. Your first release in Korea starts here — with a studio that knows the local market and can keep the process in English from first contact to final delivery."
+        }
+      ]
+    }
   },
   zh: {
     seo: {
@@ -182,7 +200,7 @@ const homeData = {
       { src: `/images/hardware8.webp`, alt: "控制台配备 Softube Console 1 Fader 和 Proac 监听音箱" }
     ],
     featuredLinks: [
-      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: '在 Studio NOL 录制和混音的完整专辑', type: 'portfolio' },
+      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: '在 Studio NOL 录制和混音的完整专辑', type: 'portfolio' },
       { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: '以人声质感为核心的专辑制作', type: 'portfolio' },
       { title: 'EQ 基础指南', href: '/stories/eq1', description: '清晰混音的均衡器基础知识', type: 'story' },
       { title: 'K-pop 人声技巧', href: '/stories/idol-vocal1', description: '如何打造韩国 K-pop 人声风格', type: 'story' },
@@ -190,19 +208,19 @@ const homeData = {
     ],
     // Locale-specific USP block for Chinese-speaking audience
     localeUsps: {
-      title: "中国音乐人 위한 스튜디오 놀",
+      title: "专为中国音乐人打造的 Studio NOL",
       items: [
         {
-          heading: "위챗 결제 · 한국어 커뮤니케이션",
-          body: "중국 현지 위챗페이 결제를 지원하며, 중국어 가능 스태프가 상주합니다. 한국 음악 시장 경험이 풍부한 엔지니어가 프로젝트 전반을 안내합니다."
+          heading: "微信支付 · 中文沟通支持",
+          body: "支持中国本地微信支付方式，常驻可用中文沟通的工作人员。熟悉韩国音乐市场的工程师将全程指导您的项目进行。"
         },
         {
-          heading: "한국 체류 아티스트 전용 패키지",
-          body: "비자 기간에 맞춘 단기·장기 예약 옵션. 공항 픽업부터 스튜디오 이동, 현지 음식 추천까지 한국 음악 활동에 필요한 모든 것을 지원합니다."
+          heading: "在韩音乐人专属服务方案",
+          body: "根据签证期限灵活安排短期或长期录音日程。从机场接送、工作室往返到当地餐饮推荐,我们为您在韩国的音乐活动提供全方位支持。"
         },
         {
-          heading: "중국 플랫폼 배포 지원",
-          body: "NetEase Cloud Music, QQ Music, Kugou 등 중국 주요 음원 플랫폼에 앨범을 배포합니다. 중국 내 음악 활동의 첫걸음을 Studio NOL에서 시작하세요."
+          heading: "中国音乐平台发行支持",
+          body: "我们协助将您的专辑发行至网易云音乐、QQ 音乐、酷狗音乐等中国主要音乐平台。在 Studio NOL 迈出您在中国音乐事业的第一步。"
         }
       ]
     }
@@ -260,7 +278,7 @@ const homeData = {
       { src: `/images/hardware8.webp`, alt: "Mesa de control con Softube Console 1 Fader y monitores Proac" }
     ],
     featuredLinks: [
-      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'Álbum completo grabado y mezclado en Studio NOL', type: 'portfolio' },
+      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Álbum completo grabado y mezclado en Studio NOL', type: 'portfolio' },
       { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Producción de álbum con enfoque en texturas vocales', type: 'portfolio' },
       { title: 'Guía de EQ para principiantes', href: '/stories/eq1', description: 'Fundamentos de ecualización para mezclas claras', type: 'story' },
       { title: 'Técnicas vocales para K-pop', href: '/stories/idol-vocal1', description: 'Cómo lograr el sonido vocal del K-pop coreano', type: 'story' },
@@ -338,7 +356,7 @@ const homeData = {
       { src: `/images/hardware8.webp`, alt: "Bàn điều khiển với Softube Console 1 Fader và loa monitor Proac" }
     ],
     featuredLinks: [
-      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'Album đầy đủ thu âm và mixing tại Studio NOL', type: 'portfolio' },
+      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Album đầy đủ thu âm và mixing tại Studio NOL', type: 'portfolio' },
       { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Sản xuất album tập trung vào chất lượng giọng hát', type: 'portfolio' },
       { title: 'Hướng dẫn EQ cơ bản', href: '/stories/eq1', description: 'Kiến thức cơ bản về cân bằng âm thanh', type: 'story' },
       { title: 'Kỹ thuật thanh nhạc K-pop', href: '/stories/idol-vocal1', description: 'Cách đạt được âm thanh giọng hát K-pop', type: 'story' },
@@ -416,7 +434,7 @@ const homeData = {
       { src: `/images/hardware8.webp`, alt: "โต๊ะควบคุมพร้อม Softube Console 1 Fader และลำโพงมอนิเตอร์ Proac" }
     ],
     featuredLinks: [
-      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'อัลบั้มเต็มบันทึกเสียงและมิกซ์ที่ Studio NOL', type: 'portfolio' },
+      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'อัลบั้มเต็มบันทึกเสียงและมิกซ์ที่ Studio NOL', type: 'portfolio' },
       { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'การผลิตอัลบั้มเน้นที่เนื้อเสียงร้อง', type: 'portfolio' },
       { title: 'คู่มือ EQ พื้นฐาน', href: '/stories/eq1', description: 'พื้นฐานการปรับสมดุลเสียงสำหรับมิกซ์ที่ชัดเจน', type: 'story' },
       { title: 'เทคนิคการร้องเพลง K-pop', href: '/stories/idol-vocal1', description: 'วิธีสร้างเสียงร้องสไตล์ K-pop ของเกาหลี', type: 'story' },
@@ -432,7 +450,7 @@ const homeData = {
         },
         {
           heading: "การผลิตเพลงสไตล์ K-pop",
-          body: "ต่างจากสตูดิโอทั่วไป Studio NOL เข้าใจความต้องการพิเศษของตลาด K-pop ตั้งแต่เทคนิคการร้อง การแสดง ไปจนถึงสไตล์การนำเสนอ — เราช่วยคุณเตรียมผลงาน âm nhạcที่สมบูรณ์แบบสำหรับตลาดเกาหลี"
+          body: "ต่างจากสตูดิโอทั่วไป Studio NOL เข้าใจความต้องการพิเศษของตลาด K-pop ตั้งแต่เทคนิคการร้อง การแสดง ไปจนถึงสไตล์การนำเสนอ — เราช่วยคุณเตรียมผลงานเพลงที่สมบูรณ์แบบสำหรับตลาดเกาหลี"
         },
         {
           heading: "รีวิวจากศิลปินไทย",
@@ -494,12 +512,30 @@ const homeData = {
       { src: `/images/hardware8.webp`, alt: "Nazorat pulti Softube Console 1 Fader va Proac monitoring karnaylari bilan" }
     ],
     featuredLinks: [
-      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: 'Studio NOL da yozilgan va mikslangan toʻliq albom', type: 'portfolio' },
+      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Studio NOL da yozilgan va mikslangan toʻliq albom', type: 'portfolio' },
       { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Vokal teksturalarga eʼtibor qaratgan albom prodakshn', type: 'portfolio' },
       { title: 'EQ asoslari qoʻllanma', href: '/stories/eq1', description: 'Aniq mikslar uchun ekvalayzer asoslari', type: 'story' },
       { title: 'K-pop vokal texnikalari', href: '/stories/idol-vocal1', description: 'Koreya K-pop vokal ovoziga erishish', type: 'story' },
       { title: 'Studiya maʼlumotlari', href: '/studio-info', description: 'Uskunalar, xonalar, va texnik spetsifikatsiyalar', type: 'page' },
-    ]
+    ],
+    // Locale-specific USP block for Uzbek speakers living in Korea (K-pop trainees, expat artists)
+    localeUsps: {
+      title: "Koreyada Yashayotgan Oʻzbek Sanʼatkorlari Uchun",
+      items: [
+        {
+          heading: "Oʻzbek va ingliz tillarida muloqot",
+          body: "Studiomizda oʻzbek va ingliz tillarida muloqot qilish mumkin. Koreya musiqa bozori bilan tanish muhandislarimiz loyihaning har bir bosqichida sizni yoʻnaltiradi — yozuvdan miks va masteringgacha tilga bogʻliq tushunmovchiliklarsiz."
+        },
+        {
+          heading: "K-pop treningi va C-4 sanʼatkor vizasi yoʻnalishi",
+          body: "K-pop trainee va xorijda tayyorgarlik koʻrayotgan sanʼatkorlar uchun Koreya bozori talablariga mos vokal yoʻnalishi va repertoire tayyorlashga yordam beramiz. Shuningdek, Korean Music Copyright Association (KOMCA) da roʻyxatdan oʻtish va C-4 sanʼatkor vizasi jarayonlari haqida amaliy maslahat beramiz."
+        },
+        {
+          heading: "Koreya streaming platformalarida chiqarish",
+          body: "Tugallangan treklaringizni Melon, Genie, Bugs Music va Spotify Korea kabi Koreyaning asosiy musiqa platformalarida chiqarishga yordam beramiz. Koreya musiqa faoliyatingizning birinchi qadamini Studio NOL da — mahalliy bozorni biladigan va siz bilan oʻzbek tilida muloqot qila oladigan studiya bilan boshlang."
+        }
+      ]
+    }
   }
 };
 

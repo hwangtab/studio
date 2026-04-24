@@ -275,8 +275,9 @@ uz 42,395B  (45%)
 | Phase 0.1-A (fallback·noindex·sitemap gate) | ✅ 완료 | 205개 포트폴리오 URL 자동 `noindex, follow` |
 | Phase 0.1-B (영문 productionNotes) | ✅ 완료 | 11 → **34/34** (100%), 중복 ID 2건 제거 |
 | Phase 0.1-C (credits·releaseDate·label) | ✅ 완료 | credits 100%, releaseDate 74% (25/34), label 26% (9/34) |
-| Phase 0.1-D (zh/es/vi/th/uz productionNotes) | ⏳ 보류 | 기계 번역 품질 리스크 |
+| Phase 0.1-D (zh/es/vi/th/uz productionNotes) | ✅ 완료 | 34/34 전부 × 5개 언어 = 170개 번역 주입. **7개 locale 100% 커버리지** |
 | Phase 1 (locale 언어 일관성 복구) | ✅ 완료 | zh localeUsps 3개 블록 한국어 혼재 제거 · th localeUsps 베트남어 오타 수정 · zh fallbackKeywords 한글 지명 음차 |
+| Phase 1b (en/uz localeUsps 추가) | ✅ 완료 | 한국 체류 외국인 음악인 타겟 (K-pop trainee · C-4 비자 · KOMCA · 현지 스트리밍). 6개 비-KO locale 전체 USP 블록 구비 |
 | Phase 2 (믹싱 시리즈 pillar 링크 보강) | ✅ 완료 | 23편 전부 `mixing-complete-guide` 허브 연결 |
 | Phase 3 (품질 감사 스크립트) | ✅ 완료 | `npm run audit:thin`/`audit:thin:ci` 등록, 의도적 noindex 분리 로직 추가. **현재 actionable thin 0건** (14건 전체가 의도적 noindex) |
 
@@ -288,3 +289,4 @@ uz 42,395B  (45%)
 | 2026-04-24 | Phase 0.1-A/B/C 완료. 포트폴리오 en 번역 100% · credits 100% · 중복 제거. 믹싱 23편에 pillar 허브 역링크 주입. audit:thin npm script 등록 |
 | 2026-04-24 (2) | Phase 1 완료. zh 홈 localeUsps에 섞여있던 한국어 100% 중국어화. th localeUsps의 베트남어 단어 오타 수정. 비-KO locale 허브 언어 일관성 시그널 회복 |
 | 2026-04-24 (3) | Phase 3 감사 스크립트 고도화. `robots: noindex` 페이지를 actionable thin에서 분리. 최종 상태: actionable thin 0건 · 의도적 noindex 14건 (`done1`·`bulgwang-mixing-club` 공지 locale 번역본) |
+| 2026-04-24 (4) | Phase 0.1-D + 1b 완료. 34개 포트폴리오 × 7 locale 전체 productionNotes 커버리지 100% (zh/es/vi/th/uz 각 34개 번역 주입, 총 170건). en/uz localeUsps 추가 — 한국 체류 외국인 음악인 타겟 USP 3블록씩 |
