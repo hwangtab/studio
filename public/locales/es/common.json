@@ -210,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Sala de ensayo mensual ₩300K · Boda ₩150K · Locución ₩30K/h | Studio NOL",
-      "description": "Precios transparentes en Studio NOL: sala de ensayo mensual desde ₩300K (pernocta permitida · sin depósito), paquete vocal de bodas ₩150K, locución ₩30K/h, mezcla y masterización. Hasta 30% descuento en paquetes. Presupuesto gratis.",
+      "title": "Precios Studio NOL · Sala ₩300K/mes · Boda ₩150K+",
+      "description": "Precios transparentes en Studio NOL: sala mensual ₩300K (sin depósito, pernocta), boda ₩150K+, locución ₩30K/h. Hasta 30% dto. Presupuesto gratis.",
       "keywords": "tarifas de grabación, presupuesto de locución, precio de alquiler de estudio, precio de mezcla, precio de masterización, Studio NOL",
       "schemaTitle": "Precios de los Servicios de Studio NOL"
     },
@@ -282,6 +282,7 @@
       "title": "Masterclass de producción todo en uno",
       "subtitleLine1": "Convierte la imaginación en sonido y las ideas en pistas terminadas.",
       "subtitleLine2": "Aprende conocimientos profesionales en un espacio profesional.",
+      "subtitleLine3": "1×/semana · 60 min/sesión · 4 sesiones/mes · 350.000 KRW plano",
       "alt": "Sala de control de Studio NOL con monitores y consola de mezcla"
     },
     "intro": {
@@ -291,11 +292,50 @@
       "subtitleLine2": "Experimenta el mismo equipo y flujo de trabajo que usan los profesionales,",
       "subtitleLine3": "en un 'proyecto práctico' para completar tu música."
     },
+    "format": {
+      "title": "Formato de la clase de un vistazo",
+      "subtitle": "Checklist previo a consultar — frecuencia, duración, extensión y precio en una sola pantalla.",
+      "items": [
+        {
+          "label": "Frecuencia",
+          "value": "1×/semana",
+          "caption": "Día y hora fijos tras la consulta"
+        },
+        {
+          "label": "Duración por sesión",
+          "value": "60 min/sesión",
+          "caption": "1:1 privada, totalmente adaptada"
+        },
+        {
+          "label": "Duración recomendada",
+          "value": "6 meses en total",
+          "caption": "Base 3 meses + Avanzado 3 meses"
+        },
+        {
+          "label": "Tarifa mensual plana",
+          "value": "350.000 KRW/mes",
+          "caption": "4 sesiones · ~87.500 KRW por sesión"
+        }
+      ],
+      "note": "Primera consulta gratis · Facturación mensual · Sin tarifas extra de estudio o equipo"
+    },
     "curriculum": {
-      "title": "Currículum: 4 pasos para dominar",
+      "title": "Hoja de ruta en 2 fases de 6 meses",
+      "subtitle": "3 meses base para terminar tu propio tema; 3 meses avanzados para mezclar, masterizar y lanzarlo.",
+      "phase1": {
+        "label": "Fase 1",
+        "title": "Programa base de 3 meses",
+        "caption": "Consolida DAW, producción y grabación para terminar un tema original"
+      },
+      "phase2": {
+        "label": "Fase 2",
+        "title": "Programa avanzado de 3 meses",
+        "caption": "Mezcla, masterización y lanzamiento en plataformas a nivel pro"
+      },
       "step1": {
         "title": "MIDI y Producción",
         "subtitle": "Bases de la creación",
+        "phaseLabel": "Fase 1 · Meses 1–2",
         "items": [
           "Optimización del flujo de trabajo en DAW",
           "Instrumentos virtuales y diseño de sonido",
@@ -306,6 +346,7 @@
       "step2": {
         "title": "Grabación",
         "subtitle": "Captura de sonido profesional",
+        "phaseLabel": "Fase 1 · Mes 3",
         "items": [
           "Comparación de micros pro (U87ai, etc.)",
           "Flujo de señal (Mic-Pre-DAW)",
@@ -316,6 +357,7 @@
       "step3": {
         "title": "Mezcla",
         "subtitle": "Esculpir el sonido",
+        "phaseLabel": "Fase 2 · Meses 4–5",
         "items": [
           "Balance, paneo e imagen estéreo",
           "EQ y dinámica (compresor)",
@@ -324,8 +366,9 @@
         ]
       },
       "step4": {
-        "title": "Masterización",
-        "subtitle": "Finalización y lanzamiento",
+        "title": "Masterización y lanzamiento",
+        "subtitle": "Finalización y distribución",
+        "phaseLabel": "Fase 2 · Mes 6",
         "items": [
           "Estándares de loudness (LUFS)",
           "Tono y consistencia del álbum",
@@ -349,8 +392,9 @@
     },
     "pricing": {
       "title": "Clase privada 1:1",
-      "subtitle": "Clases personalizadas",
+      "subtitle": "1×/semana · 60 min · 4 sesiones/mes",
       "unit": "KRW / mes",
+      "breakdown": "4 sesiones al mes · unos 87.500 KRW por sesión",
       "cta": "Solicitar consulta"
     },
     "quickAnswers": {
@@ -358,12 +402,20 @@
       "subtitle": "Respuestas rápidas a las preguntas clave.",
       "items": [
         {
-          "q": "¿Para quién es esta lección?",
-          "a": "Programa 1:1 práctico para músicos/productores que quieren publicar música."
+          "q": "¿Cómo se estructura la clase?",
+          "a": "Clases privadas 1:1: una vez por semana, 60 minutos por sesión, 4 sesiones al mes. El día y la hora se fijan tras la consulta."
         },
         {
-          "q": "¿Qué aprenderé?",
-          "a": "Completamos un proyecto en 4 etapas: MIDI, grabación, mezcla y mastering."
+          "q": "¿Cuánto dura el programa completo?",
+          "a": "Para llevar un tema original hasta el lanzamiento recomendamos una hoja de ruta de 6 meses: 3 meses base + 3 meses avanzados. El ritmo se ajusta a tu progreso."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "Tarifa fija de 350.000 KRW/mes (4 sesiones · unos 87.500 KRW por sesión). La primera consulta es gratis y no hay tarifas extra de estudio o equipo."
+        },
+        {
+          "q": "¿Para quién es esta lección?",
+          "a": "Programa 1:1 práctico para músicos/productores que quieren publicar música."
         },
         {
           "q": "¿Cómo solicito o consulto?",
@@ -374,7 +426,7 @@
     "cta": {
       "titleLine1": "Demos el primer paso juntos,",
       "titleHighlight": "Planifica tu propio currículum",
-      "subtitleLine1": "Tarifa fija de 350,000 KRW/mes para aprender todo sobre producción práctica.",
+      "subtitleLine1": "350.000 KRW/mes plano (1×/semana · 60 min · 4 sesiones) para aprender todo sobre producción práctica.",
       "subtitleLine2": "Primera consulta gratuita · Orientación 1:1 de un productor en activo",
       "location": "Ubicación",
       "inquiry": "Solicitar consulta gratuita",
@@ -383,9 +435,9 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Sala de ensayo más barata de Eunpyeong-gu · Desde 300.000 KRW/mes | Studio Nol Yeonsinnae",
-      "description": "La sala de ensayo mensual más accesible en Eunpyeong-gu. Sin depósito · 10% dto. primer mes · Insonorizada 24h · Pernocta permitida · A 5 min de Yeonsinnae.",
-      "keywords": "sala de ensayo Seúl, sala de ensayo Eunpyeong, sala de ensayo Yeonsinnae, sala de ensayo mensual, sala 24h, sala insonorizada, sala privada, sala más barata Seúl, sala de voz, sala de teclado"
+      "title": "Sala de ensayo insonorizada · Desde ₩300K/mes | Studio Nol",
+      "description": "Insonorización STC nivel estudio en Eunpyeong-gu. ₩300K/mes — sin depósito, 10% dto., ducha 24h, pernocta. A 5 min de Yeonsinnae.",
+      "keywords": "sala de ensayo Seúl, sala de ensayo Eunpyeong, sala de ensayo Yeonsinnae, sala STC insonorizada, aislamiento nivel estudio, sala con ducha privada, sala con pernocta, sala mensual, sin depósito, 24/7, insonorizada, sala privada, sala de voz, sala de teclado"
     },
     "hero": {
       "title": "Desde ₩300K/mes · Sala de ensayo insonorizada 24h en Eunpyeong-gu",
@@ -419,7 +471,7 @@
           "caption": "Desde solo 1 mes"
         }
       ],
-      "note": "Empieza con un solo mes, sin compromiso y sin depósito."
+      "note": "Operado por Korea Smart Cooperative · Insonorización de nivel superior · Comience con solo un mes."
     },
     "painPoints": {
       "title": "¿Tienes estos problemas?",
@@ -448,6 +500,33 @@
         }
       ]
     },
+    "soundproofing": {
+      "eyebrow": "Insonorización de máximo nivel",
+      "title": "Insonorización de estudio, en especificación profesional",
+      "subtitle": "Ensayos y grabaciones a todo volumen, sin molestar a los vecinos",
+      "items": [
+        {
+          "title": "Sistema de aislamiento STC internacional",
+          "description": "Diseño de estudio de radiodifusión minimiza la interferencia entre salas. Seguro para voz y batería."
+        },
+        {
+          "title": "Cámara de aire entre paredes (doble pared)",
+          "description": "El colchón de aire bloquea físicamente graves y vibraciones."
+        },
+        {
+          "title": "Lana mineral de alta densidad",
+          "description": "Absorbe reflexiones de medios/agudos — sala seca nivel estudio."
+        },
+        {
+          "title": "Materiales ignífugos y antimoho ecológicos",
+          "description": "Seguro para estancias largas. Sin olor, sin moho."
+        },
+        {
+          "title": "Interior luminoso y limpio",
+          "description": "Un espacio pulido que estimula la creatividad."
+        }
+      ]
+    },
     "gallery": {
       "alt_2": "Sala de práctica de piano Yeonsinnae - piano vertical con paredes insonorizadas",
       "alt_3": "Sala de piano Yamaha Studio NOL - espacio de práctica con paneles acústicos",
@@ -459,7 +538,7 @@
       "items": [
         {
           "title": "Entorno profesional",
-          "description": "Insonorización estándar STC y doble pared para aislar el sonido."
+          "description": "Entorno profesional optimizado desde el diseño — insonorización, ventilación, climatización y seguridad"
         },
         {
           "title": "Protección de equipos",
@@ -475,15 +554,61 @@
         }
       ]
     },
+    "facilities": {
+      "title": "Instalaciones completas para vivir, trabajar y alojarse",
+      "subtitle": "8 comodidades en nuestro estudio de 3er piso",
+      "items": [
+        {
+          "title": "Salas con ventana doble",
+          "description": "Estudio en 3er piso con luz natural y vistas"
+        },
+        {
+          "title": "Climatización integrada",
+          "description": "Sin aires de pared — protege el equipo de la condensación"
+        },
+        {
+          "title": "Ventilación en cada sala",
+          "description": "Aire fresco siempre circulando"
+        },
+        {
+          "title": "Iluminación regulable",
+          "description": "Ajuste el ambiente para cada sesión"
+        },
+        {
+          "title": "Ducha privada 24 horas",
+          "description": "Comodidad para sesiones nocturnas"
+        },
+        {
+          "title": "Servicios en el lobby",
+          "description": "Snack bar, agua fría/caliente, microondas, portátiles gratis, impresora"
+        },
+        {
+          "title": "LAN gigabit + CCTV",
+          "description": "Internet gigabit en cada sala, seguridad sin ángulos muertos"
+        },
+        {
+          "title": "Cerca de Bulgwang y el mercado",
+          "description": "Restaurantes, mercados y servicios a pie"
+        }
+      ]
+    },
     "residentBenefits": {
       "title": "Beneficios exclusivos para residentes de Studio NOL",
       "subtitle": "8 servicios premium solo para residentes mensuales",
+      "valueSummary": {
+        "eyebrow": "Mercado + Beneficios = Valor Real",
+        "headline": "~₩850K+/mes",
+        "headlineCaption": "valor mensual real",
+        "title": "Sala nivel ₩400–500K/mes por ₩300K/mes + ~₩400K/mes en beneficios",
+        "subtitle": "Salas comparables en Eunpyeong-gu cuestan ₩400–500K/mes. Más ~₩400K+/mes en beneficios extra — incluido para cada residente.",
+        "note": "* Precios de mercado basados en salas de Eunpyeong-gu con especificaciones equivalentes (insonorización, climatización, 24/7). Valores estimados por tarifas de grabación, PR y consultoría."
+      },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
       "calendarLinkUrl": "https://kosmart.co.kr/calendar",
       "items": [
         {
           "title": "Descuento en estudio de grabación premium",
-          "valueBadge": "Valor: ₩800K/año",
+          "valueBadge": "~₩60K/mes",
           "points": [
             "1 hora de estudio de grabación gratis al mes (precio normal: 200 000 KRW por 3 horas)",
             "Capta tu música con equipo profesional de gama alta"
@@ -491,15 +616,15 @@
         },
         {
           "title": "Distribución musical gratuita",
-          "valueBadge": "70% del beneficio para el artista",
+          "valueBadge": "~₩50K+/mes",
           "points": [
-            "Distribución mundial en todas las plataformas a través de AudioGuy & The Orchard",
+            "Distribución a todas las plataformas nacionales e internacionales vía Audioguy & Naxos",
             "70% del beneficio neto para el artista (la tasa más alta del sector)"
           ]
         },
         {
           "title": "Notas de prensa y difusión gratuitas",
-          "valueBadge": "Valor: ₩300K por release",
+          "valueBadge": "~₩100K/mes",
           "points": [
             "Redacción profesional de notas de prensa para lanzamientos y conciertos",
             "Publicación en el medio artístico NewsArt y difusión a medios principales",
@@ -508,7 +633,7 @@
         },
         {
           "title": "Alquiler gratuito de equipo de sonido para busking",
-          "valueBadge": "Valor: ₩2M en equipo",
+          "valueBadge": "~₩50K/mes",
           "points": [
             "2 amplificadores Roland CUBE Street EX2 (100W en total)",
             "Micrófonos, cables y soportes incluidos",
@@ -518,7 +643,7 @@
         },
         {
           "title": "Asesoría y feedback profesional",
-          "valueBadge": "Valor: ₩100K por sesión",
+          "valueBadge": "~₩100K/mes",
           "points": [
             "Experiencia de un productor con varias nominaciones y premios Korean Music Award",
             "Análisis detallado en un entorno de monitorización de alta calidad",
@@ -528,7 +653,7 @@
         },
         {
           "title": "Asesoría de crowdfunding",
-          "valueBadge": "Consulta ilimitada",
+          "valueBadge": "~₩70K/mes",
           "points": [
             "Recomendación de plataformas (Tumblbug, Wadiz, etc.) según tu proyecto",
             "Definición de meta, recompensas y duración",
@@ -539,7 +664,7 @@
         },
         {
           "title": "Información sobre subvenciones artísticas",
-          "valueBadge": "Actualizaciones en tiempo real",
+          "valueBadge": "~₩20K/mes",
           "points": [
             "Información actualizada de KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture, etc.",
             "Recomendaciones de ayudas según tu trayectoria",
@@ -550,7 +675,6 @@
         },
         {
           "title": "Préstamo gratuito de herramientas",
-          "valueBadge": "Préstamo gratuito",
           "points": [
             "Taladros eléctricos, alicates, destornilladores y más",
             "Disponibles en cualquier momento para instalar o reparar equipo"
@@ -596,7 +720,7 @@
         },
         {
           "q": "¿Se puede pernoctar en la sala de ensayo?",
-          "a": "Sí — los residentes pueden extender su estancia para sesiones largas, preparación de shows o grabaciones nocturnas. Con cerradura individual, climatización privada y acceso 24/7, se permite pernoctar. Los detalles de las instalaciones se explican durante la consulta de residencia."
+          "a": "Sí — puede quedarse para sesiones largas, preparación de shows o grabaciones nocturnas. Con cerradura individual, climatización, ducha privada 24/7 y servicios del lobby, la pernocta es cómoda. Detalles durante la consulta."
         }
       ]
     },

@@ -210,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Phòng tập ₩300K/tháng · Nhạc cưới ₩150K · Lồng tiếng ₩30K/h | Studio NOL",
-      "description": "Giá minh bạch tại Studio NOL: phòng tập thuê tháng từ ₩300K (ở qua đêm được · không cọc), gói nhạc cưới ₩150K, lồng tiếng ₩30K/giờ, mixing & mastering. Giảm đến 30% khi đặt gói. Báo giá miễn phí.",
+      "title": "Giá Studio NOL · Phòng tập ₩300K/tháng · Cưới ₩150K+",
+      "description": "Giá minh bạch tại Studio NOL: phòng tập ₩300K/tháng (không cọc, ở qua đêm), cưới ₩150K+, lồng tiếng ₩30K/h. Giảm đến 30%. Báo giá miễn phí.",
       "keywords": "phí thu âm, báo giá thu âm voiceover, giá thuê studio, giá mixing, giá mastering, Studio NOL",
       "schemaTitle": "Bảng giá dịch vụ Studio NOL"
     },
@@ -282,6 +282,7 @@
       "title": "Masterclass sản xuất trọn gói",
       "subtitleLine1": "Biến tưởng tượng thành âm thanh, ý tưởng thành track hoàn chỉnh.",
       "subtitleLine2": "Học know‑how chuyên nghiệp · 5 phút đi bộ từ ga Yeonsinnae.",
+      "subtitleLine3": "1 buổi/tuần · 60 phút/buổi · 4 buổi/tháng · ₩350.000 định mức",
       "alt": "Phòng điều khiển Studio NOL với loa monitor và bàn mixing"
     },
     "intro": {
@@ -291,11 +292,50 @@
       "subtitleLine2": "Trải nghiệm thiết bị và workflow như sản xuất album thật,",
       "subtitleLine3": "trong dự án hướng thực hành để hoàn thiện âm nhạc của bạn."
     },
+    "format": {
+      "title": "Cấu trúc khóa học trong một màn hình",
+      "subtitle": "Checklist trước khi hỏi — tần suất, thời lượng, thời gian và phí trên một trang.",
+      "items": [
+        {
+          "label": "Tần suất",
+          "value": "1 buổi/tuần",
+          "caption": "Chốt ngày giờ sau khi tư vấn"
+        },
+        {
+          "label": "Thời lượng buổi",
+          "value": "60 phút/buổi",
+          "caption": "1:1 riêng, tùy chỉnh theo học viên"
+        },
+        {
+          "label": "Thời gian khuyên dùng",
+          "value": "Tổng 6 tháng",
+          "caption": "3 tháng cơ bản + 3 tháng nâng cao"
+        },
+        {
+          "label": "Phí định mức",
+          "value": "₩350.000/tháng",
+          "caption": "4 buổi · khoảng ₩87.500/buổi"
+        }
+      ],
+      "note": "Tư vấn đầu tiên miễn phí · Thanh toán theo tháng · Không thêm phí studio hay thiết bị"
+    },
     "curriculum": {
-      "title": "Giáo trình: 4 bước làm chủ",
+      "title": "Lộ trình 2 giai đoạn trong 6 tháng",
+      "subtitle": "3 tháng cơ bản để hoàn thiện track của chính bạn; 3 tháng nâng cao để mix, master và phát hành.",
+      "phase1": {
+        "label": "Giai đoạn 1",
+        "title": "Khóa cơ bản 3 tháng",
+        "caption": "Nắm DAW, produce và thu âm để hoàn thành một track gốc"
+      },
+      "phase2": {
+        "label": "Giai đoạn 2",
+        "title": "Khóa nâng cao 3 tháng",
+        "caption": "Mix, master và phát hành lên nền tảng phân phối ở mức pro-reference"
+      },
       "step1": {
         "title": "MIDI & Producing",
         "subtitle": "Nền tảng sáng tạo",
+        "phaseLabel": "Giai đoạn 1 · Tháng 1–2",
         "items": [
           "Tối ưu workflow DAW",
           "VST & sound design",
@@ -306,6 +346,7 @@
       "step2": {
         "title": "Thu âm",
         "subtitle": "Ghi âm chuyên nghiệp",
+        "phaseLabel": "Giai đoạn 1 · Tháng 3",
         "items": [
           "So sánh micro chuyên nghiệp (U87ai, v.v.)",
           "Luồng tín hiệu (Mic‑Pre‑DAW)",
@@ -316,6 +357,7 @@
       "step3": {
         "title": "Mixing",
         "subtitle": "Điêu khắc âm thanh",
+        "phaseLabel": "Giai đoạn 2 · Tháng 4–5",
         "items": [
           "Cân bằng, panning, stereo imaging",
           "EQ & Dynamics (Compressor)",
@@ -324,8 +366,9 @@
         ]
       },
       "step4": {
-        "title": "Mastering",
-        "subtitle": "Hoàn thiện & phát hành",
+        "title": "Mastering & Phát hành",
+        "subtitle": "Hoàn thiện & Phân phối",
+        "phaseLabel": "Giai đoạn 2 · Tháng 6",
         "items": [
           "Chuẩn loudness (LUFS)",
           "Tông & độ nhất quán của album",
@@ -349,8 +392,9 @@
     },
     "pricing": {
       "title": "Lớp riêng 1:1",
-      "subtitle": "Bài học tùy chỉnh",
+      "subtitle": "1 buổi/tuần · 60 phút · 4 buổi/tháng",
       "unit": "KRW / tháng",
+      "breakdown": "4 buổi/tháng · khoảng ₩87.500/buổi",
       "cta": "Đặt lịch tư vấn"
     },
     "quickAnswers": {
@@ -358,12 +402,20 @@
       "subtitle": "Giải đáp nhanh các câu hỏi chính.",
       "items": [
         {
-          "q": "Khóa học phù hợp với ai?",
-          "a": "Chương trình 1:1 thực chiến cho nghệ sĩ/producer muốn phát hành nhạc."
+          "q": "Lớp học diễn ra thế nào?",
+          "a": "Lớp 1:1 riêng: 1 buổi/tuần, 60 phút/buổi, 4 buổi/tháng. Ngày giờ được chốt sau khi tư vấn."
         },
         {
-          "q": "Bạn sẽ học gì?",
-          "a": "Hoàn thiện dự án qua 4 bước: MIDI, thu âm, mixing, mastering."
+          "q": "Toàn bộ chương trình kéo dài bao lâu?",
+          "a": "Để đi tới phát hành một track gốc, chúng tôi khuyên theo lộ trình 6 tháng: 3 tháng cơ bản + 3 tháng nâng cao. Tốc độ điều chỉnh theo bạn."
+        },
+        {
+          "q": "Học phí bao nhiêu?",
+          "a": "Định mức ₩350.000/tháng (4 buổi · khoảng ₩87.500/buổi). Tư vấn đầu tiên miễn phí, không thêm phí studio hay thiết bị."
+        },
+        {
+          "q": "Khóa học phù hợp với ai?",
+          "a": "Chương trình 1:1 thực chiến cho nghệ sĩ/producer muốn phát hành nhạc."
         },
         {
           "q": "Đăng ký/tư vấn ra sao?",
@@ -374,7 +426,7 @@
     "cta": {
       "titleLine1": "Hãy cùng bước đầu tiên,",
       "titleHighlight": "Thiết kế giáo trình riêng cho bạn",
-      "subtitleLine1": "Phí cố định 350.000 KRW/tháng để học mọi thứ về sản xuất thực tế.",
+      "subtitleLine1": "₩350.000/tháng định mức (1 buổi/tuần · 60 phút · 4 buổi) để học mọi thứ về sản xuất thực tế.",
       "subtitleLine2": "Tư vấn đầu tiên miễn phí · Hướng dẫn 1:1 từ producer đang hoạt động",
       "location": "Địa điểm",
       "inquiry": "Đăng ký tư vấn miễn phí",
@@ -383,9 +435,9 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Phòng tập rẻ nhất Eunpyeong-gu · Từ 300.000 KRW/tháng | Studio Nol Yeonsinnae",
-      "description": "Phòng tập nhạc thuê tháng hợp lý nhất Eunpyeong-gu. Không cọc · Giảm 10% tháng đầu · Cách âm 24h · Ở qua đêm được · 5 phút từ ga Yeonsinnae.",
-      "keywords": "phòng tập nhạc Seoul, phòng tập Eunpyeong, phòng tập Yeonsinnae, thuê tháng phòng tập, phòng tập 24h, phòng tập cách âm, phòng tập riêng, phòng tập rẻ nhất, phòng tập thanh nhạc, phòng tập phím"
+      "title": "Phòng tập cách âm · Từ ₩300K/tháng | Studio Nol Yeonsinnae",
+      "description": "Cách âm STC cấp studio tại Eunpyeong-gu. ₩300K/tháng — không cọc, giảm 10%, phòng tắm 24h, ở qua đêm. 5 phút từ ga Yeonsinnae.",
+      "keywords": "phòng tập nhạc Seoul, phòng tập Eunpyeong, phòng tập Yeonsinnae, phòng cách âm STC, cách âm cấp studio, phòng tập có phòng tắm, phòng tập ở qua đêm, phòng tập thuê tháng, phòng 24/7, phòng cách âm, phòng tập riêng, phòng thanh nhạc, phòng phím"
     },
     "hero": {
       "title": "Từ 300K KRW/tháng · Phòng tập cách âm 24h Eunpyeong-gu",
@@ -419,7 +471,7 @@
           "caption": "Bắt đầu từ 1 tháng"
         }
       ],
-      "note": "Bắt đầu từ 1 tháng, không áp lực và không cần cọc."
+      "note": "Vận hành bởi Korea Smart Cooperative · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng."
     },
     "painPoints": {
       "title": "Bạn có gặp những vấn đề này?",
@@ -448,6 +500,33 @@
         }
       ]
     },
+    "soundproofing": {
+      "eyebrow": "Cách âm đỉnh cao",
+      "title": "Cách âm cấp studio, đúng chuẩn kỹ thuật chuyên nghiệp",
+      "subtitle": "Tập và thu âm hết cỡ, không phiền hàng xóm",
+      "items": [
+        {
+          "title": "Hệ thống cách âm STC quốc tế",
+          "description": "Thiết kế cấp đài phát thanh, giảm thiểu can nhiễu giữa các phòng. An toàn cho thanh nhạc và trống."
+        },
+        {
+          "title": "Lớp không khí giữa các tường (tường đôi)",
+          "description": "Đệm không khí chặn vật lý các tần số thấp và rung động."
+        },
+        {
+          "title": "Bông khoáng mật độ cao hút âm",
+          "description": "Hút phản âm trung/cao — phòng khô cấp studio."
+        },
+        {
+          "title": "Vật liệu chống cháy·chống nấm thân thiện",
+          "description": "An toàn cho thời gian dài. Không mùi, không nấm mốc."
+        },
+        {
+          "title": "Nội thất sáng sủa sạch sẽ",
+          "description": "Không gian bóng bẩy kích thích sáng tạo."
+        }
+      ]
+    },
     "gallery": {
       "alt_2": "Phòng tập đàn piano Yeonsinnae - đàn piano đứng với tường cách âm",
       "alt_3": "Phòng piano Yamaha Studio NOL - không gian tập với tấm cách âm",
@@ -459,7 +538,7 @@
       "items": [
         {
           "title": "Môi trường chuyên nghiệp",
-          "description": "Cách âm tiêu chuẩn quốc tế STC, thiết kế tường đôi."
+          "description": "Môi trường chuyên nghiệp được tối ưu từ thiết kế — cách âm, thông gió, điều hòa, an ninh"
         },
         {
           "title": "Bảo vệ thiết bị",
@@ -475,15 +554,61 @@
         }
       ]
     },
+    "facilities": {
+      "title": "Tiện nghi đầy đủ cho sống, làm việc và ở lại",
+      "subtitle": "8 tiện ích tại studio tầng 3",
+      "items": [
+        {
+          "title": "Phòng có cửa sổ đôi",
+          "description": "Studio tầng 3, cửa sổ đôi lớn đón ánh sáng và cảnh quan"
+        },
+        {
+          "title": "Điều hòa tích hợp",
+          "description": "Không treo tường — bảo vệ thiết bị khỏi ngưng tụ"
+        },
+        {
+          "title": "Thông gió tươi mọi phòng",
+          "description": "Không gian kín vẫn có khí tươi lưu thông"
+        },
+        {
+          "title": "Đèn điều chỉnh độ sáng",
+          "description": "Điều chỉnh không khí cho từng buổi"
+        },
+        {
+          "title": "Phòng tắm riêng 24h",
+          "description": "Thoải mái cho buổi làm xuyên đêm"
+        },
+        {
+          "title": "Tiện ích sảnh",
+          "description": "Quầy đồ ăn vặt, nước nóng/lạnh, lò vi sóng, laptop miễn phí, máy in"
+        },
+        {
+          "title": "LAN gigabit + CCTV",
+          "description": "Internet gigabit mỗi phòng, an ninh toàn diện"
+        },
+        {
+          "title": "Gần ga Bulgwang & chợ",
+          "description": "Nhà hàng, chợ truyền thống, tiện ích đều trong tầm đi bộ"
+        }
+      ]
+    },
     "residentBenefits": {
       "title": "Đặc quyền dành riêng cho khách thuê tháng Studio NOL",
       "subtitle": "8 dịch vụ cao cấp chỉ dành cho khách thuê theo tháng",
+      "valueSummary": {
+        "eyebrow": "Giá thị trường + Tiện ích = Giá trị thực",
+        "headline": "~850K KRW+/tháng",
+        "headlineCaption": "giá trị thực hàng tháng",
+        "title": "Phòng hạng 400–500K KRW/tháng với 300K KRW/tháng + ~400K KRW/tháng tiện ích",
+        "subtitle": "Phòng tập tương đương ở Eunpyeong-gu có giá 400–500K KRW/tháng. Thêm ~400K KRW+/tháng tiện ích — dành cho tất cả khách thuê.",
+        "note": "* Giá thị trường dựa trên các phòng ở Eunpyeong-gu có cùng thông số (cách âm, điều hòa, 24/7). Giá trị tiện ích ước tính từ giá thu âm, PR, tư vấn."
+      },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
       "calendarLinkUrl": "https://kosmart.co.kr/calendar",
       "items": [
         {
           "title": "Ưu đãi phòng thu cao cấp",
-          "valueBadge": "Trị giá 800K KRW/năm",
+          "valueBadge": "~60K KRW/tháng",
           "points": [
             "Miễn phí 1 giờ phòng thu mỗi tháng (giá thường: 200.000 KRW cho 3 giờ)",
             "Ghi lại âm nhạc của bạn với thiết bị chuyên nghiệp hàng đầu"
@@ -491,15 +616,15 @@
         },
         {
           "title": "Phát hành nhạc miễn phí",
-          "valueBadge": "70% lợi nhuận cho nghệ sĩ",
+          "valueBadge": "~50K KRW+/tháng",
           "points": [
-            "Phát hành toàn cầu trên mọi nền tảng qua AudioGuy & The Orchard",
+            "Phân phối đến mọi nền tảng trong và ngoài nước qua Audioguy & Naxos",
             "70% lợi nhuận ròng trả cho nghệ sĩ (mức cao nhất ngành)"
           ]
         },
         {
           "title": "Soạn thảo và phát hành thông cáo báo chí miễn phí",
-          "valueBadge": "Trị giá 300K KRW/lần",
+          "valueBadge": "~100K KRW/tháng",
           "points": [
             "Soạn thông cáo chuyên nghiệp cho ra mắt album, biểu diễn, v.v.",
             "Đăng trên báo nghệ thuật chuyên ngành NewsArt và phân phối tới các báo lớn",
@@ -508,7 +633,7 @@
         },
         {
           "title": "Cho mượn thiết bị âm thanh busking miễn phí",
-          "valueBadge": "Thiết bị trị giá 2M KRW",
+          "valueBadge": "~50K KRW/tháng",
           "points": [
             "2 amply Roland CUBE Street EX2 (tổng 100W)",
             "Mic + cáp + chân micro đầy đủ",
@@ -518,7 +643,7 @@
         },
         {
           "title": "Phản hồi và tư vấn chuyên gia",
-          "valueBadge": "Trị giá 100K KRW/buổi",
+          "valueBadge": "~100K KRW/tháng",
           "points": [
             "Kinh nghiệm từ nhà sản xuất từng được đề cử và đoạt giải Korean Music Award",
             "Phân tích chi tiết trong môi trường monitor cao cấp",
@@ -528,7 +653,7 @@
         },
         {
           "title": "Tư vấn gọi vốn cộng đồng",
-          "valueBadge": "Tư vấn không giới hạn",
+          "valueBadge": "~70K KRW/tháng",
           "points": [
             "Đề xuất nền tảng phù hợp (Tumblbug, Wadiz, v.v.) theo dự án",
             "Lên kế hoạch mục tiêu, phần thưởng và thời gian",
@@ -539,7 +664,7 @@
         },
         {
           "title": "Thông tin chương trình hỗ trợ nghệ thuật",
-          "valueBadge": "Cập nhật thời gian thực",
+          "valueBadge": "~20K KRW/tháng",
           "points": [
             "Thông tin mới nhất từ KOCCA, Arts Council Korea, Quỹ Nghệ thuật Seoul, v.v.",
             "Đề xuất chương trình phù hợp với hoạt động và hồ sơ của bạn",
@@ -550,7 +675,6 @@
         },
         {
           "title": "Cho mượn dụng cụ miễn phí",
-          "valueBadge": "Mượn miễn phí",
           "points": [
             "Khoan điện, kìm, tua vít và nhiều dụng cụ khác",
             "Sẵn sàng dùng bất cứ khi nào cần lắp đặt hoặc sửa chữa thiết bị"
@@ -596,7 +720,7 @@
         },
         {
           "q": "Tôi có thể ở qua đêm tại phòng tập không?",
-          "a": "Có — khách thuê tháng có thể kéo dài thời gian cho các buổi làm việc dài, chuẩn bị biểu diễn hoặc thu âm khuya. Với khóa riêng, điều hòa riêng và ra vào 24/7, bạn có thể ở qua đêm. Chi tiết tiện ích sẽ được giải thích khi tư vấn thuê tháng."
+          "a": "Có — bạn có thể ở lại cho các buổi làm dài, chuẩn bị biểu diễn hoặc thu âm khuya. Với khóa riêng, điều hòa, phòng tắm riêng 24/7 và tiện ích sảnh, ở qua đêm rất thoải mái. Chi tiết giải thích khi tư vấn."
         }
       ]
     },

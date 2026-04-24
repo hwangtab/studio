@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown, Layers, Volume2, Leaf, Sun, Thermometer, Droplets, Coffee, Lightbulb } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -237,6 +237,154 @@ const PriceLeader = ({
   </Section>
 );
 
+const SOUNDPROOFING_ICONS: LucideIcon[] = [Shield, Layers, Volume2, Leaf, Sparkles];
+
+interface SoundproofingItem {
+  title: string;
+  description: string;
+}
+
+const SoundproofingShowcase = ({
+  eyebrow,
+  title,
+  subtitle,
+  items,
+  locale,
+}: {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  items: SoundproofingItem[];
+  locale: Locale;
+}) => (
+  <Section variant="alternate" defer>
+    <div className="max-w-5xl mx-auto">
+      <div className="text-center mb-10">
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold shadow-sm">
+          <ShieldCheck size={14} aria-hidden="true" />
+          {eyebrow}
+        </span>
+        <h2
+          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+        >
+          {title}
+        </h2>
+        <p className={`typo-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+          {subtitle}
+        </p>
+      </div>
+      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-6 items-center">
+        <div className="rounded-2xl overflow-hidden shadow-lg aspect-[4/3] md:aspect-auto md:h-full">
+          <ResponsiveImage
+            src="/images/room5.webp"
+            alt={title}
+            className="w-full h-full object-cover"
+            pictureClassName="block h-full"
+            loading="lazy"
+            sizes="(min-width: 768px) 42vw, 100vw"
+            fill
+          />
+        </div>
+        <ul className="space-y-4">
+          {items.map((item, idx) => {
+            const Icon = SOUNDPROOFING_ICONS[idx] ?? Shield;
+            return (
+              <li key={idx} className="flex items-start gap-3">
+                <div className="bg-gradient-to-br from-primary to-secondary p-2.5 rounded-full text-white flex-shrink-0">
+                  <Icon size={18} aria-hidden="true" />
+                </div>
+                <div>
+                  <p
+                    className={`font-semibold text-gray-900 dark:text-gray-100 mb-0.5 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+                  >
+                    {item.title}
+                  </p>
+                  <p
+                    className={`typo-card-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+                  >
+                    {item.description}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  </Section>
+);
+
+const FACILITIES_ICONS: LucideIcon[] = [Sun, Thermometer, Wind, Lightbulb, Droplets, Coffee, ShieldCheck, MapPin];
+
+interface FacilityItem {
+  title: string;
+  description: string;
+}
+
+const FacilityCard = ({
+  icon: Icon,
+  title,
+  description,
+  delay = 0,
+  locale,
+}: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  delay?: number;
+  locale: Locale;
+}) => (
+  <BaseCard variant="default" delay={delay} className="p-5 h-full">
+    <div className="flex items-start gap-3">
+      <div className="bg-primary/10 dark:bg-primary/20 p-2.5 rounded-full text-primary dark:text-primary-light flex-shrink-0">
+        <Icon size={20} aria-hidden="true" />
+      </div>
+      <div>
+        <h3 className={`typo-card-subtitle mb-1 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+          {title}
+        </h3>
+        <p className={`typo-card-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+          {description}
+        </p>
+      </div>
+    </div>
+  </BaseCard>
+);
+
+const FacilitiesGrid = ({
+  title,
+  subtitle,
+  items,
+  locale,
+}: {
+  title: string;
+  subtitle: string;
+  items: FacilityItem[];
+  locale: Locale;
+}) => (
+  <Section variant="alternate" defer>
+    <SectionHeading
+      icon={Sparkles}
+      title={title}
+      subtitle={subtitle}
+      titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+      className="mb-10"
+    />
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {items.map((item, idx) => (
+        <FacilityCard
+          key={idx}
+          icon={FACILITIES_ICONS[idx] ?? Sparkles}
+          title={item.title}
+          description={item.description}
+          delay={0.04 * idx}
+          locale={locale}
+        />
+      ))}
+    </div>
+  </Section>
+);
+
 interface PracticeRoomProps {
   locale: Locale;
   /** 초기 노출 32개 가이드의 서버 렌더 HTML. locale !== 'ko'면 빈 문자열. */
@@ -317,6 +465,48 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
       })
       .filter((b): b is PricingBadge => b !== null);
   }, [t]);
+  const soundproofingItems = React.useMemo<SoundproofingItem[]>(() => {
+    const raw = t('practiceRoom.soundproofing.items', { returnObjects: true });
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((entry): SoundproofingItem | null => {
+        if (
+          entry &&
+          typeof entry === 'object' &&
+          typeof (entry as { title?: unknown }).title === 'string' &&
+          typeof (entry as { description?: unknown }).description === 'string'
+        ) {
+          return {
+            title: (entry as { title: string }).title,
+            description: (entry as { description: string }).description,
+          };
+        }
+        return null;
+      })
+      .filter((x): x is SoundproofingItem => x !== null);
+  }, [t]);
+
+  const facilitiesItems = React.useMemo<FacilityItem[]>(() => {
+    const raw = t('practiceRoom.facilities.items', { returnObjects: true });
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((entry): FacilityItem | null => {
+        if (
+          entry &&
+          typeof entry === 'object' &&
+          typeof (entry as { title?: unknown }).title === 'string' &&
+          typeof (entry as { description?: unknown }).description === 'string'
+        ) {
+          return {
+            title: (entry as { title: string }).title,
+            description: (entry as { description: string }).description,
+          };
+        }
+        return null;
+      })
+      .filter((x): x is FacilityItem => x !== null);
+  }, [t]);
+
   const residentBenefitsCalendarLabel = t('practiceRoom.residentBenefits.calendarLinkLabel');
   const residentBenefitsCalendarUrl = t('practiceRoom.residentBenefits.calendarLinkUrl');
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
@@ -512,6 +702,16 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         </m.div>
       </Section>
 
+      {soundproofingItems.length > 0 && (
+        <SoundproofingShowcase
+          eyebrow={t('practiceRoom.soundproofing.eyebrow')}
+          title={t('practiceRoom.soundproofing.title')}
+          subtitle={t('practiceRoom.soundproofing.subtitle')}
+          items={soundproofingItems}
+          locale={locale}
+        />
+      )}
+
       <Section variant="default" defer>
         <m.div {...featuresSectionAnimation}>
           <SectionHeading
@@ -553,6 +753,15 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         </m.div>
       </Section>
 
+      {facilitiesItems.length > 0 && (
+        <FacilitiesGrid
+          title={t('practiceRoom.facilities.title')}
+          subtitle={t('practiceRoom.facilities.subtitle')}
+          items={facilitiesItems}
+          locale={locale}
+        />
+      )}
+
       {residentBenefits.length > 0 && (
         <Section variant="default" defer>
           <m.div {...RESIDENT_BENEFITS_ANIMATION}>
@@ -561,8 +770,38 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               title={t('practiceRoom.residentBenefits.title')}
               subtitle={t('practiceRoom.residentBenefits.subtitle')}
               titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
-              className="mb-12"
+              className="mb-10"
             />
+
+            {/* 혜택 총가치 환산 — 월세 대비 제공 가치 강조 */}
+            <div className="max-w-4xl mx-auto mb-12 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-shrink-0 text-center md:text-left">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 dark:bg-gray-800/80 text-xs font-semibold text-primary dark:text-primary-light mb-3">
+                    <Sparkles size={12} aria-hidden="true" />
+                    {t('practiceRoom.residentBenefits.valueSummary.eyebrow')}
+                  </span>
+                  <p className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent leading-tight">
+                    {t('practiceRoom.residentBenefits.valueSummary.headline')}
+                  </p>
+                  <p className="typo-caption text-gray-600 dark:text-gray-400 mt-1">
+                    {t('practiceRoom.residentBenefits.valueSummary.headlineCaption')}
+                  </p>
+                </div>
+                <div className="md:border-l md:border-primary/20 md:pl-6 flex-1 text-center md:text-left">
+                  <h3 className={`typo-card-subtitle font-bold text-gray-900 dark:text-gray-100 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                    {t('practiceRoom.residentBenefits.valueSummary.title')}
+                  </h3>
+                  <p className={`typo-card-body text-gray-700 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                    {t('practiceRoom.residentBenefits.valueSummary.subtitle')}
+                  </p>
+                </div>
+              </div>
+              <p className={`typo-caption text-gray-500 dark:text-gray-400 mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                {t('practiceRoom.residentBenefits.valueSummary.note')}
+              </p>
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {residentBenefits.map((benefit, idx) => (
                 <BenefitCard

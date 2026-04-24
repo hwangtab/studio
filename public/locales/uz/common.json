@@ -210,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Mashg'ulot xonasi ₩300K/oy · To'y qo'shig'i ₩150K · Ovoz aktyori ₩30K | Studio NOL",
-      "description": "Studio NOL shaffof narxlari: musiqa mashg'ulot xonasi oyiga ₩300K'dan (tunab qolish mumkin · zakaladsiz), to'y qo'shig'i ₩150K, ovoz aktyori ₩30K/soat, miks va mastering. To'plamga 30% chegirma.",
+      "title": "Studio NOL narxlari · Xona ₩300K/oy, To'y ₩150K, Ovoz ₩30K",
+      "description": "Shaffof narxlar: oylik xona ₩300K (zakaladsiz, tunab qolish mumkin), to'y ₩150K+, ovoz aktyori ₩30K/soat. 30% chegirma. Bepul taklif.",
       "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL",
       "schemaTitle": "Studio NOL xizmat narxlari"
     },
@@ -281,6 +281,7 @@
       "title": "All-in-One prodakshn masterklass",
       "subtitleLine1": "Tasavvurni ovozga, g'oyani tayyor trekka aylantiring.",
       "subtitleLine2": "Professional bilim · Yeonsinnae bekatidan 5 daqiqa piyoda.",
+      "subtitleLine3": "Haftada 1 marta · seansi 60 daqiqa · oyiga 4 seans · ₩350,000 belgilangan narx",
       "alt": "Studio NOL nazorat xonasi monitoring karnaylari va miks pulti bilan"
     },
     "intro": {
@@ -290,11 +291,50 @@
       "subtitleLine2": "Real albom ishlab chiqarishda prolar ishlatadigan uskunalar va workflow'ni aynan shu yerda his etasiz,",
       "subtitleLine3": "o'zingizning musiqangizni yakunlash uchun \"amaliy loyiha\"da."
     },
+    "format": {
+      "title": "Dars tarkibi bir ekranda",
+      "subtitle": "So'rovdan oldingi chek-list — chastota, davomiylik, muddat va narx bitta sahifada.",
+      "items": [
+        {
+          "label": "Chastota",
+          "value": "Haftada 1 marta",
+          "caption": "Kun va vaqt konsultatsiyadan so'ng belgilanadi"
+        },
+        {
+          "label": "Seans davomiyligi",
+          "value": "Seansi 60 daqiqa",
+          "caption": "1:1 shaxsiy, to'liq moslashtirilgan"
+        },
+        {
+          "label": "Tavsiya etilgan muddat",
+          "value": "Jami 6 oy",
+          "caption": "Asosiy 3 oy + Chuqurlashtirilgan 3 oy"
+        },
+        {
+          "label": "Belgilangan oylik narx",
+          "value": "Oyiga ₩350,000",
+          "caption": "4 seans · taxminan ₩87,500 / seans"
+        }
+      ],
+      "note": "Birinchi konsultatsiya bepul · oylik to'lov · studiya/jihoz uchun qo'shimcha to'lov yo'q"
+    },
     "curriculum": {
-      "title": "Kurikulum: 4 bosqichda ustalik",
+      "title": "6 oylik, 2 bosqichli yo'l xaritasi",
+      "subtitle": "Asosiy 3 oy — o'z trekingizni yakunlash; chuqurlashtirilgan 3 oy — miks, mastering va relizni yakunlash.",
+      "phase1": {
+        "label": "1-bosqich",
+        "title": "Asosiy 3 oylik dasturi",
+        "caption": "DAW, prodakshn va yozuvni o'zlashtirib, bitta original trekni yakunlash"
+      },
+      "phase2": {
+        "label": "2-bosqich",
+        "title": "Chuqurlashtirilgan 3 oylik dasturi",
+        "caption": "Miks, mastering va platformalarga pro darajada reliz qilish"
+      },
       "step1": {
         "title": "MIDI va prodakshn",
         "subtitle": "Yaratish asoslari",
+        "phaseLabel": "1-bosqich · 1–2-oylar",
         "items": [
           "DAW ish jarayonini optimallashtirish",
           "VST va sound design",
@@ -305,6 +345,7 @@
       "step2": {
         "title": "Yozuv",
         "subtitle": "Professional ovoz yozib olish",
+        "phaseLabel": "1-bosqich · 3-oy",
         "items": [
           "Pro mikrofonlar taqqoslanishi (U87ai va boshqalar)",
           "Signal flow (Mic-Pre-DAW)",
@@ -315,6 +356,7 @@
       "step3": {
         "title": "Miks",
         "subtitle": "Ovozni shakllantirish",
+        "phaseLabel": "2-bosqich · 4–5-oylar",
         "items": [
           "Balans, panning, stereo imaging",
           "EQ va Dynamics (Compressor)",
@@ -323,8 +365,9 @@
         ]
       },
       "step4": {
-        "title": "Mastering",
-        "subtitle": "Yakunlash va chiqarish",
+        "title": "Mastering va reliz",
+        "subtitle": "Yakunlash va distribyutsiya",
+        "phaseLabel": "2-bosqich · 6-oy",
         "items": [
           "Loudness standartlari (LUFS)",
           "Albom ohangi va izchilligi",
@@ -348,8 +391,9 @@
     },
     "pricing": {
       "title": "1:1 shaxsiy dars",
-      "subtitle": "Moslashtirilgan darslar",
+      "subtitle": "Haftada 1 marta · 60 daqiqa · oyiga 4 seans",
       "unit": "KRW / oy",
+      "breakdown": "Oyiga 4 seans · taxminan ₩87,500 / seans",
       "cta": "Konsultatsiyaga yozilish"
     },
     "quickAnswers": {
@@ -357,12 +401,20 @@
       "subtitle": "Asosiy savollarga tezkor javob.",
       "items": [
         {
-          "q": "Dars kimlar uchun?",
-          "a": "Musiqa chiqarishni maqsad qilgan musiqachi/producerlar uchun 1:1 amaliy dars."
+          "q": "Dars qanday o'tkaziladi?",
+          "a": "1:1 shaxsiy dars: haftada 1 marta, seansi 60 daqiqa, oyiga 4 seans. Kun va vaqt konsultatsiyadan so'ng belgilanadi."
         },
         {
-          "q": "Nimalarni o‘rganaman?",
-          "a": "MIDI, yozuv, miks, mastering bo‘yicha 4 bosqichli loyiha."
+          "q": "To'liq kurs qancha davom etadi?",
+          "a": "O'z trekingizni reliz qilish uchun 6 oylik yo'l xaritasini tavsiya qilamiz: asosiy 3 oy + chuqurlashtirilgan 3 oy. Sur'at sizga moslashtiriladi."
+        },
+        {
+          "q": "Narxi qancha?",
+          "a": "Oyiga ₩350,000 belgilangan narx (4 seans · taxminan ₩87,500 / seans). Birinchi konsultatsiya bepul, studiya/jihoz uchun qo'shimcha to'lov yo'q."
+        },
+        {
+          "q": "Dars kimlar uchun?",
+          "a": "Musiqa chiqarishni maqsad qilgan musiqachi/producerlar uchun 1:1 amaliy dars."
         },
         {
           "q": "Qanday ariza beraman?",
@@ -373,7 +425,7 @@
     "cta": {
       "titleLine1": "Keling, birinchi qadamni birga tashlaymiz,",
       "titleHighlight": "O'zingizga mos kurikulumni rejalashtiring",
-      "subtitleLine1": "Amaliy prodakshn haqida hamma narsani o'rganish uchun oyiga 350,000 KRW belgilangan narx.",
+      "subtitleLine1": "Oyiga ₩350,000 belgilangan narx (haftada 1 marta · 60 daqiqa · 4 seans) bilan amaliy prodakshnning hammasini o'rganing.",
       "subtitleLine2": "Birinchi maslahat bepul · Amaldagi prodyuser tomonidan 1:1 shaxsiy yo'riqnoma",
       "location": "Manzil",
       "inquiry": "Bepul maslahat olish",
@@ -382,9 +434,9 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Eunpyeong-gu'dagi eng arzon mashgʻulot xonasi · Oyiga 300 000 KRW'dan | Studio Nol Yeonsinnae",
-      "description": "Eunpyeong-gu'dagi eng qulay oylik mashgʻulot xonasi. Zakaladsiz · Birinchi oyga 10% chegirma · 24/7 tovush izolyatsiyasi · Tunab qolish mumkin · Yeonsinnae bekatidan 5 daqiqada.",
-      "keywords": "Seul mashgʻulot xonasi, Eunpyeong mashgʻulot xonasi, Yeonsinnae mashgʻulot xonasi, oylik mashgʻulot xonasi, 24/7 mashgʻulot xonasi, tovush izolyatsiyali xona, shaxsiy mashgʻulot xonasi, eng arzon mashgʻulot xonasi, vokal xonasi, klaviatura xonasi"
+      "title": "STC tovush izolyatsiya xona · ₩300K/oy | Studio Nol",
+      "description": "Studiya darajasidagi STC izolyatsiya, Eunpyeong-gu. ₩300K/oy — zakaladsiz, 10% chegirma, 24/7 dush, tunab qolish. Yeonsinnae bekatidan 5 daq.",
+      "keywords": "Seul mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, Yeonsinnae mashg'ulot xonasi, STC tovush izolyatsiyali xona, studiya darajasidagi tovush izolyatsiyasi, dushli mashg'ulot xonasi, tunab qolish mumkin bo'lgan xona, oylik mashg'ulot xonasi, 24/7 mashg'ulot xonasi, shaxsiy mashg'ulot xonasi, vokal xonasi, klaviatura xonasi"
     },
     "hero": {
       "title": "Oyiga ₩300K'dan · Eunpyeong-gu'da 24/7 tovush izolyatsiyali xona",
@@ -418,7 +470,7 @@
           "caption": "1 oydan boshlab"
         }
       ],
-      "note": "1 oydan boshlang — yengil boshlash va zakaladsiz."
+      "note": "Korea Smart Cooperative tomonidan boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang."
     },
     "painPoints": {
       "title": "Quyidagi muammolar sizda bormi?",
@@ -447,6 +499,33 @@
         }
       ]
     },
+    "soundproofing": {
+      "eyebrow": "Yuqori darajadagi tovush izolyatsiyasi",
+      "title": "Studiya darajasidagi tovush izolyatsiyasi, professional texnik spetsifikatsiya",
+      "subtitle": "Qo'shnilarni bezovta qilmasdan to'liq hajmda mashq va yozuv",
+      "items": [
+        {
+          "title": "Xalqaro STC izolyatsiya tizimi",
+          "description": "Radiostudiya darajasidagi dizayn qo'shni xonalar aralashuvini minimal darajaga tushiradi. Vokal va barabanlar uchun xavfsiz."
+        },
+        {
+          "title": "Devorlar orasidagi havo qatlami (ikki qavatli devor)",
+          "description": "Havo qatlami past chastotalar va tebranishlarni fizik jihatdan bloklaydi."
+        },
+        {
+          "title": "Yuqori zichlikdagi mineral jun yutuvchi material",
+          "description": "O'rta/yuqori chastotali aks-sadolarni yutadi — studiya darajasidagi quruq xona."
+        },
+        {
+          "title": "Ekologik yong'inga·qoraqo'toliga chidamli materiallar",
+          "description": "Uzoq turish uchun xavfsiz. Hidsiz, mog'or yo'q."
+        },
+        {
+          "title": "Yorug' va toza interyer",
+          "description": "Ijodkorlikni oshiradigan toza va silliq makon."
+        }
+      ]
+    },
     "gallery": {
       "alt_2": "Yeonsinnae pianino mashq xonasi - vertikal pianino va ovoz izolyatsiyali shaxsiy mashq maydoni",
       "alt_3": "Studio NOL Yamaha pianino xonasi - ovoz izolyatsiya panelli mashq maydoni",
@@ -458,7 +537,7 @@
       "items": [
         {
           "title": "Professional muhit",
-          "description": "Xalqaro STC tovush izolyatsiyasi, ikki devor dizayni."
+          "description": "Loyihalash bosqichidan boshlab optimallashtirilgan professional muhit — tovush izolyatsiyasi, ventilyatsiya, iqlim va xavfsizlik"
         },
         {
           "title": "Uskuna himoyasi",
@@ -474,15 +553,61 @@
         }
       ]
     },
+    "facilities": {
+      "title": "Yashash, ishlash va qolish uchun to'liq jihozlangan",
+      "subtitle": "3-qavat studiyamizning 8 ta qulayligi",
+      "items": [
+        {
+          "title": "Qo'sh oynali xonalar",
+          "description": "3-qavat studiya, tabiiy yorug'lik va manzara"
+        },
+        {
+          "title": "O'rnatilgan iqlim tizimi",
+          "description": "Devorga osiladigan konditsionerlar yo'q — jihozni kondensatsiyadan himoya qiladi"
+        },
+        {
+          "title": "Barcha xonalarda havo tozalash",
+          "description": "Yopiq makonda ham toza havo aylanishi"
+        },
+        {
+          "title": "Yorug'likni sozlash",
+          "description": "Har bir sessiya uchun muhitni sozlang"
+        },
+        {
+          "title": "Shaxsiy 24 soatlik dush",
+          "description": "Tungi sessiyalarda ham qulay"
+        },
+        {
+          "title": "Lobbi qulayliklari",
+          "description": "Snack bar, issiq/sovuq suv, mikroto'lqinli pech, bepul noutbuklar, printer"
+        },
+        {
+          "title": "Gigabit LAN + CCTV",
+          "description": "Har bir xonada gigabit internet, to'liq qamrovli xavfsizlik"
+        },
+        {
+          "title": "Bulgwang bekati va bozor yaqinida",
+          "description": "Restoranlar, bozorlar va kundalik zaruriyat piyoda masofada"
+        }
+      ]
+    },
     "residentBenefits": {
       "title": "Studio NOL oylik ijarachilari uchun maxsus imtiyozlar",
       "subtitle": "Faqat oylik ijarachilar uchun 8 ta premium xizmat",
+      "valueSummary": {
+        "eyebrow": "Bozor narxi + Imtiyozlar = Haqiqiy qiymat",
+        "headline": "Oyiga ~₩850K+",
+        "headlineCaption": "haqiqiy oylik qiymat",
+        "title": "Oyiga ₩400–500K darajasidagi xona ₩300K/oy + oyiga ~₩400K imtiyozlar",
+        "subtitle": "Eunpyeong-gu'da o'xshash xonalar oyiga ₩400–500K. Ustiga oyiga ~₩400K+ qo'shimcha imtiyozlar — barcha ijarachilarga beriladi.",
+        "note": "* Bozor narxi Eunpyeong-gu'dagi bir xil spetsifikatsiyali xonalar (tovush izolyatsiyasi, iqlim, 24/7) asosida. Imtiyoz qiymatlari yozuv, PR, konsultatsiya bozor narxlari asosida taxminiy hisoblar."
+      },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
       "calendarLinkUrl": "https://kosmart.co.kr/calendar",
       "items": [
         {
           "title": "Premium yozuv studiyasi katta chegirma bilan",
-          "valueBadge": "Yiliga 800K KRW qiymatida",
+          "valueBadge": "Oyiga ~₩60K",
           "points": [
             "Har oy yozuv studiyasidan 1 soat bepul foydalanish (oddiy narx: 3 soatga 200 000 KRW)",
             "Musiqangizni eng yuqori darajadagi professional jihozlar bilan yozing"
@@ -490,15 +615,15 @@
         },
         {
           "title": "Bepul musiqa tarqatish xizmati",
-          "valueBadge": "Sof foydaning 70%i sanʼatkorga",
+          "valueBadge": "Oyiga ~₩50K+",
           "points": [
-            "AudioGuy va The Orchard orqali butun dunyodagi barcha platformalarda tarqatish",
+            "Audioguy & Naxos orqali barcha mahalliy va xalqaro platformalarga tarqatish",
             "Sof daromadning 70% sanoatkorga to'lanadi (sohada eng yuqori ko'rsatkich)"
           ]
         },
         {
           "title": "Bepul press-reliz tayyorlash va OAVga tarqatish",
-          "valueBadge": "Har bir relizga 300K KRW qiymatida",
+          "valueBadge": "Oyiga ~₩100K",
           "points": [
             "Albom chiqarish, konsert va boshqa musiqiy yangiliklar uchun professional press-reliz",
             "San'at sohasidagi NewsArt nashrida e'lon qilish va asosiy OAVga tarqatish",
@@ -507,7 +632,7 @@
         },
         {
           "title": "Busking uchun ovoz jihozlarini bepul ijaraga berish",
-          "valueBadge": "2M KRW qiymatidagi jihoz",
+          "valueBadge": "Oyiga ~₩50K",
           "points": [
             "Roland CUBE Street EX2 amplifikator 2 dona (jami 100W)",
             "Mikrofon + kabel + stand to'plami",
@@ -517,7 +642,7 @@
         },
         {
           "title": "Mutaxassisdan fikr-mulohaza va maslahat",
-          "valueBadge": "Har bir sessiyaga 100K KRW qiymatida",
+          "valueBadge": "Oyiga ~₩100K",
           "points": [
             "Korean Music Award nominantlari va sovrindorlarini tayyorlagan prodyuserdan tajriba",
             "Yuqori sifatli monitoring sharoitida musiqani batafsil tahlil qilish",
@@ -527,7 +652,7 @@
         },
         {
           "title": "Crowdfunding bo'yicha konsalting",
-          "valueBadge": "Cheksiz konsultatsiya",
+          "valueBadge": "Oyiga ~₩70K",
           "points": [
             "Loyihangizga mos platformalar (Tumblbug, Wadiz va h.k.) tavsiyasi",
             "Maqsad summasi, mukofotlar va muddatlarni rejalashtirish",
@@ -538,7 +663,7 @@
         },
         {
           "title": "San'at qo'llab-quvvatlash dasturlari haqida ma'lumot",
-          "valueBadge": "Real vaqt yangilanishlar",
+          "valueBadge": "Oyiga ~₩20K",
           "points": [
             "KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture va boshqalardan eng so'nggi ma'lumotlar",
             "Faoliyatingiz va tajribangizga mos dasturlar tavsiyasi",
@@ -549,7 +674,6 @@
         },
         {
           "title": "Asboblarni bepul ijaraga olish",
-          "valueBadge": "Bepul ijara",
           "points": [
             "Elektr drel, ombir, otvyortka va boshqa ko'plab asboblar",
             "Jihozni o'rnatish yoki ta'mirlash kerak bo'lganda istalgan vaqt foydalanish mumkin"
@@ -595,7 +719,7 @@
         },
         {
           "q": "Mashgʻulot xonasida tunab qolish mumkinmi?",
-          "a": "Ha — oylik ijarachilar uzoq mashgʻulotlar, konsertga tayyorgarlik yoki tungi yozuvlar uchun xonada uzoq vaqt qolishlari mumkin. Shaxsiy qulf, alohida iqlim va 24/7 kirish bilan tunab qolish mumkin. Jihozlardan foydalanish haqida batafsil maʼlumot ijara suhbatida beriladi."
+          "a": "Ha — siz uzoq mashg'ulotlar, konsertga tayyorgarlik yoki tungi yozuvlar uchun qolishingiz mumkin. Shaxsiy qulf, iqlim, 24/7 shaxsiy dush va lobbi qulayliklari bilan tunab qolish qulay. Batafsil ma'lumot maslahatda."
         }
       ]
     },

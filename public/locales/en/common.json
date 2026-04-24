@@ -210,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Practice Room from ₩300K/mo · Wedding ₩150K · Voiceover ₩30K/hr | Studio NOL",
-      "description": "Studio NOL Seoul transparent pricing: music practice room from ₩300K/mo (overnight stays · ₩0 deposit), wedding vocal ₩150K+, voiceover ₩30K/hr, mixing & mastering. Up to 30% package off. Free quote.",
+      "title": "Studio NOL Pricing · Practice ₩300K/mo · Wedding ₩150K+",
+      "description": "Transparent pricing at Studio NOL: practice room ₩300K/mo (no deposit, overnight stays), wedding ₩150K+, voiceover ₩30K/hr. Up to 30% off. Free quote.",
       "keywords": "recording fees, voiceover recording quote, studio rental price, mixing price, mastering price, Studio NOL",
       "schemaTitle": "Studio NOL Service Pricing"
     },
@@ -282,6 +282,7 @@
       "title": "All-in-One Production Masterclass",
       "subtitleLine1": "Turn imagination into sound, ideas into finished tracks.",
       "subtitleLine2": "Learn professional know-how in a professional space.",
+      "subtitleLine3": "1×/week · 60 min/session · 4 sessions/mo · ₩350K flat",
       "alt": "Studio NOL control room with monitoring speakers and mixing console"
     },
     "intro": {
@@ -291,11 +292,50 @@
       "subtitleLine2": "Experience the same gear and workflow pros use in real album production,",
       "subtitleLine3": "in a 'practice-oriented project' to complete your own music."
     },
+    "format": {
+      "title": "Lesson Format at a Glance",
+      "subtitle": "Pre-inquiry checklist — frequency, duration, length, and price on one screen.",
+      "items": [
+        {
+          "label": "Frequency",
+          "value": "1× per week",
+          "caption": "Fixed day & time after consult"
+        },
+        {
+          "label": "Session length",
+          "value": "60 min / session",
+          "caption": "1:1 private, fully tailored"
+        },
+        {
+          "label": "Recommended span",
+          "value": "6 months total",
+          "caption": "Core 3 mo + Advanced 3 mo roadmap"
+        },
+        {
+          "label": "Flat monthly fee",
+          "value": "₩350,000 / mo",
+          "caption": "4 sessions · ~₩87,500 per session"
+        }
+      ],
+      "note": "First consultation free · Monthly billing · No extra studio or gear fees"
+    },
     "curriculum": {
-      "title": "Curriculum: 4 Steps to Master",
+      "title": "6-Month, 2-Phase Roadmap",
+      "subtitle": "Core 3 months to finish your own track; Advanced 3 months to mix, master, and release it.",
+      "phase1": {
+        "label": "Phase 1",
+        "title": "Core 3-Month Program",
+        "caption": "Lock in DAW, production and recording to finish one original track"
+      },
+      "phase2": {
+        "label": "Phase 2",
+        "title": "Advanced 3-Month Program",
+        "caption": "Mix, master, and release to distribution platforms at pro-reference level"
+      },
       "step1": {
         "title": "MIDI & Producing",
         "subtitle": "Foundations of Creation",
+        "phaseLabel": "Phase 1 · Months 1–2",
         "items": [
           "DAW workflow optimization",
           "VST & sound design",
@@ -306,6 +346,7 @@
       "step2": {
         "title": "Recording",
         "subtitle": "Pro Sound Capture",
+        "phaseLabel": "Phase 1 · Month 3",
         "items": [
           "Comparison of pro mics (U87ai, etc.)",
           "Signal flow (Mic-Pre-DAW)",
@@ -316,6 +357,7 @@
       "step3": {
         "title": "Mixing",
         "subtitle": "Sculpting Sound",
+        "phaseLabel": "Phase 2 · Months 4–5",
         "items": [
           "Balance, panning, stereo imaging",
           "EQ & Dynamics (Compressor)",
@@ -324,8 +366,9 @@
         ]
       },
       "step4": {
-        "title": "Mastering",
-        "subtitle": "Completion & Release",
+        "title": "Mastering & Release",
+        "subtitle": "Completion & Distribution",
+        "phaseLabel": "Phase 2 · Month 6",
         "items": [
           "Loudness standards (LUFS)",
           "Album tone & consistency",
@@ -349,8 +392,9 @@
     },
     "pricing": {
       "title": "1:1 Private Lesson",
-      "subtitle": "Tailored Lessons",
+      "subtitle": "1×/week · 60 min · 4 sessions/mo",
       "unit": "KRW / mo",
+      "breakdown": "4 sessions per month · about ₩87,500 per session",
       "cta": "Book a Consultation"
     },
     "quickAnswers": {
@@ -358,12 +402,20 @@
       "subtitle": "Quick answers to the key questions.",
       "items": [
         {
-          "q": "Who is this lesson for?",
-          "a": "A 1:1 practical program for musicians/producers aiming to release music."
+          "q": "How is the lesson structured?",
+          "a": "1:1 private lessons: once a week, 60 minutes per session, 4 sessions per month. Day and time are fixed after consultation."
         },
         {
-          "q": "What will I learn?",
-          "a": "We complete a project through a 4-step curriculum: MIDI, recording, mixing, and mastering."
+          "q": "How long is the full program?",
+          "a": "To take an original track all the way to release, we recommend a 6-month roadmap: 3 core months + 3 advanced months. Pace is adjusted to your progress."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "A flat ₩350,000/month (4 sessions · roughly ₩87,500 per session). First consultation is free, and there are no extra studio or gear fees."
+        },
+        {
+          "q": "Who is this lesson for?",
+          "a": "A 1:1 practical program for musicians/producers aiming to release music."
         },
         {
           "q": "How do I apply or inquire?",
@@ -374,7 +426,7 @@
     "cta": {
       "titleLine1": "Let's take the first step together,",
       "titleHighlight": "Plan your own custom curriculum",
-      "subtitleLine1": "$350,000 KRW/mo fixed price for everything about practical production.",
+      "subtitleLine1": "₩350,000/month flat — 1×/week, 60 min, 4 sessions — for everything about practical production.",
       "subtitleLine2": "First consultation free · 1:1 tailored guidance by active producer",
       "location": "Location",
       "inquiry": "Free Consultation Apply",
@@ -383,9 +435,9 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Cheapest Practice Room in Eunpyeong-gu · From ₩300K/mo | Studio Nol Yeonsinnae",
-      "description": "The most affordable monthly music practice room in Eunpyeong-gu. ₩0 deposit · First month 10% off · 24/7 soundproof access · Overnight stays welcome · 5 min from Yeonsinnae Station.",
-      "keywords": "music practice room Seoul, Eunpyeong practice room, Yeonsinnae practice room, monthly practice room, cheapest practice room Seoul, no deposit practice room, 24/7 practice room, soundproof practice room, private practice room, vocal practice room, keyboard practice room"
+      "title": "Soundproof Practice Room ₩300K/mo | Studio Nol Yeonsinnae",
+      "description": "Studio-grade STC soundproofing in Eunpyeong-gu. ₩300K/mo — no deposit, 10% off, 24/7 shower, overnight stays. 5 min from Yeonsinnae Station.",
+      "keywords": "music practice room Seoul, Eunpyeong practice room, Yeonsinnae practice room, STC soundproof room, studio-grade soundproofing, private shower practice room, overnight stay practice room, monthly practice room, no deposit practice room, 24/7 practice room, soundproof practice room, private practice room, vocal practice room, keyboard practice room"
     },
     "hero": {
       "title": "From ₩300K/mo — Eunpyeong-gu 24/7 Soundproof Practice Room",
@@ -419,7 +471,7 @@
           "caption": "Start from just 1 month"
         }
       ],
-      "note": "Start with a single month — low-commitment and deposit-free."
+      "note": "Operated by Korea Smart Cooperative · Top-tier soundproofing · Start with just one month."
     },
     "painPoints": {
       "title": "Are you having these troubles?",
@@ -448,6 +500,33 @@
         }
       ]
     },
+    "soundproofing": {
+      "eyebrow": "Top-tier Soundproofing",
+      "title": "Studio-Grade Soundproofing, Engineered to Professional Spec",
+      "subtitle": "Full-volume jams and recordings, no neighbor complaints",
+      "items": [
+        {
+          "title": "International STC Isolation System",
+          "description": "Broadcast-studio-grade design minimizes neighboring interference. Safe for vocals and drums."
+        },
+        {
+          "title": "Air Gap Between Walls (Double-wall)",
+          "description": "Physical air buffer blocks low-frequency and vibration transfer."
+        },
+        {
+          "title": "High-Density Mineral Wool Absorption",
+          "description": "Absorbs mid/high-frequency reflections — a studio-grade dry room."
+        },
+        {
+          "title": "Eco-Friendly Fire & Mold Resistant Materials",
+          "description": "Safe for long stays. No odor, no mold, always fresh."
+        },
+        {
+          "title": "Bright, Clean Interior",
+          "description": "A polished space that sparks creative energy."
+        }
+      ]
+    },
     "gallery": {
       "alt_2": "Yeonsinnae piano practice room - upright piano with soundproofed walls",
       "alt_3": "Studio NOL Yamaha piano room - soundproof panel practice space",
@@ -459,7 +538,7 @@
       "items": [
         {
           "title": "Professional Environment",
-          "description": "International standard STC soundproofing, double wall design."
+          "description": "Professional environment optimized from the ground up — soundproofing, ventilation, HVAC, and security"
         },
         {
           "title": "Equipment Protection",
@@ -475,15 +554,61 @@
         }
       ]
     },
+    "facilities": {
+      "title": "Fully Equipped for Living, Working, and Staying",
+      "subtitle": "8 comforts at our 3rd-floor studio",
+      "items": [
+        {
+          "title": "Window Rooms with Double Glazing",
+          "description": "3rd-floor studio with natural light and views"
+        },
+        {
+          "title": "Built-in HVAC System",
+          "description": "No wall-mount units — protects gear from condensation"
+        },
+        {
+          "title": "Fresh-Air Ventilation in Every Room",
+          "description": "Sealed spaces always have fresh oxygen circulation"
+        },
+        {
+          "title": "Dimmable Lighting",
+          "description": "Set the mood to match every session"
+        },
+        {
+          "title": "Private 24-Hour Shower",
+          "description": "Stay comfortable during all-night sessions"
+        },
+        {
+          "title": "Lobby Amenities",
+          "description": "Snack bar, hot/cold water, microwave, free laptops, printer"
+        },
+        {
+          "title": "Gigabit LAN + CCTV",
+          "description": "Gigabit internet in every room, full-coverage security"
+        },
+        {
+          "title": "Bulgwang Station & Market Nearby",
+          "description": "Restaurants, markets, and daily essentials all within walking distance"
+        }
+      ]
+    },
     "residentBenefits": {
       "title": "Exclusive Benefits for Studio NOL Residents",
       "subtitle": "8 premium services available only to monthly residents",
+      "valueSummary": {
+        "eyebrow": "Market rate + Benefits = Real Value",
+        "headline": "~₩850K+/mo",
+        "headlineCaption": "real monthly value",
+        "title": "₩400–500K/mo-class practice room for ₩300K/mo + ~₩400K/mo benefits",
+        "subtitle": "Comparable practice rooms in Eunpyeong-gu cost ₩400–500K/mo. Plus ~₩400K+/mo in extra benefits — included for every resident.",
+        "note": "* Market rate based on Eunpyeong-gu rooms with equivalent spec (soundproofing, built-in HVAC, 24/7). Benefit values estimated from typical studio, PR, and consulting rates."
+      },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
       "calendarLinkUrl": "https://kosmart.co.kr/calendar",
       "items": [
         {
           "title": "Premium Recording Studio Discount",
-          "valueBadge": "Worth ₩800K/yr",
+          "valueBadge": "~₩60K/mo",
           "points": [
             "1 hour of recording studio use free every month (regular price: KRW 200,000 for 3 hours)",
             "Capture your music with top-tier professional equipment"
@@ -491,15 +616,15 @@
         },
         {
           "title": "Free Music Distribution",
-          "valueBadge": "70% net profit to artist",
+          "valueBadge": "~₩50K+/mo",
           "points": [
-            "Worldwide distribution to all major platforms via AudioGuy & The Orchard",
+            "Distribution to all major platforms worldwide via Audioguy & Naxos",
             "70% of net profits paid to the artist (highest rate in the industry)"
           ]
         },
         {
           "title": "Free Press Release & Media Outreach",
-          "valueBadge": "Worth ₩300K per release",
+          "valueBadge": "~₩100K/mo",
           "points": [
             "Professional press releases for album releases, performances, and more",
             "Published on the arts journal NewsArt and distributed to major media outlets",
@@ -508,7 +633,7 @@
         },
         {
           "title": "Free Busking Sound Equipment Rental",
-          "valueBadge": "Worth ₩2M in gear",
+          "valueBadge": "~₩50K/mo",
           "points": [
             "2 × Roland CUBE Street EX2 amps (100W total)",
             "Microphones, cables, and stands fully included",
@@ -518,7 +643,7 @@
         },
         {
           "title": "Expert Feedback & Consulting",
-          "valueBadge": "Worth ₩100K per session",
+          "valueBadge": "~₩100K/mo",
           "points": [
             "Know-how from a producer with multiple Korean Music Award nominations and wins",
             "Detailed analysis in a high-end monitoring environment",
@@ -528,7 +653,7 @@
         },
         {
           "title": "Crowdfunding Consulting",
-          "valueBadge": "Unlimited consulting",
+          "valueBadge": "~₩70K/mo",
           "points": [
             "Platform recommendations (Tumblbug, Wadiz, etc.) based on your project",
             "Goal setting, reward design, and timeline planning",
@@ -539,7 +664,7 @@
         },
         {
           "title": "Arts Grant Program Information",
-          "valueBadge": "Real-time updates",
+          "valueBadge": "~₩20K/mo",
           "points": [
             "Latest grant info from KOCCA, Arts Council Korea, Seoul Foundation for Arts and Culture, and more",
             "Grant recommendations matched to your career and activities",
@@ -550,7 +675,6 @@
         },
         {
           "title": "Free Tool Rental",
-          "valueBadge": "Free to borrow",
           "points": [
             "Power drills, nippers, pliers, screwdriver sets, and more",
             "Available anytime for equipment installation or repairs"
@@ -596,7 +720,7 @@
         },
         {
           "q": "Can I stay overnight at the practice room?",
-          "a": "Yes — residents can extend their stay for long sessions, show prep, or late-night recording. With individual door-lock access, private HVAC, and 24/7 entry, overnight stays are welcome. Detailed facilities will be explained during the residency inquiry."
+          "a": "Yes — residents can stay for long sessions, show prep, or late-night recording. With individual door-lock access, HVAC, 24/7 private shower, and lobby amenities, overnight stays are comfortable. Details explained during the inquiry."
         }
       ]
     },
