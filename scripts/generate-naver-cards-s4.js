@@ -79,8 +79,9 @@ function accentLine(x, y, length, opts = {}) {
 // CARD 1/3 — COVER "당신의 노래로 잊지 못할 결혼식"
 // =====================================================================
 async function card1() {
-  const bg = await sharp(path.join(IMG, 'recording5.webp'))
-    .resize(SIZE, SIZE, { fit: 'cover', position: 'attention' })
+  // hardware5 (acoustic + bass guitar) — 인물 없음, 셀프 축가 = 직접 연주 컨셉 매칭
+  const bg = await sharp(path.join(IMG, 'hardware5.webp'))
+    .resize(SIZE, SIZE, { fit: 'cover', position: 'left' })
     .modulate({ brightness: 0.55, saturation: 0.85 })
     .toBuffer();
 
