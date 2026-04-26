@@ -19,7 +19,7 @@ const fs = require('fs');
 
 const ROOT = path.resolve(__dirname, '..');
 const IMG = path.join(ROOT, 'public/images');
-const OUT = path.join(ROOT, 'naver-cards');
+const OUT = path.join(ROOT, 'naver-cards/series-1');
 fs.mkdirSync(OUT, { recursive: true });
 
 const SIZE = 1080;
@@ -418,23 +418,8 @@ async function card5() {
   console.log('✓ 5/5 CTA → 05-cta.jpg');
 }
 
-// =====================================================================
-// Cleanup old artifacts (rename casualties)
-// =====================================================================
-function cleanupOld() {
-  const old = ['02-comparison.jpg', '04-value.jpg'];
-  for (const name of old) {
-    const p = path.join(OUT, name);
-    if (fs.existsSync(p)) {
-      fs.unlinkSync(p);
-      console.log('  removed legacy:', name);
-    }
-  }
-}
-
 (async () => {
   console.log('▶ Generating Series 1 cards (1080×1080)...\n');
-  cleanupOld();
   await card1();
   await card2();
   await card3();

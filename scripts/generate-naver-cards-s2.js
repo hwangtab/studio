@@ -362,9 +362,9 @@ async function card5() {
         <!-- Divider -->
         <line x1="${boxW / 2 - 100}" y1="378" x2="${boxW / 2 + 100}" y2="378" stroke="${C.gold}" stroke-width="1" opacity="0.5"/>
 
-        <!-- Pricing -->
-        <text x="${boxW / 2}" y="440" text-anchor="middle" font-family="${F_BODY}" font-size="24" font-weight="600" fill="${C.beigeDark}">레코딩 시간당 10만원부터</text>
-        <text x="${boxW / 2}" y="476" text-anchor="middle" font-family="${F_BODY}" font-size="20" font-weight="500" fill="${C.gray}">Day Lock 6시간 50만원 · 패키지 결합 시 최대 30% 할인</text>
+        <!-- Pricing — 3-tier (시간당 / 1프로 / Day Lock) -->
+        <text x="${boxW / 2}" y="436" text-anchor="middle" font-family="${F_BODY}" font-size="24" font-weight="600" fill="${C.beigeDark}">시간당 10만원 · 1프로(3시간) 20만원</text>
+        <text x="${boxW / 2}" y="472" text-anchor="middle" font-family="${F_BODY}" font-size="20" font-weight="500" fill="${C.gray}">Day Lock(6시간) 50만원 · 패키지 결합 시 최대 30% 할인</text>
 
         <!-- CTA pointer -->
         <text x="${boxW / 2}" y="544" text-anchor="middle" font-family="${F_BODY}" font-size="28" font-weight="700" fill="${C.white}">아래 ↓ 톡톡 또는 전화로 무료 견적</text>

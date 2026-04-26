@@ -5,7 +5,7 @@ project: Studio NOL
 created: 2026-04-26
 updated: 2026-04-26
 status: 제작 완료 (재기획 반영)
-output: naver-cards/01-cover.jpg ~ 05-cta.jpg
+output: naver-cards/series-1/01-cover.jpg ~ 05-cta.jpg
 ---
 
 # 🎨 시리즈 1 디자인 시안 (재기획)
@@ -13,7 +13,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 
 > **상위 기획서**: [01-card-news-plan.md](./01-card-news-plan.md)
 > **생성 스크립트**: [`scripts/generate-naver-cards.js`](../../scripts/generate-naver-cards.js)
-> **출력 파일**: [`naver-cards/`](../../naver-cards/) (5장, 각 80~130KB)
+> **출력 파일**: [`naver-cards/series-1/`](../../naver-cards/series-1/) (5장, 각 79~127KB)
 
 ---
 
@@ -45,7 +45,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 
 ## 🟫 카드 1/5 — 표지 "입주자가 사랑하는 3가지 이유"
 
-**출력**: [`naver-cards/01-cover.jpg`](../../naver-cards/01-cover.jpg)
+**출력**: [`naver-cards/series-1/01-cover.jpg`](../../naver-cards/series-1/01-cover.jpg)
 
 ### 레이아웃
 - 상단 0~600px: 사진 (room3 — Yamaha 업라이트 + 베이지 방음 패널)
@@ -72,7 +72,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 
 ## 🟫 카드 2/5 — 1순위 "녹음실급 방음 성능"
 
-**출력**: [`naver-cards/02-soundproofing.jpg`](../../naver-cards/02-soundproofing.jpg)
+**출력**: [`naver-cards/series-1/02-soundproofing.jpg`](../../naver-cards/series-1/02-soundproofing.jpg)
 
 ### 레이아웃
 - 우측 1/3 (720~1080px): 사진 (bulgwang-mixing-club-2nd — 방음 부스 인물)
@@ -102,7 +102,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 
 ## 🟫 카드 3/5 — 2순위 "매달 받는 보너스"
 
-**출력**: [`naver-cards/03-benefits.jpg`](../../naver-cards/03-benefits.jpg)
+**출력**: [`naver-cards/series-1/03-benefits.jpg`](../../naver-cards/series-1/03-benefits.jpg)
 
 ### 레이아웃
 - 솔리드 베이지 풀블리드
@@ -137,7 +137,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 
 ## 🟫 카드 4/5 — 3순위 "숨 쉬기 좋은 연습실"
 
-**출력**: [`naver-cards/04-environment.jpg`](../../naver-cards/04-environment.jpg)
+**출력**: [`naver-cards/series-1/04-environment.jpg`](../../naver-cards/series-1/04-environment.jpg)
 
 ### 레이아웃
 - 좌측 1/2 (0~480px): 사진 (room5 — 창문 빛 + 빈티지 우드 피아노)
@@ -169,7 +169,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 
 ## 🟫 카드 5/5 — CTA "첫 달 50% 할인"
 
-**출력**: [`naver-cards/05-cta.jpg`](../../naver-cards/05-cta.jpg)
+**출력**: [`naver-cards/series-1/05-cta.jpg`](../../naver-cards/series-1/05-cta.jpg)
 
 ### 레이아웃
 - 풀블리드 사진 (room7 — Yamaha + 첼로 감성컷) + 차콜 25% 베일
@@ -202,7 +202,7 @@ output: naver-cards/01-cover.jpg ~ 05-cta.jpg
 node scripts/generate-naver-cards.js
 ```
 
-- 5장이 [`naver-cards/`](../../naver-cards/)에 일괄 생성됨
+- 5장이 [`naver-cards/series-1/`](../../naver-cards/series-1/)에 일괄 생성됨
 - 카피·컬러·이미지 변경 시: [`scripts/generate-naver-cards.js`](../../scripts/generate-naver-cards.js)의 `card1()` ~ `card5()` 함수 수정 후 재실행
 - 폰트는 macOS 시스템 fontconfig를 통해 자동 인식 (Bookk Myungjo + Pretendard Variable)
 
