@@ -436,20 +436,20 @@
   "practiceRoom": {
     "seo": {
       "title": "Soundproof Practice Room ₩300K/mo | Studio Nol Yeonsinnae",
-      "description": "Studio-grade STC soundproofing in Eunpyeong-gu. ₩300K/mo — no deposit, 10% off, 24/7 shower, overnight stays. 5 min from Yeonsinnae Station.",
+      "description": "Studio-grade STC soundproofing in Eunpyeong-gu. ₩300K/mo — no deposit, 50% off first month with 6-month plan, 24/7 shower, overnight stays. 5 min from Yeonsinnae Station.",
       "keywords": "music practice room Seoul, Eunpyeong practice room, Yeonsinnae practice room, STC soundproof room, studio-grade soundproofing, private shower practice room, overnight stay practice room, monthly practice room, no deposit practice room, 24/7 practice room, soundproof practice room, private practice room, vocal practice room, keyboard practice room"
     },
     "hero": {
       "title": "From ₩300K/mo — Eunpyeong-gu 24/7 Soundproof Practice Room",
       "subtitleLine1": "The most affordable monthly residency in Eunpyeong-gu.",
-      "subtitleLine2": "₩0 deposit · First month 10% off · Overnight stays welcome.",
+      "subtitleLine2": "₩0 deposit · 50% off first month (6-month plan) · Overnight stays welcome.",
       "subtitleLine3": "Vocal · keyboard · recording — a premium monthly residency.",
       "alt": "Studio NOL Practice Room"
     },
     "pricing": {
       "eyebrow": "Lowest Price in Eunpyeong-gu",
       "title": "From ₩300K/mo — the most reasonable practice room in Eunpyeong-gu",
-      "subtitle": "₩0 deposit · 10% off first month · 24/7 access + overnight stays",
+      "subtitle": "₩0 deposit · 50% off first month (6-month plan) · 24/7 access + overnight stays",
       "priceLabel": "Monthly",
       "priceValue": "From ₩300K",
       "priceCaption": "VAT excl. · utilities included",
@@ -459,8 +459,8 @@
           "caption": "No extra burden, prepaid monthly"
         },
         {
-          "label": "10% off first month",
-          "caption": "For new residents only"
+          "label": "50% off (6-month plan)",
+          "caption": "First month only · New residents"
         },
         {
           "label": "24/7 + Overnight",
@@ -507,7 +507,7 @@
       "items": [
         {
           "title": "International STC Isolation System",
-          "description": "Broadcast-studio-grade design minimizes neighboring interference. Safe for vocals and drums."
+          "description": "55dB+ measured attenuation (STC 55+) — neighboring rooms stay library-quiet. Safe for late-night vocals and MIDI work."
         },
         {
           "title": "Air Gap Between Walls (Double-wall)",
@@ -518,8 +518,8 @@
           "description": "Absorbs mid/high-frequency reflections — a studio-grade dry room."
         },
         {
-          "title": "Eco-Friendly Fire & Mold Resistant Materials",
-          "description": "Safe for long stays. No odor, no mold, always fresh."
+          "title": "Premium Eco-Friendly Materials",
+          "description": "Certified non-toxic — no VOCs, formaldehyde, or sick-building syndrome. Safe for long stays and overnight use."
         },
         {
           "title": "Bright, Clean Interior",
@@ -708,15 +708,15 @@
         },
         {
           "q": "How good is the soundproofing?",
-          "a": "We use broadcast-grade STC soundproofing to minimize noise between rooms. It provides excellent immersion for vocals, voiceovers, and MIDI work."
+          "a": "Our recording-studio-grade STC system delivers 55dB+ measured attenuation (STC 55+), nearly eliminating noise between rooms. Excellent immersion for vocals, voiceovers, and MIDI work."
         },
         {
           "q": "How much does the practice room cost?",
-          "a": "Monthly plans start from ₩300K (no deposit), the most reasonable price in Eunpyeong-gu. First month 10% off. Includes 24/7 door-lock access, HVAC, and instrument storage."
+          "a": "Monthly plans start from ₩300K (no deposit), the most reasonable price in Eunpyeong-gu. 50% off your first month with a 6-month+ contract. Includes 24/7 door-lock access, HVAC, and instrument storage."
         },
         {
           "q": "What are the conditions for monthly music practice room residency?",
-          "a": "No deposit required — prepaid monthly basis. Minimum contract is 1 month, with 24/7 individual door lock access, instrument/equipment storage, and individual HVAC control included. First month 10% discount available."
+          "a": "No deposit required — prepaid monthly basis. Minimum contract is 1 month, with 24/7 individual door lock access, instrument/equipment storage, and individual HVAC control included. 50% off your first month is available with a 6-month+ contract."
         },
         {
           "q": "Can I stay overnight at the practice room?",
@@ -728,7 +728,7 @@
       "titleLine1": "From the most reasonable ₩300K/mo in Eunpyeong-gu",
       "titleHighlight": "24/7 Pro Studio Exclusive",
       "subtitleLine1": "Top-tier soundproofing · HVAC · hi-end monitoring · unlimited monthly access",
-      "subtitleLine2": "Inquire now and get 10% off your first month.",
+      "subtitleLine2": "Inquire now — 50% off your first month with a 6-month plan.",
       "location": "Location",
       "inquiry": "Inquiry",
       "imageAlt": "Studio NOL Practice Room"
