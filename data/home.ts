@@ -34,10 +34,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: '음원 발매 & 유통',
+        description: '멜론·스포티파이·애플뮤직 등 국내외 주요 스트리밍 플랫폼에 발매. 기획부터 발매·등록까지 한 번에 지원합니다.',
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: '홍보 & 마케팅',
         description: '언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다.',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: '1:1 음악 레슨',
+        description: '현직 프로듀서의 1:1 실전 레슨. MIDI 작곡·믹싱·발매 컨설팅까지 — 음원 발매를 목표로 하는 분께 최적화된 커리큘럼.',
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: '음악연습실',
@@ -102,10 +114,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: 'Release & Distribution',
+        description: 'Release on Spotify, Apple Music, Melon, Genie and more — we handle planning, distribution, and registration in one place.',
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: 'PR & Marketing',
         description: 'We promote your music effectively to the media and support showcases to spread your charm.',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: '1:1 Music Lessons',
+        description: '1:1 lessons with working producers — MIDI composition, mixing, and release consulting. A practical curriculum optimized for artists aiming to release music.',
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: 'Premium Practice Room',
@@ -180,10 +204,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: '音源发行 & 分发',
+        description: '发行至 Spotify、Apple Music、Melon、Genie 等主要流媒体平台。从策划到发行与登记一站式支持。',
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: '宣传 & 营销',
         description: '通过媒体有效宣传，并丰富支持展示会，更广泛地传播您音乐的魅力。',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: '1对1音乐课程',
+        description: '现役制作人提供1对1实战课程。从 MIDI 作曲、混音到发行咨询 — 为以音源发行为目标的音乐人量身定制的课程。',
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: '高端练习室',
@@ -258,10 +294,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: 'Lanzamiento y Distribución',
+        description: 'Distribuimos en Spotify, Apple Music, Melon, Genie y más — gestionamos la planificación, la distribución y el registro en un solo lugar.',
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: 'RP y Marketing',
         description: 'Promocionamos tu música eficazmente en los medios y apoyamos showcases para difundir tu encanto.',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: 'Clases de Música 1:1',
+        description: 'Clases 1:1 con productores en activo — composición MIDI, mezcla y consultoría de lanzamiento. Currículo práctico optimizado para artistas que buscan publicar música.',
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: 'Sala de práctica premium',
@@ -336,10 +384,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: 'Phát hành & Phân phối',
+        description: 'Phát hành lên Spotify, Apple Music, Melon, Genie và nhiều nền tảng khác — hỗ trợ trọn gói từ lên kế hoạch, phân phối đến đăng ký.',
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: 'PR & Marketing',
         description: 'Quảng bá hiệu quả trên truyền thông và hỗ trợ showcase để lan tỏa sức hút âm nhạc của bạn.',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: 'Lớp học âm nhạc 1:1',
+        description: 'Lớp học 1:1 với nhà sản xuất chuyên nghiệp — soạn MIDI, mixing và tư vấn phát hành. Chương trình tối ưu cho nghệ sĩ muốn phát hành nhạc.',
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: 'Phòng tập cao cấp',
@@ -414,10 +474,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: 'ปล่อยเพลง & จัดจำหน่าย',
+        description: 'ปล่อยเพลงบน Spotify, Apple Music, Melon, Genie และอีกมาก ครอบคลุมตั้งแต่วางแผน จัดจำหน่าย ไปจนถึงการขึ้นทะเบียน ครบจบในที่เดียว',
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: 'ประชาสัมพันธ์ & การตลาด',
         description: 'โปรโมตผ่านสื่ออย่างมีประสิทธิภาพและสนับสนุนโชว์เคสเพื่อกระจายเสน่ห์ของเพลงคุณ',
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: 'คอร์สเรียนดนตรี 1:1',
+        description: 'คอร์สเรียน 1:1 กับโปรดิวเซอร์มืออาชีพ — แต่งเพลงด้วย MIDI, มิกซ์เสียง และคำปรึกษาด้านการปล่อยเพลง หลักสูตรเหมาะสำหรับศิลปินที่ตั้งเป้าปล่อยเพลง',
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: 'ห้องซ้อมพรีเมียม',
@@ -492,10 +564,22 @@ const homeData = {
         icon: 'Mic',
       },
       {
+        title: 'Chiqarish & Tarqatish',
+        description: "Spotify, Apple Music, Melon, Genie kabi yetakchi platformalarda chiqaramiz — rejalashdan tarqatish va ro'yxatdan o'tkazishgacha bir joyda qo'llab-quvvatlaymiz.",
+        link: '/pricing',
+        icon: 'Upload',
+      },
+      {
         title: 'PR & Marketing',
         description: "OAV orqali samarali targ'ibot va showcase qo'llovi bilan musiqangiz jozibasini keng yoyamiz.",
         link: '/portfolio',
         icon: 'Globe',
+      },
+      {
+        title: '1:1 musiqa darslari',
+        description: "Faol prodyuserlar bilan 1:1 amaliy darslar — MIDI bastalash, miks va chiqarish bo'yicha maslahatgacha. Musiqa chiqarmoqchi bo'lganlar uchun moslashtirilgan dastur.",
+        link: '/lesson',
+        icon: 'GraduationCap',
       },
       {
         title: "Premium mashg'ulot xonasi",
