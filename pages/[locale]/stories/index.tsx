@@ -10,7 +10,7 @@ import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
-import { getAllStories } from '../../../lib/stories';
+import { getAllStories, isListableStory } from '../../../lib/stories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import Pagination from '../../../components/ui/Pagination';
@@ -300,7 +300,8 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  const fullStories = getAllStories(locale);
+  // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
+  const fullStories = getAllStories(locale).filter(isListableStory);
 
   // 목록 페이지에 필요한 필드만 추출.
   // - summary: 상위 50개만 포함(스키마 + 첫 페이지 카드용). 나머지는 생략하여 payload 대폭 축소.

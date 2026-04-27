@@ -9,7 +9,7 @@ import StoryCard from '../../../../components/StoryCard';
 import SEO from '../../../../components/SEO';
 import ImageHero from '../../../../components/common/ImageHero';
 import ContactCTA from '../../../../components/common/ContactCTA';
-import { getAllStories } from '../../../../lib/stories';
+import { getAllStories, isListableStory } from '../../../../lib/stories';
 import type { Story } from '../../../../types/story';
 import { Section } from '../../../../components/ui/Section';
 import Pagination from '../../../../components/ui/Pagination';
@@ -258,7 +258,8 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
   }
 
   const allStories = getAllStories(locale);
-  const stories = allStories.filter((story) => story.categoryKey === key);
+  // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
+  const stories = allStories.filter((story) => story.categoryKey === key && isListableStory(story));
 
   return buildPageStaticProps(
     locale,

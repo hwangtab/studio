@@ -415,6 +415,18 @@ export const getStoryPaths = (): StoryPath[] => {
   return paths;
 };
 
+/**
+ * 카테고리 listing·전체 listing 노출 가부.
+ *
+ * 일반 시·군 지역 페이지는 thin/doorway 패턴으로 noindex 처리되어 있어 사이트 내
+ * listing에서도 노출하지 않는다. 광역 허브 16개만 region 카테고리에서 노출.
+ * URL 자체는 살아있어 직접 접근·북마크는 가능. getRelatedStories는 별도 정책.
+ */
+export const isListableStory = (story: Pick<Story, 'slug' | 'categoryKey'>): boolean => {
+  if (story.categoryKey === 'region' && !isRegionHub(story.slug)) return false;
+  return true;
+};
+
 export const getRelatedStories = (locale: string, slug: string, limit = 6): Story[] => {
   const all = getAllStories(locale);
   const current = all.find((item) => item.slug === slug);
