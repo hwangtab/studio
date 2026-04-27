@@ -223,6 +223,16 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           </m.div>
         </article>
 
+        {story.boilerplateSection && (
+          <aside
+            data-boilerplate="region-visit"
+            aria-label={t('stories.detail.boilerplateAside', { defaultValue: '공통 방문 안내' })}
+            className="mb-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50"
+          >
+            <MarkdownRenderer content={story.boilerplateSection} locale={locale} currentSlug={story.slug} />
+          </aside>
+        )}
+
         <StoryCTA type={ctaType} locale={locale} />
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">

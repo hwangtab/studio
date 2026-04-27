@@ -146,14 +146,17 @@ const getStoryCategory = (slug, locale) => {
 
 /**
  * Thin-content quality gate for sitemap inclusion.
- * Mirrors the logic in lib/stories.ts:343 (threshold 1500).
- * Returns true if the story should be excluded from the sitemap.
+ * Mirrors the logic in lib/stories.ts (threshold 1500).
+ * AUTO-EXPAND-V1 보일러플레이트 블록은 도시명만 치환된 동일 텍스트가 1,400+개
+ * 페이지에 중복되므로 thin 판정에서 제외해야 진짜 unique 콘텐츠 분량으로 평가된다.
+ * sentinel 형식은 lib/stories.ts의 AUTO_EXPAND_BLOCK_REGEX와 동기화 유지.
  */
 const THIN_CONTENT_THRESHOLD = 1500;
 const SHORTCODE_CHAR_ESTIMATES = {
   'online-fallback': 120,
   'session-checklist': 420,
 };
+const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
 
 const isStoryThin = (slug, locale) => {
   const candidates = [
@@ -170,8 +173,10 @@ const isStoryThin = (slug, locale) => {
       const content = contentMatch[2] || '';
       // Exclude pages explicitly marked noindex (e.g., promotional event pages)
       if (/^robots:\s*['"]?[^'"\n]*noindex/mi.test(frontmatter)) return true;
-      const rawNonWhitespace = content.replace(/\s+/g, '').length;
-      const shortcodeBonus = [...content.matchAll(/%%([a-z-]+)%%/g)]
+      // AUTO-EXPAND 보일러플레이트 제거 후 unique 본문 분량으로 측정
+      const uniqueContent = content.replace(AUTO_EXPAND_BLOCK_REGEX, '');
+      const rawNonWhitespace = uniqueContent.replace(/\s+/g, '').length;
+      const shortcodeBonus = [...uniqueContent.matchAll(/%%([a-z-]+)%%/g)]
         .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? 80), 0);
       return (rawNonWhitespace + shortcodeBonus) < THIN_CONTENT_THRESHOLD;
     } catch {

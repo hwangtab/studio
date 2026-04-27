@@ -47,13 +47,16 @@ export interface Story {
  * Returned by getStoryDetail()
  */
 export interface StoryDetail extends Story {
-  content: string; // Raw markdown content
+  content: string; // Raw markdown content (AUTO-EXPAND 블록은 boilerplateSection으로 분리됨)
   sourceLocale: Locale;
   isFallbackTranslation: boolean;
   isThinContent?: boolean;
   robots?: string;
   modifiedDate?: string; // ISO 8601 from file mtime
   faq?: StoryFAQItem[];
+  // 본문에서 분리된 보일러플레이트(AUTO-EXPAND-V1) 섹션. 사용자에게는 별도 영역으로 노출되지만
+  // SEO 본문 분량 계산에는 포함되지 않는다.
+  boilerplateSection?: string;
   availableLocales: Locale[]; // Locales with a native translation file — used to gate hreflang alternates
 }
 
