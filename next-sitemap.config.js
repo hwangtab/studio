@@ -157,8 +157,16 @@ const SHORTCODE_CHAR_ESTIMATES = {
   'session-checklist': 420,
 };
 const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
+// 광역 허브 슬러그는 thin gate에서 제외. lib/regionHubSlugs.ts와 동기화 유지.
+const REGION_HUB_SLUGS = new Set([
+  'incheon1', 'gwangju1', 'daegu1', 'busan1', 'ulsan1', 'daejeon1', 'sejong1',
+  'gangwon1', 'chungbuk1', 'chungnam1', 'jeonbuk1', 'jeonnam1',
+  'gyeongbuk1', 'gyeongnam1', 'jeju1', 'nationwide1',
+]);
 
 const isStoryThin = (slug, locale) => {
+  // 광역 허브는 사이트 정보 구조상 색인되어야 하므로 게이트 제외.
+  if (REGION_HUB_SLUGS.has(slug)) return false;
   const candidates = [
     path.join(storiesDir, `${slug}.${locale}.md`),
     path.join(storiesDir, `${slug}.md`),

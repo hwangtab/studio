@@ -6,6 +6,7 @@ import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryPath } from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
+import { isRegionHub } from './regionHubSlugs';
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 const enableCache = process.env.NODE_ENV === 'production';
@@ -371,7 +372,9 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   // Raise threshold from 1000 to 1500 to prevent thin pages from being indexed.
   // Pages like `bulgwang-mixing-club` (5,016B ≈ 1,700 chars) barely passed 1000
   // but were still rejected by Google. 1500 chars provides a safer buffer.
-  const isThinContent = rawNonWhitespace + shortcodeBonus < 1500;
+  // 단, 광역 허브 페이지는 사이트 정보 구조상 색인되어야 하므로 게이트에서 제외.
+  // (광역 허브와 일반 지역 페이지의 본문 길이 분포가 동일해 임계값으로는 구분 불가)
+  const isThinContent = !isRegionHub(slug) && (rawNonWhitespace + shortcodeBonus) < 1500;
 
   const storyDetail: StoryDetail = {
     ...baseStory,
