@@ -7,6 +7,10 @@ import type { Story, StoryDetail, StoryPath } from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
 import { isRegionHub } from './regionHubSlugs';
+import regionRedirectMap from './regionRedirectMap.json';
+
+// next.config.mjs의 redirects()로 308 처리되는 슬러그. 빌드·listing에서 모두 제외.
+const REDIRECTED_SLUGS = new Set<string>(Object.keys(regionRedirectMap));
 
 const storiesDirectory: string = path.join(process.cwd(), 'content/stories');
 const enableCache = process.env.NODE_ENV === 'production';
@@ -146,6 +150,8 @@ const getAllStorySlugs = (): string[] => {
           name = name.replace(new RegExp(`\\.${locale}$`), '');
         }
       });
+      // 308 redirect 대상 슬러그는 페이지를 생성하지 않는다 (next.config.mjs가 처리).
+      if (REDIRECTED_SLUGS.has(name)) return;
       slugs.add(name);
     }
   });

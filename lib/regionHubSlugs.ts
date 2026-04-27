@@ -12,7 +12,8 @@
  * REGION_HUB_SLUGS와 동기화 유지.
  */
 export const REGION_HUB_SLUGS = new Set<string>([
-  // 광역시
+  // 특별시·광역시
+  'seoul1',
   'incheon1',
   'gwangju1',
   'daegu1',
@@ -21,6 +22,7 @@ export const REGION_HUB_SLUGS = new Set<string>([
   'daejeon1',
   'sejong1',
   // 도(道)
+  'gyeonggi1',
   'gangwon1',
   'chungbuk1',
   'chungnam1',

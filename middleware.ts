@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { defaultLocale, locales, type Locale } from './lib/i18n-config';
 import { BOT_PATTERN } from './lib/bot-detection';
+import regionRedirectMap from './lib/regionRedirectMap.json';
+
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
+
+// 일반 시·군 지역 페이지 386개 → 광역 허브 308 redirect.
+// next.config.mjs redirects()는 routes 한도(1000)를 초과하므로 middleware에서 처리.
+const REGION_REDIRECT_MAP = regionRedirectMap as Record<string, string>;
+const STORIES_PATH_RE = /^\/(ko|en|zh|es|vi|th|uz)\/stories\/([^/]+)\/?$/;
 
 const parseCanonicalSiteUrl = (): URL | null => {
     const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || DEFAULT_SITE_URL;
@@ -115,6 +122,19 @@ export function middleware(request: NextRequest) {
             response.headers.set('Vary', 'Accept-Language');
         }
         return setSecurityHeaders(response);
+    }
+
+    // 일반 시·군 지역 페이지 → 광역 허브 308 redirect.
+    const storiesMatch = pathname.match(STORIES_PATH_RE);
+    if (storiesMatch) {
+        const [, locale, slug] = storiesMatch;
+        const destSlug = REGION_REDIRECT_MAP[slug];
+        if (destSlug) {
+            const regionRedirect = request.nextUrl.clone();
+            regionRedirect.pathname = `/${locale}/stories/${destSlug}`;
+            const response = NextResponse.redirect(regionRedirect, 308);
+            return setSecurityHeaders(response);
+        }
     }
 
     const response = NextResponse.next();

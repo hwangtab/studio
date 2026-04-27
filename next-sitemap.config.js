@@ -159,10 +159,12 @@ const SHORTCODE_CHAR_ESTIMATES = {
 const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
 // 광역 허브 슬러그는 thin gate에서 제외. lib/regionHubSlugs.ts와 동기화 유지.
 const REGION_HUB_SLUGS = new Set([
-  'incheon1', 'gwangju1', 'daegu1', 'busan1', 'ulsan1', 'daejeon1', 'sejong1',
-  'gangwon1', 'chungbuk1', 'chungnam1', 'jeonbuk1', 'jeonnam1',
+  'seoul1', 'incheon1', 'gwangju1', 'daegu1', 'busan1', 'ulsan1', 'daejeon1', 'sejong1',
+  'gyeonggi1', 'gangwon1', 'chungbuk1', 'chungnam1', 'jeonbuk1', 'jeonnam1',
   'gyeongbuk1', 'gyeongnam1', 'jeju1', 'nationwide1',
 ]);
+// 308 redirect 대상 슬러그는 sitemap에서도 제외 (next.config.mjs와 동기화).
+const REDIRECTED_SLUGS = new Set(Object.keys(require('./lib/regionRedirectMap.json')));
 
 const isStoryThin = (slug, locale) => {
   // 광역 허브는 사이트 정보 구조상 색인되어야 하므로 게이트 제외.
@@ -361,6 +363,8 @@ module.exports = {
       }
     }
     for (const slug of slugs) {
+      // 308 redirect 대상은 sitemap에서 제외 (next.config.mjs가 광역 허브로 보냄).
+      if (REDIRECTED_SLUGS.has(slug)) continue;
       for (const locale of locales) {
         // Skip if no locale-specific file exists for this locale (would be noindexed fallback)
         if (locale !== 'ko') {
@@ -465,9 +469,10 @@ module.exports = {
     }
 
     if (routePath.includes('/stories/')) {
-      // Thin-content gate: already filtered in additionalPaths, but defensive check for transform
+      // Thin-content gate + 308 redirect 대상 제외 (defensive).
       if (segments.length >= 3) {
         const slug = segments[2];
+        if (REDIRECTED_SLUGS.has(slug)) return null;
         if (isStoryThin(slug, locale)) {
           return null;
         }
