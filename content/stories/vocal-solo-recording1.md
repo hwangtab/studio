@@ -2,7 +2,7 @@
 title: "1인 보컬 녹음 — 솔로 아티스트의 스튜디오 활용 가이드"
 date: 2026-04-09
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["1인 보컬 녹음", "솔로 보컬 녹음", "1인 음반 녹음", "솔로 아티스트 녹음", "혼자 녹음", "보컬 단독 녹음", "1인 작업 스튜디오"]
 thumbnail: "/images/recording6.webp"
 summary: >-

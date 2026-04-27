@@ -1,6 +1,6 @@
 ---
 title: 네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 — 완전 가이드
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 기타

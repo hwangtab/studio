@@ -2,7 +2,7 @@
 title: "홈레코딩 vs 스튜디오 녹음 — 언제 어디서 녹음해야 하나"
 date: 2026-04-08
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["홈레코딩 vs 스튜디오", "스튜디오 녹음 장점", "홈레코딩 한계", "보컬 녹음 선택", "녹음실 필요한 경우", "음반 제작 방법", "보컬 퀄리티"]
 thumbnail: "/images/recording15.webp"
 summary: >-

@@ -1,6 +1,6 @@
 ---
 title: 혼합 발성(Mixed Voice) 완전 가이드 — 흉성과 두성 사이를 자유롭게
-date: 2026-04-06T00:00:00.000Z
+date: 2026-04-06
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

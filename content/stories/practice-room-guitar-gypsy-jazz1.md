@@ -1,6 +1,6 @@
 ---
 title: 집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 기타

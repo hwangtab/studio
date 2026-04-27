@@ -1,6 +1,6 @@
 ---
 title: 신스 프로그래밍 완전 가이드 — ADSR·오실레이터·필터·LFO 활용법
-date: 2026-04-07T00:00:00.000Z
+date: 2026-04-07
 author: 스튜디오 놀
 category: 음악 제작
 tags:

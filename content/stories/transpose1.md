@@ -1,6 +1,6 @@
 ---
 title: 노래 키 맞추는 방법 — 전조(Key Change)와 본인 키 찾기 완전 가이드
-date: 2026-04-06T00:00:00.000Z
+date: 2026-04-06
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

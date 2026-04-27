@@ -1,6 +1,6 @@
 ---
 title: 슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 기타

@@ -2,7 +2,7 @@
 title: "음악 프로덕션 레슨 6개월 후기 — \"MIDI부터 음원 발매까지 혼자 해냈습니다\""
 date: 2026-04-07
 author: "스튜디오 놀"
-category: "후기"
+category: 후기
 tags: ["프로덕션 레슨 후기", "MIDI 레슨 후기", "음악 제작 레슨", "음원 발매 레슨", "스튜디오 놀 후기", "작곡 레슨", "믹싱 레슨 후기"]
 thumbnail: "/images/recording9.webp"
 summary: >-

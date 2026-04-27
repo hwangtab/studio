@@ -1,6 +1,6 @@
 ---
 title: 재즈펑크 드럼·James Brown·The Meters·뉴올리언스 그루브 — 완전 가이드
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 드럼

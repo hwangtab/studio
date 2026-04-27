@@ -2,7 +2,7 @@
 title: "어쿠스틱 기타·피아노 녹음 가이드 — 홈레코딩과 전문 스튜디오의 차이"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["어쿠스틱 기타 녹음", "피아노 녹음", "어쿠스틱 악기", "악기 녹음", "홈레코딩 악기", "연신내 보컬 녹음"]
 thumbnail: "/images/recording16.webp"
 summary: >-

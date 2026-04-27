@@ -1,6 +1,6 @@
 ---
 title: 음원 파일 형식 완전 가이드 — WAV·MP3·FLAC·AAC 차이와 선택법
-date: 2026-04-06T00:00:00.000Z
+date: 2026-04-06
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

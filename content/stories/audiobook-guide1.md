@@ -2,7 +2,7 @@
 title: "오디오북 제작 방법 — 녹음부터 유통까지 완전 가이드"
 date: 2026-04-08
 author: "스튜디오 놀"
-category: "보컬 가이드"
+category: 보컬 가이드
 tags: ["오디오북 제작", "오디오북 녹음", "오디오북 제작 비용", "오디오북 나레이션", "성우 녹음", "오디오북 유통", "오디오북 만드는 방법"]
 thumbnail: "/images/recording6.webp"
 summary: >-

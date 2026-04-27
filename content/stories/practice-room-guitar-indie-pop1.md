@@ -1,6 +1,6 @@
 ---
 title: 인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 — 완전 가이드
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 기타

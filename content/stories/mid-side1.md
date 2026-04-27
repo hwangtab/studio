@@ -1,6 +1,6 @@
 ---
 title: 미드사이드(Mid-Side) 처리 완전 가이드 — 스테레오 폭 정밀 조절
-date: 2026-04-07T00:00:00.000Z
+date: 2026-04-07
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

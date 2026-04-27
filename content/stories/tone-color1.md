@@ -1,6 +1,6 @@
 ---
 title: 보컬 음색(Tone Color) 개발 가이드 — 나만의 목소리 특성 찾기와 음색 강화 훈련
-date: 2026-04-06T00:00:00.000Z
+date: 2026-04-06
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

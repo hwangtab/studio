@@ -1,6 +1,6 @@
 ---
 title: 노이즈 게이트 완전 가이드 — Threshold·Attack·Hold·Release 설정법
-date: 2026-04-07T00:00:00.000Z
+date: 2026-04-07
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

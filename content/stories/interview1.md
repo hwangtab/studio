@@ -2,7 +2,7 @@
 title: "박찬울 프로듀서 인터뷰 — 아티스트 인터뷰 시리즈"
 date: 2025-06-05
 author: "스튜디오 놀"
-category: "후기"
+category: 후기
 tags:
   - 박찬울
   - 인터뷰

@@ -2,7 +2,7 @@
 title: "연신내 합주실·연습실 — 24시간 예약 가능한 스튜디오 활용 가이드"
 date: 2026-04-05
 author: "스튜디오 놀"
-category: "지역 가이드"
+category: 지역 가이드
 tags: ["연신내 합주실", "은평구 합주실", "연신내 연습실", "24시간 합주실", "밴드 연습", "합주실 예약"]
 thumbnail: "/images/room4.webp"
 summary: >-

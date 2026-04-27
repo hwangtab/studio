@@ -2,7 +2,7 @@
 title: "뮤직비디오·유튜브 영상을 위한 음원 녹음 — 영상 퀄리티를 결정하는 음질"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["뮤직비디오 음원", "유튜브 음원 녹음", "영상용 음원", "MV 녹음", "유튜브 채널 녹음", "서울 녹음실"]
 thumbnail: "/images/recording2.webp"
 summary: >-

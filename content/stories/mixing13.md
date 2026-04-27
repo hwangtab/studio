@@ -2,7 +2,7 @@
 title: "스태틱 믹스(Static Mix) 뜻·첫 레벨 세팅법·순서 | 믹싱 강좌 13부"
 date: 2025-11-23
 author: "스튜디오 놀"
-category: "강좌"
+category: 강좌
 tags: ["믹싱", "강좌", "StaticMix", "Balance", "NoPlugins"]
 summary: >-
   모든 플러그인을 끄고 볼륨·패닝만으로 믹스를 완성하는 스태틱 믹스(Static Mix) 개념. 좋은 스태틱 믹스가 믹스 완성도의 기반임을 설명합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.

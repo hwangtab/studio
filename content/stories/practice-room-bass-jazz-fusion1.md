@@ -1,6 +1,6 @@
 ---
 title: 재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 베이스

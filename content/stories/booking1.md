@@ -2,7 +2,7 @@
 title: "스튜디오 놀 예약 방법 완전 가이드 — 카카오톡 문의부터 세션 확정까지"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["스튜디오 예약", "녹음실 예약", "카카오톡 예약", "연신내 녹음실 예약", "스튜디오 놀 예약", "녹음 예약 방법"]
 thumbnail: "/images/studio1.webp"
 summary: >-

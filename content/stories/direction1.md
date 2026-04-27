@@ -2,7 +2,7 @@
 title: "보컬 디렉팅이란? — 스튜디오 녹음에서 엔지니어가 하는 일"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["보컬 디렉팅", "보컬 녹음", "레코딩 엔지니어", "스튜디오 녹음", "서울 녹음실", "컴핑"]
 thumbnail: "/images/recording10.webp"
 summary: >-

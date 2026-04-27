@@ -1,6 +1,6 @@
 ---
 title: 보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 보컬

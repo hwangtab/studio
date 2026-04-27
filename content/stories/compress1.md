@@ -2,7 +2,7 @@
 title: "보컬 컴프레서 사용법 — 어택·릴리즈·레시오 설정과 보컬에 맞는 컴프레싱"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "믹싱·마스터링"
+category: 믹싱·마스터링
 tags: ["컴프레서", "보컬 컴프레싱", "어택 릴리즈", "레시오", "보컬 믹싱", "믹싱 강좌", "다이나믹"]
 thumbnail: "/images/hardware4.webp"
 summary: >-

@@ -2,7 +2,7 @@
 title: "힙합·래퍼 보컬 녹음 가이드 — 플로우·딜리버리·레이어 보컬 완성하기"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "보컬 가이드"
+category: 보컬 가이드
 tags: ["힙합 녹음", "래퍼 녹음", "힙합 스튜디오", "래퍼 보컬 녹음", "힙합 믹싱", "연신내 음악 스튜디오", "레이어 보컬"]
 thumbnail: "/images/recording11.webp"
 summary: >-

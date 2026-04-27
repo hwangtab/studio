@@ -2,7 +2,7 @@
 title: "\"불광믹싱클럽\" 세 번째 모임 안내"
 date: 2025-11-18
 author: "스튜디오 놀"
-category: "이벤트"
+category: 이벤트
 tags:
   - 믹싱클럽
   - 네트워킹

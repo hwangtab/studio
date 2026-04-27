@@ -2,7 +2,7 @@
 title: "결혼식 축가 녹음 후기 — 연신내 스튜디오 놀에서 완성한 특별한 선물"
 date: 2026-02-14
 author: "스튜디오 놀"
-category: "후기"
+category: 후기
 tags: ["축가 녹음", "결혼식 축가", "서울 녹음실", "축가 녹음 후기", "스튜디오 놀"]
 thumbnail: "/images/album3.webp"
 summary: >-

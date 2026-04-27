@@ -1,6 +1,6 @@
 ---
 title: 피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 피아노

@@ -1,6 +1,6 @@
 ---
 title: 수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 기타

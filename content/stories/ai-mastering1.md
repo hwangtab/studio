@@ -1,6 +1,6 @@
 ---
 title: AI 마스터링 완전 가이드 — LANDR·eMastered·Ozone AI 비교와 한계
-date: 2026-04-07T00:00:00.000Z
+date: 2026-04-07
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

@@ -2,7 +2,7 @@
 title: "셀프 믹싱 vs 전문 믹싱 의뢰 — 내 음악에 맞는 선택 기준"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "믹싱·마스터링"
+category: 믹싱·마스터링
 tags: ["셀프 믹싱", "믹싱 의뢰", "온라인 믹싱", "믹싱 비용", "DAW 믹싱", "전문 믹싱", "보컬 믹싱"]
 thumbnail: "/images/console.webp"
 summary: >-

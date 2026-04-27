@@ -2,7 +2,7 @@
 title: "인디 뮤지션을 위한 녹음실 — 예산·작업 흐름·스튜디오 선택법"
 date: 2026-04-11
 author: "스튜디오 놀"
-category: "음악 비즈니스"
+category: 음악 비즈니스
 tags: ["인디 뮤지션 녹음실", "인디 음악 녹음", "인디 아티스트 스튜디오", "인디 EP 제작", "독립 음반 제작", "싱어송라이터 스튜디오", "인디 밴드 녹음"]
 thumbnail: "/images/recording11.webp"
 summary: >-

@@ -2,7 +2,7 @@
 title: "트로트·성인가요 녹음 가이드 — 바이브레이션·꺾기·멜리스마 표현을 살리는 녹음법"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "보컬 가이드"
+category: 보컬 가이드
 tags: ["트로트 녹음", "성인가요 녹음", "트로트 보컬", "바이브레이션 녹음", "꺾기 표현", "서울 보컬 녹음실"]
 thumbnail: "/images/recording17.webp"
 summary: >-

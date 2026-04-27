@@ -1,6 +1,6 @@
 ---
 title: DAW 퍼포먼스 최적화 완전 가이드 — CPU·레이턴시·버퍼 설정
-date: 2026-04-07T00:00:00.000Z
+date: 2026-04-07
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

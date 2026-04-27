@@ -1,6 +1,6 @@
 ---
 title: 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법
-date: '2026-04-08'
+date: 2026-04-08
 tags:
   - 음악 연습실
   - 기타

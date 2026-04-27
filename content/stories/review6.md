@@ -2,7 +2,7 @@
 title: "연신내·불광·은평구 녹음실 비교 — 전문 스튜디오를 고를 때 체크해야 할 것들"
 date: 2026-04-01
 author: "스튜디오 놀"
-category: "후기"
+category: 후기
 tags: ["연신내 녹음실", "불광 녹음실", "은평구 녹음실", "서울 서북부 녹음실", "녹음실 추천", "녹음실 비교"]
 thumbnail: "/images/studio3.webp"
 summary: >-

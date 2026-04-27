@@ -2,7 +2,7 @@
 title: "기획사·레이블 제출용 데모 트랙 완성 가이드 — 심사위원이 원하는 데모란"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["데모 트랙", "기획사 오디션", "레이블 데모", "데모 제작", "보컬 데모", "오디션 준비", "스튜디오 데모 녹음"]
 thumbnail: "/images/console.webp"
 summary: >-

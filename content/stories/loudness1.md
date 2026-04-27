@@ -1,6 +1,6 @@
 ---
 title: 음압(LUFS)과 스트리밍 마스터링 완전 가이드
-date: 2026-04-06T00:00:00.000Z
+date: 2026-04-06
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

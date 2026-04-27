@@ -1,6 +1,6 @@
 ---
 title: GarageBand 보컬 녹음 완전 가이드 — 무료 DAW로 고퀄리티 녹음
-date: 2026-04-07T00:00:00.000Z
+date: 2026-04-07
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

@@ -1,6 +1,6 @@
 ---
 title: 합주실 vs — 차이점과 목적별 선택 가이드
-date: 2026-04-08T00:00:00.000Z
+date: 2026-04-08
 author: 스튜디오 놀
 category: 악기 연습
 tags:

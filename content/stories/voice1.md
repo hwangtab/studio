@@ -2,7 +2,7 @@
 title: "유튜브 나레이션 녹음 — 홈 마이크와 전문 스튜디오의 차이, 그리고 선택 기준"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["유튜브 나레이션 녹음", "나레이션 녹음실", "유튜브 성우", "광고 나레이션", "영상 나레이션", "연신내 성우 녹음"]
 thumbnail: "/images/recording14.webp"
 summary: >-

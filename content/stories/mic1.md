@@ -2,7 +2,7 @@
 title: "마이크 종류별 보컬 녹음 차이 — USB·다이나믹·콘덴서 마이크를 비교합니다"
 date: 2026-04-06
 author: "스튜디오 놀"
-category: "녹음 가이드"
+category: 녹음 가이드
 tags: ["마이크 종류", "콘덴서 마이크", "USB 마이크", "다이나믹 마이크", "보컬 녹음", "Neumann U87", "마이크 추천"]
 thumbnail: "/images/hardware3.webp"
 summary: >-

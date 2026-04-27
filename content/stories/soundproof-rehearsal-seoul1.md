@@ -2,7 +2,7 @@
 title: "서울 방음 합주실 — 진짜 방음되는 곳 찾는 법"
 date: 2026-04-10
 author: "스튜디오 놀"
-category: "악기 연습"
+category: 악기 연습
 tags: ["서울 방음 합주실", "은평구 합주실", "연신내 합주실", "방음 합주실", "진짜 방음", "24시간 합주실", "밴드 합주실 서울"]
 thumbnail: "/images/room5.webp"
 summary: >-
