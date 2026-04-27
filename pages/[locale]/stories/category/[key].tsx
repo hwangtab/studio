@@ -10,6 +10,7 @@ import SEO from '../../../../components/SEO';
 import ImageHero from '../../../../components/common/ImageHero';
 import ContactCTA from '../../../../components/common/ContactCTA';
 import { getAllStories, isListableStory } from '../../../../lib/stories';
+import { STORY_CATEGORY_KEYS, type StoryCategoryKey } from '../../../../lib/storyCategories';
 import type { Story } from '../../../../types/story';
 import { Section } from '../../../../components/ui/Section';
 import Pagination from '../../../../components/ui/Pagination';
@@ -20,12 +21,7 @@ import { getSiteConfig } from '../../../../data/siteConfig';
 
 import type { NextPageWithLayout } from '../../../../types';
 
-const storyCategoryKeys = [
-  'instrument', 'region', 'lesson', 'production', 'recording',
-  'vocal', 'feedback', 'mixing', 'business', 'event',
-] as const;
-
-type CategoryKey = typeof storyCategoryKeys[number];
+type CategoryKey = StoryCategoryKey;
 
 interface StoriesCategoryPageProps {
   locale: Locale;
@@ -67,7 +63,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
     noTitle: t('stories.list.noTitle'),
     noContent: t('stories.list.noContent'),
     categoryByKey: Object.fromEntries(
-      storyCategoryKeys.map((key) => [key, t(`stories.categories.${key}`)])
+      STORY_CATEGORY_KEYS.map((key) => [key, t(`stories.categories.${key}`)])
     ),
   }), [t]);
 
@@ -109,6 +105,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
   return (
     <>
       <SEO
+        locale={locale}
         title={seoTitle}
         description={seoDescription}
         keywords={`${categoryLabel}, ${t('nav.stories')}, 스튜디오 놀, Studio NOL, ${t(`stories.categories.${categoryKey}`)} 가이드`}
@@ -244,7 +241,7 @@ StoriesCategoryPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = locales.flatMap((locale) =>
-    storyCategoryKeys.map((key) => ({ params: { locale, key } }))
+    STORY_CATEGORY_KEYS.map((key) => ({ params: { locale, key } }))
   );
   return { paths, fallback: false };
 };
@@ -253,7 +250,7 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
   const locale = resolveLocaleParam(params?.locale);
   const key = params?.key as CategoryKey;
 
-  if (!storyCategoryKeys.includes(key)) {
+  if (!STORY_CATEGORY_KEYS.includes(key)) {
     return { notFound: true };
   }
 

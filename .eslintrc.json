@@ -23,5 +23,13 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["lib/sitemap/*.js"],
+      "rules": {
+        "@typescript-eslint/no-require-imports": "off"
+      }
+    }
+  ]
 }

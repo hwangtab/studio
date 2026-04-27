@@ -22,6 +22,20 @@ interface ContactProps {
   locale: Locale;
 }
 
+// Google Maps `hl` 파라미터는 BCP-47 호환 코드를 기대한다. 사이트 i18n 코드는
+// short form(zh, vi, th 등)이라 1:1 매핑이 필요하다. 우즈베크어는 Google Maps가
+// 공식 지원하지 않아 영어로 폴백 — 우리 콘텐츠 zh도 simplified 한 종류만 다루므로
+// zh-TW 사용자에게도 zh-CN을 보낸다.
+const GOOGLE_MAPS_HL: Record<Locale, string> = {
+  ko: 'ko',
+  en: 'en',
+  zh: 'zh-CN',
+  es: 'es',
+  vi: 'vi',
+  th: 'th',
+  uz: 'en',
+};
+
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon: React.ElementType;
   label: string;
@@ -114,6 +128,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   return (
     <>
       <SEO
+        locale={locale}
         title={t('contact.seo.title')}
         description={t('contact.seo.description')}
         keywords={t('contact.seo.keywords')}
@@ -200,7 +215,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                 <h3 className="typo-card-title mb-4">{t('contact.info.location')}</h3>
                 <div className="mb-6">
                   <iframe
-                    src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1s${locale === 'zh' ? 'zh-CN' : locale}!2skr!4v1704364800000!5m2!1s${locale === 'zh' ? 'zh-CN' : locale}!2skr&hl=${locale === 'zh' ? 'zh-CN' : locale}`}
+                    src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1s${GOOGLE_MAPS_HL[locale]}!2skr!4v1704364800000!5m2!1s${GOOGLE_MAPS_HL[locale]}!2skr&hl=${GOOGLE_MAPS_HL[locale]}`}
                     width="100%"
                     height="250"
                     style={{ border: 0, borderRadius: '0.5rem' }}

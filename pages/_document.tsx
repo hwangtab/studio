@@ -53,31 +53,13 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://cdn.imweb.me" />
           {/* 폰트 preload 제거: Slow 4G에서 1MB 폰트가 preload로 CSS/JS 다운로드를 블로킹하던 현상 해소.
               font-display: swap 으로 시스템 폰트 즉시 렌더 → 폰트 도착 후 swap. FCP 대폭 단축. */}
-          <script
-            id="theme-init"
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function() {
-                  try {
-                    var storageKey = 'darkMode';
-                    var storedPreference = localStorage.getItem(storageKey);
-                    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    var shouldUseDark = storedPreference === 'true' || (storedPreference === null && prefersDark);
-                
-                    document.documentElement.classList.toggle('dark', shouldUseDark);
-                
-                    var themeColor = shouldUseDark ? '#5b21b6' : '#6d28d9';
-                    var metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
-                    if (metaThemeColor) {
-                      metaThemeColor.setAttribute('content', themeColor);
-                    }
-                  } catch (error) {
-                    console.warn('theme init failed', error);
-                  }
-                })();
-                `,
-            }}
-          />
+          {/* theme-init: FOUC 방지를 위해 <head>에서 *동기* 실행이 의도적.
+              async/defer를 두면 본문 렌더 후 실행되어 라이트→다크 토글 깜빡임이
+              생긴다 (no-sync-scripts 규칙은 일반 외부 라이브러리를 위한 것이라
+              이 케이스는 예외). CSP 'unsafe-inline' 표면을 줄이기 위해 외부 파일로
+              분리했다. 색상 상수는 components/Layout.tsx 토글 핸들러와 동기화. */}
+          {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+          <script id="theme-init" src="/scripts/theme-init.js" />
         </Head>
         <body className="bg-white dark:bg-gray-900">
           <Main />

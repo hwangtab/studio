@@ -387,10 +387,41 @@ const STATIC_OVERRIDES = {
   },
 };
 
+const REGEX_META_CHARS = /[.*+?^${}()|[\]\\]/g;
+const escapeRegexLiteral = (raw: string): string => raw.replace(REGEX_META_CHARS, '\\$&');
+
+// 자동 링크 삽입에서 제외할 본문 영역(이미 링크인 곳, 코드 펜스, 인라인 코드).
+// 키워드 매치 offset이 이 범위에 들어가면 다음 유효 매치로 폴백한다.
+const EXCLUSION_PATTERNS: RegExp[] = [
+  /!?\[[^\]\n]*\]\([^)\n]*\)/g, // 마크다운 링크/이미지 [text](url) 또는 ![alt](src)
+  /```[\s\S]*?```/g,             // 코드 펜스 ``` ```
+  /`[^`\n]+`/g,                  // 인라인 코드 `code`
+];
+
+const collectExclusionRanges = (text: string): Array<[number, number]> => {
+  const ranges: Array<[number, number]> = [];
+  for (const pattern of EXCLUSION_PATTERNS) {
+    for (const m of text.matchAll(pattern)) {
+      if (typeof m.index === 'number') {
+        ranges.push([m.index, m.index + m[0].length]);
+      }
+    }
+  }
+  return ranges;
+};
+
+const isOffsetExcluded = (offset: number, ranges: Array<[number, number]>): boolean => {
+  for (const [start, end] of ranges) {
+    if (offset >= start && offset < end) return true;
+  }
+  return false;
+};
+
 /**
- * 본문에서 topicLinks 키워드의 첫 등장을 자동으로 내부 링크로 변환합니다.
+ * 본문에서 topicLinks 키워드의 *첫 유효 등장*을 자동으로 내부 링크로 변환합니다.
  * - 기사당 최대 MAX_AUTO_LINKS개
- * - 이미 마크다운 링크 안에 있는 키워드는 건너뜀
+ * - 마크다운 링크/이미지/코드 펜스/인라인 코드 안의 매치는 건너뜀 (정확한 offset 기반)
+ * - 한 키워드가 여러 번 등장할 때 첫 매치가 제외 영역 안이면 다음 유효 매치를 시도
  * - 자기 자신 slug으로의 링크는 제외
  */
 function autoLinkKeywords(text: string, currentSlug?: string): string {
@@ -398,34 +429,29 @@ function autoLinkKeywords(text: string, currentSlug?: string): string {
   let count = 0;
   const linkedSlugs = new Set<string>();
 
-  // 키워드를 길이 역순으로 정렬 (긴 키워드 우선 매칭)
+  // 긴 키워드 먼저 매칭해 짧은 키워드가 부분 매치로 가로채는 경우 방지
   const sortedKeywords = Object.keys(topicLinks).sort((a, b) => b.length - a.length);
 
   for (const keyword of sortedKeywords) {
     if (count >= MAX_AUTO_LINKS) break;
     const { slug, anchorText } = topicLinks[keyword];
-    if (slug === currentSlug) continue;
-    if (linkedSlugs.has(slug)) continue;
+    if (slug === currentSlug || linkedSlugs.has(slug)) continue;
 
-    // 이미 링크 안에 있는 키워드는 스킵: [text](url) 패턴 내부 제외
-    // 간단한 휴리스틱: 키워드 앞에 [, ( 가 없고 뒤에 ], ) 가 없는 위치에서만 매칭
-    const idx = result.indexOf(keyword);
-    if (idx === -1) continue;
+    // result는 매 변환마다 mutating되므로 exclusion ranges도 매번 재계산
+    const exclusionRanges = collectExclusionRanges(result);
+    const re = new RegExp(escapeRegexLiteral(keyword), 'g');
 
-    // 키워드가 마크다운 링크 내부에 있는지 확인
-    const before50 = result.slice(Math.max(0, idx - 50), idx);
-    const after50 = result.slice(idx + keyword.length, idx + keyword.length + 50);
-    const isInsideLink = (before50.includes('[') && !before50.includes(']')) ||
-                         (after50.includes(')') && !after50.includes('('));
-    if (isInsideLink) continue;
+    for (const m of result.matchAll(re)) {
+      if (typeof m.index !== 'number') continue;
+      if (isOffsetExcluded(m.index, exclusionRanges)) continue;
 
-    // 첫 등장만 링크로 변환
-    result = result.slice(0, idx) +
-      `[${anchorText}](/stories/${slug})` +
-      result.slice(idx + keyword.length);
-
-    linkedSlugs.add(slug);
-    count++;
+      result = result.slice(0, m.index) +
+        `[${anchorText}](/stories/${slug})` +
+        result.slice(m.index + keyword.length);
+      linkedSlugs.add(slug);
+      count++;
+      break;
+    }
   }
 
   return result;
@@ -452,8 +478,10 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
     document.head.appendChild(link);
   }, []);
 
-  const overrides = React.useMemo(() => ({
-    ...STATIC_OVERRIDES,
+  // locale이 바뀔 때만 a 컴포넌트 override를 새로 만들고, static overrides와는 합치기만 한다.
+  // 이전에는 STATIC_OVERRIDES 전체를 spread해 overrides 객체 자체가 매 locale 변경마다 통째로
+  // 재생성됐다 — markdown-to-jsx options 식별이 깨지면서 자식 트리 재마운트로 이어졌다.
+  const localeAwareOverrides = React.useMemo(() => ({
     a: {
       component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
         if (!isAllowedProtocol(href)) {
@@ -484,6 +512,11 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       },
     },
   }), [currentLocale]);
+
+  const overrides = React.useMemo(
+    () => ({ ...STATIC_OVERRIDES, ...localeAwareOverrides }),
+    [localeAwareOverrides]
+  );
 
   const processedContent = React.useMemo(() => autoLinkKeywords(content, currentSlug), [content, currentSlug]);
   const segments = React.useMemo(() => splitContentByShortcodes(processedContent), [processedContent]);

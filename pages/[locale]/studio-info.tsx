@@ -104,6 +104,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
   return (
     <>
       <SEO
+        locale={locale}
         title={t('studioInfo.seo.title')}
         description={t('studioInfo.seo.description')}
         keywords={t('studioInfo.seo.keywords')}

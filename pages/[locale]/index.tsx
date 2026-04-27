@@ -56,6 +56,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
   return (
     <div className="overflow-visible">
       <SEO
+        locale={locale}
         title={seo.title}
         description={seo.description}
         keywords={seo.keywords}
@@ -222,7 +223,11 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
       {/* 리뷰 섹션 */}
       <ReviewSection variant="default" locale={locale} />
 
-      {/* FAQ 섹션 */}
+      {/* FAQ 섹션 — 두 컴포넌트의 표시 데이터가 의도적으로 겹친다.
+          QuickAnswers: 첫 3개 항목을 above-the-fold 가까이서 빠르게 답변
+          FAQSection: 전체 항목을 카테고리·접힘 형태로 노출
+          schema(JSON-LD)는 <SEO faqItems={faqData}>에서 단일로 생성하므로
+          중복 마크업 없음. 시각적 중복은 conversion-focused UX 트레이드오프. */}
       <QuickAnswers
         items={homeQuickAnswers}
         title={t('home.faq.title')}

@@ -52,6 +52,23 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
+  // light용 theme-color는 React state로 관리한다 — setAttribute로 직접 갱신해도
+  // next/head가 hydration·reconcile 시 component tree의 content prop 값으로 attribute를
+  // 다시 set하기 때문이다. .dark 클래스 변경을 MutationObserver로 추적해 state를
+  // 갱신하면 React re-render가 meta content를 일관되게 유지한다.
+  const [themeColorLight, setThemeColorLight] = useState('#6d28d9');
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const sync = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setThemeColorLight(isDark ? '#5b21b6' : '#6d28d9');
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (typeof document === 'undefined') return;
   }, []);
@@ -210,8 +227,17 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="color-scheme" content="light dark" />
-        <meta name="theme-color" content="#6d28d9" />
-        <meta name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
+        {/* theme-color 두 meta는 next/head dedupe를 우회하도록 명시 key가 필요하다 —
+            key 없이 같은 name="theme-color"를 두 번 두면 next/head가 한 개만 SSR에
+            출력해 progressive enhancement가 깨진다.
+            동작:
+            1) light용(media 없음): /scripts/theme-init.js와 components/Layout.tsx
+               토글 핸들러가 사용자 결정값으로 content 갱신.
+            2) dark용(media query 매치 시): 스크립트 실패·차단 환경 폴백. 시스템이
+               dark 선호면 브라우저가 자동 매치.
+            HTML 스펙은 두 meta 중 environment 매치되는 것을 사용. */}
+        <meta key="theme-color-light" name="theme-color" content={themeColorLight} />
+        <meta key="theme-color-dark" name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
         <meta name="msapplication-TileColor" content="#6d28d9" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />

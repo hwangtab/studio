@@ -73,6 +73,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
   return (
     <div className="overflow-visible">
       <SEO
+        locale={locale}
         title={t('about.seo.title')}
         description={t('about.seo.description')}
         keywords={t('about.seo.keywords')}

@@ -5,7 +5,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig = {
   reactStrictMode: true,
-  compress: true,
   poweredByHeader: false,
   trailingSlash: false,
   outputFileTracingRoot: __dirname,
@@ -123,6 +122,14 @@ const nextConfig = {
         ],
       },
       {
+        // theme-init 외부 스크립트는 거의 변경되지 않고 모든 페이지에서 첫 로드 시
+        // 동기 실행된다. immutable 캐시로 두 번째 방문부터는 추가 RTT 없이 처리.
+        source: '/scripts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
         source: '/locales/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=43200' },
@@ -141,7 +148,8 @@ const nextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+          // Permissions-Policy는 middleware.ts가 페이지 응답에 더 엄격한 정책을 적용한다.
+          // 정적 자산은 권한 API를 사용하지 않아 헤더가 필요 없으므로 여기선 제외.
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains; preload',

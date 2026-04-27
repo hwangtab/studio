@@ -147,6 +147,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
   return (
     <>
       <SEO
+        locale={locale}
         title={t('weddingSong.seo.title')}
         description={t('weddingSong.seo.description')}
         keywords={t('weddingSong.seo.keywords')}

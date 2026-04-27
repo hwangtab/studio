@@ -174,6 +174,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   return (
     <div className="overflow-visible">
       <SEO
+        locale={locale}
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
         keywords={t('pricing.seo.keywords')}

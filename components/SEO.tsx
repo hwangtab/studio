@@ -49,6 +49,13 @@ interface SEOProps {
    * If omitted, hreflang is emitted for every configured locale.
    */
   availableLocales?: readonly Locale[];
+  /**
+   * Authoritative locale for this page. When provided, the component uses this
+   * value directly instead of deriving the locale from `router.asPath`, which
+   * is unreliable during SSR/SSG (asPath can be empty or fall back to `ko`).
+   * Pass the `locale` from page props whenever available.
+   */
+  locale?: Locale;
 }
 
 const SEO = ({
@@ -79,16 +86,21 @@ const SEO = ({
   isCourse = false,
   webPageType,
   availableLocales,
+  locale,
 }: SEOProps) => {
   const router = useRouter();
 
   const currentPath = router.asPath.split('?')[0].split('#')[0];
   const segments = currentPath.split('/');
   let pathWithoutLocale = currentPath;
-  let currentLocale: Locale = 'ko';
+  // 우선순위: 명시된 locale prop > URL prefix 추출 > defaultLocale 폴백.
+  // SSR/SSG 시 router.asPath가 비거나 잘못된 값으로 들어올 수 있어 prop 제공이 권장.
+  let currentLocale: Locale = locale ?? defaultLocale;
 
   if (locales.includes(segments[1] as Locale)) {
-    currentLocale = segments[1] as Locale;
+    if (!locale) {
+      currentLocale = segments[1] as Locale;
+    }
     pathWithoutLocale = '/' + segments.slice(2).join('/');
   }
 

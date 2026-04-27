@@ -124,6 +124,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
   return (
     <>
       <SEO
+        locale={locale}
         title={`${item.title} - ${t('portfolio.detail.titleSuffix')}`}
         description={metaDescription}
         canonical={isFallbackTranslation ? undefined : `/${locale}/portfolio/${item.id}`}

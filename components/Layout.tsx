@@ -13,13 +13,19 @@ interface LayoutProps {
   locale?: Locale;
 }
 
+// 헤더 실제 높이는 mount 직후 ResizeObserver가 측정·갱신한다.
+// 이 초기값은 첫 paint와 첫 RO fire 사이의 layout shift를 최소화하기 위한
+// best-effort 추정치 — 현재 헤더 CSS의 평균 렌더 높이(80px)와 일치시킨다.
+// 헤더 스타일이 바뀌면 이 상수도 함께 조정해야 한다.
+const INITIAL_HEADER_HEIGHT_PX = 80;
+
 const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(80);
+  const [headerHeight, setHeaderHeight] = useState(INITIAL_HEADER_HEIGHT_PX);
   const headerRef = useRef<HTMLElement | null>(null);
 
 

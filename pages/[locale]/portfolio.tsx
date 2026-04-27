@@ -140,6 +140,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   return (
     <>
       <SEO
+        locale={locale}
         title={t('portfolio.seo.title')}
         description={t('portfolio.seo.description')}
         keywords={t('portfolio.seo.keywords')}

@@ -25,8 +25,10 @@ const storyDetailCache = new Map<string, StoryDetail>();
 const storyAvailableLocalesCache = new Map<string, Locale[]>();
 
 export const getStoryAvailableLocales = (slug: string): Locale[] => {
-  const cached = enableCache ? storyAvailableLocalesCache.get(slug) : undefined;
-  if (cached && enableCache) return cached;
+  if (enableCache) {
+    const cached = storyAvailableLocalesCache.get(slug);
+    if (cached) return cached;
+  }
 
   const available: Locale[] = [];
   if (fs.existsSync(path.join(storiesDirectory, `${slug}.md`))) {
@@ -44,9 +46,9 @@ export const getStoryAvailableLocales = (slug: string): Locale[] => {
 
 const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { filePath: string; sourceLocale: Locale } => {
   const cacheKey = `${locale}:${slug}`;
-  const cached = enableCache ? storyFileResolutionCache.get(cacheKey) : undefined;
-  if (cached && enableCache) {
-    return cached;
+  if (enableCache) {
+    const cached = storyFileResolutionCache.get(cacheKey);
+    if (cached) return cached;
   }
 
   let resolved: { filePath: string; sourceLocale: Locale };
@@ -85,7 +87,7 @@ const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { fileP
 // next-sitemap.config.js의 isStoryThin과 sentinel 형식이 동기화되어야 한다.
 const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
 
-const extractAutoExpandBlock = (source: string): { stripped: string; block: string | null } => {
+export const extractAutoExpandBlock = (source: string): { stripped: string; block: string | null } => {
   if (!source || !source.includes('AUTO-EXPAND-V1')) {
     return { stripped: source, block: null };
   }
@@ -99,6 +101,33 @@ const extractAutoExpandBlock = (source: string): { stripped: string; block: stri
     .trim();
   const stripped = source.replace(AUTO_EXPAND_BLOCK_REGEX, '').replace(/\n{3,}/g, '\n\n');
   return { stripped, block: block.length > 0 ? block : null };
+};
+
+/**
+ * AUTO-EXPAND 보일러플레이트 분리 후 본문 분량(글자 수 + 쇼트코드 보너스)으로
+ * thin-content 여부를 판정한다. next-sitemap.config.js의 isStoryThin과 동일한
+ * 임계·로직을 공유하며, 광역 허브는 사이트 정보 구조상 색인이 필요해 제외.
+ *
+ * @param contentAfterAutoExpandStrip AUTO-EXPAND 블록을 분리한 본문 (extractAutoExpandBlock의 stripped)
+ * @param slug 광역 허브 게이트 적용을 위한 슬러그
+ */
+export const THIN_CONTENT_THRESHOLD = 1500;
+export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
+  'online-fallback': 120,
+  'session-checklist': 420,
+};
+export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
+
+export const computeThinContentStatus = (
+  contentAfterAutoExpandStrip: string,
+  slug: string,
+): { isThinContent: boolean; charCount: number } => {
+  const shortcodeBonus = [...contentAfterAutoExpandStrip.matchAll(/%%([a-z-]+)%%/g)]
+    .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? SHORTCODE_DEFAULT_CHAR_ESTIMATE), 0);
+  const rawNonWhitespace = contentAfterAutoExpandStrip.replace(/\s+/g, '').length;
+  const charCount = rawNonWhitespace + shortcodeBonus;
+  const isThinContent = !isRegionHub(slug) && charCount < THIN_CONTENT_THRESHOLD;
+  return { isThinContent, charCount };
 };
 
 const stripCodeFenceWrapper = (source: string): string => {
@@ -171,75 +200,21 @@ const normalizeDate = (value: string | Date | undefined): string => {
   return date.toISOString();
 };
 
-const storyCategoryKeyMap: Record<string, string> = {
-  // Primary categories (10)
-  '악기 연습': 'instrument',
-  '지역 가이드': 'region',
-  강좌: 'lesson',
-  '음악 제작': 'production',
-  '녹음 가이드': 'recording',
-  '보컬 가이드': 'vocal',
-  후기: 'feedback',
-  '믹싱·마스터링': 'mixing',
-  '음악 비즈니스': 'business',
-  이벤트: 'event',
-  // Legacy English keys
-  instrument: 'instrument',
-  region: 'region',
-  lesson: 'lesson',
-  production: 'production',
-  recording: 'recording',
-  vocal: 'vocal',
-  feedback: 'feedback',
-  mixing: 'mixing',
-  business: 'business',
-  event: 'event',
-  // Legacy mappings for backward compatibility
-  news: 'event',
-  notice: 'event',
-  공지: 'event',
-  소식: 'event',
-  interview: 'feedback',
-  review: 'feedback',
-  인터뷰: 'feedback',
-  리뷰: 'feedback',
-  '후기·인터뷰': 'feedback',
-  practice: 'instrument',
-  '음악연습실 가이드': 'instrument',
-  '음악연습실': 'instrument',
-  '음악 연습실 가이드': 'instrument',
-  '연습실 가이드': 'instrument',
-  'music-guide': 'recording',
-  guide: 'recording',
-  가이드: 'recording',
-};
-
-const storyCategoryKeys = new Set<string>([
-  'instrument',
-  'region',
-  'lesson',
-  'production',
-  'recording',
-  'vocal',
-  'feedback',
-  'mixing',
-  'business',
-  'event',
-]);
-
-const normalizeStoryCategoryKey = (category?: string): string => {
-  if (!category) return 'recording';
-  const trimmed = category.trim();
-  if (storyCategoryKeyMap[trimmed]) return storyCategoryKeyMap[trimmed];
-  if (storyCategoryKeys.has(trimmed)) return trimmed;
-  return 'recording';
-};
+// 카테고리 키 단일 소스는 fs 의존성을 갖지 않는 lib/storyCategories.ts에 있다 —
+// 페이지(client bundle)에서도 안전하게 import 가능. 여기선 server-only 사용처를
+// 위해 re-export한다.
+export {
+  STORY_CATEGORY_KEYS,
+  type StoryCategoryKey,
+  normalizeStoryCategoryKey,
+} from './storyCategories';
+import { normalizeStoryCategoryKey } from './storyCategories';
 
 const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
   const cacheKey = `${locale}:${categoryKey}`;
-  const cached = enableCache ? storyCategoryLabelCache.get(cacheKey) : undefined;
-  if (cached && enableCache) {
-    return cached;
+  if (enableCache) {
+    const cached = storyCategoryLabelCache.get(cacheKey);
+    if (cached) return cached;
   }
 
   const localeCommon = loadCommonResourceServer(locale);
@@ -288,9 +263,11 @@ const getParsedStoryFile = (slug: string, locale: Locale): {
   content: string;
 } => {
   const { filePath, sourceLocale } = resolveStoryFile(slug, locale);
-  const cached = enableCache ? parsedStoryFileCache.get(filePath) : undefined;
-  if (cached && enableCache) {
-    return { sourceLocale, data: cached.data, content: cached.content };
+  if (enableCache) {
+    const cached = parsedStoryFileCache.get(filePath);
+    if (cached) {
+      return { sourceLocale, data: cached.data, content: cached.content };
+    }
   }
 
   if (!fs.existsSync(filePath)) {
@@ -309,9 +286,9 @@ const getParsedStoryFile = (slug: string, locale: Locale): {
 
 export const getAllStories = (locale: string = defaultLocale): Story[] => {
   const normalizedLocale = (locale as Locale) || defaultLocale;
-  const cached = enableCache ? allStoriesCache.get(normalizedLocale) : undefined;
-  if (cached && enableCache) {
-    return cached;
+  if (enableCache) {
+    const cached = allStoriesCache.get(normalizedLocale);
+    if (cached) return cached;
   }
 
   const stories = getAllStorySlugs()
@@ -335,9 +312,9 @@ export const getAllStories = (locale: string = defaultLocale): Story[] => {
 export const getStoryDetail = async (slug: string, locale: string = defaultLocale): Promise<StoryDetail> => {
   const requestedLocale = locale as Locale;
   const cacheKey = `${requestedLocale}:${slug}`;
-  const cached = enableCache ? storyDetailCache.get(cacheKey) : undefined;
-  if (cached && enableCache) {
-    return cached;
+  if (enableCache) {
+    const cached = storyDetailCache.get(cacheKey);
+    if (cached) return cached;
   }
 
   const { sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
@@ -365,22 +342,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       )
     : undefined;
 
-  // Estimate rendered shortcode content length so boilerplate-replaced pages
-  // are not unfairly penalized. Each shortcode token contributes an estimated
-  // character count equivalent to its rendered output.
-  const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
-    'online-fallback': 120,
-    'session-checklist': 420,
-  };
-  const shortcodeBonus = [...contentToProcess.matchAll(/%%([a-z-]+)%%/g)]
-    .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? 80), 0);
-  const rawNonWhitespace = contentToProcess.replace(/\s+/g, '').length;
-  // Raise threshold from 1000 to 1500 to prevent thin pages from being indexed.
-  // Pages like `bulgwang-mixing-club` (5,016B ≈ 1,700 chars) barely passed 1000
-  // but were still rejected by Google. 1500 chars provides a safer buffer.
-  // 단, 광역 허브 페이지는 사이트 정보 구조상 색인되어야 하므로 게이트에서 제외.
-  // (광역 허브와 일반 지역 페이지의 본문 길이 분포가 동일해 임계값으로는 구분 불가)
-  const isThinContent = !isRegionHub(slug) && (rawNonWhitespace + shortcodeBonus) < 1500;
+  const isThinContent = computeThinContentStatus(contentToProcess, slug).isThinContent;
 
   const storyDetail: StoryDetail = {
     ...baseStory,

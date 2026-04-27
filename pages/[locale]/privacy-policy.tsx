@@ -230,6 +230,7 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
   return (
     <>
       <SEO
+        locale={locale}
         title={`${policyCopy.title} | ${siteConfig.name}`}
         description={policyCopy.subtitle}
         robots="noindex, follow"

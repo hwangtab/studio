@@ -11,6 +11,7 @@ import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
 import { getAllStories, isListableStory } from '../../../lib/stories';
+import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import Pagination from '../../../components/ui/Pagination';
@@ -35,8 +36,6 @@ interface StoriesPageProps {
   locale: Locale;
   stories: StoryListItem[];
 }
-
-const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'] as const;
 
 const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
   const router = useRouter();
@@ -92,7 +91,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
       noTitle: t('stories.list.noTitle'),
       noContent: t('stories.list.noContent'),
       categoryByKey: Object.fromEntries(
-        storyCategoryKeys.map((key) => [key, t(`stories.categories.${key}`)])
+        STORY_CATEGORY_KEYS.map((key) => [key, t(`stories.categories.${key}`)])
       ),
     }),
     [t]
@@ -134,6 +133,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   return (
     <>
       <SEO
+        locale={locale}
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}

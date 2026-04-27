@@ -568,6 +568,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   return (
     <>
       <SEO
+        locale={locale}
         title={t('practiceRoom.seo.title')}
         description={t('practiceRoom.seo.description')}
         keywords={t('practiceRoom.seo.keywords')}

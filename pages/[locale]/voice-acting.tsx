@@ -173,6 +173,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
   return (
     <>
       <SEO
+        locale={locale}
         title={t('voiceActing.seo.title')}
         description={t('voiceActing.seo.description')}
         keywords={t('voiceActing.seo.keywords')}

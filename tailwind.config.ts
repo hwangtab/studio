@@ -81,6 +81,10 @@ const config: Config = {
       },
     },
   },
+  // class 전략: 사용자 토글이 시스템 prefers-color-scheme를 override할 수 있도록
+  // .dark 클래스가 <html>에 토글된다 (components/Layout.tsx). 이 모드에선
+  // addComponents 안의 `.dark &` nesting이 표준이고 정상 동작한다 — Tailwind v4
+  // 마이그레이션 시에는 selector strategy 재검토 필요.
   darkMode: 'class',
   plugins: [
     function ({ addUtilities, addComponents, theme }: { addUtilities: any, addComponents: any, theme: any }) {

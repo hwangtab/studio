@@ -51,9 +51,12 @@ export const getI18nStaticProps = (localeParam: unknown, sections?: readonly str
   };
 };
 
+// extraProps는 빈 페이지의 경우에도 호출자가 `{}`를 명시 전달하므로 필수 인자.
+// 옵셔널로 두면 TS가 호출 사이트에서 TProps 추론을 default(Record<string, never>)로
+// 잡아 props에 누락이 생긴다. 필수로 두면 spread만으로 안전하게 합쳐진다.
 export const buildPageStaticProps = <TProps extends Record<string, unknown>>(
   localeParam: unknown,
-  extraProps: TProps = {} as TProps,
+  extraProps: TProps,
   options: BuildPageStaticPropsOptions = {}
 ) => {
   const baseProps = getI18nStaticProps(localeParam, options.i18nSections);

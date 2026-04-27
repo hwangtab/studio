@@ -202,6 +202,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
     return (
         <>
             <SEO
+                locale={locale}
                 title={t('lesson.seo.title')}
                 description={t('lesson.seo.description')}
                 keywords={t('lesson.seo.keywords')}

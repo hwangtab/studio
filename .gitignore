@@ -36,4 +36,5 @@ tsconfig.tsbuildinfo
 .playwright-mcp/
 reports/
 table-check.png
+lib/portfolio-meta.json
 

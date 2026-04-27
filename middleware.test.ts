@@ -1,27 +1,51 @@
 /** @jest-environment node */
 
-describe('middleware redirects', () => {
-  const originalEnv = process.env;
+// middleware.ts는 모듈 평가 시점에 process.env(NEXT_PUBLIC_SITE_URL, NODE_ENV)를
+// 읽어 const로 고정한다. 따라서 다른 env 조합을 테스트하려면 jest.resetModules
+// 후 동적 import가 필수 — jest.mock으로는 격리되지 않는다.
+// 동일 env를 공유하는 테스트는 한 describe 블록 안에서 모듈을 한 번만 import해
+// 반복 비용을 줄인다.
 
-  beforeEach(() => {
-    jest.resetModules();
-    process.env = { ...originalEnv };
+type MiddlewareModule = typeof import('./middleware');
+type NextServerModule = typeof import('next/server');
+
+const loadMiddleware = async (env: Record<string, string | undefined>): Promise<{
+  middleware: MiddlewareModule['middleware'];
+  NextRequest: NextServerModule['NextRequest'];
+}> => {
+  jest.resetModules();
+  for (const [key, value] of Object.entries(env)) {
+    if (value === undefined) {
+      delete process.env[key];
+    } else {
+      process.env[key] = value;
+    }
+  }
+  const [{ middleware }, { NextRequest }] = await Promise.all([
+    import('./middleware'),
+    import('next/server'),
+  ]);
+  return { middleware, NextRequest };
+};
+
+describe('middleware locale negotiation (non-production)', () => {
+  const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
+
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+    }));
   });
 
   afterAll(() => {
     process.env = originalEnv;
   });
 
-  it('returns 307 for locale negotiation redirects', async () => {
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://www.studionol.co.kr';
-
-    const { NextRequest } = await import('next/server');
-    const { middleware } = await import('./middleware');
-
+  it('returns 307 for locale negotiation redirects', () => {
     const request = new NextRequest('https://www.studionol.co.kr/', {
-      headers: {
-        'accept-language': 'en-US,en;q=0.9',
-      },
+      headers: { 'accept-language': 'en-US,en;q=0.9' },
     });
 
     const response = middleware(request);
@@ -29,14 +53,25 @@ describe('middleware redirects', () => {
     expect(response.headers.get('location')).toBe('https://www.studionol.co.kr/en');
     expect(response.headers.get('vary')).toContain('Accept-Language');
   });
+});
 
-  it('returns 308 for host normalization without locale negotiation', async () => {
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://www.studionol.co.kr';
-    process.env = { ...process.env, NODE_ENV: 'production' };
+describe('middleware host normalization (production)', () => {
+  const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
 
-    const { NextRequest } = await import('next/server');
-    const { middleware } = await import('./middleware');
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+      NODE_ENV: 'production',
+    }));
+  });
 
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  it('returns 308 for host normalization without locale negotiation', () => {
     const request = new NextRequest('https://studionol.co.kr/ko/about');
     const response = middleware(request);
 
@@ -46,12 +81,15 @@ describe('middleware redirects', () => {
   });
 });
 
-describe('middleware bot routing', () => {
+describe('middleware bot routing (non-production)', () => {
   const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
 
-  beforeEach(() => {
-    jest.resetModules();
-    process.env = { ...originalEnv };
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+    }));
   });
 
   afterAll(() => {
@@ -67,13 +105,7 @@ describe('middleware bot routing', () => {
     ['PerplexityBot/0.1 (+https://perplexity.ai/perplexitybot)', 'perplexitybot'],
   ])(
     'redirects %s bot to /ko regardless of Accept-Language',
-    async (userAgent, _botName) => {
-      process.env.NEXT_PUBLIC_SITE_URL = 'https://www.studionol.co.kr';
-
-      const { NextRequest } = await import('next/server');
-      const { middleware } = await import('./middleware');
-
-      // Use path WITHOUT locale prefix — bot routing only applies to uncategorized paths
+    (userAgent, _botName) => {
       const request = new NextRequest('https://www.studionol.co.kr/stories/sample', {
         headers: {
           'accept-language': 'en-US,en;q=0.9',
@@ -87,13 +119,7 @@ describe('middleware bot routing', () => {
     },
   );
 
-  it('does not redirect non-bot users via bot routing', async () => {
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://www.studionol.co.kr';
-
-    const { NextRequest } = await import('next/server');
-    const { middleware } = await import('./middleware');
-
-    // Non-bot on path without locale prefix → locale negotiation (307)
+  it('does not redirect non-bot users via bot routing', () => {
     const request = new NextRequest('https://www.studionol.co.kr/stories/sample', {
       headers: {
         'accept-language': 'en-US,en;q=0.9',

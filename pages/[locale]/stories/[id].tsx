@@ -19,6 +19,7 @@ import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
+import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
 import type { Story, StoryDetail } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
@@ -39,7 +40,6 @@ interface StoryDetailPageProps {
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
-const storyCategoryKeys = ['instrument', 'region', 'lesson', 'production', 'recording', 'vocal', 'feedback', 'mixing', 'business', 'event'] as const;
 
 const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -85,7 +85,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
       noTitle: t('stories.list.noTitle'),
       noContent: t('stories.list.noContent'),
       categoryByKey: Object.fromEntries(
-        storyCategoryKeys.map((key) => [key, t(`stories.categories.${key}`)])
+        STORY_CATEGORY_KEYS.map((key) => [key, t(`stories.categories.${key}`)])
       ),
     }),
     [t]
@@ -102,8 +102,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const wordCount = React.useMemo(() => {
     if (!story.content) return undefined;
     const plainText = stripMarkdown(story.content);
+    // CJK·Thai 등 어절 단위 공백이 없는 언어는 split(/\s+/) 결과가 어절 수에
+    // 가까워 영어 대비 systematically 과소 보고된다. 비공백 글자 수로 환산해
+    // Schema.org wordCount의 실질 정보량을 영문 텍스트와 같은 자릿수로 맞춘다.
+    if (locale === 'ko' || locale === 'zh' || locale === 'th') {
+      return plainText.replace(/\s+/g, '').length;
+    }
     return plainText.split(/\s+/).filter(Boolean).length;
-  }, [story.content]);
+  }, [story.content, locale]);
 
   if (router.isFallback) {
     return <LoadingSpinner locale={locale} />;
@@ -133,6 +139,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   return (
     <>
       <SEO
+        locale={locale}
         title={`${story.title} | ${siteConfig.name}`}
         description={story.summary || metaDescription}
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
