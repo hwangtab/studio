@@ -258,6 +258,7 @@ const mapStoryFrontmatter = (
 };
 
 const getParsedStoryFile = (slug: string, locale: Locale): {
+  filePath: string;
   sourceLocale: Locale;
   data: Record<string, unknown>;
   content: string;
@@ -266,7 +267,7 @@ const getParsedStoryFile = (slug: string, locale: Locale): {
   if (enableCache) {
     const cached = parsedStoryFileCache.get(filePath);
     if (cached) {
-      return { sourceLocale, data: cached.data, content: cached.content };
+      return { filePath, sourceLocale, data: cached.data, content: cached.content };
     }
   }
 
@@ -281,7 +282,7 @@ const getParsedStoryFile = (slug: string, locale: Locale): {
   if (enableCache) {
     parsedStoryFileCache.set(filePath, parsed);
   }
-  return { sourceLocale, ...parsed };
+  return { filePath, sourceLocale, ...parsed };
 };
 
 export const getAllStories = (locale: string = defaultLocale): Story[] => {
@@ -317,8 +318,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     if (cached) return cached;
   }
 
-  const { sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
-  const { filePath } = resolveStoryFile(slug, requestedLocale);
+  const { filePath, sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
   const modifiedDate = fs.statSync(filePath).mtime.toISOString();
   const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
 

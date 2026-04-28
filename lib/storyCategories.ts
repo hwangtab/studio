@@ -4,9 +4,17 @@
  *
  * fs/path 의존성을 가진 lib/stories.ts와 분리해 client bundle에서도 안전하게
  * import할 수 있도록 별도 모듈로 둔다 (페이지·StoryCard·sitemap 등 다중 소비처).
+ *
+ * 키 목록은 lib/storyCategoryKeys.json이 단일 소스 — TS와 CommonJS
+ * (next-sitemap.config.js) 양쪽에서 동일하게 참조한다. JSON에서 import한 값을
+ * `as const` tuple로 좁혀 StoryCategoryKey 리터럴 타입을 그대로 유지한다.
  */
+import categoryKeys from './storyCategoryKeys.json';
 
-export const STORY_CATEGORY_KEYS = [
+// JSON import는 string[]로 해석된다. 리터럴 튜플로 좁혀 StoryCategoryKey union을
+// 정확한 리터럴로 유지한다. JSON과 튜플의 길이/순서가 어긋나면 SSR 빌드 시
+// next-sitemap이 unknown key를 만들어 회귀 테스트가 잡는다.
+export const STORY_CATEGORY_KEYS = categoryKeys as unknown as readonly [
   'instrument',
   'region',
   'lesson',
@@ -17,7 +25,7 @@ export const STORY_CATEGORY_KEYS = [
   'mixing',
   'business',
   'event',
-] as const;
+];
 
 export type StoryCategoryKey = typeof STORY_CATEGORY_KEYS[number];
 

@@ -132,3 +132,61 @@ describe('middleware bot routing (non-production)', () => {
     expect(response.headers.get('location')).toBe('https://www.studionol.co.kr/en/stories/sample');
   });
 });
+
+describe('middleware region redirect (non-production)', () => {
+  const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
+  // 맵 자체는 일반 require로 충분 — 환경에 의존하지 않는 정적 JSON.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const regionRedirectMap = require('./lib/regionRedirectMap.json') as Record<string, string>;
+
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+    }));
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  it('returns 308 for mapped region slug under /ko', () => {
+    const [srcSlug, destSlug] = Object.entries(regionRedirectMap)[0];
+    const request = new NextRequest(`https://www.studionol.co.kr/ko/stories/${srcSlug}`);
+    const response = middleware(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      `https://www.studionol.co.kr/ko/stories/${destSlug}`,
+    );
+  });
+
+  it('preserves non-default locale prefix when redirecting', () => {
+    const [srcSlug, destSlug] = Object.entries(regionRedirectMap)[0];
+    const request = new NextRequest(`https://www.studionol.co.kr/en/stories/${srcSlug}`);
+    const response = middleware(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      `https://www.studionol.co.kr/en/stories/${destSlug}`,
+    );
+  });
+
+  it('handles trailing slash on mapped slug', () => {
+    const [srcSlug, destSlug] = Object.entries(regionRedirectMap)[0];
+    const request = new NextRequest(`https://www.studionol.co.kr/ko/stories/${srcSlug}/`);
+    const response = middleware(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      `https://www.studionol.co.kr/ko/stories/${destSlug}`,
+    );
+  });
+
+  it('passes through unmapped story slug without redirect', () => {
+    // 광역 허브 자신(seoul1)은 redirect 맵에 없어야 한다 — 자기 자신으로 가는 루프 방지
+    expect(regionRedirectMap['seoul1']).toBeUndefined();
+    const request = new NextRequest('https://www.studionol.co.kr/ko/stories/seoul1');
+    const response = middleware(request);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+  });
+});

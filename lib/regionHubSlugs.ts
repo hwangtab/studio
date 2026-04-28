@@ -8,31 +8,11 @@
  * 광역 허브와 일반 지역 페이지의 unique 본문 길이 분포가 거의 동일해
  * 글자 수 임계값으로 둘을 구분할 수 없으므로 명시적 화이트리스트가 필요하다.
  *
- * 새 광역 허브 추가 시 이 파일에 slug 등록 + next-sitemap.config.js의
- * REGION_HUB_SLUGS와 동기화 유지.
+ * slug 목록은 lib/regionHubSlugs.json이 단일 소스 — TS와 CommonJS
+ * (lib/sitemap/thinContent.js) 양쪽에서 동일하게 참조한다.
  */
-export const REGION_HUB_SLUGS = new Set<string>([
-  // 특별시·광역시
-  'seoul1',
-  'incheon1',
-  'gwangju1',
-  'daegu1',
-  'busan1',
-  'ulsan1',
-  'daejeon1',
-  'sejong1',
-  // 도(道)
-  'gyeonggi1',
-  'gangwon1',
-  'chungbuk1',
-  'chungnam1',
-  'jeonbuk1',
-  'jeonnam1',
-  'gyeongbuk1',
-  'gyeongnam1',
-  'jeju1',
-  // 전국 단위 가이드
-  'nationwide1',
-]);
+import regionHubSlugs from './regionHubSlugs.json';
+
+export const REGION_HUB_SLUGS = new Set<string>(regionHubSlugs);
 
 export const isRegionHub = (slug: string): boolean => REGION_HUB_SLUGS.has(slug);

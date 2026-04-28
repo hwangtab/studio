@@ -4,12 +4,9 @@ const path = require('node:path');
 // next-sitemap 설정. 헬퍼 모듈은 lib/sitemap/* 에 분할되어 있다 — 이 파일은
 // next-sitemap이 호출하는 entrypoint(robots/transform/additionalPaths)만 보유.
 
-// lib/storyCategories.ts는 .ts라 require 불가 — 카테고리 키 단일 소스의 *복제본*을
-// 여기 두고, 두 곳을 수동 동기화한다 (10개 키, 변경 빈도 매우 낮음).
-const STORY_CATEGORY_KEYS = [
-  'instrument', 'region', 'lesson', 'production', 'recording',
-  'vocal', 'feedback', 'mixing', 'business', 'event',
-];
+// 카테고리 키 단일 소스는 lib/storyCategoryKeys.json — lib/storyCategories.ts도
+// 동일 JSON을 import해 StoryCategoryKey 타입과 routes를 동기 유지한다.
+const STORY_CATEGORY_KEYS = require('./lib/storyCategoryKeys.json');
 
 const {
   storiesDir,

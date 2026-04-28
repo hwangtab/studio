@@ -157,8 +157,10 @@ export function middleware(request: NextRequest) {
         const [, locale, slug] = storiesMatch;
         const destSlug = REGION_REDIRECT_MAP[slug];
         if (destSlug) {
-            const regionRedirect = request.nextUrl.clone();
-            regionRedirect.pathname = `/${locale}/stories/${destSlug}`;
+            // request.nextUrl.clone()은 입력의 trailing slash를 destination에 보존하는데,
+            // 프로젝트는 trailingSlash:false라 Next.js가 한번 더 308 → redirect chain 생성.
+            // origin 기준으로 새 URL을 만들어 canonical 형태(no slash)로 한 번에 보낸다.
+            const regionRedirect = new URL(`/${locale}/stories/${destSlug}`, request.nextUrl);
             const response = NextResponse.redirect(regionRedirect, 308);
             return setSecurityHeaders(response);
         }
