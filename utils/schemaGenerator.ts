@@ -541,6 +541,62 @@ export const generateServiceOfferSchema = (
   };
 };
 
+export const generatePracticeRoomMonthlyRentSchema = (
+  pageUrl: string,
+  locale: Locale = 'ko'
+) => {
+  const config = getSiteConfig(locale);
+  const priceValidUntil = new Date();
+  priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${pageUrl}#practice-room-monthly-rent`,
+    name: '음악연습실 월세 입주 — 스튜디오 놀',
+    serviceType: '음악연습실 월세 입주',
+    description:
+      '서울 은평구 연신내역 도보 5분 거리 24시간 음악연습실 월세 입주 프로그램. 보증금 없음, 최소 1개월, 개별 도어록·냉난방·방음 설계 포함.',
+    provider: {
+      '@type': 'LocalBusiness',
+      '@id': `${config.url}/#studio`,
+      name: config.name,
+      url: config.url,
+    },
+    areaServed: [
+      { '@type': 'City', name: '서울특별시' },
+      { '@type': 'AdministrativeArea', name: '은평구' },
+    ],
+    offers: {
+      '@type': 'Offer',
+      name: '음악연습실 월세 입주 (개인 연습실)',
+      price: 360000,
+      priceCurrency: 'KRW',
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: 360000,
+        priceCurrency: 'KRW',
+        unitCode: 'MON',
+        unitText: '월',
+        referenceQuantity: {
+          '@type': 'QuantitativeValue',
+          value: 1,
+          unitCode: 'MON',
+        },
+      },
+      availability: 'https://schema.org/InStock',
+      priceValidUntil: priceValidUntil.toISOString().split('T')[0],
+      url: pageUrl,
+      eligibleRegion: { '@type': 'Country', name: 'KR' },
+      seller: {
+        '@type': 'LocalBusiness',
+        '@id': `${config.url}/#studio`,
+        name: config.name,
+      },
+    },
+  };
+};
+
 export interface AggregateOfferInput {
   name: string;
   priceValue: number;

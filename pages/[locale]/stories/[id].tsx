@@ -25,7 +25,7 @@ import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { generateFaqSchema } from '../../../utils/schemaGenerator';
+import { generateFaqSchema, generatePracticeRoomMonthlyRentSchema } from '../../../utils/schemaGenerator';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
@@ -99,6 +99,22 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
     );
   }, [story.faq, locale]);
 
+  // practice-room-* 스토리는 월세 36만원을 본문·FAQ에 일관되게 명시하므로
+  // Service+Offer 구조화 데이터로 가격을 노출해 SERP·AI 답변에서 직접 인용되도록 함.
+  const practiceRoomOfferSchema = React.useMemo(() => {
+    if (!story.slug.startsWith('practice-room-')) return null;
+    if (locale !== 'ko') return null;
+    const pageUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
+    return generatePracticeRoomMonthlyRentSchema(pageUrl, locale);
+  }, [story.slug, locale, siteConfig.url]);
+
+  const extraSchemas = React.useMemo(() => {
+    const items: Record<string, unknown>[] = [];
+    if (faqSchema) items.push(faqSchema as Record<string, unknown>);
+    if (practiceRoomOfferSchema) items.push(practiceRoomOfferSchema as Record<string, unknown>);
+    return items.length > 0 ? items : undefined;
+  }, [faqSchema, practiceRoomOfferSchema]);
+
   const wordCount = React.useMemo(() => {
     if (!story.content) return undefined;
     const plainText = stripMarkdown(story.content);
@@ -161,7 +177,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         articleTags={story.tags ?? undefined}
         articleWordCount={wordCount}
         includeSchema
-        schema={faqSchema ? [faqSchema] : undefined}
+        schema={extraSchemas}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },
