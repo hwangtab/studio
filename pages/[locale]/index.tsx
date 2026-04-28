@@ -92,14 +92,19 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         overlayGradient="from-black/40 via-transparent to-black/20"
         ctaButtons={
           <>
+            {/* prefetch={false}: hero CTA가 LCP 측정 창 안에 있어 자동 prefetch가
+                portfolio.json 등 무거운 SSG 데이터(>100KB)를 끌어와 TBT/대역폭 경쟁을
+                유발. hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 유지된다. */}
             <Link
               href={getLink('/contact')}
+              prefetch={false}
               className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {heroContent.cta.reserve}
             </Link>
             <Link
               href={getLink('/portfolio')}
+              prefetch={false}
               className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary border-2 border-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
             >
               {heroContent.cta.portfolio}
@@ -163,6 +168,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               >
                 <Link
                   href={getLink(link.href)}
+                  prefetch={false}
                   className="group block bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -242,35 +248,42 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         variant="alternate"
       />
 
-      {/* 서비스 바로가기 */}
+      {/* 서비스 바로가기 — 5개 link가 메인 viewport에 들어오면 next/link 기본 prefetch가
+          각 페이지의 SSG JSON·청크를 동시 다운로드한다. 메인 페이지 LCP/TBT 측정 창에
+          체류하는 사용자에게는 가성비 나쁜 비용이라 prefetch={false}로 차단. */}
       <Section variant="default" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={getLink('/wedding-song')}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/voice-acting')}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/lesson')}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/pricing')}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/stories')}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />

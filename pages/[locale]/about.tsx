@@ -305,35 +305,42 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
 
       <ReviewSection variant="default" locale={locale} />
 
-      {/* 서비스 바로가기 */}
+      {/* 서비스 바로가기 — 본문 fold 안 button pill들. next/link 자동 prefetch가
+          대상 페이지의 SSG JSON·청크를 동시 다운로드하지 않도록 prefetch={false}.
+          hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 그대로 작동. */}
       <Section variant="alternate" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/lesson`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
