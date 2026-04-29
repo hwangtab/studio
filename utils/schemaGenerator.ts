@@ -278,7 +278,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               name: practiceOfferName,
               priceCurrency: 'KRW',
-              price: 300000,
+              price: 360000,
               url: `${siteUrl}/${locale}/practice-room`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -320,7 +320,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'Offer',
             priceCurrency: 'KRW',
-            price: 300000,
+            price: 360000,
             url: `${siteUrl}/${locale}/practice-room`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: practiceOfferName },
