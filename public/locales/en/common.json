@@ -435,7 +435,7 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Soundproof Practice Room ₩360K/mo | Studio Nol Yeonsinnae",
+      "title": "Soundproof Practice Room ₩360K/mo | Studio NOL Yeonsinnae",
       "description": "Studio-grade STC soundproofing in Eunpyeong-gu. ₩360K/mo — no deposit, 50% off first month with 6-month plan, 24/7 shower, overnight stays. 5 min from Yeonsinnae Station.",
       "keywords": "music practice room Seoul, Eunpyeong practice room, Yeonsinnae practice room, STC soundproof room, studio-grade soundproofing, private shower practice room, overnight stay practice room, monthly practice room, no deposit practice room, 24/7 practice room, soundproof practice room, private practice room, vocal practice room, keyboard practice room"
     },
@@ -917,13 +917,13 @@
     "seo": {
       "title": "Wedding Song Recording — All-in-One ₩350,000 | Studio NOL",
       "description": "5 min walk from Yeonsinnae Station. Beginners welcome. 2hr recording + vocal tune + mixing & mastering for ₩350,000. Same-day rough mix available.",
-      "keywords": "wedding song recording, vocal recording studio Seoul, engineer-led wedding recording, bridal song studio, propose recording, Studio Nol"
+      "keywords": "wedding song recording, vocal recording studio Seoul, engineer-led wedding recording, bridal song studio, propose recording, Studio NOL"
     },
     "hero": {
       "title": "Share Your Heart Through Song",
       "subtitleLine1": "Beginners welcome — professional engineer guides every step",
       "subtitleLine2": "Recording, mixing & mastering in one complete package",
-      "alt": "Vocal recording session at Studio Nol"
+      "alt": "Vocal recording session at Studio NOL"
     },
     "quickAnswers": {
       "title": "Wedding Song FAQ",
@@ -944,8 +944,8 @@
       ]
     },
     "intro": {
-      "title": "Why Record Your Wedding Song at Studio Nol?",
-      "imageAlt": "Vocalist recording in Studio Nol booth",
+      "title": "Why Record Your Wedding Song at Studio NOL?",
+      "imageAlt": "Vocalist recording in Studio NOL booth",
       "features": [
         {
           "title": "Expert Vocal Direction",
@@ -1023,20 +1023,20 @@
       "subtitleLine2": "Contact us via KakaoTalk for easy booking.",
       "location": "Get Directions",
       "inquiry": "Book Wedding Song Recording",
-      "imageAlt": "Vocalist in Studio Nol recording booth"
+      "imageAlt": "Vocalist in Studio NOL recording booth"
     }
   },
   "voiceActing": {
     "seo": {
       "title": "Voice Acting Studio — Narration Recording | Studio NOL",
       "description": "5 min walk from Yeonsinnae Station. Neumann U87AI, perfect soundproofing. ₩100,000/hr, real-time editing. YouTube narration, audiobooks, ad recordings.",
-      "keywords": "voice acting studio Seoul, narration recording, voiceover studio, podcast recording, audiobook recording, YouTube narration, Studio Nol"
+      "keywords": "voice acting studio Seoul, narration recording, voiceover studio, podcast recording, audiobook recording, YouTube narration, Studio NOL"
     },
     "hero": {
       "title": "Your Voice, Professionally Recorded",
       "subtitleLine1": "State-of-the-art equipment and perfect soundproofing",
       "subtitleLine2": "Voice acting, narration & podcast recording",
-      "alt": "Voice recording session at Studio Nol"
+      "alt": "Voice recording session at Studio NOL"
     },
     "quickAnswers": {
       "title": "Voice Acting FAQ",
@@ -1078,8 +1078,8 @@
       ]
     },
     "environment": {
-      "title": "Why Studio Nol?",
-      "imageAlt": "Studio Nol voice recording equipment",
+      "title": "Why Studio NOL?",
+      "imageAlt": "Studio NOL voice recording equipment",
       "features": [
         "Neumann U87AI microphone",
         "Perfect noise-controlled environment",
@@ -1149,7 +1149,7 @@
       "subtitleLine2": "Contact us via KakaoTalk for easy booking.",
       "location": "Get Directions",
       "inquiry": "Book Voice Recording",
-      "imageAlt": "Studio Nol voice recording equipment"
+      "imageAlt": "Studio NOL voice recording equipment"
     }
   }
 }

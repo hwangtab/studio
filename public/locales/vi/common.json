@@ -435,7 +435,7 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Phòng tập cách âm · Từ ₩360K/tháng | Studio Nol Yeonsinnae",
+      "title": "Phòng tập cách âm · Từ ₩360K/tháng | Studio NOL Yeonsinnae",
       "description": "Cách âm STC cấp studio tại Eunpyeong-gu. ₩360K/tháng — không cọc, giảm 50% tháng đầu khi ký 6 tháng, phòng tắm 24h, ở qua đêm. 5 phút từ ga Yeonsinnae.",
       "keywords": "phòng tập nhạc Seoul, phòng tập Eunpyeong, phòng tập Yeonsinnae, phòng cách âm STC, cách âm cấp studio, phòng tập có phòng tắm, phòng tập ở qua đêm, phòng tập thuê tháng, phòng 24/7, phòng cách âm, phòng tập riêng, phòng thanh nhạc, phòng phím"
     },
@@ -915,15 +915,15 @@
   },
   "weddingSong": {
     "seo": {
-      "title": "Thu Âm Bài Chúc Mừng · Gói Trọn Gói ₩350.000 | Studio Nol",
+      "title": "Thu Âm Bài Chúc Mừng · Gói Trọn Gói ₩350.000 | Studio NOL",
       "description": "Cách ga Yeonsinnae 5 phút. Người mới bắt đầu được chào đón. 2 giờ thu âm + chỉnh giọng + mix & master trọn gói 350.000₩. Nhận bản mix trong ngày.",
-      "keywords": "thu âm bài chúc mừng, phòng thu Seoul, thu âm giọng hát, bài hát đám cưới, Studio Nol"
+      "keywords": "thu âm bài chúc mừng, phòng thu Seoul, thu âm giọng hát, bài hát đám cưới, Studio NOL"
     },
     "hero": {
       "title": "Truyền Tải Tâm Ý Qua Giai Điệu",
       "subtitleLine1": "Người mới bắt đầu cũng yên tâm — kỹ sư chuyên nghiệp đồng hành",
       "subtitleLine2": "Trọn gói từ thu âm đến mix & mastering · Gần ga Yeonsinnae",
-      "alt": "Phiên thu âm tại Studio Nol"
+      "alt": "Phiên thu âm tại Studio NOL"
     },
     "quickAnswers": {
       "title": "FAQ Bài Chúc Mừng",
@@ -944,8 +944,8 @@
       ]
     },
     "intro": {
-      "title": "Tại sao nên thu âm tại Studio Nol?",
-      "imageAlt": "Thu âm giọng hát tại Studio Nol",
+      "title": "Tại sao nên thu âm tại Studio NOL?",
+      "imageAlt": "Thu âm giọng hát tại Studio NOL",
       "features": [
         {
           "title": "Hướng dẫn giọng hát chuyên nghiệp",
@@ -1023,20 +1023,20 @@
       "subtitleLine2": "Liên hệ qua KakaoTalk để đặt lịch dễ dàng.",
       "location": "Chỉ Đường",
       "inquiry": "Đặt Lịch Thu Âm Bài Chúc",
-      "imageAlt": "Phòng thu giọng hát Studio Nol"
+      "imageAlt": "Phòng thu giọng hát Studio NOL"
     }
   },
   "voiceActing": {
     "seo": {
-      "title": "Phòng Thu Lồng Tiếng · Narration ₩100.000/giờ | Studio Nol",
+      "title": "Phòng Thu Lồng Tiếng · Narration ₩100.000/giờ | Studio NOL",
       "description": "Cách ga Yeonsinnae 5 phút đi bộ. Neumann U87AI, cách âm hoàn hảo. 100.000₩/giờ, chỉnh sửa thời gian thực. Narration YouTube, sách nói, quảng cáo.",
-      "keywords": "lồng tiếng Seoul, narration thu âm, phòng thu giọng nói, podcast thu âm, sách nói thu âm, Studio Nol"
+      "keywords": "lồng tiếng Seoul, narration thu âm, phòng thu giọng nói, podcast thu âm, sách nói thu âm, Studio NOL"
     },
     "hero": {
       "title": "Giọng Nói Của Bạn, Chuyên Nghiệp Hóa",
       "subtitleLine1": "Thiết bị đỉnh cao và môi trường cách âm hoàn hảo",
       "subtitleLine2": "Lồng tiếng, narration & podcast · 5 phút từ ga Yeonsinnae",
-      "alt": "Phiên thu âm giọng nói tại Studio Nol"
+      "alt": "Phiên thu âm giọng nói tại Studio NOL"
     },
     "quickAnswers": {
       "title": "FAQ Lồng Tiếng",
@@ -1078,8 +1078,8 @@
       ]
     },
     "environment": {
-      "title": "Tại sao chọn Studio Nol?",
-      "imageAlt": "Thiết bị thu âm giọng nói Studio Nol",
+      "title": "Tại sao chọn Studio NOL?",
+      "imageAlt": "Thiết bị thu âm giọng nói Studio NOL",
       "features": [
         "Micro Neumann U87AI",
         "Môi trường cách âm hoàn hảo",
@@ -1149,7 +1149,7 @@
       "subtitleLine2": "Liên hệ qua KakaoTalk để đặt lịch dễ dàng.",
       "location": "Chỉ Đường",
       "inquiry": "Đặt Lịch Thu Âm",
-      "imageAlt": "Thiết bị thu âm giọng nói Studio Nol"
+      "imageAlt": "Thiết bị thu âm giọng nói Studio NOL"
     }
   }
 }

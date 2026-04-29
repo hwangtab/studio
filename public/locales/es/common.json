@@ -435,7 +435,7 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Sala de ensayo insonorizada · Desde ₩360K/mes | Studio Nol",
+      "title": "Sala de ensayo insonorizada · Desde ₩360K/mes | Studio NOL",
       "description": "Insonorización STC nivel estudio en Eunpyeong-gu. ₩360K/mes — sin depósito, 50% dto. primer mes con plan de 6 meses, ducha 24h, pernocta. A 5 min de Yeonsinnae.",
       "keywords": "sala de ensayo Seúl, sala de ensayo Eunpyeong, sala de ensayo Yeonsinnae, sala STC insonorizada, aislamiento nivel estudio, sala con ducha privada, sala con pernocta, sala mensual, sin depósito, 24/7, insonorizada, sala privada, sala de voz, sala de teclado"
     },
@@ -917,13 +917,13 @@
     "seo": {
       "title": "Grabación Canción de Boda · Paquete ₩350,000 | Studio NOL",
       "description": "A 5 min de Yeonsinnae. Principiantes bienvenidos. 2h grabación + afinación vocal + mezcla y masterización por ₩350,000. Mezcla básica el mismo día.",
-      "keywords": "grabación canción boda, estudio vocal Seúl, propuesta musical, grabación vocal, Studio Nol"
+      "keywords": "grabación canción boda, estudio vocal Seúl, propuesta musical, grabación vocal, Studio NOL"
     },
     "hero": {
       "title": "Exprésate con una Canción",
       "subtitleLine1": "Principiantes bienvenidos — ingeniero profesional en cada paso",
       "subtitleLine2": "Grabación, mezcla y masterización en un paquete completo",
-      "alt": "Sesión de grabación vocal en Studio Nol"
+      "alt": "Sesión de grabación vocal en Studio NOL"
     },
     "quickAnswers": {
       "title": "Preguntas sobre Canción de Boda",
@@ -944,8 +944,8 @@
       ]
     },
     "intro": {
-      "title": "¿Por qué grabar tu canción en Studio Nol?",
-      "imageAlt": "Vocalista grabando en Studio Nol",
+      "title": "¿Por qué grabar tu canción en Studio NOL?",
+      "imageAlt": "Vocalista grabando en Studio NOL",
       "features": [
         {
           "title": "Dirección Vocal Experta",
@@ -1023,20 +1023,20 @@
       "subtitleLine2": "Contáctanos por KakaoTalk para reservar fácilmente.",
       "location": "Cómo llegar",
       "inquiry": "Reservar Grabación Canción de Boda",
-      "imageAlt": "Vocalista en cabina de Studio Nol"
+      "imageAlt": "Vocalista en cabina de Studio NOL"
     }
   },
   "voiceActing": {
     "seo": {
-      "title": "Estudio de Locución · Narración ₩100,000/hora | Studio Nol",
+      "title": "Estudio de Locución · Narración ₩100,000/hora | Studio NOL",
       "description": "A 5 min de Yeonsinnae. Neumann U87AI, insonorización perfecta. ₩100,000/h, edición en tiempo real. Narración YouTube, audiolibros, publicidad.",
-      "keywords": "estudio locución Seúl, narración grabación, voiceover estudio, podcast grabación, audiolibro grabación, Studio Nol"
+      "keywords": "estudio locución Seúl, narración grabación, voiceover estudio, podcast grabación, audiolibro grabación, Studio NOL"
     },
     "hero": {
       "title": "Tu Voz, Grabada Profesionalmente",
       "subtitleLine1": "Equipos de última generación e insonorización perfecta",
       "subtitleLine2": "Locución, narración y grabación de podcasts",
-      "alt": "Sesión de grabación de voz en Studio Nol"
+      "alt": "Sesión de grabación de voz en Studio NOL"
     },
     "quickAnswers": {
       "title": "Preguntas sobre Locución",
@@ -1078,8 +1078,8 @@
       ]
     },
     "environment": {
-      "title": "¿Por qué Studio Nol?",
-      "imageAlt": "Equipo de grabación de voz en Studio Nol",
+      "title": "¿Por qué Studio NOL?",
+      "imageAlt": "Equipo de grabación de voz en Studio NOL",
       "features": [
         "Micrófono Neumann U87AI",
         "Entorno perfectamente insonorizado",
@@ -1149,7 +1149,7 @@
       "subtitleLine2": "Contáctanos por KakaoTalk para reservar fácilmente.",
       "location": "Cómo llegar",
       "inquiry": "Reservar Grabación de Voz",
-      "imageAlt": "Equipo de grabación de voz en Studio Nol"
+      "imageAlt": "Equipo de grabación de voz en Studio NOL"
     }
   }
 }

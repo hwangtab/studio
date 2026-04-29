@@ -434,7 +434,7 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "STC tovush izolyatsiya xona · ₩360K/oy | Studio Nol",
+      "title": "STC tovush izolyatsiya xona · ₩360K/oy | Studio NOL",
       "description": "Studiya darajasidagi STC izolyatsiya, Eunpyeong-gu. ₩360K/oy — zakaladsiz, 6 oylik shartnomada birinchi oyga 50% chegirma, 24/7 dush, tunab qolish. Yeonsinnae bekatidan 5 daq.",
       "keywords": "Seul mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, Yeonsinnae mashg'ulot xonasi, STC tovush izolyatsiyali xona, studiya darajasidagi tovush izolyatsiyasi, dushli mashg'ulot xonasi, tunab qolish mumkin bo'lgan xona, oylik mashg'ulot xonasi, 24/7 mashg'ulot xonasi, shaxsiy mashg'ulot xonasi, vokal xonasi, klaviatura xonasi"
     },
@@ -913,15 +913,15 @@
   },
   "weddingSong": {
     "seo": {
-      "title": "To'y qo'shig'i yozish · To'liq paket 350,000 ₩ | Studio Nol",
+      "title": "To'y qo'shig'i yozish · To'liq paket 350,000 ₩ | Studio NOL",
       "description": "Yeonsinnae stansiyasidan 5 daqiqa. Yangi boshlovchilar xush kelibsiz. Yozuv + ovoz sozlash + mikslash va mastering 350,000 ₩. O'sha kuni versiya olish mumkin.",
-      "keywords": "to'y qo'shig'i yozish, ovoz yozish studiyasi, Seoul ovoz yozish, Studio Nol"
+      "keywords": "to'y qo'shig'i yozish, ovoz yozish studiyasi, Seoul ovoz yozish, Studio NOL"
     },
     "hero": {
       "title": "Qo'shiq orqali his-tuyg'ularingizni ulashing",
       "subtitleLine1": "Yangi boshlovchilar uchun ham qulay — professional muhandis har bosqichda yordamida",
       "subtitleLine2": "Yozishdan masteringgacha to'liq paket · Yeonsinnae bekati yaqinida",
-      "alt": "Studio Nol'da ovoz yozish sessiyasi"
+      "alt": "Studio NOL'da ovoz yozish sessiyasi"
     },
     "quickAnswers": {
       "title": "To'y qo'shig'i bo'yicha FAQ",
@@ -942,8 +942,8 @@
       ]
     },
     "intro": {
-      "title": "Nima uchun Studio Nol'da to'y qo'shig'ingizni yozishingiz kerak?",
-      "imageAlt": "Studio Nol budkasida ovoz yozish",
+      "title": "Nima uchun Studio NOL'da to'y qo'shig'ingizni yozishingiz kerak?",
+      "imageAlt": "Studio NOL budkasida ovoz yozish",
       "features": [
         {
           "title": "Professional ovoz yo'naltirish",
@@ -1021,20 +1021,20 @@
       "subtitleLine2": "KakaoTalk orqali oson band qilish uchun bog'laning.",
       "location": "Yo'nalishni ko'rish",
       "inquiry": "To'y qo'shig'i yozishni band qilish",
-      "imageAlt": "Studio Nol ovoz yozish budkasi"
+      "imageAlt": "Studio NOL ovoz yozish budkasi"
     }
   },
   "voiceActing": {
     "seo": {
       "title": "Ovoz Yozish Studiyasi · Naratsiya 100,000₩/soat | Studio NOL",
       "description": "Yeonsinnae stansiyasidan 5 daqiqa. Neumann U87AI, mukammal izolyatsiya. 100,000 ₩/soat, real vaqt tahriri. YouTube, audio kitob, reklama yozishlari.",
-      "keywords": "ovoz yozish studiyasi Seoul, naratsiya yozish, voiceover studiyasi, podcast yozish, audio kitob yozish, Studio Nol"
+      "keywords": "ovoz yozish studiyasi Seoul, naratsiya yozish, voiceover studiyasi, podcast yozish, audio kitob yozish, Studio NOL"
     },
     "hero": {
       "title": "Ovozingiz, professional yozilgan",
       "subtitleLine1": "Zamonaviy jihozlar va mukammal tovush izolyatsiyasi",
       "subtitleLine2": "Ovoz aktyorligi, naratsiya & podcast · Yeonsinnae bekatidan 5 daqiqa",
-      "alt": "Studio Nol'da ovoz yozish sessiyasi"
+      "alt": "Studio NOL'da ovoz yozish sessiyasi"
     },
     "quickAnswers": {
       "title": "Ovoz yozish bo'yicha FAQ",
@@ -1076,8 +1076,8 @@
       ]
     },
     "environment": {
-      "title": "Nima uchun Studio Nol?",
-      "imageAlt": "Studio Nol ovoz yozish jihozlari",
+      "title": "Nima uchun Studio NOL?",
+      "imageAlt": "Studio NOL ovoz yozish jihozlari",
       "features": [
         "Neumann U87AI mikrofon",
         "Mukammal tovush izolyatsiyali muhit",
@@ -1147,7 +1147,7 @@
       "subtitleLine2": "KakaoTalk orqali oson band qilish uchun bog'laning.",
       "location": "Yo'nalishni ko'rish",
       "inquiry": "Yozuvni band qilish",
-      "imageAlt": "Studio Nol ovoz yozish jihozlari"
+      "imageAlt": "Studio NOL ovoz yozish jihozlari"
     }
   }
 }
