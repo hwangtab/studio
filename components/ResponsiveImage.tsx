@@ -20,6 +20,8 @@ interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement>
   sizes?: string;
   priority?: boolean;
   loading?: 'lazy' | 'eager';
+  /** next/image quality (1-100). 미지정 시 75 (Next.js default). */
+  quality?: number;
 }
 
 const ResponsiveImage = React.memo(({
@@ -34,6 +36,7 @@ const ResponsiveImage = React.memo(({
   sizes = '100vw',
   priority = false,
   loading,
+  quality,
   ...rest
 }: ResponsiveImageProps) => {
   const [error, setError] = React.useState(false);
@@ -63,6 +66,7 @@ const ResponsiveImage = React.memo(({
             priority={priority}
             fill
             loading={loading}
+            quality={quality}
             onError={() => setError(true)}
             {...rest}
           />
@@ -82,6 +86,7 @@ const ResponsiveImage = React.memo(({
         width={width || 300}
         height={height || 300}
         loading={loading}
+        quality={quality}
         onError={() => setError(true)}
         {...rest}
       />
