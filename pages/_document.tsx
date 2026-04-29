@@ -57,7 +57,9 @@ class MyDocument extends Document<Props> {
               async/defer를 두면 본문 렌더 후 실행되어 라이트→다크 토글 깜빡임이
               생긴다 (no-sync-scripts 규칙은 일반 외부 라이브러리를 위한 것이라
               이 케이스는 예외). CSP 'unsafe-inline' 표면을 줄이기 위해 외부 파일로
-              분리했다. 색상 상수는 components/Layout.tsx 토글 핸들러와 동기화. */}
+              분리했다. 색상 상수는 components/Layout.tsx 토글 핸들러와 동기화.
+              preload를 함께 둬서 동기 script 태그 실행 시 캐시 hit으로 fetch 비용 0. */}
+          <link rel="preload" href="/scripts/theme-init.js" as="script" />
           {/* eslint-disable-next-line @next/next/no-sync-scripts */}
           <script id="theme-init" src="/scripts/theme-init.js" />
         </Head>

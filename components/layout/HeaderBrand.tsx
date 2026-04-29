@@ -43,7 +43,8 @@ export const HeaderBrand = ({
           style={{
             clipPath: 'inset(0 0 0 52.3%)', // Show only the right part (NOL)
           }}
-          priority
+          // priority 제거 — 200px 작은 로고를 preload하면 LCP 후보(hero 이미지)와
+          // 초기 대역폭 경쟁. above-the-fold이지만 작은 이미지라 default loading으로 충분.
         />
         {/* Studio Part - Turns white on dark/transparent backgrounds */}
         <Image
