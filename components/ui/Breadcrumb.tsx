@@ -29,8 +29,12 @@ const Breadcrumb = ({ items, className }: BreadcrumbProps) => {
                   {item.name}
                 </span>
               ) : (
+                // prefetch={false}: 모든 페이지 상단에 노출되는 nav. 거의 항상
+                // viewport에 들어와 자동 prefetch 트리거 → 부모 listing 페이지의
+                // SSG JSON이 매번 끌려와 비효율. hover/focus 시 prefetch는 유지.
                 <Link
                   href={item.path}
+                  prefetch={false}
                   className="hover:text-primary dark:hover:text-primary-light transition-colors"
                 >
                   {item.name}

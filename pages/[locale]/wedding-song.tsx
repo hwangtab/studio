@@ -323,23 +323,27 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
 
       <ReviewSection variant="alternate" locale={locale} />
 
-      {/* 관련 서비스 바로가기 */}
+      {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
+          무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="default" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/studio-info`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
+            prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />

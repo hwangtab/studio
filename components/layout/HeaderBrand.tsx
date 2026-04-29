@@ -22,6 +22,9 @@ export const HeaderBrand = ({
   return (
     <Link
       href={`/${locale}`}
+      // prefetch={false}: 모든 페이지 헤더에 노출되어 자동 prefetch가 home의
+      // SSG JSON·featured links 등을 매번 끌어옴. hover/focus 시 prefetch는 유지.
+      prefetch={false}
       className="flex-shrink-0 flex items-center hover:opacity-90 transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded-sm"
       onClick={onLogoClick}
     >

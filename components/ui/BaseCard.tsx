@@ -66,7 +66,11 @@ const BaseCard = React.memo(({
         }
 
         return (
-            <Link href={href} legacyBehavior passHref>
+            // prefetch={false}: BaseCard는 FeatureCard·PricingCard·ReviewSection·
+            // QuickAnswers의 wrapper로 listing 형태로 다수 인스턴스가 viewport에
+            // 동시 등장. 기본 prefetch면 카드 수만큼 SSG JSON·청크가 동시 다운로드.
+            // hover/focus 시 prefetch는 next/link 휴리스틱으로 유지.
+            <Link href={href} prefetch={false} legacyBehavior passHref>
                 <m.a {...animationProps} {...anchorProps}>
                     {children}
                 </m.a>

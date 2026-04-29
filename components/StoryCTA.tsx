@@ -169,9 +169,13 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         {current.description}
                     </p>
 
+                    {/* prefetch={false}: 스토리 본문 끝 CTA. 사용자가 끝까지 스크롤
+                        하면 viewport에 들어와 자동 prefetch가 무거운 SSG 데이터를 끌어옴.
+                        hover/focus 시 prefetch는 유지. */}
                     <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                         <Link
                             href={current.primaryLink}
+                            prefetch={false}
                             className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-black/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.buttonBg}`}
                         >
                             <span className="min-w-0">{current.primaryText}</span>
@@ -179,6 +183,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         </Link>
                         <Link
                             href={current.secondaryLink}
+                            prefetch={false}
                             className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
                         >
                             <span className="min-w-0">{current.secondaryText}</span>
