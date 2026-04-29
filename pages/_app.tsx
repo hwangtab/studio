@@ -1,13 +1,17 @@
 import type { AppPropsWithLayout } from '../types';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import '../styles/globals.css';
 
 import Head from 'next/head';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
 import { Montserrat, Gasoek_One } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
+
+// Vercel Analytics·SpeedInsights는 client-only이고 hydration 후에 발화하면 충분.
+// 동적 import로 _app 초기 청크에서 분리해 사용하지 않는 JS 100KB 감축에 기여.
+const Analytics = dynamic(() => import('@vercel/analytics/react').then(m => m.Analytics), { ssr: false });
+const SpeedInsights = dynamic(() => import('@vercel/speed-insights/next').then(m => m.SpeedInsights), { ssr: false });
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
