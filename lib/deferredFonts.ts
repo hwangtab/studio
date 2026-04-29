@@ -40,16 +40,11 @@ const PRETENDARD_WEIGHTS = [
 const pretendardCdnSubset = (name: string) =>
   `https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff2-subset/Pretendard-${name}.subset.woff2`;
 
-const partialSansCdn =
-  'https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2';
-
-const partialSansSources: readonly DeferredFontSource[] = [
-  { localNames: ['PartialSansKR-Regular'], url: '/fonts/PartialSansKR-Regular.woff2' },
-  { url: partialSansCdn },
-] as const;
-
 /**
  * 모든 deferred 폰트의 선언 목록.
+ *
+ * 히어로 타이틀(font-logo)은 Black Han Sans로, next/font/google이 빌드 시 self-hosted +
+ * preload + size-adjust를 자동 처리하므로 deferred 주입 대상에서 제외.
  */
 export const DEFERRED_FONTS: readonly DeferredFontDef[] = [
   // Pretendard — 본문/타이틀 전반의 주 폰트. 3 weight.
@@ -64,24 +59,6 @@ export const DEFERRED_FONTS: readonly DeferredFontDef[] = [
       { url: pretendardCdnSubset(name) },
     ],
   })),
-
-  // PartialSansKR — 히어로 타이틀(font-logo) 전용 브랜드 폰트.
-  // display: swap — 히어로 h1 단 하나에만 쓰이므로 도착 시 repaint 비용이 미미.
-  // optional이면 첫 방문자는 캐시 미스로 영원히 안 보이는 문제가 있어 swap 선택.
-  // -Regular와 -Logo 두 별칭: Logo는 ascent/descent override로 상단 여백 조정.
-  {
-    family: 'PartialSansKR-Regular',
-    display: 'swap',
-    sources: partialSansSources,
-  },
-  {
-    family: 'PartialSansKR-Logo',
-    display: 'swap',
-    sources: partialSansSources,
-    ascentOverride: '80%',
-    descentOverride: '20%',
-    lineGapOverride: '0%',
-  },
 ];
 
 /**

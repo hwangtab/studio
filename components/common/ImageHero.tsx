@@ -72,8 +72,8 @@ const ImageHero = ({
             원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
             줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
         <div>
-          {/* font-logo = PartialSansKR (지연 주입) → Pretendard (fallback).
-              브랜드 정체성 유지 위해 원본 font-normal 복원. */}
+          {/* font-logo = Black Han Sans (next/font/google 자동 self-hosted + preload + size-adjust).
+              → Pretendard (fallback). 브랜드 정체성 유지 위해 원본 font-normal 복원. */}
           <h1
             className={`font-logo text-heading-1 font-normal md:text-6xl lg:text-7xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
           >
