@@ -134,13 +134,13 @@ const nextConfig = {
       },
       {
         // public/ 자산은 content hash 없는 고정 URL이라 immutable 부적합 —
-        // theme-init.js 변경 시 재방문자에게 전파되지 않는다. SWR window를 max-age와
-        // 동일하게 맞춰 최악의 stale 노출을 2시간으로 제한. theme-init은 <head>에서
-        // 동기 실행돼 다크모드 초기화 결과가 첫 페인트에 박히므로, 구버전 노출 시간을
-        // 짧게 유지해야 한다. 근본 해결은 hash URL(`theme-init.[hash].js`) 전환.
+        // theme-init.js 변경 시 재방문자에게 전파되지 않는다. 다만 git log 기준
+        // 변경 빈도가 매우 낮아(연 1-2회) max-age=1일·SWR=1일로 늘려 PSI 캐시 수명
+        // 권장치 충족. 최악 stale 노출 2일은 다크모드 초기화 로직 안정성 고려 시 허용.
+        // 근본 해결은 hash URL(`theme-init.[hash].js`) 전환.
         source: '/scripts/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=3600' },
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400' },
         ],
       },
       {
