@@ -5,7 +5,7 @@ import '../styles/globals.css';
 
 import Head from 'next/head';
 import Script from 'next/script';
-import { Montserrat, Black_Han_Sans } from 'next/font/google';
+import { Montserrat, Gasoek_One } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
@@ -24,14 +24,14 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-// Black Han Sans — 히어로 타이틀용 한글 디스플레이 폰트.
+// Gasoek One — 히어로 타이틀용 한글 디스플레이 폰트.
 // next/font/google이 self-hosted + preload + subset + size-adjust를 자동 처리하므로
-// font-display: swap에서도 깜빡임이 미미. PartialSansKR을 대체.
-const blackHanSans = Black_Han_Sans({
+// font-display: swap에서도 깜빡임이 미미.
+const gasoekOne = Gasoek_One({
   subsets: ['latin'],
   weight: '400',
   display: 'swap',
-  variable: '--font-black-han-sans',
+  variable: '--font-gasoek-one',
 });
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -208,7 +208,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (
-      <div className={`${montserrat.variable} ${blackHanSans.variable}`}>
+      <div className={`${montserrat.variable} ${gasoekOne.variable}`}>
         <Head>
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -231,7 +231,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   };
 
   return (
-    <div className={`${montserrat.variable} ${blackHanSans.variable}`}>
+    <div className={`${montserrat.variable} ${gasoekOne.variable}`}>
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -72,7 +72,7 @@ const config: Config = {
         sans: ['Pretendard', 'Noto Sans KR', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         title: ['Pretendard', 'sans-serif'],
         display: ['var(--font-montserrat)', 'Pretendard', 'sans-serif'],
-        logo: ['var(--font-black-han-sans)', 'Pretendard', 'sans-serif'],
+        logo: ['var(--font-gasoek-one)', 'Pretendard', 'sans-serif'],
         pretendard: ['Pretendard', 'Noto Sans KR', 'sans-serif'],
       },
       animation: {
