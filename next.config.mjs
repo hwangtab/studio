@@ -59,10 +59,11 @@ const nextConfig = {
       'tailwind-merge',
       'class-variance-authority',
     ],
-    // critical CSS inlining: 첫 paint에 필요한 CSS만 <style>로 inline해
-    // CSS render-blocking을 줄임. PageSpeed 모바일 보고서의 850ms 차단 완화.
-    // 빌드 시 critters 라이브러리로 처리되며 prerendered HTML 크기는 +5~10KB 정도.
-    optimizeCss: true,
+    // optimizeCss(critters) 시도했으나 PageSpeed 모바일 점수 85→38로 급락.
+    // TBT가 260ms→7,130ms로 폭증, LCP 3.5s→4.6s 악화. critters가 lazy load CSS를
+    // 기다리느라 메인 스레드를 장시간 차단하는 것으로 추정. Next.js 15 + React 19
+    // + Pages Router 조합에서 critters가 안정적이지 않다고 판단해 비활성화.
+    // 대안 모색은 PR 단위로 격리해 측정 후 진행.
   },
 
   eslint: {
