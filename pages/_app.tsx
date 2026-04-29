@@ -4,7 +4,7 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
-import { Montserrat, Gasoek_One } from 'next/font/google';
+import { Montserrat, Noto_Sans_KR } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -19,7 +19,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
-import { buildDeferredFontCSS } from '../lib/deferredFonts';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -28,14 +27,15 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-// Gasoek One — 히어로 타이틀용 한글 디스플레이 폰트.
-// next/font/google이 self-hosted + preload + subset + size-adjust를 자동 처리하므로
-// font-display: swap에서도 깜빡임이 미미.
-const gasoekOne = Gasoek_One({
+// Noto Sans KR — 사이트 전반의 통합 한글 폰트.
+// 가변(variable) axis로 100-900 weight를 단일 폰트 파일에서 사용 (효율적).
+// next/font/google이 self-hosted + preload + subset + size-adjust 자동 처리.
+// 히어로 타이틀은 별도 디스플레이 폰트 없이 Noto Sans KR 900 (font-black)으로 임팩트.
+const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: '400',
+  weight: ['400', '500', '700', '900'],
   display: 'swap',
-  variable: '--font-gasoek-one',
+  variable: '--font-noto-sans-kr',
 });
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -95,47 +95,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, []);
 
-  // Pretendard 폰트 지연 로드 — window.load 이후 @font-face를 주입하여
-  // 크리티컬 패스에서 폰트 다운로드가 JS/CSS 대역폭을 잠식하지 않도록 함.
-  // 주입 후 브라우저는 자동으로 Pretendard를 발견하고 font-display: swap으로 적용.
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    if (document.getElementById('pretendard-deferred')) return;
-
-    const injectFonts = () => {
-      if (document.getElementById('pretendard-deferred')) return;
-      const style = document.createElement('style');
-      style.id = 'pretendard-deferred';
-      // 실제 폰트 선언은 lib/deferredFonts.ts의 DEFERRED_FONTS 배열에서 관리.
-      // font-display: optional — 시스템 폰트 페인트 후 주입이라 repaint/layout 발생 X.
-      style.textContent = buildDeferredFontCSS();
-      document.head.appendChild(style);
-    };
-
-    // window.load 이후에도 3초 지연을 둔다. Lighthouse의 TBT 측정 창은 보통
-    // FCP~TTI 사이를 포괄하는데, requestIdleCallback이 너무 빨리 발화하면 폰트
-    // 주입 후 브라우저 내부 작업(font discovery, network)이 TBT로 집계될 수 있음.
-    // 3초 후는 Lab 측정 창이 닫힌 뒤라 안전.
-    const safeInject = () => {
-      try {
-        injectFonts();
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('[Pretendard] Failed to inject deferred fonts:', err);
-      }
-    };
-
-    const schedule = () => {
-      setTimeout(() => {
-        const ric = (window as typeof window & { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback;
-        if (ric) ric(safeInject);
-        else safeInject();
-      }, 3000);
-    };
-
-    if (document.readyState === 'complete') schedule();
-    else window.addEventListener('load', schedule, { once: true });
-  }, []);
+  // 폰트 지연 로딩 useEffect 제거: 사이트 전반을 next/font/google의 Noto Sans KR로
+  // 통일하면서 더 이상 Pretendard @font-face 주입이 필요 없음. next/font가 빌드 시
+  // self-hosted + preload + size-adjust를 자동 처리.
 
   useEffect(() => {
     let isCancelled = false;
@@ -212,7 +174,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (
-      <div className={`${montserrat.variable} ${gasoekOne.variable}`}>
+      <div className={`${montserrat.variable} ${notoSansKr.variable}`}>
         <Head>
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -235,7 +197,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   };
 
   return (
-    <div className={`${montserrat.variable} ${gasoekOne.variable}`}>
+    <div className={`${montserrat.variable} ${notoSansKr.variable}`}>
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -76,10 +76,11 @@ const ImageHero = ({
             원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
             줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
         <div>
-          {/* font-logo = Gasoek One (next/font/google 자동 self-hosted + preload + size-adjust).
-              → Pretendard (fallback). 브랜드 정체성 유지 위해 원본 font-normal 복원. */}
+          {/* font-logo = Noto Sans KR (variable). 사이트 전반 단일 폰트로 통일.
+              font-black(weight 900) + 큰 사이즈로 디스플레이 폰트 없이 임팩트 확보.
+              next/font/google 자동 self-hosted + preload + size-adjust로 깜빡임 거의 없음. */}
           <h1
-            className={`font-logo text-5xl font-normal md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-logo text-5xl font-black md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}
           >
             {title}
