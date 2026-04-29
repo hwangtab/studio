@@ -507,7 +507,7 @@
       "items": [
         {
           "title": "Sistema de aislamiento STC internacional",
-          "description": "55dB+ de atenuación medida (STC 55+) — las salas vecinas se mantienen en silencio de biblioteca. Seguro para voces y trabajo MIDI nocturno."
+          "description": "60dB+ de atenuación medida (STC 60+) — las salas vecinas se mantienen en silencio de biblioteca. Seguro para voces y trabajo MIDI nocturno."
         },
         {
           "title": "Cámara de aire entre paredes (doble pared)",
@@ -708,7 +708,7 @@
         },
         {
           "q": "¿Qué tan buena es la insonorización?",
-          "a": "Nuestro sistema STC de nivel estudio de grabación ofrece 55dB+ de atenuación medida (STC 55+), eliminando casi por completo el ruido entre salas. Ideal para voces, locuciones y trabajo MIDI."
+          "a": "Nuestro sistema STC de nivel estudio de grabación ofrece 60dB+ de atenuación medida (STC 60+), eliminando casi por completo el ruido entre salas. Ideal para voces, locuciones y trabajo MIDI."
         },
         {
           "q": "¿Cuánto cuesta la sala de ensayo?",

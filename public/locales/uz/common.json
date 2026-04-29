@@ -506,7 +506,7 @@
       "items": [
         {
           "title": "Xalqaro STC izolyatsiya tizimi",
-          "description": "55dB+ tovush kamayishi (STC 55+) — qo'shni xonalar kutubxona kabi sokin qoladi. Tungi vokal va MIDI ishlari uchun xavfsiz."
+          "description": "60dB+ tovush kamayishi (STC 60+) — qo'shni xonalar kutubxona kabi sokin qoladi. Tungi vokal va MIDI ishlari uchun xavfsiz."
         },
         {
           "title": "Devorlar orasidagi havo qatlami (ikki qavatli devor)",
@@ -707,7 +707,7 @@
         },
         {
           "q": "Tovush izolyatsiyasi qanchalik yaxshi?",
-          "a": "Yozuv-studiya darajasidagi STC tizimimiz haqiqiy o'lchov bo'yicha 55dB+ kamayish (STC 55+) ta'minlaydi va xonalar orasidagi shovqinni deyarli yo'q qiladi. Vokal, voiceover va MIDI ishlarida juda yaxshi immersion beradi."
+          "a": "Yozuv-studiya darajasidagi STC tizimimiz haqiqiy oʻlchov boʻyicha 60dB+ kamayish (STC 60+) ta'minlaydi va xonalar orasidagi shovqinni deyarli yo'q qiladi. Vokal, voiceover va MIDI ishlarida juda yaxshi immersion beradi."
         },
         {
           "q": "Mashgʻulot xonasi narxi qancha?",

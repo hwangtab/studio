@@ -262,7 +262,7 @@ export const getPricingData = (locale: Locale) => {
   const specialPackages = [
     {
       id: 'package-wedding',
-      title: t(locale, { ko: '셀프 축가/이벤트 녹음', en: 'Event & Wedding Recording', zh: '婚礼/活动录音', es: 'Grabación de Bodas y Eventos', vi: 'Thu âm sự kiện & nhạc cưới', th: 'บันทึกเสียงงานอีเวนต์/งานแต่ง', uz: 'Tadbir/to‘y yozuvi' }),
+      title: t(locale, { ko: '축가/이벤트 녹음 (엔지니어 동반)', en: 'Event & Wedding Recording', zh: '婚礼/活动录音', es: 'Grabación de Bodas y Eventos', vi: 'Thu âm sự kiện & nhạc cưới', th: 'บันทึกเสียงงานอีเวนต์/งานแต่ง', uz: 'Tadbir/to‘y yozuvi' }),
       priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
       priceValue: 350000,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),

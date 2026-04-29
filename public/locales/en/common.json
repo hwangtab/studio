@@ -507,7 +507,7 @@
       "items": [
         {
           "title": "International STC Isolation System",
-          "description": "55dB+ measured attenuation (STC 55+) — neighboring rooms stay library-quiet. Safe for late-night vocals and MIDI work."
+          "description": "60dB+ measured attenuation (STC 60+) — neighboring rooms stay library-quiet. Safe for late-night vocals and MIDI work."
         },
         {
           "title": "Air Gap Between Walls (Double-wall)",
@@ -708,7 +708,7 @@
         },
         {
           "q": "How good is the soundproofing?",
-          "a": "Our recording-studio-grade STC system delivers 55dB+ measured attenuation (STC 55+), nearly eliminating noise between rooms. Excellent immersion for vocals, voiceovers, and MIDI work."
+          "a": "Our recording-studio-grade STC system delivers 60dB+ measured attenuation (STC 60+), nearly eliminating noise between rooms. Excellent immersion for vocals, voiceovers, and MIDI work."
         },
         {
           "q": "How much does the practice room cost?",
@@ -917,7 +917,7 @@
     "seo": {
       "title": "Wedding Song Recording — All-in-One ₩350,000 | Studio NOL",
       "description": "5 min walk from Yeonsinnae Station. Beginners welcome. 2hr recording + vocal tune + mixing & mastering for ₩350,000. Same-day rough mix available.",
-      "keywords": "wedding song recording, vocal recording studio Seoul, self recording wedding, bridal song studio, propose recording, Studio Nol"
+      "keywords": "wedding song recording, vocal recording studio Seoul, engineer-led wedding recording, bridal song studio, propose recording, Studio Nol"
     },
     "hero": {
       "title": "Share Your Heart Through Song",

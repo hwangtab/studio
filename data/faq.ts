@@ -20,7 +20,7 @@ const faqData = {
     },
     {
       question: '연습실 입주 프로그램이 있나요?',
-      answer: '네, 월 40만 원으로 프리미엄 방음 연습실과 8가지 부가 혜택(녹음실 할인, 무료 음원 유통, 보도자료 작성 지원, 버스킹 장비 대여 등)을 제공하는 입주 프로그램이 있습니다.',
+      answer: '네, 월 36만 원부터 프리미엄 방음 연습실과 8가지 부가 혜택(녹음실 할인, 무료 음원 유통, 보도자료 작성 지원, 버스킹 장비 대여 등)을 제공하는 입주 프로그램이 있습니다.',
     },
     {
       question: '어떤 장비를 보유하고 있나요?',
@@ -47,12 +47,12 @@ const faqData = {
       answer: "카카오톡 채널 \'스튜디오 놀\', 전화(070-8065-6700), 또는 홈페이지 문의 폼을 통해 예약하실 수 있습니다. 당일 예약도 가능하며, 주말·공휴일에도 운영합니다.",
     },
     {
-      question: '일반인(셀프 녹음)도 녹음실을 이용할 수 있나요?',
-      answer: '네, 전문가가 아니어도 누구나 환영합니다. 전담 엔지니어가 마이크 세팅부터 보컬 디렉팅, 완성 파일 전달까지 전 과정을 지원하므로 처음 녹음하시는 분도 편안하게 고품질 결과물을 얻으실 수 있습니다.',
+      question: '일반인도 녹음실을 이용할 수 있나요?',
+      answer: '네, 전문가가 아니어도 누구나 환영합니다. 모든 녹음 세션에 전담 엔지니어가 동반해 마이크 세팅부터 보컬 디렉팅, 완성 파일 전달까지 전 과정을 지원하므로 처음 녹음하시는 분도 편안하게 고품질 결과물을 얻으실 수 있습니다. (셀프 녹음·시간 대여는 운영하지 않습니다.)',
     },
     {
       question: '연습실 단기 대여도 가능한가요?',
-      answer: '현재 연습실은 월정액 입주 프로그램(월 40만 원)으로 운영 중입니다. 단기 또는 시간제 이용 문의는 카카오톡·전화로 상담해 주시면 가능 여부를 안내해 드립니다.',
+      answer: '연습실은 월정액 입주 프로그램(월 36만원~) 전용으로 운영하며 시간제·단기 대여는 운영하지 않습니다. 시간 단위로 연습 공간이 필요하시면 인근 시간 대여 운영사를 이용해주세요.',
     },
 
   ],
@@ -75,7 +75,7 @@ const faqData = {
     },
     {
       question: 'Do you have a practice room residency program?',
-      answer: 'Yes, for 400,000 KRW/month, we offer a premium soundproof practice room and 8 benefits (studio discount, free distribution, press release support, busking gear rental, etc.).',
+      answer: 'Yes, from 360,000 KRW/month, we offer a premium soundproof practice room and 8 benefits (studio discount, free distribution, press release support, busking gear rental, etc.).',
     },
     {
       question: 'What equipment do you have?',
@@ -102,12 +102,12 @@ const faqData = {
       answer: 'You can book via KakaoTalk (channel: Studio NOL), phone (070-8065-6700), or our website contact form. Same-day bookings are possible, and we are available on weekends and holidays.',
     },
     {
-      question: 'Can non-professionals record here (self-recording)?',
-      answer: 'Absolutely. Everyone is welcome regardless of experience. Our dedicated engineer handles mic setup, vocal direction, and delivers finished files — first-timers consistently achieve professional-quality results.',
+      question: 'Can non-professionals record here?',
+      answer: 'Absolutely. Everyone is welcome regardless of experience. Our dedicated engineer accompanies every session — mic setup, vocal direction, and finished file delivery — first-timers consistently achieve professional-quality results. (Self-recording and hourly rental are not offered.)',
     },
     {
       question: 'Is short-term rental of the practice room available?',
-      answer: 'Our practice room primarily operates on a monthly residency program (400,000 KRW/month). For short-term or hourly inquiries, please contact us via KakaoTalk or phone and we will advise on availability.',
+      answer: 'Our practice room primarily operates on a monthly residency program (from 360,000 KRW/month) only. We do not offer short-term or hourly rentals.',
     },
 
   ],
@@ -130,7 +130,7 @@ const faqData = {
     },
     {
       question: '有练习室入驻项目吗？',
-      answer: '有，月费 400,000 韩元，提供高端隔音练习室及 8 项福利（录音室折扣、免费发行、新闻稿支持、街头演出设备租借等）。',
+      answer: '月费 360,000 韩元起，提供高端隔音练习室及 8 项福利（录音室折扣、免费发行、新闻稿支持、街头演出设备租借等）。',
     },
     {
       question: '有哪些设备？',
@@ -149,12 +149,12 @@ const faqData = {
       answer: '可通过 KakaoTalk 频道"Studio NOL"、电话 070-8065-6700 或网站联系表单预约。支持当天预约，周末及节假日均可使用。',
     },
     {
-      question: '普通人（自录）也可以使用录音室吗？',
-      answer: '当然可以，欢迎所有人。专职工程师将协助完成麦克风设置、人声指导及成品交付等全流程，即使是第一次录音也能轻松获得高品质成果。',
+      question: '普通人也可以使用录音室吗？',
+      answer: '当然可以，欢迎所有人。所有录音均由专职工程师全程陪同，从麦克风设置到人声指导、成品交付，第一次录音也能轻松获得高品质成果。（不提供自录及小时租赁服务。）',
     },
     {
       question: '练习室可以短期租用吗？',
-      answer: '练习室目前以月费入驻项目（40万韩元/月）为主。如需短期或按小时使用，请通过 KakaoTalk 或电话咨询，我们将告知具体情况。',
+      answer: '练习室仅提供月费入驻项目（36万韩元/月起）。不提供短期或按小时租赁。',
     },
   ],
   es: [
@@ -176,7 +176,7 @@ const faqData = {
     },
     {
       question: '¿Tienen un programa de residencia para salas de práctica?',
-      answer: 'Sí, por 400.000 KRW/mes ofrecemos una sala premium insonorizada y 8 beneficios (descuento en estudio, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
+      answer: 'Sí, desde 360.000 KRW/mes ofrecemos una sala premium insonorizada y 8 beneficios (descuento en estudio, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
     },
     {
       question: '¿Qué equipo tienen?',
@@ -195,12 +195,12 @@ const faqData = {
       answer: 'Puedes reservar a través de KakaoTalk (canal: Studio NOL), por teléfono (070-8065-6700) o el formulario de contacto en nuestra web. Las reservas el mismo día son posibles y estamos disponibles los fines de semana y festivos.',
     },
     {
-      question: '¿Pueden grabar personas sin experiencia (grabación propia)?',
-      answer: 'Absolutamente. Todos son bienvenidos. Nuestro ingeniero dedicado se encarga de la configuración del micrófono, la dirección vocal y la entrega de archivos finales, para que los principiantes logren resultados de calidad profesional.',
+      question: '¿Pueden grabar personas sin experiencia?',
+      answer: 'Absolutamente. Todos son bienvenidos. Un ingeniero dedicado acompaña cada sesión — configuración del micrófono, dirección vocal y entrega de archivos finales — para que los principiantes logren resultados de calidad profesional. (No ofrecemos auto-grabación ni alquiler por horas.)',
     },
     {
       question: '¿Está disponible el alquiler a corto plazo de la sala de práctica?',
-      answer: 'Nuestra sala opera principalmente con un programa de residencia mensual (400.000 KRW/mes). Para consultas de uso a corto plazo o por horas, contáctenos vía KakaoTalk o teléfono.',
+      answer: 'Nuestra sala opera únicamente con un programa de residencia mensual (desde 360.000 KRW/mes). No ofrecemos alquiler por horas ni a corto plazo.',
     },
   ],
   vi: [
@@ -222,7 +222,7 @@ const faqData = {
     },
     {
       question: 'Có chương trình phòng tập cư trú không?',
-      answer: 'Có, 400.000 KRW/tháng cho phòng tập cách âm cao cấp và 8 quyền lợi (giảm giá phòng thu, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
+      answer: 'Có, từ 360.000 KRW/tháng cho phòng tập cách âm cao cấp và 8 quyền lợi (giảm giá phòng thu, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
     },
     {
       question: 'Có những thiết bị nào?',
@@ -241,12 +241,12 @@ const faqData = {
       answer: 'Bạn có thể đặt qua KakaoTalk (kênh: Studio NOL), điện thoại (070-8065-6700) hoặc form liên hệ trên website. Đặt trong ngày được, và chúng tôi mở cửa cả cuối tuần và ngày lễ.',
     },
     {
-      question: 'Người không chuyên (tự thu âm) có thể sử dụng phòng thu không?',
-      answer: 'Hoàn toàn có thể. Tất cả mọi người đều được chào đón. Kỹ sư chuyên trách sẽ hỗ trợ cài micro, định hướng giọng hát và bàn giao file hoàn chỉnh, giúp người lần đầu thu âm cũng có kết quả chất lượng cao.',
+      question: 'Người không chuyên có thể sử dụng phòng thu không?',
+      answer: 'Hoàn toàn có thể. Tất cả mọi người đều được chào đón. Mọi phiên thu âm đều có kỹ sư chuyên trách đồng hành — cài micro, định hướng giọng hát và bàn giao file hoàn chỉnh, giúp người lần đầu thu âm cũng có kết quả chất lượng cao. (Không cung cấp dịch vụ tự thu âm và thuê theo giờ.)',
     },
     {
       question: 'Có thể thuê phòng tập ngắn hạn không?',
-      answer: 'Phòng tập hiện chủ yếu hoạt động theo chương trình cư trú hàng tháng (400.000 KRW/tháng). Nếu có nhu cầu thuê ngắn hạn hoặc theo giờ, hãy liên hệ qua KakaoTalk hoặc điện thoại để được tư vấn.',
+      answer: 'Phòng tập chỉ hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng). Không cung cấp thuê ngắn hạn hoặc theo giờ.',
     },
   ],
   th: [
@@ -268,7 +268,7 @@ const faqData = {
     },
     {
       question: 'มีโปรแกรมห้องซ้อมรายเดือนหรือไม่?',
-      answer: 'มีค่ะ เดือนละ 400,000 วอน ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ส่วนลดสตูดิโอ, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
+      answer: 'เดือนละ 360,000 วอนขึ้นไป ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ส่วนลดสตูดิโอ, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
     },
     {
       question: 'มีอุปกรณ์อะไรบ้าง?',
@@ -292,7 +292,7 @@ const faqData = {
     },
     {
       question: 'เช่าห้องซ้อมระยะสั้นได้ไหม?',
-      answer: 'ห้องซ้อมของเราส่วนใหญ่ดำเนินการแบบโปรแกรมรายเดือน (400,000 วอน/เดือน) หากสนใจเช่าระยะสั้นหรือรายชั่วโมง ติดต่อสอบถามผ่าน KakaoTalk หรือโทรศัพท์',
+      answer: 'ห้องซ้อมของเราดำเนินการแบบโปรแกรมรายเดือนเท่านั้น (เริ่มต้น 360,000 วอน/เดือน) ไม่ได้ให้บริการเช่าระยะสั้นหรือรายชั่วโมง',
     },
   ],
   uz: [
@@ -314,7 +314,7 @@ const faqData = {
     },
     {
       question: "Mashg'ulot xonasi rezident dasturi bormi?",
-      answer: "Ha. Oyiga 400,000 KRW evaziga premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
+      answer: "Ha. Oyiga 360,000 KRW dan premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
     },
     {
       question: 'Qanday uskunalar bor?',
@@ -338,7 +338,7 @@ const faqData = {
     },
     {
       question: "Mashg'ulot xonasini qisqa muddatga ijaraga olish mumkinmi?",
-      answer: "Mashg'ulot xonasi asosan oylik rezident dastur (400,000 KRW/oy) asosida ishlaydi. Qisqa muddatli yoki soatbay foydalanish bo'yicha so'rovlar uchun KakaoTalk yoki telefon orqali bog'laning.",
+      answer: "Mashgʻulot xonasi faqat oylik rezident dastur (360,000 KRW/oy dan) asosida ishlaydi. Qisqa muddatli yoki soatbay ijara taklif etilmaydi.",
     },
   ]
 };
