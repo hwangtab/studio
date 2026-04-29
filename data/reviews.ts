@@ -27,15 +27,15 @@ export const getReviews = (locale: Locale) => {
       author: t(locale, { ko: "이*정", en: "Lee *Jeong", zh: "Lee *Jeong", es: "Lee *Jeong", vi: "Lee *Jeong", th: "Lee *Jeong", uz: "Lee *Jeong" }),
       rating: 5,
       categoryKey: 'wedding',
-      category: t(locale, { ko: "셀프 축가 녹음", en: "Self Wedding Recording", zh: "自助婚礼祝歌录音", es: "Grabación de Boda", vi: "Thu âm nhạc cưới tự thực hiện", th: "อัดเพลงงานแต่งด้วยตัวเอง", uz: "O‘z to‘y qo‘shig‘ini yozish" }),
+      category: t(locale, { ko: "축가 녹음", en: "Wedding Song Recording", zh: "婚礼祝歌录音", es: "Grabación de Boda", vi: "Thu âm nhạc cưới", th: "อัดเพลงงานแต่ง", uz: "To‘y qo‘shig‘i yozuvi" }),
       content: t(locale, {
-        ko: "결혼식 셀프 축가 녹음은 처음이라 긴장을 많이 했는데, 단순한 녹음을 넘어 곡의 감정선까지 잘 잡아주셨어요. 제가 원했던 따뜻한 느낌이 소리에 고스란히 담길 수 있도록 디렉팅해주신 덕분에 평생 잊지 못할 선물을 만들었습니다.",
-        en: "I was nervous about recording a wedding song for the first time, but they captured the emotions perfectly. Thanks to their directing, I created an unforgettable gift with the warm sound I wanted.",
-        zh: "第一次录制婚礼祝歌很紧张，但是不仅仅是录音，连歌曲的感情线也抓得很好。多亏了导演, 让我想要的那种温暖感觉原封不动地融入到了声音中，制作了一份终身难忘的礼物。",
-        es: "Estaba nerviosa por grabar una canción de boda por primera vez, pero capturaron las emociones perfectamente. Gracias a su dirección, creé un regalo inolvidable con el sonido cálido que quería.",
-        vi: "Lần đầu thu âm bài hát cưới nên tôi rất hồi hộp, nhưng họ không chỉ thu mà còn nắm được cảm xúc của bài. Nhờ phần đạo diễn tỉ mỉ, tôi đã tạo được món quà ấm áp và khó quên.",
-        th: "ครั้งแรกที่อัดเพลงงานแต่งด้วยตัวเองก็เลยตื่นเต้นมาก แต่เขาไม่ใช่แค่อัดเสียง ยังจับอารมณ์ของเพลงได้ดีมาก ด้วยการกำกับทำให้ได้ซาวด์อบอุ่นตามที่ต้องการ เป็นของขวัญที่ลืมไม่ลง",
-        uz: "To‘y qo‘shig‘imni birinchi marta o‘zim yozayotganim uchun juda hayajonlandim, lekin ular oddiy yozuvdan ham ko‘proq, qo‘shiqning hissiyot chizig‘ini ham ushlab berdi. Yo‘naltirishlari tufayli xohlagan iliq kayfiyatni yaratib, unutilmas sovg‘a tayyorladim."
+        ko: "결혼식 축가 녹음은 처음이라 긴장을 많이 했는데, 엔지니어가 단순한 녹음을 넘어 곡의 감정선까지 잘 잡아주셨어요. 제가 원했던 따뜻한 느낌이 소리에 고스란히 담길 수 있도록 디렉팅해주신 덕분에 평생 잊지 못할 선물을 만들었습니다.",
+        en: "I was nervous about recording a wedding song for the first time, but the engineer captured the emotions perfectly. Thanks to their directing, I created an unforgettable gift with the warm sound I wanted.",
+        zh: "第一次录制婚礼祝歌很紧张，但工程师不仅仅是录音，连歌曲的感情线也抓得很好。多亏了导演, 让我想要的那种温暖感觉原封不动地融入到了声音中，制作了一份终身难忘的礼物。",
+        es: "Estaba nerviosa por grabar una canción de boda por primera vez, pero el ingeniero capturó las emociones perfectamente. Gracias a su dirección, creé un regalo inolvidable con el sonido cálido que quería.",
+        vi: "Lần đầu thu âm bài hát cưới nên tôi rất hồi hộp, nhưng kỹ sư không chỉ thu mà còn nắm được cảm xúc của bài. Nhờ phần đạo diễn tỉ mỉ, tôi đã tạo được món quà ấm áp và khó quên.",
+        th: "ครั้งแรกที่อัดเพลงงานแต่งก็เลยตื่นเต้นมาก แต่วิศวกรไม่ใช่แค่อัดเสียง ยังจับอารมณ์ของเพลงได้ดีมาก ด้วยการกำกับทำให้ได้ซาวด์อบอุ่นตามที่ต้องการ เป็นของขวัญที่ลืมไม่ลง",
+        uz: "To‘y qo‘shig‘imni birinchi marta yozayotganim uchun juda hayajonlandim, lekin muhandis oddiy yozuvdan ham ko‘proq, qo‘shiqning hissiyot chizig‘ini ham ushlab berdi. Yo‘naltirishlari tufayli xohlagan iliq kayfiyatni yaratib, unutilmas sovg‘a tayyorladim."
       }),
       datePublished: "2024-12-05"
     },
