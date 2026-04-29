@@ -59,6 +59,10 @@ const nextConfig = {
       'tailwind-merge',
       'class-variance-authority',
     ],
+    // critical CSS inlining: 첫 paint에 필요한 CSS만 <style>로 inline해
+    // CSS render-blocking을 줄임. PageSpeed 모바일 보고서의 850ms 차단 완화.
+    // 빌드 시 critters 라이브러리로 처리되며 prerendered HTML 크기는 +5~10KB 정도.
+    optimizeCss: true,
   },
 
   eslint: {
