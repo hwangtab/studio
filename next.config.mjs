@@ -43,8 +43,11 @@ const nextConfig = {
     ],
     minimumCacheTTL: 31536000, // 1 year for external images
     formats: ['image/avif', 'image/webp'],
-    // Tailwind breakpoints 기반 최적 이미지 사이즈 생성
-    deviceSizes: [640, 768, 1024, 1280, 1536, 1920],
+    // Tailwind breakpoints + 모바일 small device 추가.
+    // 360px (Galaxy S 기본) × DPR 2 = 720px → 기존 768 srcset 사용했지만,
+    // 작은 안드로이드(320-360 viewport)에서 480 srcset이 더 적합.
+    // hero 이미지 sizes="100vw"가 모바일 viewport에 정확히 맞춘 srcset 선택.
+    deviceSizes: [480, 640, 768, 1024, 1280, 1536, 1920],
     imageSizes: [16, 32, 64, 96, 128, 256, 384],
   },
 
