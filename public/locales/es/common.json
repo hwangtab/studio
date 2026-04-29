@@ -210,8 +210,8 @@
   },
   "pricing": {
     "seo": {
-      "title": "Precios Studio NOL · Sala ₩300K/mes · Boda ₩150K+",
-      "description": "Precios transparentes en Studio NOL: sala mensual ₩300K (sin depósito, pernocta), boda ₩150K+, locución ₩30K/h. Hasta 30% dto. Presupuesto gratis.",
+      "title": "Precios Studio NOL · Sala ₩360K/mes · Boda ₩350K",
+      "description": "Precios transparentes en Studio NOL: sala mensual ₩360K (sin depósito, pernocta), boda ₩350K, grabación ₩100K/h. Hasta 30% dto. Presupuesto gratis.",
       "keywords": "tarifas de grabación, presupuesto de locución, precio de alquiler de estudio, precio de mezcla, precio de masterización, Studio NOL",
       "schemaTitle": "Precios de los Servicios de Studio NOL"
     },
@@ -435,12 +435,12 @@
   },
   "practiceRoom": {
     "seo": {
-      "title": "Sala de ensayo insonorizada · Desde ₩300K/mes | Studio Nol",
-      "description": "Insonorización STC nivel estudio en Eunpyeong-gu. ₩300K/mes — sin depósito, 50% dto. primer mes con plan de 6 meses, ducha 24h, pernocta. A 5 min de Yeonsinnae.",
+      "title": "Sala de ensayo insonorizada · Desde ₩360K/mes | Studio Nol",
+      "description": "Insonorización STC nivel estudio en Eunpyeong-gu. ₩360K/mes — sin depósito, 50% dto. primer mes con plan de 6 meses, ducha 24h, pernocta. A 5 min de Yeonsinnae.",
       "keywords": "sala de ensayo Seúl, sala de ensayo Eunpyeong, sala de ensayo Yeonsinnae, sala STC insonorizada, aislamiento nivel estudio, sala con ducha privada, sala con pernocta, sala mensual, sin depósito, 24/7, insonorizada, sala privada, sala de voz, sala de teclado"
     },
     "hero": {
-      "title": "Desde ₩300K/mes · Sala de ensayo insonorizada 24h en Eunpyeong-gu",
+      "title": "Desde ₩360K/mes · Sala de ensayo insonorizada 24h en Eunpyeong-gu",
       "subtitleLine1": "La residencia mensual más accesible de Eunpyeong-gu.",
       "subtitleLine2": "Sin depósito · 50% dto. primer mes (plan 6 meses) · Pernocta permitida.",
       "subtitleLine3": "Voz · teclado · enlace de grabación — residencia mensual premium.",
@@ -448,10 +448,10 @@
     },
     "pricing": {
       "eyebrow": "Mejor precio de Eunpyeong-gu",
-      "title": "Desde 300.000 KRW/mes, la sala de ensayo más razonable de Eunpyeong-gu",
+      "title": "Desde 360.000 KRW/mes, la sala de ensayo más razonable de Eunpyeong-gu",
       "subtitle": "Sin depósito · 50% dto. primer mes (plan 6 meses) · Acceso 24/7 + pernocta",
       "priceLabel": "Mensual",
-      "priceValue": "Desde ₩300K",
+      "priceValue": "Desde ₩360K",
       "priceCaption": "IVA no incl. · servicios incluidos",
       "badges": [
         {
@@ -599,7 +599,7 @@
         "eyebrow": "Mercado + Beneficios = Valor Real",
         "headline": "~₩850K+/mes",
         "headlineCaption": "valor mensual real",
-        "title": "Sala nivel ₩400–500K/mes por ₩300K/mes + ~₩400K/mes en beneficios",
+        "title": "Sala nivel ₩400–500K/mes por ₩360K/mes + ~₩400K/mes en beneficios",
         "subtitle": "Salas comparables en Eunpyeong-gu cuestan ₩400–500K/mes. Más ~₩400K+/mes en beneficios extra — incluido para cada residente.",
         "note": "* Precios de mercado basados en salas de Eunpyeong-gu con especificaciones equivalentes (insonorización, climatización, 24/7). Valores estimados por tarifas de grabación, PR y consultoría."
       },
@@ -712,7 +712,7 @@
         },
         {
           "q": "¿Cuánto cuesta la sala de ensayo?",
-          "a": "Los planes mensuales comienzan desde 300.000 KRW (sin depósito), el precio más razonable de Eunpyeong-gu. 50% de descuento el primer mes con contrato de 6 meses o más. Incluye acceso 24h con cerradura individual, climatización y almacenamiento de instrumentos."
+          "a": "Los planes mensuales comienzan desde 360.000 KRW (sin depósito), el precio más razonable de Eunpyeong-gu. 50% de descuento el primer mes con contrato de 6 meses o más. Incluye acceso 24h con cerradura individual, climatización y almacenamiento de instrumentos."
         },
         {
           "q": "¿Cuáles son las condiciones para la residencia mensual?",
@@ -725,7 +725,7 @@
       ]
     },
     "cta": {
-      "titleLine1": "Desde los 300.000 KRW/mes más razonables de Eunpyeong-gu",
+      "titleLine1": "Desde los 360.000 KRW/mes más razonables de Eunpyeong-gu",
       "titleHighlight": "Acceso 24/7 a un entorno profesional",
       "subtitleLine1": "Insonorización de primer nivel · climatización · monitoreo hi-end · uso mensual ilimitado",
       "subtitleLine2": "Consulta ahora — 50% de descuento el primer mes con plan de 6 meses.",
@@ -816,7 +816,7 @@
       },
       "practice": {
         "title": "¿Necesitas tu propia sala de práctica musical?",
-        "descriptionLine1": "Sala de práctica musical insonorizada 24h — mensual desde ₩300,000. El precio más razonable de Eunpyeong-gu.",
+        "descriptionLine1": "Sala de práctica musical insonorizada 24h — mensual desde ₩360,000. El precio más razonable de Eunpyeong-gu.",
         "descriptionLine2": "A 5 min andando de la estación Yeonsinnae. Sala de práctica individual con vocal, piano y teclado.",
         "primaryText": "Ver sala de práctica musical",
         "secondaryText": "Consulta de residencia",
