@@ -1,11 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
-import { ScrollProgress } from './common/ScrollProgress';
-import { ScrollToTop } from './ui/ScrollToTop';
 import { type Locale, defaultLocale } from '../lib/i18n';
+
+// 스크롤 인터랙션 보조 컴포넌트들은 첫 paint에 시각적 영향이 없어 hydration 후 lazy load.
+// LCP/FCP 측정 창에서 빠지면서 _app/Layout 청크에서 분리.
+const ScrollProgress = dynamic(() => import('./common/ScrollProgress').then(m => m.ScrollProgress), { ssr: false });
+const ScrollToTop = dynamic(() => import('./ui/ScrollToTop').then(m => m.ScrollToTop), { ssr: false });
 
 interface LayoutProps {
   children: React.ReactNode;
