@@ -49,12 +49,12 @@
   },
   "browserslist": {
     "production": [
-      "chrome >= 90",
-      "firefox >= 90",
-      "safari >= 14",
-      "edge >= 90",
-      "ios_saf >= 14",
-      "samsung >= 14",
+      "chrome >= 92",
+      "firefox >= 92",
+      "safari >= 16",
+      "edge >= 92",
+      "ios_saf >= 16",
+      "samsung >= 19",
       "not op_mini all"
     ],
     "development": [
