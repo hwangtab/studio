@@ -25,10 +25,10 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Specialization: Independent artist support — affordable professional-grade recording, mixing, and production in Seoul
 - Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR 03424
 - Geo: 37.614353, 126.925887
-- Phone: +82-2-764-3114
+- Phone: +82-507-1384-3144
 - Email: contact@kosmart.org
 - Business Hours: Mon–Fri 10:00–18:00, Sat 12:00–18:00, Sun Closed
-- Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (+82-2-764-3114), Email (contact@kosmart.org)
+- Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (+82-507-1384-3144), Email (contact@kosmart.org)
 - Naver Map: https://naver.me/5gFZhS3X
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
 

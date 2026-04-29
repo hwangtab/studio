@@ -20,7 +20,7 @@ You can also take a full look at the gear we actually use: from high-end microph
 
 The newly added services page introduces a wide range of offerings to realize your musical vision—vocal/instrument recording, professional mixing, mastering, album producing, and sound design. We hope you’ll experience Studio NOL’s sound philosophy on the new site and create magical moments that breathe depth into your music.
 
-If you have any questions, please feel free to contact us anytime by phone (02-764-3114), text (010-4255-7893), or [KakaoTalk](https://open.kakao.com/o/sgTfRiah). Studio NOL will always do our best for your precious music. Thank you for your support and love!
+If you have any questions, please feel free to contact us anytime by phone (0507-1384-3144), text (0507-1384-3144), or [KakaoTalk](https://open.kakao.com/me/nol). Studio NOL will always do our best for your precious music. Thank you for your support and love!
 
 Sincerely,
 Studio NOL
