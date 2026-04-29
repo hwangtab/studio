@@ -75,7 +75,8 @@ const ImageHero = ({
           {/* font-logo = Gasoek One (next/font/google 자동 self-hosted + preload + size-adjust).
               → Pretendard (fallback). 브랜드 정체성 유지 위해 원본 font-normal 복원. */}
           <h1
-            className={`font-logo text-5xl font-normal md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-tight ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-logo text-5xl font-normal md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            style={{ letterSpacing: '0' }}
           >
             {title}
           </h1>
