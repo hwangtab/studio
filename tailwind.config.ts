@@ -69,13 +69,13 @@ const config: Config = {
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },
       fontFamily: {
-        // 사이트 전반 단일 폰트(Noto Sans KR variable). var(--font-noto-sans-kr)는
-        // pages/_app.tsx의 next/font/google self-hosted 폰트.
+        // 사이트 전반 단일 폰트(Pretendard subset). var(--font-pretendard)는
+        // pages/_app.tsx의 next/font/local self-hosted 폰트 (3 weight: 400/700/900).
         // fallback은 시스템 한글 폰트 → 시스템 폰트.
-        sans: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        title: ['var(--font-noto-sans-kr)', 'sans-serif'],
-        display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', 'sans-serif'],
-        logo: ['var(--font-noto-sans-kr)', 'sans-serif'],
+        sans: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        title: ['var(--font-pretendard)', 'sans-serif'],
+        display: ['var(--font-montserrat)', 'var(--font-pretendard)', 'sans-serif'],
+        logo: ['var(--font-pretendard)', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],

@@ -4,7 +4,8 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
-import { Montserrat, Noto_Sans_KR } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
+import localFont from 'next/font/local';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -27,15 +28,18 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-// Noto Sans KR — 사이트 전반의 통합 한글 폰트.
-// 가변(variable) axis로 100-900 weight를 단일 폰트 파일에서 사용 (효율적).
-// next/font/google이 self-hosted + preload + subset + size-adjust 자동 처리.
-// 히어로 타이틀은 별도 디스플레이 폰트 없이 Noto Sans KR 900 (font-black)으로 임팩트.
-const notoSansKr = Noto_Sans_KR({
-  subsets: ['latin'],
-  weight: ['400', '500', '700', '900'],
+// Pretendard — 사이트 전반의 통합 한글 폰트 (자가 호스팅 subset).
+// next/font/local이 빌드 시 .next/static/media에 복사 + 자동 preload + size-adjust 처리.
+// Noto Sans KR variable이 한글 unicode-range chunk로 분할되며 LCP를 악화시킨 사례
+// 학습 후 더 가벼운 Pretendard subset으로 복귀. 히어로는 Black(900)로 임팩트 유지.
+const pretendard = localFont({
+  src: [
+    { path: '../public/fonts/Pretendard-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/fonts/Pretendard-Bold.woff2', weight: '700', style: 'normal' },
+    { path: '../public/fonts/Pretendard-Black.woff2', weight: '900', style: 'normal' },
+  ],
   display: 'swap',
-  variable: '--font-noto-sans-kr',
+  variable: '--font-pretendard',
 });
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -174,7 +178,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (
-      <div className={`${montserrat.variable} ${notoSansKr.variable}`}>
+      <div className={`${montserrat.variable} ${pretendard.variable}`}>
         <Head>
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -197,7 +201,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   };
 
   return (
-    <div className={`${montserrat.variable} ${notoSansKr.variable}`}>
+    <div className={`${montserrat.variable} ${pretendard.variable}`}>
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

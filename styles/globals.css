@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 폰트 시스템: 사이트 전반 next/font/google의 Noto Sans KR variable로 통일.
+/* 폰트 시스템: 사이트 전반 Pretendard subset으로 통일 (next/font/local).
    Montserrat은 display 보조용 (--font-montserrat). pages/_app.tsx에서 자가 호스팅 +
    preload + size-adjust를 자동 처리하므로 별도 @font-face 선언 불필요. */
 
