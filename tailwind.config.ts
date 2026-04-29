@@ -76,8 +76,6 @@ const config: Config = {
         title: ['var(--font-noto-sans-kr)', 'sans-serif'],
         display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', 'sans-serif'],
         logo: ['var(--font-noto-sans-kr)', 'sans-serif'],
-        // pretendard 별칭은 호환성 위해 유지하되 실제 폰트는 Noto Sans KR로 매핑.
-        pretendard: ['var(--font-noto-sans-kr)', 'sans-serif'],
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',

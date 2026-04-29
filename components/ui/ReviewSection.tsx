@@ -75,7 +75,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                     ))}
                                 </div>
 
-                                <p itemProp="reviewBody" className={`typo-card-body text-lg leading-relaxed mb-8 font-pretendard ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                                <p itemProp="reviewBody" className={`typo-card-body text-lg leading-relaxed mb-8 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                                     &quot;{review.content}&quot;
                                 </p>
 

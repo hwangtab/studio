@@ -19,7 +19,10 @@ export default async function handler(req: NextRequest) {
 
     const metaParts = [category, date].filter(Boolean).join('  ·  ');
 
-    // 자체 도메인의 Pretendard-Bold(한글 지원)를 사용해 외부 폰트 서버 의존 제거.
+    // 자체 도메인의 Pretendard-Bold(한글 지원)를 OG 이미지 생성에만 사용.
+    // 사이트 본문은 next/font/google의 Noto Sans KR로 통일됐지만, @vercel/og는 edge runtime에서
+    // 동적으로 폰트를 fetch해 ImageResponse에 주입해야 한다. next/font 빌드 산출물(.next/static/media)은
+    // edge runtime에서 접근 불가하므로 OG 전용으로 자체 호스팅 woff2 파일을 유지.
     // 외부 폰트 서버 장애 시 OG 생성 실패 → 302 fallback이 SNS 크롤러에 전달되지 않는 문제 회피.
     const origin = new URL(req.url).origin;
     const fontRes = await fetch(`${origin}/fonts/Pretendard-Bold.woff2`);

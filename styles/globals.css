@@ -2,12 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Montserrat is now loaded via next/font in _app.js */
-
-/* Pretendard @font-face는 _app.tsx의 useEffect에서 window.load 이후 지연 주입한다.
-   초기 CSS에 선언하면 브라우저가 VeryHigh 우선순위로 즉시 다운로드하여 JS/CSS
-   대역폭을 잠식, FCP/LCP를 블로킹함. 지연 주입 시 첫 페인트는 시스템 폰트로,
-   이후 Pretendard로 자연스럽게 swap됨. */
+/* 폰트 시스템: 사이트 전반 next/font/google의 Noto Sans KR variable로 통일.
+   Montserrat은 display 보조용 (--font-montserrat). pages/_app.tsx에서 자가 호스팅 +
+   preload + size-adjust를 자동 처리하므로 별도 @font-face 선언 불필요. */
 
 /* 기본 스타일 */
 @layer base {

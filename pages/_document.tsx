@@ -32,7 +32,7 @@ class MyDocument extends Document<Props> {
               초기 preconnect는 LCP 이미지·CSS·JS와 소켓/대역폭을 놓고 경쟁하므로 가성비가 나쁨.
             - dns-prefetch만 남김: 라우팅 후 실제 요청 시 DNS lookup 대기를 줄여주는 값싼 힌트(비용 <1KB, 소켓 미점유).
             - contact 페이지 전용 maps.*·www.google.com 프리커넥트는 contact 페이지에서만 주입(향후 필요시).
-            - jsdelivr 폴백(Pretendard)은 window.load + 3초 후 주입되므로 초기 preconnect 불필요.
+            - 폰트는 next/font/google이 빌드 시 self-hosted + auto preload 처리하므로 외부 preconnect 불필요.
             - vercel.live 는 프리뷰 환경 Comments bar 전용 → 제거.
           */}
           {/* Analytics & form endpoints */}
@@ -42,8 +42,6 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://api.emailjs.com" />
           <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-          {/* Pretendard CDN fallback (load + 3s 이후에만 사용) */}
-          <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
           {/* Portfolio image CDN prefetch */}
           <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
           <link rel="dns-prefetch" href="https://i.ytimg.com" />
