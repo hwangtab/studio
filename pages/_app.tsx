@@ -248,14 +248,15 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                 </AnimatePresence>
                 <Analytics />
                 <SpeedInsights />
-                {/* Google Analytics 4 — lazyOnload: window.onload 이후 유휴 시 로드.
-                    gtag.js 154KB가 초기 대역폭/메인스레드 경쟁에서 빠져 FCP/TBT 개선.
-                    측정 정확도: 대부분의 방문자는 onload 전 이탈하지 않으므로 영향 미미. */}
+                {/* Google Analytics 4 — strategy="worker": next.config.mjs의 nextScriptWorkers
+                    옵션으로 Partytown이 자동 적용되어 GA4를 Web Worker에서 실행.
+                    메인 스레드 231ms 점유와 GTM 155KB 다운로드가 main thread를 차단하지 않음.
+                    측정 데이터는 정상 전송 (postMessage로 main thread와 동기). */}
                 <Script
                   src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
-                  strategy="lazyOnload"
+                  strategy="worker"
                 />
-                <Script id="ga4-init" strategy="lazyOnload">
+                <Script id="ga4-init" strategy="worker">
                   {`
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}

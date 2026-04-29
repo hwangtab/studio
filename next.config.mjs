@@ -66,7 +66,10 @@ const nextConfig = {
     // TBT가 260ms→7,130ms로 폭증, LCP 3.5s→4.6s 악화. critters가 lazy load CSS를
     // 기다리느라 메인 스레드를 장시간 차단하는 것으로 추정. Next.js 15 + React 19
     // + Pages Router 조합에서 critters가 안정적이지 않다고 판단해 비활성화.
-    // 대안 모색은 PR 단위로 격리해 측정 후 진행.
+
+    // GTM(155KB / 메인 스레드 231ms)을 Web Worker로 격리 — Partytown 자동 적용.
+    // PSI 보고서에서 일관되게 큰 항목으로 잡혀 격리 변경으로 시도. 회귀 시 즉시 롤백.
+    nextScriptWorkers: true,
   },
 
   eslint: {
