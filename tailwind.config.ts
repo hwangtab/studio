@@ -76,6 +76,9 @@ const config: Config = {
         title: ['var(--font-noto-sans-kr)', 'sans-serif'],
         display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', 'sans-serif'],
         logo: ['var(--font-noto-sans-kr)', 'sans-serif'],
+        // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
+        // Tailwind default와 유사하되 source-code-pro 선호 추가.
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',
