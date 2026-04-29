@@ -305,7 +305,7 @@ eunpyeong-yeonsinnae-recordingstudio-studionol-01-neumann.jpg
 |---|---|---|
 | 위치 | 서울 은평구, 동명여고 정문 옆 건물 3층 (1층 카센터) | `pages/[locale]/studio-info.tsx` |
 | 교통 | 3·6호선 연신내역 / 6호선 불광역 7번 출구 도보 5~7분 | 동상 |
-| 음악연습실 가격 | 월 36만원~, 보증금 0원, 첫 달 10% 할인 | `pages/[locale]/practice-room.tsx` |
+| 음악연습실 가격 | 월 36만원~, 보증금 0원, 6개월 계약 시 첫 달 50% 할인 | `pages/[locale]/practice-room.tsx` |
 | 음악연습실 시설 | STC 차음, 이중 벽체, 24시간, 샤워실, 숙식 가능, 피아노/건반, 기가비트 인터넷 | 동상 |
 | 녹음실 가격 | 시간당 10만원~, Day Lock 6시간 50만원 | `pages/[locale]/pricing.tsx` |
 | 녹음실 장비 | Neumann U87AI, SSL Fusion, Tegeler Audio, 10년 경력 엔지니어 | `pages/[locale]/studio-info.tsx` |
