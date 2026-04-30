@@ -43,7 +43,7 @@ export const ScrollToTop = ({ locale = defaultLocale }: ScrollToTopProps) => {
           className="fixed bottom-8 right-8 z-50"
         >
           <Button
-            variant="secondary"
+            variant="primary"
             size="icon"
             onClick={scrollToTop}
             className="rounded-full shadow-lg hover:shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800"
