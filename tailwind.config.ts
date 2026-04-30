@@ -68,6 +68,7 @@ const config: Config = {
           soft: '#a8a29e',
         },
         'surface-dark-elevated': '#1c1917',
+        // border-hairline / border-hairline-strong 전용 — bg-hairline 사용 금지 (의미상 fill 색이 아님)
         hairline: 'rgba(0,0,0,0.08)',
         'hairline-strong': 'rgba(0,0,0,0.14)',
         orb: {
