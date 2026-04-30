@@ -10,12 +10,12 @@ const OnlineFallback: React.FC<OnlineFallbackProps> = ({ locale = 'ko' }) => {
   const href = `/${locale}/stories/onlinemix1`;
 
   return (
-    <div className="my-8 rounded-xl border border-primary/20 bg-primary/5 dark:bg-primary/10 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
-      <div className="flex-1 text-gray-800 dark:text-gray-200 text-body-1 leading-relaxed">
+    <div className="my-8 rounded-card border border-hairline dark:border-white/10 bg-canvas-warm dark:bg-surface-dark-elevated px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="flex-1 text-ink-muted-80 dark:text-on-dark-soft text-body-1 leading-relaxed">
         직접 방문이 어렵다면{' '}
         <NextLink
           href={href}
-          className="font-semibold text-primary hover:underline underline-offset-4"
+          className="font-semibold text-link hover:underline underline-offset-4 dark:text-link-on-dark"
         >
           온라인 파일 의뢰
         </NextLink>
@@ -23,7 +23,7 @@ const OnlineFallback: React.FC<OnlineFallbackProps> = ({ locale = 'ko' }) => {
       </div>
       <NextLink
         href={href}
-        className="inline-flex items-center justify-center shrink-0 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
+        className="inline-flex items-center justify-center shrink-0 px-4 py-2 rounded-pill bg-ink text-white text-sm font-medium hover:bg-ink/90 transition-colors dark:bg-on-dark dark:text-canvas-deep"
       >
         온라인 의뢰 안내 →
       </NextLink>

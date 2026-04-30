@@ -99,7 +99,7 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
   }, [children, className]);
 
   return (
-    <pre className={`rounded-lg overflow-hidden my-4 language-${language}`}>
+    <pre className={`bg-canvas-warm dark:bg-surface-dark-elevated rounded-card border border-hairline dark:border-white/10 overflow-hidden my-4 language-${language}`}>
       <code ref={codeRef} className={`language-${language}`}>
         {children}
       </code>
@@ -164,7 +164,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
+          'font-display font-light text-3xl md:text-4xl leading-tight mt-12 mb-6 text-ink dark:text-on-dark',
           className
         )}
       >
@@ -178,7 +178,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
+          'font-display font-light text-2xl md:text-3xl leading-snug mt-10 mb-5 text-ink dark:text-on-dark',
           className
         )}
       >
@@ -192,7 +192,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
+          'font-display font-light text-xl md:text-2xl leading-relaxed mt-8 mb-4 text-ink dark:text-on-dark',
           className
         )}
       >
@@ -206,7 +206,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'text-xl font-medium mt-6 mb-3 text-gray-900 dark:text-white',
+          'font-display font-light text-xl mt-6 mb-3 text-ink dark:text-on-dark',
           className
         )}
       >
@@ -217,7 +217,7 @@ const STATIC_OVERRIDES = {
   p: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
       <p
-        className="text-body-1 leading-relaxed mb-6 mt-4 text-gray-800 dark:text-gray-200"
+        className="text-ink-muted-80 dark:text-on-dark-soft leading-[1.7] mb-6 mt-4"
         {...props}
       >
         {children}
@@ -226,7 +226,7 @@ const STATIC_OVERRIDES = {
   },
   strong: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <strong className="font-bold text-primary-dark dark:text-primary-light" {...props}>
+      <strong className="font-bold text-ink dark:text-on-dark" {...props}>
         {children}
       </strong>
     ),
@@ -271,7 +271,7 @@ const STATIC_OVERRIDES = {
   li: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
       <li
-        className="text-body-1 leading-relaxed mb-4 pl-2 list-item text-gray-800 dark:text-gray-200"
+        className="text-ink-muted-80 dark:text-on-dark-soft leading-[1.7] mb-4 pl-2 list-item"
         {...props}
       >
         {children}
@@ -280,7 +280,7 @@ const STATIC_OVERRIDES = {
   },
   blockquote: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <blockquote className="border-l-4 border-primary-light dark:border-primary-dark pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 italic" {...props}>
+      <blockquote className="border-l-4 border-ink/20 dark:border-white/20 pl-4 py-2 my-4 italic text-ink-muted-60 dark:text-on-dark-soft" {...props}>
         {children}
       </blockquote>
     ),
@@ -307,7 +307,7 @@ const STATIC_OVERRIDES = {
               width={Number(metadata.width)}
               height={Number(metadata.height)}
               sizes="(max-width: 768px) 100vw, 768px"
-              className="w-full h-auto rounded-lg shadow-md"
+              className="w-full h-auto rounded-card border border-hairline shadow-card"
             />
           </span>
         );
@@ -315,7 +315,7 @@ const STATIC_OVERRIDES = {
 
       return (
         <span className="block my-6">
-          <span className="relative w-full overflow-hidden rounded-lg shadow-md block" style={{ aspectRatio: '16 / 9' }}>
+          <span className="relative w-full overflow-hidden rounded-card border border-hairline shadow-card block" style={{ aspectRatio: '16 / 9' }}>
             <Image
               src={src}
               alt={altText}
@@ -331,7 +331,7 @@ const STATIC_OVERRIDES = {
   hr: {
     component: ({ className, ...props }: { className?: string } & React.HTMLAttributes<HTMLHRElement>) => (
       <hr
-        className={mergeClassNames('my-12 border-t border-gray-200 dark:border-gray-700', className)}
+        className={mergeClassNames('my-12 border-t border-hairline dark:border-white/10', className)}
         {...props}
       />
     ),
@@ -342,7 +342,7 @@ const STATIC_OVERRIDES = {
         return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
       }
       return (
-        <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm" {...props}>
+        <code className="bg-canvas-warm text-ink rounded-whisper px-1.5 py-0.5 font-mono text-[0.9em]" {...props}>
           {children}
         </code>
       );
@@ -350,7 +350,7 @@ const STATIC_OVERRIDES = {
   },
   table: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.TableHTMLAttributes<HTMLTableElement>) => (
-      <div className="overflow-x-auto my-6 rounded-lg border border-gray-300 dark:border-gray-600">
+      <div className="overflow-x-auto my-6 rounded-card border border-hairline dark:border-white/10">
         <table {...props} className="w-full border-collapse text-sm">
           {children}
         </table>
@@ -359,28 +359,28 @@ const STATIC_OVERRIDES = {
   },
   thead: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLTableSectionElement>) => (
-      <thead {...props} className="bg-gray-100 dark:bg-gray-800">
+      <thead {...props} className="bg-canvas-warm dark:bg-surface-dark-elevated">
         {children}
       </thead>
     ),
   },
   tr: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLTableRowElement>) => (
-      <tr {...props} className="border-b border-gray-300 dark:border-gray-600 even:bg-gray-50 dark:even:bg-gray-800/50">
+      <tr {...props} className="border-b border-hairline dark:border-white/10 even:bg-canvas-warm/50 dark:even:bg-white/[0.03]">
         {children}
       </tr>
     ),
   },
   th: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.ThHTMLAttributes<HTMLTableCellElement>) => (
-      <th {...props} className="px-4 py-2.5 text-left font-semibold text-gray-900 dark:text-gray-100 border-b-2 border-gray-300 dark:border-gray-600">
+      <th {...props} className="px-4 py-2.5 text-left font-semibold text-ink dark:text-on-dark border-b-2 border-hairline dark:border-white/10">
         {children}
       </th>
     ),
   },
   td: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.TdHTMLAttributes<HTMLTableCellElement>) => (
-      <td {...props} className="px-4 py-2.5 text-gray-700 dark:text-gray-300">
+      <td {...props} className="px-4 py-2.5 text-ink-muted-80 dark:text-on-dark-soft">
         {children}
       </td>
     ),
@@ -485,7 +485,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
     a: {
       component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
         if (!isAllowedProtocol(href)) {
-          return <span className="text-gray-500">{children}</span>;
+          return <span className="text-ink-muted-60">{children}</span>;
         }
 
         // If it's an internal link starting with / and not already having a locale
@@ -499,13 +499,13 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
         }
         if (isExternal) {
           return (
-            <a href={finalHref} className="text-primary hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer nofollow" {...props}>
+            <a href={finalHref} className="text-link hover:underline underline-offset-4 dark:text-link-on-dark" target="_blank" rel="noopener noreferrer nofollow" {...props}>
               {children}
             </a>
           );
         }
         return (
-          <NextLink href={finalHref ?? '/'} className="text-primary hover:underline underline-offset-4" {...props}>
+          <NextLink href={finalHref ?? '/'} className="text-link hover:underline underline-offset-4 dark:text-link-on-dark" {...props}>
             {children}
           </NextLink>
         );

@@ -51,11 +51,15 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
     // prefetch={false}: stories listing 등에서 다수 카드가 viewport에 동시 존재.
     // 기본 prefetch면 carousel/그리드 한 줄에 표시되는 모든 /stories/[slug] SSG JSON이
     // 동시에 다운로드되어 모바일 데이터·메인스레드 부담. hover/focus 시 prefetch는 유지.
-    <Link href={href} prefetch={false} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
+    <Link
+      href={href}
+      prefetch={false}
+      className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
+    >
       <m.article
         itemScope
         itemType="https://schema.org/BlogPosting"
-        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full transition-shadow duration-300 hover:shadow-lg"
+        className="bg-canvas-soft border border-hairline shadow-card rounded-card overflow-hidden cursor-pointer flex flex-col h-full transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5 dark:bg-surface-dark-elevated dark:border-white/10"
         variants={cardVariants}
         initial="hidden"
         whileInView="visible"
@@ -63,7 +67,9 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
       >
         {story.date && <meta itemProp="datePublished" content={story.date} />}
         <link itemProp="url" href={href} />
-        <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
+
+        {/* 16:9 thumbnail — rounded corners only on top */}
+        <div className="aspect-[16/9] bg-canvas-warm overflow-hidden flex-shrink-0 relative rounded-t-card">
           {thumbnailUrl ? (
             <ResponsiveImage
               src={thumbnailUrl}
@@ -74,30 +80,44 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
               itemProp="image"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-white/80 text-6xl font-bold">
+            <div className="w-full h-full flex items-center justify-center bg-canvas-warm">
+              <div className="text-ink/20 text-6xl font-display font-light">
                 {story.category?.charAt(0) || 'S'}
               </div>
             </div>
           )}
         </div>
 
-        <div className="p-4 flex flex-col flex-grow min-w-0">
-          <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
-            <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words" itemProp="articleSection">
-              {categoryText}
-            </span>
-            <time dateTime={story.date} className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0" itemProp="datePublished">
-              {dateText}
-            </time>
-          </div>
-
-          <h3 className="typo-card-title mb-2 leading-tight flex-shrink-0 line-clamp-2 break-words" title={story.title} itemProp="headline">
+        <div className="p-6 flex flex-col flex-grow min-w-0">
+          <h3
+            className="text-title-md text-ink dark:text-on-dark line-clamp-2 mb-2 break-words"
+            title={story.title}
+            itemProp="headline"
+          >
             {titleText}
           </h3>
 
-          <div className="typo-card-body leading-snug line-clamp-4 flex-none" itemProp="description">
+          <div
+            className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft line-clamp-3 mb-4 leading-relaxed"
+            itemProp="description"
+          >
             {contentText}
+          </div>
+
+          <div className="mt-auto flex items-center justify-between gap-2 min-w-0">
+            <span
+              className="text-caption text-ink-muted-40 dark:text-on-dark-soft min-w-0 break-words"
+              itemProp="articleSection"
+            >
+              {categoryText}
+            </span>
+            <time
+              dateTime={story.date}
+              className="text-caption text-ink-muted-40 dark:text-on-dark-soft flex-shrink-0"
+              itemProp="datePublished"
+            >
+              {dateText}
+            </time>
           </div>
         </div>
       </m.article>

@@ -39,7 +39,7 @@ const CategoryFilter = ({
   showTitle = false,
   titleIcon: TitleIcon = null,
   titleText,
-  buttonSize = "md",
+  buttonSize: _buttonSize = "md",
   useCustomColors = false,
   gap = "gap-2",
   allLabel,
@@ -69,18 +69,12 @@ const CategoryFilter = ({
     ? mappedCategories
     : [{ id: 'all', label: resolvedAllLabel as string }, ...mappedCategories];
 
-  const sizeClasses = {
-    sm: 'px-3 py-1.5 text-body-2',
-    md: 'px-4 py-2 text-body-1',
-    lg: 'px-6 py-2 text-body-1'
-  };
-
   return (
     <div>
       {showTitle && (
         <div className="flex items-center mb-6">
-          {TitleIcon && React.createElement(TitleIcon, { className: "text-xl text-primary mr-3" })}
-          <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{resolvedTitleText}</h3>
+          {TitleIcon && React.createElement(TitleIcon, { className: "text-xl text-ink mr-3" })}
+          <h3 className="typo-card-title text-ink-muted-80 dark:text-on-dark-soft">{resolvedTitleText}</h3>
         </div>
       )}
 
@@ -99,11 +93,11 @@ const CategoryFilter = ({
                 onClick={() => setActiveCategory(category.id)}
                 animate={{ scale: isActive ? 1.05 : 1 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`${sizeClasses[buttonSize]} rounded-full transition-colors transition-shadow duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+                className={`px-4 py-2 rounded-pill transition-colors transition-shadow duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep text-body-1 ${isActive
                   ? useCustomColors && category.color
-                    ? 'text-white shadow-lg'
-                    : 'bg-primary text-white shadow-lg'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? 'text-white shadow-card'
+                    : 'bg-ink text-white shadow-card'
+                  : 'bg-transparent border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]'
                   }`}
                 style={customStyle}
                 whileHover={HOVER_SCALE}
@@ -116,7 +110,7 @@ const CategoryFilter = ({
           })}
         </div>
 
-        <div className="md:hidden absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-white dark:from-gray-900 to-transparent pointer-events-none"></div>
+        <div className="md:hidden absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-canvas dark:from-canvas-deep to-transparent pointer-events-none"></div>
       </div>
     </div>
   );

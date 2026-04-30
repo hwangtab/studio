@@ -21,7 +21,7 @@ import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
 import type { Story, StoryDetail } from '../../../types/story';
-import { Section } from '../../../components/ui/Section';
+import Section from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
@@ -214,11 +214,11 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         ]}
       />
 
-      <Section variant="default" className="pt-12 pb-12">
-        <div className="mb-12 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-6">
+      <Section tone="canvas" containerSize="narrow" className="pt-12 pb-12">
+        <div className="mb-12 flex items-center justify-between border-b border-hairline dark:border-white/10 pb-6">
           <Link
             href={getLink("/stories")}
-            className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="inline-flex items-center typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
           >
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.backToList')}
@@ -227,7 +227,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           <button
             type="button"
             onClick={shareStory}
-            className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="inline-flex items-center typo-card-cta hover:underline text-ink-muted-60 dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
           >
             <Share2 className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.share')}
@@ -250,7 +250,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           <aside
             data-boilerplate="region-visit"
             aria-label={t('stories.detail.boilerplateAside', { defaultValue: '공통 방문 안내' })}
-            className="mb-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50"
+            className="mb-12 rounded-card border border-hairline bg-canvas-warm p-6 dark:border-white/10 dark:bg-surface-dark-elevated"
           >
             <MarkdownRenderer content={story.boilerplateSection} locale={locale} currentSlug={story.slug} />
           </aside>
@@ -258,10 +258,10 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 
         <StoryCTA type={ctaType} locale={locale} />
 
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <h2 className="typo-card-title mb-6">{t('stories.detail.moreTitle')}</h2>
+        <div className="mt-8 pt-8 border-t border-hairline dark:border-white/10">
+          <h2 className="typo-card-title mb-6 text-ink dark:text-on-dark">{t('stories.detail.moreTitle')}</h2>
           {relatedStories.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map((related) => (
                 <StoryCard
                   key={related.slug}
@@ -272,9 +272,9 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
               ))}
             </div>
           ) : (
-            <p className="typo-card-body text-gray-500 mb-6">{t('stories.detail.noRelated')}</p>
+            <p className="typo-card-body text-ink-muted-60 dark:text-on-dark-soft mb-6">{t('stories.detail.noRelated')}</p>
           )}
-          <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
+          <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep">
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.viewAll')}
           </Link>

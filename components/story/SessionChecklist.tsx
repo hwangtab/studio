@@ -7,9 +7,9 @@ interface SessionChecklistProps {
 
 const SessionChecklist: React.FC<SessionChecklistProps> = () => {
   return (
-    <div className="my-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <h4 className="text-base font-semibold text-gray-900 dark:text-white">
+    <div className="my-8 rounded-card border border-hairline dark:border-white/10 bg-canvas-warm dark:bg-surface-dark-elevated overflow-hidden">
+      <div className="px-6 py-4 border-b border-hairline dark:border-white/10 bg-canvas dark:bg-canvas-deep/50">
+        <h4 className="text-base font-semibold text-ink dark:text-on-dark">
           출발 전 챙길 것
         </h4>
       </div>
@@ -22,15 +22,15 @@ const SessionChecklist: React.FC<SessionChecklistProps> = () => {
               '예약 확인 문자·카카오톡 캡처',
               '충분한 수분 (물 500ml 이상)',
             ].map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <span className="mt-0.5 text-primary" aria-hidden="true">✓</span>
+              <li key={item} className="flex items-start gap-2 text-sm text-ink-muted-80 dark:text-on-dark-soft">
+                <span className="mt-0.5 text-ink" aria-hidden="true">✓</span>
                 {item}
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted-60 dark:text-on-dark-soft mb-2">
             세션 효율을 높이는 팁
           </p>
           <ul className="space-y-2">
@@ -39,7 +39,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = () => {
               '가장 중요한 구간을 세션 초반에 먼저 녹음 (피로 전)',
               '원하는 사운드를 엔지니어에게 레퍼런스 곡으로 공유',
             ].map((tip) => (
-              <li key={tip} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <li key={tip} className="flex items-start gap-2 text-sm text-ink-muted-80 dark:text-on-dark-soft">
                 <span className="mt-0.5 text-amber-500" aria-hidden="true">→</span>
                 {tip}
               </li>

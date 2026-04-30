@@ -9,11 +9,11 @@ import { ArrowRight } from 'lucide-react';
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
-import ImageHero from '../../../components/common/ImageHero';
 import { getAllStories, isListableStory } from '../../../lib/stories';
 import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
 import type { Story } from '../../../types/story';
-import { Section } from '../../../components/ui/Section';
+import Section from '../../../components/ui/Section';
+import Hero from '../../../components/ui/Hero';
 import Pagination from '../../../components/ui/Pagination';
 
 // Below-fold CTA는 코드 스플리팅. 페이지 하단 노출 전까진 JS 로드 지연.
@@ -156,21 +156,13 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
           {nextUrl && <link rel="next" href={nextUrl} />}
         </Head>
       )}
-      <ImageHero
-        locale={locale}
-        priority
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('stories.hero.subtitle')}
         title={t('stories.hero.title')}
-        subtitle={t('stories.hero.subtitle')}
-        backgroundImage="/images/studio1.webp"
-        imageAlt={t('stories.hero.alt')}
-        minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
-        breadcrumbItems={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.stories'), path: `/${locale}/stories` },
-        ]}
+        orbs={[{ color: 'peach', size: 600, top: '-100px', right: '-80px', opacity: 0.4 }]}
       />
-      <Section variant="default">
+      <Section tone="canvas">
         <div ref={sectionRef}>
           <div className="mb-8">
             <CategoryFilter
@@ -194,11 +186,11 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
 
           {filteredStories.length === 0 ? (
             <div className="text-center py-16">
-              <div className="text-gray-400 text-2xl mb-4">📭</div>
-              <h2 className="typo-card-title mb-4 text-gray-800 dark:text-white">
+              <div className="text-ink-muted-40 text-2xl mb-4">📭</div>
+              <h2 className="typo-card-title mb-4 text-ink dark:text-on-dark">
                 {t('stories.empty.title')}
               </h2>
-              <p className="typo-card-body">
+              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">
                 {activeCategory === 'all'
                   ? t('stories.empty.all')
                   : t('stories.empty.byCategory', { category: t(`stories.categories.${activeCategory}`) })}
@@ -211,7 +203,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
                   ? t('nav.stories')
                   : t(`stories.categories.${activeCategory}`)}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {visibleStories.map((story) => (
                   <StoryCard
                     key={story.slug}
@@ -250,40 +242,40 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
       </Section>
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="default" className="py-10">
+      <Section tone="warm" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/lesson`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
 
-      <Section variant="alternate" className="py-16">
+      <Section tone="deep" className="py-16">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

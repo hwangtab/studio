@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import StoryCard from '../../../../components/StoryCard';
 import SEO from '../../../../components/SEO';
-import ImageHero from '../../../../components/common/ImageHero';
 import ContactCTA from '../../../../components/common/ContactCTA';
 import { getAllStories, isListableStory } from '../../../../lib/stories';
 import { STORY_CATEGORY_KEYS, type StoryCategoryKey } from '../../../../lib/storyCategories';
 import type { Story } from '../../../../types/story';
-import { Section } from '../../../../components/ui/Section';
+import Section from '../../../../components/ui/Section';
+import Hero from '../../../../components/ui/Hero';
 import Pagination from '../../../../components/ui/Pagination';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../../lib/getStatic';
 import { locales, type Locale } from '../../../../lib/i18n';
@@ -129,31 +129,23 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           {nextUrl && <link rel="next" href={nextUrl} />}
         </Head>
       )}
-      <ImageHero
-        locale={locale}
-        priority
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('nav.stories')}
         title={categoryLabel}
-        subtitle={t('stories.categoryHub.subtitle', {
+        lead={t('stories.categoryHub.subtitle', {
           category: categoryLabel,
           count: stories.length,
           defaultValue: `${stories.length} stories about ${categoryLabel}`,
         })}
-        backgroundImage="/images/studio1.webp"
-        imageAlt={t('stories.hero.alt')}
-        minHeight="min-h-[50vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
-        breadcrumbItems={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.stories'), path: `/${locale}/stories` },
-          { name: categoryLabel, path: canonicalPath },
-        ]}
+        orbs={[{ color: 'peach', size: 500, top: '-80px', right: '-60px', opacity: 0.35 }]}
       />
-      <Section variant="default">
+      <Section tone="canvas">
         <div ref={sectionRef}>
           <div className="mb-8">
             <Link
               href={`/${locale}/stories`}
-              className="inline-flex items-center typo-card-cta hover:underline"
+              className="inline-flex items-center typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft"
             >
               <ArrowLeft size={16} aria-hidden="true" className="mr-2" />
               {t('stories.detail.backToList')}
@@ -162,15 +154,15 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
 
           {stories.length === 0 ? (
             <div className="text-center py-16">
-              <div className="text-gray-400 text-2xl mb-4">📭</div>
-              <h2 className="typo-card-title mb-4">
+              <div className="text-ink-muted-40 text-2xl mb-4">📭</div>
+              <h2 className="typo-card-title mb-4 text-ink dark:text-on-dark">
                 {t('stories.empty.byCategory', { category: categoryLabel })}
               </h2>
             </div>
           ) : (
             <>
               <h2 className="sr-only">{categoryLabel}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {visibleStories.map((story) => (
                   <StoryCard
                     key={story.slug}
@@ -204,8 +196,8 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
             </ul>
           </nav>
 
-          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-4">
+          <div className="mt-12 pt-8 border-t border-hairline dark:border-white/10">
+            <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft mb-4">
               {t('stories.categoryHub.browseAll', {
                 total: allStoriesCount,
                 defaultValue: `Browse all ${allStoriesCount} stories.`,
@@ -213,7 +205,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
             </p>
             <Link
               href={`/${locale}/stories`}
-              className="inline-flex items-center gap-2 typo-card-cta hover:underline"
+              className="inline-flex items-center gap-2 typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft"
             >
               {t('stories.detail.viewAll')} <ArrowRight size={16} aria-hidden="true" />
             </Link>
@@ -221,7 +213,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         </div>
       </Section>
 
-      <Section variant="alternate" className="py-16">
+      <Section tone="deep" className="py-16">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}
