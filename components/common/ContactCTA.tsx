@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { MessageCircle, Sparkles, LucideIcon } from 'lucide-react';
+import { MessageCircle, LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
+import { Button } from '../ui/Button';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent } from '../../utils/analytics';
@@ -30,12 +31,10 @@ const ContactCTA = ({
     imageAlt,
     primaryButtonLabel,
     secondaryButtonLabel,
-    icon: Icon = Sparkles,
     className = "",
     headingAs = 'h2',
 }: ContactCTAProps) => {
     const { t } = useTranslation('common', { lng: locale });
-
 
     const siteConfig = getSiteConfig(locale);
     const isKorean = locale === 'ko';
@@ -45,6 +44,7 @@ const ContactCTA = ({
     const secondaryLabel = secondaryButtonLabel ?? t('actions.location');
     const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
     const imageHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
+
     const trackPrimaryCta = React.useCallback(() => {
         trackLeadEvent('lead_click_kakao', {
             locale,
@@ -52,6 +52,7 @@ const ContactCTA = ({
             cta_id: isKorean ? 'contact_cta_primary_kakao' : 'contact_cta_primary_contact',
         });
     }, [isKorean, locale]);
+
     const trackImageKakao = React.useCallback(() => {
         if (!isKorean) return;
         trackLeadEvent('lead_click_kakao', {
@@ -70,15 +71,14 @@ const ContactCTA = ({
 
     return (
         <m.div
-            className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
+            className={`bg-canvas-warm dark:bg-surface-dark-elevated rounded-hero border border-hairline overflow-hidden ${className}`}
             {...contactCtaMotionProps}
         >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-                <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
+                <div className="p-8 md:p-10 flex flex-col justify-center">
                     <SectionHeading
-                        icon={Icon}
                         title={title}
-                        subtitle={subtitle}
+                        lead={subtitle}
                         align="left"
                         className="mb-8"
                         as={headingAs}
@@ -87,9 +87,11 @@ const ContactCTA = ({
                         <Link
                             href={getLink("/contact")}
                             prefetch={false}
-                            className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                            className="block"
                         >
-                            <span className="min-w-0">{secondaryLabel}</span>
+                            <Button variant="outline" size="lg">
+                                {secondaryLabel}
+                            </Button>
                         </Link>
                         {isKorean ? (
                             <a
@@ -97,20 +99,24 @@ const ContactCTA = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={trackPrimaryCta}
-                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                                className="block"
                             >
-                                <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                                <span className="min-w-0">{primaryLabel}</span>
+                                <Button variant="primary" size="lg">
+                                    <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                    {primaryLabel}
+                                </Button>
                             </a>
                         ) : (
                             <Link
                                 href={primaryHref}
                                 prefetch={false}
                                 onClick={trackPrimaryCta}
-                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                                className="block"
                             >
-                                <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                                <span className="min-w-0">{primaryLabel}</span>
+                                <Button variant="primary" size="lg">
+                                    <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                    {primaryLabel}
+                                </Button>
                             </Link>
                         )}
                     </div>
@@ -122,7 +128,7 @@ const ContactCTA = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={trackImageKakao}
-                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2"
                     >
                         <ResponsiveImage
                             src={imageSrc}
@@ -133,13 +139,13 @@ const ContactCTA = ({
                             sizes="(min-width: 768px) 50vw, 100vw"
                             fill
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-canvas-warm/20 to-transparent pointer-events-none" />
                     </a>
                 ) : (
                     <Link
                         href={imageHref}
                         prefetch={false}
-                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                        className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2"
                     >
                         <ResponsiveImage
                             src={imageSrc}
@@ -150,7 +156,7 @@ const ContactCTA = ({
                             sizes="(min-width: 768px) 50vw, 100vw"
                             fill
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-canvas-warm/20 to-transparent pointer-events-none" />
                     </Link>
                 )}
             </div>

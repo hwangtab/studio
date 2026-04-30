@@ -1,7 +1,9 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
-import { Section } from '../../components/ui/Section';
+import Section from '../../components/ui/Section';
+import SectionHeading from '../../components/ui/SectionHeading';
+import BaseCard from '../../components/ui/BaseCard';
 import { getSiteConfig } from '../../data/siteConfig';
 import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -241,22 +243,25 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
         ]}
       />
 
-      <Section variant="default" className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{policyCopy.title}</h1>
-          <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-2">{policyCopy.subtitle}</p>
-          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">
-            {policyCopy.lastUpdatedLabel}: {policyCopy.lastUpdatedValue}
-          </p>
+      <Section tone="canvas" containerSize="narrow">
+        <SectionHeading
+          title={policyCopy.title}
+          lead={policyCopy.subtitle}
+          as="h1"
+          align="left"
+          className="mb-8"
+        />
+        <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm mb-10">
+          {policyCopy.lastUpdatedLabel}: {policyCopy.lastUpdatedValue}
+        </p>
 
-          <div className="space-y-6">
-            {policyCopy.sections.map((section) => (
-              <article key={section.heading} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
-                <p className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed">{section.body}</p>
-              </article>
-            ))}
-          </div>
+        <div className="space-y-6">
+          {policyCopy.sections.map((section) => (
+            <BaseCard key={section.heading} as="article">
+              <h2 className="font-display font-light text-ink dark:text-on-dark mb-4 mt-0 text-display-sm">{section.heading}</h2>
+              <p className="text-ink-muted-80 dark:text-on-dark-soft leading-[1.7]">{section.body}</p>
+            </BaseCard>
+          ))}
         </div>
       </Section>
     </>

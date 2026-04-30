@@ -2,17 +2,18 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
+import Hero from '../../components/ui/Hero';
+import Section from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
+import BaseCard from '../../components/ui/BaseCard';
 import { getPricingData } from '../../data/pricing';
 import { generateAggregateOfferSchema, getSchemaLanguage } from '../../utils/schemaGenerator';
 import { getHubLocaleContent } from '../../data/faq';
-import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
-import BaseCard from '../../components/ui/BaseCard';
-import ImageHero from '../../components/common/ImageHero';
+import FAQSection from '../../components/ui/FAQSection';
 
 // Below-fold 컴포넌트 code-splitting (초기 JS 번들 감소 → TBT 단축)
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -194,27 +195,13 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       />
 
       {/* Hero Section */}
-      <ImageHero
-        locale={locale}
-        priority
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('nav.pricing')}
         title={t('pricing.hero.title')}
-        subtitle={
-          <>
-            {t('pricing.hero.subtitleLine1')}
-            <br />
-            {t('pricing.hero.subtitleLine2')}
-          </>
-        }
-        backgroundImage="/images/hardware2.webp"
-        imageAlt={t('pricing.hero.alt')}
-        minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
-        breadcrumbItems={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.pricing'), path: `/${locale}/pricing` },
-        ]}
+        lead={t('pricing.hero.subtitleLine1')}
+        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.4 }]}
       />
-
 
       <QuickAnswers
         title={t('pricing.quickAnswers.title')}
@@ -225,17 +212,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       {/* Locale-specific content block (non-KO hubs only) */}
       {hubLocaleContent && (
-        <Section variant="alternate">
+        <Section tone="warm">
           <SectionHeading
-            icon={Info}
             title={hubLocaleContent.title}
             className="mb-8"
           />
           <div className="max-w-4xl mx-auto space-y-6">
             {hubLocaleContent.items.map((item) => (
               <BaseCard key={item.heading} variant="default" className="p-6">
-                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+                <h3 className="text-title-md text-ink dark:text-on-dark mb-3">{item.heading}</h3>
+                <p className="text-ink-muted-80 dark:text-on-dark-soft leading-[1.6]">{item.body}</p>
               </BaseCard>
             ))}
           </div>
@@ -243,13 +229,13 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       )}
 
       {/* Special Packages Section */}
-      <Section id="special-packages" variant="alternate">
+      <Section id="special-packages" tone="canvas">
         <SectionHeading
-          icon={Star}
+          eyebrow="PACKAGES"
           title={t('pricing.special.title')}
-          subtitle={t('pricing.special.subtitle')}
+          lead={t('pricing.special.subtitle')}
         />
-        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+        <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -272,13 +258,13 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Recording Section */}
-      <Section id="recording" variant="default">
+      <Section id="recording" tone="warm">
         <SectionHeading
-          icon={Mic}
+          eyebrow="RECORDING"
           title={t('pricing.recording.title')}
-          subtitle={t('pricing.recording.subtitle')}
+          lead={t('pricing.recording.subtitle')}
         />
-        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+        <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -301,13 +287,13 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Mixing Section */}
-      <Section id="mixing" variant="alternate">
+      <Section id="mixing" tone="canvas">
         <SectionHeading
-          icon={SlidersHorizontal}
+          eyebrow="MIXING"
           title={t('pricing.mixing.title')}
-          subtitle={t('pricing.mixing.subtitle')}
+          lead={t('pricing.mixing.subtitle')}
         />
-        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+        <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
@@ -327,11 +313,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             />
           ))}
         </div>
-        <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
-          <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} aria-hidden="true" />
+        <div className="mt-8 max-w-3xl mx-auto bg-canvas-soft dark:bg-surface-dark-elevated rounded-card p-6 border border-hairline dark:border-white/10 shadow-card flex items-start">
           <div>
-            <h3 className="typo-card-subtitle mb-1">{t('pricing.mixing.noticeTitle')}</h3>
-            <p className="typo-card-body text-sm">
+            <h3 className="text-title-sm text-ink dark:text-on-dark mb-1">{t('pricing.mixing.noticeTitle')}</h3>
+            <p className="text-ink-muted-80 dark:text-on-dark-soft text-sm leading-[1.6]">
               {t('pricing.mixing.noticeBody')}
             </p>
           </div>
@@ -339,13 +324,13 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Mastering Section */}
-      <Section id="mastering" variant="default">
+      <Section id="mastering" tone="warm">
         <SectionHeading
-          icon={Disc}
+          eyebrow="MASTERING"
           title={t('pricing.mastering.title')}
-          subtitle={t('pricing.mastering.subtitle')}
+          lead={t('pricing.mastering.subtitle')}
         />
-        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+        <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -368,13 +353,13 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Additional Services Section */}
-      <Section id="support-services" variant="alternate">
+      <Section id="support-services" tone="canvas">
         <SectionHeading
-          icon={PlusCircle}
+          eyebrow="ADD-ONS"
           title={t('pricing.additional.title')}
-          subtitle={t('pricing.additional.subtitle')}
+          lead={t('pricing.additional.subtitle')}
         />
-        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+        <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -397,43 +382,52 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       <ReviewSection variant="default" locale={locale} />
 
+      {/* FAQ Section */}
+      <Section tone="warm">
+        <FAQSection
+          title={t('pricing.quickAnswers.title')}
+          subtitle={t('pricing.quickAnswers.subtitle')}
+          items={pricingQuickAnswers}
+        />
+      </Section>
+
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" className="py-10">
+      <Section tone="canvas" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/studio-info`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
           >
             {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
 
-      {/* Improved CTA Section */}
-      <Section variant="default" className="py-16">
+      {/* Final CTA Section */}
+      <Section tone="deep" className="py-16">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

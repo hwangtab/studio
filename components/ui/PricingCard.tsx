@@ -1,6 +1,8 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import BaseCard from './BaseCard';
+import GradientOrb from './GradientOrb';
+import { Button } from './Button';
 
 interface PricingCardProps {
     id: string;
@@ -15,32 +17,34 @@ interface PricingCardProps {
     ctaHref?: string;
 }
 
-const PricingCard = ({ title, price, unit, description, features, recommended, delay, ctaLabel, ctaHref }: PricingCardProps) => {
+const PricingCard = ({ title, price, unit, description, features, recommended, ctaLabel, ctaHref }: PricingCardProps) => {
     return (
         <BaseCard
-            className="p-8 h-full flex flex-col"
-            delay={delay}
-            variant={recommended ? 'highlight' : 'default'}
-            hoverEffect={true}
+            className={`p-8 h-full flex flex-col${recommended ? ' relative overflow-hidden' : ''}`}
+            variant={recommended ? 'featured' : 'default'}
+            hover={true}
         >
             {recommended && (
-                <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
-                    RECOMMENDED
-                </div>
+                <>
+                    <GradientOrb color="mint" size={200} opacity={0.3} blur={60} style={{ top: 0, right: 0 }} />
+                    <div className="absolute top-0 right-0 bg-ink text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-hero">
+                        RECOMMENDED
+                    </div>
+                </>
             )}
-            <h3 className="typo-card-title mb-2">{title}</h3>
+            <h3 className="text-title-md text-ink dark:text-on-dark mb-2">{title}</h3>
             <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-extrabold text-primary dark:text-primary-light">{price}</span>
-                {unit && <span className="text-gray-500 dark:text-gray-400 ml-1 text-sm">{unit}</span>}
+                <span className="font-display font-light text-display-xl text-ink dark:text-on-dark">{price}</span>
+                {unit && <span className="text-ink-muted-60 dark:text-on-dark-soft ml-1">{unit}</span>}
             </div>
-            <p className="typo-card-body mb-6">{description}</p>
+            <p className="text-ink-muted-80 dark:text-on-dark-soft leading-[1.6] mb-6">{description}</p>
 
-            <div className="border-t border-gray-100 dark:border-gray-700 my-4"></div>
+            <div className="border-t border-hairline dark:border-white/10 my-4"></div>
 
             <ul className="space-y-3 flex-grow">
                 {features.map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                        <Check className="text-green-500 mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
+                    <li key={index} className="flex items-start text-ink-muted-80 dark:text-on-dark-soft leading-[1.6]">
+                        <Check className="text-ink dark:text-on-dark mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
                         <span>{feature}</span>
                     </li>
                 ))}
@@ -51,9 +55,11 @@ const PricingCard = ({ title, price, unit, description, features, recommended, d
                     href={ctaHref}
                     target={ctaHref.startsWith('http') ? '_blank' : undefined}
                     rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="mt-6 block w-full text-center py-3 px-4 rounded-lg font-semibold text-sm transition-colors bg-primary hover:bg-primary-dark text-white"
+                    className="mt-6 block"
                 >
-                    {ctaLabel}
+                    <Button variant={recommended ? 'primary' : 'outline'} fullWidth>
+                        {ctaLabel}
+                    </Button>
                 </a>
             )}
         </BaseCard>
