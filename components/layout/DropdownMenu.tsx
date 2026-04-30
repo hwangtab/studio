@@ -99,13 +99,13 @@ export const DropdownMenu = ({
             <button
                 ref={triggerRef}
                 type="button"
-                className={`flex items-center gap-1 px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+                className={`flex items-center gap-1 px-3 py-2 rounded-md typo-nav-link text-sm transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${isActive
                     ? !isTransparent
-                        ? 'text-primary dark:text-accent font-bold'
+                        ? 'text-link dark:text-link-on-dark font-bold'
                         : 'text-white font-bold bg-white/20'
                     : !isTransparent
-                        ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent'
-                        : 'text-white hover:bg-white/10 hover:text-white'
+                        ? 'text-ink-muted-80 dark:text-on-dark hover:opacity-70'
+                        : 'text-white hover:opacity-70'
                     }`}
                 aria-expanded={isOpen}
                 aria-haspopup="menu"
@@ -130,7 +130,7 @@ export const DropdownMenu = ({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute left-0 mt-1 w-48 rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50 origin-top-left"
+                        className="absolute left-0 mt-1 w-48 rounded-card bg-canvas-soft dark:bg-surface-dark-elevated backdrop-blur-xl shadow-card border border-hairline dark:border-white/10 overflow-hidden z-50 origin-top-left"
                     >
                         <div className="py-2" role="menu" aria-orientation="vertical">
                             {items.map((item, index) => {
@@ -146,9 +146,9 @@ export const DropdownMenu = ({
                                             onNavigate();
                                         }}
                                         onKeyDown={(e) => handleItemKeyDown(e, index)}
-                                        className={`flex items-center min-h-[44px] px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:bg-primary/5 focus-visible:text-primary ${isItemActive
-                                            ? 'bg-primary/5 text-primary dark:text-accent font-medium'
-                                            : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                        className={`flex items-center min-h-[44px] px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:bg-ink/[0.04] focus-visible:text-link ${isItemActive
+                                            ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
+                                            : 'text-ink-muted-80 dark:text-on-dark-soft hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'
                                             }`}
                                     >
                                         {item.label}

@@ -101,7 +101,7 @@ export const LanguageSwitcher = ({
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-ink dark:text-on-dark touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
         >
           <div className="flex items-center gap-2">
             <span>🌐</span>
@@ -119,10 +119,10 @@ export const LanguageSwitcher = ({
                   hrefLang={locale}
                   onClick={() => setIsOpen(false)}
                   className={`
-                    flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                    flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep
                     ${currentLocale === locale
-                      ? 'bg-primary/10 text-primary dark:text-accent font-medium'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
+                      : 'text-ink-muted-60 dark:text-on-dark-soft hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'
                     }
                   `}
                 >
@@ -158,11 +158,11 @@ export const LanguageSwitcher = ({
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen
             ? !isFloating
-              ? 'bg-primary text-white shadow-sm'
-              : 'bg-white/20 text-white shadow-sm'
+              ? 'bg-ink text-on-dark shadow-card'
+              : 'bg-white/20 text-white shadow-card'
             : ''}
           ${!isOpen && !isFloating
-            ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+            ? 'text-ink-muted-60 hover:text-ink hover:bg-ink/[0.04]'
             : !isOpen
               ? 'text-white/90 hover:text-white hover:bg-white/10'
               : ''}
@@ -176,8 +176,8 @@ export const LanguageSwitcher = ({
           ref={menuRef}
           className={`
             absolute right-0 top-full mt-2 ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
-            rounded-xl border border-gray-200/70 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl
-            shadow-2xl py-2 z-[100]
+            rounded-card border border-hairline dark:border-white/10 bg-canvas-soft dark:bg-surface-dark-elevated backdrop-blur-xl
+            shadow-card py-2 z-[100]
           `}
         >
           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
@@ -189,10 +189,10 @@ export const LanguageSwitcher = ({
                   onClick={() => setIsOpen(false)}
                   className={`
                     px-3 py-2 sm:px-2 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep
                     ${currentLocale === locale
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'}
+                      ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
+                      : 'text-ink-muted-60 dark:text-on-dark-soft hover:text-ink dark:hover:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'}
                   `}
                   aria-current={currentLocale === locale ? 'page' : undefined}
                 >
