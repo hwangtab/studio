@@ -3,13 +3,14 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown, Layers, Volume2, Leaf, Sun, Thermometer, Droplets, Coffee, Lightbulb } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, ShieldCheck, ArrowRight, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown, Layers, Volume2, Leaf, Sun, Thermometer, Droplets, Coffee, Lightbulb } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import Hero from '../../components/ui/Hero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
+import Section from '../../components/ui/Section';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
 // ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
@@ -17,7 +18,6 @@ const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
-import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { loadCommonResourceServer } from '../../lib/i18n.server';
 import type { Locale } from '../../lib/i18n';
@@ -27,40 +27,40 @@ import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
-const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
+const FeatureCard = ({ icon: Icon, title, description }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
+  <BaseCard variant="default" hover className="p-6 h-full">
     <div className="flex items-center mb-4">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
+      <div className="bg-canvas-warm rounded-pill p-3 inline-flex mr-4">
+        <Icon className="text-ink" size={24} aria-hidden="true" />
       </div>
-      <h3 className="typo-card-title">{title}</h3>
+      <h3 className="text-title-md text-ink dark:text-on-dark">{title}</h3>
     </div>
-    <p className="typo-card-body">{description}</p>
+    <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">{description}</p>
   </BaseCard>
 );
 
-const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: LucideIcon, text: string, delay?: number, locale?: Locale }) => (
-  <BaseCard variant="default" delay={delay} className="p-5 h-full">
+const PainPoint = ({ icon: Icon, text, locale = 'ko' }: { icon: LucideIcon, text: string, delay?: number, locale?: Locale }) => (
+  <BaseCard variant="default" hover className="p-5 h-full">
     <div className="flex items-start">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
-        <Icon size={20} aria-hidden="true" />
+      <div className="bg-canvas-warm p-3 rounded-pill mr-4 flex-shrink-0">
+        <Icon size={20} className="text-ink" aria-hidden="true" />
       </div>
       <div>
-        <p className={`typo-card-body whitespace-normal ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>{text}</p>
+        <p className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] whitespace-normal ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>{text}</p>
       </div>
     </div>
   </BaseCard>
 );
 
-const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: string, description: string, icon: LucideIcon, delay?: number }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 mb-4">
+const TargetAudience = ({ title, description, icon: Icon }: { title: string, description: string, icon: LucideIcon, delay?: number }) => (
+  <BaseCard variant="default" hover className="p-6 mb-4">
     <div className="flex items-center mb-2">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
+      <div className="bg-canvas-warm rounded-pill p-3 inline-flex mr-4">
+        <Icon className="text-ink" size={24} aria-hidden="true" />
       </div>
-      <h3 className="typo-card-subtitle">{title}</h3>
+      <h3 className="text-title-md text-ink dark:text-on-dark">{title}</h3>
     </div>
-    <p className="typo-card-body">{description}</p>
+    <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">{description}</p>
   </BaseCard>
 );
 
@@ -89,16 +89,16 @@ const BenefitCard = ({
   calendarLinkLabel?: string;
   calendarLinkUrl?: string;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
+  <BaseCard variant="default" hover className="p-6 h-full">
     <div className="flex items-center mb-4">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
-        <Icon size={22} aria-hidden="true" />
+      <div className="bg-canvas-warm p-3 rounded-pill mr-4 flex-shrink-0">
+        <Icon size={22} className="text-ink" aria-hidden="true" />
       </div>
-      <h3 className="typo-card-title">{title}</h3>
+      <h3 className="text-title-md text-ink dark:text-on-dark">{title}</h3>
     </div>
     {valueBadge && (
       <div className="mb-3">
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary/10 to-secondary/10 text-primary dark:text-primary-light border border-primary/20">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-pill text-xs font-semibold bg-canvas-warm text-ink border border-hairline">
           <Sparkles size={12} aria-hidden="true" />
           {valueBadge}
         </span>
@@ -111,12 +111,12 @@ const BenefitCard = ({
         return (
           <li key={idx} className="flex items-start gap-2">
             <Check
-              className="text-primary dark:text-primary-light mt-1 flex-shrink-0"
+              className="text-ink mt-1 flex-shrink-0"
               size={16}
               aria-hidden="true"
             />
             <span
-              className={`typo-card-body ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+              className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
             >
               {showLink ? (
                 <>
@@ -125,7 +125,7 @@ const BenefitCard = ({
                     href={calendarLinkUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary underline hover:text-primary-dark"
+                    className="text-ink underline hover:text-ink-muted-80"
                   >
                     {calendarLinkLabel}
                   </a>
@@ -181,31 +181,31 @@ const PriceLeader = ({
   note: string;
   locale: Locale;
 }) => (
-  <Section variant="default" className="py-12">
+  <Section tone="canvas" className="py-12">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold shadow-sm">
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-canvas-deep text-on-dark text-sm font-semibold shadow-card">
           <Trophy size={14} aria-hidden="true" />
           {eyebrow}
         </span>
         <h2
-          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+          className={`font-display font-light text-display-xl text-ink dark:text-on-dark mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
         >
           {title}
         </h2>
-        <p className={`typo-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+        <p className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
           {subtitle}
         </p>
       </div>
-      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-6 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-2xl p-6 md:p-8 border border-primary/10">
-        <div className="text-center md:text-left md:border-r md:border-primary/20 md:pr-6">
-          <p className="typo-caption text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-6 bg-canvas-warm rounded-card p-6 md:p-8 border border-hairline">
+        <div className="text-center md:text-left md:border-r md:border-hairline md:pr-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink-muted-60 mb-1">
             {priceLabel}
           </p>
-          <p className="text-4xl md:text-5xl font-bold text-primary dark:text-primary-light leading-tight">
+          <p className="text-4xl md:text-5xl font-bold text-ink dark:text-on-dark leading-tight">
             {priceValue}
           </p>
-          <p className="typo-caption text-gray-500 dark:text-gray-400 mt-2">
+          <p className="text-xs text-ink-muted-60 mt-2">
             {priceCaption}
           </p>
         </div>
@@ -214,14 +214,14 @@ const PriceLeader = ({
             const BadgeIcon = PRICING_BADGE_ICONS[idx] ?? Check;
             return (
               <div key={idx} className="flex items-start gap-3">
-                <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-full text-primary dark:text-primary-light flex-shrink-0">
-                  <BadgeIcon size={16} aria-hidden="true" />
+                <div className="bg-canvas-warm border border-hairline p-2 rounded-pill flex-shrink-0">
+                  <BadgeIcon size={16} className="text-ink" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className={`font-semibold text-gray-900 dark:text-gray-100 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                  <p className={`font-semibold text-ink dark:text-on-dark ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                     {badge.label}
                   </p>
-                  <p className={`typo-caption text-gray-600 dark:text-gray-400 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                  <p className={`text-xs text-ink-muted-60 dark:text-on-dark-soft ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                     {badge.caption}
                   </p>
                 </div>
@@ -230,7 +230,7 @@ const PriceLeader = ({
           })}
         </div>
       </div>
-      <p className={`text-center typo-caption text-gray-500 dark:text-gray-400 mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+      <p className={`text-center text-xs text-ink-muted-60 dark:text-on-dark-soft mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
         {note}
       </p>
     </div>
@@ -257,24 +257,24 @@ const SoundproofingShowcase = ({
   items: SoundproofingItem[];
   locale: Locale;
 }) => (
-  <Section variant="alternate" defer>
+  <Section tone="warm">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-10">
-        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold shadow-sm">
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-canvas-deep text-on-dark text-sm font-semibold shadow-card">
           <ShieldCheck size={14} aria-hidden="true" />
           {eyebrow}
         </span>
         <h2
-          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+          className={`font-display font-light text-display-xl text-ink dark:text-on-dark mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
         >
           {title}
         </h2>
-        <p className={`typo-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+        <p className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
           {subtitle}
         </p>
       </div>
       <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-6 items-center">
-        <div className="rounded-2xl overflow-hidden shadow-lg aspect-[4/3] md:aspect-auto md:h-full">
+        <div className="rounded-hero overflow-hidden shadow-card aspect-[4/3] md:aspect-auto md:h-full">
           <ResponsiveImage
             src="/images/room5.webp"
             alt={title}
@@ -290,17 +290,17 @@ const SoundproofingShowcase = ({
             const Icon = SOUNDPROOFING_ICONS[idx] ?? Shield;
             return (
               <li key={idx} className="flex items-start gap-3">
-                <div className="bg-gradient-to-br from-primary to-secondary p-2.5 rounded-full text-white flex-shrink-0">
+                <div className="bg-canvas-deep text-on-dark p-2.5 rounded-pill flex-shrink-0">
                   <Icon size={18} aria-hidden="true" />
                 </div>
                 <div>
                   <p
-                    className={`font-semibold text-gray-900 dark:text-gray-100 mb-0.5 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+                    className={`font-semibold text-ink dark:text-on-dark mb-0.5 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
                   >
                     {item.title}
                   </p>
                   <p
-                    className={`typo-card-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+                    className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
                   >
                     {item.description}
                   </p>
@@ -334,16 +334,16 @@ const FacilityCard = ({
   delay?: number;
   locale: Locale;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-5 h-full">
+  <BaseCard variant="default" hover className="p-5 h-full">
     <div className="flex items-start gap-3">
-      <div className="bg-primary/10 dark:bg-primary/20 p-2.5 rounded-full text-primary dark:text-primary-light flex-shrink-0">
-        <Icon size={20} aria-hidden="true" />
+      <div className="bg-canvas-warm rounded-pill p-2.5 inline-flex flex-shrink-0">
+        <Icon size={20} className="text-ink" aria-hidden="true" />
       </div>
       <div>
-        <h3 className={`typo-card-subtitle mb-1 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+        <h3 className={`text-title-md text-ink dark:text-on-dark mb-1 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
           {title}
         </h3>
-        <p className={`typo-card-body text-gray-600 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+        <p className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
           {description}
         </p>
       </div>
@@ -362,12 +362,11 @@ const FacilitiesGrid = ({
   items: FacilityItem[];
   locale: Locale;
 }) => (
-  <Section variant="alternate" defer>
+  <Section tone="canvas">
     <SectionHeading
-      icon={Sparkles}
+      eyebrow="Facilities"
       title={title}
-      subtitle={subtitle}
-      titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+      lead={subtitle}
       className="mb-10"
     />
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -586,26 +585,16 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
         ]}
       />
-      <ImageHero
-        locale={locale}
-        priority
+      {/* Hero — lightEditorial with sky + mint orbs */}
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('nav.practiceRoom')}
         title={t('practiceRoom.hero.title')}
-        subtitle={
-          <>
-            {t('practiceRoom.hero.subtitleLine1')}
-            <br />
-            {t('practiceRoom.hero.subtitleLine2')}
-            <br />
-            {t('practiceRoom.hero.subtitleLine3')}
-          </>
-        }
-        backgroundImage="/images/room5.webp"
-        imageAlt={t('practiceRoom.hero.alt')}
-        minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
-        breadcrumbItems={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
+        lead={t('practiceRoom.hero.subtitleLine1')}
+        primaryCta={{ label: t('practiceRoom.cta.inquiry'), href: siteConfig.contact.kakaoUrl }}
+        orbs={[
+          { color: 'sky', size: 600, top: '-100px', right: '-80px', opacity: 0.4 },
+          { color: 'mint', size: 500, bottom: '-150px', left: '-100px', opacity: 0.35 },
         ]}
       />
 
@@ -627,14 +616,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         title={t('practiceRoom.faq.title')}
         subtitle={t('practiceRoom.faq.subtitle')}
         items={practiceRoomQuickAnswers}
-        variant="default"
+        tone="warm"
       />
 
       {/* 고민 섹션 */}
-      <Section variant="default" defer>
+      <Section tone="canvas">
         <m.div {...painPointsAnimation}>
           <SectionHeading
-            icon={HelpCircle}
+            eyebrow="Pain Points"
             title={t('practiceRoom.painPoints.title')}
             className="mb-8"
           />
@@ -649,13 +638,12 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
       </Section>
 
       {/* 타겟 오디언스 섹션 */}
-      <Section variant="alternate" defer>
+      <Section tone="warm">
         <m.div {...audienceSectionAnimation}>
           <SectionHeading
-            icon={Target}
+            eyebrow="Who It's For"
             title={t('practiceRoom.audience.title')}
             className="mb-6"
-            titleClassName="text-primary"
           />
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -684,7 +672,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             {[2, 3, 4, 5].map((i) => (
               <m.div
                 key={i}
-                className="rounded-lg overflow-hidden shadow-md h-48"
+                className="rounded-card overflow-hidden shadow-card h-48"
                 whileHover={HOVER_SCALE}
                 transition={{ duration: 0.3 }}
               >
@@ -713,12 +701,11 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         />
       )}
 
-      <Section variant="default" defer>
+      <Section tone="canvas">
         <m.div {...featuresSectionAnimation}>
           <SectionHeading
-            icon={ShieldCheck}
+            eyebrow="Features"
             title={t('practiceRoom.features.title')}
-            titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
             className="mb-12"
           />
 
@@ -764,41 +751,40 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
       )}
 
       {residentBenefits.length > 0 && (
-        <Section variant="default" defer>
+        <Section tone="warm">
           <m.div {...RESIDENT_BENEFITS_ANIMATION}>
             <SectionHeading
-              icon={Gift}
+              eyebrow="Resident Benefits"
               title={t('practiceRoom.residentBenefits.title')}
-              subtitle={t('practiceRoom.residentBenefits.subtitle')}
-              titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+              lead={t('practiceRoom.residentBenefits.subtitle')}
               className="mb-10"
             />
 
             {/* 혜택 총가치 환산 — 월세 대비 제공 가치 강조 */}
-            <div className="max-w-4xl mx-auto mb-12 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
+            <div className="max-w-4xl mx-auto mb-12 rounded-card p-6 md:p-8 bg-canvas-warm border border-hairline">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="flex-shrink-0 text-center md:text-left">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 dark:bg-gray-800/80 text-xs font-semibold text-primary dark:text-primary-light mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-canvas-soft border border-hairline text-xs font-semibold text-ink mb-3">
                     <Sparkles size={12} aria-hidden="true" />
                     {t('practiceRoom.residentBenefits.valueSummary.eyebrow')}
                   </span>
-                  <p className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent leading-tight">
+                  <p className="text-4xl md:text-5xl font-bold text-ink dark:text-on-dark leading-tight">
                     {t('practiceRoom.residentBenefits.valueSummary.headline')}
                   </p>
-                  <p className="typo-caption text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-ink-muted-60 dark:text-on-dark-soft mt-1">
                     {t('practiceRoom.residentBenefits.valueSummary.headlineCaption')}
                   </p>
                 </div>
-                <div className="md:border-l md:border-primary/20 md:pl-6 flex-1 text-center md:text-left">
-                  <h3 className={`typo-card-subtitle font-bold text-gray-900 dark:text-gray-100 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                <div className="md:border-l md:border-hairline md:pl-6 flex-1 text-center md:text-left">
+                  <h3 className={`text-title-md text-ink dark:text-on-dark mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                     {t('practiceRoom.residentBenefits.valueSummary.title')}
                   </h3>
-                  <p className={`typo-card-body text-gray-700 dark:text-gray-300 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                  <p className={`text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                     {t('practiceRoom.residentBenefits.valueSummary.subtitle')}
                   </p>
                 </div>
               </div>
-              <p className={`typo-caption text-gray-500 dark:text-gray-400 mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+              <p className={`text-xs text-ink-muted-60 dark:text-on-dark-soft mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                 {t('practiceRoom.residentBenefits.valueSummary.note')}
               </p>
             </div>
@@ -829,17 +815,17 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         variant="alternate"
       />
 
-      <ReviewSection variant="default" locale={locale} />
+      <ReviewSection tone="canvas" locale={locale} />
 
       {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO)
           초기 32개 노출, 나머지는 <details> JS-free 접기 패턴.
           서버사이드 렌더 HTML이라 크롤러는 접힌 링크도 전부 탐색 가능.
           HTML 문자열은 getStaticProps에서 escapeHtml + 고정 slug 배열로 생성 — 외부 입력 없음. */}
       {locale === 'ko' && (
-        <Section variant="default" className="py-10" defer>
+        <Section tone="warm" className="py-10">
           <div className="max-w-5xl mx-auto">
             <SectionHeading
-              icon={BookOpen}
+              eyebrow="Related Guides"
               title={t('practiceRoom.relatedGuides.title')}
               className="mb-6"
             />
@@ -850,7 +836,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             />
             {relatedGuidesHiddenCount > 0 && (
               <details className="mt-6 group">
-                <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light transition-colors">
+                <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-ink hover:text-ink-muted-80 dark:text-on-dark transition-colors">
                   <span className="group-open:hidden">
                     가이드 +{relatedGuidesHiddenCount}개 더 보기
                   </span>
@@ -874,46 +860,47 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" className="py-10" defer>
+      <Section tone="canvas" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/lesson`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/stories`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/contact`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
 
-      <Section variant="default" className="py-16" defer>
+      {/* Final CTA Section */}
+      <Section tone="deep" orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
         <ContactCTA
           locale={locale}
           title={
             <>
               {t('practiceRoom.cta.titleLine1')}<br />
-              <span className="text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
+              <span>{t('practiceRoom.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
@@ -963,7 +950,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#39;');
-      const cls = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200';
+      const cls = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-card border border-hairline text-sm font-medium text-ink-muted-80 hover:border-hairline-strong hover:text-ink transition-colors duration-200';
       const arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>';
       const renderLink = (slug: string, idx: number): string => {
         const title = escapeHtml(items[idx] ?? slug);

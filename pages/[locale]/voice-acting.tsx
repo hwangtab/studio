@@ -3,14 +3,14 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Users, ListChecks, ArrowRight, CheckCircle2, LucideIcon } from 'lucide-react';
+import { Mic2, Users, ArrowRight, CheckCircle2, LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import Hero from '../../components/ui/Hero';
 import SectionHeading from '../../components/ui/SectionHeading';
 import BaseCard from '../../components/ui/BaseCard';
-import { Section } from '../../components/ui/Section';
+import Section from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 
 // Below-fold 컴포넌트 code-splitting
@@ -35,21 +35,20 @@ const AudienceCard = ({
   title,
   description,
   icon: Icon,
-  delay = 0,
 }: {
   title: string;
   description: string;
   icon: LucideIcon;
   delay?: number;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
+  <BaseCard variant="default" hover className="p-6 h-full">
     <div className="flex items-center mb-3">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={22} aria-hidden="true" />
+      <div className="bg-canvas-warm rounded-pill p-3 inline-flex mr-4">
+        <Icon className="text-ink" size={22} aria-hidden="true" />
       </div>
-      <h3 className="typo-card-subtitle">{title}</h3>
+      <h3 className="text-title-md text-ink dark:text-on-dark">{title}</h3>
     </div>
-    <p className="typo-card-body">{description}</p>
+    <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">{description}</p>
   </BaseCard>
 );
 
@@ -192,40 +191,31 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         webPageType="ItemPage"
       />
 
-      <ImageHero
-        locale={locale}
-        priority
+      {/* Hero — lightEditorial with lavender + sky orbs */}
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('nav.voiceActing')}
         title={t('voiceActing.hero.title')}
-        subtitle={
-          <>
-            {t('voiceActing.hero.subtitleLine1')}
-            <br />
-            {t('voiceActing.hero.subtitleLine2')}
-          </>
-        }
-        backgroundImage="/images/hardware3.webp"
-        imageAlt={t('voiceActing.hero.alt')}
-        minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
-        breadcrumbItems={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.voiceActing'), path: `/${locale}/voice-acting` },
+        lead={t('voiceActing.hero.subtitleLine1')}
+        primaryCta={{ label: t('voiceActing.cta.inquiry'), href: siteConfig.contact.kakaoUrl }}
+        orbs={[
+          { color: 'lavender', size: 600, top: '-100px', right: '-80px', opacity: 0.4 },
+          { color: 'sky', size: 500, bottom: '-150px', left: '-100px', opacity: 0.35 },
         ]}
       />
-
 
       <QuickAnswers
         title={t('voiceActing.quickAnswers.title')}
         subtitle={t('voiceActing.quickAnswers.subtitle')}
         items={quickAnswers}
-        variant="default"
+        tone="warm"
       />
 
       {/* 타겟 오디언스 */}
-      <Section variant="alternate">
+      <Section tone="canvas">
         <m.div {...AUDIENCE_ANIMATION}>
           <SectionHeading
-            icon={Users}
+            eyebrow="Who It's For"
             title={t('voiceActing.audience.title')}
             className="mb-8"
             as="h2"
@@ -245,12 +235,12 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       </Section>
 
       {/* 장비 & 환경 */}
-      <Section variant="default">
+      <Section tone="warm">
         <m.div {...ENV_ANIMATION}>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <m.div
               {...ENV_IMAGE_ANIMATION}
-              className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
+              className="relative h-[400px] lg:h-[500px] rounded-hero overflow-hidden shadow-card group"
             >
               <ResponsiveImage
                 src="/images/hardware3.webp"
@@ -265,22 +255,21 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
 
             <m.div {...ENV_TEXT_ANIMATION}>
               <SectionHeading
-                icon={Mic2}
+                eyebrow="Studio"
                 title={t('voiceActing.environment.title')}
                 align="left"
                 className="mb-8"
                 as="h2"
-                titleClassName="mb-2"
               />
               <ul className="space-y-4">
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0"
+                      className="text-ink flex-shrink-0"
                       size={20}
                       aria-hidden="true"
                     />
-                    <span className="typo-card-body">
+                    <span className="text-[15px] text-ink-muted-80 dark:text-on-dark-soft leading-[1.6]">
                       {t(`voiceActing.environment.features.${i}`)}
                     </span>
                   </li>
@@ -292,9 +281,9 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       </Section>
 
       {/* 가격 안내 */}
-      <Section id="voice-acting-package" variant="alternate">
+      <Section id="voice-acting-package" tone="canvas">
         <SectionHeading
-          icon={Mic2}
+          eyebrow="Pricing"
           title={t('voiceActing.package.title')}
           className="mb-10"
         />
@@ -317,31 +306,33 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       </Section>
 
       {/* 진행 절차 */}
-      <Section variant="default">
+      <Section tone="warm">
         <m.div {...PROCESS_ANIMATION}>
           <SectionHeading
-            icon={ListChecks}
+            eyebrow="Process"
             title={t('voiceActing.process.title')}
-            subtitle={t('voiceActing.process.subtitle')}
+            lead={t('voiceActing.process.subtitle')}
             className="mb-12"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {([0, 1, 2, 3] as const).map((i) => (
               <m.div
                 key={i}
-                className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
+                className="relative"
                 whileHover={HOVER_SCALE}
                 transition={{ duration: 0.25 }}
               >
-                <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
-                </div>
-                <h3 className="typo-card-subtitle mb-2">
-                  {t(`voiceActing.process.steps.${i}.title`)}
-                </h3>
-                <p className="typo-card-body text-sm">
-                  {t(`voiceActing.process.steps.${i}.description`)}
-                </p>
+                <BaseCard variant="default" hover className="p-6">
+                  <div className="w-10 h-10 rounded-pill bg-canvas-warm flex items-center justify-center mb-4">
+                    <span className="text-ink font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h3 className="text-title-md text-ink dark:text-on-dark mb-2">
+                    {t(`voiceActing.process.steps.${i}.title`)}
+                  </h3>
+                  <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">
+                    {t(`voiceActing.process.steps.${i}.description`)}
+                  </p>
+                </BaseCard>
               </m.div>
             ))}
           </div>
@@ -355,43 +346,43 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         variant="alternate"
       />
 
-      <ReviewSection variant="default" locale={locale} />
+      <ReviewSection tone="canvas" locale={locale} />
 
-      {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
-          무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" className="py-10">
+      {/* 관련 서비스 바로가기 */}
+      <Section tone="warm" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/studio-info`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
 
-      <Section variant="default" className="py-16">
+      {/* Final CTA Section */}
+      <Section tone="deep" orbs={[{ color: 'sky', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
         <ContactCTA
           locale={locale}
           title={
             <>
               {t('voiceActing.cta.titleLine1')}<br />
-              <span className="text-primary">{t('voiceActing.cta.titleHighlight')}</span>
+              <span>{t('voiceActing.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

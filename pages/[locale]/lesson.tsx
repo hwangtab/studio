@@ -3,17 +3,17 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import Hero from '../../components/ui/Hero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
+import Section from '../../components/ui/Section';
 
 // Below-fold 컴포넌트 code-splitting
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
-import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
@@ -33,26 +33,26 @@ interface CurriculumCardProps {
     delay?: number;
 }
 
-const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
-    <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group border border-gray-100 dark:border-gray-700">
-        <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-primary transition-transform group-hover:scale-110">
+const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: Icon }: CurriculumCardProps) => (
+    <BaseCard variant="default" hover className="p-8 h-full relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-ink transition-transform group-hover:scale-110">
             {step}
         </div>
         <div className="relative z-10">
-            <div className="bg-primary/10 dark:bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary dark:text-primary-light">
-                <Icon size={32} />
+            <div className="bg-canvas-warm rounded-pill p-3 inline-flex mb-6">
+                <Icon size={32} className="text-ink" aria-hidden="true" />
             </div>
             {phaseLabel && (
-                <span className="inline-block mb-3 px-3 py-1 rounded-full bg-primary/10 dark:bg-primary/20 text-xs font-bold text-primary tracking-wide uppercase">
+                <span className="inline-block mb-3 px-3 py-1 rounded-pill bg-canvas-warm text-xs font-bold text-ink tracking-wide uppercase">
                     {phaseLabel}
                 </span>
             )}
-            <h3 className="typo-card-title mb-1">{title}</h3>
-            <p className="text-sm font-semibold text-primary mb-4">{subtitle}</p>
+            <h3 className="text-title-md text-ink dark:text-on-dark mb-1">{title}</h3>
+            <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft font-semibold mb-4">{subtitle}</p>
             <ul className="space-y-2">
                 {description.map((item, idx) => (
-                    <li key={idx} className="flex items-start typo-card-body text-body-2">
-                        <CheckCircle size={14} className="mt-1 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                    <li key={idx} className="flex items-start text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">
+                        <CheckCircle size={14} className="mt-1 mr-2 text-ink flex-shrink-0" aria-hidden="true" />
                         <span>{item}</span>
                     </li>
                 ))}
@@ -69,15 +69,15 @@ interface FormatCardProps {
 }
 
 const FormatCard = ({ icon: Icon, label, value, caption }: FormatCardProps) => (
-    <BaseCard variant="default" className="p-6 h-full border border-gray-100 dark:border-gray-700">
+    <BaseCard variant="default" hover className="p-6 h-full">
         <div className="flex items-start gap-4">
-            <div className="bg-primary/10 dark:bg-primary/20 w-12 h-12 rounded-xl flex items-center justify-center text-primary dark:text-primary-light flex-shrink-0">
-                <Icon size={24} aria-hidden="true" />
+            <div className="bg-canvas-warm rounded-pill p-3 inline-flex flex-shrink-0">
+                <Icon size={24} className="text-ink" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-                <p className="text-xs font-semibold text-primary tracking-wide uppercase mb-1">{label}</p>
-                <p className="typo-card-title mb-1 break-keep">{value}</p>
-                <p className="text-body-2 text-gray-600 dark:text-gray-300 break-keep">{caption}</p>
+                <p className="text-xs font-semibold text-ink-muted-60 tracking-wide uppercase mb-1">{label}</p>
+                <p className="text-title-md text-ink dark:text-on-dark mb-1 break-keep">{value}</p>
+                <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] break-keep">{caption}</p>
             </div>
         </div>
     </BaseCard>
@@ -90,12 +90,12 @@ interface PhaseHeaderProps {
 }
 
 const PhaseHeader = ({ label, title, caption }: PhaseHeaderProps) => (
-    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6 border-l-4 border-primary pl-4">
+    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6 border-l-4 border-hairline-strong pl-4">
         <div>
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-1">{label}</span>
-            <h3 className="typo-card-title">{title}</h3>
+            <span className="inline-block text-xs font-bold tracking-widest uppercase text-ink-muted-60 mb-1">{label}</span>
+            <h3 className="text-title-md text-ink dark:text-on-dark">{title}</h3>
         </div>
-        <p className="text-body-2 text-gray-600 dark:text-gray-300 md:text-right break-keep max-w-lg">{caption}</p>
+        <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] md:text-right break-keep max-w-lg">{caption}</p>
     </div>
 );
 
@@ -221,28 +221,17 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 canonical={`/${locale}/lesson`}
                 schema={lessonServiceSchema}
             />
-            <ImageHero
-                locale={locale}
-                priority
+
+            {/* Hero — lightEditorial with peach + mint orbs */}
+            <Hero
+                variant="lightEditorial"
+                eyebrow={t('nav.lesson')}
                 title={t('lesson.hero.title')}
-                subtitle={
-                    <>
-                        <span className="break-keep">{t('lesson.hero.subtitleLine1')}</span>
-                        <br />
-                        <span className="break-keep">{t('lesson.hero.subtitleLine2')}</span>
-                        <br />
-                        <span className="inline-block mt-3 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-base md:text-lg font-semibold break-keep">
-                            {t('lesson.hero.subtitleLine3')}
-                        </span>
-                    </>
-                }
-                backgroundImage="/images/lesson1.webp"
-                imageAlt={t('lesson.hero.alt')}
-                minHeight="min-h-[60vh]"
-                overlayGradient="from-black/40 via-transparent to-black/20"
-                breadcrumbItems={[
-                    { name: t('nav.home'), path: `/${locale}` },
-                    { name: t('nav.lesson'), path: `/${locale}/lesson` },
+                lead={t('lesson.hero.subtitleLine1')}
+                primaryCta={{ label: t('lesson.pricing.cta'), href: siteConfig.contact.kakaoUrl }}
+                orbs={[
+                    { color: 'peach', size: 600, top: '-100px', right: '-80px', opacity: 0.4 },
+                    { color: 'mint', size: 500, bottom: '-150px', left: '-100px', opacity: 0.35 },
                 ]}
             />
 
@@ -250,18 +239,17 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 title={t('lesson.quickAnswers.title')}
                 subtitle={t('lesson.quickAnswers.subtitle')}
                 items={lessonQuickAnswers}
-                variant="default"
+                tone="warm"
             />
 
             {/* Lesson Format — 주 1회 · 60분 · 6개월 · 월 35만원 한눈에 */}
-            <Section variant="alternate">
+            <Section tone="canvas">
                 <SectionHeading
-                    icon={CalendarDays}
+                    eyebrow="Lesson Format"
                     title={t('lesson.format.title')}
-                    subtitle={t('lesson.format.subtitle')}
+                    lead={t('lesson.format.subtitle')}
                     as="h2"
                     className="mb-10"
-                    titleClassName="text-heading-3"
                 />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
                     {lessonFormatItems.map((item) => (
@@ -274,24 +262,24 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                         />
                     ))}
                 </div>
-                <p className="mt-6 text-center text-body-2 text-gray-600 dark:text-gray-300 break-keep">
+                <p className="mt-6 text-center text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] break-keep">
                     {t('lesson.format.note')}
                 </p>
             </Section>
 
             {/* Locale-specific content block (non-KO hubs only) */}
             {hubLocaleContent && (
-              <Section variant="alternate">
+              <Section tone="warm">
                 <SectionHeading
-                  icon={BookOpen}
+                  eyebrow="Local Info"
                   title={hubLocaleContent.title}
                   className="mb-8"
                 />
                 <div className="max-w-4xl mx-auto space-y-6">
                   {hubLocaleContent.items.map((item) => (
-                    <BaseCard key={item.heading} variant="default" className="p-6">
-                      <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                      <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+                    <BaseCard key={item.heading} variant="default" hover className="p-6">
+                      <h3 className="text-title-md text-ink dark:text-on-dark mb-3">{item.heading}</h3>
+                      <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">{item.body}</p>
                     </BaseCard>
                   ))}
                 </div>
@@ -299,35 +287,35 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
             )}
 
             {/* Intro Section */}
-            <Section variant="default">
+            <Section tone="canvas">
                 <SectionHeading
-                    icon={GraduationCap}
+                    eyebrow="Our Approach"
                     title={
                         <>
-                            {t('lesson.intro.titleLine1')}<br />
-                            <span className="text-primary">{t('lesson.intro.titleHighlight')}</span>
+                            {t('lesson.intro.titleLine1')}{' '}
+                            {t('lesson.intro.titleHighlight')}
                         </>
                     }
-                    subtitle={
+                    lead={
                         <>
-                            {t('lesson.intro.subtitleLine1')} <br className="hidden md:block" />
-                            {t('lesson.intro.subtitleLine2')} <br className="hidden md:block" />
-                            <strong>{t('lesson.intro.subtitleLine3')}</strong>
+                            {t('lesson.intro.subtitleLine1')}{' '}
+                            {t('lesson.intro.subtitleLine2')}{' '}
+                            {t('lesson.intro.subtitleLine3')}
                         </>
                     }
                     className="mb-16"
+                    as="h2"
                 />
             </Section>
 
             {/* Curriculum Roadmap — 기본 3개월 + 심화 3개월 */}
-            <Section variant="alternate">
+            <Section tone="warm">
                 <SectionHeading
-                    icon={BookOpen}
+                    eyebrow="Curriculum"
                     title={t('lesson.curriculum.title')}
-                    subtitle={t('lesson.curriculum.subtitle')}
+                    lead={t('lesson.curriculum.subtitle')}
                     as="h2"
                     className="mb-12"
-                    titleClassName="text-heading-3"
                 />
 
                 {/* Phase 1 — 기본 3개월 과정 */}
@@ -413,7 +401,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                         href={siteConfig.contact.kakaoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-pill bg-ink text-white font-bold text-lg hover:bg-canvas-deep transition-colors duration-200"
                     >
                         {t('lesson.pricing.cta')}
                     </a>
@@ -421,7 +409,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
             </Section>
 
             {/* Why Choose Us & Pricing */}
-            <Section variant="default">
+            <Section tone="canvas">
                 <div className="grid lg:grid-cols-2 gap-12 items-start mb-16">
                     {/* Why Choose Us */}
                     <m.div
@@ -435,23 +423,23 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                         />
                         <div className="space-y-10">
                             <div className="flex">
-                                <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <Mic2 className="text-primary" size={32} aria-hidden="true" />
+                                <div className="bg-canvas-warm p-4 rounded-card h-fit mr-6">
+                                    <Mic2 className="text-ink" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
-                                    <h3 className="typo-card-title mb-3">{t('lesson.why.items.0.title')}</h3>
-                                    <p className="typo-card-body text-gray-600 dark:text-gray-300">
+                                    <h3 className="text-title-md text-ink dark:text-on-dark mb-3">{t('lesson.why.items.0.title')}</h3>
+                                    <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">
                                         {t('lesson.why.items.0.body')}
                                     </p>
                                 </div>
                             </div>
                             <div className="flex">
-                                <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <Disc className="text-primary" size={32} aria-hidden="true" />
+                                <div className="bg-canvas-warm p-4 rounded-card h-fit mr-6">
+                                    <Disc className="text-ink" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
-                                    <h3 className="typo-card-title mb-3">{t('lesson.why.items.1.title')}</h3>
-                                    <p className="typo-card-body text-gray-600 dark:text-gray-300">
+                                    <h3 className="text-title-md text-ink dark:text-on-dark mb-3">{t('lesson.why.items.1.title')}</h3>
+                                    <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">
                                         {t('lesson.why.items.1.body')}
                                     </p>
                                 </div>
@@ -462,31 +450,31 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                     {/* Pricing Card */}
                     <m.div
                         {...pricingSectionRevealProps}
-                        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
+                        className="bg-canvas-soft dark:bg-surface-dark-elevated rounded-hero shadow-card overflow-hidden border border-hairline dark:border-white/10"
                     >
-                        <div className="p-8 bg-gradient-to-br from-primary to-secondary text-white text-center">
-                            <h3 className="typo-card-title text-white mb-2">{t('lesson.pricing.title')}</h3>
-                            <p className="opacity-90">{t('lesson.pricing.subtitle')}</p>
+                        <div className="p-8 bg-canvas-deep text-on-dark text-center">
+                            <h3 className="text-title-md text-on-dark mb-2">{t('lesson.pricing.title')}</h3>
+                            <p className="text-on-dark-soft">{t('lesson.pricing.subtitle')}</p>
                         </div>
                         <div className="p-8">
                             <div className="flex justify-center items-end mb-2">
-                                <span className="text-4xl font-bold text-gray-800 dark:text-white">350,000</span>
-                                <span className="text-xl text-gray-500 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
+                                <span className="text-4xl font-bold text-ink dark:text-on-dark">350,000</span>
+                                <span className="text-xl text-ink-muted-60 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
                             </div>
-                            <p className="text-center text-body-2 text-gray-600 dark:text-gray-300 mb-6 break-keep">
+                            <p className="text-center text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6] mb-6 break-keep">
                                 {t('lesson.pricing.breakdown')}
                             </p>
-                            <ul className="space-y-2 mb-6 text-body-2 text-gray-700 dark:text-gray-200">
+                            <ul className="space-y-2 mb-6 text-[15px] text-ink-muted-80 dark:text-on-dark-soft">
                                 <li className="flex items-start">
-                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-ink flex-shrink-0" aria-hidden="true" />
                                     <span className="break-keep">{t('lesson.format.items.0.label')}: <strong>{t('lesson.format.items.0.value')}</strong></span>
                                 </li>
                                 <li className="flex items-start">
-                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-ink flex-shrink-0" aria-hidden="true" />
                                     <span className="break-keep">{t('lesson.format.items.1.label')}: <strong>{t('lesson.format.items.1.value')}</strong></span>
                                 </li>
                                 <li className="flex items-start">
-                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-ink flex-shrink-0" aria-hidden="true" />
                                     <span className="break-keep">{t('lesson.format.items.2.label')}: <strong>{t('lesson.format.items.2.value')}</strong></span>
                                 </li>
                             </ul>
@@ -494,7 +482,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                                 href={siteConfig.contact.kakaoUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block w-full text-center bg-gray-900 dark:bg-gray-700 hover:bg-primary text-white font-bold py-4 rounded-xl transition-colors duration-300"
+                                className="block w-full text-center bg-canvas-deep dark:bg-surface-dark-elevated hover:opacity-90 text-on-dark font-bold py-4 rounded-card transition-colors duration-300"
                             >
                                 {t('lesson.pricing.cta')}
                             </a>
@@ -503,49 +491,48 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 </div>
             </Section>
 
-            {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
-                무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-            <Section variant="default" className="py-10">
+            {/* 관련 서비스 바로가기 */}
+            <Section tone="warm" className="py-10">
                 <div className="flex flex-wrap justify-center gap-4">
                     <Link
                         href={`/${locale}/practice-room`}
                         prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
                     >
                         {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                     <Link
                         href={`/${locale}/stories`}
                         prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
                     >
                         {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                     <Link
                         href={`/${locale}/pricing`}
                         prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
                     >
                         {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                     <Link
                         href={`/${locale}/contact`}
                         prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
                     >
                         {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                 </div>
             </Section>
 
-            {/* Improved CTA Section */}
-            <Section variant="alternate" className="py-16">
+            {/* Final CTA Section */}
+            <Section tone="deep" orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
                 <ContactCTA
                     locale={locale}
                     title={
                         <>
                             {t('lesson.cta.titleLine1')}<br />
-                            <span className="text-primary">{t('lesson.cta.titleHighlight')}</span>
+                            <span>{t('lesson.cta.titleHighlight')}</span>
                         </>
                     }
                     subtitle={

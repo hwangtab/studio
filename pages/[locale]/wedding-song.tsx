@@ -3,13 +3,14 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Heart, Package, ListChecks, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import Hero from '../../components/ui/Hero';
 import SectionHeading from '../../components/ui/SectionHeading';
-import { Section } from '../../components/ui/Section';
+import BaseCard from '../../components/ui/BaseCard';
+import Section from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 
 // Below-fold 컴포넌트 code-splitting
@@ -166,42 +167,33 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         webPageType="ItemPage"
       />
 
-      <ImageHero
-        locale={locale}
-        priority
+      {/* Hero — lightEditorial with rose + peach orbs */}
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('nav.weddingSong')}
         title={t('weddingSong.hero.title')}
-        subtitle={
-          <>
-            {t('weddingSong.hero.subtitleLine1')}
-            <br />
-            {t('weddingSong.hero.subtitleLine2')}
-          </>
-        }
-        backgroundImage="/images/recording3.webp"
-        imageAlt={t('weddingSong.hero.alt')}
-        minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
-        breadcrumbItems={[
-          { name: t('nav.home'), path: `/${locale}` },
-          { name: t('nav.weddingSong'), path: `/${locale}/wedding-song` },
+        lead={t('weddingSong.hero.subtitleLine1')}
+        primaryCta={{ label: t('weddingSong.cta.inquiry'), href: siteConfig.contact.kakaoUrl }}
+        orbs={[
+          { color: 'rose', size: 600, top: '-100px', right: '-80px', opacity: 0.4 },
+          { color: 'peach', size: 500, bottom: '-150px', left: '-100px', opacity: 0.35 },
         ]}
       />
-
 
       <QuickAnswers
         title={t('weddingSong.quickAnswers.title')}
         subtitle={t('weddingSong.quickAnswers.subtitle')}
         items={quickAnswers}
-        variant="default"
+        tone="warm"
       />
 
       {/* 서비스 소개 섹션 */}
-      <Section variant="alternate">
+      <Section tone="canvas">
         <m.div {...INTRO_ANIMATION}>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <m.div
               {...INTRO_IMAGE_ANIMATION}
-              className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
+              className="relative h-[400px] lg:h-[500px] rounded-hero overflow-hidden shadow-card group"
             >
               <ResponsiveImage
                 src="/images/recording3.webp"
@@ -216,26 +208,25 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
 
             <m.div {...INTRO_TEXT_ANIMATION}>
               <SectionHeading
-                icon={Heart}
+                eyebrow="About"
                 title={t('weddingSong.intro.title')}
                 align="left"
                 className="mb-8"
                 as="h2"
-                titleClassName="mb-2"
               />
               <ul className="space-y-5">
                 {([0, 1, 2] as const).map((i) => (
                   <li key={i} className="flex items-start gap-4">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0 mt-1"
+                      className="text-ink flex-shrink-0 mt-1"
                       size={22}
                       aria-hidden="true"
                     />
                     <div>
-                      <p className="typo-card-subtitle mb-1">
+                      <p className="text-title-md text-ink dark:text-on-dark mb-1">
                         {t(`weddingSong.intro.features.${i}.title`)}
                       </p>
-                      <p className="typo-card-body">
+                      <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">
                         {t(`weddingSong.intro.features.${i}.description`)}
                       </p>
                     </div>
@@ -248,9 +239,9 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       </Section>
 
       {/* 패키지 안내 */}
-      <Section id="wedding-package" variant="default">
+      <Section id="wedding-package" tone="warm">
         <SectionHeading
-          icon={Package}
+          eyebrow="Package"
           title={t('weddingSong.package.title')}
           className="mb-10"
         />
@@ -273,31 +264,33 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       </Section>
 
       {/* 진행 절차 */}
-      <Section variant="alternate">
+      <Section tone="canvas">
         <m.div {...PROCESS_ANIMATION}>
           <SectionHeading
-            icon={ListChecks}
+            eyebrow="Process"
             title={t('weddingSong.process.title')}
-            subtitle={t('weddingSong.process.subtitle')}
+            lead={t('weddingSong.process.subtitle')}
             className="mb-12"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {([0, 1, 2, 3] as const).map((i) => (
               <m.div
                 key={i}
-                className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
+                className="relative"
                 whileHover={HOVER_SCALE}
                 transition={{ duration: 0.25 }}
               >
-                <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
-                </div>
-                <h3 className="typo-card-subtitle mb-2">
-                  {t(`weddingSong.process.steps.${i}.title`)}
-                </h3>
-                <p className="typo-card-body text-sm">
-                  {t(`weddingSong.process.steps.${i}.description`)}
-                </p>
+                <BaseCard variant="default" hover className="p-6">
+                  <div className="w-10 h-10 rounded-pill bg-canvas-warm flex items-center justify-center mb-4">
+                    <span className="text-ink font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h3 className="text-title-md text-ink dark:text-on-dark mb-2">
+                    {t(`weddingSong.process.steps.${i}.title`)}
+                  </h3>
+                  <p className="text-[15px] text-ink-muted-60 dark:text-on-dark-soft leading-[1.6]">
+                    {t(`weddingSong.process.steps.${i}.description`)}
+                  </p>
+                </BaseCard>
               </m.div>
             ))}
           </div>
@@ -307,7 +300,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-pill bg-ink text-white font-bold text-lg hover:bg-canvas-deep transition-colors duration-200"
           >
             {t('weddingSong.cta.inquiry')}
           </a>
@@ -321,43 +314,43 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         variant="default"
       />
 
-      <ReviewSection variant="alternate" locale={locale} />
+      <ReviewSection tone="warm" locale={locale} />
 
-      {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
-          무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="default" className="py-10">
+      {/* 관련 서비스 바로가기 */}
+      <Section tone="canvas" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/studio-info`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
 
-      <Section variant="alternate" className="py-16">
+      {/* Final CTA Section — rose orb for wedding tone */}
+      <Section tone="deep" orbs={[{ color: 'rose', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
         <ContactCTA
           locale={locale}
           title={
             <>
               {t('weddingSong.cta.titleLine1')}<br />
-              <span className="text-primary">{t('weddingSong.cta.titleHighlight')}</span>
+              <span>{t('weddingSong.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
