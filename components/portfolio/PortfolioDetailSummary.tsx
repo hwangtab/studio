@@ -26,7 +26,6 @@ interface PortfolioDetailSummaryProps {
 const PortfolioDetailSummary = ({
   item,
   categoryName,
-  categoryColor,
   artistLabel,
   servicesTitle,
   listenNowLabel,
@@ -34,13 +33,13 @@ const PortfolioDetailSummary = ({
   actions,
   titleTag = 'h2',
   imageSectionClassName = 'px-6 pt-6',
-  imageWrapperClassName = 'relative aspect-square max-w-xs mx-auto rounded-xl overflow-hidden shadow-lg',
+  imageWrapperClassName = 'relative aspect-square max-w-xs mx-auto rounded-card overflow-hidden shadow-card border border-hairline dark:border-white/10',
   contentSectionClassName = 'p-6',
-  titleClassName = 'typo-card-title text-gray-900 dark:text-white mb-2',
-  artistClassName = 'typo-card-body text-gray-600 dark:text-gray-300 mb-4',
-  servicesHeadingClassName = 'typo-card-meta font-medium text-gray-400 dark:text-gray-500 mb-2',
+  titleClassName = 'text-title-lg text-ink dark:text-on-dark mb-2',
+  artistClassName = 'text-body text-ink-muted-60 dark:text-on-dark-soft mb-4',
+  servicesHeadingClassName = 'text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-2',
   actionRowClassName = 'flex flex-col sm:flex-row gap-4',
-  primaryActionClassName = 'w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium',
+  primaryActionClassName = 'w-full inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-ink text-white hover:bg-canvas-deep rounded-pill transition-all font-medium active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 dark:bg-white dark:text-ink dark:hover:bg-on-dark-soft',
 }: PortfolioDetailSummaryProps) => {
   const TitleTag = titleTag;
 
@@ -61,10 +60,7 @@ const PortfolioDetailSummary = ({
 
       <div className={contentSectionClassName}>
         <div className="mb-3">
-          <span
-            className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
-            style={{ backgroundColor: categoryColor }}
-          >
+          <span className="inline-block px-3 py-1 text-[13px] bg-canvas-warm text-ink-muted-80 dark:text-on-dark-soft rounded-pill border border-hairline dark:border-white/10">
             {categoryName}
           </span>
         </div>
@@ -85,7 +81,7 @@ const PortfolioDetailSummary = ({
             {item.services.map((service) => (
               <span
                 key={service}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                className="px-3 py-1 bg-canvas-warm text-ink-muted-80 dark:text-on-dark-soft rounded-pill text-[13px] border border-hairline dark:border-white/10"
               >
                 {service}
               </span>

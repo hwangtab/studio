@@ -19,10 +19,10 @@ interface PortfolioDetailBodyProps {
 }
 
 const sectionWrapperClass =
-  'mt-10 bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 sm:p-8';
+  'mt-10 bg-canvas-soft border border-hairline shadow-card rounded-hero p-6 sm:p-8 dark:bg-surface-dark-elevated dark:border-white/10';
 
 const sectionTitleClass =
-  'typo-card-title mb-4 text-gray-900 dark:text-white';
+  'text-title-md text-ink dark:text-on-dark mb-4';
 
 const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps) => {
   const notes = item.productionNotes?.[locale];
@@ -41,7 +41,7 @@ const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps)
           <h2 id="portfolio-production-notes" className={sectionTitleClass}>
             {labels.productionNotesTitle}
           </h2>
-          <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed [&>p]:mb-4 [&>p:last-child]:mb-0 [&>h2]:typo-card-subtitle [&>h2]:mt-6 [&>h2]:mb-3 [&>h3]:font-semibold [&>h3]:mt-4 [&>h3]:mb-2 [&>ul]:list-disc [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>blockquote]:border-l-4 [&>blockquote]:border-primary [&>blockquote]:pl-4 [&>blockquote]:italic [&_a]:text-primary [&_a]:underline [&_strong]:font-semibold">
+          <div className="space-y-4 text-ink-muted-80 dark:text-on-dark-soft leading-relaxed [&>p]:mb-4 [&>p:last-child]:mb-0 [&>h2]:text-title-sm [&>h2]:mt-6 [&>h2]:mb-3 [&>h3]:font-semibold [&>h3]:mt-4 [&>h3]:mb-2 [&>ul]:list-disc [&>ul]:pl-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>blockquote]:border-l-4 [&>blockquote]:border-hairline-strong [&>blockquote]:pl-4 [&>blockquote]:italic [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-4 [&_strong]:font-semibold">
             <Markdown
               options={{
                 forceBlock: true,
@@ -66,44 +66,44 @@ const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps)
           <h2 id="portfolio-credits" className={sectionTitleClass}>
             {labels.creditsTitle}
           </h2>
-          <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-700 dark:text-gray-300">
+          <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-ink-muted-80 dark:text-on-dark-soft">
             {item.releaseDate && (
               <div>
-                <dt className="typo-card-meta font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <dt className="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-1">
                   {labels.releaseDateLabel}
                 </dt>
-                <dd className="typo-card-body">
+                <dd className="text-body text-ink dark:text-on-dark">
                   <time dateTime={item.releaseDate}>{item.releaseDate}</time>
                 </dd>
               </div>
             )}
             {item.label && (
               <div>
-                <dt className="typo-card-meta font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <dt className="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-1">
                   {labels.labelLabel}
                 </dt>
-                <dd className="typo-card-body">{item.label}</dd>
+                <dd className="text-body text-ink dark:text-on-dark">{item.label}</dd>
               </div>
             )}
             {credits?.engineer && (
               <div>
-                <dt className="typo-card-meta font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <dt className="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-1">
                   {labels.creditsEngineer}
                 </dt>
-                <dd className="typo-card-body">{credits.engineer}</dd>
+                <dd className="text-body text-ink dark:text-on-dark">{credits.engineer}</dd>
               </div>
             )}
             {credits?.musicians && credits.musicians.length > 0 && (
               <div className="sm:col-span-3">
-                <dt className="typo-card-meta font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <dt className="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-1">
                   {labels.creditsMusicians}
                 </dt>
-                <dd className="typo-card-body">
+                <dd className="text-body">
                   <ul className="flex flex-wrap gap-2">
                     {credits.musicians.map((name) => (
                       <li
                         key={name}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm"
+                        className="px-3 py-1 bg-canvas-warm text-ink-muted-80 dark:text-on-dark-soft rounded-pill text-[13px] border border-hairline dark:border-white/10"
                       >
                         {name}
                       </li>
@@ -114,15 +114,15 @@ const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps)
             )}
             {credits?.gear && credits.gear.length > 0 && (
               <div className="sm:col-span-3">
-                <dt className="typo-card-meta font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <dt className="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-1">
                   {labels.creditsGear}
                 </dt>
-                <dd className="typo-card-body">
+                <dd className="text-body">
                   <ul className="flex flex-wrap gap-2">
                     {credits.gear.map((g) => (
                       <li
                         key={g}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm"
+                        className="px-3 py-1 bg-canvas-warm text-ink-muted-80 dark:text-on-dark-soft rounded-pill text-[13px] border border-hairline dark:border-white/10"
                       >
                         {g}
                       </li>
@@ -140,20 +140,20 @@ const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps)
           <h2 id="portfolio-tracklist" className={sectionTitleClass}>
             {labels.trackListTitle}
           </h2>
-          <ol className="divide-y divide-gray-100 dark:divide-gray-700">
+          <ol className="divide-y divide-hairline dark:divide-white/10">
             {trackList.map((track) => (
               <li
                 key={`${track.no}-${track.title}`}
-                className="flex items-center justify-between py-3 text-gray-700 dark:text-gray-300"
+                className="flex items-center justify-between py-3 text-ink dark:text-on-dark"
               >
                 <span className="flex items-baseline gap-3">
-                  <span className="typo-card-meta tabular-nums w-8 text-gray-500 dark:text-gray-400">
+                  <span className="text-caption tabular-nums w-8 text-ink-muted-40 dark:text-on-dark-soft">
                     {String(track.no).padStart(2, '0')}
                   </span>
-                  <span className="typo-card-body">{track.title}</span>
+                  <span className="text-body">{track.title}</span>
                 </span>
                 {track.duration && (
-                  <span className="typo-card-meta tabular-nums text-gray-500 dark:text-gray-400">
+                  <span className="text-caption tabular-nums text-ink-muted-40 dark:text-on-dark-soft">
                     {track.duration}
                   </span>
                 )}

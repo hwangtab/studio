@@ -14,7 +14,8 @@ import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
 import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
-import { Section } from '../../../components/ui/Section';
+import Section from '../../../components/ui/Section';
+import BaseCard from '../../../components/ui/BaseCard';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { defaultLocale, locales, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
@@ -151,13 +152,14 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
           { name: item.title, path: `/${locale}/portfolio/${item.id}` },
         ]}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 border-b border-gray-100 dark:border-gray-800"
+        className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12 py-3 border-b border-hairline dark:border-white/10"
       />
-      <Section variant="default" className="pt-8 pb-12">
+
+      <Section tone="canvas" className="pt-8 pb-12">
         <div className="mb-8">
           <Link
             href={getLink("/portfolio")}
-            className="inline-flex items-center typo-card-cta hover:underline mb-6 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="inline-flex items-center text-body text-ink-muted-60 hover:text-ink dark:text-on-dark-soft dark:hover:text-on-dark hover:underline underline-offset-4 mb-6 min-h-[44px] touch-manipulation rounded-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 transition-colors"
           >
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('portfolio.detail.backToList')}
@@ -165,39 +167,39 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <m.div
-            {...detailContentAnimation}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
-          >
-            <PortfolioDetailSummary
-              item={item}
-              categoryName={categoryInfo.name}
-              categoryColor={categoryInfo.color}
-              artistLabel={t('portfolio.detail.artistLabel')}
-              servicesTitle={t('portfolio.detail.servicesProvided')}
-              listenNowLabel={t('portfolio.detail.listenNow')}
-              listenUrl={item.link}
-              titleTag="h1"
-              imageSectionClassName="px-6 pt-8"
-              imageWrapperClassName="relative aspect-square max-w-md mx-auto rounded-xl overflow-hidden shadow-lg"
-              contentSectionClassName="p-8"
-              titleClassName="text-heading-2 font-title mb-2"
-              artistClassName="typo-card-body mb-6"
-              servicesHeadingClassName="typo-card-title mb-3"
-              actionRowClassName="flex flex-col sm:flex-row gap-4"
-              primaryActionClassName="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-              actions={
-                <button
-                  type="button"
-                  onClick={sharePortfolio}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                >
-                  <Share2 size={16} aria-hidden="true" />
-                  {t('portfolio.detail.share')}
-                </button>
-              }
-            />
+          <m.div {...detailContentAnimation}>
+            <BaseCard variant="featured" className="overflow-hidden">
+              <PortfolioDetailSummary
+                item={item}
+                categoryName={categoryInfo.name}
+                categoryColor={categoryInfo.color}
+                artistLabel={t('portfolio.detail.artistLabel')}
+                servicesTitle={t('portfolio.detail.servicesProvided')}
+                listenNowLabel={t('portfolio.detail.listenNow')}
+                listenUrl={item.link}
+                titleTag="h1"
+                imageSectionClassName="mb-6"
+                imageWrapperClassName="relative aspect-square max-w-md mx-auto rounded-card overflow-hidden shadow-card border border-hairline dark:border-white/10"
+                contentSectionClassName=""
+                titleClassName="text-display-xl font-display font-light text-ink dark:text-on-dark mb-2"
+                artistClassName="text-body text-ink-muted-60 dark:text-on-dark-soft mb-6"
+                servicesHeadingClassName="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-3"
+                actionRowClassName="flex flex-col sm:flex-row gap-4"
+                primaryActionClassName="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-ink text-white hover:bg-canvas-deep rounded-pill transition-all font-medium active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 dark:bg-white dark:text-ink dark:hover:bg-on-dark-soft"
+                actions={
+                  <button
+                    type="button"
+                    onClick={sharePortfolio}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border border-hairline-strong text-ink hover:bg-ink/[0.04] rounded-pill transition-all font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
+                  >
+                    <Share2 size={16} aria-hidden="true" />
+                    {t('portfolio.detail.share')}
+                  </button>
+                }
+              />
+            </BaseCard>
           </m.div>
+
           <PortfolioDetailBody
             item={resolvedItem}
             locale={locale}
@@ -214,19 +216,34 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           />
         </div>
       </Section>
-      <Section variant="alternate" className="py-12">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <p className="text-body mb-6 text-gray-600 dark:text-gray-300">{t('portfolio.detail.ctaPrompt', '당신의 음악도 완성해 드립니다.')}</p>
+
+      <Section tone="warm" className="py-12">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-lead text-ink-muted-80 dark:text-on-dark-soft mb-6">
+            {t('portfolio.detail.ctaPrompt', '당신의 음악도 완성해 드립니다.')}
+          </p>
           {/* prefetch={false}: 본문 fold 내 button CTA들의 무거운 SSG JSON
               자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href={getLink('/pricing')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors">
+            <Link
+              href={getLink('/pricing')}
+              prefetch={false}
+              className="inline-flex items-center px-6 py-3 min-h-[44px] bg-ink text-white hover:bg-canvas-deep rounded-pill font-medium transition-all active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 dark:bg-white dark:text-ink dark:hover:bg-on-dark-soft"
+            >
               {t('nav.pricing')}
             </Link>
-            <Link href={getLink('/contact')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg font-medium transition-colors">
+            <Link
+              href={getLink('/contact')}
+              prefetch={false}
+              className="inline-flex items-center px-6 py-3 min-h-[44px] border border-hairline-strong text-ink hover:bg-ink/[0.04] rounded-pill font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
+            >
               {t('nav.contact')}
             </Link>
-            <Link href={getLink('/studio-info')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary rounded-lg font-medium transition-colors">
+            <Link
+              href={getLink('/studio-info')}
+              prefetch={false}
+              className="inline-flex items-center px-6 py-3 min-h-[44px] border border-hairline text-ink-muted-60 hover:border-hairline-strong hover:text-ink rounded-pill font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 dark:text-on-dark-soft dark:border-white/10 dark:hover:border-white/20 dark:hover:text-on-dark"
+            >
               {t('nav.equipment')}
             </Link>
           </div>

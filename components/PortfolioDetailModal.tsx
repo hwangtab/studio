@@ -111,35 +111,38 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
       aria-modal="true"
       aria-labelledby="modal-title"
     >
+      {/* Backdrop */}
       <m.div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-canvas-deep/80 backdrop-blur-sm"
         variants={overlayVariants}
         onClick={onClose}
         aria-hidden="true"
       />
 
+      {/* Modal container */}
       <m.div
         ref={modalRef}
-        className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
+        className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-canvas-soft dark:bg-surface-dark-elevated rounded-hero shadow-deep border border-hairline dark:border-white/10"
         variants={modalVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 border-b border-gray-100 dark:border-gray-700 backdrop-blur-sm">
+        {/* Sticky header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-canvas-soft/95 dark:bg-surface-dark-elevated/95 border-b border-hairline dark:border-white/10 backdrop-blur-sm">
           <button
             ref={closeButtonRef}
             onClick={onClose}
             type="button"
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="bg-ink/[0.04] hover:bg-ink/[0.08] rounded-pill p-2 text-ink dark:bg-white/[0.06] dark:text-on-dark transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2"
             aria-label={t('actions.close')}
           >
-            <X size={20} className="text-gray-600 dark:text-gray-300" aria-hidden="true" />
+            <X size={20} aria-hidden="true" />
           </button>
           <button
             onClick={sharePortfolio}
             type="button"
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] rounded-pill transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2"
           >
             <Share2 size={16} aria-hidden="true" />
             {t('portfolio.detail.share')}
@@ -150,15 +153,20 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
           {item.title}
         </div>
 
-        <PortfolioDetailSummary
-          item={item}
-          categoryName={categoryInfo.name}
-          categoryColor={categoryInfo.color}
-          artistLabel={t('portfolio.detail.artistLabel')}
-          servicesTitle={t('portfolio.detail.servicesProvided')}
-          listenNowLabel={t('portfolio.detail.listenNow')}
-          listenUrl={item.link}
-        />
+        <div className="p-6 md:p-8">
+          <PortfolioDetailSummary
+            item={item}
+            categoryName={categoryInfo.name}
+            categoryColor={categoryInfo.color}
+            artistLabel={t('portfolio.detail.artistLabel')}
+            servicesTitle={t('portfolio.detail.servicesProvided')}
+            listenNowLabel={t('portfolio.detail.listenNow')}
+            listenUrl={item.link}
+            imageSectionClassName="mb-6"
+            imageWrapperClassName="relative aspect-square max-w-xs mx-auto rounded-card overflow-hidden shadow-card border border-hairline dark:border-white/10"
+            contentSectionClassName=""
+          />
+        </div>
       </m.div>
     </m.div>
   );

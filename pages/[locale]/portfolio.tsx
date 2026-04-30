@@ -5,14 +5,14 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
-import { Music, Headphones, ArrowRight } from 'lucide-react';
+import { Music, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { filterPortfolioItems } from '../../utils/portfolioDataUtils';
 import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schemaGenerator';
 import { getSiteConfig } from '../../data/siteConfig';
-import ImageHero from '../../components/common/ImageHero';
+import Hero from '../../components/ui/Hero';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
@@ -20,7 +20,8 @@ const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), { ssr:
 import ProjectRowCard from '../../components/ui/ProjectRowCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/data';
-import { Section } from '../../components/ui/Section';
+import Section from '../../components/ui/Section';
+import { Button } from '../../components/ui/Button';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
@@ -157,36 +158,23 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         schema={[itemListSchema, ...audioObjectSchemas]}
         webPageType="CollectionPage"
       />
-      <ImageHero
-        {...{
-          locale,
-          priority: true,
-          title: t('portfolio.title'),
-          subtitle: (
-            <>
-              {t('portfolio.subtitle')}
-            </>
-          ),
-          backgroundImage: "/images/recording1.webp",
-          imageAlt: t('portfolio.heroAlt'),
-          minHeight: "min-h-[60vh]",
-          overlayGradient: "from-black/40 via-transparent to-black/20",
-          breadcrumbItems: [
-            { name: t('nav.home'), path: `/${locale}` },
-            { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
-          ],
-        }}
+
+      <Hero
+        variant="lightEditorial"
+        eyebrow={t('nav.portfolio')}
+        title={t('portfolio.title')}
+        lead={t('portfolio.subtitle')}
+        orbs={[{ color: 'sky', size: 600, top: '-100px', right: '-80px', opacity: 0.4 }]}
       />
 
       {audioTracks.length > 0 && (
-        <Section variant="default">
+        <Section tone="canvas">
           <div id="sample-tracks">
             <SectionHeading
-              icon={Headphones}
+              eyebrow="Sample Tracks"
               title={t('portfolio.sampleTracks')}
               align="left"
               className="mb-8"
-              titleClassName="typo-card-title"
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} locale={locale} />
@@ -202,19 +190,16 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         </Section>
       )}
 
-      <Section variant="alternate">
+      <Section tone="warm">
         <div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-            <div className="flex items-center">
-              <SectionHeading
-                icon={Music}
-                title={t('portfolio.projects')}
-                align="left"
-                className="mb-0"
-                titleClassName="typo-card-title"
-                as="h2"
-              />
-            </div>
+            <SectionHeading
+              eyebrow="Projects"
+              title={t('portfolio.projects')}
+              align="left"
+              className="mb-0"
+              as="h2"
+            />
 
             <CategoryFilter
               activeCategory={selectedCategory.id}
@@ -228,8 +213,8 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
           {filteredItems.length === 0 ? (
             <div className="text-center pt-16 pb-12">
-              <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} aria-hidden="true" />
-              <p className="typo-card-body text-gray-500 dark:text-gray-400">
+              <Music className="text-ink-muted-40 mx-auto mb-4" size={64} aria-hidden="true" />
+              <p className="text-body text-ink-muted-60 dark:text-on-dark-soft">
                 {t('portfolio.noProjects')}
               </p>
             </div>
@@ -249,13 +234,14 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
           {hasMoreItems && (
             <div className="mt-8 flex justify-center">
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="md"
                 onClick={handleLoadMore}
-                className="min-h-[44px] px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                type="button"
               >
                 {t('actions.more')}
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -263,40 +249,40 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="default" className="py-10">
+      <Section tone="canvas" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink hover:bg-ink/[0.04] transition-all font-medium dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink hover:bg-ink/[0.04] transition-all font-medium dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/lesson`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink hover:bg-ink/[0.04] transition-all font-medium dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink hover:bg-ink/[0.04] transition-all font-medium dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </Section>
 
-      <Section variant="alternate" className="py-16">
+      <Section tone="warm" className="py-16">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}
