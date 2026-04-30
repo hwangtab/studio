@@ -26,17 +26,17 @@ const PlayerControls = ({
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onPrevTrack}
-                className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="text-ink-muted-60 hover:text-ink dark:text-on-dark-soft dark:hover:text-on-dark transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation hover:bg-ink/[0.06] dark:hover:bg-white/[0.06] rounded-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
                 aria-label={t('audioPlayer.prevTrack')}
             >
                 <SkipBack size={24} strokeWidth={2} aria-hidden="true" />
             </m.button>
 
             <m.button
-                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(var(--primary-rgb), 0.5)" }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onPlayPause}
-                className="group relative bg-gray-900 text-white dark:bg-white dark:text-black rounded-full p-6 min-h-[56px] min-w-[56px] shadow-lg shadow-gray-400/50 dark:shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="group relative bg-ink text-white dark:bg-white dark:text-ink rounded-pill p-6 min-h-[56px] min-w-[56px] shadow-card-hover transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
                 aria-label={isPlaying ? t('audioPlayer.pause') : t('audioPlayer.play')}
             >
                 <div className="absolute inset-0 rounded-full border border-gray-900/50 dark:border-white/50 opacity-0 group-hover:opacity-100 animate-ping-slow" />
@@ -53,7 +53,7 @@ const PlayerControls = ({
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onNextTrack}
-                className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="text-ink-muted-60 hover:text-ink dark:text-on-dark-soft dark:hover:text-on-dark transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation hover:bg-ink/[0.06] dark:hover:bg-white/[0.06] rounded-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
                 aria-label={t('audioPlayer.nextTrack')}
             >
                 <SkipForward size={24} strokeWidth={2} aria-hidden="true" />

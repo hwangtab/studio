@@ -24,7 +24,7 @@ const Playlist = ({
     const { t } = useTranslation('common', { lng: locale });
     return (
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
-            <h3 className="text-gray-500 dark:text-white/60 text-xs font-bold uppercase tracking-wider mb-4 px-2">
+            <h3 className="text-ink-muted-60 dark:text-on-dark-soft text-xs font-bold uppercase tracking-wider mb-4 px-2">
                 {t('audioPlayer.playlist')} ({tracks.length})
             </h3>
             <div className="space-y-2">
@@ -35,14 +35,8 @@ const Playlist = ({
                         <m.button
                             key={track.id}
                             initial={false}
-                            animate={{
-                                backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.1)' : 'rgba(0, 0, 0, 0)',
-                            }}
-                            whileHover={{
-                                backgroundColor: isActive ? 'rgba(var(--primary-rgb), 0.15)' : 'rgba(var(--primary-rgb), 0.05)'
-                            }}
                             type="button"
-                            className={`group w-full text-left flex items-center p-3 min-h-[44px] rounded-lg cursor-pointer transition-[border-color] duration-300 border border-transparent touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive ? 'border-primary/30' : 'hover:border-gray-200 dark:hover:border-white/5'
+                            className={`group w-full text-left flex items-center p-3 min-h-[44px] rounded-lg cursor-pointer transition-[background-color,border-color] duration-300 border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${isActive ? 'bg-ink/[0.06] dark:bg-white/[0.06] border-hairline dark:border-white/10' : 'border-transparent hover:bg-ink/[0.04] dark:hover:bg-white/[0.04] hover:border-hairline dark:hover:border-white/10'
                                 }`}
                             onClick={() => onSelectTrack(index)}
                             aria-pressed={isActive}
@@ -62,21 +56,21 @@ const Playlist = ({
                                                 <m.div
                                                     animate={{ height: [4, 12, 6, 12, 4] }}
                                                     transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-                                                    className="w-[2px] bg-primary rounded-full"
+                                                    className="w-[2px] bg-white rounded-full"
                                                 />
                                                 <m.div
                                                     animate={{ height: [8, 4, 12, 5, 8] }}
                                                     transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                                                    className="w-[2px] bg-primary rounded-full"
+                                                    className="w-[2px] bg-white rounded-full"
                                                 />
                                                 <m.div
                                                     animate={{ height: [5, 10, 5, 10, 5] }}
                                                     transition={{ repeat: Infinity, duration: 1.0, ease: "linear" }}
-                                                    className="w-[2px] bg-primary rounded-full"
+                                                    className="w-[2px] bg-white rounded-full"
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="w-2 h-2 bg-primary rounded-full" />
+                                            <div className="w-2 h-2 bg-white rounded-full" />
                                         )}
                                     </div>
                                 )}
@@ -88,15 +82,15 @@ const Playlist = ({
                             </div>
 
                             <div className="flex-1 min-w-0">
-                                <h4 className={`text-sm font-medium truncate ${isActive ? 'text-primary' : 'text-gray-900 dark:text-white'}`} title={track.title}>
+                                <h4 className={`text-sm font-medium truncate ${isActive ? 'text-ink dark:text-on-dark font-semibold' : 'text-ink dark:text-on-dark'}`} title={track.title}>
                                     {track.title}
                                 </h4>
-                                <p className="text-xs text-gray-500 dark:text-white/50 truncate" title={track.artist}>
+                                <p className="text-xs text-ink-muted-60 dark:text-on-dark-soft truncate" title={track.artist}>
                                     {track.artist}
                                 </p>
                             </div>
 
-                            <div className="text-xs text-gray-600 dark:text-white/60 font-mono ml-2">
+                            <div className="text-xs text-ink-muted-60 dark:text-on-dark-soft font-mono ml-2">
                                 {track.duration}
                             </div>
                         </m.button>

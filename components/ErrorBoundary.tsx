@@ -1,5 +1,6 @@
 import React from 'react';
 import i18n, { defaultLocale, type Locale } from '../lib/i18n';
+import Section from './ui/Section';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -30,22 +31,22 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       const locale = this.props.locale || defaultLocale;
       const t = i18n.getFixedT(locale, 'common');
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-          <div className="text-center max-w-md">
-            <h1 className="text-heading-2 font-title text-gray-900 dark:text-white mb-4">
+        <Section tone="canvas" className="min-h-screen flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto">
+            <h1 className="font-display font-light text-display-md text-ink dark:text-on-dark mb-4">
               {t('errors.title')}
             </h1>
-            <p className="typo-section-lead text-gray-600 dark:text-gray-300 mb-8">
+            <p className="text-lead text-ink-muted-60 dark:text-on-dark-soft mb-8">
               {t('errors.description')}
             </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
+            <a
+              href={`/${locale}`}
+              className="inline-flex h-12 px-6 items-center rounded-pill bg-ink text-white font-medium hover:bg-canvas-deep transition-all"
             >
-              {t('actions.reload')}
-            </button>
+              {t('nav.home')}
+            </a>
           </div>
-        </div>
+        </Section>
       );
     }
 
