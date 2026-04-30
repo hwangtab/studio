@@ -38,3 +38,6 @@ reports/
 table-check.png
 lib/portfolio-meta.json
 
+# git worktrees (design renewal etc.)
+.worktrees/
+
