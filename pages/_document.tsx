@@ -61,7 +61,7 @@ class MyDocument extends Document<Props> {
           {/* eslint-disable-next-line @next/next/no-sync-scripts */}
           <script id="theme-init" src="/scripts/theme-init.js" />
         </Head>
-        <body className="bg-white dark:bg-gray-900">
+        <body className="bg-canvas dark:bg-canvas-deep">
           <Main />
           <NextScript />
         </body>

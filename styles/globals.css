@@ -40,17 +40,6 @@
     text-wrap: balance;
   }
 
-  :lang(ko) h1, :lang(ko) h2, :lang(ko) h3,
-  :lang(zh) h1, :lang(zh) h2, :lang(zh) h3,
-  :lang(th) h1, :lang(th) h2, :lang(th) h3 {
-    letter-spacing: 0;
-  }
-
-  :lang(en) h1, :lang(en) h2, :lang(es) h1, :lang(es) h2,
-  :lang(vi) h1, :lang(vi) h2, :lang(uz) h1, :lang(uz) h2 {
-    letter-spacing: -0.015em;
-  }
-
   p {
     text-wrap: balance;
   }
@@ -58,6 +47,20 @@
   h1 { @apply text-display-xl; }
   h2 { @apply text-display-lg; }
   h3 { @apply text-display-md; }
+
+  /* :lang() overrides MUST come after size tokens to win the cascade */
+  :lang(ko) h1, :lang(ko) h2, :lang(ko) h3, :lang(ko) h4, :lang(ko) h5, :lang(ko) h6,
+  :lang(zh) h1, :lang(zh) h2, :lang(zh) h3, :lang(zh) h4, :lang(zh) h5, :lang(zh) h6,
+  :lang(th) h1, :lang(th) h2, :lang(th) h3, :lang(th) h4, :lang(th) h5, :lang(th) h6 {
+    letter-spacing: 0;
+  }
+
+  :lang(en) h1, :lang(en) h2, :lang(en) h3,
+  :lang(es) h1, :lang(es) h2, :lang(es) h3,
+  :lang(vi) h1, :lang(vi) h2, :lang(vi) h3,
+  :lang(uz) h1, :lang(uz) h2, :lang(uz) h3 {
+    letter-spacing: -0.015em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
