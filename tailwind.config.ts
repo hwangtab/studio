@@ -50,6 +50,42 @@ const config: Config = {
           900: '#030712',
           950: '#020617',
         },
+        // Editorial Cinematic 시스템 (DESIGN.md §2). 옛 primary/secondary/accent는 Phase 9에서 제거.
+        canvas: {
+          DEFAULT: '#faf9f7',
+          soft: '#ffffff',
+          warm: '#f3f1ec',
+          deep: '#0c0a09',
+        },
+        ink: {
+          DEFAULT: '#1d1b1a',
+          'muted-80': '#3a3633',
+          'muted-60': '#615d59',
+          'muted-40': '#a39e98',
+        },
+        'on-dark': {
+          DEFAULT: '#ffffff',
+          soft: '#a8a29e',
+        },
+        'surface-dark-elevated': '#1c1917',
+        hairline: 'rgba(0,0,0,0.08)',
+        'hairline-strong': 'rgba(0,0,0,0.14)',
+        orb: {
+          mint: '#a7e5d3',
+          peach: '#f4c5a8',
+          lavender: '#c8b8e0',
+          sky: '#a8c8e8',
+          rose: '#e8b8c4',
+        },
+        link: {
+          DEFAULT: '#0a66c2',
+          'on-dark': '#62aef0',
+          focus: '#097fe8',
+        },
+        badge: {
+          bg: '#f2f9ff',
+          text: '#097fe8',
+        },
       },
       fontSize: {
         'display-1': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.04em', fontWeight: '700' }],
@@ -67,6 +103,15 @@ const config: Config = {
         'caption': ['0.75rem', { lineHeight: '1.6', fontWeight: '300' }],
         'text-thin': ['1rem', { lineHeight: '1.5', fontWeight: '100' }],
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
+        // Editorial Cinematic display scale (DESIGN.md §3). 옛 display-1/heading-1과 공존.
+        'display-mega': ['clamp(2.5rem, 6vw, 4rem)', { lineHeight: '1.05', letterSpacing: '-0.02em', fontWeight: '300' }],
+        'display-xl':   ['clamp(2rem, 4.5vw, 3rem)',  { lineHeight: '1.08', letterSpacing: '-0.015em', fontWeight: '300' }],
+        'display-lg':   ['clamp(1.75rem, 3.5vw, 2.25rem)', { lineHeight: '1.17', letterSpacing: '-0.01em', fontWeight: '300' }],
+        'display-md':   ['1.75rem', { lineHeight: '1.2', letterSpacing: '0', fontWeight: '400' }],
+        'lead':         ['clamp(1.125rem, 1.6vw, 1.375rem)', { lineHeight: '1.45', letterSpacing: '0', fontWeight: '400' }],
+        'title-md':     ['1.25rem', { lineHeight: '1.4', letterSpacing: '0', fontWeight: '500' }],
+        'title-sm':     ['1.125rem', { lineHeight: '1.45', letterSpacing: '0', fontWeight: '500' }],
+        'caption-upper': ['0.75rem', { lineHeight: '1.4', letterSpacing: '0.08em', fontWeight: '600' }],
       },
       fontFamily: {
         // 사이트 전반 단일 폰트(Noto Sans KR). var(--font-noto-sans-kr)는
@@ -80,6 +125,18 @@ const config: Config = {
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+      },
+      borderRadius: {
+        pill: '9999px',
+        whisper: '4px',
+        card: '12px',
+        hero: '16px',
+        orb: '24px',
+      },
+      boxShadow: {
+        card: '0 4px 18px rgba(0,0,0,0.04), 0 2px 7.85px rgba(0,0,0,0.027), 0 0.8px 2.93px rgba(0,0,0,0.02), 0 0.175px 1.04px rgba(0,0,0,0.01)',
+        deep: '0 1px 3px rgba(0,0,0,0.01), 0 3px 7px rgba(0,0,0,0.02), 0 7px 15px rgba(0,0,0,0.02), 0 14px 28px rgba(0,0,0,0.04), 0 23px 52px rgba(0,0,0,0.05)',
+        'card-hover': '0 8px 28px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04), 0 1.5px 5px rgba(0,0,0,0.03)',
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',
