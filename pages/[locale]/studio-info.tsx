@@ -3,7 +3,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Building, Mic2, ArrowRight } from 'lucide-react';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -16,7 +16,7 @@ import EquipmentSection from '../../components/studio/EquipmentSection';
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
-import { Section } from '../../components/ui/Section';
+import Section from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
@@ -135,13 +135,16 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },
         ]}
+        orbs={[
+          { color: 'mint', size: 500, top: '15%', right: '-60px', opacity: 0.3 },
+        ]}
       />
 
       {/* 스튜디오 소개 섹션 */}
-      <Section variant="default">
+      <Section tone="canvas">
         <m.div {...introSectionAnimation}>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <m.div {...introImageAnimation} className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group">
+            <m.div {...introImageAnimation} className="relative h-[400px] lg:h-[500px] rounded-card overflow-hidden shadow-2xl group border border-hairline">
               <ResponsiveImage
                 src="/images/hardware2.webp"
                 alt={t('studioInfo.intro.imageAlt')}
@@ -155,24 +158,22 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
 
             <m.div {...introTextAnimation}>
               <SectionHeading
-                icon={Building}
                 title={t('studioInfo.intro.title')}
-                subtitle={t('studioInfo.intro.subtitle')}
+                lead={t('studioInfo.intro.subtitle')}
                 align="left"
                 className="mb-8"
                 as="h2"
-                titleClassName="mb-2"
               />
               <div className="space-y-6">
-                <p className="typo-section-lead text-gray-900 dark:text-white border-l-4 border-primary pl-4 font-bold">
+                <p className="typo-section-lead text-ink dark:text-on-dark border-l-4 border-primary pl-4 font-bold">
                   {t('studioInfo.intro.quote')}
                 </p>
-                <p className="typo-card-body leading-loose">
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft leading-loose">
                   {t('studioInfo.intro.paragraphs.0')}
                   <br className="mb-2" />
                   {t('studioInfo.intro.paragraphs.1')}
                 </p>
-                <p className="typo-card-body leading-loose">
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft leading-loose">
                   {t('studioInfo.intro.paragraphs.2')}
                 </p>
               </div>
@@ -182,12 +183,11 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
       </Section>
 
       {/* 장비 목록 섹션 */}
-      <Section variant="alternate">
+      <Section tone="warm">
         <m.div {...equipmentSectionAnimation}>
           <SectionHeading
-            icon={Mic2}
+            eyebrow="EQUIPMENT"
             title={t('studioInfo.equipment.title')}
-            titleClassName="text-heading-1 font-title bg-clip-text text-transparent bg-gradient-to-r from-primary-dark via-secondary to-accent"
             className="mb-12 py-4"
           />
 
@@ -196,7 +196,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
             {studioImages.map((image, index) => (
               <m.div
                 key={index}
-                className="rounded-lg overflow-hidden shadow-md h-48"
+                className="rounded-card overflow-hidden border border-hairline shadow-md h-48"
                 whileHover={HOVER_SCALE}
                 transition={{ duration: 0.3 }}
               >
@@ -228,9 +228,8 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
 
       {/* Locale-specific content block (non-KO hubs only) */}
       {hubLocaleContent && (
-        <Section variant="alternate">
+        <Section tone="canvas">
           <SectionHeading
-            icon={Headphones}
             title={hubLocaleContent.title}
             className="mb-8"
           />
@@ -238,7 +237,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
             {hubLocaleContent.items.map((item) => (
               <BaseCard key={item.heading} variant="default" className="p-6">
                 <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{item.body}</p>
               </BaseCard>
             ))}
           </div>
@@ -249,7 +248,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="default" className="py-10">
+      <Section tone="warm" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
@@ -289,7 +288,11 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         </div>
       </Section>
 
-      <Section variant="default" className="py-16">
+      <Section
+        tone="deep"
+        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]}
+        className="py-16"
+      >
         <ContactCTA
           locale={locale}
           title={

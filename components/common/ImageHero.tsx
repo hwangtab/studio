@@ -1,8 +1,19 @@
 import React from 'react';
 import ResponsiveImage from '../ResponsiveImage';
 import Breadcrumb from '../ui/Breadcrumb';
+import GradientOrb, { type OrbColor } from '../ui/GradientOrb';
 import type { Locale } from '../../lib/i18n';
 import type { Breadcrumb as BreadcrumbItem } from '../../types/data';
+
+interface ImageHeroOrb {
+  color: OrbColor;
+  size: number;
+  top?: string;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  opacity?: number;
+}
 
 interface ImageHeroProps {
   title: React.ReactNode;
@@ -17,6 +28,8 @@ interface ImageHeroProps {
   locale?: Locale;
   priority?: boolean;
   breadcrumbItems?: BreadcrumbItem[];
+  /** Pass orbs for ambient atmospheric accents */
+  orbs?: ImageHeroOrb[];
 }
 
 const ImageHero = ({
@@ -32,6 +45,7 @@ const ImageHero = ({
   locale = 'ko',
   priority = false,
   breadcrumbItems,
+  orbs,
 }: ImageHeroProps) => {
   const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
 
@@ -69,6 +83,17 @@ const ImageHero = ({
       <div
         className={`absolute inset-0 z-10 ${overlayGradient ? `bg-gradient-to-b ${overlayGradient}` : cinematicOverlay}`}
       />
+
+      {/* Atmospheric orb accents */}
+      {orbs?.map((o, i) => (
+        <GradientOrb
+          key={i}
+          color={o.color}
+          size={o.size}
+          opacity={o.opacity ?? 0.35}
+          style={{ top: o.top, left: o.left, right: o.right, bottom: o.bottom, zIndex: 15 }}
+        />
+      ))}
 
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
         {/* framer-motion 래퍼 제거: 모바일 Lighthouse에서 LCP element(H1 내 span)의

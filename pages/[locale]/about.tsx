@@ -14,7 +14,7 @@ const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 import { getServicesData } from '../../data/services';
 import { getHubLocaleContent } from '../../data/faq';
-import { Section } from '../../components/ui/Section';
+import Section from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -110,15 +110,18 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.about'), path: `/${locale}/about` },
           ],
+          orbs: [
+            { color: 'peach', size: 500, top: '10%', left: '-80px', opacity: 0.3 },
+            { color: 'sky', size: 400, top: '20%', right: '-60px', opacity: 0.25 },
+          ],
         }}
       />
 
 
       {/* Locale-specific content block (non-KO hubs only) */}
       {hubLocaleContent && (
-        <Section variant="alternate">
+        <Section tone="warm">
           <SectionHeading
-            icon={Globe}
             title={hubLocaleContent.title}
             className="mb-8"
           />
@@ -126,18 +129,17 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             {hubLocaleContent.items.map((item) => (
               <BaseCard key={item.heading} variant="default" className="p-6">
                 <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{item.body}</p>
               </BaseCard>
             ))}
           </div>
         </Section>
       )}
 
-      <Section variant="alternate">
+      <Section tone="warm">
         <SectionHeading
-          icon={Music}
           title={t('about.serviceTitle')}
-          subtitle={t('about.serviceSubtitle')}
+          lead={t('about.serviceSubtitle')}
           className="mb-12"
         />
 
@@ -155,11 +157,10 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         </div>
       </Section>
 
-      <Section variant="default">
+      <Section tone="canvas">
         <SectionHeading
-          icon={Activity}
           title={t('about.processTitle')}
-          subtitle={t('about.processSubtitle')}
+          lead={t('about.processSubtitle')}
           className="mb-12"
         />
 
@@ -176,11 +177,10 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         </div>
       </Section>
 
-      <Section variant="alternate">
+      <Section tone="warm">
         <SectionHeading
-          icon={Award}
           title={t('about.differenceTitle')}
-          subtitle={t('about.differenceSubtitle')}
+          lead={t('about.differenceSubtitle')}
           className="mb-12"
         />
 
@@ -189,23 +189,23 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             variant="default"
             className="p-6"
           >
-            <h3 className="typo-card-title mb-4">{t('about.package.title')}</h3>
+            <h3 className="typo-card-title mb-4 text-ink dark:text-on-dark">{t('about.package.title')}</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body">{t('about.package.items.0')}</p>
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.0')}</p>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body">{t('about.package.items.1')}</p>
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.1')}</p>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body">{t('about.package.items.2')}</p>
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.2')}</p>
               </li>
               <li className="flex items-start">
                 <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body">{t('about.package.items.3')}</p>
+                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.3')}</p>
               </li>
             </ul>
           </BaseCard>
@@ -217,14 +217,14 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                 <BaseCard
                   key={index}
                   variant="default"
-                  delay={0.2 + 0.1 * index}
+                  hover
                   className="p-4"
                 >
                   <div className="flex items-center mb-2">
                     <Icon className="text-primary dark:text-primary-light mr-2" aria-hidden="true" />
-                    <h3 className="typo-card-subtitle">{advantage.title}</h3>
+                    <h3 className="typo-card-subtitle text-ink dark:text-on-dark">{advantage.title}</h3>
                   </div>
-                  <p className="typo-card-body">{advantage.description}</p>
+                  <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{advantage.description}</p>
                 </BaseCard>
               );
             })}
@@ -232,74 +232,89 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         </div>
       </Section>
 
-      <Section variant="default">
+      <Section tone="canvas">
         <SectionHeading
-          icon={Headphones}
           title={t('contact.title')}
-          subtitle={t('contact.subtitle')}
+          lead={t('contact.subtitle')}
           className="mb-12"
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <BaseCard
-            delay={0.1}
-            className="p-6 text-center cursor-pointer"
+          <a
             href={`tel:${siteConfig.contact.phone}`}
+            className="block"
           >
-            <div className="flex justify-center mb-4">
-              <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Phone className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+            <BaseCard
+              hover
+              className="p-6 text-center"
+            >
+              <div className="flex justify-center mb-4">
+                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
+                  <Phone className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                </div>
               </div>
-            </div>
-            <h3 className="typo-card-subtitle mb-2">{t('actions.call')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.phone}</p>
-          </BaseCard>
+              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.call')}</h3>
+              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.phone}</p>
+            </BaseCard>
+          </a>
 
-          <BaseCard
-            delay={0.2}
-            className="p-6 text-center cursor-pointer"
+          <a
             href={`mailto:${siteConfig.contact.email}`}
+            className="block"
           >
-            <div className="flex justify-center mb-4">
-              <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Mail className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+            <BaseCard
+              hover
+              className="p-6 text-center"
+            >
+              <div className="flex justify-center mb-4">
+                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
+                  <Mail className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                </div>
               </div>
-            </div>
-            <h3 className="typo-card-subtitle mb-2">{t('actions.email')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.email}</p>
-          </BaseCard>
+              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.email')}</h3>
+              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.email}</p>
+            </BaseCard>
+          </a>
 
-          <BaseCard
-            delay={0.3}
-            className="p-6 text-center cursor-pointer"
+          <a
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
             rel="noopener noreferrer"
+            className="block"
           >
-            <div className="flex justify-center mb-4">
-              <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MessageCircle className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+            <BaseCard
+              hover
+              className="p-6 text-center"
+            >
+              <div className="flex justify-center mb-4">
+                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
+                  <MessageCircle className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                </div>
               </div>
-            </div>
-            <h3 className="typo-card-subtitle mb-2">{t('actions.kakao')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{t('contact.info.kakao')}</p>
-          </BaseCard>
+              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.kakao')}</h3>
+              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{t('contact.info.kakao')}</p>
+            </BaseCard>
+          </a>
 
-          <BaseCard
-            delay={0.4}
-            className="p-6 text-center cursor-pointer"
+          <a
             href={siteConfig.contact.naverMapUrl}
             target="_blank"
             rel="noopener noreferrer"
+            className="block"
           >
-            <div className="flex justify-center mb-4">
-              <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MapPin className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+            <BaseCard
+              hover
+              className="p-6 text-center"
+            >
+              <div className="flex justify-center mb-4">
+                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
+                  <MapPin className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                </div>
               </div>
-            </div>
-            <h3 className="typo-card-subtitle mb-2">{t('actions.location')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.address}</p>
-          </BaseCard>
+              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.location')}</h3>
+              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.address}</p>
+            </BaseCard>
+          </a>
         </div>
       </Section>
 
@@ -308,7 +323,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
       {/* 서비스 바로가기 — 본문 fold 안 button pill들. next/link 자동 prefetch가
           대상 페이지의 SSG JSON·청크를 동시 다운로드하지 않도록 prefetch={false}.
           hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 그대로 작동. */}
-      <Section variant="alternate" className="py-10">
+      <Section tone="warm" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
@@ -348,7 +363,11 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         </div>
       </Section>
 
-      <Section variant="default" className="py-16">
+      <Section
+        tone="deep"
+        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]}
+        className="py-16"
+      >
         <ContactCTA
           locale={locale}
           title={
