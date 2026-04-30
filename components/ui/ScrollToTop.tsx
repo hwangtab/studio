@@ -40,16 +40,16 @@ export const ScrollToTop = ({ locale = defaultLocale }: ScrollToTopProps) => {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          className="fixed bottom-8 right-8 z-50"
+          className="fixed bottom-6 right-6 z-40"
         >
           <Button
             variant="primary"
             size="icon"
             onClick={scrollToTop}
-            className="rounded-full shadow-lg hover:shadow-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800"
+            className="shadow-deep"
             aria-label={t('actions.scrollToTop')}
           >
-            <ArrowUp size={20} className="text-gray-600 dark:text-gray-300" />
+            <ArrowUp size={20} />
           </Button>
         </m.div>
       )}

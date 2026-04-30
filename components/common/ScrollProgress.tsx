@@ -15,9 +15,13 @@ const ScrollProgressBar: React.FC = () => {
 
     return (
         <m.div
-            className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent z-[60] origin-left"
-            style={{ scaleX }}
-        />
+            className="fixed top-0 left-0 right-0 z-50 bg-hairline h-[3px]"
+        >
+            <m.div
+                className="h-full bg-link origin-left"
+                style={{ scaleX }}
+            />
+        </m.div>
     );
 };
 

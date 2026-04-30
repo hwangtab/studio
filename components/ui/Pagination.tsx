@@ -44,14 +44,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
     const pages = getPageNumbers();
 
     return (
-        <nav className={`flex justify-center items-center space-x-2 ${className}`} aria-label="Pagination">
+        <nav className={`flex items-center justify-center gap-2 ${className}`} aria-label="Pagination">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`flex items-center justify-center min-h-[44px] px-3 py-2 rounded-md text-sm font-medium transition-colors
+                className={`flex items-center justify-center h-10 min-w-[40px] px-3 rounded-pill font-medium transition-colors
           ${currentPage === 1
-                        ? 'text-gray-300 cursor-not-allowed dark:text-gray-600'
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
+                        ? 'border border-hairline-strong text-ink dark:border-white/20 dark:text-on-dark opacity-50 cursor-not-allowed'
+                        : 'border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:border-white/20 dark:text-on-dark dark:hover:bg-white/[0.06]'
                     }`}
                 aria-label={t('pagination.previousPage')}
             >
@@ -64,10 +64,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={`flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md text-sm font-medium transition-colors
+                    className={`flex items-center justify-center h-10 min-w-[40px] px-3 rounded-pill font-medium transition-colors
             ${currentPage === page
-                            ? 'bg-primary text-white pointer-events-none'
-                            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
+                            ? 'bg-ink text-white pointer-events-none dark:bg-white dark:text-ink'
+                            : 'border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:border-white/20 dark:text-on-dark dark:hover:bg-white/[0.06]'
                         }`}
                     aria-current={currentPage === page ? 'page' : undefined}
                 >
@@ -78,10 +78,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`flex items-center justify-center min-h-[44px] px-3 py-2 rounded-md text-sm font-medium transition-colors
+                className={`flex items-center justify-center h-10 min-w-[40px] px-3 rounded-pill font-medium transition-colors
           ${currentPage === totalPages
-                        ? 'text-gray-300 cursor-not-allowed dark:text-gray-600'
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
+                        ? 'border border-hairline-strong text-ink dark:border-white/20 dark:text-on-dark opacity-50 cursor-not-allowed'
+                        : 'border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:border-white/20 dark:text-on-dark dark:hover:bg-white/[0.06]'
                     }`}
                 aria-label={t('pagination.nextPage')}
             >

@@ -12,19 +12,19 @@ const Breadcrumb = ({ items, className }: BreadcrumbProps) => {
   if (items.length <= 1) return null;
 
   return (
-    <nav aria-label="breadcrumb" className={cn('text-sm text-gray-500 dark:text-gray-400', className)}>
+    <nav aria-label="breadcrumb" className={cn('text-caption text-ink-muted-60 dark:text-on-dark-soft', className)}>
       <ol className="flex items-center flex-wrap gap-1">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
             <li key={item.path} className="flex items-center">
               {index > 0 && (
-                <ChevronRight size={14} className="mx-1 flex-shrink-0" aria-hidden="true" />
+                <ChevronRight size={14} className="mx-2 flex-shrink-0 text-ink-muted-40" aria-hidden="true" />
               )}
               {isLast ? (
                 <span
                   aria-current="page"
-                  className="font-medium text-gray-700 dark:text-gray-200 truncate max-w-[200px] sm:max-w-xs"
+                  className="font-medium text-ink dark:text-on-dark truncate max-w-[200px] sm:max-w-xs"
                 >
                   {item.name}
                 </span>
@@ -35,7 +35,7 @@ const Breadcrumb = ({ items, className }: BreadcrumbProps) => {
                 <Link
                   href={item.path}
                   prefetch={false}
-                  className="hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="text-ink-muted-60 hover:text-ink dark:hover:text-on-dark transition-colors"
                 >
                   {item.name}
                 </Link>
