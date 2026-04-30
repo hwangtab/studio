@@ -37,7 +37,6 @@ const GradientOrb: React.FC<GradientOrbProps> = ({
         width: size,
         height: size,
         borderRadius: '50%',
-        backgroundColor: hex,
         backgroundImage: `radial-gradient(circle, ${hex} 0%, transparent 70%)`,
         filter: `blur(${blur}px)`,
         opacity,
