@@ -33,7 +33,7 @@ const montserrat = Montserrat({
 // 한글 사용 글자가 포함된 chunk만 lazy fetch되어 페이지당 부담 미미.
 const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['400', '700', '900'],
+  weight: ['300', '400', '500', '700'],
   display: 'swap',
   variable: '--font-noto-sans-kr',
 });
