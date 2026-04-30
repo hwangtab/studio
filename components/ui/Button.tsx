@@ -2,50 +2,46 @@ import React from 'react';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
+// Editorial Cinematic CTA (DESIGN.md §4). 모든 variant는 pill, height 40-44px (Apple HIG 터치).
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-xl font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  'inline-flex items-center justify-center font-medium rounded-pill transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]',
   {
     variants: {
       variant: {
-        solid: "bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0",
-        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40",
-        ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
-        secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700",
+        primary:
+          'bg-ink text-white hover:bg-canvas-deep dark:bg-white dark:text-ink dark:hover:bg-on-dark-soft',
+        outline:
+          'bg-transparent text-ink border border-hairline-strong hover:bg-ink/[0.04] dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]',
+        onDark:
+          'bg-white text-ink hover:bg-on-dark-soft',
+        text:
+          'bg-transparent text-ink hover:underline underline-offset-4 dark:text-on-dark',
       },
       size: {
-        sm: "h-11 px-3 text-sm",
-        md: "h-11 px-5 text-base",
-        lg: "h-14 px-8 text-lg",
-        icon: "h-11 w-11",
+        sm: 'h-10 px-4 text-[14px]',
+        md: 'h-11 px-5 text-[15px]',
+        lg: 'h-14 px-7 text-[17px]',
+        icon: 'h-11 w-11 p-0',
       },
-      fullWidth: {
-        true: "w-full",
-      }
+      fullWidth: { true: 'w-full' },
     },
-    defaultVariants: {
-      variant: "solid",
-      size: "md",
-    },
+    defaultVariants: { variant: 'primary', size: 'md' },
   }
 );
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
+    VariantProps<typeof buttonVariants> {}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, fullWidth, ...props }, ref) => {
-    return (
-      <button
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
+  ({ className, variant, size, fullWidth, ...props }, ref) => (
+    <button
+      ref={ref}
+      className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+      {...props}
+    />
+  )
 );
-Button.displayName = "Button";
+Button.displayName = 'Button';
 
 export { Button, buttonVariants };
