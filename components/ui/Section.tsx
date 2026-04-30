@@ -1,47 +1,48 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
-
-export type SectionVariant = 'default' | 'alternate';
+import GradientOrb, { type OrbColor } from './GradientOrb';
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: SectionVariant;
-  container?: boolean; // If true, wraps children in a container
-  /** true면 content-visibility: auto를 적용 — 스크롤로 뷰포트에 들어오기 전까지
-   *  layout/paint 작업을 연기한다. 긴 페이지의 below-fold 섹션에 쓰면 초기
-   *  Style & Layout 시간을 크게 줄일 수 있다 (practice-room 등). */
-  defer?: boolean;
+  tone?: 'canvas' | 'warm' | 'deep';
+  orbs?: Array<{ color: OrbColor; size: number; top?: string; left?: string; right?: string; bottom?: string; opacity?: number }>;
+  containerSize?: 'default' | 'wide' | 'narrow';
 }
 
-export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ className, variant = 'default', container = true, defer = false, style, children, ...props }, ref) => {
-    const bgClass =
-      variant === 'alternate'
-        ? 'bg-gray-50 dark:bg-gray-950/50' // Slightly distinctive from gray-900 but not pitch black
-        : 'bg-white dark:bg-gray-900';
+const TONE_BG = {
+  canvas: 'bg-canvas text-ink dark:bg-canvas-deep dark:text-on-dark',
+  warm: 'bg-canvas-warm text-ink dark:bg-surface-dark-elevated dark:text-on-dark',
+  deep: 'bg-canvas-deep text-on-dark', // 다크 시네마틱 — 라이트모드에서도 다크 유지
+};
 
-    // content-visibility: auto + contain-intrinsic-size로 뷰포트 밖 섹션의 render 생략.
-    // 500px는 대략적 placeholder 높이(스크롤바 안정화용), 스크롤 도달 시 실제 크기로 교체.
-    const deferStyle: React.CSSProperties | undefined = defer
-      ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 500px' }
-      : undefined;
+const CONTAINER = {
+  default: 'max-w-[1200px]',
+  wide: 'max-w-[1400px]',
+  narrow: 'max-w-[820px]',
+};
 
-    return (
-      <section
-        ref={ref}
-        className={cn('py-16 md:py-24', bgClass, className)}
-        style={deferStyle ? { ...deferStyle, ...style } : style}
-        {...props}
-      >
-        {container ? (
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            {children}
-          </div>
-        ) : (
-          children
-        )}
-      </section>
-    );
-  }
+// DESIGN.md §5 Layout: 96~120px vertical rhythm, alternation, atmospheric orb
+const Section = React.forwardRef<HTMLElement, SectionProps>(
+  ({ className, tone = 'canvas', orbs, containerSize = 'default', children, ...props }, ref) => (
+    <section
+      ref={ref}
+      className={cn('relative overflow-hidden py-14 md:py-20 lg:py-24', TONE_BG[tone], className)}
+      {...props}
+    >
+      {orbs?.map((o, i) => (
+        <GradientOrb
+          key={i}
+          color={o.color}
+          size={o.size}
+          opacity={o.opacity ?? 0.4}
+          style={{ top: o.top, left: o.left, right: o.right, bottom: o.bottom }}
+        />
+      ))}
+      <div className={cn('relative z-10 mx-auto px-4 sm:px-6 lg:px-12', CONTAINER[containerSize])}>
+        {children}
+      </div>
+    </section>
+  )
 );
-
 Section.displayName = 'Section';
+
+export default Section;

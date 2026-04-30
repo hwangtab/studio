@@ -1,71 +1,33 @@
 import React from 'react';
-import { m } from 'framer-motion';
 import { cn } from '../../lib/utils';
-import { SCROLL_REVEAL } from '../../utils/animationUtils';
-
 
 interface SectionHeadingProps {
-  icon?: React.ElementType<{ className?: string }>;
+  eyebrow?: string;
   title: React.ReactNode;
-  subtitle?: React.ReactNode;
-  align?: 'center' | 'left';
+  lead?: React.ReactNode;
+  align?: 'left' | 'center';
   className?: string;
-  as?: 'h1' | 'h2' | 'h3' | 'h4';
-  titleClassName?: string;
+  as?: 'h1' | 'h2' | 'h3';
 }
 
-const SectionHeading = ({
-  icon: Icon,
+// DESIGN.md §3 Display weight 300, eyebrow는 caption-upper (영문 권장)
+const SectionHeading: React.FC<SectionHeadingProps> = ({
+  eyebrow,
   title,
-  subtitle,
-  align = 'center',
+  lead,
+  align = 'left',
   className,
-  as: Component = 'h2',
-  titleClassName
-}: SectionHeadingProps) => {
-
-  const alignmentClasses = {
-    center: 'text-center',
-    left: 'text-left',
-  };
-
-  return (
-    <m.div
-      className={cn(
-        alignmentClasses[align] ?? alignmentClasses.center,
-        "mb-12",
-        className
-      )}
-      initial="initial"
-      whileInView="whileInView"
-      viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-      variants={SCROLL_REVEAL}
-    >
-      {Icon && (
-        <div className={cn(
-          "inline-flex items-center justify-center p-3 bg-primary/10 dark:bg-primary/20 rounded-full mb-4",
-          align === 'center' ? "mx-auto" : "" // Only center if alignment is center
-        )} aria-hidden="true">
-          {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
-        </div>
-      )}
-
-      <Component
-        className={cn(
-          "typo-section-title text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mb-3 break-words [overflow-wrap:anywhere]",
-          titleClassName
-        )}
-      >
-        {title}
-      </Component>
-
-      {subtitle && (
-        <p className={cn("typo-section-lead max-w-2xl break-words [overflow-wrap:anywhere]", align === 'center' ? "mx-auto" : "")}>
-          {subtitle}
-        </p>
-      )}
-    </m.div>
-  );
-};
+  as: Tag = 'h2',
+}) => (
+  <header className={cn(align === 'center' ? 'text-center mx-auto max-w-3xl' : 'max-w-3xl', 'mb-10 md:mb-14', className)}>
+    {eyebrow && (
+      <p className="text-caption-upper uppercase text-ink-muted-60 dark:text-on-dark-soft mb-3">{eyebrow}</p>
+    )}
+    <Tag className="font-display font-light text-display-xl text-ink dark:text-on-dark">
+      {title}
+    </Tag>
+    {lead && <p className="mt-5 text-lead text-ink-muted-80 dark:text-on-dark-soft">{lead}</p>}
+  </header>
+);
 
 export default SectionHeading;

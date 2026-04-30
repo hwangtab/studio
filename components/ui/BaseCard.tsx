@@ -1,106 +1,33 @@
-import { cn } from '../../lib/utils';
 import React from 'react';
-import Link from 'next/link';
-import { m } from 'framer-motion';
-import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
+import { cn } from '../../lib/utils';
 
-interface BaseCardProps {
-    children: React.ReactNode;
-    className?: string;
-    href?: string;
-    onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-    target?: string;
-    rel?: string;
-    delay?: number;
-    variant?: 'default' | 'highlight' | 'outline';
-    hoverEffect?: boolean;
+interface BaseCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'featured' | 'orb';
+  hover?: boolean;
+  as?: 'div' | 'article' | 'section';
 }
 
-const BaseCard = React.memo(({
-    children,
-    className = '',
-    href,
-    onClick,
-    target,
-    rel,
-    delay = 0,
-    variant = 'default',
-    hoverEffect = true,
-}: BaseCardProps) => {
-    const baseStyles = "relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden";
-
-    const variants = {
-        default: "shadow-md border border-gray-100 dark:border-gray-700",
-        highlight: "shadow-lg border border-primary/20 dark:border-primary-light/20 ring-1 ring-primary/10 dark:ring-primary-light/10",
-        outline: "border border-gray-200 dark:border-gray-700 bg-transparent",
-    };
-
-    const animationProps = {
-        ...FADE_IN_UP,
-        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
-        transition: { ...FADE_IN_UP.transition, delay }
-    };
-
-    const isInteractive = Boolean(onClick || href);
-    const interactiveStyles = isInteractive
-        ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-        : "";
-    const cardClassName = cn(baseStyles, variants[variant], interactiveStyles, className);
-    const isExternal = Boolean(href && /^(https?:|mailto:|tel:)/.test(href));
-
-    if (href) {
-        const resolvedRel = target === '_blank' ? (rel ?? 'noopener noreferrer nofollow') : rel;
-        const anchorProps = {
-            className: cardClassName,
-            onClick,
-            target,
-            rel: resolvedRel,
-        };
-
-        if (isExternal) {
-            return (
-                <m.a href={href} {...animationProps} {...anchorProps}>
-                    {children}
-                </m.a>
-            );
-        }
-
-        return (
-            // prefetch={false}: BaseCard는 FeatureCard·PricingCard·ReviewSection·
-            // QuickAnswers의 wrapper로 listing 형태로 다수 인스턴스가 viewport에
-            // 동시 등장. 기본 prefetch면 카드 수만큼 SSG JSON·청크가 동시 다운로드.
-            // hover/focus 시 prefetch는 next/link 휴리스틱으로 유지.
-            <Link href={href} prefetch={false} legacyBehavior passHref>
-                <m.a {...animationProps} {...anchorProps}>
-                    {children}
-                </m.a>
-            </Link>
-        );
-    }
-
-    if (onClick) {
-        return (
-            <m.button
-                type="button"
-                className={cardClassName}
-                {...animationProps}
-                onClick={onClick}
-            >
-                {children}
-            </m.button>
-        );
-    }
-
+// DESIGN.md §4 Cards: whisper border + shadow-card + 12/16/24 radius
+const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
+  ({ className, variant = 'default', hover = false, as: Tag = 'div', ...props }, ref) => {
+    const radius = variant === 'orb' ? 'rounded-orb' : variant === 'featured' ? 'rounded-hero' : 'rounded-card';
+    const padding = variant === 'orb' ? 'p-8' : variant === 'featured' ? 'p-8' : 'p-6';
     return (
-        <m.div
-            className={cardClassName}
-            {...animationProps}
-        >
-            {children}
-        </m.div>
+      <Tag
+        ref={ref as React.Ref<HTMLDivElement>}
+        className={cn(
+          'bg-canvas-soft border border-hairline shadow-card',
+          radius,
+          padding,
+          'dark:bg-surface-dark-elevated dark:border-white/10',
+          hover && 'transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5',
+          className
+        )}
+        {...props}
+      />
     );
-});
-
+  }
+);
 BaseCard.displayName = 'BaseCard';
 
 export default BaseCard;
