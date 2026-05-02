@@ -11,7 +11,7 @@ const homeData = {
       titlePrefix: "당신의 음악에",
       titleHighlight: "생명",
       titleSuffix: "을 불어넣는 공간",
-      subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드. 스튜디오 놀에서 경험하세요.",
+      subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드.\n스튜디오 놀에서 경험하세요.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
@@ -91,7 +91,7 @@ const homeData = {
       titlePrefix: "Breathing",
       titleHighlight: "Life",
       titleSuffix: "into Your Music",
-      subtitle: "Complete your unique sound with high-end equipment and professional engineering. Experience it at Studio NOL.",
+      subtitle: "Complete your unique sound with high-end equipment and professional engineering.\nExperience it at Studio NOL.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
@@ -181,7 +181,7 @@ const homeData = {
       titlePrefix: "为您的音乐注入",
       titleHighlight: "生命",
       titleSuffix: "的空间",
-      subtitle: "通过高端设备和专业工程师的触感，完成您独有的声音。请在 Studio NOL 体验。",
+      subtitle: "通过高端设备和专业工程师的触感，完成您独有的声音。\n请在 Studio NOL 体验。",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
@@ -271,7 +271,7 @@ const homeData = {
       titlePrefix: "Dando",
       titleHighlight: "Vida",
       titleSuffix: "a Tu Música",
-      subtitle: "Completa tu sonido único con equipos de alta gama e ingeniería profesional. Vívelo en Studio NOL.",
+      subtitle: "Completa tu sonido único con equipos de alta gama e ingeniería profesional.\nVívelo en Studio NOL.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
@@ -361,7 +361,7 @@ const homeData = {
       titlePrefix: "Thổi",
       titleHighlight: "Sự sống",
       titleSuffix: "vào âm nhạc của bạn",
-      subtitle: "Hoàn thiện âm thanh với thiết bị cao cấp và kỹ sư chuyên nghiệp tại Yeonsinnae, Seoul. Trải nghiệm tại Studio NOL.",
+      subtitle: "Hoàn thiện âm thanh với thiết bị cao cấp và kỹ sư chuyên nghiệp tại Yeonsinnae, Seoul.\nTrải nghiệm tại Studio NOL.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
@@ -451,7 +451,7 @@ const homeData = {
       titlePrefix: "เติม",
       titleHighlight: "ชีวิต",
       titleSuffix: "ให้กับดนตรีของคุณ",
-      subtitle: "เติมเต็มซาวด์ด้วยอุปกรณ์ไฮเอนด์และวิศวกรมืออาชีพ ใน Yeonsinnae, Seoul · Studio NOL",
+      subtitle: "เติมเต็มซาวด์ด้วยอุปกรณ์ไฮเอนด์และวิศวกรมืออาชีพ\nใน Yeonsinnae, Seoul · Studio NOL",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
@@ -541,7 +541,7 @@ const homeData = {
       titlePrefix: "Musiqangizga",
       titleHighlight: "hayot",
       titleSuffix: "bag'ishlaydigan makon",
-      subtitle: "Yeonsinnae, Seul shahrida professional muhandislar va yuqori sifatli uskunalar bilan o'z tovushingizni yarating.",
+      subtitle: "Yeonsinnae, Seul shahrida professional muhandislar va yuqori sifatli uskunalar bilan\no'z tovushingizni yarating.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
