@@ -277,6 +277,12 @@ const validationCodeMessageMap: Record<ContactValidationCode, string> = {
 const toOptionalString = (value: unknown): string | undefined =>
     typeof value === 'string' ? value : undefined;
 
+const toSafeOptionalString = (value: unknown, maxLength = 255): string | undefined => {
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.slice(0, maxLength);
+    return trimmed ? validator.escape(trimmed) : undefined;
+};
+
 const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<string, unknown> | null => {
     if (req.method !== 'POST') {
         res.status(405).json({ message: 'Method not allowed' });
@@ -358,10 +364,10 @@ const validateAndSanitizeContactPayload = (
             email: validator.normalizeEmail(validationResult.normalized.email) || validationResult.normalized.email,
             message: validator.escape(validationResult.normalized.message),
             phone: validator.escape(validationResult.normalized.phone),
-            utm_source: toOptionalString(payload.utm_source),
-            utm_medium: toOptionalString(payload.utm_medium),
-            utm_campaign: toOptionalString(payload.utm_campaign),
-            referrer: toOptionalString(payload.referrer),
+            utm_source: toSafeOptionalString(payload.utm_source),
+            utm_medium: toSafeOptionalString(payload.utm_medium),
+            utm_campaign: toSafeOptionalString(payload.utm_campaign),
+            referrer: toSafeOptionalString(payload.referrer, 2048),
         },
     };
 };

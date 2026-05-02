@@ -106,7 +106,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
       >
         {images.map((image, index) => (
           <div
-            key={index}
+            key={`${image.src}-${index}`}
             className="flex-none w-[85%] sm:w-[45%] lg:w-[31%] snap-center"
           >
             <m.div
@@ -139,9 +139,9 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
       <div className="flex justify-center gap-2 mt-4">
         {images.length > 1 && (
           <div className="flex gap-2">
-            {images.map((_, i) => (
+            {images.map((image, i) => (
               <button
-                key={i}
+                key={`dot-${image.src}-${i}`}
                 type="button"
                 onClick={() => scrollToImage(i)}
                 className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${i === activeIndex

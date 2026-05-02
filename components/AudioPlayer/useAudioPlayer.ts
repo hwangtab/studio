@@ -74,8 +74,15 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             }
         };
 
+        const handleEnded = () => {
+            if (isEffectMounted && isMounted.current) {
+                setIsPlaying(false);
+            }
+        };
+
         audio.addEventListener('loadedmetadata', setAudioData);
         audio.addEventListener('timeupdate', setAudioTime);
+        audio.addEventListener('ended', handleEnded);
 
         // Handle playback
         if (isPlaying) {
@@ -99,6 +106,7 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             isEffectMounted = false;
             audio.removeEventListener('loadedmetadata', setAudioData);
             audio.removeEventListener('timeupdate', setAudioTime);
+            audio.removeEventListener('ended', handleEnded);
         };
     }, [currentTrack, tracks, isPlaying]);
 

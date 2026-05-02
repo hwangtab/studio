@@ -255,7 +255,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const categories = getCategories(locale);
 
   if (!item) {
-    return { notFound: true };
+    return { notFound: true, revalidate: 3600 };
   }
 
   return buildPageStaticProps(

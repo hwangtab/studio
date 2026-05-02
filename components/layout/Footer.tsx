@@ -6,8 +6,6 @@ import { type Locale } from '../../lib/i18n';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { trackLeadEvent } from '../../utils/analytics';
 
-const CURRENT_YEAR = new Date().getFullYear();
-
 interface FooterProps {
   locale: Locale;
 }
@@ -26,6 +24,7 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
 export const Footer = ({ locale }: FooterProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title">
@@ -40,7 +39,7 @@ export const Footer = ({ locale }: FooterProps) => {
               {t('footer.tagline')}
             </p>
             <p className="typo-footer-meta">
-              {CURRENT_YEAR} {siteConfig.name}. {t('footer.rights')}
+              {currentYear} {siteConfig.name}. {t('footer.rights')}
             </p>
             <Link
               href={`/${locale}/privacy-policy`}
