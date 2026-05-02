@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config, PluginAPI } from 'tailwindcss/types/config';
 
 const config: Config = {
   content: [
@@ -57,6 +57,7 @@ const config: Config = {
         'heading-1': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
         'heading-2': ['2.5rem', { lineHeight: '1.25', letterSpacing: '-0.02em', fontWeight: '700' }],
         'heading-3': ['1.5rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '500' }],
+        'heading-4': ['1.25rem', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '700' }],
         'subtitle-1': ['1.25rem', { lineHeight: '1.4', fontWeight: '500' }],
         'subtitle-2': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],
         'body-1': ['1rem', { lineHeight: '1.6', fontWeight: '300' }],
@@ -74,9 +75,9 @@ const config: Config = {
         // 빌드 시 Google Fonts에서 다운로드 → _next/static/media에 저장. 런타임은 자체 도메인 서빙.
         // fallback은 시스템 한글 폰트 → 시스템 폰트.
         sans: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        title: ['var(--font-noto-sans-kr)', 'sans-serif'],
-        display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', 'sans-serif'],
-        logo: ['var(--font-noto-sans-kr)', 'sans-serif'],
+        title: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        logo: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
@@ -93,7 +94,7 @@ const config: Config = {
   // 마이그레이션 시에는 selector strategy 재검토 필요.
   darkMode: 'class',
   plugins: [
-    function ({ addUtilities, addComponents, theme }: { addUtilities: any, addComponents: any, theme: any }) {
+    function ({ addUtilities, addComponents, theme }: PluginAPI) {
       addUtilities({
         '.scrollbar-hide': {
           /* IE and Edge */

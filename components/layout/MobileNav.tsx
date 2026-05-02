@@ -22,7 +22,6 @@ interface MobileNavProps {
   isDarkMode: boolean;
   toggleDarkMode: () => void;
   locale: Locale;
-  isTransparent: boolean;
   navId: string;
   t: TFunction;
 }

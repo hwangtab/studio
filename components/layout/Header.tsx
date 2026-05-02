@@ -115,7 +115,6 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         toggleDarkMode={toggleDarkMode}
         locale={locale}
         navId={mobileNavId}
-        isTransparent={isTransparent}
         t={t}
       />
     </header>

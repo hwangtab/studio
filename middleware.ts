@@ -29,14 +29,11 @@ const shouldEnforceCanonicalHost = process.env.NODE_ENV === 'production' && Bool
 const isCspEnabled = process.env.NODE_ENV === 'production';
 
 function buildContentSecurityPolicy(): string {
-    // SSG-heavy 아키텍처(8,500+ prerendered routes)에서 'unsafe-inline'은 페이지별로
-    // 동적 생성되는 application/ld+json schema(_app.tsx Site Navigation, components/SEO.tsx
-    // 페이지별 graph)를 위해 현재 필요. JSON-LD는 type 상 실행되지 않는 데이터지만 CSP는
-    // 모든 <script> 태그에 적용되므로 inline 허용이 필수다.
-    //
-    // theme-init은 외부 /scripts/theme-init.js로 분리되어 'self'만으로 허용된다 — inline
-    // script 표면이 줄어 XSS 공격 surface가 낮아졌다. inline event handler는
-    // 'script-src-attr none'으로 별도 차단된다.
+    // GA4 초기화를 /scripts/ga4-init.js로 외부화해 'unsafe-inline'이 불필요해졌다.
+    // JSON-LD(<script type="application/ld+json">)는 실행되지 않는 데이터 블록이므로
+    // 브라우저가 CSP script-src 적용 대상에서 제외한다.
+    // theme-init·ga4-init 모두 /scripts/*.js self 서빙. inline event handler는
+    // 'script-src-attr none'으로 별도 차단.
     //
     // 추가 보호:
     // - form-action 'self': 폼 제출이 외부로 hijack되지 않도록 self로 한정
@@ -45,7 +42,7 @@ function buildContentSecurityPolicy(): string {
     // - base-uri 'self': <base> 태그 주입 통한 상대경로 redirect 차단
     return [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com",
+        "script-src 'self' https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com",
         "script-src-attr 'none'",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",

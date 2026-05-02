@@ -274,13 +274,10 @@ const validationCodeMessageMap: Record<ContactValidationCode, string> = {
     message_max: 'Message must be 10-5000 characters',
 };
 
-const toOptionalString = (value: unknown): string | undefined =>
-    typeof value === 'string' ? value : undefined;
-
 const toSafeOptionalString = (value: unknown, maxLength = 255): string | undefined => {
     if (typeof value !== 'string') return undefined;
-    const trimmed = value.slice(0, maxLength);
-    return trimmed ? validator.escape(trimmed) : undefined;
+    const trimmed = value.trim().slice(0, maxLength);
+    return trimmed || undefined;
 };
 
 const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<string, unknown> | null => {
@@ -360,10 +357,10 @@ const validateAndSanitizeContactPayload = (
 
     return {
         sanitized: {
-            name: validator.escape(validationResult.normalized.name),
+            name: validationResult.normalized.name,
             email: validator.normalizeEmail(validationResult.normalized.email) || validationResult.normalized.email,
-            message: validator.escape(validationResult.normalized.message),
-            phone: validator.escape(validationResult.normalized.phone),
+            message: validationResult.normalized.message,
+            phone: validationResult.normalized.phone,
             utm_source: toSafeOptionalString(payload.utm_source),
             utm_medium: toSafeOptionalString(payload.utm_medium),
             utm_campaign: toSafeOptionalString(payload.utm_campaign),

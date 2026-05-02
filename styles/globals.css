@@ -94,10 +94,6 @@ code {
   @apply font-mono;
 }
 
-.word-break-keep-all {
-  word-break: keep-all;
-  overflow-wrap: break-word;
-}
 
 /* 마크다운 줄바꿈 스타일 */
 .prose p {

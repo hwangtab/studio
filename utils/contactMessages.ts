@@ -12,6 +12,7 @@ export interface ContactSubmitErrorMessages {
 
 interface ContactValidationFallbacks {
   errorsFound: string;
+  nameRequired: string;
   nameMin: string;
   nameMax: string;
   nameInvalid: string;
@@ -21,6 +22,7 @@ interface ContactValidationFallbacks {
   phoneRequired: string;
   phoneInvalid: string;
   phoneLength: string;
+  messageRequired: string;
   messageMin: string;
   messageMax: string;
 }
@@ -87,6 +89,7 @@ const SUBMIT_ERROR_MESSAGES: Record<Locale, ContactSubmitErrorMessages> = {
 const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
   ko: {
     errorsFound: '{{count}}개의 입력 항목을 확인해 주세요.',
+    nameRequired: '이름을 입력해 주세요.',
     nameMin: '이름은 2자 이상 입력해 주세요.',
     nameMax: '이름은 100자 이하로 입력해 주세요.',
     nameInvalid: '이름에 사용할 수 없는 문자가 포함되어 있습니다.',
@@ -96,11 +99,13 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: '연락처를 입력해 주세요.',
     phoneInvalid: '연락처 형식이 올바르지 않습니다.',
     phoneLength: '연락처는 5자 이상 50자 이하로 입력해 주세요.',
+    messageRequired: '메시지를 입력해 주세요.',
     messageMin: '메시지는 10자 이상 입력해 주세요.',
     messageMax: '메시지는 5000자 이하로 입력해 주세요.',
   },
   en: {
     errorsFound: 'Please review {{count}} field(s).',
+    nameRequired: 'Name is required.',
     nameMin: 'Name must be at least 2 characters.',
     nameMax: 'Name must be 100 characters or fewer.',
     nameInvalid: 'Name contains invalid characters.',
@@ -110,11 +115,13 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: 'Phone is required.',
     phoneInvalid: 'Phone format is invalid.',
     phoneLength: 'Phone must be between 5 and 50 characters.',
+    messageRequired: 'Message is required.',
     messageMin: 'Message must be at least 10 characters.',
     messageMax: 'Message must be 5000 characters or fewer.',
   },
   zh: {
     errorsFound: '请检查 {{count}} 个输入项。',
+    nameRequired: '请输入姓名。',
     nameMin: '姓名至少需要 2 个字符。',
     nameMax: '姓名不能超过 100 个字符。',
     nameInvalid: '姓名包含无效字符。',
@@ -124,11 +131,13 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: '请输入联系电话。',
     phoneInvalid: '联系电话格式无效。',
     phoneLength: '联系电话长度需在 5 到 50 个字符之间。',
+    messageRequired: '请输入留言。',
     messageMin: '留言至少需要 10 个字符。',
     messageMax: '留言不能超过 5000 个字符。',
   },
   es: {
     errorsFound: 'Revisa {{count}} campo(s).',
+    nameRequired: 'El nombre es obligatorio.',
     nameMin: 'El nombre debe tener al menos 2 caracteres.',
     nameMax: 'El nombre debe tener como maximo 100 caracteres.',
     nameInvalid: 'El nombre contiene caracteres no validos.',
@@ -138,11 +147,13 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: 'El telefono es obligatorio.',
     phoneInvalid: 'El formato del telefono no es valido.',
     phoneLength: 'El telefono debe tener entre 5 y 50 caracteres.',
+    messageRequired: 'El mensaje es obligatorio.',
     messageMin: 'El mensaje debe tener al menos 10 caracteres.',
     messageMax: 'El mensaje debe tener como maximo 5000 caracteres.',
   },
   vi: {
     errorsFound: 'Vui long kiem tra {{count}} truong.',
+    nameRequired: 'Vui long nhap ten.',
     nameMin: 'Ten phai co it nhat 2 ky tu.',
     nameMax: 'Ten khong duoc vuot qua 100 ky tu.',
     nameInvalid: 'Ten chua ky tu khong hop le.',
@@ -152,11 +163,13 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: 'Vui long nhap so dien thoai.',
     phoneInvalid: 'Dinh dang so dien thoai khong hop le.',
     phoneLength: 'So dien thoai phai tu 5 den 50 ky tu.',
+    messageRequired: 'Vui long nhap noi dung.',
     messageMin: 'Noi dung phai co it nhat 10 ky tu.',
     messageMax: 'Noi dung khong duoc vuot qua 5000 ky tu.',
   },
   th: {
     errorsFound: 'กรุณาตรวจสอบ {{count}} ช่องข้อมูล',
+    nameRequired: 'กรุณากรอกชื่อ',
     nameMin: 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร',
     nameMax: 'ชื่อต้องไม่เกิน 100 ตัวอักษร',
     nameInvalid: 'ชื่อมีอักขระที่ไม่ถูกต้อง',
@@ -166,11 +179,13 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: 'กรุณากรอกเบอร์โทรศัพท์',
     phoneInvalid: 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง',
     phoneLength: 'เบอร์โทรศัพท์ต้องมีความยาว 5 ถึง 50 ตัวอักษร',
+    messageRequired: 'กรุณากรอกข้อความ',
     messageMin: 'ข้อความต้องมีอย่างน้อย 10 ตัวอักษร',
     messageMax: 'ข้อความต้องไม่เกิน 5000 ตัวอักษร',
   },
   uz: {
     errorsFound: '{{count}} ta maydonni tekshiring.',
+    nameRequired: 'Ism kiritilishi shart.',
     nameMin: 'Ism kamida 2 ta belgidan iborat bolishi kerak.',
     nameMax: 'Ism 100 ta belgidan oshmasligi kerak.',
     nameInvalid: 'Ismda yaroqsiz belgilar bor.',
@@ -180,13 +195,14 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     phoneRequired: 'Telefon raqami kiritilishi shart.',
     phoneInvalid: 'Telefon raqami formati notogri.',
     phoneLength: 'Telefon raqami 5 dan 50 tagacha belgidan iborat bolishi kerak.',
+    messageRequired: 'Xabar kiritilishi shart.',
     messageMin: 'Xabar kamida 10 ta belgidan iborat bolishi kerak.',
     messageMax: 'Xabar 5000 ta belgidan oshmasligi kerak.',
   },
 };
 
 const VALIDATION_MESSAGE_META: Record<ContactValidationCode, { key: string; fallback: keyof ContactValidationFallbacks }> = {
-  name_required: { key: 'contact.form.errors.nameMin', fallback: 'nameMin' },
+  name_required: { key: 'contact.form.errors.nameRequired', fallback: 'nameRequired' },
   name_min: { key: 'contact.form.errors.nameMin', fallback: 'nameMin' },
   name_max: { key: 'contact.form.errors.nameMax', fallback: 'nameMax' },
   name_invalid: { key: 'contact.form.errors.nameInvalid', fallback: 'nameInvalid' },
@@ -196,7 +212,7 @@ const VALIDATION_MESSAGE_META: Record<ContactValidationCode, { key: string; fall
   phone_required: { key: 'contact.form.errors.phoneRequired', fallback: 'phoneRequired' },
   phone_invalid: { key: 'contact.form.errors.phoneInvalid', fallback: 'phoneInvalid' },
   phone_length: { key: 'contact.form.errors.phoneLength', fallback: 'phoneLength' },
-  message_required: { key: 'contact.form.errors.messageMin', fallback: 'messageMin' },
+  message_required: { key: 'contact.form.errors.messageRequired', fallback: 'messageRequired' },
   message_min: { key: 'contact.form.errors.messageMin', fallback: 'messageMin' },
   message_max: { key: 'contact.form.errors.messageMax', fallback: 'messageMax' },
 };

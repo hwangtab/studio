@@ -84,10 +84,6 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   useEffect(() => {
-    if (typeof document === 'undefined') return;
-  }, []);
-
-  useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         registrations.forEach((r) => r.unregister());
@@ -190,7 +186,10 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   const routeTransitionProps = {
-    initial: { opacity: 0 },
+    // initial={false}: SSR에서 opacity:0 스타일이 박히는 것을 방지해 LCP를 즉시 페인트.
+    // AnimatePresence initial={false}만으로는 SSR 출력이 보정되지 않는 것을 직접 수정.
+    // 페이지 전환 시 exit(fade-out) 애니메이션만 유지 — enter fade-in(60ms)은 제거.
+    initial: false as const,
     animate: { opacity: 1 },
     exit: { opacity: 0 },
     transition: { duration: 0.06, ease: 'linear' as const },
@@ -248,22 +247,17 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                 </AnimatePresence>
                 <Analytics />
                 <SpeedInsights />
-                {/* Google Analytics 4 — strategy="worker": next.config.mjs의 nextScriptWorkers
-                    옵션으로 Partytown이 자동 적용되어 GA4를 Web Worker에서 실행.
-                    메인 스레드 231ms 점유와 GTM 155KB 다운로드가 main thread를 차단하지 않음.
-                    측정 데이터는 정상 전송 (postMessage로 main thread와 동기). */}
+                {/* Google Analytics 4: GTM 로더 + 초기화 스크립트를 외부 파일로 분리해
+                    script-src 'unsafe-inline' 없이 CSP nonce 없이도 'self'만으로 허용.
+                    인라인 <Script> 블록은 CSP 위반이므로 /scripts/ga4-init.js로 외부화. */}
                 <Script
                   src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
-                  strategy="worker"
+                  strategy="afterInteractive"
                 />
-                <Script id="ga4-init" strategy="worker">
-                  {`
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', 'G-KYGP18G36J');
-                  `}
-                </Script>
+                <Script
+                  src="/scripts/ga4-init.js"
+                  strategy="afterInteractive"
+                />
               </Layout>
             </MotionConfig>
           </LazyMotion>

@@ -74,7 +74,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       const nextHeight = Math.ceil(entries[0]?.contentRect?.height || 0);
       if (nextHeight > 0) {
         setHeaderHeight((prev) => {
-          return Math.abs(prev - nextHeight) > 0 ? nextHeight : prev;
+          return Math.abs(prev - nextHeight) > 1 ? nextHeight : prev;
         });
       }
     });
