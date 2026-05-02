@@ -321,6 +321,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     console.error('Story detail error:', error);
     return {
       notFound: true,
+      revalidate: 60,
     };
   }
 };
