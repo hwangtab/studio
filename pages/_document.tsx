@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
 import { defaultLocale, locales } from '../lib/i18n-config';
+import { montserrat, notoSansKr } from '../lib/fonts';
 
 type Props = {
   locale: string;
@@ -23,6 +24,7 @@ class MyDocument extends Document<Props> {
       <Html
         lang={locale}
         prefix="og: https://ogp.me/ns#"
+        className={`${montserrat.variable} ${notoSansKr.variable}`}
       >
         <Head>
           <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />

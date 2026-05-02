@@ -4,7 +4,6 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
-import { Montserrat, Noto_Sans_KR } from 'next/font/google';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -20,23 +19,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
 
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  variable: '--font-montserrat',
-});
-
-// Noto Sans KR — 사이트 전반의 통합 한글 폰트.
-// next/font/google이 빌드 시 self-host + auto preload + size-adjust + unicode-range
-// 자동 분할 처리. weight 명시(['400','700','900'])로 각 weight별 chunked subset 생성.
-// 한글 사용 글자가 포함된 chunk만 lazy fetch되어 페이지당 부담 미미.
-const notoSansKr = Noto_Sans_KR({
-  subsets: ['latin'],
-  weight: ['400', '700', '900'],
-  display: 'swap',
-  variable: '--font-noto-sans-kr',
-});
 
 const localeLoadingMessage: Record<Locale, string> = {
   ko: '콘텐츠를 불러오는 중입니다...',
@@ -170,7 +152,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (
-      <div className={`${montserrat.variable} ${notoSansKr.variable}`}>
+      <>
         <Head>
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -181,7 +163,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
             <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -196,7 +178,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   };
 
   return (
-    <div className={`${montserrat.variable} ${notoSansKr.variable}`}>
+    <>
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -263,7 +245,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           </LazyMotion>
         </ErrorBoundary>
       </I18nextProvider>
-    </div>
+    </>
   );
 }
 
