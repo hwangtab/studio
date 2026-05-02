@@ -128,6 +128,8 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
         animate="visible"
         exit="exit"
       >
+        <div id="modal-title" className="sr-only">{item.title}</div>
+
         {/* Sticky header */}
         <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-canvas-soft/95 dark:bg-surface-dark-elevated/95 border-b border-hairline dark:border-white/10 backdrop-blur-sm">
           <button
@@ -147,10 +149,6 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
             <Share2 size={16} aria-hidden="true" />
             {t('portfolio.detail.share')}
           </button>
-        </div>
-
-        <div id="modal-title" className="sr-only">
-          {item.title}
         </div>
 
         <div className="p-6 md:p-8">

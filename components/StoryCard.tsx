@@ -65,7 +65,6 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
         whileInView="visible"
         viewport={{ once: true }}
       >
-        {story.date && <meta itemProp="datePublished" content={story.date} />}
         <link itemProp="url" href={href} />
 
         {/* 16:9 thumbnail — rounded corners only on top */}

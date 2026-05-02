@@ -118,10 +118,10 @@ export const createInViewEnterAnimation = ({
   if (typeof delay === 'number') transition.delay = delay;
   if (typeof duration === 'number') transition.duration = duration;
 
-  return {
+  const base = {
     initial: { opacity: 0, [axis]: distance },
     whileInView: { opacity: 1, [axis]: 0 },
     viewport: margin ? { once, margin } : { once },
-    transition,
   };
+  return Object.keys(transition).length > 0 ? { ...base, transition } : base;
 };
