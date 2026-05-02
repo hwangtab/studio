@@ -48,7 +48,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`flex items-center justify-center h-10 min-w-[40px] px-3 rounded-pill font-medium transition-colors
+                className={`flex items-center justify-center min-h-[44px] min-w-[44px] px-3 rounded-pill font-medium transition-colors touch-manipulation
           ${currentPage === 1
                         ? 'border border-hairline-strong text-ink dark:border-white/20 dark:text-on-dark opacity-50 cursor-not-allowed'
                         : 'border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:border-white/20 dark:text-on-dark dark:hover:bg-white/[0.06]'
@@ -64,7 +64,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={`flex items-center justify-center h-10 min-w-[40px] px-3 rounded-pill font-medium transition-colors
+                    className={`flex items-center justify-center min-h-[44px] min-w-[44px] px-3 rounded-pill font-medium transition-colors touch-manipulation
             ${currentPage === page
                             ? 'bg-ink text-white pointer-events-none dark:bg-white dark:text-ink'
                             : 'border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:border-white/20 dark:text-on-dark dark:hover:bg-white/[0.06]'
@@ -78,7 +78,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`flex items-center justify-center h-10 min-w-[40px] px-3 rounded-pill font-medium transition-colors
+                className={`flex items-center justify-center min-h-[44px] min-w-[44px] px-3 rounded-pill font-medium transition-colors touch-manipulation
           ${currentPage === totalPages
                         ? 'border border-hairline-strong text-ink dark:border-white/20 dark:text-on-dark opacity-50 cursor-not-allowed'
                         : 'border border-hairline-strong text-ink hover:bg-ink/[0.04] dark:border-white/20 dark:text-on-dark dark:hover:bg-white/[0.06]'

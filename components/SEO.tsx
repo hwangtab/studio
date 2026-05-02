@@ -421,8 +421,6 @@ const SEO = ({
       <meta name="twitter:image:alt" content={ogImageAlt || resolvedTitle} />
       {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
 
-      <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)" />
-      <meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)" />
       {ogType === 'article' && articleAuthor && (
         <meta name="twitter:label1" content={currentLocale === 'ko' ? '작성자' : 'Written by'} />
       )}

@@ -75,7 +75,7 @@ const ReviewSection = ({ className, tone = 'canvas', locale = 'ko' }: ReviewSect
                                     <meta itemProp="ratingValue" content={String(review.rating)} />
                                     <meta itemProp="bestRating" content="5" />
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
-                                        <Star key={i} size={18} className="text-yellow-500 fill-yellow-500 mr-1" aria-hidden="true" />
+                                        <Star key={i} size={18} className="text-yellow-500 fill-yellow-500 dark:text-yellow-400 dark:fill-yellow-400 mr-1" aria-hidden="true" />
                                     ))}
                                 </div>
 

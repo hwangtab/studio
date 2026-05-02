@@ -18,22 +18,18 @@ interface StoryCTAProps {
 const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }) => {
     const { t } = useTranslation('common', { lng: locale });
 
-
     const getLink = (path: string) => `/${locale}${path}`;
 
     const content = {
         recording: {
-            gradient: 'from-indigo-900 to-purple-900',
-            accentColor: 'text-purple-200',
-            accentBg: 'bg-purple-200',
-            buttonBg: 'bg-white text-indigo-900 hover:bg-purple-50',
-            secondaryButtonBg: 'bg-purple-700/50 text-white hover:bg-purple-700/70 border-purple-500/30',
+            accentColor: 'text-orb-lavender',
+            accentBg: 'bg-orb-lavender',
             icons: (
                 <>
                     <Mic2 size={20} />
-                    <span className="w-1 h-1 bg-purple-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-lavender rounded-full" />
                     <Settings size={20} />
-                    <span className="w-1 h-1 bg-purple-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-lavender rounded-full" />
                     <Music size={20} />
                 </>
             ),
@@ -49,20 +45,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.recording.secondaryText'),
             visualText: t('stories.cta.recording.visualText'),
-            visualGradient: 'from-purple-500 to-indigo-400',
+            visualGradient: 'from-orb-lavender to-orb-sky',
         },
         lesson: {
-            gradient: 'from-orange-800 to-amber-900',
-            accentColor: 'text-amber-200',
-            accentBg: 'bg-amber-200',
-            buttonBg: 'bg-white text-amber-900 hover:bg-amber-50',
-            secondaryButtonBg: 'bg-amber-700/50 text-white hover:bg-amber-700/70 border-amber-500/30',
+            accentColor: 'text-orb-peach',
+            accentBg: 'bg-orb-peach',
             icons: (
                 <>
                     <BookOpen size={20} />
-                    <span className="w-1 h-1 bg-amber-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-peach rounded-full" />
                     <Lightbulb size={20} />
-                    <span className="w-1 h-1 bg-amber-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-peach rounded-full" />
                     <GraduationCap size={20} />
                 </>
             ),
@@ -78,20 +71,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.lesson.secondaryText'),
             visualText: t('stories.cta.lesson.visualText'),
-            visualGradient: 'from-amber-500 to-orange-400',
+            visualGradient: 'from-orb-peach to-orb-rose',
         },
         practice: {
-            gradient: 'from-emerald-900 to-teal-900',
-            accentColor: 'text-emerald-200',
-            accentBg: 'bg-emerald-200',
-            buttonBg: 'bg-white text-emerald-900 hover:bg-emerald-50',
-            secondaryButtonBg: 'bg-teal-700/50 text-white hover:bg-teal-700/70 border-teal-500/30',
+            accentColor: 'text-orb-mint',
+            accentBg: 'bg-orb-mint',
             icons: (
                 <>
                     <MapPin size={20} />
-                    <span className="w-1 h-1 bg-emerald-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-mint rounded-full" />
                     <Clock size={20} />
-                    <span className="w-1 h-1 bg-emerald-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-mint rounded-full" />
                     <Speaker size={20} />
                 </>
             ),
@@ -107,20 +97,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.practice.secondaryText'),
             visualText: t('stories.cta.practice.visualText'),
-            visualGradient: 'from-emerald-500 to-teal-400',
+            visualGradient: 'from-orb-mint to-orb-sky',
         },
         production: {
-            gradient: 'from-blue-900 to-indigo-900',
-            accentColor: 'text-blue-200',
-            accentBg: 'bg-blue-200',
-            buttonBg: 'bg-white text-blue-900 hover:bg-blue-50',
-            secondaryButtonBg: 'bg-indigo-700/50 text-white hover:bg-indigo-700/70 border-indigo-500/30',
+            accentColor: 'text-orb-sky',
+            accentBg: 'bg-orb-sky',
             icons: (
                 <>
                     <Music size={20} />
-                    <span className="w-1 h-1 bg-blue-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-sky rounded-full" />
                     <Mic2 size={20} />
-                    <span className="w-1 h-1 bg-blue-200 rounded-full" />
+                    <span className="w-1 h-1 bg-orb-sky rounded-full" />
                     <Settings size={20} />
                 </>
             ),
@@ -136,7 +123,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryLink: getLink('/pricing'),
             secondaryText: t('stories.cta.production.secondaryText'),
             visualText: t('stories.cta.production.visualText'),
-            visualGradient: 'from-blue-500 to-indigo-400',
+            visualGradient: 'from-orb-sky to-orb-lavender',
         }
     };
 
@@ -149,11 +136,11 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     return (
         <m.div
             {...ctaMotionProps}
-            className={`my-16 relative overflow-hidden rounded-card bg-gradient-to-br ${current.gradient} text-white shadow-card`}
+            className="my-16 relative overflow-hidden rounded-card bg-canvas-deep text-white shadow-deep"
         >
-            {/* Background Decor */}
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-            <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
+            {/* Atmospheric decor orbs */}
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/[0.03] rounded-full blur-2xl" />
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 md:p-10 gap-8">
                 <div className="flex-1 text-center md:text-left">
@@ -161,11 +148,11 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         {current.icons}
                     </div>
 
-                    <h2 className={`text-2xl md:text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200 break-words [overflow-wrap:anywhere]`}>
+                    <h2 className="text-2xl md:text-3xl font-light mb-3 text-on-dark break-words [overflow-wrap:anywhere]">
                         {current.title}
                     </h2>
 
-                    <p className="text-white/90 text-lg leading-relaxed mb-6 break-words [overflow-wrap:anywhere]">
+                    <p className="text-on-dark-soft text-lg leading-relaxed mb-6 break-words [overflow-wrap:anywhere]">
                         {current.description}
                     </p>
 
@@ -176,7 +163,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         <Link
                             href={current.primaryLink}
                             prefetch={false}
-                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-pill font-bold transition-colors shadow-card touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.buttonBg}`}
+                            className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-pill bg-white text-ink font-medium hover:bg-on-dark-soft transition-colors shadow-card touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas-deep"
                         >
                             <span className="min-w-0">{current.primaryText}</span>
                             <ArrowRight size={18} className="ml-2 flex-shrink-0" aria-hidden="true" />
@@ -184,7 +171,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         <Link
                             href={current.secondaryLink}
                             prefetch={false}
-                            className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-pill font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
+                            className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-pill bg-white/10 text-white font-medium hover:bg-white/20 transition-colors border border-white/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas-deep"
                         >
                             <span className="min-w-0">{current.secondaryText}</span>
                         </Link>
@@ -192,8 +179,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                 </div>
 
                 <div className="hidden md:block w-full max-w-xs lg:max-w-sm">
-                    {/* Abstract Visual Representation */}
-                    <div ref={visualRef} className="relative aspect-square rounded-xl overflow-hidden bg-black/20 backdrop-blur-sm border border-white/10 p-6 flex flex-col justify-center items-center">
+                    <div ref={visualRef} className="relative aspect-square rounded-xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-6 flex flex-col justify-center items-center">
                         <div className="w-full flex justify-between items-end h-32 gap-2 mb-4">
                             {heights.map((h, i) => (
                                 <m.div

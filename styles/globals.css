@@ -112,7 +112,7 @@ code {
   display: block;
   margin: 0.5em 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(156, 163, 175, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.08), transparent);
 }
 
 /* Link Underline Animation */
