@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import type { Locale } from '../lib/i18n';
 import {
   getContactValidationMessage,
@@ -102,6 +102,9 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
   const [submitMessage, setSubmitMessage] = useState('');
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // 동기 가드: React state 업데이트는 비동기라, 빠른 더블클릭 시 두 번째 클릭이
+  // setIsSubmitting(true) 반영 전 통과해 fetch가 중복 발사될 수 있음. ref로 동기 차단.
+  const submittingRef = useRef(false);
   const [canRetrySubmit, setCanRetrySubmit] = useState(false);
   const [lastSubmittedData, setLastSubmittedData] = useState<ContactFormData | null>(null);
   const [attribution, setAttribution] = useState<ContactAttribution>({});
@@ -288,6 +291,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
       } finally {
         window.clearTimeout(timeout);
         setIsSubmitting(false);
+        submittingRef.current = false;
       }
     },
     [attribution, getValidationMessage, submitErrorCopy, t, trackSubmitEvent]
@@ -319,6 +323,8 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
         return;
       }
 
+      if (submittingRef.current) return;
+      submittingRef.current = true;
       setIsSubmitting(true);
       setSubmitMessage('');
       setIsSubmitSuccess(false);
@@ -339,14 +345,15 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
   );
 
   const handleRetrySubmit = useCallback(() => {
-    if (!lastSubmittedData || isSubmitting) return;
+    if (!lastSubmittedData || submittingRef.current) return;
 
+    submittingRef.current = true;
     setIsSubmitting(true);
     setSubmitMessage('');
     setIsSubmitSuccess(false);
     setCanRetrySubmit(false);
     void submitWithPayload(lastSubmittedData);
-  }, [isSubmitting, lastSubmittedData, submitWithPayload]);
+  }, [lastSubmittedData, submitWithPayload]);
 
   return {
     formData,
