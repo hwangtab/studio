@@ -45,7 +45,7 @@ const QuickAnswers = ({
               key={`${item.question}-${index}`}
               variant="default"
               hover
-              className="p-6 h-full flex flex-col bg-canvas-warm border-hairline"
+              className="p-6 h-full flex flex-col bg-canvas-warm dark:bg-surface-dark-elevated border-hairline dark:border-white/10"
             >
               <div className="text-xs font-semibold uppercase tracking-widest text-ink-muted-60 dark:text-on-dark-soft mb-3">
                 Q{index + 1}

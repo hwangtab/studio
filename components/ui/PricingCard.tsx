@@ -2,7 +2,8 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import BaseCard from './BaseCard';
 import GradientOrb from './GradientOrb';
-import { Button } from './Button';
+import { buttonVariants } from './Button';
+import { cn } from '../../lib/utils';
 
 interface PricingCardProps {
     id: string;
@@ -55,11 +56,12 @@ const PricingCard = ({ title, price, unit, description, features, recommended, c
                     href={ctaHref}
                     target={ctaHref.startsWith('http') ? '_blank' : undefined}
                     rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="mt-6 block"
+                    className={cn(
+                        'mt-6 touch-manipulation',
+                        buttonVariants({ variant: recommended ? 'primary' : 'outline', fullWidth: true })
+                    )}
                 >
-                    <Button variant={recommended ? 'primary' : 'outline'} fullWidth>
-                        {ctaLabel}
-                    </Button>
+                    {ctaLabel}
                 </a>
             )}
         </BaseCard>

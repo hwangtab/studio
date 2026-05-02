@@ -20,6 +20,10 @@ interface FAQSectionProps {
     variant?: string;
 }
 
+const FAQ_PANEL_OPEN = { height: 'auto' as const, opacity: 1 };
+const FAQ_PANEL_CLOSED = { height: 0, opacity: 0 };
+const FAQ_PANEL_TRANSITION = { duration: 0.3, ease: 'easeInOut' as const };
+
 const FAQSection: React.FC<FAQSectionProps> = ({
     items,
     title = "FAQ",
@@ -72,8 +76,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                             role="region"
                             aria-labelledby={`faq-button-${index}`}
                             initial={false}
-                            animate={activeIndex === index ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            animate={activeIndex === index ? FAQ_PANEL_OPEN : FAQ_PANEL_CLOSED}
+                            transition={FAQ_PANEL_TRANSITION}
                             className="overflow-hidden"
                             aria-hidden={activeIndex !== index}
                         >

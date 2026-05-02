@@ -236,35 +236,35 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           <Link
             href={getLink('/wedding-song')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong dark:border-white/20 text-ink dark:text-on-dark font-medium hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas dark:focus-visible:ring-offset-canvas-deep"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/voice-acting')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong dark:border-white/20 text-ink dark:text-on-dark font-medium hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas dark:focus-visible:ring-offset-canvas-deep"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/lesson')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong dark:border-white/20 text-ink dark:text-on-dark font-medium hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas dark:focus-visible:ring-offset-canvas-deep"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/pricing')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong dark:border-white/20 text-ink dark:text-on-dark font-medium hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas dark:focus-visible:ring-offset-canvas-deep"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/stories')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong dark:border-white/20 text-ink dark:text-on-dark font-medium hover:bg-ink hover:text-white dark:hover:bg-white dark:hover:text-ink transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas dark:focus-visible:ring-offset-canvas-deep"
           >
             {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
           </Link>

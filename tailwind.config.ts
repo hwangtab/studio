@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   content: [
@@ -130,7 +131,7 @@ const config: Config = {
   // .dark 클래스가 <html>에 토글된다 (components/Layout.tsx).
   darkMode: 'class',
   plugins: [
-    function ({ addUtilities }: { addUtilities: any }) {
+    plugin(({ addUtilities }) => {
       addUtilities({
         '.scrollbar-hide': {
           '-ms-overflow-style': 'none',
@@ -139,8 +140,8 @@ const config: Config = {
             display: 'none'
           }
         }
-      })
-    }
+      });
+    }),
   ],
 }
 

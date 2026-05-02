@@ -23,6 +23,13 @@ interface ContactCTAProps {
     headingAs?: 'h2' | 'h3';
 }
 
+const CONTACT_CTA_MOTION = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.8 },
+};
+
 const ContactCTA = ({
     locale,
     title,
@@ -62,17 +69,10 @@ const ContactCTA = ({
         });
     }, [isKorean, locale]);
 
-    const contactCtaMotionProps = {
-        initial: { opacity: 0, y: 30 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true },
-        transition: { duration: 0.8 }
-    };
-
     return (
         <m.div
             className={`bg-canvas-warm dark:bg-surface-dark-elevated rounded-hero border border-hairline overflow-hidden ${className}`}
-            {...contactCtaMotionProps}
+            {...CONTACT_CTA_MOTION}
         >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                 <div className="p-8 md:p-10 flex flex-col justify-center">

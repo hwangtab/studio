@@ -1,17 +1,20 @@
 import React from 'react';
-import { m, useScroll, useSpring } from 'framer-motion';
+import { m, useScroll, useSpring, useReducedMotion } from 'framer-motion';
 
 interface ScrollProgressProps {
     disabled?: boolean;
 }
 
 const ScrollProgressBar: React.FC = () => {
+    const shouldReduceMotion = useReducedMotion();
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 100,
         damping: 30,
         restDelta: 0.001
     });
+
+    if (shouldReduceMotion) return null;
 
     return (
         <m.div

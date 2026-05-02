@@ -147,7 +147,7 @@ export const DropdownMenu = ({
                                             onNavigate();
                                         }}
                                         onKeyDown={(e) => handleItemKeyDown(e, index)}
-                                        className={`flex items-center min-h-[44px] px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:bg-ink/[0.04] focus-visible:text-link ${isItemActive
+                                        className={`flex items-center min-h-[44px] px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:bg-ink/[0.04] focus-visible:text-link dark:focus-visible:bg-white/[0.08] dark:focus-visible:text-link-on-dark ${isItemActive
                                             ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
                                             : 'text-ink-muted-80 dark:text-on-dark-soft hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'
                                             }`}
