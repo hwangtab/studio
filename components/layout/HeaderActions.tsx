@@ -39,7 +39,7 @@ export const HeaderActions = ({
     <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-4">
       <div className="hidden sm:flex items-center space-x-2">
         <button
-          className={`flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${!isTransparent
+          className={`flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-pill transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${!isTransparent
             ? 'text-ink-muted-80 dark:text-on-dark hover:bg-canvas-warm dark:hover:bg-surface-dark-elevated'
             : 'text-white hover:bg-white/20'
             }`}
@@ -83,7 +83,7 @@ export const HeaderActions = ({
       )}
 
       <button
-        className={`xl:hidden flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${!isTransparent
+        className={`xl:hidden flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-pill transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${!isTransparent
           ? 'text-ink-muted-80 dark:text-on-dark hover:bg-canvas-warm dark:hover:bg-surface-dark-elevated'
           : 'text-white hover:bg-white/20'
           }`}

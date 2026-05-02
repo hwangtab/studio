@@ -297,12 +297,13 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             align="center"
             as="h2"
           />
-          <a
-            href={`/${locale}/contact`}
+          <Link
+            href={getLink('/contact')}
+            prefetch={false}
             className="inline-flex h-14 px-7 items-center rounded-pill bg-white text-ink font-medium hover:bg-on-dark-soft transition-all"
           >
             {t('home.cta.inquiry')}
-          </a>
+          </Link>
         </div>
       </Section>
     </div>

@@ -91,7 +91,7 @@ const ProjectRowCard = ({
                 </div>
 
                 <div className="relative z-10 flex items-end justify-between mt-2 gap-3 min-w-0">
-                    <p className="text-caption text-ink-muted-40 dark:text-on-dark-soft line-clamp-2 flex-1 min-w-0 break-words" title={description}>
+                    <p className="text-caption text-ink-muted-60 dark:text-on-dark-soft line-clamp-2 flex-1 min-w-0 break-words" title={description}>
                         {description}
                     </p>
 

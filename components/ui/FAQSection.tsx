@@ -22,8 +22,8 @@ interface FAQSectionProps {
 
 const FAQSection: React.FC<FAQSectionProps> = ({
     items,
-    title = "자주 묻는 질문",
-    subtitle = "스튜디오 이용에 대해 궁금한 점들을 모았습니다.",
+    title = "FAQ",
+    subtitle = "Common questions about the studio.",
     className,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     variant: _variant,

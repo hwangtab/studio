@@ -22,8 +22,8 @@ interface QuickAnswersProps {
 
 const QuickAnswers = ({
   items,
-  title = '빠른 답변',
-  subtitle = '자주 묻는 질문을 한눈에 확인하세요.',
+  title = 'Quick Answers',
+  subtitle = 'Common questions at a glance.',
   tone = 'canvas',
   className,
 }: QuickAnswersProps) => {

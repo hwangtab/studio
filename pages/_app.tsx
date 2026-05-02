@@ -70,12 +70,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   // next/head가 hydration·reconcile 시 component tree의 content prop 값으로 attribute를
   // 다시 set하기 때문이다. .dark 클래스 변경을 MutationObserver로 추적해 state를
   // 갱신하면 React re-render가 meta content를 일관되게 유지한다.
-  const [themeColorLight, setThemeColorLight] = useState('#6d28d9');
+  const [themeColorLight, setThemeColorLight] = useState('#faf9f7');
   useEffect(() => {
     if (typeof document === 'undefined') return;
     const sync = () => {
       const isDark = document.documentElement.classList.contains('dark');
-      setThemeColorLight(isDark ? '#5b21b6' : '#6d28d9');
+      setThemeColorLight(isDark ? '#0c0a09' : '#faf9f7');
     };
     sync();
     const observer = new MutationObserver(sync);
@@ -179,9 +179,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center" aria-live="polite" role="status">
-          <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
-            <span className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-primary animate-spin" aria-hidden="true" />
+        <div className="min-h-screen bg-canvas dark:bg-canvas-deep flex items-center justify-center" aria-live="polite" role="status">
+          <div className="flex items-center gap-3 text-ink dark:text-on-dark">
+            <span className="h-5 w-5 rounded-full border-2 border-hairline border-t-ink animate-spin" aria-hidden="true" />
             <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
           </div>
         </div>
@@ -213,8 +213,8 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                dark 선호면 브라우저가 자동 매치.
             HTML 스펙은 두 meta 중 environment 매치되는 것을 사용. */}
         <meta key="theme-color-light" name="theme-color" content={themeColorLight} />
-        <meta key="theme-color-dark" name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
-        <meta name="msapplication-TileColor" content="#6d28d9" />
+        <meta key="theme-color-dark" name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)" />
+        <meta name="msapplication-TileColor" content="#1d1b1a" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
