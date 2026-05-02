@@ -90,6 +90,7 @@ const config: Config = {
         'display-xl':   ['clamp(2rem, 4.5vw, 3rem)',  { lineHeight: '1.08', letterSpacing: '-0.015em', fontWeight: '300' }],
         'display-lg':   ['clamp(1.75rem, 3.5vw, 2.25rem)', { lineHeight: '1.17', letterSpacing: '-0.01em', fontWeight: '300' }],
         'display-md':   ['1.75rem', { lineHeight: '1.2', letterSpacing: '0', fontWeight: '400' }],
+        'display-sm':   ['1.5rem',  { lineHeight: '1.25', letterSpacing: '0', fontWeight: '300' }],
         'lead':         ['clamp(1.125rem, 1.6vw, 1.375rem)', { lineHeight: '1.45', letterSpacing: '0', fontWeight: '400' }],
         'title-md':     ['1.25rem', { lineHeight: '1.4', letterSpacing: '0', fontWeight: '500' }],
         'title-sm':     ['1.125rem', { lineHeight: '1.45', letterSpacing: '0', fontWeight: '500' }],

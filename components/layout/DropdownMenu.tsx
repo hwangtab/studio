@@ -141,6 +141,7 @@ export const DropdownMenu = ({
                                         href={item.href}
                                         ref={el => { itemRefs.current[index] = el; }}
                                         role="menuitem"
+                                        aria-current={isItemActive ? 'page' : undefined}
                                         onClick={() => {
                                             setIsOpen(false);
                                             onNavigate();

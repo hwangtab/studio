@@ -59,8 +59,8 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
 
                     {/* Vinyl Center Hole */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-8 h-8 bg-gray-100 dark:bg-[#121212] rounded-full border border-gray-200 dark:border-white/10 flex items-center justify-center">
-                            <div className="w-2 h-2 bg-gray-800 dark:bg-black rounded-full" />
+                        <div className="w-8 h-8 bg-canvas-warm dark:bg-canvas-deep rounded-full border border-hairline dark:border-white/10 flex items-center justify-center">
+                            <div className="w-2 h-2 bg-ink dark:bg-black rounded-full" />
                         </div>
                     </div>
 
@@ -81,7 +81,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                                     delay: i * 0.2,
                                     ease: "easeInOut"
                                 } : { duration: 0.2 }}
-                                className={`w-1 rounded-full ${isPlaying ? 'bg-ink' : 'bg-gray-500'}`}
+                                className={`w-1 rounded-full ${isPlaying ? 'bg-ink' : 'bg-ink-muted-60'}`}
                             />
                         ))}
                     </div>
@@ -94,7 +94,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
             {/* Title & Artist */}
             <div className="w-full">
                 <m.h3
-                    className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight"
+                    className="text-2xl sm:text-3xl font-light text-ink dark:text-on-dark mb-2 tracking-tight"
                     layout
                 >
                     {track.title}
@@ -106,10 +106,10 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                     {track.artist}
                 </m.p>
 
-                <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/40 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
+                <div className="flex items-center justify-center gap-2 text-xs font-mono text-ink-muted-60 dark:text-on-dark-soft uppercase tracking-widest border border-hairline dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-canvas-warm dark:bg-white/5">
                     <Disc size={12} aria-hidden="true" />
                     <span>{t('audioPlayer.highFidelity')}</span>
-                    <span className="w-1 h-1 bg-gray-300 dark:bg-white/20 rounded-full mx-1" />
+                    <span className="w-1 h-1 bg-ink-muted-40 dark:bg-white/20 rounded-full mx-1" />
                     <span>{t('audioPlayer.trackLabel', { number: trackNumberLabel })}</span>
                 </div>
             </div>

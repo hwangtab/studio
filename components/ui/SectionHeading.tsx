@@ -26,7 +26,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
     <Tag className="font-display font-light text-display-xl text-ink dark:text-on-dark">
       {title}
     </Tag>
-    {lead && <p className="mt-5 text-lead text-ink-muted-80 dark:text-on-dark-soft">{lead}</p>}
+    {lead && <div className="mt-5 text-lead text-ink-muted-80 dark:text-on-dark-soft">{lead}</div>}
   </header>
 );
 

@@ -441,7 +441,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                         cta_id: 'contact_form_kakao',
                       })
                     }
-                    className="w-full inline-flex justify-center items-center h-14 px-7 text-[17px] text-gray-900 bg-yellow-400 hover:bg-yellow-500 rounded-pill font-medium transition-all touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60 focus-visible:ring-offset-2"
+                    className="w-full inline-flex justify-center items-center h-14 px-7 text-[17px] text-ink bg-yellow-400 hover:bg-yellow-500 rounded-pill font-medium transition-all touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/60 focus-visible:ring-offset-2"
                   >
                     <MessageCircle className="mr-2" size={18} aria-hidden="true" />
                     {t('contact.form.kakao')}

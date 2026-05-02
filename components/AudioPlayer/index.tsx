@@ -48,7 +48,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
 
     return (
         <m.div
-            className="bg-white dark:bg-[#121212] overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-white/5 relative"
+            className="bg-canvas-soft dark:bg-canvas-deep overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-hairline dark:border-white/5 relative"
             {...audioPlayerMotionProps}
         >
             {/* Background Atmosphere (Dark Mode Only) */}
@@ -59,7 +59,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
 
             <div className="relative z-10 grid lg:grid-cols-[1.2fr,1fr] gap-0">
                 {/* Left Side: Player Main */}
-                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-white/5 backdrop-blur-sm">
+                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-hairline dark:border-white/5 backdrop-blur-sm">
                     <div className="flex-1 flex flex-col justify-center">
                         <TrackInfo
                             track={track}
@@ -103,7 +103,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
                 </div>
 
                 {/* Right Side: Playlist */}
-                <div className="bg-gray-50 dark:bg-black/20 p-6 lg:p-8 h-full min-h-[400px] flex flex-col backdrop-blur-md border-l border-gray-100 dark:border-white/5">
+                <div className="bg-canvas-warm dark:bg-surface-dark-elevated p-6 lg:p-8 h-full min-h-[400px] flex flex-col backdrop-blur-md border-l border-hairline dark:border-white/5">
                     <Playlist
                         tracks={tracks}
                         currentTrackIndex={currentTrack}

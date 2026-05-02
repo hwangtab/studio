@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from '../../lib/utils';
 import GradientOrb, { type OrbColor } from './GradientOrb';
 
@@ -64,26 +65,32 @@ const Hero: React.FC<HeroProps> = ({
           {(primaryCta || secondaryCta) && (
             <div className="mt-8 flex flex-wrap gap-3">
               {primaryCta && (
-                <a
+                <Link
                   href={primaryCta.href}
+                  prefetch={false}
                   className={cn(
-                    'inline-flex items-center justify-center font-medium rounded-pill transition-all h-14 px-7 text-[17px] active:scale-[0.97]',
-                    isDark ? 'bg-white text-ink hover:bg-on-dark-soft' : 'bg-ink text-white hover:bg-canvas-deep'
+                    'inline-flex items-center justify-center font-medium rounded-pill transition-all h-14 px-7 text-[17px] active:scale-[0.97] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                    isDark
+                      ? 'bg-white text-ink hover:bg-on-dark-soft focus-visible:ring-white/70 focus-visible:ring-offset-canvas-deep'
+                      : 'bg-ink text-white hover:bg-canvas-deep focus-visible:ring-ink/40 focus-visible:ring-offset-canvas'
                   )}
                 >
                   {primaryCta.label}
-                </a>
+                </Link>
               )}
               {secondaryCta && (
-                <a
+                <Link
                   href={secondaryCta.href}
+                  prefetch={false}
                   className={cn(
-                    'inline-flex items-center justify-center font-medium rounded-pill transition-all h-14 px-7 text-[17px] border',
-                    isDark ? 'border-white/20 text-on-dark hover:bg-white/[0.06]' : 'border-hairline-strong text-ink hover:bg-ink/[0.04]'
+                    'inline-flex items-center justify-center font-medium rounded-pill transition-all h-14 px-7 text-[17px] border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                    isDark
+                      ? 'border-white/20 text-on-dark hover:bg-white/[0.06] focus-visible:ring-white/50 focus-visible:ring-offset-canvas-deep'
+                      : 'border-hairline-strong text-ink hover:bg-ink/[0.04] focus-visible:ring-ink/30 focus-visible:ring-offset-canvas'
                   )}
                 >
                   {secondaryCta.label}
-                </a>
+                </Link>
               )}
             </div>
           )}

@@ -6,6 +6,12 @@ import type { AudioTrack } from '../../types/data';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
 
+const EQ_BARS = [
+  { animate: { height: [4, 12, 6, 12, 4] }, transition: { repeat: Infinity, duration: 1.2, ease: 'linear' as const } },
+  { animate: { height: [8, 4, 12, 5, 8] },  transition: { repeat: Infinity, duration: 1.5, ease: 'linear' as const } },
+  { animate: { height: [5, 10, 5, 10, 5] }, transition: { repeat: Infinity, duration: 1.0, ease: 'linear' as const } },
+];
+
 interface PlaylistProps {
     tracks: readonly AudioTrack[];
     currentTrackIndex: number;
@@ -53,21 +59,14 @@ const Playlist = ({
                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                                         {isPlaying ? (
                                             <div className="flex space-x-[2px] items-end h-3">
-                                                <m.div
-                                                    animate={{ height: [4, 12, 6, 12, 4] }}
-                                                    transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-                                                    className="w-[2px] bg-white rounded-full"
-                                                />
-                                                <m.div
-                                                    animate={{ height: [8, 4, 12, 5, 8] }}
-                                                    transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-                                                    className="w-[2px] bg-white rounded-full"
-                                                />
-                                                <m.div
-                                                    animate={{ height: [5, 10, 5, 10, 5] }}
-                                                    transition={{ repeat: Infinity, duration: 1.0, ease: "linear" }}
-                                                    className="w-[2px] bg-white rounded-full"
-                                                />
+                                                {EQ_BARS.map((bar, i) => (
+                                                    <m.div
+                                                        key={i}
+                                                        animate={bar.animate}
+                                                        transition={bar.transition}
+                                                        className="w-[2px] bg-white rounded-full"
+                                                    />
+                                                ))}
                                             </div>
                                         ) : (
                                             <div className="w-2 h-2 bg-white rounded-full" />

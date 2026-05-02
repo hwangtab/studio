@@ -172,6 +172,7 @@ export const MobileNav = ({
                           key={item.href}
                           href={item.href}
                           onClick={onClose}
+                          aria-current={currentPath === item.href ? 'page' : undefined}
                           className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep ${currentPath === item.href
                             ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
                             : 'text-ink-muted-60 dark:text-on-dark-soft hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'
