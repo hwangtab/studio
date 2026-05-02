@@ -18,25 +18,6 @@ const config: Config = {
     },
     extend: {
       colors: {
-        primary: {
-          light: '#7c3aed', // 밝은 보라색
-          DEFAULT: '#6d28d9', // 보라색
-          dark: '#5b21b6', // 진한 보라색
-        },
-        secondary: {
-          light: '#ec4899', // 밝은 핑크
-          // #db2777(pink-600)은 gray-50 배경 대비 4.39:1로 WCAG AA(4.5) 간발의 차로 미달.
-          // accent와 동일하게 pink-700로 승격하여 흰/회색 배경 버튼 모두 통과.
-          DEFAULT: '#be185d', // 핑크 (AA 통과: 5.88:1)
-          dark: '#9d174d', // 진한 핑크
-        },
-        accent: {
-          light: '#10b981', // 밝은 에메랄드
-          // #059669(emerald-600)는 흰 배경 대비 3.76:1로 WCAG AA(4.5) 미달.
-          // text-accent/border-accent를 흰 배경 버튼에 자주 쓰므로 emerald-700로 승격.
-          DEFAULT: '#047857', // 에메랄드 (AA 통과: 5.64:1)
-          dark: '#065f46', // 진한 에메랄드
-        },
         gray: {
           50: '#f9fafb',
           100: '#f3f4f6',
@@ -50,7 +31,7 @@ const config: Config = {
           900: '#030712',
           950: '#020617',
         },
-        // Editorial Cinematic 시스템 (DESIGN.md §2). 옛 primary/secondary/accent는 Phase 9에서 제거.
+        // Editorial Cinematic 시스템 (DESIGN.md §2).
         canvas: {
           DEFAULT: '#faf9f7',
           soft: '#ffffff',
@@ -120,7 +101,6 @@ const config: Config = {
         // 빌드 시 Google Fonts에서 다운로드 → _next/static/media에 저장. 런타임은 자체 도메인 서빙.
         // fallback은 시스템 한글 폰트 → 시스템 폰트.
         sans: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        title: ['var(--font-noto-sans-kr)', 'sans-serif'],
         display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', 'sans-serif'],
         logo: ['var(--font-noto-sans-kr)', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
@@ -146,115 +126,18 @@ const config: Config = {
     },
   },
   // class 전략: 사용자 토글이 시스템 prefers-color-scheme를 override할 수 있도록
-  // .dark 클래스가 <html>에 토글된다 (components/Layout.tsx). 이 모드에선
-  // addComponents 안의 `.dark &` nesting이 표준이고 정상 동작한다 — Tailwind v4
-  // 마이그레이션 시에는 selector strategy 재검토 필요.
+  // .dark 클래스가 <html>에 토글된다 (components/Layout.tsx).
   darkMode: 'class',
   plugins: [
-    function ({ addUtilities, addComponents, theme }: { addUtilities: any, addComponents: any, theme: any }) {
+    function ({ addUtilities }: { addUtilities: any }) {
       addUtilities({
         '.scrollbar-hide': {
-          /* IE and Edge */
           '-ms-overflow-style': 'none',
-          /* Firefox */
           'scrollbar-width': 'none',
-          /* Safari and Chrome */
           '&::-webkit-scrollbar': {
             display: 'none'
           }
         }
-      })
-
-      // Typography component classes
-      addComponents({
-        '.typo-section-title': {
-          fontFamily: theme('fontFamily.title'),
-          fontSize: theme('fontSize.heading-2[0]'),
-          lineHeight: theme('fontSize.heading-2[1].lineHeight'),
-          fontWeight: theme('fontSize.heading-2[1].fontWeight'),
-          color: theme('colors.gray.800'),
-          '.dark &': {
-            color: theme('colors.white'),
-          },
-        },
-        '.typo-section-lead': {
-          fontSize: theme('fontSize.subtitle-1[0]'),
-          lineHeight: theme('fontSize.subtitle-1[1].lineHeight'),
-          fontWeight: '500',
-          color: theme('colors.gray.600'),
-          '.dark &': {
-            color: theme('colors.gray.400'),
-          },
-        },
-        '.typo-card-title': {
-          fontFamily: theme('fontFamily.title'),
-          fontSize: theme('fontSize.heading-3[0]'),
-          lineHeight: theme('fontSize.heading-3[1].lineHeight'),
-          fontWeight: '700',
-          color: theme('colors.gray.800'),
-          '.dark &': {
-            color: theme('colors.gray.200'),
-          },
-        },
-        '.typo-card-subtitle': {
-          fontFamily: theme('fontFamily.title'),
-          fontSize: theme('fontSize.subtitle-2[0]'),
-          lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
-          fontWeight: '700',
-          color: theme('colors.gray.600'),
-          '.dark &': {
-            color: theme('colors.gray.300'),
-          },
-        },
-        '.typo-card-body': {
-          fontSize: theme('fontSize.body-1[0]'),
-          lineHeight: theme('fontSize.body-1[1].lineHeight'),
-          fontWeight: theme('fontSize.body-1[1].fontWeight'),
-          color: theme('colors.gray.600'),
-          '.dark &': {
-            color: theme('colors.gray.300'),
-          },
-        },
-        '.typo-card-meta': {
-          fontSize: theme('fontSize.body-2[0]'),
-          lineHeight: theme('fontSize.body-2[1].lineHeight'),
-          fontWeight: theme('fontSize.body-2[1].fontWeight'),
-          color: theme('colors.gray.500'),
-          '.dark &': {
-            color: theme('colors.gray.400'),
-          },
-        },
-        '.typo-card-cta': {
-          fontSize: theme('fontSize.body-1-medium[0]'),
-          lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
-          fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
-          color: theme('colors.gray.600'),
-          '.dark &': {
-            color: theme('colors.gray.200'),
-          },
-        },
-        '.typo-nav-link': {
-          fontFamily: theme('fontFamily.title'),
-          fontSize: theme('fontSize.body-1-medium[0]'),
-          lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
-          fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
-        },
-        '.typo-footer-heading': {
-          fontFamily: theme('fontFamily.title'),
-          fontSize: theme('fontSize.subtitle-2[0]'),
-          lineHeight: theme('fontSize.subtitle-2[1].lineHeight'),
-          fontWeight: '700',
-        },
-        '.typo-footer-body': {
-          fontSize: theme('fontSize.body-2[0]'),
-          lineHeight: theme('fontSize.body-2[1].lineHeight'),
-          fontWeight: theme('fontSize.body-2[1].fontWeight'),
-        },
-        '.typo-footer-meta': {
-          fontSize: theme('fontSize.caption[0]'),
-          lineHeight: theme('fontSize.caption[1].lineHeight'),
-          fontWeight: theme('fontSize.caption[1].fontWeight'),
-        },
       })
     }
   ],

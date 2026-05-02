@@ -145,7 +145,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           <div className="mb-8">
             <Link
               href={`/${locale}/stories`}
-              className="inline-flex items-center typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft"
+              className="inline-flex items-center text-[15px] font-medium text-ink-muted-80 hover:underline dark:text-on-dark-soft"
             >
               <ArrowLeft size={16} aria-hidden="true" className="mr-2" />
               {t('stories.detail.backToList')}
@@ -155,7 +155,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           {stories.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-ink-muted-40 text-2xl mb-4">📭</div>
-              <h2 className="typo-card-title mb-4 text-ink dark:text-on-dark">
+              <h2 className="text-title-md font-medium mb-4 text-ink dark:text-on-dark">
                 {t('stories.empty.byCategory', { category: categoryLabel })}
               </h2>
             </div>
@@ -197,7 +197,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           </nav>
 
           <div className="mt-12 pt-8 border-t border-hairline dark:border-white/10">
-            <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft mb-4">
+            <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft mb-4">
               {t('stories.categoryHub.browseAll', {
                 total: allStoriesCount,
                 defaultValue: `Browse all ${allStoriesCount} stories.`,
@@ -205,7 +205,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
             </p>
             <Link
               href={`/${locale}/stories`}
-              className="inline-flex items-center gap-2 typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft"
+              className="inline-flex items-center gap-2 text-[15px] font-medium text-ink-muted-80 hover:underline dark:text-on-dark-soft"
             >
               {t('stories.detail.viewAll')} <ArrowRight size={16} aria-hidden="true" />
             </Link>

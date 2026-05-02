@@ -119,8 +119,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-canvas border border-hairline rounded-card p-6 shadow-card"
               >
-                <h3 className="text-heading-4 font-title mb-3 text-ink">{item.heading}</h3>
-                <p className="typo-card-body text-ink-muted-60">{item.body}</p>
+                <h3 className="font-display font-light text-display-md mb-3 text-ink">{item.heading}</h3>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-60">{item.body}</p>
               </m.div>
             ))}
           </div>
@@ -156,10 +156,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                       </span>
                       <ArrowRight size={16} className="text-ink-muted-40 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" aria-hidden="true" />
                     </div>
-                    <h3 className="text-heading-5 font-title mb-2 text-ink group-hover:text-ink-muted-80 transition-colors duration-300">
+                    <h3 className="font-display font-light text-title-md mb-2 text-ink group-hover:text-ink-muted-80 transition-colors duration-300">
                       {link.title}
                     </h3>
-                    <p className="typo-card-body text-ink-muted-60">{link.description}</p>
+                    <p className="text-[15px] leading-[1.6] text-ink-muted-60">{link.description}</p>
                   </div>
                 </Link>
               </m.div>
@@ -189,7 +189,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               variant="highlight"
               delay={0.1 * (index + 1)}
               cta={
-                <div className="inline-flex items-center typo-card-cta hover:text-ink-muted-80 transition-colors duration-300">
+                <div className="inline-flex items-center text-[15px] font-medium hover:text-ink-muted-80 transition-colors duration-300">
                   {t('home.sections.servicesCta')}
                   <m.span
                     className="ml-1"

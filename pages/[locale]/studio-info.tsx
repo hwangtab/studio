@@ -165,15 +165,15 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
                 as="h2"
               />
               <div className="space-y-6">
-                <p className="typo-section-lead text-ink dark:text-on-dark border-l-4 border-primary pl-4 font-bold">
+                <p className="text-[17px] leading-[1.7] text-ink dark:text-on-dark border-l-4 border-ink/30 dark:border-white/30 pl-4 font-medium">
                   {t('studioInfo.intro.quote')}
                 </p>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft leading-loose">
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft leading-loose">
                   {t('studioInfo.intro.paragraphs.0')}
                   <br className="mb-2" />
                   {t('studioInfo.intro.paragraphs.1')}
                 </p>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft leading-loose">
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft leading-loose">
                   {t('studioInfo.intro.paragraphs.2')}
                 </p>
               </div>
@@ -236,8 +236,8 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           <div className="max-w-4xl mx-auto space-y-6">
             {hubLocaleContent.items.map((item) => (
               <BaseCard key={item.heading} variant="default" className="p-6">
-                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{item.body}</p>
+                <h3 className="font-display font-light text-title-md mb-3 text-ink dark:text-on-dark">{item.heading}</h3>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{item.body}</p>
               </BaseCard>
             ))}
           </div>
@@ -253,35 +253,35 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/lesson`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -298,7 +298,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           title={
             <>
               {t('studioInfo.cta.titleLine1')}<br />
-              <span className="text-primary">{t('studioInfo.cta.titleHighlight')}</span>
+              <span className="text-on-dark-soft">{t('studioInfo.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

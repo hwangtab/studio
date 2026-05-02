@@ -187,10 +187,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
           {filteredStories.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-ink-muted-40 text-2xl mb-4">📭</div>
-              <h2 className="typo-card-title mb-4 text-ink dark:text-on-dark">
+              <h2 className="text-title-md font-medium mb-4 text-ink dark:text-on-dark">
                 {t('stories.empty.title')}
               </h2>
-              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">
+              <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">
                 {activeCategory === 'all'
                   ? t('stories.empty.all')
                   : t('stories.empty.byCategory', { category: t(`stories.categories.${activeCategory}`) })}

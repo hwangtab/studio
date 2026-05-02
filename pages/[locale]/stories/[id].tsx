@@ -218,7 +218,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         <div className="mb-12 flex items-center justify-between border-b border-hairline dark:border-white/10 pb-6">
           <Link
             href={getLink("/stories")}
-            className="inline-flex items-center typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
+            className="inline-flex items-center text-[15px] font-medium text-ink-muted-80 hover:underline dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
           >
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.backToList')}
@@ -227,7 +227,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           <button
             type="button"
             onClick={shareStory}
-            className="inline-flex items-center typo-card-cta hover:underline text-ink-muted-60 dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
+            className="inline-flex items-center text-[15px] font-medium hover:underline text-ink-muted-60 dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
           >
             <Share2 className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.share')}
@@ -259,7 +259,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         <StoryCTA type={ctaType} locale={locale} />
 
         <div className="mt-8 pt-8 border-t border-hairline dark:border-white/10">
-          <h2 className="typo-card-title mb-6 text-ink dark:text-on-dark">{t('stories.detail.moreTitle')}</h2>
+          <h2 className="text-title-md font-medium mb-6 text-ink dark:text-on-dark">{t('stories.detail.moreTitle')}</h2>
           {relatedStories.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               {relatedStories.map((related) => (
@@ -272,9 +272,9 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
               ))}
             </div>
           ) : (
-            <p className="typo-card-body text-ink-muted-60 dark:text-on-dark-soft mb-6">{t('stories.detail.noRelated')}</p>
+            <p className="text-[15px] leading-[1.6] text-ink-muted-60 dark:text-on-dark-soft mb-6">{t('stories.detail.noRelated')}</p>
           )}
-          <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta text-ink-muted-80 hover:underline dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep">
+          <Link href={getLink("/stories")} className="inline-flex items-center text-[15px] font-medium text-ink-muted-80 hover:underline dark:text-on-dark-soft min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep">
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.viewAll')}
           </Link>

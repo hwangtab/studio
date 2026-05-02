@@ -101,7 +101,7 @@ export const LanguageSwitcher = ({
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-ink dark:text-on-dark touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
+          className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-ink dark:text-on-dark touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep"
         >
           <div className="flex items-center gap-2">
             <span>🌐</span>
@@ -119,7 +119,7 @@ export const LanguageSwitcher = ({
                   hrefLang={locale}
                   onClick={() => setIsOpen(false)}
                   className={`
-                    flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep
+                    flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep
                     ${currentLocale === locale
                       ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
                       : 'text-ink-muted-60 dark:text-on-dark-soft hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'
@@ -155,7 +155,7 @@ export const LanguageSwitcher = ({
         className={`
           inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen
             ? !isFloating
               ? 'bg-ink text-on-dark shadow-card'
@@ -189,7 +189,7 @@ export const LanguageSwitcher = ({
                   onClick={() => setIsOpen(false)}
                   className={`
                     px-3 py-2 sm:px-2 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-canvas-deep
                     ${currentLocale === locale
                       ? 'bg-ink/[0.06] text-link dark:text-link-on-dark font-medium'
                       : 'text-ink-muted-60 dark:text-on-dark-soft hover:text-ink dark:hover:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06]'}

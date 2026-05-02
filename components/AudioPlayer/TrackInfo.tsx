@@ -38,7 +38,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                 className="relative mb-8 group"
                 {...albumMotionProps}
             >
-                <div className={`absolute inset-0 rounded-full blur-3xl opacity-20 transition-transform transition-colors duration-1000 ${isPlaying ? 'bg-primary scale-110' : 'bg-white/10 scale-90'
+                <div className={`absolute inset-0 rounded-full blur-3xl opacity-20 transition-transform transition-colors duration-1000 ${isPlaying ? 'bg-orb-lavender scale-110' : 'bg-white/10 scale-90'
                     }`} />
 
                 <div
@@ -81,7 +81,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                                     delay: i * 0.2,
                                     ease: "easeInOut"
                                 } : { duration: 0.2 }}
-                                className={`w-1 rounded-full ${isPlaying ? 'bg-primary' : 'bg-gray-500'}`}
+                                className={`w-1 rounded-full ${isPlaying ? 'bg-ink' : 'bg-gray-500'}`}
                             />
                         ))}
                     </div>
@@ -100,7 +100,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                     {track.title}
                 </m.h3>
                 <m.p
-                    className="text-lg text-primary font-medium mb-6"
+                    className="text-lg text-ink-muted-60 dark:text-on-dark-soft font-medium mb-6"
                     layout
                 >
                     {track.artist}

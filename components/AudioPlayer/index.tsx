@@ -53,8 +53,8 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
         >
             {/* Background Atmosphere (Dark Mode Only) */}
             <div className="hidden dark:block absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute top-[-50%] left-[-20%] w-[70%] h-[70%] rounded-full bg-primary/20 blur-[120px]" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary/20 blur-[100px]" />
+                <div className="absolute top-[-50%] left-[-20%] w-[70%] h-[70%] rounded-full bg-orb-lavender/20 blur-[120px]" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-orb-mint/20 blur-[100px]" />
             </div>
 
             <div className="relative z-10 grid lg:grid-cols-[1.2fr,1fr] gap-0">

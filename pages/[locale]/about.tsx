@@ -128,8 +128,8 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           <div className="max-w-4xl mx-auto space-y-6">
             {hubLocaleContent.items.map((item) => (
               <BaseCard key={item.heading} variant="default" className="p-6">
-                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{item.body}</p>
+                <h3 className="font-display font-light text-title-md mb-3 text-ink dark:text-on-dark">{item.heading}</h3>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{item.body}</p>
               </BaseCard>
             ))}
           </div>
@@ -189,23 +189,23 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             variant="default"
             className="p-6"
           >
-            <h3 className="typo-card-title mb-4 text-ink dark:text-on-dark">{t('about.package.title')}</h3>
+            <h3 className="font-display font-light text-title-md mb-4 text-ink dark:text-on-dark">{t('about.package.title')}</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.0')}</p>
+                <span className="w-2 h-2 bg-ink/40 dark:bg-white/40 rounded-full mt-2 mr-2"></span>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.0')}</p>
               </li>
               <li className="flex items-start">
-                <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.1')}</p>
+                <span className="w-2 h-2 bg-ink/40 dark:bg-white/40 rounded-full mt-2 mr-2"></span>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.1')}</p>
               </li>
               <li className="flex items-start">
-                <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.2')}</p>
+                <span className="w-2 h-2 bg-ink/40 dark:bg-white/40 rounded-full mt-2 mr-2"></span>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.2')}</p>
               </li>
               <li className="flex items-start">
-                <span className="w-2 h-2 bg-primary dark:bg-primary-light rounded-full mt-2 mr-2"></span>
-                <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.3')}</p>
+                <span className="w-2 h-2 bg-ink/40 dark:bg-white/40 rounded-full mt-2 mr-2"></span>
+                <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{t('about.package.items.3')}</p>
               </li>
             </ul>
           </BaseCard>
@@ -221,10 +221,10 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                   className="p-4"
                 >
                   <div className="flex items-center mb-2">
-                    <Icon className="text-primary dark:text-primary-light mr-2" aria-hidden="true" />
-                    <h3 className="typo-card-subtitle text-ink dark:text-on-dark">{advantage.title}</h3>
+                    <Icon className="text-ink dark:text-on-dark mr-2" aria-hidden="true" />
+                    <h3 className="font-display font-light text-title-sm text-ink dark:text-on-dark">{advantage.title}</h3>
                   </div>
-                  <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft">{advantage.description}</p>
+                  <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft">{advantage.description}</p>
                 </BaseCard>
               );
             })}
@@ -249,12 +249,12 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
               className="p-6 text-center"
             >
               <div className="flex justify-center mb-4">
-                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <Phone className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <div className="bg-ink/[0.07] dark:bg-white/[0.07] p-4 rounded-full">
+                  <Phone className="text-ink dark:text-on-dark" size={20} aria-hidden="true" />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.call')}</h3>
-              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.phone}</p>
+              <h3 className="font-display font-light text-title-sm mb-2 text-ink dark:text-on-dark">{t('actions.call')}</h3>
+              <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft transition-colors">{siteConfig.contact.phone}</p>
             </BaseCard>
           </a>
 
@@ -267,12 +267,12 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
               className="p-6 text-center"
             >
               <div className="flex justify-center mb-4">
-                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <Mail className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <div className="bg-ink/[0.07] dark:bg-white/[0.07] p-4 rounded-full">
+                  <Mail className="text-ink dark:text-on-dark" size={20} aria-hidden="true" />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.email')}</h3>
-              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.email}</p>
+              <h3 className="font-display font-light text-title-sm mb-2 text-ink dark:text-on-dark">{t('actions.email')}</h3>
+              <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft transition-colors">{siteConfig.contact.email}</p>
             </BaseCard>
           </a>
 
@@ -287,12 +287,12 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
               className="p-6 text-center"
             >
               <div className="flex justify-center mb-4">
-                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <MessageCircle className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <div className="bg-ink/[0.07] dark:bg-white/[0.07] p-4 rounded-full">
+                  <MessageCircle className="text-ink dark:text-on-dark" size={20} aria-hidden="true" />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.kakao')}</h3>
-              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{t('contact.info.kakao')}</p>
+              <h3 className="font-display font-light text-title-sm mb-2 text-ink dark:text-on-dark">{t('actions.kakao')}</h3>
+              <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft transition-colors">{t('contact.info.kakao')}</p>
             </BaseCard>
           </a>
 
@@ -307,12 +307,12 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
               className="p-6 text-center"
             >
               <div className="flex justify-center mb-4">
-                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                  <MapPin className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <div className="bg-ink/[0.07] dark:bg-white/[0.07] p-4 rounded-full">
+                  <MapPin className="text-ink dark:text-on-dark" size={20} aria-hidden="true" />
                 </div>
               </div>
-              <h3 className="typo-card-subtitle mb-2 text-ink dark:text-on-dark">{t('actions.location')}</h3>
-              <p className="typo-card-body text-ink-muted-80 dark:text-on-dark-soft hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.address}</p>
+              <h3 className="font-display font-light text-title-sm mb-2 text-ink dark:text-on-dark">{t('actions.location')}</h3>
+              <p className="text-[15px] leading-[1.6] text-ink-muted-80 dark:text-on-dark-soft transition-colors">{siteConfig.contact.address}</p>
             </BaseCard>
           </a>
         </div>
@@ -328,35 +328,35 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/lesson`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -373,7 +373,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           title={
             <>
               {t('about.cta.titleLine1')}<br />
-              <span className="text-primary">{t('about.cta.titleHighlight')}</span>
+              <span className="text-on-dark-soft">{t('about.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

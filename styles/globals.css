@@ -9,8 +9,7 @@
 /* 기본 스타일 */
 @layer base {
   :root {
-    /* Editorial Cinematic 토큰 (DESIGN.md). 옛 --primary-rgb는 Phase 9에서 제거. */
-    --primary-rgb: 109, 40, 217; /* DEPRECATED — keep for backwards compat */
+    /* Editorial Cinematic 토큰 (DESIGN.md §2) */
     --orb-mint: #a7e5d3;
     --orb-peach: #f4c5a8;
     --orb-lavender: #c8b8e0;
