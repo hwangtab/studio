@@ -128,6 +128,7 @@ const ContactCTA = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={trackImageKakao}
+                        aria-label={imageAlt}
                         className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2"
                     >
                         <ResponsiveImage
@@ -145,6 +146,7 @@ const ContactCTA = ({
                     <Link
                         href={imageHref}
                         prefetch={false}
+                        aria-label={imageAlt}
                         className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link-focus focus-visible:ring-offset-2"
                     >
                         <ResponsiveImage

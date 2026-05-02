@@ -87,7 +87,7 @@ const ImageHero = ({
       {/* Atmospheric orb accents */}
       {orbs?.map((o, i) => (
         <GradientOrb
-          key={i}
+          key={`${o.color}-${i}`}
           color={o.color}
           size={o.size}
           opacity={o.opacity ?? 0.35}

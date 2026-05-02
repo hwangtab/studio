@@ -41,7 +41,7 @@ const Hero: React.FC<HeroProps> = ({
       )}
     >
       {orbs?.map((o, i) => (
-        <GradientOrb key={i} color={o.color} size={o.size} opacity={o.opacity ?? (isDark ? 0.55 : 0.4)}
+        <GradientOrb key={`${o.color}-${i}`} color={o.color} size={o.size} opacity={o.opacity ?? (isDark ? 0.55 : 0.4)}
           style={{ top: o.top, left: o.left, right: o.right, bottom: o.bottom }} />
       ))}
       <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12 grid gap-10 lg:gap-16 lg:grid-cols-12 items-center">

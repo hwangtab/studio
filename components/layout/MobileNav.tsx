@@ -71,7 +71,12 @@ export const MobileNav = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleScroll = () => onClose();
+    const scrollYAtOpen = window.scrollY;
+    const handleScroll = () => {
+      // iOS WebKit sometimes fires window scroll events during internal overflow scroll.
+      // Only close if the page itself has scrolled from its position when the menu opened.
+      if (Math.abs(window.scrollY - scrollYAtOpen) > 4) onClose();
+    };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 

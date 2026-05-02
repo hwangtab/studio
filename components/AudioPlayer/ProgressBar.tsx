@@ -17,7 +17,6 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                 <input
                     type="range"
                     ref={progressBarRef}
-                    defaultValue="0"
                     onChange={onChangeRange}
                     max={duration || 0}
                     aria-label={ariaLabel}
