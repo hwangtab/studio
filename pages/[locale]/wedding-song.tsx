@@ -210,8 +210,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
               <SectionHeading
                 eyebrow="About"
                 title={t('weddingSong.intro.title')}
-                align="left"
-                className="mb-8"
+                align="left" marginBottom="tight"
                 as="h2"
               />
               <ul className="space-y-5">
@@ -243,7 +242,6 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         <SectionHeading
           eyebrow="Package"
           title={t('weddingSong.package.title')}
-          className="mb-10"
         />
         {weddingPackage && (
           <div className="max-w-md mx-auto">
@@ -270,7 +268,6 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
             eyebrow="Process"
             title={t('weddingSong.process.title')}
             lead={t('weddingSong.process.subtitle')}
-            className="mb-12"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {([0, 1, 2, 3] as const).map((i) => (
@@ -317,7 +314,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       <ReviewSection tone="warm" locale={locale} />
 
       {/* 관련 서비스 바로가기 */}
-      <Section tone="canvas" className="py-10">
+      <Section tone="canvas" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
@@ -344,7 +341,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       </Section>
 
       {/* Final CTA Section — rose orb for wedding tone */}
-      <Section tone="deep" orbs={[{ color: 'rose', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
+      <Section tone="deep" orbs={[{ color: 'rose', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} paddingY="default">
         <ContactCTA
           locale={locale}
           title={

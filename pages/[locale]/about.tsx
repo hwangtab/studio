@@ -122,8 +122,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
       {hubLocaleContent && (
         <Section tone="warm">
           <SectionHeading
-            title={hubLocaleContent.title}
-            className="mb-8"
+            title={hubLocaleContent.title} marginBottom="tight"
           />
           <div className="max-w-4xl mx-auto space-y-6">
             {hubLocaleContent.items.map((item) => (
@@ -140,7 +139,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         <SectionHeading
           title={t('about.serviceTitle')}
           lead={t('about.serviceSubtitle')}
-          className="mb-12"
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -161,7 +159,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         <SectionHeading
           title={t('about.processTitle')}
           lead={t('about.processSubtitle')}
-          className="mb-12"
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -181,7 +178,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         <SectionHeading
           title={t('about.differenceTitle')}
           lead={t('about.differenceSubtitle')}
-          className="mb-12"
         />
 
         <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -236,7 +232,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         <SectionHeading
           title={t('contact.title')}
           lead={t('contact.subtitle')}
-          className="mb-12"
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -323,7 +318,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
       {/* 서비스 바로가기 — 본문 fold 안 button pill들. next/link 자동 prefetch가
           대상 페이지의 SSG JSON·청크를 동시 다운로드하지 않도록 prefetch={false}.
           hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 그대로 작동. */}
-      <Section tone="warm" className="py-10">
+      <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}

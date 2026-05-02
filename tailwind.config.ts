@@ -47,7 +47,9 @@ const config: Config = {
         },
         'on-dark': {
           DEFAULT: '#ffffff',
-          soft: '#a8a29e',
+          // strong: 다크 시네마틱 배경에서 lead/CTA 본문에 사용 — soft보다 명시적으로 밝게
+          strong: '#e7e5e4',
+          soft: '#c7c3be',
         },
         'surface-dark-elevated': '#1c1917',
         // border-hairline / border-hairline-strong 전용 — bg-hairline 사용 금지 (의미상 fill 색이 아님)

@@ -46,7 +46,6 @@ const NotFoundPage: NextPage = () => {
         lead={t('notFound.messageLine1')}
         align="center"
         as="h1"
-        className="mb-10"
       />
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">

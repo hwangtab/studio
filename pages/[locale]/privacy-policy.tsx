@@ -248,8 +248,7 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
           title={policyCopy.title}
           lead={policyCopy.subtitle}
           as="h1"
-          align="left"
-          className="mb-8"
+          align="left" marginBottom="tight"
         />
         <p className="text-ink-muted-60 dark:text-on-dark-soft text-sm mb-10">
           {policyCopy.lastUpdatedLabel}: {policyCopy.lastUpdatedValue}

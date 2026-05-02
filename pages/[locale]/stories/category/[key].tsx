@@ -213,7 +213,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         </div>
       </Section>
 
-      <Section tone="deep" className="py-16">
+      <Section tone="deep" paddingY="default">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

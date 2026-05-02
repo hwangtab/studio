@@ -181,7 +181,7 @@ const PriceLeader = ({
   note: string;
   locale: Locale;
 }) => (
-  <Section tone="canvas" className="py-12">
+  <Section tone="canvas" paddingY="sm">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8">
         <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-canvas-deep text-on-dark text-sm font-semibold shadow-card">
@@ -367,7 +367,6 @@ const FacilitiesGrid = ({
       eyebrow="Facilities"
       title={title}
       lead={subtitle}
-      className="mb-10"
     />
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {items.map((item, idx) => (
@@ -624,8 +623,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         <m.div {...painPointsAnimation}>
           <SectionHeading
             eyebrow="Pain Points"
-            title={t('practiceRoom.painPoints.title')}
-            className="mb-8"
+            title={t('practiceRoom.painPoints.title')} marginBottom="tight"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
             <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} delay={0.1} locale={locale} />
@@ -642,8 +640,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         <m.div {...audienceSectionAnimation}>
           <SectionHeading
             eyebrow="Who It's For"
-            title={t('practiceRoom.audience.title')}
-            className="mb-6"
+            title={t('practiceRoom.audience.title')} marginBottom="tight"
           />
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -706,7 +703,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           <SectionHeading
             eyebrow="Features"
             title={t('practiceRoom.features.title')}
-            className="mb-12"
           />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -757,7 +753,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               eyebrow="Resident Benefits"
               title={t('practiceRoom.residentBenefits.title')}
               lead={t('practiceRoom.residentBenefits.subtitle')}
-              className="mb-10"
             />
 
             {/* 혜택 총가치 환산 — 월세 대비 제공 가치 강조 */}
@@ -822,12 +817,11 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           서버사이드 렌더 HTML이라 크롤러는 접힌 링크도 전부 탐색 가능.
           HTML 문자열은 getStaticProps에서 escapeHtml + 고정 slug 배열로 생성 — 외부 입력 없음. */}
       {locale === 'ko' && (
-        <Section tone="warm" className="py-10">
+        <Section tone="warm" paddingY="sm">
           <div className="max-w-5xl mx-auto">
             <SectionHeading
               eyebrow="Related Guides"
-              title={t('practiceRoom.relatedGuides.title')}
-              className="mb-6"
+              title={t('practiceRoom.relatedGuides.title')} marginBottom="tight"
             />
             {/* eslint-disable-next-line react/no-danger */}
             <div
@@ -860,7 +854,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section tone="canvas" className="py-10">
+      <Section tone="canvas" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/lesson`}
@@ -894,7 +888,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
       </Section>
 
       {/* Final CTA Section */}
-      <Section tone="deep" orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
+      <Section tone="deep" orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} paddingY="default">
         <ContactCTA
           locale={locale}
           title={

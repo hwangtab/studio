@@ -155,7 +155,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12 py-3 border-b border-hairline dark:border-white/10"
       />
 
-      <Section tone="canvas" className="pt-8 pb-12">
+      <Section tone="canvas" paddingY="sm">
         <div className="mb-8">
           <Link
             href={getLink("/portfolio")}
@@ -217,7 +217,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         </div>
       </Section>
 
-      <Section tone="warm" className="py-12">
+      <Section tone="warm" paddingY="sm">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-lead text-ink-muted-80 dark:text-on-dark-soft mb-6">
             {t('portfolio.detail.ctaPrompt', '당신의 음악도 완성해 드립니다.')}

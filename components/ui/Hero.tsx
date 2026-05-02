@@ -58,7 +58,7 @@ const Hero: React.FC<HeroProps> = ({
             {title}
           </h1>
           {lead && (
-            <p className={cn('mt-6 text-lead', isDark ? 'text-on-dark-soft' : 'text-ink-muted-80')}>
+            <p className={cn('mt-6 text-lead', isDark ? 'text-on-dark-strong' : 'text-ink-muted-80')}>
               {lead}
             </p>
           )}

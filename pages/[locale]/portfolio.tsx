@@ -173,8 +173,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
             <SectionHeading
               eyebrow="Sample Tracks"
               title={t('portfolio.sampleTracks')}
-              align="left"
-              className="mb-8"
+              align="left" marginBottom="tight"
               as="h2"
             />
             <AudioPlayer tracks={audioTracks} locale={locale} />
@@ -196,8 +195,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
             <SectionHeading
               eyebrow="Projects"
               title={t('portfolio.projects')}
-              align="left"
-              className="mb-0"
+              align="left" marginBottom="tight"
               as="h2"
             />
 
@@ -249,7 +247,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section tone="canvas" className="py-10">
+      <Section tone="canvas" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
@@ -282,7 +280,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         </div>
       </Section>
 
-      <Section tone="warm" className="py-16">
+      <Section tone="warm" paddingY="default">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

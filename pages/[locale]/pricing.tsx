@@ -214,8 +214,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       {hubLocaleContent && (
         <Section tone="warm">
           <SectionHeading
-            title={hubLocaleContent.title}
-            className="mb-8"
+            title={hubLocaleContent.title} marginBottom="tight"
           />
           <div className="max-w-4xl mx-auto space-y-6">
             {hubLocaleContent.items.map((item) => (
@@ -393,7 +392,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section tone="canvas" className="py-10">
+      <Section tone="canvas" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/studio-info`}
@@ -427,7 +426,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Final CTA Section */}
-      <Section tone="deep" className="py-16">
+      <Section tone="deep" paddingY="default">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

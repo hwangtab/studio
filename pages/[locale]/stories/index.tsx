@@ -242,7 +242,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
       </Section>
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section tone="warm" className="py-10">
+      <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
@@ -275,7 +275,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         </div>
       </Section>
 
-      <Section tone="deep" className="py-16">
+      <Section tone="deep" paddingY="default">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

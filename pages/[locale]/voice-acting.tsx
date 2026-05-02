@@ -216,8 +216,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         <m.div {...AUDIENCE_ANIMATION}>
           <SectionHeading
             eyebrow="Who It's For"
-            title={t('voiceActing.audience.title')}
-            className="mb-8"
+            title={t('voiceActing.audience.title')} marginBottom="tight"
             as="h2"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -257,8 +256,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
               <SectionHeading
                 eyebrow="Studio"
                 title={t('voiceActing.environment.title')}
-                align="left"
-                className="mb-8"
+                align="left" marginBottom="tight"
                 as="h2"
               />
               <ul className="space-y-4">
@@ -285,7 +283,6 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         <SectionHeading
           eyebrow="Pricing"
           title={t('voiceActing.package.title')}
-          className="mb-10"
         />
         {voiceoverPackage && (
           <div className="max-w-md mx-auto">
@@ -312,7 +309,6 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
             eyebrow="Process"
             title={t('voiceActing.process.title')}
             lead={t('voiceActing.process.subtitle')}
-            className="mb-12"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {([0, 1, 2, 3] as const).map((i) => (
@@ -349,7 +345,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       <ReviewSection tone="canvas" locale={locale} />
 
       {/* 관련 서비스 바로가기 */}
-      <Section tone="warm" className="py-10">
+      <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
@@ -376,7 +372,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       </Section>
 
       {/* Final CTA Section */}
-      <Section tone="deep" orbs={[{ color: 'sky', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
+      <Section tone="deep" orbs={[{ color: 'sky', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} paddingY="default">
         <ContactCTA
           locale={locale}
           title={

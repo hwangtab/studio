@@ -249,7 +249,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                     title={t('lesson.format.title')}
                     lead={t('lesson.format.subtitle')}
                     as="h2"
-                    className="mb-10"
                 />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
                     {lessonFormatItems.map((item) => (
@@ -272,8 +271,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
               <Section tone="warm">
                 <SectionHeading
                   eyebrow="Local Info"
-                  title={hubLocaleContent.title}
-                  className="mb-8"
+                  title={hubLocaleContent.title} marginBottom="tight"
                 />
                 <div className="max-w-4xl mx-auto space-y-6">
                   {hubLocaleContent.items.map((item) => (
@@ -315,7 +313,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                     title={t('lesson.curriculum.title')}
                     lead={t('lesson.curriculum.subtitle')}
                     as="h2"
-                    className="mb-12"
                 />
 
                 {/* Phase 1 — 기본 3개월 과정 */}
@@ -418,8 +415,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                         <SectionHeading
                             title={t('lesson.why.title')}
                             as="h2"
-                            align="left"
-                            className="mb-8"
+                            align="left" marginBottom="tight"
                         />
                         <div className="space-y-10">
                             <div className="flex">
@@ -492,7 +488,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
             </Section>
 
             {/* 관련 서비스 바로가기 */}
-            <Section tone="warm" className="py-10">
+            <Section tone="warm" paddingY="sm">
                 <div className="flex flex-wrap justify-center gap-4">
                     <Link
                         href={`/${locale}/practice-room`}
@@ -526,7 +522,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
             </Section>
 
             {/* Final CTA Section */}
-            <Section tone="deep" orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} className="py-16">
+            <Section tone="deep" orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} paddingY="default">
                 <ContactCTA
                     locale={locale}
                     title={

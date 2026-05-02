@@ -160,8 +160,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
               <SectionHeading
                 title={t('studioInfo.intro.title')}
                 lead={t('studioInfo.intro.subtitle')}
-                align="left"
-                className="mb-8"
+                align="left" marginBottom="tight"
                 as="h2"
               />
               <div className="space-y-6">
@@ -230,8 +229,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
       {hubLocaleContent && (
         <Section tone="canvas">
           <SectionHeading
-            title={hubLocaleContent.title}
-            className="mb-8"
+            title={hubLocaleContent.title} marginBottom="tight"
           />
           <div className="max-w-4xl mx-auto space-y-6">
             {hubLocaleContent.items.map((item) => (
@@ -248,7 +246,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section tone="warm" className="py-10">
+      <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
