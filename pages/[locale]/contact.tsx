@@ -1,12 +1,12 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import Hero from '../../components/ui/Hero';
 import Section from '../../components/ui/Section';
+import PillNavLink from '../../components/ui/PillNavLink';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -478,55 +478,22 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/stories`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/studio-info`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink dark:text-on-dark hover:bg-ink/[0.04] dark:hover:bg-white/[0.06] transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {[
+            { i18nKey: 'nav.weddingSong', path: '/wedding-song' },
+            { i18nKey: 'nav.voiceActing', path: '/voice-acting' },
+            { i18nKey: 'nav.pricing', path: '/pricing' },
+            { i18nKey: 'nav.stories', path: '/stories' },
+            { i18nKey: 'nav.equipment', path: '/studio-info' },
+            { i18nKey: 'nav.lesson', path: '/lesson' },
+            { i18nKey: 'nav.practiceRoom', path: '/practice-room' },
+          ].map((item) => (
+            <PillNavLink
+              key={item.path}
+              href={`/${locale}${item.path}`}
+              label={t(item.i18nKey)}
+              variant="subtle"
+            />
+          ))}
         </div>
       </Section>
     </>

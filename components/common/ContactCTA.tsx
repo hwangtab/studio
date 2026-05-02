@@ -80,7 +80,7 @@ const ContactCTA = ({
                         title={title}
                         lead={subtitle}
                         align="left"
-                        className="mb-8"
+                        marginBottom="tight"
                         as={headingAs}
                     />
                     <div className="flex flex-col sm:flex-row gap-4">

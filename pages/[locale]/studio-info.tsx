@@ -1,9 +1,8 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, ArrowRight } from 'lucide-react';
+import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -17,6 +16,7 @@ import EquipmentSection from '../../components/studio/EquipmentSection';
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import Section from '../../components/ui/Section';
+import PillNavLink from '../../components/ui/PillNavLink';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
@@ -187,7 +187,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           <SectionHeading
             eyebrow="EQUIPMENT"
             title={t('studioInfo.equipment.title')}
-            className="mb-12 py-4"
+            className="py-4"
           />
 
           {/* 장비 이미지 갤러리 */}
@@ -248,48 +248,25 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {[
+            { i18nKey: 'nav.weddingSong', path: '/wedding-song' },
+            { i18nKey: 'nav.voiceActing', path: '/voice-acting' },
+            { i18nKey: 'nav.pricing', path: '/pricing' },
+            { i18nKey: 'nav.practiceRoom', path: '/practice-room' },
+            { i18nKey: 'nav.lesson', path: '/lesson' },
+          ].map((item) => (
+            <PillNavLink
+              key={item.path}
+              href={`/${locale}${item.path}`}
+              label={t(item.i18nKey)}
+            />
+          ))}
         </div>
       </Section>
 
       <Section
         tone="deep"
-        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]}
-        className="py-16"
+        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} paddingY="default"
       >
         <ContactCTA
           locale={locale}

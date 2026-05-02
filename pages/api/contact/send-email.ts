@@ -274,9 +274,6 @@ const validationCodeMessageMap: Record<ContactValidationCode, string> = {
     message_max: 'Message must be 10-5000 characters',
 };
 
-const toOptionalString = (value: unknown): string | undefined =>
-    typeof value === 'string' ? value : undefined;
-
 const toSafeOptionalString = (value: unknown, maxLength = 255): string | undefined => {
     if (typeof value !== 'string') return undefined;
     const trimmed = value.slice(0, maxLength);

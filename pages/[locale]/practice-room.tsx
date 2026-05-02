@@ -1,9 +1,8 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, ShieldCheck, ArrowRight, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown, Layers, Volume2, Leaf, Sun, Thermometer, Droplets, Coffee, Lightbulb } from 'lucide-react';
+import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, ShieldCheck, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, Trophy, CalendarDays, Lock, Wallet, ChevronDown, Layers, Volume2, Leaf, Sun, Thermometer, Droplets, Coffee, Lightbulb } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -11,6 +10,7 @@ import Hero from '../../components/ui/Hero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import Section from '../../components/ui/Section';
+import PillNavLink from '../../components/ui/PillNavLink';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
 // ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
@@ -856,34 +856,18 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section tone="canvas" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/stories`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/contact`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {[
+            { i18nKey: 'nav.lesson', path: '/lesson' },
+            { i18nKey: 'nav.pricing', path: '/pricing' },
+            { i18nKey: 'nav.stories', path: '/stories' },
+            { i18nKey: 'nav.contact', path: '/contact' },
+          ].map((item) => (
+            <PillNavLink
+              key={item.path}
+              href={`/${locale}${item.path}`}
+              label={t(item.i18nKey)}
+            />
+          ))}
         </div>
       </Section>
 

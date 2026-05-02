@@ -2,10 +2,9 @@ import React, { useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight } from 'lucide-react';
+
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
@@ -15,6 +14,7 @@ import type { Story } from '../../../types/story';
 import Section from '../../../components/ui/Section';
 import Hero from '../../../components/ui/Hero';
 import Pagination from '../../../components/ui/Pagination';
+import PillNavLink from '../../../components/ui/PillNavLink';
 
 // Below-fold CTA는 코드 스플리팅. 페이지 하단 노출 전까진 JS 로드 지연.
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
@@ -244,34 +244,19 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink/[0.04] transition-colors duration-200 dark:text-on-dark dark:border-white/20 dark:hover:bg-white/[0.06]"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {[
+            { i18nKey: 'nav.weddingSong', path: '/wedding-song' },
+            { i18nKey: 'nav.voiceActing', path: '/voice-acting' },
+            { i18nKey: 'nav.lesson', path: '/lesson' },
+            { i18nKey: 'nav.practiceRoom', path: '/practice-room' },
+          ].map((item) => (
+            <PillNavLink
+              key={item.path}
+              href={`/${locale}${item.path}`}
+              label={t(item.i18nKey)}
+              variant="subtle"
+            />
+          ))}
         </div>
       </Section>
 

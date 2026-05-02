@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import SectionHeading from './SectionHeading';
-import Section from './Section';
 
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
@@ -44,7 +43,6 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 title={title}
                 lead={subtitle}
                 align="center"
-                className="mb-12"
             />
 
             <div className="max-w-3xl mx-auto">

@@ -1,12 +1,12 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle, ArrowRight } from 'lucide-react';
+import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
+import PillNavLink from '../../components/ui/PillNavLink';
 import ImageHero from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting
@@ -320,48 +320,25 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 그대로 작동. */}
       <Section tone="warm" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-medium hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {[
+            { i18nKey: 'nav.weddingSong', path: '/wedding-song' },
+            { i18nKey: 'nav.voiceActing', path: '/voice-acting' },
+            { i18nKey: 'nav.lesson', path: '/lesson' },
+            { i18nKey: 'nav.practiceRoom', path: '/practice-room' },
+            { i18nKey: 'nav.pricing', path: '/pricing' },
+          ].map((item) => (
+            <PillNavLink
+              key={item.path}
+              href={`/${locale}${item.path}`}
+              label={t(item.i18nKey)}
+            />
+          ))}
         </div>
       </Section>
 
       <Section
         tone="deep"
-        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]}
-        className="py-16"
+        orbs={[{ color: 'mint', size: 600, top: '-100px', right: '-80px', opacity: 0.5 }]} paddingY="default"
       >
         <ContactCTA
           locale={locale}

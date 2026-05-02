@@ -37,7 +37,7 @@ const QuickAnswers = ({
           title={title}
           lead={subtitle}
           align="center"
-          className="mb-8"
+          marginBottom="tight"
         />
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((item, index) => (

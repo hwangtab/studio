@@ -214,7 +214,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         ]}
       />
 
-      <Section tone="canvas" containerSize="narrow" className="pt-12 pb-12">
+      <Section tone="canvas" containerSize="narrow" paddingY="sm">
         <div className="mb-12 flex items-center justify-between border-b border-hairline dark:border-white/10 pb-6">
           <Link
             href={getLink("/stories")}

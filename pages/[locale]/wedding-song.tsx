@@ -1,9 +1,8 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -12,6 +11,7 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import BaseCard from '../../components/ui/BaseCard';
 import Section from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import PillNavLink from '../../components/ui/PillNavLink';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -316,27 +316,17 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       {/* 관련 서비스 바로가기 */}
       <Section tone="canvas" paddingY="sm">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/studio-info`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-pill border border-hairline-strong text-ink font-semibold hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {[
+            { i18nKey: 'nav.pricing', path: '/pricing' },
+            { i18nKey: 'nav.equipment', path: '/studio-info' },
+            { i18nKey: 'nav.voiceActing', path: '/voice-acting' },
+          ].map((item) => (
+            <PillNavLink
+              key={item.path}
+              href={`/${locale}${item.path}`}
+              label={t(item.i18nKey)}
+            />
+          ))}
         </div>
       </Section>
 
