@@ -18,7 +18,10 @@
   }
 
   body {
-    @apply font-sans text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
+    /* next/font CSS variable(@font-face)는 _app.tsx에서 import될 때만 주입됨.
+       body는 해당 div 밖에 있으므로 var() 의존 없이 안전한 sans-serif 스택 직접 지정. */
+    font-family: -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    @apply text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
     word-break: keep-all;
     line-height: 1.6;
   }
