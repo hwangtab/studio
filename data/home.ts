@@ -11,7 +11,7 @@ const homeData = {
       titlePrefix: "당신의 음악에",
       titleHighlight: "생명",
       titleSuffix: "을 불어넣는 공간",
-      subtitle: "최고급 장비와 전문 엔지니어의 터치로 완성되는 당신만의 사운드.\n스튜디오 놀에서 경험하세요.",
+      subtitle: "최고급 장비와 전문 엔지니어의 터치로\n완성되는 당신만의 사운드.\n스튜디오 놀에서 경험하세요.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
