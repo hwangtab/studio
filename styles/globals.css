@@ -64,14 +64,15 @@
   }
 
   /* 중국어(zh): Noto Sans KR은 한자 미포함 → Windows SimSun(명조) 폴백 방지.
+     _app.tsx wrapper div에 data-locale이 설정되므로 body가 아닌 wrapper를 직접 타깃.
      PingFang SC(macOS/iOS) → Microsoft YaHei(Windows) → WenQuanYi(Linux) 순으로 명시. */
-  html:lang(zh) body {
+  [data-locale="zh"] {
     font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', '微软雅黑', 'WenQuanYi Micro Hei', sans-serif;
   }
 
-  /* 태국어(th): Noto Sans KR은 태국 문자 미포함 → Leelawadee UI(Windows) →
-     Noto Sans Thai → Thonburi(macOS/iOS) 순으로 지정해 sans-serif 계열 유지. */
-  html:lang(th) body {
+  /* 태국어(th): Noto Sans KR은 태국 문자 미포함.
+     Leelawadee UI(Windows) → Noto Sans Thai → Thonburi(macOS/iOS) 순으로 지정. */
+  [data-locale="th"] {
     font-family: 'Leelawadee UI', 'Leelawadee', 'Noto Sans Thai', Thonburi, sans-serif;
   }
 }

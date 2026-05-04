@@ -213,7 +213,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema) }}
         />
       </Head>
-      <div className={`${notoSansKr.className} ${notoSansKr.variable} ${montserrat.variable}`}>
+      <div className={`${notoSansKr.className} ${notoSansKr.variable} ${montserrat.variable}`} data-locale={locale}>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>
