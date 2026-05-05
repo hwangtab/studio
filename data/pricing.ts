@@ -23,30 +23,54 @@ export const getPricingData = (locale: Locale) => {
 
   const recordingOffers = [
     {
-      id: 'recording-hourly',
-      title: t(locale, { ko: '시간당 레코딩', en: 'Hourly Recording', zh: '小时录音', es: 'Grabación por Hora', vi: 'Thu âm theo giờ', th: 'บันทึกเสียงรายชั่วโมง', uz: 'Soatlik yozuv' }),
-      priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),
-      priceValue: 100000,
-      unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
-      description: t(locale, { 
-        ko: '짧은 녹음이나 성우 녹음, 간단한 악기 녹음에 적합합니다.', 
-        en: 'Suitable for short sessions, voiceovers, or simple instrument recording.',
-        zh: '适合短时间录音、配音或简单乐器录音。',
-        es: 'Adecuado para sesiones cortas, locuciones o grabaciones de instrumentos simples.',
-        vi: 'Phù hợp cho buổi thu ngắn, voiceover hoặc thu nhạc cụ đơn giản.',
-        th: 'เหมาะสำหรับเซสชันสั้น งานพากย์ หรือการอัดเครื่องดนตรีง่ายๆ',
-        uz: 'Qisqa seanslar, voiceover yoki sodda cholg‘u yozuvlari uchun mos.'
+      id: ‘recording-pro’,
+      title: t(locale, { ko: ‘보컬 녹음 1프로’, en: ‘Vocal Recording (1 Song)’, zh: ‘人声录音 (1首)’, es: ‘Grabación Vocal (1 Canción)’, vi: ‘Thu âm vocal (1 bài)’, th: ‘อัดเสียงร้อง (1 เพลง)’, uz: ‘Vokal yozuvi (1 qo’shiq)’ }),
+      priceDisplay: t(locale, { ko: ‘250,000원’, en: ‘₩250,000’, zh: ‘₩250,000’, es: ‘₩250,000’, vi: ‘₩250,000’, th: ‘₩250,000’, uz: ‘₩250,000’ }),
+      priceValue: 250000,
+      unit: t(locale, { ko: ‘/ 1프로’, en: ‘/ song’, zh: ‘/ 首’, es: ‘/ canción’, vi: ‘/ bài’, th: ‘/ เพลง’, uz: ‘/ qo’shiq’ }),
+      description: t(locale, {
+        ko: ‘보컬 1곡 녹음을 위한 기본 패키지입니다. 3시간 기준이며, 초과 시 시간당 80,000원이 추가됩니다.’,
+        en: ‘Standard package for recording 1 vocal song. Based on 3 hours; ₩80,000/hour for overtime.’,
+        zh: ‘录制1首人声歌曲的基本套餐。以3小时为基准，超时按每小时₩80,000计算。’,
+        es: ‘Paquete estándar para grabar 1 canción vocal. Basado en 3 horas; ₩80,000/hora por tiempo extra.’,
+        vi: ‘Gói cơ bản cho thu âm 1 bài vocal. Cơ sở 3 giờ; ₩80,000/giờ nếu vượt giờ.’,
+        th: ‘แพ็กเกจมาตรฐานสำหรับอัด 1 เพลงร้อง อ้างอิงตาม 3 ชั่วโมง หากเกินคิด ₩80,000/ชม.’,
+        uz: ‘1 ta vokal qo’shiq yozish uchun standart paket. 3 soat asosida; ortiqcha vaqt uchun soatiga ₩80,000.’
       }),
+      recommended: true,
       features: tArray(locale, {
-        ko: ['전문 엔지니어링 포함', '최소 2시간부터 예약 가능', '보컬 디렉팅 지원', '실시간 모니터링 및 피드백'],
-        en: ['Professional engineering included', 'Minimum 2-hour booking', 'Vocal directing support', 'Real-time monitoring & feedback'],
-        vi: ['Bao gồm kỹ thuật chuyên nghiệp', 'Đặt tối thiểu 2 giờ', 'Hỗ trợ đạo diễn vocal', 'Giám sát thời gian thực & phản hồi'],
-        th: ['รวมวิศวกรเสียงมืออาชีพ', 'จองขั้นต่ำ 2 ชั่วโมง', 'ช่วยกำกับการร้อง', 'มอนิเตอร์แบบเรียลไทม์และฟีดแบ็ก'],
-        uz: ['Professional muhandislik kiritilgan', 'Minimal 2 soat bron', 'Vokal direktori yordami', 'Real vaqt monitoring va fikr-mulohaza']
+        ko: [‘전담 엔지니어 진행’, ‘보컬 디렉팅·마이크 포지셔닝 포함’, ‘테이크 선별 및 기본 편집 포함’, ‘초과 시 시간당 80,000원’],
+        en: [‘Dedicated engineer included’, ‘Vocal directing & mic positioning’, ‘Take selection & basic editing’, ‘₩80,000/hour for overtime’],
+        vi: [‘Kỹ sư chuyên trách’, ‘Đạo diễn vocal & định vị mic’, ‘Chọn take & chỉnh sửa cơ bản’, ‘₩80,000/giờ nếu vượt’],
+        th: [‘วิศวกรเสียงประจำ’, ‘กำกับการร้องและจัดตำแหน่งไมค์’, ‘คัดเลือก take และตัดต่อเบื้องต้น’, ‘เกินเวลาคิด ₩80,000/ชม.’],
+        uz: [‘Maxsus muhandis bilan’, ‘Vokal direktori va mikrofon joylashuvi’, ‘Take tanlash va asosiy tahrirlash’, ‘Ortiqcha vaqt uchun soatiga ₩80,000’]
       }),
     },
     {
-      id: 'recording-daylock',
+      id: ‘recording-hourly’,
+      title: t(locale, { ko: ‘시간당 레코딩’, en: ‘Hourly Recording’, zh: ‘小时录音’, es: ‘Grabación por Hora’, vi: ‘Thu âm theo giờ’, th: ‘บันทึกเสียงรายชั่วโมง’, uz: ‘Soatlik yozuv’ }),
+      priceDisplay: t(locale, { ko: ‘100,000원’, en: ‘₩100,000’, zh: ‘₩100,000’, es: ‘₩100,000’, vi: ‘₩100,000’, th: ‘₩100,000’, uz: ‘₩100,000’ }),
+      priceValue: 100000,
+      unit: t(locale, { ko: ‘/ 시간’, en: ‘/ hour’, zh: ‘/ 小时’, es: ‘/ hora’, vi: ‘/ giờ’, th: ‘/ ชั่วโมง’, uz: ‘/ soat’ }),
+      description: t(locale, {
+        ko: ‘성우 녹음, 악기 추가 녹음, 보정 작업 등 시간 단위가 필요한 경우에 적합합니다.’,
+        en: ‘Ideal for voiceovers, overdubs, or correction sessions billed by the hour.’,
+        zh: ‘适合配音、补录乐器或按小时计费的修正录音。’,
+        es: ‘Ideal para locuciones, sobredoblajes o sesiones de corrección por hora.’,
+        vi: ‘Lý tưởng cho voiceover, thu thêm nhạc cụ hoặc phiên chỉnh sửa tính theo giờ.’,
+        th: ‘เหมาะสำหรับงานพากย์ การอัดซ้อนทับ หรือเซสชันแก้ไขที่คิดราคาต่อชั่วโมง’,
+        uz: ‘Voiceover, cholg’u qo’shish yoki soatlik hisoblash zarur bo’lgan tuzatish seanslari uchun mos.’
+      }),
+      features: tArray(locale, {
+        ko: [‘전담 엔지니어 진행’, ‘최소 2시간부터 예약 가능’, ‘보정·추가 녹음·성우에 적합’, ‘실시간 모니터링 및 피드백’],
+        en: [‘Dedicated engineer included’, ‘Minimum 2-hour booking’, ‘Great for overdubs, voiceover & fixes’, ‘Real-time monitoring & feedback’],
+        vi: [‘Kỹ sư chuyên trách’, ‘Đặt tối thiểu 2 giờ’, ‘Phù hợp overdub, voiceover & chỉnh sửa’, ‘Giám sát thời gian thực & phản hồi’],
+        th: [‘วิศวกรเสียงประจำ’, ‘จองขั้นต่ำ 2 ชั่วโมง’, ‘เหมาะสำหรับ overdub วอยซ์โอเวอร์ และแก้ไข’, ‘มอนิเตอร์แบบเรียลไทม์และฟีดแบ็ก’],
+        uz: [‘Maxsus muhandis bilan’, ‘Minimal 2 soat bron’, ‘Overdub, voiceover va tuzatishlar uchun mos’, ‘Real vaqt monitoring va fikr-mulohaza’]
+      }),
+    },
+    {
+      id: ‘recording-daylock’,
       title: t(locale, { ko: '6시간 패키지 (Day Lock)', en: '6-Hour Package (Day Lock)', zh: '6小时套餐 (Day Lock)', es: 'Paquete de 6 Horas', vi: 'Gói 6 giờ (Day Lock)', th: 'แพ็กเกจ 6 ชั่วโมง (Day Lock)', uz: '6 soatlik paket (Day Lock)' }),
       priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
       priceValue: 500000,
