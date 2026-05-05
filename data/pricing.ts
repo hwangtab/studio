@@ -29,21 +29,21 @@ export const getPricingData = (locale: Locale) => {
       priceValue: 250000,
       unit: t(locale, { ko: ‘/ 1프로’, en: ‘/ song’, zh: ‘/ 首’, es: ‘/ canción’, vi: ‘/ bài’, th: ‘/ เพลง’, uz: ‘/ qo’shiq’ }),
       description: t(locale, {
-        ko: ‘보컬 1곡 녹음을 위한 기본 패키지입니다. 3시간 기준이며, 초과 시 시간당 80,000원이 추가됩니다.’,
-        en: ‘Standard package for recording 1 vocal song. Based on 3 hours; ₩80,000/hour for overtime.’,
-        zh: ‘录制1首人声歌曲的基本套餐。以3小时为基准，超时按每小时₩80,000计算。’,
-        es: ‘Paquete estándar para grabar 1 canción vocal. Basado en 3 horas; ₩80,000/hora por tiempo extra.’,
-        vi: ‘Gói cơ bản cho thu âm 1 bài vocal. Cơ sở 3 giờ; ₩80,000/giờ nếu vượt giờ.’,
-        th: ‘แพ็กเกจมาตรฐานสำหรับอัด 1 เพลงร้อง อ้างอิงตาม 3 ชั่วโมง หากเกินคิด ₩80,000/ชม.’,
-        uz: ‘1 ta vokal qo’shiq yozish uchun standart paket. 3 soat asosida; ortiqcha vaqt uchun soatiga ₩80,000.’
+        ko: ‘보컬 1곡 녹음을 위한 기본 패키지입니다. 전담 엔지니어 진행, 3시간 기준.’,
+        en: ‘Standard package for recording 1 vocal song. Dedicated engineer, based on 3 hours.’,
+        zh: ‘录制1首人声歌曲的基本套餐。专属工程师陪同，以3小时为基准。’,
+        es: ‘Paquete estándar para grabar 1 canción vocal. Ingeniero dedicado, basado en 3 horas.’,
+        vi: ‘Gói cơ bản cho thu âm 1 bài vocal. Kỹ sư chuyên trách, cơ sở 3 giờ.’,
+        th: ‘แพ็กเกจมาตรฐานสำหรับอัด 1 เพลงร้อง วิศวกรเสียงประจำ อ้างอิงตาม 3 ชั่วโมง’,
+        uz: ‘1 ta vokal qo’shiq yozish uchun standart paket. Maxsus muhandis, 3 soat asosida.’
       }),
       recommended: true,
       features: tArray(locale, {
-        ko: [‘전담 엔지니어 진행’, ‘보컬 디렉팅·마이크 포지셔닝 포함’, ‘테이크 선별 및 기본 편집 포함’, ‘초과 시 시간당 80,000원’],
-        en: [‘Dedicated engineer included’, ‘Vocal directing & mic positioning’, ‘Take selection & basic editing’, ‘₩80,000/hour for overtime’],
-        vi: [‘Kỹ sư chuyên trách’, ‘Đạo diễn vocal & định vị mic’, ‘Chọn take & chỉnh sửa cơ bản’, ‘₩80,000/giờ nếu vượt’],
-        th: [‘วิศวกรเสียงประจำ’, ‘กำกับการร้องและจัดตำแหน่งไมค์’, ‘คัดเลือก take และตัดต่อเบื้องต้น’, ‘เกินเวลาคิด ₩80,000/ชม.’],
-        uz: [‘Maxsus muhandis bilan’, ‘Vokal direktori va mikrofon joylashuvi’, ‘Take tanlash va asosiy tahrirlash’, ‘Ortiqcha vaqt uchun soatiga ₩80,000’]
+        ko: [‘전담 엔지니어 진행’, ‘보컬 디렉팅·마이크 포지셔닝 포함’, ‘테이크 선별 및 기본 편집 포함’, ‘3시간 기준 (추가 시 시간당 레코딩 요금 적용)’],
+        en: [‘Dedicated engineer included’, ‘Vocal directing & mic positioning’, ‘Take selection & basic editing’, ‘Based on 3 hours (hourly rate applies for extra time)’],
+        vi: [‘Kỹ sư chuyên trách’, ‘Đạo diễn vocal & định vị mic’, ‘Chọn take & chỉnh sửa cơ bản’, ‘Cơ sở 3 giờ (vượt giờ tính theo giờ)’],
+        th: [‘วิศวกรเสียงประจำ’, ‘กำกับการร้องและจัดตำแหน่งไมค์’, ‘คัดเลือก take และตัดต่อเบื้องต้น’, ‘อ้างอิง 3 ชั่วโมง (เกินคิดรายชั่วโมง)’],
+        uz: [‘Maxsus muhandis bilan’, ‘Vokal direktori va mikrofon joylashuvi’, ‘Take tanlash va asosiy tahrirlash’, ‘3 soat asosida (ortiqcha vaqt soatlik tarif)’]
       }),
     },
     {
