@@ -135,8 +135,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             {localeUsps.items.map((item: { heading: string; body: string }, index: number) => (
               <m.div
                 key={item.heading}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700"
@@ -161,8 +161,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             {featuredLinks.map((link, index) => (
               <m.div
                 key={link.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
               >
@@ -211,14 +211,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               cta={
                 <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
                   {t('home.sections.servicesCta')}
-                  <m.span
-                    className="ml-1"
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <span className="ml-1">
                     <ArrowRight size={14} aria-hidden="true" />
-                  </m.span>
+                  </span>
                 </div>
               }
             />

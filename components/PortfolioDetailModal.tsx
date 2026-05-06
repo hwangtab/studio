@@ -17,11 +17,10 @@ const overlayVariants: Variants = {
 };
 
 const modalVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  hidden: { opacity: 0, scale: 0.97 },
   visible: {
     opacity: 1,
     scale: 1,
-    y: 0,
     transition: {
       type: 'spring',
       damping: 25,
@@ -30,9 +29,8 @@ const modalVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    scale: 0.95,
-    y: 20,
-    transition: { duration: 0.25, ease: 'easeIn' },
+    scale: 0.97,
+    transition: { duration: 0.2, ease: 'easeIn' },
   },
 };
 
