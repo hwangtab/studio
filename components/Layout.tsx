@@ -8,7 +8,6 @@ import { type Locale, defaultLocale } from '../lib/i18n';
 
 // 스크롤 인터랙션 보조 컴포넌트들은 첫 paint에 시각적 영향이 없어 hydration 후 lazy load.
 // LCP/FCP 측정 창에서 빠지면서 _app/Layout 청크에서 분리.
-const ScrollProgress = dynamic(() => import('./common/ScrollProgress').then(m => m.ScrollProgress), { ssr: false });
 const ScrollToTop = dynamic(() => import('./ui/ScrollToTop').then(m => m.ScrollToTop), { ssr: false });
 
 interface LayoutProps {
@@ -115,7 +114,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     <div
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out ${textBreakClass} overflow-x-hidden w-full`}
     >
-      <ScrollProgress />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white focus:text-gray-900 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"

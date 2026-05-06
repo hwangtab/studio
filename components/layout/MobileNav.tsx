@@ -110,18 +110,18 @@ export const MobileNav = ({
           role="dialog"
           aria-modal="true"
           aria-label={t('nav.mobileMenu')}
-          initial={{ opacity: 0, scaleY: 0 }}
-          animate={{ opacity: 1, scaleY: 1 }}
-          exit={{ opacity: 0, scaleY: 0 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
           className="xl:hidden z-40 bg-gradient-to-b from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-black/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
         >
           <div className="px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
             {/* Mobile Theme/Language Switcher */}
             <m.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.05 }}
               className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden"
             >
               <button
@@ -146,9 +146,9 @@ export const MobileNav = ({
               <m.div 
                 key={group.id} 
                 className="space-y-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 + (groupIndex * 0.1) }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.05 + (groupIndex * 0.05) }}
               >
                 <button
                   type="button"
@@ -165,10 +165,10 @@ export const MobileNav = ({
                 <AnimatePresence>
                   {expandedGroups.includes(group.id) && (
                     <m.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2, ease: 'easeInOut' }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
                       className="pl-4 space-y-1 overflow-hidden"
                     >
                       {group.items.map((item) => (
