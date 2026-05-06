@@ -522,9 +522,33 @@ export const generatePracticeRoomMonthlyRentSchema = (
       name: config.name,
       url: config.url,
     },
+    // 21개 dedicated 지역 LP가 커버하는 service area를 명시. Google이 LocalBusiness
+    // service area를 정밀히 인식해 '연신내 음악연습실' 등 long-tail 지역 검색에서
+    // 부스트. 행정구역(City/AdministrativeArea) + 동·역 단위 Place 혼합.
     areaServed: [
       { '@type': 'City', name: '서울특별시' },
       { '@type': 'AdministrativeArea', name: '은평구' },
+      { '@type': 'AdministrativeArea', name: '서대문구' },
+      { '@type': 'AdministrativeArea', name: '고양시 덕양구' },
+      { '@type': 'AdministrativeArea', name: '고양시 일산동구' },
+      { '@type': 'AdministrativeArea', name: '고양시 일산서구' },
+      { '@type': 'Place', name: '연신내' },
+      { '@type': 'Place', name: '불광' },
+      { '@type': 'Place', name: '대조동' },
+      { '@type': 'Place', name: '녹번' },
+      { '@type': 'Place', name: '독바위' },
+      { '@type': 'Place', name: '구산' },
+      { '@type': 'Place', name: '역촌' },
+      { '@type': 'Place', name: '응암' },
+      { '@type': 'Place', name: '새절' },
+      { '@type': 'Place', name: '증산' },
+      { '@type': 'Place', name: '상암' },
+      { '@type': 'Place', name: '구파발' },
+      { '@type': 'Place', name: '지축' },
+      { '@type': 'Place', name: '삼송' },
+      { '@type': 'Place', name: '원흥' },
+      { '@type': 'Place', name: '원당' },
+      { '@type': 'Place', name: '일산' },
     ],
     offers: {
       '@type': 'Offer',
