@@ -499,47 +499,6 @@ export const generateCourseSchema = (
   };
 };
 
-export interface ServiceOfferInput {
-  name: string;
-  description: string;
-  priceValue: number;
-  unit?: string;
-  url: string;
-}
-
-export const generateServiceOfferSchema = (
-  service: ServiceOfferInput,
-  locale: Locale = 'ko'
-) => {
-  const config = getSiteConfig(locale);
-  const priceValidUntil = new Date();
-  priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
-
-  return {
-    '@type': 'Offer',
-    name: service.name,
-    description: service.description,
-    priceCurrency: 'KRW',
-    price: service.priceValue,
-    priceValidUntil: priceValidUntil.toISOString().split('T')[0],
-    availability: 'https://schema.org/InStock',
-    url: service.url,
-    ...(service.unit && { unitText: service.unit }),
-    seller: {
-      '@type': 'LocalBusiness',
-      name: config.name,
-      '@id': `${config.url}/#studio`,
-    },
-    itemOffered: {
-      '@type': 'Service',
-      name: service.name,
-      provider: {
-        '@type': 'LocalBusiness',
-        name: config.name,
-      },
-    },
-  };
-};
 
 export const generatePracticeRoomMonthlyRentSchema = (
   pageUrl: string,
@@ -871,12 +830,6 @@ export const generateVideoSchema = (video: VideoInput, locale: Locale = 'ko') =>
   };
 };
 
-const YOUTUBE_ID_REGEX = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/;
-export const extractYouTubeId = (url?: string): string | null => {
-  if (!url) return null;
-  const match = url.match(YOUTUBE_ID_REGEX);
-  return match ? match[1] : null;
-};
 
 export interface ItemListInput {
   id: string;
