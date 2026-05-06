@@ -1,5 +1,6 @@
 ---
 title: "인디 뮤지션을 위한 녹음실 — 예산·작업 흐름·스튜디오 선택법"
+cta: recording
 date: 2026-04-11
 author: "스튜디오 놀"
 category: 음악 비즈니스
