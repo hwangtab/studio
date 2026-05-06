@@ -341,7 +341,14 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
 
-  const initialPortfolioItems = getPortfolioItems(locale);
+  // productionNotes는 7개 언어 전체가 포함되어 __NEXT_DATA__가 과대해짐.
+  // 목록 페이지 모달은 현재 locale 노트만 표시하므로 나머지 언어를 제거해 직렬화 크기를 절감.
+  const initialPortfolioItems = getPortfolioItems(locale).map((item) => ({
+    ...item,
+    productionNotes: item.productionNotes
+      ? { [locale]: item.productionNotes[locale] }
+      : undefined,
+  }));
   const audioTracks = getAudioTracks(locale);
   const categories = getCategories(locale);
 
@@ -352,7 +359,7 @@ export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params })
       audioTracks,
       categories,
     },
-    { revalidate: 3600, i18nSections: ['portfolio', 'pricing', 'stories'] }
+    { revalidate: 3600, i18nSections: ['portfolio', 'pricing'] }
   );
 };
 

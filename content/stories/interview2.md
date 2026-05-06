@@ -1,5 +1,6 @@
 ---
 title: "믹싱 엔지니어 인터뷰 — \"좋은 소리는 결국 사람에서 나옵니다\""
+cta: production
 date: 2026-04-07
 author: "스튜디오 놀"
 category: 후기

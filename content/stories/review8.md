@@ -1,5 +1,6 @@
 ---
 title: "연습실 입주 3개월 후기 — \"월 36만원으로 나만의 작업실을 갖다\""
+cta: practice
 date: 2026-04-07
 author: "스튜디오 놀"
 category: 후기

@@ -1,5 +1,6 @@
 ---
 title: 스튜디오 녹음 처음 해봤어요 — 첫 녹음 세션 실제 후기와 과정
+cta: recording
 date: 2026-04-06
 author: 스튜디오 놀
 category: 후기

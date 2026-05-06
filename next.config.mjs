@@ -83,7 +83,10 @@ const nextConfig = {
 
   async headers() {
     return [
-      // API 라우트 크롤링 차단 (단, llms.txt rewrite 대상은 제외)
+      // API 라우트 크롤링 차단 (단, llms.txt rewrite 대상은 제외).
+      // CSP는 middleware.ts가 페이지 응답에만 적용 — API는 JSON/text 반환이라 불필요.
+      // middleware matcher가 /api/* 를 명시적으로 제외하므로 이 블록에 CSP를 추가해도
+      // middleware CSP와 충돌 없음. 현재는 HTML 반환 없으므로 미설정.
       {
         source: '/api/:path((?!llms$|llms-full$).*)',
         headers: [
@@ -160,30 +163,11 @@ const nextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          // Permissions-Policy는 middleware.ts가 페이지 응답에 더 엄격한 정책을 적용한다.
-          // 정적 자산은 권한 API를 사용하지 않아 헤더가 필요 없으므로 여기선 제외.
+          // Permissions-Policy·CSP는 middleware.ts가 페이지 응답에 더 완성된 정책을 적용한다.
+          // 정적 자산은 권한 API / 스크립트를 사용하지 않아 여기선 HSTS만 설정.
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains; preload',
-          },
-          // CSP: script-src 'unsafe-inline' 없음 — GA4·theme-init 모두 외부 파일로 분리됨.
-          // style-src 'unsafe-inline': Framer Motion이 인라인 style 속성을 사용하므로 필요.
-          // img-src https:: next/image의 원격 이미지 최적화 프록시(/_next/image) 경유 허용.
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://va.vercel-scripts.com",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https:",
-              "font-src 'self'",
-              "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com",
-              "frame-src https://www.google.com",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "upgrade-insecure-requests",
-            ].join('; '),
           },
         ],
       },

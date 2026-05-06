@@ -282,7 +282,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           </aside>
         )}
 
-        <StoryCTA type={ctaType} locale={locale} />
+        {/* event 카테고리(공지·모임 안내)는 행동 유도 맥락이 약해 CTA 노출 부자연 → 숨김 */}
+        {story.categoryKey !== 'event' && <StoryCTA type={ctaType} locale={locale} />}
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <h2 className="typo-card-title mb-6">{t('stories.detail.moreTitle')}</h2>

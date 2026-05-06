@@ -1,5 +1,6 @@
 ---
 title: "음원 발매까지 한 번에 — 연신내 스튜디오 놀 믹싱·마스터링 의뢰 후기"
+cta: production
 date: 2026-03-28
 author: "스튜디오 놀"
 category: 후기

@@ -1,5 +1,6 @@
 ---
 title: "음악 프로덕션 레슨 6개월 후기 — \"MIDI부터 음원 발매까지 혼자 해냈습니다\""
+cta: lesson
 date: 2026-04-07
 author: "스튜디오 놀"
 category: 후기

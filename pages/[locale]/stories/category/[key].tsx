@@ -11,7 +11,7 @@ import ImageHero from '../../../../components/common/ImageHero';
 import ContactCTA from '../../../../components/common/ContactCTA';
 import { getAllStories, isListableStory } from '../../../../lib/stories';
 import { STORY_CATEGORY_KEYS, type StoryCategoryKey } from '../../../../lib/storyCategories';
-import type { Story } from '../../../../types/story';
+import type { StoryCardData } from '../../../../types/story';
 import { Section } from '../../../../components/ui/Section';
 import Pagination from '../../../../components/ui/Pagination';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../../lib/getStatic';
@@ -26,7 +26,7 @@ type CategoryKey = StoryCategoryKey;
 interface StoriesCategoryPageProps {
   locale: Locale;
   categoryKey: CategoryKey;
-  stories: Story[];
+  stories: StoryCardData[];
   allStoriesCount: number;
 }
 
@@ -256,7 +256,18 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
 
   const allStories = getAllStories(locale);
   // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
-  const stories = allStories.filter((story) => story.categoryKey === key && isListableStory(story));
+  const filtered = allStories.filter((story) => story.categoryKey === key && isListableStory(story));
+  // __NEXT_DATA__ 크기 절감: Story 전체 객체 대신 StoryCard에 필요한 필드만 직렬화.
+  const stories: StoryCardData[] = filtered.map((story, idx) => ({
+    slug: story.slug,
+    id: story.id,
+    title: story.title,
+    date: story.date,
+    categoryKey: story.categoryKey,
+    category: story.category,
+    thumbnail: story.thumbnail,
+    ...(idx < 50 && story.summary ? { summary: story.summary } : {}),
+  }));
 
   return buildPageStaticProps(
     locale,

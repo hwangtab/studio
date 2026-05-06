@@ -1,5 +1,6 @@
 ---
 title: 프로덕션 레슨 강사 인터뷰 — "MIDI 한 마디에서 완성된 음원까지"
+cta: lesson
 date: 2026-04-07
 author: 스튜디오 놀
 category: 후기
