@@ -54,17 +54,22 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 
     // slug 키워드 — 글의 실제 의도를 가장 잘 드러내는 신호. categoryKey보다 우선.
     // 작곡·편곡·코드·MIDI·비트메이킹은 24시간 작업 환경(음악연습실 월세) 페어링.
-    if (/(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody|harmony|topline)/i.test(slug)) {
+    // melody(?!ne): Melodyne(피치 보정 플러그인) 같은 mixing 도구는 제외.
+    // harmony는 단독으론 매치 안 함 — jazz-harmony는 production 카테고리 폴백으로,
+    // harmony1(녹음 가이드)·harmony-singing(보컬)은 각각 다른 의도라 폴백/lesson 매칭이 정확.
+    if (/(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody(?!ne)|topline)/i.test(slug)) {
       return 'practice';
     }
     // 레슨·트레이닝·기초·발성 → 1:1 음악 레슨.
-    // 발성 키워드(belting/falsetto/vibrato/head-voice/chest-voice/vocal-range)는
-    // 보컬 카테고리 폴백(recording) 보다 lesson 매칭이 의도에 더 부합.
-    if (/(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read|belting|falsetto|vibrato|head-?voice|chest-?voice|mix-?voice|vocal-?range)/i.test(slug)) {
+    // 발성 키워드(belting/falsetto/vibrato/head-voice/chest-voice/mix-voice/mixed-voice/vocal-range)는
+    // 보컬 카테고리 폴백(recording) 보다 lesson 매칭이 의도에 더 부합. lesson이 production보다
+    // 앞에 있어야 'mix-voice' 같은 slug가 mixing CTA로 잘못 가지 않는다.
+    if (/(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read|belting|falsetto|vibrato|head-?voice|chest-?voice|mix-?voice|mixed-?voice|vocal-?range|harmony-?sing)/i.test(slug)) {
       return 'lesson';
     }
     // 믹싱·마스터링·이펙트·EQ·컴프 → 외주 의뢰(production CTA → /contact).
-    if (/(^|[-_])(mix|master(ing)?|eq[-_]|compress|reverb|delay|chorus-effect|de-?esser|sidechain|loudness|limiter|stereo-?imag|automation|bus-?comp|808-bass|ai-master|amp-?sim|auto-?tune|autotune|clipper)/i.test(slug)) {
+    // amp-sim은 녹음 가이드(amp-simulator1)에 위치하므로 recording 폴백이 더 정확 → 제외.
+    if (/(^|[-_])(mix|master(ing)?|eq[-_]|compress|reverb|delay|chorus-effect|de-?esser|sidechain|loudness|limiter|stereo-?imag|automation|bus-?comp|808-bass|ai-master|auto-?tune|autotune|clipper)/i.test(slug)) {
       return 'production';
     }
     // 녹음·마이크·트래킹·데모 → 녹음 의뢰.
