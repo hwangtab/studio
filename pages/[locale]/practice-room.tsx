@@ -23,6 +23,7 @@ import { loadCommonResourceServer } from '../../lib/i18n.server';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
+import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
@@ -868,6 +869,54 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
                 />
               </details>
             )}
+          </div>
+        </Section>
+      )}
+
+      {/* 지역별 음악연습실 hub-and-spoke — 21개 인접 지역 dedicated LP 그리드.
+          Google이 'practice-room' hub와 21개 spoke의 관계를 명확히 인식해 권역 SERP
+          부스트. ko에서만 노출(다국어 사용자에겐 한국 음악연습실 시장이 비대상). */}
+      {locale === 'ko' && (
+        <Section variant="alternate" className="py-10" defer>
+          <div className="max-w-5xl mx-auto">
+            <SectionHeading
+              icon={MapPin}
+              title="지역별 음악연습실 안내"
+              className="mb-2"
+            />
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-6">
+              연신내 동명여고 옆 — 인근 21개 지역에서의 동선·거리 한눈에
+            </p>
+            <div className="space-y-6">
+              {(['walk', 'eunpyeong', 'seodaemun', 'goyang'] as const).map((group) => {
+                const items = PRACTICE_ROOM_REGION_LPS.filter((lp) => lp.group === group);
+                if (items.length === 0) return null;
+                return (
+                  <div key={group}>
+                    <h3 className="text-sm font-bold text-primary dark:text-primary-light mb-3 uppercase tracking-wide">
+                      {PRACTICE_ROOM_REGION_GROUP_LABELS[group]}
+                    </h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {items.map((lp) => (
+                        <Link
+                          key={lp.slug}
+                          href={`/${locale}/stories/${lp.slug}`}
+                          prefetch={false}
+                          className="group block px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light hover:shadow-md transition-all duration-200"
+                        >
+                          <div className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-light transition-colors">
+                            {lp.region} 음악연습실
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {lp.distance}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </Section>
       )}
