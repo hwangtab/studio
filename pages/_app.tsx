@@ -233,14 +233,16 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                 <SpeedInsights />
                 {/* Google Analytics 4: GTM 로더 + 초기화 스크립트를 외부 파일로 분리해
                     script-src 'unsafe-inline' 없이 CSP nonce 없이도 'self'만으로 허용.
-                    인라인 <Script> 블록은 CSP 위반이므로 /scripts/ga4-init.js로 외부화. */}
+                    인라인 <Script> 블록은 CSP 위반이므로 /scripts/ga4-init.js로 외부화.
+                    lazyOnload: gtag.js 내부 eval/Function() 실행이 브라우저 idle 시간에
+                    밀려 강제 리플로우가 사용자 인터랙션과 겹치지 않도록 함. */}
                 <Script
                   src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
-                  strategy="afterInteractive"
+                  strategy="lazyOnload"
                 />
                 <Script
                   src="/scripts/ga4-init.js"
-                  strategy="afterInteractive"
+                  strategy="lazyOnload"
                 />
               </Layout>
             </MotionConfig>
