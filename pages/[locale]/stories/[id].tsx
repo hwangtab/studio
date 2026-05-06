@@ -58,7 +58,9 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
       return 'practice';
     }
     // 레슨·트레이닝·기초·발성 → 1:1 음악 레슨.
-    if (/(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read)/i.test(slug)) {
+    // 발성 키워드(belting/falsetto/vibrato/head-voice/chest-voice/vocal-range)는
+    // 보컬 카테고리 폴백(recording) 보다 lesson 매칭이 의도에 더 부합.
+    if (/(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read|belting|falsetto|vibrato|head-?voice|chest-?voice|mix-?voice|vocal-?range)/i.test(slug)) {
       return 'lesson';
     }
     // 믹싱·마스터링·이펙트·EQ·컴프 → 외주 의뢰(production CTA → /contact).
