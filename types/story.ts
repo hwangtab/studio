@@ -9,6 +9,19 @@ export interface StoryFAQItem {
   a: string;
 }
 
+/**
+ * 스토리 본문 끝 CTA 카드 종류. 슬러그·카테고리 기반 자동 매칭이 기본이고,
+ * frontmatter `cta:` 필드로 글 단위 명시적 override가 가능하다.
+ */
+export type StoryCTAOverride = 'recording' | 'lesson' | 'practice' | 'production';
+
+export const STORY_CTA_OVERRIDES: readonly StoryCTAOverride[] = [
+  'recording',
+  'lesson',
+  'practice',
+  'production',
+] as const;
+
 export interface StoryFrontmatter {
   title: string;
   date: string | Date;
@@ -19,6 +32,7 @@ export interface StoryFrontmatter {
   thumbnail?: string;
   images?: string[];
   faq?: StoryFAQItem[];
+  cta?: StoryCTAOverride;
 }
 
 /**
@@ -40,6 +54,7 @@ export interface Story {
   thumbnailDerived: boolean;
   images: string[];
   content?: string;
+  cta?: StoryCTAOverride; // frontmatter 명시 시에만 채워짐 — getCTAType 자동 룰보다 우선
 }
 
 /**

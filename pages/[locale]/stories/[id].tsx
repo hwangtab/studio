@@ -97,9 +97,10 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
     }
   };
 
+  // frontmatter cta가 있으면 작가 명시값을 우선. 자동 룰은 그 다음.
   const ctaType = React.useMemo(
-    () => getCTAType(story.slug, story.categoryKey),
-    [story.categoryKey, story.slug]
+    () => story.cta ?? getCTAType(story.slug, story.categoryKey),
+    [story.cta, story.categoryKey, story.slug]
   );
 
   const router = useRouter();

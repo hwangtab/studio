@@ -3,7 +3,8 @@ import path from 'path';
 import matter from 'gray-matter';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
-import type { Story, StoryDetail, StoryPath } from '../types/story';
+import type { Story, StoryCTAOverride, StoryDetail, StoryPath } from '../types/story';
+import { STORY_CTA_OVERRIDES } from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
 import { isRegionHub } from './regionHubSlugs';
@@ -228,6 +229,15 @@ const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
   return label;
 };
 
+// frontmatter cta 필드를 검증된 StoryCTAOverride로 좁힌다. 잘못된 값은 무시되고
+// 자동 매칭 룰이 폴백된다.
+const STORY_CTA_OVERRIDE_SET = new Set<string>(STORY_CTA_OVERRIDES);
+const normalizeStoryCTAOverride = (raw: unknown): StoryCTAOverride | undefined => {
+  if (typeof raw !== 'string') return undefined;
+  const trimmed = raw.trim().toLowerCase();
+  return STORY_CTA_OVERRIDE_SET.has(trimmed) ? (trimmed as StoryCTAOverride) : undefined;
+};
+
 const mapStoryFrontmatter = (
   slug: string,
   frontmatter: Record<string, unknown>,
@@ -239,6 +249,7 @@ const mapStoryFrontmatter = (
   const rawCategory = (frontmatter?.category as string | undefined) || '';
   const categoryKey = normalizeStoryCategoryKey(rawCategory);
   const categoryLabel = getStoryCategoryLabel(categoryKey, locale);
+  const cta = normalizeStoryCTAOverride(frontmatter?.cta);
 
   return {
     id: slug,
@@ -254,6 +265,7 @@ const mapStoryFrontmatter = (
     thumbnail: derivedThumbnail || null,
     thumbnailDerived: !(frontmatter?.thumbnail) && Boolean(derivedThumbnail),
     images: Array.isArray(frontmatter?.images) ? (frontmatter.images as string[]) : [],
+    ...(cta ? { cta } : {}),
   };
 };
 
