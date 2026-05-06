@@ -1,5 +1,5 @@
 ---
-title: EPK(전자 홍보 자료) 만들기 — 아티스트 EPK 구성 요소와 제작 가이드
+title: EPK란? 인디 뮤지션 홍보 자료 만드는 방법 — 구성 요소·플랫폼·제출 가이드
 date: 2026-04-06
 author: 스튜디오 놀
 category: 음악 비즈니스
@@ -13,7 +13,7 @@ tags:
   - 레이블 제출
 thumbnail: /images/recording16.webp
 summary: >-
-  인디 뮤지션을 위한 EPK(Electronic Press Kit) 완성 가이드. EPK 필수 구성 요소·EPK 제작 플랫폼 비교·EPK 제출 시 주의사항까지 정리합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
+  EPK(Electronic Press Kit)는 레이블·미디어·공연 기획사에 제출하는 아티스트 디지털 홍보 자료입니다. 무엇을 담아야 하는지, 무료로 어떻게 만드는지, 제출 시 실수하지 않는 방법을 단계별로 정리합니다.
 faq:
   - q: EPK가 무엇인가요?
     a: >-

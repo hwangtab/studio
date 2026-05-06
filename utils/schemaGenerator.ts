@@ -621,6 +621,7 @@ export const generateAggregateOfferSchema = (
     '@id': `${config.url}/#pricing-catalog`,
     name: catalogName,
     inLanguage: schemaLanguage,
+    image: `${config.url}/thumbnail.jpg`,
     brand: {
       '@type': 'Organization',
       '@id': `${config.url}/#organization`,
