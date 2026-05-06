@@ -1504,9 +1504,9 @@
         "visualText": "음악연습실"
       },
       "production": {
-        "title": "나만의 음원을 제작하고 싶으신가요?",
-        "descriptionLine1": "작곡, 편곡부터 믹싱, 마스터링까지.",
-        "descriptionLine2": "당신의 아이디어를 완성된 음원으로 만들어드립니다.",
+        "title": "음원을 완성도 있게 마무리하고 싶으신가요?",
+        "descriptionLine1": "믹싱·마스터링부터 앨범 발매까지.",
+        "descriptionLine2": "전문 엔지니어와 함께 곡을 음반급 사운드로 완성하세요.",
         "primaryText": "음원 제작 상담하기",
         "secondaryText": "제작 비용 보기",
         "visualText": "음악 제작"
