@@ -803,7 +803,7 @@
         "descriptionLine2": "A dedicated engineer guides directing, take selection, and mixing.",
         "primaryText": "View Pricing",
         "secondaryText": "Inquiry",
-        "visualText": "Professional Audio"
+        "visualText": "Vocal Recording"
       },
       "lesson": {
         "mobileMenu": "Mobile Menu",
@@ -812,7 +812,7 @@
         "descriptionLine2": "Build your skills step by step with a professional instructor.",
         "primaryText": "View Curriculum",
         "secondaryText": "Request Consultation",
-        "visualText": "Music Education"
+        "visualText": "1-on-1 Lessons"
       },
       "practice": {
         "title": "Need Your Own Music Practice Room?",
@@ -828,7 +828,7 @@
         "descriptionLine2": "Pro engineers turn your tracks into release-ready records.",
         "primaryText": "Production Consultation",
         "secondaryText": "View Costs",
-        "visualText": "Music Production"
+        "visualText": "Track Finalization"
       }
     },
     "detail": {

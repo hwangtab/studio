@@ -1485,7 +1485,7 @@
         "descriptionLine2": "전담 엔지니어가 디렉팅·테이크 선별·믹싱까지 함께 진행합니다.",
         "primaryText": "서비스 가격 보기",
         "secondaryText": "문의하기",
-        "visualText": "프로페셔널 오디오"
+        "visualText": "보컬 녹음"
       },
       "lesson": {
         "title": "1:1 음악 레슨이 필요하신가요?",
@@ -1493,7 +1493,7 @@
         "descriptionLine2": "전문 강사와 기초부터 단계적으로 실력을 쌓으세요.",
         "primaryText": "레슨 커리큘럼 보기",
         "secondaryText": "상담 신청하기",
-        "visualText": "음악 교육"
+        "visualText": "1:1 음악 레슨"
       },
       "practice": {
         "title": "나만의 음악연습실이 필요한가요?",
@@ -1509,7 +1509,7 @@
         "descriptionLine2": "전문 엔지니어와 함께 곡을 음반급 사운드로 완성하세요.",
         "primaryText": "음원 제작 상담하기",
         "secondaryText": "제작 비용 보기",
-        "visualText": "음악 제작"
+        "visualText": "음원 완성"
       }
     },
     "detail": {

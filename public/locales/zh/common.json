@@ -803,7 +803,7 @@
         "descriptionLine2": "专属工程师协助编导、选录、混音全程。",
         "primaryText": "查看价格",
         "secondaryText": "咨询",
-        "visualText": "专业音频"
+        "visualText": "声乐录音"
       },
       "lesson": {
         "mobileMenu": "移动菜单",
@@ -812,7 +812,7 @@
         "descriptionLine2": "在专业讲师指导下从基础开始逐步提升。",
         "primaryText": "查看课程大纲",
         "secondaryText": "申请咨询",
-        "visualText": "音乐教育"
+        "visualText": "1对1课程"
       },
       "practice": {
         "title": "需要属于自己的音乐练习室吗？",
@@ -828,7 +828,7 @@
         "descriptionLine2": "专业工程师将您的歌曲完成为唱片级音源。",
         "primaryText": "音源制作咨询",
         "secondaryText": "查看费用",
-        "visualText": "音乐制作"
+        "visualText": "音源完成"
       }
     },
     "detail": {

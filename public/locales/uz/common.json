@@ -802,7 +802,7 @@
         "descriptionLine2": "Mas'ul muhandis rejissyorlik, take tanlash va miks bo'yicha hamkorlik qiladi.",
         "primaryText": "Xizmat narxlarini ko'rish",
         "secondaryText": "So'rov",
-        "visualText": "Professional audio"
+        "visualText": "Vokal yozish"
       },
       "lesson": {
         "title": "1:1 musiqa darslari kerakmi?",
@@ -810,7 +810,7 @@
         "descriptionLine2": "Professional ustoz bilan bosqichma-bosqich mahorat oshiring.",
         "primaryText": "O'quv dasturini ko'rish",
         "secondaryText": "Maslahat so'rash",
-        "visualText": "Musiqa ta'limi"
+        "visualText": "1:1 darslar"
       },
       "practice": {
         "title": "O'zingizning musiqa mashg'ulot xonangiz kerakmi?",
@@ -826,7 +826,7 @@
         "descriptionLine2": "Professional muhandislar treklaringizni nashrga tayyor mahsulotga aylantiradi.",
         "primaryText": "Prodakshn bo'yicha so'rov",
         "secondaryText": "Narxlarni ko'rish",
-        "visualText": "Musiqa prodakshn"
+        "visualText": "Trek yakunlash"
       }
     },
     "detail": {

@@ -803,7 +803,7 @@
         "descriptionLine2": "Un ingeniero dedicado dirige, selecciona tomas y mezcla.",
         "primaryText": "Ver Precios",
         "secondaryText": "Consulta",
-        "visualText": "Audio profesional"
+        "visualText": "Grabación vocal"
       },
       "lesson": {
         "mobileMenu": "Menú móvil",
@@ -812,7 +812,7 @@
         "descriptionLine2": "Desarrolla tus habilidades paso a paso con un instructor profesional.",
         "primaryText": "Ver Currículo",
         "secondaryText": "Solicitar Consulta",
-        "visualText": "Educación musical"
+        "visualText": "Clases 1 a 1"
       },
       "practice": {
         "title": "¿Necesitas tu propia sala de práctica musical?",
@@ -828,7 +828,7 @@
         "descriptionLine2": "Ingenieros profesionales convierten tus pistas en grabaciones listas para lanzar.",
         "primaryText": "Consulta de Producción",
         "secondaryText": "Ver Costos",
-        "visualText": "Producción musical"
+        "visualText": "Finalización de pista"
       }
     },
     "detail": {
