@@ -23,54 +23,54 @@ export const getPricingData = (locale: Locale) => {
 
   const recordingOffers = [
     {
-      id: ‘recording-pro’,
-      title: t(locale, { ko: ‘보컬 녹음 1프로’, en: ‘Vocal Recording (1 Song)’, zh: ‘人声录音 (1首)’, es: ‘Grabación Vocal (1 Canción)’, vi: ‘Thu âm vocal (1 bài)’, th: ‘อัดเสียงร้อง (1 เพลง)’, uz: ‘Vokal yozuvi (1 qo’shiq)’ }),
-      priceDisplay: t(locale, { ko: ‘250,000원’, en: ‘₩250,000’, zh: ‘₩250,000’, es: ‘₩250,000’, vi: ‘₩250,000’, th: ‘₩250,000’, uz: ‘₩250,000’ }),
+      id: "recording-pro",
+      title: t(locale, { ko: "보컬 녹음 1프로", en: "Vocal Recording (1 Song)", zh: "人声录音 (1首)", es: "Grabación Vocal (1 Canción)", vi: "Thu âm vocal (1 bài)", th: "อัดเสียงร้อง (1 เพลง)", uz: "Vokal yozuvi (1 qo'shiq)" }),
+      priceDisplay: t(locale, { ko: "250,000원", en: "₩250,000", zh: "₩250,000", es: "₩250,000", vi: "₩250,000", th: "₩250,000", uz: "₩250,000" }),
       priceValue: 250000,
-      unit: t(locale, { ko: ‘/ 1프로’, en: ‘/ song’, zh: ‘/ 首’, es: ‘/ canción’, vi: ‘/ bài’, th: ‘/ เพลง’, uz: ‘/ qo’shiq’ }),
+      unit: t(locale, { ko: "/ 1프로", en: "/ song", zh: "/ 首", es: "/ canción", vi: "/ bài", th: "/ เพลง", uz: "/ qo'shiq" }),
       description: t(locale, {
-        ko: ‘보컬 1곡 녹음을 위한 기본 패키지입니다. 전담 엔지니어 진행, 3시간 기준.’,
-        en: ‘Standard package for recording 1 vocal song. Dedicated engineer, based on 3 hours.’,
-        zh: ‘录制1首人声歌曲的基本套餐。专属工程师陪同，以3小时为基准。’,
-        es: ‘Paquete estándar para grabar 1 canción vocal. Ingeniero dedicado, basado en 3 horas.’,
-        vi: ‘Gói cơ bản cho thu âm 1 bài vocal. Kỹ sư chuyên trách, cơ sở 3 giờ.’,
-        th: ‘แพ็กเกจมาตรฐานสำหรับอัด 1 เพลงร้อง วิศวกรเสียงประจำ อ้างอิงตาม 3 ชั่วโมง’,
-        uz: ‘1 ta vokal qo’shiq yozish uchun standart paket. Maxsus muhandis, 3 soat asosida.’
+        ko: "보컬 1곡 녹음을 위한 기본 패키지입니다. 전담 엔지니어 진행, 3시간 기준.",
+        en: "Standard package for recording 1 vocal song. Dedicated engineer, based on 3 hours.",
+        zh: "录制1首人声歌曲的基本套餐。专属工程师陪同，以3小时为基准。",
+        es: "Paquete estándar para grabar 1 canción vocal. Ingeniero dedicado, basado en 3 horas.",
+        vi: "Gói cơ bản cho thu âm 1 bài vocal. Kỹ sư chuyên trách, cơ sở 3 giờ.",
+        th: "แพ็กเกจมาตรฐานสำหรับอัด 1 เพลงร้อง วิศวกรเสียงประจำ อ้างอิงตาม 3 ชั่วโมง",
+        uz: "1 ta vokal qo'shiq yozish uchun standart paket. Maxsus muhandis, 3 soat asosida."
       }),
       recommended: true,
       features: tArray(locale, {
-        ko: [‘전담 엔지니어 진행’, ‘보컬 디렉팅·마이크 포지셔닝 포함’, ‘테이크 선별 및 기본 편집 포함’, ‘3시간 기준 (추가 시 시간당 레코딩 요금 적용)’],
-        en: [‘Dedicated engineer included’, ‘Vocal directing & mic positioning’, ‘Take selection & basic editing’, ‘Based on 3 hours (hourly rate applies for extra time)’],
-        vi: [‘Kỹ sư chuyên trách’, ‘Đạo diễn vocal & định vị mic’, ‘Chọn take & chỉnh sửa cơ bản’, ‘Cơ sở 3 giờ (vượt giờ tính theo giờ)’],
-        th: [‘วิศวกรเสียงประจำ’, ‘กำกับการร้องและจัดตำแหน่งไมค์’, ‘คัดเลือก take และตัดต่อเบื้องต้น’, ‘อ้างอิง 3 ชั่วโมง (เกินคิดรายชั่วโมง)’],
-        uz: [‘Maxsus muhandis bilan’, ‘Vokal direktori va mikrofon joylashuvi’, ‘Take tanlash va asosiy tahrirlash’, ‘3 soat asosida (ortiqcha vaqt soatlik tarif)’]
+        ko: ["전담 엔지니어 진행", "보컬 디렉팅·마이크 포지셔닝 포함", "테이크 선별 및 기본 편집 포함", "3시간 기준 (추가 시 시간당 레코딩 요금 적용)"],
+        en: ["Dedicated engineer included", "Vocal directing & mic positioning", "Take selection & basic editing", "Based on 3 hours (hourly rate applies for extra time)"],
+        vi: ["Kỹ sư chuyên trách", "Đạo diễn vocal & định vị mic", "Chọn take & chỉnh sửa cơ bản", "Cơ sở 3 giờ (vượt giờ tính theo giờ)"],
+        th: ["วิศวกรเสียงประจำ", "กำกับการร้องและจัดตำแหน่งไมค์", "คัดเลือก take และตัดต่อเบื้องต้น", "อ้างอิง 3 ชั่วโมง (เกินคิดรายชั่วโมง)"],
+        uz: ["Maxsus muhandis bilan", "Vokal direktori va mikrofon joylashuvi", "Take tanlash va asosiy tahrirlash", "3 soat asosida (ortiqcha vaqt soatlik tarif)"]
       }),
     },
     {
-      id: ‘recording-hourly’,
-      title: t(locale, { ko: ‘시간당 레코딩’, en: ‘Hourly Recording’, zh: ‘小时录音’, es: ‘Grabación por Hora’, vi: ‘Thu âm theo giờ’, th: ‘บันทึกเสียงรายชั่วโมง’, uz: ‘Soatlik yozuv’ }),
-      priceDisplay: t(locale, { ko: ‘100,000원’, en: ‘₩100,000’, zh: ‘₩100,000’, es: ‘₩100,000’, vi: ‘₩100,000’, th: ‘₩100,000’, uz: ‘₩100,000’ }),
+      id: "recording-hourly",
+      title: t(locale, { ko: "시간당 레코딩", en: "Hourly Recording", zh: "小时录音", es: "Grabación por Hora", vi: "Thu âm theo giờ", th: "บันทึกเสียงรายชั่วโมง", uz: "Soatlik yozuv" }),
+      priceDisplay: t(locale, { ko: "100,000원", en: "₩100,000", zh: "₩100,000", es: "₩100,000", vi: "₩100,000", th: "₩100,000", uz: "₩100,000" }),
       priceValue: 100000,
-      unit: t(locale, { ko: ‘/ 시간’, en: ‘/ hour’, zh: ‘/ 小时’, es: ‘/ hora’, vi: ‘/ giờ’, th: ‘/ ชั่วโมง’, uz: ‘/ soat’ }),
+      unit: t(locale, { ko: "/ 시간", en: "/ hour", zh: "/ 小时", es: "/ hora", vi: "/ giờ", th: "/ ชั่วโมง", uz: "/ soat" }),
       description: t(locale, {
-        ko: ‘성우 녹음, 악기 추가 녹음, 보정 작업 등 시간 단위가 필요한 경우에 적합합니다.’,
-        en: ‘Ideal for voiceovers, overdubs, or correction sessions billed by the hour.’,
-        zh: ‘适合配音、补录乐器或按小时计费的修正录音。’,
-        es: ‘Ideal para locuciones, sobredoblajes o sesiones de corrección por hora.’,
-        vi: ‘Lý tưởng cho voiceover, thu thêm nhạc cụ hoặc phiên chỉnh sửa tính theo giờ.’,
-        th: ‘เหมาะสำหรับงานพากย์ การอัดซ้อนทับ หรือเซสชันแก้ไขที่คิดราคาต่อชั่วโมง’,
-        uz: ‘Voiceover, cholg’u qo’shish yoki soatlik hisoblash zarur bo’lgan tuzatish seanslari uchun mos.’
+        ko: "성우 녹음, 악기 추가 녹음, 보정 작업 등 시간 단위가 필요한 경우에 적합합니다.",
+        en: "Ideal for voiceovers, overdubs, or correction sessions billed by the hour.",
+        zh: "适合配音、补录乐器或按小时计费的修正录音。",
+        es: "Ideal para locuciones, sobredoblajes o sesiones de corrección por hora.",
+        vi: "Lý tưởng cho voiceover, thu thêm nhạc cụ hoặc phiên chỉnh sửa tính theo giờ.",
+        th: "เหมาะสำหรับงานพากย์ การอัดซ้อนทับ หรือเซสชันแก้ไขที่คิดราคาต่อชั่วโมง",
+        uz: "Voiceover, cholg'u qo'shish yoki soatlik hisoblash zarur bo'lgan tuzatish seanslari uchun mos."
       }),
       features: tArray(locale, {
-        ko: [‘전담 엔지니어 진행’, ‘최소 2시간부터 예약 가능’, ‘보정·추가 녹음·성우에 적합’, ‘실시간 모니터링 및 피드백’],
-        en: [‘Dedicated engineer included’, ‘Minimum 2-hour booking’, ‘Great for overdubs, voiceover & fixes’, ‘Real-time monitoring & feedback’],
-        vi: [‘Kỹ sư chuyên trách’, ‘Đặt tối thiểu 2 giờ’, ‘Phù hợp overdub, voiceover & chỉnh sửa’, ‘Giám sát thời gian thực & phản hồi’],
-        th: [‘วิศวกรเสียงประจำ’, ‘จองขั้นต่ำ 2 ชั่วโมง’, ‘เหมาะสำหรับ overdub วอยซ์โอเวอร์ และแก้ไข’, ‘มอนิเตอร์แบบเรียลไทม์และฟีดแบ็ก’],
-        uz: [‘Maxsus muhandis bilan’, ‘Minimal 2 soat bron’, ‘Overdub, voiceover va tuzatishlar uchun mos’, ‘Real vaqt monitoring va fikr-mulohaza’]
+        ko: ["전담 엔지니어 진행", "최소 2시간부터 예약 가능", "보정·추가 녹음·성우에 적합", "실시간 모니터링 및 피드백"],
+        en: ["Dedicated engineer included", "Minimum 2-hour booking", "Great for overdubs, voiceover & fixes", "Real-time monitoring & feedback"],
+        vi: ["Kỹ sư chuyên trách", "Đặt tối thiểu 2 giờ", "Phù hợp overdub, voiceover & chỉnh sửa", "Giám sát thời gian thực & phản hồi"],
+        th: ["วิศวกรเสียงประจำ", "จองขั้นต่ำ 2 ชั่วโมง", "เหมาะสำหรับ overdub วอยซ์โอเวอร์ และแก้ไข", "มอนิเตอร์แบบเรียลไทม์และฟีดแบ็ก"],
+        uz: ["Maxsus muhandis bilan", "Minimal 2 soat bron", "Overdub, voiceover va tuzatishlar uchun mos", "Real vaqt monitoring va fikr-mulohaza"]
       }),
     },
     {
-      id: ‘recording-daylock’,
+      id: "recording-daylock",
       title: t(locale, { ko: '6시간 패키지 (Day Lock)', en: '6-Hour Package (Day Lock)', zh: '6小时套餐 (Day Lock)', es: 'Paquete de 6 Horas', vi: 'Gói 6 giờ (Day Lock)', th: 'แพ็กเกจ 6 ชั่วโมง (Day Lock)', uz: '6 soatlik paket (Day Lock)' }),
       priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
       priceValue: 500000,
@@ -101,7 +101,7 @@ export const getPricingData = (locale: Locale) => {
       title: 'Level 1',
       priceDisplay: t(locale, { ko: '200,000원', en: '₩200,000', zh: '₩200,000', es: '₩200,000', vi: '₩200,000', th: '₩200,000', uz: '₩200,000' }),
       priceValue: 200000,
-      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo"shiq' }),
       description: t(locale, {
         ko: '심플한 구성의 곡에 적합합니다.',
         en: 'Perfect for songs with simple arrangements.',
@@ -109,7 +109,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Perfecto para canciones con arreglos simples.',
         vi: 'Phù hợp cho bài có cấu trúc đơn giản.',
         th: 'เหมาะสำหรับเพลงที่เรียบเรียงไม่ซับซ้อน',
-        uz: 'Soddaroq aranjirovkali qo‘shiqlar uchun mos.'
+        uz: 'Soddaroq aranjirovkali qo"shiqlar uchun mos.'
       }),
       features: tArray(locale, {
         ko: ['10 트랙 이하', '보컬 + MR 또는 소편성 악기', '기본 2회 수정 포함', '밸런스 및 톤 보정'],
@@ -124,7 +124,7 @@ export const getPricingData = (locale: Locale) => {
       title: 'Level 2',
       priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
       priceValue: 350000,
-      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo"shiq' }),
       description: t(locale, {
         ko: '일반적인 밴드 구성이나 팝 음악에 적합합니다.',
         en: 'Suitable for standard band arrangements or pop music.',
@@ -140,7 +140,7 @@ export const getPricingData = (locale: Locale) => {
         en: ['11 ~ 30 tracks', 'Full band or pop arrangement', '2 revisions included', 'Detailed effects & spatial design'],
         vi: ['11–30 track', 'Band đầy đủ hoặc pop arrangement', 'Bao gồm 2 lần chỉnh sửa', 'Hiệu ứng chi tiết & tạo không gian'],
         th: ['11–30 แทร็ก', 'วงเต็มหรือเรียบเรียงป๊อป', 'รวมแก้ไข 2 ครั้ง', 'เอฟเฟกต์ละเอียดและการออกแบบมิติ'],
-        uz: ['11–30 track', 'To‘liq band yoki pop aranjirovka', '2 ta tahrir kiritilgan', 'Batafsil effektlar va fazoviy dizayn']
+        uz: ['11–30 track', 'To"liq band yoki pop aranjirovka', '2 ta tahrir kiritilgan', 'Batafsil effektlar va fazoviy dizayn']
       }),
     },
     {
@@ -148,7 +148,7 @@ export const getPricingData = (locale: Locale) => {
       title: 'Level 3',
       priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
       priceValue: 500000,
-      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo"shiq' }),
       description: t(locale, {
         ko: '대편성 오케스트라나 복잡한 레이어의 곡에 적합합니다.',
         en: 'Suitable for large orchestras or complex layers.',
@@ -156,7 +156,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Adecuado para grandes orquestas o capas complejas.',
         vi: 'Phù hợp cho dàn nhạc lớn hoặc lớp layer phức tạp.',
         th: 'เหมาะสำหรับออร์เคสตราขนาดใหญ่หรือเพลงที่มีเลเยอร์ซับซ้อน',
-        uz: 'Katta orkestr yoki murakkab layerli qo‘shiqlar uchun mos.'
+        uz: 'Katta orkestr yoki murakkab layerli qo"shiqlar uchun mos.'
       }),
       features: tArray(locale, {
         ko: ['31 트랙 이상', '대편성 또는 복잡한 일렉트로닉', '기본 2회 수정 포함', '최고 수준의 디테일 작업'],
@@ -174,7 +174,7 @@ export const getPricingData = (locale: Locale) => {
       title: t(locale, { ko: '싱글 마스터링', en: 'Single Mastering', zh: '单曲母带处理', es: 'Masterización de Sencillo', vi: 'Mastering single', th: 'มาสเตอริ่งซิงเกิล', uz: 'Single mastering' }),
       priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),
       priceValue: 100000,
-      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo"shiq' }),
       description: t(locale, {
         ko: '디지털 싱글 발매를 위한 최적의 마스터링입니다.',
         en: 'Optimized mastering for digital single release.',
@@ -197,7 +197,7 @@ export const getPricingData = (locale: Locale) => {
       title: t(locale, { ko: 'EP / 앨범 패키지', en: 'EP / Album Package', zh: 'EP / 专辑套餐', es: 'Paquete EP / Álbum', vi: 'Gói EP / Album', th: 'แพ็กเกจ EP / อัลบั้ม', uz: 'EP / Albom paketi' }),
       priceDisplay: t(locale, { ko: '80,000원', en: '₩80,000', zh: '₩80,000', es: '₩80,000', vi: '₩80,000', th: '₩80,000', uz: '₩80,000' }),
       priceValue: 80000,
-      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo"shiq' }),
       description: t(locale, {
         ko: '4곡 이상의 앨범 작업 시 적용되는 할인 가격입니다.',
         en: 'Discounted rate for projects with 4+ songs.',
@@ -205,7 +205,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Tarifa con descuento para proyectos con 4+ canciones.',
         vi: 'Giá ưu đãi cho dự án có từ 4 bài trở lên.',
         th: 'ราคาพิเศษสำหรับโปรเจกต์ตั้งแต่ 4 เพลงขึ้นไป',
-        uz: '4+ qo‘shiqdan iborat loyihalar uchun chegirmali narx.'
+        uz: '4+ qo"shiqdan iborat loyihalar uchun chegirmali narx.'
       }),
       recommended: true,
       features: tArray(locale, {
@@ -213,7 +213,7 @@ export const getPricingData = (locale: Locale) => {
         en: ['Applies to 4+ songs', 'Consistent tone & manner', 'Level balancing across songs', '1 revision included'],
         vi: ['Áp dụng cho 4 bài trở lên', 'Đồng nhất tone & phong cách toàn album', 'Cân bằng mức giữa các bài', 'Bao gồm 1 lần chỉnh sửa'],
         th: ['ใช้ได้เมื่อมี 4 เพลงขึ้นไป', 'โทนและคาแรกเตอร์ทั้งอัลบั้มสม่ำเสมอ', 'ปรับบาลานซ์ระดับระหว่างเพลง', 'รวมแก้ไข 1 ครั้ง'],
-        uz: ['4+ qo‘shiqda qo‘llanadi', 'Albomning tone & mannerini bir xil qilish', 'Qo‘shiqlar orasida level balancing', '1 ta tahrir kiritilgan']
+        uz: ['4+ qo"shiqda qo"llanadi', 'Albomning tone & mannerini bir xil qilish', 'Qo"shiqlar orasida level balancing', '1 ta tahrir kiritilgan']
       }),
     },
   ];
@@ -232,7 +232,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Consultoría de producción de álbumes, incluyendo planificación, programación y presupuesto.',
         vi: 'Tư vấn sản xuất album: kế hoạch, lịch trình, ngân sách.',
         th: 'ให้คำปรึกษาการผลิตอัลบั้ม ครอบคลุมการวางแผน ตารางงาน และงบประมาณ',
-        uz: 'Albom ishlab chiqarish bo‘yicha rejalash, jadval va byudjet konsaltingi.'
+        uz: 'Albom ishlab chiqarish bo"yicha rejalash, jadval va byudjet konsaltingi.'
       }),
     },
     {
@@ -249,11 +249,11 @@ export const getPricingData = (locale: Locale) => {
         th: 'วางแผนหน้า crowdfunding (Tumblbug ฯลฯ) การเล่าเรื่อง และออกแบบรีวอร์ด',
         uz: 'Crowdfunding sahifasini rejalash (Tumblbug va b.), storytelling hamda reward dizayni.'
       }),
-      note: t(locale, { ko: '+ 성공 수수료 10% (후불)', en: '+ 10% success fee', zh: '+ 10% 成功手续费', es: '+ 10% tarifa de éxito', vi: '+ Phí thành công 10% (trả sau)', th: '+ ค่าธรรมเนียมความสำเร็จ 10% (ชำระภายหลัง)', uz: '+ 10% muvaffaqiyat to‘lovi (keyin to‘lanadi)' }),
+      note: t(locale, { ko: '+ 성공 수수료 10% (후불)', en: '+ 10% success fee', zh: '+ 10% 成功手续费', es: '+ 10% tarifa de éxito', vi: '+ Phí thành công 10% (trả sau)', th: '+ ค่าธรรมเนียมความสำเร็จ 10% (ชำระภายหลัง)', uz: '+ 10% muvaffaqiyat to"lovi (keyin to"lanadi)' }),
     },
     {
       id: 'service-promo',
-      title: t(locale, { ko: '기본 홍보 패키지', en: 'Basic Promotion', zh: '基础宣传套餐', es: 'Promoción Básica', vi: 'Gói PR cơ bản', th: 'แพ็กเกจโปรโมตพื้นฐาน', uz: 'Asosiy targ‘ibot paketi' }),
+      title: t(locale, { ko: '기본 홍보 패키지', en: 'Basic Promotion', zh: '基础宣传套餐', es: 'Promoción Básica', vi: 'Gói PR cơ bản', th: 'แพ็กเกจโปรโมตพื้นฐาน', uz: 'Asosiy targ"ibot paketi' }),
       priceDisplay: t(locale, { ko: '300,000원', en: '₩300,000', zh: '₩300,000', es: '₩300,000', vi: '₩300,000', th: '₩300,000', uz: '₩300,000' }),
       priceValue: 300000,
       description: t(locale, {
@@ -263,7 +263,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Redacción de comunicados de prensa, distribución en medios y registro en sitios de música.',
         vi: 'Viết thông cáo báo chí, phân phối truyền thông và đăng giới thiệu album trên các trang nhạc.',
         th: 'เขียนข่าวประชาสัมพันธ์ กระจายสื่อ และลงทะเบียนแนะนำอัลบั้มในเว็บเพลงหลัก',
-        uz: 'Press-reliz yozish, OAV tarqatish va musiqiy saytlar ro‘yxatiga kiritish.'
+        uz: 'Press-reliz yozish, OAV tarqatish va musiqiy saytlar ro"yxatiga kiritish.'
       }),
     },
     {
@@ -278,7 +278,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Sitio web adaptable para presentación de artista/álbum (Kit de Prensa Electrónico).',
         vi: 'Tạo website responsive giới thiệu nghệ sĩ/album (Electronic Press Kit).',
         th: 'สร้างเว็บไซต์แบบ responsive เพื่อแนะนำศิลปิน/อัลบั้ม (Electronic Press Kit)',
-        uz: 'San’atkor/albom taqdimoti uchun moslashuvchan veb-sayt (Electronic Press Kit).'
+        uz: "San'atkor/albom taqdimoti uchun moslashuvchan veb-sayt (Electronic Press Kit)."
       }),
     },
   ];
@@ -286,10 +286,10 @@ export const getPricingData = (locale: Locale) => {
   const specialPackages = [
     {
       id: 'package-wedding',
-      title: t(locale, { ko: '축가/이벤트 녹음 (전담 엔지니어 진행)', en: 'Event & Wedding Recording', zh: '婚礼/活动录音', es: 'Grabación de Bodas y Eventos', vi: 'Thu âm sự kiện & nhạc cưới', th: 'บันทึกเสียงงานอีเวนต์/งานแต่ง', uz: 'Tadbir/to‘y yozuvi' }),
+      title: t(locale, { ko: '축가/이벤트 녹음 (전담 엔지니어 진행)', en: 'Event & Wedding Recording', zh: '婚礼/活动录音', es: 'Grabación de Bodas y Eventos', vi: 'Thu âm sự kiện & nhạc cưới', th: 'บันทึกเสียงงานอีเวนต์/งานแต่ง', uz: 'Tadbir/to"y yozuvi' }),
       priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
       priceValue: 350000,
-      unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo‘shiq' }),
+      unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo"shiq' }),
       description: t(locale, {
         ko: '결혼식 축가, 프로포즈, 기념일 음원 제작을 위한 올인원 패키지입니다.',
         en: 'All-in-one package for wedding songs, proposals, or anniversaries.',
@@ -297,7 +297,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Paquete todo en uno para canciones de boda, propuestas o aniversarios.',
         vi: 'Gói trọn gói cho nhạc cưới, cầu hôn hoặc kỷ niệm.',
         th: 'แพ็กเกจครบวงจรสำหรับเพลงงานแต่ง การขอแต่งงาน หรือวันครบรอบ',
-        uz: 'To‘y qo‘shig‘i, taklif yoki yubiley uchun all-in-one paket.'
+        uz: 'To"y qo"shig"i, taklif yoki yubiley uchun all-in-one paket.'
       }),
       recommended: true,
       features: tArray(locale, {
@@ -305,7 +305,7 @@ export const getPricingData = (locale: Locale) => {
         en: ['2h recording (studio fee included)', 'Vocal tuning & timing correction', 'Professional mixing & mastering', 'Same-day delivery available'],
         vi: ['Thu âm 2 giờ (đã gồm phí studio)', 'Chỉnh giọng & chỉnh nhịp chính xác', 'Mixing & mastering chuyên nghiệp', 'Có thể nhận bản trong ngày (thỏa thuận trước)'],
         th: ['อัด 2 ชม. (รวมค่าใช้สตูดิโอ)', 'ปรับจูนเสียงร้องและแก้จังหวะอย่างละเอียด', 'มิกซ์ & มาสเตอริ่งระดับมืออาชีพ', 'รับงานภายในวันได้ (ตกลงล่วงหน้า)'],
-        uz: ['2 soat yozuv (studiya to‘lovi kiritilgan)', 'Aniq vokal tuning va timing tuzatish', 'Professional miks & mastering', 'Kelishuv bo‘lsa, shu kuni topshirish mumkin']
+        uz: ['2 soat yozuv (studiya to"lovi kiritilgan)', 'Aniq vokal tuning va timing tuzatish', 'Professional miks & mastering', 'Kelishuv bo"lsa, shu kuni topshirish mumkin']
       }),
     },
     {
@@ -328,7 +328,7 @@ export const getPricingData = (locale: Locale) => {
         en: ['High-end mics (U87AI, etc.)', 'Noise control & tone correction', 'Real-time editing support', 'Voice actor waiting room'],
         vi: ['Micro cao cấp (U87AI, v.v.)', 'Khử noise & chỉnh tone', 'Hỗ trợ chỉnh sửa thời gian thực', 'Có phòng chờ cho voice actor'],
         th: ['ไมค์ไฮเอนด์ (U87AI ฯลฯ)', 'ควบคุมเสียงรบกวนและปรับโทน', 'สนับสนุนการตัดต่อแบบเรียลไทม์', 'มีห้องพักรอสำหรับนักพากย์'],
-        uz: ['Yuqori darajadagi mikrofonlar (U87AI va b.)', 'Shovqinni boshqarish va ton tuzatish', 'Real vaqt tahriri qo‘llovi', 'Voice actor kutish xonasi']
+        uz: ['Yuqori darajadagi mikrofonlar (U87AI va b.)', 'Shovqinni boshqarish va ton tuzatish', 'Real vaqt tahriri qo"llovi', 'Voice actor kutish xonasi']
       }),
     },
     {
@@ -351,7 +351,7 @@ export const getPricingData = (locale: Locale) => {
         en: ['Full access to booth & control room', 'Free lighting rental', 'Audio interface connection', 'Waiting & changing rooms'],
         vi: ['Sử dụng toàn bộ booth và phòng điều khiển', 'Miễn phí thuê đèn quay (đèn liên tục)', 'Hỗ trợ kết nối audio interface', 'Có phòng chờ và phòng thay đồ'],
         th: ['ใช้บูธหลักและห้องคอนโทรลทั้งหมด', 'ให้เช่าไฟถ่ายทำฟรี (ไฟต่อเนื่อง)', 'รองรับการเชื่อมต่อออดิโออินเทอร์เฟซ', 'มีห้องพักรอและห้องเปลี่ยนเสื้อผ้า'],
-        uz: ['Asosiy booth va control room to‘liq foydalanish', 'Suratga olish chiroqlari (doimiy yorug‘lik) bepul', 'Audio interfeysni ulashni qo‘llab-quvvatlash', 'Kutish va kiyinish xonalari']
+        uz: ['Asosiy booth va control room to"liq foydalanish', 'Suratga olish chiroqlari (doimiy yorug"lik) bepul', 'Audio interfeysni ulashni qo"llab-quvvatlash', 'Kutish va kiyinish xonalari']
       }),
     },
   ];
