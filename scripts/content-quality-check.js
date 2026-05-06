@@ -81,6 +81,11 @@ function parseFrontmatter(content) {
   const faqMatches = yaml.match(/^  - q:/gm);
   result.faqCount = faqMatches ? faqMatches.length : 0;
 
+  // cta override (옵션) — 명시 시 정확한 enum 값이어야 한다. 자동 룰 silent fallback이라
+  // 오타 발생 시 작가가 모르고 지나칠 수 있어 lint 단계에서 catch.
+  const ctaMatch = yaml.match(/^cta:\s*(.+)$/m);
+  if (ctaMatch) result.cta = ctaMatch[1].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
+
   return result;
 }
 
@@ -152,6 +157,12 @@ function checkFile(filePath) {
     const sumLen = fm.summary.length;
     if (sumLen < 50) violations.push(`summary 너무 짧음: ${sumLen}자 (50~200자)`);
     if (sumLen > 200) warnings.push(`summary 너무 김: ${sumLen}자 (50~200자)`);
+  }
+
+  // Rule 4b: cta enum 검증 (옵션 — 명시 시에만 유효성 검사)
+  const VALID_CTA = ['recording', 'lesson', 'practice', 'production'];
+  if (fm.cta !== undefined && !VALID_CTA.includes(fm.cta)) {
+    violations.push(`cta 값 잘못됨: '${fm.cta}' (유효값: ${VALID_CTA.join(', ')})`);
   }
 
   // Rule 5: Internal links in body
