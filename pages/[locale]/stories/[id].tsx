@@ -45,31 +45,49 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
 
+  // 글 주제 → CTA 매칭. slug 키워드 우선·categoryKey 폴백 모두 deterministic.
+  // 기존 hash seed 균등 25% 분포가 주제 무관 CTA를 양산하던 문제(예: 작곡 글에
+  // recording CTA, 보컬 트레이닝 글에 production CTA)를 해소한다. 'equipment'는
+  // 정의된 categoryKey가 아니라 dead branch였다.
   const getCTAType = (slug: string, categoryKey: string | undefined): CTAType => {
     if (slug.startsWith('practice-room-')) return 'practice';
 
-    let hash = 0;
-    for (let i = 0; i < slug.length; i++) {
-      hash = (hash << 5) - hash + slug.charCodeAt(i);
-      hash |= 0;
+    // slug 키워드 — 글의 실제 의도를 가장 잘 드러내는 신호. categoryKey보다 우선.
+    // 작곡·편곡·코드·MIDI·비트메이킹은 24시간 작업 환경(음악연습실 월세) 페어링.
+    if (/(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody|harmony|topline)/i.test(slug)) {
+      return 'practice';
     }
-    const seed = Math.abs(hash % 100) / 100;
-
-    if (categoryKey === 'lesson') {
-      if (seed < 0.4) return 'lesson';
-      if (seed < 0.7) return 'practice';
-      if (seed < 0.9) return 'recording';
-      return 'production';
-    }
-
-    if (categoryKey === 'equipment' || categoryKey === 'feedback') {
-      if (seed < 0.6) return 'practice';
-      if (seed < 0.8) return 'recording';
+    // 레슨·트레이닝·기초·발성 → 1:1 음악 레슨.
+    if (/(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read)/i.test(slug)) {
       return 'lesson';
     }
+    // 믹싱·마스터링·이펙트·EQ·컴프 → 외주 의뢰(production CTA → /contact).
+    if (/(^|[-_])(mix|master(ing)?|eq[-_]|compress|reverb|delay|chorus-effect|de-?esser|sidechain|loudness|limiter|stereo-?imag|automation|bus-?comp|808-bass|ai-master|amp-?sim|auto-?tune|autotune|clipper)/i.test(slug)) {
+      return 'production';
+    }
+    // 녹음·마이크·트래킹·데모 → 녹음 의뢰.
+    if (/(^|[-_])(record(ing)?|mic[-_]|demo-?tape|tracking|punch-?in|comping|studio-?record|takes)/i.test(slug)) {
+      return 'recording';
+    }
 
-    const types: CTAType[] = ['recording', 'lesson', 'practice', 'production'];
-    return types[Math.floor(seed * types.length)];
+    // categoryKey 폴백. 작곡·악기연습·지역 글은 음악연습실 월세가 핵심 페어링.
+    switch (categoryKey) {
+      case 'instrument':
+      case 'region':
+      case 'production':
+        return 'practice';
+      case 'lesson':
+        return 'lesson';
+      case 'mixing':
+      case 'business':
+        return 'production';
+      case 'recording':
+      case 'vocal':
+      case 'feedback':
+      case 'event':
+      default:
+        return 'recording';
+    }
   };
 
   const ctaType = React.useMemo(
