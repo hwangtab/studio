@@ -146,6 +146,27 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     const isVisualInView = useInView(visualRef, { amount: 0.35 });
     const ctaMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
+    // GA4/GTM 클릭 추적. dataLayer는 GTM 로드 후 자동 전역에 노출되며,
+    // 부재 시(예: 차단 환경) try-catch로 안전하게 무시한다. 이벤트 이름은 GA4
+    // recommended 'select_content' + 커스텀 파라미터로 통일해 어느 CTA 카드
+    // (type)·어느 버튼(variant)·목적지(target)가 효과적인지 비교 측정 가능.
+    const trackCtaClick = (variant: 'primary' | 'secondary', target: string) => {
+      try {
+        type WindowWithDataLayer = Window & { dataLayer?: Array<Record<string, unknown>> };
+        const w = window as WindowWithDataLayer;
+        if (!w.dataLayer) return;
+        w.dataLayer.push({
+          event: 'select_content',
+          content_type: 'story_cta',
+          cta_type: type,
+          cta_variant: variant,
+          cta_target: target,
+        });
+      } catch {
+        // 추적 실패가 사용자 navigation을 막아선 안 됨.
+      }
+    };
+
     return (
         <m.div
             {...ctaMotionProps}
@@ -176,6 +197,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         <Link
                             href={current.primaryLink}
                             prefetch={false}
+                            onClick={() => trackCtaClick('primary', current.primaryLink)}
                             className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-black/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.buttonBg}`}
                         >
                             <span className="min-w-0">{current.primaryText}</span>
@@ -184,6 +206,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                         <Link
                             href={current.secondaryLink}
                             prefetch={false}
+                            onClick={() => trackCtaClick('secondary', current.secondaryLink)}
                             className={`inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-xl font-medium transition-colors backdrop-blur-sm border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20 ${current.secondaryButtonBg}`}
                         >
                             <span className="min-w-0">{current.secondaryText}</span>

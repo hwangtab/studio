@@ -334,6 +334,20 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   const modifiedDate = fs.statSync(filePath).mtime.toISOString();
   const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
 
+  // multilingual 일관성: cta는 사이트 전략 차원이므로 모든 locale에서 동일해야 한다.
+  // 번역본 frontmatter에 cta가 없으면 default locale(ko) 원본 파일의 cta를 폴백 적용.
+  // 이 폴백이 없으면 ko에만 cta 명시한 글이 영문/타 locale에서 자동 룰로 갈려 CTA가
+  // 불일치하는 잔존 부정합이 생긴다.
+  if (!baseStory.cta && sourceLocale !== defaultLocale) {
+    try {
+      const koParsed = getParsedStoryFile(slug, defaultLocale);
+      const koCta = normalizeStoryCTAOverride(koParsed.data?.cta);
+      if (koCta) baseStory.cta = koCta;
+    } catch {
+      // ko 원본이 없는 글(영문 전용 등)은 무시 — 자동 룰 폴백이 정답.
+    }
+  }
+
   // AUTO-EXPAND 보일러플레이트는 본문에서 분리한다. 분리 후 본문이 thin-content
   // 임계 미만이면 isThinContent가 자동으로 true가 되어 noindex 처리된다.
   const { stripped: contentWithoutAutoExpand, block: boilerplateSection } = extractAutoExpandBlock(content);
