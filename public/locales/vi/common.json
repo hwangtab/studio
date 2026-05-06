@@ -798,18 +798,18 @@
     },
     "cta": {
       "recording": {
-        "title": "Bạn muốn âm thanh tốt hơn?",
-        "descriptionLine1": "Hãy trải nghiệm dịch vụ thu âm và mix chuyên nghiệp tại Studio NOL.",
-        "descriptionLine2": "Chúng tôi hoàn thiện âm nhạc của bạn với thiết bị tốt nhất và kinh nghiệm chuyên môn.",
+        "title": "Đang cân nhắc thu âm vocal hoặc bài hát đám cưới?",
+        "descriptionLine1": "Buổi thu vocal ₩250,000 (3 giờ, 1 bài) · Trọn gói bài hát đám cưới ₩350,000.",
+        "descriptionLine2": "Kỹ sư chuyên trách hướng dẫn, chọn take và mix.",
         "primaryText": "Xem giá dịch vụ",
         "secondaryText": "Liên hệ",
         "visualText": "Âm thanh chuyên nghiệp"
       },
       "lesson": {
         "mobileMenu": "Menu di động",
-        "title": "Bạn muốn tự làm nhạc?",
-        "descriptionLine1": "Đừng lo một mình. Chúng tôi hỗ trợ với lớp học 1:1 theo nhu cầu.",
-        "descriptionLine2": "Học từ nền tảng đến MIDI, mixing và sound design một cách chắc chắn.",
+        "title": "Bạn cần khóa học âm nhạc 1-1?",
+        "descriptionLine1": "Thanh nhạc, nhạc cụ, MIDI, sáng tác — lớp cá nhân hóa với ₩350,000/tháng.",
+        "descriptionLine2": "Phát triển kỹ năng từng bước cùng giảng viên chuyên nghiệp.",
         "primaryText": "Xem giáo trình",
         "secondaryText": "Đăng ký tư vấn",
         "visualText": "Giáo dục âm nhạc"

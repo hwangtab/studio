@@ -797,17 +797,17 @@
     },
     "cta": {
       "recording": {
-        "title": "Yaxshiroq tovush xohlaysizmi?",
-        "descriptionLine1": "Studio NOL'da professional yozuv va miks xizmatlarini sinab ko'ring.",
-        "descriptionLine2": "Eng yaxshi uskunalar va tajriba bilan musiqangizni yakunlaymiz.",
+        "title": "Vokal yozish yoki to'y qo'shig'ini o'ylayapsizmi?",
+        "descriptionLine1": "Vokal sessiyasi ₩250,000 (3 soat, 1 qo'shiq) · To'y qo'shig'i to'liq paketi ₩350,000.",
+        "descriptionLine2": "Mas'ul muhandis rejissyorlik, take tanlash va miks bo'yicha hamkorlik qiladi.",
         "primaryText": "Xizmat narxlarini ko'rish",
         "secondaryText": "So'rov",
         "visualText": "Professional audio"
       },
       "lesson": {
-        "title": "Musiqani o'zingiz yaratmoqchimisiz?",
-        "descriptionLine1": "Yolg'iz qiynalmang. Sizga 1:1 moslashtirilgan darslar bilan yordam beramiz.",
-        "descriptionLine2": "MIDI, miks va sound dizayngacha asoslardan puxta o'rganing.",
+        "title": "1:1 musiqa darslari kerakmi?",
+        "descriptionLine1": "Vokal, asbob, MIDI, kompozitsiya — shaxsiy darslar oyiga ₩350,000.",
+        "descriptionLine2": "Professional ustoz bilan bosqichma-bosqich mahorat oshiring.",
         "primaryText": "O'quv dasturini ko'rish",
         "secondaryText": "Maslahat so'rash",
         "visualText": "Musiqa ta'limi"

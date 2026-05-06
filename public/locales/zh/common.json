@@ -798,18 +798,18 @@
     },
     "cta": {
       "recording": {
-        "title": "想要更好的声音吗？",
-        "descriptionLine1": "体验 Studio NOL 的专业录音和混音服务。",
-        "descriptionLine2": "用最好的设备和经验完成您的音乐。",
+        "title": "在考虑声乐录音或婚礼献唱吗？",
+        "descriptionLine1": "声乐录音 25万韩元（3小时·1首） · 婚礼献唱完整套餐 35万韩元。",
+        "descriptionLine2": "专属工程师协助编导、选录、混音全程。",
         "primaryText": "查看价格",
         "secondaryText": "咨询",
         "visualText": "专业音频"
       },
       "lesson": {
         "mobileMenu": "移动菜单",
-        "title": "想自己制作音乐吗？",
-        "descriptionLine1": "不要独自烦恼。我们提供1:1定制课程。",
-        "descriptionLine2": "从基础开始扎实学习 MIDI、混音、声音设计。",
+        "title": "需要1对1音乐课程吗？",
+        "descriptionLine1": "发声、乐器、MIDI、作曲 — 个性化课程，月费35万韩元定额。",
+        "descriptionLine2": "在专业讲师指导下从基础开始逐步提升。",
         "primaryText": "查看课程大纲",
         "secondaryText": "申请咨询",
         "visualText": "音乐教育"

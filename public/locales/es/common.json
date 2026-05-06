@@ -798,18 +798,18 @@
     },
     "cta": {
       "recording": {
-        "title": "¿Quieres un mejor sonido?",
-        "descriptionLine1": "Experimenta los servicios profesionales de grabación y mezcla en Studio NOL.",
-        "descriptionLine2": "Completamos tu música con el mejor equipo y experiencia.",
+        "title": "¿Considerando grabación vocal o canción de boda?",
+        "descriptionLine1": "Sesión vocal ₩250,000 (3 h, 1 canción) · Paquete completo canción de boda ₩350,000.",
+        "descriptionLine2": "Un ingeniero dedicado dirige, selecciona tomas y mezcla.",
         "primaryText": "Ver Precios",
         "secondaryText": "Consulta",
         "visualText": "Audio profesional"
       },
       "lesson": {
         "mobileMenu": "Menú móvil",
-        "title": "¿Quieres crear tu propia música?",
-        "descriptionLine1": "No luches solo. Te ayudamos con clases personalizadas 1:1.",
-        "descriptionLine2": "Aprende desde lo básico hasta MIDI, mezcla y diseño de sonido.",
+        "title": "¿Necesitas clases de música 1 a 1?",
+        "descriptionLine1": "Voz, instrumento, MIDI, composición — clases personalizadas por ₩350,000/mes.",
+        "descriptionLine2": "Desarrolla tus habilidades paso a paso con un instructor profesional.",
         "primaryText": "Ver Currículo",
         "secondaryText": "Solicitar Consulta",
         "visualText": "Educación musical"

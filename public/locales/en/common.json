@@ -798,18 +798,18 @@
     },
     "cta": {
       "recording": {
-        "title": "Want better sound?",
-        "descriptionLine1": "Experience Studio NOL's professional recording and mixing services.",
-        "descriptionLine2": "We complete your music with the best equipment and expertise.",
+        "title": "Considering vocal recording or a wedding song?",
+        "descriptionLine1": "Vocal session ₩250,000 (3 hours, 1 song) · Wedding-song package ₩350,000.",
+        "descriptionLine2": "A dedicated engineer guides directing, take selection, and mixing.",
         "primaryText": "View Pricing",
         "secondaryText": "Inquiry",
         "visualText": "Professional Audio"
       },
       "lesson": {
         "mobileMenu": "Mobile Menu",
-        "title": "Want to create your own music?",
-        "descriptionLine1": "Don't struggle alone. We help with 1:1 customized lessons.",
-        "descriptionLine2": "Learn from basics to MIDI, mixing, and sound design.",
+        "title": "Need 1-on-1 music lessons?",
+        "descriptionLine1": "Vocal, instrument, MIDI, composition — personalized lessons at ₩350,000/month.",
+        "descriptionLine2": "Build your skills step by step with a professional instructor.",
         "primaryText": "View Curriculum",
         "secondaryText": "Request Consultation",
         "visualText": "Music Education"
