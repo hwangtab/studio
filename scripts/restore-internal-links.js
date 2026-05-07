@@ -9,7 +9,7 @@ const DIR = path.join(process.cwd(), 'content/stories');
 // categoryKey → footer 마크다운 (5개 sibling/hub 링크)
 const FOOTERS = {
   production: '[작곡·작사 실전 가이드](/stories/songwriting1) | [코드 진행 완전 가이드](/stories/chord-progression1) | [비트 메이킹 입문](/stories/beatmaking1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)',
-  recording: '[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [데모 녹음 완전 가이드](/stories/demo-tape1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)',
+  recording: '[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [데모 녹음 완전 가이드](/stories/demo-tape1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)',
   vocal: '[보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 워밍업 루틴](/stories/warmup1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)',
   mixing: '[믹싱 완전 가이드](/stories/mixing-complete-guide) | [EQ 완전 가이드](/stories/eq-guide1) | [컴프레서 완전 가이드](/stories/compression-guide1) | [요금 안내](/pricing) | [문의하기](/contact)',
   business: '[가수 데뷔 준비](/stories/debut1) | [가수 지망생 가이드](/stories/aspiring1) | [인디 뮤지션 녹음실](/stories/indie-musician-studio1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)',

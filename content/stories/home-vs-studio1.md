@@ -138,4 +138,4 @@ Neumann U87AI 마이크와 방음 부스, 아날로그 장비를 통해 담긴 �
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [데모 녹음 완전 가이드](/stories/demo-tape1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [데모 녹음 완전 가이드](/stories/demo-tape1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)
