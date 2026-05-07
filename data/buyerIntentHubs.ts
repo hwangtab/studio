@@ -27,6 +27,20 @@ export interface BuyerIntentHubFeature {
   description: string;
 }
 
+/**
+ * pricingPackageId 매핑이 안 맞는 hub 전용 fallback 가격 카드.
+ * 예: lesson 가격은 data/pricing.ts에 별도 entry가 없어 hub에서 직접 정의.
+ */
+export interface BuyerIntentHubPricingFallback {
+  id: string;
+  title: string;
+  priceDisplay: string;
+  unit?: string;
+  description: string;
+  features: readonly string[];
+  recommended?: boolean;
+}
+
 export interface BuyerIntentHub {
   slug: BuyerIntentHubSlug;
   /** SEO title — 60자 이내 권장 */
@@ -51,10 +65,18 @@ export interface BuyerIntentHub {
   quickAnswers: BuyerIntentHubQuickAnswer[];
   /** 큐레이션된 관련 스토리 6편 */
   relatedStorySlugs: readonly string[];
-  /** 가격 모듈 — pricingData.specialPackages의 id를 가리킨다 */
+  /**
+   * 가격 모듈 — pricingData의 id(specialPackages/recordingOffers/mixingOffers)를 가리킨다.
+   * pricing 데이터에 매핑되지 않는 경우(예: lesson)는 빈 문자열로 두고 pricingFallback을 사용.
+   */
   pricingPackageId: string;
   /** 보조 가격 패키지 (있을 경우) */
   secondaryPricingPackageId?: string;
+  /**
+   * pricingPackageId 매핑이 빈 문자열이거나 lookup 실패 시 사용할 fallback 카드.
+   * lesson처럼 pricing 데이터에 entry가 없는 서비스에서 사용.
+   */
+  pricingFallback?: BuyerIntentHubPricingFallback;
   /**
    * 관련 portfolio 노출 카테고리 — 'all' | PortfolioItem.category 값.
    * 'all'은 featured 우선으로 셔플.
@@ -271,33 +293,33 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
 
   'vocal-beginners-guide': {
     slug: 'vocal-beginners-guide',
-    seoTitle: '처음 노래 배우는 사람을 위한 보컬 입문 가이드',
+    seoTitle: '음원 발매를 목표로 하는 보컬·프로듀싱 1:1 레슨 가이드',
     seoDescription:
-      '직장인·취미·오디션 준비생을 위한 보컬 입문 한 페이지 가이드. 호흡·발성부터 음감 훈련, 1:1 레슨, 오디션 데모까지 단계별로 정리했습니다.',
+      '현직 프로듀서의 1:1 실전 레슨으로 보컬·MIDI 작곡·믹싱·마스터링까지. 월 35만원 정액제(주 1회 60분, 월 4회), 첫 상담 무료. 호흡·발성·음감 훈련부터 발매까지 한 페이지에 정리했습니다.',
     keywords:
-      '보컬 입문, 노래 배우기, 보컬 레슨, 호흡 발성, 음감 훈련, 직장인 보컬, 오디션 준비, 발성 가이드',
+      '보컬 레슨, 1:1 보컬 레슨, 작곡 레슨, 미디 작곡, 음원 발매 레슨, 호흡 발성, 음감 훈련, 실용음악 입시, 연신내 보컬 레슨',
     hero: {
-      title: '처음 노래를',
-      titleHighlight: '배우고 싶다면',
+      title: '음원 발매를 목표로',
+      titleHighlight: '1:1 실전 레슨',
       subtitle:
-        '취미·실력 향상·오디션까지 한 페이지로. 호흡·발성·음감·실전 단계별 학습 로드맵.',
+        '현직 프로듀서가 보컬·MIDI 작곡·믹싱·마스터링까지 함께. 월 35만원 정액제로 부담 없이 시작하세요.',
       image: '/images/lesson1.webp',
-      imageAlt: '보컬 레슨을 받는 학생',
+      imageAlt: '연신내 스튜디오 놀 1:1 레슨실',
     },
     intro:
-      '"노래를 잘 부르고 싶다"는 목표는 같아도 출발점은 사람마다 다릅니다. 직장인이 회식 자리에서 1곡만 잘 부르고 싶은 경우, 오디션 준비생이 단기간에 실력을 끌어올려야 하는 경우, 취미로 꾸준히 발성을 다듬고 싶은 경우. 이 페이지는 보컬을 처음 배우는 분이 자기 목적에 맞게 시작점을 찾을 수 있도록 핵심 가이드를 한 곳에 모았습니다.',
+      '"노래를 잘 부르고 싶다"에서 시작해 "내 곡을 직접 발매하고 싶다"까지 — 목표는 사람마다 다릅니다. 스튜디오 놀의 1:1 레슨은 단순 보컬 트레이닝이 아니라 현직 프로듀서가 보컬 발성·MIDI 작곡·믹싱·마스터링·발매·저작권 상담까지 함께 진행하는 실전 커리큘럼입니다. 본인 목표에 맞춰 비중을 조정하고, 본 페이지에 모은 가이드로 자가 학습을 병행하면 효율이 크게 올라갑니다.',
     forWhom: [
       {
-        title: '취미로 노래를 잘 부르고 싶은 직장인·일반인',
-        description: '주 1회 30분 레슨으로도 회식·노래방·동호회 활동에 충분합니다.',
+        title: '취미로 노래·작곡을 시작하고 싶은 직장인',
+        description: '주 1회 60분 정액제로 꾸준히 — 발성과 곡 작업을 병행할 수 있습니다.',
       },
       {
         title: '오디션·실용음악 입시를 준비하는 학생',
         description: '발성·음감·곡 해석을 단기간에 끌어올리는 1:1 집중 코칭.',
       },
       {
-        title: '나이가 부담스러운 성인 입문자',
-        description: '40대·50대 처음 시작하는 분도 호흡·발성부터 차근차근 진행합니다.',
+        title: '내 곡을 직접 발매하고 싶은 보컬·작곡 입문자',
+        description: 'MIDI 작곡·믹싱·마스터링·저작권·발매까지 단일 강사가 끝까지 동행합니다.',
       },
     ],
     quickAnswers: [
@@ -306,20 +328,20 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
         a: '늘 수 있습니다. "음치"라고 느끼는 대부분은 음감 훈련과 호흡 안정으로 해결됩니다. 첫 1~2개월에 가장 큰 변화를 느끼는 분이 많습니다.',
       },
       {
-        q: '레슨은 얼마나 자주 받아야 하나요?',
-        a: '주 1회가 가장 보편적입니다. 단기 목표가 명확한 경우(오디션·발표)에는 주 2회로 진행하기도 합니다.',
+        q: '레슨 빈도와 시간은 어떻게 되나요?',
+        a: '주 1회 · 회당 60분 · 월 4회 정액제로 진행합니다. 회당 시간 분배(보컬 vs 작곡 vs 믹싱)는 강사와 협의해 본인 목표에 맞게 조정합니다.',
       },
       {
         q: '비용은 얼마인가요?',
-        a: '1:1 보컬 레슨은 시간당 7만원부터 시작합니다. 패키지·장기 등록 시 할인이 적용됩니다.',
+        a: '월 35만원 정액제(월 4회 · 회당 약 87,500원)입니다. 첫 상담은 무료이며 스튜디오 장비 사용료는 별도로 없습니다.',
       },
       {
-        q: '40대·50대 입문자도 가능한가요?',
-        a: '가능합니다. 성인 입문자가 절반 이상이며 호흡·발성부터 시작해 노래방·동호회 활동을 즐길 정도까지 충분히 만들 수 있습니다.',
+        q: '보컬만 배워도 되나요? 작곡·믹싱은 필수인가요?',
+        a: '본인 목표에 맞게 비중을 조정합니다. 보컬만 집중해도 되고, 음원 발매가 목표면 보컬·MIDI 작곡·믹싱·마스터링까지 단일 강사가 끝까지 함께합니다.',
       },
       {
-        q: '온라인 레슨도 가능한가요?',
-        a: '대면 레슨을 권장합니다. 호흡·발성은 자세 관찰과 즉각 피드백이 중요해 온라인은 효율이 크게 떨어집니다. 대면이 어려운 경우 협의해 일부 진행은 가능합니다.',
+        q: '성인 입문자도 가능한가요?',
+        a: '가능합니다. 성인 입문자가 다수이며 호흡·발성부터 차근차근 진행해 본인 목표 수준까지 도달할 수 있도록 커리큘럼을 짭니다.',
       },
     ],
     relatedStorySlugs: [
@@ -330,10 +352,26 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
       'audition-vocal1',
       'harmony-singing1',
     ],
-    pricingPackageId: 'recording-hourly',
+    // lesson 가격은 data/pricing.ts에 entry가 없어 hub 전용 fallback 카드를 사용한다.
+    pricingPackageId: '',
+    pricingFallback: {
+      id: 'lesson-monthly',
+      title: '1:1 음악 레슨 (월 정액제)',
+      priceDisplay: '350,000원',
+      unit: '/ 월',
+      description:
+        '현직 프로듀서가 진행하는 보컬·MIDI 작곡·믹싱·마스터링 통합 1:1 레슨입니다. 첫 상담은 무료로 진행됩니다.',
+      recommended: true,
+      features: [
+        '주 1회 · 회당 60분 · 월 4회',
+        '보컬·MIDI 작곡·믹싱·마스터링 통합 커리큘럼',
+        '음원 발매·저작권 상담 포함',
+        '첫 상담 무료 · 스튜디오 장비 사용료 별도 없음',
+      ],
+    },
     portfolioCategory: 'single',
     primaryServiceLink: 'lesson',
-    secondaryServiceLink: 'voice-acting',
+    secondaryServiceLink: 'contact',
   },
 };
 

@@ -546,8 +546,8 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
             <HubLinkCallout
                 hubSlug="vocal-beginners-guide"
                 locale={locale}
-                title="처음 노래 배우는 사람을 위한 보컬 입문 종합 가이드"
-                subtitle="취미·실력 향상·오디션 모두를 위한 단계별 학습 로드맵을 한 페이지에 모았습니다."
+                title="음원 발매를 목표로 하는 1:1 종합 레슨 가이드"
+                subtitle="보컬·MIDI 작곡·믹싱·마스터링까지 — 현직 프로듀서 1:1 실전 커리큘럼과 학습 가이드를 한 페이지에 모았습니다."
             />
 
             <RelatedStoriesSection

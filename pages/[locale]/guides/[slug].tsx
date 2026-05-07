@@ -109,9 +109,24 @@ export const getStaticProps: GetStaticProps<BuyerIntentHubPageProps> = async ({ 
   const fallback = filtered.filter((item) => !item.featured);
   const relatedPortfolio = [...featured, ...fallback].slice(0, 3);
 
-  // Pricing 패키지 lookup.
+  // Pricing 패키지 lookup. 매핑 실패(또는 빈 ID — lesson처럼 pricing 데이터에
+  // entry가 없는 경우)면 hub.pricingFallback을 primary로 사용한다.
   const pricingData = getPricingData(locale);
-  const primaryPackage = findPackageById(pricingData, hub.pricingPackageId);
+  const lookedUpPrimary = findPackageById(pricingData, hub.pricingPackageId);
+  const primaryPackage: AnyPackage | null =
+    lookedUpPrimary
+    ?? (hub.pricingFallback
+      ? {
+          id: hub.pricingFallback.id,
+          title: hub.pricingFallback.title,
+          priceDisplay: hub.pricingFallback.priceDisplay,
+          priceValue: 0,
+          unit: hub.pricingFallback.unit ?? '',
+          description: hub.pricingFallback.description,
+          features: [...hub.pricingFallback.features],
+          ...(hub.pricingFallback.recommended && { recommended: hub.pricingFallback.recommended }),
+        } as AnyPackage
+      : null);
   const secondaryPackage = hub.secondaryPricingPackageId
     ? findPackageById(pricingData, hub.secondaryPricingPackageId)
     : null;
