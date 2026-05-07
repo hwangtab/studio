@@ -13,11 +13,15 @@ import SectionHeading from '../../components/ui/SectionHeading';
 // Below-fold 컴포넌트 code-splitting
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
+const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
+const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCallout'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import type { StoryCardData } from '../../types/story';
 import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
@@ -102,9 +106,10 @@ const PhaseHeader = ({ label, title, caption }: PhaseHeaderProps) => (
 interface LessonProps {
     locale: Locale;
     hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
+    relatedStories: StoryCardData[];
 }
 
-const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) => {
+const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, relatedStories }) => {
     const { t } = useTranslation('common', { lng: locale });
     const siteConfig = getSiteConfig(locale);
 
@@ -538,6 +543,20 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent }) =
                 </div>
             </Section>
 
+            <HubLinkCallout
+                hubSlug="vocal-beginners-guide"
+                locale={locale}
+                title="처음 노래 배우는 사람을 위한 보컬 입문 종합 가이드"
+                subtitle="취미·실력 향상·오디션 모두를 위한 단계별 학습 로드맵을 한 페이지에 모았습니다."
+            />
+
+            <RelatedStoriesSection
+                stories={relatedStories}
+                locale={locale}
+                title={t('lesson.relatedStoriesTitle', { defaultValue: '레슨생들이 가장 많이 본 보컬·연습 가이드' })}
+                subtitle={t('lesson.relatedStoriesSubtitle', { defaultValue: '오디션·발성·음감 훈련에 바로 도움이 되는 실전 가이드를 모았습니다.' })}
+            />
+
             {/* Improved CTA Section */}
             <Section variant="alternate" className="py-16">
                 <ContactCTA
@@ -571,10 +590,12 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const locale = resolveLocaleParam(params?.locale);
     const hubLocaleContent = getHubLocaleContent(locale, 'lesson');
+    const relatedStories = getServiceRelatedStories('lesson', locale);
     return buildPageStaticProps(
         locale,
         {
             hubLocaleContent,
+            relatedStories,
         },
         { revalidate: 86400, i18nSections: ['lesson'] }
     );

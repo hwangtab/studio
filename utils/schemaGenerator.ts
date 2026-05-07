@@ -393,6 +393,32 @@ export const generateArticleSchema = (
   const organizationId = `${siteUrl}/#organization`;
   const websiteId = `${siteUrl}/#website`;
 
+  // Author E-E-A-T 보강: 사이트 본인 명의(스튜디오 놀)인 경우 brand authority 신호로
+  // sameAs(SNS)·worksFor(Organization @id) 연결을 추가한다. 외부 기고자(articleAuthor가
+  // 명시되고 config.name과 다른 경우)는 단순 Person으로 유지해 잘못된 affiliation 시그널을
+  // 보내지 않는다.
+  const authorName = articleAuthor || config.name;
+  const isStudioAuthor = !articleAuthor || articleAuthor === config.name;
+  const authorSameAs = Object.values(socialProfiles).filter(
+    (url): url is string => typeof url === 'string' && url.trim() !== ''
+  );
+  const author = isStudioAuthor
+    ? {
+        '@type': 'Person',
+        name: authorName,
+        url: `${siteUrl}/${locale}/about`,
+        ...(authorSameAs.length > 0 && { sameAs: authorSameAs }),
+        worksFor: {
+          '@type': 'Organization',
+          '@id': organizationId,
+          name: config.name,
+        },
+      }
+    : {
+        '@type': 'Person',
+        name: authorName,
+      };
+
   return {
     '@context': 'https://schema.org',
     '@type': articleType,
@@ -403,10 +429,7 @@ export const generateArticleSchema = (
     ...(articleSection && { articleSection }),
     ...(articleKeywords && articleKeywords.length > 0 && { keywords: articleKeywords.join(', ') }),
     ...(wordCount && wordCount > 0 && { wordCount }),
-    author: {
-      '@type': 'Person',
-      name: articleAuthor || config.name,
-    },
+    author,
     publisher: {
       '@type': 'Organization',
       '@id': organizationId,

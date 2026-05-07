@@ -17,10 +17,14 @@ const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'))
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
+const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCallout'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getPricingData } from '../../data/pricing';
+import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import type { StoryCardData } from '../../types/story';
 import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
@@ -28,6 +32,7 @@ import type { NextPageWithLayout } from '../../types';
 interface WeddingSongProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
+  relatedStories: StoryCardData[];
 }
 
 const INTRO_ANIMATION = createInViewEnterAnimation({ axis: 'y' });
@@ -35,7 +40,7 @@ const INTRO_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 
 const INTRO_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
 const PROCESS_ANIMATION = createFadeInAnimation({ delay: 0.2 });
 
-const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData }) => {
+const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
@@ -323,6 +328,20 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
 
       <ReviewSection variant="alternate" locale={locale} />
 
+      <HubLinkCallout
+        hubSlug="wedding-song-singing"
+        locale={locale}
+        title="결혼식 축가 직접 부르기 — 종합 가이드"
+        subtitle="선곡·연습·녹음·식장 납품까지 한 페이지에 정리된 신랑·신부 가이드를 보세요."
+      />
+
+      <RelatedStoriesSection
+        stories={relatedStories}
+        locale={locale}
+        title={t('weddingSong.relatedStoriesTitle', { defaultValue: '축가 준비에 도움이 되는 가이드' })}
+        subtitle={t('weddingSong.relatedStoriesSubtitle', { defaultValue: '실제 신랑·신부분들이 가장 많이 본 보컬·녹음 가이드를 모았습니다.' })}
+      />
+
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="default" className="py-10">
@@ -383,9 +402,10 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const pricingData = getPricingData(locale);
+  const relatedStories = getServiceRelatedStories('wedding-song', locale);
   return buildPageStaticProps(
     locale,
-    { pricingData },
+    { pricingData, relatedStories },
     { revalidate: 86400, i18nSections: ['weddingSong'] }
   );
 };

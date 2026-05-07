@@ -368,6 +368,33 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       )
     : undefined;
 
+  // frontmatter `howTo` 검증 및 정규화 — steps 배열이 비거나 형식이 잘못된 경우는
+  // 발행하지 않는다. HowTo schema를 잘못 발행하면 Search Console에서 경고가 발생.
+  const howTo = (() => {
+    const raw = data?.howTo as
+      | { name?: unknown; description?: unknown; totalTime?: unknown; steps?: unknown }
+      | undefined;
+    if (!raw || typeof raw !== 'object') return undefined;
+    const rawSteps = Array.isArray(raw.steps) ? raw.steps : [];
+    const steps = rawSteps
+      .filter((step): step is { name: unknown; text: unknown; image?: unknown } =>
+        Boolean(step) && typeof step === 'object'
+      )
+      .map((step) => ({
+        name: typeof step.name === 'string' ? step.name : '',
+        text: typeof step.text === 'string' ? step.text : '',
+        ...(typeof step.image === 'string' && { image: step.image }),
+      }))
+      .filter((step) => step.name.length > 0 && step.text.length > 0);
+    if (steps.length === 0) return undefined;
+    return {
+      ...(typeof raw.name === 'string' && { name: raw.name }),
+      ...(typeof raw.description === 'string' && { description: raw.description }),
+      ...(typeof raw.totalTime === 'string' && { totalTime: raw.totalTime }),
+      steps,
+    };
+  })();
+
   const isThinContent = computeThinContentStatus(contentToProcess, slug).isThinContent;
 
   const storyDetail: StoryDetail = {
@@ -379,6 +406,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     ...(typeof data?.robots === 'string' && { robots: data.robots }),
     modifiedDate,
     ...(faq && faq.length > 0 && { faq }),
+    ...(howTo && { howTo }),
     ...(boilerplateSection && { boilerplateSection }),
     availableLocales: getStoryAvailableLocales(slug),
   };

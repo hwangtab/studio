@@ -15,17 +15,20 @@ import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 
 // StoryCTA는 article 본문 아래 below-fold 영역 → 코드 스플리팅.
 const StoryCTA = dynamic(() => import('../../../components/StoryCTA'));
+const RelatedPortfolioInline = dynamic(() => import('../../../components/ui/RelatedPortfolioInline'));
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
+import { getStoryRelatedPortfolio } from '../../../lib/storyRelatedPortfolio';
 import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
 import type { Story, StoryDetail } from '../../../types/story';
+import type { PortfolioItem } from '../../../types/data';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { generateFaqSchema, generatePracticeRoomMonthlyRentSchema } from '../../../utils/schemaGenerator';
+import { generateFaqSchema, generateHowToSchema, generatePracticeRoomMonthlyRentSchema } from '../../../utils/schemaGenerator';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
@@ -37,11 +40,12 @@ interface StoryDetailPageProps {
   locale: Locale;
   story: StoryDetail;
   relatedStories: RelatedStoryItem[];
+  relatedPortfolio: PortfolioItem[];
 }
 
 const STORY_BODY_ANIMATION = createEnterAnimation();
 
-const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories }) => {
+const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, story, relatedStories, relatedPortfolio }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
 
@@ -134,12 +138,27 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
     return generatePracticeRoomMonthlyRentSchema(pageUrl, locale);
   }, [story.slug, locale, siteConfig.url]);
 
+  // frontmatter `howTo`가 있는 글만 HowTo schema 발행 — 자동 추출은 false-positive
+  // 위험이 있어 명시적 opt-in 방식을 채택. step-by-step 가이드 글에서 AI Overviews /
+  // Google How-to rich result 후보가 되도록 한다.
+  const howToSchema = React.useMemo(() => {
+    if (!story.howTo || story.howTo.steps.length === 0) return null;
+    return generateHowToSchema(
+      story.howTo.name || story.title,
+      story.howTo.description || story.summary,
+      story.howTo.steps,
+      story.howTo.totalTime,
+      locale
+    );
+  }, [story.howTo, story.title, story.summary, locale]);
+
   const extraSchemas = React.useMemo(() => {
     const items: Record<string, unknown>[] = [];
     if (faqSchema) items.push(faqSchema as Record<string, unknown>);
+    if (howToSchema) items.push(howToSchema as Record<string, unknown>);
     if (practiceRoomOfferSchema) items.push(practiceRoomOfferSchema as Record<string, unknown>);
     return items.length > 0 ? items : undefined;
-  }, [faqSchema, practiceRoomOfferSchema]);
+  }, [faqSchema, howToSchema, practiceRoomOfferSchema]);
 
   const wordCount = React.useMemo(() => {
     if (!story.content) return undefined;
@@ -282,6 +301,13 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           </aside>
         )}
 
+        {/* 가이드를 다 읽은 사용자에게 "이 가이드대로 작업한 실제 결과물"을 노출.
+            recording/mixing/production/vocal/instrument 카테고리에서만 채워진다 — 그 외
+            카테고리는 getStoryRelatedPortfolio가 빈 배열을 반환해 섹션 자체가 숨김. */}
+        {relatedPortfolio.length > 0 && (
+          <RelatedPortfolioInline items={relatedPortfolio} locale={locale} />
+        )}
+
         {/* event 카테고리(공지·모임 안내)는 행동 유도 맥락이 약해 CTA 노출 부자연 → 숨김 */}
         {story.categoryKey !== 'event' && <StoryCTA type={ctaType} locale={locale} />}
 
@@ -336,11 +362,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       summary: s.summary,
     }));
 
+    // recording/mixing/production/vocal/instrument 스토리만 portfolio 매칭이 채워지고,
+    // 그 외 카테고리는 빈 배열 반환 → 페이지에서 섹션 자체가 렌더되지 않는다.
+    const relatedPortfolio = getStoryRelatedPortfolio(story.categoryKey, story.slug, locale, 3);
+
     return buildPageStaticProps(
       locale,
       {
         story,
         relatedStories,
+        relatedPortfolio,
       },
       { revalidate: 3600, i18nSections: ['stories'] }
     );

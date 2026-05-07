@@ -18,15 +18,20 @@ import ImageHero from '../../components/common/ImageHero';
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
+const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
+const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCallout'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import type { StoryCardData } from '../../types/story';
 import type { NextPageWithLayout } from '../../types';
 
 interface PricingProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
   hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
+  relatedStories: StoryCardData[];
 }
 
 interface Offer {
@@ -40,7 +45,7 @@ interface Offer {
   recommended?: boolean;
 }
 
-const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLocaleContent }) => {
+const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLocaleContent, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const {
     VAT_NOTICE,
@@ -397,6 +402,20 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       <ReviewSection variant="default" locale={locale} />
 
+      <HubLinkCallout
+        hubSlug="home-recording-survival"
+        locale={locale}
+        title="원룸·자취방에서 데모 만들기 — 종합 가이드"
+        subtitle="홈레코딩 한계와 스튜디오 전환 시점까지 한 페이지에 정리한 생존 가이드."
+      />
+
+      <RelatedStoriesSection
+        stories={relatedStories}
+        locale={locale}
+        title={t('pricing.relatedStoriesTitle', { defaultValue: '예약 전 한 번 더 살펴보면 좋은 가이드' })}
+        subtitle={t('pricing.relatedStoriesSubtitle', { defaultValue: '비용·발매·녹음 절차를 미리 알면 첫 세션을 더 알차게 쓸 수 있습니다.' })}
+      />
+
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="alternate" className="py-10">
@@ -456,11 +475,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const pricingData = getPricingData(locale);
   const hubLocaleContent = getHubLocaleContent(locale, 'pricing');
+  const relatedStories = getServiceRelatedStories('pricing', locale);
   return buildPageStaticProps(
     locale,
     {
       pricingData,
       hubLocaleContent,
+      relatedStories,
     },
     { revalidate: 86400, i18nSections: ['pricing'] }
   );

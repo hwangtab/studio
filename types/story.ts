@@ -10,6 +10,27 @@ export interface StoryFAQItem {
 }
 
 /**
+ * Frontmatter `howTo` 필드 — schema.org HowTo 구조화 데이터로 발행되는 step list.
+ * 명시적으로 적용된 글에만 발행하므로 false-positive HowTo schema가 생기지 않는다.
+ */
+export interface StoryHowToStep {
+  name: string;
+  text: string;
+  image?: string;
+}
+
+export interface StoryHowTo {
+  /** HowTo schema의 name. 미지정 시 글 title이 사용된다. */
+  name?: string;
+  /** HowTo schema의 description. 미지정 시 글 summary가 사용된다. */
+  description?: string;
+  /** ISO 8601 duration (예: "PT30M"). schema.org HowTo.totalTime 호환. */
+  totalTime?: string;
+  /** 단계 목록 — schema.org HowToStep로 매핑된다. */
+  steps: StoryHowToStep[];
+}
+
+/**
  * 스토리 본문 끝 CTA 카드 종류. 슬러그·카테고리 기반 자동 매칭이 기본이고,
  * frontmatter `cta:` 필드로 글 단위 명시적 override가 가능하다.
  */
@@ -32,6 +53,7 @@ export interface StoryFrontmatter {
   thumbnail?: string;
   images?: string[];
   faq?: StoryFAQItem[];
+  howTo?: StoryHowTo;
   cta?: StoryCTAOverride;
 }
 
@@ -73,6 +95,7 @@ export interface StoryDetail extends Story {
   // SEO 본문 분량 계산에는 포함되지 않는다.
   boilerplateSection?: string;
   availableLocales: Locale[]; // Locales with a native translation file — used to gate hreflang alternates
+  howTo?: StoryHowTo; // frontmatter `howTo`가 있는 글만 채워진다 — HowTo schema 발행 트리거
 }
 
 /**

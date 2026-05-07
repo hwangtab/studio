@@ -1,5 +1,6 @@
 import React from 'react';
 import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
@@ -9,7 +10,11 @@ import SEO from '../../../components/SEO';
 import PortfolioDetailSummary from '../../../components/portfolio/PortfolioDetailSummary';
 import PortfolioDetailBody from '../../../components/portfolio/PortfolioDetailBody';
 import { getPortfolioItems, getCategories } from '../../../data/portfolio';
+import { getPortfolioRelatedStories } from '../../../lib/portfolioRelatedStories';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
+import type { StoryCardData } from '../../../types/story';
+
+const RelatedStoriesSection = dynamic(() => import('../../../components/ui/RelatedStoriesSection'));
 import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
 import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
@@ -26,6 +31,7 @@ interface PortfolioDetailPageProps {
   locale: Locale;
   item: PortfolioItem;
   categories: PortfolioCategory[];
+  relatedStories: StoryCardData[];
 }
 
 const DETAIL_CONTENT_ANIMATION = createEnterAnimation();
@@ -46,7 +52,7 @@ function getImageDimensions(imageUrl: string): { width: number; height: number }
   return { width: 1000, height: 1000 };
 }
 
-const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories }) => {
+const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories, relatedStories }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
 
@@ -214,6 +220,13 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           />
         </div>
       </Section>
+      <RelatedStoriesSection
+        stories={relatedStories}
+        locale={locale}
+        title={t('portfolio.detail.relatedStoriesTitle', { defaultValue: '이런 작업은 어떻게 만들어졌을까요' })}
+        subtitle={t('portfolio.detail.relatedStoriesSubtitle', { defaultValue: '실제 녹음·믹싱·프로덕션 과정에서 사용하는 기법을 가이드로 정리했습니다.' })}
+      />
+
       <Section variant="alternate" className="py-12">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-body mb-6 text-gray-600 dark:text-gray-300">{t('portfolio.detail.ctaPrompt', '당신의 음악도 완성해 드립니다.')}</p>
@@ -258,11 +271,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return { notFound: true, revalidate: 3600 };
   }
 
+  const relatedStories = getPortfolioRelatedStories(item.id, locale, 6);
+
   return buildPageStaticProps(
     locale,
     {
       item,
       categories,
+      relatedStories,
     },
     { revalidate: 3600, i18nSections: ['portfolio'] }
   );

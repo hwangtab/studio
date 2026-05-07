@@ -18,10 +18,14 @@ const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'))
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
+const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCallout'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getPricingData } from '../../data/pricing';
+import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import type { StoryCardData } from '../../types/story';
 import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
@@ -29,6 +33,7 @@ import type { NextPageWithLayout } from '../../types';
 interface VoiceActingProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
+  relatedStories: StoryCardData[];
 }
 
 const AudienceCard = ({
@@ -59,7 +64,7 @@ const ENV_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: -5
 const ENV_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
 const PROCESS_ANIMATION = createFadeInAnimation({ delay: 0.2 });
 
-const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData }) => {
+const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
@@ -357,6 +362,20 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
 
       <ReviewSection variant="default" locale={locale} />
 
+      <HubLinkCallout
+        hubSlug="audiobook-asmr-getting-started"
+        locale={locale}
+        title="오디오북·ASMR·내레이션 첫 도전 — 종합 가이드"
+        subtitle="원고 준비부터 녹음·편집·마스터링·유통까지 한 페이지에서 시작하세요."
+      />
+
+      <RelatedStoriesSection
+        stories={relatedStories}
+        locale={locale}
+        title={t('voiceActing.relatedStoriesTitle', { defaultValue: '성우·내레이션 녹음 가이드' })}
+        subtitle={t('voiceActing.relatedStoriesSubtitle', { defaultValue: '오디오북·ASMR·팟캐스트·데모 녹음에 바로 적용할 수 있는 실전 가이드.' })}
+      />
+
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="alternate" className="py-10">
@@ -417,9 +436,10 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const pricingData = getPricingData(locale);
+  const relatedStories = getServiceRelatedStories('voice-acting', locale);
   return buildPageStaticProps(
     locale,
-    { pricingData },
+    { pricingData, relatedStories },
     { revalidate: 86400, i18nSections: ['voiceActing'] }
   );
 };
