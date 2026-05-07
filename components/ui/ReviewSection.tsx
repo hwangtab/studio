@@ -37,16 +37,12 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                {/* 리뷰 schema는 JSON-LD(generateDefaultSchema의 LocalBusiness.review)
+                    에서 완전 형태로 이미 출력됨. microdata로 중복 마킹 시 itemReviewed의
+                    bare LocalBusiness가 4개씩 생겨 Google Rich Results 검사기 warning 양산.
+                    의미 정보는 JSON-LD가 단독으로 모두 표현하므로 microdata 제거. */}
                 {reviews.map((review, index) => (
-                    <div
-                        key={`${review.author}-${review.categoryKey}-${review.datePublished}`}
-                        itemScope
-                        itemType="https://schema.org/Review"
-                    >
-                        <meta itemProp="datePublished" content={review.datePublished} />
-                        <div itemProp="itemReviewed" itemScope itemType="https://schema.org/LocalBusiness">
-                            <meta itemProp="name" content="Studio NOL" />
-                        </div>
+                    <div key={`${review.author}-${review.categoryKey}-${review.datePublished}`}>
                         <BaseCard
                             variant="default"
                             delay={index * 0.08}
@@ -58,9 +54,6 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
 
                             <div className="relative z-10">
                                 <div
-                                    itemProp="reviewRating"
-                                    itemScope
-                                    itemType="https://schema.org/Rating"
                                     className="flex items-center mb-4"
                                     role="img"
                                     aria-label={t('reviewSection.ratingAria', {
@@ -68,26 +61,19 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                         defaultValue: `평점 ${review.rating}점`,
                                     })}
                                 >
-                                    <meta itemProp="ratingValue" content={String(review.rating)} />
-                                    <meta itemProp="bestRating" content="5" />
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
                                         <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" aria-hidden="true" />
                                     ))}
                                 </div>
 
-                                <p itemProp="reviewBody" className={`typo-card-body text-lg leading-relaxed mb-8 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                                <p className={`typo-card-body text-lg leading-relaxed mb-8 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                                     &quot;{review.content}&quot;
                                 </p>
 
                                 <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                                     <div>
-                                        <span
-                                            itemProp="author"
-                                            itemScope
-                                            itemType="https://schema.org/Person"
-                                            className="block font-bold typo-card-title text-base mb-1"
-                                        >
-                                            <span itemProp="name">{review.author}</span>
+                                        <span className="block font-bold typo-card-title text-base mb-1">
+                                            {review.author}
                                         </span>
                                         <span className="text-sm text-primary font-semibold">
                                             {review.category}
