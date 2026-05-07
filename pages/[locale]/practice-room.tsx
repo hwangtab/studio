@@ -516,30 +516,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
     '@type': 'Service',
     name: t('practiceRoom.seo.title'),
     description: t('practiceRoom.seo.description'),
-    inLanguage: schemaLanguage,
+    availableLanguage: schemaLanguage,
     serviceType: locale === 'ko' ? '음악연습실' : t('nav.practiceRoom'),
     areaServed: [
       { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
       { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
-      { '@type': 'Neighborhood', name: 'Yeonsinnae' },
-      { '@type': 'Neighborhood', name: 'Bulgwang' },
+      { '@type': 'Place', name: 'Yeonsinnae' },
+      { '@type': 'Place', name: 'Bulgwang' },
     ],
-    location: {
-      '@type': 'Place',
-      name: siteConfig.name,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
-        addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
-        postalCode: '03424',
-        addressCountry: 'KR',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: 37.614353,
-        longitude: 126.925887,
-      },
-    },
     provider: {
       '@type': 'Organization',
       '@id': `${siteConfig.url}/#organization`,
