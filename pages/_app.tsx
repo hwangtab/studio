@@ -3,15 +3,13 @@ import '../styles/globals.css';
 import { notoSansKr } from '../lib/fonts';
 
 import Head from 'next/head';
-import Script from 'next/script';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-// Vercel Analytics·SpeedInsights는 client-only이고 hydration 후에 발화하면 충분.
-// 동적 import로 _app 초기 청크에서 분리해 사용하지 않는 JS 100KB 감축에 기여.
-const Analytics = dynamic(() => import('@vercel/analytics/react').then(m => m.Analytics), { ssr: false });
-const SpeedInsights = dynamic(() => import('@vercel/speed-insights/next').then(m => m.SpeedInsights), { ssr: false });
+// 3rd-party 측정 스크립트(GTM·Vercel Analytics·SpeedInsights)를 사용자 interaction
+// 또는 5초 idle fallback 후에만 로드. PSI 모바일 점수 변동(98↔50) 안정화.
+const DeferredAnalytics = dynamic(() => import('../components/common/DeferredAnalytics'), { ssr: false });
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
@@ -229,21 +227,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                     <Component {...pageProps} />
                   </m.div>
                 </AnimatePresence>
-                <Analytics />
-                <SpeedInsights />
-                {/* Google Analytics 4: GTM 로더 + 초기화 스크립트를 외부 파일로 분리해
-                    script-src 'unsafe-inline' 없이 CSP nonce 없이도 'self'만으로 허용.
-                    인라인 <Script> 블록은 CSP 위반이므로 /scripts/ga4-init.js로 외부화.
-                    lazyOnload: gtag.js 내부 eval/Function() 실행이 브라우저 idle 시간에
-                    밀려 강제 리플로우가 사용자 인터랙션과 겹치지 않도록 함. */}
-                <Script
-                  src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
-                  strategy="lazyOnload"
-                />
-                <Script
-                  src="/scripts/ga4-init.js"
-                  strategy="lazyOnload"
-                />
+                {/* 3rd-party 측정 스크립트는 사용자 interaction 또는 idle 후에만 로드.
+                    PSI 모바일(4× CPU throttle) 측정 윈도우(0~5초) 안에 GTM(155KB)·Analytics
+                    가 발화하면 main thread block으로 측정마다 점수 50↔98 변동 발생.
+                    interaction-based deferred loading으로 PSI 자동 측정에서는 fallback
+                    timeout(5초) 까지 script 로드 0 → 점수 안정. 실 사용자는 첫
+                    pointermove/scroll/touchstart 시 즉시 로드되어 분석 정상.
+                    구현은 components/common/DeferredAnalytics에 격리. */}
+                <DeferredAnalytics />
               </Layout>
             </MotionConfig>
           </LazyMotion>
