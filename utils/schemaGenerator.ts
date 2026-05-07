@@ -164,7 +164,6 @@ export const generateDefaultSchema = (
             closes: '00:00',
           },
         ],
-        acceptsReservations: `${siteUrl}/${locale}/contact`,
         potentialAction: {
           '@type': 'ReserveAction',
           target: {
@@ -675,10 +674,6 @@ export const generateWebSiteSchema = (siteUrl: string, locale: Locale = 'ko') =>
     url: siteUrl,
     description: config.description,
     inLanguage: schemaLanguage,
-    availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'].map(lang => ({
-      '@type': 'Language',
-      name: lang,
-    })),
     publisher: {
       '@id': `${siteUrl}/#organization`,
     },
