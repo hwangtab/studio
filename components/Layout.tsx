@@ -16,11 +16,11 @@ interface LayoutProps {
   locale?: Locale;
 }
 
-// 헤더 실제 높이는 mount 직후 ResizeObserver가 측정·갱신한다.
-// 이 초기값은 첫 paint와 첫 RO fire 사이의 layout shift를 최소화하기 위한
-// best-effort 추정치 — 현재 헤더 CSS의 평균 렌더 높이(80px)와 일치시킨다.
-// 헤더 스타일이 바뀌면 이 상수도 함께 조정해야 한다.
-const INITIAL_HEADER_HEIGHT_PX = 80;
+// 헤더 높이는 80px 정적 처리(Tailwind pt-20). 이전엔 ResizeObserver로 실측 후
+// setState했지만 hydration·re-render 비용이 PSI 데스크톱 TBT 1680ms·강제 리플로우
+// 920ms의 잠재 원인이었다. 헤더 높이 변동 빈도가 낮고 첫 paint 후 발생이라 LCP
+// 영향 없어 정적 처리로 충분. 헤더 스타일이 바뀌면 styles/globals.css의 page-main
+// 또는 이 className을 같이 조정.
 
 const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const router = useRouter();
@@ -28,7 +28,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasThemeLoaded, setHasThemeLoaded] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(INITIAL_HEADER_HEIGHT_PX);
   const headerRef = useRef<HTMLElement | null>(null);
 
 
@@ -66,20 +65,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => !prev);
   };
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !headerRef.current || typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver((entries) => {
-      const nextHeight = Math.ceil(entries[0]?.contentRect?.height || 0);
-      if (nextHeight > 0) {
-        setHeaderHeight((prev) => {
-          return Math.abs(prev - nextHeight) > 1 ? nextHeight : prev;
-        });
-      }
-    });
-    observer.observe(headerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -130,11 +115,15 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         toggleDarkMode={toggleDarkMode}
       />
 
+      {/* paddingTop을 inline style 동적 변경(setHeaderHeight setState)에서 정적 Tailwind
+          'pt-20' (=80px, INITIAL_HEADER_HEIGHT_PX와 일치)로 변경. React re-render 시
+          자식 컴포넌트 layout 재계산 비용 0 + main thread block 감소. ResizeObserver
+          제거(헤더 실측 갱신 미사용) — 헤더 높이가 변동되는 경우는 거의 없고(다크모드
+          toggle·hover 등), 첫 paint 후 변동도 사용자 인터랙션 시에만 발생해 LCP 무관. */}
       <main
         id="main-content"
         tabIndex={-1}
-        className={`page-main flex-grow outline-none ${isHome || hasHero ? 'pt-0' : ''}`}
-        style={isHome || hasHero ? undefined : { paddingTop: headerHeight }}
+        className={`page-main flex-grow outline-none ${isHome || hasHero ? 'pt-0' : 'pt-20'}`}
       >
         {children}
       </main>
