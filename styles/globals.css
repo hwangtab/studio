@@ -91,6 +91,30 @@
   }
 }
 
+/* ScrollProgress: CSS-only scroll-driven animation. framer-motion useScroll +
+   useSpring(매 frame scrollHeight/clientHeight query + transform mutation)이 PSI
+   '강제 리플로우 9079ms' 주범으로 측정되어 CSS animation-timeline: scroll()로 교체.
+   modern Chrome 115+/Safari 26+/Edge 115+ 지원. 미지원 브라우저는 default
+   transform: scaleX(0)으로 보이지 않아 graceful degradation. */
+@keyframes scroll-progress-track {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.scroll-progress-bar {
+  transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress-bar {
+    animation: scroll-progress-track linear forwards;
+    animation-timeline: scroll(root);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress-bar {
+    display: none;
+  }
+}
+
 @layer components {}
 
 @keyframes hero-zoom-kf {
