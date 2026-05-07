@@ -99,6 +99,16 @@ export const generateDefaultSchema = (
           },
         ],
         legalName: 'Studio NOL',
+        // Google Rich Results: Organization에 address 권장(누락 시 warning).
+        // LocalBusiness(#studio)와 동일한 PostalAddress를 공유.
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: config.contact.address,
+          addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
+          addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
+          postalCode: '03424',
+          addressCountry: 'KR',
+        },
         sameAs: sameAsLinks,
         foundingDate: '2024-01-01',
         numberOfEmployees: { '@type': 'QuantitativeValue', value: 5 },
@@ -114,7 +124,11 @@ export const generateDefaultSchema = (
         ],
       },
       {
-        '@type': ['LocalBusiness', 'EntertainmentBusiness'],
+        // EntertainmentBusiness는 schema.org 계층상 LocalBusiness의 하위 타입.
+        // multi-type(["LocalBusiness", "EntertainmentBusiness"])은 Google 검사기가
+        // 두 entity로 중복 카운트하므로 단일 타입으로 통합. LocalBusiness rich result도
+        // 하위 타입으로 그대로 인정됨.
+        '@type': 'EntertainmentBusiness',
         additionalType: 'https://www.wikidata.org/wiki/Q746359',
         '@id': studioId,
         name: 'Studio NOL',
