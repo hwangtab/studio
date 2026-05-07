@@ -1,6 +1,6 @@
 import type { AppPropsWithLayout } from '../types';
 import '../styles/globals.css';
-import { notoSansKr, montserrat } from '../lib/fonts';
+import { notoSansKr } from '../lib/fonts';
 
 import Head from 'next/head';
 import Script from 'next/script';
@@ -158,7 +158,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <div className={`min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center ${notoSansKr.className} ${notoSansKr.variable} ${montserrat.variable}`} aria-live="polite" role="status">
+        <div className={`min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center ${notoSansKr.className} ${notoSansKr.variable}`} aria-live="polite" role="status">
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
             <span className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-primary animate-spin" aria-hidden="true" />
             <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
@@ -213,7 +213,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema) }}
         />
       </Head>
-      <div className={`${notoSansKr.className} ${notoSansKr.variable} ${montserrat.variable}`} data-locale={locale}>
+      <div className={`${notoSansKr.className} ${notoSansKr.variable}`} data-locale={locale}>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>

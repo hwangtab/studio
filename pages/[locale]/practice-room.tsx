@@ -24,7 +24,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
-import { getSchemaLanguage, generatePracticeRoomMonthlyRentSchema } from '../../utils/schemaGenerator';
+import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
@@ -510,7 +510,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
   const residentBenefitsCalendarLabel = t('practiceRoom.residentBenefits.calendarLinkLabel');
   const residentBenefitsCalendarUrl = t('practiceRoom.residentBenefits.calendarLinkUrl');
-  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   // 21개 dedicated 지역 LP와 동일한 generatePracticeRoomMonthlyRentSchema 사용 —
   // areaServed 26개(행정구 6 + Place 21), priceValidUntil, priceSpecification,

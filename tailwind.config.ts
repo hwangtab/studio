@@ -76,7 +76,8 @@ const config: Config = {
         // fallback은 시스템 한글 폰트 → 시스템 폰트.
         sans: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         title: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        display: ['var(--font-montserrat)', 'var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // Montserrat 제거 후 display family도 Noto Sans KR로 통일.
+        display: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         logo: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
