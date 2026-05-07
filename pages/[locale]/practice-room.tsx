@@ -884,8 +884,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               title="지역별 음악연습실 안내"
               className="mb-2"
             />
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-3">
               연신내 동명여고 옆 — 인근 21개 지역에서의 동선·거리 한눈에
+            </p>
+            {/* 21개 인접 지역명 노출 — hub 섹션의 카드 메타(data 파일)는 검색엔진
+                이 정적 i18n 텍스트가 아니라 SEO 신호가 약하므로, 본문에 명시적 텍스트로
+                전체 지역을 한 줄 나열해 long-tail 지역 검색 인덱싱 강화. */}
+            <p className="text-center text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+              연신내 · 불광 · 대조동 · 녹번 · 독바위 · 구산 · 역촌 · 응암 · 새절 · 증산 · 상암 · 서대문 · 구파발 · 지축 · 삼송 · 원흥 · 원당 · 덕양구 · 고양시 · 일산 · 은평구
             </p>
             <div className="space-y-6">
               {(['walk', 'eunpyeong', 'seodaemun', 'goyang'] as const).map((group) => {
