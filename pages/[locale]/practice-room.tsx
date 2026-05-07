@@ -24,7 +24,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
-import { getSchemaLanguage } from '../../utils/schemaGenerator';
+import { getSchemaLanguage, generatePracticeRoomMonthlyRentSchema } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
@@ -512,40 +512,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   const residentBenefitsCalendarUrl = t('practiceRoom.residentBenefits.calendarLinkUrl');
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
-  const practiceRoomSchema = React.useMemo(() => ({
-    '@type': 'Service',
-    name: t('practiceRoom.seo.title'),
-    description: t('practiceRoom.seo.description'),
-    availableLanguage: schemaLanguage,
-    serviceType: locale === 'ko' ? '음악연습실' : t('nav.practiceRoom'),
-    areaServed: [
-      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
-      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
-      { '@type': 'Place', name: 'Yeonsinnae' },
-      { '@type': 'Place', name: 'Bulgwang' },
-    ],
-    provider: {
-      '@type': 'Organization',
-      '@id': `${siteConfig.url}/#organization`,
-      name: siteConfig.name,
-      url: siteConfig.url,
-    },
-    url: `${siteConfig.url}/${locale}/practice-room`,
-    hoursAvailable: {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '00:00',
-      closes: '23:59',
-    },
-    offers: {
-      '@type': 'Offer',
-      name: locale === 'ko' ? '음악연습실 월정액 입주 프로그램' : 'Monthly Practice Room Residency Program',
-      priceCurrency: 'KRW',
-      price: 360000,
-      availability: 'https://schema.org/InStock',
-      url: `${siteConfig.url}/${locale}/practice-room`,
-    },
-  }), [t, siteConfig, locale, schemaLanguage]);
+  // 21개 dedicated 지역 LP와 동일한 generatePracticeRoomMonthlyRentSchema 사용 —
+  // areaServed 26개(행정구 6 + Place 21), priceValidUntil, priceSpecification,
+  // eligibleRegion 등 풀 디테일 자동 생성. inline 스키마(areaServed 4개·Offer 단순)
+  // 보다 SERP·AI에 노출되는 정보 풍부해 hub 페이지 정합성 강화.
+  const practiceRoomSchema = React.useMemo(
+    () => generatePracticeRoomMonthlyRentSchema(`${siteConfig.url}/${locale}/practice-room`, locale),
+    [siteConfig.url, locale]
+  );
   const painPointsAnimation = PAIN_POINTS_ANIMATION;
   const audienceSectionAnimation = AUDIENCE_SECTION_ANIMATION;
   const featuresSectionAnimation = FEATURES_SECTION_ANIMATION;
