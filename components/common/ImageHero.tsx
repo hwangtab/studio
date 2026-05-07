@@ -57,7 +57,11 @@ const ImageHero = ({
           pictureClassName="absolute inset-0 block h-full w-full"
           width={1920}
           height={1080}
-          sizes="100vw"
+          // 명시 breakpoints로 next/image의 srcset 후보 중 desktop max를 1280px로
+          // 클램프. sizes="100vw" 단독이면 PSI Lighthouse Moto G4(412×732 1.5×DPR)는
+          // 640 변형을 잘 잡지만, 일부 고밀도 모바일·태블릿에서 1920 변형까지 가져오는
+          // 경우가 있어 보수적으로 명시.
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 1280px, 1920px"
           // hero 배경 이미지는 어두운 그라디언트 오버레이(black/20→black/10) 위에
           // 깔리고 hero-zoom 애니메이션 중에 보이므로 quality 60까지 낮춰도 화질
           // 저하가 인지되지 않음. 70→60으로 모바일 LCP 변형 ~8KB 추가 감축
@@ -77,11 +81,12 @@ const ImageHero = ({
             원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
             줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
         <div>
-          {/* font-logo = Noto Sans KR (weight 900 Black 포함). 사이트 전반 단일 폰트로 통일.
-              font-black(weight 900) + 큰 사이즈로 디스플레이 폰트 없이 임팩트 확보.
+          {/* font-logo = Noto Sans KR. H1은 LCP candidate라 weight 900(Black) 한글 subset
+              다운로드가 LCP 지연 요인. font-bold(700)는 사이트 전반에서 이미 로드되어
+              추가 fetch 없음. text-5xl~8xl + 700 + display 사이즈로 시각 임팩트 충분.
               next/font/google 자동 self-hosted + preload + size-adjust로 깜빡임 거의 없음. */}
           <h1
-            className={`font-logo text-5xl font-black md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-logo text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}
           >
             {title}

@@ -9,11 +9,12 @@ export const montserrat = Montserrat({
 
 // Noto Sans KR — 사이트 전반의 통합 한글 폰트.
 // next/font/google이 빌드 시 self-host + auto preload + size-adjust + unicode-range
-// 자동 분할 처리. weight 명시(['400','700','900'])로 각 weight별 chunked subset 생성.
+// 자동 분할 처리. weight 명시(['400','700'])로 각 weight별 chunked subset 생성.
 // 한글 사용 글자가 포함된 chunk만 lazy fetch되어 페이지당 부담 미미.
+// 900(Black)은 hero H1 LCP 지연 원인이라 제거 — font-bold(700)로 대체.
 export const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['400', '700', '900'],
+  weight: ['400', '700'],
   display: 'swap',
   variable: '--font-noto-sans-kr',
 });

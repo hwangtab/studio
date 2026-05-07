@@ -35,7 +35,7 @@ interface CurriculumCardProps {
 
 const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
     <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group border border-gray-100 dark:border-gray-700">
-        <div className="absolute top-0 right-0 p-4 opacity-10 font-black text-6xl text-primary transition-transform group-hover:scale-110">
+        <div className="absolute top-0 right-0 p-4 opacity-10 font-bold text-6xl text-primary transition-transform group-hover:scale-110">
             {step}
         </div>
         <div className="relative z-10">

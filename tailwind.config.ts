@@ -71,7 +71,7 @@ const config: Config = {
       },
       fontFamily: {
         // 사이트 전반 단일 폰트(Noto Sans KR). var(--font-noto-sans-kr)는
-        // pages/_app.tsx의 next/font/google self-hosted 폰트 (3 weight: 400/700/900).
+        // pages/_app.tsx의 next/font/google self-hosted 폰트 (2 weight: 400/700).
         // 빌드 시 Google Fonts에서 다운로드 → _next/static/media에 저장. 런타임은 자체 도메인 서빙.
         // fallback은 시스템 한글 폰트 → 시스템 폰트.
         sans: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
