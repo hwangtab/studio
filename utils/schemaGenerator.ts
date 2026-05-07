@@ -11,6 +11,11 @@ const RECORDING_OFFER_NAMES: Record<Locale, string> = {
   ko: '레코딩 서비스', en: 'Recording Service', zh: '录音服务',
   es: 'Servicio de Grabación', vi: 'Dịch vụ thu âm', th: 'บริการบันทึกเสียง', uz: 'Yozuv xizmati',
 };
+const VOCAL_PACKAGE_OFFER_NAMES: Record<Locale, string> = {
+  ko: '보컬 녹음 1프로 (1곡 패키지)', en: 'Vocal Recording 1-Song Package', zh: '人声录音1首套餐',
+  es: 'Paquete de Grabación Vocal (1 canción)', vi: 'Gói thu âm vocal (1 bài)',
+  th: 'แพ็กเกจอัดเสียงร้อง (1 เพลง)', uz: "Vokal yozish paketi (1 qo'shiq)",
+};
 const MIXING_OFFER_NAMES: Record<Locale, string> = {
   ko: '믹싱 & 마스터링', en: 'Mixing & Mastering', zh: '混音与母带',
   es: 'Mezcla y Masterización', vi: 'Mixing & Mastering', th: 'มิกซ์ & มาสเตอริ่ง', uz: 'Miks & Mastering',
@@ -61,6 +66,7 @@ export const generateDefaultSchema = (
 
   const offerCatalogName = OFFER_CATALOG_NAMES[locale];
   const recordingOfferName = RECORDING_OFFER_NAMES[locale];
+  const vocalPackageOfferName = VOCAL_PACKAGE_OFFER_NAMES[locale];
   const mixingOfferName = MIXING_OFFER_NAMES[locale];
   const productionOfferName = PRODUCTION_OFFER_NAMES[locale];
   const practiceOfferName = PRACTICE_OFFER_NAMES[locale];
@@ -266,6 +272,18 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
+              price: 250000,
+              url: `${siteUrl}/${locale}/pricing`,
+              availability: 'https://schema.org/InStock',
+              itemOffered: {
+                '@type': 'Service',
+                name: vocalPackageOfferName,
+                provider: { '@type': 'Organization', '@id': organizationId },
+              },
+            },
+            {
+              '@type': 'Offer',
+              priceCurrency: 'KRW',
               price: 200000,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
@@ -313,6 +331,14 @@ export const generateDefaultSchema = (
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: recordingOfferName },
+          },
+          {
+            '@type': 'Offer',
+            priceCurrency: 'KRW',
+            price: 250000,
+            url: `${siteUrl}/${locale}/pricing`,
+            availability: 'https://schema.org/InStock',
+            itemOffered: { '@type': 'Service', name: vocalPackageOfferName },
           },
           {
             '@type': 'Offer',
