@@ -14,8 +14,8 @@ export interface TopicLink {
   anchorText: string;
 }
 
-/** 기사당 자동 삽입 최대 링크 수 */
-export const MAX_AUTO_LINKS = 3;
+/** 기사당 자동 삽입 최대 링크 수 (3 → 5로 상향, 2026-05-08) */
+export const MAX_AUTO_LINKS = 5;
 
 /**
  * 토픽 키워드 → 링크 매핑
@@ -25,17 +25,22 @@ export const MAX_AUTO_LINKS = 3;
  *
  * 등록 규칙:
  * - 키워드는 2글자 이상, 너무 일반적인 단어(예: "음악", "녹음") 제외
- * - 동일 slug를 가리키는 키워드는 최대 2개
+ * - 동일 slug를 가리키는 키워드는 최대 3-4개 (anchor variants 다양화 위해 2 → 3-4로 완화, 2026-05-08)
  * - 전체 기사의 15%를 초과하여 링크되는 slug가 없도록 관리
  */
 export const topicLinks: Record<string, TopicLink> = {
   // ─── 녹음 기초 ───
   '녹음실 처음': { slug: 'guide1', anchorText: '녹음실 처음 방문 가이드' },
+  '녹음실 처음 이용': { slug: 'guide1', anchorText: '녹음실 첫 이용 가이드' },
   '보컬 녹음 준비': { slug: 'vocal-prep1', anchorText: '보컬 녹음 준비 체크리스트' },
   '처음 보컬 녹음': { slug: 'vocal-recording-guide1', anchorText: '처음 보컬 녹음하는 법' },
+  '마이크 거리': { slug: 'vocal-recording-guide1', anchorText: '마이크 포지셔닝 가이드' },
+  '보컬 컴핑': { slug: 'vocal-recording-guide1', anchorText: '보컬 컴핑 절차' },
   '1인 보컬 녹음': { slug: 'vocal-solo-recording1', anchorText: '1인 보컬 녹음 가이드' },
   '솔로 보컬': { slug: 'vocal-solo-recording1', anchorText: '솔로 보컬 녹음 가이드' },
   '홈레코딩': { slug: 'home-vs-studio1', anchorText: '홈레코딩 vs 스튜디오 비교' },
+  '녹음실 비용': { slug: 'home-vs-studio1', anchorText: '녹음실 비용 비교' },
+  '스튜디오 녹음 vs 홈': { slug: 'home-vs-studio1', anchorText: '스튜디오 vs 홈레코딩 비교' },
 
   // ─── 믹싱 & 마스터링 ───
   '믹싱 강좌': { slug: 'mixing-complete-guide', anchorText: '믹싱 완전 가이드 — 23편 로드맵' },
@@ -70,6 +75,7 @@ export const topicLinks: Record<string, TopicLink> = {
   // ─── 음악 제작 & 발매 ───
   '편곡 팁': { slug: 'arrangement-tips1', anchorText: '편곡 팁 가이드' },
   '음반 발매': { slug: 'album-release1', anchorText: '정규앨범 발매 가이드' },
+  '음원 발매 절차': { slug: 'album-release1', anchorText: '음원 발매 가이드' },
   '음반 비용': { slug: 'album-cost1', anchorText: '음반 제작 비용 가이드' },
   '커버 아트': { slug: 'album-art1', anchorText: '앨범 아트 제작 가이드' },
   'AI 음악': { slug: 'ai-music1', anchorText: 'AI 음악 제작 가이드' },
@@ -84,6 +90,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '커버 곡 저작권': { slug: 'copyright-cover1', anchorText: '커버 곡 저작권 가이드' },
   '해외 음원 발매': { slug: 'global-release1', anchorText: '글로벌 음원 발매 가이드' },
   '데모 녹음': { slug: 'demo-recording1', anchorText: '오디션 데모 녹음 가이드' },
+  '데모 음원': { slug: 'demo-recording1', anchorText: '데모 녹음 절차' },
 
   // ─── 장비 & 기술 ───
   '오디오 인터페이스': { slug: 'audio-interface1', anchorText: '오디오 인터페이스 가이드' },
