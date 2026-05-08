@@ -2,26 +2,39 @@ import React from 'react';
 import Markdown from 'markdown-to-jsx';
 import Image from 'next/image';
 import NextLink from 'next/link';
+import dynamic from 'next/dynamic';
 import { locales, type Locale } from '../lib/i18n';
 import imageMetadata from '../utils/imageMetadata.json';
 import OnlineFallback from './story/OnlineFallback';
 import SessionChecklist from './story/SessionChecklist';
 import { topicLinks, MAX_AUTO_LINKS } from '../data/internalLinks';
+import { isInlineDirectiveName, MAX_AUTHOR_BOXES } from '../lib/inlineDirectives';
 
-type ShortcodeSegment = { type: 'shortcode'; name: string };
+const InlinePriceCallout = dynamic(() => import('./inline/InlinePriceCallout'));
+const InlineReviewCallout = dynamic(() => import('./inline/InlineReviewCallout'));
+const InlineBookingCallout = dynamic(() => import('./inline/InlineBookingCallout'));
+const InlineServiceCallout = dynamic(() => import('./inline/InlineServiceCallout'));
+
+type ShortcodeSegment = { type: 'shortcode'; name: string; arg?: string };
 type MarkdownSegment = { type: 'markdown'; value: string };
 type ContentSegment = ShortcodeSegment | MarkdownSegment;
 
 function splitContentByShortcodes(content: string): ContentSegment[] {
   const segments: ContentSegment[] = [];
-  // Split on %%shortcode-name%% markers that appear on their own line
-  const parts = content.split(/\n%%([\w-]+)%%(?:\n|$)/);
-  // parts[0], parts[2], parts[4]... are markdown; parts[1], parts[3]... are shortcode names
-  for (let i = 0; i < parts.length; i++) {
-    if (i % 2 === 0) {
-      if (parts[i].trim()) segments.push({ type: 'markdown', value: parts[i] });
-    } else {
-      segments.push({ type: 'shortcode', name: parts[i] });
+  // %%name%% 또는 %%name:arg%% 자체 라인 매칭
+  // 캡처 1: name, 캡처 2: arg (optional)
+  const parts = content.split(/\n%%([\w-]+)(?::([^%\n]+))?%%(?=\n|$)/);
+  // parts[0], parts[3], parts[6]... = markdown
+  // parts[1], parts[4], parts[7]... = shortcode name
+  // parts[2], parts[5], parts[8]... = arg (or undefined)
+  for (let i = 0; i < parts.length; i += 3) {
+    if (parts[i] && parts[i].trim()) {
+      segments.push({ type: 'markdown', value: parts[i] });
+    }
+    if (i + 1 < parts.length) {
+      const name = parts[i + 1];
+      const arg = parts[i + 2];
+      segments.push({ type: 'shortcode', name, ...(arg !== undefined && { arg }) });
     }
   }
   return segments;
@@ -521,10 +534,34 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
   const processedContent = React.useMemo(() => autoLinkKeywords(content, currentSlug), [content, currentSlug]);
   const segments = React.useMemo(() => splitContentByShortcodes(processedContent), [processedContent]);
 
+  const inlineBoxCountRef = React.useRef(0);
+  React.useEffect(() => {
+    // segments 재계산마다 카운트 리셋 (page navigate 등)
+    inlineBoxCountRef.current = 0;
+  }, [segments]);
+
   const renderSegment = (segment: ContentSegment, index: number) => {
     if (segment.type === 'shortcode') {
       if (segment.name === 'online-fallback') return <OnlineFallback key={index} locale={currentLocale} />;
       if (segment.name === 'session-checklist') return <SessionChecklist key={index} locale={currentLocale} />;
+
+      // 4종 inline directive — max 2 enforce (초과는 silent drop)
+      if (isInlineDirectiveName(segment.name)) {
+        if (inlineBoxCountRef.current >= MAX_AUTHOR_BOXES) return null;
+        inlineBoxCountRef.current += 1;
+        const arg = segment.arg;
+        switch (segment.name) {
+          case 'price':
+            return arg ? <InlinePriceCallout key={index} id={arg} locale={currentLocale} /> : null;
+          case 'review':
+            return arg ? <InlineReviewCallout key={index} id={arg} locale={currentLocale} /> : null;
+          case 'booking':
+            return <InlineBookingCallout key={index} message={arg} locale={currentLocale} />;
+          case 'service':
+            return arg ? <InlineServiceCallout key={index} type={arg} locale={currentLocale} /> : null;
+        }
+      }
+
       return null;
     }
     return (
