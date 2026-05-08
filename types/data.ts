@@ -120,6 +120,7 @@ export interface FAQItem {
 }
 
 export interface ReviewItem {
+  id: string;
   author: string;
   rating: number;
   content: string;

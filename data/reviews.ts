@@ -8,6 +8,7 @@ const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: str
 export const getReviews = (locale: Locale) => {
   return [
     {
+      id: 'review-1',
       author: t(locale, { ko: "김*준", en: "Kim *Jun", zh: "Kim *Jun", es: "Kim *Jun", vi: "Kim *Jun", th: "Kim *Jun", uz: "Kim *Jun" }),
       rating: 5,
       categoryKey: 'production',
@@ -24,6 +25,7 @@ export const getReviews = (locale: Locale) => {
       datePublished: "2024-11-20"
     },
     {
+      id: 'review-2',
       author: t(locale, { ko: "이*정", en: "Lee *Jeong", zh: "Lee *Jeong", es: "Lee *Jeong", vi: "Lee *Jeong", th: "Lee *Jeong", uz: "Lee *Jeong" }),
       rating: 5,
       categoryKey: 'wedding',
@@ -40,6 +42,7 @@ export const getReviews = (locale: Locale) => {
       datePublished: "2024-12-05"
     },
     {
+      id: 'review-3',
       author: t(locale, { ko: "박*현", en: "Park *Hyun", zh: "Park *Hyun", es: "Park *Hyun", vi: "Park *Hyun", th: "Park *Hyun", uz: "Park *Hyun" }),
       rating: 5,
       categoryKey: 'mixing',
@@ -56,6 +59,7 @@ export const getReviews = (locale: Locale) => {
       datePublished: "2025-01-10"
     },
     {
+      id: 'review-4',
       author: t(locale, { ko: "최*민", en: "Choi *Min", zh: "Choi *Min", es: "Choi *Min", vi: "Choi *Min", th: "Choi *Min", uz: "Choi *Min" }),
       rating: 5,
       categoryKey: 'practice',
