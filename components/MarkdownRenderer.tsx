@@ -535,10 +535,6 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
   const segments = React.useMemo(() => splitContentByShortcodes(processedContent), [processedContent]);
 
   const inlineBoxCountRef = React.useRef(0);
-  React.useEffect(() => {
-    // segments 재계산마다 카운트 리셋 (page navigate 등)
-    inlineBoxCountRef.current = 0;
-  }, [segments]);
 
   const renderSegment = (segment: ContentSegment, index: number) => {
     if (segment.type === 'shortcode') {
@@ -583,6 +579,9 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       </Markdown>
     );
   };
+
+  // segments.map 직전 동기 reset — 페이지 전환 시 stale count로 callout silently drop 방지
+  inlineBoxCountRef.current = 0;
 
   return (
     <div className="markdown-content">
