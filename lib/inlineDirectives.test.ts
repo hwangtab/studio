@@ -1,4 +1,4 @@
-import { parseInlineDirectives, isInlineDirectiveName } from './inlineDirectives';
+import { parseInlineDirectives, isInlineDirectiveName, decideAutoFallback } from './inlineDirectives';
 
 describe('parseInlineDirectives', () => {
   it('지원 안 되는 type은 plain text로 둠', () => {
@@ -36,5 +36,54 @@ describe('parseInlineDirectives', () => {
     expect(isInlineDirectiveName('service')).toBe(true);
     expect(isInlineDirectiveName('unknown')).toBe(false);
     expect(isInlineDirectiveName('online-fallback')).toBe(false); // 기존 short-code와 분리
+  });
+});
+
+describe('decideAutoFallback', () => {
+  const baseInput = {
+    presentTypes: new Set<never>(),
+    storyCategoryKey: 'recording',
+    wordCount: 1500,
+    matchedPriceId: 'recording-pro' as string | null,
+    matchedReviewId: 'review-1' as string | null,
+  };
+
+  it('authorBoxes >= 3이면 null', () => {
+    const r = decideAutoFallback({ ...baseInput, authorBoxes: 3 });
+    expect(r).toBeNull();
+  });
+
+  it('가격 매칭 있고 price 없으면 price 우선', () => {
+    const r = decideAutoFallback({ ...baseInput, authorBoxes: 0 });
+    expect(r).toEqual({ type: 'price', id: 'recording-pro' });
+  });
+
+  it('이미 price directive 있으면 review로 fallback', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 1,
+      presentTypes: new Set(['price']),
+    });
+    expect(r).toEqual({ type: 'review', id: 'review-1' });
+  });
+
+  it('wordCount < 1000이면 review fallback 안 함', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 1,
+      presentTypes: new Set(['price']),
+      wordCount: 800,
+    });
+    expect(r).toBeNull();
+  });
+
+  it('가격·후기 모두 매칭 없으면 null', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: null,
+      matchedReviewId: null,
+    });
+    expect(r).toBeNull();
   });
 });
