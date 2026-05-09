@@ -543,6 +543,9 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
 
       // 4종 inline directive — max 2 enforce (초과는 silent drop)
       if (isInlineDirectiveName(segment.name)) {
+        // ko 외 locale에서는 inline directive를 silent skip — Phase 1 spec 9번 정책 (다국어 사용자에게
+        // 한국어 박스 노출 방지). plain text로 떨어뜨리면 raw token이 보이므로 null 반환이 더 안전.
+        if (currentLocale !== 'ko') return null;
         if (inlineBoxCountRef.current >= MAX_AUTHOR_BOXES) return null;
         inlineBoxCountRef.current += 1;
         const arg = segment.arg;
