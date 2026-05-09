@@ -31,6 +31,8 @@ faq:
     a: >-
       곡의 키(Key)를 조정하는 방법이 있습니다. 반음 단위로 올리거나 내려서 편안한 음역에서 부를 수 있게 합니다. MR을 구입하거나
       제작할 때 키 조정을 요청하거나, DAW에서 MR의 피치를 변환해 녹음에 사용합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 음역대 확인 — 스튜디오 놀](/images/recording11.webp)
 

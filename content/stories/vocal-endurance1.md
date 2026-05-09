@@ -31,6 +31,8 @@ faq:
     a: >-
       즉시 발성을 멈추고 이비인후과를 방문합니다. 초기 성대결절은 완전한 음성 안정(Voice Rest)으로 회복이 가능합니다. 전문의의
       진단과 치료를 따르고, 완전히 회복되기 전에 발성을 강행하면 악화됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 지구력·스태미나 완전 가이드 — 스튜디오 놀](/images/service6.webp)
 

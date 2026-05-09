@@ -31,6 +31,8 @@ faq:
     a: >-
       대부분의 사람은 아침에 막 일어났을 때나 말의 끝부분에서 자연스럽게 프라이가 나옵니다. 이 자연스러운 프라이를 의식적으로 활용하는
       훈련이 가장 안전하고 효과적입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 프라이(Vocal Fry) 발성 가이드 — 스튜디오 놀](/images/recording17.webp)
 

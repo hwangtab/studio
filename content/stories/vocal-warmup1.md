@@ -31,6 +31,8 @@ faq:
     a: >-
       즉시 멈추세요. 성대는 근육이 아닌 점막으로 이루어져 있어 과도한 사용 시 부상 위험이 높습니다. 미지근한 물을 마시고 충분히 쉰 후
       가볍게 재시작합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 워밍업 완전 가이드 — 스튜디오 놀](/images/recording1.webp)
 
