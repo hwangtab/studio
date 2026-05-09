@@ -9,7 +9,7 @@ import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
 import { isRegionHub } from './regionHubSlugs';
 import regionRedirectMap from './regionRedirectMap.json';
-import { parseInlineDirectives, decideAutoFallback } from './inlineDirectives';
+import { parseInlineDirectives, decideAutoFallback, type AutoFallbackDecision } from './inlineDirectives';
 import {
   matchPricingForCategory,
   matchReviewForCategory,
@@ -30,6 +30,20 @@ const allStoriesCache = new Map<Locale, Story[]>();
 const storyDetailCache = new Map<string, StoryDetail>();
 
 const storyAvailableLocalesCache = new Map<string, Locale[]>();
+
+/**
+ * AutoFallbackDecision을 inline marker 문자열로 변환.
+ * Helper로 추출하여 switch exhaustiveness를 컴파일러가 보장 (return-only).
+ */
+const buildAutoFallbackMarker = (fb: AutoFallbackDecision): string => {
+  switch (fb.type) {
+    case 'price':
+    case 'review':
+      return `%%${fb.type}:${fb.id}%%`;
+    case 'booking':
+      return `%%booking:${fb.message}%%`;
+  }
+};
 
 export const getStoryAvailableLocales = (slug: string): Locale[] => {
   if (enableCache) {
@@ -434,17 +448,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     });
 
     if (fallback) {
-      let marker: string;
-      switch (fallback.type) {
-        case 'price':
-        case 'review':
-          marker = `%%${fallback.type}:${fallback.id}%%`;
-          break;
-        case 'booking':
-          marker = `%%booking:${fallback.message}%%`;
-          break;
-      }
-      finalContent = injectAutoFallbackMarker(contentToProcess, marker);
+      finalContent = injectAutoFallbackMarker(contentToProcess, buildAutoFallbackMarker(fallback));
     }
   }
 

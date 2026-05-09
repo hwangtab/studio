@@ -16,7 +16,6 @@ faq:
     a: "과도한 컴프레션은 소리가 '눌린' 느낌, 즉 숨이 막히는 느낌을 줍니다. 게인 리덕션 미터가 6dB 이상 계속 작동한다면 컴프레션이 과도한 신호입니다. 자연스러운 다이나믹을 살리면서 조절하는 것이 중요합니다."
 inlineFallback:
   price: lesson-monthly
-  review: review-3
 ---
 ![클래식 컴프레서의 노브들](/images/hardware1.webp)
 

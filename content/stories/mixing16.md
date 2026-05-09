@@ -16,7 +16,6 @@ faq:
     a: "서브트랙티브 EQ는 불필요한 주파수를 깎는 방식이고, 애디티브 EQ는 원하는 주파수를 올리는 방식입니다. 믹싱에서는 먼저 서브트랙티브로 문제를 해결하고, 필요한 경우에만 애디티브를 사용하는 순서를 권장합니다."
 inlineFallback:
   price: lesson-monthly
-  review: review-3
 ---
 ![화려한 컬러의 EQ 그래프 이미지](/images/pcw.webp)
 

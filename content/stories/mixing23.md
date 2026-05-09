@@ -16,7 +16,6 @@ faq:
     a: "스포티파이·멜론·유튜브는 모두 -14 LUFS(통합 음압)를 기준으로 음량 정규화를 적용합니다. 마스터링 파일은 이 기준에 맞춰 조정하고, WAV 24bit/48kHz 원본과 스트리밍용 파일을 함께 납품하는 것이 일반적입니다."
 inlineFallback:
   price: mastering-single
-  review: review-3
 ---
 ![깔끔하게 정돈된 오디오 파형이 모니터 화면에 떠 있는 모습](/images/service3.webp)
 
