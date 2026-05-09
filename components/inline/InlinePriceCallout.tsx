@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getPricingData } from '../../data/pricing';
 import { getSiteConfig } from '../../data/siteConfig';
+import { buyerIntentHubs } from '../../data/buyerIntentHubs';
 import type { Locale } from '../../lib/i18n';
 
 interface InlinePriceCalloutProps {
@@ -23,6 +24,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
   const pkg = React.useMemo(() => {
+    // 1. pricing.ts pools에서 lookup
     const pools = [
       pricingData.specialPackages,
       pricingData.recordingOffers,
@@ -34,6 +36,25 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
       const found = pool.find((p) => p.id === id);
       if (found) return found;
     }
+
+    // 2. hub pricingFallback에서 lookup (lesson-monthly 같은 hub 전용 id)
+    const hubFallback = Object.values(buyerIntentHubs)
+      .map((h) => h.pricingFallback)
+      .find((f): f is NonNullable<typeof f> => Boolean(f) && f!.id === id);
+    if (hubFallback) {
+      // hub fallback 카드를 pricing pool 항목과 동일한 shape으로 변환
+      return {
+        id: hubFallback.id,
+        title: hubFallback.title,
+        priceDisplay: hubFallback.priceDisplay,
+        priceValue: 0,  // hub fallback은 priceValue 없음
+        unit: hubFallback.unit ?? '',
+        description: hubFallback.description,
+        features: [...hubFallback.features],
+        ...(hubFallback.recommended && { recommended: hubFallback.recommended }),
+      };
+    }
+
     return null;
   }, [pricingData, id]);
 
