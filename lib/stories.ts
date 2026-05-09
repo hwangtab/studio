@@ -2,13 +2,19 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
-import { summarizeText } from '../utils/textUtils';
+import { summarizeText, stripMarkdown } from '../utils/textUtils';
 import type { Story, StoryCTAOverride, StoryDetail, StoryPath } from '../types/story';
 import { STORY_CTA_OVERRIDES } from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
 import { isRegionHub } from './regionHubSlugs';
 import regionRedirectMap from './regionRedirectMap.json';
+import { parseInlineDirectives, decideAutoFallback } from './inlineDirectives';
+import {
+  matchPricingForCategory,
+  matchReviewForCategory,
+  injectAutoFallbackMarker,
+} from './storyAutoFallback';
 
 // next.config.mjs의 redirects()로 308 처리되는 슬러그. 빌드·listing에서 모두 제외.
 const REDIRECTED_SLUGS = new Set<string>(Object.keys(regionRedirectMap));
@@ -395,11 +401,58 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     };
   })();
 
-  const isThinContent = computeThinContentStatus(contentToProcess, slug).isThinContent;
+  // Phase 2 자동 fallback wiring — frontmatter inlineFallback > categoryKey 매핑 우선순위
+  // ko 외 locale의 fallback 페이지는 자동 fallback 비활성 (Phase 1 정책 일관)
+  let finalContent = contentToProcess;
+  if (sourceLocale === requestedLocale && requestedLocale === defaultLocale) {
+    const parsed = parseInlineDirectives(contentToProcess);
+
+    const frontmatterFallback = data?.inlineFallback as
+      | { price?: string; review?: string; booking?: string }
+      | undefined;
+
+    const matchedPriceId = frontmatterFallback?.price
+      ?? matchPricingForCategory(baseStory.categoryKey);
+    const matchedReviewId = frontmatterFallback?.review
+      ?? matchReviewForCategory(baseStory.categoryKey);
+    const bookingMessage = frontmatterFallback?.booking ?? null;
+
+    // wordCount 계산 — 한국어/일본어/태국어는 글자 수, 영문은 단어 수
+    const plain = stripMarkdown(contentToProcess);
+    const wordCount = (requestedLocale === 'ko' || requestedLocale === 'zh' || requestedLocale === 'th')
+      ? plain.replace(/\s+/g, '').length
+      : plain.split(/\s+/).filter(Boolean).length;
+
+    const fallback = decideAutoFallback({
+      authorBoxes: parsed.authorBoxes,
+      presentTypes: parsed.presentTypes,
+      storyCategoryKey: baseStory.categoryKey,
+      wordCount,
+      matchedPriceId,
+      matchedReviewId,
+      bookingMessage,
+    });
+
+    if (fallback) {
+      let marker: string;
+      switch (fallback.type) {
+        case 'price':
+        case 'review':
+          marker = `%%${fallback.type}:${fallback.id}%%`;
+          break;
+        case 'booking':
+          marker = `%%booking:${fallback.message}%%`;
+          break;
+      }
+      finalContent = injectAutoFallbackMarker(contentToProcess, marker);
+    }
+  }
+
+  const isThinContent = computeThinContentStatus(finalContent, slug).isThinContent;
 
   const storyDetail: StoryDetail = {
     ...baseStory,
-    content: contentToProcess,
+    content: finalContent,
     sourceLocale,
     isFallbackTranslation: sourceLocale !== requestedLocale,
     isThinContent,
