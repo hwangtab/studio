@@ -31,6 +31,8 @@ faq:
     a: >-
       다양한 공명 위치와 성대 세팅을 실험하며 녹음해보세요. 녹음을 들으며 가장 자연스럽고 매력적으로 느껴지는 소리를 찾는 것이
       출발점입니다. 전문 보컬 코치의 피드백이 큰 도움이 됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 음색(Tone Color) 개발 가이드 — 스튜디오 놀](/images/hardware2.webp)
 

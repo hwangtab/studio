@@ -31,6 +31,8 @@ faq:
     a: >-
       브리지를 자연스럽게 통과하지 못하면 음역이 제한되고, 무리하게 흉성으로 고음을 올리다 성대에 무리를 줄 수 있습니다. 브리지 훈련으로
       음역을 자연스럽게 확장하고 안전하게 발성할 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![패사지오(Passaggio) 완전 가이드 — 스튜디오 놀](/images/service1.webp)
 

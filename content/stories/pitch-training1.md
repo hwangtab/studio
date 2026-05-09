@@ -31,6 +31,8 @@ faq:
     a: >-
       모니터 믹스(헤드폰으로 듣는 자신의 목소리)가 너무 크거나 작으면 음정 판단이 어렵습니다. 자신의 목소리를 적당히 들을 수 있는
       모니터 레벨 설정이 중요합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![음정 교정 완전 가이드 — 스튜디오 놀](/images/studio1.webp)
 

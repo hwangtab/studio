@@ -31,6 +31,8 @@ faq:
     a: >-
       Audacity(무료)나 Adobe Audition(유료)에서 노이즈 감소, EQ(저음 과다 제거·중음 강화), 컴프레서(볼륨
       일정화), 노멀라이즈(음량 기준화) 처리를 합니다. 전문 편집은 스튜디오 놀에 의뢰 가능합니다.
+inlineFallback:
+  price: package-voiceover
 ---
 ![팟캐스트·오디오드라마 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
 

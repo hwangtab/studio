@@ -32,6 +32,8 @@ faq:
     a: >-
       네. Vocal Pitch Monitor 앱은 실시간으로 본인 목소리의 피치를 시각화해 줍니다. 노래하면서 음정이 정확한지 즉각
       확인할 수 있어 혼자 연습할 때 매우 유용합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 연습 앱 추천 — 스튜디오 놀](/images/room2.webp)
 

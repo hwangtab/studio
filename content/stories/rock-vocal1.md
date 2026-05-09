@@ -31,6 +31,8 @@ faq:
     a: >-
       올바른 벨팅 발성은 지지(Breath Support)와 혼합 발성(Mixed Voice)이 기반이 됩니다. 순수한 흉성으로 극한까지
       쥐어짜는 것은 성대에 해롭습니다. 전문 보컬 코치 지도 하에 훈련하는 것이 안전합니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![록 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service4.webp)
 

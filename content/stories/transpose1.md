@@ -31,6 +31,8 @@ faq:
     a: >-
       네, 가능합니다. 스튜디오 녹음 세션에서 엔지니어가 MR(반주) 키를 조절해드릴 수 있습니다. 사전에 원하는 키를 알려주시거나,
       세션에서 같이 찾아드립니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![노래 키 맞추는 방법 — 스튜디오 놀](/images/service6.webp)
 

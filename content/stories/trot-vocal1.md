@@ -31,6 +31,8 @@ faq:
     a: >-
       꺾기와 시김새가 자동 피치 교정(Auto-Tune)에 의해 지워지지 않도록 주의해야 합니다. 트로트는 음 장식이 감성의 핵심이므로
       피치 교정을 최소화하고 자연스러운 굴곡을 살려야 합니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![트로트 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service6.webp)
 
