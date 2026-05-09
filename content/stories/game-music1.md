@@ -31,6 +31,8 @@ faq:
     a: >-
       효과음(SFX)은 폴리 아티스트 또는 사운드 디자이너가 제작하는 별도 분야입니다. 작곡가가 함께 담당하는 경우도 있으며, 무료 SFX
       라이브러리(Freesound.org 등)와 전문 미들웨어를 활용할 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![게임 음악 제작 완전 가이드 — 스튜디오 놀](/images/hardware2.webp)
 

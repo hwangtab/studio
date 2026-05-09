@@ -32,6 +32,8 @@ faq:
       Spitfire BBC Symphony Orchestra, Sample Modeling(The Trumpet·The
       Trombone), Project SAM Orchestral Brass 등이 높은 평가를 받습니다. 재즈·R&B 스타일엔
       Heavyocity의 Forzo나 8Dio의 Studio Brasses도 좋습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![금관·목관 편곡 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
 

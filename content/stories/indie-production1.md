@@ -32,6 +32,8 @@ faq:
     a: >-
       국내 멜론·지니는 재즈앤조이·사운드리퍼블리카 같은 국내 유통사를 통해 발매합니다. 해외 스포티파이·애플뮤직은
       DistroKid·TuneCore 같은 셀프 배포 플랫폼을 활용하면 유통사 없이 직접 발매가 가능합니다.
+inlineFallback:
+  price: recording-daylock
 ---
 ![인디 음악 제작 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
 

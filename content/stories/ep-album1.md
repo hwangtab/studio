@@ -31,6 +31,8 @@ faq:
     a: >-
       멜론·스포티파이·애플뮤직 등 주요 스트리밍 플랫폼에는 음악 배급사(뮤직카우, 소리바다, KAKAOM 등)를 통해 등록합니다.
       Distrokid, TuneCore 같은 국제 배급사도 이용 가능합니다. 발매 2~3주 전에 배급 신청해야 합니다.
+inlineFallback:
+  price: recording-daylock
 ---
 ![EP 앨범 제작 완전 가이드 — 스튜디오 놀](/images/hardware8.webp)
 

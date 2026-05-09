@@ -31,6 +31,8 @@ faq:
     a: >-
       스트리밍 플랫폼의 라우드니스 노멀라이제이션(-14 LUFS 기준)에 맞추되, 앰비언트는 다이나믹 범위가 크기 때문에 낮은
       LUFS(-16~-20)도 일반적입니다. 리미터를 과도하게 사용하면 공간감이 무너집니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![앰비언트 음악 제작 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
 

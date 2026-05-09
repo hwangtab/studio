@@ -31,6 +31,8 @@ faq:
     a: >-
       스트리밍 서비스의 노멀라이제이션 기준인 -14 LUFS에 맞추는 것이 일반적입니다. 발라드는 다이나믹이 중요하므로 과도한 압축으로
       -9 LUFS 이상으로 올리면 음악적 표현력이 손상될 수 있습니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![발라드 프로덕션 완전 가이드 — 스튜디오 놀](/images/service8.webp)
 

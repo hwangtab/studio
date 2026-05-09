@@ -31,6 +31,8 @@ faq:
     a: >-
       3000x3000px 이상 JPEG/PNG 파일이 스트리밍 표준입니다. 디자이너 의뢰 또는 Canva·Adobe Express로 직접
       제작 가능합니다. 아티스트 브랜딩 컬러와 일관성이 중요합니다.
+inlineFallback:
+  price: recording-daylock
 ---
 ![EP 제작 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
 

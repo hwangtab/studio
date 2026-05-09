@@ -32,6 +32,8 @@ faq:
       Auto-Tune(Melodyne) Retune Speed를 빠르게 설정하면 'T-Pain 스타일' 강한 오토튠, 느리게 설정하면
       자연스러운 피치 보정이 됩니다. K-POP 메인스트림은 자연스러운 피치 보정에 가까운 설정을 주로 사용하며, 후렴에서는 더 선명하게
       처리합니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![K-POP 프로덕션 완전 가이드 — 스튜디오 놀](/images/lesson1.webp)
 

@@ -31,6 +31,8 @@ faq:
     a: >-
       1. 7화음 종류 이해 (Maj7, m7, 7, m7b5, dim7), 2. ii-V-I 진행 암기, 3. 전조(Turnaround)
       패턴, 4. 확장 코드(9·11·13), 5. 대리 코드(Substitution), 6. 모달 재즈 순으로 진행하세요.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![재즈 코드 진행 완전 가이드 — 스튜디오 놀](/images/studio1.webp)
 

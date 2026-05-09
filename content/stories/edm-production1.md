@@ -31,6 +31,8 @@ faq:
     a: >-
       장르마다 다릅니다. 하우스: 120~130 BPM, 테크노: 130~145 BPM, 드럼앤베이스: 160~180 BPM, 트랩:
       65~75 BPM(하이햇은 2배), 더브스텝: 138~142 BPM이 일반적입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![EDM 프로덕션 완전 가이드 — 스튜디오 놀](/images/room8.webp)
 

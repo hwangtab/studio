@@ -31,6 +31,8 @@ faq:
     a: >-
       가능합니다. 장조(메이저) 코드는 밝고 힘찬 느낌, 단조(마이너) 코드는 어둡고 감성적인 느낌을 줍니다. Neapolitan
       화음(bII), 감화음(dim), 증화음(aug) 등을 활용하면 더 복잡한 감정을 표현할 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![코드 진행 완전 가이드 — 스튜디오 놀](/images/room4.webp)
 

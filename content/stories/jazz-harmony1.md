@@ -31,6 +31,8 @@ faq:
     a: >-
       알터드 스케일(Altered Scale)은 V7 코드 위에서 사용하는 스케일로, 5도와 7도 음이 반음씩 올라가거나 내려간
       형태입니다. 재즈에서 긴장감과 해결을 극적으로 만들 때 활용하며, ii-V-I의 V7 구간에서 빈번하게 사용됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![재즈 화성학 기초 완전 가이드 — 스튜디오 놀](/images/album1.webp)
 

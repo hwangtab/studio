@@ -31,6 +31,8 @@ faq:
     a: >-
       곡 중간에 조성이 바뀌는 것입니다. 반음 위 전조(Semi-tone Modulation)는 가장 자주 사용되는 기법으로, 마지막
       코러스를 반음 올려 에너지와 감정을 높이는 데 많이 활용됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![코드 진행 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
 

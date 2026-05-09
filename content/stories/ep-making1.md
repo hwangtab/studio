@@ -31,6 +31,8 @@ faq:
     a: >-
       Canva, Adobe Express 등 무료 툴로도 충분히 만들 수 있습니다. 단, 배급사에서 요구하는 규격(3000×3000px
       이상, RGB 색상, JPEG/PNG)을 맞춰야 합니다. 전문 디자이너 의뢰 시 더 독특한 결과물을 얻을 수 있습니다.
+inlineFallback:
+  price: recording-daylock
 ---
 ![EP 제작 완전 가이드 — 스튜디오 놀](/images/album1.webp)
 

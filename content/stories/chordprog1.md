@@ -31,6 +31,8 @@ faq:
     a: >-
       피아노롤에서 각 코드를 4박씩 입력하고 신스 패드나 피아노 음색으로 재생합니다. 코드 리듬(스트러밍 패턴)을 변화시키면 같은 진행도
       전혀 다른 느낌이 납니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![코드 진행 기초 가이드 — 스튜디오 놀](/images/recording9.webp)
 

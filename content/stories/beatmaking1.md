@@ -33,6 +33,8 @@ faq:
     a: >-
       DAW의 Export(내보내기) 기능으로 WAV(무손실) 또는 MP3(손실) 형식으로 렌더링합니다. 보컬 녹음용 MR은
       44.1kHz, 24bit WAV 형식이 표준입니다. 스튜디오에 MR로 제공할 때는 WAV 형식을 권장합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![비트 메이킹 입문 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
