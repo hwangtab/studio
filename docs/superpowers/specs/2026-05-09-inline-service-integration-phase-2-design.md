@@ -34,7 +34,10 @@ Phase 1에서 short-code parser·4 컴포넌트·MarkdownRenderer wiring·키워
 
 1. **Phase 2 범위**: 3가지 모두 한 spec (StickyCTA + 자동 fallback wiring + 추가 글 directive)
 2. **StickyCTA trigger**: IntersectionObserver
-3. **자동 fallback 매칭 정책**: categoryKey 단순 매핑 + lesson categoryKey는 hub의 pricingFallback 카드 reuse
+3. **자동 fallback 매칭 정책**: **하이브리드 (α+1)**
+   - 의미 명확한 카테고리(`recording`/`mixing`/`instrument`)는 categoryKey 단순 매핑
+   - 의미 어색 우려 카테고리(`vocal`/`production`/`lesson`, 약 234편)는 글 단위 frontmatter `inlineFallback` 명시 — 서브에이전트가 본문 검토 후 정확히 매칭
+   - frontmatter > categoryKey 단순 매핑 우선순위
 4. **추가 글 directive**: HowTo 적용된 5편 중 시범 안 한 3편 (mixing/vocal/band-recording)
 
 ## 4. 아키텍처
@@ -67,30 +70,45 @@ Phase 1에서 short-code parser·4 컴포넌트·MarkdownRenderer wiring·키워
 | `StickyBottomCTA` | NEW | components/inline/StickyBottomCTA.tsx | marker visible toggle, dismiss state, 두 버튼 |
 | `lib/storyAutoFallback.ts` | NEW | matchPricingForCategory · matchReviewForCategory · injectAutoFallbackMarker · constants | categoryKey → packageId/reviewId 매핑 + 본문 inject |
 | `lib/storyAutoFallback.test.ts` | NEW | TDD | 매핑·inject 위치·edge cases |
-| `lib/stories.ts` (`getStoryDetail`) | MODIFY | 자동 fallback 호출 wiring | parse → match → decide → inject 흐름 |
+| `lib/inlineDirectives.ts` (`decideAutoFallback`) | MODIFY | booking type 추가, AutoFallbackDecision union 확장 | Phase 1 함수 확장 |
+| `lib/stories.ts` (`getStoryDetail`) | MODIFY | 자동 fallback 호출 wiring | frontmatter > categoryKey 우선순위, parse → match → decide → inject |
 | `pages/[locale]/stories/[id].tsx` | MODIFY | StickyBottomCTA 마운트 + marker | 본문 첫 H2 marker 위치, observer 트리거 |
 | `components/inline/InlinePriceCallout.tsx` | MODIFY | hub의 pricingFallback도 lookup | lesson-monthly id 처리 |
+| `types/story.ts` (`StoryFrontmatter`) | MODIFY | `inlineFallback?: { price?, review?, booking? }` 필드 추가 | 글 단위 매칭 명시 |
+| `content/stories/*.md` (vocal/production/lesson 약 234편) | MODIFY | frontmatter `inlineFallback` 추가 | 서브에이전트 batch dispatch로 글 단위 매칭 (별도 task) |
 | `content/stories/{mixing-complete-guide,vocal-recording-guide1,band-recording-guide1}.md` | MODIFY | directive 시범 적용 | 작가 명시 위치 + 카카오톡 booking |
 
-## 6. categoryKey → 매핑 정책
+## 6. 매칭 정책 — 하이브리드 (frontmatter > categoryKey)
+
+### 6.1 frontmatter `inlineFallback` 필드
+
+각 .md 글의 frontmatter에 글 단위 매칭 명시:
+
+```yaml
+inlineFallback:
+  price: package-wedding   # optional, pricing.ts id 또는 hub pricingFallback id
+  review: review-1          # optional, reviews.ts id
+  booking: "축가 녹음 문의" # optional, 카카오톡 prefill (Phase 1 결정 — 단일 채널이라 미사용 가능)
+```
+
+세 필드 모두 optional. 하나도 없으면 `inlineFallback` 자체를 생략. parser는 명시된 필드만 읽고 `decideAutoFallback`이 우선순위 판단.
+
+### 6.2 categoryKey 단순 매핑 (frontmatter 없는 글의 fallback)
 
 ```ts
 // lib/storyAutoFallback.ts
 export const PRICING_BY_CATEGORY: Readonly<Record<string, string>> = {
   recording: 'recording-pro',
-  vocal: 'recording-pro',
   mixing: 'mixing-level1',
-  production: 'recording-daylock',
   instrument: 'recording-hourly',
-  lesson: 'lesson-monthly',  // pricingFallback id (hub 재사용)
+  // vocal/production/lesson 제거 — frontmatter inlineFallback으로 글 단위 매칭
   // event/feedback/business/region → 매칭 없음 (silent skip)
 };
 
 export const REVIEW_BY_CATEGORY: Readonly<Record<string, string>> = {
-  production: 'review-1',
   mixing: 'review-3',
-  practice: 'review-4',
-  // wedding/lesson/voice 등은 직접 매핑되는 review 없음 (silent skip)
+  practice: 'review-4',  // categoryKey 'practice'는 사실상 'instrument' 통합. 추후 정리.
+  // production/wedding 매핑 제거 — frontmatter로 글 단위 매칭
 };
 
 export const matchPricingForCategory = (categoryKey: string): string | null =>
@@ -99,6 +117,43 @@ export const matchPricingForCategory = (categoryKey: string): string | null =>
 export const matchReviewForCategory = (categoryKey: string): string | null =>
   REVIEW_BY_CATEGORY[categoryKey] ?? null;
 ```
+
+### 6.3 우선순위 — `getStoryDetail`에서 결정
+
+```ts
+// frontmatter 우선
+const frontmatterFallback = data?.inlineFallback as
+  | { price?: string; review?: string; booking?: string }
+  | undefined;
+const matchedPriceId = frontmatterFallback?.price
+  ?? matchPricingForCategory(baseStory.categoryKey);
+const matchedReviewId = frontmatterFallback?.review
+  ?? matchReviewForCategory(baseStory.categoryKey);
+const bookingMessage = frontmatterFallback?.booking ?? null;
+```
+
+frontmatter `booking` 명시 시 booking marker도 inject (decideAutoFallback 확장). 단 우선순위는 price > booking > review.
+
+### 6.4 글 단위 frontmatter 매핑 작업 (implementation phase)
+
+**대상**: vocal/production/lesson categoryKey 글 약 234편
+
+**방법**: 서브에이전트가 6 batches로 분할 dispatch:
+- vocal 약 130편 → 3 subagents × ~43편
+- production 약 80편 → 2 subagents × ~40편
+- lesson 약 24편 → 1 subagent
+
+각 서브에이전트는 글마다:
+1. frontmatter title/summary + 본문 첫 1-2 단락 read (글당 토큰 최소화)
+2. 글 주제·의도 파악
+3. 적합한 매칭 결정:
+   - 보컬 트레이닝(harmony-singing 등) → `inlineFallback: {}` 또는 lesson-monthly
+   - 보컬 녹음(vocal-recording-guide 등) → recording-pro
+   - 작곡·기획(album-release 등) → 적절한 production 패키지 또는 비매칭
+   - 매칭 적합한 게 없으면 `inlineFallback: {}` (자동 fallback 비활성)
+4. frontmatter에 patch 적용 (또는 메인이 batch patch 적용)
+
+세부 구현은 implementation plan에 task로 명시.
 
 ## 7. 자동 fallback inject 위치
 
@@ -150,8 +205,17 @@ import {
 // ... 기존 로직 유지 (frontmatter 파싱, content 추출 등)
 
 const parsed = parseInlineDirectives(contentToProcess);
-const matchedPriceId = matchPricingForCategory(baseStory.categoryKey);
-const matchedReviewId = matchReviewForCategory(baseStory.categoryKey);
+
+// frontmatter inlineFallback 우선
+const frontmatterFallback = data?.inlineFallback as
+  | { price?: string; review?: string; booking?: string }
+  | undefined;
+const matchedPriceId = frontmatterFallback?.price
+  ?? matchPricingForCategory(baseStory.categoryKey);
+const matchedReviewId = frontmatterFallback?.review
+  ?? matchReviewForCategory(baseStory.categoryKey);
+const bookingMessage = frontmatterFallback?.booking ?? null;
+
 const wordCount = computeWordCount(contentToProcess, requestedLocale);  // 기존 [id].tsx wordCount 로직을 lib로 이동
 
 const fallback = decideAutoFallback({
@@ -161,16 +225,31 @@ const fallback = decideAutoFallback({
   wordCount,
   matchedPriceId,
   matchedReviewId,
+  bookingMessage,  // 새 필드: frontmatter inlineFallback.booking 우선
 });
 
 let finalContent = contentToProcess;
 if (fallback) {
-  const marker = `%%${fallback.type}:${fallback.id}%%`;
+  // booking은 marker가 %%booking%% 또는 %%booking:msg%% 형태
+  const marker = fallback.type === 'booking' && fallback.message
+    ? `%%booking:${fallback.message}%%`
+    : `%%${fallback.type}:${fallback.id}%%`;
   finalContent = injectAutoFallbackMarker(contentToProcess, marker);
 }
 ```
 
-ko 외 locale: 자동 fallback도 ko 기준 categoryKey로 적용 (현재 categoryKey는 locale-independent).
+`decideAutoFallback`은 booking type도 처리하도록 Phase 1 함수 확장 필요 (Phase 1은 price/review만 반환). Phase 2에서 함수 시그니처:
+
+```ts
+export type AutoFallbackDecision =
+  | { type: 'price'; id: string }
+  | { type: 'review'; id: string }
+  | { type: 'booking'; message?: string };
+
+// 우선순위: price > booking (frontmatter 명시 시) > review
+```
+
+ko 외 locale: 자동 fallback도 ko 기준 categoryKey로 적용 (현재 categoryKey는 locale-independent). frontmatter inlineFallback도 ko-only 적용 (다른 locale의 fallback 글에는 자동 fallback 차단 — Phase 1 정책 일치).
 
 ## 9. StickyBottomCTA 동작
 
@@ -243,9 +322,14 @@ pages/[locale]/stories/[id].tsx
 ## 13. 테스트 계획
 
 **lib/storyAutoFallback.test.ts (TDD)**
-- matchPricingForCategory: 6 매핑 + 매칭 안 되는 카테고리 (event 등) null
-- matchReviewForCategory: 3 매핑 + 매칭 안 되는 카테고리 null
+- matchPricingForCategory: 3 매핑 (recording/mixing/instrument) + 매칭 안 되는 카테고리(vocal/production/lesson/event 등) null
+- matchReviewForCategory: 2 매핑 (mixing/practice) + 매칭 안 되는 카테고리 null
 - injectAutoFallbackMarker: 마지막 H2 직전 inject, 매칭 H2 없으면 끝에 append, 빈 본문 처리
+
+**lib/stories.ts integration tests**
+- getStoryDetail에서 frontmatter inlineFallback이 categoryKey 매핑보다 우선
+- frontmatter `inlineFallback: {}` (빈 object)은 자동 fallback 완전 비활성으로 동작
+- frontmatter `inlineFallback: { booking: "..." }` 단독 명시 시 booking marker inject
 
 **components/inline/StickyBottomCTA.test.tsx**
 - IntersectionObserver mock으로 visible/hidden 토글
