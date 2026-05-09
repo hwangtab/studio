@@ -25,6 +25,8 @@ faq:
     a: >-
       프로젝트 중간에 샘플레이트를 바꾸면 음질 저하와 피치 변환 오류가 발생할 수 있습니다. 녹음 시작 전에 샘플레이트와 비트뎁스를
       결정하고 끝까지 동일한 설정을 유지하는 것이 원칙입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![디지털 오디오 파형](/images/recording8.webp)
 
