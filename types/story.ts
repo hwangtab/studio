@@ -31,6 +31,20 @@ export interface StoryHowTo {
 }
 
 /**
+ * Frontmatter `inlineFallback` 필드 — 글 단위 자동 fallback 매칭 명시.
+ * Phase 2 storyAutoFallback이 categoryKey 단순 매핑보다 우선 적용.
+ * 셋 다 없으면 필드 자체 생략. 빈 object `{}`는 자동 fallback 완전 비활성 의미.
+ */
+export interface StoryInlineFallback {
+  /** pricing.ts id 또는 hub pricingFallback id (예: 'package-wedding', 'lesson-monthly') */
+  price?: string;
+  /** reviews.ts id (예: 'review-1') */
+  review?: string;
+  /** booking 카카오톡 inline 박스 안내 메시지 (없으면 default 카피) */
+  booking?: string;
+}
+
+/**
  * 스토리 본문 끝 CTA 카드 종류. 슬러그·카테고리 기반 자동 매칭이 기본이고,
  * frontmatter `cta:` 필드로 글 단위 명시적 override가 가능하다.
  */
@@ -55,6 +69,7 @@ export interface StoryFrontmatter {
   faq?: StoryFAQItem[];
   howTo?: StoryHowTo;
   cta?: StoryCTAOverride;
+  inlineFallback?: StoryInlineFallback;
 }
 
 /**
