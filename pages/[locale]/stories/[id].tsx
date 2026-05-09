@@ -16,6 +16,7 @@ import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 // StoryCTA는 article 본문 아래 below-fold 영역 → 코드 스플리팅.
 const StoryCTA = dynamic(() => import('../../../components/StoryCTA'));
 const RelatedPortfolioInline = dynamic(() => import('../../../components/ui/RelatedPortfolioInline'));
+const StickyBottomCTA = dynamic(() => import('../../../components/inline/StickyBottomCTA'), { ssr: false });
 import { shareContent } from '../../../utils/shareUtils';
 import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
@@ -108,6 +109,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   );
 
   const router = useRouter();
+  const stickyMarkerRef = React.useRef<HTMLDivElement>(null);
   const storyCardLabels = React.useMemo(
     () => ({
       defaultCategory: t('stories.list.defaultCategory'),
@@ -279,6 +281,12 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           </button>
         </div>
 
+        <div
+          ref={stickyMarkerRef}
+          aria-hidden="true"
+          data-sticky-trigger
+          className="h-px"
+        />
         <article itemScope itemType="https://schema.org/BlogPosting">
           <meta itemProp="headline" content={story.title} />
           {story.date && <meta itemProp="datePublished" content={story.date} />}
@@ -290,6 +298,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
             <MarkdownRenderer content={story.content} locale={locale} currentSlug={story.slug} />
           </m.div>
         </article>
+        {/* Phase 2 — IntersectionObserver 기반 sticky bar. ssr: false라 서버 렌더 안 됨 */}
+        <StickyBottomCTA markerRef={stickyMarkerRef} locale={locale} />
 
         {story.boilerplateSection && (
           <aside
