@@ -31,6 +31,8 @@ faq:
     a: >-
       보컬 녹음 → 믹싱·마스터링 → 음원 유통(멜론·유튜브·스포티파이)의 과정을 거칩니다. 교회 앨범이나 개인 CCM 발매 모두 음원
       유통 플랫폼을 통해 멜론·지니 등에 올릴 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![CCM 보컬 완전 가이드 — 스튜디오 놀](/images/room3.webp)
 

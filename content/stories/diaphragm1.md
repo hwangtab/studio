@@ -31,6 +31,8 @@ faq:
     a: >-
       일상에서는 흉식호흡이 습관화되어 있기 때문입니다. 또한 노래 중 감정이 올라오거나 긴장하면 자동으로 흉식호흡으로 돌아갑니다.
       복식호흡은 의도적인 훈련으로 근육 기억(Muscle Memory)을 형성해야 합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![복식호흡·횡격막 발성 완전 가이드 — 스튜디오 놀](/images/lesson1.webp)
 

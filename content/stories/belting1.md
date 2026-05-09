@@ -31,6 +31,8 @@ faq:
     a: >-
       뮤지컬 넘버(디파이잉 그래비티, 메모리 등), 팝 파워 발라드, R&B의 감정 절정 구간에서 많이 사용됩니다. '나는 가수다'
       스타일의 강력한 클라이맥스 표현이 대표적인 벨팅 예시입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![벨팅 발성법 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
 

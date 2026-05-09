@@ -32,6 +32,8 @@ faq:
     a: >-
       포크·어쿠스틱·컨트리팝 스타일은 한국 인디 씬에서도 활용됩니다. 스토리텔링 보컬 기법, 내추럴 비브라토, 어쿠스틱 감성은 한국 포크
       음악에도 접목 가능합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![컨트리 음악 보컬 완전 가이드 — 스튜디오 놀](/images/recording11.webp)
 

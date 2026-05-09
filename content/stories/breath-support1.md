@@ -29,6 +29,8 @@ faq:
       유지하면서 20~30초 이상 일정한 압력으로 내쉬는 훈련입니다.
   - q: 지지가 부족하면 어떤 문제가 생기나요?
     a: '음정이 불안정해지고, 고음에서 목을 쥐어짜게 됩니다. 롱 노트에서 소리가 점점 작아지거나 흔들리고, 조기 성대 피로가 생깁니다.'
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 호흡 지지(Breath Support) 완전 가이드 — 스튜디오 놀](/images/recording15.webp)
 

@@ -31,6 +31,8 @@ faq:
     a: >-
       재즈에서 Auto-Tune 사용은 극히 드뭅니다. 자연스러운 음정 굴곡과 즉흥 표현이 재즈의 핵심이므로, 피치 교정은 최소화하거나
       사용하지 않습니다. 음정이 인간적으로 흔들리는 것이 오히려 재즈 감성입니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![재즈 보컬 녹음 완전 가이드 — 스튜디오 놀](/images/service8.webp)
 

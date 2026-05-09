@@ -31,6 +31,8 @@ faq:
     a: >-
       녹음 전 3~5분 간단한 호흡 명상으로 교감신경을 진정시킵니다. 4박 들숨 → 4박 참음 → 8박 날숨의 박스 브리딩을 3~5회
       반복하면 긴장으로 인한 얕은 호흡이 안정됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![보컬 호흡법 가이드 — 스튜디오 놀](/images/recording6.webp)
 

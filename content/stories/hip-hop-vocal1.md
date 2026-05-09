@@ -31,6 +31,8 @@ faq:
     a: >-
       힙합 보컬은 다이내믹 마이크(Shure SM7B, Electro-Voice RE20) 또는 특정 콘덴서 마이크를 사용합니다. 마이크를
       입에서 5~15cm로 매우 가깝게 두어 친밀하고 강력한 사운드를 포착합니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![힙합 보컬·랩 녹음 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
 

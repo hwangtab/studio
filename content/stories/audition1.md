@@ -32,6 +32,8 @@ faq:
     a: >-
       보컬 세션 + 믹싱 + 마스터링 패키지 기준으로 1곡 데모를 완성할 수 있습니다. 카카오톡으로 곡 수와 편곡 현황을 알려주시면 맞춤
       견적을 드립니다.
+inlineFallback:
+  price: recording-pro
 ---
 ![오디션 데모 녹음 — 스튜디오 놀](/images/room3.webp)
 
