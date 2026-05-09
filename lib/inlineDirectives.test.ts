@@ -46,6 +46,7 @@ describe('decideAutoFallback', () => {
     wordCount: 1500,
     matchedPriceId: 'recording-pro' as string | null,
     matchedReviewId: 'review-1' as string | null,
+    bookingMessage: null as string | null,
   };
 
   it('authorBoxes >= 3이면 null', () => {
@@ -83,6 +84,51 @@ describe('decideAutoFallback', () => {
       authorBoxes: 0,
       matchedPriceId: null,
       matchedReviewId: null,
+    });
+    expect(r).toBeNull();
+  });
+
+  it('booking 메시지 명시 시 booking fallback 반환 (price 매칭 없을 때)', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: null,
+      matchedReviewId: null,
+      bookingMessage: '축가 녹음 문의드립니다',
+    });
+    expect(r).toEqual({ type: 'booking', message: '축가 녹음 문의드립니다' });
+  });
+
+  it('price 매칭 있고 booking도 있으면 price 우선', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: 'recording-pro',
+      bookingMessage: '문의',
+    });
+    expect(r).toEqual({ type: 'price', id: 'recording-pro' });
+  });
+
+  it('booking은 wordCount 제한 없이 동작', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      wordCount: 500,
+      matchedPriceId: null,
+      matchedReviewId: null,
+      bookingMessage: '문의',
+    });
+    expect(r).toEqual({ type: 'booking', message: '문의' });
+  });
+
+  it('presentTypes에 booking 있으면 booking fallback 차단', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 1,
+      presentTypes: new Set(['booking']),
+      matchedPriceId: null,
+      matchedReviewId: null,
+      bookingMessage: '문의',
     });
     expect(r).toBeNull();
   });
