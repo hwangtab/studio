@@ -32,6 +32,8 @@ faq:
     a: >-
       용도에 따라 다릅니다. 데모·배경음악용은 MIDI 그대로 사용해도 됩니다. 상업 발매용 완성 음원은 핵심 악기(보컬, 드럼, 기타
       등)를 실제 녹음으로 교체하면 완성도가 높아집니다. 스튜디오 놀에서 MIDI 기반 편곡 위에 보컬을 녹음할 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![MIDI 작곡·편곡 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
 

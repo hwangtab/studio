@@ -32,6 +32,8 @@ faq:
     a: >-
       스트리밍 플랫폼 기준 -14 LUFS (Integrated)가 표준입니다. 마스터링 전 믹스는 -18~-20 LUFS로 헤드룸을
       확보하세요. 과도하게 높은 음압은 플랫폼 자체 노멀라이제이션으로 오히려 낮아질 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![팝 음악 프로덕션 완전 가이드 — 스튜디오 놀](/images/room2.webp)
 

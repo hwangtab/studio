@@ -31,6 +31,8 @@ faq:
     a: >-
       필수는 아니지만 버스에서 코러스로 바로 이어질 때 너무 갑작스럽다면 프리코러스로 긴장감을 쌓아주면 코러스 진입이 훨씬 강렬해집니다.
       짧게 4~8마디로 구성됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![노래 구조(송 폼) 완전 가이드 — 스튜디오 놀](/images/recording14.webp)
 

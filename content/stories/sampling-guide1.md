@@ -33,6 +33,8 @@ faq:
       샘플을 짧게 잘라(Chop) 재배열하는 기법입니다. MPC·FL Studio·Ableton으로 원본과 전혀 다른 리듬·멜로디를 만들
       수 있습니다. J Dilla, Pete Rock 등 힙합 프로듀서들이 발전시킨 기법으로, 현재 트랩·붐뱁·로파이 장르에 광범위하게
       사용됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![샘플링·샘플팩 음악 제작 완전 가이드 — 스튜디오 놀](/images/service4.webp)
 

@@ -31,6 +31,8 @@ faq:
     a: >-
       실제 녹음된 드럼 연주에서 추출한 타이밍 패턴을 MIDI에 적용하는 기법입니다. Ableton의 Extract Groove,
       Logic Pro의 Groove Track 기능으로 유명 레코딩의 그루브를 내 MIDI에 입힐 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![미디 그루브·휴머나이제이션 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
 

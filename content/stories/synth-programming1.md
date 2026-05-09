@@ -33,6 +33,8 @@ faq:
     a: >-
       LFO(Low Frequency Oscillator)는 주로 Pitch(비브라토), Amplitude(트레몰로), Filter
       Cutoff(와우와우 효과)에 연결해 음악적 모듈레이션을 만듭니다. LFO Rate로 속도, Depth로 변조 깊이를 조정합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![신스 프로그래밍 완전 가이드 — 스튜디오 놀](/images/recording3.webp)
 

@@ -32,6 +32,8 @@ faq:
     a: >-
       SoundCloud, YouTube, Instagram에 완성 트랙을 꾸준히 업로드하는 것이 기본입니다. 유명 아티스트 노래를
       리믹스한 '데모 리믹스'도 실력을 보여주는 포트폴리오가 됩니다. 최소 10~15개 트랙이 쌓이면 의미 있는 포트폴리오가 됩니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![음악 프로듀서 되는 방법 — 스튜디오 놀](/images/hardware3.webp)
 

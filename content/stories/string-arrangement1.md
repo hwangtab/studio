@@ -31,6 +31,8 @@ faq:
     a: >-
       보컬이 차지하는 음역(중고음, 대략 800Hz~4kHz)에서 스트링을 EQ로 살짝 감소시키고, 보컬이 쉬는 구간에서 스트링을 앞으로
       가져옵니다. 카운터멜로디를 보컬과 다른 음역에 배치하면 충돌이 줄어듭니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![현악 편곡 완전 가이드 — 스튜디오 놀](/images/recording2.webp)
 

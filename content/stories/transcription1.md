@@ -32,6 +32,8 @@ faq:
       Moises, Chordify, Amazing Slow Downer 등의 앱이 코드 자동 감지, 느리게 듣기, 특정 악기 분리 기능을
       제공합니다. AI가 자동으로 코드를 분석해주지만, 귀 훈련을 대체하지는 않습니다. 도구와 귀 훈련을 함께 사용하는 것이 가장
       효과적입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![채보 가이드 — 스튜디오 놀](/images/hardware4.webp)
 

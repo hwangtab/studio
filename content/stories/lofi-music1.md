@@ -32,6 +32,8 @@ faq:
     a: >-
       Lo-Fi Hip Hop의 표준 BPM은 70~90BPM입니다. Chillhop은 85~100BPM 범위가 많습니다. 느린 템포가
       핵심이며, 스윙(Swing) 그루브를 50~60% 적용해 흘러가는 느낌을 만듭니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![Lo-Fi 음악 제작 완전 가이드 — 스튜디오 놀](/images/pcw.webp)
 

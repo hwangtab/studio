@@ -32,6 +32,8 @@ faq:
     a: >-
       FL Studio(가장 대중적·트랩 제작에 최적화), Ableton Live(세션 뷰로 빠른 아이디어 작업), Logic Pro
       X(Mac 사용자에게 권장)가 주요 선택지입니다. 드럼 프로그래밍은 FL Studio의 Step Sequencer가 직관적입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![트랩 비트 제작 완전 가이드 — 스튜디오 놀](/images/recording3.webp)
 

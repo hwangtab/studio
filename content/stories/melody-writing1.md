@@ -31,6 +31,8 @@ faq:
     a: >-
       같은 리듬을 반복하는 경우 리듬에 변화를 주세요. 음표를 더 길게 또는 짧게 바꾸고, 고음·저음 방향을 예상치 못하게 변경하거나,
       마지막 음에 도달하는 경로를 바꿔봅니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![멜로디 작곡 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
 

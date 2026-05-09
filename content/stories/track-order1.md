@@ -31,6 +31,8 @@ faq:
     a: >-
       인접한 트랙의 키(Key)·BPM·에너지를 고려합니다. 갑작스러운 에너지 변화보다 점진적 전환이 청취 경험을 부드럽게 만듭니다. 또한
       전환 트랙(Interlude)을 삽입하거나, 트랙 사이 무음 구간 길이를 조절하는 방법도 있습니다.
+inlineFallback:
+  price: recording-daylock
 ---
 ![앨범·EP 트랙 순서 결정 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
 

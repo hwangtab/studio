@@ -34,6 +34,8 @@ faq:
     a: >-
       비닐 레코드 노이즈(Vinyl), 테이프 워블(Wow/Flutter), 저음역 롤오프 EQ, 약한 하이패스 필터로 고음을 줄이고,
       약간의 크랙클 소음을 추가합니다. 드럼은 샘플을 피치다운하거나 빈티지 드럼 머신 샘플을 사용합니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![빈티지·아날로그 사운드 제작 완전 가이드 — 스튜디오 놀](/images/recording5.webp)
 

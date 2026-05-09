@@ -32,6 +32,8 @@ faq:
       FL Studio가 트랩 제작의 업계 표준입니다. Step Sequencer로 직관적인 드럼 패턴 제작이 가능합니다. 플러그인은
       Nexus(멜로디 신스), 3xOsc(808 베이스), Gross Beat(하이햇 효과), RC-20 Retro Color(음색
       처리)가 인기입니다.
+inlineFallback:
+  price: lesson-monthly
 ---
 ![트랩 음악 제작 완전 가이드 — 스튜디오 놀](/images/hardware4.webp)
 
