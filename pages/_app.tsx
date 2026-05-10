@@ -47,12 +47,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
-  // iOS Safari·Android Chrome 같은 터치 디바이스에서 framer-motion의 opacity·transform
-  // 애니메이션이 GPU 한계로 깜빡임·jitter를 유발한다(특히 backdrop-blur·다수 카드 동시 paint와 겹칠 때).
-  // 터치 디바이스에서 reducedMotion="always"로 모든 motion을 jump-cut 처리해 시각 안정성 확보.
-  // 데스크톱은 'user'로 OS prefers-reduced-motion만 따른다.
-  // SSR initial은 'user' — hydration mismatch 회피. 첫 frame 후 즉시 client에서 결정.
-  const [reducedMotion, setReducedMotion] = useState<'user' | 'always'>('user');
+  // SSR initial을 'always'로 두는 이유: 'user'였을 때 모바일 첫 paint에서 framer-motion이
+  // 작동해 m.x의 initial prop(opacity:0 등)이 SSR HTML에 박히고, hydration 직후 jump-cut으로
+  // animate 값으로 도약 → 한 frame 깜빡 발생. 'always' SSR이면 SSR HTML에 motion props가
+  // 정적 박히지 않아 첫 paint부터 정확한 값. 데스크톱은 hydration 후 'user'로 회복되며 페이지
+  // 전환·scroll-driven 효과는 그때부터 동작.
+  const [reducedMotion, setReducedMotion] = useState<'user' | 'always'>('always');
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mq = window.matchMedia('(hover: none) and (pointer: coarse)');
