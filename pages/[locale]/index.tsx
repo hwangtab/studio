@@ -88,7 +88,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         subtitle={heroContent.subtitle}
         backgroundImage={heroContent.backgroundImage}
         imageAlt={heroContent.imageAlt}
-        minHeight="min-h-[100vh]"
+        minHeight="min-h-[100svh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
         ctaButtons={
           <>

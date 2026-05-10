@@ -123,10 +123,12 @@
 }
 .hero-zoom {
   transform: scale(1.1);
-  animation: hero-zoom-kf 10s ease-out forwards;
-  will-change: transform;
+  animation: hero-zoom-kf 5s ease-out forwards;
+  /* will-change 제거: animation forwards 후에도 GPU 레이어 상시 점유되어 iOS Safari 메모리
+     압박 시 layer 폐기/재생성으로 깜빡 유발. 진행 중에만 브라우저가 자동 promote. */
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse) {
+  /* 모바일·터치 디바이스에서 hero-zoom 자체 비활성. iOS GPU 부담 제거. */
   .hero-zoom { animation: none; transform: none; }
 }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { m } from 'framer-motion';
 import { ExternalLink, Mic2, MousePointer2 } from 'lucide-react';
 import ResponsiveImage from '../ResponsiveImage';
 import { PortfolioItem } from '../../types/data';
@@ -36,12 +35,13 @@ const ProjectRowCard = ({
         }
     };
 
+    // iOS Safari 잔존 깜빡임 fix: framer-motion m.button + staggered fade(delay: index * 0.05) 제거.
+    // 다수 카드 동시 paint와 image 디코드가 겹쳐 row 깜빡 유발. plain button + CSS만 사용.
+    void index;  // index는 더 이상 staggered animation에 안 쓰지만 props 호환 유지
+
     return (
-        <m.button
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: index * 0.05, duration: 0.4 }}
-            className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 text-left disabled:cursor-default disabled:opacity-80"
+        <button
+            className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors duration-200 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 text-left disabled:cursor-default disabled:opacity-80"
             onClick={onClick}
             type="button"
             disabled={!isInteractive}
@@ -106,7 +106,7 @@ const ProjectRowCard = ({
                     </div>
                 </div>
             </div>
-        </m.button>
+        </button>
     );
 };
 

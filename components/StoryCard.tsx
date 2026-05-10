@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { m } from 'framer-motion';
 import { timeAgo } from '../utils/dateUtils';
 
 import { extractFirstImageUrl } from '../utils/localDataUtils';
@@ -22,11 +21,9 @@ interface StoryCardProps {
   };
 }
 
-const cardVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.4 } }
-};
-
+// iOS Safari 잔존 깜빡임 fix: framer-motion m.article + whileInView opacity fade 제거.
+// reducedMotion='always'가 jump-cut을 만들어도 SSR에 opacity:0 인라인 스타일이 박혀
+// 이미지 디코드 + jump-cut paint가 같은 frame에 겹쳐 row 단위 깜빡 발생하던 회귀 해소.
 const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) => {
   const thumbnailUrl = React.useMemo(() => {
     if (story.thumbnail) return story.thumbnail;
@@ -52,14 +49,10 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
     // 기본 prefetch면 carousel/그리드 한 줄에 표시되는 모든 /stories/[slug] SSG JSON이
     // 동시에 다운로드되어 모바일 데이터·메인스레드 부담. hover/focus 시 prefetch는 유지.
     <Link href={href} prefetch={false} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
-      <m.article
+      <article
         itemScope
         itemType="https://schema.org/BlogPosting"
-        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full transition-shadow duration-300 hover:shadow-lg"
-        variants={cardVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
+        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full"
       >
         {story.date && <meta itemProp="datePublished" content={story.date} />}
         <link itemProp="url" href={href} />
@@ -100,7 +93,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
             {contentText}
           </div>
         </div>
-      </m.article>
+      </article>
     </Link>
   );
 });

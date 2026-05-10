@@ -181,13 +181,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     );
   }
 
+  // 페이지 전환 fade. 데스크톱에선 60ms fade-out, 모바일(reducedMotion='always')에선
+  // exit 자체 비활성. 모바일에서 jump-cut + mode='wait' 조합이 한 frame 동안 빈 화면
+  // (white flash)을 유발하던 깜빡임 제거 — exit 없으면 unmount 즉시 새 페이지 mount.
+  // hook이 아닌 일반 const라 isLocaleReady early return 이후에 위치 가능.
   const routeTransitionProps = {
-    // initial={false}: SSR에서 opacity:0 스타일이 박히는 것을 방지해 LCP를 즉시 페인트.
-    // AnimatePresence initial={false}만으로는 SSR 출력이 보정되지 않는 것을 직접 수정.
-    // 페이지 전환 시 exit(fade-out) 애니메이션만 유지 — enter fade-in(60ms)은 제거.
     initial: false as const,
     animate: { opacity: 1 },
-    exit: { opacity: 0 },
+    ...(reducedMotion !== 'always' && { exit: { opacity: 0 } }),
     transition: { duration: 0.06, ease: 'linear' as const },
   };
 
