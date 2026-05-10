@@ -54,6 +54,12 @@ export interface AutoFallbackInput {
   matchedReviewId: string | null;
   /** frontmatter inlineFallback.booking 명시 메시지 — null이면 booking fallback 비활성 */
   bookingMessage: string | null;
+  /**
+   * matchedReviewId가 frontmatter `inlineFallback.review`에서 왔는지 여부.
+   * true면 wordCount 게이트를 우회해 작가 의도를 그대로 inject.
+   * categoryKey 매핑은 false 전달 (짧은 글에 어색한 자동 review fallback 방지).
+   */
+  reviewSourcedFromFrontmatter: boolean;
 }
 
 export type AutoFallbackDecision =
@@ -71,10 +77,11 @@ export const REVIEW_FALLBACK_MIN_WORDCOUNT = 1000;
  *   1. authorBoxes >= MAX_TOTAL_BOXES → null
  *   2. price 매칭 있고 presentTypes에 price 없음 → price
  *   3. booking 메시지 있고 presentTypes에 booking 없음 → booking
- *   4. review 매칭 있고 wordCount >= REVIEW_FALLBACK_MIN_WORDCOUNT + presentTypes에 review 없음 → review
+ *   4. review 매칭 있고 (frontmatter sourced || wordCount >= REVIEW_FALLBACK_MIN_WORDCOUNT) + presentTypes에 review 없음 → review
  *   5. 모두 안 되면 null
  *
  * booking은 wordCount 제한 없음 — frontmatter 명시이므로 작가 의도 신뢰.
+ * review도 frontmatter 명시 시 wordCount 게이트 우회 — 동일 원칙.
  */
 export const decideAutoFallback = (input: AutoFallbackInput): AutoFallbackDecision | null => {
   if (input.authorBoxes >= MAX_TOTAL_BOXES) return null;
@@ -89,7 +96,7 @@ export const decideAutoFallback = (input: AutoFallbackInput): AutoFallbackDecisi
 
   if (
     input.matchedReviewId
-    && input.wordCount >= REVIEW_FALLBACK_MIN_WORDCOUNT
+    && (input.reviewSourcedFromFrontmatter || input.wordCount >= REVIEW_FALLBACK_MIN_WORDCOUNT)
     && !input.presentTypes.has('review')
   ) {
     return { type: 'review', id: input.matchedReviewId };

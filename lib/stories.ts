@@ -425,11 +425,17 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       | { price?: string; review?: string; booking?: string }
       | undefined;
 
-    const matchedPriceId = frontmatterFallback?.price
-      ?? matchPricingForCategory(baseStory.categoryKey);
-    const matchedReviewId = frontmatterFallback?.review
-      ?? matchReviewForCategory(baseStory.categoryKey);
+    // frontmatter inlineFallback 객체가 정의되면(빈 object 포함) 작가 명시 의도로 간주.
+    // categoryKey 단순 매핑 우회 — 빈 object {}는 자동 fallback 완전 비활성을 의미.
+    const hasFrontmatterFallback = frontmatterFallback !== undefined;
+    const matchedPriceId = hasFrontmatterFallback
+      ? (frontmatterFallback?.price ?? null)
+      : matchPricingForCategory(baseStory.categoryKey);
+    const matchedReviewId = hasFrontmatterFallback
+      ? (frontmatterFallback?.review ?? null)
+      : matchReviewForCategory(baseStory.categoryKey);
     const bookingMessage = frontmatterFallback?.booking ?? null;
+    const reviewSourcedFromFrontmatter = hasFrontmatterFallback && Boolean(frontmatterFallback?.review);
 
     // wordCount 계산 — 한국어/일본어/태국어는 글자 수, 영문은 단어 수
     const plain = stripMarkdown(contentToProcess);
@@ -445,6 +451,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       matchedPriceId,
       matchedReviewId,
       bookingMessage,
+      reviewSourcedFromFrontmatter,
     });
 
     if (fallback) {

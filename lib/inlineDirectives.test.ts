@@ -47,6 +47,7 @@ describe('decideAutoFallback', () => {
     matchedPriceId: 'recording-pro' as string | null,
     matchedReviewId: 'review-1' as string | null,
     bookingMessage: null as string | null,
+    reviewSourcedFromFrontmatter: false,
   };
 
   it('authorBoxes >= 3이면 null', () => {
@@ -129,6 +130,30 @@ describe('decideAutoFallback', () => {
       matchedPriceId: null,
       matchedReviewId: null,
       bookingMessage: '문의',
+    });
+    expect(r).toBeNull();
+  });
+
+  it('frontmatter sourced review는 wordCount 게이트 우회', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: null,
+      matchedReviewId: 'review-2',
+      wordCount: 500,  // 게이트 미달
+      reviewSourcedFromFrontmatter: true,  // frontmatter 명시이므로 우회
+    });
+    expect(r).toEqual({ type: 'review', id: 'review-2' });
+  });
+
+  it('categoryKey 매핑 review는 wordCount 게이트 적용', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: null,
+      matchedReviewId: 'review-3',
+      wordCount: 500,
+      reviewSourcedFromFrontmatter: false,  // categoryKey sourced
     });
     expect(r).toBeNull();
   });
