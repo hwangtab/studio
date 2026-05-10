@@ -70,23 +70,27 @@ export const MobileNav = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const scrollYAtOpen = window.scrollY;
-    const handleScroll = () => {
-      // iOS WebKit sometimes fires window scroll events during internal overflow scroll.
-      // Only close if the page itself has scrolled from its position when the menu opened.
-      if (Math.abs(window.scrollY - scrollYAtOpen) > 4) onClose();
+    // body overflow:hidden은 데스크톱·일부 환경만 차단. iOS Safari·Android Chrome은
+    // touch scroll이 그대로 통과하므로 메뉴 외부 touchmove를 preventDefault로 차단한다.
+    // body position:fixed 패턴은 stacking context를 새로 만들어 메뉴를 가리는 회귀가 있어
+    // 사용하지 않는다. handleScroll 자동 닫기도 모바일 UX와 충돌해 제거 — 메뉴 닫기는
+    // X 버튼·외부 클릭·focus trap의 esc로만.
+    const handleTouchMove = (event: TouchEvent) => {
+      const target = event.target as Node | null;
+      if (target && navRef.current && navRef.current.contains(target)) return;
+      event.preventDefault();
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     if (bodyLockCountRef.current === 0) {
       acquireBodyLock();
     }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [acquireBodyLock, isOpen, onClose]);
+  }, [acquireBodyLock, isOpen]);
 
   useEffect(() => {
     return () => {
