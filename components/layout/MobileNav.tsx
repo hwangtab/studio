@@ -117,17 +117,13 @@ export const MobileNav = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15, ease: 'easeOut' }}
-          className="xl:hidden z-40 bg-gradient-to-b from-white/95 to-gray-50/95 dark:from-gray-900/95 dark:to-black/95 backdrop-blur-xl shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
+          transition={{ duration: 0.1, ease: 'linear' }}
+          className="xl:hidden z-40 bg-white dark:bg-gray-900 shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top"
         >
+          {/* iOS Safari 깜빡임 최적화: 부모 backdrop-blur-xl 제거(단색 bg) + 자식 staggered fade-in 제거.
+              메뉴 열릴 때 매 frame backdrop-blur 재계산 + 다수 자식 동시 paint가 누적되어 jitter 발생하던 회귀 해소. */}
           <div className="px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
-            {/* Mobile Theme/Language Switcher */}
-            <m.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.05 }}
-              className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden"
-            >
+            <div className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden">
               <button
                 type="button"
                 className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
@@ -144,16 +140,10 @@ export const MobileNav = ({
                 isFloating={false}
                 variant="inline"
               />
-            </m.div>
+            </div>
 
-            {navGroups.map((group, groupIndex) => (
-              <m.div 
-                key={group.id} 
-                className="space-y-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.05 + (groupIndex * 0.05) }}
-              >
+            {navGroups.map((group) => (
+              <div key={group.id} className="space-y-2">
                 <button
                   type="button"
                   onClick={() => toggleGroup(group.id)}
@@ -172,7 +162,7 @@ export const MobileNav = ({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
+                      transition={{ duration: 0.12 }}
                       className="pl-4 space-y-1 overflow-hidden"
                     >
                       {group.items.map((item) => (
@@ -192,7 +182,7 @@ export const MobileNav = ({
                     </m.div>
                   )}
                 </AnimatePresence>
-              </m.div>
+              </div>
             ))}
           </div>
         </m.nav>

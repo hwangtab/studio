@@ -47,6 +47,21 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
+  // iOS Safari·Android Chrome 같은 터치 디바이스에서 framer-motion의 opacity·transform
+  // 애니메이션이 GPU 한계로 깜빡임·jitter를 유발한다(특히 backdrop-blur·다수 카드 동시 paint와 겹칠 때).
+  // 터치 디바이스에서 reducedMotion="always"로 모든 motion을 jump-cut 처리해 시각 안정성 확보.
+  // 데스크톱은 'user'로 OS prefers-reduced-motion만 따른다.
+  // SSR initial은 'user' — hydration mismatch 회피. 첫 frame 후 즉시 client에서 결정.
+  const [reducedMotion, setReducedMotion] = useState<'user' | 'always'>('user');
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(hover: none) and (pointer: coarse)');
+    const update = () => setReducedMotion(mq.matches ? 'always' : 'user');
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
   // light용 theme-color는 React state로 관리한다 — setAttribute로 직접 갱신해도
   // next/head가 hydration·reconcile 시 component tree의 content prop 값으로 attribute를
   // 다시 set하기 때문이다. .dark 클래스 변경을 MutationObserver로 추적해 state를
@@ -215,7 +230,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>
-            <MotionConfig reducedMotion="user">
+            <MotionConfig reducedMotion={reducedMotion}>
               <Layout hasHero={hasHero} locale={locale}>
                 {/* initial={false}: 첫 방문 시 opacity:0 스타일이 SSR에 박히는 것을 막아 FCP/LCP를 즉시 페인트.
                     페이지 전환(route change) 때만 페이드 애니메이션이 작동한다. */}
