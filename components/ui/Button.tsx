@@ -3,7 +3,9 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-xl font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  // transition-all → 명시 property: iOS Safari에서 transition-all은 layout 트리거 가능 속성도
+  // 보간해 hover 시 reflow 깜빡 유발. 시각 변화는 colors·shadow·transform만.
+  "inline-flex items-center justify-center rounded-xl font-medium transition-[colors,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {

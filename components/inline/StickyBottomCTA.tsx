@@ -72,7 +72,8 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
     <div
       role="region"
       aria-label={t('stories.sticky.label', { defaultValue: '고정 문의 바' })}
-      className="fixed inset-x-4 bottom-4 sm:bottom-8 z-50 max-w-2xl sm:mx-auto rounded-xl border-2 border-amber-300 dark:border-amber-500/40 bg-amber-50/95 dark:bg-amber-500/15 backdrop-blur-md shadow-xl p-4 flex items-center gap-3"
+      style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+      className="fixed inset-x-4 bottom-4 sm:bottom-8 z-50 max-w-2xl sm:mx-auto rounded-xl border-2 border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/30 shadow-lg p-4 flex items-center gap-3"
     >
       <div className="flex-shrink-0 inline-flex items-center justify-center p-2 rounded-full bg-amber-300/40 dark:bg-amber-500/30" aria-hidden="true">
         <MessageCircle className="text-amber-700 dark:text-amber-300" size={18} />
