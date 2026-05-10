@@ -64,8 +64,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   return (
     <header
       ref={ref}
-      className={`fixed w-full z-50 transition-[background-color,backdrop-filter,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
-        ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl backdrop-saturate-150 shadow-sm border-b border-gray-200/50 dark:border-gray-800/50'
+      className={`fixed w-full z-50 transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
+        ? 'bg-white/95 dark:bg-gray-950/95 shadow-sm border-b border-gray-200/50 dark:border-gray-800/50'
         : 'bg-transparent border-b border-transparent'
         }`}
     >
