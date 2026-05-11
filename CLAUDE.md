@@ -33,6 +33,12 @@ npm run build                # Production build (includes image optimization)
 
 # Image Optimization
 node scripts/optimizeImages.js # Manually run image optimization
+
+# Hero font subset (LCP)
+# hero h1 텍스트(data/home.ts heroContent, public/locales/*/common.json의
+# *.hero.title*) 변경 시 반드시 재실행 후 결과 woff2 commit. 빠뜨리면 새 글자가
+# subset 밖이라 fallback chain으로 그려져 글자별 두께 차이 발생 가능.
+node scripts/generate-hero-font.mjs
 ```
 
 ## Architecture & Data Flow

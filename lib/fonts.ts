@@ -35,6 +35,14 @@ export const notoSansKr = Noto_Sans_KR({
 // paint 사이 gap을 거의 제거.
 //
 // 생성: scripts/generate-hero-font.mjs (글자 set 변경 시 재실행).
+//
+// ⚠️ 운영 주의 — hero h1에 들어가는 텍스트(data/home.ts heroContent, public/locales/
+// */common.json의 *.hero.title* 키)를 변경했다면 반드시 아래를 실행하고 결과 woff2를
+// commit해야 한다. 빠뜨리면 새 글자가 micro-subset에 없어 fallback chain(전체
+// chunked Noto Sans KR → 시스템 한글)으로 그려져 글자별로 미세한 두께/메트릭 차이가
+// 보일 수 있다.
+//
+//   node scripts/generate-hero-font.mjs
 export const notoSansKrHero = localFont({
   src: './fonts/noto-sans-kr-hero.woff2',
   weight: '700',
