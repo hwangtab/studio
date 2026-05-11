@@ -137,7 +137,8 @@ const SEO = ({
   const ogImageMimeType = React.useMemo(() => {
     // @vercel/og API routes return PNG by default
     if (ogImage.includes('/api/og/')) return 'image/png';
-    const ext = ogImage.split('?')[0].split('.').pop()?.toLowerCase();
+    // query(?...)·fragment(#...) 모두 제거한 뒤 확장자 추출
+    const ext = ogImage.split('?')[0].split('#')[0].split('.').pop()?.toLowerCase();
     if (ext === 'webp') return 'image/webp';
     if (ext === 'avif') return 'image/avif';
     if (ext === 'png') return 'image/png';
@@ -376,9 +377,8 @@ const SEO = ({
       <meta property="og:title" content={resolvedTitle} />
       <meta property="og:description" content={resolvedDescription} />
       <meta property="og:image" content={absoluteOgImage} />
-      {absoluteOgImage.startsWith('https://') && (
-        <meta property="og:image:secure_url" content={absoluteOgImage} />
-      )}
+      {/* og:image:secure_url은 og:image가 https://면 Facebook이 자동 인식하므로 중복 emit
+          불필요. 또한 fallback 페이지 가드 정책과 충돌하는 경계 케이스도 함께 제거. */}
       <meta property="og:image:alt" content={ogImageAlt || resolvedTitle} />
       {typeof effectiveOgImageWidth === 'number' && effectiveOgImageWidth > 0 && (
         <meta property="og:image:width" content={String(effectiveOgImageWidth)} />

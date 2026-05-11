@@ -48,6 +48,9 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
     const lessonServiceSchema = React.useMemo(() => ({
         '@context': 'https://schema.org',
         '@type': 'Service',
+        // 동 페이지에 Course schema(#course @id)도 발행되므로 entity 충돌을 피하기 위해
+        // Service에 별도 @id 부여. Rich Results가 두 entity를 명확히 구분해 surface.
+        '@id': `${siteConfig.url}/${locale}/lesson#service`,
         name: t('lesson.seo.title'),
         description: t('lesson.seo.description'),
         inLanguage: schemaLanguage,
