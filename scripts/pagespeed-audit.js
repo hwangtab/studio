@@ -6,6 +6,8 @@
  *   node scripts/pagespeed-audit.js
  *   node scripts/pagespeed-audit.js --desktop-only
  *   node scripts/pagespeed-audit.js --mobile-only
+ *   node scripts/pagespeed-audit.js --url=https://studionol.co.kr/ko
+ *   node scripts/pagespeed-audit.js --url=https://... --details   # LCP element/breakdown 포함
  *
  * 환경 변수:
  *   PAGESPEED_API_KEY  (.env.local)  - 선택, 없으면 익명 호출
@@ -53,6 +55,12 @@ const args = process.argv.slice(2);
 const strategies = args.includes('--desktop-only') ? ['desktop']
   : args.includes('--mobile-only') ? ['mobile']
   : ['mobile', 'desktop'];
+const showDetails = args.includes('--details');
+const customUrlArg = args.find(a => a.startsWith('--url='));
+if (customUrlArg) {
+  URLS.length = 0;
+  URLS.push(customUrlArg.slice('--url='.length));
+}
 
 const RESET = '\x1b[0m', GREEN = '\x1b[32m', YELLOW = '\x1b[33m', RED = '\x1b[31m', BOLD = '\x1b[1m', GRAY = '\x1b[90m';
 
@@ -147,7 +155,21 @@ async function audit(url, strategy) {
     .slice(0, 3)
     .map(a => `${a.title} (${fmtMs(a.numericValue)})`);
 
-  return { url, strategy, score, lab, field, fieldSource, topOpportunities };
+  let lcpElement = null;
+  let lcpBreakdown = null;
+  if (showDetails) {
+    const bkItems = audits['lcp-breakdown-insight']?.details?.items || [];
+    const tableItem = bkItems.find(i => i.type === 'table');
+    if (tableItem?.items) {
+      lcpBreakdown = tableItem.items.map(p => ({ phase: p.label, ms: Math.round(p.duration) }));
+    }
+    const nodeItem = bkItems.find(i => i.type === 'node');
+    if (nodeItem) {
+      lcpElement = { selector: nodeItem.selector, label: nodeItem.nodeLabel, snippet: (nodeItem.snippet || '').slice(0, 140) };
+    }
+  }
+
+  return { url, strategy, score, lab, field, fieldSource, topOpportunities, lcpElement, lcpBreakdown };
 }
 
 function printResult(r) {
@@ -178,6 +200,17 @@ function printResult(r) {
   if (r.topOpportunities.length) {
     console.log(`  ${GRAY}주요 개선 기회${RESET}`);
     r.topOpportunities.forEach(o => console.log('    • ' + o));
+  }
+
+  if (r.lcpElement) {
+    console.log(`  ${GRAY}LCP element${RESET}`);
+    console.log(`    selector: ${r.lcpElement.selector}`);
+    if (r.lcpElement.label) console.log(`    label:    "${r.lcpElement.label}"`);
+    if (r.lcpElement.snippet) console.log(`    snippet:  ${r.lcpElement.snippet}`);
+  }
+  if (r.lcpBreakdown?.length) {
+    console.log(`  ${GRAY}LCP breakdown${RESET}`);
+    r.lcpBreakdown.forEach(p => console.log(`    • ${p.phase.padEnd(22)} ${fmtMsRaw(p.ms)}`));
   }
 }
 
