@@ -1,6 +1,6 @@
 import type { AppPropsWithLayout } from '../types';
 import '../styles/globals.css';
-import { notoSansKr, notoSansKrHero } from '../lib/fonts';
+import { pretendard, pretendardHero } from '../lib/fonts';
 
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
@@ -90,9 +90,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, []);
 
-  // 폰트 지연 로딩 useEffect 제거: 사이트 전반을 next/font/google의 Noto Sans KR로
-  // 통일하면서 더 이상 Pretendard @font-face 주입이 필요 없음. next/font가 빌드 시
-  // self-hosted + preload + size-adjust를 자동 처리.
+  // 폰트 지연 로딩 useEffect 제거: 사이트 전반을 next/font/local의 Pretendard Variable로
+  // 통일. lib/fonts.ts에서 등록, _next/static/media/로 빌드 산출. 본문 Variable은
+  // preload=false라 첫 paint 영향 0, hero micro-subset만 preload=true로 critical.
 
   useEffect(() => {
     let isCancelled = false;
@@ -174,7 +174,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <div className={`min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center ${notoSansKr.className} ${notoSansKr.variable} ${notoSansKrHero.variable}`} aria-live="polite" role="status">
+        <div className={`min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center ${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`} aria-live="polite" role="status">
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
             <span className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-primary animate-spin" aria-hidden="true" />
             <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
@@ -232,7 +232,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema) }}
         />
       </Head>
-      <div className={`${notoSansKr.className} ${notoSansKr.variable} ${notoSansKrHero.variable}`} data-locale={locale}>
+      <div className={`${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`} data-locale={locale}>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>

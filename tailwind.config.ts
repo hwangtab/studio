@@ -70,21 +70,21 @@ const config: Config = {
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },
       fontFamily: {
-        // 사이트 전반 단일 폰트(Noto Sans KR). var(--font-noto-sans-kr)는
-        // pages/_app.tsx의 next/font/google self-hosted 폰트 (2 weight: 400/700).
-        // 빌드 시 Google Fonts에서 다운로드 → _next/static/media에 저장. 런타임은 자체 도메인 서빙.
-        // fallback은 시스템 한글 폰트 → 시스템 폰트.
-        sans: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        title: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        // Montserrat 제거 후 display family도 Noto Sans KR로 통일.
-        display: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        logo: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        // hero h1 전용 micro-subset. var(--font-noto-sans-kr-hero)는 lib/fonts.ts의
-        // notoSansKrHero (Noto Sans KR Bold 700 weight, hero 텍스트 글자만 self-host).
-        // preload=true라 critical path에서 swap 거의 즉시 → PSI LCP element render
-        // delay 단축. 글리프 미포함 글자는 fallback 변수(전체 chunked Noto Sans KR)로
-        // 자동 swap.
-        hero: ['var(--font-noto-sans-kr-hero)', 'var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // 사이트 전반 단일 폰트(Pretendard Variable). var(--font-pretendard)는
+        // pages/_app.tsx의 next/font/local self-hosted 폰트 (variable woff2, weight
+        // 45-920 axis range). 단일 woff2(~2MB)에 모든 weight 들어있어 chunk 분할
+        // 없음. preload=false로 font-display:swap에 의한 fallback paint 우선,
+        // Pretendard는 lazy 도착 후 swap. fallback은 시스템 한글 폰트(Pretendard가
+        // Apple SD Gothic Neo + Inter 베이스라 swap gap 시각적으로 작음).
+        sans: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        title: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        display: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        logo: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // hero h1 전용 micro-subset. var(--font-pretendard-hero)는 lib/fonts.ts의
+        // pretendardHero (Pretendard Bold 700 weight, hero 텍스트 글자만 self-host,
+        // ~30KB). preload=true라 critical path에서 swap 거의 즉시. 글리프 미포함
+        // 글자는 fallback 변수(전체 Pretendard Variable)로 자동 swap.
+        hero: ['var(--font-pretendard-hero)', 'var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],

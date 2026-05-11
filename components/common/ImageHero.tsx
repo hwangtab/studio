@@ -81,10 +81,10 @@ const ImageHero = ({
             원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
             줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
         <div>
-          {/* font-hero = Noto Sans KR Bold 700 micro-subset (lib/fonts.ts notoSansKrHero).
-              사이트 hero 텍스트 글자만 self-host + preload → next/font/google의 한글
-              chunk lazy fetch로 인한 PSI LCP element render delay 단축. 글리프 미포함
-              글자는 fallback chain(--font-noto-sans-kr → 시스템 한글)으로 자동 swap. */}
+          {/* font-hero = Pretendard Bold 700 micro-subset (lib/fonts.ts pretendardHero).
+              사이트 hero 텍스트 글자만 self-host + preload → critical path 진입,
+              swap 거의 즉시. 글리프 미포함 글자는 fallback chain(--font-pretendard →
+              시스템 한글)으로 자동 swap. */}
           <h1
             className={`font-hero text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}

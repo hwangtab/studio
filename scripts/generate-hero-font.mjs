@@ -2,17 +2,16 @@
 /**
  * hero h1 LCP 폰트 subset 생성기.
  *
- * 사이트 hero 텍스트에 등장하는 글자만 추출해 Noto Sans KR Bold weight를 micro-subset
- * → public/fonts/noto-sans-kr-hero.woff2 (수 KB).
+ * 사이트 hero 텍스트에 등장하는 글자만 추출해 Pretendard Bold weight를 micro-subset
+ * → lib/fonts/pretendard-hero.woff2 (수 KB).
  *
- * 배경: next/font/google이 Noto Sans KR을 unicode-range로 13~30개 chunk 분할하지만
- * 'korean' subset이 직접 지원되지 않아 한글 chunk가 lazy fetch. PSI mobile LCP가
- * element render delay 1.8s로 측정되는 주범. hero에 한정해 micro-subset을 명시
- * preload하면 swap이 거의 즉시 발생 → LCP 단축.
+ * 배경: Pretendard Variable woff2(2MB)는 한+영 모든 weight를 단일 파일로 묶지만 그
+ * 자체를 preload하면 critical path를 점유. hero h1만 별도 micro-subset으로 preload
+ * 진입시키고, 본문 Variable은 font-display:swap으로 fallback paint 후 lazy 도착.
  *
- * 산출물(lib/fonts/noto-sans-kr-hero.woff2)은 commit. hero 텍스트가 바뀌면 이
- * 스크립트만 재실행. prebuild에 자동 통합하지 않은 이유: GitHub raw URL에서 ttf
- * source를 받는 외부 네트워크 의존성이 매 CI 빌드를 깨뜨릴 위험.
+ * 산출물(lib/fonts/pretendard-hero.woff2)은 commit. hero 텍스트가 바뀌면 이 스크립트
+ * 재실행 후 결과 woff2도 함께 commit. prebuild에 자동 통합하지 않은 이유: jsdelivr/
+ * GitHub에서 source ttf를 받는 외부 네트워크 의존성이 매 CI 빌드를 깨뜨릴 위험.
  *
  * 사용: node scripts/generate-hero-font.mjs
  */
@@ -25,19 +24,19 @@ import subsetFont from 'subset-font';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-const OTF_URL = 'https://github.com/googlefonts/noto-cjk/raw/main/Sans/SubsetOTF/KR/NotoSansKR-Bold.otf';
+const OTF_URL = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-Bold.otf';
 const CACHE_DIR = path.join(ROOT, 'node_modules', '.cache');
-const CACHE_TTF = path.join(CACHE_DIR, 'NotoSansKR-Bold.otf');
+const CACHE_TTF = path.join(CACHE_DIR, 'Pretendard-Bold.otf');
 // next/font/local이 빌드 시 _next/static/media/로 옮기므로 public/ 대신 lib/ 안에 둔다.
 // public/에 두면 정적 서빙(/fonts/...)으로 동시에 중복 노출되어 캐시 정책이 분기됨.
-const OUT_WOFF2 = path.join(ROOT, 'lib', 'fonts', 'noto-sans-kr-hero.woff2');
+const OUT_WOFF2 = path.join(ROOT, 'lib', 'fonts', 'pretendard-hero.woff2');
 
 async function ensureSourceFont() {
   if (fs.existsSync(CACHE_TTF) && fs.statSync(CACHE_TTF).size > 1_000_000) {
     return fs.readFileSync(CACHE_TTF);
   }
   fs.mkdirSync(CACHE_DIR, { recursive: true });
-  console.log(`fetching Noto Sans KR Bold OTF…`);
+  console.log(`fetching Pretendard Bold OTF…`);
   const res = await fetch(OTF_URL, { redirect: 'follow' });
   if (!res.ok) throw new Error(`failed to fetch source font: ${res.status} ${res.statusText}`);
   const buf = Buffer.from(await res.arrayBuffer());

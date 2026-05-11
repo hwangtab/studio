@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 폰트 시스템: 사이트 전반 Noto Sans KR로 통일 (next/font/google).
-   Montserrat은 display 보조용 (--font-montserrat). pages/_app.tsx에서 자가 호스팅 +
-   preload + size-adjust를 자동 처리하므로 별도 @font-face 선언 불필요. */
+/* 폰트 시스템: 사이트 전반 Pretendard Variable로 통일 (next/font/local).
+   lib/fonts.ts에 등록, _next/static/media/로 빌드 산출. hero h1만 별도 micro-subset
+   (Pretendard Bold)으로 preload 진입. 본문 Variable은 preload=false + display:swap. */
 
 /* 기본 스타일 */
 @layer base {
@@ -63,14 +63,14 @@
     @apply text-heading-3;
   }
 
-  /* 중국어(zh): Noto Sans KR은 한자 미포함 → Windows SimSun(명조) 폴백 방지.
+  /* 중국어(zh): Pretendard는 한자 미포함 → Windows SimSun(명조) 폴백 방지.
      _app.tsx wrapper div에 data-locale이 설정되므로 body가 아닌 wrapper를 직접 타깃.
      PingFang SC(macOS/iOS) → Microsoft YaHei(Windows) → WenQuanYi(Linux) 순으로 명시. */
   [data-locale="zh"] {
     font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', '微软雅黑', 'WenQuanYi Micro Hei', sans-serif;
   }
 
-  /* 태국어(th): Noto Sans KR은 태국 문자 미포함.
+  /* 태국어(th): Pretendard는 태국 문자 미포함.
      Leelawadee UI(Windows) → Noto Sans Thai → Thonburi(macOS/iOS) 순으로 지정. */
   [data-locale="th"] {
     font-family: 'Leelawadee UI', 'Leelawadee', 'Noto Sans Thai', Thonburi, sans-serif;

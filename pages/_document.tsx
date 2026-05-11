@@ -32,7 +32,7 @@ class MyDocument extends Document<Props> {
               초기 preconnect는 LCP 이미지·CSS·JS와 소켓/대역폭을 놓고 경쟁하므로 가성비가 나쁨.
             - dns-prefetch만 남김: 라우팅 후 실제 요청 시 DNS lookup 대기를 줄여주는 값싼 힌트(비용 <1KB, 소켓 미점유).
             - contact 페이지 전용 maps.*·www.google.com 프리커넥트는 contact 페이지에서만 주입(향후 필요시).
-            - 폰트는 next/font/google이 빌드 시 self-hosted + auto preload 처리하므로 외부 preconnect 불필요.
+            - 폰트는 next/font/local이 빌드 시 self-hosted + auto preload(hero subset만) 처리하므로 외부 preconnect 불필요.
             - vercel.live 는 프리뷰 환경 Comments bar 전용 → 제거.
           */}
           {/* Analytics & form endpoints */}
