@@ -75,5 +75,7 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+  // llms-full.txt는 AI 크롤러 안내용 메타 파일이라 SERP 색인 대상 아님.
+  res.setHeader('X-Robots-Tag', 'noindex');
   res.status(200).send(body);
 }

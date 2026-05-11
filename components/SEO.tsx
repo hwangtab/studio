@@ -340,10 +340,17 @@ const SEO = ({
       <meta name="author" content={resolvedAuthor} />
       <meta name="robots" content={robots} />
 
-      <meta name="geo.region" content="KR-11" />
-      <meta name="geo.placename" content={t('seo.geoPlacename')} />
-      <meta name="geo.position" content="37.614353;126.925887" />
-      <meta name="ICBM" content="37.614353, 126.925887" />
+      {/* geo meta는 ko locale에서만 emit — 다른 locale URL에 KR-11을 박으면 다국어 SERP가
+          잘못된 region targeting을 받아 외국 시장 노출이 약해진다. ICBM/geo.position은
+          LocalBusiness JSON-LD에 동일 좌표가 있어 정보 누락 위험 없음. */}
+      {currentLocale === 'ko' && (
+        <>
+          <meta name="geo.region" content="KR-11" />
+          <meta name="geo.placename" content={t('seo.geoPlacename')} />
+          <meta name="geo.position" content="37.614353;126.925887" />
+          <meta name="ICBM" content="37.614353, 126.925887" />
+        </>
+      )}
 
       {/* fallback 페이지에도 canonical은 ko 원본을 향해 emit해야 Google이 색인 통합 신호로
           인식. disableCanonicalAndAlternates는 hreflang만 끄도록 의미 축소. */}

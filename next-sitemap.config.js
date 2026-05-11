@@ -69,8 +69,18 @@ module.exports = {
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
+      // Google
+      { userAgent: 'Googlebot', allow: '/' },
+      { userAgent: 'Googlebot-Image', allow: '/' },
+      // Google-Extended는 SGE/Gemini 학습용 분리 신호 — Google search 색인은 그대로 두고
+      // 별도로 명시해 정책 가시성 확보
+      { userAgent: 'Google-Extended', allow: '/' },
+      // Bing
+      { userAgent: 'Bingbot', allow: '/' },
       // Naver
       { userAgent: 'Yeti', allow: '/' },
+      // DuckDuckGo
+      { userAgent: 'DuckDuckBot', allow: '/' },
       // OpenAI
       { userAgent: 'GPTBot', allow: '/' },
       { userAgent: 'OAI-SearchBot', allow: '/' },
@@ -82,8 +92,15 @@ module.exports = {
       { userAgent: 'PerplexityBot', allow: '/' },
       // Meta
       { userAgent: 'FacebookBot', allow: '/' },
+      { userAgent: 'Meta-ExternalAgent', allow: '/' },
       // Apple
       { userAgent: 'Applebot', allow: '/' },
+      // Amazon
+      { userAgent: 'Amazonbot', allow: '/' },
+      // Cohere AI
+      { userAgent: 'cohere-ai', allow: '/' },
+      // Common Crawl
+      { userAgent: 'CCBot', allow: '/' },
     ],
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) => {

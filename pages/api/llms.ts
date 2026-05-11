@@ -188,5 +188,8 @@ export default function handler(_req: NextApiRequest, res: NextApiResponse) {
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+  // llms.txt는 AI 크롤러 안내용 메타 파일이라 SERP 색인 대상이 아님. 직접 접근(/api/llms)
+  // 시 200 응답이 그대로 색인되는 것을 방지.
+  res.setHeader('X-Robots-Tag', 'noindex');
   res.status(200).send(body);
 }
