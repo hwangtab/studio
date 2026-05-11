@@ -175,3 +175,8 @@ STC 60+ 방음 개인실에서 보컬·내레이션 데모를 만들고, 매월 
 <!-- 내부 link block — Round 4 C-H3 -->
 
 상암 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 상암 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.
+
+
+<!-- cross-link block — Round 5 C-H1 partial -->
+
+**상암 인근 권역 비교**: [증산](/ko/stories/practice-room-jeungsan1), [새절](/ko/stories/practice-room-saejeol1), [응암](/ko/stories/practice-room-eungam1), [독바위](/ko/stories/practice-room-dokbawi1), [서대문](/ko/stories/practice-room-seodaemun1)

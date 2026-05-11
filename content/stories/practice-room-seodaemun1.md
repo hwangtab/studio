@@ -178,3 +178,8 @@ faq:
 <!-- 내부 link block — Round 4 C-H3 -->
 
 서대문 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 서대문 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.
+
+
+<!-- cross-link block — Round 5 C-H1 partial -->
+
+**서대문 인근 권역 비교**: [연신내](/ko/stories/practice-room-yeonsinnae1), [불광](/ko/stories/practice-room-bulgwang1), [녹번](/ko/stories/practice-room-nokbeon1), [응암](/ko/stories/practice-room-eungam1), [새절](/ko/stories/practice-room-saejeol1)

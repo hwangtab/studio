@@ -172,3 +172,8 @@ faq:
 <!-- 내부 link block — Round 4 C-H3 -->
 
 원당 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 원당 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.
+
+
+<!-- cross-link block — Round 5 C-H1 partial -->
+
+**원당 인근 권역 비교**: [원흥](/ko/stories/practice-room-wonheung1), [삼송](/ko/stories/practice-room-samsong1), [덕양구](/ko/stories/practice-room-deogyang1), [고양](/ko/stories/practice-room-goyang1), [지축](/ko/stories/practice-room-jichuk1)
