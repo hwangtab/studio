@@ -127,8 +127,11 @@
   /* will-change 제거: animation forwards 후에도 GPU 레이어 상시 점유되어 iOS Safari 메모리
      압박 시 layer 폐기/재생성으로 깜빡 유발. 진행 중에만 브라우저가 자동 promote. */
 }
-@media (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse) {
-  /* 모바일·터치 디바이스에서 hero-zoom 자체 비활성. iOS GPU 부담 제거. */
+@media (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse), (max-width: 768px) {
+  /* 모바일·터치 디바이스에서 hero-zoom 자체 비활성. iOS GPU 부담 제거.
+     max-width:768px 보강: PSI Lighthouse mobile emulation이 hover/pointer 미디어쿼리를
+     일관되게 매치 안 하는 케이스 방어. transform: scale(1.1) 초기 상태가 LCP 후보에서
+     hero 이미지를 제외시켜 작은 h1 텍스트가 LCP element로 잡히는 현상 해소 목적. */
   .hero-zoom { animation: none; transform: none; }
 }
 
