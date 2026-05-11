@@ -21,11 +21,15 @@ const escapeXml = (str: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
-// CDATA wrapper — RSS description은 HTML로 해석되는 reader가 많아 entity escape 대신
-// CDATA로 감싸야 엄격 파서(W3C validator·일부 네이티브 RSS reader)에서도 description이
-// 짤리지 않는다. 본문에 `]]>`가 들어가면 CDATA를 split해 깨지지 않도록 분할.
-const cdata = (str: string): string =>
-  `<![CDATA[${str.replace(/\]\]>/g, ']]]]><![CDATA[>')}]]>`;
+// CDATA wrapper — RSS description은 RSS reader가 HTML로 렌더링하므로,
+// XML 파싱 회피용 CDATA만으로는 부족하고 본문 내 `&`(예: "R&B")가 HTML 입장에서
+// invalid entity로 보인다. CDATA 안이라도 `&` → `&amp;` escape를 추가로 수행해
+// HTML 렌더 시 `&amp;` → `&`로 정상 디코딩되도록 한다. `]]>` 시퀀스가 본문에 있으면
+// CDATA가 split되어 깨지지 않도록 먼저 분할 후 entity escape.
+const cdata = (str: string): string => {
+  const safe = str.replace(/\]\]>/g, ']]]]><![CDATA[>').replace(/&/g, '&amp;');
+  return `<![CDATA[${safe}]]>`;
+};
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const localeParam = (req.query.locale as string) || 'ko';
