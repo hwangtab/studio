@@ -109,4 +109,40 @@ export const topicLinks: Record<string, TopicLink> = {
   '보컬 오디션': { slug: 'audition-vocal1', anchorText: '보컬 오디션 가이드' },
   '예술고 입시': { slug: 'practice-room-arts-high1', anchorText: '예술고 입시 준비 가이드' },
   '가수 지망생': { slug: 'aspiring1', anchorText: '가수 지망생 로드맵' },
+
+  // ─── 지역 LP (21개 동·역세권 dedicated) ───
+  // hub-spoke 카니발리제이션 방지: 이 키워드들은 본문에서 자동 발견되면 dedicated LP로
+  // 직접 연결돼 PageRank를 spoke로 집중시킨다.
+  '연신내 음악연습실': { slug: 'practice-room-yeonsinnae1', anchorText: '연신내 음악연습실 입주 가이드' },
+  '불광 음악연습실': { slug: 'practice-room-bulgwang1', anchorText: '불광 음악연습실 입주 가이드' },
+  '은평구 음악연습실': { slug: 'practice-room-eunpyeong1', anchorText: '은평구 음악연습실 입주 가이드' },
+  '대조동 음악연습실': { slug: 'practice-room-daejo1', anchorText: '대조동 음악연습실 입주 가이드' },
+  '구산 음악연습실': { slug: 'practice-room-gusan1', anchorText: '구산 음악연습실 입주 가이드' },
+  '서대문 음악연습실': { slug: 'practice-room-seodaemun1', anchorText: '서대문 음악연습실 입주 가이드' },
+  '역촌 음악연습실': { slug: 'practice-room-yeokchon1', anchorText: '역촌 음악연습실 입주 가이드' },
+  '응암 음악연습실': { slug: 'practice-room-eungam1', anchorText: '응암 음악연습실 입주 가이드' },
+  '증산 음악연습실': { slug: 'practice-room-jeungsan1', anchorText: '증산 음악연습실 입주 가이드' },
+  '새절 음악연습실': { slug: 'practice-room-saejeol1', anchorText: '새절 음악연습실 입주 가이드' },
+  '독바위 음악연습실': { slug: 'practice-room-dokbawi1', anchorText: '독바위 음악연습실 입주 가이드' },
+  '상암 음악연습실': { slug: 'practice-room-sangam1', anchorText: '상암 음악연습실 입주 가이드' },
+  '구파발 음악연습실': { slug: 'practice-room-gupabal1', anchorText: '구파발 음악연습실 입주 가이드' },
+  '지축 음악연습실': { slug: 'practice-room-jichuk1', anchorText: '지축 음악연습실 입주 가이드' },
+  '원흥 음악연습실': { slug: 'practice-room-wonheung1', anchorText: '원흥 음악연습실 입주 가이드' },
+  '녹번 음악연습실': { slug: 'practice-room-nokbeon1', anchorText: '녹번 음악연습실 입주 가이드' },
+  '삼송 음악연습실': { slug: 'practice-room-samsong1', anchorText: '삼송 음악연습실 입주 가이드' },
+  '원당 음악연습실': { slug: 'practice-room-wondang1', anchorText: '원당 음악연습실 입주 가이드' },
+  '고양 음악연습실': { slug: 'practice-room-goyang1', anchorText: '고양 음악연습실 입주 가이드' },
+  '덕양구 음악연습실': { slug: 'practice-room-deogyang1', anchorText: '덕양구 음악연습실 입주 가이드' },
+  '일산 음악연습실': { slug: 'practice-room-ilsan1', anchorText: '일산 음악연습실 입주 가이드' },
+
+  // ─── Buyer-intent 가이드 허브 4종 ───
+  // 정보 의도 키워드 → 종합 가이드 hub로 연결. hub는 4종 dedicated 페이지로 운영.
+  '보컬 입문': { slug: 'vocal-beginners-guide', anchorText: '보컬 입문 종합 가이드' },
+  '보컬 초보': { slug: 'vocal-beginners-guide', anchorText: '보컬 초보자 학습 로드맵' },
+  '홈레코딩 시작': { slug: 'home-recording-survival', anchorText: '홈레코딩 시작 가이드' },
+  '홈레코딩 장비': { slug: 'home-recording-survival', anchorText: '홈레코딩 장비 선택 가이드' },
+  '축가 부르기': { slug: 'wedding-song-singing', anchorText: '축가 부르기 종합 가이드' },
+  '축가 연습': { slug: 'wedding-song-singing', anchorText: '축가 연습·녹음 가이드' },
+  '오디오북·ASMR 입문': { slug: 'audiobook-asmr-getting-started', anchorText: '오디오북·ASMR 입문 가이드' },
+  'ASMR 입문': { slug: 'audiobook-asmr-getting-started', anchorText: 'ASMR 입문 가이드' },
 };

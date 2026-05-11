@@ -108,6 +108,14 @@ export function middleware(request: NextRequest) {
     let shouldRedirect = false;
     let shouldVaryByLanguage = false;
 
+    // trailing slash 정규화 — Vercel platform이 trailingSlash:false 규칙에 따라
+    // 별도 308을 발사하면 middleware의 locale prefix·region redirect와 합쳐져
+    // 2-hop chain이 생긴다. middleware가 슬래시를 미리 정규화해 모든 redirect를
+    // single 308로 통합한다. (D-H1 fix)
+    const hasTrailingSlash = pathname !== '/' && pathname.endsWith('/');
+    let workingPathname = hasTrailingSlash ? pathname.replace(/\/+$/, '') : pathname;
+    if (hasTrailingSlash) shouldRedirect = true;
+
     if (
         shouldEnforceCanonicalHost &&
         canonicalSiteUrl &&
@@ -119,26 +127,37 @@ export function middleware(request: NextRequest) {
         shouldRedirect = true;
     }
 
-    // Skip if path already has a locale prefix
     const pathnameHasLocale = locales.some(
-        (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
+        (locale) => workingPathname === `/${locale}` || workingPathname.startsWith(`/${locale}/`)
     );
     const userAgent = request.headers.get('user-agent') || '';
     const isBot = BOT_PATTERN.test(userAgent);
 
     if (!pathnameHasLocale) {
-        // Redirect to locale-prefixed path
         // 봇은 Accept-Language 유무와 관계없이 항상 x-default(/ko)로 보내 canonical 신호를 /ko로 집중
         // 일반 사용자는 Accept-Language 기반 감지 유지
         const locale = isBot ? defaultLocale : getPreferredLocale(request);
-        redirectUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
+        workingPathname = `/${locale}${workingPathname === '/' ? '' : workingPathname}`;
         shouldRedirect = true;
         shouldVaryByLanguage = !isBot;
     }
 
+    // 일반 시·군 지역 슬러그 → 광역 허브 308 redirect. trailing slash·locale 정규화
+    // 이후 workingPathname 기준으로 매칭하므로 동일 호출 안에서 single 308로 통합.
+    const storiesMatch = workingPathname.match(STORIES_PATH_RE);
+    if (storiesMatch) {
+        const [, locale, slug] = storiesMatch;
+        const destSlug = REGION_REDIRECT_MAP[slug];
+        if (destSlug) {
+            workingPathname = `/${locale}/stories/${destSlug}`;
+            shouldRedirect = true;
+        }
+    }
+
     if (shouldRedirect) {
-        // 검색 엔진 봇의 접근일 경우 SEO 점수를 올바르게 이전하기 위해 308(영구 이동)을 사용하고,
-        // 일반 사용자의 언어 기반 리디렉션은 브라우저 캐싱 방지를 위해 307(임시 이동)을 사용합니다.
+        redirectUrl.pathname = workingPathname;
+        // 봇은 SEO 점수 이전을 위해 308(영구). 일반 사용자 언어 redirect는 307(임시).
+        // region map·trailing slash redirect는 항상 영구(308).
         const redirectStatus = !shouldVaryByLanguage || isBot ? 308 : 307;
 
         const response = NextResponse.redirect(redirectUrl, redirectStatus);
@@ -146,21 +165,6 @@ export function middleware(request: NextRequest) {
             response.headers.set('Vary', 'Accept-Language');
         }
         return setSecurityHeaders(response);
-    }
-
-    // 일반 시·군 지역 페이지 → 광역 허브 308 redirect.
-    const storiesMatch = pathname.match(STORIES_PATH_RE);
-    if (storiesMatch) {
-        const [, locale, slug] = storiesMatch;
-        const destSlug = REGION_REDIRECT_MAP[slug];
-        if (destSlug) {
-            // request.nextUrl.clone()은 입력의 trailing slash를 destination에 보존하는데,
-            // 프로젝트는 trailingSlash:false라 Next.js가 한번 더 308 → redirect chain 생성.
-            // origin 기준으로 새 URL을 만들어 canonical 형태(no slash)로 한 번에 보낸다.
-            const regionRedirect = new URL(`/${locale}/stories/${destSlug}`, request.nextUrl);
-            const response = NextResponse.redirect(regionRedirect, 308);
-            return setSecurityHeaders(response);
-        }
     }
 
     const response = NextResponse.next();
