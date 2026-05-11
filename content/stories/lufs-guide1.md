@@ -148,4 +148,6 @@ LUFS 기준에 맞는 마스터링은 스트리밍 음원이 모든 플랫폼에
 
 마스터링 전 믹스 납품 시에는 피크 -6dBFS 이하 헤드룸을 확보하고 리미터를 OFF한 상태로 전달하는 것이 원칙입니다. LUFS 측정은 Youlean Loudness Meter(무료) 또는 iZotope Insight로 Integrated·Short-term·True Peak를 동시에 확인합니다. 음원이 플랫폼 기준보다 크면 자동으로 낮춰지지만 과압축된 다이나믹은 복원되지 않으므로, 처음부터 -14 LUFS 목표로 마스터링하고 리미터 Ceiling을 -1.0dBTP로 설정하는 것이 가장 안전합니다.
 
+%%service:lesson%%
+
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [음압(LUFS) 스트리밍 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

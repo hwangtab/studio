@@ -132,4 +132,6 @@ faq:
 
 패닝 작업 후 반드시 DAW의 모노 버튼으로 전환해서 중요 악기(보컬·킥·스네어·베이스)가 잘 들리는지 확인해야 합니다. 특히 완전히 좌우로 패닝된 코러스 보컬이 모노 전환 시 사라지거나 위상 반전으로 상쇄되는 경우가 있습니다. 이 때는 코러스 보컬 패닝을 L60/R60에서 L40/R40으로 줄이거나, 위상(Phase) 체크 툴로 문제를 확인합니다.
 
+%%service:lesson%%
+
 [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

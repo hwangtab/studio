@@ -195,4 +195,6 @@ faq:
 
 Send 방식 리버브 버스를 활용해 여러 트랙이 동일한 리버브 공간을 공유하면 믹스의 일체감이 높아집니다. 팝 보컬에는 플레이트 또는 홀 리버브에 Pre-delay 20~30ms, Decay 1.2~1.8초가 기본 설정이고, 코러스에서 리버브 Send 양을 자동화로 늘리면 버스-코러스 대비가 극적으로 강화됩니다.
 
+%%service:lesson%%
+
 [컴프레서 완전 가이드](/stories/compression-guide1) | [보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

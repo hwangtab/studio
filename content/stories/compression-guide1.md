@@ -177,4 +177,6 @@ Release 설정은 음악의 리듬감과 직결됩니다. Release가 너무 빠�
 
 병렬 컴프레션에서 드라이 신호와 압축 신호의 위상(Phase) 일치가 핵심입니다. 컴프레서 플러그인은 처리 지연(Latency)이 발생할 수 있으므로, DAW에서 플러그인 딜레이 보상(PDC)이 활성화되어 있는지 확인하세요. 비활성화 상태에서 두 신호를 합치면 위상 간섭으로 저음이 줄어드는 예상치 못한 결과가 나올 수 있습니다. 보컬 병렬 컴프레션에서는 드라이 70%·압축 30% 비율을 출발점으로 삼고, 두 채널을 솔로 비교하며 최적 블렌드를 찾으세요.
 
+%%service:lesson%%
+
 [헤드폰 믹싱 완전 가이드](/stories/headphone-mixing1) | [리버브 완전 가이드](/stories/reverb-guide1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
