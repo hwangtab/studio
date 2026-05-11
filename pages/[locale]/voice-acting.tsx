@@ -182,10 +182,10 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         title={t('voiceActing.seo.title')}
         description={t('voiceActing.seo.description')}
         keywords={t('voiceActing.seo.keywords')}
-        ogImage="/images/hardware3.webp"
+        ogImage="/images/og-hardware3.webp"
         ogImageAlt={t('voiceActing.hero.alt')}
-        ogImageWidth={1280}
-        ogImageHeight={720}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         includeSchema
         canonical={`/${locale}/voice-acting`}
         faqItems={faqItems}

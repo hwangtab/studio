@@ -35,17 +35,17 @@ const buildTimestamp = new Date().toISOString();
 // Map of marketing pages to their representative OG images.
 // title/caption은 Google Image Search용 메타. Studio NOL 브랜드 + 페이지 주제 포함.
 const pageImageMap = {
-  '/about': { url: '/images/recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
-  '/contact': { url: '/images/hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
+  '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
+  '/contact': { url: '/images/og-hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
   '/index': { url: '/images/og-default.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },
-  '/lesson': { url: '/images/lesson1.webp', title: 'Studio NOL Music Lessons - Vocal & Production', caption: 'One-on-one vocal, mixing, and music production lessons at Studio NOL.' },
-  '/portfolio': { url: '/images/recording1.webp', title: 'Studio NOL Portfolio - Recording & Mixing Works', caption: 'Albums, singles, and commercial works produced at Studio NOL.' },
-  '/practice-room': { url: '/images/room5.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
-  '/pricing': { url: '/images/hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩20K/hr, wedding vocal ₩150K, voiceover ₩30K/hr.' },
-  '/stories': { url: '/images/studio1.webp', title: 'Studio NOL Stories - Mixing & Recording Guides', caption: 'Production guides, engineering tutorials, and studio stories by Studio NOL.' },
-  '/studio-info': { url: '/images/hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
-  '/wedding-song': { url: '/images/recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
-  '/voice-acting': { url: '/images/hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩30K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
+  '/lesson': { url: '/images/og-lesson1.webp', title: 'Studio NOL Music Lessons - Vocal & Production', caption: 'One-on-one vocal, mixing, and music production lessons at Studio NOL.' },
+  '/portfolio': { url: '/images/og-recording1.webp', title: 'Studio NOL Portfolio - Recording & Mixing Works', caption: 'Albums, singles, and commercial works produced at Studio NOL.' },
+  '/practice-room': { url: '/images/og-room5.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
+  '/pricing': { url: '/images/og-hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩20K/hr, wedding vocal ₩150K, voiceover ₩30K/hr.' },
+  '/stories': { url: '/images/og-studio1.webp', title: 'Studio NOL Stories - Mixing & Recording Guides', caption: 'Production guides, engineering tutorials, and studio stories by Studio NOL.' },
+  '/studio-info': { url: '/images/og-hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
+  '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
+  '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩30K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
 };
 
 const buildStoryImage = (slug, locale) => {

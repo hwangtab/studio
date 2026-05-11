@@ -148,10 +148,10 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },
                 ]}
-                ogImage="/images/lesson1.webp"
+                ogImage="/images/og-lesson1.webp"
                 ogImageAlt={t('lesson.hero.alt')}
-                ogImageWidth={1280}
-                ogImageHeight={720}
+                ogImageWidth={1200}
+                ogImageHeight={630}
                 webPageType="ItemPage"
                 canonical={`/${locale}/lesson`}
                 schema={lessonServiceSchema}

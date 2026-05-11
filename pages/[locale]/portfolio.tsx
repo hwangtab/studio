@@ -144,10 +144,10 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         title={t('portfolio.seo.title')}
         description={t('portfolio.seo.description')}
         keywords={t('portfolio.seo.keywords')}
-        ogImage="/images/recording1.webp"
+        ogImage="/images/og-recording1.webp"
         ogImageAlt={t('portfolio.heroAlt')}
-        ogImageWidth={1920}
-        ogImageHeight={937}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         canonical={canonicalOverride}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },

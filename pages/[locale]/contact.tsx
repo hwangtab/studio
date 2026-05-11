@@ -132,10 +132,10 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         title={t('contact.seo.title')}
         description={t('contact.seo.description')}
         keywords={t('contact.seo.keywords')}
-        ogImage="/images/hardware5.webp"
+        ogImage="/images/og-hardware5.webp"
         ogImageAlt={t('contact.heroAlt')}
-        ogImageWidth={1280}
-        ogImageHeight={720}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.contact'), path: `/${locale}/contact` },

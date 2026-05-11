@@ -183,10 +183,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
         keywords={t('pricing.seo.keywords')}
-        ogImage="/images/hardware2.webp"
+        ogImage="/images/og-hardware2.webp"
         ogImageAlt={t('pricing.hero.alt')}
-        ogImageWidth={1280}
-        ogImageHeight={720}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         includeSchema
         webPageType="WebPage"
         canonical={`/${locale}/pricing`}

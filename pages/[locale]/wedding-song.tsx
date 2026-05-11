@@ -156,10 +156,10 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         title={t('weddingSong.seo.title')}
         description={t('weddingSong.seo.description')}
         keywords={t('weddingSong.seo.keywords')}
-        ogImage="/images/recording3.webp"
+        ogImage="/images/og-recording3.webp"
         ogImageAlt={t('weddingSong.hero.alt')}
-        ogImageWidth={1280}
-        ogImageHeight={720}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         includeSchema
         canonical={`/${locale}/wedding-song`}
         faqItems={faqItems}

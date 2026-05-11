@@ -77,10 +77,10 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         title={t('about.seo.title')}
         description={t('about.seo.description')}
         keywords={t('about.seo.keywords')}
-        ogImage="/images/recording15.webp"
+        ogImage="/images/og-recording15.webp"
         ogImageAlt={t('about.heroAlt')}
-        ogImageWidth={1280}
-        ogImageHeight={854}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.about'), path: `/${locale}/about` },

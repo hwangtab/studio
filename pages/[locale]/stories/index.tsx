@@ -137,10 +137,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}
-        ogImage="/images/studio1.webp"
+        ogImage="/images/og-studio1.webp"
         ogImageAlt={t('stories.hero.alt')}
-        ogImageWidth={1440}
-        ogImageHeight={809}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         includeSchema
         webPageType="CollectionPage"
         schema={storiesItemListSchema}

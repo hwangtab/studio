@@ -60,10 +60,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         title={seo.title}
         description={seo.description}
         keywords={seo.keywords}
-        ogImage={heroContent.backgroundImage}
+        ogImage="/images/og-studio2.webp"
         ogImageAlt={heroContent.imageAlt}
-        ogImageWidth={1280}
-        ogImageHeight={720}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         includeSchema
         webPageType="WebPage"
         canonical={`/${locale}`}
