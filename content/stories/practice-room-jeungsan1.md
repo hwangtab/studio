@@ -168,3 +168,8 @@ faq:
 
 
 [연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [새절 음악연습실 — 6호선 응암루프](/stories/practice-room-saejeol1) | [응암 음악연습실 — 6호선 3정거장](/stories/practice-room-eungam1) | [구산 음악연습실 — 6호선 1정거장](/stories/practice-room-gusan1) | [은평구 음악연습실 — 구산·역촌·응암 가이드](/stories/practice-room-eunpyeong1)
+
+
+<!-- 내부 link block — Round 4 C-H3 -->
+
+증산 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 증산 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.

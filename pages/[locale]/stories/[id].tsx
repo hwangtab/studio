@@ -304,8 +304,13 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         <StickyBottomCTA markerRef={stickyMarkerRef} locale={locale} />
 
         {story.boilerplateSection && (
+          // data-nosnippet은 Google 공식 indicator — 이 영역의 텍스트를 SERP snippet에
+          // 사용하지 말라는 신호. AUTO-EXPAND 보일러플레이트가 도시명만 치환된 동일
+          // 텍스트로 356+개 페이지에 박혀 있어 doorway/duplicate snippet 평가 위험이
+          // 있던 것을 차단. 사용자에겐 그대로 노출 — UX 가치는 유지.
           <aside
             data-boilerplate="region-visit"
+            data-nosnippet
             aria-label={t('stories.detail.boilerplateAside', { defaultValue: '공통 방문 안내' })}
             className="mb-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50"
           >

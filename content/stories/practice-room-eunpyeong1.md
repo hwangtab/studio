@@ -115,3 +115,8 @@ faq:
 
 
 [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/practice-room-dongdaemun1) | [강북·도봉·노원구 음악연습실 — 서울 북동권 24시간 방음 연습실 가이드](/stories/practice-room-gangbuk1)
+
+
+<!-- 내부 link block — Round 4 C-H3 -->
+
+은평구 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 은평구 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.

@@ -146,3 +146,8 @@ faq:
 ---
 
 [불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/practice-room-hongdae1)
+
+
+<!-- 내부 link block — Round 4 C-H3 -->
+
+연신내 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 연신내 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.

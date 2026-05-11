@@ -169,3 +169,8 @@ faq:
 
 
 [연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 7분](/stories/practice-room-bulgwang1) | [녹번 음악연습실 — 3호선 1정거장](/stories/practice-room-nokbeon1) | [대조동 음악연습실 — 동명여고 옆](/stories/practice-room-daejo1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1)
+
+
+<!-- 내부 link block — Round 4 C-H3 -->
+
+구파발 음악연습실의 전체 가격·할인 조건은 [입주 가격표](/ko/pricing) 페이지에서 확인할 수 있습니다. 시설 견학·계약 문의는 [카카오톡 1분 상담](/ko/contact)에서 처리됩니다. 구파발 외 인근 권역 비교는 [은평구 음악연습실 종합 가이드](/ko/practice-room)를 참고하세요.
