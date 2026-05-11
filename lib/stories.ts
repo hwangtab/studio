@@ -45,21 +45,39 @@ const buildAutoFallbackMarker = (fb: AutoFallbackDecision): string => {
   }
 };
 
+// 한 슬러그의 native 번역 locale을 thin/noindex 필터까지 적용해 반환한다.
+// 파일 존재만 보면 sitemap exclude(thin gate 통과)와 HTML hreflang(파일 존재만 봄) 정책이
+// 어긋나 dangling alternate가 생긴다(예: bulgwang-mixing-club-2nd ko가 thin이라
+// sitemap에서 빠졌는데 외국어 파일들이 ko alternate를 가리킴). 여기서 동일 정책을 적용해
+// 양방향성을 맞춘다.
 export const getStoryAvailableLocales = (slug: string): Locale[] => {
   if (enableCache) {
     const cached = storyAvailableLocalesCache.get(slug);
     if (cached) return cached;
   }
 
-  const available: Locale[] = [];
-  if (fs.existsSync(path.join(storiesDirectory, `${slug}.md`))) {
-    available.push(defaultLocale);
-  }
-  for (const locale of locales) {
-    if (locale === defaultLocale) continue;
-    if (fs.existsSync(path.join(storiesDirectory, `${slug}.${locale}.md`))) {
-      available.push(locale);
+  const isLocaleIndexable = (locale: Locale): boolean => {
+    const filePath = locale === defaultLocale
+      ? path.join(storiesDirectory, `${slug}.md`)
+      : path.join(storiesDirectory, `${slug}.${locale}.md`);
+    if (!fs.existsSync(filePath)) return false;
+    try {
+      const raw = fs.readFileSync(filePath, 'utf8');
+      const fm = matter(raw);
+      // robots: noindex 명시 → 색인 제외 → hreflang에서도 제외
+      if (typeof fm.data.robots === 'string' && /noindex/i.test(fm.data.robots)) return false;
+      // thin gate (AUTO-EXPAND 블록 제거 후 분량) — sitemap thinContent.js와 동일 로직
+      const { stripped } = extractAutoExpandBlock(fm.content);
+      const { isThinContent } = computeThinContentStatus(stripped, slug);
+      return !isThinContent;
+    } catch {
+      return false;
     }
+  };
+
+  const available: Locale[] = [];
+  for (const locale of locales) {
+    if (isLocaleIndexable(locale)) available.push(locale);
   }
   if (enableCache) storyAvailableLocalesCache.set(slug, available);
   return available;

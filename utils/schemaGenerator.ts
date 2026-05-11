@@ -212,14 +212,14 @@ export const generateDefaultSchema = (
         hasMap: [
           config.contact.naverMapUrl,
           'https://maps.google.com/?q=37.614353,126.925887',
-        ].filter(Boolean),
+        ].filter((url): url is string => Boolean(url && url.trim())),
         sameAs: [
           config.contact.naverMapUrl,
           config.contact.kakaoUrl,
           'https://maps.google.com/?q=37.614353,126.925887',
           socialProfiles.instagram,
           socialProfiles.threads,
-        ].filter(Boolean),
+        ].filter((url): url is string => Boolean(url && url.trim())),
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
 

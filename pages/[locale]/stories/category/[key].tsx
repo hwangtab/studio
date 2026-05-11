@@ -117,6 +117,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         webPageType="CollectionPage"
         schema={itemListSchema}
         canonical={canonicalPath}
+        robots={currentPage > 1 ? 'noindex, follow' : undefined}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },

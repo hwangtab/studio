@@ -206,7 +206,9 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         title={`${story.title} | ${siteConfig.name}`}
         description={story.summary || metaDescription}
         keywords={story.tags ? story.tags.join(', ') : t('stories.seo.fallbackKeywords')}
-        canonical={story.isFallbackTranslation ? undefined : `/${locale}/stories/${story.slug}`}
+        canonical={story.isFallbackTranslation
+          ? `/ko/stories/${story.slug}`
+          : `/${locale}/stories/${story.slug}`}
         disableCanonicalAndAlternates={story.isFallbackTranslation}
         availableLocales={story.availableLocales}
         ogImage={ogImage}

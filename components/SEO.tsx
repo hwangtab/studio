@@ -344,7 +344,9 @@ const SEO = ({
       <meta name="geo.position" content="37.614353;126.925887" />
       <meta name="ICBM" content="37.614353, 126.925887" />
 
-      {!disableCanonicalAndAlternates && <link rel="canonical" href={normalizedCanonical} />}
+      {/* fallback 페이지에도 canonical은 ko 원본을 향해 emit해야 Google이 색인 통합 신호로
+          인식. disableCanonicalAndAlternates는 hreflang만 끄도록 의미 축소. */}
+      <link rel="canonical" href={normalizedCanonical} />
 
       {/* Hreflang tags for SEO.
           Limit to locales that actually have native content to avoid directing Google
