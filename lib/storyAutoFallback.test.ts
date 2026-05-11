@@ -2,8 +2,6 @@ import {
   matchPricingForCategory,
   matchReviewForCategory,
   injectAutoFallbackMarker,
-  PRICING_BY_CATEGORY,
-  REVIEW_BY_CATEGORY,
 } from './storyAutoFallback';
 
 describe('matchPricingForCategory', () => {
