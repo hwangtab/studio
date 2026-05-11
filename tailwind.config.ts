@@ -79,6 +79,12 @@ const config: Config = {
         // Montserrat 제거 후 display family도 Noto Sans KR로 통일.
         display: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         logo: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // hero h1 전용 micro-subset. var(--font-noto-sans-kr-hero)는 lib/fonts.ts의
+        // notoSansKrHero (Noto Sans KR Bold 700 weight, hero 텍스트 글자만 self-host).
+        // preload=true라 critical path에서 swap 거의 즉시 → PSI LCP element render
+        // delay 단축. 글리프 미포함 글자는 fallback 변수(전체 chunked Noto Sans KR)로
+        // 자동 swap.
+        hero: ['var(--font-noto-sans-kr-hero)', 'var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],

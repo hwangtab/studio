@@ -81,12 +81,12 @@ const ImageHero = ({
             원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
             줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
         <div>
-          {/* font-logo = Noto Sans KR. H1은 LCP candidate라 weight 900(Black) 한글 subset
-              다운로드가 LCP 지연 요인. font-bold(700)는 사이트 전반에서 이미 로드되어
-              추가 fetch 없음. text-5xl~8xl + 700 + display 사이즈로 시각 임팩트 충분.
-              next/font/google 자동 self-hosted + preload + size-adjust로 깜빡임 거의 없음. */}
+          {/* font-hero = Noto Sans KR Bold 700 micro-subset (lib/fonts.ts notoSansKrHero).
+              사이트 hero 텍스트 글자만 self-host + preload → next/font/google의 한글
+              chunk lazy fetch로 인한 PSI LCP element render delay 단축. 글리프 미포함
+              글자는 fallback chain(--font-noto-sans-kr → 시스템 한글)으로 자동 swap. */}
           <h1
-            className={`font-logo text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-hero text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}
           >
             {title}

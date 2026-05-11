@@ -1,4 +1,5 @@
 import { Noto_Sans_KR } from 'next/font/google';
+import localFont from 'next/font/local';
 
 // Noto Sans KR — 사이트 전반의 통합 한글 폰트.
 // next/font/google이 빌드 시 self-host + auto preload + size-adjust + unicode-range
@@ -24,4 +25,22 @@ export const notoSansKr = Noto_Sans_KR({
   // size-adjust 메트릭 보정해 layout shift 최소화 → Lighthouse가 fallback paint를
   // LCP로 측정.
   fallback: ['-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'system-ui', 'sans-serif'],
+});
+
+// hero h1 전용 micro-subset (7 locale × 모든 페이지 hero title 글자만, ~58KB).
+// 배경: next/font/google의 Noto Sans KR이 'korean' subset 직접 지원이 없어 한글
+// chunk가 unicode-range 기반 lazy fetch → PSI mobile LCP element render delay
+// 1.8s. hero 글자만 별도 self-host + preload=true로 critical path 진입,
+// font-display:swap과 함께 swap이 거의 즉시 발생 → LCP가 fallback paint와 final
+// paint 사이 gap을 거의 제거.
+//
+// 생성: scripts/generate-hero-font.mjs (글자 set 변경 시 재실행).
+export const notoSansKrHero = localFont({
+  src: './fonts/noto-sans-kr-hero.woff2',
+  weight: '700',
+  style: 'normal',
+  display: 'swap',
+  preload: true,
+  variable: '--font-noto-sans-kr-hero',
+  fallback: ['var(--font-noto-sans-kr)', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'system-ui', 'sans-serif'],
 });
