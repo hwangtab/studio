@@ -21,6 +21,12 @@ const escapeXml = (str: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
+// CDATA wrapper — RSS description은 HTML로 해석되는 reader가 많아 entity escape 대신
+// CDATA로 감싸야 엄격 파서(W3C validator·일부 네이티브 RSS reader)에서도 description이
+// 짤리지 않는다. 본문에 `]]>`가 들어가면 CDATA를 split해 깨지지 않도록 분할.
+const cdata = (str: string): string =>
+  `<![CDATA[${str.replace(/\]\]>/g, ']]]]><![CDATA[>')}]]>`;
+
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const localeParam = (req.query.locale as string) || 'ko';
   const locale: Locale = locales.includes(localeParam as Locale)
@@ -58,7 +64,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return `    <item>
       <title>${escapeXml(story.title)}</title>
       <link>${link}</link>
-      <description>${escapeXml(story.summary)}</description>
+      <description>${cdata(story.summary)}</description>
       <pubDate>${new Date(story.date).toUTCString()}</pubDate>
       <guid isPermaLink="true">${link}</guid>${authorTag}${categoryTag}${mediaTag}
     </item>`;
@@ -70,13 +76,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   <channel>
     <title>${escapeXml(siteConfig.name)} ${storiesLabel[locale]}</title>
     <link>${siteUrl}/${locale}/stories</link>
-    <description>${escapeXml(siteConfig.description)}</description>
+    <description>${cdata(siteConfig.description)}</description>
     <language>${locale}</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <image>
       <url>${siteUrl}/logo512.png</url>
-      <title>${escapeXml(siteConfig.name)}</title>
-      <link>${siteUrl}</link>
+      <title>${escapeXml(siteConfig.name)} ${storiesLabel[locale]}</title>
+      <link>${siteUrl}/${locale}/stories</link>
     </image>
     <atom:link href="${siteUrl}/api/rss?locale=${locale}" rel="self" type="application/rss+xml" />
 ${items}
