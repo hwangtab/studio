@@ -3,12 +3,15 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, LucideIcon, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
+import CurriculumCard from '../../components/lesson/CurriculumCard';
+import FormatCard from '../../components/lesson/FormatCard';
+import PhaseHeader from '../../components/lesson/PhaseHeader';
 
 // Below-fold 컴포넌트 code-splitting
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
@@ -26,82 +29,6 @@ import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
-
-interface CurriculumCardProps {
-    step: string;
-    title: string;
-    subtitle: string;
-    phaseLabel?: string;
-    description: string[];
-    icon: LucideIcon;
-    delay?: number;
-}
-
-const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
-    <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group border border-gray-100 dark:border-gray-700">
-        <div className="absolute top-0 right-0 p-4 opacity-10 font-bold text-6xl text-primary transition-transform group-hover:scale-110">
-            {step}
-        </div>
-        <div className="relative z-10">
-            <div className="bg-primary/10 dark:bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary dark:text-primary-light">
-                <Icon size={32} />
-            </div>
-            {phaseLabel && (
-                <span className="inline-block mb-3 px-3 py-1 rounded-full bg-primary/10 dark:bg-primary/20 text-xs font-bold text-primary tracking-wide uppercase">
-                    {phaseLabel}
-                </span>
-            )}
-            <h3 className="typo-card-title mb-1">{title}</h3>
-            <p className="text-sm font-semibold text-primary mb-4">{subtitle}</p>
-            <ul className="space-y-2">
-                {description.map((item, idx) => (
-                    <li key={idx} className="flex items-start typo-card-body text-body-2">
-                        <CheckCircle size={14} className="mt-1 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
-                        <span>{item}</span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    </BaseCard>
-);
-
-interface FormatCardProps {
-    icon: LucideIcon;
-    label: string;
-    value: string;
-    caption: string;
-}
-
-const FormatCard = ({ icon: Icon, label, value, caption }: FormatCardProps) => (
-    <BaseCard variant="default" className="p-6 h-full border border-gray-100 dark:border-gray-700">
-        <div className="flex items-start gap-4">
-            <div className="bg-primary/10 dark:bg-primary/20 w-12 h-12 rounded-xl flex items-center justify-center text-primary dark:text-primary-light flex-shrink-0">
-                <Icon size={24} aria-hidden="true" />
-            </div>
-            <div className="min-w-0">
-                <p className="text-xs font-semibold text-primary tracking-wide uppercase mb-1">{label}</p>
-                <p className="typo-card-title mb-1 break-keep">{value}</p>
-                <p className="text-body-2 text-gray-600 dark:text-gray-300 break-keep">{caption}</p>
-            </div>
-        </div>
-    </BaseCard>
-);
-
-interface PhaseHeaderProps {
-    label: string;
-    title: string;
-    caption: string;
-}
-
-const PhaseHeader = ({ label, title, caption }: PhaseHeaderProps) => (
-    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6 border-l-4 border-primary pl-4">
-        <div>
-            <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-1">{label}</span>
-            <h3 className="typo-card-title">{title}</h3>
-        </div>
-        <p className="text-body-2 text-gray-600 dark:text-gray-300 md:text-right break-keep max-w-lg">{caption}</p>
-    </div>
-);
 
 interface LessonProps {
     locale: Locale;
