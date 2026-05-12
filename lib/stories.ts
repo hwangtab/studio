@@ -102,6 +102,7 @@ const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { fileP
   }
 
   if (locale !== defaultLocale) {
+    // Priority 1: 영어 fallback (lingua franca — 외국인 사용자가 가장 무난하게 읽음)
     const englishFallbackPath = path.join(storiesDirectory, `${slug}.en.md`);
     if (fs.existsSync(englishFallbackPath)) {
       resolved = { filePath: englishFallbackPath, sourceLocale: 'en' };
@@ -109,6 +110,22 @@ const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { fileP
         storyFileResolutionCache.set(cacheKey, resolved);
       }
       return resolved;
+    }
+    // Priority 2: 그 외 native locale 중 존재하는 첫 번째 (locales 순서 따름)
+    // ko 원본도 en도 없는 native(예: zh-only 가이드)가 다른 locale 라우트에서
+    // dangling 404로 떨어지지 않도록 fallback chain 확장. sourceLocale 기반 canonical
+    // fix(pages/[locale]/stories/[id].tsx:209)와 함께 동작해 noindex + canonical →
+    // sourceLocale URL로 정합화.
+    for (const fb of locales) {
+      if (fb === locale || fb === defaultLocale || fb === 'en') continue;
+      const fbPath = path.join(storiesDirectory, `${slug}.${fb}.md`);
+      if (fs.existsSync(fbPath)) {
+        resolved = { filePath: fbPath, sourceLocale: fb };
+        if (enableCache) {
+          storyFileResolutionCache.set(cacheKey, resolved);
+        }
+        return resolved;
+      }
     }
   }
 

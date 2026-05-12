@@ -371,13 +371,25 @@ const SEO = ({
             />
           ))
       )}
-      {shouldRenderAlternates && (!availableLocales || availableLocales.includes(defaultLocale)) && (
-        <link
-          rel="alternate"
-          hrefLang="x-default"
-          href={`${siteUrl}/ko${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
-        />
-      )}
+      {shouldRenderAlternates && (() => {
+        // x-default 우선순위:
+        // 1) availableLocales 미명시 또는 ko 포함 → ko (기존 동작)
+        // 2) ko 미포함이지만 en 포함 → en (글로벌 fallback)
+        // 3) 그 외 → availableLocales 첫 번째
+        // ko 원본 없는 native 글(예: en-only, zh-only 가이드)이 x-default를 404로 가리키던
+        // 부정합 해소.
+        const xDefaultLocale =
+          (!availableLocales || availableLocales.includes(defaultLocale))
+            ? defaultLocale
+            : (availableLocales.includes('en') ? 'en' : (availableLocales[0] ?? defaultLocale));
+        return (
+          <link
+            rel="alternate"
+            hrefLang="x-default"
+            href={`${siteUrl}/${xDefaultLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+          />
+        );
+      })()}
 
       <meta property="og:type" content={ogType} />
       {!disableCanonicalAndAlternates && <meta property="og:url" content={normalizedCanonical} />}
