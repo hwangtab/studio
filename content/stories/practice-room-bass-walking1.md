@@ -38,7 +38,6 @@ faq:
       ③ 코드 톤 추가 — 근음 이외 코드 톤 포함 ④ 패싱 추가 — 코드 변환 전 패싱 노트 삽입 ⑤ 즉흥성 — 같은 진행도 매번 다른
       라인 시도. Autumn Leaves, Blue Bossa, There Will Never Be Another You 같은 재즈
       스탠다드로 시작하세요. 코드 진행이 단순하면서도 워킹베이스의 핵심 기술을 모두 연습할 수 있습니다.
-robots: "noindex, follow"
 ---
 
 ![베이스 워킹베이스·재즈 라인 음악연습실 스튜디오 놀](/images/room2.webp)
