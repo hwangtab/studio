@@ -104,6 +104,15 @@ function getPreferredLocale(request: NextRequest): Locale {
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+
+    // locale-scoped LLM index 파일은 next.config.mjs rewrites가 처리하므로 middleware
+    // bypass. matcher의 negative lookahead가 `llms-full-{ko,en,zh}.txt`까지 정확히
+    // 매칭하지 못해 locale prefix가 자동 추가되며 404로 떨어지던 회귀를 명시적 early
+    // return으로 해소.
+    if (pathname === '/llms-full-ko.txt' || pathname === '/llms-full-en.txt' || pathname === '/llms-full-zh.txt') {
+        return NextResponse.next();
+    }
+
     const redirectUrl = request.nextUrl.clone();
     let shouldRedirect = false;
     let shouldVaryByLanguage = false;
