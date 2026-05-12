@@ -232,10 +232,18 @@ module.exports = {
 
     if (routePath.includes('/stories/')) {
       // Thin gate + 308 redirect 대상 제외 (defensive).
+      // fallback locale gate: native 파일(`{slug}.{locale}.md`) 없으면 ko 폴백 페이지로
+      // 렌더되어 noindex로 처리되므로 sitemap에서도 제외. additionalPaths는 이미 동일
+      // 게이트를 적용하지만 transform은 getStaticPaths가 자동 등록한 path까지 호출하므로
+      // 여기서 한 번 더 차단해야 sitemap에 fallback URL이 누락 없이 제거된다.
       if (segments.length >= 3) {
         const slug = segments[2];
         if (REDIRECTED_SLUGS.has(slug)) return null;
         if (isStoryThin(slug, locale)) return null;
+        if (locale !== 'ko') {
+          const localeFilePath = path.join(storiesDir, `${slug}.${locale}.md`);
+          if (!fs.existsSync(localeFilePath)) return null;
+        }
       }
       return { ...entry, changefreq: 'weekly', priority: 0.8 };
     }

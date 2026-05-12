@@ -27,11 +27,19 @@ const formatStoryLine = (siteUrl: string, locale: Locale, story: { title: string
   return parts.join('');
 };
 
-export default function handler(_req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const siteConfig = getSiteConfig('ko');
   const siteUrl = siteConfig.url;
 
-  let body = `# Studio NOL — Full Content Index (llms-full.txt)
+  // ?locale=ko|en|zh|... 명시 시 그 locale의 stories만 반환 (locale-scoped LLM index).
+  // 미명시 시 전체 7 locale 통합. /llms-full-ko.txt, /llms-full-en.txt, /llms-full-zh.txt
+  // 는 next.config.mjs rewrites에서 각 ?locale=... 로 매핑.
+  const localeParam = typeof req.query.locale === 'string' ? req.query.locale : null;
+  const requestedLocale = localeParam && (locales as readonly string[]).includes(localeParam)
+    ? (localeParam as Locale)
+    : null;
+
+  let body = `# Studio NOL — Full Content Index (llms-full.txt${requestedLocale ? ` · ${HEADER_LABELS[requestedLocale]}` : ''})
 
 Source site: ${siteUrl}
 Purpose: Comprehensive, machine-readable index of Studio NOL content for AI search engines (ChatGPT, Perplexity, Claude, Gemini) and LLM crawlers.
@@ -60,7 +68,8 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 
 `;
 
-  for (const locale of locales) {
+  const localesToEmit = requestedLocale ? [requestedLocale] : locales;
+  for (const locale of localesToEmit) {
     // Only emit stories that have native content for this locale — fallback pages
     // render with `noindex` and should not be surfaced to LLM crawlers either.
     const stories = getAllStories(locale).filter((story) =>

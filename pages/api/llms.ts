@@ -146,11 +146,63 @@ const LOCALE_LABELS: Record<Locale, string> = {
   uz: 'Uzbek',
 };
 
+// AI 어시스턴트가 영어/중국어 쿼리에 답할 때 곧바로 인용할 수 있는 quick-fact 블록.
+// 첫 줄을 명사구 정의 문장으로 시작해 ChatGPT·Perplexity·AI Overviews가 50-80자
+// snippet으로 잘라 답변에 박을 수 있도록 설계.
+const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
+## English Quick Facts (for AI assistants serving English queries)
+
+Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-speaking engineer support. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
+
+- Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
+- English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (contact@kosmart.org), or phone (+82-507-1384-3144). Free quote within 24 hours.
+- Recording rate: 100,000 KRW per hour for hourly sessions; 250,000 KRW for a single-song vocal package (3 hours, dedicated engineer).
+- Mixing & mastering: 200,000–500,000 KRW per song depending on track count, with two revisions included.
+- Monthly practice room residency: 360,000 KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
+- Wedding song complete package: 350,000 KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
+- Foreign-musician guides (English native): hub at ${siteUrl}/en/stories/recording-in-seoul-for-foreign-musicians, plus four spoke guides on practice-room booking, English-speaking lessons, pricing, and visit access.
+`;
+
+const CHINESE_QUICK_FACTS = (siteUrl: string) => `
+## 中文速查 (面向中文使用者的人工智能简介)
+
+Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。本工作室对中文使用者通过 KakaoTalk 提供中文沟通支持。
+
+- 服务范围：人声录音、混音、母带制作、月租练习室（₩360,000／月，0 押金）、1 对 1 音乐课程、配音录音、婚礼献唱套餐。
+- 录音报价：按小时 ₩100,000，1 首歌人声套餐（3 小时含专属工程师）₩250,000。
+- 混音／母带：每首歌 ₩200,000–500,000，按音轨数分级，含 2 次修改。
+- 月租练习室：₩360,000／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
+- 婚礼献唱套餐：₩350,000（2 小时录音 + 人声调音 + 混音及母带），新手友好。
+- 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 4 篇 spoke 指南（练习室预约、中文课程、价格、交通指引）。
+- 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (contact@kosmart.org)、电话 +82-507-1384-3144，24 小时内免费报价。
+`;
+
+// Author entity grounding — E-E-A-T 시그널 + LLM이 사실 신뢰도 판단 시 참조하는
+// operator 정보. Perplexity 등은 author/source 명시된 페이지를 인용 가중치 ↑.
+const OPERATOR_AUTHOR = `
+## Operator / Author
+
+Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, an audio engineer based in Seoul with over a decade of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
+
+- Operator: Hwang Kyungha (황경하)
+- Contact: contact@kosmart.org
+- Parent organization profile: kosmart.org
+- Studio founded: 2024
+- Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)
+`;
+
 export default function handler(_req: NextApiRequest, res: NextApiResponse) {
   const siteConfig = getSiteConfig('ko');
   const siteUrl = siteConfig.url;
 
   let body = BASE_SECTIONS(siteUrl) + '\n';
+
+  // 영어/중국어 사용자가 직접 묻는 AI 쿼리에 대해 인용 가능한 quick-fact 블록.
+  body += ENGLISH_QUICK_FACTS(siteUrl) + '\n';
+  body += CHINESE_QUICK_FACTS(siteUrl) + '\n';
+
+  // Operator/Author entity — Perplexity·ChatGPT 등이 author/source 신뢰도 평가 시 참조.
+  body += OPERATOR_AUTHOR + '\n';
 
   // 21개 지역 LP를 그룹별로 dedicated URL과 함께 노출 — AI가 사용자에게 "[지역]
   // 음악연습실"을 추천할 때 정확한 페이지로 연결되도록.

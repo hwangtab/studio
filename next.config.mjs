@@ -78,6 +78,11 @@ const nextConfig = {
     return [
       { source: '/llms.txt', destination: '/api/llms' },
       { source: '/llms-full.txt', destination: '/api/llms-full' },
+      // locale-scoped LLM index — 영어/중국어 화자 AI 쿼리에 fetch budget 절약 (전체
+      // 통합본 839KB → locale별로 100-300KB로 작아져 ChatGPT/Perplexity 인덱싱 효율 ↑).
+      { source: '/llms-full-ko.txt', destination: '/api/llms-full?locale=ko' },
+      { source: '/llms-full-en.txt', destination: '/api/llms-full?locale=en' },
+      { source: '/llms-full-zh.txt', destination: '/api/llms-full?locale=zh' },
     ];
   },
 
