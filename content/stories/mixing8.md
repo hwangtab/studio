@@ -16,6 +16,16 @@ faq:
     a: "게인 스테이징 단계에서는 페이더가 아닌 클립 게인(Clip Gain) 또는 입력 게인(Input Gain)을 조절하는 것이 원칙입니다. 페이더는 나중에 밸런스를 잡는 용도로 남겨두어야 믹싱 작업 흐름이 깔끔하게 유지됩니다."
 inlineFallback:
   price: lesson-monthly
+howTo:
+  name: "실전 게인 스테이징 설정 방법"
+  description: "믹싱 시작 전 모든 트랙의 레벨을 점검해 -18dBFS Sweet Spot으로 정렬하는 3단계 절차."
+  steps:
+    - name: "미터기 확인"
+      text: "트랙의 평균 레벨(RMS)이 대략 -18dBFS 근처에서 노는지 확인합니다. 피크는 -10dB ~ -6dB 정도 튀어도 괜찮습니다."
+    - name: "Clip Gain 조절"
+      text: "페이더를 건드리지 말고 오디오 파형 자체의 크기(Clip Gain 또는 Input Gain)를 조절합니다. 너무 큰 파형은 줄여주고, 너무 작은 파형은 키워줍니다."
+    - name: "플러그인 입출력 조절"
+      text: "플러그인을 걸고 나서 소리가 확 커졌다면 플러그인의 Output Gain을 줄여서 걸기 전(Bypass)과 볼륨이 똑같게 맞춥니다. 'Volume in = Volume out' 원칙을 지킵니다."
 ---
 ![아날로그 VU 미터기](/images/hardware5.webp)
 

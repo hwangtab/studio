@@ -16,6 +16,19 @@ faq:
     a: "정해진 정답은 없지만, 드럼은 빨강, 베이스는 파랑, 기타는 초록, 보컬은 보라 등 악기군별로 일관된 색상을 정해두면 수십 개의 트랙에서도 원하는 트랙을 빠르게 찾을 수 있습니다. 한 번 정한 규칙을 모든 프로젝트에 동일하게 적용하는 것이 핵심입니다."
 inlineFallback:
   price: lesson-monthly
+howTo:
+  name: "DAW 믹싱 세션 정리 순서"
+  description: "믹싱을 시작하기 전 세션을 정리하는 4단계 절차. 트랙 네이밍, 색상 코딩, 트랙 순서 정렬, 마커 찍기로 작업 효율을 높입니다."
+  totalTime: "PT30M"
+  steps:
+    - name: "이름 짓기 (Naming)"
+      text: "믹싱 세션을 열자마자 트랙 이름을 바꿉니다. 'Audio 01' → 'Kick In', 'Vox_final_real_v3' → 'Lead Vox' 같이 짧고 명확하게 영어로 작성하고, 중요한 순서대로 번호를 붙입니다."
+    - name: "색칠하기 (Color Coding)"
+      text: "악기군별로 색상 규칙을 정합니다. 빨강은 드럼·퍼커션, 파랑은 베이스, 초록은 기타, 노랑/주황은 신디·브라스, 보라/분홍은 보컬, 회색은 FX·Reverb 같은 국룰을 일관되게 적용합니다."
+    - name: "트랙 순서 정렬 (Order)"
+      text: "악기군별로 트랙을 모읍니다. Drums(Kick → Snare → Hihat → Toms → OH → Room) → Bass → Guitars → Keyboards/Synths → Vocals(Lead → Double → Backing → Adlib) → FX 순서로 정렬합니다."
+    - name: "마커(Marker) 찍기"
+      text: "타임라인 상단에 곡의 구성을 표시하는 마커를 찍습니다. Intro, Verse 1, Chorus 1, Bridge, Outro 등을 표시해 단축키 한 번으로 구간을 점프할 수 있게 합니다."
 ---
 ![어지러운 케이블과 깔끔한 패치베이](/images/service3.webp)
 
