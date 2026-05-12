@@ -26,6 +26,7 @@ faq:
       8,000원부터 제공합니다.
 summary: >-
   베이스 재즈 콤핑·워킹 베이스 라인 고급 기법. Ray Brown·Paul Chambers·Ron Carter 스타일로 은평구 24시간 음악연습실에서 재즈 베이스 완성. 은평구 연신내 24시간 음악연습실에서 베이스 앰프와 방음 부스를 활용해 실전 연습하세요.
+robots: "noindex, follow"
 ---
 ![베이스 재즈 콤핑·워킹 라인 고급 음악연습실 스튜디오 놀](/images/room2.webp)
 

@@ -26,6 +26,7 @@ faq:
       8,000원부터 제공합니다.
 summary: >-
   베이스 썸 테크닉·고급 슬랩 베이스·더블 썸핑. Victor Wooten·Bootsy Collins·Flea 스타일로 은평구 24시간 음악연습실에서 슬랩 베이스 완성. 은평구 연신내 24시간 음악연습실에서 베이스 앰프와 방음 부스를 활용해 실전 연습하세요.
+robots: "noindex, follow"
 ---
 ![베이스 썸 테크닉·슬랩 베이스 고급 음악연습실 스튜디오 놀](/images/room8.webp)
 

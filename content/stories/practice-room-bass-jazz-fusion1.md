@@ -27,6 +27,7 @@ faq:
       8,000원부터 제공합니다.
 summary: >-
   재즈퓨전 베이스·Stanley Clarke·Weather Report·Return to Forever·펑크퓨전. 재즈퓨전 베이스를 은평구 24시간 음악연습실에서 마스터. 은평구 연신내 24시간 음악연습실에서 베이스 앰프와 방음 부스를 활용해 실전 연습하세요.
+robots: "noindex, follow"
 ---
 ![재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일 음악연습실 스튜디오 놀](/images/room3.webp)
 

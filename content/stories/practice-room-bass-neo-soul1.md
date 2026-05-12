@@ -24,6 +24,7 @@ faq:
       8,000원부터 제공합니다.
 summary: >-
   네오소울 베이스·D'Angelo·Erykah Badu·Pino Palladino·레잉 백 그루브. 네오소울 베이스를 은평구 24시간 음악연습실에서 마스터. 은평구 연신내 24시간 음악연습실에서 베이스 앰프와 방음 부스를 활용해 실전 연습하세요.
+robots: "noindex, follow"
 ---
 ![네오소울 베이스·D 음악연습실 스튜디오 놀](/images/room8.webp)
 
