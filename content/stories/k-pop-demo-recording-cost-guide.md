@@ -6,6 +6,21 @@ description: "K-pop 트레이닝/오디션 데모 녹음 비용·절차·곡 선
 keywords: ["K-pop 데모 녹음 비용", "K-pop 오디션 녹음", "한국 보컬 데모 녹음", "데모 녹음 가격", "연신내 데모 녹음"]
 tags: ["k-pop", "demo", "recording", "pricing", "decision-stage"]
 thumbnail: /images/studio2.webp
+howTo:
+  name: "Studio NOL K-pop 데모 녹음 진행 순서"
+  description: "1프로 패키지(3시간) 기준 K-pop 데모 녹음 5단계 흐름"
+  totalTime: "PT3H"
+  steps:
+    - name: "도착 + 워밍업"
+      text: "10-15분간 컨디션 체크, 헤드폰 모니터링 밸런스 조정, 마이크 거리 세팅. Neumann U87Ai와 TLM 103 중 톤에 맞는 마이크를 선택합니다."
+    - name: "MR 셋업 + 1차 테이크"
+      text: "30분간 MR을 Pro Tools에 import하고 한 곡 풀 테이크 1회. 음정·박자·발음을 체크합니다."
+    - name: "본격 녹음 + 리테이크"
+      text: "90분간 구간별로 끊어 녹음. 후렴·벌스·브릿지 순서로 진행하며 SSL Fusion outboard로 즉시 톤을 잡습니다."
+    - name: "보컬 레이어 / Ad-lib"
+      text: "30-45분간 더블링·하모니·애드립 녹음. ProAc 모니터로 음정을 확인합니다."
+    - name: "빠른 가이드 mix + 다음 단계 안내"
+      text: "10분간 러프 mix를 들려드리고 정식 믹싱 일정과 전달 방식을 정리합니다."
 ---
 
 Studio NOL은 서울 은평구 연신내에 위치한 녹음 스튜디오로, K-pop 데모 녹음은 보컬 1프로 패키지(₩250,000, 3시간) 또는 시간당 녹음(₩100,000/시간, 최소 2시간) 옵션이 있고 1곡 데모 + 기본 믹스는 보통 ₩450,000입니다. 이 가이드는 데모 녹음의 비용 시나리오, 트랙 구성, 녹음 당일 흐름, 보컬 레슨과의 조합까지 입문자 관점에서 정리합니다.
