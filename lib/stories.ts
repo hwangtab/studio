@@ -551,18 +551,40 @@ export const isListableStory = (story: Pick<Story, 'slug' | 'categoryKey'>): boo
 export const getRelatedStories = (locale: string, slug: string, limit = 6): Story[] => {
   const all = getAllStories(locale);
   const current = all.find((item) => item.slug === slug);
-  const candidates = all.filter((item) => item.slug !== slug);
+  // PM 회의 #2 보강: doorway/thin 페이지를 related listing에서 제외해 related 슬롯이
+  // 색인되지 않는 페이지로 낭비되지 않도록 차단. isListableStory(region doorway)
+  // + isThinContent gate를 추가 적용.
+  const candidates = all.filter((item) =>
+    item.slug !== slug
+    && isListableStory(item)
+    && !item.isThinContent,
+  );
 
   if (!current) return candidates.slice(0, limit);
 
   const currentTags = new Set(current.tags ?? []);
+  const titleTokenize = (raw: string | undefined): string[] =>
+    (raw || '')
+      .toLowerCase()
+      .split(/[\s·,—\-/|]+/)
+      .filter((w) => w.length >= 2);
+  const currentTitleWords = new Set(titleTokenize(current.title));
   const toTime = (s: Story) => new Date(s.date).getTime() || 0;
+  const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
 
   const scored = candidates
     .map((item) => {
+      // category 일치 weight 강화 (+2 → +3): 같은 인텐트 클러스터 우선 매칭.
+      const categoryMatch = item.categoryKey === current.categoryKey ? 3 : 0;
+      // tag overlap — 기존과 동일하게 각 일치 태그당 +1.
       const tagOverlap = (item.tags ?? []).filter((t) => currentTags.has(t)).length;
-      const categoryMatch = item.categoryKey === current.categoryKey ? 2 : 0;
-      return { item, score: categoryMatch + tagOverlap };
+      // title 단어 overlap (가벼운 weight) — 같은 주제 단어가 제목에 들어간 글을
+      // 추가로 끌어올린다. 단순 카테고리·태그가 둘 다 약할 때 fallback 신호.
+      const titleOverlap = titleTokenize(item.title).filter((w) => currentTitleWords.has(w)).length * 0.5;
+      // 최신 90일 boost — 새 commercial/decision-stage 콘텐츠가 자연스럽게 noted.
+      const recencyBoost = (now - toTime(item)) < NINETY_DAYS_MS ? 1 : 0;
+      return { item, score: categoryMatch + tagOverlap + titleOverlap + recencyBoost };
     })
     .sort((a, b) => b.score - a.score || toTime(b.item) - toTime(a.item));
 
