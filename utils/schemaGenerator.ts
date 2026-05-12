@@ -566,14 +566,71 @@ export const generatePracticeRoomMonthlyRentSchema = (
   const priceValidUntil = new Date();
   priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
 
+  // Localized service name/description per locale. Korean 본문은 KR 검색용 그대로
+  // 유지하고, 그 외 locale은 자연스러운 영어/현지 표현으로 출력해 Google가
+  // /en/practice-room 등 외국어 페이지에서 한글 잔재로 인한 페널티를 받지
+  // 않도록 한다.
+  type ServiceCopy = { name: string; serviceType: string; description: string; offerName: string };
+  const copyByLocale: Record<string, ServiceCopy> = {
+    ko: {
+      name: '음악연습실 월세 입주 — 스튜디오 놀',
+      serviceType: '음악연습실 월세 입주',
+      description:
+        '서울 은평구 연신내역 도보 5분 거리 24시간 음악연습실 월세 입주 프로그램. 보증금 없음, 최소 1개월, 개별 도어록·냉난방·방음 설계 포함.',
+      offerName: '음악연습실 월세 입주 (개인 연습실)',
+    },
+    en: {
+      name: 'Monthly Practice Room Residency — Studio NOL',
+      serviceType: 'Music practice room monthly rental',
+      description:
+        '24/7 soundproof music practice room in Eunpyeong-gu, Seoul — 5 min from Yeonsinnae Station. No deposit, 1-month minimum, private door lock, climate control, and studio-grade acoustic isolation.',
+      offerName: 'Monthly Practice Room Residency (Private Room)',
+    },
+    zh: {
+      name: '音乐练习室月租入住 — Studio NOL',
+      serviceType: '音乐练习室月租',
+      description:
+        '首尔恩平区延新内站步行5分钟，24小时音乐练习室月租入住。无押金，最短1个月，独立门锁、冷暖空调、专业隔音设计。',
+      offerName: '音乐练习室月租入住（个人练习室）',
+    },
+    es: {
+      name: 'Sala de ensayo musical con alquiler mensual — Studio NOL',
+      serviceType: 'Alquiler mensual de sala de ensayo musical',
+      description:
+        'Sala de ensayo musical 24/7 en Eunpyeong-gu, Seúl, a 5 min de la estación Yeonsinnae. Sin depósito, mínimo 1 mes, cerradura privada, climatización y aislamiento acústico profesional.',
+      offerName: 'Alquiler mensual de sala de ensayo (sala privada)',
+    },
+    vi: {
+      name: 'Phòng tập nhạc thuê tháng — Studio NOL',
+      serviceType: 'Cho thuê phòng tập nhạc theo tháng',
+      description:
+        'Phòng tập nhạc cách âm 24/7 ở Eunpyeong-gu, Seoul, 5 phút từ ga Yeonsinnae. Không cọc, thuê tối thiểu 1 tháng, khóa riêng, điều hòa và cách âm chuyên nghiệp.',
+      offerName: 'Phòng tập nhạc thuê tháng (phòng riêng)',
+    },
+    th: {
+      name: 'ห้องซ้อมดนตรีเช่ารายเดือน — Studio NOL',
+      serviceType: 'เช่าห้องซ้อมดนตรีรายเดือน',
+      description:
+        'ห้องซ้อมดนตรีกันเสียง 24 ชม. ใน Eunpyeong-gu กรุงโซล ห่างจากสถานี Yeonsinnae 5 นาที ไม่มีค่ามัดจำ เช่าขั้นต่ำ 1 เดือน มีล็อกประตูส่วนตัว ปรับอุณหภูมิ และกันเสียงระดับสตูดิโอ',
+      offerName: 'ห้องซ้อมดนตรีรายเดือน (ห้องส่วนตัว)',
+    },
+    uz: {
+      name: 'Oylik musiqa mashq xonasi — Studio NOL',
+      serviceType: 'Musiqa mashq xonasi oylik ijarasi',
+      description:
+        '24/7 tovush izolyatsiyali musiqa mashq xonasi, Eunpyeong-gu, Seul, Yeonsinnae bekatidan 5 daqiqa. Depozitsiz, minimal 1 oy, shaxsiy qulf, iqlim nazorati va professional akustik izolyatsiya.',
+      offerName: 'Oylik mashq xonasi (shaxsiy xona)',
+    },
+  };
+  const copy = copyByLocale[locale] ?? copyByLocale.ko;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     '@id': `${pageUrl}#practice-room-monthly-rent`,
-    name: '음악연습실 월세 입주 — 스튜디오 놀',
-    serviceType: '음악연습실 월세 입주',
-    description:
-      '서울 은평구 연신내역 도보 5분 거리 24시간 음악연습실 월세 입주 프로그램. 보증금 없음, 최소 1개월, 개별 도어록·냉난방·방음 설계 포함.',
+    name: copy.name,
+    serviceType: copy.serviceType,
+    description: copy.description,
     provider: {
       '@type': 'LocalBusiness',
       '@id': `${config.url}/#studio`,
@@ -610,7 +667,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
     ],
     offers: {
       '@type': 'Offer',
-      name: '음악연습실 월세 입주 (개인 연습실)',
+      name: copy.offerName,
       price: 360000,
       priceCurrency: 'KRW',
       priceSpecification: {
@@ -618,7 +675,13 @@ export const generatePracticeRoomMonthlyRentSchema = (
         price: 360000,
         priceCurrency: 'KRW',
         unitCode: 'MON',
-        unitText: '월',
+        unitText: locale === 'ko' ? '월'
+          : locale === 'zh' ? '月'
+          : locale === 'es' ? 'mes'
+          : locale === 'vi' ? 'tháng'
+          : locale === 'th' ? 'เดือน'
+          : locale === 'uz' ? 'oy'
+          : 'month',
         referenceQuantity: {
           '@type': 'QuantitativeValue',
           value: 1,

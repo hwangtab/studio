@@ -83,9 +83,9 @@ const homeData = {
   },
   en: {
     seo: {
-      title: "Seoul Recording Studio · Mixing & Mastering | Studio NOL",
-      description: "Seoul recording studio 5 min from Yeonsinnae Station. Wedding songs, voiceovers, mixing & mastering. Professional engineer on-site. From ₩100K/hr.",
-      keywords: "Seoul recording studio, Yeonsinnae recording studio, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, audiobook recording Korea, Studio NOL, Eunpyeong-gu studio"
+      title: "Seoul Recording Studio for International Musicians · Yeonsinnae | Studio NOL",
+      description: "Seoul recording studio with English-speaking engineers, 5 min from Yeonsinnae. Recording, mixing & mastering for international musicians in Korea. From ₩100K/hr.",
+      keywords: "Seoul recording studio, international musicians Korea, Yeonsinnae recording studio, English-speaking engineer, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, Studio NOL, Eunpyeong-gu studio"
     },
     heroContent: {
       titlePrefix: "Breathing",
