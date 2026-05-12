@@ -33,6 +33,7 @@ const NotFoundPage: NextPage = () => {
         description="404 Not Found"
         robots="noindex, nofollow, noarchive, nosnippet"
         disableCanonicalAndAlternates
+        canonical="/404"
       />
 
       <m.div
