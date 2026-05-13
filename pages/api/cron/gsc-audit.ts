@@ -129,10 +129,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     let emailResult: { ok: boolean; status?: number; error?: string } | null = null;
     if (shouldEmail) {
+      // force=1로 호출했고 실제 변동 없으면 monthly-style 종합 리포트로 출력
+      const treatAsMonthly = isMonthlySummary || !previousSnapshot || (forceEmail && !diff.hasMeaningfulChange);
       const { subject, body } = formatDiffReport(
         diff,
         currentSnapshot.date,
-        isMonthlySummary || !previousSnapshot,
+        treatAsMonthly,
         currentSnapshot,
       );
       emailResult = await sendEmail(subject, body);
