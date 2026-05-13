@@ -18,5 +18,11 @@
         { "key": "Content-Type", "value": "text/plain" }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/gsc-audit",
+      "schedule": "0 19 * * *"
+    }
   ]
 }
