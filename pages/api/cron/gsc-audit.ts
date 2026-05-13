@@ -124,11 +124,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 4. 이메일 발송 조건
     const today = new Date();
     const isMonthlySummary = today.getUTCDate() === 1; // 매월 1일(UTC) 무조건 발송
-    const shouldEmail = diff.hasMeaningfulChange || isMonthlySummary || !previousSnapshot;
+    const forceEmail = req.query.force === '1';
+    const shouldEmail = diff.hasMeaningfulChange || isMonthlySummary || !previousSnapshot || forceEmail;
 
     let emailResult: { ok: boolean; status?: number; error?: string } | null = null;
     if (shouldEmail) {
-      const { subject, body } = formatDiffReport(diff, currentSnapshot.date, isMonthlySummary || !previousSnapshot);
+      const { subject, body } = formatDiffReport(
+        diff,
+        currentSnapshot.date,
+        isMonthlySummary || !previousSnapshot,
+        currentSnapshot,
+      );
       emailResult = await sendEmail(subject, body);
     }
 
