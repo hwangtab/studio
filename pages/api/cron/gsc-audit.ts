@@ -129,18 +129,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const diff = diffAudits(previousSnapshot, currentSnapshot);
 
     // 4. 이메일 발송 조건
+    // 주 1회 cron이라 cadence 자체가 filter — cron 실행 시 항상 발송 (smart 조건 제거).
+    // ?dry=1만 발송 스킵 (테스트용).
     const today = new Date();
-    const isMonthlySummary = today.getUTCDate() === 1; // 매월 1일(UTC) 무조건 발송
-    const forceEmail = req.query.force === '1';
-    const shouldEmail = diff.hasMeaningfulChange || isMonthlySummary || !previousSnapshot || forceEmail;
+    const isMonthlySummary = today.getUTCDate() <= 7; // 매월 첫째 주 월요일 = "월간 종합" 라벨
+    const shouldEmail = true; // 주 1회 호출이라 무조건 발송
 
     const dryRun = req.query.dry === '1';
     let emailResult: { ok: boolean; status?: number; error?: string; skipped?: string } | null = null;
     let reportPreview: { subject: string; body: string } | null = null;
 
     if (shouldEmail) {
-      // force=1로 호출했고 실제 변동 없으면 monthly-style 종합 리포트로 출력
-      const treatAsMonthly = isMonthlySummary || !previousSnapshot || (forceEmail && !diff.hasMeaningfulChange);
+      // 변동 없으면 monthly-style 종합 리포트(전체 분포 + 클러스터 breakdown + Top KEEP)
+      const treatAsMonthly = isMonthlySummary || !previousSnapshot || !diff.hasMeaningfulChange;
       const report = formatDiffReport(
         diff,
         currentSnapshot.date,
