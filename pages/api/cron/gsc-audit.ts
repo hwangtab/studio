@@ -19,11 +19,18 @@ const EMAIL_TO = 'hwangtab@gmail.com';
 const EMAILJS_ENDPOINT = 'https://api.emailjs.com/api/v1.0/email/send';
 
 async function loadLatestSnapshot(): Promise<AuditSnapshot | null> {
-  // private store - list로 최신 latest.json blob URL 조회 후 fetch
+  // private store: list로 blob URL 확보, BLOB_READ_WRITE_TOKEN으로 fetch 인증
   const { blobs } = await list({ prefix: BLOB_LATEST_PATH, limit: 1 });
   if (blobs.length === 0) return null;
-  const res = await fetch(blobs[0].downloadUrl);
-  if (!res.ok) return null;
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) return null;
+  const res = await fetch(blobs[0].downloadUrl, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    console.error('[loadLatestSnapshot] fetch failed', res.status, await res.text().catch(() => ''));
+    return null;
+  }
   return (await res.json()) as AuditSnapshot;
 }
 
