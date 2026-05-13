@@ -112,6 +112,12 @@ const SEO = ({
   // Clean up double slashes if any (e.g. root path)
   if (pathWithoutLocale === '//') pathWithoutLocale = '/';
 
+  // 비-ko locale은 자동 noindex. 90일 GSC: /en·/es·/vi·/th·/uz·/zh 합계 5 clicks /
+  // 803 impressions / CTR 0.62%. 검색 트래픽 거의 0인 152개 페이지가 인덱싱 풀에
+  // 남아 사이트 전체 품질 시그널을 끌어내려 차단. hreflang은 유지해 ko 페이지의
+  // 다국어 alternate 정보는 보존.
+  const effectiveRobots = currentLocale === defaultLocale ? robots : 'noindex, follow';
+
   const toAbsoluteUrl = (value = '') => {
     if (!value) return '';
     if (/^https?:\/\//i.test(value)) {
@@ -338,7 +344,7 @@ const SEO = ({
       <meta name="description" content={resolvedDescription} />
       <meta name="keywords" content={resolvedKeywords} />
       <meta name="author" content={resolvedAuthor} />
-      <meta name="robots" content={robots} />
+      <meta name="robots" content={effectiveRobots} />
 
       {/* geo meta는 ko locale에서만 emit — 다른 locale URL에 KR-11을 박으면 다국어 SERP가
           잘못된 region targeting을 받아 외국 시장 노출이 약해진다. ICBM/geo.position은
@@ -358,9 +364,13 @@ const SEO = ({
 
       {/* Hreflang tags for SEO.
           Limit to locales that actually have native content to avoid directing Google
-          at fallback-noindex pages (e.g. stories without full translations). */}
+          at fallback-noindex pages (e.g. stories without full translations).
+          또한 비-ko locale은 site-wide noindex 상태이므로(SEO 정책 — effectiveRobots 참고)
+          hreflang alternate에서도 제외 — Google 가이드: hreflang은 indexable URL만 가리켜야
+          모순 시그널이 안 생긴다. */}
       {shouldRenderAlternates && (
         locales
+          .filter((locale) => locale === defaultLocale)
           .filter((locale) => !availableLocales || availableLocales.includes(locale))
           .map((locale) => (
             <link

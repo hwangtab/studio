@@ -127,43 +127,38 @@ module.exports = {
     const results = [];
     const slugList = Array.from(slugs);
 
+    // 비-ko locale은 site-wide noindex 정책이라 sitemap에는 ko entry만 등록.
+    // (components/SEO.tsx의 effectiveRobots, transform의 locale !== 'ko' 가드와 일관.)
+    const locale = 'ko';
+
     // Story category hub pages — pages/[locale]/stories/category/[key].tsx와 동기화.
-    for (const locale of LOCALES) {
-      for (const key of STORY_CATEGORY_KEYS) {
-        const routePath = `/${locale}/stories/category/${key}`;
-        results.push({
-          loc: routePath,
-          lastmod: getCategoryLastmod(key, slugList, locale) || buildTimestamp,
-          changefreq: 'weekly',
-          priority: 0.7,
-          alternateRefs: getAlternateRefs(routePath),
-        });
-      }
+    for (const key of STORY_CATEGORY_KEYS) {
+      const routePath = `/${locale}/stories/category/${key}`;
+      results.push({
+        loc: routePath,
+        lastmod: getCategoryLastmod(key, slugList, locale) || buildTimestamp,
+        changefreq: 'weekly',
+        priority: 0.7,
+        alternateRefs: getAlternateRefs(routePath),
+      });
     }
     for (const slug of slugs) {
       // 308 redirect 대상은 sitemap에서 제외 (next.config.mjs가 광역 허브로 보냄).
       if (REDIRECTED_SLUGS.has(slug)) continue;
-      for (const locale of LOCALES) {
-        // locale 전용 파일이 없으면 fallback noindex 페이지가 되므로 sitemap 제외.
-        if (locale !== 'ko') {
-          const localeFilePath = path.join(storiesDir, `${slug}.${locale}.md`);
-          if (!fs.existsSync(localeFilePath)) continue;
-        }
-        // Thin-content quality gate.
-        if (isStoryThin(slug, locale)) continue;
+      // Thin-content quality gate.
+      if (isStoryThin(slug, locale)) continue;
 
-        const routePath = `/${locale}/stories/${slug}`;
-        const image = buildStoryImage(slug, locale);
-        const images = image ? [image] : [];
-        results.push({
-          loc: routePath,
-          lastmod: getStoryLastmod(slug, locale) || new Date().toISOString(),
-          changefreq: 'weekly',
-          priority: 0.8,
-          alternateRefs: getAlternateRefs(routePath),
-          ...(images.length > 0 && { images }),
-        });
-      }
+      const routePath = `/${locale}/stories/${slug}`;
+      const image = buildStoryImage(slug, locale);
+      const images = image ? [image] : [];
+      results.push({
+        loc: routePath,
+        lastmod: getStoryLastmod(slug, locale) || new Date().toISOString(),
+        changefreq: 'weekly',
+        priority: 0.8,
+        alternateRefs: getAlternateRefs(routePath),
+        ...(images.length > 0 && { images }),
+      });
     }
     return results;
   },
@@ -178,6 +173,13 @@ module.exports = {
     const pathWithoutLocale = LOCALES.includes(maybeLocale)
       ? `/${segments.slice(1).join('/') || 'index'}`
       : routePath;
+
+    // 비-ko 페이지는 sitemap에서 전면 제외. SEO 컴포넌트가 noindex을 부여하므로
+    // sitemap 등록은 모순 신호. 90일 GSC에서 비-ko 152페이지 합계 5 clicks /
+    // CTR 0.62%로 검색 트래픽 사실상 없어 인덱싱 풀 정리.
+    if (locale !== 'ko') {
+      return null;
+    }
 
     // Determine image for this route.
     let images = [];

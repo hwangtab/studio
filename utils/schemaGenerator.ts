@@ -164,8 +164,6 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
-        // 일요일은 entry를 제거해 "closed" 의미를 정확히 표현. 일부 schema validator가
-        // opens=closes="00:00"을 24시간 영업으로 오해해서 잘못된 OpeningHours를 surface.
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
@@ -175,7 +173,7 @@ export const generateDefaultSchema = (
           },
           {
             '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Saturday'],
+            dayOfWeek: ['Saturday', 'Sunday'],
             opens: '12:00',
             closes: '18:00',
           },
