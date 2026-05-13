@@ -31,14 +31,14 @@ async function saveSnapshot(snapshot: AuditSnapshot): Promise<void> {
   const body = JSON.stringify(snapshot);
   // latest는 매번 동일 경로에 overwrite (addRandomSuffix: false + allowOverwrite)
   await put(BLOB_LATEST_PATH, body, {
-    access: 'public', // private store는 'access' field 필요. URL은 signed/scoped.
+    access: 'private',
     contentType: 'application/json',
     addRandomSuffix: false,
     allowOverwrite: true,
   });
   // history는 날짜별 (1개 = 1 day)
   await put(`${BLOB_HISTORY_PREFIX}${snapshot.date}.json`, body, {
-    access: 'public',
+    access: 'private',
     contentType: 'application/json',
     addRandomSuffix: false,
     allowOverwrite: true,
