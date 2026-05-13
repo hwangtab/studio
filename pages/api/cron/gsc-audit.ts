@@ -134,17 +134,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const forceEmail = req.query.force === '1';
     const shouldEmail = diff.hasMeaningfulChange || isMonthlySummary || !previousSnapshot || forceEmail;
 
-    let emailResult: { ok: boolean; status?: number; error?: string } | null = null;
+    const dryRun = req.query.dry === '1';
+    let emailResult: { ok: boolean; status?: number; error?: string; skipped?: string } | null = null;
+    let reportPreview: { subject: string; body: string } | null = null;
+
     if (shouldEmail) {
       // force=1로 호출했고 실제 변동 없으면 monthly-style 종합 리포트로 출력
       const treatAsMonthly = isMonthlySummary || !previousSnapshot || (forceEmail && !diff.hasMeaningfulChange);
-      const { subject, body } = formatDiffReport(
+      const report = formatDiffReport(
         diff,
         currentSnapshot.date,
         treatAsMonthly,
         currentSnapshot,
       );
-      emailResult = await sendEmail(subject, body);
+      if (dryRun) {
+        // dry=1: EmailJS 호출·전송 안 함, 본문 응답에 포함해 미리보기만
+        emailResult = { ok: true, skipped: 'dry-run' };
+        reportPreview = report;
+      } else {
+        emailResult = await sendEmail(report.subject, report.body);
+      }
     }
 
     // 5. Blob 저장 (latest + history by date)
@@ -162,8 +171,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       diffReasons: diff.reasons,
       isMonthlySummary,
       hadPrevious: Boolean(previousSnapshot),
-      emailSent: shouldEmail,
+      emailSent: shouldEmail && !dryRun,
       emailResult,
+      ...(reportPreview ? { reportPreview } : {}),
     });
   } catch (err) {
     console.error('[cron/gsc-audit] failed:', err);
