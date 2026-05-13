@@ -9,7 +9,6 @@
 //          EMAILJS_SERVICE_ID/TEMPLATE_ID/PUBLIC_KEY/PRIVATE_KEY, KV_REST_API_URL/TOKEN
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import path from 'node:path';
 import { kv } from '@vercel/kv';
 import { runAudit, type AuditSnapshot } from '../../../lib/seo/gscAudit';
 import { diffAudits, formatDiffReport } from '../../../lib/seo/gscDiff';
@@ -87,8 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 1. Audit 실행
     const auth = getOAuthCreds();
     const siteUrl = process.env.GSC_SITE_URL || 'sc-domain:studionol.co.kr';
-    const storiesDir = path.join(process.cwd(), 'content/stories');
-    const currentSnapshot = await runAudit({ storiesDir, siteUrl, windowDays: 90, auth });
+    const currentSnapshot = await runAudit({ siteUrl, windowDays: 90, auth });
 
     // 2. 이전 스냅샷 로드
     const previousSnapshot = await kv.get<AuditSnapshot>(KV_LATEST_KEY);

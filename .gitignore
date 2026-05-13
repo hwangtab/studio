@@ -37,6 +37,7 @@ tsconfig.tsbuildinfo
 reports/
 table-check.png
 lib/portfolio-meta.json
+lib/story-catalog.json
 
 # git worktrees (design renewal etc.)
 .worktrees/

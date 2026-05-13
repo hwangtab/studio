@@ -6,10 +6,10 @@
 //   WATCH_LOW        — 클릭 0, 임프레션 1-9
 //   NOINDEX_CANDIDATE — 클릭 0, 임프레션 0
 
-import fs from 'node:fs';
-import path from 'node:path';
-import matter from 'gray-matter';
 import { google } from 'googleapis';
+// 빌드 타임 생성된 story catalog manifest (scripts/generate-story-catalog.js).
+// 1,569개 .md 런타임 fs 읽기 회피 - Vercel Function 번들에 자동 포함됨.
+import storyCatalog from '../story-catalog.json';
 
 export type ClusterName = 'city-ktx-visit' | 'seoul-district-studio' | 'practice-room-station' | 'other';
 export type Tier = 'KEEP' | 'WATCH' | 'WATCH_LOW' | 'NOINDEX_CANDIDATE';
@@ -49,13 +49,6 @@ const PSEO_CLUSTERS: ReadonlySet<ClusterName> = new Set([
   'practice-room-station',
 ]);
 
-function classifyCluster(title: string): ClusterName {
-  if (/^.+에서 서울 녹음실 방문 가이드/.test(title)) return 'city-ktx-visit';
-  if (/구 .+ 녹음실/.test(title) && /연신내/.test(title)) return 'seoul-district-studio';
-  if (/음악연습실/.test(title) && /(정거장|월\s*\d+만원)/.test(title)) return 'practice-room-station';
-  return 'other';
-}
-
 function computeTier(clicks: number, impressions: number): Tier {
   if (clicks >= 1) return 'KEEP';
   if (impressions >= 10) return 'WATCH';
@@ -63,21 +56,16 @@ function computeTier(clicks: number, impressions: number): Tier {
   return 'NOINDEX_CANDIDATE';
 }
 
-export function loadStoryCatalog(storiesDir: string): Array<{ slug: string; title: string; contentLen: number; cluster: ClusterName }> {
-  const files = fs.readdirSync(storiesDir).filter((f) =>
-    f.endsWith('.md') && !/\.(en|zh|es|vi|th|uz)\.md$/.test(f)
-  );
-  return files.map((f) => {
-    const raw = fs.readFileSync(path.join(storiesDir, f), 'utf-8');
-    const { data, content } = matter(raw);
-    const title = (data.title as string) || '';
-    return {
-      slug: f.replace(/\.md$/, ''),
-      title,
-      contentLen: content.length,
-      cluster: classifyCluster(title),
-    };
-  });
+export interface StoryCatalogEntry {
+  slug: string;
+  title: string;
+  contentLen: number;
+  cluster: ClusterName;
+}
+
+export function loadStoryCatalog(): StoryCatalogEntry[] {
+  // 빌드 시점 manifest 사용. classify 로직은 generator 측에 위치.
+  return (storyCatalog as { entries: StoryCatalogEntry[] }).entries;
 }
 
 function urlToSlug(url: string): string | null {
@@ -148,12 +136,11 @@ export async function fetchGscPageMetrics(opts: {
 }
 
 export async function runAudit(opts: {
-  storiesDir: string;
   siteUrl: string;
   windowDays: number;
   auth: GscAuth;
 }): Promise<AuditSnapshot> {
-  const catalog = loadStoryCatalog(opts.storiesDir);
+  const catalog = loadStoryCatalog();
   const { rowCount, slugMetrics } = await fetchGscPageMetrics({
     siteUrl: opts.siteUrl,
     windowDays: opts.windowDays,
