@@ -38,9 +38,10 @@ function indexBySlug(pages: PageEntry[]): Map<string, PageEntry> {
 export function diffAudits(prev: AuditSnapshot | null, curr: AuditSnapshot): AuditDiff {
   const reasons: string[] = [];
 
-  // pSEO 페이지만 추출
-  const currPseo = curr.pages.filter((p) => PSEO_CLUSTERS.has(p.cluster as any));
-  const prevPseo = prev ? prev.pages.filter((p) => PSEO_CLUSTERS.has(p.cluster as any)) : [];
+  // pSEO 페이지만 추출. PSEO_CLUSTERS는 'other' 제외한 ClusterName subset이라 타입 좁힘.
+  const isPseo = (cluster: string): boolean => (PSEO_CLUSTERS as ReadonlySet<string>).has(cluster);
+  const currPseo = curr.pages.filter((p) => isPseo(p.cluster));
+  const prevPseo = prev ? prev.pages.filter((p) => isPseo(p.cluster)) : [];
 
   const prevBySlug = indexBySlug(prevPseo);
 
