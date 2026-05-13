@@ -32,6 +32,7 @@ faq:
     a: >-
       카카오톡 오픈채팅(open.kakao.com/me/nol) 또는 전화 0507-1384-3144로 공실 확인 후 무료 방문 견학을 예약하세요.
       6개월 계약 시 첫 달 50% 할인 진행 중입니다.
+robots: 'noindex, follow'
 ---
 
 ![삼송 음악연습실 스튜디오 놀](/images/room5.webp)

@@ -27,6 +27,7 @@ faq:
     a: >-
       가능합니다. 현지 녹음 파일을 WAV로 녹음 후 구글 드라이브·WeTransfer로 전송하면 스튜디오 놀에서 믹싱·마스터링 후 완성
       파일로 납품합니다.
+robots: 'noindex, follow'
 ---
 ![의왕에서 서울 녹음실 방문 가이드 — 스튜디오 놀](/images/recording6.webp)
 
