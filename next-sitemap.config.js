@@ -90,11 +90,17 @@ module.exports = {
       { userAgent: 'anthropic-ai', allow: '/' },
       // Perplexity
       { userAgent: 'PerplexityBot', allow: '/' },
+      // Perplexity 사용자 fetch 봇 (검색 답변 시 실시간 fetch)
+      { userAgent: 'Perplexity-User', allow: '/' },
       // Meta
       { userAgent: 'FacebookBot', allow: '/' },
       { userAgent: 'Meta-ExternalAgent', allow: '/' },
       // Apple
       { userAgent: 'Applebot', allow: '/' },
+      // Apple Intelligence (별도 봇 — Applebot은 Siri/Spotlight, Applebot-Extended는 AI 학습)
+      { userAgent: 'Applebot-Extended', allow: '/' },
+      // ByteDance / TikTok AI
+      { userAgent: 'Bytespider', allow: '/' },
       // Amazon
       { userAgent: 'Amazonbot', allow: '/' },
       // Cohere AI

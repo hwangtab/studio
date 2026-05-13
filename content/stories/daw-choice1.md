@@ -23,9 +23,17 @@ faq:
 
 ## DAW, 왜 선택이 중요한가
 
+결론부터 — **K-pop·발라드·OST·밴드 음악**이면 **Cubase**(한국 방송·음대 표준, Windows/macOS 모두 가능, Pro 약 ₩900,000), **Mac 사용자의 입문·작곡 올인원**이면 **Logic Pro**(₩290,000 일시불·평생 업데이트, 내장 악기 100+), **EDM·힙합·라이브 퍼포먼스**면 **Ableton Live**(Session View 클립 기반, Intro 무료 / Suite 약 ₩900,000). 세 DAW 모두 무료 평가판 제공. 선택 기준은 OS·장르·라이브 여부 세 가지로 좁혀집니다. 5분 안에 결정하고 싶다면 [5분 자가진단](#5분-만에-끝내는-daw-자가진단)으로.
+
+> **Key Takeaways**
+> - **OS가 먼저**: Mac 한정이면 Logic Pro가 가성비 최고(₩290,000 일시불). Windows면 Logic 불가 → Cubase 또는 Ableton.
+> - **장르가 두 번째**: 밴드·OST·MIDI 정밀 편집 → **Cubase**. 팝·R&B·작곡 올인원 → **Logic Pro**. EDM·힙합·라이브 → **Ableton Live**.
+> - **한국 시장 현실**: 방송사·실용음악과·세션 협업 환경에서는 **Cubase가 사실상 표준**. 다른 DAW를 써도 결국 큐베이스 호환 파일을 받게 됩니다.
+> - **DAW는 갈아타기 어렵습니다**: 1년차에 두세 개 동시 시도는 비추천. 하나를 3개월 집중해 곡 5~10곡 완성하는 게 가장 빠른 길.
+
 DAW(Digital Audio Workstation)는 음악을 만들고, 녹음하고, 믹싱하는 데 쓰는 소프트웨어입니다. 어떤 DAW를 쓰느냐에 따라 작업 방식, 학습 곡선, 비용이 달라집니다. 한 번 익숙해지면 쉽게 바꾸기 어렵기 때문에 처음 선택이 중요합니다.
 
-DAW의 역사는 1980년대 초 디지털 오디오 기술의 등장과 함께 시작됩니다. 1989년 Steinberg가 Cubase를 출시하면서 MIDI 시퀀싱 기반 DAW의 시대가 열렸고, 1990년 Digidesign(현 Avid)의 Pro Tools가 오디오 레코딩 표준을 정의했습니다. Logic은 1993년 독일 Notator Logic으로 출발해 2002년 Apple에 인수되면서 macOS 전용 최강 DAW로 자리잡았습니다. Ableton Live는 2001년 등장해 라이브 퍼포먼스와 비트 제작의 패러다임을 완전히 바꿨습니다. 현재 전 세계 상업 스튜디오에서는 Pro Tools, 홈 스튜디오에서는 Logic Pro와 Ableton이 가장 많이 사용되며, 한국 방송·음대에서는 Cubase가 표준에 가깝습니다.
+DAW의 역사는 1980년대 디지털 오디오 기술의 등장과 함께 시작됩니다. **1989년 Steinberg가 Atari ST용 Cubase를 출시**([Cubase — Wikipedia](https://en.wikipedia.org/wiki/Cubase) · [Sound on Sound: Karl Steinberg 인터뷰](https://www.soundonsound.com/people/karl-steinberg-cubase-computers))하면서 MIDI 시퀀싱 기반 DAW의 시대가 열렸고, **1989년 1월 Digidesign이 Mac용 Sound Tools를 내놓은 뒤 1990년 Pro Tools로 멀티트랙 디지털 녹음 표준을 정의**([Pro Tools — Wikipedia](https://en.wikipedia.org/wiki/Pro_Tools) · [MusicRadar: A brief history of Pro Tools](https://www.musicradar.com/tuition/tech/a-brief-history-of-pro-tools-452963))했습니다. Logic은 1992년 독일 Emagic의 Notator Logic으로 시작해 **2002년 7월 1일 Apple이 Emagic을 인수**([Apple Newsroom: Apple Acquires Emagic, 2002-07-01](https://www.apple.com/newsroom/2002/07/01Apple-Acquires-Emagic/) · [Logic Pro — Wikipedia](https://en.wikipedia.org/wiki/Logic_Pro))하면서 macOS 전용 최강 DAW로 자리잡았습니다. Ableton Live는 **2001년 10월 30일 베를린에서 Gerhard Behles·Robert Henke·Bernd Roggendorf 세 사람이 출시**([Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20))해 라이브 퍼포먼스와 비트 제작의 패러다임을 바꿨습니다. 현재 전 세계 상업 스튜디오에서는 Pro Tools, 홈 스튜디오에서는 Logic Pro와 Ableton이 가장 많이 사용되며, 한국 방송·음대에서는 Cubase가 표준에 가깝습니다.
 
 가장 많이 비교되는 세 가지 DAW — 큐베이스, 로직 프로, 에이블톤 라이브를 현실적으로 비교해 보겠습니다.
 
@@ -586,6 +594,17 @@ MIDI 파일이 교환되면 상대방은 자기 DAW의 가상악기로 재현해
 그런데도 정말 지겨워지고 워크플로우가 안 맞는다는 감각이 든다면, 그때가 갈아탈 시기예요. 앞 섹션의 "DAW 갈아타는 법"을 보세요. 2주~1개월 적응기로 충분해요. 단, 갈아탈 때 **이전 프로젝트는 다 스템으로 바운스해 아카이브**하세요. 나중에 리믹스나 재발매할 때 꼭 필요해요.
 
 결국 DAW는 도구예요. 지겨워지는 게 문제가 아니라, **곡을 완성하지 못하는 게** 문제예요. 도구 탓하는 시간에 한 곡이라도 더 끝내는 게 실력을 올리는 가장 확실한 길이에요.
+
+---
+
+## 출처
+
+- Cubase 1989년 Atari ST 출시 (Steinberg, Hamburg): [Cubase — Wikipedia](https://en.wikipedia.org/wiki/Cubase) · [Sound on Sound: Karl Steinberg Cubase & Computers](https://www.soundonsound.com/people/karl-steinberg-cubase-computers) · [MusicRadar: A brief history of Steinberg Cubase](https://www.musicradar.com/tuition/tech/a-brief-history-of-steinberg-cubase-406132)
+- Pro Tools 1990년 출시 (Digidesign, 현 Avid): [Pro Tools — Wikipedia](https://en.wikipedia.org/wiki/Pro_Tools) · [MusicRadar: A brief history of Pro Tools](https://www.musicradar.com/tuition/tech/a-brief-history-of-pro-tools-452963)
+- Apple의 Emagic 인수 (2002년 7월 1일): [Apple Newsroom — Apple Acquires Emagic](https://www.apple.com/newsroom/2002/07/01Apple-Acquires-Emagic/) · [Logic Pro — Wikipedia](https://en.wikipedia.org/wiki/Logic_Pro) · [Sound on Sound: Apple's Emagic Takeover](https://www.soundonsound.com/music-business/apples-emagic-takeover)
+- Ableton Live 2001년 10월 30일 베를린 출시 (Behles·Henke·Roggendorf): [Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20) · [MusicRadar: Robert Henke 인터뷰 — Ableton Live origins](https://www.musicradar.com/news/ableton-live-origins-robert-henke)
+
+본 가이드는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 10년간 진행한 녹음·믹싱 세션 경험과 위 공개 자료를 결합해 작성했습니다. 가격·기능 표기는 2026년 5월 기준이며, 각 DAW 공식 사이트(Steinberg·Apple·Ableton)에서 최신 정보를 확인하시기 바랍니다. 한국 시장 동향("방송·음대에서 Cubase가 표준") 진술은 국내 음악 산업 현장의 1차 관찰에 기반하며 공식 시장 조사 통계가 아닙니다.
 
 ---
 

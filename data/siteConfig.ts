@@ -10,6 +10,22 @@ export const socialProfiles = {
   twitter: '',
 };
 
+// 사이트 운영자 정보 — JSON-LD Person.author와 article:author 메타에 사용.
+// GEO에서 AI 엔진(ChatGPT/Claude/Perplexity)은 author.name + sameAs를 entity 단서로
+// 강하게 활용하므로 Organization name이 아닌 실제 운영자 이름을 명시해야 cite 받음.
+export const studioOperator = {
+  name: '황경하',
+  jobTitleByLocale: {
+    ko: '음악 프로듀서 · 엔지니어',
+    en: 'Music Producer · Engineer',
+    zh: '音乐制作人 · 工程师',
+    es: 'Productor Musical · Ingeniero',
+    vi: 'Nhà Sản Xuất Âm Nhạc · Kỹ Sư',
+    th: 'โปรดิวเซอร์เพลง · วิศวกร',
+    uz: 'Musiqa Prodyuseri · Muhandis',
+  } as Record<string, string>,
+};
+
 // Translation helper
 const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => {
   return dict[locale] || dict['en'] || dict['ko'];

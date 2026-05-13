@@ -13,7 +13,7 @@ import {
   generateWebPageSchema,
 } from '../utils/schemaGenerator';
 import { defaultLocale, hreflangByLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
-import { getSeoDefaults, getSiteConfig, socialProfiles } from '../data/siteConfig';
+import { getSeoDefaults, getSiteConfig, socialProfiles, studioOperator } from '../data/siteConfig';
 
 interface SEOProps {
   title?: string;
@@ -130,7 +130,13 @@ const SEO = ({
   const resolvedTitle = title || seoDefaults.title;
   const resolvedDescription = description || seoDefaults.description;
   const resolvedKeywords = keywords || seoDefaults.keywords;
-  const resolvedAuthor = author || siteConfig.name;
+  // Author 메타는 JSON-LD Author와 일관. 명시적 author prop이 없고 siteConfig.name(조직)
+  // fallback이 되는 경우 실제 운영자 이름으로 매핑해 entity 시그널 일관성 유지.
+  const resolvedAuthor = author || studioOperator.name;
+  // articleAuthor 또한 organization name이면 운영자 Person으로 매핑 — article:author /
+  // twitter:creator 등 OG·Twitter 메타가 JSON-LD와 동일 entity 가리키도록.
+  const effectiveArticleAuthor =
+    !articleAuthor || articleAuthor === siteConfig.name ? studioOperator.name : articleAuthor;
 
   const absoluteOgImage = toAbsoluteUrl(ogImage);
 
@@ -433,8 +439,8 @@ const SEO = ({
       {ogType === 'article' && articleModifiedTime && (
         <meta property="og:updated_time" content={articleModifiedTime} />
       )}
-      {ogType === 'article' && articleAuthor && (
-        <meta property="article:author" content={articleAuthor} />
+      {ogType === 'article' && (
+        <meta property="article:author" content={effectiveArticleAuthor} />
       )}
       {ogType === 'article' && articleSection && (
         <meta property="article:section" content={articleSection} />
@@ -450,12 +456,12 @@ const SEO = ({
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content={ogImageAlt || resolvedTitle} />
-      {articleAuthor && <meta name="twitter:creator" content={articleAuthor} />}
-      {ogType === 'article' && articleAuthor && (
+      <meta name="twitter:creator" content={effectiveArticleAuthor} />
+      {ogType === 'article' && (
         <meta name="twitter:label1" content={currentLocale === 'ko' ? '작성자' : 'Written by'} />
       )}
-      {ogType === 'article' && articleAuthor && (
-        <meta name="twitter:data1" content={articleAuthor} />
+      {ogType === 'article' && (
+        <meta name="twitter:data1" content={effectiveArticleAuthor} />
       )}
       {ogType === 'article' && articleSection && (
         <meta name="twitter:label2" content={currentLocale === 'ko' ? '카테고리' : 'Category'} />

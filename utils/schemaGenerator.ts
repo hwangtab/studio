@@ -1,6 +1,6 @@
 import { Breadcrumb, FAQItem, ReviewItem } from '../types/data';
 import { type Locale } from '../lib/i18n';
-import { getSiteConfig, socialProfiles } from '../data/siteConfig';
+import { getSiteConfig, socialProfiles, studioOperator } from '../data/siteConfig';
 import { getReviews } from '../data/reviews';
 
 const OFFER_CATALOG_NAMES: Record<Locale, string> = {
@@ -387,12 +387,12 @@ export const generateArticleSchema = (
   const organizationId = `${siteUrl}/#organization`;
   const websiteId = `${siteUrl}/#website`;
 
-  // Author E-E-A-T 보강: 사이트 본인 명의(스튜디오 놀)인 경우 brand authority 신호로
-  // sameAs(SNS)·worksFor(Organization @id) 연결을 추가한다. 외부 기고자(articleAuthor가
-  // 명시되고 config.name과 다른 경우)는 단순 Person으로 유지해 잘못된 affiliation 시그널을
-  // 보내지 않는다.
-  const authorName = articleAuthor || config.name;
+  // Author E-E-A-T 보강: 사이트 본인 명의 글은 실제 운영자(Person)로 author entity 명시.
+  // GEO에서 ChatGPT/Claude는 author.name + sameAs를 entity 단서로 강하게 사용 — Organization
+  // name을 Person.name에 박으면 entity resolution이 안 됨. 외부 기고자(articleAuthor가
+  // config.name과 다른 경우)는 단순 Person으로 유지해 잘못된 affiliation 시그널을 피한다.
   const isStudioAuthor = !articleAuthor || articleAuthor === config.name;
+  const authorName = isStudioAuthor ? studioOperator.name : articleAuthor!;
   const authorSameAs = Object.values(socialProfiles).filter(
     (url): url is string => typeof url === 'string' && url.trim() !== ''
   );
@@ -400,6 +400,7 @@ export const generateArticleSchema = (
     ? {
         '@type': 'Person',
         name: authorName,
+        jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
         url: `${siteUrl}/${locale}/about`,
         ...(authorSameAs.length > 0 && { sameAs: authorSameAs }),
         worksFor: {
