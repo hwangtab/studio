@@ -205,13 +205,10 @@ async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
         }
     }
 
-    if (process.env.NODE_ENV === 'production') {
-        console.error('[Rate Limit] Vercel KV is not configured in production. Failing closed.');
-        throw new Error('RATE_LIMIT_UNAVAILABLE');
-    }
-
+    // KV 비활성화 시 in-memory fallback. 저트래픽 사이트에서 region-local 카운터로 충분.
     if (!hasLoggedMemoryFallback) {
-        console.warn('[Rate Limit] Vercel KV not configured. Using in-memory limiter fallback.');
+        const where = process.env.NODE_ENV === 'production' ? 'production' : 'dev';
+        console.warn(`[Rate Limit] Vercel KV not configured (${where}). Using in-memory limiter fallback.`);
         hasLoggedMemoryFallback = true;
     }
 

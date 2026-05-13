@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@vercel/analytics": "1.6.1",
+    "@vercel/blob": "^2.3.3",
     "@vercel/kv": "^3.0.0",
     "@vercel/og": "^0.11.1",
     "@vercel/speed-insights": "^2.0.0",

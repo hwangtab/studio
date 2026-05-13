@@ -9,14 +9,41 @@
 //          EMAILJS_SERVICE_ID/TEMPLATE_ID/PUBLIC_KEY/PRIVATE_KEY, KV_REST_API_URL/TOKEN
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { kv } from '@vercel/kv';
+import { put, list } from '@vercel/blob';
 import { runAudit, type AuditSnapshot } from '../../../lib/seo/gscAudit';
 import { diffAudits, formatDiffReport } from '../../../lib/seo/gscDiff';
 
-const KV_LATEST_KEY = 'gsc:audit:latest';
-const KV_HISTORY_PREFIX = 'gsc:audit:history:';
+const BLOB_LATEST_PATH = 'gsc/latest.json';
+const BLOB_HISTORY_PREFIX = 'gsc/history/'; // gsc/history/2026-05-13.json
 const EMAIL_TO = 'hwangtab@gmail.com';
 const EMAILJS_ENDPOINT = 'https://api.emailjs.com/api/v1.0/email/send';
+
+async function loadLatestSnapshot(): Promise<AuditSnapshot | null> {
+  // private store - list로 최신 latest.json blob URL 조회 후 fetch
+  const { blobs } = await list({ prefix: BLOB_LATEST_PATH, limit: 1 });
+  if (blobs.length === 0) return null;
+  const res = await fetch(blobs[0].downloadUrl);
+  if (!res.ok) return null;
+  return (await res.json()) as AuditSnapshot;
+}
+
+async function saveSnapshot(snapshot: AuditSnapshot): Promise<void> {
+  const body = JSON.stringify(snapshot);
+  // latest는 매번 동일 경로에 overwrite (addRandomSuffix: false + allowOverwrite)
+  await put(BLOB_LATEST_PATH, body, {
+    access: 'public', // private store는 'access' field 필요. URL은 signed/scoped.
+    contentType: 'application/json',
+    addRandomSuffix: false,
+    allowOverwrite: true,
+  });
+  // history는 날짜별 (1개 = 1 day)
+  await put(`${BLOB_HISTORY_PREFIX}${snapshot.date}.json`, body, {
+    access: 'public',
+    contentType: 'application/json',
+    addRandomSuffix: false,
+    allowOverwrite: true,
+  });
+}
 
 function isAuthorized(req: NextApiRequest): boolean {
   const secret = process.env.CRON_SECRET;
@@ -88,8 +115,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const siteUrl = process.env.GSC_SITE_URL || 'sc-domain:studionol.co.kr';
     const currentSnapshot = await runAudit({ siteUrl, windowDays: 90, auth });
 
-    // 2. 이전 스냅샷 로드
-    const previousSnapshot = await kv.get<AuditSnapshot>(KV_LATEST_KEY);
+    // 2. 이전 스냅샷 로드 (Vercel Blob)
+    const previousSnapshot = await loadLatestSnapshot();
 
     // 3. Diff 계산
     const diff = diffAudits(previousSnapshot, currentSnapshot);
@@ -105,10 +132,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       emailResult = await sendEmail(subject, body);
     }
 
-    // 5. KV 저장 (latest + history)
-    await kv.set(KV_LATEST_KEY, currentSnapshot);
-    const historyKey = `${KV_HISTORY_PREFIX}${currentSnapshot.date}`;
-    await kv.set(historyKey, currentSnapshot, { ex: 60 * 60 * 24 * 400 }); // 400일 TTL
+    // 5. Blob 저장 (latest + history by date)
+    await saveSnapshot(currentSnapshot);
 
     return res.status(200).json({
       ok: true,
