@@ -1,4 +1,4 @@
-Contact: mailto:contact@kosmart.org
+Contact: mailto:hwangtab@gmail.com
 Expires: 2027-04-21T00:00:00.000Z
 Preferred-Languages: ko, en
 Canonical: https://studionol.co.kr/.well-known/security.txt

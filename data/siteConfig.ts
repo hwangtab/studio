@@ -33,7 +33,7 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
     }),
     contact: {
       phone: '0507-1384-3144',
-      email: 'contact@kosmart.org',
+      email: 'hwangtab@gmail.com',
       address: t(locale, {
         ko: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',
         en: '3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul',
