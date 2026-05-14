@@ -255,7 +255,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.sunLabel')}</span>
-                    <span className="text-red-600 dark:text-red-400">{t('contact.hours.closed')}</span>
+                    <span className="dark:text-gray-300">{t('contact.hours.sunTime')}</span>
                   </div>
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">

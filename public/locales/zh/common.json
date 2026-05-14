@@ -185,11 +185,12 @@
     },
     "hours": {
       "weekdaysLabel": "周一-周五",
-      "weekdaysTime": "10:00 AM - 6:00 PM",
+      "weekdaysTime": "10:00 - 24:00",
       "satLabel": "周六",
-      "satTime": "12:00 PM - 6:00 PM",
+      "satTime": "10:00 - 24:00",
       "sunLabel": "周日",
-      "closed": "休息"
+      "closed": "休息",
+      "sunTime": "10:00 - 24:00"
     },
     "notice": {
       "title": "咨询前须知",

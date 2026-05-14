@@ -185,11 +185,12 @@
     },
     "hours": {
       "weekdaysLabel": "Lun - Vie",
-      "weekdaysTime": "10:00 AM - 6:00 PM",
+      "weekdaysTime": "10:00 - Medianoche",
       "satLabel": "Sáb",
-      "satTime": "12:00 PM - 6:00 PM",
+      "satTime": "10:00 - Medianoche",
       "sunLabel": "Dom",
-      "closed": "Cerrado"
+      "closed": "Cerrado",
+      "sunTime": "10:00 - Medianoche"
     },
     "notice": {
       "title": "Antes de consultar",

@@ -28,7 +28,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Geo: 37.614353, 126.925887
 - Phone: +82-507-1384-3144
 - Email: hwangtab@gmail.com
-- Business Hours: Mon–Fri 10:00–18:00, Sat 12:00–18:00, Sun Closed
+- Business Hours: Daily 10:00 AM – Midnight (Mon–Sun, including weekends and holidays)
 - Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (+82-507-1384-3144), Email (hwangtab@gmail.com)
 - Naver Map: https://naver.me/5gFZhS3X
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek

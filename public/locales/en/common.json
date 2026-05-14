@@ -185,11 +185,12 @@
     },
     "hours": {
       "weekdaysLabel": "Mon - Fri",
-      "weekdaysTime": "10:00 AM - 6:00 PM",
+      "weekdaysTime": "10:00 AM - Midnight",
       "satLabel": "Sat",
-      "satTime": "12:00 PM - 6:00 PM",
+      "satTime": "10:00 AM - Midnight",
       "sunLabel": "Sun",
-      "closed": "Closed"
+      "closed": "Closed",
+      "sunTime": "10:00 AM - Midnight"
     },
     "notice": {
       "title": "Before Inquiry",

@@ -185,11 +185,12 @@
     },
     "hours": {
       "weekdaysLabel": "จันทร์ - ศุกร์",
-      "weekdaysTime": "10:00 - 18:00",
+      "weekdaysTime": "10:00 - 24:00",
       "satLabel": "เสาร์",
-      "satTime": "12:00 - 18:00",
+      "satTime": "10:00 - 24:00",
       "sunLabel": "อาทิตย์",
-      "closed": "ปิด"
+      "closed": "ปิด",
+      "sunTime": "10:00 - 24:00"
     },
     "notice": {
       "title": "ก่อนสอบถาม",

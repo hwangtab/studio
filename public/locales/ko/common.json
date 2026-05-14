@@ -185,11 +185,12 @@
     },
     "hours": {
       "weekdaysLabel": "월 - 금",
-      "weekdaysTime": "10:00 AM - 6:00 PM",
+      "weekdaysTime": "10:00 - 24:00",
       "satLabel": "토",
-      "satTime": "12:00 PM - 6:00 PM",
+      "satTime": "10:00 - 24:00",
       "sunLabel": "일",
-      "closed": "휴무"
+      "closed": "휴무",
+      "sunTime": "10:00 - 24:00"
     },
     "notice": {
       "title": "문의 전 확인사항",

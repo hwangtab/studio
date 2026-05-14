@@ -164,18 +164,15 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
+        // 월~일 매일 10:00–23:59 운영. Schema.org spec상 24:00 표기는 일부 validator가
+        // 경고로 처리하므로 23:59가 가장 안전한 자정 표기. 음악 스튜디오 특성상 야간
+        // 녹음·연습 수요를 반영해 평일·주말 단일 entry로 통합.
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
             opens: '10:00',
-            closes: '18:00',
-          },
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Saturday', 'Sunday'],
-            opens: '12:00',
-            closes: '18:00',
+            closes: '23:59',
           },
         ],
         potentialAction: {
