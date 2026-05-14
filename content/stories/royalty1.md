@@ -102,4 +102,4 @@ faq:
 
 공동 작업 시 저작권 분배 비율을 서면으로 합의해두는 것은 선택이 아니라 필수입니다. 구두 합의는 법적 분쟁 시 증명 불가능하며, KOMCA는 저작자 간 비율 합의서를 등록 시 함께 제출할 수 있습니다. 유통사에서 발급되는 ISRC 코드는 각 트랙의 고유 식별 번호로, KOMCA 저작물 등록과 연동해 스트리밍 정산 데이터를 정확히 매핑하는 데 필요합니다. 유튜브 Content ID를 설정해두면 타인이 내 음악을 유튜브에 사용할 때 자동으로 수익이 귀속되며, 별도 KOMCA 등록과 달리 유통사를 통해 설정하거나 CD Baby·DistroKid의 Content ID 서비스를 이용할 수 있습니다.
 
-[음원 유통 방법 완전 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1)
+[음원 유통 방법 완전 가이드](/stories/distribution1) | [음원 발매 방법 가이드](/stories/release1) | [음악 계약 주의사항](/stories/contract1) | [커버곡 저작권 처리 방법](/stories/coverright1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)

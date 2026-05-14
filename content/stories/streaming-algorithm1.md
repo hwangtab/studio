@@ -147,4 +147,4 @@ Spotify 알고리즘의 핵심은 곡이 처음 200~1,000명에게 배포될 때
 
 스트리밍 알고리즘의 시작은 완성도 높은 음원입니다. 음원 퀄리티가 청취자의 완청률을 높이고, 완청률이 알고리즘 배포를 확장하며, 확장된 배포가 저장률과 팬 확보로 이어지는 선순환 구조가 스트리밍 성장의 근본 메커니즘입니다. Spotify for Artists 에디토리얼 피칭은 발매 7~28일 전, 팬들의 Pre-save 캠페인은 발매 2주 전, 발매 당일 SNS 동시 공지와 완청·저장 요청, 발매 후 숏폼 콘텐츠 지속 업로드의 타임라인을 체계적으로 운영하면 알고리즘 노출을 최대화할 수 있습니다.
 
-[음악 스트리밍 데이터 분석 완전 가이드](/stories/music-analytics1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1)
+[음악 스트리밍 데이터 분석 완전 가이드](/stories/music-analytics1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)
