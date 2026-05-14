@@ -36,9 +36,18 @@ faq:
 
 ## 음원 발매 후 수익, 현실적으로 알기
 
+결론부터 — **멜론 기준 스트림당 약 5~7원**, 유통사·KOMCA 차감 후 아티스트 수령은 **스트림당 약 3~5원**. 따라서 **월 5,000 스트림 = 약 1.8~2.5만원, 월 50,000 = 약 17~25만원, 월 50만 = 약 175~250만원**. 스트리밍만으로 생계 유지하려면 멜론 기준 **월 40~60만 스트림**이 필요하므로, 초기에는 **공연·라이선스·유튜브 AdSense·KOMCA 퍼포먼스 로열티·레슨**을 병행하는 다각화 전략이 현실적입니다. DistroKid 같은 정액 구독 유통사를 쓰면 수익 100%를 직접 수령 가능.
+
+> **Key Takeaways**
+> - **단가는 플랫폼별 격차 큼**: Apple Music이 가장 높고(약 10~14원), YouTube Music이 가장 낮음(약 1~4원). 멜론·스포티파이는 중간(약 4~7원).
+> - **차감 순서가 헷갈리기 쉬움**: 플랫폼 수수료(약 40%) → 분배 풀에 들어감 → KOMCA 9~15% → 유통사 수수료 → 최종 아티스트.
+> - **누적형 수입(KOMCA 퍼포먼스 로열티)이 진짜 자산**: 방송·공연·영상 사용 시 자동 정산. 곡 수가 늘수록 복리.
+> - **유통사 선택이 수익률에 직결**: DistroKid 정액제는 수익 100% 수령, 일부 국내 유통사는 15~30% 수수료 차감.
+> - **수익 다각화가 인디 생존선**: 스트리밍 + 공연 + 라이선스 + 레슨 4축이 표준. 한 축에만 의존하지 말기.
+
 "음원 발매하면 얼마 벌어요?" 가장 자주 받는 질문입니다. 정직하게 말씀드립니다. 처음에는 적습니다. 하지만 누적됩니다.
 
-스트리밍 수익 구조의 형성은 2000년대 디지털 음원 판매에서 스트리밍으로의 전환과 함께 시작됩니다. 2008년 Spotify가 스웨덴에서 출시하면서 재생당 소액 지급 모델을 도입했고, 초기 아티스트 정산액은 스트림당 $0.006~$0.008 수준으로 현재보다 높았습니다. 스트리밍 이용자가 폭발적으로 늘면서 전체 수익 풀이 더 많은 음원으로 분배되어 단가가 하락했습니다. 2013년 Taylor Swift가 스포티파이에서 전 앨범을 철수하며 "스트리밍은 아티스트에게 공정하지 않다"고 비판한 사건은 스트리밍 수익 구조의 불균형을 공론화시켰습니다. 한국에서는 2004년 멜론 서비스 시작 이후 국내 스트리밍 단가 체계가 확립됐으며, 현재 문화체육관광부가 정한 저작인접권료 분배 기준(실연자 60%, 음반제작자 40%)과 KOMCA의 저작권료(스트리밍 수익의 10.75%)가 수익 분배의 법적 기반이 됩니다.
+스트리밍 수익 구조의 형성은 2000년대 디지털 음원 판매에서 스트리밍으로의 전환과 함께 시작됩니다. **2008년 10월 Spotify가 스웨덴 등 6개국에서 서비스를 출시**([Spotify — Wikipedia](https://en.wikipedia.org/wiki/Spotify))하면서 재생당 소액 지급 모델을 도입했고, 초기 아티스트 정산액은 스트림당 $0.006~$0.008 수준으로 현재보다 높았습니다. 스트리밍 이용자가 폭발적으로 늘면서 전체 수익 풀이 더 많은 음원으로 분배되어 단가가 하락했습니다. **2014년 11월 3일 Taylor Swift가 1989 앨범 발매 직후 Spotify에서 전 카탈로그를 철수**하며 "스트리밍은 작가·프로듀서·아티스트·창작자에게 공정한 보상이 아니다"라고 비판한 사건은 스트리밍 수익 구조의 불균형을 공론화시켰습니다([Time: Why Taylor Swift Pulled Her Music From Spotify](https://time.com/3554468/why-taylor-swift-spotify/) · [Rolling Stone: Taylor Swift Squares Off Against Spotify](https://www.rollingstone.com/music/music-news/taylor-swift-abruptly-pulls-entire-catalog-from-spotify-55523/)). 한국에서는 2004년 멜론 서비스 시작 이후 국내 스트리밍 단가 체계가 확립됐으며, 현재 문화체육관광부가 정한 저작인접권료 분배 기준(실연자·음반제작자 비율)과 [한국음악저작권협회(KOMCA)](https://www.komca.or.kr/) 저작권료가 수익 분배의 법적 기반이 됩니다.
 
 ---
 
@@ -117,6 +126,17 @@ faq:
 | KOMCA 저작권료 | 방송·공연 사용 | 누적형 |
 | 레슨·강의 | 보컬·음악 레슨 | 즉시 수익 |
 | 크라우드펀딩 | 팬 후원 (Patreon, 후원하기) | 팬덤 기반 |
+
+## 출처
+
+- Spotify 2008년 10월 6개국 서비스 출시: [Spotify — Wikipedia](https://en.wikipedia.org/wiki/Spotify) · [Spotify 공식 회사 정보](https://newsroom.spotify.com/company-info/)
+- Taylor Swift Spotify 카탈로그 철수 (2014-11-03, 1989 발매 직후): [Time — Why Taylor Swift Pulled Her Music From Spotify](https://time.com/3554468/why-taylor-swift-spotify/) · [Rolling Stone — Taylor Swift Squares Off Against Spotify](https://www.rollingstone.com/music/music-news/taylor-swift-abruptly-pulls-entire-catalog-from-spotify-55523/)
+- 한국 저작권 분배 (KOMCA): [한국음악저작권협회 KOMCA 공식](https://www.komca.or.kr/)
+- DistroKid 정액 구독 유통: [DistroKid 공식](https://distrokid.com/)
+
+본 가이드의 스트림당 단가·시나리오 시뮬레이션·차감 순서는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 인디 아티스트의 정산 내역을 검토하며 누적한 1차 관찰에 기반합니다. 실제 단가는 플랫폼·국가·구독 형태(무료/유료)·계약 유형에 따라 큰 폭으로 변동하며, KOMCA 분배율과 문화체육관광부 분배 기준 역시 개정 시점에 따라 달라질 수 있으므로 정산 시점에 각 기관 공식 자료로 재확인하시기 바랍니다.
+
+---
 
 ## 마치며
 

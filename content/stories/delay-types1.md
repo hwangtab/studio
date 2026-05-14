@@ -36,7 +36,16 @@ faq:
 
 ## 딜레이 종류 — 에코로 보컬에 생동감 더하기
 
-딜레이는 리버브와 함께 보컬 믹싱에서 공간감과 리듬감을 만드는 핵심 도구입니다. 딜레이의 역사는 1950년대 Sun Records 스튜디오로 거슬러 올라객습니다. Sam Phillips 프로듀서가 Elvis Presley와 Johnny Cash의 보컬에 적용한 "슬랩백 에코"가 로큰롤의 사운드 정체성을 정의했습니다. 당시에는 두 개의 테이프 레코더를 사용해 약 80ms의 자연 딜레이를 만들었고, 이 소리가 Sun Studio 사운드의 핵심이 됐습니다. 이후 1970-80년대 Roland Space Echo(RE-201)와 Echoplex가 아날로그 딜레이 시대를 열었고, U2의 Edge가 Roland RE-201을 활용한 딜레이 기타로 밴드의 사운드 정체성을 확립했습니다.
+결론부터 — **슬랩백(40~120ms, 피드백 0~5%)** 은 보컬을 두껍게 + 레트로 질감, **템포 싱크(1/4·1/8·1/16 노트)** 는 K-pop·팝 보컬 표준, **핑퐁(L↔R)** 은 코러스·신스·기타 솔로의 스테레오 폭 확장, **테이프 에뮬(EchoBoy 등)** 은 따뜻한 빈티지 질감. 보컬에 두께·존재감 = 딜레이, 자연스러운 공간감 = 리버브. 함께 쓸 때는 **딜레이 → 리버브** 순서.
+
+> **Key Takeaways**
+> - **딜레이 타임 계산식**: 4분음표 ms = 60,000 ÷ BPM. BPM 120 → 500ms, 8분음표 = 250ms.
+> - **슬랩백은 피드백 0~5%** — 1회만 반복돼야 슬랩백 느낌. 피드백 높이면 일반 딜레이가 됨.
+> - **핑퐁은 리드 보컬에 과하면 산만** — 배경 코러스·신스·기타에 효과적.
+> - **테이프 딜레이의 매력은 Degradation + Wow-Flutter**: 반복마다 음질 저하 + 피치 흔들림이 "살아있는" 질감.
+> - **딜레이 → 리버브 체인**: 딜레이 에코에 리버브가 더해져 풍성한 공간감. 순서 반대로 하면 리버브 잔향이 다시 딜레이로 반복되어 진흙탕.
+
+딜레이는 리버브와 함께 보컬 믹싱에서 공간감과 리듬감을 만드는 핵심 도구입니다. **딜레이의 역사는 1950년대 미국 멤피스의 Sun Records 스튜디오**로 거슬러 올라갑니다. Sam Phillips 프로듀서가 Elvis Presley·Johnny Cash·Carl Perkins의 보컬에 적용한 "**슬랩백 에코(slapback echo)**"가 로큰롤·로커빌리의 사운드 정체성을 정의했습니다([Slapback — Wikipedia](https://en.wikipedia.org/wiki/Slapback) · [Reverb News: A Brief History of Tape Echo](https://reverb.com/news/repeat-that-a-brief-history-of-tape-echo)). 당시에는 두 개의 테이프 레코더를 사용해 약 80ms의 자연 딜레이를 만들었고, 이 소리가 Sun Studio 사운드의 핵심이 됐습니다. 이후 **1974년 Roland가 RE-201 Space Echo를 출시**([Roland Space Echo — Wikipedia](https://en.wikipedia.org/wiki/Roland_Space_Echo))하면서 아날로그 테이프 딜레이가 투어·스튜디오의 휴대 가능한 표준이 됐고, Echoplex와 함께 1970~80년대 딜레이 사운드의 양대 산맥이 됐습니다. U2의 The Edge가 Roland RE-201과 디지털 딜레이를 활용한 리듬 딜레이 기타 사운드는 밴드의 정체성이 됐습니다.
 
 현대 디지털 DAW에서 딜레이는 소프트웨어 플러그인으로 구현됩니다. Waves H-Delay, SoundToys EchoBoy, Universal Audio TAPE DELAY 등이 아날로그 딜레이의 따뜻한 음색을 디지털로 재현하며, 각 딜레이 유형은 서로 다른 음악적 상황에서 활용됩니다.
 
@@ -123,6 +132,15 @@ BPM에 맞게 딜레이 타임을 자동 설정하는 방식입니다. 60,000 ÷
 - **딜레이를 선택할 때**: 보컬에 에너지·존재감 강조 / 빠른 템포 곡에서 리듬감 부여 / 공간감보다 질감 표현
 - **리버브를 선택할 때**: 자연스러운 공간감 / 악기 사이에 보컬을 자연스럽게 녹아들게 / 웅장함·분위기 표현
 - **함께 사용 시**: 딜레이 → 리버브 체인 순서. 딜레이 에코에 리버브가 더해져 더 풍성한 공간감
+
+---
+
+## 출처
+
+- 슬랩백 에코 (Sun Records, 1950년대): [Slapback — Wikipedia](https://en.wikipedia.org/wiki/Slapback) · [Reverb News — A Brief History of Tape Echo](https://reverb.com/news/repeat-that-a-brief-history-of-tape-echo)
+- Roland RE-201 Space Echo (1974년 출시): [Roland Space Echo — Wikipedia](https://en.wikipedia.org/wiki/Roland_Space_Echo)
+
+본 가이드의 딜레이 종류별 권장 파라미터(타임·피드백·믹스 비율)는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 보컬 믹싱 세션에서 사용한 1차 설정에 기반합니다. 곡 템포·장르·보컬 음역·기존 리버브 깊이에 따라 적정 값은 달라지므로 위 수치는 시작점으로 사용하고 귀로 결정하세요.
 
 ---
 
