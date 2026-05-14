@@ -1,5 +1,5 @@
 ---
-title: WAV vs MP3 — 음질·용량 차이와 언제 뭘 써야 하는지
+title: WAV vs MP3 차이 — 음질·용량 비교와 녹음·발매 상황별 선택
 date: 2026-04-06
 author: 스튜디오 놀
 category: 녹음 가이드
