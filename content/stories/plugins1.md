@@ -38,9 +38,18 @@ faq:
 
 ## 보컬 믹싱 필수 플러그인
 
+결론부터 — 처음 보컬 믹싱을 시작한다면 **EQ는 FabFilter Pro-Q 3**(또는 DAW 내장), **컴프는 Waves CLA-76**(팝·록 펀치) 또는 **CLA-2A**(발라드·자연스러운 압축), **리버브는 Valhalla Room**(가성비), **디에서는 FabFilter Pro-DS**, **피치 교정은 Melodyne 5**(자연스러움) 또는 **Auto-Tune Pro**(효과)이 한국 홈 레코딩의 사실상 표준 조합입니다. 무료로 시작하려면 DAW 내장 EQ·컴프 + Valhalla Supermassive(리버브 무료)로 충분.
+
+> **Key Takeaways**
+> - **체인 순서가 결과를 결정**: 보컬 체인 표준은 게이트 → EQ(저음 컷) → 컴프(피크 제어) → 디에서 → EQ(톤) → 리버브·딜레이.
+> - **번들이 단품보다 ROI 높음**: Waves Gold/Platinum, FabFilter FX/Pro 번들이 단품 합산 대비 60~80% 저렴. Black Friday/Cyber Monday 할인 적극 활용.
+> - **무료가 유료를 못 따라잡지는 않습니다**: Logic Pro·Ableton·Cubase 내장 EQ·컴프는 프로 음반에서도 사용. Valhalla Supermassive는 무료지만 업계 표준급.
+> - **피치 교정은 두 종류**: 자연스러운 교정 = Melodyne(수동·정밀), 효과·실시간 = Auto-Tune. 목적이 다르니 둘 다 시도해보고 선택.
+> - **하드웨어 에뮬은 마지막**: UAD·Slate Digital 같은 분석 에뮬은 기본 체인 익숙해진 뒤에. 초보자는 가격 대비 체감 효과가 작음.
+
 플러그인은 도구입니다. 어떤 도구를 쓸지보다 어떻게 사용할지가 더 중요합니다. 하지만 좋은 도구는 작업을 효율적으로 만들어줍니다.
 
-플러그인 기반 오디오 믹싱의 역사는 1996년 Waves Audio가 Native Power Pack을 출시하면서 시작됩니다. 하드웨어 랙 장비 전용이었던 EQ·컴프레서·리버브 기능이 처음으로 소프트웨어화되면서 DAW 내 플러그인 믹싱 시대가 열렸습니다. 2003년 Steinberg VST3 표준이 확립되면서 플러그인 생태계가 폭발적으로 성장했고, 2010년대 Universal Audio가 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 출시하면서 스튜디오 품질 사운드가 홈 레코딩 환경에서도 구현 가능해졌습니다. 한국 시장에서는 2015년 이후 FabFilter와 Waves 번들 가격이 대중화되면서 홈 레코딩 엔지니어들의 플러그인 구성이 급격히 고도화됐으며, 국내 인디 레이블과 유튜브 음악 채널 제작자들 사이에서 FabFilter Pro-Q 3·Valhalla Room·CLA-76 조합이 사실상의 표준으로 자리잡았습니다.
+플러그인 기반 오디오 믹싱의 역사는 **1996년 Waves Audio가 L1 Ultramaximizer를 시작으로 Native Power Pack 번들을 출시**([Sound on Sound: Waves Native Power Pack 리뷰](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack))하면서 본격화됐습니다. 하드웨어 랙 장비 전용이었던 EQ·컴프레서·리버브 기능이 처음으로 소프트웨어화되면서 DAW 내 플러그인 믹싱 시대가 열렸습니다. **Steinberg의 VST 표준은 1996년 1.0, 1999년 2.0, 2008년 3.0** 순으로 발전([Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — About VST SDK](https://www.steinberg.net/developers/vstsdk/))하면서 플러그인 생태계가 폭발적으로 성장했고, 2010년대 Universal Audio가 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 출시하면서 스튜디오 품질 사운드가 홈 레코딩 환경에서도 구현 가능해졌습니다. 한국 시장에서는 2015년 이후 FabFilter와 Waves 번들 가격이 대중화되면서 홈 레코딩 엔지니어들의 플러그인 구성이 급격히 고도화됐으며, 국내 인디 레이블과 유튜브 음악 채널 제작자들 사이에서 FabFilter Pro-Q 3·Valhalla Room·CLA-76 조합이 사실상의 표준으로 자리잡았습니다.
 
 ---
 
@@ -112,6 +121,15 @@ faq:
 - **3순위**: Waves CLA-2A 또는 CLA-76 (컴프레서)
 - **4순위**: Melodyne Essential (피치 교정)
 - **5순위**: FabFilter Pro-DS (디에서)
+
+---
+
+## 출처
+
+- Waves Audio 플러그인 역사 (L1 Ultramaximizer 1996, Native Power Pack): [Sound on Sound — Waves Native Power Pack](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack)
+- Steinberg VST 표준 (1.0=1996, 2.0=1999, 3.0=2008): [Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — VST SDK](https://www.steinberg.net/developers/vstsdk/)
+
+본 가이드의 추천 조합(FabFilter Pro-Q 3·Valhalla Room·CLA-76 등)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 직접 보컬 녹음·믹싱 세션에서 사용·검증한 도구이며, 한국 인디 레이블·유튜브 채널 제작자 사이의 실제 사용 패턴 관찰에 기반합니다. 가격·할인 정보는 2026년 5월 기준이며 각 제조사(Waves·FabFilter·Valhalla DSP·Universal Audio·Celemony·Antares) 공식 사이트에서 최신 정보를 확인하시기 바랍니다.
 
 ---
 

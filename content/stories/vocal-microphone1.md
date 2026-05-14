@@ -39,9 +39,18 @@ faq:
 
 ## 마이크 선택 — 보컬 사운드의 70%를 결정한다
 
+결론부터 — **방음 잘 된 스튜디오**라면 콘덴서(**Neumann U87/TLM 102, AKG C414, Rode NT1**), **방음이 부족한 홈**이라면 다이나믹(**Shure SM7B**)이 정답. 입문 예산이라면 **Audio-Technica AT2020(10~15만원)** 또는 **Rode NT1(30~40만원)**, 본격 홈 스튜디오 단계면 **Shure SM7B(40~50만원)** 또는 **AKG C214(50~70만원)**, 프로 레퍼런스를 노린다면 **Neumann TLM 102(80~120만원) → U87(400~500만원)** 순서가 합리적 투자 곡선입니다.
+
+> **Key Takeaways**
+> - **방음이 마이크 선택의 1차 기준**: 콘덴서는 섬세하지만 주변 잡음도 다 잡음. 방음 부족 → 다이나믹.
+> - **셀프 노이즈(self-noise) 수치 확인**: NT1은 4.5dBA로 업계 최저급. 조용한 발라드·ASMR 보컬에 결정적.
+> - **K-pop·OST 표준은 Neumann U87**(스튜디오)와 **Sony C800G**(메이저 K-pop 레이블) — 본 가이드의 기준점.
+> - **팟캐스트·라이브 스트리밍에는 SM7B**가 사실상 표준. Cloudlifter 같은 게인 부스터(약 +25dB) 필요한 경우 많음.
+> - **콘덴서는 팬텀 파워(48V) 필수**, 다이나믹은 불필요. 인터페이스·믹서 spec 사전 확인.
+
 올바른 마이크 선택은 보컬 녹음의 첫 번째 단계입니다. 마이크 유형과 성격을 이해하면 예산에 맞는 최선의 선택을 할 수 있습니다.
 
-보컬 마이크의 역사는 1940~60년대 RCA와 Neumann의 경쟁으로 형성됐습니다. RCA 44-BX 리본 마이크는 Frank Sinatra의 낮고 친밀한 보컬 사운드를 만드는 데 핵심이었고, Neumann U47은 1940년대 후반 등장해 The Beatles의 EMI Abbey Road 세션부터 수십 년간 스튜디오 표준이 됐습니다. 1967년 출시된 Neumann U87은 U47의 후계자로 지금까지도 세계 스튜디오의 기준 마이크이며, 국내에서도 드라마 OST·K-POP·광고 보이스오버 녹음에서 가장 많이 사용되는 마이크입니다. Sony C800G는 1990년대 이후 J-POP과 K-POP 스튜디오에서 표준이 됐는데, 진공관 특유의 따뜻한 포화 특성이 고음에서도 날카롭지 않은 자연스러운 압감을 만들기 때문입니다. 홈 레코딩 환경에서는 Audio-Technica AT2020(10~15만 원)이나 Rode NT1(30~40만 원)처럼 셀프 노이즈가 낮고 중립적인 콘덴서 마이크로 시작하는 것이 현실적인 선택입니다. 방음이 부족한 환경에서는 Shure SM7B(다이나믹)가 주변 잡음 픽업이 적어 오히려 콘덴서보다 안정적인 결과물을 냅니다.
+보컬 마이크의 역사는 1940~60년대 RCA와 Neumann의 경쟁으로 형성됐습니다. RCA 44-BX 리본 마이크는 Frank Sinatra의 낮고 친밀한 보컬 사운드를 만드는 데 핵심이었고, **1949년 출시된 Neumann U47**([Neumann U 47 — Wikipedia](https://en.wikipedia.org/wiki/Neumann_U_47))은 The Beatles의 EMI Abbey Road 세션부터 수십 년간 스튜디오 표준이 됐습니다. **1967년 출시된 Neumann U87**([Neumann U 87 — Wikipedia](https://en.wikipedia.org/wiki/Neumann_U_87) · [Sweetwater: The History of the Legendary Neumann U 87](https://www.sweetwater.com/insync/the-legendary-neumann-u-87/))은 U47의 후계자로 FET(전계효과트랜지스터) 회로·팬텀 파워를 도입해 1970년대 중반부터 세계 스튜디오의 기준 마이크가 됐고, 국내에서도 드라마 OST·K-POP·광고 보이스오버 녹음에서 가장 많이 사용되는 마이크입니다. Sony C800G는 1990년대 이후 J-POP과 K-POP 스튜디오에서 표준이 됐는데, 진공관 특유의 따뜻한 포화 특성이 고음에서도 날카롭지 않은 자연스러운 압감을 만들기 때문입니다. 홈 레코딩 환경에서는 Audio-Technica AT2020(10~15만 원)이나 Rode NT1(30~40만 원)처럼 셀프 노이즈가 낮고 중립적인 콘덴서 마이크로 시작하는 것이 현실적인 선택입니다. 방음이 부족한 환경에서는 Shure SM7B(다이나믹)가 주변 잡음 픽업이 적어 오히려 콘덴서보다 안정적인 결과물을 냅니다.
 
 ---
 
@@ -130,6 +139,15 @@ faq:
 - 목소리 특성 (밝은 음색→밝은 마이크 X)
 - 주요 장르 (팝·R&B vs 재즈·어쿠스틱)
 - 오디오 인터페이스 호환 (팬텀 파워 여부)
+
+---
+
+## 출처
+
+- Neumann U47 (1949년 출시): [Neumann U 47 — Wikipedia](https://en.wikipedia.org/wiki/Neumann_U_47)
+- Neumann U87 (1967년 출시, FET·팬텀 파워): [Neumann U 87 — Wikipedia](https://en.wikipedia.org/wiki/Neumann_U_87) · [Sweetwater — The History of the Legendary Neumann U 87](https://www.sweetwater.com/insync/the-legendary-neumann-u-87/)
+
+본 가이드의 가격·추천 조합(AT2020·NT1·SM7B·C214·TLM 102·U87 라인업)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 보컬·성우·축가 녹음 세션에서 직접 사용·비교한 1차 관찰에 기반합니다. 가격은 2026년 5월 한국 시장 기준이며 유통사·환율·재고에 따라 변동이 큽니다. 정확한 spec(셀프 노이즈·SPL·지향 패턴)은 각 제조사(Shure·Neumann·Audio-Technica·Rode·AKG·Sony) 공식 사이트에서 확인하시기 바랍니다.
 
 ---
 
