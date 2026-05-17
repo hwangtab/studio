@@ -34,6 +34,13 @@ tsconfig.tsbuildinfo
 .playwright-mcp/
 reports/
 table-check.png
+
+# 작업 중 생성된 스크린샷 / 분석 문서
+booking-cta-v2.png
+cta-after-fix.png
+lesson-cta-after.png
+lesson-cta-v2.png
+docs/PROJECT_ANALYSIS.md
 lib/portfolio-meta.json
 lib/story-catalog.json
 
