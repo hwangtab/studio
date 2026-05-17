@@ -20,6 +20,7 @@ export const LanguageSwitcher = ({
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const localeItemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = useCallback(() => {
@@ -174,6 +175,11 @@ export const LanguageSwitcher = ({
       {isOpen && (
         <div
           ref={menuRef}
+          onBlur={(e) => {
+            if (!menuRef.current?.contains(e.relatedTarget as Node) && !buttonRef.current?.contains(e.relatedTarget as Node)) {
+              setIsOpen(false);
+            }
+          }}
           className={`
             absolute right-0 top-full mt-2 ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
             rounded-xl border border-gray-200/70 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl
@@ -181,12 +187,25 @@ export const LanguageSwitcher = ({
           `}
         >
           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
-            {locales.map((locale) => (
+            {locales.map((locale, idx) => (
               <li key={locale}>
                 <Link
+                  ref={(el) => { localeItemRefs.current[idx] = el; }}
                   href={getPathForLocale(locale)}
                   hrefLang={locale}
                   onClick={() => setIsOpen(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowDown') {
+                      e.preventDefault();
+                      localeItemRefs.current[(idx + 1) % locales.length]?.focus();
+                    } else if (e.key === 'ArrowUp') {
+                      e.preventDefault();
+                      localeItemRefs.current[(idx - 1 + locales.length) % locales.length]?.focus();
+                    } else if (e.key === 'Escape') {
+                      setIsOpen(false);
+                      buttonRef.current?.focus();
+                    }
+                  }}
                   className={`
                     px-3 py-2 sm:px-2 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900

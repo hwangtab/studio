@@ -95,6 +95,12 @@ if (!i18n.isInitialized) {
       react: {
         useSuspense: false,
       },
+      saveMissing: process.env.NODE_ENV !== 'production',
+      missingKeyHandler: (_lng, _ns, key) => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(`[i18n] missing translation key: ${key}`);
+        }
+      },
     });
 }
 

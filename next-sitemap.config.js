@@ -41,11 +41,11 @@ const pageImageMap = {
   '/lesson': { url: '/images/og-lesson1.webp', title: 'Studio NOL Music Lessons - Vocal & Production', caption: 'One-on-one vocal, mixing, and music production lessons at Studio NOL.' },
   '/portfolio': { url: '/images/og-recording1.webp', title: 'Studio NOL Portfolio - Recording & Mixing Works', caption: 'Albums, singles, and commercial works produced at Studio NOL.' },
   '/practice-room': { url: '/images/og-room5.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
-  '/pricing': { url: '/images/og-hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩20K/hr, wedding vocal ₩150K, voiceover ₩30K/hr.' },
+  '/pricing': { url: '/images/og-hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩360K/mo, recording ₩100K/hr, wedding song ₩350K, voiceover ₩100K/hr.' },
   '/stories': { url: '/images/og-studio1.webp', title: 'Studio NOL Stories - Mixing & Recording Guides', caption: 'Production guides, engineering tutorials, and studio stories by Studio NOL.' },
   '/studio-info': { url: '/images/og-hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
   '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
-  '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩30K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
+  '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩100K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
 };
 
 const buildStoryImage = (slug, locale) => {
@@ -112,7 +112,8 @@ module.exports = {
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
       const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${SITE_URL}/llms.txt\n# llms-full.txt: ${SITE_URL}/llms-full.txt\n`;
-      return `Host: ${SITE_URL}\n${cleaned}${llmsHint}`;
+      const hostDomain = SITE_URL.replace(/^https?:\/\//, '');
+      return `Host: ${hostDomain}\n${cleaned}${llmsHint}`;
     },
   },
   sitemapSize: 50000,

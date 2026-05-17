@@ -193,22 +193,21 @@ async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
             if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') throw error;
 
             console.error('[Rate Limit] Vercel KV failed:', error);
-            if (process.env.NODE_ENV === 'production') {
-                throw new Error('RATE_LIMIT_UNAVAILABLE');
-            }
-            if (!hasLoggedMemoryFallback) {
-                console.warn('[Rate Limit] Falling back to in-memory limiter due to KV failure.');
-                hasLoggedMemoryFallback = true;
-            }
-            checkRateLimitInMemory(subject);
-            return;
+            // KV가 설정됐지만 런타임에 실패한 경우 환경 무관하게 fail-closed.
+            // (KV 미설정 개발환경은 아래 별도 경로에서 in-memory fallback 허용)
+            throw new Error('RATE_LIMIT_UNAVAILABLE');
         }
     }
 
-    // KV 비활성화 시 in-memory fallback. 저트래픽 사이트에서 region-local 카운터로 충분.
+    // 프로덕션에서는 KV 설정이 필수. 미설정이면 인스턴스별 카운터 우회가 가능하므로 503 반환.
+    if (process.env.NODE_ENV === 'production') {
+        console.error('[Rate Limit] Vercel KV not configured in production. Set KV_REST_API_URL and KV_REST_API_TOKEN.');
+        throw new Error('RATE_LIMIT_UNAVAILABLE');
+    }
+
+    // 개발환경 in-memory fallback
     if (!hasLoggedMemoryFallback) {
-        const where = process.env.NODE_ENV === 'production' ? 'production' : 'dev';
-        console.warn(`[Rate Limit] Vercel KV not configured (${where}). Using in-memory limiter fallback.`);
+        console.warn('[Rate Limit] Vercel KV not configured (dev). Using in-memory limiter fallback.');
         hasLoggedMemoryFallback = true;
     }
 
@@ -299,6 +298,13 @@ const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<st
 
 const isHoneypotSubmission = (company: unknown): boolean =>
     typeof company === 'string' && company.trim().length > 0;
+
+const MIN_FILL_MS = 3000;
+
+const isTooFast = (formLoadTime: unknown): boolean => {
+    if (typeof formLoadTime !== 'number' || !Number.isFinite(formLoadTime)) return false;
+    return Date.now() - formLoadTime < MIN_FILL_MS;
+};
 
 const isAllowedRequestOrigin = (req: NextApiRequest): boolean => {
     const allowedOrigins = getAllowedOrigins();
@@ -438,9 +444,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
 
-    // 1. Honeypot validation
-    if (isHoneypotSubmission(payload.company)) {
-        // Silently ignore honeypot submissions
+    // 1. Honeypot validation (필드 채워짐 + 너무 빠른 제출 모두 조용히 무시)
+    if (isHoneypotSubmission(payload.company) || isTooFast(payload._formLoadTime)) {
         return res.status(200).json(SUCCESS_RESPONSE);
     }
 

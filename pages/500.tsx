@@ -8,7 +8,7 @@ import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION }
 import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
-import { getLocaleI18nResourcesServer } from '../lib/i18n.server';
+import { getAllLocalesI18nResourcesServer } from '../lib/i18n.server';
 
 const ServerErrorPage: NextPage = () => {
   const router = useRouter();
@@ -85,8 +85,9 @@ const ServerErrorPage: NextPage = () => {
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
-      i18nResources: getLocaleI18nResourcesServer(defaultLocale),
+      i18nResources: getAllLocalesI18nResourcesServer(),
     },
+    revalidate: 3600,
   };
 };
 

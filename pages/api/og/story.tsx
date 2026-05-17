@@ -1,14 +1,50 @@
 import { ImageResponse } from '@vercel/og';
 import type { NextRequest } from 'next/server';
+import { kv } from '@vercel/kv';
 
 export const config = { runtime: 'edge' };
 
 const WIDTH = 1200;
 const HEIGHT = 630;
+const OG_RATE_LIMIT = 10;
+const OG_RATE_WINDOW = 60; // seconds
+
+// slug 형식 검증 — 알파벳·숫자·하이픈·한글만 허용 (임의 파라미터 DoS 방지)
+const VALID_SLUG_RE = /^[\wㄱ-힝-]{1,120}$/;
+
+async function checkOgRateLimit(ip: string): Promise<boolean> {
+  if (!process.env.KV_REST_API_URL) return true; // KV 미설정 시 통과
+  try {
+    const key = `og:rl:${ip}`;
+    const count = await kv.incr(key);
+    if (count === 1) await kv.expire(key, OG_RATE_WINDOW);
+    return count <= OG_RATE_LIMIT;
+  } catch {
+    return true; // KV 장애 시 fail-open
+  }
+}
 
 export default async function handler(req: NextRequest) {
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-real-ip') ||
+    'unknown';
+  const allowed = await checkOgRateLimit(ip);
+  if (!allowed) {
+    return new Response('Too Many Requests', {
+      status: 429,
+      headers: { 'Retry-After': String(OG_RATE_WINDOW) },
+    });
+  }
   try {
     const { searchParams } = new URL(req.url);
+
+    // slug가 있으면 포맷 검증 후 거부 (없으면 통과 — 마케팅 OG 재사용 허용)
+    const slug = searchParams.get('slug');
+    if (slug && !VALID_SLUG_RE.test(slug)) {
+      return new Response(null, { status: 400 });
+    }
+
     const title = (searchParams.get('title') || 'Studio NOL').substring(0, 100);
     const category = (searchParams.get('category') || '').substring(0, 40);
     const date = (searchParams.get('date') || '').substring(0, 20);
@@ -26,7 +62,13 @@ export default async function handler(req: NextRequest) {
     // next/font 빌드 산출물(_next/static/media)은 edge runtime에서 접근 불가, 외부 폰트
     // 서버 의존 시 장애로 OG 생성 실패 → SNS 크롤러 메타 전달 깨짐 위험이라 자체 호스팅.
     const origin = new URL(req.url).origin;
-    const fontRes = await fetch(`${origin}/fonts/Pretendard-Bold.otf`);
+    const fontController = new AbortController();
+    const fontTimeout = setTimeout(() => fontController.abort(), 5000);
+    const fontRes = await fetch(`${origin}/fonts/Pretendard-Bold.otf`, {
+      signal: fontController.signal,
+    });
+    clearTimeout(fontTimeout);
+    if (!fontRes.ok) throw new Error(`Font fetch failed: HTTP ${fontRes.status}`);
     const fontData = await fontRes.arrayBuffer();
 
     return new ImageResponse(

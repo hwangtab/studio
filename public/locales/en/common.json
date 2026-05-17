@@ -160,7 +160,7 @@
       "phone": "Phone",
       "phonePlaceholder": "e.g., 010-1234-5678…",
       "email": "Email",
-      "emailPlaceholder": "e.g., hello@studionol.co.kr…",
+      "emailPlaceholder": "e.g., hwangtab@gmail.com…",
       "message": "Message",
       "messagePlaceholder": "e.g., project goal, schedule, reference links…",
       "submit": "Send Email Inquiry",
@@ -733,6 +733,9 @@
       "location": "Location",
       "inquiry": "Inquiry",
       "imageAlt": "Studio NOL Practice Room"
+    },
+    "relatedGuides": {
+      "title": "Practice Room Related Guides"
     }
   },
   "studioInfo": {
@@ -1151,6 +1154,10 @@
       "location": "Get Directions",
       "inquiry": "Book Voice Recording",
       "imageAlt": "Studio NOL voice recording equipment"
+    },
+    "hubCallout": {
+      "title": "Audiobook · ASMR · Narration — Complete Guide",
+      "subtitle": "From script to recording, editing, mastering, and distribution — start here."
     }
   }
 }

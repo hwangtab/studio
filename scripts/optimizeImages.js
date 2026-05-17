@@ -7,7 +7,7 @@ const METADATA_OUTPUT = path.join(__dirname, '../utils/imageMetadata.json');
 const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 
 // AVIF 생성 여부 (더 작지만 인코딩 느림)
-const GENERATE_AVIF = true; // true로 변경시 AVIF 생성
+const GENERATE_AVIF = false; // true로 변경시 AVIF 생성
 
 const imageMetadata = {};
 
@@ -98,4 +98,7 @@ optimizeImages(IMAGES_DIR)
         console.log('Image metadata written to utils/imageMetadata.json');
         console.log(`Processed ${Object.keys(imageMetadata).length} images.`);
     })
-    .catch((err) => console.error('Image optimization failed:', err));
+    .catch((err) => {
+        console.error('Image optimization failed:', err);
+        process.exit(1);
+    });

@@ -5,7 +5,8 @@ This file provides guidance for development in the **Studio NOL** repository.
 ## Project Overview
 
 Studio NOL is a multi-language music studio website built with:
-- **Framework**: Next.js 14.2 (Pages Router)
+- **Framework**: Next.js 15.5.12 (Pages Router)
+- **Runtime**: React 19.2.4
 - **Styling**: Tailwind CSS with custom design system
 - **Animation**: Framer Motion
 - **i18n**: react-i18next (7 languages: ko, en, zh, es, vi, th, uz)
@@ -14,7 +15,7 @@ Studio NOL is a multi-language music studio website built with:
 
 ## Key Technologies
 
-- **Frontend**: Next.js, React 18, Tailwind CSS, Framer Motion, Lucide React
+- **Frontend**: Next.js 15.5.12, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
 - **i18n**: i18next with language detection and locale-based routing
 - **Form**: Serverless contact form via Next.js API Routes and EmailJS
 - **Imaging**: Sharp-based image optimization (WebP/AVIF)
@@ -35,9 +36,11 @@ npm run build                # Production build (includes image optimization)
 node scripts/optimizeImages.js # Manually run image optimization
 
 # Hero font subset (LCP)
-# hero h1 텍스트(data/home.ts heroContent, public/locales/*/common.json의
-# *.hero.title*) 변경 시 반드시 재실행 후 결과 woff2 commit. 빠뜨리면 새 글자가
-# subset 밖이라 fallback chain으로 그려져 글자별 두께 차이 발생 가능.
+# prebuild에서 자동 실행됨. hero h1 텍스트(data/home.ts heroContent,
+# public/locales/*/common.json의 *.hero.title*) 변경 후 빌드하면 woff2가 재생성되며
+# 변경된 woff2를 반드시 commit해야 함. 빠뜨리면 새 글자가 subset 밖이라
+# fallback chain으로 그려져 글자별 두께 차이 발생 가능.
+# 수동 재실행:
 node scripts/generate-hero-font.mjs
 ```
 
@@ -70,6 +73,16 @@ The project uses a custom optimization script `scripts/optimizeImages.js`:
 - `lib/i18n.ts` - Internationalization configuration
 - `tailwind.config.ts` - Design system (colors, typography)
 - `next.config.mjs` - Next.js configuration
+
+## Next.js Experimental Flags
+
+`next.config.mjs` `experimental` 블록 결정 사항 — 이유 없이 건드리지 말 것:
+
+| 플래그 | 상태 | 이유 |
+|--------|------|------|
+| `optimizePackageImports` | **활성** (7개 라이브러리) | `lucide-react`, `framer-motion` 등 barrel import tree-shaking |
+| `optimizeCss` (critters) | **비활성** | PSI 모바일 점수 85→38 급락, TBT 260→7,130ms. Next.js 15 + React 19 + Pages Router 조합에서 불안정 |
+| `nextScriptWorkers` (Partytown) | **비활성** | TBT 260→1,990ms 회귀 확인 |
 
 ## Deployment Notes
 

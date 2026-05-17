@@ -32,6 +32,10 @@ const cdata = (str: string): string => {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).end('Method Not Allowed');
+  }
   const localeParam = (req.query.locale as string) || 'ko';
   const locale: Locale = locales.includes(localeParam as Locale)
     ? (localeParam as Locale)

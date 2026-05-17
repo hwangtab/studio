@@ -110,6 +110,10 @@ async function sendEmail(subject: string, bodyText: string): Promise<{ ok: boole
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
   if (!isAuthorized(req)) {
     return res.status(401).json({ error: 'Unauthorized' });
   }

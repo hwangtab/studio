@@ -28,6 +28,10 @@ const formatStoryLine = (siteUrl: string, locale: Locale, story: { title: string
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).end('Method Not Allowed');
+  }
   const siteConfig = getSiteConfig('ko');
   const siteUrl = siteConfig.url;
 
@@ -86,5 +90,10 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
   // llms-full.txt는 AI 크롤러 안내용 메타 파일이라 SERP 색인 대상 아님.
   res.setHeader('X-Robots-Tag', 'noindex');
+  const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB — Vercel 6MB 응답 한도 버퍼
+  if (body.length > MAX_BODY_SIZE) {
+    console.warn(`[llms-full] body size ${body.length} exceeds limit, truncating`);
+    body = body.slice(0, MAX_BODY_SIZE) + '\n... (truncated)';
+  }
   res.status(200).send(body);
 }

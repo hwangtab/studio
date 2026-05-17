@@ -2,7 +2,7 @@
   "nav": {
     "home": "Trang chủ",
     "about": "Giới thiệu",
-    "portfolio": "Portfolio",
+    "portfolio": "Danh mục",
     "stories": "Câu chuyện",
     "contact": "Liên hệ",
     "pricing": "Giá dịch vụ",
@@ -75,7 +75,7 @@
       "featuredTitle": "Nổi Bật Tháng Này"
     },
     "featured": {
-      "typePortfolio": "Portfolio",
+      "typePortfolio": "Danh mục",
       "typeStory": "Câu chuyện",
       "typePage": "Trang"
     },
@@ -128,7 +128,7 @@
     "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp."
   },
   "portfolio": {
-    "title": "Portfolio",
+    "title": "Danh mục",
     "subtitle": "Giới thiệu các dự án đã thực hiện tại Studio NOL. Nhấp để xem chi tiết.",
     "sampleTracks": "Track mẫu",
     "projects": "Dự án",
@@ -160,7 +160,7 @@
       "phone": "Số điện thoại",
       "phonePlaceholder": "VD: 010-1234-5678…",
       "email": "Email",
-      "emailPlaceholder": "VD: hello@studionol.co.kr…",
+      "emailPlaceholder": "VD: hwangtab@gmail.com…",
       "message": "Tin nhắn",
       "messagePlaceholder": "VD: mục tiêu, lịch trình, link tham khảo…",
       "submit": "Gửi yêu cầu qua email",
@@ -901,7 +901,7 @@
     "paused": "Đang tạm dừng",
     "albumArtAlt": "Bìa album {{title}}",
     "highFidelity": "Âm thanh Hi‑Fi",
-    "trackLabel": "Track {{number}}",
+    "trackLabel": "Bài {{number}}",
     "volume": "Âm lượng",
     "playbackProgress": "Tiến trình phát"
   },

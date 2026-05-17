@@ -41,6 +41,22 @@ export const getLocaleI18nResourcesServer = (locale: Locale): Resource => ({
 });
 
 /**
+ * 404/500 같이 locale를 모르는 상태로 정적 생성되는 페이지용.
+ * 모든 locale의 CORE 섹션을 한 번에 번들해 클라이언트가 URL에서 locale 추론 후
+ * 올바른 언어로 렌더할 수 있게 한다.
+ */
+export const getAllLocalesI18nResourcesServer = (): Resource => {
+  const allLocales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
+  const resource: Resource = {};
+  for (const locale of allLocales) {
+    resource[locale] = {
+      common: loadCommonSectionsServer(locale as Locale, CORE_I18N_SECTIONS),
+    };
+  }
+  return resource;
+};
+
+/**
  * 모든 페이지에서 공통으로 필요한 i18n 섹션.
  * Header/Footer/Layout/Error 경계 등 항상 렌더되는 요소에 쓰이는 키.
  */

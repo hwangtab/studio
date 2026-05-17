@@ -64,6 +64,7 @@ function setSecurityHeaders(response: NextResponse): NextResponse {
     }
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
     // Permissions-Policy single source. 음악 스튜디오 사이트 특성상 카메라/마이크/
     // 결제·USB·센서류 권한 사용 가능성이 없어 모두 차단. 향후 AR 투어, device
     // orientation 등 새 기능에서 센서가 필요하면 명시적으로 풀어주는 형태로 변경.
@@ -164,12 +165,15 @@ export function middleware(request: NextRequest) {
     }
 
     if (shouldRedirect) {
-        redirectUrl.pathname = workingPathname;
         // 봇은 SEO 점수 이전을 위해 308(영구). 일반 사용자 언어 redirect는 307(임시).
         // region map·trailing slash redirect는 항상 영구(308).
         const redirectStatus = !shouldVaryByLanguage || isBot ? 308 : 307;
 
-        const response = NextResponse.redirect(redirectUrl, redirectStatus);
+        // NextURL.pathname setter가 원본 URL의 trailing slash를 보존하는 이슈를 방지하기 위해
+        // origin + workingPathname으로 URL 문자열을 직접 구성한다.
+        // redirectUrl.origin은 host normalization 이후 canonical 호스트를 반영한다.
+        const destUrl = `${redirectUrl.origin}${workingPathname}${redirectUrl.search}`;
+        const response = NextResponse.redirect(destUrl, redirectStatus);
         if (shouldVaryByLanguage) {
             response.headers.set('Vary', 'Accept-Language');
         }

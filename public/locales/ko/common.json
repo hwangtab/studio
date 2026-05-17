@@ -160,7 +160,7 @@
       "phone": "연락처",
       "phonePlaceholder": "예: 010-1234-5678…",
       "email": "이메일",
-      "emailPlaceholder": "예: hello@studionol.co.kr…",
+      "emailPlaceholder": "예: hwangtab@gmail.com…",
       "message": "메시지",
       "messagePlaceholder": "예: 프로젝트 목적, 일정, 참고 링크…",
       "submit": "이메일로 문의하기",
@@ -431,7 +431,8 @@
       "location": "오시는 길",
       "inquiry": "무료 상담 신청",
       "imageAlt": "스튜디오 놀 프로덕션 셋업 - Softube Console 1과 모니터링 스피커"
-    }
+    },
+    "mobileMenu": "모바일 메뉴"
   },
   "practiceRoom": {
     "seo": {
@@ -1494,7 +1495,8 @@
         "descriptionLine2": "전문 강사와 기초부터 단계적으로 실력을 쌓으세요.",
         "primaryText": "레슨 커리큘럼 보기",
         "secondaryText": "상담 신청하기",
-        "visualText": "1:1 음악 레슨"
+        "visualText": "1:1 음악 레슨",
+        "mobileMenu": "모바일 메뉴"
       },
       "practice": {
         "title": "나만의 음악연습실이 필요한가요?",
@@ -1832,6 +1834,10 @@
       "location": "오시는 길",
       "inquiry": "녹음 예약하기",
       "imageAlt": "스튜디오 놀 보이스 녹음 장비 전경"
+    },
+    "hubCallout": {
+      "title": "오디오북·ASMR·내레이션 첫 도전 — 종합 가이드",
+      "subtitle": "원고 준비부터 녹음·편집·마스터링·유통까지 한 페이지에서 시작하세요."
     }
   }
 }

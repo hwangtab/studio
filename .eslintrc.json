@@ -4,7 +4,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "error",
     "jsx-a11y/alt-text": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unused-vars": [

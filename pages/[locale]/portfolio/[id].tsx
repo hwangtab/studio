@@ -264,7 +264,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const portfolioItems = getPortfolioItems(locale);
-  const item = portfolioItems.find((p) => p.id === params!.id);
+  const item = portfolioItems.find((p) => p.id === params?.id);
   const categories = getCategories(locale);
 
   if (!item) {

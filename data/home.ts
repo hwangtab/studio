@@ -83,7 +83,7 @@ const homeData = {
   },
   en: {
     seo: {
-      title: "Seoul Recording Studio for International Musicians · Yeonsinnae | Studio NOL",
+      title: "Seoul Recording Studio · Yeonsinnae | Studio NOL",
       description: "Seoul recording studio with English-speaking engineers, 5 min from Yeonsinnae. Recording, mixing & mastering for international musicians in Korea. From ₩100K/hr.",
       keywords: "Seoul recording studio, international musicians Korea, Yeonsinnae recording studio, English-speaking engineer, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, Studio NOL, Eunpyeong-gu studio"
     },

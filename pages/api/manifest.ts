@@ -17,6 +17,10 @@ const shortcutLabels: Record<Locale, {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).end('Method Not Allowed');
+  }
   const rawLocale = (req.query.locale as string) || defaultLocale;
   const locale: Locale = locales.includes(rawLocale as Locale) ? (rawLocale as Locale) : defaultLocale;
   const config = getSiteConfig(locale);

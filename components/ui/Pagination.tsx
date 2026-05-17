@@ -43,8 +43,18 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
 
     const pages = getPageNumbers();
 
+    const handleNavKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'ArrowLeft' && currentPage > 1) {
+            e.preventDefault();
+            onPageChange(currentPage - 1);
+        } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+            e.preventDefault();
+            onPageChange(currentPage + 1);
+        }
+    };
+
     return (
-        <nav className={`flex justify-center items-center space-x-2 ${className}`} aria-label="Pagination">
+        <nav className={`flex justify-center items-center space-x-2 ${className}`} aria-label="Pagination" onKeyDown={handleNavKeyDown}>
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}

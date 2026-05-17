@@ -84,6 +84,8 @@ export const DropdownMenu = ({
             e.preventDefault();
             const prevIndex = (index - 1 + items.length) % items.length;
             itemRefs.current[prevIndex]?.focus();
+        } else if (e.key === 'Tab') {
+            setIsOpen(false);
         }
     };
 

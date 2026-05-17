@@ -7,7 +7,7 @@ import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../
 const BASE_SECTIONS = (siteUrl: string) => `Studio NOL (${siteUrl.replace(/^https?:\/\//, '')})
 
 Studio NOL is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
-Founded in 2024, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
+Established in 2024 and now in its second year of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
 The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
 ## Primary Services
@@ -191,7 +191,11 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, an audio engi
 - Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)
 `;
 
-export default function handler(_req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).end('Method Not Allowed');
+  }
   const siteConfig = getSiteConfig('ko');
   const siteUrl = siteConfig.url;
 
@@ -243,5 +247,10 @@ export default function handler(_req: NextApiRequest, res: NextApiResponse) {
   // llms.txt는 AI 크롤러 안내용 메타 파일이라 SERP 색인 대상이 아님. 직접 접근(/api/llms)
   // 시 200 응답이 그대로 색인되는 것을 방지.
   res.setHeader('X-Robots-Tag', 'noindex');
+  const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB — Vercel 6MB 응답 한도 버퍼
+  if (body.length > MAX_BODY_SIZE) {
+    console.warn(`[llms] body size ${body.length} exceeds limit, truncating`);
+    body = body.slice(0, MAX_BODY_SIZE) + '\n... (truncated)';
+  }
   res.status(200).send(body);
 }

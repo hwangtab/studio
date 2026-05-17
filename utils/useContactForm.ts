@@ -105,6 +105,8 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
   // 동기 가드: React state 업데이트는 비동기라, 빠른 더블클릭 시 두 번째 클릭이
   // setIsSubmitting(true) 반영 전 통과해 fetch가 중복 발사될 수 있음. ref로 동기 차단.
   const submittingRef = useRef(false);
+  // 시간 트랩: 폼 마운트 시각을 기록해 서버에서 너무 빠른 제출(< 3s)을 차단.
+  const formMountTimeRef = useRef<number>(Date.now());
   const [canRetrySubmit, setCanRetrySubmit] = useState(false);
   const [lastSubmittedData, setLastSubmittedData] = useState<ContactFormData | null>(null);
   const [attribution, setAttribution] = useState<ContactAttribution>({});
@@ -214,7 +216,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ ...payload, ...attribution }),
+          body: JSON.stringify({ ...payload, ...attribution, _formLoadTime: formMountTimeRef.current }),
           signal: controller.signal,
         });
 
