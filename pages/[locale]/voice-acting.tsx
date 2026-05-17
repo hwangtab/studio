@@ -182,7 +182,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         title={t('voiceActing.seo.title')}
         description={t('voiceActing.seo.description')}
         keywords={t('voiceActing.seo.keywords')}
-        ogImage="/images/og-hardware3.webp"
+        ogImage="/images/og-hardware3.jpg"
         ogImageAlt={t('voiceActing.hero.alt')}
         ogImageWidth={1200}
         ogImageHeight={630}
@@ -365,8 +365,8 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       <HubLinkCallout
         hubSlug="audiobook-asmr-getting-started"
         locale={locale}
-        title="오디오북·ASMR·내레이션 첫 도전 — 종합 가이드"
-        subtitle="원고 준비부터 녹음·편집·마스터링·유통까지 한 페이지에서 시작하세요."
+        title={t('voiceActing.hubCallout.title', { defaultValue: '오디오북·ASMR·내레이션 첫 도전 — 종합 가이드' })}
+        subtitle={t('voiceActing.hubCallout.subtitle', { defaultValue: '원고 준비부터 녹음·편집·마스터링·유통까지 한 페이지에서 시작하세요.' })}
       />
 
       <RelatedStoriesSection

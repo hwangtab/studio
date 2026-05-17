@@ -304,7 +304,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         title={t('practiceRoom.seo.title')}
         description={t('practiceRoom.seo.description')}
         keywords={t('practiceRoom.seo.keywords')}
-        ogImage="/images/og-room7.webp"
+        ogImage="/images/og-room7.jpg"
         ogImageAlt={t('practiceRoom.hero.alt')}
         ogImageWidth={1200}
         ogImageHeight={630}
@@ -567,7 +567,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           초기 32개 노출, 나머지는 <details> JS-free 접기 패턴.
           서버사이드 렌더 HTML이라 크롤러는 접힌 링크도 전부 탐색 가능.
           HTML 문자열은 getStaticProps에서 escapeHtml + 고정 slug 배열로 생성 — 외부 입력 없음. */}
-      {locale === 'ko' && (
+      {relatedGuidesVisibleHtml && (
         <Section variant="default" className="py-10" defer>
           <div className="max-w-5xl mx-auto">
             <SectionHeading
@@ -735,7 +735,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   let relatedGuidesHiddenHtml = '';
   let relatedGuidesHiddenCount = 0;
 
-  if (locale === 'ko') {
+  {
+    // 비-ko 로케일은 relatedGuides.items 번역 미제공이므로 ko 데이터로 fallback
     const full = loadCommonResourceServer('ko');
     const items = ((full as Record<string, unknown>).practiceRoom as
       | { relatedGuides?: { items?: unknown } }

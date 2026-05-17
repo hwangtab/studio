@@ -132,7 +132,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         title={t('contact.seo.title')}
         description={t('contact.seo.description')}
         keywords={t('contact.seo.keywords')}
-        ogImage="/images/og-hardware5.webp"
+        ogImage="/images/og-hardware5.jpg"
         ogImageAlt={t('contact.heroAlt')}
         ogImageWidth={1200}
         ogImageHeight={630}
@@ -281,6 +281,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                 <div
                   role="status"
                   aria-live="polite"
+                  aria-atomic="true"
                   className={`mb-4 p-4 rounded-md flex items-center ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
                 >
                   {isSubmitSuccess && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
@@ -375,6 +376,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
+                      aria-required="true"
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? "message-error" : undefined}
                       placeholder={t('contact.form.messagePlaceholder')}

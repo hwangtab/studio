@@ -181,10 +181,11 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
 
+  // 카카오톡 등 소셜 스크레이퍼는 WebP og:image를 지원하지 않으므로
+  // story.thumbnail(WebP)과 무관하게 항상 PNG를 반환하는 동적 OG 엔드포인트를 사용.
   const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
-  const ogImage = story.thumbnail || dynamicOgImage;
-  // 동적 OG는 1200x630 보장. thumbnail은 실제 크기를 알 수 없으므로 메타에 크기 명시 안 함.
-  const isDynamicOg = !story.thumbnail;
+  const ogImage = dynamicOgImage;
+  const isDynamicOg = true;
 
   const shareStory = async () => {
     const shareUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
@@ -366,8 +367,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   try {
-    const story = await getStoryDetail(params!.id as string, locale);
-    const fullRelated = getRelatedStories(locale, params!.id as string, 6);
+    const story = await getStoryDetail(params?.id as string, locale);
+    const fullRelated = getRelatedStories(locale, params?.id as string, 6);
 
     // 관련 스토리 경량화 — StoryCard 렌더에 필요한 필드만 전달.
     const relatedStories: RelatedStoryItem[] = fullRelated.map((s) => ({
@@ -396,7 +397,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     console.error('Story detail error:', error);
     return {
       notFound: true,
-      revalidate: 60,
+      revalidate: 3600,
     };
   }
 };

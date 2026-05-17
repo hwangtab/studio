@@ -40,6 +40,7 @@ interface StoriesPageProps {
 const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
+  const [pageAnnouncement, setPageAnnouncement] = useState('');
   const currentPage = Number(router.query.page) || 1;
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
@@ -110,6 +111,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
     const query: Record<string, string | number> = { locale: router.query.locale as string };
     if (page > 1) query.page = page;
     router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
+    setPageAnnouncement(`${t('nav.stories')} — ${page} / ${totalPages}`);
     if (sectionRef.current) {
       const yOffset = -100;
       const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
@@ -137,7 +139,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         title={t('stories.seo.title')}
         description={t('stories.seo.description')}
         keywords={t('stories.seo.keywords')}
-        ogImage="/images/og-studio1.webp"
+        ogImage="/images/og-studio1.jpg"
         ogImageAlt={t('stories.hero.alt')}
         ogImageWidth={1200}
         ogImageHeight={630}
@@ -171,6 +173,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         ]}
       />
       <Section variant="default">
+        <p aria-live="polite" aria-atomic="true" className="sr-only">{pageAnnouncement}</p>
         <div ref={sectionRef}>
           <div className="mb-8">
             <CategoryFilter

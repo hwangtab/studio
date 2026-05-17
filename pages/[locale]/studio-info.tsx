@@ -56,10 +56,11 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
       width: 1280,
       height: 720,
     },
-    areaServed: {
-      '@type': 'AdministrativeArea',
-      name: locale === 'ko' ? '서울특별시' : 'Seoul',
-    },
+    areaServed: [
+      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
+      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
+      { '@type': 'AdministrativeArea', name: locale === 'ko' ? '연신내' : 'Yeonsinnae' },
+    ],
     provider: {
       '@type': 'Organization',
       '@id': `${siteConfig.url}/#organization`,
@@ -70,15 +71,9 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
     hoursAvailable: [
       {
         '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         opens: '10:00',
-        closes: '18:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Saturday',
-        opens: '12:00',
-        closes: '18:00',
+        closes: '23:59',
       },
     ],
     offers: [
@@ -108,7 +103,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         title={t('studioInfo.seo.title')}
         description={t('studioInfo.seo.description')}
         keywords={t('studioInfo.seo.keywords')}
-        ogImage="/images/og-hardware1.webp"
+        ogImage="/images/og-hardware1.jpg"
         ogImageAlt={t('studioInfo.hero.alt')}
         ogImageWidth={1200}
         ogImageHeight={630}

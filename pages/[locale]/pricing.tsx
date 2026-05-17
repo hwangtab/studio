@@ -183,7 +183,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         title={t('pricing.seo.title')}
         description={t('pricing.seo.description')}
         keywords={t('pricing.seo.keywords')}
-        ogImage="/images/og-hardware2.webp"
+        ogImage="/images/og-hardware2.jpg"
         ogImageAlt={t('pricing.hero.alt')}
         ogImageWidth={1200}
         ogImageHeight={630}
@@ -257,21 +257,22 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list">
           {specialPackages.map((offer, index) => (
-            <PricingCard
-              key={offer.id}
-              id={offer.id}
-              title={offer.title}
-              price={offer.priceDisplay}
-              unit={offer.unit}
-              description={offer.description}
-              features={offer.features}
-              recommended={offer.recommended}
-              delay={0.1 * (index + 1)}
-              ctaLabel={t('pricing.cta.inquiry')}
-              ctaHref={kakaoUrl}
-            />
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                recommended={offer.recommended}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+              />
+            </div>
           ))}
         </div>
       </Section>
@@ -286,21 +287,22 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" role="list">
           {recordingOffers.map((offer, index) => (
-            <PricingCard
-              key={offer.id}
-              id={offer.id}
-              title={offer.title}
-              price={offer.priceDisplay}
-              unit={offer.unit}
-              description={offer.description}
-              features={offer.features}
-              recommended={offer.recommended}
-              delay={0.1 * (index + 1)}
-              ctaLabel={t('pricing.cta.inquiry')}
-              ctaHref={kakaoUrl}
-            />
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                recommended={offer.recommended}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+              />
+            </div>
           ))}
         </div>
       </Section>
@@ -315,21 +317,22 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8" role="list">
           {mixingOffers.map((offer, index) => (
-            <PricingCard
-              key={offer.id}
-              id={offer.id}
-              title={offer.title}
-              price={offer.priceDisplay}
-              unit={offer.unit}
-              description={offer.description}
-              features={offer.features}
-              recommended={offer.recommended}
-              delay={0.1 * (index + 1)}
-              ctaLabel={t('pricing.cta.inquiry')}
-              ctaHref={kakaoUrl}
-            />
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                recommended={offer.recommended}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+              />
+            </div>
           ))}
         </div>
         <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
@@ -353,21 +356,22 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto" role="list">
           {masteringOffers.map((offer, index) => (
-            <PricingCard
-              key={offer.id}
-              id={offer.id}
-              title={offer.title}
-              price={offer.priceDisplay}
-              unit={offer.unit}
-              description={offer.description}
-              features={offer.features}
-              recommended={offer.recommended}
-              delay={0.1 * (index + 1)}
-              ctaLabel={t('pricing.cta.inquiry')}
-              ctaHref={kakaoUrl}
-            />
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                recommended={offer.recommended}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+              />
+            </div>
           ))}
         </div>
       </Section>
@@ -382,20 +386,21 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="list">
           {additionalServices.map((service, index) => (
-            <PricingCard
-              key={service.id}
-              id={service.id}
-              title={service.title}
-              price={service.priceDisplay}
-              unit={service.unit}
-              description={service.description}
-              features={service.note ? [service.note] : []}
-              delay={0.1 * (index + 1)}
-              ctaLabel={t('pricing.cta.inquiry')}
-              ctaHref={kakaoUrl}
-            />
+            <div key={service.id} role="listitem">
+              <PricingCard
+                id={service.id}
+                title={service.title}
+                price={service.priceDisplay}
+                unit={service.unit}
+                description={service.description}
+                features={service.note ? [service.note] : []}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+              />
+            </div>
           ))}
         </div>
       </Section>
