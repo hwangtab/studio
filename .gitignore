@@ -27,6 +27,7 @@ yarn-error.log*
 .next
 public/images/**/*.webp
 public/images/**/*.avif
+!public/images/og-*.webp
 
 # build caches / debug artifacts
 tsconfig.tsbuildinfo

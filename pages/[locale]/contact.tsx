@@ -132,7 +132,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         title={t('contact.seo.title')}
         description={t('contact.seo.description')}
         keywords={t('contact.seo.keywords')}
-        ogImage="/images/og-hardware5.jpg"
+        ogImage="/images/og-hardware5.webp"
         ogImageAlt={t('contact.heroAlt')}
         ogImageWidth={1200}
         ogImageHeight={630}
