@@ -120,4 +120,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[부암동·청운동 녹음실 안내](/stories/buam1) | [서촌·사직·무악재 녹음실 안내](/stories/seochon1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/hyehwa1) | [인사동·북촌·광화문 녹음실 안내](/stories/insadong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[부암동·청운동 녹음실 안내](/stories/seoul1) | [서촌·사직·무악재 녹음실 안내](/stories/seoul1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/seoul1) | [인사동·북촌·광화문 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -127,4 +127,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[창원에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

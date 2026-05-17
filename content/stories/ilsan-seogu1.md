@@ -124,4 +124,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[일산동구 백석·마두 녹음실 안내](/stories/ilsan-donggu1) | [일산·덕양구 녹음실 안내](/stories/ilsan1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[일산동구 백석·마두 녹음실 안내](/stories/gyeonggi1) | [일산·덕양구 녹음실 안내](/stories/gyeonggi1) | [고양 행신·화정·삼송 녹음실 안내](/stories/gyeonggi1) | [파주 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

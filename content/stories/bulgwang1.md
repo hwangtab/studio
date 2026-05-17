@@ -138,4 +138,4 @@ MR + 보컬 스템 통합 믹스. EQ·컴프레서·리버브 처리. 2라운드
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[은평구 녹음실 전체 안내](/stories/eunpyeong1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [고양시·파주 녹음실 안내](/stories/goyang1)
+[은평구 녹음실 전체 안내](/stories/seoul1) | [서대문구 녹음실 안내](/stories/seoul1) | [고양시·파주 녹음실 안내](/stories/gyeonggi1)

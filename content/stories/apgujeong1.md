@@ -134,4 +134,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[신사·가로수길·논현 녹음실 안내](/stories/sinsa1) | [강남 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [잠실·석촌 녹음실 안내](/stories/jamsil1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[신사·가로수길·논현 녹음실 안내](/stories/seoul1) | [강남 녹음실 안내](/stories/seoul1) | [서초구 녹음실 안내](/stories/seoul1) | [잠실·석촌 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

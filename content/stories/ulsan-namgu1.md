@@ -157,4 +157,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[울산에서 서울 녹음실 방문 가이드](/stories/ulsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

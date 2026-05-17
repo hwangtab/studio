@@ -127,4 +127,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강동구 전체 녹음실 안내](/stories/gangdong1) | [고덕·상일·강일·하남 녹음실 안내](/stories/godeok1) | [천호·암사·길동·명일 녹음실 안내](/stories/cheonho1) | [송파구 녹음실 안내](/stories/songpa1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[강동구 전체 녹음실 안내](/stories/seoul1) | [고덕·상일·강일·하남 녹음실 안내](/stories/seoul1) | [천호·암사·길동·명일 녹음실 안내](/stories/seoul1) | [송파구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -132,4 +132,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [김천에서 서울 녹음실 방문 가이드](/stories/gimcheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [구미에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [김천에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

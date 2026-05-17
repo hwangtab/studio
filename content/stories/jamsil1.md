@@ -116,4 +116,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[송파구 녹음실 안내](/stories/songpa1) | [강동구 녹음실 안내](/stories/gangdong1) | [강남 녹음실 안내](/stories/gangnam1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[송파구 녹음실 안내](/stories/seoul1) | [강동구 녹음실 안내](/stories/seoul1) | [강남 녹음실 안내](/stories/seoul1) | [이태원·한남동 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

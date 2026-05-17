@@ -99,4 +99,4 @@ faq:
 
 제주에서 비행기로 1시간, 공항 이동 포함 3시간이면 서울 연신내. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
-[서귀포 녹음실 안내](/stories/seogwipo1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[서귀포 녹음실 안내](/stories/jeju1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

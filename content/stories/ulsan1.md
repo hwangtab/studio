@@ -83,4 +83,4 @@ faq:
 
 울산에서 KTX 약 2시간이면 서울 연신내. 왕복 일정을 고려해 세션 시간을 넉넉하게 잡아두세요. 예약 문의는 카카오톡으로 주세요.
 
-[울산 남구·삼산·무거 녹음실 안내](/stories/ulsan-namgu1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[울산 남구·삼산·무거 녹음실 안내](/stories/ulsan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [창원에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

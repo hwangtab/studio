@@ -121,4 +121,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[종로구 녹음실 안내](/stories/jongno1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [진관·구파발·갈현 녹음실 안내](/stories/jingwan1) | [홍대·마포 녹음실 안내](/stories/hongdae1)
+[종로구 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1) | [진관·구파발·갈현 녹음실 안내](/stories/seoul1) | [홍대·마포 녹음실 안내](/stories/seoul1)

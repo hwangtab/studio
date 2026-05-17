@@ -183,4 +183,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**대조동 인근 권역 비교**: [연신내](/ko/stories/practice-room-yeonsinnae1), [불광](/ko/stories/practice-room-bulgwang1), [구산](/ko/stories/practice-room-gusan1), [역촌](/ko/stories/practice-room-yeokchon1), [녹번](/ko/stories/practice-room-nokbeon1)
+**대조동 인근 권역 비교**: [연신내](/stories/practice-room-yeonsinnae1), [불광](/stories/practice-room-bulgwang1), [구산](/stories/practice-room-gusan1), [역촌](/stories/practice-room-yeokchon1), [녹번](/stories/practice-room-nokbeon1)

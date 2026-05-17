@@ -135,4 +135,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[효창·청파·원효로 녹음실 안내](/stories/yongsan-hyochang1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [이태원·한남동 근처 녹음실 안내](/stories/itaewon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[효창·청파·원효로 녹음실 안내](/stories/seoul1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/seoul1) | [해방촌·경리단길 녹음실 안내](/stories/seoul1) | [이태원·한남동 근처 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

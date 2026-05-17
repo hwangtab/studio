@@ -135,4 +135,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[한남동·동빙고·한강진 녹음실 안내](/stories/hannam1) | [용산구 녹음실 안내](/stories/yongsan1) | [홍대·신촌 근처 녹음실 안내](/stories/hongdae1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[한남동·동빙고·한강진 녹음실 안내](/stories/seoul1) | [용산구 녹음실 안내](/stories/seoul1) | [홍대·신촌 근처 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

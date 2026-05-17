@@ -127,4 +127,4 @@ KTX 강릉선 개통으로 강릉에서 서울까지 약 1시간 50분대로 이
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[동해시 녹음실 안내](/stories/donghae1) | [양양에서 서울 녹음실 방문 가이드](/stories/yangyang1) | [삼척에서 서울 녹음실 방문 가이드](/stories/samcheok1) | [평창에서 서울 녹음실 방문 가이드](/stories/pyeongchang1)
+[동해시 녹음실 안내](/stories/gangwon1) | [양양에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [삼척에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [평창에서 서울 녹음실 방문 가이드](/stories/gangwon1)

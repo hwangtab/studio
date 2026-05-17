@@ -141,4 +141,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[도봉구 방학·쌍문·창동 세부 안내](/stories/dobong-banghak1) | [강북구·북한산 방문 가이드](/stories/gangbuk1) | [노원구·중랑구 녹음실 안내](/stories/nowon1) | [의정부·양주 방문 가이드](/stories/uijeongbu1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[도봉구 방학·쌍문·창동 세부 안내](/stories/seoul1) | [강북구·북한산 방문 가이드](/stories/seoul1) | [노원구·중랑구 녹음실 안내](/stories/seoul1) | [의정부·양주 방문 가이드](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

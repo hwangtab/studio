@@ -140,4 +140,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[속초에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

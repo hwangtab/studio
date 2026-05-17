@@ -70,4 +70,4 @@ faq:
 
 세종에서 KTX를 이용하면 약 1시간 30분대로 서울 연신내. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
-[청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [공주·논산에서 서울 녹음실 방문 가이드](/stories/gongju1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [공주·논산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

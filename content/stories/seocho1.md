@@ -148,4 +148,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[서초구 양재·우면·매봉 녹음실 안내](/stories/seocho-yangjae1) | [방배·서초·내방·이수 녹음실 안내](/stories/bangbae1) | [반포·방배 녹음실 안내](/stories/banpo1) | [강남구 녹음실 안내](/stories/gangnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[서초구 양재·우면·매봉 녹음실 안내](/stories/seoul1) | [방배·서초·내방·이수 녹음실 안내](/stories/seoul1) | [반포·방배 녹음실 안내](/stories/seoul1) | [강남구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

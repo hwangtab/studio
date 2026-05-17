@@ -141,4 +141,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[영덕에서 서울 녹음실 방문 가이드](/stories/yeongdeok1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[영덕에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [포항에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [안동에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

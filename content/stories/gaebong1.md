@@ -124,4 +124,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[구로구 녹음실 안내](/stories/guro1) | [신도림 녹음실 안내](/stories/sindorim1) | [금천구 녹음실 안내](/stories/geumcheon1) | [관악구·신림 녹음실 안내](/stories/gwanak1)
+[구로구 녹음실 안내](/stories/seoul1) | [신도림 녹음실 안내](/stories/seoul1) | [금천구 녹음실 안내](/stories/seoul1) | [관악구·신림 녹음실 안내](/stories/seoul1)

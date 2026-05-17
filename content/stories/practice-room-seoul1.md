@@ -125,4 +125,4 @@ K-POP 연습생, 인디 밴드, 음악인이 집중된 서울 최대 음악연�
 
 ---
 
-[홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/practice-room-hongdae1) | [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/practice-room-dongdaemun1) | [강북·도봉·노원구 음악연습실 — 서울 북동권 24시간 방음 연습실 가이드](/stories/practice-room-gangbuk1)
+[홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/seoul1) | [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/seoul1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/seoul1) | [강북·도봉·노원구 음악연습실 — 서울 북동권 24시간 방음 연습실 가이드](/stories/seoul1)

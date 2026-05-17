@@ -132,4 +132,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[인천·부천 녹음실 안내](/stories/incheon1) | [송도 녹음실 안내](/stories/songdo1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/michuhol1) | [부평·계양·서구 녹음실 안내](/stories/bupyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[인천·부천 녹음실 안내](/stories/incheon1) | [송도 녹음실 안내](/stories/incheon1) | [인천 미추홀구 주안·도화·숭의 녹음실 안내](/stories/incheon1) | [부평·계양·서구 녹음실 안내](/stories/incheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -123,4 +123,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[용인 기흥구 기흥·보정·동천 녹음실 안내](/stories/yongin-giheung1) | [용인 처인구 용인역·동백·남사 녹음실 안내](/stories/yongin-cheoin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[용인 기흥구 기흥·보정·동천 녹음실 안내](/stories/gyeonggi1) | [용인 처인구 용인역·동백·남사 녹음실 안내](/stories/gyeonggi1) | [수지·기흥·동백 녹음실 안내](/stories/gyeonggi1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

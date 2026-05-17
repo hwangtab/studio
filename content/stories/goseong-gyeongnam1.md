@@ -130,4 +130,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[통영에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[통영에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [사천에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [진주에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

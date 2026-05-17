@@ -137,4 +137,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성남·분당·과천 음악연습실 — 3호선으로 연신내 연습실 접근 가이드](/stories/practice-room-seongnam1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/practice-room-hongdae1) | [남양주·구리·하남 음악연습실 — 경기 동부 서울 접근 방음 연습실 가이드](/stories/practice-room-namyangju1) | [의정부·양주·동두천 음악연습실 — 북부 경기 24시간 방음 연습실 가이드](/stories/practice-room-uijeongbu1)
+[성남·분당·과천 음악연습실 — 3호선으로 연신내 연습실 접근 가이드](/stories/seoul1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/seoul1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/seoul1) | [남양주·구리·하남 음악연습실 — 경기 동부 서울 접근 방음 연습실 가이드](/stories/seoul1) | [의정부·양주·동두천 음악연습실 — 북부 경기 24시간 방음 연습실 가이드](/stories/seoul1)

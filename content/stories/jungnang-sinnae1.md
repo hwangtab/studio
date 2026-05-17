@@ -134,4 +134,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[중랑구 전체 녹음실 안내](/stories/jungnang1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/jangandong1) | [노원구 녹음실 안내](/stories/nowon1) | [성북구 녹음실 안내](/stories/seongbuk1)
+[중랑구 전체 녹음실 안내](/stories/seoul1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/seoul1) | [노원구 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/seoul1)

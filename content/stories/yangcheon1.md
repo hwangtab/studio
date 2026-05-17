@@ -120,4 +120,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[오목교·신정·목4동 녹음실 안내](/stories/yangcheon-omokgyo1) | [신정·신월·화곡·까치산 녹음실 안내](/stories/sinjeong1) | [목동·신정 녹음실 안내](/stories/mokdong1) | [강서구 녹음실 안내](/stories/gangseo1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[오목교·신정·목4동 녹음실 안내](/stories/seoul1) | [신정·신월·화곡·까치산 녹음실 안내](/stories/seoul1) | [목동·신정 녹음실 안내](/stories/seoul1) | [강서구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

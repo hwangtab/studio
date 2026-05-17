@@ -142,4 +142,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[중구 녹음실 안내](/stories/junggu1) | [명동·회현·충무로·남대문 녹음실 안내](/stories/myeongdong1) | [을지로·명동 녹음실 안내](/stories/euljiro1) | [용산구 녹음실 안내](/stories/yongsan1)
+[중구 녹음실 안내](/stories/seoul1) | [명동·회현·충무로·남대문 녹음실 안내](/stories/seoul1) | [을지로·명동 녹음실 안내](/stories/seoul1) | [용산구 녹음실 안내](/stories/seoul1)

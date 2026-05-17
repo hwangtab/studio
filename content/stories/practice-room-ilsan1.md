@@ -182,4 +182,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**일산 인근 권역 비교**: [고양](/ko/stories/practice-room-goyang1), [덕양구](/ko/stories/practice-room-deogyang1), [원당](/ko/stories/practice-room-wondang1), [삼송](/ko/stories/practice-room-samsong1), [원흥](/ko/stories/practice-room-wonheung1)
+**일산 인근 권역 비교**: [고양](/stories/practice-room-goyang1), [덕양구](/stories/practice-room-deogyang1), [원당](/stories/practice-room-wondang1), [삼송](/stories/practice-room-samsong1), [원흥](/stories/practice-room-wonheung1)

@@ -138,4 +138,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[평택에서 서울 녹음실 방문 가이드](/stories/pyeongtaek1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [수원에서 서울 녹음실 방문 가이드](/stories/suwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[평택에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [수원에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

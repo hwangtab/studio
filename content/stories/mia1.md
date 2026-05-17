@@ -144,4 +144,4 @@ mia 지역 아티스트들이 스튜디오 방문 시 활용하는 대중교통 
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강북구 녹음실 안내](/stories/gangbuk1) | [노원구 녹음실 안내](/stories/nowon1) | [도봉구 녹음실 안내](/stories/dobong1) | [성북구 녹음실 안내](/stories/seongbuk1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[강북구 녹음실 안내](/stories/seoul1) | [노원구 녹음실 안내](/stories/seoul1) | [도봉구 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

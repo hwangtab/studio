@@ -143,4 +143,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[영월에서 서울 녹음실 방문 가이드](/stories/yeongwol1) | [평창에서 서울 녹음실 방문 가이드](/stories/pyeongchang1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[영월에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [평창에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [원주에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

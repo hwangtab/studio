@@ -154,4 +154,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[남양주·구리·퇴계원 녹음실 안내](/stories/namyangju1) | [이천·여주·안성 녹음실 안내](/stories/icheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 서비스 안내](/stories/remotedir1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[남양주·구리·퇴계원 녹음실 안내](/stories/gyeonggi1) | [이천·여주·안성 녹음실 안내](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [원격 보컬 서비스 안내](/stories/remotedir1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

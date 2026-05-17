@@ -139,4 +139,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[안산 고잔·단원·중앙동 녹음실 안내](/stories/ansan-danseon1) | [안산·시흥 녹음실 안내](/stories/ansan1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [군포 산본·금정 녹음실 안내](/stories/gunpo-sanbon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[안산 고잔·단원·중앙동 녹음실 안내](/stories/gyeonggi1) | [안산·시흥 녹음실 안내](/stories/gyeonggi1) | [시흥 은계·정왕 녹음실 안내](/stories/gyeonggi1) | [군포 산본·금정 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

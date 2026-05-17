@@ -168,4 +168,4 @@ STC 60+ 방음 개인실에서 보컬·내레이션 데모를 만들고, 매월 
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**상암 인근 권역 비교**: [증산](/ko/stories/practice-room-jeungsan1), [새절](/ko/stories/practice-room-saejeol1), [응암](/ko/stories/practice-room-eungam1), [독바위](/ko/stories/practice-room-dokbawi1), [서대문](/ko/stories/practice-room-seodaemun1)
+**상암 인근 권역 비교**: [증산](/stories/practice-room-jeungsan1), [새절](/stories/practice-room-saejeol1), [응암](/stories/practice-room-eungam1), [독바위](/stories/practice-room-dokbawi1), [서대문](/stories/practice-room-seodaemun1)

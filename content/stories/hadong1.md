@@ -127,4 +127,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[구례에서 서울 녹음실 방문 가이드](/stories/gurye1) | [남해에서 서울 녹음실 방문 가이드](/stories/namhae1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [순천에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[구례에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [남해에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [여수에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [순천에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

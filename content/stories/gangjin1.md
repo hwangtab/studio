@@ -153,4 +153,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[해남에서 서울 녹음실 방문 가이드](/stories/haenam1) | [보성에서 서울 녹음실 방문 가이드](/stories/boseong1) | [장흥에서 서울 녹음실 방문 가이드](/stories/jangheung1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[해남에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [보성에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [장흥에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

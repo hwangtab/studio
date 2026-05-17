@@ -144,4 +144,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성동구 녹음실 안내](/stories/seongdong1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [중구·을지로 녹음실 안내](/stories/junggu1)
+[성동구 녹음실 안내](/stories/seoul1) | [성수동·뚝섬 녹음실 안내](/stories/seoul1) | [광진구 녹음실 안내](/stories/seoul1) | [중구·을지로 녹음실 안내](/stories/seoul1)

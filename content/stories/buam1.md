@@ -134,4 +134,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[종로구 녹음실 안내](/stories/jongno1) | [서촌·사직·무악재 녹음실 안내](/stories/seochon1) | [혜화·대학로 녹음실 안내](/stories/hyehwa1) | [인사동·북촌·광화문 녹음실 안내](/stories/insadong1)
+[종로구 녹음실 안내](/stories/seoul1) | [서촌·사직·무악재 녹음실 안내](/stories/seoul1) | [혜화·대학로 녹음실 안내](/stories/seoul1) | [인사동·북촌·광화문 녹음실 안내](/stories/seoul1)

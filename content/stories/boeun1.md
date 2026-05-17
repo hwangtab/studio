@@ -118,4 +118,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[음성에서 서울 녹음실 방문 가이드](/stories/eumseong1) | [옥천에서 서울 녹음실 방문 가이드](/stories/okcheon1) | [영동에서 서울 녹음실 방문 가이드](/stories/yeongdong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[음성에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [옥천에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [영동에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

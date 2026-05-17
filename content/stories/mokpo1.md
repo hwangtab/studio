@@ -118,4 +118,4 @@ KTX 목포역 → 서울역 2시간 10분, 지하철 연신내 총 110분.
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/suncheon1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [순천·여수에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

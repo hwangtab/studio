@@ -146,4 +146,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [천안·아산 녹음실 방문 가이드](/stories/cheonan1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [천안·아산 녹음실 방문 가이드](/stories/chungnam1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

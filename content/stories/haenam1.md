@@ -145,4 +145,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[진도에서 서울 녹음실 방문 가이드](/stories/jindo1) | [강진에서 서울 녹음실 방문 가이드](/stories/gangjin1) | [완도에서 서울 녹음실 방문 가이드](/stories/wando1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[진도에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [강진에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [완도에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [나주에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

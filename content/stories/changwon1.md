@@ -124,4 +124,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[창원 의창구·성산구·마산 녹음실 안내](/stories/changwon-center1) | [경상남도 녹음실 방문 가이드](/stories/gyeongnam1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[창원 의창구·성산구·마산 녹음실 안내](/stories/gyeongnam1) | [경상남도 녹음실 방문 가이드](/stories/gyeongnam1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

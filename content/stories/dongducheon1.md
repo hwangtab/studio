@@ -119,4 +119,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[양주에서 서울 녹음실 방문 가이드](/stories/yangju1) | [의정부에서 서울 녹음실 방문 가이드](/stories/uijeongbu1) | [포천에서 서울 녹음실 방문 가이드](/stories/pocheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[양주에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [의정부에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [포천에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

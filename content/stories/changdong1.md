@@ -141,4 +141,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[노원구 녹음실 안내](/stories/nowon1) | [도봉구·강북구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[노원구 녹음실 안내](/stories/seoul1) | [도봉구·강북구 녹음실 안내](/stories/seoul1) | [중랑구 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1)

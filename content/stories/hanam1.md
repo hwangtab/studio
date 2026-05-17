@@ -119,4 +119,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[위례·하남·미사강변 녹음실 안내](/stories/wirye1) | [경기 광주에서 서울 녹음실 방문 가이드](/stories/gwangju-gyeonggi1) | [남양주·구리·퇴계원 녹음실 안내](/stories/namyangju1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[위례·하남·미사강변 녹음실 안내](/stories/gyeonggi1) | [경기 광주에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [남양주·구리·퇴계원 녹음실 안내](/stories/gyeonggi1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

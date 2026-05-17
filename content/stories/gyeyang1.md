@@ -138,4 +138,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[인천 녹음실 안내](/stories/incheon1) | [인천 서구 석남·청라 녹음실 안내](/stories/incheon-seo1) | [부평·인천 녹음실 안내](/stories/bupyeong1) | [부천 녹음실 안내](/stories/bucheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[인천 녹음실 안내](/stories/incheon1) | [인천 서구 석남·청라 녹음실 안내](/stories/incheon1) | [부평·인천 녹음실 안내](/stories/incheon1) | [부천 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

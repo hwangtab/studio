@@ -127,4 +127,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[중구 녹음실 안내](/stories/junggu1) | [을지로·청계천 녹음실 안내](/stories/euljiro1) | [종로구 녹음실 안내](/stories/jongno1) | [강남 녹음실 안내](/stories/gangnam1)
+[중구 녹음실 안내](/stories/seoul1) | [을지로·청계천 녹음실 안내](/stories/seoul1) | [종로구 녹음실 안내](/stories/seoul1) | [강남 녹음실 안내](/stories/seoul1)

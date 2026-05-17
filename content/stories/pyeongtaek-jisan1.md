@@ -131,4 +131,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[평택 녹음실 안내](/stories/pyeongtaek1) | [오산·화성 녹음실 안내](/stories/osan1) | [수원 녹음실 안내](/stories/suwon1) | [안성 녹음실 안내](/stories/anseong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[평택 녹음실 안내](/stories/gyeonggi1) | [오산·화성 녹음실 안내](/stories/gyeonggi1) | [수원 녹음실 안내](/stories/gyeonggi1) | [안성 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

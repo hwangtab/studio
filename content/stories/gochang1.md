@@ -128,4 +128,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[정읍에서 서울 녹음실 방문 가이드](/stories/jeongeup1) | [부안에서 서울 녹음실 방문 가이드](/stories/buan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[정읍에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [부안에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

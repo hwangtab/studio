@@ -137,4 +137,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[신안에서 서울 녹음실 방문 가이드](/stories/sinan1) | [영암에서 서울 녹음실 방문 가이드](/stories/yeongam1) | [나주에서 서울 녹음실 방문 가이드](/stories/naju1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[신안에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [영암에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [나주에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [함평에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

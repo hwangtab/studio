@@ -118,4 +118,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[영등포구 전체 녹음실 안내](/stories/yeongdeungpo1) | [영등포구 신길 녹음실 안내](/stories/singil1) | [구로구 녹음실 안내](/stories/guro-gasan1) | [양천구 녹음실 안내](/stories/yangcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[영등포구 전체 녹음실 안내](/stories/seoul1) | [영등포구 신길 녹음실 안내](/stories/seoul1) | [구로구 녹음실 안내](/stories/seoul1) | [양천구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

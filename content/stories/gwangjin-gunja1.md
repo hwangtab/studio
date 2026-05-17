@@ -127,4 +127,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광진구 전체 녹음실 안내](/stories/gwangjin1) | [화양·구의·광나루 녹음실 안내](/stories/hwayang1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[광진구 전체 녹음실 안내](/stories/seoul1) | [화양·구의·광나루 녹음실 안내](/stories/seoul1) | [성동구 녹음실 안내](/stories/seoul1) | [강동구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

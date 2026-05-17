@@ -146,4 +146,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강서구 녹음실 안내](/stories/gangseo1) | [마곡·발산·화곡 녹음실 안내](/stories/magok1) | [양천구 녹음실 안내](/stories/yangcheon1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1)
+[강서구 녹음실 안내](/stories/seoul1) | [마곡·발산·화곡 녹음실 안내](/stories/seoul1) | [양천구 녹음실 안내](/stories/seoul1) | [영등포·구로 녹음실 안내](/stories/seoul1)

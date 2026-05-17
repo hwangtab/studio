@@ -137,4 +137,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[은평구 녹음실 완전 안내](/stories/eunpyeong1) | [불광·수색 근처 녹음실 안내](/stories/bulgwang1) | [응암·역촌·구산 녹음실 안내](/stories/eungam1) | [진관·구파발·갈현 녹음실 안내](/stories/jingwan1)
+[은평구 녹음실 완전 안내](/stories/seoul1) | [불광·수색 근처 녹음실 안내](/stories/seoul1) | [응암·역촌·구산 녹음실 안내](/stories/seoul1) | [진관·구파발·갈현 녹음실 안내](/stories/seoul1)

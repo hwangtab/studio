@@ -136,4 +136,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[용인·수지·기흥 녹음실 안내](/stories/yongin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원 영통·광교 녹음실 안내](/stories/suwon-yeongtong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[용인·수지·기흥 녹음실 안내](/stories/gyeonggi1) | [수지·기흥·동백 녹음실 안내](/stories/gyeonggi1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [수원 영통·광교 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -140,4 +140,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성북구 녹음실 안내](/stories/seongbuk1) | [강북구 녹음실 안내](/stories/gangbuk1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [종로구 녹음실 안내](/stories/jongno1)
+[성북구 녹음실 안내](/stories/seoul1) | [강북구 녹음실 안내](/stories/seoul1) | [동대문구 녹음실 안내](/stories/seoul1) | [종로구 녹음실 안내](/stories/seoul1)

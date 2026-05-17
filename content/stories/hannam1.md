@@ -129,4 +129,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[용산구 녹음실 안내](/stories/yongsan1) | [이태원·해방촌 녹음실 안내](/stories/itaewon1) | [해방촌 녹음실 안내](/stories/haebangchon1) | [이촌·서빙고 녹음실 안내](/stories/ichon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[용산구 녹음실 안내](/stories/seoul1) | [이태원·해방촌 녹음실 안내](/stories/seoul1) | [해방촌 녹음실 안내](/stories/seoul1) | [이촌·서빙고 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

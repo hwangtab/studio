@@ -130,4 +130,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강남구 녹음실 안내](/stories/gangnam1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/yeoksam1) | [서초구 녹음실 안내](/stories/seocho1) | [송파구 녹음실 안내](/stories/songpa1)
+[강남구 녹음실 안내](/stories/seoul1) | [역삼·선릉·삼성·도곡 녹음실 안내](/stories/seoul1) | [서초구 녹음실 안내](/stories/seoul1) | [송파구 녹음실 안내](/stories/seoul1)

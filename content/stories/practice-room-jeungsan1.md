@@ -168,4 +168,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**증산 인근 권역 비교**: [새절](/ko/stories/practice-room-saejeol1), [응암](/ko/stories/practice-room-eungam1), [상암](/ko/stories/practice-room-sangam1), [독바위](/ko/stories/practice-room-dokbawi1), [구산](/ko/stories/practice-room-gusan1)
+**증산 인근 권역 비교**: [새절](/stories/practice-room-saejeol1), [응암](/stories/practice-room-eungam1), [상암](/stories/practice-room-sangam1), [독바위](/stories/practice-room-dokbawi1), [구산](/stories/practice-room-gusan1)

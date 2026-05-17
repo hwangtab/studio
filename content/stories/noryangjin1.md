@@ -142,4 +142,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[동작구 녹음실 안내](/stories/dongjak1) | [사당·방배·노량진 녹음실 안내](/stories/sadang1) | [서초구 녹음실 안내](/stories/seocho1) | [관악구 녹음실 안내](/stories/gwanak1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[동작구 녹음실 안내](/stories/dongjak1) | [사당·방배·노량진 녹음실 안내](/stories/seoul1) | [서초구 녹음실 안내](/stories/seoul1) | [관악구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

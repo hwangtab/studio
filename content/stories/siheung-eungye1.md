@@ -129,4 +129,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[시흥·안산 녹음실 안내](/stories/siheung1) | [안산 고잔·단원 녹음실 안내](/stories/ansan-danseon1) | [부천 녹음실 안내](/stories/bucheon1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[시흥·안산 녹음실 안내](/stories/gyeonggi1) | [안산 고잔·단원 녹음실 안내](/stories/gyeonggi1) | [부천 녹음실 안내](/stories/gyeonggi1) | [광명·과천·의왕 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

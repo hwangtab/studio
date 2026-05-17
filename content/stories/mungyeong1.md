@@ -124,4 +124,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[상주에서 서울 녹음실 방문 가이드](/stories/sangju1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[상주에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [안동에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

@@ -132,4 +132,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[산청에서 서울 녹음실 방문 가이드](/stories/sancheong1) | [창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [무주에서 서울 녹음실 방문 가이드](/stories/muju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[산청에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [창녕에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [무주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

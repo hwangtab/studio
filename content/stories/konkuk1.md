@@ -140,4 +140,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광진구 녹음실 안내](/stories/gwangjin1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [성동구 녹음실 안내](/stories/seongdong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[광진구 녹음실 안내](/stories/seoul1) | [성수동·뚝섬 녹음실 안내](/stories/seoul1) | [홍대·신촌 녹음실 안내](/stories/seoul1) | [성동구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

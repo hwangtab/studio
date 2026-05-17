@@ -128,4 +128,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성동구 녹음실 안내](/stories/seongdong1) | [광진구 녹음실 안내](/stories/gwangjin1) | [홍대·신촌 근처 녹음실 안내](/stories/hongdae1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성동구 녹음실 안내](/stories/seoul1) | [광진구 녹음실 안내](/stories/seoul1) | [홍대·신촌 근처 녹음실 안내](/stories/seoul1) | [이태원·한남동 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

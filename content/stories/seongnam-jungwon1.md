@@ -128,4 +128,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성남·분당·판교 녹음실 안내](/stories/seongnam1) | [성남 수정구 녹음실 안내](/stories/seongnam-sujeong1) | [분당 야탑·모란·복정 녹음실 안내](/stories/bundang-yatap1) | [하남·위례 녹음실 안내](/stories/wirye1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [성남 수정구 녹음실 안내](/stories/gyeonggi1) | [분당 야탑·모란·복정 녹음실 안내](/stories/gyeonggi1) | [하남·위례 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

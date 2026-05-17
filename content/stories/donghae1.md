@@ -136,4 +136,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강릉 녹음실 안내](/stories/gangneung1) | [속초 녹음실 안내](/stories/sokcho1) | [삼척 녹음실 안내](/stories/samcheok1) | [전국 방문 가이드](/stories/nationwide1)
+[강릉 녹음실 안내](/stories/gangwon1) | [속초 녹음실 안내](/stories/gangwon1) | [삼척 녹음실 안내](/stories/gangwon1) | [전국 방문 가이드](/stories/nationwide1)

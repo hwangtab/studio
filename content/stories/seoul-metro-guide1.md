@@ -38,36 +38,36 @@ faq:
 
 | 출발 거점 | 추천 노선 | 소요 시간 | 개별 가이드 |
 |-----------|----------|----------|-----------|
-| 홍대입구 | 6호선 직행 | **약 15분** | [홍대 가이드](/stories/hongdae1) |
-| 합정·망원 | 6호선 직행 | **약 20분** | [합정 가이드](/stories/hapjeong1) |
-| 이태원·한남 | 6호선 직행 | **약 30분** | [이태원 가이드](/stories/itaewon1) |
-| 종로·광화문 | 3호선 직행 | **약 25분** | [종로 가이드](/stories/jongno1) |
-| 을지로·명동 | 3호선 (을지로3가→연신내) | **약 30분** | [명동 가이드](/stories/myeongdong1) |
-| 강남·역삼 | 2호선→충정로→5호선→공덕→6호선 | **약 50분** | [강남 가이드](/stories/gangnam1) |
-| 잠실·송파 | 2호선→충정로→5호선→공덕→6호선 | **약 55분** | [잠실 가이드](/stories/jamsil1) |
-| 건대·성수 | 2호선→충정로→5호선→공덕→6호선 | **약 45분** | [성수 가이드](/stories/seongsu1) |
-| 영등포·여의도 | 5호선→공덕→6호선 | **약 35분** | [영등포 가이드](/stories/yeongdeungpo1) |
-| 노원·상계 | 4호선→충무로→3호선 | **약 55분** | [노원 가이드](/stories/nowon1) |
-| 목동·양천 | 5호선→공덕→6호선 | **약 40분** | [목동 가이드](/stories/mokdong1) |
-| 구로·가산 | 2호선→충정로→5호선→공덕→6호선 | **약 50분** | [구로 가이드](/stories/guro1) |
-| 사당·동작 | 4호선→충무로→3호선 | **약 45분** | [사당 가이드](/stories/sadang1) |
+| 홍대입구 | 6호선 직행 | **약 15분** | [홍대 가이드](/stories/seoul1) |
+| 합정·망원 | 6호선 직행 | **약 20분** | [합정 가이드](/stories/seoul1) |
+| 이태원·한남 | 6호선 직행 | **약 30분** | [이태원 가이드](/stories/seoul1) |
+| 종로·광화문 | 3호선 직행 | **약 25분** | [종로 가이드](/stories/seoul1) |
+| 을지로·명동 | 3호선 (을지로3가→연신내) | **약 30분** | [명동 가이드](/stories/seoul1) |
+| 강남·역삼 | 2호선→충정로→5호선→공덕→6호선 | **약 50분** | [강남 가이드](/stories/seoul1) |
+| 잠실·송파 | 2호선→충정로→5호선→공덕→6호선 | **약 55분** | [잠실 가이드](/stories/seoul1) |
+| 건대·성수 | 2호선→충정로→5호선→공덕→6호선 | **약 45분** | [성수 가이드](/stories/seoul1) |
+| 영등포·여의도 | 5호선→공덕→6호선 | **약 35분** | [영등포 가이드](/stories/seoul1) |
+| 노원·상계 | 4호선→충무로→3호선 | **약 55분** | [노원 가이드](/stories/seoul1) |
+| 목동·양천 | 5호선→공덕→6호선 | **약 40분** | [목동 가이드](/stories/seoul1) |
+| 구로·가산 | 2호선→충정로→5호선→공덕→6호선 | **약 50분** | [구로 가이드](/stories/seoul1) |
+| 사당·동작 | 4호선→충무로→3호선 | **약 45분** | [사당 가이드](/stories/seoul1) |
 
 ### 경기·인천
 
 | 출발 거점 | 추천 노선 | 소요 시간 | 개별 가이드 |
 |-----------|----------|----------|-----------|
-| 일산·고양 | 3호선 직행 | **약 25분** | [일산 가이드](/stories/ilsan1) |
-| 파주·운정 | 경의중앙선→DMC→6호선 | **약 50분** | [파주 가이드](/stories/paju1) |
-| 분당·판교 | 신분당선→강남→2호선→충정로→5→6호선 | **약 1시간 10분** | [분당 가이드](/stories/bundang1) |
-| 수원 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간 20분** | [수원 가이드](/stories/suwon1) |
-| 안양 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간** | [안양 가이드](/stories/anyang1) |
+| 일산·고양 | 3호선 직행 | **약 25분** | [일산 가이드](/stories/gyeonggi1) |
+| 파주·운정 | 경의중앙선→DMC→6호선 | **약 50분** | [파주 가이드](/stories/gyeonggi1) |
+| 분당·판교 | 신분당선→강남→2호선→충정로→5→6호선 | **약 1시간 10분** | [분당 가이드](/stories/gyeonggi1) |
+| 수원 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간 20분** | [수원 가이드](/stories/gyeonggi1) |
+| 안양 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간** | [안양 가이드](/stories/gyeonggi1) |
 | 인천·부평 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간 20분** | [인천 가이드](/stories/incheon1) |
-| 부천 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간** | [부천 가이드](/stories/bucheon1) |
-| 김포 | 김포골드라인→DMC→6호선 | **약 50분** | [김포 가이드](/stories/gimpo1) |
-| 의정부 | 1호선→종로3가→3호선 | **약 55분** | [의정부 가이드](/stories/uijeongbu1) |
-| 남양주·구리 | 경의중앙선→DMC→6호선 | **약 1시간** | [남양주 가이드](/stories/namyangju1) |
-| 하남·미사 | 5호선→공덕→6호선 | **약 1시간 5분** | [하남 가이드](/stories/hanam1) |
-| 광명 | 1호선→신도림→2호선→충정로→5→6호선 | **약 55분** | [광명 가이드](/stories/gwangmyeong1) |
+| 부천 | 1호선→신도림→2호선→충정로→5→6호선 | **약 1시간** | [부천 가이드](/stories/gyeonggi1) |
+| 김포 | 김포골드라인→DMC→6호선 | **약 50분** | [김포 가이드](/stories/gyeonggi1) |
+| 의정부 | 1호선→종로3가→3호선 | **약 55분** | [의정부 가이드](/stories/gyeonggi1) |
+| 남양주·구리 | 경의중앙선→DMC→6호선 | **약 1시간** | [남양주 가이드](/stories/gyeonggi1) |
+| 하남·미사 | 5호선→공덕→6호선 | **약 1시간 5분** | [하남 가이드](/stories/gyeonggi1) |
+| 광명 | 1호선→신도림→2호선→충정로→5→6호선 | **약 55분** | [광명 가이드](/stories/gyeonggi1) |
 
 ---
 
@@ -156,8 +156,8 @@ faq:
 
 서울 각 구와 경기·인천 주요 도시에서 스튜디오 놀까지의 상세 이동 경로, 맞춤 세션 안내는 아래 개별 가이드를 참고하세요.
 
-**서울**: [강남](/stories/gangnam1) | [홍대](/stories/hongdae1) | [잠실](/stories/jamsil1) | [종로](/stories/jongno1) | [영등포](/stories/yeongdeungpo1) | [노원](/stories/nowon1) | [성수](/stories/seongsu1) | [사당](/stories/sadang1) | [목동](/stories/mokdong1) | [구로](/stories/guro1) | [이태원](/stories/itaewon1)
+**서울**: [강남](/stories/seoul1) | [홍대](/stories/seoul1) | [잠실](/stories/seoul1) | [종로](/stories/seoul1) | [영등포](/stories/seoul1) | [노원](/stories/seoul1) | [성수](/stories/seoul1) | [사당](/stories/seoul1) | [목동](/stories/seoul1) | [구로](/stories/seoul1) | [이태원](/stories/seoul1)
 
-**경기**: [일산](/stories/ilsan1) | [분당](/stories/bundang1) | [수원](/stories/suwon1) | [안양](/stories/anyang1) | [부천](/stories/bucheon1) | [김포](/stories/gimpo1) | [의정부](/stories/uijeongbu1) | [남양주](/stories/namyangju1) | [하남](/stories/hanam1) | [파주](/stories/paju1) | [광명](/stories/gwangmyeong1)
+**경기**: [일산](/stories/gyeonggi1) | [분당](/stories/gyeonggi1) | [수원](/stories/gyeonggi1) | [안양](/stories/gyeonggi1) | [부천](/stories/gyeonggi1) | [김포](/stories/gyeonggi1) | [의정부](/stories/gyeonggi1) | [남양주](/stories/gyeonggi1) | [하남](/stories/gyeonggi1) | [파주](/stories/gyeonggi1) | [광명](/stories/gyeonggi1)
 
-**인천**: [인천](/stories/incheon1) | [부평](/stories/bupyeong1) | [송도](/stories/songdo1)
+**인천**: [인천](/stories/incheon1) | [부평](/stories/incheon1) | [송도](/stories/incheon1)

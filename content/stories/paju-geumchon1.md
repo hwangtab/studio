@@ -125,4 +125,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[파주 녹음실 안내](/stories/paju1) | [파주 운정·교하·야당 녹음실 안내](/stories/paju-unjeong1) | [고양시·파주 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[파주 녹음실 안내](/stories/gyeonggi1) | [파주 운정·교하·야당 녹음실 안내](/stories/gyeonggi1) | [고양시·파주 녹음실 안내](/stories/gyeonggi1) | [고양 행신·화정·삼송 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

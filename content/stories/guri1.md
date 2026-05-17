@@ -121,4 +121,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[남양주·구리 녹음실 안내](/stories/namyangju1) | [하남·성남 방문 가이드](/stories/hanam1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[남양주·구리 녹음실 안내](/stories/gyeonggi1) | [하남·성남 방문 가이드](/stories/gyeonggi1) | [양평에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

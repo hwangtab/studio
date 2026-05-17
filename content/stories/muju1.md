@@ -121,4 +121,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[장수에서 서울 녹음실 방문 가이드](/stories/jangsu1) | [순창에서 서울 녹음실 방문 가이드](/stories/sunchang1) | [임실에서 서울 녹음실 방문 가이드](/stories/imsil1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[장수에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [순창에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [임실에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

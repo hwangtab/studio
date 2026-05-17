@@ -123,4 +123,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[인천·부천 녹음실 안내](/stories/incheon1) | [김포에서 서울 녹음실 방문 가이드](/stories/gimpo1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[인천·부천 녹음실 안내](/stories/incheon1) | [김포에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [파주에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

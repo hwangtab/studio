@@ -123,4 +123,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성북구 녹음실 안내](/stories/seongbuk1) | [노원구 녹음실 안내](/stories/nowon1) | [도봉구 녹음실 안내](/stories/dobong1) | [이문·외대앞·석계 녹음실 안내](/stories/imun1)
+[성북구 녹음실 안내](/stories/seoul1) | [노원구 녹음실 안내](/stories/seoul1) | [도봉구 녹음실 안내](/stories/seoul1) | [이문·외대앞·석계 녹음실 안내](/stories/seoul1)

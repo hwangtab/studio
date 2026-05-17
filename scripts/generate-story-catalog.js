@@ -21,25 +21,30 @@ function classifyCluster(title) {
   return 'other';
 }
 
-const files = fs.readdirSync(STORIES_DIR).filter((f) =>
-  f.endsWith('.md') && !/\.(en|zh|es|vi|th|uz)\.md$/.test(f)
-);
+try {
+  const files = fs.readdirSync(STORIES_DIR).filter((f) =>
+    f.endsWith('.md') && !/\.(en|zh|es|vi|th|uz)\.md$/.test(f)
+  );
 
-const entries = files.map((f) => {
-  const raw = fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8');
-  const { data, content } = matter(raw);
-  const title = data.title || '';
-  return {
-    slug: f.replace(/\.md$/, ''),
-    title,
-    contentLen: content.length,
-    cluster: classifyCluster(title),
-  };
-});
+  const entries = files.map((f) => {
+    const raw = fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8');
+    const { data, content } = matter(raw);
+    const title = data.title || '';
+    return {
+      slug: f.replace(/\.md$/, ''),
+      title,
+      contentLen: content.length,
+      cluster: classifyCluster(title),
+    };
+  });
 
-fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
-fs.writeFileSync(OUTPUT, JSON.stringify({ generatedAt: new Date().toISOString(), entries }, null, 2), 'utf-8');
+  fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
+  fs.writeFileSync(OUTPUT, JSON.stringify({ generatedAt: new Date().toISOString(), entries }, null, 2), 'utf-8');
 
-const byCluster = entries.reduce((acc, e) => { acc[e.cluster] = (acc[e.cluster] || 0) + 1; return acc; }, {});
-console.log(`story-catalog: ${entries.length} entries written to ${path.relative(process.cwd(), OUTPUT)}`);
-for (const [k, v] of Object.entries(byCluster)) console.log(`  ${k}: ${v}`);
+  const byCluster = entries.reduce((acc, e) => { acc[e.cluster] = (acc[e.cluster] || 0) + 1; return acc; }, {});
+  console.log(`story-catalog: ${entries.length} entries written to ${path.relative(process.cwd(), OUTPUT)}`);
+  for (const [k, v] of Object.entries(byCluster)) console.log(`  ${k}: ${v}`);
+} catch (err) {
+  console.error('generate-story-catalog failed:', err);
+  process.exit(1);
+}

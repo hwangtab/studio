@@ -117,7 +117,7 @@ faq:
 ---
 
 
-[연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/practice-room-dongdaemun1)
+[연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/seoul1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/seoul1)
 
 
 <!-- 내부 link block — Round 4 C-H3 -->
@@ -127,4 +127,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**불광 인근 권역 비교**: [연신내](/ko/stories/practice-room-yeonsinnae1), [대조동](/ko/stories/practice-room-daejo1), [독바위](/ko/stories/practice-room-dokbawi1), [녹번](/ko/stories/practice-room-nokbeon1), [역촌](/ko/stories/practice-room-yeokchon1)
+**불광 인근 권역 비교**: [연신내](/stories/practice-room-yeonsinnae1), [대조동](/stories/practice-room-daejo1), [독바위](/stories/practice-room-dokbawi1), [녹번](/stories/practice-room-nokbeon1), [역촌](/stories/practice-room-yeokchon1)

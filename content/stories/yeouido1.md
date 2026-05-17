@@ -131,4 +131,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[영등포구 녹음실 안내](/stories/yeongdeungpo1) | [마포구 녹음실 안내](/stories/mapo1) | [홍대·신촌 녹음실 안내](/stories/hongdae1) | [강남 녹음실 안내](/stories/gangnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[영등포구 녹음실 안내](/stories/seoul1) | [마포구 녹음실 안내](/stories/seoul1) | [홍대·신촌 녹음실 안내](/stories/seoul1) | [강남 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

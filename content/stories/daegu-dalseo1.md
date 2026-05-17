@@ -143,4 +143,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [대구 수성구·동대구 녹음실 안내](/stories/suseong1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [대구 수성구·동대구 녹음실 안내](/stories/seoul1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

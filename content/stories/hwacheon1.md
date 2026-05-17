@@ -128,4 +128,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[양구에서 서울 녹음실 방문 가이드](/stories/yanggu1) | [홍천에서 서울 녹음실 방문 가이드](/stories/hongcheon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[양구에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [홍천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

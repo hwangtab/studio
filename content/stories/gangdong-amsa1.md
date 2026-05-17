@@ -122,4 +122,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강동구 녹음실 안내](/stories/gangdong1) | [고덕·상일·강일·하남 녹음실 안내](/stories/godeok1) | [천호·암사·길동·명일 녹음실 안내](/stories/cheonho1) | [강동구 둔촌·성내 녹음실 안내](/stories/gangdong-dunchon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[강동구 녹음실 안내](/stories/seoul1) | [고덕·상일·강일·하남 녹음실 안내](/stories/seoul1) | [천호·암사·길동·명일 녹음실 안내](/stories/seoul1) | [강동구 둔촌·성내 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

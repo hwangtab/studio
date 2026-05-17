@@ -143,4 +143,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 음악연습실 — 홍대·합정·연남동 권역 24시간 방음 연습실 가이드](/stories/practice-room-mapo1) | [서울 음악연습실 추천 — 권역별 비교와 가성비 좋은 선택 가이드](/stories/practice-room-seoul1) | [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/practice-room-dongdaemun1)
+[마포구 음악연습실 — 홍대·합정·연남동 권역 24시간 방음 연습실 가이드](/stories/seoul1) | [서울 음악연습실 추천 — 권역별 비교와 가성비 좋은 선택 가이드](/stories/seoul1) | [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/seoul1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/seoul1)

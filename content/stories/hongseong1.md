@@ -115,4 +115,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[예산에서 서울 녹음실 방문 가이드](/stories/yesan1) | [청양에서 서울 녹음실 방문 가이드](/stories/cheongyang1) | [부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[예산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [청양에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [부여에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

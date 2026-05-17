@@ -131,4 +131,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[수원·안양·군포 녹음실 안내](/stories/suwon1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [안양 만안구 녹음실 안내](/stories/anyang-manan1) | [평촌·범계·군포 녹음실 안내](/stories/pyeongchon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[수원·안양·군포 녹음실 안내](/stories/gyeonggi1) | [수원 영통·광교·망포 녹음실 안내](/stories/gyeonggi1) | [안양 만안구 녹음실 안내](/stories/gyeonggi1) | [평촌·범계·군포 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

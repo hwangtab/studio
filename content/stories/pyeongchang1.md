@@ -135,4 +135,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[정선에서 서울 녹음실 방문 가이드](/stories/jeongseon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주·강원도에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[정선에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [원주·강원도에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

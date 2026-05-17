@@ -146,4 +146,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[중구 녹음실 안내](/stories/junggu1) | [종로구 녹음실 안내](/stories/jongno1) | [용산구 녹음실 안내](/stories/yongsan1) | [마포구 녹음실 안내](/stories/mapo1)
+[중구 녹음실 안내](/stories/seoul1) | [종로구 녹음실 안내](/stories/seoul1) | [용산구 녹음실 안내](/stories/seoul1) | [마포구 녹음실 안내](/stories/seoul1)

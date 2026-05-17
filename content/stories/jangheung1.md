@@ -136,4 +136,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[고흥에서 서울 녹음실 방문 가이드](/stories/goheung1) | [함평에서 서울 녹음실 방문 가이드](/stories/hampyeong1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[고흥에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [함평에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [여수에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

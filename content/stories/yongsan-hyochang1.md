@@ -143,4 +143,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[용산구 전체 녹음실 안내](/stories/yongsan1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/ichon1) | [해방촌·경리단길 녹음실 안내](/stories/haebangchon1) | [마포구 공덕 녹음실 안내](/stories/mapo-gongdeok1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[용산구 전체 녹음실 안내](/stories/seoul1) | [이촌·서빙고·한남·보광 녹음실 안내](/stories/seoul1) | [해방촌·경리단길 녹음실 안내](/stories/seoul1) | [마포구 공덕 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

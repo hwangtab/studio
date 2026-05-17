@@ -140,4 +140,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 망원·연남·동교 녹음실 안내](/stories/mapo-mangwon1) | [공덕·도화·용강·아현동 녹음실 안내](/stories/mapo-gongdeok1) | [연남동·성산동·망원동 녹음실 안내](/stories/yeongnam1) | [합정·상수 녹음실 안내](/stories/hapjeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[마포구 망원·연남·동교 녹음실 안내](/stories/seoul1) | [공덕·도화·용강·아현동 녹음실 안내](/stories/seoul1) | [연남동·성산동·망원동 녹음실 안내](/stories/gyeongbuk1) | [합정·상수 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

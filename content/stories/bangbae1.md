@@ -131,4 +131,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [동작구 녹음실 안내](/stories/dongjak1) | [역삼·선릉 녹음실 안내](/stories/yeoksam1)
+[서초구 녹음실 안내](/stories/seoul1) | [강남구 녹음실 안내](/stories/seoul1) | [동작구 녹음실 안내](/stories/dongjak1) | [역삼·선릉 녹음실 안내](/stories/seoul1)

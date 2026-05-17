@@ -138,4 +138,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성동구 왕십리·마장·행당 녹음실 안내](/stories/seongdong-wangsimni1) | [금호·옥수·행당·마장 녹음실 안내](/stories/geumho1) | [성수동·뚝섬 녹음실 안내](/stories/seongsu1) | [광진구 녹음실 안내](/stories/gwangjin1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성동구 왕십리·마장·행당 녹음실 안내](/stories/seoul1) | [금호·옥수·행당·마장 녹음실 안내](/stories/seoul1) | [성수동·뚝섬 녹음실 안내](/stories/seoul1) | [광진구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -124,4 +124,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[안양·군포·의왕 방문 가이드](/stories/anyang1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[안양·군포·의왕 방문 가이드](/stories/gyeonggi1) | [수원·안양·군포 녹음실 안내](/stories/gyeonggi1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

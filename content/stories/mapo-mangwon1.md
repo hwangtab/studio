@@ -121,4 +121,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 전체 녹음실 안내](/stories/mapo1) | [마포구 공덕·대흥 녹음실 안내](/stories/mapo-gongdeok1) | [합정 녹음실 안내](/stories/hapjeong1) | [홍대 녹음실 안내](/stories/hongdae1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[마포구 전체 녹음실 안내](/stories/seoul1) | [마포구 공덕·대흥 녹음실 안내](/stories/seoul1) | [합정 녹음실 안내](/stories/seoul1) | [홍대 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -132,4 +132,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[거창에서 서울 녹음실 방문 가이드](/stories/geochang1) | [고령에서 서울 녹음실 방문 가이드](/stories/goryeong1) | [산청에서 서울 녹음실 방문 가이드](/stories/sancheong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[거창에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [고령에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [산청에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

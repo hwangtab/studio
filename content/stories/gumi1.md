@@ -120,4 +120,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[김천에서 서울 녹음실 방문 가이드](/stories/gimcheon1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[김천에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [안동에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [포항에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

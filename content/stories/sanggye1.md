@@ -149,4 +149,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[노원구·도봉구 녹음실 안내](/stories/nowon1) | [창동·노원 녹음실 안내](/stories/changdong1) | [강북구 녹음실 안내](/stories/gangbuk1) | [중랑구 녹음실 안내](/stories/jungnang1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[노원구·도봉구 녹음실 안내](/stories/seoul1) | [창동·노원 녹음실 안내](/stories/seoul1) | [강북구 녹음실 안내](/stories/seoul1) | [중랑구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -133,4 +133,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 녹음실 안내](/stories/mapo1) | [홍대·신촌 근처 녹음실 안내](/stories/hongdae1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [여의도·영등포 녹음실 안내](/stories/yeouido1)
+[마포구 녹음실 안내](/stories/seoul1) | [홍대·신촌 근처 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1) | [여의도·영등포 녹음실 안내](/stories/seoul1)

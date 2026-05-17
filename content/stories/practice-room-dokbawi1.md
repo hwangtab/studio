@@ -175,4 +175,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**독바위 인근 권역 비교**: [불광](/ko/stories/practice-room-bulgwang1), [연신내](/ko/stories/practice-room-yeonsinnae1), [증산](/ko/stories/practice-room-jeungsan1), [녹번](/ko/stories/practice-room-nokbeon1), [역촌](/ko/stories/practice-room-yeokchon1)
+**독바위 인근 권역 비교**: [불광](/stories/practice-room-bulgwang1), [연신내](/stories/practice-room-yeonsinnae1), [증산](/stories/practice-room-jeungsan1), [녹번](/stories/practice-room-nokbeon1), [역촌](/stories/practice-room-yeokchon1)

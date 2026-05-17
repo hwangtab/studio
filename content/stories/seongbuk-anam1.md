@@ -136,4 +136,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성북구 전체 녹음실 안내](/stories/seongbuk1) | [돈암·성신여대·삼선 녹음실 안내](/stories/seongbuk-donam1) | [길음·정릉·삼선 녹음실 안내](/stories/gileum1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성북구 전체 녹음실 안내](/stories/seoul1) | [돈암·성신여대·삼선 녹음실 안내](/stories/seoul1) | [길음·정릉·삼선 녹음실 안내](/stories/seoul1) | [동대문구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

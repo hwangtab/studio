@@ -108,7 +108,7 @@ faq:
 
 ---
 
-[불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [의정부·양주·동두천 음악연습실 — 북부 경기 24시간 방음 연습실 가이드](/stories/practice-room-uijeongbu1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/practice-room-dongdaemun1)
+[불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [연신내 음악연습실 추천 — 은평구 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [의정부·양주·동두천 음악연습실 — 북부 경기 24시간 방음 연습실 가이드](/stories/seoul1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/seoul1) | [동대문·성동·광진구 음악연습실 — 서울 동부권 24시간 방음 연습실 가이드](/stories/seoul1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 
@@ -116,4 +116,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**고양 인근 권역 비교**: [원당](/ko/stories/practice-room-wondang1), [덕양구](/ko/stories/practice-room-deogyang1), [일산](/ko/stories/practice-room-ilsan1), [원흥](/ko/stories/practice-room-wonheung1), [삼송](/ko/stories/practice-room-samsong1)
+**고양 인근 권역 비교**: [원당](/stories/practice-room-wondang1), [덕양구](/stories/practice-room-deogyang1), [일산](/stories/practice-room-ilsan1), [원흥](/stories/practice-room-wonheung1), [삼송](/stories/practice-room-samsong1)

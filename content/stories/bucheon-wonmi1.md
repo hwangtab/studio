@@ -133,4 +133,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[부천시 전체 녹음실 안내](/stories/bucheon1) | [부천 오정구 녹음실 안내](/stories/bucheon-ojeong1) | [부천 소사·심곡·역곡·중동 녹음실 안내](/stories/bucheon-sosa1) | [인천 녹음실 안내](/stories/incheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[부천시 전체 녹음실 안내](/stories/gyeonggi1) | [부천 오정구 녹음실 안내](/stories/gyeonggi1) | [부천 소사·심곡·역곡·중동 녹음실 안내](/stories/gyeonggi1) | [인천 녹음실 안내](/stories/incheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

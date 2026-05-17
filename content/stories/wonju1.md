@@ -129,4 +129,4 @@ KTX 원주역 → 청량리 40분, 지하철 연신내 총 65분.
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[강릉에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

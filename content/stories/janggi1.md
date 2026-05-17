@@ -127,4 +127,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[일산 녹음실 안내](/stories/ilsan1) | [고양시 녹음실 안내](/stories/goyang1) | [파주에서 서울 녹음실 방문 가이드](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[일산 녹음실 안내](/stories/gyeonggi1) | [고양시 녹음실 안내](/stories/gyeonggi1) | [파주에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [은평구 녹음실 안내](/stories/seoul1)

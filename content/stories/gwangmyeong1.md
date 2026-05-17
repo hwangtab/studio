@@ -113,4 +113,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광명 하안·철산·소하 녹음실 안내](/stories/gwangmyeong-haean1) | [부천·안양·안산 녹음실 가이드](/stories/bucheon1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [화성·시흥·안산 녹음실 안내](/stories/hwaseong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[광명 하안·철산·소하 녹음실 안내](/stories/gyeonggi1) | [부천·안양·안산 녹음실 가이드](/stories/gyeonggi1) | [수원·안양·군포 녹음실 안내](/stories/gyeonggi1) | [화성·시흥·안산 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

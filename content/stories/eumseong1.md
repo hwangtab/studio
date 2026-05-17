@@ -111,4 +111,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[진천에서 서울 녹음실 방문 가이드](/stories/jincheon1) | [보은에서 서울 녹음실 방문 가이드](/stories/boeun1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[진천에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [보은에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

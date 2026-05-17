@@ -127,4 +127,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[충주에서 서울 녹음실 방문 가이드](/stories/chungju1) | [단양에서 서울 녹음실 방문 가이드](/stories/danyang1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[충주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [단양에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

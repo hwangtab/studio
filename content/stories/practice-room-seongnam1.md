@@ -134,4 +134,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[수원·안양·의왕 음악연습실 — 경기 남부 1호선 연신내 연습실 이용 가이드](/stories/practice-room-suwon1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/practice-room-hongdae1) | [남양주·구리·하남 음악연습실 — 경기 동부 서울 접근 방음 연습실 가이드](/stories/practice-room-namyangju1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/practice-room-bucheon1)
+[수원·안양·의왕 음악연습실 — 경기 남부 1호선 연신내 연습실 이용 가이드](/stories/seoul1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/seoul1) | [남양주·구리·하남 음악연습실 — 경기 동부 서울 접근 방음 연습실 가이드](/stories/seoul1) | [부천·인천·김포 음악연습실 — 서울 서부 경기 24시간 방음 연습실 가이드](/stories/seoul1)

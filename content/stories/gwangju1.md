@@ -88,4 +88,4 @@ KTX 광주송정역 → 서울역 1시간 30분, 지하철 연신내 총 100분.
 
 광주에서 KTX로 2~3시간이면 서울 전문 스튜디오 세션이 가능합니다. 호남 지역 아티스트도 연신내 스튜디오 놀에서 음원 발매용 마스터부터 오디션 데모까지 녹음·믹싱·마스터링을 당일 왕복으로 완성할 수 있습니다. KTX 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보하시길 권장합니다.
 
-[광주 상무지구·충장로 녹음실 안내](/stories/gwangju-sangmu1) | [전라남도 녹음실 방문 가이드](/stories/jeonnam1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [목포에서 서울 녹음실 방문 가이드](/stories/mokpo1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[광주 상무지구·충장로 녹음실 안내](/stories/gwangju1) | [전라남도 녹음실 방문 가이드](/stories/jeonnam1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [목포에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

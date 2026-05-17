@@ -120,4 +120,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[천안시 전체 녹음실 안내](/stories/cheonan1) | [아산에서 서울 녹음실 방문 가이드](/stories/asan1) | [평택에서 서울 녹음실 방문 가이드](/stories/pyeongtaek1) | [세종시 녹음실 안내](/stories/sejong1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[천안시 전체 녹음실 안내](/stories/chungnam1) | [아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [평택에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [세종시 녹음실 안내](/stories/sejong1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

@@ -138,4 +138,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [함양에서 서울 녹음실 방문 가이드](/stories/hamyang1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[합천에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [함양에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [진주에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

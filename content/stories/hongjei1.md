@@ -143,4 +143,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[서대문구 녹음실 안내](/stories/seodaemun1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [마포구 녹음실 안내](/stories/mapo1) | [불광·연신내 녹음실 안내](/stories/bulgwang1)
+[서대문구 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1) | [마포구 녹음실 안내](/stories/seoul1) | [불광·연신내 녹음실 안내](/stories/seoul1)

@@ -145,4 +145,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[부산 해운대·수영·광안리 녹음실 안내](/stories/haeundae1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[부산 해운대·수영·광안리 녹음실 안내](/stories/busan1) | [부산에서 서울 녹음실 방문 가이드](/stories/busan1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

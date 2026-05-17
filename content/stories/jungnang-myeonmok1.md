@@ -130,4 +130,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[중랑구 전체 녹음실 안내](/stories/jungnang1) | [중랑구 신내·망우·상봉 녹음실 안내](/stories/jungnang-sinnae1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [성북구 녹음실 안내](/stories/seongbuk1)
+[중랑구 전체 녹음실 안내](/stories/seoul1) | [중랑구 신내·망우·상봉 녹음실 안내](/stories/seoul1) | [동대문구 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/seoul1)

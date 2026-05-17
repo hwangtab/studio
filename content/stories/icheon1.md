@@ -140,4 +140,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[여주에서 서울 녹음실 방문 가이드](/stories/yeoju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[여주에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [수원·안양·군포 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

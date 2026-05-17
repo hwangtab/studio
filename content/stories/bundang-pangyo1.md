@@ -137,4 +137,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[분당구 전체 녹음실 안내](/stories/bundang1) | [분당 서현·수내·정자 녹음실 안내](/stories/bundang-seohyun1) | [분당 야탑·모란·복정 녹음실 안내](/stories/bundang-yatap1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[분당구 전체 녹음실 안내](/stories/gyeonggi1) | [분당 서현·수내·정자 녹음실 안내](/stories/gyeonggi1) | [분당 야탑·모란·복정 녹음실 안내](/stories/gyeonggi1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

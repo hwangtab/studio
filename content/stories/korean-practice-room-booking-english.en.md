@@ -1,6 +1,6 @@
 ---
 title: "Music Practice Rooms in Korea: How to Book Without Speaking Korean"
-date: 2026-05-12
+date: 2026-05-12T00:00:00.000Z
 category: foreign-musicians
 description: "Step-by-step English guide to booking a music practice room in Seoul, with hourly rates, equipment, and what to expect at Studio NOL."
 keywords: ["music practice room Seoul", "rehearsal room Korea English", "practice space Yeonsinnae", "Korean studio English booking"]

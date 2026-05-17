@@ -116,4 +116,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[서천에서 서울 녹음실 방문 가이드](/stories/seocheon1) | [논산에서 서울 녹음실 방문 가이드](/stories/nonsan1) | [청양에서 서울 녹음실 방문 가이드](/stories/cheongyang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[서천에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [논산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [청양에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

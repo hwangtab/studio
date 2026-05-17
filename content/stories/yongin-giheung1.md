@@ -120,4 +120,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[용인시 전체 녹음실 안내](/stories/yongin1) | [수지·기흥·동백 녹음실 안내](/stories/suji1) | [용인 처인구 녹음실 안내](/stories/yongin-cheoin1) | [성남·분당·판교 녹음실 안내](/stories/seongnam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[용인시 전체 녹음실 안내](/stories/gyeonggi1) | [수지·기흥·동백 녹음실 안내](/stories/gyeonggi1) | [용인 처인구 녹음실 안내](/stories/gyeonggi1) | [성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

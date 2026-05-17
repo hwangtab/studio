@@ -136,4 +136,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광진구 녹음실 안내](/stories/gwangjin1) | [자양·능동·중곡 녹음실 안내](/stories/jayang1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1)
+[광진구 녹음실 안내](/stories/seoul1) | [자양·능동·중곡 녹음실 안내](/stories/seoul1) | [성동구 녹음실 안내](/stories/seoul1) | [강동구 녹음실 안내](/stories/seoul1)

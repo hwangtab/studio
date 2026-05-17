@@ -112,4 +112,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[보은에서 서울 녹음실 방문 가이드](/stories/boeun1) | [영동에서 서울 녹음실 방문 가이드](/stories/yeongdong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[보은에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [영동에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

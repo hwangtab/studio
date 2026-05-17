@@ -145,7 +145,7 @@ faq:
 
 ---
 
-[불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/practice-room-hongdae1)
+[불광 음악연습실 추천 — 불광역 도보 7분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/seoul1)
 
 
 <!-- 내부 link block — Round 4 C-H3 -->
@@ -155,4 +155,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**연신내 인근 권역 비교**: [불광](/ko/stories/practice-room-bulgwang1), [대조동](/ko/stories/practice-room-daejo1), [구산](/ko/stories/practice-room-gusan1), [역촌](/ko/stories/practice-room-yeokchon1), [녹번](/ko/stories/practice-room-nokbeon1)
+**연신내 인근 권역 비교**: [불광](/stories/practice-room-bulgwang1), [대조동](/stories/practice-room-daejo1), [구산](/stories/practice-room-gusan1), [역촌](/stories/practice-room-yeokchon1), [녹번](/stories/practice-room-nokbeon1)

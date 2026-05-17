@@ -146,4 +146,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[가산·구로디지털단지 녹음실 안내](/stories/guro-gasan1) | [개봉·오류·천왕 녹음실 안내](/stories/gaebong1) | [금천구·독산·가산 녹음실 안내](/stories/geumcheon1) | [영등포 녹음실 안내](/stories/yeongdeungpo1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[가산·구로디지털단지 녹음실 안내](/stories/seoul1) | [개봉·오류·천왕 녹음실 안내](/stories/seoul1) | [금천구·독산·가산 녹음실 안내](/stories/seoul1) | [영등포 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

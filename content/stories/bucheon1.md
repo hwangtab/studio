@@ -155,4 +155,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[부천 원미구 상동·중동·춘의·도당 녹음실 안내](/stories/bucheon-wonmi1) | [부천 오정구 오정·고강·원종 녹음실 안내](/stories/bucheon-ojeong1) | [부천 소사·심곡·역곡·중동 녹음실 안내](/stories/bucheon-sosa1) | [인천 녹음실 방문 가이드](/stories/incheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[부천 원미구 상동·중동·춘의·도당 녹음실 안내](/stories/gyeonggi1) | [부천 오정구 오정·고강·원종 녹음실 안내](/stories/gyeonggi1) | [부천 소사·심곡·역곡·중동 녹음실 안내](/stories/gyeonggi1) | [인천 녹음실 방문 가이드](/stories/incheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

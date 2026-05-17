@@ -145,4 +145,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[종로구 녹음실 안내](/stories/jongno1) | [대학로·혜화 녹음실 안내](/stories/daehak1) | [서대문구 녹음실 안내](/stories/seodaemun1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[종로구 녹음실 안내](/stories/seoul1) | [대학로·혜화 녹음실 안내](/stories/seoul1) | [서대문구 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1)

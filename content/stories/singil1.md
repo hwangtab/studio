@@ -139,4 +139,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [여의도 녹음실 안내](/stories/yeouido1) | [구로구 녹음실 안내](/stories/guro1) | [동작구 녹음실 안내](/stories/dongjak1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[영등포·구로 녹음실 안내](/stories/seoul1) | [여의도 녹음실 안내](/stories/seoul1) | [구로구 녹음실 안내](/stories/seoul1) | [동작구 녹음실 안내](/stories/dongjak1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

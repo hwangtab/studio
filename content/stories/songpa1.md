@@ -127,4 +127,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[신천·잠실본동·방이·오금 녹음실 안내](/stories/songpa-sincheon1) | [문정·장지·위례·복정 녹음실 안내](/stories/munjeong1) | [가락·오금·마천·거여 녹음실 안내](/stories/garak1) | [잠실·석촌 근처 녹음실 안내](/stories/jamsil1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[신천·잠실본동·방이·오금 녹음실 안내](/stories/seoul1) | [문정·장지·위례·복정 녹음실 안내](/stories/seoul1) | [가락·오금·마천·거여 녹음실 안내](/stories/seoul1) | [잠실·석촌 근처 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

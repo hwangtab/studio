@@ -162,4 +162,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**구산 인근 권역 비교**: [연신내](/ko/stories/practice-room-yeonsinnae1), [역촌](/ko/stories/practice-room-yeokchon1), [새절](/ko/stories/practice-room-saejeol1), [응암](/ko/stories/practice-room-eungam1), [대조동](/ko/stories/practice-room-daejo1)
+**구산 인근 권역 비교**: [연신내](/stories/practice-room-yeonsinnae1), [역촌](/stories/practice-room-yeokchon1), [새절](/stories/practice-room-saejeol1), [응암](/stories/practice-room-eungam1), [대조동](/stories/practice-room-daejo1)

@@ -136,4 +136,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강남구 녹음실 안내](/stories/gangnam1) | [서초구 녹음실 안내](/stories/seocho1) | [양재·강남역 녹음실 안내](/stories/yangjae1) | [송파구 녹음실 안내](/stories/songpa1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[강남구 녹음실 안내](/stories/seoul1) | [서초구 녹음실 안내](/stories/seoul1) | [양재·강남역 녹음실 안내](/stories/seoul1) | [송파구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

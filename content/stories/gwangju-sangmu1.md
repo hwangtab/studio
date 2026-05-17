@@ -98,4 +98,4 @@ faq:
 
 KTX 당일 방문을 원한다면 상무지구에서 광주 지하철 1호선으로 광주송정역까지 약 25분, 오전 6~7시대 KTX로 서울역 도착 후 6호선으로 연신내역까지 약 40분이면 총 2.5~3시간에 이동이 완료됩니다. 당일 오전 세션을 마치고 오후 KTX로 귀가하는 일정이 가능합니다. 방문 전 카카오톡으로 레퍼런스 트랙과 MR 파일을 미리 공유해두시면 세션 시간을 최대한 활용할 수 있습니다.
 
-[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [목포에서 서울 녹음실 방문 가이드](/stories/mokpo1) | [전라남도 녹음실 방문 가이드](/stories/jeonnam1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [목포에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [전라남도 녹음실 방문 가이드](/stories/jeonnam1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

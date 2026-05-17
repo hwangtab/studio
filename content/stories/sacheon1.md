@@ -135,4 +135,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[남해에서 서울 녹음실 방문 가이드](/stories/namhae1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/tongyeong1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[남해에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [진주에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [통영·거제에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [창원에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

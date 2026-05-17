@@ -138,4 +138,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[대전 녹음실 안내](/stories/daejeon1) | [논산 녹음실 안내](/stories/nonsan1) | [공주 녹음실 안내](/stories/gongju1) | [전국 방문 가이드](/stories/nationwide1)
+[대전 녹음실 안내](/stories/daejeon1) | [논산 녹음실 안내](/stories/chungnam1) | [공주 녹음실 안내](/stories/chungnam1) | [전국 방문 가이드](/stories/nationwide1)

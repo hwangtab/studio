@@ -134,4 +134,4 @@ ITX 청춘 춘천역 → 용산역 1시간 10분, 지하철 연신내 총 75분.
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강원도 녹음실 방문 가이드](/stories/gangwon1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1)
+[강원도 녹음실 방문 가이드](/stories/gangwon1) | [속초에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [원주에서 서울 녹음실 방문 가이드](/stories/gangwon1)

@@ -126,4 +126,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[시흥시 전체 녹음실 안내](/stories/siheung1) | [시흥 은계·정왕·장현·목감 녹음실 안내](/stories/siheung-eungye1) | [안산에서 서울 녹음실 방문 가이드](/stories/ansan1) | [광명에서 서울 녹음실 방문 가이드](/stories/gwangmyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[시흥시 전체 녹음실 안내](/stories/gyeonggi1) | [시흥 은계·정왕·장현·목감 녹음실 안내](/stories/gyeonggi1) | [안산에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [광명에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

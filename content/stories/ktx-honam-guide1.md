@@ -38,17 +38,17 @@ faq:
 
 | 출발 도시 | KTX 소요 | 용산역→연신내 | 총 소요 | 개별 가이드 |
 |-----------|----------|-------------|---------|-----------|
-| 공주 | 약 40분 | 약 30분 | **약 1시간 10분** | [공주 가이드](/stories/gongju1) |
-| 익산 | 약 1시간 10분 | 약 30분 | **약 1시간 40분** | [익산 가이드](/stories/iksan1) |
-| 정읍·김제 | 약 1시간 20분 | 약 30분 | **약 1시간 50분** | [정읍 가이드](/stories/jeongeup1) |
-| 전주 | 약 1시간 30분 | 약 30분 | **약 2시간** | [전주 가이드](/stories/jeonju1) |
+| 공주 | 약 40분 | 약 30분 | **약 1시간 10분** | [공주 가이드](/stories/chungnam1) |
+| 익산 | 약 1시간 10분 | 약 30분 | **약 1시간 40분** | [익산 가이드](/stories/jeonbuk1) |
+| 정읍·김제 | 약 1시간 20분 | 약 30분 | **약 1시간 50분** | [정읍 가이드](/stories/jeonbuk1) |
+| 전주 | 약 1시간 30분 | 약 30분 | **약 2시간** | [전주 가이드](/stories/jeonbuk1) |
 | 광주송정 | 약 1시간 35분 | 약 30분 | **약 2시간 5분** | [광주 가이드](/stories/gwangju1) |
-| 나주 | 약 1시간 45분 | 약 30분 | **약 2시간 15분** | [나주 가이드](/stories/naju1) |
-| 군산 | 약 2시간 (익산 경유) | 약 30분 | **약 2시간 30분** | [군산 가이드](/stories/gunsan1) |
-| 순천 | 약 2시간 30분 | 약 30분 | **약 3시간** | [순천 가이드](/stories/suncheon1) |
-| 목포 | 약 2시간 40분 | 약 30분 | **약 3시간 10분** | [목포 가이드](/stories/mokpo1) |
-| 여수 | 약 2시간 50분 | 약 30분 | **약 3시간 20분** | [여수 가이드](/stories/yeosu1) |
-| 장성 | 약 2시간 40분 (광주 경유) | 약 30분 | **약 3시간 10분** | [장성 가이드](/stories/jangseong1) |
+| 나주 | 약 1시간 45분 | 약 30분 | **약 2시간 15분** | [나주 가이드](/stories/jeonnam1) |
+| 군산 | 약 2시간 (익산 경유) | 약 30분 | **약 2시간 30분** | [군산 가이드](/stories/jeonbuk1) |
+| 순천 | 약 2시간 30분 | 약 30분 | **약 3시간** | [순천 가이드](/stories/jeonnam1) |
+| 목포 | 약 2시간 40분 | 약 30분 | **약 3시간 10분** | [목포 가이드](/stories/jeonnam1) |
+| 여수 | 약 2시간 50분 | 약 30분 | **약 3시간 20분** | [여수 가이드](/stories/jeonnam1) |
+| 장성 | 약 2시간 40분 (광주 경유) | 약 30분 | **약 3시간 10분** | [장성 가이드](/stories/jeonnam1) |
 
 KTX·SRT 운행 시간표는 시기에 따라 변동됩니다. [코레일 홈페이지](https://www.letskorail.com) 또는 [SRT 홈페이지](https://etk.srail.co.kr)에서 최신 시간표를 확인하세요.
 
@@ -154,4 +154,4 @@ SRT를 타고 수서역에서 하차하는 경우:
 
 각 도시에서 스튜디오 놀까지의 상세 이동 경로, 현지 음악 씬 소개, 맞춤 세션 안내는 아래 개별 가이드를 참고하세요.
 
-[광주 가이드](/stories/gwangju1) | [전주 가이드](/stories/jeonju1) | [익산 가이드](/stories/iksan1) | [목포 가이드](/stories/mokpo1) | [순천 가이드](/stories/suncheon1) | [여수 가이드](/stories/yeosu1) | [군산 가이드](/stories/gunsan1) | [나주 가이드](/stories/naju1) | [정읍 가이드](/stories/jeongeup1) | [공주 가이드](/stories/gongju1) | [장성 가이드](/stories/jangseong1)
+[광주 가이드](/stories/gwangju1) | [전주 가이드](/stories/jeonbuk1) | [익산 가이드](/stories/jeonbuk1) | [목포 가이드](/stories/jeonnam1) | [순천 가이드](/stories/jeonnam1) | [여수 가이드](/stories/jeonnam1) | [군산 가이드](/stories/jeonbuk1) | [나주 가이드](/stories/jeonnam1) | [정읍 가이드](/stories/jeonbuk1) | [공주 가이드](/stories/chungnam1) | [장성 가이드](/stories/jeonnam1)

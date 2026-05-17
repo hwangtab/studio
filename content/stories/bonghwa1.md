@@ -140,4 +140,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[영양에서 서울 녹음실 방문 가이드](/stories/yeongyang1) | [예천에서 서울 녹음실 방문 가이드](/stories/yecheon1) | [안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[영양에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [예천에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [안동에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

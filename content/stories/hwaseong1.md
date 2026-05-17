@@ -144,4 +144,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[화성 동탄·동탄2신도시 녹음실 안내](/stories/hwaseong-dongtan1) | [화성 봉담·향남·남양 녹음실 안내](/stories/hwaseong-bongdam1) | [안산·시흥 녹음실 방문 가이드](/stories/ansan1) | [동탄·용인·수지 녹음실 안내](/stories/dongtan1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[화성 동탄·동탄2신도시 녹음실 안내](/stories/gyeonggi1) | [화성 봉담·향남·남양 녹음실 안내](/stories/gyeonggi1) | [안산·시흥 녹음실 방문 가이드](/stories/gyeonggi1) | [동탄·용인·수지 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

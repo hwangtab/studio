@@ -132,4 +132,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광진구 자양·화양·중곡 녹음실 안내](/stories/gwangjin-jayang1) | [광진구 군자·광장·중곡·화양동 녹음실 안내](/stories/gwangjin-gunja1) | [성동구 녹음실 안내](/stories/seongdong1) | [강동구 녹음실 안내](/stories/gangdong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[광진구 자양·화양·중곡 녹음실 안내](/stories/seoul1) | [광진구 군자·광장·중곡·화양동 녹음실 안내](/stories/seoul1) | [성동구 녹음실 안내](/stories/seoul1) | [강동구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

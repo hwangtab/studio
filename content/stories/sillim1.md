@@ -148,4 +148,4 @@ faq:
 
 신림에서 45분이면 연신내에 도착합니다. 관악구 대학가에서 전문 스튜디오까지 생각보다 가깝습니다. Neumann U87AI 마이크와 10년 경력 엔지니어가 당신의 음악 작업을 함께합니다. 처음이어도 편하게 카카오톡으로 문의해 주세요.
 
-[관악구 녹음실 안내](/stories/gwanak1) | [사당·방배 녹음실 안내](/stories/sadang1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seocho1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[관악구 녹음실 안내](/stories/seoul1) | [사당·방배 녹음실 안내](/stories/seoul1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

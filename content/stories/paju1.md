@@ -141,4 +141,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[파주 금촌·파주읍·문산 녹음실 안내](/stories/paju-geumchon1) | [파주 운정·교하·야당 녹음실 안내](/stories/paju-unjeong1) | [고양·은평 녹음실 안내](/stories/goyang1) | [서울 은평구 녹음실 안내](/stories/eunpyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[파주 금촌·파주읍·문산 녹음실 안내](/stories/gyeonggi1) | [파주 운정·교하·야당 녹음실 안내](/stories/gyeonggi1) | [고양·은평 녹음실 안내](/stories/gyeonggi1) | [서울 은평구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

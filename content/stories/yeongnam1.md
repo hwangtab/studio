@@ -134,4 +134,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 전체 녹음실 안내](/stories/mapo1) | [망원·성산 녹음실 안내](/stories/seongsan1) | [합정·상수 녹음실 안내](/stories/hapjeong1) | [홍대·신촌 녹음실 안내](/stories/hongdae1)
+[마포구 전체 녹음실 안내](/stories/seoul1) | [망원·성산 녹음실 안내](/stories/seoul1) | [합정·상수 녹음실 안내](/stories/seoul1) | [홍대·신촌 녹음실 안내](/stories/seoul1)

@@ -144,4 +144,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[용산구 녹음실 안내](/stories/yongsan1) | [이태원·한남동 녹음실 안내](/stories/itaewon1) | [마포구 녹음실 안내](/stories/mapo1) | [은평구 녹음실 안내](/stories/eunpyeong1)
+[용산구 녹음실 안내](/stories/seoul1) | [이태원·한남동 녹음실 안내](/stories/seoul1) | [마포구 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1)

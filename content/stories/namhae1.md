@@ -127,4 +127,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[하동에서 서울 녹음실 방문 가이드](/stories/hadong1) | [사천에서 서울 녹음실 방문 가이드](/stories/sacheon1) | [진주에서 서울 녹음실 방문 가이드](/stories/jinju1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[하동에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [사천에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [진주에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [여수에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

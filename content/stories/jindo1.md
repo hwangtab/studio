@@ -128,4 +128,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[해남에서 서울 녹음실 방문 가이드](/stories/haenam1) | [완도에서 서울 녹음실 방문 가이드](/stories/wando1) | [담양에서 서울 녹음실 방문 가이드](/stories/damyang1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[해남에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [완도에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [담양에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

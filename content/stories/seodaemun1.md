@@ -132,4 +132,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[연희·연남·창천·신촌 녹음실 안내](/stories/seodaemun-yeonhui1) | [홍제·홍은·남가좌·북가좌 녹음실 안내](/stories/hongjei1) | [마포구 녹음실 안내](/stories/mapo1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[연희·연남·창천·신촌 녹음실 안내](/stories/seoul1) | [홍제·홍은·남가좌·북가좌 녹음실 안내](/stories/seoul1) | [마포구 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -137,4 +137,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[동대문구 녹음실 안내](/stories/dongdaemun1) | [중랑구 녹음실 안내](/stories/jungnang1) | [성북구 녹음실 안내](/stories/seongbuk1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/jangandong1)
+[동대문구 녹음실 안내](/stories/seoul1) | [중랑구 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/seoul1) | [장안동·중화·상봉·면목 녹음실 안내](/stories/seoul1)

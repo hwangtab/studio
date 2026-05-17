@@ -136,4 +136,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[종로구 녹음실 안내](/stories/jongno1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/hyehwa1) | [중랑구 면목·중화 녹음실 안내](/stories/jungnang-myeonmok1) | [성북구 녹음실 안내](/stories/seongbuk1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[종로구 녹음실 안내](/stories/seoul1) | [혜화·대학로·창신·종로5가 녹음실 안내](/stories/seoul1) | [중랑구 면목·중화 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

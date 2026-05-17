@@ -121,4 +121,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[김포 녹음실 안내](/stories/gimpo1) | [인천 검단신도시 녹음실 안내](/stories/incheon-geomdan1) | [고양시 녹음실 안내](/stories/goyang1) | [강서구·양천구 녹음실 안내](/stories/yangcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[김포 녹음실 안내](/stories/gyeonggi1) | [인천 검단신도시 녹음실 안내](/stories/incheon1) | [고양시 녹음실 안내](/stories/gyeonggi1) | [강서구·양천구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

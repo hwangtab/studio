@@ -122,4 +122,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[관악구 전체 녹음실 안내](/stories/gwanak1) | [관악구 봉천 녹음실 안내](/stories/gwanak-bongcheon1) | [동작구 녹음실 안내](/stories/dongjak1) | [금천구 녹음실 안내](/stories/geumcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[관악구 전체 녹음실 안내](/stories/seoul1) | [관악구 봉천 녹음실 안내](/stories/seoul1) | [동작구 녹음실 안내](/stories/dongjak1) | [금천구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

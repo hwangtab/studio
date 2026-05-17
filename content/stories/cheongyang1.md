@@ -125,4 +125,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[부여에서 서울 녹음실 방문 가이드](/stories/buyeo1) | [홍성에서 서울 녹음실 방문 가이드](/stories/hongseong1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[부여에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [홍성에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

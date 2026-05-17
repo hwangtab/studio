@@ -150,4 +150,4 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 진해에서 KTX로 2시간 30분이면 연신내에 도착합니다입니다. 방문이 어렵다면 온라인 믹싱 의뢰로 동일한 품질의 결과물을 받을 수 있습니다. 카카오톡으로 먼저 상담하시면 방문과 온라인 중 어떤 방식이 맞는지 함께 안내해 드립니다.
 
-[창원 녹음실 안내](/stories/changwon1) | [김해 녹음실 안내](/stories/gimhae1) | [부산 녹음실 안내](/stories/busan1) | [전국 방문 가이드](/stories/nationwide1)
+[창원 녹음실 안내](/stories/gyeongnam1) | [김해 녹음실 안내](/stories/gyeongnam1) | [부산 녹음실 안내](/stories/busan1) | [전국 방문 가이드](/stories/nationwide1)

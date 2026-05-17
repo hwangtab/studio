@@ -137,4 +137,4 @@ KTX 익산역 → 서울역 55분, 지하철 연신내 총 85분.
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[군산에서 서울 녹음실 방문 가이드](/stories/gunsan1) | [정읍·김제에서 서울 녹음실 방문 가이드](/stories/jeongeup1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[군산에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [정읍·김제에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

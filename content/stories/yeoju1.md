@@ -119,4 +119,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[이천에서 서울 녹음실 방문 가이드](/stories/icheon1) | [가평에서 서울 녹음실 방문 가이드](/stories/gapyeong1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [수도권 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[이천에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [가평에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [양평에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [수도권 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

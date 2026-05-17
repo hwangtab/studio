@@ -1,6 +1,6 @@
 ---
 title: "1:1 Vocal & Music Lessons in Seoul (English-Speaking Coaches)"
-date: 2026-05-12
+date: 2026-05-12T00:00:00.000Z
 category: foreign-musicians
 description: "Private music lessons in Seoul for international musicians — vocal coaching, instrument lessons, taught in English at Studio NOL Yeonsinnae."
 keywords: ["English vocal lessons Seoul", "music lessons Korea English speaking", "Yeonsinnae vocal coach", "Seoul singing lessons foreigners"]

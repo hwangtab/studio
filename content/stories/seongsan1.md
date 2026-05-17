@@ -123,4 +123,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 녹음실 안내](/stories/mapo1) | [합정·홍대 녹음실 안내](/stories/hapjeong1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [상암·수색 녹음실 안내](/stories/sangam1)
+[마포구 녹음실 안내](/stories/seoul1) | [합정·홍대 녹음실 안내](/stories/seoul1) | [은평구 녹음실 안내](/stories/seoul1) | [상암·수색 녹음실 안내](/stories/seoul1)

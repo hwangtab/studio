@@ -130,4 +130,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[의정부 가능·의정부·회룡·흥선 녹음실 안내](/stories/uijeongbu-ganeung1) | [의정부 민락·호원·장암 녹음실 안내](/stories/uijeongbu-minjak1) | [양주에서 서울 녹음실 방문 가이드](/stories/yangju1) | [노원구·도봉구 녹음실 안내](/stories/nowon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[의정부 가능·의정부·회룡·흥선 녹음실 안내](/stories/gyeonggi1) | [의정부 민락·호원·장암 녹음실 안내](/stories/gyeonggi1) | [양주에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [노원구·도봉구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

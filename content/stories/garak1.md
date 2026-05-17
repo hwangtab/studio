@@ -149,4 +149,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[송파구 녹음실 안내](/stories/songpa1) | [방이·가락·문정 녹음실 안내](/stories/bangi1) | [강동구 녹음실 안내](/stories/gangdong1) | [잠실·석촌 녹음실 안내](/stories/jamsil1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[송파구 녹음실 안내](/stories/seoul1) | [방이·가락·문정 녹음실 안내](/stories/seoul1) | [강동구 녹음실 안내](/stories/seoul1) | [잠실·석촌 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -139,4 +139,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[군포 산본·금정·당동 녹음실 안내](/stories/gunpo-sanbon1) | [안양 녹음실 안내](/stories/anyang1) | [수원 녹음실 안내](/stories/suwon1) | [의왕 녹음실 안내](/stories/uiwang1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[군포 산본·금정·당동 녹음실 안내](/stories/gyeonggi1) | [안양 녹음실 안내](/stories/gyeonggi1) | [수원 녹음실 안내](/stories/gyeonggi1) | [의왕 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

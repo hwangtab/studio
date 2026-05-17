@@ -133,4 +133,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[함안에서 서울 녹음실 방문 가이드](/stories/haman1) | [의령에서 서울 녹음실 방문 가이드](/stories/uiryeong1) | [창원에서 서울 녹음실 방문 가이드](/stories/changwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[함안에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [의령에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [창원에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

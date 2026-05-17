@@ -122,4 +122,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[안동에서 서울 녹음실 방문 가이드](/stories/andong1) | [구미·김천에서 서울 녹음실 방문 가이드](/stories/gumi1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[안동에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [구미·김천에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [포항에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

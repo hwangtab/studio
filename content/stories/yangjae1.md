@@ -143,4 +143,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[서초구 녹음실 안내](/stories/seocho1) | [강남구 녹음실 안내](/stories/gangnam1) | [송파구 녹음실 안내](/stories/songpa1) | [전국 방문 가이드](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[서초구 녹음실 안내](/stories/seoul1) | [강남구 녹음실 안내](/stories/seoul1) | [송파구 녹음실 안내](/stories/seoul1) | [전국 방문 가이드](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

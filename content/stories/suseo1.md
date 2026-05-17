@@ -151,4 +151,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강남 녹음실 방문 가이드](/stories/gangnam1) | [대치·개포·도곡 녹음실 안내](/stories/daechi1) | [서초구 녹음실 안내](/stories/seocho1) | [송파구 녹음실 안내](/stories/songpa1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[강남 녹음실 방문 가이드](/stories/seoul1) | [대치·개포·도곡 녹음실 안내](/stories/seoul1) | [서초구 녹음실 안내](/stories/seoul1) | [송파구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

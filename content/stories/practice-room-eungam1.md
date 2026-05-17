@@ -175,4 +175,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**응암 인근 권역 비교**: [새절](/ko/stories/practice-room-saejeol1), [구산](/ko/stories/practice-room-gusan1), [증산](/ko/stories/practice-room-jeungsan1), [역촌](/ko/stories/practice-room-yeokchon1), [서대문](/ko/stories/practice-room-seodaemun1)
+**응암 인근 권역 비교**: [새절](/stories/practice-room-saejeol1), [구산](/stories/practice-room-gusan1), [증산](/stories/practice-room-jeungsan1), [역촌](/stories/practice-room-yeokchon1), [서대문](/stories/practice-room-seodaemun1)

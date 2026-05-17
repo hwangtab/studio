@@ -92,4 +92,4 @@ faq:
 
 세션 준비는 MR 파일을 USB 또는 스마트폰에 담고 레퍼런스 트랙 1~2곡을 카카오톡으로 미리 공유해두면 빠르게 시작할 수 있습니다. 방문이 어렵다면 현지에서 드라이 보컬 WAV 파일을 녹음한 뒤 카카오톡으로 전송하는 온라인 믹싱·마스터링 의뢰도 가능합니다. 방문 세션은 예약 전 카카오톡으로 날짜와 시간을 먼저 확인해두시면 대기 없이 바로 녹음에 들어갈 수 있습니다.
 
-[고양시·파주 녹음실 안내](/stories/goyang1) | [일산동구 녹음실 안내](/stories/ilsan-donggu1) | [능곡·원흥·행신 녹음실 안내](/stories/neunggok1) | [파주 녹음실 안내](/stories/paju1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[고양시·파주 녹음실 안내](/stories/gyeonggi1) | [일산동구 녹음실 안내](/stories/gyeonggi1) | [능곡·원흥·행신 녹음실 안내](/stories/gyeonggi1) | [파주 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

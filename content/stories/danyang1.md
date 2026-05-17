@@ -120,4 +120,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[제천에서 서울 녹음실 방문 가이드](/stories/jecheon1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[제천에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [원주에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

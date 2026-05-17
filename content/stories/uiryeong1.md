@@ -133,4 +133,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[창녕에서 서울 녹음실 방문 가이드](/stories/changnyeong1) | [함안에서 서울 녹음실 방문 가이드](/stories/haman1) | [합천에서 서울 녹음실 방문 가이드](/stories/hapcheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[창녕에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [함안에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [합천에서 서울 녹음실 방문 가이드](/stories/gyeongnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

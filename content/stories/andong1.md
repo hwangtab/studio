@@ -124,4 +124,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [영주에서 서울 녹음실 방문 가이드](/stories/yeongju1) | [구미에서 서울 녹음실 방문 가이드](/stories/gumi1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [군위에서 서울 녹음실 방문 가이드](/stories/gunwi1) | [강화에서 서울 녹음실 방문 가이드](/stories/ganghwa1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[경상북도 녹음실 방문 가이드](/stories/gyeongbuk1) | [영주에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [구미에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [대구에서 서울 녹음실 방문 가이드](/stories/daegu1) | [군위에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [강화에서 서울 녹음실 방문 가이드](/stories/incheon1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

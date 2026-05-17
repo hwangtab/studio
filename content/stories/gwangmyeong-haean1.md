@@ -125,4 +125,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [부천 녹음실 안내](/stories/bucheon1) | [안양 평촌·범계 녹음실 안내](/stories/pyeongchon1) | [구로·금천 녹음실 안내](/stories/guro1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[광명·과천·의왕 녹음실 안내](/stories/gyeonggi1) | [부천 녹음실 안내](/stories/gyeonggi1) | [안양 평촌·범계 녹음실 안내](/stories/gyeonggi1) | [구로·금천 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

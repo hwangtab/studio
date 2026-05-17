@@ -138,4 +138,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[남양주 녹음실 안내](/stories/namyangju1) | [구리시 녹음실 안내](/stories/guri1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [강동구 녹음실 안내](/stories/gangdong1)
+[남양주 녹음실 안내](/stories/gyeonggi1) | [구리시 녹음실 안내](/stories/gyeonggi1) | [의정부 녹음실 안내](/stories/gyeonggi1) | [강동구 녹음실 안내](/stories/seoul1)

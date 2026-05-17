@@ -125,4 +125,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[은평구 녹음실 안내](/stories/eunpyeong1) | [응암·역촌·구산·수색 녹음실 안내](/stories/eungam1) | [불광·수색·증산 녹음실 안내](/stories/bulgwang1) | [홍제·홍은·남가좌 녹음실 안내](/stories/hongjei1)
+[은평구 녹음실 안내](/stories/seoul1) | [응암·역촌·구산·수색 녹음실 안내](/stories/seoul1) | [불광·수색·증산 녹음실 안내](/stories/seoul1) | [홍제·홍은·남가좌 녹음실 안내](/stories/seoul1)

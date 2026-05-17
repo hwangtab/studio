@@ -124,4 +124,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[성동구·광진구 녹음실 안내](/stories/seongdong1) | [광진구 군자 녹음실 안내](/stories/gwangjin-gunja1) | [중랑구 녹음실 안내](/stories/jungnang1) | [동대문구 녹음실 안내](/stories/dongdaemun1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성동구·광진구 녹음실 안내](/stories/seoul1) | [광진구 군자 녹음실 안내](/stories/seoul1) | [중랑구 녹음실 안내](/stories/seoul1) | [동대문구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

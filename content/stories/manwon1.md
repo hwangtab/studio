@@ -149,4 +149,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 녹음실 안내](/stories/mapo1) | [홍대 녹음실 안내](/stories/hongdae1) | [합정·홍대 녹음실 안내](/stories/hapjeong1) | [서대문구 녹음실 안내](/stories/seodaemun1)
+[마포구 녹음실 안내](/stories/seoul1) | [홍대 녹음실 안내](/stories/seoul1) | [합정·홍대 녹음실 안내](/stories/seoul1) | [서대문구 녹음실 안내](/stories/seoul1)

@@ -131,4 +131,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[태백에서 서울 녹음실 방문 가이드](/stories/taebaek1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangneung1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [원주에서 서울 녹음실 방문 가이드](/stories/wonju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[태백에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [강릉에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [속초에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [원주에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

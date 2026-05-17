@@ -150,4 +150,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[연천에서 서울 녹음실 방문 가이드](/stories/yeoncheon1) | [가평에서 서울 녹음실 방문 가이드](/stories/gapyeong1) | [의정부·포천·동두천 녹음실 안내](/stories/uijeongbu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[연천에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [가평에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [의정부·포천·동두천 녹음실 안내](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

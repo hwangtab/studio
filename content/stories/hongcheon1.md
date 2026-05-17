@@ -129,4 +129,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [양평에서 서울 녹음실 방문 가이드](/stories/yangpyeong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[화천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [양평에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

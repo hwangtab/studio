@@ -134,4 +134,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[양주 녹음실 안내](/stories/yangju1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [포천·연천·동두천 녹음실 안내](/stories/pocheon1) | [노원·도봉구 녹음실 안내](/stories/nowon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[양주 녹음실 안내](/stories/gyeonggi1) | [의정부 녹음실 안내](/stories/gyeonggi1) | [포천·연천·동두천 녹음실 안내](/stories/gyeonggi1) | [노원·도봉구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

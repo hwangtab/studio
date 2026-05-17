@@ -133,4 +133,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[울진에서 서울 녹음실 방문 가이드](/stories/uljin1) | [포항에서 서울 녹음실 방문 가이드](/stories/pohang1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongju1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[울진에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [포항에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [경주에서 서울 녹음실 방문 가이드](/stories/gyeongbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

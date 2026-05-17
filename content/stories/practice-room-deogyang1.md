@@ -179,4 +179,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**덕양구 인근 권역 비교**: [원당](/ko/stories/practice-room-wondang1), [고양](/ko/stories/practice-room-goyang1), [원흥](/ko/stories/practice-room-wonheung1), [삼송](/ko/stories/practice-room-samsong1), [일산](/ko/stories/practice-room-ilsan1)
+**덕양구 인근 권역 비교**: [원당](/stories/practice-room-wondang1), [고양](/stories/practice-room-goyang1), [원흥](/stories/practice-room-wonheung1), [삼송](/stories/practice-room-samsong1), [일산](/stories/practice-room-ilsan1)

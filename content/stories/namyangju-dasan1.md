@@ -118,4 +118,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[남양주시 전체 녹음실 안내](/stories/namyangju1) | [별내·다산·오남·화도 녹음실 안내](/stories/byeolnae1) | [남양주 진접·사능·퇴계원 녹음실 안내](/stories/namyangju-jincheop1) | [구리시 녹음실 안내](/stories/guri1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[남양주시 전체 녹음실 안내](/stories/gyeonggi1) | [별내·다산·오남·화도 녹음실 안내](/stories/gyeonggi1) | [남양주 진접·사능·퇴계원 녹음실 안내](/stories/gyeonggi1) | [구리시 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

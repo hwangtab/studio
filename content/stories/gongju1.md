@@ -125,4 +125,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[서산·태안에서 서울 녹음실 방문 가이드](/stories/seosan1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[서산·태안에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [대전에서 서울 녹음실 방문 가이드](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [세종에서 서울 녹음실 방문 가이드](/stories/sejong1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

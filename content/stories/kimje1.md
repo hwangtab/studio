@@ -129,4 +129,4 @@ KTX 고속선을 최대한 활용하면 **당일 왕복으로도 충분히 여�
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[정읍·김제 방문 가이드](/stories/jeongeup1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[정읍·김제 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [군산에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)

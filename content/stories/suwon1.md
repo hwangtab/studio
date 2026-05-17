@@ -128,4 +128,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[수원 권선구 녹음실 안내](/stories/suwon-gwonseon1) | [수원 팔달구·권선구 녹음실 안내](/stories/suwon-paldal1) | [수원 장안구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통·광교·망포 녹음실 안내](/stories/suwon-yeongtong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[수원 권선구 녹음실 안내](/stories/gyeonggi1) | [수원 팔달구·권선구 녹음실 안내](/stories/gyeonggi1) | [수원 장안구 녹음실 안내](/stories/gyeonggi1) | [수원 영통·광교·망포 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

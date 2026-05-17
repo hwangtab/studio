@@ -127,4 +127,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[수원 전체 녹음실 안내](/stories/suwon1) | [수원 장안구 녹음실 안내](/stories/suwon-jangan1) | [수원 영통구 녹음실 안내](/stories/suwon-yeongtong1) | [화성·봉담 녹음실 안내](/stories/hwaseong-bongdam1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[수원 전체 녹음실 안내](/stories/gyeonggi1) | [수원 장안구 녹음실 안내](/stories/gyeonggi1) | [수원 영통구 녹음실 안내](/stories/gyeonggi1) | [화성·봉담 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

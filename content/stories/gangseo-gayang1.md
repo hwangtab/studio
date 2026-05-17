@@ -123,4 +123,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[강서구 전체 녹음실 안내](/stories/gangseo1) | [강서구 화곡 녹음실 안내](/stories/gangseo-hwagok1) | [영등포구 녹음실 안내](/stories/yeongdeungpo1) | [양천구 녹음실 안내](/stories/yangcheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[강서구 전체 녹음실 안내](/stories/seoul1) | [강서구 화곡 녹음실 안내](/stories/seoul1) | [영등포구 녹음실 안내](/stories/seoul1) | [양천구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -121,4 +121,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[고양 일산·화정·행신 녹음실 안내](/stories/goyang1) | [고양 행신·화정·삼송 녹음실 안내](/stories/goyang-haengsin1) | [파주 녹음실 안내](/stories/paju1) | [은평구 녹음실 안내](/stories/eunpyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[고양 일산·화정·행신 녹음실 안내](/stories/gyeonggi1) | [고양 행신·화정·삼송 녹음실 안내](/stories/gyeonggi1) | [파주 녹음실 안내](/stories/gyeonggi1) | [은평구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

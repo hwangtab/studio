@@ -167,4 +167,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**원흥 인근 권역 비교**: [지축](/ko/stories/practice-room-jichuk1), [삼송](/ko/stories/practice-room-samsong1), [구파발](/ko/stories/practice-room-gupabal1), [원당](/ko/stories/practice-room-wondang1), [덕양구](/ko/stories/practice-room-deogyang1)
+**원흥 인근 권역 비교**: [지축](/stories/practice-room-jichuk1), [삼송](/stories/practice-room-samsong1), [구파발](/stories/practice-room-gupabal1), [원당](/stories/practice-room-wondang1), [덕양구](/stories/practice-room-deogyang1)

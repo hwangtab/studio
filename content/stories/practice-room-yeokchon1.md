@@ -171,4 +171,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**역촌 인근 권역 비교**: [구산](/ko/stories/practice-room-gusan1), [연신내](/ko/stories/practice-room-yeonsinnae1), [새절](/ko/stories/practice-room-saejeol1), [응암](/ko/stories/practice-room-eungam1), [대조동](/ko/stories/practice-room-daejo1)
+**역촌 인근 권역 비교**: [구산](/stories/practice-room-gusan1), [연신내](/stories/practice-room-yeonsinnae1), [새절](/stories/practice-room-saejeol1), [응암](/stories/practice-room-eungam1), [대조동](/stories/practice-room-daejo1)

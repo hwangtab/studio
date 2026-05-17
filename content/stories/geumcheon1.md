@@ -100,7 +100,7 @@ faq:
 
 금천구(독산·시흥·가산)에서 지하철 35~52분 이동 전 카카오톡으로 원하는 사운드 방향을 미리 공유해주시면 세션 준비 시간이 줄어듭니다.
 
-[가산·독산·금천구 근처 녹음실 — 금천구에서 연신내 스튜디오 놀 방문 가이드](/stories/gasan1)
+[가산·독산·금천구 근처 녹음실 — 금천구에서 연신내 스튜디오 놀 방문 가이드](/stories/seoul1)
 
 <!-- AUTO-EXPAND-V1 -->
 
@@ -147,4 +147,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[구로구 녹음실 안내](/stories/guro1) | [영등포·구로 녹음실 안내](/stories/yeongdeungpo1) | [노량진·흑석 녹음실 안내](/stories/noryangjin1) | [동작구 녹음실 안내](/stories/dongjak1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[구로구 녹음실 안내](/stories/seoul1) | [영등포·구로 녹음실 안내](/stories/seoul1) | [노량진·흑석 녹음실 안내](/stories/seoul1) | [동작구 녹음실 안내](/stories/dongjak1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

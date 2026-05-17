@@ -127,4 +127,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[태안에서 서울 녹음실 방문 가이드](/stories/taean1) | [아산에서 서울 녹음실 방문 가이드](/stories/asan1) | [천안에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [서산에서 서울 녹음실 방문 가이드](/stories/seosan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[태안에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [천안에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [서산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

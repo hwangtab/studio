@@ -88,4 +88,4 @@ faq:
 
 대전에서 KTX 1시간 지방 도시 중 서울 스튜디오 접근성이 가장 좋은 곳 중 하나입니다. 먼 거리를 오시는 만큼 방문 전 카카오톡으로 사운드 방향과 자료를 미리 공유해주시면 세션 시간을 절약할 수 있습니다.
 
-[대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon-donggu1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/cheonan1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[대전 동구·중구 대전역·동대전 녹음실 안내](/stories/daejeon1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon1) | [천안·아산에서 서울 녹음실 방문 가이드](/stories/chungnam1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

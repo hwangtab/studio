@@ -133,4 +133,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[안양·군포·의왕 녹음실 안내](/stories/anyang1) | [군포 녹음실 안내](/stories/gunpo1) | [수원·용인 녹음실 안내](/stories/suwon1) | [과천에서 서울 녹음실 방문 가이드](/stories/gwacheon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[안양·군포·의왕 녹음실 안내](/stories/gyeonggi1) | [군포 녹음실 안내](/stories/gyeonggi1) | [수원·용인 녹음실 안내](/stories/gyeonggi1) | [과천에서 서울 녹음실 방문 가이드](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

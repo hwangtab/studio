@@ -123,4 +123,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[남양주 녹음실 안내](/stories/namyangju1) | [별내·다산·오남·화도 녹음실 안내](/stories/byeolnae1) | [구리시 녹음실 안내](/stories/guri1) | [의정부 녹음실 안내](/stories/uijeongbu1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[남양주 녹음실 안내](/stories/gyeonggi1) | [별내·다산·오남·화도 녹음실 안내](/stories/gyeonggi1) | [구리시 녹음실 안내](/stories/gyeonggi1) | [의정부 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

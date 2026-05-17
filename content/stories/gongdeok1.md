@@ -142,4 +142,4 @@ faq:
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[마포구 녹음실 안내](/stories/mapo1) | [망원·연남·성산·합정 녹음실 안내](/stories/manwon1) | [상암·DMC 녹음실 안내](/stories/sangam1) | [서대문구 녹음실 안내](/stories/seodaemun1)
+[마포구 녹음실 안내](/stories/seoul1) | [망원·연남·성산·합정 녹음실 안내](/stories/seoul1) | [상암·DMC 녹음실 안내](/stories/seoul1) | [서대문구 녹음실 안내](/stories/seoul1)

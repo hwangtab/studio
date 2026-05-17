@@ -169,4 +169,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**구파발 인근 권역 비교**: [연신내](/ko/stories/practice-room-yeonsinnae1), [지축](/ko/stories/practice-room-jichuk1), [불광](/ko/stories/practice-room-bulgwang1), [삼송](/ko/stories/practice-room-samsong1), [원흥](/ko/stories/practice-room-wonheung1)
+**구파발 인근 권역 비교**: [연신내](/stories/practice-room-yeonsinnae1), [지축](/stories/practice-room-jichuk1), [불광](/stories/practice-room-bulgwang1), [삼송](/stories/practice-room-samsong1), [원흥](/stories/practice-room-wonheung1)

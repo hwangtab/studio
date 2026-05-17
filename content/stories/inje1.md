@@ -143,4 +143,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[화천에서 서울 녹음실 방문 가이드](/stories/hwacheon1) | [속초에서 서울 녹음실 방문 가이드](/stories/sokcho1) | [춘천에서 서울 녹음실 방문 가이드](/stories/chuncheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[화천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [속초에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [춘천에서 서울 녹음실 방문 가이드](/stories/gangwon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

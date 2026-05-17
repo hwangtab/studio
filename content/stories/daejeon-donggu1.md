@@ -123,4 +123,4 @@ robots: 'noindex, follow'
 
 <!-- /AUTO-EXPAND-V1 -->
 
-[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon-daedeok1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon-yuseong1) | [청주에서 서울 녹음실 방문 가이드](/stories/cheongju1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)
+[대전시 전체 녹음실 안내](/stories/daejeon1) | [대전 대덕구 신탄진·회덕 녹음실 안내](/stories/daejeon1) | [대전 유성구·둔산·서구 녹음실 안내](/stories/daejeon1) | [청주에서 서울 녹음실 방문 가이드](/stories/chungbuk1) | [경부선 KTX 가이드](/stories/ktx-gyeongbu-guide1)

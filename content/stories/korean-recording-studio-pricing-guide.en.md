@@ -1,6 +1,6 @@
 ---
 title: "Korean Recording Studio Pricing: What to Expect in 2026"
-date: 2026-05-12
+date: 2026-05-12T00:00:00.000Z
 category: foreign-musicians
 description: "Transparent pricing guide for Korean recording studios — hourly rates, package deals, what's included, and Studio NOL's English-friendly rates."
 keywords: ["Korean recording studio price", "Seoul studio cost", "Korea mixing mastering rates", "Yeonsinnae studio pricing"]
