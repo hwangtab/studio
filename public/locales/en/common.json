@@ -207,7 +207,38 @@
       "title": "Book a Recording Session in Seoul — Contact Studio NOL",
       "description": "Book a recording session at Studio NOL in Seoul. English booking via KakaoTalk or email — 5 min from Yeonsinnae Station, free quote with 24h reply.",
       "keywords": "book recording session Seoul, contact Studio NOL, English booking Seoul studio, recording reservation, mixing request, Yeonsinnae studio location, KakaoTalk consultation"
-    }
+    },
+    "whatToExpect": {
+      "title": "What to Expect",
+      "items": [
+        "Response within 24 hours on weekdays",
+        "English-speaking session manager",
+        "Free quote based on your session needs",
+        "Booking confirmed via email or KakaoTalk"
+      ]
+    },
+    "faq": [
+      {
+        "q": "Do you have English-speaking engineers?",
+        "a": "Yes — our session manager communicates in English for bookings, scheduling, and feedback. On-site direction during recording sessions is available in English on request."
+      },
+      {
+        "q": "Can I book remotely from outside Korea?",
+        "a": "Absolutely. Many international clients book via email or KakaoTalk before arriving in Seoul. We also offer online mixing and mastering — send us your recorded files and we handle the rest."
+      },
+      {
+        "q": "How are mixing files delivered?",
+        "a": "Final WAV and MP3 files are delivered via Google Drive or WeTransfer, typically within 3–7 business days after the session. Revisions are included in the package."
+      },
+      {
+        "q": "What is included in a basic vocal session?",
+        "a": "A basic vocal session includes studio time with a professional engineer, Neumann microphone, treated recording booth, and a dry vocal WAV file. Mixing and mastering are available as add-ons."
+      },
+      {
+        "q": "Do you offer online mixing-only service?",
+        "a": "Yes. Upload your recorded tracks and we handle mixing and mastering remotely. This is popular with artists who have their own home recording setup and want professional post-production."
+      }
+    ]
   },
   "pricing": {
     "seo": {

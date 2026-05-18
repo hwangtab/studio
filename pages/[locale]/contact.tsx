@@ -460,6 +460,45 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         </div>
       </Section>
 
+      {locale === 'en' && (() => {
+        const whatToExpectItems = t('contact.whatToExpect.items', { returnObjects: true });
+        const faqItems = t('contact.faq', { returnObjects: true });
+        const items = Array.isArray(whatToExpectItems) ? whatToExpectItems as string[] : [];
+        const faqs = Array.isArray(faqItems) ? faqItems as { q: string; a: string }[] : [];
+        return (
+          <Section variant="alternate" className="py-12">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <div className="grid md:grid-cols-2 gap-10">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-5">
+                    {t('contact.whatToExpect.title')}
+                  </h2>
+                  <ul className="space-y-3">
+                    {items.map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-5">FAQ</h2>
+                  <dl className="space-y-5">
+                    {faqs.map((faq, i) => (
+                      <div key={i}>
+                        <dt className="font-semibold text-gray-900 dark:text-white mb-1">{faq.q}</dt>
+                        <dd className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{faq.a}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </Section>
+        );
+      })()}
+
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="alternate" className="py-10">
