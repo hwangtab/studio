@@ -1,5 +1,5 @@
 ---
-title: 보사노바 기타·삼바 리듬·João Gilberto 스타일 — 완전 가이드
+title: 보사노바 기타 리듬 훈련 — João Gilberto 스타일 삼바·코드 보이싱
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
+summary: >-
+  João Gilberto 오른손 리듬과 Tom Jobim 화성. 보사노바 기타 핵심 패턴 단계별 연습.
 faq:
   - q: 보사노바 기타·삼바 리듬·João Gilberto 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

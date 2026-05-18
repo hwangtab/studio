@@ -1,5 +1,5 @@
 ---
-title: 베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드
+title: 베이스 썸 테크닉 훈련법 — 더블 썸핑·Victor Wooten 슬랩 고급 기법
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room8.webp
+summary: >-
+  더블 썸핑·업스트로크·핑거 조합으로 Victor Wooten 스타일 고급 슬랩 베이스 기법.
 faq:
   - q: 베이스 썸 테크닉·슬랩 베이스 고급을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-
