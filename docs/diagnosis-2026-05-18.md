@@ -1,8 +1,7 @@
-# Studio NOL — GSC 진단 리포트 (2026-05-18)
+# Studio NOL — GSC + GA4 풀 진단 리포트 (2026-05-18)
 
-> 데이터 기준: GSC 90일 (2026-02-19 ~ 2026-05-17) + 28일 추세  
-> 데이터 소스: `docs/gsc-raw/` (3개 파일), `docs/gsc-audit-output.csv`  
-> GA4 섹션: 서비스 계정 미설정 → [설정 가이드 §7] 후 `scripts/ga4-fetch.mjs`로 보완 가능
+> 데이터 기준: GSC 90일 (2026-02-19 ~ 2026-05-17) + 28일 추세 / GA4 90일 (동일 기간)
+> 데이터 소스: `docs/gsc-raw/` (3개 파일), `docs/gsc-audit-output.csv`, `docs/ga4-raw/` (4개 파일)
 
 ---
 
@@ -16,13 +15,16 @@
 | 평균 CTR | **2.50%** | 3% 목표 미달 |
 | 평균 순위 | **7.1위** | 1페이지 안착 |
 | 일평균 클릭 (최근 28d) | **63.6회** | 4월 초 대비 9배 성장 중 |
+| **GA4 총 세션 (90d)** | **~2,640** | — |
+| **GA4 리드 이벤트 (90d)** | **10건** | 전환율 0.4% — 심각 |
+| **리드 클릭 채널** | 카카오톡 7건, 전화 1건, 폼 2건 | — |
 | 서비스 직결 페이지 CTR | `/pricing` **1.21%** | 전환 페이지 치고 낮음 |
 | 최고 ROI 클러스터 | `practice-room-station` **CTR 7.56%** | — |
 | 최악 ROI 클러스터 | `city-ktx-visit` **CTR 1.61%** / 143페이지 | — |
 
 ### ⚠️ TOP 3 긴급 이슈
-1. **카니벌라이제이션 11건** — "녹음실" 쿼리에 11개 페이지가 동시 경쟁 중
-2. **`pricing` 페이지 CTR 1.21%** — 가장 중요한 전환 페이지인데 제목이 클릭을 못 유인
+1. **리드 전환 붕괴** — 90일간 세션 2,640회에 리드 이벤트 단 10건(0.4%). CTA 작동 페이지가 `/ko/practice-room`, `/ko` 2개뿐
+2. **카니벌라이제이션 11건** — "녹음실" 쿼리에 11개 페이지가 동시 경쟁 중
 3. **`practice-room-vocal-diction1`** — 4~10위(pos 7.3)에 437회 노출되는데 클릭 0회 → 제목·설명 즉시 수정 필요
 
 ---
@@ -229,20 +231,100 @@ GSC 결과에 "스튜디오놀", "studio nol", "studionol" 등 **브랜드 키�
 
 ---
 
-## 12. GA4 데이터 (미수집 — 설정 가이드)
+## 12. GA4 진단 (90일, 속성 479298707)
 
-현재 `GA4_SERVICE_ACCOUNT_KEY` 미설정으로 Data API 조회 불가. 이 섹션이 채워지면 교차분석(GSC 클릭 ≠ GA4 세션 갭, CTA 전환율 등)이 가능해짐.
+> 소스: `docs/ga4-raw/` — 2026-05-18 수집
 
-### 설정 방법 (10분)
-1. [Google Cloud Console](https://console.cloud.google.com) → IAM → 서비스 계정 생성 → JSON key 다운로드
-2. [GA4 Admin](https://analytics.google.com) → Property Access Management → 서비스 계정 이메일 Viewer 추가
-3. `.env.local`에 추가:
-   ```
-   GA4_PROPERTY_ID=000000000
-   GA4_SERVICE_ACCOUNT_KEY=/path/to/key.json
-   ```
-4. 실행: `node --env-file=.env.local scripts/ga4-fetch.mjs`
-5. 생성 파일: `docs/ga4-raw/landing.csv`, `events.csv`, `source.csv`, `device.csv`
+### 12-A. 트래픽 개요
+
+| 지표 | 값 |
+|---|---|
+| 총 세션 | ~2,640 |
+| 한국 세션 | 2,216 (83.9%) |
+| Google 오가닉 | 1,834 (69.5%) |
+| 직접 유입 | 483 (18.3%) |
+| AI 레퍼럴 (ChatGPT 등) | 123 (4.7%) |
+| 네이버 (오가닉+모바일) | 72 (2.7%) |
+| Bing 오가닉 | 39 (1.5%) |
+
+**주목 포인트**:
+- **ChatGPT 4.7%**: 오가닉 소셜보다 많다. 콘텐츠가 AI 응답에 인용되고 있음. 이 트래픽은 앞으로 더 커질 것.
+- **네이버 모바일 이탈률 19.6%**: 전체 소스 중 압도적 최고 품질. 네이버 플레이스/블로그 유입 신호.
+- **직접 유입 이탈률 82.4%**: 브랜드 인지 없이 직접 입력하는 사람 대부분 bounce → 브랜드 인지도 부재.
+
+### 12-B. 주요 랜딩 페이지 (세션 TOP 10)
+
+| 페이지 | 세션 | 이탈률 | 평균 체류(초) | 평가 |
+|---|---|---|---|---|
+| `/ko` (홈) | 177 | 44.6% | 239.8 | 정상 |
+| (not set) | 132 | 100% | 0.1 | 봇/직접 유입 잡음 |
+| `/ko/stories/daw-choice1` | 81 | 42.0% | 123.8 | 양호 |
+| `/ko/practice-room` | 70 | 44.3% | 115.0 | 양호 — **CTA 작동** |
+| `/ko/stories/seoul1` | 59 | 61.0% | 102.1 | 이탈률 요주의 |
+| `/ko/stories/ep-making1` | 52 | **96.2%** | **5.3** | 🔴 콘텐츠 문제 |
+| `/ko/stories/practice-room-startup1` | 47 | **36.2%** | 159.1 | 최고 참여율 |
+| `/ko/stories/copyright-cover1` | 37 | 45.9% | 86.4 | 양호 |
+| `/ko/stories/distribution1` | 34 | 38.2% | 104.4 | 양호 |
+| `/ko/stories/plugins1` | 32 | 43.8% | 85.6 | 양호 |
+
+**`ep-making1` 이상 신호**: 52 세션인데 이탈률 96.2%, 체류 5.3초. 콘텐츠가 검색 의도와 불일치하거나 페이지 로드 오류 가능성.
+
+### 12-C. 리드 이벤트 (전환)
+
+| 이벤트 | 페이지 | 횟수 |
+|---|---|---|
+| lead_click_kakao | `/ko/practice-room` | 3 |
+| lead_click_kakao | `/ko` | 2 |
+| lead_form_start | `/ko/contact` | 2 |
+| lead_click_kakao | `/ko/contact` | 1 |
+| lead_click_kakao | `/ko/voice-acting` | 1 |
+| lead_click_phone | `/ko/stories/itaewon1` | 1 |
+| **합계** | | **10건** |
+
+**핵심 문제**: 2,640 세션에 리드 10건 = **전환율 0.38%**. 이것이 현재 사업의 가장 큰 문제.
+
+CTA가 작동하는 페이지는 사실상 `/ko/practice-room`과 `/ko` 두 곳뿐. 스토리 페이지 1,000+건에서 리드가 거의 없음. 콘텐츠→전환 브릿지가 없다.
+
+### 12-D. 디바이스 분포 (한국 기준)
+
+| 디바이스 | 세션 | 이탈률 |
+|---|---|---|
+| 데스크탑 | 1,184 (53.5%) | 46.9% |
+| 모바일 | 998 (45.0%) | 50.4% |
+| 태블릿 | 34 (1.5%) | 50.0% |
+
+모바일 45%에 이탈률 50.4% — 모바일 UX 개선 여지 있음.
+
+---
+
+## 12-E. GSC × GA4 교차분석
+
+### 클릭 vs 세션 갭
+
+| 지표 | 값 |
+|---|---|
+| GSC Google 클릭 (90d) | 1,207 |
+| GA4 Google 오가닉 세션 | 1,834 |
+| 갭 | +627 세션 |
+
+GA4 세션이 GSC 클릭보다 많은 이유: Google Discover/News 트래픽은 GA4에는 잡히지만 GSC Search에는 집계되지 않음. 비율(1,207/1,834 = 65.8%)은 정상 범위. 추적 누락 없음.
+
+### 트래픽은 있는데 전환이 없는 페이지
+
+GSC 클릭 상위이면서 GA4 리드 이벤트 0인 페이지:
+
+| 페이지 | GSC 클릭 (추정) | GA4 리드 | 문제 |
+|---|---|---|---|
+| `/ko/stories/daw-choice1` | 상위권 (81 세션) | 0 | CTA 없음 |
+| `/ko/stories/practice-room-startup1` | 상위권 (47 세션) | 0 | CTA 없음 |
+| `/ko/stories/copyright-cover1` | 상위권 (37 세션) | 0 | CTA 없음 |
+| `/ko/stories/distribution1` | 상위권 (34 세션) | 0 | CTA 없음 |
+
+→ 상위 스토리 페이지들이 트래픽은 받는데 전환으로 이어지지 않음. **콘텐츠 하단에 연결 CTA 삽입** 필요.
+
+### 네이버 모바일 (미스터리 트래픽)
+
+네이버 모바일 51 세션, 이탈률 19.6% — 극히 높은 품질이지만 GSC는 Google만 추적. 이 트래픽의 출처(네이버 플레이스, 블로그, 검색)를 UTM 파라미터나 네이버 웹마스터로 별도 분석 필요.
 
 ---
 
@@ -252,11 +334,11 @@ GSC 결과에 "스튜디오놀", "studio nol", "studionol" 등 **브랜드 키�
 
 | # | 작업 | 예상 효과 |
 |---|---|---|
-| P1-1 | **`songstructure1` + `song-structure1` 통합** — 하나를 canonical로 301 redirect | 1,937 imp 통합 → CTR·순위 동시 개선 |
-| P1-2 | **`practice-room-vocal-diction1` 제목·메타 수정** — pos 7.3에서 437 imp이지만 클릭 0 | 0% → 2%+ CTR 목표 = +8 클릭/월 |
-| P1-3 | **`pricing` 페이지 메타 리라이트** — 현재 CTR 1.21%, 순위 5.4위 | CTR 3% 목표 = +5 클릭/월 |
-| P1-4 | **`vercel.json` cron `0 19 * * 1`로 변경** — 매일 메일 발송 → 주1회 | 이메일 노이즈 제거 |
-| P1-5 | **GA4 서비스 계정 설정 + `scripts/ga4-fetch.mjs` 실행** | 리드 전환 데이터 확보 |
+| P1-1 | **스토리 상위 페이지 하단 CTA 삽입** — daw-choice1, practice-room-startup1, copyright-cover1 등 세션 TOP 페이지에 "합주실 예약/문의" 카카오 링크 박스 추가 | 리드 전환율 0.4% → 2%+ 목표 = 월 리드 10건 → 50건+ |
+| P1-2 | **`songstructure1` + `song-structure1` 통합** — 하나를 canonical로 301 redirect | 1,937 imp 통합 → CTR·순위 동시 개선 |
+| P1-3 | **`practice-room-vocal-diction1` 제목·메타 수정** — pos 7.3에서 437 imp이지만 클릭 0 | 0% → 2%+ CTR 목표 = +8 클릭/월 |
+| P1-4 | **`pricing` 페이지 메타 리라이트** — 현재 CTR 1.21%, 순위 5.4위 | CTR 3% 목표 = +5 클릭/월 |
+| P1-5 | **`ep-making1` 페이지 점검** — 이탈률 96.2%, 체류 5.3초 | 콘텐츠 불일치 또는 로드 오류 수정 |
 
 ### 🟡 P2 — 단기 (1~2개월)
 
@@ -278,6 +360,8 @@ GSC 결과에 "스튜디오놀", "studio nol", "studionol" 등 **브랜드 키�
 | P3-3 | 브랜드 검색 활성화 — 인스타·카카오채널 운영 강화 + 브랜드 언급 콘텐츠 |
 | P3-4 | GA4 × GSC cross-reference 정기 리포트 자동화 (월 1회 cron으로 통합) |
 | P3-5 | `http://studionol.co.kr/` HTTP 노출 → HTTPS 리디렉션 서버 설정 확인 |
+| P3-6 | 네이버 플레이스/웹마스터 UTM 파라미터 추가 — 네이버 유입 출처 세분화 |
+| P3-7 | AI 트래픽(ChatGPT 4.7%) 활용 — llms.txt / 구조화 데이터 강화로 AI 인용 확대 |
 
 ---
 
@@ -291,14 +375,15 @@ docs/
 │   ├── page-all.csv            # 1,082행 — page×metrics 90일 (position 포함)
 │   ├── quick-win.csv           # 10행 — pos 10-20, imp≥50 페이지
 │   └── trend.csv               # 26행 — 일별 사이트 전체 추세 28일
-└── ga4-raw/                    # ← GA4 서비스 계정 설정 후 채워짐
-    ├── landing.csv
-    ├── events.csv
-    ├── source.csv
-    └── device.csv
+└── ga4-raw/                    # GA4 Data API (2026-05-18 수집)
+    ├── landing.csv             # 500행 — 랜딩 페이지×세션×이탈률×체류시간 90일
+    ├── events.csv              # 6행 — 리드 이벤트×페이지 90일
+    ├── source.csv              # 25행 — 소스/매체×세션 90일
+    └── device.csv              # 34행 — 디바이스×국가×세션 90일
 
 scripts/
 ├── gsc-pseo-audit.mjs          # 기존 — gsc-audit-output.csv 갱신용
-├── gsc-fetch-detail.mjs        # 신규 — gsc-raw/ 갱신용 (이번 진단 생성)
-└── ga4-fetch.mjs               # 신규 — ga4-raw/ 갱신용 (GA4 계정 설정 후 사용)
+├── gsc-fetch-detail.mjs        # 신규 — gsc-raw/ 갱신용
+├── ga4-oauth-setup.mjs         # 신규 — GA4 OAuth refresh token 1회 발급
+└── ga4-fetch.mjs               # 신규 — ga4-raw/ 갱신용 (OAuth 인증)
 ```

@@ -1,0 +1,35 @@
+device,country,sessions,bounce_rate
+"desktop","South Korea",1184,0.469
+"mobile","South Korea",998,0.504
+"desktop","(not set)",172,1.000
+"desktop","China",61,0.984
+"desktop","United States",43,0.791
+"desktop","Singapore",39,0.974
+"tablet","South Korea",34,0.500
+"mobile","(not set)",15,1.000
+"mobile","United States",13,0.538
+"desktop","Hong Kong",11,0.818
+"desktop","Japan",10,0.300
+"mobile","China",9,0.667
+"desktop","Canada",6,0.667
+"mobile","Japan",4,0.000
+"desktop","India",3,0.333
+"desktop","New Zealand",3,1.000
+"mobile","Australia",3,0.667
+"desktop","",2,1.000
+"desktop","Taiwan",2,0.500
+"desktop","Vietnam",2,1.000
+"desktop","Australia",1,0.000
+"desktop","Germany",1,1.000
+"desktop","Myanmar (Burma)",1,1.000
+"desktop","Philippines",1,0.000
+"desktop","Qatar",1,0.000
+"mobile","Costa Rica",1,1.000
+"mobile","Malaysia",1,0.000
+"mobile","Singapore",1,0.000
+"mobile","Thailand",1,0.000
+"mobile","United Arab Emirates",1,0.000
+"mobile","Vietnam",1,1.000
+"tablet","Australia",1,0.000
+"tablet","Indonesia",1,0.000
+"tablet","United States",1,1.000

@@ -2,37 +2,27 @@
 // GA4 Data API raw fetch — 진단용 1회성 스크립트
 // 사용: node --env-file=.env.local scripts/ga4-fetch.mjs
 //
-// 선결 조건:
-//   1. GCP Console → service account 생성 → JSON key 다운로드
-//   2. GA4 Admin → Property Access → 서비스 계정 이메일 Viewer 추가
-//   3. .env.local에 GA4_PROPERTY_ID, GA4_SERVICE_ACCOUNT_KEY (JSON 파일 경로 또는 base64 문자열)
+// 필수 환경변수:
+//   GA4_PROPERTY_ID          GA4 Admin → Property Settings의 숫자 ID
+//   GA4_OAUTH_REFRESH_TOKEN  (최초 1회: node --env-file=.env.local scripts/ga4-oauth-setup.mjs)
+//   GSC_OAUTH_CLIENT_ID / GSC_OAUTH_CLIENT_SECRET
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import { google } from 'googleapis';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'docs', 'ga4-raw');
 
-function getClient() {
-  const keyEnv = process.env.GA4_SERVICE_ACCOUNT_KEY;
-  if (!keyEnv) throw new Error('GA4_SERVICE_ACCOUNT_KEY 환경변수 누락');
-
-  let credentials;
-  if (keyEnv.startsWith('{')) {
-    // 인라인 JSON 문자열
-    credentials = JSON.parse(keyEnv);
-  } else if (keyEnv.endsWith('.json') || fs.existsSync(keyEnv)) {
-    // 파일 경로
-    credentials = JSON.parse(fs.readFileSync(keyEnv, 'utf-8'));
-  } else {
-    // base64
-    credentials = JSON.parse(Buffer.from(keyEnv, 'base64').toString('utf-8'));
-  }
-
-  return new BetaAnalyticsDataClient({ credentials });
+function getAuth() {
+  const oauth2 = new google.auth.OAuth2(
+    process.env.GSC_OAUTH_CLIENT_ID,
+    process.env.GSC_OAUTH_CLIENT_SECRET,
+  );
+  oauth2.setCredentials({ refresh_token: process.env.GA4_OAUTH_REFRESH_TOKEN });
+  return oauth2;
 }
 
 function dateRange(days) {
@@ -49,19 +39,30 @@ function escapeCsv(s) {
 function writecsv(outPath, headers, rows) {
   const lines = [headers.join(',')];
   for (const row of rows) {
-    lines.push(headers.map((_, i) => row[i]).join(','));
+    lines.push(row.map((v, i) => {
+      const h = headers[i];
+      return (h === 'landing_page' || h === 'page_path' || h === 'event_name' || h === 'source' || h === 'medium' || h === 'device' || h === 'country')
+        ? escapeCsv(v)
+        : v;
+    }).join(','));
   }
   fs.writeFileSync(outPath, lines.join('\n'), 'utf-8');
   console.log(`  → ${path.relative(ROOT, outPath)} (${rows.length} rows)`);
 }
 
-// Report 1: 랜딩 페이지별 세션·이탈률·참여 시간
-async function fetchLanding(client, propertyId) {
-  console.log('\n[1/4] landing page metrics (90d)...');
-  const { startDate, endDate } = dateRange(90);
-  const [response] = await client.runReport({
+async function runReport(analyticsdata, propertyId, requestBody) {
+  const res = await analyticsdata.properties.runReport({
     property: `properties/${propertyId}`,
-    dateRanges: [{ startDate, endDate }],
+    requestBody,
+  });
+  return res.data.rows || [];
+}
+
+// Report 1: 랜딩 페이지별 세션·이탈률·참여 시간
+async function fetchLanding(analyticsdata, propertyId) {
+  console.log('\n[1/4] landing page metrics (90d)...');
+  const rows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
     dimensions: [{ name: 'landingPage' }],
     metrics: [
       { name: 'sessions' },
@@ -73,8 +74,8 @@ async function fetchLanding(client, propertyId) {
     limit: 500,
   });
 
-  const rows = (response.rows || []).map((r) => [
-    escapeCsv(r.dimensionValues[0].value),
+  const out = rows.map((r) => [
+    r.dimensionValues[0].value,
     r.metricValues[0].value,
     parseFloat(r.metricValues[1].value).toFixed(3),
     parseFloat(r.metricValues[2].value).toFixed(1),
@@ -83,17 +84,15 @@ async function fetchLanding(client, propertyId) {
   writecsv(
     path.join(OUT_DIR, 'landing.csv'),
     ['landing_page', 'sessions', 'bounce_rate', 'avg_session_sec', 'engaged_sessions'],
-    rows,
+    out,
   );
 }
 
 // Report 2: 리드 이벤트(카카오·전화·폼 제출) — 페이지별
-async function fetchEvents(client, propertyId) {
+async function fetchEvents(analyticsdata, propertyId) {
   console.log('\n[2/4] lead events by page (90d)...');
-  const { startDate, endDate } = dateRange(90);
-  const [response] = await client.runReport({
-    property: `properties/${propertyId}`,
-    dateRanges: [{ startDate, endDate }],
+  const rows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
     dimensions: [{ name: 'eventName' }, { name: 'pagePath' }],
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: {
@@ -114,32 +113,30 @@ async function fetchEvents(client, propertyId) {
     limit: 500,
   });
 
-  const rows = (response.rows || []).map((r) => [
+  const out = rows.map((r) => [
     r.dimensionValues[0].value,
-    escapeCsv(r.dimensionValues[1].value),
+    r.dimensionValues[1].value,
     r.metricValues[0].value,
   ]);
   writecsv(
     path.join(OUT_DIR, 'events.csv'),
     ['event_name', 'page_path', 'event_count'],
-    rows,
+    out,
   );
 }
 
 // Report 3: 소스·매체별 세션
-async function fetchSource(client, propertyId) {
+async function fetchSource(analyticsdata, propertyId) {
   console.log('\n[3/4] source/medium sessions (90d)...');
-  const { startDate, endDate } = dateRange(90);
-  const [response] = await client.runReport({
-    property: `properties/${propertyId}`,
-    dateRanges: [{ startDate, endDate }],
+  const rows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
     dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }],
     metrics: [{ name: 'sessions' }, { name: 'bounceRate' }, { name: 'conversions' }],
     orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
     limit: 100,
   });
 
-  const rows = (response.rows || []).map((r) => [
+  const out = rows.map((r) => [
     r.dimensionValues[0].value,
     r.dimensionValues[1].value,
     r.metricValues[0].value,
@@ -149,24 +146,22 @@ async function fetchSource(client, propertyId) {
   writecsv(
     path.join(OUT_DIR, 'source.csv'),
     ['source', 'medium', 'sessions', 'bounce_rate', 'conversions'],
-    rows,
+    out,
   );
 }
 
 // Report 4: 디바이스·국가 분포
-async function fetchDevice(client, propertyId) {
+async function fetchDevice(analyticsdata, propertyId) {
   console.log('\n[4/4] device × country (90d)...');
-  const { startDate, endDate } = dateRange(90);
-  const [response] = await client.runReport({
-    property: `properties/${propertyId}`,
-    dateRanges: [{ startDate, endDate }],
+  const rows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
     dimensions: [{ name: 'deviceCategory' }, { name: 'country' }],
     metrics: [{ name: 'sessions' }, { name: 'bounceRate' }],
     orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
     limit: 50,
   });
 
-  const rows = (response.rows || []).map((r) => [
+  const out = rows.map((r) => [
     r.dimensionValues[0].value,
     r.dimensionValues[1].value,
     r.metricValues[0].value,
@@ -175,7 +170,7 @@ async function fetchDevice(client, propertyId) {
   writecsv(
     path.join(OUT_DIR, 'device.csv'),
     ['device', 'country', 'sessions', 'bounce_rate'],
-    rows,
+    out,
   );
 }
 
@@ -184,26 +179,26 @@ async function main() {
 
   const propertyId = process.env.GA4_PROPERTY_ID;
   if (!propertyId) {
-    console.error('ERROR: GA4_PROPERTY_ID 환경변수 누락. .env.local에 추가 필요');
+    console.error('ERROR: GA4_PROPERTY_ID 환경변수 누락');
     process.exit(1);
   }
+  if (!process.env.GA4_OAUTH_REFRESH_TOKEN) {
+    console.error('ERROR: GA4_OAUTH_REFRESH_TOKEN 환경변수 누락');
+    console.error('먼저 실행하세요: node --env-file=.env.local scripts/ga4-oauth-setup.mjs');
+    process.exit(1);
+  }
+
   console.log(`Property: ${propertyId}`);
 
-  let client;
-  try {
-    client = getClient();
-  } catch (e) {
-    console.error(`ERROR: ${e.message}`);
-    console.error('GA4_SERVICE_ACCOUNT_KEY 환경변수를 확인하세요.');
-    process.exit(1);
-  }
+  const auth = getAuth();
+  const analyticsdata = google.analyticsdata({ version: 'v1beta', auth });
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  await fetchLanding(client, propertyId);
-  await fetchEvents(client, propertyId);
-  await fetchSource(client, propertyId);
-  await fetchDevice(client, propertyId);
+  await fetchLanding(analyticsdata, propertyId);
+  await fetchEvents(analyticsdata, propertyId);
+  await fetchSource(analyticsdata, propertyId);
+  await fetchDevice(analyticsdata, propertyId);
 
   console.log('\n✓ 완료. docs/ga4-raw/ 확인.');
 }
