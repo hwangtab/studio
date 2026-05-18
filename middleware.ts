@@ -177,10 +177,16 @@ export function middleware(request: NextRequest) {
         if (shouldVaryByLanguage) {
             response.headers.set('Vary', 'Accept-Language');
         }
+        if (isBot) {
+            response.cookies.set('__bt', '1', { maxAge: 3600, sameSite: 'lax', path: '/', httpOnly: false });
+        }
         return setSecurityHeaders(response);
     }
 
     const response = NextResponse.next();
+    if (isBot) {
+        response.cookies.set('__bt', '1', { maxAge: 3600, sameSite: 'lax', path: '/', httpOnly: false });
+    }
     const pathLocale = pathname.split('/')[1];
     if (locales.includes(pathLocale as Locale)) {
         response.headers.set('Content-Language', pathLocale);
