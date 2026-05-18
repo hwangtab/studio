@@ -74,14 +74,12 @@ export const validateContactForm = (fields: ContactFormFields): ContactValidatio
     errors.email = 'email_max';
   }
 
-  if (!rawPhone) {
-    errors.phone = 'phone_required';
-  } else if (!PHONE_PATTERN.test(rawPhone)) {
-    errors.phone = 'phone_invalid';
-  } else if (!normalizedPhone) {
-    errors.phone = 'phone_required';
-  } else if (normalizedPhone.length < CONTACT_LIMITS.phone.min || normalizedPhone.length > CONTACT_LIMITS.phone.max) {
-    errors.phone = 'phone_length';
+  if (rawPhone) {
+    if (!PHONE_PATTERN.test(rawPhone)) {
+      errors.phone = 'phone_invalid';
+    } else if (!normalizedPhone || normalizedPhone.length < CONTACT_LIMITS.phone.min || normalizedPhone.length > CONTACT_LIMITS.phone.max) {
+      errors.phone = 'phone_length';
+    }
   }
 
   if (!normalizedMessage) {

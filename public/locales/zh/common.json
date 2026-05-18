@@ -157,7 +157,7 @@
     "form": {
       "name": "姓名",
       "namePlaceholder": "例如：Alex Kim…",
-      "phone": "联系电话",
+      "phone": "联系电话（选填）",
       "phonePlaceholder": "例如：010-1234-5678…",
       "email": "邮箱",
       "emailPlaceholder": "例如：hwangtab@gmail.com…",

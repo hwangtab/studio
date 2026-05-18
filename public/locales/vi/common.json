@@ -157,7 +157,7 @@
     "form": {
       "name": "Họ tên",
       "namePlaceholder": "VD: Alex Kim…",
-      "phone": "Số điện thoại",
+      "phone": "Số điện thoại (tùy chọn)",
       "phonePlaceholder": "VD: 010-1234-5678…",
       "email": "Email",
       "emailPlaceholder": "VD: hwangtab@gmail.com…",

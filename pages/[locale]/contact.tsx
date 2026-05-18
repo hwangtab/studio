@@ -344,7 +344,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   onChange={handleChange}
                   error={errors.phone}
                   placeholder={t('contact.form.phonePlaceholder')}
-                  required
                   autoComplete="tel"
                   inputMode="tel"
                 />

@@ -157,7 +157,7 @@
     "form": {
       "name": "Name",
       "namePlaceholder": "e.g., Alex Kim…",
-      "phone": "Phone",
+      "phone": "Phone (optional)",
       "phonePlaceholder": "e.g., 010-1234-5678…",
       "email": "Email",
       "emailPlaceholder": "e.g., hwangtab@gmail.com…",
@@ -841,6 +841,11 @@
       "moreTitle": "More Stories",
       "noRelated": "No related stories.",
       "viewAll": "View all stories"
+    },
+    "bottomCta": {
+      "title": "Talk to us directly on KakaoTalk",
+      "subtitle": "Quotes, scheduling, equipment questions — we respond within an hour during business hours.",
+      "imageAlt": "Studio NOL workspace"
     },
     "categoryHub": {
       "seoTitle": "{{category}} Stories | Studio NOL",

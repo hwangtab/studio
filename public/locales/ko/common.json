@@ -157,7 +157,7 @@
     "form": {
       "name": "이름",
       "namePlaceholder": "예: 홍길동…",
-      "phone": "연락처",
+      "phone": "연락처 (선택)",
       "phonePlaceholder": "예: 010-1234-5678…",
       "email": "이메일",
       "emailPlaceholder": "예: hwangtab@gmail.com…",
