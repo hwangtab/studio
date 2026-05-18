@@ -1,6 +1,7 @@
 event_name,page_path,event_count
 "lead_click_kakao","/ko/practice-room",3
 "lead_click_kakao","/ko",2
+"lead_form_field_error","/ko/contact",2
 "lead_form_start","/ko/contact",2
 "lead_click_kakao","/ko/contact",1
 "lead_click_kakao","/ko/voice-acting",1

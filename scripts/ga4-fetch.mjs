@@ -103,8 +103,10 @@ async function fetchEvents(analyticsdata, propertyId) {
             'lead_click_kakao',
             'lead_click_phone',
             'lead_submit_success',
+            'lead_submit_error',
             'lead_form_start',
             'lead_form_abandon',
+            'lead_form_field_error',
           ],
         },
       },
@@ -121,6 +123,46 @@ async function fetchEvents(analyticsdata, propertyId) {
   writecsv(
     path.join(OUT_DIR, 'events.csv'),
     ['event_name', 'page_path', 'event_count'],
+    out,
+  );
+}
+
+// Report 5: LLM 레퍼러별 랜딩 페이지 — ChatGPT/Perplexity 등 AI 트래픽 인용 역추적
+async function fetchLlmReferrers(analyticsdata, propertyId) {
+  console.log('\n[5/5] LLM referrers × landing page (90d)...');
+  const rows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
+    dimensions: [{ name: 'sessionSource' }, { name: 'landingPage' }],
+    metrics: [{ name: 'sessions' }, { name: 'bounceRate' }, { name: 'averageSessionDuration' }],
+    dimensionFilter: {
+      filter: {
+        fieldName: 'sessionSource',
+        inListFilter: {
+          values: [
+            'chatgpt.com',
+            'perplexity.ai',
+            'perplexity',
+            'copilot.com',
+            'gemini.google.com',
+            'notebooklm.google.com',
+          ],
+        },
+      },
+    },
+    orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+    limit: 100,
+  });
+
+  const out = rows.map((r) => [
+    r.dimensionValues[0].value,
+    r.dimensionValues[1].value,
+    r.metricValues[0].value,
+    parseFloat(r.metricValues[1].value).toFixed(3),
+    parseFloat(r.metricValues[2].value).toFixed(1),
+  ]);
+  writecsv(
+    path.join(OUT_DIR, 'llm_referrers.csv'),
+    ['llm_source', 'landing_page', 'sessions', 'bounce_rate', 'avg_session_sec'],
     out,
   );
 }
@@ -199,6 +241,7 @@ async function main() {
   await fetchEvents(analyticsdata, propertyId);
   await fetchSource(analyticsdata, propertyId);
   await fetchDevice(analyticsdata, propertyId);
+  await fetchLlmReferrers(analyticsdata, propertyId);
 
   console.log('\n✓ 완료. docs/ga4-raw/ 확인.');
 }

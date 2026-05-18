@@ -1,7 +1,7 @@
 landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko",177,0.446,239.8,98
 "(not set)",132,1.000,0.1,0
-"/ko/stories/daw-choice1",81,0.420,123.8,47
+"/ko/stories/daw-choice1",82,0.427,122.3,47
 "/ko/practice-room",70,0.443,115.0,39
 "/ko/stories/seoul1",59,0.610,102.1,23
 "/ko/stories/ep-making1",52,0.962,5.3,2
@@ -10,7 +10,7 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/stories/distribution1",34,0.382,104.4,21
 "/ko/stories/plugins1",32,0.438,85.6,18
 "/ko/stories/song-key1",28,0.393,52.3,17
-"/ko/stories/music-marketing1",25,0.480,92.2,13
+"/ko/stories/music-marketing1",26,0.500,88.7,13
 "/ko/stories/songstructure1",25,0.640,55.3,9
 "/ko/stories/loudness1",23,0.609,117.1,9
 "/ko/stories/vocal-microphone1",22,0.409,61.4,13
@@ -18,12 +18,12 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/stories/revenue1",19,0.579,181.8,8
 "/ko/stories/vocal-recording-setup1",19,0.421,107.7,11
 "/ko/stories/practice-room-transfer1",18,0.556,24.8,8
+"/en",17,0.412,394.2,10
 "/ko/stories/chord-progression1",17,0.824,8.5,3
 "/ko/stories/gyeonggi1",17,0.706,12.9,5
 "/ko/stories/mixvoice1",17,0.588,82.8,7
 "/ko/stories/noise-reduction1",17,0.588,43.1,7
 "/ko/stories/vocalrange1",17,0.412,66.8,10
-"/en",16,0.375,417.6,10
 "/en/contact",16,0.938,80.1,1
 "/ko/stories/mixing-complete-guide",16,0.250,776.1,12
 "",15,1.000,0.0,0
@@ -157,6 +157,7 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/stories/pricing1",4,0.500,256.3,2
 "/ko/stories/rap-recording1",4,0.250,75.1,3
 "/ko/stories/record-deal1",4,0.250,619.0,3
+"/ko/stories/sampling-guide1",4,0.500,86.2,2
 "/ko/stories/session-musician1",4,0.500,65.1,2
 "/ko/stories/store-bgm1",4,0.250,202.6,3
 "/ko/stories/studioone1",4,0.500,123.3,2
@@ -208,7 +209,6 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/stories/practice-room-vocal-register1",3,0.333,22.4,2
 "/ko/stories/practice-room-vocal-soul1",3,0.333,159.1,2
 "/ko/stories/reverb1",3,0.667,21.9,1
-"/ko/stories/sampling-guide1",3,0.333,101.9,2
 "/ko/stories/self-recording1",3,0.667,22.9,1
 "/ko/stories/sidechain1",3,0.667,611.7,1
 "/ko/stories/siryummusic1",3,0.667,18.1,1
