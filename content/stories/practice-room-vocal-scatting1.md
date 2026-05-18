@@ -1,5 +1,5 @@
 ---
-title: 보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 — 완전 가이드
+title: 스캣 싱잉 입문 — 재즈 즉흥 음절 선택과 코드 톤 중심 멜로디 만드는 법
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
+summary: >-
+  Ella Fitzgerald 스타일로 배우는 스캣. 음절 선택, 코드 톤 타겟, 즉흥 훈련 단계.
 faq:
   - q: 보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

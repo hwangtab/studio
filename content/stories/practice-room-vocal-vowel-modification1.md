@@ -1,5 +1,5 @@
 ---
-title: 보컬 모음 수정·고음 발성법 — 완전 가이드
+title: 고음에서 모음 수정(Vowel Modification)하는 법 — 자연스러운 고음 발성 훈련
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room4.webp
+summary: >-
+  A→o, E→eh 모음 변환으로 고음을 자연스럽게. 성악·팝 보컬 공통 핵심 기법.
 faq:
   - q: 보컬 모음 수정·고음 발성법을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-
