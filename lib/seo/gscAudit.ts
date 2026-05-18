@@ -10,6 +10,10 @@ import { google } from 'googleapis';
 // 빌드 타임 생성된 story catalog manifest (scripts/generate-story-catalog.js).
 // 1,569개 .md 런타임 fs 읽기 회피 - Vercel Function 번들에 자동 포함됨.
 import storyCatalog from '../story-catalog.json';
+import regionRedirectMap from '../regionRedirectMap.json';
+
+// 308 redirect 처리된 슬러그는 GSC 노출·클릭 0이 정상이므로 audit 대상에서 제외.
+const REDIRECTED_SLUGS: ReadonlySet<string> = new Set(Object.keys(regionRedirectMap as Record<string, string>));
 
 export type ClusterName = 'city-ktx-visit' | 'seoul-district-studio' | 'practice-room-station' | 'other';
 export type Tier = 'KEEP' | 'WATCH' | 'WATCH_LOW' | 'NOINDEX_CANDIDATE';
@@ -140,7 +144,7 @@ export async function runAudit(opts: {
   windowDays: number;
   auth: GscAuth;
 }): Promise<AuditSnapshot> {
-  const catalog = loadStoryCatalog();
+  const catalog = loadStoryCatalog().filter(c => !REDIRECTED_SLUGS.has(c.slug));
   const { rowCount, slugMetrics } = await fetchGscPageMetrics({
     siteUrl: opts.siteUrl,
     windowDays: opts.windowDays,
