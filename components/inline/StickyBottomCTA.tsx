@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface StickyBottomCTAProps {
   /** article 시작 직전 invisible marker ref */
@@ -30,6 +31,14 @@ const isDismissedNow = (): boolean => {
 const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
+
+  const trackKakaoClick = React.useCallback(() => {
+    trackLeadEvent('lead_click_kakao', {
+      locale,
+      component: 'StickyBottomCTA',
+      cta_id: 'sticky_bottom_kakao',
+    });
+  }, [locale]);
 
   const [visible, setVisible] = React.useState(false);
   const [dismissed, setDismissed] = React.useState(false);
@@ -85,6 +94,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
         href={siteConfig.contact.kakaoUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={trackKakaoClick}
         className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 text-sm font-bold min-h-[44px] touch-manipulation"
       >
         {t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
@@ -101,6 +111,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
         href={siteConfig.contact.kakaoUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={trackKakaoClick}
         className="sm:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 touch-manipulation"
         aria-label={t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
       >

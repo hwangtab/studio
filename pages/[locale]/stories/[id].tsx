@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { ArrowLeft, Calendar, Tag, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, Share2, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
@@ -13,8 +13,9 @@ import ImageHero from '../../../components/common/ImageHero';
 import type { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 
-// StoryCTA는 article 본문 아래 below-fold 영역 → 코드 스플리팅.
+// StoryCTA / ContactCTA는 article 본문 아래 below-fold 영역 → 코드 스플리팅.
 const StoryCTA = dynamic(() => import('../../../components/StoryCTA'));
+const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 const RelatedPortfolioInline = dynamic(() => import('../../../components/ui/RelatedPortfolioInline'));
 const StickyBottomCTA = dynamic(() => import('../../../components/inline/StickyBottomCTA'), { ssr: false });
 import { shareContent } from '../../../utils/shareUtils';
@@ -326,8 +327,30 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           <RelatedPortfolioInline items={relatedPortfolio} locale={locale} />
         )}
 
-        {/* event 카테고리(공지·모임 안내)는 행동 유도 맥락이 약해 CTA 노출 부자연 → 숨김 */}
-        {story.categoryKey !== 'event' && <StoryCTA type={ctaType} locale={locale} />}
+        {/* event 카테고리(공지·모임 안내)는 행동 유도 맥락이 약해 CTA 노출 부자연 → 숨김.
+            ko: 카카오 직링크 + lead_click_kakao 추적이 완비된 ContactCTA 사용.
+            그 외 로케일: 기존 StoryCTA 유지(외국어 사용자 동선 보존). */}
+        {story.categoryKey !== 'event' && (
+          locale === 'ko' ? (
+            <div className="my-16">
+              <ContactCTA
+                locale={locale}
+                title={t('stories.bottomCta.title', { defaultValue: '지금 카톡으로 바로 상담하세요' })}
+                subtitle={t('stories.bottomCta.subtitle', {
+                  defaultValue: '이 글에서 본 작업도 동일하게 진행 가능합니다. 일정·견적 1분 안에 안내드려요.',
+                })}
+                imageSrc="/images/studio2.webp"
+                imageAlt={t('stories.bottomCta.imageAlt', { defaultValue: '스튜디오 놀 작업 공간' })}
+                primaryButtonLabel={t('actions.kakao')}
+                secondaryButtonLabel={t('actions.location')}
+                icon={Sparkles}
+                headingAs="h3"
+              />
+            </div>
+          ) : (
+            <StoryCTA type={ctaType} locale={locale} />
+          )
+        )}
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <h2 className="typo-card-title mb-6">{t('stories.detail.moreTitle')}</h2>
