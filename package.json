@@ -63,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@google-analytics/data": "^6.0.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "^14.5.2",
