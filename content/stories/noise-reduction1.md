@@ -30,6 +30,20 @@ faq:
     a: >-
       iZotope RX(전문용), Audacity의 노이즈 제거 필터(무료), Adobe Audition의 Noise Print 기능
       등이 있습니다. 단, 사후 노이즈 제거는 음질 손상을 동반할 수 있어 예방이 최선입니다.
+howTo:
+  name: "홈 레코딩 노이즈 제거 단계별 절차"
+  description: "녹음 전 예방부터 노이즈 게이트 설정·사후 처리까지 5단계로 진행하는 노이즈 제거 절차입니다."
+  steps:
+    - name: "1단계: 녹음 전 환경 점검"
+      text: "컴퓨터 팬을 방 밖으로 이동하고 에어컨·선풍기·냉장고를 끕니다. 창문 닫고 두꺼운 커튼으로 외부 소음을 차단합니다. 형광등은 LED로 교체합니다."
+    - name: "2단계: 무음 구간 측정"
+      text: "마이크 게인을 녹음 시 동일하게 설정한 후 1.5초 이상 무음 구간을 녹음합니다. DAW에서 RMS 측정으로 노이즈 플로어를 확인합니다(예: −50dBFS)."
+    - name: "3단계: 노이즈 게이트 설정"
+      text: "Threshold = 측정값 + 5dB margin (예: −45dBFS), Attack 5ms, Release 200ms, Hold 50ms로 설정합니다. 노래 시작음이 잘리면 Attack +5ms, Hold +30ms씩 조정합니다."
+    - name: "4단계: iZotope RX / Audacity 사후 처리"
+      text: "60Hz 험은 RX De-hum 또는 Audacity Notch Filter 60Hz, 팬·에어컨 정상 노이즈는 RX Voice De-noise(Adaptive) 또는 Audacity Noise Reduction(Sensitivity 6)으로 제거합니다."
+    - name: "5단계: 강도 조절·비교 청취"
+      text: "RX reduction 5dB 이하는 자연스러움, 8~10dB가 균형점, 12dB 이상은 워터리 아티팩트가 명확합니다. 두 가지 강도로 비교 청취 후 결정합니다."
 ---
 ![녹음 노이즈 제거 완전 가이드 — 스튜디오 놀](/images/room3.webp)
 
