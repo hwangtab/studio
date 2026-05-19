@@ -1,5 +1,5 @@
 ---
-title: 피아노 CCM·워십 피아노 반주법 — 완전 가이드
+title: 피아노 워십·CCM 반주법 — 워십 코드 보이싱과 반주 패턴
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room1.webp
+summary: >-
+  워십 피아노는 선명한 코드 보이싱과 공간감이 핵심. CCM·예배 반주 패턴 단계별 훈련.
 faq:
   - q: 피아노 CCM·워십 피아노 반주법을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

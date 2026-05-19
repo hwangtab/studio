@@ -1,5 +1,5 @@
 ---
-title: 12현 기타·코러스 효과·Roger McGuinn 스타일 — 완전 가이드
+title: 12현 기타 연습 — Roger McGuinn 스타일과 옥타브 코러스 특성
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room6.webp
+summary: >-
+  줄 간격·조율이 6현 기타와 다른 12현의 특성. Roger McGuinn 포크록 스타일 연습법.
 faq:
   - q: 12현 기타·코러스 효과·Roger McGuinn 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

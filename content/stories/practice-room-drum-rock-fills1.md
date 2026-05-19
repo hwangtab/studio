@@ -1,5 +1,5 @@
 ---
-title: 드럼 록 필인·트랜지션 기법 — 완전 가이드
+title: 드럼 록 필인·트랜지션 — John Bonham 스타일 필인 기법 훈련
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
+summary: >-
+  필인은 섹션 전환 신호. John Bonham 스타일 파워풀 록 필인 기법 단계별 훈련.
 faq:
   - q: 드럼 록 필인·트랜지션 기법을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

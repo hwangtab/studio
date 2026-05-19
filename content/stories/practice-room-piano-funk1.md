@@ -1,5 +1,5 @@
 ---
-title: 피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브 — 완전 가이드
+title: 피아노 펑크·클라비넷 스타일 — Herbie Hancock 그루브 패턴 훈련
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
+summary: >-
+  클라비넷 사운드와 16분음표 싱코페이션이 펑크 피아노 핵심. Herbie Hancock 스타일 훈련.
 faq:
   - q: 피아노 펑크·클라비넷 스타일·Herbie Hancock 그루브을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

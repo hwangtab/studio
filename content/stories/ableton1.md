@@ -1,5 +1,5 @@
 ---
-title: Ableton Live 보컬 녹음 완전 가이드 — 루프·전자음악 중심 DAW 활용
+title: Ableton Live 보컬 녹음 — Arrangement View·Warp·EQ Eight 설정법
 date: 2026-04-07
 author: 스튜디오 놀
 category: 녹음 가이드
@@ -13,8 +13,7 @@ tags:
   - Ableton EQ
 thumbnail: /images/service3.webp
 summary: >-
-  Ableton Live 보컬 녹음 완전 가이드입니다. Ableton Live 기본 설정·Arrangement View 보컬 녹음·EQ
-  Eight 설정·Compressor 설정·Warp (타이밍 교정)·파일 내보내기 (Export)까지 정리합니다.
+  Arrangement View 녹음·Warp 타이밍 교정·EQ Eight·Compressor 설정. Ableton 보컬 파일 Export까지.
 faq:
   - q: Ableton Live로 보컬 녹음이 가능한가요?
     a: >-

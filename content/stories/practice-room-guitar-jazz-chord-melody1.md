@@ -1,5 +1,5 @@
 ---
-title: 재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드
+title: 재즈 기타 코드 멜로디 — Joe Pass 스타일 솔로 기타 기법
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room2.webp
+summary: >-
+  코드 멜로디는 멜로디와 반주를 기타 한 대로 동시에. 'Autumn Leaves' Joe Pass 스타일 기초 훈련.
 faq:
   - q: 재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

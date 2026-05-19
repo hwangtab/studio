@@ -1,5 +1,5 @@
 ---
-title: 블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드
+title: 블루스 록 기타 훈련 — SRV·Eric Clapton 스타일 펜타토닉 솔로
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room1.webp
+summary: >-
+  마이너 펜타토닉 스케일로 시작하는 블루스 록 솔로. SRV·Eric Clapton 스타일 벤딩 기법 단계별 훈련.
 faq:
   - q: 블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

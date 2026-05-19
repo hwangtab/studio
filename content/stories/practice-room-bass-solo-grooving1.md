@@ -1,5 +1,5 @@
 ---
-title: 베이스 솔로·그루브 솔로잉 기법 — 완전 가이드
+title: 베이스 솔로·그루브 솔로잉 — Victor Wooten·Jaco Pastorius 스타일 기법
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
+summary: >-
+  그루브를 유지하면서 솔로 라인 추가. Victor Wooten·Jaco Pastorius 스타일 솔로잉 단계별 훈련.
 faq:
   - q: 베이스 솔로·그루브 솔로잉 기법을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

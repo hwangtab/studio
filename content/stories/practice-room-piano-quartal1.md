@@ -1,5 +1,5 @@
 ---
-title: 피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner — 완전 가이드
+title: 피아노 쿼탈 하모니 훈련 — 4도 보이싱·McCoy Tyner·Bill Evans 스타일
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room5.webp
+summary: >-
+  3도 대신 4도 음정 쌓기로 모달한 사운드. McCoy Tyner 스타일 쿼탈 보이싱 단계별 훈련.
 faq:
   - q: 피아노 4도 보이싱·쿼탈 하모니·McCoy Tyner을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

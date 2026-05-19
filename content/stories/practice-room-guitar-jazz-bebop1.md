@@ -1,5 +1,5 @@
 ---
-title: 기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드
+title: 재즈 기타 비밥 훈련 — Wes Montgomery·Joe Pass 스타일 즉흥 연주
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room1.webp
+summary: >-
+  재즈 기타 기초부터 Wes Montgomery 옥타브 주법과 Joe Pass 솔로 기타까지. 비밥 즉흥 연주 단계별 훈련.
 faq:
   - q: 기타 비밥·재즈 기타 즉흥·Wes Montgomery을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

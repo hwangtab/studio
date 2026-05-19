@@ -1,5 +1,5 @@
 ---
-title: 재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일 — 완전 가이드
+title: 재즈 피아노 컴핑 훈련 — Red Garland·Wynton Kelly 스타일 밴드 앙상블
 date: 2026-04-08
 tags:
   - 음악 연습실
@@ -11,6 +11,8 @@ tags:
 category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
+summary: >-
+  컴핑은 솔리스트를 지지하는 반주. Red Garland·Wynton Kelly 스타일 재즈 피아노 컴핑 단계별 훈련.
 faq:
   - q: 재즈 피아노 컴핑·밴드 앙상블·Red Garland 스타일을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-
