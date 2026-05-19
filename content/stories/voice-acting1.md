@@ -154,4 +154,4 @@ faq:
 
 성우 지망생의 데모 녹음부터 광고·다큐멘터리 내레이션까지 모든 보이스 레코딩에서 클로즈 마이킹(15~20cm)이 친밀감 있는 사운드를 만드는 핵심입니다. 볼륨보다 음색과 속도 변화로 캐릭터의 개성과 감정을 전달하고, 녹음 전 원고를 3~5회 소리 내어 읽어 자연스러운 흐름을 확보하세요. 실수가 생겼을 때 잠시 멈추고 재시작하는 습관은 편집 효율을 크게 높입니다. 믹싱에서는 100Hz 이하 하이패스 컷으로 불필요한 저역을 제거하고 2~4kHz 딕션 선명도를 부스트한 뒤, 과강조된 S 발음은 디에서(De-esser)로 4~8kHz를 타겟팅해 처리합니다.
 
-[축가 녹음 완전 가이드](/stories/jukga1) | [뮤지컬 보컬 녹음 완전 가이드](/stories/musical-vocal1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [홈 레코딩 완전 가이드](/stories/home-recording1)
+[축가 녹음 완전 가이드](/stories/jukga1) | [뮤지컬 보컬 녹음 완전 가이드](/stories/musical-vocal1) | [보컬 아티큘레이션 완전 가이드](/stories/articulation1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [성우 녹음실 서비스 안내](/ko/voice-acting)

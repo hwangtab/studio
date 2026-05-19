@@ -115,4 +115,4 @@ faq:
 
 내레이션 녹음에서 문장 경계마다 1~2초 무음 여유를 두면 편집자가 오류 구간을 교체할 때 앞뒤 호흡이 자연스럽게 이어집니다. 오디오북 납품 표준(ACX 기준)은 -23dB~-18dB RMS, 최대 -3dBFS 피크, 파일당 3.5초 이하 배경 노이즈 플로어이며, 유튜브 나레이션은 -14 LUFS/True Peak -1dBFS 이하가 기준입니다. 마이크를 약간 아래 각도로 배치하면 치찰음(ㅅ·ㅈ·ㅊ) 과잉이 자연스럽게 감쇠되고, 30~40cm 거리에 팝 필터를 두면 폭발음 없이 클린한 보이스 트랙을 완성할 수 있습니다.
 
-[팟캐스트·오디오드라마 보컬 녹음 가이드](/stories/podcast-vocal1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [오디오북 제작 방법 — 녹음부터 유통까지 완전 가이드](/stories/audiobook-guide1)
+[팟캐스트·오디오드라마 보컬 녹음 가이드](/stories/podcast-vocal1) | [보컬 녹음 세션 준비 가이드](/stories/session1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [오디오북 제작 방법 — 녹음부터 유통까지 완전 가이드](/stories/audiobook-guide1) | [성우 녹음실 서비스 안내](/ko/voice-acting)

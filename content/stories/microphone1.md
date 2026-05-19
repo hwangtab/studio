@@ -122,4 +122,4 @@ faq:
 
 AKG C414 XLII와 Neumann U87은 자주 비교되는 마이크입니다. C414는 고음역(10~16kHz)이 U87보다 밝게 강조되어 K-POP의 고음 보컬이나 팝 장르에서 존재감 있는 사운드를 얻기 쉽습니다. 반면 U87은 중저음 배음이 두껍고 자연스러운 온기(Warmth)가 있어 발라드·재즈·팝 보컬에서 가장 범용적으로 작동합니다. 홈 레코딩 입문 단계에서는 마이크 특성의 차이보다 흡음 처리가 녹음 품질에 더 큰 영향을 미치므로, 10만원대 마이크에 흡음재 투자를 먼저 하는 것이 합리적입니다.
 
-[보컬 녹음 마이크 추천 완전 가이드](/stories/vocal-microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [샘플레이트·비트뎁스 완전 가이드](/stories/sample-rate1) | [보컬 EQ 완전 가이드](/stories/eq1)
+[보컬 녹음 마이크 추천 완전 가이드](/stories/vocal-microphone1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [샘플레이트·비트뎁스 완전 가이드](/stories/sample-rate1) | [보컬 EQ 완전 가이드](/stories/eq1) | [홈 레코딩 노이즈 제거 가이드](/stories/noise-reduction1)

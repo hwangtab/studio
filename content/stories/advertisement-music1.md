@@ -154,4 +154,4 @@ BGM 작곡가의 첫 번째 원칙은 '음악을 위한 음악을 쓰지 않는�
 
 광고음악은 15초 안에 브랜드의 수십억 원짜리 마케팅 전략을 정서로 번역하는 작업입니다. 작곡가의 실력만큼이나 중요한 것은 영상과의 싱크, 클라이언트와의 커뮤니케이션, 법적 권리의 정확한 해결입니다. 한 번의 성공적인 CM송은 20년 이상 브랜드를 따라다니고, 한 번의 BGM이 한 아티스트의 인지도를 바꾸기도 합니다. 짧지만 브랜드의 가장 중요한 소리라는 점을 기억하며, 예술성과 기능성의 균형을 맞추는 것이 이 분야의 전부입니다.
 
-[매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1)
+[매장 BGM·환경 음악 완전 가이드](/stories/store-bgm1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [유튜브·크리에이터 BGM 제작 가이드](/stories/youtube-bgm1) | [팝 음악 프로덕션 완전 가이드](/stories/pop-production1) | [성우 녹음실 서비스 안내](/ko/voice-acting)

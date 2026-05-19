@@ -130,4 +130,4 @@ inlineFallback:
 
 오디션 데모 녹음에서 뮤지컬 보컬만의 핵심은 피치 교정을 최소화하는 것입니다. 뮤지컬 발성 특유의 음정 굴곡과 비브라토 패턴은 감정 표현의 일부이며, 팝 보컬 기준으로 과도하게 교정하면 오히려 기계적으로 들립니다. Melodyne를 쓰더라도 음정 중심값(Pitch Center)만 미세 조정하고, 비브라토 속도와 깊이는 건드리지 않는 것이 원칙입니다. 완성된 데모는 -14 LUFS 스트리밍 기준보다 약간 높은 -12 LUFS로 마스터링해 오디션 심사 스피커에서 충분한 존재감을 유지하도록 하세요.
 
-[보컬 오디션 완전 가이드](/stories/audition-vocal1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1)
+[보컬 오디션 완전 가이드](/stories/audition-vocal1) | [성우 녹음실 보이스 레코딩](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [벨팅 발성법 가이드](/stories/belting1) | [성우 녹음실 서비스 안내](/ko/voice-acting)
