@@ -3,6 +3,7 @@ title: 세종에서 서울 녹음실 방문 가이드 — KTX 오송역으로 �
 date: 2026-04-06
 author: 스튜디오 놀
 category: 지역 가이드
+robots: 'noindex, follow'
 tags:
 - 세종 녹음실
 - 세종시 녹음실

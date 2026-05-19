@@ -3,6 +3,7 @@ title: 제주에서 서울 녹음실 방문 가이드 — 비행기로 스튜디
 date: 2026-04-06
 author: 스튜디오 놀
 category: 지역 가이드
+robots: 'noindex, follow'
 tags:
 - 제주 녹음실
 - 제주에서 서울 스튜디오
