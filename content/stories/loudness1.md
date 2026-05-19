@@ -32,6 +32,20 @@ faq:
     a: >-
       True Peak은 디지털 신호를 아날로그로 변환할 때 발생할 수 있는 최대 피크 레벨입니다. 스트리밍 마스터링에서는 True
       Peak을 -1 dBTP 이하로 설정하는 것이 표준입니다. 이를 초과하면 변환 과정에서 클리핑(왜곡)이 발생할 수 있습니다.
+inlineFallback:
+  price: lesson-monthly
+howTo:
+  name: "스트리밍 LUFS -14 마스터링 4단계 절차"
+  description: "LUFS 미터 삽입부터 True Peak 제한까지 스트리밍 플랫폼 음압 기준에 맞춘 마스터링 절차입니다."
+  steps:
+    - name: "1단계: LUFS 미터 마스터 버스에 삽입"
+      text: "Youlean Loudness Meter(무료) 등 LUFS 미터 플러그인을 마스터 버스 끝단에 삽입합니다. Integrated·Short Term·True Peak를 모두 표시할 수 있는 도구를 선택합니다."
+    - name: "2단계: Integrated LUFS로 곡 전체 측정"
+      text: "곡 전체를 한 번 재생해 Integrated LUFS를 측정합니다. 측정값이 -16 LUFS 이하면 너무 작고, -8 LUFS 이상이면 다이나믹이 과도하게 압축된 상태입니다."
+    - name: "3단계: 마스터 리미터로 라우드니스 조정"
+      text: "마스터 리미터의 Threshold를 낮춰 Integrated LUFS를 -14 LUFS(스포티파이·유튜브 기준)에 맞춥니다. Ceiling은 -1.0dBTP로 설정해 True Peak 클리핑을 방지합니다."
+    - name: "4단계: 플랫폼별 검증 — 정규화 후 청취"
+      text: "마스터 파일을 Spotify·Apple Music 등 실제 플랫폼에 업로드해 정규화 후 음질을 확인합니다. -14 LUFS 마스터가 -16 LUFS 마스터보다 정규화 후 다이나믹이 부족하면 압축을 줄여 재마스터링합니다."
 ---
 ![음압(LUFS)과 스트리밍 마스터링 완전 가이드 — 스튜디오 놀](/images/hardware1.webp)
 

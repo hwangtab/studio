@@ -18,6 +18,20 @@ faq:
     a: "기본 개념(트랙, 플러그인, 믹서, MIDI)은 모든 DAW에서 동일합니다. 하나를 잘 다루면 다른 DAW로 전환할 때 1~2주면 적응할 수 있습니다. 단, 단축키와 워크플로우는 새로 익혀야 합니다."
   - q: "무료 DAW로도 음원 발매가 가능한가요?"
     a: "가능합니다. GarageBand(맥 무료), Cakewalk(윈도우 무료), Audacity(무료) 등으로도 녹음·편집이 가능합니다. 단, 전문 플러그인과 기능 면에서 유료 DAW 대비 제한이 있습니다."
+inlineFallback:
+  price: lesson-monthly
+howTo:
+  name: "DAW 선택 자가진단 4단계 절차"
+  description: "운영체제·장르·협업자·예산 4문항으로 큐베이스·로직 프로·에이블톤 중 최적 DAW를 결정하는 절차입니다."
+  steps:
+    - name: "1단계: 운영체제 확인 — Mac vs Windows"
+      text: "Mac만 사용한다면 Logic Pro가 유력(맥 전용·일회 구매 24만 원). Windows 사용자는 Cubase·Ableton·Studio One 등 크로스플랫폼 옵션 중 선택합니다."
+    - name: "2단계: 장르·작업 스타일 매칭"
+      text: "발라드·팝·OST 등 어쿠스틱 중심은 Cubase 또는 Logic. 일렉트로닉·힙합 비트 메이킹·라이브 퍼포먼스는 Ableton Live. K-POP 보컬 녹음 현장 표준은 Cubase."
+    - name: "3단계: 협업자 DAW 확인"
+      text: "함께 작업할 프로듀서·엔지니어가 사용하는 DAW와 같은 것을 쓰면 프로젝트 파일 호환 문제가 사라집니다. K-POP 업계는 Cubase, 영화 음악은 Logic·Pro Tools가 표준입니다."
+    - name: "4단계: 예산 확정 — 일회 구매 vs 구독"
+      text: "초기 비용 최소화는 Logic Pro(24만 원 일회). 본격 입문은 Cubase Pro(약 60만 원) 또는 Ableton Suite(약 90만 원). 모든 DAW에 30~90일 무료 체험판이 있으니 결정 전 직접 체험을 권장합니다."
 ---
 ![큐베이스 vs 로직 프로 vs 에이블톤 — 스튜디오 놀](/images/recording12.webp)
 
