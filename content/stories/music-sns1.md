@@ -149,4 +149,4 @@ faq:
 
 틱톡 알고리즘에서 첫 3초가 스크롤 여부를 결정하는 이유는 플랫폼이 For You Page(FYP) 노출 시 초기 유지율을 가장 중요한 품질 신호로 사용하기 때문입니다. 음악 훅이 등장하는 타이밍을 영상 도입부에 배치하고, 자막으로 첫 3초에 시청자가 계속 볼 이유를 제공하는 것이 FYP 노출 가능성을 높입니다. 인스타그램 릴스의 경우 발매 후 3~4일이 알고리즘 분배의 핵심 구간이며, 이 기간의 저장(Save) 수가 이후 도달 범위를 결정합니다. Pre-save 캠페인이 효과적인 이유는 발매일 동시 스트리밍이 Spotify 에디토리얼 플레이리스트 피칭에 유리한 데이터를 만들기 때문이며, 발매 1~2주 전부터 팬들에게 Pre-save 링크를 공유하는 것이 표준 전략입니다.
 
-[플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [YouTube 음악 홍보 완전 가이드](/stories/youtube1)
+[플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [스트리밍 음악 출시 완전 가이드](/stories/streaming-release1) | [음원 유통 완전 가이드](/stories/distribution1) | [YouTube 음악 홍보 완전 가이드](/stories/youtube1) | [뮤지션 음악 비즈니스 가이드](/stories/music-business1)

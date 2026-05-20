@@ -126,4 +126,4 @@ faq:
 
 음원 발매는 녹음·믹싱·마스터링이 완성된 이후에 유통사를 통해 7~14일이면 완료됩니다. WAV 24bit/44.1kHz(-14 LUFS, True Peak -1dBTP) 마스터 파일과 3000×3000px 커버 아트를 준비하고, 발매 희망일 최소 2주(국내) ~ 4주(해외) 전에 유통사에 제출하는 것이 핵심 타임라인입니다. 발매 7일 전에는 Spotify for Artists 에디토리얼 피칭을, 발매 당일에는 팬들에게 스트리밍·저장·좋아요 요청을 동시에 진행하면 발매 초기 알고리즘 노출을 극대화할 수 있습니다. KOMCA에 저작물을 등록하면 스트리밍·방송·공연 사용에서 발생하는 퍼포먼스 로열티가 자동 정산되는 추가 수입원이 생깁니다.
 
-[음원 유통 완전 가이드](/stories/music-distribution1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [음악 저작권료 받는 방법](/stories/royalty1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 제작 가이드 보기](/stories/album1) | [마스터링이란? LUFS 기준 완전 설명](/stories/mastering1)
+[음원 유통 완전 가이드](/stories/music-distribution1) | [사운드클라우드 활용 가이드](/stories/soundcloud1) | [음악 저작권료 받는 방법](/stories/royalty1) | [음악 저작권 등록 방법](/stories/copyright1) | [음반 제작 가이드 보기](/stories/album1) | [마스터링이란? LUFS 기준 완전 설명](/stories/mastering1) | [뮤직비디오 제작 완전 가이드](/stories/music-video1)

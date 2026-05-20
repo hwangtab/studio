@@ -137,4 +137,4 @@ inlineFallback:
 
 에릭슨의 연구에서 최상위 연주자들의 공통점은 매 연습마다 현재 능력보다 살짝 어려운 구간에 집중했다는 것입니다. 쉬운 구간을 반복하는 것은 연습 시간이 길어도 성장이 느립니다. 이미 잘 부를 수 있는 구절보다 매번 조금씩 높은 목표—오늘은 고음 반음 더, 다이나믹 폭 5dB 더—를 설정하는 것이 30분 연습의 효과를 극대화합니다. 연습의 성과를 객관적으로 확인하려면 주기적으로 스튜디오 녹음을 활용하세요.
 
-[보컬 피드백 받는 방법 가이드](/stories/vocalfeedback1) | [보컬 연습 앱 추천](/stories/singapp1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [고음 내는 방법 완전 가이드](/stories/highnote1)
+[보컬 피드백 받는 방법 가이드](/stories/vocalfeedback1) | [보컬 연습 앱 추천](/stories/singapp1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [가사 암기·녹음 전 준비 가이드](/stories/lyrics-memo1)

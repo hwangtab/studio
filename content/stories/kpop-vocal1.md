@@ -111,4 +111,4 @@ K-팝 보컬은 전문 트레이닝과 꾸준한 연습으로 단계적으로 �
 
 스튜디오 녹음으로 자신의 K-팝 보컬을 객관적으로 모니터링하는 습관이 빠른 성장의 비결입니다. 헤드폰이 아닌 스피커로 재생해 음정·딕션·다이나믹을 분석하면, 자신이 내고 있다고 생각한 소리와 실제 녹음된 소리의 차이를 정확히 파악할 수 있습니다. 이 과정을 3개월 이상 반복하면 청감이 훈련되어 세션 중 실시간으로 자신의 보컬 상태를 모니터링하는 능력이 생깁니다.
 
-[힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1)
+[힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1) | [K-POP 프로덕션 완전 가이드](/stories/kpop-production1) | [K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [보컬 런·애드립 완전 가이드](/stories/runs1) | [세션 연주자·세션 싱어 활동 가이드](/stories/session-musician1)

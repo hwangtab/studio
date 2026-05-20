@@ -126,4 +126,4 @@ faq:
 
 잘 준비된 세션은 시간을 절약하고 최고의 결과물을 만듭니다. 세션 전날 가장 중요한 두 가지는 수면(7~8시간)과 수분(물 1.5~2L)이며, 카페인과 유제품은 성대 건조와 점액 증가를 유발하므로 녹음 전날부터 자제하는 것이 원칙입니다. MR 파일은 WAV 44.1kHz/24bit 포맷으로 사전에 스튜디오에 공유하면 세션 당일 셋업 시간을 10~15분 단축할 수 있습니다. 도착 후 세션 시작 전 15~20분 워밍업 시간을 확보해 립 트릴 → 허밍 → 가벼운 스케일 순으로 성대를 준비하면 첫 테이크부터 안정적인 퍼포먼스를 낼 수 있습니다. 엔지니어에게 원하는 사운드 방향(부드럽게·힘 있게·레퍼런스 트랙 등)을 세션 시작 전에 명확히 전달하면 세션 중 커뮤니케이션 비용이 줄어들고 결과물 만족도가 높아집니다.
 
-[홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocal-health1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [홈 레코딩 노이즈 제거 가이드](/stories/noise-reduction1) | [콘덴서 마이크 선택·사용법 가이드](/stories/condenser-mic1)
+[홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 건강 관리 가이드](/stories/vocal-health1) | [데모 녹음·데모 테이프 완전 가이드](/stories/demo-tape1) | [홈 레코딩 노이즈 제거 가이드](/stories/noise-reduction1) | [콘덴서 마이크 선택·사용법 가이드](/stories/condenser-mic1) | [세션 뮤지션 완전 가이드](/stories/session-musician1)

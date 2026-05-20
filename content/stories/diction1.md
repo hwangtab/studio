@@ -138,4 +138,4 @@ inlineFallback:
 
 치찰음(ㅅ, ㅆ) 과다는 녹음 환경에서 특히 문제가 됩니다. 마이크와 입의 거리를 10~15cm로 유지하되, ㅅ·ㅊ·ㅈ 발음 시 입을 살짝 측면으로 돌리면 마이크에 치찰 에너지가 직접 닿는 것을 줄일 수 있습니다. 받침 처리는 다음 음절 시작 전 미세하게 '끊고 시작'하는 습관을 들이면 자음이 다음 모음으로 연음되어 뭉개지는 현상을 방지할 수 있습니다.
 
-[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 녹음 실수 10가지](/stories/mistakes1)
+[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [노래 잘하는 방법 완전 가이드](/stories/singswell1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [노래 가사 빨리 외우는 방법](/stories/lyrics-memo1)

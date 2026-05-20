@@ -145,4 +145,4 @@ faq:
 
 드럼 기준 트랙 완성도가 전체 세션의 성패를 결정합니다. 드러머가 클릭 트랙을 안정적으로 따라가지 못하면 베이스·기타의 오버더빙이 계속 흔들리며, 이는 결국 모든 트랙을 다시 녹음하는 상황으로 이어집니다. 세션 전 최소 3회 이상 클릭과 함께 전곡 리허설을 완료하는 것이 시간과 비용을 가장 효과적으로 절약하는 방법입니다. 기타·베이스 레코딩에서 DI+앰프 블렌딩을 기록해두면 믹싱 단계에서 톤을 세밀하게 조정할 수 있고, DI 신호만 있으면 리앰핑으로 나중에 앰프 톤을 바꾸는 것도 가능합니다.
 
-[밴드 레코딩 준비 가이드 — 합주실에서 스튜디오까지](/stories/band-recording-guide1) | [라이브 녹음 완전 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1) | [서울 방음 합주실 가이드](/stories/soundproof-rehearsal-seoul1)
+[밴드 레코딩 준비 가이드 — 합주실에서 스튜디오까지](/stories/band-recording-guide1) | [라이브 녹음 완전 가이드](/stories/live-recording1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [음반 제작 가이드](/stories/album1) | [서울 방음 합주실 가이드](/stories/soundproof-rehearsal-seoul1) | [세션 뮤지션 활동·준비 전략](/stories/session-musician1)

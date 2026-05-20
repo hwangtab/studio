@@ -131,4 +131,4 @@ faq:
 
 크라우드펀딩은 앨범 제작비 마련과 동시에 팬덤과의 관계를 강화하는 가장 효과적인 방법입니다. 텀블벅·와디즈 캠페인의 성공은 팬 수의 절대량보다 기존 팬의 참여도와 초기 48시간 모멘텀에 달려 있습니다. 제작비 계산을 정확히 하고, 리워드 발송 일정을 현실적으로 설정하며, 캠페인 내내 업데이트를 꾸준히 올리는 것이 신뢰를 쌓고 다음 크라우드펀딩까지 이어지는 팬 관계의 기반이 됩니다.
 
-[음반 제작 비용 완전 가이드](/stories/album-cost1) | [팬 커뮤니티 운영 완전 가이드](/stories/fan-community1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1)
+[음반 제작 비용 완전 가이드](/stories/album-cost1) | [팬 커뮤니티 운영 완전 가이드](/stories/fan-community1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [음악으로 수익 창출하는 방법](/stories/music-business1)

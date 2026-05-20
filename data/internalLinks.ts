@@ -158,4 +158,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '백보컬': { slug: 'background-vocal1', anchorText: '백 보컬·코러스 녹음 가이드' },
   '콘덴서 마이크': { slug: 'condenser-mic1', anchorText: '콘덴서 마이크 선택·추천 가이드' },
   '힙합 보컬': { slug: 'hiphop-vocal1', anchorText: '힙합 래핑·플로우 보컬 가이드' },
+  '뮤직비디오': { slug: 'music-video1', anchorText: '뮤직비디오 제작 완전 가이드' },
+  '음악 비즈니스': { slug: 'music-business1', anchorText: '음악 비즈니스 완전 가이드' },
+  '세션 뮤지션': { slug: 'session-musician1', anchorText: '세션 뮤지션 완전 가이드' },
+  '가사 암기': { slug: 'lyrics-memo1', anchorText: '노래 가사 빨리 외우는 방법' },
 };

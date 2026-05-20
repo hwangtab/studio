@@ -141,4 +141,4 @@ EP(미니앨범)는 보통 **4~5곡**으로 구성하며, 스튜디오 녹음 �
 
 EP 발매 일정을 역산할 때 가장 많이 놓치는 지점은 유통사 처리 기간입니다. DistroKid은 빠르면 2~3일 내 플랫폼에 반영되지만, 국내 유통사(멜론·지니 등)는 2~4주가 소요됩니다. Spotify 에디터 플레이리스트 피칭은 발매 7일 전이 마감이므로, 최소 5~6주 전에 유통사 제출을 완료하는 것이 이상적인 일정입니다. 발매일 확정 후 SNS 예고 콘텐츠와 프리세이브 링크를 2~3주 전부터 배포하면 첫날 스트리밍 집중도를 높일 수 있습니다.
 
-[음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음반 제작 가이드](/stories/album1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [마스터링 완전 가이드](/stories/mastering1)
+[음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음반 제작 가이드](/stories/album1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [마스터링 완전 가이드](/stories/mastering1) | [뮤직비디오 기획·촬영·편집 가이드](/stories/music-video1)

@@ -121,4 +121,4 @@ inlineFallback:
 
 보컬 세션 피드백은 구체적이고 건설적일수록 다음 테이크에서 빠른 개선을 이끌어냅니다. 엔지니어에게 원하는 사운드의 레퍼런스 곡을 미리 공유하면 방향성 소통 오차를 줄일 수 있습니다. 셀프 피드백에서는 녹음 직후보다 24시간 뒤에 다시 들으면 뇌의 기대감이 사라져 음정 이탈·딕션 문제가 훨씬 명확하게 들립니다. 6개월 전 녹음과 현재 녹음을 비교하면 막연한 성장감 대신 구체적인 개선 항목을 확인할 수 있으며, 이것이 동기 부여와 방향 설정에 가장 효과적인 방법입니다.
 
-[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1)
+[보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [가사 외우는 법 완전 가이드](/stories/lyrics-memo1)
