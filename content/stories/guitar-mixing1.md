@@ -152,4 +152,4 @@ faq:
 
 더블 트래킹에서 두 테이크를 완전히 동일하게 연주하는 것보다 미세하게 타이밍이 다른 것이 더 자연스러운 스테레오를 만듭니다. DAW에서 기계적으로 복사한 모노 테이크를 L/R에 패닝하는 것은 진짜 더블 트래킹의 공간감을 만들지 못하며, 최소한 한 테이크에 10~25ms 딜레이를 추가하거나 비닐 플러그인으로 미세한 피치 워블을 더해야 입체감이 생깁니다.
 
-[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [딜레이 종류와 보컬 활용 가이드](/stories/delay-types1)

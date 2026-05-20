@@ -126,4 +126,4 @@ M/S 처리는 복잡하게 보이지만 실제로는 두 가지 규칙만 기억
 
 스테레오 와이드너를 믹스 버스에 적용한 뒤 반드시 DAW의 Sum to Mono 버튼으로 모노 확인을 하세요. 스테레오에서 선명하게 들리던 보컬이 모노에서 크게 줄어들거나 사라지면 위상 문제가 있는 것입니다. 이 경우 와이드너의 Width를 줄이거나 Low Frequency 컷을 활성화해 저역의 위상 충돌을 제거하면 스테레오와 모노 모두에서 안정적인 믹스가 완성됩니다.
 
-[모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1)
+[모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [패럴렐 컴프레션 완전 가이드](/stories/parallel-compression1) | [리버브 완전 가이드](/stories/reverb1) | [딜레이 종류 완전 가이드](/stories/delay-types1)

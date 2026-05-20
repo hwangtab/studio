@@ -159,4 +159,4 @@ faq:
 
 드라이 스템 전달이 원칙이지만 예외가 있습니다. 보컬 오토튠(Auto-Tune)이나 Melodyne 피치 교정이 적용된 경우, 드라이 스템으로 내보내면 피치 교정이 제거된 원본 음정으로 돌아갑니다. 이 경우 피치 교정된 상태를 오디오로 바운스(Print)해 웻 상태로 전달해야 합니다. 리버브·딜레이 같은 공간계 이펙트는 드라이로 전달하고 엔지니어가 새로 설계하는 것이 표준이지만, 특정 이펙트가 사운드의 정체성인 경우(드라이브 걸린 기타 앰프 사운드 등) 엔지니어와 사전 협의 후 웻으로 전달하세요.
 
-[온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [믹싱·마스터링 비용 기준표](/stories/recording-price1)
+[온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [믹싱·마스터링 비용 기준표](/stories/recording-price1) | [오디오 위상(Phase) 완전 가이드](/stories/phase1)

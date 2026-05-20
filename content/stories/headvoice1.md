@@ -114,4 +114,4 @@ howTo:
 
 두성은 의식적으로 찾고 훈련해야 발달합니다. 흉성의 강함과 두성의 밝음이 자연스럽게 연결될 때, 그 결과물이 믹스 보이스입니다. 매일 짧게라도 두성 구간을 탐색하는 연습이 쌓이면 3~6개월 안에 음역이 눈에 띄게 확장됩니다. 스튜디오 녹음으로 두성 음색을 객관적으로 들어보세요.
 
-[믹스 보이스 완전 가이드](/stories/mixvoice1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1)
+[믹스 보이스 완전 가이드](/stories/mixvoice1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1) | [노래 키 찾는 법 — 음역별 키 설정](/stories/transpose1)

@@ -152,4 +152,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '샘플레이트': { slug: 'sample-rate1', anchorText: '샘플레이트·비트뎁스 선택 가이드' },
   '플러그인 추천': { slug: 'plugins1', anchorText: '보컬 믹싱 플러그인 추천 가이드' },
   'EPK': { slug: 'epk1', anchorText: 'EPK 제작 가이드' },
+  '위상 문제': { slug: 'phase1', anchorText: '오디오 위상 문제 식별·교정 가이드' },
+  '이조': { slug: 'transpose1', anchorText: '음역에 맞는 이조·키 설정 가이드' },
+  'LA-2A': { slug: 'la2a1', anchorText: 'LA-2A 컴프레서 활용 가이드' },
 };

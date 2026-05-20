@@ -156,4 +156,4 @@ EQ (컷) → 1차 컴프레서 → EQ (부스트) → 2차 컴프레서 → De-e
 
 컴프레서 설정은 보컬의 다이나믹을 얼마나 살릴지와 얼마나 일관되게 할지의 균형입니다. Attack과 Release를 귀로 판단하면서 보컬의 자연스러운 표현과 믹스 안의 안정성 사이에서 최적의 지점을 찾는 것이 보컬 컴프레서 숙련의 과정입니다. 장르별 기준값을 출발점으로 삼되, 각 보컬리스트의 다이나믹 특성에 맞게 조정하는 것이 항상 최선의 접근입니다.
 
-[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [De-esser 완전 가이드](/stories/de-esser1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 믹싱 플러그인 완전 가이드](/stories/plugins1)
+[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [De-esser 완전 가이드](/stories/de-esser1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 믹싱 플러그인 완전 가이드](/stories/plugins1) | [LA-2A 옵티컬 컴프레서 활용법](/stories/la2a1)

@@ -147,4 +147,4 @@ Make-up Gain: GR 발생량 보상
 
 병렬 컴프레션(뉴욕 컴프레션)은 원본 다이나믹을 살리면서 컴프레스된 트랙의 에너지를 블렌딩하는 방법으로, R&B·소울 보컬에서 자연스러운 표현과 일관된 음량을 동시에 얻을 때 효과적입니다. 강한 컴프레서(Ratio 8:1 이상, GR -10dB)를 복제 트랙에 걸고 원본과 20~30% 블렌딩하면 다이나믹을 보존하면서 충분한 두께감을 얻을 수 있습니다.
 
-[트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1)
+[트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [LA-2A 컴프레서 완전 가이드](/stories/la2a1)
