@@ -275,7 +275,7 @@ Tito Puente는 **팀발레스(Timbales)**의 거장이며 맘보 드러밍의 �
 
 [드럼 포스트펑크·뉴웨이브 리듬 — 완전 가이드](/stories/practice-room-drum-post-punk1)
 
-[보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1) | [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1)
+[보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1) | [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1)
 
 ---
 

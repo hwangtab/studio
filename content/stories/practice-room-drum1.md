@@ -112,4 +112,4 @@ faq:
 
 방문 시 드럼을 직접 쳐보고 방음 수준을 확인하실 수 있습니다. 카카오톡 오픈채팅으로 편하게 문의 주세요.
 
-[피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리](/stories/practice-room-soundproof1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1)
+[피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리](/stories/practice-room-soundproof1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [드럼 루디먼트·26가지 기초 스트로크 단계별 가이드](/stories/practice-room-drum-rudiments1) | [드럼 스네어 림샷·고스트 노트 단계별 훈련](/stories/practice-room-drum-snare1) | [드럼 심벌 기법·라이드·크래쉬 활용 가이드](/stories/practice-room-drum-cymbal-techniques1)

@@ -136,4 +136,4 @@ PA 스피커로 자신의 목소리를 들으면 이어폰 모니터링과는 �
 
 보컬 연습실 세션을 최대한 활용하려면 매 세션 전 연습 목표를 구체적으로 설정하는 것이 중요합니다. 음정 정확도, 박자 안정성, 특정 테크닉 습득 중 한 가지에 집중하면 같은 시간에 더 뚜렷한 성과를 거둘 수 있습니다. 세션 내용을 녹음해두고 다음 세션 전에 다시 들으며 스스로 평가하는 습관도 빠른 성장에 기여합니다.
 
-[연습실 vs 노래방 — 보컬 연습 공간 완전 비교 가이드](/stories/practice-room-vs-karaoke1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1)
+[연습실 vs 노래방 — 보컬 연습 공간 완전 비교 가이드](/stories/practice-room-vs-karaoke1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [팔세토 내는 법·두성 성구 전환 단계별 훈련](/stories/practice-room-vocal-falsetto-technique1) | [보컬 딕션 훈련법·발음 명확도 단계별 루틴](/stories/practice-room-vocal-diction1) | [R&B·소울 멜리즈마 보컬 테크닉 완전 가이드](/stories/practice-room-vocal-soul1)

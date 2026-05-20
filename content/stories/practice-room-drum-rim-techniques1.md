@@ -195,4 +195,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 다양한 림 기법을 집중 연습하고 장르에 맞는 스네어 사운드를 마스터하세요.
 
-[드럼 스네어 테크닉·다이나믹 컨트롤 — 완전 가이드](/stories/practice-room-drum-snare-techniques1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)
+[드럼 스네어 테크닉·다이나믹 컨트롤 — 완전 가이드](/stories/practice-room-drum-snare-techniques1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 연습실 완벽 가이드](/stories/practice-room-drum1)

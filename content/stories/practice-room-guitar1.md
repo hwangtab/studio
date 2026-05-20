@@ -114,4 +114,4 @@ faq:
 
 처음 방문하시면 앰프를 직접 켜보고 방음 수준을 확인하실 수 있습니다. 카카오톡 오픈채팅으로 편하게 문의 주세요.
 
-[기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1)
+[기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [기타 하모닉스·인공 하모닉스 기법 가이드](/stories/practice-room-guitar-harmonics1) | [이코노미 피킹·기타 스위핑 단계별 훈련](/stories/practice-room-guitar-economy-picking1) | [기타 카포·키 변환 활용 완전 가이드](/stories/practice-room-guitar-capo-techniques1)
