@@ -8,7 +8,10 @@
 export const PRICING_BY_CATEGORY: Readonly<Record<string, string>> = {
   recording: 'recording-pro',
   mixing: 'mixing-level1',
-  instrument: 'recording-hourly',
+};
+
+export const SERVICE_BY_CATEGORY: Readonly<Record<string, string>> = {
+  instrument: 'practice',
 };
 
 export const REVIEW_BY_CATEGORY: Readonly<Record<string, string>> = {
@@ -21,6 +24,9 @@ export const matchPricingForCategory = (categoryKey: string): string | null =>
 
 export const matchReviewForCategory = (categoryKey: string): string | null =>
   REVIEW_BY_CATEGORY[categoryKey] ?? null;
+
+export const matchServiceForCategory = (categoryKey: string): string | null =>
+  SERVICE_BY_CATEGORY[categoryKey] ?? null;
 
 /**
  * 본문 마지막 H2 직전에 short-code marker inject.

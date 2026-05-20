@@ -60,12 +60,15 @@ export interface AutoFallbackInput {
    * categoryKey 매핑은 false 전달 (짧은 글에 어색한 자동 review fallback 방지).
    */
   reviewSourcedFromFrontmatter: boolean;
+  /** SERVICE_BY_CATEGORY 매핑 결과 — null이면 service fallback 비활성 */
+  matchedServiceType: string | null;
 }
 
 export type AutoFallbackDecision =
   | { type: 'price'; id: string }
   | { type: 'review'; id: string }
-  | { type: 'booking'; message: string };
+  | { type: 'booking'; message: string }
+  | { type: 'service'; serviceType: string };
 
 export const MAX_TOTAL_BOXES = 3;
 export const REVIEW_FALLBACK_MIN_WORDCOUNT = 1000;
@@ -92,6 +95,10 @@ export const decideAutoFallback = (input: AutoFallbackInput): AutoFallbackDecisi
 
   if (input.bookingMessage && !input.presentTypes.has('booking')) {
     return { type: 'booking', message: input.bookingMessage };
+  }
+
+  if (input.matchedServiceType && !input.presentTypes.has('service')) {
+    return { type: 'service', serviceType: input.matchedServiceType };
   }
 
   if (

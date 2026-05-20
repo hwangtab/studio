@@ -1,6 +1,7 @@
 import {
   matchPricingForCategory,
   matchReviewForCategory,
+  matchServiceForCategory,
   injectAutoFallbackMarker,
 } from './storyAutoFallback';
 
@@ -13,8 +14,8 @@ describe('matchPricingForCategory', () => {
     expect(matchPricingForCategory('mixing')).toBe('mixing-level1');
   });
 
-  it('instrument → recording-hourly', () => {
-    expect(matchPricingForCategory('instrument')).toBe('recording-hourly');
+  it('instrument → null (service fallback으로 이전)', () => {
+    expect(matchPricingForCategory('instrument')).toBeNull();
   });
 
   it('vocal/production/lesson은 매칭 없음 — frontmatter로 글 단위 매핑', () => {
@@ -48,6 +49,23 @@ describe('matchReviewForCategory', () => {
     expect(matchReviewForCategory('production')).toBeNull();
     expect(matchReviewForCategory('vocal')).toBeNull();
     expect(matchReviewForCategory('lesson')).toBeNull();
+  });
+});
+
+describe('matchServiceForCategory', () => {
+  it('instrument → practice', () => {
+    expect(matchServiceForCategory('instrument')).toBe('practice');
+  });
+
+  it('recording/mixing/vocal/lesson 매칭 없음', () => {
+    expect(matchServiceForCategory('recording')).toBeNull();
+    expect(matchServiceForCategory('mixing')).toBeNull();
+    expect(matchServiceForCategory('vocal')).toBeNull();
+    expect(matchServiceForCategory('lesson')).toBeNull();
+  });
+
+  it('알 수 없는 카테고리 null', () => {
+    expect(matchServiceForCategory('unknown')).toBeNull();
   });
 });
 

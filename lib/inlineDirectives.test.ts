@@ -48,6 +48,7 @@ describe('decideAutoFallback', () => {
     matchedReviewId: 'review-1' as string | null,
     bookingMessage: null as string | null,
     reviewSourcedFromFrontmatter: false,
+    matchedServiceType: null as string | null,
   };
 
   it('authorBoxes >= 3이면 null', () => {
@@ -154,6 +155,39 @@ describe('decideAutoFallback', () => {
       matchedReviewId: 'review-3',
       wordCount: 500,
       reviewSourcedFromFrontmatter: false,  // categoryKey sourced
+    });
+    expect(r).toBeNull();
+  });
+
+  it('service 매칭 있고 price/booking 없으면 service 반환', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: null,
+      matchedReviewId: null,
+      matchedServiceType: 'practice',
+    });
+    expect(r).toEqual({ type: 'service', serviceType: 'practice' });
+  });
+
+  it('price 매칭 있으면 service보다 price 우선', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: 'recording-pro',
+      matchedServiceType: 'practice',
+    });
+    expect(r).toEqual({ type: 'price', id: 'recording-pro' });
+  });
+
+  it('presentTypes에 service 있으면 service fallback 차단', () => {
+    const r = decideAutoFallback({
+      ...baseInput,
+      authorBoxes: 0,
+      matchedPriceId: null,
+      matchedReviewId: null,
+      matchedServiceType: 'practice',
+      presentTypes: new Set(['service']),
     });
     expect(r).toBeNull();
   });

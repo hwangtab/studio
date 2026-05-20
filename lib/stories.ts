@@ -13,6 +13,7 @@ import { parseInlineDirectives, decideAutoFallback, type AutoFallbackDecision } 
 import {
   matchPricingForCategory,
   matchReviewForCategory,
+  matchServiceForCategory,
   injectAutoFallbackMarker,
 } from './storyAutoFallback';
 
@@ -42,6 +43,8 @@ const buildAutoFallbackMarker = (fb: AutoFallbackDecision): string => {
       return `%%${fb.type}:${fb.id}%%`;
     case 'booking':
       return `%%booking:${fb.message}%%`;
+    case 'service':
+      return `%%service:${fb.serviceType}%%`;
   }
 };
 
@@ -471,6 +474,8 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       : matchReviewForCategory(baseStory.categoryKey);
     const bookingMessage = frontmatterFallback?.booking ?? null;
     const reviewSourcedFromFrontmatter = hasFrontmatterFallback && Boolean(frontmatterFallback?.review);
+    // inlineFallback 정의 시 카테고리 매핑 전체 우회 (service도 동일 규칙)
+    const matchedServiceType = hasFrontmatterFallback ? null : matchServiceForCategory(baseStory.categoryKey);
 
     // wordCount 계산 — 한국어/일본어/태국어는 글자 수, 영문은 단어 수
     const plain = stripMarkdown(contentToProcess);
@@ -487,6 +492,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
       matchedReviewId,
       bookingMessage,
       reviewSourcedFromFrontmatter,
+      matchedServiceType,
     });
 
     if (fallback) {
