@@ -178,4 +178,4 @@ faq:
 
 발매 당일부터 72시간이 알고리즘 배포 범위를 결정하는 핵심 구간입니다. 이 기간 동안 팬들에게 '저장·좋아요·플레이리스트 추가'를 구체적으로 요청하면 Spotify의 초기 테스트 배포가 확대됩니다. 멜론·지니는 발매 첫날 실시간 스트리밍 수와 '내 음악 담기' 수가 '오늘의 신곡' 노출 이후 개인화 추천 진입 여부를 결정하므로, 발매 당일 팬 커뮤니티 집중 참여가 장기 알고리즘 노출의 기반이 됩니다. 메타데이터는 유통사 제출 전 최종 검토가 필수입니다 — 아티스트명 표기 오류나 장르 태그 누락은 발매 후 수정에 수일이 소요되며 그사이 초기 노출 구간을 놓칩니다.
 
-[창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [MIDI 편곡 완전 가이드](/stories/midi-arrangement1)
+[창작 슬럼프 극복 완전 가이드](/stories/creative-slump1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [금관·목관 편곡 완전 가이드](/stories/brass-arrangement1) | [MIDI 편곡 완전 가이드](/stories/midi-arrangement1) | [음악 스트리밍 데이터 분석 가이드](/stories/music-analytics1)

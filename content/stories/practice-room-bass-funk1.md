@@ -132,4 +132,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 올바른 왼손 폼 확인 / 2주차: BPM 80 박자 일정 유지 / 3주차: 펜타토닉 박스 포지션 암보 / 4주차: MR에 맞춰 16마디 연속
 
-[베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass-technique1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [베이스 록 그루브·파워 베이스 — 베이스 록 그루브 완성 가이드](/stories/practice-room-bass-rock-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1)
+[베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass-technique1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [베이스 록 그루브·파워 베이스 — 베이스 록 그루브 완성 가이드](/stories/practice-room-bass-rock-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1) | [베이스 옥타브 주법 가이드](/stories/practice-room-bass-octave1)

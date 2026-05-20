@@ -190,4 +190,4 @@ VariAudio에서 피치 교정 시 Straighten Pitch 슬라이더는 50~70% 수준
 
 믹싱 의뢰용 드라이 보컬 내보내기 시 Channel Inserts를 모두 Bypass하고 트랙을 Solo한 후 WAV 24bit/44.1kHz로 내보내는 것이 기본입니다. 이펙트가 적용된 상태로 내보내면 엔지니어가 EQ·컴프레서를 독립적으로 조정할 수 없어 믹싱 퀄리티에 제한이 생깁니다.
 
-[Reaper 보컬 녹음 완전 가이드](/stories/reaper1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [음원 파일 형식 완전 가이드](/stories/audioformat1)
+[Reaper 보컬 녹음 완전 가이드](/stories/reaper1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [DAW 렉·버퍼 최적화 가이드](/stories/daw-performance1)

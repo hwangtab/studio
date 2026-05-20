@@ -102,4 +102,4 @@ DAW를 배우는 데는 기본 워크플로우 숙지에만 수주에서 수개�
 
 DAW는 도구입니다. 어떤 도구를 쓰느냐보다 무엇을 만들고 싶은지가 먼저입니다. 보컬 녹음이 목적이라면 전문 스튜디오를 활용하는 것이 DAW를 배우는 것보다 훨씬 빠른 결과를 줍니다. DAW를 직접 배우고 싶다면 GarageBand에서 시작해 Logic Pro로 이어지는 경로가 Mac 사용자에게 가장 자연스러운 학습 경로입니다.
 
-[DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[DAW 비교 완전 가이드](/stories/daw-comparison1) | [미디 편곡 + 보컬 녹음 연계 가이드](/stories/midirecord1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1)

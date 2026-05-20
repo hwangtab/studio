@@ -174,4 +174,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '녹음실 비교': { slug: 'studio-compare1', anchorText: '서울 녹음실 비교 가이드' },
   '트랩 비트': { slug: 'trap-production1', anchorText: '트랩 음악 프로덕션 가이드' },
   '실용음악과': { slug: 'siryummusic1', anchorText: '실용음악과 입시 완전 가이드' },
+  '베이스 옥타브': { slug: 'practice-room-bass-octave1', anchorText: '베이스 옥타브 주법 완전 가이드' },
+  'DAW 퍼포먼스': { slug: 'daw-performance1', anchorText: 'DAW 퍼포먼스 최적화 가이드' },
+  '스트리밍 데이터': { slug: 'music-analytics1', anchorText: '음악 스트리밍 데이터 분석 가이드' },
 };

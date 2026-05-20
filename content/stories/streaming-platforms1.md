@@ -153,4 +153,4 @@ faq:
 
 멜론 차트에서 주목받으려면 발매 직후 24~48시간의 트래픽이 결정적입니다. 멜론 실시간 차트는 시간당 스트리밍 수를 집계하므로, 팬층이 특정 시간대(자정 발매 후 첫 6시간)에 집중적으로 스트리밍하도록 유도하는 팬덤 전략이 효과적입니다. 단순 재생보다 앨범 저장과 아티스트 팔로우 행동이 스포티파이 알고리즘에서 더 높은 가중치를 갖고, 멜론에서는 '좋아요' 누적이 추천 알고리즘에 반영됩니다. 유튜브뮤직은 쇼츠(Shorts)의 바이럴이 곡 스트리밍으로 직접 연결되기 때문에, 후렴구 15초 클립을 쇼츠 포맷으로 제작해 업로드하는 것이 유튜브뮤직 노출을 높이는 실효성 있는 방법입니다.
 
-[멜론 차트 진입 전략 완전 가이드](/stories/melon-chart1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [멜론·스포티파이 음원 수익 현실 가이드](/stories/revenue1)
+[멜론 차트 진입 전략 완전 가이드](/stories/melon-chart1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [멜론·스포티파이 음원 수익 현실 가이드](/stories/revenue1) | [스트리밍 데이터 분석 완전 가이드](/stories/music-analytics1)
