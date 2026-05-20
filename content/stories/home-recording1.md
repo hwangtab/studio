@@ -158,5 +158,5 @@ howTo:
 
 가이드에 실린 내용을 실제 작업에 적용하다가 막히는 부분이 있다면 카카오톡 채널 "연신내 스튜디오 놀"로 문의해 주세요. 작업 중인 트랙의 일부 구간만 보내도 원인을 진단해 드리며, 필요하다면 방문 상담 또는 온라인 코멘트 세션으로 구체적인 다음 단계를 제안해 드립니다.
 
-[홈 레코딩 노이즈 제거 가이드](/stories/noise-reduction1) | [룸 어쿠스틱 처리 가이드](/stories/room-acoustic1) | [마이크 선택 완전 가이드](/stories/microphone1)
+[홈 레코딩 노이즈 제거 가이드](/stories/noise-reduction1) | [룸 어쿠스틱 처리 가이드](/stories/room-acoustic1) | [마이크 선택 완전 가이드](/stories/microphone1) | [콘덴서 마이크 추천·사용법 완전 가이드](/stories/condenser-mic1)
 

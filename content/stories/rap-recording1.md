@@ -158,4 +158,4 @@ inlineFallback:
 
 믹싱 단계에서 랩 보컬은 보컬보다 훨씬 드라이하게 처리하는 것이 힙합 장르의 표준입니다. 200~300Hz 컷으로 먹먹함을 제거하고 3~5kHz를 +2~3dB 부스트해 딕션 명확성을 강화하며, 리버브는 매우 짧은 룸 리버브만 사용하거나 생략합니다. 한국어 랩의 경우 'ㅅ·ㅆ' 자음이 4~8kHz 범위에서 치찰음을 만들므로 디에서(De-esser)로 해당 대역을 제어하는 것이 필수 단계입니다.
 
-[펑크 음악 제작 완전 가이드](/stories/funk-music1) | [힙합 보컬 믹싱 가이드](/stories/hip-hop-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 딕션 완전 가이드](/stories/diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[펑크 음악 제작 완전 가이드](/stories/funk-music1) | [힙합 보컬 믹싱 가이드](/stories/hip-hop-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 딕션 완전 가이드](/stories/diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1)

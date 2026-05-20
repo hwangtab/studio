@@ -155,4 +155,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '위상 문제': { slug: 'phase1', anchorText: '오디오 위상 문제 식별·교정 가이드' },
   '이조': { slug: 'transpose1', anchorText: '음역에 맞는 이조·키 설정 가이드' },
   'LA-2A': { slug: 'la2a1', anchorText: 'LA-2A 컴프레서 활용 가이드' },
+  '백보컬': { slug: 'background-vocal1', anchorText: '백 보컬·코러스 녹음 가이드' },
+  '콘덴서 마이크': { slug: 'condenser-mic1', anchorText: '콘덴서 마이크 선택·추천 가이드' },
+  '힙합 보컬': { slug: 'hiphop-vocal1', anchorText: '힙합 래핑·플로우 보컬 가이드' },
 };

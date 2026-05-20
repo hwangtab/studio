@@ -161,4 +161,4 @@ faq:
 
 베이스 트랩 없는 홈 스튜디오에서 저음이 특정 음에서 붕붕거리는 룸 모드 문제는 믹싱에서 100% 수정할 수 없습니다. 방 구석은 저음 에너지가 집중되는 지점이므로, 구석에 두꺼운 락울(10cm 이상)을 삼각형 또는 수직으로 채우는 것이 가장 효과적인 저비용 베이스 트랩입니다. 이 처리 후 믹싱 모니터 환경이 개선되면 보컬과 악기의 저역 처리 판단이 더 정확해집니다.
 
-[녹음 환경 완전 가이드](/stories/recording-environment1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [콘덴서 마이크 완전 가이드](/stories/condenser-mic1)
+[녹음 환경 완전 가이드](/stories/recording-environment1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [제대로 방음되는 합주실 고르는 법](/stories/soundproof-rehearsal-seoul1)

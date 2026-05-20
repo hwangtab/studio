@@ -193,4 +193,4 @@ faq:
 
 음악연습실 창업은 꼼꼼한 준비만큼 성공 확률이 높아지는 사업입니다. 스튜디오 놀은 연신내역 인근에서 직접 연습실과 녹음실을 운영하며 얻은 노하우를 기반으로, 예비 창업자 분들의 문의에 성심껏 답변드립니다.
 
-[베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [무인 연습실 완벽 가이드 — 24시간 무인 운영 연습실 선택 기준](/stories/practice-room-unmanned1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [연습실 양도·인수 완전 가이드 — 권리금·절차·주의사항](/stories/practice-room-transfer1)
+[베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [무인 연습실 완벽 가이드 — 24시간 무인 운영 연습실 선택 기준](/stories/practice-room-unmanned1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [연습실 양도·인수 완전 가이드 — 권리금·절차·주의사항](/stories/practice-room-transfer1) | [방음 합주실 선택 가이드 — 서울](/stories/soundproof-rehearsal-seoul1)

@@ -150,4 +150,4 @@ faq:
 
 하모니 레이어는 메인 보컬보다 -8~-12dB 낮게 믹싱해 전면에 드러나지 않고 두께감만 더하는 것이 보컬 레이어링의 기본 원칙이며, 하모니가 너무 크면 주 선율이 묻히는 역효과가 생깁니다. 레이어 수보다 각 레이어의 퍼포먼스 품질이 더 중요합니다. 두 번의 탄탄한 더블 트랙이 여섯 번의 대충 녹음한 스태킹보다 훨씬 두꺼운 사운드를 만듭니다.
 
-[보컬 더블링·더블트래킹 완전 가이드](/stories/vocal-doubling1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1)
+[보컬 더블링·더블트래킹 완전 가이드](/stories/vocal-doubling1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [코러스·백보컬 녹음 완전 가이드](/stories/background-vocal1)

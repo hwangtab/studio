@@ -130,4 +130,4 @@ faq:
 
 Buffer Size와 레이턴시의 실제 영향을 이해하면 불필요한 설정 고민을 줄일 수 있습니다. 44.1kHz에서 128샘플 버퍼는 약 3ms 레이턴시를 만들고, 256샘플은 약 6ms입니다. 인간이 인식하는 에코 임계값은 약 20~30ms이므로 256샘플(6ms)도 다이렉트 모니터링에서 어색하지 않습니다. 믹싱·편집 시에는 512~1024샘플로 올려 CPU 부하를 줄이고, 녹음 전에만 128~256으로 낮추는 방식이 가장 실용적입니다.
 
-[모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [44.1kHz·48kHz·24bit 녹음 설정 가이드](/stories/sample-rate1)
+[모니터 스피커 완전 가이드](/stories/monitor-speakers1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [마이크 종류 완전 가이드](/stories/microphone-types1) | [DAW 비교 완전 가이드](/stories/daw-comparison1) | [44.1kHz·48kHz·24bit 녹음 설정 가이드](/stories/sample-rate1) | [콘덴서 마이크 완전 가이드](/stories/condenser-mic1)
