@@ -143,4 +143,4 @@ howTo:
 
 플러그인 적용 후 레벨 변화는 반드시 확인해야 합니다. EQ에서 특정 대역을 부스트하면 출력 레벨이 올라가고, 컴프레서가 게인 리덕션을 만들면 출력이 낮아집니다. 각 플러그인의 아웃풋 게인으로 처리 전후 레벨을 일치시키는 A/B 레벨 매칭이 게인 스테이징의 실전 핵심입니다. 마스터 버스가 -6dBFS를 초과한다면 모든 채널 페이더를 일괄적으로 낮추거나 각 트랙의 트림을 조정하는 방식으로 헤드룸을 확보해야 합니다.
 
-[믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [컴프레서 완전 가이드](/stories/compress1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [컴프레서 완전 가이드](/stories/compress1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [샘플레이트·비트뎁스 선택법 — 녹음 설정](/stories/sample-rate1)

@@ -179,4 +179,4 @@ faq:
 
 음악 라이센싱은 Musicbed·Artlist 같은 해외 BGM 플랫폼에 곡을 등록해두면 월정액 수익 배분을 받을 수 있고, 국내 CF·드라마 싱크딜은 에이전시를 통해 수십만~수천만원까지 단건 수익이 가능합니다. KOMCA(한국음악저작권협회) 신탁 등록을 완료하면 방송·공연·스트리밍에서 발생하는 저작권료를 별도 수취할 수 있으므로, 첫 음원 발매 전 반드시 등록하는 것이 좋습니다.
 
-[뮤지션 음악 비즈니스 완전 가이드](/stories/music-business1) | [뮤지션 음악 지원금·창작 지원 제도 완전 가이드](/stories/music-grants1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1)
+[뮤지션 음악 비즈니스 완전 가이드](/stories/music-business1) | [뮤지션 음악 지원금·창작 지원 제도 완전 가이드](/stories/music-grants1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음원 스트리밍 수익 계산 가이드](/stories/revenue1)

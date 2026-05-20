@@ -177,4 +177,4 @@ faq:
 
 보컬 EQ는 불필요한 주파수 제거와 존재감 강조의 균형이 핵심입니다. 작업 순서는 빼기(컷) 먼저, 더하기(부스트) 나중입니다. 100~120Hz 이하를 High-Pass Filter로 제거하고, 200~300Hz에서 뭉침이 있으면 좁은 Q로 컷한 후에 2~4kHz 존재감 부스트로 마무리합니다. 2~4kHz를 +2~4dB 부스트하면 보컬이 믹스 앞으로 나오지만, 3kHz 이상 과도한 부스트는 귀의 피로를 유발하므로 0.5~1dB씩 단계적으로 조정하면서 청음하는 것이 원칙입니다. 치찰음은 고정 EQ 컷보다 FabFilter Pro-Q3의 Dynamic EQ 모드나 전용 De-esser 플러그인으로 처리하는 것이 정확합니다. 고정 컷은 치찰음이 없는 구간에서도 고역이 깎여 보컬의 공기감과 광채를 함께 잃기 때문입니다.
 
-[보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [EQ 완전 가이드](/stories/eq1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [EQ 완전 가이드](/stories/eq1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 믹싱 플러그인 추천 — EQ·컴프·리버브](/stories/plugins1)

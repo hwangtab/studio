@@ -126,4 +126,4 @@ faq:
 
 팬은 아티스트의 음악을 세상에 전파하는 가장 강력한 채널입니다. K-POP 대형 기획사의 팬덤 시스템이 보여주듯, 팬과의 관계는 음반을 파는 것 그 이상입니다. 진심 어린 소통과 일관된 콘텐츠로 팬과 함께 성장하는 것이 장기적으로 음악 커리어를 지탱하는 가장 단단한 기반입니다.
 
-[음악 굿즈·머천다이징 완전 가이드](/stories/music-merchandise1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [인스타그램 음악 마케팅 가이드](/stories/instagram-music1)
+[음악 굿즈·머천다이징 완전 가이드](/stories/music-merchandise1) | [음악 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [인스타그램 음악 마케팅 가이드](/stories/instagram-music1) | [인디 뮤지션 EPK 제작 가이드](/stories/epk1)

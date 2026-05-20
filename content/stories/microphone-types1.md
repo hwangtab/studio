@@ -237,4 +237,4 @@ faq:
 
 ---
 
-[콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [다이나믹 마이크 완전 가이드](/stories/dynamics1) | [보컬 녹음용 마이크 추천](/stories/vocal-microphone1) | [마이크 위치·거리·각도](/stories/mic-placement1) | [오디오 인터페이스 가이드](/stories/audio-interface1) | [프리앰프 완전 가이드](/stories/preamp1)
+[콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [다이나믹 마이크 완전 가이드](/stories/dynamics1) | [보컬 녹음용 마이크 추천](/stories/vocal-microphone1) | [마이크 위치·거리·각도](/stories/mic-placement1) | [오디오 인터페이스 가이드](/stories/audio-interface1) | [프리앰프 완전 가이드](/stories/preamp1) | [녹음 샘플레이트·비트뎁스 선택 가이드](/stories/sample-rate1)

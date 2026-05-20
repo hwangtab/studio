@@ -153,4 +153,4 @@ faq:
 
 바이럴이 발생한 후 스트리밍 수치를 장기적으로 유지하려면 바이럴 청중을 팬층으로 전환하는 과정이 필요합니다. 바이럴 기간 동안 관심을 가진 사람들이 아티스트 SNS 계정을 팔로우하도록 유도하고, 발매 후 2~3주 이내에 후속 콘텐츠(비하인드 영상, 라이브 세션, 미발매 데모)를 게시해 관심을 유지해야 합니다. 바이럴 이후 후속 콘텐츠 없이 사라지면 알고리즘이 해당 아티스트를 "일회성 바이럴"로 분류해 다음 발매에서 추천 우선순위가 낮아지는 불이익이 발생합니다.
 
-[음악 마케팅 완전 가이드](/stories/music-marketing1) | [틱톡 음악 활용 가이드](/stories/tiktok-music1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1)
+[음악 마케팅 완전 가이드](/stories/music-marketing1) | [틱톡 음악 활용 가이드](/stories/tiktok-music1) | [인스타그램 음악 활용 가이드](/stories/instagram-music1) | [유튜브 음악 채널 운영 가이드](/stories/youtube-music-channel1) | [EPK 만드는 법 — 인디 뮤지션 홍보 자료](/stories/epk1)

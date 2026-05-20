@@ -151,4 +151,4 @@ distrokid.com 접속 → 회원 가입
 
 ISRC 코드는 음원의 국제 표준 식별 코드입니다. 주요 유통사는 무료로 ISRC를 자동 발급하지만, 동일 곡을 다른 유통사로 이전할 때 ISRC를 직접 보유하고 있지 않으면 플랫폼 재등록 과정에서 재생 이력이 초기화되는 문제가 생길 수 있습니다. ISRC 발급 주체를 확인하고 유통사 전환 시 이전 절차를 사전에 파악해두는 것이 안전합니다.
 
-[앨범 아트 제작 가이드](/stories/album-art1) | [EP 제작 완전 가이드](/stories/ep-production1) | [스트리밍 음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)
+[앨범 아트 제작 가이드](/stories/album-art1) | [EP 제작 완전 가이드](/stories/ep-production1) | [스트리밍 음원 발매 가이드](/stories/release1) | [음악 저작권 등록 방법](/stories/copyright1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [스트리밍 수익 계산 방법 — 멜론·스포티파이](/stories/revenue1)

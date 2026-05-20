@@ -148,4 +148,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '월세 입주': { slug: 'practice-room-monthly1', anchorText: '연습실 월세 입주 비용·계약 가이드' },
   '무인 연습실': { slug: 'practice-room-unmanned1', anchorText: '무인 연습실 완벽 가이드' },
   '연습실 운영': { slug: 'practice-room-startup1', anchorText: '음악연습실 창업·운영 가이드' },
+  '스트리밍 수익': { slug: 'revenue1', anchorText: '스트리밍 수익 계산 가이드' },
+  '샘플레이트': { slug: 'sample-rate1', anchorText: '샘플레이트·비트뎁스 선택 가이드' },
+  '플러그인 추천': { slug: 'plugins1', anchorText: '보컬 믹싱 플러그인 추천 가이드' },
+  'EPK': { slug: 'epk1', anchorText: 'EPK 제작 가이드' },
 };
