@@ -133,4 +133,4 @@ faq:
 
 음악연습실 양도·인수는 신중한 현장 점검과 계약서 검토가 성패를 가릅니다. 서울 연신내 지역에서 연습실 운영 경험이 있는 스튜디오 놀에 문의주시면 더 자세한 조언을 드릴 수 있습니다.
 
-[베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [연습실 장비 완전 가이드 — 좋은 연습실이 갖춰야 할 필수 시설](/stories/practice-room-equipment1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1)
+[베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [연습실 장비 완전 가이드 — 좋은 연습실이 갖춰야 할 필수 시설](/stories/practice-room-equipment1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1) | [연습실 창업 가이드 — 비용·인허가·수익 구조](/stories/practice-room-startup1)

@@ -106,4 +106,4 @@ faq:
 
 입주자에게는 스튜디오 녹음실 이용 시 **특별 할인**이 적용되어, 연습과 녹음을 한 공간에서 연계할 수 있습니다. 체험 방문은 카카오톡 오픈채팅으로 편하게 문의해주세요.
 
-[연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [보증금 없는 — 부담 없이 시작하는 입주 연습실 가이드](/stories/practice-room-nodeposit1)
+[연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [보증금 없는 — 부담 없이 시작하는 입주 연습실 가이드](/stories/practice-room-nodeposit1) | [음악연습실 창업 비용·인허가 가이드](/stories/practice-room-startup1) | [연습실 양도·권리금 주의사항 가이드](/stories/practice-room-transfer1)

@@ -145,4 +145,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '축가 연습': { slug: 'wedding-song-singing', anchorText: '축가 연습·녹음 가이드' },
   '오디오북·ASMR 입문': { slug: 'audiobook-asmr-getting-started', anchorText: '오디오북·ASMR 입문 가이드' },
   'ASMR 입문': { slug: 'audiobook-asmr-getting-started', anchorText: 'ASMR 입문 가이드' },
+  '월세 입주': { slug: 'practice-room-monthly1', anchorText: '연습실 월세 입주 비용·계약 가이드' },
+  '무인 연습실': { slug: 'practice-room-unmanned1', anchorText: '무인 연습실 완벽 가이드' },
+  '연습실 운영': { slug: 'practice-room-startup1', anchorText: '음악연습실 창업·운영 가이드' },
 };

@@ -160,4 +160,4 @@ faq:
 - [ ] 어려운 구간을 분리해서 집중적으로 반복했는가?
 - [ ] 연습 후 무엇이 개선되었는지 구체적으로 인식하는가?
 
-[야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [직장인 — 퇴근 후 야간 연습 완벽 가이드](/stories/practice-room-office-worker1)
+[야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [직장인 — 퇴근 후 야간 연습 완벽 가이드](/stories/practice-room-office-worker1) | [연습실 창업·수익 구조 완벽 분석](/stories/practice-room-startup1) | [연습실 인수·양도 절차 가이드](/stories/practice-room-transfer1)
