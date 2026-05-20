@@ -113,4 +113,4 @@ faq:
 
 피치 교정을 두 트랙 모두 동일한 레퍼런스에 완벽히 맞추면 더블링 효과가 소멸합니다. 두 트랙이 동일한 피치로 정렬되면 실질적으로 하나의 트랙을 볼륨만 키운 것과 같아지기 때문입니다. 각 트랙에서 명백한 음정 이탈만 교정하고, 미세한 피치 변이(-15~+15cent 내외)는 유지하는 것이 자연스러운 더블링 음색을 만드는 원칙입니다.
 
-[백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [보컬 레이어링·화음 녹음 가이드](/stories/harmony1) | [믹싱 가이드](/stories/mixing1)
+[백 보컬·코러스 녹음 가이드](/stories/background-vocal1) | [보컬 레이어링·화음 녹음 가이드](/stories/harmony1) | [믹싱 가이드](/stories/mixing1) | [보컬 더블링 완전 가이드](/stories/vocal-doubling1)

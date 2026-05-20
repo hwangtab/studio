@@ -135,4 +135,4 @@ inlineFallback:
 
 재즈 화성학은 음악을 더 깊이 이해하고 표현하는 도구입니다. 이론을 외우기보다 실제 곡에서 들으면서 느끼는 것이 가장 효과적인 학습 방법입니다. 마일스 데이비스의 「Kind of Blue」에서 도리안 모드를, 존 콜트레인의 「Giant Steps」에서 변형된 ii-V-I를, 빌 에반스의 「Waltz for Debby」에서 쉘 보이싱을 직접 들어보면 이론이 실제 소리로 연결됩니다. 재즈 화성을 보컬에 적용할 때는 7th 코드의 텐션 음을 멜로디 라인에서 의식하며 부르는 것만으로도 표현의 폭이 크게 넓어집니다.
 
-[스캣 보컬 완전 가이드](/stories/scat-singing1) | [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [현악 편곡 완전 가이드](/stories/string-arrangement1)
+[스캣 보컬 완전 가이드](/stories/scat-singing1) | [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1) | [재즈 음악 제작 완전 가이드](/stories/jazz-production1) | [현악 편곡 완전 가이드](/stories/string-arrangement1) | [코드 진행 — 감정 표현·작곡 가이드](/stories/chord-progression1)

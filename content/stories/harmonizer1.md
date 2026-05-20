@@ -140,4 +140,4 @@ faq:
 
 발라드에서 하모나이저를 쓸 때는 Formant Shift를 반드시 ON으로 유지하세요. Formant 보존 없이 피치를 올리면 음색이 "치이익"하는 변조 느낌으로 바뀌어 감성 발라드에 맞지 않습니다. 팝이나 EDM처럼 의도적인 효과음 느낌이 필요한 장르에서는 Humanization을 30~50%로 낮추고 Pitch Accuracy를 80~85%로 떨어뜨리면 Auto-Tune 특유의 로봇 톤을 구현할 수 있습니다. 하모니 신호는 항상 별도 보조 트랙으로 라우팅해 리드 보컬과 독립적으로 레벨·패닝 조정이 가능하도록 구성하세요.
 
-[Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [오버더빙 완전 가이드](/stories/overdubbing1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1)
+[Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [오버더빙 완전 가이드](/stories/overdubbing1) | [보컬 오토메이션 완전 가이드](/stories/vocal-automation1) | [더블트래킹 vs 플러그인 비교 가이드](/stories/vocal-doubling1)

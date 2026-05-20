@@ -166,4 +166,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '스템 믹싱': { slug: 'stem-mixing1', anchorText: '스템 믹싱 완전 가이드' },
   '보컬 포지션': { slug: 'placement1', anchorText: '보컬 포지션·발성 위치 가이드' },
   '딜레이와 리버브': { slug: 'delay1', anchorText: '딜레이 vs 리버브 차이 가이드' },
+  '마이크 종류': { slug: 'mic1', anchorText: '마이크 종류별 보컬 녹음 가이드' },
+  '코드 진행': { slug: 'chord-progression1', anchorText: '코드 진행 완전 가이드' },
+  '보컬 더블링': { slug: 'vocal-doubling1', anchorText: '보컬 더블링 완전 가이드' },
+  '매장 BGM': { slug: 'store-bgm1', anchorText: '매장 음악 저작권 가이드' },
 };

@@ -145,4 +145,4 @@ TV 드라마, 유튜브 브이로그, 팟캐스트 배경음악 하나에도 저
 
 방송 음악 제공을 목표로 한다면 먼저 전문 스튜디오에서 고음질 데모를 완성하는 것이 첫 번째입니다. WAV 44.1kHz/24bit 파일과 장르·BPM·무드 키워드가 정확히 태깅된 메타데이터를 갖춰야 뮤직 라이브러리나 싱크 에이전시 심사를 통과할 수 있습니다. KOMCA 저작물 등록은 음원 유통 전에 반드시 완료해야 방송 사용 이후 발생하는 퍼포먼스 로열티를 연 2회 정산 받을 수 있습니다. 유튜브와 팟캐스트 크리에이터라면 Epidemic Sound($15~33/월) 또는 Artlist($199/년) 구독 서비스가 Content ID 분쟁 없이 안전하게 음악을 사용할 수 있는 현실적인 선택입니다.
 
-[음악 싱크 라이센싱 완전 가이드](/stories/sync-licensing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [광고 음악 제작 완전 가이드](/stories/advertisement-music1) | [음악 저작권 완전 가이드](/stories/copyright1)
+[음악 싱크 라이센싱 완전 가이드](/stories/sync-licensing1) | [음악 라이센싱 완전 가이드](/stories/music-licensing1) | [광고 음악 제작 완전 가이드](/stories/advertisement-music1) | [음악 저작권 완전 가이드](/stories/copyright1) | [매장 음악 저작권 가이드](/stories/store-bgm1)

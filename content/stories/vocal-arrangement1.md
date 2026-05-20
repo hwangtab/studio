@@ -182,4 +182,4 @@ inlineFallback:
 
 보컬 편곡은 가장 경제적인 사운드 강화 방법입니다. 하모니는 리드보다 5~8dB 낮게 설정해 리드 보컬이 항상 청취자의 귀를 이끌어야 합니다. 3도 하모니는 장조에서 3도 위, 단조에서 3도 아래를 기준으로 키의 음계 음을 유지하면 불협화음 없이 풍성한 사운드를 만들 수 있습니다. 코러스 스택 3~5겹을 L-50/R+50으로 넓게 패닝하면 벌스의 모노 리드와 극적인 대비를 이루며, 이 대비가 강할수록 코러스의 감정적 임팩트가 커집니다. 타이밍 정렬에서 자음 시작점이 일치하는지 파형 편집으로 확인하는 것이 블렌딩 품질을 결정하는 최우선 기준입니다.
 
-[리버브 완전 가이드](/stories/reverb-guide1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 컴핑 완전 가이드](/stories/comping1)
+[리버브 완전 가이드](/stories/reverb-guide1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 컴핑 완전 가이드](/stories/comping1) | [보컬 더블링으로 두꺼운 사운드 만들기](/stories/vocal-doubling1)
