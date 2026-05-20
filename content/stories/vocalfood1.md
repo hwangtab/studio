@@ -109,4 +109,4 @@ inlineFallback: {}
 
 유제품을 피해야 하는 이유는 카세인 단백질이 점액의 점도를 높이기 때문입니다. 점액 자체가 증가하는 것이 아니라 이미 존재하는 점액이 더 끈적해져 성대 진동 시 마찰을 높이고 음색을 탁하게 만듭니다. GERD(위산 역류)와 LPR(인후두 역류증)는 녹음 결과물에 직접 영향을 주는 만성 문제로, 취침 2~3시간 전 식사 금지와 기름진 음식·매운 음식 제한이 장기적 성대 보호에 핵심입니다.
 
-[성우·내레이션 녹음 가이드](/stories/voiceactor1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [공연·무대 전 보컬 컨디션 관리](/stories/performance-prep1) | [보컬 워밍업 루틴](/stories/warmup1)
+[성우·내레이션 녹음 가이드](/stories/voiceactor1) | [성대 건강 관리 가이드](/stories/vocal-health1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [공연·무대 전 보컬 컨디션 관리](/stories/performance-prep1) | [보컬 워밍업 루틴](/stories/warmup1)

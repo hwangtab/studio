@@ -327,4 +327,4 @@ ISRC(국제 표준 녹음 코드)는 곡마다 고유하게 부여되는 12자�
 
 ---
 
-[LUFS 완전 가이드](/stories/lufs-guide1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[LUFS 완전 가이드](/stories/lufs-guide1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [녹음·믹싱·마스터링 비용 기준표 (2026)](/stories/recording-price1)

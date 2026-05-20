@@ -190,4 +190,4 @@ Logic Pro는 Flex Pitch·Space Designer·Channel EQ 등 전문 플러그인을 �
 
 Flex Pitch로 피치를 교정할 때는 Pitch Correction 슬라이더를 50~70 수준으로 유지하면 자연스러운 교정이 됩니다. 100으로 올리면 Auto-Tune 이펙트가 발생합니다. 믹싱 의뢰용 드라이 보컬 파일은 플러그인을 Bypass한 뒤 File → Bounce → WAV/24bit/48kHz로 내보내고, 파일명은 [아티스트명]_[곡명]_vocal.wav 형식으로 저장해 MR 파일과 함께 전달합니다.
 
-[Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
+[Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audioformat1)

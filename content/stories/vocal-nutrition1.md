@@ -163,4 +163,4 @@ inlineFallback: {}
 
 목소리 건강은 하루아침에 만들어지지 않습니다. 꾸준한 수분 섭취, 식단 관리, 충분한 수면이 최고의 보컬 컨디션을 만듭니다. 공연과 녹음이 잦은 시기에는 식단 관리를 더욱 철저히 해야 하며, 성대에 이상이 느껴질 때는 무리하게 발성하지 않고 이비인후과 진료를 받는 것이 장기적인 보컬 건강을 지키는 방법입니다.
 
-[목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 건강 완전 가이드](/stories/vocalhealth1)
+[목소리 관리 생활 습관 가이드](/stories/voicecare1) | [녹음 전 금지 음식 가이드](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 건강 완전 가이드](/stories/vocal-health1)

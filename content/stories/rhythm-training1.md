@@ -166,4 +166,4 @@ inlineFallback:
 
 리듬 감각은 매일 10분의 메트로놈 훈련으로 꾸준히 키울 수 있습니다. 기초 훈련에서 가장 효과적인 방법은 메트로놈을 2박·4박으로만 인식하는 백비트 훈련입니다. 1·3박을 본인이 채우는 방식으로 연습하면 자연스럽게 오프비트 감각이 발달합니다. 그루브 감각을 키우려면 R&B·소울·힙합의 원곡에서 레이드백 또는 푸싱 타이밍을 의식적으로 분석하며 반복 청취하는 것이 효과적입니다. 녹음 세션에서 리듬이 불안정할 때는 BPM을 원래의 70~80%로 낮추고 정확한 타이밍을 먼저 확보한 후 속도를 높이는 방식이 반복 실수를 줄입니다. DAW 그리드에 보컬 파형을 올려놓고 박자 선(grid)과의 거리를 시각적으로 분석하면 자신이 일관되게 앞서거나 뒤처지는 패턴을 파악할 수 있고, 이를 의식적으로 교정하는 것이 타이밍 향상의 핵심입니다.
 
-[보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [곡 구조 완전 가이드](/stories/song-structure1) | [녹음 준비 완전 가이드](/stories/recording-preparation1)
+[보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range1) | [곡 구조 완전 가이드](/stories/songstructure1) | [녹음 준비 완전 가이드](/stories/recording-preparation1)

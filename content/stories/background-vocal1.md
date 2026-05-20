@@ -132,4 +132,4 @@ EQ에서 백 보컬의 중음역(1~3kHz)을 약간 컷하면 메인 보컬의 �
 
 백 보컬은 음반 완성도를 높이는 핵심 요소입니다. 한 사람이 혼자 보컬 스태킹으로도 풍성한 코러스를 만들 수 있고, 여러 가수가 파트를 나눠 녹음하면 더욱 풍부한 텍스처를 얻을 수 있습니다. 메인 보컬이 항상 전면에 있도록 레벨과 EQ를 관리하면서 백 보컬이 음악의 배경을 넓히는 역할에 집중하도록 믹싱하는 것이 핵심입니다.
 
-[코러스·화음 녹음 가이드](/stories/harmony1) | [보컬 더블 트래킹 가이드](/stories/doubletracking1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [믹싱 완전 가이드](/stories/mixing1)
+[코러스·화음 녹음 가이드](/stories/harmony1) | [보컬 더블 트래킹 가이드](/stories/doubletracking1) | [보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [믹싱 완전 가이드](/stories/mixing1) | [축가·커버·발매별 녹음 비용](/stories/pricing1)

@@ -151,4 +151,4 @@ faq:
 
 드럼 샘플 레이어링은 실제 드럼 녹음이 있을 때와 프로그래밍 드럼만 있을 때 적용 방법이 다릅니다. 실제 녹음에는 Slate Digital Trigger 같은 트랜지언트 디텍터 플러그인으로 킥·스네어 타격 포인트를 감지해 샘플을 자동 배치하고, 레벨은 원본 대비 -6~-10dB로 블렌드해 자연스럽게 보강합니다. 프로그래밍 드럼만 있을 때는 Velocity 레이어가 풍부한 라이브러리(Steven Slate Drums, Addictive Drums)를 선택하는 것이 타격 표현의 출발점이며, 과도한 양자화 그리드를 풀어 휴머나이즈를 적용하는 것이 기계적 느낌을 제거하는 핵심입니다.
 
-[믹싱 패닝 완전 가이드](/stories/panning-guide1) | [피아노 믹싱 완전 가이드](/stories/piano-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[믹싱 패닝 완전 가이드](/stories/panning-guide1) | [피아노 믹싱 완전 가이드](/stories/piano-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [믹싱 비용 기준표 (2026)](/stories/recording-price1)

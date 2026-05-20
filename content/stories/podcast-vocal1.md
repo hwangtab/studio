@@ -141,4 +141,4 @@ Spotify Podcast, Apple Podcast의 권장 기준은 -16 LUFS입니다. Youlean Lo
 
 팟캐스트와 오디오드라마 성공의 핵심은 깨끗하고 명료한 목소리입니다. 고가 장비보다 올바른 환경 세팅과 기본 편집 과정이 음질을 더 크게 결정합니다. 전문 스튜디오 녹음을 활용하면 홈 환경의 한계를 넘어 방송국 수준의 음질로 콘텐츠를 제작할 수 있습니다.
 
-[나레이션·성우 보컬 녹음 가이드](/stories/narration1) | [팟캐스트 인트로 음악 제작 가이드](/stories/podcast-music1) | [보컬 건강 완전 가이드](/stories/vocalhealth1) | [마이크 선택 완전 가이드](/stories/microphone1)
+[나레이션·성우 보컬 녹음 가이드](/stories/narration1) | [팟캐스트 인트로 음악 제작 가이드](/stories/podcast-music1) | [보컬 건강 완전 가이드](/stories/vocal-health1) | [마이크 선택 완전 가이드](/stories/microphone1)

@@ -142,4 +142,4 @@ faq:
 
 피치 교정에서 백보컬은 메인보다 빠른 Retune Speed(8~15)를 설정해 더 정밀하게 교정하면 "공기 같은" 배경 질감이 만들어집니다. 메인 보컬의 인간적인 피치 변동이 살아있는 상태에서 백보컬이 정밀하게 코드톤을 잡아주면, 두 요소의 대비가 오히려 입체감을 높입니다.
 
-[하모니 노래 완전 가이드](/stories/harmony-singing1) | [합창·코랄 보컬 녹음 가이드](/stories/choir1) | [더블 트래킹 보컬 가이드](/stories/doubletracking1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [오토튠(Auto-Tune) 완전 가이드](/stories/auto-tune1)
+[하모니 노래 완전 가이드](/stories/harmony-singing1) | [합창·코랄 보컬 녹음 가이드](/stories/choir1) | [더블 트래킹 보컬 가이드](/stories/doubletracking1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [오토튠(Auto-Tune) 완전 가이드](/stories/autotune1)

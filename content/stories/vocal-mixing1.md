@@ -140,4 +140,4 @@ Pre-delay: 20~30ms (보컬과 리버브 분리)
 
 컴프레서 어택 설정은 자음 질감과 직결됩니다. 어택이 5ms 이하로 너무 빠르면 "ㅅ·ㅊ·ㅌ" 같은 파열음의 초성이 눌려 보컬이 뭉개집니다. 반대로 30ms 이상으로 너무 느리면 피크가 컨트롤되지 않아 클리핑이 발생합니다. 팝 보컬의 시작점은 어택 15ms·릴리즈 80ms이며, A/B 바이패스로 컴프레션 전후를 동일 음량에서 비교하면서 게인 리덕션을 -3~-6dB 범위에서 맞추는 것이 정석입니다. 딜레이는 리버브보다 먼저 배치하고, 리버브 믹스는 15% 이하로 낮게 유지해 보컬이 공간 안에서 앞으로 들리도록 하세요.
 
-[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [디에서 완전 가이드](/stories/deesser1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음·믹싱 비용 기준표](/stories/recording-price1)

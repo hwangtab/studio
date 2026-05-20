@@ -109,4 +109,4 @@ inlineFallback:
 
 15분의 워밍업이 첫 테이크의 품질을 결정합니다. 충분히 준비된 성대는 세션 전체를 효율적으로 만들고, 결과물의 일관성을 높여줍니다. 스튜디오 시간은 비용이 발생하므로, 사전 준비가 잘 된 보컬리스트일수록 적은 테이크로 원하는 결과를 얻고 세션을 마칠 수 있습니다.
 
-[보컬 레슨 완전 가이드](/stories/singing-lesson1) | [녹음 당일 완벽 루틴 체크리스트](/stories/recordingday1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocalhealth1)
+[보컬 레슨 완전 가이드](/stories/singing-lesson1) | [녹음 당일 완벽 루틴 체크리스트](/stories/recordingday1) | [녹음 세션 준비 완전 가이드](/stories/session1) | [성대 건강 관리 가이드](/stories/vocal-health1)

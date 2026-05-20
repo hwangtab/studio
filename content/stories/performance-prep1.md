@@ -136,4 +136,4 @@ inlineFallback: {}
 
 사운드 체크는 공연 1~2시간 전에 진행하며, 모니터 스피커에서 자신의 목소리가 MR보다 약간 크게 들리는 레벨로 설정하면 음정 판단이 안정됩니다. 공연 직전 10분에는 큰 소리 발성을 완전히 멈추고 복식호흡(4박 흡기→4박 정지→8박 호기)을 5회 반복해 심박수를 낮추는 것이 긴장 에너지를 무대 에너지로 전환하는 가장 검증된 방법입니다.
 
-[보컬 긴장 극복 방법 가이드](/stories/stagefright1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1)
+[보컬 긴장 극복 방법 가이드](/stories/stagefright1) | [녹음 전 보컬 워밍업 루틴](/stories/warmup1) | [성대 건강 관리 가이드](/stories/vocal-health1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1)

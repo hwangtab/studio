@@ -183,4 +183,4 @@ inlineFallback: {}
 
 IEM이 없는 환경에서 발밑 모니터 스피커로 공연할 경우, 모니터 스피커 볼륨을 사운드체크 시 보컬이 명확히 들리되 과하지 않은 수준으로 설정하는 것이 중요합니다. 모니터가 너무 크면 PA 시스템과 간섭해 피드백이 발생하고, 너무 작으면 음정을 잡기 어렵습니다. 엔지니어에게 모니터 요청 시 "제 보컬과 드럼 킥만 크게"로 구체적으로 지시하면 현장에서 빠르게 원하는 모니터 믹스를 확보할 수 있습니다.
 
-[공연 보컬 완전 가이드](/stories/concert-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocalhealth1) | [보컬 웜업 완전 가이드](/stories/vocal-warmup1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1)
+[공연 보컬 완전 가이드](/stories/concert-vocal1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 웜업 완전 가이드](/stories/vocal-warmup1) | [보컬 레코딩 팁 완전 가이드](/stories/vocal-recording-tips1)

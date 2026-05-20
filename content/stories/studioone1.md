@@ -191,4 +191,4 @@ Studio One에서 보컬 녹음을 시작하는 가장 빠른 세팅은 버퍼 �
 
 Take Lane 컴핑 워크플로우는 Logic Pro의 컴핑과 거의 동일하므로, Logic을 사용해본 아티스트라면 즉시 익숙하게 사용할 수 있습니다. 드라이 보컬을 내보낼 때는 Inserts 플러그인을 모두 Bypass한 상태에서 트랙 Solo → Export Mixdown(Ctrl+E) → WAV 24bit/44.1kHz 또는 48kHz로 설정하면 이펙트 없는 원본 파일이 생성됩니다. 파일명에 아티스트명과 곡명, `_vocal_dry`를 포함해 저장하면 후속 믹싱·마스터링 단계에서 파일 혼동을 방지할 수 있습니다.
 
-[Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audio-format1)
+[Cubase 보컬 녹음 완전 가이드](/stories/cubase1) | [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audioformat1)

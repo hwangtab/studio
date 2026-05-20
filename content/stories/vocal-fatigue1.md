@@ -141,4 +141,4 @@ inlineFallback: {}
 
 장기 피로 예방의 핵심은 발성 집중일 → 가벼운 허밍일 → 완전 휴식일의 3단계 사이클입니다. 주 3~4회 이상 집중 발성 세션을 소화하는 보컬리스트는 세션 사이에 반드시 가벼운 허밍 세션(5~10분 이내)과 완전 발성 휴식일을 교차 배치해야 성대 조직의 충분한 회복 시간을 확보할 수 있습니다. 집중 세션 전 3일은 과도한 연습 자제, 당일 세션 후 당일 추가 발성은 배제하는 것이 장기적으로 성대 수명을 지키는 실전 원칙입니다.
 
-[보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1)
+[보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 연습 루틴 완전 가이드](/stories/vocal-practice-routine1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [성대 건강 관리 가이드](/stories/vocal-health1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1)

@@ -141,4 +141,4 @@ Share → Export Song to Disk
 
 파일명은 처음부터 체계적으로 관리하세요. [아티스트명]_[곡명]_mix_v1.wav처럼 버전 번호를 포함하면 수정 사항이 생겼을 때 어느 파일이 최신인지 혼동이 없습니다. 마스터링 완료 파일과 믹싱 납품 파일을 같은 폴더에서 관리하면 "_master" vs "_mix" 구분이 없어 파일을 혼동할 위험이 있으므로 별도 폴더로 분리하는 것이 좋습니다.
 
-[믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [음원 파일 형식 완전 가이드](/stories/audio-format1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [마스터링 완전 가이드](/stories/mastering1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

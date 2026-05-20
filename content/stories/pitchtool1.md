@@ -125,4 +125,4 @@ Auto-Tune은 1997년 Andy Hildebrand가 Antares Audio Technologies에서 개발�
 
 반음 이상 이탈한 구간은 교정보다 재녹음이 항상 자연스럽습니다. 피치 교정은 보컬리스트가 의도한 음정에 가까웠지만 약간 이탈한 경우에만 효과적이며, 전혀 다른 음정을 목표 음정으로 옮기면 포르만트(음색)가 왜곡돼 인위적인 느낌이 납니다. "교정으로 구할 수 있는 테이크"와 "재녹음이 필요한 테이크"를 판단하는 기준은 반음(50 cents) 이탈 여부입니다.
 
-[오토튠 완전 가이드](/stories/auto-tune1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [마스터링이란?](/stories/mastering1) | [녹음실 용어 사전](/stories/glossary1)
+[오토튠 완전 가이드](/stories/autotune1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [마스터링이란?](/stories/mastering1) | [녹음실 용어 사전](/stories/glossary1)

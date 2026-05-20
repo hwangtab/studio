@@ -171,4 +171,4 @@ MR 파일의 피치를 조정해드립니다.
 
 노래방 키 조절에서 0으로 시작해 1씩 조정하는 방법은 원곡과의 음역 차이를 직접 체험하면서 최적점을 찾는 가장 효율적인 접근입니다. 키를 올리면 저음도 함께 올라간다는 점을 반드시 고려해야 하며, 자신의 실용 최고음을 미리 파악해두면 어떤 곡이든 키 설정 시간을 30초 이내로 줄일 수 있습니다.
 
-[나의 목소리 유형 찾기](/stories/voicetype1) | [보컬 음역대 넓히는 방법](/stories/vocalrange1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1)
+[나의 목소리 유형 찾기](/stories/voice-type1) | [보컬 음역대 넓히는 방법](/stories/vocalrange1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 녹음 당일 완벽 루틴](/stories/recordingday1) | [보컬 녹음 가격 결정 요인 가이드](/stories/pricing1)

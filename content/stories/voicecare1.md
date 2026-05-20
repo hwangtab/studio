@@ -118,4 +118,4 @@ inlineFallback: {}
 
 위산 역류(LPR)는 성대 만성 자극의 가장 흔한 숨은 원인입니다. 맵고 기름진 음식, 야식, 알코올이 위산 분비를 촉진하고 역류한 위산이 성대 후방을 자극해 만성 쉰 목소리와 이물감을 유발합니다. 녹음·공연 전날뿐 아니라 평소 저녁 식사를 취침 3시간 전에 마무리하는 것이 LPR 예방의 핵심 습관입니다.
 
-[성대 건강 관리 가이드](/stories/vocalhealth1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [보컬 녹음 전 먹으면 안 되는 음식](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1)
+[성대 건강 관리 가이드](/stories/vocal-health1) | [쉰 목소리 원인과 치료법](/stories/hoarse1) | [보컬 녹음 전 먹으면 안 되는 음식](/stories/vocalfood1) | [보컬 워밍업 루틴](/stories/warmup1)

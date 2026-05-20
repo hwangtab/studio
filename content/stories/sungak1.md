@@ -126,4 +126,4 @@ inlineFallback:
 
 발음 교정에서는 성악적 모음 열기(입을 수직으로 크게 열어 공명을 극대화하는 방식)를 대화체 모음으로 전환하는 것이 필요합니다. 마이크 다이나믹스 훈련은 크레셴도 구간에서 마이크에서 멀어지고 여린 구간에서 가까이 다가가는 연습으로 음향 엔지니어가 컴프레서 의존도를 낮추게 해줍니다.
 
-[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [보컬 워밍업 루틴](/stories/warmup1) | [목소리 타입 완전 가이드](/stories/voicetype1)
+[좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [보컬 실력 향상 로드맵](/stories/growthplan1) | [보컬 워밍업 루틴](/stories/warmup1) | [목소리 타입 완전 가이드](/stories/voice-type1)

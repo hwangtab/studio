@@ -142,4 +142,4 @@ inlineFallback:
 
 호흡은 하루아침에 개선되지 않습니다. 꾸준한 연습과 전문가 레슨이 함께할 때 빠르게 향상됩니다. 복식 호흡 기반을 갖추면 고음, 롱 노트, 감정 표현이 모두 안정되고 녹음 환경에서도 일관된 퍼포먼스를 낼 수 있습니다. 스튜디오 녹음 전 호흡 워밍업을 루틴화하면 첫 테이크부터 컨디션을 최대로 끌어올릴 수 있습니다.
 
-[보컬 공명 훈련 완전 가이드](/stories/resonance1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 자세 완전 가이드](/stories/posture1) | [성대 건강 관리 가이드](/stories/vocalhealth1) | [보컬 레슨 선택 가이드](/stories/lessonguide1)
+[보컬 공명 훈련 완전 가이드](/stories/resonance1) | [보컬 워밍업 루틴](/stories/warmup1) | [보컬 자세 완전 가이드](/stories/posture1) | [성대 건강 관리 가이드](/stories/vocal-health1) | [보컬 레슨 선택 가이드](/stories/lessonguide1)

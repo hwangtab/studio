@@ -134,4 +134,4 @@ faq:
 
 정식 커버 음원을 스트리밍 발매할 계획이라면 MR 직접 제작이 필수입니다. 해외 플랫폼(Spotify, Apple Music)을 통해 커버 음원을 발매하려면 DistroKid의 Songfile 서비스($12/곡)를 이용해 기계적 복제 허락을 처리할 수 있습니다. 커버 음원은 원곡 저작권자에게 별도 수익 공유가 되므로 수익 분배 구조를 사전에 이해하고 시작하세요.
 
-[커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1)
+[커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1) | [커버·발매별 보컬 녹음 비용 가이드](/stories/pricing1)

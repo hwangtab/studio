@@ -129,4 +129,4 @@ inlineFallback:
 
 다이나믹 조절은 보컬 레슨에서 가장 늦게 배우지만 녹음에서 가장 먼저 차이가 드러나는 기술입니다. 모든 음절을 같은 세기로 부르면 컴프레서가 과도하게 작동해 결과물이 평평하고 표정 없이 들립니다. 절(Verse)에서 속삭이듯 낮추고 후렴(Chorus) 클라이맥스에서 충분한 파워를 내는 다이나믹 폭이 녹음 믹싱 단계에서 엔지니어가 가장 살리기 쉬운 보컬 퍼포먼스입니다. 레슨과 스튜디오 녹음을 6개월 단위로 병행하면서 초기 녹음 파일과 현재를 비교 청취하는 습관이 보컬 성장을 가장 객관적으로 확인하는 방법입니다.
 
-[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voicetype1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1)
+[온라인 보컬 레슨 vs 오프라인 비교](/stories/onlinelesson1) | [좋은 보컬 코치 찾는 방법](/stories/vocalcoach1) | [목소리 타입(보이스 타입) 가이드](/stories/voice-type1) | [청음 훈련 완전 가이드](/stories/eartraining1) | [보컬 독학 vs 레슨 비교](/stories/vocal1) | [가수 지망생 준비 로드맵](/stories/aspiring1)

@@ -139,4 +139,4 @@ inlineFallback:
 
 음역이 좁다고 녹음이 어려운 것은 아닙니다. Bob Dylan의 음역은 1.5옥타브 내외이지만 표현력으로 수십 년의 경력을 만들었습니다. 음역의 넓이보다 그 안에서 안정적인 음정, 일관된 음색, 감정 표현이 녹음의 완성도를 결정합니다.
 
-[보컬리스트를 위한 음악 이론 기초](/stories/music-theory1) | [나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 레슨 선택 가이드](/stories/lessonguide1)
+[보컬리스트를 위한 음악 이론 기초](/stories/music-theory1) | [나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 녹음 비용 결정 요인](/stories/pricing1)

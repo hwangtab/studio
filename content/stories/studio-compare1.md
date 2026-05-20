@@ -92,4 +92,4 @@ faq:
 
 ---
 
-[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [데모 녹음 완전 가이드](/stories/demo-tape1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)
+[처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오 녹음](/stories/home-vs-studio1) | [데모 녹음 완전 가이드](/stories/demo-tape1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing) | [녹음실 비용 기준표 (2026)](/stories/recording-price1)

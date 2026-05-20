@@ -154,4 +154,4 @@ faq:
 
 발매 당일 SNS 포스팅은 발매 시각(오전 0시 KST)보다 1~2시간 늦은 오전 7~9시에 게시하면 활성 사용자가 많은 시간대와 겹칩니다. 스트리밍 첫 24시간 수치가 플랫폼 내 초기 노출에 영향을 주므로, 팬에게 "발매 당일 오전에 스트리밍 부탁한다"는 사전 안내가 효과적입니다. 발매 후 KOMCA 저작권 등록은 30일 이내에 완료해야 이후 방송·광고 사용 시 저작권료를 소급 청구할 수 있습니다.
 
-[EP 앨범 제작 완전 가이드](/stories/ep-album1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)
+[EP 앨범 제작 완전 가이드](/stories/ep-album1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음반 제작 비용 기준표](/stories/recording-price1)
