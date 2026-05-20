@@ -149,4 +149,4 @@ K팝 연습생의 길은 치열하지만, 철저한 준비로 가능성을 높�
 
 계약서 검토는 연습생 단계에서 가장 소홀히 다루는 부분입니다. 전속 계약 기간(통상 3~7년)과 수익 배분 비율, 활동 지역, 위약금 조항을 계약 전에 법적 검토를 받는 것이 장기적으로 자신을 보호하는 핵심 조치입니다. 공정거래위원회의 표준 연예계약서를 기준으로 계약 내용이 크게 벗어나지 않는지 확인하는 것이 최소한의 안전망입니다.
 
-[K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [오디션 준비 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1)
+[K-POP 오디션 준비 완전 가이드](/stories/kpop-audition1) | [오디션 준비 가이드](/stories/audition1) | [보컬 포트폴리오 만들기](/stories/portfolio1) | [가수 지망생 준비 로드맵](/stories/aspiring1) | [실용음악과 진학 가이드](/stories/siryummusic1)

@@ -170,4 +170,4 @@ faq:
 
 스튜디오에 MR 파일을 가져올 때는 원본 WAV 파일이 가장 좋으며, MP3는 음질 손실이 있어 녹음 이후 믹싱 과정에서 품질이 저하될 수 있습니다. 처음 스튜디오를 방문하면 엔지니어가 모든 과정을 안내하므로 용어를 완벽히 알지 못해도 걱정하지 않아도 됩니다.
 
-[녹음실 처음 방문 가이드](/stories/guide1) | [마스터링이란?](/stories/mastering1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1)
+[녹음실 처음 방문 가이드](/stories/guide1) | [마스터링이란?](/stories/mastering1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [녹음실 선택 기준·비교 가이드](/stories/studio-compare1)

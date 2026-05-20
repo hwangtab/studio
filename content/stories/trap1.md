@@ -149,4 +149,4 @@ inlineFallback:
 
 트랩 보컬에서 오토튠은 '숨기는 도구'가 아니라 '악기'입니다. 리테이크 속도(Retune Speed)를 0~5ms(극도로 빠른 피치 교정)로 설정하면 Travis Scott·Future의 로봇 보컬 질감이 만들어집니다. 반대로 50~100ms로 설정하면 자연스러운 피치 교정이 됩니다. 멜로디 랩 구간에는 빠른 리테이크, 서정적 구간에는 느린 리테이크를 교차해 사용하면 감정 표현의 폭이 넓어집니다.
 
-[808 베이스 믹싱 완전 가이드](/stories/808-bass1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1)
+[808 베이스 믹싱 완전 가이드](/stories/808-bass1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [트랩 음악 프로덕션 완전 가이드](/stories/trap-production1)

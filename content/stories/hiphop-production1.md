@@ -169,4 +169,4 @@ inlineFallback:
 
 힙합 믹싱에서 808 베이스와 킥 드럼의 충돌은 가장 자주 발생하는 주파수 문제입니다. 사이드체인 컴프레션으로 킥이 들어올 때 808 볼륨을 순간적으로 낮추거나, 킥 저역을 EQ로 미세하게 컷해 808에 자리를 내주는 방법을 병행합니다. 랩 보컬의 딕션이 비트에 묻히는 경우는 3~5kHz 대역이 부족한 것이며, 이 범위를 2~3dB 부스트하면 자음 명료도가 높아집니다. 힙합 마스터링에서 LUFS -9~-11 범위는 Spotify·Apple Music의 노멀라이제이션(-14 LUFS) 기준보다 높아 플랫폼에서 자동으로 음량을 낮추게 되지만, 이 레벨이 힙합 장르 특유의 임팩트감을 위해 업계에서 관행적으로 사용됩니다.
 
-[힙합·랩 보컬 녹음 가이드](/stories/hip-hop-vocal1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [트랩 음악 프로덕션 가이드](/stories/trap1)
+[힙합·랩 보컬 녹음 가이드](/stories/hip-hop-vocal1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [트랩 음악 프로덕션 가이드](/stories/trap1) | [트랩 프로덕션 완전 가이드](/stories/trap-production1)

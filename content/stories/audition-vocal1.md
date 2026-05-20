@@ -154,4 +154,4 @@ inlineFallback:
 
 오디션 전날은 연습을 최소화하고 성대 보호에 집중합니다. 충분한 수면 7~8시간, 따뜻한 물 수시 섭취, 카페인·알코올 금지가 기본입니다. 당일에는 가벼운 허밍으로 성대를 부드럽게 깨운 후 30분 전부터 대기 공간에 적응하는 것이 좋습니다. 오디션 현장에서 실수가 발생하더라도 멈추지 않고 계속 진행하는 것이 중요합니다. 멈추면 실수가 부각되지만, 흘려 넘기면 심사위원 기억에 남지 않을 수도 있습니다.
 
-[뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1)
+[뮤지컬 보컬 완전 가이드](/stories/musical-vocal1) | [K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [실용음악 입시 준비 가이드](/stories/siryummusic1)

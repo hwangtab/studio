@@ -170,4 +170,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '코드 진행': { slug: 'chord-progression1', anchorText: '코드 진행 완전 가이드' },
   '보컬 더블링': { slug: 'vocal-doubling1', anchorText: '보컬 더블링 완전 가이드' },
   '매장 BGM': { slug: 'store-bgm1', anchorText: '매장 음악 저작권 가이드' },
+  '기타 하모닉스': { slug: 'practice-room-guitar-harmonics1', anchorText: '기타 하모닉스 완전 가이드' },
+  '녹음실 비교': { slug: 'studio-compare1', anchorText: '서울 녹음실 비교 가이드' },
+  '트랩 비트': { slug: 'trap-production1', anchorText: '트랩 음악 프로덕션 가이드' },
+  '실용음악과': { slug: 'siryummusic1', anchorText: '실용음악과 입시 완전 가이드' },
 };
