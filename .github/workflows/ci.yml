@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate build manifests
+        run: npm run generate:manifests
+
       - name: Type-check
         run: npm run type-check
 
