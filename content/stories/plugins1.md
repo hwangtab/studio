@@ -33,6 +33,18 @@ faq:
     a: >-
       아닙니다. 플러그인 수보다 각 플러그인을 제대로 사용하는 것이 중요합니다. 프로 엔지니어들도 3~5개의 핵심 플러그인만으로 대부분의
       작업을 처리합니다. '좋은 결과를 내는 귀'가 플러그인보다 훨씬 중요합니다.
+howTo:
+  name: "보컬 믹싱 플러그인 구매 4단계 절차"
+  description: "ROI 순서로 EQ·리버브·컴프레서·피치 교정을 갖춰 보컬 믹싱 체인을 완성하는 단계별 구매 절차입니다."
+  steps:
+    - name: "1단계: EQ 확보 — FabFilter Pro-Q 3"
+      text: "가장 먼저 EQ를 갖춥니다. FabFilter Pro-Q 3는 시각적으로 직관적이고 동적 EQ 기능까지 포함해 보컬 톤 조정의 사실상 표준입니다. 초기 예산이 부족하면 DAW 내장 EQ(Logic Channel EQ·Ableton EQ Eight)로 시작해도 충분합니다."
+    - name: "2단계: 리버브 확보 — Valhalla Room"
+      text: "Valhalla Room이 가성비 최고의 보컬 리버브입니다. 무료 대안인 Valhalla Supermassive도 업계 표준급 품질을 제공해 입문 단계에서 권장됩니다."
+    - name: "3단계: 컴프레서 확보 — CLA-2A 또는 CLA-76"
+      text: "발라드·CCM은 Waves CLA-2A(광학 컴프·자연스러운 압축), 팝·힙합은 Waves CLA-76(빠른 어택·펀치감)을 선택합니다. 장르에 맞춰 한 가지를 먼저 구매하고 나머지는 번들 할인 시점에 추가합니다."
+    - name: "4단계: 피치 교정·디에서 보강 — Melodyne·Pro-DS"
+      text: "Melodyne Essential로 자연스러운 보컬 피치 교정을 추가하고, FabFilter Pro-DS로 치찰음을 정밀 제어합니다. 1~3단계 체인이 익숙해진 뒤 보강하면 투자 대비 효과가 가장 큽니다."
 ---
 ![오디오 플러그인 — 스튜디오 놀](/images/hardware4.webp)
 
