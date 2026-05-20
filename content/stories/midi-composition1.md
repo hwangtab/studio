@@ -170,4 +170,4 @@ MIDI 작곡·편곡은 DAW 피아노롤 하나로 오케스트라부터 EDM까�
 
 오케스트라 MIDI 편곡 시 관악 앙상블은 유니즌 대신 미세 피치를 분산시켜 실제 앙상블 밀도를 구현하고, 피치벤드 레인지는 ±2반음(기본)~±12반음(글리산도)으로 용도에 맞게 설정합니다. MIDI 편곡 위에 실제 보컬을 오버더빙할 때는 VST 믹스 사전 밸런스를 설정하고 보컬 가이드 멜로디를 별도 트랙으로 준비해두면 스튜디오 세션 효율이 높아집니다. 스튜디오 놀에서 MIDI 기반 편곡 위에 보컬 레코딩을 진행할 경우 완성된 MIDI 프로젝트 파일과 MR WAV를 함께 지참하면 현장에서 키·BPM 미세 조정이 즉시 가능합니다.
 
-[비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [편곡 완전 가이드](/stories/arrangement1)
+[비트 메이킹 완전 가이드](/stories/beatmaking1) | [드럼 프로그래밍 완전 가이드](/stories/drum-programming1) | [오케스트라 샘플링 완전 가이드](/stories/orchestral-sampling1) | [편곡 완전 가이드](/stories/arrangement1) | [음악 프로듀서 입문 가이드 — DAW부터](/stories/producer1)

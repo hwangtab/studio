@@ -139,4 +139,4 @@ faq:
 
 기타 코러스의 전형적인 80년대 팝 사운드는 Rate 0.5~1Hz, Depth 40~60%의 중간 설정에서 나옵니다. DAW 내장 코러스 플러그인 외에 유료 선택지로는 Soundtoys MicroShift(앙상블 두께감)와 Eventide H3000(플랜저 포함)이 많이 사용됩니다. 플랜저나 페이저는 자동화(Automation)로 특정 구간에만 적용하면 믹스 전체가 아닌 표현 포인트에만 효과를 줄 수 있습니다.
 
-[리버브 종류 완전 가이드](/stories/reverb-types1) | [딜레이 종류 완전 가이드](/stories/delay-types1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1)
+[리버브 종류 완전 가이드](/stories/reverb-types1) | [딜레이 종류 완전 가이드](/stories/delay-types1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [딜레이 vs 리버브 — 보컬 믹싱 가이드](/stories/delay1)

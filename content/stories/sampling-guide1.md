@@ -147,4 +147,4 @@ inlineFallback:
 
 초퍼 기법의 핵심은 원본 리듬을 완전히 해체하는 것입니다. FL Studio Slice X나 Ableton Live의 Slice to MIDI 기능으로 트랜지언트마다 자동 슬라이싱 후, 패드 순서를 재배열하고 각 슬라이스에 개별적으로 피치시프트·리버스·필터를 적용하면 원본과 다른 리듬 패턴이 만들어집니다. 루프 BPM이 현재 프로젝트 템포와 다를 경우 타임스트레치 알고리즘(복잡한 소스에는 Complex 또는 Complex Pro, 단순 리듬에는 Beats 알고리즘)을 선택하면 품질 손실 없이 템포를 맞출 수 있습니다.
 
-[비트 메이킹 완전 가이드](/stories/beatmaking1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[비트 메이킹 완전 가이드](/stories/beatmaking1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [로파이 프로덕션 완전 가이드](/stories/lofi-production1) | [R&B 프로덕션 완전 가이드](/stories/rnb-production1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [프로듀서 되는 방법 가이드](/stories/producer1)

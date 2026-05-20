@@ -162,4 +162,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '음악 비즈니스': { slug: 'music-business1', anchorText: '음악 비즈니스 완전 가이드' },
   '세션 뮤지션': { slug: 'session-musician1', anchorText: '세션 뮤지션 완전 가이드' },
   '가사 암기': { slug: 'lyrics-memo1', anchorText: '노래 가사 빨리 외우는 방법' },
+  '음악 프로듀서': { slug: 'producer1', anchorText: '음악 프로듀서 되는 법 가이드' },
+  '스템 믹싱': { slug: 'stem-mixing1', anchorText: '스템 믹싱 완전 가이드' },
+  '보컬 포지션': { slug: 'placement1', anchorText: '보컬 포지션·발성 위치 가이드' },
+  '딜레이와 리버브': { slug: 'delay1', anchorText: '딜레이 vs 리버브 차이 가이드' },
 };

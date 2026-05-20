@@ -134,4 +134,4 @@ Release는 음악의 BPM과 리듬에 맞게 컴프레서가 호흡하도록 설
 
 버스 컴프레션은 믹스의 완성도를 높이는 핵심 기법이지만, "덜 쓰는 것이 더 좋다"는 원칙이 가장 잘 적용되는 영역이기도 합니다. 컴프레서가 걸렸는지 인식하기 어려울 때, 그것이 버스 컴프레션이 제대로 작동하고 있다는 증거입니다.
 
-[믹스 버스 완전 가이드](/stories/mix-bus1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[믹스 버스 완전 가이드](/stories/mix-bus1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [마스터링 완전 가이드](/stories/mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [스템 믹싱 — 그룹 버스 믹싱 가이드](/stories/stem-mixing1)
