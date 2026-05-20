@@ -96,7 +96,7 @@ Neumann U87AI 같은 레퍼런스 마이크와 전문 엔지니어의 보컬 디
 
 %%service:recording%%
 
-[스튜디오 놀 서비스 요금 안내 자세히 보기](/pricing) | [믹싱 완전 가이드](/stories/mixing-complete-guide) | [데모 녹음 가이드](/stories/demo-tape1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [녹음·믹싱·마스터링 비용 기준표](/stories/recording-price1)
+[믹싱 완전 가이드](/stories/mixing-complete-guide) | [데모 녹음 가이드](/stories/demo-tape1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [녹음·믹싱·마스터링 비용 기준표](/stories/recording-price1)
 
 ---
 
