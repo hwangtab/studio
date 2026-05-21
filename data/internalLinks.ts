@@ -200,4 +200,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '멜리스마': { slug: 'practice-room-vocal-soul1', anchorText: 'R&B·소울 보컬 멜리스마 가이드' },
   '보컬 디렉팅': { slug: 'vocal-directing1', anchorText: '보컬 디렉팅 완전 가이드' },
   '가수 데뷔': { slug: 'debut1', anchorText: '가수 데뷔 준비 완전 가이드' },
+  '음원 유통': { slug: 'distribution1', anchorText: '인디 음원 유통 방법 가이드' },
+  '고음 발성': { slug: 'highnote1', anchorText: '고음 내는 법 완전 가이드' },
+  '마이크 선택': { slug: 'microphone-types1', anchorText: '마이크 선택 완전 가이드' },
+  '드럼 믹싱': { slug: 'drum-mixing1', anchorText: '드럼 믹싱 완전 가이드' },
 };

@@ -138,4 +138,4 @@ faq:
 
 차트 진입의 첫 번째 조건은 완성도 높은 음원입니다. 아무리 전략적인 발매 타이밍과 스트리밍 캠페인을 구사해도 음원 품질이 받쳐주지 않으면 차트 유지가 어렵습니다. 좋은 음원을 스튜디오에서 완성하고, 타이밍과 팬덤 전략을 더하는 것이 인디 아티스트의 멜론 차트 공략 전략입니다.
 
-[스트리밍 플랫폼 완전 비교 가이드](/stories/streaming-platforms1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음원 유통 완전 가이드](/stories/music-distribution1)
+[스트리밍 플랫폼 완전 비교 가이드](/stories/streaming-platforms1) | [스트리밍 알고리즘 완전 가이드](/stories/streaming-algorithm1) | [스트리밍 수익 완전 가이드](/stories/streaming-revenue1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [인디 음원 유통 방법 가이드](/stories/distribution1)

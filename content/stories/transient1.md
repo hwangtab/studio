@@ -153,4 +153,4 @@ SPL Transient Designer는 원조 하드웨어의 소프트웨어 버전으로 �
 
 트랜지언트 쉐이퍼는 컴프레서로 해결하기 어려운 어택·서스테인 조형에 효과적입니다. 드럼의 펀치감을 살리거나 룸 울림을 억제할 때 게이트의 부자연스러운 끊김 없이 원하는 결과를 얻을 수 있습니다. 믹싱 워크플로우에 트랜지언트 쉐이퍼를 추가하면 EQ와 컴프레서만으로는 만들기 어려운 타이트하고 선명한 다이나믹 구조를 실현할 수 있습니다.
 
-[보컬 컴프레서 완전 가이드](/stories/compressor1) | [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [클리퍼·소프트 클리핑 완전 가이드](/stories/clipper1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1)
+[보컬 컴프레서 완전 가이드](/stories/compressor1) | [사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [클리퍼·소프트 클리핑 완전 가이드](/stories/clipper1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1)

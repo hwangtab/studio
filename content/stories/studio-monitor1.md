@@ -130,4 +130,4 @@ faq:
 
 룸 어쿠스틱 처리는 스피커 업그레이드보다 투자 효율이 높습니다. 5만원짜리 폼 흡음패널 4개를 1차 반사점(스피커 좌우 벽면·천장)에 배치하는 것이 동일 예산의 스피커 업그레이드보다 믹스 정확도를 더 크게 높입니다. 코너 배스 트랩은 저역 정재파(Room Mode)를 흡수해 특정 주파수가 과잉되거나 부족하게 들리는 현상을 줄여줍니다. 모니터 스피커 구매 전에 현재 청음 환경의 어쿠스틱 문제를 먼저 점검하는 것이 장기적으로 더 좋은 결과를 만듭니다.
 
-[헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [어쿠스틱 트리트먼트 완전 가이드](/stories/acoustic-treatment1) | [홈 레코딩 첫 장비 가이드](/stories/homegear1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1)
+[헤드폰 믹싱 완전 가이드](/stories/headphone-mix1) | [어쿠스틱 트리트먼트 완전 가이드](/stories/acoustic-treatment1) | [홈 레코딩 첫 장비 가이드](/stories/homegear1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [마이크 선택 완전 가이드](/stories/microphone-types1)
