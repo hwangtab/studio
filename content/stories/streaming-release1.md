@@ -142,4 +142,4 @@ D-0: 출시일 오전 발매
 
 KOMCA 저작권 등록은 발매 전에 완료하는 것이 원칙입니다. 발매 후 역산하여 등록하면 발매 이전 스트리밍 수익에 대한 저작권료 청구가 복잡해질 수 있습니다. 발매 예정일 기준 최소 D-30에 KOMCA(komca.or.kr)에서 저작물 등록을 신청해두세요. 한국 플랫폼(멜론·지니·벅스)의 게재 소요 시간이 7~14일이므로 유통사 업로드는 D-21에 완료하는 것이 안전합니다.
 
-[싱글 발매 완전 가이드](/stories/single-release1) | [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)
+[싱글 발매 완전 가이드](/stories/single-release1) | [마스터링 체인 완전 가이드](/stories/mastering-chain1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [스트리밍 알고리즘 공략 가이드](/stories/streaming-algorithm1)

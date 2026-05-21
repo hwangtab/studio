@@ -129,4 +129,4 @@ faq:
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
-[피아노 즉흥 연주·재즈 피아노 — 재즈 피아노 완성 가이드](/stories/practice-room-piano-jazz1) | [재즈 피아노 연습 — 보이싱·즉흥 연주 완성 가이드](/stories/practice-room-jazz-piano1) | [기타 즉흥 연주·임프로비제이션 — 기타 즉흥 연주 완성 가이드](/stories/practice-room-guitar-improv1) | [재즈 피아노 즉흥 솔로·임프로비제이션 — 재즈 피아노 즉흥 완성 가이드](/stories/practice-room-piano-jazz-improv1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1)
+[피아노 즉흥 연주·재즈 피아노 — 재즈 피아노 완성 가이드](/stories/practice-room-piano-jazz1) | [재즈 피아노 연습 — 보이싱·즉흥 연주 완성 가이드](/stories/practice-room-jazz-piano1) | [기타 즉흥 연주·임프로비제이션 — 기타 즉흥 연주 완성 가이드](/stories/practice-room-guitar-improv1) | [재즈 피아노 즉흥 솔로·임프로비제이션 — 재즈 피아노 즉흥 완성 가이드](/stories/practice-room-piano-jazz-improv1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [리드시트 즉흥반주·코드 읽기 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)

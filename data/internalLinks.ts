@@ -188,4 +188,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '노래 키': { slug: 'song-key1', anchorText: '나에게 맞는 노래 키 찾기 가이드' },
   '보컬 마이크': { slug: 'vocal-microphone1', anchorText: '보컬 녹음 마이크 추천 가이드' },
   '주파수 대역': { slug: 'frequency-spectrum1', anchorText: 'EQ 주파수 대역 완전 가이드' },
+  '마이크 배치': { slug: 'mic-placement1', anchorText: '마이크 배치법 완전 가이드' },
+  '스트리밍 알고리즘': { slug: 'streaming-algorithm1', anchorText: '스트리밍 알고리즘 공략 가이드' },
+  '리드시트': { slug: 'practice-room-piano-lead-sheet-improvisation1', anchorText: '피아노 리드시트 즉흥반주 가이드' },
+  '리버브 종류': { slug: 'reverb-types1', anchorText: '리버브 종류 완전 가이드' },
 };

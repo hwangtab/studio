@@ -138,7 +138,7 @@ faq:
 
 마이크 테크닉은 연습과 경험으로 개선됩니다.
 
-[녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [콘덴서·다이나믹 마이크 비교 가이드](/stories/vocal-microphone1)
+[녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [콘덴서·다이나믹 마이크 비교 가이드](/stories/vocal-microphone1) | [보컬·기타 마이크 배치법 가이드](/stories/mic-placement1)
 
 ---
 

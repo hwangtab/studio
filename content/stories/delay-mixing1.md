@@ -141,4 +141,4 @@ BPM에 동기화된 딜레이는 반복 에코가 곡의 리듬 그루브와 정
 
 딜레이는 리버브와 함께 믹스에 공간과 깊이를 만드는 두 축입니다. BPM 동기화, 에코 EQ 처리, Aux 버스 분리라는 세 원칙을 지키면 딜레이가 믹스를 어지럽히는 대신 리듬적 생동감과 공간감을 동시에 더해주는 강력한 도구가 됩니다.
 
-[리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [딜레이 종류 완전 가이드 — 슬랩백·핑퐁](/stories/delay-types1)
+[리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [믹싱 오토메이션 완전 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [딜레이 종류 완전 가이드 — 슬랩백·핑퐁](/stories/delay-types1) | [리버브 종류별 차이·활용 가이드](/stories/reverb-types1)

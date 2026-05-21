@@ -107,4 +107,4 @@ faq:
 
 음원 발매의 마지막 단계는 유통이지만, 먼저 마스터링 품질의 음원이 완성돼야 합니다. WAV 44.1kHz/16bit 이상, -14 LUFS, True Peak -1dBTP 이하의 납품 기준을 충족한 마스터링 파일과 3000×3000px 앨범 커버를 준비한 뒤, 발매 희망일로부터 국내 배급은 2주 전, 해외 배급은 3~4주 전에 유통사에 제출해야 합니다. DistroKid 연간 $19.99는 가장 저렴한 해외 배급 선택이며, 국내 멜론·지니 포함을 위해서는 사운드리퍼블리카 같은 국내 유통사를 추가로 이용하는 것이 현실적입니다.
 
-[해외 음원 발매·글로벌 배포 완전 가이드](/stories/global-release1) | [음반 아트워크·앨범 커버 디자인 완전 가이드](/stories/album-artwork1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [뮤직비디오 제작 완전 가이드](/stories/music-video1)
+[해외 음원 발매·글로벌 배포 완전 가이드](/stories/global-release1) | [음반 아트워크·앨범 커버 디자인 완전 가이드](/stories/album-artwork1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [뮤직비디오 제작 완전 가이드](/stories/music-video1) | [스트리밍 알고리즘·노출 전략 가이드](/stories/streaming-algorithm1)

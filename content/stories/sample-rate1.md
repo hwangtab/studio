@@ -127,4 +127,4 @@ howTo:
 
 24bit로 녹음해야 하는 실질적인 이유는 헤드룸입니다. 레벨이 낮게 녹음된 파일을 후반 작업에서 올릴 때, 16bit 파일은 -60dB 이하 영역에서 양자화 노이즈(quantization noise)가 발생하지만 24bit는 144dB 다이나믹 레인지로 안전하게 처리됩니다. 샘플레이트 변환(예: 96kHz→44.1kHz) 시 고품질 SRC(Sample Rate Conversion) 알고리즘을 사용해야 에일리어싱 아티팩트를 방지할 수 있으며, DAW 내부 처리는 32bit float로 진행되어 정밀도 손실이 발생하지 않습니다.
 
-[보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [홈 레코딩 마이크 가이드](/stories/vocal-microphone1) | [마스터링 완전 가이드](/stories/mastering1)
+[보컬 녹음 완전 가이드](/stories/vocal-recording-tips1) | [홈 레코딩 마이크 가이드](/stories/vocal-microphone1) | [마스터링 완전 가이드](/stories/mastering1) | [보컬·기타 마이크 배치 가이드](/stories/mic-placement1)

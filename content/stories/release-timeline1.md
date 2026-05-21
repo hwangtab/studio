@@ -154,4 +154,4 @@ Pre-save(사전 저장)는 아직 발매되지 않은 음원을 팬이 사전에
 
 체계적인 타임라인 계획이 음원 발매의 성패를 좌우합니다. 아무리 좋은 음원이라도 준비 없이 발매하면 알고리즘이 인식하기 전에 묻힙니다. D-8주 계획표를 작성하고, 각 단계를 완료할 때마다 체크하면서 진행하면 발매일에 최선의 상태로 청중 앞에 설 수 있습니다.
 
-[음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 완전 가이드](/stories/streaming-release1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)
+[음원 유통 완전 가이드](/stories/music-distribution1) | [스트리밍 음원 발매 완전 가이드](/stories/streaming-release1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [발매 초기 48시간 노출 전략](/stories/streaming-algorithm1)
