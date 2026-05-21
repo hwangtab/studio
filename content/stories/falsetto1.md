@@ -149,4 +149,4 @@ howTo:
 
 가성과 두성은 보컬의 음역을 확장하는 핵심 도구입니다. 억지로 만들려 하지 말고, 이완과 호흡 지지 속에서 자연스럽게 발생하도록 훈련하는 것이 가장 효과적입니다. 스튜디오 녹음에서 고음 파트는 가성·두성 발성이 자연스럽게 이루어질 때 가장 아름답게 담깁니다.
 
-[두성·헤드보이스 완전 가이드](/stories/head-voice1) | [벨팅 발성법 완전 가이드](/stories/belting1) | [보컬 프라이 발성법 가이드](/stories/vocal-fry1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [믹스 보이스 완전 가이드](/stories/mixvoice1)
+[두성·헤드보이스 완전 가이드](/stories/head-voice1) | [벨팅 발성법 완전 가이드](/stories/belting1) | [보컬 프라이 발성법 가이드](/stories/vocal-fry1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [음악연습실 팔세토 훈련 루틴](/stories/practice-room-vocal-falsetto-technique1)

@@ -1,5 +1,5 @@
 ---
-title: 팔세토 내는 법 — 가성·두성 성구 전환 단계별 훈련 (3단계)
+title: 음악연습실 팔세토 훈련 루틴 — 성구 전환 45분 실전 메뉴
 date: 2026-04-08
 tags:
 - 음악 연습실
@@ -33,7 +33,7 @@ howTo:
 ---
 ![보컬 팔세토·성구 전환 기법 음악연습실 스튜디오 놀](/images/room2.webp)
 
-# 보컬 팔세토·성구 전환 기법 — 음악연습실 완전 가이드
+# 음악연습실 팔세토 훈련 루틴 — 성구 전환 45분 실전 메뉴
 
 팔세토(Falsetto)는 많은 보컬리스트가 사용하지만 충분히 이해되지 않는 발성입니다. 단순히 "높은 음에서 가성으로 부르는 것"을 넘어, **팔세토의 원리와 두성과의 차이, 음악적 활용법**을 이해하면 훨씬 표현력 있는 보컬이 됩니다.
 
@@ -201,4 +201,4 @@ howTo:
 
 보컬 워밍업은 본격 연습 전 10분 이상 충분히 해야 목소리 부상을 예방할 수 있습니다. 립 트릴과 허밍으로 성대를 부드럽게 풀어준 뒤 모음 스케일로 음역대를 확장하는 루틴이 효과적입니다. 연습 중 목에서 통증이 느껴지면 즉시 멈추고 충분히 쉬어야 합니다. 수분 섭취를 충분히 유지하고 공기가 너무 건조한 환경에서는 가습기를 활용하는 것이 성대 건강에 도움이 됩니다. 과도한 목 긴장 없이 자연스럽게 소리를 내는 것이 장기적으로 목소리를 보호합니다.
 
-[보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 스타일·장르별 보컬 표현 — 보컬 스타일 완성 가이드](/stories/practice-room-vocal-style1) | [보컬 벨팅·파워 벨팅 — 벨팅 발성 완성 가이드](/stories/practice-room-vocal-belting1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1) | [보컬 연습실 완전 활용법](/stories/practice-room-vocal1)
+[가성·팔세토와 두성 차이 — 발성 완전 가이드](/stories/falsetto1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 스타일·장르별 보컬 표현 — 보컬 스타일 완성 가이드](/stories/practice-room-vocal-style1) | [보컬 벨팅·파워 벨팅 — 벨팅 발성 완성 가이드](/stories/practice-room-vocal-belting1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1) | [보컬 연습실 완전 활용법](/stories/practice-room-vocal1)

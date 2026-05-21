@@ -185,6 +185,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '헤드 보이스': { slug: 'headvoice1', anchorText: '두성·헤드 보이스 완전 가이드' },
   '믹스보이스': { slug: 'mixvoice1', anchorText: '믹스 보이스 훈련법' },
   '믹스 보이스': { slug: 'mixvoice1', anchorText: '믹스 보이스 훈련법' },
+  '팔세토': { slug: 'falsetto1', anchorText: '가성·팔세토 발성 가이드' },
+  '가성': { slug: 'falsetto1', anchorText: '가성 내는 법 완전 가이드' },
   '보컬 리버브': { slug: 'reverb1', anchorText: '보컬 리버브 완전 가이드' },
   'DAW 선택': { slug: 'daw-choice1', anchorText: 'DAW 선택 완전 가이드' },
   '노래 키': { slug: 'song-key1', anchorText: '나에게 맞는 노래 키 찾기 가이드' },
