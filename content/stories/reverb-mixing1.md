@@ -142,4 +142,4 @@ faq:
 
 Aux 버스의 리버브 전처리 EQ는 믹스 탁함을 제거하는 핵심 기법입니다. 리버브에 100~200Hz 하이패스 필터를 적용하면 저역 에너지가 리버브 테일에 쌓여 믹스를 흐리게 만드는 현상을 방지합니다. 리버브를 Insert로 직접 걸지 않고 Aux Send 방식으로 운용하면 드라이 신호는 100% 원본으로 보존되며, 여러 채널이 동일한 리버브 공간을 공유해 악기들이 같은 공간에 있는 것처럼 자연스럽게 들립니다. 편곡 파일(MIDI·MR)을 가져오시면 리버브 공간 설계까지 포함한 더욱 정밀한 믹싱이 가능합니다.
 
-[딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [위상(Phase) 완전 가이드](/stories/phase1) | [딜레이 vs 리버브 차이 완전 가이드](/stories/delay1)
+[딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [위상(Phase) 완전 가이드](/stories/phase1) | [딜레이 vs 리버브 차이 완전 가이드](/stories/delay1) | [보컬 리버브 완전 가이드](/stories/reverb1)

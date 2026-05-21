@@ -122,4 +122,4 @@ Pre-Delay: 20~40ms (보컬이 먼저 들리고 리버브가 따라오게)
 
 신호 체인 순서는 딜레이 → 리버브로 놓는 것이 일반적입니다. 딜레이로 리듬적 깊이감을 만든 후 리버브로 공간 크기를 덮으면 이펙트 레이어가 자연스럽게 정리됩니다. 둘 다 과도하게 사용하면 보컬이 뒤로 밀려 퍼지므로 각각의 Wet 비율을 낮게 유지하는 것이 현대 팝 믹싱의 기준입니다.
 
-[딜레이 종류 완전 가이드](/stories/delay-types1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[딜레이 종류 완전 가이드](/stories/delay-types1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [딜레이 믹싱 완전 가이드](/stories/delay-mixing1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [홀·룸·플레이트 리버브 가이드](/stories/reverb1)

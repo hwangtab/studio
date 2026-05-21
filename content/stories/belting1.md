@@ -117,4 +117,4 @@ inlineFallback:
 
 벨팅 훈련에서 가장 효과적인 도구 중 하나는 녹음입니다. '충분히 찼다'고 느껴도 녹음에서 음색이 얇게 들리는 경우가 있고, 반대로 '기계적으로 지른다'고 느껴도 녹음을 들어보면 파워풀하게 들리는 경우가 있습니다. 스튜디오에서 헤드폰 모니터링과 함께 자신의 벨팅을 실시간으로 확인하는 환경이 셀프 훈련보다 훨씬 빠른 교정을 가능하게 합니다.
 
-[혼합 발성(Mixed Voice) 완전 가이드](/stories/mixedvoice1) | [트왕 발성 완전 가이드](/stories/twang1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 워밍업 루틴](/stories/warmup1)
+[혼합 발성(Mixed Voice) 완전 가이드](/stories/mixedvoice1) | [트왕 발성 완전 가이드](/stories/twang1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [가성(팔세토) 완전 가이드](/stories/falsetto1) | [보컬 워밍업 루틴](/stories/warmup1) | [두성 발성 훈련 완전 가이드](/stories/headvoice1)

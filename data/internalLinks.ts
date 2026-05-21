@@ -180,4 +180,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '5현 베이스': { slug: 'practice-room-bass-5string1', anchorText: '베이스 5현·저음 확장 완전 가이드' },
   '피치 교정': { slug: 'pitch-correction1', anchorText: '피치 교정 완전 가이드' },
   '커버곡 녹음': { slug: 'cover1', anchorText: '커버곡 녹음 완전 가이드' },
+  '드럼 루디먼트': { slug: 'practice-room-drum-rudiments1', anchorText: '드럼 루디먼트 26개 연습 가이드' },
+  '인디 레이블': { slug: 'indie-label1', anchorText: '인디 레이블 설립 완전 가이드' },
+  '헤드 보이스': { slug: 'headvoice1', anchorText: '두성·헤드 보이스 완전 가이드' },
+  '보컬 리버브': { slug: 'reverb1', anchorText: '보컬 리버브 완전 가이드' },
 };

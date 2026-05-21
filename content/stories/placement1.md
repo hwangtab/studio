@@ -106,4 +106,4 @@ inlineFallback:
 
 올바른 보컬 포지션은 하루아침에 만들어지지 않습니다. 매일 5~10분의 허밍 훈련이 수개월 후 음색을 바꿉니다. 스스로의 변화를 확인하는 가장 좋은 방법은 정기적인 스튜디오 녹음입니다. 집에서 스마트폰으로 듣는 목소리와 전문 마이크로 포착한 목소리의 차이를 들으면 포지션 교정의 효과를 객관적으로 확인할 수 있습니다.
 
-[보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 자세 완전 가이드](/stories/posture1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 워밍업 루틴](/stories/warmup1)
+[보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 자세 완전 가이드](/stories/posture1) | [성량 키우는 방법 가이드](/stories/volume1) | [보컬 워밍업 루틴](/stories/warmup1) | [두성·믹스보이스 완전 가이드](/stories/headvoice1)
