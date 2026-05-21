@@ -157,4 +157,4 @@ faq:
 
 다이나믹 EQ는 정적 EQ보다 자연스러운 마스킹 해결을 가능하게 합니다. FabFilter Pro-Q3의 다이나믹 밴드를 기타 트랙의 1~3kHz 구간에 설정하고 사이드체인 입력을 보컬 트랙으로 설정하면, 보컬이 들어올 때만 기타 중역이 -3~-4dB 자동으로 감소합니다. 보컬이 없는 인스트루멘탈 구간에서는 기타 원래 중역이 살아 있으므로, 정적 EQ로 항상 컷하는 것보다 악기 사운드가 훨씬 자연스럽습니다. 레퍼런스 트랙의 스펙트럼을 SPAN으로 분석해 목표 주파수 밸런스를 확인하는 것도 마스킹 해결의 방향을 잡는 빠른 방법입니다.
 
-[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [디에서(De-esser) 완전 가이드](/stories/de-esser1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [디에서(De-esser) 완전 가이드](/stories/de-esser1) | [믹싱 워크플로우 완전 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [주파수 대역·스펙트럼 분포 가이드](/stories/frequency-spectrum1)

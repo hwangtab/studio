@@ -148,4 +148,4 @@ inlineFallback:
 
 저음 확장은 고음 확장보다 결과가 제한적입니다. 성대 구조상 저음역의 확장 폭은 개인 성대의 길이·질량에 크게 의존하며, 훈련으로 얻을 수 있는 저음 범위는 반음~1.5음 정도입니다. 저음 훈련에서 핵심은 후두를 하강시키는 것인데, "하품하는 느낌"으로 목을 열 때의 후두 위치를 저음 발성 중 유지하는 것이 가장 실용적인 방법입니다. 훈련 일정은 매일 15~20분이 안전 상한이며, 음역 확장 훈련 전 반드시 5~7분 허밍 워밍업으로 성대를 충분히 깨운 뒤 시작합니다.
 
-[패사지오(Passaggio) 완전 가이드](/stories/passaggio1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1)
+[패사지오(Passaggio) 완전 가이드](/stories/passaggio1) | [두성(헤드 보이스) 훈련 완전 가이드](/stories/headvoice1) | [흉성 완전 가이드](/stories/chest-voice1) | [보컬 호흡 지지 완전 가이드](/stories/breath-support1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [나에게 맞는 노래 키 찾기 가이드](/stories/song-key1)

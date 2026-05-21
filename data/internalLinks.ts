@@ -184,4 +184,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '인디 레이블': { slug: 'indie-label1', anchorText: '인디 레이블 설립 완전 가이드' },
   '헤드 보이스': { slug: 'headvoice1', anchorText: '두성·헤드 보이스 완전 가이드' },
   '보컬 리버브': { slug: 'reverb1', anchorText: '보컬 리버브 완전 가이드' },
+  'DAW 선택': { slug: 'daw-choice1', anchorText: 'DAW 선택 완전 가이드' },
+  '노래 키': { slug: 'song-key1', anchorText: '나에게 맞는 노래 키 찾기 가이드' },
+  '보컬 마이크': { slug: 'vocal-microphone1', anchorText: '보컬 녹음 마이크 추천 가이드' },
+  '주파수 대역': { slug: 'frequency-spectrum1', anchorText: 'EQ 주파수 대역 완전 가이드' },
 };

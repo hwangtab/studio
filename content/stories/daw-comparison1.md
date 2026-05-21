@@ -155,4 +155,4 @@ DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인�
 
 어떤 DAW를 선택해도 드라이(무처리) WAV 24bit/44.1kHz 파일로 내보내면 전문 스튜디오에 믹싱을 의뢰하는 데 아무 문제가 없습니다. 보컬 녹음이 목적이라면 Logic Pro의 Flex Pitch와 내장 Vintage 플러그인으로 스튜디오 수준의 보컬 체인을 구성할 수 있으며, 비트메이킹이 목적이라면 FL Studio의 패턴 기반 워크플로우와 평생 무료 업데이트 정책이 장점입니다. 처음 DAW를 시작한다면 GarageBand로 시작해 Logic Pro로 업그레이드하는 Apple 경로가 학습 비용을 최소화하는 가장 효율적인 선택입니다.
 
-[DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1) | [DAW 믹싱 템플릿 완전 가이드](/stories/daw-template1) | [Ableton 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[DAW 퍼포먼스 최적화 가이드](/stories/daw-performance1) | [DAW 믹싱 템플릿 완전 가이드](/stories/daw-template1) | [Ableton 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [나에게 맞는 DAW 고르는 법](/stories/daw-choice1)

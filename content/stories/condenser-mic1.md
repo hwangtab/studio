@@ -152,4 +152,4 @@ faq:
 
 콘덴서 마이크의 보관에서 가장 중요한 것은 습기 관리입니다. 다이어프램은 금속 박막(2~6마이크론 두께)이기 때문에 고습 환경에 장기간 방치하면 산화와 부식이 진행돼 잡음이 증가합니다. 마이크 케이스 안에 실리카겔(방습제)을 함께 보관하고, 사용하지 않을 때는 케이스에 넣어두세요. 오래된 마이크에서 잡음이 생기거나 고역이 탁해졌다면 캡슐 오염이 원인인 경우가 많으며, 전문 수리점에서 캡슐 청소를 받으면 상당 부분 복원됩니다.
 
-[마이크 종류 완전 가이드](/stories/microphone-types1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 마이크 종류 비교 가이드](/stories/mic1)
+[마이크 종류 완전 가이드](/stories/microphone-types1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [마이크 배치 완전 가이드](/stories/mic-placement1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 마이크 종류 비교 가이드](/stories/mic1) | [보컬 녹음용 마이크 추천 가이드](/stories/vocal-microphone1)

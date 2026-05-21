@@ -154,4 +154,4 @@ howTo:
 
 마이크 위치는 녹음 결과물의 음색과 분리감에 결정적인 영향을 줍니다. 보컬의 경우 마이크를 입과 정면으로 약 15~20cm 거리에 배치하되, 폭발음(플로시브) 방지를 위해 팝 필터를 함께 사용합니다. 기타나 피아노 등 어쿠스틱 악기는 마이크 위치에 따라 음색이 현저히 달라지므로 여러 포지션을 테스트한 뒤 최적 지점을 선택하는 것이 좋습니다.
 
-[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [룸 어쿠스틱 완전 가이드](/stories/room-acoustic1) | [방음·흡음 처리 가이드](/stories/soundproof1) | [보컬 녹음 완전 가이드](/stories/guide1) | [마이크 종류별 녹음 차이 완전 가이드](/stories/mic1)
+[보컬 녹음 마이크 종류 가이드](/stories/microphone1) | [룸 어쿠스틱 완전 가이드](/stories/room-acoustic1) | [방음·흡음 처리 가이드](/stories/soundproof1) | [보컬 녹음 완전 가이드](/stories/guide1) | [마이크 종류별 녹음 차이 완전 가이드](/stories/mic1) | [보컬 마이크 추천·비교 가이드](/stories/vocal-microphone1)

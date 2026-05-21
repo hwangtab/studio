@@ -184,4 +184,4 @@ File → Export Audio/Video (Cmd+Shift+R)
 
 Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 강력한 DAW입니다. 보컬 녹음에서 핵심 설정은 버퍼 크기입니다. 녹음 시에는 64~128 samples로 설정해 레이턴시를 5ms 이하로 유지하고, 믹싱 시에는 256~512 samples로 높여 CPU 부하를 줄이는 방식으로 전환하는 것이 표준 워크플로우입니다. 드라이 보컬은 EQ Eight과 Compressor를 Bypass한 상태로 내보내야 믹싱 의뢰 시 원본 파일로 활용할 수 있으며, 내보내기 설정은 WAV 24bit/44100Hz가 기본입니다. Warp 기능은 타이밍 교정 외에도 보컬 멜로디를 BPM에 맞게 동기화하는 데 유용하지만, Complex Pro 모드는 CPU를 많이 소모하므로 최종 믹싱 이전 단계에서만 활용하는 것을 권장합니다.
 
-[Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [DAW 성능 최적화 가이드](/stories/daw-performance1)
+[Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [DAW 성능 최적화 가이드](/stories/daw-performance1) | [나에게 맞는 DAW 선택 가이드](/stories/daw-choice1)

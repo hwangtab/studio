@@ -128,4 +128,4 @@ inlineFallback:
 
 스튜디오 녹음 세션에서는 자연 음정 실력 70% 이상을 확보한 뒤 Melodyne으로 미세 교정하는 접근이 가장 자연스러운 결과물을 만들어 냅니다. 모니터 믹스(헤드폰으로 듣는 자신의 목소리)가 너무 크면 샤프, 너무 작으면 플랫 경향이 강화되므로, 세션 시작 전 엔지니어에게 자신의 목소리가 반주보다 약간 크게 들리도록 헤드폰 모니터를 조정해 달라고 요청하는 것만으로도 음정 안정도가 크게 높아집니다.
 
-[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 호흡 지지(Breath Support) 완전 가이드](/stories/breath-support1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [흉성 완전 가이드](/stories/chest-voice1)
+[보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 호흡 지지(Breath Support) 완전 가이드](/stories/breath-support1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [흉성 완전 가이드](/stories/chest-voice1) | [내 음역대 노래 키 찾기](/stories/song-key1)
