@@ -151,4 +151,4 @@ faq:
 
 어쿠스틱 기타 녹음은 공간과 마이크 선택이 핵심입니다. 좋은 룸 어쿠스틱은 후반 믹싱에서 고칠 수 없는 문제를 원천 차단하고, 12프렛 기준 30~45cm 거리의 표준 마이킹은 수십 년의 스튜디오 경험이 검증한 출발점입니다. 홈레코딩 환경이라면 카펫·소파·커튼이 많은 공간에서 마이크를 기타에 가까이 배치해 룸 반사음을 최소화하는 것만으로도 스튜디오에 근접한 클린한 소스를 얻을 수 있습니다.
 
-[기타 녹음 완전 가이드](/stories/guitar-recording1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [드럼 녹음 완전 가이드](/stories/drum-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [ASMR 녹음 완전 가이드](/stories/asmr1)
+[기타 녹음 완전 가이드](/stories/guitar-recording1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [드럼 녹음 완전 가이드](/stories/drum-recording1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [ASMR 녹음 완전 가이드](/stories/asmr1) | [커버 음원 녹음 가이드](/stories/cover1)

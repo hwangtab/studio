@@ -166,4 +166,4 @@ P·B·T 발음 시 살짝 마이크 옆으로 각도 조절
 
 컴핑 단계에서 "감정 최고 테이크"를 우선 선택하는 원칙은 기술적 완벽함보다 일관되게 중요합니다. 음정 ±50센트 이내의 피치는 Melodyne으로 수정 가능하고, 박자 편차도 DAW 그리드 스냅으로 교정 가능합니다. 그러나 감정의 강도와 뉘앙스는 후처리로 만들어낼 수 없습니다. 전체 풀 테이크를 세션 마지막에 한 번 더 녹음하는 것도 이 이유에서입니다 — 워밍업이 완전히 된 상태에서 나오는 마지막 테이크가 예상 밖으로 좋은 경우가 많습니다.
 
-[보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 레슨·코치 선택 완전 가이드](/stories/vocal-lesson1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음용 콘덴서 마이크 선택·추천](/stories/condenser-mic1)
+[보컬 녹음 세팅 완전 가이드](/stories/vocal-recording-setup1) | [보컬 레슨·코치 선택 완전 가이드](/stories/vocal-lesson1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음용 콘덴서 마이크 선택·추천](/stories/condenser-mic1) | [유튜브 커버 음원 제작 가이드](/stories/cover1)

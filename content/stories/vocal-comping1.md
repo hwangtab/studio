@@ -141,4 +141,4 @@ faq:
 
 콤핑 완료 후 경계 구간을 순서대로 재생하며 음색 일관성을 확인하는 단계가 중요합니다. 같은 보컬리스트라도 테이크마다 마이크 거리·방향이 미세하게 달라지면 음색 차이가 발생합니다. 이런 경우 클립 게인을 조정해 레벨을 맞추고, 구간 전환 부분에 EQ 오토메이션으로 음색을 보정하면 해결됩니다. Melodyne 피치 교정은 콤핑이 완전히 확정된 후 진행하는 것이 원칙이며, 콤핑 전에 피치를 교정하면 최선의 테이크를 선택하는 감각적 판단에 영향을 줍니다.
 
-[보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [보컬 브레스 처리 완전 가이드](/stories/vocal-breath1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1)
+[보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [보컬 브레스 처리 완전 가이드](/stories/vocal-breath1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 편집 완전 가이드](/stories/vocal-editing1) | [피치 수정 완전 가이드](/stories/pitch-correction1)

@@ -113,4 +113,4 @@ faq:
 
 1차 납품 파일을 받은 뒤 피드백을 작성할 때는 타임코드를 기준으로 기술하는 것이 수정 정확도를 높입니다. "1:15 부터 1:30 사이 보컬이 MR에 묻히는 느낌입니다"처럼 구간을 특정하면, 엔지니어가 해당 부분의 레벨·EQ·리버브 중 어느 요소를 조정해야 할지 빠르게 판단할 수 있습니다. 스포티파이나 유튜브 링크로 레퍼런스 곡을 공유할 때도 "2:30 코러스의 보컬 느낌처럼"이라고 타임코드와 함께 표기하면 방향 공유가 훨씬 명확해집니다.
 
-[보컬 녹음·믹싱 가격 완전 가이드](/stories/recording-price1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [마스터링이란?](/stories/mastering1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1)
+[보컬 녹음·믹싱 가격 완전 가이드](/stories/recording-price1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1) | [마스터링이란?](/stories/mastering1) | [지방에서 서울 녹음실 이용 가이드](/stories/nationwide1) | [커버곡 녹음 완전 가이드](/stories/cover1)

@@ -177,4 +177,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '베이스 옥타브': { slug: 'practice-room-bass-octave1', anchorText: '베이스 옥타브 주법 완전 가이드' },
   'DAW 퍼포먼스': { slug: 'daw-performance1', anchorText: 'DAW 퍼포먼스 최적화 가이드' },
   '스트리밍 데이터': { slug: 'music-analytics1', anchorText: '음악 스트리밍 데이터 분석 가이드' },
+  '5현 베이스': { slug: 'practice-room-bass-5string1', anchorText: '베이스 5현·저음 확장 완전 가이드' },
+  '피치 교정': { slug: 'pitch-correction1', anchorText: '피치 교정 완전 가이드' },
+  '커버곡 녹음': { slug: 'cover1', anchorText: '커버곡 녹음 완전 가이드' },
 };
