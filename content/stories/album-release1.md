@@ -169,4 +169,4 @@ faq:
 
 마스터링은 전 트랙의 음압·음색 통일성을 목표로 합니다. 트랙마다 다른 시기에 믹싱한 경우 마스터링 단계에서 앨범 전체가 자연스럽게 이어지도록 통일해야 합니다. KOMCA 저작권 등록은 발매 당일 이전에 완료하는 것이 원칙입니다. 등록 후 스트리밍 수익 분배가 시작되므로, 사후 등록 시 초기 스트리밍 수익에 대한 저작권료 청구가 복잡해질 수 있습니다.
 
-[음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [EP 발매 완전 가이드](/stories/ep-release1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1)
+[음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [EP 발매 완전 가이드](/stories/ep-release1) | [싱글 발매 완전 가이드](/stories/single-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [가수 데뷔 준비 완전 가이드](/stories/debut1)

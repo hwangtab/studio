@@ -143,4 +143,4 @@ howTo:
 
 DAW 게인 세팅에서 보컬 피크를 -12dBFS ~ -6dBFS로 유지하면 최대 볼륨 절규 시에도 클리핑 없이 헤드룸을 확보할 수 있습니다. 24bit/48kHz 설정이 표준이며, 녹음 트랙에 리버브나 이펙트를 직접 인서트하지 않고 헤드폰 모니터용 Aux 센드에만 사용하는 것이 중요합니다. 최종 파일은 [아티스트명]_[곡명]_vocal_dry.wav 형식으로 정리하고 MR 파일과 함께 전달하면 믹싱 의뢰 시 추가 작업 없이 바로 작업이 시작됩니다.
 
-[GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [마이크 테크닉 완전 가이드](/stories/mic-technique1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [마이크 테크닉 완전 가이드](/stories/mic-technique1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 디렉팅 완전 가이드](/stories/vocal-directing1)

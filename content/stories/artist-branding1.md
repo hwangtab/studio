@@ -161,4 +161,4 @@ faq:
 
 아티스트 브랜딩은 음악과 함께 지속적으로 발전하는 장기 전략입니다. 활동명·컬러·바이오·소셜미디어 프로필이 일관되게 정렬됐을 때 팬은 "아, 이 아티스트다"를 한 번에 인식합니다. 첫 EP를 발매하기 전에 이 브랜딩 요소들을 먼저 결정하면, 이후 모든 마케팅 활동의 일관성이 자동으로 확보됩니다. 브랜딩은 비용 없이도 시작할 수 있는 가장 효과적인 음악 마케팅 도구입니다.
 
-[뮤지션 브랜드 협업·스폰서십 완전 가이드](/stories/brand-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [EPK(전자 보도자료) 제작 가이드](/stories/epk1)
+[뮤지션 브랜드 협업·스폰서십 완전 가이드](/stories/brand-collab1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 SNS 마케팅 완전 가이드](/stories/music-sns1) | [플레이리스트 피칭 완전 가이드](/stories/playlist-pitch1) | [EPK(전자 보도자료) 제작 가이드](/stories/epk1) | [가수 데뷔 준비 완전 가이드](/stories/debut1)

@@ -194,4 +194,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '스트리밍 알고리즘': { slug: 'streaming-algorithm1', anchorText: '스트리밍 알고리즘 공략 가이드' },
   '리드시트': { slug: 'practice-room-piano-lead-sheet-improvisation1', anchorText: '피아노 리드시트 즉흥반주 가이드' },
   '리버브 종류': { slug: 'reverb-types1', anchorText: '리버브 종류 완전 가이드' },
+  '리버브 믹싱': { slug: 'reverb-mixing1', anchorText: '리버브 믹싱 완전 가이드' },
+  '멜리스마': { slug: 'practice-room-vocal-soul1', anchorText: 'R&B·소울 보컬 멜리스마 가이드' },
+  '보컬 디렉팅': { slug: 'vocal-directing1', anchorText: '보컬 디렉팅 완전 가이드' },
+  '가수 데뷔': { slug: 'debut1', anchorText: '가수 데뷔 준비 완전 가이드' },
 };

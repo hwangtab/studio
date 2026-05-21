@@ -197,4 +197,4 @@ Send 방식 리버브 버스를 활용해 여러 트랙이 동일한 리버브 �
 
 %%service:lesson%%
 
-[컴프레서 완전 가이드](/stories/compression-guide1) | [보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [리버브 종류 완전 가이드](/stories/reverb-types1)
+[컴프레서 완전 가이드](/stories/compression-guide1) | [보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1)
