@@ -212,4 +212,8 @@ export const topicLinks: Record<string, TopicLink> = {
   'EP 제작': { slug: 'ep-production1', anchorText: 'EP 제작 완전 가이드' },
   '카포 활용': { slug: 'practice-room-guitar-capo-techniques1', anchorText: '기타 카포 활용법 완전 가이드' },
   '헤드폰 모니터링': { slug: 'monitoring1', anchorText: '헤드폰 모니터링 완전 가이드' },
+  '음악 마케팅': { slug: 'music-marketing1', anchorText: '음악 마케팅 완전 가이드' },
+  '드럼 심벌': { slug: 'practice-room-drum-cymbal-techniques1', anchorText: '드럼 심벌 기법 완전 가이드' },
+  '흉성 공명': { slug: 'practice-room-vocal-resonance-chest1', anchorText: '흉성·두성 공명 배치 완전 가이드' },
+  '보컬 연습 루틴': { slug: 'practice-schedule1', anchorText: '보컬 연습 스케줄 완전 가이드' },
 };

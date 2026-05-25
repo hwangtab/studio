@@ -140,4 +140,4 @@ faq:
 
 계약서 검토는 음악 저작권 전문 변호사를 통해 진행하는 것이 필수입니다. 계약서 검토 시간 압박, 구두 약속만 하고 서면 수정 거부, 마케팅 예산 불명시는 레드플래그입니다. 독립 활동을 유지하면서도 레이블의 유통·마케팅 인프라를 활용하려면 배포 계약(Distribution Deal)이 가장 유연한 선택지이며, 첫 계약은 1~2년 단기로 성과를 검증한 뒤 재협상하는 전략이 권장됩니다.
 
-[인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약서 완전 가이드](/stories/contract1)
+[인디 레이블·자체 발매 완전 가이드](/stories/indie-label1) | [음악 퍼블리싱 완전 가이드](/stories/music-publishing1) | [음원 저작권 완전 가이드](/stories/copyright1) | [음악 계약서 완전 가이드](/stories/contract1) | [음악 마케팅 완전 가이드](/stories/music-marketing1)

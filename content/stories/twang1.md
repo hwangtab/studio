@@ -107,4 +107,4 @@ inlineFallback:
 
 트왕은 목소리 효율을 높이는 기술입니다. 처음에는 어색할 수 있지만 꾸준히 훈련하면 자연스럽게 음색에 녹아듭니다. 스튜디오 녹음을 통해 트왕 음색을 객관적으로 들어보고, 어떤 음역과 장르에서 가장 자연스럽게 활용할 수 있는지 파악하는 것이 이 기법을 빠르게 체득하는 가장 효율적인 방법입니다.
 
-[벨팅 발성법 완전 가이드](/stories/belting1) | [마스크 공명·보컬 포지션 가이드](/stories/placement1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [고음 내는 법 완전 가이드](/stories/highnote1)
+[벨팅 발성법 완전 가이드](/stories/belting1) | [마스크 공명·보컬 포지션 가이드](/stories/placement1) | [보컬 공명 훈련 완전 가이드](/stories/resonance1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [고음 내는 법 완전 가이드](/stories/highnote1) | [보컬 연습 스케줄 완전 가이드](/stories/practice-schedule1)
