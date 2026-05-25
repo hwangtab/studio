@@ -146,4 +146,4 @@ faq:
 
 어쿠스틱 기타 홈 레코딩에서 가장 흔한 문제는 룸 노이즈와 반사음입니다. 기타 연주자 주변에 두꺼운 담요나 흡음재를 배치하고, 에어컨·냉장고 소음이 없는 환경에서 녹음하는 것이 기본입니다. 소형 다이어프램 콘덴서 마이크(AKG C451, Rode NT5)는 어쿠스틱 기타의 고역 디테일과 어택을 잘 잡으며, 두 마이크를 12프렛 지향 XY 방식으로 배치하면 자연스러운 스테레오 어쿠스틱 사운드를 얻을 수 있습니다.
 
-[어쿠스틱 기타 녹음 완전 가이드](/stories/acoustic-recording1) | [앰프 시뮬레이터·DI 레코딩 완전 가이드](/stories/amp-simulator1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [커버곡 고음질 녹음 가이드](/stories/cover1) | [마이크 선택 완전 가이드](/stories/microphone-types1)
+[어쿠스틱 기타 녹음 완전 가이드](/stories/acoustic-recording1) | [앰프 시뮬레이터·DI 레코딩 완전 가이드](/stories/amp-simulator1) | [피아노 녹음 완전 가이드](/stories/piano-recording1) | [베이스 녹음 완전 가이드](/stories/bass-recording1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [커버곡 고음질 녹음 가이드](/stories/cover1) | [마이크 선택 완전 가이드](/stories/microphone-types1) | [기타 카포 활용법 완전 가이드](/stories/practice-room-guitar-capo-techniques1)

@@ -236,4 +236,4 @@ Em7: 0-2-2-0-3-0 (토닉 대체)
 
 어쿠스틱 기타에서 핑거피킹의 오른손 독립성을 키우는 것이 핵심 과제입니다. 엄지는 저음현, 검지·중지·약지는 고음현을 담당하는 기본 배치에서 시작해 점차 복잡한 아르페지오 패턴으로 발전합니다. 손가락 끝의 각도를 일정하게 유지하면 음량 균형이 자연스럽게 맞춰집니다. 스트러밍과 핑거피킹을 한 곡 안에서 자연스럽게 전환하는 능력을 키우면 표현 범위가 크게 확장됩니다. 카포를 활용해 다양한 키에서 같은 코드 보이싱을 연습하면 응용력이 빠르게 향상됩니다.
 
-[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)
+[재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1) | [기타 네오소울·코드 멜로디 기법 — 완전 가이드](/stories/practice-room-guitar-neo-soul1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1) | [기타 카포 활용법 완전 가이드](/stories/practice-room-guitar-capo-techniques1)

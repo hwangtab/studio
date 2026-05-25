@@ -208,4 +208,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '베이스 믹싱': { slug: 'bass-mixing1', anchorText: '베이스 믹싱 완전 가이드' },
   '보컬 컴프레서': { slug: 'vocal-compression1', anchorText: '보컬 컴프레서 완전 가이드' },
   '작곡법': { slug: 'songwriting1', anchorText: '초보자 작곡법 완전 가이드' },
+  '녹음 세팅': { slug: 'vocal-recording-setup1', anchorText: '보컬 녹음 세팅 완전 가이드' },
+  'EP 제작': { slug: 'ep-production1', anchorText: 'EP 제작 완전 가이드' },
+  '카포 활용': { slug: 'practice-room-guitar-capo-techniques1', anchorText: '기타 카포 활용법 완전 가이드' },
+  '헤드폰 모니터링': { slug: 'monitoring1', anchorText: '헤드폰 모니터링 완전 가이드' },
 };

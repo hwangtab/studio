@@ -192,4 +192,4 @@ B3-G3에서 C4-A3으로 슬라이드+밴드
 
 은평구 24시간 음악연습실에서 텔레캐스터 스타일 클린 사운드로 컨트리 기타 기법을 마스터하세요.
 
-[기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)
+[기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 카포 활용법 완전 가이드](/stories/practice-room-guitar-capo-techniques1)
