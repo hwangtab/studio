@@ -176,4 +176,4 @@ inlineFallback:
 
 음역 확장의 기대 수준은 현실적으로 설정해야 합니다. 6개월~1년의 집중 훈련으로 고음역 1~3반음 확장이 가능한 수준이며, "내가 원하는 음역까지 올릴 수 있다"보다 "현재 최고음을 안정적인 혼성으로 만든다"가 더 실용적인 목표입니다. 혼성이 완성되면 같은 음에서의 음색이 달라지고, 다음 반음을 올리는 것이 이전보다 훨씬 수월해집니다.
 
-[보컬 레슨·코치 선택 완전 가이드](/stories/vocal-lesson1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [음역대별 최적 키 설정 가이드](/stories/song-key1) | [고음 내는 법 완전 가이드](/stories/highnote1) | [보컬 연습 스케줄 완전 가이드](/stories/practice-schedule1)
+[보컬 레슨·코치 선택 완전 가이드](/stories/vocal-lesson1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [음역대별 최적 키 설정 가이드](/stories/song-key1) | [고음 내는 법 완전 가이드](/stories/highnote1) | [보컬 연습 스케줄 완전 가이드](/stories/practice-schedule1) | [믹스 보이스 완전 가이드](/stories/mixvoice1)
