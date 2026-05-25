@@ -158,4 +158,4 @@ Wet/Dry 비율
 
 리버브는 Aux 센드 방식(Send/Return)으로 처리하는 것이 인서트 방식보다 효율적입니다. 보컬·기타·피아노 등 여러 트랙이 같은 리버브 버스를 공유하면 공간이 통일돼 믹스가 자연스럽게 하나의 공간에 있는 것처럼 들리고, 개별 센드 양 조절로 각 악기의 공간 깊이를 정밀하게 제어할 수 있습니다. Pre-delay 10~30ms는 원음과 리버브 사이에 공백을 만들어 보컬 가사 전달력을 유지하면서도 공간감을 더하는 핵심 설정입니다.
 
-[코러스·플랜저·페이저 완전 가이드](/stories/chorus-effect1) | [리버브 믹싱 완전 가이드](/stories/reverb1) | [딜레이 효과 완전 가이드](/stories/delay1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [슬랩백·핑퐁·테이프 딜레이 차이](/stories/delay-types1)
+[코러스·플랜저·페이저 완전 가이드](/stories/chorus-effect1) | [리버브 믹싱 완전 가이드](/stories/reverb1) | [딜레이 효과 완전 가이드](/stories/delay1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [슬랩백·핑퐁·테이프 딜레이 차이](/stories/delay-types1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1)

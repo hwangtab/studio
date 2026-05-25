@@ -204,4 +204,8 @@ export const topicLinks: Record<string, TopicLink> = {
   '고음 발성': { slug: 'highnote1', anchorText: '고음 내는 법 완전 가이드' },
   '마이크 선택': { slug: 'microphone-types1', anchorText: '마이크 선택 완전 가이드' },
   '드럼 믹싱': { slug: 'drum-mixing1', anchorText: '드럼 믹싱 완전 가이드' },
+  '보컬 음역대': { slug: 'vocalrange1', anchorText: '보컬 음역대 확인 완전 가이드' },
+  '베이스 믹싱': { slug: 'bass-mixing1', anchorText: '베이스 믹싱 완전 가이드' },
+  '보컬 컴프레서': { slug: 'vocal-compression1', anchorText: '보컬 컴프레서 완전 가이드' },
+  '작곡법': { slug: 'songwriting1', anchorText: '초보자 작곡법 완전 가이드' },
 };

@@ -167,4 +167,4 @@ inlineFallback:
 
 가장 효과적인 학습 도구는 자신의 래핑을 매일 녹음해 가사 보며 다시 듣는 것입니다. 불분명한 음절을 목록으로 정리하고 그 음절만 집중 반복 훈련하는 방식이 전체를 반복하는 것보다 훨씬 효율적입니다. 스튜디오 녹음 의뢰 시에는 이펙트 없는 드라이 보컬 WAV 파일과 원하는 딜레이·리버브 레퍼런스 곡을 함께 제시하면 엔지니어와 빠르게 소통할 수 있습니다.
 
-[K-pop 보컬 완전 가이드](/stories/kpop-vocal1) | [록 보컬 완전 가이드](/stories/rock-vocal1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [비트메이킹 완전 가이드](/stories/beatmaking1)
+[K-pop 보컬 완전 가이드](/stories/kpop-vocal1) | [록 보컬 완전 가이드](/stories/rock-vocal1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [비트메이킹 완전 가이드](/stories/beatmaking1) | [보컬 음역대 확인 완전 가이드](/stories/vocalrange1)

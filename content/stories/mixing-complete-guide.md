@@ -273,4 +273,4 @@ faq:
 
 ---
 
-[DAW 선택 가이드](/stories/daw-choice1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [방음·흡음 가이드](/stories/acoustic-treatment1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1)
+[DAW 선택 가이드](/stories/daw-choice1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [방음·흡음 가이드](/stories/acoustic-treatment1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [스템 믹싱 완전 가이드](/stories/stem-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1)

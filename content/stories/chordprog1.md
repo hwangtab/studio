@@ -120,4 +120,4 @@ inlineFallback:
 
 좋아하는 노래 5곡의 코드 진행을 분석해보면 대부분 이 가이드에서 소개한 6가지 패턴 안에 있다는 것을 발견하게 됩니다. 팝 음악에서 코드 진행의 "클리셰"가 오히려 강점인 이유는 익숙한 진행이 청중의 감정 반응을 예측 가능하게 만들기 때문입니다. 코드 자체보다 리듬(스트러밍 패턴), 악기 편성(신스 패드·스트링·기타), 멜로디 방향이 진행의 감정적 느낌을 더 크게 좌우합니다. 같은 I-V-vi-IV 진행이 아이유의 발라드와 NewJeans의 팝에서 완전히 다르게 들리는 이유가 바로 이 세 가지 요소의 차이입니다.
 
-[코드 진행 완전 가이드](/stories/chord-progression1) | [노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [악기 없이 작곡하는 방법](/stories/compose1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [채보 기초 가이드](/stories/transcription1)
+[코드 진행 완전 가이드](/stories/chord-progression1) | [노래 구조(송 폼) 완전 가이드](/stories/songstructure1) | [악기 없이 작곡하는 방법](/stories/compose1) | [비트 메이킹 입문 가이드](/stories/beatmaking1) | [채보 기초 가이드](/stories/transcription1) | [초보자 작곡법 완전 가이드](/stories/songwriting1)

@@ -169,4 +169,4 @@ faq:
 
 음악 비즈니스의 핵심은 좋은 음악을 꾸준히 발표하는 것이지만, 그 음악이 지속되려면 경제적 기반이 필요합니다. 스트리밍 단 하나의 수입원에 의존하지 않고, 자신의 전문성과 팬 규모에 맞는 여러 수입원을 조합하는 포트폴리오형 접근이 현대 인디 뮤지션에게 가장 현실적인 전략입니다.
 
-[음악 수익 완전 가이드](/stories/music-income1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [뮤지션 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [뮤직비디오 제작 가이드](/stories/music-video1) | [가수 데뷔 준비 완전 가이드](/stories/debut1)
+[음악 수익 완전 가이드](/stories/music-income1) | [음악 마케팅 완전 가이드](/stories/music-marketing1) | [음악 배급·유통 완전 가이드](/stories/music-distribution1) | [뮤지션 크라우드펀딩 완전 가이드](/stories/music-crowdfunding1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [뮤직비디오 제작 가이드](/stories/music-video1) | [가수 데뷔 준비 완전 가이드](/stories/debut1) | [초보자 작곡법 완전 가이드](/stories/songwriting1)

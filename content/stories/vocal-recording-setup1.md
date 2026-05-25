@@ -142,4 +142,4 @@ faq:
 
 마이크 세팅을 변경했을 때 변화를 객관적으로 평가하는 가장 효과적인 방법은 A/B 비교입니다. 같은 구절을 세팅 A(현재)와 세팅 B(변경 후)로 각각 녹음하고 DAW에서 같은 레벨로 맞춘 뒤 교대로 들어보면 차이가 명확해집니다. 마이크 각도를 10~20도 조정하거나 거리를 5cm 바꾸는 것만으로도 치찰음 강도와 저음 배음이 달라지기 때문에, 최적의 세팅을 찾는 과정에서 이 비교 청취 습관이 장비 투자보다 더 큰 효과를 냅니다.
 
-[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 마이크 완전 가이드](/stories/microphone1) | [보컬 녹음 마이크 추천 가이드](/stories/vocal-microphone1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 가격 결정 요인](/stories/pricing1) | [ASMR 사운드 녹음 가이드](/stories/asmr1) | [보컬 디렉팅 완전 가이드](/stories/vocal-directing1)
+[보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 마이크 완전 가이드](/stories/microphone1) | [보컬 녹음 마이크 추천 가이드](/stories/vocal-microphone1) | [오디오 인터페이스 완전 가이드](/stories/audio-interface1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [보컬 녹음 가격 결정 요인](/stories/pricing1) | [ASMR 사운드 녹음 가이드](/stories/asmr1) | [보컬 디렉팅 완전 가이드](/stories/vocal-directing1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1)
