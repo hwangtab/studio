@@ -149,4 +149,4 @@ faq:
 
 더블 트래킹 위상 교정은 두 트랙을 파형 뷰에서 확인해 시작점을 정렬하는 것이 첫 단계입니다. 한 트랙의 위상 반전 버튼(Ø)을 토글하면서 모노로 더 풍성하게 들리는 상태를 선택합니다. 위상 문제가 의심되는데 육안으로 정렬이 안 될 때는 Little Labs IBP나 Waves InPhase 같은 위상 정렬 플러그인이 샘플 단위의 미세 조정을 가능하게 합니다.
 
-[미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹스 다운 완전 가이드](/stories/mixdown1)
+[미드사이드(MS) 처리 완전 가이드](/stories/mid-side1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [믹스 다운 완전 가이드](/stories/mixdown1) | [스트리밍 음압(LUFS) 완전 가이드](/stories/loudness1)

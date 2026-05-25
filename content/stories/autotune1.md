@@ -137,4 +137,4 @@ T-Pain, 오토튠 랩 스타일을 원한다면:
 
 피치 교정은 좋은 녹음을 완성하는 마지막 단계입니다. 자연스러운 교정의 핵심은 Retune Speed 설정으로, 80~120ms 속도에서 음정 이탈 부분만 교정하면 인간적인 피치 변동이 유지되면서 음정 안정성을 확보할 수 있습니다. 반면 Retune Speed를 0~5ms로 설정하면 T-Pain 스타일의 로봇 이펙트가 만들어집니다. 피치 교정이 효과적으로 작동하려면 녹음 단계에서 리버브·딜레이 등 이펙트 없이 드라이 보컬로 녹음하는 것이 필수입니다. 이미 리버브가 적용된 파일은 피치 교정 알고리즘이 잔향을 음표로 인식해 오작동을 일으킵니다. 좋은 퍼포먼스를 더 완성도 있게 만드는 것이 피치 교정의 본래 역할이며, 리듬 이탈·딕션 문제·감정 표현의 부재는 반드시 재녹음으로 해결해야 합니다.
 
-[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [힙합 보컬·플로우 완전 가이드](/stories/hiphop-vocal1)
+[피치 교정 완전 가이드](/stories/pitch-correction1) | [멜로다인 완전 가이드](/stories/melodyne1) | [보컬 믹싱 기초 가이드](/stories/vocal-mixing1) | [믹싱·마스터링 완전 가이드](/stories/mixing1) | [힙합 보컬·플로우 완전 가이드](/stories/hiphop-vocal1) | [스트리밍 음압(LUFS) 완전 가이드](/stories/loudness1)

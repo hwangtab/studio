@@ -216,4 +216,5 @@ export const topicLinks: Record<string, TopicLink> = {
   '드럼 심벌': { slug: 'practice-room-drum-cymbal-techniques1', anchorText: '드럼 심벌 기법 완전 가이드' },
   '흉성 공명': { slug: 'practice-room-vocal-resonance-chest1', anchorText: '흉성·두성 공명 배치 완전 가이드' },
   '보컬 연습 루틴': { slug: 'practice-schedule1', anchorText: '보컬 연습 스케줄 완전 가이드' },
+  '샘플링 제작': { slug: 'sampling-guide1', anchorText: '샘플링 음악 제작 가이드' },
 };

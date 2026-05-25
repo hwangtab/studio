@@ -171,4 +171,4 @@ SNS 포트폴리오 구축은 가장 현대적이고 효율적인 세션 마케�
 
 세션 뮤지션의 성공 방정식은 실력(50%) + 신뢰(30%) + 포트폴리오(20%)입니다. 아무리 실력이 뛰어나도 신뢰를 잃으면 재의뢰가 없고, 신뢰가 있어도 포트폴리오로 실력을 증명하지 못하면 새로운 클라이언트를 만나기 어렵습니다. 세 가지를 균형 있게 발전시키는 것이 지속 가능한 세션 커리어의 핵심입니다.
 
-[밴드 편성·세션 구성 완전 가이드](/stories/band-arrangement1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 에티켓 완전 가이드](/stories/studio-etiquette1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1)
+[밴드 편성·세션 구성 완전 가이드](/stories/band-arrangement1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [스튜디오 에티켓 완전 가이드](/stories/studio-etiquette1) | [K-POP 보컬 녹음 완전 가이드](/stories/kpop-vocal1) | [샘플링 음악 제작 가이드](/stories/sampling-guide1)

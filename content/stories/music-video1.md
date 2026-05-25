@@ -151,4 +151,4 @@ faq:
 
 유튜브 업로드 시 썸네일은 얼굴 클로즈업과 곡명 텍스트 조합이 CTR(클릭률)을 높이는 가장 효과적인 방식입니다. 제목은 `"[아티스트명] - [곡명] (Official Music Video)"` 형식으로 검색 최적화하고, 설명란에 가사·크레딧·음원 링크·SNS 링크를 모두 삽입합니다. 인스타그램 릴스·틱톡용 세로형 15~30초 하이라이트 클립을 동시에 편집해두면 발매 직후 멀티플랫폼 노출을 극대화할 수 있습니다.
 
-[EP 제작 완전 가이드](/stories/ep-making1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [홈 레코딩 완전 가이드](/stories/home-recording1)
+[EP 제작 완전 가이드](/stories/ep-making1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [싱어송라이터 1인 음반 제작 가이드](/stories/singer-songwriter1) | [작곡·작사 실전 가이드](/stories/songwriting1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [스트리밍 수익 계산 가이드](/stories/revenue1)
