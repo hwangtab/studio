@@ -116,4 +116,4 @@ Mix 20~40% = 패럴렐 효과와 동일
 
 보컬에 적용할 때는 옵토 타입 컴프레서(UA LA-2A, 1176 전자관 모드)를 GR -10dB 내외로 설정하고 Mix 20% 내외로 블렌딩하면 작은 음절이 자연스럽게 끌어올려집니다. 패럴렐 채널 레벨을 너무 높이면 웨트 신호가 원본을 압도해 뭉글한 사운드가 되므로, 블렌딩 후 반드시 모노 버튼으로 전환해 두 신호의 위상 상쇄 여부를 확인하는 것이 필수 단계입니다.
 
-[사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [새추레이션 완전 가이드](/stories/saturation1) | [컴프레서 완전 가이드](/stories/compress1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [LA-2A 클래식 컴프레서 가이드](/stories/la2a1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1)
+[사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [새추레이션 완전 가이드](/stories/saturation1) | [컴프레서 완전 가이드](/stories/compress1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [LA-2A 클래식 컴프레서 가이드](/stories/la2a1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1)

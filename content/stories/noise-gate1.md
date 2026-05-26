@@ -176,4 +176,4 @@ Hold 파라미터는 게이트가 열린 상태를 유지하는 시간으로, �
 
 보컬 처리에는 완전 차단 게이트보다 Ratio 2:1~4:1의 익스팬더가 자연스러운 결과를 만들며, FabFilter Pro-G처럼 익스팬더 모드를 지원하는 플러그인이 보컬·어쿠스틱 악기에 적합합니다. Threshold를 설정할 때 노이즈 레벨보다 3~6dB 높게 잡는 원칙을 지키면서 실제 음악이 재생되는 상태에서 GR 미터가 의도한 구간에서만 반응하는지 확인하는 것이 올바른 설정 절차입니다.
 
-[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [컴프레서 완전 가이드](/stories/compress1) | [사이드체인 완전 가이드](/stories/sidechain1)
+[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [컴프레서 완전 가이드](/stories/compress1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [사이드체인 완전 가이드](/stories/sidechain1)
