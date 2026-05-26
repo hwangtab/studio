@@ -173,4 +173,4 @@ K팝 보컬은 기술과 감정, 퍼포먼스가 모두 통합된 분야입니�
 
 K팝 스튜디오 녹음에서 '드라이 보컬'을 요구하는 이유는 프로듀서가 이펙트를 나중에 자유롭게 설계하기 위해서입니다. 보컬리스트가 리버브가 많은 헤드폰 믹스를 듣고 부드럽게 노래하면 드라이 녹음 파일에서는 긴장감이 없고 에너지가 빠진 것처럼 들립니다. 헤드폰 큐 믹스에서 리버브를 최소화하고 자신의 목소리를 직접적으로 들으며 에너지 레벨을 조정하는 연습이 스튜디오 보컬 세션의 효율을 높이는 방법입니다.
 
-[K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1)
+[K팝 보컬 완전 가이드](/stories/kpop-vocal1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [R&B 보컬 완전 가이드](/stories/rnb-vocal1) | [K팝 연습생 준비 완전 가이드](/stories/kpop-trainee1)
