@@ -45,6 +45,7 @@ export const topicLinks: Record<string, TopicLink> = {
   // ─── 믹싱 & 마스터링 ───
   '믹싱 강좌': { slug: 'mixing-complete-guide', anchorText: '믹싱 완전 가이드 — 23편 로드맵' },
   '믹싱 로드맵': { slug: 'mixing-complete-guide', anchorText: '믹싱 학습 로드맵' },
+  '보컬 믹싱': { slug: 'vocal-mixing1', anchorText: '보컬 믹싱 완전 가이드' },
   '보컬 EQ': { slug: 'eq-guide1', anchorText: '보컬 EQ 가이드' },
   '컴프레서 설정': { slug: 'compression-guide1', anchorText: '컴프레서 완전 가이드' },
   '디에서': { slug: 'de-esser1', anchorText: '디에서(De-esser) 가이드' },
