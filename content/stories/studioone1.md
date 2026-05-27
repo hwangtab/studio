@@ -13,8 +13,7 @@ tags:
   - Studio One 컴프레서
 thumbnail: /images/studio5.webp
 summary: >-
-  Studio One 보컬 녹음 완전 가이드입니다. Studio One 기본 설정·오디오 트랙 생성 및 녹음·Pro EQ 설정·Pro
-  Compressor 설정·레이어 녹음 (Take Lane)·파일 내보내기 (Export Mixdown)까지 정리합니다.
+  Studio One 보컬 녹음 완전 가이드입니다.
 faq:
   - q: Studio One으로 보컬 녹음이 가능한가요?
     a: >-

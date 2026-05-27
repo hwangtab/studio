@@ -13,7 +13,7 @@ tags:
   - 보컬 믹싱 디에서
 thumbnail: /images/hardware5.webp
 summary: >-
-  보컬 디에서(De-esser) 설정법은 Split 방식과 Wideband 방식 중 보컬 특성에 맞는 처리법을 선택하고 5~8kHz 치찰음 주파수를 제어하는 과정입니다. 두 방식의 음색 차이, 장르별 설정 수치, 컴프레서 후단 배치 이유를 정리합니다.
+  보컬 디에서(De-esser) 설정법은 Split 방식과 Wideband 방식 중 보컬 특성에 맞는 처리법을 선택하고 5~8kHz 치찰음 주파…
 faq:
   - q: 디에서(De-esser)가 필요한 이유는 무엇인가요?
     a: >-

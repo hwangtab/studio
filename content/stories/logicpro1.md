@@ -13,8 +13,7 @@ tags:
   - Logic Pro 컴프레서
 thumbnail: /images/room8.webp
 summary: >-
-  Logic Pro 보컬 녹음 완전 가이드입니다. Logic Pro 기본 설정·오디오 트랙 생성 및 녹음·Logic Pro Channel EQ
-  설정·Logic Pro 컴프레서 설정·Flex Pitch — 내장 피치 교정·파일 내보내기 (Bounce)까지 정리합니다.
+  Logic Pro 보컬 녹음 완전 가이드입니다.
 faq:
   - q: Logic Pro로 고퀄리티 보컬 녹음이 가능한가요?
     a: >-

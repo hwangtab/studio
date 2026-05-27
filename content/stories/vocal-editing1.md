@@ -13,7 +13,7 @@ tags:
   - 멜로다인
 thumbnail: /images/recording2.webp
 summary: >-
-  보컬 편집 완전 가이드입니다. 컴핑(Comping), 피치 수정(Melodyne·Auto-Tune), 타이밍 교정(워프), 브레스 처리, 팝 노이즈 클리닝 방법을 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다.
+  보컬 편집 완전 가이드입니다.
 faq:
   - q: 보컬 컴핑(Comping)이란 무엇인가요?
     a: >-

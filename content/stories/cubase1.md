@@ -13,8 +13,7 @@ tags:
   - Cubase 컴프레서
 thumbnail: /images/recording6.webp
 summary: >-
-  Cubase 보컬 녹음 완전 가이드입니다. Cubase 기본 설정·오디오 트랙 생성 및 녹음·Channel EQ 설정·Compressor
-  설정·VariAudio — 내장 피치 교정·파일 내보내기 (Export)까지 정리합니다.
+  Cubase 보컬 녹음 완전 가이드입니다.
 faq:
   - q: Cubase로 보컬 녹음이 가능한가요?
     a: >-

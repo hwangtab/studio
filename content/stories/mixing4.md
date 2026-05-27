@@ -10,7 +10,7 @@ tags:
   - SampleRate
   - BitDepth
 summary: >-
-  샘플레이트·비트뎁스란 디지털 오디오의 해상도를 결정하는 두 핵심 설정입니다. 44.1kHz vs 48kHz 샘플레이트 선택 기준, 16bit vs 24bit 비트뎁스 차이, 홈레코딩 최적 설정을 정리합니다.
+  샘플레이트·비트뎁스란 디지털 오디오의 해상도를 결정하는 두 핵심 설정입니다.
 thumbnail: /images/hardware4.webp
 faq:
   - q: 샘플레이트 44.1kHz와 48kHz 중 어떤 것을 선택해야 하나요?

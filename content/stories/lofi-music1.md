@@ -13,7 +13,7 @@ tags:
   - Lo-Fi 마스터링
 thumbnail: /images/pcw.webp
 summary: >-
-  Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi 사운드의 핵심 요소·Lo-Fi 비트 제작 방법·Lo-Fi 믹싱·마스터링·Lo-Fi 음악으로 수익 창출까지 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리합니다.
+  Lo-Fi 음악 제작 완전 가이드입니다. Lo-Fi 사운드의 핵심 요소·Lo-Fi 비트 제작 방법·Lo-Fi 믹싱·마스터링·Lo-Fi 음악으로…
 faq:
   - q: Lo-Fi 음악이란 무엇인가요?
     a: >-

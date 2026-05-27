@@ -13,7 +13,7 @@ tags:
   - 오디오 버퍼
 thumbnail: /images/recording11.webp
 summary: >-
-  DAW가 느리거나 끊길 때 CPU·레이턴시·버퍼 사이즈 설정으로 최적화하는 방법을 정리합니다. 트랙 프리징·바운싱으로 CPU 절약, 오디오 인터페이스 버퍼 설정, Logic·Ableton·FL Studio·Reaper DAW별 퍼포먼스 팁을 단계별로 안내합니다.
+  DAW가 느리거나 끊길 때 CPU·레이턴시·버퍼 사이즈 설정으로 최적화하는 방법을 정리합니다.
 faq:
   - q: DAW에서 CPU 과부하가 발생하는 이유는?
     a: >-

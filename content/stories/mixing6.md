@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "미터링", "Metering", "Loudness"]
 summary: >-
-  미터링(Metering)이란 오디오 신호 레벨을 측정·모니터링하는 기술입니다. VU미터(평균 레벨)·피크미터(순간 최대치)·LUFS 미터(스트리밍 음압 기준) 차이와 믹싱·마스터링에서 각 미터를 언제·어떻게 읽어야 하는지 정리합니다.
+  미터링(Metering)이란 오디오 신호 레벨을 측정·모니터링하는 기술입니다.
 thumbnail: "/images/recording1.webp"
 faq:
   - q: "LUFS란 무엇이고 왜 중요한가요?"

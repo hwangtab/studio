@@ -13,7 +13,7 @@ tags:
   - 보컬 믹싱
 thumbnail: /images/hardware2.webp
 summary: >-
-  보컬 녹음 후 음정 교정에 사용하는 Melodyne과 Auto-Tune의 차이와 사용 기준을 정리합니다. 자연스러운 피치 교정부터 로봇 보컬 효과까지, 각 도구의 활용법과 한계를 설명합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
+  보컬 녹음 후 음정 교정에 사용하는 Melodyne과 Auto-Tune의 차이와 사용 기준을 정리합니다.
 faq:
   - q: Melodyne과 Auto-Tune의 차이는 무엇인가요?
     a: >-

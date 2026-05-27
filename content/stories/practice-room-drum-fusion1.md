@@ -24,7 +24,7 @@ faq:
     a: >-
       방음 개인실에서 소음 걱정 없이 충분한 볼륨으로 연습할 수 있습니다. 스튜디오 놀은 24시간 사용 가능한 전용 음악연습실을 월 36만원(보증금 0)에 임대 제공합니다.
 summary: >-
-  퓨전 드럼·Weather Report·Vinnie Colaiuta·Dave Weckl·폴리리듬·복잡한 퓨전 그루브. 퓨전 드럼을 은평구 24시간 음악연습실에서 마스터. 은평구 연신내 24시간 음악연습실에서 드럼 킷 풀세트로 실전 연습하세요.
+  퓨전 드럼·Weather Report·Vinnie Colaiuta·Dave Weckl·폴리리듬·복잡한 퓨전 그루브.
 ---
 ![퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 음악연습실 스튜디오 놀](/images/room1.webp)
 

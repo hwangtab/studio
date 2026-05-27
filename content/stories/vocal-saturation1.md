@@ -13,7 +13,7 @@ tags:
   - 보컬 믹싱
 thumbnail: /images/recording16.webp
 summary: >-
-  보컬 새추레이션(Saturation)이란 하모닉 디스토션을 이용해 보컬에 두께감과 존재감을 더하는 처리 기법입니다. Tape·Tube·Transformer 타입별 음색 차이, 보컬 체인에서 올바른 배치 위치, 과도한 적용 시 주의사항을 정리합니다.
+  보컬 새추레이션(Saturation)이란 하모닉 디스토션을 이용해 보컬에 두께감과 존재감을 더하는 처리 기법입니다.
 faq:
   - q: 보컬에 새추레이션을 사용하는 이유는?
     a: >-

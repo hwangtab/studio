@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "위상", "Phase", "DrumMixing"]
 summary: >-
-  위상(Phase) 문제가 믹스에 미치는 영향과 해결법. 드럼 멀티마이킹, 보컬 더블 트래킹에서 자주 발생하는 위상 충돌 원인과 체크 방법을 설명합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
+  위상(Phase) 문제가 믹스에 미치는 영향과 해결법.
 thumbnail: "/images/recording4.webp"
 faq:
   - q: "위상(Phase) 문제란 무엇인가요?"

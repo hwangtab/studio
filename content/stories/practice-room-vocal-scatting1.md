@@ -12,7 +12,7 @@ category: 악기 연습
 author: 스튜디오 놀
 thumbnail: /images/room3.webp
 summary: >-
-  스캣(Scat)이란 가사 없이 즉흥적인 음절(doo·wah·bah)로 멜로디를 부르는 재즈 보컬 기법입니다. Ella Fitzgerald 스타일의 음절 선택, 코드 톤 타겟팅, 단계별 즉흥 훈련법을 정리합니다.
+  스캣(Scat)이란 가사 없이 즉흥적인 음절(doo·wah·bah)로 멜로디를 부르는 재즈 보컬 기법입니다.
 faq:
   - q: 보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

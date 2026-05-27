@@ -25,7 +25,7 @@ faq:
     a: >-
       방음 개인실에서 소음 걱정 없이 충분한 볼륨으로 연습할 수 있습니다. 스튜디오 놀은 24시간 사용 가능한 전용 음악연습실을 월 36만원(보증금 0)에 임대 제공합니다.
 summary: >-
-  수학록 기타·폴리리듬·7박자·Animals as Leaders·Tosin Abasi 스타일. 수학록 기타를 은평구 24시간 음악연습실에서 마스터. 은평구 연신내 24시간 음악연습실에서 기타 앰프와 방음 환경으로 실전 연습하세요.
+  수학록 기타·폴리리듬·7박자·Animals as Leaders·Tosin Abasi 스타일.
 ---
 ![수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일 음악연습실 스튜디오 놀](/images/room5.webp)
 

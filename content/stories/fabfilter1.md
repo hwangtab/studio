@@ -13,8 +13,7 @@ tags:
   - 다이나믹 EQ
 thumbnail: /images/recording6.webp
 summary: >-
-  FabFilter Pro-Q3 완전 가이드입니다. EQ 밴드 타입 및 파라미터·보컬 EQ 실전 설정·Spectrum Analyzer
-  활용·Collision Detection (주파수 충돌 감지)·다이나믹 EQ 활용까지 정리합니다.
+  FabFilter Pro-Q3 완전 가이드입니다.
 faq:
   - q: FabFilter Pro-Q3란 무엇인가요?
     a: >-

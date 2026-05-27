@@ -13,7 +13,7 @@ tags:
   - FLAC 비교
 thumbnail: /images/recording14.webp
 summary: >-
-  오디오 파일 형식이란 음악·녹음 데이터를 저장하는 방식으로, WAV·MP3·FLAC이 대표적입니다. 무손실·손실 압축 차이, 홈 레코딩·음원 발매·유튜브·SNS 상황별 선택 기준을 정리합니다.
+  오디오 파일 형식이란 음악·녹음 데이터를 저장하는 방식으로, WAV·MP3·FLAC이 대표적입니다.
 faq:
   - q: MP3와 WAV 중 어느 것이 음질이 더 좋나요?
     a: >-

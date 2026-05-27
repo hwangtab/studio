@@ -13,8 +13,7 @@ tags:
   - EDM 보컬 녹음
 thumbnail: /images/studio1.webp
 summary: >-
-  FL Studio 보컬 녹음 완전 가이드입니다. FL Studio 기본 설정·Edison으로 보컬 녹음·Playlist 오디오 클립
-  녹음·Parametric EQ 2 설정·Fruity Compressor 설정·파일 내보내기 (Export)까지 정리합니다.
+  FL Studio 보컬 녹음 완전 가이드입니다.
 faq:
   - q: FL Studio로 보컬 녹음이 가능한가요?
     a: >-

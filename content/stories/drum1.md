@@ -13,7 +13,7 @@ tags:
   - 드럼 믹싱
 thumbnail: /images/recording17.webp
 summary: >-
-  드럼 녹음은 밴드 레코딩의 핵심입니다. 전자드럼 홈 녹음 방법, 어쿠스틱 드럼 마이킹 기초, 드럼 샘플 활용법, 전문 스튜디오 드럼 세션 준비까지 정리합니다. John Bonham의 Led Zeppelin 드럼 사운드부터 EZdrummer VSTi까지 실전 경험을 바탕으로 안내합니다.
+  드럼 녹음은 밴드 레코딩의 핵심입니다.
 faq:
   - q: 집에서 드럼을 녹음할 수 있나요?
     a: >-

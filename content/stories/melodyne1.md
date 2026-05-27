@@ -13,7 +13,7 @@ tags:
   - 피치 보정 플러그인
 thumbnail: /images/hardware8.webp
 summary: >-
-  Melodyne 보컬 피치 교정 완전 가이드입니다. Melodyne 버전 비교, 기본 조작 (노트 이동·피치 센터·Formant), ARA2 DAW 통합 사용법, 자연스러운 교정 팁을 정리합니다. 스튜디오 놀 엔지니어의 실무 경험을 바탕으로 홈레코딩 환경에서 바로 적용할 수 있도록 정리했습니다.
+  Melodyne 보컬 피치 교정 완전 가이드입니다.
 faq:
   - q: Melodyne이란 무엇인가요?
     a: >-

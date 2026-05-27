@@ -13,8 +13,7 @@ tags:
   - 음악 마케팅 데이터
 thumbnail: /images/service6.webp
 summary: >-
-  음악 스트리밍 데이터 분석 완전 가이드입니다. Spotify for Artists 분석·Apple Music for Artists
-  분석·YouTube Analytics 분석·멜론·지니 아티스트 포털 분석·데이터 기반 마케팅 전략까지 정리합니다.
+  음악 스트리밍 데이터 분석 완전 가이드입니다.
 faq:
   - q: Spotify for Artists는 어떻게 사용하나요?
     a: >-

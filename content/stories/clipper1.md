@@ -13,7 +13,7 @@ tags:
   - 마스터링 클리퍼
 thumbnail: /images/service2.webp
 summary: >-
-  클리퍼(Clipper)란 오디오 피크를 제한해 음압을 높이는 마스터링 도구입니다. 소프트 클리핑·하드 클리핑의 음질 차이, 리미터와의 역할 구분, True Peak 설정 기준을 정리합니다.
+  클리퍼(Clipper)란 오디오 피크를 제한해 음압을 높이는 마스터링 도구입니다.
 faq:
   - q: 클리핑(Clipping)이란 무엇인가요?
     a: >-

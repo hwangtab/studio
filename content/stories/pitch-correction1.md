@@ -13,7 +13,7 @@ tags:
   - Antares Auto-Tune
 thumbnail: /images/hardware8.webp
 summary: >-
-  피치 교정 완전 가이드입니다. 오토튠(Auto-Tune)과 멜로다인(Melodyne)의 차이와 사용법, 자연스러운 피치 교정 방법, K팝 보컬 피치 수정 기법, 과도한 교정의 문제점을 정리합니다. 홈레코딩 환경에서도 바로 적용할 수 있는 실전 팁을 단계별로 정리합니다.
+  피치 교정 완전 가이드입니다. 오토튠(Auto-Tune)과 멜로다인(Melodyne)의 차이와 사용법, 자연스러운 피치 교정 방법, K팝 보컬…
 faq:
   - q: 오토튠과 멜로다인의 차이는 무엇인가요?
     a: >-

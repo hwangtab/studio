@@ -13,7 +13,7 @@ tags:
 - 레이블 제출
 thumbnail: /images/recording16.webp
 summary: >-
-  EPK(Electronic Press Kit)란 레이블·미디어·기획사에 제출하는 아티스트 디지털 홍보 자료입니다. 바이오·음원 샘플·공연 이력 등 5가지 필수 요소, 무료 제작 방법, 제출 시 주의사항을 정리합니다.
+  EPK(Electronic Press Kit)란 레이블·미디어·기획사에 제출하는 아티스트 디지털 홍보 자료입니다.
 faq:
 - q: EPK가 무엇인가요?
   a: EPK(Electronic Press Kit)는 아티스트를 미디어·레이블·공연 기획사에 소개하는 디지털 홍보 자료입니다. 아티스트 바이오, 음원 샘플, 사진, 공연 이력, 연락처를 하나의 문서나 링크로 정리합니다. 과거의 종이 프레스킷이 디지털화된 형태입니다.
