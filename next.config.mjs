@@ -74,6 +74,16 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/stories/song-structure1',
+        destination: '/:locale/stories/songstructure1',
+        permanent: true,
+      },
+    ];
+  },
+
   async rewrites() {
     return [
       { source: '/llms.txt', destination: '/api/llms' },
