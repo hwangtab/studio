@@ -1,5 +1,5 @@
 ---
-title: LA-2A 컴프레서 완전 가이드 — 클래식 Optical 컴프레서 활용법
+title: LA-2A·LA2A 컴프레서 완전 가이드 — Optical 컴프레서 원리와 보컬 믹싱 세팅
 date: 2026-04-07
 author: 스튜디오 놀
 category: 믹싱·마스터링
