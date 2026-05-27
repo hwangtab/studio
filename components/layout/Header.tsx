@@ -34,6 +34,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         { label: t('nav.equipment'), href: `/${locale}/studio-info` },
         { label: t('nav.weddingSong'), href: `/${locale}/wedding-song` },
         { label: t('nav.voiceActing'), href: `/${locale}/voice-acting` },
+        { label: t('nav.coverVideo'), href: `/${locale}/cover-video` },
       ]
     },
     {

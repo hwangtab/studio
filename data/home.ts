@@ -57,6 +57,12 @@ const homeData = {
         link: '/practice-room',
         icon: 'Music',
       },
+      {
+        title: '커버 영상 촬영',
+        description: '촬영 + 음원 녹음 + 믹싱 + 편집까지 올인원. 4K 영상과 WAV·MP3를 한 세션에 완성하세요.',
+        link: '/cover-video',
+        icon: 'Video',
+      },
     ],
     studioImages: [
       {
@@ -136,6 +142,12 @@ const homeData = {
         description: '24/7 fully soundproof practice room — overnight stays welcome. Vocal, piano & keyboard ready. Monthly residency from ₩360K — the most affordable in Eunpyeong-gu.',
         link: '/practice-room',
         icon: 'Music',
+      },
+      {
+        title: 'Cover Video Filming',
+        description: 'Filming + recording + mixing + editing all in one. Get your 4K video and WAV/MP3 in a single 3-hour session.',
+        link: '/cover-video',
+        icon: 'Video',
       },
     ],
     studioImages: [
@@ -227,6 +239,12 @@ const homeData = {
         link: '/practice-room',
         icon: 'Music',
       },
+      {
+        title: '翻唱视频拍摄',
+        description: '拍摄+录音+混音+剪辑一站式。一次3小时完成4K视频与WAV·MP3。',
+        link: '/cover-video',
+        icon: 'Video',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.webp`, alt: "录音室" },
@@ -316,6 +334,12 @@ const homeData = {
         description: 'Sala de práctica 24/7 completamente insonorizada — pernocta permitida. Voz, piano y teclado incluidos. Residencia mensual desde 360.000 KRW — la más accesible de Eunpyeong-gu.',
         link: '/practice-room',
         icon: 'Music',
+      },
+      {
+        title: 'Grabación de Video Cover',
+        description: 'Filmación + grabación + mezcla + edición todo en uno. Video 4K y WAV/MP3 en una sola sesión de 3 horas.',
+        link: '/cover-video',
+        icon: 'Video',
       },
     ],
     studioImages: [
@@ -407,6 +431,12 @@ const homeData = {
         link: '/practice-room',
         icon: 'Music',
       },
+      {
+        title: 'Quay Video Cover',
+        description: 'Quay phim + thu âm + mix + dựng phim trọn gói. Video 4K và WAV/MP3 trong một buổi 3 giờ.',
+        link: '/cover-video',
+        icon: 'Video',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.webp`, alt: "Phòng thu với loa kiểm âm và bàn điều khiển" },
@@ -497,6 +527,12 @@ const homeData = {
         link: '/practice-room',
         icon: 'Music',
       },
+      {
+        title: 'ถ่ายวิดีโอ Cover',
+        description: 'ถ่ายทำ + อัดเสียง + มิกซ์ + ตัดต่อครบวงจร วิดีโอ 4K และ WAV/MP3 ในเซสชันเดียว 3 ชั่วโมง',
+        link: '/cover-video',
+        icon: 'Video',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.webp`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
@@ -586,6 +622,12 @@ const homeData = {
         description: "24/7 to'liq ovoz izolyatsiyali mashg'ulot xonasi — tunab qolish mumkin. Vokal, pianino, klaviatura mavjud. Oylik ijara 360,000 KRW'dan — Eunpyeong-gu'dagi eng qulay narx.",
         link: '/practice-room',
         icon: 'Music',
+      },
+      {
+        title: "Cover video suratga olish",
+        description: "Suratga olish + yozuv + miks + montaj bitta paketda. 3 soatlik bitta seansda 4K video va WAV/MP3.",
+        link: '/cover-video',
+        icon: 'Video',
       },
     ],
     studioImages: [

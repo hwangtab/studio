@@ -15,7 +15,8 @@ export type BuyerIntentHubSlug =
   | 'wedding-song-singing'
   | 'audiobook-asmr-getting-started'
   | 'home-recording-survival'
-  | 'vocal-beginners-guide';
+  | 'vocal-beginners-guide'
+  | 'cover-video-production';
 
 export interface BuyerIntentHubQuickAnswer {
   q: string;
@@ -377,6 +378,74 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     portfolioCategory: 'single',
     primaryServiceLink: 'lesson',
     secondaryServiceLink: 'contact',
+  },
+
+  'cover-video-production': {
+    slug: 'cover-video-production',
+    seoTitle: '커버 영상 촬영·제작 — 기획부터 유튜브 업로드까지',
+    seoDescription:
+      '노래 커버 영상을 처음 만드는 분을 위한 한 페이지 가이드. 선곡·의상·촬영 세팅부터 음원 믹싱, 4K 편집, 유튜브·SNS 업로드까지 단계별로 정리했습니다.',
+    keywords:
+      '커버 영상 촬영, 노래 커버 동영상, 커버곡 영상 제작, 유튜브 커버 영상, SNS 커버 영상, 커버 음원 녹음, 스튜디오 커버 촬영',
+    hero: {
+      title: '커버 영상,',
+      titleHighlight: '처음부터 완성까지',
+      subtitle:
+        '선곡·의상·촬영 세팅부터 음원 믹싱, 4K 편집, 유튜브·SNS 업로드까지 한 번에 정리했습니다.',
+      image: '/images/hardware3.webp',
+      imageAlt: '스튜디오 커버 영상 촬영 세팅',
+    },
+    intro:
+      '유튜브·인스타그램·틱톡에 커버 영상을 올리고 싶지만 어디서 시작해야 할지 막막한 분이 많습니다. 촬영 공간, 음원 품질, 편집 퀄리티 — 셋 중 하나라도 아쉬우면 시청자가 이탈합니다. 스튜디오 놀의 커버 영상 올인원 패키지는 촬영·음원 녹음·믹싱·편집을 한 번에 해결합니다. 이 페이지는 처음 커버 영상을 준비하는 분이 알아야 할 모든 가이드를 한 곳에 모은 색인입니다.',
+    forWhom: [
+      {
+        title: '유튜브·인스타·틱톡에 커버 영상을 올리고 싶은 분',
+        description: '4K 촬영 + 믹싱 음원 + 편집까지 원스톱으로 해결합니다.',
+      },
+      {
+        title: '홈 촬영 품질에 한계를 느끼는 분',
+        description: '전문 스튜디오 조명·카메라·방음 환경에서 촬영 퀄리티를 한 단계 끌어올립니다.',
+      },
+      {
+        title: '음원과 영상을 따로 외주 맡기기 번거로운 분',
+        description: '촬영·녹음·믹싱·영상 편집을 한 팀이 담당해 납품까지 한 번에 끝납니다.',
+      },
+    ],
+    quickAnswers: [
+      {
+        q: '악기 연주 없이 보컬만 촬영해도 되나요?',
+        a: '가능합니다. MR 위에 보컬만 올리는 방식이 가장 일반적입니다. MR을 직접 가져오거나 스튜디오에서 MR 선정을 도와드립니다.',
+      },
+      {
+        q: '비용은 얼마인가요?',
+        a: '커버 영상 촬영 올인원 패키지는 350,000원(VAT 별도)입니다. 촬영·작업 3시간 기준 1곡이며, 4K MP4 영상 + WAV·MP3 음원을 제공합니다.',
+      },
+      {
+        q: '저작권 처리는 어떻게 하나요?',
+        a: '커버곡을 유튜브에 업로드하면 Content ID로 원저작자에게 수익이 귀속됩니다. 상업적 사용이 필요한 경우 한국음악저작권협회(KMCA) 신청을 안내해 드립니다.',
+      },
+      {
+        q: '의상·소품은 직접 준비해야 하나요?',
+        a: '의상·소품은 직접 가져오시면 됩니다. 스튜디오 배경·조명 세팅은 촬영 전 함께 협의합니다.',
+      },
+      {
+        q: '결과물은 어떤 포맷으로 받나요?',
+        a: '4K MP4 영상 파일과 WAV(무손실)·MP3 음원 파일 3종을 함께 드립니다. 유튜브·릴스·틱톡 바로 업로드 가능한 형태로 납품합니다.',
+      },
+    ],
+    relatedStorySlugs: [
+      'cover1',
+      'music-video1',
+      'practice-room-video-audition1',
+      'youtube-music-channel1',
+      'vocal-recording-guide1',
+      'copyright-cover1',
+      'practice-room-yeonsinnae1',
+    ],
+    pricingPackageId: 'package-cover-video',
+    portfolioCategory: 'single',
+    primaryServiceLink: 'cover-video',
+    secondaryServiceLink: 'pricing',
   },
 };
 

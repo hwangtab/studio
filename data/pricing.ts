@@ -332,6 +332,32 @@ export const getPricingData = (locale: Locale) => {
       }),
     },
     {
+      id: 'package-cover-video',
+      title: t(locale, { ko: '커버 영상 촬영 올인원 패키지', en: 'Cover Video All-in-One Package', zh: '翻唱视频一站式套餐', es: 'Paquete Todo en Uno para Video Cover', vi: 'Gói Trọn Gói Quay Video Cover', th: 'แพ็กเกจ Cover Video ครบวงจร', uz: 'Cover Video All-in-One paketi' }),
+      priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
+      priceValue: 350000,
+      unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
+      description: t(locale, {
+        ko: '커버 영상 촬영과 음원 작업을 한 번에 — 촬영·믹싱·편집 올인원 패키지입니다.',
+        en: 'Cover video filming and audio production in one session — filming, mixing, and editing all included.',
+        zh: '翻唱视频拍摄与音源制作一次完成——拍摄、混音、剪辑一站式套餐。',
+        es: 'Filmación de video cover y producción de audio en una sesión — filmación, mezcla y edición incluidas.',
+        vi: 'Quay video cover và sản xuất âm nhạc trong một buổi — quay phim, mix và chỉnh sửa đều được bao gồm.',
+        th: 'ถ่ายวิดีโอ cover และงานเสียงในครั้งเดียว — ถ่ายทำ มิกซ์ และตัดต่อครบในแพ็กเกจเดียว',
+        uz: 'Cover video suratga olish va audio ishlab chiqarish bitta seansda — suratga olish, miks va montaj kiritilgan.'
+      }),
+      recommended: true,
+      features: tArray(locale, {
+        ko: ['촬영 + 작업 3시간 기준 (1곡)', '4K 카메라 1대 촬영 + 조명 포함', '전문 믹싱 포함', '4K MP4 영상 + WAV·MP3 제공'],
+        en: ['3-hour session (1 song)', '4K camera + lighting included', 'Professional mixing included', '4K MP4 video + WAV & MP3 delivered'],
+        zh: ['3小时拍摄+制作基准（1首）', '含4K摄像机1台+灯光', '含专业混音', '交付4K MP4视频+WAV·MP3'],
+        es: ['Sesión de 3 horas (1 canción)', 'Cámara 4K + iluminación incluida', 'Mezcla profesional incluida', 'Entrega de video 4K MP4 + WAV y MP3'],
+        vi: ['Buổi 3 giờ (1 bài)', 'Camera 4K + đèn chiếu sáng', 'Mix chuyên nghiệp', 'Giao 4K MP4 + WAV & MP3'],
+        th: ['เซสชัน 3 ชั่วโมง (1 เพลง)', 'กล้อง 4K 1 ตัว + แสง', 'มิกซ์มืออาชีพ', 'ส่งวิดีโอ 4K MP4 + WAV & MP3'],
+        uz: ['3 soatlik seans (1 qo\'shiq)', '4K kamera (1 ta) + yoritish', 'Professional miks kiritilgan', '4K MP4 video + WAV & MP3 taqdim etiladi']
+      }),
+    },
+    {
       id: 'package-rental',
       title: t(locale, { ko: '유튜브/방송 촬영 대관', en: 'Studio Rental for Filming', zh: 'YouTube/广播拍摄租赁', es: 'Alquiler de Estudio para Filmación', vi: 'Thuê studio quay phim', th: 'เช่าสตูดิโอถ่ายทำ', uz: 'Suratga olish uchun studiya ijarasi' }),
       priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),

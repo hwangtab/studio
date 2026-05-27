@@ -46,6 +46,7 @@ const pageImageMap = {
   '/studio-info': { url: '/images/og-hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
   '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
   '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩100K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
+  '/cover-video': { url: '/images/og-hardware3.webp', title: 'Studio NOL Cover Video Package - ₩350K', caption: 'Cover video filming + recording + mixing all-in-one at Studio NOL, Yeonsinnae.' },
 };
 
 const buildStoryImage = (slug, locale) => {
@@ -257,7 +258,7 @@ module.exports = {
       return { ...entry, changefreq: 'weekly', priority: 0.8 };
     }
 
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|lesson)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 

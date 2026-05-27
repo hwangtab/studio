@@ -16,7 +16,8 @@
       "explore": "Batafsil"
     },
     "weddingSong": "To'y qo'shig'i",
-    "voiceActing": "Ovoz yozish"
+    "voiceActing": "Ovoz yozish",
+    "coverVideo": "Cover video suratga olish"
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",
@@ -1150,5 +1151,80 @@
       "inquiry": "Yozuvni band qilish",
       "imageAlt": "Studio NOL ovoz yozish jihozlari"
     }
+  },
+  "coverVideo": {
+    "seo": {
+      "title": "Cover video suratga olish · 4K video + audio to'liq paket ₩350K | Studio NOL",
+      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (VATsiz).",
+      "keywords": "cover video suratga olish, cover qo'shiq, youtube cover video, musiqa studiyasi Seul, Yeonsinnae"
+    },
+    "hero": {
+      "title": "O'zingizning Cover Videongizni Yarating",
+      "subtitleLine1": "Suratga olishdan miks va montajgacha — maxsus muhandis bilan to'liq paket",
+      "subtitleLine2": "4K video + yuqori sifatli WAV & MP3 taqdim etiladi",
+      "alt": "Studio NOL cover video suratga olish seansi"
+    },
+    "quickAnswers": {
+      "title": "Cover Video FAQ Xulosasi",
+      "subtitle": "Eng ko'p so'raladigan savollarni avval ko'ring.",
+      "items": [
+        { "q": "Suratga olish va yozishni bir vaqtda qilish mumkinmi?", "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, miks va montaj kiritilgan." },
+        { "q": "Narxi qancha?", "a": "1 ta qo'shiq, 3 soatlik to'liq paket ₩350,000 (VATsiz). 4K video, WAV va MP3 kiritilgan." },
+        { "q": "Fayllarni qachon olaman?", "a": "Montaj tugagandan so'ng odatda 3–5 kun ichida." }
+      ]
+    },
+    "audience": {
+      "title": "Kim Uchun",
+      "items": [
+        { "title": "YouTube / SNS Kreatorlar", "description": "Professional cover videolar bilan auditoriyangizni kengaytiring." },
+        { "title": "Audition Ishtirokchilari", "description": "Audition uchun kuchli video portfolio yarating." },
+        { "title": "Havaskor Musiqachilar", "description": "Sevimli qo'shiqlaringizni video sifatida abadiy saqlang." },
+        { "title": "Indie Badiiylar", "description": "Rasmiy chiqishdan oldin reklama cover videosini yarating." }
+      ]
+    },
+    "environment": {
+      "title": "Suratga Olish Muhiti",
+      "imageAlt": "Studio NOL cover video suratga olish muhiti",
+      "features": [
+        "Neumann U87AI yuqori darajadagi mikrofon — aniq va boy vokal yozuvi",
+        "4K kamera (1 ta) + doimiy yoritish to'plami",
+        "To'liq tovush o'tkazmaydigan kabina — mukammal audio sifati",
+        "Maxsus muhandis suratga olish, yozuv & miksni boshidan oxirigacha amalga oshiradi"
+      ]
+    },
+    "package": { "title": "Cover Video To'liq Paketi" },
+    "process": {
+      "title": "Ish Tartibi",
+      "subtitle": "Cover videongiz 4 bosqichda",
+      "steps": [
+        { "title": "Maslahat & Qo'shiq Tanlash", "description": "KakaoTalk yoki telefon orqali qo'shiq va jadval tanlanadi." },
+        { "title": "Yozuv & Suratga Olish", "description": "Vokal yozuvi va 4K kamera suratga olish tovush o'tkazmaydigan kabinada bir vaqtda amalga oshiriladi." },
+        { "title": "Miks & Montaj", "description": "Vokal tuning, miks va video montaj birgalikda yakunlanadi." },
+        { "title": "Yakuniy Topshirish", "description": "4K MP4 video, WAV va MP3 to'liq paket sifatida taqdim etiladi." }
+      ]
+    },
+    "faq": {
+      "title": "Cover Video FAQ",
+      "subtitle": "Cover video xizmati haqida tez-tez so'raladigan savollar.",
+      "items": [
+        { "q": "Kamera va yoritish studiyada mavjudmi?", "a": "Ha. 4K kamera va doimiy yoritish kiritilgan. O'z jihozingizni olib kelishingiz shart emas." },
+        { "q": "MR (jo'r bo'lish treki) olib kelish kerakmi?", "a": "Ha, MR faylingizni olib keling. Maxsus MR ishlab chiqarish ham mavjud — maslahat vaqtida aytib qo'ying." },
+        { "q": "Suratga olish foni qanday?", "a": "Studiya ichidagi makondan foydalanamiz. O'zingiz xohlagan muhitni maslahat vaqtida aytib qo'ying." },
+        { "q": "Montaj uslubini tanlash mumkinmi?", "a": "Asosiy montaj (kesish, sarlavhalar, rang tuzatish) kiritilgan. Maxsus talablar maslahatda muhokama qilinadi." },
+        { "q": "3 soat yetarli bo'lmasa nima bo'ladi?", "a": "Qo'shimcha vaqt standart soatlik tarif bo'yicha hisoblanadi. 1 soat qo'shimcha rezerv qilishni tavsiya etamiz." },
+        { "q": "Guruh yoki duet suratga olish mumkinmi?", "a": "Ha, kichik guruhlar ham xush kelibsiz. Vaqt guruh hajmiga qarab farq qilishi mumkin — oldindan maslahat so'rang." }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Sizning cover videongiz,",
+      "titleHighlight": "hoziroq yarating",
+      "subtitleLine1": "Suratga olish · Yozuv · Miks · Montaj To'liq Paket",
+      "subtitleLine2": "KakaoTalk orqali osonlik bilan band qiling.",
+      "location": "Yo'nalish",
+      "inquiry": "Cover Video Seansini Band Qilish",
+      "imageAlt": "Studio NOL cover video suratga olish seansi"
+    },
+    "relatedStoriesTitle": "Cover Video Ishlab Chiqarish Qo'llanmalari",
+    "relatedStoriesSubtitle": "YouTube yoki SNS uchun cover videoni rejalashtirish, suratga olish va montaj qilish bo'yicha amaliy qo'llanmalar."
   }
 }

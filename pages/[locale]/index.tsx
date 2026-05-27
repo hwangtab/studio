@@ -3,7 +3,7 @@ import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap } from 'lucide-react';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap, Video } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -35,6 +35,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Music,
   Upload,
   GraduationCap,
+  Video,
 };
 
 interface HomeProps {

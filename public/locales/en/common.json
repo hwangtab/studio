@@ -16,7 +16,8 @@
       "explore": "Explore"
     },
     "weddingSong": "Wedding Song",
-    "voiceActing": "Voice Acting"
+    "voiceActing": "Voice Acting",
+    "coverVideo": "Cover Video"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -1195,5 +1196,133 @@
       "title": "Audiobook · ASMR · Narration — Complete Guide",
       "subtitle": "From script to recording, editing, mastering, and distribution — start here."
     }
+  },
+  "coverVideo": {
+    "seo": {
+      "title": "Cover Video Recording Studio · 4K Video + Audio All-in-One ₩350K | Studio NOL",
+      "description": "5 min walk from Yeonsinnae Station exit 4. Cover song video filming + mixing in one session. 4K MP4 + WAV/MP3 included. All-in-one package ₩350,000 (excl. VAT).",
+      "keywords": "cover video recording, cover song studio, youtube cover video, music cover filming, 4k cover video studio, cover recording Seoul, Yeonsinnae recording studio"
+    },
+    "hero": {
+      "title": "Create Your Own Cover Video",
+      "subtitleLine1": "From filming to mixing & editing — an all-in-one package with a dedicated engineer",
+      "subtitleLine2": "Delivered as 4K video + high-quality WAV & MP3",
+      "alt": "Studio NOL cover video filming session"
+    },
+    "quickAnswers": {
+      "title": "Cover Video FAQ Summary",
+      "subtitle": "Check the most common questions first.",
+      "items": [
+        {
+          "q": "Can I film and record at the same time?",
+          "a": "Yes. Studio recording and video filming happen simultaneously in one session. Filming, mixing, and editing are all included."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "₩350,000 (excl. VAT) for a 1-song, 3-hour all-in-one package. Includes 4K video, WAV and MP3."
+        },
+        {
+          "q": "When will I receive my files?",
+          "a": "Typically within 3–5 days after the editing is complete."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Who This Is For",
+      "items": [
+        {
+          "title": "YouTube / SNS Creators",
+          "description": "Grow your audience with professional-quality cover videos."
+        },
+        {
+          "title": "Audition Applicants",
+          "description": "Build a strong video portfolio for auditions."
+        },
+        {
+          "title": "Hobby Musicians",
+          "description": "Preserve your favorite songs on film as a lasting memory."
+        },
+        {
+          "title": "Indie Artists",
+          "description": "Create promo cover videos before your official release."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Our Filming Environment",
+      "imageAlt": "Studio NOL cover video filming setup",
+      "features": [
+        "High-end Neumann U87AI microphone for clear, rich vocal capture",
+        "4K camera (1 unit) + continuous lighting setup included",
+        "Fully soundproofed booth for pristine audio quality",
+        "Dedicated engineer handles filming, recording & mixing end-to-end"
+      ]
+    },
+    "package": {
+      "title": "Cover Video All-in-One Package"
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Your cover video in 4 steps",
+      "steps": [
+        {
+          "title": "Consultation & Song Selection",
+          "description": "Choose your song and schedule via KakaoTalk or phone."
+        },
+        {
+          "title": "Recording & Filming",
+          "description": "Vocal recording and 4K camera filming happen simultaneously in the soundproofed booth."
+        },
+        {
+          "title": "Mixing & Editing",
+          "description": "Vocal tuning, mixing, and video editing are completed together."
+        },
+        {
+          "title": "Final Delivery",
+          "description": "Receive your 4K MP4 video, WAV, and MP3 files as a complete package."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Cover Video FAQ",
+      "subtitle": "Frequently asked questions about our cover video service.",
+      "items": [
+        {
+          "q": "Is camera and lighting equipment provided?",
+          "a": "Yes. A 4K camera and continuous lighting are included. No need to bring your own equipment."
+        },
+        {
+          "q": "Do I need to bring my own backing track (MR)?",
+          "a": "Yes, please bring your MR file. Custom MR production is also available — just let us know during consultation."
+        },
+        {
+          "q": "What does the filming background look like?",
+          "a": "We use the studio interior. Let us know your preferred atmosphere and we'll prepare accordingly."
+        },
+        {
+          "q": "Can I choose the editing style?",
+          "a": "Basic editing (cut editing, titles, color grading) is included. Specific requests can be discussed during consultation."
+        },
+        {
+          "q": "What if 3 hours isn't enough?",
+          "a": "Extra time is billed at the standard hourly rate. We recommend allowing an extra hour as a buffer."
+        },
+        {
+          "q": "Can groups or duets be filmed?",
+          "a": "Yes, small groups are welcome. Timing may vary by group size — please consult before booking."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Your cover video,",
+      "titleHighlight": "let's create it now",
+      "subtitleLine1": "Filming · Recording · Mixing · Editing All-in-One",
+      "subtitleLine2": "Book easily via KakaoTalk.",
+      "location": "Get Directions",
+      "inquiry": "Book a Cover Video Session",
+      "imageAlt": "Studio NOL cover video filming session"
+    },
+    "relatedStoriesTitle": "Cover Video Production Guides",
+    "relatedStoriesSubtitle": "Practical guides for planning, filming, and editing your YouTube or SNS cover video."
   }
 }
