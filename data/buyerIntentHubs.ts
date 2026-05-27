@@ -392,7 +392,7 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
       titleHighlight: '처음부터 완성까지',
       subtitle:
         '선곡·의상·촬영 세팅부터 음원 믹싱, 4K 편집, 유튜브·SNS 업로드까지 한 번에 정리했습니다.',
-      image: '/images/hardware3.webp',
+      image: '/images/recording2.webp',
       imageAlt: '스튜디오 커버 영상 촬영 세팅',
     },
     intro:
