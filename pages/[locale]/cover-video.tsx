@@ -208,7 +208,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
             {t('coverVideo.hero.subtitleLine2')}
           </>
         }
-        backgroundImage="/images/recording2.webp"
+        backgroundImage="/images/recording1.webp"
         imageAlt={t('coverVideo.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
@@ -257,7 +257,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
               className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group"
             >
               <ResponsiveImage
-                src="/images/recording1.webp"
+                src="/images/recording2.webp"
                 alt={t('coverVideo.environment.imageAlt')}
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 pictureClassName="block h-full"
@@ -417,7 +417,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
               {t('coverVideo.cta.subtitleLine2')}
             </>
           }
-          imageSrc="/images/recording1.webp"
+          imageSrc="/images/recording2.webp"
           imageAlt={t('coverVideo.cta.imageAlt')}
           primaryButtonLabel={t('coverVideo.cta.inquiry')}
           secondaryButtonLabel={t('coverVideo.cta.location')}
