@@ -1162,7 +1162,7 @@
     },
     "hero": {
       "title": "Tạo Video Cover Của Riêng Bạn",
-      "subtitleLine1": "Từ quay phim đến mix & dựng phim — gói trọn gói với kỹ sư chuyên trách",
+      "subtitleLine1": "Gói trọn gói từ quay phim đến dựng phim",
       "subtitleLine2": "Giao video 4K + WAV & MP3 chất lượng cao",
       "alt": "Buổi quay video cover tại Studio NOL"
     },
@@ -1170,18 +1170,39 @@
       "title": "Tóm Tắt FAQ Video Cover",
       "subtitle": "Kiểm tra các câu hỏi phổ biến nhất trước.",
       "items": [
-        { "q": "Có thể quay và thu âm cùng lúc không?", "a": "Có. Thu âm và quay video diễn ra đồng thời trong một buổi. Quay phim, mix và dựng phim đều được bao gồm." },
-        { "q": "Chi phí là bao nhiêu?", "a": "₩350,000 (chưa VAT) cho gói trọn gói 1 bài, 3 giờ. Bao gồm video 4K, WAV và MP3." },
-        { "q": "Khi nào nhận được file?", "a": "Thường trong vòng 3–5 ngày sau khi dựng xong." }
+        {
+          "q": "Có thể quay và thu âm cùng lúc không?",
+          "a": "Có. Thu âm và quay video diễn ra đồng thời trong một buổi. Quay phim, mix và dựng phim đều được bao gồm."
+        },
+        {
+          "q": "Chi phí là bao nhiêu?",
+          "a": "₩350,000 (chưa VAT) cho gói trọn gói 1 bài, 3 giờ. Bao gồm video 4K, WAV và MP3."
+        },
+        {
+          "q": "Khi nào nhận được file?",
+          "a": "Thường trong vòng 3–5 ngày sau khi dựng xong."
+        }
       ]
     },
     "audience": {
       "title": "Dành Cho Ai",
       "items": [
-        { "title": "Creators YouTube / SNS", "description": "Phát triển kênh với video cover chất lượng chuyên nghiệp." },
-        { "title": "Thí Sinh Audition", "description": "Xây dựng portfolio video ấn tượng cho audition." },
-        { "title": "Nhạc Sĩ Nghiệp Dư", "description": "Lưu giữ bài hát yêu thích bằng video như kỷ niệm lâu dài." },
-        { "title": "Nghệ Sĩ Indie", "description": "Tạo video cover quảng bá trước khi phát hành chính thức." }
+        {
+          "title": "Creators YouTube / SNS",
+          "description": "Phát triển kênh với video cover chất lượng chuyên nghiệp."
+        },
+        {
+          "title": "Thí Sinh Audition",
+          "description": "Xây dựng portfolio video ấn tượng cho audition."
+        },
+        {
+          "title": "Nhạc Sĩ Nghiệp Dư",
+          "description": "Lưu giữ bài hát yêu thích bằng video như kỷ niệm lâu dài."
+        },
+        {
+          "title": "Nghệ Sĩ Indie",
+          "description": "Tạo video cover quảng bá trước khi phát hành chính thức."
+        }
       ]
     },
     "environment": {
@@ -1194,27 +1215,59 @@
         "Kỹ sư chuyên trách xử lý quay, thu âm & mix từ đầu đến cuối"
       ]
     },
-    "package": { "title": "Gói Trọn Gói Video Cover" },
+    "package": {
+      "title": "Gói Trọn Gói Video Cover"
+    },
     "process": {
       "title": "Quy Trình",
       "subtitle": "Video cover của bạn trong 4 bước",
       "steps": [
-        { "title": "Tư Vấn & Chọn Bài", "description": "Chọn bài hát và lịch qua KakaoTalk hoặc điện thoại." },
-        { "title": "Thu Âm & Quay Phim", "description": "Thu âm vocal và quay camera 4K diễn ra đồng thời trong phòng cách âm." },
-        { "title": "Mix & Dựng Phim", "description": "Chỉnh giọng, mix và dựng video hoàn thành cùng nhau." },
-        { "title": "Giao Hàng Cuối Cùng", "description": "Nhận video 4K MP4, WAV và MP3 dưới dạng gói hoàn chỉnh." }
+        {
+          "title": "Tư Vấn & Chọn Bài",
+          "description": "Chọn bài hát và lịch qua KakaoTalk hoặc điện thoại."
+        },
+        {
+          "title": "Thu Âm & Quay Phim",
+          "description": "Thu âm vocal và quay camera 4K diễn ra đồng thời trong phòng cách âm."
+        },
+        {
+          "title": "Mix & Dựng Phim",
+          "description": "Chỉnh giọng, mix và dựng video hoàn thành cùng nhau."
+        },
+        {
+          "title": "Giao Hàng Cuối Cùng",
+          "description": "Nhận video 4K MP4, WAV và MP3 dưới dạng gói hoàn chỉnh."
+        }
       ]
     },
     "faq": {
       "title": "FAQ Video Cover",
       "subtitle": "Các câu hỏi thường gặp về dịch vụ video cover.",
       "items": [
-        { "q": "Camera và đèn có sẵn tại phòng thu không?", "a": "Có. Camera 4K và đèn chiếu sáng liên tục đều được cung cấp. Không cần mang thiết bị." },
-        { "q": "Có cần mang MR (nhạc nền) không?", "a": "Có, hãy mang file MR của bạn. Sản xuất MR tùy chỉnh cũng có thể thực hiện khi tư vấn." },
-        { "q": "Phông nền quay như thế nào?", "a": "Chúng tôi sử dụng không gian nội thất phòng thu. Hãy cho biết phong cách bạn muốn khi tư vấn." },
-        { "q": "Có thể chọn phong cách dựng phim không?", "a": "Dựng phim cơ bản (cắt cảnh, phụ đề, chỉnh màu) đã bao gồm. Yêu cầu đặc biệt có thể thảo luận trước." },
-        { "q": "Nếu 3 giờ không đủ thì sao?", "a": "Thời gian thêm được tính theo giá giờ tiêu chuẩn. Chúng tôi khuyến nghị đặt thêm 1 giờ dự phòng." },
-        { "q": "Có thể quay nhóm hoặc song ca không?", "a": "Có, nhóm nhỏ đều được chào đón. Thời gian có thể thay đổi theo số lượng người." }
+        {
+          "q": "Camera và đèn có sẵn tại phòng thu không?",
+          "a": "Có. Camera 4K và đèn chiếu sáng liên tục đều được cung cấp. Không cần mang thiết bị."
+        },
+        {
+          "q": "Có cần mang MR (nhạc nền) không?",
+          "a": "Có, hãy mang file MR của bạn. Sản xuất MR tùy chỉnh cũng có thể thực hiện khi tư vấn."
+        },
+        {
+          "q": "Phông nền quay như thế nào?",
+          "a": "Chúng tôi sử dụng không gian nội thất phòng thu. Hãy cho biết phong cách bạn muốn khi tư vấn."
+        },
+        {
+          "q": "Có thể chọn phong cách dựng phim không?",
+          "a": "Dựng phim cơ bản (cắt cảnh, phụ đề, chỉnh màu) đã bao gồm. Yêu cầu đặc biệt có thể thảo luận trước."
+        },
+        {
+          "q": "Nếu 3 giờ không đủ thì sao?",
+          "a": "Thời gian thêm được tính theo giá giờ tiêu chuẩn. Chúng tôi khuyến nghị đặt thêm 1 giờ dự phòng."
+        },
+        {
+          "q": "Có thể quay nhóm hoặc song ca không?",
+          "a": "Có, nhóm nhỏ đều được chào đón. Thời gian có thể thay đổi theo số lượng người."
+        }
       ]
     },
     "cta": {

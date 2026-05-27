@@ -1162,7 +1162,7 @@
     },
     "hero": {
       "title": "Crea Tu Propio Video Cover",
-      "subtitleLine1": "Desde la filmación hasta la mezcla y edición — paquete todo en uno con ingeniero dedicado",
+      "subtitleLine1": "Paquete todo en uno, de filmación a edición",
       "subtitleLine2": "Entregado como video 4K + WAV y MP3 de alta calidad",
       "alt": "Sesión de filmación de video cover en Studio NOL"
     },
@@ -1170,18 +1170,39 @@
       "title": "Resumen FAQ Video Cover",
       "subtitle": "Revisa las preguntas más frecuentes.",
       "items": [
-        { "q": "¿Puedo filmar y grabar al mismo tiempo?", "a": "Sí. La grabación en estudio y la filmación de video ocurren simultáneamente. Filmación, mezcla y edición están incluidas." },
-        { "q": "¿Cuánto cuesta?", "a": "₩350,000 (sin IVA) por un paquete todo en uno de 1 canción y 3 horas. Incluye video 4K, WAV y MP3." },
-        { "q": "¿Cuándo recibiré mis archivos?", "a": "Normalmente dentro de 3–5 días después de completar la edición." }
+        {
+          "q": "¿Puedo filmar y grabar al mismo tiempo?",
+          "a": "Sí. La grabación en estudio y la filmación de video ocurren simultáneamente. Filmación, mezcla y edición están incluidas."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "₩350,000 (sin IVA) por un paquete todo en uno de 1 canción y 3 horas. Incluye video 4K, WAV y MP3."
+        },
+        {
+          "q": "¿Cuándo recibiré mis archivos?",
+          "a": "Normalmente dentro de 3–5 días después de completar la edición."
+        }
       ]
     },
     "audience": {
       "title": "¿Para Quién Es?",
       "items": [
-        { "title": "Creadores YouTube / SNS", "description": "Haz crecer tu audiencia con videos cover de calidad profesional." },
-        { "title": "Aspirantes a Audición", "description": "Crea un portafolio de video sólido para audiciones." },
-        { "title": "Músicos Aficionados", "description": "Conserva tus canciones favoritas en video como recuerdo duradero." },
-        { "title": "Artistas Independientes", "description": "Crea videos cover promocionales antes de tu lanzamiento oficial." }
+        {
+          "title": "Creadores YouTube / SNS",
+          "description": "Haz crecer tu audiencia con videos cover de calidad profesional."
+        },
+        {
+          "title": "Aspirantes a Audición",
+          "description": "Crea un portafolio de video sólido para audiciones."
+        },
+        {
+          "title": "Músicos Aficionados",
+          "description": "Conserva tus canciones favoritas en video como recuerdo duradero."
+        },
+        {
+          "title": "Artistas Independientes",
+          "description": "Crea videos cover promocionales antes de tu lanzamiento oficial."
+        }
       ]
     },
     "environment": {
@@ -1194,27 +1215,59 @@
         "Ingeniero dedicado gestiona filmación, grabación y mezcla de extremo a extremo"
       ]
     },
-    "package": { "title": "Paquete Todo en Uno Video Cover" },
+    "package": {
+      "title": "Paquete Todo en Uno Video Cover"
+    },
     "process": {
       "title": "Cómo Funciona",
       "subtitle": "Tu video cover en 4 pasos",
       "steps": [
-        { "title": "Consulta y Selección de Canción", "description": "Elige tu canción y agenda vía KakaoTalk o teléfono." },
-        { "title": "Grabación y Filmación", "description": "La grabación vocal y la filmación 4K ocurren simultáneamente en la cabina." },
-        { "title": "Mezcla y Edición", "description": "Afinación vocal, mezcla y edición de video se completan juntas." },
-        { "title": "Entrega Final", "description": "Recibe tu video 4K MP4, WAV y MP3 como paquete completo." }
+        {
+          "title": "Consulta y Selección de Canción",
+          "description": "Elige tu canción y agenda vía KakaoTalk o teléfono."
+        },
+        {
+          "title": "Grabación y Filmación",
+          "description": "La grabación vocal y la filmación 4K ocurren simultáneamente en la cabina."
+        },
+        {
+          "title": "Mezcla y Edición",
+          "description": "Afinación vocal, mezcla y edición de video se completan juntas."
+        },
+        {
+          "title": "Entrega Final",
+          "description": "Recibe tu video 4K MP4, WAV y MP3 como paquete completo."
+        }
       ]
     },
     "faq": {
       "title": "FAQ Video Cover",
       "subtitle": "Preguntas frecuentes sobre nuestro servicio de video cover.",
       "items": [
-        { "q": "¿Se proporciona equipo de cámara e iluminación?", "a": "Sí. Una cámara 4K e iluminación continua están incluidas. No necesitas traer tu propio equipo." },
-        { "q": "¿Necesito traer mi propio MR (pista de acompañamiento)?", "a": "Sí, trae tu archivo MR. La producción de MR personalizado también está disponible." },
-        { "q": "¿Cómo es el fondo de filmación?", "a": "Usamos el interior del estudio. Cuéntanos tu atmósfera preferida y lo prepararemos." },
-        { "q": "¿Puedo elegir el estilo de edición?", "a": "La edición básica (corte, títulos, corrección de color) está incluida. Los pedidos específicos se discuten en la consulta." },
-        { "q": "¿Qué pasa si 3 horas no son suficientes?", "a": "El tiempo extra se factura a la tarifa horaria estándar. Recomendamos reservar una hora adicional como margen." },
-        { "q": "¿Se pueden filmar grupos o duetos?", "a": "Sí, los grupos pequeños son bienvenidos. El tiempo puede variar según el tamaño del grupo." }
+        {
+          "q": "¿Se proporciona equipo de cámara e iluminación?",
+          "a": "Sí. Una cámara 4K e iluminación continua están incluidas. No necesitas traer tu propio equipo."
+        },
+        {
+          "q": "¿Necesito traer mi propio MR (pista de acompañamiento)?",
+          "a": "Sí, trae tu archivo MR. La producción de MR personalizado también está disponible."
+        },
+        {
+          "q": "¿Cómo es el fondo de filmación?",
+          "a": "Usamos el interior del estudio. Cuéntanos tu atmósfera preferida y lo prepararemos."
+        },
+        {
+          "q": "¿Puedo elegir el estilo de edición?",
+          "a": "La edición básica (corte, títulos, corrección de color) está incluida. Los pedidos específicos se discuten en la consulta."
+        },
+        {
+          "q": "¿Qué pasa si 3 horas no son suficientes?",
+          "a": "El tiempo extra se factura a la tarifa horaria estándar. Recomendamos reservar una hora adicional como margen."
+        },
+        {
+          "q": "¿Se pueden filmar grupos o duetos?",
+          "a": "Sí, los grupos pequeños son bienvenidos. El tiempo puede variar según el tamaño del grupo."
+        }
       ]
     },
     "cta": {
