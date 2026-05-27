@@ -37,7 +37,7 @@ export const CONTACT_LIMITS = {
 
 const NAME_PATTERN = /^[\p{L}\p{M}\s'-]+$/u;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^[\d\s+\-\(\)]+$/;
+const PHONE_PATTERN = /^[\d\s+\-\(\)\.]+$/;
 
 const toStringValue = (value: unknown): string => (typeof value === 'string' ? value : '');
 
@@ -52,7 +52,7 @@ export const validateContactForm = (fields: ContactFormFields): ContactValidatio
   const normalizedName = fields.name.trim();
   const normalizedEmail = fields.email.trim();
   const rawPhone = fields.phone;
-  const normalizedPhone = rawPhone.replace(/\s/g, '');
+  const normalizedPhone = rawPhone.replace(/[\s.]/g, '');
   const normalizedMessage = fields.message.trim();
   const errors: Partial<Record<ContactField, ContactValidationCode>> = {};
 
