@@ -1,29 +1,31 @@
 source,medium,sessions,bounce_rate,conversions
-"google","organic",2111,0.495,0
-"(direct)","(none)",532,0.833,0
-"chatgpt.com","(not set)",78,0.731,0
-"(not set)","(not set)",65,1.000,0
-"chatgpt.com","referral",63,0.603,0
-"m.search.naver.com","referral",60,0.217,0
-"bing","organic",51,0.529,0
-"naver","organic",24,0.417,0
-"search.google.com","referral",15,0.533,0
-"perplexity","(not set)",12,0.500,0
-"perplexity.ai","referral",10,0.200,0
+"google","organic",2679,0.484,0
+"(direct)","(none)",605,0.835,0
+"m.search.naver.com","referral",107,0.280,0
+"chatgpt.com","(not set)",98,0.745,0
+"chatgpt.com","referral",79,0.608,0
+"(not set)","(not set)",78,1.000,0
+"bing","organic",68,0.485,0
+"naver","organic",41,0.415,0
+"perplexity","(not set)",19,0.684,0
+"search.google.com","referral",17,0.353,0
+"perplexity.ai","referral",13,0.308,0
+"copilot.com","referral",8,0.250,0
+"notebooklm.google.com","referral",7,0.286,0
+"gemini.google.com","referral",6,1.000,0
 "pcmap.place.naver.com","referral",5,0.200,0
-"copilot.com","referral",4,0.000,0
+"yahoo","organic",5,0.400,0
 "m.place.naver.com","referral",4,0.500,0
-"yahoo","organic",4,0.500,0
-"notebooklm.google.com","referral",3,0.333,0
+"mule.co.kr","referral",4,0.250,0
+"facebook.com","referral",3,0.000,0
 "cn.bing.com","referral",2,0.500,0
-"facebook.com","referral",2,0.000,0
 "vercel.com","referral",2,0.000,0
-"wad.sentinel.navercorp.com","referral",2,1.000,0
-"chatgpt.com","(none)",1,1.000,0
+"wad.sentinel.navercorp.com","referral",2,0.500,0
+"youtube.com","referral",2,1.000,0
+"chat.beai.kr","referral",1,1.000,0
 "copilot.com","(not set)",1,1.000,0
 "duckduckgo","organic",1,0.000,0
-"gemini.google.com","referral",1,1.000,0
 "ig","social",1,1.000,0
+"m.blog.naver.com","referral",1,0.000,0
 "mixing.co.kr","referral",1,0.000,0
-"mule.co.kr","referral",1,0.000,0
 "naver.com","referral",1,1.000,0
