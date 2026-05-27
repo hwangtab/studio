@@ -35,7 +35,7 @@ export const CONTACT_LIMITS = {
   message: { min: 10, max: 5000 },
 } as const;
 
-const NAME_PATTERN = /^[\p{L}\p{M}\s'-]+$/u;
+const NAME_PATTERN = /^[\p{L}\p{M}\s'.,-]+$/u;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^[\d\s+\-\(\)\.]+$/;
 

@@ -106,6 +106,27 @@ describe('contact send-email api', () => {
     expect(expireMock).toHaveBeenCalledWith(rateLimitKey, 120);
   });
 
+  it('accepts English names with periods and commas (Dr. Smith, Smith Jr.)', async () => {
+    const testCases = [
+      { name: 'Dr. Smith', desc: 'title with period' },
+      { name: 'John A. Smith', desc: 'middle initial' },
+      { name: 'Smith, John', desc: 'inverted name with comma' },
+      { name: 'Mary-Jane O\'Brien Jr.', desc: 'complex name' },
+    ];
+
+    for (const { name } of testCases) {
+      jest.clearAllMocks();
+      incrMock.mockResolvedValue(1);
+      expireMock.mockResolvedValue(undefined);
+      global.fetch = jest.fn().mockResolvedValue({ ok: true, text: async () => '' } as unknown as Response);
+
+      const req = createRequest({ body: { name, phone: '+82 10 1234 5678', email: 'test@example.com', message: 'Valid inquiry message here.', company: '' } });
+      const { res, getStatus } = createResponse();
+      await handler(req, res);
+      expect(getStatus()).toBe(200);
+    }
+  });
+
   it('returns 403 for disallowed origins before rate limiting', async () => {
     const req = createRequest({
       headers: {

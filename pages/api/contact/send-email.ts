@@ -200,15 +200,11 @@ async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
         }
     }
 
-    // 프로덕션에서는 KV 설정이 필수. 미설정이면 인스턴스별 카운터 우회가 가능하므로 503 반환.
-    if (process.env.NODE_ENV === 'production') {
-        console.error('[Rate Limit] Vercel KV not configured in production. Set KV_REST_API_URL and KV_REST_API_TOKEN.');
-        throw new Error('RATE_LIMIT_UNAVAILABLE');
-    }
-
-    // 개발환경 in-memory fallback
+    // KV 미설정 시 in-memory fallback. 인스턴스별 카운터이므로 serverless 재시작 시
+    // 카운터가 초기화되지만, 음악 스튜디오 규모에서 스팸 위험보다 폼 작동이 우선.
     if (!hasLoggedMemoryFallback) {
-        console.warn('[Rate Limit] Vercel KV not configured (dev). Using in-memory limiter fallback.');
+        const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
+        console.warn(`[Rate Limit] Vercel KV not configured (${env}). Using in-memory limiter fallback. Set KV_REST_API_URL and KV_REST_API_TOKEN.`);
         hasLoggedMemoryFallback = true;
     }
 
