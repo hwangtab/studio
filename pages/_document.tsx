@@ -39,7 +39,6 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           <link rel="dns-prefetch" href="https://www.google-analytics.com" />
           <link rel="dns-prefetch" href="https://analytics.google.com" />
-          <link rel="dns-prefetch" href="https://api.emailjs.com" />
           <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
           {/* Portfolio image CDN prefetch */}

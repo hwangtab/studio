@@ -6,17 +6,17 @@
 //
 // 인증: Vercel Cron이 자동으로 Authorization: Bearer ${CRON_SECRET} 헤더 첨부.
 // 환경변수: CRON_SECRET, GSC_OAUTH_CLIENT_ID/SECRET/REFRESH_TOKEN, GSC_SITE_URL,
-//          EMAILJS_SERVICE_ID/TEMPLATE_ID/PUBLIC_KEY/PRIVATE_KEY, KV_REST_API_URL/TOKEN
+//          RESEND_API_KEY, KV_REST_API_URL/TOKEN
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { put, list } from '@vercel/blob';
+import { sendEmail } from '../../../lib/email/resend';
 import { runAudit, type AuditSnapshot } from '../../../lib/seo/gscAudit';
 import { diffAudits, formatDiffReport } from '../../../lib/seo/gscDiff';
 
 const BLOB_LATEST_PATH = 'gsc/latest.json';
 const BLOB_HISTORY_PREFIX = 'gsc/history/'; // gsc/history/2026-05-13.json
 const EMAIL_TO = 'hwangtab@gmail.com';
-const EMAILJS_ENDPOINT = 'https://api.emailjs.com/api/v1.0/email/send';
 
 async function loadLatestSnapshot(): Promise<AuditSnapshot | null> {
   // private store: list로 blob URL 확보, BLOB_READ_WRITE_TOKEN으로 fetch 인증
@@ -69,44 +69,10 @@ function getOAuthCreds() {
   return { clientId, clientSecret, refreshToken };
 }
 
-async function sendEmail(subject: string, bodyText: string): Promise<{ ok: boolean; status?: number; error?: string }> {
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-  if (!serviceId || !templateId || !publicKey) {
-    return { ok: false, error: 'EmailJS env vars missing' };
-  }
-
-  // 기존 contact form 템플릿 재사용 — name/email/message 필드에 cron 컨텍스트 매핑.
-  const payload: Record<string, unknown> = {
-    service_id: serviceId,
-    template_id: templateId,
-    user_id: publicKey,
-    template_params: {
-      name: '[Studio NOL SEO Cron]',
-      email: EMAIL_TO,
-      phone: '-',
-      message: `${subject}\n\n${bodyText}`,
-    },
-  };
-  if (privateKey) payload.accessToken = privateKey;
-
-  try {
-    const res = await fetch(EMAILJS_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      cache: 'no-store',
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      return { ok: false, status: res.status, error: errText };
-    }
-    return { ok: true, status: res.status };
-  } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : String(err) };
-  }
+async function sendCronEmail(subject: string, bodyText: string): Promise<{ ok: boolean; status?: number; error?: string }> {
+  const result = await sendEmail({ to: EMAIL_TO, subject, text: bodyText });
+  if (result.ok) return { ok: true, status: result.status };
+  return { ok: false, status: result.status, error: result.errorDetail ?? result.errorCode };
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -153,11 +119,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         currentSnapshot,
       );
       if (dryRun) {
-        // dry=1: EmailJS 호출·전송 안 함, 본문 응답에 포함해 미리보기만
+        // dry=1: 이메일 호출·전송 안 함, 본문 응답에 포함해 미리보기만
         emailResult = { ok: true, skipped: 'dry-run' };
         reportPreview = report;
       } else {
-        emailResult = await sendEmail(report.subject, report.body);
+        emailResult = await sendCronEmail(report.subject, report.body);
       }
     }
 

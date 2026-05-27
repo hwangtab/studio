@@ -74,10 +74,7 @@ describe('contact send-email api', () => {
       NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
       KV_REST_API_URL: 'https://mock-kv.local',
       KV_REST_API_TOKEN: 'mock-token',
-      EMAILJS_SERVICE_ID: 'service_id',
-      EMAILJS_TEMPLATE_ID: 'template_id',
-      EMAILJS_PUBLIC_KEY: 'public_key',
-      EMAILJS_PRIVATE_KEY: 'private_key',
+      RESEND_API_KEY: 're_test_key',
     };
 
     incrMock.mockResolvedValue(1);

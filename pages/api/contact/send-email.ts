@@ -3,6 +3,7 @@ import validator from 'validator';
 import { createHash } from 'crypto';
 
 import { kv } from '@vercel/kv';
+import { sendEmail } from '../../../lib/email/resend';
 import {
     getFirstContactValidationError,
     toContactFormFields,
@@ -215,30 +216,6 @@ async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
     return;
 }
 
-interface EmailJSPayload {
-    service_id: string;
-    template_id: string;
-    user_id: string;
-    template_params: {
-        name: string;
-        phone?: string;
-        email: string;
-        message: string;
-        utm_source?: string;
-        utm_medium?: string;
-        utm_campaign?: string;
-        referrer?: string;
-    };
-    accessToken?: string;
-}
-
-interface EmailJSConfig {
-    serviceId: string;
-    templateId: string;
-    publicKey: string;
-    privateKey?: string;
-}
-
 interface SanitizedContactPayload {
     name: string;
     phone: string;
@@ -250,8 +227,7 @@ interface SanitizedContactPayload {
     referrer?: string;
 }
 
-const EMAILJS_ENDPOINT = 'https://api.emailjs.com/api/v1.0/email/send';
-const EMAIL_REQUEST_TIMEOUT_MS = 12000;
+const CONTACT_TO = 'hwangtab@gmail.com';
 const SUCCESS_RESPONSE = { success: true, message: 'Message sent successfully' };
 
 const validationCodeMessageMap: Record<ContactValidationCode, string> = {
@@ -372,67 +348,160 @@ const validateAndSanitizeContactPayload = (
     };
 };
 
-const getEmailJsConfig = (): EmailJSConfig | null => {
-    const serviceId = process.env.EMAILJS_SERVICE_ID;
-    const templateId = process.env.EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-    const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+const escapeHtml = (value: string): string =>
+    value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 
-    if (!serviceId || !templateId || !publicKey) {
-        return null;
-    }
+const buildContactEmailHtml = (sanitized: SanitizedContactPayload): string => {
+    const name = escapeHtml(sanitized.name);
+    const email = escapeHtml(sanitized.email);
+    const phone = escapeHtml(sanitized.phone);
+    const message = escapeHtml(sanitized.message).replace(/\n/g, '<br>');
 
-    if (!privateKey) {
-        console.warn('[API Warning] EMAILJS_PRIVATE_KEY is not set. If EmailJS requires it (non-browser apps), calls will fail.');
-    }
+    const fieldRow = (label: string, value: string, link?: string) => `
+        <tr>
+          <td style="padding:6px 0 2px;font-size:11px;font-weight:600;letter-spacing:.06em;
+                     text-transform:uppercase;color:#6b7280;">
+            ${label}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 0 18px;font-size:15px;color:#1f2937;">
+            ${link ? `<a href="${link}" style="color:#6d28d9;text-decoration:none;">${value}</a>` : value}
+          </td>
+        </tr>`;
 
-    return {
-        serviceId,
-        templateId,
-        publicKey,
-        privateKey: privateKey || undefined,
-    };
+    const attributionLines: string[] = [];
+    if (sanitized.utm_source) attributionLines.push(`utm_source: ${escapeHtml(sanitized.utm_source)}`);
+    if (sanitized.utm_medium) attributionLines.push(`utm_medium: ${escapeHtml(sanitized.utm_medium)}`);
+    if (sanitized.utm_campaign) attributionLines.push(`utm_campaign: ${escapeHtml(sanitized.utm_campaign)}`);
+    if (sanitized.referrer) attributionLines.push(`referrer: ${escapeHtml(sanitized.referrer)}`);
+
+    const attributionBlock = attributionLines.length > 0 ? `
+        <tr>
+          <td style="padding:18px 0 0;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;">
+              ${attributionLines.join(' &nbsp;·&nbsp; ')}
+            </p>
+          </td>
+        </tr>` : '';
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;">
+
+  <!-- 프리헤더 (받은편지함 미리보기) -->
+  <div style="display:none;max-height:0;overflow:hidden;color:#f9fafb;">
+    ${name}님의 새 문의가 도착했습니다.&nbsp;‌&zwnj;​&zwnj;
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"
+         style="background:#f9fafb;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0"
+               style="max-width:600px;width:100%;background:#ffffff;
+                      border-radius:12px;border:1px solid #e5e7eb;
+                      overflow:hidden;">
+
+          <!-- 헤더 -->
+          <tr>
+            <td bgcolor="#6d28d9"
+                style="background-image:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);
+                       padding:36px 32px;text-align:center;">
+              <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#ffffff;
+                        letter-spacing:-.01em;">
+                스튜디오 놀
+              </p>
+              <p style="margin:0;font-size:13px;color:rgba(255,255,255,.8);letter-spacing:.02em;">
+                새 문의가 도착했습니다
+              </p>
+            </td>
+          </tr>
+
+          <!-- 본문 -->
+          <tr>
+            <td style="padding:32px 32px 20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                ${fieldRow('이름', name)}
+                ${fieldRow('이메일', email, `mailto:${encodeURIComponent(sanitized.email)}`)}
+                ${fieldRow('전화', phone, `tel:${encodeURIComponent(sanitized.phone)}`)}
+                <tr>
+                  <td style="padding:6px 0 8px;font-size:11px;font-weight:600;letter-spacing:.06em;
+                             text-transform:uppercase;color:#6b7280;">
+                    메시지
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 0 8px;">
+                    <div style="background:#f9fafb;border-left:3px solid #6d28d9;
+                                border-radius:6px;padding:16px 18px;
+                                font-size:15px;line-height:1.7;color:#1f2937;
+                                white-space:pre-wrap;word-break:break-word;">
+                      ${message}
+                    </div>
+                  </td>
+                </tr>
+                ${attributionBlock}
+              </table>
+            </td>
+          </tr>
+
+          <!-- 푸터 -->
+          <tr>
+            <td style="background:#f9fafb;border-top:1px solid #e5e7eb;
+                       padding:20px 32px;text-align:center;">
+              <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;line-height:1.6;">
+                <strong style="color:#6b7280;">스튜디오 놀</strong>
+                &nbsp;·&nbsp; 서울특별시 은평구 대조동 84-3 3층
+              </p>
+              <p style="margin:0;font-size:12px;color:#9ca3af;">
+                <a href="tel:050713843144" style="color:#9ca3af;text-decoration:none;">
+                  0507-1384-3144
+                </a>
+                &nbsp;·&nbsp;
+                <a href="https://studionol.co.kr" style="color:#6d28d9;text-decoration:none;">
+                  studionol.co.kr
+                </a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`;
 };
 
-const buildEmailJsPayload = (config: EmailJSConfig, sanitized: SanitizedContactPayload): EmailJSPayload => {
-    const payload: EmailJSPayload = {
-        service_id: config.serviceId,
-        template_id: config.templateId,
-        user_id: config.publicKey,
-        template_params: {
-            name: sanitized.name,
-            phone: sanitized.phone,
-            email: sanitized.email,
-            message: sanitized.message,
-            utm_source: sanitized.utm_source,
-            utm_medium: sanitized.utm_medium,
-            utm_campaign: sanitized.utm_campaign,
-            referrer: sanitized.referrer,
-        },
-    };
+const buildContactEmailBody = (sanitized: SanitizedContactPayload): string => {
+    const lines: string[] = [
+        `이름: ${sanitized.name}`,
+        `이메일: ${sanitized.email}`,
+        `전화: ${sanitized.phone}`,
+        '',
+        '메시지:',
+        sanitized.message,
+    ];
 
-    if (config.privateKey) {
-        payload.accessToken = config.privateKey;
+    const attribution: string[] = [];
+    if (sanitized.utm_source) attribution.push(`utm_source=${sanitized.utm_source}`);
+    if (sanitized.utm_medium) attribution.push(`utm_medium=${sanitized.utm_medium}`);
+    if (sanitized.utm_campaign) attribution.push(`utm_campaign=${sanitized.utm_campaign}`);
+    if (sanitized.referrer) attribution.push(`referrer=${sanitized.referrer}`);
+
+    if (attribution.length > 0) {
+        lines.push('', '---', attribution.join('  |  '));
     }
 
-    return payload;
-};
-
-const sendEmailJsRequest = async (payload: EmailJSPayload): Promise<Response> => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), EMAIL_REQUEST_TIMEOUT_MS);
-
-    return fetch(EMAILJS_ENDPOINT, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        cache: 'no-store',
-        signal: controller.signal,
-    }).finally(() => {
-        clearTimeout(timeoutId);
-    });
+    return lines.join('\n');
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -473,38 +542,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ message: 'Internal server error' });
     }
 
-    // 5. Send email via EmailJS REST API
-    const emailJsConfig = getEmailJsConfig();
-    if (!emailJsConfig) {
-        console.error('[API Error] Missing EmailJS configuration');
+    // 5. Send email via Resend
+    const emailBody = buildContactEmailBody(sanitized);
+    const result = await sendEmail({
+        to: CONTACT_TO,
+        subject: `[Studio NOL] 새 문의 — ${sanitized.name}`,
+        html: buildContactEmailHtml(sanitized),
+        text: emailBody,
+        replyTo: sanitized.email,
+    });
+
+    if (result.errorCode === 'RESEND_API_KEY_MISSING') {
+        console.error('[API Error] Missing Resend configuration');
         return res.status(500).json({ message: 'Server configuration error' });
     }
 
-    const emailJsPayload = buildEmailJsPayload(emailJsConfig, sanitized);
+    if (result.errorCode === 'TIMEOUT') {
+        return res.status(504).json({ message: 'Email service timeout. Please try again later.' });
+    }
 
-    try {
-        const response = await sendEmailJsRequest(emailJsPayload);
-
-        if (response.ok) {
-            return res.status(200).json(SUCCESS_RESPONSE);
-        }
-
-        const errorText = await response.text();
-        // Log full error on server, but send generic message to client
-        console.error('[EmailJS Error]', {
-            status: response.status,
-            error: errorText,
-            serviceId: emailJsConfig.serviceId
-        });
-        // Map external service errors to 502 Bad Gateway to distinguish from internal CSRF 403
-        return res.status(502).json({
-            message: 'Failed to send message. Please try again later.'
-        });
-    } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') {
-            return res.status(504).json({ message: 'Email service timeout. Please try again later.' });
-        }
-        console.error('[API Route Error]', error);
+    if (result.errorCode === 'NETWORK_ERROR') {
+        console.error('[API Route Error] Resend network error:', result.errorDetail);
         return res.status(500).json({ message: 'Internal server error' });
     }
+
+    if (!result.ok) {
+        console.error('[Resend Error]', { status: result.status, detail: result.errorDetail });
+        return res.status(502).json({ message: 'Failed to send message. Please try again later.' });
+    }
+
+    return res.status(200).json(SUCCESS_RESPONSE);
 }

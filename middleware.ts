@@ -48,7 +48,7 @@ function buildContentSecurityPolicy(): string {
         "img-src 'self' data: https:",
         "font-src 'self' data: https://fonts.gstatic.com",
         "frame-src 'self' https://www.google.com https://www.google.co.kr",
-        "connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+        "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
