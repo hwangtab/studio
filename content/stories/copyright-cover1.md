@@ -1,5 +1,5 @@
 ---
-title: 커버곡 저작권이란? — 유튜브 삭제 안 되는 이유와 Content ID·수익화 조건
+title: 커버곡 저작권 완전 가이드 — 유튜브 수익화 조건·Content ID 대처와 정식 발매 절차
 date: 2026-04-06
 author: 스튜디오 놀
 category: 음악 비즈니스
@@ -13,7 +13,7 @@ tags:
   - 커버 업로드 방법
 thumbnail: /images/hardware3.webp
 summary: >-
-  커버곡 저작권이란 원작자 허락 없이 재녹음·업로드 시 적용되는 규정입니다. Content ID 대처법·수익화 조건·절차를 정리합니다.
+  커버곡 저작권·수익화 조건 완전 정리 — 유튜브 Content ID 대처법부터 스트리밍 정식 발매 절차까지.
 faq:
   - q: 커버 곡을 유튜브에 올리면 저작권 위반인가요?
     a: >-
@@ -135,4 +135,4 @@ faq:
 
 정식 커버 음원을 스트리밍 발매할 계획이라면 MR 직접 제작이 필수입니다. 해외 플랫폼(Spotify, Apple Music)을 통해 커버 음원을 발매하려면 DistroKid의 Songfile 서비스($12/곡)를 이용해 기계적 복제 허락을 처리할 수 있습니다. 커버 음원은 원곡 저작권자에게 별도 수익 공유가 되므로 수익 분배 구조를 사전에 이해하고 시작하세요.
 
-[커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1) | [커버·발매별 보컬 녹음 비용 가이드](/stories/pricing1)
+[커버곡으로 수익 내는 방법](/stories/cover-monetize1) | [커버 곡 녹음 완전 가이드](/stories/coverrecording1) | [음악 저작권료 받는 방법 — KOMCA 등록](/stories/royalty1) | [음원 발매·유통 가이드](/stories/release1) | [커버·발매별 보컬 녹음 비용 가이드](/stories/pricing1)
