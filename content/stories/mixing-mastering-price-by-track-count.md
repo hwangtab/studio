@@ -6,6 +6,7 @@ description: "Studio NOL 믹싱 가격 ₩20만~₩50만의 트랙 수별 tier, 
 keywords: ["믹싱 가격", "마스터링 가격", "한국 믹싱 스튜디오 비용", "Studio NOL 믹싱", "K-pop 믹싱 가격"]
 tags: ["mixing", "mastering", "pricing", "decision-stage"]
 thumbnail: /images/hardware1.webp
+summary: 믹싱·마스터링 가격 가이드. 트랙 수별 비용 차이와 포함 내역을 정리합니다.
 ---
 
 Studio NOL의 믹싱 가격은 곡당 ₩200,000–500,000으로 트랙 수에 따라 ≤10트랙 ₩200K / 11–30트랙 ₩350K / 31+트랙 ₩500K로 나뉘며, 마스터링과 2회 수정이 포함됩니다(서울 연신내, 3호선·6호선 4번 출구 도보 5분). 이 가이드는 트랙 수가 가격을 결정하는 이유와 자가 진단법, 절약 팁을 정리합니다.

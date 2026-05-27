@@ -6,6 +6,7 @@ description: "결혼 축가 녹음 비용·시간·결과물 비교. Studio NOL 
 keywords: ["결혼식 축가 녹음 비용", "축가 녹음 스튜디오", "신랑 신부 축가 녹음", "셀프 녹음 vs 스튜디오 축가", "연신내 축가 녹음"]
 tags: ["wedding-song", "pricing", "seoul", "decision-stage"]
 thumbnail: /images/recording3.webp
+summary: 결혼식 축가 셀프 녹음과 스튜디오 패키지 비용 비교. 선택 가이드를 정리합니다.
 howTo:
   name: "Studio NOL 결혼식 축가 녹음 당일 흐름"
   description: "₩35만 축가 패키지 2시간 녹음 진행 4단계"

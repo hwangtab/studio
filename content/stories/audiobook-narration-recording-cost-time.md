@@ -6,6 +6,7 @@ description: "오디오북·내레이션 녹음 1시간당 비용 ₩10만, 실�
 keywords: ["오디오북 녹음 비용", "내레이션 녹음 가격", "성우 녹음 시간당", "Studio NOL 보이스 액팅", "연신내 오디오북 스튜디오"]
 tags: ["audiobook", "voice-acting", "pricing", "decision-stage"]
 thumbnail: /images/hardware3.webp
+summary: 오디오북·나레이션 녹음 비용과 소요 시간 가이드. 시간당 요금, 최소 세션, 데이락 옵션을 정리합니다.
 howTo:
   name: "Studio NOL 오디오북·내레이션 녹음 진행 흐름"
   description: "Studio NOL 오디오북 녹음 5단계 일반 흐름 (본문 1-2시간 분량 기준 약 4시간 세션)"

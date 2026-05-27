@@ -6,6 +6,7 @@ description: "K-pop 트레이닝/오디션 데모 녹음 비용·절차·곡 선
 keywords: ["K-pop 데모 녹음 비용", "K-pop 오디션 녹음", "한국 보컬 데모 녹음", "데모 녹음 가격", "연신내 데모 녹음"]
 tags: ["k-pop", "demo", "recording", "pricing", "decision-stage"]
 thumbnail: /images/studio2.webp
+summary: K-pop 데모 녹음 비용과 절차 안내. 패키지·시간당 요금과 1곡 완성까지 준비를 정리합니다.
 howTo:
   name: "Studio NOL K-pop 데모 녹음 진행 순서"
   description: "1프로 패키지(3시간) 기준 K-pop 데모 녹음 5단계 흐름"

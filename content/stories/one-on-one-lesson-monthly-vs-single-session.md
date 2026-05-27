@@ -6,6 +6,7 @@ description: "Studio NOL 1:1 레슨 월정액 ₩35만(4세션)과 단건 옵션
 keywords: ["1대1 음악 레슨 비용", "보컬 레슨 월정액 vs 단건", "한국 1:1 음악 학원 가격", "Studio NOL 레슨 가격", "연신내 보컬 레슨"]
 tags: ["lesson", "vocal-coaching", "pricing", "comparison", "decision-stage"]
 thumbnail: /images/lesson1.webp
+summary: 1:1 음악 레슨 월정액과 단건 수강 비용 효율 비교. 목적별 선택 기준을 정리합니다.
 ---
 
 Studio NOL의 1:1 음악 레슨은 월정액 ₩350,000(4세션, 각 60분, 회당 ₩87,500)으로 일반 학원 1:1(₩100,000–150,000/회)보다 저렴하며 실제 녹음 스튜디오 환경에서 진행됩니다(서울 연신내, 3호선·6호선 4번 출구 도보 5분, 영어·한국어 코치). 이 가이드는 월정액 vs 단건 비용 효과와 레슨 빈도별 추천을 정리합니다.
