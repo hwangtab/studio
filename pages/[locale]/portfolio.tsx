@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { NextPageWithLayout } from '../../types';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
@@ -13,7 +13,7 @@ import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schemaGenerator';
 import { getSiteConfig } from '../../data/siteConfig';
 import ImageHero from '../../components/common/ImageHero';
-import ContactCTA from '../../components/common/ContactCTA';
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
 const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), { ssr: false });
@@ -29,6 +29,8 @@ interface PortfolioProps {
   initialPortfolioItems: readonly PortfolioItem[];
   audioTracks: readonly AudioTrack[];
   categories: readonly PortfolioCategory[];
+  itemListSchema: Record<string, unknown>;
+  audioObjectSchemas: Record<string, unknown>[];
 }
 
 const Portfolio: NextPageWithLayout<PortfolioProps> = ({
@@ -36,39 +38,14 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
   initialPortfolioItems = [],
   audioTracks = [],
   categories = [],
+  itemListSchema,
+  audioObjectSchemas,
 }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
-  const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
   // canonical은 항상 목록 페이지로 고정. 모달은 클라이언트 UX이며 SSR 단계에서
   // 아이템 상세 URL이 canonical로 인식되면 색인이 오염됨.
   const canonicalOverride = `/${locale}/portfolio`;
-
-  const itemListSchema = React.useMemo(() => generateItemListSchema(
-    initialPortfolioItems.map((item) => ({
-      id: item.id,
-      name: `${item.artist} - ${item.title}`,
-      url: `/${locale}/portfolio/${item.id}`,
-      image: item.image,
-      description: item.description,
-    })),
-    siteUrl,
-    locale,
-    t('nav.portfolio')
-  ), [initialPortfolioItems, locale, siteUrl, t]);
-
-  const audioObjectSchemas = React.useMemo(() =>
-    generateAudioObjectSchema(
-      audioTracks.map((track) => ({
-        name: track.title,
-        contentUrl: track.src,
-        description: track.description,
-        artist: track.artist,
-      })),
-      siteUrl,
-      locale
-    ),
-  [audioTracks, siteUrl, locale]);
 
   const [selectedCategory, setSelectedCategory] = useState<PortfolioCategory>({
     id: 'all',
@@ -337,6 +314,12 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
 Portfolio.hasHero = true;
 
+// i18n hook을 쓸 수 없는 getStaticProps용 포트폴리오 라벨 맵.
+const PORTFOLIO_LABELS: Record<string, string> = {
+  ko: '포트폴리오', en: 'Portfolio', zh: '作品集',
+  es: 'Portafolio', vi: 'Danh mục', th: 'ผลงาน', uz: 'Portfolio',
+};
+
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
@@ -352,12 +335,39 @@ export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params })
   const audioTracks = getAudioTracks(locale);
   const categories = getCategories(locale);
 
+  // schema 연산을 빌드 타임에 수행해 hydration 블로킹 제거.
+  const siteUrl = getSiteConfig(locale).url;
+  const itemListSchema = generateItemListSchema(
+    initialPortfolioItems.map((item) => ({
+      id: item.id,
+      name: `${item.artist} - ${item.title}`,
+      url: `/${locale}/portfolio/${item.id}`,
+      image: item.image,
+      description: item.description,
+    })),
+    siteUrl,
+    locale,
+    PORTFOLIO_LABELS[locale] ?? 'Portfolio'
+  );
+  const audioObjectSchemas = generateAudioObjectSchema(
+    audioTracks.map((track) => ({
+      name: track.title,
+      contentUrl: track.src,
+      description: track.description,
+      artist: track.artist,
+    })),
+    siteUrl,
+    locale
+  );
+
   return buildPageStaticProps(
     locale,
     {
       initialPortfolioItems,
       audioTracks,
       categories,
+      itemListSchema,
+      audioObjectSchemas,
     },
     { revalidate: 3600, i18nSections: ['portfolio', 'pricing'] }
   );
