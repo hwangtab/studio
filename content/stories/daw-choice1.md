@@ -1,5 +1,5 @@
 ---
-title: "큐베이스 vs 로직 프로 vs 에이블톤 — 나에게 맞는 DAW 선택 가이드"
+title: "큐베이스·로직·에이블톤 완전 비교 — 나에게 맞는 DAW 선택 가이드"
 date: 2026-04-08
 author: "스튜디오 놀"
 category: 녹음 가이드
@@ -619,6 +619,26 @@ MIDI 파일이 교환되면 상대방은 자기 DAW의 가상악기로 재현해
 - Ableton Live 2001년 10월 30일 베를린 출시 (Behles·Henke·Roggendorf): [Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20) · [MusicRadar: Robert Henke 인터뷰 — Ableton Live origins](https://www.musicradar.com/news/ableton-live-origins-robert-henke)
 
 본 가이드는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 10년간 진행한 녹음·믹싱 세션 경험과 위 공개 자료를 결합해 작성했습니다. 가격·기능 표기는 2026년 5월 기준이며, 각 DAW 공식 사이트(Steinberg·Apple·Ableton)에서 최신 정보를 확인하시기 바랍니다. 한국 시장 동향("방송·음대에서 Cubase가 표준") 진술은 국내 음악 산업 현장의 1차 관찰에 기반하며 공식 시장 조사 통계가 아닙니다.
+
+---
+
+## Studio NOL에서 주로 사용하는 DAW — 보컬 녹음·믹싱 현장의 실제 선택
+
+스튜디오 놀에서는 보컬 녹음과 믹싱 세션에 **Cubase Pro**를 주력으로 사용합니다.
+
+**Cubase를 선택한 이유 3가지**
+
+**1. VariAudio 피치 보정의 자연스러움**
+
+세션에서 보컬 피치 보정은 Cubase의 VariAudio를 씁니다. Melodyne과 비교해도 포르만트 유지가 자연스럽고, DAW 안에서 편집-보정-믹싱이 끊김 없이 이어지는 워크플로우가 세션 속도를 높여줍니다. 보정이 과해지는 것을 경계하는 기준으로 항상 "A/B로 원본과 비교"를 원칙으로 삼고 있습니다.
+
+**2. K-pop 협업자 파일 호환**
+
+스튜디오 놀에 작업물을 가져오는 프로듀서·작곡가의 상당수가 Cubase를 씁니다. 같은 DAW를 쓰면 프로젝트 파일 직접 수정이 가능하고, 스템 변환 작업이 줄어 세션 시간이 단축됩니다. 납품 포맷은 항상 WAV 스템으로 내보내기 때문에 클라이언트 측 DAW와 무관하게 호환됩니다.
+
+**3. 정밀한 오디오 편집과 MIDI 동시 작업**
+
+보컬 컴핑(여러 테이크 중 최선 구간 조합), 타이밍 수정, MIDI 보컬 멜로디 레퍼런스 작업을 한 프로젝트 안에서 처리합니다. Cubase의 Key Editor와 오디오 트랙이 동일 타임라인 위에서 작동해 레퍼런스 MIDI와 보컬 레이어를 비교하기 편리합니다.
 
 ---
 
