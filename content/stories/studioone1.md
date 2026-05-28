@@ -12,8 +12,7 @@ tags:
   - Studio One EQ
   - Studio One 컴프레서
 thumbnail: /images/studio5.webp
-summary: >-
-  Studio One 보컬 녹음 완전 가이드입니다.
+summary: Studio One 보컬 녹음 세팅·트랙 운용·믹싱 워크플로우. Studio NOL 보컬 녹음 의뢰 시 호환 기준.
 faq:
   - q: Studio One으로 보컬 녹음이 가능한가요?
     a: >-
@@ -179,6 +178,24 @@ Song → Export Mixdown (Ctrl+E)
 - **파일명**: [아티스트명]_[곡명]_vocal.wav
 
 Google Drive 또는 WeTransfer 업로드
+
+---
+
+## Studio NOL이 Studio One 클라이언트에게 자주 권하는 보컬 녹음 세팅 3가지
+
+스튜디오 놀에서 Studio One으로 보컬 녹음·믹싱하는 클라이언트에게 반복적으로 권하는 설정입니다.
+
+**1. Audio Setup — Device Block Size 128 샘플**
+
+Studio One 보컬 녹음 시 Device Block Size를 128 샘플(~3ms 레이턴시)로 설정합니다. 256 이상으로 두면 헤드폰 모니터 레이턴시가 보컬리스트에게 거슬리고, 64로 낮추면 CPU 부하로 녹음이 끊길 수 있어 128이 가장 안정적인 균형점입니다.
+
+**2. Tracklist — 보컬 멀티트랙 별도 폴더로 그룹화**
+
+메인 + 더블 L/R + 애드립 4~5트랙을 "Vocal" 폴더 트랙으로 그룹화하면 컴핑·믹싱 단계에서 일괄 처리가 쉽습니다. 폴더 트랙의 Bus 라우팅으로 보컬 전체 EQ·컴프를 한 번에 적용할 수 있습니다.
+
+**3. Send 채널로 리버브·딜레이 운용**
+
+Insert로 리버브를 직접 걸지 않고 Send 채널 분리. 드라이/웻 비율 독립 제어 + CPU 부하 감소 + 여러 보컬 트랙이 같은 공간감 공유의 세 가지 효과를 동시에 얻습니다. Studio One의 Console 뷰에서 Send 라우팅을 시각적으로 관리하기 쉽습니다.
 
 ---
 
