@@ -264,19 +264,21 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       )}
 
       {/* 전환 CTA */}
-      <ContactCTA
-        locale={locale}
-        title={
-          <>
-            {t('releaseProject.cta.titleLine1')}<br />
-            <span className="text-primary">{t('releaseProject.cta.titleHighlight')}</span>
-          </>
-        }
-        subtitle={t('releaseProject.cta.subtitle')}
-        imageSrc="/images/studio2.webp"
-        imageAlt={t('releaseProject.cta.imageAlt')}
-        primaryButtonLabel={t('releaseProject.cta.inquiry')}
-      />
+      <Section variant="alternate" className="py-16">
+        <ContactCTA
+          locale={locale}
+          title={
+            <>
+              {t('releaseProject.cta.titleLine1')}<br />
+              <span className="text-primary">{t('releaseProject.cta.titleHighlight')}</span>
+            </>
+          }
+          subtitle={t('releaseProject.cta.subtitle')}
+          imageSrc="/images/studio2.webp"
+          imageAlt={t('releaseProject.cta.imageAlt')}
+          primaryButtonLabel={t('releaseProject.cta.inquiry')}
+        />
+      </Section>
     </div>
   );
 };
