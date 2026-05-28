@@ -12,8 +12,7 @@ tags:
   - Nectar 하모니
   - iZotope 보컬
 thumbnail: /images/recording2.webp
-summary: >-
-  iZotope Nectar 보컬 처리 완전 가이드입니다.
+summary: iZotope Nectar 보컬 채널 스트립·Pitch·De-esser·리버브 통합 운용. Studio NOL 보컬 믹싱 기준.
 faq:
   - q: iZotope Nectar란 무엇인가요?
     a: >-
@@ -142,6 +141,24 @@ Nectar Reverb는 삽입형 → 센드 채널 활용 권장
 
 - **Insert 방식**: Mix 낮게 (15~20%)
 - **Send 방식**: Nectar 없이 별도 리버브 플러그인
+
+---
+
+## Studio NOL 보컬 믹싱에서 Nectar 대신 별도 플러그인을 쓰는 3가지 이유
+
+스튜디오 놀 보컬 믹싱에서 Nectar(통합 채널 스트립) 대신 개별 플러그인 체인을 선호하는 반복 이유입니다.
+
+**1. 자유로운 순서 조합**
+
+Nectar는 EQ·컴프·디에서·리버브 순서가 고정돼 있어 곡별 최적 순서를 적용하기 어렵습니다. 별도 플러그인으로 분리하면 EQ → 컴프 → 디에서 → EQ → 컴프 2단 → 리버브 식의 자유로운 체인 구성이 가능합니다.
+
+**2. 개별 플러그인 음색 활용**
+
+각 플러그인의 고유 음색(FabFilter Pro-Q3의 깔끔함, CLA-76의 거친 느낌, Valhalla Room의 자연스러움)을 조합하는 것이 통합 플러그인보다 결과가 풍부합니다. Nectar는 편리하지만 음색 다양성이 제한됩니다.
+
+**3. 리버브는 Aux Send 운용**
+
+리버브를 채널 인서트(Nectar 내장)로 두면 드라이/웻 비율 조정과 여러 보컬 트랙의 공간감 공유가 어렵습니다. 별도 리버브 플러그인을 Aux Send 버스로 분리하는 것이 보컬 믹싱의 표준 운용 방식입니다.
 
 ---
 
