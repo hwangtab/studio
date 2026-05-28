@@ -36,12 +36,6 @@ interface JourneyItem {
   desc: string;
 }
 
-interface CaseStudyJsonItem {
-  portfolioId: string;
-  headline: string;
-  quote: string;
-}
-
 interface ConsultationStep {
   num: string;
   title: string;
@@ -86,6 +80,11 @@ const TIER_CATEGORY_MAP: Record<'single' | 'ep' | 'album', string[]> = {
   ep: [],
   album: ['album'],
 };
+const CASE_STUDY_IDS: Record<'single' | 'ep' | 'album', string[]> = {
+  single: ['tierliner-bite-me', 'the-projectors-babu-first-flight', 'heo-jeong-hyuk-wind', 'jai-hanash-pink-padding'],
+  ep: ['namjae-wi-inmul', 'unknown-feeling'],
+  album: ['kang-ho-jung-self-titled', 'dystopia-2025', 'eongadeul-self-titled', 'ryu-hyeong-su-haru'],
+};
 
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -97,7 +96,6 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const journeyItems = t(k('journeyItems'), { returnObjects: true }) as JourneyItem[];
   const deliverablesIncluded = t(k('deliverablesIncluded'), { returnObjects: true }) as string[];
   const deliverablesExcluded = t(k('deliverablesExcluded'), { returnObjects: true }) as string[];
-  const caseStudyJsonItems = t(k('caseStudyItems'), { returnObjects: true }) as CaseStudyJsonItem[];
   const faqItems = t(k('faqItems'), { returnObjects: true }) as { question: string; answer: string }[];
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
@@ -108,6 +106,10 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const featuredPortfolioItems = portfolioItems
     .filter((i) => i.featured && tierCategoryAllow.includes(i.category))
     .slice(0, 6);
+  const caseStudyIds = CASE_STUDY_IDS[tier];
+  const caseStudyPortfolioItems = caseStudyIds
+    .map((id) => portfolioItems.find((p) => p.id === id))
+    .filter((p): p is NonNullable<typeof p> => p !== undefined);
   const otherTiers = ALL_TIERS.filter((t) => t !== tier);
   const reviewsToShow = getReviews(locale).filter((r) => REVIEW_IDS_FOR_RELEASE_PROJECT.includes(r.id));
 
@@ -337,8 +339,8 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </div>
       </Section>
 
-      {/* 케이스 스터디 */}
-      {Array.isArray(caseStudyJsonItems) && caseStudyJsonItems.length > 0 && (
+      {/* 케이스 스터디 — 디스코그래피와 동일 카드, 사실 정보만 */}
+      {caseStudyPortfolioItems.length > 0 && (
         <Section variant="alternate">
           <SectionHeading
             icon={BookOpen}
@@ -346,43 +348,33 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             subtitle={t(k('caseStudySubtitle'))}
             className="mb-10"
           />
-          <div className={`grid grid-cols-1 ${caseStudyJsonItems.length > 1 ? 'sm:grid-cols-2' : ''} gap-6 max-w-3xl mx-auto`}>
-            {caseStudyJsonItems.map((csItem) => {
-              const portfolioItem = portfolioItems.find((p) => p.id === csItem.portfolioId);
-              return (
-                <div
-                  key={csItem.portfolioId}
-                  className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 flex flex-col"
-                >
-                  {portfolioItem?.image && (
-                    <div className="aspect-square overflow-hidden relative">
-                      <Image
-                        src={portfolioItem.image}
-                        alt={portfolioItem.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 50vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-5 flex flex-col flex-1">
-                    {portfolioItem?.artist && (
-                      <p className="text-xs text-primary font-medium mb-1">{portfolioItem.artist}</p>
-                    )}
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2">{csItem.headline}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4 flex-1">{csItem.quote}</p>
-                    {portfolioItem && (
-                      <Link
-                        href={getLink(`/portfolio/${portfolioItem.id}`)}
-                        className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline underline-offset-2 self-start"
-                      >
-                        {t('releaseProject.tiers.caseStudyViewDetail')} <ArrowRight size={12} />
-                      </Link>
-                    )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {caseStudyPortfolioItems.map((item) => (
+              <Link
+                key={item.id}
+                href={getLink(`/portfolio/${item.id}`)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                {item.image && (
+                  <div className="aspect-square overflow-hidden relative">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
+                )}
+                <div className="p-5">
+                  <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
                 </div>
-              );
-            })}
+              </Link>
+            ))}
           </div>
         </Section>
       )}

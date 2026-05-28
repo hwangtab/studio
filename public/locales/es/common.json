@@ -1400,28 +1400,6 @@
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Singles que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "tierliner-bite-me",
-              "headline": "Un tono sonoro concentrado en una sola pista",
-              "quote": "Tierliner 〈Bite Me〉. Un single que traslada al disco el sonido contundente característico del artista. La grabación y la mezcla priorizaron el color del artista por encima de todo."
-            },
-            {
-              "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "Debut de banda, energía en vivo intacta",
-              "quote": "El single debut de The Projectors. Un proyecto que conserva la interpretación en vivo de la banda y la reinterpreta para el sonido moderno de streaming."
-            },
-            {
-              "portfolioId": "heo-jeong-hyuk-wind",
-              "headline": "Un crossover que honra la fuerza vocal",
-              "quote": "Heo Jeong-hyuk 〈Wind〉. Preservando la intensa expresividad vocal del trot y añadiendo la claridad propia del pop — un single que tiende un puente entre ambos géneros."
-            },
-            {
-              "portfolioId": "jai-hanash-pink-padding",
-              "headline": "Dos artistas, una pista",
-              "quote": "Colaboración entre Jai y HANASH. Un proyecto que armoniza los tonos del pop y el hip-hop para que convivan naturalmente en una sola pista."
-            }
-          ],
           "inProgressSectionTitle": "Singles que estamos haciendo ahora",
           "faqSectionTitle": "Preguntas Frecuentes",
           "faqSubtitle": "Preguntas antes de consultar.",
@@ -1514,18 +1492,6 @@
           "priceNote": "Cotización personalizada tras consulta gratuita.",
           "caseStudySectionTitle": "EPs que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "namjae-wi-inmul",
-              "headline": "Una declaración artística con narrativa",
-              "quote": "Namjae 〈Una persona arriba ha atravesado X y alcanzado la revelación〉. Desde el arreglo hasta la promoción, trabajamos juntos para que el mundo distintivo del artista llegara completamente a la escena indie."
-            },
-            {
-              "portfolioId": "unknown-feeling",
-              "headline": "Varios artistas, un solo flujo",
-              "quote": "Harusali Project 2 〈Unknown Feeling〉. Un álbum colaborativo que une las pistas de varios artistas bajo una sola identidad sonora. Nos encargamos de la planificación, mezcla, masterización y el sitio web dedicado al proyecto."
-            }
-          ],
           "inProgressSectionTitle": "EPs que estamos haciendo ahora",
           "faqSectionTitle": "Preguntas Frecuentes",
           "faqSubtitle": "Preguntas antes de consultar.",
@@ -1620,28 +1586,6 @@
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "kang-ho-jung-self-titled",
-              "headline": "Poniendo tu nombre en juego",
-              "quote": "Kang Ho-jung 〈Self-titled〉. Desde la planificación hasta la mezcla, diseñamos el color sonoro que se convertiría en el punto de referencia de toda su discografía."
-            },
-            {
-              "portfolioId": "dystopia-2025",
-              "headline": "La ambición total de un álbum completo",
-              "quote": "Samgakjeonpasa 〈Dystopia 2025〉. Desde la planificación, grabación, mezcla, masterización y PR con la crítica, hasta un sitio web dedicado al álbum — acompañamos cada paso del recorrido del álbum completo."
-            },
-            {
-              "portfolioId": "eongadeul-self-titled",
-              "headline": "El primer álbum homónimo de la banda",
-              "quote": "Eongadeul 〈Self-titled〉. El primer trabajo en el que la banda puso su propio nombre por delante. Preservamos el color individual de cada miembro mientras capturábamos la textura en vivo de la sala de ensayo."
-            },
-            {
-              "portfolioId": "ryu-hyeong-su-haru",
-              "headline": "La textura de la vida diaria, tal cual",
-              "quote": "Ryu Hyeong-su 〈Haru〉. Un álbum completo que captura el flujo de un día desde la mañana hasta la noche. Diseñamos la dirección de llevar la textura cotidiana al sonido a través de un arreglo centrado en lo acústico."
-            }
-          ],
           "inProgressSectionTitle": "Álbumes completos que estamos haciendo ahora",
           "faqSectionTitle": "Preguntas Frecuentes",
           "faqSubtitle": "Preguntas antes de consultar.",
@@ -1676,7 +1620,6 @@
       "footNotePricingLabel": "página de precios",
       "footNotePost": ".",
       "detailCta": "Ver más",
-      "caseStudyViewDetail": "Ver caso de lanzamiento",
       "crossTier": {
         "sectionTitle": "Mira también otros formatos de lanzamiento",
         "sectionSubtitle": "Encontremos juntos la escala que se ajusta a ti."

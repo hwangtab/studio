@@ -2096,28 +2096,6 @@
           "priceNote": "세션 구성·곡수·편곡 범위에 따라 달라집니다. 무료 상담 후 단가표 기반 맞춤 견적.",
           "caseStudySectionTitle": "이런 싱글을 함께 만들었습니다",
           "caseStudySubtitle": "실제 작업한 발매 사례입니다.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "tierliner-bite-me",
-              "headline": "한 곡에 집중된 사운드 톤",
-              "quote": "티어라이너 〈Bite Me〉. 아티스트 본연의 묵직한 사운드 결을 음원에 그대로 옮긴 한 곡. 레코딩과 믹싱에서 아티스트의 색을 가장 우선했습니다."
-            },
-            {
-              "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "밴드 데뷔, 라이브 에너지를 그대로",
-              "quote": "더 프로젝터스의 데뷔 싱글. 라이브 밴드 연주를 살리면서 현대적인 스트리밍 사운드로 재해석한 프로젝트입니다."
-            },
-            {
-              "portfolioId": "heo-jeong-hyuk-wind",
-              "headline": "보컬의 힘을 살리는 크로스오버",
-              "quote": "허정혁 〈바람 한 점〉. 트로트의 강렬한 보컬 표현력을 보존하면서 팝적인 명료성을 더해 두 장르를 잇는 한 곡으로 완성했습니다."
-            },
-            {
-              "portfolioId": "jai-hanash-pink-padding",
-              "headline": "두 아티스트, 한 곡",
-              "quote": "자이와 HANASH의 콜라보. 팝과 힙합 두 톤을 조율해 한 곡 안에 자연스럽게 공존시킨 프로젝트입니다."
-            }
-          ],
           "inProgressSectionTitle": "지금 함께 만들고 있는 싱글들",
           "faqSectionTitle": "자주 묻는 질문",
           "faqSubtitle": "상담 전 궁금한 것들.",
@@ -2210,18 +2188,6 @@
           "priceNote": "무료 상담 후 단가표 기반 맞춤 견적.",
           "caseStudySectionTitle": "이런 EP를 함께 만들었습니다",
           "caseStudySubtitle": "실제 작업한 발매 사례입니다.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "namjae-wi-inmul",
-              "headline": "서사 있는 아티스트 선언",
-              "quote": "남자애 〈위 인물은 X를 겪고 깨달음을 얻음〉. 편곡부터 홍보까지 함께하며 아티스트의 독특한 세계관이 인디씬에 온전히 닿도록 했습니다."
-            },
-            {
-              "portfolioId": "unknown-feeling",
-              "headline": "여러 아티스트, 하나의 흐름",
-              "quote": "하루살이 프로젝트 2 〈알 수 없는 느낌〉. 여러 아티스트의 트랙을 하나의 사운드 아이덴티티로 묶어낸 협업 앨범. 기획·믹싱·마스터링·전용 웹사이트까지 함께했습니다."
-            }
-          ],
           "inProgressSectionTitle": "지금 함께 만들고 있는 EP들",
           "faqSectionTitle": "자주 묻는 질문",
           "faqSubtitle": "상담 전 궁금한 것들.",
@@ -2316,28 +2282,6 @@
           "priceNote": "세션 구성·곡수·편곡 범위에 따라 달라집니다. 무료 상담 후 단가표 기반 맞춤 견적.",
           "caseStudySectionTitle": "이런 정규앨범을 함께 만들었습니다",
           "caseStudySubtitle": "실제 작업한 발매 사례입니다.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "kang-ho-jung-self-titled",
-              "headline": "싱어송라이터의 이름을 걸다",
-              "quote": "강호중 〈Self-titled〉. 기획부터 믹싱까지 담당하며, 이후 디스코그래피의 기준선이 되는 사운드 컬러를 함께 설계했습니다."
-            },
-            {
-              "portfolioId": "dystopia-2025",
-              "headline": "정규의 야심을 끝까지",
-              "quote": "삼각전파사 〈Dystopia 2025〉. 기획·녹음·믹싱·마스터링·평론 PR, 그리고 앨범 전용 웹사이트 제작까지 정규의 모든 단계를 함께했습니다."
-            },
-            {
-              "portfolioId": "eongadeul-self-titled",
-              "headline": "밴드의 첫 셀프 타이틀",
-              "quote": "엉아들 〈Self-titled〉. 밴드가 자신들의 이름을 처음으로 내세운 정규. 멤버 각자의 색을 살리면서 합주실의 라이브 질감을 그대로 담았습니다."
-            },
-            {
-              "portfolioId": "ryu-hyeong-su-haru",
-              "headline": "일상의 결을 그대로",
-              "quote": "류형수 〈하루〉. 아침부터 밤까지 하루의 흐름을 담은 정규 앨범. 어쿠스틱 기반 편성으로 일상의 질감을 사운드에 담는 방향을 함께 설계했습니다."
-            }
-          ],
           "inProgressSectionTitle": "지금 함께 만들고 있는 정규들",
           "faqSectionTitle": "자주 묻는 질문",
           "faqSubtitle": "상담 전 궁금한 것들.",
@@ -2372,7 +2316,6 @@
       "footNotePricingLabel": "가격 페이지",
       "footNotePost": "에서 확인하세요.",
       "detailCta": "자세히 보기",
-      "caseStudyViewDetail": "발매 사례 보기",
       "crossTier": {
         "sectionTitle": "다른 발매 형태도 살펴보세요",
         "sectionSubtitle": "당신에게 맞는 규모를 함께 찾아보세요."

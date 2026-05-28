@@ -1400,28 +1400,6 @@
           "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的单曲",
           "caseStudySubtitle": "真实的发行项目案例。",
-          "caseStudyItems": [
-            {
-              "portfolioId": "tierliner-bite-me",
-              "headline": "凝聚于一曲的声音质感",
-              "quote": "Tierliner 〈Bite Me〉。将艺术家本身厚重的声音质感原汁原味地呈现于音源中的一首作品。录音与混音中优先考虑艺术家的色彩。"
-            },
-            {
-              "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "乐队出道，现场能量原样保留",
-              "quote": "The Projectors 的出道单曲。在保留乐队现场演奏的同时，重新诠释为现代的流媒体声音。"
-            },
-            {
-              "portfolioId": "heo-jeong-hyuk-wind",
-              "headline": "彰显人声力量的跨界融合",
-              "quote": "Heo Jeong-hyuk 〈一阵风〉。在保留 trot（韩式抒情曲）强烈人声表现力的同时，融入流行音乐的清晰度，完成连接两种流派的一首作品。"
-            },
-            {
-              "portfolioId": "jai-hanash-pink-padding",
-              "headline": "两位艺术家，一首歌",
-              "quote": "Jai 与 HANASH 的合作。调和流行与嘻哈两种声音质感，让它们在同一首歌中自然共存的项目。"
-            }
-          ],
           "inProgressSectionTitle": "正在制作中的单曲",
           "faqSectionTitle": "常见问题",
           "faqSubtitle": "咨询前的疑问。",
@@ -1514,18 +1492,6 @@
           "priceNote": "免费咨询后按单价表定制报价。",
           "caseStudySectionTitle": "我们一起完成的 EP",
           "caseStudySubtitle": "真实的发行项目案例。",
-          "caseStudyItems": [
-            {
-              "portfolioId": "namjae-wi-inmul",
-              "headline": "带有叙事性的艺术家宣言",
-              "quote": "南宰 〈上述人物经历了 X 并获得领悟〉。从编曲到宣传，我们一起合作，让艺术家独特的世界观完整地传达给独立音乐圈。"
-            },
-            {
-              "portfolioId": "unknown-feeling",
-              "headline": "多位艺术家，一种流向",
-              "quote": "蜉蝣计划 2 〈未知的感觉〉。一张把多位艺术家的曲目以一个声音身份串联起来的合作专辑。我们负责企划、混音、母带，以及专属项目网站。"
-            }
-          ],
           "inProgressSectionTitle": "正在制作中的 EP",
           "faqSectionTitle": "常见问题",
           "faqSubtitle": "咨询前的疑问。",
@@ -1620,28 +1586,6 @@
           "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的专辑",
           "caseStudySubtitle": "真实的发行项目案例。",
-          "caseStudyItems": [
-            {
-              "portfolioId": "kang-ho-jung-self-titled",
-              "headline": "以自己的名字为赌注",
-              "quote": "姜浩中 〈Self-titled〉。从策划到混音，我们设计了将成为他整个音乐作品集参考基准的声音色彩。"
-            },
-            {
-              "portfolioId": "dystopia-2025",
-              "headline": "把正规专辑的野心走到底",
-              "quote": "Samgakjeonpasa 〈Dystopia 2025〉。从企划、录音、混音、母带，到乐评 PR 以及专辑专属网站制作，我们参与了正规专辑的每一个环节。"
-            },
-            {
-              "portfolioId": "eongadeul-self-titled",
-              "headline": "乐队首张同名专辑",
-              "quote": "Eongadeul 〈Self-titled〉。乐队首次以自己的名字推出的正规专辑。我们在保留每位成员个性的同时，把合奏室的现场质感原汁原味地呈现了出来。"
-            },
-            {
-              "portfolioId": "ryu-hyeong-su-haru",
-              "headline": "如实呈现日常的纹理",
-              "quote": "柳亨秀 〈一天〉。一张承载从早到晚一整天流向的正规专辑。我们以原声编制为基础，一同设计了把日常质感融入声音的方向。"
-            }
-          ],
           "inProgressSectionTitle": "正在制作中的专辑",
           "faqSectionTitle": "常见问题",
           "faqSubtitle": "咨询前的疑问。",
@@ -1676,7 +1620,6 @@
       "footNotePricingLabel": "价格页面",
       "footNotePost": "。",
       "detailCta": "了解更多",
-      "caseStudyViewDetail": "查看发行案例",
       "crossTier": {
         "sectionTitle": "也看看其他发行形态",
         "sectionSubtitle": "一起找到适合你的规模。"

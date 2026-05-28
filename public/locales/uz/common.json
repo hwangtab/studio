@@ -1398,28 +1398,6 @@
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan singlarimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "tierliner-bite-me",
-              "headline": "Bitta trekka jamlangan ovoz tovlanishi",
-              "quote": "Tierliner 〈Bite Me〉. Artistning o‘ziga xos salmoqli ovoz tovlanishini yozuvga aynan ko‘chirib o‘tkazgan singl. Yozish va miksda artistning rangi birinchi o‘ringa qo‘yildi."
-            },
-            {
-              "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "Guruh debyuti, jonli energiya saqlab qolingan holda",
-              "quote": "The Projectors’ning debyut singli. Guruhning jonli ijrosini imkon qadar saqlab qolgan holda, uni zamonaviy streaming ovozi uchun qayta talqin qilgan loyiha."
-            },
-            {
-              "portfolioId": "heo-jeong-hyuk-wind",
-              "headline": "Vokal kuchini ulug‘lovchi krossover",
-              "quote": "Heo Jeong-hyuk 〈Wind〉. Trot (Koreyaning an’anaviy pop janri) ovozining kuchli ifodaliligini saqlab qolgan holda, pop uslubidagi tiniqlikni qo‘shgan — ikki janrni bog‘lovchi singl."
-            },
-            {
-              "portfolioId": "jai-hanash-pink-padding",
-              "headline": "Ikki artist, bitta trek",
-              "quote": "Jai va HANASH hamkorligi. Pop va hip-hop tovlanishlarini moslashtirib, ularni bitta trek ichida tabiiy ravishda birga yashashga erishgan loyiha."
-            }
-          ],
           "inProgressSectionTitle": "Hozir yaratayotgan singller",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
           "faqSubtitle": "Maslahatdan oldingi savollar.",
@@ -1512,18 +1490,6 @@
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
           "caseStudySectionTitle": "Birga yaratgan EP larimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "namjae-wi-inmul",
-              "headline": "Rivoyatli artist bayonoti",
-              "quote": "Namjae 〈Yuqoridagi shaxs X ni boshidan kechirib, anglashga erishdi〉. Arranjmandan reklama kampaniyasigacha birga ishlabmiz, artistning o'ziga xos dunyosi indie sahnaga to'liq yetib borishi uchun."
-            },
-            {
-              "portfolioId": "unknown-feeling",
-              "headline": "Bir nechta artist, bir oqim",
-              "quote": "Harusali Project 2 〈Unknown Feeling〉. Bir nechta artistning treklarini yagona ovoz identifikatsiyasi ostida birlashtirgan hamkorlik albomi. Rejalashtirish, mikslash, masterlash va loyihaning maxsus veb-saytini biz yuritdik."
-            }
-          ],
           "inProgressSectionTitle": "Hozir yaratayotgan EP lar",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
           "faqSubtitle": "Maslahatdan oldingi savollar.",
@@ -1618,28 +1584,6 @@
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
-          "caseStudyItems": [
-            {
-              "portfolioId": "kang-ho-jung-self-titled",
-              "headline": "O'z ismingizni garovga qo'yish",
-              "quote": "Kang Ho-jung 〈Self-titled〉. Rejalashtirish bosqichidan mikslashgacha uning butun ijodi uchun mos yozuvlar nuqtasiga aylanadigan ovoz rangini loyihalashtirdik."
-            },
-            {
-              "portfolioId": "dystopia-2025",
-              "headline": "To‘liq albomning shijoatini oxirigacha olib borish",
-              "quote": "Samgakjeonpasa 〈Dystopia 2025〉. Rejalashtirish, yozuv, mikslash, masterlash va tanqidchilar uchun PR’dan tortib, albomga bag‘ishlangan veb-sayt yaratishgacha — to‘liq albom safarining har bosqichida birga bo‘ldik."
-            },
-            {
-              "portfolioId": "eongadeul-self-titled",
-              "headline": "Guruhning birinchi self-titled albomi",
-              "quote": "Eongadeul 〈Self-titled〉. Guruh o'z ismini birinchi marta birinchi o'ringa qo'ygan ish. Har bir a'zoning o'ziga xos rangini saqlab qolgan holda, mashq xonasining jonli tovushini bor holicha yozib oldik."
-            },
-            {
-              "portfolioId": "ryu-hyeong-su-haru",
-              "headline": "Kundalik hayotning to'qimasi bor holicha",
-              "quote": "Ryu Hyeong-su 〈Haru〉. Ertalabdan kechgacha bo'lgan bir kunning oqimini ifoda etgan to'liq albom. Akustik asosidagi aranjirovka orqali kundalik hayotning to'qimasini tovushga olib kirish yo'nalishini birga loyihalashtirdik."
-            }
-          ],
           "inProgressSectionTitle": "Hozir yaratayotgan albomlar",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
           "faqSubtitle": "Maslahatdan oldingi savollar.",
@@ -1674,7 +1618,6 @@
       "footNotePricingLabel": "narxlar sahifasida",
       "footNotePost": "ko'ring.",
       "detailCta": "Ko'proq bilish",
-      "caseStudyViewDetail": "Reliz keysini ko‘rish",
       "crossTier": {
         "sectionTitle": "Boshqa chiqarish formatlarini ham ko‘rib chiqing",
         "sectionSubtitle": "Sizga mos hajmni birga tanlaymiz."
