@@ -259,7 +259,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             className="mb-12"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {portfolioItems.map((item) => (
+            {portfolioItems.slice(0, 12).map((item) => (
               <Link
                 key={item.id}
                 href={getLink(`/portfolio/${item.id}`)}

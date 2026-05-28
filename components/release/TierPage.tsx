@@ -56,7 +56,7 @@ interface ProducerStat {
 interface TierPageProps {
   locale: Locale;
   tier: 'single' | 'ep' | 'album';
-  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
+  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured' | 'category'>[];
   inProgressItems: InProgressItem[];
 }
 
@@ -77,6 +77,11 @@ const TIER_TYPE_KEYS: Record<string, string[]> = {
 const TIER_HERO_IMAGE = '/images/studio2.webp';
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
 const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
+const TIER_CATEGORY_MAP: Record<'single' | 'ep' | 'album', string[]> = {
+  single: ['single'],
+  ep: [],
+  album: ['album'],
+};
 
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -95,7 +100,10 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
 
   const tierTypeKeys = TIER_TYPE_KEYS[tier] ?? [];
   const filteredInProgress = ALL_IN_PROGRESS.filter((item) => tierTypeKeys.includes(item.typeKey));
-  const featuredPortfolioItems = portfolioItems.filter((i) => i.featured);
+  const tierCategoryAllow = TIER_CATEGORY_MAP[tier];
+  const featuredPortfolioItems = portfolioItems
+    .filter((i) => i.featured && tierCategoryAllow.includes(i.category))
+    .slice(0, 6);
   const otherTiers = ALL_TIERS.filter((t) => t !== tier);
   const reviewsToShow = getReviews(locale).filter((r) => REVIEW_IDS_FOR_RELEASE_PROJECT.includes(r.id));
 

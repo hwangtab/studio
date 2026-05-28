@@ -1317,12 +1317,12 @@
     },
     "producer": {
       "sectionTitle": "Prodyuser Hwang Gyeongha",
-      "tagline": "15 yillik indie prodyuser va A&R",
+      "tagline": "15 yillik tajribali musiqa prodyuseri va A&R",
       "bodyParagraph1": "Men Tierliner, The Projectors, Kang Ho-jung, Sickbaby va Namjae kabi indie artistlar bilan ishlaganman — rejalashtirishdan yozuv, mikslash, tarqatish va matbuot PR’igacha bo‘lgan butun jarayonda.",
       "bodyParagraph2": "Chiqarish — bir kishining qo‘lidan keladigan ish emas. Shu sababli mening vazifam — yo‘lning oxirigacha siz bilan birga yuradigan hamroh bo‘lishdir.",
       "stats": [
         { "value": "30+", "label": "Birga chiqarilgan ishlar" },
-        { "value": "15 yil", "label": "Indie sahnasida" },
+        { "value": "15 yil", "label": "Yillik musiqa prodyuserlik tajribasi" },
         { "value": "Ko‘plab", "label": "Musiqa OAV tarmog‘i" }
       ]
     },
@@ -1336,7 +1336,7 @@
       "single": {
         "label": "Singl Chiqarish",
         "duration": "~7 oy",
-        "range": "Taxminan ₩2.7M dan",
+        "range": "Taxminan ₩500K dan",
         "note": "1–2 qo'shiq, 3 sessiya musiqachi",
         "detail": {
           "heroTitlePrefix": "Birinchi singling,",
@@ -1393,9 +1393,9 @@
             "SMM reklama byudjeti"
           ],
           "priceSectionTitle": "Narx oralig'i",
-          "priceRange": "Taxminan ₩2.7M dan (singl)",
-          "priceRationale": "Haqiqiy loyihaga asoslangan: Harris singli",
-          "priceNote": "Session tarkibi va yozuv seanslariga qarab farqlanadi. Bepul maslahatdan so'ng maxsus narx.",
+          "priceRange": "Taxminan ₩500K dan",
+          "priceRationale": "Asosiy stavkadan boshlab (vokal yozuv + miks)",
+          "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan singlarimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
           "caseStudyItems": [
@@ -1419,8 +1419,8 @@
               "answer": "Ba'zida qo'shiqning tayyor darajasiga qarab tezroq bo'ladi. Lekin arrajman, sessiya, yozuv, mikslash, mastering va tarqatish ro'yxatga olish har biri yetarli vaqt talab qiladi. Bepul maslahatda holatini ko'rib, birga realistik jadval tuzamiz."
             },
             {
-              "question": "Bitta qo'shiq uchun qimmat emasmi?",
-              "answer": "Bu faqat studiya ijarasi emas — rejalashtirish, sessiya muvofiqlashtiruvi, yozuv yo'naltirish, mikslash, mastering, tarqatish va PR ni to'liq paket sifatida o'z ichiga oladi. Har bir elementni alohida topish aslida qimmatroq bo'lishi mumkin. Byudjetga qarab sessiya hajmini moslashtiramiz va maslahatdan so'ng maxsus narx taklif qilamiz."
+              "question": "Bu narxga qanday ishlar kiradi?",
+              "answer": "Vokal yozuvi va miks asos, ko‘lam kengaygan sari sessiya muvofiqlashtirish, aranjirovka, mastering, distribyutsiya va media PR qo‘shilib narx oshib boradi. Bu oddiy studiya ijarasi emas, butun reliz jarayoni davomida siz bilan birga bo‘lish narxi. Sessiya tarkibi va aranjirovkaga qarab o‘zgaradi; konsultatsiyadan keyin moslashtirilgan taklif beramiz."
             },
             {
               "question": "So'ramasdan qo'shiqni o'zgartirmaysizlarmi?",
@@ -1536,7 +1536,7 @@
       "album": {
         "label": "To'liq Albom Chiqarish",
         "duration": "~24 oy",
-        "range": "Taxminan ₩13M dan",
+        "range": "Taxminan ₩4M dan",
         "note": "~8 qo'shiq, to'liq sessiya",
         "detail": {
           "heroTitlePrefix": "Indie sahnasida",
@@ -1598,9 +1598,9 @@
             "Katta sessiya qo'shimchalari (alohida taklif)"
           ],
           "priceSectionTitle": "Narx oralig'i",
-          "priceRange": "Taxminan ₩13M dan (to'liq albom)",
-          "priceRationale": "Haqiqiy loyihaga asoslangan: Sickbaby 2-albom",
-          "priceNote": "Session tarkibi va yozuv seanslariga qarab farqlanadi. Bepul maslahatdan so'ng maxsus narx.",
+          "priceRange": "Taxminan ₩4M dan",
+          "priceRationale": "Standart stavka (~8 trek, vokal yozuv + miks + mastering)",
+          "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
           "caseStudyItems": [
@@ -1628,8 +1628,8 @@
               "answer": "Bu borada tajribamiz bor. Maslahatda san'at kengashi grantlari, mintaqaviy san'at mablag'lari va crowdfunding yo'nalishlari haqida gaplashamiz. Lekin natijalar kafolatlanmaydi."
             },
             {
-              "question": "₩13M dan tashqari qo'shimcha xarajatlar chiqishi mumkinmi?",
-              "answer": "Session tarkibi, trek soni va arrajman hajmiga qarab farqlanadi. Muqova rasmi, musiqa videosi va h.k. alohida. Maslahatda to'liq hajmni tushunib olgandan so'ng to'liq maxsus narx taklif qilamiz. Yashirin xarajatlar yo'q."
+              "question": "Asosiy narxdan tashqari qo‘shimcha xarajatlar bo‘lishi mumkinmi?",
+              "answer": "Ha, sessiya tarkibi, treklar soni va aranjirovkaga qarab. Muqova dizayni, klip, qo‘shimcha sessiya musiqachilari, jismoniy reliz va h.k. alohida. Konsultatsiyada to‘liq qamrovni tushunib, moslashtirilgan to‘liq taklifni beramiz. Yashirin xarajatlar yo‘q."
             },
             {
               "question": "To'liq albom meni chart ga chiqara oladimi?",

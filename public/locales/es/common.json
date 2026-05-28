@@ -1319,12 +1319,12 @@
     },
     "producer": {
       "sectionTitle": "Productor Hwang Gyeongha",
-      "tagline": "Productor y A&R indie con 15 años de trayectoria",
+      "tagline": "Productor y A&R con 15 años de experiencia",
       "bodyParagraph1": "He trabajado en lanzamientos con artistas indie como Tierliner, The Projectors, Kang Ho-jung, Sickbaby y Namjae — desde la planificación hasta la grabación, la mezcla, la distribución y la prensa.",
       "bodyParagraph2": "Un lanzamiento no es algo que una sola persona pueda lograr. Por eso mi trabajo es ser el compañero que camina contigo hasta el final.",
       "stats": [
         { "value": "30+", "label": "Lanzamientos producidos" },
-        { "value": "15 años", "label": "En la escena indie" },
+        { "value": "15 años", "label": "Años produciendo discos" },
         { "value": "Muchos", "label": "Contactos de prensa musical" }
       ]
     },
@@ -1338,7 +1338,7 @@
       "single": {
         "label": "Lanzamiento de Single",
         "duration": "~7 meses",
-        "range": "Desde aprox. ₩2.7M",
+        "range": "Desde aprox. ₩500K",
         "note": "1–2 pistas, 3 músicos de sesión",
         "detail": {
           "heroTitlePrefix": "Tu primer single,",
@@ -1395,9 +1395,9 @@
             "Presupuesto de publicidad en redes sociales"
           ],
           "priceSectionTitle": "Rango de precio",
-          "priceRange": "Desde ~₩2.7M (single)",
-          "priceRationale": "Basado en proyecto real: single de Harris",
-          "priceNote": "Varía según músicos y sesiones de grabación. Cotización personalizada tras consulta gratuita.",
+          "priceRange": "Desde aprox. ₩500K",
+          "priceRationale": "Desde tarifa base (grabación vocal + mezcla)",
+          "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Singles que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
           "caseStudyItems": [
@@ -1421,8 +1421,8 @@
               "answer": "A veces va más rápido dependiendo de qué tan lista esté la canción. Pero el arreglo, las sesiones, la grabación, la mezcla, la masterización y el registro de distribución cada uno necesita tiempo suficiente. Analizaremos tu situación en la consulta gratuita y estableceremos juntos un cronograma realista."
             },
             {
-              "question": "¿No es caro para una sola canción?",
-              "answer": "Esto no es solo alquiler de estudio — cubre planificación, coordinación de sesiones, dirección de grabación, mezcla, masterización, distribución y PR como paquete completo. Buscar cada elemento por separado puede resultar más caro. Podemos ajustar el tamaño de la sesión a tu presupuesto y darte una cotización personalizada tras la consulta."
+              "question": "¿Qué incluye este precio?",
+              "answer": "La grabación vocal y la mezcla son la base, y a medida que se añaden coordinación de sesiones, arreglos, masterización, distribución y PR de medios, el costo aumenta. No es solo alquiler de estudio — es el costo de acompañarte durante todo el proceso de lanzamiento. Varía según sesión y arreglo; presupuesto personalizado tras consulta."
             },
             {
               "question": "No cambiarán mi canción sin preguntarme, ¿verdad?",
@@ -1538,7 +1538,7 @@
       "album": {
         "label": "Lanzamiento de Álbum",
         "duration": "~24 meses",
-        "range": "Desde aprox. ₩13M",
+        "range": "Desde aprox. ₩4M",
         "note": "~8 pistas, sesión completa",
         "detail": {
           "heroTitlePrefix": "Dejando tu huella",
@@ -1600,9 +1600,9 @@
             "Adiciones grandes de sesión (cotización aparte)"
           ],
           "priceSectionTitle": "Rango de precio",
-          "priceRange": "Desde ~₩13M (álbum completo)",
-          "priceRationale": "Basado en proyecto real: 2.º álbum de Sickbaby",
-          "priceNote": "Varía según músicos y sesiones de grabación. Cotización personalizada tras consulta gratuita.",
+          "priceRange": "Desde aprox. ₩4M",
+          "priceRationale": "Tarifa estándar (~8 pistas, grabación vocal + mezcla + masterización)",
+          "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
           "caseStudyItems": [
@@ -1630,8 +1630,8 @@
               "answer": "Tenemos experiencia con esto. Podemos discutir becas de consejos de artes, fondos artísticos regionales y direcciones de crowdfunding en la consulta. Los resultados, sin embargo, no pueden garantizarse."
             },
             {
-              "question": "¿Pueden surgir costos adicionales más allá de ₩13M?",
-              "answer": "Varía según la formación de sesión, el número de pistas y el alcance del arreglo. Arte de portada, videoclip, etc. son aparte. Damos una cotización personalizada completa después de entender el alcance completo en la consulta. Sin costos ocultos."
+              "question": "¿Pueden surgir costos adicionales más allá de la tarifa base?",
+              "answer": "Sí, varía según sesión, número de pistas y arreglo. Arte de portada, video musical, músicos de sesión adicionales, producción física, etc. son aparte. Damos un presupuesto completo personalizado tras entender el alcance total en la consulta. Sin costos ocultos."
             },
             {
               "question": "¿Un álbum completo puede llevarme a las listas?",

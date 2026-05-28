@@ -1319,12 +1319,12 @@
     },
     "producer": {
       "sectionTitle": "制作人 黄景夏",
-      "tagline": "15年独立音乐圈企划·制作人",
+      "tagline": "15年资历 唱片企划·制作人",
       "bodyParagraph1": "我曾与 Tierliner、The Projectors、Kang Ho-jung、Sickbaby、Namjae 等独立艺人合作，从企划到录音·混音·发行·乐评 PR 全程同行。",
       "bodyParagraph2": "发行从来不是一个人能完成的事。所以我的工作，就是成为陪你走到最后的同行者。",
       "stats": [
         { "value": "30+", "label": "参与发行作品" },
-        { "value": "15年", "label": "独立音乐圈经验" },
+        { "value": "15年", "label": "唱片制作经验" },
         { "value": "众多", "label": "音乐媒体网络" }
       ]
     },
@@ -1338,7 +1338,7 @@
       "single": {
         "label": "单曲发行",
         "duration": "约7个月",
-        "range": "约270万韩元起",
+        "range": "单曲基准 约 ₩50万起",
         "note": "1-2首，3位会话乐手",
         "detail": {
           "heroTitlePrefix": "第一张单曲，",
@@ -1395,9 +1395,9 @@
             "SNS 广告预算"
           ],
           "priceSectionTitle": "价格范围",
-          "priceRange": "单曲约 270 万韩元起",
-          "priceRationale": "实际案例：Harris 单曲",
-          "priceNote": "因乐手配置和录音次数而异。免费咨询后按单价表定制报价。",
+          "priceRange": "单曲基准 约 ₩50万起",
+          "priceRationale": "人声录音·混音 起始单价",
+          "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的单曲",
           "caseStudySubtitle": "真实的发行项目案例。",
           "caseStudyItems": [
@@ -1421,8 +1421,8 @@
               "answer": "根据歌曲的完成度，有时会更快。但编曲、会话、录音、混音、母带和发行注册各环节都需要充足时间。免费咨询时我们会了解你的情况，一起制定切实可行的时间表。"
             },
             {
-              "question": "只有一首歌，会不会太贵了？",
-              "answer": "这不只是录音棚租用，而是涵盖策划、会话协调、录音指导、混音、母带、发行和宣传的完整套餐。单独寻找各个环节实际上可能更贵。我们可以根据预算调整会话规模，咨询后提供定制报价。"
+              "question": "这个价格里包含哪些工作？",
+              "answer": "人声录音·混音是基础，再加上 session 连接·编曲·母带·发行·媒体 PR，单价随之上升。这不是简单的录音棚租用，而是与你一起走完整个发行流程的费用。根据 session 编制和编曲范围而定，咨询后会给您定制报价。"
             },
             {
               "question": "不会在没问我的情况下改变我的歌吧？",
@@ -1538,7 +1538,7 @@
       "album": {
         "label": "正规专辑发行",
         "duration": "约24个月",
-        "range": "约1,305万韩元起",
+        "range": "正规专辑基准 约 ₩400万起",
         "note": "约8首，全会话阵容",
         "detail": {
           "heroTitlePrefix": "在独立音乐圈",
@@ -1600,9 +1600,9 @@
             "大规模会话增加（另行报价）"
           ],
           "priceSectionTitle": "价格范围",
-          "priceRange": "专辑约 1,305 万韩元起",
-          "priceRationale": "实际案例：Sickbaby 第二张专辑",
-          "priceNote": "因乐手配置和录音次数而异。免费咨询后按单价表定制报价。",
+          "priceRange": "正规专辑基准 约 ₩400万起",
+          "priceRationale": "8首左右，人声录音·混音·母带 通常单价",
+          "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的专辑",
           "caseStudySubtitle": "真实的发行项目案例。",
           "caseStudyItems": [
@@ -1630,8 +1630,8 @@
               "answer": "我们有这方面的经验。咨询时可以讨论艺术委员会资助、地区艺术资金和众筹方向。但结果无法保证。"
             },
             {
-              "question": "除了1,305万韩元之外，还会产生额外费用吗？",
-              "answer": "因会话配置、曲目数量和编曲规模而异。封面设计、MV 等另行计算。咨询时了解完整范围后，我们会提供全面的定制报价。没有隐性费用。"
+              "question": "基础单价之外还会有额外费用吗？",
+              "answer": "会，根据 session 编制·曲数·编曲范围而定。封面设计、MV、追加 session 人员、实体专辑制作等为另计。咨询时会先把握整体构成，再给出定制报价。绝无隐藏费用。"
             },
             {
               "question": "发行正规专辑能登上音乐榜单吗？",

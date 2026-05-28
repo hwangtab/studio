@@ -8,7 +8,7 @@ import type { NextPageWithLayout } from '../../../types';
 
 interface Props {
   locale: Locale;
-  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
+  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured' | 'category'>[];
 }
 
 const SingleReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems }) => (
@@ -25,8 +25,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const SINGLE_CASE_STUDY_IDS = ['tierliner-bite-me'];
   const portfolioItems = allItems
     .filter((item) => item.featured || SINGLE_CASE_STUDY_IDS.includes(item.id))
-    .map(({ id, title, description, image, artist, featured }) => ({
-      id, title, description, image, artist, featured,
+    .map(({ id, title, description, image, artist, featured, category }) => ({
+      id, title, description, image, artist, featured, category,
     }));
 
   return buildPageStaticProps(locale, { locale, portfolioItems }, { revalidate: 86400 });

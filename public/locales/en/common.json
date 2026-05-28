@@ -1362,12 +1362,12 @@
     },
     "producer": {
       "sectionTitle": "Producer Hwang Gyeongha",
-      "tagline": "15-year indie producer & A&R",
+      "tagline": "15-year music producer & A&R",
       "bodyParagraph1": "I've worked on releases by indie artists like Tierliner, The Projectors, Kang Ho-jung, Sickbaby, and Namjae — from planning through recording, mixing, distribution, and press coverage.",
       "bodyParagraph2": "A release is not something one person can pull off alone. So my job is to be the companion who walks the whole way with you.",
       "stats": [
         { "value": "30+", "label": "Releases produced" },
-        { "value": "15 yrs", "label": "In the indie scene" },
+        { "value": "15 yrs", "label": "Years producing records" },
         { "value": "Many", "label": "Music media contacts" }
       ]
     },
@@ -1381,7 +1381,7 @@
       "single": {
         "label": "Single Release",
         "duration": "~7 months",
-        "range": "From approx. ₩2.7M",
+        "range": "From approx. ₩500K",
         "note": "1–2 tracks, 3 session musicians",
         "detail": {
           "heroTitlePrefix": "Your first single,",
@@ -1438,9 +1438,9 @@
             "SNS advertising budget"
           ],
           "priceSectionTitle": "Price Range",
-          "priceRange": "From ~₩2.7M (single)",
-          "priceRationale": "Based on actual project: Harris single",
-          "priceNote": "Varies by session lineup and recording sessions. Custom quote after free consultation.",
+          "priceRange": "From approx. ₩500K",
+          "priceRationale": "Starting from base rate (vocal recording + mixing)",
+          "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Singles we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
           "caseStudyItems": [
@@ -1464,8 +1464,8 @@
               "answer": "Sometimes it goes faster depending on how ready the song is. But arrangement, sessions, recording, mixing, mastering, and distribution registration each need sufficient time. We'll look at your situation in the free consultation and set a realistic timeline together."
             },
             {
-              "question": "Isn't it expensive for just one song?",
-              "answer": "This isn't just studio rental — it covers planning, session coordination, recording direction, mixing, mastering, distribution, and PR as a complete package. Sourcing each element separately can actually cost more. We can adjust session size to fit your budget, and give a custom quote after consultation."
+              "question": "What's included at this price?",
+              "answer": "Vocal recording and mixing are the base, with session coordination, arrangement, mastering, distribution, and media PR added as scope grows. This isn't simple studio rental — it's the cost of accompanying you through the whole release process. Varies by session lineup and arrangement scope; we'll give a custom quote after consultation."
             },
             {
               "question": "You won't change my song without asking, right?",
@@ -1581,7 +1581,7 @@
       "album": {
         "label": "Full Album Release",
         "duration": "~24 months",
-        "range": "From approx. ₩13M",
+        "range": "From approx. ₩4M",
         "note": "~8 tracks, full session",
         "detail": {
           "heroTitlePrefix": "Making your name",
@@ -1643,9 +1643,9 @@
             "Large session additions (separate quote)"
           ],
           "priceSectionTitle": "Price Range",
-          "priceRange": "From ~₩13M (full album)",
-          "priceRationale": "Based on actual project: Sickbaby 2nd album",
-          "priceNote": "Varies by session lineup and recording sessions. Custom quote after free consultation.",
+          "priceRange": "From approx. ₩4M",
+          "priceRationale": "Standard rate (~8 tracks, vocal recording + mixing + mastering)",
+          "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Full albums we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
           "caseStudyItems": [
@@ -1673,8 +1673,8 @@
               "answer": "We have experience with this. We can discuss arts council grants, regional arts funding, and crowdfunding directions in the consultation. Results, however, cannot be guaranteed."
             },
             {
-              "question": "Can additional costs come up beyond ₩13M?",
-              "answer": "Varies by session lineup, track count, and arrangement scope. Cover artwork, music video, etc. are separate. We give a full custom quote after understanding the complete scope in consultation. No hidden costs."
+              "question": "Can additional costs come up beyond the base rate?",
+              "answer": "Yes, varying by session lineup, track count, and arrangement scope. Cover artwork, music video, extra session musicians, physical release production, etc. are separate. We give a full custom quote after understanding the complete scope in consultation. No hidden costs."
             },
             {
               "question": "Can a full album get me on the charts?",

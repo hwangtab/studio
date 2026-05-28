@@ -1319,12 +1319,12 @@
     },
     "producer": {
       "sectionTitle": "Nhà sản xuất Hwang Gyeongha",
-      "tagline": "Nhà sản xuất & A&R indie 15 năm kinh nghiệm",
+      "tagline": "Nhà sản xuất & A&R với 15 năm kinh nghiệm",
       "bodyParagraph1": "Tôi đã đồng hành cùng các nghệ sĩ indie như Tierliner, The Projectors, Kang Ho-jung, Sickbaby và Namjae — từ lập kế hoạch đến thu âm, hòa âm, phân phối và PR phê bình.",
       "bodyParagraph2": "Phát hành không phải là điều một mình ai đó có thể làm được. Vì vậy công việc của tôi là trở thành người đồng hành đi cùng bạn đến cuối con đường.",
       "stats": [
         { "value": "30+", "label": "Bản phát hành đã sản xuất" },
-        { "value": "15 năm", "label": "Trong làng indie" },
+        { "value": "15 năm", "label": "Năm làm sản xuất âm nhạc" },
         { "value": "Nhiều", "label": "Đầu mối truyền thông âm nhạc" }
       ]
     },
@@ -1338,7 +1338,7 @@
       "single": {
         "label": "Phát hành Single",
         "duration": "~7 tháng",
-        "range": "Từ khoảng ₩2.7M",
+        "range": "Từ khoảng ₩500K",
         "note": "1–2 bài, 3 nhạc công session",
         "detail": {
           "heroTitlePrefix": "Single đầu tiên của bạn,",
@@ -1395,9 +1395,9 @@
             "Ngân sách quảng cáo mạng xã hội"
           ],
           "priceSectionTitle": "Khoảng giá",
-          "priceRange": "Từ ~₩2.7M (single)",
-          "priceRationale": "Dựa trên dự án thực tế: single Harris",
-          "priceNote": "Thay đổi theo cấu hình session và số buổi thu âm. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "priceRange": "Từ khoảng ₩500K",
+          "priceRationale": "Bắt đầu từ mức cơ bản (thu âm vocal + mix)",
+          "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các single chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
           "caseStudyItems": [
@@ -1421,8 +1421,8 @@
               "answer": "Đôi khi nhanh hơn tùy thuộc vào mức độ sẵn sàng của bài hát. Nhưng dàn dựng, session, thu âm, hòa âm, mastering và đăng ký phân phối mỗi bước đều cần đủ thời gian. Chúng tôi sẽ xem xét tình huống của bạn trong buổi tư vấn miễn phí và cùng nhau lập lịch thực tế."
             },
             {
-              "question": "Có đắt không khi chỉ cho một bài hát?",
-              "answer": "Đây không chỉ là thuê phòng thu — mà bao gồm lên kế hoạch, phối hợp session, định hướng thu âm, hòa âm, mastering, phân phối và PR như một gói hoàn chỉnh. Tự tìm từng yếu tố riêng lẻ thực ra có thể tốn kém hơn. Chúng tôi có thể điều chỉnh quy mô session theo ngân sách và báo giá tùy chỉnh sau tư vấn."
+              "question": "Mức giá này bao gồm những gì?",
+              "answer": "Thu âm vocal và mix là nền tảng, cộng thêm điều phối session, arrangement, master, phân phối và PR truyền thông khi phạm vi mở rộng. Đây không phải thuê phòng thu đơn thuần mà là chi phí đồng hành cùng bạn suốt quá trình phát hành. Tùy session và arrangement; chúng tôi sẽ báo giá tùy chỉnh sau tư vấn."
             },
             {
               "question": "Các bạn sẽ không thay đổi bài hát của tôi mà không hỏi đúng không?",
@@ -1538,7 +1538,7 @@
       "album": {
         "label": "Phát hành Album Đầy đủ",
         "duration": "~24 tháng",
-        "range": "Từ khoảng ₩13M",
+        "range": "Từ khoảng ₩4M",
         "note": "~8 bài, dàn nhạc công đầy đủ",
         "detail": {
           "heroTitlePrefix": "Khắc tên bạn",
@@ -1600,9 +1600,9 @@
             "Bổ sung session lớn (báo giá riêng)"
           ],
           "priceSectionTitle": "Khoảng giá",
-          "priceRange": "Từ ~₩13M (album đầy đủ)",
-          "priceRationale": "Dựa trên dự án thực tế: album thứ 2 của Sickbaby",
-          "priceNote": "Thay đổi theo cấu hình session và số buổi thu âm. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "priceRange": "Từ khoảng ₩4M",
+          "priceRationale": "Mức tiêu chuẩn (~8 bài, thu âm vocal + mix + master)",
+          "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các album đầy đủ chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
           "caseStudyItems": [
@@ -1630,8 +1630,8 @@
               "answer": "Chúng tôi có kinh nghiệm về điều này. Chúng tôi có thể thảo luận về học bổng hội đồng nghệ thuật, quỹ nghệ thuật địa phương và hướng gây quỹ cộng đồng trong buổi tư vấn. Tuy nhiên, kết quả không thể đảm bảo."
             },
             {
-              "question": "Có thể phát sinh chi phí thêm ngoài ₩13M không?",
-              "answer": "Thay đổi theo cấu hình session, số bài và quy mô dàn dựng. Artwork bìa, MV, v.v. tính riêng. Chúng tôi báo giá tùy chỉnh đầy đủ sau khi hiểu phạm vi hoàn chỉnh trong buổi tư vấn. Không có chi phí ẩn."
+              "question": "Ngoài mức giá cơ bản có thể phát sinh chi phí nào không?",
+              "answer": "Có, tùy theo session, số bài và phạm vi arrangement. Thiết kế bìa, MV, thêm nhạc công session, sản xuất bản vật lý, v.v. là riêng. Chúng tôi sẽ báo giá tùy chỉnh đầy đủ sau khi nắm phạm vi tổng thể trong buổi tư vấn. Không có chi phí ẩn."
             },
             {
               "question": "Album đầy đủ có thể đưa tôi lên bảng xếp hạng không?",
