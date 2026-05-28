@@ -81,6 +81,11 @@ const nextConfig = {
         destination: '/:locale/stories/songstructure1',
         permanent: true,
       },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/stories/practice-room-drum1',
+        destination: '/:locale/practice-room',
+        permanent: true,
+      },
     ];
   },
 
