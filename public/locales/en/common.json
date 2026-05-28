@@ -1561,7 +1561,12 @@
             {
               "portfolioId": "namjae-wi-inmul",
               "headline": "An artist statement with narrative",
-              "quote": "From arrangement to promotion, we worked together so Namjae's distinct artistic world could fully reach the indie scene."
+              "quote": "Namjae 〈A Person Above Has Gone Through X and Reached Realization〉. From arrangement to promotion, we worked together so the artist's distinct world could fully reach the indie scene."
+            },
+            {
+              "portfolioId": "unknown-feeling",
+              "headline": "Many artists, one flow",
+              "quote": "Harusali Project 2 〈Unknown Feeling〉. A collaborative album that ties together tracks by multiple artists under one sonic identity. We handled planning, mixing, mastering, and the dedicated project website."
             }
           ],
           "inProgressSectionTitle": "EPs we're making right now",
@@ -1662,12 +1667,22 @@
             {
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "Putting your name on the line",
-              "quote": "From planning to mixing, we designed the sound color that would become the reference point for his entire discography."
+              "quote": "Kang Ho-jung 〈Self-titled〉. From planning to mixing, we designed the sound color that would become the reference point for his entire discography."
             },
             {
               "portfolioId": "dystopia-2025",
               "headline": "The full ambition of a full album",
-              "quote": "Samgakjeonpasa's 〈Dystopia 2025〉. From planning, recording, mixing, mastering, and critic PR, to an album-dedicated website — we joined every step of the full album journey."
+              "quote": "Samgakjeonpasa 〈Dystopia 2025〉. From planning, recording, mixing, mastering, and critic PR, to an album-dedicated website — we joined every step of the full album journey."
+            },
+            {
+              "portfolioId": "eongadeul-self-titled",
+              "headline": "A band's first self-titled",
+              "quote": "Eongadeul 〈Self-titled〉. The first work where the band put their own name forward. We preserved each member's individual color while capturing the live texture of the rehearsal room."
+            },
+            {
+              "portfolioId": "ryu-hyeong-su-haru",
+              "headline": "The grain of daily life, as-is",
+              "quote": "Ryu Hyeong-su 〈Haru〉. A full album that captures the flow of one day from morning to night. We designed the direction of bringing everyday texture into sound through an acoustic-centered arrangement."
             }
           ],
           "inProgressSectionTitle": "Full albums we're making right now",

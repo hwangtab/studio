@@ -1518,7 +1518,12 @@
             {
               "portfolioId": "namjae-wi-inmul",
               "headline": "带有叙事性的艺术家宣言",
-              "quote": "从编曲到宣传，我们一起合作，让南宰独特的艺术世界完整地传达给独立音乐圈。"
+              "quote": "南宰 〈上述人物经历了 X 并获得领悟〉。从编曲到宣传，我们一起合作，让艺术家独特的世界观完整地传达给独立音乐圈。"
+            },
+            {
+              "portfolioId": "unknown-feeling",
+              "headline": "多位艺术家，一种流向",
+              "quote": "蜉蝣计划 2 〈未知的感觉〉。一张把多位艺术家的曲目以一个声音身份串联起来的合作专辑。我们负责企划、混音、母带，以及专属项目网站。"
             }
           ],
           "inProgressSectionTitle": "正在制作中的 EP",
@@ -1619,12 +1624,22 @@
             {
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "以自己的名字为赌注",
-              "quote": "从策划到混音，我们设计了将成为他整个音乐作品集参考基准的声音色彩。"
+              "quote": "姜浩中 〈Self-titled〉。从策划到混音，我们设计了将成为他整个音乐作品集参考基准的声音色彩。"
             },
             {
               "portfolioId": "dystopia-2025",
               "headline": "把正规专辑的野心走到底",
               "quote": "Samgakjeonpasa 〈Dystopia 2025〉。从企划、录音、混音、母带，到乐评 PR 以及专辑专属网站制作，我们参与了正规专辑的每一个环节。"
+            },
+            {
+              "portfolioId": "eongadeul-self-titled",
+              "headline": "乐队首张同名专辑",
+              "quote": "Eongadeul 〈Self-titled〉。乐队首次以自己的名字推出的正规专辑。我们在保留每位成员个性的同时，把合奏室的现场质感原汁原味地呈现了出来。"
+            },
+            {
+              "portfolioId": "ryu-hyeong-su-haru",
+              "headline": "如实呈现日常的纹理",
+              "quote": "柳亨秀 〈一天〉。一张承载从早到晚一整天流向的正规专辑。我们以原声编制为基础，一同设计了把日常质感融入声音的方向。"
             }
           ],
           "inProgressSectionTitle": "正在制作中的专辑",

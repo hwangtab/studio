@@ -22,7 +22,7 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
-  const ALBUM_CASE_STUDY_IDS = ['kang-ho-jung-self-titled'];
+  const ALBUM_CASE_STUDY_IDS = ['kang-ho-jung-self-titled', 'eongadeul-self-titled', 'ryu-hyeong-su-haru'];
   const portfolioItems = allItems
     .filter((item) => item.featured || ALBUM_CASE_STUDY_IDS.includes(item.id))
     .map(({ id, title, description, image, artist, featured, category }) => ({

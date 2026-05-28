@@ -1516,7 +1516,12 @@
             {
               "portfolioId": "namjae-wi-inmul",
               "headline": "Rivoyatli artist bayonoti",
-              "quote": "Arranjmandan reklama kampaniyasigacha birga ishlabmiz, Namjaening o'ziga xos badiiy dunyosi indie sahnaga to'liq yetib borishi uchun."
+              "quote": "Namjae 〈Yuqoridagi shaxs X ni boshidan kechirib, anglashga erishdi〉. Arranjmandan reklama kampaniyasigacha birga ishlabmiz, artistning o'ziga xos dunyosi indie sahnaga to'liq yetib borishi uchun."
+            },
+            {
+              "portfolioId": "unknown-feeling",
+              "headline": "Bir nechta artist, bir oqim",
+              "quote": "Harusali Project 2 〈Unknown Feeling〉. Bir nechta artistning treklarini yagona ovoz identifikatsiyasi ostida birlashtirgan hamkorlik albomi. Rejalashtirish, mikslash, masterlash va loyihaning maxsus veb-saytini biz yuritdik."
             }
           ],
           "inProgressSectionTitle": "Hozir yaratayotgan EP lar",
@@ -1617,12 +1622,22 @@
             {
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "O'z ismingizni garovga qo'yish",
-              "quote": "Rejalashtirish bosqichidan mikslashgacha uning butun ijodi uchun mos yozuvlar nuqtasiga aylanadigan ovoz rangini loyihalashtirdik."
+              "quote": "Kang Ho-jung 〈Self-titled〉. Rejalashtirish bosqichidan mikslashgacha uning butun ijodi uchun mos yozuvlar nuqtasiga aylanadigan ovoz rangini loyihalashtirdik."
             },
             {
               "portfolioId": "dystopia-2025",
               "headline": "To‘liq albomning shijoatini oxirigacha olib borish",
-              "quote": "Samgakjeonpasaning 〈Dystopia 2025〉 albomi. Rejalashtirish, yozuv, mikslash, masterlash va tanqidchilar uchun PR’dan tortib, albomga bag‘ishlangan veb-sayt yaratishgacha — to‘liq albom safarining har bosqichida birga bo‘ldik."
+              "quote": "Samgakjeonpasa 〈Dystopia 2025〉. Rejalashtirish, yozuv, mikslash, masterlash va tanqidchilar uchun PR’dan tortib, albomga bag‘ishlangan veb-sayt yaratishgacha — to‘liq albom safarining har bosqichida birga bo‘ldik."
+            },
+            {
+              "portfolioId": "eongadeul-self-titled",
+              "headline": "Guruhning birinchi self-titled albomi",
+              "quote": "Eongadeul 〈Self-titled〉. Guruh o'z ismini birinchi marta birinchi o'ringa qo'ygan ish. Har bir a'zoning o'ziga xos rangini saqlab qolgan holda, mashq xonasining jonli tovushini bor holicha yozib oldik."
+            },
+            {
+              "portfolioId": "ryu-hyeong-su-haru",
+              "headline": "Kundalik hayotning to'qimasi bor holicha",
+              "quote": "Ryu Hyeong-su 〈Haru〉. Ertalabdan kechgacha bo'lgan bir kunning oqimini ifoda etgan to'liq albom. Akustik asosidagi aranjirovka orqali kundalik hayotning to'qimasini tovushga olib kirish yo'nalishini birga loyihalashtirdik."
             }
           ],
           "inProgressSectionTitle": "Hozir yaratayotgan albomlar",

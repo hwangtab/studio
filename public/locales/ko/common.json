@@ -2214,7 +2214,12 @@
             {
               "portfolioId": "namjae-wi-inmul",
               "headline": "서사 있는 아티스트 선언",
-              "quote": "편곡부터 홍보까지 함께하며 남자애의 독특한 세계관이 인디씬에 온전히 닿도록 했습니다."
+              "quote": "남자애 〈위 인물은 X를 겪고 깨달음을 얻음〉. 편곡부터 홍보까지 함께하며 아티스트의 독특한 세계관이 인디씬에 온전히 닿도록 했습니다."
+            },
+            {
+              "portfolioId": "unknown-feeling",
+              "headline": "여러 아티스트, 하나의 흐름",
+              "quote": "하루살이 프로젝트 2 〈알 수 없는 느낌〉. 여러 아티스트의 트랙을 하나의 사운드 아이덴티티로 묶어낸 협업 앨범. 기획·믹싱·마스터링·전용 웹사이트까지 함께했습니다."
             }
           ],
           "inProgressSectionTitle": "지금 함께 만들고 있는 EP들",
@@ -2315,12 +2320,22 @@
             {
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "싱어송라이터의 이름을 걸다",
-              "quote": "기획부터 믹싱까지 담당하며, 이후 디스코그래피의 기준선이 되는 사운드 컬러를 함께 설계했습니다."
+              "quote": "강호중 〈Self-titled〉. 기획부터 믹싱까지 담당하며, 이후 디스코그래피의 기준선이 되는 사운드 컬러를 함께 설계했습니다."
             },
             {
               "portfolioId": "dystopia-2025",
               "headline": "정규의 야심을 끝까지",
               "quote": "삼각전파사 〈Dystopia 2025〉. 기획·녹음·믹싱·마스터링·평론 PR, 그리고 앨범 전용 웹사이트 제작까지 정규의 모든 단계를 함께했습니다."
+            },
+            {
+              "portfolioId": "eongadeul-self-titled",
+              "headline": "밴드의 첫 셀프 타이틀",
+              "quote": "엉아들 〈Self-titled〉. 밴드가 자신들의 이름을 처음으로 내세운 정규. 멤버 각자의 색을 살리면서 합주실의 라이브 질감을 그대로 담았습니다."
+            },
+            {
+              "portfolioId": "ryu-hyeong-su-haru",
+              "headline": "일상의 결을 그대로",
+              "quote": "류형수 〈하루〉. 아침부터 밤까지 하루의 흐름을 담은 정규 앨범. 어쿠스틱 기반 편성으로 일상의 질감을 사운드에 담는 방향을 함께 설계했습니다."
             }
           ],
           "inProgressSectionTitle": "지금 함께 만들고 있는 정규들",
