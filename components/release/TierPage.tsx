@@ -74,7 +74,11 @@ const TIER_TYPE_KEYS: Record<string, string[]> = {
   album: ['fullAlbum'],
 };
 
-const TIER_HERO_IMAGE = '/images/studio2.webp';
+const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
+  single: '/images/album1.webp',
+  ep: '/images/album2.webp',
+  album: '/images/album3.webp',
+};
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
 const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
 const TIER_CATEGORY_MAP: Record<'single' | 'ep' | 'album', string[]> = {
@@ -138,7 +142,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           </>
         }
         subtitle={t(k('heroSubtitle'))}
-        backgroundImage={TIER_HERO_IMAGE}
+        backgroundImage={TIER_HERO_IMAGES[tier]}
         imageAlt={t('releaseProject.hero.imageAlt')}
         minHeight="min-h-[60svh]"
         ctaButtons={
