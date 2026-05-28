@@ -1288,21 +1288,21 @@
   "releaseProject": {
     "seo": {
       "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
-      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan — 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Bepul maslahat.",
+      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan — Tierliner, The Projectors va Kang Ho-jung kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
       "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL",
       "single": {
         "title": "Singl chiqarish loyihasi | Studio NOL",
-        "description": "Birinchi singldan chiqarishgacha — Hwang Gyeongha produceri bilan rejalashtirish, yozuv, tarqatish va PR.",
+        "description": "Birinchi singldan oxirigacha yoningizdamiz. Tierliner va The Projectors kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan rejalashtirish, yozuv, tarqatish va PR.",
         "keywords": "singl chiqarish, indie musiqa, Studio NOL, musiqa produceri"
       },
       "ep": {
         "title": "EP chiqarish loyihasi | Studio NOL",
-        "description": "3–5 ta qo'shiq bilan musiqa o'zligingizni e'lon qiling. Hwang Gyeongha produceri bilan rejalashtirish, yozuv, tarqatish va PR.",
+        "description": "3–5 ta qo‘shiq bilan musiqa o‘zligingizni e’lon qiling. Namjae kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan EP chiqarish loyihasi. Birinchi singldan boshlab ikki bosqichli media PR.",
         "keywords": "EP chiqarish, mini albom, indie musiqa, Studio NOL"
       },
       "album": {
         "title": "To'liq albom chiqarish loyihasi | Studio NOL",
-        "description": "Indie sahnasida ismingizni o'yib yozing. Hwang Gyeongha produceri bilan rejalashtirish, yozuv, session, tarqatish va PR.",
+        "description": "Indie sahnasida ismingizni o‘yib yozadigan to‘liq albom. Kang Ho-jung va Samgakjeonpasa kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
         "keywords": "albom chiqarish, indie musiqa, musiqa produceri, Studio NOL"
       }
     },
@@ -1314,6 +1314,21 @@
       "ctaConsult": "Bepul Chiqarish Maslahati",
       "ctaPortfolio": "Portfelni Ko'rish",
       "imageAlt": "Studio NOL Chiqarish Loyihasi"
+    },
+    "producer": {
+      "sectionTitle": "Prodyuser Hwang Gyeongha",
+      "tagline": "15 yillik indie prodyuser va A&R",
+      "bodyParagraph1": "Men Tierliner, The Projectors, Kang Ho-jung, Sickbaby va Namjae kabi indie artistlar bilan ishlaganman — rejalashtirishdan yozuv, mikslash, tarqatish va matbuot PR’igacha bo‘lgan butun jarayonda.",
+      "bodyParagraph2": "Chiqarish — bir kishining qo‘lidan keladigan ish emas. Shu sababli mening vazifam — yo‘lning oxirigacha siz bilan birga yuradigan hamroh bo‘lishdir.",
+      "stats": [
+        { "value": "30+", "label": "Birga chiqarilgan ishlar" },
+        { "value": "15 yil", "label": "Indie sahnasida" },
+        { "value": "Ko‘plab", "label": "Musiqa OAV tarmog‘i" }
+      ]
+    },
+    "reviews": {
+      "sectionTitle": "Birga ishlagan artistlarning fikrlari",
+      "sectionSubtitle": "Chiqarishni yakunlagan artistlarning haqiqiy ovozlari."
     },
     "tiers": {
       "sectionTitle": "Chiqarish Loyihasi Turlari",
@@ -1388,6 +1403,11 @@
               "portfolioId": "tierliner-bite-me",
               "headline": "Bitta trek, guruhning barcha energiyasi",
               "quote": "Indie rok guruhining xom energiyasini streaming uchun tayyor ovozga aylantirdik. Jonli energiya yozuvda saqlanib qoldi."
+            },
+            {
+              "portfolioId": "the-projectors-babu-first-flight",
+              "headline": "Debyut singl, jonli energiyani saqlab qolgan holda",
+              "quote": "The Projectors’ning debyut singli. Guruhning jonli ijrosini imkon qadar saqlab qolgan holda, uni zamonaviy streaming ovozi uchun qayta talqin qilgan loyiha."
             }
           ],
           "inProgressSectionTitle": "Hozir yaratayotgan singller",
@@ -1588,6 +1608,11 @@
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "O'z ismingizni garovga qo'yish",
               "quote": "Rejalashtirish bosqichidan mikslashgacha uning butun ijodi uchun mos yozuvlar nuqtasiga aylanadigan ovoz rangini loyihalashtirdik."
+            },
+            {
+              "portfolioId": "dystopia-2025",
+              "headline": "To‘liq albomning shijoatini oxirigacha olib borish",
+              "quote": "Samgakjeonpasaning 〈Dystopia 2025〉 albomi. Rejalashtirish, yozuv, mikslash, masterlash va tanqidchilar uchun PR’dan tortib, albomga bag‘ishlangan veb-sayt yaratishgacha — to‘liq albom safarining har bosqichida birga bo‘ldik."
             }
           ],
           "inProgressSectionTitle": "Hozir yaratayotgan albomlar",
@@ -1623,7 +1648,12 @@
       "footNoteMid": "orqali amalga oshiriladi. Narxlarni",
       "footNotePricingLabel": "narxlar sahifasida",
       "footNotePost": "ko'ring.",
-      "detailCta": "Ko'proq bilish"
+      "detailCta": "Ko'proq bilish",
+      "caseStudyViewDetail": "Reliz keysini ko‘rish",
+      "crossTier": {
+        "sectionTitle": "Boshqa chiqarish formatlarini ham ko‘rib chiqing",
+        "sectionSubtitle": "Sizga mos hajmni birga tanlaymiz."
+      }
     },
     "scope": {
       "sectionTitle": "Prodyuser Hwang Gyeongha Beradi",

@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
   Target, Calendar, ListChecks, X, MessageCircle, BookOpen,
+  Award, Star, Quote, ArrowRightLeft,
 } from 'lucide-react';
 import SEO from '../SEO';
 import SectionHeading from '../ui/SectionHeading';
 import ImageHero from '../common/ImageHero';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
+import { getReviews } from '../../data/reviews';
 import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
 
@@ -46,6 +48,11 @@ interface ConsultationStep {
   desc: string;
 }
 
+interface ProducerStat {
+  value: string;
+  label: string;
+}
+
 interface TierPageProps {
   locale: Locale;
   tier: 'single' | 'ep' | 'album';
@@ -68,6 +75,8 @@ const TIER_TYPE_KEYS: Record<string, string[]> = {
 };
 
 const TIER_HERO_IMAGE = '/images/studio2.webp';
+const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
+const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
 
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -82,10 +91,13 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const caseStudyJsonItems = t(k('caseStudyItems'), { returnObjects: true }) as CaseStudyJsonItem[];
   const faqItems = t(k('faqItems'), { returnObjects: true }) as { question: string; answer: string }[];
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
+  const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
 
   const tierTypeKeys = TIER_TYPE_KEYS[tier] ?? [];
   const filteredInProgress = ALL_IN_PROGRESS.filter((item) => tierTypeKeys.includes(item.typeKey));
   const featuredPortfolioItems = portfolioItems.filter((i) => i.featured);
+  const otherTiers = ALL_TIERS.filter((t) => t !== tier);
+  const reviewsToShow = getReviews(locale).filter((r) => REVIEW_IDS_FOR_RELEASE_PROJECT.includes(r.id));
 
   const inProgressTypeLabels: Record<string, string> = {
     fullAlbum: t('releaseProject.inProgress.types.fullAlbum'),
@@ -102,6 +114,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         description={t(`releaseProject.seo.${tier}.description`)}
         keywords={t(`releaseProject.seo.${tier}.keywords`)}
         canonical={`/${locale}/release-project/${tier}`}
+        faqItems={Array.isArray(faqItems) ? faqItems : null}
       />
 
       <ImageHero
@@ -140,6 +153,39 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           </>
         }
       />
+
+      {/* 프로듀서 소개 */}
+      <Section variant="alternate">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 sm:p-10 shadow-md border border-gray-100 dark:border-gray-700 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
+              <Award size={32} className="text-primary" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-title font-bold text-gray-900 dark:text-white mb-2">
+              {t('releaseProject.producer.sectionTitle')}
+            </h2>
+            <p className="text-sm text-primary font-medium mb-6">
+              {t('releaseProject.producer.tagline')}
+            </p>
+            <div className="text-left sm:text-center space-y-3 max-w-xl mx-auto mb-8">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {t('releaseProject.producer.bodyParagraph1')}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {t('releaseProject.producer.bodyParagraph2')}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
+              {Array.isArray(producerStats) && producerStats.map((stat, i) => (
+                <div key={i}>
+                  <p className="text-2xl sm:text-3xl font-bold text-primary mb-1">{stat.value}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
 
       {/* 페르소나 */}
       <Section variant="default">
@@ -283,13 +329,13 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             subtitle={t(k('caseStudySubtitle'))}
             className="mb-10"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          <div className={`grid grid-cols-1 ${caseStudyJsonItems.length > 1 ? 'sm:grid-cols-2' : ''} gap-6 max-w-3xl mx-auto`}>
             {caseStudyJsonItems.map((csItem) => {
               const portfolioItem = portfolioItems.find((p) => p.id === csItem.portfolioId);
               return (
                 <div
                   key={csItem.portfolioId}
-                  className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700"
+                  className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 flex flex-col"
                 >
                   {portfolioItem?.image && (
                     <div className="aspect-square overflow-hidden relative">
@@ -302,18 +348,18 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                       />
                     </div>
                   )}
-                  <div className="p-5">
+                  <div className="p-5 flex flex-col flex-1">
                     {portfolioItem?.artist && (
                       <p className="text-xs text-primary font-medium mb-1">{portfolioItem.artist}</p>
                     )}
                     <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2">{csItem.headline}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{csItem.quote}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4 flex-1">{csItem.quote}</p>
                     {portfolioItem && (
                       <Link
                         href={getLink(`/portfolio/${portfolioItem.id}`)}
-                        className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline underline-offset-2"
+                        className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline underline-offset-2 self-start"
                       >
-                        {t('releaseProject.tiers.detailCta')} <ArrowRight size={12} />
+                        {t('releaseProject.tiers.caseStudyViewDetail')} <ArrowRight size={12} />
                       </Link>
                     )}
                   </div>
@@ -324,9 +370,42 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </Section>
       )}
 
+      {/* 고객 후기 */}
+      {reviewsToShow.length > 0 && (
+        <Section variant="default">
+          <SectionHeading
+            icon={Quote}
+            title={t('releaseProject.reviews.sectionTitle')}
+            subtitle={t('releaseProject.reviews.sectionSubtitle')}
+            className="mb-10"
+          />
+          <div className={`grid grid-cols-1 ${reviewsToShow.length > 1 ? 'md:grid-cols-2' : ''} gap-5 max-w-4xl mx-auto`}>
+            {reviewsToShow.map((review) => (
+              <figure
+                key={review.id}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col"
+              >
+                <div className="flex items-center gap-1 mb-3" aria-label={`${review.rating} / 5`}>
+                  {Array.from({ length: review.rating }).map((_, i) => (
+                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" aria-hidden="true" />
+                  ))}
+                </div>
+                <blockquote className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4 flex-1">
+                  &ldquo;{review.content}&rdquo;
+                </blockquote>
+                <figcaption className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">{review.author}</span>
+                  <span>{review.category}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {/* 지금 함께 만들고 있는 작업들 */}
       {filteredInProgress.length > 0 && (
-        <Section variant="default">
+        <Section variant="alternate">
           <SectionHeading
             icon={Disc}
             title={t(k('inProgressSectionTitle'))}
@@ -356,7 +435,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
       {/* FAQ */}
       {Array.isArray(faqItems) && faqItems.length > 0 && (
         <FAQSection
-          variant="alternate"
+          variant="default"
           items={faqItems}
           title={t(k('faqSectionTitle'))}
           subtitle={t(k('faqSubtitle'))}
@@ -365,7 +444,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
 
       {/* 디스코그래피 */}
       {featuredPortfolioItems.length > 0 && (
-        <Section variant="default">
+        <Section variant="alternate">
           <SectionHeading
             icon={Disc}
             title={t('releaseProject.discography.sectionTitle')}
@@ -413,7 +492,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
 
       {/* 상담 프로세스 */}
       {Array.isArray(consultationSteps) && consultationSteps.length > 0 && (
-        <Section variant="alternate">
+        <Section variant="default">
           <SectionHeading
             icon={MessageCircle}
             title={t('releaseProject.consultation.sectionTitle')}
@@ -435,6 +514,34 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           </div>
         </Section>
       )}
+
+      {/* 다른 티어 살펴보기 */}
+      <Section variant="alternate">
+        <SectionHeading
+          icon={ArrowRightLeft}
+          title={t('releaseProject.tiers.crossTier.sectionTitle')}
+          subtitle={t('releaseProject.tiers.crossTier.sectionSubtitle')}
+          className="mb-10"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+          {otherTiers.map((otherTier) => (
+            <Link
+              key={otherTier}
+              href={getLink(`/release-project/${otherTier}`)}
+              className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <p className="text-xs text-primary font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                {t(`releaseProject.tiers.${otherTier}.label`)}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(`releaseProject.tiers.${otherTier}.note`)}</p>
+              <span className="inline-flex items-center gap-1 text-sm text-primary font-medium">
+                {t('releaseProject.tiers.detailCta')} <ArrowRight size={14} />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </Section>
 
       <Section variant="default" className="py-16">
         <ContactCTA

@@ -1290,21 +1290,21 @@
   "releaseProject": {
     "seo": {
       "title": "Dự án Phát hành · Sản xuất Âm nhạc Indie | Studio NOL",
-      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha 15 năm kinh nghiệm. Tư vấn miễn phí.",
+      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), từng làm việc với các nghệ sĩ như Tierliner, The Projectors và Kang Ho-jung. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
       "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL",
       "single": {
         "title": "Dự án phát hành Single | Studio NOL",
-        "description": "Từ single đầu tiên đến phát hành — lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha.",
+        "description": "Đồng hành từ single đầu tiên đến tận cuối. Lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha (15 năm) — người từng làm việc với các nghệ sĩ như Tierliner và The Projectors.",
         "keywords": "phát hành single, âm nhạc indie, Studio NOL, nhà sản xuất âm nhạc"
       },
       "ep": {
         "title": "Dự án phát hành EP | Studio NOL",
-        "description": "Tuyên bố bản sắc âm nhạc của bạn với 3–5 bài. Lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha.",
+        "description": "Tuyên bố bản sắc âm nhạc của bạn với 3–5 bài. Dự án EP cùng nhà sản xuất Hwang Gyeongha (15 năm) — từng làm việc với các nghệ sĩ như Namjae. Từ single mở đường đến hai vòng PR truyền thông.",
         "keywords": "phát hành EP, mini album, âm nhạc indie, Studio NOL"
       },
       "album": {
         "title": "Dự án phát hành Album | Studio NOL",
-        "description": "Khắc tên bạn trong cảnh indie với album đầy đủ. Lập kế hoạch, thu âm, session, phân phối và PR cùng nhà sản xuất Hwang Gyeongha.",
+        "description": "Album đầy đủ khắc tên bạn trong cảnh indie. Dự án album cùng nhà sản xuất Hwang Gyeongha (15 năm) — từng làm việc với các nghệ sĩ như Kang Ho-jung và Samgakjeonpasa. A&R, buổi nghe dành cho nhà phê bình và hỗ trợ nộp hồ sơ tài trợ.",
         "keywords": "phát hành album, âm nhạc indie Korea, nhà sản xuất âm nhạc, Studio NOL"
       }
     },
@@ -1316,6 +1316,21 @@
       "ctaConsult": "Tư vấn Phát hành Miễn phí",
       "ctaPortfolio": "Xem Danh mục",
       "imageAlt": "Dự án Phát hành Studio NOL"
+    },
+    "producer": {
+      "sectionTitle": "Nhà sản xuất Hwang Gyeongha",
+      "tagline": "Nhà sản xuất & A&R indie 15 năm kinh nghiệm",
+      "bodyParagraph1": "Tôi đã đồng hành cùng các nghệ sĩ indie như Tierliner, The Projectors, Kang Ho-jung, Sickbaby và Namjae — từ lập kế hoạch đến thu âm, hòa âm, phân phối và PR phê bình.",
+      "bodyParagraph2": "Phát hành không phải là điều một mình ai đó có thể làm được. Vì vậy công việc của tôi là trở thành người đồng hành đi cùng bạn đến cuối con đường.",
+      "stats": [
+        { "value": "30+", "label": "Bản phát hành đã sản xuất" },
+        { "value": "15 năm", "label": "Trong làng indie" },
+        { "value": "Nhiều", "label": "Đầu mối truyền thông âm nhạc" }
+      ]
+    },
+    "reviews": {
+      "sectionTitle": "Phản hồi từ các nghệ sĩ đã đồng hành",
+      "sectionSubtitle": "Tiếng nói của những người đã hoàn tất bản phát hành."
     },
     "tiers": {
       "sectionTitle": "Các loại Dự án Phát hành",
@@ -1390,6 +1405,11 @@
               "portfolioId": "tierliner-bite-me",
               "headline": "Một bài hát, toàn bộ năng lượng của ban nhạc",
               "quote": "Chúng tôi đã chuyển hóa năng lượng thô của ban nhạc indie rock thành âm thanh sẵn sàng cho streaming. Năng lượng trực tiếp vẫn sống trong bản thu."
+            },
+            {
+              "portfolioId": "the-projectors-babu-first-flight",
+              "headline": "Single ra mắt, giữ nguyên năng lượng live",
+              "quote": "Single ra mắt của The Projectors. Một dự án giữ lại trọn vẹn màn trình diễn live của ban nhạc, đồng thời tái diễn giải cho âm thanh streaming hiện đại."
             }
           ],
           "inProgressSectionTitle": "Các single đang thực hiện",
@@ -1590,6 +1610,11 @@
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "Đặt tên mình làm cược",
               "quote": "Từ lên kế hoạch đến hòa âm, chúng tôi thiết kế màu sắc âm thanh sẽ trở thành điểm tham chiếu cho toàn bộ sự nghiệp âm nhạc của anh."
+            },
+            {
+              "portfolioId": "dystopia-2025",
+              "headline": "Đi đến tận cùng tham vọng của một album đầy đủ",
+              "quote": "〈Dystopia 2025〉 của Samgakjeonpasa. Từ lập kế hoạch, thu âm, hòa âm, mastering, PR phê bình, đến cả việc xây dựng website dành riêng cho album — chúng tôi đồng hành ở mọi bước của hành trình album đầy đủ."
             }
           ],
           "inProgressSectionTitle": "Các album đang thực hiện",
@@ -1625,7 +1650,12 @@
       "footNoteMid": ". Xem mức giá tại",
       "footNotePricingLabel": "trang giá",
       "footNotePost": ".",
-      "detailCta": "Xem thêm"
+      "detailCta": "Xem thêm",
+      "caseStudyViewDetail": "Xem ca phát hành",
+      "crossTier": {
+        "sectionTitle": "Xem thử các hình thức phát hành khác",
+        "sectionSubtitle": "Cùng tìm ra quy mô phù hợp với bạn."
+      }
     },
     "scope": {
       "sectionTitle": "Những gì Nhà sản xuất Hwang Gyeongha Mang lại",

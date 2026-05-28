@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send } from 'lucide-react';
+import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award } from 'lucide-react';
 import SEO from '../../../components/SEO';
 import SectionHeading from '../../../components/ui/SectionHeading';
 import ImageHero from '../../../components/common/ImageHero';
@@ -44,6 +44,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
+  const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
 
   return (
     <div className="overflow-visible">
@@ -90,6 +91,39 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </>
         }
       />
+
+      {/* 프로듀서 소개 */}
+      <Section variant="alternate">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 sm:p-10 shadow-md border border-gray-100 dark:border-gray-700 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
+              <Award size={32} className="text-primary" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-title font-bold text-gray-900 dark:text-white mb-2">
+              {t('releaseProject.producer.sectionTitle')}
+            </h2>
+            <p className="text-sm text-primary font-medium mb-6">
+              {t('releaseProject.producer.tagline')}
+            </p>
+            <div className="text-left sm:text-center space-y-3 max-w-xl mx-auto mb-8">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {t('releaseProject.producer.bodyParagraph1')}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {t('releaseProject.producer.bodyParagraph2')}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
+              {Array.isArray(producerStats) && producerStats.map((stat, i) => (
+                <div key={i}>
+                  <p className="text-2xl sm:text-3xl font-bold text-primary mb-1">{stat.value}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
 
       {/* 발매 프로젝트 3형태 */}
       <Section variant="default">

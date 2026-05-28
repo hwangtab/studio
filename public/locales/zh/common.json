@@ -1290,21 +1290,21 @@
   "releaseProject": {
     "seo": {
       "title": "发行项目 · 独立音乐制作 | Studio NOL",
-      "description": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 — 由15年资深制作人黄庆厦带领的独立音乐发行项目。免费咨询。",
+      "description": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 — 由曾与 Tierliner、The Projectors、Kang Ho-jung 等艺人合作的 15 年资深制作人黄景夏带领的独立音乐发行项目。按单曲·EP·专辑规模提供免费咨询。",
       "keywords": "发行项目, 独立音乐发行, 唱片制作, 独立歌手, Studio NOL",
       "single": {
         "title": "单曲发行项目 | Studio NOL",
-        "description": "从第一张单曲到发行全程陪伴。企划·录音·发行·PR — 15 年制作人黄景夏主导的独立单曲发行项目。",
+        "description": "从第一张单曲到发行全程陪伴。企划·录音·发行·PR — 曾与 Tierliner、The Projectors 等艺人合作的 15 年制作人黄景夏主导的独立单曲发行项目。",
         "keywords": "单曲发行, 独立音乐, Studio NOL, 音乐制作人"
       },
       "ep": {
         "title": "EP 发行项目 | Studio NOL",
-        "description": "用 3~5 首歌宣告你的音乐身份。企划·录音·发行·PR — 15 年制作人黄景夏主导的 EP 发行项目。",
+        "description": "用 3~5 首歌宣告你的音乐身份。曾与 Namjae 等艺人合作的 15 年制作人黄景夏主导的 EP 发行项目。从先行单曲到媒体 PR 两轮覆盖。",
         "keywords": "EP 发行, 迷你专辑, 独立音乐, Studio NOL"
       },
       "album": {
         "title": "专辑发行项目 | Studio NOL",
-        "description": "在独立音乐圈刻下你的名字。企划·录音·乐手·发行·乐评 PR — 15 年制作人黄景夏主导的正规专辑发行项目。",
+        "description": "在独立音乐圈刻下名字的正规专辑。曾与 Kang Ho-jung、Samgakjeonpasa 等艺人合作的 15 年制作人黄景夏主导的正规专辑发行项目。A&R · 乐评试听会 · 资助申请同行。",
         "keywords": "专辑发行, 音乐企划, 独立歌手, 制作人黄景夏, Studio NOL"
       }
     },
@@ -1316,6 +1316,21 @@
       "ctaConsult": "免费发行咨询",
       "ctaPortfolio": "查看作品集",
       "imageAlt": "Studio NOL 发行项目"
+    },
+    "producer": {
+      "sectionTitle": "制作人 黄景夏",
+      "tagline": "15年独立音乐圈企划·制作人",
+      "bodyParagraph1": "我曾与 Tierliner、The Projectors、Kang Ho-jung、Sickbaby、Namjae 等独立艺人合作，从企划到录音·混音·发行·乐评 PR 全程同行。",
+      "bodyParagraph2": "发行从来不是一个人能完成的事。所以我的工作，就是成为陪你走到最后的同行者。",
+      "stats": [
+        { "value": "30+", "label": "参与发行作品" },
+        { "value": "15年", "label": "独立音乐圈经验" },
+        { "value": "众多", "label": "音乐媒体网络" }
+      ]
+    },
+    "reviews": {
+      "sectionTitle": "合作艺人的真实反馈",
+      "sectionSubtitle": "来自实际完成发行的艺人的声音。"
     },
     "tiers": {
       "sectionTitle": "发行项目类型",
@@ -1390,6 +1405,11 @@
               "portfolioId": "tierliner-bite-me",
               "headline": "一首歌，乐队的全部能量",
               "quote": "我们将独立摇滚乐队的原始能量转化为流媒体就绪的声音。现场的活力在录音中得以延续。"
+            },
+            {
+              "portfolioId": "the-projectors-babu-first-flight",
+              "headline": "出道单曲，原汁原味的现场能量",
+              "quote": "The Projectors 的出道单曲。在最大程度保留乐队现场演奏的同时，重新诠释为现代的流媒体声音。"
             }
           ],
           "inProgressSectionTitle": "正在制作中的单曲",
@@ -1590,6 +1610,11 @@
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "以自己的名字为赌注",
               "quote": "从策划到混音，我们设计了将成为他整个音乐作品集参考基准的声音色彩。"
+            },
+            {
+              "portfolioId": "dystopia-2025",
+              "headline": "把正规专辑的野心走到底",
+              "quote": "Samgakjeonpasa 〈Dystopia 2025〉。从企划、录音、混音、母带，到乐评 PR 以及专辑专属网站制作，我们参与了正规专辑的每一个环节。"
             }
           ],
           "inProgressSectionTitle": "正在制作中的专辑",
@@ -1625,7 +1650,12 @@
       "footNoteMid": "方式进行。费用标准请参见",
       "footNotePricingLabel": "价格页面",
       "footNotePost": "。",
-      "detailCta": "了解更多"
+      "detailCta": "了解更多",
+      "caseStudyViewDetail": "查看发行案例",
+      "crossTier": {
+        "sectionTitle": "也看看其他发行形态",
+        "sectionSubtitle": "一起找到适合你的规模。"
+      }
     },
     "scope": {
       "sectionTitle": "制作人黄庆厦提供的服务",

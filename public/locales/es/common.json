@@ -1290,21 +1290,21 @@
   "releaseProject": {
     "seo": {
       "title": "Proyecto de Lanzamiento · Producción Musical Indie | Studio NOL",
-      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y conexión con críticos — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha. Consulta gratuita.",
+      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con críticos — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner, The Projectors y Kang Ho-jung. Consulta gratuita por escala: single, EP o álbum.",
       "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL",
       "single": {
         "title": "Proyecto de Single | Studio NOL",
-        "description": "Desde el primer single hasta el lanzamiento — planificación, grabación, distribución y PR con el productor Hwang Gyeongha.",
+        "description": "Te acompañamos desde tu primer single hasta el final. Planificación, grabación, distribución y PR con el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner y The Projectors.",
         "keywords": "lanzamiento single, música indie, Studio NOL, productor musical Korea"
       },
       "ep": {
         "title": "Proyecto de EP | Studio NOL",
-        "description": "Declara tu identidad musical con 3–5 temas. Planificación, grabación, distribución y PR con el productor Hwang Gyeongha.",
+        "description": "Declara tu identidad musical con 3–5 temas. Proyecto de EP con el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Namjae. Desde el single de adelanto hasta dos rondas de PR mediática.",
         "keywords": "lanzamiento EP, mini álbum, música indie, Studio NOL"
       },
       "album": {
         "title": "Proyecto de Álbum Completo | Studio NOL",
-        "description": "Deja tu huella en la escena indie con un álbum completo. Planificación, grabación, sesiones, distribución y PR con el productor Hwang Gyeongha.",
+        "description": "Un álbum completo que graba tu nombre en la escena indie. Proyecto de álbum con el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Kang Ho-jung y Samgakjeonpasa. A&R, sesión de escucha para críticos y acompañamiento en convocatorias.",
         "keywords": "lanzamiento álbum, música indie Korea, productor musical, Studio NOL"
       }
     },
@@ -1316,6 +1316,21 @@
       "ctaConsult": "Consulta Gratuita de Lanzamiento",
       "ctaPortfolio": "Ver Discografía",
       "imageAlt": "Proyecto de Lanzamiento Studio NOL"
+    },
+    "producer": {
+      "sectionTitle": "Productor Hwang Gyeongha",
+      "tagline": "Productor y A&R indie con 15 años de trayectoria",
+      "bodyParagraph1": "He trabajado en lanzamientos con artistas indie como Tierliner, The Projectors, Kang Ho-jung, Sickbaby y Namjae — desde la planificación hasta la grabación, la mezcla, la distribución y la prensa.",
+      "bodyParagraph2": "Un lanzamiento no es algo que una sola persona pueda lograr. Por eso mi trabajo es ser el compañero que camina contigo hasta el final.",
+      "stats": [
+        { "value": "30+", "label": "Lanzamientos producidos" },
+        { "value": "15 años", "label": "En la escena indie" },
+        { "value": "Muchos", "label": "Contactos de prensa musical" }
+      ]
+    },
+    "reviews": {
+      "sectionTitle": "Lo que dicen los artistas que han trabajado con nosotros",
+      "sectionSubtitle": "Voces de quienes ya completaron su lanzamiento."
     },
     "tiers": {
       "sectionTitle": "Tipos de Proyecto de Lanzamiento",
@@ -1390,6 +1405,11 @@
               "portfolioId": "tierliner-bite-me",
               "headline": "Una pista, toda la energía de la banda",
               "quote": "Convertimos la energía cruda de una banda de indie rock en un sonido listo para streaming. La energía en vivo vive en la grabación."
+            },
+            {
+              "portfolioId": "the-projectors-babu-first-flight",
+              "headline": "Single debut, con la energía en vivo intacta",
+              "quote": "El single debut de The Projectors. Un proyecto que conserva la interpretación en vivo de la banda y la reinterpreta para el sonido moderno de streaming."
             }
           ],
           "inProgressSectionTitle": "Singles que estamos haciendo ahora",
@@ -1590,6 +1610,11 @@
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "Poniendo tu nombre en juego",
               "quote": "Desde la planificación hasta la mezcla, diseñamos el color sonoro que se convertiría en el punto de referencia de toda su discografía."
+            },
+            {
+              "portfolioId": "dystopia-2025",
+              "headline": "La ambición total de un álbum completo",
+              "quote": "〈Dystopia 2025〉 de Samgakjeonpasa. Desde la planificación, grabación, mezcla, masterización y PR con la crítica, hasta un sitio web dedicado al álbum — acompañamos cada paso del recorrido del álbum completo."
             }
           ],
           "inProgressSectionTitle": "Álbumes completos que estamos haciendo ahora",
@@ -1625,7 +1650,12 @@
       "footNoteMid": ". Ver tarifas en la",
       "footNotePricingLabel": "página de precios",
       "footNotePost": ".",
-      "detailCta": "Ver más"
+      "detailCta": "Ver más",
+      "caseStudyViewDetail": "Ver caso de lanzamiento",
+      "crossTier": {
+        "sectionTitle": "Mira también otros formatos de lanzamiento",
+        "sectionSubtitle": "Encontremos juntos la escala que se ajusta a ti."
+      }
     },
     "scope": {
       "sectionTitle": "Lo que Ofrece el Productor Hwang Gyeongha",

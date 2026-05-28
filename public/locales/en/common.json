@@ -1333,21 +1333,21 @@
   "releaseProject": {
     "seo": {
       "title": "Release Project · Indie Music Production | Studio NOL",
-      "description": "From planning to recording, session musicians, mixing, distribution, and reaching critics — indie release production led by 15-year producer Hwang Gyeongha. Free consultation.",
+      "description": "From planning to recording, session musicians, mixing, distribution, and reaching critics — indie release production led by 15-year producer Hwang Gyeongha, who has worked with artists like Tierliner, The Projectors, and Kang Ho-jung. Free consultation by release scale: single, EP, or full album.",
       "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL",
       "single": {
         "title": "Single Release Project | Studio NOL",
-        "description": "From first single to release — planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha.",
+        "description": "We're with you from your first single all the way through. Planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha — who has worked with artists like Tierliner and The Projectors.",
         "keywords": "single release, indie music release, studio NOL, music producer Korea"
       },
       "ep": {
         "title": "EP Release Project | Studio NOL",
-        "description": "Declare your musical identity with 3–5 tracks. Planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha.",
+        "description": "Declare your musical identity with 3–5 tracks. EP release project with 15-year producer Hwang Gyeongha — who has worked with artists like Namjae. From lead single to two rounds of media PR.",
         "keywords": "EP release, mini album, indie music release, studio NOL"
       },
       "album": {
         "title": "Full Album Release Project | Studio NOL",
-        "description": "Make your name in the indie scene with a full album. Planning, recording, sessions, distribution, and PR with 15-year producer Hwang Gyeongha.",
+        "description": "A full album that carves your name into the indie scene. Full-album release project with 15-year producer Hwang Gyeongha — who has worked with artists like Kang Ho-jung and Samgakjeonpasa. A&R, critics listening session, and grant application support.",
         "keywords": "full album release, indie music, music producer Korea, studio NOL"
       }
     },
@@ -1359,6 +1359,21 @@
       "ctaConsult": "Free Release Consultation",
       "ctaPortfolio": "View Discography",
       "imageAlt": "Studio NOL Release Project"
+    },
+    "producer": {
+      "sectionTitle": "Producer Hwang Gyeongha",
+      "tagline": "15-year indie producer & A&R",
+      "bodyParagraph1": "I've worked on releases by indie artists like Tierliner, The Projectors, Kang Ho-jung, Sickbaby, and Namjae — from planning through recording, mixing, distribution, and press coverage.",
+      "bodyParagraph2": "A release is not something one person can pull off alone. So my job is to be the companion who walks the whole way with you.",
+      "stats": [
+        { "value": "30+", "label": "Releases produced" },
+        { "value": "15 yrs", "label": "In the indie scene" },
+        { "value": "Many", "label": "Music media contacts" }
+      ]
+    },
+    "reviews": {
+      "sectionTitle": "What artists who worked with us say",
+      "sectionSubtitle": "Voices from artists whose releases are complete."
     },
     "tiers": {
       "sectionTitle": "Release Project Types",
@@ -1433,6 +1448,11 @@
               "portfolioId": "tierliner-bite-me",
               "headline": "One track, all the band's energy",
               "quote": "We completed an indie rock band's raw energy into a streaming-ready sound. The live energy lives on in the recording."
+            },
+            {
+              "portfolioId": "the-projectors-babu-first-flight",
+              "headline": "Debut single, live energy preserved",
+              "quote": "The Projectors' debut single. A project that preserves the band's live performance while reinterpreting it for modern streaming sound."
             }
           ],
           "inProgressSectionTitle": "Singles we're making right now",
@@ -1633,6 +1653,11 @@
               "portfolioId": "kang-ho-jung-self-titled",
               "headline": "Putting your name on the line",
               "quote": "From planning to mixing, we designed the sound color that would become the reference point for his entire discography."
+            },
+            {
+              "portfolioId": "dystopia-2025",
+              "headline": "The full ambition of a full album",
+              "quote": "Samgakjeonpasa's 〈Dystopia 2025〉. From planning, recording, mixing, mastering, and critic PR, to an album-dedicated website — we joined every step of the full album journey."
             }
           ],
           "inProgressSectionTitle": "Full albums we're making right now",
@@ -1668,7 +1693,12 @@
       "footNoteMid": ". See rates on the",
       "footNotePricingLabel": "pricing page",
       "footNotePost": ".",
-      "detailCta": "Learn more"
+      "detailCta": "Learn more",
+      "caseStudyViewDetail": "View release case",
+      "crossTier": {
+        "sectionTitle": "See other release formats too",
+        "sectionSubtitle": "Find the scale that fits you."
+      }
     },
     "scope": {
       "sectionTitle": "What Producer Hwang Gyeongha Brings",
