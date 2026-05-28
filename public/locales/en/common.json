@@ -1710,7 +1710,7 @@
     "inProgress": {
       "sectionTitle": "Albums We're Making Now",
       "sectionSubtitle": "Artists currently in the release project pipeline.",
-      "footNote": "In-progress projects are shared with artist consent.",
+      "asOf": "As of {{date}}",
       "types": {
         "fullAlbum": "Full Album",
         "single": "Single",

@@ -1665,7 +1665,7 @@
     "inProgress": {
       "sectionTitle": "Hozir Ishlayotgan Albumlar",
       "sectionSubtitle": "Hozirda chiqarish loyihasida ishlaydigan san'atkorlar.",
-      "footNote": "Jarayondagi loyihalar san'atkor roziligidan so'ng taqdim etiladi.",
+      "asOf": "{{date}} holatiga ko‘ra",
       "types": {
         "fullAlbum": "To'liq albom",
         "single": "Singl",

@@ -1667,7 +1667,7 @@
     "inProgress": {
       "sectionTitle": "Álbumes que Estamos Haciendo Ahora",
       "sectionSubtitle": "Artistas actualmente en el proceso de proyecto de lanzamiento.",
-      "footNote": "Los proyectos en curso se comparten con consentimiento del artista.",
+      "asOf": "A fecha de {{date}}",
       "types": {
         "fullAlbum": "Álbum Completo",
         "single": "Sencillo",

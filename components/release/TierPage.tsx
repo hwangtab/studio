@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -62,12 +62,6 @@ const ALL_IN_PROGRESS: InProgressItem[] = [
   { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
 ];
 
-const TIER_TYPE_KEYS: Record<string, string[]> = {
-  single: ['single'],
-  ep: ['ep', 'miniAlbum'],
-  album: ['fullAlbum'],
-};
-
 const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
   single: '/images/album1.webp',
   ep: '/images/album2.webp',
@@ -100,8 +94,11 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
 
-  const tierTypeKeys = TIER_TYPE_KEYS[tier] ?? [];
-  const filteredInProgress = ALL_IN_PROGRESS.filter((item) => tierTypeKeys.includes(item.typeKey));
+  const [today, setToday] = useState('');
+  useEffect(() => {
+    setToday(new Date().toISOString().slice(0, 10).replace(/-/g, '.'));
+  }, []);
+
   const tierCategoryAllow = TIER_CATEGORY_MAP[tier];
   const featuredPortfolioItems = portfolioItems
     .filter((i) => i.featured && tierCategoryAllow.includes(i.category))
@@ -413,33 +410,33 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
       )}
 
       {/* 지금 함께 만들고 있는 작업들 */}
-      {filteredInProgress.length > 0 && (
-        <Section variant="alternate">
-          <SectionHeading
-            icon={Disc}
-            title={t(k('inProgressSectionTitle'))}
-            subtitle={t('releaseProject.inProgress.sectionSubtitle')}
-            className="mb-10"
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {filteredInProgress.map((item) => (
-              <div
-                key={`${item.artist}-${item.title}`}
-                className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
-              >
-                <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
-                  {inProgressTypeLabels[item.typeKey] ?? item.typeKey}
-                </span>
-                <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
-              </div>
-            ))}
-          </div>
-          <p className="text-center text-sm text-gray-400 dark:text-gray-500 mt-8 max-w-xl mx-auto">
-            {t('releaseProject.inProgress.footNote')}
+      <Section variant="alternate">
+        <SectionHeading
+          icon={Disc}
+          title={t('releaseProject.inProgress.sectionTitle')}
+          subtitle={t('releaseProject.inProgress.sectionSubtitle')}
+          className="mb-3"
+        />
+        {today && (
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mb-8">
+            {t('releaseProject.inProgress.asOf', { date: today })}
           </p>
-        </Section>
-      )}
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          {ALL_IN_PROGRESS.map((item) => (
+            <div
+              key={`${item.artist}-${item.title}`}
+              className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+            >
+              <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
+                {inProgressTypeLabels[item.typeKey] ?? item.typeKey}
+              </span>
+              <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
 
       {/* FAQ */}
       {Array.isArray(faqItems) && faqItems.length > 0 && (

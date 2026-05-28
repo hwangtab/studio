@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -45,6 +45,10 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
   const getLink = (path: string) => `/${locale}${path}`;
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
+  const [today, setToday] = useState('');
+  useEffect(() => {
+    setToday(new Date().toISOString().slice(0, 10).replace(/-/g, '.'));
+  }, []);
 
   return (
     <div className="overflow-visible">
@@ -229,8 +233,13 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           icon={Disc}
           title={t('releaseProject.inProgress.sectionTitle')}
           subtitle={t('releaseProject.inProgress.sectionSubtitle')}
-          className="mb-12"
+          className="mb-3"
         />
+        {today && (
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mb-10">
+            {t('releaseProject.inProgress.asOf', { date: today })}
+          </p>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {IN_PROGRESS_ITEMS.map((item) => (
             <div
@@ -245,9 +254,6 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             </div>
           ))}
         </div>
-        <p className="text-center text-sm text-gray-400 dark:text-gray-500 mt-8 max-w-xl mx-auto">
-          {t('releaseProject.inProgress.footNote')}
-        </p>
       </Section>
 
       {/* 발매 디스코그래피 증거 */}

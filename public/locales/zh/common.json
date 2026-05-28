@@ -1667,7 +1667,7 @@
     "inProgress": {
       "sectionTitle": "正在制作中的专辑",
       "sectionSubtitle": "目前正在进行发行项目的艺人。",
-      "footNote": "进行中的项目经艺人同意后介绍。",
+      "asOf": "截至 {{date}}",
       "types": {
         "fullAlbum": "正规专辑",
         "single": "单曲",

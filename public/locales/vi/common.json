@@ -1667,7 +1667,7 @@
     "inProgress": {
       "sectionTitle": "Những Album Đang Thực hiện",
       "sectionSubtitle": "Các nghệ sĩ đang trong quá trình dự án phát hành.",
-      "footNote": "Các dự án đang thực hiện được chia sẻ với sự đồng ý của nghệ sĩ.",
+      "asOf": "Tính đến {{date}}",
       "types": {
         "fullAlbum": "Album Đầy Đủ",
         "single": "Single",
