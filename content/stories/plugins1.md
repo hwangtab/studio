@@ -145,6 +145,24 @@ howTo:
 
 ---
 
+## Studio NOL 보컬 믹싱에서 자주 쓰는 플러그인 조합 3가지
+
+스튜디오 놀 보컬 믹싱 세션에서 반복적으로 손이 가는 플러그인 체인입니다.
+
+**1. 깔끔한 K팝 보컬 — FabFilter Pro-Q 3 → CLA-2A → FabFilter Pro-DS → Valhalla Room**
+
+EQ로 200Hz 이하 하이패스와 3kHz 음색 정리 → CLA-2A로 자연스러운 다이나믹 평탄화(GR -3~5dB) → Pro-DS로 6~8kHz 치찰음 처리 → Valhalla Room 0.8~1.2초 짧은 룸 리버브. 보컬을 앞에 두면서도 자연스러운 공간감을 만들 때 가장 안정적인 조합입니다.
+
+**2. 거친 록·인디 보컬 — Pro-Q 3 → CLA-76 → Decapitator → Valhalla VintageVerb**
+
+Pro-Q 3로 저역 정리 → CLA-76(All-button 모드)로 강한 컴프(GR -8dB+) → Soundtoys Decapitator로 새츄레이션 추가 → VintageVerb Plate 모드. 보컬에 거친 질감과 무게감을 더해 거친 트랙 안에서도 묻히지 않게 만듭니다.
+
+**3. 발라드·감성 보컬 — Pro-Q 3 → LA-2A 에뮬 → FabFilter Pro-DS → Valhalla Room + Soundtoys EchoBoy**
+
+Pro-Q 3 부드러운 EQ → LA-2A 에뮬레이션(UAD/Waves)으로 부드러운 옵티컬 컴프 → Pro-DS → Valhalla Room 1.5~2.0초 + EchoBoy 1/4 또는 1/8 dotted 딜레이. 발라드 후렴부에서 공간이 넓어지면서도 보컬 명료도가 유지됩니다.
+
+---
+
 ## 마치며
 
 플러그인을 구매하기 전에 DAW 내장 도구를 완전히 익히는 것이 먼저입니다. Logic Pro의 Channel EQ, Ableton의 EQ Eight, Pro Tools의 내장 컴프레서만으로도 상업 품질의 믹스를 만들 수 있으며, 유료 플러그인은 워크플로우 효율을 높이거나 특정 아날로그 톤을 재현하는 목적에 최적화되어 있습니다. 처음 플러그인을 구매한다면 FabFilter Pro-Q 3(EQ) → Valhalla Room(리버브) → Waves CLA-2A 또는 CLA-76(컴프레서) 순서가 투자 대비 효과가 가장 높습니다.
