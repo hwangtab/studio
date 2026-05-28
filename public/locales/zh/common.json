@@ -1339,7 +1339,7 @@
         "label": "单曲发行",
         "duration": "约7个月",
         "range": "单曲基准 约 ₩50万起",
-        "note": "1-2首，3位会话乐手",
+        "note": "1首基准",
         "detail": {
           "heroTitlePrefix": "第一张单曲，",
           "heroTitleHighlight": "踏实",
@@ -1539,7 +1539,7 @@
         "label": "正规专辑发行",
         "duration": "约24个月",
         "range": "正规专辑基准 约 ₩400万起",
-        "note": "约8首，全会话阵容",
+        "note": "8首基准",
         "detail": {
           "heroTitlePrefix": "在独立音乐圈",
           "heroTitleHighlight": "刻下你名字的",
@@ -1601,7 +1601,7 @@
           ],
           "priceSectionTitle": "价格范围",
           "priceRange": "正规专辑基准 约 ₩400万起",
-          "priceRationale": "8首左右，人声录音·混音·母带 通常单价",
+          "priceRationale": "8首基准，人声录音·混音·母带 通常单价",
           "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的专辑",
           "caseStudySubtitle": "真实的发行项目案例。",

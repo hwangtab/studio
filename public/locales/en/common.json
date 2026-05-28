@@ -1382,7 +1382,7 @@
         "label": "Single Release",
         "duration": "~7 months",
         "range": "From approx. ₩500K",
-        "note": "1–2 tracks, 3 session musicians",
+        "note": "1 track",
         "detail": {
           "heroTitlePrefix": "Your first single,",
           "heroTitleHighlight": "done right",
@@ -1582,7 +1582,7 @@
         "label": "Full Album Release",
         "duration": "~24 months",
         "range": "From approx. ₩4M",
-        "note": "~8 tracks, full session",
+        "note": "8 tracks",
         "detail": {
           "heroTitlePrefix": "Making your name",
           "heroTitleHighlight": "in the indie scene",
@@ -1644,7 +1644,7 @@
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From approx. ₩4M",
-          "priceRationale": "Standard rate (~8 tracks, vocal recording + mixing + mastering)",
+          "priceRationale": "Standard rate (8 tracks, vocal recording + mixing + mastering)",
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Full albums we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",

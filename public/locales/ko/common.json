@@ -2035,7 +2035,7 @@
         "label": "싱글 발매",
         "duration": "약 7개월",
         "range": "싱글 기준 약 50만원~",
-        "note": "2곡 내외, 세션 3인 기준",
+        "note": "1곡 기준",
         "detail": {
           "heroTitlePrefix": "첫 싱글,",
           "heroTitleHighlight": "단단하게",
@@ -2235,7 +2235,7 @@
         "label": "정규 발매",
         "duration": "약 24개월",
         "range": "정규 기준 약 400만원~",
-        "note": "8곡 내외, 풀 세션 기준",
+        "note": "8곡 기준",
         "detail": {
           "heroTitlePrefix": "인디씬에",
           "heroTitleHighlight": "이름을 새기는",
@@ -2297,7 +2297,7 @@
           ],
           "priceSectionTitle": "가격 레인지",
           "priceRange": "정규 기준 약 400만원~",
-          "priceRationale": "8곡 내외, 보컬 녹음·믹싱·마스터링 통상 단가",
+          "priceRationale": "8곡 기준, 보컬 녹음·믹싱·마스터링 통상 단가",
           "priceNote": "세션 구성·곡수·편곡 범위에 따라 달라집니다. 무료 상담 후 단가표 기반 맞춤 견적.",
           "caseStudySectionTitle": "이런 정규앨범을 함께 만들었습니다",
           "caseStudySubtitle": "실제 작업한 발매 사례입니다.",

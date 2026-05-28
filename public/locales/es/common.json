@@ -1339,7 +1339,7 @@
         "label": "Lanzamiento de Single",
         "duration": "~7 meses",
         "range": "Desde aprox. ₩500K",
-        "note": "1–2 pistas, 3 músicos de sesión",
+        "note": "Base de 1 pista",
         "detail": {
           "heroTitlePrefix": "Tu primer single,",
           "heroTitleHighlight": "bien hecho",
@@ -1539,7 +1539,7 @@
         "label": "Lanzamiento de Álbum",
         "duration": "~24 meses",
         "range": "Desde aprox. ₩4M",
-        "note": "~8 pistas, sesión completa",
+        "note": "Base de 8 pistas",
         "detail": {
           "heroTitlePrefix": "Dejando tu huella",
           "heroTitleHighlight": "en la escena indie",
@@ -1601,7 +1601,7 @@
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde aprox. ₩4M",
-          "priceRationale": "Tarifa estándar (~8 pistas, grabación vocal + mezcla + masterización)",
+          "priceRationale": "Tarifa estándar (base de 8 pistas, grabación vocal + mezcla + masterización)",
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",

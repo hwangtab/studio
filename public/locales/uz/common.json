@@ -1337,7 +1337,7 @@
         "label": "Singl Chiqarish",
         "duration": "~7 oy",
         "range": "Taxminan ₩500K dan",
-        "note": "1–2 qo'shiq, 3 sessiya musiqachi",
+        "note": "1 qo'shiq asosida",
         "detail": {
           "heroTitlePrefix": "Birinchi singling,",
           "heroTitleHighlight": "to'g'ri bajarilgan",
@@ -1537,7 +1537,7 @@
         "label": "To'liq Albom Chiqarish",
         "duration": "~24 oy",
         "range": "Taxminan ₩4M dan",
-        "note": "~8 qo'shiq, to'liq sessiya",
+        "note": "8 qo'shiq asosida",
         "detail": {
           "heroTitlePrefix": "Indie sahnasida",
           "heroTitleHighlight": "ismingizni o'yib yozing",
@@ -1599,7 +1599,7 @@
           ],
           "priceSectionTitle": "Narx oralig'i",
           "priceRange": "Taxminan ₩4M dan",
-          "priceRationale": "Standart stavka (~8 trek, vokal yozuv + miks + mastering)",
+          "priceRationale": "Standart stavka (8 trek, vokal yozuv + miks + mastering)",
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",

@@ -1339,7 +1339,7 @@
         "label": "Phát hành Single",
         "duration": "~7 tháng",
         "range": "Từ khoảng ₩500K",
-        "note": "1–2 bài, 3 nhạc công session",
+        "note": "Mức 1 bài",
         "detail": {
           "heroTitlePrefix": "Single đầu tiên của bạn,",
           "heroTitleHighlight": "làm đúng cách",
@@ -1539,7 +1539,7 @@
         "label": "Phát hành Album Đầy đủ",
         "duration": "~24 tháng",
         "range": "Từ khoảng ₩4M",
-        "note": "~8 bài, dàn nhạc công đầy đủ",
+        "note": "Mức 8 bài",
         "detail": {
           "heroTitlePrefix": "Khắc tên bạn",
           "heroTitleHighlight": "trong cảnh indie",
@@ -1601,7 +1601,7 @@
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Từ khoảng ₩4M",
-          "priceRationale": "Mức tiêu chuẩn (~8 bài, thu âm vocal + mix + master)",
+          "priceRationale": "Mức tiêu chuẩn (8 bài, thu âm vocal + mix + master)",
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các album đầy đủ chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
