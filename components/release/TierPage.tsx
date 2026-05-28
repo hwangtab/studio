@@ -3,10 +3,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, Package, Users, DollarSign, Disc } from 'lucide-react';
+import {
+  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
+  Target, Calendar, ListChecks, X, MessageCircle, BookOpen,
+} from 'lucide-react';
 import SEO from '../SEO';
 import SectionHeading from '../ui/SectionHeading';
 import ImageHero from '../common/ImageHero';
+import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
@@ -17,6 +21,29 @@ interface InProgressItem {
   artist: string;
   title: string;
   typeKey: string;
+}
+
+interface FocusItem {
+  title: string;
+  desc: string;
+}
+
+interface JourneyItem {
+  month: string;
+  label: string;
+  desc: string;
+}
+
+interface CaseStudyJsonItem {
+  portfolioId: string;
+  headline: string;
+  quote: string;
+}
+
+interface ConsultationStep {
+  num: string;
+  title: string;
+  desc: string;
 }
 
 interface TierPageProps {
@@ -48,10 +75,17 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const k = (key: string) => `releaseProject.tiers.${tier}.detail.${key}`;
 
   const personaItems = t(k('personaItems'), { returnObjects: true }) as string[];
-  const deliverablesItems = t(k('deliverablesItems'), { returnObjects: true }) as string[];
+  const focusItems = t(k('focusItems'), { returnObjects: true }) as FocusItem[];
+  const journeyItems = t(k('journeyItems'), { returnObjects: true }) as JourneyItem[];
+  const deliverablesIncluded = t(k('deliverablesIncluded'), { returnObjects: true }) as string[];
+  const deliverablesExcluded = t(k('deliverablesExcluded'), { returnObjects: true }) as string[];
+  const caseStudyJsonItems = t(k('caseStudyItems'), { returnObjects: true }) as CaseStudyJsonItem[];
+  const faqItems = t(k('faqItems'), { returnObjects: true }) as { question: string; answer: string }[];
+  const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
 
   const tierTypeKeys = TIER_TYPE_KEYS[tier] ?? [];
   const filteredInProgress = ALL_IN_PROGRESS.filter((item) => tierTypeKeys.includes(item.typeKey));
+  const featuredPortfolioItems = portfolioItems.filter((i) => i.featured);
 
   const inProgressTypeLabels: Record<string, string> = {
     fullAlbum: t('releaseProject.inProgress.types.fullAlbum'),
@@ -107,7 +141,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         }
       />
 
-      {/* 페르소나 — 이런 분께 적합합니다 */}
+      {/* 페르소나 */}
       <Section variant="default">
         <SectionHeading
           icon={Users}
@@ -124,26 +158,94 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
             </div>
           ))}
+          <p className="text-sm text-gray-400 dark:text-gray-500 text-center mt-4 pt-1">
+            {t(k('personaNotFitNote'))}
+          </p>
         </div>
       </Section>
 
-      {/* 호흡·결과물 */}
+      {/* 이 티어에서 특히 신경 쓰는 것 */}
       <Section variant="alternate">
         <SectionHeading
-          icon={Clock}
+          icon={Target}
+          title={t(k('focusSectionTitle'))}
+          subtitle={t(k('focusSubtitle'))}
+          className="mb-10"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          {Array.isArray(focusItems) && focusItems.map((item, i) => (
+            <div
+              key={i}
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
+            >
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 발매까지의 여정 */}
+      <Section variant="default">
+        <SectionHeading
+          icon={Calendar}
+          title={t(k('journeySectionTitle'))}
+          subtitle={t(k('journeySubtitle'))}
+          className="mb-10"
+        />
+        <div className="max-w-2xl mx-auto">
+          {Array.isArray(journeyItems) && journeyItems.map((item, i) => (
+            <div key={i} className="flex gap-4 mb-4 last:mb-0">
+              <div className="flex-shrink-0 pt-0.5">
+                <span className="inline-block text-xs font-bold text-primary bg-primary/10 rounded-full px-2.5 py-1 whitespace-nowrap">
+                  {item.month}
+                </span>
+              </div>
+              <div className={`flex-1 pb-5 ${i < journeyItems.length - 1 ? 'border-l-2 border-gray-100 dark:border-gray-700' : ''} pl-4`}>
+                <p className="font-bold text-gray-900 dark:text-white mb-1">{item.label}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 결과물 — 포함 / 별도 */}
+      <Section variant="alternate">
+        <SectionHeading
+          icon={ListChecks}
           title={t(k('deliverablesSectionTitle'))}
           className="mb-10"
         />
-        <div className="max-w-2xl mx-auto space-y-3">
-          {Array.isArray(deliverablesItems) && deliverablesItems.map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
-            >
-              <Package size={20} className="text-primary flex-shrink-0 mt-0.5" />
-              <span className="text-gray-700 dark:text-gray-300 font-medium">{item}</span>
-            </div>
-          ))}
+        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-sm">
+              <CheckCircle size={16} className="text-primary flex-shrink-0" />
+              {t(k('deliverablesIncludedTitle'))}
+            </h3>
+            <ul className="space-y-2.5">
+              {Array.isArray(deliverablesIncluded) && deliverablesIncluded.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-primary mt-0.5 flex-shrink-0 text-base leading-none">✓</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
+            <h3 className="font-semibold text-gray-400 dark:text-gray-500 mb-4 flex items-center gap-2 text-sm">
+              <X size={16} className="flex-shrink-0" />
+              {t(k('deliverablesExcludedTitle'))}
+            </h3>
+            <ul className="space-y-2.5">
+              {Array.isArray(deliverablesExcluded) && deliverablesExcluded.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-500 dark:text-gray-500">
+                  <span className="flex-shrink-0 mt-0.5">—</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Section>
 
@@ -172,9 +274,59 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </div>
       </Section>
 
+      {/* 케이스 스터디 */}
+      {Array.isArray(caseStudyJsonItems) && caseStudyJsonItems.length > 0 && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={BookOpen}
+            title={t(k('caseStudySectionTitle'))}
+            subtitle={t(k('caseStudySubtitle'))}
+            className="mb-10"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {caseStudyJsonItems.map((csItem) => {
+              const portfolioItem = portfolioItems.find((p) => p.id === csItem.portfolioId);
+              return (
+                <div
+                  key={csItem.portfolioId}
+                  className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700"
+                >
+                  {portfolioItem?.image && (
+                    <div className="aspect-square overflow-hidden relative">
+                      <Image
+                        src={portfolioItem.image}
+                        alt={portfolioItem.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-5">
+                    {portfolioItem?.artist && (
+                      <p className="text-xs text-primary font-medium mb-1">{portfolioItem.artist}</p>
+                    )}
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2">{csItem.headline}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{csItem.quote}</p>
+                    {portfolioItem && (
+                      <Link
+                        href={getLink(`/portfolio/${portfolioItem.id}`)}
+                        className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline underline-offset-2"
+                      >
+                        {t('releaseProject.tiers.detailCta')} <ArrowRight size={12} />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Section>
+      )}
+
       {/* 지금 함께 만들고 있는 작업들 */}
       {filteredInProgress.length > 0 && (
-        <Section variant="alternate">
+        <Section variant="default">
           <SectionHeading
             icon={Disc}
             title={t(k('inProgressSectionTitle'))}
@@ -201,8 +353,18 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </Section>
       )}
 
+      {/* FAQ */}
+      {Array.isArray(faqItems) && faqItems.length > 0 && (
+        <FAQSection
+          variant="alternate"
+          items={faqItems}
+          title={t(k('faqSectionTitle'))}
+          subtitle={t(k('faqSubtitle'))}
+        />
+      )}
+
       {/* 디스코그래피 */}
-      {portfolioItems.length > 0 && (
+      {featuredPortfolioItems.length > 0 && (
         <Section variant="default">
           <SectionHeading
             icon={Disc}
@@ -211,7 +373,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             className="mb-10"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {portfolioItems.map((item) => (
+            {featuredPortfolioItems.map((item) => (
               <Link
                 key={item.id}
                 href={getLink(`/portfolio/${item.id}`)}
@@ -249,7 +411,32 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </Section>
       )}
 
-      <Section variant="alternate" className="py-16">
+      {/* 상담 프로세스 */}
+      {Array.isArray(consultationSteps) && consultationSteps.length > 0 && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={MessageCircle}
+            title={t('releaseProject.consultation.sectionTitle')}
+            subtitle={t('releaseProject.consultation.sectionSubtitle')}
+            className="mb-10"
+          />
+          <div className="max-w-xl mx-auto">
+            {consultationSteps.map((step, i) => (
+              <div key={i} className="flex gap-4 mb-6 last:mb-0">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">
+                  {step.num}
+                </div>
+                <div className="pt-0.5">
+                  <p className="font-bold text-gray-900 dark:text-white mb-1">{step.title}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      <Section variant="default" className="py-16">
         <ContactCTA
           locale={locale}
           title={

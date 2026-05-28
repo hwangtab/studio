@@ -1337,17 +1337,82 @@
             "Muốn bắt đầu thực tế với ngân sách rõ ràng",
             "Đang bước vào cảnh indie lần đầu"
           ],
-          "deliverablesSectionTitle": "Tiến độ · Kết quả",
-          "deliverablesItems": [
-            "Thời gian: ~7 tháng",
-            "Số bài: ~2 bài",
-            "Session: ~3 nhạc công (guitar, bass, trống)"
+          "personaNotFitNote": "Nếu bạn đã nghĩ đến quy mô EP hoặc album đầy đủ, hãy xem thêm các trang đó.",
+          "focusSectionTitle": "Chúng tôi tập trung vào gì cho single của bạn",
+          "focusSubtitle": "Chỉ một bài hát nghĩa là chúng tôi có thể đầu tư sâu hơn.",
+          "focusItems": [
+            { "title": "Tập trung toàn bộ vào một bài", "desc": "Chỉ với một bài hát, toàn bộ năng lượng đều dành cho nó. Dàn dựng và định hướng âm thanh được tối ưu hóa cho single đó." },
+            { "title": "Định hình ấn tượng đầu tiên", "desc": "Khoảnh khắc tên bạn bước vào cảnh indie. Chúng tôi cùng bạn suy nghĩ từ giai đoạn lên kế hoạch về ấn tượng bạn muốn tạo ra." },
+            { "title": "Bước khởi đầu thực tế", "desc": "Mục tiêu là thực sự phát hành, không phải hoàn hảo. Bắt đầu quan trọng hơn là hoàn hảo." },
+            { "title": "Điểm tiếp xúc truyền thông đầu tiên", "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí đến các nhà báo và nhà phê bình âm nhạc. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie." }
+          ],
+          "journeySectionTitle": "Hành trình đến phát hành",
+          "journeySubtitle": "~7 tháng, đây là cách chúng ta cùng thực hiện.",
+          "journeyItems": [
+            { "month": "T0", "label": "Lên kế hoạch & Định hướng", "desc": "Chúng ta cùng quyết định bài hát nào, cách tiếp cận nào và ai sẽ nghe." },
+            { "month": "T1-2", "label": "Dàn dựng & Tuyển session", "desc": "Phát triển định hướng dàn dựng và kết nối với nhạc công session." },
+            { "month": "T3", "label": "Thu âm giọng hát & Định hướng", "desc": "Thu âm tại studio và khai thác màn trình diễn tốt nhất của bạn." },
+            { "month": "T4", "label": "Thu âm session & Hòa âm", "desc": "Nhạc cụ session được thu âm và hòa âm để hoàn thiện âm thanh." },
+            { "month": "T5", "label": "Mastering & Artwork", "desc": "Sau khi mastering, chúng tôi chuẩn bị artwork bìa." },
+            { "month": "T6", "label": "Phân phối & Teaser", "desc": "Đăng ký phân phối trên nền tảng và chiến dịch teaser trước phát hành." },
+            { "month": "T7", "label": "Phát hành & PR truyền thông", "desc": "Vào ngày phát hành và sau đó, thông cáo báo chí gửi đến nhà phê bình và truyền thông." }
+          ],
+          "deliverablesSectionTitle": "Những gì bạn nhận được",
+          "deliverablesIncludedTitle": "Bao gồm trong giá này",
+          "deliverablesIncluded": [
+            "Ý tưởng & định hướng album",
+            "Thu âm giọng hát (Studio NOL nội bộ)",
+            "Định hướng giọng hát",
+            "Tuyển dụng & phối hợp nhạc công session (guitar, bass, trống, v.v.)",
+            "Hòa âm (nội bộ)",
+            "Mastering (nội bộ)",
+            "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
+            "Viết thông cáo báo chí",
+            "Gửi thông cáo báo chí đến nhà báo & nhà phê bình",
+            "Giao file master (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Xử lý riêng",
+          "deliverablesExcluded": [
+            "Artwork bìa (có thể kết nối designer, chi phí riêng)",
+            "MV / video trực tiếp",
+            "4+ nhạc công session (báo giá riêng)",
+            "Phát hành vật lý (CD / LP)",
+            "Ngân sách quảng cáo mạng xã hội"
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Từ ~₩2.7M (single)",
           "priceRationale": "Dựa trên dự án thực tế: single Harris",
           "priceNote": "Thay đổi theo cấu hình session và số buổi thu âm. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "caseStudySectionTitle": "Các single chúng ta đã làm cùng nhau",
+          "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "tierliner-bite-me",
+              "headline": "Một bài hát, toàn bộ năng lượng của ban nhạc",
+              "quote": "Chúng tôi đã chuyển hóa năng lượng thô của ban nhạc indie rock thành âm thanh sẵn sàng cho streaming. Năng lượng trực tiếp vẫn sống trong bản thu."
+            }
+          ],
           "inProgressSectionTitle": "Các single đang thực hiện",
+          "faqSectionTitle": "Câu hỏi thường gặp",
+          "faqSubtitle": "Câu hỏi trước khi tư vấn.",
+          "faqItems": [
+            {
+              "question": "7 tháng có vẻ lâu. Chúng ta có thể phát hành nhanh hơn không?",
+              "answer": "Đôi khi nhanh hơn tùy thuộc vào mức độ sẵn sàng của bài hát. Nhưng dàn dựng, session, thu âm, hòa âm, mastering và đăng ký phân phối mỗi bước đều cần đủ thời gian. Chúng tôi sẽ xem xét tình huống của bạn trong buổi tư vấn miễn phí và cùng nhau lập lịch thực tế."
+            },
+            {
+              "question": "Có đắt không khi chỉ cho một bài hát?",
+              "answer": "Đây không chỉ là thuê phòng thu — mà bao gồm lên kế hoạch, phối hợp session, định hướng thu âm, hòa âm, mastering, phân phối và PR như một gói hoàn chỉnh. Tự tìm từng yếu tố riêng lẻ thực ra có thể tốn kém hơn. Chúng tôi có thể điều chỉnh quy mô session theo ngân sách và báo giá tùy chỉnh sau tư vấn."
+            },
+            {
+              "question": "Các bạn sẽ không thay đổi bài hát của tôi mà không hỏi đúng không?",
+              "answer": "Định hướng nghệ thuật luôn thuộc về bạn. Dàn dựng và hòa âm được đề xuất và thảo luận, không áp đặt. Nếu bạn không thích điều gì, chúng ta sẽ cùng nói chuyện."
+            },
+            {
+              "question": "Các bạn có thể đảm bảo nhà phê bình thực sự review phát hành của tôi không?",
+              "answer": "Chúng tôi không thể đảm bảo review. Nhưng chúng tôi gửi thông cáo báo chí qua mạng lưới truyền thông 15 năm, và nếu có quan tâm, chúng tôi cố gắng chuyển thành review. Công việc của tôi là mở con đường, không đảm bảo kết quả."
+            }
+          ],
           "linkBack": "Quay lại tổng quan phát hành"
         }
       },
@@ -1364,20 +1429,89 @@
           "personaSectionTitle": "Dành cho ai",
           "personaItems": [
             "Muốn thể hiện thế giới quan rộng hơn sau khi phát hành single",
-            "Sẵn sàng định nghĩa âm thanh của mình qua 3–5 bài",
-            "Muốn xây dựng nền tảng fan vững chắc"
+            "Sẵn sàng định nghĩa âm thanh của mình rõ ràng qua 3–5 bài",
+            "Xây dựng nền tảng fan vững chắc từng bước",
+            "Muốn tạo chiến dịch ra mắt theo giai đoạn: single chủ lực → EP"
           ],
-          "deliverablesSectionTitle": "Tiến độ · Kết quả",
-          "deliverablesItems": [
-            "Thời gian: ~12 tháng",
-            "Số bài: 3–5 bài",
-            "Quy mô giữa single và album đầy đủ"
+          "personaNotFitNote": "Nếu chỉ có một bài, single có thể phù hợp hơn. Nếu bạn đang nghĩ đến 8+ bài, hãy xem trang album đầy đủ.",
+          "focusSectionTitle": "Chúng tôi tập trung vào gì cho EP của bạn",
+          "focusSubtitle": "Kết nối nhiều bài thành một thế giới là trái tim của EP.",
+          "focusItems": [
+            { "title": "Nhất quán & sắp xếp thứ tự giữa các bài", "desc": "Gắn kết nhiều bài thành một thế giới là cốt lõi của EP. Chúng ta cùng thiết kế thứ tự bài, nhịp độ và sự đồng nhất âm sắc." },
+            { "title": "Chiến dịch theo giai đoạn: single chủ lực → EP", "desc": "Phát hành một bài trước để đo phản hồi, sau đó chuẩn bị phần còn lại — xây dựng fan từng bước." },
+            { "title": "Định nghĩa bản sắc nghệ thuật của bạn", "desc": "Những gì khó thể hiện với một single sẽ rõ ràng qua EP. Bản sắc âm nhạc độc đáo của bạn hình thành." },
+            { "title": "Hai vòng PR truyền thông", "desc": "Single chủ lực + phát hành EP mang lại hai cơ hội tiếp cận nhà phê bình và truyền thông âm nhạc." }
+          ],
+          "journeySectionTitle": "Hành trình đến phát hành",
+          "journeySubtitle": "~12 tháng, đây là cách chúng ta cùng thực hiện.",
+          "journeyItems": [
+            { "month": "T0", "label": "Lên kế hoạch & Ý niệm", "desc": "Chúng ta thiết kế định hướng tổng thể của EP, số bài và thế giới nghệ thuật." },
+            { "month": "T1-2", "label": "Tuyển chọn danh sách bài", "desc": "Cùng chọn bài nào vào EP và sắp xếp thứ tự." },
+            { "month": "T3-5", "label": "Dàn dựng & Session", "desc": "Phát triển dàn dựng từng bài và kết nối nhạc công session." },
+            { "month": "T6-7", "label": "Thu âm giọng hát & Session", "desc": "Định hướng giọng hát và thu âm nhạc cụ session." },
+            { "month": "T8", "label": "Hòa âm & Đồng nhất âm sắc", "desc": "Hòa âm để nhiều bài kết nối thành EP nhất quán." },
+            { "month": "T9", "label": "Mastering & Artwork", "desc": "Mastering và chuẩn bị artwork bìa." },
+            { "month": "T10", "label": "Single chủ lực & PR vòng 1", "desc": "Phát hành single chủ lực và vòng PR truyền thông đầu tiên." },
+            { "month": "T11-12", "label": "Phát hành EP & PR vòng 2", "desc": "Phát hành toàn bộ EP, PR truyền thông vòng 2 và chiến dịch hậu phát hành." }
+          ],
+          "deliverablesSectionTitle": "Những gì bạn nhận được",
+          "deliverablesIncludedTitle": "Bao gồm trong giá này",
+          "deliverablesIncluded": [
+            "Ý tưởng & định hướng album",
+            "Tuyển chọn danh sách bài & sắp xếp thứ tự",
+            "Thu âm giọng hát (Studio NOL nội bộ) — tất cả bài",
+            "Định hướng giọng hát",
+            "Tuyển dụng & phối hợp nhạc công session",
+            "Hòa âm (nội bộ) — đồng nhất âm sắc tất cả bài",
+            "Mastering (nội bộ)",
+            "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
+            "Bao gồm single chủ lực",
+            "Viết thông cáo báo chí (single chủ lực + EP, 2 vòng)",
+            "Gửi thông cáo báo chí đến nhà báo & nhà phê bình (2 vòng)",
+            "Giao file master (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Xử lý riêng",
+          "deliverablesExcluded": [
+            "Artwork bìa (có thể kết nối designer, chi phí riêng)",
+            "MV / video trực tiếp",
+            "5+ nhạc công session (báo giá riêng)",
+            "Phát hành vật lý (CD / LP)",
+            "Ngân sách quảng cáo mạng xã hội"
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Báo giá tùy chỉnh theo quy mô",
           "priceRationale": "Thay đổi theo session và biên soạn",
           "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "caseStudySectionTitle": "Các EP chúng ta đã làm cùng nhau",
+          "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "namjae-wi-inmul",
+              "headline": "Tuyên ngôn nghệ sĩ mang tính tự sự",
+              "quote": "Từ dàn dựng đến quảng bá, chúng tôi cùng nhau để thế giới nghệ thuật độc đáo của Namjae tiếp cận đầy đủ cảnh indie."
+            }
+          ],
           "inProgressSectionTitle": "Các EP đang thực hiện",
+          "faqSectionTitle": "Câu hỏi thường gặp",
+          "faqSubtitle": "Câu hỏi trước khi tư vấn.",
+          "faqItems": [
+            {
+              "question": "EP khác gì so với phát hành nhiều single?",
+              "answer": "Nhiều single là các phát hành độc lập. EP là một tác phẩm hoàn chỉnh. Công việc tuyển chọn — thứ tự bài, âm sắc và xây dựng thế giới — chỉ có thể thực hiện với EP. Nếu bạn muốn xây dựng nền tảng fan vững chắc, EP để lại ấn tượng mạnh hơn."
+            },
+            {
+              "question": "Chi phí có tăng tỉ lệ thuận với số bài không?",
+              "answer": "Thay đổi theo cấu hình session, số bài và quy mô dàn dựng — không phải nhân số đơn giản. Chúng tôi hiểu đầy đủ phạm vi trước, rồi báo giá tùy chỉnh. Hãy kể về các bài hát bạn có trong buổi tư vấn miễn phí."
+            },
+            {
+              "question": "EP có cần single chủ lực không?",
+              "answer": "Không bắt buộc. Nhưng single chủ lực hiệu quả để tạo sự mong đợi trước khi EP ra mắt. Chúng ta quyết định cùng nhau dựa trên tình huống và lịch trình của bạn."
+            },
+            {
+              "question": "12 tháng có vẻ lâu. Chúng ta có thể làm nhanh hơn không?",
+              "answer": "Tùy quy mô EP. Nếu bài hát đã chuẩn bị sẵn hoặc quy mô session nhỏ, chúng ta có thể tiến nhanh hơn. Chúng tôi sẽ đề xuất lịch thực tế sau khi hiểu tình huống hiện tại của bạn."
+            }
+          ],
           "linkBack": "Quay lại tổng quan phát hành"
         }
       },
@@ -1395,19 +1529,94 @@
           "personaItems": [
             "Muốn gói trọn thế giới nghệ thuật của mình vào một tác phẩm",
             "Sẵn sàng để lại dấu ấn rõ nét trong cảnh indie",
-            "Muốn tiếp cận các nhà phê bình và truyền thông nghiêm túc"
+            "Muốn tiếp cận các nhà phê bình và truyền thông nghiêm túc",
+            "Muốn dùng học bổng hoặc gây quỹ cộng đồng để cơ cấu ngân sách"
           ],
-          "deliverablesSectionTitle": "Tiến độ · Kết quả",
-          "deliverablesItems": [
-            "Thời gian: ~24 tháng",
-            "Số bài: ~8 bài",
-            "Đội session đầy đủ"
+          "personaNotFitNote": "Nếu chưa phát hành single, chúng tôi khuyến nghị bắt đầu từ đó. Đó là nền tảng vững chắc hơn.",
+          "focusSectionTitle": "Chúng tôi tập trung vào gì cho album đầy đủ của bạn",
+          "focusSubtitle": "Album đầy đủ là cuộc chiến về chất lượng và thời gian.",
+          "focusItems": [
+            { "title": "Chiều sâu A&R & tuyển chọn bài hát", "desc": "Chúng ta cùng đánh giá bài nào phù hợp với album và bài nào không. Cung bậc toàn diện của album được quyết định ở đây." },
+            { "title": "Thiết kế cung bậc & thứ tự toàn album", "desc": "Chúng ta thiết kế hành trình từ bài 1 đến bài cuối để toàn bộ album kể một câu chuyện." },
+            { "title": "PR nhà phê bình & buổi nghe thử", "desc": "Chúng tôi tổ chức buổi nghe thử trước phát hành cho nhà phê bình — chỉ có thể thực hiện với album đầy đủ. Được công nhận qua đánh giá là mục tiêu." },
+            { "title": "Hỗ trợ học bổng & tài trợ", "desc": "Chúng tôi có kinh nghiệm với các chương trình học bổng nghệ thuật và gây quỹ cộng đồng. Cùng nhau suy nghĩ về cơ cấu ngân sách." }
+          ],
+          "journeySectionTitle": "Hành trình đến phát hành",
+          "journeySubtitle": "~24 tháng, đây là cách chúng ta cùng thực hiện.",
+          "journeyItems": [
+            { "month": "T0-3", "label": "A&R & Tuyển chọn bài hát", "desc": "Chúng ta thiết kế bài nào thuộc album và đĩa nhạc sẽ như thế nào." },
+            { "month": "T4-6", "label": "Ý niệm & Danh sách bài", "desc": "Hoàn thiện ý niệm album và thứ tự bài." },
+            { "month": "T7-12", "label": "Dàn dựng & Session", "desc": "Phát triển dàn dựng từng bài và tuyển dụng, phối hợp nhạc công session." },
+            { "month": "T13-15", "label": "Thu âm giọng hát & Session", "desc": "Giai đoạn thu âm chuyên sâu, bao gồm định hướng giọng hát." },
+            { "month": "T16-18", "label": "Hòa âm", "desc": "Trong nhiều tháng, chúng tôi định hình âm thanh tổng thể của album." },
+            { "month": "T19", "label": "Mastering & Artwork", "desc": "Mastering và định hướng artwork." },
+            { "month": "T20-21", "label": "Single chủ lực 1–2", "desc": "1–2 bài được phát hành trước album." },
+            { "month": "T22-24", "label": "Phát hành album & Buổi nghe thử nhà phê bình", "desc": "Phát hành toàn bộ album, buổi nghe thử nhà phê bình và chiến dịch tiếp theo." }
+          ],
+          "deliverablesSectionTitle": "Những gì bạn nhận được",
+          "deliverablesIncludedTitle": "Bao gồm trong giá này",
+          "deliverablesIncluded": [
+            "Tư vấn A&R & tuyển chọn bài hát",
+            "Danh sách bài & thiết kế thứ tự album",
+            "Thu âm giọng hát (Studio NOL nội bộ) — tất cả bài",
+            "Định hướng giọng hát",
+            "Tuyển dụng & phối hợp nhạc công session",
+            "Hòa âm (nội bộ) — âm sắc thống nhất toàn album",
+            "Mastering (nội bộ)",
+            "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
+            "Bao gồm 1–2 single chủ lực",
+            "Viết thông cáo báo chí",
+            "Gửi thông cáo báo chí đến nhà báo & nhà phê bình",
+            "Buổi nghe thử trước phát hành cho nhà phê bình (khi điều kiện cho phép)",
+            "Hướng dẫn xin học bổng nghệ thuật / tài trợ",
+            "Giao file master (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Xử lý riêng",
+          "deliverablesExcluded": [
+            "Artwork bìa (có thể kết nối designer, chi phí riêng)",
+            "MV / video trực tiếp",
+            "Ngân sách quảng cáo mạng xã hội",
+            "Phát hành vật lý (CD / LP)",
+            "Bổ sung session lớn (báo giá riêng)"
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Từ ~₩13M (album đầy đủ)",
           "priceRationale": "Dựa trên dự án thực tế: album thứ 2 của Sickbaby",
           "priceNote": "Thay đổi theo cấu hình session và số buổi thu âm. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "caseStudySectionTitle": "Các album đầy đủ chúng ta đã làm cùng nhau",
+          "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "kang-ho-jung-self-titled",
+              "headline": "Đặt tên mình làm cược",
+              "quote": "Từ lên kế hoạch đến hòa âm, chúng tôi thiết kế màu sắc âm thanh sẽ trở thành điểm tham chiếu cho toàn bộ sự nghiệp âm nhạc của anh."
+            }
+          ],
           "inProgressSectionTitle": "Các album đang thực hiện",
+          "faqSectionTitle": "Câu hỏi thường gặp",
+          "faqSubtitle": "Câu hỏi trước khi tư vấn.",
+          "faqItems": [
+            {
+              "question": "2 năm được lấp đầy như thế nào?",
+              "answer": "Bắt đầu bằng A&R và tuyển chọn bài, sau đó trải qua dàn dựng, session và thu âm từng bài, hòa âm để thống nhất âm thanh album, phát hành 1–2 single chủ lực, phát hành toàn bộ album và buổi nghe thử nhà phê bình. Ưu điểm của lịch dài hơn là chất lượng — album mà mỗi bài có không gian để phát triển."
+            },
+            {
+              "question": "Các bạn có thể giúp với học bổng nghệ thuật hoặc gây quỹ cộng đồng không?",
+              "answer": "Chúng tôi có kinh nghiệm về điều này. Chúng tôi có thể thảo luận về học bổng hội đồng nghệ thuật, quỹ nghệ thuật địa phương và hướng gây quỹ cộng đồng trong buổi tư vấn. Tuy nhiên, kết quả không thể đảm bảo."
+            },
+            {
+              "question": "Có thể phát sinh chi phí thêm ngoài ₩13M không?",
+              "answer": "Thay đổi theo cấu hình session, số bài và quy mô dàn dựng. Artwork bìa, MV, v.v. tính riêng. Chúng tôi báo giá tùy chỉnh đầy đủ sau khi hiểu phạm vi hoàn chỉnh trong buổi tư vấn. Không có chi phí ẩn."
+            },
+            {
+              "question": "Album đầy đủ có thể đưa tôi lên bảng xếp hạng không?",
+              "answer": "Chúng tôi không thể đảm bảo điều đó. Trong cảnh indie, giá trị của album đầy đủ nằm ở sự công nhận của nhà phê bình và vị thế trong cảnh hơn là thứ hạng trên bảng xếp hạng. Chúng ta cùng nỗ lực mở con đường đó."
+            },
+            {
+              "question": "Tôi đã phát hành album đầu tiên rồi. Tôi có thể cộng tác với các bạn không?",
+              "answer": "Hoàn toàn được. Album thứ hai là về sợi dây tự sự kết nối với album đầu và thể hiện sự trưởng thành. Chúng tôi thiết kế hướng đi cho album thứ hai tốt hơn bằng cách tham chiếu tác phẩm trước của bạn."
+            }
+          ],
           "linkBack": "Quay lại tổng quan phát hành"
         }
       },
@@ -1472,6 +1681,32 @@
       "sectionTitle": "Danh mục Phát hành",
       "sectionSubtitle": "Những album chúng tôi đã thực hiện. Nhấp để đọc ghi chú sản xuất.",
       "viewAll": "Xem Toàn bộ Portfolio"
+    },
+    "consultation": {
+      "sectionTitle": "Quy trình tư vấn",
+      "sectionSubtitle": "Bạn có thể quyết định sau. Không áp lực phải cam kết.",
+      "steps": [
+        {
+          "num": "1",
+          "title": "Chia sẻ bài hát & tình huống của bạn trước",
+          "desc": "Kể cho chúng tôi về bài hát, bạn đang ở đâu trong quy trình và muốn loại phát hành nào. ~10 phút."
+        },
+        {
+          "num": "2",
+          "title": "Tư vấn miễn phí 30 phút",
+          "desc": "Cuộc gọi video hoặc thăm studio. Bạn không cần quyết định tại cuộc họp này."
+        },
+        {
+          "num": "3",
+          "title": "Báo giá tùy chỉnh & đề xuất lịch",
+          "desc": "Trong vòng 48 giờ sau tư vấn. Đề xuất tùy chỉnh dựa trên mức phí."
+        },
+        {
+          "num": "4",
+          "title": "Quyết định theo tốc độ của bạn",
+          "desc": "Không áp lực. Nếu không phù hợp, chúng tôi sẽ giúp bạn tìm con đường khác."
+        }
+      ]
     },
     "cta": {
       "titleLine1": "Một sự phát hành bạn không thể làm một mình —",

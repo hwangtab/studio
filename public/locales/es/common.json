@@ -1337,17 +1337,82 @@
             "Quieres empezar de forma realista con un presupuesto claro",
             "Dando tus primeros pasos en la escena indie"
           ],
-          "deliverablesSectionTitle": "Cronograma · Entregables",
-          "deliverablesItems": [
-            "Duración: ~7 meses",
-            "Canciones: ~2 temas",
-            "Sesiones: ~3 músicos (guitarra, bajo, batería)"
+          "personaNotFitNote": "Si ya estás pensando en escala de EP o álbum completo, revisa esas páginas también.",
+          "focusSectionTitle": "En qué nos enfocamos para tu single",
+          "focusSubtitle": "Una sola pista significa que podemos ir más profundo.",
+          "focusItems": [
+            { "title": "Enfoque total en una pista", "desc": "Con una sola canción, toda la energía va hacia ella. El arreglo y la dirección sonora se optimizan para ese single." },
+            { "title": "Definir tu primera impresión", "desc": "El momento en que tu nombre entra en la escena indie. Pensamos juntos desde la etapa de planificación qué impresión quieres dejar." },
+            { "title": "Un primer paso realista", "desc": "El objetivo es llegar al lanzamiento, no la perfección. Empezar es más importante que ser perfecto." },
+            { "title": "Tu primer contacto con los medios", "desc": "Al lanzar, enviamos un comunicado de prensa a periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie." }
+          ],
+          "journeySectionTitle": "El camino hacia el lanzamiento",
+          "journeySubtitle": "~7 meses, así lo hacemos juntos.",
+          "journeyItems": [
+            { "month": "M0", "label": "Planificación y Dirección", "desc": "Decidimos juntos qué canción, qué enfoque y a quién debe llegar." },
+            { "month": "M1-2", "label": "Arreglo y Casting de Sesión", "desc": "Desarrollamos la dirección del arreglo y te conectamos con músicos de sesión." },
+            { "month": "M3", "label": "Grabación Vocal y Dirección", "desc": "Grabamos en el estudio y sacamos tu mejor actuación." },
+            { "month": "M4", "label": "Grabación de Sesión y Mezcla", "desc": "Se graban los instrumentos de sesión y se mezclan para completar el sonido." },
+            { "month": "M5", "label": "Masterización y Arte", "desc": "Después de masterizar, preparamos el arte de portada." },
+            { "month": "M6", "label": "Distribución y Teaser", "desc": "Registro de distribución en plataformas y campaña teaser previa al lanzamiento." },
+            { "month": "M7", "label": "Lanzamiento y PR en Medios", "desc": "El día del lanzamiento y después, los comunicados de prensa van a críticos y medios." }
+          ],
+          "deliverablesSectionTitle": "Lo que recibes",
+          "deliverablesIncludedTitle": "Incluido en este precio",
+          "deliverablesIncluded": [
+            "Concepto y dirección del álbum",
+            "Grabación vocal (Studio NOL in-house)",
+            "Dirección vocal",
+            "Búsqueda y coordinación de músicos de sesión (guitarra, bajo, batería, etc.)",
+            "Mezcla (in-house)",
+            "Masterización (in-house)",
+            "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
+            "Redacción del comunicado de prensa",
+            "Comunicado de prensa a periodistas y críticos",
+            "Entrega del archivo master (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Se gestiona por separado",
+          "deliverablesExcluded": [
+            "Arte de portada (se puede conectar con diseñador, costo aparte)",
+            "Videoclip / video en vivo",
+            "4+ músicos de sesión (cotización aparte)",
+            "Lanzamiento físico (CD / LP)",
+            "Presupuesto de publicidad en redes sociales"
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde ~₩2.7M (single)",
           "priceRationale": "Basado en proyecto real: single de Harris",
           "priceNote": "Varía según músicos y sesiones de grabación. Cotización personalizada tras consulta gratuita.",
+          "caseStudySectionTitle": "Singles que hemos hecho juntos",
+          "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "tierliner-bite-me",
+              "headline": "Una pista, toda la energía de la banda",
+              "quote": "Convertimos la energía cruda de una banda de indie rock en un sonido listo para streaming. La energía en vivo vive en la grabación."
+            }
+          ],
           "inProgressSectionTitle": "Singles que estamos haciendo ahora",
+          "faqSectionTitle": "Preguntas Frecuentes",
+          "faqSubtitle": "Preguntas antes de consultar.",
+          "faqItems": [
+            {
+              "question": "7 meses parece mucho. ¿Podemos lanzar más rápido?",
+              "answer": "A veces va más rápido dependiendo de qué tan lista esté la canción. Pero el arreglo, las sesiones, la grabación, la mezcla, la masterización y el registro de distribución cada uno necesita tiempo suficiente. Analizaremos tu situación en la consulta gratuita y estableceremos juntos un cronograma realista."
+            },
+            {
+              "question": "¿No es caro para una sola canción?",
+              "answer": "Esto no es solo alquiler de estudio — cubre planificación, coordinación de sesiones, dirección de grabación, mezcla, masterización, distribución y PR como paquete completo. Buscar cada elemento por separado puede resultar más caro. Podemos ajustar el tamaño de la sesión a tu presupuesto y darte una cotización personalizada tras la consulta."
+            },
+            {
+              "question": "No cambiarán mi canción sin preguntarme, ¿verdad?",
+              "answer": "La dirección artística siempre queda contigo. Los arreglos y la mezcla se proponen y discuten, no se imponen. Si no te gusta algo, lo hablamos."
+            },
+            {
+              "question": "¿Pueden garantizar que los críticos realmente reseñen mi lanzamiento?",
+              "answer": "No podemos garantizar reseñas. Pero enviamos comunicados de prensa a través de una red de medios de 15 años, y si hay interés, trabajamos para convertirlo en una reseña. Mi trabajo es abrir el camino, no garantizar el resultado."
+            }
+          ],
           "linkBack": "Volver a descripción general"
         }
       },
@@ -1364,20 +1429,89 @@
           "personaSectionTitle": "Para quién es esto",
           "personaItems": [
             "Quieres mostrar un mundo más amplio después de lanzar un single",
-            "Listo para definir tu sonido en 3–5 temas",
-            "Buscas construir una base sólida de fans"
+            "Listo para definir tu sonido claramente en 3–5 temas",
+            "Construyendo una base sólida de fans paso a paso",
+            "Quieres crear una campaña de lanzamiento por fases: single principal → EP"
           ],
-          "deliverablesSectionTitle": "Cronograma · Entregables",
-          "deliverablesItems": [
-            "Duración: ~12 meses",
-            "Canciones: 3–5 temas",
-            "Entre single y álbum completo en alcance"
+          "personaNotFitNote": "Si solo tienes una pista, un single puede ser más adecuado. Si piensas en 8+ pistas, mira la página del álbum completo.",
+          "focusSectionTitle": "En qué nos enfocamos para tu EP",
+          "focusSubtitle": "Conectar múltiples pistas en un solo mundo es el corazón de un EP.",
+          "focusItems": [
+            { "title": "Consistencia y secuenciación entre pistas", "desc": "Unir múltiples canciones en un mundo es el núcleo de un EP. Diseñamos juntos el orden de pistas, el ritmo y la coherencia de tonos." },
+            { "title": "Campaña por fases: single principal → EP", "desc": "Lanza primero una pista para medir la respuesta, luego prepara el resto — construyendo tu base de fans paso a paso." },
+            { "title": "Definir tu identidad artística", "desc": "Lo que es difícil mostrar con un solo single se vuelve claro en un EP. Tu identidad musical distintiva toma forma." },
+            { "title": "Dos rondas de PR en medios", "desc": "Single principal + lanzamiento de EP te da dos oportunidades de llegar a críticos y medios musicales." }
+          ],
+          "journeySectionTitle": "El camino hacia el lanzamiento",
+          "journeySubtitle": "~12 meses, así lo hacemos juntos.",
+          "journeyItems": [
+            { "month": "M0", "label": "Planificación y Concepto", "desc": "Diseñamos la dirección general del EP, número de pistas y mundo artístico." },
+            { "month": "M1-2", "label": "Selección de Lista de Pistas", "desc": "Seleccionamos juntos qué canciones van al EP y establecemos el orden." },
+            { "month": "M3-5", "label": "Arreglo y Sesiones", "desc": "Desarrollamos el arreglo de cada canción y conectamos músicos de sesión." },
+            { "month": "M6-7", "label": "Grabación Vocal y de Sesión", "desc": "Dirección vocal y grabación de sesiones instrumentales." },
+            { "month": "M8", "label": "Mezcla y Coherencia de Tono", "desc": "Mezclamos para que múltiples pistas conecten como un EP cohesivo." },
+            { "month": "M9", "label": "Masterización y Arte", "desc": "Masterización y preparación del arte de portada." },
+            { "month": "M10", "label": "Single Principal y 1ª PR", "desc": "Lanzamiento del single principal y primera ronda de PR en medios." },
+            { "month": "M11-12", "label": "Lanzamiento de EP y 2ª PR", "desc": "Lanzamiento completo del EP, segunda ronda de PR y campaña post-lanzamiento." }
+          ],
+          "deliverablesSectionTitle": "Lo que recibes",
+          "deliverablesIncludedTitle": "Incluido en este precio",
+          "deliverablesIncluded": [
+            "Concepto y dirección del álbum",
+            "Selección y secuenciación de lista de pistas",
+            "Grabación vocal (Studio NOL in-house) — todas las pistas",
+            "Dirección vocal",
+            "Búsqueda y coordinación de músicos de sesión",
+            "Mezcla (in-house) — coherencia de tono en todas las pistas",
+            "Masterización (in-house)",
+            "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
+            "Single principal incluido",
+            "Redacción de comunicado de prensa (single principal + EP, 2 rondas)",
+            "Comunicado de prensa a periodistas y críticos (2 rondas)",
+            "Entrega del archivo master (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Se gestiona por separado",
+          "deliverablesExcluded": [
+            "Arte de portada (se puede conectar con diseñador, costo aparte)",
+            "Videoclip / video en vivo",
+            "5+ músicos de sesión (cotización aparte)",
+            "Lanzamiento físico (CD / LP)",
+            "Presupuesto de publicidad en redes sociales"
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Cotización personalizada según alcance",
           "priceRationale": "Varía según sesiones y arreglos",
           "priceNote": "Cotización personalizada tras consulta gratuita.",
+          "caseStudySectionTitle": "EPs que hemos hecho juntos",
+          "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "namjae-wi-inmul",
+              "headline": "Una declaración artística con narrativa",
+              "quote": "Desde el arreglo hasta la promoción, trabajamos juntos para que el mundo artístico distintivo de Namjae llegara completamente a la escena indie."
+            }
+          ],
           "inProgressSectionTitle": "EPs que estamos haciendo ahora",
+          "faqSectionTitle": "Preguntas Frecuentes",
+          "faqSubtitle": "Preguntas antes de consultar.",
+          "faqItems": [
+            {
+              "question": "¿En qué se diferencia un EP de lanzar varios singles?",
+              "answer": "Varios singles son lanzamientos independientes cada uno. Un EP es una obra completa. El trabajo de selección — orden de pistas, tono y construcción de mundo — solo es posible con un EP. Si quieres construir una base sólida de fans, un EP deja una impresión más fuerte."
+            },
+            {
+              "question": "¿El costo sube proporcionalmente con más pistas?",
+              "answer": "Varía según la formación de sesión, el número de pistas y el alcance del arreglo — no es un simple multiplicador. Primero entendemos el alcance completo, luego damos una cotización personalizada. Cuéntanos sobre las canciones que tienes en la consulta gratuita."
+            },
+            {
+              "question": "¿Un EP necesita un single principal?",
+              "answer": "No es obligatorio. Pero un single principal es efectivo para generar expectativa antes del EP. Decidimos juntos según tu situación y cronograma."
+            },
+            {
+              "question": "12 meses parece mucho. ¿Podemos hacerlo más rápido?",
+              "answer": "Depende del alcance del EP. Si tus canciones ya están preparadas o el alcance de la sesión es pequeño, podemos avanzar más rápido. Propondremos un cronograma realista después de entender tu situación actual."
+            }
+          ],
           "linkBack": "Volver a descripción general"
         }
       },
@@ -1395,19 +1529,94 @@
           "personaItems": [
             "Quieres capturar todo tu mundo artístico en una obra",
             "Listo para dejar una marca clara en la escena indie",
-            "Buscas llegar a críticos y medios en serio"
+            "Buscas llegar a críticos y medios en serio",
+            "Quieres usar becas o crowdfunding para estructurar el presupuesto"
           ],
-          "deliverablesSectionTitle": "Cronograma · Entregables",
-          "deliverablesItems": [
-            "Duración: ~24 meses",
-            "Canciones: ~8 temas",
-            "Formación completa de sesionistas"
+          "personaNotFitNote": "Si aún no has lanzado un single, recomendamos empezar por ahí. Es una base más sólida.",
+          "focusSectionTitle": "En qué nos enfocamos para tu álbum completo",
+          "focusSubtitle": "Un álbum completo es una batalla de calidad y tiempo.",
+          "focusItems": [
+            { "title": "Profundidad de A&R y selección de canciones", "desc": "Juzgamos juntos qué canciones pertenecen al álbum y cuáles no. El arco completo del álbum se decide aquí." },
+            { "title": "Diseño del arco completo y secuencia", "desc": "Diseñamos el viaje desde la pista 1 hasta la última para que todo el álbum cuente una historia." },
+            { "title": "PR con críticos y sesión de escucha", "desc": "Organizamos una sesión de escucha previa al lanzamiento para críticos — solo posible con un álbum completo. El reconocimiento a través de reseñas es el objetivo." },
+            { "title": "Apoyo con becas y financiamiento", "desc": "Tenemos experiencia con programas de becas artísticas y crowdfunding. Pensamos juntos la estructura del presupuesto." }
+          ],
+          "journeySectionTitle": "El camino hacia el lanzamiento",
+          "journeySubtitle": "~24 meses, así lo hacemos juntos.",
+          "journeyItems": [
+            { "month": "M0-3", "label": "A&R y Selección de Canciones", "desc": "Diseñamos qué canciones pertenecen al álbum y qué tipo de disco será." },
+            { "month": "M4-6", "label": "Concepto y Lista de Pistas", "desc": "Finalizamos el concepto y el orden de pistas del álbum." },
+            { "month": "M7-12", "label": "Arreglo y Sesiones", "desc": "Desarrollamos el arreglo de cada pista y buscamos y coordinamos músicos de sesión." },
+            { "month": "M13-15", "label": "Grabación Vocal y de Sesión", "desc": "Período de grabación intensiva, incluyendo dirección vocal." },
+            { "month": "M16-18", "label": "Mezcla", "desc": "Durante varios meses, damos forma al sonido general del álbum." },
+            { "month": "M19", "label": "Masterización y Arte", "desc": "Masterización y dirección de arte." },
+            { "month": "M20-21", "label": "Singles Principales 1–2", "desc": "1–2 pistas lanzadas antes del álbum." },
+            { "month": "M22-24", "label": "Lanzamiento del Álbum y Sesión de Críticos", "desc": "Lanzamiento completo del álbum, sesión de escucha para críticos y campaña de seguimiento." }
+          ],
+          "deliverablesSectionTitle": "Lo que recibes",
+          "deliverablesIncludedTitle": "Incluido en este precio",
+          "deliverablesIncluded": [
+            "Consultoría A&R y selección de canciones",
+            "Lista de pistas y diseño de secuencia del álbum",
+            "Grabación vocal (Studio NOL in-house) — todas las pistas",
+            "Dirección vocal",
+            "Búsqueda y coordinación de músicos de sesión",
+            "Mezcla (in-house) — tono unificado del álbum",
+            "Masterización (in-house)",
+            "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
+            "1–2 singles principales incluidos",
+            "Redacción del comunicado de prensa",
+            "Comunicado de prensa a periodistas y críticos",
+            "Sesión de escucha previa al lanzamiento para críticos (cuando sea posible)",
+            "Guía de solicitud de becas artísticas / financiamiento",
+            "Entrega del archivo master (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Se gestiona por separado",
+          "deliverablesExcluded": [
+            "Arte de portada (se puede conectar con diseñador, costo aparte)",
+            "Videoclip / video en vivo",
+            "Presupuesto de publicidad en redes sociales",
+            "Lanzamiento físico (CD / LP)",
+            "Adiciones grandes de sesión (cotización aparte)"
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde ~₩13M (álbum completo)",
           "priceRationale": "Basado en proyecto real: 2.º álbum de Sickbaby",
           "priceNote": "Varía según músicos y sesiones de grabación. Cotización personalizada tras consulta gratuita.",
+          "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
+          "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "kang-ho-jung-self-titled",
+              "headline": "Poniendo tu nombre en juego",
+              "quote": "Desde la planificación hasta la mezcla, diseñamos el color sonoro que se convertiría en el punto de referencia de toda su discografía."
+            }
+          ],
           "inProgressSectionTitle": "Álbumes completos que estamos haciendo ahora",
+          "faqSectionTitle": "Preguntas Frecuentes",
+          "faqSubtitle": "Preguntas antes de consultar.",
+          "faqItems": [
+            {
+              "question": "¿Cómo se llena 2 años?",
+              "answer": "Comienza con A&R y selección de canciones, luego pasa por arreglo, sesiones y grabación de cada pista, mezcla para unificar el sonido del álbum, 1–2 lanzamientos de singles principales, el lanzamiento completo del álbum y una sesión de escucha para críticos. La ventaja del cronograma más largo es la calidad — un álbum donde cada canción tiene espacio para respirar."
+            },
+            {
+              "question": "¿Pueden ayudar con becas artísticas o crowdfunding?",
+              "answer": "Tenemos experiencia con esto. Podemos discutir becas de consejos de artes, fondos artísticos regionales y direcciones de crowdfunding en la consulta. Los resultados, sin embargo, no pueden garantizarse."
+            },
+            {
+              "question": "¿Pueden surgir costos adicionales más allá de ₩13M?",
+              "answer": "Varía según la formación de sesión, el número de pistas y el alcance del arreglo. Arte de portada, videoclip, etc. son aparte. Damos una cotización personalizada completa después de entender el alcance completo en la consulta. Sin costos ocultos."
+            },
+            {
+              "question": "¿Un álbum completo puede llevarme a las listas?",
+              "answer": "No podemos garantizar eso. En la escena indie, el valor de un álbum completo está en el reconocimiento crítico y la posición en la escena más que en las listas. Trabajamos juntos para abrir ese camino."
+            },
+            {
+              "question": "Ya he lanzado un primer álbum. ¿Puedo seguir trabajando con ustedes?",
+              "answer": "Por supuesto. Un segundo álbum trata del hilo narrativo que lo conecta con el primero y muestra el crecimiento. Diseñamos la dirección para un mejor segundo álbum referenciando tu trabajo anterior."
+            }
+          ],
           "linkBack": "Volver a descripción general"
         }
       },
@@ -1472,6 +1681,32 @@
       "sectionTitle": "Discografía",
       "sectionSubtitle": "Álbumes en los que hemos trabajado. Haz clic para leer las notas de producción.",
       "viewAll": "Ver Portafolio Completo"
+    },
+    "consultation": {
+      "sectionTitle": "Cómo funciona la consulta",
+      "sectionSubtitle": "Puedes decidir después. Sin presión para comprometerte.",
+      "steps": [
+        {
+          "num": "1",
+          "title": "Comparte tus canciones y situación primero",
+          "desc": "Cuéntanos sobre la pista, dónde estás en el proceso y qué tipo de lanzamiento quieres. ~10 minutos."
+        },
+        {
+          "num": "2",
+          "title": "Consulta gratuita de 30 minutos",
+          "desc": "Videollamada o visita al estudio. No necesitas decidir en esta reunión."
+        },
+        {
+          "num": "3",
+          "title": "Cotización personalizada y propuesta de cronograma",
+          "desc": "Dentro de las 48 horas después de la consulta. Propuesta personalizada basada en tarifas."
+        },
+        {
+          "num": "4",
+          "title": "Decide a tu propio ritmo",
+          "desc": "Sin presión. Si no es el ajuste correcto, te ayudaremos a encontrar otro camino."
+        }
+      ]
     },
     "cta": {
       "titleLine1": "Un lanzamiento que no puedes hacer solo —",

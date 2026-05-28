@@ -1380,17 +1380,82 @@
             "Want to start realistically with a clear budget",
             "Taking your first steps into the indie scene"
           ],
-          "deliverablesSectionTitle": "Timeline · Deliverables",
-          "deliverablesItems": [
-            "Duration: ~7 months",
-            "Tracks: ~2 songs",
-            "Sessions: ~3 musicians (guitar, bass, drums)"
+          "personaNotFitNote": "If you're already thinking EP or full album scale, check those pages too.",
+          "focusSectionTitle": "What we focus on for your single",
+          "focusSubtitle": "One track means we can go deeper.",
+          "focusItems": [
+            { "title": "Full focus on one track", "desc": "With just one song, every bit of energy goes into it. Arrangement and sound direction are optimized for that single track." },
+            { "title": "Defining your first impression", "desc": "The moment your name enters the indie scene. We think together from the planning stage about what impression you want to make." },
+            { "title": "A realistic first step", "desc": "The goal is to actually get to release, not perfection. Starting is more important than being perfect." },
+            { "title": "Your first media touchpoint", "desc": "At release, we send a press release to music journalists and critics. Even your first release can reach the indie scene's eyes." }
+          ],
+          "journeySectionTitle": "The journey to release",
+          "journeySubtitle": "~7 months, here's how we do it together.",
+          "journeyItems": [
+            { "month": "M0", "label": "Planning & Direction", "desc": "We decide together what song, what approach, and who it should reach." },
+            { "month": "M1-2", "label": "Arrangement & Session Casting", "desc": "We develop the arrangement direction and connect you with session musicians." },
+            { "month": "M3", "label": "Vocal Recording & Direction", "desc": "We record at the studio and bring out your best performance." },
+            { "month": "M4", "label": "Session Recording & Mixing", "desc": "Session instruments are recorded and mixed to complete the sound." },
+            { "month": "M5", "label": "Mastering & Artwork", "desc": "After mastering, we prepare the cover artwork." },
+            { "month": "M6", "label": "Distribution & Teaser", "desc": "Platform distribution registration and pre-release teaser campaign." },
+            { "month": "M7", "label": "Release & Media PR", "desc": "On release day and after, press releases go to critics and media." }
+          ],
+          "deliverablesSectionTitle": "What you receive",
+          "deliverablesIncludedTitle": "Included in this price",
+          "deliverablesIncluded": [
+            "Album concept & direction",
+            "Vocal recording (Studio NOL in-house)",
+            "Vocal direction",
+            "Session musician sourcing & coordination (guitar, bass, drums, etc.)",
+            "Mixing (in-house)",
+            "Mastering (in-house)",
+            "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
+            "Press release writing",
+            "Press release to journalists & critics",
+            "Master file delivery (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Handled separately",
+          "deliverablesExcluded": [
+            "Cover artwork (can connect with designer, cost separate)",
+            "Music video / live video",
+            "4+ session musicians (separate quote)",
+            "Physical release (CD / LP)",
+            "SNS advertising budget"
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From ~₩2.7M (single)",
           "priceRationale": "Based on actual project: Harris single",
           "priceNote": "Varies by session lineup and recording sessions. Custom quote after free consultation.",
+          "caseStudySectionTitle": "Singles we've made together",
+          "caseStudySubtitle": "Real release projects we've worked on.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "tierliner-bite-me",
+              "headline": "One track, all the band's energy",
+              "quote": "We completed an indie rock band's raw energy into a streaming-ready sound. The live energy lives on in the recording."
+            }
+          ],
           "inProgressSectionTitle": "Singles we're making right now",
+          "faqSectionTitle": "Frequently Asked Questions",
+          "faqSubtitle": "Questions before you consult.",
+          "faqItems": [
+            {
+              "question": "7 months seems long. Can we release faster?",
+              "answer": "Sometimes it goes faster depending on how ready the song is. But arrangement, sessions, recording, mixing, mastering, and distribution registration each need sufficient time. We'll look at your situation in the free consultation and set a realistic timeline together."
+            },
+            {
+              "question": "Isn't it expensive for just one song?",
+              "answer": "This isn't just studio rental — it covers planning, session coordination, recording direction, mixing, mastering, distribution, and PR as a complete package. Sourcing each element separately can actually cost more. We can adjust session size to fit your budget, and give a custom quote after consultation."
+            },
+            {
+              "question": "You won't change my song without asking, right?",
+              "answer": "Artistic direction always stays with you. Arrangement and mixing are proposed and discussed, not imposed. If you don't like something, we talk it through."
+            },
+            {
+              "question": "Can you guarantee critics will actually review my release?",
+              "answer": "We can't guarantee reviews. But we send press releases through a 15-year media network, and if there's interest, we work to convert it into a review. My job is to open the pathway, not guarantee the outcome."
+            }
+          ],
           "linkBack": "Back to Music Release Overview"
         }
       },
@@ -1407,20 +1472,89 @@
           "personaSectionTitle": "Who this is for",
           "personaItems": [
             "Want to show a wider world after releasing a single",
-            "Ready to define your sound over 3–5 tracks",
-            "Looking to build a solid fanbase"
+            "Ready to define your sound clearly across 3–5 tracks",
+            "Building a solid fanbase step by step",
+            "Want to create a phased launch campaign: lead single → EP"
           ],
-          "deliverablesSectionTitle": "Timeline · Deliverables",
-          "deliverablesItems": [
-            "Duration: ~12 months",
-            "Tracks: 3–5 songs",
-            "Between single and full album scope"
+          "personaNotFitNote": "If you only have one track, a single may fit better. If you're thinking 8+ tracks, look at the full album page.",
+          "focusSectionTitle": "What we focus on for your EP",
+          "focusSubtitle": "Connecting multiple tracks into one world is the heart of an EP.",
+          "focusItems": [
+            { "title": "Consistency & sequencing across tracks", "desc": "Tying multiple songs into one world is the core of an EP. We design track order, pacing, and tone-matching together." },
+            { "title": "Lead single → EP phased campaign", "desc": "Release one track first to gauge response, then prepare the rest — building your fanbase step by step." },
+            { "title": "Defining your artistic identity", "desc": "What's hard to show with one single becomes clear across an EP. Your distinct musical identity takes shape." },
+            { "title": "Two rounds of media PR", "desc": "Lead single + EP release gives you two chances to reach critics and music media." }
+          ],
+          "journeySectionTitle": "The journey to release",
+          "journeySubtitle": "~12 months, here's how we do it together.",
+          "journeyItems": [
+            { "month": "M0", "label": "Planning & Concept", "desc": "We design the EP's overall direction, track count, and artistic world." },
+            { "month": "M1-2", "label": "Track List Curation", "desc": "We select which songs go into the EP together and set the order." },
+            { "month": "M3-5", "label": "Arrangement & Sessions", "desc": "We develop each song's arrangement and connect session musicians." },
+            { "month": "M6-7", "label": "Vocal & Session Recording", "desc": "Vocal direction and instrumental session recording." },
+            { "month": "M8", "label": "Mixing & Tone Matching", "desc": "We mix so multiple tracks connect as one cohesive EP." },
+            { "month": "M9", "label": "Mastering & Artwork", "desc": "Mastering and cover artwork preparation." },
+            { "month": "M10", "label": "Lead Single & 1st PR", "desc": "Lead single release and first media PR round." },
+            { "month": "M11-12", "label": "EP Release & 2nd PR", "desc": "Full EP release, second media PR, and post-release campaign." }
+          ],
+          "deliverablesSectionTitle": "What you receive",
+          "deliverablesIncludedTitle": "Included in this price",
+          "deliverablesIncluded": [
+            "Album concept & direction",
+            "Track list curation & sequencing",
+            "Vocal recording (Studio NOL in-house) — all tracks",
+            "Vocal direction",
+            "Session musician sourcing & coordination",
+            "Mixing (in-house) — tone-matching across all tracks",
+            "Mastering (in-house)",
+            "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
+            "Lead single included",
+            "Press release writing (lead single + EP, 2 rounds)",
+            "Press release to journalists & critics (2 rounds)",
+            "Master file delivery (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Handled separately",
+          "deliverablesExcluded": [
+            "Cover artwork (can connect with designer, cost separate)",
+            "Music video / live video",
+            "5+ session musicians (separate quote)",
+            "Physical release (CD / LP)",
+            "SNS advertising budget"
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "Custom quote by scope",
           "priceRationale": "Varies by session and arrangement",
           "priceNote": "Custom quote after free consultation.",
+          "caseStudySectionTitle": "EPs we've made together",
+          "caseStudySubtitle": "Real release projects we've worked on.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "namjae-wi-inmul",
+              "headline": "An artist statement with narrative",
+              "quote": "From arrangement to promotion, we worked together so Namjae's distinct artistic world could fully reach the indie scene."
+            }
+          ],
           "inProgressSectionTitle": "EPs we're making right now",
+          "faqSectionTitle": "Frequently Asked Questions",
+          "faqSubtitle": "Questions before you consult.",
+          "faqItems": [
+            {
+              "question": "How is an EP different from releasing multiple singles?",
+              "answer": "Multiple singles are each independent releases. An EP is one complete body of work. The curation work — track order, tone, and world-building across tracks — is only possible with an EP. If you want to build a solid fanbase, an EP leaves a stronger impression."
+            },
+            {
+              "question": "Does cost go up proportionally with more tracks?",
+              "answer": "It varies by session lineup, track count, and arrangement scope — not a simple multiplier. We understand the full scope first, then give a custom quote. Tell us about the songs you have in the free consultation."
+            },
+            {
+              "question": "Does an EP need a lead single?",
+              "answer": "It's not required. But a lead single is effective for building anticipation before the EP drops. We decide together based on your situation and timeline."
+            },
+            {
+              "question": "12 months seems long. Can we do it faster?",
+              "answer": "Depends on the EP scope. If your songs are already prepared or the session scope is small, we can move faster. We'll propose a realistic timeline after understanding your current situation."
+            }
+          ],
           "linkBack": "Back to Music Release Overview"
         }
       },
@@ -1438,19 +1572,94 @@
           "personaItems": [
             "Want to capture your full artistic world in one work",
             "Ready to leave a clear mark in the indie scene",
-            "Looking to reach critics and media in earnest"
+            "Looking to reach critics and media in earnest",
+            "Want to use grants or crowdfunding to structure the budget"
           ],
-          "deliverablesSectionTitle": "Timeline · Deliverables",
-          "deliverablesItems": [
-            "Duration: ~24 months",
-            "Tracks: ~8 songs",
-            "Full session lineup"
+          "personaNotFitNote": "If you haven't released a single yet, we recommend starting there. It's a stronger foundation.",
+          "focusSectionTitle": "What we focus on for your full album",
+          "focusSubtitle": "A full album is a battle of quality and time.",
+          "focusItems": [
+            { "title": "Depth of A&R & song selection", "desc": "We judge together which songs belong on the album and which don't. The full arc of the album is decided here." },
+            { "title": "Full arc & sequence design", "desc": "We design the journey from track 1 to the last so the whole album tells one story." },
+            { "title": "Critics PR & listening session", "desc": "We organize a pre-release listening session for critics — only possible with a full album. Recognition through reviews is the goal." },
+            { "title": "Grants & funding support", "desc": "We have experience with arts grant programs and crowdfunding. We think through the budget structure together." }
+          ],
+          "journeySectionTitle": "The journey to release",
+          "journeySubtitle": "~24 months, here's how we do it together.",
+          "journeyItems": [
+            { "month": "M0-3", "label": "A&R & Song Selection", "desc": "We design which songs belong on the album and what kind of record it will be." },
+            { "month": "M4-6", "label": "Concept & Track List", "desc": "We finalize the album's concept and track order." },
+            { "month": "M7-12", "label": "Arrangement & Sessions", "desc": "We develop each track's arrangement and source and coordinate session musicians." },
+            { "month": "M13-15", "label": "Vocal & Session Recording", "desc": "Intensive recording period, including vocal direction." },
+            { "month": "M16-18", "label": "Mixing", "desc": "Over several months, we shape the overall sound of the album." },
+            { "month": "M19", "label": "Mastering & Artwork", "desc": "Mastering and artwork direction." },
+            { "month": "M20-21", "label": "Lead Singles 1–2", "desc": "1–2 tracks released ahead of the album." },
+            { "month": "M22-24", "label": "Album Release & Critics Session", "desc": "Full album release, critics listening session, and follow-up campaign." }
+          ],
+          "deliverablesSectionTitle": "What you receive",
+          "deliverablesIncludedTitle": "Included in this price",
+          "deliverablesIncluded": [
+            "A&R consulting & song selection",
+            "Album track list & sequence design",
+            "Vocal recording (Studio NOL in-house) — all tracks",
+            "Vocal direction",
+            "Session musician sourcing & coordination",
+            "Mixing (in-house) — unified album tone",
+            "Mastering (in-house)",
+            "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
+            "1–2 lead singles included",
+            "Press release writing",
+            "Press release to journalists & critics",
+            "Critics pre-release listening session (where possible)",
+            "Arts grant / funding application guide",
+            "Master file delivery (24bit / 16bit / MP3)"
+          ],
+          "deliverablesExcludedTitle": "Handled separately",
+          "deliverablesExcluded": [
+            "Cover artwork (can connect with designer, cost separate)",
+            "Music video / live video",
+            "SNS advertising budget",
+            "Physical release (CD / LP)",
+            "Large session additions (separate quote)"
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From ~₩13M (full album)",
           "priceRationale": "Based on actual project: Sickbaby 2nd album",
           "priceNote": "Varies by session lineup and recording sessions. Custom quote after free consultation.",
+          "caseStudySectionTitle": "Full albums we've made together",
+          "caseStudySubtitle": "Real release projects we've worked on.",
+          "caseStudyItems": [
+            {
+              "portfolioId": "kang-ho-jung-self-titled",
+              "headline": "Putting your name on the line",
+              "quote": "From planning to mixing, we designed the sound color that would become the reference point for his entire discography."
+            }
+          ],
           "inProgressSectionTitle": "Full albums we're making right now",
+          "faqSectionTitle": "Frequently Asked Questions",
+          "faqSubtitle": "Questions before you consult.",
+          "faqItems": [
+            {
+              "question": "How is 2 years filled?",
+              "answer": "It starts with A&R and song selection, then goes through arrangement, sessions, and recording for each track, mixing to unify the album's sound, 1–2 lead single releases, the full album release, and a critics listening session. The advantage of the longer timeline is quality — an album where each song has room to breathe."
+            },
+            {
+              "question": "Can you help with arts grants or crowdfunding?",
+              "answer": "We have experience with this. We can discuss arts council grants, regional arts funding, and crowdfunding directions in the consultation. Results, however, cannot be guaranteed."
+            },
+            {
+              "question": "Can additional costs come up beyond ₩13M?",
+              "answer": "Varies by session lineup, track count, and arrangement scope. Cover artwork, music video, etc. are separate. We give a full custom quote after understanding the complete scope in consultation. No hidden costs."
+            },
+            {
+              "question": "Can a full album get me on the charts?",
+              "answer": "We can't guarantee that. In the indie scene, a full album's value is in critical recognition and scene standing more than chart rankings. We work to open that path together."
+            },
+            {
+              "question": "I've already released a first album. Can I still work with you?",
+              "answer": "Absolutely. A second album is about the narrative thread connecting it to the first and showing growth. We design the direction for a better second album by referencing your previous work."
+            }
+          ],
           "linkBack": "Back to Music Release Overview"
         }
       },
@@ -1515,6 +1724,32 @@
       "sectionTitle": "Discography",
       "sectionSubtitle": "Albums we've worked on. Click to read production notes.",
       "viewAll": "View Full Portfolio"
+    },
+    "consultation": {
+      "sectionTitle": "How the consultation works",
+      "sectionSubtitle": "You can decide after. No pressure to commit.",
+      "steps": [
+        {
+          "num": "1",
+          "title": "Share your songs & situation first",
+          "desc": "Tell us about the track, where you are in the process, and what kind of release you want. ~10 minutes."
+        },
+        {
+          "num": "2",
+          "title": "30-minute free consultation",
+          "desc": "Video call or studio visit. You don't need to decide at this meeting."
+        },
+        {
+          "num": "3",
+          "title": "Custom quote & schedule proposal",
+          "desc": "Within 48 hours after consultation. Rate-based custom proposal."
+        },
+        {
+          "num": "4",
+          "title": "Decide at your own pace",
+          "desc": "No pressure. If it's not the right fit, we'll help you find another path."
+        }
+      ]
     },
     "cta": {
       "titleLine1": "A release you can't do alone —",
