@@ -252,19 +252,24 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           className="mb-10"
         />
         <div className="max-w-2xl mx-auto">
-          {Array.isArray(journeyItems) && journeyItems.map((item, i) => (
-            <div key={i} className="flex gap-4 mb-4 last:mb-0">
-              <div className="flex-shrink-0 pt-0.5 w-20 flex justify-end">
-                <span className="text-xs font-bold text-primary bg-primary/10 rounded-full px-2.5 py-1 whitespace-nowrap">
-                  {item.month}
-                </span>
+          {Array.isArray(journeyItems) && journeyItems.map((item, i) => {
+            const isLast = i === journeyItems.length - 1;
+            return (
+              <div key={i} className="flex gap-5">
+                <div className="flex-shrink-0 flex flex-col items-center self-stretch">
+                  <div className="w-3 h-3 rounded-full bg-primary mt-2 flex-shrink-0 ring-4 ring-primary/10" />
+                  {!isLast && (
+                    <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1" />
+                  )}
+                </div>
+                <div className={`flex-1 ${!isLast ? 'pb-6' : ''}`}>
+                  <p className="text-xs font-bold text-primary mb-1 tracking-wide">{item.month}</p>
+                  <p className="font-bold text-gray-900 dark:text-white mb-1">{item.label}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
-              <div className={`flex-1 pb-5 ${i < journeyItems.length - 1 ? 'border-l-2 border-gray-100 dark:border-gray-700' : ''} pl-4`}>
-                <p className="font-bold text-gray-900 dark:text-white mb-1">{item.label}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Section>
 
@@ -512,17 +517,25 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             className="mb-10"
           />
           <div className="max-w-xl mx-auto">
-            {consultationSteps.map((step, i) => (
-              <div key={i} className="flex gap-4 mb-6 last:mb-0">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">
-                  {step.num}
+            {consultationSteps.map((step, i) => {
+              const isLast = i === consultationSteps.length - 1;
+              return (
+                <div key={i} className="flex gap-4">
+                  <div className="flex-shrink-0 flex flex-col items-center self-stretch">
+                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {step.num}
+                    </div>
+                    {!isLast && (
+                      <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1.5" />
+                    )}
+                  </div>
+                  <div className={`flex-1 pt-1 ${!isLast ? 'pb-6' : ''}`}>
+                    <p className="font-bold text-gray-900 dark:text-white mb-1">{step.title}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{step.desc}</p>
+                  </div>
                 </div>
-                <div className="pt-0.5">
-                  <p className="font-bold text-gray-900 dark:text-white mb-1">{step.title}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Section>
       )}

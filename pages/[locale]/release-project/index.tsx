@@ -198,23 +198,24 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           subtitle={t('releaseProject.process.sectionSubtitle')}
           className="mb-12"
         />
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-2xl mx-auto">
           {PROCESS_ICONS.map((s, i) => {
             const Icon = s.icon;
+            const isLast = i === PROCESS_ICONS.length - 1;
             return (
-              <div
-                key={s.step}
-                className="flex items-start gap-4 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
-              >
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icon size={18} className="text-primary" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-primary/50">{s.step}</span>
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">{t(`releaseProject.process.steps.${i}.title`)}</h3>
+              <div key={s.step} className="flex gap-5">
+                <div className="flex-shrink-0 flex flex-col items-center self-stretch">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Icon size={18} className="text-primary" />
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{t(`releaseProject.process.steps.${i}.desc`)}</p>
+                  {!isLast && (
+                    <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1.5" />
+                  )}
+                </div>
+                <div className={`flex-1 pt-1.5 ${!isLast ? 'pb-6' : ''}`}>
+                  <p className="text-xs font-mono text-primary/60 mb-1 tracking-wide">{s.step}</p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">{t(`releaseProject.process.steps.${i}.title`)}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{t(`releaseProject.process.steps.${i}.desc`)}</p>
                 </div>
               </div>
             );
