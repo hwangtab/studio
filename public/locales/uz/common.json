@@ -1401,13 +1401,23 @@
           "caseStudyItems": [
             {
               "portfolioId": "tierliner-bite-me",
-              "headline": "Bitta trek, guruhning barcha energiyasi",
-              "quote": "Indie rok guruhining xom energiyasini streaming uchun tayyor ovozga aylantirdik. Jonli energiya yozuvda saqlanib qoldi."
+              "headline": "Bitta trekka jamlangan ovoz tovlanishi",
+              "quote": "Tierliner 〈Bite Me〉. Artistning o‘ziga xos salmoqli ovoz tovlanishini yozuvga aynan ko‘chirib o‘tkazgan singl. Yozish va miksda artistning rangi birinchi o‘ringa qo‘yildi."
             },
             {
               "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "Debyut singl, jonli energiyani saqlab qolgan holda",
+              "headline": "Guruh debyuti, jonli energiya saqlab qolingan holda",
               "quote": "The Projectors’ning debyut singli. Guruhning jonli ijrosini imkon qadar saqlab qolgan holda, uni zamonaviy streaming ovozi uchun qayta talqin qilgan loyiha."
+            },
+            {
+              "portfolioId": "heo-jeong-hyuk-wind",
+              "headline": "Vokal kuchini ulug‘lovchi krossover",
+              "quote": "Heo Jeong-hyuk 〈Wind〉. Trot (Koreyaning an’anaviy pop janri) ovozining kuchli ifodaliligini saqlab qolgan holda, pop uslubidagi tiniqlikni qo‘shgan — ikki janrni bog‘lovchi singl."
+            },
+            {
+              "portfolioId": "jai-hanash-pink-padding",
+              "headline": "Ikki artist, bitta trek",
+              "quote": "Jai va HANASH hamkorligi. Pop va hip-hop tovlanishlarini moslashtirib, ularni bitta trek ichida tabiiy ravishda birga yashashga erishgan loyiha."
             }
           ],
           "inProgressSectionTitle": "Hozir yaratayotgan singller",

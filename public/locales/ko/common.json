@@ -2099,13 +2099,23 @@
           "caseStudyItems": [
             {
               "portfolioId": "tierliner-bite-me",
-              "headline": "한 곡에 밴드의 에너지를 담다",
-              "quote": "인디 록 밴드의 날 것 에너지를 스트리밍 사운드로 완성했습니다. 라이브 에너지가 음원에도 살아있습니다."
+              "headline": "한 곡에 집중된 사운드 톤",
+              "quote": "티어라이너 〈Bite Me〉. 아티스트 본연의 묵직한 사운드 결을 음원에 그대로 옮긴 한 곡. 레코딩과 믹싱에서 아티스트의 색을 가장 우선했습니다."
             },
             {
               "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "데뷔 싱글, 라이브 에너지를 그대로",
-              "quote": "더 프로젝터스의 데뷔 싱글. 라이브 밴드 연주를 최대한 살리면서 현대적인 스트리밍 사운드로 재해석한 프로젝트입니다."
+              "headline": "밴드 데뷔, 라이브 에너지를 그대로",
+              "quote": "더 프로젝터스의 데뷔 싱글. 라이브 밴드 연주를 살리면서 현대적인 스트리밍 사운드로 재해석한 프로젝트입니다."
+            },
+            {
+              "portfolioId": "heo-jeong-hyuk-wind",
+              "headline": "보컬의 힘을 살리는 크로스오버",
+              "quote": "허정혁 〈바람 한 점〉. 트로트의 강렬한 보컬 표현력을 보존하면서 팝적인 명료성을 더해 두 장르를 잇는 한 곡으로 완성했습니다."
+            },
+            {
+              "portfolioId": "jai-hanash-pink-padding",
+              "headline": "두 아티스트, 한 곡",
+              "quote": "자이와 HANASH의 콜라보. 팝과 힙합 두 톤을 조율해 한 곡 안에 자연스럽게 공존시킨 프로젝트입니다."
             }
           ],
           "inProgressSectionTitle": "지금 함께 만들고 있는 싱글들",

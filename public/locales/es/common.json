@@ -1403,13 +1403,23 @@
           "caseStudyItems": [
             {
               "portfolioId": "tierliner-bite-me",
-              "headline": "Una pista, toda la energía de la banda",
-              "quote": "Convertimos la energía cruda de una banda de indie rock en un sonido listo para streaming. La energía en vivo vive en la grabación."
+              "headline": "Un tono sonoro concentrado en una sola pista",
+              "quote": "Tierliner 〈Bite Me〉. Un single que traslada al disco el sonido contundente característico del artista. La grabación y la mezcla priorizaron el color del artista por encima de todo."
             },
             {
               "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "Single debut, con la energía en vivo intacta",
+              "headline": "Debut de banda, energía en vivo intacta",
               "quote": "El single debut de The Projectors. Un proyecto que conserva la interpretación en vivo de la banda y la reinterpreta para el sonido moderno de streaming."
+            },
+            {
+              "portfolioId": "heo-jeong-hyuk-wind",
+              "headline": "Un crossover que honra la fuerza vocal",
+              "quote": "Heo Jeong-hyuk 〈Wind〉. Preservando la intensa expresividad vocal del trot y añadiendo la claridad propia del pop — un single que tiende un puente entre ambos géneros."
+            },
+            {
+              "portfolioId": "jai-hanash-pink-padding",
+              "headline": "Dos artistas, una pista",
+              "quote": "Colaboración entre Jai y HANASH. Un proyecto que armoniza los tonos del pop y el hip-hop para que convivan naturalmente en una sola pista."
             }
           ],
           "inProgressSectionTitle": "Singles que estamos haciendo ahora",

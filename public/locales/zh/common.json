@@ -1403,13 +1403,23 @@
           "caseStudyItems": [
             {
               "portfolioId": "tierliner-bite-me",
-              "headline": "一首歌，乐队的全部能量",
-              "quote": "我们将独立摇滚乐队的原始能量转化为流媒体就绪的声音。现场的活力在录音中得以延续。"
+              "headline": "凝聚于一曲的声音质感",
+              "quote": "Tierliner 〈Bite Me〉。将艺术家本身厚重的声音质感原汁原味地呈现于音源中的一首作品。录音与混音中优先考虑艺术家的色彩。"
             },
             {
               "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "出道单曲，原汁原味的现场能量",
-              "quote": "The Projectors 的出道单曲。在最大程度保留乐队现场演奏的同时，重新诠释为现代的流媒体声音。"
+              "headline": "乐队出道，现场能量原样保留",
+              "quote": "The Projectors 的出道单曲。在保留乐队现场演奏的同时，重新诠释为现代的流媒体声音。"
+            },
+            {
+              "portfolioId": "heo-jeong-hyuk-wind",
+              "headline": "彰显人声力量的跨界融合",
+              "quote": "Heo Jeong-hyuk 〈一阵风〉。在保留 trot（韩式抒情曲）强烈人声表现力的同时，融入流行音乐的清晰度，完成连接两种流派的一首作品。"
+            },
+            {
+              "portfolioId": "jai-hanash-pink-padding",
+              "headline": "两位艺术家，一首歌",
+              "quote": "Jai 与 HANASH 的合作。调和流行与嘻哈两种声音质感，让它们在同一首歌中自然共存的项目。"
             }
           ],
           "inProgressSectionTitle": "正在制作中的单曲",

@@ -250,8 +250,8 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         <div className="max-w-2xl mx-auto">
           {Array.isArray(journeyItems) && journeyItems.map((item, i) => (
             <div key={i} className="flex gap-4 mb-4 last:mb-0">
-              <div className="flex-shrink-0 pt-0.5">
-                <span className="inline-block text-xs font-bold text-primary bg-primary/10 rounded-full px-2.5 py-1 whitespace-nowrap">
+              <div className="flex-shrink-0 pt-0.5 w-20 flex justify-end">
+                <span className="text-xs font-bold text-primary bg-primary/10 rounded-full px-2.5 py-1 whitespace-nowrap">
                   {item.month}
                 </span>
               </div>

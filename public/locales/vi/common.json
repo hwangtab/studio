@@ -1403,13 +1403,23 @@
           "caseStudyItems": [
             {
               "portfolioId": "tierliner-bite-me",
-              "headline": "Một bài hát, toàn bộ năng lượng của ban nhạc",
-              "quote": "Chúng tôi đã chuyển hóa năng lượng thô của ban nhạc indie rock thành âm thanh sẵn sàng cho streaming. Năng lượng trực tiếp vẫn sống trong bản thu."
+              "headline": "Chất âm hội tụ trong một bài hát",
+              "quote": "Tierliner 〈Bite Me〉. Một single đưa nguyên vẹn chất âm dày dặn đặc trưng của nghệ sĩ vào bản thu. Khâu thu âm và phối khí đều ưu tiên màu sắc của nghệ sĩ trên hết."
             },
             {
               "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "Single ra mắt, giữ nguyên năng lượng live",
+              "headline": "Ban nhạc ra mắt, năng lượng live nguyên vẹn",
               "quote": "Single ra mắt của The Projectors. Một dự án giữ lại trọn vẹn màn trình diễn live của ban nhạc, đồng thời tái diễn giải cho âm thanh streaming hiện đại."
+            },
+            {
+              "portfolioId": "heo-jeong-hyuk-wind",
+              "headline": "Bản crossover tôn vinh sức mạnh giọng hát",
+              "quote": "Heo Jeong-hyuk 〈Wind〉. Vẫn giữ được sự biểu cảm mãnh liệt của giọng hát trot (nhạc pop truyền thống Hàn Quốc), đồng thời thêm vào sự rõ ràng của pop — một single bắc cầu giữa hai thể loại."
+            },
+            {
+              "portfolioId": "jai-hanash-pink-padding",
+              "headline": "Hai nghệ sĩ, một bài hát",
+              "quote": "Sự hợp tác giữa Jai và HANASH. Một dự án tinh chỉnh tông màu của pop và hip-hop để chúng cùng tồn tại tự nhiên trong cùng một bài hát."
             }
           ],
           "inProgressSectionTitle": "Các single đang thực hiện",

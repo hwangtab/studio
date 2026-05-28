@@ -1446,13 +1446,23 @@
           "caseStudyItems": [
             {
               "portfolioId": "tierliner-bite-me",
-              "headline": "One track, all the band's energy",
-              "quote": "We completed an indie rock band's raw energy into a streaming-ready sound. The live energy lives on in the recording."
+              "headline": "Sound tone concentrated in one track",
+              "quote": "Tierliner 〈Bite Me〉. A single that carries the artist's signature weighty sound onto record. Recording and mixing prioritized the artist's color above all."
             },
             {
               "portfolioId": "the-projectors-babu-first-flight",
-              "headline": "Debut single, live energy preserved",
-              "quote": "The Projectors' debut single. A project that preserves the band's live performance while reinterpreting it for modern streaming sound."
+              "headline": "Band debut, live energy intact",
+              "quote": "The Projectors' debut single. A project that preserves the live band performance while reinterpreting it for modern streaming sound."
+            },
+            {
+              "portfolioId": "heo-jeong-hyuk-wind",
+              "headline": "A crossover that honors vocal power",
+              "quote": "Heo Jeong-hyuk 〈Wind〉. Preserving the intense vocal expressiveness of trot while adding pop-style clarity — a single that bridges the two genres."
+            },
+            {
+              "portfolioId": "jai-hanash-pink-padding",
+              "headline": "Two artists, one track",
+              "quote": "Collaboration between Jai and HANASH. A project tuning pop and hip-hop tones so they coexist naturally in a single track."
             }
           ],
           "inProgressSectionTitle": "Singles we're making right now",
