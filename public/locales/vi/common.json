@@ -269,7 +269,7 @@
       "title": "Sẵn sàng bắt đầu dự án phát hành?",
       "subtitle": "Tư vấn miễn phí 30 phút · Báo giá tùy chỉnh · Thanh toán trả góp",
       "location": "Liên hệ Trực tuyến",
-      "inquiry": "Đặt lịch Tư vấn Phát hành Miễn phí"
+      "inquiry": "Đặt lịch Tư vấn Miễn phí"
     },
     "images": {
       "packageAlt": "Phiên thu âm vocal tại booth Studio NOL"
@@ -1368,7 +1368,13 @@
     "inProgress": {
       "sectionTitle": "Những Album Đang Thực hiện",
       "sectionSubtitle": "Các nghệ sĩ đang trong quá trình dự án phát hành.",
-      "footNote": "Các dự án đang thực hiện được chia sẻ với sự đồng ý của nghệ sĩ."
+      "footNote": "Các dự án đang thực hiện được chia sẻ với sự đồng ý của nghệ sĩ.",
+      "types": {
+        "fullAlbum": "Album Đầy Đủ",
+        "single": "Single",
+        "ep": "EP",
+        "miniAlbum": "EP"
+      }
     },
     "discography": {
       "sectionTitle": "Danh mục Phát hành",

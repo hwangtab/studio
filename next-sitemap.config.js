@@ -35,6 +35,7 @@ const buildTimestamp = new Date().toISOString();
 // Map of marketing pages to their representative OG images.
 // title/caption은 Google Image Search용 메타. Studio NOL 브랜드 + 페이지 주제 포함.
 const pageImageMap = {
+  '/release-project': { url: '/images/og-recording15.webp', title: 'Studio NOL Release Project - Indie Music Release by Producer Hwang Gyeongha', caption: 'Full-service indie music release: planning, recording, sessions, mixing, distribution, and media PR by 15-year producer Hwang Gyeongha.' },
   '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
   '/contact': { url: '/images/og-hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
   '/index': { url: '/images/og-default.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },

@@ -269,7 +269,7 @@
       "title": "准备好开始发行项目了吗？",
       "subtitle": "30分钟免费咨询 · 基于费率表的定制报价 · 支持分期付款",
       "location": "在线咨询",
-      "inquiry": "申请免费发行咨询"
+      "inquiry": "申请免费咨询"
     },
     "images": {
       "packageAlt": "Studio NOL 录音棚中的歌手录音"
@@ -1368,7 +1368,13 @@
     "inProgress": {
       "sectionTitle": "正在制作中的专辑",
       "sectionSubtitle": "目前正在进行发行项目的艺人。",
-      "footNote": "进行中的项目经艺人同意后介绍。"
+      "footNote": "进行中的项目经艺人同意后介绍。",
+      "types": {
+        "fullAlbum": "正规专辑",
+        "single": "单曲",
+        "ep": "EP",
+        "miniAlbum": "EP"
+      }
     },
     "discography": {
       "sectionTitle": "发行作品集",

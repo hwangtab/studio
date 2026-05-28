@@ -269,7 +269,7 @@
       "title": "Chiqarish loyihasini boshlashga tayyormisiz?",
       "subtitle": "30 daqiqa bepul maslahat · Maxsus narx · Bo'lib to'lash imkoniyati",
       "location": "Onlayn murojaat",
-      "inquiry": "Bepul Chiqarish Maslahatiga Yoziling"
+      "inquiry": "Bepul Maslahat Olish"
     },
     "images": {
       "packageAlt": "Studio NOL kabinasida vokalchi yozuv seanssi"
@@ -1366,7 +1366,13 @@
     "inProgress": {
       "sectionTitle": "Hozir Ishlayotgan Albumlar",
       "sectionSubtitle": "Hozirda chiqarish loyihasida ishlaydigan san'atkorlar.",
-      "footNote": "Jarayondagi loyihalar san'atkor roziligidan so'ng taqdim etiladi."
+      "footNote": "Jarayondagi loyihalar san'atkor roziligidan so'ng taqdim etiladi.",
+      "types": {
+        "fullAlbum": "To'liq albom",
+        "single": "Singl",
+        "ep": "EP",
+        "miniAlbum": "EP"
+      }
     },
     "discography": {
       "sectionTitle": "Diskografiya",

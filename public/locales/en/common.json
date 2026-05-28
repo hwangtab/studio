@@ -300,7 +300,7 @@
       "title": "Ready to start your release project?",
       "subtitle": "30-min free consultation · Custom quote based on rate sheet · Installment payment available",
       "location": "Contact Online",
-      "inquiry": "Book a Free Release Consultation"
+      "inquiry": "Book a Free Consultation"
     },
     "images": {
       "packageAlt": "Vocalist recording session in Studio NOL booth"
@@ -1411,7 +1411,13 @@
     "inProgress": {
       "sectionTitle": "Albums We're Making Now",
       "sectionSubtitle": "Artists currently in the release project pipeline.",
-      "footNote": "In-progress projects are shared with artist consent."
+      "footNote": "In-progress projects are shared with artist consent.",
+      "types": {
+        "fullAlbum": "Full Album",
+        "single": "Single",
+        "ep": "EP",
+        "miniAlbum": "EP"
+      }
     },
     "discography": {
       "sectionTitle": "Discography",

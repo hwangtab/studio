@@ -269,7 +269,7 @@
       "title": "발매 프로젝트를 시작하고 싶다면",
       "subtitle": "30분 무료 발매 상담 · 단가표 기반 맞춤 견적 · 분할 결제 가능",
       "location": "온라인으로 문의하기",
-      "inquiry": "무료 발매 상담 신청"
+      "inquiry": "무료 상담 신청"
     },
     "images": {
       "packageAlt": "스튜디오 놀 부스에서 보컬리스트 녹음 세션"
@@ -2064,7 +2064,13 @@
     "inProgress": {
       "sectionTitle": "지금 함께 만들고 있는 음반들",
       "sectionSubtitle": "현재 발매 프로젝트로 진행 중인 아티스트들입니다.",
-      "footNote": "진행 중인 프로젝트는 아티스트 동의 하에 소개합니다."
+      "footNote": "진행 중인 프로젝트는 아티스트 동의 하에 소개합니다.",
+      "types": {
+        "fullAlbum": "정규",
+        "single": "싱글",
+        "ep": "EP",
+        "miniAlbum": "EP"
+      }
     },
     "discography": {
       "sectionTitle": "발매 디스코그래피",
