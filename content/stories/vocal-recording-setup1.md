@@ -12,7 +12,7 @@ tags:
   - 쇼크마운트
   - 녹음 환경 세팅
 thumbnail: /images/album2.webp
-summary: 보컬 녹음 세팅 핵심: 마이크 15~25cm·팝필터 5~8cm·방음 처리. Studio NOL 세팅 기준.
+summary: "보컬 녹음 세팅 핵심: 마이크 15~25cm·팝필터 5~8cm·방음 처리. Studio NOL 세팅 기준."
 faq:
   - q: 보컬 녹음 시 마이크까지 거리는 얼마나 해야 하나요?
     a: >-
