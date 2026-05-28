@@ -11,7 +11,7 @@ const homeData = {
       titlePrefix: "곡은 다 썼는데,",
       titleHighlight: "그 다음",
       titleSuffix: "을 모르는 당신에게",
-      subtitle: "기획부터 녹음·세션·믹싱·유통, 그리고 평론가에게 닿는 일까지 —\n15년차 프로듀서 황경하가 이끄는 발매 프로젝트.",
+      subtitle: "그 다음은 함께 만듭니다. 기획·녹음·세션·믹싱·유통, 그리고 평론가에게 닿는 일까지.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
@@ -97,7 +97,7 @@ const homeData = {
       titlePrefix: "You've written the songs.",
       titleHighlight: "What comes",
       titleSuffix: "next?",
-      subtitle: "Planning · Recording · Sessions · Mixing · Distribution, and even connecting to critics —\nled by Producer Hwang Gyeongha.",
+      subtitle: "We make what comes next, together. Planning, recording, sessions, mixing, distribution, and reaching critics.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
@@ -193,7 +193,7 @@ const homeData = {
       titlePrefix: "歌曲写完了，",
       titleHighlight: "接下来",
       titleSuffix: "不知道该怎么办的你",
-      subtitle: "从企划、录音、乐手联络、混音到发行，乃至评论人对接——\n由制作人황경하主导的音乐发行企划。",
+      subtitle: "接下来的，与你一起。从企划、录音、乐手联络、混音、发行，到接触乐评人。",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
@@ -289,7 +289,7 @@ const homeData = {
       titlePrefix: "Ya escribiste las canciones.",
       titleHighlight: "¿Y ahora",
       titleSuffix: "qué?",
-      subtitle: "Planificación, grabación, sesiones, mezcla, distribución y medios —\nconduzco tu proyecto de lanzamiento hasta el final. — Producer Hwang Gyeongha.",
+      subtitle: "Hacemos juntos lo que viene después. Planificación, grabación, sesiones, mezcla, distribución y conexión con críticos.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
@@ -385,7 +385,7 @@ const homeData = {
       titlePrefix: "Bạn đã viết xong bài hát,",
       titleHighlight: "nhưng tiếp theo",
       titleSuffix: "bạn chưa biết phải làm gì?",
-      subtitle: "Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành và truyền thông —\ndự án phát hành do Producer Hwang Gyeongha dẫn dắt.",
+      subtitle: "Phần tiếp theo, chúng ta cùng làm. Lập kế hoạch, thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
@@ -481,7 +481,7 @@ const homeData = {
       titlePrefix: "คุณแต่งเพลงเสร็จแล้ว",
       titleHighlight: "แต่ขั้นตอน",
       titleSuffix: "ต่อไปคืออะไร?",
-      subtitle: "ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย จนถึงสื่อ —\nโปรเจกต์ปล่อยเพลงที่นำโดย Producer Hwang Gyeongha",
+      subtitle: "ส่วนที่ตามมา เราทำด้วยกัน การวางแผน บันทึกเสียง นักดนตรีเซสชัน มิกซ์ จัดจำหน่าย และเข้าถึงนักวิจารณ์",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
@@ -577,7 +577,7 @@ const homeData = {
       titlePrefix: "Qo'shiqlarni yozdingiz,",
       titleHighlight: "keyingi qadam",
       titleSuffix: "nima ekanligini bilmayapsizmi?",
-      subtitle: "Rejalashdan yozuv, musiqachilar, miks, tarqatish va media bilan bog'lanishgacha —\nProducer Hwang Gyeongha boshchiligidagi chiqarish loyihasi.",
+      subtitle: "Keyingisi — birgalikda. Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetish.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
