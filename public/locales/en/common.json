@@ -13,11 +13,13 @@
     "groups": {
       "recording": "Recording",
       "practice": "Practice",
-      "explore": "Explore"
+      "explore": "Explore",
+      "release": "Release"
     },
     "weddingSong": "Wedding Song",
     "voiceActing": "Voice Acting",
-    "coverVideo": "Cover Video"
+    "coverVideo": "Cover Video",
+    "releaseProject": "Release Project"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -81,12 +83,12 @@
       "typePage": "Page"
     },
     "cta": {
-      "titleLine1": "The Sound You Imagined,",
-      "titleHighlight": "Becomes Reality",
-      "subtitleLine1": "Complete your music with the best equipment in a comfortable space.",
-      "subtitleLine2": "Studio NOL joins your musical journey.",
+      "titleLine1": "Build your name in the indie scene,",
+      "titleHighlight": "start with a release.",
+      "subtitleLine1": "Planning · Recording · Sessions · Mixing · Distribution · PR — a 15-year producer by your side.",
+      "subtitleLine2": "30-min free consultation · Custom quote based on rate sheet",
       "location": "Location",
-      "inquiry": "Inquiry"
+      "inquiry": "Book a Free Release Consultation"
     },
     "faq": {
       "title": "Frequently Asked Questions",
@@ -295,10 +297,10 @@
       ]
     },
     "cta": {
-      "title": "Best Partner for Your Music",
-      "subtitle": "We suggest the best plan matching your budget and schedule.",
-      "location": "Location",
-      "inquiry": "Inquiry"
+      "title": "Ready to start your release project?",
+      "subtitle": "30-min free consultation · Custom quote based on rate sheet · Installment payment available",
+      "location": "Contact Online",
+      "inquiry": "Book a Free Release Consultation"
     },
     "images": {
       "packageAlt": "Vocalist recording session in Studio NOL booth"
@@ -1324,5 +1326,104 @@
     },
     "relatedStoriesTitle": "Cover Video Production Guides",
     "relatedStoriesSubtitle": "Practical guides for planning, filming, and editing your YouTube or SNS cover video."
+  },
+  "releaseProject": {
+    "seo": {
+      "title": "Release Project · Indie Music Production | Studio NOL",
+      "description": "From planning to recording, session musicians, mixing, distribution, and reaching critics — indie release production led by 15-year producer Hwang Gyeongha. Free consultation.",
+      "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL"
+    },
+    "hero": {
+      "titlePrefix": "You've written the songs.",
+      "titleHighlight": "What comes",
+      "titleSuffix": "next?",
+      "subtitle": "From planning to recording, sessions, mixing, distribution — and getting your music to critics.\nA release project led by producer Hwang Gyeongha, 15 years in the indie scene.",
+      "ctaConsult": "Free Release Consultation",
+      "ctaPortfolio": "View Discography",
+      "imageAlt": "Studio NOL Release Project"
+    },
+    "tiers": {
+      "sectionTitle": "Release Project Types",
+      "sectionSubtitle": "Structured by actual release scale. Custom quote after free consultation.",
+      "single": {
+        "label": "Single Release",
+        "duration": "~7 months",
+        "range": "From approx. ₩2.7M",
+        "note": "1–2 tracks, 3 session musicians"
+      },
+      "ep": {
+        "label": "EP Release",
+        "duration": "~12 months",
+        "range": "Custom quote by scale",
+        "note": "Between single and full album"
+      },
+      "album": {
+        "label": "Full Album Release",
+        "duration": "~24 months",
+        "range": "From approx. ₩13M",
+        "note": "~8 tracks, full session"
+      },
+      "footNotePre": "All types proceed via",
+      "footNoteHighlight": "free consultation → custom quote",
+      "footNoteMid": ". See rates on the",
+      "footNotePricingLabel": "pricing page",
+      "footNotePost": "."
+    },
+    "scope": {
+      "sectionTitle": "What Producer Hwang Gyeongha Brings",
+      "sectionSubtitle": "15 years crafting meaningful indie records in the Korean music scene.",
+      "items": [
+        "Album concept & A&R direction",
+        "Vocal recording · Mixing · Mastering (in-house)",
+        "Session musician sourcing · Arrangement network",
+        "Digital distribution (Melon · Spotify · Apple Music etc.)",
+        "Press release to critics & media, review outreach",
+        "Crowdfunding & arts grant consulting"
+      ],
+      "footNote": "Vocal recording, mixing & mastering are provided in-house. Instrumental sessions are arranged via our network."
+    },
+    "process": {
+      "sectionTitle": "Production Process",
+      "sectionSubtitle": "5 steps from planning to press coverage.",
+      "steps": [
+        {
+          "title": "A&R · Concept",
+          "desc": "We define the artistic direction and musical identity together. The starting point for deciding what kind of record to make and who it's for."
+        },
+        {
+          "title": "Vocal Recording · Direction",
+          "desc": "Recorded in Studio NOL's in-house recording room. Hwang Gyeongha directs to bring out the best performance."
+        },
+        {
+          "title": "Session · Arrangement",
+          "desc": "We connect session musicians through a 15-year network. Arrangements are discussed to fit the record's direction."
+        },
+        {
+          "title": "Mix · Master · Distribution",
+          "desc": "After in-house mixing and mastering, the music is distributed to Melon, Spotify, Apple Music and more."
+        },
+        {
+          "title": "Critics · Media PR",
+          "desc": "Press releases are sent to critics and music media, with review outreach attempted. The final step to establishing your name in the indie scene."
+        }
+      ]
+    },
+    "inProgress": {
+      "sectionTitle": "Albums We're Making Now",
+      "sectionSubtitle": "Artists currently in the release project pipeline.",
+      "footNote": "In-progress projects are shared with artist consent."
+    },
+    "discography": {
+      "sectionTitle": "Discography",
+      "sectionSubtitle": "Albums we've worked on. Click to read production notes.",
+      "viewAll": "View Full Portfolio"
+    },
+    "cta": {
+      "titleLine1": "A release you can't do alone —",
+      "titleHighlight": "we'll go all the way with you",
+      "subtitle": "A 30-minute free consultation to hear about your project first.",
+      "imageAlt": "Studio NOL Release Project Consultation",
+      "inquiry": "Free Release Consultation"
+    }
   }
 }

@@ -13,11 +13,13 @@
     "groups": {
       "recording": "Yozuv",
       "practice": "Mashg'ulot",
-      "explore": "Batafsil"
+      "explore": "Batafsil",
+      "release": "Chiqarish"
     },
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
-    "coverVideo": "Cover video suratga olish"
+    "coverVideo": "Cover video suratga olish",
+    "releaseProject": "Chiqarish loyihasi"
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",
@@ -81,12 +83,12 @@
       "typePage": "Sahifa"
     },
     "cta": {
-      "titleLine1": "Tasavvur qilgan ovoz,",
-      "titleHighlight": "Haqiqatga aylanadi",
-      "subtitleLine1": "Qulay makonda eng yaxshi uskunalar bilan musiqangizni yakunlang.",
-      "subtitleLine2": "Studio NOL musiqiy sayohatingizga qo'shiladi.",
+      "titleLine1": "Indie sahnaida o'z nomingizni qoldiring,",
+      "titleHighlight": "chiqarish bilan boshlang.",
+      "subtitleLine1": "Rejalash · Yozuv · Musiqachilar · Miks · Tarqatish · PR — 15 yillik tajribali producer yoningizda.",
+      "subtitleLine2": "30 daqiqa bepul maslahat · Tarif jadvaliga asoslangan maxsus narx",
       "location": "Manzil",
-      "inquiry": "So'rov"
+      "inquiry": "Bepul Chiqarish Maslahatiga Yoziling"
     },
     "faq": {
       "title": "Ko'p so'raladigan savollar",
@@ -264,10 +266,10 @@
       ]
     },
     "cta": {
-      "title": "Musiqangiz uchun eng yaxshi hamkor",
-      "subtitle": "Byudjet va jadvalingizga mos eng yaxshi reja taklif qilamiz.",
-      "location": "Manzil",
-      "inquiry": "So'rov"
+      "title": "Chiqarish loyihasini boshlashga tayyormisiz?",
+      "subtitle": "30 daqiqa bepul maslahat · Maxsus narx · Bo'lib to'lash imkoniyati",
+      "location": "Onlayn murojaat",
+      "inquiry": "Bepul Chiqarish Maslahatiga Yoziling"
     },
     "images": {
       "packageAlt": "Studio NOL kabinasida vokalchi yozuv seanssi"
@@ -1279,5 +1281,104 @@
     },
     "relatedStoriesTitle": "Cover Video Ishlab Chiqarish Qo'llanmalari",
     "relatedStoriesSubtitle": "YouTube yoki SNS uchun cover videoni rejalashtirish, suratga olish va montaj qilish bo'yicha amaliy qo'llanmalar."
+  },
+  "releaseProject": {
+    "seo": {
+      "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
+      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan — 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Bepul maslahat.",
+      "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL"
+    },
+    "hero": {
+      "titlePrefix": "Qo'shiqlarni yozdingiz,",
+      "titleHighlight": "keyingi qadam",
+      "titleSuffix": "nima ekanligini bilmayapsizmi?",
+      "subtitle": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan —\n15 yillik prodyuser Hwang Gyeongha boshchiligidagi chiqarish loyihasi.",
+      "ctaConsult": "Bepul Chiqarish Maslahati",
+      "ctaPortfolio": "Portfelni Ko'rish",
+      "imageAlt": "Studio NOL Chiqarish Loyihasi"
+    },
+    "tiers": {
+      "sectionTitle": "Chiqarish Loyihasi Turlari",
+      "sectionSubtitle": "Haqiqiy chiqarish hajmiga qarab tuzilgan. Bepul maslahatdan keyin maxsus taklif.",
+      "single": {
+        "label": "Singl Chiqarish",
+        "duration": "~7 oy",
+        "range": "Taxminan ₩2.7M dan",
+        "note": "1–2 qo'shiq, 3 sessiya musiqachi"
+      },
+      "ep": {
+        "label": "EP Chiqarish",
+        "duration": "~12 oy",
+        "range": "Hajmga qarab maxsus taklif",
+        "note": "Singl va to'liq albom orasida"
+      },
+      "album": {
+        "label": "To'liq Albom Chiqarish",
+        "duration": "~24 oy",
+        "range": "Taxminan ₩13M dan",
+        "note": "~8 qo'shiq, to'liq sessiya"
+      },
+      "footNotePre": "Barcha turlar",
+      "footNoteHighlight": "bepul maslahat → maxsus taklif",
+      "footNoteMid": "orqali amalga oshiriladi. Narxlarni",
+      "footNotePricingLabel": "narxlar sahifasida",
+      "footNotePost": "ko'ring."
+    },
+    "scope": {
+      "sectionTitle": "Prodyuser Hwang Gyeongha Beradi",
+      "sectionSubtitle": "15 yil davomida Koreya indie musiqasida muhim albumlar yaratgan prodyuser.",
+      "items": [
+        "Albom kontseptsiyasi va A&R yo'nalishi",
+        "Vokal yozish · Mikslash · Mastering (ichki)",
+        "Sessiya musiqachilarini jalb etish · Arrajman tarmog'i",
+        "Raqamli tarqatish (Melon · Spotify · Apple Music va boshqalar)",
+        "Tanqidchilar va media uchun press-reliz, sharh so'rash",
+        "Jamoa moliyalashtirish va san'at grantlari bo'yicha maslahat"
+      ],
+      "footNote": "Vokal yozish, mikslash va mastering ichki taqdim etiladi. Asboblar sessiyalari tarmoq orqali amalga oshiriladi."
+    },
+    "process": {
+      "sectionTitle": "Ishlab Chiqarish Jarayoni",
+      "sectionSubtitle": "Rejalashtirish va media yoritishgacha 5 qadam.",
+      "steps": [
+        {
+          "title": "A&R · Rejalashtirish",
+          "desc": "Birgalikda badiiy yo'nalish va musiqiy identifikatsiyani aniqlaymiz. Qanday albom yaratish va kim uchun ekanligini aniqlashning boshlang'ich nuqtasi."
+        },
+        {
+          "title": "Vokal Yozish · Rejissura",
+          "desc": "Studio NOL ichki yozuv xonasida yoziladi. Hwang Gyeongha eng yaxshi ijroni chiqarish uchun rejissura qiladi."
+        },
+        {
+          "title": "Sessiya · Arrajman",
+          "desc": "15 yillik tarmoq orqali sessiya musiqachilarini bog'laymiz. Arrajman albomning yo'nalishiga mos kelish uchun muhokama qilinadi."
+        },
+        {
+          "title": "Mikslash · Master · Tarqatish",
+          "desc": "Ichki mikslash va masteringdan so'ng musiqa Melon, Spotify, Apple Music va boshqalarga tarqatiladi."
+        },
+        {
+          "title": "Tanqidchilar · Media PR",
+          "desc": "Tanqidchilar va musiqa media uchun press-relizlar yuboriladi. Indie sahnasida nomingizni o'rnatishning so'nggi qadam."
+        }
+      ]
+    },
+    "inProgress": {
+      "sectionTitle": "Hozir Ishlayotgan Albumlar",
+      "sectionSubtitle": "Hozirda chiqarish loyihasida ishlaydigan san'atkorlar.",
+      "footNote": "Jarayondagi loyihalar san'atkor roziligidan so'ng taqdim etiladi."
+    },
+    "discography": {
+      "sectionTitle": "Diskografiya",
+      "sectionSubtitle": "Biz ishlagan albumlar. Ishlab chiqarish eslatmalarini o'qish uchun bosing.",
+      "viewAll": "To'liq Portfelni Ko'rish"
+    },
+    "cta": {
+      "titleLine1": "Yolg'iz qila olmaydigan chiqarish —",
+      "titleHighlight": "biz bilan oxirigacha boramiz",
+      "subtitle": "30 daqiqalik bepul maslahat - loyihangizni birinchi bo'lib eshitamiz.",
+      "imageAlt": "Studio NOL Chiqarish Loyihasi Maslahati",
+      "inquiry": "Bepul Chiqarish Maslahati"
+    }
   }
 }

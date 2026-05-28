@@ -8,23 +8,23 @@ const homeData = {
       keywords: "음원 제작, 디지털 싱글, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 오디오북 녹음, 일반인 녹음실, 스튜디오 놀, 음악연습실, 24시간 음악연습실"
     },
     heroContent: {
-      titlePrefix: "당신의 음악에",
-      titleHighlight: "생명",
-      titleSuffix: "을 불어넣는 공간",
-      subtitle: "최고급 장비와 전문 엔지니어의 터치로\n완성되는 당신만의 사운드.\n연신내 녹음실 스튜디오 놀에서 경험하세요.",
+      titlePrefix: "곡은 다 썼는데,",
+      titleHighlight: "그 다음",
+      titleSuffix: "을 모르는 당신에게",
+      subtitle: "기획부터 녹음·세션·믹싱·유통, 그리고 평론가에게 닿는 일까지 —\n15년차 프로듀서 황경하가 이끄는 발매 프로젝트.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
-        reserve: "예약하기",
+        reserve: "무료 발매 상담",
         portfolio: "포트폴리오"
       },
       ctaImageAlt: "연신내 녹음실 스튜디오 놀 - 전문 녹음 장비와 하드웨어"
     },
     homeServices: [
       {
-        title: '음반 기획',
-        description: '당신의 음악적 비전을 현실로 만들어드립니다. 기획부터 제작까지 전 과정을 함께합니다.',
-        link: '/about',
+        title: '발매 프로젝트',
+        description: '기획·녹음·세션·믹싱·유통·홍보까지 — 프로듀서가 끝까지 책임지는 인디 발매 프로듀싱. 무료 상담 후 맞춤 견적.',
+        link: '/release-project',
         icon: 'Disc',
       },
       {
@@ -94,23 +94,23 @@ const homeData = {
       keywords: "Seoul recording studio, international musicians Korea, Yeonsinnae recording studio, English-speaking engineer, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, Studio NOL, Eunpyeong-gu studio"
     },
     heroContent: {
-      titlePrefix: "Breathing",
-      titleHighlight: "Life",
-      titleSuffix: "into Your Music",
-      subtitle: "Complete your unique sound with high-end equipment and professional engineering.\nExperience it at Studio NOL.",
+      titlePrefix: "You've written the songs.",
+      titleHighlight: "What comes",
+      titleSuffix: "next?",
+      subtitle: "Planning · Recording · Sessions · Mixing · Distribution, and even connecting to critics —\nled by Producer Hwang Gyeongha.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
-        reserve: "Book Now",
+        reserve: "Free Release Consultation",
         portfolio: "Portfolio"
       },
       ctaImageAlt: "Studio NOL Seoul - Professional Recording Equipment and Hardware"
     },
     homeServices: [
       {
-        title: 'Production',
-        description: 'We turn your musical vision into reality. We are with you from planning to production.',
-        link: '/about',
+        title: 'Release Project',
+        description: 'From planning to recording, sessions, mixing, and distribution — a release project led by Producer Hwang Gyeongha. Free consultation, custom quote.',
+        link: '/release-project',
         icon: 'Disc',
       },
       {
@@ -190,23 +190,23 @@ const homeData = {
       keywords: "首尔录音室, 延新内录音室, 专业录音, 混音母带, 婚礼歌曲录音, 配音录音, Studio NOL, 恩平区音乐制作"
     },
     heroContent: {
-      titlePrefix: "为您的音乐注入",
-      titleHighlight: "生命",
-      titleSuffix: "的空间",
-      subtitle: "通过高端设备和专业工程师的触感，完成您独有的声音。\n请在 Studio NOL 体验。",
+      titlePrefix: "歌曲写完了，",
+      titleHighlight: "接下来",
+      titleSuffix: "不知道该怎么办的你",
+      subtitle: "从企划、录音、乐手联络、混音到发行，乃至评论人对接——\n由制作人황경하主导的音乐发行企划。",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
-        reserve: "立即预订",
+        reserve: "免费发行咨询",
         portfolio: "作品集"
       },
       ctaImageAlt: "Studio NOL 首尔 - 专业录音设备和硬件"
     },
     homeServices: [
       {
-        title: '专辑策划',
-        description: '我们将您的音乐愿景变为现实。从策划到制作，全程陪伴。',
-        link: '/about',
+        title: '发行项目',
+        description: '从企划、录音、乐手联络、混音到发行——由制作人황경하主导，全程陪伴你的音乐发行之旅。免费咨询，定制报价。',
+        link: '/release-project',
         icon: 'Disc',
       },
       {
@@ -286,23 +286,23 @@ const homeData = {
       keywords: "estudio de grabación Seúl, Yeonsinnae estudio, mezcla masterización, canción boda, locución Seúl, producción musical, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "Dando",
-      titleHighlight: "Vida",
-      titleSuffix: "a Tu Música",
-      subtitle: "Completa tu sonido único con equipos de alta gama e ingeniería profesional.\nVívelo en Studio NOL.",
+      titlePrefix: "Ya escribiste las canciones.",
+      titleHighlight: "¿Y ahora",
+      titleSuffix: "qué?",
+      subtitle: "Planificación, grabación, sesiones, mezcla, distribución y medios —\nconduzco tu proyecto de lanzamiento hasta el final. — Producer Hwang Gyeongha.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
-        reserve: "Reservar",
+        reserve: "Consulta Gratuita de Lanzamiento",
         portfolio: "Portafolio"
       },
       ctaImageAlt: "Studio NOL Seúl - Equipo de grabación profesional"
     },
     homeServices: [
       {
-        title: 'Producción',
-        description: 'Convertimos tu visión musical en realidad. Estamos contigo desde la planificación hasta la producción.',
-        link: '/about',
+        title: 'Proyecto de Lanzamiento',
+        description: 'Desde la planificación hasta la grabación, sesiones, mezcla y distribución — un proyecto de lanzamiento liderado por el productor Hwang Gyeongha. Consulta gratuita, presupuesto personalizado.',
+        link: '/release-project',
         icon: 'Disc',
       },
       {
@@ -382,23 +382,23 @@ const homeData = {
       keywords: "phòng thu Seoul, Yeonsinnae phòng thu, mixing mastering, thu âm nhạc cưới, thu âm lồng tiếng, sản xuất âm nhạc, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "Thổi",
-      titleHighlight: "Sự sống",
-      titleSuffix: "vào âm nhạc của bạn",
-      subtitle: "Hoàn thiện âm thanh với thiết bị cao cấp và kỹ sư chuyên nghiệp tại Yeonsinnae, Seoul.\nTrải nghiệm tại Studio NOL.",
+      titlePrefix: "Bạn đã viết xong bài hát,",
+      titleHighlight: "nhưng tiếp theo",
+      titleSuffix: "bạn chưa biết phải làm gì?",
+      subtitle: "Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành và truyền thông —\ndự án phát hành do Producer Hwang Gyeongha dẫn dắt.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
-        reserve: "Đặt lịch",
+        reserve: "Tư vấn Phát hành Miễn phí",
         portfolio: "Portfolio"
       },
       ctaImageAlt: "Studio NOL Seoul - Thiết bị thu âm chuyên nghiệp"
     },
     homeServices: [
       {
-        title: 'Kế hoạch album',
-        description: 'Biến tầm nhìn âm nhạc của bạn thành hiện thực. Đồng hành từ lên kế hoạch đến sản xuất.',
-        link: '/about',
+        title: 'Dự án Phát hành',
+        description: 'Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành — dự án phát hành do Producer Hwang Gyeongha dẫn dắt. Tư vấn miễn phí, báo giá tùy chỉnh.',
+        link: '/release-project',
         icon: 'Disc',
       },
       {
@@ -478,23 +478,23 @@ const homeData = {
       keywords: "สตูดิโอบันทึกเสียงโซล, Yeonsinnae สตูดิโอ, มิกซ์มาสเตอริ่ง, อัดเพลงงานแต่ง, อัดเสียงพากย์, ผลิตเพลง, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "เติม",
-      titleHighlight: "ชีวิต",
-      titleSuffix: "ให้กับดนตรีของคุณ",
-      subtitle: "เติมเต็มซาวด์ด้วยอุปกรณ์ไฮเอนด์และวิศวกรมืออาชีพ\nใน Yeonsinnae, Seoul · Studio NOL",
+      titlePrefix: "คุณแต่งเพลงเสร็จแล้ว",
+      titleHighlight: "แต่ขั้นตอน",
+      titleSuffix: "ต่อไปคืออะไร?",
+      subtitle: "ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย จนถึงสื่อ —\nโปรเจกต์ปล่อยเพลงที่นำโดย Producer Hwang Gyeongha",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
-        reserve: "จองคิว",
+        reserve: "ปรึกษาการปล่อยเพลงฟรี",
         portfolio: "ผลงาน"
       },
       ctaImageAlt: "Studio NOL โซล - อุปกรณ์บันทึกเสียงมืออาชีพ"
     },
     homeServices: [
       {
-        title: 'วางแผนอัลบั้ม',
-        description: 'ทำให้วิสัยทัศน์ทางดนตรีของคุณเป็นจริง เราดูแลตั้งแต่การวางแผนจนถึงการผลิต',
-        link: '/about',
+        title: 'โปรเจกต์ปล่อยเพลง',
+        description: 'ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย — โปรเจกต์ปล่อยเพลงที่นำโดย Producer Hwang Gyeongha ปรึกษาฟรี ราคาสำหรับคุณโดยเฉพาะ',
+        link: '/release-project',
         icon: 'Disc',
       },
       {
@@ -574,23 +574,23 @@ const homeData = {
       keywords: "Seul yozuv studiyasi, Yeonsinnae studiya, miks mastering, to'y qo'shig'i yozuvi, ovoz aktyorligi, musiqa prodakshn, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "Musiqangizga",
-      titleHighlight: "hayot",
-      titleSuffix: "bag'ishlaydigan makon",
-      subtitle: "Yeonsinnae, Seul shahrida professional muhandislar va yuqori sifatli uskunalar bilan\no'z tovushingizni yarating.",
+      titlePrefix: "Qo'shiqlarni yozdingiz,",
+      titleHighlight: "keyingi qadam",
+      titleSuffix: "nima ekanligini bilmayapsizmi?",
+      subtitle: "Rejalashdan yozuv, musiqachilar, miks, tarqatish va media bilan bog'lanishgacha —\nProducer Hwang Gyeongha boshchiligidagi chiqarish loyihasi.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
-        reserve: "Band qilish",
+        reserve: "Bepul Chiqarish Maslahati",
         portfolio: "Portfel"
       },
       ctaImageAlt: "Studio NOL Seul - Professional yozuv uskunalari"
     },
     homeServices: [
       {
-        title: 'Albom rejalash',
-        description: 'Musiqiy tasavvuringizni haqiqatga aylantiramiz. Rejadan ishlab chiqarishgacha birga.',
-        link: '/about',
+        title: 'Chiqarish loyihasi',
+        description: "Rejalashdan yozuv, musiqachilar, miks va tarqatishgacha — Producer Hwang Gyeongha boshchiligidagi chiqarish loyihasi. Bepul maslahat, maxsus narx.",
+        link: '/release-project',
         icon: 'Disc',
       },
       {

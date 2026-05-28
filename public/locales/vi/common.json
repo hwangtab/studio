@@ -13,11 +13,13 @@
     "groups": {
       "recording": "Thu âm",
       "practice": "Luyện tập",
-      "explore": "Khám phá"
+      "explore": "Khám phá",
+      "release": "Phát hành"
     },
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
-    "coverVideo": "Quay Video Cover"
+    "coverVideo": "Quay Video Cover",
+    "releaseProject": "Dự án Phát hành"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
@@ -81,12 +83,12 @@
       "typePage": "Trang"
     },
     "cta": {
-      "titleLine1": "Âm thanh bạn tưởng tượng,",
-      "titleHighlight": "Trở thành hiện thực",
-      "subtitleLine1": "Hoàn thiện âm nhạc của bạn với thiết bị tốt nhất trong không gian thoải mái.",
-      "subtitleLine2": "Studio NOL đồng hành cùng hành trình âm nhạc của bạn.",
+      "titleLine1": "Xây dựng tên tuổi của bạn trong cộng đồng indie,",
+      "titleHighlight": "bắt đầu từ một bản phát hành.",
+      "subtitleLine1": "Lập kế hoạch · Thu âm · Nhạc công · Mix · Phát hành · PR — Producer 15 năm kinh nghiệm đồng hành.",
+      "subtitleLine2": "Tư vấn miễn phí 30 phút · Báo giá tùy chỉnh",
       "location": "Địa điểm",
-      "inquiry": "Liên hệ"
+      "inquiry": "Đặt lịch Tư vấn Phát hành Miễn phí"
     },
     "faq": {
       "title": "Câu hỏi thường gặp",
@@ -264,10 +266,10 @@
       ]
     },
     "cta": {
-      "title": "Đối tác tốt nhất cho âm nhạc của bạn",
-      "subtitle": "Chúng tôi đề xuất gói phù hợp với ngân sách và lịch trình của bạn.",
-      "location": "Địa điểm",
-      "inquiry": "Liên hệ"
+      "title": "Sẵn sàng bắt đầu dự án phát hành?",
+      "subtitle": "Tư vấn miễn phí 30 phút · Báo giá tùy chỉnh · Thanh toán trả góp",
+      "location": "Liên hệ Trực tuyến",
+      "inquiry": "Đặt lịch Tư vấn Phát hành Miễn phí"
     },
     "images": {
       "packageAlt": "Phiên thu âm vocal tại booth Studio NOL"
@@ -1281,5 +1283,104 @@
     },
     "relatedStoriesTitle": "Hướng Dẫn Sản Xuất Video Cover",
     "relatedStoriesSubtitle": "Hướng dẫn thực tế để lên kế hoạch, quay và dựng video cover cho YouTube hoặc SNS."
+  },
+  "releaseProject": {
+    "seo": {
+      "title": "Dự án Phát hành · Sản xuất Âm nhạc Indie | Studio NOL",
+      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha 15 năm kinh nghiệm. Tư vấn miễn phí.",
+      "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL"
+    },
+    "hero": {
+      "titlePrefix": "Bạn đã viết xong bài hát,",
+      "titleHighlight": "nhưng tiếp theo",
+      "titleSuffix": "bạn chưa biết phải làm gì?",
+      "subtitle": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình —\nDự án phát hành dẫn dắt bởi nhà sản xuất Hwang Gyeongha, 15 năm trong làng indie.",
+      "ctaConsult": "Tư vấn Phát hành Miễn phí",
+      "ctaPortfolio": "Xem Danh mục",
+      "imageAlt": "Dự án Phát hành Studio NOL"
+    },
+    "tiers": {
+      "sectionTitle": "Các loại Dự án Phát hành",
+      "sectionSubtitle": "Được cấu trúc theo quy mô phát hành thực tế. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+      "single": {
+        "label": "Phát hành Single",
+        "duration": "~7 tháng",
+        "range": "Từ khoảng ₩2.7M",
+        "note": "1–2 bài, 3 nhạc công session"
+      },
+      "ep": {
+        "label": "Phát hành EP",
+        "duration": "~12 tháng",
+        "range": "Báo giá tùy chỉnh",
+        "note": "Giữa single và album đầy đủ"
+      },
+      "album": {
+        "label": "Phát hành Album Đầy đủ",
+        "duration": "~24 tháng",
+        "range": "Từ khoảng ₩13M",
+        "note": "~8 bài, dàn nhạc công đầy đủ"
+      },
+      "footNotePre": "Tất cả các loại tiến hành thông qua",
+      "footNoteHighlight": "tư vấn miễn phí → báo giá tùy chỉnh",
+      "footNoteMid": ". Xem mức giá tại",
+      "footNotePricingLabel": "trang giá",
+      "footNotePost": "."
+    },
+    "scope": {
+      "sectionTitle": "Những gì Nhà sản xuất Hwang Gyeongha Mang lại",
+      "sectionSubtitle": "15 năm tạo ra những đĩa nhạc indie có ý nghĩa trong làng nhạc Hàn Quốc.",
+      "items": [
+        "Lên ý tưởng album & định hướng A&R",
+        "Thu âm giọng hát · Hòa âm · Mastering (nội bộ)",
+        "Tuyển dụng nhạc công session · Mạng lưới dàn dựng",
+        "Phân phối nhạc số (Melon · Spotify · Apple Music v.v.)",
+        "Gửi thông cáo báo chí đến nhà phê bình & truyền thông",
+        "Tư vấn gây quỹ cộng đồng & hỗ trợ nghệ thuật"
+      ],
+      "footNote": "Thu âm giọng hát, hòa âm và mastering được cung cấp nội bộ. Nhạc cụ session được thu xếp qua mạng lưới của chúng tôi."
+    },
+    "process": {
+      "sectionTitle": "Quy trình Sản xuất",
+      "sectionSubtitle": "5 bước từ lập kế hoạch đến phủ sóng truyền thông.",
+      "steps": [
+        {
+          "title": "A&R · Lập kế hoạch",
+          "desc": "Cùng nhau xác định định hướng nghệ thuật và bản sắc âm nhạc. Điểm xuất phát để quyết định làm loại đĩa nhạc nào và cho ai."
+        },
+        {
+          "title": "Thu âm Giọng hát · Chỉ đạo",
+          "desc": "Thu âm tại phòng thu nội bộ của Studio NOL. Hwang Gyeongha chỉ đạo để có màn trình diễn tốt nhất."
+        },
+        {
+          "title": "Nhạc công Session · Dàn dựng",
+          "desc": "Kết nối nhạc công session qua mạng lưới 15 năm. Dàn dựng được thảo luận để phù hợp với định hướng đĩa nhạc."
+        },
+        {
+          "title": "Hòa âm · Mastering · Phân phối",
+          "desc": "Sau khi hòa âm và mastering nội bộ, âm nhạc được phân phối trên Melon, Spotify, Apple Music và nhiều nền tảng khác."
+        },
+        {
+          "title": "Nhà phê bình · PR Truyền thông",
+          "desc": "Gửi thông cáo báo chí đến nhà phê bình và truyền thông âm nhạc. Bước cuối cùng để xây dựng tên tuổi của bạn trong làng indie."
+        }
+      ]
+    },
+    "inProgress": {
+      "sectionTitle": "Những Album Đang Thực hiện",
+      "sectionSubtitle": "Các nghệ sĩ đang trong quá trình dự án phát hành.",
+      "footNote": "Các dự án đang thực hiện được chia sẻ với sự đồng ý của nghệ sĩ."
+    },
+    "discography": {
+      "sectionTitle": "Danh mục Phát hành",
+      "sectionSubtitle": "Những album chúng tôi đã thực hiện. Nhấp để đọc ghi chú sản xuất.",
+      "viewAll": "Xem Toàn bộ Portfolio"
+    },
+    "cta": {
+      "titleLine1": "Một sự phát hành bạn không thể làm một mình —",
+      "titleHighlight": "chúng tôi sẽ đồng hành đến cùng",
+      "subtitle": "30 phút tư vấn miễn phí để lắng nghe dự án của bạn trước.",
+      "imageAlt": "Tư vấn Dự án Phát hành Studio NOL",
+      "inquiry": "Tư vấn Phát hành Miễn phí"
+    }
   }
 }

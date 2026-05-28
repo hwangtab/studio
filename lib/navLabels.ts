@@ -12,7 +12,8 @@ export type NavKey =
   | 'voiceActing'
   | 'portfolio'
   | 'stories'
-  | 'contact';
+  | 'contact'
+  | 'releaseProject';
 
 export const navLabels: Record<Locale, Record<NavKey, string>> = {
   ko: {
@@ -26,6 +27,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: '포트폴리오',
     stories: '스토리',
     contact: '문의',
+    releaseProject: '발매 프로젝트',
   },
   en: {
     home: 'Home',
@@ -38,6 +40,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portfolio',
     stories: 'Stories',
     contact: 'Contact',
+    releaseProject: 'Release Project',
   },
   zh: {
     home: '主页',
@@ -50,6 +53,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: '作品集',
     stories: '故事',
     contact: '联系我们',
+    releaseProject: '发行项目',
   },
   es: {
     home: 'Inicio',
@@ -62,6 +66,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portafolio',
     stories: 'Historias',
     contact: 'Contacto',
+    releaseProject: 'Proyecto de Lanzamiento',
   },
   vi: {
     home: 'Trang chủ',
@@ -74,6 +79,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portfolio',
     stories: 'Câu chuyện',
     contact: 'Liên hệ',
+    releaseProject: 'Dự án Phát hành',
   },
   th: {
     home: 'หน้าแรก',
@@ -86,6 +92,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'พอร์ตโฟลิโอ',
     stories: 'เรื่องราว',
     contact: 'ติดต่อ',
+    releaseProject: 'โปรเจกต์ปล่อยเพลง',
   },
   uz: {
     home: 'Bosh sahifa',
@@ -98,5 +105,6 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portfel',
     stories: 'Hikoyalar',
     contact: 'Aloqa',
+    releaseProject: 'Chiqarish loyihasi',
   },
 };

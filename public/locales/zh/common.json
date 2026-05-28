@@ -13,11 +13,13 @@
     "groups": {
       "recording": "录音/混音",
       "practice": "练习/课程",
-      "explore": "了解更多"
+      "explore": "了解更多",
+      "release": "发行项目"
     },
     "weddingSong": "婚礼祝歌录音",
     "voiceActing": "配音录音",
-    "coverVideo": "翻唱视频拍摄"
+    "coverVideo": "翻唱视频拍摄",
+    "releaseProject": "发行项目"
   },
   "footer": {
     "rights": "版权所有。",
@@ -81,12 +83,12 @@
       "typePage": "页面"
     },
     "cta": {
-      "titleLine1": "你想象的声音，",
-      "titleHighlight": "在此成真",
-      "subtitleLine1": "在舒适空间与顶级设备中完成你的音乐。",
-      "subtitleLine2": "Studio NOL 将陪伴你的音乐之旅。",
+      "titleLine1": "在独立音乐圈留下你的名字，",
+      "titleHighlight": "从发行开始。",
+      "subtitleLine1": "企划·录音·乐手·混音·发行·媒体PR — 15年制作人全程陪伴。",
+      "subtitleLine2": "30分钟免费咨询 · 基于费率表的定制报价",
       "location": "位置",
-      "inquiry": "预约咨询"
+      "inquiry": "申请免费发行咨询"
     },
     "faq": {
       "title": "常见问题",
@@ -264,10 +266,10 @@
       ]
     },
     "cta": {
-      "title": "你音乐的最佳伙伴",
-      "subtitle": "根据预算与进度提出最合适的方案。",
-      "location": "位置",
-      "inquiry": "KakaoTalk 咨询"
+      "title": "准备好开始发行项目了吗？",
+      "subtitle": "30分钟免费咨询 · 基于费率表的定制报价 · 支持分期付款",
+      "location": "在线咨询",
+      "inquiry": "申请免费发行咨询"
     },
     "images": {
       "packageAlt": "Studio NOL 录音棚中的歌手录音"
@@ -1281,5 +1283,104 @@
     },
     "relatedStoriesTitle": "翻唱视频制作指南",
     "relatedStoriesSubtitle": "从策划到拍摄·剪辑，YouTube/SNS翻唱视频实战指南。"
+  },
+  "releaseProject": {
+    "seo": {
+      "title": "发行项目 · 独立音乐制作 | Studio NOL",
+      "description": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 — 由15年资深制作人黄庆厦带领的独立音乐发行项目。免费咨询。",
+      "keywords": "发行项目, 独立音乐发行, 唱片制作, 独立歌手, Studio NOL"
+    },
+    "hero": {
+      "titlePrefix": "歌曲写完了，",
+      "titleHighlight": "接下来",
+      "titleSuffix": "不知道该怎么办的你",
+      "subtitle": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 —\n由15年资深制作人黄庆厦带领的发行项目。",
+      "ctaConsult": "免费发行咨询",
+      "ctaPortfolio": "查看作品集",
+      "imageAlt": "Studio NOL 发行项目"
+    },
+    "tiers": {
+      "sectionTitle": "发行项目类型",
+      "sectionSubtitle": "根据实际发行规模定制。免费咨询后提供报价。",
+      "single": {
+        "label": "单曲发行",
+        "duration": "约7个月",
+        "range": "约270万韩元起",
+        "note": "1-2首，3位会话乐手"
+      },
+      "ep": {
+        "label": "EP发行",
+        "duration": "约12个月",
+        "range": "按规模定制报价",
+        "note": "介于单曲和专辑之间"
+      },
+      "album": {
+        "label": "正规专辑发行",
+        "duration": "约24个月",
+        "range": "约1,305万韩元起",
+        "note": "约8首，全会话阵容"
+      },
+      "footNotePre": "所有类型均通过",
+      "footNoteHighlight": "免费咨询 → 定制报价",
+      "footNoteMid": "方式进行。费用标准请参见",
+      "footNotePricingLabel": "价格页面",
+      "footNotePost": "。"
+    },
+    "scope": {
+      "sectionTitle": "制作人黄庆厦提供的服务",
+      "sectionSubtitle": "15年来在韩国独立音乐界打造了众多有意义的唱片。",
+      "items": [
+        "专辑策划及A&R方向设计",
+        "人声录音 · 混音 · 母带处理（内部直接提供）",
+        "会话乐手招募 · 编曲网络连接",
+        "数字音乐发行（Melon · Spotify · Apple Music等）",
+        "向乐评人和音乐媒体发送新闻稿及联系评论",
+        "众筹及艺术资助项目咨询"
+      ],
+      "footNote": "人声录音、混音、母带处理由内部直接提供。乐器会话通过网络连接进行。"
+    },
+    "process": {
+      "sectionTitle": "制作流程",
+      "sectionSubtitle": "从策划到媒体宣传，5个步骤共同完成。",
+      "steps": [
+        {
+          "title": "A&R · 策划",
+          "desc": "共同设计艺人的方向性和音乐色彩。确定制作什么样的唱片、面向什么样的听众的出发点。"
+        },
+        {
+          "title": "人声录音 · 指导",
+          "desc": "在Studio NOL内部录音室录制人声。黄庆厦负责指导，发挥最佳演唱状态。"
+        },
+        {
+          "title": "会话连接 · 编曲",
+          "desc": "通过15年积累的会话网络连接乐器演奏。编曲根据唱片方向协商进行。"
+        },
+        {
+          "title": "混音 · 母带 · 发行",
+          "desc": "内部混音母带处理后，在Melon、Spotify、Apple Music等国内外平台发行。"
+        },
+        {
+          "title": "乐评 · 媒体宣传",
+          "desc": "向乐评人和音乐媒体发送新闻稿，并尝试联系评论。在独立音乐界建立您名声的最后一步。"
+        }
+      ]
+    },
+    "inProgress": {
+      "sectionTitle": "正在制作中的专辑",
+      "sectionSubtitle": "目前正在进行发行项目的艺人。",
+      "footNote": "进行中的项目经艺人同意后介绍。"
+    },
+    "discography": {
+      "sectionTitle": "发行作品集",
+      "sectionSubtitle": "实际制作的唱片。点击查看制作说明。",
+      "viewAll": "查看全部作品集"
+    },
+    "cta": {
+      "titleLine1": "独自无法完成的发行，",
+      "titleHighlight": "我们一路相伴",
+      "subtitle": "30分钟免费咨询，先聆听您的项目。",
+      "imageAlt": "Studio NOL 发行项目咨询",
+      "inquiry": "免费发行咨询"
+    }
   }
 }

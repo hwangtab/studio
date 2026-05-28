@@ -13,11 +13,13 @@
     "groups": {
       "recording": "Grabación",
       "practice": "Práctica",
-      "explore": "Explorar"
+      "explore": "Explorar",
+      "release": "Lanzamiento"
     },
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
-    "coverVideo": "Video Cover"
+    "coverVideo": "Video Cover",
+    "releaseProject": "Proyecto de Lanzamiento"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -81,12 +83,12 @@
       "typePage": "Página"
     },
     "cta": {
-      "titleLine1": "El sonido que imaginaste,",
-      "titleHighlight": "se vuelve realidad",
-      "subtitleLine1": "Completa tu música con el mejor equipo en un espacio cómodo.",
-      "subtitleLine2": "Studio NOL acompaña tu viaje musical.",
+      "titleLine1": "Construye tu nombre en la escena indie,",
+      "titleHighlight": "empieza con un lanzamiento.",
+      "subtitleLine1": "Planificación · Grabación · Sesiones · Mezcla · Distribución · PR — 15 años de experiencia a tu lado.",
+      "subtitleLine2": "Consulta gratuita de 30 min · Presupuesto personalizado",
       "location": "Ubicación",
-      "inquiry": "Consulta"
+      "inquiry": "Solicitar Consulta Gratuita de Lanzamiento"
     },
     "faq": {
       "title": "Preguntas frecuentes",
@@ -264,10 +266,10 @@
       ]
     },
     "cta": {
-      "title": "El mejor socio para tu música",
-      "subtitle": "Sugerimos el plan óptimo según tu presupuesto y calendario.",
-      "location": "Ubicación",
-      "inquiry": "Consulta"
+      "title": "¿Listo para empezar tu proyecto de lanzamiento?",
+      "subtitle": "Consulta gratuita 30 min · Presupuesto personalizado · Pago en cuotas disponible",
+      "location": "Contactar Online",
+      "inquiry": "Solicitar Consulta Gratuita de Lanzamiento"
     },
     "images": {
       "packageAlt": "Sesión de grabación de voz en la cabina de Studio NOL"
@@ -1281,5 +1283,104 @@
     },
     "relatedStoriesTitle": "Guías de Producción de Video Cover",
     "relatedStoriesSubtitle": "Guías prácticas para planificar, filmar y editar tu video cover para YouTube o SNS."
+  },
+  "releaseProject": {
+    "seo": {
+      "title": "Proyecto de Lanzamiento · Producción Musical Indie | Studio NOL",
+      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y conexión con críticos — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha. Consulta gratuita.",
+      "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL"
+    },
+    "hero": {
+      "titlePrefix": "Ya escribiste las canciones.",
+      "titleHighlight": "¿Y ahora",
+      "titleSuffix": "qué?",
+      "subtitle": "Desde la planificación hasta la grabación, sesiones, mezcla, distribución y conexión con críticos —\nUn proyecto de lanzamiento liderado por el productor Hwang Gyeongha, 15 años en la escena indie.",
+      "ctaConsult": "Consulta Gratuita de Lanzamiento",
+      "ctaPortfolio": "Ver Discografía",
+      "imageAlt": "Proyecto de Lanzamiento Studio NOL"
+    },
+    "tiers": {
+      "sectionTitle": "Tipos de Proyecto de Lanzamiento",
+      "sectionSubtitle": "Estructurado según la escala real del lanzamiento. Cotización personalizada tras consulta gratuita.",
+      "single": {
+        "label": "Lanzamiento de Single",
+        "duration": "~7 meses",
+        "range": "Desde aprox. ₩2.7M",
+        "note": "1–2 pistas, 3 músicos de sesión"
+      },
+      "ep": {
+        "label": "Lanzamiento de EP",
+        "duration": "~12 meses",
+        "range": "Cotización personalizada",
+        "note": "Entre single y álbum completo"
+      },
+      "album": {
+        "label": "Lanzamiento de Álbum",
+        "duration": "~24 meses",
+        "range": "Desde aprox. ₩13M",
+        "note": "~8 pistas, sesión completa"
+      },
+      "footNotePre": "Todos los tipos proceden mediante",
+      "footNoteHighlight": "consulta gratuita → cotización personalizada",
+      "footNoteMid": ". Ver tarifas en la",
+      "footNotePricingLabel": "página de precios",
+      "footNotePost": "."
+    },
+    "scope": {
+      "sectionTitle": "Lo que Ofrece el Productor Hwang Gyeongha",
+      "sectionSubtitle": "15 años creando discos indie significativos en la escena musical coreana.",
+      "items": [
+        "Concepto de álbum y dirección A&R",
+        "Grabación vocal · Mezcla · Masterización (in-house)",
+        "Músicos de sesión · Red de arreglos",
+        "Distribución digital (Melon · Spotify · Apple Music etc.)",
+        "Notas de prensa para críticos y medios, gestión de reseñas",
+        "Consultoría de crowdfunding y subvenciones artísticas"
+      ],
+      "footNote": "Grabación vocal, mezcla y masterización son servicios in-house. Las sesiones instrumentales se gestionan a través de nuestra red."
+    },
+    "process": {
+      "sectionTitle": "Proceso de Producción",
+      "sectionSubtitle": "5 pasos desde la planificación hasta la cobertura mediática.",
+      "steps": [
+        {
+          "title": "A&R · Concepto",
+          "desc": "Definimos juntos la dirección artística e identidad musical. El punto de partida para decidir qué tipo de disco hacer y para quién."
+        },
+        {
+          "title": "Grabación Vocal · Dirección",
+          "desc": "Grabado en el estudio in-house de Studio NOL. Hwang Gyeongha dirige para obtener la mejor actuación."
+        },
+        {
+          "title": "Sesiones · Arreglos",
+          "desc": "Conectamos músicos de sesión a través de una red de 15 años. Los arreglos se discuten para adaptarse a la dirección del disco."
+        },
+        {
+          "title": "Mezcla · Master · Distribución",
+          "desc": "Tras la mezcla y masterización in-house, la música se distribuye en Melon, Spotify, Apple Music y más."
+        },
+        {
+          "title": "Críticos · Medios PR",
+          "desc": "Se envían notas de prensa a críticos y medios musicales, con gestión de reseñas. El paso final para establecer tu nombre en la escena indie."
+        }
+      ]
+    },
+    "inProgress": {
+      "sectionTitle": "Álbumes que Estamos Haciendo Ahora",
+      "sectionSubtitle": "Artistas actualmente en el proceso de proyecto de lanzamiento.",
+      "footNote": "Los proyectos en curso se comparten con consentimiento del artista."
+    },
+    "discography": {
+      "sectionTitle": "Discografía",
+      "sectionSubtitle": "Álbumes en los que hemos trabajado. Haz clic para leer las notas de producción.",
+      "viewAll": "Ver Portafolio Completo"
+    },
+    "cta": {
+      "titleLine1": "Un lanzamiento que no puedes hacer solo —",
+      "titleHighlight": "llegaremos hasta el final contigo",
+      "subtitle": "Una consulta gratuita de 30 minutos para escuchar tu proyecto primero.",
+      "imageAlt": "Consulta de Proyecto de Lanzamiento Studio NOL",
+      "inquiry": "Consulta Gratuita de Lanzamiento"
+    }
   }
 }

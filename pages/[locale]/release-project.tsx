@@ -1,0 +1,303 @@
+import React from 'react';
+import type { GetStaticPaths, GetStaticProps } from 'next';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
+import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send } from 'lucide-react';
+import SEO from '../../components/SEO';
+import SectionHeading from '../../components/ui/SectionHeading';
+import ImageHero from '../../components/common/ImageHero';
+import { Section } from '../../components/ui/Section';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
+import type { Locale } from '../../lib/i18n';
+import { getPortfolioItems } from '../../data/portfolio';
+import type { PortfolioItem } from '../../types/data';
+import type { NextPageWithLayout } from '../../types';
+
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+
+interface ReleaseProjectProps {
+  locale: Locale;
+  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
+}
+
+const TIER_KEYS = ['single', 'ep', 'album'] as const;
+
+const PROCESS_ICONS = [
+  { step: '01', icon: Lightbulb },
+  { step: '02', icon: Mic },
+  { step: '03', icon: Music },
+  { step: '04', icon: Package },
+  { step: '05', icon: Send },
+];
+
+const IN_PROGRESS_ITEMS = [
+  { artist: '마리코 & 유키에', title: '〈남산타워〉 정규앨범', type: '정규' },
+  { artist: 'Sabbaha', title: '정규 2집', type: '정규' },
+  { artist: '남자애', title: '릴레이 싱글', type: '싱글' },
+  { artist: 'Sickbaby', title: '정규 2집', type: '정규' },
+  { artist: '더블제이정', title: '미니앨범', type: 'EP' },
+];
+
+const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems }) => {
+  const { t } = useTranslation('common', { lng: locale });
+  const getLink = (path: string) => `/${locale}${path}`;
+  const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
+
+  return (
+    <div className="overflow-visible">
+      <SEO
+        locale={locale}
+        title={t('releaseProject.seo.title')}
+        description={t('releaseProject.seo.description')}
+        keywords={t('releaseProject.seo.keywords')}
+        canonical={`/${locale}/release-project`}
+      />
+
+      <ImageHero
+        locale={locale}
+        priority
+        title={
+          <>
+            <span className="block mb-2 text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titlePrefix')}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+              {t('releaseProject.hero.titleHighlight')}
+            </span>
+            <span className="text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titleSuffix')}</span>
+          </>
+        }
+        subtitle={t('releaseProject.hero.subtitle')}
+        backgroundImage="/images/studio2.webp"
+        imageAlt={t('releaseProject.hero.imageAlt')}
+        minHeight="min-h-[70svh]"
+        ctaButtons={
+          <>
+            <Link
+              href={getLink('/contact')}
+              prefetch={false}
+              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              {t('releaseProject.hero.ctaConsult')}
+            </Link>
+            <Link
+              href={getLink('/portfolio')}
+              prefetch={false}
+              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary border-2 border-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+            >
+              {t('releaseProject.hero.ctaPortfolio')}
+            </Link>
+          </>
+        }
+      />
+
+      {/* 발매 프로젝트 3형태 */}
+      <Section variant="default">
+        <SectionHeading
+          icon={Disc}
+          title={t('releaseProject.tiers.sectionTitle')}
+          subtitle={t('releaseProject.tiers.sectionSubtitle')}
+          className="mb-12"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {TIER_KEYS.map((key) => (
+            <div
+              key={key}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md border border-gray-100 dark:border-gray-700 flex flex-col"
+            >
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t(`releaseProject.tiers.${key}.label`)}</h3>
+              <div className="flex items-center gap-1.5 text-primary mb-4">
+                <Clock size={14} className="flex-shrink-0" />
+                <span className="text-sm font-medium">{t(`releaseProject.tiers.${key}.duration`)}</span>
+              </div>
+              <p className="text-base text-gray-700 dark:text-gray-200 font-semibold mb-2">{t(`releaseProject.tiers.${key}.range`)}</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-auto">{t(`releaseProject.tiers.${key}.note`)}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8 max-w-2xl mx-auto">
+          {t('releaseProject.tiers.footNotePre')}{' '}
+          <strong>{t('releaseProject.tiers.footNoteHighlight')}</strong>{' '}
+          {t('releaseProject.tiers.footNoteMid')}{' '}
+          <Link href={getLink('/pricing')} className="text-primary underline underline-offset-2 hover:text-primary-dark">
+            {t('releaseProject.tiers.footNotePricingLabel')}
+          </Link>
+          {t('releaseProject.tiers.footNotePost')}
+        </p>
+      </Section>
+
+      {/* 프로듀서 황경하가 함께하는 것들 */}
+      <Section variant="alternate">
+        <SectionHeading
+          icon={CheckCircle}
+          title={t('releaseProject.scope.sectionTitle')}
+          subtitle={t('releaseProject.scope.sectionSubtitle')}
+          className="mb-12"
+        />
+        <div className="max-w-3xl mx-auto space-y-3">
+          {Array.isArray(scopeItems) && scopeItems.map((item, i) => (
+            <div
+              key={i}
+              className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+            >
+              <CheckCircle size={20} className="text-primary flex-shrink-0 mt-0.5" />
+              <span className="text-gray-700 dark:text-gray-300">{item}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8 max-w-xl mx-auto">
+          {t('releaseProject.scope.footNote')}
+        </p>
+      </Section>
+
+      {/* 프로듀싱 프로세스 5단계 */}
+      <Section variant="default">
+        <SectionHeading
+          icon={Disc}
+          title={t('releaseProject.process.sectionTitle')}
+          subtitle={t('releaseProject.process.sectionSubtitle')}
+          className="mb-12"
+        />
+        <div className="max-w-3xl mx-auto space-y-4">
+          {PROCESS_ICONS.map((s, i) => {
+            const Icon = s.icon;
+            return (
+              <div
+                key={s.step}
+                className="flex items-start gap-4 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+              >
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Icon size={18} className="text-primary" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-mono text-primary/50">{s.step}</span>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">{t(`releaseProject.process.steps.${i}.title`)}</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{t(`releaseProject.process.steps.${i}.desc`)}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
+
+      {/* 지금 함께 만들고 있는 음반들 */}
+      <Section variant="alternate">
+        <SectionHeading
+          icon={Disc}
+          title={t('releaseProject.inProgress.sectionTitle')}
+          subtitle={t('releaseProject.inProgress.sectionSubtitle')}
+          className="mb-12"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          {IN_PROGRESS_ITEMS.map((item) => (
+            <div
+              key={`${item.artist}-${item.title}`}
+              className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+            >
+              <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
+                {item.type}
+              </span>
+              <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-sm text-gray-400 dark:text-gray-500 mt-8 max-w-xl mx-auto">
+          {t('releaseProject.inProgress.footNote')}
+        </p>
+      </Section>
+
+      {/* 발매 디스코그래피 증거 */}
+      {portfolioItems.length > 0 && (
+        <Section variant="default">
+          <SectionHeading
+            icon={Disc}
+            title={t('releaseProject.discography.sectionTitle')}
+            subtitle={t('releaseProject.discography.sectionSubtitle')}
+            className="mb-12"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {portfolioItems.map((item) => (
+              <Link
+                key={item.id}
+                href={getLink(`/portfolio/${item.id}`)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                {item.image && (
+                  <div className="aspect-square overflow-hidden relative">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+                <div className="p-5">
+                  <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link
+              href={getLink('/portfolio')}
+              className="inline-flex items-center gap-2 text-primary font-semibold hover:underline underline-offset-2"
+            >
+              {t('releaseProject.discography.viewAll')} <ArrowRight size={16} />
+            </Link>
+          </div>
+        </Section>
+      )}
+
+      {/* 전환 CTA */}
+      <ContactCTA
+        locale={locale}
+        title={
+          <>
+            {t('releaseProject.cta.titleLine1')}<br />
+            <span className="text-primary">{t('releaseProject.cta.titleHighlight')}</span>
+          </>
+        }
+        subtitle={t('releaseProject.cta.subtitle')}
+        imageSrc="/images/studio2.webp"
+        imageAlt={t('releaseProject.cta.imageAlt')}
+        primaryButtonLabel={t('releaseProject.cta.inquiry')}
+      />
+    </div>
+  );
+};
+
+ReleaseProject.hasHero = true;
+
+export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
+
+export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ params }) => {
+  const locale = resolveLocaleParam(params?.locale);
+  const allItems = getPortfolioItems(locale);
+  const portfolioItems = allItems
+    .filter((item) => item.featured)
+    .map(({ id, title, description, image, artist, featured }) => ({
+      id,
+      title,
+      description,
+      image,
+      artist,
+      featured,
+    }));
+
+  return buildPageStaticProps(
+    locale,
+    { locale, portfolioItems },
+    { revalidate: 86400 }
+  );
+};
+
+export default ReleaseProject;

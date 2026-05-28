@@ -26,6 +26,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
 
   const navGroups = useMemo(() => [
     {
+      id: 'release',
+      label: t('nav.groups.release'),
+      items: [
+        { label: t('nav.releaseProject'), href: `/${locale}/release-project` }
+      ]
+    },
+    {
       id: 'recording',
       label: t('nav.groups.recording'),
       items: [
