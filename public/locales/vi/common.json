@@ -1290,7 +1290,7 @@
   "releaseProject": {
     "seo": {
       "title": "Dự án Phát hành · Sản xuất Âm nhạc Indie | Studio NOL",
-      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), từng làm việc với các nghệ sĩ như Tierliner, The Projectors và Kang Ho-jung. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
+      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), từng làm việc với các nghệ sĩ như Tierliner, The Projectors và Kang Ho-jung. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
       "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL",
       "single": {
         "title": "Dự án phát hành Single | Studio NOL",
@@ -1312,7 +1312,7 @@
       "titlePrefix": "Bản phát hành của bạn —",
       "titleHighlight": "bắt đầu từ đây,",
       "titleSuffix": "cùng nhau",
-      "subtitle": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình. Đồng hành cùng bạn qua từng bước phát hành, đến tận cuối hành trình.",
+      "subtitle": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình. Đồng hành cùng bạn qua từng bước phát hành, đến tận cuối hành trình.",
       "ctaConsult": "Tư vấn Phát hành Miễn phí",
       "ctaPortfolio": "Xem Danh mục",
       "imageAlt": "Dự án Phát hành Studio NOL"
@@ -1320,7 +1320,7 @@
     "producer": {
       "sectionTitle": "Nhà sản xuất Hwang Gyeongha",
       "tagline": "Nhà sản xuất & A&R với 15 năm kinh nghiệm",
-      "bodyParagraph1": "Tôi đồng hành cùng các nghệ sĩ singer-songwriter và ban nhạc indie trong việc phát hành. Trau chuốt bài hát, đưa lên Spotify và Apple Music, kết nối nhạc công session, tiếp cận nhà phê bình và truyền thông — để một bài hát có chỗ đứng trong indie scene, mọi mắt xích đều phải khớp với nhau.",
+      "bodyParagraph1": "Tôi đồng hành cùng các nghệ sĩ singer-songwriter và ban nhạc indie trong việc phát hành. Trau chuốt bài hát, đưa lên Spotify và Apple Music, kết nối nhạc công session, tiếp cận báo chí và phê bình — để một bài hát có chỗ đứng trong indie scene, mọi mắt xích đều phải khớp với nhau.",
       "bodyParagraph2": "Phát hành không phải là điều một mình ai đó có thể làm được. Vì vậy công việc của tôi là trở thành người đồng hành đi cùng bạn đến cuối con đường.",
       "stats": [
         { "value": "50+", "label": "Bản phát hành đã sản xuất" },

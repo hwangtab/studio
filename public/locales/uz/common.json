@@ -1288,7 +1288,7 @@
   "releaseProject": {
     "seo": {
       "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
-      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan — Tierliner, The Projectors va Kang Ho-jung kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
+      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — Tierliner, The Projectors va Kang Ho-jung kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
       "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL",
       "single": {
         "title": "Singl chiqarish loyihasi | Studio NOL",
@@ -1310,7 +1310,7 @@
       "titlePrefix": "Sizning relizingiz —",
       "titleHighlight": "shu yerdan",
       "titleSuffix": "birga",
-      "subtitle": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetish. Relizingizning har bir bosqichida oxirigacha siz bilan birga.",
+      "subtitle": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetish. Relizingizning har bir bosqichida oxirigacha siz bilan birga.",
       "ctaConsult": "Bepul Chiqarish Maslahati",
       "ctaPortfolio": "Portfelni Ko'rish",
       "imageAlt": "Studio NOL Chiqarish Loyihasi"
@@ -1318,7 +1318,7 @@
     "producer": {
       "sectionTitle": "Prodyuser Hwang Gyeongha",
       "tagline": "15 yillik tajribali musiqa prodyuseri va A&R",
-      "bodyParagraph1": "Men indie singer-songwriterlar va guruhlar bilan birga ularning reliz jarayonida ishlayman. Qo‘shiqni jilolab, Spotify va Apple Music’ga joylash, sessiya musiqachilarini ulash, tanqidchi va OAVga yetkazish — qo‘shiq indie sahnada o‘z o‘rnini topishi uchun bu bosqichlarning barchasi bir-biriga zich bog‘lanishi kerak.",
+      "bodyParagraph1": "Men indie singer-songwriterlar va guruhlar bilan birga ularning reliz jarayonida ishlayman. Qo‘shiqni jilolab, Spotify va Apple Music’ga joylash, sessiya musiqachilarini ulash, OAV va tanqidga yetkazish — qo‘shiq indie sahnada o‘z o‘rnini topishi uchun bu bosqichlarning barchasi bir-biriga zich bog‘lanishi kerak.",
       "bodyParagraph2": "Chiqarish — bir kishining qo‘lidan keladigan ish emas. Shu sababli mening vazifam — yo‘lning oxirigacha siz bilan birga yuradigan hamroh bo‘lishdir.",
       "stats": [
         { "value": "50+", "label": "Birga chiqarilgan ishlar" },

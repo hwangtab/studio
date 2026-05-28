@@ -1333,7 +1333,7 @@
   "releaseProject": {
     "seo": {
       "title": "Release Project · Indie Music Production | Studio NOL",
-      "description": "From planning to recording, session musicians, mixing, distribution, and reaching critics — indie release production led by 15-year producer Hwang Gyeongha, who has worked with artists like Tierliner, The Projectors, and Kang Ho-jung. Free consultation by release scale: single, EP, or full album.",
+      "description": "From planning to recording, session musicians, mixing, distribution, and reaching press and critics — indie release production led by 15-year producer Hwang Gyeongha, who has worked with artists like Tierliner, The Projectors, and Kang Ho-jung. Free consultation by release scale: single, EP, or full album.",
       "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL",
       "single": {
         "title": "Single Release Project | Studio NOL",
@@ -1355,7 +1355,7 @@
       "titlePrefix": "Your release —",
       "titleHighlight": "starts here,",
       "titleSuffix": "together",
-      "subtitle": "From planning to recording, sessions, mixing, distribution, and getting your music to critics. We walk every step of your release with you, all the way through.",
+      "subtitle": "From planning to recording, sessions, mixing, distribution, and getting your music to press and critics. We walk every step of your release with you, all the way through.",
       "ctaConsult": "Free Release Consultation",
       "ctaPortfolio": "View Discography",
       "imageAlt": "Studio NOL Release Project"
@@ -1363,7 +1363,7 @@
     "producer": {
       "sectionTitle": "Producer Hwang Gyeongha",
       "tagline": "15-year music producer & A&R",
-      "bodyParagraph1": "I work with indie singer-songwriters and bands on their releases. From shaping the song to getting it onto Spotify and Apple Music, connecting session players, and reaching critics and media — for a song to find its place in the indie scene, all these steps have to fit together.",
+      "bodyParagraph1": "I work with indie singer-songwriters and bands on their releases. From shaping the song to getting it onto Spotify and Apple Music, connecting session players, and reaching press and critics — for a song to find its place in the indie scene, all these steps have to fit together.",
       "bodyParagraph2": "A release is not something one person can pull off alone. So my job is to be the companion who walks the whole way with you.",
       "stats": [
         { "value": "50+", "label": "Releases produced" },

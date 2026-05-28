@@ -11,7 +11,7 @@ const homeData = {
       titlePrefix: "곡은 다 썼는데,",
       titleHighlight: "그 다음",
       titleSuffix: "을 모르는 당신에게",
-      subtitle: "그 다음은 함께 만듭니다. 기획·녹음·세션·믹싱·유통, 그리고 평론가에게 닿는 일까지.",
+      subtitle: "그 다음은 함께 만듭니다. 기획·녹음·세션·믹싱·유통, 그리고 매체·평론에 닿는 일까지.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
@@ -97,7 +97,7 @@ const homeData = {
       titlePrefix: "You've written the songs.",
       titleHighlight: "What comes",
       titleSuffix: "next?",
-      subtitle: "We make what comes next, together. Planning, recording, sessions, mixing, distribution, and reaching critics.",
+      subtitle: "We make what comes next, together. Planning, recording, sessions, mixing, distribution, and reaching press and critics.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
@@ -193,7 +193,7 @@ const homeData = {
       titlePrefix: "歌曲写完了，",
       titleHighlight: "接下来",
       titleSuffix: "不知道该怎么办的你",
-      subtitle: "接下来的，与你一起。从企划、录音、乐手联络、混音、发行，到接触乐评人。",
+      subtitle: "接下来的，与你一起。从企划、录音、乐手联络、混音、发行，到对接媒体与乐评。",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
@@ -289,7 +289,7 @@ const homeData = {
       titlePrefix: "Ya escribiste las canciones.",
       titleHighlight: "¿Y ahora",
       titleSuffix: "qué?",
-      subtitle: "Hacemos juntos lo que viene después. Planificación, grabación, sesiones, mezcla, distribución y conexión con críticos.",
+      subtitle: "Hacemos juntos lo que viene después. Planificación, grabación, sesiones, mezcla, distribución y conexión con medios y reseñas.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
@@ -385,7 +385,7 @@ const homeData = {
       titlePrefix: "Bạn đã viết xong bài hát,",
       titleHighlight: "nhưng tiếp theo",
       titleSuffix: "bạn chưa biết phải làm gì?",
-      subtitle: "Phần tiếp theo, chúng ta cùng làm. Lập kế hoạch, thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình.",
+      subtitle: "Phần tiếp theo, chúng ta cùng làm. Lập kế hoạch, thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
@@ -481,7 +481,7 @@ const homeData = {
       titlePrefix: "คุณแต่งเพลงเสร็จแล้ว",
       titleHighlight: "แต่ขั้นตอน",
       titleSuffix: "ต่อไปคืออะไร?",
-      subtitle: "ส่วนที่ตามมา เราทำด้วยกัน การวางแผน บันทึกเสียง นักดนตรีเซสชัน มิกซ์ จัดจำหน่าย และเข้าถึงนักวิจารณ์",
+      subtitle: "ส่วนที่ตามมา เราทำด้วยกัน การวางแผน บันทึกเสียง นักดนตรีเซสชัน มิกซ์ จัดจำหน่าย และเข้าถึงสื่อและการวิจารณ์",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
@@ -577,7 +577,7 @@ const homeData = {
       titlePrefix: "Qo'shiqlarni yozdingiz,",
       titleHighlight: "keyingi qadam",
       titleSuffix: "nima ekanligini bilmayapsizmi?",
-      subtitle: "Keyingisi — birgalikda. Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetish.",
+      subtitle: "Keyingisi — birgalikda. Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetish.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {

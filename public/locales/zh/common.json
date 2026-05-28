@@ -1290,7 +1290,7 @@
   "releaseProject": {
     "seo": {
       "title": "发行项目 · 独立音乐制作 | Studio NOL",
-      "description": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 — 由曾与 Tierliner、The Projectors、Kang Ho-jung 等艺人合作的 15 年资深制作人黄景夏带领的独立音乐发行项目。按单曲·EP·专辑规模提供免费咨询。",
+      "description": "从策划到录音、会话乐手、混音、发行，以及对接媒体与乐评 — 由曾与 Tierliner、The Projectors、Kang Ho-jung 等艺人合作的 15 年资深制作人黄景夏带领的独立音乐发行项目。按单曲·EP·专辑规模提供免费咨询。",
       "keywords": "发行项目, 独立音乐发行, 唱片制作, 独立歌手, Studio NOL",
       "single": {
         "title": "单曲发行项目 | Studio NOL",
@@ -1312,7 +1312,7 @@
       "titlePrefix": "你的发行，",
       "titleHighlight": "从这里",
       "titleSuffix": "一起开始",
-      "subtitle": "从策划到录音、会话乐手、混音、发行，以及接触乐评人。发行的每一步，都陪你走到最后。",
+      "subtitle": "从策划到录音、会话乐手、混音、发行，以及对接媒体与乐评。发行的每一步，都陪你走到最后。",
       "ctaConsult": "免费发行咨询",
       "ctaPortfolio": "查看作品集",
       "imageAlt": "Studio NOL 发行项目"
@@ -1320,7 +1320,7 @@
     "producer": {
       "sectionTitle": "制作人 黄景夏",
       "tagline": "15年资历 唱片企划·制作人",
-      "bodyParagraph1": "我与独立创作歌手和乐队的发行同行。打磨歌曲、上架 Spotify 与 Apple Music、对接 session 乐手、连接乐评人与媒体——一首歌要在独立音乐场景立足，这些环节都必须紧密咬合。",
+      "bodyParagraph1": "我与独立创作歌手和乐队的发行同行。打磨歌曲、上架 Spotify 与 Apple Music、对接 session 乐手、对接媒体与乐评——一首歌要在独立音乐场景立足，这些环节都必须紧密咬合。",
       "bodyParagraph2": "发行从来不是一个人能完成的事。所以我的工作，就是成为陪你走到最后的同行者。",
       "stats": [
         { "value": "50+", "label": "参与发行作品" },

@@ -1290,7 +1290,7 @@
   "releaseProject": {
     "seo": {
       "title": "Proyecto de Lanzamiento · Producción Musical Indie | Studio NOL",
-      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con críticos — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner, The Projectors y Kang Ho-jung. Consulta gratuita por escala: single, EP o álbum.",
+      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con medios y reseñas — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner, The Projectors y Kang Ho-jung. Consulta gratuita por escala: single, EP o álbum.",
       "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL",
       "single": {
         "title": "Proyecto de Single | Studio NOL",
@@ -1312,7 +1312,7 @@
       "titlePrefix": "Tu lanzamiento,",
       "titleHighlight": "desde aquí,",
       "titleSuffix": "juntos",
-      "subtitle": "Desde la planificación hasta la grabación, sesiones, mezcla, distribución y conexión con críticos. Acompañamos cada paso de tu lanzamiento, hasta el final.",
+      "subtitle": "Desde la planificación hasta la grabación, sesiones, mezcla, distribución y conexión con medios y reseñas. Acompañamos cada paso de tu lanzamiento, hasta el final.",
       "ctaConsult": "Consulta Gratuita de Lanzamiento",
       "ctaPortfolio": "Ver Discografía",
       "imageAlt": "Proyecto de Lanzamiento Studio NOL"
@@ -1320,7 +1320,7 @@
     "producer": {
       "sectionTitle": "Productor Hwang Gyeongha",
       "tagline": "Productor y A&R con 15 años de experiencia",
-      "bodyParagraph1": "Acompaño a cantautores y bandas indie en sus lanzamientos. Pulir la canción, subirla a Spotify y Apple Music, conectar músicos de sesión, llegar a críticos y medios — para que una canción encuentre su lugar en la escena indie, todos estos pasos deben encajar.",
+      "bodyParagraph1": "Acompaño a cantautores y bandas indie en sus lanzamientos. Pulir la canción, subirla a Spotify y Apple Music, conectar músicos de sesión, llegar a medios y reseñas — para que una canción encuentre su lugar en la escena indie, todos estos pasos deben encajar.",
       "bodyParagraph2": "Un lanzamiento no es algo que una sola persona pueda lograr. Por eso mi trabajo es ser el compañero que camina contigo hasta el final.",
       "stats": [
         { "value": "50+", "label": "Lanzamientos producidos" },
