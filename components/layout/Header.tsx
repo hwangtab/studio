@@ -29,7 +29,10 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       id: 'release',
       label: t('nav.groups.release'),
       items: [
-        { label: t('nav.releaseProject'), href: `/${locale}/release-project` }
+        { label: t('nav.releaseProject'), href: `/${locale}/release-project` },
+        { label: t('nav.releaseSingle'), href: `/${locale}/release-project/single` },
+        { label: t('nav.releaseEp'), href: `/${locale}/release-project/ep` },
+        { label: t('nav.releaseAlbum'), href: `/${locale}/release-project/album` },
       ]
     },
     {

@@ -14,12 +14,15 @@
       "recording": "Grabación",
       "practice": "Práctica",
       "explore": "Explorar",
-      "release": "Lanzamiento"
+      "release": "Lanzamiento Musical"
     },
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
     "coverVideo": "Video Cover",
-    "releaseProject": "Proyecto de Lanzamiento"
+    "releaseProject": "Descripción general",
+    "releaseSingle": "Single",
+    "releaseEp": "EP",
+    "releaseAlbum": "Álbum completo"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -1288,7 +1291,22 @@
     "seo": {
       "title": "Proyecto de Lanzamiento · Producción Musical Indie | Studio NOL",
       "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y conexión con críticos — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha. Consulta gratuita.",
-      "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL"
+      "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL",
+      "single": {
+        "title": "Proyecto de Single | Studio NOL",
+        "description": "Desde el primer single hasta el lanzamiento — planificación, grabación, distribución y PR con el productor Hwang Gyeongha.",
+        "keywords": "lanzamiento single, música indie, Studio NOL, productor musical Korea"
+      },
+      "ep": {
+        "title": "Proyecto de EP | Studio NOL",
+        "description": "Declara tu identidad musical con 3–5 temas. Planificación, grabación, distribución y PR con el productor Hwang Gyeongha.",
+        "keywords": "lanzamiento EP, mini álbum, música indie, Studio NOL"
+      },
+      "album": {
+        "title": "Proyecto de Álbum Completo | Studio NOL",
+        "description": "Deja tu huella en la escena indie con un álbum completo. Planificación, grabación, sesiones, distribución y PR con el productor Hwang Gyeongha.",
+        "keywords": "lanzamiento álbum, música indie Korea, productor musical, Studio NOL"
+      }
     },
     "hero": {
       "titlePrefix": "Ya escribiste las canciones.",
@@ -1306,25 +1324,99 @@
         "label": "Lanzamiento de Single",
         "duration": "~7 meses",
         "range": "Desde aprox. ₩2.7M",
-        "note": "1–2 pistas, 3 músicos de sesión"
+        "note": "1–2 pistas, 3 músicos de sesión",
+        "detail": {
+          "heroTitlePrefix": "Tu primer single,",
+          "heroTitleHighlight": "bien hecho",
+          "heroTitleSuffix": "desde el principio",
+          "heroSubtitle": "Te acompañamos en cada paso de tu lanzamiento.",
+          "personaSectionTitle": "Para quién es esto",
+          "personaItems": [
+            "Listo para subir tus canciones a Spotify o Melon por primera vez",
+            "Tienes canciones pero no sabes qué sigue",
+            "Quieres empezar de forma realista con un presupuesto claro",
+            "Dando tus primeros pasos en la escena indie"
+          ],
+          "deliverablesSectionTitle": "Cronograma · Entregables",
+          "deliverablesItems": [
+            "Duración: ~7 meses",
+            "Canciones: ~2 temas",
+            "Sesiones: ~3 músicos (guitarra, bajo, batería)"
+          ],
+          "priceSectionTitle": "Rango de precio",
+          "priceRange": "Desde ~₩2.7M (single)",
+          "priceRationale": "Basado en proyecto real: single de Harris",
+          "priceNote": "Varía según músicos y sesiones de grabación. Cotización personalizada tras consulta gratuita.",
+          "inProgressSectionTitle": "Singles que estamos haciendo ahora",
+          "linkBack": "Volver a descripción general"
+        }
       },
       "ep": {
         "label": "Lanzamiento de EP",
         "duration": "~12 meses",
         "range": "Cotización personalizada",
-        "note": "Entre single y álbum completo"
+        "note": "Entre single y álbum completo",
+        "detail": {
+          "heroTitlePrefix": "Tu identidad musical,",
+          "heroTitleHighlight": "declarada",
+          "heroTitleSuffix": "con un EP",
+          "heroSubtitle": "3–5 temas para definir quién eres como artista.",
+          "personaSectionTitle": "Para quién es esto",
+          "personaItems": [
+            "Quieres mostrar un mundo más amplio después de lanzar un single",
+            "Listo para definir tu sonido en 3–5 temas",
+            "Buscas construir una base sólida de fans"
+          ],
+          "deliverablesSectionTitle": "Cronograma · Entregables",
+          "deliverablesItems": [
+            "Duración: ~12 meses",
+            "Canciones: 3–5 temas",
+            "Entre single y álbum completo en alcance"
+          ],
+          "priceSectionTitle": "Rango de precio",
+          "priceRange": "Cotización personalizada según alcance",
+          "priceRationale": "Varía según sesiones y arreglos",
+          "priceNote": "Cotización personalizada tras consulta gratuita.",
+          "inProgressSectionTitle": "EPs que estamos haciendo ahora",
+          "linkBack": "Volver a descripción general"
+        }
       },
       "album": {
         "label": "Lanzamiento de Álbum",
         "duration": "~24 meses",
         "range": "Desde aprox. ₩13M",
-        "note": "~8 pistas, sesión completa"
+        "note": "~8 pistas, sesión completa",
+        "detail": {
+          "heroTitlePrefix": "Dejando tu huella",
+          "heroTitleHighlight": "en la escena indie",
+          "heroTitleSuffix": "con un álbum completo",
+          "heroSubtitle": "Tu mundo completo en un álbum — lo llevamos hasta el final.",
+          "personaSectionTitle": "Para quién es esto",
+          "personaItems": [
+            "Quieres capturar todo tu mundo artístico en una obra",
+            "Listo para dejar una marca clara en la escena indie",
+            "Buscas llegar a críticos y medios en serio"
+          ],
+          "deliverablesSectionTitle": "Cronograma · Entregables",
+          "deliverablesItems": [
+            "Duración: ~24 meses",
+            "Canciones: ~8 temas",
+            "Formación completa de sesionistas"
+          ],
+          "priceSectionTitle": "Rango de precio",
+          "priceRange": "Desde ~₩13M (álbum completo)",
+          "priceRationale": "Basado en proyecto real: 2.º álbum de Sickbaby",
+          "priceNote": "Varía según músicos y sesiones de grabación. Cotización personalizada tras consulta gratuita.",
+          "inProgressSectionTitle": "Álbumes completos que estamos haciendo ahora",
+          "linkBack": "Volver a descripción general"
+        }
       },
       "footNotePre": "Todos los tipos proceden mediante",
       "footNoteHighlight": "consulta gratuita → cotización personalizada",
       "footNoteMid": ". Ver tarifas en la",
       "footNotePricingLabel": "página de precios",
-      "footNotePost": "."
+      "footNotePost": ".",
+      "detailCta": "Ver más"
     },
     "scope": {
       "sectionTitle": "Lo que Ofrece el Productor Hwang Gyeongha",

@@ -14,12 +14,15 @@
       "recording": "Yozuv",
       "practice": "Mashg'ulot",
       "explore": "Batafsil",
-      "release": "Chiqarish"
+      "release": "Musiqa chiqarish"
     },
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
     "coverVideo": "Cover video suratga olish",
-    "releaseProject": "Chiqarish loyihasi"
+    "releaseProject": "Umumiy ko'rinish",
+    "releaseSingle": "Singl",
+    "releaseEp": "EP",
+    "releaseAlbum": "To'liq albom"
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",
@@ -1286,7 +1289,22 @@
     "seo": {
       "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
       "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan — 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Bepul maslahat.",
-      "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL"
+      "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL",
+      "single": {
+        "title": "Singl chiqarish loyihasi | Studio NOL",
+        "description": "Birinchi singldan chiqarishgacha — Hwang Gyeongha produceri bilan rejalashtirish, yozuv, tarqatish va PR.",
+        "keywords": "singl chiqarish, indie musiqa, Studio NOL, musiqa produceri"
+      },
+      "ep": {
+        "title": "EP chiqarish loyihasi | Studio NOL",
+        "description": "3–5 ta qo'shiq bilan musiqa o'zligingizni e'lon qiling. Hwang Gyeongha produceri bilan rejalashtirish, yozuv, tarqatish va PR.",
+        "keywords": "EP chiqarish, mini albom, indie musiqa, Studio NOL"
+      },
+      "album": {
+        "title": "To'liq albom chiqarish loyihasi | Studio NOL",
+        "description": "Indie sahnasida ismingizni o'yib yozing. Hwang Gyeongha produceri bilan rejalashtirish, yozuv, session, tarqatish va PR.",
+        "keywords": "albom chiqarish, indie musiqa, musiqa produceri, Studio NOL"
+      }
     },
     "hero": {
       "titlePrefix": "Qo'shiqlarni yozdingiz,",
@@ -1304,25 +1322,99 @@
         "label": "Singl Chiqarish",
         "duration": "~7 oy",
         "range": "Taxminan ₩2.7M dan",
-        "note": "1–2 qo'shiq, 3 sessiya musiqachi"
+        "note": "1–2 qo'shiq, 3 sessiya musiqachi",
+        "detail": {
+          "heroTitlePrefix": "Birinchi singling,",
+          "heroTitleHighlight": "to'g'ri bajarilgan",
+          "heroTitleSuffix": "boshidanoq",
+          "heroSubtitle": "Chiqarish jarayonining har qadamida birga boramiz.",
+          "personaSectionTitle": "Bu kim uchun",
+          "personaItems": [
+            "Qo'shiqlarini birinchi marta Spotify yoki Melonga yuklashga tayyor",
+            "Qo'shiqlari bor, lekin keyingi qadamni bilmaydi",
+            "Aniq byudjet bilan realistik boshlashni xohlaydi",
+            "Indie sahnasiga birinchi qadamini tashlaydi"
+          ],
+          "deliverablesSectionTitle": "Jadval · Natijalar",
+          "deliverablesItems": [
+            "Muddat: taxminan 7 oy",
+            "Treklar: taxminan 2 ta qo'shiq",
+            "Session: taxminan 3 musiqachi (gitara, bas, baraban)"
+          ],
+          "priceSectionTitle": "Narx oralig'i",
+          "priceRange": "Taxminan ₩2.7M dan (singl)",
+          "priceRationale": "Haqiqiy loyihaga asoslangan: Harris singli",
+          "priceNote": "Session tarkibi va yozuv seanslariga qarab farqlanadi. Bepul maslahatdan so'ng maxsus narx.",
+          "inProgressSectionTitle": "Hozir yaratayotgan singller",
+          "linkBack": "Musiqa chiqarish umumiy ko'rinishiga qaytish"
+        }
       },
       "ep": {
         "label": "EP Chiqarish",
         "duration": "~12 oy",
         "range": "Hajmga qarab maxsus taklif",
-        "note": "Singl va to'liq albom orasida"
+        "note": "Singl va to'liq albom orasida",
+        "detail": {
+          "heroTitlePrefix": "Musiqa o'zligingiz,",
+          "heroTitleHighlight": "e'lon qilingan",
+          "heroTitleSuffix": "EP bilan",
+          "heroSubtitle": "3–5 ta qo'shiq bilan artist sifatida o'zingizni aniqlang.",
+          "personaSectionTitle": "Bu kim uchun",
+          "personaItems": [
+            "Singl chiqargandan so'ng kengroq dunyoni ko'rsatishni xohlaydi",
+            "3–5 ta qo'shiq bilan o'z uslubini aniq belgilashga tayyor",
+            "Mustahkam muxlislar bazasini yaratmoqchi"
+          ],
+          "deliverablesSectionTitle": "Jadval · Natijalar",
+          "deliverablesItems": [
+            "Muddat: taxminan 12 oy",
+            "Treklar: 3–5 ta qo'shiq",
+            "Singl va to'liq albom orasida"
+          ],
+          "priceSectionTitle": "Narx oralig'i",
+          "priceRange": "Hajmga qarab maxsus narx",
+          "priceRationale": "Session va arranjirovkaga qarab farqlanadi",
+          "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
+          "inProgressSectionTitle": "Hozir yaratayotgan EP lar",
+          "linkBack": "Musiqa chiqarish umumiy ko'rinishiga qaytish"
+        }
       },
       "album": {
         "label": "To'liq Albom Chiqarish",
         "duration": "~24 oy",
         "range": "Taxminan ₩13M dan",
-        "note": "~8 qo'shiq, to'liq sessiya"
+        "note": "~8 qo'shiq, to'liq sessiya",
+        "detail": {
+          "heroTitlePrefix": "Indie sahnasida",
+          "heroTitleHighlight": "ismingizni o'yib yozing",
+          "heroTitleSuffix": "to'liq albom bilan",
+          "heroSubtitle": "Butun dunyoyingizni bir albumda — biz oxirigacha birga boramiz.",
+          "personaSectionTitle": "Bu kim uchun",
+          "personaItems": [
+            "Butun ijodiy dunyosini bir asarga solishni xohlaydi",
+            "Indie sahnasida yorqin iz qoldirishga tayyor",
+            "Tanqidchilar va OAV bilan jiddiy aloqa o'rnatmoqchi"
+          ],
+          "deliverablesSectionTitle": "Jadval · Natijalar",
+          "deliverablesItems": [
+            "Muddat: taxminan 24 oy",
+            "Treklar: taxminan 8 ta qo'shiq",
+            "To'liq session guruhi"
+          ],
+          "priceSectionTitle": "Narx oralig'i",
+          "priceRange": "Taxminan ₩13M dan (to'liq albom)",
+          "priceRationale": "Haqiqiy loyihaga asoslangan: Sickbaby 2-albom",
+          "priceNote": "Session tarkibi va yozuv seanslariga qarab farqlanadi. Bepul maslahatdan so'ng maxsus narx.",
+          "inProgressSectionTitle": "Hozir yaratayotgan albomlar",
+          "linkBack": "Musiqa chiqarish umumiy ko'rinishiga qaytish"
+        }
       },
       "footNotePre": "Barcha turlar",
       "footNoteHighlight": "bepul maslahat → maxsus taklif",
       "footNoteMid": "orqali amalga oshiriladi. Narxlarni",
       "footNotePricingLabel": "narxlar sahifasida",
-      "footNotePost": "ko'ring."
+      "footNotePost": "ko'ring.",
+      "detailCta": "Ko'proq bilish"
     },
     "scope": {
       "sectionTitle": "Prodyuser Hwang Gyeongha Beradi",

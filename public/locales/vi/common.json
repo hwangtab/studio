@@ -14,12 +14,15 @@
       "recording": "Thu âm",
       "practice": "Luyện tập",
       "explore": "Khám phá",
-      "release": "Phát hành"
+      "release": "Phát hành âm nhạc"
     },
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
     "coverVideo": "Quay Video Cover",
-    "releaseProject": "Dự án Phát hành"
+    "releaseProject": "Tổng quan",
+    "releaseSingle": "Single",
+    "releaseEp": "EP",
+    "releaseAlbum": "Album đầy đủ"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
@@ -1288,7 +1291,22 @@
     "seo": {
       "title": "Dự án Phát hành · Sản xuất Âm nhạc Indie | Studio NOL",
       "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với nhà phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha 15 năm kinh nghiệm. Tư vấn miễn phí.",
-      "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL"
+      "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL",
+      "single": {
+        "title": "Dự án phát hành Single | Studio NOL",
+        "description": "Từ single đầu tiên đến phát hành — lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha.",
+        "keywords": "phát hành single, âm nhạc indie, Studio NOL, nhà sản xuất âm nhạc"
+      },
+      "ep": {
+        "title": "Dự án phát hành EP | Studio NOL",
+        "description": "Tuyên bố bản sắc âm nhạc của bạn với 3–5 bài. Lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha.",
+        "keywords": "phát hành EP, mini album, âm nhạc indie, Studio NOL"
+      },
+      "album": {
+        "title": "Dự án phát hành Album | Studio NOL",
+        "description": "Khắc tên bạn trong cảnh indie với album đầy đủ. Lập kế hoạch, thu âm, session, phân phối và PR cùng nhà sản xuất Hwang Gyeongha.",
+        "keywords": "phát hành album, âm nhạc indie Korea, nhà sản xuất âm nhạc, Studio NOL"
+      }
     },
     "hero": {
       "titlePrefix": "Bạn đã viết xong bài hát,",
@@ -1306,25 +1324,99 @@
         "label": "Phát hành Single",
         "duration": "~7 tháng",
         "range": "Từ khoảng ₩2.7M",
-        "note": "1–2 bài, 3 nhạc công session"
+        "note": "1–2 bài, 3 nhạc công session",
+        "detail": {
+          "heroTitlePrefix": "Single đầu tiên của bạn,",
+          "heroTitleHighlight": "làm đúng cách",
+          "heroTitleSuffix": "từ đầu đến cuối",
+          "heroSubtitle": "Chúng tôi đồng hành cùng bạn trong từng bước phát hành.",
+          "personaSectionTitle": "Dành cho ai",
+          "personaItems": [
+            "Sẵn sàng đưa bài hát lên Spotify hoặc Melon lần đầu tiên",
+            "Đã có bài hát nhưng không biết bước tiếp theo",
+            "Muốn bắt đầu thực tế với ngân sách rõ ràng",
+            "Đang bước vào cảnh indie lần đầu"
+          ],
+          "deliverablesSectionTitle": "Tiến độ · Kết quả",
+          "deliverablesItems": [
+            "Thời gian: ~7 tháng",
+            "Số bài: ~2 bài",
+            "Session: ~3 nhạc công (guitar, bass, trống)"
+          ],
+          "priceSectionTitle": "Khoảng giá",
+          "priceRange": "Từ ~₩2.7M (single)",
+          "priceRationale": "Dựa trên dự án thực tế: single Harris",
+          "priceNote": "Thay đổi theo cấu hình session và số buổi thu âm. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "inProgressSectionTitle": "Các single đang thực hiện",
+          "linkBack": "Quay lại tổng quan phát hành"
+        }
       },
       "ep": {
         "label": "Phát hành EP",
         "duration": "~12 tháng",
         "range": "Báo giá tùy chỉnh",
-        "note": "Giữa single và album đầy đủ"
+        "note": "Giữa single và album đầy đủ",
+        "detail": {
+          "heroTitlePrefix": "Bản sắc âm nhạc của bạn,",
+          "heroTitleHighlight": "tuyên bố",
+          "heroTitleSuffix": "qua EP",
+          "heroSubtitle": "3–5 bài hát để định nghĩa con người nghệ sĩ của bạn.",
+          "personaSectionTitle": "Dành cho ai",
+          "personaItems": [
+            "Muốn thể hiện thế giới quan rộng hơn sau khi phát hành single",
+            "Sẵn sàng định nghĩa âm thanh của mình qua 3–5 bài",
+            "Muốn xây dựng nền tảng fan vững chắc"
+          ],
+          "deliverablesSectionTitle": "Tiến độ · Kết quả",
+          "deliverablesItems": [
+            "Thời gian: ~12 tháng",
+            "Số bài: 3–5 bài",
+            "Quy mô giữa single và album đầy đủ"
+          ],
+          "priceSectionTitle": "Khoảng giá",
+          "priceRange": "Báo giá tùy chỉnh theo quy mô",
+          "priceRationale": "Thay đổi theo session và biên soạn",
+          "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "inProgressSectionTitle": "Các EP đang thực hiện",
+          "linkBack": "Quay lại tổng quan phát hành"
+        }
       },
       "album": {
         "label": "Phát hành Album Đầy đủ",
         "duration": "~24 tháng",
         "range": "Từ khoảng ₩13M",
-        "note": "~8 bài, dàn nhạc công đầy đủ"
+        "note": "~8 bài, dàn nhạc công đầy đủ",
+        "detail": {
+          "heroTitlePrefix": "Khắc tên bạn",
+          "heroTitleHighlight": "trong cảnh indie",
+          "heroTitleSuffix": "với album đầy đủ",
+          "heroSubtitle": "Toàn bộ thế giới của bạn trong một album — chúng tôi đi đến cùng.",
+          "personaSectionTitle": "Dành cho ai",
+          "personaItems": [
+            "Muốn gói trọn thế giới nghệ thuật của mình vào một tác phẩm",
+            "Sẵn sàng để lại dấu ấn rõ nét trong cảnh indie",
+            "Muốn tiếp cận các nhà phê bình và truyền thông nghiêm túc"
+          ],
+          "deliverablesSectionTitle": "Tiến độ · Kết quả",
+          "deliverablesItems": [
+            "Thời gian: ~24 tháng",
+            "Số bài: ~8 bài",
+            "Đội session đầy đủ"
+          ],
+          "priceSectionTitle": "Khoảng giá",
+          "priceRange": "Từ ~₩13M (album đầy đủ)",
+          "priceRationale": "Dựa trên dự án thực tế: album thứ 2 của Sickbaby",
+          "priceNote": "Thay đổi theo cấu hình session và số buổi thu âm. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "inProgressSectionTitle": "Các album đang thực hiện",
+          "linkBack": "Quay lại tổng quan phát hành"
+        }
       },
       "footNotePre": "Tất cả các loại tiến hành thông qua",
       "footNoteHighlight": "tư vấn miễn phí → báo giá tùy chỉnh",
       "footNoteMid": ". Xem mức giá tại",
       "footNotePricingLabel": "trang giá",
-      "footNotePost": "."
+      "footNotePost": ".",
+      "detailCta": "Xem thêm"
     },
     "scope": {
       "sectionTitle": "Những gì Nhà sản xuất Hwang Gyeongha Mang lại",

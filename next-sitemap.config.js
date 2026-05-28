@@ -36,6 +36,9 @@ const buildTimestamp = new Date().toISOString();
 // title/caption은 Google Image Search용 메타. Studio NOL 브랜드 + 페이지 주제 포함.
 const pageImageMap = {
   '/release-project': { url: '/images/og-recording15.webp', title: 'Studio NOL Release Project - Indie Music Release by Producer Hwang Gyeongha', caption: 'Full-service indie music release: planning, recording, sessions, mixing, distribution, and media PR by 15-year producer Hwang Gyeongha.' },
+  '/release-project/single': { url: '/images/og-recording15.webp', title: 'Studio NOL Single Release - Indie Single by Producer Hwang Gyeongha', caption: 'Indie single release project: planning, vocal recording, sessions, mixing, distribution, and PR by 15-year producer Hwang Gyeongha.' },
+  '/release-project/ep': { url: '/images/og-recording15.webp', title: 'Studio NOL EP Release - Indie EP by Producer Hwang Gyeongha', caption: 'Indie EP release project: 3–5 tracks with planning, recording, sessions, mixing, distribution, and PR by 15-year producer Hwang Gyeongha.' },
+  '/release-project/album': { url: '/images/og-recording15.webp', title: 'Studio NOL Full Album Release - Indie Album by Producer Hwang Gyeongha', caption: 'Full album release project: planning, vocal recording, sessions, mixing, distribution, and media PR by 15-year producer Hwang Gyeongha.' },
   '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
   '/contact': { url: '/images/og-hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
   '/index': { url: '/images/og-default.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },
@@ -259,7 +262,7 @@ module.exports = {
       return { ...entry, changefreq: 'weekly', priority: 0.8 };
     }
 
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson|release-project)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 

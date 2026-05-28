@@ -14,12 +14,15 @@
       "recording": "Recording",
       "practice": "Practice",
       "explore": "Explore",
-      "release": "Release"
+      "release": "Music Release"
     },
     "weddingSong": "Wedding Song",
     "voiceActing": "Voice Acting",
     "coverVideo": "Cover Video",
-    "releaseProject": "Release Project"
+    "releaseProject": "Overview",
+    "releaseSingle": "Single",
+    "releaseEp": "EP",
+    "releaseAlbum": "Full Album"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -1331,7 +1334,22 @@
     "seo": {
       "title": "Release Project · Indie Music Production | Studio NOL",
       "description": "From planning to recording, session musicians, mixing, distribution, and reaching critics — indie release production led by 15-year producer Hwang Gyeongha. Free consultation.",
-      "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL"
+      "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL",
+      "single": {
+        "title": "Single Release Project | Studio NOL",
+        "description": "From first single to release — planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha.",
+        "keywords": "single release, indie music release, studio NOL, music producer Korea"
+      },
+      "ep": {
+        "title": "EP Release Project | Studio NOL",
+        "description": "Declare your musical identity with 3–5 tracks. Planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha.",
+        "keywords": "EP release, mini album, indie music release, studio NOL"
+      },
+      "album": {
+        "title": "Full Album Release Project | Studio NOL",
+        "description": "Make your name in the indie scene with a full album. Planning, recording, sessions, distribution, and PR with 15-year producer Hwang Gyeongha.",
+        "keywords": "full album release, indie music, music producer Korea, studio NOL"
+      }
     },
     "hero": {
       "titlePrefix": "You've written the songs.",
@@ -1349,25 +1367,99 @@
         "label": "Single Release",
         "duration": "~7 months",
         "range": "From approx. ₩2.7M",
-        "note": "1–2 tracks, 3 session musicians"
+        "note": "1–2 tracks, 3 session musicians",
+        "detail": {
+          "heroTitlePrefix": "Your first single,",
+          "heroTitleHighlight": "done right",
+          "heroTitleSuffix": "from the start",
+          "heroSubtitle": "We guide every step of your release journey.",
+          "personaSectionTitle": "Who this is for",
+          "personaItems": [
+            "Ready to put your songs on Spotify or Melon for the first time",
+            "Have songs but don't know what comes next",
+            "Want to start realistically with a clear budget",
+            "Taking your first steps into the indie scene"
+          ],
+          "deliverablesSectionTitle": "Timeline · Deliverables",
+          "deliverablesItems": [
+            "Duration: ~7 months",
+            "Tracks: ~2 songs",
+            "Sessions: ~3 musicians (guitar, bass, drums)"
+          ],
+          "priceSectionTitle": "Price Range",
+          "priceRange": "From ~₩2.7M (single)",
+          "priceRationale": "Based on actual project: Harris single",
+          "priceNote": "Varies by session lineup and recording sessions. Custom quote after free consultation.",
+          "inProgressSectionTitle": "Singles we're making right now",
+          "linkBack": "Back to Music Release Overview"
+        }
       },
       "ep": {
         "label": "EP Release",
         "duration": "~12 months",
         "range": "Custom quote by scale",
-        "note": "Between single and full album"
+        "note": "Between single and full album",
+        "detail": {
+          "heroTitlePrefix": "Your musical identity,",
+          "heroTitleHighlight": "declared",
+          "heroTitleSuffix": "with an EP",
+          "heroSubtitle": "3–5 tracks to define who you are as an artist.",
+          "personaSectionTitle": "Who this is for",
+          "personaItems": [
+            "Want to show a wider world after releasing a single",
+            "Ready to define your sound over 3–5 tracks",
+            "Looking to build a solid fanbase"
+          ],
+          "deliverablesSectionTitle": "Timeline · Deliverables",
+          "deliverablesItems": [
+            "Duration: ~12 months",
+            "Tracks: 3–5 songs",
+            "Between single and full album scope"
+          ],
+          "priceSectionTitle": "Price Range",
+          "priceRange": "Custom quote by scope",
+          "priceRationale": "Varies by session and arrangement",
+          "priceNote": "Custom quote after free consultation.",
+          "inProgressSectionTitle": "EPs we're making right now",
+          "linkBack": "Back to Music Release Overview"
+        }
       },
       "album": {
         "label": "Full Album Release",
         "duration": "~24 months",
         "range": "From approx. ₩13M",
-        "note": "~8 tracks, full session"
+        "note": "~8 tracks, full session",
+        "detail": {
+          "heroTitlePrefix": "Making your name",
+          "heroTitleHighlight": "in the indie scene",
+          "heroTitleSuffix": "with a full album",
+          "heroSubtitle": "Your full world in one album — we see it through to the end.",
+          "personaSectionTitle": "Who this is for",
+          "personaItems": [
+            "Want to capture your full artistic world in one work",
+            "Ready to leave a clear mark in the indie scene",
+            "Looking to reach critics and media in earnest"
+          ],
+          "deliverablesSectionTitle": "Timeline · Deliverables",
+          "deliverablesItems": [
+            "Duration: ~24 months",
+            "Tracks: ~8 songs",
+            "Full session lineup"
+          ],
+          "priceSectionTitle": "Price Range",
+          "priceRange": "From ~₩13M (full album)",
+          "priceRationale": "Based on actual project: Sickbaby 2nd album",
+          "priceNote": "Varies by session lineup and recording sessions. Custom quote after free consultation.",
+          "inProgressSectionTitle": "Full albums we're making right now",
+          "linkBack": "Back to Music Release Overview"
+        }
       },
       "footNotePre": "All types proceed via",
       "footNoteHighlight": "free consultation → custom quote",
       "footNoteMid": ". See rates on the",
       "footNotePricingLabel": "pricing page",
-      "footNotePost": "."
+      "footNotePost": ".",
+      "detailCta": "Learn more"
     },
     "scope": {
       "sectionTitle": "What Producer Hwang Gyeongha Brings",

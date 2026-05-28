@@ -14,12 +14,15 @@
       "recording": "녹음/믹싱",
       "practice": "연습/레슨",
       "explore": "알아보기",
-      "release": "발매 프로젝트"
+      "release": "음원 발매"
     },
     "weddingSong": "축가 녹음",
     "voiceActing": "성우 녹음",
     "coverVideo": "커버 영상 촬영",
-    "releaseProject": "발매 프로젝트"
+    "releaseProject": "음원 발매 개요",
+    "releaseSingle": "싱글 발매",
+    "releaseEp": "EP 발매",
+    "releaseAlbum": "정규 발매"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -1984,7 +1987,22 @@
     "seo": {
       "title": "발매 프로젝트 · 인디 발매 프로듀싱 | 스튜디오 놀",
       "description": "기획부터 녹음·세션·믹싱·유통, 그리고 평론가에게 닿는 일까지 — 15년차 프로듀서 황경하가 이끄는 인디 발매 프로젝트. 싱글·EP·정규 규모별 무료 상담.",
-      "keywords": "발매 프로젝트, 인디 발매, 음반 기획, 프로듀싱, 인디 싱어송라이터, 발매 상담, 스튜디오 놀"
+      "keywords": "발매 프로젝트, 인디 발매, 음반 기획, 프로듀싱, 인디 싱어송라이터, 발매 상담, 스튜디오 놀",
+      "single": {
+        "title": "싱글 발매 프로젝트 | 스튜디오 놀",
+        "description": "첫 싱글부터 끝까지 함께합니다. 기획·녹음·유통·PR — 15년차 프로듀서 황경하의 인디 싱글 발매 프로젝트.",
+        "keywords": "싱글 발매, 음원 발매, 인디 싱어송라이터, 발매 프로젝트, 스튜디오 놀"
+      },
+      "ep": {
+        "title": "EP 발매 프로젝트 | 스튜디오 놀",
+        "description": "3~5곡으로 당신의 음악적 정체성을 선언합니다. 기획·녹음·유통·PR — 15년차 프로듀서 황경하의 EP 발매 프로젝트.",
+        "keywords": "EP 발매, 미니앨범 발매, 음원 발매, 인디 싱어송라이터, 스튜디오 놀"
+      },
+      "album": {
+        "title": "정규앨범 발매 프로젝트 | 스튜디오 놀",
+        "description": "인디씬에 이름을 새기는 정규앨범. 기획·녹음·세션·유통·평론 PR — 15년차 프로듀서 황경하의 정규 발매 프로젝트.",
+        "keywords": "정규앨범 발매, 음반 기획, 인디 싱어송라이터, 프로듀서 황경하, 스튜디오 놀"
+      }
     },
     "hero": {
       "titlePrefix": "곡은 다 썼는데,",
@@ -2002,25 +2020,99 @@
         "label": "싱글 발매",
         "duration": "약 7개월",
         "range": "싱글 기준 약 270만원~",
-        "note": "2곡 내외, 세션 3인 기준"
+        "note": "2곡 내외, 세션 3인 기준",
+        "detail": {
+          "heroTitlePrefix": "첫 싱글,",
+          "heroTitleHighlight": "단단하게",
+          "heroTitleSuffix": "시작합니다",
+          "heroSubtitle": "발매의 모든 과정을 처음부터 끝까지 함께합니다.",
+          "personaSectionTitle": "이런 분께 적합합니다",
+          "personaItems": [
+            "처음으로 멜론·스포티파이에 내 곡을 올리고 싶은 분",
+            "곡은 있는데 다음 단계를 모르는 분",
+            "비용을 조율하며 현실적으로 시작하고 싶은 분",
+            "인디씬에 첫발을 내딛고 싶은 분"
+          ],
+          "deliverablesSectionTitle": "호흡 · 결과물",
+          "deliverablesItems": [
+            "기간: 약 7개월",
+            "수록곡: 2곡 내외",
+            "세션: 기타·베이스·드럼 등 3인 기준"
+          ],
+          "priceSectionTitle": "가격 레인지",
+          "priceRange": "싱글 기준 약 270만원~",
+          "priceRationale": "실거래 사례: Harris 싱글 기준",
+          "priceNote": "세션 구성·녹음 횟수에 따라 달라집니다. 무료 상담 후 단가표 기반 맞춤 견적.",
+          "inProgressSectionTitle": "지금 함께 만들고 있는 싱글들",
+          "linkBack": "음원 발매 개요로 돌아가기"
+        }
       },
       "ep": {
         "label": "EP 발매",
         "duration": "약 12개월",
         "range": "규모·편성에 따라 맞춤 견적",
-        "note": "싱글과 정규 사이 규모"
+        "note": "싱글과 정규 사이 규모",
+        "detail": {
+          "heroTitlePrefix": "당신의 음악적 정체성,",
+          "heroTitleHighlight": "EP로",
+          "heroTitleSuffix": "선언합니다",
+          "heroSubtitle": "3~5곡으로 뚜렷한 아티스트 색깔을 만듭니다.",
+          "personaSectionTitle": "이런 분께 적합합니다",
+          "personaItems": [
+            "싱글로 시작해 더 넓은 세계관을 보여주고 싶은 분",
+            "3~5곡으로 자신의 색을 확실히 드러내고 싶은 분",
+            "팬베이스를 단단히 구축하고 싶은 분"
+          ],
+          "deliverablesSectionTitle": "호흡 · 결과물",
+          "deliverablesItems": [
+            "기간: 약 12개월",
+            "수록곡: 3~5곡",
+            "싱글과 정규 사이 규모"
+          ],
+          "priceSectionTitle": "가격 레인지",
+          "priceRange": "규모·편성에 따라 맞춤 견적",
+          "priceRationale": "세션·편곡 구성에 따라 달라집니다",
+          "priceNote": "무료 상담 후 단가표 기반 맞춤 견적.",
+          "inProgressSectionTitle": "지금 함께 만들고 있는 EP들",
+          "linkBack": "음원 발매 개요로 돌아가기"
+        }
       },
       "album": {
         "label": "정규 발매",
         "duration": "약 24개월",
         "range": "정규 기준 약 1,305만원~",
-        "note": "8곡 내외, 풀 세션 기준"
+        "note": "8곡 내외, 풀 세션 기준",
+        "detail": {
+          "heroTitlePrefix": "인디씬에",
+          "heroTitleHighlight": "이름을 새기는",
+          "heroTitleSuffix": "정규앨범",
+          "heroSubtitle": "나의 세계관을 온전히 담은 작품, 끝까지 함께 만듭니다.",
+          "personaSectionTitle": "이런 분께 적합합니다",
+          "personaItems": [
+            "자신의 세계관을 온전히 담은 작품을 만들고 싶은 분",
+            "인디씬에서 뚜렷한 이름을 남기고 싶은 분",
+            "평론가와 매체에 본격적으로 닿고 싶은 분"
+          ],
+          "deliverablesSectionTitle": "호흡 · 결과물",
+          "deliverablesItems": [
+            "기간: 약 24개월",
+            "수록곡: 8곡 내외",
+            "풀 세션 기준"
+          ],
+          "priceSectionTitle": "가격 레인지",
+          "priceRange": "정규 기준 약 1,305만원~",
+          "priceRationale": "실거래 사례: Sickbaby 정규 2집 기준",
+          "priceNote": "세션 구성·녹음 횟수에 따라 달라집니다. 무료 상담 후 단가표 기반 맞춤 견적.",
+          "inProgressSectionTitle": "지금 함께 만들고 있는 정규들",
+          "linkBack": "음원 발매 개요로 돌아가기"
+        }
       },
       "footNotePre": "모든 형태는",
       "footNoteHighlight": "무료 발매 상담 → 단가표 기반 맞춤 견적",
       "footNoteMid": "방식으로 진행됩니다. 단가 기준은",
       "footNotePricingLabel": "가격 페이지",
-      "footNotePost": "에서 확인하세요."
+      "footNotePost": "에서 확인하세요.",
+      "detailCta": "자세히 보기"
     },
     "scope": {
       "sectionTitle": "프로듀서 황경하가 함께하는 것들",

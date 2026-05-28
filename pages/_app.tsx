@@ -155,6 +155,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       hasPart: [
         { '@type': 'SiteNavigationElement', name: sc.name, url: base },
         { '@type': 'SiteNavigationElement', name: labels.releaseProject, url: `${base}/release-project` },
+        { '@type': 'SiteNavigationElement', name: labels.releaseSingle, url: `${base}/release-project/single` },
+        { '@type': 'SiteNavigationElement', name: labels.releaseEp, url: `${base}/release-project/ep` },
+        { '@type': 'SiteNavigationElement', name: labels.releaseAlbum, url: `${base}/release-project/album` },
         { '@type': 'SiteNavigationElement', name: labels.pricing, url: `${base}/pricing` },
         { '@type': 'SiteNavigationElement', name: labels.equipment, url: `${base}/studio-info` },
         { '@type': 'SiteNavigationElement', name: labels.practiceRoom, url: `${base}/practice-room` },

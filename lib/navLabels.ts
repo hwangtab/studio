@@ -13,7 +13,10 @@ export type NavKey =
   | 'portfolio'
   | 'stories'
   | 'contact'
-  | 'releaseProject';
+  | 'releaseProject'
+  | 'releaseSingle'
+  | 'releaseEp'
+  | 'releaseAlbum';
 
 export const navLabels: Record<Locale, Record<NavKey, string>> = {
   ko: {
@@ -27,7 +30,10 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: '포트폴리오',
     stories: '스토리',
     contact: '문의',
-    releaseProject: '발매 프로젝트',
+    releaseProject: '음원 발매 개요',
+    releaseSingle: '싱글 발매',
+    releaseEp: 'EP 발매',
+    releaseAlbum: '정규 발매',
   },
   en: {
     home: 'Home',
@@ -40,7 +46,10 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portfolio',
     stories: 'Stories',
     contact: 'Contact',
-    releaseProject: 'Release Project',
+    releaseProject: 'Overview',
+    releaseSingle: 'Single',
+    releaseEp: 'EP',
+    releaseAlbum: 'Full Album',
   },
   zh: {
     home: '主页',
@@ -53,7 +62,10 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: '作品集',
     stories: '故事',
     contact: '联系我们',
-    releaseProject: '发行项目',
+    releaseProject: '概览',
+    releaseSingle: '单曲',
+    releaseEp: 'EP',
+    releaseAlbum: '专辑',
   },
   es: {
     home: 'Inicio',
@@ -66,7 +78,10 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portafolio',
     stories: 'Historias',
     contact: 'Contacto',
-    releaseProject: 'Proyecto de Lanzamiento',
+    releaseProject: 'Descripción general',
+    releaseSingle: 'Single',
+    releaseEp: 'EP',
+    releaseAlbum: 'Álbum completo',
   },
   vi: {
     home: 'Trang chủ',
@@ -79,7 +94,10 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portfolio',
     stories: 'Câu chuyện',
     contact: 'Liên hệ',
-    releaseProject: 'Dự án Phát hành',
+    releaseProject: 'Tổng quan',
+    releaseSingle: 'Single',
+    releaseEp: 'EP',
+    releaseAlbum: 'Album đầy đủ',
   },
   th: {
     home: 'หน้าแรก',
@@ -92,7 +110,10 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'พอร์ตโฟลิโอ',
     stories: 'เรื่องราว',
     contact: 'ติดต่อ',
-    releaseProject: 'โปรเจกต์ปล่อยเพลง',
+    releaseProject: 'ภาพรวม',
+    releaseSingle: 'ซิงเกิล',
+    releaseEp: 'EP',
+    releaseAlbum: 'อัลบั้มเต็ม',
   },
   uz: {
     home: 'Bosh sahifa',
@@ -105,6 +126,9 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     portfolio: 'Portfel',
     stories: 'Hikoyalar',
     contact: 'Aloqa',
-    releaseProject: 'Chiqarish loyihasi',
+    releaseProject: "Umumiy ko'rinish",
+    releaseSingle: 'Singl',
+    releaseEp: 'EP',
+    releaseAlbum: "To'liq albom",
   },
 };

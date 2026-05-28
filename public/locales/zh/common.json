@@ -14,12 +14,15 @@
       "recording": "录音/混音",
       "practice": "练习/课程",
       "explore": "了解更多",
-      "release": "发行项目"
+      "release": "音乐发行"
     },
     "weddingSong": "婚礼祝歌录音",
     "voiceActing": "配音录音",
     "coverVideo": "翻唱视频拍摄",
-    "releaseProject": "发行项目"
+    "releaseProject": "概览",
+    "releaseSingle": "单曲",
+    "releaseEp": "EP",
+    "releaseAlbum": "专辑"
   },
   "footer": {
     "rights": "版权所有。",
@@ -1288,7 +1291,22 @@
     "seo": {
       "title": "发行项目 · 独立音乐制作 | Studio NOL",
       "description": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 — 由15年资深制作人黄庆厦带领的独立音乐发行项目。免费咨询。",
-      "keywords": "发行项目, 独立音乐发行, 唱片制作, 独立歌手, Studio NOL"
+      "keywords": "发行项目, 独立音乐发行, 唱片制作, 独立歌手, Studio NOL",
+      "single": {
+        "title": "单曲发行项目 | Studio NOL",
+        "description": "从第一张单曲到发行全程陪伴。企划·录音·发行·PR — 15 年制作人黄景夏主导的独立单曲发行项目。",
+        "keywords": "单曲发行, 独立音乐, Studio NOL, 音乐制作人"
+      },
+      "ep": {
+        "title": "EP 发行项目 | Studio NOL",
+        "description": "用 3~5 首歌宣告你的音乐身份。企划·录音·发行·PR — 15 年制作人黄景夏主导的 EP 发行项目。",
+        "keywords": "EP 发行, 迷你专辑, 独立音乐, Studio NOL"
+      },
+      "album": {
+        "title": "专辑发行项目 | Studio NOL",
+        "description": "在独立音乐圈刻下你的名字。企划·录音·乐手·发行·乐评 PR — 15 年制作人黄景夏主导的正规专辑发行项目。",
+        "keywords": "专辑发行, 音乐企划, 独立歌手, 制作人黄景夏, Studio NOL"
+      }
     },
     "hero": {
       "titlePrefix": "歌曲写完了，",
@@ -1306,25 +1324,99 @@
         "label": "单曲发行",
         "duration": "约7个月",
         "range": "约270万韩元起",
-        "note": "1-2首，3位会话乐手"
+        "note": "1-2首，3位会话乐手",
+        "detail": {
+          "heroTitlePrefix": "第一张单曲，",
+          "heroTitleHighlight": "踏实",
+          "heroTitleSuffix": "出发",
+          "heroSubtitle": "从头到尾陪你走完发行的每一步。",
+          "personaSectionTitle": "适合这样的你",
+          "personaItems": [
+            "第一次想把歌上传到 Spotify 或 Melon",
+            "歌已经写好，但不知道下一步该怎么办",
+            "希望控制预算、务实地起步",
+            "想迈出进入独立音乐圈的第一步"
+          ],
+          "deliverablesSectionTitle": "节奏 · 成果",
+          "deliverablesItems": [
+            "周期：约 7 个月",
+            "曲目：约 2 首",
+            "乐手：约 3 人（吉他·贝斯·鼓等）"
+          ],
+          "priceSectionTitle": "价格范围",
+          "priceRange": "单曲约 270 万韩元起",
+          "priceRationale": "实际案例：Harris 单曲",
+          "priceNote": "因乐手配置和录音次数而异。免费咨询后按单价表定制报价。",
+          "inProgressSectionTitle": "正在制作中的单曲",
+          "linkBack": "返回音乐发行概览"
+        }
       },
       "ep": {
         "label": "EP发行",
         "duration": "约12个月",
         "range": "按规模定制报价",
-        "note": "介于单曲和专辑之间"
+        "note": "介于单曲和专辑之间",
+        "detail": {
+          "heroTitlePrefix": "你的音乐身份，",
+          "heroTitleHighlight": "用 EP",
+          "heroTitleSuffix": "宣告",
+          "heroSubtitle": "3~5 首歌，明确展示你作为艺术家的色彩。",
+          "personaSectionTitle": "适合这样的你",
+          "personaItems": [
+            "发完单曲，想展示更广阔的世界观",
+            "想用 3~5 首歌明确表达自己的风格",
+            "想要打造稳固的粉丝基础"
+          ],
+          "deliverablesSectionTitle": "节奏 · 成果",
+          "deliverablesItems": [
+            "周期：约 12 个月",
+            "曲目：3~5 首",
+            "规模介于单曲与专辑之间"
+          ],
+          "priceSectionTitle": "价格范围",
+          "priceRange": "根据规模和编制定制报价",
+          "priceRationale": "因乐手和编曲配置而异",
+          "priceNote": "免费咨询后按单价表定制报价。",
+          "inProgressSectionTitle": "正在制作中的 EP",
+          "linkBack": "返回音乐发行概览"
+        }
       },
       "album": {
         "label": "正规专辑发行",
         "duration": "约24个月",
         "range": "约1,305万韩元起",
-        "note": "约8首，全会话阵容"
+        "note": "约8首，全会话阵容",
+        "detail": {
+          "heroTitlePrefix": "在独立音乐圈",
+          "heroTitleHighlight": "刻下你名字的",
+          "heroTitleSuffix": "专辑",
+          "heroSubtitle": "将你的全部世界观融入一张作品，陪你走到最后。",
+          "personaSectionTitle": "适合这样的你",
+          "personaItems": [
+            "想创作一部完整展现自己世界观的作品",
+            "想在独立音乐圈留下鲜明印记",
+            "想认真触达乐评人和媒体"
+          ],
+          "deliverablesSectionTitle": "节奏 · 成果",
+          "deliverablesItems": [
+            "周期：约 24 个月",
+            "曲目：约 8 首",
+            "全乐队配置"
+          ],
+          "priceSectionTitle": "价格范围",
+          "priceRange": "专辑约 1,305 万韩元起",
+          "priceRationale": "实际案例：Sickbaby 第二张专辑",
+          "priceNote": "因乐手配置和录音次数而异。免费咨询后按单价表定制报价。",
+          "inProgressSectionTitle": "正在制作中的专辑",
+          "linkBack": "返回音乐发行概览"
+        }
       },
       "footNotePre": "所有类型均通过",
       "footNoteHighlight": "免费咨询 → 定制报价",
       "footNoteMid": "方式进行。费用标准请参见",
       "footNotePricingLabel": "价格页面",
-      "footNotePost": "。"
+      "footNotePost": "。",
+      "detailCta": "了解更多"
     },
     "scope": {
       "sectionTitle": "制作人黄庆厦提供的服务",

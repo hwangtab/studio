@@ -5,17 +5,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send } from 'lucide-react';
-import SEO from '../../components/SEO';
-import SectionHeading from '../../components/ui/SectionHeading';
-import ImageHero from '../../components/common/ImageHero';
-import { Section } from '../../components/ui/Section';
-import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
-import type { Locale } from '../../lib/i18n';
-import { getPortfolioItems } from '../../data/portfolio';
-import type { PortfolioItem } from '../../types/data';
-import type { NextPageWithLayout } from '../../types';
+import SEO from '../../../components/SEO';
+import SectionHeading from '../../../components/ui/SectionHeading';
+import ImageHero from '../../../components/common/ImageHero';
+import { Section } from '../../../components/ui/Section';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
+import type { Locale } from '../../../lib/i18n';
+import { getPortfolioItems } from '../../../data/portfolio';
+import type { PortfolioItem } from '../../../types/data';
+import type { NextPageWithLayout } from '../../../types';
 
-const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 
 interface ReleaseProjectProps {
   locale: Locale;
@@ -111,7 +111,13 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                 <span className="text-sm font-medium">{t(`releaseProject.tiers.${key}.duration`)}</span>
               </div>
               <p className="text-base text-gray-700 dark:text-gray-200 font-semibold mb-2">{t(`releaseProject.tiers.${key}.range`)}</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-auto">{t(`releaseProject.tiers.${key}.note`)}</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mb-5">{t(`releaseProject.tiers.${key}.note`)}</p>
+              <Link
+                href={getLink(`/release-project/${key}`)}
+                className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark hover:underline underline-offset-2 transition-colors"
+              >
+                {t('releaseProject.tiers.detailCta')} <ArrowRight size={14} />
+              </Link>
             </div>
           ))}
         </div>
