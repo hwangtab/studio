@@ -1309,10 +1309,10 @@
       }
     },
     "hero": {
-      "titlePrefix": "歌曲写完了，",
-      "titleHighlight": "接下来",
-      "titleSuffix": "不知道该怎么办的你",
-      "subtitle": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 —\n由15年资深制作人黄庆厦带领的发行项目。",
+      "titlePrefix": "你的发行，",
+      "titleHighlight": "从这里",
+      "titleSuffix": "一起开始",
+      "subtitle": "从策划到录音、会话乐手、混音、发行，以及接触乐评人 —\n发行的每一步，都陪你走到最后。",
       "ctaConsult": "免费发行咨询",
       "ctaPortfolio": "查看作品集",
       "imageAlt": "Studio NOL 发行项目"

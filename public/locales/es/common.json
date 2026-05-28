@@ -1309,10 +1309,10 @@
       }
     },
     "hero": {
-      "titlePrefix": "Ya escribiste las canciones.",
-      "titleHighlight": "¿Y ahora",
-      "titleSuffix": "qué?",
-      "subtitle": "Desde la planificación hasta la grabación, sesiones, mezcla, distribución y conexión con críticos —\nUn proyecto de lanzamiento liderado por el productor Hwang Gyeongha, 15 años en la escena indie.",
+      "titlePrefix": "Tu lanzamiento,",
+      "titleHighlight": "desde aquí,",
+      "titleSuffix": "juntos",
+      "subtitle": "Desde la planificación hasta la grabación, sesiones, mezcla, distribución y conexión con críticos —\nAcompañamos cada paso de tu lanzamiento, hasta el final.",
       "ctaConsult": "Consulta Gratuita de Lanzamiento",
       "ctaPortfolio": "Ver Discografía",
       "imageAlt": "Proyecto de Lanzamiento Studio NOL"

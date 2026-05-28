@@ -69,7 +69,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </>
         }
         subtitle={t('releaseProject.hero.subtitle')}
-        backgroundImage="/images/studio2.webp"
+        backgroundImage="/images/studio3.webp"
         imageAlt={t('releaseProject.hero.imageAlt')}
         minHeight="min-h-[70svh]"
         ctaButtons={

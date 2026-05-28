@@ -1307,10 +1307,10 @@
       }
     },
     "hero": {
-      "titlePrefix": "Qo'shiqlarni yozdingiz,",
-      "titleHighlight": "keyingi qadam",
-      "titleSuffix": "nima ekanligini bilmayapsizmi?",
-      "subtitle": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan —\n15 yillik prodyuser Hwang Gyeongha boshchiligidagi chiqarish loyihasi.",
+      "titlePrefix": "Sizning relizingiz —",
+      "titleHighlight": "shu yerdan",
+      "titleSuffix": "birga",
+      "subtitle": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va tanqidchilarga yetishdan —\nRelizingizning har bir bosqichida oxirigacha siz bilan birga.",
       "ctaConsult": "Bepul Chiqarish Maslahati",
       "ctaPortfolio": "Portfelni Ko'rish",
       "imageAlt": "Studio NOL Chiqarish Loyihasi"
