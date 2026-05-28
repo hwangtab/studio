@@ -12,8 +12,7 @@ tags:
   - 보컬 EQ 플러그인
   - 다이나믹 EQ
 thumbnail: /images/recording6.webp
-summary: >-
-  FabFilter Pro-Q3 완전 가이드입니다.
+summary: FabFilter Pro-Q3 EQ·Dynamic EQ·Spectrum Grab 사용법과 보컬 믹싱 활용. Studio NOL 보컬 EQ 기준.
 faq:
   - q: FabFilter Pro-Q3란 무엇인가요?
     a: >-
@@ -139,6 +138,24 @@ FabFilter는 2002년 네덜란드에서 Frederik Soto와 Floris Klinkert가 창�
 
 - De-esser: 고정 주파수, 빠른 처리
 - Dynamic EQ: 더 정밀한 제어, 자연스러움
+
+---
+
+## Studio NOL 보컬 믹싱에서 Pro-Q3를 활용하는 3가지 방식
+
+스튜디오 놀 보컬 믹싱 세션에서 FabFilter Pro-Q3가 결과를 바꾸는 반복 활용 방식입니다.
+
+**1. 200Hz 이하 하이패스 + 3kHz 음색 정리**
+
+보컬 첫 EQ는 항상 200Hz 이하 하이패스로 룸 노이즈·저역 정리부터 시작합니다. 이어 3kHz 부근에서 보컬리스트별로 거슬리는 피크를 -2~3dB 컷해 음색을 정리하는 것이 표준 출발점입니다. Pro-Q3의 Spectrum Grab으로 특정 주파수를 시각적으로 잡아 정확히 처리할 수 있습니다.
+
+**2. Dynamic EQ로 치찰음 처리 — 디에서 대체**
+
+5~8kHz의 치찰음을 디에서 대신 Pro-Q3의 Dynamic EQ로 처리하면 자연스러움이 훨씬 큽니다. 치찰음이 임계값을 넘을 때만 해당 대역이 -3~5dB 살짝 줄어들고 평소에는 음색이 그대로 유지됩니다.
+
+**3. Mid/Side 모드로 보컬 스테레오 폭 정리**
+
+리버브가 적용된 보컬의 사이드(Side) 대역에서 100Hz 이하를 컷하면 저역이 스테레오로 퍼지는 탁함이 사라집니다. 중심(Mid)의 보컬 본체는 그대로 두고 공간감만 깔끔하게 정리하는 방식입니다.
 
 ---
 
