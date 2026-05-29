@@ -24,12 +24,16 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
   // productionNotes는 7개 언어 전체가 포함되어 __NEXT_DATA__가 과대해짐. 현재 locale 노트만 포함.
-  const portfolioItems = allItems.map((item) => ({
-    ...item,
-    productionNotes: item.productionNotes
-      ? { [locale]: item.productionNotes[locale] }
-      : undefined,
-  }));
+  // JSON round-trip으로 모든 undefined 키 제거 (Next.js getStaticProps는 undefined 직렬화 불가)
+  const portfolioItems = JSON.parse(
+    JSON.stringify(
+      allItems.map((item) => {
+        const note = item.productionNotes?.[locale];
+        const { productionNotes: _omit, ...rest } = item;
+        return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
+      })
+    )
+  ) as PortfolioItem[];
   const categories = getCategories(locale);
 
   return buildPageStaticProps(locale, { locale, portfolioItems, categories }, { revalidate: 86400 });

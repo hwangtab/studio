@@ -469,12 +469,16 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
   // productionNotes는 7개 언어 전체가 포함되어 __NEXT_DATA__가 과대해짐. 현재 locale 노트만 포함.
-  const portfolioItems = allItems.map((item) => ({
-    ...item,
-    productionNotes: item.productionNotes
-      ? { [locale]: item.productionNotes[locale] }
-      : undefined,
-  }));
+  // JSON round-trip으로 undefined 제거 (Next.js getStaticProps 직렬화 안전)
+  const portfolioItems = JSON.parse(
+    JSON.stringify(
+      allItems.map((item) => {
+        const note = item.productionNotes?.[locale];
+        const { productionNotes: _omit, ...rest } = item;
+        return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
+      })
+    )
+  ) as PortfolioItem[];
   const categories = getCategories(locale);
 
   const SPOTLIGHT_EXCLUDE_IDS = ['hwang-gyeong-ha-nunnokeut'];

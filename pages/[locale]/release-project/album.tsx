@@ -23,12 +23,16 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
-  const portfolioItems = allItems.map((item) => ({
-    ...item,
-    productionNotes: item.productionNotes
-      ? { [locale]: item.productionNotes[locale] }
-      : undefined,
-  }));
+  // JSON round-trip으로 undefined 제거 (Next.js getStaticProps 직렬화 안전)
+  const portfolioItems = JSON.parse(
+    JSON.stringify(
+      allItems.map((item) => {
+        const note = item.productionNotes?.[locale];
+        const { productionNotes: _omit, ...rest } = item;
+        return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
+      })
+    )
+  ) as PortfolioItem[];
   const categories = getCategories(locale);
 
   return buildPageStaticProps(locale, { locale, portfolioItems, categories }, { revalidate: 86400 });
