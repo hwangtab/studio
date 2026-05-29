@@ -23,10 +23,11 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
-  // JSON round-trip으로 undefined 제거 (Next.js getStaticProps 직렬화 안전)
+  // 모달이 필요한 작품만 전달 (디스코그래피 featured.slice(0,12))
+  const relevantItems = allItems.filter((i) => i.featured).slice(0, 12);
   const portfolioItems = JSON.parse(
     JSON.stringify(
-      allItems.map((item) => {
+      relevantItems.map((item) => {
         const note = item.productionNotes?.[locale];
         const { productionNotes: _omit, ...rest } = item;
         return note ? { ...rest, productionNotes: { [locale]: note } } : rest;

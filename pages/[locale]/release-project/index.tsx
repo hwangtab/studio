@@ -468,26 +468,37 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
-  // productionNotes는 7개 언어 전체가 포함되어 __NEXT_DATA__가 과대해짐. 현재 locale 노트만 포함.
-  // JSON round-trip으로 undefined 제거 (Next.js getStaticProps 직렬화 안전)
-  const portfolioItems = JSON.parse(
-    JSON.stringify(
-      allItems.map((item) => {
-        const note = item.productionNotes?.[locale];
-        const { productionNotes: _omit, ...rest } = item;
-        return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
-      })
-    )
-  ) as PortfolioItem[];
-  const categories = getCategories(locale);
 
+  // spotlight 후보 (productionNotes + releaseDate, 본인 작품 제외, 최신순 6개)
   const SPOTLIGHT_EXCLUDE_IDS = ['hwang-gyeong-ha-nunnokeut'];
-  const spotlightItems: SpotlightItem[] = allItems
+  const spotlightSourceItems = allItems
     .filter((i) => i.productionNotes && Object.keys(i.productionNotes).length > 0)
     .filter((i) => i.releaseDate)
     .filter((i) => !SPOTLIGHT_EXCLUDE_IDS.includes(i.id))
     .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
-    .slice(0, 6)
+    .slice(0, 6);
+
+  // 모달이 필요한 작품 union (디스코그래피 12개 + spotlight 6개)
+  // productionNotes 현재 locale만 포함, JSON round-trip으로 undefined 제거
+  const featuredTop12 = allItems.filter((i) => i.featured).slice(0, 12);
+  const relevantIds = new Set([
+    ...featuredTop12.map((i) => i.id),
+    ...spotlightSourceItems.map((i) => i.id),
+  ]);
+  const portfolioItems = JSON.parse(
+    JSON.stringify(
+      allItems
+        .filter((i) => relevantIds.has(i.id))
+        .map((item) => {
+          const note = item.productionNotes?.[locale];
+          const { productionNotes: _omit, ...rest } = item;
+          return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
+        })
+    )
+  ) as PortfolioItem[];
+  const categories = getCategories(locale);
+
+  const spotlightItems: SpotlightItem[] = spotlightSourceItems
     .map((item) => {
       const note = item.productionNotes?.[locale] ?? item.productionNotes?.en ?? item.productionNotes?.ko ?? '';
       const noteExcerpt = note.split('\n\n')[0] ?? '';
