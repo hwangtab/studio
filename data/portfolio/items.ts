@@ -34,6 +34,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["티어라이너 (Vocal)"],
                 "gear": ["Neumann TLM 103"]
+            },
+            "productionNotes": {
+                "ko": "티어라이너(tearliner)와 Love X Stereo의 협업 싱글 \"Bite Hard\"(2026년 2월 23일 발매)의 오프닝 트랙. 작사·작곡·보컬은 liner가 맡았고, 편곡과 모든 악기는 배한슬이 연주했다. 장르는 인디 록·드림 팝·기타 팝 계열로 분류되며, 마스터링은 런던 메트로폴리스 스튜디오의 Andy 'Hippy' Baldwin이 담당했다.\n\n이 트랙의 보컬 레코딩과 믹싱은 Studio NOL에서 황경하가 진행했다. 티어라이너 특유의 몽환적이고 서정적인 사운드 결을 유지하면서 Love X Stereo와의 협업 색채를 담아낸 곡이다.",
+                "en": "The opening track of \"Bite Hard,\" a collaborative single by tearliner and Love X Stereo released on February 23, 2026. Written, composed, and performed by liner, with all instruments arranged and played by Bae Hanseul (배한슬). The track sits within indie rock, dream pop, and guitar pop territory, with mastering handled by Andy 'Hippy' Baldwin at Metropolis Studios in London.\n\nVocals were recorded and the track was mixed by Hwang Kyung Ha at Studio NOL. The song preserves tearliner's signature dreamy, lyrical sonic palette while bringing in the collaborative texture of Love X Stereo."
             }
         },
         {
@@ -56,6 +60,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["더 프로젝터스 전 멤버"],
                 "gear": ["Studer A810 Multitrack", "Neumann U87", "Neve 1073 Preamp", "Fender Jazz Bass"]
+            },
+            "productionNotes": {
+                "ko": "더 프로젝터스(The Projectors)는 보컬 Rosalyn Song과 기타·베이스 Simon DM으로 이루어진 듀오로, 매니지먼트는 Pleiades Media, 유통은 FUGA를 통한다. 싱글 '바보의 첫 비행(Fool's First Flight)'은 2025년 11월 10일 발매된 1트랙 싱글로, 멜론·벅스에서 락 장르로 분류된다.\n\n작사는 Rosalyn Song, 작·편곡은 Simon DM과 Rosalyn Song이 함께 맡았다. 곡은 처음으로 자신의 창작물을 세상에 내보이는 순간의 설렘과 두려움을 다루며, 화성 없는 모놀로그처럼 시작해 영화적 스트링이 더해지고 마지막 후렴에서 키를 올려 고조되는 구성을 가진다.",
+                "en": "The Projectors (더 프로젝터스) is a duo featuring vocalist Rosalyn Song and guitarist/bassist Simon DM, managed by Pleiades Media and distributed via FUGA. Their single \"바보의 첫 비행 (Fool's First Flight)\" was released on November 10, 2025 as a one-track single, classified under Rock on Melon and Bugs.\n\nLyrics are by Rosalyn Song, with composition and arrangement credited to Simon DM and Rosalyn Song. The song captures the mix of excitement and apprehension of sharing creative work for the first time, opening as a monologue without harmony, layering cinematic strings, and rising to a higher key in the final chorus."
             }
         },
         {
@@ -160,6 +168,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["자이 (Vocal)"],
                 "gear": ["Neumann U87", "Classé Preamp", "Neve 1073", "Lexicon 480L"]
+            },
+            "productionNotes": {
+                "ko": "자이(Jai)의 EP 'Golden Hour'는 2025년 3월 10일 발매된 5곡 구성의 미니앨범으로, 타이틀곡 'Fever'와 함께 '너의 데이트', '때늦은 옛 이야기', '오늘 이 밤을', 그리고 '너의 데이트(Piano Ver.)'가 수록되어 있다. 벅스·멜론·지니 등 국내 주요 음원 플랫폼에 정식 등록되어 있다.\n\nStudio NOL은 본 EP의 작업에 참여했다. 보컬 녹음과 믹싱을 거쳐 곡 전반의 정서적 결을 다듬는 데 초점을 두었으며, 피아노 버전을 포함한 다섯 트랙이 일관된 톤으로 완성될 수 있도록 사운드의 균형을 잡았다.",
+                "en": "Jai's EP 'Golden Hour' was released on March 10, 2025, as a five-track mini-album. It features the title track 'Fever' alongside 'Your Date (너의 데이트)', 'A Belated Old Story (때늦은 옛 이야기)', 'Tonight (오늘 이 밤을)', and a piano version of 'Your Date.' The EP is officially distributed across major Korean streaming services including Bugs, Melon, and Genie.\n\nStudio NOL contributed to the production of this EP, focusing on vocal recording and mixing to shape the emotional texture across the tracklist. Particular care was taken to maintain a consistent sonic tone across all five tracks, including the piano-led arrangement, so the EP would read as a cohesive whole."
             }
         },
         {
@@ -333,6 +345,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["나뭇잎들"]
+            },
+            "productionNotes": {
+                "ko": "나뭇잎들은 포크·블루스 계열의 혼성 듀오로, \"눈 앞의 마음\"은 2025년 1월 16일 발매된 디지털 싱글이다. 같은 곡이 컴필레이션 성격의 \"이름을 모르는 먼 곳의 그대에게\"에도 수록되어, 단일 트랙이 두 형태의 음원으로 유통되고 있는 구조다.\n\nStudio NOL은 이 트랙의 보컬 녹음·믹싱 작업을 맡아, 어쿠스틱 기반 듀오 사운드의 결을 살리는 데 초점을 두었다. 두 보컬의 위치 관계와 호흡, 그리고 악기와 목소리 사이의 거리감이 곡의 정서를 좌우하는 만큼, 과한 처리 대신 원음의 결과 다이내믹을 보존하는 방향으로 정리했다.",
+                "en": "Leaves (나뭇잎들) is a Korean mixed-gender duo working in a folk/blues vein. \"Eyes Front Heart\" (눈 앞의 마음) was released as a digital single on January 16, 2025, and the same track also appears on a compilation-style release titled \"To You in a Distant Place Whose Name I Don't Know\" (이름을 모르는 먼 곳의 그대에게).\n\nStudio NOL handled vocal recording and mixing on the track, focusing on preserving the grain of an acoustic duo. Because the emotional core of the song depends on the relationship between the two voices and the space around them and their instruments, the work prioritized natural tone and dynamics over heavy processing."
             }
         },
         {
@@ -380,6 +396,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["김인 (Vocal)"],
                 "gear": ["Neumann TLM 103"]
+            },
+            "productionNotes": {
+                "ko": "「별을 보러 간 사람」은 싱어송라이터 김인이 2025년 1월에 발표한 디지털 싱글이다. 동명의 싱글 앨범에 한 곡으로 수록되어 멜론 등 주요 음원 플랫폼을 통해 공개됐다.\n\nStudio NOL은 이 곡의 기획·편곡·레코딩·믹싱과 발매 홍보까지 전 과정을 담당했다. 황경하가 엔지니어링을 맡아 보컬 트래킹부터 믹싱까지 진행했으며, 작품은 Studio NOL 공식 포트폴리오에 'kim-in-star-person' 항목으로 등재되어 있다.",
+                "en": "\"Star Person\" (별을 보러 간 사람) is a digital single by Korean singer-songwriter Kim In, released in January 2025. It appears as a single-track release on the same-titled single album, distributed via major Korean streaming platforms including Melon.\n\nStudio NOL handled the full production cycle — planning, arrangement, recording, mixing, and release promotion. Engineer Hwang Gyeongha (Studio NOL) led the sessions from vocal tracking through mix, and the project is documented in Studio NOL's official portfolio under the entry \"kim-in-star-person.\""
             }
         },
         {
@@ -506,6 +526,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "황경하 (전 과정 총괄)",
                 "musicians": ["황경하 (Vocal, Acoustic Guitar, Piano, Synthesizer)"],
                 "gear": ["Neumann U87", "DPA 4006", "Neve 1073", "Prophet-6", "Pro Tools HDX", "Dolby Atmos Production Suite"]
+            },
+            "productionNotes": {
+                "ko": "'눈녹듯'은 음악가이자 기획자 황경하가 2024년 8월 5일 발매한 솔로 디지털 싱글이다. Apple Music, Spotify, Bugs, Genie 등 주요 음원 플랫폼에 유통되어 있으며, 단일 곡으로 구성된 싱글 형태로 발표되었다.\n\n황경하는 밴드 노컨트롤 멤버이자 자립음악생산조합 운영위원으로 활동해 왔으며, 11팀이 참여한 사회참여 컴필레이션 '젠트리피케이션'을 기획·제작해 한국대중음악상 선정위원 특별상을 수상한 바 있다. 솔로 활동으로는 2022년 싱글 '가지말아요'에 이어 본 작품을 선보였다. 본 작품은 Studio NOL에서 작업되었다.",
+                "en": "\"Like Snow Melting\" (눈녹듯) is a solo digital single by Korean indie musician and producer Hwang Gyeong-ha, released on August 5, 2024. The single-track release is distributed on major streaming platforms including Apple Music, Spotify, Bugs, and Genie.\n\nHwang Gyeong-ha is known as a member of the band No Control and as a longtime operating committee member of the Jarip Music Production Cooperative. He produced the socially engaged compilation album \"Gentrification,\" gathering 11 acts, for which he received a Special Award from the Korean Music Awards selection committee. Following his 2022 single \"Don't Go\" (가지말아요), this track marks another entry in his solo catalog. The work was produced at Studio NOL."
             }
         },
         {
@@ -564,6 +588,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["어린이 보컬 팀", "성인 내레이션"],
                 "gear": ["Neumann U87", "Sennheiser MKH 416", "Neve 1073", "Lexicon 480L"]
+            },
+            "productionNotes": {
+                "ko": "《물고기는 물이 없으면 죽어요》는 2022년 11월 24일 발매된 8곡 구성의 옴니버스(Various Artists) 컴필레이션 앨범이다. 맑은, 경하와 세민, 고효경, 길가는 밴드, 초륜, 유동혁, 박치치, 지누 콘다 등 여러 인디 아티스트가 참여했으며, 멜론·벅스 등 주요 국내 음원 플랫폼에서 유통되고 있다.\n\n수록곡들은 록/메탈, 발라드, 인디, 포크/블루스/컨트리 등 여러 장르를 아우른다. Studio NOL이 이 컴필레이션의 작업에 참여했다.",
+                "en": "\"Fish Die Without Water\" (물고기는 물이 없으면 죽어요) is an 8-track Various Artists compilation album released on November 24, 2022. Participating indie artists include Maljeun, Gyeongha & Semin, Go Hyokyung, Gilganeun Band, Choryun, Yu Donghyeok, Park Chichi, and Jinu Konda. The compilation is distributed on major Korean music platforms such as Melon and Bugs.\n\nThe tracklist spans multiple genres including rock/metal, ballad, indie, and folk/blues/country. Studio NOL contributed to the production of this compilation."
             }
         },
         {
@@ -729,6 +757,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["영인 (Vocal)"]
+            },
+            "productionNotes": {
+                "ko": "'빨간점'은 싱어송라이터 영인(YOUNG IN)이 2023년 1월 15일에 발표한 EP 'salt'의 수록곡이다. 영인은 2022년 'sea', 'sai' 두 장의 싱글로 데뷔한 솔로 아티스트로, 발라드와 R&B/소울을 기반으로 한 인디 사운드를 들려준다. EP 'salt'는 동명 타이틀곡 'salt'와 'NO ONE'을 포함해 총 세 곡으로 구성되어 있다.\n\n스튜디오 놀은 본 작업의 일부 공정에 참여했다. 보컬의 결과 정서가 또렷이 드러나야 하는 발라드/R&B 계열 작품의 특성에 맞춰, 노래의 호흡과 잔향이 자연스럽게 살아나도록 작업의 균형을 잡는 데 중점을 두었다.",
+                "en": "\"Red Dot\" (빨간점) is a track from singer-songwriter YOUNG IN's (영인) EP \"salt,\" released on January 15, 2023. YOUNG IN is a solo Korean artist who debuted in 2022 with two singles, \"sea\" and \"sai,\" working primarily in ballad and R&B/soul-leaning indie territory. The \"salt\" EP comprises three tracks: \"빨간점,\" the title track \"salt,\" and \"NO ONE.\"\n\nStudio NOL contributed to part of the production process for this release. Given the ballad/R&B character of the material — where the singer's breath and emotional contour need to read clearly — the work focused on keeping the vocal forward and letting its natural decay and space sit honestly in the mix."
             }
         },
         {
@@ -775,6 +807,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["엉아들"]
+            },
+            "productionNotes": {
+                "ko": "엉아들은 2022년에 데뷔한 한국 남성 인디 그룹이다. Self-titled EP \"엉아들\"은 2022년 8월 5일에 발매된 미니 앨범으로, 벅스에서는 인디 장르로 분류되어 있다. \"술취한 엉아들을 어찌할까\", \"Drink Song\", \"언덕에 올라\", \"지난 밤 이야기\", \"명태\" 등의 트랙을 담고 있다. 술자리와 일상의 정서를 친근한 어법으로 풀어낸 곡들이 중심이며, 크레딧에는 이영경(작·편곡)과 민정기, 박태종 등이 작사로 참여한 것이 확인된다. Studio NOL은 본 EP의 제작 과정 일부에 참여했다.",
+                "en": "Eongadeul (엉아들) is a Korean male indie group that debuted in 2022. Their self-titled EP \"엉아들,\" released on August 5, 2022, is classified as indie on Bugs and contains tracks such as \"What to Do with Drunk Eongadeul,\" \"Drink Song,\" \"On the Hill,\" \"Last Night's Story,\" and \"Pollock.\" The songs revolve around drinking-table camaraderie and everyday sentiment delivered in a friendly, conversational tone. Credits on the EP include Lee Young-kyung (composition/arrangement) and lyric contributions from Min Jung-ki and Park Tae-jong. Studio NOL was involved in part of the production work for this release."
             }
         },
         {
