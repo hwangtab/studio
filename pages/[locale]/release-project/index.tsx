@@ -3,6 +3,8 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award, BookOpen } from 'lucide-react';
 import SEO from '../../../components/SEO';
@@ -12,11 +14,12 @@ import FAQSection from '../../../components/ui/FAQSection';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
-import { getPortfolioItems } from '../../../data/portfolio';
-import type { PortfolioItem } from '../../../types/data';
+import { getPortfolioItems, getCategories } from '../../../data/portfolio';
+import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
 import type { NextPageWithLayout } from '../../../types';
 
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
+const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });
 
 interface SpotlightItem {
   id: string;
@@ -28,7 +31,8 @@ interface SpotlightItem {
 
 interface ReleaseProjectProps {
   locale: Locale;
-  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
+  portfolioItems: PortfolioItem[];
+  categories: PortfolioCategory[];
   spotlightItems: SpotlightItem[];
 }
 
@@ -50,8 +54,9 @@ const IN_PROGRESS_ITEMS = [
   { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
 ];
 
-const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems }) => {
+const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, categories, spotlightItems }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const router = useRouter();
   const getLink = (path: string) => `/${locale}${path}`;
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
@@ -64,6 +69,31 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
     const dd = String(d.getDate()).padStart(2, '0');
     setToday(`${yyyy}.${mm}.${dd}`);
   }, []);
+
+  // 모달 상태 관리 (portfolio.tsx 패턴 차용)
+  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
+  const basePath = `/${locale}/release-project`;
+  useEffect(() => {
+    const itemId = router.query.item;
+    if (itemId) {
+      const item = portfolioItems.find((p) => p.id === itemId);
+      setSelectedItem(item || null);
+    } else {
+      setSelectedItem(null);
+    }
+  }, [router.query.item, portfolioItems]);
+  const handleCardClick = (item: PortfolioItem) => {
+    setSelectedItem(item);
+    router.push(`${basePath}?item=${item.id}`, undefined, { shallow: true, scroll: false });
+  };
+  const handleCloseModal = () => {
+    setSelectedItem(null);
+    router.push(basePath, undefined, { shallow: true, scroll: false });
+  };
+  const handleSpotlightClick = (spotlightId: string) => {
+    const item = portfolioItems.find((p) => p.id === spotlightId);
+    if (item) handleCardClick(item);
+  };
 
   return (
     <div className="overflow-visible">
@@ -282,11 +312,13 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             className="mb-12"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {portfolioItems.slice(0, 12).map((item) => (
-              <Link
+            {portfolioItems.filter((i) => i.featured).slice(0, 12).map((item) => (
+              <button
                 key={item.id}
-                href={getLink(`/portfolio/${item.id}`)}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                type="button"
+                onClick={() => handleCardClick(item)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                aria-haspopup="dialog"
               >
                 {item.image && (
                   <div className="aspect-square overflow-hidden relative">
@@ -306,9 +338,19 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
+          {/* 크롤러용 internal link (PageRank 유지) */}
+          <nav aria-label="Hub discography links" className="sr-only">
+            <ul>
+              {portfolioItems.filter((i) => i.featured).slice(0, 12).map((item) => (
+                <li key={item.id}>
+                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <div className="text-center mt-10">
             <Link
               href={getLink('/portfolio')}
@@ -331,10 +373,12 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {spotlightItems.map((item) => (
-              <Link
+              <button
                 key={item.id}
-                href={getLink(`/portfolio/${item.id}`)}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                type="button"
+                onClick={() => handleSpotlightClick(item.id)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                aria-haspopup="dialog"
               >
                 {item.image && (
                   <div className="aspect-square overflow-hidden relative">
@@ -359,9 +403,19 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                     {t('releaseProject.spotlight.viewFull')} <ArrowRight size={12} />
                   </span>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
+          {/* 크롤러용 internal link */}
+          <nav aria-label="Spotlight links" className="sr-only">
+            <ul>
+              {spotlightItems.map((item) => (
+                <li key={item.id}>
+                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </Section>
       )}
 
@@ -391,6 +445,18 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           primaryButtonLabel={t('releaseProject.cta.inquiry')}
         />
       </Section>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <PortfolioDetailModal
+            key={selectedItem.id}
+            item={selectedItem}
+            categories={categories}
+            onClose={handleCloseModal}
+            locale={locale}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -402,16 +468,14 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
-  const portfolioItems = allItems
-    .filter((item) => item.featured)
-    .map(({ id, title, description, image, artist, featured }) => ({
-      id,
-      title,
-      description,
-      image,
-      artist,
-      featured,
-    }));
+  // productionNotes는 7개 언어 전체가 포함되어 __NEXT_DATA__가 과대해짐. 현재 locale 노트만 포함.
+  const portfolioItems = allItems.map((item) => ({
+    ...item,
+    productionNotes: item.productionNotes
+      ? { [locale]: item.productionNotes[locale] }
+      : undefined,
+  }));
+  const categories = getCategories(locale);
 
   const SPOTLIGHT_EXCLUDE_IDS = ['hwang-gyeong-ha-nunnokeut'];
   const spotlightItems: SpotlightItem[] = allItems
@@ -435,7 +499,7 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
 
   return buildPageStaticProps(
     locale,
-    { locale, portfolioItems, spotlightItems },
+    { locale, portfolioItems, categories, spotlightItems },
     { revalidate: 86400 }
   );
 };

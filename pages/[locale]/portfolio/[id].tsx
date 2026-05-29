@@ -160,13 +160,20 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
       />
       <Section variant="alternate" className="pt-8 pb-12">
         <div className="mb-8">
-          <Link
-            href={getLink("/portfolio")}
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.history.length > 1) {
+                router.back();
+              } else {
+                router.push(getLink('/portfolio'));
+              }
+            }}
             className="inline-flex items-center typo-card-cta hover:underline mb-6 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           >
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('portfolio.detail.backToList')}
-          </Link>
+          </button>
         </div>
 
         <m.div {...detailContentAnimation}>
