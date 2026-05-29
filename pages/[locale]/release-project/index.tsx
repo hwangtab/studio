@@ -33,7 +33,6 @@ interface ReleaseProjectProps {
 }
 
 const TIER_KEYS = ['single', 'ep', 'album'] as const;
-const SPOTLIGHT_IDS = ['kang-ho-jung-self-titled', 'peace-and-music', 'dystopia-2025'];
 
 const PROCESS_ICONS = [
   { step: '01', icon: Lightbulb },
@@ -414,10 +413,12 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
       featured,
     }));
 
-  const spotlightItems: SpotlightItem[] = SPOTLIGHT_IDS
-    .map((id) => {
-      const item = allItems.find((i) => i.id === id);
-      if (!item) return null;
+  const spotlightItems: SpotlightItem[] = allItems
+    .filter((i) => i.productionNotes && Object.keys(i.productionNotes).length > 0)
+    .filter((i) => i.releaseDate)
+    .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
+    .slice(0, 3)
+    .map((item) => {
       const note = item.productionNotes?.[locale] ?? item.productionNotes?.en ?? item.productionNotes?.ko ?? '';
       const noteExcerpt = note.split('\n\n')[0] ?? '';
       return {
@@ -428,7 +429,7 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
         noteExcerpt,
       };
     })
-    .filter((i): i is SpotlightItem => i !== null && i.noteExcerpt.length > 0);
+    .filter((i) => i.noteExcerpt.length > 0);
 
   return buildPageStaticProps(
     locale,
