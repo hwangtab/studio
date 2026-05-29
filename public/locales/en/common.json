@@ -1333,7 +1333,7 @@
   "releaseProject": {
     "seo": {
       "title": "Release Project · Indie Music Production | Studio NOL",
-      "description": "From planning to recording, session musicians, mixing, distribution, and reaching press and critics — indie release production led by 15-year producer Hwang Gyeongha, who has worked with artists like Tierliner, The Projectors, and Kang Ho-jung. Free consultation by release scale: single, EP, or full album.",
+      "description": "From planning to recording, session musicians, mixing, distribution, and reaching press and critics — indie release production with 15-year producer Hwang Gyeongha, who has worked with artists like Tierliner, The Projectors, and Kang Ho-jung. Free consultation by release scale: single, EP, or full album.",
       "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL",
       "single": {
         "title": "Single Release Project | Studio NOL",
@@ -1443,7 +1443,6 @@
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Singles we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
-          "inProgressSectionTitle": "Singles we're making right now",
           "faqSectionTitle": "Frequently Asked Questions",
           "faqSubtitle": "Questions before you consult.",
           "faqItems": [
@@ -1535,7 +1534,6 @@
           "priceNote": "Custom quote after free consultation.",
           "caseStudySectionTitle": "EPs we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
-          "inProgressSectionTitle": "EPs we're making right now",
           "faqSectionTitle": "Frequently Asked Questions",
           "faqSubtitle": "Questions before you consult.",
           "faqItems": [
@@ -1629,7 +1627,6 @@
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Full albums we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
-          "inProgressSectionTitle": "Full albums we're making right now",
           "faqSectionTitle": "Frequently Asked Questions",
           "faqSubtitle": "Questions before you consult.",
           "faqItems": [

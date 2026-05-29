@@ -1290,7 +1290,7 @@
   "releaseProject": {
     "seo": {
       "title": "Proyecto de Lanzamiento · Producción Musical Indie | Studio NOL",
-      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con medios y reseñas — proyecto de lanzamiento indie liderado por el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner, The Projectors y Kang Ho-jung. Consulta gratuita por escala: single, EP o álbum.",
+      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con medios y reseñas — proyecto de lanzamiento indie junto al productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner, The Projectors y Kang Ho-jung. Consulta gratuita por escala: single, EP o álbum.",
       "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL",
       "single": {
         "title": "Proyecto de Single | Studio NOL",
@@ -1400,7 +1400,6 @@
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Singles que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
-          "inProgressSectionTitle": "Singles que estamos haciendo ahora",
           "faqSectionTitle": "Preguntas Frecuentes",
           "faqSubtitle": "Preguntas antes de consultar.",
           "faqItems": [
@@ -1492,7 +1491,6 @@
           "priceNote": "Cotización personalizada tras consulta gratuita.",
           "caseStudySectionTitle": "EPs que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
-          "inProgressSectionTitle": "EPs que estamos haciendo ahora",
           "faqSectionTitle": "Preguntas Frecuentes",
           "faqSubtitle": "Preguntas antes de consultar.",
           "faqItems": [
@@ -1586,7 +1584,6 @@
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
-          "inProgressSectionTitle": "Álbumes completos que estamos haciendo ahora",
           "faqSectionTitle": "Preguntas Frecuentes",
           "faqSubtitle": "Preguntas antes de consultar.",
           "faqItems": [

@@ -96,7 +96,11 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
 
   const [today, setToday] = useState('');
   useEffect(() => {
-    setToday(new Date().toISOString().slice(0, 10).replace(/-/g, '.'));
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    setToday(`${yyyy}.${mm}.${dd}`);
   }, []);
 
   const tierCategoryAllow = TIER_CATEGORY_MAP[tier];

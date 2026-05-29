@@ -1290,21 +1290,21 @@
   "releaseProject": {
     "seo": {
       "title": "发行项目 · 独立音乐制作 | Studio NOL",
-      "description": "从策划到录音、会话乐手、混音、发行，以及对接媒体与乐评 — 由曾与 Tierliner、The Projectors、Kang Ho-jung 等艺人合作的 15 年资深制作人黄景夏带领的独立音乐发行项目。按单曲·EP·专辑规模提供免费咨询。",
+      "description": "从策划到录音、会话乐手、混音、发行，以及对接媒体与乐评 — 由曾与 Tierliner、The Projectors、Kang Ho-jung 等艺人合作的 15 年资深制作人黄景夏共同打造的独立音乐发行项目。按单曲·EP·专辑规模提供免费咨询。",
       "keywords": "发行项目, 独立音乐发行, 唱片制作, 独立歌手, Studio NOL",
       "single": {
         "title": "单曲发行项目 | Studio NOL",
-        "description": "从第一张单曲到发行全程陪伴。企划·录音·发行·PR — 曾与 Tierliner、The Projectors 等艺人合作的 15 年制作人黄景夏主导的独立单曲发行项目。",
+        "description": "从第一张单曲到发行全程陪伴。企划·录音·发行·PR — 与 Tierliner、The Projectors 等艺人合作的 15 年制作人黄景夏共同打造的独立单曲发行项目。",
         "keywords": "单曲发行, 独立音乐, Studio NOL, 音乐制作人"
       },
       "ep": {
         "title": "EP 发行项目 | Studio NOL",
-        "description": "用 3~5 首歌宣告你的音乐身份。曾与 Namjae 等艺人合作的 15 年制作人黄景夏主导的 EP 发行项目。从先行单曲到媒体 PR 两轮覆盖。",
+        "description": "用 3~5 首歌宣告你的音乐身份。与 Namjae 等艺人合作的 15 年制作人黄景夏共同打造的 EP 发行项目。从先行单曲到媒体 PR 两轮覆盖。",
         "keywords": "EP 发行, 迷你专辑, 独立音乐, Studio NOL"
       },
       "album": {
         "title": "专辑发行项目 | Studio NOL",
-        "description": "在独立音乐圈刻下名字的正规专辑。曾与 Kang Ho-jung、Samgakjeonpasa 等艺人合作的 15 年制作人黄景夏主导的正规专辑发行项目。A&R · 乐评试听会 · 资助申请同行。",
+        "description": "在独立音乐圈刻下名字的正规专辑。与 Kang Ho-jung、Samgakjeonpasa 等艺人合作的 15 年制作人黄景夏共同打造的正规专辑发行项目。A&R · 乐评试听会 · 资助申请同行。",
         "keywords": "专辑发行, 音乐企划, 独立歌手, 制作人黄景夏, Studio NOL"
       }
     },
@@ -1400,7 +1400,6 @@
           "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的单曲",
           "caseStudySubtitle": "真实的发行项目案例。",
-          "inProgressSectionTitle": "正在制作中的单曲",
           "faqSectionTitle": "常见问题",
           "faqSubtitle": "咨询前的疑问。",
           "faqItems": [
@@ -1492,7 +1491,6 @@
           "priceNote": "免费咨询后按单价表定制报价。",
           "caseStudySectionTitle": "我们一起完成的 EP",
           "caseStudySubtitle": "真实的发行项目案例。",
-          "inProgressSectionTitle": "正在制作中的 EP",
           "faqSectionTitle": "常见问题",
           "faqSubtitle": "咨询前的疑问。",
           "faqItems": [
@@ -1586,7 +1584,6 @@
           "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "caseStudySectionTitle": "我们一起完成的专辑",
           "caseStudySubtitle": "真实的发行项目案例。",
-          "inProgressSectionTitle": "正在制作中的专辑",
           "faqSectionTitle": "常见问题",
           "faqSubtitle": "咨询前的疑问。",
           "faqItems": [

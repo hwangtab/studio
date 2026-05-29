@@ -1290,7 +1290,7 @@
   "releaseProject": {
     "seo": {
       "title": "Dự án Phát hành · Sản xuất Âm nhạc Indie | Studio NOL",
-      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình — dự án phát hành indie dẫn dắt bởi nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), từng làm việc với các nghệ sĩ như Tierliner, The Projectors và Kang Ho-jung. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
+      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình — dự án phát hành indie cùng nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), người từng làm việc với các nghệ sĩ như Tierliner, The Projectors và Kang Ho-jung. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
       "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL",
       "single": {
         "title": "Dự án phát hành Single | Studio NOL",
@@ -1400,7 +1400,6 @@
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các single chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
-          "inProgressSectionTitle": "Các single đang thực hiện",
           "faqSectionTitle": "Câu hỏi thường gặp",
           "faqSubtitle": "Câu hỏi trước khi tư vấn.",
           "faqItems": [
@@ -1492,7 +1491,6 @@
           "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các EP chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
-          "inProgressSectionTitle": "Các EP đang thực hiện",
           "faqSectionTitle": "Câu hỏi thường gặp",
           "faqSubtitle": "Câu hỏi trước khi tư vấn.",
           "faqItems": [
@@ -1586,7 +1584,6 @@
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các album đầy đủ chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
-          "inProgressSectionTitle": "Các album đang thực hiện",
           "faqSectionTitle": "Câu hỏi thường gặp",
           "faqSubtitle": "Câu hỏi trước khi tư vấn.",
           "faqItems": [

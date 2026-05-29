@@ -1288,7 +1288,7 @@
   "releaseProject": {
     "seo": {
       "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
-      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — Tierliner, The Projectors va Kang Ho-jung kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha boshchiligidagi indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
+      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — Tierliner, The Projectors va Kang Ho-jung kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan birga indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
       "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL",
       "single": {
         "title": "Singl chiqarish loyihasi | Studio NOL",
@@ -1398,7 +1398,6 @@
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan singlarimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
-          "inProgressSectionTitle": "Hozir yaratayotgan singller",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
           "faqSubtitle": "Maslahatdan oldingi savollar.",
           "faqItems": [
@@ -1490,7 +1489,6 @@
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
           "caseStudySectionTitle": "Birga yaratgan EP larimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
-          "inProgressSectionTitle": "Hozir yaratayotgan EP lar",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
           "faqSubtitle": "Maslahatdan oldingi savollar.",
           "faqItems": [
@@ -1584,7 +1582,6 @@
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
-          "inProgressSectionTitle": "Hozir yaratayotgan albomlar",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
           "faqSubtitle": "Maslahatdan oldingi savollar.",
           "faqItems": [
