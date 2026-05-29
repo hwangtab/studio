@@ -22,9 +22,8 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const allItems = getPortfolioItems(locale);
-  const SINGLE_CASE_STUDY_IDS = ['tierliner-bite-me'];
   const portfolioItems = allItems
-    .filter((item) => item.featured || SINGLE_CASE_STUDY_IDS.includes(item.id))
+    .filter((item) => item.featured)
     .map(({ id, title, description, image, artist, featured, category }) => ({
       id, title, description, image, artist, featured, category,
     }));

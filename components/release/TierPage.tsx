@@ -4,8 +4,8 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
 import {
-  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign,
-  Target, Calendar, ListChecks, X, MessageCircle, BookOpen,
+  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
+  Target, Calendar, ListChecks, X, MessageCircle,
   Award, Star, Quote, ArrowRightLeft,
 } from 'lucide-react';
 import SEO from '../SEO';
@@ -54,11 +54,6 @@ const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
 };
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
 const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
-const CASE_STUDY_IDS: Record<'single' | 'ep' | 'album', string[]> = {
-  single: ['tierliner-bite-me', 'the-projectors-babu-first-flight', 'heo-jeong-hyuk-wind', 'jai-hanash-pink-padding'],
-  ep: ['namjae-wi-inmul', 'unknown-feeling'],
-  album: ['kang-ho-jung-self-titled', 'dystopia-2025', 'eongadeul-self-titled', 'ryu-hyeong-su-haru'],
-};
 
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -74,10 +69,9 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
 
-  const caseStudyIds = CASE_STUDY_IDS[tier];
-  const caseStudyPortfolioItems = caseStudyIds
-    .map((id) => portfolioItems.find((p) => p.id === id))
-    .filter((p): p is NonNullable<typeof p> => p !== undefined);
+  const discographyItems = portfolioItems
+    .filter((i) => i.featured)
+    .slice(0, 12);
   const otherTiers = ALL_TIERS.filter((t) => t !== tier);
   const reviewsToShow = getReviews(locale).filter((r) => REVIEW_IDS_FOR_RELEASE_PROJECT.includes(r.id));
 
@@ -300,17 +294,17 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </div>
       </Section>
 
-      {/* 케이스 스터디 — 디스코그래피와 동일 카드, 사실 정보만 */}
-      {caseStudyPortfolioItems.length > 0 && (
+      {/* 디스코그래피 — 전체 featured, 구분 없이 */}
+      {discographyItems.length > 0 && (
         <Section variant="alternate">
           <SectionHeading
-            icon={BookOpen}
-            title={t(k('caseStudySectionTitle'))}
-            subtitle={t(k('caseStudySubtitle'))}
+            icon={Disc}
+            title={t('releaseProject.discography.sectionTitle')}
+            subtitle={t('releaseProject.discography.sectionSubtitle')}
             className="mb-10"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {caseStudyPortfolioItems.map((item) => (
+            {discographyItems.map((item) => (
               <Link
                 key={item.id}
                 href={getLink(`/portfolio/${item.id}`)}
@@ -336,6 +330,14 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                 </div>
               </Link>
             ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link
+              href={getLink('/portfolio')}
+              className="inline-flex items-center gap-2 text-primary font-semibold hover:underline underline-offset-2"
+            >
+              {t('releaseProject.discography.viewAll')} <ArrowRight size={16} />
+            </Link>
           </div>
         </Section>
       )}
