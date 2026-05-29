@@ -3,6 +3,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
+import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award, BookOpen } from 'lucide-react';
 import SEO from '../../../components/SEO';
@@ -11,12 +12,14 @@ import ImageHero from '../../../components/common/ImageHero';
 import FAQSection from '../../../components/ui/FAQSection';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
+import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../../lib/i18n';
 import { getPortfolioItems } from '../../../data/portfolio';
 import type { PortfolioItem } from '../../../types/data';
 import type { NextPageWithLayout } from '../../../types';
 
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
+const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });
 
 interface SpotlightItem {
   id: string;
@@ -56,6 +59,10 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
   const hubFaqItems = t('releaseProject.hubFaq.items', { returnObjects: true }) as { question: string; answer: string }[];
+  const { selectedItem, categories, open: openModal, close: closeModal } = usePortfolioModalLazy(
+    locale,
+    `/${locale}/release-project`
+  );
   const [today, setToday] = useState('');
   useEffect(() => {
     const d = new Date();
@@ -283,10 +290,12 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {portfolioItems.filter((i) => i.featured).slice(0, 12).map((item) => (
-              <Link
+              <button
                 key={item.id}
-                href={getLink(`/portfolio?item=${item.id}`)}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                type="button"
+                onClick={() => openModal(item.id)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                aria-haspopup="dialog"
               >
                 {item.image && (
                   <div className="aspect-square overflow-hidden relative">
@@ -306,9 +315,19 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
+          {/* 크롤러용 internal link */}
+          <nav aria-label="Hub discography links" className="sr-only">
+            <ul>
+              {portfolioItems.filter((i) => i.featured).slice(0, 12).map((item) => (
+                <li key={item.id}>
+                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <div className="text-center mt-10">
             <Link
               href={getLink('/portfolio')}
@@ -331,10 +350,12 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {spotlightItems.map((item) => (
-              <Link
+              <button
                 key={item.id}
-                href={getLink(`/portfolio?item=${item.id}`)}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                type="button"
+                onClick={() => openModal(item.id)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                aria-haspopup="dialog"
               >
                 {item.image && (
                   <div className="aspect-square overflow-hidden relative">
@@ -359,9 +380,19 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                     {t('releaseProject.spotlight.viewFull')} <ArrowRight size={12} />
                   </span>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
+          {/* 크롤러용 internal link */}
+          <nav aria-label="Spotlight links" className="sr-only">
+            <ul>
+              {spotlightItems.map((item) => (
+                <li key={item.id}>
+                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </Section>
       )}
 
@@ -391,6 +422,18 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           primaryButtonLabel={t('releaseProject.cta.inquiry')}
         />
       </Section>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <PortfolioDetailModal
+            key={selectedItem.id}
+            item={selectedItem}
+            categories={categories}
+            onClose={closeModal}
+            locale={locale}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
