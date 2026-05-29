@@ -108,13 +108,6 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["하루살이 프로젝트 아티스트 전원"]
             },
-            "trackList": [
-                { "no": 1, "title": "아침 햇살 (Morning Light)", "duration": "4:12" },
-                { "no": 2, "title": "비 오는 날 (Rainy Day)", "duration": "3:45" },
-                { "no": 3, "title": "알 수 없는 느낌 (Unknown Feeling)", "duration": "5:01" },
-                { "no": 4, "title": "지하철 (Subway)", "duration": "3:28" },
-                { "no": 5, "title": "저녁 노을 (Sunset)", "duration": "4:33" }
-            ],
             "productionNotes": {
                 "ko": "『하루살이 프로젝트 2: 알 수 없는 느낌』은 2025년 7월 22일에 공개된 하루살이 프로젝트의 정규 음반으로, 「알수없느낌(Unknown Feeling)」을 타이틀곡으로 내세웠다. 벅스 분류 기준 포크/포크 어쿠스틱 장르에 속하며, 「집을 나선 고양이」 「괴로워!」 「그림을 그려」 「새우 까주는 사람」 「집중 두 시간」 「아침밥 먹은 날에 더 배고파」 「말 필요 없는 노래」 등 일상의 장면과 감정을 구어체 가까운 제목으로 옮긴 곡들이 함께 실렸다. 시리즈의 두 번째 결과물답게 작은 순간을 응시하는 시선을 차분한 어쿠스틱 사운드로 풀어내며, 멜론·벅스 등 주요 음원 플랫폼에서 정식 유통되고 있다.",
                 "en": "\"Mayfly Project 2: Unknown Feeling\" is a full-length album by the Korean indie project Harusari Project (하루살이 프로젝트), released on July 22, 2025, with \"Unknown Feeling (알수없느낌)\" as the title track. Classified under Folk / Folk Acoustic on Bugs, the record collects songs that translate small everyday scenes and feelings into colloquial titles, including \"The Cat Left Home,\" \"In Pain,\" \"Just Painting,\" \"The Person Who Peels Shrimp (for Me),\" \"Focusing for Two Hours,\" \"Hungry Days when I eat Breakfast,\" and \"Wordless Song.\" As the second installment of the series, it sustains a quiet acoustic approach to ordinary moments and is distributed across major Korean streaming platforms such as Melon and Bugs."
@@ -219,12 +212,6 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하) — Mastering & Album Direction",
                 "musicians": ["Various Artists (다수 아티스트 협업)"]
             },
-            "trackList": [
-                { "no": 1, "title": "이름을 모르는 먼 곳의 그대에게", "duration": "4:22" },
-                { "no": 2, "title": "바람이 부면", "duration": "3:45" },
-                { "no": 3, "title": "먼 곳의 그대", "duration": "5:01" },
-                { "no": 4, "title": "연결된 거리", "duration": "4:15" }
-            ],
             "productionNotes": {
                 "ko": "'이름을 모르는 먼 곳의 그대에게'는 강정피스앤뮤직캠프 조직위원회가 기획한 컴필레이션 앨범으로, 제주 강정마을에서 시작된 평화음악 프로젝트의 결과물이다. 우크라이나·팔레스타인 등 분쟁 지역의 평화를 염원하며 Project Around Surround, 정진석, 김동산, 남수, 까르, 김인, 모레도토요일, 나뭇잎들, 여유, 모모, 자이 x HANASH, 이서영 등 13팀이 참여했다.\n\n총 13트랙 중 12트랙의 녹음·믹싱을 Studio NOL 황경하가 맡았고, 마스터링은 주로 이재수가 담당했다. 2024년 10월 제주, 11월 홍대 공연이 매진되었으며 멜론·벅스·스포티파이·애플뮤직 등에서 공개되었다.",
                 "en": "\"To You in a Distant Place Whose Name I Don't Know\" is a compilation album organized by the Gangjeong Peace and Music Camp committee, a peace music project rooted in Gangjeong Village on Jeju Island. Standing in solidarity with people in conflict zones such as Ukraine and Palestine, 13 acts contributed — including Project Around Surround, Jeong Jin-seok, Kim Dongsan, Namsoo, Kkar, Kim In, Moredo Saturday, Leaves, Yeoyu, Momo, Zai x HANASH, and Lee Seoyoung.\n\nOf the album's 13 tracks, 12 were recorded and mixed by Hwang Kyung-ha at Studio NOL, with mastering primarily handled by Lee Jae-soo. Linked Jeju (October) and Hongdae (November) 2024 concerts sold out, and the album is available on Melon, Bugs, Spotify, and Apple Music."
@@ -550,12 +537,6 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["남자애"]
             },
-            "trackList": [
-                { "no": 1, "title": "위 인물은 X를 겪고", "duration": "4:12" },
-                { "no": 2, "title": "깨달음의 시작", "duration": "3:45" },
-                { "no": 3, "title": "여정", "duration": "5:01" },
-                { "no": 4, "title": "깨달음을 얻음", "duration": "4:33" }
-            ],
             "productionNotes": {
                 "ko": "'위 인물은 X를 겪고 깨달음을 얻음'은 솔로 인디 아티스트 남자애가 2023년 1월 11일 발매한 미니 EP다. 총 5곡, 약 16분 분량으로 인트로를 제외한 나머지 트랙이 모두 타이틀 성격을 갖는다. 2022년 데뷔 싱글 '그는 어쩌다가 게이가 되었을까'에서 시작된 서사를 잇는 후속작으로 소개된다.\n\nBugs에서는 일렉트로닉/인디, Apple Music에서는 K-Pop으로 분류되며, 서울레코드페어를 통해 카세트 테이프 피지컬도 유통됐다. Studio NOL은 본 작품의 작업에 참여했다.",
                 "en": "\"To Experience X and Gain Enlightenment\" is a mini EP by Namja-ae (남자애), a Korean solo indie artist, released on January 11, 2023. The five-track EP runs about 16 minutes, with every song aside from the intro positioned as a title track. It continues the narrative arc opened by the artist's 2022 debut single \"How Did He Become Gay?\" (\"그는 어쩌다가 게이가 되었을까\").\n\nBugs files the artist under Electronic/Indie, while Apple Music categorizes the EP as K-Pop. A cassette tape edition was also distributed through Seoul Record Fair. Studio NOL contributed to the production of this release."
