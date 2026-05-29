@@ -419,7 +419,7 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
     .filter((i) => i.releaseDate)
     .filter((i) => !SPOTLIGHT_EXCLUDE_IDS.includes(i.id))
     .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
-    .slice(0, 3)
+    .slice(0, 6)
     .map((item) => {
       const note = item.productionNotes?.[locale] ?? item.productionNotes?.en ?? item.productionNotes?.ko ?? '';
       const noteExcerpt = note.split('\n\n')[0] ?? '';
