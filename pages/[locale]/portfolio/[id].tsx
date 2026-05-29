@@ -7,8 +7,7 @@ import { m } from 'framer-motion';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
-import PortfolioDetailSummary from '../../../components/portfolio/PortfolioDetailSummary';
-import PortfolioDetailBody from '../../../components/portfolio/PortfolioDetailBody';
+import PortfolioDetailContent from '../../../components/portfolio/PortfolioDetailContent';
 import { getPortfolioItems, getCategories } from '../../../data/portfolio';
 import { getPortfolioRelatedStories } from '../../../lib/portfolioRelatedStories';
 import type { PortfolioItem, PortfolioCategory } from '../../../types/data';
@@ -159,7 +158,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         ]}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 border-b border-gray-100 dark:border-gray-800"
       />
-      <Section variant="default" className="pt-8 pb-12">
+      <Section variant="alternate" className="pt-8 pb-12">
         <div className="mb-8">
           <Link
             href={getLink("/portfolio")}
@@ -170,55 +169,31 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           </Link>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <m.div
-            {...detailContentAnimation}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
-          >
-            <PortfolioDetailSummary
-              item={item}
-              categoryName={categoryInfo.name}
-              categoryColor={categoryInfo.color}
-              artistLabel={t('portfolio.detail.artistLabel')}
-              servicesTitle={t('portfolio.detail.servicesProvided')}
-              listenNowLabel={t('portfolio.detail.listenNow')}
-              listenUrl={item.link}
-              titleTag="h1"
-              imageSectionClassName="px-6 pt-8"
-              imageWrapperClassName="relative aspect-square max-w-md mx-auto rounded-xl overflow-hidden shadow-lg"
-              contentSectionClassName="p-8"
-              titleClassName="text-heading-2 font-title mb-2"
-              artistClassName="typo-card-body mb-6"
-              servicesHeadingClassName="typo-card-title mb-3"
-              actionRowClassName="flex flex-col sm:flex-row gap-4"
-              primaryActionClassName="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-              actions={
-                <button
-                  type="button"
-                  onClick={sharePortfolio}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                >
-                  <Share2 size={16} aria-hidden="true" />
-                  {t('portfolio.detail.share')}
-                </button>
-              }
-            />
-          </m.div>
-          <PortfolioDetailBody
+        <m.div {...detailContentAnimation}>
+          <PortfolioDetailContent
             item={resolvedItem}
+            categories={categories}
             locale={locale}
-            labels={{
-              productionNotesTitle: t('portfolio.detail.productionNotes', '프로덕션 노트'),
-              creditsTitle: t('portfolio.detail.credits', '크레딧'),
-              creditsEngineer: t('portfolio.detail.creditsEngineer', '엔지니어'),
-              creditsMusicians: t('portfolio.detail.creditsMusicians', '연주자'),
-              creditsGear: t('portfolio.detail.creditsGear', '사용 장비'),
-              trackListTitle: t('portfolio.detail.trackList', '트랙 리스트'),
-              releaseDateLabel: t('portfolio.detail.releaseDate', '발매일'),
-              labelLabel: t('portfolio.detail.label', '레이블'),
-            }}
+            titleTag="h1"
+            imageSectionClassName="px-6 pt-8"
+            imageWrapperClassName="relative aspect-square max-w-md mx-auto rounded-xl overflow-hidden shadow-lg"
+            contentSectionClassName="p-8"
+            titleClassName="text-heading-2 font-title mb-2"
+            artistClassName="typo-card-body mb-6"
+            servicesHeadingClassName="typo-card-title mb-3"
+            primaryActionClassName="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+            summaryActions={
+              <button
+                type="button"
+                onClick={sharePortfolio}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+              >
+                <Share2 size={16} aria-hidden="true" />
+                {t('portfolio.detail.share')}
+              </button>
+            }
           />
-        </div>
+        </m.div>
       </Section>
       <RelatedStoriesSection
         stories={relatedStories}

@@ -4,12 +4,11 @@ import { X, Share2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { PortfolioItem, PortfolioCategory } from '../types/data';
 import { shareContent } from '../utils/shareUtils';
-import { getCategoryInfo } from '../utils/portfolioDataUtils';
 import { defaultLocale, type Locale } from '../lib/i18n';
 import { getSiteConfig } from '../data/siteConfig';
 import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock';
 import { useFocusTrapDialog } from '../utils/useFocusTrapDialog';
-import PortfolioDetailSummary from './portfolio/PortfolioDetailSummary';
+import PortfolioDetailContent from './portfolio/PortfolioDetailContent';
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -66,8 +65,6 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
 
   if (!item) return null;
 
-  const categoryInfo = getCategoryInfo(item.category, categories);
-
   const shareUrl = `${siteConfig.url}/${locale}/portfolio/${item.id}`;
   const metaDescription = t('portfolio.detail.metaDescription', {
     artist: item.artist,
@@ -118,18 +115,18 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
 
       <m.div
         ref={modalRef}
-        className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
+        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto overscroll-contain bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-2xl"
         variants={modalVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/95 dark:bg-gray-800/95 border-b border-gray-100 dark:border-gray-700 backdrop-blur-sm">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-gray-50/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-700 backdrop-blur-sm">
           <button
             ref={closeButtonRef}
             onClick={onClose}
             type="button"
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
             aria-label={t('actions.close')}
           >
             <X size={20} className="text-gray-600 dark:text-gray-300" aria-hidden="true" />
@@ -148,15 +145,14 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
           {item.title}
         </div>
 
-        <PortfolioDetailSummary
-          item={item}
-          categoryName={categoryInfo.name}
-          categoryColor={categoryInfo.color}
-          artistLabel={t('portfolio.detail.artistLabel')}
-          servicesTitle={t('portfolio.detail.servicesProvided')}
-          listenNowLabel={t('portfolio.detail.listenNow')}
-          listenUrl={item.link}
-        />
+        <div className="px-4 sm:px-6 pb-8 pt-2">
+          <PortfolioDetailContent
+            item={item}
+            categories={categories}
+            locale={locale}
+            titleTag="h2"
+          />
+        </div>
       </m.div>
     </m.div>
   );
