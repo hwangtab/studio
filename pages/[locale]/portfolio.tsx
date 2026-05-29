@@ -326,12 +326,16 @@ export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params })
 
   // productionNotes는 7개 언어 전체가 포함되어 __NEXT_DATA__가 과대해짐.
   // 목록 페이지 모달은 현재 locale 노트만 표시하므로 나머지 언어를 제거해 직렬화 크기를 절감.
-  // 노트가 없거나 해당 locale 값이 없으면 키 자체를 생략해야 함 (Next.js는 undefined 직렬화 불가).
-  const initialPortfolioItems = getPortfolioItems(locale).map((item) => {
-    const note = item.productionNotes?.[locale];
-    const { productionNotes: _omit, ...rest } = item;
-    return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
-  });
+  // JSON round-trip으로 모든 undefined 키를 제거 — Next.js getStaticProps는 undefined 직렬화 불가.
+  const initialPortfolioItems = JSON.parse(
+    JSON.stringify(
+      getPortfolioItems(locale).map((item) => {
+        const note = item.productionNotes?.[locale];
+        const { productionNotes: _omit, ...rest } = item;
+        return note ? { ...rest, productionNotes: { [locale]: note } } : rest;
+      })
+    )
+  ) as PortfolioItem[];
   const audioTracks = getAudioTracks(locale);
   const categories = getCategories(locale);
 
