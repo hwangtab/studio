@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
@@ -17,10 +15,9 @@ import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import { getReviews } from '../../data/reviews';
 import type { Locale } from '../../lib/i18n';
-import type { PortfolioItem, PortfolioCategory } from '../../types/data';
+import type { PortfolioItem } from '../../types/data';
 
 const ContactCTA = dynamic(() => import('../common/ContactCTA'));
-const PortfolioDetailModal = dynamic(() => import('../PortfolioDetailModal'), { ssr: false });
 
 interface FocusItem {
   title: string;
@@ -47,8 +44,7 @@ interface ProducerStat {
 interface TierPageProps {
   locale: Locale;
   tier: 'single' | 'ep' | 'album';
-  portfolioItems: PortfolioItem[];
-  categories: PortfolioCategory[];
+  portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured' | 'category'>[];
 }
 
 const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
@@ -59,33 +55,9 @@ const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
 const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
 
-export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems, categories }) => {
+export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
-  const router = useRouter();
   const getLink = (path: string) => `/${locale}${path}`;
-
-  // 모달 상태 관리 (portfolio.tsx 패턴 차용)
-  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
-  const basePath = `/${locale}/release-project/${tier}`;
-
-  useEffect(() => {
-    const itemId = router.query.item;
-    if (itemId) {
-      const item = portfolioItems.find((p) => p.id === itemId);
-      setSelectedItem(item || null);
-    } else {
-      setSelectedItem(null);
-    }
-  }, [router.query.item, portfolioItems]);
-
-  const handleCardClick = (item: PortfolioItem) => {
-    setSelectedItem(item);
-    router.push(`${basePath}?item=${item.id}`, undefined, { shallow: true, scroll: false });
-  };
-  const handleCloseModal = () => {
-    setSelectedItem(null);
-    router.push(basePath, undefined, { shallow: true, scroll: false });
-  };
   const k = (key: string) => `releaseProject.tiers.${tier}.detail.${key}`;
 
   const personaItems = t(k('personaItems'), { returnObjects: true }) as string[];
@@ -333,12 +305,10 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {discographyItems.map((item) => (
-              <button
+              <Link
                 key={item.id}
-                type="button"
-                onClick={() => handleCardClick(item)}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
-                aria-haspopup="dialog"
+                href={getLink(`/portfolio?item=${item.id}`)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 {item.image && (
                   <div className="aspect-square overflow-hidden relative">
@@ -358,19 +328,9 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
-          {/* 크롤러용 internal link (PageRank 유지) */}
-          <nav aria-label="Discography links" className="sr-only">
-            <ul>
-              {discographyItems.map((item) => (
-                <li key={item.id}>
-                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
           <div className="text-center mt-10">
             <Link
               href={getLink('/portfolio')}
@@ -501,18 +461,6 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           primaryButtonLabel={t('releaseProject.cta.inquiry')}
         />
       </Section>
-
-      <AnimatePresence>
-        {selectedItem && (
-          <PortfolioDetailModal
-            key={selectedItem.id}
-            item={selectedItem}
-            categories={categories}
-            onClose={handleCloseModal}
-            locale={locale}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };
