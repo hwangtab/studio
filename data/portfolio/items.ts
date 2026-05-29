@@ -117,7 +117,11 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 { "no": 3, "title": "알 수 없는 느낌 (Unknown Feeling)", "duration": "5:01" },
                 { "no": 4, "title": "지하철 (Subway)", "duration": "3:28" },
                 { "no": 5, "title": "저녁 노을 (Sunset)", "duration": "4:33" }
-            ]
+            ],
+            "productionNotes": {
+                "ko": "『하루살이 프로젝트 2: 알 수 없는 느낌』은 2025년 7월 22일에 공개된 하루살이 프로젝트의 정규 음반으로, 「알수없느낌(Unknown Feeling)」을 타이틀곡으로 내세웠다. 벅스 분류 기준 포크/포크 어쿠스틱 장르에 속하며, 「집을 나선 고양이」 「괴로워!」 「그림을 그려」 「새우 까주는 사람」 「집중 두 시간」 「아침밥 먹은 날에 더 배고파」 「말 필요 없는 노래」 등 일상의 장면과 감정을 구어체 가까운 제목으로 옮긴 곡들이 함께 실렸다. 시리즈의 두 번째 결과물답게 작은 순간을 응시하는 시선을 차분한 어쿠스틱 사운드로 풀어내며, 멜론·벅스 등 주요 음원 플랫폼에서 정식 유통되고 있다.",
+                "en": "\"Mayfly Project 2: Unknown Feeling\" is a full-length album by the Korean indie project Harusari Project (하루살이 프로젝트), released on July 22, 2025, with \"Unknown Feeling (알수없느낌)\" as the title track. Classified under Folk / Folk Acoustic on Bugs, the record collects songs that translate small everyday scenes and feelings into colloquial titles, including \"The Cat Left Home,\" \"In Pain,\" \"Just Painting,\" \"The Person Who Peels Shrimp (for Me),\" \"Focusing for Two Hours,\" \"Hungry Days when I eat Breakfast,\" and \"Wordless Song.\" As the second installment of the series, it sustains a quiet acoustic approach to ordinary moments and is distributed across major Korean streaming platforms such as Melon and Bugs."
+            }
         },
         {
             "id": "dystopia-2025",
@@ -302,6 +306,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["모모 (Vocal)"]
+            },
+            "productionNotes": {
+                "ko": "재즈 듀오 모모(보컬 예진 안젤라 박, 베이스 황슬기)의 'If this can be tolerated, what can't be?'는 2024년 11월 27일 디지털 싱글로 발매되었고, 같은 시기 반전·평화를 주제로 12팀이 참여한 컴필레이션 '이름을 모르는 먼 곳의 그대에게'에도 함께 수록됐다. 곡의 모티프는 팔레스타인 영화감독 엘리아 술레이만의 '실종의 연대기'에서 가져왔으며, 우크라이나 전쟁과 이스라엘-팔레스타인 분쟁, 한반도 분단까지 동시대 폭력을 '용인'하는 자유 사회의 모순을 짧고 단호한 질문으로 되묻는 재즈 곡이다. 멜론·벅스·지니·스포티파이·애플뮤직 등에서 정식 스트리밍할 수 있다.",
+                "en": "\"If this can be tolerated, what can't be?\" is a single by the Korean jazz duo MOMO — vocalist Yejin Angela Park and bassist Hwang Seulki — released on 27 November 2024. The track also appears on the anti-war and peace compilation \"To You in a Distant Place Whose Name I Don't Know,\" to which twelve acts contributed. Its central image is borrowed from Palestinian filmmaker Elia Suleiman's \"Chronicle of a Disappearance,\" and the lyric turns a sharp question on a society that calls itself free while tolerating violence — from the war in Ukraine to the Israel–Palestine conflict and the division of the Korean peninsula. The song streams on Melon, Bugs, Genie, Spotify and Apple Music."
             }
         },
         {
