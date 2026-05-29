@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
 import {
-  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
+  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign,
   Target, Calendar, ListChecks, X, MessageCircle, BookOpen,
   Award, Star, Quote, ArrowRightLeft,
 } from 'lucide-react';
@@ -18,12 +18,6 @@ import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
 
 const ContactCTA = dynamic(() => import('../common/ContactCTA'));
-
-interface InProgressItem {
-  artist: string;
-  title: string;
-  typeKey: string;
-}
 
 interface FocusItem {
   title: string;
@@ -51,16 +45,7 @@ interface TierPageProps {
   locale: Locale;
   tier: 'single' | 'ep' | 'album';
   portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured' | 'category'>[];
-  inProgressItems: InProgressItem[];
 }
-
-const ALL_IN_PROGRESS: InProgressItem[] = [
-  { artist: '마리코 & 유키에', title: '〈남산타워〉 정규앨범', typeKey: 'fullAlbum' },
-  { artist: 'Sabbaha', title: '정규 2집', typeKey: 'fullAlbum' },
-  { artist: '남자애', title: '릴레이 싱글', typeKey: 'single' },
-  { artist: 'Sickbaby', title: '정규 2집', typeKey: 'fullAlbum' },
-  { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
-];
 
 const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
   single: '/images/album1.webp',
@@ -89,31 +74,12 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
 
-  const [today, setToday] = useState('');
-  useEffect(() => {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    setToday(`${yyyy}.${mm}.${dd}`);
-  }, []);
-
-  const featuredPortfolioItems = portfolioItems
-    .filter((i) => i.featured)
-    .slice(0, 12);
   const caseStudyIds = CASE_STUDY_IDS[tier];
   const caseStudyPortfolioItems = caseStudyIds
     .map((id) => portfolioItems.find((p) => p.id === id))
     .filter((p): p is NonNullable<typeof p> => p !== undefined);
   const otherTiers = ALL_TIERS.filter((t) => t !== tier);
   const reviewsToShow = getReviews(locale).filter((r) => REVIEW_IDS_FOR_RELEASE_PROJECT.includes(r.id));
-
-  const inProgressTypeLabels: Record<string, string> = {
-    fullAlbum: t('releaseProject.inProgress.types.fullAlbum'),
-    single: t('releaseProject.inProgress.types.single'),
-    ep: t('releaseProject.inProgress.types.ep'),
-    miniAlbum: t('releaseProject.inProgress.types.miniAlbum'),
-  };
 
   return (
     <div className="overflow-visible">
@@ -407,91 +373,14 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </Section>
       )}
 
-      {/* 지금 함께 만들고 있는 작업들 */}
-      <Section variant="alternate">
-        <SectionHeading
-          icon={Disc}
-          title={t('releaseProject.inProgress.sectionTitle')}
-          subtitle={t('releaseProject.inProgress.sectionSubtitle')}
-          className="mb-3"
-        />
-        {today && (
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mb-8">
-            {t('releaseProject.inProgress.asOf', { date: today })}
-          </p>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          {ALL_IN_PROGRESS.map((item) => (
-            <div
-              key={`${item.artist}-${item.title}`}
-              className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
-            >
-              <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
-                {inProgressTypeLabels[item.typeKey] ?? item.typeKey}
-              </span>
-              <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       {/* FAQ */}
       {Array.isArray(faqItems) && faqItems.length > 0 && (
         <FAQSection
-          variant="default"
+          variant="alternate"
           items={faqItems}
           title={t(k('faqSectionTitle'))}
           subtitle={t(k('faqSubtitle'))}
         />
-      )}
-
-      {/* 디스코그래피 */}
-      {featuredPortfolioItems.length > 0 && (
-        <Section variant="alternate">
-          <SectionHeading
-            icon={Disc}
-            title={t('releaseProject.discography.sectionTitle')}
-            subtitle={t('releaseProject.discography.sectionSubtitle')}
-            className="mb-10"
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {featuredPortfolioItems.map((item) => (
-              <Link
-                key={item.id}
-                href={getLink(`/portfolio/${item.id}`)}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                {item.image && (
-                  <div className="aspect-square overflow-hidden relative">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-                <div className="p-5">
-                  <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href={getLink('/portfolio')}
-              className="inline-flex items-center gap-2 text-primary font-semibold hover:underline underline-offset-2"
-            >
-              {t('releaseProject.discography.viewAll')} <ArrowRight size={16} />
-            </Link>
-          </div>
-        </Section>
       )}
 
       {/* 상담 프로세스 */}

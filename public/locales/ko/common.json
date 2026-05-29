@@ -2069,7 +2069,7 @@
             { "month": "M7", "label": "발매·매체 PR", "desc": "발매 당일 및 발매 후 평론가·매체 보도자료 발송." }
           ],
           "deliverablesSectionTitle": "무엇을 받으시나요",
-          "deliverablesIncludedTitle": "이 가격에 포함되는 것",
+          "deliverablesIncludedTitle": "프로젝트 구성 요소",
           "deliverablesIncluded": [
             "앨범 기획 · 방향 디렉팅",
             "보컬 녹음 (스튜디오 NOL 인하우스)",
@@ -2158,7 +2158,7 @@
             { "month": "M11-12", "label": "EP 발매·2차 PR", "desc": "EP 전체 발매 및 두 번째 매체 PR, 발매 후 캠페인." }
           ],
           "deliverablesSectionTitle": "무엇을 받으시나요",
-          "deliverablesIncludedTitle": "이 가격에 포함되는 것",
+          "deliverablesIncludedTitle": "프로젝트 구성 요소",
           "deliverablesIncluded": [
             "앨범 기획 · 컨셉 디렉팅",
             "트랙리스트 큐레이션 · 시퀀싱",
@@ -2249,7 +2249,7 @@
             { "month": "M22-24", "label": "정규 발매·청취회·후속", "desc": "정규 발매, 평론가 청취회 기획, 후속 캠페인." }
           ],
           "deliverablesSectionTitle": "무엇을 받으시나요",
-          "deliverablesIncludedTitle": "이 가격에 포함되는 것",
+          "deliverablesIncludedTitle": "프로젝트 구성 요소",
           "deliverablesIncluded": [
             "A&R 컨설팅 · 곡 선별",
             "앨범 트랙리스트 · 시퀀스 설계",

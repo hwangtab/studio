@@ -25,7 +25,10 @@ const sectionTitleClass =
   'typo-card-title mb-4 text-gray-900 dark:text-white';
 
 const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps) => {
-  const notes = item.productionNotes?.[locale];
+  // productionNotes는 사실 검증 전까지 UI 노출 비활성화 (AI 생성 가능성 — 작품별 사실 검증 후 재활성화)
+  const notes: string | undefined = undefined;
+  void item.productionNotes;
+  void locale;
   const credits = item.credits;
   const trackList = item.trackList;
   const hasMeta = Boolean(item.releaseDate || item.label);

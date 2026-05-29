@@ -12,7 +12,7 @@ interface Props {
 }
 
 const AlbumReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems }) => (
-  <TierPage locale={locale} tier="album" portfolioItems={portfolioItems} inProgressItems={[]} />
+  <TierPage locale={locale} tier="album" portfolioItems={portfolioItems} />
 );
 
 AlbumReleasePage.hasHero = true;

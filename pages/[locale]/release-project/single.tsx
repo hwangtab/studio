@@ -12,7 +12,7 @@ interface Props {
 }
 
 const SingleReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems }) => (
-  <TierPage locale={locale} tier="single" portfolioItems={portfolioItems} inProgressItems={[]} />
+  <TierPage locale={locale} tier="single" portfolioItems={portfolioItems} />
 );
 
 SingleReleasePage.hasHero = true;

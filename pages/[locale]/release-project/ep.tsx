@@ -12,7 +12,7 @@ interface Props {
 }
 
 const EpReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems }) => (
-  <TierPage locale={locale} tier="ep" portfolioItems={portfolioItems} inProgressItems={[]} />
+  <TierPage locale={locale} tier="ep" portfolioItems={portfolioItems} />
 );
 
 EpReleasePage.hasHero = true;
