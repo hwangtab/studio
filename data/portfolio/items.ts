@@ -32,8 +32,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2026-02-22",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["티어라이너 (Vocal)"],
-                "gear": ["Neumann TLM 103"]
+                "musicians": ["티어라이너 (Vocal)"]
             },
             "productionNotes": {
                 "ko": "티어라이너(tearliner)와 Love X Stereo의 협업 싱글 \"Bite Hard\"(2026년 2월 23일 발매)의 오프닝 트랙. 작사·작곡·보컬은 liner가 맡았고, 편곡과 모든 악기는 배한슬이 연주했다. 장르는 인디 록·드림 팝·기타 팝 계열로 분류되며, 마스터링은 런던 메트로폴리스 스튜디오의 Andy 'Hippy' Baldwin이 담당했다.\n\n이 트랙의 보컬 레코딩과 믹싱은 Studio NOL에서 황경하가 진행했다. 티어라이너 특유의 몽환적이고 서정적인 사운드 결을 유지하면서 Love X Stereo와의 협업 색채를 담아낸 곡이다.",
@@ -58,8 +57,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "The Projectors",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["더 프로젝터스 전 멤버"],
-                "gear": ["Studer A810 Multitrack", "Neumann U87", "Neve 1073 Preamp", "Fender Jazz Bass"]
+                "musicians": ["더 프로젝터스 전 멤버"]
             },
             "productionNotes": {
                 "ko": "더 프로젝터스(The Projectors)는 보컬 Rosalyn Song과 기타·베이스 Simon DM으로 이루어진 듀오로, 매니지먼트는 Pleiades Media, 유통은 FUGA를 통한다. 싱글 '바보의 첫 비행(Fool's First Flight)'은 2025년 11월 10일 발매된 1트랙 싱글로, 멜론·벅스에서 락 장르로 분류된다.\n\n작사는 Rosalyn Song, 작·편곡은 Simon DM과 Rosalyn Song이 함께 맡았다. 곡은 처음으로 자신의 창작물을 세상에 내보이는 순간의 설렘과 두려움을 다루며, 화성 없는 모놀로그처럼 시작해 영화적 스트링이 더해지고 마지막 후렴에서 키를 올려 고조되는 구성을 가진다.",
@@ -108,8 +106,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Harusali Project",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["하루살이 프로젝트 아티스트 전원"],
-                "gear": ["Pro Tools HDX", "Neumann U87", "Lexicon 480L", "Tube-Tech CL1B"]
+                "musicians": ["하루살이 프로젝트 아티스트 전원"]
             },
             "trackList": [
                 { "no": 1, "title": "아침 햇살 (Morning Light)", "duration": "4:12" },
@@ -144,8 +141,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Samgeuk Jeonpasa",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["삼각전파사"],
-                "gear": ["Prophet-6", "Moog Sub 37", "Ableton Live", "Neumann U87", "Lexicon 224"]
+                "musicians": ["삼각전파사"]
             },
             "productionNotes": {
                 "ko": "삼각전파사는 SF작가 장호진의 솔로 실험전자음악 프로젝트로, 2015년부터 활동해왔다. 『Dystopia 2025』는 2025년 5월 2일 FUGA를 통해 유통된 정규 1집으로, 왜곡된 신디사이저와 급진적 전자음향을 1980년대 민중음악의 저항 정신과 결합한 작품이다.\n\n수록곡 '땅거미 Z'(젠트리피케이션), '그리마 X'(자본주의), '물결'(산업재해) 등은 2025년 한국 사회의 구체적 현안을 다루며, 'House of Rising Sun' 재해석도 포함됐다. 박치치 감독이 티저 영상을 연출했고, 발매 기념 공연은 서울 스페이스 한강에서 진행됐다.",
@@ -170,8 +166,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2023-09-01",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["자이 (Vocal)"],
-                "gear": ["Neumann U87", "Classé Preamp", "Neve 1073", "Lexicon 480L"]
+                "musicians": ["자이 (Vocal)"]
             },
             "productionNotes": {
                 "ko": "자이(Jai)의 EP 'Golden Hour'는 2025년 3월 10일 발매된 5곡 구성의 미니앨범으로, 타이틀곡 'Fever'와 함께 '너의 데이트', '때늦은 옛 이야기', '오늘 이 밤을', 그리고 '너의 데이트(Piano Ver.)'가 수록되어 있다. 벅스·멜론·지니 등 국내 주요 음원 플랫폼에 정식 등록되어 있다.\n\nStudio NOL은 본 EP의 작업에 참여했다. 보컬 녹음과 믹싱을 거쳐 곡 전반의 정서적 결을 다듬는 데 초점을 두었으며, 피아노 버전을 포함한 다섯 트랙이 일관된 톤으로 완성될 수 있도록 사운드의 균형을 잡았다.",
@@ -195,8 +190,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2023-05-18",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["허정혁 (Vocal)"],
-                "gear": ["Shure SM7B", "Neumann U87", "Neve 1073", "Tube-Tech CL1B"]
+                "musicians": ["허정혁 (Vocal)"]
             },
             "productionNotes": {
                 "ko": "허정혁의 싱글 '바람 한 점'은 2024년 12월 13일 발매된 포크/어쿠스틱 트랙으로, 한국스마트협동조합 레이블을 통해 FUGA가 유통했다. 허정혁이 작사·작곡·편곡과 보컬·나일론 기타·프로그래밍을 직접 맡았고, 박기훈이 플루트와 클라리넷, 곽주나와 허정혁이 코러스로 참여했다.\n\n봄날 창문으로 불어든 한 줄기 바람에서 영감을 받은 곡으로, 어디서 오고 어디로 가는지 알 수 없는 바람이 지친 몸을 어루만져 다시 살아가게 한다는 메타포를 담고 있다. Studio NOL에서 녹음 작업이 진행되었다.",
@@ -223,8 +217,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Peace and Music",
             "credits": {
                 "engineer": "Studio NOL (황경하) — Mastering & Album Direction",
-                "musicians": ["Various Artists (다수 아티스트 협업)"],
-                "gear": ["Pro Tools HDX", "Neumann U87", "Lexicon 480L", "Weber Mass"]
+                "musicians": ["Various Artists (다수 아티스트 협업)"]
             },
             "trackList": [
                 { "no": 1, "title": "이름을 모르는 먼 곳의 그대에게", "duration": "4:22" },
@@ -254,8 +247,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2024-11-29",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["이서영 (Vocal)"],
-                "gear": ["Neumann U87Ai"]
+                "musicians": ["이서영 (Vocal)"]
             },
             "productionNotes": {
                 "ko": "'우리'는 싱어송라이터 이서영이 2025년 2월 7일 발매된 컴필레이션 앨범 '이름을 모르는 먼 곳의 그대에게'에 참여해 수록한 트랙이다. 이 앨범은 12개 팀이 평화 메시지를 주제로 모은 프로젝트로, 포크·록·재즈·전자 등 다양한 장르를 아우르는 총 13곡, 약 55분 분량의 합본이며 마스터링은 이재수가 맡았다.\n\n이서영은 2019년 데뷔한 솔로 싱어송라이터로 발라드·인디·포크 계열에서 활동해 왔으며, EP '허물 벗기'(2022)와 싱글 '서리'(2024), '무성한 줄기'(2025) 등을 발표했다. '우리'는 그가 평화를 주제로 한 공동 프로젝트에 참여한 작업으로, 재생 시간 약 4분 22초의 곡으로 기록되어 있다.",
@@ -279,8 +271,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2024-12-03",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["자이 (Vocal)", "HANASH (Rap)"],
-                "gear": ["Neumann U87Ai"]
+                "musicians": ["자이 (Vocal)", "HANASH (Rap)"]
             },
             "productionNotes": {
                 "ko": "'분홍색 패딩 소녀'는 싱어송라이터 자이(Jai)와 일렉트로닉 뮤지션 HANASH가 함께 만든 싱글로, 2024년 12월 4일 발매됐다. 이 곡은 반전·평화를 주제로 12팀의 뮤지션이 참여한 프로젝트 앨범 '이름을 모르는 먼 곳의 그대에게'에도 수록됐다.\n\n곡은 전쟁의 참상을 한 소녀의 시선으로 풀어내는 내러티브를 취한다. 자이의 중저음 보컬이 절제된 톤으로 메시지를 전하고, HANASH의 모듈라 신디사이저 작업이 앰비언트 패드와 중음역대 아르페지오 시퀀스로 곡의 정서를 받쳐 일상의 불안과 긴장감을 표현한다.",
@@ -402,8 +393,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2025-01-09",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["김인 (Vocal)"],
-                "gear": ["Neumann TLM 103"]
+                "musicians": ["김인 (Vocal)"]
             },
             "productionNotes": {
                 "ko": "「별을 보러 간 사람」은 싱어송라이터 김인이 2025년 1월에 발표한 디지털 싱글이다. 동명의 싱글 앨범에 한 곡으로 수록되어 멜론 등 주요 음원 플랫폼을 통해 공개됐다.\n\nStudio NOL은 이 곡의 기획·편곡·레코딩·믹싱과 발매 홍보까지 전 과정을 담당했다. 황경하가 엔지니어링을 맡아 보컬 트래킹부터 믹싱까지 진행했으며, 작품은 Studio NOL 공식 포트폴리오에 'kim-in-star-person' 항목으로 등재되어 있다.",
@@ -428,8 +418,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "artist": "까르",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["까르 (Vocal)"],
-                "gear": ["Shure SM7B", "Neumann U87Ai"]
+                "musicians": ["까르 (Vocal)"]
             },
             "productionNotes": {
                 "ko": "까르(Caru)는 포크·어쿠스틱 기반의 여성 솔로 싱어송라이터로, 「TRANSITION」은 2024년 12월 13일 발매된 디지털 싱글이다. 기타 한 대로 일상의 무대를 이어 온 독학 뮤지션이 CJ문화재단 튠업 25기 선정 이후 본격적인 음원 작업으로 넘어가는 시점에 놓인 곡으로, 같은 흐름에서 2025년 싱글 「상처의 빛」과 정규 'O' 연작(「원 '原'」, 「정 '情'」)이 이어졌다.\n\n스튜디오 놀은 이 싱글의 작업에 참여했다. 보컬과 어쿠스틱 기타가 중심에 놓인 까르 특유의 결을 해치지 않도록, 과도한 가공보다 원음의 질감을 살리는 방향으로 진행했다.",
@@ -532,8 +521,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Studio NOL",
             "credits": {
                 "engineer": "황경하 (전 과정 총괄)",
-                "musicians": ["황경하 (Vocal, Acoustic Guitar, Piano, Synthesizer)"],
-                "gear": ["Neumann U87", "DPA 4006", "Neve 1073", "Prophet-6", "Pro Tools HDX", "Dolby Atmos Production Suite"]
+                "musicians": ["황경하 (Vocal, Acoustic Guitar, Piano, Synthesizer)"]
             },
             "productionNotes": {
                 "ko": "'눈녹듯'은 음악가이자 기획자 황경하가 2024년 8월 5일 발매한 솔로 디지털 싱글이다. Apple Music, Spotify, Bugs, Genie 등 주요 음원 플랫폼에 유통되어 있으며, 단일 곡으로 구성된 싱글 형태로 발표되었다.\n\n황경하는 밴드 노컨트롤 멤버이자 자립음악생산조합 운영위원으로 활동해 왔으며, 11팀이 참여한 사회참여 컴필레이션 '젠트리피케이션'을 기획·제작해 한국대중음악상 선정위원 특별상을 수상한 바 있다. 솔로 활동으로는 2022년 싱글 '가지말아요'에 이어 본 작품을 선보였다. 본 작품은 Studio NOL에서 작업되었다.",
@@ -560,8 +548,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Namjae",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["남자애"],
-                "gear": ["Prophet-6", "Moog Sub 37", "Studer A810", "Neumann U87", "Neve 88R"]
+                "musicians": ["남자애"]
             },
             "trackList": [
                 { "no": 1, "title": "위 인물은 X를 겪고", "duration": "4:12" },
@@ -594,8 +581,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Studio NOL / Melon Music",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["어린이 보컬 팀", "성인 내레이션"],
-                "gear": ["Neumann U87", "Sennheiser MKH 416", "Neve 1073", "Lexicon 480L"]
+                "musicians": ["어린이 보컬 팀", "성인 내레이션"]
             },
             "productionNotes": {
                 "ko": "《물고기는 물이 없으면 죽어요》는 2022년 11월 24일 발매된 8곡 구성의 옴니버스(Various Artists) 컴필레이션 앨범이다. 맑은, 경하와 세민, 고효경, 길가는 밴드, 초륜, 유동혁, 박치치, 지누 콘다 등 여러 인디 아티스트가 참여했으며, 멜론·벅스 등 주요 국내 음원 플랫폼에서 유통되고 있다.\n\n수록곡들은 록/메탈, 발라드, 인디, 포크/블루스/컨트리 등 여러 장르를 아우른다. Studio NOL이 이 컴필레이션의 작업에 참여했다.",
@@ -671,8 +657,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "releaseDate": "2024-03-26",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["Jinu Konda (Vocal, Guitar)"],
-                "gear": ["Shure SM7B"]
+                "musicians": ["Jinu Konda (Vocal, Guitar)"]
             }
         },
         {
@@ -865,8 +850,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Balkwaehan",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
-                "musicians": ["발쾌한"],
-                "gear": ["Neumann U87", "Neve 1073", "FabFilter Pro-Q 3", "Waves L1"]
+                "musicians": ["발쾌한"]
             }
         },
         {
@@ -888,8 +872,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "label": "Korean Music Awards",
             "credits": {
                 "engineer": "Studio NOL (황경하) — Mastering & Album Direction",
-                "musicians": ["Various Artists (KMA 참여 아티스트 전원)"],
-                "gear": ["Pro Tools HDX", "Neumann U87", "Neve 88R", "Lexicon 480L"]
+                "musicians": ["Various Artists (KMA 참여 아티스트 전원)"]
             },
             "productionNotes": {
                 "ko": "2016년 10월 5일 포크라노스를 통해 발매된 컴필레이션 앨범으로, 자립음악생산조합이 기획했다. 옥바라지골목, 테이크아웃드로잉, 경의선공유지 등 강제 철거 위기에 놓인 공간과 그 곳의 이야기를 음악으로 기록한 프로젝트로, 파다파, 여행하는 작곡가 김동산, 아나킨 프로젝트, 황푸하, 김해원, 여유, 잇다, 심애리·이권형, 우레루나, 박지하·김오키 등 11곡이 수록되어 있다.\n\n황경하가 프로듀스·녹음·믹스를 맡았으며, 마스터링은 소노리떼 마스터링 스튜디오에서 진행했다. 포크, 블루스, 락 등 다양한 인디 사운드가 한 앨범에 모여 젠트리피케이션이라는 사회적 의제를 음악적으로 기록한 작품이다.",
