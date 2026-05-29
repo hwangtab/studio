@@ -1746,6 +1746,37 @@
         }
       ]
     },
+    "spotlight": {
+      "sectionTitle": "Recent production notes",
+      "sectionSubtitle": "Verified case studies — click a work title to read the full production notes.",
+      "viewFull": "Read full notes"
+    },
+    "hubFaq": {
+      "sectionTitle": "Frequently asked questions",
+      "sectionSubtitle": "Five questions people often ask when they first hear about the release project.",
+      "items": [
+        {
+          "question": "What exactly is the release project?",
+          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media/press PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and press connections run through the 15-year network we've built in the indie scene. You can take the full package or pick individual steps."
+        },
+        {
+          "question": "How is the price determined?",
+          "answer": "Vocal recording and mixing form the base rate (from ~₩500K for a single, ~₩4M for a full album). Additional items — session musicians, arrangement scope, distribution, media PR — are added on top. You get a custom quote based on our rate sheet after the free consultation. No hidden costs."
+        },
+        {
+          "question": "How long does it take?",
+          "answer": "The standard pace is roughly 7 months for a single, 12 months for an EP, and 24 months for a full album. This can be shortened depending on how ready the songs are, the session scope, and the release campaign schedule. We'll set a realistic timeline together during the consultation."
+        },
+        {
+          "question": "What kind of artists have you worked with?",
+          "answer": "We've worked on 30+ releases with a range of indie artists — singer-songwriters, bands, jazz duos, experimental electronic projects, and compilation projects. You can see real past work in the discography section above and on the portfolio page."
+        },
+        {
+          "question": "How does the free consultation work?",
+          "answer": "Send a quick message on KakaoTalk with your song and situation → 30-minute free consultation (video call or studio visit) → custom quote and timeline within 48 hours. You don't need to decide on the spot. If it's not the right fit, we'll help you find another path."
+        }
+      ]
+    },
     "cta": {
       "titleLine1": "A release you can't do alone —",
       "titleHighlight": "we'll go all the way with you",

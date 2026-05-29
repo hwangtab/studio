@@ -1703,6 +1703,37 @@
         }
       ]
     },
+    "spotlight": {
+      "sectionTitle": "Ghi chú sản xuất gần đây",
+      "sectionSubtitle": "Các trường hợp đã được xác minh — nhấp vào tên tác phẩm để xem toàn bộ ghi chú sản xuất.",
+      "viewFull": "Xem toàn bộ ghi chú"
+    },
+    "hubFaq": {
+      "sectionTitle": "Câu hỏi thường gặp",
+      "sectionSubtitle": "Năm câu hỏi mà mọi người thường hỏi khi lần đầu tiếp xúc với dự án phát hành.",
+      "items": [
+        {
+          "question": "Dự án phát hành là dịch vụ gì?",
+          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL, trong khi các session nhạc cụ và kết nối báo chí được triển khai qua mạng lưới 15 năm chúng tôi đã xây dựng trong cộng đồng indie. Bạn có thể chọn trọn gói hoặc chỉ chọn một số bước riêng lẻ."
+        },
+        {
+          "question": "Chi phí được xác định như thế nào?",
+          "answer": "Thu âm vocal và mixing là đơn giá cơ bản (single từ ~₩500K, album đầy đủ từ ~₩4M). Trên cơ sở đó, các hạng mục bổ sung — nhạc công session, phạm vi phối khí, phân phối, PR truyền thông — sẽ được cộng thêm. Sau buổi tư vấn miễn phí, bạn sẽ nhận được báo giá tùy chỉnh dựa trên bảng đơn giá. Không có chi phí ẩn."
+        },
+        {
+          "question": "Thời gian thực hiện là bao lâu?",
+          "answer": "Nhịp tiêu chuẩn là khoảng 7 tháng cho single / 12 tháng cho EP / 24 tháng cho album đầy đủ. Thời gian có thể rút ngắn tùy theo mức độ sẵn sàng của bài hát, quy mô session và lịch trình chiến dịch phát hành. Trong buổi tư vấn, chúng ta sẽ cùng thiết lập một lịch trình thực tế."
+        },
+        {
+          "question": "Bạn đã làm việc với những nghệ sĩ nào?",
+          "answer": "Chúng tôi đã cùng thực hiện hơn 30 sản phẩm phát hành với nhiều nghệ sĩ indie — singer-songwriter, ban nhạc, song tấu jazz, dự án điện tử thử nghiệm và các dự án tuyển tập. Bạn có thể xem các album thực tế đã hợp tác ở phần discography phía trên và trang portfolio."
+        },
+        {
+          "question": "Buổi tư vấn miễn phí diễn ra như thế nào?",
+          "answer": "Chia sẻ nhẹ nhàng bài hát và tình hình của bạn qua KakaoTalk → tư vấn miễn phí 30 phút (video call hoặc đến studio) → báo giá và đề xuất lịch trình tùy chỉnh trong vòng 48 giờ. Bạn không cần phải quyết định ngay tại chỗ. Nếu không phù hợp, chúng tôi sẽ giúp bạn tìm con đường khác."
+        }
+      ]
+    },
     "cta": {
       "titleLine1": "Một sự phát hành bạn không thể làm một mình —",
       "titleHighlight": "chúng tôi sẽ đồng hành đến cùng",

@@ -4,10 +4,11 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award } from 'lucide-react';
+import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award, BookOpen } from 'lucide-react';
 import SEO from '../../../components/SEO';
 import SectionHeading from '../../../components/ui/SectionHeading';
 import ImageHero from '../../../components/common/ImageHero';
+import FAQSection from '../../../components/ui/FAQSection';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
@@ -17,12 +18,22 @@ import type { NextPageWithLayout } from '../../../types';
 
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 
+interface SpotlightItem {
+  id: string;
+  artist: string;
+  title: string;
+  image: string;
+  noteExcerpt: string;
+}
+
 interface ReleaseProjectProps {
   locale: Locale;
   portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
+  spotlightItems: SpotlightItem[];
 }
 
 const TIER_KEYS = ['single', 'ep', 'album'] as const;
+const SPOTLIGHT_IDS = ['kang-ho-jung-self-titled', 'peace-and-music', 'dystopia-2025'];
 
 const PROCESS_ICONS = [
   { step: '01', icon: Lightbulb },
@@ -40,11 +51,12 @@ const IN_PROGRESS_ITEMS = [
   { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
 ];
 
-const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems }) => {
+const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
+  const hubFaqItems = t('releaseProject.hubFaq.items', { returnObjects: true }) as { question: string; answer: string }[];
   const [today, setToday] = useState('');
   useEffect(() => {
     const d = new Date();
@@ -62,6 +74,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         description={t('releaseProject.seo.description')}
         keywords={t('releaseProject.seo.keywords')}
         canonical={`/${locale}/release-project`}
+        faqItems={Array.isArray(hubFaqItems) ? hubFaqItems : null}
       />
 
       <ImageHero
@@ -308,6 +321,61 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         </Section>
       )}
 
+      {/* 최근 작업 노트 spotlight — 검증된 productionNotes 3건 */}
+      {spotlightItems.length > 0 && (
+        <Section variant="alternate">
+          <SectionHeading
+            icon={BookOpen}
+            title={t('releaseProject.spotlight.sectionTitle')}
+            subtitle={t('releaseProject.spotlight.sectionSubtitle')}
+            className="mb-12"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {spotlightItems.map((item) => (
+              <Link
+                key={item.id}
+                href={getLink(`/portfolio/${item.id}`)}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+              >
+                {item.image && (
+                  <div className="aspect-square overflow-hidden relative">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+                <div className="p-6 flex flex-col flex-1">
+                  <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4 flex-1 line-clamp-6">
+                    {item.noteExcerpt}
+                  </p>
+                  <span className="inline-flex items-center gap-1 text-xs text-primary font-medium self-start mt-auto">
+                    {t('releaseProject.spotlight.viewFull')} <ArrowRight size={12} />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* 자주 묻는 질문 */}
+      {Array.isArray(hubFaqItems) && hubFaqItems.length > 0 && (
+        <FAQSection
+          variant="default"
+          items={hubFaqItems}
+          title={t('releaseProject.hubFaq.sectionTitle')}
+          subtitle={t('releaseProject.hubFaq.sectionSubtitle')}
+        />
+      )}
+
       {/* 전환 CTA */}
       <Section variant="alternate" className="py-16">
         <ContactCTA
@@ -346,9 +414,25 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
       featured,
     }));
 
+  const spotlightItems: SpotlightItem[] = SPOTLIGHT_IDS
+    .map((id) => {
+      const item = allItems.find((i) => i.id === id);
+      if (!item) return null;
+      const note = item.productionNotes?.[locale] ?? item.productionNotes?.en ?? item.productionNotes?.ko ?? '';
+      const noteExcerpt = note.split('\n\n')[0] ?? '';
+      return {
+        id: item.id,
+        artist: item.artist,
+        title: item.title,
+        image: item.image,
+        noteExcerpt,
+      };
+    })
+    .filter((i): i is SpotlightItem => i !== null && i.noteExcerpt.length > 0);
+
   return buildPageStaticProps(
     locale,
-    { locale, portfolioItems },
+    { locale, portfolioItems, spotlightItems },
     { revalidate: 86400 }
   );
 };
