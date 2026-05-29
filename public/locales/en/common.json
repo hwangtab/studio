@@ -1751,6 +1751,10 @@
       "sectionSubtitle": "Verified case studies — click a work title to read the full production notes.",
       "viewFull": "Read full notes"
     },
+    "relatedStories": {
+      "sectionTitle": "Release guides",
+      "sectionSubtitle": "From timelines and distribution to platforms, revenue, and copyright — the guides artists read most before releasing."
+    },
     "hubFaq": {
       "sectionTitle": "Frequently asked questions",
       "sectionSubtitle": "Five questions people often ask when they first hear about the release project.",

@@ -11,9 +11,17 @@
  * - 카테고리 분포는 의도적으로 다양하게 (recording/vocal/lesson/business 혼합)
  */
 
-export type ServiceKey = 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video';
+export type ServiceKey = 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project';
 
 export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
+  'release-project': [
+    'release-timeline1',
+    'music-distribution1',
+    'streaming-platforms1',
+    'streaming-revenue1',
+    'music-copyright1',
+    'global-release1',
+  ],
   'wedding-song': [
     'wedding-song-guide1',
     'vocal-prep1',

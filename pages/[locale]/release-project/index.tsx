@@ -15,11 +15,14 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../../lib/i18n';
 import { getPortfolioItems } from '../../../data/portfolio';
+import { getServiceRelatedStories } from '../../../lib/serviceRelatedStories';
 import type { PortfolioItem } from '../../../types/data';
+import type { StoryCardData } from '../../../types/story';
 import type { NextPageWithLayout } from '../../../types';
 
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });
+const RelatedStoriesSection = dynamic(() => import('../../../components/ui/RelatedStoriesSection'));
 
 interface SpotlightItem {
   id: string;
@@ -33,6 +36,7 @@ interface ReleaseProjectProps {
   locale: Locale;
   portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
   spotlightItems: SpotlightItem[];
+  relatedStories: StoryCardData[];
 }
 
 const TIER_KEYS = ['single', 'ep', 'album'] as const;
@@ -53,7 +57,7 @@ const IN_PROGRESS_ITEMS = [
   { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
 ];
 
-const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems }) => {
+const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
@@ -396,6 +400,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         </Section>
       )}
 
+      {/* 발매 가이드 — 큐레이션된 관련 스토리 */}
+      <RelatedStoriesSection
+        stories={relatedStories}
+        locale={locale}
+        title={t('releaseProject.relatedStories.sectionTitle')}
+        subtitle={t('releaseProject.relatedStories.sectionSubtitle')}
+      />
+
       {/* 자주 묻는 질문 */}
       {Array.isArray(hubFaqItems) && hubFaqItems.length > 0 && (
         <FAQSection
@@ -472,9 +484,11 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
     })
     .filter((i) => i.noteExcerpt.length > 0);
 
+  const relatedStories = getServiceRelatedStories('release-project', locale);
+
   return buildPageStaticProps(
     locale,
-    { locale, portfolioItems, spotlightItems },
+    { locale, portfolioItems, spotlightItems, relatedStories },
     { revalidate: 86400 }
   );
 };

@@ -1706,6 +1706,10 @@
       "sectionSubtitle": "Tasdiqlangan haqiqiy ishlar — to'liq prodyuserlik yozuvlarini ko'rish uchun ish nomini bosing.",
       "viewFull": "To'liq yozuvlarni o'qish"
     },
+    "relatedStories": {
+      "sectionTitle": "Reliz bo'yicha qo'llanmalar",
+      "sectionSubtitle": "Reliz jadvali va tarqatishdan tortib platformalar, daromad va mualliflik huquqigacha — artistlar reliz oldidan eng ko'p o'qiydigan qo'llanmalar."
+    },
     "hubFaq": {
       "sectionTitle": "Tez-tez so'raladigan savollar",
       "sectionSubtitle": "Chiqarish loyihasi bilan birinchi marta tanishadiganlar ko'p so'raydigan beshta savol.",
