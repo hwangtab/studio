@@ -48,9 +48,9 @@ interface TierPageProps {
 }
 
 const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
-  single: '/images/album1.webp',
-  ep: '/images/album2.webp',
-  album: '/images/album3.webp',
+  single: '/images/recording11.webp',
+  ep: '/images/recording13.webp',
+  album: '/images/recording15.webp',
 };
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
 const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
