@@ -413,9 +413,11 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
       featured,
     }));
 
+  const SPOTLIGHT_EXCLUDE_IDS = ['hwang-gyeong-ha-nunnokeut'];
   const spotlightItems: SpotlightItem[] = allItems
     .filter((i) => i.productionNotes && Object.keys(i.productionNotes).length > 0)
     .filter((i) => i.releaseDate)
+    .filter((i) => !SPOTLIGHT_EXCLUDE_IDS.includes(i.id))
     .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
     .slice(0, 3)
     .map((item) => {
