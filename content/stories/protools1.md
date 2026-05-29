@@ -12,8 +12,7 @@ tags:
   - Pro Tools 컴프레서
   - 업계 표준 DAW
 thumbnail: /images/room4.webp
-summary: >-
-  Pro Tools 보컬 녹음 완전 가이드입니다.
+summary: Pro Tools 보컬 녹음·플레이리스트 컴핑·믹싱 워크플로우. Studio NOL 의뢰 시 호환 기준.
 faq:
   - q: Pro Tools로 보컬 녹음을 할 수 있나요?
     a: >-
@@ -179,6 +178,24 @@ File → Bounce to → Disk
 
 - 구글 드라이브 또는 WeTransfer 업로드
 - 파일명: [아티스트명]_[곡명]_vocal.wav
+
+---
+
+## Studio NOL이 Pro Tools 클라이언트에게 자주 권하는 보컬 녹음 세팅 3가지
+
+스튜디오 놀에서 Pro Tools로 보컬 녹음·믹싱하는 클라이언트에게 반복적으로 권하는 설정입니다.
+
+**1. Hardware Buffer Size — 녹음 시 64~128 샘플**
+
+보컬 녹음 시 Hardware Buffer Size를 64~128 샘플로 설정해 헤드폰 모니터 레이턴시를 ~3ms로 유지합니다. 256 이상은 보컬리스트가 자기 목소리와 가이드의 시간차를 느껴 박자가 흔들립니다.
+
+**2. Playlist 기능 — 멀티테이크 관리의 핵심**
+
+같은 트랙 안에서 Playlist로 5~10테이크를 정리하면 컴핑이 시각적으로 명확해집니다. 각 테이크에 메모(음정·다이나믹·발음 등)를 달아두면 다음 날 신선한 귀로 컴핑할 때 효율이 크게 올라갑니다.
+
+**3. Send → Aux로 리버브·딜레이 운용**
+
+Insert로 리버브를 직접 걸지 않고 Aux 버스로 분리. 드라이/웻 비율 독립 제어 + CPU 부하 감소 + 여러 보컬 트랙이 같은 공간감 공유의 세 가지 효과를 동시에 얻습니다. Pro Tools의 Aux 라우팅이 가장 직관적인 DAW 중 하나입니다.
 
 ---
 
