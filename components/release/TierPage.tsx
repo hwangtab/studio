@@ -69,11 +69,6 @@ const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
 };
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
 const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
-const TIER_CATEGORY_MAP: Record<'single' | 'ep' | 'album', string[]> = {
-  single: ['single'],
-  ep: [],
-  album: ['album'],
-};
 const CASE_STUDY_IDS: Record<'single' | 'ep' | 'album', string[]> = {
   single: ['tierliner-bite-me', 'the-projectors-babu-first-flight', 'heo-jeong-hyuk-wind', 'jai-hanash-pink-padding'],
   ep: ['namjae-wi-inmul', 'unknown-feeling'],
@@ -103,10 +98,9 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
     setToday(`${yyyy}.${mm}.${dd}`);
   }, []);
 
-  const tierCategoryAllow = TIER_CATEGORY_MAP[tier];
   const featuredPortfolioItems = portfolioItems
-    .filter((i) => i.featured && tierCategoryAllow.includes(i.category))
-    .slice(0, 6);
+    .filter((i) => i.featured)
+    .slice(0, 12);
   const caseStudyIds = CASE_STUDY_IDS[tier];
   const caseStudyPortfolioItems = caseStudyIds
     .map((id) => portfolioItems.find((p) => p.id === id))
