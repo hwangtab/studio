@@ -180,6 +180,24 @@ File → Export Audio/Video (Cmd+Shift+R)
 
 ---
 
+## Studio NOL이 Ableton 클라이언트에게 자주 권하는 보컬 녹음 세팅 3가지
+
+스튜디오 놀에서 Ableton Live로 보컬 녹음·믹싱하는 클라이언트에게 반복적으로 권하는 설정입니다.
+
+**1. Arrangement View로 녹음 — Session View는 작곡용**
+
+보컬 녹음은 Arrangement View(타임라인 기반)에서 진행합니다. Session View는 라이브 퍼포먼스·작곡 단계용이라 보컬 멀티트랙·컴핑 관리가 어렵습니다. 메인 + 더블L/R + 애드립 트랙을 Arrangement View 상단에 별도 트랙으로 배치합니다.
+
+**2. Warp 비활성화 — 보컬 트랙은 Warping 끄기**
+
+Ableton의 Warp 기능은 자동 타이밍 보정이지만 보컬에 그대로 적용되면 음색이 미세하게 손상됩니다. 보컬 트랙은 Warping을 끄고 원본 그대로 두며, 타이밍 보정이 필요하면 Melodyne으로 별도 처리합니다.
+
+**3. Send Channel로 리버브 운용 + Group Track**
+
+Insert로 리버브를 직접 걸지 않고 Send Channel 분리. 보컬 트랙들을 Group Track으로 묶어 한 번에 그룹 EQ·컴프를 적용하면 작업 효율이 크게 올라갑니다.
+
+---
+
 ## 마치며
 
 Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 강력한 DAW입니다. 보컬 녹음에서 핵심 설정은 버퍼 크기입니다. 녹음 시에는 64~128 samples로 설정해 레이턴시를 5ms 이하로 유지하고, 믹싱 시에는 256~512 samples로 높여 CPU 부하를 줄이는 방식으로 전환하는 것이 표준 워크플로우입니다. 드라이 보컬은 EQ Eight과 Compressor를 Bypass한 상태로 내보내야 믹싱 의뢰 시 원본 파일로 활용할 수 있으며, 내보내기 설정은 WAV 24bit/44100Hz가 기본입니다. Warp 기능은 타이밍 교정 외에도 보컬 멜로디를 BPM에 맞게 동기화하는 데 유용하지만, Complex Pro 모드는 CPU를 많이 소모하므로 최종 믹싱 이전 단계에서만 활용하는 것을 권장합니다.
