@@ -126,6 +126,24 @@ inlineFallback:
 
 ---
 
+## Studio NOL 발매 마스터링 의뢰에서 항상 점검하는 3가지
+
+스튜디오 놀 발매 마스터링에서 일관되게 점검하는 표준입니다.
+
+**1. True Peak -1dBTP 절대 사수**
+
+스트리밍 플랫폼이 -14 LUFS로 정규화하더라도 True Peak가 -1dBTP를 초과하면 정규화 후 클리핑이 발생합니다. 리미터 천장을 -1dBTP로 고정하고, 모든 곡에서 True Peak 미터로 최종 확인합니다.
+
+**2. LUFS Integrated — 장르별 기준**
+
+발라드·어쿠스틱은 -14 LUFS 표준 유지. EDM·힙합은 -10~-12 LUFS. 유튜브·SoundCloud 동시 발매는 -13 LUFS 절충. 같은 마스터를 모든 곡에 적용하지 않습니다.
+
+**3. 모노 호환성 — 스마트폰·블루투스 최종 확인**
+
+마스터 완성 후 스마트폰·블루투스 스피커(모노 출력)에서 직접 들어보며 저역 사라짐·보컬 자리 흔들림을 점검합니다.
+
+---
+
 **믹싱 강좌 시리즈**: [← 제22부: 시간 위에 그리는 그림, 오토메이션](/stories/mixing22) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)
 
 [믹싱 vs 마스터링 차이 가이드](/stories/mixing-vs-mastering1) | [믹싱·마스터링 의뢰 요금 안내](/pricing) | [음악 레슨 서비스 보기](/lesson) | [불광믹싱클럽 스터디 보기](/stories/bulgwang-mixing-club) | [믹싱 의뢰 후기](/stories/review5)
