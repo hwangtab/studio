@@ -265,4 +265,22 @@ Martin D12-20 어쿠스틱
 
 은평구 24시간 음악연습실에서 오픈 G 코드부터 시작해보세요. 12현의 코러스가 공기를 채우는 순간, 당신의 음악이 넓어집니다.
 
+## Studio NOL이 12현 기타 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 12현 기타·코러스 효과 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 튜닝 안정 — 6현보다 잦은 재튜닝**
+
+12현 기타는 텐션이 강해 튜닝이 자주 흐트러집니다. 연주 전 항상 재튜닝합니다.
+
+**2. 오픈 코드 활용 — 12현의 강점**
+
+12현 기타는 오픈 코드(G·D·C)에서 가장 풍부한 사운드가 나옵니다.
+
+**3. 픽킹 강도 절제 — 음 겹침 방지**
+
+12현은 강한 픽킹 시 음이 뭉칩니다. 부드러운 픽킹이 표준입니다.
+
+---
+
 [기타 카포·키 변환 활용법 — 완전 가이드](/stories/practice-room-guitar-capo-techniques1) | [재즈 기타 코드 멜로디·솔로 기타·Joe Pass 스타일 — 완전 가이드](/stories/practice-room-guitar-jazz-chord-melody1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [블루스 록 기타·SRV·Eric Clapton 스타일·펜타토닉 — 완전 가이드](/stories/practice-room-guitar-blues-rock1) | [보사노바 기타·삼바 리듬·João Gilberto 스타일 — 완전 가이드](/stories/practice-room-guitar-bossa1) | [집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일](/stories/practice-room-guitar-gypsy-jazz1) | [기타 더블 스탑·두음 화성 기법 — 완전 가이드](/stories/practice-room-guitar-double-stop1) | [인디팝 기타·The Strokes·Vampire Weekend·코드 스타일 — 완전 가이드](/stories/practice-room-guitar-indie-pop1) | [기타 하모닉스·인공 하모닉스 기법 — 완전 가이드](/stories/practice-room-guitar-harmonics1) | [네오포크 기타·Bon Iver·Iron and Wine·핑거피킹 스타일 — 완전 가이드](/stories/practice-room-guitar-neofolk1) | [수학록 기타·폴리리듬·Animals as Leaders·Don Caballero 스타일](/stories/practice-room-guitar-math-rock1) | [레게 기타·스카·록스테디·오프비트 리듬 — 완전 가이드](/stories/practice-room-guitar-reggae1) | [포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일](/stories/practice-room-guitar-post-rock1) | [슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive](/stories/practice-room-guitar-shoegaze1) | [기타 록 리드·파워풀 솔로 기법 — 완전 가이드](/stories/practice-room-guitar-rock-lead1) | [기타 모드 이론·7가지 교회 선법 — 완전 가이드](/stories/practice-room-guitar-theory-modes1)
