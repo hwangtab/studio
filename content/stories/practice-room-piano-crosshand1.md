@@ -171,6 +171,24 @@ summary: >-
 
 ---
 
+## Studio NOL이 크로스핸드 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 피아노 크로스핸드·손 교차 연주 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 시선 선행 — 목표 위치 먼저**
+
+크로스핸드는 시선이 목표 키에 먼저 도달해야 정확성이 잡힙니다.
+
+**2. 양손 분리 후 합치기 — 충돌 방지**
+
+각 손 단독으로 자동화한 후 합칩니다.
+
+**3. 거울·영상 점검 — 본인 동선 객관화**
+
+크로스핸드 동선은 본인 눈으로 보기 어렵습니다.
+
+---
+
 *관련 아티클:*
 
 [피아노 크로스핸드 테크닉·클래식 기교 — 완전 가이드](/stories/practice-room-piano-cross-hand-technique1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 발라드 연주 기법·감성 표현 — 완전 가이드](/stories/practice-room-piano-ballad-technique1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1)
