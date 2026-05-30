@@ -184,6 +184,24 @@ summary: >-
 
 ---
 
+## Studio NOL이 트레몰로 픽킹 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 기타 트레몰로 픽킹 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 손목 단독 — 팔뚝 사용 금지**
+
+트레몰로 픽킹은 손목 회전이 동력입니다. 팔뚝을 사용하면 빠르기 한계에 빨리 부딪힙니다.
+
+**2. 픽 잡는 강도 — 부드러운 그립**
+
+너무 단단히 잡으면 손목이 굳습니다. 픽이 떨어지지 않을 정도로 부드럽게 잡고 회전합니다.
+
+**3. BPM 80 16분음표부터 — 단계적 상승**
+
+빠른 BPM으로 시작하면 균일성이 무너집니다. BPM 80 16분음표에서 균일성을 잡은 뒤 BPM을 올립니다.
+
+---
+
 *관련 아티클:*
 
 [기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 아르페지오 고급·스윕 피킹 — 완전 가이드](/stories/practice-room-guitar-arpeggios-advanced1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1)
