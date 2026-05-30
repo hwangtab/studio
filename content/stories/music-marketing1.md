@@ -206,4 +206,22 @@ KOMCA 등록을 발매 후 30일 이내에 완료해야 이후 방송·광고·�
 
 SNS 노출량보다 중요한 지표는 저장(Save)과 팔로우입니다. 스포티파이 알고리즘은 단순 재생보다 저장·팔로우·플레이리스트 추가를 더 높은 신호로 처리합니다. 발매 당일 팬들에게 "플레이리스트에 추가해달라"고 구체적으로 요청하는 것이 스트리밍 수보다 알고리즘 노출을 높이는 더 효과적인 방법입니다.
 
+## Studio NOL이 음악 마케팅 발매자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 음악 마케팅 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 발매 1개월 전 — 캠페인**
+
+티저·인터뷰·MV 사전 노출.
+
+**2. SNS — 정기 업로드**
+
+발매 후 매주 콘텐츠 유지.
+
+**3. 직접 소통 — 팬덤 형성**
+
+DM·댓글 직접 답.
+
+---
+
 [음악 바이럴 마케팅 완전 가이드](/stories/viral-music-marketing1) | [뮤지션 음악 홍보·미디어 PR 완전 가이드](/stories/music-pr1) | [팬 커뮤니티 완전 가이드](/stories/fan-community1) | [스트리밍 알고리즘 공략](/stories/streaming-algorithm1) | [음원 유통 비교](/stories/distribution1) | [음원 수익·정산 가이드](/stories/royalty1) | [EPK 만드는 법](/stories/epk1) | [음악 비즈니스 완전 가이드](/stories/music-business1) | [음원 데이터 분석 가이드](/stories/music-analytics1) | [뮤직비디오 기획·촬영 가이드](/stories/music-video1) | [초보자 작곡법 완전 가이드](/stories/songwriting1) | [EP 제작 완전 가이드](/stories/ep-production1) | [스트리밍 수익 계산 가이드](/stories/revenue1)

@@ -152,4 +152,22 @@ Adaptive Limiter의 Gain을 조정해 최종 음량을 -14 LUFS(Spotify 기준) 
 
 Logic Pro는 Mac 홈 레코딩의 표준 DAW입니다. 내장 플러그인만으로도 상업 음원 수준의 보컬 체인을 구성할 수 있으며, Flex Pitch와 Mastering Assistant로 작업 효율도 높일 수 있습니다. 홈 레코딩 후 완성된 파일은 온라인 믹싱·마스터링 의뢰로 추가적인 품질 향상을 기대할 수 있습니다.
 
+## Studio NOL이 Logic Pro 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 Logic Pro 보컬 녹음·믹싱 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Flex Pitch — 보컬 피치 교정**
+
+Logic Pro의 Flex Pitch가 Melodyne 대안. 무료 내장.
+
+**2. Mastering Assistant — AI 마스터링**
+
+Logic Pro 14의 Mastering Assistant로 데모 마스터링 자동화.
+
+**3. 발매용 — 온라인 의뢰**
+
+홈 레코딩 후 발매용 마스터링은 온라인 의뢰로 품질 향상.
+
+---
+
 [Ableton 완전 가이드](/stories/ableton1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [피치 교정 완전 가이드](/stories/pitch-correction1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [DAW 선택 완전 가이드](/stories/daw-choice1)

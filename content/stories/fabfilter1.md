@@ -167,4 +167,22 @@ Pro-Q3에서 Linear Phase와 Natural Phase 중 선택은 작업 단계에 따라
 
 Collision Detection을 처음 사용할 때는 충돌 강도(Collision Strength)를 중간(50~60%)으로 설정하는 것이 좋습니다. 강도를 너무 높이면 충돌로 표시되는 구간이 많아져 과도한 카빙으로 이어지고, 너무 낮으면 실제 충돌 구간이 감지되지 않습니다. 충돌 표시 구간을 발견했을 때 상대 트랙(기타 또는 피아노)에서 해당 주파수를 -2~3dB 컷하는 것이 보컬을 직접 부스트하는 것보다 자연스러운 믹스를 만듭니다.
 
+## Studio NOL이 FabFilter 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 FabFilter Pro-Q3 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Dynamic EQ — 강력**
+
+특정 주파수 압축 효과.
+
+**2. Pro-MB — 멀티밴드**
+
+디에서·펌프 효과.
+
+**3. Pro-L 2 — 마스터 리미터**
+
+True Peak 컨트롤.
+
+---
+
 [1176 컴프레서 완전 가이드](/stories/comp1176) | [iZotope Nectar 보컬 처리 완전 가이드](/stories/nectar1) | [EQ 완전 가이드](/stories/eq-guide1) | [주파수 마스킹 완전 가이드](/stories/frequency-masking1)

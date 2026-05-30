@@ -140,4 +140,22 @@ AI 마스터링을 가장 효과적으로 활용하는 방법은 믹스 제출 �
 
 AI 마스터링 결과물을 전문 마스터링과 비교할 때는 음량을 동일하게 맞춘 상태에서 비교해야 합니다. AI 마스터링은 -14 LUFS에 맞추고, 비교 대상 트랙도 동일 LUFS로 정규화한 후 들어야 음압 차이에 의한 착각 없이 음색과 다이나믹 차이를 정확히 판단할 수 있습니다. 홈 레코딩 데모 수준에서는 LANDR Medium Intensity가 대부분의 장르에 무난하며, 발라드·재즈는 Low Intensity로 다이나믹을 보존하는 것을 권장합니다.
 
+## Studio NOL이 AI 마스터링 고민자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 AI 마스터링 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 데모 수준 — AI 마스터링 적합**
+
+홈 레코딩 데모는 AI 마스터링(LANDR)이 가성비. 발매용 정식 마스터링은 전문가에게.
+
+**2. 비교 청취 — 동일 LUFS 기준**
+
+AI vs 전문 마스터링 비교 시 동일 LUFS(-14)로 정규화 후 청취.
+
+**3. 장르 — Low vs Medium Intensity**
+
+발라드·재즈는 Low Intensity, 팝·록은 Medium Intensity가 일반적.
+
+---
+
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

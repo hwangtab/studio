@@ -129,4 +129,22 @@ ii-V-I의 흐름, 드롭 2의 풍부함. 방음 개인실에서 재즈 보이싱
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
+## Studio NOL이 재즈 기타 코드 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 재즈 기타 코드·보이싱 상담에서 반복적으로 드리는 조언입니다.
+
+**1. ii-V-I — 12 키 자동화 우선**
+
+재즈 코드의 80%는 ii-V-I. 12 키에서 막힘 없이 칠 수 있어야 스탠더드 자유.
+
+**2. 드롭 2·드롭 3 보이싱 — 재즈 기타 표준**
+
+재즈 기타 보이싱은 드롭 2·드롭 3가 표준. 두 가지 보이싱 12 키 자동화.
+
+**3. Joe Pass·Wes Montgomery — 거장 카피**
+
+재즈 코드 어휘는 Joe Pass, Wes Montgomery 카피로 가장 빠르게 늡니다.
+
+---
+
 [기타 재즈 보이싱·코드 멜로디 — 재즈 기타 완성 가이드](/stories/practice-room-guitar-jazz-voicing1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1)

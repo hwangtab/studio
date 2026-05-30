@@ -203,4 +203,22 @@ Insert로 리버브를 직접 걸지 않고 Aux 버스로 분리. 드라이/웻 
 
 Pro Tools는 전 세계 프로 스튜디오의 표준으로, 플레이리스트 컴핑과 정밀한 편집 기능이 탁월합니다.
 
+## Studio NOL이 Pro Tools 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 Pro Tools 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 스튜디오 표준 — 호환성**
+
+상업 스튜디오 납품 시 Pro Tools 세션 호환.
+
+**2. AAX 플러그인 — 별도 구매**
+
+VST·AU와 별도 라이센스.
+
+**3. Playlist 기능 — 컴핑 강력**
+
+테이크별 Playlist로 컴핑 효율적.
+
+---
+
 [FL Studio 보컬 녹음 완전 가이드](/stories/flstudio1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [음원 파일 형식 완전 가이드](/stories/audioformat1)

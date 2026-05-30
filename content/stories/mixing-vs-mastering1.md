@@ -158,4 +158,22 @@ faq:
 
 Spotify -14 LUFS, Apple Music -16 LUFS의 음량 정규화 정책으로 인해 과도하게 크게 마스터링된 음원은 플랫폼에서 자동으로 음량이 낮춰집니다. 예를 들어 -8 LUFS로 마스터링된 음원은 Spotify에서 -6dB 감쇄되어 재생되므로, 의도했던 마스터의 다이나믹이 손상됩니다. 타깃 플랫폼의 LUFS 기준에 맞게 마스터링하는 것이 플랫폼에서 가장 자연스럽게 들리는 조건입니다.
 
+## Studio NOL이 믹싱·마스터링 차이 학습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 믹싱과 마스터링 차이 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 믹싱 — 트랙 간 밸런스**
+
+각 악기·보컬 트랙 조율.
+
+**2. 마스터링 — 곡 전체 톤**
+
+음압·EQ 균형 통합.
+
+**3. 별도 단계 — 귀 휴식**
+
+믹싱 → 마스터링 사이 휴식 권장.
+
+---
+
 [강좌 제1부: 믹싱이라는 요리의 시작](/stories/mixing1) | [강좌 제23부: 마스터링](/stories/mixing23) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [마스터링 완전 가이드](/stories/mastering1) | [음반 제작 비용 완전 가이드](/stories/album-cost1) | [음원 발매 타임라인 완전 가이드](/stories/release-timeline1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1)

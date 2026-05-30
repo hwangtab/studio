@@ -17,7 +17,7 @@ Studio NOL is a multi-language music studio website built with:
 
 - **Frontend**: Next.js 15.5.12, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
 - **i18n**: i18next with language detection and locale-based routing
-- **Form**: Serverless contact form via Next.js API Routes and EmailJS
+- **Form**: Serverless contact form via Next.js API Routes and Resend
 - **Imaging**: Sharp-based image optimization (WebP/AVIF)
 - **Audio**: Custom AudioPlayer with `useAudioPlayer` hook
 
@@ -57,7 +57,7 @@ The project uses a custom optimization script `scripts/optimizeImages.js`:
 - **Client**: `pages/[locale]/contact.tsx` captures user input
 - **Server**: `pages/api/contact/send-email.ts` (API route)
 - **Validation**: Honeypot and Rate Limiting implemented on server-side
-- **Delivery**: Server-side request to EmailJS REST API
+- **Delivery**: Server-side request to Resend REST API (`lib/email/resend.ts`)
 
 ### Routing & i18n
 - **Path structure**: `/[locale]/[path]`
@@ -87,5 +87,5 @@ The project uses a custom optimization script `scripts/optimizeImages.js`:
 ## Deployment Notes
 
 - **Hosting**: Vercel (Standard Next.js deployment)
-- **Environment Variables**: Configure `EMAILJS_*` variables in Vercel dashboard
+- **Environment Variables**: Configure `RESEND_API_KEY` (and optional `RESEND_FROM`) in Vercel dashboard
 - **Build**: Prebuild hook runs image optimization automatically

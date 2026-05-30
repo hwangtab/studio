@@ -189,4 +189,22 @@ VariAudio에서 피치 교정 시 Straighten Pitch 슬라이더는 50~70% 수준
 
 믹싱 의뢰용 드라이 보컬 내보내기 시 Channel Inserts를 모두 Bypass하고 트랙을 Solo한 후 WAV 24bit/44.1kHz로 내보내는 것이 기본입니다. 이펙트가 적용된 상태로 내보내면 엔지니어가 EQ·컴프레서를 독립적으로 조정할 수 없어 믹싱 퀄리티에 제한이 생깁니다.
 
+## Studio NOL이 큐베이스 보컬 녹음자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 큐베이스 보컬 녹음 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 믹싱 의뢰 — Bypass + Solo + WAV 내보내기**
+
+믹싱 의뢰는 Inserts 모두 Bypass, 트랙 Solo, WAV 24bit/44.1kHz.
+
+**2. 이펙트 적용 X — 드라이 파일**
+
+이펙트 걸린 상태 내보내면 엔지니어가 EQ·컴프 독립 조정 불가.
+
+**3. 파일명 — Artist_Song_Vocal_v1.wav**
+
+파일명에 버전 번호 포함. 수정 라운드 혼동 방지.
+
+---
+
 [Reaper 보컬 녹음 완전 가이드](/stories/reaper1) | [Studio One 보컬 녹음 완전 가이드](/stories/studioone1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [DAW 렉·버퍼 최적화 가이드](/stories/daw-performance1) | [큐베이스·로직·에이블톤 DAW 비교](/stories/daw-choice1)

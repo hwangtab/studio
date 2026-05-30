@@ -125,4 +125,22 @@ Attack을 10ms 미만으로 빠르게 두면 자음 트랜지언트가 짓눌려
 
 ---
 
+## Studio NOL이 컴프레서 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 컴프레서 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Ratio 3:1 — 보컬 표준**
+
+너무 강하면 다이내믹 손실.
+
+**2. Attack 10~30ms**
+
+자음 어택 보존.
+
+**3. GR -3~-6dB**
+
+압축량 적정 수준.
+
+---
+
 [믹싱 완전 가이드](/stories/mixing-complete-guide) | [EQ 완전 가이드](/stories/eq-guide1) | [컴프레서 완전 가이드](/stories/compression-guide1) | [요금 안내](/pricing) | [문의하기](/contact)

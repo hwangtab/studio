@@ -258,4 +258,22 @@ summary: >-
 
 은평구 24시간 음악연습실에서 부담 없이, 꾸준히 음역 확장을 훈련하세요.
 
+## Studio NOL이 보컬 음역 확장 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 보컬 녹음·연습실에서 음역 확장 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 1주에 반음씩 — 점진적 확장**
+
+음역 확장은 점진적. 1주에 반음씩 천천히 늘려야 성대 부상 없이 안정적 확장.
+
+**2. 중음역 완성 — 그 후 고·저음 확장**
+
+처음부터 고음 도전은 무리. 중음역(편안한 음역) 완성 후 고·저음 점진적 확장.
+
+**3. 워밍업 10분 — 음역 확장 시 필수**
+
+음역 확장 훈련 전 워밍업 10분 필수. 워밍업 없이 고음 시도는 부상 위험.
+
+---
+
 [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 발음 훈련·딕션 스피드 연습 — 완전 가이드](/stories/practice-room-vocal-tongue-twisters1)

@@ -1,10 +1,10 @@
 source,medium,sessions,bounce_rate,conversions
 "google","organic",2679,0.484,0
 "(direct)","(none)",605,0.835,0
-"m.search.naver.com","referral",107,0.280,0
+"m.search.naver.com","referral",108,0.287,0
 "chatgpt.com","(not set)",98,0.745,0
+"(not set)","(not set)",79,1.000,0
 "chatgpt.com","referral",79,0.608,0
-"(not set)","(not set)",78,1.000,0
 "bing","organic",68,0.485,0
 "naver","organic",41,0.415,0
 "perplexity","(not set)",19,0.684,0

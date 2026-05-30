@@ -170,4 +170,22 @@ Vocal Assistant가 제안하는 자동 설정은 출발점입니다. Assistant �
 
 Harmony 모듈의 Humanize 슬라이더는 반드시 50% 이상으로 설정하는 것이 좋습니다. 0%에 가까울수록 하모니가 기계적으로 들리며, 특히 발라드에서 부자연스러운 하모니는 오히려 분위기를 해칩니다. 80% 내외에서 Level을 리드 보컬보다 -4~-6dB 낮게 설정하면 하모니가 리드를 지지하면서 자연스럽게 블렌딩됩니다.
 
+## Studio NOL이 Nectar 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 iZotope Nectar 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Vocal Assistant — 시작점만**
+
+자동 분석은 시작점. 수동 조정 필수.
+
+**2. De-Esser — 6~8kHz**
+
+치찰음 6~8kHz 대역 설정.
+
+**3. Pitch Correction — Subtle 우선**
+
+Hard 설정은 효과용. 일반 보컬은 Subtle.
+
+---
+
 [FabFilter Pro-Q3 완전 가이드](/stories/fabfilter1) | [Melodyne 피치 교정 완전 가이드](/stories/melodyne1) | [보컬 하모나이저 완전 가이드](/stories/harmonizer1) | [보컬 편집 완전 가이드](/stories/vocal-editing1)

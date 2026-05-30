@@ -123,4 +123,22 @@ howTo:
 
 ---
 
+## Studio NOL이 디지털 믹싱 작업자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 디지털 믹싱 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 클리핑 절대 금지**
+
+0dBFS 초과는 디지털 왜곡. -1dBFS 이하 유지.
+
+**2. 인터샘플 피크 — True Peak -1dBTP**
+
+샘플 간 피크 방지. 마스터 리미터 Ceiling -1dBTP.
+
+**3. 알리아싱 — 오버샘플링 ON**
+
+새츄레이션·디스토션 플러그인 오버샘플링 활성화.
+
+---
+
 **믹싱 강좌 시리즈**: [← 제4부: 디지털 오디오의 해상도](/stories/mixing4) | [제6부: 눈으로 소리 읽기 →](/stories/mixing6) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)

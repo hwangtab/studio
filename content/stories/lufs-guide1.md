@@ -150,4 +150,22 @@ LUFS 기준에 맞는 마스터링은 스트리밍 음원이 모든 플랫폼에
 
 %%service:lesson%%
 
+## Studio NOL이 LUFS 측정 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 LUFS·라우드니스 측정 상담에서 반복적으로 드리는 조언입니다.
+
+**1. -14 LUFS — 스트리밍 표준**
+
+스포티파이·애플뮤직 노멀라이제이션 기준은 -14 LUFS.
+
+**2. 장르별 차이 — 발라드 vs 힙합**
+
+발라드는 -16~-14 LUFS(다이내믹 보존), 힙합은 -9~-11 LUFS(임팩트 우선).
+
+**3. iZotope Insight / Youlean — 측정 도구**
+
+iZotope Insight 또는 Youlean Loudness Meter로 측정.
+
+---
+
 [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [음압(LUFS) 스트리밍 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

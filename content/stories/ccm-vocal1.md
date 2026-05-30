@@ -176,4 +176,22 @@ CCM(Contemporary Christian Music) 보컬은 기교적 완성도 이전에 가사
 
 CCM 보컬의 진정성은 준비에서 나옵니다.
 
+## Studio NOL이 CCM 보컬리스트에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 CCM 보컬 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 가사 메시지 — 1순위**
+
+CCM은 메시지 전달이 핵심.
+
+**2. 콘덴서 — 따뜻한 톤**
+
+U87Ai 등 따뜻한 마이크.
+
+**3. 백 코러스 — 화음 두께**
+
+3성·5성 화음.
+
+---
+
 [교회 찬양·예배 음악 레코딩 가이드](/stories/worship-recording1) | [찬양·CCM 녹음 서비스](/stories/ccm1) | [보컬 녹음 팁 완전 가이드](/stories/vocal-recording-tips1) | [보컬 감정 표현 완전 가이드](/stories/vocal-emotion1)

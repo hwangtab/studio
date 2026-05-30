@@ -196,4 +196,22 @@ H H H H H H H H H H H H H H H H
 
 *관련 아티클:*
 
+## Studio NOL이 드럼 하이햇 패턴 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 드럼 하이햇 패턴·개폐 컨트롤 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 오픈·클로즈 — 깊이 단계별 사용**
+
+하이햇은 ON/OFF가 아닙니다. 1/4·1/2·완전 오픈 단계별 사용으로 톤 변화.
+
+**2. 빌드업 — 클로즈 → 오픈 전환**
+
+코러스 진입 빌드업에 클로즈 → 오픈 전환이 시그니처.
+
+**3. 16분음표 패턴 — 다른 패턴 위에 유지**
+
+하이햇 16분음표가 안정돼야 그 위 패턴 가능. 단독 16분음표 안정 우선.
+
+---
+
 [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1)

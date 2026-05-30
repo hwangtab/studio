@@ -183,4 +183,22 @@ summary: >-
 
 은평구 24시간 음악연습실에서 다양한 타이밍 느낌을 탐구하고, 자신만의 그루브 정체성을 만들어가세요.
 
+## Studio NOL이 드럼 그루브 포켓 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 드럼 그루브·포켓 연주 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 포켓 — 박자 위 미세 이탈**
+
+그루브의 핵심은 박자 위 미세한 앞·뒤 이탈입니다.
+
+**2. 베이스 동조 — 리듬 섹션 통일**
+
+드럼 포켓은 베이스와 동조해야 그루브가 단단해집니다.
+
+**3. 녹음 청취 — 본인 포켓 객관화**
+
+본인 포켓 위치는 본인 귀로 판단이 어렵습니다.
+
+---
+
 [드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

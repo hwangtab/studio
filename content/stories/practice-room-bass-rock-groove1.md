@@ -131,4 +131,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 올바른 왼손 폼 확인 / 2주차: BPM 80 박자 일정 유지 / 3주차: 펜타토닉 박스 포지션 암보 / 4주차: MR에 맞춰 16마디 연속
 
+## Studio NOL이 록 베이스 그루브 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 록 베이스 그루브·파워 베이스 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 드럼 킥 동기화 — 록 베이스의 기초**
+
+록 베이스 핵심은 드럼 킥과의 정확한 동기화.
+
+**2. 강력한 어택 — 픽 또는 강한 핑거**
+
+록은 강력한 어택이 필요. 픽 사용 또는 강한 핑거 어택.
+
+**3. John Paul Jones·Geddy Lee — 록 베이스 거장 카피**
+
+록 베이스 어휘는 John Paul Jones(Led Zeppelin), Geddy Lee(Rush) 카피로 학습.
+
+---
+
 [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass-funk1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

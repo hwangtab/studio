@@ -193,3 +193,19 @@ G → F# → E 하행: 풀오프로 유연한 하행
 - [베이스 라틴 리듬 음악연습실](/stories/practice-room-bass-latin1)
 - [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1)
 - [베이스 슬랩·팝 기법 음악연습실](/stories/practice-room-bass-slap-pop1)
+
+## Studio NOL이 레게 베이스 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 레게 베이스 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 원 드롭 — 1박 강조**
+
+레게 시그니처는 원 드롭(One Drop). 1박에 강한 베이스 어택.
+
+**2. 짧은 음 — 4분음표 짧게 끊기**
+
+레게 베이스는 4분음표를 짧게 끊는 그루브. 길게 누르면 레게 아님.
+
+**3. Aston Barrett·Robbie Shakespeare — 거장 카피**
+
+레게 베이스 어휘는 Aston "Family Man" Barrett(Bob Marley), Robbie Shakespeare 카피로 학습.

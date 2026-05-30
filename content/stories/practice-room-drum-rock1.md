@@ -132,4 +132,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 메트로놈 맞추며 4마디 연속 / 2주차: 발-손 동시 안정적 유지 / 3주차: 필인 후 박자 복귀 자연스럽게 / 4주차: 음악과 함께 드럼 전곡 완주
 
+## Studio NOL이 록 드럼 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 록 드럼 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 강한 백비트 — 스네어 2·4 폭발적으로**
+
+록 드럼의 핵심은 강한 백비트. 2·4박 스네어를 폭발적으로.
+
+**2. 4/4 8분음표 하이햇 — 록 기본**
+
+록 기본 그루브는 4/4 8분음표 하이햇. 안정된 8분음표 위에 다양한 패턴.
+
+**3. John Bonham 카피 — 록 드럼 시그니처**
+
+록 드럼 어휘는 John Bonham 카피가 가장 직접적. Whole Lotta Love, When the Levee Breaks.
+
+---
+
 [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 컨트리·블루그래스 비트 — 드럼 컨트리 완성 가이드](/stories/practice-room-drum-country1) | [드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1) | [드럼 힙합·트랩 비트 — 드럼 힙합 완성 가이드](/stories/practice-room-drum-hiphop1)

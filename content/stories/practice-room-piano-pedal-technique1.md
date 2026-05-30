@@ -170,6 +170,24 @@ summary: >-
 
 ---
 
+## Studio NOL이 피아노 페달 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 피아노 페달 테크닉 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 코드 변화 위치에서 페달 교체**
+
+페달 교체 타이밍은 코드 변화 위치에 정확히 맞춥니다.
+
+**2. 페달 없이 레가토 우선 — 손가락 연결 점검**
+
+페달로 레가토를 만들면 손가락 연결 실수가 가려집니다.
+
+**3. 발끝 컨트롤 — 발 전체 사용 금지**
+
+페달은 발끝으로 미세 컨트롤합니다.
+
+---
+
 *관련 아티클:*
 
 [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 클래식 테크닉·핑거 독립성 훈련 — 완전 가이드](/stories/practice-room-piano-classical-technique1) | [피아노 크로스핸드 테크닉·클래식 기교 — 완전 가이드](/stories/practice-room-piano-cross-hand-technique1)

@@ -154,4 +154,22 @@ FX → 공간 전체 분산
 
 Apple Music Atmos 납품 시 유통사(TuneCore·DistroKid 등)에서 ADM BWF 포맷 파일을 요구합니다. Logic Pro 11 이상에서 내장 Atmos 렌더러로 직접 ADM BWF 출력이 가능하며, Pro Tools에서는 Dolby Atmos Production Suite가 필요합니다. 스테레오 다운믹스도 동시에 납품해 Atmos 미지원 기기 청취자에게 표준 재생을 보장하는 것이 필수입니다.
 
+## Studio NOL이 공간 음향 작업자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 돌비 애트모스·바이노럴 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 헤드폰 — 바이노럴 필수**
+
+스피커로 공간 음향 모니터링 불가.
+
+**2. 애플뮤직 — 돌비 애트모스 지원**
+
+스트리밍 표준 플랫폼.
+
+**3. 스테레오 → 공간 — 별도 작업**
+
+스테레오 믹스와 공간 믹스 분리.
+
+---
+
 [마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS 완전 가이드](/stories/lufs-guide1)

@@ -115,4 +115,22 @@ howTo:
 
 ---
 
+## Studio NOL이 플러그인 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 플러그인 활용 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 플러그인 전 정리 — 게인·위상**
+
+플러그인은 만능 아님. 게인·위상 먼저.
+
+**2. EQ → 컴프 → 디에서 → 리버브**
+
+표준 보컬 체인 순서.
+
+**3. CPU 부하 — Freeze 활용**
+
+플러그인 많을 때 Freeze로 CPU 절약.
+
+---
+
 **믹싱 강좌 시리즈**: [← 제7부: 믹스는 '정리 정돈'에서 시작된다](/stories/mixing7) | [제9부: 투명 인간 같은 적, 위상(Phase) →](/stories/mixing9) | [믹싱 체인 가이드](/stories/mixing-chain1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)

@@ -131,4 +131,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 메트로놈 맞추며 4마디 연속 / 2주차: 발-손 동시 안정적 유지 / 3주차: 필인 후 박자 복귀 자연스럽게 / 4주차: 음악과 함께 드럼 전곡 완주
 
+## Studio NOL이 드럼 브러시 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 드럼 브러시·재즈 발라드 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 스윕 — 브러시 핵심 동작**
+
+브러시 기본은 스네어 위 스윕 동작. 원형·반원형 동작으로 일정한 노이즈 만들기.
+
+**2. 압력 — 너무 누르지 말기**
+
+브러시는 가볍게 닿아야 부드러운 사운드. 너무 누르면 잡음.
+
+**3. Ed Thigpen — 재즈 발라드 카피**
+
+브러시 어휘는 Ed Thigpen, Philly Joe Jones 카피로 학습.
+
+---
+
 [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [재즈 드럼 고급·스윙 필 심화 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-adv1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1)

@@ -136,4 +136,22 @@ inlineFallback:
 
 드럼 패턴에서 그루브를 만드는 핵심은 퀀타이즈(Quantize) 완화입니다. 모든 노트가 정확히 그리드에 맞아있으면 기계적으로 들립니다. FL Studio의 Groove 기능이나 Ableton의 Groove Pool을 활용해 퀀타이즈를 70~80%로 낮추거나, 스네어와 하이햇을 5~10ms 뒤로 밀면 자연스러운 레이드백(Laid-back) 그루브가 만들어집니다. 보컬 녹음을 위한 MR을 스튜디오에 가져올 때는 반드시 WAV 44.1kHz 24bit로 내보내세요.
 
+## Studio NOL이 비트메이킹 작업자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 비트메이킹 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 퀀타이즈 70~80% — 그루브 자연스러움**
+
+100% 퀀타이즈는 기계적. 70~80%로 자연스러운 그루브.
+
+**2. 스네어 5~10ms 뒤로 — 레이드백 그루브**
+
+스네어·하이햇 미세하게 뒤로 밀면 레이드백 그루브.
+
+**3. MR 보컬 녹음용 — WAV 48kHz 24bit**
+
+보컬 녹음용 MR은 WAV 48kHz 24bit. MP3 절대 금지.
+
+---
+
 [MIDI 작곡·편곡 완전 가이드](/stories/midi-composition1) | [트랩 비트 제작 완전 가이드](/stories/trap1) | [샘플링·샘플팩 음악 제작 완전 가이드](/stories/sampling-guide1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [힙합 래핑·라임·딕션 훈련 가이드](/stories/hiphop-vocal1) | [음악 프로듀서 되는 법 완전 가이드](/stories/producer1) | [드럼 심벌 기법 완전 가이드](/stories/practice-room-drum-cymbal-techniques1)

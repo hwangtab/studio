@@ -4,7 +4,7 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/practice-room",107,0.402,100.9,64
 "/ko/stories/daw-choice1",97,0.392,127.6,59
 "/ko/stories/seoul1",75,0.613,87.7,29
-"",65,1.000,0.0,0
+"",66,1.000,0.0,0
 "/ko/stories/copyright-cover1",60,0.433,98.0,34
 "/ko/stories/practice-room-startup1",60,0.367,146.1,38
 "/ko/stories/ep-making1",54,0.944,5.3,3
@@ -152,6 +152,7 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/stories/practice-room-guitar-blues-licks1",6,0.500,301.8,3
 "/ko/stories/practice-room-guitar-jazz-chords1",6,1.000,0.9,0
 "/ko/stories/practice-room-guitar-volume-swell1",6,0.833,1.9,1
+"/ko/stories/practice-room-keyboard1",6,0.667,52.7,2
 "/ko/stories/preamp1",6,0.333,12.0,4
 "/ko/stories/rap-recording1",6,0.500,50.8,3
 "/ko/stories/sampling-guide1",6,0.333,60.5,4
@@ -187,7 +188,6 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/ko/stories/practice-room-guide1",5,0.400,26.1,3
 "/ko/stories/practice-room-guitar-archtop1",5,0.400,219.9,3
 "/ko/stories/practice-room-guitar-capo-techniques1",5,0.400,22.6,3
-"/ko/stories/practice-room-keyboard1",5,0.600,63.2,2
 "/ko/stories/practice-room-piano-jazz-standard-analysis1",5,0.800,4.1,1
 "/ko/stories/practice-room-piano-jazz-voicings1",5,0.800,25.3,1
 "/ko/stories/practice-room-piano-technique1",5,0.400,51.6,3
@@ -237,6 +237,7 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/zh/stories/mixing15",4,1.000,0.0,0
 "/zh/stories/mixing6",4,1.000,0.5,0
 "/zh/voice-acting",4,1.000,0.0,0
+"/en/lesson",3,0.667,686.2,1
 "/ko/about",3,1.000,21.2,0
 "/ko/stories/audition1",3,0.667,9.0,1
 "/ko/stories/ballad-vocal1",3,0.000,37.2,3
@@ -296,7 +297,6 @@ landing_page,sessions,bounce_rate,avg_session_sec,engaged_sessions
 "/zh/lesson",3,1.000,0.0,0
 "/zh/stories/korean-recording-studio-pricing-chinese",3,1.000,2.6,0
 "/zh/stories/mixing14",3,1.000,0.0,0
-"/en/lesson",2,0.500,1029.3,1
 "/en/stories/eq1",2,0.500,12.6,1
 "/ko/guides/wedding-song-singing",2,0.000,20.0,2
 "/ko/stories/acapella1",2,0.500,53.2,1

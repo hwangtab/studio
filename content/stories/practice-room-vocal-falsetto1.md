@@ -166,4 +166,22 @@ summary: >-
 
 *관련 아티클:*
 
+## Studio NOL이 팔세토 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 보컬 녹음·연습실에서 팔세토 발성 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 힘 빼기 — 팔세토는 이완이 핵심**
+
+팔세토는 흉성과 달리 힘을 빼야 나옵니다. 목·턱·어깨 긴장 풀고 가볍게 발성.
+
+**2. 호흡 — 적은 호흡량으로 충분**
+
+팔세토는 호흡량이 적습니다. 호흡을 많이 쓰면 거친 팔세토가 됩니다. 호흡 절제 훈련.
+
+**3. 연결성 — 흉성·믹스·팔세토 자연스러운 전환**
+
+팔세토 단독 발성보다 흉성에서 자연스럽게 연결되는 전환이 음악적 가치. 음역 전환 구간 집중 훈련.
+
+---
+
 [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1)

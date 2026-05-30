@@ -459,4 +459,22 @@ Spotify for Artists, Apple Music for Artists, 멜론 아티스트 플러스에 �
 
 ---
 
+## Studio NOL이 인디 뮤지션 스튜디오 선택자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 인디 뮤지션 스튜디오 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 가성비 — 동일 장비**
+
+U87Ai 등 표준 장비 보유 확인.
+
+**2. 엔지니어 — 1:1 가이드**
+
+신생보다 경력 5년 이상.
+
+**3. 패키지 — 25만원 (3시간)**
+
+스튜디오 놀 표준 인디 패키지.
+
+---
+
 [혼자 앨범 내는 방법](/stories/solo-album1) | [음반 제작 비용 가이드](/stories/album-cost1) | [정규앨범 발매 가이드](/stories/album-release1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [밴드 레코딩 가이드](/stories/band-recording-guide1)

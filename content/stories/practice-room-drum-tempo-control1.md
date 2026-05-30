@@ -205,4 +205,22 @@ BPM 80: 4박 중 1박에만 클릭
 - [ ] Paradiddle을 양손에서 균일한 볼륨으로 칠 수 있는가?
 - [ ] 연습 후 손목·팔꿈치에 통증이 없는가?
 
+## Studio NOL이 드럼 템포 컨트롤 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 드럼 템포 컨트롤·메트로놈 활용 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 메트로놈 — 매 세션 100% 사용**
+
+드럼 템포 안정의 절대 조건은 메트로놈 사용. 메트로놈 없는 연습은 박자 흐트러뜨림.
+
+**2. 백비트에 메트로놈 — 2·4 강조**
+
+메트로놈을 2·4박에 두면 진짜 템포 감각이 길러집니다.
+
+**3. 점진적 BPM 변화 — 5씩 올리기**
+
+BPM을 한 번에 20 올리지 말고 5씩 점진적. 정확성 유지하며 확장.
+
+---
+
 [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 패러디들·루디먼트·스틱 컨트롤 심화 — 완전 가이드](/stories/practice-room-drum-paradiddle1) | [드럼 스네어 테크닉·다이나믹 컨트롤 — 완전 가이드](/stories/practice-room-drum-snare-techniques1) | [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 — 완전 가이드](/stories/practice-room-drum-stick-control1)

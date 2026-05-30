@@ -147,4 +147,22 @@ faq:
 
 [리듬·박자 훈련 — 정확한 박자감으로 실력 도약](/stories/practice-room-rhythm1)
 
+## Studio NOL이 속도·BPM 향상 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 연주 속도·BPM 향상 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 느린 BPM부터 — 정확성 우선**
+
+속도 향상은 느린 BPM에서 100% 정확 → 점진적 빠르게.
+
+**2. BPM 5씩 — 한 번에 큰 점프 X**
+
+BPM을 한 번에 20 올리지 말기. 5씩 점진적으로.
+
+**3. 메트로놈 — 모든 속도 연습에 필수**
+
+속도 연습은 메트로놈 없이는 의미 없음. 매 세션 메트로놈 사용.
+
+---
+
 [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [초견·악보 읽기 실전 연습 — 악보 읽기 속도 향상 가이드](/stories/practice-room-sight-reading1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

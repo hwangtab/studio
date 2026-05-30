@@ -197,4 +197,22 @@ Send 방식 리버브 버스를 활용해 여러 트랙이 동일한 리버브 �
 
 %%service:lesson%%
 
+## Studio NOL이 리버브 입문자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 리버브 입문 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Pre-delay — 보컬 명료도 보존**
+
+15~30ms로 직접음과 분리.
+
+**2. Decay — 곡 BPM 기준**
+
+빠른 곡은 짧게, 느린 곡은 길게.
+
+**3. 센드 방식 — Aux Return**
+
+인서트보다 Aux로 깊이 조절 용이.
+
+---
+
 [컴프레서 완전 가이드](/stories/compression-guide1) | [보컬 편곡 완전 가이드](/stories/vocal-arrangement1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1)

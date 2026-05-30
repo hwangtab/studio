@@ -163,4 +163,22 @@ Valhalla Room(짧은 룸, Decay 0.6~1.0초)을 리드 보컬에, Valhalla Plate(
 
 %%service:lesson%%
 
+## Studio NOL이 VST 플러그인 선택자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 VST 플러그인 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 무료 — ReaPlugs·TDR·Voxengo**
+
+입문 충분.
+
+**2. 만능 X — 1~2개 마스터**
+
+여러 EQ 플러그인보다 1개 깊이.
+
+**3. 64bit 호환 확인**
+
+최신 DAW는 32bit 미지원.
+
+---
+
 [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [컴프레서 사용법](/stories/compress1) | [DAW 선택 가이드](/stories/daw1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

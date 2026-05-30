@@ -139,4 +139,22 @@ faq:
 
 샘플링과 커버 음악에서 가장 흔한 실수는 "유튜브 Content ID가 걸리지 않으면 안전하다"고 생각하는 것입니다. Content ID 불감지는 저작권 소유자가 시스템에 등록하지 않은 경우에도 발생하며, 법적 저작권 침해는 Content ID 여부와 무관합니다. 상업 발매를 계획한다면 원저작자·음반사와 직접 라이선스 계약을 체결하거나 KOMCA를 통해 공식 허락을 취득하는 것이 유일하게 안전한 방법입니다.
 
+## Studio NOL이 음악 저작권 학습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 음악 저작권 상담에서 반복적으로 드리는 조언입니다.
+
+**1. KOMCA — 저작권자 등록**
+
+작사·작곡가는 KOMCA.
+
+**2. KOSCAP·KOSDAA — 인접권자**
+
+가수·연주자.
+
+**3. 변호사 검토**
+
+계약 시 전문가 조언.
+
+---
+
 [인스타그램 릴스·유튜브 쇼츠 음악 마케팅 가이드](/stories/shorts-reels-music1) | [음원 배포 완전 가이드](/stories/music-distribution1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1) | [카페·식당 BGM 합법 가이드](/stories/store-bgm1)

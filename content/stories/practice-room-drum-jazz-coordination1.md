@@ -179,3 +179,19 @@ Alan Dawson의 "The Drummer's Complete Vocabulary"나 Gary Chaffee의 "Patterns"
 - [드럼 브러시워크 재즈 음악연습실](/stories/practice-room-drum-brushwork1)
 - [드럼 힙합·트랩 비트 음악연습실](/stories/practice-room-drum-hiphop1)
 - [드럼 맘보·라틴재즈 비트 음악연습실](/stories/practice-room-drum-latin-jazz1)
+
+## Studio NOL이 재즈 드럼 코디네이션 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 재즈 드럼 코디네이션·4-way 독립성 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 4-way 독립 — 양손·양발 다른 패턴**
+
+재즈 드럼 핵심은 4-way 독립성. 라이드(오른손), 하이햇(왼발), 스네어(왼손), 킥(오른발) 각자 다른 패턴.
+
+**2. 라이드 신디 — 1-and-2-and-3-and-4-and**
+
+재즈 라이드 신디 패턴 자동화가 가장 우선.
+
+**3. Tony Williams·Elvin Jones — 거장 카피**
+
+재즈 코디네이션 어휘는 Tony Williams, Elvin Jones 카피로 학습.

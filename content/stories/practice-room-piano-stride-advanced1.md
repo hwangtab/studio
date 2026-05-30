@@ -315,4 +315,22 @@ Am7b5 → D7 → Gm (G단조)
 
 은평구 24시간 음악연습실에서 시간 제한 없이 왼손 도약을 훈련하세요. 스트라이드는 많은 반복이 필요한 스타일입니다—인내심을 갖고, 천천히, 정확하게.
 
+## Studio NOL이 스트라이드 피아노 고급 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 스트라이드 피아노 고급·Art Tatum 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 왼손 도약 — 정확성 우선, 속도는 그 후**
+
+스트라이드 왼손 도약은 BPM 60에서 100% 정확히 안 되면 빠른 템포에서는 무너집니다.
+
+**2. 시선 — 왼손에서 떼는 훈련**
+
+처음에는 왼손 보면서 도약하지만 시선을 떼야 진짜 스트라이드. 손이 위치를 기억할 때까지 반복.
+
+**3. Art Tatum·Fats Waller — 음원 카피**
+
+스트라이드 고급 어휘는 거장 음원 카피로 가장 빠르게 늡니다. Art Tatum 한 코러스 카피부터 시작.
+
+---
+
 [피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 스트라이드 입문·왼손 점프 기초 — 완전 가이드](/stories/practice-room-piano-stride-beginner1) | [피아노 스트라이드·뉴올리언스 피아노 — 완전 가이드](/stories/practice-room-piano-stride1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)

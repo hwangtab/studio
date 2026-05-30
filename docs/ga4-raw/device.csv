@@ -1,12 +1,12 @@
 device,country,sessions,bounce_rate
 "desktop","South Korea",1744,0.471
-"mobile","South Korea",1448,0.519
+"mobile","South Korea",1449,0.519
 "desktop","(not set)",215,1.000
 "desktop","China",68,0.956
 "desktop","Singapore",62,0.952
 "tablet","South Korea",61,0.525
 "desktop","United States",53,0.774
-"mobile","United States",30,0.333
+"mobile","United States",31,0.355
 "mobile","China",16,0.813
 "mobile","(not set)",15,1.000
 "desktop","Hong Kong",13,0.846

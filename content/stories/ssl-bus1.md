@@ -140,4 +140,22 @@ SSL G-Bus의 Attack 30ms 설정이 마스터 버스에서 권장되는 이유는
 
 SSL G-Bus 플러그인 선택에서 Waves 버전과 UAD 버전의 실제 차이는 매우 미세합니다. 전문 리스닝 테스트에서 두 버전을 A/B 비교하면 UAD가 약간 더 따뜻하고 미드가 풍부하게 느껴진다는 평가가 있지만, 최종 음원에서 청취자가 구별하기는 사실상 불가능합니다. UAD 하드웨어 없이 홈 스튜디오 환경이라면 Waves SSL G 또는 Cytomic The Glue로 충분히 전문적인 마스터 버스 컴프레션이 가능합니다.
 
+## Studio NOL이 SSL G-Bus 컴프 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 SSL G-Bus 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 마스터 버스 — 글루**
+
+전 트랙 일관성.
+
+**2. Ratio 2:1 — 1~2dB GR**
+
+미세 압축.
+
+**3. Attack 30ms, Release Auto**
+
+자연스러운 응답.
+
+---
+
 [보컬 리버브 완전 가이드](/stories/vocal-reverb1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [LA-2A 컴프레서 완전 가이드](/stories/la2a1) | [믹스 버스 완전 가이드](/stories/mix-bus1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

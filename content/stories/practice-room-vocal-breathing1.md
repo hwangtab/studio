@@ -280,4 +280,22 @@ summary: >-
 
 은평구 24시간 음악연습실에서 복식 호흡 확인부터 시작하세요. 배가 팽창하는 그 순간, 진짜 보컬 트레이닝이 시작됩니다.
 
+## Studio NOL이 보컬 호흡 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 보컬 녹음·연습실에서 보컬 호흡 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 누워서 호흡 확인 — 자연 복식 호흡 체득**
+
+누운 자세에서는 자동으로 복식 호흡이 됩니다. 그 감각을 일어서서도 유지하는 훈련.
+
+**2. 호흡량 ≠ 발성 안정**
+
+많이 들이마시는 것이 중요한 게 아니라 일정하게 내보내는 컨트롤이 중요합니다.
+
+**3. 발성 전 항상 5분 호흡 워밍업**
+
+성대 부상 예방을 위해 본격 발성 전 호흡 워밍업 5분이 필수입니다. 갑작스러운 발성은 부상 위험.
+
+---
+
 [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡 컨트롤·폐활량 훈련 — 완전 가이드](/stories/practice-room-vocal-breath-control1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

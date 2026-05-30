@@ -268,4 +268,22 @@ Cmaj7: C - - - G - - -
 
 워킹 베이스라인은 악보를 외우는 것이 아닙니다. 화성의 논리를 이해하고 그 안에서 즉흥적으로 선율을 만드는 능력입니다. 은평구 24시간 음악연습실에서 충분한 시간을 들여 귀와 손을 동시에 훈련하세요.
 
+## Studio NOL이 재즈 베이스 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 재즈 베이스·워킹 베이스 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 워킹 베이스 — 4분음표 안정**
+
+재즈 베이스 기초는 4분음표 워킹. 정확한 박자 + 코드 톤 연결.
+
+**2. ii-V-I — 12 키 워킹 라인**
+
+재즈 진행 80%는 ii-V-I. 12 키 워킹 라인 자동화 우선.
+
+**3. Ray Brown·Paul Chambers — 거장 카피**
+
+재즈 베이스 어휘는 Ray Brown, Paul Chambers 카피로 학습.
+
+---
+
 [베이스 재즈 콤핑·워킹 라인 고급 — 완전 가이드](/stories/practice-room-bass-jazz-comping1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

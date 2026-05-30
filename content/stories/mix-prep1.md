@@ -140,4 +140,22 @@ DAW 마스터 버스 미터에서
 
 [믹스 납품 준비 완전 가이드 — 최종 믹스·마스터링 파일 납품 기준](/stories/mix-delivery1)
 
+## Studio NOL이 마스터링 전 믹스 준비자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 마스터링 전 믹스 준비 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 마스터 리미터 OFF**
+
+마스터링 의뢰 시 리미터 미적용.
+
+**2. 헤드룸 -6dBFS**
+
+마스터링 처리 공간 확보.
+
+**3. WAV 24bit/48kHz**
+
+압축 없는 형식.
+
+---
+
 [믹싱 최종 체크리스트 완전 가이드](/stories/mix-checklist1) | [마스터링 완전 가이드](/stories/mastering1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

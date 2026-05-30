@@ -109,4 +109,22 @@ faq:
 
 처음 이용하시는 분들을 위해 장비 세팅 방법도 안내해드립니다. 연습실 대여부터 입주까지 궁금한 점은 편하게 문의주세요.
 
-[연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [음악연습실 창업 비용·인허가 가이드](/stories/practice-room-startup1) | [연습실 인수·양도 절차 가이드](/stories/practice-room-transfer1)
+## Studio NOL이 연습실 대여 문의자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 연습실 대여 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 카카오톡 오픈채팅 — 가장 빠른 응답**
+
+전화·이메일보다 카카오톡 오픈채팅이 가장 빠른 응답.
+
+**2. 시간 대여 vs 월세 — 사용 패턴 기준**
+
+월 30시간 이하: 시간 대여 / 30시간 이상: 월세 입주가 가성비.
+
+**3. 무료 견학 — 결정 전 직접 확인**
+
+방음 등급·시설은 글로 안 됨. 무료 견학으로 직접 확인.
+
+---
+
+[연습실 예약 방법 완전 가이드](/stories/practice-room-booking1) — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [음악연습실 창업 비용·인허가 가이드](/stories/practice-room-startup1) | [연습실 인수·양도 절차 가이드](/stories/practice-room-transfer1)

@@ -172,4 +172,22 @@ Pre-delay 설정에서 BPM과의 동기화는 단순 공간감을 넘어 리듬�
 
 리버브 채널에 EQ를 적용할 때 HPF는 필수입니다. 리버브의 저역 성분은 믹스에서 탁함을 만드는 주범입니다. 리버브 채널 Insert에 HPF를 넣고 150~200Hz 이하를 컷하면 보컬 리버브가 깨끗하게 공간감만 전달됩니다. LPF도 8~10kHz 이상 롤오프하면 리버브 고역이 보컬의 선명도를 방해하지 않습니다.
 
+## Studio NOL이 보컬 리버브 작업자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 보컬 리버브 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Pre-delay 15~30ms**
+
+직접음과 분리.
+
+**2. EQ — 200Hz·8kHz 컷**
+
+리버브 진흙·날카로움 제거.
+
+**3. Aux Return — 25% 이하**
+
+보컬 명료도 보존.
+
+---
+
 [보컬 딜레이 완전 가이드](/stories/vocal-delay1) | [SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [리버브 종류·설정 완전 가이드](/stories/reverb1) | [홀·룸·플레이트·스프링 리버브 차이](/stories/reverb-types1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1)

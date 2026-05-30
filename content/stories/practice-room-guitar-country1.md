@@ -192,4 +192,22 @@ B3-G3에서 C4-A3으로 슬라이드+밴드
 
 은평구 24시간 음악연습실에서 텔레캐스터 스타일 클린 사운드로 컨트리 기타 기법을 마스터하세요.
 
+## Studio NOL이 컨트리 기타 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 컨트리 기타·치킨 피킹 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 치킨 피킹 — 하이브리드 피킹 기본**
+
+컨트리 톤의 핵심은 치킨 피킹(픽 + 손가락). 픽으로 베이스 + 손가락으로 고음.
+
+**2. 텔레캐스터 클린 톤 — 컴프 + 약한 게인**
+
+컨트리는 클린 톤이 표준. 컴프레서 + 약한 게인으로 또렷한 픽킹 어택.
+
+**3. 풀 벤딩 — 컨트리 표현의 시그니처**
+
+컨트리 시그니처는 풀 스텝 벤딩. 정확한 음정으로 벤딩 도달하는 훈련.
+
+---
+
 [기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 카포 활용법 완전 가이드](/stories/practice-room-guitar-capo-techniques1)

@@ -145,4 +145,22 @@ EQ의 역사는 1930년대 벨 연구소에서 전화 신호의 주파수 감쇠
 
 %%service:lesson%%
 
+## Studio NOL이 EQ 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 EQ·주파수 처리 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 컷 우선 — 부스트보다 컷**
+
+EQ는 컷 우선. 부스트는 음 추가가 아니라 자연스러움 강조.
+
+**2. 100Hz 하이패스 — 보컬 표준**
+
+보컬 100Hz 하이패스는 표준. 저역 진동음 정리.
+
+**3. 3kHz·5kHz 부스트 — 보컬 명료도**
+
+보컬 명료도는 3kHz·5kHz 살짝 부스트. 너무 강하면 거친 톤.
+
+---
+
 [주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [EQ 주파수 대역 완전 가이드](/stories/frequency-spectrum1)

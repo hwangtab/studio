@@ -131,4 +131,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 코드 전환 2초 이내 / 2주차: 박자 흔들림 없이 8마디 연속 / 3주차: 목표 곡 코드 전환 오류 없이 / 4주차: 노래·MR과 함께 완주
 
+## Studio NOL이 고급 핑거픽 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 기타 고급 핑거픽 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 손가락 독립성 — p-i-m-a 각자 따로**
+
+엄지·검지·중지·약지가 각자 다른 패턴을 동시에 칠 수 있어야 합니다.
+
+**2. 베이스 라인 자동화 — 엄지 자유롭게**
+
+엄지 베이스 라인이 자동화돼야 멜로디·하모니에 집중 가능. 엄지 분리 훈련 필수.
+
+**3. Tommy Emmanuel — 거장 카피로 어휘 확장**
+
+핑거픽 고급 어휘는 Tommy Emmanuel, Chet Atkins 카피로 가장 빠르게 늡니다.
+
+---
+
 [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [기타 핑거스타일 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [기타 코드 멜로디·솔로 기타 편곡 — 기타 코드 멜로디 완성 가이드](/stories/practice-room-guitar-chord-melody1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21)

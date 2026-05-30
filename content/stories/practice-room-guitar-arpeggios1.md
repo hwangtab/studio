@@ -188,4 +188,22 @@ E 마이너 - A 마이너 - C 메이저 - B7 진행으로 연주됩니다.
 
 *관련 아티클:*
 
+## Studio NOL이 기타 아르페지오 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 기타 아르페지오 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 손가락 번호 — 표준 운지 자동화**
+
+아르페지오는 표준 손가락 번호(p-i-m-a)가 있습니다. 임의 운지 익히면 빠른 템포에서 막힙니다.
+
+**2. 메트로놈 BPM 60 — 정확성 우선**
+
+빠르게만 연습하면 음정이 균등하지 않게 됩니다. BPM 60에서 100% 정확 → 점진적 빠르게.
+
+**3. 한 코드 8마디 — 같은 코드에서 패턴 변형**
+
+같은 코드에서 8마디 동안 아르페지오 패턴 변형 훈련. 한 코드에서 다양한 패턴 만들기.
+
+---
+
 [나일론 현 기타·클래식 기타 자세·포지션 연주 — 완전 가이드](/stories/practice-room-guitar-nylon1) | [기타 아르페지오 고급·스윕 피킹 — 완전 가이드](/stories/practice-room-guitar-arpeggios-advanced1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 어쿠스틱 핑거스타일·DADGAD 튜닝 — 완전 가이드](/stories/practice-room-guitar-acoustic-fingerstyle1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1)

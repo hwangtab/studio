@@ -129,3 +129,19 @@ faq:
 <!-- cross-link block — Round 5 C-H1 partial -->
 
 **불광 인근 권역 비교**: [연신내](/stories/practice-room-yeonsinnae1), [대조동](/stories/practice-room-daejo1), [독바위](/stories/practice-room-dokbawi1), [녹번](/stories/practice-room-nokbeon1), [역촌](/stories/practice-room-yeokchon1)
+
+## Studio NOL이 불광 거주 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 불광 권역 보컬리스트·뮤지션의 연습실 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 6호선 직통 — 5~7분 표준**
+
+불광(6호선) → 연신내 직통 1정거장, 5~7분.
+
+**2. 도보 가능 — 매일 반복 사용**
+
+불광역에서 도보 약 15분. 자전거 5~7분.
+
+**3. 월세 입주 손익분기 — 주 3회 이상**
+
+불광에서 주 3회 이상 연습한다면 월세 입주(36만원~)가 매우 경제적입니다.

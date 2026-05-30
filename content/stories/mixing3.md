@@ -86,4 +86,22 @@ DAW(Digital Audio Workstation)는 컴퓨터 안의 스튜디오입니다. 큐베
 
 **믹싱 강좌 시리즈**: [← 제2부: 거짓말쟁이 방(Room) 길들이기](/stories/mixing2) | [제4부: 디지털 오디오의 해상도 →](/stories/mixing4) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)
 
+## Studio NOL이 장비 욕심 단계 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 장비 선택 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 흡음 환경 — 1순위 투자**
+
+플러그인보다 룸 트리트먼트가 결정적.
+
+**2. 헤드폰 vs 모니터 스피커**
+
+방음 어려운 환경은 헤드폰(HD650 등) 우선.
+
+**3. 무료 플러그인 → 충분**
+
+ReaPlugs·Voxengo·TDR 등 무료가 입문 충분.
+
+---
+
 [보컬 EQ 완전 가이드](/stories/eq1) | [셀프 믹싱 vs 전문 의뢰 비교](/stories/selfmix1) | [믹싱 체인 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing)

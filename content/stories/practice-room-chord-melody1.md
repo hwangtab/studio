@@ -112,4 +112,22 @@ faq:
 - 실제 악기로 아이디어 즉흥 연주 후 MIDI 녹음
 - 반향음·잔향이 없는 환경에서 어레인지먼트 점검
 
+## Studio NOL이 코드 멜로디 편곡 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 코드 멜로디 편곡·솔로 기타 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 멜로디 우선 — 코드는 멜로디 아래**
+
+코드 멜로디 핵심은 멜로디. 코드 톤은 멜로디를 받치는 역할.
+
+**2. 가이드 톤 — 3·7도 보이싱**
+
+코드 멜로디 표준 보이싱은 가이드 톤(3·7도). 풀 코드는 손이 막힘.
+
+**3. Joe Pass·Ted Greene — 거장 카피**
+
+코드 멜로디 어휘는 Joe Pass, Ted Greene 카피로 학습.
+
+---
+
 [기타 코드 멜로디·솔로 기타 편곡 — 기타 코드 멜로디 완성 가이드](/stories/practice-room-guitar-chord-melody1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerpick-adv1) | [기타 솔로·리드 기타 연습 — 솔로 연주 완성 가이드](/stories/practice-room-guitar-solo1)

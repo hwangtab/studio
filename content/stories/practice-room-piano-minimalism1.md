@@ -224,4 +224,22 @@ Gmaj7 → Dmaj7 → Gmaj7 → Dmaj7 → ...
 
 은평구 24시간 음악연습실에서 메트로놈 없이, 눈을 감고 Am 아르페지오를 50회 반복해보세요. 20회 즈음부터 뭔가가 달라지기 시작합니다. 100회 이후에는 손과 마음이 분리되어, 음악이 저절로 흘러나오는 경험을 하게 됩니다.
 
+## Studio NOL이 미니멀리즘 피아노 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 미니멀리즘·Philip Glass·Steve Reich 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 같은 패턴 50회 반복 — 변화는 미세하게**
+
+미니멀리즘은 같은 패턴을 50~100회 반복하면서 미세한 변화를 듣는 음악입니다. 인내심이 핵심.
+
+**2. 메트로놈 정확성 — 0.01초도 어긋나면 패턴 무너짐**
+
+반복 패턴은 메트로놈 정확성이 절대적입니다. 미세한 박자 어긋남이 곡 전체 패턴을 무너뜨립니다.
+
+**3. 페이즈 시프트 — 두 손 박자 분리**
+
+Steve Reich 페이즈 시프트는 두 손이 다른 박자로 움직이는 기술. 점진적 시프트를 위한 양손 독립성 훈련 필수.
+
+---
+
 [피아노 미니멀리즘·Philip Glass·Steve Reich·반복 패턴 — 완전 가이드](/stories/practice-room-piano-minimalism-glass1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1) | [피아노 발라드 연주 기법·감성 표현 — 완전 가이드](/stories/practice-room-piano-ballad-technique1) | [피아노 비밥·Bud Powell·Thelonious Monk 스타일 — 완전 가이드](/stories/practice-room-piano-bebop1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1)

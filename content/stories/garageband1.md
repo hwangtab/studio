@@ -182,4 +182,22 @@ GarageBand는 무료이지만 스튜디오 의뢰용 드라이 보컬 녹음에 
 
 EQ 설정에서는 HPF를 80~100Hz에 걸어 불필요한 저역을 정리한 뒤, 2~5kHz 대역을 +1~2dB 부스트해 명료도를 높이고 10kHz 이상 Shelf를 +1dB 올려 공기감을 더하는 것이 기본입니다. 컴프레서는 Threshold -18dBFS·Ratio 3:1·Attack 15ms·Release 100ms로 설정하면 게인 리덕션 미터에서 -3~-6dB 수준으로 눌려 자연스러운 다이나믹이 유지됩니다. 믹싱 의뢰용 드라이 보컬 파일은 Share → Export Song to Disk → AIFF/WAV Lossless로 내보내어 전달하고, iOS에서는 Lightning 또는 USB-C 어댑터로 오디오 인터페이스를 연결한 뒤 '공유 → 노래 → 오디오 → Lossless' 경로로 무손실 파일을 저장할 수 있습니다.
 
+## Studio NOL이 개러지밴드 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 GarageBand 보컬 녹음 상담에서 반복적으로 드리는 조언입니다.
+
+**1. HPF 80~100Hz — 보컬 저역 정리**
+
+보컬 트랙에 HPF 80~100Hz 적용. 불필요한 저역 정리.
+
+**2. 컴프레서 — Ratio 3:1, Attack 15ms**
+
+GarageBand 컴프 표준 설정: Threshold -18dBFS, Ratio 3:1, Attack 15ms, Release 100ms.
+
+**3. 믹싱 의뢰 — AIFF/WAV Lossless 내보내기**
+
+Share → Export Song to Disk → AIFF/WAV Lossless로 무손실 파일 전달.
+
+---
+
 [Logic Pro 보컬 녹음 완전 가이드](/stories/logicpro1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [음원 파일 형식 완전 가이드](/stories/audioformat1)

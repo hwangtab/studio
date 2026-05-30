@@ -197,4 +197,22 @@ Release 설정은 음악의 리듬감과 직결됩니다. Release가 너무 빠�
 
 %%service:lesson%%
 
+## Studio NOL이 컴프레서 학습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 컴프레서 학습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. Threshold·Ratio·Attack·Release — 4 파라미터**
+
+기본 4개 이해 우선.
+
+**2. 광대역 → 멀티밴드**
+
+먼저 광대역 마스터.
+
+**3. 글루 컴프 — 마스터 버스**
+
+전체 트랙 글루 효과.
+
+---
+
 [헤드폰 믹싱 완전 가이드](/stories/headphone-mixing1) | [리버브 완전 가이드](/stories/reverb-guide1) | [병렬 컴프레션 완전 가이드](/stories/parallel-compression1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [클래식 Optical 컴프레서 LA-2A 가이드](/stories/la2a1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [보컬 믹싱 플러그인 완전 가이드](/stories/plugins1)

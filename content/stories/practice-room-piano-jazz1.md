@@ -134,4 +134,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
+## Studio NOL이 재즈 피아노 연습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 재즈 피아노 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 스탠더드 레퍼토리 — Real Book 10곡 우선**
+
+재즈 피아노는 스탠더드 레퍼토리 보유량이 실력입니다. Real Book에서 10곡을 골라 코드 진행·멜로디 암보부터 시작.
+
+**2. ii-V-I + 가이드 톤 — 12 키 자동화**
+
+재즈 코드 진행의 80%는 ii-V-I. 가이드 톤(3·7도) 보이싱으로 12 키 전부에서 막힘 없이 연주 가능해야 합니다.
+
+**3. 트랜스크립션 — Bill Evans·Herbie Hancock**
+
+재즈 어휘는 거장 솔로 카피로 가장 빠르게 늡니다. Bill Evans, Herbie Hancock 한 코러스부터 시작.
+
+---
+
 [재즈 피아노 연습 — 보이싱·즉흥 연주 완성 가이드](/stories/practice-room-jazz-piano1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1) | [재즈 피아노 즉흥 솔로·임프로비제이션 — 재즈 피아노 즉흥 완성 가이드](/stories/practice-room-piano-jazz-improv1) | [피아노 재즈 스탠다드·재즈 레퍼토리 — 재즈 스탠다드 완성 가이드](/stories/practice-room-piano-jazz-standard1) | [팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1)

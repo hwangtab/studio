@@ -142,4 +142,22 @@ Aux 2 (Reverb Send)
 
 딜레이와 리버브를 Insert가 아닌 Send/Return으로 분리하는 이유는 CPU 효율 외에도 프로덕션 일관성 때문입니다. 보컬·기타·피아노가 같은 리버브 Aux 채널을 공유하면 공간이 일체감 있게 들리고, 리버브의 Pre-delay(10~30ms)와 Decay Time을 한 곳에서 조절할 수 있습니다. 믹싱이 끝난 후 최종 렌더 전에는 마스터 버스에서 모든 플러그인을 바이패스한 상태와 활성 상태를 음량을 동일하게 맞춘 뒤 A/B 비교하는 검증이 필수입니다. 처리 전보다 처리 후가 더 명확하고 앞으로 나오는 느낌이어야 합니다.
 
+## Studio NOL이 믹싱 체인 학습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 믹싱 체인 상담에서 반복적으로 드리는 조언입니다.
+
+**1. EQ → 컴프 → 디에서 → 리버브**
+
+보컬 표준 체인.
+
+**2. 디에서 위치 — 컴프 후**
+
+압축 후 치찰음 강조됨.
+
+**3. 리버브 — Aux Return**
+
+인서트보다 Aux.
+
+---
+
 [강좌 제8부: 게인 스테이징](/stories/mixing8) | [강좌 제16부: EQ](/stories/mixing16) | [강좌 제17부: 컴프레서](/stories/mixing17) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [믹싱 레퍼런스 트랙 가이드](/stories/mixing-reference1) | [믹싱 vs 마스터링 차이](/stories/mixing-vs-mastering1) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [스펙트럼 분석기 완전 가이드](/stories/spectrum-analyzer1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1)

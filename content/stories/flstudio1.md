@@ -198,4 +198,22 @@ FL Studio는 비트메이킹에서 보컬 녹음까지 모두 가능한 통합 D
 
 Edison 녹음 시 레벨은 -12dBFS~-6dBFS 피크 범위를 목표로 설정합니다. 파형이 트랙 창 높이의 50~70% 수준이면 적절하며, 파형 상단이 잘려 있다면 클리핑이 발생한 것이므로 게인을 낮추고 재녹음해야 합니다. 믹싱 의뢰용 드라이 보컬은 Parametric EQ 2와 Fruity Compressor를 Bypass한 후 보컬 트랙만 Solo하여 WAV 24bit/44.1kHz로 내보내야 엔지니어가 이펙트를 독립적으로 처리할 수 있습니다.
 
+## Studio NOL이 FL Studio 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 FL Studio 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 평생 무료 업데이트**
+
+타 DAW 대비 강점.
+
+**2. 비트 메이킹 — 최강**
+
+스텝 시퀀서 직관적.
+
+**3. 보컬 녹음 — Edison + Newtone**
+
+내장 보컬 에디팅 도구.
+
+---
+
 [스마트폰 보컬 녹음 완전 가이드](/stories/smartphone-recording1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [Ableton Live 보컬 녹음 완전 가이드](/stories/ableton1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [DAW 최적화 완전 가이드](/stories/daw-performance1)
