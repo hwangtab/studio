@@ -257,4 +257,22 @@ John Paul Jones와 John Bonham의 리듬 섹션.
 
 은평구 24시간 음악연습실에서 드럼 루프와 함께 락킹을 연습하세요. 그루브는 반복으로만 만들어집니다.
 
+## Studio NOL이 베이스 리듬 락킹 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 베이스 그루브 락·킥드럼 동조 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 킥 드럼 위치 동조 — 1·3박 우선**
+
+베이스와 킥이 어긋나면 그루브가 무너집니다. 킥 1·3박 위치에 베이스를 정확히 맞춥니다.
+
+**2. 드럼 루프 활용 — Toontrack·Loopcloud**
+
+메트로놈만으로는 실제 드럼 느낌이 나지 않습니다. 드럼 루프를 백킹으로 연주해 실전 감각을 익힙니다.
+
+**3. 녹음 비교 — 베이스·드럼 위상 확인**
+
+본인 베이스와 드럼이 동조하는지 녹음 후 비교 청취로 확인합니다.
+
+---
+
 [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 그루브 구성·리듬 설계 원리 — 완전 가이드](/stories/practice-room-bass-groove-construction1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)
