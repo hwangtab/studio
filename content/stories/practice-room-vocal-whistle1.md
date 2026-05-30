@@ -149,4 +149,22 @@ faq:
 
 ---
 
+## Studio NOL이 휘슬 보이스 훈련자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 휘슬 보이스 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 호흡 — 매우 가벼움**
+
+힘으로 내지 말기.
+
+**2. 워밍업 충분히**
+
+성대 부상 위험 큰 영역.
+
+**3. 매일 짧게**
+
+긴 시간 X. 매일 5분.
+
+---
+
 [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드](/stories/practice-room-vocal-rasp1) | [보컬 워밍업·발성 준비 루틴 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warm-up1)

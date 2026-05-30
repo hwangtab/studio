@@ -182,3 +182,21 @@ faq:
 - [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1)
 - [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1)
 - [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1)
+
+## Studio NOL이 보컬 워밍업 루틴 설계자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 보컬 워밍업 루틴 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 30분 — 표준**
+
+부족 시 부상.
+
+**2. 립트릴 → 험 → 스케일**
+
+3단계 순서.
+
+**3. 매일 동일 시간**
+
+루틴 정착이 핵심.
+
+---

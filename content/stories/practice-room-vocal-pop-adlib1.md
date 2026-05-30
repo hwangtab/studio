@@ -284,4 +284,22 @@ C-E-G-C-E (코드 톤 위아래)
 
 은평구 24시간 음악연습실에서 실수를 두려워하지 않고 자신만의 애드립 언어를 만들어보세요. 개성은 연습에서 나옵니다.
 
+## Studio NOL이 팝 애드립 훈련자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 팝 애드립 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 마지막 코러스 — 애드립 우선**
+
+후반부 임팩트.
+
+**2. 코드 톤 위주**
+
+코드 구성음에서 시작.
+
+**3. 카피 → 본인 변형**
+
+좋아하는 보컬 애드립 분석.
+
+---
+
 [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

@@ -152,4 +152,22 @@ faq:
 
 ---
 
+## Studio NOL이 자음 발음 훈련자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 자음 발음 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 입술·혀 — 자음 핵심**
+
+자음은 입술과 혀의 정밀 동작.
+
+**2. 거울 — 입 모양 시각 점검**
+
+자음 발음 형태 확인.
+
+**3. 빠른 발음 — 단계별**
+
+천천히 → 점진 속도.
+
+---
+
 [보컬 발음·딕션 훈련 — 노래 발음 완성 가이드](/stories/practice-room-vocal-technique21) | [보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath-adv1) | [보컬 브레스 컨트롤·호흡 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21)
