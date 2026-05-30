@@ -112,4 +112,22 @@ inlineFallback:
 
 ---
 
+## Studio NOL이 다이내믹 처리 학습자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구)에서 다이내믹·컴프레서·오토메이션 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 오토메이션 우선 — 컴프 전 페이더 변화**
+
+다이내믹은 컴프 전 페이더 오토메이션으로 1차 처리합니다.
+
+**2. 컴프 부드러운 설정 — Ratio 3:1 시작**
+
+컴프는 부드러운 설정(Ratio 3:1, Attack 10~30ms, Release 50~100ms)에서 시작합니다.
+
+**3. GR 미터 확인 — 2~4dB 표준**
+
+컴프 GR(Gain Reduction) 미터를 확인하며 2~4dB 정도가 표준입니다.
+
+---
+
 **믹싱 강좌 시리즈**: [← 제13부: 멈춰있을 때 가장 아름답다](/stories/mixing13) | [제15부: 좌우의 미학, 패닝(Panning) →](/stories/mixing15) | [믹싱 워크플로우 가이드](/stories/mixing-workflow1) | [믹싱 오토메이션 가이드](/stories/mixing-automation1) | [온라인 믹싱 의뢰](/stories/onlinemix1) | [레슨 안내](/lesson) | [요금 안내](/pricing) | [📚 믹싱 완전 가이드 (전체 로드맵)](/stories/mixing-complete-guide)
