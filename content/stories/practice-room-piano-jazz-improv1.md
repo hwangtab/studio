@@ -131,4 +131,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 손 독립적 움직임 확인 / 2주차: 악보 암보 여부 / 3주차: 목표 구간 실수 없이 3회 연속 / 4주차: 처음부터 끝까지 감정 표현 포함
 
+## Studio NOL이 재즈 피아노 즉흥 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 재즈 피아노 즉흥 솔로·임프로비제이션 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. ii-V-I 12키 — 재즈 즉흥 골격**
+
+재즈의 핵심 진행 ii-V-I를 12키에서 자동화하면 어떤 스탠다드 위에서도 즉흥이 가능합니다.
+
+**2. 비밥 스케일 — 코드 톤 + 패싱 노트**
+
+비밥 스케일은 코드 톤에 크로매틱 패싱 노트를 추가한 형태입니다. 강박에 코드 톤이 오도록 라인을 설계합니다.
+
+**3. 트랜스크라이브 — Bill Evans·Bud Powell**
+
+재즈 즉흥 어휘는 트랜스크라이브로 익힙니다. Bill Evans·Bud Powell 솔로 카피로 시작합니다.
+
+---
+
 [피아노 즉흥 연주·재즈 피아노 — 재즈 피아노 완성 가이드](/stories/practice-room-piano-jazz1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1) | [재즈 피아노 연습 — 보이싱·즉흥 연주 완성 가이드](/stories/practice-room-jazz-piano1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [피아노 블루스 즉흥·블루스 스케일 — 피아노 블루스 즉흥 완성 가이드](/stories/practice-room-piano-improv-blues1) | [피아노 리드시트 즉흥반주 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)
