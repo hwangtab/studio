@@ -166,6 +166,24 @@ summary: >-
 
 ---
 
+## Studio NOL이 피아노 초견 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 피아노 초견·악보 읽기 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 한 마디 앞 시선 — 선행 읽기 자동화**
+
+초견은 연주 위치보다 한 마디 앞을 읽어야 합니다. 시선이 손을 앞서가는 훈련을 BPM 80에서 합니다.
+
+**2. 일일 새 악보 — 같은 곡 반복 금지**
+
+초견은 매일 새 악보를 접해야 향상됩니다. 같은 곡 반복은 암기가 됩니다.
+
+**3. BPM 점진 상승 — 정확성 먼저**
+
+초견 시 BPM을 처음부터 빠르게 잡으면 실수가 누적됩니다. 정확성을 잡은 후 BPM을 단계적으로 올립니다.
+
+---
+
 *관련 아티클:*
 
 [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 클래식 테크닉·핑거 독립성 훈련 — 완전 가이드](/stories/practice-room-piano-classical-technique1) | [피아노 귀 훈련·청음 완전 가이드](/stories/practice-room-piano-ear-training1)
