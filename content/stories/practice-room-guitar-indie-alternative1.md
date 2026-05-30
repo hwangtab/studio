@@ -198,4 +198,22 @@ A-D-E (4도 포함, 3도 없음)
 
 은평구 24시간 음악연습실에서 다양한 이펙터와 기법을 자유롭게 탐구하고 자신만의 인디 사운드를 만들어가세요.
 
+## Studio NOL이 인디 기타 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 인디·얼터너티브 기타 사운드 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 리버브 + 딜레이 — 인디 사운드 골격**
+
+인디 기타 사운드는 리버브와 딜레이의 적절한 조합에서 옵니다.
+
+**2. 오픈 튜닝 활용 — 독창적 보이싱**
+
+오픈 D·오픈 G 튜닝으로 표준 코드와 다른 보이싱을 만들 수 있습니다.
+
+**3. 클린 톤 + 가벼운 새츄레이션**
+
+인디 톤은 풀 디스토션이 아닌 가벼운 새츄레이션입니다.
+
+---
+
 [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [바리톤 기타·다운 튜닝·헤비 사운드 — 완전 가이드](/stories/practice-room-guitar-baritone1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)
