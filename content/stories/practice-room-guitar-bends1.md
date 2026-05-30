@@ -168,4 +168,22 @@ faq:
 
 [보컬 비브라토·트릴 훈련법 — 완전 가이드](/stories/practice-room-vocal-vibrato1)
 
+## Studio NOL이 기타 벤딩 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 기타 벤딩 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 음정 기준 우선 — 풀스텝·하프스텝 정확도**
+
+벤딩의 핵심은 목표 음정에 정확히 도달하는 것입니다. 튜너 앱이나 피아노로 풀스텝(2프렛)·하프스텝(1프렛) 목표 음을 확인하며 훈련합니다.
+
+**2. 다손가락 보조 — 약지 + 중지 + 검지**
+
+약지 단독으로 벤딩하면 힘이 부족합니다. 약지 뒤로 중지·검지를 받쳐 3개 손가락 힘으로 벤딩합니다.
+
+**3. 비브라토 후 벤딩 — 표현력 결합**
+
+벤딩 음정 도달 후 비브라토로 마무리하면 블루스 표현력이 살아납니다. 별도 연습 후 결합 훈련을 합니다.
+
+---
+
 [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 인디·얼터너티브 기타 사운드 — 완전 가이드](/stories/practice-room-guitar-indie-alternative1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1) | [기타 하모닉스 주법 완성 가이드](/stories/practice-room-guitar-harmonics1)
