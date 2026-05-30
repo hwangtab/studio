@@ -131,4 +131,22 @@ faq:
 
 **주간 체크포인트:** 1주차: 올바른 왼손 폼 확인 / 2주차: BPM 80 박자 일정 유지 / 3주차: 펜타토닉 박스 포지션 암보 / 4주차: MR에 맞춰 16마디 연속
 
+## Studio NOL이 슬랩 베이스 연습실 사용자에게 자주 권하는 3가지
+
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 베이스 슬랩·테크닉 연습 상담에서 반복적으로 드리는 조언입니다.
+
+**1. 썸핑·풀링 분리 — 음량 균등화**
+
+엄지 썸핑과 검지 풀링은 별도 동작입니다.
+
+**2. 손목 회전 — 손목 단독 움직임**
+
+슬랩은 손목 회전이 동력입니다.
+
+**3. 메트로놈 BPM 70 — 균일성 우선**
+
+빠르기로 시작하면 음량 편차가 생깁니다.
+
+---
+
 [베이스 슬랩·팝핑 고급 테크닉 — 슬랩 베이스 완성 가이드](/stories/practice-room-bass-slap-adv1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass-technique1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [옥타브 주법·그루브 완전 가이드](/stories/practice-room-bass-octave1)
