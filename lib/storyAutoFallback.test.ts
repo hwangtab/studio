@@ -18,17 +18,24 @@ describe('matchPricingForCategory', () => {
     expect(matchPricingForCategory('instrument')).toBeNull();
   });
 
-  it('vocal/production/lesson은 매칭 없음 — frontmatter로 글 단위 매핑', () => {
-    expect(matchPricingForCategory('vocal')).toBeNull();
-    expect(matchPricingForCategory('production')).toBeNull();
+  // 2026-05-31 확장: 의뢰 의도 카테고리에 가격 카드 자동 연결.
+  it('region/vocal/production → recording-pro (의뢰 의도 매핑)', () => {
+    expect(matchPricingForCategory('region')).toBe('recording-pro');
+    expect(matchPricingForCategory('vocal')).toBe('recording-pro');
+    expect(matchPricingForCategory('production')).toBe('recording-pro');
+  });
+
+  it('business → mixing-level1 (발매·유통 의도)', () => {
+    expect(matchPricingForCategory('business')).toBe('mixing-level1');
+  });
+
+  it('lesson은 매칭 없음 — frontmatter inlineFallback로 글 단위 매핑', () => {
     expect(matchPricingForCategory('lesson')).toBeNull();
   });
 
-  it('event/feedback/business/region 매칭 없음', () => {
+  it('event/feedback 매칭 없음', () => {
     expect(matchPricingForCategory('event')).toBeNull();
     expect(matchPricingForCategory('feedback')).toBeNull();
-    expect(matchPricingForCategory('business')).toBeNull();
-    expect(matchPricingForCategory('region')).toBeNull();
   });
 
   it('알 수 없는 카테고리 null', () => {

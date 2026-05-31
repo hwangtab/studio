@@ -133,6 +133,32 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         </Section>
       )}
 
+      {/* 대표 소개 — 의뢰는 사람을 믿고 맡기는 일. 신뢰 신호를 첫 콘텐츠 블록에 배치.
+          ko 우선(트래픽 절대다수). 텍스트는 release-project 프로듀서 소개와 정합. */}
+      {locale === 'ko' && (
+        <Section variant="default">
+          <div className="max-w-3xl mx-auto">
+            <BaseCard variant="default" className="p-8">
+              <div className="flex items-center gap-3 mb-2 text-primary">
+                <Award size={22} aria-hidden="true" />
+                <span className="typo-card-meta font-semibold">{t('about.producer.tagline')}</span>
+              </div>
+              <h2 className="typo-card-title mb-4">{t('about.producer.title')}</h2>
+              <p className="typo-card-body text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                {t('about.producer.body')}
+              </p>
+              <Link
+                href={`/${locale}/portfolio`}
+                prefetch={false}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
+              >
+                {t('about.producer.portfolioCta')} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </BaseCard>
+          </div>
+        </Section>
+      )}
+
       <Section variant="alternate">
         <SectionHeading
           icon={Music}

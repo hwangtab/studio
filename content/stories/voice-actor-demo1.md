@@ -231,4 +231,4 @@ inlineFallback:
 
 ---
 
-[오디오북 제작 가이드](/stories/audiobook-guide1) | [보컬 오디션 가이드](/stories/audition-vocal1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [1인 보컬 녹음 가이드](/stories/vocal-solo-recording1)
+[오디오북 제작 가이드](/stories/audiobook-guide1) | [보컬 오디션 가이드](/stories/audition-vocal1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [홈레코딩 vs 스튜디오](/stories/home-vs-studio1) | [1인 보컬 녹음 가이드](/stories/vocal-solo-recording1) | [성우 녹음실 서비스 안내](/ko/voice-acting)

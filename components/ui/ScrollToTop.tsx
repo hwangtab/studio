@@ -43,7 +43,7 @@ export const ScrollToTop = ({ locale = defaultLocale }: ScrollToTopProps) => {
 
   return (
     <div
-      className={`fixed bottom-8 right-8 z-50 transition-opacity duration-200 ${isVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed bottom-24 right-6 sm:right-8 z-40 transition-opacity duration-200 ${isVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       aria-hidden={!isVisible}
     >
       <Button

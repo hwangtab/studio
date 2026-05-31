@@ -15,7 +15,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
-        reserve: "무료 발매 상담",
+        reserve: "카톡으로 무료 상담",
         portfolio: "포트폴리오"
       },
       ctaImageAlt: "연신내 녹음실 스튜디오 놀 - 전문 녹음 장비와 하드웨어"

@@ -24,6 +24,8 @@ import { getHomeData, type HomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
+import { getSiteConfig } from '../../data/siteConfig';
+import { trackLeadEvent } from '../../utils/analytics';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -51,6 +53,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
 
   // Helper to generate locale-aware links
   const getLink = (path: string) => `/${locale}${path}`;
+  // 검증된 유일 전환 채널(카카오) — 히어로 1차 CTA를 폼이 아닌 카카오 직링크로.
+  const kakaoUrl = getSiteConfig(locale).contact.kakaoUrl;
   const homeQuickAnswers = React.useMemo(() => faqData.slice(0, 3), [faqData]);
   const homeServicesMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
@@ -96,13 +100,24 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             {/* prefetch={false}: hero CTA가 LCP 측정 창 안에 있어 자동 prefetch가
                 portfolio.json 등 무거운 SSG 데이터(>100KB)를 끌어와 TBT/대역폭 경쟁을
                 유발. hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 유지된다. */}
-            <Link
-              href={getLink('/contact')}
-              prefetch={false}
+            {/* 1차 CTA — 검증된 전환 채널(카카오톡) 직링크. GA4 90일 실질 전환은
+                카카오 클릭이 전부였고 폼은 전환 0이라, 마찰 큰 폼(/contact) 대신
+                카카오 오픈채팅으로 직접 연결. */}
+            <a
+              href={kakaoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackLeadEvent('lead_click_kakao', {
+                  locale,
+                  component: 'HomeHero',
+                  cta_id: 'hero_primary_kakao',
+                })
+              }
               className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {heroContent.cta.reserve}
-            </Link>
+            </a>
             <Link
               href={getLink('/portfolio')}
               prefetch={false}
