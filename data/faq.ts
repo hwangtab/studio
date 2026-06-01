@@ -16,7 +16,7 @@ const faqData = {
     },
     {
       question: '마스터링 비용은 얼마인가요?',
-      answer: '싱글 마스터링은 곡당 100,000원이며, EP/앨범 패키지(4곡 이상)는 곡당 80,000원입니다. 멜론, 지니, 유튜브 뮤직, 애플뮤직 등 주요 음원사이트 규격에 맞게 작업됩니다.',
+      answer: '마스터링은 곡당 100,000원입니다. 멜론, 지니, 유튜브 뮤직, 애플뮤직 등 주요 음원사이트 규격에 맞게 작업됩니다.',
     },
     {
       question: '연습실 입주 프로그램이 있나요?',
@@ -71,7 +71,7 @@ const faqData = {
     },
     {
       question: 'How much is mastering?',
-      answer: 'Single mastering is 100,000 KRW per song. EP/Album package (4+ songs) is 80,000 KRW per song. Mastered for streaming platforms like Spotify and Apple Music.',
+      answer: 'Mastering is 100,000 KRW per song. Mastered for streaming platforms like Spotify and Apple Music.',
     },
     {
       question: 'Do you have a practice room residency program?',
@@ -126,7 +126,7 @@ const faqData = {
     },
     {
       question: '母带处理费用是多少？',
-      answer: '单曲母带处理每首 100,000 韩元；EP/专辑套餐（4 首以上）每首 80,000 韩元。将按 Spotify、Apple Music 等流媒体平台规格制作。',
+      answer: '母带处理每首 100,000 韩元。将按 Spotify、Apple Music 等流媒体平台规格制作。',
     },
     {
       question: '有练习室入驻项目吗？',
@@ -218,7 +218,7 @@ const faqData = {
     },
     {
       question: 'Mastering giá bao nhiêu?',
-      answer: 'Mastering single 100.000 KRW/bài; gói EP/album (4+ bài) 80.000 KRW/bài. Thực hiện theo chuẩn Spotify, Apple Music, v.v.',
+      answer: 'Mastering 100.000 KRW/bài. Thực hiện theo chuẩn Spotify, Apple Music, v.v.',
     },
     {
       question: 'Có chương trình phòng tập cư trú không?',
@@ -264,7 +264,7 @@ const faqData = {
     },
     {
       question: 'ค่ามาสเตอริ่งเท่าไหร่?',
-      answer: 'มาสเตอริ่งซิงเกิล 100,000 วอน/เพลง แพ็กเกจ EP/อัลบั้ม (4 เพลงขึ้นไป) 80,000 วอน/เพลง ทำตามมาตรฐาน Spotify, Apple Music ฯลฯ',
+      answer: 'มาสเตอริ่ง 100,000 วอน/เพลง ทำตามมาตรฐาน Spotify, Apple Music ฯลฯ',
     },
     {
       question: 'มีโปรแกรมห้องซ้อมรายเดือนหรือไม่?',
@@ -310,7 +310,7 @@ const faqData = {
     },
     {
       question: 'Mastering narxi qancha?',
-      answer: "Single mastering 100,000 KRW/qo'shiq, EP/album paketi (4+ qo'shiq) 80,000 KRW/qo'shiq. Spotify, Apple Music kabi platformalar standartiga mos.",
+      answer: "Mastering 100,000 KRW/qo'shiq. Spotify, Apple Music kabi platformalar standartiga mos.",
     },
     {
       question: "Mashg'ulot xonasi rezident dasturi bormi?",

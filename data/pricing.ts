@@ -184,36 +184,13 @@ export const getPricingData = (locale: Locale) => {
         th: 'มาสเตอริ่งที่เหมาะที่สุดสำหรับซิงเกิลดิจิทัล',
         uz: 'Raqamli singl chiqishi uchun optimallashtirilgan mastering.'
       }),
+      recommended: true,
       features: tArray(locale, {
         ko: ['스트리밍 플랫폼 규격 준수', '기본 1회 수정 포함', '고해상도 음원 제공', '장르별 최적화된 라우드니스 설정'],
         en: ['Streaming platform standards', '1 revision included', 'High-res audio files', 'Genre-optimized loudness'],
         vi: ['Tuân thủ chuẩn nền tảng streaming', 'Bao gồm 1 lần chỉnh sửa', 'File âm thanh độ phân giải cao', 'Loudness tối ưu theo thể loại'],
         th: ['ตามมาตรฐานแพลตฟอร์มสตรีมมิง', 'รวมแก้ไข 1 ครั้ง', 'ไฟล์เสียงความละเอียดสูง', 'ตั้งค่า loudness ให้เหมาะกับแนวเพลง'],
         uz: ['Streaming platforma standartlariga mos', '1 ta tahrir kiritilgan', 'Yuqori rezolyutsiyali audio fayllar', 'Janrga mos loudness sozlamalari']
-      }),
-    },
-    {
-      id: 'mastering-album',
-      title: t(locale, { ko: 'EP / 앨범 패키지', en: 'EP / Album Package', zh: 'EP / 专辑套餐', es: 'Paquete EP / Álbum', vi: 'Gói EP / Album', th: 'แพ็กเกจ EP / อัลบั้ม', uz: 'EP / Albom paketi' }),
-      priceDisplay: t(locale, { ko: '80,000원', en: '₩80,000', zh: '₩80,000', es: '₩80,000', vi: '₩80,000', th: '₩80,000', uz: '₩80,000' }),
-      priceValue: 80000,
-      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
-      description: t(locale, {
-        ko: '4곡 이상의 앨범 작업 시 적용되는 할인 가격입니다.',
-        en: 'Discounted rate for projects with 4+ songs.',
-        zh: '4首以上专辑制作时的优惠价格。',
-        es: 'Tarifa con descuento para proyectos con 4+ canciones.',
-        vi: 'Giá ưu đãi cho dự án có từ 4 bài trở lên.',
-        th: 'ราคาพิเศษสำหรับโปรเจกต์ตั้งแต่ 4 เพลงขึ้นไป',
-        uz: '4+ qo\'shiqdan iborat loyihalar uchun chegirmali narx.'
-      }),
-      recommended: true,
-      features: tArray(locale, {
-        ko: ['4곡 이상 진행 시 적용', '앨범 전체의 톤 앤 매너 통일', '곡 간 레벨 밸런싱', '기본 1회 수정 포함'],
-        en: ['Applies to 4+ songs', 'Consistent tone & manner', 'Level balancing across songs', '1 revision included'],
-        vi: ['Áp dụng cho 4 bài trở lên', 'Đồng nhất tone & phong cách toàn album', 'Cân bằng mức giữa các bài', 'Bao gồm 1 lần chỉnh sửa'],
-        th: ['ใช้ได้เมื่อมี 4 เพลงขึ้นไป', 'โทนและคาแรกเตอร์ทั้งอัลบั้มสม่ำเสมอ', 'ปรับบาลานซ์ระดับระหว่างเพลง', 'รวมแก้ไข 1 ครั้ง'],
-        uz: ['4+ qo\'shiqda qo\'llanadi', 'Albomning tone & mannerini bir xil qilish', 'Qo\'shiqlar orasida level balancing', '1 ta tahrir kiritilgan']
       }),
     },
   ];
