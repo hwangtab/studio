@@ -8,10 +8,10 @@ const homeData = {
       keywords: "노래 녹음 스튜디오, 보컬 녹음, 연신내 녹음실, 음원 제작, 디지털 싱글, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 오디오북 녹음, 일반인 녹음실, 스튜디오 놀, 음악연습실, 24시간 음악연습실"
     },
     heroContent: {
-      titlePrefix: "곡은 다 썼는데,",
-      titleHighlight: "그 다음",
-      titleSuffix: "을 모르는 당신에게",
-      subtitle: "그 다음은 함께 만듭니다. 기획·녹음·세션·믹싱·유통, 그리고 매체·평론에 닿는 일까지.",
+      titlePrefix: "당신의 목소리를 가장 좋은 소리로",
+      titleHighlight: "연신내 노래 녹음 스튜디오",
+      titleSuffix: "",
+      subtitle: "보컬 녹음부터 믹싱·마스터링까지 전문 엔지니어가 직접 진행합니다. 연신내역 도보 5분, 첫 녹음도 편하게 시작하세요.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {

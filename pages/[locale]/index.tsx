@@ -87,7 +87,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
               {heroContent.titleHighlight}
             </span>
-            <span className="text-gray-100 drop-shadow-lg">{heroContent.titleSuffix}</span>
+            {heroContent.titleSuffix && (
+              <span className="text-gray-100 drop-shadow-lg">{heroContent.titleSuffix}</span>
+            )}
           </>
         }
         subtitle={heroContent.subtitle}
