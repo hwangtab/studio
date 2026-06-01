@@ -94,10 +94,10 @@ const homeData = {
       keywords: "Seoul recording studio, international musicians Korea, Yeonsinnae recording studio, English-speaking engineer, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, Studio NOL, Eunpyeong-gu studio"
     },
     heroContent: {
-      titlePrefix: "You've written the songs.",
-      titleHighlight: "What comes",
-      titleSuffix: "next?",
-      subtitle: "We make what comes next, together. Planning, recording, sessions, mixing, distribution, and reaching press and critics.",
+      titlePrefix: "Your voice, at its best.",
+      titleHighlight: "Seoul Vocal Recording Studio",
+      titleSuffix: "",
+      subtitle: "From vocal recording to mixing and mastering — handled directly by a professional engineer. 5 minutes from Yeonsinnae Station. Your first session, made easy.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
@@ -190,10 +190,10 @@ const homeData = {
       keywords: "首尔录音室, 延新内录音室, 专业录音, 混音母带, 婚礼歌曲录音, 配音录音, Studio NOL, 恩平区音乐制作"
     },
     heroContent: {
-      titlePrefix: "歌曲写完了，",
-      titleHighlight: "接下来",
-      titleSuffix: "不知道该怎么办的你",
-      subtitle: "接下来的，与你一起。从企划、录音、乐手联络、混音、发行，到对接媒体与乐评。",
+      titlePrefix: "用最好的声音呈现你的歌声",
+      titleHighlight: "延新内人声录音室",
+      titleSuffix: "",
+      subtitle: "从人声录音到混音、母带，专业工程师亲自操作。延新内站步行5分钟，第一次录音也能轻松开始。",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
@@ -286,10 +286,10 @@ const homeData = {
       keywords: "estudio de grabación Seúl, Yeonsinnae estudio, mezcla masterización, canción boda, locución Seúl, producción musical, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "Ya escribiste las canciones.",
-      titleHighlight: "¿Y ahora",
-      titleSuffix: "qué?",
-      subtitle: "Hacemos juntos lo que viene después. Planificación, grabación, sesiones, mezcla, distribución y conexión con medios y reseñas.",
+      titlePrefix: "Tu voz, con el mejor sonido.",
+      titleHighlight: "Estudio de Grabación Vocal en Seúl",
+      titleSuffix: "",
+      subtitle: "Desde la grabación vocal hasta la mezcla y masterización, a cargo de un ingeniero profesional. A 5 min de Yeonsinnae. Tu primera sesión, sin complicaciones.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
@@ -382,10 +382,10 @@ const homeData = {
       keywords: "phòng thu Seoul, Yeonsinnae phòng thu, mixing mastering, thu âm nhạc cưới, thu âm lồng tiếng, sản xuất âm nhạc, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "Bạn đã viết xong bài hát,",
-      titleHighlight: "nhưng tiếp theo",
-      titleSuffix: "bạn chưa biết phải làm gì?",
-      subtitle: "Phần tiếp theo, chúng ta cùng làm. Lập kế hoạch, thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình.",
+      titlePrefix: "Giọng hát của bạn, với âm thanh tốt nhất.",
+      titleHighlight: "Phòng thu âm giọng hát Seoul",
+      titleSuffix: "",
+      subtitle: "Từ thu âm giọng hát đến mixing và mastering — kỹ sư chuyên nghiệp trực tiếp thực hiện. Cách ga Yeonsinnae 5 phút. Buổi thu đầu tiên cũng thật dễ dàng.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
@@ -478,10 +478,10 @@ const homeData = {
       keywords: "สตูดิโอบันทึกเสียงโซล, Yeonsinnae สตูดิโอ, มิกซ์มาสเตอริ่ง, อัดเพลงงานแต่ง, อัดเสียงพากย์, ผลิตเพลง, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "คุณแต่งเพลงเสร็จแล้ว",
-      titleHighlight: "แต่ขั้นตอน",
-      titleSuffix: "ต่อไปคืออะไร?",
-      subtitle: "ส่วนที่ตามมา เราทำด้วยกัน การวางแผน บันทึกเสียง นักดนตรีเซสชัน มิกซ์ จัดจำหน่าย และเข้าถึงสื่อและการวิจารณ์",
+      titlePrefix: "เสียงของคุณ ในแบบที่ดีที่สุด",
+      titleHighlight: "สตูดิโอบันทึกเสียงร้องโซล",
+      titleSuffix: "",
+      subtitle: "ตั้งแต่บันทึกเสียงร้องไปจนถึงมิกซ์และมาสเตอริ่ง โดยวิศวกรมืออาชีพ เดิน 5 นาทีจากสถานี Yeonsinnae เริ่มต้นบันทึกครั้งแรกได้อย่างง่ายดาย",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
@@ -574,10 +574,10 @@ const homeData = {
       keywords: "Seul yozuv studiyasi, Yeonsinnae studiya, miks mastering, to'y qo'shig'i yozuvi, ovoz aktyorligi, musiqa prodakshn, Studio NOL"
     },
     heroContent: {
-      titlePrefix: "Qo'shiqlarni yozdingiz,",
-      titleHighlight: "keyingi qadam",
-      titleSuffix: "nima ekanligini bilmayapsizmi?",
-      subtitle: "Keyingisi — birgalikda. Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetish.",
+      titlePrefix: "Ovozingiz — eng yaxshi tovushda.",
+      titleHighlight: "Seul vokal yozuv studiyasi",
+      titleSuffix: "",
+      subtitle: "Vokal yozuvdan to miks va masteringgacha — professional muhandis bevosita bajaradi. Yeonsinnae bekatidan 5 daqiqa. Birinchi seansingiz ham oson.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
