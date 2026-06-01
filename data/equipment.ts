@@ -50,6 +50,7 @@ export const getEquipmentData = (locale: Locale) => {
       "G&L Tribute ASAT",
     ],
     consoles: [
+      "Midas Venice 320",
       "Softube Console 1",
       "Softube Console 1 Fader",
       "Presonus Faderport V2",
