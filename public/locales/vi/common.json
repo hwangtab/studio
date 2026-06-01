@@ -1398,6 +1398,13 @@
           "priceRange": "Từ khoảng ₩500K",
           "priceRationale": "Mức cơ bản (thu âm vocal + mix). Tiết kiệm thời gian và tổng chi phí so với phải lấy 5-7 báo giá riêng lẻ.",
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "priceFactorsTitle": "Giá được quyết định bởi các yếu tố sau",
+          "priceFactors": [
+            { "label": "Số bài", "detail": "1 bài cơ bản → mỗi bài thêm +₩300K~500K" },
+            { "label": "Số nhạc công session", "detail": "Bao gồm 1~2 người → từ 3 người trở lên +₩200K/người" },
+            { "label": "Độ sâu phối khí", "detail": "Phối khí cơ bản → ban nhạc đầy đủ·dàn dây·hợp xướng +₩500K~1.5M" },
+            { "label": "PR truyền thông", "detail": "1 vòng cơ bản → 2 vòng·phỏng vấn kỷ niệm phát hành +₩300K" }
+          ],
           "caseStudySectionTitle": "Các single chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
           "faqSectionTitle": "Câu hỏi thường gặp",
@@ -1489,6 +1496,13 @@
           "priceRange": "EP từ ~₩1.5M (3-5 bài)",
           "priceRationale": "Mức tiêu chuẩn cho 3-5 bài (thu âm vocal, mix, đồng nhất âm sắc). Tiết kiệm thời gian và tổng chi phí so với phải tìm 5-7 nhà cung cấp riêng lẻ.",
           "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "priceFactorsTitle": "Giá được quyết định bởi các yếu tố sau",
+          "priceFactors": [
+            { "label": "Số bài trong EP", "detail": "3 bài cơ bản → 4 bài +₩500K / 5 bài +₩1M" },
+            { "label": "Quy mô session", "detail": "Vocal + 1~2 session → thu live ban nhạc +₩1M~2M" },
+            { "label": "Chiến dịch single chủ lực", "detail": "1 vòng cơ bản → phát hành theo 2 giai đoạn·PR 2 vòng +₩500K" },
+            { "label": "Độ sâu đồng nhất âm sắc", "detail": "Đồng nhất giữa các bài → mastering bằng một engine +₩300K" }
+          ],
           "caseStudySectionTitle": "Các EP chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
           "faqSectionTitle": "Câu hỏi thường gặp",
@@ -1582,6 +1596,13 @@
           "priceRange": "Từ khoảng ₩4M",
           "priceRationale": "Mức tiêu chuẩn cho 8 bài (thu âm vocal, mix, master). A&R, PR với nhà phê bình, hướng dẫn xin tài trợ — tất cả từ một nhà sản xuất, một báo giá.",
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
+          "priceFactorsTitle": "Giá được quyết định bởi các yếu tố sau",
+          "priceFactors": [
+            { "label": "Số bài trong album", "detail": "8 bài cơ bản → 10 bài +₩2M / 12 bài +₩4M" },
+            { "label": "Quy mô session", "detail": "Vocal + session lõi → ban nhạc đầy đủ·dàn dây·hợp xướng +₩2M~5M" },
+            { "label": "Độ sâu A&R", "detail": "5 vòng tuyển chọn bài → workshop sáng tác·tư vấn ngoài +₩1M~2M" },
+            { "label": "PR phê bình·buổi nghe thử", "detail": "Thông cáo + tiếp cận từng cơ quan → sự kiện nghe thử +₩800K" }
+          ],
           "caseStudySectionTitle": "Các album đầy đủ chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
           "faqSectionTitle": "Câu hỏi thường gặp",
@@ -1714,23 +1735,27 @@
     },
     "hubFaq": {
       "sectionTitle": "Câu hỏi thường gặp",
-      "sectionSubtitle": "Năm câu hỏi mà mọi người thường hỏi khi lần đầu tiếp xúc với dự án phát hành.",
+      "sectionSubtitle": "Những lo ngại mà người mới tiếp xúc thường nêu nhất — đừng ngần ngại, cứ hỏi thoải mái.",
       "items": [
         {
           "question": "Dự án phát hành là dịch vụ gì?",
-          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL, trong khi các session nhạc cụ và kết nối báo chí được triển khai qua mạng lưới 15 năm chúng tôi đã xây dựng trong cộng đồng indie. Bạn có thể chọn trọn gói hoặc chỉ chọn một số bước riêng lẻ."
+          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL; nhạc cụ session và kết nối phê bình·truyền thông được triển khai qua mạng lưới 15 năm trong cộng đồng indie. Single, EP và album đầy đủ có nhịp độ và ngân sách khác nhau — vui lòng xem từng trang để biết hạng mục cụ thể và cấu trúc giá."
         },
         {
-          "question": "Chi phí được xác định như thế nào?",
-          "answer": "Thu âm vocal và mixing là đơn giá cơ bản (single từ ~₩500K, album đầy đủ từ ~₩4M). Trên cơ sở đó, các hạng mục bổ sung — nhạc công session, phạm vi phối khí, phân phối, PR truyền thông — sẽ được cộng thêm. Sau buổi tư vấn miễn phí, bạn sẽ nhận được báo giá tùy chỉnh dựa trên bảng đơn giá. Không có chi phí ẩn."
+          "question": "Nếu giữa dự án tôi đổi ý hoặc lịch trình bị xáo trộn thì sao?",
+          "answer": "Vì dự án được triển khai theo từng giai đoạn nên có thể tạm dừng hoặc làm chậm nhịp giữa chừng. Bạn chỉ thanh toán chi phí cho các giai đoạn đã hoàn tất và có thể có khoảng nghỉ. Ngay cả khi định hướng bài hát thay đổi đáng kể, chúng ta sẽ bàn lại và cùng tìm đường — chính sách hoàn tiền sẽ được giải thích rõ ràng trong buổi tư vấn miễn phí."
         },
         {
-          "question": "Thời gian thực hiện là bao lâu?",
-          "answer": "Nhịp tiêu chuẩn là khoảng 7 tháng cho single / 12 tháng cho EP / 24 tháng cho album đầy đủ. Thời gian có thể rút ngắn tùy theo mức độ sẵn sàng của bài hát, quy mô session và lịch trình chiến dịch phát hành. Trong buổi tư vấn, chúng ta sẽ cùng thiết lập một lịch trình thực tế."
+          "question": "Ngân sách eo hẹp — tôi có thể chỉ đặt một phần trong các giai đoạn không?",
+          "answer": "Có. Chúng tôi khuyến nghị toàn bộ quy trình phát hành, nhưng bạn cũng có thể đặt riêng từng giai đoạn: chỉ thu âm vocal / chỉ mix / chỉ master. Báo giá từng phần dựa trên bảng đơn giá (thu âm vocal từ ₩40K/giờ, mix từ ₩800K, v.v.). Tuy nhiên, PR truyền thông và đồng hành phân phối chỉ kèm theo khi đặt trọn quy trình."
+        },
+        {
+          "question": "Tôi đã bắt đầu thu âm ở nơi khác — các bạn có thể tham gia giữa chừng không?",
+          "answer": "Có thể. Chúng tôi có thể nhận tracks/stems thu ở studio khác và tiếp tục với mixing, mastering, phân phối và PR. Tuy nhiên, chúng tôi sẽ nghe trước và thẳng thắn cho bạn biết các hạn chế có thể phát sinh do khác biệt âm sắc giọng hát hoặc môi trường thu âm."
         },
         {
           "question": "Bạn đã làm việc với những nghệ sĩ nào?",
-          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — và hơn 70 sản phẩm phát hành với nhiều nghệ sĩ indie: singer-songwriter, ban nhạc, nghệ sĩ jazz, dự án điện tử thử nghiệm và các dự án tuyển tập. Phần discography phía trên và trang portfolio chỉ giới thiệu một phần trong số đó."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — và hơn 70 sản phẩm phát hành với nhiều nghệ sĩ indie: singer-songwriter, ban nhạc, nghệ sĩ jazz, dự án điện tử thử nghiệm và các dự án tuyển tập. Phần discography và trang portfolio chỉ giới thiệu một phần trong số đó."
         },
         {
           "question": "Buổi tư vấn miễn phí diễn ra như thế nào?",

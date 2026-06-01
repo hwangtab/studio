@@ -1396,6 +1396,13 @@
           "priceRange": "Taxminan ₩500K dan",
           "priceRationale": "Asosiy stavka (vokal yozuv + miks). 5-7 ta alohida narx olishdan ko'ra vaqt va umumiy xarajatni tejaydi.",
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
+          "priceFactorsTitle": "Narxni belgilovchi omillar",
+          "priceFactors": [
+            { "label": "Treklar soni", "detail": "1 trek asos → har qo‘shimcha trek +₩300K~500K" },
+            { "label": "Sessiya musiqachilari", "detail": "1~2 nafar kiritilgan → 3 nafardan ortiq +₩200K/kishi" },
+            { "label": "Aranjirovka chuqurligi", "detail": "Asosiy aranjirovka → to‘liq guruh·simlar·xor +₩500K~1.5M" },
+            { "label": "Media PR", "detail": "1 raund asos → 2 raund·chiqarish intervyusi +₩300K" }
+          ],
           "caseStudySectionTitle": "Birga yaratgan singlarimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
@@ -1487,6 +1494,13 @@
           "priceRange": "EP ~₩1.5M dan (3-5 trek)",
           "priceRationale": "3-5 trek uchun standart stavka (vokal yozuv, miks, ohang moslashuvi). 5-7 ta alohida ta'minotchidan narx olishdan ko'ra vaqt va umumiy xarajatni tejaydi.",
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
+          "priceFactorsTitle": "Narxni belgilovchi omillar",
+          "priceFactors": [
+            { "label": "Treklar soni", "detail": "3 trek asos → 4 trek +₩500K / 5 trek +₩1M" },
+            { "label": "Sessiya hajmi", "detail": "Vokal + 1~2 sessiya → jonli guruh tracking +₩1M~2M" },
+            { "label": "Bosh singl kampaniyasi", "detail": "1 raund asos → 2 bosqichli chiqarish·2 raund PR +₩500K" },
+            { "label": "Ohang moslashuvi chuqurligi", "detail": "Treklararo moslashuv → bitta mastering engine +₩300K" }
+          ],
           "caseStudySectionTitle": "Birga yaratgan EP larimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
@@ -1580,6 +1594,13 @@
           "priceRange": "Taxminan ₩4M dan",
           "priceRationale": "8 trek uchun standart stavka (vokal yozuv, miks, mastering). A&R, tanqidchilar PR, grant maslahati — barchasi bitta prodyuserdan, bitta narxdan.",
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
+          "priceFactorsTitle": "Narxni belgilovchi omillar",
+          "priceFactors": [
+            { "label": "Treklar soni", "detail": "8 trek asos → 10 trek +₩2M / 12 trek +₩4M" },
+            { "label": "Sessiya hajmi", "detail": "Vokal + asosiy sessiya → to‘liq guruh·simlar·xor +₩2M~5M" },
+            { "label": "A&R chuqurligi", "detail": "5 raundli qo‘shiq tanlash → kompozitsiya seminar·tashqi maslahat +₩1M~2M" },
+            { "label": "Tanqidchilar PR·tinglash sessiyasi", "detail": "Press-reliz + alohida OAV → tinglash tadbiri +₩800K" }
+          ],
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
           "faqSectionTitle": "Ko'p so'raladigan savollar",
@@ -1712,27 +1733,31 @@
     },
     "hubFaq": {
       "sectionTitle": "Tez-tez so'raladigan savollar",
-      "sectionSubtitle": "Chiqarish loyihasi bilan birinchi marta tanishadiganlar ko'p so'raydigan beshta savol.",
+      "sectionSubtitle": "Birinchi marta tanishuvchilar eng ko‘p bildiradigan xavotirlar — tortinmasdan, bemalol so‘rang.",
       "items": [
         {
           "question": "Chiqarish loyihasi qanday xizmat?",
-          "answer": "Bu musiqani chiqarishning har bir bosqichida — rejalashtirish, yozib olish, session musiqachilarini biriktirish, mixing, mastering, tarqatish va media/matbuot PR — siz bilan birga yuradigan loyiha. Vokal yozish, mixing va mastering Studio NOL ichida bajariladi; cholg'u session va matbuot bilan aloqalar esa indi sahnada 15 yil davomida qurilgan tarmoq orqali olib boriladi. Siz to'liq paketni yoki alohida bosqichlarni tanlashingiz mumkin."
+          "answer": "Bu musiqani chiqarishning har bir bosqichida — rejalashtirish, yozib olish, session musiqachilarini biriktirish, miks, mastering, tarqatish va media PR — siz bilan birga yuradigan loyiha. Vokal yozish, miks va mastering Studio NOL ichida bajariladi; cholg‘u sessiya va tanqidchi·media aloqalari esa indi sahnada 15 yil davomida qurilgan tarmoq orqali olib boriladi. Single, EP va to‘liq albomning sur’ati va byudjeti har xil — har bir sahifada aniq tarkib va narx tuzilmasini ko‘rib chiqing."
         },
         {
-          "question": "Narx qanday belgilanadi?",
-          "answer": "Vokal yozish va mixing asosiy narx (single ~₩500K dan, to'liq albom ~₩4M dan). Bu asosga session musiqachilar soni, aranjirovka hajmi, tarqatish, media PR kabi qo'shimcha elementlar qo'shiladi. Bepul maslahatdan so'ng narxlar jadvali asosida shaxsiy taklif olasiz. Yashirin xarajatlar yo'q."
+          "question": "Loyiha davomida fikrim o‘zgarsa yoki jadval buzilsa nima bo‘ladi?",
+          "answer": "Loyiha bosqichma-bosqich olib boriladi, shuning uchun yo‘l-yo‘lakay to‘xtab turish yoki sur’atni sekinlashtirish mumkin. Faqat bajarilgan bosqichlar uchun hisob-kitob qilinadi va tanaffus olinadi. Qo‘shiq yo‘nalishi katta o‘zgarsa ham, qaytadan muhokama qilamiz va birga yo‘l topamiz — qaytarish siyosati bepul maslahat paytida aniq tushuntiriladi."
         },
         {
-          "question": "Qancha vaqt oladi?",
-          "answer": "Standart sur'at: single uchun taxminan 7 oy / EP uchun 12 oy / to'liq albom uchun 24 oy. Qo'shiqlarning tayyorlik darajasi, session ko'lami va chiqarish kampaniyasi jadvaliga qarab muddat qisqartirilishi mumkin. Maslahat paytida real jadvalni birgalikda belgilab olamiz."
+          "question": "Byudjet qisqa — faqat ayrim bosqichlarga buyurtma berish mumkinmi?",
+          "answer": "Ha. Biz to‘liq chiqarish jarayonini tavsiya qilamiz, lekin bosqichlar bo‘yicha alohida buyurtma berish ham mumkin: faqat vokal yozuv / faqat miks / faqat mastering. Qisman narxlar narxlar jadvali asosida beriladi (vokal yozuv ₩40K/soatdan, miks ₩800K dan va h.k.). Lekin media PR va tarqatish hamrohligi faqat to‘liq jarayon buyurtma qilingandagina qo‘shiladi."
+        },
+        {
+          "question": "Boshqa joyda yozishni boshlab qo‘yganman — yarmida qo‘shila olasizlarmi?",
+          "answer": "Ha. Boshqa studiyada yozilgan trek yoki stem larni qabul qilib, miks, mastering, tarqatish va PR bilan davom ettira olamiz. Lekin vokal ohangi yoki yozuv muhiti farqidan kelib chiqadigan cheklovlarni avval tinglab, ochiq aytamiz."
         },
         {
           "question": "Qanday san'atkorlar bilan ishlagansiz?",
-          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — va indi qo'shiqchi-mualliflar, guruhlar, jazz san'atkorlari, eksperimental elektron loyihalar va kompilyatsiya loyihalari kabi turli indi san'atkorlar bilan 70 dan ortiq chiqarish ustida ishlaganmiz. Yuqoridagi diskografiya bo'limi va portfolio sahifasi ularning bir qismini ko'rsatadi."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — va indi qo‘shiqchi-mualliflar, guruhlar, jazz san’atkorlari, eksperimental elektron loyihalar va kompilyatsiya loyihalari kabi turli indi san’atkorlar bilan 70 dan ortiq chiqarish ustida ishlaganmiz. Diskografiya bo‘limi va portfolio sahifasi ularning bir qismini ko‘rsatadi."
         },
         {
           "question": "Bepul maslahat qanday o'tkaziladi?",
-          "answer": "KakaoTalk orqali qo'shiq va vaziyatingizni qisqacha ulashing → 30 daqiqalik bepul maslahat (video qo'ng'iroq yoki studiyaga tashrif) → 48 soat ichida shaxsiy taklif va jadval. Joyida qaror qabul qilish shart emas. Agar mos kelmasa, boshqa yo'l topishingizga ham yordam beramiz."
+          "answer": "KakaoTalk orqali qo‘shiq va vaziyatingizni bemalol ulashing → 30 daqiqalik bepul maslahat (video qo‘ng‘iroq yoki studiyaga tashrif) → 48 soat ichida shaxsiy taklif va jadval. Joyida qaror qabul qilish shart emas. Mos kelmasligi ma’lum bo‘lsa, boshqa yo‘l topishingizga ham yordam beramiz."
         }
       ]
     },

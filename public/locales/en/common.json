@@ -1441,6 +1441,13 @@
           "priceRange": "From approx. ₩500K",
           "priceRationale": "Base rate (vocal recording + mixing). Saves time and total cost vs sourcing 5-7 separate quotes.",
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
+          "priceFactorsTitle": "What drives the price",
+          "priceFactors": [
+            { "label": "Track count", "detail": "1 track baseline → each additional track +₩300K–500K" },
+            { "label": "Session musicians", "detail": "1–2 included → 3+ musicians +₩200K per person" },
+            { "label": "Arrangement depth", "detail": "Basic arrangement → full band · strings · choir +₩500K–1.5M" },
+            { "label": "Media PR", "detail": "1 round baseline → 2 rounds · release interview +₩300K" }
+          ],
           "caseStudySectionTitle": "Singles we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
           "faqSectionTitle": "Frequently Asked Questions",
@@ -1532,6 +1539,13 @@
           "priceRange": "EP from ~₩1.5M (3-5 tracks)",
           "priceRationale": "Standard rate for 3-5 tracks (vocal recording, mixing, tone-matching). Saves time and total cost vs sourcing 5-7 separate vendors.",
           "priceNote": "Custom quote after free consultation.",
+          "priceFactorsTitle": "What drives the price",
+          "priceFactors": [
+            { "label": "Track count", "detail": "3 tracks baseline → 4 tracks +₩500K / 5 tracks +₩1M" },
+            { "label": "Session scale", "detail": "Vocal + 1–2 sessions → full live band tracking +₩1M–2M" },
+            { "label": "Lead single campaign", "detail": "1 round baseline → 2-phase release · 2 PR rounds +₩500K" },
+            { "label": "Tone matching depth", "detail": "Track-to-track tone matching → single mastering engine +₩300K" }
+          ],
           "caseStudySectionTitle": "EPs we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
           "faqSectionTitle": "Frequently Asked Questions",
@@ -1625,6 +1639,13 @@
           "priceRange": "From approx. ₩4M",
           "priceRationale": "Standard rate for 8 tracks (vocal recording, mixing, mastering). A&R, critics PR, grant guidance — all from one producer, one quote.",
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
+          "priceFactorsTitle": "What drives the price",
+          "priceFactors": [
+            { "label": "Track count", "detail": "8 tracks baseline → 10 tracks +₩2M / 12 tracks +₩4M" },
+            { "label": "Session scale", "detail": "Vocal + core sessions → full band · strings · choir +₩2M–5M" },
+            { "label": "A&R depth", "detail": "Song selection x5 → composition workshop · external guidance +₩1M–2M" },
+            { "label": "Critics PR · listening session", "detail": "Press release + individual media → listening event +₩800K" }
+          ],
           "caseStudySectionTitle": "Full albums we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
           "faqSectionTitle": "Frequently Asked Questions",
@@ -1757,27 +1778,31 @@
     },
     "hubFaq": {
       "sectionTitle": "Frequently asked questions",
-      "sectionSubtitle": "Five questions people often ask when they first hear about the release project.",
+      "sectionSubtitle": "The concerns first-time visitors raise most — feel free to ask without hesitation.",
       "items": [
         {
           "question": "What exactly is the release project?",
-          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media/press PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and press connections run through the 15-year network we've built in the indie scene. You can take the full package or pick individual steps."
+          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and critics/media connections run through the 15-year indie scene network. Single, EP, and full album each have their own pace and budget — check each page for the specific scope and how pricing is determined."
         },
         {
-          "question": "How is the price determined?",
-          "answer": "Vocal recording and mixing form the base rate (from ~₩500K for a single, ~₩4M for a full album). Additional items — session musicians, arrangement scope, distribution, media PR — are added on top. You get a custom quote based on our rate sheet after the free consultation. No hidden costs."
+          "question": "What if I change my mind or my schedule shifts mid-project?",
+          "answer": "Because the project runs in stages, it's possible to pause or slow the pace midway. You only settle costs for the stages already completed and can take a break. Even if the song's direction shifts significantly, we discuss it again and find a path together — the refund policy is explained clearly during the free consultation."
         },
         {
-          "question": "How long does it take?",
-          "answer": "The standard pace is roughly 7 months for a single, 12 months for an EP, and 24 months for a full album. This can be shortened depending on how ready the songs are, the session scope, and the release campaign schedule. We'll set a realistic timeline together during the consultation."
+          "question": "I'm on a tight budget — can I commission only part of the process?",
+          "answer": "Yes. We recommend the full release process, but you can also commission individual stages: vocal recording only / mixing only / mastering only. Partial quotes are based on our rate sheet (vocal recording from ₩40K/hour, mixing from ₩800K, etc.). Note: media PR and distribution accompaniment are only included with full-process commissions."
+        },
+        {
+          "question": "I've already started recording elsewhere — can you join mid-process?",
+          "answer": "Yes. We can receive tracks or stems recorded at another studio and continue with mixing, mastering, distribution, and PR. That said, we'll listen first and tell you honestly about any limitations caused by vocal tone or recording-environment differences."
         },
         {
           "question": "What kind of artists have you worked with?",
-          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — and 70+ releases with a range of indie artists: singer-songwriters, bands, jazz artists, experimental electronic projects, and compilation projects. The discography section above and the portfolio page show a selection of that work."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — 70+ releases with a wide range of indie artists: singer-songwriters, bands, jazz, experimental electronic music, and compilation projects. The discography section and portfolio page show a selection."
         },
         {
           "question": "How does the free consultation work?",
-          "answer": "Send a quick message on KakaoTalk with your song and situation → 30-minute free consultation (video call or studio visit) → custom quote and timeline within 48 hours. You don't need to decide on the spot. If it's not the right fit, we'll help you find another path."
+          "answer": "Share your song and situation casually on KakaoTalk → 30-minute free consultation (video call or studio visit) → custom quote and timeline within 48 hours. You don't need to decide at the consultation. If it turns out not to be the right fit, we'll help you find another path."
         }
       ]
     },

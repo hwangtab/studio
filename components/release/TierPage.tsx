@@ -13,9 +13,11 @@ import SEO from '../SEO';
 import SectionHeading from '../ui/SectionHeading';
 import ImageHero from '../common/ImageHero';
 import FAQSection from '../ui/FAQSection';
+import TierComparisonTable from './TierComparisonTable';
 import { Section } from '../ui/Section';
 import { getReviews } from '../../data/reviews';
 import { getSiteConfig } from '../../data/siteConfig';
+import { generateReleaseProjectSchema } from '../../utils/schemaGenerator';
 import { usePortfolioModalLazy } from '../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
@@ -76,6 +78,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const deliverablesIncluded = t(k('deliverablesIncluded'), { returnObjects: true }) as string[];
   const deliverablesExcluded = t(k('deliverablesExcluded'), { returnObjects: true }) as string[];
   const faqItems = t(k('faqItems'), { returnObjects: true }) as { question: string; answer: string }[];
+  const priceFactors = t(k('priceFactors'), { returnObjects: true }) as { label: string; detail: string }[];
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
 
@@ -95,6 +98,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         canonical={`/${locale}/release-project/${tier}`}
         faqItems={Array.isArray(faqItems) ? faqItems : null}
         includeSchema
+        schema={generateReleaseProjectSchema(siteConfig.url, locale, tier)}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.releaseProject'), path: `/${locale}/release-project` },
@@ -296,19 +300,40 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </div>
       </Section>
 
-      {/* 가격 레인지 */}
+      {/* M1: 3티어 비교표 — 가격 결정 직전 */}
       <Section variant="default">
         <SectionHeading
           icon={DollarSign}
           title={t(k('priceSectionTitle'))}
           className="mb-10"
         />
+        <div className="mb-12">
+          <TierComparisonTable locale={locale} highlightTier={tier} />
+        </div>
         <div className="max-w-2xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md border border-gray-100 dark:border-gray-700 text-center">
             <p className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t(k('priceRange'))}</p>
             <p className="text-sm text-primary font-medium mb-4">{t(k('priceRationale'))}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">{t(k('priceNote'))}</p>
           </div>
+          {Array.isArray(priceFactors) && priceFactors.length > 0 && (
+            <div className="mt-8">
+              <p className="text-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                {t(k('priceFactorsTitle'))}
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {priceFactors.map((f, i) => (
+                  <div
+                    key={i}
+                    className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700"
+                  >
+                    <p className="text-xs font-bold text-primary mb-1">{f.label}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{f.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
             {t('releaseProject.tiers.footNotePre')}{' '}
             <strong>{t('releaseProject.tiers.footNoteHighlight')}</strong>{' '}
@@ -332,10 +357,14 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {discographyItems.map((item) => (
-              <button
+              <Link
                 key={item.id}
-                type="button"
-                onClick={() => openModal(item.id)}
+                href={getLink(`/portfolio/${item.id}`)}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as React.MouseEvent).button === 1) return;
+                  e.preventDefault();
+                  openModal(item.id);
+                }}
                 className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                 aria-haspopup="dialog"
               >
@@ -357,19 +386,9 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
-          {/* 크롤러용 internal link (PageRank/SEO 유지) */}
-          <nav aria-label="Discography links" className="sr-only">
-            <ul>
-              {discographyItems.map((item) => (
-                <li key={item.id}>
-                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
           <div className="text-center mt-10">
             <Link
               href={getLink('/portfolio')}

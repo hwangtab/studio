@@ -1398,6 +1398,13 @@
           "priceRange": "Desde aprox. ₩500K",
           "priceRationale": "Tarifa base (grabación vocal + mezcla). Ahorra tiempo y costo total frente a buscar 5-7 presupuestos por separado.",
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
+          "priceFactorsTitle": "Variables que determinan el precio",
+          "priceFactors": [
+            { "label": "Número de pistas", "detail": "1 pista de base → cada pista adicional +₩300K~500K" },
+            { "label": "Músicos de sesión", "detail": "1~2 incluidos → 3 o más +₩200K por persona" },
+            { "label": "Profundidad del arreglo", "detail": "Arreglo básico → banda completa·cuerdas·coro +₩500K~1.5M" },
+            { "label": "PR en medios", "detail": "1 ronda base → 2 rondas·entrevista de lanzamiento +₩300K" }
+          ],
           "caseStudySectionTitle": "Singles que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
           "faqSectionTitle": "Preguntas Frecuentes",
@@ -1489,6 +1496,13 @@
           "priceRange": "EP desde ~₩1.5M (3-5 temas)",
           "priceRationale": "Tarifa estándar para 3-5 temas (grabación vocal, mezcla, coherencia de tono). Ahorra tiempo y costo total frente a buscar 5-7 proveedores por separado.",
           "priceNote": "Cotización personalizada tras consulta gratuita.",
+          "priceFactorsTitle": "Variables que determinan el precio",
+          "priceFactors": [
+            { "label": "Número de pistas", "detail": "3 pistas de base → 4 pistas +₩500K / 5 pistas +₩1M" },
+            { "label": "Escala de sesión", "detail": "Voz + 1~2 sesiones → grabación de banda en vivo +₩1M~2M" },
+            { "label": "Campaña del single principal", "detail": "1 ronda base → lanzamiento en 2 fases·2 rondas de PR +₩500K" },
+            { "label": "Profundidad de coherencia de tono", "detail": "Coherencia entre pistas → masterización con un único motor +₩300K" }
+          ],
           "caseStudySectionTitle": "EPs que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
           "faqSectionTitle": "Preguntas Frecuentes",
@@ -1582,6 +1596,13 @@
           "priceRange": "Desde aprox. ₩4M",
           "priceRationale": "Tarifa estándar para 8 pistas (grabación vocal, mezcla, masterización). A&R, PR con críticos, guía de subvenciones — todo de un solo productor, una sola cotización.",
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
+          "priceFactorsTitle": "Variables que determinan el precio",
+          "priceFactors": [
+            { "label": "Número de pistas", "detail": "8 pistas de base → 10 pistas +₩2M / 12 pistas +₩4M" },
+            { "label": "Escala de sesión", "detail": "Voz + sesión central → banda completa·cuerdas·coro +₩2M~5M" },
+            { "label": "Profundidad A&R", "detail": "5 rondas de selección → taller de composición·guía externa +₩1M~2M" },
+            { "label": "PR con críticos·sesión de escucha", "detail": "Nota de prensa + medios individuales → evento de escucha +₩800K" }
+          ],
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
           "faqSectionTitle": "Preguntas Frecuentes",
@@ -1714,27 +1735,31 @@
     },
     "hubFaq": {
       "sectionTitle": "Preguntas frecuentes",
-      "sectionSubtitle": "Cinco preguntas que la gente suele hacer cuando conoce por primera vez el proyecto de lanzamiento.",
+      "sectionSubtitle": "Las dudas que más plantean quienes se acercan por primera vez — pregunta sin reparos.",
       "items": [
         {
           "question": "¿Qué es exactamente el proyecto de lanzamiento?",
-          "answer": "Es un proyecto que te acompaña en cada etapa del lanzamiento musical — planificación, grabación, coordinación de músicos de sesión, mezcla, masterización, distribución y PR/medios. La grabación vocal, la mezcla y la masterización se realizan internamente en Studio NOL, mientras que las sesiones instrumentales y las conexiones con prensa se gestionan a través de la red de 15 años que hemos construido en la escena indie. Puedes contratar el paquete completo o elegir etapas individuales."
+          "answer": "Es un proyecto que te acompaña en cada etapa del lanzamiento musical — planificación, grabación, coordinación de músicos de sesión, mezcla, masterización, distribución y PR de medios. La grabación vocal, la mezcla y la masterización se hacen internamente en Studio NOL, mientras que las sesiones instrumentales y las conexiones con críticos/medios se gestionan a través de la red de 15 años en la escena indie. Single, EP y álbum completo tienen ritmos y presupuestos distintos — consulta cada página para conocer el alcance específico y cómo se determina el precio."
         },
         {
-          "question": "¿Cómo se determina el precio?",
-          "answer": "La grabación vocal y la mezcla son la tarifa base (desde ~₩500K para un sencillo, ~₩4M para un álbum completo). Sobre esa base se añaden elementos adicionales — músicos de sesión, alcance del arreglo, distribución, PR de medios. Después de la consulta gratuita recibes un presupuesto personalizado basado en nuestra lista de tarifas. Sin costes ocultos."
+          "question": "¿Qué pasa si cambio de opinión o se altera el cronograma a mitad de camino?",
+          "answer": "Como el proyecto avanza por etapas, es posible pausar o ralentizar el ritmo a mitad de camino. Solo se liquidan los costes hasta la etapa completada y puedes tomar un descanso. Aunque la dirección de la canción cambie significativamente, lo conversamos de nuevo y buscamos juntos el camino — la política de reembolso se explica con claridad en la consulta gratuita."
         },
         {
-          "question": "¿Cuánto tiempo lleva?",
-          "answer": "El ritmo estándar es aproximadamente 7 meses para un sencillo, 12 meses para un EP y 24 meses para un álbum completo. Puede acortarse según lo preparadas que estén las canciones, el alcance de las sesiones y el calendario de la campaña de lanzamiento. En la consulta fijaremos juntos un cronograma realista."
+          "question": "Tengo un presupuesto ajustado — ¿puedo contratar solo algunas etapas?",
+          "answer": "Sí. Recomendamos el proceso de lanzamiento completo, pero también puedes contratar etapas individuales: solo grabación vocal / solo mezcla / solo masterización. Los presupuestos parciales se basan en nuestra lista de tarifas (grabación vocal desde ₩40K/hora, mezcla desde ₩800K, etc.). Eso sí: el PR de medios y el acompañamiento de distribución solo se incluyen con la contratación del proceso completo."
+        },
+        {
+          "question": "Ya empecé a grabar en otro lado — ¿pueden unirse a mitad de camino?",
+          "answer": "Sí. Podemos recibir las pistas o stems grabados en otro estudio y continuar con la mezcla, la masterización, la distribución y el PR. Eso sí, escucharemos primero y te diremos con franqueza qué limitaciones pueden surgir por diferencias de tono vocal o de entorno de grabación."
         },
         {
           "question": "¿Con qué tipo de artistas habéis trabajado?",
-          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — y más de 70 lanzamientos con una gran variedad de artistas indie: cantautores, bandas, artistas de jazz, proyectos de electrónica experimental y proyectos de recopilación. La sección de discografía y la página de portafolio muestran solo una parte de ese trabajo."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — y más de 70 lanzamientos con una gran variedad de artistas indie: cantautores, bandas, artistas de jazz, proyectos de electrónica experimental y proyectos de recopilación. La sección de discografía y la página de portafolio muestran una parte de ese trabajo."
         },
         {
           "question": "¿Cómo funciona la consulta gratuita?",
-          "answer": "Envía un mensaje rápido por KakaoTalk con tu canción y situación → consulta gratuita de 30 minutos (videollamada o visita al estudio) → presupuesto y cronograma personalizados en 48 horas. No tienes que decidir en el momento. Si no es el ajuste correcto, te ayudaremos a encontrar otro camino."
+          "answer": "Comparte tu canción y situación con tranquilidad por KakaoTalk → consulta gratuita de 30 minutos (videollamada o visita al estudio) → presupuesto y cronograma personalizados en 48 horas. No tienes que decidir en el momento. Si no es el ajuste correcto, te ayudaremos a encontrar otro camino."
         }
       ]
     },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -11,10 +11,12 @@ import SectionHeading from '../../../components/ui/SectionHeading';
 import ImageHero from '../../../components/common/ImageHero';
 import FAQSection from '../../../components/ui/FAQSection';
 import { Section } from '../../../components/ui/Section';
+import TierComparisonTable from '../../../components/release/TierComparisonTable';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { generateReleaseProjectSchema } from '../../../utils/schemaGenerator';
 import { getReviews } from '../../../data/reviews';
 import { getPortfolioItems } from '../../../data/portfolio';
 import { getServiceRelatedStories } from '../../../lib/serviceRelatedStories';
@@ -39,6 +41,7 @@ interface ReleaseProjectProps {
   portfolioItems: Pick<PortfolioItem, 'id' | 'title' | 'description' | 'image' | 'artist' | 'featured'>[];
   spotlightItems: SpotlightItem[];
   relatedStories: StoryCardData[];
+  asOf: string;
 }
 
 const TIER_KEYS = ['single', 'ep', 'album'] as const;
@@ -59,7 +62,7 @@ const IN_PROGRESS_ITEMS = [
   { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
 ];
 
-const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems, relatedStories }) => {
+const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems, relatedStories, asOf }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const isKorean = locale === 'ko';
@@ -73,14 +76,6 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
     locale,
     `/${locale}/release-project`
   );
-  const [today, setToday] = useState('');
-  useEffect(() => {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    setToday(`${yyyy}.${mm}.${dd}`);
-  }, []);
 
   return (
     <div className="overflow-visible">
@@ -92,6 +87,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         canonical={`/${locale}/release-project`}
         faqItems={Array.isArray(hubFaqItems) ? hubFaqItems : null}
         includeSchema
+        schema={generateReleaseProjectSchema(siteConfig.url, locale)}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.releaseProject'), path: `/${locale}/release-project` },
@@ -217,6 +213,16 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </Link>
           {t('releaseProject.tiers.footNotePost')}
         </p>
+
+        {/* M1: 3티어 비교표 — 결정 보조 */}
+        <div className="mt-16">
+          <SectionHeading
+            title={t('releaseProject.tiers.comparisonTable.sectionTitle')}
+            subtitle={t('releaseProject.tiers.comparisonTable.sectionSubtitle')}
+            className="mb-8"
+          />
+          <TierComparisonTable locale={locale} />
+        </div>
       </Section>
 
       {/* 프로듀서 황경하가 함께하는 것들 */}
@@ -284,11 +290,9 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           subtitle={t('releaseProject.inProgress.sectionSubtitle')}
           className="mb-3"
         />
-        {today && (
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mb-10">
-            {t('releaseProject.inProgress.asOf', { date: today })}
-          </p>
-        )}
+        <p className="text-center text-xs text-gray-400 dark:text-gray-500 mb-10">
+          {t('releaseProject.inProgress.asOf', { date: asOf })}
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {IN_PROGRESS_ITEMS.map((item) => (
             <div
@@ -316,10 +320,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {portfolioItems.filter((i) => i.featured).slice(0, 12).map((item) => (
-              <button
+              <Link
                 key={item.id}
-                type="button"
-                onClick={() => openModal(item.id)}
+                href={getLink(`/portfolio/${item.id}`)}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as React.MouseEvent).button === 1) return;
+                  e.preventDefault();
+                  openModal(item.id);
+                }}
                 className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                 aria-haspopup="dialog"
               >
@@ -341,19 +349,9 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
-          {/* 크롤러용 internal link */}
-          <nav aria-label="Hub discography links" className="sr-only">
-            <ul>
-              {portfolioItems.filter((i) => i.featured).slice(0, 12).map((item) => (
-                <li key={item.id}>
-                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
           <div className="text-center mt-10">
             <Link
               href={getLink('/portfolio')}
@@ -376,10 +374,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {spotlightItems.map((item) => (
-              <button
+              <Link
                 key={item.id}
-                type="button"
-                onClick={() => openModal(item.id)}
+                href={getLink(`/portfolio/${item.id}`)}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as React.MouseEvent).button === 1) return;
+                  e.preventDefault();
+                  openModal(item.id);
+                }}
                 className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                 aria-haspopup="dialog"
               >
@@ -406,31 +408,13 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                     {t('releaseProject.spotlight.viewFull')} <ArrowRight size={12} />
                   </span>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
-          {/* 크롤러용 internal link */}
-          <nav aria-label="Spotlight links" className="sr-only">
-            <ul>
-              {spotlightItems.map((item) => (
-                <li key={item.id}>
-                  <a href={getLink(`/portfolio/${item.id}`)}>{item.artist} - {item.title}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </Section>
       )}
 
-      {/* 발매 가이드 — 큐레이션된 관련 스토리 */}
-      <RelatedStoriesSection
-        stories={relatedStories}
-        locale={locale}
-        title={t('releaseProject.relatedStories.sectionTitle')}
-        subtitle={t('releaseProject.relatedStories.sectionSubtitle')}
-      />
-
-      {/* 함께한 아티스트들의 후기 (H4: Hub 결정 직전 사회적 증거) */}
+      {/* 함께한 아티스트들의 후기 — proof block 연속 (Spotlight 직후) */}
       {reviewsToShow.length > 0 && (
         <Section variant="default">
           <SectionHeading
@@ -462,6 +446,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </div>
         </Section>
       )}
+
+      {/* 발매 가이드 — proof 다음 reference 학습 자료 */}
+      <RelatedStoriesSection
+        stories={relatedStories}
+        locale={locale}
+        title={t('releaseProject.relatedStories.sectionTitle')}
+        subtitle={t('releaseProject.relatedStories.sectionSubtitle')}
+      />
 
       {/* 자주 묻는 질문 */}
       {Array.isArray(hubFaqItems) && hubFaqItems.length > 0 && (
@@ -574,9 +566,12 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
 
   const relatedStories = getServiceRelatedStories('release-project', locale);
 
+  const now = new Date();
+  const asOf = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+
   return buildPageStaticProps(
     locale,
-    { locale, portfolioItems, spotlightItems, relatedStories },
+    { locale, portfolioItems, spotlightItems, relatedStories, asOf },
     { revalidate: 86400 }
   );
 };
