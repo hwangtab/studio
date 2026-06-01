@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award, BookOpen } from 'lucide-react';
+import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, Award, BookOpen, Quote, MessageCircle, Star } from 'lucide-react';
 import SEO from '../../../components/SEO';
 import SectionHeading from '../../../components/ui/SectionHeading';
 import ImageHero from '../../../components/common/ImageHero';
@@ -14,6 +14,8 @@ import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../../lib/i18n';
+import { getSiteConfig } from '../../../data/siteConfig';
+import { getReviews } from '../../../data/reviews';
 import { getPortfolioItems } from '../../../data/portfolio';
 import { getServiceRelatedStories } from '../../../lib/serviceRelatedStories';
 import type { PortfolioItem } from '../../../types/data';
@@ -60,6 +62,10 @@ const IN_PROGRESS_ITEMS = [
 const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
+  const isKorean = locale === 'ko';
+  const siteConfig = getSiteConfig(locale);
+  const reviewsToShow = getReviews(locale).filter((r) => ['review-1', 'review-3'].includes(r.id));
+  const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as { num: string; title: string; desc: string }[];
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
   const hubFaqItems = t('releaseProject.hubFaq.items', { returnObjects: true }) as { question: string; answer: string }[];
@@ -85,6 +91,11 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         keywords={t('releaseProject.seo.keywords')}
         canonical={`/${locale}/release-project`}
         faqItems={Array.isArray(hubFaqItems) ? hubFaqItems : null}
+        includeSchema
+        breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.releaseProject'), path: `/${locale}/release-project` },
+        ]}
       />
 
       <ImageHero
@@ -105,13 +116,24 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         minHeight="min-h-[70svh]"
         ctaButtons={
           <>
-            <Link
-              href={getLink('/contact')}
-              prefetch={false}
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
-              {t('releaseProject.hero.ctaConsult')}
-            </Link>
+            {isKorean ? (
+              <a
+                href={siteConfig.contact.kakaoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                {t('releaseProject.hero.ctaConsult')}
+              </a>
+            ) : (
+              <Link
+                href={getLink('/contact')}
+                prefetch={false}
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                {t('releaseProject.hero.ctaConsult')}
+              </Link>
+            )}
             <Link
               href={getLink('/portfolio')}
               prefetch={false}
@@ -408,14 +430,80 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         subtitle={t('releaseProject.relatedStories.sectionSubtitle')}
       />
 
+      {/* 함께한 아티스트들의 후기 (H4: Hub 결정 직전 사회적 증거) */}
+      {reviewsToShow.length > 0 && (
+        <Section variant="default">
+          <SectionHeading
+            icon={Quote}
+            title={t('releaseProject.reviews.sectionTitle')}
+            subtitle={t('releaseProject.reviews.sectionSubtitle')}
+            className="mb-10"
+          />
+          <div className={`grid grid-cols-1 ${reviewsToShow.length > 1 ? 'md:grid-cols-2' : ''} gap-5 max-w-4xl mx-auto`}>
+            {reviewsToShow.map((review) => (
+              <figure
+                key={review.id}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col"
+              >
+                <div className="flex items-center gap-1 mb-3" aria-label={`${review.rating} / 5`}>
+                  {Array.from({ length: review.rating }).map((_, i) => (
+                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" aria-hidden="true" />
+                  ))}
+                </div>
+                <blockquote className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4 flex-1">
+                  &ldquo;{review.content}&rdquo;
+                </blockquote>
+                <figcaption className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">{review.author}</span>
+                  <span>{review.category}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {/* 자주 묻는 질문 */}
       {Array.isArray(hubFaqItems) && hubFaqItems.length > 0 && (
         <FAQSection
-          variant="default"
+          variant="alternate"
           items={hubFaqItems}
           title={t('releaseProject.hubFaq.sectionTitle')}
           subtitle={t('releaseProject.hubFaq.sectionSubtitle')}
         />
+      )}
+
+      {/* 상담 프로세스 4단계 (H4: 최종 CTA 직전 약속 명료화) */}
+      {Array.isArray(consultationSteps) && consultationSteps.length > 0 && (
+        <Section variant="default">
+          <SectionHeading
+            icon={MessageCircle}
+            title={t('releaseProject.consultation.sectionTitle')}
+            subtitle={t('releaseProject.consultation.sectionSubtitle')}
+            className="mb-10"
+          />
+          <div className="max-w-xl mx-auto">
+            {consultationSteps.map((step, i) => {
+              const isLast = i === consultationSteps.length - 1;
+              return (
+                <div key={i} className="flex gap-4">
+                  <div className="flex-shrink-0 flex flex-col items-center self-stretch">
+                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {step.num}
+                    </div>
+                    {!isLast && (
+                      <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1.5" />
+                    )}
+                  </div>
+                  <div className={`flex-1 pt-1 ${!isLast ? 'pb-6' : ''}`}>
+                    <p className="font-bold text-gray-900 dark:text-white mb-1">{step.title}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Section>
       )}
 
       {/* 전환 CTA */}

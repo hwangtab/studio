@@ -15,6 +15,7 @@ import ImageHero from '../common/ImageHero';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import { getReviews } from '../../data/reviews';
+import { getSiteConfig } from '../../data/siteConfig';
 import { usePortfolioModalLazy } from '../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
@@ -61,6 +62,8 @@ const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
+  const isKorean = locale === 'ko';
+  const siteConfig = getSiteConfig(locale);
   const { selectedItem, categories, open: openModal, close: closeModal } = usePortfolioModalLazy(
     locale,
     `/${locale}/release-project/${tier}`
@@ -91,6 +94,12 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         keywords={t(`releaseProject.seo.${tier}.keywords`)}
         canonical={`/${locale}/release-project/${tier}`}
         faqItems={Array.isArray(faqItems) ? faqItems : null}
+        includeSchema
+        breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('nav.releaseProject'), path: `/${locale}/release-project` },
+          { name: t(`releaseProject.tiers.${tier}.label`), path: `/${locale}/release-project/${tier}` },
+        ]}
       />
 
       <ImageHero
@@ -111,13 +120,24 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         minHeight="min-h-[60svh]"
         ctaButtons={
           <>
-            <Link
-              href={getLink('/contact')}
-              prefetch={false}
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
-              {t('releaseProject.hero.ctaConsult')}
-            </Link>
+            {isKorean ? (
+              <a
+                href={siteConfig.contact.kakaoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                {t('releaseProject.hero.ctaConsult')}
+              </a>
+            ) : (
+              <Link
+                href={getLink('/contact')}
+                prefetch={false}
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                {t('releaseProject.hero.ctaConsult')}
+              </Link>
+            )}
             <Link
               href={getLink('/release-project')}
               prefetch={false}
