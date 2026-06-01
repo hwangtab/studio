@@ -393,9 +393,13 @@ export const generateArticleSchema = (
   const authorSameAs = Object.values(socialProfiles).filter(
     (url): url is string => typeof url === 'string' && url.trim() !== ''
   );
+  // canonical Person @id (host 기반) — release-project schema와 동일 entity로 묶어
+  // AI/Google이 황경하를 단일 entity로 인식하게 함. locale 독립 ID로 다국어 alternate도 통합.
+  const personId = `${siteUrl}/#person-hwang`;
   const author = isStudioAuthor
     ? {
         '@type': 'Person',
+        '@id': personId,
         name: authorName,
         jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
         url: `${siteUrl}/${locale}/about`,
@@ -1152,7 +1156,8 @@ export const generateReleaseProjectSchema = (
 ) => {
   const config = getSiteConfig(locale);
   const organizationId = `${siteUrl}/#organization`;
-  const personId = `${siteUrl}/${locale}/release-project#person-hwang`;
+  // canonical Person @id — generateArticleSchema와 동일 ID로 묶어 단일 entity 보장
+  const personId = `${siteUrl}/#person-hwang`;
   const schemaLanguage = getSchemaLanguage(locale);
 
   const personSameAs = Object.values(socialProfiles).filter(

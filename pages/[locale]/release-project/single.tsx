@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       id, title, description, image, artist, featured, category,
     }));
 
-  return buildPageStaticProps(locale, { locale, portfolioItems }, { revalidate: 86400 });
+  return buildPageStaticProps(locale, { locale, portfolioItems }, { revalidate: 86400, i18nSections: ['releaseProject'] });
 };
 
 export default SingleReleasePage;
