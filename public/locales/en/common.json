@@ -1333,30 +1333,30 @@
   "releaseProject": {
     "seo": {
       "title": "Release Project · Indie Music Production | Studio NOL",
-      "description": "From planning to recording, session musicians, mixing, distribution, and reaching press and critics — indie release production with 15-year producer Hwang Gyeongha, who has worked with artists like Tierliner, The Projectors, and Kang Ho-jung. Free consultation by release scale: single, EP, or full album.",
+      "description": "From planning to recording, session musicians, mixing, distribution, and reaching press and critics — indie release production with 15-year producer Hwang Gyeongha, who has worked with many indie artists. Free consultation by release scale: single, EP, or full album.",
       "keywords": "release project, indie music release, album production, indie singer-songwriter, Studio NOL",
       "single": {
         "title": "Single Release Project | Studio NOL",
-        "description": "We're with you from your first single all the way through. Planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha — who has worked with artists like Tierliner and The Projectors.",
+        "description": "We're with you from your first single all the way through. Planning, recording, distribution, and PR with 15-year producer Hwang Gyeongha — who has worked with many indie artists.",
         "keywords": "single release, indie music release, studio NOL, music producer Korea"
       },
       "ep": {
         "title": "EP Release Project | Studio NOL",
-        "description": "Declare your musical identity with 3–5 tracks. EP release project with 15-year producer Hwang Gyeongha — who has worked with artists like Namjae. From lead single to two rounds of media PR.",
+        "description": "Declare your musical identity with 3–5 tracks. EP release project with 15-year producer Hwang Gyeongha — who has worked with many indie artists. From lead single to two rounds of media PR.",
         "keywords": "EP release, mini album, indie music release, studio NOL"
       },
       "album": {
         "title": "Full Album Release Project | Studio NOL",
-        "description": "A full album that carves your name into the indie scene. Full-album release project with 15-year producer Hwang Gyeongha — who has worked with artists like Kang Ho-jung and Samgakjeonpasa. A&R, critics listening session, and grant application support.",
+        "description": "A full album that carves your name into the indie scene. Full-album release project with 15-year producer Hwang Gyeongha — who has worked with many indie artists. A&R, critics listening session, and grant application support.",
         "keywords": "full album release, indie music, music producer Korea, studio NOL"
       }
     },
     "hero": {
-      "titlePrefix": "Your release —",
-      "titleHighlight": "starts here,",
-      "titleSuffix": "together",
+      "titlePrefix": "You've written the songs.",
+      "titleHighlight": "Stuck on",
+      "titleSuffix": "what comes next?",
       "subtitle": "From planning to recording, sessions, mixing, distribution, and getting your music to press and critics. We walk every step of your release with you, all the way through.",
-      "ctaConsult": "Free Release Consultation",
+      "ctaConsult": "Get a 1-min consultation",
       "ctaPortfolio": "View Discography",
       "imageAlt": "Studio NOL Release Project"
     },
@@ -1402,7 +1402,7 @@
             { "title": "Full focus on one track", "desc": "With just one song, every bit of energy goes into it. Arrangement and sound direction are optimized for that single track." },
             { "title": "Defining your first impression", "desc": "The moment your name enters the indie scene. We think together from the planning stage about what impression you want to make." },
             { "title": "A realistic first step", "desc": "The goal is to actually get to release, not perfection. Starting is more important than being perfect." },
-            { "title": "Your first media touchpoint", "desc": "At release, we send a press release to music journalists and critics. Even your first release can reach the indie scene's eyes." }
+            { "title": "Your first media touchpoint", "desc": "At release, we send a press release through our 15-year network of music journalists and critics. Even your first release can reach the indie scene's eyes." }
           ],
           "journeySectionTitle": "The journey to release",
           "journeySubtitle": "~7 months, here's how we do it together.",
@@ -1439,7 +1439,7 @@
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From approx. ₩500K",
-          "priceRationale": "Starting from base rate (vocal recording + mixing)",
+          "priceRationale": "Base rate (vocal recording + mixing). Saves time and total cost vs sourcing 5-7 separate quotes.",
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Singles we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
@@ -1469,7 +1469,7 @@
       "ep": {
         "label": "EP Release",
         "duration": "~12 months",
-        "range": "Custom quote by scale",
+        "range": "EP from ~₩1.5M (3-5 tracks)",
         "note": "Between single and full album",
         "detail": {
           "heroTitlePrefix": "Your musical identity,",
@@ -1490,7 +1490,7 @@
             { "title": "Consistency & sequencing across tracks", "desc": "Tying multiple songs into one world is the core of an EP. We design track order, pacing, and tone-matching together." },
             { "title": "Lead single → EP phased campaign", "desc": "Release one track first to gauge response, then prepare the rest — building your fanbase step by step." },
             { "title": "Defining your artistic identity", "desc": "What's hard to show with one single becomes clear across an EP. Your distinct musical identity takes shape." },
-            { "title": "Two rounds of media PR", "desc": "Lead single + EP release gives you two chances to reach critics and music media." }
+            { "title": "Two rounds of media PR", "desc": "Lead single + EP release gives you two chances to reach critics and music media through our 15-year indie media network." }
           ],
           "journeySectionTitle": "The journey to release",
           "journeySubtitle": "~12 months, here's how we do it together.",
@@ -1529,8 +1529,8 @@
             "SNS advertising budget"
           ],
           "priceSectionTitle": "Price Range",
-          "priceRange": "Custom quote by scope",
-          "priceRationale": "Varies by session and arrangement",
+          "priceRange": "EP from ~₩1.5M (3-5 tracks)",
+          "priceRationale": "Standard rate for 3-5 tracks (vocal recording, mixing, tone-matching). Saves time and total cost vs sourcing 5-7 separate vendors.",
           "priceNote": "Custom quote after free consultation.",
           "caseStudySectionTitle": "EPs we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
@@ -1580,7 +1580,7 @@
           "focusItems": [
             { "title": "Depth of A&R & song selection", "desc": "We judge together which songs belong on the album and which don't. The full arc of the album is decided here." },
             { "title": "Full arc & sequence design", "desc": "We design the journey from track 1 to the last so the whole album tells one story." },
-            { "title": "Critics PR & listening session", "desc": "We organize a pre-release listening session for critics — only possible with a full album. Recognition through reviews is the goal." },
+            { "title": "Critics PR & listening session", "desc": "Critics pathway refined across 70+ releases — including Kang Ho-jung and Samgakjeonpasa. We organize a pre-release listening session for critics — only possible with a full album. Recognition through reviews is the goal." },
             { "title": "Grants & funding support", "desc": "We have experience with arts grant programs and crowdfunding. We think through the budget structure together." }
           ],
           "journeySectionTitle": "The journey to release",
@@ -1623,7 +1623,7 @@
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From approx. ₩4M",
-          "priceRationale": "Standard rate (8 tracks, vocal recording + mixing + mastering)",
+          "priceRationale": "Standard rate for 8 tracks (vocal recording, mixing, mastering). A&R, critics PR, grant guidance — all from one producer, one quote.",
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "caseStudySectionTitle": "Full albums we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
@@ -1773,7 +1773,7 @@
         },
         {
           "question": "What kind of artists have you worked with?",
-          "answer": "We've worked on 70+ releases with a range of indie artists — singer-songwriters, bands, jazz artists, experimental electronic projects, and compilation projects. The discography section above and the portfolio page show a selection of that work."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — and 70+ releases with a range of indie artists: singer-songwriters, bands, jazz artists, experimental electronic projects, and compilation projects. The discography section above and the portfolio page show a selection of that work."
         },
         {
           "question": "How does the free consultation work?",

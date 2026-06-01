@@ -1290,30 +1290,30 @@
   "releaseProject": {
     "seo": {
       "title": "Proyecto de Lanzamiento · Producción Musical Indie | Studio NOL",
-      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con medios y reseñas — proyecto de lanzamiento indie junto al productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner, The Projectors y Kang Ho-jung. Consulta gratuita por escala: single, EP o álbum.",
+      "description": "Desde la planificación hasta la grabación, músicos de sesión, mezcla, distribución y la conexión con medios y reseñas — proyecto de lanzamiento indie junto al productor Hwang Gyeongha (15 años), quien ha trabajado con numerosos artistas indie. Consulta gratuita por escala: single, EP o álbum.",
       "keywords": "proyecto de lanzamiento, música indie, producción musical, Studio NOL",
       "single": {
         "title": "Proyecto de Single | Studio NOL",
-        "description": "Te acompañamos desde tu primer single hasta el final. Planificación, grabación, distribución y PR con el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Tierliner y The Projectors.",
+        "description": "Te acompañamos desde tu primer single hasta el final. Planificación, grabación, distribución y PR con el productor Hwang Gyeongha (15 años), quien ha trabajado con numerosos artistas indie.",
         "keywords": "lanzamiento single, música indie, Studio NOL, productor musical Korea"
       },
       "ep": {
         "title": "Proyecto de EP | Studio NOL",
-        "description": "Declara tu identidad musical con 3–5 temas. Proyecto de EP con el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Namjae. Desde el single de adelanto hasta dos rondas de PR mediática.",
+        "description": "Declara tu identidad musical con 3–5 temas. Proyecto de EP con el productor Hwang Gyeongha (15 años), quien ha trabajado con numerosos artistas indie. Desde el single de adelanto hasta dos rondas de PR mediática.",
         "keywords": "lanzamiento EP, mini álbum, música indie, Studio NOL"
       },
       "album": {
         "title": "Proyecto de Álbum Completo | Studio NOL",
-        "description": "Un álbum completo que graba tu nombre en la escena indie. Proyecto de álbum con el productor Hwang Gyeongha (15 años), quien ha trabajado con artistas como Kang Ho-jung y Samgakjeonpasa. A&R, sesión de escucha para críticos y acompañamiento en convocatorias.",
+        "description": "Un álbum completo que graba tu nombre en la escena indie. Proyecto de álbum con el productor Hwang Gyeongha (15 años), quien ha trabajado con numerosos artistas indie. A&R, sesión de escucha para críticos y acompañamiento en convocatorias.",
         "keywords": "lanzamiento álbum, música indie Korea, productor musical, Studio NOL"
       }
     },
     "hero": {
-      "titlePrefix": "Tu lanzamiento,",
-      "titleHighlight": "desde aquí,",
-      "titleSuffix": "juntos",
+      "titlePrefix": "Tienes las canciones,",
+      "titleHighlight": "atascado",
+      "titleSuffix": "con lo que viene",
       "subtitle": "Desde la planificación hasta la grabación, sesiones, mezcla, distribución y conexión con medios y reseñas. Acompañamos cada paso de tu lanzamiento, hasta el final.",
-      "ctaConsult": "Consulta Gratuita de Lanzamiento",
+      "ctaConsult": "Consulta de 1 minuto",
       "ctaPortfolio": "Ver Discografía",
       "imageAlt": "Proyecto de Lanzamiento Studio NOL"
     },
@@ -1359,7 +1359,7 @@
             { "title": "Enfoque total en una pista", "desc": "Con una sola canción, toda la energía va hacia ella. El arreglo y la dirección sonora se optimizan para ese single." },
             { "title": "Definir tu primera impresión", "desc": "El momento en que tu nombre entra en la escena indie. Pensamos juntos desde la etapa de planificación qué impresión quieres dejar." },
             { "title": "Un primer paso realista", "desc": "El objetivo es llegar al lanzamiento, no la perfección. Empezar es más importante que ser perfecto." },
-            { "title": "Tu primer contacto con los medios", "desc": "Al lanzar, enviamos un comunicado de prensa a periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie." }
+            { "title": "Tu primer contacto con los medios", "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie." }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
           "journeySubtitle": "~7 meses, así lo hacemos juntos.",
@@ -1396,7 +1396,7 @@
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde aprox. ₩500K",
-          "priceRationale": "Desde tarifa base (grabación vocal + mezcla)",
+          "priceRationale": "Tarifa base (grabación vocal + mezcla). Ahorra tiempo y costo total frente a buscar 5-7 presupuestos por separado.",
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Singles que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
@@ -1426,7 +1426,7 @@
       "ep": {
         "label": "Lanzamiento de EP",
         "duration": "~12 meses",
-        "range": "Cotización personalizada",
+        "range": "EP desde ~₩1.5M (3-5 temas)",
         "note": "Entre single y álbum completo",
         "detail": {
           "heroTitlePrefix": "Tu identidad musical,",
@@ -1447,7 +1447,7 @@
             { "title": "Consistencia y secuenciación entre pistas", "desc": "Unir múltiples canciones en un mundo es el núcleo de un EP. Diseñamos juntos el orden de pistas, el ritmo y la coherencia de tonos." },
             { "title": "Campaña por fases: single principal → EP", "desc": "Lanza primero una pista para medir la respuesta, luego prepara el resto — construyendo tu base de fans paso a paso." },
             { "title": "Definir tu identidad artística", "desc": "Lo que es difícil mostrar con un solo single se vuelve claro en un EP. Tu identidad musical distintiva toma forma." },
-            { "title": "Dos rondas de PR en medios", "desc": "Single principal + lanzamiento de EP te da dos oportunidades de llegar a críticos y medios musicales." }
+            { "title": "Dos rondas de PR en medios", "desc": "Single principal + lanzamiento de EP te da dos oportunidades de llegar a críticos y medios musicales a través de nuestra red indie de 15 años." }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
           "journeySubtitle": "~12 meses, así lo hacemos juntos.",
@@ -1486,8 +1486,8 @@
             "Presupuesto de publicidad en redes sociales"
           ],
           "priceSectionTitle": "Rango de precio",
-          "priceRange": "Cotización personalizada según alcance",
-          "priceRationale": "Varía según sesiones y arreglos",
+          "priceRange": "EP desde ~₩1.5M (3-5 temas)",
+          "priceRationale": "Tarifa estándar para 3-5 temas (grabación vocal, mezcla, coherencia de tono). Ahorra tiempo y costo total frente a buscar 5-7 proveedores por separado.",
           "priceNote": "Cotización personalizada tras consulta gratuita.",
           "caseStudySectionTitle": "EPs que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
@@ -1537,7 +1537,7 @@
           "focusItems": [
             { "title": "Profundidad de A&R y selección de canciones", "desc": "Juzgamos juntos qué canciones pertenecen al álbum y cuáles no. El arco completo del álbum se decide aquí." },
             { "title": "Diseño del arco completo y secuencia", "desc": "Diseñamos el viaje desde la pista 1 hasta la última para que todo el álbum cuente una historia." },
-            { "title": "PR con críticos y sesión de escucha", "desc": "Organizamos una sesión de escucha previa al lanzamiento para críticos — solo posible con un álbum completo. El reconocimiento a través de reseñas es el objetivo." },
+            { "title": "PR con críticos y sesión de escucha", "desc": "Camino con críticos refinado a lo largo de más de 70 lanzamientos — incluyendo a Kang Ho-jung y Samgakjeonpasa. Organizamos una sesión de escucha previa al lanzamiento para críticos, solo posible con un álbum completo. El reconocimiento a través de reseñas es el objetivo." },
             { "title": "Apoyo con becas y financiamiento", "desc": "Tenemos experiencia con programas de becas artísticas y crowdfunding. Pensamos juntos la estructura del presupuesto." }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
@@ -1580,7 +1580,7 @@
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde aprox. ₩4M",
-          "priceRationale": "Tarifa estándar (base de 8 pistas, grabación vocal + mezcla + masterización)",
+          "priceRationale": "Tarifa estándar para 8 pistas (grabación vocal, mezcla, masterización). A&R, PR con críticos, guía de subvenciones — todo de un solo productor, una sola cotización.",
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
@@ -1730,7 +1730,7 @@
         },
         {
           "question": "¿Con qué tipo de artistas habéis trabajado?",
-          "answer": "Hemos trabajado en más de 70 lanzamientos con una gran variedad de artistas indie — cantautores, bandas, artistas de jazz, proyectos de electrónica experimental y proyectos de recopilación. La sección de discografía y la página de portafolio muestran solo una parte de ese trabajo."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — y más de 70 lanzamientos con una gran variedad de artistas indie: cantautores, bandas, artistas de jazz, proyectos de electrónica experimental y proyectos de recopilación. La sección de discografía y la página de portafolio muestran solo una parte de ese trabajo."
         },
         {
           "question": "¿Cómo funciona la consulta gratuita?",

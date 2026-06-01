@@ -1288,30 +1288,30 @@
   "releaseProject": {
     "seo": {
       "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
-      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — Tierliner, The Projectors va Kang Ho-jung kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan birga indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
+      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan birga indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
       "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL",
       "single": {
         "title": "Singl chiqarish loyihasi | Studio NOL",
-        "description": "Birinchi singldan oxirigacha yoningizdamiz. Tierliner va The Projectors kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan rejalashtirish, yozuv, tarqatish va PR.",
+        "description": "Birinchi singldan oxirigacha yoningizdamiz. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan rejalashtirish, yozuv, tarqatish va PR.",
         "keywords": "singl chiqarish, indie musiqa, Studio NOL, musiqa produceri"
       },
       "ep": {
         "title": "EP chiqarish loyihasi | Studio NOL",
-        "description": "3–5 ta qo‘shiq bilan musiqa o‘zligingizni e’lon qiling. Namjae kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan EP chiqarish loyihasi. Birinchi singldan boshlab ikki bosqichli media PR.",
+        "description": "3–5 ta qo‘shiq bilan musiqa o‘zligingizni e’lon qiling. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan EP chiqarish loyihasi. Birinchi singldan boshlab ikki bosqichli media PR.",
         "keywords": "EP chiqarish, mini albom, indie musiqa, Studio NOL"
       },
       "album": {
         "title": "To'liq albom chiqarish loyihasi | Studio NOL",
-        "description": "Indie sahnasida ismingizni o‘yib yozadigan to‘liq albom. Kang Ho-jung va Samgakjeonpasa kabi artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
+        "description": "Indie sahnasida ismingizni o‘yib yozadigan to‘liq albom. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
         "keywords": "albom chiqarish, indie musiqa, musiqa produceri, Studio NOL"
       }
     },
     "hero": {
-      "titlePrefix": "Sizning relizingiz —",
-      "titleHighlight": "shu yerdan",
-      "titleSuffix": "birga",
+      "titlePrefix": "Qo'shiqlaringiz tayyor,",
+      "titleHighlight": "keyingisi",
+      "titleSuffix": "muammomi?",
       "subtitle": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetish. Relizingizning har bir bosqichida oxirigacha siz bilan birga.",
-      "ctaConsult": "Bepul Chiqarish Maslahati",
+      "ctaConsult": "1 daqiqalik maslahat",
       "ctaPortfolio": "Portfelni Ko'rish",
       "imageAlt": "Studio NOL Chiqarish Loyihasi"
     },
@@ -1357,7 +1357,7 @@
             { "title": "Bitta trekka to'liq e'tibor", "desc": "Bitta qo'shiq bilan barcha energiya unga sarflanadi. Arrajman va ovoz yo'nalishi o'sha singl uchun optimallashtiriladi." },
             { "title": "Birinchi taassurotni belgilash", "desc": "Ismingiz indie sahnasiga kirgan lahza. Rejalashtirish bosqichidan boshlab qanday taassurot qoldirmoqchisiz deb birga o'ylaymiz." },
             { "title": "Realistik birinchi qadam", "desc": "Maqsad mukammallik emas, balki chiqarishga erishish. Boshlash mukammal bo'lishdan muhimroq." },
-            { "title": "Birinchi media aloqa nuqtasi", "desc": "Chiqarishda musiqa jurnalistlari va tanqidchilarga press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin." }
+            { "title": "Birinchi media aloqa nuqtasi", "desc": "Chiqarishda 15 yillik musiqa jurnalistlari va tanqidchilar tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin." }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
           "journeySubtitle": "~7 oy, birga qanday amalga oshiramiz.",
@@ -1394,7 +1394,7 @@
           ],
           "priceSectionTitle": "Narx oralig'i",
           "priceRange": "Taxminan ₩500K dan",
-          "priceRationale": "Asosiy stavkadan boshlab (vokal yozuv + miks)",
+          "priceRationale": "Asosiy stavka (vokal yozuv + miks). 5-7 ta alohida narx olishdan ko'ra vaqt va umumiy xarajatni tejaydi.",
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan singlarimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
@@ -1424,7 +1424,7 @@
       "ep": {
         "label": "EP Chiqarish",
         "duration": "~12 oy",
-        "range": "Hajmga qarab maxsus taklif",
+        "range": "EP ~₩1.5M dan (3-5 trek)",
         "note": "Singl va to'liq albom orasida",
         "detail": {
           "heroTitlePrefix": "Musiqa o'zligingiz,",
@@ -1445,7 +1445,7 @@
             { "title": "Treklar o'rtasida izchillik va tartib", "desc": "Ko'p qo'shiqni bitta dunyoga bog'lash EP ning asosi. Trek tartibi, sur'at va ohang uyg'unligini birga loyihalashtiramiz." },
             { "title": "Bosqichli kampaniya: bosh singl → EP", "desc": "Avval bitta trekning javobini o'lchash uchun chiqaramiz, keyin qolganlarni tayyorlaymiz — muxlislar bazasini qadam-baqadam quramiz." },
             { "title": "Badiiy o'zlikni belgilash", "desc": "Bitta singl bilan ko'rsatish qiyin bo'lgan narsa EP da oydinlashadi. O'zingizning musiqa o'zligingiz shakllanadi." },
-            { "title": "Ikki marta media PR", "desc": "Bosh singl + EP chiqarish tanqidchilar va musiqa mediasiga ikki marta yetib borish imkonini beradi." }
+            { "title": "Ikki marta media PR", "desc": "Bosh singl + EP chiqarish 15 yillik indie media tarmog'i orqali tanqidchilar va musiqa mediasiga ikki marta yetib borish imkonini beradi." }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
           "journeySubtitle": "~12 oy, birga qanday amalga oshiramiz.",
@@ -1484,8 +1484,8 @@
             "SMM reklama byudjeti"
           ],
           "priceSectionTitle": "Narx oralig'i",
-          "priceRange": "Hajmga qarab maxsus narx",
-          "priceRationale": "Session va arranjirovkaga qarab farqlanadi",
+          "priceRange": "EP ~₩1.5M dan (3-5 trek)",
+          "priceRationale": "3-5 trek uchun standart stavka (vokal yozuv, miks, ohang moslashuvi). 5-7 ta alohida ta'minotchidan narx olishdan ko'ra vaqt va umumiy xarajatni tejaydi.",
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
           "caseStudySectionTitle": "Birga yaratgan EP larimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
@@ -1535,7 +1535,7 @@
           "focusItems": [
             { "title": "A&R va qo'shiq tanlashning chuqurligi", "desc": "Qaysi qo'shiqlar albomga kirishi va kirmasligi haqida birga qaror qilamiz. Albomning to'liq yoyi shu yerda belgilanadi." },
             { "title": "To'liq yoy va trek tartibini loyihalash", "desc": "1-trekdan oxirigacha bo'lgan sayohatni loyihalashtirаmiz, butun albom bitta hikoya aytsin deb." },
-            { "title": "Tanqidchilar PR va tinglash sessiyasi", "desc": "Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasini tashkillashtirаmiz — faqat to'liq albom bilan mumkin. Sharhlar orqali tan olinish maqsad." },
+            { "title": "Tanqidchilar PR va tinglash sessiyasi", "desc": "70+ chiqarishda — jumladan Kang Ho-jung va Samgakjeonpasa bilan — sayqallangan tanqidchilar yo'li. Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasini tashkillashtirаmiz, faqat to'liq albom bilan mumkin. Sharhlar orqali tan olinish maqsad." },
             { "title": "Grantlar va moliyalashtirish qo'llab-quvvatlash", "desc": "San'at grantlari dasturlari va crowdfunding tajribamiz bor. Byudjet tuzilmasini birga o'ylaymiz." }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
@@ -1578,7 +1578,7 @@
           ],
           "priceSectionTitle": "Narx oralig'i",
           "priceRange": "Taxminan ₩4M dan",
-          "priceRationale": "Standart stavka (8 trek, vokal yozuv + miks + mastering)",
+          "priceRationale": "8 trek uchun standart stavka (vokal yozuv, miks, mastering). A&R, tanqidchilar PR, grant maslahati — barchasi bitta prodyuserdan, bitta narxdan.",
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
@@ -1728,7 +1728,7 @@
         },
         {
           "question": "Qanday san'atkorlar bilan ishlagansiz?",
-          "answer": "Indi qo'shiqchi-mualliflar, guruhlar, jazz san'atkorlari, eksperimental elektron loyihalar va kompilyatsiya loyihalari kabi turli indi san'atkorlar bilan 70 dan ortiq chiqarish ustida ishlaganmiz. Yuqoridagi diskografiya bo'limi va portfolio sahifasi ularning bir qismini ko'rsatadi."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — va indi qo'shiqchi-mualliflar, guruhlar, jazz san'atkorlari, eksperimental elektron loyihalar va kompilyatsiya loyihalari kabi turli indi san'atkorlar bilan 70 dan ortiq chiqarish ustida ishlaganmiz. Yuqoridagi diskografiya bo'limi va portfolio sahifasi ularning bir qismini ko'rsatadi."
         },
         {
           "question": "Bepul maslahat qanday o'tkaziladi?",

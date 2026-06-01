@@ -1290,30 +1290,30 @@
   "releaseProject": {
     "seo": {
       "title": "Dự án Phát hành · Sản xuất Âm nhạc Indie | Studio NOL",
-      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình — dự án phát hành indie cùng nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), người từng làm việc với các nghệ sĩ như Tierliner, The Projectors và Kang Ho-jung. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
+      "description": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình — dự án phát hành indie cùng nhà sản xuất Hwang Gyeongha (15 năm kinh nghiệm), người từng làm việc với nhiều nghệ sĩ indie. Tư vấn miễn phí theo quy mô: single, EP hoặc album.",
       "keywords": "dự án phát hành, âm nhạc indie, sản xuất âm nhạc, Studio NOL",
       "single": {
         "title": "Dự án phát hành Single | Studio NOL",
-        "description": "Đồng hành từ single đầu tiên đến tận cuối. Lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha (15 năm) — người từng làm việc với các nghệ sĩ như Tierliner và The Projectors.",
+        "description": "Đồng hành từ single đầu tiên đến tận cuối. Lập kế hoạch, thu âm, phân phối và PR cùng nhà sản xuất Hwang Gyeongha (15 năm) — người từng làm việc với nhiều nghệ sĩ indie.",
         "keywords": "phát hành single, âm nhạc indie, Studio NOL, nhà sản xuất âm nhạc"
       },
       "ep": {
         "title": "Dự án phát hành EP | Studio NOL",
-        "description": "Tuyên bố bản sắc âm nhạc của bạn với 3–5 bài. Dự án EP cùng nhà sản xuất Hwang Gyeongha (15 năm) — từng làm việc với các nghệ sĩ như Namjae. Từ single mở đường đến hai vòng PR truyền thông.",
+        "description": "Tuyên bố bản sắc âm nhạc của bạn với 3–5 bài. Dự án EP cùng nhà sản xuất Hwang Gyeongha (15 năm) — từng làm việc với nhiều nghệ sĩ indie. Từ single mở đường đến hai vòng PR truyền thông.",
         "keywords": "phát hành EP, mini album, âm nhạc indie, Studio NOL"
       },
       "album": {
         "title": "Dự án phát hành Album | Studio NOL",
-        "description": "Album đầy đủ khắc tên bạn trong cảnh indie. Dự án album cùng nhà sản xuất Hwang Gyeongha (15 năm) — từng làm việc với các nghệ sĩ như Kang Ho-jung và Samgakjeonpasa. A&R, buổi nghe dành cho nhà phê bình và hỗ trợ nộp hồ sơ tài trợ.",
+        "description": "Album đầy đủ khắc tên bạn trong cảnh indie. Dự án album cùng nhà sản xuất Hwang Gyeongha (15 năm) — từng làm việc với nhiều nghệ sĩ indie. A&R, buổi nghe dành cho nhà phê bình và hỗ trợ nộp hồ sơ tài trợ.",
         "keywords": "phát hành album, âm nhạc indie Korea, nhà sản xuất âm nhạc, Studio NOL"
       }
     },
     "hero": {
-      "titlePrefix": "Bản phát hành của bạn —",
-      "titleHighlight": "bắt đầu từ đây,",
-      "titleSuffix": "cùng nhau",
+      "titlePrefix": "Đã có bài hát,",
+      "titleHighlight": "loay hoay",
+      "titleSuffix": "với bước tiếp theo?",
       "subtitle": "Từ lập kế hoạch đến thu âm, nhạc công session, hòa âm, phân phối và kết nối với báo chí và phê bình. Đồng hành cùng bạn qua từng bước phát hành, đến tận cuối hành trình.",
-      "ctaConsult": "Tư vấn Phát hành Miễn phí",
+      "ctaConsult": "Tư vấn 1 phút",
       "ctaPortfolio": "Xem Danh mục",
       "imageAlt": "Dự án Phát hành Studio NOL"
     },
@@ -1359,7 +1359,7 @@
             { "title": "Tập trung toàn bộ vào một bài", "desc": "Chỉ với một bài hát, toàn bộ năng lượng đều dành cho nó. Dàn dựng và định hướng âm thanh được tối ưu hóa cho single đó." },
             { "title": "Định hình ấn tượng đầu tiên", "desc": "Khoảnh khắc tên bạn bước vào cảnh indie. Chúng tôi cùng bạn suy nghĩ từ giai đoạn lên kế hoạch về ấn tượng bạn muốn tạo ra." },
             { "title": "Bước khởi đầu thực tế", "desc": "Mục tiêu là thực sự phát hành, không phải hoàn hảo. Bắt đầu quan trọng hơn là hoàn hảo." },
-            { "title": "Điểm tiếp xúc truyền thông đầu tiên", "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí đến các nhà báo và nhà phê bình âm nhạc. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie." }
+            { "title": "Điểm tiếp xúc truyền thông đầu tiên", "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí qua mạng lưới nhà báo và nhà phê bình âm nhạc đã gây dựng trong 15 năm. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie." }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
           "journeySubtitle": "~7 tháng, đây là cách chúng ta cùng thực hiện.",
@@ -1396,7 +1396,7 @@
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Từ khoảng ₩500K",
-          "priceRationale": "Bắt đầu từ mức cơ bản (thu âm vocal + mix)",
+          "priceRationale": "Mức cơ bản (thu âm vocal + mix). Tiết kiệm thời gian và tổng chi phí so với phải lấy 5-7 báo giá riêng lẻ.",
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các single chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
@@ -1426,7 +1426,7 @@
       "ep": {
         "label": "Phát hành EP",
         "duration": "~12 tháng",
-        "range": "Báo giá tùy chỉnh",
+        "range": "EP từ ~₩1.5M (3-5 bài)",
         "note": "Giữa single và album đầy đủ",
         "detail": {
           "heroTitlePrefix": "Bản sắc âm nhạc của bạn,",
@@ -1447,7 +1447,7 @@
             { "title": "Nhất quán & sắp xếp thứ tự giữa các bài", "desc": "Gắn kết nhiều bài thành một thế giới là cốt lõi của EP. Chúng ta cùng thiết kế thứ tự bài, nhịp độ và sự đồng nhất âm sắc." },
             { "title": "Chiến dịch theo giai đoạn: single chủ lực → EP", "desc": "Phát hành một bài trước để đo phản hồi, sau đó chuẩn bị phần còn lại — xây dựng fan từng bước." },
             { "title": "Định nghĩa bản sắc nghệ thuật của bạn", "desc": "Những gì khó thể hiện với một single sẽ rõ ràng qua EP. Bản sắc âm nhạc độc đáo của bạn hình thành." },
-            { "title": "Hai vòng PR truyền thông", "desc": "Single chủ lực + phát hành EP mang lại hai cơ hội tiếp cận nhà phê bình và truyền thông âm nhạc." }
+            { "title": "Hai vòng PR truyền thông", "desc": "Single chủ lực + phát hành EP mang lại hai cơ hội tiếp cận nhà phê bình và truyền thông âm nhạc qua mạng lưới truyền thông indie 15 năm." }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
           "journeySubtitle": "~12 tháng, đây là cách chúng ta cùng thực hiện.",
@@ -1486,8 +1486,8 @@
             "Ngân sách quảng cáo mạng xã hội"
           ],
           "priceSectionTitle": "Khoảng giá",
-          "priceRange": "Báo giá tùy chỉnh theo quy mô",
-          "priceRationale": "Thay đổi theo session và biên soạn",
+          "priceRange": "EP từ ~₩1.5M (3-5 bài)",
+          "priceRationale": "Mức tiêu chuẩn cho 3-5 bài (thu âm vocal, mix, đồng nhất âm sắc). Tiết kiệm thời gian và tổng chi phí so với phải tìm 5-7 nhà cung cấp riêng lẻ.",
           "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các EP chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
@@ -1537,7 +1537,7 @@
           "focusItems": [
             { "title": "Chiều sâu A&R & tuyển chọn bài hát", "desc": "Chúng ta cùng đánh giá bài nào phù hợp với album và bài nào không. Cung bậc toàn diện của album được quyết định ở đây." },
             { "title": "Thiết kế cung bậc & thứ tự toàn album", "desc": "Chúng ta thiết kế hành trình từ bài 1 đến bài cuối để toàn bộ album kể một câu chuyện." },
-            { "title": "PR nhà phê bình & buổi nghe thử", "desc": "Chúng tôi tổ chức buổi nghe thử trước phát hành cho nhà phê bình — chỉ có thể thực hiện với album đầy đủ. Được công nhận qua đánh giá là mục tiêu." },
+            { "title": "PR nhà phê bình & buổi nghe thử", "desc": "Đường tiếp cận nhà phê bình được mài giũa qua hơn 70 bản phát hành — bao gồm Kang Ho-jung và Samgakjeonpasa. Chúng tôi tổ chức buổi nghe thử trước phát hành cho nhà phê bình, chỉ có thể thực hiện với album đầy đủ. Được công nhận qua đánh giá là mục tiêu." },
             { "title": "Hỗ trợ học bổng & tài trợ", "desc": "Chúng tôi có kinh nghiệm với các chương trình học bổng nghệ thuật và gây quỹ cộng đồng. Cùng nhau suy nghĩ về cơ cấu ngân sách." }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
@@ -1580,7 +1580,7 @@
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Từ khoảng ₩4M",
-          "priceRationale": "Mức tiêu chuẩn (8 bài, thu âm vocal + mix + master)",
+          "priceRationale": "Mức tiêu chuẩn cho 8 bài (thu âm vocal, mix, master). A&R, PR với nhà phê bình, hướng dẫn xin tài trợ — tất cả từ một nhà sản xuất, một báo giá.",
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "caseStudySectionTitle": "Các album đầy đủ chúng ta đã làm cùng nhau",
           "caseStudySubtitle": "Dự án phát hành thực tế chúng tôi đã thực hiện.",
@@ -1730,7 +1730,7 @@
         },
         {
           "question": "Bạn đã làm việc với những nghệ sĩ nào?",
-          "answer": "Chúng tôi đã cùng thực hiện hơn 70 sản phẩm phát hành với nhiều nghệ sĩ indie — singer-songwriter, ban nhạc, nghệ sĩ jazz, dự án điện tử thử nghiệm và các dự án tuyển tập. Phần discography phía trên và trang portfolio chỉ giới thiệu một phần trong số đó."
+          "answer": "Tierliner · The Projectors · Kang Ho-jung · Samgakjeonpasa · Namjae — và hơn 70 sản phẩm phát hành với nhiều nghệ sĩ indie: singer-songwriter, ban nhạc, nghệ sĩ jazz, dự án điện tử thử nghiệm và các dự án tuyển tập. Phần discography phía trên và trang portfolio chỉ giới thiệu một phần trong số đó."
         },
         {
           "question": "Buổi tư vấn miễn phí diễn ra như thế nào?",
