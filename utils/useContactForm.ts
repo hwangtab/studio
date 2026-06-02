@@ -56,6 +56,7 @@ interface UseContactFormResult {
   retryLabel: string;
   errorCount: number;
   handleChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleBlur: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSubmit: (event: FormEvent) => Promise<void>;
   handleRetrySubmit: () => void;
 }
@@ -185,24 +186,40 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
       const nextFormData = { ...formData, [name]: value };
       setFormData(nextFormData);
 
-      if (isContactField(name)) {
+      // 입력 중에는 검증 에러를 새로 띄우지 않는다 (공격적 on-change 검증은 미완성
+      // 이메일/전화 입력 도중 빨간 에러를 노출해 이탈을 유발하고 field_error 이벤트를
+      // 부풀린다). 이미 떠 있는 에러가 입력으로 해소되면 즉시 해제만 한다(긍정 피드백).
+      // 신규 검증·에러 표시·이벤트 발사는 handleBlur(필드 이탈 시점)에서 처리.
+      if (isContactField(name) && errors[name]) {
         const code = validateContactField(name, toContactFormFields(nextFormData));
-        const nextMessage = getValidationMessage(code);
-        setErrors((prev) => {
-          const prevMessage = prev[name];
-          // 신규 에러가 발생했거나 에러 종류가 변경된 경우에만 이벤트 전송
-          // (같은 에러 지속 중 입력 이어갈 때 반복 발사 방지).
-          if (nextMessage && nextMessage !== prevMessage) {
-            trackFormEvent('lead_form_field_error', {
-              field: name,
-              error_code: code,
-            });
-          }
-          return { ...prev, [name]: nextMessage };
-        });
+        if (!code) {
+          setErrors((prev) => ({ ...prev, [name]: '' }));
+        }
       }
     },
-    [formData, getValidationMessage, hasStartedForm, trackFormEvent]
+    [errors, formData, hasStartedForm, trackFormEvent]
+  );
+
+  // 검증은 필드를 떠나는 시점에만 수행 — 미완성 입력에 대한 빨간 에러를 막고,
+  // field_error 이벤트는 "사용자가 잘못된 값을 남기고 떠났다"는 진짜 신호일 때만 발사.
+  const handleBlur = useCallback(
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name } = event.target;
+      if (!isContactField(name)) return;
+
+      const code = validateContactField(name, toContactFormFields(formData));
+      const nextMessage = getValidationMessage(code);
+      setErrors((prev) => {
+        if (nextMessage && nextMessage !== prev[name]) {
+          trackFormEvent('lead_form_field_error', {
+            field: name,
+            error_code: code,
+          });
+        }
+        return { ...prev, [name]: nextMessage };
+      });
+    },
+    [formData, getValidationMessage, trackFormEvent]
   );
 
   const submitWithPayload = useCallback(
@@ -367,6 +384,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
     retryLabel: submitErrorCopy.retry,
     errorCount,
     handleChange,
+    handleBlur,
     handleSubmit,
     handleRetrySubmit,
   };

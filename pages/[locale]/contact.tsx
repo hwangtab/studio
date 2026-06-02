@@ -77,6 +77,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
     retryLabel,
     errorCount,
     handleChange,
+    handleBlur,
     handleSubmit,
     handleRetrySubmit,
   } = useContactForm({ locale, t });
@@ -328,6 +329,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   error={errors.name}
                   placeholder={t('contact.form.namePlaceholder')}
                   required
@@ -342,6 +344,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   error={errors.phone}
                   placeholder={t('contact.form.phonePlaceholder')}
                   autoComplete="tel"
@@ -356,6 +359,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   error={errors.email}
                   placeholder={t('contact.form.emailPlaceholder')}
                   required
@@ -375,6 +379,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       aria-required="true"
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? "message-error" : undefined}
