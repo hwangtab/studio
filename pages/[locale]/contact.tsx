@@ -6,6 +6,8 @@ import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle, ArrowRight
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import EnglishFastContactActions from '../../components/contact/EnglishFastContactActions';
+import KoreanFastContactActions from '../../components/contact/KoreanFastContactActions';
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -278,6 +280,22 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           >
             <div>
               <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>
+              {locale === 'ko' && (
+                <KoreanFastContactActions
+                  locale={locale}
+                  naverMapUrl={siteConfig.contact.naverMapUrl}
+                  kakaoUrl={siteConfig.contact.kakaoUrl}
+                  phone={siteConfig.contact.phone}
+                />
+              )}
+              {locale === 'en' && (
+                <EnglishFastContactActions
+                  locale={locale}
+                  kakaoUrl={siteConfig.contact.kakaoUrl}
+                  email={siteConfig.contact.email}
+                  phone={siteConfig.contact.phone}
+                />
+              )}
               {submitMessage && (
                 <div
                   role="status"

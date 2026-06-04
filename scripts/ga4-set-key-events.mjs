@@ -3,7 +3,7 @@
 // 사용: node --env-file=.env.local scripts/ga4-set-key-events.mjs
 //
 // 하는 일:
-//   lead_click_kakao / lead_click_phone / lead_submit_success 를
+//   lead_click_kakao / lead_click_phone / lead_click_naver_map / lead_submit_success 를
 //   GA4 속성의 "주요 이벤트(key event)"로 등록 → conversions 집계 시작.
 //
 // 인증:
@@ -34,6 +34,7 @@ const SCOPE = 'https://www.googleapis.com/auth/analytics.edit';
 const KEY_EVENTS = [
   { eventName: 'lead_click_kakao', countingMethod: 'ONCE_PER_SESSION' },
   { eventName: 'lead_click_phone', countingMethod: 'ONCE_PER_SESSION' },
+  { eventName: 'lead_click_naver_map', countingMethod: 'ONCE_PER_SESSION' },
   { eventName: 'lead_submit_success', countingMethod: 'ONCE_PER_SESSION' },
 ];
 

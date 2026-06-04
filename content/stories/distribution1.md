@@ -58,6 +58,8 @@ howTo:
 > - **발매 4주 전 제출**: 플랫폼 심사 + Spotify Pre-save 캠페인 시간 확보. 같은 날 동시 공개를 위한 안전 마진.
 > - **수익은 스트리밍 1회 약 ₩4~5(Spotify), ₩7~12(멜론)**. 라이브·굿즈·MD가 본격 수익원이고 스트리밍은 청취·발견 채널.
 
+%%service:recording%%
+
 믹싱·마스터링까지 완성된 음원을 멜론·스포티파이에 올리는 것은 생각보다 어렵지 않습니다. 디지털 유통사를 통해 개인 아티스트도 주요 스트리밍 플랫폼에 발매할 수 있습니다.
 
 디지털 음원 유통의 역사는 **2003년 4월 28일 Apple이 iTunes Music Store를 출시**([History of iTunes — Wikipedia](https://en.wikipedia.org/wiki/History_of_iTunes))하면서 곡당 $0.99 디지털 구매 모델이 확립됐고, 메이저 레이블이 독점하던 음원 유통 구조에 균열을 냈습니다. **2006년 스웨덴에서 Daniel Ek·Martin Lorentzon이 창업한 Spotify가 2008년 10월 6개국에서 서비스를 출시**([Spotify — Wikipedia](https://en.wikipedia.org/wiki/Spotify) · [Spotify 공식 회사 정보](https://newsroom.spotify.com/company-info/))하면서 소유에서 스트리밍으로 소비 방식이 전환됐고, 스트리밍 수익 배분 모델이 음원 유통의 새로운 표준이 됐습니다. 인디 아티스트 유통의 민주화는 **2012년 Philip Kaplan이 설립해 2013년 출시한 DistroKid**의 연간 정액제(현재 Musician $22.99, 무제한 발매)가 결정적 계기였습니다([DistroKid — Wikipedia](https://en.wikipedia.org/wiki/DistroKid) · [DistroKid 공식](https://distrokid.com/)). 이전까지 TuneCore·CD Baby는 건당 수수료 또는 연간 싱글별 요금을 받았는데, DistroKid이 무제한 발매 정액제를 도입하면서 발매 비용의 장벽이 사실상 사라졌습니다. 한국에서는 2010년대 멜론·지니·벅스 중심의 스트리밍 생태계가 형성됐고, 카카오엔터테인먼트·지니뮤직이 국내 플랫폼 유통을 주도하게 됐습니다. 현재 인디 아티스트들은 DistroKid으로 해외 플랫폼, 국내 유통사로 멜론·지니를 병행하는 이중 유통 전략을 사용하는 경우가 늘고 있습니다.

@@ -50,6 +50,8 @@ faq:
 
 커버 음원을 정식으로 스트리밍 발매할 계획이라면 KOMCA에 기계적 복제 허락(Mechanical License)을 신청하거나, 해외 플랫폼 발매 시 DistroKid Songfile($12/곡)을 이용해 처리할 수 있습니다. **MR을 직접 편곡·제작**하면 음반권 문제를 원천 차단할 수 있습니다.
 
+%%service:recording%%
+
 ---
 
 ## 음악 권리 구조

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface InlineBookingCalloutProps {
   /** 사용자에게 보일 짧은 안내 문구. arg 미명시 시 default 카피 사용. */
@@ -81,6 +82,14 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
         href={siteConfig.contact.kakaoUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() =>
+          trackLeadEvent('lead_click_kakao', {
+            locale,
+            component: 'InlineBookingCallout',
+            cta_id: 'inline_booking_kakao',
+            booking_message: headline,
+          })
+        }
         className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-bold min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
       >
         {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}

@@ -1,5 +1,5 @@
 ---
-title: WAV MP3 차이 완전 가이드 — 음질·용량·녹음 납품 형식 선택 기준
+title: WAV MP3 차이·MP3 WAV 차이 — 음질·용량·녹음 납품 형식 선택 기준
 date: 2026-04-06
 author: 스튜디오 놀
 category: 녹음 가이드
@@ -13,7 +13,7 @@ tags:
   - FLAC 비교
 thumbnail: /images/recording14.webp
 summary: >-
-  WAV MP3 차이와 상황별 선택 기준 — 녹음 원본·납품·발매 단계별로 올바른 형식을 정리합니다.
+  WAV MP3 차이와 MP3 WAV 차이를 음질·용량·용도별로 비교합니다. 녹음 원본·납품·발매 단계별 올바른 파일 형식을 정리합니다.
 faq:
   - q: MP3와 WAV 중 어느 것이 음질이 더 좋나요?
     a: >-

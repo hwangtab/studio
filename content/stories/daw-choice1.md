@@ -45,6 +45,8 @@ howTo:
 > - **한국 시장 현실**: 방송사·실용음악과·세션 협업 환경에서는 **Cubase가 사실상 표준**. 다른 DAW를 써도 결국 큐베이스 호환 파일을 받게 됩니다.
 > - **DAW는 갈아타기 어렵습니다**: 1년차에 두세 개 동시 시도는 비추천. 하나를 3개월 집중해 곡 5~10곡 완성하는 게 가장 빠른 길.
 
+%%service:lesson%%
+
 DAW(Digital Audio Workstation)는 음악을 만들고, 녹음하고, 믹싱하는 데 쓰는 소프트웨어입니다. 어떤 DAW를 쓰느냐에 따라 작업 방식, 학습 곡선, 비용이 달라집니다. 한 번 익숙해지면 쉽게 바꾸기 어렵기 때문에 처음 선택이 중요합니다.
 
 DAW의 역사는 1980년대 디지털 오디오 기술의 등장과 함께 시작됩니다. **1989년 Steinberg가 Atari ST용 Cubase를 출시**([Cubase — Wikipedia](https://en.wikipedia.org/wiki/Cubase) · [Sound on Sound: Karl Steinberg 인터뷰](https://www.soundonsound.com/people/karl-steinberg-cubase-computers))하면서 MIDI 시퀀싱 기반 DAW의 시대가 열렸고, **1989년 1월 Digidesign이 Mac용 Sound Tools를 내놓은 뒤 1990년 Pro Tools로 멀티트랙 디지털 녹음 표준을 정의**([Pro Tools — Wikipedia](https://en.wikipedia.org/wiki/Pro_Tools) · [MusicRadar: A brief history of Pro Tools](https://www.musicradar.com/tuition/tech/a-brief-history-of-pro-tools-452963))했습니다. Logic은 1992년 독일 Emagic의 Notator Logic으로 시작해 **2002년 7월 1일 Apple이 Emagic을 인수**([Apple Newsroom: Apple Acquires Emagic, 2002-07-01](https://www.apple.com/newsroom/2002/07/01Apple-Acquires-Emagic/) · [Logic Pro — Wikipedia](https://en.wikipedia.org/wiki/Logic_Pro))하면서 macOS 전용 최강 DAW로 자리잡았습니다. Ableton Live는 **2001년 10월 30일 베를린에서 Gerhard Behles·Robert Henke·Bernd Roggendorf 세 사람이 출시**([Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20))해 라이브 퍼포먼스와 비트 제작의 패러다임을 바꿨습니다. 현재 전 세계 상업 스튜디오에서는 Pro Tools, 홈 스튜디오에서는 Logic Pro와 Ableton이 가장 많이 사용되며, 한국 방송·음대에서는 Cubase가 표준에 가깝습니다.

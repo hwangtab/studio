@@ -59,6 +59,8 @@ howTo:
 > - **피치 교정은 두 종류**: 자연스러운 교정 = Melodyne(수동·정밀), 효과·실시간 = Auto-Tune. 목적이 다르니 둘 다 시도해보고 선택.
 > - **하드웨어 에뮬은 마지막**: UAD·Slate Digital 같은 분석 에뮬은 기본 체인 익숙해진 뒤에. 초보자는 가격 대비 체감 효과가 작음.
 
+%%service:lesson%%
+
 플러그인은 도구입니다. 어떤 도구를 쓸지보다 어떻게 사용할지가 더 중요합니다. 하지만 좋은 도구는 작업을 효율적으로 만들어줍니다.
 
 플러그인 기반 오디오 믹싱의 역사는 **1996년 Waves Audio가 L1 Ultramaximizer를 시작으로 Native Power Pack 번들을 출시**([Sound on Sound: Waves Native Power Pack 리뷰](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack))하면서 본격화됐습니다. 하드웨어 랙 장비 전용이었던 EQ·컴프레서·리버브 기능이 처음으로 소프트웨어화되면서 DAW 내 플러그인 믹싱 시대가 열렸습니다. **Steinberg의 VST 표준은 1996년 1.0, 1999년 2.0, 2008년 3.0** 순으로 발전([Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — About VST SDK](https://www.steinberg.net/developers/vstsdk/))하면서 플러그인 생태계가 폭발적으로 성장했고, 2010년대 Universal Audio가 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 출시하면서 스튜디오 품질 사운드가 홈 레코딩 환경에서도 구현 가능해졌습니다. 한국 시장에서는 2015년 이후 FabFilter와 Waves 번들 가격이 대중화되면서 홈 레코딩 엔지니어들의 플러그인 구성이 급격히 고도화됐으며, 국내 인디 레이블과 유튜브 음악 채널 제작자들 사이에서 FabFilter Pro-Q 3·Valhalla Room·CLA-76 조합이 사실상의 표준으로 자리잡았습니다.

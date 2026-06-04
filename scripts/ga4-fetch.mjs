@@ -15,6 +15,27 @@ import { google } from 'googleapis';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'docs', 'ga4-raw');
+const ALL_LEAD_EVENT_NAMES = [
+  'lead_click_kakao',
+  'lead_click_phone',
+  'lead_click_naver_map',
+  'lead_submit_success',
+  'lead_submit_error',
+  'lead_form_start',
+  'lead_form_abandon',
+  'lead_form_field_error',
+];
+const QUALIFIED_LEAD_EVENT_NAMES = new Set([
+  'lead_click_kakao',
+  'lead_click_phone',
+  'lead_click_naver_map',
+  'lead_submit_success',
+]);
+const FORM_ERROR_EVENT_NAMES = new Set([
+  'lead_submit_error',
+  'lead_form_field_error',
+  'lead_form_abandon',
+]);
 
 function getAuth() {
   const oauth2 = new google.auth.OAuth2(
@@ -100,13 +121,7 @@ async function fetchEvents(analyticsdata, propertyId) {
         fieldName: 'eventName',
         inListFilter: {
           values: [
-            'lead_click_kakao',
-            'lead_click_phone',
-            'lead_submit_success',
-            'lead_submit_error',
-            'lead_form_start',
-            'lead_form_abandon',
-            'lead_form_field_error',
+            ...ALL_LEAD_EVENT_NAMES,
           ],
         },
       },
@@ -167,31 +182,68 @@ async function fetchLlmReferrers(analyticsdata, propertyId) {
   );
 }
 
-// Report 3: 소스·매체별 세션
+const sourceKey = (source, medium) => `${source}\u0000${medium}`;
+
+// Report 3: 소스·매체별 세션 + Studio NOL 리드 이벤트
 async function fetchSource(analyticsdata, propertyId) {
-  console.log('\n[3/4] source/medium sessions (90d)...');
-  const rows = await runReport(analyticsdata, propertyId, {
+  console.log('\n[3/4] source/medium sessions + lead events (90d)...');
+  const sessionRows = await runReport(analyticsdata, propertyId, {
     dateRanges: [dateRange(90)],
     dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }],
-    metrics: [{ name: 'sessions' }, { name: 'bounceRate' }, { name: 'conversions' }],
+    metrics: [{ name: 'sessions' }, { name: 'bounceRate' }],
     orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
     limit: 100,
   });
 
-  const out = rows.map((r) => [
-    r.dimensionValues[0].value,
-    r.dimensionValues[1].value,
-    r.metricValues[0].value,
-    parseFloat(r.metricValues[1].value).toFixed(3),
-    r.metricValues[2].value,
-  ]);
+  const leadRows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
+    dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }, { name: 'eventName' }],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: {
+      filter: {
+        fieldName: 'eventName',
+        inListFilter: {
+          values: ALL_LEAD_EVENT_NAMES,
+        },
+      },
+    },
+    limit: 500,
+  });
+
+  const leadEventsBySource = new Map();
+  for (const row of leadRows) {
+    const source = row.dimensionValues[0].value;
+    const medium = row.dimensionValues[1].value;
+    const eventName = row.dimensionValues[2].value;
+    const eventCount = Number(row.metricValues[0].value) || 0;
+    const key = sourceKey(source, medium);
+    const current = leadEventsBySource.get(key) || { leadEvents: 0, qualifiedLeads: 0, formErrors: 0 };
+    current.leadEvents += eventCount;
+    if (QUALIFIED_LEAD_EVENT_NAMES.has(eventName)) current.qualifiedLeads += eventCount;
+    if (FORM_ERROR_EVENT_NAMES.has(eventName)) current.formErrors += eventCount;
+    leadEventsBySource.set(key, current);
+  }
+
+  const out = sessionRows.map((r) => {
+    const source = r.dimensionValues[0].value;
+    const medium = r.dimensionValues[1].value;
+    const counts = leadEventsBySource.get(sourceKey(source, medium)) || { leadEvents: 0, qualifiedLeads: 0, formErrors: 0 };
+    return [
+      source,
+      medium,
+      r.metricValues[0].value,
+      parseFloat(r.metricValues[1].value).toFixed(3),
+      counts.leadEvents,
+      counts.qualifiedLeads,
+      counts.formErrors,
+    ];
+  });
   writecsv(
     path.join(OUT_DIR, 'source.csv'),
-    ['source', 'medium', 'sessions', 'bounce_rate', 'conversions'],
+    ['source', 'medium', 'sessions', 'bounce_rate', 'lead_events', 'qualified_leads', 'form_errors'],
     out,
   );
 }
-
 // Report 4: 디바이스·국가 분포
 async function fetchDevice(analyticsdata, propertyId) {
   console.log('\n[4/4] device × country (90d)...');

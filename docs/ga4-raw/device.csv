@@ -1,30 +1,30 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",2231,0.420
-"mobile","South Korea",1862,0.470
-"desktop","(not set)",273,1.000
-"tablet","South Korea",80,0.463
-"desktop","China",70,0.943
-"desktop","Singapore",67,0.955
-"desktop","United States",57,0.719
-"mobile","China",43,0.721
-"mobile","United States",35,0.286
-"desktop","",18,0.000
+"desktop","South Korea",2409,0.387
+"mobile","South Korea",2026,0.432
+"desktop","(not set)",314,0.869
+"tablet","South Korea",92,0.402
+"desktop","China",76,0.868
+"desktop","Singapore",74,0.878
+"desktop","United States",59,0.695
+"mobile","China",56,0.554
+"mobile","United States",38,0.263
+"desktop","Canada",16,0.313
 "desktop","Japan",16,0.375
 "mobile","(not set)",15,1.000
-"desktop","Canada",13,0.385
 "desktop","Hong Kong",13,0.846
 "mobile","Japan",13,0.308
+"desktop","",9,0.000
 "mobile","Vietnam",6,0.167
 "desktop","India",5,0.600
 "desktop","New Zealand",5,0.600
 "mobile","Thailand",5,0.400
 "mobile","Australia",4,0.750
 "desktop","Vietnam",3,0.667
+"mobile","New Zealand",3,0.333
 "desktop","Philippines",2,0.500
 "desktop","Taiwan",2,0.500
 "mobile","Hong Kong",2,0.500
 "mobile","Indonesia",2,1.000
-"mobile","New Zealand",2,0.500
 "mobile","Singapore",2,0.000
 "tablet","United States",2,1.000
 "desktop","Australia",1,0.000
@@ -37,6 +37,7 @@ device,country,sessions,bounce_rate
 "desktop","Thailand",1,0.000
 "mobile","Albania",1,0.000
 "mobile","Cambodia",1,0.000
+"mobile","Canada",1,0.000
 "mobile","Costa Rica",1,0.000
 "mobile","Malaysia",1,0.000
 "mobile","Morocco",1,1.000

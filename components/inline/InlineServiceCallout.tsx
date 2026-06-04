@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
+import { trackLeadEvent } from '../../utils/analytics';
 
 type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'practice';
 
@@ -167,6 +168,14 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
           href={siteConfig.contact.kakaoUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            trackLeadEvent('lead_click_kakao', {
+              locale,
+              component: 'InlineServiceCallout',
+              cta_id: `inline_service_${type}_kakao`,
+              service_type: type,
+            })
+          }
           className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-secondary px-4 py-2.5 text-sm font-semibold text-white hover:bg-secondary-dark transition-colors min-h-[44px] touch-manipulation"
         >
           {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}
