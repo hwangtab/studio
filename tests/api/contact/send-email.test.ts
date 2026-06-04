@@ -1,7 +1,7 @@
 /** @jest-environment node */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from './send-email';
+import handler from '../../../pages/api/contact/send-email';
 
 const incrMock = jest.fn();
 const expireMock = jest.fn();

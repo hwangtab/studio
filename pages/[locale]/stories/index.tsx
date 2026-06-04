@@ -22,6 +22,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../../lib/i18n';
 import { generateItemListSchema } from '../../../utils/schemaGenerator';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { normalizePageNumber } from '../../../utils/pagination';
 
 import type { NextPageWithLayout } from '../../../types';
 
@@ -41,7 +42,6 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [pageAnnouncement, setPageAnnouncement] = useState('');
-  const currentPage = Number(router.query.page) || 1;
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
@@ -78,6 +78,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
   }, [stories, activeCategory]);
 
   const totalPages = Math.ceil(filteredStories.length / ITEMS_PER_PAGE);
+  const currentPage = normalizePageNumber(router.query.page, totalPages);
 
   const visibleStories = useMemo(
     () => filteredStories.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE),

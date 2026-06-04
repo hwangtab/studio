@@ -151,4 +151,4 @@ faq:
 
 ---
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 빠른 템포·스피드 훈련 — 드럼 속도 완성 가이드](/stories/practice-room-drum-speed1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1) | [드럼 더블킥·더블 베이스 드럼 훈련 — 더블킥 완성 가이드](/stories/practice-room-drum-doublekick1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 빠른 템포·스피드 훈련 — 드럼 속도 완성 가이드](/stories/practice-room-drum-speed1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1) | [드럼 더블킥·더블 베이스 드럼 훈련 — 더블킥 완성 가이드](/stories/practice-room-drum-double-kick1)

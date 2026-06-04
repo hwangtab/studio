@@ -532,6 +532,9 @@ export const getStoryPaths = (): StoryPath[] => {
 
   slugs.forEach((slug) => {
     locales.forEach((locale) => {
+      if (locale === defaultLocale && !fs.existsSync(path.join(storiesDirectory, `${slug}.md`))) {
+        return;
+      }
       paths.push({ params: { locale, id: slug } });
     });
   });

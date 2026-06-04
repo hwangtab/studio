@@ -3,6 +3,7 @@
 import {
   extractAutoExpandBlock,
   computeThinContentStatus,
+  getStoryPaths,
   THIN_CONTENT_THRESHOLD,
   SHORTCODE_CHAR_ESTIMATES,
 } from './stories';
@@ -105,5 +106,18 @@ describe('computeThinContentStatus', () => {
   it('still flags non-hub slugs with empty content as thin', () => {
     const { isThinContent } = computeThinContentStatus('', 'arbitrary-slug-no-hub');
     expect(isThinContent).toBe(true);
+  });
+});
+
+describe('getStoryPaths', () => {
+  it('does not pre-render default-locale paths for locale-only stories', () => {
+    const paths = getStoryPaths();
+
+    expect(paths).toContainEqual({
+      params: { locale: 'en', id: 'korean-practice-room-booking-english' },
+    });
+    expect(paths).not.toContainEqual({
+      params: { locale: 'ko', id: 'korean-practice-room-booking-english' },
+    });
   });
 });

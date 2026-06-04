@@ -1,6 +1,7 @@
 // 음악연습실 허브의 관련 가이드 cluster 링크용 slug 목록 (SEO pillar-cluster 전략).
 // 서버사이드에서만 렌더되어 HTML 문자열로 주입되므로 React 하이드레이션 비용이 0.
 // 번역된 타이틀은 i18n common.json의 practiceRoom.relatedGuides.items 배열에서 index로 매칭.
+// 같은 slug가 여러 번 등장할 수 있다. 서로 다른 앵커 텍스트와 매칭되므로 dedupe하지 않는다.
 
 export const PRACTICE_ROOM_RELATED_SLUGS = [
   'practice-room-guide1',
@@ -303,7 +304,7 @@ export const PRACTICE_ROOM_RELATED_SLUGS = [
   'practice-room-piano-modulation1',
   'practice-room-guitar-fingerpick-pattern1',
   'practice-room-bass-muting1',
-  'practice-room-drum-doublekick1',
+  'practice-room-drum-double-kick1',
   'practice-room-piano-jazz-standard1',
   'practice-room-vocal-live1',
   'practice-room-guitar-memory1',
