@@ -1140,8 +1140,8 @@ const RELEASE_TIER_LABELS: Record<'single' | 'ep' | 'album', Record<Locale, stri
     es: 'Proyecto de Álbum', vi: 'Dự án phát hành Album', th: 'โปรเจกต์ปล่อยอัลบั้มเต็ม', uz: 'Toʻliq albom reliz loyihasi',
   },
 };
-const RELEASE_TIER_PRICES = { single: 2700000, ep: 6000000, album: 13050000 };
-const RELEASE_TIER_DURATIONS = { single: 'P7M', ep: 'P12M', album: 'P24M' };
+const RELEASE_TIER_PRICES = { single: 500000, ep: 1500000, album: 4000000 };
+const RELEASE_TIER_DURATIONS = { single: 'P12W', ep: 'P6M', album: 'P12M' };
 
 /**
  * Release Project Schema — Person(황경하) + Service(음원 발매 프로듀싱).

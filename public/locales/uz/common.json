@@ -1335,9 +1335,9 @@
       "sectionSubtitle": "Haqiqiy chiqarish hajmiga qarab tuzilgan. Bepul maslahatdan keyin maxsus taklif.",
       "single": {
         "label": "Singl Chiqarish",
-        "duration": "~7 oy",
+        "duration": "~6-12 hafta",
         "range": "Taxminan ₩500K dan",
-        "note": "1 qo'shiq asosida",
+        "note": "Hozirgi tayyorlikka qarab moslanadi",
         "detail": {
           "heroTitlePrefix": "Birinchi singling,",
           "heroTitleHighlight": "to'g'ri bajarilgan",
@@ -1360,15 +1360,14 @@
             { "title": "Birinchi media aloqa nuqtasi", "desc": "Chiqarishda 15 yillik musiqa jurnalistlari va tanqidchilar tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin." }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
-          "journeySubtitle": "~7 oy, birga qanday amalga oshiramiz.",
+          "journeySubtitle": "Qo'shiq holatiga qarab odatda 6-12 haftalik real jadval tuzamiz.",
           "journeyItems": [
-            { "month": "O'0", "label": "Rejalashtirish va yo'nalish", "desc": "Qaysi qo'shiq, qanday yondashuv va kimga yetib borishi kerakligini birga hal qilamiz." },
-            { "month": "O'1-2", "label": "Arrajman va session tanlash", "desc": "Arrajman yo'nalishini ishlab chiqib, sessiya musiqachilariga bog'laymiz." },
-            { "month": "O'3", "label": "Vokal yozish va yo'naltirish", "desc": "Studiyada yozib, eng yaxshi ijroni oldirish." },
-            { "month": "O'4", "label": "Session yozish va mikslash", "desc": "Session cholg'ulari yoziladi va ovozni to'ldirish uchun mikslanadi." },
-            { "month": "O'5", "label": "Mastering va muqova rasmi", "desc": "Masteringdan so'ng muqova rasmini tayyorlaymiz." },
-            { "month": "O'6", "label": "Tarqatish va teaser", "desc": "Platforma tarqatish ro'yxatdan o'tkazish va chiqarishdan oldingi teaser kampaniyasi." },
-            { "month": "O'7", "label": "Chiqarish va media PR", "desc": "Chiqarish kuni va undan keyin tanqidchilar va mediaga press-reliz yuboriladi." }
+            { "month": "Maslahatdan so'ng", "label": "Holat tekshiruvi va jadval", "desc": "Avval qo'shiq tayyorligi, aranjirovka hajmi va maqsadli chiqarish sanasini tekshiramiz." },
+            { "month": "1-2 hafta", "label": "Rejalashtirish va yo'nalish", "desc": "Qaysi qo'shiq, qanday yondashuv va kimga yetishi kerakligini birga belgilaymiz." },
+            { "month": "2-4 hafta", "label": "Aranjirovka va yozuv tayyorgarligi", "desc": "Kerakli aranjirovkani tartiblaymiz va zarur bo'lsa session musiqachilarni ulaymiz." },
+            { "month": "4-6 hafta", "label": "Vokal va session yozuvi", "desc": "Studiyada yozib, eng yaxshi ijroni chiqaramiz." },
+            { "month": "6-8 hafta", "label": "Miks va mastering", "desc": "Soundni yakunlab, platforma ro'yxati uchun master fayllarni tayyorlaymiz." },
+            { "month": "8-12 hafta", "label": "Distribyutsiya va PR", "desc": "Distribyutsiya ro'yxati, chiqarish sanasi va press-reliz yuborishni yakunlaymiz." }
           ],
           "deliverablesSectionTitle": "Nimani olasiz",
           "deliverablesIncludedTitle": "Loyiha tarkibi",
@@ -1409,8 +1408,8 @@
           "faqSubtitle": "Maslahatdan oldingi savollar.",
           "faqItems": [
             {
-              "question": "7 oy juda uzoq ko'rinadi. Tezroq chiqara olamizmi?",
-              "answer": "Ba'zida qo'shiqning tayyor darajasiga qarab tezroq bo'ladi. Lekin arrajman, sessiya, yozuv, mikslash, mastering va tarqatish ro'yxatga olish har biri yetarli vaqt talab qiladi. Bepul maslahatda holatini ko'rib, birga realistik jadval tuzamiz."
+              "question": "Qanchalik tez chiqara olamiz?",
+              "answer": "Qo'shiq tayyor bo'lsa, 6-8 haftada chiqarish mumkin. Aranjirovka, session yozuvi, cover artwork yoki distribyutsiya tekshiruvi kattalashsa, 10-12 hafta xavfsizroq. Bepul maslahatda hozirgi fayllar va maqsadli sanani avval ko'ramiz."
             },
             {
               "question": "Bu narxga qanday ishlar kiradi?",
@@ -1430,9 +1429,9 @@
       },
       "ep": {
         "label": "EP Chiqarish",
-        "duration": "~12 oy",
+        "duration": "~3-6 oy",
         "range": "EP ~₩1.5M dan (3-5 trek)",
-        "note": "Singl va to'liq albom orasida",
+        "note": "Qo'shiqlar tayyorligiga qarab moslanadi",
         "detail": {
           "heroTitlePrefix": "Musiqa o'zligingiz,",
           "heroTitleHighlight": "e'lon qilingan",
@@ -1455,16 +1454,15 @@
             { "title": "Ikki marta media PR", "desc": "Bosh singl + EP chiqarish 15 yillik indie media tarmog'i orqali tanqidchilar va musiqa mediasiga ikki marta yetib borish imkonini beradi." }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
-          "journeySubtitle": "~12 oy, birga qanday amalga oshiramiz.",
+          "journeySubtitle": "3-5 trek uchun odatda 3-6 oy ichida bosqichma-bosqich tuzamiz.",
           "journeyItems": [
-            { "month": "O'0", "label": "Rejalashtirish va kontseptsiya", "desc": "EP ning umumiy yo'nalishi, trek soni va badiiy dunyosini loyihalashtirамiz." },
-            { "month": "O'1-2", "label": "Trek ro'yxatini tanlash", "desc": "Birga qaysi qo'shiqlar EP ga kirishini tanlaymiz va tartib belgilaymiz." },
-            { "month": "O'3-5", "label": "Arrajman va sessiyalar", "desc": "Har bir qo'shiqning arrajmanini ishlab chiqib, sessiya musiqachilariga bog'laymiz." },
-            { "month": "O'6-7", "label": "Vokal va sessiya yozish", "desc": "Vokal yo'naltirish va cholg'u sessiyalarini yozish." },
-            { "month": "O'8", "label": "Mikslash va ohang moslashuvi", "desc": "Ko'p treklarni yaxlit EP sifatida bog'lash uchun mikslash." },
-            { "month": "O'9", "label": "Mastering va muqova rasmi", "desc": "Mastering va muqova rasmini tayyorlash." },
-            { "month": "O'10", "label": "Bosh singl va 1-PR", "desc": "Bosh singl chiqarish va birinchi media PR raundi." },
-            { "month": "O'11-12", "label": "EP chiqarish va 2-PR", "desc": "To'liq EP chiqarish, ikkinchi media PR va chiqarishdan keyingi kampaniya." }
+            { "month": "Maslahatdan so'ng", "label": "Holat va hajm tekshiruvi", "desc": "Nomzod treklar, aranjirovka hajmi, session ko'lami va chiqarish sanasini tekshiramiz." },
+            { "month": "1-3 hafta", "label": "Reja va trek ro'yxati", "desc": "EP yo'nalishi, trek soni, tartibi va badiiy dunyosini loyihalaymiz." },
+            { "month": "3-8 hafta", "label": "Aranjirovka va session tayyorgarligi", "desc": "Har qo'shiq aranjirovkasini aniqlab, kerakli session musiqachilarni ulaymiz." },
+            { "month": "2-3 oy", "label": "Vokal va session yozuvi", "desc": "Vokal direction va instrumental session yozuvlari." },
+            { "month": "3-4 oy", "label": "Miks va tone matching", "desc": "Bir nechta trek bitta EP sifatida bog'lanishi uchun miks qilamiz." },
+            { "month": "4-5 oy", "label": "Mastering va artwork", "desc": "Mastering, cover artwork va distribyutsiya materiallarini tayyorlaymiz." },
+            { "month": "5-6 oy", "label": "Chiqarish va PR", "desc": "Kerak bo'lsa lead singlni oldin chiqarib, keyin EP va media PRga o'tamiz." }
           ],
           "deliverablesSectionTitle": "Nimani olasiz",
           "deliverablesIncludedTitle": "Loyiha tarkibi",
@@ -1519,8 +1517,8 @@
               "answer": "Majburiy emas. Lekin bosh singl EP chiqishidan oldin kutish yaratishda samarali. Holatiza va vaqt jadvaliga qarab birga qaror qilamiz."
             },
             {
-              "question": "12 oy juda uzoq ko'rinadi. Tezroq qila olamizmi?",
-              "answer": "EP hajmiga bog'liq. Qo'shiqlaringiz tayyor bo'lsa yoki sessiya hajmi kichik bo'lsa, tezroq harakatlanish mumkin. Hozirgi holatni tushungandan so'ng realistik jadval taklif qilamiz."
+              "question": "EPni tez chiqarish mumkinmi?",
+              "answer": "Ha. Qo'shiqlar va demolar tayyor, session hajmi kichik bo'lsa, 3-4 oy ham mumkin. Tanlash, aranjirovka, session yozuvi va lead singl kampaniyasi boshidan qurilsa, 5-6 oy yoki undan ko'proq xavfsizroq. Hozirgi holatni ko'rib jadval taklif qilamiz."
             }
           ],
           "linkBack": "Musiqa chiqarish umumiy ko'rinishiga qaytish"
@@ -1528,9 +1526,9 @@
       },
       "album": {
         "label": "To'liq Albom Chiqarish",
-        "duration": "~24 oy",
+        "duration": "~6-12 oy",
         "range": "Taxminan ₩4M dan",
-        "note": "8 qo'shiq asosida",
+        "note": "8 trek asosida, hajmga qarab moslanadi",
         "detail": {
           "heroTitlePrefix": "Indie sahnasida",
           "heroTitleHighlight": "ismingizni o'yib yozing",
@@ -1553,16 +1551,15 @@
             { "title": "Grantlar va moliyalashtirish qo'llab-quvvatlash", "desc": "San'at grantlari dasturlari va crowdfunding tajribamiz bor. Byudjet tuzilmasini birga o'ylaymiz." }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
-          "journeySubtitle": "~24 oy, birga qanday amalga oshiramiz.",
+          "journeySubtitle": "8 trekli albom uchun qo'shiqlar tayyorligiga qarab odatda 6-12 oylik jadval tuzamiz.",
           "journeyItems": [
-            { "month": "O'0-3", "label": "A&R va qo'shiq tanlash", "desc": "Qaysi qo'shiqlar albomga kirishi va qanday plastinka bo'lishini loyihalashtirаmiz." },
-            { "month": "O'4-6", "label": "Kontseptsiya va trek ro'yxati", "desc": "Albom kontseptsiyasi va trek tartibini yakunlaymiz." },
-            { "month": "O'7-12", "label": "Arrajman va sessiyalar", "desc": "Har bir trekning arrajmanini ishlab chiqib, sessiya musiqachilarini topib, muvofiqlashtirаmiz." },
-            { "month": "O'13-15", "label": "Vokal va sessiya yozish", "desc": "Vokal yo'naltirish bilan intensiv yozuv davri." },
-            { "month": "O'16-18", "label": "Mikslash", "desc": "Bir necha oy davomida albomning umumiy ovozini shakllantiramiz." },
-            { "month": "O'19", "label": "Mastering va muqova rasmi", "desc": "Mastering va muqova yo'nalishi." },
-            { "month": "O'20-21", "label": "Bosh singllar 1–2", "desc": "Albomdan oldin 1–2 trek chiqariladi." },
-            { "month": "O'22-24", "label": "Albom chiqarish va tanqidchilar sessiyasi", "desc": "To'liq albom chiqarish, tanqidchilar tinglash sessiyasi va keyingi kampaniya." }
+            { "month": "Maslahatdan so'ng", "label": "Holat va hajm tekshiruvi", "desc": "Nomzod treklar, demo tayyorligi, session ko'lami, budjet va sanani tekshiramiz." },
+            { "month": "1 oy", "label": "A&R va trek ro'yxati", "desc": "Qaysi qo'shiqlar albomga kirishi va qanday plastinka bo'lishini belgilaymiz." },
+            { "month": "1-3 oy", "label": "Konsept va aranjirovka", "desc": "Albom konsepti, trek tartibi va har qo'shiq aranjirovka hajmini yakunlaymiz." },
+            { "month": "3-6 oy", "label": "Aranjirovka, session va yozuv", "desc": "Kerakli sessionlarni ulab, vokal va instrument yozuvlariga fokuslanamiz." },
+            { "month": "5-8 oy", "label": "Miks va albom toni", "desc": "Ko'p qo'shiq bitta albomdek eshitilishi uchun soundni shakllantiramiz." },
+            { "month": "8-10 oy", "label": "Mastering va artwork", "desc": "Mastering, cover artwork va distribyutsiya materiallarini tayyorlaymiz." },
+            { "month": "10-12 oy", "label": "Lead singl, albom va PR", "desc": "Kerak bo'lsa lead singlni oldin chiqarib, to'liq albom va media PRga o'tamiz." }
           ],
           "deliverablesSectionTitle": "Nimani olasiz",
           "deliverablesIncludedTitle": "Loyiha tarkibi",
@@ -1607,8 +1604,8 @@
           "faqSubtitle": "Maslahatdan oldingi savollar.",
           "faqItems": [
             {
-              "question": "2 yil qanday to'ldiriladi?",
-              "answer": "A&R va qo'shiq tanlashdan boshlanadi, so'ng har bir trek uchun arrajman, sessiya va yozuv, albomning ovozini birlashtirish uchun mikslash, 1–2 bosh singl chiqarish, to'liq albom chiqarish va tanqidchilar tinglash sessiyasi. Uzoqroq jadvalning afzalligi — sifat, ya'ni har bir qo'shiq nafas olish joyiga ega bo'lgan albom."
+              "question": "To'liq albom qancha vaqt oladi?",
+              "answer": "8 trekli albomda qo'shiqlar va demolar tayyor bo'lsa, 6-8 oy real bo'lishi mumkin. Tanlash, aranjirovka, session yozuvi, lead singllar va media PR boshidan qurilsa, 9-12 oy realroq. Maslahatda avval qo'shiq holati va maqsadli sanani ko'ramiz."
             },
             {
               "question": "San'at grantlari yoki crowdfunding borasida yordam bera olasizlarmi?",

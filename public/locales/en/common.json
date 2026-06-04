@@ -1380,9 +1380,9 @@
       "sectionSubtitle": "Structured by actual release scale. Custom quote after free consultation.",
       "single": {
         "label": "Single Release",
-        "duration": "~7 months",
+        "duration": "~6-12 weeks",
         "range": "From approx. ₩500K",
-        "note": "1 track",
+        "note": "Adjusted by current readiness",
         "detail": {
           "heroTitlePrefix": "Your first single,",
           "heroTitleHighlight": "done right",
@@ -1405,15 +1405,14 @@
             { "title": "Your first media touchpoint", "desc": "At release, we send a press release through our 15-year network of music journalists and critics. Even your first release can reach the indie scene's eyes." }
           ],
           "journeySectionTitle": "The journey to release",
-          "journeySubtitle": "~7 months, here's how we do it together.",
+          "journeySubtitle": "Depending on the song's current state, we usually set a realistic 6-12 week timeline.",
           "journeyItems": [
-            { "month": "M0", "label": "Planning & Direction", "desc": "We decide together what song, what approach, and who it should reach." },
-            { "month": "M1-2", "label": "Arrangement & Session Casting", "desc": "We develop the arrangement direction and connect you with session musicians." },
-            { "month": "M3", "label": "Vocal Recording & Direction", "desc": "We record at the studio and bring out your best performance." },
-            { "month": "M4", "label": "Session Recording & Mixing", "desc": "Session instruments are recorded and mixed to complete the sound." },
-            { "month": "M5", "label": "Mastering & Artwork", "desc": "After mastering, we prepare the cover artwork." },
-            { "month": "M6", "label": "Distribution & Teaser", "desc": "Platform distribution registration and pre-release teaser campaign." },
-            { "month": "M7", "label": "Release & Media PR", "desc": "On release day and after, press releases go to critics and media." }
+            { "month": "After consultation", "label": "Readiness check & schedule", "desc": "We first review song readiness, arrangement scope, and target release date." },
+            { "month": "1-2 weeks", "label": "Planning & Direction", "desc": "We decide together what song, what approach, and who it should reach." },
+            { "month": "2-4 weeks", "label": "Arrangement & Recording Prep", "desc": "We organize the needed arrangement and quickly connect session players if needed." },
+            { "month": "4-6 weeks", "label": "Vocal & Session Recording", "desc": "We record at the studio and bring out your best performance." },
+            { "month": "6-8 weeks", "label": "Mixing & Mastering", "desc": "We complete the sound and prepare masters for platform registration." },
+            { "month": "8-12 weeks", "label": "Distribution & Release PR", "desc": "We register distribution, confirm the release date, and send the press release." }
           ],
           "deliverablesSectionTitle": "What you receive",
           "deliverablesIncludedTitle": "Project scope",
@@ -1454,8 +1453,8 @@
           "faqSubtitle": "Questions before you consult.",
           "faqItems": [
             {
-              "question": "7 months seems long. Can we release faster?",
-              "answer": "Sometimes it goes faster depending on how ready the song is. But arrangement, sessions, recording, mixing, mastering, and distribution registration each need sufficient time. We'll look at your situation in the free consultation and set a realistic timeline together."
+              "question": "How fast can we release?",
+              "answer": "If the song is already prepared, a 6-8 week release is possible. If arrangement, session recording, cover artwork, or distribution review scope grows, 10-12 weeks is safer. In the free consultation, we review your current files and target release date first."
             },
             {
               "question": "What's included at this price?",
@@ -1475,9 +1474,9 @@
       },
       "ep": {
         "label": "EP Release",
-        "duration": "~12 months",
+        "duration": "~3-6 months",
         "range": "EP from ~₩1.5M (3-5 tracks)",
-        "note": "Between single and full album",
+        "note": "Adjusted by song readiness",
         "detail": {
           "heroTitlePrefix": "Your musical identity,",
           "heroTitleHighlight": "declared",
@@ -1500,16 +1499,15 @@
             { "title": "Two rounds of media PR", "desc": "Lead single + EP release gives you two chances to reach critics and music media through our 15-year indie media network." }
           ],
           "journeySectionTitle": "The journey to release",
-          "journeySubtitle": "~12 months, here's how we do it together.",
+          "journeySubtitle": "For 3-5 tracks, we usually organize the release in 3-6 months.",
           "journeyItems": [
-            { "month": "M0", "label": "Planning & Concept", "desc": "We design the EP's overall direction, track count, and artistic world." },
-            { "month": "M1-2", "label": "Track List Curation", "desc": "We select which songs go into the EP together and set the order." },
-            { "month": "M3-5", "label": "Arrangement & Sessions", "desc": "We develop each song's arrangement and connect session musicians." },
-            { "month": "M6-7", "label": "Vocal & Session Recording", "desc": "Vocal direction and instrumental session recording." },
-            { "month": "M8", "label": "Mixing & Tone Matching", "desc": "We mix so multiple tracks connect as one cohesive EP." },
-            { "month": "M9", "label": "Mastering & Artwork", "desc": "Mastering and cover artwork preparation." },
-            { "month": "M10", "label": "Lead Single & 1st PR", "desc": "Lead single release and first media PR round." },
-            { "month": "M11-12", "label": "EP Release & 2nd PR", "desc": "Full EP release, second media PR, and post-release campaign." }
+            { "month": "After consultation", "label": "Song readiness & scope check", "desc": "We first review candidate tracks, arrangement scope, session scale, and target release date." },
+            { "month": "1-3 weeks", "label": "Planning & Track List", "desc": "We design the EP's overall direction, track count, sequence, and artistic world." },
+            { "month": "3-8 weeks", "label": "Arrangement & Session Prep", "desc": "We develop each song's arrangement and connect the needed session musicians." },
+            { "month": "2-3 months", "label": "Vocal & Session Recording", "desc": "Vocal direction and instrumental session recording." },
+            { "month": "3-4 months", "label": "Mixing & Tone Matching", "desc": "We mix so multiple tracks connect as one cohesive EP." },
+            { "month": "4-5 months", "label": "Mastering & Artwork", "desc": "We prepare mastering, cover artwork, and distribution assets." },
+            { "month": "5-6 months", "label": "Release & PR", "desc": "If a lead single is useful, we release it first, then continue into the EP release and media PR." }
           ],
           "deliverablesSectionTitle": "What you receive",
           "deliverablesIncludedTitle": "Project scope",
@@ -1564,8 +1562,8 @@
               "answer": "It's not required. But a lead single is effective for building anticipation before the EP drops. We decide together based on your situation and timeline."
             },
             {
-              "question": "12 months seems long. Can we do it faster?",
-              "answer": "Depends on the EP scope. If your songs are already prepared or the session scope is small, we can move faster. We'll propose a realistic timeline after understanding your current situation."
+              "question": "Can we release an EP quickly?",
+              "answer": "Yes. If the songs and demos are ready and session scope is small, 3-4 months can work. If song selection, arrangement, session recording, and a lead-single campaign all need to be designed from scratch, 5-6 months or more is safer. We propose the timeline after reviewing your current situation."
             }
           ],
           "linkBack": "Back to Music Release Overview"
@@ -1573,9 +1571,9 @@
       },
       "album": {
         "label": "Full Album Release",
-        "duration": "~24 months",
+        "duration": "~6-12 months",
         "range": "From approx. ₩4M",
-        "note": "8 tracks",
+        "note": "8-track baseline, adjusted by scope",
         "detail": {
           "heroTitlePrefix": "Making your name",
           "heroTitleHighlight": "in the indie scene",
@@ -1598,16 +1596,15 @@
             { "title": "Grants & funding support", "desc": "We have experience with arts grant programs and crowdfunding. We think through the budget structure together." }
           ],
           "journeySectionTitle": "The journey to release",
-          "journeySubtitle": "~24 months, here's how we do it together.",
+          "journeySubtitle": "For an 8-track album, we usually design a 6-12 month timeline based on song readiness.",
           "journeyItems": [
-            { "month": "M0-3", "label": "A&R & Song Selection", "desc": "We design which songs belong on the album and what kind of record it will be." },
-            { "month": "M4-6", "label": "Concept & Track List", "desc": "We finalize the album's concept and track order." },
-            { "month": "M7-12", "label": "Arrangement & Sessions", "desc": "We develop each track's arrangement and source and coordinate session musicians." },
-            { "month": "M13-15", "label": "Vocal & Session Recording", "desc": "Intensive recording period, including vocal direction." },
-            { "month": "M16-18", "label": "Mixing", "desc": "Over several months, we shape the overall sound of the album." },
-            { "month": "M19", "label": "Mastering & Artwork", "desc": "Mastering and artwork direction." },
-            { "month": "M20-21", "label": "Lead Singles 1–2", "desc": "1–2 tracks released ahead of the album." },
-            { "month": "M22-24", "label": "Album Release & Critics Session", "desc": "Full album release, critics listening session, and follow-up campaign." }
+            { "month": "After consultation", "label": "Song readiness & scope check", "desc": "We first review candidate tracks, demo readiness, session scale, budget, and target release date." },
+            { "month": "1 month", "label": "A&R & Track List", "desc": "We design which songs belong on the album and what kind of record it will be." },
+            { "month": "1-3 months", "label": "Concept & Arrangement Design", "desc": "We finalize the album concept, track order, and each song's arrangement scope." },
+            { "month": "3-6 months", "label": "Arrangement, Sessions & Recording", "desc": "We connect the needed sessions and focus on vocal and instrumental recording." },
+            { "month": "5-8 months", "label": "Mixing & Album Tone", "desc": "We shape the whole record so multiple songs feel like one album." },
+            { "month": "8-10 months", "label": "Mastering & Artwork", "desc": "We prepare mastering, cover artwork, and distribution assets." },
+            { "month": "10-12 months", "label": "Lead Single, Album Release & PR", "desc": "If useful, we release a lead single first, then continue into the full album release and critics/media PR." }
           ],
           "deliverablesSectionTitle": "What you receive",
           "deliverablesIncludedTitle": "Project scope",
@@ -1652,8 +1649,8 @@
           "faqSubtitle": "Questions before you consult.",
           "faqItems": [
             {
-              "question": "How is 2 years filled?",
-              "answer": "It starts with A&R and song selection, then goes through arrangement, sessions, and recording for each track, mixing to unify the album's sound, 1–2 lead single releases, the full album release, and a critics listening session. The advantage of the longer timeline is quality — an album where each song has room to breathe."
+              "question": "How long does a full album take?",
+              "answer": "For an 8-track album, if the songs and demos are ready, 6-8 months can be realistic. If song selection, arrangement, session recording, lead singles, and critics/media PR all need to be designed from scratch, 9-12 months is more realistic. We review song readiness and target release date first in consultation."
             },
             {
               "question": "Can you help with arts grants or crowdfunding?",

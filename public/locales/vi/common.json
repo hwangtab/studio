@@ -1337,9 +1337,9 @@
       "sectionSubtitle": "Được cấu trúc theo quy mô phát hành thực tế. Báo giá tùy chỉnh sau tư vấn miễn phí.",
       "single": {
         "label": "Phát hành Single",
-        "duration": "~7 tháng",
+        "duration": "~6-12 tuần",
         "range": "Từ khoảng ₩500K",
-        "note": "Mức 1 bài",
+        "note": "Điều chỉnh theo mức độ sẵn sàng",
         "detail": {
           "heroTitlePrefix": "Single đầu tiên của bạn,",
           "heroTitleHighlight": "làm đúng cách",
@@ -1362,15 +1362,14 @@
             { "title": "Điểm tiếp xúc truyền thông đầu tiên", "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí qua mạng lưới nhà báo và nhà phê bình âm nhạc đã gây dựng trong 15 năm. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie." }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
-          "journeySubtitle": "~7 tháng, đây là cách chúng ta cùng thực hiện.",
+          "journeySubtitle": "Tùy trạng thái bài hát, chúng tôi thường đặt lịch thực tế trong 6-12 tuần.",
           "journeyItems": [
-            { "month": "T0", "label": "Lên kế hoạch & Định hướng", "desc": "Chúng ta cùng quyết định bài hát nào, cách tiếp cận nào và ai sẽ nghe." },
-            { "month": "T1-2", "label": "Dàn dựng & Tuyển session", "desc": "Phát triển định hướng dàn dựng và kết nối với nhạc công session." },
-            { "month": "T3", "label": "Thu âm giọng hát & Định hướng", "desc": "Thu âm tại studio và khai thác màn trình diễn tốt nhất của bạn." },
-            { "month": "T4", "label": "Thu âm session & Hòa âm", "desc": "Nhạc cụ session được thu âm và hòa âm để hoàn thiện âm thanh." },
-            { "month": "T5", "label": "Mastering & Artwork", "desc": "Sau khi mastering, chúng tôi chuẩn bị artwork bìa." },
-            { "month": "T6", "label": "Phân phối & Teaser", "desc": "Đăng ký phân phối trên nền tảng và chiến dịch teaser trước phát hành." },
-            { "month": "T7", "label": "Phát hành & PR truyền thông", "desc": "Vào ngày phát hành và sau đó, thông cáo báo chí gửi đến nhà phê bình và truyền thông." }
+            { "month": "Sau tư vấn", "label": "Kiểm tra và chốt lịch", "desc": "Trước tiên xem mức độ hoàn thiện bài, phạm vi phối khí và ngày phát hành mục tiêu." },
+            { "month": "1-2 tuần", "label": "Lên kế hoạch và định hướng", "desc": "Cùng quyết định bài nào, cách làm nào và muốn chạm tới ai." },
+            { "month": "2-4 tuần", "label": "Phối khí và chuẩn bị thu", "desc": "Sắp xếp phần phối khí cần thiết và kết nối nhạc công session nếu cần." },
+            { "month": "4-6 tuần", "label": "Thu vocal và session", "desc": "Thu tại studio và khai thác phần thể hiện tốt nhất." },
+            { "month": "6-8 tuần", "label": "Mix và mastering", "desc": "Hoàn thiện âm thanh và chuẩn bị master cho nền tảng." },
+            { "month": "8-12 tuần", "label": "Phân phối và PR", "desc": "Đăng ký phân phối, xác nhận ngày phát hành và gửi thông cáo báo chí." }
           ],
           "deliverablesSectionTitle": "Những gì bạn nhận được",
           "deliverablesIncludedTitle": "Thành phần dự án",
@@ -1411,8 +1410,8 @@
           "faqSubtitle": "Câu hỏi trước khi tư vấn.",
           "faqItems": [
             {
-              "question": "7 tháng có vẻ lâu. Chúng ta có thể phát hành nhanh hơn không?",
-              "answer": "Đôi khi nhanh hơn tùy thuộc vào mức độ sẵn sàng của bài hát. Nhưng dàn dựng, session, thu âm, hòa âm, mastering và đăng ký phân phối mỗi bước đều cần đủ thời gian. Chúng tôi sẽ xem xét tình huống của bạn trong buổi tư vấn miễn phí và cùng nhau lập lịch thực tế."
+              "question": "Có thể phát hành nhanh nhất trong bao lâu?",
+              "answer": "Nếu bài đã sẵn sàng, phát hành trong 6-8 tuần là có thể. Nếu phạm vi phối khí, thu session, bìa hoặc xét duyệt phân phối lớn hơn, 10-12 tuần sẽ an toàn hơn. Trong buổi tư vấn miễn phí, chúng tôi xem file hiện tại và ngày mục tiêu trước."
             },
             {
               "question": "Mức giá này bao gồm những gì?",
@@ -1432,9 +1431,9 @@
       },
       "ep": {
         "label": "Phát hành EP",
-        "duration": "~12 tháng",
+        "duration": "~3-6 tháng",
         "range": "EP từ ~₩1.5M (3-5 bài)",
-        "note": "Giữa single và album đầy đủ",
+        "note": "Điều chỉnh theo độ sẵn sàng của bài",
         "detail": {
           "heroTitlePrefix": "Bản sắc âm nhạc của bạn,",
           "heroTitleHighlight": "tuyên bố",
@@ -1457,16 +1456,15 @@
             { "title": "Hai vòng PR truyền thông", "desc": "Single chủ lực + phát hành EP mang lại hai cơ hội tiếp cận nhà phê bình và truyền thông âm nhạc qua mạng lưới truyền thông indie 15 năm." }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
-          "journeySubtitle": "~12 tháng, đây là cách chúng ta cùng thực hiện.",
+          "journeySubtitle": "Với 3-5 bài, chúng tôi thường tổ chức phát hành trong 3-6 tháng.",
           "journeyItems": [
-            { "month": "T0", "label": "Lên kế hoạch & Ý niệm", "desc": "Chúng ta thiết kế định hướng tổng thể của EP, số bài và thế giới nghệ thuật." },
-            { "month": "T1-2", "label": "Tuyển chọn danh sách bài", "desc": "Cùng chọn bài nào vào EP và sắp xếp thứ tự." },
-            { "month": "T3-5", "label": "Dàn dựng & Session", "desc": "Phát triển dàn dựng từng bài và kết nối nhạc công session." },
-            { "month": "T6-7", "label": "Thu âm giọng hát & Session", "desc": "Định hướng giọng hát và thu âm nhạc cụ session." },
-            { "month": "T8", "label": "Hòa âm & Đồng nhất âm sắc", "desc": "Hòa âm để nhiều bài kết nối thành EP nhất quán." },
-            { "month": "T9", "label": "Mastering & Artwork", "desc": "Mastering và chuẩn bị artwork bìa." },
-            { "month": "T10", "label": "Single chủ lực & PR vòng 1", "desc": "Phát hành single chủ lực và vòng PR truyền thông đầu tiên." },
-            { "month": "T11-12", "label": "Phát hành EP & PR vòng 2", "desc": "Phát hành toàn bộ EP, PR truyền thông vòng 2 và chiến dịch hậu phát hành." }
+            { "month": "Sau tư vấn", "label": "Kiểm tra bài và phạm vi", "desc": "Xem bài ứng viên, phạm vi phối khí, quy mô session và ngày phát hành mục tiêu." },
+            { "month": "1-3 tuần", "label": "Kế hoạch và tracklist", "desc": "Thiết kế hướng EP, số bài, thứ tự và thế giới nghệ thuật." },
+            { "month": "3-8 tuần", "label": "Phối khí và chuẩn bị session", "desc": "Phát triển phối khí từng bài và kết nối nhạc công cần thiết." },
+            { "month": "2-3 tháng", "label": "Thu vocal và session", "desc": "Direction vocal và thu nhạc cụ session." },
+            { "month": "3-4 tháng", "label": "Mix và đồng nhất tone", "desc": "Mix để nhiều bài kết nối thành một EP thống nhất." },
+            { "month": "4-5 tháng", "label": "Mastering và artwork", "desc": "Chuẩn bị mastering, bìa và tài liệu phân phối." },
+            { "month": "5-6 tháng", "label": "Phát hành và PR", "desc": "Nếu phù hợp, phát hành lead single trước rồi tiếp tục EP và PR truyền thông." }
           ],
           "deliverablesSectionTitle": "Những gì bạn nhận được",
           "deliverablesIncludedTitle": "Thành phần dự án",
@@ -1510,7 +1508,7 @@
           "faqItems": [
             {
               "question": "EP khác gì so với phát hành nhiều single?",
-              "answer": "Nhiều single là các phát hành độc lập. EP là một tác phẩm hoàn chỉnh. Công việc tuyển chọn — thứ tự bài, âm sắc và xây dựng thế giới — chỉ có thể thực hiện với EP. Nếu bạn muốn xây dựng nền tảng fan vững chắc, EP để lại ấn tượng mạnh hơn."
+              "answer": "Nhiều single là các lần phát hành độc lập. EP là một tác phẩm hoàn chỉnh. Việc tuyển chọn thứ tự bài, tone và thế giới âm nhạc chỉ thật sự rõ trong EP. Nếu muốn xây dựng fanbase vững hơn, EP để lại ấn tượng mạnh hơn."
             },
             {
               "question": "Chi phí có tăng tỉ lệ thuận với số bài không?",
@@ -1521,8 +1519,8 @@
               "answer": "Không bắt buộc. Nhưng single chủ lực hiệu quả để tạo sự mong đợi trước khi EP ra mắt. Chúng ta quyết định cùng nhau dựa trên tình huống và lịch trình của bạn."
             },
             {
-              "question": "12 tháng có vẻ lâu. Chúng ta có thể làm nhanh hơn không?",
-              "answer": "Tùy quy mô EP. Nếu bài hát đã chuẩn bị sẵn hoặc quy mô session nhỏ, chúng ta có thể tiến nhanh hơn. Chúng tôi sẽ đề xuất lịch thực tế sau khi hiểu tình huống hiện tại của bạn."
+              "question": "Có thể phát hành EP nhanh không?",
+              "answer": "Có. Nếu bài và demo đã sẵn sàng, phạm vi session nhỏ, 3-4 tháng có thể làm được. Nếu phải thiết kế từ đầu phần chọn bài, phối khí, thu session và chiến dịch lead single, 5-6 tháng trở lên sẽ an toàn hơn. Chúng tôi đề xuất lịch sau khi xem tình trạng hiện tại."
             }
           ],
           "linkBack": "Quay lại tổng quan phát hành"
@@ -1530,9 +1528,9 @@
       },
       "album": {
         "label": "Phát hành Album Đầy đủ",
-        "duration": "~24 tháng",
+        "duration": "~6-12 tháng",
         "range": "Từ khoảng ₩4M",
-        "note": "Mức 8 bài",
+        "note": "Mốc 8 bài, điều chỉnh theo phạm vi",
         "detail": {
           "heroTitlePrefix": "Khắc tên bạn",
           "heroTitleHighlight": "trong cảnh indie",
@@ -1555,16 +1553,15 @@
             { "title": "Hỗ trợ học bổng & tài trợ", "desc": "Chúng tôi có kinh nghiệm với các chương trình học bổng nghệ thuật và gây quỹ cộng đồng. Cùng nhau suy nghĩ về cơ cấu ngân sách." }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
-          "journeySubtitle": "~24 tháng, đây là cách chúng ta cùng thực hiện.",
+          "journeySubtitle": "Với album 8 bài, chúng tôi thường thiết kế lịch 6-12 tháng theo độ sẵn sàng của bài.",
           "journeyItems": [
-            { "month": "T0-3", "label": "A&R & Tuyển chọn bài hát", "desc": "Chúng ta thiết kế bài nào thuộc album và đĩa nhạc sẽ như thế nào." },
-            { "month": "T4-6", "label": "Ý niệm & Danh sách bài", "desc": "Hoàn thiện ý niệm album và thứ tự bài." },
-            { "month": "T7-12", "label": "Dàn dựng & Session", "desc": "Phát triển dàn dựng từng bài và tuyển dụng, phối hợp nhạc công session." },
-            { "month": "T13-15", "label": "Thu âm giọng hát & Session", "desc": "Giai đoạn thu âm chuyên sâu, bao gồm định hướng giọng hát." },
-            { "month": "T16-18", "label": "Hòa âm", "desc": "Trong nhiều tháng, chúng tôi định hình âm thanh tổng thể của album." },
-            { "month": "T19", "label": "Mastering & Artwork", "desc": "Mastering và định hướng artwork." },
-            { "month": "T20-21", "label": "Single chủ lực 1–2", "desc": "1–2 bài được phát hành trước album." },
-            { "month": "T22-24", "label": "Phát hành album & Buổi nghe thử nhà phê bình", "desc": "Phát hành toàn bộ album, buổi nghe thử nhà phê bình và chiến dịch tiếp theo." }
+            { "month": "Sau tư vấn", "label": "Kiểm tra bài và phạm vi", "desc": "Xem bài ứng viên, độ sẵn sàng demo, quy mô session, ngân sách và ngày mục tiêu." },
+            { "month": "1 tháng", "label": "A&R và tracklist", "desc": "Thiết kế bài nào thuộc về album và album này sẽ là kiểu bản thu nào." },
+            { "month": "1-3 tháng", "label": "Concept và phối khí", "desc": "Chốt concept album, thứ tự bài và phạm vi phối khí từng bài." },
+            { "month": "3-6 tháng", "label": "Phối khí, session và thu", "desc": "Kết nối session cần thiết và tập trung thu vocal, nhạc cụ." },
+            { "month": "5-8 tháng", "label": "Mix và tone album", "desc": "Định hình để nhiều bài nghe như một album thống nhất." },
+            { "month": "8-10 tháng", "label": "Mastering và artwork", "desc": "Chuẩn bị mastering, bìa và tài liệu phân phối." },
+            { "month": "10-12 tháng", "label": "Lead single, album và PR", "desc": "Nếu phù hợp, phát hành lead single trước rồi tiếp tục album đầy đủ và PR với giới phê bình/truyền thông." }
           ],
           "deliverablesSectionTitle": "Những gì bạn nhận được",
           "deliverablesIncludedTitle": "Thành phần dự án",
@@ -1609,8 +1606,8 @@
           "faqSubtitle": "Câu hỏi trước khi tư vấn.",
           "faqItems": [
             {
-              "question": "2 năm được lấp đầy như thế nào?",
-              "answer": "Bắt đầu bằng A&R và tuyển chọn bài, sau đó trải qua dàn dựng, session và thu âm từng bài, hòa âm để thống nhất âm thanh album, phát hành 1–2 single chủ lực, phát hành toàn bộ album và buổi nghe thử nhà phê bình. Ưu điểm của lịch dài hơn là chất lượng — album mà mỗi bài có không gian để phát triển."
+              "question": "Album đầy đủ mất bao lâu?",
+              "answer": "Với 8 bài, nếu bài và demo đã sẵn sàng, 6-8 tháng có thể thực tế. Nếu chọn bài, phối khí, thu session, lead single và PR với giới phê bình/truyền thông đều phải thiết kế từ đầu, 9-12 tháng thực tế hơn. Trong tư vấn, chúng tôi xem độ sẵn sàng của bài và ngày mục tiêu trước."
             },
             {
               "question": "Các bạn có thể giúp với học bổng nghệ thuật hoặc gây quỹ cộng đồng không?",

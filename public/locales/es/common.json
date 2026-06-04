@@ -1337,9 +1337,9 @@
       "sectionSubtitle": "Estructurado según la escala real del lanzamiento. Cotización personalizada tras consulta gratuita.",
       "single": {
         "label": "Lanzamiento de Single",
-        "duration": "~7 meses",
+        "duration": "~6-12 semanas",
         "range": "Desde aprox. ₩500K",
-        "note": "Base de 1 pista",
+        "note": "Se ajusta según el estado actual",
         "detail": {
           "heroTitlePrefix": "Tu primer single,",
           "heroTitleHighlight": "bien hecho",
@@ -1362,15 +1362,14 @@
             { "title": "Tu primer contacto con los medios", "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie." }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
-          "journeySubtitle": "~7 meses, así lo hacemos juntos.",
+          "journeySubtitle": "Según el estado de la canción, normalmente fijamos un calendario realista de 6-12 semanas.",
           "journeyItems": [
-            { "month": "M0", "label": "Planificación y Dirección", "desc": "Decidimos juntos qué canción, qué enfoque y a quién debe llegar." },
-            { "month": "M1-2", "label": "Arreglo y Casting de Sesión", "desc": "Desarrollamos la dirección del arreglo y te conectamos con músicos de sesión." },
-            { "month": "M3", "label": "Grabación Vocal y Dirección", "desc": "Grabamos en el estudio y sacamos tu mejor actuación." },
-            { "month": "M4", "label": "Grabación de Sesión y Mezcla", "desc": "Se graban los instrumentos de sesión y se mezclan para completar el sonido." },
-            { "month": "M5", "label": "Masterización y Arte", "desc": "Después de masterizar, preparamos el arte de portada." },
-            { "month": "M6", "label": "Distribución y Teaser", "desc": "Registro de distribución en plataformas y campaña teaser previa al lanzamiento." },
-            { "month": "M7", "label": "Lanzamiento y PR en Medios", "desc": "El día del lanzamiento y después, los comunicados de prensa van a críticos y medios." }
+            { "month": "Tras consulta", "label": "Revisión y calendario", "desc": "Primero revisamos el estado de la canción, el alcance del arreglo y la fecha objetivo de lanzamiento." },
+            { "month": "1-2 semanas", "label": "Planificación y Dirección", "desc": "Decidimos juntos qué canción, qué enfoque y a quién debe llegar." },
+            { "month": "2-4 semanas", "label": "Arreglo y preparación", "desc": "Organizamos el arreglo necesario y conectamos músicos de sesión si hace falta." },
+            { "month": "4-6 semanas", "label": "Grabación vocal y de sesión", "desc": "Grabamos en el estudio y sacamos tu mejor actuación." },
+            { "month": "6-8 semanas", "label": "Mezcla y masterización", "desc": "Completamos el sonido y preparamos masters para las plataformas." },
+            { "month": "8-12 semanas", "label": "Distribución y PR", "desc": "Registramos la distribución, confirmamos la fecha y enviamos el comunicado de prensa." }
           ],
           "deliverablesSectionTitle": "Lo que recibes",
           "deliverablesIncludedTitle": "Componentes del proyecto",
@@ -1411,8 +1410,8 @@
           "faqSubtitle": "Preguntas antes de consultar.",
           "faqItems": [
             {
-              "question": "7 meses parece mucho. ¿Podemos lanzar más rápido?",
-              "answer": "A veces va más rápido dependiendo de qué tan lista esté la canción. Pero el arreglo, las sesiones, la grabación, la mezcla, la masterización y el registro de distribución cada uno necesita tiempo suficiente. Analizaremos tu situación en la consulta gratuita y estableceremos juntos un cronograma realista."
+              "question": "¿Qué tan rápido podemos lanzar?",
+              "answer": "Si la canción ya está preparada, es posible lanzar en 6-8 semanas. Si crece el alcance de arreglo, grabación de sesión, arte de portada o revisión de distribución, 10-12 semanas es más seguro. En la consulta gratuita revisamos primero tus archivos y fecha objetivo."
             },
             {
               "question": "¿Qué incluye este precio?",
@@ -1432,9 +1431,9 @@
       },
       "ep": {
         "label": "Lanzamiento de EP",
-        "duration": "~12 meses",
+        "duration": "~3-6 meses",
         "range": "EP desde ~₩1.5M (3-5 temas)",
-        "note": "Entre single y álbum completo",
+        "note": "Se ajusta según el estado de las canciones",
         "detail": {
           "heroTitlePrefix": "Tu identidad musical,",
           "heroTitleHighlight": "declarada",
@@ -1457,16 +1456,15 @@
             { "title": "Dos rondas de PR en medios", "desc": "Single principal + lanzamiento de EP te da dos oportunidades de llegar a críticos y medios musicales a través de nuestra red indie de 15 años." }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
-          "journeySubtitle": "~12 meses, así lo hacemos juntos.",
+          "journeySubtitle": "Para 3-5 temas, normalmente organizamos el lanzamiento en 3-6 meses.",
           "journeyItems": [
-            { "month": "M0", "label": "Planificación y Concepto", "desc": "Diseñamos la dirección general del EP, número de pistas y mundo artístico." },
-            { "month": "M1-2", "label": "Selección de Lista de Pistas", "desc": "Seleccionamos juntos qué canciones van al EP y establecemos el orden." },
-            { "month": "M3-5", "label": "Arreglo y Sesiones", "desc": "Desarrollamos el arreglo de cada canción y conectamos músicos de sesión." },
-            { "month": "M6-7", "label": "Grabación Vocal y de Sesión", "desc": "Dirección vocal y grabación de sesiones instrumentales." },
-            { "month": "M8", "label": "Mezcla y Coherencia de Tono", "desc": "Mezclamos para que múltiples pistas conecten como un EP cohesivo." },
-            { "month": "M9", "label": "Masterización y Arte", "desc": "Masterización y preparación del arte de portada." },
-            { "month": "M10", "label": "Single Principal y 1ª PR", "desc": "Lanzamiento del single principal y primera ronda de PR en medios." },
-            { "month": "M11-12", "label": "Lanzamiento de EP y 2ª PR", "desc": "Lanzamiento completo del EP, segunda ronda de PR y campaña post-lanzamiento." }
+            { "month": "Tras consulta", "label": "Estado y alcance", "desc": "Primero revisamos canciones candidatas, arreglo, escala de sesión y fecha objetivo." },
+            { "month": "1-3 semanas", "label": "Planificación y lista de pistas", "desc": "Diseñamos la dirección del EP, número de pistas, secuencia y mundo artístico." },
+            { "month": "3-8 semanas", "label": "Arreglo y preparación de sesión", "desc": "Desarrollamos el arreglo de cada canción y conectamos los músicos necesarios." },
+            { "month": "2-3 meses", "label": "Grabación vocal y de sesión", "desc": "Dirección vocal y grabación de sesiones instrumentales." },
+            { "month": "3-4 meses", "label": "Mezcla y coherencia de tono", "desc": "Mezclamos para que múltiples pistas conecten como un EP cohesivo." },
+            { "month": "4-5 meses", "label": "Masterización y arte", "desc": "Preparamos masterización, portada y materiales de distribución." },
+            { "month": "5-6 meses", "label": "Lanzamiento y PR", "desc": "Si conviene, lanzamos primero un single principal y seguimos con el EP y PR en medios." }
           ],
           "deliverablesSectionTitle": "Lo que recibes",
           "deliverablesIncludedTitle": "Componentes del proyecto",
@@ -1521,8 +1519,8 @@
               "answer": "No es obligatorio. Pero un single principal es efectivo para generar expectativa antes del EP. Decidimos juntos según tu situación y cronograma."
             },
             {
-              "question": "12 meses parece mucho. ¿Podemos hacerlo más rápido?",
-              "answer": "Depende del alcance del EP. Si tus canciones ya están preparadas o el alcance de la sesión es pequeño, podemos avanzar más rápido. Propondremos un cronograma realista después de entender tu situación actual."
+              "question": "¿Podemos lanzar un EP rápido?",
+              "answer": "Sí. Si las canciones y demos están listas y el alcance de sesión es pequeño, 3-4 meses puede funcionar. Si hay que diseñar desde cero selección de canciones, arreglos, sesiones y campaña de single principal, 5-6 meses o más es más seguro. Proponemos el calendario tras revisar tu situación."
             }
           ],
           "linkBack": "Volver a descripción general"
@@ -1530,9 +1528,9 @@
       },
       "album": {
         "label": "Lanzamiento de Álbum",
-        "duration": "~24 meses",
+        "duration": "~6-12 meses",
         "range": "Desde aprox. ₩4M",
-        "note": "Base de 8 pistas",
+        "note": "Base de 8 pistas, ajustado por alcance",
         "detail": {
           "heroTitlePrefix": "Dejando tu huella",
           "heroTitleHighlight": "en la escena indie",
@@ -1555,16 +1553,15 @@
             { "title": "Apoyo con becas y financiamiento", "desc": "Tenemos experiencia con programas de becas artísticas y crowdfunding. Pensamos juntos la estructura del presupuesto." }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
-          "journeySubtitle": "~24 meses, así lo hacemos juntos.",
+          "journeySubtitle": "Para un álbum de 8 pistas, normalmente diseñamos un calendario de 6-12 meses según el estado de las canciones.",
           "journeyItems": [
-            { "month": "M0-3", "label": "A&R y Selección de Canciones", "desc": "Diseñamos qué canciones pertenecen al álbum y qué tipo de disco será." },
-            { "month": "M4-6", "label": "Concepto y Lista de Pistas", "desc": "Finalizamos el concepto y el orden de pistas del álbum." },
-            { "month": "M7-12", "label": "Arreglo y Sesiones", "desc": "Desarrollamos el arreglo de cada pista y buscamos y coordinamos músicos de sesión." },
-            { "month": "M13-15", "label": "Grabación Vocal y de Sesión", "desc": "Período de grabación intensiva, incluyendo dirección vocal." },
-            { "month": "M16-18", "label": "Mezcla", "desc": "Durante varios meses, damos forma al sonido general del álbum." },
-            { "month": "M19", "label": "Masterización y Arte", "desc": "Masterización y dirección de arte." },
-            { "month": "M20-21", "label": "Singles Principales 1–2", "desc": "1–2 pistas lanzadas antes del álbum." },
-            { "month": "M22-24", "label": "Lanzamiento del Álbum y Sesión de Críticos", "desc": "Lanzamiento completo del álbum, sesión de escucha para críticos y campaña de seguimiento." }
+            { "month": "Tras consulta", "label": "Estado y alcance", "desc": "Primero revisamos canciones candidatas, demos, escala de sesión, presupuesto y fecha objetivo." },
+            { "month": "1 mes", "label": "A&R y lista de pistas", "desc": "Diseñamos qué canciones pertenecen al álbum y qué tipo de disco será." },
+            { "month": "1-3 meses", "label": "Concepto y arreglo", "desc": "Finalizamos concepto, orden de pistas y alcance de arreglo de cada canción." },
+            { "month": "3-6 meses", "label": "Arreglo, sesiones y grabación", "desc": "Conectamos sesiones necesarias y nos concentramos en voces e instrumentos." },
+            { "month": "5-8 meses", "label": "Mezcla y tono del álbum", "desc": "Damos forma al disco para que múltiples canciones se sientan como un álbum." },
+            { "month": "8-10 meses", "label": "Masterización y arte", "desc": "Preparamos masterización, portada y materiales de distribución." },
+            { "month": "10-12 meses", "label": "Single, álbum y PR", "desc": "Si conviene, lanzamos un single primero y seguimos con el álbum completo y PR con críticos y medios." }
           ],
           "deliverablesSectionTitle": "Lo que recibes",
           "deliverablesIncludedTitle": "Componentes del proyecto",
@@ -1609,8 +1606,8 @@
           "faqSubtitle": "Preguntas antes de consultar.",
           "faqItems": [
             {
-              "question": "¿Cómo se llena 2 años?",
-              "answer": "Comienza con A&R y selección de canciones, luego pasa por arreglo, sesiones y grabación de cada pista, mezcla para unificar el sonido del álbum, 1–2 lanzamientos de singles principales, el lanzamiento completo del álbum y una sesión de escucha para críticos. La ventaja del cronograma más largo es la calidad — un álbum donde cada canción tiene espacio para respirar."
+              "question": "¿Cuánto tarda un álbum completo?",
+              "answer": "Para 8 pistas, si las canciones y demos están listas, 6-8 meses puede ser realista. Si hay que diseñar desde cero selección, arreglos, sesiones, singles principales y PR con críticos/medios, 9-12 meses es más realista. En consulta revisamos primero el estado de las canciones y la fecha objetivo."
             },
             {
               "question": "¿Pueden ayudar con becas artísticas o crowdfunding?",
