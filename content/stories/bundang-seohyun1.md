@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[성남·분당·판교 녹음실 안내](/stories/gyeonggi1) | [성남 수정구·중원구 녹음실 안내](/stories/gyeonggi1) | [용인·수지 녹음실 안내](/stories/gyeonggi1) | [수원·안양·군포 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[성남·분당·판교 녹음실 안내](/stories/bundang1) | [성남 수정구·중원구 녹음실 안내](/stories/seongnam-sujeong1) | [용인·수지 녹음실 안내](/stories/suji1) | [수원·안양·군포 녹음실 안내](/stories/suwon1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

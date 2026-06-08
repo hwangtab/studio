@@ -172,4 +172,4 @@ SRT를 타고 수서역에서 하차하는 경우:
 
 각 도시에서 스튜디오 놀까지의 상세 이동 경로, 현지 음악 씬 소개, 맞춤 세션 안내는 아래 개별 가이드를 참고하세요.
 
-[광주 가이드](/stories/gwangju1) | [전주 가이드](/stories/jeonbuk1) | [익산 가이드](/stories/jeonbuk1) | [목포 가이드](/stories/jeonnam1) | [순천 가이드](/stories/jeonnam1) | [여수 가이드](/stories/jeonnam1) | [군산 가이드](/stories/jeonbuk1) | [나주 가이드](/stories/jeonnam1) | [정읍 가이드](/stories/jeonbuk1) | [공주 가이드](/stories/chungnam1) | [장성 가이드](/stories/jeonnam1)
+[광주 가이드](/stories/gwangju1) | [전주 가이드](/stories/jeonbuk1) | [익산 가이드](/stories/jeonbuk1) | [목포 가이드](/stories/mokpo1) | [순천 가이드](/stories/suncheon1) | [여수 가이드](/stories/jeonnam1) | [군산 가이드](/stories/jeonbuk1) | [나주 가이드](/stories/naju1) | [정읍 가이드](/stories/jeonbuk1) | [공주 가이드](/stories/chungnam1) | [장성 가이드](/stories/jangseong1)

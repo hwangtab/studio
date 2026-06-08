@@ -162,4 +162,4 @@ Neumann U87AI는 국내 방송사와 메이저 음반사에서도 쓰는 표준 
 
 ---
 
-[동작구 전체 녹음실 안내](/stories/dongjak1) | [노량진 녹음실 안내](/stories/seoul1) | [사당·방배 녹음실 안내](/stories/seoul1) | [여의도 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[동작구 전체 녹음실 안내](/stories/dongjak1) | [노량진 녹음실 안내](/stories/seoul1) | [사당·방배 녹음실 안내](/stories/sadang1) | [여의도 녹음실 안내](/stories/yeouido1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

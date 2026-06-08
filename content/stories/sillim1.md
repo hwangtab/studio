@@ -165,4 +165,4 @@ faq:
 
 ---
 
-[관악구 녹음실 안내](/stories/seoul1) | [사당·방배 녹음실 안내](/stories/seoul1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[관악구 녹음실 안내](/stories/seoul1) | [사당·방배 녹음실 안내](/stories/sadang1) | [동작구 녹음실 안내](/stories/dongjak1) | [서초구 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

@@ -132,4 +132,4 @@ faq:
 
 ---
 
-[강서구·양천구 음악연습실](/stories/seoul1) | [동대문·성동·광진구 음악연습실](/stories/seoul1) | [강북·도봉·노원구 음악연습실](/stories/seoul1) | [강남·서초구 음악연습실](/stories/seoul1) | [구로·금천·영등포 음악연습실](/stories/seoul1) | [종로구·중구 음악연습실](/stories/seoul1) | [신촌·이대·서대문구 음악연습실](/stories/seoul1) | [관악구·동작구 음악연습실](/stories/seoul1) | [용산·이태원·한남 음악연습실](/stories/seoul1) | [송파구·잠실 음악연습실](/stories/seoul1)
+[강서구·양천구 음악연습실](/stories/practice-room-gangseo1) | [동대문·성동·광진구 음악연습실](/stories/practice-room-dongdaemun1) | [강북·도봉·노원구 음악연습실](/stories/practice-room-gangbuk1) | [강남·서초구 음악연습실](/stories/practice-room-gangnam1) | [구로·금천·영등포 음악연습실](/stories/practice-room-guro1) | [종로구·중구 음악연습실](/stories/practice-room-jongno1) | [신촌·이대·서대문구 음악연습실](/stories/practice-room-sinchon1) | [관악구·동작구 음악연습실](/stories/practice-room-gwanak1) | [용산·이태원·한남 음악연습실](/stories/practice-room-yongsan1) | [송파구·잠실 음악연습실](/stories/practice-room-songpa1)

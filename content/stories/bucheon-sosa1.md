@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[부천 녹음실 안내](/stories/gyeonggi1) | [인천·부천 녹음실 안내](/stories/incheon1) | [시흥 은계·정왕 녹음실 안내](/stories/gyeonggi1) | [광명·과천·의왕 녹음실 안내](/stories/gyeonggi1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[부천 녹음실 안내](/stories/gyeonggi1) | [인천·부천 녹음실 안내](/stories/incheon1) | [시흥 은계·정왕 녹음실 안내](/stories/siheung-eungye1) | [광명·과천·의왕 녹음실 안내](/stories/gwangmyeong1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

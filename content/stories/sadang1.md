@@ -154,4 +154,4 @@ faq:
 
 ---
 
-[동작구 녹음실 안내](/stories/dongjak1) | [관악구 녹음실 안내](/stories/seoul1) | [서초구 녹음실 안내](/stories/seoul1) | [강남 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)
+[동작구 녹음실 안내](/stories/dongjak1) | [관악구 녹음실 안내](/stories/sillim1) | [서초구 녹음실 안내](/stories/seoul1) | [강남 녹음실 안내](/stories/seoul1) | [수도권 녹음실 가이드](/stories/seoul-metro-guide1)

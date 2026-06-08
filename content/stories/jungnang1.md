@@ -118,4 +118,4 @@ faq:
 
 ---
 
-[중랑구 면목·중화·묵동 녹음실 안내](/stories/seoul1) | [신내·망우·상봉·묵동 녹음실 안내](/stories/seoul1) | [노원구 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/seoul1)
+[중랑구 면목·중화·묵동 녹음실 안내](/stories/jungnang-myeonmok1) | [신내·망우·상봉·묵동 녹음실 안내](/stories/jungnang-sinnae1) | [노원구 녹음실 안내](/stories/seoul1) | [성북구 녹음실 안내](/stories/gileum1)
