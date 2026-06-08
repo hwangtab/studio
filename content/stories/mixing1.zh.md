@@ -84,7 +84,7 @@ thumbnail: /images/hardware1.webp
 
 ### 混音课程系列导航
 
-* [第 1 部 混音是什么](/stories/mixing1) · [第 2 部 增益分段](/stories/mixing2) · [第 3 部 相位](/stories/mixing3) · [第 4 部 EQ 基础](/stories/mixing4) · [第 5 部 EQ 实战](/stories/mixing5) · [第 6 部 动态压缩](/stories/mixing6) · [第 7 部 压缩实战](/stories/mixing7) · [第 8 部 多段压缩](/stories/mixing8) · [第 9 部 侧链](/stories/mixing9) · [第 10 部 限制器](/stories/mixing10)
+* **第 1 部 混音是什么** · [第 2 部 增益分段](/stories/mixing2) · [第 3 部 相位](/stories/mixing3) · [第 4 部 EQ 基础](/stories/mixing4) · [第 5 部 EQ 实战](/stories/mixing5) · [第 6 部 动态压缩](/stories/mixing6) · [第 7 部 压缩实战](/stories/mixing7) · [第 8 部 多段压缩](/stories/mixing8) · [第 9 部 侧链](/stories/mixing9) · [第 10 部 限制器](/stories/mixing10)
 * [第 11 部 扩展器·门](/stories/mixing11) · [第 12 部 饱和与真空管](/stories/mixing12) · [第 13 部 声像](/stories/mixing13) · [第 14 部 立体声成像](/stories/mixing14) · [第 15 部 参考曲](/stories/mixing15) · [第 16 部 增益检查](/stories/mixing16) · [第 17 部 总线处理](/stories/mixing17) · [第 18 部 混响](/stories/mixing18) · [第 19 部 延迟](/stories/mixing19) · [第 20 部 调制](/stories/mixing20)
 * [第 21 部 饱和·失真](/stories/mixing21) · [第 22 部 自动化](/stories/mixing22) · [第 23 部 母带](/stories/mixing23)
 * [📚 混音完全指南（全系路线图）](/stories/mixing-complete-guide)
@@ -99,5 +99,5 @@ Studio NOL 位于首尔恩平区，距连新内（Yeonsinnae）站步行 5 分�
 * 想边学边练？[一对一混音课程](/lesson) 按你的作品节奏定制学习进度。
 * 想加入社群？关注我们每周一发布的 Bulgwang Mixing Club 名额公告。
 
-对课程内容有疑问或想预约课程，可通过 KakaoTalk 频道 “连新内 Studio NOL” 联系，或发短信至 0507-1384-3144。每一集课程都会在开头的 summary 里标明重点；如果你是第一次接触混音，建议从 [第 1 部](/stories/mixing1) 顺序阅读，每集学完一个概念、回到 DAW 动手试一次，再看下一集——这是我们最推荐的节奏。
+对课程内容有疑问或想预约课程，可通过 KakaoTalk 频道 “连新内 Studio NOL” 联系，或发短信至 0507-1384-3144。每一集课程都会在开头的 summary 里标明重点；如果你是第一次接触混音，建议从 **第 1 部** 顺序阅读，每集学完一个概念、回到 DAW 动手试一次，再看下一集——这是我们最推荐的节奏。
 

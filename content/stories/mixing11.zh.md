@@ -69,7 +69,7 @@ thumbnail: /images/recording8.webp
 ### 混音课程系列导航
 
 * [第 1 部 混音是什么](/stories/mixing1) · [第 2 部 增益分段](/stories/mixing2) · [第 3 部 相位](/stories/mixing3) · [第 4 部 EQ 基础](/stories/mixing4) · [第 5 部 EQ 实战](/stories/mixing5) · [第 6 部 动态压缩](/stories/mixing6) · [第 7 部 压缩实战](/stories/mixing7) · [第 8 部 多段压缩](/stories/mixing8) · [第 9 部 侧链](/stories/mixing9) · [第 10 部 限制器](/stories/mixing10)
-* [第 11 部 扩展器·门](/stories/mixing11) · [第 12 部 饱和与真空管](/stories/mixing12) · [第 13 部 声像](/stories/mixing13) · [第 14 部 立体声成像](/stories/mixing14) · [第 15 部 参考曲](/stories/mixing15) · [第 16 部 增益检查](/stories/mixing16) · [第 17 部 总线处理](/stories/mixing17) · [第 18 部 混响](/stories/mixing18) · [第 19 部 延迟](/stories/mixing19) · [第 20 部 调制](/stories/mixing20)
+* **第 11 部 扩展器·门** · [第 12 部 饱和与真空管](/stories/mixing12) · [第 13 部 声像](/stories/mixing13) · [第 14 部 立体声成像](/stories/mixing14) · [第 15 部 参考曲](/stories/mixing15) · [第 16 部 增益检查](/stories/mixing16) · [第 17 部 总线处理](/stories/mixing17) · [第 18 部 混响](/stories/mixing18) · [第 19 部 延迟](/stories/mixing19) · [第 20 部 调制](/stories/mixing20)
 * [第 21 部 饱和·失真](/stories/mixing21) · [第 22 部 自动化](/stories/mixing22) · [第 23 部 母带](/stories/mixing23)
 * [📚 混音完全指南（全系路线图）](/stories/mixing-complete-guide)
 

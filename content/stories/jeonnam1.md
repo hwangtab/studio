@@ -133,4 +133,4 @@ KTX 광주송정·목포·순천역 → 서울역 → 6호선 → 연신내.
 
 ---
 
-[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [목포에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [여수에서 서울 녹음실 방문 가이드](/stories/jeonnam1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[광주에서 서울 녹음실 방문 가이드](/stories/gwangju1) | [목포에서 서울 녹음실 방문 가이드](/stories/mokpo1) | [여수에서 서울 녹음실 방문 가이드](/stories/yeosu1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
