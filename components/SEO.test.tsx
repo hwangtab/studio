@@ -59,4 +59,43 @@ describe('SEO alternates', () => {
     expect(document.head.querySelector('link[rel="canonical"]')).toBeTruthy();
     expect(document.head.querySelector('link[rel="alternate"]')).toBeNull();
   });
+
+  it('keeps canonical query params in alternate URLs', () => {
+    useRouterMock.mockReturnValue({
+      asPath: '/ko/stories?page=2',
+    });
+
+    render(
+      <SEO
+        locale="ko"
+        title="Stories Page 2"
+        description="Paginated story list"
+        canonical="/ko/stories?page=2"
+      />
+    );
+
+    expect(document.head.querySelector('link[hreflang="ko"]')?.getAttribute('href'))
+      .toBe('https://studionol.co.kr/ko/stories?page=2');
+    expect(document.head.querySelector('link[hreflang="x-default"]')?.getAttribute('href'))
+      .toBe('https://studionol.co.kr/ko/stories?page=2');
+  });
+
+  it('does not emit hreflang alternates when no indexable locale is available', () => {
+    useRouterMock.mockReturnValue({
+      asPath: '/en/stories/en-only',
+    });
+
+    render(
+      <SEO
+        locale="en"
+        title="English Only"
+        description="English only noindex page"
+        canonical="/en/stories/en-only"
+        availableLocales={['en'] as const}
+      />
+    );
+
+    expect(document.head.querySelector('link[rel="alternate"]')).toBeNull();
+    expect(document.head.querySelector('meta[property="og:locale:alternate"]')).toBeNull();
+  });
 });

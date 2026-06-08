@@ -168,6 +168,34 @@ const SEO = ({
       ? canonicalUrl.slice(0, -1)
       : canonicalUrl;
 
+  const alternatePath = React.useMemo(() => {
+    try {
+      const url = new URL(normalizedCanonical);
+      if (url.origin !== siteUrl) {
+        return pathWithoutLocale;
+      }
+
+      const urlSegments = url.pathname.split('/');
+      const path =
+        locales.includes(urlSegments[1] as Locale)
+          ? `/${urlSegments.slice(2).join('/')}`
+          : url.pathname;
+
+      const normalizedPath = path === '//' || path === '' ? '/' : path;
+      return `${normalizedPath}${url.search}`;
+    } catch {
+      return pathWithoutLocale;
+    }
+  }, [normalizedCanonical, pathWithoutLocale, siteUrl]);
+
+  const indexableAlternateLocales = React.useMemo(
+    () =>
+      locales
+        .filter((candidateLocale) => candidateLocale === defaultLocale)
+        .filter((candidateLocale) => !availableLocales || availableLocales.includes(candidateLocale)),
+    [availableLocales]
+  );
+
   const defaultSchema = React.useMemo(
     () => generateDefaultSchema(siteUrl, currentLocale),
     [siteUrl, currentLocale]
@@ -376,34 +404,26 @@ const SEO = ({
           hreflang alternate에서도 제외 — Google 가이드: hreflang은 indexable URL만 가리켜야
           모순 시그널이 안 생긴다. */}
       {shouldRenderAlternates && (
-        locales
-          .filter((locale) => locale === defaultLocale)
-          .filter((locale) => !availableLocales || availableLocales.includes(locale))
-          .map((locale) => (
+        indexableAlternateLocales
+          .map((alternateLocale) => (
             <link
-              key={`hreflang-${locale}`}
+              key={`hreflang-${alternateLocale}`}
               rel="alternate"
-              hrefLang={hreflangByLocale[locale]}
-              href={`${siteUrl}/${locale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+              hrefLang={hreflangByLocale[alternateLocale]}
+              href={`${siteUrl}/${alternateLocale}${alternatePath === '/' ? '' : alternatePath}`}
             />
           ))
       )}
-      {shouldRenderAlternates && (() => {
+      {shouldRenderAlternates && indexableAlternateLocales.includes(defaultLocale) && (() => {
         // x-default 우선순위:
-        // 1) availableLocales 미명시 또는 ko 포함 → ko (기존 동작)
-        // 2) ko 미포함이지만 en 포함 → en (글로벌 fallback)
-        // 3) 그 외 → availableLocales 첫 번째
-        // ko 원본 없는 native 글(예: en-only, zh-only 가이드)이 x-default를 404로 가리키던
-        // 부정합 해소.
-        const xDefaultLocale =
-          (!availableLocales || availableLocales.includes(defaultLocale))
-            ? defaultLocale
-            : (availableLocales.includes('en') ? 'en' : (availableLocales[0] ?? defaultLocale));
+        // site-wide indexable locale인 ko만 x-default로 발행. non-ko는 noindex라
+        // x-default 대상이 되면 hreflang이 비색인 URL을 가리키는 모순 신호가 된다.
+        const xDefaultLocale = defaultLocale;
         return (
           <link
             rel="alternate"
             hrefLang="x-default"
-            href={`${siteUrl}/${xDefaultLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`}
+            href={`${siteUrl}/${xDefaultLocale}${alternatePath === '/' ? '' : alternatePath}`}
           />
         );
       })()}
@@ -427,8 +447,8 @@ const SEO = ({
       <meta property="og:site_name" content={siteConfig.name} />
 
       {/* Alternate locales in OG */}
-      {locales.filter(l => l !== currentLocale).map(locale => (
-        <meta key={`og-locale-alt-${locale}`} property="og:locale:alternate" content={ogLocaleByLocale[locale]} />
+      {indexableAlternateLocales.filter(alternateLocale => alternateLocale !== currentLocale).map(alternateLocale => (
+        <meta key={`og-locale-alt-${alternateLocale}`} property="og:locale:alternate" content={ogLocaleByLocale[alternateLocale]} />
       ))}
 
       {ogType === 'article' && articlePublishedTime && (

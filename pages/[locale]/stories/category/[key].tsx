@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -27,18 +27,25 @@ type CategoryKey = StoryCategoryKey;
 interface StoriesCategoryPageProps {
   locale: Locale;
   categoryKey: CategoryKey;
-  stories: StoryCardData[];
+  initialStories: StoryCardData[];
+  storyLinks: Pick<StoryCardData, 'slug' | 'title'>[];
+  storyCount: number;
   allStoriesCount: number;
+  totalPages: number;
 }
 
 const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
-  locale, categoryKey, stories, allStoriesCount,
+  locale, categoryKey, initialStories, storyLinks, storyCount, allStoriesCount, totalPages: initialTotalPages,
 }) => {
   const router = useRouter();
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = useMemo(() => getSiteConfig(locale).url, [locale]);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [stories, setStories] = useState<StoryCardData[]>(initialStories);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const [totalItems, setTotalItems] = useState(storyCount);
+  const [isLoadingStories, setIsLoadingStories] = useState(false);
 
   const categoryLabel = t(`stories.categories.${categoryKey}`);
   const seoTitle = t('stories.categoryHub.seoTitle', {
@@ -47,16 +54,11 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
   });
   const seoDescription = t('stories.categoryHub.seoDescription', {
     category: categoryLabel,
-    count: stories.length,
-    defaultValue: `${stories.length} Studio NOL stories about ${categoryLabel}.`,
+    count: storyCount,
+    defaultValue: `${storyCount} Studio NOL stories about ${categoryLabel}.`,
   });
 
-  const totalPages = Math.ceil(stories.length / ITEMS_PER_PAGE);
   const currentPage = normalizePageNumber(router.query.page, totalPages);
-  const visibleStories = useMemo(
-    () => stories.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE),
-    [stories, currentPage]
-  );
 
   const storyCardLabels = useMemo(() => ({
     defaultCategory: t('stories.list.defaultCategory'),
@@ -69,7 +71,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
   }), [t]);
 
   const itemListSchema = useMemo(() => generateItemListSchema(
-    stories.slice(0, 50).map((story) => ({
+    stories.map((story) => ({
       id: story.slug,
       name: story.title,
       url: `${siteUrl}/${locale}/stories/${story.slug}`,
@@ -103,6 +105,44 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const controller = new AbortController();
+    const loadStories = async () => {
+      setIsLoadingStories(true);
+      try {
+        const params = new URLSearchParams({
+          locale,
+          category: categoryKey,
+          page: String(currentPage),
+          pageSize: String(ITEMS_PER_PAGE),
+        });
+        const response = await fetch(`/api/stories/catalog?${params.toString()}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`Story catalog request failed: ${response.status}`);
+        const data = await response.json() as {
+          stories: StoryCardData[];
+          totalItems: number;
+          totalPages: number;
+        };
+        setStories(data.stories);
+        setTotalItems(data.totalItems);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error(error);
+        }
+      } finally {
+        setIsLoadingStories(false);
+      }
+    };
+
+    void loadStories();
+    return () => controller.abort();
+  }, [categoryKey, currentPage, locale, router.isReady]);
+
   return (
     <>
       <SEO
@@ -116,9 +156,8 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         ogImageHeight={630}
         includeSchema
         webPageType="CollectionPage"
-        schema={itemListSchema}
+        schema={currentPage === 1 ? itemListSchema : undefined}
         canonical={canonicalPath}
-        robots={currentPage > 1 ? 'noindex, follow' : undefined}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.stories'), path: `/${locale}/stories` },
@@ -137,8 +176,8 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         title={categoryLabel}
         subtitle={t('stories.categoryHub.subtitle', {
           category: categoryLabel,
-          count: stories.length,
-          defaultValue: `${stories.length} stories about ${categoryLabel}`,
+          count: storyCount,
+          defaultValue: `${storyCount} stories about ${categoryLabel}`,
         })}
         backgroundImage="/images/studio1.webp"
         imageAlt={t('stories.hero.alt')}
@@ -151,6 +190,9 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
         ]}
       />
       <Section variant="default">
+        <p aria-live="polite" aria-atomic="true" className="sr-only">
+          {isLoadingStories ? t('common.loading', { defaultValue: 'Loading' }) : `${totalItems} ${categoryLabel}`}
+        </p>
         <div ref={sectionRef}>
           <div className="mb-8">
             <Link
@@ -172,8 +214,8 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           ) : (
             <>
               <h2 className="sr-only">{categoryLabel}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {visibleStories.map((story) => (
+              <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-opacity duration-200 ${isLoadingStories ? 'opacity-60' : 'opacity-100'}`}>
+                {stories.map((story) => (
                   <StoryCard
                     key={story.slug}
                     story={story}
@@ -198,7 +240,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
 
           <nav aria-label={`${categoryLabel} stories`} className="sr-only">
             <ul>
-              {stories.map((story) => (
+              {storyLinks.map((story) => (
                 <li key={story.slug}>
                   <a href={`/${locale}/stories/${story.slug}`}>{story.title}</a>
                 </li>
@@ -260,7 +302,7 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
   // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
   const filtered = allStories.filter((story) => story.categoryKey === key && isListableStory(story));
   // __NEXT_DATA__ 크기 절감: Story 전체 객체 대신 StoryCard에 필요한 필드만 직렬화.
-  const stories: StoryCardData[] = filtered.map((story, idx) => ({
+  const toStoryCardData = (story: typeof filtered[number]): StoryCardData => ({
     slug: story.slug,
     id: story.id,
     title: story.title,
@@ -268,15 +310,23 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
     categoryKey: story.categoryKey,
     category: story.category,
     thumbnail: story.thumbnail,
-    ...(idx < 50 && story.summary ? { summary: story.summary } : {}),
+    ...(story.summary ? { summary: story.summary } : {}),
+  });
+  const initialStories = filtered.slice(0, 12).map(toStoryCardData);
+  const storyLinks = filtered.slice(0, 50).map((story) => ({
+    slug: story.slug,
+    title: story.title,
   }));
 
   return buildPageStaticProps(
     locale,
     {
       categoryKey: key,
-      stories,
+      initialStories,
+      storyLinks,
+      storyCount: filtered.length,
       allStoriesCount: allStories.length,
+      totalPages: Math.max(1, Math.ceil(filtered.length / 12)),
     },
     { revalidate: 3600, i18nSections: ['stories', 'pricing'] }
   );

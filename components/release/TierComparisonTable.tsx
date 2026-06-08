@@ -15,6 +15,33 @@ interface TierComparisonTableProps {
 
 type Tier = 'single' | 'ep' | 'album';
 const TIERS: Tier[] = ['single', 'ep', 'album'];
+const FALLBACK_ROW_LABELS = {
+  duration: 'Timeline',
+  basePrice: 'Base price',
+  trackCount: 'Tracks',
+  persona: 'Best for',
+  keyDeliverables: 'Key deliverables',
+};
+const FALLBACK_VALUES: Record<Tier, { trackCount: string; persona: string; keyDeliverables: string }> = {
+  single: {
+    trackCount: '1 track',
+    persona: 'Testing one strong song',
+    keyDeliverables: 'Recording, mixing, mastering, and release setup',
+  },
+  ep: {
+    trackCount: '3-5 tracks',
+    persona: 'Building a compact release identity',
+    keyDeliverables: 'A&R, unified sound, release planning, and promotion basics',
+  },
+  album: {
+    trackCount: 'Around 8 tracks',
+    persona: 'Making a full artistic statement',
+    keyDeliverables: 'A&R, sequencing, listening session, and grant support',
+  },
+};
+
+const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
  * 3티어(싱글·EP·정규) 비교표 — 호흡·베이스 단가·곡수·페르소나·핵심 포함을 한눈에.
@@ -24,17 +51,20 @@ const TIERS: Tier[] = ['single', 'ep', 'album'];
 const TierComparisonTable: React.FC<TierComparisonTableProps> = ({ locale, highlightTier }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
-  const rowLabels = t('releaseProject.tiers.comparisonTable.rowLabels', { returnObjects: true }) as {
-    duration: string;
-    basePrice: string;
-    trackCount: string;
-    persona: string;
-    keyDeliverables: string;
-  };
-  const values = t('releaseProject.tiers.comparisonTable.values', { returnObjects: true }) as Record<
-    Tier,
-    { trackCount: string; persona: string; keyDeliverables: string }
-  >;
+  const rawRowLabels = t('releaseProject.tiers.comparisonTable.rowLabels', { returnObjects: true });
+  const rawValues = t('releaseProject.tiers.comparisonTable.values', { returnObjects: true });
+  const rowLabels = {
+    ...FALLBACK_ROW_LABELS,
+    ...(isObjectRecord(rawRowLabels) ? rawRowLabels : {}),
+  } as typeof FALLBACK_ROW_LABELS;
+  const values = TIERS.reduce((acc, tier) => {
+    const tierValues = isObjectRecord(rawValues) ? rawValues[tier] : null;
+    acc[tier] = {
+      ...FALLBACK_VALUES[tier],
+      ...(isObjectRecord(tierValues) ? tierValues : {}),
+    };
+    return acc;
+  }, {} as Record<Tier, { trackCount: string; persona: string; keyDeliverables: string }>);
 
   return (
     <div className="max-w-5xl mx-auto overflow-x-auto">

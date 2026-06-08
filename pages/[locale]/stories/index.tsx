@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
@@ -35,56 +35,55 @@ type StoryListItem = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'th
 
 interface StoriesPageProps {
   locale: Locale;
-  stories: StoryListItem[];
+  initialStories: StoryListItem[];
+  recentStories: Pick<StoryListItem, 'slug' | 'title'>[];
+  categoryKeys: string[];
+  totalStories: number;
+  totalPages: number;
 }
 
-const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) => {
+const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
+  locale,
+  initialStories,
+  recentStories,
+  categoryKeys,
+  totalStories,
+  totalPages: initialTotalPages,
+}) => {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [pageAnnouncement, setPageAnnouncement] = useState('');
+  const [stories, setStories] = useState<StoryListItem[]>(initialStories);
+  const [totalItems, setTotalItems] = useState(totalStories);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const [isLoadingStories, setIsLoadingStories] = useState(false);
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
 
-  const storiesItemListSchema = React.useMemo(() => {
-    const top = stories.slice(0, 50);
-    return generateItemListSchema(
-      top.map((story) => ({
-        id: story.slug,
-        name: story.title,
-        url: `${siteUrl}/${locale}/stories/${story.slug}`,
-        image: story.thumbnail ?? undefined,
-        description: story.summary,
-      })),
-      siteUrl,
-      locale,
-      t('nav.stories')
-    );
-  }, [stories, locale, siteUrl, t]);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-
   const categories = useMemo(() => {
-    const uniqueKeys = new Set(stories.map((story) => story.categoryKey).filter(Boolean));
-    return Array.from(uniqueKeys).map(key => ({
+    return categoryKeys.map(key => ({
       id: key,
       label: t(`stories.categories.${key}`)
     }));
-  }, [stories, t]);
+  }, [categoryKeys, t]);
 
-  const filteredStories = useMemo(() => {
-    if (activeCategory === 'all') return stories;
-    return stories.filter((story) => story.categoryKey === activeCategory);
-  }, [stories, activeCategory]);
-
-  const totalPages = Math.ceil(filteredStories.length / ITEMS_PER_PAGE);
   const currentPage = normalizePageNumber(router.query.page, totalPages);
 
-  const visibleStories = useMemo(
-    () => filteredStories.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE),
-    [filteredStories, currentPage]
-  );
-
+  const storiesItemListSchema = React.useMemo(() => generateItemListSchema(
+    stories.map((story) => ({
+      id: story.slug,
+      name: story.title,
+      url: `${siteUrl}/${locale}/stories/${story.slug}`,
+      image: story.thumbnail ?? undefined,
+      description: story.summary,
+    })),
+    siteUrl,
+    locale,
+    t('nav.stories')
+  ), [stories, locale, siteUrl, t]);
 
   const storyCardLabels = useMemo(
     () => ({
@@ -101,12 +100,52 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
 
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
+    setPageAnnouncement('');
     router.push(
       { pathname: router.pathname, query: { locale: router.query.locale } },
       undefined,
       { shallow: true }
     );
   };
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const controller = new AbortController();
+    const loadStories = async () => {
+      setIsLoadingStories(true);
+      try {
+        const params = new URLSearchParams({
+          locale,
+          category: activeCategory,
+          page: String(currentPage),
+          pageSize: String(ITEMS_PER_PAGE),
+        });
+        const response = await fetch(`/api/stories/catalog?${params.toString()}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`Story catalog request failed: ${response.status}`);
+        const data = await response.json() as {
+          stories: StoryListItem[];
+          totalItems: number;
+          totalPages: number;
+          page: number;
+        };
+        setStories(data.stories);
+        setTotalItems(data.totalItems);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error(error);
+        }
+      } finally {
+        setIsLoadingStories(false);
+      }
+    };
+
+    void loadStories();
+    return () => controller.abort();
+  }, [activeCategory, currentPage, locale, router.isReady]);
 
   const handlePageChange = (page: number) => {
     const query: Record<string, string | number> = { locale: router.query.locale as string };
@@ -120,11 +159,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
     }
   };
 
-  // 페이지별 self-referencing canonical — Google이 rel=prev/next를 더 이상 공식 지원하지 않으므로
-  // 각 페이지 고유 콘텐츠가 색인되도록 canonical을 페이지마다 분리한다.
-  const canonicalUrl = currentPage > 1
-    ? `/${locale}/stories?page=${currentPage}`
-    : `/${locale}/stories`;
+  // Query 기반 페이지네이션은 SSG 원본 HTML에서 항상 1페이지로 렌더된다.
+  // 따라서 ?page=2+는 noindex 대신 대표 목록 canonical로 통합하고, 클라이언트 렌더 후
+  // 현재 화면과 어긋날 수 있는 ItemList만 제거한다.
+  const canonicalUrl = `/${locale}/stories`;
 
   const prevUrl = currentPage > 1
     ? `${siteUrl}/${locale}/stories${currentPage - 1 > 1 ? `?page=${currentPage - 1}` : ''}`
@@ -146,7 +184,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
         ogImageHeight={630}
         includeSchema
         webPageType="CollectionPage"
-        schema={storiesItemListSchema}
+        schema={currentPage === 1 ? storiesItemListSchema : undefined}
         canonical={canonicalUrl}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
@@ -175,6 +213,9 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
       />
       <Section variant="default">
         <p aria-live="polite" aria-atomic="true" className="sr-only">{pageAnnouncement}</p>
+        <p aria-live="polite" aria-atomic="true" className="sr-only">
+          {isLoadingStories ? t('common.loading', { defaultValue: 'Loading' }) : `${totalItems} ${t('nav.stories')}`}
+        </p>
         <div ref={sectionRef}>
           <div className="mb-8">
             <CategoryFilter
@@ -196,7 +237,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
             </ul>
           </nav>
 
-          {filteredStories.length === 0 ? (
+          {stories.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-gray-400 text-2xl mb-4">📭</div>
               <h2 className="typo-card-title mb-4 text-gray-800 dark:text-white">
@@ -215,8 +256,8 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
                   ? t('nav.stories')
                   : t(`stories.categories.${activeCategory}`)}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {visibleStories.map((story) => (
+              <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-opacity duration-200 ${isLoadingStories ? 'opacity-60' : 'opacity-100'}`}>
+                {stories.map((story) => (
                   <StoryCard
                     key={story.slug}
                     story={story}
@@ -243,7 +284,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({ locale, stories }) 
               여기는 허브 신호 강화용 상위 50개만 렌더한다. (성능: DOM 1707→50, TBT 대폭 감소) */}
           <nav aria-label="Recent stories" className="sr-only">
             <ul>
-              {stories.slice(0, 50).map((story) => (
+              {recentStories.map((story) => (
                 <li key={story.slug}>
                   <a href={`/${locale}/stories/${story.slug}`}>{story.title}</a>
                 </li>
@@ -311,24 +352,32 @@ export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params 
   const locale = resolveLocaleParam(params?.locale);
   // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
   const fullStories = getAllStories(locale).filter(isListableStory);
+  const categoryKeys = STORY_CATEGORY_KEYS.filter((key) =>
+    fullStories.some((story) => story.categoryKey === key)
+  );
 
-  // 목록 페이지에 필요한 필드만 추출.
-  // - summary: 상위 50개만 포함(스키마 + 첫 페이지 카드용). 나머지는 생략하여 payload 대폭 축소.
-  //   JSON 전체 크기가 ~540KB → ~250KB 예상. Hydration TBT 대폭 감소.
-  // - category 라벨은 제거 (StoryCard가 i18n labels.categoryByKey를 우선 사용).
-  const stories: StoryListItem[] = fullStories.map((s, idx) => ({
+  const toStoryListItem = (s: Story): StoryListItem => ({
     slug: s.slug,
     title: s.title,
     date: s.date,
     categoryKey: s.categoryKey,
     thumbnail: s.thumbnail,
-    ...(idx < 50 && s.summary ? { summary: s.summary } : {}),
+    ...(s.summary ? { summary: s.summary } : {}),
+  });
+  const initialStories = fullStories.slice(0, 12).map(toStoryListItem);
+  const recentStories = fullStories.slice(0, 50).map((s) => ({
+    slug: s.slug,
+    title: s.title,
   }));
 
   return buildPageStaticProps(
     locale,
     {
-      stories,
+      initialStories,
+      recentStories,
+      categoryKeys,
+      totalStories: fullStories.length,
+      totalPages: Math.max(1, Math.ceil(fullStories.length / 12)),
     },
     { revalidate: 1800, i18nSections: ['stories', 'pricing'] }
   );
