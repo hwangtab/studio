@@ -27,6 +27,8 @@ inlineFallback:
 
 ---
 
+%%service:wedding%%
+
 ## 축가 선곡 기준
 
 ### 피로연 분위기에 맞는 곡
