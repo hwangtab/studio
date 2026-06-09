@@ -55,6 +55,8 @@ inlineFallback:
 
 ---
 
+%%service:lesson%%
+
 ## 시작 로드맵
 
 - **Step 1**: DAW 선택 및 기초 학습 (1~2개월)
