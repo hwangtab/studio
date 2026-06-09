@@ -41,6 +41,8 @@ faq:
 
 ---
 
+%%service:recording%%
+
 ## 리버브 종류
 
 ### 홀 리버브 (Hall)

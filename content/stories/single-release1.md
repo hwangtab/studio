@@ -41,6 +41,8 @@ faq:
 
 ---
 
+%%service:recording%%
+
 ## 싱글 발매 체크리스트
 
 ### 음원 파일

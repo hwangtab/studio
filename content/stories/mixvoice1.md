@@ -46,6 +46,8 @@ inlineFallback:
 
 ---
 
+%%service:practice%%
+
 ## 발성 레지스터 비교
 
 | 레지스터 | 특징 | 주로 쓰이는 음역 |

@@ -54,6 +54,8 @@ howTo:
 
 ---
 
+%%service:recording%%
+
 ## 보컬 마이크 배치
 
 ### 기본 세팅

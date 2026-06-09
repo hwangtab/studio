@@ -53,6 +53,8 @@ LA-2A의 탄생은 1965년 엔지니어 James F. Lawrence Jr.가 캘리포니아
 
 ---
 
+%%service:recording%%
+
 ## LA-2A 특성 — 자동 시간 상수
 
 ### Optical 컴프레서의 특징

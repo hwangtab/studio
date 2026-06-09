@@ -68,6 +68,8 @@ inlineFallback:
 
 ---
 
+%%service:practice%%
+
 ## 혼자 음역대 확인하는 방법
 
 ### 준비물

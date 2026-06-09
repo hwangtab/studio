@@ -41,6 +41,8 @@ faq:
 
 ---
 
+%%service:recording%%
+
 ## 킥 드럼 EQ
 
 | 주파수 | 처리 | 효과 |
