@@ -8,6 +8,11 @@ const CTR_TITLE_TARGETS: Record<string, string[]> = {
   'epk1.md': ['EPK 뜻', 'EPK 만드는 법'],
   'songstructure1.md': ['프리코러스', '송폼'],
   'audioformat1.md': ['WAV MP3 차이', 'MP3 WAV 차이'],
+  'headvoice1.md': ['두성 뜻', '두성 내는 법'],
+  'falsetto1.md': ['팔세토 뜻', '가성 내는 법'],
+  'session-musician1.md': ['세션 뜻', '세션 뮤지션'],
+  'noise-reduction1.md': ['홈레코딩', '녹음 잡음 제거'],
+  'mastering1.md': ['마스터링이란', '믹싱과 마스터링 차이'],
 };
 
 const getFrontmatterTitle = (file: string) => {

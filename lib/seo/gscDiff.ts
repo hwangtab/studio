@@ -155,6 +155,29 @@ function topKeepPages(snapshot: AuditSnapshot, limit: number): typeof snapshot.p
     .slice(0, limit);
 }
 
+interface CtrLeakPage extends PageEntry {
+  ctr: number;
+  expectedClicksAtThreePct: number;
+  clickGapAtThreePct: number;
+}
+
+function highImpressionLowCtrPages(snapshot: AuditSnapshot, limit: number): CtrLeakPage[] {
+  return snapshot.pages
+    .filter((p) => p.impressions >= 300 && p.clicks >= 0)
+    .map((p) => {
+      const expectedClicksAtThreePct = p.impressions * 0.03;
+      return {
+        ...p,
+        ctr: p.impressions > 0 ? p.clicks / p.impressions : 0,
+        expectedClicksAtThreePct,
+        clickGapAtThreePct: Math.max(0, expectedClicksAtThreePct - p.clicks),
+      };
+    })
+    .filter((p) => p.ctr < 0.02 && p.clickGapAtThreePct >= 5)
+    .sort((a, b) => b.clickGapAtThreePct - a.clickGapAtThreePct || b.impressions - a.impressions)
+    .slice(0, limit);
+}
+
 export function formatDiffReport(
   diff: AuditDiff,
   currDate: string,
@@ -206,6 +229,18 @@ export function formatDiffReport(
 
   // 클러스터별 breakdown
   if (currentSnapshot) {
+    const ctrLeaks = highImpressionLowCtrPages(currentSnapshot, 10);
+    if (ctrLeaks.length > 0) {
+      lines.push('[고노출 저CTR 페이지 — title/summary 우선 점검]');
+      lines.push('  기준: 90일 임프레션 300+ · CTR 2% 미만 · CTR 3% 대비 클릭 갭 5+');
+      for (const p of ctrLeaks) {
+        const ctrPct = (p.ctr * 100).toFixed(2);
+        const gap = Math.round(p.clickGapAtThreePct);
+        lines.push(`  ${p.clicks.toString().padStart(3)}c / ${p.impressions.toString().padStart(4)}i  CTR ${ctrPct}%  gap≈${gap}  ${p.title} (slug: ${p.slug})`);
+      }
+      lines.push('');
+    }
+
     lines.push('[클러스터별 상세]');
     const breakdown = buildClusterBreakdown(currentSnapshot);
     for (const c of breakdown) {
@@ -281,7 +316,7 @@ export function formatDiffReport(
 
   lines.push('');
   lines.push('---');
-  lines.push('자동 생성: /api/cron/gsc-audit (Vercel Cron, 매일 04:00 KST)');
+  lines.push('자동 생성: /api/cron/gsc-audit (Vercel Cron, 매주 월요일 04:00 KST)');
   lines.push('전체 데이터: docs/gsc-audit-output.csv (수동 audit 실행 시 갱신)');
   lines.push('수동 실행: curl /api/cron/gsc-audit + Bearer CRON_SECRET');
 
