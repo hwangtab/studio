@@ -1,44 +1,47 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",2409,0.387
-"mobile","South Korea",2026,0.432
-"desktop","(not set)",314,0.869
-"tablet","South Korea",92,0.402
-"desktop","China",76,0.868
-"desktop","Singapore",74,0.878
-"desktop","United States",59,0.695
-"mobile","China",56,0.554
-"mobile","United States",38,0.263
+"desktop","South Korea",2748,0.341
+"mobile","South Korea",2354,0.370
+"desktop","(not set)",372,0.737
+"tablet","South Korea",103,0.359
+"desktop","China",84,0.786
+"desktop","Singapore",76,0.855
+"mobile","China",69,0.449
+"desktop","United States",63,0.651
+"mobile","United States",42,0.238
+"desktop","Japan",19,0.316
 "desktop","Canada",16,0.313
-"desktop","Japan",16,0.375
+"mobile","Japan",16,0.250
 "mobile","(not set)",15,1.000
 "desktop","Hong Kong",13,0.846
-"mobile","Japan",13,0.308
-"desktop","",9,0.000
-"mobile","Vietnam",6,0.167
+"mobile","Vietnam",7,0.143
+"mobile","New Zealand",6,0.167
+"desktop","",5,0.000
 "desktop","India",5,0.600
 "desktop","New Zealand",5,0.600
 "mobile","Thailand",5,0.400
 "mobile","Australia",4,0.750
 "desktop","Vietnam",3,0.667
-"mobile","New Zealand",3,0.333
 "desktop","Philippines",2,0.500
 "desktop","Taiwan",2,0.500
+"mobile","Canada",2,0.000
 "mobile","Hong Kong",2,0.500
 "mobile","Indonesia",2,1.000
 "mobile","Singapore",2,0.000
 "tablet","United States",2,1.000
 "desktop","Australia",1,0.000
+"desktop","Bangladesh",1,0.000
 "desktop","Germany",1,1.000
 "desktop","Indonesia",1,1.000
 "desktop","Malaysia",1,0.000
+"desktop","Mexico",1,0.000
 "desktop","Myanmar (Burma)",1,1.000
 "desktop","Qatar",1,0.000
 "desktop","Saudi Arabia",1,1.000
 "desktop","Thailand",1,0.000
 "mobile","Albania",1,0.000
 "mobile","Cambodia",1,0.000
-"mobile","Canada",1,0.000
 "mobile","Costa Rica",1,0.000
+"mobile","Guam",1,0.000
 "mobile","Malaysia",1,0.000
 "mobile","Morocco",1,1.000
 "mobile","South Africa",1,0.000
@@ -46,5 +49,3 @@ device,country,sessions,bounce_rate
 "mobile","United Arab Emirates",1,0.000
 "mobile","Zambia",1,0.000
 "tablet","Australia",1,0.000
-"tablet","Indonesia",1,0.000
-"tablet","Türkiye",1,1.000

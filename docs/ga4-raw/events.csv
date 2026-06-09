@@ -1,6 +1,6 @@
 event_name,page_path,event_count
 "lead_form_field_error","/en/contact",12
-"lead_click_kakao","/ko/practice-room",5
+"lead_click_kakao","/ko/practice-room",9
 "lead_click_kakao","/en/contact",4
 "lead_click_kakao","/ko",4
 "lead_form_start","/en/contact",4
@@ -10,13 +10,16 @@ event_name,page_path,event_count
 "lead_click_kakao","/ko/stories/songstructure1",2
 "lead_form_field_error","/ko/contact",2
 "lead_form_start","/ko/contact",2
+"lead_click_kakao","/en",1
 "lead_click_kakao","/en/lesson",1
 "lead_click_kakao","/en/stories/korean-practice-room-booking-english",1
 "lead_click_kakao","/ko/lesson",1
+"lead_click_kakao","/ko/stories/distribution1",1
 "lead_click_kakao","/ko/stories/drum1",1
 "lead_click_kakao","/ko/stories/practice-room-keyboard1",1
 "lead_click_kakao","/ko/stories/recording-price1",1
 "lead_click_kakao","/ko/stories/singapp1",1
+"lead_click_kakao","/ko/stories/streaming-platforms1",1
 "lead_click_kakao","/ko/stories/studioone1",1
 "lead_click_kakao","/ko/voice-acting",1
 "lead_click_phone","/en",1
