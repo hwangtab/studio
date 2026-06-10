@@ -4,6 +4,7 @@ cta: practice
 date: 2026-05-25
 author: 스튜디오 놀
 category: 지역 가이드
+robots: 'noindex, follow'
 tags:
   - 대화역 음악연습실
   - 대화역 음악연습실
