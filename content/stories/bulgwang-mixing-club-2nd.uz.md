@@ -34,7 +34,7 @@ Bu safar kalit so'zlar — “ulashish” va “tajriba”. So'nggi loyihangizni
 
 ### 🚀 Qanday qo'shilish mumkin
 
-0507-1384-3144 raqamiga “I’m in for pizza-beer mixing!” deb SMS yuboring — tamom. Agar ulashmoqchi bo'lgan trek yoki taqqoslamoqchi bo'lgan reference bo'lsa, SMSda qisqa eslatma qoldiring.
+010-4255-7893 raqamiga “I’m in for pizza-beer mixing!” deb SMS yuboring — tamom. Agar ulashmoqchi bo'lgan trek yoki taqqoslamoqchi bo'lgan reference bo'lsa, SMSda qisqa eslatma qoldiring.
 
 Bu juma pizza va pivo bilan yanada zo'r bo'lgan Bulgwang Mixing Clubda ko'rishamiz!
 
@@ -58,5 +58,5 @@ Studio NOL — Seulning shimoli-gʻarbida, Yeonsinnae bekatidan 5 daqiqa piyoda 
 * [Miks va mastering xizmati narxlari](/pricing)
 * [Yeonsinnae mashq xonalari katalogi](/practice-room)
 
-Uchrashuvlar haqida savollar bo‘yicha Studio NOL Yeonsinnae ning KakaoTalk ochiq kanalidan foydalaning yoki 0507-1384-3144 raqamiga SMS yuboring. Dushanba e’lonlari haftaning ro‘yxatini yopadi, joylar tez to‘ladi.
+Uchrashuvlar haqida savollar bo‘yicha Studio NOL Yeonsinnae ning KakaoTalk ochiq kanalidan foydalaning yoki 010-4255-7893 raqamiga SMS yuboring. Dushanba e’lonlari haftaning ro‘yxatini yopadi, joylar tez to‘ladi.
 

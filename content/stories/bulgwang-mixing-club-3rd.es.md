@@ -40,7 +40,7 @@ Así que el tercer Bulgwang Mixing Club será el **viernes 28 de noviembre, 7:00
 
 ### 🚀 Cómo participar
 
-Envía un mensaje al 0507-1384-3144 diciendo “¡Me apunto al mixing del 11/28!”. Si tienes un track o un punto de mezcla para compartir, añádelo al mensaje.
+Envía un mensaje al 010-4255-7893 diciendo “¡Me apunto al mixing del 11/28!”. Si tienes un track o un punto de mezcla para compartir, añádelo al mensaje.
 
 Perdón por el cambio de fecha, pero también es prueba de que el estudio está a tope. ¡El 28 será aún mejor!
 
@@ -66,5 +66,5 @@ Studio NOL es un estudio boutique de grabación y mezcla situado a 5 minutos a p
 * [Precios del servicio de mezcla y masterización](/pricing)
 * [Directorio de salas de ensayo en Yeonsinnae](/practice-room)
 
-Para consultar sobre los encuentros, usa el canal de KakaoTalk Studio NOL Yeonsinnae o envía un SMS al 0507-1384-3144 para confirmar tu plaza. Los anuncios de los lunes fijan la lista de la semana y los cupos vuelan rápido.
+Para consultar sobre los encuentros, usa el canal de KakaoTalk Studio NOL Yeonsinnae o envía un SMS al 010-4255-7893 para confirmar tu plaza. Los anuncios de los lunes fijan la lista de la semana y los cupos vuelan rápido.
 

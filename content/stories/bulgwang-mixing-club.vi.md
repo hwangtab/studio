@@ -36,5 +36,5 @@ Chúng tôi mời bạn đến bữa tiệc đầy kích thích dành cho nhữn
 
 ### 🚀 Cách tham gia
 
-Nhắn tin đến 0507-1384-3144 với câu “I’m in!” thật dứt khoát.
+Nhắn tin đến 010-4255-7893 với câu “I’m in!” thật dứt khoát.
 Sẵn sàng cầm chuột và cầm đùi gà chưa? Hẹn gặp bạn tối thứ Sáu tại Studio NOL—chúng tôi nóng lòng cảm nhận đam mê của bạn.

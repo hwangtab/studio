@@ -34,7 +34,7 @@ Lịch “Bulgwang Mixing Club” được cập nhật mỗi thứ Hai. Hãy xe
 
 ### 🚀 Cách tham gia
 
-Nhắn tin 0507-1384-3144 với câu “I’m in for pizza-beer mixing!” là xong. Nếu có track muốn chia sẻ hoặc reference muốn so sánh, thêm ghi chú ngắn trong tin nhắn.
+Nhắn tin 010-4255-7893 với câu “I’m in for pizza-beer mixing!” là xong. Nếu có track muốn chia sẻ hoặc reference muốn so sánh, thêm ghi chú ngắn trong tin nhắn.
 
 Hẹn gặp bạn thứ Sáu này tại Bulgwang Mixing Club với pizza và bia mát lạnh!
 
@@ -58,5 +58,5 @@ Studio NOL là studio thu âm - mix boutique nằm cách ga Yeonsinnae 5 phút �
 * [Bảng giá dịch vụ mix và mastering](/pricing)
 * [Danh mục phòng tập Yeonsinnae](/practice-room)
 
-Để hỏi về các buổi gặp, hãy dùng kênh chat mở KakaoTalk của Studio NOL Yeonsinnae, hoặc nhắn tin SMS đến 0507-1384-3144 để xác nhận chỗ. Thông báo thứ Hai khóa danh sách của tuần và các suất trống rất nhanh hết.
+Để hỏi về các buổi gặp, hãy dùng kênh chat mở KakaoTalk của Studio NOL Yeonsinnae, hoặc nhắn tin SMS đến 010-4255-7893 để xác nhận chỗ. Thông báo thứ Hai khóa danh sách của tuần và các suất trống rất nhanh hết.
 
