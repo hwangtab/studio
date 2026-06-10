@@ -1,26 +1,26 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",2748,0.341
-"mobile","South Korea",2354,0.370
-"desktop","(not set)",372,0.737
-"tablet","South Korea",103,0.359
+"desktop","South Korea",2809,0.332
+"mobile","South Korea",2413,0.362
+"desktop","(not set)",395,0.694
+"tablet","South Korea",106,0.349
 "desktop","China",84,0.786
-"desktop","Singapore",76,0.855
-"mobile","China",69,0.449
+"desktop","Singapore",77,0.844
+"mobile","China",76,0.408
 "desktop","United States",63,0.651
 "mobile","United States",42,0.238
-"desktop","Japan",19,0.316
-"desktop","Canada",16,0.313
+"desktop","Japan",22,0.273
+"desktop","Canada",17,0.294
 "mobile","Japan",16,0.250
 "mobile","(not set)",15,1.000
 "desktop","Hong Kong",13,0.846
 "mobile","Vietnam",7,0.143
 "mobile","New Zealand",6,0.167
-"desktop","",5,0.000
 "desktop","India",5,0.600
 "desktop","New Zealand",5,0.600
 "mobile","Thailand",5,0.400
 "mobile","Australia",4,0.750
 "desktop","Vietnam",3,0.667
+"desktop","Australia",2,0.000
 "desktop","Philippines",2,0.500
 "desktop","Taiwan",2,0.500
 "mobile","Canada",2,0.000
@@ -28,7 +28,7 @@ device,country,sessions,bounce_rate
 "mobile","Indonesia",2,1.000
 "mobile","Singapore",2,0.000
 "tablet","United States",2,1.000
-"desktop","Australia",1,0.000
+"desktop","",1,0.000
 "desktop","Bangladesh",1,0.000
 "desktop","Germany",1,1.000
 "desktop","Indonesia",1,1.000

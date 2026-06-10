@@ -1,6 +1,6 @@
 page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/daw-choice1",daw-choice1,108,2233,4.84,7.1
-"https://studionol.co.kr/ko/practice-room",,89,2360,3.77,6.9
+"https://studionol.co.kr/ko/practice-room",,88,2356,3.74,6.9
 "https://studionol.co.kr/ko/stories/practice-room-startup1",practice-room-startup1,80,1318,6.07,5.1
 "https://studionol.co.kr/ko/stories/song-key1",song-key1,80,1752,4.57,6.5
 "https://studionol.co.kr/ko/stories/copyright-cover1",copyright-cover1,66,4789,1.38,5.2
@@ -22,7 +22,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/chord-progression1",chord-progression1,34,1270,2.68,6.5
 "https://studionol.co.kr/ko/stories/highnote1",highnote1,34,1495,2.27,7.7
 "https://studionol.co.kr/ko/stories/practice-room-monthly1",practice-room-monthly1,34,825,4.12,7.2
-"https://studionol.co.kr/ko",,33,437,7.55,6.0
+"https://studionol.co.kr/ko",,33,431,7.66,6.0
 "https://studionol.co.kr/ko/stories/delay-types1",delay-types1,33,762,4.33,5.7
 "https://studionol.co.kr/ko/stories/mixing-complete-guide",mixing-complete-guide,33,668,4.94,7.5
 "https://studionol.co.kr/ko/stories/drum-mixing1",drum-mixing1,32,686,4.66,6.4
@@ -67,7 +67,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/practice-room-vocal-soul1",practice-room-vocal-soul1,13,675,1.93,5.6
 "https://studionol.co.kr/ko/stories/practice-room-yongsan1",practice-room-yongsan1,13,113,11.50,5.6
 "https://studionol.co.kr/ko/stories/glossary1",glossary1,12,260,4.62,6.1
-"https://studionol.co.kr/ko/stories/mixing19",mixing19,12,387,3.10,8.1
+"https://studionol.co.kr/ko/stories/mixing19",mixing19,12,386,3.11,8.1
 "https://studionol.co.kr/ko/stories/music-analytics1",music-analytics1,12,250,4.80,7.7
 "https://studionol.co.kr/ko/stories/pitch-correction1",pitch-correction1,12,590,2.03,7.3
 "https://studionol.co.kr/ko/stories/practice-room-drum1",practice-room-drum1,12,407,2.95,8.1
@@ -86,7 +86,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/transpose1",transpose1,11,694,1.59,7.6
 "https://studionol.co.kr/ko/stories/breath-support1",breath-support1,10,489,2.04,6.9
 "https://studionol.co.kr/ko/stories/compression-guide1",compression-guide1,10,436,2.29,7.2
-"https://studionol.co.kr/ko/stories/mixing11",mixing11,10,538,1.86,5.5
+"https://studionol.co.kr/ko/stories/mixing11",mixing11,10,537,1.86,5.5
 "https://studionol.co.kr/ko/stories/practice-room-electric-guitar1",practice-room-electric-guitar1,10,170,5.88,7.9
 "https://studionol.co.kr/ko/stories/practice-schedule1",practice-schedule1,10,490,2.04,5.9
 "https://studionol.co.kr/ko/stories/record-deal1",record-deal1,10,216,4.63,6.4
@@ -142,7 +142,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/debut1",debut1,7,570,1.23,6.8
 "https://studionol.co.kr/ko/stories/ep-making1",ep-making1,7,322,2.17,6.9
 "https://studionol.co.kr/ko/stories/gugak-recording1",gugak-recording1,7,91,7.69,6.3
-"https://studionol.co.kr/ko/stories/mixing6",mixing6,7,447,1.57,8.0
+"https://studionol.co.kr/ko/stories/mixing6",mixing6,7,446,1.57,8.0
 "https://studionol.co.kr/ko/stories/practice-room-bass-tapping1",practice-room-bass-tapping1,7,179,3.91,5.8
 "https://studionol.co.kr/ko/stories/practice-room-busking1",practice-room-busking1,7,185,3.78,6.0
 "https://studionol.co.kr/ko/stories/practice-room-eunpyeong1",practice-room-eunpyeong1,7,85,8.24,7.5
@@ -197,7 +197,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/home-recording1",home-recording1,5,249,2.01,8.1
 "https://studionol.co.kr/ko/stories/livesound1",livesound1,5,132,3.79,8.1
 "https://studionol.co.kr/ko/stories/mix-delivery1",mix-delivery1,5,121,4.13,7.0
-"https://studionol.co.kr/ko/stories/mixing8",mixing8,5,173,2.89,7.7
+"https://studionol.co.kr/ko/stories/mixing8",mixing8,5,172,2.91,7.7
 "https://studionol.co.kr/ko/stories/orchestration1",orchestration1,5,130,3.85,7.7
 "https://studionol.co.kr/ko/stories/overdubbing1",overdubbing1,5,158,3.16,7.8
 "https://studionol.co.kr/ko/stories/placement1",placement1,5,356,1.40,5.9
@@ -230,7 +230,6 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/live-performance1",live-performance1,4,252,1.59,6.8
 "https://studionol.co.kr/ko/stories/mid-side1",mid-side1,4,92,4.35,4.8
 "https://studionol.co.kr/ko/stories/midi-composition1",midi-composition1,4,189,2.12,8.0
-"https://studionol.co.kr/ko/stories/mixing18",mixing18,4,224,1.79,7.6
 "https://studionol.co.kr/ko/stories/music-business1",music-business1,4,373,1.07,7.0
 "https://studionol.co.kr/ko/stories/music-grants1",music-grants1,4,103,3.88,6.9
 "https://studionol.co.kr/ko/stories/music-network1",music-network1,4,74,5.41,5.8
@@ -287,6 +286,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/limiter1",limiter1,3,133,2.26,6.9
 "https://studionol.co.kr/ko/stories/midi-arrangement1",midi-arrangement1,3,49,6.12,7.1
 "https://studionol.co.kr/ko/stories/mixedvoice1",mixedvoice1,3,155,1.94,6.5
+"https://studionol.co.kr/ko/stories/mixing18",mixing18,3,220,1.36,7.6
 "https://studionol.co.kr/ko/stories/mixing20",mixing20,3,43,6.98,5.7
 "https://studionol.co.kr/ko/stories/mixing7",mixing7,3,107,2.80,6.9
 "https://studionol.co.kr/ko/stories/music-pr1",music-pr1,3,108,2.78,7.6
@@ -338,10 +338,10 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/vocalcoach1",vocalcoach1,3,34,8.82,9.8
 "https://studionol.co.kr/ko/stories/voice-actor-demo1",voice-actor-demo1,3,181,1.66,7.9
 "https://studionol.co.kr/vi/stories/mixing15",mixing15,3,28,10.71,5.9
-"http://studionol.co.kr/",,2,120,1.67,5.9
+"http://studionol.co.kr/",,2,117,1.71,5.7
 "https://studionol.co.kr/ko/about",,2,134,1.49,4.9
 "https://studionol.co.kr/ko/contact",,2,75,2.67,3.8
-"https://studionol.co.kr/ko/pricing",,2,269,0.74,6.9
+"https://studionol.co.kr/ko/pricing",,2,268,0.75,7.0
 "https://studionol.co.kr/ko/stories/808-bass1",808-bass1,2,172,1.16,7.2
 "https://studionol.co.kr/ko/stories/advertisement-music1",advertisement-music1,2,97,2.06,7.3
 "https://studionol.co.kr/ko/stories/bundang1",bundang1,2,84,2.38,5.8
@@ -699,7 +699,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/en/portfolio/the-projectors-babu-first-flight",,0,1,0.00,5.0
 "https://studionol.co.kr/en/portfolio/various-artists-gentrification",,0,4,0.00,6.8
 "https://studionol.co.kr/en/portfolio/yeoyu-seoul-night",,0,1,0.00,6.0
-"https://studionol.co.kr/en/practice-room",,0,68,0.00,5.6
+"https://studionol.co.kr/en/practice-room",,0,62,0.00,5.8
 "https://studionol.co.kr/en/stories",,0,1,0.00,10.0
 "https://studionol.co.kr/en/stories/bulgwang-mixing-club",bulgwang-mixing-club,0,2,0.00,6.5
 "https://studionol.co.kr/en/stories/category/business",category,0,41,0.00,8.4
@@ -721,7 +721,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/en/stories/mixing5",mixing5,0,1,0.00,8.0
 "https://studionol.co.kr/en/stories/mixing6",mixing6,0,7,0.00,11.0
 "https://studionol.co.kr/en/stories/mixing7",mixing7,0,2,0.00,7.5
-"https://studionol.co.kr/en/stories/mixing8",mixing8,0,23,0.00,7.4
+"https://studionol.co.kr/en/stories/mixing8",mixing8,0,22,0.00,7.3
 "https://studionol.co.kr/en/stories/mixing9",mixing9,0,2,0.00,7.0
 "https://studionol.co.kr/en/stories/recording-in-seoul-for-foreign-musicians",recording-in-seoul-for-foreign-musicians,0,40,0.00,8.2
 "https://studionol.co.kr/en/wedding-song",,0,16,0.00,4.1
@@ -898,7 +898,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/ko/stories/mixing23",mixing23,0,27,0.00,8.0
 "https://studionol.co.kr/ko/stories/mixing3",mixing3,0,9,0.00,9.6
 "https://studionol.co.kr/ko/stories/mixing4",mixing4,0,162,0.00,6.9
-"https://studionol.co.kr/ko/stories/mixing5",mixing5,0,135,0.00,6.9
+"https://studionol.co.kr/ko/stories/mixing5",mixing5,0,133,0.00,7.0
 "https://studionol.co.kr/ko/stories/muan1",muan1,0,10,0.00,9.3
 "https://studionol.co.kr/ko/stories/music-crowdfunding1",music-crowdfunding1,0,1,0.00,9.0
 "https://studionol.co.kr/ko/stories/music-distribution1",music-distribution1,0,12,0.00,6.0
@@ -1185,7 +1185,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/th/stories/mixing19",mixing19,0,1,0.00,10.0
 "https://studionol.co.kr/th/stories/mixing2",mixing2,0,1,0.00,8.0
 "https://studionol.co.kr/th/stories/mixing21",mixing21,0,1,0.00,9.0
-"https://studionol.co.kr/th/stories/mixing4",mixing4,0,2,0.00,9.0
+"https://studionol.co.kr/th/stories/mixing4",mixing4,0,1,0.00,7.0
 "https://studionol.co.kr/th/stories/mixing6",mixing6,0,1,0.00,10.0
 "https://studionol.co.kr/th/stories/mixing8",mixing8,0,1,0.00,16.0
 "https://studionol.co.kr/th/stories/mixing9",mixing9,0,1,0.00,10.0
@@ -1220,7 +1220,6 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/vi",,0,11,0.00,5.1
 "https://studionol.co.kr/vi/lesson",,0,2,0.00,2.5
 "https://studionol.co.kr/vi/portfolio/unknown-feeling",,0,1,0.00,20.0
-"https://studionol.co.kr/vi/practice-room",,0,1,0.00,2.0
 "https://studionol.co.kr/vi/pricing",,0,2,0.00,6.0
 "https://studionol.co.kr/vi/stories/category/event",category,0,1,0.00,9.0
 "https://studionol.co.kr/vi/stories/category/instrument",category,0,9,0.00,13.3
@@ -1233,7 +1232,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/vi/stories/mixing20",mixing20,0,5,0.00,3.2
 "https://studionol.co.kr/vi/stories/mixing21",mixing21,0,1,0.00,1.0
 "https://studionol.co.kr/vi/stories/mixing3",mixing3,0,1,0.00,4.0
-"https://studionol.co.kr/vi/stories/mixing4",mixing4,0,2,0.00,8.0
+"https://studionol.co.kr/vi/stories/mixing4",mixing4,0,1,0.00,4.0
 "https://studionol.co.kr/vi/stories/mixing6",mixing6,0,4,0.00,7.0
 "https://studionol.co.kr/vi/stories/mixing8",mixing8,0,1,0.00,12.0
 "https://studionol.co.kr/zh",,0,11,0.00,8.8
@@ -1246,7 +1245,7 @@ page,slug,clicks,impressions,ctr,position
 "https://studionol.co.kr/zh/portfolio/various-artists-fish-die",,0,1,0.00,10.0
 "https://studionol.co.kr/zh/portfolio/yeoyu-seoul-night",,0,1,0.00,5.0
 "https://studionol.co.kr/zh/portfolio/young-in-red-dot",,0,1,0.00,3.0
-"https://studionol.co.kr/zh/pricing",,0,21,0.00,5.9
+"https://studionol.co.kr/zh/pricing",,0,20,0.00,6.0
 "https://studionol.co.kr/zh/stories/bulgwang-mixing-club-3rd",bulgwang-mixing-club-3rd,0,1,0.00,7.0
 "https://studionol.co.kr/zh/stories/category/business",category,0,3,0.00,7.0
 "https://studionol.co.kr/zh/stories/category/instrument",category,0,3,0.00,22.3

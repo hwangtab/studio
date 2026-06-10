@@ -1,15 +1,15 @@
 source,medium,sessions,bounce_rate,lead_events,qualified_leads,form_errors
-"google","organic",4292,0.367,47,23,18
-"(direct)","(none)",901,0.656,3,3,0
-"m.search.naver.com","referral",307,0.199,4,4,0
-"bing","organic",115,0.383,0,0,0
+"google","organic",4390,0.359,47,23,18
+"(direct)","(none)",936,0.631,3,3,0
+"m.search.naver.com","referral",313,0.195,4,4,0
+"bing","organic",117,0.376,0,0,0
+"naver","organic",114,0.228,1,1,0
 "chatgpt.com","(not set)",110,0.718,3,3,0
-"naver","organic",109,0.239,1,1,0
 "chatgpt.com","referral",86,0.570,0,0,0
-"chatgpt.com","ai-assistant",64,0.203,2,2,0
-"(not set)","(not set)",40,0.975,0,0,0
+"chatgpt.com","ai-assistant",71,0.197,2,2,0
 "search.google.com","referral",32,0.250,2,2,0
-"perplexity","(not set)",26,0.577,0,0,0
+"(not set)","(not set)",27,1.000,0,0,0
+"perplexity","(not set)",27,0.556,0,0,0
 "perplexity.ai","referral",14,0.214,0,0,0
 "perplexity.ai","ai-assistant",12,0.250,0,0,0
 "notebooklm.google.com","referral",10,0.200,0,0,0
@@ -35,3 +35,4 @@ source,medium,sessions,bounce_rate,lead_events,qualified_leads,form_errors
 "m.blog.naver.com","referral",1,0.000,0,0,0
 "mixing.co.kr","referral",1,0.000,0,0,0
 "naver.com","referral",1,1.000,0,0,0
+"webhwp.hancomdocs.com","referral",1,0.000,0,0,0
