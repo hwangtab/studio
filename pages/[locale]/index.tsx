@@ -3,7 +3,7 @@ import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap, Video } from 'lucide-react';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap, Video, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -141,11 +141,11 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         <MediaGallery images={studioImages} locale={locale} />
       </Section>
 
-      {/* Locale-specific USP block (zh, es, vi, th only) */}
-      {localeUsps && locale !== 'ko' && (
+      {/* Locale-specific USP/trust block — ko: 신뢰·전환 보강, 그 외: 외국 뮤지션 안내 */}
+      {localeUsps && (
         <Section variant="alternate">
           <SectionHeading
-            icon={Globe}
+            icon={locale === 'ko' ? ShieldCheck : Globe}
             title={localeUsps.title}
             className="mb-8"
           />
