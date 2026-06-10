@@ -341,6 +341,20 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                       {t('actions.kakao')}
                     </a>
                     <a
+                      href={`tel:${siteConfig.contact.phone}`}
+                      onClick={() =>
+                        trackLeadEvent('lead_click_phone', {
+                          locale,
+                          component: 'ContactFormErrorFallback',
+                          cta_id: 'contact_form_error_phone',
+                        })
+                      }
+                      className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <Phone size={18} aria-hidden="true" />
+                      {siteConfig.contact.phone}
+                    </a>
+                    <a
                       href={`mailto:${siteConfig.contact.email}`}
                       onClick={() =>
                         trackLeadEvent('lead_click_email', {
