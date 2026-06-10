@@ -161,6 +161,8 @@
     "subtitle": "Savol yoki bron qilish uchun bemalol murojaat qiling.",
     "heroAlt": "Studio NOL bilan aloqa",
     "form": {
+
+      "failFallback": "Agar forma yuborilmasa, quyidan biz bilan to‘g‘ridan-to‘g‘ri bog‘laning.",
       "name": "Ism",
       "namePlaceholder": "Masalan: Alex Kim…",
       "phone": "Telefon (ixtiyoriy)",

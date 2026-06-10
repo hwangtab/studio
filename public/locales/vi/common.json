@@ -161,6 +161,8 @@
     "subtitle": "Hãy liên hệ với chúng tôi cho mọi thắc mắc hoặc đặt lịch.",
     "heroAlt": "Liên hệ Studio NOL",
     "form": {
+
+      "failFallback": "Nếu biểu mẫu không gửi được, hãy liên hệ trực tiếp bên dưới.",
       "name": "Họ tên",
       "namePlaceholder": "VD: Alex Kim…",
       "phone": "Số điện thoại (tùy chọn)",

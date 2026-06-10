@@ -7,6 +7,7 @@ export type LeadEventName =
   | 'lead_click_kakao'
   | 'lead_click_phone'
   | 'lead_click_naver_map'
+  | 'lead_click_email'
   | 'lead_submit_success'
   | 'lead_submit_error'
   // 폼 funnel 분석용 — 방문자가 어느 단계에서 이탈하는지 추적.

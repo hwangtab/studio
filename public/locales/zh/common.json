@@ -161,6 +161,8 @@
     "subtitle": "欢迎咨询项目或预约。",
     "heroAlt": "联系 Studio NOL",
     "form": {
+
+      "failFallback": "如果表单无法发送，请通过以下方式直接联系我们。",
       "name": "姓名",
       "namePlaceholder": "例如：Alex Kim…",
       "phone": "联系电话（选填）",

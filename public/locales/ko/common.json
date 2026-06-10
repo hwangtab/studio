@@ -167,6 +167,8 @@
     "subtitle": "프로젝트에 대한 문의나 예약 상담을 편하게 해주세요.",
     "heroAlt": "Studio NOL 문의",
     "form": {
+
+      "failFallback": "전송이 안 되면 아래로 바로 연락 주세요.",
       "name": "이름",
       "namePlaceholder": "예: 홍길동…",
       "phone": "연락처 (선택)",

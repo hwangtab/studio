@@ -316,6 +316,47 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   {retryLabel}
                 </button>
               )}
+              {/* 제출 실패 시 직접 연결 안전망 — 폼 전송이 실패해도 리드를 잃지 않도록
+                  카카오톡/직접 이메일 폴백 노출. 특히 카톡 없는 해외 리드에 mailto가 핵심. */}
+              {submitMessage && !isSubmitSuccess && (
+                <div className="mb-6 rounded-md border border-yellow-300 bg-yellow-50 p-4 dark:border-yellow-500/30 dark:bg-yellow-500/10">
+                  <p className="mb-3 text-sm font-medium text-gray-800 dark:text-gray-100">
+                    {t('contact.form.failFallback', { defaultValue: '전송이 안 되면 아래로 바로 연락 주세요.' })}
+                  </p>
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <a
+                      href={siteConfig.contact.kakaoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() =>
+                        trackLeadEvent('lead_click_kakao', {
+                          locale,
+                          component: 'ContactFormErrorFallback',
+                          cta_id: 'contact_form_error_kakao',
+                        })
+                      }
+                      className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-md bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-950 transition-colors hover:bg-yellow-500 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
+                    >
+                      <MessageCircle size={18} aria-hidden="true" />
+                      {t('actions.kakao')}
+                    </a>
+                    <a
+                      href={`mailto:${siteConfig.contact.email}`}
+                      onClick={() =>
+                        trackLeadEvent('lead_click_email', {
+                          locale,
+                          component: 'ContactFormErrorFallback',
+                          cta_id: 'contact_form_error_email',
+                        })
+                      }
+                      className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                    >
+                      <Mail size={18} aria-hidden="true" />
+                      {siteConfig.contact.email}
+                    </a>
+                  </div>
+                </div>
+              )}
               {errorCount > 1 && (
                 <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
                   <p className="text-sm font-medium text-red-800 dark:text-red-300">

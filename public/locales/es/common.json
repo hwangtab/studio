@@ -161,6 +161,8 @@
     "subtitle": "Contáctanos para consultas o reservas.",
     "heroAlt": "Contactar Studio NOL",
     "form": {
+
+      "failFallback": "Si el formulario no se envía, contáctanos directamente abajo.",
       "name": "Nombre",
       "namePlaceholder": "p. ej., Alex Kim…",
       "phone": "Teléfono (opcional)",

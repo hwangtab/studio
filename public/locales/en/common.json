@@ -161,6 +161,8 @@
     "subtitle": "Feel free to contact us for inquiries or reservations.",
     "heroAlt": "Contact Studio NOL",
     "form": {
+
+      "failFallback": "If the form will not send, reach us directly below.",
       "name": "Name",
       "namePlaceholder": "e.g., Alex Kim…",
       "phone": "Phone (optional)",
