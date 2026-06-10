@@ -2,7 +2,8 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight } from 'lucide-react';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, MessageCircle } from 'lucide-react';
+import { trackLeadEvent } from '../../utils/analytics';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -218,6 +219,27 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.pricing'), path: `/${locale}/pricing` },
         ]}
+        ctaButtons={
+          // AI 검색(ChatGPT 등)·외부 유입이 가격 페이지에 바로 착지하는 비중이 큰데
+          // 기존엔 above-the-fold 행동 버튼이 없어 이탈이 높았음. 검증된 전환 채널인
+          // 카카오톡 직링크를 히어로에 노출해 즉시 견적 문의로 연결.
+          <a
+            href={kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'PricingHero',
+                cta_id: 'pricing_hero_kakao',
+              })
+            }
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          >
+            <MessageCircle className="w-5 h-5" aria-hidden="true" />
+            {t('pricing.hero.ctaKakao', { defaultValue: '카톡으로 무료 견적 받기' })}
+          </a>
+        }
       />
 
 
