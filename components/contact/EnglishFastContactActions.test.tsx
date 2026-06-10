@@ -19,7 +19,7 @@ describe('EnglishFastContactActions', () => {
         locale="en"
         kakaoUrl="https://open.kakao.com/me/nol"
         email="hwangtab@gmail.com"
-        phone="0507-1384-3144"
+        phone="010-4255-7893"
       />
     );
 
@@ -31,7 +31,7 @@ describe('EnglishFastContactActions', () => {
     );
     expect(screen.getByRole('link', { name: /call studio nol/i })).toHaveAttribute(
       'href',
-      'tel:0507-1384-3144'
+      'tel:010-4255-7893'
     );
 
     fireEvent.click(kakao);

@@ -48,7 +48,7 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
       uz: 'Yozuv studiyasi, mashg‘ulot xonasi, miks, mastering va musiqa prodakshn studiyasi.'
     }),
     contact: {
-      phone: '0507-1384-3144',
+      phone: '010-4255-7893',
       email: 'hwangtab@gmail.com',
       address: t(locale, {
         ko: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',

@@ -40,7 +40,7 @@ Juma kechasi baribir miks + pizza & pivo! 🎧
 
 ### 🚀 Qanday qo'shilish mumkin
 
-0507-1384-3144 raqamiga “I’m in for the 11/28 mixing club!” deb SMS yuboring. Agar ulashmoqchi bo'lgan trek yoki miks muammosi bo'lsa, qisqa eslatma qo'shing.
+010-4255-7893 raqamiga “I’m in for the 11/28 mixing club!” deb SMS yuboring. Agar ulashmoqchi bo'lgan trek yoki miks muammosi bo'lsa, qisqa eslatma qo'shing.
 
 Jadval o'zgargani uchun uzr, ammo bu studioning to'liq ishlayotganini ham ko'rsatadi. 28-kunini yanada zo'r qilamiz!
 
@@ -66,5 +66,5 @@ Studio NOL — Seulning shimoli-gʻarbida, Yeonsinnae bekatidan 5 daqiqa piyoda 
 * [Miks va mastering xizmati narxlari](/pricing)
 * [Yeonsinnae mashq xonalari katalogi](/practice-room)
 
-Uchrashuvlar haqida savollar bo‘yicha Studio NOL Yeonsinnae ning KakaoTalk ochiq kanalidan foydalaning yoki 0507-1384-3144 raqamiga SMS yuboring. Dushanba e’lonlari haftaning ro‘yxatini yopadi, joylar tez to‘ladi.
+Uchrashuvlar haqida savollar bo‘yicha Studio NOL Yeonsinnae ning KakaoTalk ochiq kanalidan foydalaning yoki 010-4255-7893 raqamiga SMS yuboring. Dushanba e’lonlari haftaning ro‘yxatini yopadi, joylar tez to‘ladi.
 

@@ -455,7 +455,7 @@ const buildContactEmailHtml = (sanitized: SanitizedContactPayload): string => {
               </p>
               <p style="margin:0;font-size:12px;color:#9ca3af;">
                 <a href="tel:050713843144" style="color:#9ca3af;text-decoration:none;">
-                  0507-1384-3144
+                  010-4255-7893
                 </a>
                 &nbsp;·&nbsp;
                 <a href="https://studionol.co.kr" style="color:#6d28d9;text-decoration:none;">

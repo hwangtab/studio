@@ -36,5 +36,5 @@ Enough mixing alone with your head in your hands. Come share know-how, level up 
 
 ### 🚀 How to join
 
-Text 0507-1384-3144 with “I’m in!” like you mean it.
+Text 010-4255-7893 with “I’m in!” like you mean it.
 Ready to grab your mouse hand and your chicken hand? See you Friday night at Studio NOL—we can’t wait to feel your passion.

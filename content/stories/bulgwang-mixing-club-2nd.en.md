@@ -34,7 +34,7 @@ This session’s keywords are “sharing” and “experimenting.” Bring a rec
 
 ### 🚀 How to join
 
-Text 0507-1384-3144 with “I’m in for pizza-beer mixing!” Done. If you have a track you want to share or references you want to compare, add a quick note in your text.
+Text 010-4255-7893 with “I’m in for pizza-beer mixing!” Done. If you have a track you want to share or references you want to compare, add a quick note in your text.
 
 See you this Friday at the cooler, pizza-and-beer-powered Bulgwang Mixing Club!
 
@@ -58,5 +58,5 @@ Studio NOL is a boutique recording and mixing room located a 5-minute walk from 
 * [Mixing & mastering service pricing](/pricing)
 * [Yeonsinnae practice-room directory](/practice-room)
 
-For meetup questions, use the KakaoTalk open chat channel for Studio NOL Yeonsinnae, or SMS 0507-1384-3144 to confirm a seat. Sessions fill fast — Monday posts lock the current week's list.
+For meetup questions, use the KakaoTalk open chat channel for Studio NOL Yeonsinnae, or SMS 010-4255-7893 to confirm a seat. Sessions fill fast — Monday posts lock the current week's list.
 

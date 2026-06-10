@@ -20,7 +20,7 @@ Shuningdek, biz amalda ishlatadigan uskunalarning barchasini ko'rib chiqishingiz
 
 Yangi xizmatlar sahifasi musiqiy visioningizni ro'yobga chiqarish uchun keng ko'lamli xizmatlarni taqdim etadi — vokal/asbob yozuvi, professional miks, mastering, albom prodakshn va sound design. Yangi saytda Studio NOLning tovush falsafasini his qilishingizni va musiqangizga chuqurlik baxsh etadigan sehrli lahzalarni yaratishingizni tilaymiz.
 
-Savollaringiz bo'lsa, istalgan payt telefon (0507-1384-3144), SMS (0507-1384-3144) yoki [KakaoTalk](https://open.kakao.com/me/nol) orqali bog'laning. Studio NOL qadrli musiqangiz uchun doimo bor kuchini beradi. Qo'llab-quvvatlovingiz va muhabbatingiz uchun rahmat!
+Savollaringiz bo'lsa, istalgan payt telefon (010-4255-7893), SMS (010-4255-7893) yoki [KakaoTalk](https://open.kakao.com/me/nol) orqali bog'laning. Studio NOL qadrli musiqangiz uchun doimo bor kuchini beradi. Qo'llab-quvvatlovingiz va muhabbatingiz uchun rahmat!
 
 Hurmat bilan,
 Studio NOL

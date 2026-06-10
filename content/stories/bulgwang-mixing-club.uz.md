@@ -36,5 +36,5 @@ Boshni ushlab yolg'iz miks qilish yetarli. Keling, tajriba ulashaylik, birga o's
 
 ### 🚀 Qanday qo'shilish mumkin
 
-0507-1384-3144 raqamiga “I’m in!” deb SMS yuboring.
+010-4255-7893 raqamiga “I’m in!” deb SMS yuboring.
 Sichqoncha qo'li va tovuq qo'lini tayyormisiz? Juma kechasi Studio NOLda ko'rishamiz—ishtiyoqingizni kutyapmiz.

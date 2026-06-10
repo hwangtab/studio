@@ -40,7 +40,7 @@ Friday night is still mixing + pizza & beer! 🎧
 
 ### 🚀 How to join
 
-Text 0507-1384-3144 with “I’m in for the 11/28 mixing club!” If you have a track or a mixing issue you want to share, add a quick note.
+Text 010-4255-7893 with “I’m in for the 11/28 mixing club!” If you have a track or a mixing issue you want to share, add a quick note.
 
 Sorry for the schedule change, but it’s also proof the studio is in full swing. We’ll make the 28th even better!
 
@@ -66,5 +66,5 @@ Studio NOL is a boutique recording and mixing room located a 5-minute walk from 
 * [Mixing & mastering service pricing](/pricing)
 * [Yeonsinnae practice-room directory](/practice-room)
 
-For meetup questions, use the KakaoTalk open chat channel for Studio NOL Yeonsinnae, or SMS 0507-1384-3144 to confirm a seat. Sessions fill fast — Monday posts lock the current week's list.
+For meetup questions, use the KakaoTalk open chat channel for Studio NOL Yeonsinnae, or SMS 010-4255-7893 to confirm a seat. Sessions fill fast — Monday posts lock the current week's list.
 

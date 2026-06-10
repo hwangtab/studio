@@ -40,7 +40,7 @@ Tối thứ Sáu vẫn là mixing + pizza & bia! 🎧
 
 ### 🚀 Cách tham gia
 
-Nhắn tin 0507-1384-3144 với câu “I’m in for the 11/28 mixing club!” Nếu bạn có track hoặc vấn đề mixing muốn chia sẻ, hãy thêm ghi chú ngắn.
+Nhắn tin 010-4255-7893 với câu “I’m in for the 11/28 mixing club!” Nếu bạn có track hoặc vấn đề mixing muốn chia sẻ, hãy thêm ghi chú ngắn.
 
 Xin lỗi vì thay đổi lịch, nhưng đó cũng là dấu hiệu studio đang rất bận rộn. Chúng tôi sẽ làm cho ngày 28 còn tuyệt hơn!
 
@@ -66,5 +66,5 @@ Studio NOL là studio thu âm - mix boutique nằm cách ga Yeonsinnae 5 phút �
 * [Bảng giá dịch vụ mix và mastering](/pricing)
 * [Danh mục phòng tập Yeonsinnae](/practice-room)
 
-Để hỏi về các buổi gặp, hãy dùng kênh chat mở KakaoTalk của Studio NOL Yeonsinnae, hoặc nhắn tin SMS đến 0507-1384-3144 để xác nhận chỗ. Thông báo thứ Hai khóa danh sách của tuần và các suất trống rất nhanh hết.
+Để hỏi về các buổi gặp, hãy dùng kênh chat mở KakaoTalk của Studio NOL Yeonsinnae, hoặc nhắn tin SMS đến 010-4255-7893 để xác nhận chỗ. Thông báo thứ Hai khóa danh sách của tuần và các suất trống rất nhanh hết.
 
