@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { m } from 'framer-motion';
-import { Plus, Minus, HelpCircle } from 'lucide-react';
+import { Plus, Minus, HelpCircle } from '@/lib/lucide-icons';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
 

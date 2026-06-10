@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin } from '@/lib/lucide-icons';
 import { trackLeadEvent } from '../../utils/analytics';
 
 interface FooterProps {

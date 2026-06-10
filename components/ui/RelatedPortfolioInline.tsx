@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Disc } from 'lucide-react';
+import { ArrowRight, Disc } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import PortfolioMiniCard from './PortfolioMiniCard';

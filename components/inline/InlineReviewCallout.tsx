@@ -1,5 +1,5 @@
 import React from 'react';
-import { Quote, Star } from 'lucide-react';
+import { Quote, Star } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getReviews } from '../../data/reviews';

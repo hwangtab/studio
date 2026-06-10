@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Tag } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Tag } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getPricingData } from '../../data/pricing';

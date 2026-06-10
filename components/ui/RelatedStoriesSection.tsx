@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, BookOpen } from 'lucide-react';
+import { ArrowRight, BookOpen } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import StoryCard from '../StoryCard';

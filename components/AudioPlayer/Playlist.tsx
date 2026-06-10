@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { m } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { Play } from '@/lib/lucide-icons';
 import type { AudioTrack } from '../../types/data';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';

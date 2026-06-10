@@ -1,12 +1,12 @@
-// Vercel Cron — 매일 04:00 KST (19:00 UTC) 실행.
+// Vercel Cron — 매주 월요일 04:00 KST (일요일 19:00 UTC) 실행.
 // 1. GSC 90일 audit 측정
-// 2. KV에서 이전 스냅샷 로드 후 diff 계산
-// 3. Smart Daily 조건: 의미있는 변동 OR 매월 1일 → 이메일 발송
-// 4. 새 스냅샷 KV 저장
+// 2. Vercel Blob에서 이전 스냅샷 로드 후 diff 계산
+// 3. 주 1회 cadence 자체가 필터이므로 dry-run이 아니면 매 실행 이메일 발송
+// 4. 새 스냅샷을 Vercel Blob latest/history에 저장
 //
 // 인증: Vercel Cron이 자동으로 Authorization: Bearer ${CRON_SECRET} 헤더 첨부.
 // 환경변수: CRON_SECRET, GSC_OAUTH_CLIENT_ID/SECRET/REFRESH_TOKEN, GSC_SITE_URL,
-//          RESEND_API_KEY, KV_REST_API_URL/TOKEN
+//          RESEND_API_KEY, BLOB_READ_WRITE_TOKEN
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { put, list } from '@vercel/blob';

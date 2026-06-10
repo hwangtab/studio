@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle } from '@/lib/lucide-icons';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
 import BaseCard from './BaseCard';

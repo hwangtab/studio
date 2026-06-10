@@ -1,11 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { MessageCircle, Sparkles, LucideIcon } from 'lucide-react';
+import { MessageCircle, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
 import type { Locale } from '../../lib/i18n';
+import type { LucideIcon } from '@/lib/lucide-icons';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent } from '../../utils/analytics';
 

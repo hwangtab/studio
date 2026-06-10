@@ -6,6 +6,8 @@ const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
+    '^@/lib/lucide-icons$': '<rootDir>/test/mocks/lucide-icons.js',
+    '^lucide-react/dist/esm/icons/.+\\.js$': '<rootDir>/test/mocks/lucide-icon.js',
     '^@vercel/analytics/react$': '<rootDir>/test/mocks/vercel-analytics.js',
   },
   collectCoverageFrom: [

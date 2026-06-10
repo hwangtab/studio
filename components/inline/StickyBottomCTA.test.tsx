@@ -3,6 +3,17 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import StickyBottomCTA from './StickyBottomCTA';
 import '@testing-library/jest-dom';
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (_key: string, fallback?: string | { defaultValue?: string }) => {
+      if (typeof fallback === 'string') {
+        return fallback;
+      }
+      return fallback?.defaultValue ?? _key;
+    },
+  }),
+}));
+
 // IntersectionObserver mock
 class MockIntersectionObserver {
   callback: IntersectionObserverCallback;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, MessageCircle, Phone } from 'lucide-react';
+import { Mail, MessageCircle, Phone } from '@/lib/lucide-icons';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 

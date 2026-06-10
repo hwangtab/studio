@@ -3,13 +3,14 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { LucideIcon, Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, ChevronDown } from 'lucide-react';
+import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, ChevronDown } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
+import type { LucideIcon } from '@/lib/lucide-icons';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
 // ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
@@ -162,12 +163,8 @@ import FacilitiesGrid, { type FacilityItem } from '../../components/practice-roo
 
 interface PracticeRoomProps {
   locale: Locale;
-  /** 초기 노출 32개 가이드의 서버 렌더 HTML. locale !== 'ko'면 빈 문자열. */
-  relatedGuidesVisibleHtml: string;
-  /** 접힘 상태로 렌더되는 나머지 가이드 HTML. 크롤러는 HTML로 그대로 탐색 가능. */
-  relatedGuidesHiddenHtml: string;
-  /** 접힘 안에 들어있는 가이드 개수 (0이면 더보기 토글 숨김). */
-  relatedGuidesHiddenCount: number;
+  /** 음악연습실 hub-and-spoke 가이드 링크. ko에서만 채운다. */
+  relatedGuides: Array<{ slug: string; title: string }>;
 }
 
 const PAIN_POINTS_ANIMATION = createFadeInAnimation();
@@ -177,9 +174,7 @@ const RESIDENT_BENEFITS_ANIMATION = createFadeInAnimation();
 
 const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   locale,
-  relatedGuidesVisibleHtml,
-  relatedGuidesHiddenHtml,
-  relatedGuidesHiddenCount,
+  relatedGuides,
 }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
@@ -296,6 +291,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   const painPointsAnimation = PAIN_POINTS_ANIMATION;
   const audienceSectionAnimation = AUDIENCE_SECTION_ANIMATION;
   const featuresSectionAnimation = FEATURES_SECTION_ANIMATION;
+  const VISIBLE_GUIDES = 32;
+  const visibleRelatedGuides = relatedGuides.slice(0, VISIBLE_GUIDES);
+  const hiddenRelatedGuides = relatedGuides.slice(VISIBLE_GUIDES);
+  const relatedGuideLinkClassName = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200';
 
   return (
     <>
@@ -563,11 +562,11 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
       <ReviewSection variant="default" locale={locale} />
 
-      {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO)
+      {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO).
           초기 32개 노출, 나머지는 <details> JS-free 접기 패턴.
-          서버사이드 렌더 HTML이라 크롤러는 접힌 링크도 전부 탐색 가능.
-          HTML 문자열은 getStaticProps에서 escapeHtml + 고정 slug 배열로 생성 — 외부 입력 없음. */}
-      {relatedGuidesVisibleHtml && (
+          JSX로 SSR되어 크롤러는 접힌 링크도 탐색 가능하고, props에는 slug/title만 전달해
+          __NEXT_DATA__ payload가 커지지 않도록 한다. */}
+      {visibleRelatedGuides.length > 0 && (
         <Section variant="default" className="py-10" defer>
           <div className="max-w-5xl mx-auto">
             <SectionHeading
@@ -575,16 +574,23 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               title={t('practiceRoom.relatedGuides.title')}
               className="mb-6"
             />
-            {/* eslint-disable-next-line react/no-danger */}
-            <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-              dangerouslySetInnerHTML={{ __html: relatedGuidesVisibleHtml }}
-            />
-            {relatedGuidesHiddenCount > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {visibleRelatedGuides.map((guide, idx) => (
+                <Link
+                  key={`${guide.slug}-visible-${idx}`}
+                  href={`/ko/stories/${guide.slug}`}
+                  className={relatedGuideLinkClassName}
+                >
+                  <span>{guide.title}</span>
+                  <ArrowRight size={14} className="flex-shrink-0" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+            {hiddenRelatedGuides.length > 0 && (
               <details className="mt-6 group">
                 <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light transition-colors">
                   <span className="group-open:hidden">
-                    가이드 +{relatedGuidesHiddenCount}개 더 보기
+                    가이드 +{hiddenRelatedGuides.length}개 더 보기
                   </span>
                   <span className="hidden group-open:inline">접기</span>
                   <ChevronDown
@@ -593,11 +599,18 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
                     aria-hidden="true"
                   />
                 </summary>
-                {/* eslint-disable-next-line react/no-danger */}
-                <div
-                  className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3"
-                  dangerouslySetInnerHTML={{ __html: relatedGuidesHiddenHtml }}
-                />
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+                  {hiddenRelatedGuides.map((guide, idx) => (
+                    <Link
+                      key={`${guide.slug}-hidden-${idx}`}
+                      href={`/ko/stories/${guide.slug}`}
+                      className={relatedGuideLinkClassName}
+                    >
+                      <span>{guide.title}</span>
+                      <ArrowRight size={14} className="flex-shrink-0" aria-hidden="true" />
+                    </Link>
+                  ))}
+                </div>
               </details>
             )}
           </div>
@@ -725,18 +738,9 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
 
-  // 서버에서 "관련 가이드" 678개 링크의 HTML 문자열을 미리 생성해 클라이언트로 전달.
-  // 초기 32개(visible) + 나머지(hidden)로 split — hidden은 <details>로 접힘.
-  // 크롤러는 HTML 링크 그대로 탐색하므로 SEO 가치는 유지되고, 초기 뷰포트는 가벼워진다.
-  // 동시에 i18n의 practiceRoom.relatedGuides.items 배열(17KB)을 __NEXT_DATA__에서
-  // 제외해 페이로드를 줄인다.
-  const VISIBLE_GUIDES = 32;
-  let relatedGuidesVisibleHtml = '';
-  let relatedGuidesHiddenHtml = '';
-  let relatedGuidesHiddenCount = 0;
+  let relatedGuides: Array<{ slug: string; title: string }> = [];
 
-  {
-    // 비-ko 로케일은 relatedGuides.items 번역 미제공이므로 ko 데이터로 fallback
+  if (locale === 'ko') {
     const full = loadCommonResourceServer('ko');
     const items = ((full as Record<string, unknown>).practiceRoom as
       | { relatedGuides?: { items?: unknown } }
@@ -744,39 +748,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     )?.relatedGuides?.items as string[] | undefined;
 
     if (Array.isArray(items)) {
-      const escapeHtml = (s: string): string =>
-        s.replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      const cls = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200';
-      const arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>';
-      const renderLink = (slug: string, idx: number): string => {
-        const title = escapeHtml(items[idx] ?? slug);
-        return `<a href="/ko/stories/${slug}" class="${cls}"><span>${title}</span>${arrowSvg}</a>`;
-      };
-      const total = PRACTICE_ROOM_RELATED_SLUGS.length;
-      relatedGuidesVisibleHtml = PRACTICE_ROOM_RELATED_SLUGS
-        .slice(0, VISIBLE_GUIDES)
-        .map((slug, idx) => renderLink(slug, idx))
-        .join('');
-      if (total > VISIBLE_GUIDES) {
-        relatedGuidesHiddenHtml = PRACTICE_ROOM_RELATED_SLUGS
-          .slice(VISIBLE_GUIDES)
-          .map((slug, idx) => renderLink(slug, idx + VISIBLE_GUIDES))
-          .join('');
-        relatedGuidesHiddenCount = total - VISIBLE_GUIDES;
-      }
+      relatedGuides = PRACTICE_ROOM_RELATED_SLUGS.map((slug, idx) => ({
+        slug,
+        title: items[idx] ?? slug,
+      }));
     }
   }
 
   const result = buildPageStaticProps(
     locale,
     {
-      relatedGuidesVisibleHtml,
-      relatedGuidesHiddenHtml,
-      relatedGuidesHiddenCount,
+      relatedGuides,
     },
     { revalidate: 86400, i18nSections: ['practiceRoom'] }
   );

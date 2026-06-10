@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { LucideIcon, Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle, ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
@@ -15,6 +15,7 @@ const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'))
 import { getServicesData } from '../../data/services';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
+import type { LucideIcon } from '@/lib/lucide-icons';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';

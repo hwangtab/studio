@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { ArrowLeft, Calendar, Tag, Share2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, Share2, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';

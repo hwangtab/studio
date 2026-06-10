@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import validator from 'validator';
 import { createHash } from 'crypto';
 
-import { kv } from '@vercel/kv';
 import { sendEmail } from '../../../lib/email/resend';
+import { getRedisRestConfig, incrWithExpire } from '../../../lib/rate-limit/redisRest';
 import {
     getFirstContactValidationError,
     toContactFormFields,
@@ -174,17 +174,14 @@ const checkRateLimitInMemory = (subject: RateLimitSubject): void => {
 };
 
 async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
-    const isKvConfigured = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+    const redisConfig = getRedisRestConfig();
 
-    // Vercel KV is required for production rate limiting
-    if (isKvConfigured) {
+    // Redis REST rate limiting. Env names stay KV_REST_API_* for deployment compatibility,
+    // but the implementation is fetch-based and not coupled to a provider SDK.
+    if (redisConfig) {
         try {
             const key = `rate_limit_contact:${subject.key}`;
-            const count = await kv.incr(key);
-
-            if (count === 1) {
-                await kv.expire(key, subject.windowSeconds);
-            }
+            const count = await incrWithExpire({ key, windowSeconds: subject.windowSeconds, config: redisConfig });
 
             if (count > subject.limit) {
                 throw new Error('RATE_LIMIT_EXCEEDED');
@@ -193,18 +190,18 @@ async function checkRateLimit(subject: RateLimitSubject): Promise<void> {
         } catch (error: unknown) {
             if (error instanceof Error && error.message === 'RATE_LIMIT_EXCEEDED') throw error;
 
-            console.error('[Rate Limit] Vercel KV failed:', error);
-            // KV가 설정됐지만 런타임에 실패한 경우 환경 무관하게 fail-closed.
+            console.error('[Rate Limit] Redis REST failed:', error);
+            // Redis가 설정됐지만 런타임에 실패한 경우 환경 무관하게 fail-closed.
             // (KV 미설정 개발환경은 아래 별도 경로에서 in-memory fallback 허용)
             throw new Error('RATE_LIMIT_UNAVAILABLE');
         }
     }
 
-    // KV 미설정 시 in-memory fallback. 인스턴스별 카운터이므로 serverless 재시작 시
+    // Redis REST 미설정 시 in-memory fallback. 인스턴스별 카운터이므로 serverless 재시작 시
     // 카운터가 초기화되지만, 음악 스튜디오 규모에서 스팸 위험보다 폼 작동이 우선.
     if (!hasLoggedMemoryFallback) {
         const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
-        console.warn(`[Rate Limit] Vercel KV not configured (${env}). Using in-memory limiter fallback. Set KV_REST_API_URL and KV_REST_API_TOKEN.`);
+        console.warn(`[Rate Limit] Redis REST not configured (${env}). Using in-memory limiter fallback. Set KV_REST_API_URL and KV_REST_API_TOKEN.`);
         hasLoggedMemoryFallback = true;
     }
 

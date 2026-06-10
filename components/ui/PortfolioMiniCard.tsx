@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Music } from 'lucide-react';
+import { Music } from '@/lib/lucide-icons';
 
 import ResponsiveImage from '../ResponsiveImage';
 import type { PortfolioItem } from '../../types/data';

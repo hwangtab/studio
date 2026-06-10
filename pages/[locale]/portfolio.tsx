@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
-import { Music, Headphones, ArrowRight } from 'lucide-react';
+import { Music, Headphones, ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import { filterPortfolioItems } from '../../utils/portfolioDataUtils';
 import CategoryFilter from '../../components/CategoryFilter';

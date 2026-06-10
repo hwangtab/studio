@@ -8,7 +8,7 @@ import {
   ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
   Target, Calendar, ListChecks, X, MessageCircle,
   Award, Star, Quote, ArrowRightLeft,
-} from 'lucide-react';
+} from '@/lib/lucide-icons';
 import SEO from '../SEO';
 import SectionHeading from '../ui/SectionHeading';
 import ImageHero from '../common/ImageHero';

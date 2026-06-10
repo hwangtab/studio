@@ -1,8 +1,9 @@
 import React from 'react';
-import { LucideIcon, Shield, Layers, Volume2, Leaf, Sparkles, ShieldCheck } from 'lucide-react';
+import { Shield, Layers, Volume2, Leaf, Sparkles, ShieldCheck } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
 import { Section } from '../ui/Section';
 import type { Locale } from '../../lib/i18n';
+import type { LucideIcon } from '@/lib/lucide-icons';
 
 const SOUNDPROOFING_ICONS: LucideIcon[] = [Shield, Layers, Volume2, Leaf, Sparkles];
 

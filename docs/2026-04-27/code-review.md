@@ -596,7 +596,7 @@ describe('middleware', () => {
 
 3. **Security headers** are well-configured: CSP (despite `'unsafe-inline'`), HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.
 
-4. **Contact form API** has robust security: honeypot field, CSRF origin validation, dual-tier rate limiting (Vercel KV + in-memory fallback), input sanitization via `validator` library, 12-second timeout on EmailJS.
+4. **Contact form API** has robust security: honeypot field, CSRF origin validation, dual-tier rate limiting (Redis REST-compatible storage + in-memory fallback), input sanitization via `validator` library, 12-second timeout on EmailJS.
 
 5. **Performance optimizations** are thoughtful: dynamic imports for below-fold components (`ReviewSection`, `QuickAnswers`, `FAQSection`, `ContactCTA`), deferred Pretendard font loading (3s after `window.load`), lazy GA4 loading, response caching with ISR revalidation.
 

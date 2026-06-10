@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from '@/lib/lucide-icons';
 import { cn } from '../../lib/utils';
 import type { Breadcrumb as BreadcrumbItem } from '../../types/data';
 

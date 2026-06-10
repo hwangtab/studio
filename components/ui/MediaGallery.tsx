@@ -1,6 +1,6 @@
 import React from 'react';
 import { m } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import { defaultLocale, type Locale } from '../../lib/i18n';

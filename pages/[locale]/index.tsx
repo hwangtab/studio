@@ -3,7 +3,7 @@ import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap, Video, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap, Video, ShieldCheck } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';

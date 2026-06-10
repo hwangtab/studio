@@ -1,7 +1,8 @@
 import React from 'react';
-import { LucideIcon, Trophy, Wallet, Gift, Lock, CalendarDays, Check } from 'lucide-react';
+import { Trophy, Wallet, Gift, Lock, CalendarDays, Check } from '@/lib/lucide-icons';
 import { Section } from '../ui/Section';
 import type { Locale } from '../../lib/i18n';
+import type { LucideIcon } from '@/lib/lucide-icons';
 
 const PRICING_BADGE_ICONS: LucideIcon[] = [Wallet, Gift, Lock, CalendarDays];
 

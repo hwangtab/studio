@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 import { defaultLocale, type Locale } from '../../lib/i18n';

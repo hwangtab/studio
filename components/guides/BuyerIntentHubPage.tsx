@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { ArrowRight, CheckCircle2, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Sparkles, Users } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../SEO';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check } from 'lucide-react';
+import { Check } from '@/lib/lucide-icons';
 import BaseCard from './BaseCard';
 
 interface PricingCardProps {

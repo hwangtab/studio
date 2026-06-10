@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from 'lucide-react';
+import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';

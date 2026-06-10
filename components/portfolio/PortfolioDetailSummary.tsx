@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
 import type { PortfolioItem } from '../../types/data';
 

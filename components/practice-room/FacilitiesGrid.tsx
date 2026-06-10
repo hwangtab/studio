@@ -1,9 +1,10 @@
 import React from 'react';
-import { LucideIcon, Sun, Thermometer, Wind, Lightbulb, Droplets, Coffee, ShieldCheck, MapPin, Sparkles } from 'lucide-react';
+import { Sun, Thermometer, Wind, Lightbulb, Droplets, Coffee, ShieldCheck, MapPin, Sparkles } from '@/lib/lucide-icons';
 import BaseCard from '../ui/BaseCard';
 import SectionHeading from '../ui/SectionHeading';
 import { Section } from '../ui/Section';
 import type { Locale } from '../../lib/i18n';
+import type { LucideIcon } from '@/lib/lucide-icons';
 
 const FACILITIES_ICONS: LucideIcon[] = [Sun, Thermometer, Wind, Lightbulb, Droplets, Coffee, ShieldCheck, MapPin];
 

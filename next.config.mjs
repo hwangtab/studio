@@ -54,9 +54,7 @@ const nextConfig = {
   // Experimental optimizations
   experimental: {
     optimizePackageImports: [
-      'lucide-react',
       'framer-motion',
-      'react-i18next',
       'markdown-to-jsx',
       'clsx',
       'tailwind-merge',
@@ -72,6 +70,17 @@ const nextConfig = {
 
   eslint: {
     ignoreDuringBuilds: false,
+  },
+
+  webpack(config, { dev }) {
+    if (!dev) {
+      // The production filesystem cache serializes large generated server chunks
+      // and emits PackFileCacheStrategy warnings; clean CI/Vercel builds do not
+      // benefit enough from that cache to justify the noisy, slower path.
+      config.cache = false;
+    }
+
+    return config;
   },
 
   async redirects() {

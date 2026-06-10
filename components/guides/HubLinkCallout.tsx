@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, BookMarked } from 'lucide-react';
+import { ArrowRight, BookMarked } from '@/lib/lucide-icons';
 
 import type { Locale } from '../../lib/i18n';
 import type { BuyerIntentHubSlug } from '../../data/buyerIntentHubs';

@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, MessageCircle } from 'lucide-react';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, MessageCircle } from '@/lib/lucide-icons';
 import { trackLeadEvent } from '../../utils/analytics';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';

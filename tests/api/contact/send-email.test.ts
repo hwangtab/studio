@@ -3,16 +3,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/contact/send-email';
 
-const incrMock = jest.fn();
-const expireMock = jest.fn();
-
-jest.mock('@vercel/kv', () => ({
-  kv: {
-    incr: (...args: unknown[]) => incrMock(...args),
-    expire: (...args: unknown[]) => expireMock(...args),
-  },
-}));
-
 const originalEnv = process.env;
 const originalFetch = global.fetch;
 
@@ -66,6 +56,35 @@ const createResponse = () => {
   };
 };
 
+const mockFetchForRedisAndResend = (options: { redisCount?: number; redisOk?: boolean } = {}) => {
+  const { redisCount = 1, redisOk = true } = options;
+  global.fetch = jest.fn(async (input: RequestInfo | URL) => {
+    const url = String(input);
+    if (url.startsWith('https://mock-kv.local/')) {
+      if (!redisOk) {
+        return {
+          ok: false,
+          status: 500,
+          text: async () => 'redis unavailable',
+          json: async () => ({ error: 'redis unavailable' }),
+        } as unknown as Response;
+      }
+      return {
+        ok: true,
+        status: 200,
+        text: async () => '',
+        json: async () => ({ result: url.includes('/incr/') ? redisCount : 1 }),
+      } as unknown as Response;
+    }
+
+    return {
+      ok: true,
+      status: 200,
+      text: async () => '',
+    } as unknown as Response;
+  });
+};
+
 describe('contact send-email api', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -77,12 +96,7 @@ describe('contact send-email api', () => {
       RESEND_API_KEY: 're_test_key',
     };
 
-    incrMock.mockResolvedValue(1);
-    expireMock.mockResolvedValue(undefined);
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      text: async () => '',
-    } as unknown as Response);
+    mockFetchForRedisAndResend();
   });
 
   afterAll(() => {
@@ -98,12 +112,17 @@ describe('contact send-email api', () => {
 
     expect(getStatus()).toBe(200);
     expect(getBody().success).toBe(true);
-    expect(incrMock).toHaveBeenCalledTimes(1);
 
-    const [rateLimitKey] = incrMock.mock.calls[0];
+    const fetchCalls = (global.fetch as jest.Mock).mock.calls.map(([input]) => String(input));
+    const incrUrl = fetchCalls.find((url) => url.startsWith('https://mock-kv.local/incr/'));
+    const expireUrl = fetchCalls.find((url) => url.startsWith('https://mock-kv.local/expire/'));
+    expect(incrUrl).toBeDefined();
+    expect(expireUrl).toBeDefined();
+
+    const rateLimitKey = decodeURIComponent(String(incrUrl).replace('https://mock-kv.local/incr/', ''));
     expect(rateLimitKey).toMatch(/^rate_limit_contact:fp:[a-f0-9]{24}$/);
-    expect(String(rateLimitKey)).not.toContain('unknown');
-    expect(expireMock).toHaveBeenCalledWith(rateLimitKey, 120);
+    expect(rateLimitKey).not.toContain('unknown');
+    expect(decodeURIComponent(String(expireUrl))).toContain(`${rateLimitKey}/120`);
   });
 
   it('accepts English names with periods and commas (Dr. Smith, Smith Jr.)', async () => {
@@ -116,9 +135,7 @@ describe('contact send-email api', () => {
 
     for (const { name } of testCases) {
       jest.clearAllMocks();
-      incrMock.mockResolvedValue(1);
-      expireMock.mockResolvedValue(undefined);
-      global.fetch = jest.fn().mockResolvedValue({ ok: true, text: async () => '' } as unknown as Response);
+      mockFetchForRedisAndResend();
 
       const req = createRequest({ body: { name, phone: '+82 10 1234 5678', email: 'test@example.com', message: 'Valid inquiry message here.', company: '' } });
       const { res, getStatus } = createResponse();
@@ -141,6 +158,45 @@ describe('contact send-email api', () => {
 
     expect(getStatus()).toBe(403);
     expect(getBody().message).toBe('Forbidden');
-    expect(incrMock).not.toHaveBeenCalled();
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it('returns 503 when configured Redis REST rate limiting fails', async () => {
+    mockFetchForRedisAndResend({ redisOk: false });
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const req = createRequest();
+    const { res, getStatus, getBody } = createResponse();
+
+    await handler(req, res);
+
+    expect(getStatus()).toBe(503);
+    expect(getBody().message).toBe('Service temporarily unavailable. Please try again later.');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    errorSpy.mockRestore();
+  });
+
+  it('falls back to in-memory rate limiting when Redis REST is not configured', async () => {
+    delete process.env.KV_REST_API_URL;
+    delete process.env.KV_REST_API_TOKEN;
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const req = createRequest({
+      headers: {
+        origin: 'https://www.studionol.co.kr',
+        referer: 'https://www.studionol.co.kr/ko/contact',
+        'content-type': 'application/json',
+        'user-agent': 'UnitTestBrowser/InMemoryFallback',
+        'accept-language': 'en-US,en;q=0.9',
+      },
+    });
+    const { res, getStatus, getBody } = createResponse();
+
+    await handler(req, res);
+
+    expect(getStatus()).toBe(200);
+    expect(getBody().success).toBe(true);
+    const fetchCalls = (global.fetch as jest.Mock).mock.calls.map(([input]) => String(input));
+    expect(fetchCalls.some((url) => url.startsWith('https://mock-kv.local/'))).toBe(false);
+    expect(fetchCalls.some((url) => url.startsWith('https://api.resend.com/'))).toBe(true);
+    warnSpy.mockRestore();
   });
 });

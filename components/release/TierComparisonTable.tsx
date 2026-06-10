@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle } from '@/lib/lucide-icons';
 import type { Locale } from '../../lib/i18n';
 
 interface TierComparisonTableProps {

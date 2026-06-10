@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from '@/lib/lucide-icons';
 import { type TFunction } from 'i18next';
 import Link from 'next/link';
 import { LanguageSwitcher } from '../LanguageSwitcher';

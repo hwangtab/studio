@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { m, Variants } from 'framer-motion';
-import { X, Share2 } from 'lucide-react';
+import { X, Share2 } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import type { PortfolioItem, PortfolioCategory } from '../types/data';
 import { shareContent } from '../utils/shareUtils';

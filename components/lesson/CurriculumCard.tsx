@@ -1,6 +1,7 @@
 import React from 'react';
-import { LucideIcon, CheckCircle } from 'lucide-react';
+import { CheckCircle } from '@/lib/lucide-icons';
 import BaseCard from '../ui/BaseCard';
+import type { LucideIcon } from '@/lib/lucide-icons';
 
 export interface CurriculumCardProps {
     step: string;

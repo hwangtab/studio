@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle, ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';

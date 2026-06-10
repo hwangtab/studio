@@ -1,6 +1,6 @@
 import React from 'react';
 import { m } from 'framer-motion';
-import { Disc } from 'lucide-react';
+import { Disc } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';

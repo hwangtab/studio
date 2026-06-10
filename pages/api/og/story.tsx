@@ -1,6 +1,6 @@
 import { ImageResponse } from '@vercel/og';
 import type { NextRequest } from 'next/server';
-import { kv } from '@vercel/kv';
+import { getRedisRestConfig, incrWithExpire } from '../../../lib/rate-limit/redisRest';
 
 export const config = { runtime: 'edge' };
 
@@ -13,14 +13,17 @@ const OG_RATE_WINDOW = 60; // seconds
 const VALID_SLUG_RE = /^[\wㄱ-힝-]{1,120}$/;
 
 async function checkOgRateLimit(ip: string): Promise<boolean> {
-  if (!process.env.KV_REST_API_URL) return true; // KV 미설정 시 통과
+  const redisConfig = getRedisRestConfig();
+  if (!redisConfig) return true;
+
+  // OG 이미지는 SNS 크롤러용 부가 기능이라 rate limit은 best-effort로만 적용한다.
+  // Redis REST 미설정/장애가 OG 생성 자체를 막지 않도록 fail-open 유지.
   try {
     const key = `og:rl:${ip}`;
-    const count = await kv.incr(key);
-    if (count === 1) await kv.expire(key, OG_RATE_WINDOW);
+    const count = await incrWithExpire({ key, windowSeconds: OG_RATE_WINDOW, config: redisConfig });
     return count <= OG_RATE_LIMIT;
   } catch {
-    return true; // KV 장애 시 fail-open
+    return true;
   }
 }
 

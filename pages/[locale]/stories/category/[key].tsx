@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from '@/lib/lucide-icons';
 import StoryCard from '../../../../components/StoryCard';
 import SEO from '../../../../components/SEO';
 import ImageHero from '../../../../components/common/ImageHero';

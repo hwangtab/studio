@@ -95,6 +95,7 @@ if (!i18n.isInitialized) {
       react: {
         useSuspense: false,
       },
+      showSupportNotice: false,
       saveMissing: process.env.NODE_ENV !== 'production',
       missingKeyHandler: (_lng, _ns, key) => {
         if (process.env.NODE_ENV !== 'production') {

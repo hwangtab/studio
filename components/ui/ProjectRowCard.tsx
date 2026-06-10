@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Mic2, MousePointer2 } from 'lucide-react';
+import { ExternalLink, Mic2, MousePointer2 } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
 import { PortfolioItem } from '../../types/data';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, MessageSquare, Quote } from 'lucide-react';
+import { Star, MessageSquare, Quote } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';

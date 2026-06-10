@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Heart, Package, ListChecks, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Heart, Package, ListChecks, ArrowRight, CheckCircle2 } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';

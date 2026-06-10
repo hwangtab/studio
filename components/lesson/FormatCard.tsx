@@ -1,6 +1,6 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
 import BaseCard from '../ui/BaseCard';
+import type { LucideIcon } from '@/lib/lucide-icons';
 
 export interface FormatCardProps {
     icon: LucideIcon;

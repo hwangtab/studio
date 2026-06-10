@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import Link from 'next/link';
 import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from 'lucide-react';
+import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from '@/lib/lucide-icons';
 import { createInViewEnterAnimation } from '../utils/animationUtils';
 
 
