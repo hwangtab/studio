@@ -840,6 +840,7 @@
     },
     "detail": {
       "backToList": "返回故事列表",
+      "summaryLabel": "核心摘要",
       "share": "分享",
       "moreTitle": "更多故事",
       "noRelated": "没有相关故事。",

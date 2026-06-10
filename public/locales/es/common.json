@@ -840,6 +840,7 @@
     },
     "detail": {
       "backToList": "Volver a historias",
+      "summaryLabel": "Resumen clave",
       "share": "Compartir",
       "moreTitle": "Más historias",
       "noRelated": "No hay historias relacionadas.",

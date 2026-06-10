@@ -842,6 +842,7 @@
     },
     "detail": {
       "backToList": "กลับไปที่ Stories",
+      "summaryLabel": "สรุปสาระสำคัญ",
       "share": "แชร์",
       "moreTitle": "เรื่องราวเพิ่มเติม",
       "noRelated": "ไม่มีเรื่องราวที่เกี่ยวข้อง.",

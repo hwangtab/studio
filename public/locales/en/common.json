@@ -874,6 +874,7 @@
     },
     "detail": {
       "backToList": "Back to Stories",
+      "summaryLabel": "Key Summary",
       "share": "Share",
       "moreTitle": "More Stories",
       "noRelated": "No related stories.",
