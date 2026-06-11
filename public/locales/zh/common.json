@@ -131,7 +131,13 @@
       "description": "首尔恩平区 Studio NOL 距延新内站4号出口步行5分钟。10年以上资深工程师与老式模拟设备提供一站式音乐制作：企划·录音·混音·母带·音源发行。KakaoTalk 免费咨询。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
-    "howToDescription": "为您介绍在专业录音室制作音乐的全过程。"
+    "howToDescription": "为您介绍在专业录音室制作音乐的全过程。",
+    "producer": {
+      "tagline": "15年资历的唱片制作人 · 录音工程师",
+      "title": "制作人兼工程师 黄景夏",
+      "body": "第一次录音对任何人都可能感到茫然。15年来，我与多位独立音乐人一起制作唱片，从人声录音与指导，到混音、母带和发行准备，始终以一个连续流程负责到底。由同一个人贯穿项目，作品的音色和整体平衡更不容易偏移。",
+      "portfolioCta": "查看代表作品"
+    }
   },
   "portfolio": {
     "title": "作品集",
@@ -215,6 +221,9 @@
       "keywords": "Studio NOL 联系方式, 音乐制作咨询, 录音预约, 混音委托, 工作室位置, KakaoTalk 咨询, 制作报价",
       "title": "录音预约·报价咨询·交通指引 | Studio NOL",
       "description": "预约Studio NOL录音、混音、母带及配音。延新内站4号出口步行5分钟，KakaoTalk及邮件咨询，免费报价，24小时内回复。"
+    },
+    "whatToExpect": {
+      "title": "你可以期待什么"
     }
   },
   "pricing": {
@@ -742,6 +751,9 @@
       "location": "位置",
       "inquiry": "KakaoTalk 咨询",
       "imageAlt": "Studio NOL 练习室"
+    },
+    "relatedGuides": {
+      "title": "音乐练习室相关指南"
     }
   },
   "studioInfo": {
@@ -1642,6 +1654,10 @@
       "crossTier": {
         "sectionTitle": "也看看其他发行形态",
         "sectionSubtitle": "一起找到适合你的规模。"
+      },
+      "comparisonTable": {
+        "sectionTitle": "一目了然地比较",
+        "sectionSubtitle": "单曲、EP 或专辑 — 在一个视图中比较周期、基础价格和服务范围。"
       }
     },
     "scope": {

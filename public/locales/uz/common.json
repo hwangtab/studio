@@ -131,7 +131,13 @@
       "description": "Seul Eunpyeong-gu Studio NOL: 10+ yillik muhandislar, analog uskunalar, to’liq musiqa prodakshn xizmati. KakaoTalk orqali bepul maslahat."
     },
     "howToTitle": "Studio NOLda musiqa qanday ishlab chiqariladi",
-    "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma."
+    "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma.",
+    "producer": {
+      "tagline": "15 yillik tajribaga ega albom prodyuseri va yozuv muhandisi",
+      "title": "Prodyuser va muhandis Hwang Gyeongha",
+      "body": "Birinchi yozuv sessiyasi ko‘pchilik uchun murakkab tuyuladi. 15 yil davomida indie artistlar bilan albomlar tayyorlab, vokal yozuvi va yo‘naltirish, miks, mastering hamda reliz tayyorgarligini bitta uzluksiz jarayonda olib bordim. Loyiha boshidan oxirigacha bir qo‘lda bo‘lsa, ton va balans izchil qoladi.",
+      "portfolioCta": "Asosiy ishlarni ko‘rish"
+    }
   },
   "portfolio": {
     "title": "Portfel",
@@ -215,6 +221,9 @@
       "keywords": "Studio NOL aloqa, musiqa prodakshn so'rovi, yozuv bron qilish, miks so'rovi, studio manzili, KakaoTalk konsultatsiya, prodakshn narxlari",
       "title": "Aloqa, Bron va Yo'nalish | Studio NOL",
       "description": "Yozuv, miks va mastering bo'yicha murojaat qiling. KakaoTalk va email orqali mavjud. Yeonsinnae bekati 4-chiqishidan 5 daqiqa. 24 soat ichida javob."
+    },
+    "whatToExpect": {
+      "title": "Nimalarni kutish mumkin"
     }
   },
   "pricing": {
@@ -741,6 +750,9 @@
       "location": "Manzil",
       "inquiry": "So'rov",
       "imageAlt": "Studio NOL mashg'ulot xonasi"
+    },
+    "relatedGuides": {
+      "title": "Mashg‘ulot xonasi bo‘yicha tegishli qo‘llanmalar"
     }
   },
   "studioInfo": {
@@ -1640,6 +1652,10 @@
       "crossTier": {
         "sectionTitle": "Boshqa chiqarish formatlarini ham ko‘rib chiqing",
         "sectionSubtitle": "Sizga mos hajmni birga tanlaymiz."
+      },
+      "comparisonTable": {
+        "sectionTitle": "Bir qarashda solishtirish",
+        "sectionSubtitle": "Singl, EP yoki to‘liq albom — muddat, bazaviy narx va ish ko‘lamini bir joyda solishtiring."
       }
     },
     "scope": {

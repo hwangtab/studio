@@ -131,7 +131,13 @@
       "description": "Studio NOL en Eunpyeong-gu, Seúl: 10+ años de ingeniería, equipo analógico vintage, producción musical integral. Consulta gratuita por KakaoTalk."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
-    "howToDescription": "Una guía completa para producir música en un estudio profesional."
+    "howToDescription": "Una guía completa para producir música en un estudio profesional.",
+    "producer": {
+      "tagline": "Productor discográfico e ingeniero de grabación con 15 años de experiencia",
+      "title": "Productor e ingeniero Hwang Gyeongha",
+      "body": "La primera grabación puede sentirse abrumadora. Durante 15 años he producido discos con artistas indie, encargándome de la grabación y dirección vocal, mezcla, mastering y preparación del lanzamiento en un solo proceso. Cuando una persona acompaña todo el proyecto, el tono y el balance se mantienen consistentes.",
+      "portfolioCta": "Ver trabajos destacados"
+    }
   },
   "portfolio": {
     "title": "Portafolio",
@@ -215,6 +221,9 @@
       "keywords": "contacto de Studio NOL, consulta de producción musical, reserva de grabación, solicitud de mezcla, ubicación del estudio, consulta por KakaoTalk, presupuesto de producción",
       "title": "Contacto, Reservas e Indicaciones | Studio NOL",
       "description": "Consulte sobre grabación, mezcla y masterización. Disponible por KakaoTalk y correo electrónico. A 5 minutos de la estación Yeonsinnae. Respuesta en 24 horas."
+    },
+    "whatToExpect": {
+      "title": "Qué esperar"
     }
   },
   "pricing": {
@@ -742,6 +751,9 @@
       "location": "Ubicación",
       "inquiry": "Consulta",
       "imageAlt": "Sala de práctica de Studio NOL"
+    },
+    "relatedGuides": {
+      "title": "Guías relacionadas con salas de práctica"
     }
   },
   "studioInfo": {
@@ -1642,6 +1654,10 @@
       "crossTier": {
         "sectionTitle": "Mira también otros formatos de lanzamiento",
         "sectionSubtitle": "Encontremos juntos la escala que se ajusta a ti."
+      },
+      "comparisonTable": {
+        "sectionTitle": "Comparar de un vistazo",
+        "sectionSubtitle": "Single, EP o álbum completo — compara tiempos, precio base y alcance en una sola vista."
       }
     },
     "scope": {

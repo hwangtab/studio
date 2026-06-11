@@ -131,7 +131,13 @@
       "keywords": "Studio NOL Korea, music studio Yeonsinnae, recording studio Seoul, about Studio NOL, music production process, mixing mastering, analog equipment"
     },
     "howToTitle": "How to Produce Music at Studio NOL",
-    "howToDescription": "A complete guide to producing music at a professional studio."
+    "howToDescription": "A complete guide to producing music at a professional studio.",
+    "producer": {
+      "tagline": "15-year record producer and recording engineer",
+      "title": "Producer and engineer Hwang Gyeongha",
+      "body": "A first recording session can feel overwhelming. Over 15 years of making records with indie artists, I have handled vocal recording and direction, mixing, mastering, and release prep in one continuous process. When one person carries the project through, the tone and balance stay consistent.",
+      "portfolioCta": "View featured work"
+    }
   },
   "portfolio": {
     "title": "Portfolio",
@@ -1685,6 +1691,10 @@
       "crossTier": {
         "sectionTitle": "See other release formats too",
         "sectionSubtitle": "Find the scale that fits you."
+      },
+      "comparisonTable": {
+        "sectionTitle": "Compare at a Glance",
+        "sectionSubtitle": "Single, EP, or full album — compare timeline, base price, and scope in one view."
       }
     },
     "scope": {

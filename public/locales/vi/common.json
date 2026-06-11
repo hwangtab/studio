@@ -131,7 +131,13 @@
       "description": "Studio NOL Eunpyeong-gu, Seoul — 5 phút từ ga Yeonsinnae cửa 4. Kỹ sư 10+ năm cùng thiết bị analog, sản xuất âm nhạc trọn gói. Tư vấn KakaoTalk miễn phí."
     },
     "howToTitle": "Cách sản xuất âm nhạc tại Studio NOL",
-    "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp."
+    "howToDescription": "Hướng dẫn chi tiết quy trình sản xuất âm nhạc tại một studio chuyên nghiệp.",
+    "producer": {
+      "tagline": "Nhà sản xuất thu âm và kỹ sư ghi âm với 15 năm kinh nghiệm",
+      "title": "Nhà sản xuất và kỹ sư Hwang Gyeongha",
+      "body": "Buổi thu âm đầu tiên có thể khiến ai cũng thấy bối rối. Trong 15 năm làm album với các nghệ sĩ indie, tôi đã phụ trách thu và định hướng vocal, mixing, mastering và chuẩn bị phát hành trong một quy trình liền mạch. Khi một người theo sát đến cuối, màu âm và cân bằng của dự án được giữ nhất quán.",
+      "portfolioCta": "Xem tác phẩm tiêu biểu"
+    }
   },
   "portfolio": {
     "title": "Danh mục",
@@ -215,6 +221,9 @@
       "keywords": "liên hệ Studio NOL, tư vấn sản xuất âm nhạc, đặt phòng thu, yêu cầu mixing, địa điểm studio, tư vấn KakaoTalk, báo giá sản xuất",
       "title": "Liên Hệ, Đặt Lịch & Chỉ Đường | Studio NOL",
       "description": "Liên hệ tư vấn thu âm, mixing, mastering tại Studio NOL Yeonsinnae. Hỗ trợ qua KakaoTalk và email. Cách ga 5 phút đi bộ. Phản hồi trong 24 giờ."
+    },
+    "whatToExpect": {
+      "title": "Bạn có thể mong đợi gì"
     }
   },
   "pricing": {
@@ -742,6 +751,9 @@
       "location": "Địa điểm",
       "inquiry": "Liên hệ",
       "imageAlt": "Phòng tập Studio NOL"
+    },
+    "relatedGuides": {
+      "title": "Hướng dẫn liên quan đến phòng tập nhạc"
     }
   },
   "studioInfo": {
@@ -1642,6 +1654,10 @@
       "crossTier": {
         "sectionTitle": "Xem thử các hình thức phát hành khác",
         "sectionSubtitle": "Cùng tìm ra quy mô phù hợp với bạn."
+      },
+      "comparisonTable": {
+        "sectionTitle": "So sánh nhanh",
+        "sectionSubtitle": "Single, EP hoặc album đầy đủ — so sánh thời gian, giá cơ bản và phạm vi trong một màn hình."
       }
     },
     "scope": {
