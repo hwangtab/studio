@@ -572,7 +572,7 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
   return buildPageStaticProps(
     locale,
     { locale, portfolioItems, spotlightItems, relatedStories, asOf },
-    { revalidate: 86400, i18nSections: ['releaseProject'] }
+    { revalidate: 86400, i18nSections: ['releaseProject', 'portfolio'] }
   );
 };
 
