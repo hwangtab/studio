@@ -43,11 +43,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const siteConfig = getSiteConfig(locale);
   const siteUrl = siteConfig.url;
-  // Non-ko RSS feeds should only list stories that have a native translation.
-  // Otherwise we syndicate URLs that render with `noindex` (fallback pages),
-  // which wastes crawl budget and leaks low-quality links.
+  // RSS should only list stories that render as indexable in the requested
+  // locale. Fallback, explicit noindex, and runtime-thin pages waste crawl
+  // budget and leak low-quality links when syndicated.
   const stories = getAllStories(locale).filter((story) =>
-    locale === 'ko' ? true : getStoryAvailableLocales(story.slug).includes(locale)
+    getStoryAvailableLocales(story.slug).includes(locale)
   );
 
   const lastBuildDate = stories.length > 0

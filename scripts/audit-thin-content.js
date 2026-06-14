@@ -14,16 +14,19 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
+const {
+  THIN_CONTENT_THRESHOLD,
+  SHORTCODE_CHAR_ESTIMATES,
+  AUTO_EXPAND_BLOCK_REGEX,
+  REGION_HUB_SLUGS,
+} = require('../lib/sitemap/thinContent');
 
 const storiesDirectory = path.join(process.cwd(), 'content/stories');
 const portfolioFile = path.join(process.cwd(), 'data/portfolio.ts');
 
-const THIN_CONTENT_THRESHOLD = 1500;
-const SHORTCODE_CHAR_ESTIMATES = {
-  'online-fallback': 120,
-  'session-checklist': 420,
-};
-
+const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
+const DEFAULT_LOCALE = 'ko';
+const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 const args = process.argv.slice(2);
 const showSummary = args.includes('--summary');
 const ciMode = args.includes('--fail');
@@ -32,12 +35,20 @@ const ciMode = args.includes('--fail');
  * Compute content score for a given raw markdown content string.
  * Returns { rawNonWhitespace, shortcodeBonus, total, isThin }.
  */
-function scoreContent(content) {
-  const rawNonWhitespace = content.replace(/\s+/g, '').length;
-  const shortcodeBonus = [...content.matchAll(/%%([a-z-]+)%%/g)]
-    .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? 80), 0);
+function scoreContent(slug, content) {
+  const uniqueContent = content.replace(AUTO_EXPAND_BLOCK_REGEX, '');
+  const rawNonWhitespace = uniqueContent.replace(/\s+/g, '').length;
+  const shortcodeBonus = [...uniqueContent.matchAll(/%%([a-z-]+)%%/g)]
+    .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? SHORTCODE_DEFAULT_CHAR_ESTIMATE), 0);
   const total = rawNonWhitespace + shortcodeBonus;
-  return { rawNonWhitespace, shortcodeBonus, total, isThin: total < THIN_CONTENT_THRESHOLD };
+  const regionHubExempt = REGION_HUB_SLUGS.has(slug);
+  return {
+    rawNonWhitespace,
+    shortcodeBonus,
+    total,
+    regionHubExempt,
+    isThin: !regionHubExempt && total < THIN_CONTENT_THRESHOLD,
+  };
 }
 
 /**
@@ -72,8 +83,7 @@ function auditStories() {
 
   for (const slug of slugs) {
     // Check each locale
-    const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
-    for (const locale of locales) {
+    for (const locale of LOCALES) {
       let filePath = null;
       let sourceLocale = null;
 
@@ -96,13 +106,28 @@ function auditStories() {
       let score;
       let category = 'uncategorized';
       let robots = null;
+      let effectiveRobots = null;
+      let noindexReasons = [];
 
       try {
         const raw = fs.readFileSync(filePath, 'utf-8');
         const { data, content } = matter(raw);
-        score = scoreContent(content);
+        score = scoreContent(slug, content);
         category = data.category || 'uncategorized';
         robots = data.robots || null;
+        if (typeof robots === 'string' && /noindex/i.test(robots)) {
+          noindexReasons.push('frontmatter');
+        }
+        if (locale !== DEFAULT_LOCALE) {
+          noindexReasons.push('site-wide non-ko');
+        }
+        if (sourceLocale !== locale) {
+          noindexReasons.push('fallback translation');
+        }
+        if (score.isThin) {
+          noindexReasons.push('thin auto-noindex');
+        }
+        effectiveRobots = noindexReasons.length > 0 ? 'noindex, follow' : robots;
       } catch (err) {
         // YAML parsing failed — skip this file but note it
         results.push({
@@ -116,6 +141,8 @@ function auditStories() {
           total: 0,
           isThin: true,
           robots: null,
+          effectiveRobots: null,
+          noindexReasons: [],
           parseError: err.message.slice(0, 100),
         });
         continue;
@@ -129,6 +156,8 @@ function auditStories() {
         category,
         ...score,
         robots,
+        effectiveRobots,
+        noindexReasons,
       });
     }
   }
@@ -203,18 +232,22 @@ function auditPortfolio() {
 /**
  * Print human-readable summary.
  */
+function isEffectivelyNoindex(result) {
+  return (Array.isArray(result.noindexReasons) && result.noindexReasons.length > 0)
+    || (typeof result.effectiveRobots === 'string' && /noindex/i.test(result.effectiveRobots));
+}
+
 function printSummary(storyResults, portfolioResults) {
-  const isNoindex = (r) => typeof r.robots === 'string' && /noindex/i.test(r.robots);
   const thinAll = storyResults.filter(r => r.isThin);
-  const thinActionable = thinAll.filter(r => !isNoindex(r));
-  const thinNoindex = thinAll.filter(isNoindex);
+  const thinActionable = thinAll.filter(r => !isEffectivelyNoindex(r));
+  const thinNoindex = thinAll.filter(isEffectivelyNoindex);
   const thinPortfolio = portfolioResults.filter(r => r.isThin);
 
   console.log('\n=== Thin Content Audit Summary ===\n');
 
   console.log(`Stories: ${storyResults.length} total, ${thinAll.length} under ${THIN_CONTENT_THRESHOLD} chars`);
   console.log(`  ├─ actionable (indexable & thin): ${thinActionable.length}`);
-  console.log(`  └─ already noindex (safe to ignore): ${thinNoindex.length}`);
+  console.log(`  └─ noindex by policy/runtime (safe to ignore): ${thinNoindex.length}`);
   console.log(`Portfolio: ${portfolioResults.length} total, ${thinPortfolio.length} without productionNotes\n`);
 
   if (thinActionable.length > 0) {
@@ -262,7 +295,7 @@ function main() {
   const storyResults = auditStories();
   const portfolioResults = auditPortfolio();
 
-  if (showSummary) {
+  if (showSummary || ciMode) {
     printSummary(storyResults, portfolioResults);
   } else {
     // Output JSON
@@ -274,6 +307,7 @@ function main() {
       summary: {
         totalStories: storyResults.length,
         thinStories: storyResults.filter(r => r.isThin).length,
+        actionableThinStories: storyResults.filter(r => r.isThin && !isEffectivelyNoindex(r)).length,
         totalPortfolio: portfolioResults.length,
         thinPortfolio: portfolioResults.filter(r => r.isThin).length,
       }
@@ -282,10 +316,9 @@ function main() {
   }
 
   // CI mode: fail only on actionable thin content (indexable + thin).
-  // Stories with `robots: noindex` in frontmatter are intentional and excluded.
+  // Stories that are noindex by frontmatter, locale policy, fallback, or runtime thin gate are excluded.
   if (ciMode) {
-    const isNoindex = (r) => typeof r.robots === 'string' && /noindex/i.test(r.robots);
-    const actionableThinStories = storyResults.filter(r => r.isThin && !isNoindex(r)).length;
+    const actionableThinStories = storyResults.filter(r => r.isThin && !isEffectivelyNoindex(r)).length;
     const thinPortfolio = portfolioResults.filter(r => r.isThin).length;
     const thinCount = actionableThinStories + thinPortfolio;
     if (thinCount > 0) {

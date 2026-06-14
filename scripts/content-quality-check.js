@@ -159,6 +159,19 @@ function checkFile(filePath) {
     if (sumLen > 200) warnings.push(`summary 너무 김: ${sumLen}자 (50~200자)`);
   }
 
+  // Rule 4a: 생성 요약의 주제 불일치 방지
+  const titleText = fm.title || '';
+  const summaryText = fm.summary || '';
+  if (/녹음실/.test(titleText) && /음악연습실 선택 기준/.test(summaryText)) {
+    violations.push('summary 주제 불일치: 녹음실 글이 음악연습실 월세 요약으로 생성됨');
+  }
+  if (/^\d+\s+정보를/.test(summaryText)) {
+    violations.push('summary 주제 추출 실패: 숫자만 topic으로 사용됨');
+  }
+  if (((summaryText.match(/"/g) || []).length % 2) === 1) {
+    violations.push('summary 따옴표 불균형: 큰따옴표가 홀수 개임');
+  }
+
   // Rule 4b: cta enum 검증 (옵션 — 명시 시에만 유효성 검사)
   const VALID_CTA = ['recording', 'lesson', 'practice', 'production'];
   if (fm.cta !== undefined && !VALID_CTA.includes(fm.cta)) {

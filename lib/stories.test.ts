@@ -3,6 +3,8 @@
 import {
   extractAutoExpandBlock,
   computeThinContentStatus,
+  getRelatedStories,
+  getStoryAvailableLocales,
   getStoryPaths,
   THIN_CONTENT_THRESHOLD,
   SHORTCODE_CHAR_ESTIMATES,
@@ -119,5 +121,19 @@ describe('getStoryPaths', () => {
     expect(paths).not.toContainEqual({
       params: { locale: 'ko', id: 'korean-practice-room-booking-english' },
     });
+  });
+});
+
+describe('getRelatedStories', () => {
+  it('does not recommend noindex or runtime-thin stories from an indexable page', () => {
+    const related = getRelatedStories('ko', 'seoul1', 6);
+
+    expect(related).toHaveLength(6);
+    expect(related.map((story) => story.slug)).not.toEqual(
+      expect.arrayContaining(['busan1', 'gwangju1', 'jeju1', 'sejong1', 'ulsan1'])
+    );
+    expect(
+      related.every((story) => getStoryAvailableLocales(story.slug).includes('ko'))
+    ).toBe(true);
   });
 });

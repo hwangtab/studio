@@ -10,7 +10,7 @@ import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
 import ImageHero from '../../../components/common/ImageHero';
-import { getAllStories, isListableStory } from '../../../lib/stories';
+import { getAllStories, isBrowsableStoryForLocale } from '../../../lib/stories';
 import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
 import type { Story } from '../../../types/story';
 import { Section } from '../../../components/ui/Section';
@@ -350,8 +350,10 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps<StoriesPageProps> = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
-  // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
-  const fullStories = getAllStories(locale).filter(isListableStory);
+  // noindex/thin/fallback 및 일반 시·군 지역 페이지는 listing에서도 숨김.
+  const fullStories = getAllStories(locale).filter((story) =>
+    isBrowsableStoryForLocale(story, locale)
+  );
   const categoryKeys = STORY_CATEGORY_KEYS.filter((key) =>
     fullStories.some((story) => story.categoryKey === key)
   );

@@ -9,7 +9,7 @@ import StoryCard from '../../../../components/StoryCard';
 import SEO from '../../../../components/SEO';
 import ImageHero from '../../../../components/common/ImageHero';
 import ContactCTA from '../../../../components/common/ContactCTA';
-import { getAllStories, isListableStory } from '../../../../lib/stories';
+import { getAllStories, isBrowsableStoryForLocale } from '../../../../lib/stories';
 import { STORY_CATEGORY_KEYS, type StoryCategoryKey } from '../../../../lib/storyCategories';
 import type { StoryCardData } from '../../../../types/story';
 import { Section } from '../../../../components/ui/Section';
@@ -299,8 +299,11 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
   }
 
   const allStories = getAllStories(locale);
-  // 일반 시·군 지역 페이지는 noindex 처리되어 listing에서도 숨김 (광역 허브 16개만 노출).
-  const filtered = allStories.filter((story) => story.categoryKey === key && isListableStory(story));
+  const listableStories = allStories.filter((story) =>
+    isBrowsableStoryForLocale(story, locale)
+  );
+  // noindex/thin/fallback 및 일반 시·군 지역 페이지는 listing에서도 숨김.
+  const filtered = listableStories.filter((story) => story.categoryKey === key);
   // __NEXT_DATA__ 크기 절감: Story 전체 객체 대신 StoryCard에 필요한 필드만 직렬화.
   const toStoryCardData = (story: typeof filtered[number]): StoryCardData => ({
     slug: story.slug,
@@ -325,7 +328,7 @@ export const getStaticProps: GetStaticProps<StoriesCategoryPageProps> = async ({
       initialStories,
       storyLinks,
       storyCount: filtered.length,
-      allStoriesCount: allStories.length,
+      allStoriesCount: listableStories.length,
       totalPages: Math.max(1, Math.ceil(filtered.length / 12)),
     },
     { revalidate: 3600, i18nSections: ['stories', 'pricing'] }

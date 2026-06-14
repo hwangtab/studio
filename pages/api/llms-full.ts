@@ -74,10 +74,10 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 
   const localesToEmit = requestedLocale ? [requestedLocale] : locales;
   for (const locale of localesToEmit) {
-    // Only emit stories that have native content for this locale — fallback pages
-    // render with `noindex` and should not be surfaced to LLM crawlers either.
+    // Only emit stories that render as indexable for this locale. Fallback,
+    // explicit noindex, and runtime-thin pages should not be surfaced to LLM crawlers.
     const stories = getAllStories(locale).filter((story) =>
-      locale === 'ko' ? true : getStoryAvailableLocales(story.slug).includes(locale)
+      getStoryAvailableLocales(story.slug).includes(locale)
     );
     if (stories.length === 0) continue;
     body += `\n## Stories — ${HEADER_LABELS[locale]} (${locale}) · ${stories.length} entries\n\n`;

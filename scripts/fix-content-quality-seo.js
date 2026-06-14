@@ -122,7 +122,13 @@ for (const list of queryMetrics.values()) {
   list.sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions || a.position - b.position);
 }
 
-const removeWrappingQuotes = (value) => String(value || '').trim().replace(/^['"]|['"]$/g, '');
+const removeWrappingQuotes = (value) => {
+  const text = String(value || '').trim();
+  if (text.length >= 2 && ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'")))) {
+    return text.slice(1, -1).trim();
+  }
+  return text;
+};
 
 const parseFrontmatter = (content) => {
   const match = content.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -225,7 +231,7 @@ const titleCore = (title) =>
   removeWrappingQuotes(title)
     .replace(/\s*\|\s*.+$/, '')
     .split('—')[0]
-    .split(':')[0]
+    .replace(/([^\d])\s*[:：]\s+.*$/, '$1')
     .trim();
 
 const compactText = (value) => String(value || '').replace(/\s+/g, ' ').trim();
@@ -272,6 +278,18 @@ const detectInstrument = (slug, title) => {
 
 const hasAny = (value, pattern) => pattern.test(value);
 
+const isRecordingRegionTitle = (title) => /녹음실|녹음\s*스튜디오|레코딩\s*스튜디오|스튜디오 방문/.test(title);
+
+const isPracticeRoomRegionTitle = (title) => /음악연습실/.test(title);
+
+const normalizeRegionName = (region) => compactText(region).replace(/\s+근처$/, '').trim();
+
+const buildRecordingRegionSummary = (region, topic) => {
+  const origin = normalizeRegionName(region || topic);
+  const prefix = origin ? `${origin}에서 ` : '';
+  return `${prefix}연신내 Studio NOL까지 녹음실 방문 동선, 당일 세션 준비, 온라인 믹싱 의뢰 방법을 정리합니다. 이동 시간과 파일 준비 기준을 함께 확인하세요.`;
+};
+
 const buildSummary = (slug, fm, tier) => {
   const topic = topicFromTitleAndQuery(slug, fm);
   const title = fm.title || slug;
@@ -282,8 +300,12 @@ const buildSummary = (slug, fm, tier) => {
 
   if (category === '지역 가이드' && /^.+에서\s+서울/.test(title)) {
     summary = `${region}에서 서울 연신내 Studio NOL까지 이동 시간, KTX·SRT 동선, 당일 녹음 예약 준비를 정리합니다. 세션 전 파일 공유와 귀가 일정까지 한 번에 확인하세요.`;
-  } else if (category === '지역 가이드') {
+  } else if (category === '지역 가이드' && isRecordingRegionTitle(title)) {
+    summary = buildRecordingRegionSummary(region, topic);
+  } else if (category === '지역 가이드' && isPracticeRoomRegionTitle(title)) {
     summary = `${region || topic} 음악연습실 선택 기준을 월 36만원, 24시간 이용, 방음 개인실 관점에서 정리합니다. 연신내 Studio NOL 방문 동선과 입주 전 확인할 조건도 함께 봅니다.`;
+  } else if (category === '지역 가이드') {
+    summary = `${region || topic} 지역에서 Studio NOL 방문 전 이동 시간, 예약 준비, 연습·녹음 목적별 확인할 조건을 정리합니다. 상담 전 확인할 기준도 함께 봅니다.`;
   } else if (category === '악기 연습' && /창업|양도|인수|계약|운영/.test(title)) {
     summary = `${topic} 정보를 비용, 계약 조건, 운영 리스크 기준으로 정리합니다. 방음 시공, 월세 입주 수요, Studio NOL 운영 경험에서 확인할 체크포인트를 담았습니다.`;
   } else if (category === '악기 연습' && hasAny(title, /예약|처음 이용|이용 가이드|에티켓|주말|월세|시간 대여|입주|활용법|선택|비교|vs|차이/i)) {
@@ -305,7 +327,9 @@ const buildSummary = (slug, fm, tier) => {
   } else if (category === '믹싱·마스터링' || category === '강좌') {
     summary = `${topic} 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.`;
   } else if (category === '음악 비즈니스') {
-    if (/EPK|프레스킷/i.test(title)) {
+    if (/1:1.*레슨.*(월정액|단건)|월정액.*단건/.test(title)) {
+      summary = '1:1 음악 레슨 월정액과 단건 수강 비용 효율을 비교합니다. 회당 비용, 학원 대비 차이, 목표별 선택 기준을 Studio NOL 레슨 구조에 맞춰 정리합니다.';
+    } else if (/EPK|프레스킷/i.test(title)) {
       summary = 'EPK 뜻과 만드는 법을 인디 뮤지션 관점에서 정리합니다. 바이오, 프로필 사진, 음원 링크, 공연 이력, 섭외 연락처까지 프레스킷 필수 요소를 확인하세요.';
     } else {
       summary = `${topic} 정보를 비용, 일정, 준비물 기준으로 비교합니다. Studio NOL 상담 전에 예산과 선택 기준, 의뢰 전 확인할 내용을 빠르게 정리하세요.`;
@@ -441,16 +465,17 @@ const buildFaq = (slug, fm, body) => {
   const category = fm.category || '';
   const topic = topicFromTitleAndQuery(slug, fm);
   const region = detectRegionName(title, slug);
+  const faqRegion = normalizeRegionName(region || topic);
   const instrument = detectInstrument(slug, title);
 
-  if (category === '지역 가이드' && /^.+에서\s+서울/.test(title)) {
+  if (category === '지역 가이드' && (/^.+에서\s+서울/.test(title) || isRecordingRegionTitle(title))) {
     return [
       {
-        q: `${region}에서 Studio NOL까지 당일 방문이 가능한가요?`,
-        a: answerLimit(`${region}에서 KTX·SRT 또는 항공편으로 서울에 도착한 뒤 지하철로 연신내역까지 이동하면 당일 녹음 세션이 가능합니다. 예약 전 MR과 참고 음원을 먼저 공유하면 현장 시간을 줄일 수 있습니다.`),
+        q: `${faqRegion}에서 Studio NOL까지 당일 방문이 가능한가요?`,
+        a: answerLimit(`${faqRegion}에서 대중교통이나 차량으로 연신내역까지 이동하면 당일 녹음 세션이 가능합니다. 예약 전 MR과 참고 음원을 먼저 공유하면 현장 시간을 줄일 수 있습니다.`),
       },
       {
-        q: `${region} 뮤지션이 녹음 전에 준비할 것은 무엇인가요?`,
+        q: `${faqRegion} 뮤지션이 녹음 전에 준비할 것은 무엇인가요?`,
         a: answerLimit('가사, MR 또는 세션 파일, 참고 곡 링크, 원하는 결과물 형식을 미리 보내주세요. 장거리 이동일수록 세션 시작 30분 전 도착해 목을 풀고 모니터 밸런스를 확인하는 것이 좋습니다.'),
       },
       {
@@ -460,10 +485,10 @@ const buildFaq = (slug, fm, body) => {
     ];
   }
 
-  if (category === '지역 가이드') {
+  if (category === '지역 가이드' && isPracticeRoomRegionTitle(title)) {
     return [
       {
-        q: `${region || topic} 음악연습실은 월 이용 기준인가요?`,
+        q: `${faqRegion} 음악연습실은 월 이용 기준인가요?`,
         a: answerLimit('Studio NOL은 시간제 합주실이 아니라 월 입주형 방음 개인실을 운영합니다. 월 36만원, 보증금 0원, 24시간 이용 기준으로 장기 연습 루틴을 만들기 좋습니다.'),
       },
       {
@@ -473,6 +498,23 @@ const buildFaq = (slug, fm, body) => {
       {
         q: `입주 전 방문 상담을 받을 수 있나요?`,
         a: answerLimit('가능합니다. 카카오톡으로 희망 시간과 연습 악기를 알려주시면 공실 여부, 이용 규칙, 방음 상태를 현장에서 확인할 수 있도록 안내합니다.'),
+      },
+    ];
+  }
+
+  if (category === '지역 가이드') {
+    return [
+      {
+        q: `${faqRegion}에서 Studio NOL 방문 전 무엇을 확인해야 하나요?`,
+        a: answerLimit('목적이 녹음인지 월 연습실 이용인지 먼저 정하고, 이동 시간, 예약 가능 시간, 파일 준비물 또는 입주 상담 일정을 함께 확인하는 것이 좋습니다.'),
+      },
+      {
+        q: `방문 상담이나 녹음 예약은 어떻게 잡나요?`,
+        a: answerLimit('카카오톡으로 희망 날짜, 이용 목적, 준비된 파일이나 악기를 알려주시면 공실 여부와 녹음 가능 시간을 확인해 안내합니다.'),
+      },
+      {
+        q: `온라인으로 먼저 의뢰할 수도 있나요?`,
+        a: answerLimit('가능합니다. 녹음 파일, MR, BPM, 키, 참고 곡을 보내면 믹싱·마스터링 견적과 추가 녹음 필요 여부를 먼저 확인할 수 있습니다.'),
       },
     ];
   }

@@ -557,17 +557,23 @@ export const isListableStory = (story: Pick<Story, 'slug' | 'categoryKey'>): boo
   return true;
 };
 
+export const isBrowsableStoryForLocale = (
+  story: Pick<Story, 'slug' | 'categoryKey'>,
+  locale: string = defaultLocale
+): boolean => {
+  const targetLocale = locales.includes(locale as Locale) ? (locale as Locale) : defaultLocale;
+  return isListableStory(story) && getStoryAvailableLocales(story.slug).includes(targetLocale);
+};
+
 export const getRelatedStories = (locale: string, slug: string, limit = 6): Story[] => {
-  const all = getAllStories(locale);
+  const targetLocale = locales.includes(locale as Locale) ? (locale as Locale) : defaultLocale;
+  const all = getAllStories(targetLocale);
   const current = all.find((item) => item.slug === slug);
-  // PM 회의 #2 보강: doorway 페이지를 related listing에서 제외해 related 슬롯이
-  // 색인되지 않는 페이지로 낭비되지 않도록 차단. isListableStory(region doorway)
-  // 필터링. thin gate는 빌드 시 sitemap/색인 단에서 별도 처리되므로 여기서는
-  // 카테고리·매칭 신호로 자연스럽게 deprioritize 되도록 둠 (Story 경량 타입에
-  // isThinContent 필드 부재).
+  // Related 카드가 noindex/thin 페이지로 새면 indexable 페이지의 내부 링크 품질이
+  // 떨어진다. Listing 정책과 sitemap/hreflang의 indexable locale 정책을 함께 적용한다.
   const candidates = all.filter((item) =>
     item.slug !== slug
-    && isListableStory(item),
+    && isBrowsableStoryForLocale(item, targetLocale),
   );
 
   if (!current) return candidates.slice(0, limit);

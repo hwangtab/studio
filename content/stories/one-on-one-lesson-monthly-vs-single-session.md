@@ -7,7 +7,7 @@ keywords: ["1대1 음악 레슨 비용", "보컬 레슨 월정액 vs 단건", "�
 tags: ["lesson", "vocal-coaching", "pricing", "comparison", "decision-stage"]
 thumbnail: /images/lesson1.webp
 summary: >-
-  1 정보를 비용, 일정, 준비물 기준으로 비교합니다. Studio NOL 상담 전에 예산과 선택 기준, 의뢰 전 확인할 내용을 빠르게 정리하세요.
+  1:1 음악 레슨 월정액과 단건 수강 비용 효율을 비교합니다. 회당 비용, 학원 대비 차이, 목표별 선택 기준을 Studio NOL 레슨 구조에 맞춰 정리합니다.
 faq:
   - q: "초보자도 받을 수 있나요?"
     a: >-

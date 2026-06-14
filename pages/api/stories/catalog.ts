@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAllStories, isListableStory } from '../../../lib/stories';
+import { getAllStories, isBrowsableStoryForLocale } from '../../../lib/stories';
 import { locales, defaultLocale, type Locale } from '../../../lib/i18n';
 import { STORY_CATEGORY_KEYS, type StoryCategoryKey } from '../../../lib/storyCategories';
 import type { StoryCardData } from '../../../types/story';
@@ -48,7 +48,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  const allStories = getAllStories(locale).filter(isListableStory);
+  const allStories = getAllStories(locale).filter((story) =>
+    isBrowsableStoryForLocale(story, locale)
+  );
   const stories = category === 'all'
     ? allStories
     : allStories.filter((story) => story.categoryKey === category);

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAllStories } from '../../lib/stories';
+import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
@@ -226,7 +226,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     body += '\n' + localeKeyPages(siteUrl, locale, LOCALE_LABELS[locale]);
   }
 
-  const koStories = getAllStories('ko').slice(0, 50);
+  const koStories = getAllStories('ko')
+    .filter((story) => getStoryAvailableLocales(story.slug).includes('ko'))
+    .slice(0, 50);
   if (koStories.length > 0) {
     body += '\n## Recent Stories (Korean, latest 50)\n\n';
     for (const story of koStories) {
