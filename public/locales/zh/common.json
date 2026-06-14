@@ -293,8 +293,8 @@
   "lesson": {
     "mobileMenu": "移动菜单",
     "seo": {
-      "title": "声乐·MIDI·混音 1:1 音乐课 ₩35万/月 | 首尔 Studio NOL",
-      "description": "专业制作人1:1教授声乐·MIDI·混音·母带·发行. ₩35万/月, 首次免费, 延新内站步行5分钟.",
+      "title": "MIDI·混音·作曲 1:1 音乐课 ₩35万/月 | 首尔 Studio NOL",
+      "description": "专业制作人1:1教授 MIDI·混音·作曲·母带·发行. ₩35万/月, 首次免费, 延新内站步行5分钟.",
       "keywords": "音乐制作咨询, 混音反馈, MIDI 指导, 音乐制作课程, 短期 MIDI 课程, Cubase, Logic Pro"
     },
     "hero": {
@@ -369,7 +369,7 @@
         "items": [
           "专业麦克风（U87ai 等）对比试听",
           "信号流程（麦克风-前级-DAW）理解",
-          "人声指导与音高修正（Melodyne）",
+          "人声音高·节奏修正（Melodyne）",
           "真实乐器拾音技巧"
         ]
       },

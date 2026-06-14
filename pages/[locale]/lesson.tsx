@@ -477,14 +477,14 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                 hubSlug="vocal-beginners-guide"
                 locale={locale}
                 title="음원 발매를 목표로 하는 1:1 종합 레슨 가이드"
-                subtitle="보컬·MIDI 작곡·믹싱·마스터링까지 — 현직 프로듀서 1:1 실전 커리큘럼과 학습 가이드를 한 페이지에 모았습니다."
+                subtitle="MIDI 작곡·믹싱·마스터링까지 — 현직 프로듀서 1:1 실전 커리큘럼과 학습 가이드를 한 페이지에 모았습니다."
             />
 
             <RelatedStoriesSection
                 stories={relatedStories}
                 locale={locale}
-                title={t('lesson.relatedStoriesTitle', { defaultValue: '레슨생들이 가장 많이 본 보컬·연습 가이드' })}
-                subtitle={t('lesson.relatedStoriesSubtitle', { defaultValue: '오디션·발성·음감 훈련에 바로 도움이 되는 실전 가이드를 모았습니다.' })}
+                title={t('lesson.relatedStoriesTitle', { defaultValue: '레슨생들이 가장 많이 본 작곡·믹싱 가이드' })}
+                subtitle={t('lesson.relatedStoriesSubtitle', { defaultValue: '작곡·믹싱·발매에 바로 도움이 되는 실전 가이드를 모았습니다.' })}
             />
 
             {/* Improved CTA Section */}

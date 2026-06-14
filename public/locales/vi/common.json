@@ -293,8 +293,8 @@
   "lesson": {
     "mobileMenu": "Menu di động",
     "seo": {
-      "title": "Thanh nhạc·MIDI·Mix 1:1 ₩350K/tháng | Studio NOL Seoul",
-      "description": "Học 1:1 thanh nhạc, MIDI, mixing, mastering với producer chuyên nghiệp. ₩350K/tháng, buổi đầu miễn phí, 5 phút từ ga Yeonsinnae.",
+      "title": "MIDI·Mix·Sáng tác 1:1 ₩350K/tháng | Studio NOL Seoul",
+      "description": "Học 1:1 MIDI, mixing, sáng tác, mastering với producer chuyên nghiệp. ₩350K/tháng, buổi đầu miễn phí, 5 phút từ ga Yeonsinnae.",
       "keywords": "tư vấn sản xuất âm nhạc, phản hồi mixing, mentoring MIDI, coaching sản xuất âm nhạc, lớp MIDI ngắn hạn, Cubase, Logic Pro"
     },
     "hero": {
@@ -369,7 +369,7 @@
         "items": [
           "So sánh micro chuyên nghiệp (U87ai, v.v.)",
           "Luồng tín hiệu (Mic‑Pre‑DAW)",
-          "Vocal directing & tuning",
+          "Chỉnh tune & timing track vocal (Melodyne)",
           "Kỹ thuật đặt mic nhạc cụ"
         ]
       },
