@@ -13,7 +13,7 @@ tags:
   - ASMR 편집
 thumbnail: /images/service6.webp
 summary: >-
-  ASMR 콘텐츠를 만들려면 조용한 환경, 민감한 마이크, 적절한 편집이 핵심입니다.
+  ASMR 녹음 방법 준비 과정을 녹음 전 준비물, 세션 진행, 결과물 기준으로 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
 faq:
   - q: ASMR 녹음에 어떤 마이크가 좋은가요?
     a: >-

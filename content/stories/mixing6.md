@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: 믹싱·마스터링
 tags: ["미터링", "Metering", "LUFS", "VU미터", "믹싱 레벨", "피크미터", "라우드니스"]
 summary: >-
-  미터링(Metering)이란 오디오 신호 레벨을 측정·모니터링하는 기술입니다.
+  미터링(Metering) 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 thumbnail: "/images/recording1.webp"
 faq:
   - q: "LUFS란 무엇이고 왜 중요한가요?"

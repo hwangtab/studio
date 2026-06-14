@@ -12,7 +12,8 @@ tags:
   - 컨볼루션 리버브
   - 보컬 리버브
 thumbnail: /images/hardware5.webp
-summary: 리버브 종류와 홀·룸·플레이트·스프링 차이. Studio NOL 믹싱 세션 기준.
+summary: >-
+  리버브 종류 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 faq:
   - q: 보컬에 가장 많이 쓰는 리버브 종류는?
     a: >-

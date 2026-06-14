@@ -13,7 +13,7 @@ tags:
   - 소울 보컬
 thumbnail: /images/studio4.webp
 summary: >-
-  R&B 보컬 녹음 완전 가이드.
+  R&B 보컬 녹음 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 레슨·녹음에서 바로 점검할 포인트를 담았습니다.
 faq:
   - q: R&B 보컬 녹음이 일반 팝 녹음과 다른 점은 무엇인가요?
     a: >-

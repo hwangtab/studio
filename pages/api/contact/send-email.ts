@@ -454,7 +454,7 @@ const buildContactEmailHtml = (sanitized: SanitizedContactPayload): string => {
                 &nbsp;·&nbsp; 서울특별시 은평구 대조동 84-3 3층
               </p>
               <p style="margin:0;font-size:12px;color:#9ca3af;">
-                <a href="tel:050713843144" style="color:#9ca3af;text-decoration:none;">
+                <a href="tel:01042557893" style="color:#9ca3af;text-decoration:none;">
                   010-4255-7893
                 </a>
                 &nbsp;·&nbsp;

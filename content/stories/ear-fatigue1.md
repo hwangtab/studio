@@ -13,7 +13,7 @@ tags:
   - 귀 건강
 thumbnail: /images/hardware4.webp
 summary: >-
-  믹싱 중 귀 피로(Ear Fatigue)를 방지하는 방법 완전 가이드입니다.
+  귀 피로 방지 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 faq:
   - q: 귀 피로(Ear Fatigue)란 무엇인가요?
     a: >-

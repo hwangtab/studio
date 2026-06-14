@@ -13,7 +13,7 @@ tags:
   - VST 추천
 thumbnail: /images/album2.webp
 summary: >-
-  보컬 녹음·믹싱에 사용하는 VST 플러그인의 종류와 역할을 안내합니다.
+  VST 플러그인 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 faq:
   - q: VST 플러그인이란 무엇인가요?
     a: >-

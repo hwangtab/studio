@@ -10,7 +10,7 @@ tags:
   - SampleRate
   - BitDepth
 summary: >-
-  샘플레이트·비트뎁스란 디지털 오디오의 해상도를 결정하는 두 핵심 설정입니다.
+  샘플레이트·비트뎁스란? 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 thumbnail: /images/hardware4.webp
 faq:
   - q: 샘플레이트 44.1kHz와 48kHz 중 어떤 것을 선택해야 하나요?

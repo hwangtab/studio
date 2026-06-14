@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "리버브", "Reverb", "Space"]
 summary: >-
-  리버브의 종류(홀·룸·플레이트·스프링)와 프리딜레이·디케이 파라미터 설명.
+  리버브(Reverb) 종류·프리딜레이·디케이 파라미터 설정법 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 thumbnail: "/images/hardware2.webp"
 faq:
   - q: "리버브(Reverb)란 무엇이고 믹싱에서 어떻게 사용하나요?"

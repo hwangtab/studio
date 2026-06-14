@@ -144,6 +144,24 @@ describe('contact send-email api', () => {
     }
   });
 
+  it('uses the current phone number in the delivered email html', async () => {
+    const req = createRequest();
+    const { res, getStatus } = createResponse();
+
+    await handler(req, res);
+
+    expect(getStatus()).toBe(200);
+    const resendCall = (global.fetch as jest.Mock).mock.calls.find(([input]) =>
+      String(input).startsWith('https://api.resend.com/')
+    );
+    expect(resendCall).toBeDefined();
+
+    const body = JSON.parse(String(resendCall?.[1]?.body)) as { html?: string };
+    expect(body.html).toContain('010-4255-7893');
+    expect(body.html).toContain('href="tel:01042557893"');
+    expect(body.html).not.toContain('050713843144');
+  });
+
   it('returns 403 for disallowed origins before rate limiting', async () => {
     const req = createRequest({
       headers: {

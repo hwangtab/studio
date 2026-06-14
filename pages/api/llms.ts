@@ -26,10 +26,10 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Specialization: Independent artist support — affordable professional-grade recording, mixing, and production in Seoul
 - Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR 03424 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
 - Geo: 37.614353, 126.925887
-- Phone: +82-507-1384-3144
+- Phone: +82-10-4255-7893
 - Email: hwangtab@gmail.com
 - Business Hours: Daily 10:00 AM – Midnight (Mon–Sun, including weekends and holidays)
-- Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (+82-507-1384-3144), Email (hwangtab@gmail.com)
+- Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (+82-10-4255-7893), Email (hwangtab@gmail.com)
 - Naver Map: https://naver.me/5gFZhS3X
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
 
@@ -111,7 +111,7 @@ Wedding Song Complete Package is 350,000 KRW: 2-hour recording session + vocal t
 Korean (primary), English, Chinese Simplified, Spanish, Vietnamese, Thai, Uzbek.
 
 ### How do I book or get a quote?
-KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: +82-507-1384-3144. Email: hwangtab@gmail.com. Free quote, same-day booking possible.
+KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: +82-10-4255-7893. Email: hwangtab@gmail.com. Free quote, same-day booking possible.
 
 ## Sitemaps & Feeds
 
@@ -155,7 +155,7 @@ const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
 Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-speaking engineer support. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
-- English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (+82-507-1384-3144). Free quote within 24 hours.
+- English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (+82-10-4255-7893). Free quote within 24 hours.
 - Recording rate: 100,000 KRW per hour for hourly sessions; 250,000 KRW for a single-song vocal package (3 hours, dedicated engineer).
 - Mixing & mastering: 200,000–500,000 KRW per song depending on track count, with two revisions included.
 - Monthly practice room residency: 360,000 KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
@@ -174,7 +174,7 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 - 月租练习室：₩360,000／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
 - 婚礼献唱套餐：₩350,000（2 小时录音 + 人声调音 + 混音及母带），新手友好。
 - 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 4 篇 spoke 指南（练习室预约、中文课程、价格、交通指引）。
-- 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hwangtab@gmail.com)、电话 +82-507-1384-3144，24 小时内免费报价。
+- 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hwangtab@gmail.com)、电话 +82-10-4255-7893，24 小时内免费报价。
 `;
 
 // Author entity grounding — E-E-A-T 시그널 + LLM이 사실 신뢰도 판단 시 참조하는

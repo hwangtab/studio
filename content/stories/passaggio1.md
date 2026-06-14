@@ -13,7 +13,7 @@ tags:
   - 보이스 브레이크
 thumbnail: /images/service1.webp
 summary: >-
-  보컬의 패사지오(Passaggio, 브리지) 완전 가이드입니다.
+  패사지오(Passaggio) 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 레슨·녹음에서 바로 점검할 포인트를 담았습니다.
 faq:
   - q: 패사지오(Passaggio)란 무엇인가요?
     a: >-

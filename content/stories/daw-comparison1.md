@@ -13,7 +13,7 @@ tags:
   - DAW 선택 가이드
 thumbnail: /images/recording17.webp
 summary: >-
-  DAW 비교 완전 가이드입니다.
+  DAW 비교 완전 가이드 완전 비교 가이드 준비 과정을 녹음 전 준비물, 세션 진행, 결과물 기준으로 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
 faq:
   - q: 보컬 녹음에 가장 좋은 DAW는 무엇인가요?
     a: >-

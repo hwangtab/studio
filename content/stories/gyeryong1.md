@@ -13,7 +13,7 @@ tags:
   - 계룡시
 thumbnail: /images/recording17.webp
 summary: >-
-  계룡에서 서울 연신내 스튜디오 놀까지 KTX 계룡역으로 당일 왕복이 가능합니다.
+  계룡에서 서울 연신내 Studio NOL까지 이동 시간, KTX·SRT 동선, 당일 녹음 예약 준비를 정리합니다. 세션 전 파일 공유와 귀가 일정까지 한 번에 확인하세요.
 faq:
   - q: 계룡에서 서울까지 어떻게 오나요?
     a: >-

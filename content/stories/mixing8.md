@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "게인스테이징", "GainStaging", "Headroom"]
 summary: >-
-  믹싱에서 가장 중요한 기초, 게인 스테이징.
+  게인 스테이징(Gain Staging) 뜻·설정법·홈레코딩 적용 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 thumbnail: "/images/recording3.webp"
 faq:
   - q: "게인 스테이징(Gain Staging)이란 무엇인가요?"

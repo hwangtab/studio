@@ -13,7 +13,7 @@ tags:
   - Span 플러그인
 thumbnail: /images/service6.webp
 summary: >-
-  스펙트럼 분석기 완전 가이드입니다.
+  스펙트럼 분석기 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 faq:
   - q: 스펙트럼 분석기란 무엇인가요?
     a: >-

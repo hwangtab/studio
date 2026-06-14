@@ -13,7 +13,7 @@ tags:
   - 기획사 지원
 thumbnail: /images/recording5.webp
 summary: >-
-  K-POP 기획사 오디션을 준비하는 보컬 지망생을 위한 완전 가이드.
+  K-POP 오디션 준비 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 레슨·녹음에서 바로 점검할 포인트를 담았습니다.
 faq:
   - q: K-POP 오디션에서 어떤 곡을 불러야 유리한가요?
     a: >-

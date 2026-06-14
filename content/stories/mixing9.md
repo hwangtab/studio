@@ -5,7 +5,7 @@ author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "위상", "Phase", "DrumMixing"]
 summary: >-
-  위상(Phase) 문제가 믹스에 미치는 영향과 해결법.
+  위상(Phase) 뜻·상쇄 원리·마이크 다중 녹음 정렬법 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 thumbnail: "/images/recording4.webp"
 faq:
   - q: "위상(Phase) 문제란 무엇인가요?"

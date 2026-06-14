@@ -13,7 +13,7 @@ tags:
   - iOS GarageBand
 thumbnail: /images/room6.webp
 summary: >-
-  GarageBand 보컬 녹음 완전 가이드입니다.
+  GarageBand 보컬 녹음 준비 과정을 녹음 전 준비물, 세션 진행, 결과물 기준으로 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
 faq:
   - q: GarageBand로 고퀄리티 보컬 녹음이 가능한가요?
     a: >-

@@ -13,7 +13,7 @@ tags:
   - 리버브 플러그인
 thumbnail: /images/recording2.webp
 summary: >-
-  리버브 완전 가이드입니다.
+  리버브 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 faq:
   - q: 보컬에 어떤 리버브를 써야 하나요?
     a: >-

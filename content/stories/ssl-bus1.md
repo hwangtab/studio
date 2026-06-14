@@ -13,7 +13,7 @@ tags:
   - 마스터 버스
 thumbnail: /images/room6.webp
 summary: >-
-  SSL G-Bus 컴프레서 완전 가이드입니다.
+  SSL G-Bus 컴프레서 설정 기준과 작업 순서를 정리합니다. 홈레코딩에서 바로 적용할 체크포인트와 Studio NOL 믹싱 의뢰 전 준비할 파일까지 확인하세요.
 faq:
   - q: SSL G-Bus 컴프레서란 무엇인가요?
     a: >-

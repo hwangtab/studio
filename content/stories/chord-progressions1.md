@@ -13,7 +13,7 @@ tags:
   - ii-V-I 코드
 thumbnail: /images/recording4.webp
 summary: >-
-  코드 진행 완전 가이드입니다.
+  코드 진행 과정을 작곡·편곡·녹음 흐름에 맞춰 정리합니다. 홈레코딩에서 적용할 방법과 Studio NOL 제작 상담 전 준비할 내용을 함께 확인하세요.
 faq:
   - q: 가장 기본적인 코드 진행은 무엇인가요?
     a: >-

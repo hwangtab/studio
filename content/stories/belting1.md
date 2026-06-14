@@ -13,7 +13,7 @@ tags:
   - 파워 보컬
 thumbnail: /images/recording6.webp
 summary: >-
-  벨팅(Belting)은 흉성의 파워를 고음 구간까지 밀어 올리는 발성 기술입니다.
+  벨팅 발성법 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 레슨·녹음에서 바로 점검할 포인트를 담았습니다.
 faq:
   - q: 벨팅이란 무엇인가요?
     a: >-
