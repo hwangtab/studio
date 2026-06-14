@@ -195,7 +195,7 @@
       "parking": "ที่จอดรถ",
       "parkingDetail": "มีที่จอดรถแบบเสียค่าบริการที่อาคาร KT Eunpyeong ใกล้เคียง",
       "transport": "ขนส่งสาธารณะ",
-      "transportDetail": "เดิน 5 นาทีจากสถานี Bulgwang (Line 6) ทางออก 7"
+      "transportDetail": "เดิน 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7 หรือสถานี Yeonsinnae (สาย 3) ทางออก 4"
     },
     "hours": {
       "weekdaysLabel": "จันทร์ - ศุกร์",
