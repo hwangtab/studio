@@ -11,7 +11,7 @@ const CTR_TITLE_TARGETS: Record<string, string[]> = {
   'headvoice1.md': ['두성 뜻', '두성 내는 법'],
   'falsetto1.md': ['팔세토 뜻', '가성 내는 법'],
   'session-musician1.md': ['세션 뜻', '세션 뮤지션'],
-  'noise-reduction1.md': ['홈레코딩', '녹음 잡음 제거'],
+  'noise-reduction1.md': ['배경 잡음 제거', '녹음 노이즈'],
   'mastering1.md': ['마스터링이란', '믹싱과 마스터링 차이'],
 };
 
