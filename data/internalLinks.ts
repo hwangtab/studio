@@ -138,8 +138,8 @@ export const topicLinks: Record<string, TopicLink> = {
 
   // ─── Buyer-intent 가이드 허브 4종 ───
   // 정보 의도 키워드 → 종합 가이드 hub로 연결. hub는 4종 dedicated 페이지로 운영.
-  '보컬 입문': { slug: 'vocal-beginners-guide', anchorText: '보컬 입문 종합 가이드' },
-  '보컬 초보': { slug: 'vocal-beginners-guide', anchorText: '보컬 초보자 학습 로드맵' },
+  '작곡 입문': { slug: 'vocal-beginners-guide', anchorText: '작곡·프로듀싱 1:1 레슨 가이드' },
+  '음원 발매 레슨': { slug: 'vocal-beginners-guide', anchorText: '음원 발매 1:1 레슨 가이드' },
   '홈레코딩 시작': { slug: 'home-recording-survival', anchorText: '홈레코딩 시작 가이드' },
   '홈레코딩 장비': { slug: 'home-recording-survival', anchorText: '홈레코딩 장비 선택 가이드' },
   '축가 부르기': { slug: 'wedding-song-singing', anchorText: '축가 부르기 종합 가이드' },
