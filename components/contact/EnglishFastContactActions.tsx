@@ -16,7 +16,7 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
       Fastest way to reach Studio NOL
     </p>
     <p className="mt-1 text-xs leading-relaxed text-gray-700 dark:text-gray-200">
-      English-speaking engineers · Recording, mixing &amp; mastering · Transparent quote before you book
+      Book in English · Recording, mixing &amp; mastering · Remote mixing worldwide
     </p>
     <a
       href={`/${locale}/pricing`}

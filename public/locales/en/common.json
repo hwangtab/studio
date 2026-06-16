@@ -176,8 +176,8 @@
   "contact": {
     "title": "Contact Us",
     "subtitle": "Feel free to contact us for inquiries or reservations.",
-    "heroTitle": "English-Speaking Recording Studio in Seoul",
-    "heroSubtitle": "Recording, mixing & mastering with an English-speaking engineer. Book a session in Seoul or work with us remotely from anywhere — free quote, reply within 24 hours.",
+    "heroTitle": "Recording Studio in Seoul — English Booking & Remote Mixing",
+    "heroSubtitle": "Recording, mixing & mastering in Seoul. Book and communicate in English, or send us your tracks for remote mixing from anywhere — free quote, reply within 24 hours.",
     "heroAlt": "Contact Studio NOL",
     "form": {
       "failFallback": "If the form will not send, reach us directly below.",
@@ -238,15 +238,15 @@
       "title": "What to Expect",
       "items": [
         "Response within 24 hours on weekdays",
-        "English-speaking session manager",
+        "Booking & communication in English",
         "Free quote based on your session needs",
         "Booking confirmed via email or KakaoTalk"
       ]
     },
     "faq": [
       {
-        "q": "Do you have English-speaking engineers?",
-        "a": "Yes — our session manager communicates in English for bookings, scheduling, and feedback. On-site direction during recording sessions is available in English on request."
+        "q": "Can I work with Studio NOL in English?",
+        "a": "Yes — booking, quotes, mix notes, and revisions are all handled in English by email or KakaoTalk, and our remote mixing & mastering runs entirely in English. For an in-person session in Seoul, let us know your needs when you book and we'll set things up smoothly."
       },
       {
         "q": "Can I book remotely from outside Korea?",
