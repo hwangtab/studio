@@ -29,5 +29,5 @@ Playwright로 프로덕션 `https://studionol.co.kr/en/contact` 에 실제 테�
 2. **이름 검증 완화 검토**: NAME_PATTERN(`/^[\p{L}\p{M}\s'.,-]+$/u`)이 숫자를 거부. 외국인이 이름/닉네임에 숫자를 넣으면 field_error. 닉네임 허용이 필요하면 패턴에 `\d` 추가 검토([utils/contactValidation.ts:38](../../utils/contactValidation.ts#L38)). (실측 데이터로 확인 후 결정 권장)
 3. **`/en/contact` 랜딩 전환 개선**: AI 유입 75.8% 이탈 대응 — 폼보다 카카오톡 CTA가 이미 상단이나, AI 방문자가 원하는 정보(가격·영어 응대·원격 가능 여부)를 폼 위에 더 명확히. (page-cro 영역)
 
-## 메모
-- 테스트 문의 1건이 hwangtab@gmail.com 으로 실제 발송됐을 수 있음(제목/본문에 "Diagnostic"/"Please ignore" 명시). 수신함에서 확인해 발송까지 정상인지 교차 검증 가능.
+## 교차검증 (확정)
+- 테스트 문의가 hwangtab@gmail.com 수신함에 **실제 도착 확인됨**(이름 "Diagnostic Test", 본문 "Please ignore"). → POST 200이 봇 quiet-pass가 아니라 **Resend 실제 발송**이었음이 확정. 폼 → API → 검증 → Resend → 메일 수신까지 **전체 파이프라인 정상**. 영어 컨택폼은 발송까지 완전 작동.
