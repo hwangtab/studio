@@ -182,7 +182,7 @@
       "name": "ชื่อ",
       "namePlaceholder": "เช่น Alex Kim…",
       "phone": "โทรศัพท์ (ไม่บังคับ)",
-      "phonePlaceholder": "เช่น 010-1234-5678…",
+      "phonePlaceholder": "เช่น +82 10-1234-5678…",
       "email": "อีเมล",
       "emailPlaceholder": "เช่น hwangtab@gmail.com…",
       "message": "ข้อความ",

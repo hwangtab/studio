@@ -182,7 +182,7 @@
       "name": "Name",
       "namePlaceholder": "e.g., Alex Kim…",
       "phone": "Phone (optional)",
-      "phonePlaceholder": "e.g., 010-1234-5678…",
+      "phonePlaceholder": "e.g., +82 10-1234-5678…",
       "email": "Email",
       "emailPlaceholder": "e.g., hwangtab@gmail.com…",
       "message": "Message",
