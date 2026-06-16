@@ -135,4 +135,4 @@ inlineFallback:
 
 ---
 
-[팔세토 발성법 완전 가이드](/stories/falsetto1) | [두성(헤드 보이스) 훈련 가이드](/stories/headvoice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [벨팅 발성법 가이드](/stories/belting1) | [보컬 레슨 가이드](/stories/lessonguide1)
+[팔세토 발성법 완전 가이드](/stories/falsetto1) | [두성(헤드 보이스) 훈련 가이드](/stories/headvoice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [벨팅 발성법 가이드](/stories/belting1) | [보컬 가이드](/stories/lessonguide1)
