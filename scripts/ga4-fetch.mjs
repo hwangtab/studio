@@ -18,6 +18,7 @@ const OUT_DIR = path.join(ROOT, 'docs', 'ga4-raw');
 const ALL_LEAD_EVENT_NAMES = [
   'lead_click_kakao',
   'lead_click_phone',
+  'lead_click_email',
   'lead_click_naver_map',
   'lead_submit_success',
   'lead_submit_error',
@@ -28,6 +29,7 @@ const ALL_LEAD_EVENT_NAMES = [
 const QUALIFIED_LEAD_EVENT_NAMES = new Set([
   'lead_click_kakao',
   'lead_click_phone',
+  'lead_click_email',
   'lead_click_naver_map',
   'lead_submit_success',
 ]);
