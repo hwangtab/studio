@@ -36,16 +36,16 @@ If you also need a room to rehearse before tracking — which we strongly recomm
 
 Studio NOL is a working music studio in Eunpyeong-gu, a quiet residential district in northwest Seoul. We are a five-minute walk from Yeonsinnae Station on Line 3, which puts us about thirty to forty minutes from Hongdae, Itaewon, or Gangnam by subway. If you are coming in from Incheon Airport, the AREX express train plus one transfer gets you to the neighborhood directly. Full directions live in our [visiting Studio NOL guide](/en/stories/visiting-studio-nol-from-seoul-gyeonggi).
 
-Under one roof we offer recording (vocals, instruments, full band tracking, mixing, and mastering), hourly practice room rentals, 1:1 music lessons for vocal and instruments, voice acting sessions including English dubbing, and wedding song recording for couples who want a personal track for their ceremony. Whatever brings you to Seoul, there is a good chance we can host that part of your project.
+Under one roof we offer recording (vocals, instruments, full band tracking, mixing, and mastering), hourly practice room rentals, voice acting sessions including English dubbing, and wedding song recording for couples who want a personal track for their ceremony. Whatever brings you to Seoul, there is a good chance we can host that part of your project.
 
 On the gear side, our vocal chain is built around the Neumann U87Ai through a clean preamp into Pro Tools, with SSL Fusion analog processing available on the master bus. We monitor on ProAc speakers in a treated control room, and we keep a tuned upright, a stage piano, and a handful of guitars available for visiting artists who travel light. Files go out as WAV by default — 24-bit, 96 kHz unless you ask otherwise — with MP3 references on request.
 
-Most importantly for international musicians: yes, we work in English. Bookings, sessions, mix notes, and revision rounds can all run in English without anyone having to translate on the fly. If you are also thinking about taking a few sessions with a local teacher while you are in town, our [English-speaking music lessons in Seoul](/en/stories/english-speaking-music-lessons-seoul) cover vocal coaching, songwriting, and instrument lessons for visiting artists.
+For international musicians, the project side is easy to handle in English: bookings, quotes, mix notes, and revision rounds are all handled in English by email or KakaoTalk, and our remote mixing and mastering service runs entirely in English — send us your tracks from anywhere and we deliver finished files.
 
 ## Common questions from foreign musicians
 
-**Do I need to speak any Korean to record at Studio NOL?**
-No. Our team works comfortably in English for the entire workflow, from your first inquiry through final delivery. Korean is a bonus, never a requirement.
+**Can I handle my project in English?**
+Booking, quotes, mix notes, and revision rounds are all handled in English, and our remote mixing and mastering runs fully in English from start to finish — many international clients work with us entirely by sending their tracks. For an in-person session in Seoul, let us know your needs when you book and we will make sure the session is set up smoothly.
 
 **Can I bring my own instruments?**
 Absolutely, and many visiting artists do. If you would rather travel light, we have a tuned upright piano, a stage keyboard, and a small selection of guitars on site. Let us know in advance what you plan to bring and we will set up the room accordingly.
@@ -59,9 +59,9 @@ WAV at 24-bit, 96 kHz is our default for stems and final mixes, which is industr
 **Can you handle K-pop style production?**
 Yes. We work with pitch correction, dense vocal stacking, ad-lib comping, and the bright, forward mix aesthetic associated with current K-pop releases. We can also dial it back toward indie, R&B, or acoustic if that is closer to your sound — we mix to the song, not to a single template.
 
-**Where can I find more details on prices, practice rooms, or lessons?**
-Each topic has its own dedicated guide: [pricing](/en/stories/korean-recording-studio-pricing-guide), [practice room booking](/en/stories/korean-practice-room-booking-english), and [English-speaking lessons](/en/stories/english-speaking-music-lessons-seoul). For directions and travel logistics, see the [visit guide](/en/stories/visiting-studio-nol-from-seoul-gyeonggi).
+**Where can I find more details on prices or practice rooms?**
+Each topic has its own dedicated guide: [pricing](/en/stories/korean-recording-studio-pricing-guide) and [practice room booking](/en/stories/korean-practice-room-booking-english). For directions and travel logistics, see the [visit guide](/en/stories/visiting-studio-nol-from-seoul-gyeonggi).
 
 ## Next steps
 
-If this guide answered the big questions, the next move depends on what your trip looks like. If you want to compare costs before deciding how many sessions to book, start with the [pricing guide](/en/stories/korean-recording-studio-pricing-guide). If you need a rehearsal room before tracking, the [practice room guide](/en/stories/korean-practice-room-booking-english) walks through reservations step by step. If you are thinking about pairing recording with a few lessons while you are in Seoul, the [lessons guide](/en/stories/english-speaking-music-lessons-seoul) covers what is available. And if you are ready to lock in dates, [contact us directly](/en/contact) — tell us what you want to record, when you are in town, and we will get a session held for you. Welcome to Seoul. We are looking forward to hearing what you bring in.
+If this guide answered the big questions, the next move depends on what your trip looks like. If you want to compare costs before deciding how many sessions to book, start with the [pricing guide](/en/stories/korean-recording-studio-pricing-guide). If you need a rehearsal room before tracking, the [practice room guide](/en/stories/korean-practice-room-booking-english) walks through reservations step by step. And if you are ready to lock in dates, [contact us directly](/en/contact) — tell us what you want to record, when you are in town, and we will get a session held for you. Welcome to Seoul. We are looking forward to hearing what you bring in.

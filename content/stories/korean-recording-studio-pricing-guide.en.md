@@ -52,7 +52,7 @@ Second, **confirm file format expectations early**. Most Seoul studios deliver W
 
 Our up-to-date hourly and package rates are on our [pricing page](/en/pricing), where they stay current as gear and offerings change. We deliberately do not list specific numbers in story articles, because pricing pages move faster than blog posts and we would rather show you the real figure than a stale one. The pricing page covers tracking, mixing, mastering, and our common bundle deals for foreign musicians.
 
-If you are also planning to rehearse, take a lesson, or evaluate the full cost of a Seoul music trip, two companion guides will help. Our [Korean practice room booking guide](/en/stories/korean-practice-room-booking-english) covers how rehearsal rooms are priced separately from recording, and our [English-speaking music lessons guide](/en/stories/english-speaking-music-lessons-seoul) explains how 1:1 lesson pricing works in Korea. Together with this pricing guide, those three pieces give you a complete picture of Yeonsinnae studio pricing for everything we offer.
+If you are also planning to rehearse or evaluate the full cost of a Seoul music trip, our [Korean practice room booking guide](/en/stories/korean-practice-room-booking-english) covers how rehearsal rooms are priced separately from recording. Together with this pricing guide, those pieces give you a complete picture of Yeonsinnae studio pricing for everything we offer.
 
 ## FAQ
 

@@ -64,4 +64,4 @@ A: Practice rooms are designed for rehearsal, not professional recording. For tr
 
 ## Next steps
 
-Ready to book a room? [Contact Studio NOL in English](/en/contact) and we'll confirm your slot within a day. For the wider picture of what foreign musicians can do in Seoul, our [recording in Seoul hub guide](/en/stories/recording-in-seoul-for-foreign-musicians) ties everything together — practice, lessons, recording, and getting around the city.
+Ready to book a room? [Contact Studio NOL in English](/en/contact) and we'll confirm your slot within a day. For the wider picture of what foreign musicians can do in Seoul, our [recording in Seoul hub guide](/en/stories/recording-in-seoul-for-foreign-musicians) ties everything together — practice, recording, and getting around the city.
