@@ -153,8 +153,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         {...{
           locale,
           priority: true,
-          title: t('contact.title'),
-          subtitle: t('contact.subtitle'),
+          title: t('contact.heroTitle', { defaultValue: t('contact.title') }),
+          subtitle: t('contact.heroSubtitle', { defaultValue: t('contact.subtitle') }),
           backgroundImage: "/images/hardware5.webp",
           imageAlt: t('contact.heroAlt'),
           minHeight: "min-h-[60vh]",

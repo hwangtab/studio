@@ -176,6 +176,8 @@
   "contact": {
     "title": "Contact Us",
     "subtitle": "Feel free to contact us for inquiries or reservations.",
+    "heroTitle": "English-Speaking Recording Studio in Seoul",
+    "heroSubtitle": "Recording, mixing & mastering with an English-speaking engineer. Book a session in Seoul or work with us remotely from anywhere — free quote, reply within 24 hours.",
     "heroAlt": "Contact Studio NOL",
     "form": {
       "failFallback": "If the form will not send, reach us directly below.",
