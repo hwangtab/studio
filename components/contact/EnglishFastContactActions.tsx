@@ -18,8 +18,14 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
     <p className="mt-1 text-xs leading-relaxed text-gray-700 dark:text-gray-200">
       English-speaking engineers · Recording, mixing &amp; mastering · Transparent quote before you book
     </p>
-    {/* 카톡을 primary(전체 너비)로, 이메일/전화는 보조 2열로 — GA4상 영어권 실질 전환은
-        카카오 클릭이 사실상 전부고 폼/이메일은 거의 0이라 카톡을 시각적으로 우선 노출. */}
+    <a
+      href={`/${locale}/pricing`}
+      className="mt-2 inline-block text-xs font-semibold text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+    >
+      See transparent pricing →
+    </a>
+    {/* 카톡을 primary(전체 너비)로 유지 — GA4상 영어권 실질 전환은 카카오 클릭이 사실상 전부.
+        단 카톡 미사용 방문자를 위해 이메일을 전체너비 보조 1순위로 승격하고, 안내 문구로 이메일/폼 경로를 환영. */}
     <a
       href={kakaoUrl}
       target="_blank"
@@ -36,24 +42,22 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
       <MessageCircle size={20} aria-hidden="true" />
       Message on KakaoTalk
     </a>
-    <div className="mt-2 grid gap-2 sm:grid-cols-2">
-      <a
-        href={`mailto:${email}`}
-        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-      >
-        <Mail size={18} aria-hidden="true" />
-        Email Studio NOL
-      </a>
-      <a
-        href={`tel:${phone}`}
-        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-      >
-        <Phone size={18} aria-hidden="true" />
-        Call Studio NOL
-      </a>
-    </div>
+    <a
+      href={`mailto:${email}`}
+      className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+    >
+      <Mail size={18} aria-hidden="true" />
+      Email Studio NOL
+    </a>
+    <a
+      href={`tel:${phone}`}
+      className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+    >
+      <Phone size={18} aria-hidden="true" />
+      Call Studio NOL
+    </a>
     <p className="mt-3 text-xs leading-relaxed text-gray-700 dark:text-gray-300">
-      The email form is still available below, but KakaoTalk is the most reliable path for quick scheduling.
+      No KakaoTalk? Email us or use the form below — we reply within 24 hours.
     </p>
   </div>
 );
