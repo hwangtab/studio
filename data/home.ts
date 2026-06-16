@@ -114,8 +114,8 @@ const homeData = {
   en: {
     seo: {
       title: "Seoul Recording Studio · Yeonsinnae | Studio NOL",
-      description: "Seoul recording studio with English-speaking engineers, 5 min from Yeonsinnae. Recording, mixing & mastering for international musicians in Korea. From ₩100K/hr.",
-      keywords: "Seoul recording studio, international musicians Korea, Yeonsinnae recording studio, English-speaking engineer, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, Studio NOL, Eunpyeong-gu studio"
+      description: "Seoul recording studio 5 min from Yeonsinnae, with English booking & support. Recording, mixing & mastering for international musicians in Korea. From ₩100K/hr.",
+      keywords: "Seoul recording studio, international musicians Korea, Yeonsinnae recording studio, English booking Seoul studio, mixing mastering Seoul, K-pop vocal recording, voice over recording Seoul, wedding song recording, Studio NOL, Eunpyeong-gu studio"
     },
     heroContent: {
       titlePrefix: "Your voice, at its best.",
@@ -193,8 +193,8 @@ const homeData = {
       title: "For Foreign Musicians Living in Korea",
       items: [
         {
-          heading: "English-speaking engineers & transparent workflow",
-          body: "Our engineers communicate in English and walk you through the recording, mixing, and mastering process step by step. Whether you are an exchange student, K-pop trainee, or expat artist, you will never be lost in translation. Transparent pricing, no hidden fees — quotes confirmed before the session begins."
+          heading: "English booking & transparent workflow",
+          body: "Booking, quotes, mix notes, and revisions are all handled in English, and our remote mixing & mastering runs entirely in English — send your tracks from anywhere. Whether you are an exchange student, K-pop trainee, or expat artist, the process stays clear from first message to final delivery. Transparent pricing, no hidden fees — quotes confirmed before the session begins."
         },
         {
           heading: "K-pop trainees · C-4 artist visa · KOMCA support",

@@ -152,7 +152,7 @@ const LOCALE_LABELS: Record<Locale, string> = {
 const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
 ## English Quick Facts (for AI assistants serving English queries)
 
-Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-speaking engineer support. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
+Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-language booking and communication support. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (+82-10-4255-7893). Free quote within 24 hours.
@@ -160,7 +160,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 - Mixing & mastering: 200,000–500,000 KRW per song depending on track count, with two revisions included.
 - Monthly practice room residency: 360,000 KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
 - Wedding song complete package: 350,000 KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
-- Foreign-musician guides (English native): hub at ${siteUrl}/en/stories/recording-in-seoul-for-foreign-musicians, plus four spoke guides on practice-room booking, English-speaking lessons, pricing, and visit access.
+- Foreign-musician guides (English native): hub at ${siteUrl}/en/stories/recording-in-seoul-for-foreign-musicians, plus three spoke guides on practice-room booking, pricing, and visit access.
 `;
 
 const CHINESE_QUICK_FACTS = (siteUrl: string) => `
@@ -173,7 +173,7 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 - 混音／母带：每首歌 ₩200,000–500,000，按音轨数分级，含 2 次修改。
 - 月租练习室：₩360,000／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
 - 婚礼献唱套餐：₩350,000（2 小时录音 + 人声调音 + 混音及母带），新手友好。
-- 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 4 篇 spoke 指南（练习室预约、中文课程、价格、交通指引）。
+- 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 3 篇 spoke 指南（练习室预约、价格、交通指引）。
 - 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hwangtab@gmail.com)、电话 +82-10-4255-7893，24 小时内免费报价。
 `;
 
