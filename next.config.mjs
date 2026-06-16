@@ -95,6 +95,16 @@ const nextConfig = {
         destination: '/:locale/practice-room',
         permanent: true,
       },
+      {
+        source: '/en/stories/english-speaking-music-lessons-seoul',
+        destination: '/en/stories/recording-in-seoul-for-foreign-musicians',
+        permanent: true,
+      },
+      {
+        source: '/zh/stories/chinese-music-lessons-seoul',
+        destination: '/zh/stories/recording-in-seoul-for-chinese-musicians',
+        permanent: true,
+      },
     ];
   },
 
