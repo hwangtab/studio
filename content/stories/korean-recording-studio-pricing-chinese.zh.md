@@ -51,10 +51,9 @@ thumbnail: /images/hardware2.webp
 
 ## Studio NOL 的价格
 
-我们最新的 hourly 与套餐价格请见 [价格页](/zh/pricing)。在韩华人音乐人录音 + 中文课程的组合方案，请见[hub 指南](/zh/stories/recording-in-seoul-for-chinese-musicians)——里面有针对不同预算的搭配建议。
+我们最新的 hourly 与套餐价格请见 [价格页](/zh/pricing)。在韩华人音乐人录音的组合方案，请见[hub 指南](/zh/stories/recording-in-seoul-for-chinese-musicians)——里面有针对不同预算的搭配建议。
 
-如果你不仅想录音，还需要练习空间，[练习室预约指南](/zh/stories/korean-practice-room-booking-chinese)介绍了在韩华人怎么找按小时的练习室，那一页也写了练习室的常见价格区间。如果你想边录音边上课打磨技术，[中文音乐课程介绍](/zh/stories/chinese-music-lessons-seoul)里有课程费用的说明。
-
+如果你不仅想录音，还需要练习空间，[练习室预约指南](/zh/stories/korean-practice-room-booking-chinese)介绍了在韩华人怎么找按小时的练习室，那一页也写了练习室的常见价格区间。
 我们这里不写具体数字，是因为汇率、市场和我们自身的费率每个季度都会调整——任何固定数字写在 blog 里都会过时。价格页随时保持最新。
 
 ## FAQ

@@ -86,6 +86,5 @@ A：仁川机场打车到延新内大约 ₩70,000 起，遇到首尔市内堵�
 - 还没看 hub 总指南？建议从 [在韩华人音乐人首尔录音完全攻略](/zh/stories/recording-in-seoul-for-chinese-musicians) 开始，把整个流程先过一遍。
 - 想找便宜的练习空间？看 [韩国练习室中文预约指南](/zh/stories/korean-practice-room-booking-chinese)。
 - 想知道大概需要多少预算？读 [韩国录音棚价格中文版](/zh/stories/korean-recording-studio-pricing-chinese)。
-- 想找中文老师上课？看 [首尔中文音乐课程指南](/zh/stories/chinese-music-lessons-seoul)。
 
 确定要预约后，直接 [联系我们](/zh/contact)，在表单里写中文就行，我们会通过 KakaoTalk 或邮件用中文回复，并把当天的出口指引一并发给你。
