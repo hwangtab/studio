@@ -793,6 +793,11 @@
     }
   },
   "stories": {
+    "bottomCta": {
+      "title": "Habla con nosotros por KakaoTalk",
+      "subtitle": "También podemos realizar el trabajo que viste en este artículo. Fechas y presupuesto en 1 minuto.",
+      "imageAlt": "Espacio de trabajo de Studio NOL"
+    },
     "seo": {
       "title": "Guías de Grabación, Mezcla y Producción Vocal | Studio NOL",
       "description": "1,500+ guías prácticas de grabación vocal, mezcla, masterización, EQ y producción K-pop por ingenieros de Studio NOL en Seúl.",
@@ -1349,6 +1354,7 @@
       "sectionSubtitle": "Voces de quienes ya completaron su lanzamiento."
     },
     "tiers": {
+      "currentBadge": "Actual",
       "sectionTitle": "Tipos de Proyecto de Lanzamiento",
       "sectionSubtitle": "Estructurado según la escala real del lanzamiento. Cotización personalizada tras consulta gratuita.",
       "single": {
@@ -1656,6 +1662,30 @@
         "sectionSubtitle": "Encontremos juntos la escala que se ajusta a ti."
       },
       "comparisonTable": {
+        "rowLabels": {
+          "duration": "Duración",
+          "basePrice": "Precio base",
+          "trackCount": "Canciones",
+          "persona": "Ideal para",
+          "keyDeliverables": "Incluye"
+        },
+        "values": {
+          "single": {
+            "trackCount": "1 canción",
+            "persona": "Un primer lanzamiento sólido",
+            "keyDeliverables": "Planificación · Grabación de voz · Mezcla · Distribución · Primera PR en medios"
+          },
+          "ep": {
+            "trackCount": "3-5 canciones",
+            "persona": "Declara tu identidad musical",
+            "keyDeliverables": "Curaduría de temas · Igualación de tono · Single de adelanto · 2 rondas de PR"
+          },
+          "album": {
+            "trackCount": "~8 canciones",
+            "persona": "Deja tu huella en la escena indie",
+            "keyDeliverables": "A&R · Secuenciación · Sesión de escucha con crítica · Acompañamiento en convocatorias"
+          }
+        },
         "sectionTitle": "Comparar de un vistazo",
         "sectionSubtitle": "Single, EP o álbum completo — compara tiempos, precio base y alcance en una sola vista."
       }

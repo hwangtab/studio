@@ -792,6 +792,11 @@
     }
   },
   "stories": {
+    "bottomCta": {
+      "title": "Hozir KakaoTalk orqali maslahatlashing",
+      "subtitle": "Ushbu maqolada koʻrgan ishni ham xuddi shunday bajaramiz. Jadval va narxni 1 daqiqada bildiramiz.",
+      "imageAlt": "Studio NOL ish maydoni"
+    },
     "seo": {
       "title": "Yozuv, Miks va Vokal Prodakshn Qo'llanmalari | Studio NOL",
       "description": "Vokal yozuv, miks, mastering, EQ va K-pop prodakshn bo'yicha 1,500+ amaliy qo'llanma — Studio NOL muhandislaridan.",
@@ -1347,6 +1352,7 @@
       "sectionSubtitle": "Chiqarishni yakunlagan artistlarning haqiqiy ovozlari."
     },
     "tiers": {
+      "currentBadge": "Joriy",
       "sectionTitle": "Chiqarish Loyihasi Turlari",
       "sectionSubtitle": "Haqiqiy chiqarish hajmiga qarab tuzilgan. Bepul maslahatdan keyin maxsus taklif.",
       "single": {
@@ -1654,6 +1660,30 @@
         "sectionSubtitle": "Sizga mos hajmni birga tanlaymiz."
       },
       "comparisonTable": {
+        "rowLabels": {
+          "duration": "Muddat",
+          "basePrice": "Asosiy narx",
+          "trackCount": "Qoʻshiqlar",
+          "persona": "Kimlar uchun",
+          "keyDeliverables": "Asosiy tarkib"
+        },
+        "values": {
+          "single": {
+            "trackCount": "1 qoʻshiq",
+            "persona": "Ilk relizni mustahkam boshlash",
+            "keyDeliverables": "Rejalashtirish · Vokal yozish · Miks · Tarqatish · Birinchi matbuot PR"
+          },
+          "ep": {
+            "trackCount": "3–5 qoʻshiq",
+            "persona": "Musiqiy oʻziga xoslikni eʼlon qilish",
+            "keyDeliverables": "Trek tanlovi · Ton moslash · Avval chiqariladigan singl · 2 bosqich PR"
+          },
+          "album": {
+            "trackCount": "8 ga yaqin qoʻshiq",
+            "persona": "Indi sahnasida nom qoldirish",
+            "keyDeliverables": "A&R · Ketma-ketlik · Tanqidchilar bilan tinglash · Grant loyihalarida hamrohlik"
+          }
+        },
         "sectionTitle": "Bir qarashda solishtirish",
         "sectionSubtitle": "Singl, EP yoki to‘liq albom — muddat, bazaviy narx va ish ko‘lamini bir joyda solishtiring."
       }

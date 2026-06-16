@@ -147,7 +147,7 @@ const TierComparisonTable: React.FC<TierComparisonTableProps> = ({ locale, highl
                 >
                   {highlightTier === tier ? (
                     <span className="inline-flex items-center gap-1 text-xs text-primary font-medium opacity-60">
-                      {t('releaseProject.tiers.detailCta')} (현재)
+                      {t('releaseProject.tiers.detailCta')} ({t('releaseProject.tiers.currentBadge')})
                     </span>
                   ) : (
                     <Link

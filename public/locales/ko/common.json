@@ -2046,6 +2046,7 @@
       "sectionSubtitle": "실제 음반을 마친 분들의 이야기입니다."
     },
     "tiers": {
+      "currentBadge": "현재",
       "sectionTitle": "발매 프로젝트 형태",
       "sectionSubtitle": "실제 발매 규모에 따라 구성됩니다. 무료 상담 후 단가표 기반 맞춤 견적.",
       "single": {

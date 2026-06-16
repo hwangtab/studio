@@ -793,6 +793,11 @@
     }
   },
   "stories": {
+    "bottomCta": {
+      "title": "立即通过 KakaoTalk 咨询",
+      "subtitle": "这篇文章中的作业同样可以为您完成。日程·报价 1 分钟内回复。",
+      "imageAlt": "Studio NOL 工作空间"
+    },
     "seo": {
       "title": "录音后记·混音技巧·制作案例 | Studio NOL",
       "description": "Studio NOL 1,500+ 篇实战指南：声乐录音、混音、母带、EQ、压缩、K-pop 制作技巧。延新内首尔录音室工程师亲授。",
@@ -1349,6 +1354,7 @@
       "sectionSubtitle": "来自实际完成发行的艺人的声音。"
     },
     "tiers": {
+      "currentBadge": "当前",
       "sectionTitle": "发行项目类型",
       "sectionSubtitle": "根据实际发行规模定制。免费咨询后提供报价。",
       "single": {
@@ -1656,6 +1662,30 @@
         "sectionSubtitle": "一起找到适合你的规模。"
       },
       "comparisonTable": {
+        "rowLabels": {
+          "duration": "周期",
+          "basePrice": "基础单价",
+          "trackCount": "收录曲目",
+          "persona": "适合人群",
+          "keyDeliverables": "核心包含"
+        },
+        "values": {
+          "single": {
+            "trackCount": "1 首",
+            "persona": "稳健开启首次发行",
+            "keyDeliverables": "企划 · 人声录音 · 混音 · 发行 · 首次媒体宣传"
+          },
+          "ep": {
+            "trackCount": "3-5 首",
+            "persona": "宣告音乐个性",
+            "keyDeliverables": "曲目策划 · 音色统一 · 预发单曲 · 两轮宣传"
+          },
+          "album": {
+            "trackCount": "8 首左右",
+            "persona": "在独立乐坛留名",
+            "keyDeliverables": "A&R · 曲目排序 · 乐评试听会 · 扶持项目同行"
+          }
+        },
         "sectionTitle": "一目了然地比较",
         "sectionSubtitle": "单曲、EP 或专辑 — 在一个视图中比较周期、基础价格和服务范围。"
       }

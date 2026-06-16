@@ -1386,6 +1386,7 @@
       "sectionSubtitle": "Voices from artists whose releases are complete."
     },
     "tiers": {
+      "currentBadge": "Current",
       "sectionTitle": "Release Project Types",
       "sectionSubtitle": "Structured by actual release scale. Custom quote after free consultation.",
       "single": {
@@ -1693,6 +1694,30 @@
         "sectionSubtitle": "Find the scale that fits you."
       },
       "comparisonTable": {
+        "rowLabels": {
+          "duration": "Timeline",
+          "basePrice": "Base price",
+          "trackCount": "Tracks",
+          "persona": "Best for",
+          "keyDeliverables": "Key inclusions"
+        },
+        "values": {
+          "single": {
+            "trackCount": "1 track",
+            "persona": "A solid first release",
+            "keyDeliverables": "Planning · Vocal recording · Mixing · Distribution · First press PR"
+          },
+          "ep": {
+            "trackCount": "3–5 tracks",
+            "persona": "Declare your musical identity",
+            "keyDeliverables": "Track curation · Tone matching · Pre-release single · 2 rounds of PR"
+          },
+          "album": {
+            "trackCount": "~8 tracks",
+            "persona": "Make your mark on the indie scene",
+            "keyDeliverables": "A&R · Sequencing · Critics’ listening session · Grant application support"
+          }
+        },
         "sectionTitle": "Compare at a Glance",
         "sectionSubtitle": "Single, EP, or full album — compare timeline, base price, and scope in one view."
       }

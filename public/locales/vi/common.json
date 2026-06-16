@@ -793,6 +793,11 @@
     }
   },
   "stories": {
+    "bottomCta": {
+      "title": "Tư vấn ngay qua KakaoTalk",
+      "subtitle": "Công việc bạn thấy trong bài viết này cũng có thể thực hiện tương tự. Báo lịch và báo giá trong vòng 1 phút.",
+      "imageAlt": "Không gian làm việc của Studio NOL"
+    },
     "seo": {
       "title": "Hướng Dẫn Thu Âm, Mixing & Sản Xuất Vocal | Studio NOL",
       "description": "1,500+ bài hướng dẫn thực chiến về thu âm vocal, mixing, mastering, EQ và sản xuất K-pop từ kỹ sư Studio NOL tại Seoul.",
@@ -1349,6 +1354,7 @@
       "sectionSubtitle": "Tiếng nói của những người đã hoàn tất bản phát hành."
     },
     "tiers": {
+      "currentBadge": "Hiện tại",
       "sectionTitle": "Các loại Dự án Phát hành",
       "sectionSubtitle": "Được cấu trúc theo quy mô phát hành thực tế. Báo giá tùy chỉnh sau tư vấn miễn phí.",
       "single": {
@@ -1656,6 +1662,30 @@
         "sectionSubtitle": "Cùng tìm ra quy mô phù hợp với bạn."
       },
       "comparisonTable": {
+        "rowLabels": {
+          "duration": "Tiến độ",
+          "basePrice": "Giá cơ bản",
+          "trackCount": "Số bài",
+          "persona": "Phù hợp với",
+          "keyDeliverables": "Bao gồm chính"
+        },
+        "values": {
+          "single": {
+            "trackCount": "1 bài",
+            "persona": "Khởi đầu phát hành vững chắc",
+            "keyDeliverables": "Lên kế hoạch · Thu âm giọng hát · Phối khí · Phát hành · PR truyền thông đầu tiên"
+          },
+          "ep": {
+            "trackCount": "3–5 bài",
+            "persona": "Khẳng định bản sắc âm nhạc",
+            "keyDeliverables": "Tuyển chọn bài · Đồng bộ âm sắc · Single phát hành trước · 2 đợt PR"
+          },
+          "album": {
+            "trackCount": "khoảng 8 bài",
+            "persona": "Ghi dấu trong làng indie",
+            "keyDeliverables": "A&R · Sắp xếp thứ tự · Buổi nghe cùng giới phê bình · Đồng hành xin tài trợ"
+          }
+        },
         "sectionTitle": "So sánh nhanh",
         "sectionSubtitle": "Single, EP hoặc album đầy đủ — so sánh thời gian, giá cơ bản và phạm vi trong một màn hình."
       }
