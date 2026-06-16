@@ -55,11 +55,11 @@ const PROCESS_ICONS = [
 ];
 
 const IN_PROGRESS_ITEMS = [
-  { artist: '마리코 & 유키에', title: '〈남산타워〉 정규앨범', typeKey: 'fullAlbum' },
-  { artist: 'Sabbaha', title: '정규 2집', typeKey: 'fullAlbum' },
-  { artist: '남자애', title: '릴레이 싱글', typeKey: 'single' },
-  { artist: 'Sickbaby', title: '정규 2집', typeKey: 'fullAlbum' },
-  { artist: '더블제이정', title: '미니앨범', typeKey: 'ep' },
+  { artist: '마리코 & 유키에', titleKey: 'namsanTower', typeKey: 'fullAlbum' },
+  { artist: 'Sabbaha', titleKey: 'fullAlbum2', typeKey: 'fullAlbum' },
+  { artist: '남자애', titleKey: 'relaySingle', typeKey: 'single' },
+  { artist: 'Sickbaby', titleKey: 'fullAlbum2', typeKey: 'fullAlbum' },
+  { artist: '더블제이정', titleKey: 'miniAlbum', typeKey: 'ep' },
 ];
 
 const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portfolioItems, spotlightItems, relatedStories, asOf }) => {
@@ -296,14 +296,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {IN_PROGRESS_ITEMS.map((item) => (
             <div
-              key={`${item.artist}-${item.title}`}
+              key={`${item.artist}-${item.titleKey}`}
               className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
             >
               <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
                 {t(`releaseProject.inProgress.types.${item.typeKey}`)}
               </span>
               <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t(`releaseProject.inProgress.items.${item.titleKey}`)}</p>
             </div>
           ))}
         </div>

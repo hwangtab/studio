@@ -153,7 +153,18 @@
       "artistLabel": "Artista",
       "servicesProvided": "Servicios proporcionados",
       "listenNow": "Escuchar ahora",
-      "share": "Compartir"
+      "share": "Compartir",
+      "productionNotes": "Notas de producción",
+      "credits": "Créditos",
+      "creditsEngineer": "Ingeniero",
+      "creditsMusicians": "Músicos",
+      "creditsGear": "Equipamiento utilizado",
+      "trackList": "Lista de pistas",
+      "releaseDate": "Fecha de lanzamiento",
+      "label": "Sello discográfico",
+      "relatedStoriesTitle": "¿Cómo se creó este trabajo?",
+      "relatedStoriesSubtitle": "Hemos reunido en guías las técnicas utilizadas en sesiones reales de grabación, mezcla y producción.",
+      "ctaPrompt": "También le ayudamos a dar vida a su música."
     },
     "heroAlt": "Portafolio de Studio NOL",
     "seo": {
@@ -167,7 +178,6 @@
     "subtitle": "Contáctanos para consultas o reservas.",
     "heroAlt": "Contactar Studio NOL",
     "form": {
-
       "failFallback": "Si el formulario no se envía, contáctanos directamente abajo.",
       "name": "Nombre",
       "namePlaceholder": "p. ej., Alex Kim…",
@@ -864,7 +874,10 @@
       "share": "Compartir",
       "moreTitle": "Más historias",
       "noRelated": "No hay historias relacionadas.",
-      "viewAll": "Ver todas las historias"
+      "viewAll": "Ver todas las historias",
+      "relatedPortfolioTitle": "Trabajos reales realizados por Studio NOL",
+      "viewAllPortfolio": "Ver todo el portafolio",
+      "boilerplateAside": "Información general de visita"
     },
     "categoryHub": {
       "seoTitle": "Historias sobre {{category}} | Studio NOL",
@@ -883,6 +896,30 @@
       "mixing": "Mezcla y masterización",
       "business": "Negocio musical",
       "event": "Eventos"
+    },
+    "inline": {
+      "bookingDefault": "Si desea consultar o reservar de inmediato",
+      "bookingLabel": "Consulta por KakaoTalk",
+      "bookingBody": "Envíenos un mensaje a nuestro canal de KakaoTalk y le responderemos rápidamente. Solo incluya la siguiente información:",
+      "kakaoCta": "Consultar por KakaoTalk",
+      "priceLabel": "Paquete recomendado",
+      "priceCategory": {
+        "recording": "Grabación vocal",
+        "mixing": "Mezcla",
+        "mastering": "Masterización",
+        "special": "Paquete recomendado",
+        "additional": "Servicios adicionales"
+      },
+      "priceDetail": "Ver lista de precios completa",
+      "reviewLabel": "Reseñas de clientes y residentes",
+      "serviceBodyDefault": "Descubra más sobre los servicios relacionados.",
+      "serviceDetail": "Ver detalles del servicio"
+    },
+    "sticky": {
+      "label": "Barra de contacto fija",
+      "headline": "Reservas y consultas por KakaoTalk",
+      "kakao": "KakaoTalk",
+      "dismiss": "Cerrar"
     }
   },
   "reviewSection": {
@@ -1167,6 +1204,10 @@
         {
           "q": "¿Hay grabaciones disponibles en fines de semana y festivos?",
           "a": "Sí, hay disponibilidad en fines de semana y festivos. Contáctanos por KakaoTalk o teléfono."
+        },
+        {
+          "q": "¿Cuánto cuesta contratar a un actor de voz y cómo se obtiene un presupuesto?",
+          "a": "El uso de la sala de grabación (100 000 KRW por hora, IVA no incluido) y los honorarios del actor de voz se presupuestan por separado. Los honorarios varían según el nivel del actor, la extensión del guion y el alcance de uso (YouTube, publicidad, promoción corporativa, etc.). Cuéntenos su guion y el propósito, y le prepararemos un presupuesto gratuito. Contáctenos por KakaoTalk o por teléfono y le responderemos rápidamente."
         }
       ]
     },
@@ -1178,6 +1219,10 @@
       "location": "Cómo llegar",
       "inquiry": "Reservar Grabación de Voz",
       "imageAlt": "Equipo de grabación de voz en Studio NOL"
+    },
+    "hubCallout": {
+      "title": "Audiolibros · ASMR · Narración — Guía completa para principiantes",
+      "subtitle": "Desde la preparación del guion hasta la grabación, edición, masterización y distribución — todo en una sola página."
     }
   },
   "coverVideo": {
@@ -1306,7 +1351,11 @@
       "imageAlt": "Sesión de filmación de video cover en Studio NOL"
     },
     "relatedStoriesTitle": "Guías de Producción de Video Cover",
-    "relatedStoriesSubtitle": "Guías prácticas para planificar, filmar y editar tu video cover para YouTube o SNS."
+    "relatedStoriesSubtitle": "Guías prácticas para planificar, filmar y editar tu video cover para YouTube o SNS.",
+    "hubCallout": {
+      "title": "Producción de cover en video — Guía completa: concepto, grabación, audio y edición",
+      "subtitle": "Desde la selección de la canción hasta la configuración de grabación, mezcla de audio y subida a YouTube y redes sociales — todo en una sola página."
+    }
   },
   "releaseProject": {
     "seo": {
@@ -1344,9 +1393,18 @@
       "bodyParagraph1": "Acompaño a cantautores y bandas indie en sus lanzamientos. Pulir la canción, subirla a Spotify y Apple Music, conectar músicos de sesión, llegar a medios y reseñas — para que una canción encuentre su lugar en la escena indie, todos estos pasos deben encajar.",
       "bodyParagraph2": "Un lanzamiento exitoso es difícil de lograr en solitario. Por eso mi trabajo es ser el compañero que camina contigo hasta el final.",
       "stats": [
-        { "value": "70+", "label": "Lanzamientos producidos" },
-        { "value": "15 años", "label": "Años produciendo discos" },
-        { "value": "Amplia", "label": "Red musical" }
+        {
+          "value": "70+",
+          "label": "Lanzamientos producidos"
+        },
+        {
+          "value": "15 años",
+          "label": "Años produciendo discos"
+        },
+        {
+          "value": "Amplia",
+          "label": "Red musical"
+        }
       ]
     },
     "reviews": {
@@ -1378,20 +1436,56 @@
           "focusSectionTitle": "En qué nos enfocamos para tu single",
           "focusSubtitle": "Una sola pista significa que podemos ir más profundo.",
           "focusItems": [
-            { "title": "Enfoque total en una pista", "desc": "Con una sola canción, toda la energía va hacia ella. El arreglo y la dirección sonora se optimizan para ese single." },
-            { "title": "Definir tu primera impresión", "desc": "El momento en que tu nombre entra en la escena indie. Pensamos juntos desde la etapa de planificación qué impresión quieres dejar." },
-            { "title": "Un primer paso realista", "desc": "El objetivo es llegar al lanzamiento, no la perfección. Empezar es más importante que ser perfecto." },
-            { "title": "Tu primer contacto con los medios", "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie." }
+            {
+              "title": "Enfoque total en una pista",
+              "desc": "Con una sola canción, toda la energía va hacia ella. El arreglo y la dirección sonora se optimizan para ese single."
+            },
+            {
+              "title": "Definir tu primera impresión",
+              "desc": "El momento en que tu nombre entra en la escena indie. Pensamos juntos desde la etapa de planificación qué impresión quieres dejar."
+            },
+            {
+              "title": "Un primer paso realista",
+              "desc": "El objetivo es llegar al lanzamiento, no la perfección. Empezar es más importante que ser perfecto."
+            },
+            {
+              "title": "Tu primer contacto con los medios",
+              "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie."
+            }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
           "journeySubtitle": "Según el estado de la canción, normalmente fijamos un calendario realista de 6-12 semanas.",
           "journeyItems": [
-            { "month": "Tras consulta", "label": "Revisión y calendario", "desc": "Primero revisamos el estado de la canción, el alcance del arreglo y la fecha objetivo de lanzamiento." },
-            { "month": "1-2 semanas", "label": "Planificación y Dirección", "desc": "Decidimos juntos qué canción, qué enfoque y a quién debe llegar." },
-            { "month": "2-4 semanas", "label": "Arreglo y preparación", "desc": "Organizamos el arreglo necesario y conectamos músicos de sesión si hace falta." },
-            { "month": "4-6 semanas", "label": "Grabación vocal y de sesión", "desc": "Grabamos en el estudio y sacamos tu mejor actuación." },
-            { "month": "6-8 semanas", "label": "Mezcla y masterización", "desc": "Completamos el sonido y preparamos masters para las plataformas." },
-            { "month": "8-12 semanas", "label": "Distribución y PR", "desc": "Registramos la distribución, confirmamos la fecha y enviamos el comunicado de prensa." }
+            {
+              "month": "Tras consulta",
+              "label": "Revisión y calendario",
+              "desc": "Primero revisamos el estado de la canción, el alcance del arreglo y la fecha objetivo de lanzamiento."
+            },
+            {
+              "month": "1-2 semanas",
+              "label": "Planificación y Dirección",
+              "desc": "Decidimos juntos qué canción, qué enfoque y a quién debe llegar."
+            },
+            {
+              "month": "2-4 semanas",
+              "label": "Arreglo y preparación",
+              "desc": "Organizamos el arreglo necesario y conectamos músicos de sesión si hace falta."
+            },
+            {
+              "month": "4-6 semanas",
+              "label": "Grabación vocal y de sesión",
+              "desc": "Grabamos en el estudio y sacamos tu mejor actuación."
+            },
+            {
+              "month": "6-8 semanas",
+              "label": "Mezcla y masterización",
+              "desc": "Completamos el sonido y preparamos masters para las plataformas."
+            },
+            {
+              "month": "8-12 semanas",
+              "label": "Distribución y PR",
+              "desc": "Registramos la distribución, confirmamos la fecha y enviamos el comunicado de prensa."
+            }
           ],
           "deliverablesSectionTitle": "Lo que recibes",
           "deliverablesIncludedTitle": "Componentes del proyecto",
@@ -1421,10 +1515,22 @@
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "priceFactorsTitle": "Variables que determinan el precio",
           "priceFactors": [
-            { "label": "Número de pistas", "detail": "1 pista de base → cada pista adicional +₩300K~500K" },
-            { "label": "Músicos de sesión", "detail": "1~2 incluidos → 3 o más +₩200K por persona" },
-            { "label": "Profundidad del arreglo", "detail": "Arreglo básico → banda completa·cuerdas·coro +₩500K~1.5M" },
-            { "label": "PR en medios", "detail": "1 ronda base → 2 rondas·entrevista de lanzamiento +₩300K" }
+            {
+              "label": "Número de pistas",
+              "detail": "1 pista de base → cada pista adicional +₩300K~500K"
+            },
+            {
+              "label": "Músicos de sesión",
+              "detail": "1~2 incluidos → 3 o más +₩200K por persona"
+            },
+            {
+              "label": "Profundidad del arreglo",
+              "detail": "Arreglo básico → banda completa·cuerdas·coro +₩500K~1.5M"
+            },
+            {
+              "label": "PR en medios",
+              "detail": "1 ronda base → 2 rondas·entrevista de lanzamiento +₩300K"
+            }
           ],
           "caseStudySectionTitle": "Singles que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
@@ -1472,21 +1578,61 @@
           "focusSectionTitle": "En qué nos enfocamos para tu EP",
           "focusSubtitle": "Conectar múltiples pistas en un solo mundo es el corazón de un EP.",
           "focusItems": [
-            { "title": "Consistencia y secuenciación entre pistas", "desc": "Unir múltiples canciones en un mundo es el núcleo de un EP. Diseñamos juntos el orden de pistas, el ritmo y la coherencia de tonos." },
-            { "title": "Campaña por fases: single principal → EP", "desc": "Lanza primero una pista para medir la respuesta, luego prepara el resto — construyendo tu base de fans paso a paso." },
-            { "title": "Definir tu identidad artística", "desc": "Lo que es difícil mostrar con un solo single se vuelve claro en un EP. Tu identidad musical distintiva toma forma." },
-            { "title": "Dos rondas de PR en medios", "desc": "Single principal + lanzamiento de EP te da dos oportunidades de llegar a críticos y medios musicales a través de nuestra red indie de 15 años." }
+            {
+              "title": "Consistencia y secuenciación entre pistas",
+              "desc": "Unir múltiples canciones en un mundo es el núcleo de un EP. Diseñamos juntos el orden de pistas, el ritmo y la coherencia de tonos."
+            },
+            {
+              "title": "Campaña por fases: single principal → EP",
+              "desc": "Lanza primero una pista para medir la respuesta, luego prepara el resto — construyendo tu base de fans paso a paso."
+            },
+            {
+              "title": "Definir tu identidad artística",
+              "desc": "Lo que es difícil mostrar con un solo single se vuelve claro en un EP. Tu identidad musical distintiva toma forma."
+            },
+            {
+              "title": "Dos rondas de PR en medios",
+              "desc": "Single principal + lanzamiento de EP te da dos oportunidades de llegar a críticos y medios musicales a través de nuestra red indie de 15 años."
+            }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
           "journeySubtitle": "Para 3-5 temas, normalmente organizamos el lanzamiento en 3-6 meses.",
           "journeyItems": [
-            { "month": "Tras consulta", "label": "Estado y alcance", "desc": "Primero revisamos canciones candidatas, arreglo, escala de sesión y fecha objetivo." },
-            { "month": "1-3 semanas", "label": "Planificación y lista de pistas", "desc": "Diseñamos la dirección del EP, número de pistas, secuencia y mundo artístico." },
-            { "month": "3-8 semanas", "label": "Arreglo y preparación de sesión", "desc": "Desarrollamos el arreglo de cada canción y conectamos los músicos necesarios." },
-            { "month": "2-3 meses", "label": "Grabación vocal y de sesión", "desc": "Dirección vocal y grabación de sesiones instrumentales." },
-            { "month": "3-4 meses", "label": "Mezcla y coherencia de tono", "desc": "Mezclamos para que múltiples pistas conecten como un EP cohesivo." },
-            { "month": "4-5 meses", "label": "Masterización y arte", "desc": "Preparamos masterización, portada y materiales de distribución." },
-            { "month": "5-6 meses", "label": "Lanzamiento y PR", "desc": "Si conviene, lanzamos primero un single principal y seguimos con el EP y PR en medios." }
+            {
+              "month": "Tras consulta",
+              "label": "Estado y alcance",
+              "desc": "Primero revisamos canciones candidatas, arreglo, escala de sesión y fecha objetivo."
+            },
+            {
+              "month": "1-3 semanas",
+              "label": "Planificación y lista de pistas",
+              "desc": "Diseñamos la dirección del EP, número de pistas, secuencia y mundo artístico."
+            },
+            {
+              "month": "3-8 semanas",
+              "label": "Arreglo y preparación de sesión",
+              "desc": "Desarrollamos el arreglo de cada canción y conectamos los músicos necesarios."
+            },
+            {
+              "month": "2-3 meses",
+              "label": "Grabación vocal y de sesión",
+              "desc": "Dirección vocal y grabación de sesiones instrumentales."
+            },
+            {
+              "month": "3-4 meses",
+              "label": "Mezcla y coherencia de tono",
+              "desc": "Mezclamos para que múltiples pistas conecten como un EP cohesivo."
+            },
+            {
+              "month": "4-5 meses",
+              "label": "Masterización y arte",
+              "desc": "Preparamos masterización, portada y materiales de distribución."
+            },
+            {
+              "month": "5-6 meses",
+              "label": "Lanzamiento y PR",
+              "desc": "Si conviene, lanzamos primero un single principal y seguimos con el EP y PR en medios."
+            }
           ],
           "deliverablesSectionTitle": "Lo que recibes",
           "deliverablesIncludedTitle": "Componentes del proyecto",
@@ -1518,10 +1664,22 @@
           "priceNote": "Cotización personalizada tras consulta gratuita.",
           "priceFactorsTitle": "Variables que determinan el precio",
           "priceFactors": [
-            { "label": "Número de pistas", "detail": "3 pistas de base → 4 pistas +₩500K / 5 pistas +₩1M" },
-            { "label": "Escala de sesión", "detail": "Voz + 1~2 sesiones → grabación de banda en vivo +₩1M~2M" },
-            { "label": "Campaña del single principal", "detail": "1 ronda base → lanzamiento en 2 fases·2 rondas de PR +₩500K" },
-            { "label": "Profundidad de coherencia de tono", "detail": "Coherencia entre pistas → masterización con un único motor +₩300K" }
+            {
+              "label": "Número de pistas",
+              "detail": "3 pistas de base → 4 pistas +₩500K / 5 pistas +₩1M"
+            },
+            {
+              "label": "Escala de sesión",
+              "detail": "Voz + 1~2 sesiones → grabación de banda en vivo +₩1M~2M"
+            },
+            {
+              "label": "Campaña del single principal",
+              "detail": "1 ronda base → lanzamiento en 2 fases·2 rondas de PR +₩500K"
+            },
+            {
+              "label": "Profundidad de coherencia de tono",
+              "detail": "Coherencia entre pistas → masterización con un único motor +₩300K"
+            }
           ],
           "caseStudySectionTitle": "EPs que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
@@ -1569,21 +1727,61 @@
           "focusSectionTitle": "En qué nos enfocamos para tu álbum completo",
           "focusSubtitle": "Un álbum completo es una batalla de calidad y tiempo.",
           "focusItems": [
-            { "title": "Profundidad de A&R y selección de canciones", "desc": "Juzgamos juntos qué canciones pertenecen al álbum y cuáles no. El arco completo del álbum se decide aquí." },
-            { "title": "Diseño del arco completo y secuencia", "desc": "Diseñamos el viaje desde la pista 1 hasta la última para que todo el álbum cuente una historia." },
-            { "title": "PR con críticos y sesión de escucha", "desc": "Camino con críticos refinado a lo largo de más de 70 lanzamientos — incluyendo a Kang Ho-jung y Samgakjeonpasa. Organizamos una sesión de escucha previa al lanzamiento para críticos, solo posible con un álbum completo. El reconocimiento a través de reseñas es el objetivo." },
-            { "title": "Apoyo con becas y financiamiento", "desc": "Tenemos experiencia con programas de becas artísticas y crowdfunding. Pensamos juntos la estructura del presupuesto." }
+            {
+              "title": "Profundidad de A&R y selección de canciones",
+              "desc": "Juzgamos juntos qué canciones pertenecen al álbum y cuáles no. El arco completo del álbum se decide aquí."
+            },
+            {
+              "title": "Diseño del arco completo y secuencia",
+              "desc": "Diseñamos el viaje desde la pista 1 hasta la última para que todo el álbum cuente una historia."
+            },
+            {
+              "title": "PR con críticos y sesión de escucha",
+              "desc": "Camino con críticos refinado a lo largo de más de 70 lanzamientos — incluyendo a Kang Ho-jung y Samgakjeonpasa. Organizamos una sesión de escucha previa al lanzamiento para críticos, solo posible con un álbum completo. El reconocimiento a través de reseñas es el objetivo."
+            },
+            {
+              "title": "Apoyo con becas y financiamiento",
+              "desc": "Tenemos experiencia con programas de becas artísticas y crowdfunding. Pensamos juntos la estructura del presupuesto."
+            }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
           "journeySubtitle": "Para un álbum de 8 pistas, normalmente diseñamos un calendario de 6-12 meses según el estado de las canciones.",
           "journeyItems": [
-            { "month": "Tras consulta", "label": "Estado y alcance", "desc": "Primero revisamos canciones candidatas, demos, escala de sesión, presupuesto y fecha objetivo." },
-            { "month": "1 mes", "label": "A&R y lista de pistas", "desc": "Diseñamos qué canciones pertenecen al álbum y qué tipo de disco será." },
-            { "month": "1-3 meses", "label": "Concepto y arreglo", "desc": "Finalizamos concepto, orden de pistas y alcance de arreglo de cada canción." },
-            { "month": "3-6 meses", "label": "Arreglo, sesiones y grabación", "desc": "Conectamos sesiones necesarias y nos concentramos en voces e instrumentos." },
-            { "month": "5-8 meses", "label": "Mezcla y tono del álbum", "desc": "Damos forma al disco para que múltiples canciones se sientan como un álbum." },
-            { "month": "8-10 meses", "label": "Masterización y arte", "desc": "Preparamos masterización, portada y materiales de distribución." },
-            { "month": "10-12 meses", "label": "Single, álbum y PR", "desc": "Si conviene, lanzamos un single primero y seguimos con el álbum completo y PR con críticos y medios." }
+            {
+              "month": "Tras consulta",
+              "label": "Estado y alcance",
+              "desc": "Primero revisamos canciones candidatas, demos, escala de sesión, presupuesto y fecha objetivo."
+            },
+            {
+              "month": "1 mes",
+              "label": "A&R y lista de pistas",
+              "desc": "Diseñamos qué canciones pertenecen al álbum y qué tipo de disco será."
+            },
+            {
+              "month": "1-3 meses",
+              "label": "Concepto y arreglo",
+              "desc": "Finalizamos concepto, orden de pistas y alcance de arreglo de cada canción."
+            },
+            {
+              "month": "3-6 meses",
+              "label": "Arreglo, sesiones y grabación",
+              "desc": "Conectamos sesiones necesarias y nos concentramos en voces e instrumentos."
+            },
+            {
+              "month": "5-8 meses",
+              "label": "Mezcla y tono del álbum",
+              "desc": "Damos forma al disco para que múltiples canciones se sientan como un álbum."
+            },
+            {
+              "month": "8-10 meses",
+              "label": "Masterización y arte",
+              "desc": "Preparamos masterización, portada y materiales de distribución."
+            },
+            {
+              "month": "10-12 meses",
+              "label": "Single, álbum y PR",
+              "desc": "Si conviene, lanzamos un single primero y seguimos con el álbum completo y PR con críticos y medios."
+            }
           ],
           "deliverablesSectionTitle": "Lo que recibes",
           "deliverablesIncludedTitle": "Componentes del proyecto",
@@ -1617,10 +1815,22 @@
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "priceFactorsTitle": "Variables que determinan el precio",
           "priceFactors": [
-            { "label": "Número de pistas", "detail": "8 pistas de base → 10 pistas +₩2M / 12 pistas +₩4M" },
-            { "label": "Escala de sesión", "detail": "Voz + sesión central → banda completa·cuerdas·coro +₩2M~5M" },
-            { "label": "Profundidad A&R", "detail": "5 rondas de selección → taller de composición·guía externa +₩1M~2M" },
-            { "label": "PR con críticos·sesión de escucha", "detail": "Nota de prensa + medios individuales → evento de escucha +₩800K" }
+            {
+              "label": "Número de pistas",
+              "detail": "8 pistas de base → 10 pistas +₩2M / 12 pistas +₩4M"
+            },
+            {
+              "label": "Escala de sesión",
+              "detail": "Voz + sesión central → banda completa·cuerdas·coro +₩2M~5M"
+            },
+            {
+              "label": "Profundidad A&R",
+              "detail": "5 rondas de selección → taller de composición·guía externa +₩1M~2M"
+            },
+            {
+              "label": "PR con críticos·sesión de escucha",
+              "detail": "Nota de prensa + medios individuales → evento de escucha +₩800K"
+            }
           ],
           "caseStudySectionTitle": "Álbumes completos que hemos hecho juntos",
           "caseStudySubtitle": "Proyectos de lanzamiento reales en los que hemos trabajado.",
@@ -1738,6 +1948,12 @@
         "single": "Sencillo",
         "ep": "EP",
         "miniAlbum": "EP"
+      },
+      "items": {
+        "namsanTower": "«Namsan Tower» Álbum de estudio",
+        "fullAlbum2": "Segundo álbum de estudio",
+        "relaySingle": "Singles en cadena",
+        "miniAlbum": "Miniálbum"
       }
     },
     "discography": {

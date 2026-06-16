@@ -41,6 +41,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ["전담 엔지니어 진행", "보컬 디렉팅·마이크 포지셔닝 포함", "테이크 선별 및 기본 편집 포함", "3시간 기준 (추가 시 시간당 레코딩 요금 적용)"],
         en: ["Dedicated engineer included", "Vocal directing & mic positioning", "Take selection & basic editing", "Based on 3 hours (hourly rate applies for extra time)"],
+        zh: ["专属工程师陪同", "含人声指导及麦克风定位", "含录音片段筛选及基本剪辑", "以3小时为基准（超时按小时计费）"],
+        es: ["Ingeniero dedicado incluido", "Dirección vocal y posicionamiento de micrófono", "Selección de tomas y edición básica", "Basado en 3 horas (tarifa por hora si se excede)"],
         vi: ["Kỹ sư chuyên trách", "Đạo diễn vocal & định vị mic", "Chọn take & chỉnh sửa cơ bản", "Cơ sở 3 giờ (vượt giờ tính theo giờ)"],
         th: ["วิศวกรเสียงประจำ", "กำกับการร้องและจัดตำแหน่งไมค์", "คัดเลือก take และตัดต่อเบื้องต้น", "อ้างอิง 3 ชั่วโมง (เกินคิดรายชั่วโมง)"],
         uz: ["Maxsus muhandis bilan", "Vokal direktori va mikrofon joylashuvi", "Take tanlash va asosiy tahrirlash", "3 soat asosida (ortiqcha vaqt soatlik tarif)"]
@@ -64,6 +66,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ["전담 엔지니어 진행", "최소 2시간부터 예약 가능", "보정·추가 녹음·성우에 적합", "실시간 모니터링 및 피드백"],
         en: ["Dedicated engineer included", "Minimum 2-hour booking", "Great for overdubs, voiceover & fixes", "Real-time monitoring & feedback"],
+        zh: ["专属工程师陪同", "最少预约2小时", "适合补录、配音及修正录音", "实时监听与即时反馈"],
+        es: ["Ingeniero dedicado incluido", "Reserva mínima de 2 horas", "Ideal para sobredoblajes, locución y correcciones", "Monitoreo en tiempo real y retroalimentación"],
         vi: ["Kỹ sư chuyên trách", "Đặt tối thiểu 2 giờ", "Phù hợp overdub, voiceover & chỉnh sửa", "Giám sát thời gian thực & phản hồi"],
         th: ["วิศวกรเสียงประจำ", "จองขั้นต่ำ 2 ชั่วโมง", "เหมาะสำหรับ overdub วอยซ์โอเวอร์ และแก้ไข", "มอนิเตอร์แบบเรียลไทม์และฟีดแบ็ก"],
         uz: ["Maxsus muhandis bilan", "Minimal 2 soat bron", "Overdub, voiceover va tuzatishlar uchun mos", "Real vaqt monitoring va fikr-mulohaza"]
@@ -88,6 +92,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['6시간 패키지 (약 17% 할인)', '충분한 휴식과 여유로운 작업', '식사 시간 포함', '장시간 집중이 필요한 프로젝트에 최적'],
         en: ['6-hour package (~17% discount)', 'Relaxed work pace', 'Meal break included', 'Optimized for focus-heavy projects'],
+        zh: ['6小时套餐（约17%折扣）', '从容的工作节奏，充分休息', '含用餐时间', '适合需要长时间专注的项目'],
+        es: ['Paquete de 6 horas (~17% de descuento)', 'Ritmo de trabajo relajado con descansos suficientes', 'Pausa para comida incluida', 'Optimizado para proyectos que requieren concentración prolongada'],
         vi: ['Gói 6 giờ (giảm ~17%)', 'Nhịp làm việc thoải mái, nghỉ ngơi đầy đủ', 'Bao gồm thời gian ăn', 'Tối ưu cho dự án cần tập trung dài'],
         th: ['แพ็กเกจ 6 ชั่วโมง (ลด ~17%)', 'ทำงานสบาย ๆ มีเวลาพักเพียงพอ', 'รวมเวลาพักทานอาหาร', 'เหมาะกับโปรเจกต์ที่ต้องโฟกัสนาน'],
         uz: ['6 soatlik paket (taxm. 17% chegirma)', 'Rahat ish tempi va yetarli dam olish', 'Ovqatlanish vaqti kiritilgan', 'Uzoq vaqt diqqat talab qiladigan loyihalar uchun optimal']
@@ -114,6 +120,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['10 트랙 이하', '보컬 + MR 또는 소편성 악기', '기본 2회 수정 포함', '밸런스 및 톤 보정'],
         en: ['Under 10 tracks', 'Vocal + MR or small ensemble', '2 revisions included', 'Balance & tone correction'],
+        zh: ['10轨以下', '人声 + MR 或小编制乐器', '含2次修改', '音量平衡及音色调整'],
+        es: ['Menos de 10 pistas', 'Vocal + MR o conjunto pequeño', '2 revisiones incluidas', 'Corrección de balance y tono'],
         vi: ['Dưới 10 track', 'Vocal + MR hoặc dàn nhạc nhỏ', 'Bao gồm 2 lần chỉnh sửa', 'Cân bằng & chỉnh tone'],
         th: ['ต่ำกว่า 10 แทร็ก', 'ร้อง + MR หรือวงเล็ก', 'รวมแก้ไข 2 ครั้ง', 'ปรับบาลานซ์และโทน'],
         uz: ['10 ta trackgacha', 'Vokal + MR yoki kichik ansambl', '2 ta tahrir kiritilgan', 'Balans va ton tuzatish']
@@ -138,6 +146,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['11 ~ 30 트랙', '풀 밴드 구성 또는 팝 편곡', '기본 2회 수정 포함', '디테일한 이펙팅 및 공간감 형성'],
         en: ['11 ~ 30 tracks', 'Full band or pop arrangement', '2 revisions included', 'Detailed effects & spatial design'],
+        zh: ['11–30轨', '完整乐队或流行编曲', '含2次修改', '精细效果处理及空间感营造'],
+        es: ['11–30 pistas', 'Arreglo de banda completa o pop', '2 revisiones incluidas', 'Efectos detallados y diseño espacial'],
         vi: ['11–30 track', 'Band đầy đủ hoặc pop arrangement', 'Bao gồm 2 lần chỉnh sửa', 'Hiệu ứng chi tiết & tạo không gian'],
         th: ['11–30 แทร็ก', 'วงเต็มหรือเรียบเรียงป๊อป', 'รวมแก้ไข 2 ครั้ง', 'เอฟเฟกต์ละเอียดและการออกแบบมิติ'],
         uz: ['11–30 track', 'To"liq band yoki pop aranjirovka', '2 ta tahrir kiritilgan', 'Batafsil effektlar va fazoviy dizayn']
@@ -161,6 +171,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['31 트랙 이상', '대편성 또는 복잡한 일렉트로닉', '기본 2회 수정 포함', '최고 수준의 디테일 작업'],
         en: ['31+ tracks', 'Large ensemble or complex electronic', '2 revisions included', 'Highest level of detail'],
+        zh: ['31轨以上', '大编制或复杂电子音乐', '含2次修改', '最高水准的细节处理'],
+        es: ['31 o más pistas', 'Gran ensemble o electrónica compleja', '2 revisiones incluidas', 'Mayor nivel de detalle'],
         vi: ['31 track trở lên', 'Dàn nhạc lớn hoặc electronic phức tạp', 'Bao gồm 2 lần chỉnh sửa', 'Chi tiết ở mức cao nhất'],
         th: ['31 แทร็กขึ้นไป', 'วงใหญ่หรืออิเล็กทรอนิกส์ซับซ้อน', 'รวมแก้ไข 2 ครั้ง', 'งานละเอียดระดับสูงสุด'],
         uz: ['31+ track', 'Katta ansambl yoki murakkab elektronika', '2 ta tahrir kiritilgan', 'Eng yuqori darajadagi detal ishlov']
@@ -188,6 +200,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['스트리밍 플랫폼 규격 준수', '기본 1회 수정 포함', '고해상도 음원 제공', '장르별 최적화된 라우드니스 설정'],
         en: ['Streaming platform standards', '1 revision included', 'High-res audio files', 'Genre-optimized loudness'],
+        zh: ['符合流媒体平台规格标准', '含1次修改', '提供高解析度音频文件', '按流派优化响度设置'],
+        es: ['Cumple con los estándares de plataformas de streaming', '1 revisión incluida', 'Archivos de audio de alta resolución', 'Loudness optimizado por género'],
         vi: ['Tuân thủ chuẩn nền tảng streaming', 'Bao gồm 1 lần chỉnh sửa', 'File âm thanh độ phân giải cao', 'Loudness tối ưu theo thể loại'],
         th: ['ตามมาตรฐานแพลตฟอร์มสตรีมมิง', 'รวมแก้ไข 1 ครั้ง', 'ไฟล์เสียงความละเอียดสูง', 'ตั้งค่า loudness ให้เหมาะกับแนวเพลง'],
         uz: ['Streaming platforma standartlariga mos', '1 ta tahrir kiritilgan', 'Yuqori rezolyutsiyali audio fayllar', 'Janrga mos loudness sozlamalari']
@@ -280,6 +294,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['녹음 2시간 (스튜디오 사용료 포함)', '정밀 보컬 튠 및 박자 보정', '전문 믹싱 & 마스터링', '당일 보정본 수령 가능 (사전 협의 시)'],
         en: ['2h recording (studio fee included)', 'Vocal tuning & timing correction', 'Professional mixing & mastering', 'Same-day delivery available'],
+        zh: ['2小时录音（含录音棚使用费）', '精准人声音准及节奏校正', '专业混音 & 母带处理', '可当日取回成品（提前协商）'],
+        es: ['2 horas de grabación (tarifa de estudio incluida)', 'Afinación vocal y corrección de tempo', 'Mezcla y masterización profesional', 'Entrega en el mismo día disponible (previa consulta)'],
         vi: ['Thu âm 2 giờ (đã gồm phí studio)', 'Chỉnh giọng & chỉnh nhịp chính xác', 'Mixing & mastering chuyên nghiệp', 'Có thể nhận bản trong ngày (thỏa thuận trước)'],
         th: ['อัด 2 ชม. (รวมค่าใช้สตูดิโอ)', 'ปรับจูนเสียงร้องและแก้จังหวะอย่างละเอียด', 'มิกซ์ & มาสเตอริ่งระดับมืออาชีพ', 'รับงานภายในวันได้ (ตกลงล่วงหน้า)'],
         uz: ['2 soat yozuv (studiya to"lovi kiritilgan)', 'Aniq vokal tuning va timing tuzatish', 'Professional miks & mastering', 'Kelishuv bo"lsa, shu kuni topshirish mumkin']
@@ -303,6 +319,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['Neumann U87AI 등 하이엔드 마이크 사용', '노이즈 제어 및 톤 보정', '실시간 편집 지원', '성우 대기실 제공'],
         en: ['High-end mics (U87AI, etc.)', 'Noise control & tone correction', 'Real-time editing support', 'Voice actor waiting room'],
+        zh: ['使用Neumann U87AI等高端麦克风', '噪音控制及音色调整', '支持实时剪辑', '提供配音演员休息室'],
+        es: ['Micrófonos de alta gama (U87AI, etc.)', 'Control de ruido y corrección de tono', 'Soporte de edición en tiempo real', 'Sala de espera para actores de voz'],
         vi: ['Micro cao cấp (U87AI, v.v.)', 'Khử noise & chỉnh tone', 'Hỗ trợ chỉnh sửa thời gian thực', 'Có phòng chờ cho voice actor'],
         th: ['ไมค์ไฮเอนด์ (U87AI ฯลฯ)', 'ควบคุมเสียงรบกวนและปรับโทน', 'สนับสนุนการตัดต่อแบบเรียลไทม์', 'มีห้องพักรอสำหรับนักพากย์'],
         uz: ['Yuqori darajadagi mikrofonlar (U87AI va b.)', 'Shovqinni boshqarish va ton tuzatish', 'Real vaqt tahriri qo"llovi', 'Voice actor kutish xonasi']
@@ -352,6 +370,8 @@ export const getPricingData = (locale: Locale) => {
       features: tArray(locale, {
         ko: ['메인 부스 및 컨트롤 룸 전체 사용', '촬영용 조명(지속광) 무료 대여', '오디오 인터페이스 직접 연결 지원', '대기실 및 탈의실 사용'],
         en: ['Full access to booth & control room', 'Free lighting rental', 'Audio interface connection', 'Waiting & changing rooms'],
+        zh: ['主录音棚及控制室全部开放使用', '拍摄用灯光（持续光）免费租借', '支持直接连接音频接口', '提供等候室及更衣室'],
+        es: ['Acceso completo a la cabina y sala de control', 'Alquiler gratuito de iluminación (luz continua)', 'Conexión directa de interfaz de audio', 'Salas de espera y vestuario disponibles'],
         vi: ['Sử dụng toàn bộ booth và phòng điều khiển', 'Miễn phí thuê đèn quay (đèn liên tục)', 'Hỗ trợ kết nối audio interface', 'Có phòng chờ và phòng thay đồ'],
         th: ['ใช้บูธหลักและห้องคอนโทรลทั้งหมด', 'ให้เช่าไฟถ่ายทำฟรี (ไฟต่อเนื่อง)', 'รองรับการเชื่อมต่อออดิโออินเทอร์เฟซ', 'มีห้องพักรอและห้องเปลี่ยนเสื้อผ้า'],
         uz: ['Asosiy booth va control room to"liq foydalanish', 'Suratga olish chiroqlari (doimiy yorug"lik) bepul', 'Audio interfeysni ulashni qo"llab-quvvatlash', 'Kutish va kiyinish xonalari']

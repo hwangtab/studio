@@ -153,7 +153,18 @@
       "artistLabel": "Artist",
       "servicesProvided": "Services Provided",
       "listenNow": "Listen Now",
-      "share": "Share"
+      "share": "Share",
+      "productionNotes": "Production Notes",
+      "credits": "Credits",
+      "creditsEngineer": "Engineer",
+      "creditsMusicians": "Musicians",
+      "creditsGear": "Gear Used",
+      "trackList": "Track List",
+      "releaseDate": "Release Date",
+      "label": "Label",
+      "relatedStoriesTitle": "How was this made?",
+      "relatedStoriesSubtitle": "Techniques used in real recording, mixing, and production sessions — compiled as guides.",
+      "ctaPrompt": "We can help complete your music too."
     },
     "heroAlt": "Studio NOL Portfolio",
     "seo": {
@@ -167,7 +178,6 @@
     "subtitle": "Feel free to contact us for inquiries or reservations.",
     "heroAlt": "Contact Studio NOL",
     "form": {
-
       "failFallback": "If the form will not send, reach us directly below.",
       "name": "Name",
       "namePlaceholder": "e.g., Alex Kim…",
@@ -887,7 +897,10 @@
       "share": "Share",
       "moreTitle": "More Stories",
       "noRelated": "No related stories.",
-      "viewAll": "View all stories"
+      "viewAll": "View all stories",
+      "relatedPortfolioTitle": "Real work produced at Studio NOL",
+      "viewAllPortfolio": "View Full Portfolio",
+      "boilerplateAside": "Visit Guide"
     },
     "bottomCta": {
       "title": "Talk to us directly on KakaoTalk",
@@ -911,6 +924,30 @@
       "mixing": "Mixing & Mastering",
       "business": "Music Business",
       "event": "Events"
+    },
+    "inline": {
+      "bookingDefault": "Ready to book or get a quick quote?",
+      "bookingLabel": "KakaoTalk Consultation",
+      "bookingBody": "Send us a message on our KakaoTalk channel and we will get back to you fast. Just include the details below.",
+      "kakaoCta": "Inquire via KakaoTalk",
+      "priceLabel": "Recommended Package",
+      "priceCategory": {
+        "recording": "Vocal Recording",
+        "mixing": "Mixing",
+        "mastering": "Mastering",
+        "special": "Recommended Package",
+        "additional": "Additional Services"
+      },
+      "priceDetail": "View Full Pricing",
+      "reviewLabel": "Client Reviews",
+      "serviceBodyDefault": "Learn more about related services.",
+      "serviceDetail": "View Service Details"
+    },
+    "sticky": {
+      "label": "Quick Inquiry Bar",
+      "headline": "Book or inquire via KakaoTalk",
+      "kakao": "KakaoTalk",
+      "dismiss": "Dismiss"
     }
   },
   "reviewSection": {
@@ -1195,6 +1232,10 @@
         {
           "q": "Is recording available on weekends and holidays?",
           "a": "Yes, weekends and holidays are available. Contact us via KakaoTalk or phone to schedule."
+        },
+        {
+          "q": "How much does it cost to hire a voice actor, and how is the quote determined?",
+          "a": "Studio rental (₩100,000/hr, excl. VAT) and voice actor fees are quoted separately. Actor fees vary by tier, script length, and usage scope (YouTube, commercial, corporate, etc.). Share your script and intended use and we will provide a free outsourcing estimate. Contact us via KakaoTalk or phone for a quick quote."
         }
       ]
     },
@@ -1338,7 +1379,11 @@
       "imageAlt": "Studio NOL cover video filming session"
     },
     "relatedStoriesTitle": "Cover Video Production Guides",
-    "relatedStoriesSubtitle": "Practical guides for planning, filming, and editing your YouTube or SNS cover video."
+    "relatedStoriesSubtitle": "Practical guides for planning, filming, and editing your YouTube or SNS cover video.",
+    "hubCallout": {
+      "title": "Cover Video Production — Complete Guide: Planning, Filming, Audio & Editing",
+      "subtitle": "From song selection and camera setup to audio mixing and uploading to YouTube and social media — start everything on one page."
+    }
   },
   "releaseProject": {
     "seo": {
@@ -1376,9 +1421,18 @@
       "bodyParagraph1": "I work with indie singer-songwriters and bands on their releases. From shaping the song to getting it onto Spotify and Apple Music, connecting session players, and reaching press and critics — for a song to find its place in the indie scene, all these steps have to fit together.",
       "bodyParagraph2": "A successful release is hard to pull off alone. So my job is to be the companion who walks the whole way with you.",
       "stats": [
-        { "value": "70+", "label": "Releases produced" },
-        { "value": "15 yrs", "label": "Years producing records" },
-        { "value": "Extensive", "label": "Music network" }
+        {
+          "value": "70+",
+          "label": "Releases produced"
+        },
+        {
+          "value": "15 yrs",
+          "label": "Years producing records"
+        },
+        {
+          "value": "Extensive",
+          "label": "Music network"
+        }
       ]
     },
     "reviews": {
@@ -1410,20 +1464,56 @@
           "focusSectionTitle": "What we focus on for your single",
           "focusSubtitle": "One track means we can go deeper.",
           "focusItems": [
-            { "title": "Full focus on one track", "desc": "With just one song, every bit of energy goes into it. Arrangement and sound direction are optimized for that single track." },
-            { "title": "Defining your first impression", "desc": "The moment your name enters the indie scene. We think together from the planning stage about what impression you want to make." },
-            { "title": "A realistic first step", "desc": "The goal is to actually get to release, not perfection. Starting is more important than being perfect." },
-            { "title": "Your first media touchpoint", "desc": "At release, we send a press release through our 15-year network of music journalists and critics. Even your first release can reach the indie scene's eyes." }
+            {
+              "title": "Full focus on one track",
+              "desc": "With just one song, every bit of energy goes into it. Arrangement and sound direction are optimized for that single track."
+            },
+            {
+              "title": "Defining your first impression",
+              "desc": "The moment your name enters the indie scene. We think together from the planning stage about what impression you want to make."
+            },
+            {
+              "title": "A realistic first step",
+              "desc": "The goal is to actually get to release, not perfection. Starting is more important than being perfect."
+            },
+            {
+              "title": "Your first media touchpoint",
+              "desc": "At release, we send a press release through our 15-year network of music journalists and critics. Even your first release can reach the indie scene's eyes."
+            }
           ],
           "journeySectionTitle": "The journey to release",
           "journeySubtitle": "Depending on the song's current state, we usually set a realistic 6-12 week timeline.",
           "journeyItems": [
-            { "month": "After consultation", "label": "Readiness check & schedule", "desc": "We first review song readiness, arrangement scope, and target release date." },
-            { "month": "1-2 weeks", "label": "Planning & Direction", "desc": "We decide together what song, what approach, and who it should reach." },
-            { "month": "2-4 weeks", "label": "Arrangement & Recording Prep", "desc": "We organize the needed arrangement and quickly connect session players if needed." },
-            { "month": "4-6 weeks", "label": "Vocal & Session Recording", "desc": "We record at the studio and bring out your best performance." },
-            { "month": "6-8 weeks", "label": "Mixing & Mastering", "desc": "We complete the sound and prepare masters for platform registration." },
-            { "month": "8-12 weeks", "label": "Distribution & Release PR", "desc": "We register distribution, confirm the release date, and send the press release." }
+            {
+              "month": "After consultation",
+              "label": "Readiness check & schedule",
+              "desc": "We first review song readiness, arrangement scope, and target release date."
+            },
+            {
+              "month": "1-2 weeks",
+              "label": "Planning & Direction",
+              "desc": "We decide together what song, what approach, and who it should reach."
+            },
+            {
+              "month": "2-4 weeks",
+              "label": "Arrangement & Recording Prep",
+              "desc": "We organize the needed arrangement and quickly connect session players if needed."
+            },
+            {
+              "month": "4-6 weeks",
+              "label": "Vocal & Session Recording",
+              "desc": "We record at the studio and bring out your best performance."
+            },
+            {
+              "month": "6-8 weeks",
+              "label": "Mixing & Mastering",
+              "desc": "We complete the sound and prepare masters for platform registration."
+            },
+            {
+              "month": "8-12 weeks",
+              "label": "Distribution & Release PR",
+              "desc": "We register distribution, confirm the release date, and send the press release."
+            }
           ],
           "deliverablesSectionTitle": "What you receive",
           "deliverablesIncludedTitle": "Project scope",
@@ -1453,10 +1543,22 @@
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "priceFactorsTitle": "What drives the price",
           "priceFactors": [
-            { "label": "Track count", "detail": "1 track baseline → each additional track +₩300K–500K" },
-            { "label": "Session musicians", "detail": "1–2 included → 3+ musicians +₩200K per person" },
-            { "label": "Arrangement depth", "detail": "Basic arrangement → full band · strings · choir +₩500K–1.5M" },
-            { "label": "Media PR", "detail": "1 round baseline → 2 rounds · release interview +₩300K" }
+            {
+              "label": "Track count",
+              "detail": "1 track baseline → each additional track +₩300K–500K"
+            },
+            {
+              "label": "Session musicians",
+              "detail": "1–2 included → 3+ musicians +₩200K per person"
+            },
+            {
+              "label": "Arrangement depth",
+              "detail": "Basic arrangement → full band · strings · choir +₩500K–1.5M"
+            },
+            {
+              "label": "Media PR",
+              "detail": "1 round baseline → 2 rounds · release interview +₩300K"
+            }
           ],
           "caseStudySectionTitle": "Singles we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
@@ -1504,21 +1606,61 @@
           "focusSectionTitle": "What we focus on for your EP",
           "focusSubtitle": "Connecting multiple tracks into one world is the heart of an EP.",
           "focusItems": [
-            { "title": "Consistency & sequencing across tracks", "desc": "Tying multiple songs into one world is the core of an EP. We design track order, pacing, and tone-matching together." },
-            { "title": "Lead single → EP phased campaign", "desc": "Release one track first to gauge response, then prepare the rest — building your fanbase step by step." },
-            { "title": "Defining your artistic identity", "desc": "What's hard to show with one single becomes clear across an EP. Your distinct musical identity takes shape." },
-            { "title": "Two rounds of media PR", "desc": "Lead single + EP release gives you two chances to reach critics and music media through our 15-year indie media network." }
+            {
+              "title": "Consistency & sequencing across tracks",
+              "desc": "Tying multiple songs into one world is the core of an EP. We design track order, pacing, and tone-matching together."
+            },
+            {
+              "title": "Lead single → EP phased campaign",
+              "desc": "Release one track first to gauge response, then prepare the rest — building your fanbase step by step."
+            },
+            {
+              "title": "Defining your artistic identity",
+              "desc": "What's hard to show with one single becomes clear across an EP. Your distinct musical identity takes shape."
+            },
+            {
+              "title": "Two rounds of media PR",
+              "desc": "Lead single + EP release gives you two chances to reach critics and music media through our 15-year indie media network."
+            }
           ],
           "journeySectionTitle": "The journey to release",
           "journeySubtitle": "For 3-5 tracks, we usually organize the release in 3-6 months.",
           "journeyItems": [
-            { "month": "After consultation", "label": "Song readiness & scope check", "desc": "We first review candidate tracks, arrangement scope, session scale, and target release date." },
-            { "month": "1-3 weeks", "label": "Planning & Track List", "desc": "We design the EP's overall direction, track count, sequence, and artistic world." },
-            { "month": "3-8 weeks", "label": "Arrangement & Session Prep", "desc": "We develop each song's arrangement and connect the needed session musicians." },
-            { "month": "2-3 months", "label": "Vocal & Session Recording", "desc": "Vocal direction and instrumental session recording." },
-            { "month": "3-4 months", "label": "Mixing & Tone Matching", "desc": "We mix so multiple tracks connect as one cohesive EP." },
-            { "month": "4-5 months", "label": "Mastering & Artwork", "desc": "We prepare mastering, cover artwork, and distribution assets." },
-            { "month": "5-6 months", "label": "Release & PR", "desc": "If a lead single is useful, we release it first, then continue into the EP release and media PR." }
+            {
+              "month": "After consultation",
+              "label": "Song readiness & scope check",
+              "desc": "We first review candidate tracks, arrangement scope, session scale, and target release date."
+            },
+            {
+              "month": "1-3 weeks",
+              "label": "Planning & Track List",
+              "desc": "We design the EP's overall direction, track count, sequence, and artistic world."
+            },
+            {
+              "month": "3-8 weeks",
+              "label": "Arrangement & Session Prep",
+              "desc": "We develop each song's arrangement and connect the needed session musicians."
+            },
+            {
+              "month": "2-3 months",
+              "label": "Vocal & Session Recording",
+              "desc": "Vocal direction and instrumental session recording."
+            },
+            {
+              "month": "3-4 months",
+              "label": "Mixing & Tone Matching",
+              "desc": "We mix so multiple tracks connect as one cohesive EP."
+            },
+            {
+              "month": "4-5 months",
+              "label": "Mastering & Artwork",
+              "desc": "We prepare mastering, cover artwork, and distribution assets."
+            },
+            {
+              "month": "5-6 months",
+              "label": "Release & PR",
+              "desc": "If a lead single is useful, we release it first, then continue into the EP release and media PR."
+            }
           ],
           "deliverablesSectionTitle": "What you receive",
           "deliverablesIncludedTitle": "Project scope",
@@ -1550,10 +1692,22 @@
           "priceNote": "Custom quote after free consultation.",
           "priceFactorsTitle": "What drives the price",
           "priceFactors": [
-            { "label": "Track count", "detail": "3 tracks baseline → 4 tracks +₩500K / 5 tracks +₩1M" },
-            { "label": "Session scale", "detail": "Vocal + 1–2 sessions → full live band tracking +₩1M–2M" },
-            { "label": "Lead single campaign", "detail": "1 round baseline → 2-phase release · 2 PR rounds +₩500K" },
-            { "label": "Tone matching depth", "detail": "Track-to-track tone matching → single mastering engine +₩300K" }
+            {
+              "label": "Track count",
+              "detail": "3 tracks baseline → 4 tracks +₩500K / 5 tracks +₩1M"
+            },
+            {
+              "label": "Session scale",
+              "detail": "Vocal + 1–2 sessions → full live band tracking +₩1M–2M"
+            },
+            {
+              "label": "Lead single campaign",
+              "detail": "1 round baseline → 2-phase release · 2 PR rounds +₩500K"
+            },
+            {
+              "label": "Tone matching depth",
+              "detail": "Track-to-track tone matching → single mastering engine +₩300K"
+            }
           ],
           "caseStudySectionTitle": "EPs we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
@@ -1601,21 +1755,61 @@
           "focusSectionTitle": "What we focus on for your full album",
           "focusSubtitle": "A full album is a battle of quality and time.",
           "focusItems": [
-            { "title": "Depth of A&R & song selection", "desc": "We judge together which songs belong on the album and which don't. The full arc of the album is decided here." },
-            { "title": "Full arc & sequence design", "desc": "We design the journey from track 1 to the last so the whole album tells one story." },
-            { "title": "Critics PR & listening session", "desc": "Critics pathway refined across 70+ releases — including Kang Ho-jung and Samgakjeonpasa. We organize a pre-release listening session for critics — only possible with a full album. Recognition through reviews is the goal." },
-            { "title": "Grants & funding support", "desc": "We have experience with arts grant programs and crowdfunding. We think through the budget structure together." }
+            {
+              "title": "Depth of A&R & song selection",
+              "desc": "We judge together which songs belong on the album and which don't. The full arc of the album is decided here."
+            },
+            {
+              "title": "Full arc & sequence design",
+              "desc": "We design the journey from track 1 to the last so the whole album tells one story."
+            },
+            {
+              "title": "Critics PR & listening session",
+              "desc": "Critics pathway refined across 70+ releases — including Kang Ho-jung and Samgakjeonpasa. We organize a pre-release listening session for critics — only possible with a full album. Recognition through reviews is the goal."
+            },
+            {
+              "title": "Grants & funding support",
+              "desc": "We have experience with arts grant programs and crowdfunding. We think through the budget structure together."
+            }
           ],
           "journeySectionTitle": "The journey to release",
           "journeySubtitle": "For an 8-track album, we usually design a 6-12 month timeline based on song readiness.",
           "journeyItems": [
-            { "month": "After consultation", "label": "Song readiness & scope check", "desc": "We first review candidate tracks, demo readiness, session scale, budget, and target release date." },
-            { "month": "1 month", "label": "A&R & Track List", "desc": "We design which songs belong on the album and what kind of record it will be." },
-            { "month": "1-3 months", "label": "Concept & Arrangement Design", "desc": "We finalize the album concept, track order, and each song's arrangement scope." },
-            { "month": "3-6 months", "label": "Arrangement, Sessions & Recording", "desc": "We connect the needed sessions and focus on vocal and instrumental recording." },
-            { "month": "5-8 months", "label": "Mixing & Album Tone", "desc": "We shape the whole record so multiple songs feel like one album." },
-            { "month": "8-10 months", "label": "Mastering & Artwork", "desc": "We prepare mastering, cover artwork, and distribution assets." },
-            { "month": "10-12 months", "label": "Lead Single, Album Release & PR", "desc": "If useful, we release a lead single first, then continue into the full album release and critics/media PR." }
+            {
+              "month": "After consultation",
+              "label": "Song readiness & scope check",
+              "desc": "We first review candidate tracks, demo readiness, session scale, budget, and target release date."
+            },
+            {
+              "month": "1 month",
+              "label": "A&R & Track List",
+              "desc": "We design which songs belong on the album and what kind of record it will be."
+            },
+            {
+              "month": "1-3 months",
+              "label": "Concept & Arrangement Design",
+              "desc": "We finalize the album concept, track order, and each song's arrangement scope."
+            },
+            {
+              "month": "3-6 months",
+              "label": "Arrangement, Sessions & Recording",
+              "desc": "We connect the needed sessions and focus on vocal and instrumental recording."
+            },
+            {
+              "month": "5-8 months",
+              "label": "Mixing & Album Tone",
+              "desc": "We shape the whole record so multiple songs feel like one album."
+            },
+            {
+              "month": "8-10 months",
+              "label": "Mastering & Artwork",
+              "desc": "We prepare mastering, cover artwork, and distribution assets."
+            },
+            {
+              "month": "10-12 months",
+              "label": "Lead Single, Album Release & PR",
+              "desc": "If useful, we release a lead single first, then continue into the full album release and critics/media PR."
+            }
           ],
           "deliverablesSectionTitle": "What you receive",
           "deliverablesIncludedTitle": "Project scope",
@@ -1649,10 +1843,22 @@
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "priceFactorsTitle": "What drives the price",
           "priceFactors": [
-            { "label": "Track count", "detail": "8 tracks baseline → 10 tracks +₩2M / 12 tracks +₩4M" },
-            { "label": "Session scale", "detail": "Vocal + core sessions → full band · strings · choir +₩2M–5M" },
-            { "label": "A&R depth", "detail": "Song selection x5 → composition workshop · external guidance +₩1M–2M" },
-            { "label": "Critics PR · listening session", "detail": "Press release + individual media → listening event +₩800K" }
+            {
+              "label": "Track count",
+              "detail": "8 tracks baseline → 10 tracks +₩2M / 12 tracks +₩4M"
+            },
+            {
+              "label": "Session scale",
+              "detail": "Vocal + core sessions → full band · strings · choir +₩2M–5M"
+            },
+            {
+              "label": "A&R depth",
+              "detail": "Song selection x5 → composition workshop · external guidance +₩1M–2M"
+            },
+            {
+              "label": "Critics PR · listening session",
+              "detail": "Press release + individual media → listening event +₩800K"
+            }
           ],
           "caseStudySectionTitle": "Full albums we've made together",
           "caseStudySubtitle": "Real release projects we've worked on.",
@@ -1770,6 +1976,12 @@
         "single": "Single",
         "ep": "EP",
         "miniAlbum": "EP"
+      },
+      "items": {
+        "namsanTower": "\"Namsan Tower\" Full Album",
+        "fullAlbum2": "Second Full Album",
+        "relaySingle": "Relay Singles",
+        "miniAlbum": "Mini Album"
       }
     },
     "discography": {

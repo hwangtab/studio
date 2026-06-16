@@ -86,6 +86,13 @@ const homeData = {
         alt: "스튜디오 놀 컨트롤 데스크 - Softube Console 1 Fader와 Proac 모니터링 스피커"
       }
     ],
+    featuredLinks: [
+      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: '스튜디오 놀에서 녹음·믹싱한 정규 앨범', type: 'portfolio' },
+      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: '보컬 텍스처에 집중한 앨범 프로덕션', type: 'portfolio' },
+      { title: 'EQ 기초 가이드', href: '/stories/eq1', description: '깨끗한 믹스를 위한 이퀄라이징 기본기', type: 'story' },
+      { title: 'K-pop 보컬 테크닉', href: '/stories/idol-vocal1', description: '케이팝 보컬 사운드를 만드는 법', type: 'story' },
+      { title: '스튜디오 안내', href: '/studio-info', description: '장비·룸·기술 사양 안내', type: 'page' },
+    ],
     localeUsps: {
       title: "처음이어도 안심하고 맡기는 이유",
       items: [

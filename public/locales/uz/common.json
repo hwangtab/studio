@@ -153,7 +153,18 @@
       "artistLabel": "Artist",
       "servicesProvided": "Ko'rsatilgan xizmatlar",
       "listenNow": "Hozir tinglang",
-      "share": "Ulashish"
+      "share": "Ulashish",
+      "productionNotes": "Prodakshn eslatmalari",
+      "credits": "Kredit",
+      "creditsEngineer": "Muhandis",
+      "creditsMusicians": "Ijrochilar",
+      "creditsGear": "Ishlatiladigan jihozlar",
+      "trackList": "Trek ro'yxati",
+      "releaseDate": "Chiqarilgan sana",
+      "label": "Nashriyot",
+      "relatedStoriesTitle": "Bu kabi ishlar qanday yaratildi?",
+      "relatedStoriesSubtitle": "Haqiqiy yozuv, miks va prodakshn jarayonida ishlatiladigan usullar qo'llanma sifatida yig'ilgan.",
+      "ctaPrompt": "Sizning musiqangizni ham yakunlaymiz."
     },
     "heroAlt": "Studio NOL Portfeli",
     "seo": {
@@ -167,7 +178,6 @@
     "subtitle": "Savol yoki bron qilish uchun bemalol murojaat qiling.",
     "heroAlt": "Studio NOL bilan aloqa",
     "form": {
-
       "failFallback": "Agar forma yuborilmasa, quyidan biz bilan to‘g‘ridan-to‘g‘ri bog‘laning.",
       "name": "Ism",
       "namePlaceholder": "Masalan: Alex Kim…",
@@ -449,7 +459,8 @@
       "location": "Manzil",
       "inquiry": "Bepul maslahat olish",
       "imageAlt": "Studio NOL prodakshn sozlamalari Softube Console 1 va monitoring karnaylari bilan"
-    }
+    },
+    "mobileMenu": "Mobil menyu"
   },
   "practiceRoom": {
     "seo": {
@@ -837,7 +848,8 @@
         "descriptionLine2": "Professional ustoz bilan bosqichma-bosqich mahorat oshiring.",
         "primaryText": "O'quv dasturini ko'rish",
         "secondaryText": "Maslahat so'rash",
-        "visualText": "1:1 darslar"
+        "visualText": "1:1 darslar",
+        "mobileMenu": "Mobil menyu"
       },
       "practice": {
         "title": "O'zingizning musiqa mashg'ulot xonangiz kerakmi?",
@@ -862,7 +874,10 @@
       "share": "Ulashish",
       "moreTitle": "Yana hikoyalar",
       "noRelated": "O'xshash hikoyalar yo'q.",
-      "viewAll": "Barcha hikoyalarni ko'rish"
+      "viewAll": "Barcha hikoyalarni ko'rish",
+      "relatedPortfolioTitle": "Studio NOL tomonidan yaratilgan haqiqiy natijalar",
+      "viewAllPortfolio": "To'liq portfel",
+      "boilerplateAside": "Umumiy tashrif ma'lumotlari"
     },
     "categoryHub": {
       "seoTitle": "{{category}} haqida hikoyalar | Studio NOL",
@@ -881,6 +896,30 @@
       "mixing": "Miks va mastering",
       "business": "Musiqa biznesi",
       "event": "Tadbirlar"
+    },
+    "inline": {
+      "bookingDefault": "Hoziroq maslahat yoki bron olishni xohlasangiz",
+      "bookingLabel": "KakaoTalk orqali maslahat",
+      "bookingBody": "KakaoTalk kanalimizga xabar yuboring — tez javob beramiz. Quyidagi ma'lumotlarni qisqacha yozing.",
+      "kakaoCta": "KakaoTalk orqali so'rov",
+      "priceLabel": "Tavsiya etiladigan paket",
+      "priceCategory": {
+        "recording": "Vokal yozish",
+        "mixing": "Miks",
+        "mastering": "Mastering",
+        "special": "Tavsiya etiladigan paket",
+        "additional": "Qo'shimcha xizmatlar"
+      },
+      "priceDetail": "To'liq narx jadvalini ko'rish",
+      "reviewLabel": "Ijarachilar va mijozlar sharhlari",
+      "serviceBodyDefault": "Tegishli xizmat haqida batafsil ma'lumot oling.",
+      "serviceDetail": "Xizmat haqida batafsil"
+    },
+    "sticky": {
+      "label": "Doimiy so'rov paneli",
+      "headline": "Bron va so'rovlar KakaoTalk orqali",
+      "kakao": "KakaoTalk",
+      "dismiss": "Yopish"
     }
   },
   "reviewSection": {
@@ -1165,6 +1204,10 @@
         {
           "q": "Dam olish kunlari va bayramlarda ham yozish mumkinmi?",
           "a": "Ha, dam olish kunlari va bayramlarda ham bron mavjud. KakaoTalk yoki telefon orqali bog'laning."
+        },
+        {
+          "q": "Ovoz aktyor yollash narxi va taklifi qanday?",
+          "a": "Yozuv xonasi ijarasi (soatiga 100,000 ₩, QQS alohida) va ovoz aktyor yollash to'lovi alohida belgilanadi. Yollash to'lovi aktyor darajasi, matn hajmi va foydalanish ko'lami (YouTube, reklama, korporativ promo va h.k.)ga qarab farqlanadi — matn va maqsadni bildiring, bepul tashqi taklif tayyorlaymiz. KakaoTalk yoki telefon orqali murojaat qilsangiz, tez narx ma'lumoti beramiz."
         }
       ]
     },
@@ -1176,6 +1219,10 @@
       "location": "Yo'nalishni ko'rish",
       "inquiry": "Yozuvni band qilish",
       "imageAlt": "Studio NOL ovoz yozish jihozlari"
+    },
+    "hubCallout": {
+      "title": "Audiokitob · ASMR · Naratsiya birinchi urinish — To'liq qo'llanma",
+      "subtitle": "Matn tayyorlashdan yozuv, tahrirlash, mastering va tarqatishgacha — bir sahifadan boshlang."
     }
   },
   "coverVideo": {
@@ -1304,7 +1351,11 @@
       "imageAlt": "Studio NOL cover video suratga olish seansi"
     },
     "relatedStoriesTitle": "Cover Video Ishlab Chiqarish Qo'llanmalari",
-    "relatedStoriesSubtitle": "YouTube yoki SNS uchun cover videoni rejalashtirish, suratga olish va montaj qilish bo'yicha amaliy qo'llanmalar."
+    "relatedStoriesSubtitle": "YouTube yoki SNS uchun cover videoni rejalashtirish, suratga olish va montaj qilish bo'yicha amaliy qo'llanmalar.",
+    "hubCallout": {
+      "title": "Cover video yaratish — Rejalashtirish · Suratga olish · Musiqa · Montaj to'liq qo'llanmasi",
+      "subtitle": "Qo'shiq tanlashdan suratga olish sozlamasi, ovoz miksiga, YouTube va SNS'ga yuklashgacha — bir sahifadan boshlang."
+    }
   },
   "releaseProject": {
     "seo": {
@@ -1342,9 +1393,18 @@
       "bodyParagraph1": "Men indie singer-songwriterlar va guruhlar bilan birga ularning reliz jarayonida ishlayman. Qo‘shiqni jilolab, Spotify va Apple Music’ga joylash, sessiya musiqachilarini ulash, OAV va tanqidga yetkazish — qo‘shiq indie sahnada o‘z o‘rnini topishi uchun bu bosqichlarning barchasi bir-biriga zich bog‘lanishi kerak.",
       "bodyParagraph2": "Muvaffaqiyatli relizni yolg‘iz amalga oshirish qiyin. Shu sababli mening vazifam — yo‘lning oxirigacha siz bilan birga yuradigan hamroh bo‘lishdir.",
       "stats": [
-        { "value": "70+", "label": "Birga chiqarilgan ishlar" },
-        { "value": "15 yil", "label": "Yillik musiqa prodyuserlik tajribasi" },
-        { "value": "Keng", "label": "Musiqa tarmog‘i" }
+        {
+          "value": "70+",
+          "label": "Birga chiqarilgan ishlar"
+        },
+        {
+          "value": "15 yil",
+          "label": "Yillik musiqa prodyuserlik tajribasi"
+        },
+        {
+          "value": "Keng",
+          "label": "Musiqa tarmog‘i"
+        }
       ]
     },
     "reviews": {
@@ -1376,20 +1436,56 @@
           "focusSectionTitle": "Singlingiz uchun nimaga e'tibor qaratamiz",
           "focusSubtitle": "Bitta trek — chuqurroq kirishimiz mumkin.",
           "focusItems": [
-            { "title": "Bitta trekka to'liq e'tibor", "desc": "Bitta qo'shiq bilan barcha energiya unga sarflanadi. Arrajman va ovoz yo'nalishi o'sha singl uchun optimallashtiriladi." },
-            { "title": "Birinchi taassurotni belgilash", "desc": "Ismingiz indie sahnasiga kirgan lahza. Rejalashtirish bosqichidan boshlab qanday taassurot qoldirmoqchisiz deb birga o'ylaymiz." },
-            { "title": "Realistik birinchi qadam", "desc": "Maqsad mukammallik emas, balki chiqarishga erishish. Boshlash mukammal bo'lishdan muhimroq." },
-            { "title": "Birinchi media aloqa nuqtasi", "desc": "Chiqarishda 15 yillik musiqa jurnalistlari va tanqidchilar tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin." }
+            {
+              "title": "Bitta trekka to'liq e'tibor",
+              "desc": "Bitta qo'shiq bilan barcha energiya unga sarflanadi. Arrajman va ovoz yo'nalishi o'sha singl uchun optimallashtiriladi."
+            },
+            {
+              "title": "Birinchi taassurotni belgilash",
+              "desc": "Ismingiz indie sahnasiga kirgan lahza. Rejalashtirish bosqichidan boshlab qanday taassurot qoldirmoqchisiz deb birga o'ylaymiz."
+            },
+            {
+              "title": "Realistik birinchi qadam",
+              "desc": "Maqsad mukammallik emas, balki chiqarishga erishish. Boshlash mukammal bo'lishdan muhimroq."
+            },
+            {
+              "title": "Birinchi media aloqa nuqtasi",
+              "desc": "Chiqarishda 15 yillik musiqa jurnalistlari va tanqidchilar tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin."
+            }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
           "journeySubtitle": "Qo'shiq holatiga qarab odatda 6-12 haftalik real jadval tuzamiz.",
           "journeyItems": [
-            { "month": "Maslahatdan so'ng", "label": "Holat tekshiruvi va jadval", "desc": "Avval qo'shiq tayyorligi, aranjirovka hajmi va maqsadli chiqarish sanasini tekshiramiz." },
-            { "month": "1-2 hafta", "label": "Rejalashtirish va yo'nalish", "desc": "Qaysi qo'shiq, qanday yondashuv va kimga yetishi kerakligini birga belgilaymiz." },
-            { "month": "2-4 hafta", "label": "Aranjirovka va yozuv tayyorgarligi", "desc": "Kerakli aranjirovkani tartiblaymiz va zarur bo'lsa session musiqachilarni ulaymiz." },
-            { "month": "4-6 hafta", "label": "Vokal va session yozuvi", "desc": "Studiyada yozib, eng yaxshi ijroni chiqaramiz." },
-            { "month": "6-8 hafta", "label": "Miks va mastering", "desc": "Soundni yakunlab, platforma ro'yxati uchun master fayllarni tayyorlaymiz." },
-            { "month": "8-12 hafta", "label": "Distribyutsiya va PR", "desc": "Distribyutsiya ro'yxati, chiqarish sanasi va press-reliz yuborishni yakunlaymiz." }
+            {
+              "month": "Maslahatdan so'ng",
+              "label": "Holat tekshiruvi va jadval",
+              "desc": "Avval qo'shiq tayyorligi, aranjirovka hajmi va maqsadli chiqarish sanasini tekshiramiz."
+            },
+            {
+              "month": "1-2 hafta",
+              "label": "Rejalashtirish va yo'nalish",
+              "desc": "Qaysi qo'shiq, qanday yondashuv va kimga yetishi kerakligini birga belgilaymiz."
+            },
+            {
+              "month": "2-4 hafta",
+              "label": "Aranjirovka va yozuv tayyorgarligi",
+              "desc": "Kerakli aranjirovkani tartiblaymiz va zarur bo'lsa session musiqachilarni ulaymiz."
+            },
+            {
+              "month": "4-6 hafta",
+              "label": "Vokal va session yozuvi",
+              "desc": "Studiyada yozib, eng yaxshi ijroni chiqaramiz."
+            },
+            {
+              "month": "6-8 hafta",
+              "label": "Miks va mastering",
+              "desc": "Soundni yakunlab, platforma ro'yxati uchun master fayllarni tayyorlaymiz."
+            },
+            {
+              "month": "8-12 hafta",
+              "label": "Distribyutsiya va PR",
+              "desc": "Distribyutsiya ro'yxati, chiqarish sanasi va press-reliz yuborishni yakunlaymiz."
+            }
           ],
           "deliverablesSectionTitle": "Nimani olasiz",
           "deliverablesIncludedTitle": "Loyiha tarkibi",
@@ -1419,10 +1515,22 @@
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "priceFactorsTitle": "Narxni belgilovchi omillar",
           "priceFactors": [
-            { "label": "Treklar soni", "detail": "1 trek asos → har qo‘shimcha trek +₩300K~500K" },
-            { "label": "Sessiya musiqachilari", "detail": "1~2 nafar kiritilgan → 3 nafardan ortiq +₩200K/kishi" },
-            { "label": "Aranjirovka chuqurligi", "detail": "Asosiy aranjirovka → to‘liq guruh·simlar·xor +₩500K~1.5M" },
-            { "label": "Media PR", "detail": "1 raund asos → 2 raund·chiqarish intervyusi +₩300K" }
+            {
+              "label": "Treklar soni",
+              "detail": "1 trek asos → har qo‘shimcha trek +₩300K~500K"
+            },
+            {
+              "label": "Sessiya musiqachilari",
+              "detail": "1~2 nafar kiritilgan → 3 nafardan ortiq +₩200K/kishi"
+            },
+            {
+              "label": "Aranjirovka chuqurligi",
+              "detail": "Asosiy aranjirovka → to‘liq guruh·simlar·xor +₩500K~1.5M"
+            },
+            {
+              "label": "Media PR",
+              "detail": "1 raund asos → 2 raund·chiqarish intervyusi +₩300K"
+            }
           ],
           "caseStudySectionTitle": "Birga yaratgan singlarimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
@@ -1470,21 +1578,61 @@
           "focusSectionTitle": "EP ingiz uchun nimaga e'tibor qaratamiz",
           "focusSubtitle": "Ko'p treklarni bitta dunyoga bog'lash EP ning mohiyati.",
           "focusItems": [
-            { "title": "Treklar o'rtasida izchillik va tartib", "desc": "Ko'p qo'shiqni bitta dunyoga bog'lash EP ning asosi. Trek tartibi, sur'at va ohang uyg'unligini birga loyihalashtiramiz." },
-            { "title": "Bosqichli kampaniya: bosh singl → EP", "desc": "Avval bitta trekning javobini o'lchash uchun chiqaramiz, keyin qolganlarni tayyorlaymiz — muxlislar bazasini qadam-baqadam quramiz." },
-            { "title": "Badiiy o'zlikni belgilash", "desc": "Bitta singl bilan ko'rsatish qiyin bo'lgan narsa EP da oydinlashadi. O'zingizning musiqa o'zligingiz shakllanadi." },
-            { "title": "Ikki marta media PR", "desc": "Bosh singl + EP chiqarish 15 yillik indie media tarmog'i orqali tanqidchilar va musiqa mediasiga ikki marta yetib borish imkonini beradi." }
+            {
+              "title": "Treklar o'rtasida izchillik va tartib",
+              "desc": "Ko'p qo'shiqni bitta dunyoga bog'lash EP ning asosi. Trek tartibi, sur'at va ohang uyg'unligini birga loyihalashtiramiz."
+            },
+            {
+              "title": "Bosqichli kampaniya: bosh singl → EP",
+              "desc": "Avval bitta trekning javobini o'lchash uchun chiqaramiz, keyin qolganlarni tayyorlaymiz — muxlislar bazasini qadam-baqadam quramiz."
+            },
+            {
+              "title": "Badiiy o'zlikni belgilash",
+              "desc": "Bitta singl bilan ko'rsatish qiyin bo'lgan narsa EP da oydinlashadi. O'zingizning musiqa o'zligingiz shakllanadi."
+            },
+            {
+              "title": "Ikki marta media PR",
+              "desc": "Bosh singl + EP chiqarish 15 yillik indie media tarmog'i orqali tanqidchilar va musiqa mediasiga ikki marta yetib borish imkonini beradi."
+            }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
           "journeySubtitle": "3-5 trek uchun odatda 3-6 oy ichida bosqichma-bosqich tuzamiz.",
           "journeyItems": [
-            { "month": "Maslahatdan so'ng", "label": "Holat va hajm tekshiruvi", "desc": "Nomzod treklar, aranjirovka hajmi, session ko'lami va chiqarish sanasini tekshiramiz." },
-            { "month": "1-3 hafta", "label": "Reja va trek ro'yxati", "desc": "EP yo'nalishi, trek soni, tartibi va badiiy dunyosini loyihalaymiz." },
-            { "month": "3-8 hafta", "label": "Aranjirovka va session tayyorgarligi", "desc": "Har qo'shiq aranjirovkasini aniqlab, kerakli session musiqachilarni ulaymiz." },
-            { "month": "2-3 oy", "label": "Vokal va session yozuvi", "desc": "Vokal direction va instrumental session yozuvlari." },
-            { "month": "3-4 oy", "label": "Miks va tone matching", "desc": "Bir nechta trek bitta EP sifatida bog'lanishi uchun miks qilamiz." },
-            { "month": "4-5 oy", "label": "Mastering va artwork", "desc": "Mastering, cover artwork va distribyutsiya materiallarini tayyorlaymiz." },
-            { "month": "5-6 oy", "label": "Chiqarish va PR", "desc": "Kerak bo'lsa lead singlni oldin chiqarib, keyin EP va media PRga o'tamiz." }
+            {
+              "month": "Maslahatdan so'ng",
+              "label": "Holat va hajm tekshiruvi",
+              "desc": "Nomzod treklar, aranjirovka hajmi, session ko'lami va chiqarish sanasini tekshiramiz."
+            },
+            {
+              "month": "1-3 hafta",
+              "label": "Reja va trek ro'yxati",
+              "desc": "EP yo'nalishi, trek soni, tartibi va badiiy dunyosini loyihalaymiz."
+            },
+            {
+              "month": "3-8 hafta",
+              "label": "Aranjirovka va session tayyorgarligi",
+              "desc": "Har qo'shiq aranjirovkasini aniqlab, kerakli session musiqachilarni ulaymiz."
+            },
+            {
+              "month": "2-3 oy",
+              "label": "Vokal va session yozuvi",
+              "desc": "Vokal direction va instrumental session yozuvlari."
+            },
+            {
+              "month": "3-4 oy",
+              "label": "Miks va tone matching",
+              "desc": "Bir nechta trek bitta EP sifatida bog'lanishi uchun miks qilamiz."
+            },
+            {
+              "month": "4-5 oy",
+              "label": "Mastering va artwork",
+              "desc": "Mastering, cover artwork va distribyutsiya materiallarini tayyorlaymiz."
+            },
+            {
+              "month": "5-6 oy",
+              "label": "Chiqarish va PR",
+              "desc": "Kerak bo'lsa lead singlni oldin chiqarib, keyin EP va media PRga o'tamiz."
+            }
           ],
           "deliverablesSectionTitle": "Nimani olasiz",
           "deliverablesIncludedTitle": "Loyiha tarkibi",
@@ -1516,10 +1664,22 @@
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
           "priceFactorsTitle": "Narxni belgilovchi omillar",
           "priceFactors": [
-            { "label": "Treklar soni", "detail": "3 trek asos → 4 trek +₩500K / 5 trek +₩1M" },
-            { "label": "Sessiya hajmi", "detail": "Vokal + 1~2 sessiya → jonli guruh tracking +₩1M~2M" },
-            { "label": "Bosh singl kampaniyasi", "detail": "1 raund asos → 2 bosqichli chiqarish·2 raund PR +₩500K" },
-            { "label": "Ohang moslashuvi chuqurligi", "detail": "Treklararo moslashuv → bitta mastering engine +₩300K" }
+            {
+              "label": "Treklar soni",
+              "detail": "3 trek asos → 4 trek +₩500K / 5 trek +₩1M"
+            },
+            {
+              "label": "Sessiya hajmi",
+              "detail": "Vokal + 1~2 sessiya → jonli guruh tracking +₩1M~2M"
+            },
+            {
+              "label": "Bosh singl kampaniyasi",
+              "detail": "1 raund asos → 2 bosqichli chiqarish·2 raund PR +₩500K"
+            },
+            {
+              "label": "Ohang moslashuvi chuqurligi",
+              "detail": "Treklararo moslashuv → bitta mastering engine +₩300K"
+            }
           ],
           "caseStudySectionTitle": "Birga yaratgan EP larimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
@@ -1567,21 +1727,61 @@
           "focusSectionTitle": "To'liq albomingiz uchun nimaga e'tibor qaratamiz",
           "focusSubtitle": "To'liq albom — sifat va vaqt kurashi.",
           "focusItems": [
-            { "title": "A&R va qo'shiq tanlashning chuqurligi", "desc": "Qaysi qo'shiqlar albomga kirishi va kirmasligi haqida birga qaror qilamiz. Albomning to'liq yoyi shu yerda belgilanadi." },
-            { "title": "To'liq yoy va trek tartibini loyihalash", "desc": "1-trekdan oxirigacha bo'lgan sayohatni loyihalashtirаmiz, butun albom bitta hikoya aytsin deb." },
-            { "title": "Tanqidchilar PR va tinglash sessiyasi", "desc": "70+ chiqarishda — jumladan Kang Ho-jung va Samgakjeonpasa bilan — sayqallangan tanqidchilar yo'li. Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasini tashkillashtirаmiz, faqat to'liq albom bilan mumkin. Sharhlar orqali tan olinish maqsad." },
-            { "title": "Grantlar va moliyalashtirish qo'llab-quvvatlash", "desc": "San'at grantlari dasturlari va crowdfunding tajribamiz bor. Byudjet tuzilmasini birga o'ylaymiz." }
+            {
+              "title": "A&R va qo'shiq tanlashning chuqurligi",
+              "desc": "Qaysi qo'shiqlar albomga kirishi va kirmasligi haqida birga qaror qilamiz. Albomning to'liq yoyi shu yerda belgilanadi."
+            },
+            {
+              "title": "To'liq yoy va trek tartibini loyihalash",
+              "desc": "1-trekdan oxirigacha bo'lgan sayohatni loyihalashtirаmiz, butun albom bitta hikoya aytsin deb."
+            },
+            {
+              "title": "Tanqidchilar PR va tinglash sessiyasi",
+              "desc": "70+ chiqarishda — jumladan Kang Ho-jung va Samgakjeonpasa bilan — sayqallangan tanqidchilar yo'li. Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasini tashkillashtirаmiz, faqat to'liq albom bilan mumkin. Sharhlar orqali tan olinish maqsad."
+            },
+            {
+              "title": "Grantlar va moliyalashtirish qo'llab-quvvatlash",
+              "desc": "San'at grantlari dasturlari va crowdfunding tajribamiz bor. Byudjet tuzilmasini birga o'ylaymiz."
+            }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
           "journeySubtitle": "8 trekli albom uchun qo'shiqlar tayyorligiga qarab odatda 6-12 oylik jadval tuzamiz.",
           "journeyItems": [
-            { "month": "Maslahatdan so'ng", "label": "Holat va hajm tekshiruvi", "desc": "Nomzod treklar, demo tayyorligi, session ko'lami, budjet va sanani tekshiramiz." },
-            { "month": "1 oy", "label": "A&R va trek ro'yxati", "desc": "Qaysi qo'shiqlar albomga kirishi va qanday plastinka bo'lishini belgilaymiz." },
-            { "month": "1-3 oy", "label": "Konsept va aranjirovka", "desc": "Albom konsepti, trek tartibi va har qo'shiq aranjirovka hajmini yakunlaymiz." },
-            { "month": "3-6 oy", "label": "Aranjirovka, session va yozuv", "desc": "Kerakli sessionlarni ulab, vokal va instrument yozuvlariga fokuslanamiz." },
-            { "month": "5-8 oy", "label": "Miks va albom toni", "desc": "Ko'p qo'shiq bitta albomdek eshitilishi uchun soundni shakllantiramiz." },
-            { "month": "8-10 oy", "label": "Mastering va artwork", "desc": "Mastering, cover artwork va distribyutsiya materiallarini tayyorlaymiz." },
-            { "month": "10-12 oy", "label": "Lead singl, albom va PR", "desc": "Kerak bo'lsa lead singlni oldin chiqarib, to'liq albom va media PRga o'tamiz." }
+            {
+              "month": "Maslahatdan so'ng",
+              "label": "Holat va hajm tekshiruvi",
+              "desc": "Nomzod treklar, demo tayyorligi, session ko'lami, budjet va sanani tekshiramiz."
+            },
+            {
+              "month": "1 oy",
+              "label": "A&R va trek ro'yxati",
+              "desc": "Qaysi qo'shiqlar albomga kirishi va qanday plastinka bo'lishini belgilaymiz."
+            },
+            {
+              "month": "1-3 oy",
+              "label": "Konsept va aranjirovka",
+              "desc": "Albom konsepti, trek tartibi va har qo'shiq aranjirovka hajmini yakunlaymiz."
+            },
+            {
+              "month": "3-6 oy",
+              "label": "Aranjirovka, session va yozuv",
+              "desc": "Kerakli sessionlarni ulab, vokal va instrument yozuvlariga fokuslanamiz."
+            },
+            {
+              "month": "5-8 oy",
+              "label": "Miks va albom toni",
+              "desc": "Ko'p qo'shiq bitta albomdek eshitilishi uchun soundni shakllantiramiz."
+            },
+            {
+              "month": "8-10 oy",
+              "label": "Mastering va artwork",
+              "desc": "Mastering, cover artwork va distribyutsiya materiallarini tayyorlaymiz."
+            },
+            {
+              "month": "10-12 oy",
+              "label": "Lead singl, albom va PR",
+              "desc": "Kerak bo'lsa lead singlni oldin chiqarib, to'liq albom va media PRga o'tamiz."
+            }
           ],
           "deliverablesSectionTitle": "Nimani olasiz",
           "deliverablesIncludedTitle": "Loyiha tarkibi",
@@ -1615,10 +1815,22 @@
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "priceFactorsTitle": "Narxni belgilovchi omillar",
           "priceFactors": [
-            { "label": "Treklar soni", "detail": "8 trek asos → 10 trek +₩2M / 12 trek +₩4M" },
-            { "label": "Sessiya hajmi", "detail": "Vokal + asosiy sessiya → to‘liq guruh·simlar·xor +₩2M~5M" },
-            { "label": "A&R chuqurligi", "detail": "5 raundli qo‘shiq tanlash → kompozitsiya seminar·tashqi maslahat +₩1M~2M" },
-            { "label": "Tanqidchilar PR·tinglash sessiyasi", "detail": "Press-reliz + alohida OAV → tinglash tadbiri +₩800K" }
+            {
+              "label": "Treklar soni",
+              "detail": "8 trek asos → 10 trek +₩2M / 12 trek +₩4M"
+            },
+            {
+              "label": "Sessiya hajmi",
+              "detail": "Vokal + asosiy sessiya → to‘liq guruh·simlar·xor +₩2M~5M"
+            },
+            {
+              "label": "A&R chuqurligi",
+              "detail": "5 raundli qo‘shiq tanlash → kompozitsiya seminar·tashqi maslahat +₩1M~2M"
+            },
+            {
+              "label": "Tanqidchilar PR·tinglash sessiyasi",
+              "detail": "Press-reliz + alohida OAV → tinglash tadbiri +₩800K"
+            }
           ],
           "caseStudySectionTitle": "Birga yaratgan to'liq albomlаrimiz",
           "caseStudySubtitle": "Haqiqiy chiqarish loyihalari.",
@@ -1736,6 +1948,12 @@
         "single": "Singl",
         "ep": "EP",
         "miniAlbum": "EP"
+      },
+      "items": {
+        "namsanTower": "《Namsan Tower》 To'liq albom",
+        "fullAlbum2": "Ikkinchi to'liq albom",
+        "relaySingle": "Zanjirli singl",
+        "miniAlbum": "Mini-albom"
       }
     },
     "discography": {
