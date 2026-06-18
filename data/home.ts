@@ -8,10 +8,10 @@ const homeData = {
       keywords: "노래 녹음 스튜디오, 보컬 녹음, 연신내 녹음실, 음원 제작, 디지털 싱글, 믹싱 마스터링, 앨범 발매, 음악 프로듀싱, 전문 녹음실, 성우 녹음, 축가 녹음, 오디오북 녹음, 일반인 녹음실, 스튜디오 놀, 음악연습실, 24시간 음악연습실"
     },
     heroContent: {
-      titlePrefix: "당신의 목소리를 가장 좋은 소리로",
-      titleHighlight: "연신내 노래 녹음 스튜디오",
-      titleSuffix: "",
-      subtitle: "보컬 녹음부터 믹싱·마스터링까지 전문 엔지니어가 직접 진행합니다. 연신내역 도보 5분, 첫 녹음도 편하게 시작하세요.",
+      titlePrefix: "곡은 다 썼는데,",
+      titleHighlight: "그 다음",
+      titleSuffix: "을 모르는 당신에게",
+      subtitle: "그 다음은 함께 만듭니다. 기획·녹음·세션·믹싱·유통, 그리고 매체·평론에 닿는 일까지. 연신내 녹음실 스튜디오 놀에서 시작하세요.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
@@ -85,13 +85,6 @@ const homeData = {
         src: `/images/hardware8.webp`,
         alt: "스튜디오 놀 컨트롤 데스크 - Softube Console 1 Fader와 Proac 모니터링 스피커"
       }
-    ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — 삼각전파사', href: '/portfolio/dystopia-2025', description: '스튜디오 놀에서 녹음·믹싱한 정규 앨범', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: '보컬 텍스처에 집중한 앨범 프로덕션', type: 'portfolio' },
-      { title: 'EQ 기초 가이드', href: '/stories/eq1', description: '깨끗한 믹스를 위한 이퀄라이징 기본기', type: 'story' },
-      { title: 'K-pop 보컬 테크닉', href: '/stories/idol-vocal1', description: '케이팝 보컬 사운드를 만드는 법', type: 'story' },
-      { title: '스튜디오 안내', href: '/studio-info', description: '장비·룸·기술 사양 안내', type: 'page' },
     ],
     localeUsps: {
       title: "처음이어도 안심하고 맡기는 이유",
@@ -180,13 +173,6 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "Upright bass recording session in studio booth" },
       { src: `/images/studio5.webp`, alt: "Vintech X73i preamp and Tegeler Vari Tube Compressor rack" },
       { src: `/images/hardware8.webp`, alt: "Control desk with Softube Console 1 Fader and Proac monitoring speakers" }
-    ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Full album recorded and mixed at Studio NOL', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Album production with a focus on vocal textures', type: 'portfolio' },
-      { title: 'EQ Fundamentals Guide', href: '/stories/eq1', description: 'Equalization basics for clear mixes', type: 'story' },
-      { title: 'K-pop Vocal Techniques', href: '/stories/idol-vocal1', description: 'How to achieve the Korean K-pop vocal sound', type: 'story' },
-      { title: 'Studio Info', href: '/studio-info', description: 'Equipment, rooms, and technical specifications', type: 'page' },
     ],
     // Locale-specific USP block for English-speaking foreign musicians living in Korea
     localeUsps: {
@@ -277,13 +263,6 @@ const homeData = {
       { src: `/images/studio5.webp`, alt: "Vintech X73i 前置放大器和 Tegeler Vari Tube Compressor 机架" },
       { src: `/images/hardware8.webp`, alt: "控制台配备 Softube Console 1 Fader 和 Proac 监听音箱" }
     ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: '在 Studio NOL 录制和混音的完整专辑', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: '以人声质感为核心的专辑制作', type: 'portfolio' },
-      { title: 'EQ 基础指南', href: '/stories/eq1', description: '清晰混音的均衡器基础知识', type: 'story' },
-      { title: 'K-pop 人声技巧', href: '/stories/idol-vocal1', description: '如何打造韩国 K-pop 人声风格', type: 'story' },
-      { title: '工作室信息', href: '/studio-info', description: '设备、录音室与技术规格', type: 'page' },
-    ],
     // Locale-specific USP block for Chinese-speaking audience
     localeUsps: {
       title: "专为中国音乐人打造的 Studio NOL",
@@ -372,13 +351,6 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "Sesión de grabación de contrabajo en la cabina de estudio" },
       { src: `/images/studio5.webp`, alt: "Rack con preamplificador Vintech X73i y Tegeler Vari Tube Compressor" },
       { src: `/images/hardware8.webp`, alt: "Mesa de control con Softube Console 1 Fader y monitores Proac" }
-    ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Álbum completo grabado y mezclado en Studio NOL', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Producción de álbum con enfoque en texturas vocales', type: 'portfolio' },
-      { title: 'Guía de EQ para principiantes', href: '/stories/eq1', description: 'Fundamentos de ecualización para mezclas claras', type: 'story' },
-      { title: 'Técnicas vocales para K-pop', href: '/stories/idol-vocal1', description: 'Cómo lograr el sonido vocal del K-pop coreano', type: 'story' },
-      { title: 'Información del estudio', href: '/studio-info', description: 'Equipos, salas, y especificaciones técnicas', type: 'page' },
     ],
     // Locale-specific USP block for Spanish-speaking audience (Latin America)
     localeUsps: {
@@ -469,13 +441,6 @@ const homeData = {
       { src: `/images/studio5.webp`, alt: "Rack thiết bị Vintech X73i preamp và Tegeler Vari Tube Compressor" },
       { src: `/images/hardware8.webp`, alt: "Bàn điều khiển với Softube Console 1 Fader và loa monitor Proac" }
     ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Album đầy đủ thu âm và mixing tại Studio NOL', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Sản xuất album tập trung vào chất lượng giọng hát', type: 'portfolio' },
-      { title: 'Hướng dẫn EQ cơ bản', href: '/stories/eq1', description: 'Kiến thức cơ bản về cân bằng âm thanh', type: 'story' },
-      { title: 'Kỹ thuật thanh nhạc K-pop', href: '/stories/idol-vocal1', description: 'Cách đạt được âm thanh giọng hát K-pop', type: 'story' },
-      { title: 'Thông tin phòng thu', href: '/studio-info', description: 'Thiết bị, phòng thu, và thông số kỹ thuật', type: 'page' },
-    ],
     // Locale-specific USP block for Vietnamese/K-pop trainee audience
     localeUsps: {
       title: "Cho Nghệ Sĩ Việt Nam Tại Hàn Quốc",
@@ -564,13 +529,6 @@ const homeData = {
       { src: `/images/studio4.webp`, alt: "การบันทึกเสียงดับเบิลเบสในห้องบูธอัด" },
       { src: `/images/studio5.webp`, alt: "แร็คพรีแอมป์ Vintech X73i และ Tegeler Vari Tube Compressor" },
       { src: `/images/hardware8.webp`, alt: "โต๊ะควบคุมพร้อม Softube Console 1 Fader และลำโพงมอนิเตอร์ Proac" }
-    ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'อัลบั้มเต็มบันทึกเสียงและมิกซ์ที่ Studio NOL', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'การผลิตอัลบั้มเน้นที่เนื้อเสียงร้อง', type: 'portfolio' },
-      { title: 'คู่มือ EQ พื้นฐาน', href: '/stories/eq1', description: 'พื้นฐานการปรับสมดุลเสียงสำหรับมิกซ์ที่ชัดเจน', type: 'story' },
-      { title: 'เทคนิคการร้องเพลง K-pop', href: '/stories/idol-vocal1', description: 'วิธีสร้างเสียงร้องสไตล์ K-pop ของเกาหลี', type: 'story' },
-      { title: 'ข้อมูลสตูดิโอ', href: '/studio-info', description: 'อุปกรณ์ ห้องบันทึกเสียง และข้อมูลจำเพาะทางเทคนิค', type: 'page' },
     ],
     // Locale-specific USP block for Thai audience
     localeUsps: {
@@ -661,13 +619,6 @@ const homeData = {
       { src: `/images/studio5.webp`, alt: "Vintech X73i preamp va Tegeler Vari Tube Compressor rack" },
       { src: `/images/hardware8.webp`, alt: "Nazorat pulti Softube Console 1 Fader va Proac monitoring karnaylari bilan" }
     ],
-    featuredLinks: [
-      { title: 'Dystopia 2025 — Samgeuk Jeonpasa', href: '/portfolio/dystopia-2025', description: 'Studio NOL da yozilgan va mikslangan toʻliq albom', type: 'portfolio' },
-      { title: 'Jai — Golden Hour', href: '/portfolio/jai-golden-hour', description: 'Vokal teksturalarga eʼtibor qaratgan albom prodakshn', type: 'portfolio' },
-      { title: 'EQ asoslari qoʻllanma', href: '/stories/eq1', description: 'Aniq mikslar uchun ekvalayzer asoslari', type: 'story' },
-      { title: 'K-pop vokal texnikalari', href: '/stories/idol-vocal1', description: 'Koreya K-pop vokal ovoziga erishish', type: 'story' },
-      { title: 'Studiya maʼlumotlari', href: '/studio-info', description: 'Uskunalar, xonalar, va texnik spetsifikatsiyalar', type: 'page' },
-    ],
     // Locale-specific USP block for Uzbek speakers living in Korea (K-pop trainees, expat artists)
     localeUsps: {
       title: "Koreyada Yashayotgan Oʻzbek Sanʼatkorlari Uchun",
@@ -715,13 +666,4 @@ export interface HomeData {
   homeServices: { title: string; description: string; link: string; icon: string }[];
   studioImages: { src: string; alt: string }[];
   localeUsps?: LocaleUspsBlock;
-  featuredLinks?: FeaturedLink[];
-}
-
-/** Type for curated internal links displayed on home pages */
-export interface FeaturedLink {
-  title: string;
-  href: string;
-  description: string;
-  type: 'story' | 'portfolio' | 'page';
 }

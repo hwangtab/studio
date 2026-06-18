@@ -77,13 +77,7 @@
     "sections": {
       "galleryTitle": "Siz uchun joy va uskunalar",
       "servicesTitle": "Xizmatlarimiz",
-      "servicesCta": "Batafsil",
-      "featuredTitle": "Oyning Tanlovlari"
-    },
-    "featured": {
-      "typePortfolio": "Portfel",
-      "typeStory": "Hikoya",
-      "typePage": "Sahifa"
+      "servicesCta": "Batafsil"
     },
     "cta": {
       "titleLine1": "Indie sahnaida o'z nomingizni qoldiring,",

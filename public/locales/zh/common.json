@@ -77,13 +77,7 @@
     "sections": {
       "galleryTitle": "为你准备的录音空间与设备",
       "servicesTitle": "我们的服务",
-      "servicesCta": "了解更多",
-      "featuredTitle": "本月精选"
-    },
-    "featured": {
-      "typePortfolio": "作品集",
-      "typeStory": "故事",
-      "typePage": "页面"
+      "servicesCta": "了解更多"
     },
     "cta": {
       "titleLine1": "在独立音乐圈留下你的名字，",

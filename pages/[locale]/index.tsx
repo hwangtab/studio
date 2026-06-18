@@ -3,7 +3,7 @@ import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Sparkles, Upload, GraduationCap, Video, ShieldCheck } from '@/lib/lucide-icons';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, Video, ShieldCheck } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -17,7 +17,6 @@ import { Section } from '../../components/ui/Section';
 // ssr:true(기본)라 서버 렌더링 HTML은 그대로 나오고, 클라이언트 JS 청크만 지연 로드됨.
 // → 초기 JS 다운로드/파싱/하이드레이션 비용 감소 (TBT 개선 기대).
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
-const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getHomeData, type HomeData } from '../../data/home';
@@ -47,7 +46,7 @@ interface HomeProps {
 }
 
 const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
-  const { heroContent, homeServices, studioImages, seo, localeUsps, featuredLinks } = homeData;
+  const { heroContent, homeServices, studioImages, seo, localeUsps } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
 
@@ -55,7 +54,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
   const getLink = (path: string) => `/${locale}${path}`;
   // 검증된 유일 전환 채널(카카오) — 히어로 1차 CTA를 폼이 아닌 카카오 직링크로.
   const kakaoUrl = getSiteConfig(locale).contact.kakaoUrl;
-  const homeQuickAnswers = React.useMemo(() => faqData.slice(0, 3), [faqData]);
   const homeServicesMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
   return (
@@ -167,45 +165,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         </Section>
       )}
 
-      {/* Featured This Month — curated internal links for non-KO locales */}
-      {featuredLinks && featuredLinks.length > 0 && (
-        <Section variant="default">
-          <SectionHeading
-            icon={Sparkles}
-            title={t('home.sections.featuredTitle', 'Featured This Month')}
-            className="mb-8"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredLinks.map((link, index) => (
-              <m.div
-                key={link.title}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-              >
-                <Link
-                  href={getLink(link.href)}
-                  prefetch={false}
-                  className="group block bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                      {link.type === 'portfolio' ? t('home.featured.typePortfolio', 'Portfolio') : link.type === 'story' ? t('home.featured.typeStory', 'Story') : t('home.featured.typePage', 'Page')}
-                    </span>
-                    <ArrowRight size={16} className="text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" aria-hidden="true" />
-                  </div>
-                  <h3 className="text-heading-5 font-title mb-2 text-gray-900 dark:text-gray-100 group-hover:text-primary transition-colors duration-300">
-                    {link.title}
-                  </h3>
-                  <p className="typo-card-body text-gray-600 dark:text-gray-300">{link.description}</p>
-                </Link>
-              </m.div>
-            ))}
-          </div>
-        </Section>
-      )}
-
       {/* 서비스 소개 섹션 */}
       <Section variant="alternate">
         <SectionHeading
@@ -242,18 +201,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
       {/* 리뷰 섹션 */}
       <ReviewSection variant="default" locale={locale} />
 
-      {/* FAQ 섹션 — 두 컴포넌트의 표시 데이터가 의도적으로 겹친다.
-          QuickAnswers: 첫 3개 항목을 above-the-fold 가까이서 빠르게 답변
-          FAQSection: 전체 항목을 카테고리·접힘 형태로 노출
-          schema(JSON-LD)는 <SEO faqItems={faqData}>에서 단일로 생성하므로
-          중복 마크업 없음. 시각적 중복은 conversion-focused UX 트레이드오프. */}
-      <QuickAnswers
-        items={homeQuickAnswers}
-        title={t('home.faq.title')}
-        subtitle={t('home.faq.subtitle')}
-        variant="default"
-      />
-
+      {/* FAQ 섹션 */}
       <FAQSection
         items={faqData}
         title={t('home.faq.title')}

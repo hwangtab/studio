@@ -77,13 +77,7 @@
     "sections": {
       "galleryTitle": "Espacio y equipo para ti",
       "servicesTitle": "Nuestros servicios",
-      "servicesCta": "Ver más",
-      "featuredTitle": "Destacados del Mes"
-    },
-    "featured": {
-      "typePortfolio": "Portafolio",
-      "typeStory": "Historia",
-      "typePage": "Página"
+      "servicesCta": "Ver más"
     },
     "cta": {
       "titleLine1": "Construye tu nombre en la escena indie,",

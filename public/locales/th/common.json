@@ -77,13 +77,7 @@
     "sections": {
       "galleryTitle": "พื้นที่ & อุปกรณ์สำหรับคุณ",
       "servicesTitle": "บริการของเรา",
-      "servicesCta": "ดูเพิ่มเติม",
-      "featuredTitle": "แนะนำประจำเดือนนี้"
-    },
-    "featured": {
-      "typePortfolio": "ผลงาน",
-      "typeStory": "เรื่องราว",
-      "typePage": "หน้า"
+      "servicesCta": "ดูเพิ่มเติม"
     },
     "cta": {
       "titleLine1": "สร้างชื่อของคุณในวงการอินดี้,",

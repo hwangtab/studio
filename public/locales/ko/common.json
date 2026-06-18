@@ -77,13 +77,7 @@
     "sections": {
       "galleryTitle": "당신을 위한 녹음 공간과 장비",
       "servicesTitle": "우리의 서비스",
-      "servicesCta": "자세히 보기",
-      "featuredTitle": "이번 달 추천"
-    },
-    "featured": {
-      "typePortfolio": "포트폴리오",
-      "typeStory": "스토리",
-      "typePage": "페이지"
+      "servicesCta": "자세히 보기"
     },
     "cta": {
       "titleLine1": "인디씬에서 당신만의 이름을,",
