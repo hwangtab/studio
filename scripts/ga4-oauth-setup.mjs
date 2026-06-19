@@ -15,7 +15,12 @@ const ROOT = path.resolve(__dirname, '..');
 
 const PORT = 43821;
 const REDIRECT_URI = `http://localhost:${PORT}`;
-const SCOPE = 'https://www.googleapis.com/auth/analytics.readonly';
+// Data API(runReport)는 analytics.readonly, Admin 쓰기(맞춤 측정기준 등록)는 analytics.edit를
+// 각각 요구한다. edit는 readonly의 superset이 아니므로 둘 다 부여한다.
+const SCOPE = [
+  'https://www.googleapis.com/auth/analytics.readonly',
+  'https://www.googleapis.com/auth/analytics.edit',
+];
 
 async function main() {
   const clientId = process.env.GSC_OAUTH_CLIENT_ID;
@@ -67,10 +72,14 @@ async function main() {
         res.end('<h1>✓ 인증 완료!</h1><p>터미널로 돌아가서 refresh token을 복사하세요.</p>');
         server.close();
 
-        // .env.local에 직접 저장
+        // .env.local에 저장 — 기존 GA4_OAUTH_REFRESH_TOKEN 라인이 있으면 교체(중복 방지), 없으면 append.
         const envPath = path.join(ROOT, '.env.local');
-        const line = `\nGA4_OAUTH_REFRESH_TOKEN="${tokens.refresh_token}"\n`;
-        fs.appendFileSync(envPath, line, 'utf-8');
+        const entry = `GA4_OAUTH_REFRESH_TOKEN="${tokens.refresh_token}"`;
+        const current = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf-8') : '';
+        const next = /^GA4_OAUTH_REFRESH_TOKEN=.*$/m.test(current)
+          ? current.replace(/^GA4_OAUTH_REFRESH_TOKEN=.*$/m, entry)
+          : `${current}${current.endsWith('\n') || current === '' ? '' : '\n'}${entry}\n`;
+        fs.writeFileSync(envPath, next, 'utf-8');
 
         console.log('✓ 인증 완료!');
         console.log('.env.local에 GA4_OAUTH_REFRESH_TOKEN이 자동 저장됐습니다.');
