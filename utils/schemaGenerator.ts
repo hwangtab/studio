@@ -390,9 +390,12 @@ export const generateArticleSchema = (
   // config.name과 다른 경우)는 단순 Person으로 유지해 잘못된 affiliation 시그널을 피한다.
   const isStudioAuthor = !articleAuthor || articleAuthor === config.name;
   const authorName = isStudioAuthor ? studioOperator.name : articleAuthor!;
-  const authorSameAs = Object.values(socialProfiles).filter(
-    (url): url is string => typeof url === 'string' && url.trim() !== ''
-  );
+  // 스튜디오 SNS(socialProfiles) + 운영자 본인 권위 프로필(studioOperator.sameAs)을 author entity에 병합.
+  // 운영자 개인 프로필은 Person author sameAs에만 들어가고 Organization sameAs(line 61)에는 섞지 않는다.
+  const authorSameAs = [
+    ...Object.values(socialProfiles),
+    ...(isStudioAuthor ? studioOperator.sameAs ?? [] : []),
+  ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
   // canonical Person @id (host 기반) — release-project schema와 동일 entity로 묶어
   // AI/Google이 황경하를 단일 entity로 인식하게 함. locale 독립 ID로 다국어 alternate도 통합.
   const personId = `${siteUrl}/#person-hwang`;
@@ -404,6 +407,7 @@ export const generateArticleSchema = (
         jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
         url: `${siteUrl}/${locale}/about`,
         ...(authorSameAs.length > 0 && { sameAs: authorSameAs }),
+        ...(studioOperator.award && { award: studioOperator.award }),
         worksFor: {
           '@type': 'Organization',
           '@id': organizationId,

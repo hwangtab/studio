@@ -15,6 +15,17 @@ export const socialProfiles = {
 // 강하게 활용하므로 Organization name이 아닌 실제 운영자 이름을 명시해야 cite 받음.
 export const studioOperator = {
   name: '황경하',
+  // 운영자 본인(Person) 엔티티의 권위 프로필 — JSON-LD author.sameAs에만 반영(Organization sameAs와 분리).
+  // AI 엔진(특히 ChatGPT는 상위 인용 ~48%가 Wikipedia급 엔티티)이 author entity resolution에 사용.
+  // 실재 검증된 URL만 등록(2026-06-19 확인): ggac.kr 아티스트 프로필, Bugs 음원 DB 아티스트 페이지.
+  sameAs: [
+    'https://ggac.kr/artists/hwang-gyeong-ha',
+    'https://music.bugs.co.kr/artist/20045652',
+  ],
+  // 검증된 수상 이력 — JSON-LD Person.award. AI 엔진이 author를 "수상 프로듀서" 엔티티로 인식하는 강한 E-E-A-T 신호.
+  // 〈젠트리피케이션〉(자립음악생산조합 기획·제작, 2016.10.05 발매)의 프로듀서로 2017 제14회 한국대중음악상
+  // '선정위원 특별상' 수상. (같은 해 '최우수 포크 음반'은 후보 등재.) 출처: 한겨레21·한국대중음악상 시상 기록.
+  award: '2017 한국대중음악상 선정위원 특별상 〈젠트리피케이션〉',
   jobTitleByLocale: {
     ko: '음악 프로듀서 · 엔지니어',
     en: 'Music Producer · Engineer',
