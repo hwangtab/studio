@@ -10,6 +10,14 @@ const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 const REGION_REDIRECT_MAP = regionRedirectMap as Record<string, string>;
 const STORIES_PATH_RE = /^\/(ko|en|zh|es|vi|th|uz)\/stories\/([^/]+)\/?$/;
 
+// /stories/<slug>이 스토리가 아니라 상위 페이지로 308되는 슬러그 → 목적지 경로.
+// regionRedirectMap이 이 슬러그를 destSlug로 가리킬 때 /stories/destSlug(다시 308)로
+// 보내면 2-hop chain이 생기므로, middleware에서 최종 페이지로 곧장 보내 chain을 붕괴한다.
+// (next.config.mjs의 동일 슬러그 redirect는 직접 요청 fallback으로 유지.)
+const PAGE_REDIRECT_SLUGS: Record<string, string> = {
+  'practice-room-drum1': 'practice-room',
+};
+
 const parseCanonicalSiteUrl = (): URL | null => {
     const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || DEFAULT_SITE_URL;
     try {
@@ -159,7 +167,10 @@ export function middleware(request: NextRequest) {
         const [, locale, slug] = storiesMatch;
         const destSlug = REGION_REDIRECT_MAP[slug];
         if (destSlug) {
-            workingPathname = `/${locale}/stories/${destSlug}`;
+            // destSlug가 상위 페이지로 308되는 슬러그면 chain 붕괴 — /stories/destSlug 대신 최종 페이지로.
+            workingPathname = PAGE_REDIRECT_SLUGS[destSlug]
+                ? `/${locale}/${PAGE_REDIRECT_SLUGS[destSlug]}`
+                : `/${locale}/stories/${destSlug}`;
             shouldRedirect = true;
         }
     }

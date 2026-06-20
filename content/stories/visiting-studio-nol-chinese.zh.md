@@ -2,7 +2,7 @@
 title: "访问 Studio NOL：从首尔/京畿/仁川怎么去延新内"
 date: 2026-05-12T00:00:00.000Z
 category: foreign-musicians
-description: "Studio NOL 位于延新内 (Yeonsinnae, 3号线) 4号出口步行5分钟. 来自首尔市内、京畿、仁川的中文交通指南."
+summary: "Studio NOL 位于延新内 (Yeonsinnae, 3号线) 4号出口步行5分钟. 来自首尔市内、京畿、仁川的中文交通指南."
 keywords: ["延新内 录音棚 怎么去", "首尔 3号线 录音", "Studio NOL 地址", "延新内 交通"]
 tags: ["location", "directions", "seoul", "chinese-musicians", "guide"]
 thumbnail: /images/studio3.webp

@@ -477,7 +477,9 @@ const SEO = ({
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />
       <meta name="twitter:image:alt" content={ogImageAlt || resolvedTitle} />
-      <meta name="twitter:creator" content={effectiveArticleAuthor} />
+      {ogType === 'article' && (
+        <meta name="twitter:creator" content={effectiveArticleAuthor} />
+      )}
       {ogType === 'article' && (
         <meta name="twitter:label1" content={currentLocale === 'ko' ? '작성자' : 'Written by'} />
       )}

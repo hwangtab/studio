@@ -79,8 +79,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   ]), [t, VAT_NOTICE]);
 
   const priceValidUntil = React.useMemo(() => {
+    // 12개월 — SSG 빌드 시점 고정이라 재빌드 주기가 길어도 Offer가 만료되지 않도록 여유.
     const date = new Date();
-    date.setMonth(date.getMonth() + 6);
+    date.setMonth(date.getMonth() + 12);
     return date.toISOString().split('T')[0];
   }, []);
 

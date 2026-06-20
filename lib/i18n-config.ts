@@ -11,7 +11,7 @@ export const ogLocaleByLocale: Record<Locale, string> = {
   es: 'es_ES',
   vi: 'vi_VN',
   th: 'th_TH',
-  uz: 'uz_Latn_UZ',
+  uz: 'uz_UZ',
 };
 
 // Google 공식 hreflang 코드 매핑 — lib/hreflang.json 단일 소스

@@ -101,7 +101,7 @@ export const generateDefaultSchema = (
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
             email: config.contact.email,
             url: localeContactUrl,
-            availableLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
+            availableLanguage: ['ko-KR', 'en-US', 'zh-CN', 'es-ES', 'vi-VN', 'th-TH', 'uz-UZ'],
           },
         ],
         legalName: 'Studio NOL',
@@ -120,7 +120,7 @@ export const generateDefaultSchema = (
         numberOfEmployees: { '@type': 'QuantitativeValue', value: 5 },
         description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
-        knowsLanguage: ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'],
+        knowsLanguage: ['ko-KR', 'en-US', 'zh-CN', 'es-ES', 'vi-VN', 'th-TH', 'uz-UZ'],
         knowsAbout: [
           'Music Recording', 'Audio Mixing', 'Audio Mastering', 'Music Production',
           'Vocal Recording', 'Voice Acting Recording', 'Wedding Song Recording',
@@ -568,7 +568,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
 ) => {
   const config = getSiteConfig(locale);
   const priceValidUntil = new Date();
-  priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
+  priceValidUntil.setMonth(priceValidUntil.getMonth() + 12);
 
   // Localized service name/description per locale. Korean 본문은 KR 검색용 그대로
   // 유지하고, 그 외 locale은 자연스러운 영어/현지 표현으로 출력해 Google가
@@ -723,7 +723,7 @@ export const generateAggregateOfferSchema = (
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
   const priceValidUntil = new Date();
-  priceValidUntil.setMonth(priceValidUntil.getMonth() + 6);
+  priceValidUntil.setMonth(priceValidUntil.getMonth() + 12);
 
   return {
     '@context': 'https://schema.org',
@@ -893,7 +893,7 @@ export const generateMusicRecordingSchema = (
         '@type': 'MusicGroup' as const,
         name: item.artist,
         hasMember: item.credits.musicians
-          ? item.credits.musicians.map(name => ({ '@type': 'MusicGroup' as const, name }))
+          ? item.credits.musicians.map(name => ({ '@type': 'Person' as const, name }))
           : undefined,
       }
     : undefined;
@@ -927,7 +927,7 @@ export const generateMusicRecordingSchema = (
     ...(item.datePublished && { datePublished: item.datePublished }),
     ...(item.genre && { genre: item.genre }),
     ...(item.duration && { duration: item.duration }),
-    ...(item.label && { license: `${siteUrl}/#${item.label}` }),
+    ...(item.label && { recordLabel: { '@type': 'Organization', name: item.label } }),
     ...(item.productionNotes?.[locale] && { description: item.productionNotes[locale] }),
     ...(item.credits && {
       contributor: item.credits.engineer
@@ -1219,7 +1219,7 @@ export const generateReleaseProjectSchema = (
     inLanguage: schemaLanguage,
     provider: { '@type': 'Organization', '@id': organizationId, name: config.name },
     performer: { '@id': personId },
-    areaServed: { '@type': 'Country', name: 'South Korea' },
+    areaServed: { '@type': 'Country', name: 'KR' },
     audience: { '@type': 'Audience', audienceType: RELEASE_AUDIENCE_TYPES[locale] },
     url: baseUrl,
     category: locale === 'ko' ? '음악 프로듀싱·발매 동행' : 'Music production & release accompaniment',
