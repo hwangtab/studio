@@ -90,7 +90,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     description: offer.description,
     inLanguage: schemaLanguage,
     priceCurrency: 'KRW',
-    price: offer.priceValue,
+    // 가격 미정(0) 항목은 price 생략 — price:0은 "무료"로 오인됨.
+    ...(offer.priceValue > 0 && { price: offer.priceValue }),
     priceValidUntil,
     availability: 'https://schema.org/InStock',
     url: `${pricingUrl}#${offer.id}`,

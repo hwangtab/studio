@@ -97,7 +97,7 @@ export const generateDefaultSchema = (
         contactPoint: [
           {
             '@type': 'ContactPoint',
-            contactType: 'Booking & Inquiry',
+            contactType: 'reservations',
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
             email: config.contact.email,
             url: localeContactUrl,
@@ -551,7 +551,7 @@ export const generateCourseSchema = (
         name: 'Studio NOL',
         address: {
           '@type': 'PostalAddress',
-          streetAddress: isKo ? '연신내역 도보 5분' : '5 min walk from Yeonsinnae Station',
+          streetAddress: getSiteConfig(locale).contact.address,
           addressLocality: isKo ? '은평구' : 'Eunpyeong-gu',
           addressRegion: isKo ? '서울특별시' : 'Seoul',
           addressCountry: 'KR',
@@ -748,7 +748,8 @@ export const generateAggregateOfferSchema = (
       offers: offers.map((offer) => ({
         '@type': 'Offer',
         name: offer.name,
-        price: offer.priceValue,
+        // 가격 미정(0) 항목은 price를 생략 — price:0은 "무료"로 오인되어 rich result 왜곡.
+        ...(offer.priceValue > 0 && { price: offer.priceValue }),
         priceCurrency: 'KRW',
       })),
     },

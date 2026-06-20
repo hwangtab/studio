@@ -16,7 +16,6 @@ export const PRACTICE_ROOM_RELATED_SLUGS = [
   'practice-room-yeonsinnae1',
   'practice-room-private1',
   'practice-room-guitar1',
-  'practice-room-drum1',
   'practice-room-bass1',
   'practice-room-night1',
   'practice-room-nodeposit1',

@@ -6,7 +6,6 @@ import path from 'path';
 const locales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 const explicitStoryAliases = new Set([
   'practice-room-drum1',
-  'song-structure1',
 ]);
 
 const getBaseSlug = (fileName: string): string => {
