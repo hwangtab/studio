@@ -32,7 +32,7 @@ const ServerErrorPage: NextPage = () => {
         title={t('serverError.seoTitle')}
         description="500 Internal Server Error"
         robots="noindex, nofollow"
-        disableCanonicalAndAlternates
+        disableUrlMetaAndAlternates
       />
 
       <m.div

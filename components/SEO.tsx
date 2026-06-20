@@ -20,7 +20,7 @@ interface SEOProps {
   description?: string;
   keywords?: string;
   canonical?: string;
-  disableCanonicalAndAlternates?: boolean;
+  disableUrlMetaAndAlternates?: boolean;
   disableAlternates?: boolean;
   ogImage?: string;
   ogImageAlt?: string;
@@ -63,7 +63,7 @@ const SEO = ({
   description,
   keywords,
   canonical,
-  disableCanonicalAndAlternates = false,
+  disableUrlMetaAndAlternates = false,
   disableAlternates = false,
   ogImage = '/images/og-default.webp',
   ogImageAlt,
@@ -161,7 +161,7 @@ const SEO = ({
   // Use provided canonical or generate one based on current path
   const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
   const canonicalUrl = toAbsoluteUrl(derivedCanonical);
-  const shouldRenderAlternates = !disableCanonicalAndAlternates && !disableAlternates;
+  const shouldRenderAlternates = !disableUrlMetaAndAlternates && !disableAlternates;
 
   const normalizedCanonical =
     canonicalUrl.endsWith('/') && canonicalUrl !== `${siteUrl}/`
@@ -393,8 +393,9 @@ const SEO = ({
         </>
       )}
 
-      {/* fallback 페이지에도 canonical은 ko 원본을 향해 emit해야 Google이 색인 통합 신호로
-          인식. disableCanonicalAndAlternates는 hreflang만 끄도록 의미 축소. */}
+      {/* rel=canonical은 항상 emit한다(fallback 페이지도 ko 원본을 향해 색인 통합 신호 유지).
+          disableUrlMetaAndAlternates는 canonical link가 아니라 og:url·twitter:url·hreflang
+          alternates만 끈다 — 이름이 'Canonical'을 끄는 것처럼 오해되던 것을 정정. */}
       <link rel="canonical" href={normalizedCanonical} />
 
       {/* Hreflang tags for SEO.
@@ -429,7 +430,7 @@ const SEO = ({
       })()}
 
       <meta property="og:type" content={ogType} />
-      {!disableCanonicalAndAlternates && <meta property="og:url" content={normalizedCanonical} />}
+      {!disableUrlMetaAndAlternates && <meta property="og:url" content={normalizedCanonical} />}
       <meta property="og:title" content={resolvedTitle} />
       <meta property="og:description" content={resolvedDescription} />
       <meta property="og:image" content={absoluteOgImage} />
@@ -472,7 +473,7 @@ const SEO = ({
 
       <meta name="twitter:card" content="summary_large_image" />
       {socialProfiles.twitter && <meta name="twitter:site" content={socialProfiles.twitter} />}
-      {!disableCanonicalAndAlternates && <meta name="twitter:url" content={normalizedCanonical} />}
+      {!disableUrlMetaAndAlternates && <meta name="twitter:url" content={normalizedCanonical} />}
       <meta name="twitter:title" content={resolvedTitle} />
       <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={absoluteOgImage} />

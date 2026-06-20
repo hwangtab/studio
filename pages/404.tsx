@@ -32,7 +32,7 @@ const NotFoundPage: NextPage = () => {
         title={t('notFound.seoTitle')}
         description="404 Not Found"
         robots="noindex, nofollow, noarchive, nosnippet"
-        disableCanonicalAndAlternates
+        disableUrlMetaAndAlternates
         canonical="/404"
       />
 

@@ -211,7 +211,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         canonical={story.isFallbackTranslation
           ? `/${story.sourceLocale}/stories/${story.slug}`
           : `/${locale}/stories/${story.slug}`}
-        disableCanonicalAndAlternates={story.isFallbackTranslation}
+        disableUrlMetaAndAlternates={story.isFallbackTranslation}
         availableLocales={story.availableLocales}
         ogImage={ogImage}
         ogImageAlt={story.thumbnail ? story.title : `${story.title} - ${siteConfig.name}`}
