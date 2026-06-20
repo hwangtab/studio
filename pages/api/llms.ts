@@ -186,7 +186,6 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, an audio engi
 
 - Operator: Hwang Kyungha (황경하)
 - Contact: hwangtab@gmail.com
-- Parent organization profile: kosmart.org
 - Studio founded: 2024
 - Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)
 `;
