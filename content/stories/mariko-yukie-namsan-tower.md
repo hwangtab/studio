@@ -104,6 +104,7 @@ inlineFallback: {}
 | 발매 | 2026년 8월 예정 |
 | 프로듀스 | 사토 유키에 |
 | 레코딩 | Bohemian Studio (2024.4~2025.7) |
+| 레코딩 디렉터 | 곽우영 (Bohemian Studio) |
 | 믹싱 | Studio Nol · 황경하 (2025.8~2025.12) |
 | 마스터링 | Aubrite Mastering Studio · Hashimoto Yoei |
 | 아트워크 & 디자인 | Nao (Studio Vamp) |
