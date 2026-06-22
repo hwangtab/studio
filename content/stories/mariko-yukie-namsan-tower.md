@@ -14,7 +14,7 @@ tags:
   - 믹싱
   - 스튜디오 놀
   - 텀블벅
-thumbnail: /images/mariko-yukie-album-cover.webp
+thumbnail: /images/mariko-yukie-album-cover.jpg
 summary: >-
   트로트를 사랑해 한국에 온 가수 마리코와 곱창전골의 리더 사토 유키에가 정규 1집 《남산타워》를
   냈습니다. 60~70년대 그룹 사운드를 몸으로 익혀 온 두 사람의 소리를 스튜디오 놀이 믹싱으로
@@ -45,7 +45,7 @@ faq:
       함께했습니다. 프로듀스는 사토 유키에, 마스터링은 Aubrite Mastering Studio가 맡았습니다.
 inlineFallback: {}
 ---
-![마리코 & 유키에 정규 1집 《남산타워》 앨범 커버](/images/mariko-yukie-album-cover.webp)
+![마리코 & 유키에 정규 1집 《남산타워》 앨범 커버](/images/mariko-yukie-album-cover.jpg)
 
 트로트를 사랑해 한국에 온 가수 마리코와 곱창전골의 리더 사토 유키에가 손을 잡고 정규음반 《남산타워》를 냈습니다. 스튜디오 놀이 이 음반의 믹싱을 맡았고, 저도 운 좋게 기획과 믹싱으로 함께했습니다.
 
@@ -53,7 +53,7 @@ inlineFallback: {}
 
 ## 《남산타워》는 어떤 음반인가
 
-![남산타워가 보이는 서울의 밤](/images/mariko-yukie-namsan-night.webp)
+![남산타워가 보이는 서울의 밤](/images/mariko-yukie-namsan-night.jpg)
 
 마리코와 유키에는 60~70년대 그룹 사운드를 수십 년에 걸쳐 몸으로 익혀 왔습니다. 그래서 《남산타워》의 소리에는 설계가 아니라 습관이 배어 있습니다. 복고풍으로 꾸민 것이 아니라, 두 사람이 지금 여기서 자연스럽게 꺼내놓은 사운드입니다.
 
@@ -65,7 +65,7 @@ inlineFallback: {}
 
 ### 마리코 — 트로트를 사랑한 순례자
 
-![가수 마리코](/images/mariko-yukie-mariko.webp)
+![가수 마리코](/images/mariko-yukie-mariko.jpg)
 
 마리코의 출발점은 팬이었습니다. 트로트가 좋았고, 한국 무대에 서고 싶었고, 그 길을 스스로 만들어 낸 사람입니다. 2009년부터 일본에서 열리는 한국가요 콘테스트에 나가기 시작해 2011년에는 전국대회에 출전했고, 수년간 일본에서 한국어 노래를 부르며 실력을 쌓은 뒤 직접 한국으로 건너왔습니다.
 
@@ -73,7 +73,7 @@ inlineFallback: {}
 
 ### 사토 유키에 — 한국 록의 고고학자
 
-![사토 유키에](/images/mariko-yukie-yukie.webp)
+![사토 유키에](/images/mariko-yukie-yukie.jpg)
 
 사토 유키에는 1995년, 서른두 살에 "가장 싸게 갈 수 있는 해외"가 한국이라는 이유로 서울에 왔습니다. 우연히 들른 음반 가게에서 신중현과 엽전들의 LP를 산 뒤로 모든 것이 바뀌었습니다. "우리에게는 신중현과 산울림이 비틀스"라고 그는 말합니다.
 
@@ -81,7 +81,7 @@ inlineFallback: {}
 
 ## 그 시대의 소리를 그대로
 
-![두 사람의 서울 생활](/images/mariko-yukie-table.webp)
+![두 사람의 서울 생활](/images/mariko-yukie-table.jpg)
 
 60~70년대 음악을 유튜브로 접한 사람과, 그 시대를 직접 살며 통과한 사람의 연주는 다릅니다. 마리코 & 유키에의 《남산타워》는 그 시대의 소리를 흉내 내지 않고 그대로 지니고 있습니다. 2026년에 녹음했지만 2026년의 소리가 나지 않는 이유입니다.
 
@@ -91,7 +91,7 @@ inlineFallback: {}
 
 ## 음반 사양과 크레딧
 
-![「남산타워」 뮤직비디오 한 장면](/images/mariko-yukie-stage.webp)
+![「남산타워」 뮤직비디오 한 장면](/images/mariko-yukie-stage.jpg)
 
 | 항목 | 내용 |
 |------|------|
@@ -110,7 +110,7 @@ inlineFallback: {}
 
 ## 타이틀곡 「남산타워」
 
-![「남산타워」 뮤직비디오 필름 톤 스틸](/images/mariko-yukie-mv-still.webp)
+![「남산타워」 뮤직비디오 필름 톤 스틸](/images/mariko-yukie-mv-still.jpg)
 
 타이틀곡 「남산타워」에는 뮤직비디오가 있습니다. 쇼와 시대 버라이어티 쇼와 빈티지 필름의 톤을 빌려 음반의 분위기를 영상으로 옮겼습니다.
 
@@ -119,7 +119,7 @@ inlineFallback: {}
 
 ## 먼저 발견한 사람으로
 
-![서울을 걷는 두 사람](/images/mariko-yukie-walk.webp)
+![서울을 걷는 두 사람](/images/mariko-yukie-walk.jpg)
 
 이런 음반은 차트를 노리지 않습니다. 대신 이 소리를 듣고 싶은 사람들의 손으로 만들어집니다. 여러분의 후원이 녹음과 마스터링을 거쳐 이 한 장의 음반을 세상에 내놓습니다.
 
