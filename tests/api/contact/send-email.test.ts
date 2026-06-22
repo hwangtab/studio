@@ -104,6 +104,18 @@ describe('contact send-email api', () => {
     global.fetch = originalFetch;
   });
 
+  it('rejects non-POST requests with an Allow header', async () => {
+    const req = createRequest({ method: 'GET' });
+    const { res, getStatus, getBody, getHeader } = createResponse();
+
+    await handler(req, res);
+
+    expect(getStatus()).toBe(405);
+    expect(getHeader('allow')).toBe('POST');
+    expect(getBody().message).toBe('Method not allowed');
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
   it('uses fingerprint-based bucket when client ip is unknown', async () => {
     const req = createRequest();
     const { res, getStatus, getBody } = createResponse();

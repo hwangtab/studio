@@ -37,6 +37,11 @@ const toStoryCardData = (story: ReturnType<typeof getAllStories>[number]): Story
 });
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
   const locale = resolveLocale(req.query.locale);
   const rawCategory = Array.isArray(req.query.category) ? req.query.category[0] : req.query.category;
   const category = rawCategory && rawCategory !== 'all' ? rawCategory : 'all';

@@ -247,6 +247,7 @@ const toSafeOptionalString = (value: unknown, maxLength = 255): string | undefin
 
 const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<string, unknown> | null => {
     if (req.method !== 'POST') {
+        res.setHeader('Allow', 'POST');
         res.status(405).json({ message: 'Method not allowed' });
         return null;
     }

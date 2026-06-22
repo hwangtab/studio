@@ -47,10 +47,14 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     // 2. Apply Theme
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('darkMode', 'true');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('darkMode', 'false');
+    }
+
+    try {
+      localStorage.setItem('darkMode', String(isDarkMode));
+    } catch {
+      // Storage can be blocked in private browsing or hardened browser modes.
     }
 
     // 3. Update theme-color meta tag

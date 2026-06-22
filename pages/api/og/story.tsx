@@ -28,6 +28,13 @@ async function checkOgRateLimit(ip: string): Promise<boolean> {
 }
 
 export default async function handler(req: NextRequest) {
+  if (req.method !== 'GET') {
+    return new Response('Method Not Allowed', {
+      status: 405,
+      headers: { Allow: 'GET' },
+    });
+  }
+
   const ip =
     req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     req.headers.get('x-real-ip') ||
