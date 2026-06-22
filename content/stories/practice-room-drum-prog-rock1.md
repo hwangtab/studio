@@ -15,9 +15,8 @@ faq:
   - q: 프로그레시브 록 드럼·Neil Peart·John Bonham·변박을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-
       프로그레시브 록 드럼·Neil Peart·John Bonham·변박 연습은 프로그레시브 록 드럼이란?, Neil Peart
-      (Rush), John Bonham (Led Zeppelin) 순서로 진행하면 좋습니다. 기초 단계를 충분히 소화한 후 다음
-      단계로 넘어가세요.
-  - q: 프로그레시브 록 드럼·Neil Peart·John Bonham·변박 연습 시 핵심 포인트는 무엇인가요?
+      (Rush), John Bonham (Led Zeppelin) 순서로 진행하면 좋습니다. 기초 단계를 익힌 뒤 다음 단계로 넘어가세요.
+  - q: 프로그레시브 록 드럼·Neil Peart·John Bonham·변박 연습할 때 무엇을 신경 쓰면 좋나요?
     a: >-
       프로그레시브 록 드럼·Neil Peart·John Bonham·변박 연습에서는 일정한 타이밍과 스틱 컨트롤이 중요합니다.
       메트로놈과 함께 느린 BPM부터 시작해 정확도를 높이세요.

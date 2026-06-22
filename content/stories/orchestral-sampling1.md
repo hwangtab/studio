@@ -23,7 +23,7 @@ faq:
     a: >-
       Spitfire Audio LABS (무료), BBC Symphony Orchestra Discover (무료), Fazioli
       Concert Grand (무료)가 대표적입니다. LABS는 스트링·브라스·목관·타악기를 무료로 제공하며 팝·발라드 프로덕션에도
-      충분히 활용 가능합니다.
+      활용 가능합니다.
   - q: 오케스트라 샘플이 자연스럽지 않게 들리는 이유는 무엇인가요?
     a: >-
       베로시티(강약) 변화 없이 균일한 MIDI 입력이 가장 큰 원인입니다. 실제 오케스트라처럼 다이나믹·어택·비브라토를 CC(컨트롤

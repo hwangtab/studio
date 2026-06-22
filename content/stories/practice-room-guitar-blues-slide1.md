@@ -15,8 +15,8 @@ faq:
   - q: 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-
       블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 연습은 슬라이드 기타란?, Duane Allman,
-      Derek Trucks 순서로 진행하면 좋습니다. 기초 단계를 충분히 소화한 후 다음 단계로 넘어가세요.
-  - q: 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 연습 시 핵심 포인트는 무엇인가요?
+      Derek Trucks 순서로 진행하면 좋습니다. 기초 단계를 익힌 뒤 다음 단계로 넘어가세요.
+  - q: 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 연습할 때 무엇을 신경 쓰면 좋나요?
     a: >-
       블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 연습에서는 정확한 손 포지션과 리듬감이 중요합니다. 메트로놈을 활용해 느린 템포부터 연습하고, 깨끗한 음 하나하나에 집중하세요.
   - q: 음악연습실에서 블루스 슬라이드 기타·Duane Allman·Derek Trucks·보틀넥 주법 연습하면 어떤 장점이 있나요?
