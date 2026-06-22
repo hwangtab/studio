@@ -22,7 +22,7 @@ inlineFallback:
   price: lesson-monthly
 howTo:
   name: "DAW 선택 자가진단 4단계 절차"
-  description: "운영체제·장르·협업자·예산 4문항으로 큐베이스·로직 프로·에이블톤 중 최적 DAW를 결정하는 절차입니다."
+  description: "운영체제·장르·협업자·예산 4문항으로 큐베이스·로직 프로·에이블톤 중 알맞은 DAW를 고르는 절차입니다."
   steps:
     - name: "1단계: 운영체제 확인 — Mac vs Windows"
       text: "Mac만 사용한다면 Logic Pro가 유력(맥 전용·일회 구매 24만 원). Windows 사용자는 Cubase·Ableton·Studio One 등 크로스플랫폼 옵션 중 선택합니다."
@@ -31,7 +31,7 @@ howTo:
     - name: "3단계: 협업자 DAW 확인"
       text: "함께 작업할 프로듀서·엔지니어가 사용하는 DAW와 같은 것을 쓰면 프로젝트 파일 호환 문제가 사라집니다. K-POP 업계는 Cubase, 영화 음악은 Logic·Pro Tools가 표준입니다."
     - name: "4단계: 예산 확정 — 일회 구매 vs 구독"
-      text: "초기 비용 최소화는 Logic Pro(24만 원 일회). 본격 입문은 Cubase Pro(약 60만 원) 또는 Ableton Suite(약 90만 원). 모든 DAW에 30~90일 무료 체험판이 있으니 결정 전 직접 체험을 권장합니다."
+      text: "초기 비용 최소화는 Logic Pro(24만 원 일회). 본격 입문은 Cubase Pro(약 60만 원) 또는 Ableton Suite(약 90만 원). 모든 DAW에 30~90일 무료 체험판이 있으니 결정 전 직접 체험해 보세요."
 ---
 ![큐베이스 vs 로직 프로 vs 에이블톤 — 스튜디오 놀](/images/recording12.webp)
 
@@ -40,18 +40,18 @@ howTo:
 결론부터 — **K-pop·발라드·OST·밴드 음악**이면 **Cubase**(한국 방송·음대 표준, Windows/macOS 모두 가능, Pro 약 ₩900,000), **Mac 사용자의 입문·작곡 올인원**이면 **Logic Pro**(₩290,000 일시불·평생 업데이트, 내장 악기 100+), **EDM·힙합·라이브 퍼포먼스**면 **Ableton Live**(Session View 클립 기반, Intro 무료 / Suite 약 ₩900,000). 세 DAW 모두 무료 평가판 제공. 선택 기준은 OS·장르·라이브 여부 세 가지로 좁혀집니다. 5분 안에 결정하고 싶다면 [5분 자가진단](#5분-만에-끝내는-daw-자가진단)으로.
 
 > **Key Takeaways**
-> - **OS가 먼저**: Mac 한정이면 Logic Pro가 가성비 최고(₩290,000 일시불). Windows면 Logic 불가 → Cubase 또는 Ableton.
+> - **OS가 먼저**: Mac 한정이면 Logic Pro가 가성비가 좋습니다(₩290,000 일시불). Windows면 Logic 불가 → Cubase 또는 Ableton.
 > - **장르가 두 번째**: 밴드·OST·MIDI 정밀 편집 → **Cubase**. 팝·R&B·작곡 올인원 → **Logic Pro**. EDM·힙합·라이브 → **Ableton Live**.
 > - **한국 시장 현실**: 방송사·실용음악과·세션 협업 환경에서는 **Cubase가 사실상 표준**. 다른 DAW를 써도 결국 큐베이스 호환 파일을 받게 됩니다.
-> - **DAW는 갈아타기 어렵습니다**: 1년차에 두세 개 동시 시도는 비추천. 하나를 3개월 집중해 곡 5~10곡 완성하는 게 가장 빠른 길.
+> - **DAW는 갈아타기 어렵습니다**: 1년차에 두세 개 동시 시도는 비추천. 하나를 3개월 집중해 곡 5~10곡 완성하는 게 빠른 길.
 
 %%service:lesson%%
 
 DAW(Digital Audio Workstation)는 음악을 만들고, 녹음하고, 믹싱하는 데 쓰는 소프트웨어입니다. 어떤 DAW를 쓰느냐에 따라 작업 방식, 학습 곡선, 비용이 달라집니다. 한 번 익숙해지면 쉽게 바꾸기 어렵기 때문에 처음 선택이 중요합니다.
 
-DAW의 역사는 1980년대 디지털 오디오 기술의 등장과 함께 시작됩니다. **1989년 Steinberg가 Atari ST용 Cubase를 출시**([Cubase — Wikipedia](https://en.wikipedia.org/wiki/Cubase) · [Sound on Sound: Karl Steinberg 인터뷰](https://www.soundonsound.com/people/karl-steinberg-cubase-computers))하면서 MIDI 시퀀싱 기반 DAW의 시대가 열렸고, **1989년 1월 Digidesign이 Mac용 Sound Tools를 내놓은 뒤 1990년 Pro Tools로 멀티트랙 디지털 녹음 표준을 정의**([Pro Tools — Wikipedia](https://en.wikipedia.org/wiki/Pro_Tools) · [MusicRadar: A brief history of Pro Tools](https://www.musicradar.com/tuition/tech/a-brief-history-of-pro-tools-452963))했습니다. Logic은 1992년 독일 Emagic의 Notator Logic으로 시작해 **2002년 7월 1일 Apple이 Emagic을 인수**([Apple Newsroom: Apple Acquires Emagic, 2002-07-01](https://www.apple.com/newsroom/2002/07/01Apple-Acquires-Emagic/) · [Logic Pro — Wikipedia](https://en.wikipedia.org/wiki/Logic_Pro))하면서 macOS 전용 최강 DAW로 자리잡았습니다. Ableton Live는 **2001년 10월 30일 베를린에서 Gerhard Behles·Robert Henke·Bernd Roggendorf 세 사람이 출시**([Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20))해 라이브 퍼포먼스와 비트 제작의 패러다임을 바꿨습니다. 현재 전 세계 상업 스튜디오에서는 Pro Tools, 홈 스튜디오에서는 Logic Pro와 Ableton이 가장 많이 사용되며, 한국 방송·음대에서는 Cubase가 표준에 가깝습니다.
+DAW의 역사는 1980년대 디지털 오디오 기술의 등장과 함께 시작됩니다. **1989년 Steinberg가 Atari ST용 Cubase를 출시**([Cubase — Wikipedia](https://en.wikipedia.org/wiki/Cubase) · [Sound on Sound: Karl Steinberg 인터뷰](https://www.soundonsound.com/people/karl-steinberg-cubase-computers))하면서 MIDI 시퀀싱 기반 DAW의 시대가 열렸고, **1989년 1월 Digidesign이 Mac용 Sound Tools를 내놓은 뒤 1990년 Pro Tools로 멀티트랙 디지털 녹음 표준을 정의**([Pro Tools — Wikipedia](https://en.wikipedia.org/wiki/Pro_Tools) · [MusicRadar: A brief history of Pro Tools](https://www.musicradar.com/tuition/tech/a-brief-history-of-pro-tools-452963))했습니다. Logic은 1992년 독일 Emagic의 Notator Logic으로 시작해 **2002년 7월 1일 Apple이 Emagic을 인수**([Apple Newsroom: Apple Acquires Emagic, 2002-07-01](https://www.apple.com/newsroom/2002/07/01Apple-Acquires-Emagic/) · [Logic Pro — Wikipedia](https://en.wikipedia.org/wiki/Logic_Pro))하면서 macOS 전용 대표 DAW로 자리잡았습니다. Ableton Live는 **2001년 10월 30일 베를린에서 Gerhard Behles·Robert Henke·Bernd Roggendorf 세 사람이 출시**([Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20))해 라이브 퍼포먼스와 비트 제작의 패러다임을 바꿨습니다. 현재 전 세계 상업 스튜디오에서는 Pro Tools, 홈 스튜디오에서는 Logic Pro와 Ableton이 많이 사용되며, 한국 방송·음대에서는 Cubase가 표준에 가깝습니다.
 
-가장 많이 비교되는 세 가지 DAW — 큐베이스, 로직 프로, 에이블톤 라이브를 현실적으로 비교해 보겠습니다.
+자주 비교되는 세 가지 DAW — 큐베이스, 로직 프로, 에이블톤 라이브를 현실적으로 비교해 보겠습니다.
 
 ---
 
@@ -79,7 +79,7 @@ DAW의 역사는 1980년대 디지털 오디오 기술의 등장과 함께 시�
 
 ### 장점
 
-큐베이스는 **MIDI 편집 기능**이 가장 강력합니다. Score Editor로 악보 작업까지 가능하고, VariAudio로 보컬 피치 보정도 DAW 안에서 처리할 수 있습니다. 국내 방송사와 음악 대학에서 가장 많이 쓰는 DAW이기도 합니다.
+큐베이스는 **MIDI 편집 기능**의 강점이 큽니다. Score Editor로 악보 작업까지 가능하고, VariAudio로 보컬 피치 보정도 DAW 안에서 처리할 수 있습니다. 국내 방송사와 음악 대학에서 많이 쓰는 DAW이기도 합니다.
 
 ### 단점
 
@@ -100,7 +100,7 @@ DAW의 역사는 1980년대 디지털 오디오 기술의 등장과 함께 시�
 
 ### 장점
 
-29만원 일시불에 **내장 악기와 이펙트가 100개 이상** 포함되어 있어 추가 플러그인 없이도 바로 작업을 시작할 수 있습니다. GarageBand에서 만든 프로젝트를 그대로 열 수 있어 입문 경로가 자연스럽습니다. Drummer, Alchemy 신스, Flex Pitch 등 강력한 내장 툴이 큰 장점입니다.
+29만원 일시불에 **내장 악기와 이펙트가 100개 이상** 포함되어 있어 추가 플러그인 없이도 바로 작업을 시작할 수 있습니다. GarageBand에서 만든 프로젝트를 그대로 열 수 있어 입문 경로가 자연스럽습니다. Drummer, Alchemy 신스, Flex Pitch 등 내장 툴이 큰 장점입니다.
 
 ### 단점
 
@@ -180,7 +180,7 @@ DAW는 기능이 워낙 많아서 독학으로 배우면 시간이 오래 걸립
 
 ## 5분 만에 끝내는 DAW 자가진단
 
-여기까지 읽었는데도 여전히 "그래서 저는 뭘 써야 해요?"가 머릿속을 맴도시나요. 그럴 수 있어요. 저도 음대에 처음 들어갔을 때 선배들이 "너 큐베이스 써야 돼, 아니야 로직이 나아, 그냥 에이블톤 사" 이렇게 삼중으로 조언해 주는 바람에 한동안 아무것도 못 깔고 유튜브만 보고 있었거든요. 그래서 오늘은 5분이면 끝나는 자가진단을 하나 만들어 봤어요. 질문에 순서대로 답하면 자동으로 답이 나옵니다. 완벽한 답은 아니지만, 이 분기만 따라가도 "나한테 안 맞는 DAW 3개월 붙잡고 있다가 포기하는" 참사는 막을 수 있어요.
+여기까지 읽었는데도 여전히 "그래서 저는 뭘 써야 해요?"가 머릿속을 맴도시나요. 그럴 수 있어요. 저도 음대에 처음 들어갔을 때 선배들이 "너 큐베이스 써야 돼, 아니야 로직이 나아, 그냥 에이블톤 사" 이렇게 삼중으로 조언해 주는 바람에 한동안 아무것도 못 깔고 유튜브만 보고 있었거든요. 그래서 오늘은 5분이면 끝나는 자가진단을 하나 만들어 봤어요. 질문에 순서대로 답하면 자동으로 답이 나옵니다. 정답은 아니지만, 이 분기만 따라가도 "나한테 안 맞는 DAW 3개월 붙잡고 있다가 포기하는" 참사는 막을 수 있어요.
 
 ### Q1. 지금 집에 있는 컴퓨터의 운영체제는?
 
@@ -248,11 +248,11 @@ Q1~Q4를 모두 거치면 대체로 답은 이렇게 나와요.
 - **윈도우 + 힙합 비트** → FL Studio Producer
 - **어떤 상황이든 예산 0원** → Reaper (60일 평가판이 사실상 무기한)
 
-이 자가진단이 완벽한 건 아니에요. 다만 이 4개 질문에 답하는 것만으로도 "뭘 사야 할지 3개월 고민하는 시간"은 아낄 수 있어요. 일단 하나 정해서 설치하고, 3개월 동안 다른 건 안 쳐다보기 — 이게 제가 드릴 수 있는 가장 실용적인 조언이에요.
+이 자가진단이 정답은 아니에요. 다만 이 4개 질문에 답하는 것만으로도 "뭘 사야 할지 3개월 고민하는 시간"은 아낄 수 있어요. 일단 하나 정해서 설치하고, 3개월 동안 다른 건 안 쳐다보기 — 이게 제가 드릴 수 있는 실용적인 조언이에요.
 
 ---
 
-## 입문자가 가장 많이 하는 5가지 실수
+## 입문자가 자주 하는 5가지 실수
 
 저도 처음 큐베이스를 깔고서 정말 어처구니없는 실수를 많이 했어요. 지금 돌이켜 보면 웃긴데, 그 당시엔 울기 직전이었거든요. 스튜디오에서 입문자 레슨을 하다 보면 "아 저도 저랬지" 싶은 실수들이 거의 똑같이 반복돼요. 미리 알고 시작하면 몇 주는 아낄 수 있는 실수들이니 솔직하게 공유할게요.
 
@@ -454,7 +454,7 @@ Apple 기기에 기본 탑재되어 있어요. "무료 DAW라 장난감이겠지
 
 ### 3. Reaper (60일 평가판, $60 라이선스)
 
-"60일 평가판"이라고 표시되지만, 60일 지나도 실사용 가능한 유연한 정책이 유명해요(물론 양심이 있다면 구매하는 게 예의). 라이선스는 $60으로 경쟁 DAW 대비 10분의 1 가격인데 기능은 큐베이스 Pro에 버금가요. 커스터마이징의 자유도가 최고 수준이고, Windows·macOS·Linux 모두 지원해요.
+"60일 평가판"이라고 표시되지만, 60일 지나도 실사용 가능한 유연한 정책이 유명해요(물론 양심이 있다면 구매하는 게 예의). 라이선스는 $60으로 경쟁 DAW 대비 10분의 1 가격인데 기능은 큐베이스 Pro에 버금가요. 커스터마이징의 자유도가 높은 편이고, Windows·macOS·Linux 모두 지원해요.
 
 - **강점**: 압도적 가성비, 가벼움(설치 파일 18MB), 커스터마이징 무한, 3개 OS 지원
 - **한계**: 기본 UI가 투박함, 내장 가상악기 적음, 초보에겐 진입 장벽 있음
@@ -501,7 +501,7 @@ PreSonus의 Studio One은 **Prime 버전이 완전 무료**예요. 기본 기능
 
 ## DAW 갈아타는 법
 
-"이미 큐베이스 2년 썼는데 로직 프로로 갈아타고 싶어요"라는 문의가 심심치 않게 들어와요. 반대 방향도 있고, 에이블톤에서 로직으로 가는 케이스도 있어요. 단도직입적으로 말씀드리면 **완전한 이주는 불가능**해요. 하지만 잘 준비하면 2주 안에 실전 투입 가능한 수준까지 적응할 수 있어요.
+"이미 큐베이스 2년 썼는데 로직 프로로 갈아타고 싶어요"라는 문의가 심심치 않게 들어와요. 반대 방향도 있고, 에이블톤에서 로직으로 가는 케이스도 있어요. 단도직입적으로 말씀드리면 **그대로 이주하기는 어렵습니다**. 하지만 잘 준비하면 2주 안에 실전 투입 가능한 수준까지 적응할 수 있어요.
 
 ### 프로젝트 파일 호환성 — 거의 없음
 
@@ -542,7 +542,7 @@ PreSonus의 Studio One은 **Prime 버전이 완전 무료**예요. 기본 기능
 - **주요 차이**: Session View 없음, 인플레이스 편집 방식
 - **꿀팁**: 큐베이스의 "Sampler Track"으로 Ableton의 Simpler 비슷하게 쓰기
 - **잃는 것**: 즉흥 클립 트리거링, Warp 수준의 실시간 타임스트레칭
-- **얻는 것**: 정밀한 오디오 편집, Score Editor, 최고급 MIDI 편집
+- **얻는 것**: 정밀한 오디오 편집, Score Editor, 고급 MIDI 편집
 
 ### FL Studio → 로직 프로
 
@@ -551,7 +551,7 @@ PreSonus의 Studio One은 **Prime 버전이 완전 무료**예요. 기본 기능
 - **익숙해지는 데**: 2~3주
 - **주요 차이**: 패턴 기반 → 트랙 기반 사고방식
 - **꿀팁**: 로직의 "Session View 대체"로 Live Loops 활용
-- **잃는 것**: Piano Roll의 편의성(FL이 업계 최고 수준), Pattern 워크플로우
+- **잃는 것**: Piano Roll의 편의성(FL이 업계 상위권), Pattern 워크플로우
 - **얻는 것**: 본격 녹음·편집 기능, 맥 생태계
 
 ### 1~2주 적응 프로토콜
@@ -646,8 +646,8 @@ MIDI 파일이 교환되면 상대방은 자기 DAW의 가상악기로 재현해
 
 ## 마치며
 
-완벽한 DAW는 없습니다. 각각 다른 강점을 가지고 있고, 어떤 DAW를 쓰든 좋은 음악을 만들 수 있습니다. 중요한 건 하나를 정해서 깊이 익히는 것입니다. 이것저것 시도하다 아무것도 익숙해지지 않는 게 가장 비효율적입니다.
+모든 것을 만족하는 DAW는 없습니다. 각각 다른 강점을 가지고 있고, 어떤 DAW를 쓰든 좋은 음악을 만들 수 있습니다. 중요한 건 하나를 정해서 깊이 익히는 것입니다. 이것저것 시도하다 아무것도 익숙해지지 않는 게 비효율적입니다.
 
-하나를 골라서 3개월만 집중하면 기본 작업은 충분히 할 수 있게 됩니다.
+하나를 골라서 3개월만 집중하면 기본 작업은 무리 없이 할 수 있게 됩니다.
 
 [DAW 비교 완전 가이드](/stories/daw-comparison1) | [큐베이스 보컬 녹음 가이드](/stories/cubase1) | [로직 프로 보컬 녹음 가이드](/stories/logicpro1) | [에이블톤 보컬 녹음 가이드](/stories/ableton1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [게인 스테이징 완전 가이드](/stories/gain-staging1)

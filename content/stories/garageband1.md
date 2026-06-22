@@ -13,7 +13,7 @@ tags:
   - iOS GarageBand
 thumbnail: /images/room6.webp
 summary: >-
-  GarageBand 보컬 녹음 준비 과정을 녹음 전 준비물, 세션 진행, 결과물 기준으로 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
+  GarageBand 보컬 녹음 준비 기준을 녹음 전 준비물, 세션 진행, 결과물 확인 포인트에 맞춰 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
 faq:
   - q: GarageBand로 고퀄리티 보컬 녹음이 가능한가요?
     a: >-
@@ -36,7 +36,7 @@ faq:
 
 ## GarageBand — Mac·iOS에서 무료로 전문 녹음
 
-GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 중급자까지 바로 사용할 수 있는 강력한 녹음 환경을 제공합니다.
+GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 중급자까지 바로 사용할 수 있는 탄탄한 녹음 환경을 제공합니다.
 
 GarageBand의 역사는 2004년 Apple이 Mac용 iLife 번들 소프트웨어로 처음 출시하면서 시작됩니다. Steve Jobs가 Macworld Expo에서 직접 시연했으며, 기존 프로 DAW에 비해 직관적인 인터페이스로 비전문가가 바로 음악 제작을 시작할 수 있게 했습니다. 2011년 iOS용 GarageBand가 출시되면서 스마트폰으로 음악 제작이 가능해졌고, 2012년부터 Mac App Store에서 무료로 배포되기 시작했습니다. Billie Eilish·Tones and I 등 글로벌 아티스트들이 GarageBand를 제작 도구로 사용했다고 밝히면서 무료 DAW의 가능성이 재평가됐으며, 현재 GarageBand로 녹음한 드라이 보컬 파일이 전문 스튜디오 믹싱 의뢰 납품 파일로 활용되는 사례도 많습니다.
 
@@ -184,7 +184,7 @@ EQ 설정에서는 HPF를 80~100Hz에 걸어 불필요한 저역을 정리한 �
 
 ## Studio NOL이 개러지밴드 사용자에게 자주 권하는 3가지
 
-스튜디오 놀(연신내, 서울 은평구)에서 GarageBand 보컬 녹음 상담에서 반복적으로 드리는 조언입니다.
+스튜디오 놀(연신내, 서울 은평구)에서 GarageBand 보컬 녹음 상담 때 자주 드리는 조언입니다.
 
 **1. HPF 80~100Hz — 보컬 저역 정리**
 

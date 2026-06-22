@@ -40,7 +40,7 @@ howTo:
     - name: "1단계: EQ 확보 — FabFilter Pro-Q 3"
       text: "가장 먼저 EQ를 갖춥니다. FabFilter Pro-Q 3는 시각적으로 직관적이고 동적 EQ 기능까지 포함해 보컬 톤 조정의 사실상 표준입니다. 초기 예산이 부족하면 DAW 내장 EQ(Logic Channel EQ·Ableton EQ Eight)로 시작해도 충분합니다."
     - name: "2단계: 리버브 확보 — Valhalla Room"
-      text: "Valhalla Room이 가성비 최고의 보컬 리버브입니다. 무료 대안인 Valhalla Supermassive도 업계 표준급 품질을 제공해 입문 단계에서 권장됩니다."
+      text: "Valhalla Room은 가성비가 좋은 보컬 리버브입니다. 무료 대안인 Valhalla Supermassive도 업계 표준급 품질을 제공해 입문 단계에서 쓰기 좋습니다."
     - name: "3단계: 컴프레서 확보 — CLA-2A 또는 CLA-76"
       text: "발라드·CCM은 Waves CLA-2A(광학 컴프·자연스러운 압축), 팝·힙합은 Waves CLA-76(빠른 어택·펀치감)을 선택합니다. 장르에 맞춰 한 가지를 먼저 구매하고 나머지는 번들 할인 시점에 추가합니다."
     - name: "4단계: 피치 교정·디에서 보강 — Melodyne·Pro-DS"
@@ -87,7 +87,7 @@ howTo:
 | Waves CLA-2A | 광학 컴프 에뮬, 자연스러운 압축 | 발라드·CCM |
 | FabFilter Pro-C 2 | 다양한 모드, 정밀 제어 | 모든 장르 |
 | Waves CLA-76 | 빠른 어택, 팝·록 펀치감 | 팝·힙합 보컬 |
-| UAD LA-2A | 최고 수준 에뮬레이션 | 레퍼런스 사운드 |
+| UAD LA-2A | 높은 수준 에뮬레이션 | 레퍼런스 사운드 |
 
 **무료 대안**: Logic Pro Vintage VCA, Ableton Compressor
 
@@ -128,10 +128,10 @@ howTo:
 
 ## 초보자를 위한 플러그인 구매 순서
 
-처음 플러그인을 구매할 때 이 순서를 권장합니다:
+처음 플러그인을 구매할 때는 이 순서가 좋습니다:
 
 - **1순위**: FabFilter Pro-Q 3 (EQ) — 가장 직관적
-- **2순위**: Valhalla Room (리버브) — 가성비 최고
+- **2순위**: Valhalla Room (리버브) — 가성비 좋음
 - **3순위**: Waves CLA-2A 또는 CLA-76 (컴프레서)
 - **4순위**: Melodyne Essential (피치 교정)
 - **5순위**: FabFilter Pro-DS (디에서)
@@ -149,7 +149,7 @@ howTo:
 
 ## Studio NOL 보컬 믹싱에서 자주 쓰는 플러그인 조합 3가지
 
-스튜디오 놀 보컬 믹싱 세션에서 반복적으로 손이 가는 플러그인 체인입니다.
+스튜디오 놀 보컬 믹싱 세션에서 자주 손이 가는 플러그인 체인입니다.
 
 **1. 깔끔한 K팝 보컬 — FabFilter Pro-Q 3 → CLA-2A → FabFilter Pro-DS → Valhalla Room**
 
@@ -173,9 +173,9 @@ Melodyne Essential은 자연스러운 보컬 피치 교정의 기본 도구로, 
 
 ## Studio NOL이 플러그인 입문자에게 자주 권하는 3가지
 
-스튜디오 놀(연신내, 서울 은평구)에서 플러그인 선택 상담에서 반복적으로 드리는 조언입니다.
+스튜디오 놀(연신내, 서울 은평구)에서 플러그인 선택 상담 때 자주 드리는 조언입니다.
 
-**1. 무료 플러그인 — 충분히 강력**
+**1. 무료 플러그인 — 입문 단계에 충분**
 
 ReaPlugs·Voxengo·TDR 등 입문 충분.
 

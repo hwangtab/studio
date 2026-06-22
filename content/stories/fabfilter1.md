@@ -30,14 +30,14 @@ faq:
   - q: Pro-Q3의 Linear Phase와 Natural Phase의 차이는?
     a: >-
       Natural Phase는 아날로그처럼 동작하여 위상 변화가 있지만 레이턴시가 없습니다. Linear Phase는 위상 왜곡 없이
-      완벽하게 처리하지만 레이턴시가 발생합니다. 마스터링·최종 믹스에는 Linear Phase, 보컬 트랙 처리에는 Natural
+      정교하게 처리하지만 레이턴시가 발생합니다. 마스터링·최종 믹스에는 Linear Phase, 보컬 트랙 처리에는 Natural
       Phase 권장입니다.
 ---
 ![FabFilter Pro-Q3 완전 가이드 — 스튜디오 놀](/images/recording6.webp)
 
 ## FabFilter Pro-Q3 — 업계 최고의 EQ 플러그인
 
-Pro-Q3는 직관적인 인터페이스와 강력한 기능으로 수많은 Grammy 수상 엔지니어가 선택한 EQ 플러그인입니다.
+Pro-Q3는 직관적인 인터페이스와 다양한 기능으로 수많은 Grammy 수상 엔지니어가 선택한 EQ 플러그인입니다.
 
 FabFilter는 2002년 네덜란드에서 Frederik Soto와 Floris Klinkert가 창립한 소프트웨어 회사입니다. 초기에는 신스 플러그인(FabFilter One, 2003)으로 시작했으나 2012년 Pro-Q1 출시 후 EQ 플러그인 시장의 판도를 바꿨습니다. Pro-Q1은 기존 EQ 플러그인에 없던 실시간 스펙트럼 분석기를 화면에 직접 표시하고, 밴드를 드래그로 즉시 생성·이동할 수 있는 인터페이스를 선보였습니다. 이 직관성이 Waves·Sonnox 등 기존 표준 EQ를 밀어내고 2013년경부터 전 세계 믹싱 스튜디오의 표준 EQ로 자리 잡는 계기가 됐습니다. 2018년 출시된 Pro-Q3에는 트랙 간 주파수 충돌을 실시간으로 감지하는 Collision Detection과, 지정 주파수가 임계값을 초과할 때만 EQ가 작동하는 Dynamic EQ 밴드가 추가됐습니다. 이 두 기능이 기존 EQ로는 불가능했던 자연스럽고 정밀한 주파수 처리를 가능하게 하면서, Pro-Q3는 보컬 믹싱의 업계 표준으로 완전히 자리 잡았습니다.
 
@@ -169,7 +169,7 @@ Collision Detection을 처음 사용할 때는 충돌 강도(Collision Strength)
 
 ## Studio NOL이 FabFilter 사용자에게 자주 권하는 3가지
 
-스튜디오 놀(연신내, 서울 은평구)에서 FabFilter Pro-Q3 상담에서 반복적으로 드리는 조언입니다.
+스튜디오 놀(연신내, 서울 은평구)에서 FabFilter Pro-Q3 상담 때 자주 드리는 조언입니다.
 
 **1. Dynamic EQ — 강력**
 

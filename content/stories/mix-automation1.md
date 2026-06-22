@@ -30,7 +30,7 @@ faq:
   - q: 오토메이션 모드(Read·Write·Touch·Latch)의 차이는?
     a: >-
       Read: 기록된 오토메이션 재생. Write: 재생 중 모든 움직임 기록. Touch: 파라미터에 손댈 때만 기록. Latch:
-      Touch와 유사하나 손을 놓아도 마지막 값 유지. 실제 작업에서는 Touch 모드를 가장 많이 사용합니다.
+      Touch와 유사하나 손을 놓아도 마지막 값 유지. 실제 작업에서는 Touch 모드를 주로 사용합니다.
 ---
 ![믹싱 오토메이션 완전 가이드 — 스튜디오 놀](/images/studio4.webp)
 

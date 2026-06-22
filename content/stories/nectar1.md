@@ -172,7 +172,7 @@ Harmony 모듈의 Humanize 슬라이더는 반드시 50% 이상으로 설정하�
 
 ## Studio NOL이 Nectar 사용자에게 자주 권하는 3가지
 
-스튜디오 놀(연신내, 서울 은평구)에서 iZotope Nectar 상담에서 반복적으로 드리는 조언입니다.
+스튜디오 놀(연신내, 서울 은평구)에서 iZotope Nectar 상담 때 자주 드리는 조언입니다.
 
 **1. Vocal Assistant — 시작점만**
 

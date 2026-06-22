@@ -17,7 +17,7 @@ summary: >-
 faq:
   - q: 보컬에 가장 많이 쓰는 딜레이 종류는?
     a: >-
-      K-POP·팝 보컬에는 템포 싱크 딜레이(Quarter Note 또는 Eighth Note)가 가장 많이 사용됩니다. 리듬에 맞게
+      K-POP·팝 보컬에는 템포 싱크 딜레이(Quarter Note 또는 Eighth Note)가 자주 사용됩니다. 리듬에 맞게
       에코가 반복되어 보컬에 생동감을 줍니다. R&B에는 짧은 슬랩백 딜레이가 공간감 대용으로 쓰입니다.
   - q: 슬랩백 딜레이란 무엇인가요?
     a: >-
@@ -57,7 +57,7 @@ howTo:
 > - **테이프 딜레이의 매력은 Degradation + Wow-Flutter**: 반복마다 음질 저하 + 피치 흔들림이 "살아있는" 질감.
 > - **딜레이 → 리버브 체인**: 딜레이 에코에 리버브가 더해져 풍성한 공간감. 순서 반대로 하면 리버브 잔향이 다시 딜레이로 반복되어 진흙탕.
 
-딜레이는 리버브와 함께 보컬 믹싱에서 공간감과 리듬감을 만드는 핵심 도구입니다. **딜레이의 역사는 1950년대 미국 멤피스의 Sun Records 스튜디오**로 거슬러 올라갑니다. Sam Phillips 프로듀서가 Elvis Presley·Johnny Cash·Carl Perkins의 보컬에 적용한 "**슬랩백 에코(slapback echo)**"가 로큰롤·로커빌리의 사운드 정체성을 정의했습니다([Slapback — Wikipedia](https://en.wikipedia.org/wiki/Slapback) · [Reverb News: A Brief History of Tape Echo](https://reverb.com/news/repeat-that-a-brief-history-of-tape-echo)). 당시에는 두 개의 테이프 레코더를 사용해 약 80ms의 자연 딜레이를 만들었고, 이 소리가 Sun Studio 사운드의 핵심이 됐습니다. 이후 **1974년 Roland가 RE-201 Space Echo를 출시**([Roland Space Echo — Wikipedia](https://en.wikipedia.org/wiki/Roland_Space_Echo))하면서 아날로그 테이프 딜레이가 투어·스튜디오의 휴대 가능한 표준이 됐고, Echoplex와 함께 1970~80년대 딜레이 사운드의 양대 산맥이 됐습니다. U2의 The Edge가 Roland RE-201과 디지털 딜레이를 활용한 리듬 딜레이 기타 사운드는 밴드의 정체성이 됐습니다.
+딜레이는 리버브와 함께 보컬 믹싱에서 공간감과 리듬감을 만드는 중요한 도구입니다. **딜레이의 역사는 1950년대 미국 멤피스의 Sun Records 스튜디오**로 거슬러 올라갑니다. Sam Phillips 프로듀서가 Elvis Presley·Johnny Cash·Carl Perkins의 보컬에 적용한 "**슬랩백 에코(slapback echo)**"가 로큰롤·로커빌리의 사운드 정체성을 정의했습니다([Slapback — Wikipedia](https://en.wikipedia.org/wiki/Slapback) · [Reverb News: A Brief History of Tape Echo](https://reverb.com/news/repeat-that-a-brief-history-of-tape-echo)). 당시에는 두 개의 테이프 레코더를 사용해 약 80ms의 자연 딜레이를 만들었고, 이 소리가 Sun Studio 사운드의 핵심이 됐습니다. 이후 **1974년 Roland가 RE-201 Space Echo를 출시**([Roland Space Echo — Wikipedia](https://en.wikipedia.org/wiki/Roland_Space_Echo))하면서 아날로그 테이프 딜레이가 투어·스튜디오의 휴대 가능한 표준이 됐고, Echoplex와 함께 1970~80년대 딜레이 사운드의 양대 산맥이 됐습니다. U2의 The Edge가 Roland RE-201과 디지털 딜레이를 활용한 리듬 딜레이 기타 사운드는 밴드의 정체성이 됐습니다.
 
 현대 디지털 DAW에서 딜레이는 소프트웨어 플러그인으로 구현됩니다. Waves H-Delay, SoundToys EchoBoy, Universal Audio TAPE DELAY 등이 아날로그 딜레이의 따뜻한 음색을 디지털로 재현하며, 각 딜레이 유형은 서로 다른 음악적 상황에서 활용됩니다.
 
@@ -176,6 +176,6 @@ K-POP 보컬 믹싱에서 "보컬이 얇게 들린다"는 피드백이 나올 �
 
 ## 마치며
 
-딜레이는 보컬에 리듬감과 깊이를 더하는 강력한 도구입니다. 슬랩백으로 두께를 더할지, 템포 싱크로 리듬적 생동감을 줄지, 핑퐁으로 스테레오 폭을 넓힐지 — 각 딜레이 유형의 음악적 역할을 이해하면 믹스에서 딜레이가 어색하게 "첨가된" 느낌이 아니라 음악의 일부로 자연스럽게 녹아듭니다.
+딜레이는 보컬에 리듬감과 깊이를 더하는 효과적인 도구입니다. 슬랩백으로 두께를 더할지, 템포 싱크로 리듬적 생동감을 줄지, 핑퐁으로 스테레오 폭을 넓힐지 — 각 딜레이 유형의 음악적 역할을 이해하면 믹스에서 딜레이가 어색하게 "첨가된" 느낌이 아니라 음악의 일부로 자연스럽게 녹아듭니다.
 
 [딜레이 vs 리버브 완전 가이드](/stories/delay1) | [리버브 종류 완전 가이드](/stories/reverb-types1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [리버브 믹싱 완전 가이드](/stories/reverb-mixing1) | [스트리밍 음압(LUFS) 완전 가이드](/stories/loudness1)

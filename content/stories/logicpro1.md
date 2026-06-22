@@ -13,7 +13,7 @@ tags:
   - Logic Pro 컴프레서
 thumbnail: /images/room8.webp
 summary: >-
-  Logic Pro 보컬 녹음 준비 과정을 녹음 전 준비물, 세션 진행, 결과물 기준으로 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
+  Logic Pro 보컬 녹음 준비 기준을 녹음 전 준비물, 세션 진행, 결과물 확인 포인트에 맞춰 정리합니다. 연신내 Studio NOL의 장비와 엔지니어링 관점도 함께 확인하세요.
 faq:
   - q: Logic Pro로 고퀄리티 보컬 녹음이 가능한가요?
     a: >-
@@ -191,7 +191,7 @@ Flex Pitch로 피치를 교정할 때는 Pitch Correction 슬라이더를 50~70 
 
 ## Studio NOL이 Logic Pro 보컬 작업자에게 자주 권하는 3가지
 
-스튜디오 놀(연신내, 서울 은평구)에서 Logic Pro 보컬 녹음 상담에서 반복적으로 드리는 조언입니다.
+스튜디오 놀(연신내, 서울 은평구)에서 Logic Pro 보컬 녹음 상담 때 자주 드리는 조언입니다.
 
 **1. Flex Pitch Correction 50~70 — 자연스러운 교정**
 

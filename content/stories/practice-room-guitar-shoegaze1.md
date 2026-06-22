@@ -17,14 +17,13 @@ faq:
       시작해야 하나요?
     a: >-
       슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 연습은 슈게이징이란?, My
-      Bloody Valentine 스타일, Slowdive 스타일 순서로 진행하는 것을 추천합니다. 기초 단계를 충분히 소화한 후 다음
+      Bloody Valentine 스타일, Slowdive 스타일 순서로 진행하면 좋습니다. 기초 단계를 충분히 소화한 후 다음
       단계로 넘어가세요.
   - q: >-
-      슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 연습 시 가장 중요한 포인트는
+      슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 연습 시 핵심 포인트는
       무엇인가요?
     a: >-
-      슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 연습에서 가장 중요한 것은 정확한
-      손 포지션과 리듬감입니다. 메트로놈을 활용해 느린 템포부터 연습하고, 깨끗한 음 하나하나에 집중하세요.
+      슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 연습에서는 정확한 손 포지션과 리듬감이 중요합니다. 메트로놈을 활용해 느린 템포부터 연습하고, 깨끗한 음 하나하나에 집중하세요.
   - q: >-
       음악연습실에서 슈게이징 기타·Wall of Sound·My Bloody Valentine·Slowdive 스타일 연습하면 어떤 장점이
       있나요?
@@ -261,7 +260,7 @@ Asus4: x-0-2-2-0-0
 
 ## Studio NOL이 슈게이즈 기타 연습자에게 자주 권하는 3가지
 
-스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 슈게이즈 기타·My Bloody Valentine 상담에서 반복적으로 드리는 조언입니다.
+스튜디오 놀(연신내, 서울 은평구) 음악연습실에서 슈게이즈 기타·My Bloody Valentine 상담 때 자주 드리는 조언입니다.
 
 **1. 이펙터 — 리버브 + 모듈레이션 + 디스토션**
 
