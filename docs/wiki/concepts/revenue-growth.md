@@ -9,6 +9,7 @@ related:
   - "[[concepts/pricing-offers]]"
   - "[[entities/services]]"
   - "[[concepts/marketing-channels]]"
+  - "[[entities/project-release-flagship]]"
 ---
 
 # 매출 성장 전략

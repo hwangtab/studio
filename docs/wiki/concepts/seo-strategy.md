@@ -11,6 +11,7 @@ related:
   - "[[concepts/keyword-clusters]]"
   - "[[concepts/content-guidelines]]"
   - "[[decisions/seo-ctr-optimization]]"
+  - "[[entities/channel-llm-referrers]]"
 ---
 
 # SEO 전략
@@ -114,3 +115,9 @@ NAP(Name·Address·Phone) 일치 필수: 네이버와 구글 기재 정보가 �
 | 오가닉 주간 클릭수 | 주간 | GSC Performance |
 | 타깃 키워드 상위 10위 수 | 월간 | GSC Queries |
 | Thin content actionable 건수 | 빌드마다 | `npm run audit:thin` |
+
+---
+
+## 6. GEO / AI 검색
+
+GEO(Generative Engine Optimization)는 ChatGPT, Perplexity, Gemini 등 생성형 AI 검색 엔진이 스튜디오 놀을 올바르게 인용·추천하도록 콘텐츠와 구조화 데이터를 최적화하는 SEO 전략의 확장 영역이다. LLM은 기존 키워드 매칭이 아닌 콘텐츠의 사실성·구조·문맥을 기반으로 정보를 인용하므로, FAQ형 콘텐츠·정의형 문장·명확한 서비스 범위 기술이 인용 품질에 직접 영향을 준다. 실제 LLM 유입 데이터와 플랫폼별 이탈률·시사점은 [[entities/channel-llm-referrers]]에 정리되어 있다.
