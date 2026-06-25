@@ -27,6 +27,12 @@
 - 갱신: index.md Entities 섹션 4개 신규 등록, naver-place 설명 갱신
 - 소스: ga4-raw/{device,events,landing,llm_referrers,source}.csv, gsc-raw/{page-all,page-query,quick-win,trend}.csv, naver-smartplace/01~06.md, naver-blog/ 전체
 
+## 2026-06-25 · ingest · 발매 프로젝트
+- 신설: entities/project-release-flagship.md — Path B 플래그십 목적·포지셔닝·진짜 상품 정의(프로듀서+네트워크)·3티어 상품 형태·실행 방향·증거 자산·Open Items
+- 갱신: index.md Entities 섹션 최상단에 등록
+- 소스: 2026-05-28-발매프로젝트-재포지셔닝-기획.md
+- 고객 vs 프로듀서 이력 구분: 기획안 내 sickbaby 페르소나 정보(두루두루AMC 매니저 경력 등)를 황경하 이력으로 오기하지 않도록 별도 섹션으로 명시. 확인 필요 플래그 없음(기획안 §4에 이미 명시).
+
 ## 2026-06-25 · ingest · diagnosis 시계열
 - 신설: decisions/seo-ctr-optimization.md — 2026-05-18~05-31 CTR 최적화·카니벌라이제이션 정리 타임라인
 - 신설: decisions/conversion-cta-system.md — 2026-05-18~05-31 전환율·CTA 시스템 타임라인

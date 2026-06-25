@@ -3,6 +3,7 @@
 > 콘텐츠 카탈로그. 모든 위키 페이지를 카테고리별로 등록한다. 규칙은 [WIKI.md](WIKI.md) 참조.
 
 ## Entities
+- [[entities/project-release-flagship]] — 발매 프로젝트 Path B 플래그십 (목적·포지셔닝·진짜 상품 정의·실행 방향·Open Items)
 - [[entities/services]] — Studio NOL 공식 서비스 목록 (녹음·믹싱·마스터링·연습실·성우녹음·프로듀싱레슨·부가서비스·가격)
 - [[entities/naver-place]] — 네이버 스마트플레이스 운영 현황 및 최적화 가이드 (NAP·카테고리·리뷰 전략·카드뉴스 5개 시리즈)
 - [[entities/channel-ga4]] — GA4 트래픽 채널 해석 (디바이스·소스별 전환·상위 랜딩·이벤트 추세)
