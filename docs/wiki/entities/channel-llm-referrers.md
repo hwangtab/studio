@@ -38,7 +38,7 @@ source.csv 기준 LLM 소스 합산:
 | manus.im | referral | 1 | 0.0% | |
 | gpt.k-university.ai | referral | 1 | 0.0% | |
 
-**총계(추정)**: ChatGPT 계열 약 331세션, Perplexity 계열 63세션, 기타 LLM 39세션 — 합산 약 430+ 세션.
+**총계**: ChatGPT 계열 332세션 (135+110+86+1), Perplexity 계열 63세션, 기타 LLM 39세션 — 합산 약 434세션.
 
 ---
 

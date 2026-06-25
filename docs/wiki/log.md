@@ -21,7 +21,7 @@
 ## 2026-06-25 · ingest · 채널 raw 데이터
 - 신설: entities/channel-ga4.md — GA4 소스·디바이스·랜딩·이벤트 해석 (google organic 지배, 네이버 referral 최고 전환, /en/contact 폼 오류 주목)
 - 신설: entities/channel-gsc.md — GSC 5/22~6/17 추세 (노출 85% 상승), 상위 10페이지, 상위 쿼리, quick-win 15건 정리
-- 신설: entities/channel-llm-referrers.md — ChatGPT 331+ 세션(이탈률 10.4%), Perplexity·NotebookLM·Gemini 포함 GEO 분석, 전략 시사점 5개
+- 신설: entities/channel-llm-referrers.md — ChatGPT 332세션(135+110+86+1, 이탈률 10.4%), Perplexity·NotebookLM·Gemini 포함 GEO 분석, 전략 시사점 5개
 - 신설: entities/channel-naver-blog.md — 16편 초안 주제별 목록, 발행 순서, GSC 연계 키워드, 내부링크 전략
 - 갱신: entities/naver-place.md — naver-smartplace 카드뉴스 5개 시리즈 현황 및 디자인 원칙 보강 (섹션 11 추가), frontmatter sources/related 갱신
 - 갱신: index.md Entities 섹션 4개 신규 등록, naver-place 설명 갱신
@@ -39,3 +39,24 @@
 - 신설: decisions/contact-form-en.md — 2026-05-21~06-16 영문 컨택폼 오류 조사→정상 확인
 - 갱신: index.md Decisions 섹션 3개 등록
 - 소스: diagnosis-2026-05-18.md, -05-21.md, -05-27.md, -05-31.md, -06-16-contact-form.md
+
+## 2026-06-25 · lint · 전체
+- 고아 페이지: 0건 (16개 페이지 전부 index.md 등록 확인)
+- 끊긴 wiki-link: 0건 (모든 [[...]] 링크 → 실제 파일 존재 확인; WIKI.md 내 예시 `[[entities/service-mixing]]`·`[[경로]]`는 schema 설명용이므로 무시)
+- 끊긴 raw 경로: 0건 (55개 상대경로 전수 확인, 전부 정상)
+- 포맷 위반: 0건 (전 페이지 title/type/sources/updated/related 키 보유 확인)
+- 수정한 minor 오류 3건:
+  - entities/channel-llm-referrers.md: "약 331세션" → "332세션 (135+110+86+1)" (source.csv 기준 정확값)
+  - entities/channel-naver-blog.md: "총 16편" → "23편 초안 파일 (01~07 한/영 각 2파일)" (frontmatter 25개 sources와 정합)
+  - log.md (2026-06-25 채널 raw 데이터 항목): "ChatGPT 331+" → "ChatGPT 332세션(135+110+86+1)"
+  - index.md: channel-naver-blog 설명 "16편 초안" → "23편 초안 파일"
+- 확인 필요 플래그: 이전 ingest에서 표시된 2건 잔존 (성우 시간당 3만원 vs 100,000원 / 보컬 원데이 클래스) — 사실 충돌 미해소, 사람 판단 대기
+- 민감 사실 회귀: 금지 표현(0507·보컬레슨·악기레슨·영어엔지니어) 미발견. 전화번호 010-4255-7893 정상 표기 확인.
+
+## 2026-06-25 · query · 서비스/가격 검증
+- 질문: "Studio NOL의 공식 서비스 범위와 가격은?"
+- entities/services.md에서 6개 서비스(보컬·악기 녹음/믹싱/마스터링/성우나레이션/연습실/프로듀싱레슨) + 부가서비스 전체 확인.
+- concepts/pricing-offers.md에서 가격표 정합 확인(레코딩 100,000원/시간, 믹싱 200,000~500,000원/곡, 마스터링 80,000~100,000원 등).
+- 보컬·악기 레슨 없음(entities/services.md 가드 박스 명시), 영어=예약응대+원격믹싱 한정(services.md §1 내 "영어 전담 엔지니어 없음" 명시).
+- 전화번호 010-4255-7893 정상(services.md §9, pricing-offers.md 상단 가드).
+- 검증 통과.

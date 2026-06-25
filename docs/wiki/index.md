@@ -9,7 +9,7 @@
 - [[entities/channel-ga4]] — GA4 트래픽 채널 해석 (디바이스·소스별 전환·상위 랜딩·이벤트 추세)
 - [[entities/channel-gsc]] — GSC 검색 성과 (상위 페이지·쿼리·quick-win·5월~6월 추세)
 - [[entities/channel-llm-referrers]] — LLM 유입 채널 GEO 분석 (ChatGPT·Perplexity·Gemini 등 유입 구조 및 시사점)
-- [[entities/channel-naver-blog]] — 네이버 블로그 콘텐츠 자산 목록 (16편 초안 주제·발행 순서·내부링크 전략)
+- [[entities/channel-naver-blog]] — 네이버 블로그 콘텐츠 자산 목록 (23편 초안 파일, 주제 01~16·발행 순서·내부링크 전략)
 
 ## Concepts
 - [[concepts/seo-strategy]] — SEO 전략 전체 (Pillar-Cluster 구조, 색인 품질 개선, 백링크 전략, 기술 SEO 가드레일)
