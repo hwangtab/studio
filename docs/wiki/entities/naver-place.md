@@ -4,10 +4,17 @@ type: entity
 sources:
   - ../naver-place-optimization.md
   - ../marketing_strategies.md
+  - ../naver-smartplace/01-card-news-plan.md
+  - ../naver-smartplace/02-series-1-design-spec.md
+  - ../naver-smartplace/03-series-2-design-spec.md
+  - ../naver-smartplace/04-series-3-design-spec.md
+  - ../naver-smartplace/05-series-4-design-spec.md
+  - ../naver-smartplace/06-series-5-design-spec.md
 updated: 2026-06-25
 related:
   - "[[concepts/marketing-channels]]"
   - "[[concepts/pricing-offers]]"
+  - "[[entities/channel-naver-blog]]"
 ---
 
 # 네이버 스마트플레이스
@@ -130,3 +137,37 @@ GA4에서 네이버 플레이스 유입 확인: `m.place.naver.com` / `pcmap.pla
 - [ ] 방문자 리뷰 요청
 - [ ] 블로그 후기 1~2건 확보
 - [ ] 사진 추가 (작업 장면·신규 장비)
+
+---
+
+## 11. 카드뉴스 전략 (보강 — 2026-06-25)
+
+소스: [../naver-smartplace/01-card-news-plan.md](../naver-smartplace/01-card-news-plan.md), 시리즈 1~5 디자인 시안.
+
+### 운영 방향
+
+- 총 100장 목표 (실사 사진 우선, 카드뉴스 보조)
+- **음악연습실 80장 / 녹음실 20장** 비중 — 검색량·LTV 기준 최적 배분
+- 대표 4장(첫 화면)은 텍스트 0% 감성 실사. 알고리즘이 실사 우대.
+- **120장 한꺼번에 업로드 금지** — 주 1~2회 5~10장씩 점진 업로드 (신선도 신호 유지)
+
+### 5개 카드뉴스 시리즈 현황
+
+| 시리즈 | 주제 | 상태 |
+|--------|------|------|
+| 시리즈 1 | 입주자가 사랑하는 3가지 이유 (방음·부가혜택·환경) | 제작 완료 (5장) |
+| 시리즈 2 | 연신내 연습실 vs 홍대 연습실 비교 | 기획 완료 |
+| 시리즈 3 | "6개월 계약 첫 달 50% 할인" 이벤트 카드 | 기획 완료 |
+| 시리즈 4 | 장비·시설 소개 카드 | 기획 완료 |
+| 시리즈 5 | 녹음실 서비스 압축 소개 | 기획 완료 |
+
+### 디자인 원칙 (시리즈 1 기준)
+
+- 폰트: 부크크명조(본문) + Pretendard(강조) — 고딕 일변도 탈피
+- 색상: 흑백 베이스 + 포인트 골드
+- 규격: 1080×1080 정방형, JPG 출력
+- AI 이미지 불사용 — 스튜디오 실사 또는 텍스트 레이아웃 카드만 사용
+
+### 초안 폐기 교훈 (시리즈 1)
+
+"월 30만원대 → 시간당 1,500원" 가격 환산형 초안은 오히려 비싸 보이는 역효과로 폐기. **사용자 경험 트리거 순서**: ① 방음 ② 부가혜택 ③ 환경 → 가격은 부차적. 가격 강조 카드는 검색 의도가 확인된 뒤 소식/이벤트 탭에서 사용 권장.

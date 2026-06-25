@@ -4,7 +4,11 @@
 
 ## Entities
 - [[entities/services]] — Studio NOL 공식 서비스 목록 (녹음·믹싱·마스터링·연습실·성우녹음·프로듀싱레슨·부가서비스·가격)
-- [[entities/naver-place]] — 네이버 스마트플레이스 운영 현황 및 최적화 가이드 (NAP·카테고리·리뷰 전략)
+- [[entities/naver-place]] — 네이버 스마트플레이스 운영 현황 및 최적화 가이드 (NAP·카테고리·리뷰 전략·카드뉴스 5개 시리즈)
+- [[entities/channel-ga4]] — GA4 트래픽 채널 해석 (디바이스·소스별 전환·상위 랜딩·이벤트 추세)
+- [[entities/channel-gsc]] — GSC 검색 성과 (상위 페이지·쿼리·quick-win·5월~6월 추세)
+- [[entities/channel-llm-referrers]] — LLM 유입 채널 GEO 분석 (ChatGPT·Perplexity·Gemini 등 유입 구조 및 시사점)
+- [[entities/channel-naver-blog]] — 네이버 블로그 콘텐츠 자산 목록 (16편 초안 주제·발행 순서·내부링크 전략)
 
 ## Concepts
 - [[concepts/seo-strategy]] — SEO 전략 전체 (Pillar-Cluster 구조, 색인 품질 개선, 백링크 전략, 기술 SEO 가드레일)

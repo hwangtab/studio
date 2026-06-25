@@ -18,6 +18,15 @@
 - 소스: studio-nol-complete-guide.md, content-guidelines.md, seo-keyword-cluster-map.md, seo-backlink-strategy.md, seo-content-calendar.md, seo-indexing-remediation.md, marketing_strategies.md, revenue_growth_strategies.md, naver-place-optimization.md
 - 확인 필요 플래그 2건: (1) seo-content-calendar.md 내 "성우 녹음 시간당 3만원" vs 공식 100,000원 — pricing-offers.md 주석 참조. (2) marketing_strategies.md "보컬 원데이 클래스" — 보컬 레슨 미제공, marketing-channels.md 주석 참조.
 
+## 2026-06-25 · ingest · 채널 raw 데이터
+- 신설: entities/channel-ga4.md — GA4 소스·디바이스·랜딩·이벤트 해석 (google organic 지배, 네이버 referral 최고 전환, /en/contact 폼 오류 주목)
+- 신설: entities/channel-gsc.md — GSC 5/22~6/17 추세 (노출 85% 상승), 상위 10페이지, 상위 쿼리, quick-win 15건 정리
+- 신설: entities/channel-llm-referrers.md — ChatGPT 331+ 세션(이탈률 10.4%), Perplexity·NotebookLM·Gemini 포함 GEO 분석, 전략 시사점 5개
+- 신설: entities/channel-naver-blog.md — 16편 초안 주제별 목록, 발행 순서, GSC 연계 키워드, 내부링크 전략
+- 갱신: entities/naver-place.md — naver-smartplace 카드뉴스 5개 시리즈 현황 및 디자인 원칙 보강 (섹션 11 추가), frontmatter sources/related 갱신
+- 갱신: index.md Entities 섹션 4개 신규 등록, naver-place 설명 갱신
+- 소스: ga4-raw/{device,events,landing,llm_referrers,source}.csv, gsc-raw/{page-all,page-query,quick-win,trend}.csv, naver-smartplace/01~06.md, naver-blog/ 전체
+
 ## 2026-06-25 · ingest · diagnosis 시계열
 - 신설: decisions/seo-ctr-optimization.md — 2026-05-18~05-31 CTR 최적화·카니벌라이제이션 정리 타임라인
 - 신설: decisions/conversion-cta-system.md — 2026-05-18~05-31 전환율·CTA 시스템 타임라인
