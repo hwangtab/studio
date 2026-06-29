@@ -3,6 +3,15 @@ import { type Locale } from '../lib/i18n';
 import { getSiteConfig, socialProfiles, studioOperator } from '../data/siteConfig';
 import { getReviews } from '../data/reviews';
 
+// Offer.priceValidUntil — Google Rich Results는 가격 만료일이 없으면 가격을 '만료'로
+// 처리해 리치 결과에서 가격 표시를 제거하거나 경고를 낸다. 빌드(SSG) 시점 기준
+// +12개월로 고정한다(빌드 주기가 1년을 넘기지 않는 한 유효).
+const getOfferPriceValidUntil = (): string => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 12);
+  return date.toISOString().split('T')[0];
+};
+
 const OFFER_CATALOG_NAMES: Record<Locale, string> = {
   ko: '스튜디오 서비스', en: 'Studio Services', zh: '工作室服务',
   es: 'Servicios del Estudio', vi: 'Dịch vụ Studio', th: 'บริการสตูดิโอ', uz: 'Studiya xizmatlari',
@@ -70,6 +79,7 @@ export const generateDefaultSchema = (
   const mixingOfferName = MIXING_OFFER_NAMES[locale];
   const productionOfferName = PRODUCTION_OFFER_NAMES[locale];
   const practiceOfferName = PRACTICE_OFFER_NAMES[locale];
+  const priceValidUntil = getOfferPriceValidUntil();
 
   return {
     '@context': 'https://schema.org',
@@ -252,6 +262,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               priceCurrency: 'KRW',
               price: 100000,
+              priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -264,6 +275,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               priceCurrency: 'KRW',
               price: 250000,
+              priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -276,6 +288,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               priceCurrency: 'KRW',
               price: 200000,
+              priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -288,6 +301,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               priceCurrency: 'KRW',
               price: 350000,
+              priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -301,6 +315,7 @@ export const generateDefaultSchema = (
               name: practiceOfferName,
               priceCurrency: 'KRW',
               price: 360000,
+              priceValidUntil,
               url: `${siteUrl}/${locale}/practice-room`,
               availability: 'https://schema.org/InStock',
               itemOffered: {
@@ -319,6 +334,7 @@ export const generateDefaultSchema = (
             '@type': 'Offer',
             priceCurrency: 'KRW',
             price: 100000,
+            priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: recordingOfferName },
@@ -327,6 +343,7 @@ export const generateDefaultSchema = (
             '@type': 'Offer',
             priceCurrency: 'KRW',
             price: 250000,
+            priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: vocalPackageOfferName },
@@ -335,6 +352,7 @@ export const generateDefaultSchema = (
             '@type': 'Offer',
             priceCurrency: 'KRW',
             price: 200000,
+            priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: mixingOfferName },
@@ -343,6 +361,7 @@ export const generateDefaultSchema = (
             '@type': 'Offer',
             priceCurrency: 'KRW',
             price: 350000,
+            priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: productionOfferName },
@@ -351,6 +370,7 @@ export const generateDefaultSchema = (
             '@type': 'Offer',
             priceCurrency: 'KRW',
             price: 360000,
+            priceValidUntil,
             url: `${siteUrl}/${locale}/practice-room`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: practiceOfferName },

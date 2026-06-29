@@ -1,16 +1,13 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, ArrowRight, BookOpen, Mic, Globe2, Newspaper, Speaker, MessageCircle, HandCoins, ClipboardList, Wrench, Gift, Check, ChevronDown } from '@/lib/lucide-icons';
+import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, Gift } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import BaseCard from '../../components/ui/BaseCard';
 import SectionHeading from '../../components/ui/SectionHeading';
-import type { LucideIcon } from '@/lib/lucide-icons';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
 // ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
@@ -24,142 +21,26 @@ import { loadCommonResourceServer } from '../../lib/i18n.server';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
-import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schemaGenerator';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
-
-const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: { icon: LucideIcon, title: string, description: string, delay?: number }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
-    <div className="flex items-center mb-4">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
-      </div>
-      <h3 className="typo-card-title">{title}</h3>
-    </div>
-    <p className="typo-card-body">{description}</p>
-  </BaseCard>
-);
-
-const PainPoint = ({ icon: Icon, text, delay = 0, locale = 'ko' }: { icon: LucideIcon, text: string, delay?: number, locale?: Locale }) => (
-  <BaseCard variant="default" delay={delay} className="p-5 h-full">
-    <div className="flex items-start">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
-        <Icon size={20} aria-hidden="true" />
-      </div>
-      <div>
-        <p className={`typo-card-body whitespace-normal ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>{text}</p>
-      </div>
-    </div>
-  </BaseCard>
-);
-
-const TargetAudience = ({ title, description, icon: Icon, delay = 0 }: { title: string, description: string, icon: LucideIcon, delay?: number }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 mb-4">
-    <div className="flex items-center mb-2">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
-      </div>
-      <h3 className="typo-card-subtitle">{title}</h3>
-    </div>
-    <p className="typo-card-body">{description}</p>
-  </BaseCard>
-);
-
-interface BenefitItem {
-  title: string;
-  points: string[];
-  valueBadge?: string;
-}
-
-const BenefitCard = ({
-  icon: Icon,
-  title,
-  points,
-  valueBadge,
-  delay = 0,
-  locale,
-  calendarLinkLabel,
-  calendarLinkUrl,
-}: {
-  icon: LucideIcon;
-  title: string;
-  points: string[];
-  valueBadge?: string;
-  delay?: number;
-  locale: Locale;
-  calendarLinkLabel?: string;
-  calendarLinkUrl?: string;
-}) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
-    <div className="flex items-center mb-4">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
-        <Icon size={22} aria-hidden="true" />
-      </div>
-      <h3 className="typo-card-title">{title}</h3>
-    </div>
-    {valueBadge && (
-      <div className="mb-3">
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary/10 to-secondary/10 text-primary dark:text-primary-light border border-primary/20">
-          <Sparkles size={12} aria-hidden="true" />
-          {valueBadge}
-        </span>
-      </div>
-    )}
-    <ul className="space-y-2">
-      {points.map((point, idx) => {
-        const showLink =
-          calendarLinkLabel && calendarLinkUrl && point.includes(calendarLinkLabel);
-        return (
-          <li key={idx} className="flex items-start gap-2">
-            <Check
-              className="text-primary dark:text-primary-light mt-1 flex-shrink-0"
-              size={16}
-              aria-hidden="true"
-            />
-            <span
-              className={`typo-card-body ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
-            >
-              {showLink ? (
-                <>
-                  {point.split(calendarLinkLabel)[0]}
-                  <a
-                    href={calendarLinkUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline hover:text-primary-dark"
-                  >
-                    {calendarLinkLabel}
-                  </a>
-                  {point.split(calendarLinkLabel)[1]}
-                </>
-              ) : (
-                point
-              )}
-            </span>
-          </li>
-        );
-      })}
-    </ul>
-  </BaseCard>
-);
-
-const BENEFIT_ICONS: LucideIcon[] = [
-  Mic,
-  Globe2,
-  Newspaper,
-  Speaker,
-  MessageCircle,
-  HandCoins,
-  ClipboardList,
-  Wrench,
-];
 
 // PriceLeader·SoundproofingShowcase·FacilitiesGrid는 별도 파일로 분리(2026-05-11).
 // 1020 → ~800줄로 축소·관심사 분리·재사용성 확보.
 import PriceLeader, { type PricingBadge } from '../../components/practice-room/PriceLeader';
 import SoundproofingShowcase, { type SoundproofingItem } from '../../components/practice-room/SoundproofingShowcase';
 import FacilitiesGrid, { type FacilityItem } from '../../components/practice-room/FacilitiesGrid';
+import {
+  BENEFIT_ICONS,
+  BenefitCard,
+  FeatureCard,
+  PainPoint,
+  TargetAudience,
+  type BenefitItem,
+} from '../../components/practice-room/PracticeRoomCards';
+import RelatedGuidesSection from '../../components/practice-room/RelatedGuidesSection';
+import RegionLinksSection from '../../components/practice-room/RegionLinksSection';
+import ServiceLinksSection from '../../components/practice-room/ServiceLinksSection';
 
 interface PracticeRoomProps {
   locale: Locale;
@@ -291,10 +172,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   const painPointsAnimation = PAIN_POINTS_ANIMATION;
   const audienceSectionAnimation = AUDIENCE_SECTION_ANIMATION;
   const featuresSectionAnimation = FEATURES_SECTION_ANIMATION;
-  const VISIBLE_GUIDES = 32;
-  const visibleRelatedGuides = relatedGuides.slice(0, VISIBLE_GUIDES);
-  const hiddenRelatedGuides = relatedGuides.slice(VISIBLE_GUIDES);
-  const relatedGuideLinkClassName = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200';
 
   return (
     <>
@@ -562,149 +439,22 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
       <ReviewSection variant="default" locale={locale} />
 
-      {/* 관련 가이드 — Pillar→Cluster 내부 링크 (한국어 SEO).
-          초기 32개 노출, 나머지는 <details> JS-free 접기 패턴.
-          JSX로 SSR되어 크롤러는 접힌 링크도 탐색 가능하고, props에는 slug/title만 전달해
-          __NEXT_DATA__ payload가 커지지 않도록 한다. */}
-      {visibleRelatedGuides.length > 0 && (
-        <Section variant="default" className="py-10" defer>
-          <div className="max-w-5xl mx-auto">
-            <SectionHeading
-              icon={BookOpen}
-              title={t('practiceRoom.relatedGuides.title')}
-              className="mb-6"
-            />
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {visibleRelatedGuides.map((guide, idx) => (
-                <Link
-                  key={`${guide.slug}-visible-${idx}`}
-                  href={`/ko/stories/${guide.slug}`}
-                  className={relatedGuideLinkClassName}
-                >
-                  <span>{guide.title}</span>
-                  <ArrowRight size={14} className="flex-shrink-0" aria-hidden="true" />
-                </Link>
-              ))}
-            </div>
-            {hiddenRelatedGuides.length > 0 && (
-              <details className="mt-6 group">
-                <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light transition-colors">
-                  <span className="group-open:hidden">
-                    가이드 +{hiddenRelatedGuides.length}개 더 보기
-                  </span>
-                  <span className="hidden group-open:inline">접기</span>
-                  <ChevronDown
-                    size={16}
-                    className="transition-transform group-open:rotate-180"
-                    aria-hidden="true"
-                  />
-                </summary>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-                  {hiddenRelatedGuides.map((guide, idx) => (
-                    <Link
-                      key={`${guide.slug}-hidden-${idx}`}
-                      href={`/ko/stories/${guide.slug}`}
-                      className={relatedGuideLinkClassName}
-                    >
-                      <span>{guide.title}</span>
-                      <ArrowRight size={14} className="flex-shrink-0" aria-hidden="true" />
-                    </Link>
-                  ))}
-                </div>
-              </details>
-            )}
-          </div>
-        </Section>
-      )}
+      <RelatedGuidesSection
+        title={t('practiceRoom.relatedGuides.title')}
+        guides={relatedGuides}
+      />
 
-      {/* 지역별 음악연습실 hub-and-spoke — 21개 인접 지역 dedicated LP 그리드.
-          Google이 'practice-room' hub와 21개 spoke의 관계를 명확히 인식해 권역 SERP
-          부스트. ko에서만 노출(다국어 사용자에겐 한국 음악연습실 시장이 비대상). */}
-      {locale === 'ko' && (
-        <Section variant="alternate" className="py-10" defer>
-          <div className="max-w-5xl mx-auto">
-            <SectionHeading
-              icon={MapPin}
-              title="지역별 음악연습실 안내"
-              className="mb-2"
-            />
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-3">
-              연신내 동명여고 옆 — 인근 21개 지역에서의 동선·거리 한눈에
-            </p>
-            {/* 21개 인접 지역명 노출 — hub 섹션의 카드 메타(data 파일)는 검색엔진
-                이 정적 i18n 텍스트가 아니라 SEO 신호가 약하므로, 본문에 명시적 텍스트로
-                전체 지역을 한 줄 나열해 long-tail 지역 검색 인덱싱 강화. */}
-            <p className="text-center text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
-              연신내 · 불광 · 대조동 · 녹번 · 독바위 · 구산 · 역촌 · 응암 · 새절 · 증산 · 상암 · 서대문 · 구파발 · 지축 · 삼송 · 원흥 · 원당 · 덕양구 · 고양시 · 일산 · 은평구
-            </p>
-            <div className="space-y-6">
-              {(['walk', 'eunpyeong', 'seodaemun', 'goyang'] as const).map((group) => {
-                const items = PRACTICE_ROOM_REGION_LPS.filter((lp) => lp.group === group);
-                if (items.length === 0) return null;
-                return (
-                  <div key={group}>
-                    <h3 className="text-sm font-bold text-primary dark:text-primary-light mb-3 uppercase tracking-wide">
-                      {PRACTICE_ROOM_REGION_GROUP_LABELS[group]}
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                      {items.map((lp) => (
-                        <Link
-                          key={lp.slug}
-                          href={`/${locale}/stories/${lp.slug}`}
-                          prefetch={false}
-                          className="group block px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light hover:shadow-md transition-all duration-200"
-                        >
-                          <div className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-light transition-colors">
-                            {lp.region} 음악연습실
-                          </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            {lp.distance}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </Section>
-      )}
+      <RegionLinksSection locale={locale} />
 
-      {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
-          무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" className="py-10" defer>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/stories`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
-          >
-            {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/contact`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-      </Section>
+      <ServiceLinksSection
+        locale={locale}
+        labels={{
+          lesson: t('nav.lesson'),
+          pricing: t('nav.pricing'),
+          stories: t('nav.stories'),
+          contact: t('nav.contact'),
+        }}
+      />
 
       <Section variant="default" className="py-16" defer>
         <ContactCTA

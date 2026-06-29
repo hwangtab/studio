@@ -1,51 +1,51 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",3099,0.305
-"mobile","South Korea",2688,0.326
-"desktop","(not set)",426,0.643
-"tablet","South Korea",114,0.325
-"mobile","China",97,0.320
-"desktop","China",96,0.688
-"desktop","Singapore",80,0.825
-"desktop","United States",65,0.631
-"mobile","United States",45,0.222
-"desktop","Japan",23,0.261
-"mobile","Japan",20,0.200
-"desktop","Canada",18,0.278
-"desktop","",15,0.000
+"desktop","South Korea",4484,0.214
+"mobile","South Korea",3860,0.249
+"desktop","(not set)",618,0.443
+"mobile","China",292,0.106
+"desktop","China",180,0.433
+"tablet","South Korea",163,0.233
+"desktop","United States",88,0.466
+"desktop","Singapore",85,0.765
+"mobile","United States",51,0.216
+"desktop","Japan",26,0.231
+"mobile","Japan",25,0.160
+"desktop","Canada",23,0.217
 "mobile","(not set)",15,1.000
 "desktop","Hong Kong",14,0.786
-"mobile","Vietnam",7,0.143
+"mobile","Australia",11,0.273
+"mobile","Vietnam",8,0.125
+"desktop","India",6,0.500
 "mobile","New Zealand",6,0.167
-"desktop","India",5,0.600
 "desktop","New Zealand",5,0.600
-"mobile","Australia",5,0.600
+"mobile","Canada",5,0.000
 "mobile","Thailand",5,0.400
-"desktop","Vietnam",3,0.667
-"mobile","Canada",3,0.000
+"desktop","",4,0.000
+"desktop","Australia",4,0.000
+"desktop","Philippines",4,0.250
+"desktop","Vietnam",4,0.500
+"mobile","Indonesia",4,0.500
+"desktop","Brazil",3,0.000
+"desktop","Indonesia",3,0.333
 "mobile","Hong Kong",3,0.333
+"mobile","Taiwan",3,0.000
 "tablet","United States",3,0.667
-"desktop","Australia",2,0.000
-"desktop","Indonesia",2,0.500
-"desktop","Philippines",2,0.500
+"desktop","Germany",2,0.500
+"desktop","Malaysia",2,0.000
 "desktop","Taiwan",2,0.500
-"mobile","Indonesia",2,1.000
+"desktop","Thailand",2,0.000
 "mobile","Singapore",2,0.000
+"desktop","Argentina",1,0.000
 "desktop","Bangladesh",1,0.000
+"desktop","Cambodia",1,0.000
+"desktop","Costa Rica",1,0.000
 "desktop","Ecuador",1,0.000
-"desktop","Germany",1,1.000
-"desktop","Malaysia",1,0.000
+"desktop","Georgia",1,0.000
 "desktop","Mexico",1,0.000
+"desktop","Mongolia",1,0.000
 "desktop","Myanmar (Burma)",1,1.000
 "desktop","Qatar",1,0.000
+"desktop","Russia",1,0.000
 "desktop","Saudi Arabia",1,1.000
-"desktop","Thailand",1,0.000
+"desktop","Spain",1,0.000
 "mobile","Albania",1,0.000
-"mobile","Cambodia",1,0.000
-"mobile","Costa Rica",1,0.000
-"mobile","Guam",1,0.000
-"mobile","Malaysia",1,0.000
-"mobile","Morocco",1,1.000
-"mobile","Qatar",1,0.000
-"mobile","South Africa",1,0.000
-"mobile","Taiwan",1,0.000
-"mobile","United Arab Emirates",1,0.000

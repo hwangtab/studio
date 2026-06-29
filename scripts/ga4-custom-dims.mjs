@@ -14,6 +14,8 @@ const parent = `properties/${process.env.GA4_PROPERTY_ID}`;
 const WANT = [
   { parameterName: 'field', displayName: 'field', scope: 'EVENT' },
   { parameterName: 'error_code', displayName: 'error_code', scope: 'EVENT' },
+  { parameterName: 'error_type', displayName: 'error_type', scope: 'EVENT' },
+  { parameterName: 'status_code', displayName: 'status_code', scope: 'EVENT' },
 ];
 
 async function list() {

@@ -35,9 +35,12 @@ export default async function handler(req: NextRequest) {
     });
   }
 
+  // x-vercel-forwarded-for는 Vercel 프록시가 설정해 클라이언트가 위조할 수 없다.
+  // 클라이언트가 임의로 붙일 수 있는 x-forwarded-for보다 우선해 rate-limit 키 스푸핑을 줄인다.
   const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    req.headers.get('x-vercel-forwarded-for')?.split(',')[0]?.trim() ||
     req.headers.get('x-real-ip') ||
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     'unknown';
   const allowed = await checkOgRateLimit(ip);
   if (!allowed) {

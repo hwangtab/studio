@@ -10,6 +10,10 @@ const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 const GENERATE_AVIF = false; // true로 변경시 AVIF 생성
 
 const imageMetadata = {};
+// 변환 실패 누적 — captureMetadata는 변환 전에 원본을 imageMetadata에 기록하므로,
+// WebP/AVIF 변환이 조용히 실패하면 메타데이터엔 있으나 .webp 파일이 없어 런타임 404가
+// 발생한다. 실패를 모아 빌드 끝에 명확히 비정상 종료시켜 CI에서 잡는다.
+const conversionFailures = [];
 
 const toPublicPath = (filePath) => {
     const relativePath = path.relative(IMAGES_DIR, filePath).split(path.sep).join('/');
@@ -70,6 +74,7 @@ async function optimizeImages(directory) {
                         .toFile(webpPath);
                 } catch (err) {
                     console.error(`Error converting ${file} to WebP:`, err);
+                    conversionFailures.push(`${toPublicPath(filePath)} → WebP: ${err.message}`);
                 }
             }
 
@@ -84,6 +89,7 @@ async function optimizeImages(directory) {
                             .toFile(avifPath);
                     } catch (err) {
                         console.error(`Error converting ${file} to AVIF:`, err);
+                        conversionFailures.push(`${toPublicPath(filePath)} → AVIF: ${err.message}`);
                     }
                 }
             }
@@ -97,6 +103,12 @@ optimizeImages(IMAGES_DIR)
         console.log('Image optimization complete!');
         console.log('Image metadata written to utils/imageMetadata.json');
         console.log(`Processed ${Object.keys(imageMetadata).length} images.`);
+
+        if (conversionFailures.length > 0) {
+            console.error(`\n${conversionFailures.length} image conversion(s) failed — these would 404 at runtime:`);
+            for (const failure of conversionFailures) console.error(`  - ${failure}`);
+            process.exit(1);
+        }
     })
     .catch((err) => {
         console.error('Image optimization failed:', err);

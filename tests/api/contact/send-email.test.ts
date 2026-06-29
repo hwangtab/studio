@@ -73,7 +73,8 @@ const mockFetchForRedisAndResend = (options: { redisCount?: number; redisOk?: bo
         ok: true,
         status: 200,
         text: async () => '',
-        json: async () => ({ result: url.includes('/incr/') ? redisCount : 1 }),
+        // 파이프라인 응답: [INCR 결과, EXPIRE NX 결과].
+        json: async () => [{ result: redisCount }, { result: 1 }],
       } as unknown as Response;
     }
 
@@ -125,16 +126,22 @@ describe('contact send-email api', () => {
     expect(getStatus()).toBe(200);
     expect(getBody().success).toBe(true);
 
-    const fetchCalls = (global.fetch as jest.Mock).mock.calls.map(([input]) => String(input));
-    const incrUrl = fetchCalls.find((url) => url.startsWith('https://mock-kv.local/incr/'));
-    const expireUrl = fetchCalls.find((url) => url.startsWith('https://mock-kv.local/expire/'));
-    expect(incrUrl).toBeDefined();
-    expect(expireUrl).toBeDefined();
+    const pipelineCall = (global.fetch as jest.Mock).mock.calls.find(([input]) =>
+      String(input).startsWith('https://mock-kv.local/pipeline')
+    );
+    expect(pipelineCall).toBeDefined();
 
-    const rateLimitKey = decodeURIComponent(String(incrUrl).replace('https://mock-kv.local/incr/', ''));
+    const commands = JSON.parse(pipelineCall![1].body as string) as string[][];
+    const [incrCmd, expireCmd] = commands;
+    expect(incrCmd[0]).toBe('INCR');
+    expect(expireCmd[0]).toBe('EXPIRE');
+
+    const rateLimitKey = incrCmd[1];
     expect(rateLimitKey).toMatch(/^rate_limit_contact:fp:[a-f0-9]{24}$/);
     expect(rateLimitKey).not.toContain('unknown');
-    expect(decodeURIComponent(String(expireUrl))).toContain(`${rateLimitKey}/120`);
+    expect(expireCmd[1]).toBe(rateLimitKey);
+    expect(expireCmd[2]).toBe('120');
+    expect(expireCmd[3]).toBe('NX');
   });
 
   it('accepts English names with periods and commas (Dr. Smith, Smith Jr.)', async () => {
@@ -203,6 +210,19 @@ describe('contact send-email api', () => {
     expect(getBody().message).toBe('Service temporarily unavailable. Please try again later.');
     expect(global.fetch).toHaveBeenCalledTimes(1);
     errorSpy.mockRestore();
+  });
+
+  it('returns 429 before email delivery when the rate limit is exceeded', async () => {
+    mockFetchForRedisAndResend({ redisCount: 6 });
+    const req = createRequest();
+    const { res, getStatus, getBody } = createResponse();
+
+    await handler(req, res);
+
+    expect(getStatus()).toBe(429);
+    expect(getBody().message).toBe('Too many requests. Please try again later.');
+    const fetchCalls = (global.fetch as jest.Mock).mock.calls.map(([input]) => String(input));
+    expect(fetchCalls.some((url) => url.startsWith('https://api.resend.com/'))).toBe(false);
   });
 
   it('falls back to in-memory rate limiting when Redis REST is not configured', async () => {

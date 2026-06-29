@@ -76,8 +76,10 @@ async function sendCronEmail(subject: string, bodyText: string): Promise<{ ok: b
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+  // Vercel Cron은 GET으로 호출(Authorization: Bearer ${CRON_SECRET} 헤더 첨부).
+  // POST는 수동 트리거(curl 등)용으로 함께 허용한다.
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    res.setHeader('Allow', 'GET, POST');
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
   if (!isAuthorized(req)) {
@@ -147,10 +149,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ...(reportPreview ? { reportPreview } : {}),
     });
   } catch (err) {
+    // 내부 예외 상세(OAuth/Blob/GSC 오류 메시지)는 서버 로그에만 남기고
+    // 응답 본문에는 일반 메시지만 반환한다(운영 인프라 정보 노출 방지).
     console.error('[cron/gsc-audit] failed:', err);
     return res.status(500).json({
       ok: false,
-      error: err instanceof Error ? err.message : String(err),
+      error: 'Internal server error',
       durationMs: Date.now() - startedAt,
     });
   }

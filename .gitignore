@@ -46,3 +46,9 @@ lib/story-catalog.json
 
 # git worktrees (design renewal etc.)
 .worktrees/
+
+# codebase-memory-mcp (로컬 절대경로 — 환경별로 다름)
+.mcp.json
+
+# 스킬 작업 스크래치(humanize·newsart 산출물)
+_workspace/

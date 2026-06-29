@@ -10,8 +10,12 @@
  * 진입시키고, 본문 Variable은 font-display:swap으로 fallback paint 후 lazy 도착.
  *
  * 산출물(lib/fonts/pretendard-hero.woff2)은 commit. hero 텍스트가 바뀌면 이 스크립트
- * 재실행 후 결과 woff2도 함께 commit. prebuild에 자동 통합하지 않은 이유: jsdelivr/
- * GitHub에서 source ttf를 받는 외부 네트워크 의존성이 매 CI 빌드를 깨뜨릴 위험.
+ * 재실행 후 결과 woff2도 함께 commit.
+ *
+ * prebuild에 통합돼 있다(package.json). jsdelivr/GitHub에서 source ttf를 받는 외부
+ * 네트워크 의존성이 CI를 깨뜨리지 않도록, fetch 실패 시 이미 커밋된 woff2를 그대로
+ * 쓰고 빌드를 계속한다(main()의 fallback 참고). 따라서 hero 텍스트 변경분은 반드시
+ * 로컬에서 수동 재실행해 갱신된 woff2를 commit해야 빌드에 반영된다.
  *
  * 사용: node scripts/generate-hero-font.mjs
  */
@@ -124,7 +128,22 @@ async function main() {
   const subsetText = [...chars].join('');
   console.log(`hero char set: ${chars.size} glyphs`);
 
-  const src = await ensureSourceFont();
+  let src;
+  try {
+    src = await ensureSourceFont();
+  } catch (err) {
+    // prebuild 체인에서 실행되므로 jsdelivr 장애·rate limit·타임아웃이 빌드 전체를
+    // 깨뜨리면 안 된다. 산출물(woff2)은 commit돼 있으므로, source font를 못 받으면
+    // 이미 커밋된 woff2를 그대로 사용하고 빌드를 계속한다. (hero 텍스트가 바뀐 경우엔
+    // 로컬에서 이 스크립트를 수동 재실행해 갱신된 woff2를 commit해야 한다.)
+    if (fs.existsSync(OUT_WOFF2)) {
+      console.warn(`generate-hero-font: source font unavailable (${err.message}); ` +
+        `keeping committed ${path.relative(ROOT, OUT_WOFF2)} and continuing build.`);
+      return;
+    }
+    throw err;
+  }
+
   const out = await subsetFont(src, subsetText, { targetFormat: 'woff2' });
 
   fs.mkdirSync(path.dirname(OUT_WOFF2), { recursive: true });

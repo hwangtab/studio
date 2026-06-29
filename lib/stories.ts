@@ -254,6 +254,9 @@ const getAllStorySlugs = (): string[] => {
 const normalizeDate = (value: string | Date | undefined): string => {
   const date = value ? new Date(value) : new Date();
   if (Number.isNaN(date.getTime())) {
+    // 잘못된 frontmatter date('미정'·오타 등)는 조용히 오늘로 대체하면 매 빌드마다
+    // datePublished가 바뀌고 정렬이 오염되므로, 추적할 수 있게 경고를 남긴다.
+    console.warn(`[stories] invalid date value, falling back to today: ${String(value)}`);
     return new Date().toISOString();
   }
   return date.toISOString();
@@ -412,7 +415,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
   let contentToProcess = contentWithoutAutoExpand;
 
   if (baseStory.thumbnailDerived && baseStory.thumbnail) {
-    const imageRegex = /!.*\]\(([^)]+)\)/;
+    const imageRegex = /!\[.*?\]\(([^)]+)\)/;
     const match = contentToProcess.match(imageRegex);
     if (match && match[1] === baseStory.thumbnail) {
       contentToProcess = contentToProcess.replace(match[0], '');
