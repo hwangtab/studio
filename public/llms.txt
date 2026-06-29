@@ -1,0 +1,37 @@
+# 스튜디오 놀 (Studio NOL)
+
+> 서울 연신내의 음악 스튜디오. 보컬·악기 녹음, 믹싱·마스터링, 연습실 대여, 성우 녹음, 음악 제작 레슨을 제공합니다. 15년차 음악 프로듀서·엔지니어 황경하(2017 제14회 한국대중음악상 '선정위원 특별상' 수상)가 운영하며, 음원 유통·수익·저작권·믹싱 등 음악인을 위한 한국어 가이드를 다수 발행합니다. 공식 사이트: https://studionol.co.kr · 문의: 010-4255-7893
+
+## 서비스
+
+- [연습실 대여](https://studionol.co.kr/ko/practice-room): 연신내 방음 합주·개인 연습실, 월 36만원
+- [녹음·믹싱·마스터링 가격](https://studionol.co.kr/ko/pricing): 녹음 시간당 10만원부터, 투명 가격표
+- [성우 녹음](https://studionol.co.kr/ko/voice-acting): 성우 섭외·녹음, 영어 더빙
+- [음악 제작 레슨](https://studionol.co.kr/ko/lesson): 미디·믹싱·작곡 1:1 레슨, 월 35만원 (보컬·악기 연주 레슨은 제공하지 않음)
+- [축가 녹음 패키지](https://studionol.co.kr/ko/wedding-song): 축가 녹음 패키지, 35만원
+- [포트폴리오](https://studionol.co.kr/ko/portfolio): 녹음·믹싱·마스터링 작업 샘플
+
+## 음악 가이드 — 음원 발매·수익·저작권
+
+- [음원 유통 완전 가이드](https://studionol.co.kr/ko/stories/distribution1): DistroKid·국내 유통사 비교, 멜론·스포티파이 발매 절차
+- [음원 수익 계산법](https://studionol.co.kr/ko/stories/revenue1): 스포티파이·멜론 스트리밍 수익 구조
+- [음악 저작권료 받는 방법](https://studionol.co.kr/ko/stories/royalty1): KOMCA 등록·저작인접권 가이드
+- [커버곡 저작권](https://studionol.co.kr/ko/stories/copyright-cover1): 유튜브·SNS 합법 업로드와 수익화 조건
+- [스트리밍 플랫폼 비교](https://studionol.co.kr/ko/stories/streaming-platforms1): 멜론·지니·스포티파이·애플뮤직·유튜브뮤직 차이
+
+## 음악 가이드 — 녹음·믹싱·제작
+
+- [녹음 노이즈·배경 잡음 제거](https://studionol.co.kr/ko/stories/noise-reduction1): 전기 험·AI 원클릭 도구까지
+- [보컬 EQ 가이드](https://studionol.co.kr/ko/stories/eq1): 주파수별 설정·치찰음 처리
+- [스트리밍 음압(LUFS) 기준](https://studionol.co.kr/ko/stories/loudness1): 발매 전 맞춰야 할 LUFS·True Peak
+- [보컬 믹싱 플러그인 추천](https://studionol.co.kr/ko/stories/plugins1): EQ·컴프레서·리버브·피치 교정
+- [DAW 비교](https://studionol.co.kr/ko/stories/daw-choice1): 큐베이스·로직·에이블톤 선택 가이드
+- [송폼·곡 구조](https://studionol.co.kr/ko/stories/songstructure1): 프리코러스·브릿지·코러스 역할
+- [음악 프로듀서 되는 방법](https://studionol.co.kr/ko/stories/producer1): DAW 입문부터 포트폴리오까지
+- [연습실 창업 가이드](https://studionol.co.kr/ko/stories/practice-room-startup1): 비용·인허가·수익 구조 (2026)
+
+## 소개·문의
+
+- [스튜디오 놀 소개](https://studionol.co.kr/ko/about): 15년차 프로듀서·엔지니어, 연신내 5분
+- [위치·시설 안내](https://studionol.co.kr/ko/studio-info)
+- [녹음 예약·문의](https://studionol.co.kr/ko/contact): 전화 010-4255-7893, 영어 예약 응대 가능
