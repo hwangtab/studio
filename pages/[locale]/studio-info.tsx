@@ -7,7 +7,7 @@ import { Mic, SlidersHorizontal, Headphones, Guitar, Piano, Music, Laptop, Build
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
-import BaseCard from '../../components/ui/BaseCard';
+import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero from '../../components/common/ImageHero';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
@@ -22,7 +22,7 @@ import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
 import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getSchemaLanguage } from '../../utils/schemaGenerator';
+import { getSchemaLanguage } from '../../utils/schema';
 import { createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -221,24 +221,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         </m.div >
       </Section>
 
-      {/* Locale-specific content block (non-KO hubs only) */}
-      {hubLocaleContent && (
-        <Section variant="alternate">
-          <SectionHeading
-            icon={Headphones}
-            title={hubLocaleContent.title}
-            className="mb-8"
-          />
-          <div className="max-w-4xl mx-auto space-y-6">
-            {hubLocaleContent.items.map((item) => (
-              <BaseCard key={item.heading} variant="default" className="p-6">
-                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-              </BaseCard>
-            ))}
-          </div>
-        </Section>
-      )}
+      <HubLocaleContentSection content={hubLocaleContent} icon={Headphones} />
 
       <ReviewSection variant="alternate" locale={locale} />
 

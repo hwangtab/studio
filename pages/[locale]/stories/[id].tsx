@@ -10,7 +10,6 @@ import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
 import StoryCard from '../../../components/StoryCard';
 import ImageHero from '../../../components/common/ImageHero';
-import type { CTAType } from '../../../components/StoryCTA';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 
 // StoryCTA / ContactCTA는 article 본문 아래 below-fold 영역 → 코드 스플리팅.
@@ -19,18 +18,23 @@ const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA')
 const RelatedPortfolioInline = dynamic(() => import('../../../components/ui/RelatedPortfolioInline'));
 const StickyBottomCTA = dynamic(() => import('../../../components/inline/StickyBottomCTA'), { ssr: false });
 import { shareContent } from '../../../utils/shareUtils';
-import { stripMarkdown } from '../../../utils/textUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import { getStoryRelatedPortfolio } from '../../../lib/storyRelatedPortfolio';
 import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
+import { resolveStoryCTAType } from '../../../lib/storyCtaPolicy';
+import {
+  buildStoryDynamicOgImage,
+  buildStoryExtraSchemas,
+  buildStoryMetaDescription,
+  getStoryWordCount,
+} from '../../../lib/storySeoData';
 import type { Story, StoryDetail } from '../../../types/story';
 import type { PortfolioItem } from '../../../types/data';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { generateFaqSchema, generateHowToSchema, generatePracticeRoomMonthlyRentSchema } from '../../../utils/schemaGenerator';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
@@ -51,61 +55,12 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
 
-  // 글 주제 → CTA 매칭. slug 키워드 우선·categoryKey 폴백 모두 deterministic.
-  // 기존 hash seed 균등 25% 분포가 주제 무관 CTA를 양산하던 문제(예: 작곡 글에
-  // recording CTA, 보컬 트레이닝 글에 production CTA)를 해소한다. 'equipment'는
-  // 정의된 categoryKey가 아니라 dead branch였다.
-  const getCTAType = (slug: string, categoryKey: string | undefined): CTAType => {
-    if (slug.startsWith('practice-room-')) return 'practice';
-
-    // slug 키워드 — 글의 실제 의도를 가장 잘 드러내는 신호. categoryKey보다 우선.
-    // 작곡·편곡·코드·MIDI·비트메이킹은 24시간 작업 환경(음악연습실 월세) 페어링.
-    // melody(?!ne): Melodyne(피치 보정 플러그인) 같은 mixing 도구는 제외.
-    // harmony는 단독으론 매치 안 함 — jazz-harmony는 production 카테고리 폴백으로,
-    // harmony1(녹음 가이드)·harmony-singing(보컬)은 각각 다른 의도라 폴백/lesson 매칭이 정확.
-    if (/(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody(?!ne)|topline)/i.test(slug)) {
-      return 'practice';
-    }
-    // 레슨·트레이닝·기초·발성 → 1:1 음악 레슨.
-    // 발성 키워드(belting/falsetto/vibrato/head-voice/chest-voice/mix-voice/mixed-voice/vocal-range)는
-    // 보컬 카테고리 폴백(recording) 보다 lesson 매칭이 의도에 더 부합. lesson이 production보다
-    // 앞에 있어야 'mix-voice' 같은 slug가 mixing CTA로 잘못 가지 않는다.
-    if (/(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read|belting|falsetto|vibrato|head-?voice|chest-?voice|mix-?voice|mixed-?voice|vocal-?range|harmony-?sing)/i.test(slug)) {
-      return 'lesson';
-    }
-    // 믹싱·마스터링·이펙트·EQ·컴프 → 외주 의뢰(production CTA → /contact).
-    // amp-sim은 녹음 가이드(amp-simulator1)에 위치하므로 recording 폴백이 더 정확 → 제외.
-    if (/(^|[-_])(mix|master(ing)?|eq[-_]|compress|reverb|delay|chorus-effect|de-?esser|sidechain|loudness|limiter|stereo-?imag|automation|bus-?comp|808-bass|ai-master|auto-?tune|autotune|clipper)/i.test(slug)) {
-      return 'production';
-    }
-    // 녹음·마이크·트래킹·데모 → 녹음 의뢰.
-    if (/(^|[-_])(record(ing)?|mic[-_]|demo-?tape|tracking|punch-?in|comping|studio-?record|takes)/i.test(slug)) {
-      return 'recording';
-    }
-
-    // categoryKey 폴백. 작곡·악기연습·지역 글은 음악연습실 월세가 핵심 페어링.
-    switch (categoryKey) {
-      case 'instrument':
-      case 'region':
-      case 'production':
-        return 'practice';
-      case 'lesson':
-        return 'lesson';
-      case 'mixing':
-      case 'business':
-        return 'production';
-      case 'recording':
-      case 'vocal':
-      case 'feedback':
-      case 'event':
-      default:
-        return 'recording';
-    }
-  };
-
-  // frontmatter cta가 있으면 작가 명시값을 우선. 자동 룰은 그 다음.
   const ctaType = React.useMemo(
-    () => story.cta ?? getCTAType(story.slug, story.categoryKey),
+    () => resolveStoryCTAType({
+      slug: story.slug,
+      categoryKey: story.categoryKey,
+      override: story.cta,
+    }),
     [story.cta, story.categoryKey, story.slug]
   );
 
@@ -124,69 +79,31 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
     [t]
   );
 
-  const faqSchema = React.useMemo(() => {
-    if (!story.faq || story.faq.length === 0) return null;
-    return generateFaqSchema(
-      story.faq.map((item) => ({ question: item.q, answer: item.a })),
-      locale
-    );
-  }, [story.faq, locale]);
+  const extraSchemas = React.useMemo(
+    () => buildStoryExtraSchemas({ story, locale, siteUrl: siteConfig.url }),
+    [story, locale, siteConfig.url]
+  );
 
-  // practice-room-* 스토리는 월세 36만원을 본문·FAQ에 일관되게 명시하므로
-  // Service+Offer 구조화 데이터로 가격을 노출해 SERP·AI 답변에서 직접 인용되도록 함.
-  const practiceRoomOfferSchema = React.useMemo(() => {
-    if (!story.slug.startsWith('practice-room-')) return null;
-    if (locale !== 'ko') return null;
-    const pageUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
-    return generatePracticeRoomMonthlyRentSchema(pageUrl, locale);
-  }, [story.slug, locale, siteConfig.url]);
-
-  // frontmatter `howTo`가 있는 글만 HowTo schema 발행 — 자동 추출은 false-positive
-  // 위험이 있어 명시적 opt-in 방식을 채택. step-by-step 가이드 글에서 AI Overviews /
-  // Google How-to rich result 후보가 되도록 한다.
-  const howToSchema = React.useMemo(() => {
-    if (!story.howTo || story.howTo.steps.length === 0) return null;
-    return generateHowToSchema(
-      story.howTo.name || story.title,
-      story.howTo.description || story.summary,
-      story.howTo.steps,
-      story.howTo.totalTime,
-      locale
-    );
-  }, [story.howTo, story.title, story.summary, locale]);
-
-  const extraSchemas = React.useMemo(() => {
-    const items: Record<string, unknown>[] = [];
-    if (faqSchema) items.push(faqSchema as Record<string, unknown>);
-    if (howToSchema) items.push(howToSchema as Record<string, unknown>);
-    if (practiceRoomOfferSchema) items.push(practiceRoomOfferSchema as Record<string, unknown>);
-    return items.length > 0 ? items : undefined;
-  }, [faqSchema, howToSchema, practiceRoomOfferSchema]);
-
-  const wordCount = React.useMemo(() => {
-    if (!story.content) return undefined;
-    const plainText = stripMarkdown(story.content);
-    // CJK·Thai 등 어절 단위 공백이 없는 언어는 split(/\s+/) 결과가 어절 수에
-    // 가까워 영어 대비 systematically 과소 보고된다. 비공백 글자 수로 환산해
-    // Schema.org wordCount의 실질 정보량을 영문 텍스트와 같은 자릿수로 맞춘다.
-    if (locale === 'ko' || locale === 'zh' || locale === 'th') {
-      return plainText.replace(/\s+/g, '').length;
-    }
-    return plainText.split(/\s+/).filter(Boolean).length;
-  }, [story.content, locale]);
+  const wordCount = React.useMemo(
+    () => getStoryWordCount(story.content, locale),
+    [story.content, locale]
+  );
 
   if (router.isFallback) {
     return <LoadingSpinner locale={locale} />;
   }
 
   const getLink = (path: string) => `/${locale}${path}`;
-  const metaDescription = stripMarkdown(story.content || '').substring(0, 160);
+  const metaDescription = buildStoryMetaDescription(story.content);
 
   // 카카오톡 등 소셜 스크레이퍼는 WebP og:image를 지원하지 않으므로
   // story.thumbnail(WebP)과 무관하게 항상 PNG를 반환하는 동적 OG 엔드포인트를 사용.
-  const dynamicOgImage = `/api/og/story?title=${encodeURIComponent(story.title)}&category=${encodeURIComponent(story.category || '')}&date=${encodeURIComponent(story.date || '')}&locale=${locale}`;
-  const ogImage = dynamicOgImage;
-  const isDynamicOg = true;
+  const ogImage = buildStoryDynamicOgImage({
+    title: story.title,
+    category: story.category,
+    date: story.date,
+    locale,
+  });
 
   const shareStory = async () => {
     const shareUrl = `${siteConfig.url}/${locale}/stories/${story.slug}`;
@@ -215,8 +132,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         availableLocales={story.availableLocales}
         ogImage={ogImage}
         ogImageAlt={story.thumbnail ? story.title : `${story.title} - ${siteConfig.name}`}
-        ogImageWidth={isDynamicOg ? 1200 : undefined}
-        ogImageHeight={isDynamicOg ? 630 : undefined}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         ogType="article"
         author={story.author || undefined}
         robots={story.robots || ((story.isFallbackTranslation || story.isThinContent) ? 'noindex, follow' : undefined)}

@@ -1,13 +1,12 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import Link from 'next/link';
-import { m } from 'framer-motion';
-import { MapPin, Phone, Mail, User, Send, CheckCircle, MessageCircle, ArrowRight } from '@/lib/lucide-icons';
+import { CheckCircle, ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import EnglishFastContactActions from '../../components/contact/EnglishFastContactActions';
-import KoreanFastContactActions from '../../components/contact/KoreanFastContactActions';
+import ContactFormCard from '../../components/contact/ContactFormCard';
+import ContactInfoCard from '../../components/contact/ContactInfoCard';
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -17,53 +16,11 @@ import { NextPageWithLayout } from '../../types';
 
 import { getValidationFallbacks } from '../../utils/contactMessages';
 import { useContactForm } from '../../utils/useContactForm';
-import { trackLeadEvent } from '../../utils/analytics';
 import { createEnterAnimation, createInViewEnterAnimation } from '../../utils/animationUtils';
 
 interface ContactProps {
   locale: Locale;
 }
-
-// Google Maps `hl` 파라미터는 BCP-47 호환 코드를 기대한다. 사이트 i18n 코드는
-// short form(zh, vi, th 등)이라 1:1 매핑이 필요하다. 우즈베크어는 Google Maps가
-// 공식 지원하지 않아 영어로 폴백 — 우리 콘텐츠 zh도 simplified 한 종류만 다루므로
-// zh-TW 사용자에게도 zh-CN을 보낸다.
-const GOOGLE_MAPS_HL: Record<Locale, string> = {
-  ko: 'ko',
-  en: 'en',
-  zh: 'zh-CN',
-  es: 'es',
-  vi: 'vi',
-  th: 'th',
-  uz: 'en',
-};
-
-interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  icon: React.ElementType;
-  label: string;
-  id: string;
-  error?: string;
-}
-
-const InputField = ({ icon: Icon, label, id, error, ...props }: InputFieldProps) => (
-  <div className="relative mb-4">
-    <label htmlFor={id} className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{label}</label>
-    <div className="relative">
-      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
-      </div>
-      <input
-        id={id}
-        aria-required={props.required}
-        aria-invalid={!!error}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className={`w-full pl-10 pr-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent`}
-        {...props}
-      />
-    </div>
-    {error && <span id={`${id}-error`} role="alert" className="text-xs text-red-600 mt-1 pl-10 block">{error}</span>}
-  </div>
-);
 
 const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -94,7 +51,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const infoCardMotionProps = createEnterAnimation({ axis: 'x', distance: -50, duration: 0.5 });
   const directionsMotionProps = createInViewEnterAnimation({ duration: 0.5, delay: 0.4 });
   const formCardMotionProps = createEnterAnimation({ axis: 'x', distance: 50, duration: 0.5, delay: 0.2 });
-  const interactiveMotionProps = { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } };
   const noticeList = t('contact.notice.list', { returnObjects: true });
   const resolvedNoticeList = Array.isArray(noticeList) ? noticeList : null;
 
@@ -168,373 +124,34 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
       <Section variant="default">
         <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
-          <m.div
-            {...infoCardMotionProps}
-            className="card p-8 shadow-xl order-2 lg:order-1"
-          >
-            <div>
-              <h2 className="typo-card-title mb-4">{t('contact.info.title')}</h2>
-              <div className="space-y-4">
-                <a href={siteConfig.contact.naverMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation">
-                  <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
-                  <span className="leading-relaxed">{siteConfig.contact.address}</span>
-                </a>
-                <a
-                  href={`tel:${siteConfig.contact.phone}`}
-                  onClick={() =>
-                    trackLeadEvent('lead_click_phone', {
-                      locale,
-                      component: 'ContactPage',
-                      cta_id: 'contact_info_phone',
-                    })
-                  }
-                  className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
-                >
-                  <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
-                  <span className="leading-relaxed">{siteConfig.contact.phone}</span>
-                </a>
-                <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation">
-                  <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
-                  <span className="leading-relaxed">{siteConfig.contact.email}</span>
-                </a>
-                <a
-                  href={siteConfig.contact.kakaoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() =>
-                    trackLeadEvent('lead_click_kakao', {
-                      locale,
-                      component: 'ContactPage',
-                      cta_id: 'contact_info_kakao',
-                    })
-                  }
-                  className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
-                  <span className="leading-relaxed">{t('actions.kakao')}</span>
-                </a>
-              </div>
-              <div className="mt-6">
-                <h3 className="typo-card-title mb-4">{t('contact.info.location')}</h3>
-                <div className="mb-6">
-                  <iframe
-                    src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1s${GOOGLE_MAPS_HL[locale]}!2skr!4v1704364800000!5m2!1s${GOOGLE_MAPS_HL[locale]}!2skr&hl=${GOOGLE_MAPS_HL[locale]}`}
-                    width="100%"
-                    height="250"
-                    style={{ border: 0, borderRadius: '0.5rem' }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={t('contact.info.location')}
-                  ></iframe>
-                </div>
+          <ContactInfoCard
+            locale={locale}
+            siteConfig={siteConfig}
+            t={t}
+            motionProps={infoCardMotionProps}
+            directionsMotionProps={directionsMotionProps}
+          />
 
-                {/* 오시는 길 설명 (GEO 최적화) */}
-                <m.div
-                  {...directionsMotionProps}
-                  className="mt-12 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700"
-                >
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-primary" />
-                    {t('contact.directions.title')}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                    {t('contact.directions.description')}
-                  </p>
-                </m.div>
-              </div>
-
-              {/* 지도 */}
-              <div className="mt-8">
-                <h3 className="typo-card-title mb-4">{t('contact.info.hours')}</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.weekdaysLabel')}</span>
-                    <span className="dark:text-gray-300">{t('contact.hours.weekdaysTime')}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.satLabel')}</span>
-                    <span className="dark:text-gray-300">{t('contact.hours.satTime')}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.sunLabel')}</span>
-                    <span className="dark:text-gray-300">{t('contact.hours.sunTime')}</span>
-                  </div>
-                </div>
-                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                  <p className="typo-card-body text-blue-800 dark:text-blue-300">
-                    <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.parking')}:</span> {t('contact.info.parkingDetail')}
-                  </p>
-                  <p className="typo-card-body text-blue-800 dark:text-blue-300 mt-1">
-                    <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.transport')}:</span> {t('contact.info.transportDetail')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </m.div>
-
-          {/* Contact Form */}
-          <m.div
-            {...formCardMotionProps}
-            className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
-          >
-            <div>
-              <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>
-              {locale === 'ko' && (
-                <KoreanFastContactActions
-                  locale={locale}
-                  naverMapUrl={siteConfig.contact.naverMapUrl}
-                  kakaoUrl={siteConfig.contact.kakaoUrl}
-                  phone={siteConfig.contact.phone}
-                />
-              )}
-              {locale === 'en' && (
-                <EnglishFastContactActions
-                  locale={locale}
-                  kakaoUrl={siteConfig.contact.kakaoUrl}
-                  email={siteConfig.contact.email}
-                  phone={siteConfig.contact.phone}
-                />
-              )}
-              {submitMessage && (
-                <div
-                  role="status"
-                  aria-live="polite"
-                  aria-atomic="true"
-                  className={`mb-4 p-4 rounded-md flex items-center ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
-                >
-                  {isSubmitSuccess && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
-                  {submitMessage}
-                </div>
-              )}
-              {canRetrySubmit && !isSubmitting && (
-                <button
-                  type="button"
-                  onClick={handleRetrySubmit}
-                  className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
-                >
-                  {retryLabel}
-                </button>
-              )}
-              {/* 제출 실패 시 직접 연결 안전망 — 폼 전송이 실패해도 리드를 잃지 않도록
-                  카카오톡/직접 이메일 폴백 노출. 특히 카톡 없는 해외 리드에 mailto가 핵심. */}
-              {submitMessage && !isSubmitSuccess && (
-                <div className="mb-6 rounded-md border border-yellow-300 bg-yellow-50 p-4 dark:border-yellow-500/30 dark:bg-yellow-500/10">
-                  <p className="mb-3 text-sm font-medium text-gray-800 dark:text-gray-100">
-                    {t('contact.form.failFallback', { defaultValue: '전송이 안 되면 아래로 바로 연락 주세요.' })}
-                  </p>
-                  <div className="flex flex-col gap-2 sm:flex-row">
-                    <a
-                      href={siteConfig.contact.kakaoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() =>
-                        trackLeadEvent('lead_click_kakao', {
-                          locale,
-                          component: 'ContactFormErrorFallback',
-                          cta_id: 'contact_form_error_kakao',
-                        })
-                      }
-                      className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-md bg-yellow-400 px-4 py-2 text-sm font-semibold text-gray-950 transition-colors hover:bg-yellow-500 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
-                    >
-                      <MessageCircle size={18} aria-hidden="true" />
-                      {t('actions.kakao')}
-                    </a>
-                    <a
-                      href={`tel:${siteConfig.contact.phone}`}
-                      onClick={() =>
-                        trackLeadEvent('lead_click_phone', {
-                          locale,
-                          component: 'ContactFormErrorFallback',
-                          cta_id: 'contact_form_error_phone',
-                        })
-                      }
-                      className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <Phone size={18} aria-hidden="true" />
-                      {siteConfig.contact.phone}
-                    </a>
-                    <a
-                      href={`mailto:${siteConfig.contact.email}`}
-                      onClick={() =>
-                        trackLeadEvent('lead_click_email', {
-                          locale,
-                          component: 'ContactFormErrorFallback',
-                          cta_id: 'contact_form_error_email',
-                        })
-                      }
-                      className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                    >
-                      <Mail size={18} aria-hidden="true" />
-                      {siteConfig.contact.email}
-                    </a>
-                  </div>
-                </div>
-              )}
-              {errorCount > 1 && (
-                <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
-                  <p className="text-sm font-medium text-red-800 dark:text-red-300">
-                    {t('contact.form.errorsFound', {
-                      count: errorCount,
-                      defaultValue: validationCopy.errorsFound,
-                    })}
-                  </p>
-                </div>
-              )}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Honeypot field */}
-                <input
-                  type="text"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  className="hidden"
-                  autoComplete="off"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                />
-
-                <InputField
-                  icon={User}
-                  id="name"
-                  label={t('contact.form.name')}
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={errors.name}
-                  placeholder={t('contact.form.namePlaceholder')}
-                  required
-                  autoComplete="name"
-                />
-
-                <InputField
-                  icon={Phone}
-                  id="phone"
-                  label={t('contact.form.phone')}
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={errors.phone}
-                  placeholder={t('contact.form.phonePlaceholder')}
-                  autoComplete="tel"
-                  inputMode="tel"
-                />
-
-                <InputField
-                  icon={Mail}
-                  id="email"
-                  label={t('contact.form.email')}
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={errors.email}
-                  placeholder={t('contact.form.emailPlaceholder')}
-                  required
-                  autoComplete="email"
-                  inputMode="email"
-                  spellCheck={false}
-                />
-
-                <div className="relative mb-6">
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{t('contact.form.message')}</label>
-                  <div className="relative">
-                    <div className="absolute top-3 left-3 pointer-events-none">
-                      <Send className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
-                    </div>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      aria-required="true"
-                      aria-invalid={!!errors.message}
-                      aria-describedby={errors.message ? "message-error" : undefined}
-                      placeholder={t('contact.form.messagePlaceholder')}
-                      className={`w-full pl-10 pr-3 py-2 border ${errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent`}
-                      rows={8}
-                      required
-                      autoComplete="on"
-                    ></textarea>
-                  </div>
-                  {errors.message && (
-                    <span id="message-error" role="alert" className="text-xs text-red-600 mt-1 pl-10 block">
-                      {errors.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <m.button
-                    {...interactiveMotionProps}
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 font-title disabled:opacity-50 touch-manipulation"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        {t('contact.form.loading')}
-                      </>
-                    ) : (
-                      <>
-                        <Send className="mr-2" size={18} aria-hidden="true" />
-                        {t('contact.form.submit')}
-                      </>
-                    )}
-                  </m.button>
-
-                  <m.a
-                    {...interactiveMotionProps}
-                    href={siteConfig.contact.kakaoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() =>
-                      trackLeadEvent('lead_click_kakao', {
-                        locale,
-                        component: 'ContactPage',
-                        cta_id: 'contact_form_kakao',
-                      })
-                    }
-                    className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-gray-900 dark:text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 font-title touch-manipulation"
-                  >
-                    <MessageCircle className="mr-2" size={18} aria-hidden="true" />
-                    {t('contact.form.kakao')}
-                  </m.a>
-                </div>
-              </form>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                <h3 className="typo-card-subtitle text-blue-800 dark:text-blue-300 mb-2">{t('contact.notice.title')}</h3>
-                <ul className="typo-card-body text-blue-700 dark:text-blue-400 space-y-1">
-                  {resolvedNoticeList?.map((item, i) => (
-                    <li key={`${item}-${i}`}>{item}</li>
-                  ))}
-                  {!resolvedNoticeList && (
-                    <li>{t('contact.checkNotices')}</li>
-                  )}
-                </ul>
-              </div>
-
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <h3 className="typo-card-subtitle text-gray-800 dark:text-gray-300 mb-2">{t('contact.notice.privacyTitle')}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-400">
-                  {t('contact.notice.privacyText')}
-                </p>
-              </div>
-            </div>
-          </m.div>
+          <ContactFormCard
+            locale={locale}
+            siteConfig={siteConfig}
+            t={t}
+            validationCopy={validationCopy}
+            formData={formData}
+            errors={errors}
+            submitMessage={submitMessage}
+            isSubmitSuccess={isSubmitSuccess}
+            isSubmitting={isSubmitting}
+            canRetrySubmit={canRetrySubmit}
+            retryLabel={retryLabel}
+            errorCount={errorCount}
+            noticeItems={resolvedNoticeList}
+            motionProps={formCardMotionProps}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onSubmit={handleSubmit}
+            onRetrySubmit={handleRetrySubmit}
+          />
         </div>
       </Section>
 

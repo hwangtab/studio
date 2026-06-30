@@ -3,7 +3,6 @@ import type { Locale } from '../lib/i18n';
 import {
   getContactValidationMessage,
   getSubmitErrorMessages,
-  type ContactSubmitErrorMessages,
 } from './contactMessages';
 import {
   getFirstContactValidationError,
@@ -13,6 +12,11 @@ import {
   type ContactField,
   type ContactValidationCode,
 } from './contactValidation';
+import {
+  getSubmitStatusRule,
+  isContactField,
+  parseContactResponseBody,
+} from './contactSubmitPolicy';
 import { trackLeadEvent, type LeadEventName } from './analytics';
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
@@ -22,13 +26,6 @@ interface ContactAttribution {
   utm_medium?: string;
   utm_campaign?: string;
   referrer?: string;
-}
-
-interface ContactResponseBody {
-  success?: boolean;
-  message?: string;
-  field?: string;
-  code?: string;
 }
 
 export interface ContactFormData {
@@ -74,27 +71,6 @@ const EMPTY_ERRORS: ContactErrors = {
   email: '',
   phone: '',
   message: '',
-};
-
-const SUBMIT_STATUS_RULES: Partial<Record<number, { messageKey: keyof ContactSubmitErrorMessages; canRetry: boolean }>> = {
-  400: { messageKey: 'invalidRequest', canRetry: false },
-  403: { messageKey: 'forbidden', canRetry: false },
-  415: { messageKey: 'invalidRequest', canRetry: false },
-  429: { messageKey: 'tooMany', canRetry: true },
-  502: { messageKey: 'unavailable', canRetry: true },
-  503: { messageKey: 'unavailable', canRetry: true },
-  504: { messageKey: 'timeout', canRetry: true },
-};
-
-const isContactField = (value: string): value is ContactField =>
-  value === 'name' || value === 'email' || value === 'phone' || value === 'message';
-
-const parseJsonSafe = async (response: Response): Promise<ContactResponseBody> => {
-  try {
-    return (await response.json()) as ContactResponseBody;
-  } catch {
-    return {};
-  }
 };
 
 export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactFormResult => {
@@ -237,7 +213,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           signal: controller.signal,
         });
 
-        const result = await parseJsonSafe(response);
+        const result = await parseContactResponseBody(response);
 
         if (response.ok && result.success) {
           setSubmitMessage(t('contact.form.success'));
@@ -270,7 +246,7 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           return;
         }
 
-        const statusRule = SUBMIT_STATUS_RULES[response.status];
+        const statusRule = getSubmitStatusRule(response.status);
         if (statusRule) {
           setSubmitMessage(submitErrorCopy[statusRule.messageKey]);
           setIsSubmitSuccess(false);

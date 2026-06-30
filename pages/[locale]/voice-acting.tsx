@@ -27,8 +27,10 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getPricingData } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
-import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
+import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
+import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import type { NextPageWithLayout } from '../../types';
 
 interface VoiceActingProps {
@@ -68,7 +70,6 @@ const PROCESS_ANIMATION = createFadeInAnimation({ delay: 0.2 });
 const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
-  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   const voiceoverPackage = React.useMemo(
     () => pricingData.specialPackages.find((p) => p.id === 'package-voiceover'),
@@ -76,82 +77,35 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
   );
 
   const quickAnswers = React.useMemo(
-    () => [
-      { question: t('voiceActing.quickAnswers.items.0.q'), answer: t('voiceActing.quickAnswers.items.0.a') },
-      { question: t('voiceActing.quickAnswers.items.1.q'), answer: t('voiceActing.quickAnswers.items.1.a') },
-      { question: t('voiceActing.quickAnswers.items.2.q'), answer: t('voiceActing.quickAnswers.items.2.a') },
-    ],
+    () => createTranslatedQaItems(t, 'voiceActing.quickAnswers.items', 3),
     [t]
   );
 
   const faqItems = React.useMemo(
-    () => [
-      { question: t('voiceActing.faq.items.0.q'), answer: t('voiceActing.faq.items.0.a') },
-      { question: t('voiceActing.faq.items.1.q'), answer: t('voiceActing.faq.items.1.a') },
-      { question: t('voiceActing.faq.items.2.q'), answer: t('voiceActing.faq.items.2.a') },
-      { question: t('voiceActing.faq.items.3.q'), answer: t('voiceActing.faq.items.3.a') },
-      { question: t('voiceActing.faq.items.4.q'), answer: t('voiceActing.faq.items.4.a') },
-      { question: t('voiceActing.faq.items.5.q'), answer: t('voiceActing.faq.items.5.a') },
-    ],
+    () => createTranslatedQaItems(t, 'voiceActing.faq.items', 6),
     [t]
   );
 
   const howToSteps = React.useMemo(
-    () => [
-      { name: t('voiceActing.process.steps.0.title'), text: t('voiceActing.process.steps.0.description') },
-      { name: t('voiceActing.process.steps.1.title'), text: t('voiceActing.process.steps.1.description') },
-      { name: t('voiceActing.process.steps.2.title'), text: t('voiceActing.process.steps.2.description') },
-      { name: t('voiceActing.process.steps.3.title'), text: t('voiceActing.process.steps.3.description') },
-    ],
+    () => createTranslatedHowToSteps(t, 'voiceActing.process.steps', 4),
     [t]
   );
 
   const pageUrl = `${siteConfig.url}/${locale}/voice-acting`;
 
   const serviceSchema = React.useMemo(
-    () => ({
-      '@type': 'Service',
+    () => buildStudioServiceSchema({
+      locale,
+      siteName: siteConfig.name,
+      siteUrl: siteConfig.url,
+      pageUrl,
       name: t('voiceActing.seo.title'),
       description: t('voiceActing.seo.description'),
-      inLanguage: schemaLanguage,
       serviceType: locale === 'ko' ? '성우 녹음' : 'Voice Acting & Narration Recording',
-      areaServed: {
-        '@type': 'City',
-        name: locale === 'ko' ? '서울특별시 은평구' : 'Eunpyeong-gu, Seoul',
-      },
-      location: {
-        '@type': 'Place',
-        name: siteConfig.name,
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
-          addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
-          postalCode: '03424',
-          addressCountry: 'KR',
-        },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: 37.614353,
-          longitude: 126.925887,
-        },
-      },
-      provider: {
-        '@type': 'Organization',
-        '@id': `${siteConfig.url}/#organization`,
-        name: siteConfig.name,
-        url: siteConfig.url,
-      },
-      url: pageUrl,
-      offers: {
-        '@type': 'Offer',
-        name: voiceoverPackage?.title ?? (locale === 'ko' ? '성우/나레이션 녹음' : 'Voiceover & Narration'),
-        priceCurrency: 'KRW',
-        price: 100000,
-        availability: 'https://schema.org/InStock',
-        url: `${siteConfig.url}/${locale}/pricing#special-packages`,
-      },
+      offerName: voiceoverPackage?.title ?? (locale === 'ko' ? '성우/나레이션 녹음' : 'Voiceover & Narration'),
+      offerPrice: 100000,
     }),
-    [t, siteConfig, locale, schemaLanguage, pageUrl, voiceoverPackage]
+    [t, siteConfig, locale, pageUrl, voiceoverPackage]
   );
 
   const howToSchema = React.useMemo(
@@ -167,10 +121,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
   );
 
   const pageSchema = React.useMemo(
-    () => ({
-      '@context': 'https://schema.org',
-      '@graph': [serviceSchema, howToSchema],
-    }),
+    () => buildSchemaGraph(serviceSchema, howToSchema),
     [serviceSchema, howToSchema]
   );
 

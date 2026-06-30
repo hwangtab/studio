@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
+import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting
@@ -20,7 +21,7 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { generateHowToSchema, generateServiceListSchema } from '../../utils/schemaGenerator';
+import { generateHowToSchema, generateServiceListSchema } from '../../utils/schema';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -115,24 +116,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
       />
 
 
-      {/* Locale-specific content block (non-KO hubs only) */}
-      {hubLocaleContent && (
-        <Section variant="alternate">
-          <SectionHeading
-            icon={Globe}
-            title={hubLocaleContent.title}
-            className="mb-8"
-          />
-          <div className="max-w-4xl mx-auto space-y-6">
-            {hubLocaleContent.items.map((item) => (
-              <BaseCard key={item.heading} variant="default" className="p-6">
-                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-              </BaseCard>
-            ))}
-          </div>
-        </Section>
-      )}
+      <HubLocaleContentSection content={hubLocaleContent} icon={Globe} />
 
       {/* 대표 소개 — 의뢰는 사람을 믿고 맡기는 일. 신뢰 신호를 첫 콘텐츠 블록에 배치.
           ko 우선(트래픽 절대다수). 텍스트는 release-project 프로듀서 소개와 정합. */}

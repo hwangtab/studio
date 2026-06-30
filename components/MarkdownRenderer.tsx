@@ -1,71 +1,24 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import dynamic from 'next/dynamic';
 import { locales, type Locale } from '../lib/i18n';
-import imageMetadata from '../utils/imageMetadata.json';
 import OnlineFallback from './story/OnlineFallback';
 import SessionChecklist from './story/SessionChecklist';
-import { topicLinks, MAX_AUTO_LINKS } from '../data/internalLinks';
 import { isInlineDirectiveName, MAX_AUTHOR_BOXES } from '../lib/inlineDirectives';
+import { isAllowedLinkHref } from './markdown/safeLinks';
+import { autoLinkKeywords } from './markdown/autoLinks';
+import { splitContentByShortcodes, type ContentSegment } from './markdown/contentSegments';
+import { toHeadingId } from './markdown/headings';
+import { MarkdownImage } from './markdown/MarkdownImage';
 
 const InlinePriceCallout = dynamic(() => import('./inline/InlinePriceCallout'));
 const InlineReviewCallout = dynamic(() => import('./inline/InlineReviewCallout'));
 const InlineBookingCallout = dynamic(() => import('./inline/InlineBookingCallout'));
 const InlineServiceCallout = dynamic(() => import('./inline/InlineServiceCallout'));
 
-type ShortcodeSegment = { type: 'shortcode'; name: string; arg?: string };
-type MarkdownSegment = { type: 'markdown'; value: string };
-type ContentSegment = ShortcodeSegment | MarkdownSegment;
-
-function splitContentByShortcodes(content: string): ContentSegment[] {
-  const segments: ContentSegment[] = [];
-  // %%name%% 또는 %%name:arg%% 자체 라인 매칭
-  // 캡처 1: name, 캡처 2: arg (optional)
-  const parts = content.split(/\n%%([\w-]+)(?::([^%\n]+))?%%(?=\n|$)/);
-  // parts[0], parts[3], parts[6]... = markdown
-  // parts[1], parts[4], parts[7]... = shortcode name
-  // parts[2], parts[5], parts[8]... = arg (or undefined)
-  for (let i = 0; i < parts.length; i += 3) {
-    if (parts[i] && parts[i].trim()) {
-      segments.push({ type: 'markdown', value: parts[i] });
-    }
-    if (i + 1 < parts.length) {
-      const name = parts[i + 1];
-      const arg = parts[i + 2];
-      segments.push({ type: 'shortcode', name, ...(arg !== undefined && { arg }) });
-    }
-  }
-  return segments;
-}
-
-const extractTextContent = (children: React.ReactNode): string => {
-  if (typeof children === 'string') return children;
-  if (typeof children === 'number') return String(children);
-  if (Array.isArray(children)) return children.map(extractTextContent).join('');
-  if (React.isValidElement(children)) {
-    const { children: subChildren } = children.props as { children?: React.ReactNode };
-    return extractTextContent(subChildren);
-  }
-  return '';
-};
-
-const toHeadingId = (children: React.ReactNode): string => {
-  const text = extractTextContent(children);
-  return text
-    .toLowerCase()
-    .replace(/[\s]+/g, '-')
-    .replace(/[^\w\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    || 'section';
-};
-
 let prismLoaderPromise: Promise<typeof import('prismjs')> | null = null;
 const PRISM_THEME_STYLESHEET_ID = 'prism-theme-stylesheet';
-
-const imageMetadataMap = imageMetadata as Record<string, { width: number; height: number }>;
 
 const loadPrism = async () => {
   if (typeof window === 'undefined') {
@@ -121,43 +74,6 @@ const CodeBlock = ({ children, className }: CodeBlockProps) => {
 };
 
 const mergeClassNames = (base: string, extra?: string) => (extra ? `${base} ${extra}` : base);
-
-const CONTROL_AND_SPACE_CHARS = /[\u0000-\u001F\u007F\s]+/g;
-const EXPLICIT_PROTOCOL = /^([a-z][a-z0-9+.-]*):/;
-
-const isAllowedProtocol = (href: string | undefined): boolean => {
-  if (!href) {
-    return false;
-  }
-
-  const trimmed = href.trim();
-  if (!trimmed) {
-    return false;
-  }
-
-  const normalized = trimmed.toLowerCase();
-  const compact = normalized.replace(CONTROL_AND_SPACE_CHARS, '');
-
-  if (
-    compact.startsWith('/') ||
-    compact.startsWith('./') ||
-    compact.startsWith('../') ||
-    compact.startsWith('#') ||
-    compact.startsWith('?')
-  ) {
-    return !compact.startsWith('//');
-  }
-
-  if (/^(https?|mailto|tel):/.test(compact)) {
-    return true;
-  }
-
-  if (EXPLICIT_PROTOCOL.test(compact)) {
-    return false;
-  }
-
-  return true;
-};
 
 // Block dangerous HTML tags to prevent XSS from markdown content
 const DangerousTagBlock = () => null;
@@ -299,47 +215,7 @@ const STATIC_OVERRIDES = {
     ),
   },
   img: {
-    component: ({ alt, src }: { alt?: string; src?: string } & React.ImgHTMLAttributes<HTMLImageElement>) => {
-      if (!src) return null;
-      const metadata = (imageMetadataMap as Record<string, { width: number; height: number }>)[src];
-      const hasDimensions = metadata?.width && metadata?.height;
-      const altText = typeof alt === 'string' && alt.trim().length > 0
-        ? alt
-        : src ? src.split('/').pop()?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || ''
-        : '';
-
-      // markdown-to-jsx가 <img>를 <p> 내부에 배치하므로 래퍼가 <div>면 HTML 무효 →
-      // 브라우저가 <p>를 자동 닫음 → SSR/하이드레이션 DOM 불일치(React #418 HTML mismatch).
-      // <span> + display:block 으로 같은 레이아웃 유지하되 <p> 내부에서도 유효한 태그 구조 보장.
-      if (hasDimensions) {
-        return (
-          <span className="block my-6">
-            <Image
-              src={src}
-              alt={altText}
-              width={Number(metadata.width)}
-              height={Number(metadata.height)}
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="w-full h-auto rounded-lg shadow-md"
-            />
-          </span>
-        );
-      }
-
-      return (
-        <span className="block my-6">
-          <span className="relative w-full overflow-hidden rounded-lg shadow-md block" style={{ aspectRatio: '16 / 9' }}>
-            <Image
-              src={src}
-              alt={altText}
-              fill
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="object-contain"
-            />
-          </span>
-        </span>
-      );
-    },
+    component: MarkdownImage,
   },
   hr: {
     component: ({ className, ...props }: { className?: string } & React.HTMLAttributes<HTMLHRElement>) => (
@@ -400,76 +276,6 @@ const STATIC_OVERRIDES = {
   },
 };
 
-const REGEX_META_CHARS = /[.*+?^${}()|[\]\\]/g;
-const escapeRegexLiteral = (raw: string): string => raw.replace(REGEX_META_CHARS, '\\$&');
-
-// 자동 링크 삽입에서 제외할 본문 영역(이미 링크인 곳, 코드 펜스, 인라인 코드).
-// 키워드 매치 offset이 이 범위에 들어가면 다음 유효 매치로 폴백한다.
-const EXCLUSION_PATTERNS: RegExp[] = [
-  /!?\[[^\]\n]*\]\([^)\n]*\)/g, // 마크다운 링크/이미지 [text](url) 또는 ![alt](src)
-  /```[\s\S]*?```/g,             // 코드 펜스 ``` ```
-  /`[^`\n]+`/g,                  // 인라인 코드 `code`
-];
-
-const collectExclusionRanges = (text: string): Array<[number, number]> => {
-  const ranges: Array<[number, number]> = [];
-  for (const pattern of EXCLUSION_PATTERNS) {
-    for (const m of text.matchAll(pattern)) {
-      if (typeof m.index === 'number') {
-        ranges.push([m.index, m.index + m[0].length]);
-      }
-    }
-  }
-  return ranges;
-};
-
-const isOffsetExcluded = (offset: number, ranges: Array<[number, number]>): boolean => {
-  for (const [start, end] of ranges) {
-    if (offset >= start && offset < end) return true;
-  }
-  return false;
-};
-
-/**
- * 본문에서 topicLinks 키워드의 *첫 유효 등장*을 자동으로 내부 링크로 변환합니다.
- * - 기사당 최대 MAX_AUTO_LINKS개
- * - 마크다운 링크/이미지/코드 펜스/인라인 코드 안의 매치는 건너뜀 (정확한 offset 기반)
- * - 한 키워드가 여러 번 등장할 때 첫 매치가 제외 영역 안이면 다음 유효 매치를 시도
- * - 자기 자신 slug으로의 링크는 제외
- */
-function autoLinkKeywords(text: string, currentSlug?: string): string {
-  let result = text;
-  let count = 0;
-  const linkedSlugs = new Set<string>();
-
-  // 긴 키워드 먼저 매칭해 짧은 키워드가 부분 매치로 가로채는 경우 방지
-  const sortedKeywords = Object.keys(topicLinks).sort((a, b) => b.length - a.length);
-
-  for (const keyword of sortedKeywords) {
-    if (count >= MAX_AUTO_LINKS) break;
-    const { slug, anchorText } = topicLinks[keyword];
-    if (slug === currentSlug || linkedSlugs.has(slug)) continue;
-
-    // result는 매 변환마다 mutating되므로 exclusion ranges도 매번 재계산
-    const exclusionRanges = collectExclusionRanges(result);
-    const re = new RegExp(escapeRegexLiteral(keyword), 'g');
-
-    for (const m of result.matchAll(re)) {
-      if (typeof m.index !== 'number') continue;
-      if (isOffsetExcluded(m.index, exclusionRanges)) continue;
-
-      result = result.slice(0, m.index) +
-        `[${anchorText}](/stories/${slug})` +
-        result.slice(m.index + keyword.length);
-      linkedSlugs.add(slug);
-      count++;
-      break;
-    }
-  }
-
-  return result;
-}
-
 interface MarkdownRendererProps {
   content: string;
   locale?: Locale;
@@ -497,7 +303,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
   const localeAwareOverrides = React.useMemo(() => ({
     a: {
       component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-        if (!isAllowedProtocol(href)) {
+        if (!isAllowedLinkHref(href)) {
           return <span className="text-gray-500">{children}</span>;
         }
 

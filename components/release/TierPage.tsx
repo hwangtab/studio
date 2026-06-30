@@ -1,23 +1,27 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign, Disc,
-  Target, Calendar, ListChecks, X, MessageCircle,
-  Award, Star, Quote, ArrowRightLeft,
+  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign,
+  Target, Calendar, ListChecks, X,
+  ArrowRightLeft,
 } from '@/lib/lucide-icons';
 import SEO from '../SEO';
 import SectionHeading from '../ui/SectionHeading';
 import ImageHero from '../common/ImageHero';
 import FAQSection from '../ui/FAQSection';
+import ReleaseConsultationSteps from './ReleaseConsultationSteps';
+import ReleaseDiscographySection from './ReleaseDiscographySection';
+import ReleaseHeroCtas from './ReleaseHeroCtas';
+import ReleaseProducerIntro from './ReleaseProducerIntro';
+import ReleaseReviewsSection from './ReleaseReviewsSection';
 import TierComparisonTable from './TierComparisonTable';
 import { Section } from '../ui/Section';
 import { getReviews } from '../../data/reviews';
 import { getSiteConfig } from '../../data/siteConfig';
-import { generateReleaseProjectSchema } from '../../utils/schemaGenerator';
+import { generateReleaseProjectSchema } from '../../utils/schema';
 import { usePortfolioModalLazy } from '../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
@@ -64,7 +68,6 @@ const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
-  const isKorean = locale === 'ko';
   const siteConfig = getSiteConfig(locale);
   const { selectedItem, categories, open: openModal, close: closeModal } = usePortfolioModalLazy(
     locale,
@@ -123,69 +126,26 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         imageAlt={t('releaseProject.hero.imageAlt')}
         minHeight="min-h-[60svh]"
         ctaButtons={
-          <>
-            {isKorean ? (
-              <a
-                href={siteConfig.contact.kakaoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                {t('releaseProject.hero.ctaConsult')}
-              </a>
-            ) : (
-              <Link
-                href={getLink('/contact')}
-                prefetch={false}
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                {t('releaseProject.hero.ctaConsult')}
-              </Link>
-            )}
-            <Link
-              href={getLink('/release-project')}
-              prefetch={false}
-              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary border-2 border-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-            >
-              <ArrowLeft size={16} />
-              {t(k('linkBack'))}
-            </Link>
-          </>
+          <ReleaseHeroCtas
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            consultLabel={t('releaseProject.hero.ctaConsult')}
+            secondaryHref={getLink('/release-project')}
+            secondaryLabel={t(k('linkBack'))}
+            secondaryLeadingIcon={<ArrowLeft size={16} />}
+          />
         }
       />
 
-      {/* 프로듀서 소개 */}
-      <Section variant="alternate">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 sm:p-10 shadow-md border border-gray-100 dark:border-gray-700 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
-              <Award size={32} className="text-primary" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-title font-bold text-gray-900 dark:text-white mb-2">
-              {t('releaseProject.producer.sectionTitle')}
-            </h2>
-            <p className="text-sm text-primary font-medium mb-6">
-              {t('releaseProject.producer.tagline')}
-            </p>
-            <div className="text-left sm:text-center space-y-3 max-w-xl mx-auto mb-8">
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {t('releaseProject.producer.bodyParagraph1')}
-              </p>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {t('releaseProject.producer.bodyParagraph2')}
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
-              {Array.isArray(producerStats) && producerStats.map((stat, i) => (
-                <div key={i}>
-                  <p className="text-2xl sm:text-3xl font-bold text-primary mb-1">{stat.value}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Section>
+      <ReleaseProducerIntro
+        sectionTitle={t('releaseProject.producer.sectionTitle')}
+        tagline={t('releaseProject.producer.tagline')}
+        bodyParagraphs={[
+          t('releaseProject.producer.bodyParagraph1'),
+          t('releaseProject.producer.bodyParagraph2'),
+        ]}
+        stats={Array.isArray(producerStats) ? producerStats : []}
+      />
 
       {/* 페르소나 */}
       <Section variant="default">
@@ -346,92 +306,21 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         </div>
       </Section>
 
-      {/* 디스코그래피 — 전체 featured, 구분 없이 */}
-      {discographyItems.length > 0 && (
-        <Section variant="alternate">
-          <SectionHeading
-            icon={Disc}
-            title={t('releaseProject.discography.sectionTitle')}
-            subtitle={t('releaseProject.discography.sectionSubtitle')}
-            className="mb-10"
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {discographyItems.map((item) => (
-              <Link
-                key={item.id}
-                href={getLink(`/portfolio/${item.id}`)}
-                onClick={(e) => {
-                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as React.MouseEvent).button === 1) return;
-                  e.preventDefault();
-                  openModal(item.id);
-                }}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
-                aria-haspopup="dialog"
-              >
-                {item.image && (
-                  <div className="aspect-square overflow-hidden relative">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-                <div className="p-5">
-                  <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link
-              href={getLink('/portfolio')}
-              className="inline-flex items-center gap-2 text-primary font-semibold hover:underline underline-offset-2"
-            >
-              {t('releaseProject.discography.viewAll')} <ArrowRight size={16} />
-            </Link>
-          </div>
-        </Section>
-      )}
+      <ReleaseDiscographySection
+        locale={locale}
+        title={t('releaseProject.discography.sectionTitle')}
+        subtitle={t('releaseProject.discography.sectionSubtitle')}
+        viewAllLabel={t('releaseProject.discography.viewAll')}
+        items={discographyItems}
+        variant="alternate"
+        onSelectItem={openModal}
+      />
 
-      {/* 고객 후기 */}
-      {reviewsToShow.length > 0 && (
-        <Section variant="default">
-          <SectionHeading
-            icon={Quote}
-            title={t('releaseProject.reviews.sectionTitle')}
-            subtitle={t('releaseProject.reviews.sectionSubtitle')}
-            className="mb-10"
-          />
-          <div className={`grid grid-cols-1 ${reviewsToShow.length > 1 ? 'md:grid-cols-2' : ''} gap-5 max-w-4xl mx-auto`}>
-            {reviewsToShow.map((review) => (
-              <figure
-                key={review.id}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col"
-              >
-                <div className="flex items-center gap-1 mb-3" aria-label={`${review.rating} / 5`}>
-                  {Array.from({ length: review.rating }).map((_, i) => (
-                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" aria-hidden="true" />
-                  ))}
-                </div>
-                <blockquote className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4 flex-1">
-                  &ldquo;{review.content}&rdquo;
-                </blockquote>
-                <figcaption className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
-                  <span className="font-medium text-gray-700 dark:text-gray-300">{review.author}</span>
-                  <span>{review.category}</span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </Section>
-      )}
+      <ReleaseReviewsSection
+        title={t('releaseProject.reviews.sectionTitle')}
+        subtitle={t('releaseProject.reviews.sectionSubtitle')}
+        reviews={reviewsToShow}
+      />
 
       {/* FAQ */}
       {Array.isArray(faqItems) && faqItems.length > 0 && (
@@ -443,38 +332,11 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         />
       )}
 
-      {/* 상담 프로세스 */}
-      {Array.isArray(consultationSteps) && consultationSteps.length > 0 && (
-        <Section variant="default">
-          <SectionHeading
-            icon={MessageCircle}
-            title={t('releaseProject.consultation.sectionTitle')}
-            subtitle={t('releaseProject.consultation.sectionSubtitle')}
-            className="mb-10"
-          />
-          <div className="max-w-xl mx-auto">
-            {consultationSteps.map((step, i) => {
-              const isLast = i === consultationSteps.length - 1;
-              return (
-                <div key={i} className="flex gap-4">
-                  <div className="flex-shrink-0 flex flex-col items-center self-stretch">
-                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
-                      {step.num}
-                    </div>
-                    {!isLast && (
-                      <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1.5" />
-                    )}
-                  </div>
-                  <div className={`flex-1 pt-1 ${!isLast ? 'pb-6' : ''}`}>
-                    <p className="font-bold text-gray-900 dark:text-white mb-1">{step.title}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{step.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-      )}
+      <ReleaseConsultationSteps
+        title={t('releaseProject.consultation.sectionTitle')}
+        subtitle={t('releaseProject.consultation.sectionSubtitle')}
+        steps={Array.isArray(consultationSteps) ? consultationSteps : []}
+      />
 
       {/* 다른 티어 살펴보기 */}
       <Section variant="alternate">

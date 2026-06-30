@@ -21,7 +21,7 @@ import { loadCommonResourceServer } from '../../lib/i18n.server';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
-import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schemaGenerator';
+import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
 import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
@@ -41,6 +41,11 @@ import {
 import RelatedGuidesSection from '../../components/practice-room/RelatedGuidesSection';
 import RegionLinksSection from '../../components/practice-room/RegionLinksSection';
 import ServiceLinksSection from '../../components/practice-room/ServiceLinksSection';
+import {
+  parsePricingBadges,
+  parseResidentBenefits,
+  parseTitleDescriptionItems,
+} from '../../components/practice-room/contentItems';
 
 interface PracticeRoomProps {
   locale: Locale;
@@ -70,93 +75,25 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
   const practiceRoomQuickAnswers = React.useMemo(() => practiceRoomFaqs.slice(0, 3), [practiceRoomFaqs]);
 
-  const residentBenefits = React.useMemo<BenefitItem[]>(() => {
-    const raw = t('practiceRoom.residentBenefits.items', { returnObjects: true });
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((entry): BenefitItem | null => {
-        if (
-          entry &&
-          typeof entry === 'object' &&
-          typeof (entry as { title?: unknown }).title === 'string' &&
-          Array.isArray((entry as { points?: unknown }).points)
-        ) {
-          const points = ((entry as { points: unknown[] }).points).filter(
-            (p): p is string => typeof p === 'string'
-          );
-          const vb = (entry as { valueBadge?: unknown }).valueBadge;
-          return {
-            title: (entry as { title: string }).title,
-            points,
-            valueBadge: typeof vb === 'string' ? vb : undefined,
-          };
-        }
-        return null;
-      })
-      .filter((b): b is BenefitItem => b !== null);
-  }, [t]);
+  const residentBenefits = React.useMemo<BenefitItem[]>(
+    () => parseResidentBenefits(t('practiceRoom.residentBenefits.items', { returnObjects: true })),
+    [t]
+  );
 
-  const pricingBadges = React.useMemo<PricingBadge[]>(() => {
-    const raw = t('practiceRoom.pricing.badges', { returnObjects: true });
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((entry): PricingBadge | null => {
-        if (
-          entry &&
-          typeof entry === 'object' &&
-          typeof (entry as { label?: unknown }).label === 'string' &&
-          typeof (entry as { caption?: unknown }).caption === 'string'
-        ) {
-          return {
-            label: (entry as { label: string }).label,
-            caption: (entry as { caption: string }).caption,
-          };
-        }
-        return null;
-      })
-      .filter((b): b is PricingBadge => b !== null);
-  }, [t]);
-  const soundproofingItems = React.useMemo<SoundproofingItem[]>(() => {
-    const raw = t('practiceRoom.soundproofing.items', { returnObjects: true });
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((entry): SoundproofingItem | null => {
-        if (
-          entry &&
-          typeof entry === 'object' &&
-          typeof (entry as { title?: unknown }).title === 'string' &&
-          typeof (entry as { description?: unknown }).description === 'string'
-        ) {
-          return {
-            title: (entry as { title: string }).title,
-            description: (entry as { description: string }).description,
-          };
-        }
-        return null;
-      })
-      .filter((x): x is SoundproofingItem => x !== null);
-  }, [t]);
+  const pricingBadges = React.useMemo<PricingBadge[]>(
+    () => parsePricingBadges(t('practiceRoom.pricing.badges', { returnObjects: true })),
+    [t]
+  );
 
-  const facilitiesItems = React.useMemo<FacilityItem[]>(() => {
-    const raw = t('practiceRoom.facilities.items', { returnObjects: true });
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((entry): FacilityItem | null => {
-        if (
-          entry &&
-          typeof entry === 'object' &&
-          typeof (entry as { title?: unknown }).title === 'string' &&
-          typeof (entry as { description?: unknown }).description === 'string'
-        ) {
-          return {
-            title: (entry as { title: string }).title,
-            description: (entry as { description: string }).description,
-          };
-        }
-        return null;
-      })
-      .filter((x): x is FacilityItem => x !== null);
-  }, [t]);
+  const soundproofingItems = React.useMemo<SoundproofingItem[]>(
+    () => parseTitleDescriptionItems(t('practiceRoom.soundproofing.items', { returnObjects: true })),
+    [t]
+  );
+
+  const facilitiesItems = React.useMemo<FacilityItem[]>(
+    () => parseTitleDescriptionItems(t('practiceRoom.facilities.items', { returnObjects: true })),
+    [t]
+  );
 
   const residentBenefitsCalendarLabel = t('practiceRoom.residentBenefits.calendarLinkLabel');
   const residentBenefitsCalendarUrl = t('practiceRoom.residentBenefits.calendarLinkUrl');

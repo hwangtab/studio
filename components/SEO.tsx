@@ -11,9 +11,11 @@ import {
   generateCourseSchema,
   generateWebSiteSchema,
   generateWebPageSchema,
-} from '../utils/schemaGenerator';
-import { defaultLocale, hreflangByLocale, locales, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
+} from '../utils/schema';
+import { defaultLocale, hreflangByLocale, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
 import { getSeoDefaults, getSiteConfig, socialProfiles, studioOperator } from '../data/siteConfig';
+import { resolveSeoPathState, resolveSeoUrlState } from './seo/metadataUrls';
+import { buildFinalSchemaData, collectSchemaItems, serializeJsonLd } from './seo/schemaData';
 
 interface SEOProps {
   title?: string;
@@ -89,43 +91,55 @@ const SEO = ({
   locale,
 }: SEOProps) => {
   const router = useRouter();
-
-  const currentPath = router.asPath.split('?')[0].split('#')[0];
-  const segments = currentPath.split('/');
-  let pathWithoutLocale = currentPath;
-  // 우선순위: 명시된 locale prop > URL prefix 추출 > defaultLocale 폴백.
-  // SSR/SSG 시 router.asPath가 비거나 잘못된 값으로 들어올 수 있어 prop 제공이 권장.
-  let currentLocale: Locale = locale ?? defaultLocale;
-
-  if (locales.includes(segments[1] as Locale)) {
-    if (!locale) {
-      currentLocale = segments[1] as Locale;
-    }
-    pathWithoutLocale = '/' + segments.slice(2).join('/');
-  }
+  const asPath = router.asPath ?? '';
+  const pathState = React.useMemo(
+    () => resolveSeoPathState({ asPath, locale }),
+    [asPath, locale]
+  );
+  const currentLocale = pathState.currentLocale;
 
   const { t } = useTranslation('common', { lng: currentLocale });
   const siteConfig = getSiteConfig(currentLocale);
   const siteUrl = siteConfig.url;
   const seoDefaults = getSeoDefaults(currentLocale);
 
-  // Clean up double slashes if any (e.g. root path)
-  if (pathWithoutLocale === '//') pathWithoutLocale = '/';
-
   // 비-ko locale은 자동 noindex. 90일 GSC: /en·/es·/vi·/th·/uz·/zh 합계 5 clicks /
   // 803 impressions / CTR 0.62%. 검색 트래픽 거의 0인 152개 페이지가 인덱싱 풀에
   // 남아 사이트 전체 품질 시그널을 끌어내려 차단. hreflang은 유지해 ko 페이지의
   // 다국어 alternate 정보는 보존.
-  const effectiveRobots = currentLocale === defaultLocale ? robots : 'noindex, follow';
+  const seoUrlState = React.useMemo(
+    () =>
+      resolveSeoUrlState({
+        asPath,
+        siteUrl,
+        canonical,
+        disableUrlMetaAndAlternates,
+        disableAlternates,
+        availableLocales,
+        locale,
+        pathState,
+      }),
+    [
+      asPath,
+      siteUrl,
+      canonical,
+      disableUrlMetaAndAlternates,
+      disableAlternates,
+      availableLocales,
+      locale,
+      pathState,
+    ]
+  );
 
-  const toAbsoluteUrl = (value = '') => {
-    if (!value) return '';
-    if (/^https?:\/\//i.test(value)) {
-      return value;
-    }
-    const sanitized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`;
-    return `${siteUrl}${sanitized}`;
-  };
+  const {
+    normalizedCanonical,
+    shouldRenderAlternates,
+    indexableAlternateLocales,
+    toAbsoluteUrl,
+    alternateHrefFor,
+    xDefaultHref,
+  } = seoUrlState;
+  const effectiveRobots = seoUrlState.effectiveRobots(robots);
 
   const resolvedTitle = title || seoDefaults.title;
   const resolvedDescription = description || seoDefaults.description;
@@ -157,44 +171,6 @@ const SEO = ({
     if (ext === 'gif') return 'image/gif';
     return 'image/jpeg';
   }, [ogImage]);
-
-  // Use provided canonical or generate one based on current path
-  const derivedCanonical = canonical || `${siteUrl}${currentPath}`;
-  const canonicalUrl = toAbsoluteUrl(derivedCanonical);
-  const shouldRenderAlternates = !disableUrlMetaAndAlternates && !disableAlternates;
-
-  const normalizedCanonical =
-    canonicalUrl.endsWith('/') && canonicalUrl !== `${siteUrl}/`
-      ? canonicalUrl.slice(0, -1)
-      : canonicalUrl;
-
-  const alternatePath = React.useMemo(() => {
-    try {
-      const url = new URL(normalizedCanonical);
-      if (url.origin !== siteUrl) {
-        return pathWithoutLocale;
-      }
-
-      const urlSegments = url.pathname.split('/');
-      const path =
-        locales.includes(urlSegments[1] as Locale)
-          ? `/${urlSegments.slice(2).join('/')}`
-          : url.pathname;
-
-      const normalizedPath = path === '//' || path === '' ? '/' : path;
-      return `${normalizedPath}${url.search}`;
-    } catch {
-      return pathWithoutLocale;
-    }
-  }, [normalizedCanonical, pathWithoutLocale, siteUrl]);
-
-  const indexableAlternateLocales = React.useMemo(
-    () =>
-      locales
-        .filter((candidateLocale) => candidateLocale === defaultLocale)
-        .filter((candidateLocale) => !availableLocales || availableLocales.includes(candidateLocale)),
-    [availableLocales]
-  );
 
   const defaultSchema = React.useMemo(
     () => generateDefaultSchema(siteUrl, currentLocale),
@@ -287,79 +263,32 @@ const SEO = ({
 
   const faqSchema = React.useMemo(() => generateFaqSchema(faqItems, currentLocale), [faqItems, currentLocale]);
 
-  const schemaItems = React.useMemo(() => {
-    const items: Record<string, unknown>[] = [];
-
-    const addItems = (input: unknown) => {
-      if (!input) return;
-      if (Array.isArray(input)) {
-        input.forEach(addItems);
-      } else if (typeof input === 'object' && input !== null && '@graph' in input) {
-        const graph = (input as { '@graph': unknown[] })['@graph'];
-        if (Array.isArray(graph)) graph.forEach(addItems);
-      } else if (typeof input === 'object' && input !== null) {
-        items.push(input as Record<string, unknown>);
-      }
-    };
-
-    addItems(defaultSchema);
-    addItems(websiteSchema);
-    addItems(webPageSchema);
-    addItems(articleSchema);
-    addItems(courseSchema);
-    addItems(schema);
-
-    return items.filter(Boolean);
-  }, [defaultSchema, websiteSchema, webPageSchema, articleSchema, courseSchema, schema]);
-
-  const schemaData = React.useMemo(() => {
-    if (schemaItems.length === 0) return null;
-    if (schemaItems.length === 1) return schemaItems[0];
-    return {
-      '@context': 'https://schema.org',
-      '@graph': schemaItems.map((item) => {
-        if (!item || typeof item !== 'object') return item;
-        const { ['@context']: _context, ...rest } = item;
-        return rest;
-      }),
-    };
-  }, [schemaItems]);
+  const schemaItems = React.useMemo(
+    () => collectSchemaItems([
+      defaultSchema,
+      websiteSchema,
+      webPageSchema,
+      articleSchema,
+      courseSchema,
+      schema,
+    ]),
+    [defaultSchema, websiteSchema, webPageSchema, articleSchema, courseSchema, schema]
+  );
 
   const finalSchema = React.useMemo(() => {
-    if (!includeSchema) return null;
-
-    const extraItems: Record<string, unknown>[] = [];
-    if (breadcrumbSchema) {
-      const { ['@context']: _, ...rest } = breadcrumbSchema as Record<string, unknown>;
-      extraItems.push(rest);
-    }
-    if (faqSchema) {
-      const { ['@context']: _, ...rest } = faqSchema as Record<string, unknown>;
-      extraItems.push(rest);
-    }
-
-    if (!schemaData && extraItems.length === 0) return null;
-
-    const items = [...(schemaData ? schemaItems : []), ...extraItems];
-
-    if (items.length === 0) return null;
-    if (items.length === 1) return items[0];
-
-    return {
-      '@context': 'https://schema.org',
-      '@graph': items.map((item) => {
-        if (!item || typeof item !== 'object') return item;
-        const { ['@context']: _context, ...rest } = item;
-        return rest;
-      }),
-    };
-  }, [includeSchema, schemaData, schemaItems, breadcrumbSchema, faqSchema]);
+    return buildFinalSchemaData({
+      includeSchema,
+      schemaItems,
+      breadcrumbSchema,
+      faqSchema,
+    });
+  }, [includeSchema, schemaItems, breadcrumbSchema, faqSchema]);
 
   const renderSchema = React.useCallback((data: Record<string, unknown> | null) => {
     if (!data) return null;
     let jsonString = '';
     try {
-      jsonString = JSON.stringify(data).replace(/<\//g, '<\\/');
+      jsonString = serializeJsonLd(data);
     } catch (e) {
       console.error('Schema serialization error:', e);
       return null;
@@ -406,25 +335,28 @@ const SEO = ({
           모순 시그널이 안 생긴다. */}
       {shouldRenderAlternates && (
         indexableAlternateLocales
-          .map((alternateLocale) => (
-            <link
-              key={`hreflang-${alternateLocale}`}
-              rel="alternate"
-              hrefLang={hreflangByLocale[alternateLocale]}
-              href={`${siteUrl}/${alternateLocale}${alternatePath === '/' ? '' : alternatePath}`}
-            />
-          ))
+          .map((alternateLocale) => {
+            const href = alternateHrefFor(alternateLocale);
+            if (!href) return null;
+            return (
+              <link
+                key={`hreflang-${alternateLocale}`}
+                rel="alternate"
+                hrefLang={hreflangByLocale[alternateLocale]}
+                href={href}
+              />
+            );
+          })
       )}
-      {shouldRenderAlternates && indexableAlternateLocales.includes(defaultLocale) && (() => {
+      {shouldRenderAlternates && xDefaultHref && (() => {
         // x-default 우선순위:
         // site-wide indexable locale인 ko만 x-default로 발행. non-ko는 noindex라
         // x-default 대상이 되면 hreflang이 비색인 URL을 가리키는 모순 신호가 된다.
-        const xDefaultLocale = defaultLocale;
         return (
           <link
             rel="alternate"
             hrefLang="x-default"
-            href={`${siteUrl}/${xDefaultLocale}${alternatePath === '/' ? '' : alternatePath}`}
+            href={xDefaultHref}
           />
         );
       })()}

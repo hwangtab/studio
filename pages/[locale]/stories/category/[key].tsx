@@ -16,7 +16,7 @@ import { Section } from '../../../../components/ui/Section';
 import Pagination from '../../../../components/ui/Pagination';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../../lib/getStatic';
 import { locales, type Locale } from '../../../../lib/i18n';
-import { generateItemListSchema } from '../../../../utils/schemaGenerator';
+import { generateItemListSchema } from '../../../../utils/schema';
 import { getSiteConfig } from '../../../../data/siteConfig';
 import { normalizePageNumber } from '../../../../utils/pagination';
 

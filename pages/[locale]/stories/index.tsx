@@ -20,7 +20,7 @@ import Pagination from '../../../components/ui/Pagination';
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
-import { generateItemListSchema } from '../../../utils/schemaGenerator';
+import { generateItemListSchema } from '../../../utils/schema';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { normalizePageNumber } from '../../../utils/pagination';
 

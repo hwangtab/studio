@@ -7,7 +7,7 @@ import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, Arrow
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
-import BaseCard from '../../components/ui/BaseCard';
+import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import CurriculumCard from '../../components/lesson/CurriculumCard';
 import FormatCard from '../../components/lesson/FormatCard';
@@ -24,9 +24,10 @@ import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import { buildLessonServiceSchema } from '../../lib/lessonSchema';
 import type { StoryCardData } from '../../types/story';
-import { getSchemaLanguage } from '../../utils/schemaGenerator';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
+import { createTranslatedQaItems } from '../../utils/translatedList';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -43,69 +44,21 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
     const whySectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: -20, duration: 0.6 });
     const pricingSectionRevealProps = createInViewEnterAnimation({ axis: 'x', distance: 20, duration: 0.6 });
 
-    const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
+    const lessonServiceSchema = React.useMemo(
+        () => buildLessonServiceSchema({
+            locale,
+            siteName: siteConfig.name,
+            siteUrl: siteConfig.url,
+            title: t('lesson.seo.title'),
+            description: t('lesson.seo.description'),
+        }),
+        [t, siteConfig, locale]
+    );
 
-    const lessonServiceSchema = React.useMemo(() => ({
-        '@context': 'https://schema.org',
-        '@type': 'Service',
-        // 동 페이지에 Course schema(#course @id)도 발행되므로 entity 충돌을 피하기 위해
-        // Service에 별도 @id 부여. Rich Results가 두 entity를 명확히 구분해 surface.
-        '@id': `${siteConfig.url}/${locale}/lesson#service`,
-        name: t('lesson.seo.title'),
-        description: t('lesson.seo.description'),
-        inLanguage: schemaLanguage,
-        serviceType: locale === 'ko' ? '음악 레슨' : 'Music Lesson',
-        areaServed: [
-            { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
-            { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
-            { '@type': 'Neighborhood', name: 'Yeonsinnae' },
-        ],
-        location: {
-            '@type': 'Place',
-            name: siteConfig.name,
-            address: {
-                '@type': 'PostalAddress',
-                addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
-                addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
-                postalCode: '03424',
-                addressCountry: 'KR',
-            },
-            geo: {
-                '@type': 'GeoCoordinates',
-                latitude: 37.614353,
-                longitude: 126.925887,
-            },
-        },
-        url: `${siteConfig.url}/${locale}/lesson`,
-        provider: {
-            '@type': 'Organization',
-            '@id': `${siteConfig.url}/#organization`,
-            name: siteConfig.name,
-        },
-    }), [t, siteConfig, locale, schemaLanguage]);
-
-    const lessonQuickAnswers = React.useMemo(() => ([
-        {
-            question: t('lesson.quickAnswers.items.0.q'),
-            answer: t('lesson.quickAnswers.items.0.a'),
-        },
-        {
-            question: t('lesson.quickAnswers.items.1.q'),
-            answer: t('lesson.quickAnswers.items.1.a'),
-        },
-        {
-            question: t('lesson.quickAnswers.items.2.q'),
-            answer: t('lesson.quickAnswers.items.2.a'),
-        },
-        {
-            question: t('lesson.quickAnswers.items.3.q'),
-            answer: t('lesson.quickAnswers.items.3.a'),
-        },
-        {
-            question: t('lesson.quickAnswers.items.4.q'),
-            answer: t('lesson.quickAnswers.items.4.a'),
-        },
-    ]), [t]);
+    const lessonQuickAnswers = React.useMemo(
+        () => createTranslatedQaItems(t, 'lesson.quickAnswers.items', 5),
+        [t]
+    );
 
     const lessonFormatItems = React.useMemo(() => ([
         {
@@ -214,24 +167,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                 </p>
             </Section>
 
-            {/* Locale-specific content block (non-KO hubs only) */}
-            {hubLocaleContent && (
-              <Section variant="alternate">
-                <SectionHeading
-                  icon={BookOpen}
-                  title={hubLocaleContent.title}
-                  className="mb-8"
-                />
-                <div className="max-w-4xl mx-auto space-y-6">
-                  {hubLocaleContent.items.map((item) => (
-                    <BaseCard key={item.heading} variant="default" className="p-6">
-                      <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                      <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-                    </BaseCard>
-                  ))}
-                </div>
-              </Section>
-            )}
+            <HubLocaleContentSection content={hubLocaleContent} icon={BookOpen} />
 
             {/* Intro Section */}
             <Section variant="default">

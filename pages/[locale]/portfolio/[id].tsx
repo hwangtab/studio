@@ -16,7 +16,7 @@ import type { StoryCardData } from '../../../types/story';
 const RelatedStoriesSection = dynamic(() => import('../../../components/ui/RelatedStoriesSection'));
 import { shareContent } from '../../../utils/shareUtils';
 import { getCategoryInfo } from '../../../utils/portfolioDataUtils';
-import { generateMusicRecordingSchema } from '../../../utils/schemaGenerator';
+import { generateMusicRecordingSchema } from '../../../utils/schema';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';

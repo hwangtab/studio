@@ -8,11 +8,10 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getPricingData } from '../../data/pricing';
-import { generateAggregateOfferSchema, getSchemaLanguage } from '../../utils/schemaGenerator';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
-import BaseCard from '../../components/ui/BaseCard';
+import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting (초기 JS 번들 감소 → TBT 단축)
@@ -25,6 +24,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import { buildPricingPageSchema } from '../../lib/pricingSchema';
 import type { StoryCardData } from '../../types/story';
 import type { NextPageWithLayout } from '../../types';
 
@@ -33,17 +33,6 @@ interface PricingProps {
   pricingData: ReturnType<typeof getPricingData>;
   hubLocaleContent: ReturnType<typeof getHubLocaleContent>;
   relatedStories: StoryCardData[];
-}
-
-interface Offer {
-  id: string;
-  title: string;
-  description: string;
-  priceValue: number;
-  priceDisplay: string;
-  unit: string;
-  features: string[];
-  recommended?: boolean;
 }
 
 const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLocaleContent, relatedStories }) => {
@@ -60,8 +49,6 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   const siteConfig = getSiteConfig(locale);
   const siteUrl = siteConfig.url;
   const kakaoUrl = siteConfig.contact.kakaoUrl;
-  const pricingUrl = `${siteUrl}/${locale}/pricing`;
-  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   const pricingQuickAnswers = React.useMemo(() => ([
     {
@@ -78,106 +65,15 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     },
   ]), [t, VAT_NOTICE]);
 
-  const priceValidUntil = React.useMemo(() => {
-    // 12개월 — SSG 빌드 시점 고정이라 재빌드 주기가 길어도 Offer가 만료되지 않도록 여유.
-    const date = new Date();
-    date.setMonth(date.getMonth() + 12);
-    return date.toISOString().split('T')[0];
-  }, []);
-
-  const offerToSchema = React.useCallback((offer: Offer) => ({
-    '@type': 'Offer',
-    name: offer.title,
-    description: offer.description,
-    inLanguage: schemaLanguage,
-    priceCurrency: 'KRW',
-    // 가격 미정(0) 항목은 price 생략 — price:0은 "무료"로 오인됨.
-    ...(offer.priceValue > 0 && { price: offer.priceValue }),
-    priceValidUntil,
-    availability: 'https://schema.org/InStock',
-    url: `${pricingUrl}#${offer.id}`,
-    seller: {
-      '@type': 'Organization',
-      name: t('common.siteName'),
-      '@id': `${siteUrl}/#organization`,
-    },
-    itemOffered: {
-      '@type': 'Service',
-      name: offer.title,
-      url: `${pricingUrl}#${offer.id}`,
-      inLanguage: schemaLanguage,
-      areaServed: [
-        { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
-        { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },
-      ],
-      provider: {
-        '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
-        name: t('common.siteName'),
-      },
-    },
-  }), [locale, pricingUrl, priceValidUntil, schemaLanguage, siteUrl, t]);
-
-  const catalogToSchema = React.useCallback((name: string, offers: Offer[]) => ({
-    '@type': 'OfferCatalog',
-    name,
-    inLanguage: schemaLanguage,
-    itemListElement: offers.map(offerToSchema),
-  }), [offerToSchema, schemaLanguage]);
-
-  const allOffers = React.useMemo(() => [
-    ...specialPackages as Offer[],
-    ...recordingOffers as Offer[],
-    ...mixingOffers as Offer[],
-    ...masteringOffers as Offer[],
-    ...additionalServices.map(s => ({ ...s, features: s.note ? [s.note] : [] })) as Offer[],
-  ], [specialPackages, recordingOffers, mixingOffers, masteringOffers, additionalServices]);
-
-  const aggregateOfferSchema = React.useMemo(() =>
-    generateAggregateOfferSchema(
-      t('pricing.seo.schemaTitle'),
-      allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
-      locale
-    ),
-    [allOffers, locale, t]
+  const pricingSchema = React.useMemo(
+    () => buildPricingPageSchema({
+      locale,
+      siteUrl,
+      pricingData,
+      t,
+    }),
+    [locale, pricingData, siteUrl, t]
   );
-
-  const pricingSchema = React.useMemo(() => ({
-    '@context': 'https://schema.org',
-    '@graph': [
-      aggregateOfferSchema,
-      {
-        '@type': 'OfferCatalog',
-        name: t('pricing.seo.title'),
-        inLanguage: schemaLanguage,
-        itemListElement: [
-          catalogToSchema(t('pricing.special.title'), specialPackages as Offer[]),
-          catalogToSchema(t('pricing.recording.title'), recordingOffers as Offer[]),
-          catalogToSchema(t('pricing.mixing.title'), mixingOffers as Offer[]),
-          catalogToSchema(t('pricing.mastering.title'), masteringOffers as Offer[]),
-          catalogToSchema(t('pricing.additional.title'), additionalServices.map(s => ({
-            id: s.id,
-            title: s.title,
-            description: s.note || '',
-            priceValue: s.priceValue || 0,
-            priceDisplay: s.priceDisplay,
-            unit: '',
-            features: s.note ? [s.note] : [],
-          }))),
-        ],
-      },
-    ].filter(Boolean) as Record<string, unknown>[],
-  }), [
-    t,
-    catalogToSchema,
-    aggregateOfferSchema,
-    specialPackages,
-    recordingOffers,
-    mixingOffers,
-    masteringOffers,
-    additionalServices,
-    schemaLanguage,
-  ]);
 
   return (
     <div className="overflow-visible">
@@ -252,24 +148,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         variant="default"
       />
 
-      {/* Locale-specific content block (non-KO hubs only) */}
-      {hubLocaleContent && (
-        <Section variant="alternate">
-          <SectionHeading
-            icon={Info}
-            title={hubLocaleContent.title}
-            className="mb-8"
-          />
-          <div className="max-w-4xl mx-auto space-y-6">
-            {hubLocaleContent.items.map((item) => (
-              <BaseCard key={item.heading} variant="default" className="p-6">
-                <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-              </BaseCard>
-            ))}
-          </div>
-        </Section>
-      )}
+      <HubLocaleContentSection content={hubLocaleContent} icon={Info} />
 
       {/* Special Packages Section */}
       <Section id="special-packages" variant="alternate">

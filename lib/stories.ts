@@ -2,9 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
-import { summarizeText, stripMarkdown } from '../utils/textUtils';
-import type { Story, StoryCTAOverride, StoryDetail, StoryPath } from '../types/story';
-import { STORY_CTA_OVERRIDES } from '../types/story';
+import { summarizeText } from '../utils/textUtils';
+import type { Story, StoryDetail, StoryPath } from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
 import { isRegionHub } from './regionHubSlugs';
@@ -16,6 +15,25 @@ import {
   matchServiceForCategory,
   injectAutoFallbackMarker,
 } from './storyAutoFallback';
+import {
+  computeThinContentStatus,
+  extractAutoExpandBlock,
+} from './storyContentPolicy';
+import { rankRelatedStories } from './storyRelatedScoring';
+import {
+  normalizeStoryCTAOverride,
+  normalizeStoryFaq,
+  normalizeStoryHowTo,
+  stripCodeFenceWrapper,
+} from './storyFrontmatter';
+import { getStoryWordCount } from './storySeoData';
+export {
+  computeThinContentStatus,
+  extractAutoExpandBlock,
+  SHORTCODE_CHAR_ESTIMATES,
+  SHORTCODE_DEFAULT_CHAR_ESTIMATE,
+  THIN_CONTENT_THRESHOLD,
+} from './storyContentPolicy';
 
 // next.config.mjs의 redirects()로 308 처리되는 슬러그. 빌드·listing에서 모두 제외.
 const REDIRECTED_SLUGS = new Set<string>(Object.keys(regionRedirectMap));
@@ -139,81 +157,6 @@ const resolveStoryFile = (slug: string, locale: Locale = defaultLocale): { fileP
   return resolved;
 };
 
-// AUTO-EXPAND-V1 블록은 지역 가이드 페이지 등에 자동 삽입된 보일러플레이트 섹션이다.
-// 본문에 그대로 포함되면 도시명만 치환된 동일 텍스트가 1,400+개 페이지에 중복되어
-// Google "doorway page" 신호가 된다. 본문에서 분리해 별도 영역으로 노출하면
-// (1) thin-content 게이트가 정상 동작하고 (2) Googlebot이 사이트 boilerplate로 인식한다.
-// next-sitemap.config.js의 isStoryThin과 sentinel 형식이 동기화되어야 한다.
-const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
-
-export const extractAutoExpandBlock = (source: string): { stripped: string; block: string | null } => {
-  if (!source || !source.includes('AUTO-EXPAND-V1')) {
-    return { stripped: source, block: null };
-  }
-  const matches = source.match(AUTO_EXPAND_BLOCK_REGEX);
-  if (!matches || matches.length === 0) {
-    return { stripped: source, block: null };
-  }
-  const block = matches
-    .map((m) => m.replace(/^<!--\s*AUTO-EXPAND-V1\s*-->\s*/, '').replace(/\s*<!--\s*\/AUTO-EXPAND-V1\s*-->$/, ''))
-    .join('\n\n')
-    .trim();
-  const stripped = source.replace(AUTO_EXPAND_BLOCK_REGEX, '').replace(/\n{3,}/g, '\n\n');
-  return { stripped, block: block.length > 0 ? block : null };
-};
-
-/**
- * AUTO-EXPAND 보일러플레이트 분리 후 본문 분량(글자 수 + 쇼트코드 보너스)으로
- * thin-content 여부를 판정한다. next-sitemap.config.js의 isStoryThin과 동일한
- * 임계·로직을 공유하며, 광역 허브는 사이트 정보 구조상 색인이 필요해 제외.
- *
- * @param contentAfterAutoExpandStrip AUTO-EXPAND 블록을 분리한 본문 (extractAutoExpandBlock의 stripped)
- * @param slug 광역 허브 게이트 적용을 위한 슬러그
- */
-export const THIN_CONTENT_THRESHOLD = 1500;
-export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
-  'online-fallback': 120,
-  'session-checklist': 420,
-};
-export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
-
-export const computeThinContentStatus = (
-  contentAfterAutoExpandStrip: string,
-  slug: string,
-): { isThinContent: boolean; charCount: number } => {
-  const shortcodeBonus = [...contentAfterAutoExpandStrip.matchAll(/%%([a-z-]+)%%/g)]
-    .reduce((sum, m) => sum + (SHORTCODE_CHAR_ESTIMATES[m[1]] ?? SHORTCODE_DEFAULT_CHAR_ESTIMATE), 0);
-  const rawNonWhitespace = contentAfterAutoExpandStrip.replace(/\s+/g, '').length;
-  const charCount = rawNonWhitespace + shortcodeBonus;
-  const isThinContent = !isRegionHub(slug) && charCount < THIN_CONTENT_THRESHOLD;
-  return { isThinContent, charCount };
-};
-
-const stripCodeFenceWrapper = (source: string): string => {
-  if (!source) return '';
-  const trimmed = source.trimStart();
-  if (!trimmed.startsWith('```')) {
-    return source;
-  }
-
-  const lines = trimmed.split(/\r?\n/);
-  const opening = lines[0].trim();
-  if (!opening.startsWith('```')) {
-    return source;
-  }
-
-  let closingIndex = lines.length - 1;
-  while (closingIndex > 0 && !lines[closingIndex].trim().startsWith('```')) {
-    closingIndex -= 1;
-  }
-
-  if (closingIndex <= 0) {
-    return source;
-  }
-
-  return lines.slice(1, closingIndex).join('\n');
-};
-
 const getAllStorySlugs = (): string[] => {
   if (enableCache && storySlugsCache.value) {
     return storySlugsCache.value;
@@ -288,15 +231,6 @@ const getStoryCategoryLabel = (categoryKey: string, locale: Locale): string => {
     storyCategoryLabelCache.set(cacheKey, label);
   }
   return label;
-};
-
-// frontmatter cta 필드를 검증된 StoryCTAOverride로 좁힌다. 잘못된 값은 무시되고
-// 자동 매칭 룰이 폴백된다.
-const STORY_CTA_OVERRIDE_SET = new Set<string>(STORY_CTA_OVERRIDES);
-const normalizeStoryCTAOverride = (raw: unknown): StoryCTAOverride | undefined => {
-  if (typeof raw !== 'string') return undefined;
-  const trimmed = raw.trim().toLowerCase();
-  return STORY_CTA_OVERRIDE_SET.has(trimmed) ? (trimmed as StoryCTAOverride) : undefined;
 };
 
 const mapStoryFrontmatter = (
@@ -422,39 +356,8 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     }
   }
 
-  const rawFaq = data?.faq;
-  const faq = Array.isArray(rawFaq)
-    ? (rawFaq as Array<{ q: string; a: string }>).filter(
-        (item) => typeof item?.q === 'string' && typeof item?.a === 'string'
-      )
-    : undefined;
-
-  // frontmatter `howTo` 검증 및 정규화 — steps 배열이 비거나 형식이 잘못된 경우는
-  // 발행하지 않는다. HowTo schema를 잘못 발행하면 Search Console에서 경고가 발생.
-  const howTo = (() => {
-    const raw = data?.howTo as
-      | { name?: unknown; description?: unknown; totalTime?: unknown; steps?: unknown }
-      | undefined;
-    if (!raw || typeof raw !== 'object') return undefined;
-    const rawSteps = Array.isArray(raw.steps) ? raw.steps : [];
-    const steps = rawSteps
-      .filter((step): step is { name: unknown; text: unknown; image?: unknown } =>
-        Boolean(step) && typeof step === 'object'
-      )
-      .map((step) => ({
-        name: typeof step.name === 'string' ? step.name : '',
-        text: typeof step.text === 'string' ? step.text : '',
-        ...(typeof step.image === 'string' && { image: step.image }),
-      }))
-      .filter((step) => step.name.length > 0 && step.text.length > 0);
-    if (steps.length === 0) return undefined;
-    return {
-      ...(typeof raw.name === 'string' && { name: raw.name }),
-      ...(typeof raw.description === 'string' && { description: raw.description }),
-      ...(typeof raw.totalTime === 'string' && { totalTime: raw.totalTime }),
-      steps,
-    };
-  })();
+  const faq = normalizeStoryFaq(data?.faq);
+  const howTo = normalizeStoryHowTo(data?.howTo);
 
   // Phase 2 자동 fallback wiring — frontmatter inlineFallback > categoryKey 매핑 우선순위
   // ko 외 locale의 fallback 페이지는 자동 fallback 비활성 (Phase 1 정책 일관)
@@ -480,17 +383,11 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     // inlineFallback 정의 시 카테고리 매핑 전체 우회 (service도 동일 규칙)
     const matchedServiceType = hasFrontmatterFallback ? null : matchServiceForCategory(baseStory.categoryKey);
 
-    // wordCount 계산 — 한국어/일본어/태국어는 글자 수, 영문은 단어 수
-    const plain = stripMarkdown(contentToProcess);
-    const wordCount = (requestedLocale === 'ko' || requestedLocale === 'zh' || requestedLocale === 'th')
-      ? plain.replace(/\s+/g, '').length
-      : plain.split(/\s+/).filter(Boolean).length;
-
     const fallback = decideAutoFallback({
       authorBoxes: parsed.authorBoxes,
       presentTypes: parsed.presentTypes,
       storyCategoryKey: baseStory.categoryKey,
-      wordCount,
+      wordCount: getStoryWordCount(contentToProcess, requestedLocale) ?? 0,
       matchedPriceId,
       matchedReviewId,
       bookingMessage,
@@ -579,41 +476,5 @@ export const getRelatedStories = (locale: string, slug: string, limit = 6): Stor
     && isBrowsableStoryForLocale(item, targetLocale),
   );
 
-  if (!current) return candidates.slice(0, limit);
-
-  const currentTags = new Set(current.tags ?? []);
-  const titleTokenize = (raw: string | undefined): string[] =>
-    (raw || '')
-      .toLowerCase()
-      .split(/[\s·,—\-/|]+/)
-      .filter((w) => w.length >= 2);
-  const currentTitleWords = new Set(titleTokenize(current.title));
-  const toTime = (s: Story) => new Date(s.date).getTime() || 0;
-  const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
-  const now = Date.now();
-
-  const scored = candidates
-    .map((item) => {
-      // category 일치 weight 강화 (+2 → +3): 같은 인텐트 클러스터 우선 매칭.
-      const categoryMatch = item.categoryKey === current.categoryKey ? 3 : 0;
-      // tag overlap — 기존과 동일하게 각 일치 태그당 +1.
-      const tagOverlap = (item.tags ?? []).filter((t) => currentTags.has(t)).length;
-      // title 단어 overlap (가벼운 weight) — 같은 주제 단어가 제목에 들어간 글을
-      // 추가로 끌어올린다. 단순 카테고리·태그가 둘 다 약할 때 fallback 신호.
-      const titleOverlap = titleTokenize(item.title).filter((w) => currentTitleWords.has(w)).length * 0.5;
-      // 최신 90일 boost — 새 commercial/decision-stage 콘텐츠가 자연스럽게 noted.
-      const recencyBoost = (now - toTime(item)) < NINETY_DAYS_MS ? 1 : 0;
-      return { item, score: categoryMatch + tagOverlap + titleOverlap + recencyBoost };
-    })
-    .sort((a, b) => b.score - a.score || toTime(b.item) - toTime(a.item));
-
-  const relevant = scored.filter(({ score }) => score > 0).map(({ item }) => item);
-  if (relevant.length >= limit) return relevant.slice(0, limit);
-
-  const seen = new Set(relevant.map((s) => s.slug));
-  const fallback = candidates
-    .filter((s) => !seen.has(s.slug))
-    .sort((a, b) => toTime(b) - toTime(a));
-
-  return [...relevant, ...fallback].slice(0, limit);
+  return rankRelatedStories(current, candidates, limit);
 };

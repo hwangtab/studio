@@ -27,8 +27,10 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getPricingData } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
-import { getSchemaLanguage, generateHowToSchema } from '../../utils/schemaGenerator';
+import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
+import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import type { NextPageWithLayout } from '../../types';
 
 interface CoverVideoProps {
@@ -68,7 +70,6 @@ const PROCESS_ANIMATION = createFadeInAnimation({ delay: 0.2 });
 const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
-  const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
 
   const coverVideoPackage = React.useMemo(
     () => pricingData.specialPackages.find((p) => p.id === 'package-cover-video'),
@@ -76,82 +77,35 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
   );
 
   const quickAnswers = React.useMemo(
-    () => [
-      { question: t('coverVideo.quickAnswers.items.0.q'), answer: t('coverVideo.quickAnswers.items.0.a') },
-      { question: t('coverVideo.quickAnswers.items.1.q'), answer: t('coverVideo.quickAnswers.items.1.a') },
-      { question: t('coverVideo.quickAnswers.items.2.q'), answer: t('coverVideo.quickAnswers.items.2.a') },
-    ],
+    () => createTranslatedQaItems(t, 'coverVideo.quickAnswers.items', 3),
     [t]
   );
 
   const faqItems = React.useMemo(
-    () => [
-      { question: t('coverVideo.faq.items.0.q'), answer: t('coverVideo.faq.items.0.a') },
-      { question: t('coverVideo.faq.items.1.q'), answer: t('coverVideo.faq.items.1.a') },
-      { question: t('coverVideo.faq.items.2.q'), answer: t('coverVideo.faq.items.2.a') },
-      { question: t('coverVideo.faq.items.3.q'), answer: t('coverVideo.faq.items.3.a') },
-      { question: t('coverVideo.faq.items.4.q'), answer: t('coverVideo.faq.items.4.a') },
-      { question: t('coverVideo.faq.items.5.q'), answer: t('coverVideo.faq.items.5.a') },
-    ],
+    () => createTranslatedQaItems(t, 'coverVideo.faq.items', 6),
     [t]
   );
 
   const howToSteps = React.useMemo(
-    () => [
-      { name: t('coverVideo.process.steps.0.title'), text: t('coverVideo.process.steps.0.description') },
-      { name: t('coverVideo.process.steps.1.title'), text: t('coverVideo.process.steps.1.description') },
-      { name: t('coverVideo.process.steps.2.title'), text: t('coverVideo.process.steps.2.description') },
-      { name: t('coverVideo.process.steps.3.title'), text: t('coverVideo.process.steps.3.description') },
-    ],
+    () => createTranslatedHowToSteps(t, 'coverVideo.process.steps', 4),
     [t]
   );
 
   const pageUrl = `${siteConfig.url}/${locale}/cover-video`;
 
   const serviceSchema = React.useMemo(
-    () => ({
-      '@type': 'Service',
+    () => buildStudioServiceSchema({
+      locale,
+      siteName: siteConfig.name,
+      siteUrl: siteConfig.url,
+      pageUrl,
       name: t('coverVideo.seo.title'),
       description: t('coverVideo.seo.description'),
-      inLanguage: schemaLanguage,
       serviceType: locale === 'ko' ? '커버 영상 촬영' : 'Cover Video Production',
-      areaServed: {
-        '@type': 'City',
-        name: locale === 'ko' ? '서울특별시 은평구' : 'Eunpyeong-gu, Seoul',
-      },
-      location: {
-        '@type': 'Place',
-        name: siteConfig.name,
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
-          addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
-          postalCode: '03424',
-          addressCountry: 'KR',
-        },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: 37.614353,
-          longitude: 126.925887,
-        },
-      },
-      provider: {
-        '@type': 'Organization',
-        '@id': `${siteConfig.url}/#organization`,
-        name: siteConfig.name,
-        url: siteConfig.url,
-      },
-      url: pageUrl,
-      offers: {
-        '@type': 'Offer',
-        name: coverVideoPackage?.title ?? (locale === 'ko' ? '커버 영상 촬영 올인원 패키지' : 'Cover Video All-in-One Package'),
-        priceCurrency: 'KRW',
-        price: 350000,
-        availability: 'https://schema.org/InStock',
-        url: `${siteConfig.url}/${locale}/pricing#special-packages`,
-      },
+      offerName: coverVideoPackage?.title ?? (locale === 'ko' ? '커버 영상 촬영 올인원 패키지' : 'Cover Video All-in-One Package'),
+      offerPrice: 350000,
     }),
-    [t, siteConfig, locale, schemaLanguage, pageUrl, coverVideoPackage]
+    [t, siteConfig, locale, pageUrl, coverVideoPackage]
   );
 
   const howToSchema = React.useMemo(
@@ -167,10 +121,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
   );
 
   const pageSchema = React.useMemo(
-    () => ({
-      '@context': 'https://schema.org',
-      '@graph': [serviceSchema, howToSchema],
-    }),
+    () => buildSchemaGraph(serviceSchema, howToSchema),
     [serviceSchema, howToSchema]
   );
 

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { filterPortfolioItems } from '../../utils/portfolioDataUtils';
 import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
-import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schemaGenerator';
+import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schema';
 import { getSiteConfig } from '../../data/siteConfig';
 import ImageHero from '../../components/common/ImageHero';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
