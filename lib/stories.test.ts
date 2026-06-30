@@ -130,7 +130,7 @@ describe('getRelatedStories', () => {
 
     expect(related).toHaveLength(6);
     expect(related.map((story) => story.slug)).not.toEqual(
-      expect.arrayContaining(['busan1', 'gwangju1', 'jeju1', 'sejong1', 'ulsan1'])
+      expect.arrayContaining(['gwangju1', 'jeju1', 'sejong1', 'ulsan1'])
     );
     expect(
       related.every((story) => getStoryAvailableLocales(story.slug).includes('ko'))

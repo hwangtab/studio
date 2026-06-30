@@ -54,14 +54,20 @@ export function diffAudits(prev: AuditSnapshot | null, curr: AuditSnapshot): Aud
     const prev = prevBySlug.get(p.slug);
     if (!prev) continue; // 신규 페이지는 이번 라운드엔 무시
 
-    if (prev.tier !== 'NOINDEX_CANDIDATE' && p.tier === 'NOINDEX_CANDIDATE') {
+    // 분기 우선순위: 클릭 변화(KEEP 진입/이탈)를 임프 변화보다 먼저 판정한다.
+    // 그래야 NOINDEX_CANDIDATE→KEEP(클릭 획득) 점프가 "noindex 해제 후보"가 아니라
+    // "KEEP 승격"으로 분류되어, 같은 URL이 KEEP Top10과 해제 후보에 동시 등장하는
+    // 이중 분류가 사라진다.
+    if (prev.tier !== 'KEEP' && p.tier === 'KEEP') {
+      watchToKeep.push(makeTransition(p, prev));
+    } else if (prev.tier === 'KEEP' && p.tier !== 'KEEP') {
+      keepToWatch.push(makeTransition(p, prev));
+    } else if (prev.tier !== 'NOINDEX_CANDIDATE' && p.tier === 'NOINDEX_CANDIDATE') {
       newNoindexCandidates.push(makeTransition(p, prev));
     } else if (prev.tier === 'NOINDEX_CANDIDATE' && p.tier !== 'NOINDEX_CANDIDATE') {
-      unindexCandidates.push(makeTransition(p, prev));
-    } else if (prev.tier === 'KEEP' && (p.tier === 'WATCH' || p.tier === 'WATCH_LOW')) {
-      keepToWatch.push(makeTransition(p, prev));
-    } else if ((prev.tier === 'WATCH' || prev.tier === 'WATCH_LOW') && p.tier === 'KEEP') {
-      watchToKeep.push(makeTransition(p, prev));
+      // 임프 신규 발생. 단 tier NOINDEX_CANDIDATE(클릭0·임프0)는 robots 상태와 무관하므로
+      // 실제로 noindex된 페이지만 "해제 후보"로 보고한다(이미 색인 중인 페이지 거짓양성 제거).
+      if (p.noindex) unindexCandidates.push(makeTransition(p, prev));
     }
   }
 

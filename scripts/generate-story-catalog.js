@@ -10,6 +10,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const matter = require('gray-matter');
+// 색인 정책의 단일 진실원천(robots:noindex → 광역 허브 예외 → thin 게이트).
+// catalog에 noindex 플래그를 박아 gsc-audit이 런타임 .md 재읽기 없이 실제
+// 색인 상태를 알 수 있게 한다(diffAudits의 "noindex 해제 후보" 정합).
+const { isStoryThin } = require('../lib/sitemap/thinContent');
 
 const STORIES_DIR = path.join(process.cwd(), 'content/stories');
 const OUTPUT = path.join(process.cwd(), 'lib/story-catalog.json');
@@ -30,11 +34,15 @@ try {
     const raw = fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8');
     const { data, content } = matter(raw);
     const title = data.title || '';
+    const slug = f.replace(/\.md$/, '');
     return {
-      slug: f.replace(/\.md$/, ''),
+      slug,
       title,
       contentLen: content.length,
       cluster: classifyCluster(title),
+      // ko 캐노니컬 페이지가 실제로 noindex(sitemap 제외)인지. 비-ko는 site-wide
+      // noindex라 색인 정책 판단 기준이 아니므로 ko 기준으로 고정.
+      noindex: isStoryThin(slug, 'ko'),
     };
   });
 

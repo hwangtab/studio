@@ -26,6 +26,8 @@ export interface PageEntry {
   clicks: number;
   impressions: number;
   tier: Tier;
+  // ko 캐노니컬이 실제 noindex(robots 또는 thin 게이트)인지. catalog 빌드 시 확정.
+  noindex: boolean;
 }
 
 export interface ClusterStats {
@@ -65,6 +67,9 @@ export interface StoryCatalogEntry {
   title: string;
   contentLen: number;
   cluster: ClusterName;
+  // generate-story-catalog.js가 isStoryThin(slug,'ko')로 산출. 구버전 catalog에는
+  // 없을 수 있어 runAudit에서 Boolean()으로 안전 변환.
+  noindex?: boolean;
 }
 
 export function loadStoryCatalog(): StoryCatalogEntry[] {
@@ -163,6 +168,7 @@ export async function runAudit(opts: {
       clicks,
       impressions,
       tier: computeTier(clicks, impressions),
+      noindex: Boolean(c.noindex),
     };
   });
 
