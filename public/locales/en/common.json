@@ -39,6 +39,7 @@
     "geoPlacename": "Eunpyeong-gu, Seoul"
   },
   "actions": {
+    "responseAssurance": "Usually replies within 24 hours · Same-day booking available",
     "more": "Learn More",
     "submit": "Submit",
     "close": "Close",
@@ -176,6 +177,9 @@
     "form": {
       "failFallback": "If the form will not send, reach us directly below.",
       "name": "Name",
+      "consentLabel": "I agree to the collection and use of my personal information (required)",
+      "consentPolicyLink": "Privacy Policy",
+      "consentError": "Please agree to the collection and use of your personal information.",
       "namePlaceholder": "e.g., Alex Kim…",
       "phone": "Phone (optional)",
       "phonePlaceholder": "e.g., +82 10-1234-5678…",
@@ -261,6 +265,7 @@
     ]
   },
   "pricing": {
+    "anchorNavLabel": "Jump to pricing section",
     "seo": {
       "title": "Practice Room ₩360K/mo · Recording ₩100K/hr | Studio NOL",
       "description": "Studio NOL Seoul: practice room ₩360K/mo (no deposit, 24hr access), wedding song ₩350K, recording ₩100K/hr. Up to 30% off, free quote, 5 min from Yeonsinnae station.",
@@ -889,6 +894,7 @@
     },
     "detail": {
       "backToList": "Back to Stories",
+      "tocTitle": "Table of Contents",
       "summaryLabel": "Key Summary",
       "share": "Share",
       "moreTitle": "More Stories",
@@ -953,6 +959,8 @@
     "ratingAria": "Rating {{rating}} stars"
   },
   "notFound": {
+    "popularTitle": "Popular pages",
+    "popularGuide": "Home Recording Survival Guide",
     "seoTitle": "Page Not Found | Studio NOL",
     "badge": "404 Not Found",
     "title": "Page Not Found",

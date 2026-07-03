@@ -10,6 +10,7 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import { getPricingData } from '../../data/pricing';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
+import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
 import PricingCard from '../../components/ui/PricingCard';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero from '../../components/common/ImageHero';
@@ -64,6 +65,15 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       answer: t('pricing.quickAnswers.items.2.a'),
     },
   ]), [t, VAT_NOTICE]);
+
+  // 긴 가격 페이지(특수패키지→녹음→믹싱→마스터링→부가서비스)를 바로 점프하는 앵커 목차.
+  const anchorItems = React.useMemo(() => [
+    { id: 'special-packages', label: t('pricing.special.title') },
+    { id: 'recording', label: t('pricing.recording.title') },
+    { id: 'mixing', label: t('pricing.mixing.title') },
+    { id: 'mastering', label: t('pricing.mastering.title') },
+    { id: 'support-services', label: t('pricing.additional.title') },
+  ], [t]);
 
   const pricingSchema = React.useMemo(
     () => buildPricingPageSchema({
@@ -141,6 +151,11 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       />
 
 
+      <SectionAnchorNav
+        items={anchorItems}
+        ariaLabel={t('pricing.anchorNavLabel', { defaultValue: '가격 섹션 바로가기' })}
+      />
+
       <QuickAnswers
         title={t('pricing.quickAnswers.title')}
         subtitle={t('pricing.quickAnswers.subtitle')}
@@ -151,7 +166,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       <HubLocaleContentSection content={hubLocaleContent} icon={Info} />
 
       {/* Special Packages Section */}
-      <Section id="special-packages" variant="alternate">
+      <Section id="special-packages" variant="alternate" className="scroll-mt-32">
         <SectionHeading
           icon={Star}
           title={t('pricing.special.title')}
@@ -181,7 +196,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Recording Section */}
-      <Section id="recording" variant="default">
+      <Section id="recording" variant="default" className="scroll-mt-32">
         <SectionHeading
           icon={Mic}
           title={t('pricing.recording.title')}
@@ -211,7 +226,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Mixing Section */}
-      <Section id="mixing" variant="alternate">
+      <Section id="mixing" variant="alternate" className="scroll-mt-32">
         <SectionHeading
           icon={SlidersHorizontal}
           title={t('pricing.mixing.title')}
@@ -250,7 +265,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Mastering Section */}
-      <Section id="mastering" variant="default">
+      <Section id="mastering" variant="default" className="scroll-mt-32">
         <SectionHeading
           icon={Disc}
           title={t('pricing.mastering.title')}
@@ -280,7 +295,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Additional Services Section */}
-      <Section id="support-services" variant="alternate">
+      <Section id="support-services" variant="alternate" className="scroll-mt-32">
         <SectionHeading
           icon={PlusCircle}
           title={t('pricing.additional.title')}

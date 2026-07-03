@@ -40,6 +40,7 @@ export { default as Laptop } from 'lucide-react/dist/esm/icons/laptop.js';
 export { default as Layers } from 'lucide-react/dist/esm/icons/layers.js';
 export { default as Leaf } from 'lucide-react/dist/esm/icons/leaf.js';
 export { default as Lightbulb } from 'lucide-react/dist/esm/icons/lightbulb.js';
+export { default as List } from 'lucide-react/dist/esm/icons/list.js';
 export { default as ListChecks } from 'lucide-react/dist/esm/icons/list-checks.js';
 export { default as Lock } from 'lucide-react/dist/esm/icons/lock.js';
 export { default as Mail } from 'lucide-react/dist/esm/icons/mail.js';

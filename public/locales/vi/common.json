@@ -39,6 +39,7 @@
     "geoPlacename": "Eunpyeong-gu, Seoul"
   },
   "actions": {
+    "responseAssurance": "Thường phản hồi trong 24 giờ · Có thể đặt lịch trong ngày",
     "more": "Xem thêm",
     "submit": "Gửi",
     "close": "Đóng",
@@ -174,6 +175,9 @@
     "form": {
       "failFallback": "Nếu biểu mẫu không gửi được, hãy liên hệ trực tiếp bên dưới.",
       "name": "Họ tên",
+      "consentLabel": "Tôi đồng ý cho việc thu thập và sử dụng thông tin cá nhân của tôi (bắt buộc)",
+      "consentPolicyLink": "Chính sách bảo mật",
+      "consentError": "Vui lòng đồng ý cho việc thu thập và sử dụng thông tin cá nhân của bạn.",
       "namePlaceholder": "VD: Alex Kim…",
       "phone": "Số điện thoại (tùy chọn)",
       "phonePlaceholder": "VD: +82 10-1234-5678…",
@@ -231,6 +235,7 @@
     }
   },
   "pricing": {
+    "anchorNavLabel": "Chuyển đến mục bảng giá",
     "seo": {
       "title": "Giá Studio NOL · Phòng tập ₩360K/tháng · Cưới ₩350K",
       "description": "Giá minh bạch tại Studio NOL: phòng tập ₩360K/tháng (không cọc, ở qua đêm), cưới ₩350K, thu âm ₩100K/h. Giảm đến 30%. Báo giá miễn phí.",
@@ -864,6 +869,7 @@
     },
     "detail": {
       "backToList": "Quay lại Stories",
+      "tocTitle": "Mục lục",
       "summaryLabel": "Tóm tắt chính",
       "share": "Chia sẻ",
       "moreTitle": "Câu chuyện khác",
@@ -923,6 +929,8 @@
     "ratingAria": "Đánh giá {{rating}} sao"
   },
   "notFound": {
+    "popularTitle": "Trang phổ biến",
+    "popularGuide": "Hướng dẫn thu âm tại nhà",
     "seoTitle": "Không tìm thấy trang | Studio NOL",
     "badge": "404 Not Found",
     "title": "Không tìm thấy trang",

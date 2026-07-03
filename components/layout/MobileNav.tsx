@@ -25,6 +25,7 @@ interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
   navGroups: NavGroup[];
+  quickLinks: { label: string; href: string; }[];
   currentPath: string;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
@@ -37,6 +38,7 @@ export const MobileNav = ({
   isOpen,
   onClose,
   navGroups,
+  quickLinks,
   currentPath,
   isDarkMode,
   toggleDarkMode,
@@ -112,7 +114,7 @@ export const MobileNav = ({
       aria-modal="true"
       aria-label={t('nav.mobileMenu')}
       aria-hidden={!isOpen}
-      className={`xl:hidden fixed inset-x-0 top-16 z-40 bg-white dark:bg-gray-900 shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top transition-opacity duration-100 ${isOpen ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`}
+      className={`lg:hidden fixed inset-x-0 top-16 z-40 bg-white dark:bg-gray-900 shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top transition-opacity duration-100 ${isOpen ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`}
     >
       <div className="px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden">
@@ -133,6 +135,25 @@ export const MobileNav = ({
             isFloating={false}
             variant="inline"
           />
+        </div>
+
+        {/* 그룹 밖 고정 퀵링크 — 가격·문의·포트폴리오. 아코디언을 펼치지 않아도 1탭 도달. */}
+        <div className="grid grid-cols-3 gap-2 pb-3 border-b border-gray-100 dark:border-gray-800">
+          {quickLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={onClose}
+              aria-current={currentPath === link.href ? 'page' : undefined}
+              tabIndex={isOpen ? 0 : -1}
+              className={`flex items-center justify-center min-h-[44px] px-2 py-2 text-sm font-bold rounded-lg text-center transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === link.href
+                ? 'bg-primary text-white'
+                : 'bg-primary/10 text-primary dark:text-accent hover:bg-primary/20'
+                }`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
         {navGroups.map((group) => (

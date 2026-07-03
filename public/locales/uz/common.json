@@ -39,6 +39,7 @@
     "geoPlacename": "Eunpyeong-gu, Seul"
   },
   "actions": {
+    "responseAssurance": "Odatda 24 soat ichida javob · Shu kunning o'zida band qilish mumkin",
     "more": "Batafsil",
     "submit": "Yuborish",
     "close": "Yopish",
@@ -174,6 +175,9 @@
     "form": {
       "failFallback": "Agar forma yuborilmasa, quyidan biz bilan to‘g‘ridan-to‘g‘ri bog‘laning.",
       "name": "Ism",
+      "consentLabel": "Shaxsiy maʼlumotlarimni yigʻish va ishlatishga roziman (majburiy)",
+      "consentPolicyLink": "Maxfiylik siyosati",
+      "consentError": "Iltimos, shaxsiy maʼlumotlaringizni yigʻish va ishlatishga rozilik bering.",
       "namePlaceholder": "Masalan: Alex Kim…",
       "phone": "Telefon (ixtiyoriy)",
       "phonePlaceholder": "Masalan: +82 10-1234-5678…",
@@ -231,6 +235,7 @@
     }
   },
   "pricing": {
+    "anchorNavLabel": "Narxlar bo'limiga o'tish",
     "seo": {
       "title": "Studio NOL narxlari Â· Xona ₩360K/oy, Toʼy ₩350K, Yozuv ₩100K",
       "description": "Shaffof narxlar: oylik xona ₩360K (zakaladsiz, tunab qolish mumkin), toʼy ₩350K, yozuv ₩100K/soat. 30% chegirma. Bepul taklif.",
@@ -864,6 +869,7 @@
     },
     "detail": {
       "backToList": "Hikoyalarga qaytish",
+      "tocTitle": "Mundarija",
       "summaryLabel": "Asosiy xulosa",
       "share": "Ulashish",
       "moreTitle": "Yana hikoyalar",
@@ -923,6 +929,8 @@
     "ratingAria": "{{rating}} yulduzli baho"
   },
   "notFound": {
+    "popularTitle": "Ommabop sahifalar",
+    "popularGuide": "Uyda yozib olish boʻyicha qoʻllanma",
     "seoTitle": "Sahifa topilmadi | Studio NOL",
     "badge": "404 Not Found",
     "title": "Sahifa topilmadi",

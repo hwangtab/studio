@@ -56,7 +56,49 @@ const ContactFormCard = ({
   onBlur,
   onSubmit,
   onRetrySubmit,
-}: ContactFormCardProps) => (
+}: ContactFormCardProps) => {
+  // 제출 결과 배너로 스크롤·포커스 이동. 긴 폼 하단에서 제출하면 상단 배너가 뷰포트
+  // 밖이라 성공/실패를 놓칠 수 있어, 결과가 뜰 때마다 배너를 화면 중앙으로 가져오고
+  // 포커스를 옮긴다(스크린리더는 role="status"로 이미 안내되지만 시각 사용자 보완).
+  const messageRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (!submitMessage) return;
+    const el = messageRef.current;
+    if (!el) return;
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'center' });
+    el.focus();
+  }, [submitMessage, isSubmitSuccess]);
+
+  // 개인정보 수집·이용 동의(필수). 미동의 시 제출 차단.
+  const [consent, setConsent] = React.useState(false);
+  const [consentError, setConsentError] = React.useState(false);
+  const consentRef = React.useRef<HTMLInputElement>(null);
+
+  // 제출 성공 시 폼이 초기화되므로 동의 상태도 되돌린다.
+  React.useEffect(() => {
+    if (isSubmitSuccess) setConsent(false);
+  }, [isSubmitSuccess]);
+
+  const handleGatedSubmit = React.useCallback(
+    (event: FormEvent) => {
+      if (!consent) {
+        event.preventDefault();
+        setConsentError(true);
+        consentRef.current?.focus();
+        return;
+      }
+      setConsentError(false);
+      void onSubmit(event);
+    },
+    [consent, onSubmit]
+  );
+
+  const privacyPolicyHref = `/${locale}/privacy-policy`;
+
+  return (
   <m.div
     {...motionProps}
     className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
@@ -81,10 +123,12 @@ const ContactFormCard = ({
       )}
       {submitMessage && (
         <div
+          ref={messageRef}
+          tabIndex={-1}
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className={`mb-4 p-4 rounded-md flex items-center ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
+          className={`mb-4 p-4 rounded-md flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
         >
           {isSubmitSuccess && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
           {submitMessage}
@@ -118,7 +162,7 @@ const ContactFormCard = ({
           </p>
         </div>
       )}
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={handleGatedSubmit} className="space-y-4">
         <input
           type="text"
           name="company"
@@ -206,6 +250,40 @@ const ContactFormCard = ({
           )}
         </div>
 
+        <div className="flex items-start gap-2.5">
+          <input
+            ref={consentRef}
+            type="checkbox"
+            id="privacy-consent"
+            name="privacyConsent"
+            checked={consent}
+            onChange={(e) => {
+              setConsent(e.target.checked);
+              if (e.target.checked) setConsentError(false);
+            }}
+            aria-required="true"
+            aria-invalid={consentError}
+            aria-describedby={consentError ? 'privacy-consent-error' : undefined}
+            className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 touch-manipulation"
+          />
+          <label htmlFor="privacy-consent" className="text-sm text-gray-600 dark:text-gray-400 leading-snug">
+            {t('contact.form.consentLabel', { defaultValue: '개인정보 수집·이용에 동의합니다 (필수)' })}{' '}
+            <a
+              href={privacyPolicyHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline underline-offset-2"
+            >
+              {t('contact.form.consentPolicyLink', { defaultValue: '개인정보 처리방침' })}
+            </a>
+          </label>
+        </div>
+        {consentError && (
+          <span id="privacy-consent-error" role="alert" className="block text-xs text-red-600">
+            {t('contact.form.consentError', { defaultValue: '개인정보 수집·이용에 동의해 주세요.' })}
+          </span>
+        )}
+
         <div className="flex flex-col gap-3">
           <m.button
             {...interactiveMotionProps}
@@ -246,6 +324,9 @@ const ContactFormCard = ({
             <MessageCircle className="mr-2" size={18} aria-hidden="true" />
             {t('contact.form.kakao')}
           </m.a>
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            {t('actions.responseAssurance', { defaultValue: '보통 24시간 이내 답변 · 당일 예약도 가능합니다' })}
+          </p>
         </div>
       </form>
     </div>
@@ -271,6 +352,7 @@ const ContactFormCard = ({
       </div>
     </div>
   </m.div>
-);
+  );
+};
 
 export default ContactFormCard;

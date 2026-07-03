@@ -39,6 +39,7 @@
     "geoPlacename": "首尔特别市恩平区"
   },
   "actions": {
+    "responseAssurance": "通常24小时内回复 · 可当天预约",
     "more": "查看更多",
     "submit": "提交",
     "close": "关闭",
@@ -174,6 +175,9 @@
     "form": {
       "failFallback": "如果表单无法发送，请通过以下方式直接联系我们。",
       "name": "姓名",
+      "consentLabel": "我同意收集和使用我的个人信息（必填）",
+      "consentPolicyLink": "隐私政策",
+      "consentError": "请同意收集和使用您的个人信息。",
       "namePlaceholder": "例如：Alex Kim…",
       "phone": "联系电话（选填）",
       "phonePlaceholder": "例如：+82 10-1234-5678…",
@@ -231,6 +235,7 @@
     }
   },
   "pricing": {
+    "anchorNavLabel": "跳转到价格版块",
     "seo": {
       "title": "练习室月租₩36万起·婚礼献唱₩35万·配音₩3万 | 首尔恩平 Studio NOL",
       "description": "首尔恩平区 Studio NOL 价格公开透明：音乐练习室月租 36 万韩元起（可过夜住宿·0 保证金）、婚礼献唱套餐 ₩35万、录音 ₩10万/小时、混音·母带多种方案。套餐折扣最高 30%，KakaoTalk 免费报价，24小时内回复。",
@@ -864,6 +869,7 @@
     },
     "detail": {
       "backToList": "返回故事列表",
+      "tocTitle": "目录",
       "summaryLabel": "核心摘要",
       "share": "分享",
       "moreTitle": "更多故事",
@@ -923,6 +929,8 @@
     "ratingAria": "评分 {{rating}} 分"
   },
   "notFound": {
+    "popularTitle": "热门页面",
+    "popularGuide": "家庭录音生存指南",
     "seoTitle": "页面未找到 | Studio NOL",
     "badge": "404 Not Found",
     "title": "页面未找到",

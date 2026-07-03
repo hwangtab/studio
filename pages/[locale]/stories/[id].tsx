@@ -8,6 +8,7 @@ import { ArrowLeft, Calendar, Tag, Share2, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
+import TableOfContents from '../../../components/markdown/TableOfContents';
 import StoryCard from '../../../components/StoryCard';
 import ImageHero from '../../../components/common/ImageHero';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
@@ -223,6 +224,10 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
               </p>
             </div>
           )}
+          <TableOfContents
+            content={story.content}
+            title={t('stories.detail.tocTitle', { defaultValue: '목차' })}
+          />
           <m.div
             itemProp="articleBody"
             {...STORY_BODY_ANIMATION}

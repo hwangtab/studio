@@ -98,6 +98,9 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   }, []);
 
   const isHome = router.pathname === '/[locale]';
+  // 스토리 상세는 스크롤 시 StickyBottomCTA(하단 바)가 상시 카카오 CTA 역할을 하므로
+  // 전역 KakaoFab을 숨겨 우하단 요소 중복·시각 충돌을 제거한다.
+  const isStoryDetail = router.pathname === '/[locale]/stories/[id]';
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const skipLabel = t('actions.skipToContent');
 
@@ -135,7 +138,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       <Footer locale={locale} />
-      <KakaoFab locale={locale} />
+      {!isStoryDetail && <KakaoFab locale={locale} />}
       <ScrollToTop locale={locale} />
     </div>
   );

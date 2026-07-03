@@ -3,11 +3,14 @@ import { MAX_AUTO_LINKS, topicLinks } from '../../data/internalLinks';
 const REGEX_META_CHARS = /[.*+?^${}()|[\]\\]/g;
 const escapeRegexLiteral = (raw: string): string => raw.replace(REGEX_META_CHARS, '\\$&');
 
-// 자동 링크 삽입에서 제외할 본문 영역(이미 링크인 곳, 코드 펜스, 인라인 코드).
+// 자동 링크 삽입에서 제외할 본문 영역(이미 링크인 곳, 코드 펜스, 인라인 코드, 헤딩 줄).
+// 헤딩 줄을 제외하는 이유: 헤딩 안에 링크가 주입되면 렌더 헤딩 텍스트가 원문과 달라져
+// 헤딩 id(및 이를 참조하는 목차·딥링크 앵커)가 어긋난다. UX상으로도 헤딩 속 링크는 부자연.
 const EXCLUSION_PATTERNS: RegExp[] = [
   /!?\[[^\]\n]*\]\([^)\n]*\)/g,
   /```[\s\S]*?```/g,
   /`[^`\n]+`/g,
+  /^#{1,6}[^\n]*/gm,
 ];
 
 const collectExclusionRanges = (text: string): Array<[number, number]> => {

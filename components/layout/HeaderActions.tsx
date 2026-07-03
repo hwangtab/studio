@@ -83,7 +83,7 @@ export const HeaderActions = ({
       )}
 
       <button
-        className={`xl:hidden flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+        className={`lg:hidden flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
           ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
           : 'text-white hover:bg-white/20'
           }`}

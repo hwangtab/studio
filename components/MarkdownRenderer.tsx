@@ -93,7 +93,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
+          'scroll-mt-24 font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
           className
         )}
       >
@@ -107,7 +107,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
+          'scroll-mt-24 font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
           className
         )}
       >
@@ -121,7 +121,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
+          'scroll-mt-24 text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
           className
         )}
       >
@@ -135,7 +135,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'text-xl font-medium mt-6 mb-3 text-gray-900 dark:text-white',
+          'scroll-mt-24 text-xl font-medium mt-6 mb-3 text-gray-900 dark:text-white',
           className
         )}
       >
@@ -374,6 +374,10 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
         key={index}
         options={{
           overrides,
+          // markdown-to-jsx 기본 slugify는 한글을 버리고(예: "808 베이스 —" → "808----")
+          // 하이픈도 정리하지 않아 헤딩 id가 깨지고 서로 충돌한다. TOC·딥링크가 참조하는
+          // toHeadingId와 동일 규칙으로 맞춰 앵커가 실제 헤딩과 일치하게 한다.
+          slugify: toHeadingId,
           disableParsingRawHTML: true,
           forceBlock: true,
           forceWrapper: true,

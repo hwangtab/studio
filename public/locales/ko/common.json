@@ -39,6 +39,7 @@
     "geoPlacename": "서울특별시 은평구"
   },
   "actions": {
+    "responseAssurance": "보통 24시간 이내 답변 · 당일 예약도 가능합니다",
     "more": "더 보기",
     "submit": "제출하기",
     "close": "닫기",
@@ -174,6 +175,9 @@
     "form": {
       "failFallback": "전송이 안 되면 아래로 바로 연락 주세요.",
       "name": "이름",
+      "consentLabel": "개인정보 수집·이용에 동의합니다 (필수)",
+      "consentPolicyLink": "개인정보 처리방침",
+      "consentError": "개인정보 수집·이용에 동의해 주세요.",
       "namePlaceholder": "예: 홍길동…",
       "phone": "연락처 (선택)",
       "phonePlaceholder": "예: 010-1234-5678…",
@@ -231,6 +235,7 @@
     }
   },
   "pricing": {
+    "anchorNavLabel": "가격 섹션 바로가기",
     "seo": {
       "title": "연습실 월 36만원·녹음 10만원·축가 패키지 35만원 | 스튜디오 놀",
       "description": "음악연습실 월 36만원(보증금 0·24시간), 축가 패키지 35만원, 녹음 시간당 10만원. 최대 30% 할인, 무료 견적.",
@@ -1538,6 +1543,7 @@
     },
     "detail": {
       "backToList": "스토리 목록으로 돌아가기",
+      "tocTitle": "목차",
       "summaryLabel": "핵심 요약",
       "share": "공유하기",
       "moreTitle": "더 많은 스토리",
@@ -1602,6 +1608,8 @@
     "ratingAria": "평점 {{rating}}점"
   },
   "notFound": {
+    "popularTitle": "자주 찾는 페이지",
+    "popularGuide": "홈레코딩 생존 가이드",
     "seoTitle": "페이지를 찾을 수 없음 | 스튜디오 놀",
     "badge": "404 Not Found",
     "title": "페이지를 찾을 수 없습니다",

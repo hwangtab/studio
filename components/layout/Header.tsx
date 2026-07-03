@@ -66,6 +66,14 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     }
   ], [locale, t]);
 
+  // 모바일 메뉴 최상단 고정 노출 퀵링크. 4개 그룹 아코디언이 모두 접힌 채 시작하므로
+  // 고객 최다 의도(가격 확인·방문/전화·작업물 확인)를 그룹 밖 1탭 경로로 승격한다.
+  const quickLinks = useMemo(() => [
+    { label: t('nav.pricing'), href: `/${locale}/pricing` },
+    { label: t('nav.contact'), href: `/${locale}/contact` },
+    { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
+  ], [locale, t]);
+
   const handleNavigate = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
@@ -121,6 +129,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         navGroups={navGroups}
+        quickLinks={quickLinks}
         currentPath={currentPath}
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}

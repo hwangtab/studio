@@ -39,6 +39,7 @@
     "geoPlacename": "Eunpyeong-gu, Seúl"
   },
   "actions": {
+    "responseAssurance": "Normalmente respondemos en 24 h · Reserva el mismo día",
     "more": "Ver Más",
     "submit": "Enviar",
     "close": "Cerrar",
@@ -174,6 +175,9 @@
     "form": {
       "failFallback": "Si el formulario no se envía, contáctanos directamente abajo.",
       "name": "Nombre",
+      "consentLabel": "Acepto la recopilación y el uso de mis datos personales (obligatorio)",
+      "consentPolicyLink": "Política de privacidad",
+      "consentError": "Por favor, acepta la recopilación y el uso de tus datos personales.",
       "namePlaceholder": "p. ej., Alex Kim…",
       "phone": "Teléfono (opcional)",
       "phonePlaceholder": "p. ej., +82 10-1234-5678…",
@@ -231,6 +235,7 @@
     }
   },
   "pricing": {
+    "anchorNavLabel": "Ir a la sección de precios",
     "seo": {
       "title": "Precios Studio NOL · Sala ₩360K/mes · Boda ₩350K",
       "description": "Precios transparentes en Studio NOL: sala mensual ₩360K (sin depósito, pernocta), boda ₩350K, grabación ₩100K/h. Hasta 30% dto. Presupuesto gratis.",
@@ -864,6 +869,7 @@
     },
     "detail": {
       "backToList": "Volver a historias",
+      "tocTitle": "Índice",
       "summaryLabel": "Resumen clave",
       "share": "Compartir",
       "moreTitle": "Más historias",
@@ -923,6 +929,8 @@
     "ratingAria": "Calificación {{rating}} estrellas"
   },
   "notFound": {
+    "popularTitle": "Páginas populares",
+    "popularGuide": "Guía de supervivencia de grabación casera",
     "seoTitle": "Página no encontrada | Studio NOL",
     "badge": "404 Not Found",
     "title": "Página no encontrada",
