@@ -64,6 +64,7 @@
       "all": "Hammasi"
     },
     "siteName": "Studio NOL",
+    "loading": "Yuklanmoqda",
     "languageSelector": "Til tanlagichi",
     "languageOptions": "Til variantlari"
   },
@@ -171,6 +172,8 @@
   "contact": {
     "title": "Bog'laning",
     "subtitle": "Savol yoki bron qilish uchun bemalol murojaat qiling.",
+    "heroTitle": "Seuldagi ovoz yozish studiyasi — Ingliz tilida bron va masofaviy miks",
+    "heroSubtitle": "Seulda yozuv, miks va mastering. Ingliz tilida bron qilib muloqot qiling yoki treklaringizni istalgan joydan masofaviy miks uchun yuboring — bepul narx taklifi, 24 soat ichida javob.",
     "heroAlt": "Studio NOL bilan aloqa",
     "form": {
       "failFallback": "Agar forma yuborilmasa, quyidan biz bilan to‘g‘ridan-to‘g‘ri bog‘laning.",
@@ -189,6 +192,7 @@
       "kakao": "KakaoTalk orqali so'rov",
       "success": "Xabar muvaffaqiyatli yuborildi.",
       "error": "Xabar yuborilmadi. Qayta urinib ko'ring.",
+      "errorsFound": "{{count}} ta maydonni tekshiring.",
       "loading": "Yuborilmoqda…"
     },
     "directions": {
@@ -294,6 +298,12 @@
       "subtitle": "30 daqiqa bepul maslahat · Maxsus narx · Bo'lib to'lash imkoniyati",
       "location": "Onlayn murojaat",
       "inquiry": "Bepul Maslahat Olish"
+    },
+    "relatedStoriesTitle": "Bron qilishdan oldin ko'rib chiqishga arziydigan qo'llanmalar",
+    "relatedStoriesSubtitle": "Xarajat, reliz va yozuv jarayonini oldindan bilsangiz, birinchi seansdan ko'proq foyda olasiz.",
+    "hubCallout": {
+      "title": "Ijara xonada demo yaratish — To'liq qo'llanma",
+      "subtitle": "Uy yozuvining chegaralari va studiyaga o'tish vaqtigacha — bir sahifada jamlangan omon qolish qo'llanmasi."
     },
     "images": {
       "packageAlt": "Studio NOL kabinasida vokalchi yozuv seanssi"
@@ -458,6 +468,12 @@
       "location": "Manzil",
       "inquiry": "Bepul maslahat olish",
       "imageAlt": "Studio NOL prodakshn sozlamalari Softube Console 1 va monitoring karnaylari bilan"
+    },
+    "relatedStoriesTitle": "O'quvchilar eng ko'p ko'rgan bastalash va miks qo'llanmalari",
+    "relatedStoriesSubtitle": "Bastalash, miks va relizga darhol yordam beradigan amaliy qo'llanmalarni to'pladik.",
+    "hubCallout": {
+      "title": "Musiqa relizini maqsad qilgan 1:1 kompleks dars qo'llanmasi",
+      "subtitle": "MIDI bastalashdan miks va masteringgacha — amaldagi prodyuserning 1:1 amaliy dasturi bir sahifada."
     },
     "mobileMenu": "Mobil menyu"
   },
@@ -1091,6 +1107,12 @@
       "location": "Yo'nalishni ko'rish",
       "inquiry": "To'y qo'shig'i yozishni band qilish",
       "imageAlt": "Studio NOL ovoz yozish budkasi"
+    },
+    "relatedStoriesTitle": "To'y qo'shig'iga tayyorlanish qo'llanmalari",
+    "relatedStoriesSubtitle": "Kelin-kuyovlar eng ko'p ko'rgan vokal va yozuv qo'llanmalarini to'pladik.",
+    "hubCallout": {
+      "title": "To'y qo'shig'ini o'zingiz kuylash — To'liq qo'llanma",
+      "subtitle": "Qo'shiq tanlash va mashqdan yozuv va to'yxonaga topshirishgacha — kelin-kuyov uchun bir sahifada."
     }
   },
   "voiceActing": {
@@ -1222,6 +1244,8 @@
       "inquiry": "Yozuvni band qilish",
       "imageAlt": "Studio NOL ovoz yozish jihozlari"
     },
+    "relatedStoriesTitle": "Ovoz aktyorligi va naratsiya yozuvi qo'llanmalari",
+    "relatedStoriesSubtitle": "Audiokitob, ASMR, podkast va demo yozuvlariga darhol qo'llash mumkin bo'lgan amaliy qo'llanmalar.",
     "hubCallout": {
       "title": "Audiokitob · ASMR · Naratsiya birinchi urinish — To'liq qo'llanma",
       "subtitle": "Matn tayyorlashdan yozuv, tahrirlash, mastering va tarqatishgacha — bir sahifadan boshlang."

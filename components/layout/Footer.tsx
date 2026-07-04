@@ -38,7 +38,10 @@ export const Footer = ({ locale }: FooterProps) => {
             <p className="typo-footer-body text-gray-200/90 mb-4 leading-relaxed">
               {t('footer.tagline')}
             </p>
-            <p className="typo-footer-meta">
+            {/* ISR 캐시가 연말/연초 경계를 걸치면 SSR(캐시된 연도)과 CSR(현재 연도)이
+                어긋날 수 있다. 연 1회 코스메틱 불일치이므로 전 페이지 getStaticProps 계약
+                변경 대신 이 텍스트 노드에 한해 hydration 경고를 억제한다(직접 부모 요소에 적용). */}
+            <p className="typo-footer-meta" suppressHydrationWarning>
               {currentYear} {siteConfig.name}. {t('footer.rights')}
             </p>
             <Link

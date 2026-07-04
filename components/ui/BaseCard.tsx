@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { m } from 'framer-motion';
 import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
 
+// 신 Link API(자체 <a> 렌더)에 framer-motion을 결합한 컴포넌트. legacyBehavior +
+// 자식 <m.a> 조합(차기 Next에서 제거 예정)을 대체하며, 렌더 결과는 동일한 단일 <a>.
+// 모듈 스코프에서 1회 생성(렌더마다 재생성 방지). LazyMotion(domAnimation) 컨텍스트
+// 하에서 whileHover 등 제스처 동작 — 기존 m.a와 동일한 피처만 요구.
+const MotionLink = m.create(Link);
+
 interface BaseCardProps {
     children: React.ReactNode;
     className?: string;
@@ -70,11 +76,9 @@ const BaseCard = React.memo(({
             // QuickAnswers의 wrapper로 listing 형태로 다수 인스턴스가 viewport에
             // 동시 등장. 기본 prefetch면 카드 수만큼 SSG JSON·청크가 동시 다운로드.
             // hover/focus 시 prefetch는 next/link 휴리스틱으로 유지.
-            <Link href={href} prefetch={false} legacyBehavior passHref>
-                <m.a {...animationProps} {...anchorProps}>
-                    {children}
-                </m.a>
-            </Link>
+            <MotionLink href={href} prefetch={false} {...animationProps} {...anchorProps}>
+                {children}
+            </MotionLink>
         );
     }
 

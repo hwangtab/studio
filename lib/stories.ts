@@ -400,7 +400,20 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     }
   }
 
-  const isThinContent = computeThinContentStatus(finalContent, slug).isThinContent;
+  // thin 판정은 사이트맵 isStoryThin(lib/sitemap/thinContent.js)·audit scoreContent와
+  // 반드시 동일 입력이어야 "사이트맵 제외 ↔ 페이지 noindex"가 일치한다(핵심 불변식).
+  // finalContent는 fallback 마커(가격·리뷰 카드 등)가 삽입된 상태인데, 이 마커는 여러
+  // 페이지에 공통으로 박히는 boilerplate라 unique 분량이 아니며 사이트맵/audit 입력에는
+  // 없다. 마커 삽입 전 contentToProcess로 계산해 세 경로의 판정을 통일한다. (finalContent로
+  // 계산하면 마커가 char count를 부풀려 사이트맵은 thin으로 제외했는데 페이지는 noindex
+  // 없이 색인되는 도시명 치환 pSEO 페이지가 생긴다.)
+  const isThinContent = computeThinContentStatus(contentToProcess, slug).isThinContent;
+
+  // ko 원본(slug.md)이 없는 native-only 스토리 여부. site-wide 비-ko noindex 정책의
+  // 예외 판단에 쓰인다 — native-only 스토리는 native locale에서 색인 가능(사이트맵
+  // lib/sitemap/routes.js isLocaleStoryIndexable의 동일 정책과 대칭). 번역본(ko 원본
+  // 존재) 스토리는 ko가 thin/noindex여도 이 예외에 해당하지 않는다.
+  const isNativeOnly = !fs.existsSync(path.join(storiesDirectory, `${slug}.md`));
 
   const storyDetail: StoryDetail = {
     ...baseStory,
@@ -408,6 +421,7 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     sourceLocale,
     isFallbackTranslation: sourceLocale !== requestedLocale,
     isThinContent,
+    isNativeOnly,
     ...(typeof data?.robots === 'string' && { robots: data.robots }),
     modifiedDate,
     ...(faq && faq.length > 0 && { faq }),

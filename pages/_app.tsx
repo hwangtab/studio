@@ -222,6 +222,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <meta name="msapplication-TileColor" content="#6d28d9" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
+        {/* 표준 메타 병기: apple- 접두는 폐기 경고 대상이라 표준 mobile-web-app-capable을
+            함께 선언(경고 해소). apple- 쪽은 iOS 구버전 홈화면 앱 호환 위해 유지. */}
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="스튜디오 놀" />

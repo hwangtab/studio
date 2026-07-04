@@ -412,8 +412,8 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
             <HubLinkCallout
                 hubSlug="vocal-beginners-guide"
                 locale={locale}
-                title="음원 발매를 목표로 하는 1:1 종합 레슨 가이드"
-                subtitle="MIDI 작곡·믹싱·마스터링까지 — 현직 프로듀서 1:1 실전 커리큘럼과 학습 가이드를 한 페이지에 모았습니다."
+                title={t('lesson.hubCallout.title', { defaultValue: '음원 발매를 목표로 하는 1:1 종합 레슨 가이드' })}
+                subtitle={t('lesson.hubCallout.subtitle', { defaultValue: 'MIDI 작곡·믹싱·마스터링까지 — 현직 프로듀서 1:1 실전 커리큘럼과 학습 가이드를 한 페이지에 모았습니다.' })}
             />
 
             <RelatedStoriesSection
@@ -463,7 +463,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             hubLocaleContent,
             relatedStories,
         },
-        { revalidate: 86400, i18nSections: ['lesson'] }
+        { revalidate: 86400, i18nSections: ['lesson', 'stories'] }
     );
 };
 

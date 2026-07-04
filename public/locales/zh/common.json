@@ -64,6 +64,7 @@
       "all": "全部"
     },
     "siteName": "Studio NOL",
+    "loading": "加载中",
     "languageSelector": "语言选择器",
     "languageOptions": "语言选项"
   },
@@ -171,6 +172,8 @@
   "contact": {
     "title": "联系我们",
     "subtitle": "欢迎咨询项目或预约。",
+    "heroTitle": "首尔录音室 — 支持英语预约与远程混音",
+    "heroSubtitle": "在首尔提供录音、混音与母带制作。可用英语预约沟通，也可从任何地方发送音轨进行远程混音 — 免费报价，24小时内回复。",
     "heroAlt": "联系 Studio NOL",
     "form": {
       "failFallback": "如果表单无法发送，请通过以下方式直接联系我们。",
@@ -189,6 +192,7 @@
       "kakao": "通过 KakaoTalk 咨询",
       "success": "消息已成功发送。",
       "error": "发送失败，请重试。",
+      "errorsFound": "请检查 {{count}} 个输入项。",
       "loading": "发送中…"
     },
     "directions": {
@@ -294,6 +298,12 @@
       "subtitle": "30分钟免费咨询 · 基于费率表的定制报价 · 支持分期付款",
       "location": "在线咨询",
       "inquiry": "申请免费咨询"
+    },
+    "relatedStoriesTitle": "预约前值得再看一遍的指南",
+    "relatedStoriesSubtitle": "提前了解费用·发行·录音流程，让你的首次录音更高效。",
+    "hubCallout": {
+      "title": "在单间·出租屋制作Demo — 综合指南",
+      "subtitle": "从家庭录音的局限到转向录音室的时机，一页整理好的生存指南。"
     },
     "images": {
       "packageAlt": "Studio NOL 录音棚中的歌手录音"
@@ -459,6 +469,12 @@
       "location": "位置",
       "inquiry": "申请免费咨询",
       "imageAlt": "Studio NOL 制作设置 - Softube Console 1 和监听音箱"
+    },
+    "relatedStoriesTitle": "学员浏览最多的作曲·混音指南",
+    "relatedStoriesSubtitle": "汇集了对作曲·混音·发行直接有帮助的实战指南。",
+    "hubCallout": {
+      "title": "以发行音乐为目标的1:1综合课程指南",
+      "subtitle": "从MIDI作曲到混音·母带 — 现职制作人的1:1实战课程与学习指南，一页全搞定。"
     }
   },
   "practiceRoom": {
@@ -1091,6 +1107,12 @@
       "location": "查看地址",
       "inquiry": "预约婚礼祝歌录音",
       "imageAlt": "Studio NOL人声录音棚"
+    },
+    "relatedStoriesTitle": "婚礼祝歌准备指南",
+    "relatedStoriesSubtitle": "汇集了新郎新娘浏览最多的声乐·录音指南。",
+    "hubCallout": {
+      "title": "亲自演唱婚礼祝歌 — 综合指南",
+      "subtitle": "从选曲、练习到录音、婚礼现场交付，一页全搞定的新郎新娘指南。"
     }
   },
   "voiceActing": {
@@ -1222,6 +1244,8 @@
       "inquiry": "预约配音录音",
       "imageAlt": "Studio NOL配音录音设备"
     },
+    "relatedStoriesTitle": "配音·旁白录音指南",
+    "relatedStoriesSubtitle": "可直接用于有声书·ASMR·播客·小样录音的实战指南。",
     "hubCallout": {
       "title": "有声书·ASMR·旁白初挑战 — 综合指南",
       "subtitle": "从稿件准备到录音·剪辑·母带·发行，一页全搞定。"

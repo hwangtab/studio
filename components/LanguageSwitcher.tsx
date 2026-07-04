@@ -147,7 +147,11 @@ export const LanguageSwitcher = ({
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        aria-haspopup="menu"
+        // 언어 전환은 로케일 URL로 이동하는 "네비게이션 링크 목록"이므로 ARIA menu가 아닌
+        // disclosure 패턴이 맞다(WAI-ARIA APG는 네비게이션에 role=menu 대신 disclosure 권장).
+        // 팝업은 <ul>+<Link> 링크 목록이며 roving tabindex 등 menu 키보드 모델이 없다 —
+        // aria-haspopup="menu"는 SR에 menu/menuitem을 약속하는 거짓 계약이었다. 제거하고
+        // aria-expanded만으로 열림/닫힘을 알린다(화살표 키 이동은 부가 향상으로 유지).
         aria-expanded={isOpen}
         // WCAG 2.5.3 (Label in Name): 접근 가능한 이름은 보이는 텍스트로 시작해야 한다.
         // 기존 aria-label={t('common.languageSelector')}는 보이는 텍스트(localeNames[currentLocale])와

@@ -131,6 +131,11 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           : `/${locale}/stories/${story.slug}`}
         disableUrlMetaAndAlternates={story.isFallbackTranslation}
         availableLocales={story.availableLocales}
+        // ko 원본 없는 native-only 스토리는 native locale에서 색인 가능(site-wide 비-ko
+        // noindex 정책의 예외 — 사이트맵 등재와 대칭). 번역본(ko 원본 존재)이나 fallback
+        // 렌더에는 켜지지 않는다. thin/frontmatter noindex는 아래 robots prop이 그대로
+        // 통과 적용되므로 "사이트맵 등재 ⇔ 색인 가능" 불변식이 유지된다.
+        allowNonDefaultLocaleIndexing={Boolean(story.isNativeOnly) && !story.isFallbackTranslation}
         ogImage={ogImage}
         ogImageAlt={story.thumbnail ? story.title : `${story.title} - ${siteConfig.name}`}
         ogImageWidth={1200}

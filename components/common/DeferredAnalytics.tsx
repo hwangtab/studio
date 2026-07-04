@@ -11,7 +11,9 @@ import Script from 'next/script';
 const Analytics = dynamic(() => import('@vercel/analytics/react').then((m) => m.Analytics), { ssr: false });
 const SpeedInsights = dynamic(() => import('@vercel/speed-insights/next').then((m) => m.SpeedInsights), { ssr: false });
 
-const INTERACTION_EVENTS: (keyof WindowEventMap)[] = ['pointermove', 'scroll', 'keydown', 'touchstart'];
+// pointerdown 포함: 마우스 이동 없이 첫 입력이 순수 클릭/탭(터치패드 탭 등)인 경우에도
+// 스크립트 로드 전에 라우트 이동이 발생하지 않도록 봉쇄(pointermove는 이 경로를 못 잡음).
+const INTERACTION_EVENTS: (keyof WindowEventMap)[] = ['pointermove', 'pointerdown', 'scroll', 'keydown', 'touchstart'];
 const FALLBACK_TIMEOUT_MS = 5000;
 
 const DeferredAnalytics: React.FC = () => {

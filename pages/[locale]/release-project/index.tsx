@@ -76,7 +76,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
   const hubFaqItems = t('releaseProject.hubFaq.items', { returnObjects: true }) as { question: string; answer: string }[];
-  const { selectedItem, categories, open: openModal, close: closeModal } = usePortfolioModalLazy(
+  const { selectedItem, categories, open: openModal, close: closeModal, loadError } = usePortfolioModalLazy(
     locale,
     `/${locale}/release-project`
   );
@@ -276,7 +276,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         subtitle={t('releaseProject.discography.sectionSubtitle')}
         viewAllLabel={t('releaseProject.discography.viewAll')}
         items={portfolioItems.filter((item) => item.featured)}
-        onSelectItem={openModal}
+        onSelectItem={loadError ? undefined : openModal}
       />
 
       {/* 최근 작업 노트 spotlight — 검증된 productionNotes 3건 */}
@@ -294,12 +294,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                 key={item.id}
                 href={getLink(`/portfolio/${item.id}`)}
                 onClick={(e) => {
+                  // 데이터 로드 실패 시 모달 대신 링크 기본 동작(실제 상세 페이지 이동)으로 폴백.
+                  if (loadError) return;
                   if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as React.MouseEvent).button === 1) return;
                   e.preventDefault();
                   openModal(item.id);
                 }}
                 className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
-                aria-haspopup="dialog"
+                aria-haspopup={loadError ? undefined : 'dialog'}
               >
                 {item.image && (
                   <div className="aspect-square overflow-hidden relative">
@@ -434,7 +436,7 @@ export const getStaticProps: GetStaticProps<ReleaseProjectProps> = async ({ para
   return buildPageStaticProps(
     locale,
     { locale, portfolioItems, spotlightItems, relatedStories, asOf },
-    { revalidate: 86400, i18nSections: ['releaseProject', 'portfolio'] }
+    { revalidate: 86400, i18nSections: ['releaseProject', 'portfolio', 'stories'] }
   );
 };
 

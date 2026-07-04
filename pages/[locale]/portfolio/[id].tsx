@@ -262,7 +262,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       categories,
       relatedStories,
     },
-    { revalidate: 3600, i18nSections: ['portfolio'] }
+    { revalidate: 3600, i18nSections: ['portfolio', 'stories'] }
   );
 };
 

@@ -52,6 +52,12 @@ interface SEOProps {
    */
   availableLocales?: readonly Locale[];
   /**
+   * site-wide 비-ko noindex 정책의 예외 스위치 — ko 원본 없는 native-only 콘텐츠의
+   * native locale 페이지에서만 true로 전달. robots가 그대로 적용되고 현재 locale의
+   * self-reference hreflang이 발행된다. 번역본 페이지에는 절대 켜지 말 것.
+   */
+  allowNonDefaultLocaleIndexing?: boolean;
+  /**
    * Authoritative locale for this page. When provided, the component uses this
    * value directly instead of deriving the locale from `router.asPath`, which
    * is unreliable during SSR/SSG (asPath can be empty or fall back to `ko`).
@@ -88,6 +94,7 @@ const SEO = ({
   isCourse = false,
   webPageType,
   availableLocales,
+  allowNonDefaultLocaleIndexing = false,
   locale,
 }: SEOProps) => {
   const router = useRouter();
@@ -116,6 +123,7 @@ const SEO = ({
         disableUrlMetaAndAlternates,
         disableAlternates,
         availableLocales,
+        allowNonDefaultLocaleIndexing,
         locale,
         pathState,
       }),
@@ -126,6 +134,7 @@ const SEO = ({
       disableUrlMetaAndAlternates,
       disableAlternates,
       availableLocales,
+      allowNonDefaultLocaleIndexing,
       locale,
       pathState,
     ]

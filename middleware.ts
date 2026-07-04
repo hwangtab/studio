@@ -176,8 +176,16 @@ export function middleware(request: NextRequest) {
     }
 
     if (shouldRedirect) {
-        // 봇은 SEO 점수 이전을 위해 308(영구). 일반 사용자 언어 redirect는 307(임시).
-        // region map·trailing slash redirect는 항상 영구(308).
+        // redirect status 결정:
+        // shouldVaryByLanguage(= locale 프리픽스 없는 요청 + 비봇)일 때만 307(임시)+Vary: Accept-Language.
+        // 이 경로의 최종 목적지는 Accept-Language에 따라 /ko/… vs /en/…로 갈린다. 이를 308(영구)로
+        // 내보내면 Vary를 무시하는 중간 캐시가 한 사용자의 언어 redirect를 영구 캐싱해 다른 언어
+        // 사용자에게 오배송한다(cache poisoning). region map·trailing slash redirect가 이 locale
+        // 감지 경로에 합성돼도 동일하게 307이 된다 — "region/trailing slash는 항상 308"이 아니다.
+        // 그 외는 모두 308(영구):
+        //  · 봇: Accept-Language와 무관하게 defaultLocale(/ko) 고정 → 결정적이라 영구 안전 + SEO 신호 집중.
+        //  · 이미 locale 프리픽스가 있는 요청의 region map·trailing slash redirect: 목적지 locale이
+        //    요청 locale과 동일(언어 비의존)하므로 영구가 맞다. 구글은 이 locale URL로 크롤링한다.
         const redirectStatus = !shouldVaryByLanguage || isBot ? 308 : 307;
 
         // NextURL.pathname setter가 원본 URL의 trailing slash를 보존하는 이슈를 방지하기 위해

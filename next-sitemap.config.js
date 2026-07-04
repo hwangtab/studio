@@ -26,6 +26,7 @@ const {
   LOCALES,
   REDIRECTED_SLUGS,
   getAlternateRefs,
+  getIndexableStoryLocales,
   getRouteLastmod,
   getCategoryLastmod,
 } = require('./lib/sitemap/routes');
@@ -140,15 +141,20 @@ module.exports = {
     const slugList = Array.from(slugs);
 
     // 비-ko locale은 site-wide noindex 정책이라 sitemap에는 ko entry만 등록.
-    // (components/SEO.tsx의 effectiveRobots, transform의 locale !== 'ko' 가드와 일관.)
-    const locale = 'ko';
+    // 단 ko 원본 없는 native-only 스토리는 예외로 native locale entry가 등재된다 —
+    // getIndexableStoryLocales가 정책·thin·noindex 게이트를 일괄 적용해 "등재 ⇔ 색인
+    // 가능" 불변식을 지킨다. (components/SEO.tsx effectiveRobots의
+    // allowNonDefaultLocaleIndexing 예외, transform의 locale !== 'ko' 가드와 일관.
+    // transform이 null로 거른 native-only 정적 경로는 여기서 추가되고, ko 경로 충돌은
+    // next-sitemap이 loc 기준 merge하므로 중복 없음.)
+    const hubLocale = 'ko';
 
-    // Story category hub pages — pages/[locale]/stories/category/[key].tsx와 동기화.
+    // Story category hub pages — pages/[locale]/stories/category/[key].tsx와 동기화 (ko 전용 유지).
     for (const key of STORY_CATEGORY_KEYS) {
-      const routePath = `/${locale}/stories/category/${key}`;
+      const routePath = `/${hubLocale}/stories/category/${key}`;
       results.push({
         loc: routePath,
-        lastmod: getCategoryLastmod(key, slugList, locale) || buildTimestamp,
+        lastmod: getCategoryLastmod(key, slugList, hubLocale) || buildTimestamp,
         changefreq: 'weekly',
         priority: 0.7,
         alternateRefs: getAlternateRefs(routePath),
@@ -157,20 +163,20 @@ module.exports = {
     for (const slug of slugs) {
       // 308 redirect 대상은 sitemap에서 제외 (next.config.mjs가 광역 허브로 보냄).
       if (REDIRECTED_SLUGS.has(slug)) continue;
-      // Thin-content quality gate.
-      if (isStoryThin(slug, locale)) continue;
-
-      const routePath = `/${locale}/stories/${slug}`;
-      const image = buildStoryImage(slug, locale);
-      const images = image ? [image] : [];
-      results.push({
-        loc: routePath,
-        lastmod: getStoryLastmod(slug, locale) || new Date().toISOString(),
-        changefreq: 'weekly',
-        priority: 0.8,
-        alternateRefs: getAlternateRefs(routePath),
-        ...(images.length > 0 && { images }),
-      });
+      // 일반 스토리 ['ko'](thin/noindex면 []) · native-only 스토리 [native].
+      for (const locale of getIndexableStoryLocales(slug)) {
+        const routePath = `/${locale}/stories/${slug}`;
+        const image = buildStoryImage(slug, locale);
+        const images = image ? [image] : [];
+        results.push({
+          loc: routePath,
+          lastmod: getStoryLastmod(slug, locale) || new Date().toISOString(),
+          changefreq: 'weekly',
+          priority: 0.8,
+          alternateRefs: getAlternateRefs(routePath),
+          ...(images.length > 0 && { images }),
+        });
+      }
     }
     return results;
   },

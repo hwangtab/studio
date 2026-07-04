@@ -33,8 +33,12 @@ export const HeaderBrand = ({
         <Image
           src={siteConfig.logo}
           alt={siteConfig.name}
-          height={40}
-          width={200}
+          // 실제 파일 종횡비(3350×862 = 3.886:1)를 그대로 선언. 200×40(5:1)로 잘못
+          // 선언하면 sm(h-10=40px)에서 렌더 높이가 선언 height와 우연히 일치하는데
+          // width만 auto로 어긋나 next/image 종횡비 경고가 뜬다. h-full+w-auto는 유지
+          // (한 축 auto = 권고 방식), 표시 크기는 CSS가 결정하므로 시각 결과 불변.
+          height={862}
+          width={3350}
           // sizes 미지정 시 Next.js가 deviceSizes 기준 srcset을 생성해 640w 변종을 요청하던 문제
           // (Lighthouse: 124×32 display에 640×165 image = 12KB 낭비) → 200px 고정으로 imageSizes
           // 기반 srcset 사용하도록 힌트. DPR=2에서 256~384w 변종이 선택됨.
@@ -51,8 +55,9 @@ export const HeaderBrand = ({
           src={siteConfig.logo}
           alt=""
           aria-hidden="true"
-          height={40}
-          width={200}
+          // 위 로고와 동일: 실제 종횡비 3350×862로 선언(종횡비 경고 방지).
+          height={862}
+          width={3350}
           sizes="200px"
           className="h-full w-auto object-contain absolute top-0 left-0 transition-[filter] duration-300"
           style={{

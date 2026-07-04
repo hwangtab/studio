@@ -328,8 +328,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       <HubLinkCallout
         hubSlug="home-recording-survival"
         locale={locale}
-        title="원룸·자취방에서 데모 만들기 — 종합 가이드"
-        subtitle="홈레코딩 한계와 스튜디오 전환 시점까지 한 페이지에 정리한 생존 가이드."
+        title={t('pricing.hubCallout.title', { defaultValue: '원룸·자취방에서 데모 만들기 — 종합 가이드' })}
+        subtitle={t('pricing.hubCallout.subtitle', { defaultValue: '홈레코딩 한계와 스튜디오 전환 시점까지 한 페이지에 정리한 생존 가이드.' })}
       />
 
       <RelatedStoriesSection
@@ -406,7 +406,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       hubLocaleContent,
       relatedStories,
     },
-    { revalidate: 86400, i18nSections: ['pricing'] }
+    { revalidate: 86400, i18nSections: ['pricing', 'stories'] }
   );
 };
 

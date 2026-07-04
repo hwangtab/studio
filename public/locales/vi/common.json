@@ -64,6 +64,7 @@
       "all": "Tất cả"
     },
     "siteName": "Studio NOL",
+    "loading": "Đang tải",
     "languageSelector": "Bộ chọn ngôn ngữ",
     "languageOptions": "Tùy chọn ngôn ngữ"
   },
@@ -171,6 +172,8 @@
   "contact": {
     "title": "Liên hệ",
     "subtitle": "Hãy liên hệ với chúng tôi cho mọi thắc mắc hoặc đặt lịch.",
+    "heroTitle": "Phòng thu âm tại Seoul — Đặt lịch bằng tiếng Anh & mix từ xa",
+    "heroSubtitle": "Thu âm, mix và mastering tại Seoul. Đặt lịch và trao đổi bằng tiếng Anh, hoặc gửi track để mix từ xa từ bất cứ đâu — báo giá miễn phí, phản hồi trong 24 giờ.",
     "heroAlt": "Liên hệ Studio NOL",
     "form": {
       "failFallback": "Nếu biểu mẫu không gửi được, hãy liên hệ trực tiếp bên dưới.",
@@ -189,6 +192,7 @@
       "kakao": "Liên hệ qua KakaoTalk",
       "success": "Đã gửi tin nhắn thành công.",
       "error": "Gửi thất bại. Vui lòng thử lại.",
+      "errorsFound": "Vui lòng kiểm tra {{count}} trường.",
       "loading": "Đang gửi…"
     },
     "directions": {
@@ -294,6 +298,12 @@
       "subtitle": "Tư vấn miễn phí 30 phút · Báo giá tùy chỉnh · Thanh toán trả góp",
       "location": "Liên hệ Trực tuyến",
       "inquiry": "Đặt lịch Tư vấn Miễn phí"
+    },
+    "relatedStoriesTitle": "Những hướng dẫn nên xem trước khi đặt lịch",
+    "relatedStoriesSubtitle": "Biết trước chi phí, quy trình phát hành và thu âm giúp bạn tận dụng tối đa buổi thu đầu tiên.",
+    "hubCallout": {
+      "title": "Làm demo trong phòng trọ — Hướng dẫn toàn diện",
+      "subtitle": "Hướng dẫn sinh tồn về giới hạn của thu âm tại nhà và thời điểm nên chuyển sang phòng thu — gói gọn trong một trang."
     },
     "images": {
       "packageAlt": "Phiên thu âm vocal tại booth Studio NOL"
@@ -459,6 +469,12 @@
       "location": "Địa điểm",
       "inquiry": "Đăng ký tư vấn miễn phí",
       "imageAlt": "Thiết lập sản xuất Studio NOL với Softube Console 1 và loa monitor"
+    },
+    "relatedStoriesTitle": "Hướng dẫn sáng tác & mix được học viên xem nhiều nhất",
+    "relatedStoriesSubtitle": "Tổng hợp các hướng dẫn thực tế giúp ích ngay cho việc sáng tác, mix và phát hành nhạc.",
+    "hubCallout": {
+      "title": "Hướng dẫn khóa học 1:1 toàn diện hướng tới phát hành nhạc",
+      "subtitle": "Từ sáng tác MIDI đến mix và mastering — giáo trình thực chiến 1:1 của nhà sản xuất đang hoạt động, gói gọn trong một trang."
     }
   },
   "practiceRoom": {
@@ -1091,6 +1107,12 @@
       "location": "Chỉ Đường",
       "inquiry": "Đặt Lịch Thu Âm Bài Chúc",
       "imageAlt": "Phòng thu giọng hát Studio NOL"
+    },
+    "relatedStoriesTitle": "Hướng dẫn chuẩn bị bài hát đám cưới",
+    "relatedStoriesSubtitle": "Tổng hợp các hướng dẫn về giọng hát và thu âm được các cô dâu chú rể xem nhiều nhất.",
+    "hubCallout": {
+      "title": "Tự hát bài hát đám cưới — Hướng dẫn toàn diện",
+      "subtitle": "Từ chọn bài, luyện tập đến thu âm và bàn giao cho hôn trường — hướng dẫn cho cô dâu chú rể trên một trang."
     }
   },
   "voiceActing": {
@@ -1222,6 +1244,8 @@
       "inquiry": "Đặt Lịch Thu Âm",
       "imageAlt": "Thiết bị thu âm giọng nói Studio NOL"
     },
+    "relatedStoriesTitle": "Hướng dẫn thu âm lồng tiếng & thuyết minh",
+    "relatedStoriesSubtitle": "Hướng dẫn thực tế có thể áp dụng ngay cho thu âm sách nói, ASMR, podcast và demo.",
     "hubCallout": {
       "title": "Sách nói · ASMR · Thuyết minh — Hướng dẫn toàn diện cho người mới bắt đầu",
       "subtitle": "Từ chuẩn bị kịch bản, thu âm, chỉnh sửa, mastering đến phân phối — bắt đầu tất cả từ một trang."

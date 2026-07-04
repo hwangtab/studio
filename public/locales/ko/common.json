@@ -64,6 +64,7 @@
       "all": "전체"
     },
     "siteName": "스튜디오 놀",
+    "loading": "불러오는 중",
     "languageSelector": "언어 선택",
     "languageOptions": "언어 옵션"
   },
@@ -171,6 +172,8 @@
   "contact": {
     "title": "연락하기",
     "subtitle": "프로젝트에 대한 문의나 예약 상담을 편하게 해주세요.",
+    "heroTitle": "연락하기",
+    "heroSubtitle": "프로젝트에 대한 문의나 예약 상담을 편하게 해주세요.",
     "heroAlt": "Studio NOL 문의",
     "form": {
       "failFallback": "전송이 안 되면 아래로 바로 연락 주세요.",
@@ -189,6 +192,7 @@
       "kakao": "카카오톡으로 문의하기",
       "success": "메시지가 성공적으로 전송되었습니다.",
       "error": "메시지 전송에 실패했습니다. 다시 시도해주세요.",
+      "errorsFound": "{{count}}개의 입력 항목을 확인해 주세요.",
       "loading": "전송 중…"
     },
     "directions": {
@@ -294,6 +298,12 @@
       "subtitle": "30분 무료 발매 상담 · 단가표 기반 맞춤 견적 · 분할 결제 가능",
       "location": "온라인으로 문의하기",
       "inquiry": "무료 상담 신청"
+    },
+    "relatedStoriesTitle": "예약 전 한 번 더 살펴보면 좋은 가이드",
+    "relatedStoriesSubtitle": "비용·발매·녹음 절차를 미리 알면 첫 세션을 더 알차게 쓸 수 있습니다.",
+    "hubCallout": {
+      "title": "원룸·자취방에서 데모 만들기 — 종합 가이드",
+      "subtitle": "홈레코딩 한계와 스튜디오 전환 시점까지 한 페이지에 정리한 생존 가이드."
     },
     "images": {
       "packageAlt": "스튜디오 놀 부스에서 보컬리스트 녹음 세션"
@@ -458,6 +468,12 @@
       "location": "오시는 길",
       "inquiry": "무료 상담 신청",
       "imageAlt": "스튜디오 놀 프로덕션 셋업 - Softube Console 1과 모니터링 스피커"
+    },
+    "relatedStoriesTitle": "레슨생들이 가장 많이 본 작곡·믹싱 가이드",
+    "relatedStoriesSubtitle": "작곡·믹싱·발매에 바로 도움이 되는 실전 가이드를 모았습니다.",
+    "hubCallout": {
+      "title": "음원 발매를 목표로 하는 1:1 종합 레슨 가이드",
+      "subtitle": "MIDI 작곡·믹싱·마스터링까지 — 현직 프로듀서 1:1 실전 커리큘럼과 학습 가이드를 한 페이지에 모았습니다."
     },
     "mobileMenu": "모바일 메뉴"
   },
@@ -1770,6 +1786,12 @@
       "location": "오시는 길",
       "inquiry": "축가 녹음 예약하기",
       "imageAlt": "스튜디오 놀 보컬 부스 녹음 모습"
+    },
+    "relatedStoriesTitle": "축가 준비에 도움이 되는 가이드",
+    "relatedStoriesSubtitle": "실제 신랑·신부분들이 가장 많이 본 보컬·녹음 가이드를 모았습니다.",
+    "hubCallout": {
+      "title": "결혼식 축가 직접 부르기 — 종합 가이드",
+      "subtitle": "선곡·연습·녹음·식장 납품까지 한 페이지에 정리된 신랑·신부 가이드를 보세요."
     }
   },
   "voiceActing": {
@@ -1901,6 +1923,8 @@
       "inquiry": "녹음 예약하기",
       "imageAlt": "스튜디오 놀 보이스 녹음 장비 전경"
     },
+    "relatedStoriesTitle": "성우·내레이션 녹음 가이드",
+    "relatedStoriesSubtitle": "오디오북·ASMR·팟캐스트·데모 녹음에 바로 적용할 수 있는 실전 가이드.",
     "hubCallout": {
       "title": "오디오북·ASMR·내레이션 첫 도전 — 종합 가이드",
       "subtitle": "원고 준비부터 녹음·편집·마스터링·유통까지 한 페이지에서 시작하세요."

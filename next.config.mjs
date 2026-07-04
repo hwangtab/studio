@@ -43,6 +43,10 @@ const nextConfig = {
     ],
     minimumCacheTTL: 31536000, // 1 year for external images
     formats: ['image/avif', 'image/webp'],
+    // next/image가 실제 요청하는 quality 집합만 허용(Next 16 필수 — 미설정 시 실측 경고).
+    // 60 = ImageHero 배경(components/common/ImageHero.tsx), 75 = Next.js 기본값
+    // (ResponsiveImage 미지정 호출·HeaderBrand 로고 등). 목록 밖 값은 최적화기가 400 반환.
+    qualities: [60, 75],
     // Tailwind breakpoints + 모바일 small device 추가.
     // 360px (Galaxy S 기본) × DPR 2 = 720px → 기존 768 srcset 사용했지만,
     // 작은 안드로이드(320-360 viewport)에서 480 srcset이 더 적합.

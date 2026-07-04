@@ -17,6 +17,13 @@ interface ResolveSeoUrlStateOptions extends ResolveSeoPathStateOptions {
   disableUrlMetaAndAlternates?: boolean;
   disableAlternates?: boolean;
   availableLocales?: readonly Locale[];
+  /**
+   * site-wide 비-ko noindex 정책의 예외 스위치. ko 원본 없는 native-only 스토리의
+   * native locale 페이지처럼 "이 locale이 콘텐츠의 원본"인 페이지에서만 true.
+   * true면 effectiveRobots가 robots를 그대로 통과시키고, hreflang에 현재 locale의
+   * self-reference가 추가된다(사이트맵 lib/sitemap/routes.js 등재 정책과 대칭).
+   */
+  allowNonDefaultLocaleIndexing?: boolean;
   pathState?: SeoPathState;
 }
 
@@ -70,6 +77,7 @@ export const resolveSeoUrlState = ({
   disableUrlMetaAndAlternates = false,
   disableAlternates = false,
   availableLocales,
+  allowNonDefaultLocaleIndexing = false,
   locale,
   pathState,
 }: ResolveSeoUrlStateOptions): SeoUrlState => {
@@ -111,8 +119,12 @@ export const resolveSeoUrlState = ({
     }
   })();
 
+  // 기본은 site-wide indexable locale인 ko만. native-only 예외 페이지는 현재 locale의
+  // self-reference hreflang을 추가한다(ko가 availableLocales에 없으면 자연히 native만 남음).
   const indexableAlternateLocales: Locale[] = locales
-    .filter((candidateLocale) => candidateLocale === defaultLocale)
+    .filter((candidateLocale) =>
+      candidateLocale === defaultLocale
+      || (allowNonDefaultLocaleIndexing && candidateLocale === currentLocale))
     .filter((candidateLocale) => !availableLocales || availableLocales.includes(candidateLocale));
 
   const shouldRenderAlternates = !disableUrlMetaAndAlternates && !disableAlternates;
@@ -134,7 +146,11 @@ export const resolveSeoUrlState = ({
     indexableAlternateLocales,
     alternateHrefFor,
     xDefaultHref: alternateHrefFor(defaultLocale),
-    effectiveRobots: (robots) => (currentLocale === defaultLocale ? robots : 'noindex, follow'),
+    // 비-ko는 site-wide noindex. 단 native-only 예외 페이지(ko 원본 없는 스토리의
+    // native locale)는 robots를 그대로 통과 — 페이지 단 robots(thin/frontmatter noindex)는
+    // 호출부 인자로 이미 반영돼 있으므로 사이트맵 등재 ⇔ 색인가능 불변식이 유지된다.
+    effectiveRobots: (robots) =>
+      (currentLocale === defaultLocale || allowNonDefaultLocaleIndexing ? robots : 'noindex, follow'),
     toAbsoluteUrl,
   };
 };

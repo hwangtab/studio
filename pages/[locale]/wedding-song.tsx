@@ -282,8 +282,8 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       <HubLinkCallout
         hubSlug="wedding-song-singing"
         locale={locale}
-        title="결혼식 축가 직접 부르기 — 종합 가이드"
-        subtitle="선곡·연습·녹음·식장 납품까지 한 페이지에 정리된 신랑·신부 가이드를 보세요."
+        title={t('weddingSong.hubCallout.title', { defaultValue: '결혼식 축가 직접 부르기 — 종합 가이드' })}
+        subtitle={t('weddingSong.hubCallout.subtitle', { defaultValue: '선곡·연습·녹음·식장 납품까지 한 페이지에 정리된 신랑·신부 가이드를 보세요.' })}
       />
 
       <RelatedStoriesSection
@@ -357,7 +357,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return buildPageStaticProps(
     locale,
     { pricingData, relatedStories },
-    { revalidate: 86400, i18nSections: ['weddingSong'] }
+    { revalidate: 86400, i18nSections: ['weddingSong', 'stories'] }
   );
 };
 

@@ -1,8 +1,8 @@
-// Vercel Cron — 매주 월요일 04:00 KST (일요일 19:00 UTC) 실행.
+// Vercel Cron — 매주 화요일 04:00 KST (월요일 19:00 UTC) 실행. (schedule: "0 19 * * 1")
 // 1. GSC 90일 audit 측정
 // 2. Vercel Blob에서 이전 스냅샷 로드 후 diff 계산
-// 3. 주 1회 cadence 자체가 필터이므로 dry-run이 아니면 매 실행 이메일 발송
-// 4. 새 스냅샷을 Vercel Blob latest/history에 저장
+// 3. 새 스냅샷을 Vercel Blob latest/history에 저장 (통지 전 저장 = write-then-notify)
+// 4. 주 1회 cadence 자체가 필터이므로 dry-run이 아니면 매 실행 이메일 발송
 //
 // 인증: Vercel Cron이 자동으로 Authorization: Bearer ${CRON_SECRET} 헤더 첨부.
 // 환경변수: CRON_SECRET, GSC_OAUTH_CLIENT_ID/SECRET/REFRESH_TOKEN, GSC_SITE_URL,
@@ -75,6 +75,10 @@ async function sendCronEmail(subject: string, bodyText: string): Promise<{ ok: b
   return { ok: false, status: result.status, error: result.errorDetail ?? result.errorCode };
 }
 
+// 6+개의 순차 네트워크 호출(GSC API/OAuth·Blob load·save·Resend)을 실행하므로
+// Vercel 기본 함수 타임아웃 한도를 넘기지 않도록 상향한다.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Vercel Cron은 GET으로 호출(Authorization: Bearer ${CRON_SECRET} 헤더 첨부).
   // POST는 수동 트리거(curl 등)용으로 함께 허용한다.
@@ -100,7 +104,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 3. Diff 계산
     const diff = diffAudits(previousSnapshot, currentSnapshot);
 
-    // 4. 이메일 발송 조건
+    // 4. Blob 저장 (latest + history by date)
+    // write-then-notify: 통지 전에 스냅샷을 먼저 저장한다. 저장이 실패하면 throw되어
+    // 아래 catch로 넘어가 이메일을 보내지 않으므로, 다음 실행에서 동일 diff를 재계산·
+    // 재시도하게 되어 이미 통지한 변화가 다시 통지되는 불일치가 발생하지 않는다.
+    await saveSnapshot(currentSnapshot);
+
+    // 5. 이메일 발송 조건
     // 주 1회 cron이라 cadence 자체가 filter — cron 실행 시 항상 발송 (smart 조건 제거).
     // ?dry=1만 발송 스킵 (테스트용).
     const today = new Date();
@@ -128,9 +138,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         emailResult = await sendCronEmail(report.subject, report.body);
       }
     }
-
-    // 5. Blob 저장 (latest + history by date)
-    await saveSnapshot(currentSnapshot);
 
     return res.status(200).json({
       ok: true,

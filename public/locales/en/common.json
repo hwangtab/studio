@@ -64,6 +64,7 @@
       "all": "All"
     },
     "siteName": "Studio NOL",
+    "loading": "Loading",
     "languageSelector": "Language selector",
     "languageOptions": "Language options"
   },
@@ -191,6 +192,7 @@
       "kakao": "Inquiry via KakaoTalk",
       "success": "Message sent successfully.",
       "error": "Failed to send message. Please try again.",
+      "errorsFound": "Please review {{count}} field(s).",
       "loading": "Sending…"
     },
     "directions": {
@@ -324,6 +326,12 @@
       "subtitle": "30-min free consultation · Custom quote based on rate sheet · Installment payment available",
       "location": "Contact Online",
       "inquiry": "Book a Free Consultation"
+    },
+    "relatedStoriesTitle": "Guides Worth a Look Before You Book",
+    "relatedStoriesSubtitle": "Knowing costs, release steps, and the recording process in advance helps you make the most of your first session.",
+    "hubCallout": {
+      "title": "Making Demos in a Studio Apartment — Complete Guide",
+      "subtitle": "A survival guide to home-recording limits and when to move to a studio — all on one page."
     },
     "images": {
       "packageAlt": "Vocalist recording session in Studio NOL booth"
@@ -489,6 +497,12 @@
       "location": "Location",
       "inquiry": "Free Consultation Apply",
       "imageAlt": "Studio NOL production setup with Softube Console 1 and monitoring speakers"
+    },
+    "relatedStoriesTitle": "The Composition & Mixing Guides Students Read Most",
+    "relatedStoriesSubtitle": "Practical guides that directly help with composing, mixing, and releasing your music.",
+    "hubCallout": {
+      "title": "1:1 Comprehensive Lesson Guide for Releasing Your Music",
+      "subtitle": "From MIDI composition to mixing and mastering — a working producer's 1:1 practical curriculum and study guide on one page."
     }
   },
   "practiceRoom": {
@@ -1121,6 +1135,12 @@
       "location": "Get Directions",
       "inquiry": "Book Wedding Song Recording",
       "imageAlt": "Vocalist in Studio NOL recording booth"
+    },
+    "relatedStoriesTitle": "Guides for Preparing Your Wedding Song",
+    "relatedStoriesSubtitle": "The vocal and recording guides real brides and grooms read most.",
+    "hubCallout": {
+      "title": "Singing Your Own Wedding Song — Complete Guide",
+      "subtitle": "From song selection and practice to recording and venue delivery — a bride-and-groom guide on one page."
     }
   },
   "voiceActing": {
@@ -1252,6 +1272,8 @@
       "inquiry": "Book Voice Recording",
       "imageAlt": "Studio NOL voice recording equipment"
     },
+    "relatedStoriesTitle": "Voice-Over & Narration Recording Guides",
+    "relatedStoriesSubtitle": "Practical guides you can apply right away to audiobook, ASMR, podcast, and demo recording.",
     "hubCallout": {
       "title": "Audiobook · ASMR · Narration — Complete Guide",
       "subtitle": "From script to recording, editing, mastering, and distribution — start here."

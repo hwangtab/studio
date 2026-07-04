@@ -34,6 +34,40 @@ describe('resolveSeoUrlState', () => {
     expect(result.xDefaultHref).toBeNull();
   });
 
+  it('allows indexing with a self-referencing hreflang for native-only pages (allowNonDefaultLocaleIndexing)', () => {
+    // ko 원본 없는 native-only 스토리의 native locale 페이지 — site-wide 비-ko noindex의 예외.
+    const result = resolveSeoUrlState({
+      asPath: '/en/stories/korean-practice-room-booking-english',
+      canonical: '/en/stories/korean-practice-room-booking-english',
+      siteUrl: 'https://studionol.co.kr',
+      locale: 'en',
+      availableLocales: ['en'],
+      allowNonDefaultLocaleIndexing: true,
+    });
+
+    expect(result.effectiveRobots('index, follow')).toBe('index, follow');
+    expect(result.indexableAlternateLocales).toEqual(['en']);
+    expect(result.alternateHrefFor('en')).toBe(
+      'https://studionol.co.kr/en/stories/korean-practice-room-booking-english'
+    );
+    // ko가 비가용이므로 x-default 없음 — dangling alternate 방지.
+    expect(result.xDefaultHref).toBeNull();
+  });
+
+  it('keeps translated non-ko pages noindex when the native-only flag is off (default)', () => {
+    // 번역본(ko 원본 존재) 스토리의 비-ko 페이지 — 예외 비대상, 기존 정책 유지.
+    const result = resolveSeoUrlState({
+      asPath: '/en/stories/global-release1',
+      canonical: '/en/stories/global-release1',
+      siteUrl: 'https://studionol.co.kr',
+      locale: 'en',
+      availableLocales: ['ko', 'en'],
+    });
+
+    expect(result.effectiveRobots('index, follow')).toBe('noindex, follow');
+    expect(result.indexableAlternateLocales).toEqual(['ko']);
+  });
+
   it('prefers explicit locale over the router path when SSR path data is stale', () => {
     const result = resolveSeoUrlState({
       asPath: '/ko/voice-acting',

@@ -64,6 +64,7 @@
       "all": "Todo"
     },
     "siteName": "Studio NOL",
+    "loading": "Cargando",
     "languageSelector": "Selector de idioma",
     "languageOptions": "Opciones de idioma"
   },
@@ -171,6 +172,8 @@
   "contact": {
     "title": "Contacto",
     "subtitle": "Contáctanos para consultas o reservas.",
+    "heroTitle": "Estudio de grabación en Seúl — Reservas en inglés y mezcla remota",
+    "heroSubtitle": "Grabación, mezcla y masterización en Seúl. Reserva y comunícate en inglés, o envíanos tus pistas para una mezcla remota desde cualquier lugar — presupuesto gratuito, respuesta en 24 horas.",
     "heroAlt": "Contactar Studio NOL",
     "form": {
       "failFallback": "Si el formulario no se envía, contáctanos directamente abajo.",
@@ -189,6 +192,7 @@
       "kakao": "Consulta por KakaoTalk",
       "success": "Mensaje enviado correctamente.",
       "error": "Error al enviar. Inténtalo de nuevo.",
+      "errorsFound": "Revisa {{count}} campo(s).",
       "loading": "Enviando…"
     },
     "directions": {
@@ -294,6 +298,12 @@
       "subtitle": "Consulta gratuita 30 min · Presupuesto personalizado · Pago en cuotas disponible",
       "location": "Contactar Online",
       "inquiry": "Solicitar Consulta Gratuita"
+    },
+    "relatedStoriesTitle": "Guías que conviene revisar antes de reservar",
+    "relatedStoriesSubtitle": "Conocer de antemano los costos, el lanzamiento y el proceso de grabación te ayuda a aprovechar al máximo tu primera sesión.",
+    "hubCallout": {
+      "title": "Crear demos en una habitación pequeña — Guía completa",
+      "subtitle": "Una guía de supervivencia sobre los límites de la grabación casera y cuándo pasar a un estudio — todo en una sola página."
     },
     "images": {
       "packageAlt": "Sesión de grabación de voz en la cabina de Studio NOL"
@@ -459,6 +469,12 @@
       "location": "Ubicación",
       "inquiry": "Solicitar consulta gratuita",
       "imageAlt": "Configuración de producción de Studio NOL con Softube Console 1 y monitores"
+    },
+    "relatedStoriesTitle": "Las guías de composición y mezcla más vistas por los alumnos",
+    "relatedStoriesSubtitle": "Guías prácticas que ayudan directamente a componer, mezclar y lanzar tu música.",
+    "hubCallout": {
+      "title": "Guía de clases 1:1 integrales para lanzar tu música",
+      "subtitle": "Desde la composición MIDI hasta la mezcla y masterización — el currículo práctico 1:1 de un productor en activo, en una sola página."
     }
   },
   "practiceRoom": {
@@ -1091,6 +1107,12 @@
       "location": "Cómo llegar",
       "inquiry": "Reservar Grabación Canción de Boda",
       "imageAlt": "Vocalista en cabina de Studio NOL"
+    },
+    "relatedStoriesTitle": "Guías para preparar tu canción de boda",
+    "relatedStoriesSubtitle": "Las guías de voz y grabación más consultadas por novios y novias.",
+    "hubCallout": {
+      "title": "Cantar tu propia canción de boda — Guía completa",
+      "subtitle": "Desde la selección de la canción y los ensayos hasta la grabación y la entrega para la ceremonia — todo en una sola página."
     }
   },
   "voiceActing": {
@@ -1222,6 +1244,8 @@
       "inquiry": "Reservar Grabación de Voz",
       "imageAlt": "Equipo de grabación de voz en Studio NOL"
     },
+    "relatedStoriesTitle": "Guías de grabación de voz y narración",
+    "relatedStoriesSubtitle": "Guías prácticas para aplicar de inmediato en grabaciones de audiolibros, ASMR, pódcast y demos.",
     "hubCallout": {
       "title": "Audiolibros · ASMR · Narración — Guía completa para principiantes",
       "subtitle": "Desde la preparación del guion hasta la grabación, edición, masterización y distribución — todo en una sola página."

@@ -16,9 +16,17 @@ interface UseFocusTrapDialogResult {
   restoreFocus: () => void;
 }
 
+// display:none 등으로 렌더되지 않는 요소는 focus()가 무효 → 트랩 경계·초기 포커스에서 제외.
+// (예: 태블릿 폭에서 sm:hidden으로 숨긴 MobileNav의 첫 버튼이 firstElement로 잡혀 트랩이 깨짐.)
+// offsetParent는 position:fixed 요소에서 null이 되므로 getClientRects()로 보강한다.
+const isElementVisible = (element: HTMLElement): boolean =>
+  element.offsetParent !== null || element.getClientRects().length > 0;
+
 const getFocusableElements = (container: HTMLElement | null): HTMLElement[] => {
   if (!container) return [];
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+  ).filter(isElementVisible);
 };
 
 const focusInitialElement = (
@@ -46,6 +54,13 @@ export const useFocusTrapDialog = ({
 }: UseFocusTrapDialogOptions): UseFocusTrapDialogResult => {
   const triggerRef = useRef<HTMLElement | null>(null);
 
+  // onClose는 호출부에서 미메모이즈로 넘어와 매 렌더 새 참조가 된다. effect 의존성에 직접
+  // 넣으면 트리거 요소 재캡처·초기 포커스 재실행이 반복되므로 ref에 보관해 최신값만 읽는다.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
   const restoreFocus = useCallback(() => {
     if (triggerRef.current && typeof triggerRef.current.focus === 'function') {
       triggerRef.current.focus();
@@ -62,7 +77,7 @@ export const useFocusTrapDialog = ({
       if (!(event instanceof KeyboardEvent)) return;
 
       if (event.key === 'Escape') {
-        onClose?.();
+        onCloseRef.current?.();
         return;
       }
 
@@ -98,7 +113,7 @@ export const useFocusTrapDialog = ({
         restoreFocus();
       }
     };
-  }, [containerRef, eventTarget, initialFocusRef, isOpen, onClose, restoreFocus, restoreOnCleanup]);
+  }, [containerRef, eventTarget, initialFocusRef, isOpen, restoreFocus, restoreOnCleanup]);
 
   return { restoreFocus };
 };

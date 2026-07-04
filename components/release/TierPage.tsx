@@ -69,7 +69,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const siteConfig = getSiteConfig(locale);
-  const { selectedItem, categories, open: openModal, close: closeModal } = usePortfolioModalLazy(
+  const { selectedItem, categories, open: openModal, close: closeModal, loadError } = usePortfolioModalLazy(
     locale,
     `/${locale}/release-project/${tier}`
   );
@@ -313,7 +313,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         viewAllLabel={t('releaseProject.discography.viewAll')}
         items={discographyItems}
         variant="alternate"
-        onSelectItem={openModal}
+        onSelectItem={loadError ? undefined : openModal}
       />
 
       <ReleaseReviewsSection

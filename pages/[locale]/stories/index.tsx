@@ -62,6 +62,9 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
   const siteUrl = React.useMemo(() => getSiteConfig(locale).url, [locale]);
 
   const sectionRef = useRef<HTMLDivElement>(null);
+  // 카테고리/페이지 빠른 전환 시 구 요청의 finally가 최신 요청의 로딩 상태를
+  // 끄는 경합을 막기 위한 요청 식별자 (effect 실행마다 증가).
+  const requestIdRef = useRef(0);
 
   const categories = useMemo(() => {
     return categoryKeys.map(key => ({
@@ -112,6 +115,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
     if (!router.isReady) return;
 
     const controller = new AbortController();
+    const requestId = ++requestIdRef.current;
     const loadStories = async () => {
       setIsLoadingStories(true);
       try {
@@ -139,7 +143,11 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
           console.error(error);
         }
       } finally {
-        setIsLoadingStories(false);
+        // 자신이 최신 요청일 때만 로딩 해제. 구 요청(abort됨)의 finally가 이미
+        // 시작된 최신 요청의 로딩 상태를 잘못 끄지 않도록 방지한다.
+        if (requestId === requestIdRef.current) {
+          setIsLoadingStories(false);
+        }
       }
     };
 

@@ -5,6 +5,7 @@ import {
   computeThinContentStatus,
   getRelatedStories,
   getStoryAvailableLocales,
+  getStoryDetail,
   getStoryPaths,
   THIN_CONTENT_THRESHOLD,
   SHORTCODE_CHAR_ESTIMATES,
@@ -121,6 +122,26 @@ describe('getStoryPaths', () => {
     expect(paths).not.toContainEqual({
       params: { locale: 'ko', id: 'korean-practice-room-booking-english' },
     });
+  });
+});
+
+describe('getStoryDetail — native-only 색인 예외 (ko 원본 없는 스토리)', () => {
+  it('marks a ko-less native story as isNativeOnly at its native locale (indexable)', async () => {
+    const detail = await getStoryDetail('korean-practice-room-booking-english', 'en');
+    expect(detail.isNativeOnly).toBe(true);
+    expect(detail.isFallbackTranslation).toBe(false);
+    expect(detail.isThinContent).toBe(false);
+    expect(detail.sourceLocale).toBe('en');
+  });
+
+  it('keeps translated stories (ko original exists) isNativeOnly=false — 비-ko는 계속 noindex', async () => {
+    const detail = await getStoryDetail('global-release1', 'en');
+    expect(detail.isNativeOnly).toBe(false);
+  });
+
+  it('still fails the ko route for native-only stories (page returns notFound 404)', async () => {
+    await expect(getStoryDetail('korean-practice-room-booking-english', 'ko'))
+      .rejects.toThrow('Story file not found');
   });
 });
 

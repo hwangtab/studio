@@ -6,8 +6,9 @@ import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../
 
 const BASE_SECTIONS = (siteUrl: string) => `Studio NOL (${siteUrl.replace(/^https?:\/\//, '')})
 
-Studio NOL is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
+Studio NOL (스튜디오 놀) is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
 Established in 2024 and now in its second year of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
+It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, recipient of the Selection Committee Special Award at the 14th Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상').
 The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
 ## Primary Services
@@ -15,7 +16,8 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Recording Studio**: Professional vocal and instrument recording in a fully treated acoustic space
 - **Mixing & Mastering**: Professional mixing and mastering services using industry-standard equipment
 - **Practice Room Residency**: Premium private practice room residency program (monthly subscription)
-- **Music Production Consulting & Lessons**: One-on-one recording/production lessons with studio engineers
+- **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
+- **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Album Production**: Full-service album planning, recording, mixing, and mastering packages
 
 ## Business Information
@@ -26,7 +28,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Specialization: Independent artist support — affordable professional-grade recording, mixing, and production in Seoul
 - Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR 03424 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
 - Geo: 37.614353, 126.925887
-- Phone: +82-10-4255-7893
+- Phone: +82-10-4255-7893 (domestic: 010-4255-7893)
 - Email: hwangtab@gmail.com
 - Business Hours: Daily 10:00 AM – Midnight (Mon–Sun, including weekends and holidays)
 - Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (+82-10-4255-7893), Email (hwangtab@gmail.com)
@@ -182,13 +184,48 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 const OPERATOR_AUTHOR = `
 ## Operator / Author
 
-Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, an audio engineer based in Seoul with over a decade of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
+Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. He received the Selection Committee Special Award at the 14th Korean Music Awards (2017). The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
 
 - Operator: Hwang Kyungha (황경하)
+- Award: 제14회 한국대중음악상 '선정위원 특별상' (Selection Committee Special Award, 14th Korean Music Awards, 2017)
 - Contact: hwangtab@gmail.com
 - Studio founded: 2024
 - Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)
 `;
+
+// 큐레이션 상록 가이드 13종 — 구 public/llms.txt(정적 파일)에서 이식(동적 단일화).
+// 'Recent Stories'는 날짜순 최신 50개라 이 상록 가이드들이 목록 밖으로 밀려나 AI 인용
+// 대상에서 사라지는 문제가 있어, 날짜와 무관하게 항상 노출되는 고정 큐레이션으로 유지.
+// 링크·설명은 정적 파일 원문 그대로. slug 실존은 핸들러(누락 시 skip + warn)와
+// tests/api/llms-contact.test.ts가 이중 검증한다.
+export const CURATED_GUIDES: {
+  section: string;
+  items: { slug: string; title: string; desc: string }[];
+}[] = [
+  {
+    section: '음악 가이드 — 음원 발매·수익·저작권',
+    items: [
+      { slug: 'distribution1', title: '음원 유통 완전 가이드', desc: 'DistroKid·국내 유통사 비교, 멜론·스포티파이 발매 절차' },
+      { slug: 'revenue1', title: '음원 수익 계산법', desc: '스포티파이·멜론 스트리밍 수익 구조' },
+      { slug: 'royalty1', title: '음악 저작권료 받는 방법', desc: 'KOMCA 등록·저작인접권 가이드' },
+      { slug: 'copyright-cover1', title: '커버곡 저작권', desc: '유튜브·SNS 합법 업로드와 수익화 조건' },
+      { slug: 'streaming-platforms1', title: '스트리밍 플랫폼 비교', desc: '멜론·지니·스포티파이·애플뮤직·유튜브뮤직 차이' },
+    ],
+  },
+  {
+    section: '음악 가이드 — 녹음·믹싱·제작',
+    items: [
+      { slug: 'noise-reduction1', title: '녹음 노이즈·배경 잡음 제거', desc: '전기 험·AI 원클릭 도구까지' },
+      { slug: 'eq1', title: '보컬 EQ 가이드', desc: '주파수별 설정·치찰음 처리' },
+      { slug: 'loudness1', title: '스트리밍 음압(LUFS) 기준', desc: '발매 전 맞춰야 할 LUFS·True Peak' },
+      { slug: 'plugins1', title: '보컬 믹싱 플러그인 추천', desc: 'EQ·컴프레서·리버브·피치 교정' },
+      { slug: 'daw-choice1', title: 'DAW 비교', desc: '큐베이스·로직·에이블톤 선택 가이드' },
+      { slug: 'songstructure1', title: '송폼·곡 구조', desc: '프리코러스·브릿지·코러스 역할' },
+      { slug: 'producer1', title: '음악 프로듀서 되는 방법', desc: 'DAW 입문부터 포트폴리오까지' },
+      { slug: 'practice-room-startup1', title: '연습실 창업 가이드', desc: '비용·인허가·수익 구조 (2026)' },
+    ],
+  },
+];
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -225,7 +262,23 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     body += '\n' + localeKeyPages(siteUrl, locale, LOCALE_LABELS[locale]);
   }
 
-  const koStories = getAllStories('ko')
+  const allKoStories = getAllStories('ko');
+
+  // 큐레이션 상록 가이드 — Recent Stories(최신 50, 날짜순)와 별개의 고정 섹션.
+  // 스토리 삭제/개명으로 catalog와 어긋나면 죽은 링크 대신 skip + warn.
+  const koSlugSet = new Set(allKoStories.map((story) => story.slug));
+  for (const group of CURATED_GUIDES) {
+    body += `\n## ${group.section}\n\n`;
+    for (const guide of group.items) {
+      if (!koSlugSet.has(guide.slug)) {
+        console.warn(`[llms] curated guide slug missing from ko stories: ${guide.slug}`);
+        continue;
+      }
+      body += `- [${guide.title}](${siteUrl}/ko/stories/${guide.slug}): ${guide.desc}\n`;
+    }
+  }
+
+  const koStories = allKoStories
     .filter((story) => getStoryAvailableLocales(story.slug).includes('ko'))
     .slice(0, 50);
   if (koStories.length > 0) {

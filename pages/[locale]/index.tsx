@@ -1,6 +1,5 @@
 import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, Video, ShieldCheck } from '@/lib/lucide-icons';
@@ -13,12 +12,16 @@ import ImageHero from '../../components/common/ImageHero';
 import MediaGallery from '../../components/ui/MediaGallery';
 import { Section } from '../../components/ui/Section';
 
-// Below-fold 컴포넌트는 코드 스플리팅으로 초기 번들에서 분리.
-// ssr:true(기본)라 서버 렌더링 HTML은 그대로 나오고, 클라이언트 JS 청크만 지연 로드됨.
-// → 초기 JS 다운로드/파싱/하이드레이션 비용 감소 (TBT 개선 기대).
-const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
-const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
-const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+// Below-fold 섹션은 정적 import로 유지한다(과거 next/dynamic ssr:true 코드 스플리팅에서 전환).
+// 이유: 이들은 ssr:true라 서버는 완전한 HTML을 내보내지만, 클라이언트는 청크가 도착하기
+// 전 하이드레이션 첫 패스에서 Loadable을 null로 렌더한다. dev 빌드는 __NEXT_DATA__에
+// dynamicIds를 싣지 않아 loadableReady가 하이드레이션을 게이트하지 못하므로, null 렌더로
+// 뒤따르는 형제 섹션이 밀려 hydration mismatch가 발생했다. prod에서도 loadableReady가
+// 해당 청크를 하이드레이션 임계경로에 두어 스플리팅의 TBT 이득은 사실상 없다. 정적 import는
+// 서버·클라이언트 트리를 항상 동일한 동기 렌더로 만들어 불일치를 근본 제거한다.
+import ReviewSection from '../../components/ui/ReviewSection';
+import FAQSection from '../../components/ui/FAQSection';
+import ContactCTA from '../../components/common/ContactCTA';
 import { getHomeData, type HomeData } from '../../data/home';
 import { getFaqData } from '../../data/faq';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';

@@ -337,7 +337,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
     [localeAwareOverrides]
   );
 
-  const processedContent = React.useMemo(() => autoLinkKeywords(content, currentSlug), [content, currentSlug]);
+  const processedContent = React.useMemo(() => autoLinkKeywords(content, currentSlug, currentLocale), [content, currentSlug, currentLocale]);
   const segments = React.useMemo(() => splitContentByShortcodes(processedContent), [processedContent]);
 
   const inlineBoxCountRef = React.useRef(0);

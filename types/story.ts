@@ -111,6 +111,10 @@ export interface StoryDetail extends Story {
   boilerplateSection?: string;
   availableLocales: Locale[]; // Locales with a native translation file — used to gate hreflang alternates
   howTo?: StoryHowTo; // frontmatter `howTo`가 있는 글만 채워진다 — HowTo schema 발행 트리거
+  // ko 원본(slug.md) 없이 native 번역 파일만 존재하는 스토리. site-wide 비-ko noindex
+  // 정책의 예외 — native locale 페이지가 색인 가능해진다(사이트맵 등재와 대칭).
+  // 번역본(ko 원본 존재) 스토리는 ko가 thin/noindex여도 이 예외에 해당하지 않는다.
+  isNativeOnly?: boolean;
 }
 
 /**

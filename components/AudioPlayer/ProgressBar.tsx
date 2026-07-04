@@ -20,6 +20,11 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                     onChange={onChangeRange}
                     max={duration || 0}
                     aria-label={ariaLabel}
+                    // 스크린리더가 생 초 단위 값("127") 대신 사람이 읽는 시간("2:07")을 읽도록.
+                    // valuemin/max도 명시해 슬라이더 값 범위를 정합적으로 노출한다.
+                    aria-valuetext={formatTime(currentTime)}
+                    aria-valuemin={0}
+                    aria-valuemax={duration || 0}
                     className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-full"
                 />
 

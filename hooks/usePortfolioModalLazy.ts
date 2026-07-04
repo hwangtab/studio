@@ -20,14 +20,25 @@ export const usePortfolioModalLazy = (locale: Locale, basePath: string) => {
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
   const [allItems, setAllItems] = useState<PortfolioItem[]>([]);
   const [categories, setCategories] = useState<PortfolioCategory[]>([]);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    import('../data/portfolio').then(({ getPortfolioItems, getCategories }) => {
-      if (cancelled) return;
-      setAllItems(getPortfolioItems(locale));
-      setCategories(getCategories(locale));
-    });
+    import('../data/portfolio')
+      .then(({ getPortfolioItems, getCategories }) => {
+        if (cancelled) return;
+        setAllItems(getPortfolioItems(locale));
+        setCategories(getCategories(locale));
+        setLoadError(false);
+      })
+      .catch((error) => {
+        // dynamic import 실패(청크 네트워크 오류 등) 시 rejection이 유실되면 모달이
+        // 조용히 작동 불능해진다. 에러 상태를 노출해 호출부가 모달을 비활성화하고
+        // 실제 상세 페이지로 폴백할 수 있게 한다. (언마운트 시엔 상태 갱신 생략)
+        if (cancelled) return;
+        console.error('[usePortfolioModalLazy] portfolio 데이터 로드 실패:', error);
+        setLoadError(true);
+      });
     return () => {
       cancelled = true;
     };
@@ -56,5 +67,5 @@ export const usePortfolioModalLazy = (locale: Locale, basePath: string) => {
     router.push(basePath, undefined, { shallow: true, scroll: false });
   };
 
-  return { selectedItem, categories, open, close };
+  return { selectedItem, categories, open, close, loadError };
 };
