@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import { locales, localeNames, type Locale } from '../lib/i18n';
-import { DUR, EASE_STANDARD } from '../utils/animationUtils';
+import { DUR, EASE_STANDARD, TRANSITION_STANDARD } from '../utils/animationUtils';
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
@@ -110,31 +110,39 @@ export const LanguageSwitcher = ({
             <span>🌐</span>
             <span>{localeNames[currentLocale]}</span>
           </div>
-          <span className={`text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>▾</span>
+          <span className={`text-xs transition-transform duration-base ease-standard ${isOpen ? 'rotate-180' : ''}`}>▾</span>
         </button>
-        {isOpen && (
-          <div className="pl-4 mt-3 space-y-1 pb-4">
-            <div className={`grid ${menuGridClass} gap-2`}>
-              {locales.map((locale) => (
-                <Link
-                  key={locale}
-                  href={getPathForLocale(locale)}
-                  hrefLang={locale}
-                  onClick={() => setIsOpen(false)}
-                  className={`
-                    flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
-                    ${currentLocale === locale
-                      ? 'bg-primary/10 text-primary dark:text-accent font-medium'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }
-                  `}
-                >
-                  {localeNames[locale]}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {isOpen && (
+            <m.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={TRANSITION_STANDARD}
+              className="pl-4 mt-3 space-y-1 pb-4 overflow-hidden"
+            >
+              <div className={`grid ${menuGridClass} gap-2`}>
+                {locales.map((locale) => (
+                  <Link
+                    key={locale}
+                    href={getPathForLocale(locale)}
+                    hrefLang={locale}
+                    onClick={() => setIsOpen(false)}
+                    className={`
+                      flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                      ${currentLocale === locale
+                        ? 'bg-primary/10 text-primary dark:text-accent font-medium'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }
+                    `}
+                  >
+                    {localeNames[locale]}
+                  </Link>
+                ))}
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }

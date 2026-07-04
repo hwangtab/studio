@@ -184,11 +184,11 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             className="mb-8"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} delay={0.1} locale={locale} />
-            <PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} delay={0.2} locale={locale} />
-            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} delay={0.3} locale={locale} />
-            <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} delay={0.4} locale={locale} />
-            <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} delay={0.5} locale={locale} />
+            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} locale={locale} />
+            <PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} locale={locale} />
+            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} locale={locale} />
+            <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} locale={locale} />
+            <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} locale={locale} />
           </div>
         </m.div>
       </Section>
@@ -208,19 +208,16 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               title={t('practiceRoom.audience.items.0.title')}
               description={t('practiceRoom.audience.items.0.description')}
               icon={MapPin}
-              delay={0.1}
             />
             <TargetAudience
               title={t('practiceRoom.audience.items.1.title')}
               description={t('practiceRoom.audience.items.1.description')}
               icon={Star}
-              delay={0.2}
             />
             <TargetAudience
               title={t('practiceRoom.audience.items.2.title')}
               description={t('practiceRoom.audience.items.2.description')}
               icon={Music}
-              delay={0.3}
             />
           </div>
 
@@ -271,28 +268,24 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               icon={Music}
               title={t('practiceRoom.features.items.0.title')}
               description={t('practiceRoom.features.items.0.description')}
-              delay={0.1}
             />
 
             <FeatureCard
               icon={Shield}
               title={t('practiceRoom.features.items.1.title')}
               description={t('practiceRoom.features.items.1.description')}
-              delay={0.2}
             />
 
             <FeatureCard
               icon={Star}
               title={t('practiceRoom.features.items.2.title')}
               description={t('practiceRoom.features.items.2.description')}
-              delay={0.3}
             />
 
             <FeatureCard
               icon={MapPin}
               title={t('practiceRoom.features.items.3.title')}
               description={t('practiceRoom.features.items.3.description')}
-              delay={0.4}
             />
           </div>
         </m.div>
@@ -355,7 +348,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
                   title={benefit.title}
                   points={benefit.points}
                   valueBadge={benefit.valueBadge}
-                  delay={0.05 * idx}
                   locale={locale}
                   calendarLinkLabel={residentBenefitsCalendarLabel}
                   calendarLinkUrl={residentBenefitsCalendarUrl}
