@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { m, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from '@/lib/lucide-icons';
+import { DUR, EASE_STANDARD } from '../../utils/animationUtils';
 
 interface MenuItem {
     label: string;
@@ -118,7 +119,7 @@ export const DropdownMenu = ({
                 {label}
                 <m.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: DUR.fast, ease: EASE_STANDARD }}
                 >
                     <ChevronDown size={14} aria-hidden="true" />
                 </m.div>
@@ -131,7 +132,7 @@ export const DropdownMenu = ({
                         initial={{ opacity: 0, scale: 0.97 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.97 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        transition={{ duration: DUR.fast, ease: EASE_STANDARD }}
                         className="absolute left-0 mt-1 w-48 rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50 origin-top-left"
                     >
                         <div className="py-2" role="menu" aria-orientation="vertical">

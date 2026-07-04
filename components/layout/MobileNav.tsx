@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { m, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, ChevronDown } from '@/lib/lucide-icons';
+import { TRANSITION_STANDARD } from '../../utils/animationUtils';
 import { type TFunction } from 'i18next';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
@@ -114,7 +115,7 @@ export const MobileNav = ({
       aria-modal="true"
       aria-label={t('nav.mobileMenu')}
       aria-hidden={!isOpen}
-      className={`lg:hidden fixed inset-x-0 top-16 z-40 bg-white dark:bg-gray-900 shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top transition-opacity duration-100 ${isOpen ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`}
+      className={`lg:hidden fixed inset-x-0 top-16 z-40 bg-white dark:bg-gray-900 shadow-2xl border-t border-gray-100 dark:border-gray-800 origin-top transition-opacity duration-base ease-standard ${isOpen ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`}
     >
       <div className="px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden">
@@ -168,16 +169,16 @@ export const MobileNav = ({
               {group.label}
               <ChevronDown
                 size={18}
-                className={`transition-transform duration-200 ${expandedGroups.includes(group.id) ? 'rotate-180' : ''}`}
+                className={`transition-transform duration-base ease-standard ${expandedGroups.includes(group.id) ? 'rotate-180' : ''}`}
               />
             </button>
             <AnimatePresence>
               {expandedGroups.includes(group.id) && (
                 <m.div
-                  initial={false}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.12 }}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={TRANSITION_STANDARD}
                   className="pl-4 space-y-1 overflow-hidden"
                 >
                   {group.items.map((item) => (

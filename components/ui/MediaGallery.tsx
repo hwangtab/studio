@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import { defaultLocale, type Locale } from '../../lib/i18n';
+import { getScrollBehavior } from '../../utils/scrollUtils';
 
 interface MediaImage {
   src: string;
@@ -61,7 +62,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
     if (scrollRef.current) {
       const { clientWidth } = scrollRef.current;
       const scrollAmount = direction === 'left' ? -clientWidth : clientWidth;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: getScrollBehavior() });
     }
   };
 
@@ -70,7 +71,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
       const { clientWidth } = scrollRef.current;
       // Approximate scroll position based on width
       const scrollAmount = index * clientWidth * 0.85;
-      scrollRef.current.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+      scrollRef.current.scrollTo({ left: scrollAmount, behavior: getScrollBehavior() });
     }
   };
 

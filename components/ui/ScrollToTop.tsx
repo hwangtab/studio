@@ -3,6 +3,7 @@ import { ArrowUp } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 import { defaultLocale, type Locale } from '../../lib/i18n';
+import { getScrollBehavior } from '../../utils/scrollUtils';
 
 interface ScrollToTopProps {
   locale?: Locale;
@@ -38,7 +39,7 @@ export const ScrollToTop = ({ locale = defaultLocale }: ScrollToTopProps) => {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: getScrollBehavior() });
   };
 
   return (

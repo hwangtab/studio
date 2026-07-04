@@ -221,7 +221,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                 t('lesson.curriculum.step1.items.2'),
                                 t('lesson.curriculum.step1.items.3'),
                             ]}
-                            delay={0.1}
                         />
                         <CurriculumCard
                             step="02"
@@ -235,7 +234,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                 t('lesson.curriculum.step2.items.2'),
                                 t('lesson.curriculum.step2.items.3'),
                             ]}
-                            delay={0.2}
                         />
                     </div>
                 </div>
@@ -260,7 +258,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                 t('lesson.curriculum.step3.items.2'),
                                 t('lesson.curriculum.step3.items.3'),
                             ]}
-                            delay={0.3}
                         />
                         <CurriculumCard
                             step="04"
@@ -274,7 +271,6 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                 t('lesson.curriculum.step4.items.2'),
                                 t('lesson.curriculum.step4.items.3'),
                             ]}
-                            delay={0.4}
                         />
                     </div>
                 </div>

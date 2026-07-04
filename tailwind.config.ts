@@ -93,6 +93,20 @@ const config: Config = {
         'spin-slow': 'spin 8s linear infinite',
         'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
+      // 리듬 토큰(CSS) — utils/animationUtils.ts의 DUR/EASE_STANDARD와 값·이름 동기화.
+      // extend라 Tailwind 기본 duration-200/300/700·ease-* 클래스는 그대로 유효(하위호환).
+      // framer(초)  DUR.fast 0.2 / DUR.base 0.3 / DUR.slow 0.7
+      //          ↔  duration-fast 200ms / duration-base 300ms / duration-slow 700ms
+      transitionDuration: {
+        fast: '200ms',
+        base: '300ms',
+        slow: '700ms',
+      },
+      // EASE_STANDARD = cubic-bezier(0.4,0,0.2,1) = Tailwind ease-in-out DEFAULT.
+      // `ease-standard` 유틸이 framer EASE_STANDARD와 같은 곡선을 가리킴.
+      transitionTimingFunction: {
+        standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
     },
   },
   // class 전략: 사용자 토글이 시스템 prefers-color-scheme를 override할 수 있도록

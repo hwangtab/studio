@@ -66,7 +66,6 @@ const FacilitiesGrid = ({ title, subtitle, items, locale }: FacilitiesGridProps)
           icon={FACILITIES_ICONS[idx] ?? Sparkles}
           title={item.title}
           description={item.description}
-          delay={0.04 * idx}
           locale={locale}
         />
       ))}

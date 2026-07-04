@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { m, AnimatePresence } from 'framer-motion';
 import { locales, localeNames, type Locale } from '../lib/i18n';
+import { DUR, EASE_STANDARD } from '../utils/animationUtils';
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
@@ -176,16 +178,21 @@ export const LanguageSwitcher = ({
         <span className="truncate max-w-[72px] sm:max-w-[120px]">{localeNames[currentLocale]}</span>
         <span className="text-[10px] opacity-80 flex-shrink-0">▾</span>
       </button>
+      <AnimatePresence>
       {isOpen && (
-        <div
+        <m.div
           ref={menuRef}
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: DUR.fast, ease: EASE_STANDARD }}
           onBlur={(e) => {
             if (!menuRef.current?.contains(e.relatedTarget as Node) && !buttonRef.current?.contains(e.relatedTarget as Node)) {
               setIsOpen(false);
             }
           }}
           className={`
-            absolute right-0 top-full mt-2 ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
+            absolute right-0 top-full mt-2 origin-top-right ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
             rounded-xl border border-gray-200/70 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl
             shadow-2xl py-2 z-[100]
           `}
@@ -224,8 +231,9 @@ export const LanguageSwitcher = ({
               </li>
             ))}
           </ul>
-        </div>
+        </m.div>
       )}
+      </AnimatePresence>
     </div>
   );
 };

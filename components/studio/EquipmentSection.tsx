@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import React from 'react';
-import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 
 export interface EquipmentSectionProps {
     title: string;
@@ -10,7 +10,7 @@ export interface EquipmentSectionProps {
 
 const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => {
     const motionProps = createFadeInAnimation();
-    const cardHoverMotion = { ...HOVER_SCALE, transition: { duration: 0.3 } };
+    const cardHoverMotion = { ...HOVER_SCALE, transition: TRANSITION_STANDARD };
 
     return (
         <m.div

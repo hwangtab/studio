@@ -22,7 +22,7 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
-import { createFadeInAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
 // PriceLeader·SoundproofingShowcase·FacilitiesGrid는 별도 파일로 분리(2026-05-11).
@@ -54,8 +54,8 @@ interface PracticeRoomProps {
 }
 
 const PAIN_POINTS_ANIMATION = createFadeInAnimation();
-const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.6 });
-const FEATURES_SECTION_ANIMATION = createFadeInAnimation({ delay: 0.8 });
+const AUDIENCE_SECTION_ANIMATION = createFadeInAnimation();
+const FEATURES_SECTION_ANIMATION = createFadeInAnimation();
 const RESIDENT_BENEFITS_ANIMATION = createFadeInAnimation();
 
 const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
@@ -230,8 +230,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               <m.div
                 key={i}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={HOVER_SCALE}
-                transition={{ duration: 0.3 }}
+                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <ResponsiveImage
                   src={`/images/room${i}.webp`}

@@ -132,7 +132,7 @@ const ContactCTA = ({
                         <ResponsiveImage
                             src={imageSrc}
                             alt={imageAlt}
-                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
                             pictureClassName="block h-full"
                             loading="lazy"
                             sizes="(min-width: 768px) 50vw, 100vw"
@@ -150,7 +150,7 @@ const ContactCTA = ({
                         <ResponsiveImage
                             src={imageSrc}
                             alt={imageAlt}
-                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
                             pictureClassName="block h-full"
                             loading="lazy"
                             sizes="(min-width: 768px) 50vw, 100vw"

@@ -29,7 +29,7 @@ import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
 import { generateHowToSchema } from '../../utils/schema';
-import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import type { NextPageWithLayout } from '../../types';
 
@@ -61,11 +61,11 @@ const AudienceCard = ({
   </BaseCard>
 );
 
-const AUDIENCE_ANIMATION = createFadeInAnimation({ delay: 0.2 });
+const AUDIENCE_ANIMATION = createFadeInAnimation();
 const ENV_ANIMATION = createInViewEnterAnimation({ axis: 'y' });
-const ENV_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: -50, delay: 0.2 });
-const ENV_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
-const PROCESS_ANIMATION = createFadeInAnimation({ delay: 0.2 });
+const ENV_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: -50 });
+const ENV_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50 });
+const PROCESS_ANIMATION = createFadeInAnimation();
 
 const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -193,7 +193,6 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
                 icon={audienceIcons[i]}
                 title={t(`coverVideo.audience.items.${i}.title`)}
                 description={t(`coverVideo.audience.items.${i}.description`)}
-                delay={0.1 * (i + 1)}
               />
             ))}
           </div>
@@ -211,7 +210,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
               <ResponsiveImage
                 src="/images/recording2.webp"
                 alt={t('coverVideo.environment.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -264,7 +263,6 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
               description={coverVideoPackage.description}
               features={coverVideoPackage.features}
               recommended={coverVideoPackage.recommended}
-              delay={0.1}
               ctaLabel={t('coverVideo.cta.inquiry')}
               ctaHref={siteConfig.contact.kakaoUrl}
             />
@@ -286,8 +284,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
               <m.div
                 key={i}
                 className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
-                whileHover={HOVER_SCALE}
-                transition={{ duration: 0.25 }}
+                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
                   <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>

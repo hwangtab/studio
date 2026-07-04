@@ -19,6 +19,7 @@ import { locales, type Locale } from '../../../../lib/i18n';
 import { generateItemListSchema } from '../../../../utils/schema';
 import { getSiteConfig } from '../../../../data/siteConfig';
 import { normalizePageNumber } from '../../../../utils/pagination';
+import { getScrollBehavior } from '../../../../utils/scrollUtils';
 
 import type { NextPageWithLayout } from '../../../../types';
 
@@ -101,7 +102,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
     if (sectionRef.current) {
       const yOffset = -100;
       const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      window.scrollTo({ top: y, behavior: getScrollBehavior() });
     }
   };
 

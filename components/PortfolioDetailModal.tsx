@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { m, Variants } from 'framer-motion';
+import { TRANSITION_STANDARD, DUR } from '../utils/animationUtils';
 import { X, Share2 } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import type { PortfolioItem, PortfolioCategory } from '../types/data';
@@ -11,8 +12,8 @@ import { useFocusTrapDialog } from '../utils/useFocusTrapDialog';
 import PortfolioDetailContent from './portfolio/PortfolioDetailContent';
 
 const overlayVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
+  hidden: { opacity: 0, transition: TRANSITION_STANDARD },
+  visible: { opacity: 1, transition: TRANSITION_STANDARD },
 };
 
 const modalVariants: Variants = {
@@ -20,16 +21,13 @@ const modalVariants: Variants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: {
-      type: 'spring',
-      damping: 25,
-      stiffness: 300,
-    },
+    transition: TRANSITION_STANDARD,
   },
   exit: {
     opacity: 0,
     scale: 0.97,
-    transition: { duration: 0.2, ease: 'easeIn' },
+    // 진입과 같은 tween 계열 + 동일 base duration. exit만 방향상 자연스러운 easeIn(가속 이탈) 유지.
+    transition: { duration: DUR.base, ease: 'easeIn' },
   },
 };
 

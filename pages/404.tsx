@@ -36,9 +36,11 @@ const NotFoundPage: NextPage = () => {
         canonical="/404"
       />
 
+      {/* badge를 h1(delay 0)보다 DOM에 먼저 두므로 진입 delay를 0으로 맞춰 (latent) 순서 역전 제거 */}
       <m.div
         className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-light"
         {...PAGE_SUBTITLE_ANIMATION}
+        transition={{ ...PAGE_SUBTITLE_ANIMATION.transition, delay: 0 }}
       >
         {t('notFound.badge')}
       </m.div>
@@ -64,7 +66,6 @@ const NotFoundPage: NextPage = () => {
       <m.div
         className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         {...pageContentMotionProps}
-        transition={{ ...PAGE_CONTENT_ANIMATION.transition, delay: 0.6 }}
       >
         <Link
           href={`/${locale}`}
@@ -85,7 +86,6 @@ const NotFoundPage: NextPage = () => {
         aria-label={t('notFound.popularTitle', { defaultValue: '자주 찾는 페이지' })}
         className="mt-12"
         {...pageContentMotionProps}
-        transition={{ ...PAGE_CONTENT_ANIMATION.transition, delay: 0.8 }}
       >
         <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-4">
           {t('notFound.popularTitle', { defaultValue: '자주 찾는 페이지' })}

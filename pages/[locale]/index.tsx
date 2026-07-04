@@ -179,7 +179,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           {...homeServicesMotionProps}
         >
-          {homeServices.map((service, index) => (
+          {homeServices.map((service) => (
             <FeatureCard
               key={service.title}
               icon={ICON_MAP[service.icon as string] || Disc}
@@ -187,7 +187,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               description={service.description}
               href={getLink(service.link)}
               variant="highlight"
-              delay={0.1 * (index + 1)}
               cta={
                 <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
                   {t('home.sections.servicesCta')}

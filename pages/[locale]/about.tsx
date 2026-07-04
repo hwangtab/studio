@@ -153,13 +153,12 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {coreServices.map((service, index) => (
+          {coreServices.map((service) => (
             <FeatureCard
               key={service.title}
               title={service.title}
               description={service.description}
               icon={ICON_MAP[service.icon as string]}
-              delay={0.1 * (index + 1)}
               size="lg"
             />
           ))}
@@ -175,13 +174,12 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {productionProcess.map((step, index) => (
+          {productionProcess.map((step) => (
             <FeatureCard
               key={step.title}
               title={step.title}
               description={step.description}
               icon={ICON_MAP[step.icon as string]}
-              delay={0.1 * (index + 1)}
             />
           ))}
         </div>
@@ -228,7 +226,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                 <BaseCard
                   key={index}
                   variant="default"
-                  delay={0.2 + 0.1 * index}
                   className="p-4"
                 >
                   <div className="flex items-center mb-2">
@@ -253,7 +250,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <BaseCard
-            delay={0.1}
             className="p-6 text-center cursor-pointer"
             href={`tel:${siteConfig.contact.phone}`}
           >
@@ -267,7 +263,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           </BaseCard>
 
           <BaseCard
-            delay={0.2}
             className="p-6 text-center cursor-pointer"
             href={`mailto:${siteConfig.contact.email}`}
           >
@@ -281,7 +276,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           </BaseCard>
 
           <BaseCard
-            delay={0.3}
             className="p-6 text-center cursor-pointer"
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
@@ -297,7 +291,6 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           </BaseCard>
 
           <BaseCard
-            delay={0.4}
             className="p-6 text-center cursor-pointer"
             href={siteConfig.contact.naverMapUrl}
             target="_blank"

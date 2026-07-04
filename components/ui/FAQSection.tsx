@@ -4,7 +4,7 @@ import { Plus, Minus, HelpCircle } from '@/lib/lucide-icons';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
 
-import { createInViewEnterAnimation } from '../../utils/animationUtils';
+import { createInViewEnterAnimation, TRANSITION_STANDARD } from '../../utils/animationUtils';
 
 interface FAQItem {
     question: string;
@@ -76,7 +76,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 aria-labelledby={`faq-button-${index}`}
                                 initial={false}
                                 animate={activeIndex === index ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                transition={TRANSITION_STANDARD}
                                 className="overflow-hidden"
                                 aria-hidden={activeIndex !== index}
                             >

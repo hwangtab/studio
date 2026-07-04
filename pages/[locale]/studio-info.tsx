@@ -23,7 +23,7 @@ import { getHubLocaleContent } from '../../data/faq';
 import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getSchemaLanguage } from '../../utils/schema';
-import { createInViewEnterAnimation, HOVER_SCALE } from '../../utils/animationUtils';
+import { createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -40,8 +40,8 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const schemaLanguage = React.useMemo(() => getSchemaLanguage(locale), [locale]);
   const introSectionAnimation = createInViewEnterAnimation({ axis: 'y' });
-  const introImageAnimation = createInViewEnterAnimation({ axis: 'x', distance: -50, delay: 0.2 });
-  const introTextAnimation = createInViewEnterAnimation({ axis: 'x', distance: 50, delay: 0.2 });
+  const introImageAnimation = createInViewEnterAnimation({ axis: 'x', distance: -50 });
+  const introTextAnimation = createInViewEnterAnimation({ axis: 'x', distance: 50 });
   const equipmentSectionAnimation = createInViewEnterAnimation({});
 
   const recordingStudioSchema = React.useMemo(() => ({
@@ -140,7 +140,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
               <ResponsiveImage
                 src="/images/hardware2.webp"
                 alt={t('studioInfo.intro.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -192,8 +192,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
               <m.div
                 key={index}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={HOVER_SCALE}
-                transition={{ duration: 0.3 }}
+                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <ResponsiveImage
                   src={image.src}

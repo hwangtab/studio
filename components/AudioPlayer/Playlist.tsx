@@ -5,6 +5,8 @@ import { Play } from '@/lib/lucide-icons';
 import type { AudioTrack } from '../../types/data';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
+// TrackInfo가 소유한 모션 억제 감지 훅·정적 높이를 공유(AudioPlayer 모듈 내 단일 출처).
+import { useMotionSuppressed, EQUALIZER_STATIC_HEIGHTS } from './TrackInfo';
 
 interface PlaylistProps {
     tracks: readonly AudioTrack[];
@@ -22,6 +24,8 @@ const Playlist = ({
     locale = defaultLocale,
 }: PlaylistProps) => {
     const { t } = useTranslation('common', { lng: locale });
+    // 터치기기·OS reduce 시 재생 중 이퀄라이저 바를 정적으로(무한 height 애니메이션 억제).
+    const motionSuppressed = useMotionSuppressed();
     return (
         <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
             <h3 className="text-gray-500 dark:text-white/60 text-xs font-bold uppercase tracking-wider mb-4 px-2">
@@ -60,18 +64,18 @@ const Playlist = ({
                                         {isPlaying ? (
                                             <div className="flex space-x-[2px] items-end h-3">
                                                 <m.div
-                                                    animate={{ height: [4, 12, 6, 12, 4] }}
-                                                    transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+                                                    animate={motionSuppressed ? { height: EQUALIZER_STATIC_HEIGHTS[0] } : { height: [4, 12, 6, 12, 4] }}
+                                                    transition={motionSuppressed ? { duration: 0 } : { repeat: Infinity, duration: 1.2, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
                                                 <m.div
-                                                    animate={{ height: [8, 4, 12, 5, 8] }}
-                                                    transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                                                    animate={motionSuppressed ? { height: EQUALIZER_STATIC_HEIGHTS[1] } : { height: [8, 4, 12, 5, 8] }}
+                                                    transition={motionSuppressed ? { duration: 0 } : { repeat: Infinity, duration: 1.5, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
                                                 <m.div
-                                                    animate={{ height: [5, 10, 5, 10, 5] }}
-                                                    transition={{ repeat: Infinity, duration: 1.0, ease: "linear" }}
+                                                    animate={motionSuppressed ? { height: EQUALIZER_STATIC_HEIGHTS[2] } : { height: [5, 10, 5, 10, 5] }}
+                                                    transition={motionSuppressed ? { duration: 0 } : { repeat: Infinity, duration: 1.0, ease: "linear" }}
                                                     className="w-[2px] bg-primary rounded-full"
                                                 />
                                             </div>

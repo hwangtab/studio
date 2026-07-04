@@ -2,7 +2,7 @@ import { cn } from '../../lib/utils';
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { FADE_IN_UP, HOVER_Y, SHADOW_HOVER } from '../../utils/animationUtils';
+import { FADE_IN_UP, CARD_HOVER, SHADOW_HOVER } from '../../utils/animationUtils';
 
 // 신 Link API(자체 <a> 렌더)에 framer-motion을 결합한 컴포넌트. legacyBehavior +
 // 자식 <m.a> 조합(차기 Next에서 제거 예정)을 대체하며, 렌더 결과는 동일한 단일 <a>.
@@ -43,7 +43,11 @@ const BaseCard = React.memo(({
 
     const animationProps = {
         ...FADE_IN_UP,
-        whileHover: hoverEffect ? { ...HOVER_Y, ...SHADOW_HOVER } : {},
+        // whileHover에 CARD_HOVER(= HOVER_Y + TRANSITION_STANDARD)를 써서 hover 리프트가
+        // 자체 transition을 갖게 한다. 이렇게 안 하면 whileHover가 아래 컴포넌트 레벨
+        // transition(진입 delay 포함)을 상속해, delay 큰 카드일수록 hover 리프트가 늦게
+        // 시작한다. y·shadow 값은 기존(HOVER_Y+SHADOW_HOVER)과 동일하게 유지.
+        whileHover: hoverEffect ? { ...CARD_HOVER, ...SHADOW_HOVER } : {},
         transition: { ...FADE_IN_UP.transition, delay }
     };
 

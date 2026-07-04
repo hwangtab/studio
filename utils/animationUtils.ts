@@ -4,6 +4,27 @@
 // - 단점: viewport 진입 fade-in/slide-in 효과 사라짐 (즉시 표시). 안정성 우선 trade-off.
 // - desktop에서도 동일 적용 — initial=false는 framer-motion이 SSR HTML 그대로 둠.
 
+// ─────────────────────────────────────────────────────────────────────────
+// 리듬 토큰 SSOT (2026-07 도입) — hover/tap·transition의 duration·easing 단일 출처.
+// 컴포넌트/페이지에서 duration 숫자(0.3, 0.25 등)를 재정의하지 말 것. 아래 토큰만 import.
+// framer(초)와 Tailwind CSS(ms) 이름 동기화 (tailwind.config.ts theme.extend와 쌍):
+//   DUR.fast (0.2s)  ↔  duration-fast  (200ms)  — 색·소형 피드백 (현재 다수파: duration-200)
+//   DUR.base (0.3s)  ↔  duration-base  (300ms)  — 표준 hover·scale (현재 다수파: duration-300)
+//   DUR.slow (0.7s)  ↔  duration-slow  (700ms)  — 썸네일 zoom (현재 다수파: duration-700 7곳)
+// easing 표준 1종: EASE_STANDARD = cubic-bezier(0.4,0,0.2,1) = Tailwind ease-in-out DEFAULT
+//   ↔ Tailwind `ease-standard`. (기존 duration-200/300/700·ease-* 기본 클래스도 그대로 유효
+//   — extend는 병합이라 하위호환.)
+// ─────────────────────────────────────────────────────────────────────────
+
+/** 표준 easing (framer bezier). Tailwind `ease-standard`/`ease-in-out`과 동일 값. */
+export const EASE_STANDARD = [0.4, 0, 0.2, 1] as const;
+
+/** duration 토큰(초, framer용). Tailwind `duration-fast|base|slow`(ms)와 이름 동기화. */
+export const DUR = { fast: 0.2, base: 0.3, slow: 0.7 } as const;
+
+/** 표준 transition(base duration + 표준 easing). hover/tap에 그대로 spread해 재정의 방지. */
+export const TRANSITION_STANDARD = { duration: DUR.base, ease: EASE_STANDARD };
+
 export const FADE_IN_UP = {
   initial: false as const,
   whileInView: { opacity: 1, y: 0 },
@@ -11,6 +32,12 @@ export const FADE_IN_UP = {
   transition: { duration: 0.4 }
 };
 
+// 카드 lift = 값 + 리듬 묶음. whileHover에 CARD_HOVER 하나만 넣으면 duration 재정의 불필요.
+// 그림자까지 원하면 whileHover={{ ...CARD_HOVER, ...SHADOW_HOVER }}.
+export const CARD_HOVER = { y: -4, transition: TRANSITION_STANDARD };
+
+// 아래 3개는 값만 있는 하위호환 export(기존 소비처 유지). 표준 리듬을 붙이려면
+// TRANSITION_STANDARD를 함께 spread: whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
 export const HOVER_Y = { y: -4 };
 
 export const HOVER_SCALE = { scale: 1.05 };
@@ -40,27 +67,6 @@ export const PAGE_CONTENT_ANIMATION = {
   whileInView: { opacity: 1 },
   viewport: { once: true },
   transition: { duration: 0.8, delay: 0.4 }
-};
-
-export const STAGGER_CONTAINER = {
-  initial: {},
-  animate: {
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-export const STAGGER_ITEM = {
-  initial: false as const,
-  animate: { opacity: 1, y: 0 }
-};
-
-export const TEXT_REVEAL = {
-  initial: false as const,
-  whileInView: { y: 0, opacity: 1 },
-  viewport: { once: true },
-  transition: { duration: 0.8, ease: [0.33, 1, 0.68, 1] }
 };
 
 // SCROLL_REVEAL은 variants 패턴(SectionHeading 등에서 variants prop으로 사용)이라

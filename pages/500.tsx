@@ -35,9 +35,11 @@ const ServerErrorPage: NextPage = () => {
         disableUrlMetaAndAlternates
       />
 
+      {/* badge를 h1(delay 0)보다 DOM에 먼저 두므로 진입 delay를 0으로 맞춰 (latent) 순서 역전 제거 */}
       <m.div
         className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-light"
         {...PAGE_SUBTITLE_ANIMATION}
+        transition={{ ...PAGE_SUBTITLE_ANIMATION.transition, delay: 0 }}
       >
         {t('serverError.badge')}
       </m.div>
@@ -63,7 +65,6 @@ const ServerErrorPage: NextPage = () => {
       <m.div
         className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         {...pageContentMotionProps}
-        transition={{ ...PAGE_CONTENT_ANIMATION.transition, delay: 0.6 }}
       >
         <Link
           href={`/${locale}`}

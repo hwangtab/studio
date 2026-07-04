@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 import { Disc } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale, type Locale } from '../../lib/i18n';
+
+// 앱의 모션 억제 정책(pages/_app.tsx MotionConfig: 터치기기=always, +OS reduce)을
+// CSS·height 애니메이션에도 반영하기 위한 감지 훅.
+// framer의 reducedMotion='always'는 transform(x/y/scale/rotate)만 억제하므로,
+// CSS transform:rotate(animate-spin-slow LP 회전)와 height 키프레임(이퀄라이저)은 억제를 받지 못해
+// 모바일·reduce 환경에서도 계속 움직인다. (OS reduce) 또는 (터치기기)일 때 true를 반환해
+// 해당 장식 애니메이션을 정적으로 전환한다. 재생/일시정지 기능 로직과는 무관하다.
+// SSR·첫 paint 기본값은 억제(true) — _app.tsx의 SSR reducedMotion='always'와 정합해 hydration 불일치 방지.
+export const useMotionSuppressed = (): boolean => {
+    const [suppressed, setSuppressed] = useState(true);
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+        const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const touchMq = window.matchMedia('(hover: none) and (pointer: coarse)');
+        const update = () => setSuppressed(reduceMq.matches || touchMq.matches);
+        update();
+        reduceMq.addEventListener('change', update);
+        touchMq.addEventListener('change', update);
+        return () => {
+            reduceMq.removeEventListener('change', update);
+            touchMq.removeEventListener('change', update);
+        };
+    }, []);
+    return suppressed;
+};
+
+// 모션 억제 상태에서 '재생 중' 이퀄라이저를 정적으로 표시할 높이(px).
+// 오르내리는 애니메이션의 한 프레임을 얼려, 모션 없이도 재생 중임을 전달한다.
+export const EQUALIZER_STATIC_HEIGHTS = [8, 12, 6] as const;
 
 
 interface Track {
@@ -28,7 +57,9 @@ interface TrackInfoProps {
 
 const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: TrackInfoProps) => {
     const { t } = useTranslation('common', { lng: locale });
-    const shouldAnimateNowPlaying = isPlaying;
+    const motionSuppressed = useMotionSuppressed();
+    // 재생 중이더라도 모션 억제(터치기기·OS reduce) 시엔 LP 회전·이퀄라이저를 멈춘다.
+    const shouldAnimateNowPlaying = isPlaying && !motionSuppressed;
     const albumMotionProps = { initial: { scale: 0.9, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { duration: 0.5 } };
     const trackNumberLabel = trackNumber < 10 ? `0${trackNumber}` : String(trackNumber);
     return (
@@ -74,13 +105,14 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                         {[...Array(3)].map((_, i) => (
                             <m.div
                                 key={i}
-                                animate={shouldAnimateNowPlaying ? { height: [4, 12, 4] } : { height: 4 }}
+                                // 재생+비억제: 오르내림. 재생+억제: 정적 staggered 높이. 정지: height 4.
+                                animate={shouldAnimateNowPlaying ? { height: [4, 12, 4] } : { height: isPlaying ? EQUALIZER_STATIC_HEIGHTS[i] : 4 }}
                                 transition={shouldAnimateNowPlaying ? {
                                     repeat: Infinity,
                                     duration: 0.8,
                                     delay: i * 0.2,
                                     ease: "easeInOut"
-                                } : { duration: 0.2 }}
+                                } : { duration: motionSuppressed ? 0 : 0.2 }}
                                 className={`w-1 rounded-full ${isPlaying ? 'bg-primary' : 'bg-gray-500'}`}
                             />
                         ))}
