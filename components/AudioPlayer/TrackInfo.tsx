@@ -82,10 +82,12 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                         pictureClassName="block w-full h-full"
                         className="w-full h-full object-cover"
                         loading="lazy"
+                        // 부모(위 div)가 relative + 고정 크기(w-64/h-64, sm:w-80/h-80 = 256/320px)라
+                        // fill이 맞는 구조. width/height(320)는 fill과 동시 지정 시 next/image가
+                        // 무시하고 경고하는 조합이라 제거 — sizes 값(256/320px)이 이미 실제 원
+                        // 크기와 정확히 일치해 그대로 유지.
                         sizes="(max-width: 640px) 256px, 320px"
                         fill={true}
-                        width={320}
-                        height={320}
                     />
 
                     {/* Vinyl Center Hole */}

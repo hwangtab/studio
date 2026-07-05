@@ -57,6 +57,15 @@ const Playlist = ({
                                     alt={t('audioPlayer.albumArtAlt', { title: track.title })}
                                     width={40}
                                     height={40}
+                                    // sizes 없이 width/height만 있으면 next/image가 DPR 기반(1x/2x) 후보만
+                                    // 만들어 sizes를 무시한다. 40px 표시엔 원래도 64w(1x)가 선택되지만
+                                    // (imageSizes 32→64 간극상 40px가 32보다 커서 64w가 최소 충족값 —
+                                    // config 변경 없인 더 못 낮춤), sizes 명시로 2x/3x 후보가 96/128w로
+                                    // 정확히 매핑되어 고DPR 기기 화질이 개선된다. 40px 썸네일은 화질
+                                    // 저하가 육안으로 보이지 않아 quality도 60(next.config qualities에
+                                    // 이미 포함된 값)으로 낮춰 다운로드 용량을 추가로 줄인다.
+                                    sizes="40px"
+                                    quality={60}
                                     className={`w-full h-full object-cover transition-transform duration-300 ${isActive && isPlaying ? 'scale-110' : ''}`}
                                 />
                                 {isActive && (

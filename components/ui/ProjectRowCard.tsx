@@ -55,7 +55,19 @@ const ProjectRowCard = ({
                     className="w-full h-full object-cover transition-transform duration-slow group-hover:scale-105 opacity-100 dark:opacity-90 dark:group-hover:opacity-100"
                     width={200}
                     height={200}
-                    sizes="(max-width: 640px) 100vw, 200px"
+                    // 실제 렌더 폭: 데스크톱(sm:)은 좌측 열이 sm:w-48/h-full = 고정 192px 정사각
+                    // (뷰포트가 커져도 스케일 안 됨). 모바일(<sm)은 카드가 flex-col이 되며
+                    // 이 div가 w-full로 카드 폭(Section container = 100vw - px-4 32px) 전체를 채움.
+                    // 과거 "100vw, 200px"는 next/image의 getWidths()가 sizes 문자열 전체에서
+                    // vw 최솟값(100)을 찾아 deviceSizes[0]*1.0=480px를 srcset 하한선으로 강제
+                    // (미디어쿼리 스코프 무시, 문자열 어디든 vw가 있으면 전역 적용되는 next/image 자체 동작) —
+                    // 그 결과 데스크톱 200px 표시에도 480w 미만 후보가 전부 제거돼 480w 확정 다운로드
+                    // (실측 192×190px 표시에 480w, 2.5배 과다). vw를 완전히 제거하고 고정 px만 쓰면
+                    // 하한선 필터 자체가 걸리지 않아 전체 imageSizes(16~384)가 후보에 남고,
+                    // 데스크톱은 실제 필요한 256w를 받는다. 480/640 두 구간은 기존 100vw가
+                    // 모바일 전 구간(뷰포트 0~639px)에서 실제로 골라주던 값(480 또는 640)을 그대로
+                    // 재현하도록 계산한 값이라 모바일 다운로드 용량은 완전히 동일(회귀 없음).
+                    sizes="(max-width: 480px) 480px, (max-width: 640px) 640px, 200px"
                 />
 
                 {/* Vinyl Effect Overlay (Dark Mode Only) */}
