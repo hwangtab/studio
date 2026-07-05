@@ -61,9 +61,14 @@ function collectHeroChars() {
   // hero h1에 실제 들어가는 키 패턴만 잡는다.
   //   - *.hero.title 또는 *.hero.titlePrefix/Highlight/Suffix (대부분 페이지)
   //   - contact.title (contact 페이지가 t('contact.title') 사용)
-  // subtitle/description 등은 h1 아니므로 제외 — LCP 영향 없음.
+  //   - portfolio.title (portfolio 페이지 h1이 t('portfolio.title') 사용)
+  //   - stories.categories.* (카테고리 허브 페이지 h1이 카테고리명을 제목으로 렌더)
+  // 위 페이지 h1들은 hero.* 네임스페이스 밖이라 heroTitleRe에 안 잡혀, 놓치면 해당
+  // 제목이 본문 Pretendard(≈460KB subset)를 경유해 그려진다. subtitle/description 등은
+  // h1 아니므로 제외 — LCP 영향 없음.
   const heroTitleRe = /(^|\.)hero\.title[a-z]*$/i;
-  const pageH1Re = /^(contact\.title)$/i;
+  const pageH1Re = /^(contact\.title|portfolio\.title)$/i;
+  const categoryHubRe = /^stories\.categories\.[a-z0-9_]+$/i;
 
   function walkObject(obj, parentKey = '') {
     if (!obj || typeof obj !== 'object') return;
@@ -74,7 +79,7 @@ function collectHeroChars() {
     for (const [k, v] of Object.entries(obj)) {
       const fullKey = parentKey ? `${parentKey}.${k}` : k;
       if (typeof v === 'string') {
-        if (heroTitleRe.test(fullKey) || pageH1Re.test(fullKey)) {
+        if (heroTitleRe.test(fullKey) || pageH1Re.test(fullKey) || categoryHubRe.test(fullKey)) {
           addStr(v);
         }
       } else {

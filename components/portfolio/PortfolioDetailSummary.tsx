@@ -13,6 +13,12 @@ interface PortfolioDetailSummaryProps {
   listenUrl: string;
   actions?: React.ReactNode;
   titleTag?: 'h1' | 'h2';
+  /**
+   * 상세 이미지의 next/image priority. 페이지(/[locale]/portfolio/[id], above-fold LCP
+   * 후보)에서는 true, 모달(클라이언트 인터랙션 후 열림)에서는 미지정 권장.
+   * 명시하지 않으면 titleTag(호출부가 이미 page='h1'/modal='h2'로 구분해 넘김)로 유추한다.
+   */
+  imagePriority?: boolean;
   imageSectionClassName?: string;
   imageWrapperClassName?: string;
   contentSectionClassName?: string;
@@ -33,6 +39,7 @@ const PortfolioDetailSummary = ({
   listenUrl,
   actions,
   titleTag = 'h2',
+  imagePriority,
   imageSectionClassName = 'px-6 pt-6',
   imageWrapperClassName = 'relative aspect-square max-w-xs mx-auto rounded-xl overflow-hidden shadow-lg',
   contentSectionClassName = 'p-6',
@@ -43,6 +50,8 @@ const PortfolioDetailSummary = ({
   primaryActionClassName = 'w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium',
 }: PortfolioDetailSummaryProps) => {
   const TitleTag = titleTag;
+  // titleTag='h1'은 페이지 사용처(above-fold LCP)만 넘기므로 priority 유추 신호로 재사용.
+  const resolvedImagePriority = imagePriority ?? titleTag === 'h1';
 
   return (
     <>
@@ -54,6 +63,7 @@ const PortfolioDetailSummary = ({
             className="object-cover"
             pictureClassName="block w-full h-full"
             sizes="(min-width: 768px) 400px, 100vw"
+            priority={resolvedImagePriority}
             fill
           />
         </div>

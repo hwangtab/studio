@@ -138,12 +138,17 @@ export const MobileNav = ({
           />
         </div>
 
-        {/* 그룹 밖 고정 퀵링크 — 가격·문의·포트폴리오. 아코디언을 펼치지 않아도 1탭 도달. */}
+        {/* 그룹 밖 고정 퀵링크 — 가격·문의·포트폴리오. 아코디언을 펼치지 않아도 1탭 도달.
+            prefetch={false}: 이 <nav>는 메뉴 열림 여부와 무관하게 모든 페이지에서 항상
+            mount되어 있어(CSS opacity/visibility 토글) 기본 prefetch=true면 사이트 전역에서
+            pricing/contact 등 청크를 상시 선다운로드해 폰트 등 critical 리소스와 대역폭을
+            경쟁한다. hover/focus 시 prefetch는 유지. */}
         <div className="grid grid-cols-3 gap-2 pb-3 border-b border-gray-100 dark:border-gray-800">
           {quickLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               onClick={onClose}
               aria-current={currentPath === link.href ? 'page' : undefined}
               tabIndex={isOpen ? 0 : -1}

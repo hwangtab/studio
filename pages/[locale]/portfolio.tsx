@@ -16,7 +16,20 @@ import ImageHero from '../../components/common/ImageHero';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
-const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), { ssr: false });
+// loading 스켈레톤: AudioPlayer(components/AudioPlayer/index.tsx)는 청크 로드 전 null을
+// 렌더해 above-fold 공간이 예약되지 않고, 마운트 시 아래 콘텐츠를 밀어내 CLS 0.09를 유발했다.
+// 실제 컴포넌트와 동일한 bg/rounded/border의 빈 자리표시로 채우고, min-height는 실제
+// 마운트 후 높이(그리드 lg:grid-cols-[1.2fr,1fr] + 앨범아트 원형 256/320px + 컨트롤 등 실측 기반
+// 추정치)에 맞춰 모바일·태블릿(세로 스택) 1100px, 데스크톱(lg: 2열)은 720px.
+const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="bg-white dark:bg-[#121212] overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-white/5 min-h-[1100px] lg:min-h-[720px]"
+    />
+  ),
+});
 import ProjectRowCard from '../../components/ui/ProjectRowCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/data';
