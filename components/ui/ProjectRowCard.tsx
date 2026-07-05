@@ -55,19 +55,24 @@ const ProjectRowCard = ({
                     className="w-full h-full object-cover transition-transform duration-slow group-hover:scale-105 opacity-100 dark:opacity-90 dark:group-hover:opacity-100"
                     width={200}
                     height={200}
-                    // 실제 렌더 폭: 데스크톱(sm:)은 좌측 열이 sm:w-48/h-full = 고정 192px 정사각
-                    // (뷰포트가 커져도 스케일 안 됨). 모바일(<sm)은 카드가 flex-col이 되며
-                    // 이 div가 w-full로 카드 폭(Section container = 100vw - px-4 32px) 전체를 채움.
-                    // 과거 "100vw, 200px"는 next/image의 getWidths()가 sizes 문자열 전체에서
-                    // vw 최솟값(100)을 찾아 deviceSizes[0]*1.0=480px를 srcset 하한선으로 강제
-                    // (미디어쿼리 스코프 무시, 문자열 어디든 vw가 있으면 전역 적용되는 next/image 자체 동작) —
-                    // 그 결과 데스크톱 200px 표시에도 480w 미만 후보가 전부 제거돼 480w 확정 다운로드
-                    // (실측 192×190px 표시에 480w, 2.5배 과다). vw를 완전히 제거하고 고정 px만 쓰면
-                    // 하한선 필터 자체가 걸리지 않아 전체 imageSizes(16~384)가 후보에 남고,
-                    // 데스크톱은 실제 필요한 256w를 받는다. 480/640 두 구간은 기존 100vw가
-                    // 모바일 전 구간(뷰포트 0~639px)에서 실제로 골라주던 값(480 또는 640)을 그대로
-                    // 재현하도록 계산한 값이라 모바일 다운로드 용량은 완전히 동일(회귀 없음).
-                    sizes="(max-width: 480px) 480px, (max-width: 640px) 640px, 200px"
+                    // 이 이미지는 반응형으로 렌더 폭이 다르다:
+                    //  - 모바일(<640px): 이 div가 w-full → 카드=뷰포트 전폭. 100vw가 정답
+                    //    (Moto G4 412px×dpr → 768w). 이 구간은 절대 건드리면 안 됨.
+                    //  - 데스크톱(≥640px, sm:w-48): 좌측 열이 고정 192px 정사각(뷰포트 무관 불변).
+                    // 딜레마: next/image getWidths()는 sizes 문자열 전체에서 vw 최솟값을 찾아
+                    //   floor=deviceSizes[0]×(minVw/100)=480×(minVw/100)로 그 미만 srcset 후보를
+                    //   전부 제거한다(미디어쿼리 스코프 무시, 전역 적용). "100vw, 200px"는 minVw=100
+                    //   →floor=480이라 데스크톱 192px 표시에도 480w 미만이 다 잘려 480w 확정(2.5배 과다).
+                    // 해결: 데스크톱 분기를 작은 vw(30vw)로 표현해 floor를 480→144로 낮춘다.
+                    //   floor 144는 (a)128w 이하를 후보에서 제외해 192px 표시가 128w로 흐려질 blur를
+                    //   원천 차단하고 (b)256w는 후보로 남겨 데스크톱이 256w를 받게 한다.
+                    //   30vw는 641~1024px에서 source 192~307px→항상 256w 선택(sharp). >1024px는
+                    //   고정 192px 클램프로 뷰포트가 아무리 커져도 dpr1=256w/dpr2=384w 평탄(대형
+                    //   화면 과다 다운로드 방지). 모바일 100vw 분기는 문자열에 그대로라 후보 상단부
+                    //   (≥480w)가 기존과 동일 → 모바일 선택폭 불변(768w, 회귀 0). getWidths+브라우저
+                    //   geometric-mean 선택 재현 스크립트로 Moto G4(412,dpr2)=768w·데스크톱(1280,dpr1)
+                    //   =256w 양쪽 검증 완료.
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 30vw, 192px"
                 />
 
                 {/* Vinyl Effect Overlay (Dark Mode Only) */}
