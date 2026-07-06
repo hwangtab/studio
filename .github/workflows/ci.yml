@@ -33,6 +33,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Content quality check
+        run: npm run content-check:ci
+
       - name: Test
         run: npm test -- --coverage --passWithNoTests
 

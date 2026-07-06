@@ -13,7 +13,7 @@ tags:
   - 보컬 레슨 선택
 thumbnail: /images/hardware8.webp
 summary: >-
-  온라인 보컬 레슨 vs 오프라인 레슨 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 녹음에서 바로 점검할 포인트를 담았습니다.
+  온라인 보컬 레슨 vs 오프라인 레슨(외부 수강) 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 녹음에서 바로 점검할 포인트를 담았습니다.
 faq:
   - q: 온라인 보컬 레슨이 오프라인만큼 효과적인가요?
     a: >-
@@ -34,7 +34,7 @@ faq:
 inlineFallback:
   price: lesson-monthly
 ---
-![온라인 보컬 레슨 vs 오프라인 레슨 — 스튜디오 놀](/images/hardware8.webp)
+![온라인 보컬 레슨 vs 오프라인 레슨 비교 — 스튜디오 놀](/images/hardware8.webp)
 
 ## 어떤 방식이 나에게 맞을까
 

@@ -20,6 +20,7 @@
  * 사용: node scripts/generate-hero-font.mjs
  */
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -34,6 +35,12 @@ const CACHE_TTF = path.join(CACHE_DIR, 'Pretendard-Bold.otf');
 // next/font/local이 빌드 시 _next/static/media/로 옮기므로 public/ 대신 lib/ 안에 둔다.
 // public/에 두면 정적 서빙(/fonts/...)으로 동시에 중복 노출되어 캐시 정책이 분기됨.
 const OUT_WOFF2 = path.join(ROOT, 'lib', 'fonts', 'pretendard-hero.woff2');
+// woff2에 포함된 글자 집합 + woff2 sha256의 사이드카. hero 텍스트가 바뀌었는데
+// woff2 재생성을 빠뜨리면 새 글자가 subset 밖이라 fallback으로 그려진다 —
+// --check 모드(네트워크 불필요)가 (1) 현재 hero 텍스트 ⊆ 사이드카 글자 집합,
+// (2) woff2 실물 sha == 사이드카 sha 를 대조하고 hero-font-subset.test.js가 CI에서
+// 강제한다. sha 대조 덕에 둘 중 한 파일만 commit해도 잡힌다. 항상 함께 commit할 것.
+const OUT_CHARS = path.join(ROOT, 'lib', 'fonts', 'pretendard-hero.chars.json');
 
 async function ensureSourceFont() {
   if (fs.existsSync(CACHE_TTF) && fs.statSync(CACHE_TTF).size > 1_000_000) {
@@ -128,10 +135,52 @@ function collectHeroChars() {
   return chars;
 }
 
+function woff2Sha256() {
+  return crypto.createHash('sha256').update(fs.readFileSync(OUT_WOFF2)).digest('hex');
+}
+
+function runCheck(chars) {
+  const regenerateHint =
+    `node scripts/generate-hero-font.mjs 를 로컬에서 실행하고 ` +
+    `갱신된 woff2 + chars.json을 함께 commit하세요.`;
+
+  if (!fs.existsSync(OUT_CHARS) || !fs.existsSync(OUT_WOFF2)) {
+    console.error(
+      `generate-hero-font --check: ${path.relative(ROOT, OUT_CHARS)} 또는 woff2 없음. ${regenerateHint}`,
+    );
+    process.exit(1);
+  }
+
+  const sidecar = JSON.parse(fs.readFileSync(OUT_CHARS, 'utf8'));
+  if (sidecar.sha256 !== woff2Sha256()) {
+    console.error(
+      `generate-hero-font --check: woff2 실물과 chars.json 사이드카의 sha256 불일치 — ` +
+        `둘 중 한쪽만 commit되었습니다. ${regenerateHint}`,
+    );
+    process.exit(1);
+  }
+
+  const committed = new Set(sidecar.chars);
+  const missing = [...chars].filter((ch) => !committed.has(ch));
+  if (missing.length > 0) {
+    console.error(
+      `generate-hero-font --check: hero 텍스트에 subset 밖 글자 ${missing.length}자 발견: ` +
+        `${JSON.stringify(missing.join(''))}\nhero 문구가 바뀌었습니다. ${regenerateHint}`,
+    );
+    process.exit(1);
+  }
+  console.log(`hero subset OK: ${chars.size} chars covered, woff2 sha match`);
+}
+
 async function main() {
   const chars = collectHeroChars();
   const subsetText = [...chars].join('');
   console.log(`hero char set: ${chars.size} glyphs`);
+
+  if (process.argv.includes('--check')) {
+    runCheck(chars);
+    return;
+  }
 
   let src;
   try {
@@ -153,8 +202,13 @@ async function main() {
 
   fs.mkdirSync(path.dirname(OUT_WOFF2), { recursive: true });
   fs.writeFileSync(OUT_WOFF2, out);
+  fs.writeFileSync(
+    OUT_CHARS,
+    `${JSON.stringify({ sha256: woff2Sha256(), chars: [...chars].sort() })}\n`,
+  );
 
   console.log(`written: ${path.relative(ROOT, OUT_WOFF2)}  (${(out.length / 1024).toFixed(1)} KB)`);
+  console.log(`written: ${path.relative(ROOT, OUT_CHARS)}  (${chars.size} chars + woff2 sha)`);
 }
 
 main().catch((err) => {

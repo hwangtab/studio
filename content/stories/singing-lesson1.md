@@ -34,7 +34,7 @@ faq:
 inlineFallback:
   price: lesson-monthly
 ---
-![보컬 레슨 완전 가이드 — 스튜디오 놀](/images/album2.webp)
+![보컬 레슨 선택 가이드 — 스튜디오 놀](/images/album2.webp)
 
 ## 보컬 레슨이 필요한 순간
 

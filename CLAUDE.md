@@ -38,10 +38,11 @@ node scripts/optimizeImages.js # Manually run image optimization
 # Hero font subset (LCP)
 # prebuild에서 자동 실행됨. hero h1 텍스트(data/home.ts heroContent,
 # public/locales/*/common.json의 *.hero.title*) 변경 후 빌드하면 woff2가 재생성되며
-# 변경된 woff2를 반드시 commit해야 함. 빠뜨리면 새 글자가 subset 밖이라
-# fallback chain으로 그려져 글자별 두께 차이 발생 가능.
+# 변경된 woff2 + pretendard-hero.chars.json 사이드카를 반드시 함께 commit해야 함.
+# 빠뜨리면 hero-font-subset.test.js(CI)가 --check 모드로 잡아낸다.
 # 수동 재실행:
 node scripts/generate-hero-font.mjs
+node scripts/generate-hero-font.mjs --check  # 네트워크 없이 subset 커버리지 검증
 ```
 
 ## Architecture & Data Flow

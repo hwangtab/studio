@@ -146,4 +146,4 @@ inlineFallback:
 
 ---
 
-[성악과 보컬의 차이 가이드](/stories/sungak1) | [보컬 레슨 서비스 안내](/lesson) | [연신내 보컬 레슨 소개](/stories/lesson1) | [보컬 녹음 세션 준비 가이드](/stories/session1)
+[성악과 보컬의 차이 가이드](/stories/sungak1) | [프로듀싱 레슨 안내](/lesson) | [연신내 레슨 안내 — 보컬 레슨 미운영](/stories/lesson1) | [보컬 녹음 세션 준비 가이드](/stories/session1)
