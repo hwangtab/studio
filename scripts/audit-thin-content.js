@@ -20,6 +20,7 @@ const {
   AUTO_EXPAND_BLOCK_REGEX,
   REGION_HUB_SLUGS,
 } = require('../lib/sitemap/thinContent');
+const { applyFactTokens } = require('../lib/factTokens');
 
 const storiesDirectory = path.join(process.cwd(), 'content/stories');
 const portfolioFile = path.join(process.cwd(), 'data/portfolio.ts');
@@ -110,7 +111,7 @@ function auditStories() {
       let noindexReasons = [];
 
       try {
-        const raw = fs.readFileSync(filePath, 'utf-8');
+        const raw = applyFactTokens(fs.readFileSync(filePath, 'utf-8'));
         const { data, content } = matter(raw);
         score = scoreContent(slug, content);
         category = data.category || 'uncategorized';

@@ -45,6 +45,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import subsetFont from 'subset-font';
+import { applyFactTokens } from '../lib/factTokens.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -113,7 +114,9 @@ function collectUsedChars() {
     ...walk(path.join(ROOT, 'public', 'locales'), (p) => p.endsWith('.json')),
   ];
   for (const f of sources) {
-    try { add(fs.readFileSync(f, 'utf8')); }
+    // 렌더 시점에는 %%phone%% 류가 치환된 텍스트가 보이므로, 글리프 수집도
+    // 치환 후 텍스트 기준이어야 한다 (lib/factTokens.js 배선 규약).
+    try { add(applyFactTokens(fs.readFileSync(f, 'utf8'))); }
     catch (e) { console.warn(`  skip ${path.relative(ROOT, f)}: ${e.message}`); }
   }
   return { used, fileCount: sources.length };

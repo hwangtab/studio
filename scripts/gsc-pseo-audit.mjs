@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import { google } from 'googleapis';
+import { applyFactTokens } from '../lib/factTokens.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -41,7 +42,7 @@ function loadCatalog() {
     f.endsWith('.md') && !/\.(en|zh|es|vi|th|uz)\.md$/.test(f)
   );
   return files.map((f) => {
-    const raw = fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8');
+    const raw = applyFactTokens(fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8'));
     const { data, content } = matter(raw);
     const title = data.title || '';
     return {

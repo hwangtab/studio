@@ -46,6 +46,9 @@ GA4 90일 분석 결과:
 | 카카오 상담 | https://open.kakao.com/me/nol |
 
 > NAP는 구글 비즈니스 프로필과 동일해야 함 (불일치 시 SEO 손해). 전화번호는 010-4255-7893만 사용.
+> 단, `content/stories/` 마크다운 본문에는 번호를 직접 쓰지 말고 `%%phone%%` 토큰을 쓸 것
+> (국제 표기는 `%%phone-intl%%`). 값의 단일 소스는 `lib/factTokens.js`이며 로드 시 자동 치환된다.
+> 하드코딩은 CI(factGuards `phone-hardcoded-in-content`)가 차단한다.
 
 ---
 

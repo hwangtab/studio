@@ -13,7 +13,9 @@
 import fs from 'fs';
 import path from 'path';
 
-import { findFactViolations, FactViolation } from '../lib/factGuards';
+import { findFactViolations, FactGuardSurface, FactViolation } from '../lib/factGuards';
+import { FACT_TOKENS, applyFactTokens } from '../lib/factTokens';
+import { INLINE_DIRECTIVE_NAMES } from '../lib/inlineDirectives';
 
 const ROOT = process.cwd();
 
@@ -33,9 +35,9 @@ const listFilesRecursive = (dir: string, extensions: string[]): string[] => {
 const formatViolations = (violations: FactViolation[]): string =>
   violations.map((v) => `  ${v.file}:${v.line} [${v.ruleId}] ${v.excerpt}`).join('\n');
 
-const expectNoViolations = (files: string[], markdown: boolean, label: string): void => {
+const expectNoViolations = (files: string[], surface: FactGuardSurface, label: string): void => {
   const violations = files.flatMap((file) =>
-    findFactViolations(fs.readFileSync(file, 'utf8'), path.relative(ROOT, file), { markdown }),
+    findFactViolations(fs.readFileSync(file, 'utf8'), path.relative(ROOT, file), { surface }),
   );
   expect(
     violations.length === 0
@@ -48,13 +50,13 @@ describe('canonical fact guards', () => {
   it('keeps content/stories free of forbidden fact claims', () => {
     const files = listFilesRecursive(path.join(ROOT, 'content/stories'), ['.md']);
     expect(files.length).toBeGreaterThan(1000);
-    expectNoViolations(files, true, 'content/stories');
+    expectNoViolations(files, 'markdown', 'content/stories');
   });
 
   it('keeps locale resources free of forbidden fact claims', () => {
     const files = listFilesRecursive(path.join(ROOT, 'public/locales'), ['.json']);
     expect(files.length).toBeGreaterThanOrEqual(7);
-    expectNoViolations(files, false, 'public/locales');
+    expectNoViolations(files, 'locales', 'public/locales');
   });
 
   it('keeps data/, pages/, components/ code surfaces free of forbidden fact claims', () => {
@@ -65,7 +67,51 @@ describe('canonical fact guards', () => {
     ].filter((f) => !/\.test\.[jt]sx?$|__snapshots__/.test(f));
 
     expect(codeFiles.length).toBeGreaterThan(50);
-    expectNoViolations(codeFiles, false, 'code surfaces');
+    expectNoViolations(codeFiles, 'code', 'code surfaces');
+  });
+});
+
+describe('fact token integrity', () => {
+  // MarkdownRenderer가 컴포넌트로 렌더하는 블록 shortcode 이름들
+  // (components/MarkdownRenderer.tsx renderSegment + lib/inlineDirectives).
+  const BLOCK_SHORTCODE_NAMES = new Set<string>([
+    'online-fallback',
+    'session-checklist',
+    ...INLINE_DIRECTIVE_NAMES,
+  ]);
+  const factTokenNames = Object.keys(FACT_TOKENS).map((t) => t.replace(/^%%|%%$/g, ''));
+
+  it('keeps fact token names disjoint from block shortcode names', () => {
+    // 같은 이름이 양쪽에 있으면: 로드 시 인라인 치환이 먼저 일어나 블록 컴포넌트가
+    // 조용히 렌더되지 않는다 — 이름 공간을 테스트로 고정.
+    const collisions = factTokenNames.filter((name) => BLOCK_SHORTCODE_NAMES.has(name));
+    expect(collisions).toEqual([]);
+  });
+
+  it('every %%token%% in content/stories is a known fact token or block shortcode', () => {
+    // 오타 토큰(%%phone-int%% 등)은 어떤 치환기·렌더러도 처리하지 않고 본문에
+    // 리터럴로 노출된다 — 알려진 이름만 허용.
+    const files = listFilesRecursive(path.join(ROOT, 'content/stories'), ['.md']);
+    const known = new Set([...factTokenNames, ...BLOCK_SHORTCODE_NAMES]);
+    const unknown: string[] = [];
+
+    for (const file of files) {
+      const raw = fs.readFileSync(file, 'utf8');
+      for (const m of raw.matchAll(/%%([\w-]+)(?::[^%\n]+)?%%/g)) {
+        if (!known.has(m[1])) unknown.push(`${path.relative(ROOT, file)}: %%${m[1]}%%`);
+      }
+    }
+
+    expect(
+      unknown.length === 0 ? '' : `미등록 토큰/shortcode ${unknown.length}건:\n  ${unknown.join('\n  ')}`,
+    ).toBe('');
+  });
+
+  it('substitutes every fact token and never yields "undefined"', () => {
+    const allTokens = Object.keys(FACT_TOKENS).join(' ');
+    const substituted = applyFactTokens(allTokens);
+    expect(substituted).not.toContain('%%');
+    expect(substituted).not.toContain('undefined');
   });
 });
 
@@ -102,6 +148,27 @@ describe('fact guard rules self-check', () => {
           ? expectedRule
           : `MISSED(${expectedRule}): ${text} → [${violations.map((v) => v.ruleId).join(',')}]`,
       ).toBe(expectedRule);
+    }
+
+    // 표면 한정 룰: 전화번호 하드코딩은 markdown·locales 표면에서 위반이고,
+    // code 표면(siteConfig 등 단일 소스가 값을 보유)에서는 적용되지 않아야 한다.
+    const phoneFixtures: Array<[string, string]> = [
+      ['문의는 전화 010-4255-7893으로 주세요.', 'phone-hardcoded-in-content'],
+      ['International callers: +82-10-4255-7893', 'phone-hardcoded-in-content'],
+    ];
+
+    for (const [text, expectedRule] of phoneFixtures) {
+      for (const surface of ['markdown', 'locales'] as const) {
+        const found = findFactViolations(text, `fixture.${surface}`, { surface });
+        expect(
+          found.some((v) => v.ruleId === expectedRule)
+            ? expectedRule
+            : `MISSED(${expectedRule}@${surface}): ${text}`,
+        ).toBe(expectedRule);
+      }
+
+      const inCode = findFactViolations(text, 'fixture.ts', { surface: 'code' });
+      expect(inCode.filter((v) => v.ruleId === expectedRule)).toEqual([]);
     }
   });
 

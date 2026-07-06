@@ -17,10 +17,9 @@ const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'))
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
-import { loadCommonResourceServer } from '../../lib/i18n.server';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { PRACTICE_ROOM_RELATED_SLUGS } from '../../data/practiceRoomRelatedSlugs';
+import { PRACTICE_ROOM_RELATED_GUIDES, type PracticeRoomRelatedGuide } from '../../data/practiceRoomRelatedGuides';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
 import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
@@ -50,7 +49,7 @@ import {
 interface PracticeRoomProps {
   locale: Locale;
   /** 음악연습실 hub-and-spoke 가이드 링크. ko에서만 채운다. */
-  relatedGuides: Array<{ slug: string; title: string }>;
+  relatedGuides: PracticeRoomRelatedGuide[];
 }
 
 const PAIN_POINTS_ANIMATION = createFadeInAnimation();
@@ -416,40 +415,16 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
 
-  let relatedGuides: Array<{ slug: string; title: string }> = [];
+  // 앵커 타이틀이 한국어 전용이므로 ko 허브에서만 렌더 (기존 동작 유지).
+  const relatedGuides = locale === 'ko' ? PRACTICE_ROOM_RELATED_GUIDES : [];
 
-  if (locale === 'ko') {
-    const full = loadCommonResourceServer('ko');
-    const items = ((full as Record<string, unknown>).practiceRoom as
-      | { relatedGuides?: { items?: unknown } }
-      | undefined
-    )?.relatedGuides?.items as string[] | undefined;
-
-    if (Array.isArray(items)) {
-      relatedGuides = PRACTICE_ROOM_RELATED_SLUGS.map((slug, idx) => ({
-        slug,
-        title: items[idx] ?? slug,
-      }));
-    }
-  }
-
-  const result = buildPageStaticProps(
+  return buildPageStaticProps(
     locale,
     {
       relatedGuides,
     },
     { revalidate: 86400, i18nSections: ['practiceRoom'] }
   );
-
-  // i18nResources에서 relatedGuides.items 제거 — 클라이언트는 이 배열이 필요 없음.
-  // title은 t()로 참조해야 하므로 practiceRoom.relatedGuides.title은 유지.
-  const resources = (result as { props: { i18nResources?: Record<string, { common?: { practiceRoom?: { relatedGuides?: { items?: unknown } } } }> } }).props.i18nResources;
-  const rg = resources?.[locale]?.common?.practiceRoom?.relatedGuides;
-  if (rg && 'items' in rg) {
-    delete rg.items;
-  }
-
-  return result;
 };
 
 export default PracticeRoom;

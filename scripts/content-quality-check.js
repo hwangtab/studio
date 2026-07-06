@@ -22,6 +22,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { applyFactTokens } = require('../lib/factTokens');
 
 const STORIES_DIR = path.join(__dirname, '..', 'content', 'stories');
 const SHORTCODE_PATTERN = /%%[\w-]+%%/g;
@@ -115,7 +116,7 @@ function countWords(text) {
 }
 
 function checkFile(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
+  const content = applyFactTokens(fs.readFileSync(filePath, 'utf8'));
   const fm = parseFrontmatter(content);
   const body = getBodyContent(content);
   const strippedBody = stripMarkdownSyntax(body);
@@ -199,7 +200,7 @@ function buildLinkConcentrationMap(files) {
   const total = files.length;
 
   for (const file of files) {
-    const content = fs.readFileSync(file, 'utf8');
+    const content = applyFactTokens(fs.readFileSync(file, 'utf8'));
     const body = getBodyContent(content);
     const slugs = new Set([...body.matchAll(/\[([^\]]*)\]\(\/stories\/([\w-]+[\w\d]*)\)/g)].map(m => m[2]));
     for (const slug of slugs) {

@@ -1,4 +1,5 @@
 import type { SanitizedContactPayload } from './payload';
+import { CANONICAL_FACTS } from '../factTokens';
 
 const escapeHtml = (value: string): string =>
   value
@@ -113,8 +114,8 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
                 &nbsp;·&nbsp; 서울특별시 은평구 대조동 84-3 3층
               </p>
               <p style="margin:0;font-size:12px;color:#9ca3af;">
-                <a href="tel:01042557893" style="color:#9ca3af;text-decoration:none;">
-                  010-4255-7893
+                <a href="tel:${CANONICAL_FACTS.phone.replace(/-/g, '')}" style="color:#9ca3af;text-decoration:none;">
+                  ${CANONICAL_FACTS.phone}
                 </a>
                 &nbsp;·&nbsp;
                 <a href="https://studionol.co.kr" style="color:#6d28d9;text-decoration:none;">

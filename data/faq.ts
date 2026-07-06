@@ -1,4 +1,5 @@
 import type { Locale } from '../lib/i18n';
+import { CANONICAL_FACTS } from '../lib/factTokens';
 
 const faqData = {
   ko: [
@@ -44,7 +45,7 @@ const faqData = {
     },
     {
       question: '녹음실 예약은 어떻게 하나요?',
-      answer: "카카오톡 채널 \'스튜디오 놀\', 전화(010-4255-7893), 또는 홈페이지 문의 폼을 통해 예약하실 수 있습니다. 당일 예약도 가능하며, 주말·공휴일에도 운영합니다.",
+      answer: `카카오톡 채널 '스튜디오 놀', 전화(${CANONICAL_FACTS.phone}), 또는 홈페이지 문의 폼을 통해 예약하실 수 있습니다. 당일 예약도 가능하며, 주말·공휴일에도 운영합니다.`,
     },
     {
       question: '일반인도 녹음실을 이용할 수 있나요?',
@@ -99,7 +100,7 @@ const faqData = {
     },
     {
       question: 'How do I book the recording studio?',
-      answer: 'You can book via KakaoTalk (channel: Studio NOL), phone (010-4255-7893), or our website contact form. Same-day bookings are possible, and we are available on weekends and holidays.',
+      answer: `You can book via KakaoTalk (channel: Studio NOL), phone (${CANONICAL_FACTS.phone}), or our website contact form. Same-day bookings are possible, and we are available on weekends and holidays.`,
     },
     {
       question: 'Can non-professionals record here?',
@@ -146,7 +147,7 @@ const faqData = {
     },
     {
       question: '如何预约录音室？',
-      answer: '可通过 KakaoTalk 频道"Studio NOL"、电话 010-4255-7893 或网站联系表单预约。支持当天预约，周末及节假日均可使用。',
+      answer: `可通过 KakaoTalk 频道"Studio NOL"、电话 ${CANONICAL_FACTS.phone} 或网站联系表单预约。支持当天预约，周末及节假日均可使用。`,
     },
     {
       question: '普通人也可以使用录音室吗？',
@@ -192,7 +193,7 @@ const faqData = {
     },
     {
       question: '¿Cómo reservo el estudio de grabación?',
-      answer: 'Puedes reservar a través de KakaoTalk (canal: Studio NOL), por teléfono (010-4255-7893) o el formulario de contacto en nuestra web. Las reservas el mismo día son posibles y estamos disponibles los fines de semana y festivos.',
+      answer: `Puedes reservar a través de KakaoTalk (canal: Studio NOL), por teléfono (${CANONICAL_FACTS.phone}) o el formulario de contacto en nuestra web. Las reservas el mismo día son posibles y estamos disponibles los fines de semana y festivos.`,
     },
     {
       question: '¿Pueden grabar personas sin experiencia?',
@@ -238,7 +239,7 @@ const faqData = {
     },
     {
       question: 'Làm thế nào để đặt phòng thu?',
-      answer: 'Bạn có thể đặt qua KakaoTalk (kênh: Studio NOL), điện thoại (010-4255-7893) hoặc form liên hệ trên website. Đặt trong ngày được, và chúng tôi mở cửa cả cuối tuần và ngày lễ.',
+      answer: `Bạn có thể đặt qua KakaoTalk (kênh: Studio NOL), điện thoại (${CANONICAL_FACTS.phone}) hoặc form liên hệ trên website. Đặt trong ngày được, và chúng tôi mở cửa cả cuối tuần và ngày lễ.`,
     },
     {
       question: 'Người không chuyên có thể sử dụng phòng thu không?',
@@ -284,7 +285,7 @@ const faqData = {
     },
     {
       question: 'จะจองห้องอัดได้อย่างไร?',
-      answer: 'จองได้ผ่าน KakaoTalk (ช่อง: Studio NOL), โทรศัพท์ (010-4255-7893) หรือฟอร์มติดต่อบนเว็บไซต์ รับจองในวันเดียวกัน และเปิดให้บริการทั้งวันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์',
+      answer: `จองได้ผ่าน KakaoTalk (ช่อง: Studio NOL), โทรศัพท์ (${CANONICAL_FACTS.phone}) หรือฟอร์มติดต่อบนเว็บไซต์ รับจองในวันเดียวกัน และเปิดให้บริการทั้งวันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์`,
     },
     {
       question: 'คนทั่วไป (บันทึกเสียงเอง) ใช้ห้องอัดได้ไหม?',
@@ -330,7 +331,7 @@ const faqData = {
     },
     {
       question: "Yozuv studiyasini qanday band qilish mumkin?",
-      answer: "KakaoTalk (kanal: Studio NOL), telefon (010-4255-7893) yoki veb-saytdagi murojaat formasi orqali band qilishingiz mumkin. Bir kunlik band ham mumkin, dam olish va bayram kunlarida ham ishlaydi.",
+      answer: `KakaoTalk (kanal: Studio NOL), telefon (${CANONICAL_FACTS.phone}) yoki veb-saytdagi murojaat formasi orqali band qilishingiz mumkin. Bir kunlik band ham mumkin, dam olish va bayram kunlarida ham ishlaydi.`,
     },
     {
       question: "Oddiy odamlar (mustaqil yozish) studiyadan foydalana oladimi?",

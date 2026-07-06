@@ -20,7 +20,7 @@ Bạn cũng có thể xem đầy đủ những thiết bị chúng tôi đang s�
 
 Trang dịch vụ mới được bổ sung giới thiệu đa dạng hạng mục để hiện thực hóa tầm nhìn âm nhạc của bạn—thu vocal/nhạc cụ, mixing chuyên nghiệp, mastering, sản xuất album và sound design. Hy vọng bạn sẽ cảm nhận triết lý âm thanh của Studio NOL trên trang mới và tạo ra những khoảnh khắc kỳ diệu thổi chiều sâu vào âm nhạc của mình.
 
-Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ bất cứ lúc nào qua điện thoại (010-4255-7893), tin nhắn (010-4255-7893), hoặc [KakaoTalk](https://open.kakao.com/me/nol). Studio NOL luôn cố gắng hết sức vì âm nhạc quý giá của bạn. Xin cảm ơn sự ủng hộ và yêu mến!
+Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ bất cứ lúc nào qua điện thoại (%%phone%%), tin nhắn (%%phone%%), hoặc [KakaoTalk](https://open.kakao.com/me/nol). Studio NOL luôn cố gắng hết sức vì âm nhạc quý giá của bạn. Xin cảm ơn sự ủng hộ và yêu mến!
 
 Trân trọng,
 Studio NOL

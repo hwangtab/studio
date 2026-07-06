@@ -1,7 +1,10 @@
 /** @jest-environment node */
 
 import { getStaticProps } from './pages/[locale]/practice-room';
-import { PRACTICE_ROOM_RELATED_SLUGS } from './data/practiceRoomRelatedSlugs';
+import {
+  PRACTICE_ROOM_RELATED_GUIDES,
+  type PracticeRoomRelatedGuide,
+} from './data/practiceRoomRelatedGuides';
 
 describe('practice-room static props', () => {
   it('serializes related guides as compact data instead of large HTML strings', async () => {
@@ -19,12 +22,9 @@ describe('practice-room static props', () => {
       expect(props[propName]).toBeUndefined();
     });
 
-    const relatedGuides = props.relatedGuides as Array<{ slug: string; title: string }>;
-    expect(relatedGuides).toHaveLength(PRACTICE_ROOM_RELATED_SLUGS.length);
-    expect(relatedGuides[0]).toEqual({
-      slug: PRACTICE_ROOM_RELATED_SLUGS[0],
-      title: expect.any(String),
-    });
+    const relatedGuides = props.relatedGuides as PracticeRoomRelatedGuide[];
+    expect(relatedGuides).toHaveLength(PRACTICE_ROOM_RELATED_GUIDES.length);
+    expect(relatedGuides[0]).toEqual(PRACTICE_ROOM_RELATED_GUIDES[0]);
     expect(JSON.stringify(props).length).toBeLessThan(128_000);
   });
 

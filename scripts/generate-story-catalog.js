@@ -14,6 +14,7 @@ const matter = require('gray-matter');
 // catalog에 noindex 플래그를 박아 gsc-audit이 런타임 .md 재읽기 없이 실제
 // 색인 상태를 알 수 있게 한다(diffAudits의 "noindex 해제 후보" 정합).
 const { isStoryThin } = require('../lib/sitemap/thinContent');
+const { applyFactTokens } = require('../lib/factTokens');
 
 const STORIES_DIR = path.join(process.cwd(), 'content/stories');
 const OUTPUT = path.join(process.cwd(), 'lib/story-catalog.json');
@@ -31,7 +32,7 @@ try {
   );
 
   const entries = files.map((f) => {
-    const raw = fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8');
+    const raw = applyFactTokens(fs.readFileSync(path.join(STORIES_DIR, f), 'utf-8'));
     const { data, content } = matter(raw);
     const title = data.title || '';
     const slug = f.replace(/\.md$/, '');

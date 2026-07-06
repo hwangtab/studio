@@ -20,6 +20,6 @@ robots: "noindex"
 
 新增的服务介绍页面也展示了丰富的项目：人声/乐器录音、专业混音、母带处理、专辑制作及声音设计，帮助你实现音乐愿景。希望你在新网站上体验到 Studio NOL 的声音哲学，并与我们一起创造让音乐更有生命力的魔法时刻。
 
-如有任何问题，欢迎随时通过电话（010-4255-7893）、短信（010-4255-7893）或 [KakaoTalk](https://open.kakao.com/me/nol) 联系我们。Studio NOL 将始终为你的珍贵音乐尽全力。感谢支持与厚爱！
+如有任何问题，欢迎随时通过电话（%%phone%%）、短信（%%phone%%）或 [KakaoTalk](https://open.kakao.com/me/nol) 联系我们。Studio NOL 将始终为你的珍贵音乐尽全力。感谢支持与厚爱！
 
 Studio NOL 敬上

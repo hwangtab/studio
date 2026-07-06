@@ -1,5 +1,6 @@
 import type { SiteConfig, SEODefaults } from '../types/data';
 import type { Locale } from '../lib/i18n';
+import { CANONICAL_FACTS } from '../lib/factTokens';
 
 // Social profiles — 계정 개설 시 URL 추가 (schema.org sameAs에 자동 반영됨)
 export const socialProfiles = {
@@ -59,7 +60,7 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
       uz: 'Yozuv studiyasi, mashg‘ulot xonasi, miks, mastering va musiqa prodakshn studiyasi.'
     }),
     contact: {
-      phone: '010-4255-7893',
+      phone: CANONICAL_FACTS.phone,
       email: 'hwangtab@gmail.com',
       address: t(locale, {
         ko: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',

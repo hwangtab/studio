@@ -34,7 +34,7 @@ El calendario de "Bulgwang Mixing Club" se actualiza cada lunes. Revisa el anunc
 
 ### 🚀 Cómo participar
 
-Envía un mensaje al 010-4255-7893 diciendo “¡Me apunto al mixing con pizza y cerveza!”. Listo. Si tienes un track para compartir o referencias para comparar, escríbelo en el mensaje.
+Envía un mensaje al %%phone%% diciendo “¡Me apunto al mixing con pizza y cerveza!”. Listo. Si tienes un track para compartir o referencias para comparar, escríbelo en el mensaje.
 
 ¡Nos vemos este viernes en el Bulgwang Mixing Club con pizza y cerveza!
 
@@ -58,5 +58,5 @@ Studio NOL es un estudio boutique de grabación y mezcla situado a 5 minutos a p
 * [Precios del servicio de mezcla y masterización](/pricing)
 * [Directorio de salas de ensayo en Yeonsinnae](/practice-room)
 
-Para consultar sobre los encuentros, usa el canal de KakaoTalk Studio NOL Yeonsinnae o envía un SMS al 010-4255-7893 para confirmar tu plaza. Los anuncios de los lunes fijan la lista de la semana y los cupos vuelan rápido.
+Para consultar sobre los encuentros, usa el canal de KakaoTalk Studio NOL Yeonsinnae o envía un SMS al %%phone%% para confirmar tu plaza. Los anuncios de los lunes fijan la lista de la semana y los cupos vuelan rápido.
 

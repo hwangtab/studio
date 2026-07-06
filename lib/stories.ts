@@ -6,6 +6,7 @@ import { summarizeText } from '../utils/textUtils';
 import type { Story, StoryDetail, StoryPath } from '../types/story';
 import { locales, defaultLocale, type Locale } from './i18n';
 import { loadCommonResourceServer } from './i18n.server';
+import { applyFactTokens } from './factTokens';
 import { isRegionHub } from './regionHubSlugs';
 import regionRedirectMap from './regionRedirectMap.json';
 import { parseInlineDirectives, decideAutoFallback, type AutoFallbackDecision } from './inlineDirectives';
@@ -83,7 +84,7 @@ export const getStoryAvailableLocales = (slug: string): Locale[] => {
       : path.join(storiesDirectory, `${slug}.${locale}.md`);
     if (!fs.existsSync(filePath)) return false;
     try {
-      const raw = fs.readFileSync(filePath, 'utf8');
+      const raw = applyFactTokens(fs.readFileSync(filePath, 'utf8'));
       const fm = matter(raw);
       // robots: noindex 명시 → 색인 제외 → hreflang에서도 제외
       if (typeof fm.data.robots === 'string' && /noindex/i.test(fm.data.robots)) return false;
@@ -282,7 +283,7 @@ const getParsedStoryFile = (slug: string, locale: Locale): {
     throw new Error(`Story file not found: ${filePath}`);
   }
 
-  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const fileContents = applyFactTokens(fs.readFileSync(filePath, 'utf8'));
   const normalized = stripCodeFenceWrapper(fileContents);
   const { data, content } = matter(normalized);
   const parsed = { data, content };

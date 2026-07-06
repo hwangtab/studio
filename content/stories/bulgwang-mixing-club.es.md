@@ -36,5 +36,5 @@ Basta de mezclar solos y frustrarse. Vengan a compartir trucos, subir de nivel y
 
 ### 🚀 Cómo participar
 
-Envía un mensaje al 010-4255-7893 diciendo: “¡Yo voy!”.
+Envía un mensaje al %%phone%% diciendo: “¡Yo voy!”.
 ¿Listos para la mano del mouse y la mano del pollo? Nos vemos el viernes por la noche en Studio NOL.

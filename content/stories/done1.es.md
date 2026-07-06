@@ -20,7 +20,7 @@ También podrás ver de un vistazo el equipo que usamos realmente: desde micróf
 
 La nueva página de servicios presenta una amplia gama de opciones para hacer realidad tu visión musical: grabación vocal/instrumental, mezcla profesional, masterización, producción de álbumes y diseño sonoro. Esperamos que en el nuevo sitio puedas experimentar la filosofía sonora de Studio NOL y crear momentos mágicos que den vida y profundidad a tu música.
 
-Si tienes preguntas, no dudes en contactarnos por teléfono (010-4255-7893), mensaje (010-4255-7893) o [KakaoTalk](https://open.kakao.com/me/nol). En Studio NOL siempre daremos lo mejor por tu música. ¡Gracias por tu apoyo!
+Si tienes preguntas, no dudes en contactarnos por teléfono (%%phone%%), mensaje (%%phone%%) o [KakaoTalk](https://open.kakao.com/me/nol). En Studio NOL siempre daremos lo mejor por tu música. ¡Gracias por tu apoyo!
 
 Atentamente,
 Studio NOL

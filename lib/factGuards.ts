@@ -12,17 +12,30 @@
  * 못하게 하는 사전 차단막이다. content/factGuards.test.ts가 CI에서 전수 스캔한다.
  */
 
+import { CANONICAL_FACTS } from './factTokens';
+
+/** 스캔 표면 분류: markdown=content/stories, locales=public/locales JSON, code=data·pages·components */
+export type FactGuardSurface = 'markdown' | 'locales' | 'code';
+
 export interface FactGuardRule {
   id: string;
   description: string;
   /** 위반 후보: 라인이 이 패턴에 걸리면 후보로 승격 */
   pattern: RegExp;
-  /** 1인칭(스튜디오 자신) 맥락 한정 룰의 마커. 지정 시 같은 라인에 마커가 있어야 후보 */
+  /** 1인칭(스튜디오 자신) 맥락 한정 룰의 마커. 지정 시 같은 라인±1에 마커가 있어야 후보 */
   marker?: RegExp;
-  /** 합법 문맥: 후보 라인부터 allowWindow 라인 안에 이 패턴이 있으면 통과 */
+  /** 합법 문맥: 후보 직전 라인부터 allowWindow 라인 안에 이 패턴이 있으면 통과 */
   allow?: RegExp;
   /** allow 탐색 창(후보 라인 포함 라인 수). 기본 3 = 해당 라인 + 다음 2라인 */
   allowWindow?: number;
+  /** 지정 시 해당 표면에만 적용. 생략하면 전 표면 적용 */
+  surfaces?: FactGuardSurface[];
+  /**
+   * true면 frontmatter tags/keywords 면제를 무시하고 그 라인들도 검사.
+   * SEO 키워드 타겟팅("연신내 보컬 레슨")은 면제가 맞지만, 전화번호 같은
+   * 회전 사실은 태그에 있어도 메타로 렌더되므로 반드시 검사해야 한다.
+   */
+  includeExemptFrontmatter?: boolean;
 }
 
 export interface FactViolation {
@@ -32,12 +45,36 @@ export interface FactViolation {
   excerpt: string;
 }
 
+// 현재 공식 번호의 하드코딩 탐지 패턴을 CANONICAL_FACTS에서 파생 — 번호를
+// factTokens.js에서 바꾸면 이 가드가 자동으로 새 번호의 하드코딩을 추적한다
+// (폐기 번호는 legacy-phone-0507처럼 정적 룰로 별도 등재할 것).
+function currentPhoneHardcodePattern(): RegExp {
+  const groups = (CANONICAL_FACTS.phone as string).split('-'); // 예: ['010','4255','7893']
+  const sep = '[-\\s.]?';
+  const intlFirstGroup = groups[0].replace(/^0/, ''); // '010' → '10' (+82 표기)
+  return new RegExp(
+    `(?:\\+82${sep}${intlFirstGroup}|${groups[0]})${sep}${groups.slice(1).join(sep)}`,
+  );
+}
+
 export const FACT_GUARD_RULES: FactGuardRule[] = [
   {
     id: 'legacy-phone-0507',
     description:
       '폐기된 0507 안심번호 금지 — 공식 번호는 010-4255-7893 (wiki/entities/naver-place.md)',
     pattern: /(?:\+?82[-\s.]?)?0?507[-\s.]?1384[-\s.]?3144|050713843144/,
+  },
+  {
+    // 마크다운 본문에는 %%phone%% / %%phone-intl%% 토큰만(lib/factTokens.js가 로드 시
+    // 치환), 로케일 JSON·UI 카피에는 siteConfig.contact.phone 참조만 허용 — 하드코딩이
+    // 다시 들어오면 다음 번호 변경 때 전수 스윕이 재발한다. 패턴을 CANONICAL_FACTS에서
+    // 파생시키므로 번호가 바뀌면 가드도 자동으로 새 번호의 하드코딩을 쫓는다.
+    id: 'phone-hardcoded-in-content',
+    description:
+      '본문·로케일에 전화번호 하드코딩 금지 — %%phone%% 토큰/siteConfig 참조 사용 (단일 소스: lib/factTokens.js)',
+    pattern: currentPhoneHardcodePattern(),
+    surfaces: ['markdown', 'locales'],
+    includeExemptFrontmatter: true,
   },
   {
     // 갭에서 '출'·'역'을 배제해 "연신내역 4번 출구 … 불광역 7번 출구"처럼
@@ -144,17 +181,19 @@ export function frontmatterExemptMask(lines: string[]): boolean[] {
 export function findFactViolations(
   raw: string,
   file: string,
-  options: { markdown?: boolean } = {},
+  options: { surface?: FactGuardSurface } = {},
 ): FactViolation[] {
+  const surface: FactGuardSurface = options.surface ?? 'code';
   const lines = raw.split('\n');
-  const exempt = options.markdown ? frontmatterExemptMask(lines) : null;
+  const exempt = surface === 'markdown' ? frontmatterExemptMask(lines) : null;
   const violations: FactViolation[] = [];
 
   for (let i = 0; i < lines.length; i += 1) {
-    if (exempt?.[i]) continue;
     const line = lines[i];
 
     for (const rule of FACT_GUARD_RULES) {
+      if (rule.surfaces && !rule.surfaces.includes(surface)) continue;
+      if (exempt?.[i] && !rule.includeExemptFrontmatter) continue;
       if (!rule.pattern.test(line)) continue;
       // 마커는 앞뒤 1라인까지 본다 — "저희 스튜디오는 …\n보컬 레슨도 …"처럼
       // 마커와 주장이 줄바꿈으로 갈라진 문단 수준 주장을 잡기 위함.
