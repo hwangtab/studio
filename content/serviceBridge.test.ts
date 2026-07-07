@@ -18,6 +18,9 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   'royalty1.md': '%%service:recording%%',
   'session-musician1.md': '%%service:recording%%',
   'songstructure1.md': '%%service:recording%%',
+  // 녹음/발성 주제라 연습실(practice)보다 녹음 의뢰(recording) 전환 적합도가 높아 재타깃.
+  'highnote1.md': '%%service:recording%%',
+  'vocalrange1.md': '%%service:recording%%',
 };
 
 describe('high-traffic story service bridges', () => {

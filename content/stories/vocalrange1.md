@@ -68,7 +68,7 @@ inlineFallback:
 
 ---
 
-%%service:practice%%
+%%service:recording%%
 
 ## 혼자 음역대 확인하는 방법
 

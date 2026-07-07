@@ -54,7 +54,7 @@ howTo:
 
 ---
 
-%%service:practice%%
+%%service:recording%%
 
 ## Studio NOL 보컬 녹음 세션에서 자주 보는 고음 발성 패턴 3가지
 
