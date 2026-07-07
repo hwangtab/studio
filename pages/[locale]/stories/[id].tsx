@@ -18,6 +18,10 @@ const StoryCTA = dynamic(() => import('../../../components/StoryCTA'));
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 const RelatedPortfolioInline = dynamic(() => import('../../../components/ui/RelatedPortfolioInline'));
 const StickyBottomCTA = dynamic(() => import('../../../components/inline/StickyBottomCTA'), { ssr: false });
+// faq 프론트매터는 이미 FAQPage JSON-LD로 발행 중(buildStoryExtraSchemas). 그 구조화
+// 데이터에 대응하는 가시 콘텐츠가 페이지에 없어 Google 정책상 리치결과가 무시될 수
+// 있었다 → 본문 하단에 FAQSection을 렌더해 스키마-가시콘텐츠 일치를 확보.
+const FAQSection = dynamic(() => import('../../../components/ui/FAQSection'));
 import { shareContent } from '../../../utils/shareUtils';
 import { timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
@@ -88,6 +92,13 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
   const wordCount = React.useMemo(
     () => getStoryWordCount(story.content, locale),
     [story.content, locale]
+  );
+
+  // FAQPage JSON-LD와 동일한 소스(story.faq)를 FAQSection 가시 렌더에 재사용.
+  // shape 변환은 스키마 생성부(buildStoryExtraSchemas)와 동일하게 {q,a}→{question,answer}.
+  const faqItems = React.useMemo(
+    () => (story.faq ?? []).map((item) => ({ question: item.q, answer: item.a })),
+    [story.faq]
   );
 
   if (router.isFallback) {
@@ -241,6 +252,18 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
             <MarkdownRenderer content={story.content} locale={locale} currentSlug={story.slug} />
           </m.div>
         </article>
+
+        {/* FAQPage 구조화 데이터(buildStoryExtraSchemas)와 대응하는 가시 FAQ.
+            "본문 정독 → 궁금증 해소 → 상담 CTA" 순서로 CTA 앞에 배치. */}
+        {faqItems.length > 0 && (
+          <FAQSection
+            items={faqItems}
+            title={t('stories.detail.faqTitle', { defaultValue: '자주 묻는 질문' })}
+            subtitle={t('stories.detail.faqSubtitle', { defaultValue: '이 주제에 대해 자주 묻는 질문을 모았습니다.' })}
+            variant="default"
+          />
+        )}
+
         {/* Phase 2 — IntersectionObserver 기반 sticky bar. ssr: false라 서버 렌더 안 됨 */}
         <StickyBottomCTA markerRef={stickyMarkerRef} locale={locale} />
 
