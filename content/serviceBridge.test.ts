@@ -9,6 +9,15 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   'copyright-cover1.md': '%%service:recording%%',
   'distribution1.md': '%%service:recording%%',
   'plugins1.md': '%%service:lesson%%',
+  // 2026-07-07 GSC audit 고임프레션 저CTR 페이지 중 전환 브릿지가 비어 있던 6건.
+  // vocal/business/production 카테고리라 SERVICE_BY_CATEGORY 자동 fallback 대상이
+  // 아니었음 → 정보성 트래픽을 녹음 의뢰(/pricing)로 잇는 명시 브릿지 추가.
+  'falsetto1.md': '%%service:recording%%',
+  'headvoice1.md': '%%service:recording%%',
+  'practice-room-vocal-diction1.md': '%%service:recording%%',
+  'royalty1.md': '%%service:recording%%',
+  'session-musician1.md': '%%service:recording%%',
+  'songstructure1.md': '%%service:recording%%',
 };
 
 describe('high-traffic story service bridges', () => {

@@ -69,6 +69,8 @@ howTo:
 
 ---
 
+%%service:recording%%
+
 ## 한국어 딕션
 
 ### 한국어 딕션의 특수성

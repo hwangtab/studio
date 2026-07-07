@@ -56,6 +56,8 @@ inlineFallback:
 
 ---
 
+%%service:recording%%
+
 ## 팝·K팝 기본 구조
 
 ### 기본 팝송 구조
