@@ -29,8 +29,9 @@ const formatStoryLine = (siteUrl: string, locale: Locale, story: { title: string
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+  // HEAD 허용 이유는 pages/api/llms.ts 핸들러 주석 참조.
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.setHeader('Allow', 'GET, HEAD');
     return res.status(405).end('Method Not Allowed');
   }
   const siteConfig = getSiteConfig('ko');

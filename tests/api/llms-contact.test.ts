@@ -6,21 +6,23 @@ import llmsFullHandler from '../../pages/api/llms-full';
 import rssHandler from '../../pages/api/rss';
 import { getAllStories } from '../../lib/stories';
 
-const createRequest = (query: Record<string, string> = {}): NextApiRequest =>
+const createRequest = (query: Record<string, string> = {}, method = 'GET'): NextApiRequest =>
   ({
-    method: 'GET',
+    method,
     query,
   } as NextApiRequest);
 
 const createResponse = () => {
   let body = '';
+  let statusCode = 200;
   const headers: Record<string, string> = {};
 
   const res = {
     setHeader(name: string, value: string) {
       headers[name.toLowerCase()] = String(value);
     },
-    status() {
+    status(code: number) {
+      statusCode = code;
       return this;
     },
     send(payload: unknown) {
@@ -36,6 +38,7 @@ const createResponse = () => {
   return {
     res,
     getBody: () => body,
+    getStatus: () => statusCode,
     getHeader: (name: string) => headers[name.toLowerCase()],
   };
 };
@@ -85,6 +88,47 @@ describe('curated evergreen guides', () => {
       expect(body).toContain(`/ko/stories/${slug})`);
     }
     expect(body).toContain('한국대중음악상');
+  });
+});
+
+// PageSpeed Insights의 'Agentic Browsing > llms.txt' 감사가 실패로 잡아낸 두 결함의
+// 회귀 방지. (1) H1 부재 — llmstxt.org 스펙의 유일한 필수 요소, (2) HEAD 405 —
+// 크롤러가 존재 확인용 HEAD를 먼저 보내면 "가져올 수 없음"으로 판정된다.
+describe('llms.txt spec compliance (llmstxt.org)', () => {
+  it.each([
+    ['llms.txt', llmsHandler],
+    ['llms-full.txt', llmsFullHandler],
+  ])('starts %s with an H1 heading', (_name, handler) => {
+    const { res, getBody } = createResponse();
+
+    handler(createRequest(), res);
+
+    const firstLine = getBody().split('\n')[0];
+    expect(firstLine).toMatch(/^# \S/);
+  });
+
+  it.each([
+    ['llms.txt', llmsHandler],
+    ['llms-full.txt', llmsFullHandler],
+  ])('answers HEAD %s with 200 so crawlers can probe it', (_name, handler) => {
+    const { res, getStatus, getHeader } = createResponse();
+
+    handler(createRequest({}, 'HEAD'), res);
+
+    expect(getStatus()).toBe(200);
+    expect(getHeader('content-type')).toBe('text/plain; charset=utf-8');
+  });
+
+  it.each([
+    ['llms.txt', llmsHandler],
+    ['llms-full.txt', llmsFullHandler],
+  ])('still rejects unsafe methods on %s with 405', (_name, handler) => {
+    const { res, getStatus, getHeader } = createResponse();
+
+    handler(createRequest({}, 'POST'), res);
+
+    expect(getStatus()).toBe(405);
+    expect(getHeader('allow')).toBe('GET, HEAD');
   });
 });
 

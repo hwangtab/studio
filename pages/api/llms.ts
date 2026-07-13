@@ -5,7 +5,9 @@ import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 
-const BASE_SECTIONS = (siteUrl: string) => `Studio NOL (${siteUrl.replace(/^https?:\/\//, '')})
+// 첫 줄은 반드시 H1(`# `)이어야 한다 — llmstxt.org 스펙에서 유일한 필수 요소이며,
+// PageSpeed Insights의 'Agentic Browsing > llms.txt' 감사도 H1 부재를 실패로 판정한다.
+const BASE_SECTIONS = (siteUrl: string) => `# Studio NOL (${siteUrl.replace(/^https?:\/\//, '')})
 
 Studio NOL (스튜디오 놀) is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
 Established in 2024 and now in its second year of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
@@ -229,8 +231,11 @@ export const CURATED_GUIDES: {
 ];
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+  // HEAD 허용 필수 — 크롤러/감사 도구(PSI Agentic Browsing 등)는 존재 확인에 HEAD를
+  // 먼저 쓴다. GET만 허용하면 405가 나가 "llms.txt를 가져올 수 없음"으로 판정된다.
+  // res.send()는 HEAD일 때 Content-Length만 세팅하고 본문을 생략한다(Next api-utils).
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.setHeader('Allow', 'GET, HEAD');
     return res.status(405).end('Method Not Allowed');
   }
   const siteConfig = getSiteConfig('ko');
