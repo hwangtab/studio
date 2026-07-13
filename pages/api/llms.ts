@@ -46,7 +46,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 
 ## Pricing (KRW, VAT excluded)
 
-- **Practice Room Monthly Residency**: 360,000 KRW/month (₩0 deposit, 50% off first month for 6-month contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
+- **Practice Room Monthly Residency**: 360,000 KRW/month (₩0 deposit, 50% off first month for 1-year contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
 - **Vocal Recording 1프로 (1-song package)**: 250,000 KRW (3 hours, dedicated engineer included)
 - **Hourly Recording (voice acting / instrument / vocal corrections)**: 100,000 KRW/hour (minimum 2 hours)
 - **Wedding Song Complete Package**: 350,000 KRW (2hr recording + vocal tuning + mixing & mastering)
@@ -100,7 +100,7 @@ Take Exit 4 of Yeonsinnae Station (Seoul Metro Line 3 / Line 6), walk straight t
 No. Studio NOL operates **monthly residency only** (360,000 KRW/month, ₩0 deposit). Hourly rental and band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (100,000 KRW/hour) or as the 1프로 package (250,000 KRW for 3 hours / 1 song).
 
 ### What is the practice room residency fee?
-360,000 KRW per month (₩0 deposit, minimum 1 month). 6-month contracts get 50% off the first month. Includes 24/7 access, soundproof private room (STC 60+), personal gear storage, free monthly recording session (1 hour), and additional benefits.
+360,000 KRW per month (₩0 deposit, minimum 1 month). 1-year contracts get 50% off the first month. Includes 24/7 access, soundproof private room (STC 60+), personal gear storage, free monthly recording session (1 hour), and additional benefits.
 
 ### What is the wedding song package?
 Wedding Song Complete Package is 350,000 KRW: 2-hour recording session + vocal tuning + mixing & mastering. Beginners welcome.

@@ -480,20 +480,20 @@
   "practiceRoom": {
     "seo": {
       "title": "Phòng tập cách âm · Từ ₩360K/tháng | Studio NOL Yeonsinnae",
-      "description": "Cách âm STC cấp studio tại Eunpyeong-gu. ₩360K/tháng — không cọc, giảm 50% tháng đầu khi ký 6 tháng, phòng tắm 24h, ở qua đêm. 5 phút từ ga Yeonsinnae cửa 4.",
+      "description": "Cách âm STC cấp studio tại Eunpyeong-gu. ₩360K/tháng — không cọc, giảm 50% tháng đầu khi ký 1 năm, phòng tắm 24h, ở qua đêm. 5 phút từ ga Yeonsinnae cửa 4.",
       "keywords": "phòng tập nhạc Seoul, phòng tập Eunpyeong, phòng tập Yeonsinnae, phòng cách âm STC, cách âm cấp studio, phòng tập có phòng tắm, phòng tập ở qua đêm, phòng tập thuê tháng, phòng 24/7, phòng cách âm, phòng tập riêng, phòng thanh nhạc, phòng phím"
     },
     "hero": {
       "title": "Từ 360K KRW/tháng · Phòng tập cách âm 24h Eunpyeong-gu",
       "subtitleLine1": "Thuê tháng hợp lý nhất Eunpyeong-gu.",
-      "subtitleLine2": "Không cọc · Giảm 50% tháng đầu (gói 6 tháng) · Ở qua đêm được.",
+      "subtitleLine2": "Không cọc · Giảm 50% tháng đầu (gói 1 năm) · Ở qua đêm được.",
       "subtitleLine3": "Thanh nhạc · phím · thu âm — trải nghiệm thuê tháng cao cấp.",
       "alt": "Phòng tập Studio NOL"
     },
     "pricing": {
       "eyebrow": "Giá thấp nhất Eunpyeong-gu",
       "title": "Từ 360.000 KRW/tháng, phòng tập hợp lý nhất Eunpyeong-gu",
-      "subtitle": "Không cọc · Giảm 50% tháng đầu (gói 6 tháng) · 24/7 + ở qua đêm",
+      "subtitle": "Không cọc · Giảm 50% tháng đầu (gói 1 năm) · 24/7 + ở qua đêm",
       "priceLabel": "Hàng tháng",
       "priceValue": "Từ ₩360K",
       "priceCaption": "Chưa VAT · Đã gồm phí quản lý",
@@ -503,7 +503,7 @@
           "caption": "Không gánh nặng, thanh toán tháng trước"
         },
         {
-          "label": "Giảm 50% (gói 6 tháng)",
+          "label": "Giảm 50% (gói 1 năm)",
           "caption": "Chỉ tháng đầu · Người mới"
         },
         {
@@ -756,11 +756,11 @@
         },
         {
           "q": "Chi phí phòng tập là bao nhiêu?",
-          "a": "Gói tháng từ 360.000 KRW (không cọc), giá hợp lý nhất Eunpyeong-gu. Giảm 50% tháng đầu khi ký hợp đồng từ 6 tháng. Bao gồm ra vào khóa riêng 24h, điều hòa và bảo quản nhạc cụ."
+          "a": "Gói tháng từ 360.000 KRW (không cọc), giá hợp lý nhất Eunpyeong-gu. Giảm 50% tháng đầu khi ký hợp đồng từ 1 năm. Bao gồm ra vào khóa riêng 24h, điều hòa và bảo quản nhạc cụ."
         },
         {
           "q": "Điều kiện thuê phòng tập nhạc theo tháng là gì?",
-          "a": "Không cần đặt cọc — thanh toán hàng tháng trước. Hợp đồng tối thiểu 1 tháng, bao gồm khóa cửa riêng 24/7, lưu trữ nhạc cụ/thiết bị và điều hòa riêng biệt. Giảm 50% tháng đầu khi ký hợp đồng từ 6 tháng."
+          "a": "Không cần đặt cọc — thanh toán hàng tháng trước. Hợp đồng tối thiểu 1 tháng, bao gồm khóa cửa riêng 24/7, lưu trữ nhạc cụ/thiết bị và điều hòa riêng biệt. Giảm 50% tháng đầu khi ký hợp đồng từ 1 năm."
         },
         {
           "q": "Tôi có thể ở qua đêm tại phòng tập không?",
@@ -772,7 +772,7 @@
       "titleLine1": "Với mức 360K KRW/tháng hợp lý nhất Eunpyeong-gu",
       "titleHighlight": "Độc quyền studio pro 24/7",
       "subtitleLine1": "Cách âm đỉnh cao · điều hòa · giám sát hi-end · sử dụng không giới hạn hàng tháng",
-      "subtitleLine2": "Tư vấn ngay — Giảm 50% tháng đầu khi ký gói 6 tháng.",
+      "subtitleLine2": "Tư vấn ngay — Giảm 50% tháng đầu khi ký gói 1 năm.",
       "location": "Địa điểm",
       "inquiry": "Liên hệ",
       "imageAlt": "Phòng tập Studio NOL"

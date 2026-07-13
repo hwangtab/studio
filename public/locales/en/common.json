@@ -514,14 +514,14 @@
     "hero": {
       "title": "From ₩360K/mo — Eunpyeong-gu 24/7 Soundproof Practice Room",
       "subtitleLine1": "The most affordable monthly residency in Eunpyeong-gu.",
-      "subtitleLine2": "₩0 deposit · 50% off first month (6-month plan) · Overnight stays welcome.",
+      "subtitleLine2": "₩0 deposit · 50% off first month (1-year plan) · Overnight stays welcome.",
       "subtitleLine3": "Vocal · keyboard · recording — a premium monthly residency.",
       "alt": "Studio NOL Practice Room"
     },
     "pricing": {
       "eyebrow": "Lowest Price in Eunpyeong-gu",
       "title": "From ₩360K/mo — the most reasonable practice room in Eunpyeong-gu",
-      "subtitle": "₩0 deposit · 50% off first month (6-month plan) · 24/7 access + overnight stays",
+      "subtitle": "₩0 deposit · 50% off first month (1-year plan) · 24/7 access + overnight stays",
       "priceLabel": "Monthly",
       "priceValue": "From ₩360K",
       "priceCaption": "VAT excl. · utilities included",
@@ -531,7 +531,7 @@
           "caption": "No extra burden, prepaid monthly"
         },
         {
-          "label": "50% off (6-month plan)",
+          "label": "50% off (1-year plan)",
           "caption": "First month only · New residents"
         },
         {
@@ -784,11 +784,11 @@
         },
         {
           "q": "How much does the practice room cost?",
-          "a": "Monthly plans start from ₩360K (no deposit), the most reasonable price in Eunpyeong-gu. 50% off your first month with a 6-month+ contract. Includes 24/7 door-lock access, HVAC, and instrument storage."
+          "a": "Monthly plans start from ₩360K (no deposit), the most reasonable price in Eunpyeong-gu. 50% off your first month with a 1-year+ contract. Includes 24/7 door-lock access, HVAC, and instrument storage."
         },
         {
           "q": "What are the conditions for monthly music practice room residency?",
-          "a": "No deposit required — prepaid monthly basis. Minimum contract is 1 month, with 24/7 individual door lock access, instrument/equipment storage, and individual HVAC control included. 50% off your first month is available with a 6-month+ contract."
+          "a": "No deposit required — prepaid monthly basis. Minimum contract is 1 month, with 24/7 individual door lock access, instrument/equipment storage, and individual HVAC control included. 50% off your first month is available with a 1-year+ contract."
         },
         {
           "q": "Can I stay overnight at the practice room?",
@@ -800,7 +800,7 @@
       "titleLine1": "From the most reasonable ₩360K/mo in Eunpyeong-gu",
       "titleHighlight": "24/7 Pro Studio Exclusive",
       "subtitleLine1": "Top-tier soundproofing · HVAC · hi-end monitoring · unlimited monthly access",
-      "subtitleLine2": "Inquire now — 50% off your first month with a 6-month plan.",
+      "subtitleLine2": "Inquire now — 50% off your first month with a 1-year plan.",
       "location": "Location",
       "inquiry": "Inquiry",
       "imageAlt": "Studio NOL Practice Room"

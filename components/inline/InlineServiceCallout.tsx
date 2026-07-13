@@ -84,7 +84,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     title: '음악연습실',
     description: '월세 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물.',
     features: [
-      '월 36만원부터 (6개월 계약 첫 달 50% 할인)',
+      '월 36만원부터 (1년 계약 첫 달 50% 할인)',
       '보컬·키보드·작곡 개인 부스',
       '같은 건물에서 녹음 연계 가능',
       '시간 대여·합주실은 운영하지 않음',

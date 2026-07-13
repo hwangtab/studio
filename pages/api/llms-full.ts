@@ -62,7 +62,7 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 - **Subway**: Yeonsinnae Station Exit 4 (Lines 3 & 6) — 5 min walk; Bulgwang Station Exit 7 (Lines 3 & 6) — 7 min walk
 - **Phone**: ${CANONICAL_FACTS.phoneIntl} · **KakaoTalk**: open.kakao.com/me/nol
 - **Pricing (KRW, VAT excl.)**:
-  - Practice Room Monthly Residency: 360,000/mo (₩0 deposit, 50% off first month for 6-month contracts)
+  - Practice Room Monthly Residency: 360,000/mo (₩0 deposit, 50% off first month for 1-year contracts)
   - Vocal Recording 1프로 (1-song package, 3 hrs): 250,000
   - Hourly Recording (voice acting / instrument / corrections): 100,000/hr (min 2 hrs)
   - Wedding Song Complete Package: 350,000 (2hr recording + tuning + mixing & mastering)

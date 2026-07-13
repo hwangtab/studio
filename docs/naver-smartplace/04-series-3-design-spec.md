@@ -50,7 +50,7 @@ output: naver-cards/series-3/01-cover.jpg ~ 05-cta.jpg
 | 2/5 | [series-3/02-persona-1.jpg](../../naver-cards/series-3/02-persona-1.jpg) | 실용음악 입시생 | 곧 입시 시즌 / 24시간 **풀데이** | 실기 풀타임 + 피아노 |
 | 3/5 | [series-3/03-persona-2.jpg](../../naver-cards/series-3/03-persona-2.jpg) | 직장인 보컬·미디 | 낮엔 회사, / **밤엔 음악** | 22시~새벽 + 도서관 정적 |
 | 4/5 | [series-3/04-persona-3.jpg](../../naver-cards/series-3/04-persona-3.jpg) | 지방 합숙 입주자 | 월 1~2주, / **서울 작업** | 숙식 + 월 단위 + 가성비 |
-| 5/5 | [series-3/05-cta.jpg](../../naver-cards/series-3/05-cta.jpg) | 독립 뮤지션 + CTA | 음원 발매를 향해 / **기획부터 한 번에** | 8가지 부가혜택 + 6개월 50% |
+| 5/5 | [series-3/05-cta.jpg](../../naver-cards/series-3/05-cta.jpg) | 독립 뮤지션 + CTA | 음원 발매를 향해 / **기획부터 한 번에** | 8가지 부가혜택 + 1년 50% |
 
 (상세 카피·시나리오 항목은 [`scripts/generate-naver-cards-s3.js`](../../scripts/generate-naver-cards-s3.js)의 각 카드 함수 인자 참조)
 
@@ -75,7 +75,7 @@ output: naver-cards/series-3/01-cover.jpg ~ 05-cta.jpg
 | 도서관 같은 정적 | 카드 2 (방음) | 카드 3 시나리오 2 |
 | 산소 공조기 + 자연광 | 카드 4 (환경) | 카드 3 시나리오 3 |
 | 음원 발매·보도자료·8가지 부가혜택 | 카드 3 | 카드 5 서브 |
-| 6개월 계약 50% 할인 | 카드 5 (CTA) | 카드 5 (CTA) |
+| 1년 계약 50% 할인 | 카드 5 (CTA) | 카드 5 (CTA) |
 
 → 같은 메시지가 다른 카드에 자연스럽게 회수되어 시리즈 간 일관성 확보
 
