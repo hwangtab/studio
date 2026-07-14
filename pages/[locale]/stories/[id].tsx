@@ -303,8 +303,6 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
                 })}
                 imageSrc="/images/studio2.webp"
                 imageAlt={t('stories.bottomCta.imageAlt', { defaultValue: '스튜디오 놀 작업 공간' })}
-                primaryButtonLabel={t('actions.kakao')}
-                secondaryButtonLabel={t('actions.location')}
                 icon={Sparkles}
                 headingAs="h3"
               />
