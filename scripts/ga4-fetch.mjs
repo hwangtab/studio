@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 // GA4 Data API raw fetch — 진단용 1회성 스크립트
 // 사용: node --env-file=.env.local scripts/ga4-fetch.mjs
+//       node --env-file=.env.local scripts/ga4-fetch.mjs --include-bots  (봇 미제외 원본)
+//
+// 모든 리포트는 기본적으로 봇 트래픽을 제외한다 (BOT_EXCLUSION 참조).
+// 제외된 분량은 docs/ga4-raw/bot-excluded.csv에 별도 기록된다.
 //
 // 필수 환경변수:
 //   GA4_PROPERTY_ID          GA4 Admin → Property Settings의 숫자 ID
@@ -39,6 +43,44 @@ const FORM_ERROR_EVENT_NAMES = new Set([
   'lead_form_abandon',
 ]);
 
+// GA4 내장 봇 필터는 IAB 알려진 크롤러만 거른다. GA 스크립트를 실제로 실행하는
+// 헤드리스 브라우저는 그대로 통과하므로 여기서 직접 잘라낸다.
+//
+// 지문 (2026-07-14 90일 진단): 소스 (direct)/(none) + 브라우저 언어 English 조합이
+// 1,992세션(전체의 14.2%). 평균 체류 12초, first_visit 99.5%(쿠키 미유지),
+// 해상도가 412x732·393x851·1280x1200 3종에 고정, 794세션 중 scroll 이벤트 1건,
+// 도시·OS가 (not set)인데 deviceCategory는 desktop. 4월 중순부터 매일 일정량 유입.
+// 리드 이벤트는 이 덩어리 전체에서 카카오 클릭 1건뿐.
+//
+// 진짜 영어권 방문자는 대부분 google/organic으로 들어오고(555세션, 체류 129초)
+// 한국어 직접유입은 체류 203초라, 이 두 조건의 교집합만 잘라도 실사용자 손실은 미미하다.
+const BOT_EXCLUSION = {
+  notExpression: {
+    andGroup: {
+      expressions: [
+        { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
+        { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'English' } } },
+      ],
+    },
+  },
+};
+
+// 위 notExpression의 여집합 — 봇 감사 리포트에서 "무엇을 버렸는지" 보여주는 데 쓴다.
+const BOT_ONLY = BOT_EXCLUSION.notExpression;
+
+const INCLUDE_BOTS = process.argv.includes('--include-bots');
+
+// 기존 dimensionFilter를 덮어쓰지 않고 AND로 병합한다.
+function withBotFilter(requestBody) {
+  const existing = requestBody.dimensionFilter;
+  return {
+    ...requestBody,
+    dimensionFilter: existing
+      ? { andGroup: { expressions: [existing, BOT_EXCLUSION] } }
+      : BOT_EXCLUSION,
+  };
+}
+
 function getAuth() {
   const oauth2 = new google.auth.OAuth2(
     process.env.GSC_OAUTH_CLIENT_ID,
@@ -59,31 +101,34 @@ function escapeCsv(s) {
   return `"${String(s ?? '').replace(/"/g, '""')}"`;
 }
 
+// 콤마·괄호가 섞여 들어올 수 있는 열은 따옴표로 감싼다. 숫자 열은 그대로 둔다.
+const TEXT_COLUMNS = new Set([
+  'landing_page', 'page_path', 'event_name', 'source', 'medium', 'device', 'country',
+  'llm_source', 'screen_resolution', 'operating_system',
+]);
+
 function writecsv(outPath, headers, rows) {
   const lines = [headers.join(',')];
   for (const row of rows) {
-    lines.push(row.map((v, i) => {
-      const h = headers[i];
-      return (h === 'landing_page' || h === 'page_path' || h === 'event_name' || h === 'source' || h === 'medium' || h === 'device' || h === 'country')
-        ? escapeCsv(v)
-        : v;
-    }).join(','));
+    lines.push(row.map((v, i) => (TEXT_COLUMNS.has(headers[i]) ? escapeCsv(v) : v)).join(','));
   }
   fs.writeFileSync(outPath, lines.join('\n'), 'utf-8');
   console.log(`  → ${path.relative(ROOT, outPath)} (${rows.length} rows)`);
 }
 
-async function runReport(analyticsdata, propertyId, requestBody) {
+// applyBotFilter: false — 봇 감사 리포트처럼 일부러 봇을 봐야 할 때만 끈다.
+async function runReport(analyticsdata, propertyId, requestBody, { applyBotFilter = true } = {}) {
+  const body = (applyBotFilter && !INCLUDE_BOTS) ? withBotFilter(requestBody) : requestBody;
   const res = await analyticsdata.properties.runReport({
     property: `properties/${propertyId}`,
-    requestBody,
+    requestBody: body,
   });
   return res.data.rows || [];
 }
 
 // Report 1: 랜딩 페이지별 세션·이탈률·참여 시간
 async function fetchLanding(analyticsdata, propertyId) {
-  console.log('\n[1/4] landing page metrics (90d)...');
+  console.log('\n[1/6] landing page metrics (90d)...');
   const rows = await runReport(analyticsdata, propertyId, {
     dateRanges: [dateRange(90)],
     dimensions: [{ name: 'landingPage' }],
@@ -113,7 +158,7 @@ async function fetchLanding(analyticsdata, propertyId) {
 
 // Report 2: 리드 이벤트(카카오·전화·폼 제출) — 페이지별
 async function fetchEvents(analyticsdata, propertyId) {
-  console.log('\n[2/4] lead events by page (90d)...');
+  console.log('\n[2/6] lead events by page (90d)...');
   const rows = await runReport(analyticsdata, propertyId, {
     dateRanges: [dateRange(90)],
     dimensions: [{ name: 'eventName' }, { name: 'pagePath' }],
@@ -146,7 +191,7 @@ async function fetchEvents(analyticsdata, propertyId) {
 
 // Report 5: LLM 레퍼러별 랜딩 페이지 — ChatGPT/Perplexity 등 AI 트래픽 인용 역추적
 async function fetchLlmReferrers(analyticsdata, propertyId) {
-  console.log('\n[5/5] LLM referrers × landing page (90d)...');
+  console.log('\n[5/6] LLM referrers × landing page (90d)...');
   const rows = await runReport(analyticsdata, propertyId, {
     dateRanges: [dateRange(90)],
     dimensions: [{ name: 'sessionSource' }, { name: 'landingPage' }],
@@ -188,7 +233,7 @@ const sourceKey = (source, medium) => `${source}\u0000${medium}`;
 
 // Report 3: 소스·매체별 세션 + Studio NOL 리드 이벤트
 async function fetchSource(analyticsdata, propertyId) {
-  console.log('\n[3/4] source/medium sessions + lead events (90d)...');
+  console.log('\n[3/6] source/medium sessions + lead events (90d)...');
   const sessionRows = await runReport(analyticsdata, propertyId, {
     dateRanges: [dateRange(90)],
     dimensions: [{ name: 'sessionSource' }, { name: 'sessionMedium' }],
@@ -248,7 +293,7 @@ async function fetchSource(analyticsdata, propertyId) {
 }
 // Report 4: 디바이스·국가 분포
 async function fetchDevice(analyticsdata, propertyId) {
-  console.log('\n[4/4] device × country (90d)...');
+  console.log('\n[4/6] device × country (90d)...');
   const rows = await runReport(analyticsdata, propertyId, {
     dateRanges: [dateRange(90)],
     dimensions: [{ name: 'deviceCategory' }, { name: 'country' }],
@@ -270,6 +315,45 @@ async function fetchDevice(analyticsdata, propertyId) {
   );
 }
 
+// Report 6: 봇 감사 — 위 리포트들에서 제외된 트래픽이 정확히 무엇인지 기록.
+// 제외량이 조용히 늘거나(새 봇 유입) 줄어드는(지문 변화) 걸 눈으로 잡기 위한 안전장치.
+async function fetchBotAudit(analyticsdata, propertyId) {
+  console.log('\n[6/6] bot audit — 제외된 트래픽 (90d)...');
+  const rows = await runReport(analyticsdata, propertyId, {
+    dateRanges: [dateRange(90)],
+    dimensions: [
+      { name: 'screenResolution' },
+      { name: 'operatingSystem' },
+      { name: 'deviceCategory' },
+    ],
+    metrics: [
+      { name: 'sessions' },
+      { name: 'engagementRate' },
+      { name: 'averageSessionDuration' },
+    ],
+    dimensionFilter: BOT_ONLY,
+    orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+    limit: 100,
+  }, { applyBotFilter: false });
+
+  const out = rows.map((r) => [
+    r.dimensionValues[0].value,
+    r.dimensionValues[1].value,
+    r.dimensionValues[2].value,
+    r.metricValues[0].value,
+    parseFloat(r.metricValues[1].value).toFixed(3),
+    parseFloat(r.metricValues[2].value).toFixed(1),
+  ]);
+  writecsv(
+    path.join(OUT_DIR, 'bot-excluded.csv'),
+    ['screen_resolution', 'operating_system', 'device', 'sessions', 'engagement_rate', 'avg_session_sec'],
+    out,
+  );
+
+  const excluded = out.reduce((sum, r) => sum + Number(r[3]), 0);
+  console.log(`  ⚠ 봇으로 판정해 제외한 세션: ${excluded}`);
+}
+
 async function main() {
   console.log('=== GA4 Data API Fetch ===');
 
@@ -285,6 +369,9 @@ async function main() {
   }
 
   console.log(`Property: ${propertyId}`);
+  console.log(INCLUDE_BOTS
+    ? '봇 필터: OFF (--include-bots) — 원본 그대로'
+    : '봇 필터: ON — (direct)/(none) + English 세션 제외');
 
   const auth = getAuth();
   const analyticsdata = google.analyticsdata({ version: 'v1beta', auth });
@@ -296,6 +383,7 @@ async function main() {
   await fetchSource(analyticsdata, propertyId);
   await fetchDevice(analyticsdata, propertyId);
   await fetchLlmReferrers(analyticsdata, propertyId);
+  if (!INCLUDE_BOTS) await fetchBotAudit(analyticsdata, propertyId);
 
   console.log('\n✓ 완료. docs/ga4-raw/ 확인.');
 }

@@ -1,45 +1,49 @@
 source,medium,sessions,bounce_rate,lead_events,qualified_leads,form_errors
-"google","organic",6920,0.229,64,40,18
-"(direct)","(none)",1596,0.371,6,5,0
-"m.search.naver.com","referral",483,0.126,14,14,0
-"chatgpt.com","ai-assistant",191,0.073,5,5,0
-"naver","organic",189,0.138,2,2,0
-"bing","organic",183,0.240,0,0,0
+"google","organic",9386,0.174,79,55,18
+"m.search.naver.com","referral",617,0.099,17,17,0
+"(direct)","(none)",584,0.216,8,6,0
+"bing","organic",260,0.169,0,0,0
+"chatgpt.com","ai-assistant",249,0.056,5,5,0
+"naver","organic",246,0.106,2,2,0
+"(not set)","(not set)",154,1.000,1,1,0
 "chatgpt.com","(not set)",110,0.718,3,3,0
 "chatgpt.com","referral",86,0.570,0,0,0
-"(not set)","(not set)",45,1.000,0,0,0
+"perplexity","(not set)",41,0.366,0,0,0
 "search.google.com","referral",41,0.195,4,4,0
-"perplexity","(not set)",33,0.455,0,0,0
-"perplexity.ai","ai-assistant",19,0.158,0,0,0
-"notebooklm.google.com","referral",16,0.125,0,0,0
+"perplexity.ai","ai-assistant",36,0.083,0,0,0
+"(data not available)","(data not available)",26,0.000,0,0,0
+"notebooklm.google.com","referral",20,0.100,0,0,0
+"t.co","referral",17,0.000,0,0,0
+"yahoo","organic",17,0.118,0,0,0
+"copilot.com","ai-assistant",16,0.188,0,0,0
+"gemini.google.com","ai-assistant",15,0.000,1,1,0
 "perplexity.ai","referral",14,0.214,0,0,0
-"copilot.com","ai-assistant",13,0.231,0,0,0
-"yahoo","organic",13,0.154,0,0,0
-"facebook.com","referral",9,0.000,0,0,0
+"facebook.com","referral",10,0.000,0,0,0
+"mule.co.kr","referral",9,0.000,0,0,0
 "copilot.com","referral",8,0.125,1,1,0
-"gemini.google.com","ai-assistant",8,0.000,0,0,0
-"mule.co.kr","referral",7,0.000,0,0,0
+"youtube.com","referral",8,0.250,0,0,0
+"m.place.naver.com","referral",7,0.429,0,0,0
+"duckduckgo","organic",6,0.000,0,0,0
 "gemini.google.com","referral",6,1.000,0,0,0
-"m.place.naver.com","referral",6,0.500,0,0,0
 "pcmap.place.naver.com","referral",6,0.167,1,1,0
-"youtube.com","referral",5,0.400,0,0,0
-"duckduckgo","organic",4,0.000,0,0,0
+"ig","social",5,0.200,0,0,0
+"claude.ai","ai-assistant",4,0.000,0,0,0
 "google","cpc",3,0.000,0,0,0
-"(data not available)","(data not available)",2,0.000,0,0,0
-"claude.ai","ai-assistant",2,0.000,0,0,0
+"manus.im","referral",3,0.000,0,0,0
 "cn.bing.com","referral",2,0.500,0,0,0
 "copilot.com","(not set)",2,0.500,0,0,0
-"ig","social",2,0.500,0,0,0
-"manus.im","referral",2,0.000,0,0,0
 "vercel.com","referral",2,0.000,0,0,0
 "wad.sentinel.navercorp.com","referral",2,0.500,0,0,0
 "chat.beai.kr","referral",1,1.000,0,0,0
 "claude.ai","referral",1,0.000,0,0,0
 "gpt.k-university.ai","referral",1,0.000,0,0,0
+"hyesung.riroschool.kr","referral",1,0.000,0,0,0
+"l.threads.com","referral",1,0.000,0,0,0
 "linktr.ee","referral",1,0.000,0,0,0
 "m.blog.naver.com","referral",1,0.000,0,0,0
 "mixing.co.kr","referral",1,0.000,0,0,0
 "naver.com","referral",1,1.000,0,0,0
 "padlet.com","referral",1,0.000,0,0,0
 "perplexity","",1,0.000,0,0,0
+"tumblbug.com","referral",1,0.000,0,0,0
 "webhwp.hancomdocs.com","referral",1,0.000,0,0,0
