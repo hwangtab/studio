@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Locale } from '../../lib/i18n';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 interface ReleaseHeroCtasProps {
   locale: Locale;
@@ -45,6 +45,14 @@ const ReleaseHeroCtas = ({
         href={`/${locale}/contact`}
         prefetch={false}
         className={primaryButtonClassName}
+        onClick={() =>
+          // 목적지가 카카오톡이 아니라 문의 폼이므로 리드가 아니다 — micro로 집계한다.
+          trackMicroEvent('micro_click_contact', {
+            locale,
+            component: 'ReleaseHeroCtas',
+            cta_id: 'release_hero_contact',
+          })
+        }
       >
         {consultLabel}
       </Link>

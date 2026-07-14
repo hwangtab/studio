@@ -751,13 +751,21 @@ print('신규 qualified_leads 기준선:', sum(int(r['qualified_leads']) for r i
 from collections import defaultdict
 ev=defaultdict(int)
 for r in E: ev[r['event_name']] += int(r['event_count'])
-for k in ['lead_click_kakao','lead_click_contact','micro_click_service']:
+for k in ['lead_click_kakao','micro_click_contact','micro_click_service']:
     print(f'  {k}: {ev[k]}')
 "
 ```
 
-기록할 것: **주당 카톡 리드 N건**(새 기준선), `lead_click_contact` 발생량, `micro_click_service` 발생량.
+기록할 것: **주당 카톡 리드 N건**(새 기준선), `micro_click_contact` 발생량, `micro_click_service` 발생량.
 `micro_click_service`가 0이면 배포 1이 실제로 동작하지 않은 것이다 — Task 6으로 넘어가기 전에 원인을 찾아라.
+
+**주의 — 이 기준선은 이전 90일과 직접 비교할 수 없다.** 배포 1이 카톡 집계를 양방향으로 바꿨기 때문이다:
+- (감소) 비한국어 `/contact` 클릭이 더 이상 `lead_click_kakao`로 세지 않는다 (기존 오염 ~3건).
+- (증가) 그동안 추적이 아예 없던 카카오 앵커 9곳(release 히어로, about, lesson, voice-acting, cover-video, wedding-song, InlinePriceCallout 등)에 추적이 붙었다 — **기존 "87건"은 과소집계였다.**
+
+따라서 새 기준선은 이전보다 **올라갈 가능성이 높다.** 이 상승을 성과로 오독하지 마라 — 계측 커버리지가 넓어진 것이다.
+
+**GA4 콘솔 주의사항 (운영자):** `micro_click_*` 이벤트는 **리드가 아니다.** GA4 콘솔에서 **주요 이벤트(key event)로 지정하지 마라.** 지정하는 순간 이 배포가 제거한 오염이 사람 손으로 부활한다.
 
 ---
 
