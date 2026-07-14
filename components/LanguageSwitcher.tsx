@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import { locales, localeNames, type Locale } from '../lib/i18n';
+import { isRoutePatternPath } from '../lib/routePattern';
 import { DUR, EASE_STANDARD, TRANSITION_STANDARD } from '../utils/animationUtils';
 
 interface LanguageSwitcherProps {
@@ -46,6 +47,14 @@ export const LanguageSwitcher = ({
 
   const getPathForLocale = useCallback((targetLocale: Locale) => {
     const path = router.asPath;
+
+    // `/[locale]/contact` 류의 라우트 패턴 URL(404) 위에서는 어느 세그먼트를 바꿔도
+    // 깨진 경로만 나온다. 그대로 두면 404 페이지가 깨진 링크를 클릭 가능한 형태로
+    // 재생산해 퍼뜨린다. 해당 로케일 홈으로 탈출시킨다.
+    if (isRoutePatternPath(path)) {
+      return `/${targetLocale}`;
+    }
+
     const segments = path.split('/');
 
     if (locales.includes(segments[1] as Locale)) {

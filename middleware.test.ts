@@ -190,3 +190,48 @@ describe('middleware region redirect (non-production)', () => {
     expect(response.headers.get('location')).toBeNull();
   });
 });
+
+// Next.js 빌드 산출물(_buildManifest.js, __NEXT_DATA__)에는 `/[locale]/contact` 같은
+// 라우트 패턴이 URL처럼 들어 있어 스크래퍼가 이를 실제 URL로 오인해 요청한다.
+// 로케일 프리픽스를 붙여주면 `/en/[locale]/contact`(404)가 만들어지고, 그 404 페이지가
+// GA4 page_view를 쏴 분석 데이터를 오염시킨다(90일간 12건 관측). 또한 404 페이지의
+// LanguageSwitcher가 이 깨진 URL을 클릭 가능한 링크로 재생산한다.
+// → 대괄호가 든 경로는 어떤 처리보다 먼저 404로 끊는다.
+describe('middleware bracket path rejection (non-production)', () => {
+  const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
+
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+    }));
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  it.each([
+    ['percent-encoded, no locale', 'https://www.studionol.co.kr/%5Blocale%5D/contact'],
+    ['percent-encoded, with locale', 'https://www.studionol.co.kr/ko/%5Blocale%5D/contact'],
+    ['literal brackets', 'https://www.studionol.co.kr/[locale]/about'],
+    ['nested dynamic segment', 'https://www.studionol.co.kr/en/stories/category/[key]'],
+  ])('returns bare 404 for bracket path (%s)', (_label, url) => {
+    const request = new NextRequest(url, {
+      headers: { 'accept-language': 'en-US,en;q=0.9' },
+    });
+
+    const response = middleware(request);
+    expect(response.status).toBe(404);
+    // locale 프리픽스를 붙인 redirect를 절대 만들지 않는다
+    expect(response.headers.get('location')).toBeNull();
+  });
+
+  it('leaves ordinary paths untouched', () => {
+    const request = new NextRequest('https://www.studionol.co.kr/ko/contact');
+    const response = middleware(request);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+  });
+});

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { defaultLocale, locales, type Locale } from './lib/i18n-config';
 import { BOT_PATTERN } from './lib/bot-detection';
+import { isRoutePatternPath } from './lib/routePattern';
 import regionRedirectMap from './lib/regionRedirectMap.json';
 
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
@@ -120,6 +121,14 @@ export function middleware(request: NextRequest) {
     // return으로 해소.
     if (pathname === '/llms-full-ko.txt' || pathname === '/llms-full-en.txt' || pathname === '/llms-full-zh.txt') {
         return NextResponse.next();
+    }
+
+    // 라우트 패턴 문자열이 URL로 요청된 것(`/[locale]/contact` 등). 여기서 끊지 않으면
+    // 아래 locale 협상이 프리픽스를 붙여 `/en/[locale]/contact`를 만들어내고, 그 404
+    // 페이지가 GA4 page_view를 쏴 분석을 오염시킨다(90일간 12건 관측). 404 페이지의
+    // LanguageSwitcher가 이 깨진 URL을 링크로 재생산하기까지 한다.
+    if (isRoutePatternPath(pathname)) {
+        return setSecurityHeaders(new NextResponse(null, { status: 404 }));
     }
 
     const redirectUrl = request.nextUrl.clone();
