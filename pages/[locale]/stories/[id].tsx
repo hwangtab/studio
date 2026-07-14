@@ -290,7 +290,8 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         )}
 
         {/* event 카테고리(공지·모임 안내)는 행동 유도 맥락이 약해 CTA 노출 부자연 → 숨김.
-            ko·en: 카카오 직링크 + lead_click_kakao 추적이 완비된 ContactCTA 사용.
+            ko·en: 계측이 완비된 ContactCTA 사용 — ko는 카카오 직링크(lead_click_kakao),
+            en은 /contact 폼(micro_click_contact, 리드 아님).
             그 외 로케일: 기존 StoryCTA 유지(외국어 사용자 동선 보존). */}
         {story.categoryKey !== 'event' && (
           ['ko', 'en'].includes(locale) ? (

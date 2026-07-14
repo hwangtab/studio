@@ -6,10 +6,11 @@ sources:
   - ../diagnosis-2026-05-21.md
   - ../diagnosis-2026-05-27.md
   - ../diagnosis-2026-05-31.md
-updated: 2026-06-25
+updated: 2026-07-14
 related:
   - "[[decisions/seo-ctr-optimization]]"
   - "[[decisions/contact-form-en]]"
+  - "[[entities/channel-ga4]]"
 ---
 
 # 전환율 · CTA 시스템
@@ -96,6 +97,34 @@ related:
 
 ---
 
+### 2026-07-14 — 계측 정확성 배포: 카톡 리드 오염 제거 + 기준선 재수집
+
+**배경:**
+- 비한국어 `ContactCTA`가 실제로는 `/contact` 폼으로 이동시키면서 `lead_click_kakao`를
+  발화하는 버그 발견. 목적지와 이벤트가 불일치해 유일하게 신뢰 가능한 지표(카톡 리드,
+  90일 96리드 중 87건)가 오염되고 있었다.
+- 카카오 링크(`siteConfig.contact.kakaoUrl`)가 있는데도 `trackLeadEvent`가 아예 없는
+  지점이 9곳 발견됨 — 즉 "카톡 87건"이라는 기준선 자체가 과소집계였다.
+
+**결정 및 조치:**
+1. 목적지-이벤트 불일치 버그 수정(`ContactCTA.tsx`) — `/contact`로 가는 버튼은
+   `lead_click_kakao`를 발화하지 않는다.
+2. `lead_click_contact` → `micro_click_contact` 개명. `lead_` 접두사가 남아 있으면
+   운영자가 GA4 콘솔에서 주요 이벤트를 지정할 때 `lead_*` 패밀리를 훑다가 실수로
+   함께 체크할 위험이 있었다 — micro_ 접두사로 "리드 아님"을 이름에 새김
+   (자세한 내용은 [[entities/channel-ga4]] "마이크로 전환 이벤트" 참조).
+3. 추적 누락 9곳(`ReleaseHeroCtas`·`InlinePriceCallout`·`about`·`lesson`(×2)·
+   `voice-acting`·`cover-video`·`wedding-song`(×2))에 `lead_click_kakao` 계측 부착 —
+   기준선을 한 번에 재수집.
+4. `HeaderActions`의 비한국어 `/contact` 링크에 `micro_click_contact` 부착 — 가장
+   상시 노출되는 진입점이라 신규 마이크로 지표가 구조적으로 과소집계되는 것을 방지.
+
+**불변식:** `QUALIFIED_LEAD_EVENT_NAMES`는 정확히 5개(`lead_click_kakao`·
+`lead_click_phone`·`lead_click_email`·`lead_click_naver_map`·`lead_submit_success`)로
+고정. `micro_*` 이벤트는 절대 여기 포함하지 않는다.
+
+---
+
 ## 현재 상태 (2026-05-31 기준)
 
 | 항목 | 상태 | 수치 |
@@ -116,3 +145,7 @@ related:
 2. **측정 없으면 판단 없다**: `lead_click_kakao` 17건이 conversion 미집계 상태로 3주 이상 운영됨. GA4 key event 설정이 모든 최적화 판단의 전제.
 3. **스토리 CTA 전환 0 = 위치·문구 문제**: 시스템은 있지만 daw-choice1(89세션 0리드) 등 실제 전환 미발생. CTA 위치 및 문구 A/B 개선 필요.
 4. **네이버 모바일이 숨은 보석**: 이탈률 28.7% = 의도 가장 명확한 트래픽. 네이버 플레이스 최적화가 다음 전환 레버.
+5. **이름이 곧 방어선이다**: `lead_click_contact`가 `lead_` 접두사를 달고 있었던 것 자체가
+   나중에 GA4 콘솔에서 오염되기 쉬운 상태였다. `micro_click_service`·`micro_click_contact`는
+   **리드가 아니다** — GA4 콘솔에서 주요 이벤트(key event)로 절대 지정하지 말 것. 지정하는
+   순간 이 라운드에서 고친 카톡 리드 오염이 사람 손으로 재발한다.

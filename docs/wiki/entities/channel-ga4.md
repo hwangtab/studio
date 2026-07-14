@@ -6,12 +6,13 @@ sources:
   - ../ga4-raw/events.csv
   - ../ga4-raw/landing.csv
   - ../ga4-raw/source.csv
-updated: 2026-06-25
+updated: 2026-07-14
 related:
   - "[[concepts/seo-strategy]]"
   - "[[concepts/keyword-clusters]]"
   - "[[entities/channel-gsc]]"
   - "[[entities/channel-llm-referrers]]"
+  - "[[decisions/conversion-cta-system]]"
 ---
 
 # GA4 트래픽 채널
@@ -79,3 +80,20 @@ Google Organic이 전체 세션의 압도적 다수를 차지 (5,585세션, 이�
 ### 시사점
 - 연습실 페이지 CTA는 카카오 중심으로 최적화되어 있어 효과적.
 - 영문 폼 오류 문제는 별도 tracked. 실제 폼 고장보다 사용자 마찰 가능성 높음(→ [[decisions/contact-form-en]]).
+
+### 마이크로 전환 이벤트 (`micro_*`)
+
+2026-07-14 계측 정확성 배포에서 `lead_` 접두사를 쓰던 두 이벤트를 `micro_` 접두사로
+개명·정리했다. `scripts/ga4-fetch.mjs`의 `MICRO_EVENT_NAMES`로 관측은 하되,
+`QUALIFIED_LEAD_EVENT_NAMES`(정확히 5개: `lead_click_kakao`·`lead_click_phone`·
+`lead_click_email`·`lead_click_naver_map`·`lead_submit_success`)에는 절대 포함하지 않는다.
+
+- `micro_click_service` — 서비스 소개 페이지 인라인 클릭. 관심 신호일 뿐 문의가 아니다.
+- `micro_click_contact` — `/contact` 폼 페이지로의 "이동". 예전엔 `lead_click_contact`라는
+  이름이었는데, 비한국어 `ContactCTA`가 `/contact`로 가면서 `lead_click_kakao`를 잘못
+  발화해 유일하게 신뢰 가능한 지표(카톡 리드)를 오염시킨 버그의 근본 원인이었다(수정
+  커밋 참조). 재발 방지를 위해 이름 자체에 "리드 아님"을 새겼다.
+
+> **경고**: `micro_click_service`·`micro_click_contact`는 리드가 아니다. GA4 콘솔에서
+> `lead_*` 패밀리를 훑으며 주요 이벤트(key event)를 지정할 때 이 두 이벤트를 절대
+> 함께 체크하지 말 것. 체크하는 순간 카톡 리드 오염이 사람 손으로 재발한다.
