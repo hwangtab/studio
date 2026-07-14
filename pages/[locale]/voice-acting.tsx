@@ -31,6 +31,7 @@ import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServ
 import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
+import { trackLeadEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
 
 interface VoiceActingProps {
@@ -266,6 +267,13 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
               recommended={voiceoverPackage.recommended}
               ctaLabel={t('voiceActing.cta.inquiry')}
               ctaHref={siteConfig.contact.kakaoUrl}
+              onCtaClick={() =>
+                trackLeadEvent('lead_click_kakao', {
+                  locale,
+                  component: 'VoiceActingPage',
+                  cta_id: 'voice_acting_package_kakao',
+                })
+              }
             />
           </div>
         )}

@@ -31,6 +31,7 @@ import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServ
 import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
+import { trackLeadEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
 
 interface CoverVideoProps {
@@ -265,6 +266,13 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
               recommended={coverVideoPackage.recommended}
               ctaLabel={t('coverVideo.cta.inquiry')}
               ctaHref={siteConfig.contact.kakaoUrl}
+              onCtaClick={() =>
+                trackLeadEvent('lead_click_kakao', {
+                  locale,
+                  component: 'CoverVideoPage',
+                  cta_id: 'cover_video_package_kakao',
+                })
+              }
             />
           </div>
         )}

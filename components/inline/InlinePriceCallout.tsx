@@ -7,6 +7,7 @@ import { getPricingData } from '../../data/pricing';
 import { getSiteConfig } from '../../data/siteConfig';
 import { buyerIntentHubs } from '../../data/buyerIntentHubs';
 import type { Locale } from '../../lib/i18n';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface InlinePriceCalloutProps {
   id: string;
@@ -138,6 +139,13 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
           href={siteConfig.contact.kakaoUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            trackLeadEvent('lead_click_kakao', {
+              locale,
+              component: 'InlinePriceCallout',
+              cta_id: 'inline_price_kakao',
+            })
+          }
           className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-dark transition-colors min-h-[44px] touch-manipulation"
         >
           {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}

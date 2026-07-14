@@ -22,6 +22,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { generateHowToSchema, generateServiceListSchema } from '../../utils/schema';
+import { trackLeadEvent } from '../../utils/analytics';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -280,6 +281,13 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'AboutPage',
+                cta_id: 'about_kakao',
+              })
+            }
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">

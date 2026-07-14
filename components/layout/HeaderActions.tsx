@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 interface HeaderActionsProps {
   isTransparent: boolean;
@@ -77,6 +77,13 @@ export const HeaderActions = ({
           href={`/${locale}/contact`}
           prefetch={false}
           className={headerCtaButtonClass}
+          onClick={() =>
+            trackMicroEvent('micro_click_contact', {
+              locale,
+              component: 'HeaderActions',
+              cta_id: 'header_contact',
+            })
+          }
         >
           {t('nav.contact')}
         </Link>

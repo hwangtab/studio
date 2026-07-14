@@ -29,6 +29,7 @@ import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServ
 import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
+import { trackLeadEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
 
 interface WeddingSongProps {
@@ -222,6 +223,13 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
               recommended={weddingPackage.recommended}
               ctaLabel={t('weddingSong.cta.inquiry')}
               ctaHref={siteConfig.contact.kakaoUrl}
+              onCtaClick={() =>
+                trackLeadEvent('lead_click_kakao', {
+                  locale,
+                  component: 'WeddingSongPage',
+                  cta_id: 'wedding_song_package_kakao',
+                })
+              }
             />
           </div>
         )}
@@ -261,6 +269,13 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'WeddingSongPage',
+                cta_id: 'wedding_song_process_kakao',
+              })
+            }
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
           >
             {t('weddingSong.cta.inquiry')}

@@ -13,9 +13,10 @@ interface PricingCardProps {
     delay?: number;
     ctaLabel?: string;
     ctaHref?: string;
+    onCtaClick?: () => void;
 }
 
-const PricingCard = ({ title, price, unit, description, features, recommended, delay, ctaLabel, ctaHref }: PricingCardProps) => {
+const PricingCard = ({ title, price, unit, description, features, recommended, delay, ctaLabel, ctaHref, onCtaClick }: PricingCardProps) => {
     return (
         <BaseCard
             className="p-8 h-full flex flex-col"
@@ -51,6 +52,7 @@ const PricingCard = ({ title, price, unit, description, features, recommended, d
                     href={ctaHref}
                     target={ctaHref.startsWith('http') ? '_blank' : undefined}
                     rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    onClick={onCtaClick}
                     className="mt-6 block w-full text-center py-3 px-4 rounded-lg font-semibold text-sm transition-colors bg-primary hover:bg-primary-dark text-white"
                 >
                     {ctaLabel}

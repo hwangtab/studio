@@ -25,6 +25,7 @@ import { getHubLocaleContent } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import { buildLessonServiceSchema } from '../../lib/lessonSchema';
+import { trackLeadEvent } from '../../utils/analytics';
 import type { StoryCardData } from '../../types/story';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedQaItems } from '../../utils/translatedList';
@@ -280,6 +281,13 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         href={siteConfig.contact.kakaoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                            trackLeadEvent('lead_click_kakao', {
+                                locale,
+                                component: 'LessonPage',
+                                cta_id: 'lesson_curriculum_kakao',
+                            })
+                        }
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
                     >
                         {t('lesson.pricing.cta')}
@@ -361,6 +369,13 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                 href={siteConfig.contact.kakaoUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() =>
+                                    trackLeadEvent('lead_click_kakao', {
+                                        locale,
+                                        component: 'LessonPage',
+                                        cta_id: 'lesson_pricing_kakao',
+                                    })
+                                }
                                 className="block w-full text-center bg-gray-900 dark:bg-gray-700 hover:bg-primary text-white font-bold py-4 rounded-xl transition-colors duration-300"
                             >
                                 {t('lesson.pricing.cta')}

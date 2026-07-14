@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Locale } from '../../lib/i18n';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface ReleaseHeroCtasProps {
   locale: Locale;
@@ -29,6 +30,13 @@ const ReleaseHeroCtas = ({
         target="_blank"
         rel="noopener noreferrer"
         className={primaryButtonClassName}
+        onClick={() =>
+          trackLeadEvent('lead_click_kakao', {
+            locale,
+            component: 'ReleaseHeroCtas',
+            cta_id: 'release_hero_kakao',
+          })
+        }
       >
         {consultLabel}
       </a>
