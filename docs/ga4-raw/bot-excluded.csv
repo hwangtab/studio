@@ -1,18 +1,18 @@
 screen_resolution,operating_system,device,sessions,engagement_rate,avg_session_sec
-"412x732","(not set)","desktop",784,0.679,0.0
-"393x851","Android","mobile",647,0.961,0.0
-"1280x1200","Windows","desktop",341,0.674,0.5
-"1512x982","Linux","desktop",47,1.000,23.2
+"412x732","(not set)","desktop",793,0.682,0.0
+"393x851","Android","mobile",655,0.963,0.0
+"1280x1200","Windows","desktop",346,0.679,0.5
+"1512x982","Linux","desktop",49,1.000,25.3
 "800x600","Linux","desktop",27,0.296,3.4
+"1200x1800","Android","mobile",15,1.000,5.0
 "1280x1024","Linux","desktop",15,0.000,0.0
 "360x640","Android","mobile",15,0.000,0.0
-"1200x1800","Android","mobile",14,1.000,3.0
 "1600x1200","Android","mobile",11,1.000,4.5
 "800x600","Macintosh","desktop",11,0.182,0.4
-"412x732","","desktop",9,1.000,0.0
 "800x600","Android","mobile",9,0.222,7.9
 "1920x1080","Windows","desktop",7,0.714,22.9
 "384x832","Android","mobile",6,1.000,315.0
+"412x732","","desktop",6,1.000,0.0
 "800x600","(not set)","desktop",6,0.000,0.0
 "1280x900","Linux","desktop",4,1.000,880.2
 "1280x900","Macintosh","desktop",4,1.000,1374.8

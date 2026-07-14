@@ -27,6 +27,7 @@ llm_source,landing_page,sessions,bounce_rate,avg_session_sec
 "chatgpt.com","/ko/stories/album-cost1",4,0.000,105.9
 "chatgpt.com","/ko/stories/audioformat1",4,0.750,18.9
 "chatgpt.com","/ko/stories/daw-choice1",4,1.000,0.4
+"chatgpt.com","/ko/stories/mr-guide1",4,0.000,108.4
 "chatgpt.com","/ko/stories/music-business1",4,0.750,125.1
 "chatgpt.com","/ko/stories/practice-room-startup1",4,0.750,11.7
 "chatgpt.com","/ko/stories/practice-room-stress1",4,0.500,185.3
@@ -35,7 +36,6 @@ llm_source,landing_page,sessions,bounce_rate,avg_session_sec
 "perplexity.ai","/ko/voice-acting",4,0.000,238.2
 "chatgpt.com","/ko/stories/frequency-spectrum1",3,0.667,0.0
 "chatgpt.com","/ko/stories/kpop-trainee1",3,0.333,738.5
-"chatgpt.com","/ko/stories/mr-guide1",3,0.000,68.1
 "chatgpt.com","/ko/stories/practice-room-vocal-vowel-modification1",3,0.667,17.3
 "chatgpt.com","/ko/stories/practice-room-vocal-warm-up1",3,0.667,6.0
 "chatgpt.com","/ko/stories/seoul1",3,0.333,38.0
@@ -45,6 +45,7 @@ llm_source,landing_page,sessions,bounce_rate,avg_session_sec
 "chatgpt.com","/ko/stories/voice-actor-demo1",3,0.000,24.9
 "chatgpt.com","/ko/voice-acting",3,0.333,106.3
 "copilot.com","(not set)",3,0.333,0.0
+"gemini.google.com","(not set)",3,0.333,0.0
 "perplexity","/ko/stories/stage-vocal1",3,0.333,61.0
 "perplexity.ai","/ko/stories/eq1",3,0.000,113.2
 "perplexity.ai","/ko/stories/music-marketing1",3,0.000,831.1
@@ -73,10 +74,10 @@ llm_source,landing_page,sessions,bounce_rate,avg_session_sec
 "chatgpt.com","/ko/stories/rnb-production1",2,0.500,0.0
 "chatgpt.com","/ko/stories/seoul-metro-guide1",2,0.000,136.4
 "chatgpt.com","/ko/stories/sound-engineer1",2,0.000,309.3
+"chatgpt.com","/ko/stories/vocal-layering1",2,0.000,1123.3
 "chatgpt.com","/ko/stories/vocal-mixing1",2,0.500,0.0
 "copilot.com","/ko/stories/ai-music1",2,0.000,116.3
 "copilot.com","/ko/stories/placement1",2,0.000,27.2
-"gemini.google.com","(not set)",2,0.500,0.0
 "gemini.google.com","/ko/stories/recording-price1",2,0.000,41.3
 "gemini.google.com","/ko/stories/royalty1",2,0.000,847.2
 "perplexity","/ko/stories/autotune1",2,0.500,128.2
@@ -98,4 +99,3 @@ llm_source,landing_page,sessions,bounce_rate,avg_session_sec
 "chatgpt.com","/ko/stories/audition-vocal1",1,0.000,0.0
 "chatgpt.com","/ko/stories/audition1",1,0.000,15.6
 "chatgpt.com","/ko/stories/autotune1",1,0.000,0.0
-"chatgpt.com","/ko/stories/balladstyle1",1,0.000,942.4
