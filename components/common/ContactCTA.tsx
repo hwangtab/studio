@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { MessageCircle, Sparkles } from '@/lib/lucide-icons';
+import { Mail, MessageCircle, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
 import SectionHeading from '../ui/SectionHeading';
@@ -42,23 +42,51 @@ const ContactCTA = ({
     const isKorean = locale === 'ko';
     const getLink = (path: string) => `/${locale}${path}`;
 
-    const primaryLabel = primaryButtonLabel ?? t('actions.kakao');
+    // 비한국어에서는 primary가 카카오톡이 아니라 문의 폼이다. 라벨·아이콘·이벤트를 모두 그에 맞춘다.
+    const primaryLabel = primaryButtonLabel ?? (isKorean ? t('actions.kakao') : t('actions.contact'));
     const secondaryLabel = secondaryButtonLabel ?? t('actions.location');
-    const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
-    const imageHref = isKorean ? siteConfig.contact.kakaoUrl : getLink('/contact');
+    const contactHref = getLink('/contact');
+    const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : contactHref;
+    const imageHref = isKorean ? siteConfig.contact.kakaoUrl : contactHref;
+
     const trackPrimaryCta = React.useCallback(() => {
-        trackLeadEvent('lead_click_kakao', {
+        // 목적지가 카카오톡일 때만 카톡 리드다. 비한국어는 /contact로 가므로 별개 이벤트.
+        if (isKorean) {
+            trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'ContactCTA',
+                cta_id: 'contact_cta_primary_kakao',
+            });
+            return;
+        }
+        trackLeadEvent('lead_click_contact', {
             locale,
             component: 'ContactCTA',
-            cta_id: isKorean ? 'contact_cta_primary_kakao' : 'contact_cta_primary_contact',
+            cta_id: 'contact_cta_primary_contact',
         });
     }, [isKorean, locale]);
-    const trackImageKakao = React.useCallback(() => {
-        if (!isKorean) return;
-        trackLeadEvent('lead_click_kakao', {
+
+    const trackSecondaryContact = React.useCallback(() => {
+        trackLeadEvent('lead_click_contact', {
             locale,
             component: 'ContactCTA',
-            cta_id: 'contact_cta_image_kakao',
+            cta_id: 'contact_cta_secondary_contact',
+        });
+    }, [locale]);
+
+    const trackImageCta = React.useCallback(() => {
+        if (isKorean) {
+            trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'ContactCTA',
+                cta_id: 'contact_cta_image_kakao',
+            });
+            return;
+        }
+        trackLeadEvent('lead_click_contact', {
+            locale,
+            component: 'ContactCTA',
+            cta_id: 'contact_cta_image_contact',
         });
     }, [isKorean, locale]);
 
@@ -85,13 +113,16 @@ const ContactCTA = ({
                         as={headingAs}
                     />
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <Link
-                            href={getLink("/contact")}
-                            prefetch={false}
-                            className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                        >
-                            <span className="min-w-0">{secondaryLabel}</span>
-                        </Link>
+                        {isKorean && (
+                            <Link
+                                href={contactHref}
+                                prefetch={false}
+                                onClick={trackSecondaryContact}
+                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                            >
+                                <span className="min-w-0">{secondaryLabel}</span>
+                            </Link>
+                        )}
                         {isKorean ? (
                             <a
                                 href={primaryHref}
@@ -110,7 +141,7 @@ const ContactCTA = ({
                                 onClick={trackPrimaryCta}
                                 className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
                             >
-                                <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                <Mail className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
                                 <span className="min-w-0">{primaryLabel}</span>
                             </Link>
                         )}
@@ -125,7 +156,7 @@ const ContactCTA = ({
                         href={imageHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={trackImageKakao}
+                        onClick={trackImageCta}
                         aria-label={imageAlt}
                         className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                     >
@@ -144,6 +175,7 @@ const ContactCTA = ({
                     <Link
                         href={imageHref}
                         prefetch={false}
+                        onClick={trackImageCta}
                         aria-label={imageAlt}
                         className="relative h-64 md:h-auto overflow-hidden block group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                     >
