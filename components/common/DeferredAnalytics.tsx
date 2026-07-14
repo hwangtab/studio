@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Script from 'next/script';
+import { flushPendingLeadEvents } from '../../utils/analytics';
 
 // 3rd-party 측정 스크립트(GTM·Vercel Analytics·SpeedInsights)를 사용자 interaction
 // 또는 idle 후에만 로드. PSI 모바일(4× CPU throttle) 측정 윈도우(0~5초)에 GTM
@@ -51,7 +52,14 @@ const DeferredAnalytics: React.FC = () => {
         src="https://www.googletagmanager.com/gtag/js?id=G-KYGP18G36J"
         strategy="afterInteractive"
       />
-      <Script src="/scripts/ga4-init.js" strategy="afterInteractive" />
+      {/* onLoad는 ga4-init.js가 gtag('config', …)를 끝낸 뒤에 발화한다. 이 시점에 큐를
+          비워야 dataLayer에서 config → event 순서가 보장된다. config보다 먼저 들어간
+          event는 측정 ID가 없어 gtag.js가 버리므로 순서를 앞당기면 안 된다. */}
+      <Script
+        src="/scripts/ga4-init.js"
+        strategy="afterInteractive"
+        onLoad={flushPendingLeadEvents}
+      />
     </>
   );
 };

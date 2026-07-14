@@ -83,6 +83,37 @@ const toFlatProperties = (
 
 type GtagFn = (command: 'event', eventName: string, params: Record<string, unknown>) => void;
 
+const getGtag = (): GtagFn | undefined => {
+  const gtag = (window as typeof window & { gtag?: GtagFn }).gtag;
+  return typeof gtag === 'function' ? gtag : undefined;
+};
+
+// GA4(gtag.js)는 PSI 점수 보호를 위해 첫 인터랙션 이후에야 로드된다(DeferredAnalytics).
+// 그런데 lead_form_start는 "첫 타이핑" 시점에 발화하므로, keydown이 로드를 트리거한 바로
+// 그 순간 gtag는 아직 없다. 예전 구현은 이 이벤트를 조용히 버렸고, 그 결과 폼 퍼널 초반이
+// 구조적으로 과소집계됐다.
+//
+// window.dataLayer에 직접 밀어넣는 것으로는 해결되지 않는다 — gtag.js는 dataLayer를 순서대로
+// 처리하는데, config보다 먼저 도착한 event는 측정 ID가 없어 버려진다. 그래서 여기 큐에
+// 담아뒀다가 ga4-init.js가 config를 끝낸 뒤 flushPendingLeadEvents()로 내보낸다.
+//
+// 상한을 두는 이유: 사용자가 끝내 인터랙션하지 않아 GA4가 영영 로드되지 않는 경우
+// (봇·프리렌더) 큐가 무한히 자라지 않게 한다. 리드 이벤트는 세션당 한 자릿수라 넉넉하다.
+const MAX_PENDING_EVENTS = 20;
+const pendingEvents: Array<[LeadEventName, Record<string, unknown>]> = [];
+
+/** ga4-init.js가 gtag config를 끝낸 뒤 호출된다 (DeferredAnalytics의 Script onLoad). */
+export const flushPendingLeadEvents = (): void => {
+  if (typeof window === 'undefined') return;
+  const gtag = getGtag();
+  if (!gtag) return; // 아직 준비 안 됨 — 큐를 유지한 채 다음 기회를 기다린다.
+
+  while (pendingEvents.length > 0) {
+    const [name, payload] = pendingEvents.shift() as [LeadEventName, Record<string, unknown>];
+    gtag('event', name, payload);
+  }
+};
+
 export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void => {
   if (typeof window === 'undefined') return;
 
@@ -102,10 +133,12 @@ export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void
   // 1) Vercel Analytics — 항상 전송 (페이지 즉시 집계)
   track(name, payload);
 
-  // 2) Google Analytics 4 — gtag.js가 lazyOnload라 페이지 로드 초반엔 없음.
-  //    존재할 때만 동일 payload 전송. GA4 Conversions·Funnels 설정 가능.
-  const gtag = (window as typeof window & { gtag?: GtagFn }).gtag;
-  if (typeof gtag === 'function') {
+  // 2) Google Analytics 4 — gtag.js는 interaction-deferred라 초반엔 없다.
+  //    없으면 버리지 말고 큐에 담아 로드 직후 flush한다.
+  const gtag = getGtag();
+  if (gtag) {
     gtag('event', name, payload);
+  } else if (pendingEvents.length < MAX_PENDING_EVENTS) {
+    pendingEvents.push([name, payload]);
   }
 };
