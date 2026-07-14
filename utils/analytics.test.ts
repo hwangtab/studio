@@ -4,7 +4,7 @@
  * 트리거한 바로 그 순간 gtag는 아직 존재하지 않는다. 이 구간의 이벤트가 유실되면
  * 폼 퍼널 초반이 구조적으로 과소집계된다(2026-07 진단에서 실제 관측).
  */
-import { trackLeadEvent, flushPendingLeadEvents } from './analytics';
+import { trackLeadEvent, trackMicroEvent, flushPendingLeadEvents } from './analytics';
 
 type GtagCall = [string, string, Record<string, unknown>];
 
@@ -103,5 +103,53 @@ describe('trackLeadEvent GA4 큐잉', () => {
     const calls = getCalls();
     expect(calls.length).toBeGreaterThan(0);
     expect(calls.length).toBeLessThanOrEqual(20);
+  });
+});
+
+describe('마이크로 전환 이벤트 분리', () => {
+  beforeEach(() => {
+    removeGtag();
+    installGtag();
+    flushPendingLeadEvents();
+    removeGtag();
+  });
+
+  afterEach(removeGtag);
+
+  it('trackMicroEvent는 micro_click_service를 전송한다', () => {
+    installGtag();
+
+    trackMicroEvent('micro_click_service', {
+      component: 'InlineServiceCallout',
+      cta_id: 'inline_service_practice_detail',
+      service_type: 'practice',
+    });
+
+    expect(getCalls()).toHaveLength(1);
+    const [command, name, payload] = getCalls()[0];
+    expect(command).toBe('event');
+    expect(name).toBe('micro_click_service');
+    expect(payload).toMatchObject({ service_type: 'practice' });
+  });
+
+  it('마이크로 이벤트도 gtag 로드 전이면 큐에 담긴다', () => {
+    trackMicroEvent('micro_click_service', { component: 'InlineServiceCallout' });
+
+    installGtag();
+    flushPendingLeadEvents();
+
+    expect(getCalls().map((c) => c[1])).toEqual(['micro_click_service']);
+  });
+
+  it('lead_click_contact는 lead_click_kakao와 별개 이벤트로 전송된다', () => {
+    installGtag();
+
+    trackLeadEvent('lead_click_contact', {
+      component: 'ContactCTA',
+      cta_id: 'contact_cta_primary_contact',
+    });
+
+    expect(getCalls().map((c) => c[1])).toEqual(['lead_click_contact']);
+    expect(getCalls().map((c) => c[1])).not.toContain('lead_click_kakao');
   });
 });

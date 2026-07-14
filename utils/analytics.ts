@@ -8,12 +8,26 @@ export type LeadEventName =
   | 'lead_click_phone'
   | 'lead_click_naver_map'
   | 'lead_click_email'
+  // 문의 페이지로의 "이동" — 문의 자체가 아니다. QUALIFIED 집계에서 제외한다.
+  // 이전에는 비한국어 ContactCTA가 /contact로 가면서 lead_click_kakao를 발화해
+  // 유일하게 신뢰 가능한 지표(카톡 리드)를 오염시켰다.
+  | 'lead_click_contact'
   | 'lead_submit_success'
   | 'lead_submit_error'
   // 폼 funnel 분석용 — 방문자가 어느 단계에서 이탈하는지 추적.
   | 'lead_form_start'        // 첫 필드 입력 시작
   | 'lead_form_field_error'  // 필드 검증 실패 (어느 필드에서 막히는지)
   | 'lead_form_abandon';     // 폼 시작했으나 성공 전 페이지 이탈
+
+/**
+ * 마이크로 전환 — 리드가 아니다.
+ * 리드 지표(카카오·전화·이메일·폼 제출)는 이 사업의 유일하게 신뢰 가능한 신호이므로
+ * 마이크로 클릭으로 희석하지 않는다.
+ * scripts/ga4-fetch.mjs의 QUALIFIED_LEAD_EVENT_NAMES에 절대 넣지 말 것.
+ */
+export type MicroEventName = 'micro_click_service';
+
+export type TrackedEventName = LeadEventName | MicroEventName;
 
 export type LeadEventProps = {
   locale?: Locale | string;
@@ -100,7 +114,7 @@ const getGtag = (): GtagFn | undefined => {
 // 상한을 두는 이유: 사용자가 끝내 인터랙션하지 않아 GA4가 영영 로드되지 않는 경우
 // (봇·프리렌더) 큐가 무한히 자라지 않게 한다. 리드 이벤트는 세션당 한 자릿수라 넉넉하다.
 const MAX_PENDING_EVENTS = 20;
-const pendingEvents: Array<[LeadEventName, Record<string, unknown>]> = [];
+const pendingEvents: Array<[TrackedEventName, Record<string, unknown>]> = [];
 
 /** ga4-init.js가 gtag config를 끝낸 뒤 호출된다 (DeferredAnalytics의 Script onLoad). */
 export const flushPendingLeadEvents = (): void => {
@@ -109,12 +123,12 @@ export const flushPendingLeadEvents = (): void => {
   if (!gtag) return; // 아직 준비 안 됨 — 큐를 유지한 채 다음 기회를 기다린다.
 
   while (pendingEvents.length > 0) {
-    const [name, payload] = pendingEvents.shift() as [LeadEventName, Record<string, unknown>];
+    const [name, payload] = pendingEvents.shift() as [TrackedEventName, Record<string, unknown>];
     gtag('event', name, payload);
   }
 };
 
-export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void => {
+const trackEvent = (name: TrackedEventName, props: LeadEventProps): void => {
   if (typeof window === 'undefined') return;
 
   const path = normalizePath(props.path);
@@ -142,3 +156,10 @@ export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void
     pendingEvents.push([name, payload]);
   }
 };
+
+export const trackLeadEvent = (name: LeadEventName, props: LeadEventProps): void =>
+  trackEvent(name, props);
+
+/** 마이크로 전환 전용. 리드 집계에 포함되지 않는다 — MicroEventName 주석 참조. */
+export const trackMicroEvent = (name: MicroEventName, props: LeadEventProps): void =>
+  trackEvent(name, props);
