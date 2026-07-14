@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'practice';
 
@@ -184,6 +184,14 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
         <Link
           href={`/${locale}${path}`}
           prefetch={false}
+          onClick={() =>
+            trackMicroEvent('micro_click_service', {
+              locale,
+              component: 'InlineServiceCallout',
+              cta_id: `inline_service_${type}_detail`,
+              service_type: type,
+            })
+          }
           className="inline-flex items-center gap-1 text-sm font-semibold text-secondary dark:text-secondary-light hover:underline min-h-[44px] touch-manipulation"
         >
           {t('stories.inline.serviceDetail', { defaultValue: '서비스 자세히 보기' })}
