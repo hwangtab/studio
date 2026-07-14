@@ -11,7 +11,7 @@ const homeData = {
       titlePrefix: "곡은 다 썼는데,",
       titleHighlight: "그 다음",
       titleSuffix: "이 어려운 당신에게",
-      subtitle: "그 다음은 함께 만듭니다.\n기획·녹음·세션·믹싱·유통, 그리고 매체·평론에 닿는 일까지.\n연신내 녹음실 스튜디오 놀에서 시작하세요.",
+      subtitle: "그 다음은 함께 만듭니다.\n기획·녹음·세션·믹싱·유통,\n그리고 매체·평론에 닿는 일까지.\n연신내 녹음실 스튜디오 놀에서 시작하세요.",
       backgroundImage: "/images/studio2.webp",
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
