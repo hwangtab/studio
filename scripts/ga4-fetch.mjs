@@ -24,7 +24,6 @@ const ALL_LEAD_EVENT_NAMES = [
   'lead_click_phone',
   'lead_click_email',
   'lead_click_naver_map',
-  'lead_click_contact',
   'lead_submit_success',
   'lead_submit_error',
   'lead_form_start',
@@ -33,10 +32,10 @@ const ALL_LEAD_EVENT_NAMES = [
 ];
 
 // 마이크로 전환 — 리드가 아니다. 관측은 하되 QUALIFIED에는 절대 넣지 않는다.
-const MICRO_EVENT_NAMES = ['micro_click_service'];
+const MICRO_EVENT_NAMES = ['micro_click_service', 'micro_click_contact'];
 
 // 실제 "문의 행동"만 유효 리드다.
-// lead_click_contact(문의 페이지로 이동)와 micro_click_service(서비스 페이지 클릭)는
+// micro_click_contact(문의 페이지로 이동)와 micro_click_service(서비스 페이지 클릭)는
 // 의도적으로 제외한다 — 이동은 문의가 아니다. 이 집합을 넓히면 이 사업의 유일하게
 // 신뢰 가능한 지표가 희석된다.
 const QUALIFIED_LEAD_EVENT_NAMES = new Set([

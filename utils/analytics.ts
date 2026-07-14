@@ -8,10 +8,6 @@ export type LeadEventName =
   | 'lead_click_phone'
   | 'lead_click_naver_map'
   | 'lead_click_email'
-  // 문의 페이지로의 "이동" — 문의 자체가 아니다. QUALIFIED 집계에서 제외한다.
-  // 이전에는 비한국어 ContactCTA가 /contact로 가면서 lead_click_kakao를 발화해
-  // 유일하게 신뢰 가능한 지표(카톡 리드)를 오염시켰다.
-  | 'lead_click_contact'
   | 'lead_submit_success'
   | 'lead_submit_error'
   // 폼 funnel 분석용 — 방문자가 어느 단계에서 이탈하는지 추적.
@@ -24,8 +20,15 @@ export type LeadEventName =
  * 리드 지표(카카오·전화·이메일·폼 제출)는 이 사업의 유일하게 신뢰 가능한 신호이므로
  * 마이크로 클릭으로 희석하지 않는다.
  * scripts/ga4-fetch.mjs의 QUALIFIED_LEAD_EVENT_NAMES에 절대 넣지 말 것.
+ *
+ * micro_click_contact: 문의 페이지(/contact)로의 "이동" — 문의 자체가 아니다.
+ * 이전에는 lead_click_contact라는 이름이었는데, `lead_` 접두사 때문에 GA4 콘솔에서
+ * 주요 이벤트(key event) 지정 시 `lead_*` 패밀리를 훑다가 함께 체크될 위험이 있었다.
+ * micro_ 접두사로 "리드 아님"을 이름 자체에 새긴다. 이 이벤트를 GA4 콘솔에서
+ * 주요 이벤트로 지정하지 말 것 — 그러면 유일하게 신뢰 가능한 지표(카톡 리드)가
+ * 다시 오염된다.
  */
-export type MicroEventName = 'micro_click_service';
+export type MicroEventName = 'micro_click_service' | 'micro_click_contact';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
 

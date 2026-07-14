@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ContactCTA from './ContactCTA';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -19,6 +19,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('../../utils/analytics', () => ({
   trackLeadEvent: jest.fn(),
+  trackMicroEvent: jest.fn(),
 }));
 
 jest.mock('framer-motion', () => ({
@@ -47,7 +48,7 @@ describe('ContactCTA 리드 계측', () => {
     });
   });
 
-  it('한국어: /contact 버튼은 lead_click_contact를 발화한다 (라벨·목적지는 그대로)', () => {
+  it('한국어: /contact 버튼은 micro_click_contact를 발화한다 (라벨·목적지는 그대로)', () => {
     render(<ContactCTA locale="ko" {...baseProps} />);
 
     const link = screen.getByRole('link', { name: '위치' });
@@ -55,19 +56,19 @@ describe('ContactCTA 리드 계측', () => {
 
     fireEvent.click(link);
 
-    expect(trackLeadEvent).toHaveBeenCalledWith('lead_click_contact', {
+    expect(trackMicroEvent).toHaveBeenCalledWith('micro_click_contact', {
       locale: 'ko',
       component: 'ContactCTA',
       cta_id: 'contact_cta_secondary_contact',
     });
   });
 
-  it('영어: /contact 버튼이 lead_click_kakao가 아니라 lead_click_contact를 발화한다', () => {
+  it('영어: /contact 버튼이 lead_click_kakao가 아니라 micro_click_contact를 발화한다', () => {
     render(<ContactCTA locale="en" {...baseProps} />);
 
     fireEvent.click(screen.getByRole('link', { name: /문의하기/ }));
 
-    expect(trackLeadEvent).toHaveBeenCalledWith('lead_click_contact', {
+    expect(trackMicroEvent).toHaveBeenCalledWith('micro_click_contact', {
       locale: 'en',
       component: 'ContactCTA',
       cta_id: 'contact_cta_primary_contact',

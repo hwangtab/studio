@@ -8,7 +8,7 @@ import SectionHeading from '../ui/SectionHeading';
 import type { Locale } from '../../lib/i18n';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import { getSiteConfig } from '../../data/siteConfig';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -59,7 +59,7 @@ const ContactCTA = ({
             });
             return;
         }
-        trackLeadEvent('lead_click_contact', {
+        trackMicroEvent('micro_click_contact', {
             locale,
             component: 'ContactCTA',
             cta_id: 'contact_cta_primary_contact',
@@ -67,7 +67,7 @@ const ContactCTA = ({
     }, [isKorean, locale]);
 
     const trackSecondaryContact = React.useCallback(() => {
-        trackLeadEvent('lead_click_contact', {
+        trackMicroEvent('micro_click_contact', {
             locale,
             component: 'ContactCTA',
             cta_id: 'contact_cta_secondary_contact',
@@ -83,7 +83,7 @@ const ContactCTA = ({
             });
             return;
         }
-        trackLeadEvent('lead_click_contact', {
+        trackMicroEvent('micro_click_contact', {
             locale,
             component: 'ContactCTA',
             cta_id: 'contact_cta_image_contact',

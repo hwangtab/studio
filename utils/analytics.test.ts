@@ -141,15 +141,15 @@ describe('마이크로 전환 이벤트 분리', () => {
     expect(getCalls().map((c) => c[1])).toEqual(['micro_click_service']);
   });
 
-  it('lead_click_contact는 lead_click_kakao와 별개 이벤트로 전송된다', () => {
+  it('micro_click_contact는 lead_click_kakao와 별개 이벤트로 전송된다', () => {
     installGtag();
 
-    trackLeadEvent('lead_click_contact', {
+    trackMicroEvent('micro_click_contact', {
       component: 'ContactCTA',
       cta_id: 'contact_cta_primary_contact',
     });
 
-    expect(getCalls().map((c) => c[1])).toEqual(['lead_click_contact']);
+    expect(getCalls().map((c) => c[1])).toEqual(['micro_click_contact']);
     expect(getCalls().map((c) => c[1])).not.toContain('lead_click_kakao');
   });
 });
