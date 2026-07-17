@@ -4,6 +4,24 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
+import {
+  DAY_LOCK_PRICE,
+  formatPriceAmount,
+  LESSON_MONTHLY_PRICE,
+  MIXING_LEVEL1_PRICE,
+  MIXING_LEVEL2_PRICE,
+  MIXING_LEVEL3_PRICE,
+  PRACTICE_ROOM_MONTHLY_PRICE,
+  RECORDING_HOURLY_PRICE,
+  RELEASE_ALBUM_FROM_PRICE,
+  RELEASE_EP_FROM_PRICE,
+  RELEASE_SINGLE_FROM_PRICE,
+  VOCAL_PACKAGE_PRICE,
+  WEDDING_PACKAGE_PRICE,
+} from '../../data/pricing';
+
+// 가격은 전부 data/pricing.ts SSOT 상수를 보간한다 — 리터럴 하드코딩 금지(드리프트 방지).
+const krw = formatPriceAmount;
 
 // 첫 줄은 반드시 H1(`# `)이어야 한다 — llmstxt.org 스펙에서 유일한 필수 요소이며,
 // PageSpeed Insights의 'Agentic Browsing > llms.txt' 감사도 H1 부재를 실패로 판정한다.
@@ -48,14 +66,14 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 
 ## Pricing (KRW, VAT excluded)
 
-- **Practice Room Monthly Residency**: 360,000 KRW/month (₩0 deposit, 50% off first month for 1-year contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
-- **Vocal Recording 1프로 (1-song package)**: 250,000 KRW (3 hours, dedicated engineer included)
-- **Hourly Recording (voice acting / instrument / vocal corrections)**: 100,000 KRW/hour (minimum 2 hours)
-- **Wedding Song Complete Package**: 350,000 KRW (2hr recording + vocal tuning + mixing & mastering)
-- **Day Lock (6-hour package)**: 500,000 KRW (~17% discount vs hourly)
-- **1:1 Music Lesson**: 350,000 KRW/month flat rate (4 sessions, 60 min each)
-- **Mixing**: 200,000–500,000 KRW/song (tier by track count: ≤10 tracks ₩200K · 11–30 ₩350K · 31+ ₩500K · includes 2 revisions)
-- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~500,000 KRW; EP from ~1,500,000 KRW (3–5 tracks); full album from ~4,000,000 KRW (8 songs). Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
+- **Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
+- **Vocal Recording 1프로 (1-song package)**: ${krw(VOCAL_PACKAGE_PRICE)} KRW (3 hours, dedicated engineer included)
+- **Hourly Recording (voice acting / instrument / vocal corrections)**: ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours)
+- **Wedding Song Complete Package**: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2hr recording + vocal tuning + mixing & mastering)
+- **Day Lock (6-hour package)**: ${krw(DAY_LOCK_PRICE)} KRW (~17% discount vs hourly)
+- **1:1 Music Lesson**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each)
+- **Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ₩${MIXING_LEVEL1_PRICE / 1000}K · 11–30 ₩${MIXING_LEVEL2_PRICE / 1000}K · 31+ ₩${MIXING_LEVEL3_PRICE / 1000}K · includes 2 revisions)
+- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
 
@@ -99,18 +117,18 @@ Studio NOL is at 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, right next to 
 Take Exit 4 of Yeonsinnae Station (Seoul Metro Line 3 / Line 6), walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school. Total walk: ~5 minutes.
 
 ### Does Studio NOL operate hourly practice room rental or band rehearsal rooms?
-No. Studio NOL operates **monthly residency only** (360,000 KRW/month, ₩0 deposit). Hourly rental and band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (100,000 KRW/hour) or as the 1프로 package (250,000 KRW for 3 hours / 1 song).
+No. Studio NOL operates **monthly residency only** (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, ₩0 deposit). Hourly rental and band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (${krw(RECORDING_HOURLY_PRICE)} KRW/hour) or as the 1프로 package (${krw(VOCAL_PACKAGE_PRICE)} KRW for 3 hours / 1 song).
 
 ### What is the practice room residency fee?
-360,000 KRW per month (₩0 deposit, minimum 1 month). 1-year contracts get 50% off the first month. Includes 24/7 access, soundproof private room (STC 60+), personal gear storage, free monthly recording session (1 hour), and additional benefits.
+${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW per month (₩0 deposit, minimum 1 month). 1-year contracts get 50% off the first month. Includes 24/7 access, soundproof private room (STC 60+), personal gear storage, free monthly recording session (1 hour), and additional benefits.
 
 ### What is the wedding song package?
-Wedding Song Complete Package is 350,000 KRW: 2-hour recording session + vocal tuning + mixing & mastering. Beginners welcome.
+Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recording session + vocal tuning + mixing & mastering. Beginners welcome.
 
 ### What are the recording rates?
-- 1프로 (1-song vocal package, 3 hours): 250,000 KRW
-- Hourly recording (voice acting, instruments, corrections): 100,000 KRW/hour, minimum 2 hours
-- Day Lock (6-hour package): 500,000 KRW
+- 1프로 (1-song vocal package, 3 hours): ${krw(VOCAL_PACKAGE_PRICE)} KRW
+- Hourly recording (voice acting, instruments, corrections): ${krw(RECORDING_HOURLY_PRICE)} KRW/hour, minimum 2 hours
+- Day Lock (6-hour package): ${krw(DAY_LOCK_PRICE)} KRW
 
 ### What languages does Studio NOL support?
 Korean (primary), English, Chinese Simplified, Spanish, Vietnamese, Thai, Uzbek.
@@ -162,10 +180,10 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
-- Recording rate: 100,000 KRW per hour for hourly sessions; 250,000 KRW for a single-song vocal package (3 hours, dedicated engineer).
-- Mixing & mastering: 200,000–500,000 KRW per song depending on track count, with two revisions included.
-- Monthly practice room residency: 360,000 KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
-- Wedding song complete package: 350,000 KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
+- Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer).
+- Mixing & mastering: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included.
+- Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
+- Wedding song complete package: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
 - Foreign-musician guides (English native): hub at ${siteUrl}/en/stories/recording-in-seoul-for-foreign-musicians, plus three spoke guides on practice-room booking, pricing, and visit access.
 `;
 
@@ -174,11 +192,11 @@ const CHINESE_QUICK_FACTS = (siteUrl: string) => `
 
 Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。本工作室对中文使用者通过 KakaoTalk 提供中文沟通支持。
 
-- 服务范围：人声录音、混音、母带制作、月租练习室（₩360,000／月，0 押金）、1 对 1 音乐课程、配音录音、婚礼献唱套餐。
-- 录音报价：按小时 ₩100,000，1 首歌人声套餐（3 小时含专属工程师）₩250,000。
-- 混音／母带：每首歌 ₩200,000–500,000，按音轨数分级，含 2 次修改。
-- 月租练习室：₩360,000／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
-- 婚礼献唱套餐：₩350,000（2 小时录音 + 人声调音 + 混音及母带），新手友好。
+- 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐课程、配音录音、婚礼献唱套餐。
+- 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，1 首歌人声套餐（3 小时含专属工程师）₩${krw(VOCAL_PACKAGE_PRICE)}。
+- 混音／母带：每首歌 ₩${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}，按音轨数分级，含 2 次修改。
+- 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
+- 婚礼献唱套餐：₩${krw(WEDDING_PACKAGE_PRICE)}（2 小时录音 + 人声调音 + 混音及母带），新手友好。
 - 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 3 篇 spoke 指南（练习室预约、价格、交通指引）。
 - 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hwangtab@gmail.com)、电话 ${CANONICAL_FACTS.phoneIntl}，24 小时内免费报价。
 `;

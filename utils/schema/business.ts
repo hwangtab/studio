@@ -3,6 +3,13 @@ import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
 import { getReviews } from '../../data/reviews';
 import {
+  MIXING_LEVEL1_PRICE,
+  PRACTICE_ROOM_MONTHLY_PRICE,
+  PRODUCTION_OFFER_PRICE,
+  RECORDING_HOURLY_PRICE,
+  VOCAL_PACKAGE_PRICE,
+} from '../../data/pricing';
+import {
   getOfferPriceValidUntil,
   getSchemaLanguage,
   MIXING_OFFER_NAMES,
@@ -224,7 +231,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 100000,
+              price: RECORDING_HOURLY_PRICE,
               priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
@@ -237,7 +244,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 250000,
+              price: VOCAL_PACKAGE_PRICE,
               priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
@@ -250,7 +257,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 200000,
+              price: MIXING_LEVEL1_PRICE,
               priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
@@ -263,7 +270,7 @@ export const generateDefaultSchema = (
             {
               '@type': 'Offer',
               priceCurrency: 'KRW',
-              price: 350000,
+              price: PRODUCTION_OFFER_PRICE,
               priceValidUntil,
               url: `${siteUrl}/${locale}/pricing`,
               availability: 'https://schema.org/InStock',
@@ -277,7 +284,7 @@ export const generateDefaultSchema = (
               '@type': 'Offer',
               name: practiceOfferName,
               priceCurrency: 'KRW',
-              price: 360000,
+              price: PRACTICE_ROOM_MONTHLY_PRICE,
               priceValidUntil,
               url: `${siteUrl}/${locale}/practice-room`,
               availability: 'https://schema.org/InStock',
@@ -296,7 +303,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'Offer',
             priceCurrency: 'KRW',
-            price: 100000,
+            price: RECORDING_HOURLY_PRICE,
             priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
@@ -305,7 +312,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'Offer',
             priceCurrency: 'KRW',
-            price: 250000,
+            price: VOCAL_PACKAGE_PRICE,
             priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
@@ -314,7 +321,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'Offer',
             priceCurrency: 'KRW',
-            price: 200000,
+            price: MIXING_LEVEL1_PRICE,
             priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
@@ -323,7 +330,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'Offer',
             priceCurrency: 'KRW',
-            price: 350000,
+            price: PRODUCTION_OFFER_PRICE,
             priceValidUntil,
             url: `${siteUrl}/${locale}/pricing`,
             availability: 'https://schema.org/InStock',
@@ -332,7 +339,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'Offer',
             priceCurrency: 'KRW',
-            price: 360000,
+            price: PRACTICE_ROOM_MONTHLY_PRICE,
             priceValidUntil,
             url: `${siteUrl}/${locale}/practice-room`,
             availability: 'https://schema.org/InStock',

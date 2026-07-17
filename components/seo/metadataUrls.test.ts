@@ -1,4 +1,9 @@
 import { resolveSeoUrlState } from './metadataUrls';
+import enIndexablePaths from '../../lib/enIndexablePaths.json';
+// 사이트맵 소비자(CJS)를 같은 테스트에서 교차 검증 — 두 구현이 같은 JSON을 읽고
+// 같은 결과를 내는지 실행으로 확인한다.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { getAlternateRefs } = require('../../lib/sitemap/routes');
 
 describe('resolveSeoUrlState', () => {
   it('builds canonical and alternate paths from a localized canonical URL with query params', () => {
@@ -130,4 +135,35 @@ describe('resolveSeoUrlState', () => {
     expect(result.effectiveRobots('index, follow')).toBe('noindex, follow');
     expect(result.indexableAlternateLocales).toEqual(['ko']);
   });
+});
+
+describe('enIndexablePaths 계약 — 런타임(SEO)↔사이트맵 화이트리스트 정합', () => {
+  // 계약: enIndexablePaths.json 엔트리는 self-canonical 상업 라우트만 허용한다.
+  // 런타임은 canonical 파생 경로로, 사이트맵(lib/sitemap/routes.js)은 routePath로
+  // 키를 잡으므로, cross-locale canonical을 쓰는 엔트리를 추가하면 두 소비자가
+  // 발산한다(런타임 색인인데 사이트맵 누락 등). 이 테스트는 그 계약의 실행 문서 —
+  // JSON에 새 엔트리를 추가하면 자동으로 양쪽 정합이 검증된다.
+  const siteUrl = 'https://studionol.co.kr';
+
+  it.each(enIndexablePaths as string[])(
+    '%s: ko·en 양쪽에서 런타임 색인·hreflang과 사이트맵 alternate가 일치한다',
+    (p) => {
+      for (const locale of ['ko', 'en'] as const) {
+        const routePath = `/${locale}${p}`;
+        const runtime = resolveSeoUrlState({
+          asPath: routePath,
+          canonical: routePath,
+          siteUrl,
+          locale,
+        });
+        expect(runtime.effectiveRobots('index, follow')).toBe('index, follow');
+        expect(runtime.indexableAlternateLocales).toEqual(['ko', 'en']);
+
+        const sitemapHreflangs = getAlternateRefs(routePath).map(
+          (ref: { hreflang: string }) => ref.hreflang
+        );
+        expect(sitemapHreflangs).toEqual(['ko', 'en', 'x-default']);
+      }
+    }
+  );
 });

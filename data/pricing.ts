@@ -1,10 +1,34 @@
 import type { Locale } from '../lib/i18n';
 
-// 가격 단일 소스(SSOT). 이전엔 레슨 월 수강료가 lesson.tsx JSX에 "350,000"으로
-// 하드코딩돼 있었고 연습실 월정액은 i18n에만 있어, 통합 가격표·스키마와 어긋날
-// 위험이 있었다. 매출 라인 가격은 전부 여기서 관리한다.
+// ─────────────────────────────────────────────────────────────────────────────
+// 가격 단일 소스(SSOT).
+// 소비처: 이 파일의 오퍼 priceValue · utils/schema/business.ts(JSON-LD Offer) ·
+// pages/api/llms.ts(AI 인덱스) · lesson.tsx 등 페이지. 같은 값이 여러 파일에
+// 리터럴로 흩어져 있다가 한쪽만 고쳐 어긋나는 드리프트를 구조적으로 차단한다.
+// data/pricing.test.ts가 표시문자열↔값·스키마↔상수 정합을 CI에서 강제한다.
+// 주의: 350,000은 서로 다른 세 상품(레슨 월정액·축가 패키지·음반 기획 오퍼)의
+// 우연한 동일값 — 반드시 상품별 상수를 쓸 것(일괄 치환 금지).
+// ─────────────────────────────────────────────────────────────────────────────
+export const RECORDING_HOURLY_PRICE = 100000;
+export const VOCAL_PACKAGE_PRICE = 250000; // 보컬 녹음 1프로(1곡·3시간)
+export const DAY_LOCK_PRICE = 500000; // 6시간 패키지
+export const MIXING_LEVEL1_PRICE = 200000;
+export const MIXING_LEVEL2_PRICE = 350000;
+export const MIXING_LEVEL3_PRICE = 500000;
+export const MASTERING_SINGLE_PRICE = 100000;
+export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사용 믹싱 포함)
+export const VOICEOVER_HOURLY_PRICE = 100000;
+export const COVER_VIDEO_PACKAGE_PRICE = 350000;
+export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 export const LESSON_MONTHLY_PRICE = 350000;
 export const PRACTICE_ROOM_MONTHLY_PRICE = 360000;
+/** schema.org '음반 기획(Album Production)' 오퍼 앵커 — 별개 오퍼(레슨·축가와 값만 동일). */
+export const PRODUCTION_OFFER_PRICE = 350000;
+// 발매 프로젝트 티어 시작가 — 한국어 카피 SSOT는 common.json releaseProject.tiers.*.range
+// ("약 50만원~" 등)이며, data/pricing.test.ts가 아래 상수와 만원 표기 정합을 강제한다.
+export const RELEASE_SINGLE_FROM_PRICE = 500000;
+export const RELEASE_EP_FROM_PRICE = 1500000; // 3-5곡
+export const RELEASE_ALBUM_FROM_PRICE = 4000000; // 8곡 기준
 
 /** 350000 → "350,000". 서버·클라이언트 동일 결과를 보장하려 로케일을 명시 고정. */
 export const formatPriceAmount = (value: number): string => value.toLocaleString('en-US');

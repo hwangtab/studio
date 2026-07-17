@@ -33,6 +33,7 @@ const {
 
 // 라우트 단위 en 색인 개방 대상(단일 소스 lib/enIndexablePaths.json) — 이 경로의 en
 // 버전은 noindex 전면 제외에서 예외로 사이트맵에 등재된다(런타임 metadataUrls와 대칭).
+// ⚠️ 엔트리는 self-canonical 라우트만(계약 상세: components/seo/metadataUrls.ts).
 const EN_INDEXABLE_PATHS = new Set(require('./lib/enIndexablePaths.json'));
 
 const buildTimestamp = new Date().toISOString();

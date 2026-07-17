@@ -5,6 +5,12 @@ import enIndexablePaths from '../../lib/enIndexablePaths.json';
 // 실제로 완전 번역된 상업 페이지라 색인을 열고 ko↔en reciprocal hreflang을 emit한다.
 // 사이트맵(lib/sitemap/routes.js·next-sitemap.config.js)도 동일 JSON을 참조해
 // "사이트맵 등재 ⇔ 색인가능" 불변식을 구조적으로 유지한다.
+//
+// ⚠️ 엔트리 계약: **self-canonical 상업 라우트만** 등재할 것. 런타임(여기)은 canonical
+// 파생 경로로, 사이트맵은 routePath로 키를 잡는다 — 두 키는 페이지가 self-canonical일
+// 때만 일치한다. stories/portfolio 폴백처럼 cross-locale canonical을 쓰는 경로를
+// 추가하면 런타임과 사이트맵이 발산한다(런타임 색인·사이트맵 누락 등).
+// metadataUrls.test.ts의 'enIndexablePaths 계약' 테스트가 모든 엔트리를 자동 검증한다.
 const EN_INDEXABLE_PATHS = new Set<string>(enIndexablePaths as string[]);
 
 interface ResolveSeoPathStateOptions {
