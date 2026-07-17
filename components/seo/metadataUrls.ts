@@ -131,7 +131,13 @@ export const resolveSeoUrlState = ({
   //  - 라우트가 EN_INDEXABLE_PATHS에 있으면 en (currentLocale과 무관하게 추가 → ko·en
   //    양쪽 렌더가 reciprocal hreflang을 emit하고, zh 등 나머지는 noindex인 채 두 색인본을 가리킴)
   //  - native-only 예외 페이지는 현재 locale(allowNonDefaultLocaleIndexing)
-  const routeIndexableLocales: Locale[] = EN_INDEXABLE_PATHS.has(pathWithoutLocale) ? ['en'] : [];
+  //
+  // 화이트리스트 판정은 canonical 파생 경로(alternatePath)로 한다. pathWithoutLocale은
+  // asPath 파생이라 SSG 중 asPath가 ''/'/ko'로 폴백되면(이 파일이 locale prop을 두는 이유)
+  // '/'로 계산돼 화이트리스트를 못 맞추고 /en/pricing에 잘못된 noindex를 굽는다. canonical은
+  // 상업 페이지가 명시적으로 넘기므로 신뢰 가능.
+  const canonicalPathWithoutLocale = alternatePath.split('?')[0] || '/';
+  const routeIndexableLocales: Locale[] = EN_INDEXABLE_PATHS.has(canonicalPathWithoutLocale) ? ['en'] : [];
   const indexableLocaleSet = new Set<Locale>([
     defaultLocale,
     ...routeIndexableLocales,

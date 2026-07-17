@@ -55,7 +55,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Day Lock (6-hour package)**: 500,000 KRW (~17% discount vs hourly)
 - **1:1 Music Lesson**: 350,000 KRW/month flat rate (4 sessions, 60 min each)
 - **Mixing**: 200,000–500,000 KRW/song (tier by track count: ≤10 tracks ₩200K · 11–30 ₩350K · 31+ ₩500K · includes 2 revisions)
-- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~500,000 KRW; full album from ~4,000,000 KRW (8 songs); EP by custom quote. Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
+- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~500,000 KRW; EP from ~1,500,000 KRW (3–5 tracks); full album from ~4,000,000 KRW (8 songs). Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
 

@@ -239,18 +239,23 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         variant="alternate"
       />
 
-      {/* 서비스 바로가기 — 5개 link가 메인 viewport에 들어오면 next/link 기본 prefetch가
+      {/* 서비스 바로가기 — 6~7개 link(ko는 발매 pill 포함)가 메인 viewport에 들어오면 next/link 기본 prefetch가
           각 페이지의 SSG JSON·청크를 동시 다운로드한다. 메인 페이지 LCP/TBT 측정 창에
           체류하는 사용자에게는 가성비 나쁜 비용이라 prefetch={false}로 차단. */}
       <Section variant="default" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={getLink('/release-project')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          {/* 발매 프로젝트 pill은 ko 전용 — nav.releaseProject는 하위메뉴 맥락 라벨이라
+              비한국어에서 "Overview"로 해석돼 홈에서 맥락을 잃는다. 플래그십은 한국 인디
+              아티스트 중심이고 비-ko 홈은 저트래픽이라 ko에만 노출한다. */}
+          {locale === 'ko' && (
+            <Link
+              href={getLink('/release-project')}
+              prefetch={false}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            >
+              {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          )}
           <Link
             href={getLink('/practice-room')}
             prefetch={false}

@@ -106,6 +106,20 @@ describe('resolveSeoUrlState', () => {
     expect(ko.alternateHrefFor('en')).toBe('https://studionol.co.kr/en/pricing');
   });
 
+  it('resolves the commercial whitelist from canonical, not asPath (SSG asPath fallback safe)', () => {
+    // SSG 중 asPath가 ''/'/ko'로 폴백돼도 canonical이 신뢰 가능하면 색인 결정이 유지돼야 한다.
+    for (const asPath of ['', '/ko', '/en/pricing']) {
+      const result = resolveSeoUrlState({
+        asPath,
+        canonical: '/en/pricing',
+        siteUrl: 'https://studionol.co.kr',
+        locale: 'en',
+      });
+      expect(result.effectiveRobots('index, follow')).toBe('index, follow');
+      expect(result.indexableAlternateLocales).toEqual(['ko', 'en']);
+    }
+  });
+
   it('keeps non-whitelisted en pages noindex with ko-only hreflang', () => {
     const result = resolveSeoUrlState({
       asPath: '/en/lesson',

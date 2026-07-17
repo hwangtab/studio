@@ -109,6 +109,9 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         // ko 단일 + x-default(ko)로 발행해 Google에 명시적으로 ko 단일 언어 페이지임을 알린다.
         availableLocales={['ko'] as const}
         includeSchema
+        // 가이드 허브는 스튜디오 자체가 아니라 주제 콘텐츠 페이지 → 스토리·카테고리와
+        // 동일하게 집계 리뷰 스키마 제외(self-serving review 정책 위반·수동 조치 리스크 방지).
+        includeBusinessReviews={false}
         webPageType="WebPage"
         faqItems={faqItems}
         breadcrumbs={[
