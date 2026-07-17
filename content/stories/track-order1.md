@@ -185,4 +185,4 @@ Track 5~6: 클로징
 
 ---
 
-[EP·싱글 발매 완전 가이드](/stories/ep-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [앨범 아트 제작 가이드](/stories/album-art1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1)
+[EP·싱글 발매 완전 가이드](/stories/ep-release1) | [음원 유통 완전 가이드](/stories/music-distribution1) | [음반 아트워크·앨범 커버 가이드](/stories/album-artwork1) | [스트리밍 음원 발매 가이드](/stories/streaming-release1)

@@ -180,4 +180,4 @@ WAV 파일 자체에 메타데이터를 임베드하거나, 유통사 입력 폼
 
 메타데이터에서 작곡가·작사가·편곡자 입력은 법적·수익 배분의 기초입니다. KMCA에 등록된 이름과 유통 시 입력하는 이름이 일치해야 저작권료가 올바른 계좌로 지급됩니다. 공동 작업 시 지분 비율을 유통 신청 단계에서 입력하지 않으면 이후 수정이 어려우므로, 유통 전에 공동 창작자 간 합의를 서면으로 남기고 유통사 시스템에 반영하세요.
 
-[음원 유통 완전 가이드](/stories/distribution1) | [마스터링 완전 가이드](/stories/mastering1) | [앨범 아트 제작 가이드](/stories/album-art1) | [스트리밍 발매 가이드](/stories/streaming-release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[음원 유통 완전 가이드](/stories/distribution1) | [마스터링 완전 가이드](/stories/mastering1) | [음반 아트워크·앨범 커버 가이드](/stories/album-artwork1) | [스트리밍 발매 가이드](/stories/streaming-release1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

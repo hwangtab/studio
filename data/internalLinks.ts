@@ -78,7 +78,7 @@ export const topicLinks: Record<string, TopicLink> = {
   '음반 발매': { slug: 'album-release1', anchorText: '정규앨범 발매 가이드' },
   '음원 발매 절차': { slug: 'album-release1', anchorText: '음원 발매 가이드' },
   '음반 비용': { slug: 'album-cost1', anchorText: '음반 제작 비용 가이드' },
-  '커버 아트': { slug: 'album-art1', anchorText: '앨범 아트 제작 가이드' },
+  '커버 아트': { slug: 'album-artwork1', anchorText: '음반 아트워크·앨범 커버 가이드' },
   'AI 음악': { slug: 'ai-music1', anchorText: 'AI 음악 제작 가이드' },
   '808 베이스': { slug: '808-bass1', anchorText: '808 베이스 믹싱 가이드' },
   '혼자 앨범': { slug: 'solo-album1', anchorText: '혼자 앨범 내는 방법' },
