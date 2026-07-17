@@ -81,4 +81,39 @@ describe('resolveSeoUrlState', () => {
     expect(result.normalizedCanonical).toBe('https://studionol.co.kr/en/voice-acting');
     expect(result.alternatePath).toBe('/voice-acting');
   });
+
+  // 4-1: 상업 3페이지(/pricing·/contact·/release-project)의 en 선별 색인 개방 + reciprocal hreflang.
+  it('opens en indexing for whitelisted commercial pages with ko+en reciprocal hreflang', () => {
+    const en = resolveSeoUrlState({
+      asPath: '/en/pricing',
+      canonical: '/en/pricing',
+      siteUrl: 'https://studionol.co.kr',
+      locale: 'en',
+    });
+    expect(en.effectiveRobots('index, follow')).toBe('index, follow');
+    expect(en.indexableAlternateLocales).toEqual(['ko', 'en']);
+    expect(en.xDefaultHref).toBe('https://studionol.co.kr/ko/pricing');
+
+    // ko 렌더도 en alternate를 되받아야 reciprocal이 성립.
+    const ko = resolveSeoUrlState({
+      asPath: '/ko/pricing',
+      canonical: '/ko/pricing',
+      siteUrl: 'https://studionol.co.kr',
+      locale: 'ko',
+    });
+    expect(ko.effectiveRobots('index, follow')).toBe('index, follow');
+    expect(ko.indexableAlternateLocales).toEqual(['ko', 'en']);
+    expect(ko.alternateHrefFor('en')).toBe('https://studionol.co.kr/en/pricing');
+  });
+
+  it('keeps non-whitelisted en pages noindex with ko-only hreflang', () => {
+    const result = resolveSeoUrlState({
+      asPath: '/en/lesson',
+      canonical: '/en/lesson',
+      siteUrl: 'https://studionol.co.kr',
+      locale: 'en',
+    });
+    expect(result.effectiveRobots('index, follow')).toBe('noindex, follow');
+    expect(result.indexableAlternateLocales).toEqual(['ko']);
+  });
 });

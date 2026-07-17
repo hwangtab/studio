@@ -1,4 +1,11 @@
 import { defaultLocale, locales, type Locale } from '../../lib/i18n-config';
+import enIndexablePaths from '../../lib/enIndexablePaths.json';
+
+// 라우트 단위 비-ko 색인 예외의 단일 소스. 여기 등재된 경로(로케일 제외)의 en 버전은
+// 실제로 완전 번역된 상업 페이지라 색인을 열고 ko↔en reciprocal hreflang을 emit한다.
+// 사이트맵(lib/sitemap/routes.js·next-sitemap.config.js)도 동일 JSON을 참조해
+// "사이트맵 등재 ⇔ 색인가능" 불변식을 구조적으로 유지한다.
+const EN_INDEXABLE_PATHS = new Set<string>(enIndexablePaths as string[]);
 
 interface ResolveSeoPathStateOptions {
   asPath: string;
@@ -119,12 +126,20 @@ export const resolveSeoUrlState = ({
     }
   })();
 
-  // 기본은 site-wide indexable locale인 ko만. native-only 예외 페이지는 현재 locale의
-  // self-reference hreflang을 추가한다(ko가 availableLocales에 없으면 자연히 native만 남음).
+  // 색인 가능 locale 집합:
+  //  - 항상 defaultLocale(ko)
+  //  - 라우트가 EN_INDEXABLE_PATHS에 있으면 en (currentLocale과 무관하게 추가 → ko·en
+  //    양쪽 렌더가 reciprocal hreflang을 emit하고, zh 등 나머지는 noindex인 채 두 색인본을 가리킴)
+  //  - native-only 예외 페이지는 현재 locale(allowNonDefaultLocaleIndexing)
+  const routeIndexableLocales: Locale[] = EN_INDEXABLE_PATHS.has(pathWithoutLocale) ? ['en'] : [];
+  const indexableLocaleSet = new Set<Locale>([
+    defaultLocale,
+    ...routeIndexableLocales,
+    ...(allowNonDefaultLocaleIndexing ? [currentLocale] : []),
+  ]);
+
   const indexableAlternateLocales: Locale[] = locales
-    .filter((candidateLocale) =>
-      candidateLocale === defaultLocale
-      || (allowNonDefaultLocaleIndexing && candidateLocale === currentLocale))
+    .filter((candidateLocale) => indexableLocaleSet.has(candidateLocale))
     .filter((candidateLocale) => !availableLocales || availableLocales.includes(candidateLocale));
 
   const shouldRenderAlternates = !disableUrlMetaAndAlternates && !disableAlternates;
@@ -150,7 +165,7 @@ export const resolveSeoUrlState = ({
     // native locale)는 robots를 그대로 통과 — 페이지 단 robots(thin/frontmatter noindex)는
     // 호출부 인자로 이미 반영돼 있으므로 사이트맵 등재 ⇔ 색인가능 불변식이 유지된다.
     effectiveRobots: (robots) =>
-      (currentLocale === defaultLocale || allowNonDefaultLocaleIndexing ? robots : 'noindex, follow'),
+      (indexableLocaleSet.has(currentLocale) ? robots : 'noindex, follow'),
     toAbsoluteUrl,
   };
 };

@@ -31,6 +31,10 @@ const {
   getCategoryLastmod,
 } = require('./lib/sitemap/routes');
 
+// 라우트 단위 en 색인 개방 대상(단일 소스 lib/enIndexablePaths.json) — 이 경로의 en
+// 버전은 noindex 전면 제외에서 예외로 사이트맵에 등재된다(런타임 metadataUrls와 대칭).
+const EN_INDEXABLE_PATHS = new Set(require('./lib/enIndexablePaths.json'));
+
 const buildTimestamp = new Date().toISOString();
 
 // Map of marketing pages to their representative OG images.
@@ -195,7 +199,9 @@ module.exports = {
     // 비-ko 페이지는 sitemap에서 전면 제외. SEO 컴포넌트가 noindex을 부여하므로
     // sitemap 등록은 모순 신호. 90일 GSC에서 비-ko 152페이지 합계 5 clicks /
     // CTR 0.62%로 검색 트래픽 사실상 없어 인덱싱 풀 정리.
-    if (locale !== 'ko') {
+    // 단, 상업 3페이지(/pricing·/contact·/release-project)의 en 버전은 선별 색인
+    // 개방 대상이라 예외로 등재 — 런타임 metadataUrls의 EN_INDEXABLE_PATHS와 대칭.
+    if (locale !== 'ko' && !(locale === 'en' && EN_INDEXABLE_PATHS.has(pathWithoutLocale))) {
       return null;
     }
 
