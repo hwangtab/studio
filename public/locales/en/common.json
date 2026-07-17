@@ -917,7 +917,9 @@
       "viewAll": "View all stories",
       "relatedPortfolioTitle": "Real work produced at Studio NOL",
       "viewAllPortfolio": "View Full Portfolio",
-      "boilerplateAside": "Visit Guide"
+      "boilerplateAside": "Visit Guide",
+      "faqTitle": "Frequently Asked Questions",
+      "faqSubtitle": "Common questions about this topic, answered."
     },
     "bottomCta": {
       "title": "Get in touch with us directly",

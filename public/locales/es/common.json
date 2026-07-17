@@ -894,7 +894,9 @@
       "viewAll": "Ver todas las historias",
       "relatedPortfolioTitle": "Trabajos reales realizados por Studio NOL",
       "viewAllPortfolio": "Ver todo el portafolio",
-      "boilerplateAside": "Información general de visita"
+      "boilerplateAside": "Información general de visita",
+      "faqTitle": "Preguntas Frecuentes",
+      "faqSubtitle": "Preguntas comunes sobre este tema, respondidas."
     },
     "categoryHub": {
       "seoTitle": "Historias sobre {{category}} | Studio NOL",

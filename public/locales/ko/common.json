@@ -889,7 +889,9 @@
       "viewAll": "모든 스토리 보기",
       "relatedPortfolioTitle": "스튜디오 놀이 작업한 실제 결과물",
       "viewAllPortfolio": "전체 포트폴리오",
-      "boilerplateAside": "공통 방문 안내"
+      "boilerplateAside": "공통 방문 안내",
+      "faqTitle": "자주 묻는 질문",
+      "faqSubtitle": "이 주제에 대해 자주 묻는 질문을 모았습니다."
     },
     "bottomCta": {
       "title": "지금 카톡으로 바로 상담하세요",

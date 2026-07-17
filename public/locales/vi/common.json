@@ -894,7 +894,9 @@
       "viewAll": "Xem tất cả stories",
       "relatedPortfolioTitle": "Sản phẩm thực tế Studio NOL đã thực hiện",
       "viewAllPortfolio": "Xem toàn bộ portfolio",
-      "boilerplateAside": "Hướng dẫn tham quan studio"
+      "boilerplateAside": "Hướng dẫn tham quan studio",
+      "faqTitle": "Câu hỏi thường gặp",
+      "faqSubtitle": "Những câu hỏi thường gặp về chủ đề này."
     },
     "categoryHub": {
       "seoTitle": "Câu chuyện về {{category}} | Studio NOL",

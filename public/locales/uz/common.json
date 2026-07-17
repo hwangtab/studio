@@ -894,7 +894,9 @@
       "viewAll": "Barcha hikoyalarni ko'rish",
       "relatedPortfolioTitle": "Studio NOL tomonidan yaratilgan haqiqiy natijalar",
       "viewAllPortfolio": "To'liq portfel",
-      "boilerplateAside": "Umumiy tashrif ma'lumotlari"
+      "boilerplateAside": "Umumiy tashrif ma'lumotlari",
+      "faqTitle": "Ko'p so'raladigan savollar",
+      "faqSubtitle": "Ushbu mavzu bo'yicha tez-tez so'raladigan savollar."
     },
     "categoryHub": {
       "seoTitle": "{{category}} haqida hikoyalar | Studio NOL",

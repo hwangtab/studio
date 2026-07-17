@@ -894,7 +894,9 @@
       "viewAll": "查看所有故事",
       "relatedPortfolioTitle": "Studio NOL 实际完成的作品",
       "viewAllPortfolio": "全部作品集",
-      "boilerplateAside": "到访须知"
+      "boilerplateAside": "到访须知",
+      "faqTitle": "常见问题",
+      "faqSubtitle": "关于此主题的常见问题解答。"
     },
     "categoryHub": {
       "seoTitle": "{{category}} 相关故事 | Studio NOL",
