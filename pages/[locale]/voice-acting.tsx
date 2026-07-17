@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
@@ -169,6 +170,15 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.voiceActing'), path: `/${locale}/voice-acting` },
         ]}
+        ctaButtons={
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="VoiceActingHero"
+            ctaId="voice_acting_hero_kakao"
+            label={t('voiceActing.cta.inquiry')}
+          />
+        }
       />
 
 
@@ -308,6 +318,23 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
             ))}
           </div>
         </m.div>
+        <div className="mt-10 text-center">
+          <a
+            href={siteConfig.contact.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'VoiceActingPage',
+                cta_id: 'voice_acting_process_kakao',
+              })
+            }
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
+          >
+            {t('voiceActing.cta.inquiry')}
+          </a>
+        </div>
       </Section>
 
       <FAQSection

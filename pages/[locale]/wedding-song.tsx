@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
@@ -142,6 +143,15 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.weddingSong'), path: `/${locale}/wedding-song` },
         ]}
+        ctaButtons={
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="WeddingSongHero"
+            ctaId="wedding_song_hero_kakao"
+            label={t('weddingSong.cta.inquiry')}
+          />
+        }
       />
 
 

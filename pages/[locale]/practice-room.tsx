@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
@@ -151,6 +152,15 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
         ]}
+        ctaButtons={
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="PracticeRoomHero"
+            ctaId="practice_room_hero_kakao"
+            label={t('practiceRoom.cta.inquiry')}
+          />
+        }
       />
 
       {pricingBadges.length > 0 && (

@@ -7,6 +7,7 @@ import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, Arrow
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import SectionHeading from '../../components/ui/SectionHeading';
 import CurriculumCard from '../../components/lesson/CurriculumCard';
@@ -18,12 +19,14 @@ const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
 const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCallout'));
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
+import { LESSON_MONTHLY_PRICE, formatPriceAmount } from '../../data/pricing';
 import { buildLessonServiceSchema } from '../../lib/lessonSchema';
 import { trackLeadEvent } from '../../utils/analytics';
 import type { StoryCardData } from '../../types/story';
@@ -133,6 +136,15 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },
                 ]}
+                ctaButtons={
+                    <HeroKakaoCta
+                        locale={locale}
+                        kakaoUrl={siteConfig.contact.kakaoUrl}
+                        component="LessonHero"
+                        ctaId="lesson_hero_kakao"
+                        label={t('lesson.cta.inquiry')}
+                    />
+                }
             />
 
             <QuickAnswers
@@ -345,7 +357,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         </div>
                         <div className="p-8">
                             <div className="flex justify-center items-end mb-2">
-                                <span className="text-4xl font-bold text-gray-800 dark:text-white">350,000</span>
+                                <span className="text-4xl font-bold text-gray-800 dark:text-white">{formatPriceAmount(LESSON_MONTHLY_PRICE)}</span>
                                 <span className="text-xl text-gray-500 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
                             </div>
                             <p className="text-center text-body-2 text-gray-600 dark:text-gray-300 mb-6 break-keep">
@@ -419,6 +431,10 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     </Link>
                 </div>
             </Section>
+
+            {/* 월 35만원 6개월 과정을 사회적 증거 없이 팔던 문제 해소 — 다른 서비스
+                페이지와 동일하게 후기 섹션을 노출해 신뢰→행동 전환 고리를 만든다. */}
+            <ReviewSection variant="default" locale={locale} />
 
             <HubLinkCallout
                 hubSlug="vocal-beginners-guide"

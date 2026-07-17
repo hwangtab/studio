@@ -1,5 +1,14 @@
 import type { Locale } from '../lib/i18n';
 
+// 가격 단일 소스(SSOT). 이전엔 레슨 월 수강료가 lesson.tsx JSX에 "350,000"으로
+// 하드코딩돼 있었고 연습실 월정액은 i18n에만 있어, 통합 가격표·스키마와 어긋날
+// 위험이 있었다. 매출 라인 가격은 전부 여기서 관리한다.
+export const LESSON_MONTHLY_PRICE = 350000;
+export const PRACTICE_ROOM_MONTHLY_PRICE = 360000;
+
+/** 350000 → "350,000". 서버·클라이언트 동일 결과를 보장하려 로케일을 명시 고정. */
+export const formatPriceAmount = (value: number): string => value.toLocaleString('en-US');
+
 // Helper for translations
 const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => {
   return dict[locale] || dict['en'] || dict['ko'];
@@ -385,6 +394,10 @@ export const getPricingData = (locale: Locale) => {
     mixingOffers,
     masteringOffers,
     additionalServices,
-    specialPackages
+    specialPackages,
+    // 통합 가격표에는 아직 카드로 렌더하지 않지만, 교차판매·스키마 참조를 위해
+    // 매출 라인 가격을 데이터로 노출한다(SSOT).
+    lessonMonthlyPrice: LESSON_MONTHLY_PRICE,
+    practiceRoomMonthlyPrice: PRACTICE_ROOM_MONTHLY_PRICE,
   };
 };
