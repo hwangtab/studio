@@ -21,7 +21,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Practice Room Residency**: Premium private practice room residency program (monthly subscription)
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
-- **Album Production**: Full-service album planning, recording, mixing, and mastering packages
+- **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — planning, recording, session-musician connections, mixing, mastering, distribution, and outreach to press/critics. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
 
 ## Business Information
 
@@ -55,7 +55,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Day Lock (6-hour package)**: 500,000 KRW (~17% discount vs hourly)
 - **1:1 Music Lesson**: 350,000 KRW/month flat rate (4 sessions, 60 min each)
 - **Mixing**: 200,000–500,000 KRW/song (tier by track count: ≤10 tracks ₩200K · 11–30 ₩350K · 31+ ₩500K · includes 2 revisions)
-- **Album Production Packages**: custom quote via KakaoTalk
+- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~500,000 KRW; full album from ~4,000,000 KRW (8 songs); EP by custom quote. Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
 
@@ -130,6 +130,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
 
 - Home: ${siteUrl}/${locale}
 - About / Services: ${siteUrl}/${locale}/about
+- Album Release Project (flagship, producer-led): ${siteUrl}/${locale}/release-project
 - Portfolio: ${siteUrl}/${locale}/portfolio
 - Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact

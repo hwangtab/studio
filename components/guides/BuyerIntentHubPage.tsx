@@ -43,6 +43,7 @@ const SERVICE_LINK_PATH: Record<string, string> = {
   'pricing': '/pricing',
   'practice-room': '/practice-room',
   'cover-video': '/cover-video',
+  'release-project': '/release-project',
   'contact': '/contact',
 };
 
@@ -53,6 +54,7 @@ const SERVICE_LINK_LABEL_KEY: Record<string, string> = {
   'pricing': 'nav.pricing',
   'practice-room': 'nav.practiceRoom',
   'cover-video': 'nav.coverVideo',
+  'release-project': 'nav.releaseProject',
   'contact': 'nav.contact',
 };
 

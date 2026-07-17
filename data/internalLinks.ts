@@ -218,4 +218,24 @@ export const topicLinks: Record<string, TopicLink> = {
   '흉성 공명': { slug: 'practice-room-vocal-resonance-chest1', anchorText: '흉성·두성 공명 배치 완전 가이드' },
   '보컬 연습 루틴': { slug: 'practice-schedule1', anchorText: '보컬 연습 스케줄 완전 가이드' },
   '샘플링 제작': { slug: 'sampling-guide1', anchorText: '샘플링 음악 제작 가이드' },
+
+  // ─── P1 quick-win 부스트 (2026-07-17) ───
+  // 10~17위권에 걸린 유입 페이지로 내부 링크를 집중해 1페이지 진입을 유도.
+  // 각 키워드가 본문에 실제로 다수 등장하는지 확인 후 등재(죽은 매핑 방지):
+  // 노이즈 제거 35편·프리앰프 69편·플레이리스트 52편·크라우드펀딩 9편·연습실 장비 5편.
+  '노이즈 제거': { slug: 'noise-reduction1', anchorText: '녹음 노이즈·배경 잡음 제거 가이드' },
+  '프리앰프': { slug: 'preamp1', anchorText: '마이크 프리앰프 완전 가이드' },
+  '플레이리스트': { slug: 'playlist1', anchorText: '스트리밍 플레이리스트 피칭 가이드' },
+  '크라우드펀딩': { slug: 'music-crowdfunding1', anchorText: '음악 크라우드펀딩 완전 가이드' },
+  '연습실 장비': { slug: 'practice-room-equipment1', anchorText: '연습실 장비·시설 완전 가이드' },
+  '노래방 녹음': { slug: 'karaoke-vs-studio1', anchorText: '노래방 vs 녹음실 비교 가이드' },
+
+  // ─── 발매 프로젝트 부트스트랩 (2026-07-17) ───
+  // 발매 의도 키워드 → 인디 발매 buyer-intent 허브(/guides/)로 연결. 허브가 발매
+  // 프로젝트 플래그십·pricing으로 CTA를 수렴시켜, 서비스 페이지를 직접 auto-link할 수
+  // 없는 제약(레지스트리는 story/guide 슬러그만 타겟)을 우회한다.
+  // 등장 검증: 싱글 발매 17편·인디 발매 7편·음원 발매 방법 6편.
+  '싱글 발매': { slug: 'indie-release-guide', anchorText: '인디 음원 발매 A to Z 가이드' },
+  '인디 발매': { slug: 'indie-release-guide', anchorText: '인디 음원 발매 가이드' },
+  '음원 발매 방법': { slug: 'indie-release-guide', anchorText: '음원 발매 방법 완전 가이드' },
 };

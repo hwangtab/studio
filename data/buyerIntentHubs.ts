@@ -16,7 +16,8 @@ export type BuyerIntentHubSlug =
   | 'audiobook-asmr-getting-started'
   | 'home-recording-survival'
   | 'vocal-beginners-guide'
-  | 'cover-video-production';
+  | 'cover-video-production'
+  | 'indie-release-guide';
 
 export interface BuyerIntentHubQuickAnswer {
   q: string;
@@ -84,9 +85,9 @@ export interface BuyerIntentHub {
    */
   portfolioCategory: 'all' | 'single' | 'album' | 'compilation' | 'commercial';
   /** 본 hub와 가장 가까운 service LP — primary CTA 대상 */
-  primaryServiceLink: ServiceKey | 'practice-room' | 'contact';
+  primaryServiceLink: ServiceKey | 'practice-room' | 'release-project' | 'contact';
   /** 보조 service LP — secondary CTA */
-  secondaryServiceLink?: ServiceKey | 'practice-room' | 'contact';
+  secondaryServiceLink?: ServiceKey | 'practice-room' | 'release-project' | 'contact';
 }
 
 export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
@@ -445,6 +446,92 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     pricingPackageId: 'package-cover-video',
     portfolioCategory: 'single',
     primaryServiceLink: 'cover-video',
+    secondaryServiceLink: 'pricing',
+  },
+
+  'indie-release-guide': {
+    slug: 'indie-release-guide',
+    seoTitle: '인디 음원 발매 A to Z — 싱글·EP·정규, 혼자서도 막히지 않게',
+    seoDescription:
+      '처음 음원을 발매하는 인디 아티스트를 위한 한 페이지 가이드. 싱글·EP·정규 발매 절차, 유통사 선택, 저작권료, 발매 타임라인부터 프로듀서와 함께하는 발매 프로젝트까지 한 곳에 정리했습니다.',
+    keywords:
+      '음원 발매 방법, 첫 싱글 발매, 인디 음원 발매, 싱글 발매 절차, 음원 내는 법, EP 발매, 정규앨범 발매, 발매 프로젝트',
+    hero: {
+      title: '첫 음원 발매,',
+      titleHighlight: '어디서 시작할지 막막하다면',
+      subtitle:
+        '싱글·EP·정규까지 발매의 모든 단계를 한 페이지에 정리했습니다. 혼자서도, 함께서도 갈 수 있게.',
+      image: '/images/room7.webp',
+      imageAlt: '인디 음원 발매를 준비하는 아티스트',
+    },
+    intro:
+      '곡은 완성했는데 그다음이 막막한 분이 많습니다. 유통사는 어디를 골라야 하는지, 발매일은 언제로 잡아야 하는지, 저작권료는 어떻게 받는지 — 처음이면 모든 단계가 낯섭니다. 이 페이지는 인디·1인 아티스트가 첫 음원을 발매할 때 알아야 할 가이드를 싱글·EP·정규 규모별로 한 곳에 모은 색인입니다. 절차만 확인하고 혼자 발매해도 되고, 기획부터 유통·평단 PR까지 함께 갈 파트너가 필요하면 발매 프로젝트로 이어집니다.',
+    forWhom: [
+      {
+        title: '첫 싱글을 발매하려는데 절차가 막막한 분',
+        description: '유통사 선택·앨범아트 규격·발매 타임라인을 단계별로 정리했습니다.',
+      },
+      {
+        title: '녹음·믹싱까지는 했는데 그다음을 모르는 분',
+        description: '유통 등록·저작권료·선공개 전략까지 발매 뒷단을 이어서 안내합니다.',
+      },
+      {
+        title: '레이블 없이 혼자 준비 중인 인디 아티스트',
+        description: '기획·세션 연결·홍보·평단 접점까지 필요하다면 프로듀서 동행 발매 프로젝트로 연결됩니다.',
+      },
+    ],
+    quickAnswers: [
+      {
+        q: '첫 싱글 발매, 비용이 얼마나 드나요?',
+        a: '유통 자체는 DistroKid 연 3만원대 정액제로 해결됩니다. 녹음·믹싱·마스터링은 별도로, 보컬 녹음 1곡 250,000원 + 싱글 마스터링 100,000원선이 기준입니다(VAT 별도). 기획·세션·홍보까지 함께하는 발매 프로젝트는 싱글 규모 약 50만원부터 규모별 견적으로 진행합니다.',
+      },
+      {
+        q: '혼자 발매하는 것과 프로듀서와 함께하는 발매는 뭐가 다른가요?',
+        a: '절차만 보면 유통 등록은 누구나 혼자 할 수 있습니다. 다만 곡의 완성도를 높이는 기획·편곡, 세션 연주자 연결, 발매 후 홍보와 매체·평론 접점은 혼자 만들기 어렵습니다. 발매 프로젝트는 이 과정을 15년차 프로듀서 황경하가 처음부터 끝까지 함께 설계합니다.',
+      },
+      {
+        q: '발매 준비는 얼마나 걸리나요?',
+        a: '싱글은 6~12주, EP는 3~6개월, 정규앨범은 6~12개월을 잡는 것이 현실적입니다. 유통사에는 모든 플랫폼 동시 공개를 위해 발매일 최소 4주 전에 음원을 제출해야 합니다.',
+      },
+      {
+        q: '유통사는 어떻게 고르나요?',
+        a: '해외 플랫폼(Spotify·Apple Music)은 DistroKid 같은 정액제 유통사, 국내 플랫폼(멜론·지니·벅스)은 카카오엔터·지니뮤직 계열 국내 유통사로 나눠 이중 유통하는 것이 표준입니다. 자세한 비교는 음원 유통 가이드에서 확인하세요.',
+      },
+      {
+        q: '발매하면 저작권료는 어떻게 받나요?',
+        a: '한국음악저작권협회(KOMCA)에 저작권을 등록하고, 음원 녹음에 대한 저작인접권을 함께 관리하면 스트리밍·방송 사용료를 정산받을 수 있습니다. 등록 절차는 음악 저작권료 가이드에 단계별로 정리돼 있습니다.',
+      },
+    ],
+    relatedStorySlugs: [
+      'single-release1',
+      'distribution1',
+      'ep-making1',
+      'album-release1',
+      'indie-label1',
+      'royalty1',
+      'solo-album1',
+      'revenue1',
+    ],
+    // 발매 프로젝트는 규모별 맞춤 견적이라 data/pricing.ts에 고정 entry가 없어
+    // hub 전용 fallback 카드로 티어 구조를 안내한다.
+    pricingPackageId: '',
+    pricingFallback: {
+      id: 'release-project',
+      title: '발매 프로젝트 (프로듀서 동행)',
+      priceDisplay: '싱글 50만원~',
+      unit: '/ 규모별 견적',
+      description:
+        '기획부터 녹음·세션·믹싱·유통, 매체·평론에 닿는 일까지 15년차 프로듀서 황경하가 함께하는 인디 발매 프로젝트입니다. 첫 상담은 무료로 진행됩니다.',
+      recommended: true,
+      features: [
+        '싱글 약 50만원~ · EP 규모별 견적 · 정규 약 400만원~ (8곡 기준)',
+        '기획·녹음·믹싱·마스터링 + 세션 연결·편곡·유통',
+        '발매 후 매체·평론 접점까지 동행',
+        '무료 발매 상담(30분 기획 상담)으로 시작',
+      ],
+    },
+    portfolioCategory: 'all',
+    primaryServiceLink: 'release-project',
     secondaryServiceLink: 'pricing',
   },
 };

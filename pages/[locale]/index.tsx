@@ -217,6 +217,20 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
       <Section variant="default" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
+            href={getLink('/release-project')}
+            prefetch={false}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={getLink('/practice-room')}
+            prefetch={false}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+          >
+            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
             href={getLink('/wedding-song')}
             prefetch={false}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
