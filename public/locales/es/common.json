@@ -237,6 +237,10 @@
     },
     "whatToExpect": {
       "title": "Qué esperar"
+    },
+    "faqSection": {
+      "title": "Preguntas frecuentes antes de contactar",
+      "subtitle": "Ubicación, horarios y otras dudas comunes."
     }
   },
   "pricing": {
@@ -816,6 +820,10 @@
       "subtitleLine1": "Prometemos los mejores resultados con equipo verificado y know-how experto.",
       "subtitleLine2": "Reserva una consulta ahora y recorre el estudio.",
       "imageAlt": "Sala de control de Studio NOL"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes sobre equipo y estudio",
+      "subtitle": "Las preguntas más comunes antes de reservar."
     }
   },
   "stories": {
@@ -2063,6 +2071,10 @@
       "subtitle": "Una consulta gratuita de 30 minutos para escuchar tu proyecto primero.",
       "imageAlt": "Consulta de Proyecto de Lanzamiento Studio NOL",
       "inquiry": "Consulta Gratuita de Lanzamiento"
+    },
+    "hubCallout": {
+      "title": "Lanzamiento indie de la A a la Z — guía en una página",
+      "subtitle": "Pasos de single, EP y álbum, distribución y regalías en un solo lugar."
     }
   }
 }

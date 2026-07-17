@@ -1,5 +1,6 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { CheckCircle, ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +9,8 @@ import ImageHero from '../../components/common/ImageHero';
 import ContactFormCard from '../../components/contact/ContactFormCard';
 import ContactInfoCard from '../../components/contact/ContactInfoCard';
 import { Section } from '../../components/ui/Section';
+// FAQPage 스키마(faqItems)와 가시 콘텐츠를 동일 소스로 유지하기 위한 렌더 컴포넌트.
+const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -157,9 +160,10 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
       {locale === 'en' && (() => {
         const whatToExpectItems = t('contact.whatToExpect.items', { returnObjects: true });
-        const faqItems = t('contact.faq', { returnObjects: true });
         const items = Array.isArray(whatToExpectItems) ? whatToExpectItems as string[] : [];
-        const faqs = Array.isArray(faqItems) ? faqItems as { q: string; a: string }[] : [];
+        // 가시 FAQ는 SEO faqItems(FAQPage 스키마)와 동일 소스(contactFaqData)여야 한다 —
+        // 스키마 항목 ≠ 본문 항목이면 구조화 데이터 가이드라인 위반(스팸 판정 리스크).
+        const faqs = contactFaqData;
         return (
           <Section variant="alternate" className="py-12">
             <div className="container mx-auto px-4 max-w-6xl">
@@ -182,8 +186,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   <dl className="space-y-5">
                     {faqs.map((faq, i) => (
                       <div key={i}>
-                        <dt className="font-semibold text-gray-900 dark:text-white mb-1">{faq.q}</dt>
-                        <dd className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{faq.a}</dd>
+                        <dt className="font-semibold text-gray-900 dark:text-white mb-1">{faq.question}</dt>
+                        <dd className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{faq.answer}</dd>
                       </div>
                     ))}
                   </dl>
@@ -193,6 +197,17 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           </Section>
         );
       })()}
+
+      {/* 비-en 로케일 가시 FAQ — SEO faqItems(FAQPage 스키마)와 동일 소스.
+          en은 위 whatToExpect 블록의 FAQ 칼럼이 같은 역할을 한다. */}
+      {locale !== 'en' && contactFaqData.length > 0 && (
+        <FAQSection
+          items={contactFaqData}
+          title={t('contact.faqSection.title')}
+          subtitle={t('contact.faqSection.subtitle')}
+          variant="alternate"
+        />
+      )}
 
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}

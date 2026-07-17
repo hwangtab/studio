@@ -27,6 +27,7 @@ import type { Locale } from '../../lib/i18n';
 import type { PortfolioItem } from '../../types/data';
 
 const ContactCTA = dynamic(() => import('../common/ContactCTA'));
+const HubLinkCallout = dynamic(() => import('../guides/HubLinkCallout'));
 const PortfolioDetailModal = dynamic(() => import('../PortfolioDetailModal'), { ssr: false });
 
 interface FocusItem {
@@ -99,6 +100,13 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         description={t(`releaseProject.seo.${tier}.description`)}
         keywords={t(`releaseProject.seo.${tier}.keywords`)}
         canonical={`/${locale}/release-project/${tier}`}
+        // 이미지 사이트맵(next-sitemap pageImageMap)과 동일 대표 이미지 — og-default
+        // 폴백이면 소셜 카드가 범용 이미지로 약화되고 두 신호가 서로 어긋난다.
+        ogImage="/images/og-recording15.webp"
+        ogImageAlt={t('releaseProject.hero.imageAlt')}
+        ogImageWidth={1200}
+        ogImageHeight={630}
+        webPageType="ItemPage"
         faqItems={Array.isArray(faqItems) ? faqItems : null}
         includeSchema
         schema={generateReleaseProjectSchema(siteConfig.url, locale, tier)}
@@ -365,6 +373,14 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           ))}
         </div>
       </Section>
+
+      {/* 발매 buyer-intent 허브 정적 진입점 — 절차·유통·저작권료 정보 의도를 허브로 수렴. */}
+      <HubLinkCallout
+        hubSlug="indie-release-guide"
+        locale={locale}
+        title={t('releaseProject.hubCallout.title')}
+        subtitle={t('releaseProject.hubCallout.subtitle')}
+      />
 
       <Section variant="default" className="py-16">
         <ContactCTA

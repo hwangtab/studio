@@ -237,6 +237,10 @@
     },
     "whatToExpect": {
       "title": "Bạn có thể mong đợi gì"
+    },
+    "faqSection": {
+      "title": "Câu hỏi thường gặp trước khi liên hệ",
+      "subtitle": "Vị trí, giờ mở cửa và các câu hỏi khác."
     }
   },
   "pricing": {
@@ -816,6 +820,10 @@
       "subtitleLine1": "Chúng tôi hứa kết quả tốt nhất với thiết bị được xác minh và know-how chuyên gia.",
       "subtitleLine2": "Đặt lịch tư vấn ngay và tham quan studio.",
       "imageAlt": "Phòng điều khiển Studio NOL"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp về thiết bị & studio",
+      "subtitle": "Những câu hỏi phổ biến trước khi đặt lịch."
     }
   },
   "stories": {
@@ -2063,6 +2071,10 @@
       "subtitle": "30 phút tư vấn miễn phí để lắng nghe dự án của bạn trước.",
       "imageAlt": "Tư vấn Dự án Phát hành Studio NOL",
       "inquiry": "Tư vấn Phát hành Miễn phí"
+    },
+    "hubCallout": {
+      "title": "Phát hành nhạc indie A-Z — hướng dẫn một trang",
+      "subtitle": "Quy trình phát hành single·EP·album, phân phối và tiền bản quyền trong một trang."
     }
   }
 }

@@ -237,6 +237,10 @@
     },
     "whatToExpect": {
       "title": "문의 후 진행 흐름"
+    },
+    "faqSection": {
+      "title": "문의 전 자주 묻는 질문",
+      "subtitle": "위치·영업시간 등 가장 많이 묻는 내용입니다."
     }
   },
   "pricing": {
@@ -816,6 +820,10 @@
       "subtitleLine1": "Neumann · SSL · Tegeler — 세계적 장비로 완성되는 사운드",
       "subtitleLine2": "지금 무료 방문 상담 → 스튜디오 투어 + 맞춤 견적",
       "imageAlt": "스튜디오 놀 컨트롤 룸"
+    },
+    "faq": {
+      "title": "장비·이용 자주 묻는 질문",
+      "subtitle": "녹음 예약 전 가장 많이 받는 질문입니다."
     }
   },
   "stories": {
@@ -2063,6 +2071,10 @@
       "subtitle": "30분 무료 상담으로 당신의 프로젝트를 먼저 들어봅니다.",
       "imageAlt": "스튜디오 놀 발매 프로젝트 상담",
       "inquiry": "무료 발매 상담 신청"
+    },
+    "hubCallout": {
+      "title": "인디 음원 발매 A to Z — 한 페이지 가이드",
+      "subtitle": "싱글·EP·정규 발매 절차와 유통·저작권료까지, 시작 전 한 번에 확인하세요."
     }
   }
 }

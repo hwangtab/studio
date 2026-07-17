@@ -104,6 +104,10 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         keywords={hub.keywords}
         ogImage={hub.hero.image}
         ogImageAlt={hub.hero.imageAlt}
+        // 허브 히어로는 1280×720 콘텐츠 이미지 — 치수 미전달 시 og:image:width/height
+        // 메타가 아예 빠져 소셜 크롤러가 재협상한다(자동 주입은 og-default 한정).
+        ogImageWidth={1280}
+        ogImageHeight={720}
         canonical={`/${locale}/guides/${hub.slug}`}
         // Hub은 ko만 SSG된다 (getStaticPaths에서 한국어만 paths 반환). hreflang은
         // ko 단일 + x-default(ko)로 발행해 Google에 명시적으로 ko 단일 언어 페이지임을 알린다.

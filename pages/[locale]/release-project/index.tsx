@@ -30,6 +30,7 @@ import type { StoryCardData } from '../../../types/story';
 import type { NextPageWithLayout } from '../../../types';
 
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
+const HubLinkCallout = dynamic(() => import('../../../components/guides/HubLinkCallout'));
 const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });
 const RelatedStoriesSection = dynamic(() => import('../../../components/ui/RelatedStoriesSection'));
 
@@ -89,6 +90,12 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         description={t('releaseProject.seo.description')}
         keywords={t('releaseProject.seo.keywords')}
         canonical={`/${locale}/release-project`}
+        // 이미지 사이트맵(pageImageMap)과 동일 대표 이미지로 소셜 카드·이미지 검색 신호 일치.
+        ogImage="/images/og-recording15.webp"
+        ogImageAlt={t('releaseProject.hero.imageAlt')}
+        ogImageWidth={1200}
+        ogImageHeight={630}
+        webPageType="ItemPage"
         faqItems={Array.isArray(hubFaqItems) ? hubFaqItems : null}
         includeSchema
         schema={generateReleaseProjectSchema(siteConfig.url, locale)}
@@ -339,6 +346,15 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       />
 
       {/* 발매 가이드 — proof 다음 reference 학습 자료 */}
+      {/* 발매 buyer-intent 허브로의 정적 진입점 — 이게 없으면 허브 유입이 스토리 본문
+          자동링크뿐이라 가장 관련 깊은 플래그십 페이지에서 고아가 된다. */}
+      <HubLinkCallout
+        hubSlug="indie-release-guide"
+        locale={locale}
+        title={t('releaseProject.hubCallout.title')}
+        subtitle={t('releaseProject.hubCallout.subtitle')}
+      />
+
       <RelatedStoriesSection
         stories={relatedStories}
         locale={locale}

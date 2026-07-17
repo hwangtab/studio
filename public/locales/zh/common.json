@@ -237,6 +237,10 @@
     },
     "whatToExpect": {
       "title": "你可以期待什么"
+    },
+    "faqSection": {
+      "title": "咨询前常见问题",
+      "subtitle": "位置、营业时间等常见问题。"
     }
   },
   "pricing": {
@@ -816,6 +820,10 @@
       "subtitleLine1": "Neumann · SSL · Tegeler — 世界级设备完成的声音",
       "subtitleLine2": "现在免费上门咨询 → 工作室参观 + 定制报价",
       "imageAlt": "Studio NOL 控制室"
+    },
+    "faq": {
+      "title": "设备与使用常见问题",
+      "subtitle": "预约录音前最常见的问题。"
     }
   },
   "stories": {
@@ -2063,6 +2071,10 @@
       "subtitle": "30分钟免费咨询，先聆听您的项目。",
       "imageAlt": "Studio NOL 发行项目咨询",
       "inquiry": "免费发行咨询"
+    },
+    "hubCallout": {
+      "title": "独立音乐发行 A to Z——单页指南",
+      "subtitle": "单曲·EP·专辑发行流程、发行渠道与版税，一页看完。"
     }
   }
 }

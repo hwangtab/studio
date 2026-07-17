@@ -16,6 +16,9 @@ import EquipmentSection from '../../components/studio/EquipmentSection';
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+// FAQPage 스키마(faqItems)와 동일 데이터를 본문에도 렌더 — 스키마-온리 FAQ는
+// 구조화 데이터 가이드라인 위반(가시 콘텐츠 필수)이라 마크업 무시·스팸 판정 리스크.
+const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
@@ -223,6 +226,13 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
       <HubLocaleContentSection content={hubLocaleContent} icon={Headphones} />
 
       <ReviewSection variant="alternate" locale={locale} />
+
+      <FAQSection
+        items={studioFaqData}
+        title={t('studioInfo.faq.title')}
+        subtitle={t('studioInfo.faq.subtitle')}
+        variant="default"
+      />
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}

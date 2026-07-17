@@ -265,7 +265,11 @@
         "q": "Do you offer online mixing-only service?",
         "a": "Yes. Upload your recorded tracks and we handle mixing and mastering remotely. This is popular with artists who have their own home recording setup and want professional post-production."
       }
-    ]
+    ],
+    "faqSection": {
+      "title": "Before You Contact Us — FAQ",
+      "subtitle": "Location, hours, and other common questions."
+    }
   },
   "pricing": {
     "anchorNavLabel": "Jump to pricing section",
@@ -844,6 +848,10 @@
       "subtitleLine1": "We promise the best results with verified equipment and expert know-how.",
       "subtitleLine2": "Book a consultation now and tour the studio.",
       "imageAlt": "Studio NOL Control Room"
+    },
+    "faq": {
+      "title": "Equipment & Studio FAQ",
+      "subtitle": "The most common questions before booking a session."
     }
   },
   "stories": {
@@ -2091,6 +2099,10 @@
       "subtitle": "A 30-minute free consultation to hear about your project first.",
       "imageAlt": "Studio NOL Release Project Consultation",
       "inquiry": "Free Release Consultation"
+    },
+    "hubCallout": {
+      "title": "Indie Music Release A to Z — One-Page Guide",
+      "subtitle": "Single, EP, and album release steps, distribution, and royalties — all in one place."
     }
   }
 }

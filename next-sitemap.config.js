@@ -47,16 +47,24 @@ const pageImageMap = {
   '/release-project/album': { url: '/images/og-recording15.webp', title: 'Studio NOL Full Album Release - Indie Album by Producer Hwang Gyeongha', caption: 'Full album release project: planning, vocal recording, sessions, mixing, distribution, and media PR by 15-year producer Hwang Gyeongha.' },
   '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
   '/contact': { url: '/images/og-hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
-  '/index': { url: '/images/og-default.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },
+  '/index': { url: '/images/og-studio2.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },
   '/lesson': { url: '/images/og-lesson1.webp', title: 'Studio NOL Music Lessons - Vocal & Production', caption: 'One-on-one vocal, mixing, and music production lessons at Studio NOL.' },
   '/portfolio': { url: '/images/og-recording1.webp', title: 'Studio NOL Portfolio - Recording & Mixing Works', caption: 'Albums, singles, and commercial works produced at Studio NOL.' },
-  '/practice-room': { url: '/images/og-room5.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
+  '/practice-room': { url: '/images/og-room8.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
   '/pricing': { url: '/images/og-hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩360K/mo, recording ₩100K/hr, wedding song ₩350K, voiceover ₩100K/hr.' },
   '/stories': { url: '/images/og-studio1.webp', title: 'Studio NOL Stories - Mixing & Recording Guides', caption: 'Production guides, engineering tutorials, and studio stories by Studio NOL.' },
   '/studio-info': { url: '/images/og-hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
   '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
   '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩100K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
   '/cover-video': { url: '/images/og-recording1.webp', title: 'Studio NOL Cover Video Package - ₩350K', caption: 'Cover video filming + recording + mixing all-in-one at Studio NOL, Yeonsinnae.' },
+  // Buyer-intent 가이드 허브 6종 — 이미지 소스는 data/buyerIntentHubs.ts hero.image와
+  // 수동 동기(허브 추가/이미지 변경 시 여기도 갱신).
+  '/guides/wedding-song-singing': { url: '/images/recording7.webp', title: 'Wedding Song Self-Singing Guide - Studio NOL', caption: 'Practice, record, and deliver your own wedding song — one-page guide by Studio NOL.' },
+  '/guides/audiobook-asmr-getting-started': { url: '/images/recording6.webp', title: 'Audiobook & ASMR Starter Guide - Studio NOL', caption: 'Getting started with audiobook and ASMR recording — curated guide by Studio NOL.' },
+  '/guides/home-recording-survival': { url: '/images/hardware2.webp', title: 'Home Recording Survival Guide - Studio NOL', caption: 'Making demos in a one-room studio — gear, limits, and when to go pro.' },
+  '/guides/vocal-beginners-guide': { url: '/images/lesson1.webp', title: '1:1 Music Production Lesson Guide - Studio NOL', caption: 'MIDI composition, mixing, and release consulting — 1:1 lesson guide.' },
+  '/guides/cover-video-production': { url: '/images/recording1.webp', title: 'Cover Video Production Guide - Studio NOL', caption: 'Filming, mixing, and uploading your first cover video — one-page guide.' },
+  '/guides/indie-release-guide': { url: '/images/room7.webp', title: 'Indie Music Release A to Z - Studio NOL', caption: 'Single, EP, and album release steps, distribution, and royalties for indie artists.' },
 };
 
 const buildStoryImage = (slug, locale) => {
@@ -78,51 +86,40 @@ module.exports = {
   priority: 0.7,
   exclude: ['/api/*', '/404', '/500', '/', '/*/privacy-policy'],
   robotsTxtOptions: {
-    policies: [
-      { userAgent: '*', allow: ['/', '/api/rss'], disallow: ['/api/'] },
-      // Google
-      { userAgent: 'Googlebot', allow: '/' },
-      { userAgent: 'Googlebot-Image', allow: '/' },
-      // Google-Extended는 SGE/Gemini 학습용 분리 신호 — Google search 색인은 그대로 두고
-      // 별도로 명시해 정책 가시성 확보
-      { userAgent: 'Google-Extended', allow: '/' },
-      // Bing
-      { userAgent: 'Bingbot', allow: '/' },
-      // Naver
-      { userAgent: 'Yeti', allow: '/' },
-      // DuckDuckGo
-      { userAgent: 'DuckDuckBot', allow: '/' },
-      // OpenAI
-      { userAgent: 'GPTBot', allow: '/' },
-      { userAgent: 'OAI-SearchBot', allow: '/' },
-      { userAgent: 'ChatGPT-User', allow: '/' },
-      // Anthropic
-      { userAgent: 'ClaudeBot', allow: '/' },
-      { userAgent: 'anthropic-ai', allow: '/' },
-      // Perplexity
-      { userAgent: 'PerplexityBot', allow: '/' },
-      // Perplexity 사용자 fetch 봇 (검색 답변 시 실시간 fetch)
-      { userAgent: 'Perplexity-User', allow: '/' },
-      // Meta
-      { userAgent: 'FacebookBot', allow: '/' },
-      { userAgent: 'Meta-ExternalAgent', allow: '/' },
-      // Apple
-      { userAgent: 'Applebot', allow: '/' },
-      // Apple Intelligence (별도 봇 — Applebot은 Siri/Spotlight, Applebot-Extended는 AI 학습)
-      { userAgent: 'Applebot-Extended', allow: '/' },
-      // ByteDance / TikTok AI
-      { userAgent: 'Bytespider', allow: '/' },
-      // Amazon
-      { userAgent: 'Amazonbot', allow: '/' },
-      // Cohere AI
-      { userAgent: 'cohere-ai', allow: '/' },
-      // Common Crawl
-      { userAgent: 'CCBot', allow: '/' },
-    ],
+    // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
+    // 따라서 명명된 봇 그룹에 allow:'/'만 두면 그 봇들은 /api/ disallow를 잃는다
+    // (X-Robots-Tag가 색인은 막지만 크롤 예산은 샘). 모든 그룹에 동일 규칙을 복제한다.
+    // allow에 /api/og/ 포함: 스토리 og:image가 /api/og/story라, 이게 없으면 robots를
+    // 준수하는 소셜 스크레이퍼(Twitterbot·Slackbot 등 '*' 그룹 대상)가 공유 카드
+    // 이미지를 못 가져온다. /llms.txt·/llms-full*.txt는 rewrite 경로(비-/api/)라
+    // AI 봇의 /api/ 차단과 무관하게 접근 가능.
+    policies: (() => {
+      const RULES = { allow: ['/', '/api/rss', '/api/og/'], disallow: ['/api/'] };
+      const NAMED_BOTS = [
+        // Google (Google-Extended는 SGE/Gemini 학습용 분리 신호 — 정책 가시성 목적 명시)
+        'Googlebot', 'Googlebot-Image', 'Google-Extended',
+        // Bing / Naver / DuckDuckGo
+        'Bingbot', 'Yeti', 'DuckDuckBot',
+        // OpenAI
+        'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
+        // Anthropic
+        'ClaudeBot', 'anthropic-ai',
+        // Perplexity (Perplexity-User는 답변 시 실시간 fetch 봇)
+        'PerplexityBot', 'Perplexity-User',
+        // Meta / Apple (Applebot-Extended는 AI 학습용 분리 봇)
+        'FacebookBot', 'Meta-ExternalAgent', 'Applebot', 'Applebot-Extended',
+        // ByteDance / Amazon / Cohere / Common Crawl
+        'Bytespider', 'Amazonbot', 'cohere-ai', 'CCBot',
+      ];
+      return [
+        { userAgent: '*', ...RULES },
+        ...NAMED_BOTS.map((userAgent) => ({ userAgent, ...RULES })),
+      ];
+    })(),
     additionalSitemaps: [],
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
-      const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${SITE_URL}/llms.txt\n# llms-full.txt: ${SITE_URL}/llms-full.txt\n`;
+      const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${SITE_URL}/llms.txt\n# llms-full.txt: ${SITE_URL}/llms-full.txt\n# llms-full (locale-scoped): ${SITE_URL}/llms-full-ko.txt ${SITE_URL}/llms-full-en.txt ${SITE_URL}/llms-full-zh.txt\n`;
       const hostDomain = SITE_URL.replace(/^https?:\/\//, '');
       return `Host: ${hostDomain}\n${cleaned}${llmsHint}`;
     },
@@ -275,7 +272,8 @@ module.exports = {
       return { ...entry, changefreq: 'weekly', priority: 0.8 };
     }
 
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson|release-project)(\/|$)/)) {
+    // guides 포함: buyer-intent 허브는 구매 직전 의도 LP라 서비스 페이지와 동급(0.9).
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson|release-project|guides)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 

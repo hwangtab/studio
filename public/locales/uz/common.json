@@ -237,6 +237,10 @@
     },
     "whatToExpect": {
       "title": "Nimalarni kutish mumkin"
+    },
+    "faqSection": {
+      "title": "Murojaat oldidan savollar",
+      "subtitle": "Manzil, ish vaqti va boshqa savollar."
     }
   },
   "pricing": {
@@ -816,6 +820,10 @@
       "subtitleLine1": "Tekshirilgan uskunalar va ekspert know-how bilan eng yaxshi natijalarni kafolatlayamiz.",
       "subtitleLine2": "Hozir maslahat bron qiling va studiyo bo'ylab tur qiling.",
       "imageAlt": "Studio NOL asosiy nazorat xonasi"
+    },
+    "faq": {
+      "title": "Uskuna va studiya bo'yicha savollar",
+      "subtitle": "Sessiya bron qilishdan oldingi eng ko'p savollar."
     }
   },
   "stories": {
@@ -2063,6 +2071,10 @@
       "subtitle": "30 daqiqalik bepul maslahat - loyihangizni birinchi bo'lib eshitamiz.",
       "imageAlt": "Studio NOL Chiqarish Loyihasi Maslahati",
       "inquiry": "Bepul Chiqarish Maslahati"
+    },
+    "hubCallout": {
+      "title": "Indie relizi A dan Z gacha — bir sahifali qo'llanma",
+      "subtitle": "Singl, EP, albom chiqarish bosqichlari, distributsiya va royalti — bitta sahifada."
     }
   }
 }
