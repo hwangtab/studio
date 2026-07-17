@@ -189,6 +189,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 delay={0.1 * (index + 1)}
                 ctaLabel={t('pricing.cta.inquiry')}
                 ctaHref={kakaoUrl}
+                trackingComponent="PricingSpecial"
+                locale={locale}
               />
             </div>
           ))}
@@ -219,6 +221,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 delay={0.1 * (index + 1)}
                 ctaLabel={t('pricing.cta.inquiry')}
                 ctaHref={kakaoUrl}
+                trackingComponent="PricingRecording"
+                locale={locale}
               />
             </div>
           ))}
@@ -249,6 +253,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 delay={0.1 * (index + 1)}
                 ctaLabel={t('pricing.cta.inquiry')}
                 ctaHref={kakaoUrl}
+                trackingComponent="PricingMixing"
+                locale={locale}
               />
             </div>
           ))}
@@ -288,6 +294,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 delay={0.1 * (index + 1)}
                 ctaLabel={t('pricing.cta.inquiry')}
                 ctaHref={kakaoUrl}
+                trackingComponent="PricingMastering"
+                locale={locale}
               />
             </div>
           ))}
@@ -317,6 +325,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 delay={0.1 * (index + 1)}
                 ctaLabel={t('pricing.cta.inquiry')}
                 ctaHref={kakaoUrl}
+                trackingComponent="PricingAdditional"
+                locale={locale}
               />
             </div>
           ))}

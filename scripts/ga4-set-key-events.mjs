@@ -31,9 +31,13 @@ const SCOPE = 'https://www.googleapis.com/auth/analytics.edit';
 // 등록할 전환 이벤트. countingMethod:
 //   ONCE_PER_SESSION — 세션당 1회만 전환 집계 (리드 클릭에 적합: 한 방문에서
 //   카카오를 여러 번 눌러도 전환 1회로 계산해 과대집계 방지).
+// scripts/ga4-fetch.mjs의 QUALIFIED_LEAD_EVENT_NAMES(정식 5개)와 1:1 일치시킨다.
+// lead_click_email은 이메일 리드 계측 부착 후 추가됨 — 등록에서 빠지면 이메일 리드가
+// GA4 주요 이벤트(conversion)로 집계되지 않는다. micro_* 이벤트는 절대 포함 금지.
 const KEY_EVENTS = [
   { eventName: 'lead_click_kakao', countingMethod: 'ONCE_PER_SESSION' },
   { eventName: 'lead_click_phone', countingMethod: 'ONCE_PER_SESSION' },
+  { eventName: 'lead_click_email', countingMethod: 'ONCE_PER_SESSION' },
   { eventName: 'lead_click_naver_map', countingMethod: 'ONCE_PER_SESSION' },
   { eventName: 'lead_submit_success', countingMethod: 'ONCE_PER_SESSION' },
 ];

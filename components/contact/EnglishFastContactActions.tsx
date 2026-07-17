@@ -18,6 +18,11 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
     <p className="mt-1 text-xs leading-relaxed text-gray-700 dark:text-gray-200">
       Book in English · Recording, mixing &amp; mastering · Remote mixing worldwide
     </p>
+    {/* 가격 즉답 — ChatGPT 등 LLM 유입 영어 방문자(이탈률 64%)가 클릭 없이 핵심 요금을
+        바로 확인하도록 상단 노출. 수치는 pricing.ts SSOT / llms.txt English Quick Facts와 일치. */}
+    <p className="mt-1 text-xs font-medium text-gray-900 dark:text-yellow-100">
+      Recording ₩100,000/hr · 1-song vocal package ₩250,000 · Mixing from ₩200,000/song
+    </p>
     <a
       href={`/${locale}/pricing`}
       className="mt-2 inline-block text-xs font-semibold text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
@@ -44,6 +49,13 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
     </a>
     <a
       href={`mailto:${email}`}
+      onClick={() =>
+        trackLeadEvent('lead_click_email', {
+          locale,
+          component: 'EnglishFastContactActions',
+          cta_id: 'en_contact_fast_email',
+        })
+      }
       className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
     >
       <Mail size={18} aria-hidden="true" />
@@ -51,6 +63,13 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
     </a>
     <a
       href={`tel:${phone}`}
+      onClick={() =>
+        trackLeadEvent('lead_click_phone', {
+          locale,
+          component: 'EnglishFastContactActions',
+          cta_id: 'en_contact_fast_phone',
+        })
+      }
       className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
     >
       <Phone size={18} aria-hidden="true" />

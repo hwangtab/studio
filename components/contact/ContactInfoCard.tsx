@@ -60,7 +60,17 @@ const ContactInfoCard = ({
           <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
           <span className="leading-relaxed">{siteConfig.contact.phone}</span>
         </a>
-        <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation">
+        <a
+          href={`mailto:${siteConfig.contact.email}`}
+          onClick={() =>
+            trackLeadEvent('lead_click_email', {
+              locale,
+              component: 'ContactPage',
+              cta_id: 'contact_info_email',
+            })
+          }
+          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+        >
           <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
           <span className="leading-relaxed">{siteConfig.contact.email}</span>
         </a>
