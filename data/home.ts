@@ -102,6 +102,16 @@ const homeData = {
           body: "연신내역 도보 5분. 녹음 → 믹싱·마스터링 → 음원 발매·유통, 그리고 24시간 음악연습실까지 한 건물에서 원스톱으로 해결합니다."
         }
       ]
+    },
+    producerCredibility: {
+      eyebrow: "이 스튜디오를 이끄는 사람",
+      name: "프로듀서 황경하",
+      tagline: "15년차 음반 기획자·프로듀서 · 2017 한국대중음악상 선정위원 특별상 수상",
+      stats: [
+        { value: "70+", label: "함께한 발매작" },
+        { value: "15년", label: "음반 작업 경력" },
+        { value: "2017", label: "한국대중음악상 수상" }
+      ]
     }
   },
   en: {
@@ -650,6 +660,14 @@ export interface LocaleUspsBlock {
   items: { heading: string; body: string }[];
 }
 
+/** 프로듀서 신뢰 스트립 — 그동안 /release-project 페이지에만 있던 실적을 홈으로 승격. */
+export interface ProducerCredibility {
+  eyebrow: string;
+  name: string;
+  tagline: string;
+  stats: { value: string; label: string }[];
+}
+
 /** Type for the full home data object */
 export interface HomeData {
   seo: { title: string; description: string; keywords: string };
@@ -666,4 +684,5 @@ export interface HomeData {
   homeServices: { title: string; description: string; link: string; icon: string }[];
   studioImages: { src: string; alt: string }[];
   localeUsps?: LocaleUspsBlock;
+  producerCredibility?: ProducerCredibility;
 }

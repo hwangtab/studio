@@ -22,6 +22,13 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
 
     const { t } = useTranslation('common', { lng: locale });
 
+    // 집계 평점 — JSON-LD(business.ts aggregateRating)에는 이미 있으나 UI에는 노출되지
+    // 않아 사람 방문자가 볼 수 없었음. 스키마와 동일한 값을 화면에도 표시해 신뢰 신호 강화.
+    const reviewCount = reviews.length;
+    const avgRating = reviewCount > 0
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount).toFixed(1)
+        : '0.0';
+
     return (
         <Section variant={variant} className={className}>
             <SectionHeading
@@ -33,8 +40,30 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                     </>
                 )}
                 subtitle={t('reviewSection.subtitle', { defaultValue: '스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.' })}
-                className="mb-16"
+                className="mb-8"
             />
+
+            {reviewCount > 0 && (
+                <div
+                    className="flex items-center justify-center gap-2 mb-12 text-gray-700 dark:text-gray-200"
+                    role="img"
+                    aria-label={t('reviewSection.aggregateAria', {
+                        rating: avgRating,
+                        count: reviewCount,
+                        defaultValue: `평균 평점 ${avgRating}점, 후기 ${reviewCount}개`,
+                    })}
+                >
+                    <span className="flex" aria-hidden="true">
+                        {FIVE_STARS.map((i) => (
+                            <Star key={i} size={20} className="text-yellow-400 fill-yellow-400" />
+                        ))}
+                    </span>
+                    <span className="font-bold text-lg tabular-nums" aria-hidden="true">{avgRating}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400" aria-hidden="true">
+                        · {t('reviewSection.aggregateCount', { count: reviewCount, defaultValue: `실제 이용 후기 ${reviewCount}개` })}
+                    </span>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                 {/* 리뷰 schema는 JSON-LD(generateDefaultSchema의 LocalBusiness.review)
@@ -78,6 +107,11 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                         <span className="text-sm text-primary font-semibold">
                                             {review.category}
                                         </span>
+                                        {review.datePublished && (
+                                            <span className="block text-xs text-gray-400 dark:text-gray-500 mt-1 tabular-nums">
+                                                {review.datePublished.replace(/-/g, '.')}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary" aria-hidden="true">
                                         <MessageSquare size={20} />

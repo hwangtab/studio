@@ -945,7 +945,9 @@
     "titlePrefix": "共同创造:",
     "titleHighlight": "感动的记录",
     "subtitle": "这是经过 Studio NOL 的许多人证明的技术力量和真诚。",
-    "ratingAria": "评分 {{rating}} 分"
+    "ratingAria": "评分 {{rating}} 分",
+    "aggregateAria": "平均评分 {{rating}}，{{count}} 条评价",
+    "aggregateCount": "{{count}} 条真实评价"
   },
   "notFound": {
     "popularTitle": "热门页面",

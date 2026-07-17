@@ -949,7 +949,9 @@
     "titlePrefix": "สร้างร่วมกัน:",
     "titleHighlight": "บันทึกที่ประทับใจ",
     "subtitle": "เทคโนโลยีที่พิสูจน์แล้วและความจริงใจที่ได้รับการยืนยันจากผู้ที่เคยมา Studio NOL",
-    "ratingAria": "คะแนน {{rating}} ดาว"
+    "ratingAria": "คะแนน {{rating}} ดาว",
+    "aggregateAria": "คะแนนเฉลี่ย {{rating}} จาก {{count}} รีวิว",
+    "aggregateCount": "รีวิวจริง {{count}} รายการ"
   },
   "notFound": {
     "popularTitle": "หน้ายอดนิยม",

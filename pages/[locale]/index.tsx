@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, Video, ShieldCheck } from '@/lib/lucide-icons';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, Video, ShieldCheck, Award } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -49,7 +49,7 @@ interface HomeProps {
 }
 
 const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
-  const { heroContent, homeServices, studioImages, seo, localeUsps } = homeData;
+  const { heroContent, homeServices, studioImages, seo, localeUsps, producerCredibility } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
 
@@ -164,6 +164,34 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                 <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
               </m.div>
             ))}
+          </div>
+        </Section>
+      )}
+
+      {/* 프로듀서 신뢰 스트립 — 그동안 /release-project에만 있던 실적(70+ 발매작·15년·
+          2017 한국대중음악상)을 홈으로 승격해 첫 화면 신뢰도 보강. */}
+      {producerCredibility && (
+        <Section variant="default">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary mb-2">
+              <Award size={18} aria-hidden="true" />
+              {producerCredibility.eyebrow}
+            </div>
+            <h2 className="text-heading-3 font-title mb-1">{producerCredibility.name}</h2>
+            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-8 break-keep">
+              {producerCredibility.tagline}
+            </p>
+            <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+              {producerCredibility.stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-md border border-gray-100 dark:border-gray-700"
+                >
+                  <div className="text-3xl font-extrabold text-primary tabular-nums">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-keep">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </Section>
       )}

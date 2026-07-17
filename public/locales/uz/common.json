@@ -945,7 +945,9 @@
     "titlePrefix": "Birga yaratamiz:",
     "titleHighlight": "Ta'sirli xotiralar",
     "subtitle": "Studio NOL’dan o‘tgan ko‘plab insonlar tasdiqlagan texnologiya va samimiyat.",
-    "ratingAria": "{{rating}} yulduzli baho"
+    "ratingAria": "{{rating}} yulduzli baho",
+    "aggregateAria": "O'rtacha reyting {{rating}}, {{count}} ta sharh",
+    "aggregateCount": "{{count}} ta haqiqiy sharh"
   },
   "notFound": {
     "popularTitle": "Ommabop sahifalar",

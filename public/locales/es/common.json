@@ -945,7 +945,9 @@
     "titlePrefix": "Creando Juntos:",
     "titleHighlight": "Registros Conmovedores",
     "subtitle": "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL.",
-    "ratingAria": "Calificación {{rating}} estrellas"
+    "ratingAria": "Calificación {{rating}} estrellas",
+    "aggregateAria": "Valoración media {{rating}}, {{count}} reseñas",
+    "aggregateCount": "{{count}} reseñas reales"
   },
   "notFound": {
     "popularTitle": "Páginas populares",

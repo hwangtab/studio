@@ -945,7 +945,9 @@
     "titlePrefix": "Cùng tạo nên:",
     "titleHighlight": "Những khoảnh khắc lay động",
     "subtitle": "Công nghệ và sự chân thành được nhiều người đã đến Studio NOL chứng thực.",
-    "ratingAria": "Đánh giá {{rating}} sao"
+    "ratingAria": "Đánh giá {{rating}} sao",
+    "aggregateAria": "Đánh giá trung bình {{rating}}, {{count}} đánh giá",
+    "aggregateCount": "{{count}} đánh giá thực tế"
   },
   "notFound": {
     "popularTitle": "Trang phổ biến",

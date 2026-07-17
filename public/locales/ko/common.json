@@ -945,7 +945,9 @@
     "titlePrefix": "아티스트와 함께 만드는",
     "titleHighlight": "감동의 기록",
     "subtitle": "스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.",
-    "ratingAria": "평점 {{rating}}점"
+    "ratingAria": "평점 {{rating}}점",
+    "aggregateAria": "평균 평점 {{rating}}점, 후기 {{count}}개",
+    "aggregateCount": "실제 이용 후기 {{count}}개"
   },
   "notFound": {
     "popularTitle": "자주 찾는 페이지",
