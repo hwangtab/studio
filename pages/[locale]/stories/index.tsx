@@ -192,6 +192,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
         ogImageWidth={1200}
         ogImageHeight={630}
         includeSchema
+        includeBusinessReviews={false}
         webPageType="CollectionPage"
         schema={currentPage === 1 ? storiesItemListSchema : undefined}
         canonical={canonicalUrl}

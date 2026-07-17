@@ -45,6 +45,13 @@ interface SEOProps {
   isCourse?: boolean;
   webPageType?: string;
   /**
+   * LocalBusiness aggregateRating/review 마크업을 이 페이지에 실을지 여부. 기본 true.
+   * 스토리·가이드·카테고리 목록처럼 스튜디오 자체가 주제가 아닌 pSEO 페이지에서는
+   * false로 꺼서 self-serving review 정책 위반(수동 조치) 리스크를 없앤다.
+   * Organization·LocalBusiness entity(@id)는 그대로 유지되고 별점만 빠진다.
+   */
+  includeBusinessReviews?: boolean;
+  /**
    * Restrict hreflang alternates to this list of locales.
    * Use for pages that exist only in some locales (e.g. a story with native translations
    * only for ko/en) to avoid pointing Google at fallback-noindex URLs.
@@ -93,6 +100,7 @@ const SEO = ({
   faqItems = null,
   isCourse = false,
   webPageType,
+  includeBusinessReviews = true,
   availableLocales,
   allowNonDefaultLocaleIndexing = false,
   locale,
@@ -182,8 +190,8 @@ const SEO = ({
   }, [ogImage]);
 
   const defaultSchema = React.useMemo(
-    () => generateDefaultSchema(siteUrl, currentLocale),
-    [siteUrl, currentLocale]
+    () => generateDefaultSchema(siteUrl, currentLocale, { includeReviews: includeBusinessReviews }),
+    [siteUrl, currentLocale, includeBusinessReviews]
   );
 
   const websiteSchema = React.useMemo(

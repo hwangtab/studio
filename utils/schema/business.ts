@@ -15,14 +15,19 @@ import {
 
 export const generateDefaultSchema = (
   siteUrl: string,
-  locale: Locale = 'ko'
+  locale: Locale = 'ko',
+  options: { includeReviews?: boolean } = {}
 ) => {
   const config = getSiteConfig(locale);
   const schemaLanguage = getSchemaLanguage(locale);
 
-  // LocalBusiness aggregateRating must reflect the business as a whole, so always
-  // sourced from the canonical full review set — independent of any per-page filter.
-  const reviewItems: ReviewItem[] = getReviews(locale);
+  // aggregateRating/review는 "그 페이지가 실제로 비즈니스에 관한 페이지"일 때만 붙인다.
+  // 블로그 스토리·가이드·카테고리 목록처럼 주제가 스튜디오 자체가 아닌 페이지에
+  // 별점 마크업을 실으면 Google의 self-serving review 정책 위반 소지가 있어
+  // 수동 조치 리스크가 된다. 그래서 호출부(SEO.tsx)가 includeReviews로 제어한다.
+  // aggregateRating 수치 자체는 비즈니스 전체 기준이므로 정식 전체 리뷰셋에서 산출.
+  const { includeReviews = true } = options;
+  const reviewItems: ReviewItem[] = includeReviews ? getReviews(locale) : [];
 
   const localeContactUrl = `${siteUrl}/${locale}/contact`;
   const socialLinks = Object.values(socialProfiles).filter(url => url && url.trim() !== '');

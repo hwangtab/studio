@@ -162,6 +162,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         articleTags={story.tags ?? undefined}
         articleWordCount={wordCount}
         includeSchema
+        includeBusinessReviews={false}
         schema={extraSchemas}
         breadcrumbs={[
           { name: t('nav.home'), path: `/${locale}` },
