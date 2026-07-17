@@ -46,9 +46,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // RSS should only list stories that render as indexable in the requested
   // locale. Fallback, explicit noindex, and runtime-thin pages waste crawl
   // budget and leak low-quality links when syndicated.
-  const stories = getAllStories(locale).filter((story) =>
-    getStoryAvailableLocales(story.slug).includes(locale)
-  );
+  // 최신 50건 캡: RSS는 신규 글 발견용 피드다. 전량(ko 1,500+) 방출은 네이버
+  // 서치어드바이저 수집·리더 폴링에 수 MB급 낭비이고 발견 목적에도 역행한다.
+  // getAllStories는 날짜 내림차순 정렬이므로 slice가 곧 최신순 상위 50이다.
+  const RSS_MAX_ITEMS = 50;
+  const stories = getAllStories(locale)
+    .filter((story) => getStoryAvailableLocales(story.slug).includes(locale))
+    .slice(0, RSS_MAX_ITEMS);
 
   const lastBuildDate = stories.length > 0
     ? new Date(stories[0].date).toUTCString()

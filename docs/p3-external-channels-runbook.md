@@ -134,6 +134,16 @@
 - **티어 1(첫날)**: practice-room · pricing · voice-acting · wedding-song · `/ko` · about · portfolio · studio-info · lesson · contact
 - **RSS 제출**: `요청 → RSS 제출`에 `https://studionol.co.kr/api/rss?locale=ko` 등록 → 새 글 자동 수집
 
+### IndexNow 즉시 색인 (Bing·네이버 — 배포돼 있음, 계정 불필요)
+
+새 글 발행·주요 페이지 개편 직후 해당 URL만 제출:
+```bash
+node scripts/indexnow-submit.mjs https://studionol.co.kr/ko/stories/새글슬러그
+# 초기 1회 시딩(색인 핵심 페이지 일괄):
+node scripts/indexnow-submit.mjs --from-sitemap --limit 200
+```
+> 전량 반복 제출 금지(스팸 신호). 키 파일은 `public/9f2c…e4.txt`로 이미 서빙됨.
+
 ---
 
 # 3-3. 구글 비즈니스 프로필 · 카카오맵 등록

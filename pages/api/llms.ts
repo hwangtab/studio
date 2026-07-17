@@ -5,6 +5,7 @@ import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 import {
+  COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_PRICE,
   formatPriceAmount,
   LESSON_MONTHLY_PRICE,
@@ -19,6 +20,9 @@ import {
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
+import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
+import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
+import koCommon from '../../public/locales/ko/common.json';
 
 // 가격은 전부 data/pricing.ts SSOT 상수를 보간한다 — 리터럴 하드코딩 금지(드리프트 방지).
 const krw = formatPriceAmount;
@@ -39,6 +43,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Practice Room Residency**: Premium private practice room residency program (monthly subscription)
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
+- **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
 - **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — planning, recording, session-musician connections, mixing, mastering, distribution, and outreach to press/critics. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
 
 ## Business Information
@@ -64,6 +69,16 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Bus Stop: "동명여고·천주교불광동성당" (right in front of the building)
 - Parking: limited on-site; nearby Daejo-dong public parking ~1-2 minute walk
 
+## Equipment Highlights (for "Studio NOL gear" queries)
+
+Full list with photos: ${siteUrl}/ko/studio-info
+
+- Microphones: Neumann U87Ai, AKG C414 XLS, Shure SM58/SM57
+- Preamps: Vintech X73i (Neve 1073-style), Focusrite Octopre
+- Interface / Conversion: Prism Sound Lyra 2
+- Piano: Yamaha U3 upright (acoustic recording available)
+- Rooms: fully treated acoustic space, soundproof vocal booth (STC 60+)
+
 ## Pricing (KRW, VAT excluded)
 
 - **Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
@@ -71,6 +86,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Hourly Recording (voice acting / instrument / vocal corrections)**: ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours)
 - **Wedding Song Complete Package**: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2hr recording + vocal tuning + mixing & mastering)
 - **Day Lock (6-hour package)**: ${krw(DAY_LOCK_PRICE)} KRW (~17% discount vs hourly)
+- **Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K MP4 & WAV/MP3 delivery)
 - **1:1 Music Lesson**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each)
 - **Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ₩${MIXING_LEVEL1_PRICE / 1000}K · 11–30 ₩${MIXING_LEVEL2_PRICE / 1000}K · 31+ ₩${MIXING_LEVEL3_PRICE / 1000}K · includes 2 revisions)
 - **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
@@ -141,7 +157,8 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - Sitemap: ${siteUrl}/sitemap.xml
 - RSS Feed (Korean): ${siteUrl}/api/rss?locale=ko
 - RSS Feed (English): ${siteUrl}/api/rss?locale=en
-- llms-full.txt (content index): ${siteUrl}/llms-full.txt
+- llms-full.txt (content index, all locales): ${siteUrl}/llms-full.txt
+- llms-full.txt locale-scoped: ${siteUrl}/llms-full-ko.txt · ${siteUrl}/llms-full-en.txt · ${siteUrl}/llms-full-zh.txt
 `;
 
 const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## Key Pages (${label})
@@ -149,6 +166,10 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
 - Home: ${siteUrl}/${locale}
 - About / Services: ${siteUrl}/${locale}/about
 - Album Release Project (flagship, producer-led): ${siteUrl}/${locale}/release-project
+  - Single Release tier: ${siteUrl}/${locale}/release-project/single
+  - EP Release tier: ${siteUrl}/${locale}/release-project/ep
+  - Full Album Release tier: ${siteUrl}/${locale}/release-project/album
+- Cover Video Package: ${siteUrl}/${locale}/cover-video
 - Portfolio: ${siteUrl}/${locale}/portfolio
 - Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
@@ -281,6 +302,25 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       body += `- ${lp.region} 음악연습실 (${lp.distance}): ${siteUrl}/ko/stories/${lp.slug}\n`;
     }
     body += '\n';
+  }
+
+  // Buyer-intent 가이드 허브 — 구매·예약 직전 의도를 응축한 큐레이션 LP(ko 전용 색인).
+  // buyerIntentHubs 데이터에서 자동 파생되므로 허브 추가 시 여기 자동 반영된다.
+  body += '\n## Buyer-Intent Guides (Korean, curated hubs)\n\n';
+  body += 'One-page curated guides for visitors close to booking. Each aggregates related stories, pricing, and portfolio:\n\n';
+  for (const slug of buyerIntentHubSlugs) {
+    const hub = buyerIntentHubs[slug];
+    const desc = hub.seoDescription.replace(/\s+/g, ' ').trim().slice(0, 140);
+    body += `- [${hub.seoTitle}](${siteUrl}/ko/guides/${slug}): ${desc}\n`;
+  }
+
+  // 스토리 카테고리 허브 10종 — 1,500+ 스토리의 탐색 진입점. 라벨은 ko i18n
+  // (stories.categories.*)에서 소싱해 사이트 표기와 자동 동기.
+  const categoryLabels = (koCommon as { stories: { categories: Record<string, string> } }).stories.categories;
+  body += '\n## Story Category Hubs (Korean)\n\n';
+  for (const key of STORY_CATEGORY_KEYS as string[]) {
+    const label = categoryLabels[key] || key;
+    body += `- ${label}: ${siteUrl}/ko/stories/category/${key}\n`;
   }
 
   for (const locale of locales) {

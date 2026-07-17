@@ -1,8 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
+import { getPortfolioItems } from '../../data/portfolio';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
+import {
+  DAY_LOCK_PRICE,
+  formatPriceAmount,
+  LESSON_MONTHLY_PRICE,
+  MIXING_LEVEL1_PRICE,
+  MIXING_LEVEL3_PRICE,
+  PRACTICE_ROOM_MONTHLY_PRICE,
+  RECORDING_HOURLY_PRICE,
+  VOCAL_PACKAGE_PRICE,
+  WEDDING_PACKAGE_PRICE,
+} from '../../data/pricing';
+
+// 가격은 data/pricing.ts SSOT 상수 보간 — 리터럴 하드코딩 금지(llms.ts와 동일 규칙).
+const krw = formatPriceAmount;
 
 const HEADER_LABELS: Record<Locale, string> = {
   ko: 'Korean',
@@ -63,16 +78,40 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 - **Subway**: Yeonsinnae Station Exit 4 (Lines 3 & 6) — 5 min walk; Bulgwang Station Exit 7 (Lines 3 & 6) — 7 min walk
 - **Phone**: ${CANONICAL_FACTS.phoneIntl} · **KakaoTalk**: open.kakao.com/me/nol
 - **Pricing (KRW, VAT excl.)**:
-  - Practice Room Monthly Residency: 360,000/mo (₩0 deposit, 50% off first month for 1-year contracts)
-  - Vocal Recording 1프로 (1-song package, 3 hrs): 250,000
-  - Hourly Recording (voice acting / instrument / corrections): 100,000/hr (min 2 hrs)
-  - Wedding Song Complete Package: 350,000 (2hr recording + tuning + mixing & mastering)
-  - Day Lock (6-hour package): 500,000
-  - 1:1 Music Lesson: 350,000/month flat (4 sessions, 60 min each)
-  - Mixing: 200,000–500,000/song (tier by track count)
+  - Practice Room Monthly Residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)}/mo (₩0 deposit, 50% off first month for 1-year contracts)
+  - Vocal Recording 1프로 (1-song package, 3 hrs): ${krw(VOCAL_PACKAGE_PRICE)}
+  - Hourly Recording (voice acting / instrument / corrections): ${krw(RECORDING_HOURLY_PRICE)}/hr (min 2 hrs)
+  - Wedding Song Complete Package: ${krw(WEDDING_PACKAGE_PRICE)} (2hr recording + tuning + mixing & mastering)
+  - Day Lock (6-hour package): ${krw(DAY_LOCK_PRICE)}
+  - 1:1 Music Lesson: ${krw(LESSON_MONTHLY_PRICE)}/month flat (4 sessions, 60 min each)
+  - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}/song (tier by track count)
 - **Operating Notes**: Hourly practice room rental and band rehearsal rooms are NOT operated. Practice room is monthly residency only.
 
 `;
+
+  // 포트폴리오 상세 — 프로듀싱 크레딧은 "황경하/스튜디오 놀 작업물" 류 AI 쿼리의
+  // 인용 근거인데 그동안 stories만 방출돼 색인 자산에서 통째로 빠져 있었다.
+  // ko 상세만: 비-ko 상세는 productionNotes 폴백 시 noindex라 LLM에 내보내지 않는다
+  // (sitemap isPortfolioThin 게이트와 동일 기준).
+  if (!requestedLocale || requestedLocale === 'ko') {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { isPortfolioThin } = require('../../lib/sitemap/portfolioMeta') as {
+      isPortfolioThin: (id: string, locale: string) => boolean;
+    };
+    const portfolioItems = getPortfolioItems('ko').filter((item) => !isPortfolioThin(item.id, 'ko'));
+    if (portfolioItems.length > 0) {
+      body += `\n## Portfolio — Production Credits (Korean) · ${portfolioItems.length} entries\n\n`;
+      body += `Albums, singles, and commercial works produced/recorded/mixed at Studio NOL by producer Hwang Kyungha (황경하).\n\n`;
+      for (const item of portfolioItems) {
+        const url = `${siteUrl}/ko/portfolio/${item.id}`;
+        const artist = item.artist ? ` — ${item.artist}` : '';
+        const desc = item.description
+          ? ` · ${item.description.replace(/\s+/g, ' ').trim().slice(0, 120)}`
+          : '';
+        body += `- [${item.title}](${url})${artist}${desc}\n`;
+      }
+    }
+  }
 
   const localesToEmit = requestedLocale ? [requestedLocale] : locales;
   for (const locale of localesToEmit) {

@@ -269,6 +269,27 @@ export function formatDiffReport(
       }
       lines.push('');
     }
+
+    // 비-story 사이트 라우트 — en 색인 3페이지·guides 허브·release tier·카테고리 허브·
+    // 마케팅 페이지. 구버전 스냅샷(siteRoutes 없음)과의 하위호환을 위해 optional 가드.
+    const siteRoutes = currentSnapshot.siteRoutes ?? [];
+    if (siteRoutes.length > 0) {
+      const topRoutes = siteRoutes.slice(0, 15);
+      lines.push('[사이트 라우트 Top 15 — 비-story (마케팅·guides·release·en)]');
+      for (const r of topRoutes) {
+        lines.push(`  ${r.clicks.toString().padStart(3)}c / ${r.impressions.toString().padStart(5)}i  ${r.path}`);
+      }
+      const zeroClickWatch = siteRoutes
+        .filter((r) => r.clicks === 0 && r.impressions >= 10)
+        .slice(0, 10);
+      if (zeroClickWatch.length > 0) {
+        lines.push('  — 클릭 0 · 임프 10+ (노출은 받는데 클릭 없음, 메타 점검 후보):');
+        for (const r of zeroClickWatch) {
+          lines.push(`    ${r.impressions.toString().padStart(5)}i  ${r.path}`);
+        }
+      }
+      lines.push('');
+    }
   }
 
   // 변동 사유 + 상세 (baseline이 아닐 때만)
