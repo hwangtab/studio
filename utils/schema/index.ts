@@ -5,3 +5,4 @@ export * from './basics';
 export * from './commerce';
 export * from './media';
 export * from './releaseProject';
+export * from './person';

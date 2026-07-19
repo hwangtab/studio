@@ -147,4 +147,4 @@ faq:
 
 ---
 
-[핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerpicking1) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerpick-adv1) | [핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드](/stories/practice-room-fingerstyle1) | [기타 핑거스타일 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1)
+[핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerpicking1) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드](/stories/practice-room-fingerstyle1) | [기타 핑거스타일 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1)

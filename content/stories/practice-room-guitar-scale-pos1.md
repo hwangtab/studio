@@ -144,4 +144,4 @@ faq:
 
 ---
 
-[기타 스케일 포지션·넥 전체 활용 — 기타 스케일 포지션 완성 가이드](/stories/practice-room-guitar-scale-position1) | [블루스 스케일·펜타토닉 기타 연습 — 블루스 기타 솔로 완성 가이드](/stories/practice-room-guitar-blues-scale1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [기타 모드 스케일·모달 연주 — 기타 모드 완성 가이드](/stories/practice-room-guitar-pentatonic-modes1)
+[블루스 스케일·펜타토닉 기타 연습 — 블루스 기타 솔로 완성 가이드](/stories/practice-room-guitar-blues-scale1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [기타 모드 스케일·모달 연주 — 기타 모드 완성 가이드](/stories/practice-room-guitar-pentatonic-modes1)

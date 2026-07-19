@@ -165,6 +165,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
 
 - Home: ${siteUrl}/${locale}
 - About / Services: ${siteUrl}/${locale}/about
+- Producer profile (Kyungha Hwang, operator): ${siteUrl}/${locale}/author
 - Album Release Project (flagship, producer-led): ${siteUrl}/${locale}/release-project
   - Single Release tier: ${siteUrl}/${locale}/release-project/single
   - EP Release tier: ${siteUrl}/${locale}/release-project/ep

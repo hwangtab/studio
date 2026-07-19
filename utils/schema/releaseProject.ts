@@ -1,6 +1,7 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
 import { getSchemaLanguage } from './shared';
+import { getOperatorKnowsAbout } from './person';
 
 const RELEASE_SERVICE_NAMES: Record<Locale, string> = {
   ko: '음원 발매 프로듀싱',
@@ -72,9 +73,11 @@ export const generateReleaseProjectSchema = (
   const personId = `${siteUrl}/#person-hwang`;
   const schemaLanguage = getSchemaLanguage(locale);
 
-  const personSameAs = Object.values(socialProfiles).filter(
-    (url): url is string => typeof url === 'string' && url.trim() !== ''
-  );
+  // 스튜디오 SNS + 운영자 본인 권위 프로필(ggac·Bugs) 병합 — generateArticleSchema와 동일 규칙.
+  const personSameAs = [
+    ...Object.values(socialProfiles),
+    ...(studioOperator.sameAs ?? []),
+  ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
 
   const person = {
     '@type': 'Person',
@@ -82,10 +85,10 @@ export const generateReleaseProjectSchema = (
     name: studioOperator.name,
     jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
     description: RELEASE_PERSON_DESCRIPTIONS[locale],
-    url: `${siteUrl}/${locale}/release-project`,
-    knowsAbout: locale === 'ko'
-      ? ['A&R', '음반 기획', '보컬 디렉팅', '믹싱', '인디 음악 유통', '평론 PR', '세션 네트워킹']
-      : ['A&R', 'Album Production', 'Vocal Direction', 'Mixing', 'Indie Music Distribution', 'Press PR', 'Session Networking'],
+    // Person 권위 프로필 홈 — /author 프로필 페이지·generateArticleSchema와 일치 (단일 entity url).
+    url: `${siteUrl}/${locale}/author`,
+    ...(studioOperator.award && { award: studioOperator.award }),
+    knowsAbout: getOperatorKnowsAbout(locale),
     ...(personSameAs.length > 0 && { sameAs: personSameAs }),
     worksFor: { '@type': 'Organization', '@id': organizationId, name: config.name },
   };

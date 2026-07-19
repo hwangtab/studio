@@ -180,9 +180,9 @@ File → Export Audio/Video (Cmd+Shift+R)
 
 ---
 
-## Studio NOL이 Ableton 클라이언트에게 자주 권하는 보컬 녹음 세팅 3가지
+## Ableton으로 보컬 녹음할 때 — View부터 바꾸세요
 
-스튜디오 놀에서 Ableton Live로 보컬 녹음·믹싱하는 클라이언트에게 자주 권하는 설정입니다.
+Ableton은 작곡·라이브에 강한 DAW라, 보컬 녹음엔 살짝 결이 달라요. Ableton으로 녹음하는 분들이 자주 막히는 지점을 미리 잡아드릴게요. 특히 첫 번째, View 선택만 바꿔도 작업이 훨씬 편해집니다.
 
 **1. Arrangement View로 녹음 — Session View는 작곡용**
 

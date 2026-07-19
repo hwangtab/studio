@@ -190,4 +190,4 @@ D 도리안 스케일로 자유 즉흥
 
 ---
 
-[레게 기타·스카·록스테디·오프비트 리듬 — 완전 가이드](/stories/practice-room-guitar-reggae1) | [기타 트레몰로·웜바 암 테크닉 — 기타 트레몰로 완성 가이드](/stories/practice-room-guitar-whammy1) | [기타 카포·키 변환 활용법 — 완전 가이드](/stories/practice-room-guitar-capo-techniques1) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerpick-adv1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1)
+[레게 기타·스카·록스테디·오프비트 리듬 — 완전 가이드](/stories/practice-room-guitar-reggae1) | [기타 트레몰로·웜바 암 테크닉 — 기타 트레몰로 완성 가이드](/stories/practice-room-guitar-whammy1) | [기타 카포·키 변환 활용법 — 완전 가이드](/stories/practice-room-guitar-capo-techniques1) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [기타 재즈 코드·텐션 코드 보이싱 — 완전 가이드](/stories/practice-room-guitar-jazz-chords1)

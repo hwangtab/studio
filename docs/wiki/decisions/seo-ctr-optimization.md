@@ -6,10 +6,12 @@ sources:
   - ../diagnosis-2026-05-21.md
   - ../diagnosis-2026-05-27.md
   - ../diagnosis-2026-05-31.md
-updated: 2026-06-25
+  - ../ctr-surgery-log.md
+updated: 2026-07-18
 related:
   - "[[decisions/conversion-cta-system]]"
   - "[[decisions/contact-form-en]]"
+  - "[[decisions/story-content-strategy]]"
 ---
 
 # SEO CTR 최적화 · 카니벌라이제이션 정리
@@ -89,6 +91,25 @@ related:
 - `voice-acting` SEO title 재설계: "성우 녹음실 —"로 시작 + "연신내 성우 녹음실" description 명시(CTR 26.67%, pos 34 → 상위 목표)
 - `vocal-diction1` title: 카니벌라이제이션 방지를 위해 practice-room-vocal-diction1("딕션" 전담)과 명확히 분리
 - GA4 key event 설정(콘솔 작업) → 측정 정상화 1순위
+
+---
+
+### 2026-07-07 ~ 07-18 — CTA 꼬리 실험·원복, 실험 장부 체제 전환
+
+출처: [../ctr-surgery-log.md](../ctr-surgery-log.md), 커밋 c0e42485f0·638b17fe53·7a5e1ed13e
+
+**결과:**
+- 07-07: 고노출 10편 타이틀에 "의뢰 CTA 꼬리" 추가 → **당일 원복** (정보성 검색의도 정합 훼손·강한
+  키워드 손실·CTR 역효과 위험). summary CTA는 본문 리드용으로 유지, FAQ 가시 렌더 추가.
+- 07-17: copyright-cover1은 타이틀 불변·**수익화 전용 섹션 추가**로 pos 8~9 수익 쿼리 공략
+  (강점 쿼리 CTR 보호 + 약점 쿼리 콘텐츠 공략 패턴 확립).
+- 07-18: [[decisions/story-content-strategy]] 채택과 함께 수술 3건(audioformat1 어순 병기 자연화,
+  seoul-metro-guide1 summary 버그 수정, ktx-gyeongbu-guide1 당일 왕복 재조준) 실행.
+
+**결정 — 운영 체제 전환:**
+- 타이틀·메타 변경은 이후 [../ctr-surgery-log.md](../ctr-surgery-log.md)를 **단일 실험 장부**로 사용:
+  변경 전 로그 확인 → 측정 중 페이지 동결 → 변경 기록 → 4주 후 전후 비교.
+- `content/ctrTargets.test.ts`가 9편의 타이틀 핵심 키워드를 고정 — 리라이트 시 준수 또는 근거와 함께 갱신.
 
 ---
 

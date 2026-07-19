@@ -1,0 +1,199 @@
+import React from 'react';
+import type { GetStaticPaths, GetStaticProps } from 'next';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { ArrowRight, Award, ExternalLink, Music } from '@/lib/lucide-icons';
+import SEO from '../../components/SEO';
+import ImageHero from '../../components/common/ImageHero';
+import { Section } from '../../components/ui/Section';
+import SectionHeading from '../../components/ui/SectionHeading';
+import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
+import type { Locale } from '../../lib/i18n';
+import { getSiteConfig } from '../../data/siteConfig';
+import { getAuthorProfile } from '../../data/authorProfile';
+import { generatePersonProfileSchema } from '../../utils/schema';
+import type { NextPageWithLayout } from '../../types';
+
+// Below-fold CTA — code-splitting (about.tsx와 동일 패턴)
+const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
+
+interface AuthorPageProps {
+  locale: Locale;
+}
+
+// 운영자 프로필 페이지 — 스토리 실명 바이라인의 착지점이자 Person entity(#person-hwang)의
+// 크롤 가능한 홈. article/releaseProject JSON-LD의 Person.url이 이 페이지를 가리킨다.
+const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
+  const { t } = useTranslation('common', { lng: locale });
+  const siteConfig = getSiteConfig(locale);
+  const profile = getAuthorProfile(locale);
+  const getLink = (path: string) => `/${locale}${path}`;
+
+  const personSchema = React.useMemo(
+    () => generatePersonProfileSchema(siteConfig.url, locale, profile.schemaDescription),
+    [siteConfig.url, locale, profile.schemaDescription]
+  );
+
+  return (
+    <div className="overflow-visible">
+      <SEO
+        locale={locale}
+        title={profile.seo.title}
+        description={profile.seo.description}
+        keywords={profile.seo.keywords}
+        ogImage="/images/og-recording15.webp"
+        ogImageAlt={profile.heroAlt}
+        ogImageWidth={1200}
+        ogImageHeight={630}
+        canonical={`/${locale}/author`}
+        breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: profile.name, path: `/${locale}/author` },
+        ]}
+        includeSchema
+        webPageType="ProfilePage"
+        webPageMainEntityId={`${siteConfig.url}/#person-hwang`}
+        schema={[personSchema]}
+      />
+
+      <ImageHero
+        locale={locale}
+        priority
+        title={profile.name}
+        subtitle={
+          <div className="mt-4 space-y-1 text-lg opacity-90">
+            <p>{profile.jobTitle}</p>
+            <p className="text-base">{profile.tagline}</p>
+          </div>
+        }
+        backgroundImage="/images/studio1.webp"
+        imageAlt={profile.heroAlt}
+        minHeight="min-h-[50vh]"
+        overlayGradient="from-black/70 via-black/40 to-black/70"
+        breadcrumbItems={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: profile.name, path: `/${locale}/author` },
+        ]}
+      />
+
+      <Section variant="default">
+        <SectionHeading icon={Music} title={profile.headings.about} className="mb-8" />
+        <div className="max-w-3xl space-y-5">
+          {profile.intro.map((paragraph) => (
+            <p key={paragraph} className="typo-card-body leading-relaxed text-gray-700 dark:text-gray-200">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {profile.stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-lg border border-gray-200 p-6 text-center dark:border-gray-700"
+            >
+              <p className="text-3xl font-bold text-primary">{stat.value}</p>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section variant="alternate">
+        <SectionHeading icon={Award} title={profile.headings.award} className="mb-8" />
+        <div className="max-w-3xl rounded-lg border-l-4 border-primary bg-primary/5 p-6 dark:bg-primary/10">
+          <p className="font-semibold text-gray-900 dark:text-gray-50">{profile.award.title}</p>
+          <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            {profile.award.detail}
+          </p>
+        </div>
+
+        <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+          {profile.headings.expertise}
+        </h3>
+        <ul className="flex max-w-3xl flex-wrap gap-2">
+          {profile.expertise.map((item) => (
+            <li
+              key={item}
+              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+          {profile.headings.profiles}
+        </h3>
+        <ul className="space-y-2">
+          {profile.externalProfiles.map((external) => (
+            <li key={external.url}>
+              <a
+                href={external.url}
+                target="_blank"
+                rel="me noopener noreferrer"
+                className="inline-flex min-h-[44px] items-center gap-2 text-primary hover:underline"
+              >
+                <ExternalLink size={16} aria-hidden="true" />
+                {external.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section variant="default">
+        <SectionHeading icon={ArrowRight} title={profile.headings.work} className="mb-8" />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {profile.workLinks.map((work) => (
+            <Link
+              key={work.href}
+              href={getLink(work.href)}
+              className="group rounded-lg border border-gray-200 p-6 transition-colors hover:border-primary dark:border-gray-700"
+            >
+              <p className="flex items-center justify-between font-semibold text-gray-900 dark:text-gray-50">
+                {work.title}
+                <ArrowRight
+                  size={18}
+                  aria-hidden="true"
+                  className="text-primary transition-transform group-hover:translate-x-1"
+                />
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                {work.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+      <Section variant="alternate" className="py-16">
+        <ContactCTA
+          locale={locale}
+          title={
+            <>
+              {profile.cta.titleLine1}<br />
+              <span className="text-primary">{profile.cta.titleHighlight}</span>
+            </>
+          }
+          subtitle={profile.cta.subtitle}
+          imageSrc="/images/studio2.webp"
+          imageAlt={profile.cta.imageAlt}
+          headingAs="h3"
+        />
+      </Section>
+    </div>
+  );
+};
+
+AuthorPage.hasHero = true;
+
+export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
+
+export const getStaticProps: GetStaticProps<AuthorPageProps> = async ({ params }) => {
+  const locale = resolveLocaleParam(params?.locale);
+  return buildPageStaticProps(locale, {}, { revalidate: 86400, i18nSections: ['contact'] });
+};
+
+export default AuthorPage;

@@ -28,8 +28,10 @@ export const generateArticleSchema = (
   // Author E-E-A-T 보강: 사이트 본인 명의 글은 실제 운영자(Person)로 author entity 명시.
   // GEO에서 ChatGPT/Claude는 author.name + sameAs를 entity 단서로 강하게 사용 — Organization
   // name을 Person.name에 박으면 entity resolution이 안 됨. 외부 기고자(articleAuthor가
-  // config.name과 다른 경우)는 단순 Person으로 유지해 잘못된 affiliation 시그널을 피한다.
-  const isStudioAuthor = !articleAuthor || articleAuthor === config.name;
+  // config.name·운영자명과 다른 경우)는 단순 Person으로 유지해 잘못된 affiliation 시그널을 피한다.
+  // 운영자 실명 바이라인(frontmatter author: 황경하 — 플래그십 스토리)도 동일 entity로 승격.
+  const isStudioAuthor =
+    !articleAuthor || articleAuthor === config.name || articleAuthor === studioOperator.name;
   const authorName = isStudioAuthor ? studioOperator.name : articleAuthor!;
   // 스튜디오 SNS(socialProfiles) + 운영자 본인 권위 프로필(studioOperator.sameAs)을 author entity에 병합.
   // 운영자 개인 프로필은 Person author sameAs에만 들어가고 Organization sameAs(line 61)에는 섞지 않는다.
@@ -46,7 +48,8 @@ export const generateArticleSchema = (
         '@id': personId,
         name: authorName,
         jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
-        url: `${siteUrl}/${locale}/about`,
+        // Person 권위 프로필 홈 — /author 프로필 페이지(ProfilePage mainEntity)와 일치.
+        url: `${siteUrl}/${locale}/author`,
         ...(authorSameAs.length > 0 && { sameAs: authorSameAs }),
         ...(studioOperator.award && { award: studioOperator.award }),
         worksFor: {

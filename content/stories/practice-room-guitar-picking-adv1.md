@@ -150,4 +150,4 @@ faq:
 
 ---
 
-[기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1) | [기타 하이브리드 피킹·치킨 피킹 — 하이브리드 피킹 완성 가이드](/stories/practice-room-guitar-hybrid1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerpick-adv1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21)
+[기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1) | [기타 하이브리드 피킹·치킨 피킹 — 하이브리드 피킹 완성 가이드](/stories/practice-room-guitar-hybrid1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [기타 핑거스타일 고급·솔로 기타 편곡 — 고급 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle-adv1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21)

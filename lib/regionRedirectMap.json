@@ -484,5 +484,9 @@
   "yongsan1": "seoul1",
   "vocalhealth1": "vocal-health1",
   "voicetype1": "voice-type1",
-  "vocalfry1": "vocal-fry1"
+  "vocalfry1": "vocal-fry1",
+  "practice-room-vocal-warmup1": "practice-room-vocal-warm-up1",
+  "practice-room-guitar-scale-position1": "practice-room-guitar-scale-pos1",
+  "practice-room-guitar-fingerpick-adv1": "practice-room-guitar-fingerstyle-adv1",
+  "practice-room-guitar-jazz-chord1": "practice-room-guitar-jazz-voicing1"
 }

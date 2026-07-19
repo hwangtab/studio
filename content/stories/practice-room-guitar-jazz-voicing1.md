@@ -149,4 +149,4 @@ faq:
 
 ---
 
-[기타 재즈 코드·재즈 보이싱 — 기타 재즈 코드 완성 가이드](/stories/practice-room-guitar-jazz-chord1) | [기타 코드 멜로디·솔로 기타 편곡 — 기타 코드 멜로디 완성 가이드](/stories/practice-room-guitar-chord-melody1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1)
+[기타 코드 멜로디·솔로 기타 편곡 — 기타 코드 멜로디 완성 가이드](/stories/practice-room-guitar-chord-melody1) | [기타 오픈 코드·기본 코드 완전 정복 — 기타 기초 코드 완성 가이드](/stories/practice-room-guitar-chord21) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1)

@@ -146,4 +146,4 @@ faq:
 
 ---
 
-[보컬 워밍업·발성 준비 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warmup1) | [보컬 워밍업 루틴·발성 준비 완전 가이드 — 실전 연습](/stories/practice-room-vocal-warmup-routine1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)
+[보컬 워밍업 루틴·발성 준비 완전 가이드 — 실전 연습](/stories/practice-room-vocal-warmup-routine1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)

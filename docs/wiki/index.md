@@ -20,6 +20,7 @@
 - [[concepts/revenue-growth]] — 매출 성장 전략 (교육 다각화·가동률 극대화·영상 서비스·B2B·멤버십)
 
 ## Decisions
-- [[decisions/seo-ctr-optimization]] — CTR 최적화·카니벌라이제이션 정리 타임라인 (2026-05-18~05-31): 메타 리라이트 효과 확인, noindex 처리, noise-reduction1 역행 미해결
+- [[decisions/story-content-strategy]] — 스토리 콘텐츠 고도화·전문화·강화 전략 채택 + P0 실행 (2026-07-18): 역피라미드 재배분·실명 저자성·플래그십 20편·근접중복 스캔 603페어
+- [[decisions/seo-ctr-optimization]] — CTR 최적화·카니벌라이제이션 정리 타임라인 (2026-05-18~07-18): 메타 리라이트 효과 확인, noindex 처리, CTA 꼬리 원복 교훈, noise-reduction1 역행 미해결
 - [[decisions/conversion-cta-system]] — 전환율·CTA 시스템 타임라인 (2026-05-18~05-31): 리드 0.38%→0.54%, StoryCTA 전체 적용, GA4 key event 미설정 잔존
 - [[decisions/contact-form-en]] — 영문 컨택폼 오류 조사→정상 확인 (2026-05-21~06-16): "폼 고장" 가설 반증, 실체는 사용자 마찰 + 랜딩 의도 문제

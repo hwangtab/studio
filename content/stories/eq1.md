@@ -1,7 +1,7 @@
 ---
 title: 보컬 EQ 완전 가이드 — 주파수별 설정·치찰음 처리·믹싱 포인트
 date: 2026-04-06
-author: 스튜디오 놀
+author: 황경하
 category: 믹싱·마스터링
 tags:
   - 보컬 EQ

@@ -152,4 +152,4 @@ faq:
 
 목소리 건강은 지속 가능한 보컬 커리어의 기반입니다. 충분한 수면, 수분 섭취, 흡연 자제 외에도 과도한 발성 후에는 최소 24시간의 발성 휴식을 취하는 것이 성대 회복에 효과적입니다. 목이 아프거나 쉰 소리가 2주 이상 지속된다면 반드시 이비인후과 전문의를 찾아야 합니다.
 
-[보컬 워밍업·발성 준비 루틴 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warm-up1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 워밍업·발성 준비 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warmup1) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1)
+[보컬 워밍업·발성 준비 루틴 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warm-up1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 워밍업·발성 준비 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warm-up1) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1)

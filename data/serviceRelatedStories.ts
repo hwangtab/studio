@@ -31,6 +31,7 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'balladstyle1',
   ],
   'voice-acting': [
+    'voice-actor-hiring-quote-cost',
     'voice-actor-demo1',
     'audiobook-guide1',
     'asmr1',

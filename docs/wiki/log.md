@@ -66,3 +66,55 @@
 - "보컬 원데이 클래스" 미제공 확정(보컬 레슨류 없음) — marketing-channels.md §4 서비스 가드로 교체
 - 보컬 녹음 1곡(25만) ≠ 축가/이벤트(35만)는 별개 상품 확정(축가는 행사용 믹싱 포함) — pricing-offers.md §4·§8 상품 구분 가드 추가
 - 콘텐츠 페이지 미해결 확인필요 0건
+
+## 2026-07-18 · ingest · story-content-strategy-2026-07.md (P0 실행 결과 포함)
+- decisions/story-content-strategy.md 신설: 3축 전략(고도화·전문화·강화) 채택 기록 + 당일 P0 실행 4건
+  (플래그십 F15+B5 확정, CTR 수술 3건+실험 장부 신설, 근접중복 전수 스캔 603페어, 실명 저자성 인프라 /author)
+- decisions/seo-ctr-optimization.md 갱신: 2026-07-07~18 타임라인 추가(CTA 꼬리 원복 교훈, 콘텐츠 공략 패턴,
+  ctr-surgery-log 실험 장부 체제 전환), updated 2026-07-18, sources·related 추가
+- index.md: story-content-strategy 등록, seo-ctr-optimization 요약 기간 05-31 → 07-18 갱신
+- 신규 raw 4건 생성됨(계층 1): story-content-strategy-2026-07.md, story-tier-flagship-2026-07.md,
+  ctr-surgery-log.md, near-duplicate-scan-2026-07.md(+csv)
+- 모순/확인필요: 없음. 민감 사실 가드 준수(성우 10만원/시간, 전화 010-4255-7893, 레슨 범위) 확인.
+
+## 2026-07-18 · ingest · P1 실행(근접중복 통합 + 성우 신규)
+- decisions/story-content-strategy.md 갱신: "P1 실행" 섹션 추가(근접중복 재프레이밍+4쌍 308, 성우 신규 1편), "다음 단계"→"남은 P1"로 재구성
+- 신규 raw: near-duplicate-consolidation-2026-07.md(통합 실행 기록 + 501페어=템플릿 재프레이밍)
+- 근접중복: 명백한 동의어 4쌍만 308(regionRedirectMap +4), 본문링크 16곳·practiceRoomRelatedGuides 약자 4줄 정리. 대량 practice-room 유사도는 탈템플릿/꼬리 트랙으로 재분류(중복 URL 아님)
+- 신규 스토리: voice-actor-hiring-quote-cost.md(구매자 관점 성우 견적, 황경하 저자, 본문 5,494자) — 가격가드 준수, serviceRelatedStories 편입
+- 검증: factGuards·ctrTargets·storyLinks·practiceRoomRelatedGuides 통과. 모순/확인필요 0건
+
+## 2026-07-19 · ingest · P1 실행 2차(성우 2편째 + 플래그십 업그레이드)
+- decisions/story-content-strategy.md 갱신: 성우 2편 쿼터 완료(commercial-narration 추가), producer1 플래그십 업그레이드 기록, "남은 P1" 갱신(나머지 14편)
+- story-tier-flagship-2026-07.md: producer1 업그레이드 완료 표시(2,511→4,832자)
+- 신규 스토리: commercial-narration-cost-guide.md(광고 나레이션 비용, 황경하, 5,248자) — voice-actor-hiring-quote-cost와 Jaccard 0.068 차별화
+- producer1: #1 페이지 랭킹 보존 + 1인칭 심화 + 얕은 템플릿 저자박스 교체
+- 검증: factGuards·storyLinks·ctrTargets·content-check 통과. 가격가드(성우 10만원/시간) 준수. 모순/확인필요 0건
+
+## 2026-07-19 · ingest · P1 실행 3차(탈템플릿 2편 + 꼬리 noindex 재평가)
+- 신규 raw: tail-noindex-assessment-2026-07.md — "688편 꼬리"는 stale 감사(2026-05-21) 착시임을 최신 GSC(07-14)로 규명
+- 핵심 발견: 감사 CSV의 NOINDEX_CANDIDATE 688에 실제 가치 페이지(album-artwork1 146노출, audiobook-narration 118노출) 혼입 → 대량 noindex 위험. 진짜 꼬리는 55→가드 후 프룬후보 6편뿐, 43편은 인바운드링크 보유(탈템플릿 대상)
+- decisions/story-content-strategy.md 갱신: 탈템플릿 2편(recording-price1·transfer1) 기록, 꼬리 재평가 반영, 남은 P1에 "감사 데이터 갱신" 추가. sources 병합(중복 sources 키 수정), updated 2026-07-19
+- story-content-strategy-2026-07.md: 티어 수치에 stale 교정 주석
+- 권고: 대량 noindex 하지 말 것. gsc-audit-output.csv 최신화(cron 재실행 점검)가 진짜 액션
+- 검증: factGuards·storyLinks·content-check 통과. 모순/확인필요 0건(오히려 stale 데이터 착시 1건 규명)
+
+## 2026-07-19 · ingest · P1 실행 4차(플래그십 탈템플릿 F15/B5 전편 완료)
+- 플래그십 7편 추가 탈템플릿(startup1·plugins1·song-key1·music-marketing1·loudness1·bass-mixing1·soundproof) → 누계 10편, F15/B5 전편 완료
+- 각 편 얕은 "자주 권하는 3가지" 박스 → 주제별 황경하 1인칭 실질 섹션(재템플릿 방지 차별화)
+- 서비스 가드 준수: soundproof "합주실 미운영" 보존, music-marketing 검증된 15년 발매PR 사실만
+- decisions/story-content-strategy.md·story-tier-flagship-2026-07.md 완료 표기, 남은 P1을 "개별 심화 + 탈템플릿 백로그(~1,417편)"로 갱신
+- 검증: factGuards(합주실 미운영·가격가드)·storyLinks·content-check 통과. 모순/확인필요 0건
+
+## 2026-07-19 · ingest · 탈템플릿 백로그 착수(고트래픽 bespoke 13편)
+- 사용자 결정: 대량 렌더처리/삭제 아니라 고트래픽 페이지부터 수작업 1인칭 bespoke(무위험·순증분)
+- 비플래그십 13편 탈템플릿(2배치): coverrecording1·vst-guide1·bass-5string1·streaming-platforms1·melodyne1·fabfilter1·flstudio1(박스2개)·breath-support1·pitch-correction1·recording-environment1·bass-recording1·mastering-tips1·condenser-mic1
+- 누계 23편(플래그십 10 + 비플래그십 13). 남은 백로그 ~1,404편(고트래픽순 계속)
+- 재템플릿 방지: 유사주제 페어도 상호 Jaccard 0.03~0.06 차별화. factGuards·storyLinks·content-check 통과
+- decisions/story-content-strategy.md에 백로그 진행 섹션 추가
+
+## 2026-07-19 · ingest · 탈템플릿 백로그 3차 배치(비플래그십 8편)
+- 추가 8편: practice-room-vs-karaoke1·ep-making1·headphone-mixing1·sound-engineer1·music-video1·mid-side1·vocal-nutrition1·ableton1
+- sound-engineer1 박스 2개 중복 정리(상세 박스 1인칭화 + 중복 신규섹션 제거)
+- 누계 31편(플래그십 10 + 비플래그십 21). 남은 ~1,396편, 클릭 <18 구간 진입(ROI 점감)
+- 재템플릿 방지: 유사주제 상호 Jaccard 0.02~0.11. factGuards·storyLinks·content-check 통과

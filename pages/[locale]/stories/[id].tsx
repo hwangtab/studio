@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { ArrowLeft, Calendar, Tag, Share2, Sparkles } from '@/lib/lucide-icons';
+import { ArrowLeft, Calendar, Tag, Share2, Sparkles, User } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import MarkdownRenderer from '../../../components/MarkdownRenderer';
@@ -39,7 +39,7 @@ import type { PortfolioItem } from '../../../types/data';
 import { Section } from '../../../components/ui/Section';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { type Locale } from '../../../lib/i18n';
-import { getSiteConfig } from '../../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../../data/siteConfig';
 
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../../types';
@@ -178,6 +178,23 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         title={story.title}
         subtitle={
           <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">
+            {/* 가시적 바이라인 — JSON-LD Person author와 대응하는 E-E-A-T 신호.
+                운영자 실명(플래그십 스토리)은 /author 프로필 페이지로 링크. */}
+            {story.author && (
+              <>
+                <div className="flex items-center">
+                  <User className="mr-2" size={18} aria-hidden="true" />
+                  {story.author === studioOperator.name ? (
+                    <Link href={getLink('/author')} className="hover:underline underline-offset-4">
+                      {story.author}
+                    </Link>
+                  ) : (
+                    <span>{story.author}</span>
+                  )}
+                </div>
+                <span className="hidden sm:inline">•</span>
+              </>
+            )}
             <div className="flex items-center">
               <Tag className="mr-2" size={18} aria-hidden="true" />
               <span>{story.category}</span>

@@ -141,4 +141,4 @@ faq:
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [드럼 없는 — 피아노·보컬·기타 전용 방음 연습 공간](/stories/practice-room-drumless1) | [기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1) | [기타 재즈 코드·재즈 보이싱 — 기타 재즈 코드 완성 가이드](/stories/practice-room-guitar-jazz-chord1) | [피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [드럼 없는 — 피아노·보컬·기타 전용 방음 연습 공간](/stories/practice-room-drumless1) | [기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드](/stories/practice-room-guitar-beginner1) | [기타 재즈 코드·재즈 보이싱 — 기타 재즈 코드 완성 가이드](/stories/practice-room-guitar-jazz-voicing1) | [피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1)

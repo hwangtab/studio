@@ -44,6 +44,9 @@ interface SEOProps {
   faqItems?: FAQItem[] | null;
   isCourse?: boolean;
   webPageType?: string;
+  /** WebPage/ProfilePage 노드의 mainEntity @id — article이 아닌 페이지(예: /author의
+   *  Person)에서 mainEntity를 명시할 때 사용. ogType==='article'이면 article @id가 우선. */
+  webPageMainEntityId?: string;
   /**
    * LocalBusiness aggregateRating/review 마크업을 이 페이지에 실을지 여부. 기본 true.
    * 스토리·가이드·카테고리 목록처럼 스튜디오 자체가 주제가 아닌 pSEO 페이지에서는
@@ -100,6 +103,7 @@ const SEO = ({
   faqItems = null,
   isCourse = false,
   webPageType,
+  webPageMainEntityId,
   includeBusinessReviews = true,
   availableLocales,
   allowNonDefaultLocaleIndexing = false,
@@ -208,13 +212,13 @@ const SEO = ({
           siteUrl,
           normalizedCanonical,
           currentLocale,
-          ogType === 'article' ? `${normalizedCanonical}#article` : undefined,
+          ogType === 'article' ? `${normalizedCanonical}#article` : webPageMainEntityId,
           Boolean(breadcrumbs && breadcrumbs.length > 0),
           absoluteOgImage || undefined,
           webPageType
         )
         : null,
-    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage, webPageType]
+    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage, webPageType, webPageMainEntityId]
   );
 
   const articleSchema = React.useMemo(
