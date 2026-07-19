@@ -118,3 +118,10 @@
 - sound-engineer1 박스 2개 중복 정리(상세 박스 1인칭화 + 중복 신규섹션 제거)
 - 누계 31편(플래그십 10 + 비플래그십 21). 남은 ~1,396편, 클릭 <18 구간 진입(ROI 점감)
 - 재템플릿 방지: 유사주제 상호 Jaccard 0.02~0.11. factGuards·storyLinks·content-check 통과
+
+## 2026-07-19 · ingest · 탈템플릿 백로그 4~5차(비플래그십 16편)
+- 4차 8편: cover1·bass-pentatonic1·piano-sight-play1·saxophone1·solo-album1·glossary1·music-publishing1·practice-room-wedding1
+- 5차 8편: placement1·piano-technique1·music-analytics1·busking1·contract1·guitar-double-stop1·daw-performance1·practice-room-guide1
+- 누계 47편(플래그십 10 + 비플래그십 37). 남은 ~1,380편(클릭<18, ROI 점감)
+- near-dup·인트로 재템플릿 방지 검증(상호 Jaccard 0.01~0.06). factGuards·storyLinks·content-check 통과
+- 가격/서비스 가드 준수(축가 35만원 보존, contract·publishing은 전문영역 주의)

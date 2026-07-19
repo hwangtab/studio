@@ -102,13 +102,14 @@ related:
 
 사용자 결정: 대량 렌더처리·삭제가 아니라 **고트래픽 페이지부터 수작업 1인칭 bespoke 교체**(플래그십과 동일 playbook, 무위험·순증분).
 
-- **누계 31편 탈템플릿 완료** = 플래그십 10편 + 고트래픽 비플래그십 21편(3배치).
+- **누계 47편 탈템플릿 완료** = 플래그십 10편 + 고트래픽 비플래그십 37편(5배치).
 - 비플래그십 13편(클릭순): coverrecording1(54)·vst-guide1(43)·bass-5string1·streaming-platforms1·melodyne1·
   fabfilter1·flstudio1(박스2개)·breath-support1·pitch-correction1·recording-environment1·bass-recording1·
   mastering-tips1·condenser-mic1.
 - 재템플릿 방지: 유사 주제 페어도 상호 Jaccard 0.03~0.06으로 차별화 확인. 매 편 factGuards·storyLinks 통과.
 - 3차 배치 추가: practice-room-vs-karaoke1·ep-making1·headphone-mixing1·sound-engineer1·music-video1·mid-side1·vocal-nutrition1·ableton1.
-- **남은 백로그: 약 1,396편**(트래픽순 계속). 클릭 <18 구간으로 진입 — ROI 점감, 배치별 판단.
+- 4~5차 배치: cover1·solo-album1·glossary1·music-publishing1·placement1·music-analytics1·contract1·daw-performance1 등 16편(발매·보컬·비즈니스·연습 주제 다양화).
+- **남은 백로그: 약 1,380편**(클릭 <18, ROI 점감). 다음은 이번 변경의 GSC 반영(~4주) 확인 후 배치 판단 권장.
 
 ## 남은 P1 (2026-Q3)
 
