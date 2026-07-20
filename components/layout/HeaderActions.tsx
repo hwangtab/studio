@@ -32,7 +32,9 @@ export const HeaderActions = ({
 }: HeaderActionsProps) => {
   const headerCtaButtonClass = `inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 transition-all duration-300 transform hover:scale-105 active:scale-95 ${!isTransparent
     ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
-    : 'glass-clear hover:bg-white/20 text-white'
+    // 투명 헤더 CTA는 히어로 이미지 위 흰 글씨 오버레이 — glass 토큰(모바일 폴백 시
+    // 불투명 흰색으로 강등)을 쓰면 흰 글씨가 사라진다. 폴백과 무관한 고정 반투명 사용.
+    : 'bg-white/15 hover:bg-white/25 text-white border-white/40'
     }`;
 
   return (
