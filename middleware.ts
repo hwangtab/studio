@@ -29,7 +29,14 @@ const parseCanonicalSiteUrl = (): URL | null => {
 };
 
 const canonicalSiteUrl = parseCanonicalSiteUrl();
-const shouldEnforceCanonicalHost = process.env.NODE_ENV === 'production' && Boolean(canonicalSiteUrl);
+// canonical host 강제는 실제 프로덕션 배포에서만. Vercel 프리뷰도 NODE_ENV=production
+// 이라 NODE_ENV 조건만으로는 프리뷰 전체가 studionol.co.kr로 308되어 프리뷰 검증이
+// 불가능해진다(2026-07-20 확인). VERCEL_ENV는 배포별 빌드에 production/preview로
+// 주입된다. 비-Vercel 환경(로컬 next start 등)은 VERCEL_ENV가 없어 기존 동작 유지.
+const shouldEnforceCanonicalHost =
+    process.env.NODE_ENV === 'production' &&
+    (process.env.VERCEL_ENV ? process.env.VERCEL_ENV === 'production' : true) &&
+    Boolean(canonicalSiteUrl);
 
 // CSP는 production 빌드에서만 적용된다 — Next.js dev runtime이 react-refresh를 위해
 // eval-기반 hot reload를 쓰고 upgrade-insecure-requests는 localhost http를 https로
