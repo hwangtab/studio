@@ -133,7 +133,7 @@ export const DropdownMenu = ({
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.97 }}
                         transition={{ duration: DUR.fast, ease: EASE_STANDARD }}
-                        className="absolute left-0 mt-1 w-48 rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50 origin-top-left"
+                        className="absolute left-0 mt-1 w-48 rounded-xl glass-regular overflow-hidden z-50 origin-top-left"
                     >
                         <div className="py-2" role="menu" aria-orientation="vertical">
                             {items.map((item, index) => {
@@ -152,7 +152,7 @@ export const DropdownMenu = ({
                                         onKeyDown={(e) => handleItemKeyDown(e, index)}
                                         className={`flex items-center min-h-[44px] px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:bg-primary/5 focus-visible:text-primary ${isItemActive
                                             ? 'bg-primary/5 text-primary dark:text-accent font-medium'
-                                            : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            : 'text-gray-700 dark:text-gray-200 hover:bg-white/45 dark:hover:bg-white/10'
                                             }`}
                                     >
                                         {item.label}

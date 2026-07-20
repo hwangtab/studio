@@ -11,6 +11,65 @@
   :root {
     --primary-rgb: 109, 40, 217;
     color-scheme: light dark;
+
+    /* ── Liquid Glass 재질 토큰 ─────────────────────────────────────────
+       재질은 3단계: regular(기본) / clear(화려한 배경 위 소수 요소) / solid(폴백).
+       컴포넌트는 tailwind.config.ts의 .glass-* 컴포넌트 클래스만 사용하고,
+       기기·설정별 강등은 아래 폴백 블록이 토큰 교체로 일괄 처리한다.
+       solid 값은 기존 bg-white/95 · dark:bg-gray-900/95와 동일 — 강등 시
+       리뉴얼 이전의 검증된 모습으로 돌아간다. */
+    --glass-tint: rgba(255, 255, 255, 0.6);
+    --glass-tint-clear: rgba(255, 255, 255, 0.35);
+    --glass-solid: rgba(255, 255, 255, 0.95);
+    --glass-filter: blur(14px) saturate(1.7);
+    --glass-filter-clear: blur(24px) saturate(1.8);
+    --glass-border: rgba(255, 255, 255, 0.65);
+    --glass-spec: rgba(255, 255, 255, 0.75);
+    --glass-shadow: 0 8px 32px rgba(27, 22, 48, 0.12);
+    --glass-glow: rgba(255, 255, 255, 0.4);
+  }
+
+  .dark {
+    --glass-tint: rgba(17, 24, 39, 0.6);
+    --glass-tint-clear: rgba(17, 24, 39, 0.35);
+    --glass-solid: rgba(3, 7, 18, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-spec: rgba(255, 255, 255, 0.18);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    --glass-glow: rgba(255, 255, 255, 0.1);
+  }
+
+  /* 글래스 → 솔리드 강등 폴백. --glass-solid는 라이트/다크가 위에서 이미
+     분기되어 있으므로 var() 간접 참조만으로 양 테마가 함께 처리된다.
+     (1) OS 투명도 감소 설정
+     (2) 터치 기기 + PSI mobile emulation 방어용 max-width 보강(hero-zoom과
+         동일 패턴) — 1차 릴리스는 모바일 전체 솔리드, 실측 후 확대 검토
+     (3) html[data-glass="solid"] 킬스위치 — pages/_document.tsx에서
+         NEXT_PUBLIC_DISABLE_GLASS=1일 때 부여. PSI 회귀 시 즉시 전체 롤백용 */
+  @media (prefers-reduced-transparency: reduce) {
+    :root {
+      --glass-tint: var(--glass-solid);
+      --glass-tint-clear: var(--glass-solid);
+      --glass-filter: none;
+      --glass-filter-clear: none;
+      --glass-glow: transparent;
+    }
+  }
+  @media (hover: none) and (pointer: coarse), (max-width: 768px) {
+    :root {
+      --glass-tint: var(--glass-solid);
+      --glass-tint-clear: var(--glass-solid);
+      --glass-filter: none;
+      --glass-filter-clear: none;
+      --glass-glow: transparent;
+    }
+  }
+  html[data-glass='solid'] {
+    --glass-tint: var(--glass-solid);
+    --glass-tint-clear: var(--glass-solid);
+    --glass-filter: none;
+    --glass-filter-clear: none;
+    --glass-glow: transparent;
   }
 
   html {
@@ -121,7 +180,33 @@
   }
 }
 
-@layer components {}
+@layer components {
+  /* 글래스 카드 스펙큘러 하이라이트(iOS 26 빛 반사). 포인터 좌표(--mx/--my)는
+     BaseCard가 onPointerMove로 주입 — 커스텀 프로퍼티 갱신뿐이라 리플로우 없음.
+     hover 가능 기기 한정. 솔리드 폴백에선 --glass-glow가 transparent라 자동 비활성. */
+  @media (hover: hover) {
+    .glass-card {
+      position: relative;
+    }
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(
+        320px circle at var(--mx, 50%) var(--my, 35%),
+        var(--glass-glow),
+        transparent 62%
+      );
+      opacity: 0;
+      transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card:hover::after {
+      opacity: 1;
+    }
+  }
+}
 
 @keyframes hero-zoom-kf {
   from { transform: scale(1.1); }

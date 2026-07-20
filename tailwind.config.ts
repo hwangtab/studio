@@ -220,6 +220,43 @@ const config: Config = {
           fontWeight: theme('fontSize.caption[1].fontWeight'),
         },
       })
+
+      // Liquid Glass 재질 클래스 — 값은 styles/globals.css의 --glass-* 토큰.
+      // 라이트/다크 분기와 솔리드 폴백(투명도 감소·모바일·킬스위치)이 전부
+      // 토큰 레이어에서 처리되므로 여기에는 .dark & nesting이 없다.
+      // 자체 border를 포함하므로 적용 시 컴포넌트의 border-* 클래스는 제거할 것.
+      addComponents({
+        // 기본 재질: 헤더, 카드, 모달, 드롭다운 등 텍스트를 얹는 표면
+        '.glass-regular': {
+          backgroundColor: 'var(--glass-tint)',
+          backdropFilter: 'var(--glass-filter)',
+          border: '1px solid var(--glass-border)',
+          boxShadow: 'inset 0 1px 0 var(--glass-spec), var(--glass-shadow)',
+        },
+        // 화려한 배경 위 소수 요소 전용(뷰포트당 1–2개): 히어로 위 CTA, 배지
+        '.glass-clear': {
+          backgroundColor: 'var(--glass-tint-clear)',
+          backdropFilter: 'var(--glass-filter-clear)',
+          border: '1px solid var(--glass-border)',
+          boxShadow: 'inset 0 1px 0 var(--glass-spec), var(--glass-shadow)',
+        },
+        // 전폭 sticky 바(앵커 네비, 모달 헤더): border·그림자는 컴포넌트가
+        // border-b 등으로 직접 관리하고 재질(배경+블러+스펙큘러 엣지)만 입힌다
+        '.glass-bar': {
+          backgroundColor: 'var(--glass-tint)',
+          backdropFilter: 'var(--glass-filter)',
+          boxShadow: 'inset 0 1px 0 var(--glass-spec)',
+        },
+        // 인플로우 카드용: backdrop-filter 없는 글래스(틴트+보더+스펙큘러).
+        // 정적 섹션 배경 위 카드는 뒤로 지나가는 콘텐츠가 없어 블러 결과가
+        // 배경색과 동일 — 시각 이득 0에 GPU만 소모하므로 filter를 뺀다.
+        // blur 예산은 fixed/sticky 레이어(헤더·ScrollToTop·glass-bar)에만 쓴다.
+        '.glass-card': {
+          backgroundColor: 'var(--glass-tint)',
+          border: '1px solid var(--glass-border)',
+          boxShadow: 'inset 0 1px 0 var(--glass-spec), var(--glass-shadow)',
+        },
+      })
     }
   ],
 }

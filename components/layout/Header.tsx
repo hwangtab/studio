@@ -81,15 +81,18 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const isTransparent = hasHero && !isScrolled;
 
   return (
-    <header
-      ref={ref}
-      className={`fixed w-full z-50 transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
-        ? 'bg-white/95 dark:bg-gray-950/95 shadow-sm border-b border-gray-200/50 dark:border-gray-800/50'
-        : 'bg-transparent border-b border-transparent'
-        }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4">
+    // iOS 26 플로팅 pill 바. backdrop-filter는 안쪽 pill div에만 둔다 —
+    // <header> 자체에 filter/transform을 주면 containing block이 생겨
+    // 자식 MobileNav(fixed inset-x-0 top-16)의 뷰포트 기준 배치가 깨진다.
+    // pill 상단 8px + h-14(56px) = 64px 하단선이라 MobileNav top-16과 정확히 맞물린다.
+    <header ref={ref} className="fixed w-full z-50">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 pt-2">
+        <div
+          className={`grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 rounded-full px-3 sm:px-4 transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
+            ? 'glass-regular'
+            : 'bg-transparent border border-transparent'
+            }`}
+        >
           <div className="justify-self-start">
             <HeaderBrand
               locale={locale}

@@ -13,6 +13,10 @@ const buttonVariants = cva(
         outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 hover:-translate-y-0.5 active:translate-y-0",
         ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0",
         secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0",
+        // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
+        // 제공하므로 여기에 bg-* 등 충돌 유틸리티를 추가하지 말 것 — utilities 레이어가
+        // 재질을 덮어써 폴백(솔리드 강등)까지 깨진다.
+        glass: "glass-regular text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
       },
       size: {
         sm: "h-11 px-3 text-sm",
