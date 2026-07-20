@@ -97,11 +97,14 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
 
 적용 현황:
 - Phase 1: DropdownMenu, LanguageSwitcher, SectionAnchorNav, PortfolioDetailModal 헤더
-- Phase 2: Header 플로팅 pill(상단 8px + h-14 = 하단선 64px — MobileNav `top-16`·
-  scroll-mt 오프셋과 정합. backdrop-filter는 안쪽 pill div에만: header에 주면
-  MobileNav fixed containing block이 깨짐), Button `glass` variant, ScrollToTop,
-  투명 헤더 CTA(glass-clear). **KakaoFab은 의도적으로 솔리드 옐로 유지** —
-  전환 핵심 브랜드 버튼 + blur 예산(상시 고정 레이어 ≤2: 헤더+ScrollToTop) 준수.
+- Phase 2: Header 반응형 — 모바일/태블릿(<lg) 전폭 글래스 바(전폭 MobileNav와 정합),
+  데스크톱(lg+) 플로팅 pill. 두 경우 모두 하단선 64px(모바일 h-16 / 데스크톱 pt-2+h-14)로
+  MobileNav `top-16`·scroll-mt 오프셋과 정합. backdrop-filter는 안쪽 바 div에만
+  (header에 주면 MobileNav fixed containing block이 깨짐). Button `glass` variant,
+  ScrollToTop. **투명 헤더 CTA는 glass 토큰이 아니라 고정 반투명 `bg-white/15`+`text-white`**
+  — glass-clear는 모바일 폴백 시 불투명 흰색이 되어 흰 글씨가 사라진다(히어로 위 오버레이엔 부적합).
+  **KakaoFab은 의도적으로 솔리드 옐로 유지** — 전환 핵심 브랜드 버튼 + blur 예산
+  (상시 고정 레이어 ≤2: 헤더+ScrollToTop) 준수.
 - Phase 3: BaseCard `glass`/`glass-highlight` variant(FeatureCard·PricingCard 적용,
   PricingCard는 동심원 라운드 24px/12px). **인플로우 카드는 `.glass-card` — blur 없는
   글래스**(정적 배경 위 backdrop-filter는 시각 이득 0에 GPU만 소모). glass 카드는

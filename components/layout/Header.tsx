@@ -81,16 +81,19 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const isTransparent = hasHero && !isScrolled;
 
   return (
-    // iOS 26 플로팅 pill 바. backdrop-filter는 안쪽 pill div에만 둔다 —
-    // <header> 자체에 filter/transform을 주면 containing block이 생겨
-    // 자식 MobileNav(fixed inset-x-0 top-16)의 뷰포트 기준 배치가 깨진다.
-    // pill 상단 8px + h-14(56px) = 64px 하단선이라 MobileNav top-16과 정확히 맞물린다.
+    // backdrop-filter는 안쪽 바/pill div에만 둔다 — <header> 자체에 filter/transform을
+    // 주면 containing block이 생겨 자식 MobileNav(fixed inset-x-0 top-16)의 뷰포트 기준
+    // 배치가 깨진다.
+    // 반응형: 모바일/태블릿(<lg)은 전폭 글래스 바(전폭 MobileNav와 정합·좌우 어긋남 없음),
+    // 데스크톱(lg+)은 iOS 26 플로팅 pill. 두 경우 모두 하단선이 64px —
+    // 모바일 h-16(64) / 데스크톱 pt-2(8)+h-14(56) — 라 MobileNav top-16 ·
+    // SectionAnchorNav sticky top-16 · 본문 scroll-mt 오프셋과 그대로 맞물린다.
     <header ref={ref} className="fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 pt-2">
+      <div className="max-w-7xl mx-auto lg:px-6 lg:pt-2">
         <div
-          className={`grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 rounded-full px-3 sm:px-4 transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
-            ? 'glass-regular'
-            : 'bg-transparent border border-transparent'
+          className={`grid h-16 lg:h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6 lg:px-4 rounded-none lg:rounded-full transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
+            ? 'glass-bar border-b border-gray-200/60 dark:border-gray-800/60 lg:border lg:border-[color:var(--glass-border)] lg:shadow-[inset_0_1px_0_var(--glass-spec),var(--glass-shadow)]'
+            : 'bg-transparent'
             }`}
         >
           <div className="justify-self-start">
