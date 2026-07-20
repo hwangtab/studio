@@ -23,6 +23,10 @@ class MyDocument extends Document<Props> {
       <Html
         lang={locale}
         prefix="og: https://ogp.me/ns#"
+        // Liquid Glass 킬스위치: PSI/실기기 회귀 시 env만 바꿔 재배포하면
+        // 전 사이트가 솔리드 재질(bg-white/95 상당)로 강등된다.
+        // 토큰 정의는 styles/globals.css의 html[data-glass='solid'] 블록.
+        data-glass={process.env.NEXT_PUBLIC_DISABLE_GLASS === '1' ? 'solid' : undefined}
       >
         <Head>
           <meta name="naver-site-verification" content="ef87236e7323d19bf025b9606fc12ab06707d574" />

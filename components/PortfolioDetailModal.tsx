@@ -119,7 +119,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
         animate="visible"
         exit="exit"
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-gray-50/95 dark:bg-gray-900/95 border-b border-gray-100 dark:border-gray-700 backdrop-blur-sm">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-4 glass-bar border-b border-gray-100 dark:border-gray-700">
           <button
             ref={closeButtonRef}
             onClick={onClose}

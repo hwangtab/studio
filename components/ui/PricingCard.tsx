@@ -76,9 +76,10 @@ const PricingCard = ({
 
     return (
         <BaseCard
-            className="p-8 h-full flex flex-col"
+            // rounded-3xl(24px) 외곽 + 내부 CTA rounded-xl(12px): iOS 26 동심원 라운드
+            className="p-8 h-full flex flex-col rounded-3xl"
             delay={delay}
-            variant={recommended ? 'highlight' : 'default'}
+            variant={recommended ? 'glass-highlight' : 'glass'}
             hoverEffect={true}
         >
             {recommended && (
@@ -110,7 +111,7 @@ const PricingCard = ({
                     target={ctaHref.startsWith('http') ? '_blank' : undefined}
                     rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
                     onClick={handleCtaClick}
-                    className="mt-6 block w-full text-center py-3 px-4 rounded-lg font-semibold text-sm transition-colors bg-primary hover:bg-primary-dark text-white"
+                    className="mt-6 block w-full text-center py-3 px-4 rounded-xl font-semibold text-sm transition-colors bg-primary hover:bg-primary-dark text-white"
                 >
                     {ctaLabel}
                 </a>

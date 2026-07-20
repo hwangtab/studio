@@ -77,7 +77,7 @@ export const SectionAnchorNav = ({ items, ariaLabel, className }: SectionAnchorN
   return (
     <nav
       aria-label={ariaLabel}
-      className={`sticky top-16 z-30 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-200/70 dark:border-gray-800/70 ${className ?? ''}`}
+      className={`sticky top-16 z-30 glass-bar border-b border-gray-200/70 dark:border-gray-800/70 ${className ?? ''}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ul className="flex items-center gap-2 overflow-x-auto py-3 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>

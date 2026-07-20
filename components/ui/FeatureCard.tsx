@@ -29,7 +29,7 @@ const FeatureCard = ({
   children,
 }: FeatureCardProps) => {
   const isLarge = size === 'lg';
-  const baseVariant = variant === 'highlight' ? 'highlight' : 'default';
+  const baseVariant = variant === 'highlight' ? 'glass-highlight' : 'glass';
 
   return (
     <BaseCard

@@ -59,7 +59,10 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
 
             <div className="relative z-10 grid lg:grid-cols-[1.2fr,1fr] gap-0">
                 {/* Left Side: Player Main */}
-                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-white/5 backdrop-blur-sm">
+                {/* backdrop-blur 제거(2026-07-20): 이 패널 뒤는 자체 atmosphere 그라디언트뿐
+                    이라 블러가 시각 변화 없이 400px급 GPU 레이어만 만든다. blur 예산은
+                    fixed/sticky 레이어 전용 — TrackInfo의 앨범아트 위 배지만 유지. */}
+                <div className="p-8 lg:p-10 flex flex-col justify-between min-h-[400px] border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-white/5">
                     <div className="flex-1 flex flex-col justify-center">
                         <TrackInfo
                             track={track}
@@ -103,7 +106,7 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
                 </div>
 
                 {/* Right Side: Playlist */}
-                <div className="bg-gray-50 dark:bg-black/20 p-6 lg:p-8 h-full min-h-[400px] flex flex-col backdrop-blur-md border-l border-gray-100 dark:border-white/5">
+                <div className="bg-gray-50 dark:bg-black/20 p-6 lg:p-8 h-full min-h-[400px] flex flex-col border-l border-gray-100 dark:border-white/5">
                     <Playlist
                         tracks={tracks}
                         currentTrackIndex={currentTrack}

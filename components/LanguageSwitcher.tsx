@@ -210,8 +210,7 @@ export const LanguageSwitcher = ({
           }}
           className={`
             absolute right-0 top-full mt-2 origin-top-right ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
-            rounded-xl border border-gray-200/70 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl
-            shadow-2xl py-2 z-[100]
+            rounded-xl glass-regular py-2 z-[100]
           `}
         >
           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
@@ -239,7 +238,7 @@ export const LanguageSwitcher = ({
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                     ${currentLocale === locale
                       ? 'bg-primary text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'}
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/45 dark:hover:bg-white/10'}
                   `}
                   aria-current={currentLocale === locale ? 'page' : undefined}
                 >
