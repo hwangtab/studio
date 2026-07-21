@@ -50,6 +50,10 @@ export const matchServiceForCategory = (categoryKey: string): string | null =>
  *
  * data/practiceRoomRegionLPs.ts는 hub-and-spoke 섹션용 큐레이션 부분집합(21개)이라
  * 5편(합정·망원·월드컵·대화·화정)을 놓친다. 슬러그 접두사가 실제 분류 기준이다.
+ *
+ * 주의: content/stories/의 practice-room- 접두사 .md 파일은 총 45편이지만, 그중 19편은
+ * lib/regionRedirectMap.json에 등록돼 308 리다이렉트되므로 getStoryDetail까지 도달하지
+ * 않는다(렌더되지 않음). 이 함수와 실제로 관련된 실라이브 practice-room-{동네}는 26편뿐이다.
  */
 export const isPracticeRoomRegionStory = (categoryKey: string, slug: string): boolean =>
   categoryKey === 'region' && slug.startsWith('practice-room-');

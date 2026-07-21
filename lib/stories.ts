@@ -11,9 +11,9 @@ import { isRegionHub } from './regionHubSlugs';
 import regionRedirectMap from './regionRedirectMap.json';
 import { parseInlineDirectives, decideAutoFallback, type AutoFallbackDecision } from './inlineDirectives';
 import {
-  matchPricingForCategory,
+  matchPricingForStory,
   matchReviewForCategory,
-  matchServiceForCategory,
+  matchServiceForStory,
   injectAutoFallbackMarker,
 } from './storyAutoFallback';
 import {
@@ -375,14 +375,14 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     const hasFrontmatterFallback = frontmatterFallback !== undefined;
     const matchedPriceId = hasFrontmatterFallback
       ? (frontmatterFallback?.price ?? null)
-      : matchPricingForCategory(baseStory.categoryKey);
+      : matchPricingForStory(baseStory.categoryKey, slug);
     const matchedReviewId = hasFrontmatterFallback
       ? (frontmatterFallback?.review ?? null)
       : matchReviewForCategory(baseStory.categoryKey);
     const bookingMessage = frontmatterFallback?.booking ?? null;
     const reviewSourcedFromFrontmatter = hasFrontmatterFallback && Boolean(frontmatterFallback?.review);
     // inlineFallback 정의 시 카테고리 매핑 전체 우회 (service도 동일 규칙)
-    const matchedServiceType = hasFrontmatterFallback ? null : matchServiceForCategory(baseStory.categoryKey);
+    const matchedServiceType = hasFrontmatterFallback ? null : matchServiceForStory(baseStory.categoryKey, slug);
 
     const fallback = decideAutoFallback({
       authorBoxes: parsed.authorBoxes,

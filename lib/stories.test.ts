@@ -158,3 +158,19 @@ describe('getRelatedStories', () => {
     ).toBe(true);
   });
 });
+
+describe('지역 스토리 자동 fallback — 유입 의도와 오퍼 정합', () => {
+  it('실상권 연습실 LP는 연습실 브릿지를 받는다 (보컬녹음 가격표가 아니라)', async () => {
+    const detail = await getStoryDetail('practice-room-yeonsinnae1', 'ko');
+
+    expect(detail.content).toContain('%%service:practice%%');
+    expect(detail.content).not.toContain('%%price:recording-pro%%');
+  });
+
+  it('광역 허브는 기존대로 녹음 가격표를 받는다 (원격 믹싱·데이록은 전국 대상)', async () => {
+    const detail = await getStoryDetail('seoul1', 'ko');
+
+    expect(detail.content).toContain('%%price:recording-pro%%');
+    expect(detail.content).not.toContain('%%service:practice%%');
+  });
+});
