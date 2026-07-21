@@ -25,7 +25,7 @@ const RelatedPortfolioInline = ({ items, locale }: RelatedPortfolioInlineProps) 
   return (
     <aside
       aria-labelledby="story-related-portfolio-heading"
-      className="mb-12 rounded-xl glass-card p-6 sm:p-8"
+      className="mb-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-6 sm:p-8"
     >
       <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
         <div className="flex items-center gap-3">
