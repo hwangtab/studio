@@ -1,7 +1,7 @@
 ---
 title: EPK 뜻·EPK 만드는 법 — 인디 뮤지션 프레스킷 필수 요소와 무료 제작 가이드
 date: 2026-04-06
-author: 스튜디오 놀
+author: 황경하
 category: 음악 비즈니스
 tags:
   - epk

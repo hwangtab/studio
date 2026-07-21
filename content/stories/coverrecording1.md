@@ -1,7 +1,7 @@
 ---
 title: 커버 곡 녹음 완전 가이드 — 원곡보다 나은 커버 만들기
 date: 2026-04-06
-author: 스튜디오 놀
+author: 황경하
 category: 녹음 가이드
 tags:
   - 커버 곡 녹음

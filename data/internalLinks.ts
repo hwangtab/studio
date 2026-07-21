@@ -42,6 +42,13 @@ export const topicLinks: Record<string, TopicLink> = {
   '녹음실 비용': { slug: 'home-vs-studio1', anchorText: '녹음실 비용 비교' },
   '스튜디오 녹음 vs 홈': { slug: 'home-vs-studio1', anchorText: '스튜디오 vs 홈레코딩 비교' },
 
+  // ─── 녹음 노이즈 제거 ───
+  '녹음 노이즈 제거': { slug: 'noise-reduction1', anchorText: '녹음 노이즈 제거 완전 가이드' },
+  '배경 잡음 제거': { slug: 'noise-reduction1', anchorText: '배경 잡음 제거 방법' },
+  '노이즈 게이트 설정': { slug: 'noise-reduction1', anchorText: '노이즈 게이트 설정법' },
+  '전기 험 제거': { slug: 'noise-reduction1', anchorText: '전기 험·60Hz 노이즈 제거' },
+  'AI 노이즈 제거': { slug: 'noise-reduction1', anchorText: 'AI 원클릭 배경 잡음 제거 도구' },
+
   // ─── 믹싱 & 마스터링 ───
   '믹싱 강좌': { slug: 'mixing-complete-guide', anchorText: '믹싱 완전 가이드 — 23편 로드맵' },
   '믹싱 로드맵': { slug: 'mixing-complete-guide', anchorText: '믹싱 학습 로드맵' },
@@ -162,6 +169,16 @@ export const topicLinks: Record<string, TopicLink> = {
   '뮤직비디오': { slug: 'music-video1', anchorText: '뮤직비디오 제작 완전 가이드' },
   '음악 비즈니스': { slug: 'music-business1', anchorText: '음악 비즈니스 완전 가이드' },
   '세션 뮤지션': { slug: 'session-musician1', anchorText: '세션 뮤지션 완전 가이드' },
+
+  // ─── 성우 클러스터 (2026-07-20 신규) ───
+  // "성우 녹음실" pos 24.6 → 15위권 목표. buyer-intent 강화: voice-acting-rate1(단가),
+  // audiobook-production-cost1(오디오북 견적)이 /ko/voice-acting 허브로 수렴.
+  '성우 녹음 단가': { slug: 'voice-acting-rate1', anchorText: '성우 녹음 단가·비용 가이드' },
+  '성우 섭외 비용': { slug: 'voice-acting-rate1', anchorText: '성우 섭외 비용·견적 가이드' },
+  '성우 녹음 비용': { slug: 'voice-acting-rate1', anchorText: '성우 녹음 비용 완전 가이드' },
+  '오디오북 제작 비용': { slug: 'audiobook-production-cost1', anchorText: '오디오북 제작 비용 완전 가이드' },
+  '오디오북 견적': { slug: 'audiobook-production-cost1', anchorText: '오디오북 제작 견적 가이드' },
+  '오디오북 제작 견적': { slug: 'audiobook-production-cost1', anchorText: '오디오북 제작 비용·견적' },
   '가사 암기': { slug: 'lyrics-memo1', anchorText: '노래 가사 빨리 외우는 방법' },
   '음악 프로듀서': { slug: 'producer1', anchorText: '음악 프로듀서 되는 법 가이드' },
   '스템 믹싱': { slug: 'stem-mixing1', anchorText: '스템 믹싱 완전 가이드' },

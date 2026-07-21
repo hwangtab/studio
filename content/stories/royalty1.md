@@ -1,7 +1,7 @@
 ---
 title: 음악 저작권료 받는 방법 — KOMCA 등록과 저작인접권 완전 가이드
 date: 2026-04-06
-author: 스튜디오 놀
+author: 황경하
 category: 음악 비즈니스
 tags:
   - 음악 저작권료

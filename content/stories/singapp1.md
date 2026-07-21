@@ -1,7 +1,7 @@
 ---
 title: 보컬 연습 앱 추천 — 노래 실력 향상을 위한 최고의 앱 모음
 date: 2026-04-06
-author: 스튜디오 놀
+author: 황경하
 category: 보컬 가이드
 tags:
   - 보컬 연습 앱

@@ -9,7 +9,7 @@ tags:
   - 보컬 장식음
   - 보컬 훈련
 category: 보컬 가이드
-author: 스튜디오 놀
+author: 황경하
 thumbnail: /images/room6.webp
 faq:
   - q: 보컬 소울·R&B 창법·멜리즈마 기법을 처음 연습할 때 어디서부터 시작해야 하나요?
