@@ -3,6 +3,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import Breadcrumb from '../ui/Breadcrumb';
 import type { Locale } from '../../lib/i18n';
 import type { Breadcrumb as BreadcrumbItem } from '../../types/data';
+import { hasNavigatedSinceLoad } from '../../lib/navigationState';
 
 interface ImageHeroProps {
   title: React.ReactNode;
@@ -42,9 +43,15 @@ const ImageHero = ({
 
   const verticalAlignClass = 'justify-center pt-32 pb-12';
 
+  // 페이지 전환으로 mount된 히어로만 페이드인. 첫 로드(SSR)는 loaded=true로 시작해
+  // SSR HTML·hydration 클래스가 일치(opacity-100) → LCP 페인트에 영향 없음.
+  const [imageLoaded, setImageLoaded] = React.useState(() => !hasNavigatedSinceLoad());
+
   return (
     <section
-      className={`relative overflow-hidden ${minHeight} flex flex-col ${verticalAlignClass} ${className}`}
+      // bg-gray-900: 이미지 로드 전 흰 body가 비쳐 어두운 히어로 사이 전환에서
+      // 밝기 급변(번쩍임)을 일으키던 것을 차단. 로드 후엔 fill 이미지가 완전히 덮음.
+      className={`relative overflow-hidden bg-gray-900 ${minHeight} flex flex-col ${verticalAlignClass} ${className}`}
     >
       {/* LCP 요소: framer-motion 래퍼 없이 즉시 페인트. 줌 애니메이션은 CSS로 처리(hero-zoom). */}
       <div className="absolute inset-0 z-0 hero-zoom">
@@ -53,7 +60,8 @@ const ImageHero = ({
           alt={imageAlt}
           fill={true}
           priority={priority}
-          className="object-cover"
+          className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setImageLoaded(true)}
           pictureClassName="absolute inset-0 block h-full w-full"
           width={1920}
           height={1080}

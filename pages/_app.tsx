@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
+import { markNavigated } from '../lib/navigationState';
 
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -61,6 +62,13 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
   }, []);
+
+  // 첫 클라이언트 내비게이션 시점 기록 — ImageHero가 "첫 로드는 즉시 표시(LCP),
+  // 전환으로 mount될 때만 페이드인"을 구분하는 데 사용(lib/navigationState).
+  useEffect(() => {
+    router.events.on('routeChangeStart', markNavigated);
+    return () => router.events.off('routeChangeStart', markNavigated);
+  }, [router.events]);
 
   // theme-color meta는 imperative로만 관리 — React state·re-render 없음.
   // theme-init.js(_document.tsx에서 sync 실행)가 페이지 진입 시 정확한 값으로 set하고,
@@ -188,14 +196,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     );
   }
 
-  // 페이지 전환 fade. 데스크톱에선 60ms fade-out, 모바일(reducedMotion='always')에선
-  // exit 자체 비활성. 모바일에서 jump-cut + mode='wait' 조합이 한 frame 동안 빈 화면
-  // (white flash)을 유발하던 깜빡임 제거 — exit 없으면 unmount 즉시 새 페이지 mount.
+  // 페이지 전환에 exit fade 없음(데스크톱 포함) — unmount 즉시 새 페이지 mount.
+  // 데스크톱의 60ms fade-out이 어두운 히어로 사이에서 흰 body 배경을 1~2 frame
+  // 노출해 white flash(번쩍임)를 유발했다. 모바일은 같은 이유로 이미 exit을 제거해
+  // 검증된 경로. AnimatePresence는 onExitComplete의 scroll reset·focus 이동을 위해 유지.
   // hook이 아닌 일반 const라 isLocaleReady early return 이후에 위치 가능.
   const routeTransitionProps = {
     initial: false as const,
     animate: { opacity: 1 },
-    ...(reducedMotion !== 'always' && { exit: { opacity: 0 } }),
     transition: { duration: 0.06, ease: 'linear' as const },
   };
 
