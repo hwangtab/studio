@@ -2,6 +2,9 @@ import {
   matchPricingForCategory,
   matchReviewForCategory,
   matchServiceForCategory,
+  matchPricingForStory,
+  matchServiceForStory,
+  isPracticeRoomRegionStory,
   injectAutoFallbackMarker,
 } from './storyAutoFallback';
 
@@ -98,5 +101,65 @@ describe('injectAutoFallbackMarker', () => {
   it('빈 본문에도 안전', () => {
     const result = injectAutoFallbackMarker('', '%%price:p1%%');
     expect(result).toBe('\n\n%%price:p1%%\n');
+  });
+});
+
+// 실상권 연습실 지역 LP는 "연신내 연습실 월세" 같은 순수 구매 의도로 진입한다.
+// 그런데 PRICING_BY_CATEGORY.region = 'recording-pro'이고 decideAutoFallback이 price를
+// service보다 먼저 반환하므로, 이 페이지들의 본문에는 시간당 10만원 보컬녹음 가격표가
+// 꽂히고 연습실 브릿지는 구조적으로 못 받는다. 슬러그로 분기해 교정한다.
+describe('지역 스토리 오퍼 분기', () => {
+  describe('isPracticeRoomRegionStory', () => {
+    it('region + practice-room- 접두사 → true', () => {
+      expect(isPracticeRoomRegionStory('region', 'practice-room-yeonsinnae1')).toBe(true);
+      expect(isPracticeRoomRegionStory('region', 'practice-room-deogyang1')).toBe(true);
+      expect(isPracticeRoomRegionStory('region', 'practice-room-mangwon1')).toBe(true);
+    });
+
+    it('광역 허브는 false — 부산 검색자에게 서울 연습실은 무의미하다', () => {
+      expect(isPracticeRoomRegionStory('region', 'seoul1')).toBe(false);
+      expect(isPracticeRoomRegionStory('region', 'busan1')).toBe(false);
+    });
+
+    it('찾아오는 길 가이드는 false — 녹음하러 오는 사람이다', () => {
+      expect(isPracticeRoomRegionStory('region', 'ktx-gyeongbu-guide1')).toBe(false);
+      expect(isPracticeRoomRegionStory('region', 'seoul-metro-guide1')).toBe(false);
+      expect(isPracticeRoomRegionStory('region', 'dongjak1')).toBe(false);
+    });
+
+    it('region이 아닌 카테고리는 접두사가 같아도 false', () => {
+      expect(isPracticeRoomRegionStory('instrument', 'practice-room-bass-funk1')).toBe(false);
+    });
+  });
+
+  describe('matchPricingForStory', () => {
+    it('실상권 연습실 LP는 가격표를 받지 않는다 (service 자리를 비워준다)', () => {
+      expect(matchPricingForStory('region', 'practice-room-yeonsinnae1')).toBeNull();
+    });
+
+    it('광역 허브·교통 가이드는 기존대로 recording-pro', () => {
+      expect(matchPricingForStory('region', 'seoul1')).toBe('recording-pro');
+      expect(matchPricingForStory('region', 'ktx-honam-guide1')).toBe('recording-pro');
+    });
+
+    it('다른 카테고리는 카테고리 맵 그대로', () => {
+      expect(matchPricingForStory('mixing', 'mixing1')).toBe('mixing-level1');
+      expect(matchPricingForStory('instrument', 'practice-room-bass-funk1')).toBeNull();
+    });
+  });
+
+  describe('matchServiceForStory', () => {
+    it('실상권 연습실 LP → practice 브릿지', () => {
+      expect(matchServiceForStory('region', 'practice-room-samsong1')).toBe('practice');
+    });
+
+    it('광역 허브·교통 가이드는 service 매칭 없음', () => {
+      expect(matchServiceForStory('region', 'seoul1')).toBeNull();
+      expect(matchServiceForStory('region', 'ktx-gyeongbu-guide1')).toBeNull();
+    });
+
+    it('instrument 카테고리는 기존대로 practice', () => {
+      expect(matchServiceForStory('instrument', 'practice-room-bass-funk1')).toBe('practice');
+    });
   });
 });
