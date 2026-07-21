@@ -18,7 +18,10 @@
        기기·설정별 강등은 아래 폴백 블록이 토큰 교체로 일괄 처리한다.
        solid 값은 기존 bg-white/95 · dark:bg-gray-900/95와 동일 — 강등 시
        리뉴얼 이전의 검증된 모습으로 돌아간다. */
-    --glass-tint: rgba(255, 255, 255, 0.6);
+    /* 틴트 0.72: 드롭다운·언어 메뉴가 어두운 히어로 위에 열려도 본문 텍스트가
+       AA(4.5:1)를 유지하도록 상향(0.6은 어두운 배경 위 gray-600이 2.6~4.0:1로 미달).
+       흰 섹션 위 카드는 여전히 사실상 흰색이라 시각 변화 미미. */
+    --glass-tint: rgba(255, 255, 255, 0.72);
     --glass-tint-clear: rgba(255, 255, 255, 0.35);
     --glass-solid: rgba(255, 255, 255, 0.95);
     --glass-filter: blur(14px) saturate(1.7);
@@ -26,17 +29,19 @@
     --glass-border: rgba(255, 255, 255, 0.65);
     --glass-spec: rgba(255, 255, 255, 0.75);
     --glass-shadow: 0 8px 32px rgba(27, 22, 48, 0.12);
-    --glass-glow: rgba(255, 255, 255, 0.4);
+    /* 스펙큘러 글로우: 텍스트 뒤(::after z-index:-1)로 깔리므로 대비를 해치지
+       않지만, 과한 블룸을 피해 은은하게 0.18. */
+    --glass-glow: rgba(255, 255, 255, 0.18);
   }
 
   .dark {
-    --glass-tint: rgba(17, 24, 39, 0.6);
+    --glass-tint: rgba(17, 24, 39, 0.72);
     --glass-tint-clear: rgba(17, 24, 39, 0.35);
     --glass-solid: rgba(3, 7, 18, 0.95);
     --glass-border: rgba(255, 255, 255, 0.12);
     --glass-spec: rgba(255, 255, 255, 0.18);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-    --glass-glow: rgba(255, 255, 255, 0.1);
+    --glass-glow: rgba(255, 255, 255, 0.08);
   }
 
   /* 글래스 → 솔리드 강등 폴백. --glass-solid는 라이트/다크가 위에서 이미
@@ -154,6 +159,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  /* reduced-motion 사용자에겐 포인터 추종 스펙큘러 글로우도 끈다
+     (prefers-reduced-transparency 미지원 브라우저까지 커버). */
+  :root {
+    --glass-glow: transparent;
+  }
 }
 
 /* ScrollProgress: CSS-only scroll-driven animation. framer-motion useScroll +
@@ -185,13 +196,20 @@
      BaseCard가 onPointerMove로 주입 — 커스텀 프로퍼티 갱신뿐이라 리플로우 없음.
      hover 가능 기기 한정. 솔리드 폴백에선 --glass-glow가 transparent라 자동 비활성. */
   @media (hover: hover) {
+    /* isolation: 카드에 stacking context를 만들어 ::after의 z-index:-1이 카드
+       내부(배경 위·콘텐츠 아래)에 갇히게 한다. 이게 없으면 음수 z가 카드 밖으로
+       빠져 배경 뒤로 사라진다. */
     .glass-card {
       position: relative;
+      isolation: isolate;
     }
+    /* 스펙큘러 글로우를 z-index:-1로 텍스트 뒤에 깐다 — 카드 본문(z-index 래퍼가
+       없는 대다수 카드) 대비를 씻어내던 문제 해소. 재질만 밝히고 글자는 안 건드림. */
     .glass-card::after {
       content: '';
       position: absolute;
       inset: 0;
+      z-index: -1;
       border-radius: inherit;
       pointer-events: none;
       background: radial-gradient(

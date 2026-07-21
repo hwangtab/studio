@@ -92,7 +92,10 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       <div className="max-w-7xl mx-auto lg:px-6 lg:pt-2">
         <div
           className={`grid h-16 lg:h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6 lg:px-4 rounded-none lg:rounded-full transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
-            ? 'glass-bar border-b border-gray-200/60 dark:border-gray-800/60 lg:border lg:border-[color:var(--glass-border)] lg:shadow-[inset_0_1px_0_var(--glass-spec),var(--glass-shadow)]'
+            // 데스크톱 pill 그림자: shadow-[...var(--glass-shadow)]는 Tailwind이
+            // '섀도 색상'으로 오판해 box-shadow를 안 내보낸다(감사에서 확인). arbitrary
+            // *property* 문법 [box-shadow:...]로 raw 선언을 직접 출력해 우회한다.
+            ? 'glass-bar border-b border-gray-200/60 dark:border-gray-800/60 lg:border lg:border-[color:var(--glass-border)] lg:[box-shadow:inset_0_1px_0_var(--glass-spec),var(--glass-shadow)]'
             : 'bg-transparent'
             }`}
         >

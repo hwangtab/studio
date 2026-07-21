@@ -90,8 +90,9 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
   2. 터치 기기 + `max-width: 768px` — 1차 릴리스는 **모바일 전체 솔리드**
   3. 킬스위치: `NEXT_PUBLIC_DISABLE_GLASS=1` → `_document.tsx`가 `<html data-glass="solid">` 부여
 - 솔리드 폴백 값은 기존 `bg-white/95`·`dark:bg-gray-900/95`와 동일 — 강등 시 리뉴얼 이전 모습으로 복귀
-- `-webkit-backdrop-filter` 프리픽스는 autoprefixer가 production browserslist(safari≥16) 기준
-  자동 생성 — 수동으로 쓰지 말 것 (dev 모드에선 development browserslist라 프리픽스가 안 보이는 게 정상)
+- `-webkit-backdrop-filter` 프리픽스는 tailwind.config의 .glass-* 컴포넌트 클래스에 **명시적으로** 둔다.
+  autoprefixer는 이 컴포넌트 클래스들에 프리픽스를 일관되게 안 붙인다(빌드 CSS 감사에서
+  glass-regular만 붙고 glass-clear·glass-bar 누락 확인). Safari 16–17 데스크톱 blur에 필수라 수동 유지.
 - 가드레일: 뷰포트당 상시 고정 blur 레이어 ≤ 2, 본문 텍스트는 글래스 위에 직접 올리지 않기,
   글래스 위 텍스트 대비 AA(4.5:1) 유지
 
