@@ -259,7 +259,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
-        <div className="mt-8 max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-6 border border-primary/20 shadow-sm flex items-start">
+        <div className="mt-8 max-w-3xl mx-auto glass-card rounded-xl p-6 ring-1 ring-primary/20 flex items-start">
           <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} aria-hidden="true" />
           <div>
             <h3 className="typo-card-subtitle mb-1">{t('pricing.mixing.noticeTitle')}</h3>

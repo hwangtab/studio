@@ -48,7 +48,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                         <m.div
                             key={index}
                             {...createInViewEnterAnimation({ distance: 10, delay: index * 0.05 })}
-                            className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
+                            className="glass-card rounded-2xl overflow-hidden"
                         >
                             <button
                                 id={`faq-button-${index}`}

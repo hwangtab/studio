@@ -349,7 +349,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     {/* Pricing Card */}
                     <m.div
                         {...pricingSectionRevealProps}
-                        className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700"
+                        className="glass-card rounded-2xl overflow-hidden"
                     >
                         <div className="p-8 bg-gradient-to-br from-primary to-secondary text-white text-center">
                             <h3 className="typo-card-title text-white mb-2">{t('lesson.pricing.title')}</h3>

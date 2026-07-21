@@ -63,7 +63,7 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
             key={item.id}
             href={getLink(`/portfolio/${item.id}`)}
             onClick={(event) => handleCardClick(event, item.id)}
-            className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+            className="group block glass-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
             aria-haspopup={onSelectItem ? 'dialog' : undefined}
           >
             {item.image && (

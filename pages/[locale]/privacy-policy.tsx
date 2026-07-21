@@ -251,7 +251,7 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
 
           <div className="space-y-6">
             {policyCopy.sections.map((section) => (
-              <article key={section.heading} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <article key={section.heading} className="glass-card rounded-xl p-6">
                 <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
                 <p className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed">{section.body}</p>
               </article>

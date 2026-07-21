@@ -22,7 +22,7 @@ const ReleaseProducerIntro = ({
 }: ReleaseProducerIntroProps) => (
   <Section variant="alternate">
     <div className="max-w-3xl mx-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 sm:p-10 shadow-md border border-gray-100 dark:border-gray-700 text-center">
+      <div className="glass-card rounded-3xl p-8 sm:p-10 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
           <Award size={32} className="text-primary" />
         </div>

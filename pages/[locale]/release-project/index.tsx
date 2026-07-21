@@ -154,7 +154,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           {TIER_KEYS.map((key) => (
             <div
               key={key}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md border border-gray-100 dark:border-gray-700 flex flex-col"
+              className="glass-card rounded-2xl p-8 flex flex-col"
             >
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t(`releaseProject.tiers.${key}.label`)}</h3>
               <div className="flex items-center gap-1.5 text-primary mb-4">
@@ -205,7 +205,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           {Array.isArray(scopeItems) && scopeItems.map((item, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+              className="flex items-start gap-3 glass-card rounded-xl p-5"
             >
               <CheckCircle size={20} className="text-primary flex-shrink-0 mt-0.5" />
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
@@ -265,7 +265,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           {IN_PROGRESS_ITEMS.map((item) => (
             <div
               key={`${item.artist}-${item.titleKey}`}
-              className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+              className="glass-card rounded-xl p-5"
             >
               <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
                 {t(`releaseProject.inProgress.types.${item.typeKey}`)}
@@ -307,7 +307,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   e.preventDefault();
                   openModal(item.id);
                 }}
-                className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                className="group block glass-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                 aria-haspopup={loadError ? undefined : 'dialog'}
               >
                 {item.image && (

@@ -158,7 +158,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-100 dark:border-gray-700"
+                className="glass-card rounded-xl p-6"
               >
                 <h3 className="text-heading-4 font-title mb-3 text-primary">{item.heading}</h3>
                 <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
@@ -185,7 +185,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               {producerCredibility.stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-md border border-gray-100 dark:border-gray-700"
+                  className="glass-card rounded-xl p-5"
                 >
                   <div className="text-3xl font-extrabold text-primary tabular-nums">{stat.value}</div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-keep">{stat.label}</div>

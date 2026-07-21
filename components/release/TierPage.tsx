@@ -166,7 +166,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           {Array.isArray(personaItems) && personaItems.map((item, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700"
+              className="flex items-start gap-3 glass-card rounded-xl p-5"
             >
               <CheckCircle size={20} className="text-primary flex-shrink-0 mt-0.5" />
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
@@ -190,7 +190,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           {Array.isArray(focusItems) && focusItems.map((item, i) => (
             <div
               key={i}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700"
+              className="glass-card rounded-xl p-6"
             >
               <h3 className="font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
@@ -237,7 +237,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           className="mb-10"
         />
         <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+          <div className="glass-card rounded-2xl p-6">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-sm">
               <CheckCircle size={16} className="text-primary flex-shrink-0" />
               {t(k('deliverablesIncludedTitle'))}
@@ -279,7 +279,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           <TierComparisonTable locale={locale} highlightTier={tier} />
         </div>
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-md border border-gray-100 dark:border-gray-700 text-center">
+          <div className="glass-card rounded-2xl p-8 text-center">
             <p className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t(k('priceRange'))}</p>
             <p className="text-sm text-primary font-medium mb-4">{t(k('priceRationale'))}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">{t(k('priceNote'))}</p>
@@ -293,7 +293,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                 {priceFactors.map((f, i) => (
                   <div
                     key={i}
-                    className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700"
+                    className="glass-card rounded-xl p-4"
                   >
                     <p className="text-xs font-bold text-primary mb-1">{f.label}</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{f.detail}</p>
@@ -359,7 +359,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             <Link
               key={otherTier}
               href={getLink(`/release-project/${otherTier}`)}
-              className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group glass-card rounded-2xl p-6 hover:-translate-y-0.5 transition-all duration-200"
             >
               <p className="text-xs text-primary font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">

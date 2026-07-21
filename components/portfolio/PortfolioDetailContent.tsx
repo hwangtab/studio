@@ -58,7 +58,7 @@ const PortfolioDetailContent = ({
   return (
     <div className="max-w-4xl mx-auto">
       {/* Summary 흰 카드 */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden">
+      <div className="glass-card rounded-2xl overflow-hidden">
         <PortfolioDetailSummary
           item={item}
           categoryName={categoryInfo.name}
