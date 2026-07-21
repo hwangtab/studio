@@ -27,7 +27,7 @@ const InlineReviewCallout = ({ id, locale }: InlineReviewCalloutProps) => {
     <aside
       data-inline-callout="review"
       aria-label={t('stories.inline.reviewLabel', { defaultValue: '입주자·고객 후기' })}
-      className="my-8 rounded-xl border-l-4 border-primary bg-gray-50 dark:bg-gray-800/40 p-6"
+      className="my-8 rounded-xl border-l-4 border-l-primary glass-card p-6"
     >
       <div className="flex items-center gap-2 mb-3">
         <Quote className="text-primary flex-shrink-0" size={18} aria-hidden="true" />

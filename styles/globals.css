@@ -195,14 +195,15 @@
   /* 글래스 카드 스펙큘러 하이라이트(iOS 26 빛 반사). 포인터 좌표(--mx/--my)는
      BaseCard가 onPointerMove로 주입 — 커스텀 프로퍼티 갱신뿐이라 리플로우 없음.
      hover 가능 기기 한정. 솔리드 폴백에선 --glass-glow가 transparent라 자동 비활성. */
+  /* 카드는 항상 positioning/stacking 컨텍스트. 내부 배지·오버레이의 기준이자
+     ::after 글로우(z-index:-1)를 카드 안에 가둔다(isolation). hover 미디어 밖에서
+     항상 적용 — 그래야 BaseCard 아닌 독자 카드(glass-card만 붙인)의 절대배치 자식이
+     터치/데스크톱에서 동일한 기준을 갖는다(데스크톱에서만 기준이 바뀌는 회귀 방지). */
+  .glass-card {
+    position: relative;
+    isolation: isolate;
+  }
   @media (hover: hover) {
-    /* isolation: 카드에 stacking context를 만들어 ::after의 z-index:-1이 카드
-       내부(배경 위·콘텐츠 아래)에 갇히게 한다. 이게 없으면 음수 z가 카드 밖으로
-       빠져 배경 뒤로 사라진다. */
-    .glass-card {
-      position: relative;
-      isolation: isolate;
-    }
     /* 스펙큘러 글로우를 z-index:-1로 텍스트 뒤에 깐다 — 카드 본문(z-index 래퍼가
        없는 대다수 카드) 대비를 씻어내던 문제 해소. 재질만 밝히고 글자는 안 건드림. */
     .glass-card::after {

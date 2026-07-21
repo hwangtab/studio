@@ -101,7 +101,7 @@ const ContactFormCard = ({
   return (
   <m.div
     {...motionProps}
-    className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl order-1 lg:order-2"
+    className="glass-card p-8 rounded-lg order-1 lg:order-2"
   >
     <div>
       <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>

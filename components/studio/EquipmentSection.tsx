@@ -14,7 +14,7 @@ const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) =
 
     return (
         <m.div
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
+            className="glass-card p-6 rounded-lg mb-6"
             {...motionProps}
             whileHover={cardHoverMotion}
         >

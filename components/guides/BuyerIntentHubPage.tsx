@@ -183,7 +183,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
           {hub.forWhom.map((feature, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-xl bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700"
+              className="p-6 rounded-xl glass-card"
             >
               <div className="inline-flex items-center justify-center p-2.5 bg-primary/10 dark:bg-primary/20 rounded-full mb-4" aria-hidden="true">
                 <CheckCircle2 className="text-primary dark:text-primary-light" size={20} />

@@ -35,7 +35,7 @@ const ReleaseReviewsSection = ({
         {reviews.map((review) => (
           <figure
             key={review.id}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col"
+            className="glass-card rounded-2xl p-6 sm:p-7 flex flex-col"
           >
             <div className="flex items-center gap-1 mb-3" aria-label={`${review.rating} / 5`}>
               {Array.from({ length: review.rating }).map((_, i) => (

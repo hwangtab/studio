@@ -108,7 +108,7 @@ const ContactInfoCard = ({
 
         <m.div
           {...directionsMotionProps}
-          className="mt-12 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700"
+          className="mt-12 p-8 glass-card rounded-2xl"
         >
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <MapPin className="w-5 h-5 text-primary" />

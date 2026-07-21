@@ -31,7 +31,7 @@ const PortfolioMiniCard = ({ item, locale }: PortfolioMiniCardProps) => {
     <Link
       href={href}
       prefetch={false}
-      className="group block h-full rounded-lg overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+      className="group block h-full rounded-lg overflow-hidden glass-card touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
     >
       <div className="relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-gray-900">
         <ResponsiveImage

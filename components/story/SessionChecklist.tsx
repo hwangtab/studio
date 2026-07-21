@@ -7,8 +7,8 @@ interface SessionChecklistProps {
 
 const SessionChecklist: React.FC<SessionChecklistProps> = () => {
   return (
-    <div className="my-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <div className="my-8 rounded-xl glass-card overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <h4 className="text-base font-semibold text-gray-900 dark:text-white">
           출발 전 챙길 것
         </h4>

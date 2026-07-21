@@ -52,7 +52,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
       <article
         itemScope
         itemType="https://schema.org/BlogPosting"
-        className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md cursor-pointer flex flex-col h-full"
+        className="glass-card rounded-lg overflow-hidden cursor-pointer flex flex-col h-full"
       >
         {story.date && <meta itemProp="datePublished" content={story.date} />}
         <link itemProp="url" href={href} />

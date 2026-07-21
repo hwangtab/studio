@@ -19,7 +19,7 @@ interface PortfolioDetailBodyProps {
 }
 
 const sectionWrapperClass =
-  'mt-10 bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 sm:p-8';
+  'mt-10 glass-card rounded-2xl p-6 sm:p-8';
 
 const sectionTitleClass =
   'typo-card-title mb-4 text-gray-900 dark:text-white';
