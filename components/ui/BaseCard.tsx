@@ -10,6 +10,11 @@ import { FADE_IN_UP, CARD_HOVER, SHADOW_HOVER, EASE_STANDARD } from '../../utils
 // 하에서 whileHover 등 제스처 동작 — 기존 m.a와 동일한 피처만 요구.
 const MotionLink = m.create(Link);
 
+// 스펙큘러 글로우용 카드 rect 캐시. hover 진입 시 1회만 getBoundingClientRect를
+// 읽고 이후 pointermove는 캐시를 재사용 — move마다 geometry를 다시 읽는 중복(과
+// 그로 인한 강제 style-recalc flush)을 없앤다. WeakMap이라 언마운트 시 자동 GC.
+const specularRects = new WeakMap<Element, DOMRect>();
+
 interface BaseCardProps {
     children: React.ReactNode;
     className?: string;
@@ -73,13 +78,21 @@ const BaseCard = React.memo(({
     };
 
     // 스펙큘러 하이라이트(globals.css의 .glass-card::after)에 포인터 좌표 주입.
-    // 커스텀 프로퍼티만 갱신하므로 layout을 더럽히지 않는다(리플로우 无).
+    // --mx/--my는 ::after의 background(paint 전용)만 소비하므로 layout reflow는
+    // 없다. rect는 hover 진입 시 1회만 읽어 캐시(위 specularRects)하고, 마우스/펜
+    // 포인터에만 반응(터치는 글로우 자체가 @media(hover:hover) 밖이라 무의미).
     const specularHandlers = isGlass && hoverEffect
         ? {
+            onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
+                if (e.pointerType === 'touch') return;
+                specularRects.set(e.currentTarget, e.currentTarget.getBoundingClientRect());
+            },
             onPointerMove: (e: React.PointerEvent<HTMLElement>) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-                e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`);
+                if (e.pointerType === 'touch') return;
+                const el = e.currentTarget;
+                const rect = specularRects.get(el) ?? el.getBoundingClientRect();
+                el.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+                el.style.setProperty('--my', `${e.clientY - rect.top}px`);
             },
         }
         : {};

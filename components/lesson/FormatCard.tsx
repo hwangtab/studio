@@ -10,7 +10,7 @@ export interface FormatCardProps {
 }
 
 const FormatCard = ({ icon: Icon, label, value, caption }: FormatCardProps) => (
-    <BaseCard variant="default" className="p-6 h-full border border-gray-100 dark:border-gray-700">
+    <BaseCard variant="default" className="p-6 h-full">
         <div className="flex items-start gap-4">
             <div className="bg-primary/10 dark:bg-primary/20 w-12 h-12 rounded-xl flex items-center justify-center text-primary dark:text-primary-light flex-shrink-0">
                 <Icon size={24} aria-hidden="true" />

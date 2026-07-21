@@ -225,10 +225,14 @@ const config: Config = {
       // 라이트/다크 분기와 솔리드 폴백(투명도 감소·모바일·킬스위치)이 전부
       // 토큰 레이어에서 처리되므로 여기에는 .dark & nesting이 없다.
       // 자체 border를 포함하므로 적용 시 컴포넌트의 border-* 클래스는 제거할 것.
+      // -webkit-backdrop-filter는 명시적으로 둔다 — autoprefixer가 이 컴포넌트
+      // 클래스들에 프리픽스를 일관되게 안 붙이는 것이 빌드 CSS 감사로 확인됨
+      // (glass-regular만 붙고 glass-clear·glass-bar 누락). Safari 16–17 필수.
       addComponents({
         // 기본 재질: 헤더, 카드, 모달, 드롭다운 등 텍스트를 얹는 표면
         '.glass-regular': {
           backgroundColor: 'var(--glass-tint)',
+          '-webkit-backdrop-filter': 'var(--glass-filter)',
           backdropFilter: 'var(--glass-filter)',
           border: '1px solid var(--glass-border)',
           boxShadow: 'inset 0 1px 0 var(--glass-spec), var(--glass-shadow)',
@@ -236,6 +240,7 @@ const config: Config = {
         // 화려한 배경 위 소수 요소 전용(뷰포트당 1–2개): 히어로 위 CTA, 배지
         '.glass-clear': {
           backgroundColor: 'var(--glass-tint-clear)',
+          '-webkit-backdrop-filter': 'var(--glass-filter-clear)',
           backdropFilter: 'var(--glass-filter-clear)',
           border: '1px solid var(--glass-border)',
           boxShadow: 'inset 0 1px 0 var(--glass-spec), var(--glass-shadow)',
@@ -244,6 +249,7 @@ const config: Config = {
         // border-b 등으로 직접 관리하고 재질(배경+블러+스펙큘러 엣지)만 입힌다
         '.glass-bar': {
           backgroundColor: 'var(--glass-tint)',
+          '-webkit-backdrop-filter': 'var(--glass-filter)',
           backdropFilter: 'var(--glass-filter)',
           boxShadow: 'inset 0 1px 0 var(--glass-spec)',
         },
