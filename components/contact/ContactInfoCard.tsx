@@ -37,7 +37,7 @@ const ContactInfoCard = ({
 }: ContactInfoCardProps) => (
   <m.div
     {...motionProps}
-    className="card p-8 shadow-xl order-2 lg:order-1"
+    className="glass-card p-8 rounded-2xl order-2 lg:order-1"
   >
     <div>
       <h2 className="typo-card-title mb-4">{t('contact.info.title')}</h2>
@@ -108,7 +108,7 @@ const ContactInfoCard = ({
 
         <m.div
           {...directionsMotionProps}
-          className="mt-12 p-8 glass-card rounded-2xl"
+          className="mt-12 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700"
         >
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <MapPin className="w-5 h-5 text-primary" />
