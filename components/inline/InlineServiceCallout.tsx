@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Disc, GraduationCap, Heart, Mic, Speaker } from '@/lib/lucide-icons';
+import { ArrowRight, CheckCircle2, Disc, GraduationCap, Heart, Mic, Speaker, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
-type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'practice';
+type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'practice' | 'release';
 
 interface InlineServiceCalloutProps {
   type: string;
@@ -20,6 +20,7 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   lesson: '/lesson',
   recording: '/recording',
   practice: '/practice-room',
+  release: '/release-project',
 };
 
 const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
@@ -28,6 +29,7 @@ const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
   lesson: GraduationCap,
   recording: Disc,
   practice: Speaker,
+  release: Sparkles,
 };
 
 const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
@@ -36,6 +38,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   lesson: 'nav.lesson',
   recording: 'nav.recording',
   practice: 'nav.practiceRoom',
+  release: 'nav.releaseProject',
 };
 
 // 한국어 풍부 콘텐츠. 다른 locale은 fallback (제목만 + generic body, features 없음).
@@ -90,10 +93,20 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '시간 대여·합주실은 운영하지 않음',
     ],
   },
+  release: {
+    title: '음원 발매 프로젝트',
+    description: '기획·녹음·믹싱·마스터링·유통까지, 싱글부터 정규 앨범까지 한 팀이 원스톱으로 함께합니다.',
+    features: [
+      '싱글 약 50만원부터 · EP 150만원부터 · 정규 400만원부터',
+      '기획 → 녹음 → 믹싱·마스터링 → 유통 원스톱',
+      '음원 유통사 등록·발매 대행',
+      '아티스트 상황에 맞춘 단계별 진행',
+    ],
+  },
 };
 
 const isServiceType = (v: string): v is ServiceType =>
-  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'practice';
+  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'practice' || v === 'release';
 
 /**
  * 본문 안 서비스 강조 박스. %%service:<type>%% short-code로 트리거.

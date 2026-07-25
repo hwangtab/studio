@@ -22,14 +22,15 @@ describe('matchPricingForCategory', () => {
   });
 
   // 2026-05-31 확장: 의뢰 의도 카테고리에 가격 카드 자동 연결.
-  it('region/vocal/production → recording-pro (의뢰 의도 매핑)', () => {
+  it('region/vocal → recording-pro (구매 직전 의도)', () => {
     expect(matchPricingForCategory('region')).toBe('recording-pro');
     expect(matchPricingForCategory('vocal')).toBe('recording-pro');
-    expect(matchPricingForCategory('production')).toBe('recording-pro');
   });
 
-  it('business → mixing-level1 (발매·유통 의도)', () => {
-    expect(matchPricingForCategory('business')).toBe('mixing-level1');
+  // 2026-07-25 의도 재매칭(레버 4): production·business는 가격 카드 대신 서비스 브릿지로.
+  it('production/business → null (가격 카드 아님 — 서비스 브릿지로 이전)', () => {
+    expect(matchPricingForCategory('production')).toBeNull();
+    expect(matchPricingForCategory('business')).toBeNull();
   });
 
   it('lesson은 매칭 없음 — frontmatter inlineFallback로 글 단위 매핑', () => {
@@ -65,6 +66,15 @@ describe('matchReviewForCategory', () => {
 describe('matchServiceForCategory', () => {
   it('instrument → practice', () => {
     expect(matchServiceForCategory('instrument')).toBe('practice');
+  });
+
+  // 2026-07-25 의도 재매칭(레버 4): 정보성 학습·비즈니스 트래픽을 의도 맞춤 서비스로.
+  it('production → lesson (제작 학습자 → 프로듀싱 레슨)', () => {
+    expect(matchServiceForCategory('production')).toBe('lesson');
+  });
+
+  it('business → release (수익·유통·발매 독자 → 발매 프로젝트)', () => {
+    expect(matchServiceForCategory('business')).toBe('release');
   });
 
   it('recording/mixing/vocal/lesson 매칭 없음', () => {

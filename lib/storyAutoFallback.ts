@@ -7,8 +7,16 @@
  *
  * 2026-05-31 확장: GSC/GA4 분석상 region(426)·vocal(141)·production(71)·
  * business(88) 카테고리는 본문 중간 전환 장치가 0개였다. 검색 의도와 매칭해
- * region/vocal/production → 보컬녹음(recording-pro), business(발매·유통) →
- * 믹싱·마스터링(mixing-level1) 가격 카드를 연결한다.
+ * 가격/서비스 카드를 연결한다.
+ *
+ * 2026-07-25 의도 재매칭(레버 4): production·business가 "가격 카드"를 받던 것을
+ * 서비스 브릿지로 교정한다. 정보성 트래픽(daw/plugins/producer 학습자, 수익/유통/발매
+ * 독자)에게 보컬녹음·믹싱 "가격표"는 구매 단계 미스매치라 리드 0이었다.
+ *   - production(음악 제작·작곡·비트메이킹 학습자) → 프로듀싱 레슨(lesson) 서비스
+ *   - business(수익·유통·마케팅·레이블·저작권) → 음원 발매 프로젝트(release) 서비스
+ * recording/vocal/region은 구매 직전 의도라 가격 카드(recording-pro)를 유지.
+ * 상위 스토리는 대부분 명시 %%service%% 브릿지(2026-07-07 큐레이션)를 이미 갖고 있어
+ * 이 카테고리 기본값은 롱테일에 적용된다.
  */
 
 export const PRICING_BY_CATEGORY: Readonly<Record<string, string>> = {
@@ -16,12 +24,12 @@ export const PRICING_BY_CATEGORY: Readonly<Record<string, string>> = {
   mixing: 'mixing-level1',
   region: 'recording-pro',
   vocal: 'recording-pro',
-  production: 'recording-pro',
-  business: 'mixing-level1',
 };
 
 export const SERVICE_BY_CATEGORY: Readonly<Record<string, string>> = {
   instrument: 'practice',
+  production: 'lesson',
+  business: 'release',
 };
 
 export const REVIEW_BY_CATEGORY: Readonly<Record<string, string>> = {

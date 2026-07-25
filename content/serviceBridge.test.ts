@@ -7,7 +7,8 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   'daw-choice1.md': '%%service:lesson%%',
   'practice-room-startup1.md': '%%service:practice%%',
   'copyright-cover1.md': '%%service:recording%%',
-  'distribution1.md': '%%service:recording%%',
+  // 유통(발매) 의도 글 → 발매 프로젝트 브릿지로 재타깃(2026-07-25 레버 4).
+  'distribution1.md': '%%service:release%%',
   'plugins1.md': '%%service:lesson%%',
   // 2026-07-07 GSC audit 고임프레션 저CTR 페이지 중 전환 브릿지가 비어 있던 6건.
   // vocal/business/production 카테고리라 SERVICE_BY_CATEGORY 자동 fallback 대상이
