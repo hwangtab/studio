@@ -1,10 +1,14 @@
 #!/usr/bin/env node
-// GA4 주요 이벤트(Key Event = 전환) 일괄 등록 스크립트
-// 사용: node --env-file=.env.local scripts/ga4-set-key-events.mjs
+// GA4 주요 이벤트(Key Event = 전환) 선언적 동기화 스크립트
+// 사용: node --env-file=.env.local scripts/ga4-set-key-events.mjs           (누락분 생성 + 잉여분 미리보기)
+//       node --env-file=.env.local scripts/ga4-set-key-events.mjs --prune   (잉여분까지 실제 해제)
 //
 // 하는 일:
-//   lead_click_kakao / lead_click_phone / lead_click_naver_map / lead_submit_success 를
-//   GA4 속성의 "주요 이벤트(key event)"로 등록 → conversions 집계 시작.
+//   GA4 속성의 주요 이벤트 집합을 KEY_EVENTS(정식 5종)와 **정확히 일치**시킨다.
+//   - 누락된 정식 이벤트 → 생성.
+//   - 정식 5종에 없는 잉여 주요 이벤트(page_view·scroll·click·오류 이벤트 등) →
+//     기본 실행에서는 "해제 예정"으로 보고만 하고, --prune 플래그가 있을 때만 실제 해제.
+//   해제는 이벤트/데이터를 지우지 않고 "전환 표시"만 내린다(가역적).
 //
 // 인증:
 //   - GA4 Admin API write는 analytics.edit scope가 필요 (ga4-fetch의
@@ -137,11 +141,13 @@ async function main() {
   const admin = google.analyticsadmin({ version: 'v1beta', auth: oauth2 });
   const parent = `properties/${propertyId}`;
 
-  // 기존 주요 이벤트 조회 (중복 등록 방지)
+  const prune = process.argv.includes('--prune');
+
+  // 기존 주요 이벤트 조회 (name + eventName 보존 — 해제는 리소스 name이 필요)
   let existing = [];
   try {
     const listRes = await admin.properties.keyEvents.list({ parent, pageSize: 200 });
-    existing = (listRes.data.keyEvents || []).map((k) => k.eventName);
+    existing = (listRes.data.keyEvents || []).map((k) => ({ name: k.name, eventName: k.eventName }));
   } catch (e) {
     const msg = e?.errors?.[0]?.message || e.message;
     if (/insufficient|scope|permission/i.test(msg)) {
@@ -152,11 +158,16 @@ async function main() {
     throw e;
   }
 
-  console.log(`현재 등록된 주요 이벤트: ${existing.length ? existing.join(', ') : '(없음)'}\n`);
+  const existingNames = existing.map((k) => k.eventName);
+  const targetNames = new Set(KEY_EVENTS.map((k) => k.eventName));
 
+  console.log(`현재 등록된 주요 이벤트(${existing.length}): ${existingNames.length ? existingNames.join(', ') : '(없음)'}\n`);
+
+  // 1) 누락된 정식 이벤트 생성
+  console.log('— 정식 전환 이벤트 동기화 —');
   for (const ke of KEY_EVENTS) {
-    if (existing.includes(ke.eventName)) {
-      console.log(`= ${ke.eventName} — 이미 주요 이벤트로 등록됨 (skip)`);
+    if (existingNames.includes(ke.eventName)) {
+      console.log(`= ${ke.eventName} — 이미 등록됨 (skip)`);
       continue;
     }
     try {
@@ -164,14 +175,37 @@ async function main() {
         parent,
         requestBody: { eventName: ke.eventName, countingMethod: ke.countingMethod },
       });
-      console.log(`✓ ${ke.eventName} — 주요 이벤트로 등록 완료 (${ke.countingMethod})`);
+      console.log(`✓ ${ke.eventName} — 주요 이벤트로 등록 (${ke.countingMethod})`);
     } catch (e) {
       const msg = e?.errors?.[0]?.message || e.message;
       console.error(`✗ ${ke.eventName} — 등록 실패: ${msg}`);
     }
   }
 
-  console.log('\n완료. GA4 보고서에 전환이 집계되기까지 24~48시간 걸립니다.');
+  // 2) 잉여 주요 이벤트 정리 (page_view·scroll·click·session_start·오류 이벤트 등).
+  //    이것들이 전환으로 남아 있으면 GA4 conversions가 무의미해진다.
+  const extras = existing.filter((k) => !targetNames.has(k.eventName));
+  console.log('\n— 잉여 주요 이벤트 정리 —');
+  if (extras.length === 0) {
+    console.log('정식 5종 외 잉여 주요 이벤트 없음. 집합이 이미 깨끗합니다.');
+  } else if (!prune) {
+    console.log(`해제 예정 ${extras.length}종 (전환 표시만 내림 — 이벤트/데이터는 보존, 가역적):`);
+    extras.forEach((k) => console.log(`  ⚠ ${k.eventName}`));
+    console.log('\n실제로 해제하려면 --prune 플래그로 다시 실행하세요:');
+    console.log('  node --env-file=.env.local scripts/ga4-set-key-events.mjs --prune');
+  } else {
+    for (const k of extras) {
+      try {
+        await admin.properties.keyEvents.delete({ name: k.name });
+        console.log(`✓ ${k.eventName} — 전환 표시 해제`);
+      } catch (e) {
+        const msg = e?.errors?.[0]?.message || e.message;
+        console.error(`✗ ${k.eventName} — 해제 실패: ${msg}`);
+      }
+    }
+  }
+
+  console.log('\n완료. GA4 보고서에 반영되기까지 24~48시간 걸립니다.');
   console.log('실시간 보고서에서 카카오 버튼 클릭 → lead_click_kakao 즉시 확인 가능.');
 }
 

@@ -4,6 +4,7 @@ import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from '@/lib/lucide-icons';
 import { createInViewEnterAnimation } from '../utils/animationUtils';
+import { trackMicroEvent } from '../utils/analytics';
 
 
 import type { Locale } from '../lib/i18n';
@@ -146,25 +147,22 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
     const isVisualInView = useInView(visualRef, { amount: 0.35 });
     const ctaMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
-    // GA4/GTM 클릭 추적. dataLayer는 GTM 로드 후 자동 전역에 노출되며,
-    // 부재 시(예: 차단 환경) try-catch로 안전하게 무시한다. 이벤트 이름은 GA4
-    // recommended 'select_content' + 커스텀 파라미터로 통일해 어느 CTA 카드
-    // (type)·어느 버튼(variant)·목적지(target)가 효과적인지 비교 측정 가능.
+    // CTA 클릭 추적. StoryCTA 버튼은 전부 내부 페이지 이동(/contact·/pricing·
+    // /lesson·/practice-room)이므로 리드가 아니라 마이크로 전환이다 — lead_*로
+    // 발화하면 "이동을 리드로 집계하는" 오염이 재발한다(2026-07-14 수정 참조).
+    // 목적지가 /contact면 micro_click_contact, 서비스 페이지면 micro_click_service.
+    // (구형 dataLayer 'select_content' push는 GTM 컨테이너가 없어 gtag.js에서
+    //  소실됐다 — trackMicroEvent로 이관해 Vercel Analytics + GA4 gtag 이중 발화.)
     const trackCtaClick = (variant: 'primary' | 'secondary', target: string) => {
-      try {
-        type WindowWithDataLayer = Window & { dataLayer?: Array<Record<string, unknown>> };
-        const w = window as WindowWithDataLayer;
-        if (!w.dataLayer) return;
-        w.dataLayer.push({
-          event: 'select_content',
-          content_type: 'story_cta',
-          cta_type: type,
-          cta_variant: variant,
-          cta_target: target,
-        });
-      } catch {
-        // 추적 실패가 사용자 navigation을 막아선 안 됨.
-      }
+      const isContact = target.endsWith('/contact');
+      trackMicroEvent(isContact ? 'micro_click_contact' : 'micro_click_service', {
+        locale,
+        component: 'StoryCTA',
+        cta_id: `story_cta_${type}_${variant}`,
+        cta_type: type,
+        cta_variant: variant,
+        cta_target: target,
+      });
     };
 
     return (

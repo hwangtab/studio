@@ -9,6 +9,7 @@
     "equipment": "Uskunalar",
     "practiceRoom": "Mashg'ulot xonasi",
     "lesson": "Dars",
+    "recording": "Yozuv",
     "mobileMenu": "Mobil menyu",
     "groups": {
       "recording": "Yozuv",
@@ -245,6 +246,11 @@
   },
   "pricing": {
     "anchorNavLabel": "Narxlar bo'limiga o'tish",
+    "summary": {
+      "title": "Narxlar bir qarashda",
+      "serviceCol": "Xizmat",
+      "priceCol": "Narx"
+    },
     "seo": {
       "title": "Studio NOL narxlari Â· Xona ₩360K/oy, Toʼy ₩350K, Yozuv ₩100K",
       "description": "Shaffof narxlar: oylik xona ₩360K (zakaladsiz, tunab qolish mumkin), toʼy ₩350K, yozuv ₩100K/soat. 30% chegirma. Bepul taklif.",
@@ -1126,6 +1132,135 @@
     "hubCallout": {
       "title": "To'y qo'shig'ini o'zingiz kuylash — To'liq qo'llanma",
       "subtitle": "Qo'shiq tanlash va mashqdan yozuv va to'yxonaga topshirishgacha — kelin-kuyov uchun bir sahifada."
+    }
+  },
+  "recording": {
+    "seo": {
+      "title": "Ovoz yozish studiyasi ijarasi — Yeonsinnae vokal yozuvi | Studio NOL",
+      "description": "Seul, Eunpyeong-gu, Yeonsinnae'dagi yozuv studiyasi. Vokal yozuvi ₩250,000/qo'shiqdan, soatlik ijara ₩100,000. Har bir seansni maxsus muhandis boshqaradi. Demo, singl, albom yoki cover yozuvini bron qiling.",
+      "keywords": "yozuv studiyasi, yozuv studiyasi ijarasi, vokal yozuvi, Seul yozuv studiyasi, Yeonsinnae yozuv studiyasi, demo yozuvi, soatlik yozuv"
+    },
+    "hero": {
+      "title": "Ovoz yozish studiyasi ijarasi — Yeonsinnae vokal yozuvi",
+      "subtitleLine1": "Maxsus muhandis va yuqori darajali jihozlar bilan",
+      "subtitleLine2": "bitta qo'shiqni tuzukkina yozing — demodan albomgacha.",
+      "alt": "Studio NOL yozuv studiyasidagi vokal seansi"
+    },
+    "quickAnswers": {
+      "title": "Yozuv broni — Tezkor javoblar",
+      "subtitle": "Eng ko'p so'raladigan savollar, avval javob beramiz.",
+      "items": [
+        {
+          "q": "Yozuv qancha turadi?",
+          "a": "Bitta qo'shiq vokal yozuvi ₩250,000 (3 soat asosida). Soatlik ijara ₩100,000 (kamida 2 soat). 6 soatlik Day Lock paketi ₩500,000 (~17% chegirma). Barcha narxlar VATsiz."
+        },
+        {
+          "q": "Muhandissiz faqat xonani ijaraga olsam bo'ladimi?",
+          "a": "Studio NOL'dagi har bir seans maxsus muhandisni o'z ichiga oladi — vokal rejissyorligi, mikrofon joylashuvi va real vaqt monitoringi — shuning uchun birinchi marta yozayotgan ham yaxshi natija oladi."
+        },
+        {
+          "q": "Manzil qayerda va qanday bron qilaman?",
+          "a": "Yeonsinnae bekatidan 5 daqiqa piyoda (Daejo-dong, Eunpyeong-gu, Seul). Biz faqat oldindan kelishuv asosida ishlaymiz: KakaoTalk kanalimizga sana va qo'shiqlar sonini yozing, qisqa suhbatdan so'ng tasdiqlaymiz."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Bu studiya kimlar uchun",
+      "items": [
+        {
+          "title": "Qo'shiq mualliflari & ko'cha ijrochilari",
+          "description": "O'z qo'shig'ini tuzukkina yozib qoldirmoqchi bo'lganlar uchun — demodan chiqarilishgacha."
+        },
+        {
+          "title": "Vokalchilar",
+          "description": "Kasting, profil uchun yozuvlar, cover qo'shiqlar — har qanday darajadagi vokalchilar uchun."
+        },
+        {
+          "title": "Guruhlar & session ijrochilari",
+          "description": "Mashq demolari, session overdublari va boshqa uzoq ishlar."
+        },
+        {
+          "title": "YouTuberlar & cover ijrochilari",
+          "description": "Cover videolar va kanal kontenti uchun yuqori sifatli vokal yozuvi."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Nega Studio NOL'da yozish kerak?",
+      "imageAlt": "Studio NOL yozuv xonasi jihozlari va kabinasi",
+      "features": [
+        "Maxsus muhandis tomonidan vokal rejissyorligi va mikrofon joylashuvi",
+        "Yuqori darajali mikrofon va analog preamp signal zanjiri",
+        "Real vaqt monitoringi, take tanlash va asosiy tahrirlash bilan",
+        "Yeonsinnae bekatidan 5 daqiqa, qulay tovushdan izolyatsiyalangan kabina"
+      ]
+    },
+    "package": {
+      "title": "Yozuv studiyasi narxlari",
+      "subtitle": "Ish hajmingizga mos uchta variantdan birini tanlang."
+    },
+    "process": {
+      "title": "Seans qanday o'tadi",
+      "subtitle": "To'rt bosqichda professional vokal yozuvi",
+      "steps": [
+        {
+          "title": "Maslahat & bron",
+          "description": "Qo'shiqlar soni, kayfiyat va jadvalingizni KakaoTalk orqali ayting. Oldindan guide yoki minus track ulashsangiz aniqroq bo'ladi."
+        },
+        {
+          "title": "Yozuv seansi",
+          "description": "Maxsus muhandis vokal rejissyorligi va mikrofon sozlashni bajaradi, darajalar va tonni real vaqtda kuzatadi."
+        },
+        {
+          "title": "Take tanlash & tahrirlash",
+          "description": "Eng yaxshi take'larni birga tanlaymiz va shovqinni tozalash bilan asosiy tahrirlashni bajaramiz."
+        },
+        {
+          "title": "Fayl topshirish & keyingi qadamlar",
+          "description": "Yozuvingizni topshiramiz va kerak bo'lsa miks va masteringgacha davom ettiramiz."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Yozuv studiyasi FAQ",
+      "subtitle": "Bron qilishdan oldingi keng tarqalgan savollar.",
+      "items": [
+        {
+          "q": "Studiya ijarasi qancha turadi?",
+          "a": "Bitta qo'shiq vokal paketi ₩250,000 (3 soat, maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan). Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun 6 soatlik Day Lock ₩500,000. Barchasi VATsiz."
+        },
+        {
+          "q": "Birinchi marta yolg'iz yozsam bo'ladimi?",
+          "a": "Ha. Maxsus muhandis mikrofon sozlashdan tortib vokal rejissyorligi va take tanlashgacha hammasini bajaradi, shuning uchun birinchi seansda ham puxta natija olasiz — faqat ovozingizga e'tibor bering."
+        },
+        {
+          "q": "Minus (MR) trackni qanday tayyorlayman?",
+          "a": "O'zingizdagi MR / instrumental faylni olib keling. Agar bo'lmasa yoki aranjirovka kerak bo'lsa, maslahat vaqtida ayting, birga yechim topamiz."
+        },
+        {
+          "q": "Yozuvdan keyin miks va mastering ham bo'ladimi?",
+          "a": "Ha. Xuddi shu studiyada miks (₩200,000dan) va masteringni (₩100,000dan) davom ettirish ton izchilligini saqlaydi va muloqotni soddalashtiradi."
+        },
+        {
+          "q": "Minimal bron va bekor qilish qoidasi qanday?",
+          "a": "Soatlik ijara kamida 2 soatdan boshlanadi. Biz faqat kelishuv asosida ishlaymiz, shuning uchun jadval o'zgarsa KakaoTalk orqali oldindan xabar bering, moslashtiramiz."
+        },
+        {
+          "q": "Manzil qayerda va to'xtash joyi bormi?",
+          "a": "Daejo-dong, Eunpyeong-gu, Seul — Yeonsinnae bekatidan 5 daqiqa piyoda. Bron tasdiqlanganda yo'nalish va to'xtash joyi ma'lumotlarini yuboramiz."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Yozuvga tayyorgarlik qo'llanmalari",
+    "relatedStoriesSubtitle": "Bron qilishdan oldin o'qishga arziydigan amaliy qo'llanmalar — narxlar, tayyorgarlik va uy vs studiya taqqoslash.",
+    "cta": {
+      "inquiry": "KakaoTalk orqali yozuv haqida so'rang",
+      "location": "Yo'nalish",
+      "titleLine1": "Endi uni",
+      "titleHighlight": "tuzukkina yozib olish vaqti",
+      "subtitleLine1": "Yeonsinnae'dagi Studio NOL'da, maxsus muhandis bilan,",
+      "subtitleLine2": "demodan chiqarishga tayyor trekgacha hammasini yakunlang.",
+      "imageAlt": "Studio NOL yozuv studiyasi so'rovi"
     }
   },
   "voiceActing": {

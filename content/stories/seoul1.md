@@ -150,4 +150,4 @@ faq:
 
 **연신내 녹음실 스튜디오 놀 본격 안내**: [메인 페이지](/) · [녹음·믹싱 가격표](/pricing) · [녹음 예약·견적 문의](/contact) · [24시간 음악연습실](/practice-room)
 
-[경기도 녹음실 방문 가이드](/stories/gyeonggi1) | [인천에서 서울 녹음실 방문 가이드](/stories/incheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)
+[연신내 녹음실 대여·가격](/recording) | [경기도 녹음실 방문 가이드](/stories/gyeonggi1) | [인천에서 서울 녹음실 방문 가이드](/stories/incheon1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1)

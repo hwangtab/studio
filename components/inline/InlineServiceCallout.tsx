@@ -18,7 +18,7 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   wedding: '/wedding-song',
   voice: '/voice-acting',
   lesson: '/lesson',
-  recording: '/pricing',
+  recording: '/recording',
   practice: '/practice-room',
 };
 
@@ -34,7 +34,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   wedding: 'nav.weddingSong',
   voice: 'nav.voiceActing',
   lesson: 'nav.lesson',
-  recording: 'nav.pricing',
+  recording: 'nav.recording',
   practice: 'nav.practiceRoom',
 };
 

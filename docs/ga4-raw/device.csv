@@ -1,51 +1,51 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",6116,0.159
-"mobile","South Korea",5259,0.180
-"tablet","South Korea",216,0.176
-"desktop","China",121,0.612
-"desktop","United States",62,0.177
-"mobile","United States",62,0.161
-"mobile","Japan",40,0.100
-"desktop","Japan",38,0.132
-"desktop","Canada",25,0.160
-"desktop","Singapore",20,0.300
-"desktop","Hong Kong",14,0.643
-"mobile","Australia",12,0.250
-"mobile","Canada",11,0.000
-"mobile","Vietnam",10,0.100
-"mobile","Thailand",8,0.250
+"desktop","South Korea",7218,0.124
+"mobile","South Korea",6141,0.145
+"tablet","South Korea",245,0.151
+"desktop","China",138,0.616
+"mobile","United States",80,0.125
+"desktop","United States",77,0.143
+"desktop","Japan",54,0.093
+"mobile","Japan",47,0.085
+"desktop","Canada",29,0.138
+"desktop","Singapore",17,0.176
+"mobile","Canada",17,0.000
+"mobile","Australia",13,0.231
+"desktop","Hong Kong",11,0.545
+"mobile","Thailand",11,0.182
+"mobile","Vietnam",11,0.091
+"mobile","China",8,0.250
+"desktop","New Zealand",7,0.429
 "mobile","New Zealand",7,0.143
-"mobile","China",6,0.167
-"desktop","Australia",5,0.000
-"desktop","New Zealand",5,0.600
-"desktop","Spain",5,0.000
-"desktop","Brazil",4,0.000
-"desktop","France",4,0.000
-"desktop","India",4,0.000
+"desktop","Australia",6,0.000
+"desktop","France",6,0.000
+"desktop","Philippines",6,0.167
+"desktop","Spain",6,0.000
+"desktop","Brazil",5,0.000
+"desktop","India",5,0.000
+"desktop","Thailand",5,0.000
+"mobile","Indonesia",5,0.400
 "desktop","Malaysia",4,0.000
-"desktop","Philippines",4,0.250
+"desktop","Namibia",4,0.000
 "desktop","Russia",4,0.000
-"desktop","Taiwan",4,0.250
-"desktop","Thailand",4,0.000
+"desktop","United Kingdom",4,0.000
 "mobile","Hong Kong",4,0.250
-"mobile","Indonesia",4,0.500
 "tablet","United States",4,0.500
 "desktop","(not set)",3,0.000
-"desktop","United Kingdom",3,0.000
+"desktop","Indonesia",3,0.000
 "desktop","Vietnam",3,0.000
 "mobile","Singapore",3,0.000
 "mobile","Taiwan",3,0.000
+"desktop","Bangladesh",2,0.000
 "desktop","Ecuador",2,0.000
-"desktop","Indonesia",2,0.000
+"desktop","Pakistan",2,0.000
+"desktop","Taiwan",2,0.000
 "mobile","Panama",2,0.000
+"mobile","Philippines",2,0.000
 "mobile","Türkiye",2,0.000
-"desktop","Bangladesh",1,1.000
 "desktop","Cambodia",1,0.000
+"desktop","Fiji",1,0.000
+"desktop","Ireland",1,0.000
 "desktop","Kenya",1,0.000
 "desktop","Mexico",1,0.000
 "desktop","Mongolia",1,0.000
-"desktop","Myanmar (Burma)",1,1.000
-"desktop","Namibia",1,0.000
-"desktop","Pakistan",1,0.000
-"desktop","Qatar",1,0.000
-"desktop","Venezuela",1,0.000

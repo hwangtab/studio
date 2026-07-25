@@ -172,4 +172,4 @@ faq:
 
 ---
 
-[보컬 녹음 가격 완전 가이드 — 스튜디오 비용 결정 요인과 합리적인 선택 방법](/stories/pricing1) | [인디팝·인디음악 보컬 완전 가이드 — 인디 보컬 스타일·녹음 팁·믹싱 특성](/stories/indie-pop1) | [DAW 믹싱 템플릿 완전 가이드 — 보컬 녹음·믹싱 세션 파일 세팅 방법](/stories/daw-template1) | [보컬 녹음 준비·레코딩 보컬 — 보컬 녹음 완성 가이드](/stories/practice-room-vocal-recording1) | [음반 제작 비용 완전 가이드 — 싱글·EP·정규 앨범 예산 계획](/stories/album-cost1)
+[연신내 녹음실 대여 — 보컬 녹음 예약](/recording) | [보컬 녹음 가격 완전 가이드 — 스튜디오 비용 결정 요인과 합리적인 선택 방법](/stories/pricing1) | [인디팝·인디음악 보컬 완전 가이드 — 인디 보컬 스타일·녹음 팁·믹싱 특성](/stories/indie-pop1) | [DAW 믹싱 템플릿 완전 가이드 — 보컬 녹음·믹싱 세션 파일 세팅 방법](/stories/daw-template1) | [보컬 녹음 준비·레코딩 보컬 — 보컬 녹음 완성 가이드](/stories/practice-room-vocal-recording1) | [음반 제작 비용 완전 가이드 — 싱글·EP·정규 앨범 예산 계획](/stories/album-cost1)

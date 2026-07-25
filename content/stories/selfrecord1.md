@@ -142,4 +142,4 @@ faq:
 
 ---
 
-[홈 레코딩 완전 가이드](/stories/homestudio1) | [홈 레코딩 방음 방법 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 헤드폰 모니터링](/stories/monitoring1)
+[전문 녹음실에서 보컬 녹음하기](/recording) | [홈 레코딩 완전 가이드](/stories/homestudio1) | [홈 레코딩 방음 방법 가이드](/stories/soundproof1) | [홈 레코딩 첫 장비 구입 가이드](/stories/homegear1) | [보컬 녹음 헤드폰 모니터링](/stories/monitoring1)

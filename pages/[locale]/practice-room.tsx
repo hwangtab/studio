@@ -159,6 +159,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             component="PracticeRoomHero"
             ctaId="practice_room_hero_kakao"
             label={t('practiceRoom.cta.inquiry')}
+            phone={siteConfig.contact.phone}
+            phoneCtaId="practice_room_hero_phone"
           />
         }
       />

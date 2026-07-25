@@ -9,6 +9,7 @@
     "equipment": "Equipo",
     "practiceRoom": "Sala",
     "lesson": "Clases",
+    "recording": "Grabación",
     "mobileMenu": "Menú móvil",
     "groups": {
       "recording": "Grabación",
@@ -245,6 +246,11 @@
   },
   "pricing": {
     "anchorNavLabel": "Ir a la sección de precios",
+    "summary": {
+      "title": "Precios de un vistazo",
+      "serviceCol": "Servicio",
+      "priceCol": "Precio"
+    },
     "seo": {
       "title": "Precios Studio NOL · Sala ₩360K/mes · Boda ₩350K",
       "description": "Precios transparentes en Studio NOL: sala mensual ₩360K (sin depósito, pernocta), boda ₩350K, grabación ₩100K/h. Hasta 30% dto. Presupuesto gratis.",
@@ -1126,6 +1132,135 @@
     "hubCallout": {
       "title": "Cantar tu propia canción de boda — Guía completa",
       "subtitle": "Desde la selección de la canción y los ensayos hasta la grabación y la entrega para la ceremonia — todo en una sola página."
+    }
+  },
+  "recording": {
+    "seo": {
+      "title": "Alquiler de estudio de grabación — Grabación vocal en Yeonsinnae | Studio NOL",
+      "description": "Estudio de grabación en Yeonsinnae, Eunpyeong-gu, Seúl. Grabación vocal desde ₩250,000/canción, alquiler por hora ₩100,000. Un ingeniero dedicado dirige cada sesión. Reserva grabación de demo, single, álbum o cover.",
+      "keywords": "estudio de grabación, alquiler de estudio de grabación, grabación vocal, estudio de grabación Seúl, estudio de grabación Yeonsinnae, grabación de demo, grabación por hora"
+    },
+    "hero": {
+      "title": "Alquiler de estudio de grabación — Grabación vocal en Yeonsinnae",
+      "subtitleLine1": "Con un ingeniero dedicado y equipo de alta gama,",
+      "subtitleLine2": "graba una canción como es debido — del demo al álbum.",
+      "alt": "Sesión de grabación vocal en el estudio Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Reserva de grabación — Respuestas rápidas",
+      "subtitle": "Las preguntas más frecuentes, respondidas primero.",
+      "items": [
+        {
+          "q": "¿Cuánto cuesta la grabación?",
+          "a": "La grabación vocal de una canción cuesta ₩250,000 (basado en 3 horas). El alquiler por hora es ₩100,000 (mínimo 2 horas). El paquete Day Lock de 6 horas es ₩500,000 (~17% de descuento). Todos los precios excluyen el IVA."
+        },
+        {
+          "q": "¿Puedo alquilar solo la sala sin ingeniero?",
+          "a": "Cada sesión en Studio NOL incluye un ingeniero dedicado — dirección vocal, colocación de micrófono y monitoreo en tiempo real — para que incluso quien graba por primera vez obtenga un gran resultado."
+        },
+        {
+          "q": "¿Dónde están y cómo reservo?",
+          "a": "A 5 minutos a pie de la estación Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seúl). Trabajamos solo con cita: escríbenos por nuestro canal de KakaoTalk con tu fecha y número de canciones y confirmamos tras una breve charla."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Para quién es este estudio",
+      "items": [
+        {
+          "title": "Cantautores y músicos callejeros",
+          "description": "Para quien quiere capturar su propia canción como es debido — del demo al lanzamiento."
+        },
+        {
+          "title": "Vocalistas",
+          "description": "Grabaciones para audiciones y perfiles, covers — para vocalistas de todos los niveles."
+        },
+        {
+          "title": "Bandas y músicos de sesión",
+          "description": "Demos de ensayo, overdubs de sesión y otros trabajos de larga duración."
+        },
+        {
+          "title": "YouTubers y artistas de covers",
+          "description": "Grabación vocal de alta calidad para videos de covers y contenido de canal."
+        }
+      ]
+    },
+    "environment": {
+      "title": "¿Por qué grabar en Studio NOL?",
+      "imageAlt": "Equipo y cabina de la sala de grabación de Studio NOL",
+      "features": [
+        "Dirección vocal y posicionamiento de micrófono por un ingeniero dedicado",
+        "Cadena de señal con micrófono de alta gama y preamplificador analógico",
+        "Monitoreo en tiempo real con selección de tomas y edición básica",
+        "A 5 minutos de la estación Yeonsinnae, cabina insonorizada cómoda"
+      ]
+    },
+    "package": {
+      "title": "Tarifas del estudio de grabación",
+      "subtitle": "Elige una de tres opciones según tu carga de trabajo."
+    },
+    "process": {
+      "title": "Cómo funciona una sesión",
+      "subtitle": "Grabación vocal profesional en cuatro pasos",
+      "steps": [
+        {
+          "title": "Consulta y reserva",
+          "description": "Cuéntanos el número de canciones, el ambiente y tu horario por KakaoTalk. Compartir una guía o pista base de antemano ayuda."
+        },
+        {
+          "title": "Sesión de grabación",
+          "description": "Un ingeniero dedicado se encarga de la dirección vocal y la configuración del micrófono, monitoreando niveles y tono en tiempo real."
+        },
+        {
+          "title": "Selección de tomas y edición",
+          "description": "Elegimos juntos las mejores tomas y hacemos la eliminación de ruido y la edición básica."
+        },
+        {
+          "title": "Entrega de archivos y siguientes pasos",
+          "description": "Entregamos tu grabación y podemos continuar con mezcla y masterización si lo necesitas."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ del estudio de grabación",
+      "subtitle": "Preguntas comunes antes de reservar.",
+      "items": [
+        {
+          "q": "¿Cuánto cuesta el alquiler del estudio?",
+          "a": "El paquete vocal de una canción cuesta ₩250,000 (3 horas, incluye ingeniero dedicado, dirección y edición básica). Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, el Day Lock de 6 horas cuesta ₩500,000. Todos los precios excluyen el IVA."
+        },
+        {
+          "q": "¿Está bien si es mi primera vez grabando?",
+          "a": "Sí. Un ingeniero dedicado se encarga de todo, desde la configuración del micrófono hasta la dirección vocal y la selección de tomas, así que obtienes un resultado pulido incluso en tu primera sesión — solo concéntrate en tu voz."
+        },
+        {
+          "q": "¿Cómo preparo una pista base?",
+          "a": "Trae tu archivo MR / instrumental. Si no tienes uno o necesitas ayuda con el arreglo, dínoslo durante la consulta y lo resolvemos juntos."
+        },
+        {
+          "q": "¿Pueden mezclar y masterizar después?",
+          "a": "Sí. Continuar con la mezcla (desde ₩200,000) y la masterización (desde ₩100,000) en el mismo estudio mantiene el tono consistente y simplifica la comunicación."
+        },
+        {
+          "q": "¿Cuál es la reserva mínima y la política de cancelación?",
+          "a": "El alquiler por hora comienza con un mínimo de 2 horas. Trabajamos solo con cita, así que avísanos por KakaoTalk con antelación si cambia tu horario y lo adaptaremos."
+        },
+        {
+          "q": "¿Dónde están y hay estacionamiento?",
+          "a": "Daejo-dong, Eunpyeong-gu, Seúl — a 5 minutos a pie de la estación Yeonsinnae. Compartiremos indicaciones y detalles de estacionamiento cuando se confirme tu reserva."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Guías de preparación para grabar",
+    "relatedStoriesSubtitle": "Guías prácticas que vale la pena leer antes de reservar — precios, preparación y casa vs. estudio.",
+    "cta": {
+      "inquiry": "Consulta sobre grabación por KakaoTalk",
+      "location": "Cómo llegar",
+      "titleLine1": "Es hora de",
+      "titleHighlight": "capturarlo como es debido",
+      "subtitleLine1": "En Studio NOL, en Yeonsinnae, con un ingeniero dedicado,",
+      "subtitleLine2": "termina todo, del demo a la pista lista para publicar.",
+      "imageAlt": "Consulta del estudio de grabación Studio NOL"
     }
   },
   "voiceActing": {

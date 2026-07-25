@@ -9,6 +9,7 @@
     "equipment": "Gear",
     "practiceRoom": "Practice",
     "lesson": "Lesson",
+    "recording": "Recording",
     "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "Recording",
@@ -273,6 +274,11 @@
   },
   "pricing": {
     "anchorNavLabel": "Jump to pricing section",
+    "summary": {
+      "title": "Pricing at a Glance",
+      "serviceCol": "Service",
+      "priceCol": "Price"
+    },
     "seo": {
       "title": "Practice Room ₩360K/mo · Recording ₩100K/hr | Studio NOL",
       "description": "Studio NOL Seoul: practice room ₩360K/mo (no deposit, 24hr access), wedding song ₩350K, recording ₩100K/hr. Up to 30% off, free quote, 5 min from Yeonsinnae station.",
@@ -1154,6 +1160,135 @@
     "hubCallout": {
       "title": "Singing Your Own Wedding Song — Complete Guide",
       "subtitle": "From song selection and practice to recording and venue delivery — a bride-and-groom guide on one page."
+    }
+  },
+  "recording": {
+    "seo": {
+      "title": "Recording Studio Rental — Yeonsinnae Vocal Recording | Studio NOL",
+      "description": "Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul. Vocal recording from ₩250,000/song, hourly rental ₩100,000. A dedicated engineer runs every session. Book demo, single, album or cover recording.",
+      "keywords": "recording studio, recording studio rental, vocal recording, recording studio Seoul, Yeonsinnae recording studio, demo recording, hourly recording, English-speaking recording studio Seoul"
+    },
+    "hero": {
+      "title": "Recording Studio Rental — Yeonsinnae Vocal Recording",
+      "subtitleLine1": "With a dedicated engineer and high-end gear,",
+      "subtitleLine2": "record one song properly — from demo to album.",
+      "alt": "Studio NOL recording studio vocal session"
+    },
+    "quickAnswers": {
+      "title": "Recording Booking — Quick Answers",
+      "subtitle": "The questions we hear most, answered first.",
+      "items": [
+        {
+          "q": "How much does recording cost?",
+          "a": "Vocal recording for one song is ₩250,000 (based on 3 hours). Hourly rental is ₩100,000 (2-hour minimum). The 6-hour Day Lock package is ₩500,000 (~17% off). All prices exclude VAT."
+        },
+        {
+          "q": "Can I rent just the room without an engineer?",
+          "a": "Every session at Studio NOL includes a dedicated engineer — vocal directing, mic setup and real-time monitoring — so even first-time recordists get a great result."
+        },
+        {
+          "q": "Where are you, and how do I book?",
+          "a": "A 5-minute walk from Yeonsinnae Station (Daejo-dong, Eunpyeong-gu, Seoul). We work by appointment only — message our KakaoTalk channel with your date and number of songs and we'll confirm after a short chat."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Who this studio is for",
+      "items": [
+        {
+          "title": "Singer-songwriters & buskers",
+          "description": "Anyone who wants to capture their own song properly — from demo to release."
+        },
+        {
+          "title": "Vocalists",
+          "description": "Audition and profile recordings, cover songs — for vocalists of every level."
+        },
+        {
+          "title": "Bands & session players",
+          "description": "Rehearsal demos, session overdubs and other longer-form work."
+        },
+        {
+          "title": "YouTubers & cover artists",
+          "description": "High-quality vocal recording for cover videos and channel content."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Why record at Studio NOL?",
+      "imageAlt": "Studio NOL recording room gear and booth",
+      "features": [
+        "Vocal directing & mic positioning by a dedicated engineer",
+        "High-end microphone and analog preamp signal chain",
+        "Real-time monitoring with take selection & basic editing",
+        "5 minutes from Yeonsinnae Station, comfortable soundproof booth"
+      ]
+    },
+    "package": {
+      "title": "Recording Studio Rates",
+      "subtitle": "Pick one of three options to match your workload."
+    },
+    "process": {
+      "title": "How a Session Works",
+      "subtitle": "Professional vocal recording in four steps",
+      "steps": [
+        {
+          "title": "Consult & book",
+          "description": "Tell us the number of songs, the mood and your schedule via KakaoTalk. Sharing a guide or backing track ahead helps."
+        },
+        {
+          "title": "Recording session",
+          "description": "A dedicated engineer handles vocal directing and mic setup, monitoring levels and tone in real time."
+        },
+        {
+          "title": "Take selection & editing",
+          "description": "We choose the best takes together and handle noise removal and basic editing."
+        },
+        {
+          "title": "File delivery & next steps",
+          "description": "We deliver your recording, and can continue into mixing and mastering if you need it."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Recording Studio FAQ",
+      "subtitle": "Common questions before you book.",
+      "items": [
+        {
+          "q": "How much is studio rental?",
+          "a": "The vocal one-song package is ₩250,000 (3 hours, including a dedicated engineer, directing and basic editing). If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work the 6-hour Day Lock is ₩500,000. All prices exclude VAT."
+        },
+        {
+          "q": "Is it OK if it's my first time recording?",
+          "a": "Yes. A dedicated engineer handles everything from mic setup to vocal directing and take selection, so you get a polished result even on your first session — just focus on your voice."
+        },
+        {
+          "q": "How do I prepare a backing track?",
+          "a": "Bring your MR / instrumental file. If you don't have one or need arrangement help, let us know during the consult and we'll work it out together."
+        },
+        {
+          "q": "Can you mix and master afterward?",
+          "a": "Yes. Continuing into mixing (from ₩200,000) and mastering (from ₩100,000) at the same studio keeps the tone consistent and communication simple."
+        },
+        {
+          "q": "What's the minimum booking and cancellation policy?",
+          "a": "Hourly rental starts at a 2-hour minimum. We work by appointment only, so let us know via KakaoTalk in advance if your schedule changes and we'll accommodate it."
+        },
+        {
+          "q": "Where are you and is there parking?",
+          "a": "Daejo-dong, Eunpyeong-gu, Seoul — a 5-minute walk from Yeonsinnae Station. We'll share directions and parking details when your booking is confirmed."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Recording prep guides",
+    "relatedStoriesSubtitle": "Practical guides worth reading before you book — pricing, preparation and home-vs-studio.",
+    "cta": {
+      "inquiry": "Ask about recording on KakaoTalk",
+      "location": "Directions",
+      "titleLine1": "It's time to",
+      "titleHighlight": "capture it properly",
+      "subtitleLine1": "At Studio NOL in Yeonsinnae, with a dedicated engineer,",
+      "subtitleLine2": "finish everything from demo to release-ready track.",
+      "imageAlt": "Studio NOL recording studio inquiry"
     }
   },
   "voiceActing": {

@@ -57,6 +57,7 @@ export const Footer = ({ locale }: FooterProps) => {
             <div className="h-px w-full bg-white/25 mb-4" />
             <ul className="grid grid-cols-2 gap-x-4">
               <FooterLink href={`/${locale}`}>{t('nav.home')}</FooterLink>
+              <FooterLink href={`/${locale}/recording`}>{t('nav.recording')}</FooterLink>
               <FooterLink href={`/${locale}/about`}>{t('nav.about')}</FooterLink>
               <FooterLink href={`/${locale}/portfolio`}>{t('nav.portfolio')}</FooterLink>
               <FooterLink href={`/${locale}/stories`}>{t('nav.stories')}</FooterLink>
@@ -83,6 +84,13 @@ export const Footer = ({ locale }: FooterProps) => {
               href={siteConfig.contact.naverMapUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                trackLeadEvent('lead_click_naver_map', {
+                  locale,
+                  component: 'Footer',
+                  cta_id: 'footer_naver_map',
+                })
+              }
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <MapPin className="mr-2 mt-0.5" size={16} aria-hidden="true" />
@@ -90,6 +98,13 @@ export const Footer = ({ locale }: FooterProps) => {
             </a>
             <a
               href={`mailto:${siteConfig.contact.email}`}
+              onClick={() =>
+                trackLeadEvent('lead_click_email', {
+                  locale,
+                  component: 'Footer',
+                  cta_id: 'footer_email',
+                })
+              }
               className="typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 flex items-start mb-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <Mail className="mr-2 mt-0.5" size={16} aria-hidden="true" />

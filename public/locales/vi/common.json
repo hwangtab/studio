@@ -9,6 +9,7 @@
     "equipment": "Thiết bị",
     "practiceRoom": "Phòng tập",
     "lesson": "Bài học",
+    "recording": "Thu âm",
     "mobileMenu": "Menu di động",
     "groups": {
       "recording": "Thu âm",
@@ -245,6 +246,11 @@
   },
   "pricing": {
     "anchorNavLabel": "Chuyển đến mục bảng giá",
+    "summary": {
+      "title": "Bảng giá tổng quan",
+      "serviceCol": "Dịch vụ",
+      "priceCol": "Giá"
+    },
     "seo": {
       "title": "Giá Studio NOL · Phòng tập ₩360K/tháng · Cưới ₩350K",
       "description": "Giá minh bạch tại Studio NOL: phòng tập ₩360K/tháng (không cọc, ở qua đêm), cưới ₩350K, thu âm ₩100K/h. Giảm đến 30%. Báo giá miễn phí.",
@@ -1126,6 +1132,135 @@
     "hubCallout": {
       "title": "Tự hát bài hát đám cưới — Hướng dẫn toàn diện",
       "subtitle": "Từ chọn bài, luyện tập đến thu âm và bàn giao cho hôn trường — hướng dẫn cho cô dâu chú rể trên một trang."
+    }
+  },
+  "recording": {
+    "seo": {
+      "title": "Cho thuê phòng thu — Thu âm vocal tại Yeonsinnae | Studio NOL",
+      "description": "Phòng thu tại Yeonsinnae, Eunpyeong-gu, Seoul. Thu âm vocal từ ₩250,000/bài, thuê theo giờ ₩100,000. Kỹ sư chuyên trách điều hành mỗi buổi thu. Đặt lịch thu demo, single, album hoặc cover.",
+      "keywords": "phòng thu, cho thuê phòng thu, thu âm vocal, phòng thu Seoul, phòng thu Yeonsinnae, thu demo, thu âm theo giờ"
+    },
+    "hero": {
+      "title": "Cho thuê phòng thu — Thu âm vocal tại Yeonsinnae",
+      "subtitleLine1": "Với kỹ sư chuyên trách và thiết bị cao cấp,",
+      "subtitleLine2": "thu một bài cho ra hồn — từ demo đến album.",
+      "alt": "Buổi thu âm vocal tại phòng thu Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Đặt lịch thu âm — Giải đáp nhanh",
+      "subtitle": "Những câu hỏi thường gặp nhất, trả lời trước.",
+      "items": [
+        {
+          "q": "Chi phí thu âm là bao nhiêu?",
+          "a": "Thu âm vocal một bài là ₩250,000 (cơ sở 3 giờ). Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Gói Day Lock 6 giờ là ₩500,000 (giảm ~17%). Tất cả giá chưa bao gồm VAT."
+        },
+        {
+          "q": "Tôi có thể thuê phòng mà không cần kỹ sư không?",
+          "a": "Mỗi buổi thu tại Studio NOL đều bao gồm kỹ sư chuyên trách — đạo diễn vocal, đặt mic và giám sát thời gian thực — nên ngay cả người thu lần đầu cũng có kết quả tốt."
+        },
+        {
+          "q": "Địa điểm ở đâu và đặt lịch thế nào?",
+          "a": "Đi bộ 5 phút từ ga Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seoul). Chúng tôi làm việc theo lịch hẹn: nhắn kênh KakaoTalk kèm ngày và số bài, chúng tôi xác nhận sau khi trao đổi ngắn."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Phòng thu này dành cho ai",
+      "items": [
+        {
+          "title": "Nhạc sĩ hát & nghệ sĩ đường phố",
+          "description": "Cho ai muốn ghi lại bài hát của mình cho ra hồn — từ demo đến phát hành."
+        },
+        {
+          "title": "Ca sĩ vocal",
+          "description": "Thu cho casting, hồ sơ, bài cover — cho vocalist mọi trình độ."
+        },
+        {
+          "title": "Ban nhạc & nhạc công session",
+          "description": "Demo hợp luyện, overdub session và các công việc dài hơi khác."
+        },
+        {
+          "title": "YouTuber & nghệ sĩ cover",
+          "description": "Thu âm vocal chất lượng cao cho video cover và nội dung kênh."
+        }
+      ]
+    },
+    "environment": {
+      "title": "Tại sao thu âm tại Studio NOL?",
+      "imageAlt": "Thiết bị và buồng thu của phòng thu Studio NOL",
+      "features": [
+        "Đạo diễn vocal & đặt mic bởi kỹ sư chuyên trách",
+        "Chuỗi tín hiệu micro cao cấp và preamp analog",
+        "Giám sát thời gian thực kèm chọn take & chỉnh sửa cơ bản",
+        "5 phút từ ga Yeonsinnae, buồng cách âm thoải mái"
+      ]
+    },
+    "package": {
+      "title": "Bảng giá phòng thu",
+      "subtitle": "Chọn một trong ba tùy chọn phù hợp với khối lượng công việc của bạn."
+    },
+    "process": {
+      "title": "Quy trình một buổi thu",
+      "subtitle": "Thu âm vocal chuyên nghiệp qua bốn bước",
+      "steps": [
+        {
+          "title": "Tư vấn & đặt lịch",
+          "description": "Cho chúng tôi biết số bài, không khí và lịch của bạn qua KakaoTalk. Chia sẻ trước bản guide hoặc beat sẽ chính xác hơn."
+        },
+        {
+          "title": "Buổi thu âm",
+          "description": "Kỹ sư chuyên trách phụ trách đạo diễn vocal và đặt mic, giám sát mức và tông thời gian thực."
+        },
+        {
+          "title": "Chọn take & chỉnh sửa",
+          "description": "Cùng chọn take tốt nhất và xử lý khử nhiễu, chỉnh sửa cơ bản."
+        },
+        {
+          "title": "Giao file & bước tiếp theo",
+          "description": "Chúng tôi giao bản thu, và có thể tiếp tục sang mix và master nếu bạn cần."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ phòng thu",
+      "subtitle": "Những câu hỏi thường gặp trước khi đặt lịch.",
+      "items": [
+        {
+          "q": "Thuê phòng thu bao nhiêu tiền?",
+          "a": "Gói vocal một bài là ₩250,000 (3 giờ, bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản). Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, gói Day Lock 6 giờ là ₩500,000. Tất cả giá chưa gồm VAT."
+        },
+        {
+          "q": "Lần đầu thu âm một mình có sao không?",
+          "a": "Không sao. Kỹ sư chuyên trách lo mọi thứ từ đặt mic đến đạo diễn vocal và chọn take, nên bạn có kết quả hoàn thiện ngay lần đầu — chỉ cần tập trung vào giọng của mình."
+        },
+        {
+          "q": "Chuẩn bị beat (MR) thế nào?",
+          "a": "Mang theo file MR / instrumental của bạn. Nếu chưa có hoặc cần phối khí, hãy nói khi tư vấn và chúng tôi sẽ cùng tìm cách."
+        },
+        {
+          "q": "Sau khi thu có mix và master được không?",
+          "a": "Được. Tiếp tục mix (từ ₩200,000) và master (từ ₩100,000) tại cùng phòng thu giúp tông nhất quán và trao đổi đơn giản."
+        },
+        {
+          "q": "Đặt tối thiểu và quy định hủy thế nào?",
+          "a": "Thuê theo giờ bắt đầu từ tối thiểu 2 giờ. Chúng tôi làm theo lịch hẹn, nên nếu lịch thay đổi hãy báo trước qua KakaoTalk và chúng tôi sẽ sắp xếp."
+        },
+        {
+          "q": "Địa điểm ở đâu và có chỗ đậu xe không?",
+          "a": "Daejo-dong, Eunpyeong-gu, Seoul — đi bộ 5 phút từ ga Yeonsinnae. Chúng tôi sẽ gửi chỉ đường và thông tin đậu xe khi xác nhận đặt lịch."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Hướng dẫn chuẩn bị thu âm",
+    "relatedStoriesSubtitle": "Những hướng dẫn thực tế đáng đọc trước khi đặt lịch — giá cả, chuẩn bị và so sánh thu tại nhà với phòng thu.",
+    "cta": {
+      "inquiry": "Hỏi về thu âm qua KakaoTalk",
+      "location": "Chỉ đường",
+      "titleLine1": "Đã đến lúc",
+      "titleHighlight": "ghi lại cho ra hồn",
+      "subtitleLine1": "Tại Studio NOL ở Yeonsinnae, cùng kỹ sư chuyên trách,",
+      "subtitleLine2": "hoàn thiện mọi thứ từ demo đến bản sẵn sàng phát hành.",
+      "imageAlt": "Tư vấn phòng thu Studio NOL"
     }
   },
   "voiceActing": {
