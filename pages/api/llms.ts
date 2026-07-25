@@ -174,6 +174,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
 - Portfolio: ${siteUrl}/${locale}/portfolio
 - Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
+- Recording Studio (rental, rates, booking): ${siteUrl}/${locale}/recording
 - Pricing: ${siteUrl}/${locale}/pricing
 - Practice Room: ${siteUrl}/${locale}/practice-room
 - Recording Lessons: ${siteUrl}/${locale}/lesson
@@ -202,7 +203,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
-- Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer).
+- Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing & mastering: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included.
 - Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
 - Wedding song complete package: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.

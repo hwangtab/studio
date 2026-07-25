@@ -2,13 +2,15 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { CheckCircle, ArrowRight } from '@/lib/lucide-icons';
+import { CheckCircle, ArrowRight, MessageCircle } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import ContactFormCard from '../../components/contact/ContactFormCard';
 import ContactInfoCard from '../../components/contact/ContactInfoCard';
 import { Section } from '../../components/ui/Section';
+import { RECORDING_HOURLY_PRICE, VOCAL_PACKAGE_PRICE, formatPriceAmount } from '../../data/pricing';
+import { trackLeadEvent } from '../../utils/analytics';
 // FAQPage 스키마(faqItems)와 가시 콘텐츠를 동일 소스로 유지하기 위한 렌더 컴포넌트.
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
@@ -124,6 +126,59 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           ],
         }}
       />
+
+      {/* 영어권·AI(ChatGPT) 유입 즉답 블록 — /en/contact은 ChatGPT 최다 랜딩(90일 58세션).
+          방문자가 폼을 만나기 전에 "영어 응대·가격·위치·예약법"을 즉시 확인하도록 폼 위 배치.
+          en 전용이라 영어 리터럴 사용, 가격은 SSOT 상수 보간(드리프트 방지). */}
+      {locale === 'en' && (
+        <Section variant="default" className="pt-8 pb-0">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="rounded-2xl border border-primary/20 bg-primary/5 dark:bg-primary/10 p-6 md:p-8">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Studio NOL — an English-friendly recording studio in Seoul
+              </h2>
+              <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-2.5 mb-6">
+                {[
+                  'English booking & communication (KakaoTalk / email / phone)',
+                  `Vocal recording from ₩${formatPriceAmount(RECORDING_HOURLY_PRICE)}/hour · single-song package ₩${formatPriceAmount(VOCAL_PACKAGE_PRICE)} (3 hrs)`,
+                  '5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6)',
+                  'Reply within 24 hours · mixing, mastering & release production available',
+                ].map((fact, i) => (
+                  <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <span>{fact}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap items-center gap-3">
+                <a
+                  href={siteConfig.contact.kakaoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackLeadEvent('lead_click_kakao', {
+                      locale,
+                      component: 'ContactPage',
+                      cta_id: 'contact_en_quickfacts_kakao',
+                    })
+                  }
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-dark transition-colors min-h-[44px] touch-manipulation"
+                >
+                  <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                  Chat on KakaoTalk
+                </a>
+                <Link
+                  href={`/${locale}/recording`}
+                  prefetch={false}
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px]"
+                >
+                  Recording studio &amp; rates <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Section>
+      )}
 
       <Section variant="default">
         <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
