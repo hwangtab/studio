@@ -1,5 +1,5 @@
 ---
-title: 흉성(Chest Voice) 완전 가이드 — 두껍고 파워풀한 저음역 발성 트레이닝
+title: 흉성 뜻·흉성 내는 법 — 두껍고 파워풀한 저음역 발성 트레이닝 (Chest Voice)
 date: 2026-04-06
 author: 스튜디오 놀
 category: 보컬 가이드
@@ -12,8 +12,7 @@ tags:
   - 보컬 레지스터
   - 파워 보컬
 thumbnail: /images/recording9.webp
-summary: >-
-  흉성(Chest Voice) 완전 가이드. 흉성의 정의와 느낌, 흉성을 강화하는 훈련법, 흉성과 두성 사이 브릿지 구간 극복 방법까지 파워풀한…
+summary: 흉성(Chest Voice)의 뜻과 흉성 내는 법을 정리합니다. 흉성의 느낌과 확인법, 저음역을 두껍고 안정적으로 내는 훈련, 흉성과 두성 사이 브릿지 구간(성구 전환)을 매끄럽게 넘기는 방법까지.
 faq:
   - q: 흉성(Chest Voice)이란 무엇인가요?
     a: >-
