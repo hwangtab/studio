@@ -106,7 +106,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '음원 유통사 등록·발매 대행',
       '아티스트 상황에 맞춘 단계별 진행',
     ],
-    softNote: '아직 발매를 결정하지 않았어도 괜찮아요. 예산·일정만 물어보면 무료로 방향을 잡아드립니다.',
+    softNote: '혼자 발매를 준비하다 막막하면, 계약 전에 예산·일정부터 편하게 물어보세요. 첫 상담 30분은 무료입니다.',
   },
 };
 
