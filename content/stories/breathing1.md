@@ -10,7 +10,6 @@ tags:
   - 보컬 훈련
   - 노래 호흡
   - 보컬 실력 향상
-  - 보컬 레슨
 thumbnail: /images/recording6.webp
 summary: >-
   보컬 호흡법이란 노래의 음량·음정·지속력을 결정하는 복식 호흡 기반 발성 지지 기술입니다.
