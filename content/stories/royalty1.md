@@ -44,7 +44,7 @@ faq:
 
 ---
 
-%%service:recording%%
+%%service:release%%
 
 ## 음악 권리의 종류
 

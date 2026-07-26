@@ -13,8 +13,9 @@ describe('matchPricingForCategory', () => {
     expect(matchPricingForCategory('recording')).toBe('recording-pro');
   });
 
-  it('mixing → mixing-level1', () => {
-    expect(matchPricingForCategory('mixing')).toBe('mixing-level1');
+  // 2026-07-26 믹싱 학습→레슨: mixing도 가격 카드에서 서비스(레슨)로 이전.
+  it('mixing → null (가격 카드 아님 — 믹싱 레슨 서비스로 이전)', () => {
+    expect(matchPricingForCategory('mixing')).toBeNull();
   });
 
   it('instrument → null (service fallback으로 이전)', () => {
@@ -77,9 +78,13 @@ describe('matchServiceForCategory', () => {
     expect(matchServiceForCategory('business')).toBe('release');
   });
 
-  it('recording/mixing/vocal/lesson 매칭 없음', () => {
+  it('mixing → lesson (믹싱 학습자 → 믹싱 레슨, 2026-07-26)', () => {
+    expect(matchServiceForCategory('mixing')).toBe('lesson');
+  });
+
+  // vocal은 lesson으로 보내지 않는다 — 보컬 발성 코칭 미제공(서비스 가드).
+  it('recording/vocal/lesson 매칭 없음', () => {
     expect(matchServiceForCategory('recording')).toBeNull();
-    expect(matchServiceForCategory('mixing')).toBeNull();
     expect(matchServiceForCategory('vocal')).toBeNull();
     expect(matchServiceForCategory('lesson')).toBeNull();
   });
@@ -153,7 +158,8 @@ describe('지역 스토리 오퍼 분기', () => {
     });
 
     it('다른 카테고리는 카테고리 맵 그대로', () => {
-      expect(matchPricingForStory('mixing', 'mixing1')).toBe('mixing-level1');
+      expect(matchPricingForStory('mixing', 'mixing1')).toBeNull(); // 믹싱 레슨 서비스로 이전
+      expect(matchPricingForStory('recording', 'selfrecord1')).toBe('recording-pro');
       expect(matchPricingForStory('instrument', 'practice-room-bass-funk1')).toBeNull();
     });
   });

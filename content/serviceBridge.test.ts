@@ -6,7 +6,8 @@ import path from 'path';
 const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   'daw-choice1.md': '%%service:lesson%%',
   'practice-room-startup1.md': '%%service:practice%%',
-  'copyright-cover1.md': '%%service:recording%%',
+  // 커버곡 저작권(세션 1위) → 커버를 만들어 발매하는 올인원 = 발매 프로젝트(2026-07-26).
+  'copyright-cover1.md': '%%service:release%%',
   // 유통(발매) 의도 글 → 발매 프로젝트 브릿지로 재타깃(2026-07-25 레버 4).
   'distribution1.md': '%%service:release%%',
   'plugins1.md': '%%service:lesson%%',
@@ -16,9 +17,11 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   'falsetto1.md': '%%service:recording%%',
   'headvoice1.md': '%%service:recording%%',
   'practice-room-vocal-diction1.md': '%%service:recording%%',
-  'royalty1.md': '%%service:recording%%',
   'session-musician1.md': '%%service:recording%%',
   'songstructure1.md': '%%service:recording%%',
+  // 발매·저작권료 의도 글 → 발매 프로젝트(2026-07-26, distribution1과 동일 케이스).
+  'royalty1.md': '%%service:release%%',
+  'single-release1.md': '%%service:release%%',
   // 녹음/발성 주제라 연습실(practice)보다 녹음 의뢰(recording) 전환 적합도가 높아 재타깃.
   'highnote1.md': '%%service:recording%%',
   'vocalrange1.md': '%%service:recording%%',

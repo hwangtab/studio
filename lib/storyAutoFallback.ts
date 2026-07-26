@@ -17,11 +17,17 @@
  * recording/vocal/region은 구매 직전 의도라 가격 카드(recording-pro)를 유지.
  * 상위 스토리는 대부분 명시 %%service%% 브릿지(2026-07-07 큐레이션)를 이미 갖고 있어
  * 이 카테고리 기본값은 롱테일에 적용된다.
+ *
+ * 2026-07-26 믹싱 학습→레슨 확장: mixing(믹싱·마스터링 튜토리얼)도 가격 카드 대신
+ * 믹싱 레슨(lesson) 서비스로. eq1·loudness1 등 고트래픽 믹싱 튜토리얼은 학습 의도라
+ * "믹싱 의뢰 가격표"가 아니라 "1:1 믹싱 레슨"이 맞고, 정원 유한 라인 대신 확장 가능한
+ * 월정액 레슨으로 매출 믹스를 이동한다. /ko/lesson이 이미 미디·믹싱·작곡 레슨 타겟.
+ * (믹싱 레슨은 실제 제공 서비스. 단, 보컬 발성 코칭은 미제공이라 vocal 카테고리는
+ * lesson으로 보내지 않는다 — recording 유지.)
  */
 
 export const PRICING_BY_CATEGORY: Readonly<Record<string, string>> = {
   recording: 'recording-pro',
-  mixing: 'mixing-level1',
   region: 'recording-pro',
   vocal: 'recording-pro',
 };
@@ -30,6 +36,7 @@ export const SERVICE_BY_CATEGORY: Readonly<Record<string, string>> = {
   instrument: 'practice',
   production: 'lesson',
   business: 'release',
+  mixing: 'lesson',
 };
 
 export const REVIEW_BY_CATEGORY: Readonly<Record<string, string>> = {

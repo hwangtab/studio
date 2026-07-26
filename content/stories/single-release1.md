@@ -43,7 +43,7 @@ faq:
 
 ---
 
-%%service:recording%%
+%%service:release%%
 
 ## 싱글 발매 체크리스트
 
