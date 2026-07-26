@@ -42,7 +42,10 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
 };
 
 // 한국어 풍부 콘텐츠. 다른 locale은 fallback (제목만 + generic body, features 없음).
-const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[] }> = {
+// softNote: 고단가 오퍼(레슨 월정액·발매 수백만)는 정보탐색 독자에게 진입 마찰이 크다.
+// 이미 실재하는 "첫 상담/견적 무료"를 앞세워 "등록·계약 전에 그냥 물어봐도 된다"는
+// 저마찰 진입로를 명시한다(새 무료 서비스 약속이 아니라 기존 무료 상담의 프레이밍).
+const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[]; softNote?: string }> = {
   lesson: {
     title: '1:1 음악 레슨',
     description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 보컬·믹싱·마스터링 멘토링.',
@@ -52,6 +55,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '믹싱·마스터링 단계 멘토 효과 큼',
       '첫 상담 무료',
     ],
+    softNote: '월 정액이 부담되면 등록 전에 궁금한 것부터 편하게 물어보세요. 첫 상담은 무료입니다.',
   },
   wedding: {
     title: '축가·이벤트 녹음',
@@ -102,6 +106,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '음원 유통사 등록·발매 대행',
       '아티스트 상황에 맞춘 단계별 진행',
     ],
+    softNote: '아직 발매를 결정하지 않았어도 괜찮아요. 예산·일정만 물어보면 무료로 방향을 잡아드립니다.',
   },
 };
 
@@ -174,6 +179,12 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
             </li>
           ))}
         </ul>
+      )}
+
+      {isKo && koContent.softNote && (
+        <p className="text-sm text-secondary dark:text-secondary-light mb-4 font-medium">
+          💬 {koContent.softNote}
+        </p>
       )}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
