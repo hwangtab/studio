@@ -57,7 +57,7 @@ howTo:
 
 ---
 
-%%service:recording%%
+%%service:lesson%%
 
 ## 발매 직전에 가장 자주 나오는 음압 실수 3가지
 

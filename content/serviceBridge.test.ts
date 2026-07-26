@@ -22,6 +22,13 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   // 녹음/발성 주제라 연습실(practice)보다 녹음 의뢰(recording) 전환 적합도가 높아 재타깃.
   'highnote1.md': '%%service:recording%%',
   'vocalrange1.md': '%%service:recording%%',
+  // 2026-07-26 레슨 매출 강화: 고트래픽 믹싱 튜토리얼(학습 의도)을 '녹음'에서 '믹싱 레슨'으로
+  // 재타깃 — 정원 유한한 연습실·의도 미스매치 녹음 대신 확장 가능한 레슨(월정액) 라인으로.
+  'eq1.md': '%%service:lesson%%',
+  'loudness1.md': '%%service:lesson%%',
+  'drum-mixing1.md': '%%service:lesson%%',
+  // song-key1(자기 키 찾기)은 정원 유한 연습실 → 녹음(보컬 녹음 의뢰)으로 재타깃.
+  'song-key1.md': '%%service:recording%%',
 };
 
 describe('high-traffic story service bridges', () => {

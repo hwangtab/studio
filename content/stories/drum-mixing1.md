@@ -41,7 +41,7 @@ faq:
 
 ---
 
-%%service:recording%%
+%%service:lesson%%
 
 ## 킥 드럼 EQ
 

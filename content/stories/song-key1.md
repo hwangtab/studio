@@ -74,7 +74,7 @@ howTo:
 
 ---
 
-%%service:practice%%
+%%service:recording%%
 
 ## 내 음역대 측정 방법
 

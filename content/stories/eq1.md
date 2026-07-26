@@ -56,7 +56,7 @@ EQ의 역사는 1950년대 방송 엔지니어링으로 거슬러 올라갑니�
 
 ---
 
-%%service:recording%%
+%%service:lesson%%
 
 ## 보컬 주파수 대역별 역할
 
