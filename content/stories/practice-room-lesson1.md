@@ -4,12 +4,10 @@ date: 2026-04-08
 author: 스튜디오 놀
 category: 악기 연습
 tags:
-  - 보컬 레슨 연습실
   - 음악 연습실
   - 레슨 연습실 병행
   - 보컬 독학 연습
   - 음악 레슨 연습
-  - 보컬 레슨 효과
   - 음악연습실 보컬
 thumbnail: /images/room3.webp
 summary: >-

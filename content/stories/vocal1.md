@@ -9,7 +9,6 @@ tags:
   - 보컬 트레이닝
   - 노래 잘 하는 법
   - 보컬 실력
-  - 연신내 보컬 레슨
 thumbnail: /images/album3.webp
 summary: >-
   보컬 독학 vs 레슨 정보를 보컬 훈련 순서, 녹음 실수, 피드백 기준으로 정리합니다. 연신내 Studio NOL 녹음에서 바로 점검할 포인트를 담았습니다.
