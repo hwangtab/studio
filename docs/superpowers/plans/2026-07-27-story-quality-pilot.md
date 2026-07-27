@@ -415,8 +415,8 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 - Consumes: 없음
 - Produces:
   - `fingerprint(markdown: string): Fingerprint`
-    - `Fingerprint = { frontmatterKeys: string[], tableRows: number, headings: string[], links: string[], directives: string[], images: number, codeFences: number }`
-    - `headings`는 제목 텍스트 배열(앵커 파손 감지용), `links`는 URL 배열, `directives`는 `%%...%%` 원문 배열.
+    - `Fingerprint = { frontmatterKeys: string[], frontmatter: object, tableRows: number, tableShape: number[], headings: string[], links: string[], directives: string[], images: number, codeFences: number }`
+    - `headings`는 제목 레벨과 텍스트를 포함한 배열 (예: `'2:섹션 제목'`), `tableShape`는 행별 열 개수 배열, `frontmatter`는 YAML 전체, `links`는 URL 배열, `directives`는 `%%...%%` 원문 배열.
   - `diffFingerprint(before: Fingerprint, after: Fingerprint): string[]` — 차이 설명 배열. 같으면 빈 배열.
 
 - [ ] **Step 1: 실패하는 테스트 작성**
@@ -457,7 +457,7 @@ describe('fingerprint', () => {
   });
 
   test('제목 텍스트를 순서대로 뽑는다', () => {
-    expect(fingerprint(BASE).headings).toEqual(['섹션 하나', '하위 제목']);
+    expect(fingerprint(BASE).headings).toEqual(['2:섹션 하나', '3:하위 제목']);
   });
 
   test('표 행·이미지 수를 센다', () => {
@@ -500,6 +500,30 @@ describe('diffFingerprint', () => {
     const after = BASE.replace('산문입니다.', '산문을 고쳤습니다. 리듬도 바꿨고요.');
     expect(diffFingerprint(fingerprint(BASE), fingerprint(after))).toEqual([]);
   });
+
+  test('제목 레벨이 바뀌면 잡는다', () => {
+    const after = BASE.replace('## 섹션 하나', '### 섹션 하나');
+    const diffs = diffFingerprint(fingerprint(BASE), fingerprint(after));
+    expect(diffs.join(' ')).toMatch(/headings/);
+  });
+
+  test('프론트매터 값이 바뀌면 잡는다', () => {
+    const after = BASE.replace('title: "글 제목"', 'title: "바뀐 제목"');
+    const diffs = diffFingerprint(fingerprint(BASE), fingerprint(after));
+    expect(diffs.join(' ')).toMatch(/frontmatter/);
+  });
+
+  test('표 열 개수가 바뀌면 잡는다', () => {
+    const after = BASE.replace('| 항목 | 값 |', '| 항목 | 값 | 추가 |').replace('|---|---|', '|---|---|---|');
+    const diffs = diffFingerprint(fingerprint(BASE), fingerprint(after));
+    expect(diffs.join(' ')).toMatch(/tableShape/);
+  });
+
+  test('숫자를 포함한 디렉티브를 뽑는다', () => {
+    const withDigitDirective = BASE.replace('%%phone%%', '%%review:review-1%%');
+    const fp = fingerprint(withDigitDirective);
+    expect(fp.directives).toContain('%%review:review-1%%');
+  });
 });
 ```
 
@@ -535,7 +559,7 @@ function fingerprint(markdown) {
   const lines = body.split('\n');
 
   const headings = [];
-  let tableRows = 0;
+  const tableShape = [];
   let images = 0;
   let codeFences = 0;
   let inFence = false;
@@ -550,16 +574,22 @@ function fingerprint(markdown) {
     if (inFence) return;
     const h = /^(#{1,6})\s+(.*)$/.exec(s);
     if (h) {
-      headings.push(h[2].trim());
+      const level = h[1].length;
+      headings.push(`${level}:${h[2].trim()}`);
       return;
     }
-    if (s.startsWith('|')) tableRows += 1;
+    if (s.startsWith('|')) {
+      const colCount = s.split('|').length - 1;
+      tableShape.push(colCount);
+    }
     if (/!\[[^\]]*\]\([^)]+\)/.test(s)) images += 1;
   });
 
   return {
     frontmatterKeys: Object.keys(parsed.data),
-    tableRows,
+    frontmatter: parsed.data,
+    tableRows: tableShape.length,
+    tableShape,
     headings,
     links: [...body.matchAll(LINK_RE)].map((m) => m[1]),
     directives: body.match(DIRECTIVE_RE) || [],
@@ -575,7 +605,7 @@ function diffFingerprint(before, after) {
     const b = JSON.stringify(after[key]);
     if (a !== b) diffs.push(`${key}: ${a} → ${b}`);
   };
-  ['frontmatterKeys', 'headings', 'links', 'directives'].forEach(cmp);
+  ['frontmatterKeys', 'frontmatter', 'headings', 'links', 'directives', 'tableShape'].forEach(cmp);
   ['tableRows', 'images', 'codeFences'].forEach((key) => {
     if (before[key] !== after[key]) diffs.push(`${key}: ${before[key]} → ${after[key]}`);
   });
@@ -588,7 +618,7 @@ module.exports = { fingerprint, diffFingerprint };
 - [ ] **Step 4: 테스트 통과 확인**
 
 Run: `npx jest scripts/__tests__/structureIntegrity.test.js`
-Expected: PASS — 9 tests
+Expected: PASS — 13 tests
 
 - [ ] **Step 5: 파일럿 파일 지문 베이스라인 저장**
 

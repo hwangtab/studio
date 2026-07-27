@@ -20,7 +20,7 @@ function fingerprint(markdown) {
   const lines = body.split('\n');
 
   const headings = [];
-  let tableRows = 0;
+  const tableShape = [];
   let images = 0;
   let codeFences = 0;
   let inFence = false;
@@ -35,16 +35,22 @@ function fingerprint(markdown) {
     if (inFence) return;
     const h = /^(#{1,6})\s+(.*)$/.exec(s);
     if (h) {
-      headings.push(h[2].trim());
+      const level = h[1].length;
+      headings.push(`${level}:${h[2].trim()}`);
       return;
     }
-    if (s.startsWith('|')) tableRows += 1;
+    if (s.startsWith('|')) {
+      const colCount = s.split('|').length - 1;
+      tableShape.push(colCount);
+    }
     if (/!\[[^\]]*\]\([^)]+\)/.test(s)) images += 1;
   });
 
   return {
     frontmatterKeys: Object.keys(parsed.data),
-    tableRows,
+    frontmatter: parsed.data,
+    tableRows: tableShape.length,
+    tableShape,
     headings,
     links: [...body.matchAll(LINK_RE)].map((m) => m[1]),
     directives: body.match(DIRECTIVE_RE) || [],
@@ -60,7 +66,7 @@ function diffFingerprint(before, after) {
     const b = JSON.stringify(after[key]);
     if (a !== b) diffs.push(`${key}: ${a} → ${b}`);
   };
-  ['frontmatterKeys', 'headings', 'links', 'directives'].forEach(cmp);
+  ['frontmatterKeys', 'frontmatter', 'headings', 'links', 'directives', 'tableShape'].forEach(cmp);
   ['tableRows', 'images', 'codeFences'].forEach((key) => {
     if (before[key] !== after[key]) diffs.push(`${key}: ${before[key]} → ${after[key]}`);
   });
