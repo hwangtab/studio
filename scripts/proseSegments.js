@@ -25,7 +25,7 @@ function isStructureLine(line, inFence) {
   if (/^#{1,6}\s/.test(s)) return true;
   if (/^(-{3,}|\*{3,}|_{3,})$/.test(s)) return true;
   if (s.startsWith('![')) return true;
-  if (/^%%[A-Za-z:_-]+%%$/.test(s)) return true;
+  if (/^%%[A-Za-z0-9:_-]+%%$/.test(s)) return true;
   if (/^\[[^\]]+\]\([^)]+\)$/.test(s)) return true;
   if (s.startsWith('>')) return true;
   return false;

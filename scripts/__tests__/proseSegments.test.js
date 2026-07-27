@@ -85,6 +85,20 @@ describe('extractProse', () => {
     const { segments } = extractProse('그냥 산문입니다.\n');
     expect(segments.map((s) => s.text)).toEqual(['그냥 산문입니다.']);
   });
+
+  test('숫자가 들어간 디렉티브는 구조로 판정된다', () => {
+    const md = [
+      '산문 줄입니다.',
+      '%%review:review-1%%',
+      '',
+      '또 다른 산문입니다.',
+    ].join('\n');
+    const { segments } = extractProse(md);
+    // 첫 번째 블록은 디렉티브를 포함하므로 제외되어야 함
+    const texts = segments.map((s) => s.text);
+    expect(texts).not.toContain('산문 줄입니다.');
+    expect(texts).toContain('또 다른 산문입니다.');
+  });
 });
 
 describe('mergeProse', () => {
@@ -130,5 +144,26 @@ describe('mergeProse', () => {
     const { marked } = extractProse(SAMPLE);
     const broken = marked.replace('두 번째 산문 단락입니다.', '');
     expect(() => mergeProse(SAMPLE, broken)).toThrow(/비어/);
+  });
+
+  test('앞쪽 세그먼트의 줄 수가 늘어나도 뒤쪽 구조가 제자리에 남는다', () => {
+    const { marked } = extractProse(SAMPLE);
+    // 첫 번째 세그먼트(001)를 두 줄 늘린다
+    const rewritten = marked.replace(
+      '첫 산문 단락입니다.\n두 번째 줄이 이어집니다.',
+      '첫 산문 단락입니다.\n두 번째 줄이 이어집니다.\n세 번째 줄을 추가했습니다.\n네 번째 줄도 추가했습니다.',
+    );
+    const merged = mergeProse(SAMPLE, rewritten);
+    // 테이블이 여전히 제자리에 있어야 함
+    expect(merged).toContain('| 가격 | 10만원 |');
+    // 코드펜스도 제자리에 있어야 함
+    expect(merged).toContain('```js');
+    // 마지막 산문도 제자리에 있어야 함
+    expect(merged).toContain('마지막 산문 단락입니다.');
+    // 추가된 줄도 포함되어야 함
+    expect(merged).toContain('세 번째 줄을 추가했습니다.');
+    // 모든 구조 요소가 정확히 한 번씩만 나타나야 함 (중복 방지)
+    expect((merged.match(/- 불릿 둘/g) || []).length).toBe(1);
+    expect((merged.match(/const a = 1;/g) || []).length).toBe(1);
   });
 });

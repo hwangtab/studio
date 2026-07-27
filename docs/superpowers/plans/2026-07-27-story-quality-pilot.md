@@ -235,7 +235,7 @@ function isStructureLine(line, inFence) {
   if (/^#{1,6}\s/.test(s)) return true;
   if (/^(-{3,}|\*{3,}|_{3,})$/.test(s)) return true;
   if (s.startsWith('![')) return true;
-  if (/^%%[A-Za-z:_-]+%%$/.test(s)) return true;
+  if (/^%%[A-Za-z0-9:_-]+%%$/.test(s)) return true;
   if (/^\[[^\]]+\]\([^)]+\)$/.test(s)) return true;
   if (s.startsWith('>')) return true;
   return false;
@@ -527,7 +527,7 @@ Create `scripts/structureIntegrity.js`:
 const matter = require('gray-matter');
 
 const LINK_RE = /(?<!!)\[[^\]]*\]\(([^)]+)\)/g;
-const DIRECTIVE_RE = /%%[A-Za-z:_-]+%%/g;
+const DIRECTIVE_RE = /%%[A-Za-z0-9:_-]+%%/g;
 
 function fingerprint(markdown) {
   const parsed = matter(markdown);
