@@ -1,0 +1,165 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { waitUntil } from '@vercel/functions';
+import { and, eq } from 'drizzle-orm';
+
+import { db } from '../../../../db/client';
+import { contractAttachments, contractClauses, contracts, signatures } from '../../../../db/schema';
+import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
+import { serializeContract } from '../../../../lib/contracts/serialize';
+import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
+import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
+
+const getClientIp = (req: NextApiRequest): string => {
+  const forwarded = req.headers['x-forwarded-for'];
+  const raw = Array.isArray(forwarded) ? forwarded[0] : forwarded || req.socket.remoteAddress || '';
+  return String(raw).split(',')[0].trim();
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader('Cache-Control', 'no-store');
+
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ ok: false, message: 'Method not allowed' });
+  }
+
+  const { id } = req.query;
+  if (typeof id !== 'string') {
+    return res.status(400).json({ ok: false, message: '잘못된 계약 ID입니다.' });
+  }
+
+  if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+  }
+
+  const { token, signatureData, agreements } = req.body as Record<string, unknown>;
+
+  if (typeof token !== 'string' || token.trim() === '') {
+    return res.status(400).json({ ok: false, message: '서명 토큰이 없습니다.' });
+  }
+
+  if (typeof signatureData !== 'string' || signatureData.trim() === '') {
+    return res.status(400).json({ ok: false, message: '서명이 필요합니다.' });
+  }
+
+  const signatureValidation = validateSignatureData(signatureData);
+  if (!signatureValidation.ok) {
+    return res.status(400).json({ ok: false, message: signatureValidation.message });
+  }
+
+  if (!Array.isArray(agreements) || agreements.some((item) => typeof item !== 'string')) {
+    return res.status(400).json({ ok: false, message: '동의 항목 형식이 올바르지 않습니다.' });
+  }
+
+  const agreedIds = new Set(agreements as string[]);
+
+  try {
+    const contract = await db.query.contracts.findFirst({
+      where: (contractsTable, { eq: equals, and: both }) =>
+        both(equals(contractsTable.id, id), equals(contractsTable.signToken, token)),
+      with: { signatures: true, contractClauses: true, contractAttachments: true },
+    });
+
+    if (!contract) {
+      return res.status(404).json({ ok: false, message: '계약을 찾을 수 없습니다.' });
+    }
+
+    // 만료 기한이 지난 링크는 서명할 수 없다. 상태 전이 규칙과 만료를 한 번에 판정한다.
+    const effectiveStatus = getEffectiveStatus(contract);
+    const allowed = checkAction(effectiveStatus, 'sign');
+    if (!allowed.ok) {
+      const message =
+        effectiveStatus === 'expired'
+          ? '서명 링크가 만료되었습니다. 운영자에게 재발송을 요청해 주세요.'
+          : allowed.message;
+      return res.status(409).json({ ok: false, message, status: effectiveStatus });
+    }
+
+    // 필수 동의 항목을 서버에서 다시 확인한다(클라이언트 검사만으로는 우회 가능).
+    const missing = [
+      ...contract.contractClauses.filter((clause) => !agreedIds.has(clause.id)),
+      ...contract.contractAttachments.filter((attachment) => !agreedIds.has(attachment.id)),
+    ];
+
+    if (missing.length > 0) {
+      return res.status(400).json({
+        ok: false,
+        message: '모든 필수 동의 항목에 동의해야 서명할 수 있습니다.',
+      });
+    }
+
+    const now = new Date();
+    const ipAddress = getClientIp(req);
+    const userAgent = String(req.headers['user-agent'] || '');
+
+    // 서명자는 계약 당사자로 고정한다. 클라이언트가 보낸 이름·이메일은 신뢰하지 않는다.
+    const pendingSignature = contract.signatures.find(
+      (signature) => signature.signerRole === 'customer' && signature.status === 'pending',
+    );
+
+    const signatureWrite = pendingSignature
+      ? db
+          .update(signatures)
+          .set({
+            status: 'signed',
+            signedAt: now,
+            signatureData,
+            ipAddress,
+            userAgent,
+            updatedAt: now,
+          })
+          .where(eq(signatures.id, pendingSignature.id))
+      : db.insert(signatures).values({
+          contractId: contract.id,
+          signerName: contract.customerName,
+          signerEmail: contract.customerEmail,
+          signerRole: 'customer',
+          status: 'signed',
+          signedAt: now,
+          signatureData,
+          ipAddress,
+          userAgent,
+        });
+
+    await db.batch([
+      signatureWrite,
+      db
+        .update(contractClauses)
+        .set({ agreedAt: now })
+        .where(eq(contractClauses.contractId, contract.id)),
+      db
+        .update(contractAttachments)
+        .set({ agreedAt: now })
+        .where(eq(contractAttachments.contractId, contract.id)),
+      db
+        .update(contracts)
+        .set({
+          status: 'signed',
+          signedAt: now,
+          signTokenUsedAt: now,
+          rulesAgreed: true,
+          rulesAgreedAt: now,
+          updatedAt: now,
+        })
+        // 동시에 두 번 제출돼도 한 번만 서명되도록 상태를 조건에 건다.
+        .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent'))),
+    ]);
+
+    const signedContract = await db.query.contracts.findFirst({
+      where: (contractsTable, { eq: equals }) => equals(contractsTable.id, contract.id),
+    });
+
+    if (!signedContract) {
+      return res.status(500).json({ ok: false, message: '서명 결과를 확인하지 못했습니다.' });
+    }
+
+    // PDF 생성·메일 발송은 응답을 보낸 뒤 이어서 처리한다. 서버리스에서 응답 직후 실행이
+    // 중단되지 않도록 waitUntil로 런타임에 알린다.
+    waitUntil(finalizeSignedContract(contract.id));
+
+    return res.status(200).json({ ok: true, contract: serializeContract(signedContract) });
+  } catch (error: unknown) {
+    console.error('[API/contracts/[id]/sign] Failed to sign contract:', error);
+    return res.status(500).json({ ok: false, message: '서명 처리에 실패했습니다.' });
+  }
+}

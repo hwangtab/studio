@@ -1,0 +1,391 @@
+import React, { useState } from 'react';
+import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import ContractContent from '../../../../components/contracts/ContractContent';
+import {
+  copyToClipboard,
+  deleteContract,
+  downloadContractPdf,
+  mutateContract,
+} from '../../../../components/admin/contractActions';
+import { Button } from '../../../../components/ui/Button';
+import { db } from '../../../../db/client';
+import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
+import {
+  serializeAttachment,
+  serializeClause,
+  serializeContractForAdmin,
+  serializeSignature,
+  type AdminSerializedContract,
+  type SerializedAttachment,
+  type SerializedClause,
+  type SerializedSignature,
+} from '../../../../lib/contracts/serialize';
+import { getStatusLabel, isActionAllowed } from '../../../../lib/contracts/status';
+
+interface AdminContractDetailPageProps {
+  contract: AdminSerializedContract;
+  signatures: SerializedSignature[];
+  clauses: SerializedClause[];
+  attachments: SerializedAttachment[];
+}
+
+export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
+  context,
+) => {
+  const auth = await authenticateAdminRequest(context);
+  if (!auth.ok) {
+    return { redirect: { destination: '/admin/login', permanent: false } };
+  }
+
+  const { id } = context.query;
+  if (typeof id !== 'string') {
+    return { notFound: true };
+  }
+
+  const contract = await db.query.contracts
+    .findFirst({
+      where: (contracts, { eq }) => eq(contracts.id, id),
+      with: { signatures: true, contractClauses: true, contractAttachments: true },
+    })
+    .catch((error: unknown) => {
+      console.error('[admin/contracts/[id]] Failed to load contract:', error);
+      return null;
+    });
+
+  if (!contract) {
+    return { notFound: true };
+  }
+
+  return {
+    props: {
+      contract: serializeContractForAdmin(contract),
+      signatures: contract.signatures.map(serializeSignature),
+      clauses: contract.contractClauses.map(serializeClause),
+      attachments: contract.contractAttachments.map(serializeAttachment),
+    },
+  };
+};
+
+const formatDate = (date: string | null): string => {
+  if (!date) return '-';
+  return new Date(date).toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+const formatDateTime = (date: string | null): string => {
+  if (!date) return '-';
+  return new Date(date).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const formatCurrency = (amount: number): string => new Intl.NumberFormat('ko-KR').format(amount);
+
+const STATUS_CLASS: Record<string, string> = {
+  draft: 'bg-gray-100 text-gray-700',
+  sent: 'bg-blue-100 text-blue-700',
+  signed: 'bg-green-100 text-green-700',
+  cancelled: 'bg-red-100 text-red-700',
+  expired: 'bg-yellow-100 text-yellow-700',
+};
+
+const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
+  <div className="flex justify-between gap-4">
+    <dt className="text-gray-500 shrink-0">{label}</dt>
+    <dd className="font-medium text-right">{value}</dd>
+  </div>
+);
+
+export default function AdminContractDetailPage({
+  contract,
+  signatures,
+  clauses,
+  attachments,
+}: AdminContractDetailPageProps) {
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const customerSignature = signatures.find((s) => s.signerRole === 'customer');
+
+  const run = async (task: () => Promise<{ ok: boolean; message?: string }>, confirmText?: string) => {
+    if (confirmText && !window.confirm(confirmText)) return;
+
+    setBusy(true);
+    setNotice(null);
+    const result = await task();
+    setBusy(false);
+
+    if (!result.ok) {
+      setNotice(result.message ?? '요청을 처리하지 못했습니다.');
+      return;
+    }
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
+  const handleCopyLink = async () => {
+    const copied = await copyToClipboard(contract.signUrl);
+    setNotice(copied ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.');
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('이 계약을 삭제할까요? 되돌릴 수 없습니다.')) return;
+
+    setBusy(true);
+    const result = await deleteContract(contract.id);
+    setBusy(false);
+
+    if (!result.ok) {
+      setNotice(result.message ?? '삭제하지 못했습니다.');
+      return;
+    }
+    await router.replace('/admin/contracts');
+  };
+
+  return (
+    <>
+      <Head>
+        <title>{contract.customerName}님 계약 상세 | Studio NOL</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+
+      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900">계약 상세</h1>
+            <Link href="/admin/contracts" passHref>
+              <Button variant="outline">목록으로</Button>
+            </Link>
+          </div>
+
+          {notice && (
+            <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+          )}
+
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div className="p-6 md:p-8 border-b border-gray-200">
+              <div className="flex flex-wrap items-center gap-3 mb-5">
+                <span
+                  className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${STATUS_CLASS[contract.status]}`}
+                >
+                  {getStatusLabel(contract.status)}
+                </span>
+                <span className="text-gray-400 text-xs font-mono">{contract.id}</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">이용자 정보</h2>
+                  <dl className="space-y-2 text-sm">
+                    <DescriptionRow label="성명" value={contract.customerName} />
+                    <DescriptionRow label="생년월일" value={contract.customerBirthdate || '-'} />
+                    <DescriptionRow label="이메일" value={contract.customerEmail} />
+                    <DescriptionRow label="전화번호" value={contract.customerPhone} />
+                    <DescriptionRow label="주소" value={contract.customerAddress || '-'} />
+                  </dl>
+                </div>
+
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">계약 정보</h2>
+                  <dl className="space-y-2 text-sm">
+                    <DescriptionRow
+                      label="호실"
+                      value={`${contract.roomNumber}호 (${contract.roomArea})`}
+                    />
+                    <DescriptionRow
+                      label="계약 기간"
+                      value={`${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`}
+                    />
+                    <DescriptionRow
+                      label="월 이용료"
+                      value={`${formatCurrency(contract.monthlyRent)}원`}
+                    />
+                    <DescriptionRow
+                      label="보증금"
+                      value={`${formatCurrency(contract.depositAmount)}원`}
+                    />
+                    <DescriptionRow label="납부일" value={`매월 ${contract.paymentDay}일`} />
+                  </dl>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                <dl className="space-y-2">
+                  <DescriptionRow label="작성일" value={formatDateTime(contract.createdAt)} />
+                  <DescriptionRow label="발송일" value={formatDateTime(contract.sentAt)} />
+                </dl>
+                <dl className="space-y-2">
+                  <DescriptionRow
+                    label="링크 만료"
+                    value={contract.status === 'sent' ? formatDateTime(contract.expiresAt) : '-'}
+                  />
+                  <DescriptionRow label="서명일" value={formatDateTime(contract.signedAt)} />
+                </dl>
+              </div>
+            </div>
+
+            <div className="p-6 md:p-8 border-b border-gray-200">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">동의 항목</h2>
+              <div className="space-y-2">
+                {clauses.map((clause) => (
+                  <div
+                    key={clause.id}
+                    className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"
+                  >
+                    <span>
+                      <strong>{clause.clauseNumber}</strong> {clause.title}
+                    </span>
+                    <span
+                      className={`shrink-0 font-medium ${clause.agreedAt ? 'text-green-600' : 'text-gray-400'}`}
+                    >
+                      {clause.agreedAt ? `✓ ${formatDateTime(clause.agreedAt)}` : '미동의'}
+                    </span>
+                  </div>
+                ))}
+                {attachments.map((attachment) => (
+                  <div
+                    key={attachment.id}
+                    className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"
+                  >
+                    <span>「{attachment.title}」</span>
+                    <span
+                      className={`shrink-0 font-medium ${attachment.agreedAt ? 'text-green-600' : 'text-gray-400'}`}
+                    >
+                      {attachment.agreedAt ? `✓ ${formatDateTime(attachment.agreedAt)}` : '미동의'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 md:p-8 border-b border-gray-200">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">서명 기록</h2>
+              {customerSignature?.status === 'signed' ? (
+                <div className="flex flex-wrap items-center gap-4">
+                  {customerSignature.signatureData && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={customerSignature.signatureData}
+                      alt="서명"
+                      className="max-h-20 border border-gray-200 rounded-lg bg-white"
+                    />
+                  )}
+                  <div className="text-sm text-gray-600 space-y-0.5">
+                    <p>서명자: {customerSignature.signerName}</p>
+                    <p>이메일: {customerSignature.signerEmail}</p>
+                    <p>일시: {formatDateTime(customerSignature.signedAt)}</p>
+                    <p>IP: {customerSignature.ipAddress || '-'}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-500 text-sm">아직 서명하지 않았습니다.</p>
+              )}
+            </div>
+
+            <div className="p-6 md:p-8">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">계약서 본문</h2>
+              <ContractContent content={contract.content} size="sm" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">작업</h2>
+            <div className="flex flex-wrap gap-3">
+              {isActionAllowed(contract.status, 'send') && (
+                <Button
+                  disabled={busy}
+                  onClick={() =>
+                    run(
+                      () => mutateContract(contract.id, 'send'),
+                      `${contract.customerEmail} 주소로 서명 요청 메일을 보냅니다. 계속할까요?`,
+                    )
+                  }
+                >
+                  {busy ? '처리 중...' : '고객에게 발송'}
+                </Button>
+              )}
+
+              {contract.status === 'sent' && (
+                <Button variant="secondary" onClick={handleCopyLink}>
+                  서명 링크 복사
+                </Button>
+              )}
+
+              {isActionAllowed(contract.status, 'resend') && (
+                <Button
+                  variant={contract.status === 'sent' ? 'outline' : 'solid'}
+                  disabled={busy}
+                  onClick={() =>
+                    run(
+                      () => mutateContract(contract.id, 'resend'),
+                      '재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 계속할까요?',
+                    )
+                  }
+                >
+                  재발송
+                </Button>
+              )}
+
+              {isActionAllowed(contract.status, 'update') && (
+                <Link href={`/admin/contracts/${contract.id}/edit`} passHref>
+                  <Button variant="outline">수정</Button>
+                </Link>
+              )}
+
+              {contract.status === 'signed' && (
+                <Button
+                  disabled={busy}
+                  onClick={() => run(() => downloadContractPdf(contract.id, contract.customerName))}
+                >
+                  PDF 다운로드
+                </Button>
+              )}
+
+              {isActionAllowed(contract.status, 'cancel') && (
+                <Button
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={() =>
+                    run(
+                      () => mutateContract(contract.id, 'cancel'),
+                      '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.',
+                    )
+                  }
+                >
+                  계약 취소
+                </Button>
+              )}
+
+              {isActionAllowed(contract.status, 'delete') && (
+                <Button
+                  variant="ghost"
+                  className="text-red-600 hover:bg-red-50"
+                  disabled={busy}
+                  onClick={handleDelete}
+                >
+                  삭제
+                </Button>
+              )}
+            </div>
+
+            {contract.status === 'signed' && (
+              <p className="mt-4 text-sm text-gray-500">
+                서명이 완료된 계약은 수정·삭제할 수 없습니다.
+              </p>
+            )}
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}

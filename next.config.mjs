@@ -9,6 +9,19 @@ const nextConfig = {
   trailingSlash: false,
   outputFileTracingRoot: __dirname,
 
+  // 전자계약 라우트는 계약서 템플릿·이용수칙 마크다운과 한글 폰트를 런타임에 readFileSync로
+  // 읽는다. 경로가 동적이라 Next.js 파일 트레이싱이 감지하지 못해, 명시하지 않으면 배포
+  // 환경에서 ENOENT로 실패한다(로컬은 소스 트리를 그대로 읽어 드러나지 않음).
+  outputFileTracingIncludes: {
+    '/api/contracts/**': [
+      './lib/contracts/*.md',
+      './lib/fonts/pretendard-variable-full.woff2',
+      './public/images/contract-seal.png',
+    ],
+    '/[locale]/contracts/**': ['./lib/contracts/*.md'],
+    '/admin/contracts/**': ['./lib/contracts/*.md'],
+  },
+
   // Optimized image configuration
   images: {
     remotePatterns: [

@@ -8,12 +8,18 @@ export type SendEmailError =
     | 'NETWORK_ERROR'
     | 'API_ERROR';
 
+interface SendEmailAttachment {
+    filename: string;
+    content: string;
+}
+
 interface SendEmailParams {
     to: string;
     subject: string;
     html?: string;
     text?: string;
     replyTo?: string;
+    attachments?: SendEmailAttachment[];
 }
 
 export interface SendEmailResult {
@@ -22,6 +28,24 @@ export interface SendEmailResult {
     errorCode?: SendEmailError;
     errorDetail?: string;
 }
+
+const escapeHtml = (unsafe: string): string =>
+    unsafe
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+export const buildEmailHtml = (parts: { title: string; body: string; footer?: string }): string => {
+    return `
+    <div style="font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+      <h2 style="color: #111;">${escapeHtml(parts.title)}</h2>
+      ${parts.body}
+      ${parts.footer ? `<p style="font-size: 12px; color: #999; margin-top: 24px;">${escapeHtml(parts.footer)}</p>` : ''}
+    </div>
+  `;
+};
 
 export async function sendEmail(params: SendEmailParams): Promise<SendEmailResult> {
     const apiKey = process.env.RESEND_API_KEY;
@@ -40,6 +64,9 @@ export async function sendEmail(params: SendEmailParams): Promise<SendEmailResul
     if (params.replyTo) body.reply_to = params.replyTo;
     if (params.html) body.html = params.html;
     if (params.text) body.text = params.text;
+    if (params.attachments && params.attachments.length > 0) {
+        body.attachments = params.attachments;
+    }
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), EMAIL_REQUEST_TIMEOUT_MS);
