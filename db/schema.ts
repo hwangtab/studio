@@ -131,6 +131,14 @@ export const contractAttachments = sqliteTable('contract_attachments', {
     .references(() => contracts.id, { onDelete: 'cascade' }),
   type: text('type').notNull(), // 'rules', 'appendix'
   title: text('title').notNull(),
+  /**
+   * 계약 시점의 첨부 문서 원본.
+   *
+   * 파일에서 매번 읽으면 수칙을 고치는 순간 이미 서명된 계약의 화면과 PDF까지 바뀐다.
+   * 고객이 동의한 문서와 보관되는 문서가 달라지므로, 계약을 만들 때 내용을 그대로
+   * 떠서 보관한다(계약 본문 content와 같은 이유).
+   */
+  content: text('content'),
   agreedAt: integer('agreed_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });

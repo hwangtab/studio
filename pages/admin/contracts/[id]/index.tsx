@@ -128,8 +128,8 @@ export default function AdminContractDetailPage({
 
     if (!result.ok) {
       setNotice(result.message ?? '요청을 처리하지 못했습니다.');
-      return;
     }
+    // 실패해도 새로고침한다 — 거절 사유는 대개 화면이 낡았다는 뜻이다.
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 

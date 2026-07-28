@@ -1,0 +1,1 @@
+ALTER TABLE `contract_attachments` ADD `content` text;

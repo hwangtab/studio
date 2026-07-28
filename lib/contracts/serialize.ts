@@ -15,7 +15,7 @@ export type Serialized<T> = { [K in keyof T]: SerializeValue<T[K]> };
 export type SerializedContract = Omit<Serialized<Contract>, 'signToken'>;
 export type SerializedSignature = Serialized<Signature>;
 export type SerializedClause = Serialized<ContractClause>;
-export type SerializedAttachment = Serialized<ContractAttachment>;
+export type SerializedAttachment = Omit<Serialized<ContractAttachment>, 'content'>;
 
 const iso = (date: Date | null): string | null => (date ? date.toISOString() : null);
 
@@ -83,8 +83,16 @@ export const serializeClause = (clause: ContractClause): SerializedClause => ({
   createdAt: clause.createdAt.toISOString(),
 });
 
-export const serializeAttachment = (attachment: ContractAttachment): SerializedAttachment => ({
-  ...attachment,
-  agreedAt: iso(attachment.agreedAt),
-  createdAt: attachment.createdAt.toISOString(),
-});
+/**
+ * 첨부 본문(content)은 응답에서 뺀다. 수 KB짜리 이용수칙 전문을 목록·상세 응답마다
+ * 실어 나를 이유가 없다 — 화면에 필요한 곳(서명 페이지)은 rulesContent로 따로 받는다.
+ */
+export const serializeAttachment = (attachment: ContractAttachment): SerializedAttachment => {
+  const { content: _content, ...rest } = attachment;
+
+  return {
+    ...rest,
+    agreedAt: iso(attachment.agreedAt),
+    createdAt: attachment.createdAt.toISOString(),
+  };
+};

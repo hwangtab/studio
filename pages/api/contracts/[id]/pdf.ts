@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { generateContractPdf } from '../../../../lib/contracts/pdf';
-import { buildRulesContent } from '../../../../lib/contracts/template';
+import { resolveRulesContent } from '../../../../lib/contracts/template';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -45,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       signature: customerSignature,
       clauses: contract.contractClauses,
       attachments: contract.contractAttachments,
-      rulesContent: buildRulesContent(),
+      rulesContent: resolveRulesContent(contract.contractAttachments),
     });
 
     // 한글 파일명은 RFC 5987 filename*로 넘긴다. filename만 쓰면 일부 브라우저가 깨뜨린다.

@@ -79,6 +79,7 @@ const attachments: ContractAttachment[] = [
     contractId: 'contract-1',
     type: 'rules',
     title: '공동생활 이용수칙',
+    content: null,
     agreedAt: null,
     createdAt: now,
   },

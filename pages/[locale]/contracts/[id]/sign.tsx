@@ -17,7 +17,7 @@ import {
 } from '../../../../lib/contracts/serialize';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
-import { buildRulesContent } from '../../../../lib/contracts/template';
+import { resolveRulesContent } from '../../../../lib/contracts/template';
 
 /** 서명 캔버스 내부 해상도. 표시 크기의 2배로 잡아 고해상도 화면에서도 선이 선명하다. */
 const CANVAS_WIDTH = 1440;
@@ -91,7 +91,7 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
         contract: serializeContract({ ...rest, signToken: contract.signToken }),
         clauses: contractClauses.map(serializeClause),
         attachments: contractAttachments.map(serializeAttachment),
-        rulesContent: buildRulesContent(),
+        rulesContent: resolveRulesContent(contractAttachments),
       },
     };
   } catch (error: unknown) {

@@ -74,8 +74,26 @@ export const buildContractContent = (data: ContractTemplateData): string => {
  * 공동생활 이용수칙 원본. 계약서의 첨부 문서로 서명 페이지·PDF에 함께 실린다.
  * 배포 환경의 파일 트레이싱을 위해 lib/contracts 아래에 두며(next.config.mjs 참조),
  * 수정할 때는 이 파일이 단일 원본이다.
+ *
+ * 이미 만들어진 계약을 읽을 때는 이 함수를 쓰지 말 것 — 계약 시점에 떠 둔 사본
+ * (contract_attachments.content)을 써야 한다. 파일을 고치면 이미 체결된 계약의 첨부까지
+ * 바뀌어, 고객이 동의한 문서와 보관되는 문서가 달라진다. 사본을 읽을 때는
+ * resolveRulesContent를 쓴다.
  */
 export const buildRulesContent = (): string => {
   const rulesPath = path.join(process.cwd(), 'lib', 'contracts', 'house-rules.md');
   return readFileSync(rulesPath, 'utf-8');
+};
+
+/**
+ * 계약에 딸린 이용수칙 본문을 고른다.
+ *
+ * 스냅샷이 있으면 그것이 정답이다. 없을 때만(스냅샷 도입 이전에 만들어진 계약) 현재
+ * 파일로 되돌아간다.
+ */
+export const resolveRulesContent = (
+  attachments: ReadonlyArray<{ type: string; content: string | null }>,
+): string => {
+  const snapshot = attachments.find((attachment) => attachment.type === 'rules')?.content;
+  return snapshot ?? buildRulesContent();
 };

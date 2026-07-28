@@ -5,7 +5,7 @@ import { contracts, type Signature } from '../../db/schema';
 import { sendContractSignedEmail, sendOperatorContractNotification } from './email';
 import { generateContractPdf } from './pdf';
 import { uploadContractPdf } from './pdf-storage';
-import { buildRulesContent } from './template';
+import { resolveRulesContent } from './template';
 
 /**
  * 서명 직후의 후처리 — PDF 생성·보관과 확인 메일 발송.
@@ -38,7 +38,7 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
       signature: customerSignature,
       clauses: contract.contractClauses,
       attachments: contract.contractAttachments,
-      rulesContent: buildRulesContent(),
+      rulesContent: resolveRulesContent(contract.contractAttachments),
     });
 
     const pdfUrl = await uploadContractPdf(contract.id, pdfBuffer);

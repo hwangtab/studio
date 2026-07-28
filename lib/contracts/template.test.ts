@@ -1,6 +1,6 @@
 /** @jest-environment node */
 
-import { buildContractContent, buildRulesContent } from './template';
+import { buildContractContent, buildRulesContent, resolveRulesContent } from './template';
 import { renderMarkdown } from './markdown';
 
 const baseData = {
@@ -102,6 +102,26 @@ describe('공동생활 이용수칙', () => {
   it('런타임에서 원본 파일을 읽어온다', () => {
     const rules = buildRulesContent();
     expect(rules.length).toBeGreaterThan(0);
+  });
+
+  // 파일을 고치면 이미 체결된 계약의 첨부까지 바뀌어, 고객이 동의한 문서와 보관되는
+  // 문서가 달라진다. 계약이 들고 있는 사본이 항상 우선해야 한다.
+  it('계약이 들고 있는 사본을 원본 파일보다 우선한다', () => {
+    const snapshot = '# 계약 시점의 이용수칙\n\n이 계약에 적용되는 판본.';
+    const resolved = resolveRulesContent([{ type: 'rules', content: snapshot }]);
+
+    expect(resolved).toBe(snapshot);
+    expect(resolved).not.toBe(buildRulesContent());
+  });
+
+  it('사본이 없는 과거 계약만 현재 파일로 되돌아간다', () => {
+    expect(resolveRulesContent([{ type: 'rules', content: null }])).toBe(buildRulesContent());
+    expect(resolveRulesContent([])).toBe(buildRulesContent());
+  });
+
+  it('rules 이외의 첨부는 이용수칙으로 오인하지 않는다', () => {
+    const resolved = resolveRulesContent([{ type: 'appendix', content: '다른 문서' }]);
+    expect(resolved).toBe(buildRulesContent());
   });
 });
 

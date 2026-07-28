@@ -104,8 +104,9 @@ export default function AdminContractsPage({ contracts, error }: AdminContractsP
 
     if (!result.ok) {
       setNotice(result.message ?? '요청을 처리하지 못했습니다.');
-      return;
     }
+    // 실패했더라도 새로고침한다. 거절 사유는 대개 "화면이 낡았다"는 것이라,
+    // 낡은 상태를 그대로 두면 같은 버튼을 계속 누르게 된다.
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 

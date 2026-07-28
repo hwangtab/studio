@@ -10,7 +10,7 @@ import {
 } from '../../db/schema';
 import { sendContractCreatedEmail, sendOperatorContractNotification } from './email';
 import { computeExpiresAt, type ContractStatus } from './status';
-import { buildContractContent } from './template';
+import { buildContractContent, buildRulesContent } from './template';
 import { buildSignUrl, generateSignToken } from './token';
 import type { CreateContractPayload } from './validation';
 
@@ -103,11 +103,16 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     })),
   );
 
+  // 첨부 문서는 계약 시점 내용을 그대로 떠서 보관한다 — 원본 파일이 바뀌어도
+  // 이미 체결된 계약의 첨부는 달라지지 않아야 한다.
+  const rulesContent = buildRulesContent();
+
   await getDb().insert(contractAttachments).values(
     REQUIRED_ATTACHMENTS.map((attachment) => ({
       contractId: contract.id,
       type: attachment.type,
       title: attachment.title,
+      content: attachment.type === 'rules' ? rulesContent : null,
     })),
   );
 
