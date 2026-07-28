@@ -1,6 +1,7 @@
 ---
 title: 온라인 보컬 레슨 vs 오프라인 레슨 — 장단점 비교와 선택 가이드
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

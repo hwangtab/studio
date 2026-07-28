@@ -1,6 +1,7 @@
 ---
 title: 녹음실 에티켓 — 예약·세션 중 소통·장비 사용 주의사항
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

@@ -1,6 +1,7 @@
 ---
 title: FL Studio 보컬 녹음 완전 가이드 — 힙합·EDM 프로듀서를 위한 보컬 세팅
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

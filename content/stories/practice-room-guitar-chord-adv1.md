@@ -1,6 +1,7 @@
 ---
 title: 기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 가사 빨리 외우는 법 — 노래 가사 암기 전략과 녹음 세션 준비
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

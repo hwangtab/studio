@@ -1,6 +1,7 @@
 ---
 title: 뮤지컬 보컬 훈련 — 딕션·프로젝션·역할 감정 표현 연습
 date: 2026-04-09
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 악기 연습
 tags:

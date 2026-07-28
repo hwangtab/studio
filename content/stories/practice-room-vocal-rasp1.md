@@ -1,6 +1,7 @@
 ---
 title: 보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

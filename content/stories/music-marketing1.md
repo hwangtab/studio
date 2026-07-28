@@ -1,6 +1,7 @@
 ---
 title: 음악 마케팅·아티스트 마케팅 가이드 — 인디 음악 홍보·SNS·팬덤 구축 전략
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 황경하
 category: 음악 비즈니스
 tags:

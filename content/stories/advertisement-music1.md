@@ -1,6 +1,7 @@
 ---
 title: CF·광고음악 제작 — 광고 BGM·CM송·싱크 라이센싱 가이드
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

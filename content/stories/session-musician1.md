@@ -1,6 +1,7 @@
 ---
 title: 세션 뜻·세션 뮤지션이란 — 세션 싱어·밴드 세션 활동법
 date: 2026-04-07
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

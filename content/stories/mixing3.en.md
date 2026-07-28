@@ -1,6 +1,7 @@
 ---
 title: 'Mixing Course - Part 3: The Gear-Addiction Detox Project'
 date: 2025-11-14T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

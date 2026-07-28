@@ -1,6 +1,7 @@
 ---
 title: 기타 바레 코드·F코드 극복 훈련 — 검지 강화와 정확한 누르는 위치
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

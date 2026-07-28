@@ -1,6 +1,7 @@
 ---
 title: 노래 잘하는 방법 — 보컬 실력을 올리는 5가지 핵심 원칙
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

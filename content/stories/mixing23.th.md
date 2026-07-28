@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 23: ตอนจบยิ่งใหญ่—Mastering'
 date: 2025-12-03T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

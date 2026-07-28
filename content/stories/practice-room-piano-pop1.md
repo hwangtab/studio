@@ -1,6 +1,7 @@
 ---
 title: 팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

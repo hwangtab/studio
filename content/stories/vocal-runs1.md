@@ -1,6 +1,7 @@
 ---
 title: 보컬 런(멜리스마) 완전 가이드 — R&B·가스펠 스타일 빠른 음 연결 기법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

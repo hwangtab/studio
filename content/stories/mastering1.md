@@ -1,6 +1,7 @@
 ---
 title: 마스터링이란? 마스터링 뜻과 믹싱과 마스터링 차이·LUFS -14 기준
 date: 2026-04-06
+lastmod: 2026-07-26
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

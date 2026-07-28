@@ -1,6 +1,7 @@
 ---
 title: 유튜브·라이브 스트리밍 음악 연습 — 라이브 방송 전 완벽 준비
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 'Curso de Mezcla - Parte 1: El inicio de la mezcla como cocina'
 date: 2025-11-12T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

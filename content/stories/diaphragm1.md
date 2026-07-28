@@ -1,6 +1,7 @@
 ---
 title: 복식호흡·횡격막 발성 완전 가이드 — 보컬 호흡 훈련법
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

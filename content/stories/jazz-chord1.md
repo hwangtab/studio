@@ -1,6 +1,7 @@
 ---
 title: 재즈 코드 진행 완전 가이드 — ii-V-I·재즈 화성·보이싱 기법
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

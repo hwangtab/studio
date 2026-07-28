@@ -1,6 +1,7 @@
 ---
 title: 'Curso de Mezcla - Parte 11: La última pieza antes de mezclar, edición'
 date: 2025-11-22T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

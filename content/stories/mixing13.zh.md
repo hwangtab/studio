@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 13 部：静止时最美（静态混音）
 date: 2025-11-23T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

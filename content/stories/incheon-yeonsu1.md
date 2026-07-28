@@ -1,6 +1,7 @@
 ---
 title: 인천 연수구 연수·청학·동춘·옥련동 녹음실
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

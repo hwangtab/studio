@@ -1,6 +1,7 @@
 ---
 title: 보컬 코러스·하모니 훈련 — 보컬 하모니 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

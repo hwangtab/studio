@@ -1,6 +1,7 @@
 ---
 title: 보컬 무대 퍼포먼스 — 무대 동작·표정 연기·스테이지 연기 훈련
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

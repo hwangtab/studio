@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 21 部：失真的美学——饱和与失真
 date: 2025-12-01T00:00:00.000Z
+lastmod: 2026-04-24
 author: Studio NOL
 category: lesson
 tags:

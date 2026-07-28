@@ -1,6 +1,7 @@
 ---
 title: 재즈 피아노 컴핑 훈련 — Red Garland·Wynton Kelly 스타일 밴드 앙상블
 date: 2026-04-08
+lastmod: 2026-07-27
 tags:
   - 음악 연습실
   - 피아노

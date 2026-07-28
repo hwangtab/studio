@@ -1,6 +1,7 @@
 ---
 title: 인스타그램 음악 업로드·릴스 활용 완전 가이드 — 보컬 아티스트를 위한 SNS 전략
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

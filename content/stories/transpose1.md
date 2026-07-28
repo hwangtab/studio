@@ -1,6 +1,7 @@
 ---
 title: 노래 키 변경·전조하는 법 — 반음 올리기/내리기와 노래방·DAW 키 조절 가이드
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

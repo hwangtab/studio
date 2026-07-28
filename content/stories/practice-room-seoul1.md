@@ -1,6 +1,7 @@
 ---
 title: 서울 음악연습실 추천 — 권역별 비교와 가성비 좋은 선택 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

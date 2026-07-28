@@ -1,6 +1,7 @@
 ---
 title: 독립 아티스트 음악 PR 방법 — 프레스 릴리즈·블로거 피치·SNS 홍보
 date: 2026-04-07
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

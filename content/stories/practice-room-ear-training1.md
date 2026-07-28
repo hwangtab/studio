@@ -1,6 +1,7 @@
 ---
 title: 청음·귀 훈련 — 상대음감 훈련과 음정·화음 청취 향상법
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

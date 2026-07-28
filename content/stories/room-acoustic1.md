@@ -1,6 +1,7 @@
 ---
 title: 룸 어쿠스틱 처리 — 흡음재·확산재·베이스 트랩 배치 방법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

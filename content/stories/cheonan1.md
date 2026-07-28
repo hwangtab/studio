@@ -1,6 +1,7 @@
 ---
 title: 천안·아산에서 서울 녹음실 — KTX·전철로 스튜디오 놀 방문 가이드
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

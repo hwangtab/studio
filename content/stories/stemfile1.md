@@ -1,6 +1,7 @@
 ---
 title: 녹음 파일 납품 형식 완전 가이드 — WAV·스템·믹스다운 파일 이해하기
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

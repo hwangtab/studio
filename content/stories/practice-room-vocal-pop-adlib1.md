@@ -1,6 +1,7 @@
 ---
 title: 보컬 팝 애드립·스타일링 — Beyoncé·Ariana Grande 스타일 기법
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 보컬

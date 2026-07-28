@@ -1,6 +1,7 @@
 ---
 title: 보컬 음색 고급 개발 — 포먼트·후두 위치 조절로 음색 개성 확립
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

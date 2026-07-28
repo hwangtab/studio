@@ -1,6 +1,7 @@
 ---
 title: 음악 연습 체력·지구력 관리 — 오래 연습해도 지치지 않는 법
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

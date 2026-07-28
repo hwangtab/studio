@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 15 部：左右的美学——声像（Panning）
 date: 2025-11-25T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

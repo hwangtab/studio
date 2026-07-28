@@ -1,6 +1,7 @@
 ---
 title: 인디 EP 앨범 만들기 — 기획·녹음·믹싱·발매까지 단계별 제작 순서
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

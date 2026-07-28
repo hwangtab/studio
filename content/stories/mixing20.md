@@ -1,6 +1,7 @@
 ---
 title: "모듈레이션 이펙트 종류·코러스·플랜저·페이저 활용법 | 믹싱 강좌 20부"
 date: 2025-11-30
+lastmod: 2026-06-22
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "모듈레이션", "Modulation", "Chorus"]

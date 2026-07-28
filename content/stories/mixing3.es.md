@@ -3,6 +3,7 @@ title: >-
   Curso de Mezcla - Parte 3: Proyecto de desintoxicación de la obsesión por el
   equipo
 date: 2025-11-14T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

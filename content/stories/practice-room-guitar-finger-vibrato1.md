@@ -1,6 +1,7 @@
 ---
 title: 기타 왼손 비브라토·핑거 비브라토 — 기타 비브라토 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

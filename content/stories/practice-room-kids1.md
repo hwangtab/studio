@@ -1,6 +1,7 @@
 ---
 title: 어린이·청소년 — 아이 음악 연습 공간 선택 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

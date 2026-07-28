@@ -1,6 +1,7 @@
 ---
 title: 용인 처인구 용인역·동백·남사·원삼 녹음실
 date: 2026-04-07
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

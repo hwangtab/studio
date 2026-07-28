@@ -1,6 +1,7 @@
 ---
 title: 'Khóa học Mixing - Phần 6: Đọc âm thanh bằng mắt (Tất tần tật về metering)'
 date: 2025-11-17T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

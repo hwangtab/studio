@@ -1,6 +1,7 @@
 ---
 title: ASMR 녹음 방법 완전 가이드 — ASMR 제작을 위한 마이크·환경·편집 기초
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

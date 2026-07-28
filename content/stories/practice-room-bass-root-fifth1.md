@@ -1,6 +1,7 @@
 ---
 title: 베이스 루트·5도 패턴 — 기초 코드 라인으로 화성 기초 훈련
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

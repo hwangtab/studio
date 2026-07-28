@@ -1,6 +1,7 @@
 ---
 title: WAV MP3 차이 완전 정리 — 음질·용량 비교, 발매·납품엔 어떤 형식?
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

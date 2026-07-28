@@ -1,6 +1,7 @@
 ---
 title: 녹음 전 보컬 워밍업 루틴 — 성대를 준비하는 15분 루틴
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

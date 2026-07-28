@@ -1,6 +1,7 @@
 ---
 title: '불광·연신내 뮤지션 "불광믹싱클럽" 첫 모임 안내'
 date: 2025-11-03
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 이벤트
 tags:

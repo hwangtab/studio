@@ -1,6 +1,7 @@
 ---
 title: Studio NOL veb-sayti yangilandi!
 date: 2025-06-04T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: notice
 tags:

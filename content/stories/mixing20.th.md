@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 20: เวทมนตร์คลื่นของ Modulation'
 date: 2025-11-30T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

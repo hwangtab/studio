@@ -1,6 +1,7 @@
 ---
 title: 'Curso de Mezcla - Parte 18: Dar aire a la música, reverb'
 date: 2025-11-28T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

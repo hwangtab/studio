@@ -1,6 +1,7 @@
 ---
 title: 핑거스타일 기타 연습 — 손가락 연주 기타 마스터 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

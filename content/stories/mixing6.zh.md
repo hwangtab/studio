@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 6 部：用眼睛读声音（米特的全部）
 date: 2025-11-17T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

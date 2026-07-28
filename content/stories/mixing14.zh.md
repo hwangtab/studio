@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 14 部：混音 8 成是音量平衡
 date: 2025-11-24T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

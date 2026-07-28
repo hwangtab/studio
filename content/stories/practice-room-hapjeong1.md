@@ -2,6 +2,7 @@
 title: 합정역 음악연습실 추천 — 6호선+2호선 합정역, 연신내 24시간 방음 개인실 월 36만원 입주
 cta: practice
 date: 2026-05-25
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

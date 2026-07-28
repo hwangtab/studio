@@ -1,6 +1,7 @@
 ---
 title: 보컬 중심 편곡 방법 — 파트 역할·미디 vs 실연 어레인지먼트 차이
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 음악 제작
 tags:

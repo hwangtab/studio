@@ -1,6 +1,7 @@
 ---
 title: 보컬 포트폴리오 만들기 — 오디션·레이블 제출·SNS용 보컬 데모 완성 가이드
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 음악 온라인 협업 도구 활용 완전 가이드
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

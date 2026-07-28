@@ -1,6 +1,7 @@
 ---
 title: 동대문구 신설·용두·제기·답십리 녹음실
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

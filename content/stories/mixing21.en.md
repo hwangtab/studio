@@ -1,6 +1,7 @@
 ---
 title: 'Mixing Course - Part 21: The Aesthetics of Distortion & Saturation'
 date: 2025-12-01T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 고음에서 모음 수정(Vowel Modification)하는 법 — 자연스러운 고음 발성 훈련
 date: 2026-04-08
+lastmod: 2026-06-14
 tags:
   - 음악 연습실
   - 보컬

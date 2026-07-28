@@ -1,6 +1,7 @@
 ---
 title: 앨범·EP 트랙 순서 결정 완전 가이드 — 곡 배열로 리스너 경험 설계하기
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 제작
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 피아노 루바토 연습법 — 쇼팽 스타일 템포 자유 표현과 보상 원리
 date: 2026-04-09
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

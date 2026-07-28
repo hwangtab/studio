@@ -1,6 +1,7 @@
 ---
 title: "게인 스테이징(Gain Staging) 뜻·설정법·홈레코딩 적용 | 믹싱 강좌 8부"
 date: 2025-11-19
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "게인스테이징", "GainStaging", "Headroom"]

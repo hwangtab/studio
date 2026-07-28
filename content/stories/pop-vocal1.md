@@ -1,6 +1,7 @@
 ---
 title: 팝 보컬 녹음 완전 가이드 — K팝·팝 장르 보컬 레코딩 세팅과 표현 전략
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

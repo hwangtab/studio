@@ -1,6 +1,7 @@
 ---
 title: 마이크 종류 비교 — 다이나믹·콘덴서·리본 차이와 보컬 추천
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

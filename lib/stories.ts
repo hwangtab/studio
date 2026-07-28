@@ -326,9 +326,15 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     if (cached) return cached;
   }
 
-  const { filePath, sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
-  const modifiedDate = fs.statSync(filePath).mtime.toISOString();
+  const { sourceLocale, data, content } = getParsedStoryFile(slug, requestedLocale);
   const baseStory = mapStoryFrontmatter(slug, data, content, requestedLocale);
+
+  // dateModified는 frontmatter lastmod에서만 온다. 파일 mtime을 쓰면 git이 mtime을
+  // 보존하지 않는 탓에 Vercel이 배포할 때마다 전 글이 "방금 수정됨"으로 찍혀,
+  // 사실과 다른 데다 균일한 가짜 최신성이라 검색·AI 엔진에서 신호 가치도 없다.
+  // lastmod이 없으면 발행일이 곧 최종 수정일이다.
+  const rawLastmod = data?.lastmod as string | Date | undefined;
+  const modifiedDate = rawLastmod ? normalizeDate(rawLastmod) : baseStory.date;
 
   // multilingual 일관성: cta는 사이트 전략 차원이므로 모든 locale에서 동일해야 한다.
   // 번역본 frontmatter에 cta가 없으면 default locale(ko) 원본 파일의 cta를 폴백 적용.

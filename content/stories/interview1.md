@@ -2,6 +2,7 @@
 title: 박찬울 프로듀서 인터뷰 — 자이 Golden Hour 프로듀싱 비하인드
 cta: production
 date: 2025-06-05
+lastmod: 2026-07-19
 author: "스튜디오 놀"
 category: 후기
 tags:

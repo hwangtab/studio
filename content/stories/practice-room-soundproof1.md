@@ -1,6 +1,7 @@
 ---
 title: 방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리
 date: 2026-04-07
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 보컬 솔페지오·구음 훈련 — 도레미 음계로 상대음감과 초견 향상
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 피아노 테크닉·손가락 독립 연습 — 기술 완성 집중 가이드
 date: 2026-04-08
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 악기 연습
 tags:

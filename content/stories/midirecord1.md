@@ -1,6 +1,7 @@
 ---
 title: MIDI 편곡 후 보컬 녹음 연계 — 스템 파일 준비와 스튜디오 세션 방법
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

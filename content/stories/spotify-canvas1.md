@@ -1,6 +1,7 @@
 ---
 title: Spotify Canvas·가사 완전 가이드 — 누가 만들고 어떻게 올리나
 date: 2026-05-29
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 블루스 록 기타 훈련 — SRV·Eric Clapton 스타일 펜타토닉 솔로
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 기타

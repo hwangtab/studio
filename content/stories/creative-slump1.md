@@ -1,6 +1,7 @@
 ---
 title: 창작 슬럼프 극복 완전 가이드 — 음악 창작 블록 해소 방법
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

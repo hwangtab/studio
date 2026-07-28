@@ -1,6 +1,7 @@
 ---
 title: 오페라·성악 연습 — 클래식 성악 발성 완성 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

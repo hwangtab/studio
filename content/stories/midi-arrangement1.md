@@ -1,6 +1,7 @@
 ---
 title: MIDI 편곡 완전 가이드 — DAW에서 MIDI로 완성하는 음악 제작
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

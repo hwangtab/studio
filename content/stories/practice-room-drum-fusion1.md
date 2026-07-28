@@ -1,6 +1,7 @@
 ---
 title: 퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 드럼

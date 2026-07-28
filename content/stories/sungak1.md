@@ -1,6 +1,7 @@
 ---
 title: 성악과 보컬의 차이 — 클래식 발성 vs 팝 발성 완전 비교 가이드
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

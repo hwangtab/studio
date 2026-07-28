@@ -1,6 +1,7 @@
 ---
 title: 스튜디오 방문 체크리스트 — 녹음 세션 전 준비해야 할 모든 것
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

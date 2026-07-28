@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 2 部：驯服会说谎的房间
 date: 2025-11-13T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

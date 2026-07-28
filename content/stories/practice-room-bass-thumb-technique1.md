@@ -1,6 +1,7 @@
 ---
 title: 베이스 썸 테크닉 훈련법 — 더블 썸핑·Victor Wooten 슬랩 고급 기법
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 베이스

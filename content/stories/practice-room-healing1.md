@@ -1,6 +1,7 @@
 ---
 title: 음악 치유·힐링 — 음악으로 마음을 회복하는 공간
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: DAW 최적화 완전 가이드 — CPU 절약·버퍼 설정·레이턴시 해결법
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

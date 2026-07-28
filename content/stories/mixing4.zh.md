@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 4 部：数字音频的分辨率（采样率 & 位深）
 date: 2025-11-15T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

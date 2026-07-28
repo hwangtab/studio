@@ -2,6 +2,7 @@
 title: 앨범 믹싱·마스터링 의뢰 후기 — "디지털 싱글이 완전히 달라졌습니다"
 cta: production
 date: 2026-04-07
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 후기
 tags:

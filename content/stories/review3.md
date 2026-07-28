@@ -1,6 +1,7 @@
 ---
 title: 인디 보컬리스트의 셀프 디지털 싱글 녹음기 — 스튜디오 놀 세션 후기
 date: 2026-03-15
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 후기
 tags:

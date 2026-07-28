@@ -1,6 +1,7 @@
 ---
 title: 'Miks kursi - 20-qism: Modulationning to''lqinli sehri'
 date: 2025-11-30T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

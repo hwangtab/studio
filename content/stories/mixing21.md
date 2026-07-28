@@ -1,6 +1,7 @@
 ---
 title: "믹싱에서 새츄레이션 활용법 — 디스토션 vs 테이프 새츄레이션 차이와 드럼·보컬 적용"
 date: 2025-12-01
+lastmod: 2026-05-29
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "새츄레이션", "Saturation", "Distortion"]

@@ -1,6 +1,7 @@
 ---
 title: CCM·찬양 보컬 녹음 가이드 — 예배 음원부터 스트리밍 찬양 발매까지
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

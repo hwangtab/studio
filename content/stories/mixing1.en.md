@@ -1,6 +1,7 @@
 ---
 title: 'Mixing Course - Part 1: The Start of Mixing as Cooking'
 date: 2025-11-12T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

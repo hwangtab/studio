@@ -1,6 +1,7 @@
 ---
 title: 성우 지망생 입문 — 오디션·프리랜서·직업 준비 방법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

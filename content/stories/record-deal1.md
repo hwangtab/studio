@@ -2,6 +2,7 @@
 title: 음반사·레이블 계약 완전 가이드 — 뮤지션이 알아야 할 레코드 딜의 모든 것
 cta: production
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

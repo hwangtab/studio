@@ -1,6 +1,7 @@
 ---
 title: 인천 서구 석남·신현·가좌·청라 녹음실
 date: 2026-04-07
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 7 部：混音从整理开始
 date: 2025-11-18T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

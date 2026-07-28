@@ -1,6 +1,7 @@
 ---
 title: 보증금 없는 — 부담 없이 시작하는 입주 연습실 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

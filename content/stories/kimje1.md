@@ -1,6 +1,7 @@
 ---
 title: 김제에서 서울 녹음실 방문 가이드 — KTX 익산역 경유 2시간 10분
 date: 2026-04-07
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

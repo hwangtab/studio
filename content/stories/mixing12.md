@@ -1,6 +1,7 @@
 ---
 title: "믹싱 템플릿 만들기·DAW 세션 프리셋·작업 속도 향상 | 믹싱 강좌 12부"
 date: 2025-11-23
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "템플릿", "Template", "Routing"]

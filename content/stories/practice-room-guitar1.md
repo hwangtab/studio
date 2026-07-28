@@ -1,6 +1,7 @@
 ---
 title: 기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

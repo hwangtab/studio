@@ -1,6 +1,7 @@
 ---
 title: 파라메트릭 EQ 완전 가이드 — Q값·주파수·게인 설정과 보컬·악기 활용법
 date: 2026-04-07
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

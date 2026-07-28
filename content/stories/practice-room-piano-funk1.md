@@ -1,6 +1,7 @@
 ---
 title: 피아노 펑크·클라비넷 스타일 — Herbie Hancock 그루브 패턴 훈련
 date: 2026-04-08
+lastmod: 2026-07-27
 tags:
   - 음악 연습실
   - 피아노

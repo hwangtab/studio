@@ -1,6 +1,7 @@
 ---
 title: 단기 집중 연습 — 1주일로 실력을 끌어올리는 스프린트 전략
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

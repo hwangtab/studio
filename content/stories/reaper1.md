@@ -1,6 +1,7 @@
 ---
 title: Reaper 보컬 녹음 완전 가이드 — 저렴하고 실용적인 DAW로 고퀄리티 녹음
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

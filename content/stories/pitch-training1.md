@@ -1,6 +1,7 @@
 ---
 title: 음정 교정 완전 가이드 — 보컬 음정 이탈 원인과 자연 교정 훈련법
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

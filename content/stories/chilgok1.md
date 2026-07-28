@@ -1,6 +1,7 @@
 ---
 title: 칠곡에서 서울 녹음실 방문 가이드 — KTX 동대구역 또는 김천구미역 경유
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

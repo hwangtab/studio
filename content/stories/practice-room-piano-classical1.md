@@ -1,6 +1,7 @@
 ---
 title: 클래식 피아노 — 소나타·에튀드 독학 순서와 암보 전략
 date: 2026-04-09
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

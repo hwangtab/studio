@@ -1,6 +1,7 @@
 ---
 title: 충주에서 서울 녹음실 방문 가이드 — KTX 오송역 경유 또는 충주역 기차
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

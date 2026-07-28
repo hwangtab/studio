@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 1: จุดเริ่มต้นของมิกซ์เหมือนการทำอาหาร'
 date: 2025-11-12T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

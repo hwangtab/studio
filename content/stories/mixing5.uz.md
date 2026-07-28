@@ -1,6 +1,7 @@
 ---
 title: 'Miks kursi - 5-qism: Raqamli dushmanlar (xatolar va shovqin)'
 date: 2025-11-16T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

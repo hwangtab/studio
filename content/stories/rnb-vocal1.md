@@ -1,6 +1,7 @@
 ---
 title: R&B 보컬 녹음 완전 가이드 — 멜리스마·런·애드립 레코딩 기법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 힙합 보컬·플로우 완전 가이드 — 한국어 랩 딕션·라임 훈련법
 date: 2026-04-07
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

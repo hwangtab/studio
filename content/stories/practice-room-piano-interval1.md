@@ -1,6 +1,7 @@
 ---
 title: 피아노 인터벌 훈련 — 3도·6도 이중음과 음정 청음 인식
 date: 2026-04-09
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

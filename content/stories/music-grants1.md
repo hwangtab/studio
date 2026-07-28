@@ -1,6 +1,7 @@
 ---
 title: 뮤지션 음악 지원금·창작 지원 제도 완전 가이드
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

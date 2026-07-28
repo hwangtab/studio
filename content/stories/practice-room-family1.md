@@ -1,6 +1,7 @@
 ---
 title: 가족 음악 취미 연습실 — 온 가족이 함께하는 음악 생활
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

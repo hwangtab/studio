@@ -1,6 +1,7 @@
 ---
 title: 우쿨렐레 독학 입문 — 4줄 코드·스트러밍·멜로디 연주 기초
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

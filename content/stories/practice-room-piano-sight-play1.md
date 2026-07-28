@@ -1,6 +1,7 @@
 ---
 title: 피아노 즉흥 반주·코드 반주 — 피아노 코드 반주 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 악기 연습
 tags:

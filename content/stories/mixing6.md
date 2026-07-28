@@ -1,6 +1,7 @@
 ---
 title: "미터링(Metering) 완전 가이드 — 뜻·VU·피크·LUFS 믹싱 레벨 관리"
 date: 2025-11-17
+lastmod: 2026-06-14
 author: "스튜디오 놀"
 category: 믹싱·마스터링
 tags: ["미터링", "Metering", "LUFS", "VU미터", "믹싱 레벨", "피크미터", "라우드니스"]

@@ -1,6 +1,7 @@
 ---
 title: iZotope Nectar 보컬 처리 완전 가이드 — AI 올인원 보컬 플러그인
 date: 2026-04-07
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

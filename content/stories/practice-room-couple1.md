@@ -1,6 +1,7 @@
 ---
 title: 커플·연인 음악 취미 연습실 — 함께 노래·연주하는 데이트 방법
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 클래식·팝·재즈 장르 전환 — 새로운 음악 세계 도전
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

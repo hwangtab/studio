@@ -1,6 +1,7 @@
 ---
 title: 피아노 믹싱 완전 가이드 — EQ·컴프레서·공간감 실전 설정
 date: 2026-04-07
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

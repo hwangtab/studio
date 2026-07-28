@@ -1,6 +1,7 @@
 ---
 title: 성남 수정구·중원구·신흥·단대·은행 녹음실
 date: 2026-04-07
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

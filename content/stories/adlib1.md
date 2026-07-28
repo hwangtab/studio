@@ -1,6 +1,7 @@
 ---
 title: 애드립·런 완전 가이드 — R&B·소울 보컬 즉흥 표현 기법
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

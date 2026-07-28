@@ -1,6 +1,7 @@
 ---
 title: 인디 뮤지션 SNS 마케팅 가이드 — 인스타그램·유튜브·틱톡으로 팬 만들기
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

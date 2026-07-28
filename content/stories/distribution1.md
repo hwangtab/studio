@@ -1,6 +1,7 @@
 ---
 title: 음원 유통 완전 가이드 — DistroKid·국내 유통사 추천 비교와 멜론·스포티파이 발매 절차
 date: 2026-04-06
+lastmod: 2026-07-25
 author: 황경하
 category: 음악 비즈니스
 tags:

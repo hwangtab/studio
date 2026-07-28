@@ -1,6 +1,7 @@
 ---
 title: 연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

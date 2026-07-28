@@ -1,6 +1,7 @@
 ---
 title: 금관·목관 편곡 완전 가이드 — 팝·재즈·R&B를 위한 브라스 어레인지먼트
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 'Mixing Course - Part 15: The Art of Left and Right, Panning'
 date: 2025-11-25T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

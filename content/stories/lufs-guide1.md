@@ -1,6 +1,7 @@
 ---
 title: LUFS 완전 가이드 — 스트리밍 음압 기준과 마스터링 목표값 설정
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

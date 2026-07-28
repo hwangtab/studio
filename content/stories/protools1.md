@@ -1,6 +1,7 @@
 ---
 title: Pro Tools 보컬 녹음 완전 가이드 — 업계 표준 DAW로 스튜디오급 녹음
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

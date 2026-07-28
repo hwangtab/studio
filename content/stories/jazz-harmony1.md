@@ -1,6 +1,7 @@
 ---
 title: 재즈 화성학 기초 완전 가이드 — 코드 텐션·보이싱·ii-V-I 진행
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

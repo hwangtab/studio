@@ -1,6 +1,7 @@
 ---
 title: 연습실 vs 노래방 — 보컬 연습 공간 완전 비교 가이드
 date: 2026-04-08
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 악기 연습
 tags:

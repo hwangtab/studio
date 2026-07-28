@@ -1,6 +1,7 @@
 ---
 title: 래퍼 힙합 연습 — 방음실 풀 볼륨 플로우·딕션 실전 훈련
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

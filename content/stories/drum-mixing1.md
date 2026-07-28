@@ -1,6 +1,7 @@
 ---
 title: 드럼 믹싱 완전 가이드 — 킥·스네어·하이햇 EQ·컴프레서 실전 설정
 date: 2026-04-07
+lastmod: 2026-07-26
 author: 황경하
 category: 믹싱·마스터링
 tags:

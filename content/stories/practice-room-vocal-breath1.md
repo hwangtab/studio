@@ -1,6 +1,7 @@
 ---
 title: 보컬 브레스 컨트롤 훈련법 — 복식호흡 지지력과 호흡 포인트 설정
 date: 2026-04-09
+lastmod: 2026-06-14
 author: 스튜디오 놀
 category: 악기 연습
 tags:

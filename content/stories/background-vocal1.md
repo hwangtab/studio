@@ -1,6 +1,7 @@
 ---
 title: 백보컬 완전 가이드 — 백 보컬 뜻·코러스 녹음법·화음 잡는 법
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

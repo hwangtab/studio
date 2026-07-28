@@ -1,6 +1,7 @@
 ---
 title: 미디 작업실·음악 프로덕션 연습실 — DAW 작업에 최적화된 연습실 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 연습실 고르는 법 — 2026년 체크리스트 완벽 가이드
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 악기 연습
 tags:

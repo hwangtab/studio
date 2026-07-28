@@ -1,6 +1,7 @@
 ---
 title: 유튜브 쇼츠로 보컬·음악 활동하는 방법 — 노출 극대화 전략
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

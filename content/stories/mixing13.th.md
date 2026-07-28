@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 13: สวยที่สุดเมื่ออยู่นิ่ง (Static Mix)'
 date: 2025-11-23T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

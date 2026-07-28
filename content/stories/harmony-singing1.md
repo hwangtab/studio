@@ -1,6 +1,7 @@
 ---
 title: 하모니 노래 완전 가이드 — 코러스·화음 보컬 녹음과 어레인지
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

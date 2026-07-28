@@ -1,6 +1,7 @@
 ---
 title: 게임 음악 제작 — BGM 루프·효과음·Wwise·FMOD 인터랙티브 오디오
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

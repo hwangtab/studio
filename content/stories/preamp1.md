@@ -1,6 +1,7 @@
 ---
 title: 마이크 프리앰프 완전 가이드 — 보컬 녹음 음색에 미치는 영향
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

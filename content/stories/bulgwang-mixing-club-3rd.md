@@ -1,6 +1,7 @@
 ---
 title: 불광믹싱클럽 3회 모임 — 연신내 뮤지션 믹싱 피드백 네트워킹
 date: 2025-11-18
+lastmod: 2026-07-19
 author: "스튜디오 놀"
 category: 이벤트
 tags:

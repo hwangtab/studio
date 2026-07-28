@@ -1,6 +1,7 @@
 ---
 title: 디에서란? — 보컬 치찰음 제거 원리와 5~8kHz 주파수 설정 완전 가이드
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

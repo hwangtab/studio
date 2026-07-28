@@ -1,6 +1,7 @@
 ---
 title: 기타 왼손 독립·핑거링 훈련 — 크롤링·링거·소지 단독 훈련법
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

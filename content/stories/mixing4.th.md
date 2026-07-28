@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 4: ความละเอียดเสียงดิจิทัล (Sample Rate & Bit Depth)'
 date: 2025-11-15T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

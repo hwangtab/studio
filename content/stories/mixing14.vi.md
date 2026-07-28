@@ -1,6 +1,7 @@
 ---
 title: 'Khóa học Mixing - Phần 14: 80% của mix là cân bằng volume'
 date: 2025-11-24T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

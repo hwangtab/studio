@@ -1,6 +1,7 @@
 ---
 title: 공연 전날 리허설 — 셋리스트 논스톱 완주와 최종 점검 루틴
 date: 2026-04-08
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 악기 연습
 tags:

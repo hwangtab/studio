@@ -1,6 +1,7 @@
 ---
 title: 현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

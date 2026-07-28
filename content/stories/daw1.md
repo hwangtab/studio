@@ -1,6 +1,7 @@
 ---
 title: DAW 선택 가이드 — GarageBand·Logic·Ableton·FL Studio 비교
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

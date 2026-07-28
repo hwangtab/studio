@@ -1,6 +1,7 @@
 ---
 title: 보컬 EQ 완전 가이드 — 주파수 대역별 역할과 믹싱 실전 세팅
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

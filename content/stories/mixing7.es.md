@@ -1,6 +1,7 @@
 ---
 title: 'Curso de Mezcla - Parte 7: La mezcla empieza con el orden'
 date: 2025-11-18T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

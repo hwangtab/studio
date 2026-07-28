@@ -1,6 +1,7 @@
 ---
 title: 보컬 중음역 강화 — 흉성·두성 연결과 혼합 공명 훈련
 date: 2026-04-09
+lastmod: 2026-06-14
 author: 스튜디오 놀
 category: 악기 연습
 tags:

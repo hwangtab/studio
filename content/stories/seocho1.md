@@ -1,6 +1,7 @@
 ---
 title: 서초구 녹음실 — 강남·서초·방배·양재에서 연신내까지
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

@@ -2,6 +2,7 @@
 title: 연신내 음악연습실 — 4번 출구 도보 5분, 24시간 방음 개인실 월 36만원 입주
 cta: practice
 date: 2026-04-08
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

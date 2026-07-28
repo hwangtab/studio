@@ -1,6 +1,7 @@
 ---
 title: 앙상블·합주 준비 개인 연습실 — 함께 연주 전 완벽한 파트 숙지
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: '음악 저작권 등록 방법 — KOMCA 등록, 저작권 보호, 인디 뮤지션 저작권 관리'
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

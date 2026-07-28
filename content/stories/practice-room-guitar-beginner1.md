@@ -1,6 +1,7 @@
 ---
 title: 기타 독학 연습실 — 기타 초보자를 위한 연습 공간 완벽 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

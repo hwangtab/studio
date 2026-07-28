@@ -1,6 +1,7 @@
 ---
 title: 마스터링 팁 완전 가이드 — 스트리밍 최적화·LUFS·리미터 실전 설정
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

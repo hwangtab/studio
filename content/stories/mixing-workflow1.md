@@ -1,6 +1,7 @@
 ---
 title: 믹싱 워크플로우 — 클리닝·레벨·EQ·다이나믹·공간감 단계 순서
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

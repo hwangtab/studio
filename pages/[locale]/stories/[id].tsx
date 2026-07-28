@@ -23,7 +23,7 @@ const StickyBottomCTA = dynamic(() => import('../../../components/inline/StickyB
 // 있었다 → 본문 하단에 FAQSection을 렌더해 스키마-가시콘텐츠 일치를 확보.
 const FAQSection = dynamic(() => import('../../../components/ui/FAQSection'));
 import { shareContent } from '../../../utils/shareUtils';
-import { timeAgo } from '../../../utils/dateUtils';
+import { formatDate, timeAgo } from '../../../utils/dateUtils';
 import { getRelatedStories, getStoryDetail, getStoryPaths } from '../../../lib/stories';
 import { getStoryRelatedPortfolio } from '../../../lib/storyRelatedPortfolio';
 import { STORY_CATEGORY_KEYS } from '../../../lib/storyCategories';
@@ -107,6 +107,11 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 
   const getLink = (path: string) => `/${locale}${path}`;
   const metaDescription = buildStoryMetaDescription(story.content);
+
+  // 발행 후 실제로 개정된 글인지 — frontmatter lastmod이 발행일보다 늦을 때만 참.
+  const isRevised = Boolean(
+    story.modifiedDate && story.modifiedDate.slice(0, 10) > story.date.slice(0, 10)
+  );
 
   // 카카오톡 등 소셜 스크레이퍼는 WebP og:image를 지원하지 않으므로
   // story.thumbnail(WebP)과 무관하게 항상 PNG를 반환하는 동적 OG 엔드포인트를 사용.
@@ -246,6 +251,16 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         <article itemScope itemType="https://schema.org/BlogPosting">
           <meta itemProp="headline" content={story.title} />
           {story.date && <meta itemProp="datePublished" content={story.date} />}
+          {/* 개정된 글에만 최종 수정일을 노출한다. 발행 후 손대지 않은 글은
+              히어로의 발행일이 곧 최종 수정일이라 같은 날짜를 두 번 보일 이유가 없다. */}
+          {isRevised && (
+            <p className="mb-6 typo-card-meta text-sm text-gray-500 dark:text-gray-400">
+              {t('stories.detail.lastUpdated')}{' '}
+              <time itemProp="dateModified" dateTime={story.modifiedDate}>
+                {formatDate(story.modifiedDate as string, locale)}
+              </time>
+            </p>
+          )}
           {story.summary && (
             // 핵심 요약 리드 — meta에만 쓰이던 summary를 본문 상단에 가시 렌더.
             // AI 검색엔진(ChatGPT·Perplexity 등)이 인용하기 좋은 자기완결 요약 + 독자 UX.

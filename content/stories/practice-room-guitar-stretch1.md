@@ -1,6 +1,7 @@
 ---
 title: 기타 핑거링 스트레칭 훈련 — 손가락 유연성·독립·워밍업 루틴
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 피아노 크로스핸드 테크닉 — Scarlatti·Chopin 클래식 기교 훈련
 date: 2026-04-08
+lastmod: 2026-07-27
 tags:
   - 음악 연습실
   - 피아노

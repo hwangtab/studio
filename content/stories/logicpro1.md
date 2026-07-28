@@ -1,6 +1,7 @@
 ---
 title: Logic Pro 보컬 녹음 완전 가이드 — Mac 전용 DAW로 프로급 녹음
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

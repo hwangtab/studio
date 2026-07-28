@@ -1,6 +1,7 @@
 ---
 title: "오토메이션 사용법·볼륨/팬 라이딩·믹스 다이나믹 | 믹싱 강좌 22부"
 date: 2025-12-02
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "오토메이션", "Automation", "DynamicMix"]

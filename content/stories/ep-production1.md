@@ -1,6 +1,7 @@
 ---
 title: EP 제작 과정 — 미니앨범 트랙 수·녹음·믹싱·발매 타임라인
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

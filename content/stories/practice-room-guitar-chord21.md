@@ -1,6 +1,7 @@
 ---
 title: 기타 오픈코드 완전 가이드 — C·G·D·Em·Am 기본 코드 운지와 전환 훈련법
 date: 2026-04-09
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 악기 연습
 tags:

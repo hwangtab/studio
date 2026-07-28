@@ -1,6 +1,7 @@
 ---
 title: 보컬 딕션 훈련 — 한국어·영어 노래 발음 교정과 가사 전달력 향상
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

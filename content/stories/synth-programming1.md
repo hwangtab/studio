@@ -1,6 +1,7 @@
 ---
 title: 신스 프로그래밍 기초 — ADSR·오실레이터·필터·LFO 파라미터 설정법
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 제작
 tags:

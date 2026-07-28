@@ -1,6 +1,7 @@
 ---
 title: 피아노 연습실 선택법 — 어쿠스틱 vs 디지털·방음 등급·24시간 조건
 date: 2026-04-08
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

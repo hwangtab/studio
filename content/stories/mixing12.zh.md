@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 12 部：打造你的混音模板（录音室秘技）
 date: 2025-11-23T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

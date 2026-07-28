@@ -1,6 +1,7 @@
 ---
 title: "믹싱 완전 가이드 — 입문부터 마스터링까지 23편 로드맵"
 date: 2026-04-12
+lastmod: 2026-06-22
 author: "스튜디오 놀"
 category: 강좌
 tags:

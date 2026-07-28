@@ -1,6 +1,7 @@
 ---
 title: 흉성 뜻·흉성 내는 법 — 두껍고 파워풀한 저음역 발성 트레이닝 (Chest Voice)
 date: 2026-04-06
+lastmod: 2026-07-26
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

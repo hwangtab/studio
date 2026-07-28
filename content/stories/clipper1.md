@@ -1,6 +1,7 @@
 ---
 title: 클리퍼란? — 소프트·하드 클리핑 차이와 마스터링 음압·True Peak 관리 가이드
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

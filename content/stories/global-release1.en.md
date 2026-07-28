@@ -1,6 +1,7 @@
 ---
 title: "Releasing Music Abroad & Global Distribution — The Complete Guide: How K-pop and Indie Music Break Into Overseas Streaming"
 date: 2026-04-07
+lastmod: 2026-05-29
 author: Studio NOL
 category: business
 tags:

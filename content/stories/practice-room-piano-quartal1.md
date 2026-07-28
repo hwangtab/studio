@@ -1,6 +1,7 @@
 ---
 title: 피아노 쿼탈 하모니 훈련 — 4도 보이싱·McCoy Tyner·Bill Evans 스타일
 date: 2026-04-08
+lastmod: 2026-07-27
 tags:
   - 음악 연습실
   - 피아노

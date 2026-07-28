@@ -1,6 +1,7 @@
 ---
 title: 창원 의창구·성산구·마산 녹음실 스튜디오 방문 가이드
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

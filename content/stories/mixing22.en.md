@@ -1,6 +1,7 @@
 ---
 title: 'Mixing Course - Part 22: Painting on Time, Automation'
 date: 2025-12-02T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

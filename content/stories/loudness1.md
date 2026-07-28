@@ -1,6 +1,7 @@
 ---
 title: 스트리밍 음압 기준 완전 가이드 — 발매 전 반드시 맞춰야 할 LUFS·True Peak 설정
 date: 2026-04-06
+lastmod: 2026-07-26
 author: 황경하
 category: 믹싱·마스터링
 tags:

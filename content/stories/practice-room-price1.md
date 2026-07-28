@@ -1,6 +1,7 @@
 ---
 title: 연습실 가격 완벽 정리 — 시간 대여·월세 입주 비용 비교 (2026)
 date: 2026-04-07
+lastmod: 2026-07-21
 author: 황경하
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 베이스 믹싱 완전 가이드 — 탄탄한 저역을 만드는 EQ·컴프레서 설정
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 황경하
 category: 믹싱·마스터링
 tags:

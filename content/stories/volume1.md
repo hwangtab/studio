@@ -1,6 +1,7 @@
 ---
 title: 성량 키우는 방법 완전 가이드 — 보컬 볼륨을 늘리는 발성 훈련
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

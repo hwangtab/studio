@@ -1,6 +1,7 @@
 ---
 title: 천안시 서북구 불당·두정·직산·성환 녹음실
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

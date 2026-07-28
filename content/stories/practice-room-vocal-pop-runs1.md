@@ -1,6 +1,7 @@
 ---
 title: 보컬 팝 런·멜리스마 — Mariah Carey·Christina Aguilera 스타일 훈련
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 보컬

@@ -1,6 +1,7 @@
 ---
 title: 'Khóa học Mixing - Phần 5: Kẻ thù của digital (Lỗi và nhiễu)'
 date: 2025-11-16T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

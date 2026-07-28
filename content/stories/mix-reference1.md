@@ -1,6 +1,7 @@
 ---
 title: 믹싱할 때 레퍼런스 트랙 쓰는 법 — 선택 기준과 DAW 비교 세팅
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

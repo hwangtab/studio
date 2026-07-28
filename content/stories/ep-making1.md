@@ -1,6 +1,7 @@
 ---
 title: EP 제작·발매 완전 가이드 — 인디 아티스트 미니앨범 3~6개월 로드맵
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

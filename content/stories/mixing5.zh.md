@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 5 部：数字的敌人（错误与噪声）
 date: 2025-11-16T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

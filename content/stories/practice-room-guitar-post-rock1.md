@@ -1,6 +1,7 @@
 ---
 title: 포스트록 기타·빌드업·Explosions in the Sky·Mogwai 스타일
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 기타

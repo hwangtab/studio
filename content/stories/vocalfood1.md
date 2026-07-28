@@ -1,6 +1,7 @@
 ---
 title: 보컬 녹음 전 먹으면 안 되는 음식 — 성대 보호를 위한 식단 가이드
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

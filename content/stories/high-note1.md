@@ -1,6 +1,7 @@
 ---
 title: 고음 발성 완전 가이드 — 고음 올리는 방법과 고음 훈련법
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

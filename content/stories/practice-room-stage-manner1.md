@@ -1,6 +1,7 @@
 ---
 title: 무대 매너·퍼포먼스 연습 — 눈 맞춤·MC 멘트·동선 실전 준비
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

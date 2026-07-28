@@ -1,6 +1,7 @@
 ---
 title: 싱어송라이터 녹음 완전 가이드 — 혼자서 만들고 녹음하는 방법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

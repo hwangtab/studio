@@ -1,6 +1,7 @@
 ---
 title: 바이올린 연습 — 방음 개인실에서 현악기 집중 연습
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

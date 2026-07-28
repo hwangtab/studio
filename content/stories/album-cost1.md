@@ -1,6 +1,7 @@
 ---
 title: 음반 제작 비용 완전 가이드 — 싱글·EP·정규 앨범 예산 계획
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

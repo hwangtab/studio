@@ -1,6 +1,7 @@
 ---
 title: DAW 비교 완전 가이드 — 보컬 녹음용 작업환경 선택법
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

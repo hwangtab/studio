@@ -1,6 +1,7 @@
 ---
 title: 보컬 새추레이션이란? — Tape·Tube·Transformer 타입 차이와 보컬 존재감 강화 설정
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

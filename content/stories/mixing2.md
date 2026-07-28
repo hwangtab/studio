@@ -1,6 +1,7 @@
 ---
 title: 홈스튜디오 룸 어쿠스틱 체크 — 스피커 배치·방음으로 믹스 판단력 높이기
 date: 2025-11-13
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "모니터링", "Monitoring", "RoomAcoustic"]

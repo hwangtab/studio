@@ -1,6 +1,7 @@
 ---
 title: 혼자 앨범 내는 방법 — 작곡부터 음원 유통까지 현실적인 순서
 date: 2026-04-08
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

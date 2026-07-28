@@ -1,6 +1,7 @@
 ---
 title: 보컬 런·애드립 훈련 — 멜리스마 기초와 화려한 패시지 기법
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

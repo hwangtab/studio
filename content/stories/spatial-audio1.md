@@ -1,6 +1,7 @@
 ---
 title: 돌비 애트모스·공간 음향 믹싱 — 스테레오 vs 3D 이머시브 오디오 차이
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

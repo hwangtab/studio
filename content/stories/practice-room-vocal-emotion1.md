@@ -1,6 +1,7 @@
 ---
 title: 보컬 감정 표현 훈련법 — 가사 해석·감정 매핑·다이나믹 표현
 date: 2026-04-09
+lastmod: 2026-05-29
 author: 스튜디오 놀
 category: 악기 연습
 tags:

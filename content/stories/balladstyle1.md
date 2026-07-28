@@ -1,6 +1,7 @@
 ---
 title: 발라드 창법 완전 가이드 — 감성 발라드 보컬 스타일과 훈련법
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

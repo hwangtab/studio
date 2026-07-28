@@ -1,6 +1,7 @@
 ---
 title: '"Bulgwang Mixing Club" Thông báo buổi gặp mặt đầu tiên'
 date: 2025-11-03T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: event
 tags:

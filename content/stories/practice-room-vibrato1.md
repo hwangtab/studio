@@ -1,6 +1,7 @@
 ---
 title: 비브라토·음정 안정화 연습 — 보컬·현악기 비브라토 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

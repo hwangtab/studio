@@ -1,6 +1,7 @@
 ---
 title: 음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

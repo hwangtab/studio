@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 11 部：混音前的最后一块拼图——编辑
 date: 2025-11-22T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

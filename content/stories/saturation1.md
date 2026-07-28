@@ -1,6 +1,7 @@
 ---
 title: 새추레이션(Saturation) 완전 가이드 — 보컬·믹스에 아날로그 따뜻함 더하기
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

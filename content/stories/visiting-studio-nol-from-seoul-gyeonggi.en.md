@@ -1,6 +1,7 @@
 ---
 title: "Visiting Studio NOL: Yeonsinnae Access from Seoul, Gyeonggi, and Incheon"
 date: 2026-05-12T00:00:00.000Z
+lastmod: 2026-06-20
 category: foreign-musicians
 summary: "Directions and transit guide to Studio NOL (Yeonsinnae, Seoul Line 3) — reach in under an hour from most parts of Seoul, Gyeonggi, and Incheon."
 keywords: ["Yeonsinnae studio access", "Studio NOL location Seoul", "how to get to Yeonsinnae", "Seoul Line 3 studio"]

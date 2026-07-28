@@ -1,6 +1,7 @@
 ---
 title: "컴프레서 사용법·어택/릴리즈·플러그인 추천 | 믹싱 강좌 17부"
 date: 2025-11-27
+lastmod: 2026-06-22
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "컴프레서", "Dynamics", "Compressor"]

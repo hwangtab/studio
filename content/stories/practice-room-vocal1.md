@@ -1,6 +1,7 @@
 ---
 title: 보컬 연습실 완전 활용법 — 노래 실력 빠르게 키우는 환경 가이드
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

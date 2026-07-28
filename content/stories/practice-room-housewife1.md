@@ -1,6 +1,7 @@
 ---
 title: 주부·육아맘 — 육아 중에도 나만의 음악 시간 갖기
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

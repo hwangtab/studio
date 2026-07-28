@@ -1,6 +1,7 @@
 ---
 title: 매장 음악 저작권이란? — 카페·식당 BGM 사용료 기준과 무료 합법 서비스 가이드
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

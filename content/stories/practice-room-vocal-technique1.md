@@ -1,6 +1,7 @@
 ---
 title: 보컬 테크닉·런·멜리스마 연습 — 화려한 보컬 기술 완성
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

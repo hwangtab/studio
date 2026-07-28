@@ -1,6 +1,7 @@
 ---
 title: 'Miks kursi - 23-qism: Katta yakun — Mastering'
 date: 2025-12-03T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

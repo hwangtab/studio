@@ -1,6 +1,7 @@
 ---
 title: 복식호흡 보컬 훈련법 — 횡격막 호흡으로 발성 지지력 키우기
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

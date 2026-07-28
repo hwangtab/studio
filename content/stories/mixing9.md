@@ -1,6 +1,7 @@
 ---
 title: "위상(Phase) 뜻·상쇄 원리·마이크 다중 녹음 정렬법 | 믹싱 강좌 9부"
 date: 2025-11-20
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "위상", "Phase", "DrumMixing"]

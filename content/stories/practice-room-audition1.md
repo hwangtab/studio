@@ -1,6 +1,7 @@
 ---
 title: 보컬 오디션 준비 — K-pop 기획사·방송·입시 오디션 유형별 연습 전략
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

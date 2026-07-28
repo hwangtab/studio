@@ -1,6 +1,7 @@
 ---
 title: 목소리 굵어지는 방법 — 풍부하고 두꺼운 보컬 사운드 만들기
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

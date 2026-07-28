@@ -1,6 +1,7 @@
 ---
 title: 오버더빙 완전 가이드 — 기존 녹음에 보컬·악기 추가하기
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

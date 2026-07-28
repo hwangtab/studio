@@ -2,6 +2,7 @@
 title: 대화역 음악연습실 추천 — 3호선 종점 대화역, 연신내 24시간 방음 개인실 월 36만원 입주
 cta: practice
 date: 2026-05-25
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 robots: 'noindex, follow'

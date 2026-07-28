@@ -1,6 +1,7 @@
 ---
 title: 보컬 크루닝 훈련법 — 마이크 인티머시와 저음 발성 감성 표현
 date: 2026-04-09
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 드럼 고급 필인·전환 기법·John Bonham — 완전 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 드럼

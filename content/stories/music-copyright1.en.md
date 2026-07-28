@@ -1,6 +1,7 @@
 ---
 title: "The Complete Guide to Music Copyright & Neighboring Rights — Copyright Basics Every Artist Should Know"
 date: 2026-04-06
+lastmod: 2026-05-29
 author: Studio NOL
 category: business
 tags:

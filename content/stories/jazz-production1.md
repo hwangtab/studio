@@ -1,6 +1,7 @@
 ---
 title: 재즈 음악 제작 방법 — 앙상블 레코딩·마이킹·믹싱 접근법
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

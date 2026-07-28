@@ -1,6 +1,7 @@
 ---
 title: 대전시 대덕구 신탄진·회덕·법동 녹음실 — KTX로 연신내 스튜디오 놀 방문 가이드
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

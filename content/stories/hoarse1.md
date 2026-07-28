@@ -1,6 +1,7 @@
 ---
 title: 쉰 목소리 원인과 치료법 — 성대 보호 응급 가이드
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

@@ -2,6 +2,7 @@
 title: 가수 지망생이 해야 할 일 — 데뷔 전 준비 로드맵과 첫 녹음 가이드
 cta: recording
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

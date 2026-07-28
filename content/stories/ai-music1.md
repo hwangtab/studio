@@ -1,6 +1,7 @@
 ---
 title: AI 음악 제작 완전 가이드 — AI 작곡·AI 보컬·AI 믹싱 활용법과 한계
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

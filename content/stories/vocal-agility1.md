@@ -1,6 +1,7 @@
 ---
 title: 보컬 애지리티 완전 가이드 — 멜리스마·리프·런 연습 방법
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

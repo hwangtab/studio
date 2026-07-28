@@ -1,6 +1,7 @@
 ---
 title: 커버송 녹음 완전 가이드 — 유튜브·SNS용 커버 음원 제작부터 업로드까지
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

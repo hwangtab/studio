@@ -1,6 +1,7 @@
 ---
 title: "믹싱 볼륨 밸런스 맞추는 법·페이더 설정 순서 | 믹싱 강좌 14부"
 date: 2025-11-24
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "볼륨", "Balance", "Fader"]

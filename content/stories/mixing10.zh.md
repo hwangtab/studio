@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 10 部：打造黄金耳（听力训练与录音室智慧）
 date: 2025-11-21T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

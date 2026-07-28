@@ -1,6 +1,7 @@
 ---
 title: 'Curso de Mezcla - Parte 22: Dibujar sobre el tiempo, automatización'
 date: 2025-12-02T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

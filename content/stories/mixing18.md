@@ -1,6 +1,7 @@
 ---
 title: "리버브(Reverb) 종류·프리딜레이·디케이 파라미터 설정법 | 믹싱 강좌 18부"
 date: 2025-11-28
+lastmod: 2026-06-22
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "리버브", "Reverb", "Space"]

@@ -1,6 +1,7 @@
 ---
 title: 중장년·시니어 — 50대 이후 악기 취미를 위한 연습 공간 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

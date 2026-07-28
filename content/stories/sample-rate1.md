@@ -1,6 +1,7 @@
 ---
 title: 샘플레이트·비트뎁스 완전 가이드 — 44.1kHz·48kHz·24bit 녹음 설정과 납품 기준
 date: 2026-04-06
+lastmod: 2026-06-09
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

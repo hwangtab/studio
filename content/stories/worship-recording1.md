@@ -1,6 +1,7 @@
 ---
 title: 교회 찬양팀 음원 제작법 — 예배 보컬·악기 레코딩과 CCM 믹싱 절차
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

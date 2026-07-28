@@ -1,6 +1,7 @@
 ---
 title: 보컬 더블 트래킹 완전 가이드 — 소리를 두껍게 만드는 녹음 기술
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

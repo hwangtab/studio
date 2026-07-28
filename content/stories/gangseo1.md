@@ -1,6 +1,7 @@
 ---
 title: 강서구 녹음실 — 화곡·발산·개화·방화에서 연신내까지
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

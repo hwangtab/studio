@@ -1,6 +1,7 @@
 ---
 title: 사운드 디자인 입문 — 신스 가산·FM 합성으로 원하는 소리 만드는 방법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 제작
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 음악 포트폴리오·오디션 영상 준비 — 내 음악 기록 완성
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

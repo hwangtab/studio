@@ -1,6 +1,7 @@
 ---
 title: 연습실 대여 방법 — 예약부터 이용까지 단계별 가이드
 date: 2026-04-07
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

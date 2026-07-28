@@ -1,6 +1,7 @@
 ---
 title: 샘플레이트·비트뎁스란? — 44.1kHz·48kHz, 16bit·24bit 디지털 오디오 해상도 가이드
 date: 2025-11-15
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 강좌
 tags:

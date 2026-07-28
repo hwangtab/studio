@@ -1,6 +1,7 @@
 ---
 title: 음악 멘탈 트레이닝·집중력 — 연주 심리 완성 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

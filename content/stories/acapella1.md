@@ -1,6 +1,7 @@
 ---
 title: 아카펠라 녹음 가이드 — 솔로 다성부터 그룹 하모니까지
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

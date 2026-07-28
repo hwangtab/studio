@@ -1,6 +1,7 @@
 ---
 title: "DAW 믹싱 세션 정리법: 트랙 네이밍·그룹핑·버스 라우팅 | 믹싱 강좌 7부"
 date: 2025-11-18
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "세션정리", "SessionPrep", "Workflow"]

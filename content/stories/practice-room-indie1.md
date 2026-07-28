@@ -1,6 +1,7 @@
 ---
 title: 인디 뮤지션·독립 음악가 — 혼자 음악 만드는 공간 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

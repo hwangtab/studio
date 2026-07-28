@@ -1,6 +1,7 @@
 ---
 title: 음악가 부상 예방·신체 관리 — 연주 전 워밍업과 통증 대처법
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

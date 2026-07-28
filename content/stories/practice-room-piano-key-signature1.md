@@ -1,6 +1,7 @@
 ---
 title: 피아노 조표·조성 이해 — 5도권과 장단조 전조 방법
 date: 2026-04-09
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 악기 연습
 tags:

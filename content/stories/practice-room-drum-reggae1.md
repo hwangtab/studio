@@ -1,6 +1,7 @@
 ---
 title: 드럼 레게·스카 비트 — 레게 드럼 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

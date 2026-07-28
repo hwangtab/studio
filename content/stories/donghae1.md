@@ -1,6 +1,7 @@
 ---
 title: 동해시 녹음실 — 강원 동해에서 연신내 스튜디오 놀까지
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

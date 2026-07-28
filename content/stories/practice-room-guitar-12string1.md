@@ -1,6 +1,7 @@
 ---
 title: 12현 기타 연습 — Roger McGuinn 스타일과 옥타브 코러스 특성
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 기타

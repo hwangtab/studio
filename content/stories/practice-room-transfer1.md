@@ -1,6 +1,7 @@
 ---
 title: 연습실 양도·인수 완전 가이드 — 권리금·절차·주의사항
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 황경하
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 온라인 음악 협업 — 원격 파일 공유·보컬 협업·계약 핵심 정리
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

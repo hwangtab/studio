@@ -1,6 +1,7 @@
 ---
 title: 보컬 건강 관리 완전 가이드 — 성대 보호와 컨디션 유지 방법
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

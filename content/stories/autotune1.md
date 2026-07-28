@@ -1,6 +1,7 @@
 ---
 title: 오토튠 사용법 완전 가이드 — 멜로다인 비교와 Retune Speed·Key 설정
 date: 2026-04-06
+lastmod: 2026-07-21
 author: 황경하
 category: 믹싱·마스터링
 tags:

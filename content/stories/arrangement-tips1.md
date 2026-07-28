@@ -1,6 +1,7 @@
 ---
 title: 보컬곡 편곡 팁 — 레이어링·다이나믹·드롭·빌드업 설계법
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

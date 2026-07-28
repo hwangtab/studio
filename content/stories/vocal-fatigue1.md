@@ -1,6 +1,7 @@
 ---
 title: 보컬 피로 완전 가이드 — 목이 지친 날 회복하는 방법과 예방법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

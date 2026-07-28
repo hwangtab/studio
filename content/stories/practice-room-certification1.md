@@ -1,6 +1,7 @@
 ---
 title: 피아노·음악 자격증·능력 시험 준비 — 시험 합격까지
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

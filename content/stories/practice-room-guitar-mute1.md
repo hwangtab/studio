@@ -1,6 +1,7 @@
 ---
 title: 기타 팜 뮤트·왼손 뮤트 훈련 — 피치카토 주법과 뮤트 강도 조절
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

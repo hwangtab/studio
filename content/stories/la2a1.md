@@ -1,6 +1,7 @@
 ---
 title: LA-2A·LA2A 컴프레서 완전 가이드 — Optical 컴프레서 원리와 보컬 믹싱 세팅
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

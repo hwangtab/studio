@@ -1,6 +1,7 @@
 ---
 title: 색소폰 바이브레이토·리드 고급 테크닉 — 즉흥 솔로 훈련
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

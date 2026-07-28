@@ -1,6 +1,7 @@
 ---
 title: 믹스 다운 완전 가이드 — DAW 최종 출력 설정과 유통사 스펙
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

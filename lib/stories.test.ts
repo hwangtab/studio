@@ -145,6 +145,37 @@ describe('getStoryDetail — native-only 색인 예외 (ko 원본 없는 스토�
   });
 });
 
+describe('getStoryDetail — dateModified는 frontmatter lastmod에서만 온다', () => {
+  // 예전에는 파일 mtime을 썼는데, git이 mtime을 보존하지 않아 Vercel이 배포할 때마다
+  // 전 글의 dateModified가 빌드 시각으로 갱신됐다. 아래 두 케이스가 그 회귀를 막는다.
+  it('lastmod이 있으면 그 값을 ISO로 정규화해 쓴다', async () => {
+    const detail = await getStoryDetail('distribution1', 'ko');
+    expect(detail.modifiedDate).toBeDefined();
+    expect(detail.modifiedDate).toBe(new Date('2026-07-25').toISOString());
+  });
+
+  it('어느 글도 dateModified가 오늘(빌드 시각)로 찍히지 않는다', async () => {
+    // mtime 회귀의 직접 증상 — git이 mtime을 보존하지 않으므로 mtime을 쓰면
+    // 배포일에 전 글이 여기서 걸린다. 발행일·개정일이 모두 과거인 표본으로 확인한다.
+    const today = new Date().toISOString().slice(0, 10);
+    const samples = ['distribution1', 'seoul1', 'mixing-complete-guide', 'recording-price1'];
+
+    for (const slug of samples) {
+      const detail = await getStoryDetail(slug, 'ko');
+      expect(`${slug}:${detail.modifiedDate?.slice(0, 10)}`).not.toBe(`${slug}:${today}`);
+    }
+  });
+
+  it('lastmod은 발행일보다 이르지 않다 (개정일 역전 방지)', async () => {
+    const samples = ['distribution1', 'seoul1', 'mixing-complete-guide', 'recording-price1'];
+
+    for (const slug of samples) {
+      const detail = await getStoryDetail(slug, 'ko');
+      expect(`${slug}:${(detail.modifiedDate ?? '') >= detail.date}`).toBe(`${slug}:true`);
+    }
+  });
+});
+
 describe('getRelatedStories', () => {
   it('does not recommend noindex or runtime-thin stories from an indexable page', () => {
     const related = getRelatedStories('ko', 'seoul1', 6);

@@ -1,6 +1,7 @@
 ---
 title: 보컬 브레스 처리 완전 가이드 — 녹음 후 숨소리 편집 & 활용법
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

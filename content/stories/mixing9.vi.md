@@ -1,6 +1,7 @@
 ---
 title: 'Khóa học Mixing - Phần 9: Kẻ thù vô hình, Phase'
 date: 2025-11-20T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

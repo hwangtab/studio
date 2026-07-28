@@ -1,6 +1,7 @@
 ---
 title: 마스터링 역할·믹싱 차이·-14 LUFS 기준 | 믹싱 23부
 date: 2025-12-03
+lastmod: 2026-06-22
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "마스터링", "Mastering", "FinalStep"]

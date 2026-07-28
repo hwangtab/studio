@@ -1,6 +1,7 @@
 ---
 title: 피아노 반주자·반주 연습 — 솔리스트와 함께하는 반주 완성법
 date: 2026-04-08
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 악기 연습
 tags:

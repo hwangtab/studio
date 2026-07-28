@@ -1,6 +1,7 @@
 ---
 title: 동작구 녹음실 — 노량진·사당·이수·대방에서 연신내까지
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

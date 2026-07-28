@@ -1,6 +1,7 @@
 ---
 title: 드럼 스피드 훈련법 — 리바운드 활용과 BPM 5% 점진 속도 증가
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

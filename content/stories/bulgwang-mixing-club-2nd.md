@@ -1,6 +1,7 @@
 ---
 title: '"불광믹싱클럽" 두 번째 모임 안내 — 스튜디오 놀 믹싱클럽'
 date: 2025-11-10
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 이벤트
 tags:

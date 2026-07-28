@@ -1,6 +1,7 @@
 ---
 title: 미디 그루브·휴머나이제이션 완전 가이드 — MIDI를 인간적으로 만드는 법
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
 tags:

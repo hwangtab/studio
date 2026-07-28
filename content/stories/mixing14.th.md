@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 14: 80% ของมิกซ์คือบาลานซ์โวลุ่ม'
 date: 2025-11-24T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

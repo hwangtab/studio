@@ -1,6 +1,7 @@
 ---
 title: 보컬 자음 명료도 훈련 — 딕션 향상과 노래 가사 전달력 완성
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

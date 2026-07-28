@@ -1,6 +1,7 @@
 ---
 title: 보컬 실력 향상 로드맵 — 초보부터 전문가까지 단계별 성장 계획
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 리버브 완전 가이드 — 보컬·악기 리버브 선택과 설정 방법
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

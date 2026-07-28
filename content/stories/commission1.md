@@ -1,6 +1,7 @@
 ---
 title: 음악 작업 의뢰 방법 — MR·편곡·작사 외주 완전 가이드
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

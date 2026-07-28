@@ -1,6 +1,7 @@
 ---
 title: EQ(이퀄라이저) 활용법 — 보컬·드럼 주파수 세팅과 서브트랙티브·애디티브 차이 | 믹싱 16부
 date: 2025-11-26
+lastmod: 2026-06-22
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "EQ", "Equalizer", "Frequency"]

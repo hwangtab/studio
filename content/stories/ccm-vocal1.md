@@ -1,6 +1,7 @@
 ---
 title: CCM 보컬 훈련 — 찬양·예배 감정 표현과 CCM 녹음 준비
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 보컬 가이드
 tags:

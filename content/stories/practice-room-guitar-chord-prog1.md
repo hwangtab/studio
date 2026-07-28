@@ -1,6 +1,7 @@
 ---
 title: 기타 코드 진행 화성 이해 — I-IV-V·ii-V-I·차용 화음 훈련
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

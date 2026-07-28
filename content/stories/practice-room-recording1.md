@@ -1,6 +1,7 @@
 ---
 title: 녹음 가능한 — 연습실 내 셀프 녹음 완벽 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 8 部：为插件摆好餐桌（增益分级）
 date: 2025-11-19T00:00:00.000Z
+lastmod: 2026-07-06
 author: Studio NOL
 category: lesson
 tags:

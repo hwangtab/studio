@@ -1,6 +1,7 @@
 ---
 title: "스태틱 믹스(Static Mix) 뜻·첫 레벨 세팅법·순서 | 믹싱 강좌 13부"
 date: 2025-11-23
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "StaticMix", "Balance", "NoPlugins"]

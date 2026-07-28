@@ -2,6 +2,7 @@
 title: 가수 데뷔 준비 완전 가이드 — 인디 아티스트로 음원 발매하는 방법
 cta: recording
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

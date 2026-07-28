@@ -1,6 +1,7 @@
 ---
 title: 음악 연주 자세 교정 — 올바른 자세가 실력을 만든다
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

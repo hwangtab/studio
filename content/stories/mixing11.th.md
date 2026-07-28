@@ -1,6 +1,7 @@
 ---
 title: 'คอร์สมิกซ์ - ตอนที่ 11: ชิ้นสุดท้ายก่อนมิกซ์—การแก้ไข (Editing)'
 date: 2025-11-22T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

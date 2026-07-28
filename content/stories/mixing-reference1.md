@@ -1,6 +1,7 @@
 ---
 title: 믹싱 레퍼런스 트랙 완전 가이드 — 프로처럼 A/B 비교하는 방법
 date: 2026-04-07
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

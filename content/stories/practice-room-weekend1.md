@@ -1,6 +1,7 @@
 ---
 title: 주말 연습실 이용 가이드 — 직장인·학생을 위한 주말 연습 전략
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

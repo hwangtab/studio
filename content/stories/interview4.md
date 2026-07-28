@@ -2,6 +2,7 @@
 title: 프로덕션 레슨 강사 인터뷰 — MIDI 작곡·믹싱 커리큘럼과 레슨 철학
 cta: lesson
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 후기
 tags:

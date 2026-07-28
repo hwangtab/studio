@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 20 部：起伏的魔法——调制
 date: 2025-11-30T00:00:00.000Z
+lastmod: 2026-04-24
 author: Studio NOL
 category: lesson
 tags:

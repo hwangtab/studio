@@ -1,6 +1,7 @@
 ---
 title: 나에게 맞는 노래 키 찾는 방법 — 음역대별 최적 키 설정 가이드
 date: 2026-04-06
+lastmod: 2026-07-26
 author: 황경하
 category: 보컬 가이드
 tags:

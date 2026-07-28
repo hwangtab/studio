@@ -1,6 +1,7 @@
 ---
 title: 음악 프로듀서 되는 방법 완전 가이드 — DAW 입문부터 포트폴리오까지
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 황경하
 category: 음악 제작
 tags:

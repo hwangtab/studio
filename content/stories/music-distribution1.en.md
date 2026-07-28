@@ -1,6 +1,7 @@
 ---
 title: "The Complete Music Distribution Guide — How to Register on Melon, Spotify, Apple Music & More"
 date: 2026-04-06
+lastmod: 2026-05-29
 author: Studio NOL
 category: business
 tags:

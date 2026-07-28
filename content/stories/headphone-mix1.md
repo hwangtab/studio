@@ -1,6 +1,7 @@
 ---
 title: 헤드폰 믹싱 완전 가이드 — 헤드폰으로 정확한 믹스 만들기
 date: 2026-04-07
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

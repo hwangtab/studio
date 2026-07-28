@@ -1,6 +1,7 @@
 ---
 title: 드럼 그루브 심화 — 메트로놈 레이드백과 장르별 리듬 패턴
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

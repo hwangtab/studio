@@ -1,6 +1,7 @@
 ---
 title: 생일·기념일 이벤트 노래 준비 — 특별한 날을 위한 음악
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

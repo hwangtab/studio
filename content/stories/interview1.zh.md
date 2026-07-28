@@ -1,6 +1,7 @@
 ---
 title: 制作人朴灿佑专访
 date: 2025-06-05T00:00:00.000Z
+lastmod: 2026-04-14
 author: Studio NOL
 category: interview
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 보컬 피치·음정 교정 훈련 — 보컬 음정 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

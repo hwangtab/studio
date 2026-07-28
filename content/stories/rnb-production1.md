@@ -1,6 +1,7 @@
 ---
 title: R&B 프로덕션 — 셔플 드럼·재즈 코드·보컬 레이어링 제작법
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 제작
 tags:

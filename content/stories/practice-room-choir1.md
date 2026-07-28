@@ -1,6 +1,7 @@
 ---
 title: 합창단 개인 파트 연습 — 음정·리듬 완성 후 합창 합류 전략
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

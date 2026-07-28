@@ -1,6 +1,7 @@
 ---
 title: 보컬 서스테인·롱톤 훈련 — 음정 안정·호흡으로 긴 음 유지
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

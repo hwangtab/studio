@@ -1,6 +1,7 @@
 ---
 title: 성남 중원구 금광·중동·상대원·모란 녹음실
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

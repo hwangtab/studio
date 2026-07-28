@@ -1,6 +1,7 @@
 ---
 title: 피아노 녹음 방법 완전 가이드 — 전문 스튜디오 vs 홈 레코딩 비교
 date: 2026-04-06
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

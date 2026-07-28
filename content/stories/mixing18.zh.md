@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 18 部：给音乐注入空气——混响
 date: 2025-11-28T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

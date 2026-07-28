@@ -1,6 +1,7 @@
 ---
 title: 메들리·연속 곡 연습 — 여러 곡을 끊김 없이 연결하는 방법
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 기타 뮤직 메모리·악보 없이 연주하기 — 기타 암보 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

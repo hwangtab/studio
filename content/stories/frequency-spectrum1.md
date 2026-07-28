@@ -1,6 +1,7 @@
 ---
 title: 주파수 대역 완전 가이드 — 보컬·악기별 EQ 스펙트럼과 마스킹 방지법
 date: 2026-04-07
+lastmod: 2026-07-21
 author: 황경하
 category: 믹싱·마스터링
 tags:

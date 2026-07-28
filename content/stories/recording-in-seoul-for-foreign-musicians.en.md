@@ -1,6 +1,7 @@
 ---
 title: "Recording in Seoul: A Complete Guide for Foreign Musicians"
 date: 2026-05-12T00:00:00.000Z
+lastmod: 2026-06-20
 category: foreign-musicians
 summary: "Everything international musicians need to know about recording, practicing, and learning music in Seoul — from booking to studio access, all in English."
 keywords: ["Seoul recording studio", "Korea recording for foreigners", "English speaking studio Seoul", "Yeonsinnae studio", "international musicians Korea"]

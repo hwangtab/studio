@@ -1,6 +1,7 @@
 ---
 title: 프로그레시브 록 드럼·Neil Peart·John Bonham·변박 완전 가이드
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 드럼

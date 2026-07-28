@@ -1,6 +1,7 @@
 ---
 title: 드럼 없는 — 피아노·보컬·기타 전용 방음 연습 공간
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

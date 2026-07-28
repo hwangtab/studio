@@ -1,6 +1,7 @@
 ---
 title: 기타 피킹 테크닉 고급 훈련 — 기타 피킹 완성 가이드
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 패닝(Panning) 뜻·하는 법 — 스테레오 이미지와 악기별 배치로 넓은 믹스 만들기
 date: 2025-11-25
+lastmod: 2026-07-26
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "팬", "Panning", "Stereo"]

@@ -1,6 +1,7 @@
 ---
 title: "The Complete Music Release Timeline Guide — A Step-by-Step Plan from 8 Weeks Out to Release Day"
 date: 2026-04-07
+lastmod: 2026-05-29
 author: Studio NOL
 category: business
 tags:

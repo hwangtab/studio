@@ -1,6 +1,7 @@
 ---
 title: 커버곡 저작권 처리 방법 — 유튜브·SNS에 커버 영상 올릴 때 주의할 점
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 22 部：在时间上作画——自动化
 date: 2025-12-02T00:00:00.000Z
+lastmod: 2026-04-24
 author: Studio NOL
 category: lesson
 tags:

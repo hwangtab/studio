@@ -1,6 +1,7 @@
 ---
 title: 드라마·영화 OST 녹음 가이드 — OST 보컬 준비부터 납품까지
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

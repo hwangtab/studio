@@ -1,6 +1,7 @@
 ---
 title: 유튜브·크리에이터 BGM 제작 완전 가이드 — 저작권 없는 배경음악 직접 만들기
 date: 2026-04-07
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 제작
 tags:

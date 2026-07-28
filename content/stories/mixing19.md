@@ -1,6 +1,7 @@
 ---
 title: 딜레이(Delay) 뜻·원리 — 센드·BPM 동기화와 슬랩백까지 믹싱 활용법
 date: 2025-11-29
+lastmod: 2026-07-26
 author: "스튜디오 놀"
 category: 강좌
 tags: ["딜레이란", "딜레이 믹싱", "딜레이 센드", "BPM 동기화", "Delay", "Echo"]

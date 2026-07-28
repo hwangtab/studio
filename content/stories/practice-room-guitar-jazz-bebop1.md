@@ -1,6 +1,7 @@
 ---
 title: 재즈 기타 비밥 훈련 — Wes Montgomery·Joe Pass 스타일 즉흥 연주
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 기타

@@ -1,6 +1,7 @@
 ---
 title: 연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

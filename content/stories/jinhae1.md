@@ -1,6 +1,7 @@
 ---
 title: 진해 녹음실 — 창원 진해구에서 연신내 스튜디오 놀까지
 date: 2026-04-06
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 지역 가이드
 tags:

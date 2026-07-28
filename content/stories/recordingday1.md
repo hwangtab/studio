@@ -1,6 +1,7 @@
 ---
 title: 녹음 당일 완벽 루틴 — 스튜디오 방문 전 준비 체크리스트
 date: 2026-04-06
+lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
 tags:

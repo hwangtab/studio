@@ -1,6 +1,7 @@
 ---
 title: 'Mixing Course - Part 8: Setting the Table for Plugins (Gain Staging)'
 date: 2025-11-19T00:00:00.000Z
+lastmod: 2026-04-20
 author: Studio NOL
 category: lesson
 tags:

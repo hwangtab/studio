@@ -1,6 +1,7 @@
 ---
 title: 베이스 솔로·그루브 솔로잉 — Victor Wooten·Jaco Pastorius 스타일 기법
 date: 2026-04-08
+lastmod: 2026-07-21
 tags:
   - 음악 연습실
   - 베이스

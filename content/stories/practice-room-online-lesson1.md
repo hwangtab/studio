@@ -1,6 +1,7 @@
 ---
 title: 온라인 레슨 연계 연습실 활용 — 화상 레슨 효과를 극대화하는 방법
 date: 2026-04-08
+lastmod: 2026-06-22
 author: 스튜디오 놀
 category: 악기 연습
 tags:

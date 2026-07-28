@@ -1,6 +1,7 @@
 ---
 title: 디지털 클리핑이란? — 지터·그라운드 노이즈 방지와 홈레코딩 오디오 에러 해결 가이드
 date: 2025-11-16
+lastmod: 2026-07-20
 author: "스튜디오 놀"
 category: 강좌
 tags: ["믹싱", "강좌", "디지털에러", "DigitalError", "Clipping"]

@@ -1,6 +1,7 @@
 ---
 title: 마스터링 리미터 설정 — True Peak·LUFS 기준과 추천 플러그인
 date: 2026-04-06
+lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 믹싱·마스터링
 tags:

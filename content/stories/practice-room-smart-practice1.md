@@ -1,6 +1,7 @@
 ---
 title: 스마트폰·앱으로 연습실 스마트하게 활용하기
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

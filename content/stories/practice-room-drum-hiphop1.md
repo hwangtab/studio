@@ -1,6 +1,7 @@
 ---
 title: 드럼 힙합·트랩 비트 훈련 — 레이드백 그루브와 하이햇 변주
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

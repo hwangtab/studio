@@ -1,6 +1,7 @@
 ---
 title: 홈 스튜디오 vs 음악연습실 — 어떤 선택이 더 현명할까?
 date: 2026-04-08
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

@@ -1,6 +1,7 @@
 ---
 title: 플레이리스트 피칭 완전 가이드 — Spotify·멜론·인디 큐레이터에게 음원 제출하기
 date: 2026-04-07
+lastmod: 2026-07-20
 author: 스튜디오 놀
 category: 음악 비즈니스
 tags:

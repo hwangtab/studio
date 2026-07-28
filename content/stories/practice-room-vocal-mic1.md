@@ -1,6 +1,7 @@
 ---
 title: 보컬 마이크 테크닉 — 거리·각도 조절과 모니터 활용 PA 활용법
 date: 2026-04-09
+lastmod: 2026-07-21
 author: 스튜디오 놀
 category: 악기 연습
 tags:

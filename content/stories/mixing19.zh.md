@@ -1,6 +1,7 @@
 ---
 title: 混音课程 - 第 19 部：声音的影子——延迟
 date: 2025-11-29T00:00:00.000Z
+lastmod: 2026-04-24
 author: Studio NOL
 category: lesson
 tags:

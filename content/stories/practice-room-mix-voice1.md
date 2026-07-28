@@ -1,6 +1,7 @@
 ---
 title: 믹스 보이스·팔세토 — 고음 발성 기법 완전 정복
 date: 2026-04-08
+lastmod: 2026-06-14
 author: 스튜디오 놀
 category: 악기 연습
 tags:
