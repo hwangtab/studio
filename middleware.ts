@@ -235,6 +235,12 @@ export const config = {
         // icons / browserconfig.xml 추가: /icons/icon-192.png이 로케일 미들웨어에 걸려
         // /ko/icons/icon-192.png로 307 → 404가 발생하던 PWA/Apple touch icon 요청 수정.
         // /admin/*은 locale 자동 프리픽스 없이 운영자 페이지로 직접 매핑되도록 제외.
-        '/((?!api|_next|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full.*\\.txt|locales|images|icons|logo.*|audio|styles|scripts|fonts|admin).*)',
+        //
+        // [0-9a-f]{8,128}\.txt — IndexNow 키 파일(public/{KEY}.txt). 이게 없으면 로케일
+        // 프리픽스가 붙어 /ko/{KEY}.txt로 307되고, 검색엔진이 키를 못 읽어 소유 검증에
+        // 실패한다(2026-07-28 네이버 403으로 발견 — 그동안 제출이 무효였다).
+        // 키 값은 scripts/indexnow-submit.mjs의 KEY 상수. 프로토콜상 8~128자 hex라
+        // 길이 범위로 잡아 키를 교체해도 계속 통과한다.
+        '/((?!api|_next|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full.*\\.txt|[0-9a-f]{8,128}\\.txt|locales|images|icons|logo.*|audio|styles|scripts|fonts|admin).*)',
     ],
 };
