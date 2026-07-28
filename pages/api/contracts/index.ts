@@ -3,7 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../db/client';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
 import { serializeContractForAdmin } from '../../../lib/contracts/serialize';
-import { createContract, expireOverdueContracts } from '../../../lib/contracts/service';
+import { createContract, expireOverdueContracts, findRoomConflict } from '../../../lib/contracts/service';
+import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
 
 const LIST_LIMIT = 200;
@@ -46,6 +47,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
+      const conflict = await findRoomConflict({
+        roomNumber: validation.data.roomNumber,
+        startDate: new Date(validation.data.startDate),
+        endDate: new Date(validation.data.endDate),
+      });
+
+      if (conflict) {
+        return res.status(409).json({ ok: false, message: describeRoomConflict(conflict) });
+      }
+
       const contract = await createContract(validation.data);
       return res.status(201).json({ ok: true, contract: serializeContractForAdmin(contract) });
     } catch (error: unknown) {

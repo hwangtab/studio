@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNull, lte, or } from 'drizzle-orm';
+import { and, eq, gt, inArray, isNull, lt, lte, ne, or } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
@@ -44,6 +44,37 @@ export const expireOverdueContracts = async (now: Date = new Date()): Promise<nu
     console.error('[contracts/service] Failed to expire overdue contracts:', error);
     return 0;
   }
+};
+
+/**
+ * 같은 호실에 기간이 겹치는 유효 계약을 찾는다. 있으면 그 계약을 돌려준다.
+ *
+ * 연습실 호실은 한 사람이 쓰는 것을 전제로 하고(계약서 제6조 4항이 제3자 사용을
+ * 금지한다), 겹치는 계약이 둘 다 서명되면 두 고객이 같은 방을 배정받는다. 두 계약
+ * 모두 효력이 있어 어느 쪽도 물러설 근거가 없는 분쟁이 된다.
+ *
+ * 확정된 것만 본다 — draft는 아직 고객에게 가지 않았고, 취소·만료 건은 효력이 없다.
+ */
+export const findRoomConflict = async (params: {
+  roomNumber: string;
+  startDate: Date;
+  endDate: Date;
+  excludeContractId?: string;
+}): Promise<Contract | null> => {
+  const conditions = [
+    eq(contracts.roomNumber, params.roomNumber),
+    inArray(contracts.status, ['sent', 'signed'] satisfies ContractStatus[]),
+    // 기간이 하루라도 겹치면 충돌이다.
+    lt(contracts.startDate, params.endDate),
+    gt(contracts.endDate, params.startDate),
+  ];
+
+  if (params.excludeContractId) {
+    conditions.push(ne(contracts.id, params.excludeContractId));
+  }
+
+  const [conflict] = await getDb().select().from(contracts).where(and(...conditions)).limit(1);
+  return conflict ?? null;
 };
 
 /** 계약을 draft로 생성한다. 이메일은 발송하지 않는다(발송은 별도 액션). */

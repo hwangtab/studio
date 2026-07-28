@@ -12,10 +12,12 @@ import {
 import {
   cancelContract,
   deleteContract,
+  findRoomConflict,
   markContractSent,
   sendContractNotifications,
   updateDraftContract,
 } from '../../../lib/contracts/service';
+import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { checkAction, getEffectiveStatus, type ContractAction } from '../../../lib/contracts/status';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
 
@@ -90,6 +92,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ ok: false, errors: validation.errors });
         }
 
+        const conflict = await findRoomConflict({
+          roomNumber: validation.data.roomNumber,
+          startDate: new Date(validation.data.startDate),
+          endDate: new Date(validation.data.endDate),
+          excludeContractId: id,
+        });
+
+        if (conflict) {
+          return res.status(409).json({ ok: false, message: describeRoomConflict(conflict) });
+        }
+
         const updated = await updateDraftContract(id, validation.data);
         if (!updated) {
           // 읽은 뒤 상태가 바뀌었다(동시 발송·서명 등). 확정된 문서를 고치지 않는다.
@@ -110,6 +123,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(cancelled) });
+      }
+
+      // 발송 직전에 다시 확인한다. 작성해 둔 사이에 같은 호실의 다른 계약이 확정됐을 수
+      // 있고, 그대로 보내면 두 고객이 같은 방을 배정받는다.
+      const conflict = await findRoomConflict({
+        roomNumber: contract.roomNumber,
+        startDate: contract.startDate,
+        endDate: contract.endDate,
+        excludeContractId: id,
+      });
+
+      if (conflict) {
+        return res.status(409).json({ ok: false, message: describeRoomConflict(conflict) });
       }
 
       // send | resend — 허용 상태를 조건에 걸어 동시 요청이 두 번 발송되지 않게 한다.
