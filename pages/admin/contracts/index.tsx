@@ -28,8 +28,19 @@ interface AdminContractsPageProps {
   contracts: AdminSerializedContract[];
   /** 잘린 계약이 있다 — 검색도 실린 목록 안에서만 되므로 반드시 알려야 한다. */
   truncated: boolean;
+  /** 만료까지 남은 일수를 서버·클라이언트가 같은 기준으로 계산하도록 넘긴다. */
+  now: string;
   error?: string;
 }
+
+/** 만료까지 남은 일수. 이미 지났으면 0 이하. */
+const daysUntil = (iso: string | null, now: string): number | null => {
+  if (!iso) return null;
+  return Math.ceil((new Date(iso).getTime() - new Date(now).getTime()) / (24 * 60 * 60 * 1000));
+};
+
+/** 이 안으로 들어오면 재발송을 준비해야 한다. */
+const EXPIRY_WARNING_DAYS = 2;
 
 export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = async (context) => {
   const auth = await authenticateAdminRequest(context);
@@ -51,12 +62,18 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
       props: {
         contracts: allContracts.slice(0, LIST_LIMIT).map((c) => serializeContractForAdmin(c)),
         truncated: allContracts.length > LIST_LIMIT,
+        now: new Date().toISOString(),
       },
     };
   } catch (error: unknown) {
     console.error('[admin/contracts] Failed to load contracts:', error);
     return {
-      props: { contracts: [], truncated: false, error: '계약 목록을 불러오는 중 오류가 발생했습니다.' },
+      props: {
+        contracts: [],
+        truncated: false,
+        now: new Date().toISOString(),
+        error: '계약 목록을 불러오는 중 오류가 발생했습니다.',
+      },
     };
   }
 };
@@ -83,6 +100,7 @@ const STATUS_CLASS: Record<string, string> = {
 export default function AdminContractsPage({
   contracts,
   truncated,
+  now,
   error,
 }: AdminContractsPageProps) {
   const router = useRouter();
@@ -104,6 +122,17 @@ export default function AdminContractsPage({
       return matchesFilter && matchesSearch;
     });
   }, [contracts, filter, search]);
+
+  // 발송했지만 아직 서명되지 않은 건 중 기한이 얼마 남지 않은 것들.
+  const expiringSoon = useMemo(
+    () =>
+      contracts.filter((c) => {
+        if (c.status !== 'sent') return false;
+        const left = daysUntil(c.expiresAt, now);
+        return left !== null && left <= EXPIRY_WARNING_DAYS;
+      }),
+    [contracts, now],
+  );
 
   const counts = useMemo(() => {
     const result: Record<string, number> = { all: contracts.length };
@@ -178,6 +207,14 @@ export default function AdminContractsPage({
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
               )}
 
+              {expiringSoon.length > 0 && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+                  서명 링크가 곧 만료되는 계약이 {expiringSoon.length}건 있습니다 (
+                  {expiringSoon.map((c) => c.customerName).join(', ')}). 고객이 서명하지 못하면
+                  재발송해야 합니다.
+                </div>
+              )}
+
               {truncated && (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
                   최근 {LIST_LIMIT}건만 표시합니다. 아래 검색도 이 목록 안에서만 찾으므로,
@@ -237,6 +274,22 @@ export default function AdminContractsPage({
                             >
                               {getStatusLabel(contract.status)}
                             </span>
+                            {contract.status === 'sent' &&
+                              (() => {
+                                const left = daysUntil(contract.expiresAt, now);
+                                if (left === null) return null;
+                                return (
+                                  <div
+                                    className={`mt-1 text-xs ${
+                                      left <= EXPIRY_WARNING_DAYS
+                                        ? 'text-red-600 font-medium'
+                                        : 'text-gray-500'
+                                    }`}
+                                  >
+                                    {left <= 0 ? '오늘 만료' : `${left}일 남음`}
+                                  </div>
+                                );
+                              })()}
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-900">
                             {contract.customerName}
