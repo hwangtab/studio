@@ -49,11 +49,39 @@ const formatDate = (date: string | null): string => {
 export default function ContractCompletePage({ locale, contract }: CompletePageProps) {
   const signed = contract.status === 'signed';
 
+  // 서명 전에 이 주소로 들어오면(북마크·뒤로가기 등) 완료됐다고 오해하기 쉽다.
+  // 계약 맥락에서 잘못된 확인은 분쟁 소지가 되므로 상태를 그대로 알린다.
+  if (!signed) {
+    return (
+      <>
+        <Head>
+          <title>서명 미완료 | Studio NOL</title>
+          <meta name="robots" content="noindex, nofollow" />
+          <meta name="referrer" content="no-referrer" />
+        </Head>
+
+        <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+          <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12 max-w-lg w-full text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">아직 서명이 완료되지 않았습니다</h1>
+            <p className="text-gray-600 mb-8 leading-relaxed">
+              {contract.customerName}님, 계약서 서명이 접수되지 않은 상태입니다.
+              <br />
+              메일로 받으신 서명 링크에서 서명을 완료해 주세요.
+            </p>
+            <p className="text-sm text-gray-500">문의: 스튜디오 놀 010-4255-7893</p>
+          </div>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Head>
         <title>서명 완료 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
+        {/* URL에 서명 토큰이 들어 있어, 외부로 나가는 요청에 Referer로 실리면 유출된다. */}
+        <meta name="referrer" content="no-referrer" />
       </Head>
 
       <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">

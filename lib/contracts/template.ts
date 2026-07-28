@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { escapeMarkdown, escapeHtml } from './html-escape';
+import { escapeMarkdown, escapeTableCell } from './html-escape';
 
 export interface ContractTemplateData {
   customerName: string;
@@ -41,13 +41,15 @@ export const buildContractContent = (data: ContractTemplateData): string => {
 
   let content = readFileSync(templatePath, 'utf-8');
 
+  // 아래 값은 모두 마크다운 표의 셀 안에 들어간다. 파이프·개행까지 막지 않으면
+  // 이름 한 줄로 계약서에 없던 칸과 문구를 심을 수 있다.
   const replacements: Record<string, string> = {
-    '{{customerName}}': escapeHtml(data.customerName),
-    '{{customerBirthdate}}': data.customerBirthdate ? escapeHtml(data.customerBirthdate) : '',
-    '{{customerPhone}}': escapeHtml(data.customerPhone),
-    '{{customerAddress}}': data.customerAddress ? escapeHtml(data.customerAddress) : '',
-    '{{roomNumber}}': escapeHtml(data.roomNumber),
-    '{{roomArea}}': data.roomArea ? escapeHtml(data.roomArea) : '3m × 2m',
+    '{{customerName}}': escapeTableCell(data.customerName),
+    '{{customerBirthdate}}': data.customerBirthdate ? escapeTableCell(data.customerBirthdate) : '',
+    '{{customerPhone}}': escapeTableCell(data.customerPhone),
+    '{{customerAddress}}': data.customerAddress ? escapeTableCell(data.customerAddress) : '',
+    '{{roomNumber}}': escapeTableCell(data.roomNumber),
+    '{{roomArea}}': data.roomArea ? escapeTableCell(data.roomArea) : '3m × 2m',
     '{{startDate}}': formatDate(data.startDate),
     '{{endDate}}': formatDate(data.endDate),
     '{{monthlyRent}}': formatCurrency(data.monthlyRent),

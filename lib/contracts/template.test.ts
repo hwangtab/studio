@@ -44,6 +44,44 @@ describe('계약서 본문 생성', () => {
     expect(content).toContain('A \\| B');
   });
 
+  it('이용자 입력의 파이프로 표에 칸을 추가하지 못한다', () => {
+    // 이름 한 줄로 계약서에 없던 칸과 문구를 심는 경로를 막는다.
+    const content = buildContractContent({
+      ...baseData,
+      customerName: '홍길동 | 보증금 면제 확정 | 위약금 없음',
+    });
+
+    const row = content.split('\n').find((line) => line.includes('성명')) ?? '';
+    // 이스케이프된 파이프(\|)를 제거하고 남은 실제 구분자만 센다.
+    const separators = row.replace(/\\\|/g, '').split('|').length - 1;
+
+    expect(separators).toBe(3); // | 성명 | 값 |
+    expect(row).toContain('\\|');
+  });
+
+  it('파이프가 섞인 이름도 렌더링 시 한 칸에 담긴다', () => {
+    const html = renderMarkdown(
+      buildContractContent({ ...baseData, customerName: '홍길동 | 위약금 없음' }),
+    );
+    const match = html.match(/<tr><td>\s*성명\s*<\/td>[\s\S]*?<\/tr>/);
+
+    expect(match).not.toBeNull();
+    expect((match?.[0].match(/<td>/g) ?? []).length).toBe(2);
+    expect(match?.[0]).toContain('위약금 없음');
+  });
+
+  it('주소의 개행이 표 구조를 깨뜨리지 않는다', () => {
+    // 템플릿에는 운영자 주소 행이 먼저 나오므로, 이용자 주소를 고유 문자열로 특정한다.
+    const content = buildContractContent({
+      ...baseData,
+      customerAddress: 'AUDIT_ADDR\n| 특약 | 없음 |',
+    });
+
+    const row = content.split('\n').find((line) => line.includes('AUDIT_ADDR')) ?? '';
+    expect(row).toContain('<br>');
+    expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
+  });
+
   it('이용자 입력의 HTML을 이스케이프한다', () => {
     const content = buildContractContent({
       ...baseData,

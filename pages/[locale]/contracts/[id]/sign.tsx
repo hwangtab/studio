@@ -314,6 +314,9 @@ export default function ContractSignPage({
       <Head>
         <title>{contract.title} — 서명 요청 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
+        {/* URL에 서명 토큰이 들어 있다. 계약 본문·이용수칙은 사람이 고치는 마크다운이라
+            나중에 외부 링크가 들어가면 Referer로 토큰이 조용히 샌다. 미리 막는다. */}
+        <meta name="referrer" content="no-referrer" />
       </Head>
 
       <main className="min-h-screen bg-gray-50 py-8 md:py-12">

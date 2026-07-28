@@ -97,6 +97,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       (signature) => signature.signerRole === 'customer' && signature.status === 'pending',
     );
 
+    /**
+     * 상태 전이를 먼저 원자적으로 선점한다.
+     *
+     * 위에서 상태를 확인한 뒤 쓰기까지는 틈이 있어(TOCTOU) 동시에 들어온 두 요청이 모두
+     * 검사를 통과할 수 있다. 서명 데이터를 먼저 쓰면 늦게 도착한 요청이 이미 확정된
+     * 서명 이미지·시각·IP를 덮어쓴다 — 토큰을 아는 제3자가 남의 서명을 갈아치울 수 있고
+     * 확인 메일과 PDF도 두 번 나간다.
+     *
+     * UPDATE ... WHERE status = 'sent' 는 단일 원자 연산이라 동시에 몇 개가 오든 정확히
+     * 하나만 행을 바꾼다. 그 하나만 서명을 기록할 자격을 얻는다.
+     */
+    const claimed = await getDb()
+      .update(contracts)
+      .set({
+        status: 'signed',
+        signedAt: now,
+        signTokenUsedAt: now,
+        rulesAgreed: true,
+        rulesAgreedAt: now,
+        updatedAt: now,
+      })
+      .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent')))
+      .returning({ id: contracts.id });
+
+    if (claimed.length === 0) {
+      return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
+    }
+
     const signatureWrite = pendingSignature
       ? getDb()
           .update(signatures)
@@ -108,7 +136,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             userAgent,
             updatedAt: now,
           })
-          .where(eq(signatures.id, pendingSignature.id))
+          // 선점에 성공했더라도 서명 행이 다른 경로로 확정됐을 수 있으니 조건을 함께 건다.
+          .where(and(eq(signatures.id, pendingSignature.id), eq(signatures.status, 'pending')))
       : getDb().insert(signatures).values({
           contractId: contract.id,
           signerName: contract.customerName,
@@ -131,18 +160,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .update(contractAttachments)
         .set({ agreedAt: now })
         .where(eq(contractAttachments.contractId, contract.id)),
-      getDb()
-        .update(contracts)
-        .set({
-          status: 'signed',
-          signedAt: now,
-          signTokenUsedAt: now,
-          rulesAgreed: true,
-          rulesAgreedAt: now,
-          updatedAt: now,
-        })
-        // 동시에 두 번 제출돼도 한 번만 서명되도록 상태를 조건에 건다.
-        .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent'))),
     ]);
 
     const signedContract = await getDb().query.contracts.findFirst({
