@@ -68,6 +68,49 @@ describe('계약 생성 페이로드 검증', () => {
     expect(errorFields({ ...validPayload(), customerPhone: '01012345678' })).toEqual([]);
   });
 
+  describe('호실 표기 정규화', () => {
+    // 표기가 흔들리면 기간 겹침 검사가 다른 방으로 보아 이중 배정을 못 막는다.
+    it.each([
+      ['소문자', 'a', 'A'],
+      ['앞뒤 공백', ' A ', 'A'],
+      ['중간 공백', 'A 1', 'A1'],
+      ['소문자+공백', '  b2 ', 'B2'],
+    ])('%s를 한 형태로 모은다', (_label, input, expected) => {
+      const result = validateCreateContractPayload({ ...validPayload(), roomNumber: input });
+
+      expect(result.ok).toBe(true);
+      if (result.ok) expect(result.data.roomNumber).toBe(expected);
+    });
+
+    it('숫자·한글 호실은 그대로 둔다', () => {
+      const result = validateCreateContractPayload({ ...validPayload(), roomNumber: '201' });
+      expect(result.ok).toBe(true);
+      if (result.ok) expect(result.data.roomNumber).toBe('201');
+    });
+  });
+
+  describe('최소 계약 기간', () => {
+    it('1개월 미만은 거부한다', () => {
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-02' })).toContain('endDate');
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-31' })).toContain('endDate');
+    });
+
+    it('정확히 1개월은 통과한다', () => {
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-09-01' })).toEqual([]);
+    });
+
+    it('말일에서 시작해도 1개월을 정확히 판정한다', () => {
+      // 1/31 + 1개월은 2/28로 본다. 3/3까지 요구하면 정당한 계약이 막힌다.
+      expect(errorFields({ ...validPayload(), startDate: '2026-01-31', endDate: '2026-02-28' })).toEqual([]);
+      expect(errorFields({ ...validPayload(), startDate: '2026-01-31', endDate: '2026-02-20' })).toContain('endDate');
+    });
+
+    it('6개월·12개월 계약도 통과한다', () => {
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2027-02-01' })).toEqual([]);
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2027-08-01' })).toEqual([]);
+    });
+  });
+
   it('종료일이 시작일보다 앞서면 거부한다', () => {
     expect(
       errorFields({ ...validPayload(), startDate: '2026-11-01', endDate: '2026-08-01' }),

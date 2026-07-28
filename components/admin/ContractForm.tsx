@@ -263,19 +263,28 @@ export default function ContractForm({
             />
           </Field>
 
-          <div className="md:col-span-2 flex flex-wrap items-center gap-2">
-            <span className="text-sm text-gray-500">기간 빠른 설정:</span>
-            {[3, 6, 12].map((months) => (
-              <button
-                key={months}
-                type="button"
-                onClick={() => applyTerm(months)}
-                disabled={!values.startDate}
-                className="px-3 py-1.5 rounded-full text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                {months}개월
-              </button>
-            ))}
+          <div className="md:col-span-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-gray-500">기간 빠른 설정:</span>
+              {[1, 3, 6, 12].map((months) => (
+                <button
+                  key={months}
+                  type="button"
+                  onClick={() => applyTerm(months)}
+                  disabled={!values.startDate}
+                  className={`px-3 py-1.5 rounded-full text-sm disabled:opacity-40 disabled:cursor-not-allowed ${
+                    months === 6
+                      ? 'bg-primary/10 text-primary font-medium hover:bg-primary/20'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {months}개월
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              최소 1개월부터 가능하며, <strong className="text-primary">6개월 이상</strong>을 권합니다.
+            </p>
           </div>
         </div>
       </section>

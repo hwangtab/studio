@@ -41,6 +41,32 @@ const parseDate = (value: string): Date | null => {
 };
 
 /**
+ * 호실 표기의 흔들림을 없앤다.
+ *
+ * 호실은 자유 입력이라 같은 방을 'A'·'a'·' A '로 적을 수 있다. 표기가 다르면 기간이
+ * 겹치는지 확인할 때 다른 방으로 보여, 이중 배정을 막는 장치가 그대로 뚫린다.
+ * 저장 전에 한 형태로 모아 둔다.
+ */
+const normalizeRoomNumber = (value: string): string => value.replace(/\s+/g, '').toUpperCase();
+
+/** 계약서에 적히는 최소 이용 기간. 운영상 6개월 이상을 권하지만 강제하지는 않는다. */
+export const MIN_CONTRACT_MONTHS = 1;
+
+/** 말일을 넘기지 않고 개월 수를 더한다 (1/31 + 1개월 = 2/28). */
+const addMonths = (date: Date, months: number): Date => {
+  const result = new Date(date);
+  const day = result.getDate();
+
+  result.setDate(1);
+  result.setMonth(result.getMonth() + months);
+
+  const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+  result.setDate(Math.min(day, lastDay));
+
+  return result;
+};
+
+/**
  * 한 줄 입력에 섞이면 안 되는 문자.
  *
  * 줄바꿈은 계약서 표의 셀 안에서 <br>로 살아남아, 이름 한 칸에 "홍길동 / 보증금 면제
@@ -109,8 +135,13 @@ export const validateCreateContractPayload = (
 
   if (startDateRaw && !startDate) push('startDate', '올바른 날짜가 아닙니다.');
   if (endDateRaw && !endDate) push('endDate', '올바른 날짜가 아닙니다.');
-  if (startDate && endDate && endDate.getTime() <= startDate.getTime()) {
-    push('endDate', '종료일은 시작일보다 뒤여야 합니다.');
+
+  if (startDate && endDate) {
+    if (endDate.getTime() <= startDate.getTime()) {
+      push('endDate', '종료일은 시작일보다 뒤여야 합니다.');
+    } else if (endDate.getTime() < addMonths(startDate, MIN_CONTRACT_MONTHS).getTime()) {
+      push('endDate', `계약 기간은 최소 ${MIN_CONTRACT_MONTHS}개월이어야 합니다.`);
+    }
   }
 
   const readAmount = (field: string, allowZero: boolean): number | undefined => {
@@ -183,7 +214,7 @@ export const validateCreateContractPayload = (
       customerEmail: customerEmail as string,
       customerPhone: customerPhone as string,
       customerAddress,
-      roomNumber: roomNumber as string,
+      roomNumber: normalizeRoomNumber(roomNumber as string),
       roomArea,
       startDate: startDateRaw as string,
       endDate: endDateRaw as string,
