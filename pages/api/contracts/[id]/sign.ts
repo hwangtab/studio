@@ -15,6 +15,12 @@ const getClientIp = (req: NextApiRequest): string => {
   return String(raw).split(',')[0].trim();
 };
 
+/**
+ * 응답 뒤에 이어지는 후처리(PDF 생성·메일 발송)까지 이 함수의 실행 시간 안에서 끝나야
+ * 한다. 콜드 스타트에서 Chromium을 푸는 시간을 감안해 상한을 명시한다.
+ */
+export const config = { maxDuration: 60 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
 

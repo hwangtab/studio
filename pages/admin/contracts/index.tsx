@@ -296,7 +296,7 @@ export default function AdminContractsPage({
                                 </Button>
                               )}
 
-                              {contract.status === 'signed' && (
+                              {contract.status === 'signed' && !contract.purgedAt && (
                                 <Button
                                   size="sm"
                                   disabled={busy}

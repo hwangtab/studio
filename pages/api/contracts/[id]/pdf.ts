@@ -5,6 +5,12 @@ import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { generateContractPdf } from '../../../../lib/contracts/pdf';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 
+/**
+ * PDF 생성은 Chromium을 띄운다. 콜드 스타트에서는 64MB짜리 바이너리를 풀어 쓰므로
+ * 통상 실행보다 훨씬 오래 걸린다. 기본값에 기대지 않고 상한을 명시한다.
+ */
+export const config = { maxDuration: 60 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
 
@@ -35,6 +41,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (contract.status !== 'signed') {
       return res.status(409).json({ ok: false, message: '서명이 완료된 계약만 PDF로 받을 수 있습니다.' });
+    }
+
+    // 파기된 계약도 상태는 signed로 남는다. 그대로 만들면 이름·본문·서명이 모두 빠진
+    // 껍데기 계약서가 발급되므로 막는다.
+    if (contract.purgedAt) {
+      return res.status(409).json({
+        ok: false,
+        message: '보관 기간이 지나 개인정보가 파기된 계약입니다. 계약서를 다시 발급할 수 없습니다.',
+      });
     }
 
     const customerSignature =

@@ -184,7 +184,17 @@ export default function AdminContractDetailPage({
             </div>
           )}
 
-          {contract.status === 'signed' && !contract.pdfUrl && (
+          {/* 파기된 계약은 상태가 signed로 남지만 이름·본문·서명이 모두 비어 있다.
+              그 사실을 먼저 알리고, PDF 재발급 안내는 띄우지 않는다. */}
+          {contract.purgedAt && (
+            <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
+              <strong className="block mb-1">보관 기간이 지나 개인정보가 파기된 계약입니다</strong>
+              {formatDate(contract.purgedAt)}에 이름·연락처·계약 본문·서명 기록을 지웠습니다.
+              계약 기간과 금액만 운영 기록으로 남아 있으며, 계약서를 다시 발급할 수 없습니다.
+            </div>
+          )}
+
+          {contract.status === 'signed' && !contract.pdfUrl && !contract.purgedAt && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
               <strong className="block mb-1">서명본 PDF가 보관되지 않았습니다</strong>
               아래 “PDF 다운로드”를 누르면 계약 내용으로 다시 만들어 받을 수 있습니다.
@@ -361,7 +371,7 @@ export default function AdminContractDetailPage({
                 </Link>
               )}
 
-              {contract.status === 'signed' && (
+              {contract.status === 'signed' && !contract.purgedAt && (
                 <Button
                   disabled={busy}
                   onClick={() => run(() => downloadContractPdf(contract.id, contract.customerName))}
