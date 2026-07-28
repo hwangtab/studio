@@ -65,6 +65,15 @@ export const contracts = sqliteTable('contracts', {
   notificationError: text('notification_error'),
   notifiedAt: integer('notified_at', { mode: 'timestamp' }),
 
+  /**
+   * 개인정보를 파기한 시각.
+   *
+   * 계약서 제12조는 "계약 종료 후 3년간 보관한 뒤 파기한다"고 약속한다. 이 값이 있으면
+   * 이름·연락처·주소·서명 이미지 등을 지운 뒤이며, 계약 기간·금액처럼 개인을 식별하지
+   * 않는 항목만 남아 있다. 같은 계약을 두 번 처리하지 않도록 표식으로도 쓴다.
+   */
+  purgedAt: integer('purged_at', { mode: 'timestamp' }),
+
   // 감사
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

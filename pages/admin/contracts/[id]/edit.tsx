@@ -15,6 +15,8 @@ import type { ValidationError } from '../../../../lib/contracts/validation';
 interface EditContractPageProps {
   contractId: string;
   initialValues: ContractFormValues;
+  /** 저장된 특약사항을 읽지 못했다. 그대로 저장하면 특약이 사라진다. */
+  specialTermsUnreadable: boolean;
 }
 
 /** ISO 문자열을 <input type="date">가 받는 YYYY-MM-DD로 자른다. */
@@ -26,13 +28,21 @@ const toDateInputValue = (date: Date | null): string => {
   return `${yyyy}-${mm}-${dd}`;
 };
 
-const parseSpecialTerms = (raw: string | null): string[] => {
-  if (!raw) return [];
+/**
+ * 특약사항을 폼에 되살린다.
+ *
+ * 읽지 못한 값을 조용히 빈 배열로 넘기면, 관리자가 눈치채지 못한 채 저장해 특약이
+ * 사라진다. 읽기에 실패했다는 사실을 그대로 돌려 화면에서 경고하게 한다.
+ */
+const parseSpecialTerms = (raw: string | null): { terms: string[]; failed: boolean } => {
+  if (!raw) return { terms: [], failed: false };
+
   try {
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((t): t is string => typeof t === 'string') : [];
+    if (!Array.isArray(parsed)) return { terms: [], failed: true };
+    return { terms: parsed.filter((t): t is string => typeof t === 'string'), failed: false };
   } catch {
-    return [];
+    return { terms: [], failed: true };
   }
 };
 
@@ -60,6 +70,8 @@ export const getServerSideProps: GetServerSideProps<EditContractPageProps> = asy
     return { redirect: { destination: `/admin/contracts/${id}`, permanent: false } };
   }
 
+  const specialTerms = parseSpecialTerms(contract.specialTerms);
+
   return {
     props: {
       contractId: contract.id,
@@ -77,13 +89,18 @@ export const getServerSideProps: GetServerSideProps<EditContractPageProps> = asy
         monthlyRent: String(contract.monthlyRent),
         depositAmount: String(contract.depositAmount),
         paymentDay: String(contract.paymentDay),
-        specialTerms: parseSpecialTerms(contract.specialTerms),
+        specialTerms: specialTerms.terms,
       },
+      specialTermsUnreadable: specialTerms.failed,
     },
   };
 };
 
-export default function EditContractPage({ contractId, initialValues }: EditContractPageProps) {
+export default function EditContractPage({
+  contractId,
+  initialValues,
+  specialTermsUnreadable,
+}: EditContractPageProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationError[]>([]);
@@ -140,6 +157,13 @@ export default function EditContractPage({ contractId, initialValues }: EditCont
             </div>
 
             <div className="p-6 md:p-8">
+              {specialTermsUnreadable && (
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+                  <strong className="block mb-1">저장된 특약사항을 읽지 못했습니다</strong>
+                  이대로 저장하면 기존 특약이 사라집니다. 필요한 내용을 다시 입력해 주세요.
+                </div>
+              )}
+
               <ContractForm
                 initialValues={initialValues}
                 submitLabel="수정 내용 저장"

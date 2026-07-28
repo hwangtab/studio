@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/gsc-audit",
       "schedule": "0 19 * * 1"
+    },
+    {
+      "path": "/api/cron/purge-contracts",
+      "schedule": "0 18 1 * *"
     }
   ]
 }

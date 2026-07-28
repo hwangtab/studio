@@ -1,0 +1,1 @@
+ALTER TABLE `contracts` ADD `purged_at` integer;

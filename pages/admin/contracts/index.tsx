@@ -21,8 +21,13 @@ import {
 import { expireOverdueContracts } from '../../../lib/contracts/service';
 import { getStatusLabel } from '../../../lib/contracts/status';
 
+/** 한 화면에 싣는 최대 건수. 넘으면 오래된 계약이 잘린다는 사실을 화면에 알린다. */
+const LIST_LIMIT = 200;
+
 interface AdminContractsPageProps {
   contracts: AdminSerializedContract[];
+  /** 잘린 계약이 있다 — 검색도 실린 목록 안에서만 되므로 반드시 알려야 한다. */
+  truncated: boolean;
   error?: string;
 }
 
@@ -36,15 +41,23 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
     // 목록을 여는 시점이 곧 만료를 판정할 시점이다(크론 없이 lazy 처리).
     await expireOverdueContracts();
 
+    // 한 건 더 읽어 "잘렸는지"를 판별한다.
     const allContracts = await getDb().query.contracts.findMany({
       orderBy: (contracts, { desc }) => [desc(contracts.createdAt)],
-      limit: 200,
+      limit: LIST_LIMIT + 1,
     });
 
-    return { props: { contracts: allContracts.map((c) => serializeContractForAdmin(c)) } };
+    return {
+      props: {
+        contracts: allContracts.slice(0, LIST_LIMIT).map((c) => serializeContractForAdmin(c)),
+        truncated: allContracts.length > LIST_LIMIT,
+      },
+    };
   } catch (error: unknown) {
     console.error('[admin/contracts] Failed to load contracts:', error);
-    return { props: { contracts: [], error: '계약 목록을 불러오는 중 오류가 발생했습니다.' } };
+    return {
+      props: { contracts: [], truncated: false, error: '계약 목록을 불러오는 중 오류가 발생했습니다.' },
+    };
   }
 };
 
@@ -67,7 +80,11 @@ const STATUS_CLASS: Record<string, string> = {
   expired: 'bg-yellow-100 text-yellow-700',
 };
 
-export default function AdminContractsPage({ contracts, error }: AdminContractsPageProps) {
+export default function AdminContractsPage({
+  contracts,
+  truncated,
+  error,
+}: AdminContractsPageProps) {
   const router = useRouter();
   const [filter, setFilter] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
@@ -159,6 +176,13 @@ export default function AdminContractsPage({ contracts, error }: AdminContractsP
             <div className="p-6 md:p-8">
               {notice && (
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+              )}
+
+              {truncated && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+                  최근 {LIST_LIMIT}건만 표시합니다. 아래 검색도 이 목록 안에서만 찾으므로,
+                  더 오래된 계약은 나오지 않습니다.
+                </div>
               )}
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
