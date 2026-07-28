@@ -114,11 +114,18 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
   return contract;
 };
 
-/** draft 상태 계약의 내용을 갱신하고 본문을 다시 만든다. */
+/**
+ * draft 상태 계약의 내용을 갱신하고 본문을 다시 만든다.
+ *
+ * 허용 상태를 UPDATE 조건에 함께 건다. 호출부가 미리 상태를 확인하지만 읽기와 쓰기
+ * 사이에는 틈이 있어, 조건이 없으면 동시 요청으로 이미 서명된 계약의 본문까지 바꿀 수
+ * 있다 — 고객이 동의하지 않은 내용에 서명이 붙은 형태가 되므로 문서 위조에 해당한다.
+ * 조건이 맞지 않으면 null을 돌려 호출부가 거절하게 한다.
+ */
 export const updateDraftContract = async (
   contractId: string,
   data: CreateContractPayload,
-): Promise<Contract> => {
+): Promise<Contract | null> => {
   const content = buildContractContent({
     customerName: data.customerName,
     customerBirthdate: data.customerBirthdate,
@@ -155,8 +162,10 @@ export const updateDraftContract = async (
       specialTerms: data.specialTerms ? JSON.stringify(data.specialTerms) : null,
       updatedAt: new Date(),
     })
-    .where(eq(contracts.id, contractId))
+    .where(and(eq(contracts.id, contractId), eq(contracts.status, 'draft')))
     .returning();
+
+  if (!updated) return null;
 
   // 서명자 정보도 함께 따라가야 서명 페이지의 기본값이 어긋나지 않는다.
   await getDb()
@@ -278,19 +287,48 @@ export const sendContractNotifications = async (
   }
 };
 
-export const cancelContract = async (contractId: string): Promise<Contract> => {
+/** 서명 전 계약만 취소한다. 확정된 계약이 취소 상태로 바뀌지 않도록 조건을 건다. */
+export const cancelContract = async (contractId: string): Promise<Contract | null> => {
   const [contract] = await getDb()
     .update(contracts)
     .set({ status: 'cancelled', updatedAt: new Date() })
-    .where(eq(contracts.id, contractId))
+    .where(
+      and(
+        eq(contracts.id, contractId),
+        inArray(contracts.status, ['draft', 'sent', 'expired'] satisfies ContractStatus[]),
+      ),
+    )
     .returning();
-  return contract;
+
+  return contract ?? null;
 };
 
-export const deleteContract = async (contractId: string): Promise<void> => {
-  // SQLite 외래키 CASCADE가 PRAGMA에 의존하므로 자식 행을 명시적으로 지운다.
-  await getDb().delete(signatures).where(eq(signatures.contractId, contractId));
-  await getDb().delete(contractClauses).where(eq(contractClauses.contractId, contractId));
-  await getDb().delete(contractAttachments).where(eq(contractAttachments.contractId, contractId));
-  await getDb().delete(contracts).where(eq(contracts.id, contractId));
+/**
+ * 계약을 지운다. 지울 수 있었으면 true.
+ *
+ * 계약 행을 조건부로 먼저 지우고, 성공했을 때만 딸린 기록을 정리한다. 순서를 뒤집으면
+ * 조건이 맞지 않아 계약은 남았는데 서명 기록만 사라지는 최악의 결과가 나온다.
+ * 서명이 끝난 계약은 어떤 경로로도 지워지면 안 된다 — 서명·동의 이력이 유일한 증거다.
+ */
+export const deleteContract = async (contractId: string): Promise<boolean> => {
+  const [deleted] = await getDb()
+    .delete(contracts)
+    .where(
+      and(
+        eq(contracts.id, contractId),
+        inArray(contracts.status, ['draft', 'cancelled'] satisfies ContractStatus[]),
+      ),
+    )
+    .returning({ id: contracts.id });
+
+  if (!deleted) return false;
+
+  // SQLite 외래키 CASCADE가 PRAGMA에 의존하므로 남은 자식 행을 명시적으로 지운다.
+  await getDb().batch([
+    getDb().delete(signatures).where(eq(signatures.contractId, contractId)),
+    getDb().delete(contractClauses).where(eq(contractClauses.contractId, contractId)),
+    getDb().delete(contractAttachments).where(eq(contractAttachments.contractId, contractId)),
+  ]);
+
+  return true;
 };

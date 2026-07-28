@@ -89,12 +89,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!validation.ok) {
           return res.status(400).json({ ok: false, errors: validation.errors });
         }
+
         const updated = await updateDraftContract(id, validation.data);
+        if (!updated) {
+          // 읽은 뒤 상태가 바뀌었다(동시 발송·서명 등). 확정된 문서를 고치지 않는다.
+          return res.status(409).json({
+            ok: false,
+            message: '계약 상태가 바뀌어 수정할 수 없습니다. 새로고침 후 확인해 주세요.',
+          });
+        }
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(updated) });
       }
 
       if (action === 'cancel') {
         const cancelled = await cancelContract(id);
+        if (!cancelled) {
+          return res.status(409).json({
+            ok: false,
+            message: '계약 상태가 바뀌어 취소할 수 없습니다. 새로고침 후 확인해 주세요.',
+          });
+        }
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(cancelled) });
       }
 
@@ -128,7 +142,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      await deleteContract(id);
+      const removed = await deleteContract(id);
+      if (!removed) {
+        // 읽은 뒤 상태가 바뀌었다. 서명이 끝난 계약은 지우지 않는다 — 서명·동의 이력이
+        // 유일한 증거다.
+        return res.status(409).json({
+          ok: false,
+          message: '계약 상태가 바뀌어 삭제할 수 없습니다. 새로고침 후 확인해 주세요.',
+        });
+      }
       return res.status(200).json({ ok: true });
     } catch (error: unknown) {
       console.error('[API/contracts/[id]] Failed to delete contract:', error);
