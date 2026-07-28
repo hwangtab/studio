@@ -55,6 +55,16 @@ export const contracts = sqliteTable('contracts', {
   pdfUrl: text('pdf_url'),
   pdfGeneratedAt: integer('pdf_generated_at', { mode: 'timestamp' }),
 
+  /**
+   * 마지막 알림 메일이 실패한 사유. 성공하면 비운다.
+   *
+   * 메일 발송은 응답을 보낸 뒤 처리되므로 실패해도 화면에는 아무 표시가 없었다.
+   * 고객은 서명 링크를 받지 못했는데 관리자는 발송된 줄 아는 상태가 조용히 유지된다.
+   * 실패를 남겨 두어야 관리자가 알아채고 재발송하거나 링크를 직접 전달할 수 있다.
+   */
+  notificationError: text('notification_error'),
+  notifiedAt: integer('notified_at', { mode: 'timestamp' }),
+
   // 감사
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

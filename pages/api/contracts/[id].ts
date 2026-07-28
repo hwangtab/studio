@@ -98,14 +98,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(cancelled) });
       }
 
-      // send | resend — 재발송은 이전 링크를 무효화하기 위해 토큰을 새로 발급한다.
-      const { contract: sent, signUrl } = await markContractSent(id, {
-        regenerateToken: action === 'resend',
+      // send | resend — 허용 상태를 조건에 걸어 동시 요청이 두 번 발송되지 않게 한다.
+      const result = await markContractSent(id, {
+        allowedStatuses: action === 'send' ? ['draft'] : ['sent', 'expired', 'cancelled'],
       });
 
-      waitUntil(sendContractNotifications(sent, signUrl));
+      if (!result) {
+        // 상태가 이미 바뀌었거나, 방금 발송해 쿨다운 중이다. 둘 다 "다시 누르지 마세요"라
+        // 같은 안내로 충분하다.
+        return res.status(409).json({
+          ok: false,
+          message: '방금 처리된 요청입니다. 잠시 후 상태를 확인해 주세요.',
+        });
+      }
 
-      return res.status(200).json({ ok: true, contract: serializeContractForAdmin(sent) });
+      waitUntil(sendContractNotifications(result.contract, result.signUrl));
+
+      return res.status(200).json({ ok: true, contract: serializeContractForAdmin(result.contract) });
     } catch (error: unknown) {
       console.error(`[API/contracts/[id]] Action "${action}" failed:`, error);
       return res.status(500).json({ ok: false, message: '요청을 처리하지 못했습니다.' });

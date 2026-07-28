@@ -47,9 +47,14 @@ const parseDate = (value: string): Date | null => {
  * 확정" 같은 문구를 두 줄로 심을 수 있다(파이프를 막아도 남는 우회 경로). 제로폭
  * 문자는 눈에 보이지 않아 동명이인 위장에 쓰이고, 그 밖의 제어문자는 이메일 제목과
  * 로그를 깨뜨린다.
+ *
+ * 방향 제어는 embedding·override(202A–202E)만으로 부족하다. isolate(2066–2069)로도
+ * 표시 순서를 뒤집을 수 있어, 화면과 PDF에 보이는 글자가 저장된 값과 달라진다
+ * (Trojan Source). 계약서는 "보이는 대로 합의한 것"이 되어야 하므로 방향을 건드리는
+ * 문자는 모두 막는다.
  */
 const CONTROL_CHARS =
-  /[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028\u2029\u202A-\u202E\uFEFF]/;
+  /[\u0000-\u001F\u007F-\u009F\u00AD\u061C\u180E\u200B-\u200F\u2028\u2029\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]/;
 
 export const validateCreateContractPayload = (
   payload: Record<string, unknown>,

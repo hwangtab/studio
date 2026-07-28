@@ -51,6 +51,11 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
     console.error('[contracts/finalize] Failed to generate or store PDF:', error);
   }
 
+  // 메일 결과도 계약에 남긴다. 서명은 이미 확정됐지만, 확인 메일과 PDF가 고객에게
+  // 닿지 않은 사실을 관리자가 알아야 다시 보낼 수 있다.
+  const problems: string[] = [];
+  if (!pdfBuffer) problems.push('PDF 생성 실패');
+
   try {
     const [customerResult, operatorResult] = await Promise.all([
       sendContractSignedEmail(contract, pdfBuffer),
@@ -59,11 +64,25 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
 
     if (!customerResult.ok) {
       console.error('[contracts/finalize] Signed email failed:', customerResult);
+      problems.push(`서명 완료 메일 발송 실패 (${customerResult.errorCode ?? 'UNKNOWN'})`);
     }
     if (!operatorResult.ok) {
       console.error('[contracts/finalize] Operator notification failed:', operatorResult);
     }
   } catch (error: unknown) {
     console.error('[contracts/finalize] Failed to send signed emails:', error);
+    problems.push('서명 완료 메일 발송 중 오류');
+  }
+
+  try {
+    await getDb()
+      .update(contracts)
+      .set({
+        notificationError: problems.length > 0 ? problems.join(' / ') : null,
+        notifiedAt: new Date(),
+      })
+      .where(eq(contracts.id, contract.id));
+  } catch (error: unknown) {
+    console.error('[contracts/finalize] Failed to record notification result:', error);
   }
 };

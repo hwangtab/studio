@@ -172,6 +172,25 @@ export default function AdminContractDetailPage({
             <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
           )}
 
+          {/* 메일·PDF는 응답 이후에 처리돼 실패해도 화면에 흔적이 없었다. 남겨 둔 사유를
+              띄워야 관리자가 재발송하거나 링크를 직접 전달할 수 있다. */}
+          {contract.notificationError && (
+            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+              <strong className="block mb-1">알림 처리에 문제가 있었습니다</strong>
+              {contract.notificationError}
+              <span className="block mt-2 text-amber-700">
+                고객이 메일을 받지 못했을 수 있습니다. 재발송하거나 서명 링크를 직접 전달해 주세요.
+              </span>
+            </div>
+          )}
+
+          {contract.status === 'signed' && !contract.pdfUrl && (
+            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+              <strong className="block mb-1">서명본 PDF가 보관되지 않았습니다</strong>
+              아래 “PDF 다운로드”를 누르면 계약 내용으로 다시 만들어 받을 수 있습니다.
+            </div>
+          )}
+
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
             <div className="p-6 md:p-8 border-b border-gray-200">
               <div className="flex flex-wrap items-center gap-3 mb-5">

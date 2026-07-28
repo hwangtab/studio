@@ -15,6 +15,13 @@
       "when": 1785209523112,
       "tag": "0001_sharp_sheva_callister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785220404152,
+      "tag": "0002_omniscient_johnny_storm",
+      "breakpoints": true
     }
   ]
 }

@@ -165,6 +165,22 @@ describe('계약 생성 페이로드 검증', () => {
       ).toContain('specialTerms');
     });
 
+    // 방향 제어는 embedding/override만 막으면 isolate로 우회된다. 화면·PDF에 보이는
+    // 글자가 저장된 값과 달라지면 "보이는 대로 합의했다"는 전제가 무너진다.
+    it.each([
+      ['RLO override', '‮홍길동'],
+      ['RLI isolate', '⁦홍길동⁩'],
+      ['LRI isolate', '⁧보증금 면제⁩'],
+      ['FSI isolate', '⁨홍길동⁩'],
+      ['PDI 단독', '홍길동⁩'],
+      ['word joiner', '홍⁠길동'],
+      ['Arabic letter mark', '홍؜길동'],
+      ['soft hyphen', '홍­길동'],
+      ['interlinear annotation', '홍￹길동￻'],
+    ])('이름의 %s를 거부한다', (_label, name) => {
+      expect(errorFields({ ...validPayload(), customerName: name })).toContain('customerName');
+    });
+
     it('정상적인 한글·공백·기호는 그대로 통과한다', () => {
       const result = validateCreateContractPayload({
         ...validPayload(),
