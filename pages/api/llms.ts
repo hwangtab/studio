@@ -9,6 +9,8 @@ import {
   DAY_LOCK_PRICE,
   formatPriceAmount,
   LESSON_MONTHLY_PRICE,
+  MASTERING_PACKAGE_PRICE,
+  MASTERING_SINGLE_PRICE,
   MIXING_LEVEL1_PRICE,
   MIXING_LEVEL2_PRICE,
   MIXING_LEVEL3_PRICE,
@@ -39,7 +41,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 ## Primary Services
 
 - **Recording Studio**: Professional vocal and instrument recording in a fully treated acoustic space
-- **Mixing & Mastering**: Professional mixing and mastering services using industry-standard equipment
+- **Mixing & Mastering**: Professional mixing and mastering, available fully remotely — send stems from anywhere (KakaoTalk / Google Drive / WeTransfer), delivery in 3–7 business days. Dedicated page: /mixing-mastering
 - **Practice Room Residency**: Premium private practice room residency program (monthly subscription)
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
@@ -89,6 +91,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 - **Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K MP4 & WAV/MP3 delivery)
 - **1:1 Music Lesson**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each)
 - **Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ₩${MIXING_LEVEL1_PRICE / 1000}K · 11–30 ₩${MIXING_LEVEL2_PRICE / 1000}K · 31+ ₩${MIXING_LEVEL3_PRICE / 1000}K · includes 2 revisions)
+- **Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album). Mastered to streaming platform loudness standards.
 - **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
@@ -175,6 +178,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
 - Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
 - Recording Studio (rental, rates, booking): ${siteUrl}/${locale}/recording
+- Mixing & Mastering (remote-friendly, rates, file specs): ${siteUrl}/${locale}/mixing-mastering
 - Pricing: ${siteUrl}/${locale}/pricing
 - Practice Room: ${siteUrl}/${locale}/practice-room
 - Recording Lessons: ${siteUrl}/${locale}/lesson
@@ -204,7 +208,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
-- Mixing & mastering: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included.
+- Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
 - Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
 - Wedding song complete package: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
 - Foreign-musician guides (English native): hub at ${siteUrl}/en/stories/recording-in-seoul-for-foreign-musicians, plus three spoke guides on practice-room booking, pricing, and visit access.

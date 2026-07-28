@@ -16,6 +16,8 @@ export const MIXING_LEVEL1_PRICE = 200000;
 export const MIXING_LEVEL2_PRICE = 350000;
 export const MIXING_LEVEL3_PRICE = 500000;
 export const MASTERING_SINGLE_PRICE = 100000;
+/** EP·정규(4곡 이상) 일괄 마스터링 곡당 단가. 싱글 단건보다 곡당 2만원 낮다. */
+export const MASTERING_PACKAGE_PRICE = 80000;
 export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사용 믹싱 포함)
 export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;
@@ -238,6 +240,31 @@ export const getPricingData = (locale: Locale) => {
         vi: ['Tuân thủ chuẩn nền tảng streaming', 'Bao gồm 1 lần chỉnh sửa', 'File âm thanh độ phân giải cao', 'Loudness tối ưu theo thể loại'],
         th: ['ตามมาตรฐานแพลตฟอร์มสตรีมมิง', 'รวมแก้ไข 1 ครั้ง', 'ไฟล์เสียงความละเอียดสูง', 'ตั้งค่า loudness ให้เหมาะกับแนวเพลง'],
         uz: ['Streaming platforma standartlariga mos', '1 ta tahrir kiritilgan', 'Yuqori rezolyutsiyali audio fayllar', 'Janrga mos loudness sozlamalari']
+      }),
+    },
+    {
+      id: 'mastering-package',
+      title: t(locale, { ko: 'EP · 정규 마스터링', en: 'EP · Album Mastering', zh: 'EP·专辑母带处理', es: 'Masterización de EP · Álbum', vi: 'Mastering EP · album', th: 'มาสเตอริ่ง EP · อัลบั้ม', uz: 'EP · albom masteringi' }),
+      priceDisplay: t(locale, { ko: '80,000원', en: '₩80,000', zh: '₩80,000', es: '₩80,000', vi: '₩80,000', th: '₩80,000', uz: '₩80,000' }),
+      priceValue: MASTERING_PACKAGE_PRICE,
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
+      description: t(locale, {
+        ko: '4곡 이상을 한 번에 맡길 때 적용되는 곡당 단가입니다.',
+        en: 'Per-song rate applied when mastering four or more tracks together.',
+        zh: '一次委托4首以上时适用的每首单价。',
+        es: 'Tarifa por canción al masterizar cuatro o más pistas juntas.',
+        vi: 'Đơn giá mỗi bài khi mastering từ 4 bài trở lên cùng lúc.',
+        th: 'ราคาต่อเพลงเมื่อมาสเตอร์ 4 เพลงขึ้นไปพร้อมกัน',
+        uz: 'To\'rt va undan ortiq trekni birga masteringlashda qo\'llaniladigan narx.'
+      }),
+      features: tArray(locale, {
+        ko: ['4곡 이상 일괄 의뢰 시 적용', '앨범 전체 톤·라우드니스 통일', '스트리밍 플랫폼 규격 준수', '고해상도 음원 제공'],
+        en: ['Applies to four or more tracks', 'Consistent tone & loudness across the album', 'Streaming platform standards', 'High-res audio files'],
+        zh: ['一次委托4首以上时适用', '统一整张专辑的音色与响度', '符合流媒体平台规格标准', '提供高解析度音频文件'],
+        es: ['Se aplica a cuatro o más pistas', 'Tono y loudness uniformes en todo el álbum', 'Cumple con los estándares de plataformas de streaming', 'Archivos de audio de alta resolución'],
+        vi: ['Áp dụng từ 4 bài trở lên', 'Thống nhất tone và loudness toàn album', 'Tuân thủ chuẩn nền tảng streaming', 'File âm thanh độ phân giải cao'],
+        th: ['ใช้กับ 4 เพลงขึ้นไป', 'ปรับโทนและ loudness ทั้งอัลบั้มให้สม่ำเสมอ', 'ตามมาตรฐานแพลตฟอร์มสตรีมมิง', 'ไฟล์เสียงความละเอียดสูง'],
+        uz: ['To"rt va undan ortiq trek uchun', 'Albom bo"ylab ton va loudness bir xil', 'Streaming platforma standartlariga mos', 'Yuqori rezolyutsiyali audio fayllar']
       }),
     },
   ];

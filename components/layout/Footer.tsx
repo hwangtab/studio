@@ -58,6 +58,7 @@ export const Footer = ({ locale }: FooterProps) => {
             <ul className="grid grid-cols-2 gap-x-4">
               <FooterLink href={`/${locale}`}>{t('nav.home')}</FooterLink>
               <FooterLink href={`/${locale}/recording`}>{t('nav.recording')}</FooterLink>
+              <FooterLink href={`/${locale}/mixing-mastering`}>{t('nav.mixingMastering')}</FooterLink>
               <FooterLink href={`/${locale}/about`}>{t('nav.about')}</FooterLink>
               <FooterLink href={`/${locale}/portfolio`}>{t('nav.portfolio')}</FooterLink>
               <FooterLink href={`/${locale}/stories`}>{t('nav.stories')}</FooterLink>

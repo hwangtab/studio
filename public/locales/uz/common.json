@@ -10,6 +10,7 @@
     "practiceRoom": "Mashg'ulot xonasi",
     "lesson": "Dars",
     "recording": "Yozuv",
+    "mixingMastering": "Miks va mastering",
     "mobileMenu": "Mobil menyu",
     "groups": {
       "recording": "Yozuv",
@@ -902,6 +903,7 @@
       "backToList": "Hikoyalarga qaytish",
       "tocTitle": "Mundarija",
       "summaryLabel": "Asosiy xulosa",
+      "lastUpdated": "Oxirgi yangilanish",
       "share": "Ulashish",
       "moreTitle": "Yana hikoyalar",
       "noRelated": "O'xshash hikoyalar yo'q.",
@@ -1261,6 +1263,183 @@
       "subtitleLine1": "Yeonsinnae'dagi Studio NOL'da, maxsus muhandis bilan,",
       "subtitleLine2": "demodan chiqarishga tayyor trekgacha hammasini yakunlang.",
       "imageAlt": "Studio NOL yozuv studiyasi so'rovi"
+    }
+  },
+  "mixingMastering": {
+    "seo": {
+      "title": "Miks va mastering — ₩200,000/qo'shiqdan, masofadan | Studio NOL",
+      "description": "Studio NOL (Yeonsinnae, Seul)da miks va mastering. Miks trek soniga qarab ₩200,000–₩500,000 (2 marta tuzatish kiritilgan), yakka qo'shiq masteringi ₩100,000. Butun mamlakat yoki chet eldan faylni yuboring, 3-7 ish kunida tayyor natijani oling.",
+      "keywords": "miks, mastering, miks va mastering, onlayn miks, masofaviy miks, miks buyurtma, mastering buyurtma, miks narxi, mastering narxi, musiqa miksi, stem miks, Seul miks studiyasi"
+    },
+    "hero": {
+      "title": "Miks · Mastering",
+      "subtitleLine1": "Shunchaki faylni yuboring — butun mamlakat yoki chet eldan bo'lsa ham",
+      "subtitleLine2": "₩200,000/qo'shiqdan, 3-7 ish kunida tayyor natija",
+      "alt": "Studio NOL miks konsoli va monitor kolonkalari"
+    },
+    "quickAnswers": {
+      "title": "Miks·mastering buyurtmasi haqida qisqacha",
+      "subtitle": "Eng ko'p so'raladigan uch savolga avval javob beramiz.",
+      "items": [
+        {
+          "q": "Miks·mastering narxi qancha?",
+          "a": "Miks trek soniga qarab: 10 trekgacha ₩200,000, 11-30 trek ₩350,000, 31 va undan ko'p trek ₩500,000 — barchasida 2 marta tuzatish bor. Mastering yakka qo'shiq uchun ₩100,000; agar bir yo'la 4 va undan ko'p qo'shiq buyurtma qilsangiz (EP, albom), qo'shiq boshiga ₩80,000. Barcha narxlar VATsiz."
+        },
+        {
+          "q": "Ish qancha vaqt oladi?",
+          "a": "Faylni qabul qilgandan so'ng 3-7 ish kunida tayyor natijani topshiramiz. Tuzatish standart holatda miksda 2 marta, masteringda 1 marta kiritilgan."
+        },
+        {
+          "q": "Studiyaga shaxsan borishim kerakmi?",
+          "a": "Yo'q. Qayerda yozgan bo'lsangiz ham, shunchaki faylni yuboring. KakaoTalk yoki Google Drive/WeTransfer havolasi orqali qabul qilamiz, tayyor natijani ham xuddi shu tarzda topshiramiz."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Ko'pincha shu odamlar buyurtma beradi",
+      "items": [
+        {
+          "title": "Uyda yozib bo'lganlar",
+          "description": "Mikrofon va interfeys bilan o'zi yozgan, lekin balans va fazoviylikda qiynalganlar. Faqat quruq vokal va minus trackni yuboring."
+        },
+        {
+          "title": "Boshqa studiyada yozganlar",
+          "description": "Tanish joyda yozib, faqat post-produksiyani buyurtma bering. Har bir trek stem'ini qabul qilib, davom ettiramiz."
+        },
+        {
+          "title": "Chiqarishga tayyorlanayotganlar",
+          "description": "Chiqarish rejalashtirilgan platforma (Melon, Spotify, Apple Music va boshqalar) balandlik standartiga mos mastering qilamiz."
+        },
+        {
+          "title": "Boshqa shahar yoki chet eldagilar",
+          "description": "Sayohat shart emas — hammasi fayl yuborish orqali bitadi. Narx va tuzatish so'rovlari ingliz tilida ham bo'lishi mumkin."
+        }
+      ]
+    },
+    "mixing": {
+      "title": "Miks narxlari",
+      "subtitle": "Trek soniga qarab uch daraja. Qaysi darajaga tushishingizni bilmasangiz, sessiyani yuboring, aytib beramiz.",
+      "vocalTuneNotice": "Aniq vokal tuning va timing tuzatish qo'shiq boshiga qo'shimcha ₩150,000. Barcha narxlar VATsiz."
+    },
+    "mastering": {
+      "title": "Mastering narxlari",
+      "subtitle": "Miks tayyor bo'lsa, faqat masteringni alohida ham buyurtma qilishingiz mumkin."
+    },
+    "process": {
+      "title": "Masofaviy buyurtma shunday ketadi",
+      "subtitle": "KakaoTalk maslahatidan tayyor natija topshirishgacha to'rt bosqich",
+      "steps": [
+        {
+          "title": "Maslahat va narx",
+          "description": "KakaoTalk orqali qo'shiq ma'lumotlari va trek sonini ayting, qaysi darajaga tushishingiz va narxini darhol aytamiz."
+        },
+        {
+          "title": "Faylni yuborish",
+          "description": "Quruq vokal va minus trackni KakaoTalk yoki Google Drive/WeTransfer havolasi orqali yuboring. Xohlagan sound uchun referens trek qo'shsangiz, yo'nalishni topish osonlashadi."
+        },
+        {
+          "title": "Miks·mastering ishi",
+          "description": "Qabul qilingan fayllar bilan balans va tonni sozlaymiz, so'ng masteringgacha davom ettiramiz. Odatda 3-7 ish kuni ketadi."
+        },
+        {
+          "title": "Tuzatish va topshirish",
+          "description": "Tayyor natijani tinglang va nimani o'zgartirmoqchi ekaningizni ayting. Standart holatda miksda 2 marta, masteringda 1 marta tuzatish bor, yakuniy fayllar WAV va MP3 formatida beriladi."
+        }
+      ]
+    },
+    "fileSpec": {
+      "title": "Yuborilishi kerak bo'lgan fayllar",
+      "subtitle": "Quyidagicha tayyorlab qo'ysangiz, ish ancha tezlashadi.",
+      "groups": [
+        {
+          "title": "Miksni buyurtma qilganda",
+          "items": [
+            "Effektsiz quruq vokal WAV",
+            "Minus track yoki har bir trek bo'yicha stem, WAV",
+            "Xohlagan soundni ko'rsatadigan 1-2 ta referens trek",
+            "WAV 24bit / 44.1kHz yoki 48kHz tavsiya etiladi (MP3 ham qabul qilinadi, lekin sifat original WAVga qaraganda cheklangan)"
+          ]
+        },
+        {
+          "title": "Masteringni buyurtma qilganda",
+          "items": [
+            "Tayyor stereo miks, WAV (24bit / 44.1kHz va undan yuqori)",
+            "Master busdagi limiter va kompressorni olib tashlab yuboring",
+            "Master bus piki taxminan -3dBFS ~ -6dBFS atrofida bo'lishi maqbul",
+            "Chiqarish rejalashtirilgan platformani ayting, balandlik standartiga moslashtiramiz"
+          ]
+        }
+      ]
+    },
+    "environment": {
+      "title": "Qanday muhitda ishlaymiz",
+      "imageAlt": "Studio NOL miks konsoli va outboard uskunalari",
+      "features": [
+        "Monitorlar Proac Tablett 50 · EVE Audio SC207 · ADAM A5 — uchalasida o'zaro tekshiruv",
+        "Outboard SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
+        "UAD · Acustica Audio · Softube · Soundtoys · iZotope plaginlari",
+        "Platforma bo'yicha balandlik standartlarini qo'llaymiz (Spotify -14 LUFS, Apple Music -16 LUFS, YouTube -14 LUFS)"
+      ],
+      "equipmentLink": "Barcha uskunalar ro'yxatini ko'rish"
+    },
+    "credits": {
+      "title": "Bajarilgan ishlar",
+      "subtitle": "Studio NOL miks yoki masteringni bajargan chiqarishlardan bir qismi.",
+      "items": [
+        {
+          "role": "Vokal yozuvi · miks"
+        },
+        {
+          "role": "Yozuv · miks · mastering"
+        },
+        {
+          "role": "Yozuv · miks"
+        },
+        {
+          "role": "Yozuv · miks"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Miks·mastering bo'yicha ko'p so'raladigan savollar",
+      "subtitle": "Buyurtma berishdan oldin bilib qo'yish foydali narsalar.",
+      "items": [
+        {
+          "q": "Miks narxi qanday belgilanadi?",
+          "a": "Trek soni asosida. 10 trekgacha ₩200,000, 11-30 trek ₩350,000, 31 va undan ko'p trek ₩500,000 — barchasida 2 marta tuzatish bor. Aniq vokal tuning va timing tuzatish kerak bo'lsa, qo'shiq boshiga qo'shimcha ₩150,000."
+        },
+        {
+          "q": "Faqat onlayn buyurtma berish mumkinmi?",
+          "a": "Mumkin. Vokal WAV va minus trackni KakaoTalk yoki Google Drive/WeTransfer havolasi orqali yuboring, ishlangandan so'ng tayyor fayllarni topshiramiz. Mamlakat ichida qayerda yozgan bo'lsangiz ham, fayl yuborish orqali buyurtma bera olasiz."
+        },
+        {
+          "q": "Qanday fayl, qaysi formatda yuborish kerak?",
+          "a": "Effektsiz quruq vokal WAV, minus track yoki har bir trek bo'yicha stem WAV, va xohlagan yo'nalishni ko'rsatadigan 1-2 ta referens trek. WAV 24bit, 44.1kHz yoki 48kHz tavsiya etiladi. MP3 ham qabul qilinadi, lekin sifat original WAVga qaraganda cheklangan."
+        },
+        {
+          "q": "Ish qancha vaqt oladi?",
+          "a": "Faylni qabul qilgandan so'ng 3-7 ish kunida tayyor natijani topshiramiz. Qo'shiqlar soni ko'p yoki stemlar murakkab bo'lsa, jadvalni oldindan aytamiz."
+        },
+        {
+          "q": "Faqat masteringni alohida buyurtma qilsa bo'ladimi?",
+          "a": "Bo'ladi. Yakka qo'shiq uchun ₩100,000; bir yo'la 4 va undan ko'p qo'shiq buyurtma qilsangiz (EP, albom), qo'shiq boshiga ₩80,000. Tayyor stereo miksni master busda limiter·kompressorsiz, piki taxminan -3dBFS dan -6dBFS gacha bo'lgan holda yuboring."
+        },
+        {
+          "q": "Necha marta tuzatish mumkin?",
+          "a": "Miksda standart 2 marta, masteringda 1 marta. Tuzatmoqchi bo'lgan vaqt va joyingizni ayting, biz qo'llaymiz."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Miks buyurtma berishdan oldin o'qishga arziydigan maqolalar",
+    "relatedStoriesSubtitle": "Onlayn buyurtma berish usulidan stem tayyorlashgacha, trek soniga qarab narxlargacha — barchasi shu yerda.",
+    "cta": {
+      "inquiry": "KakaoTalk orqali miks haqida so'rang",
+      "location": "Yo'nalish",
+      "titleLine1": "Miks yig'ilmayotganda,",
+      "titleHighlight": "shunchaki faylni yuboring",
+      "subtitleLine1": "Trek sonini ayting — narxni darhol aytamiz.",
+      "subtitleLine2": "Butun mamlakat yoki chet eldan fayl yuborish orqali ishlaydi.",
+      "imageAlt": "Studio NOL miks buyurtmasi so'rovi"
     }
   },
   "voiceActing": {
@@ -2184,7 +2363,7 @@
         },
         {
           "question": "Byudjet qisqa — faqat ayrim bosqichlarga buyurtma berish mumkinmi?",
-          "answer": "Ha. Biz to‘liq chiqarish jarayonini tavsiya qilamiz, lekin bosqichlar bo‘yicha alohida buyurtma berish ham mumkin: faqat vokal yozuv / faqat miks / faqat mastering. Qisman narxlar narxlar jadvali asosida beriladi (vokal yozuv ₩40K/soatdan, miks ₩800K dan va h.k.). Lekin media PR va tarqatish hamrohligi faqat to‘liq jarayon buyurtma qilingandagina qo‘shiladi."
+          "answer": "Ha. Biz to‘liq chiqarish jarayonini tavsiya qilamiz, lekin bosqichlar bo‘yicha alohida buyurtma berish ham mumkin: faqat vokal yozuv / faqat miks / faqat mastering. Qisman narxlar narxlar jadvali asosida beriladi (vokal yozuv ₩100K/soat, miks ₩200K dan va h.k.). Lekin media PR va tarqatish hamrohligi faqat to‘liq jarayon buyurtma qilingandagina qo‘shiladi."
         },
         {
           "question": "Boshqa joyda yozishni boshlab qo‘yganman — yarmida qo‘shila olasizlarmi?",

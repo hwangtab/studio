@@ -10,6 +10,7 @@
     "practiceRoom": "Sala",
     "lesson": "Clases",
     "recording": "Grabación",
+    "mixingMastering": "Mezcla y Masterización",
     "mobileMenu": "Menú móvil",
     "groups": {
       "recording": "Grabación",
@@ -902,6 +903,7 @@
       "backToList": "Volver a historias",
       "tocTitle": "Índice",
       "summaryLabel": "Resumen clave",
+      "lastUpdated": "Última actualización",
       "share": "Compartir",
       "moreTitle": "Más historias",
       "noRelated": "No hay historias relacionadas.",
@@ -1261,6 +1263,183 @@
       "subtitleLine1": "En Studio NOL, en Yeonsinnae, con un ingeniero dedicado,",
       "subtitleLine2": "termina todo, del demo a la pista lista para publicar.",
       "imageAlt": "Consulta del estudio de grabación Studio NOL"
+    }
+  },
+  "mixingMastering": {
+    "seo": {
+      "title": "Mezcla y masterización — desde ₩200,000/canción, remoto | Studio NOL",
+      "description": "Mezcla y masterización en Studio NOL, Yeonsinnae, Seúl. La mezcla cuesta entre ₩200,000 y ₩500,000 según el número de pistas (incluye 2 revisiones), y la masterización de un single cuesta ₩100,000. Envía tus archivos desde cualquier parte de Corea o del extranjero y recibe el resultado final en 3-7 días hábiles.",
+      "keywords": "mezcla, masterización, mezcla y masterización, mezcla online, mezcla remota, encargo de mezcla, encargo de masterización, precio de mezcla, precio de masterización, mezcla de audio, mezcla de stems, estudio de mezcla Seúl"
+    },
+    "hero": {
+      "title": "Mezcla y masterización",
+      "subtitleLine1": "Solo tienes que enviarnos tus archivos — desde cualquier parte de Corea o del extranjero",
+      "subtitleLine2": "Desde ₩200,000 por canción, con entrega en 3-7 días hábiles",
+      "alt": "Consola de mezcla y monitores de Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Mezcla y masterización — Respuestas rápidas",
+      "subtitle": "Las tres preguntas más frecuentes, respondidas primero.",
+      "items": [
+        {
+          "q": "¿Cuánto cuestan la mezcla y la masterización?",
+          "a": "La mezcla se cobra según el número de pistas: ₩200,000 hasta 10 pistas, ₩350,000 entre 11 y 30 pistas, y ₩500,000 con 31 o más — todo con 2 revisiones incluidas. La masterización de un single cuesta ₩100,000; si encargas 4 canciones o más juntas (EP, álbum), sale a ₩80,000 por canción. Todos los precios excluyen el IVA."
+        },
+        {
+          "q": "¿Cuánto tarda el trabajo?",
+          "a": "Entregamos el resultado final entre 3 y 7 días hábiles después de recibir tus archivos. Las revisiones están incluidas — 2 rondas en mezcla, 1 en masterización."
+        },
+        {
+          "q": "¿Tengo que ir al estudio en persona?",
+          "a": "No. Sin importar dónde hayas grabado, solo envíanos tus archivos. Los recibimos por KakaoTalk o un enlace de Google Drive/WeTransfer, y entregamos el resultado de la misma forma."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Quién suele encargar esto",
+      "items": [
+        {
+          "title": "Ya grabaste en casa",
+          "description": "Grabaste tú mismo con micrófono e interfaz, pero te trabaste con el balance y la sensación de espacio. Solo envía la voz seca y la pista base."
+        },
+        {
+          "title": "Grabaste en otro estudio",
+          "description": "Graba donde te resulte cómodo y encárganos solo la posproducción. Recibimos tus stems por pista y continuamos desde ahí."
+        },
+        {
+          "title": "Estás por lanzar tu música",
+          "description": "Masterizamos según el estándar de sonoridad de la plataforma donde vayas a lanzar — Melon, Spotify, Apple Music y más."
+        },
+        {
+          "title": "Estás fuera de Seúl o en el extranjero",
+          "description": "No hace falta viajar — todo funciona por transferencia de archivos. También podemos coordinar presupuestos y revisiones en inglés."
+        }
+      ]
+    },
+    "mixing": {
+      "title": "Precios de mezcla",
+      "subtitle": "Tres niveles según el número de pistas. ¿No sabes cuál te corresponde? Envíanos la sesión y te lo decimos.",
+      "vocalTuneNotice": "El ajuste vocal preciso y la corrección de tiempo cuestan ₩150,000 adicionales por canción. Todos los precios excluyen el IVA."
+    },
+    "mastering": {
+      "title": "Precios de masterización",
+      "subtitle": "¿Ya tienes la mezcla lista? También puedes encargar solo la masterización."
+    },
+    "process": {
+      "title": "Así funciona un encargo remoto",
+      "subtitle": "Cuatro pasos, desde la consulta por KakaoTalk hasta la entrega final",
+      "steps": [
+        {
+          "title": "Consulta y presupuesto",
+          "description": "Cuéntanos los detalles de tu canción y el número de pistas por KakaoTalk, y te decimos al momento qué nivel te corresponde y cuánto cuesta."
+        },
+        {
+          "title": "Envío de archivos",
+          "description": "Envía la voz seca y la pista base por KakaoTalk o un enlace de Google Drive/WeTransfer. Una pista de referencia del sonido que buscas ayuda a definir la dirección."
+        },
+        {
+          "title": "Trabajo de mezcla y masterización",
+          "description": "Ajustamos el balance y el tono con tus archivos y seguimos con la masterización. Suele tomar entre 3 y 7 días hábiles."
+        },
+        {
+          "title": "Revisiones y entrega",
+          "description": "Escucha el resultado final y dinos qué quieres ajustar. Incluye 2 revisiones de mezcla y 1 de masterización, y los archivos finales llegan en WAV y MP3."
+        }
+      ]
+    },
+    "fileSpec": {
+      "title": "Archivos que debes enviar",
+      "subtitle": "Prepararlos así de antemano agiliza mucho el trabajo.",
+      "groups": [
+        {
+          "title": "Para encargar la mezcla",
+          "items": [
+            "Voz seca en WAV, sin efectos aplicados",
+            "Pista base o stems por pista en WAV",
+            "1-2 pistas de referencia que muestren el sonido que buscas",
+            "WAV 24 bits / 44.1kHz o 48kHz recomendado (también aceptamos MP3, aunque con calidad más limitada que el WAV original)"
+          ]
+        },
+        {
+          "title": "Para encargar la masterización",
+          "items": [
+            "Mezcla estéreo terminada en WAV (24 bits / 44.1kHz o más)",
+            "Sin limitador ni compresor en el bus máster",
+            "Un pico de bus máster de entre -3dBFS y -6dBFS es lo más adecuado",
+            "Dinos en qué plataforma vas a lanzar y ajustamos la sonoridad"
+          ]
+        }
+      ]
+    },
+    "environment": {
+      "title": "En qué entorno trabajamos",
+      "imageAlt": "Consola de mezcla y outboard de Studio NOL",
+      "features": [
+        "Monitores Proac Tablett 50 · EVE Audio SC207 · ADAM A5 — verificación cruzada entre los tres",
+        "Outboard SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
+        "Plugins UAD · Acustica Audio · Softube · Soundtoys · iZotope",
+        "Aplicamos el estándar de sonoridad de cada plataforma (Spotify -14 LUFS, Apple Music -16 LUFS, YouTube -14 LUFS)"
+      ],
+      "equipmentLink": "Ver la lista completa de equipos"
+    },
+    "credits": {
+      "title": "Trabajos realizados",
+      "subtitle": "Algunos de los lanzamientos donde Studio NOL se encargó de la mezcla o la masterización.",
+      "items": [
+        {
+          "role": "Grabación vocal · mezcla"
+        },
+        {
+          "role": "Grabación · mezcla · masterización"
+        },
+        {
+          "role": "Grabación · mezcla"
+        },
+        {
+          "role": "Grabación · mezcla"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Preguntas frecuentes de mezcla y masterización",
+      "subtitle": "Vale la pena revisarlas antes de encargar.",
+      "items": [
+        {
+          "q": "¿Cómo se determina el precio de la mezcla?",
+          "a": "Se basa en el número de pistas: ₩200,000 hasta 10 pistas, ₩350,000 entre 11 y 30, y ₩500,000 con 31 o más — todo con 2 revisiones incluidas. El ajuste vocal preciso y la corrección de tiempo suman ₩150,000 adicionales por canción."
+        },
+        {
+          "q": "¿Puedo encargarlo todo en línea?",
+          "a": "Sí. Envía tu voz en WAV y la pista base por KakaoTalk o un enlace de Google Drive/WeTransfer, y entregamos los archivos finales de la misma forma. Sin importar dónde grabaste en Corea, puedes encargarlo por transferencia de archivos."
+        },
+        {
+          "q": "¿Qué archivos y en qué formato debo enviar?",
+          "a": "Voz seca en WAV sin efectos, la pista base o los stems por pista en WAV, y 1-2 pistas de referencia que muestren la dirección que buscas. Se recomienda WAV de 24 bits, a 44.1kHz o 48kHz. También aceptamos MP3, aunque con calidad más limitada que el WAV original."
+        },
+        {
+          "q": "¿Cuánto tarda el trabajo?",
+          "a": "Entregamos el resultado final entre 3 y 7 días hábiles después de recibir tus archivos. Si tienes muchas canciones o stems complejos, te avisamos el cronograma con antelación."
+        },
+        {
+          "q": "¿Puedo encargar solo la masterización?",
+          "a": "Sí. Un single cuesta ₩100,000 por canción, y si encargas 4 canciones o más juntas (EP, álbum), sale a ₩80,000 por canción. Envía una mezcla estéreo terminada sin limitador ni compresor en el bus máster, con un pico de alrededor de -3dBFS a -6dBFS."
+        },
+        {
+          "q": "¿Cuántas revisiones están incluidas?",
+          "a": "2 en mezcla y 1 en masterización, como estándar. Dinos el momento exacto y qué quieres cambiar, y lo aplicamos."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Vale la pena leer esto antes de encargar una mezcla",
+    "relatedStoriesSubtitle": "Desde cómo funciona un encargo en línea hasta preparar stems y costos según el número de pistas.",
+    "cta": {
+      "inquiry": "Consulta sobre mezcla por KakaoTalk",
+      "location": "Cómo llegar",
+      "titleLine1": "Cuando la mezcla no",
+      "titleHighlight": "termina de cuajar, solo envía los archivos",
+      "subtitleLine1": "Dinos el número de pistas y te damos el presupuesto al momento.",
+      "subtitleLine2": "Funciona por transferencia de archivos desde cualquier parte de Corea o del extranjero.",
+      "imageAlt": "Consulta de trabajo de mezcla de Studio NOL"
     }
   },
   "voiceActing": {
@@ -2184,7 +2363,7 @@
         },
         {
           "question": "Tengo un presupuesto ajustado — ¿puedo contratar solo algunas etapas?",
-          "answer": "Sí. Recomendamos el proceso de lanzamiento completo, pero también puedes contratar etapas individuales: solo grabación vocal / solo mezcla / solo masterización. Los presupuestos parciales se basan en nuestra lista de tarifas (grabación vocal desde ₩40K/hora, mezcla desde ₩800K, etc.). Eso sí: el PR de medios y el acompañamiento de distribución solo se incluyen con la contratación del proceso completo."
+          "answer": "Sí. Recomendamos el proceso de lanzamiento completo, pero también puedes contratar etapas individuales: solo grabación vocal / solo mezcla / solo masterización. Los presupuestos parciales se basan en nuestra lista de tarifas (grabación vocal ₩100K/hora, mezcla desde ₩200K, etc.). Eso sí: el PR de medios y el acompañamiento de distribución solo se incluyen con la contratación del proceso completo."
         },
         {
           "question": "Ya empecé a grabar en otro lado — ¿pueden unirse a mitad de camino?",

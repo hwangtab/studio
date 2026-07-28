@@ -12,6 +12,7 @@ import {
   formatPriceAmount,
   getPricingData,
   LESSON_MONTHLY_PRICE,
+  MASTERING_PACKAGE_PRICE,
   MASTERING_SINGLE_PRICE,
   MIXING_LEVEL1_PRICE,
   MIXING_LEVEL2_PRICE,
@@ -63,6 +64,7 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('mixing-level2')).toBe(MIXING_LEVEL2_PRICE);
     expect(byId.get('mixing-level3')).toBe(MIXING_LEVEL3_PRICE);
     expect(byId.get('mastering-single')).toBe(MASTERING_SINGLE_PRICE);
+    expect(byId.get('mastering-package')).toBe(MASTERING_PACKAGE_PRICE);
     expect(byId.get('package-wedding')).toBe(WEDDING_PACKAGE_PRICE);
     expect(byId.get('package-voiceover')).toBe(VOICEOVER_HOURLY_PRICE);
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);

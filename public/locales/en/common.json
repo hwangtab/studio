@@ -10,6 +10,7 @@
     "practiceRoom": "Practice",
     "lesson": "Lesson",
     "recording": "Recording",
+    "mixingMastering": "Mixing & Mastering",
     "mobileMenu": "Mobile Menu",
     "groups": {
       "recording": "Recording",
@@ -925,6 +926,7 @@
       "backToList": "Back to Stories",
       "tocTitle": "Table of Contents",
       "summaryLabel": "Key Summary",
+      "lastUpdated": "Last updated",
       "share": "Share",
       "moreTitle": "More Stories",
       "noRelated": "No related stories.",
@@ -1289,6 +1291,183 @@
       "subtitleLine1": "At Studio NOL in Yeonsinnae, with a dedicated engineer,",
       "subtitleLine2": "finish everything from demo to release-ready track.",
       "imageAlt": "Studio NOL recording studio inquiry"
+    }
+  },
+  "mixingMastering": {
+    "seo": {
+      "title": "Mixing & Mastering — From ₩200K/Song, Remote | Studio NOL",
+      "description": "Mixing & mastering at Studio NOL in Yeonsinnae, Seoul. Mixing runs ₩200,000–₩500,000 by track count (2 revisions included); single mastering is ₩100,000. Send your files from anywhere in Korea or abroad and get your finished track in 3-7 business days.",
+      "keywords": "mixing, mastering, mixing and mastering, online mixing, remote mixing, mixing service, mastering service, mixing cost, mastering price, music mixing, stem mixing, Seoul mixing studio"
+    },
+    "hero": {
+      "title": "Mixing & Mastering",
+      "subtitleLine1": "Just send us your files — from anywhere in Korea or abroad",
+      "subtitleLine2": "From ₩200,000 per song, delivered in 3-7 business days",
+      "alt": "Studio NOL mixing console and monitor speakers"
+    },
+    "quickAnswers": {
+      "title": "Mixing & Mastering — Quick Answers",
+      "subtitle": "The three questions we hear most, answered first.",
+      "items": [
+        {
+          "q": "How much do mixing and mastering cost?",
+          "a": "Mixing is priced by track count: ₩200,000 for 10 tracks or fewer, ₩350,000 for 11-30 tracks, and ₩500,000 for 31 or more — all including 2 revisions. Mastering is ₩100,000 for a single, or ₩80,000 per song when you commission 4 or more songs together (EP, full album). All prices exclude VAT."
+        },
+        {
+          "q": "How long does it take?",
+          "a": "We deliver the finished track within 3-7 business days of receiving your files. Revisions are included — 2 rounds for mixing, 1 for mastering."
+        },
+        {
+          "q": "Do I need to visit the studio in person?",
+          "a": "No. Wherever you recorded, just send us your files. We receive them via KakaoTalk or a Google Drive/WeTransfer link, and deliver the finished track the same way."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Who commissions this",
+      "items": [
+        {
+          "title": "You finished recording at home",
+          "description": "You recorded with a mic and interface yourself but got stuck on balance and space. Just send the dry vocal and the backing track."
+        },
+        {
+          "title": "You recorded at another studio",
+          "description": "Record wherever you're comfortable and hand off just the post-production. We pick up from your stems and continue."
+        },
+        {
+          "title": "You're preparing for release",
+          "description": "We master to the loudness spec of whichever platform you're releasing on — Melon, Spotify, Apple Music, and more."
+        },
+        {
+          "title": "You're outside Seoul or abroad",
+          "description": "No travel needed — everything runs on file transfer. Quotes and revision requests work in English too."
+        }
+      ]
+    },
+    "mixing": {
+      "title": "Mixing Pricing",
+      "subtitle": "Three tiers based on track count. Not sure which applies to you? Send us the session and we'll tell you.",
+      "vocalTuneNotice": "Precise vocal tuning and timing correction adds ₩150,000 per song. All prices exclude VAT."
+    },
+    "mastering": {
+      "title": "Mastering Pricing",
+      "subtitle": "Already have a mix? You can commission mastering on its own."
+    },
+    "process": {
+      "title": "How a Remote Commission Works",
+      "subtitle": "Four steps from KakaoTalk consultation to final delivery",
+      "steps": [
+        {
+          "title": "Consult & quote",
+          "description": "Tell us your song details and track count on KakaoTalk, and we'll tell you which tier applies and what it costs right away."
+        },
+        {
+          "title": "Send your files",
+          "description": "Send the dry vocal and backing track via KakaoTalk or a Google Drive/WeTransfer link. A reference track for the sound you want helps us find the direction."
+        },
+        {
+          "title": "Mixing & mastering",
+          "description": "We balance and shape the tone from your files and carry it through to mastering. This usually takes 3-7 business days."
+        },
+        {
+          "title": "Revisions & delivery",
+          "description": "Listen to the finished track and tell us what to adjust. 2 mixing revisions and 1 mastering revision are included, and the final files come as WAV and MP3."
+        }
+      ]
+    },
+    "fileSpec": {
+      "title": "Files to Send",
+      "subtitle": "Preparing these in advance makes the work go much faster.",
+      "groups": [
+        {
+          "title": "For mixing",
+          "items": [
+            "Dry vocal WAV with no effects applied",
+            "Backing track or stems by track, WAV",
+            "1-2 reference tracks showing the sound you want",
+            "WAV, 24bit / 44.1kHz or 48kHz recommended (MP3 accepted, but with more limited quality than the original WAV)"
+          ]
+        },
+        {
+          "title": "For mastering",
+          "items": [
+            "Finished stereo mix, WAV (24bit / 44.1kHz or higher)",
+            "Leave off the limiter and compressor on your master bus",
+            "A master bus peak around -3dBFS to -6dBFS works well",
+            "Tell us which platform you're releasing on and we'll match the loudness spec"
+          ]
+        }
+      ]
+    },
+    "environment": {
+      "title": "What We Work With",
+      "imageAlt": "Studio NOL mixing console and outboard gear",
+      "features": [
+        "Monitors: Proac Tablett 50 · EVE Audio SC207 · ADAM A5 — cross-checked across all three",
+        "Outboard: SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
+        "Plugins: UAD · Acustica Audio · Softube · Soundtoys · iZotope",
+        "Platform-specific loudness targets (Spotify -14 LUFS, Apple Music -16 LUFS, YouTube -14 LUFS)"
+      ],
+      "equipmentLink": "See our full equipment list"
+    },
+    "credits": {
+      "title": "Recent Work",
+      "subtitle": "A selection of releases where Studio NOL handled mixing or mastering.",
+      "items": [
+        {
+          "role": "Vocal recording · mixing"
+        },
+        {
+          "role": "Recording · mixing · mastering"
+        },
+        {
+          "role": "Recording · mixing"
+        },
+        {
+          "role": "Recording · mixing"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Mixing & Mastering FAQ",
+      "subtitle": "Good to check before you commission.",
+      "items": [
+        {
+          "q": "How is the mixing price set?",
+          "a": "It's based on track count: ₩200,000 for 10 tracks or fewer, ₩350,000 for 11-30 tracks, and ₩500,000 for 31 or more, all including 2 revisions. Precise vocal tuning and timing correction adds ₩150,000 per song."
+        },
+        {
+          "q": "Can I commission this entirely online?",
+          "a": "Yes. Send your vocal WAV and backing track via KakaoTalk or a Google Drive/WeTransfer link, and we deliver the finished files the same way. Wherever you recorded in Korea, you can commission by file transfer."
+        },
+        {
+          "q": "What files and specs should I send?",
+          "a": "A dry vocal WAV with no effects, the backing track or stems by track in WAV, and 1-2 reference tracks showing the direction you want. WAV at 24bit, 44.1kHz or 48kHz is recommended. MP3 is fine too, but quality is more limited than the original WAV."
+        },
+        {
+          "q": "How long does the work take?",
+          "a": "We deliver the finished track within 3-7 business days of receiving your files. If you have a lot of songs or complex stems, we'll let you know the schedule in advance."
+        },
+        {
+          "q": "Can I commission mastering on its own?",
+          "a": "Yes. It's ₩100,000 per song for a single, or ₩80,000 per song when you commission 4 or more together (EP, full album). Send a finished stereo mix without a limiter or compressor on the master bus, peaking around -3dBFS to -6dBFS."
+        },
+        {
+          "q": "How many revisions are included?",
+          "a": "2 for mixing and 1 for mastering, as standard. Tell us the timestamp and what you'd like changed, and we'll apply it."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Worth Reading Before You Commission Mixing",
+    "relatedStoriesSubtitle": "From how online commissions work to preparing stems and costs by track count.",
+    "cta": {
+      "inquiry": "Ask about mixing on KakaoTalk",
+      "location": "Directions",
+      "titleLine1": "When the mix isn't",
+      "titleHighlight": "coming together, just send the files",
+      "subtitleLine1": "Tell us the track count and we'll quote you right away.",
+      "subtitleLine2": "Works by file transfer from anywhere in Korea or abroad.",
+      "imageAlt": "Studio NOL mixing inquiry"
     }
   },
   "voiceActing": {
@@ -2212,7 +2391,7 @@
         },
         {
           "question": "I'm on a tight budget — can I commission only part of the process?",
-          "answer": "Yes. We recommend the full release process, but you can also commission individual stages: vocal recording only / mixing only / mastering only. Partial quotes are based on our rate sheet (vocal recording from ₩40K/hour, mixing from ₩800K, etc.). Note: media PR and distribution accompaniment are only included with full-process commissions."
+          "answer": "Yes. We recommend the full release process, but you can also commission individual stages: vocal recording only / mixing only / mastering only. Partial quotes are based on our rate sheet (vocal recording ₩100K/hour, mixing from ₩200K, etc.). Note: media PR and distribution accompaniment are only included with full-process commissions."
         },
         {
           "question": "I've already started recording elsewhere — can you join mid-process?",

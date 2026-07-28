@@ -10,6 +10,7 @@
     "practiceRoom": "Phòng tập",
     "lesson": "Bài học",
     "recording": "Thu âm",
+    "mixingMastering": "Mixing & Mastering",
     "mobileMenu": "Menu di động",
     "groups": {
       "recording": "Thu âm",
@@ -902,6 +903,7 @@
       "backToList": "Quay lại Stories",
       "tocTitle": "Mục lục",
       "summaryLabel": "Tóm tắt chính",
+      "lastUpdated": "Cập nhật lần cuối",
       "share": "Chia sẻ",
       "moreTitle": "Câu chuyện khác",
       "noRelated": "Không có câu chuyện liên quan.",
@@ -1261,6 +1263,183 @@
       "subtitleLine1": "Tại Studio NOL ở Yeonsinnae, cùng kỹ sư chuyên trách,",
       "subtitleLine2": "hoàn thiện mọi thứ từ demo đến bản sẵn sàng phát hành.",
       "imageAlt": "Tư vấn phòng thu Studio NOL"
+    }
+  },
+  "mixingMastering": {
+    "seo": {
+      "title": "Mixing & Mastering — Từ ₩200,000/bài, làm từ xa | Studio NOL",
+      "description": "Mixing & mastering tại Studio NOL, Yeonsinnae, Seoul. Mixing tính theo số track: ₩200,000–₩500,000 (gồm 2 lần sửa), mastering single ₩100,000. Gửi file từ bất cứ đâu trong nước hoặc nước ngoài, nhận bản hoàn thiện trong 3-7 ngày làm việc.",
+      "keywords": "mixing, mastering, mixing và mastering, mixing online, mixing từ xa, đặt mixing, đặt mastering, chi phí mixing, giá mastering, mixing nhạc, mixing stem, phòng mixing Seoul"
+    },
+    "hero": {
+      "title": "Mixing · Mastering",
+      "subtitleLine1": "Chỉ cần gửi file — từ bất cứ đâu trong nước hay nước ngoài",
+      "subtitleLine2": "Từ ₩200,000/bài, nhận bản hoàn thiện trong 3-7 ngày làm việc",
+      "alt": "Bàn mixing và loa monitor tại Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Tóm tắt đặt mixing·mastering",
+      "subtitle": "Trả lời trước ba câu hỏi thường gặp nhất.",
+      "items": [
+        {
+          "q": "Chi phí mixing·mastering là bao nhiêu?",
+          "a": "Mixing tính theo số track: từ 10 track trở xuống ₩200,000, 11-30 track ₩350,000, từ 31 track trở lên ₩500,000, đều gồm 2 lần sửa cơ bản. Mastering single ₩100,000/bài; nếu đặt cùng lúc 4 bài trở lên (EP, album) thì ₩80,000/bài. Tất cả giá chưa gồm VAT."
+        },
+        {
+          "q": "Thời gian làm việc mất bao lâu?",
+          "a": "Sau khi nhận file, chúng tôi giao bản hoàn thiện trong 3-7 ngày làm việc. Sửa bao gồm 2 lần cho mixing, 1 lần cho mastering."
+        },
+        {
+          "q": "Tôi có cần đến trực tiếp phòng thu không?",
+          "a": "Không. Dù bạn thu âm ở đâu, chỉ cần gửi file. Nhận qua KakaoTalk hoặc link Google Drive/WeTransfer, bản hoàn thiện cũng giao theo cách tương tự."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Những ai thường đặt dịch vụ này",
+      "items": [
+        {
+          "title": "Người đã thu âm xong tại nhà",
+          "description": "Tự thu bằng mic và interface nhưng gặp khó ở cân bằng và không gian âm thanh. Chỉ cần gửi vocal khô và bản beat."
+        },
+        {
+          "title": "Người thu âm ở phòng thu khác",
+          "description": "Thu âm ở nơi quen thuộc, chỉ cần giao riêng phần hậu kỳ. Chúng tôi nhận stem từng track và tiếp tục xử lý."
+        },
+        {
+          "title": "Người sắp phát hành",
+          "description": "Master theo đúng chuẩn loudness của nền tảng bạn sắp phát hành — Melon, Spotify, Apple Music và hơn thế."
+        },
+        {
+          "title": "Người ở tỉnh xa hoặc nước ngoài",
+          "description": "Không cần di chuyển, chỉ cần gửi file là xong. Báo giá và yêu cầu sửa cũng có thể trao đổi bằng tiếng Anh."
+        }
+      ]
+    },
+    "mixing": {
+      "title": "Bảng giá mixing",
+      "subtitle": "Ba mức dựa trên số track. Chưa chắc mình thuộc mức nào? Gửi session cho chúng tôi, chúng tôi sẽ báo.",
+      "vocalTuneNotice": "Nếu cần chỉnh giọng chi tiết và sửa timing, phụ thu ₩150,000/bài. Tất cả giá chưa gồm VAT."
+    },
+    "mastering": {
+      "title": "Bảng giá mastering",
+      "subtitle": "Nếu đã có bản mix, bạn cũng có thể chỉ đặt riêng mastering."
+    },
+    "process": {
+      "title": "Quy trình đặt từ xa diễn ra thế nào",
+      "subtitle": "Bốn bước từ tư vấn KakaoTalk đến giao bản hoàn thiện",
+      "steps": [
+        {
+          "title": "Tư vấn & báo giá",
+          "description": "Cho chúng tôi biết thông tin bài hát và số track qua KakaoTalk, chúng tôi báo ngay bạn thuộc mức nào và chi phí bao nhiêu."
+        },
+        {
+          "title": "Gửi file",
+          "description": "Gửi vocal khô và bản beat qua KakaoTalk hoặc link Google Drive/WeTransfer. Gửi kèm track tham khảo cho âm thanh bạn muốn sẽ giúp định hướng tốt hơn."
+        },
+        {
+          "title": "Xử lý mixing·mastering",
+          "description": "Chúng tôi cân bằng và chỉnh tông từ file nhận được, rồi tiếp tục sang mastering. Thường mất 3-7 ngày làm việc."
+        },
+        {
+          "title": "Sửa & giao hàng",
+          "description": "Nghe bản hoàn thiện và cho chúng tôi biết điểm muốn chỉnh. Mặc định gồm 2 lần sửa mixing, 1 lần sửa mastering, file cuối giao dưới dạng WAV và MP3."
+        }
+      ]
+    },
+    "fileSpec": {
+      "title": "File cần gửi",
+      "subtitle": "Chuẩn bị theo hướng dẫn dưới đây giúp công việc nhanh hơn nhiều.",
+      "groups": [
+        {
+          "title": "Khi đặt mixing",
+          "items": [
+            "Vocal khô WAV, chưa gắn hiệu ứng",
+            "Bản beat hoặc stem từng track, WAV",
+            "1-2 track tham khảo cho âm thanh bạn muốn",
+            "Khuyến nghị WAV 24bit / 44.1kHz hoặc 48kHz (nhận cả MP3 nhưng chất lượng hạn chế hơn WAV gốc)"
+          ]
+        },
+        {
+          "title": "Khi đặt mastering",
+          "items": [
+            "Bản mix stereo hoàn chỉnh, WAV (24bit / 44.1kHz trở lên)",
+            "Vui lòng bỏ limiter và compressor trên master bus",
+            "Peak master bus khoảng -3dBFS đến -6dBFS là phù hợp",
+            "Cho chúng tôi biết nền tảng phát hành để canh chuẩn loudness"
+          ]
+        }
+      ]
+    },
+    "environment": {
+      "title": "Làm việc trong môi trường nào",
+      "imageAlt": "Bàn mixing và outboard tại Studio NOL",
+      "features": [
+        "Monitor Proac Tablett 50 · EVE Audio SC207 · ADAM A5 — đối chiếu chéo cả ba",
+        "Outboard SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
+        "Plugin UAD · Acustica Audio · Softube · Soundtoys · iZotope",
+        "Áp dụng chuẩn loudness theo từng nền tảng (Spotify -14 LUFS, Apple Music -16 LUFS, YouTube -14 LUFS)"
+      ],
+      "equipmentLink": "Xem toàn bộ danh sách thiết bị"
+    },
+    "credits": {
+      "title": "Những dự án đã thực hiện",
+      "subtitle": "Một số sản phẩm phát hành mà Studio NOL đảm nhận mixing hoặc mastering.",
+      "items": [
+        {
+          "role": "Thu âm vocal · mixing"
+        },
+        {
+          "role": "Thu âm · mixing · mastering"
+        },
+        {
+          "role": "Thu âm · mixing"
+        },
+        {
+          "role": "Thu âm · mixing"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp về mixing·mastering",
+      "subtitle": "Những điều nên biết trước khi đặt dịch vụ.",
+      "items": [
+        {
+          "q": "Giá mixing được tính thế nào?",
+          "a": "Dựa theo số track. Từ 10 track trở xuống ₩200,000, 11-30 track ₩350,000, từ 31 track trở lên ₩500,000, đều gồm 2 lần sửa cơ bản. Nếu cần chỉnh giọng chi tiết và sửa timing, phụ thu ₩150,000/bài."
+        },
+        {
+          "q": "Có thể đặt hoàn toàn online không?",
+          "a": "Được. Gửi vocal WAV và bản beat qua KakaoTalk hoặc link Google Drive/WeTransfer, sau khi xử lý chúng tôi giao file hoàn thiện. Dù bạn thu âm ở đâu trong nước, vẫn có thể đặt qua gửi file."
+        },
+        {
+          "q": "Cần gửi file gì, chuẩn nào?",
+          "a": "Vocal khô WAV chưa gắn hiệu ứng, bản beat hoặc stem từng track dạng WAV, cùng 1-2 track tham khảo cho hướng âm thanh bạn muốn. Khuyến nghị WAV 24bit, 44.1kHz hoặc 48kHz. Cũng nhận MP3 nhưng chất lượng hạn chế hơn WAV gốc."
+        },
+        {
+          "q": "Công việc mất bao lâu?",
+          "a": "Sau khi nhận file, giao bản hoàn thiện trong 3-7 ngày làm việc. Nếu số bài nhiều hoặc stem phức tạp, chúng tôi sẽ báo lịch trước."
+        },
+        {
+          "q": "Có thể chỉ đặt riêng mastering không?",
+          "a": "Được. Single ₩100,000/bài; nếu đặt cùng lúc 4 bài trở lên (EP, album) thì ₩80,000/bài. Gửi bản mix stereo hoàn chỉnh, không gắn limiter·compressor trên master bus, peak khoảng -3dBFS đến -6dBFS."
+        },
+        {
+          "q": "Được sửa tối đa mấy lần?",
+          "a": "Mặc định mixing 2 lần, mastering 1 lần. Cho chúng tôi biết mốc thời gian và điểm muốn sửa, chúng tôi sẽ áp dụng."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Nên đọc trước khi đặt mixing",
+    "relatedStoriesSubtitle": "Từ cách đặt online, chuẩn bị stem, đến chi phí theo số track — đã tổng hợp đầy đủ.",
+    "cta": {
+      "inquiry": "Hỏi về mixing qua KakaoTalk",
+      "location": "Chỉ đường",
+      "titleLine1": "Khi mix chưa ổn,",
+      "titleHighlight": "chỉ cần gửi file",
+      "subtitleLine1": "Cho chúng tôi biết số track là có báo giá ngay.",
+      "subtitleLine2": "Làm việc qua gửi file từ bất cứ đâu trong nước hay nước ngoài.",
+      "imageAlt": "Tư vấn công việc mixing Studio NOL"
     }
   },
   "voiceActing": {
@@ -2184,7 +2363,7 @@
         },
         {
           "question": "Ngân sách eo hẹp — tôi có thể chỉ đặt một phần trong các giai đoạn không?",
-          "answer": "Có. Chúng tôi khuyến nghị toàn bộ quy trình phát hành, nhưng bạn cũng có thể đặt riêng từng giai đoạn: chỉ thu âm vocal / chỉ mix / chỉ master. Báo giá từng phần dựa trên bảng đơn giá (thu âm vocal từ ₩40K/giờ, mix từ ₩800K, v.v.). Tuy nhiên, PR truyền thông và đồng hành phân phối chỉ kèm theo khi đặt trọn quy trình."
+          "answer": "Có. Chúng tôi khuyến nghị toàn bộ quy trình phát hành, nhưng bạn cũng có thể đặt riêng từng giai đoạn: chỉ thu âm vocal / chỉ mix / chỉ master. Báo giá từng phần dựa trên bảng đơn giá (thu âm vocal ₩100K/giờ, mix từ ₩200K, v.v.). Tuy nhiên, PR truyền thông và đồng hành phân phối chỉ kèm theo khi đặt trọn quy trình."
         },
         {
           "question": "Tôi đã bắt đầu thu âm ở nơi khác — các bạn có thể tham gia giữa chừng không?",

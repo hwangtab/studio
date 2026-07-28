@@ -8,6 +8,7 @@ export type NavKey =
   | 'equipment'
   | 'practiceRoom'
   | 'lesson'
+  | 'mixingMastering'
   | 'weddingSong'
   | 'voiceActing'
   | 'portfolio'
@@ -25,6 +26,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: '장비',
     practiceRoom: '음악연습실',
     lesson: '레슨',
+    mixingMastering: '믹싱·마스터링',
     weddingSong: '축가 녹음',
     voiceActing: '성우 녹음',
     portfolio: '포트폴리오',
@@ -41,6 +43,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: 'Gear',
     practiceRoom: 'Practice',
     lesson: 'Lesson',
+    mixingMastering: 'Mixing & Mastering',
     weddingSong: 'Wedding Song',
     voiceActing: 'Voice Acting',
     portfolio: 'Portfolio',
@@ -57,6 +60,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: '设备介绍',
     practiceRoom: '练习室',
     lesson: '课程',
+    mixingMastering: '混音·母带',
     weddingSong: '婚礼祝歌录音',
     voiceActing: '配音录音',
     portfolio: '作品集',
@@ -73,6 +77,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: 'Equipo',
     practiceRoom: 'Sala',
     lesson: 'Clases',
+    mixingMastering: 'Mezcla y Masterización',
     weddingSong: 'Canción de Boda',
     voiceActing: 'Locución',
     portfolio: 'Portafolio',
@@ -89,6 +94,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: 'Thiết bị',
     practiceRoom: 'Phòng tập',
     lesson: 'Bài học',
+    mixingMastering: 'Mixing & Mastering',
     weddingSong: 'Thu Âm Bài Chúc',
     voiceActing: 'Lồng Tiếng',
     portfolio: 'Portfolio',
@@ -105,6 +111,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: 'อุปกรณ์',
     practiceRoom: 'ห้องซ้อม',
     lesson: 'บทเรียน',
+    mixingMastering: 'มิกซ์ & มาสเตอร์',
     weddingSong: 'บันทึกเพลงอวยพร',
     voiceActing: 'บันทึกเสียงพากย์',
     portfolio: 'พอร์ตโฟลิโอ',
@@ -121,6 +128,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     equipment: 'Uskunalar',
     practiceRoom: "Mashg'ulot xonasi",
     lesson: 'Dars',
+    mixingMastering: 'Miks va mastering',
     weddingSong: "To'y qo'shig'i",
     voiceActing: 'Ovoz yozish',
     portfolio: 'Portfel',
