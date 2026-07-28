@@ -12,11 +12,18 @@ const nextConfig = {
   // 전자계약 라우트는 계약서 템플릿·이용수칙 마크다운과 한글 폰트를 런타임에 readFileSync로
   // 읽는다. 경로가 동적이라 Next.js 파일 트레이싱이 감지하지 못해, 명시하지 않으면 배포
   // 환경에서 ENOENT로 실패한다(로컬은 소스 트리를 그대로 읽어 드러나지 않음).
+  // @sparticuz/chromium은 bin/*.br(압축된 Chromium 바이너리)을 런타임에 풀어 쓴다.
+  // 번들에 포함되면 경로가 재배치돼 "input directory does not exist"로 PDF 생성이
+  // 실패하므로 externalize해서 node_modules에 그대로 두어야 한다.
+  serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
+
   outputFileTracingIncludes: {
     '/api/contracts/**': [
       './lib/contracts/*.md',
       './lib/fonts/pretendard-variable-full.woff2',
       './public/images/contract-seal.png',
+      // externalize만으로는 .br 바이너리가 추적되지 않는다(코드에서 동적으로 참조).
+      './node_modules/@sparticuz/chromium/bin/**',
     ],
     '/[locale]/contracts/**': ['./lib/contracts/*.md'],
     '/admin/contracts/**': ['./lib/contracts/*.md'],
