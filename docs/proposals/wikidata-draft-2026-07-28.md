@@ -38,7 +38,22 @@ AI 엔티티 해석의 앵커가 됩니다. 나무위키는 삭제 리스크가 
 | `P166` (award received) | 한국대중음악상 — 선정위원 특별상, `P585`(시점) 2017 | 한국대중음악상 시상 기록, 한겨레21 |
 | `P856` (official website) | https://studionol.co.kr/ko/author | — |
 | `P2003` (Instagram) | podopodopo | 계정 바이오에 studionol.co.kr 링크 |
-| `P434` 계열 음악 식별자 | Bugs 아티스트 ID `20045652` 등 (아래 sameAs 표 참조) | — |
+| 음악 서비스 식별자 | 아래 표 참조 — 전부 본인 확정 검증 완료 | 2026-07-28 직접 확인 |
+
+### 음악 플랫폼 식별자 (전부 검증 완료 — `data/siteConfig.ts`의 `operatorProfiles`와 동일)
+
+| 플랫폼 | ID / URL | 확정 근거 |
+|---|---|---|
+| Apple Music | `1301544239` | 〈눈녹듯〉 앨범아트 UPC `888618381700`가 저장소 포트폴리오 데이터와 완전 일치 |
+| Bugs | `20045652` | 기존 확정 앵커 |
+| 멜론 | `957470` | 〈눈녹듯〉 + 별고을·내 마음이 더욱 괴롭구나 등 Bugs 디스코그래피 중복 |
+| 지니 | `80600168` | 〈눈녹듯〉 + 새 민중음악 선곡집 수록곡 중복 |
+| 네이버 VIBE | `481720` | 〈눈녹듯〉(albumId 31980204) + 별고을 |
+| ggac.kr | `hwang-gyeong-ha` | 기존 확정 |
+| Instagram | `podopodopo` | 바이오에 studionol.co.kr 링크 |
+
+**Spotify는 넣지 마세요.** `5wjCYnSk55HlNqb6ypnD7w`가 이름("황경하 Hwang kyung ha")은
+정확히 일치하지만 디스코그래피를 확인하지 못했습니다. 근거 1개로는 동명이인 위험이 남습니다.
 
 ### 근거 자료 (출처로 붙일 것)
 
@@ -53,17 +68,30 @@ AI 엔티티 해석의 앵커가 됩니다. 나무위키는 삭제 리스크가 
   - → **Wikidata `P166`(award received)의 출처로 이 URL을 쓰면 됩니다.** 3자 언론 보도라
     저명성 근거로도 가장 강력합니다.
 
+- **경향신문** — 「천 번을 들어줘야 4200원, 먹고 살 수 있습니까?」, 2016-06-25.
+  https://www.khan.co.kr/article/201606251956021
+  - **"자립음악생산조합의 황경하 운영위원"**으로 음원 수익 구조에 대한 발언이 직접 인용됨.
+  - → 음악계 활동 이력의 `P106`(occupation) 보강 출처.
+
 - Bugs 아티스트 페이지: https://music.bugs.co.kr/artist/20045652
 - ggac.kr 아티스트 프로필: https://ggac.kr/artists/hwang-gyeong-ha
 
-**미검증** — 한겨레21·ize 보도는 사이트 주석에만 언급돼 있고 실제 URL이 확인되지 않았습니다.
-찾으면 출처로 추가하되, 못 찾아도 위 노컷뉴스 하나로 `P166` 근거는 충분합니다.
+**참고 (Wikidata 출처로는 부적합)**
+- 한겨레 2016-11-08 시국선언 기사 — 명단에 이름만 등장. 근거로 약합니다.
+- 문화연대 뉴스레터 인터뷰(2013) — 본인 육성 인터뷰지만 시민단체 발행물이라 언론 보도가 아닙니다.
+- Brunch 「인디에도 기획자가 있다」 — 수상 사실을 직접 서술하나 개인 블로그 플랫폼입니다.
+
+**찾지 못함** — 사이트 주석에 적혀 있던 한겨레21·ize 자체 기사는 검색으로 확인되지 않았습니다.
+`data/siteConfig.ts`의 해당 주석은 출처 표기를 노컷뉴스로 바꿔 두었습니다.
 
 ### 대표 작업 (P800 notable work 후보)
 
-- 〈젠트리피케이션〉 (Various Artists, 2016) — 프로듀스·녹음·믹스
-- 〈눈녹듯〉 (황경하, 2025-01-15, Studio NOL) — 작곡·편곡·연주·녹음·믹싱·마스터링 전 과정
-- 티어라이너 〈Bite Me〉 (2026-02-22) — 보컬 녹음·믹싱
+- 〈젠트리피케이션〉 (Various Artists, 2016-10-05, 포크라노스 유통 / 자립음악생산조합 기획)
+  — 크레딧에 Produced by / Recorded by / Mixed by / Executive producer 황경하 명시
+  (멜론 앨범 페이지 albumId 10003221에서 확인)
+- 〈눈녹듯〉 (황경하, **2024-08-05**, Studio NOL) — 작곡·편곡·연주·녹음·믹싱·마스터링 전 과정
+- 〈강호중〉 (강호중, 2022-03-28, 바른음원협동조합) — 프로듀서·믹싱·사운드디자인
+- 티어라이너 〈Bite Me〉 (2026-02-22) — 보컬 녹음·믹싱 (마스터링은 런던 Metropolis Studios)
 
 ---
 
@@ -101,9 +129,9 @@ AI 엔티티 해석의 앵커가 됩니다. 나무위키는 삭제 리스크가 
 
 ## 등록 후 할 일
 
-1. 생성된 Q-ID를 `data/siteConfig.ts`의 `studioOperator.sameAs`에 추가
-   (`https://www.wikidata.org/wiki/Q…`). 그러면 사이트의 모든 Article·Person 스키마가
-   Wikidata 엔티티를 가리키게 됩니다.
+1. 생성된 Q-ID를 `data/siteConfig.ts`의 `operatorProfiles` 배열에 추가
+   (`{ id: 'wikidata', url: 'https://www.wikidata.org/wiki/Q…' }`). 그러면 사이트의
+   모든 Article·Person 스키마가 Wikidata 엔티티를 가리키게 됩니다.
 2. `utils/schema/business.ts`의 `EntertainmentBusiness`에도 `sameAs`로 항목 2 연결.
 3. 4~8주 뒤 ChatGPT·Perplexity에 "스튜디오 놀", "황경하 프로듀서"를 물어 엔티티 해석이
    개선됐는지 확인.
