@@ -141,6 +141,35 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
             </li>
           ))}
         </ul>
+
+        {profile.pressCoverage.length > 0 && (
+          <>
+            <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+              {profile.headings.press}
+            </h3>
+            <ul className="space-y-3">
+              {profile.pressCoverage.map((article) => (
+                <li key={article.url}>
+                  {/* rel에 me를 넣지 않는다 — 본인이 운영하는 프로필이 아니라 제3자 보도다. */}
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-[44px] items-start gap-2 text-primary hover:underline"
+                  >
+                    <ExternalLink size={16} className="mt-1 flex-shrink-0" aria-hidden="true" />
+                    <span>
+                      {article.title}
+                      <span className="block text-sm text-gray-500 dark:text-gray-400">
+                        {article.meta}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </Section>
 
       <Section variant="default">

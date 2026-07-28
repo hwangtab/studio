@@ -16,6 +16,21 @@ export const getOperatorProfileUrl = (siteUrl: string, locale: Locale): string =
   `${siteUrl}/${locale}/author`;
 
 /**
+ * Person.subjectOf — 운영자를 다룬 제3자 언론 보도.
+ *
+ * sameAs(본인이 관리하는 프로필)와 구분한다. 수상 이력 같은 자기주장을 사이트 밖에서
+ * 검증할 수 있는 근거라, AI 엔진의 entity 신뢰도에 직접 작용한다.
+ */
+export const getOperatorPressCoverage = () =>
+  (studioOperator.pressCoverage ?? []).map((article) => ({
+    '@type': 'NewsArticle',
+    headline: article.title,
+    url: article.url,
+    datePublished: article.datePublished,
+    publisher: { '@type': 'Organization', name: article.publisher },
+  }));
+
+/**
  * Person 프로필 스키마 — /[locale]/author 페이지의 mainEntity.
  * generateArticleSchema·generateReleaseProjectSchema와 동일한 @id(#person-hwang)를 사용해
  * 사이트 전체에서 황경하를 단일 entity로 인식시킨다 (GEO/E-E-A-T 핵심).
@@ -31,6 +46,7 @@ export const generatePersonProfileSchema = (
     ...Object.values(socialProfiles),
     ...(studioOperator.sameAs ?? []),
   ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
+  const press = getOperatorPressCoverage();
 
   return {
     '@context': 'https://schema.org',
@@ -42,6 +58,7 @@ export const generatePersonProfileSchema = (
     url: getOperatorProfileUrl(siteUrl, locale),
     ...(studioOperator.award && { award: studioOperator.award }),
     ...(sameAs.length > 0 && { sameAs }),
+    ...(press.length > 0 && { subjectOf: press }),
     knowsAbout: getOperatorKnowsAbout(locale),
     worksFor: { '@type': 'Organization', '@id': organizationId, name: config.name },
   };

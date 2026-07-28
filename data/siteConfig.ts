@@ -27,6 +27,17 @@ export const studioOperator = {
   // 〈젠트리피케이션〉(자립음악생산조합 기획·제작, 2016.10.05 발매)의 프로듀서로 2017 제14회 한국대중음악상
   // '선정위원 특별상' 수상. (같은 해 '최우수 포크 음반'은 후보 등재.) 출처: 한겨레21·한국대중음악상 시상 기록.
   award: '2017 한국대중음악상 선정위원 특별상 〈젠트리피케이션〉',
+  // 수상 사실을 확인해 주는 제3자 언론 보도. sameAs(본인 프로필)와 성격이 다르므로
+  // JSON-LD에서도 Person.subjectOf로 따로 낸다 — AI 엔진이 "수상 프로듀서" 주장을
+  // 자체 사이트 밖에서 검증할 수 있는 유일한 근거다(2026-07-28 원문 확인).
+  pressCoverage: [
+    {
+      url: 'https://www.nocutnews.co.kr/news/4741803',
+      title: '가난·페미니즘·강제철거 반대… 한대음을 빛낸 수상소감',
+      publisher: '노컷뉴스',
+      datePublished: '2017-03-01',
+    },
+  ],
   jobTitleByLocale: {
     ko: '음악 프로듀서 · 엔지니어',
     en: 'Music Producer · Engineer',

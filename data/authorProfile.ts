@@ -83,11 +83,18 @@ export const getAuthorProfile = (locale: Locale) => ({
     { label: t(locale, { ko: 'ggac.kr 아티스트 프로필', en: 'Artist profile on ggac.kr' }), url: studioOperator.sameAs[0] },
     { label: t(locale, { ko: '벅스(Bugs) 아티스트 페이지', en: 'Artist page on Bugs Music' }), url: studioOperator.sameAs[1] },
   ],
+  // 제3자 보도 — 수상 이력을 사이트 밖에서 검증할 수 있는 근거. siteConfig가 단일 소스.
+  pressCoverage: studioOperator.pressCoverage.map((article) => ({
+    url: article.url,
+    title: article.title,
+    meta: `${article.publisher} · ${article.datePublished}`,
+  })),
   headings: {
     about: t(locale, { ko: '소개', en: 'About' }),
     expertise: t(locale, { ko: '전문 분야', en: 'Expertise' }),
     award: t(locale, { ko: '수상', en: 'Award' }),
     profiles: t(locale, { ko: '외부 프로필', en: 'Profiles elsewhere' }),
+    press: t(locale, { ko: '언론 보도', en: 'In the press' }),
     work: t(locale, { ko: '함께 하는 방법', en: 'Work with me' }),
   },
   cta: {
