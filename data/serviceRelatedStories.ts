@@ -47,13 +47,17 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'articulation1',
     'audio-interface1',
   ],
+  // 2026-07-28 교체: 이전 6편(aspiring1·audition-vocal1·diaphragm1·ear-training1·adlib1·
+  // balladstyle1)은 전부 보컬 발성·오디션 주제였다. 레슨은 프로듀싱(작곡·미디·믹싱·발매)만
+  // 가르치고 보컬 레슨은 아예 운영하지 않으므로, 읽고 온 사람의 기대와 실제 상품이 어긋났다.
+  // 지금은 6개월 커리큘럼(미디·프로듀싱 → 레코딩 → 믹싱 → 마스터링·발매) 순서로 배열한다.
   'lesson': [
-    'aspiring1',
-    'audition-vocal1',
-    'diaphragm1',
-    'ear-training1',
-    'adlib1',
-    'balladstyle1',
+    'producer1',
+    'daw-choice1',
+    'songwriting1',
+    'midi-composition1',
+    'mixing-complete-guide',
+    'distribution1',
   ],
   'cover-video': [
     'cover1',

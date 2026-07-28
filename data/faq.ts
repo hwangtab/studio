@@ -467,64 +467,67 @@ export interface HubLocaleContent {
 
 const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
   ko: [], // Korean hub pages use full native content — no locale block needed
+  // 2026-07-28 전면 재작성. 이전 내용은 실재하지 않는 서비스를 6개 언어로 광고하고 있었다
+  // (존재하지 않는 예술인 비자·저작권 등록 대행 지원, 실재하지 않는 보컬 레슨, 미지원 결제수단, 각 언어 상주 인력 등).
+  // 지금은 저장소 SSOT로 검증되는 사실만 쓴다 — 영어 제공 범위는 예약 응대와 원격 믹싱·마스터링뿐이다.
   en: [
     {
       hubKey: 'about',
-      title: 'For International Artists in Seoul',
+      title: 'Working with Studio NOL from Abroad',
       items: [
         {
-          heading: 'Artist Visa (C-4) & KOMCA Registration',
-          body: 'Navigating Korean immigration and copyright law can be complex. We guide you through the C-4 artist visa process and Korean Music Copyright Association (KOMCA) registration, so you can focus on making music.'
+          heading: 'Mixing and Mastering, Handled Remotely',
+          body: 'You do not need to be in Seoul. Send your dry vocal and instrumental tracks as WAV files over KakaoTalk, Google Drive, or WeTransfer, and we return the finished master the same way. Quotes, mix notes, and revision requests are all handled in English.'
         },
         {
-          heading: 'Bilingual Studio Experience',
-          body: 'All communication is in clear English. Our engineers document every session in writing, and we provide contract templates in English for your peace of mind.'
+          heading: 'Turnaround and Revisions',
+          body: 'Finished files are delivered within 3 to 7 business days of receiving your tracks. Mixing includes two revision rounds and mastering includes one.'
         },
         {
-          heading: 'Global Distribution Included',
-          body: 'Every production package includes free distribution to Spotify, Apple Music, YouTube Music, and more through our Audioguy partnership. Keep 70% of your streaming revenue.'
+          heading: 'Distribution',
+          body: 'Release production packages include distribution to Spotify, Apple Music, YouTube Music and other platforms through our Audioguy partnership, and you keep 70% of your streaming revenue.'
         }
       ]
     },
     {
       hubKey: 'lesson',
-      title: 'Music Lessons Tailored for Foreign Artists',
+      title: 'What the Lesson Actually Covers',
       items: [
         {
-          heading: 'K-pop Vocal Technique & Korean Language',
-          body: 'Our curriculum covers K-pop vocal techniques, Korean pronunciation for lyrics, and performance styling. Whether you\'re preparing for a debut or recording your first single, we build the skills you need.'
+          heading: 'Production, Not Performance',
+          body: 'The lesson teaches music production: MIDI composition and arrangement, recording technique, mixing, mastering, and releasing your track to streaming platforms. We do not teach vocal or instrumental performance — if you want singing lessons, work with a vocal coach and come to us for the production side.'
         },
         {
-          heading: 'Flexible Scheduling for Touring Artists',
-          body: 'We offer weekend and evening lessons to accommodate touring schedules. Intensive crash courses are available for artists preparing for an upcoming release.'
+          heading: 'Format and Pace',
+          body: 'One 60-minute private session per week, four sessions a month. The recommended path is six months: three months to finish one song of your own, then three months through mixing, mastering, and release. Lessons are taught in Korean.'
         }
       ]
     },
     {
       hubKey: 'pricing',
-      title: 'Transparent Pricing for International Clients',
+      title: 'Pricing, Stated Up Front',
       items: [
         {
-          heading: 'Multiple Payment Options',
-          body: 'Pay by bank transfer (local Korean banks), credit card, or PayPal. We provide detailed invoices in English for your accounting and tax records.'
+          heading: 'Every Rate Is Published',
+          body: 'Recording, mixing, mastering, lessons, and the practice room all have posted prices on this site — nothing is quote-only. All prices exclude VAT.'
         },
         {
-          heading: 'No Hidden Fees',
-          body: 'All prices include professional engineering. Session photos and a summary report are included with every booking. What you see is what you pay.'
+          heading: 'What Is Not Included',
+          body: 'Mixing covers balance, tone, and effects with two revisions. Detailed vocal tuning and timing correction is a separate 150,000 KRW per song. Session musicians, arrangement, and press outreach on release projects are quoted per project.'
         }
       ]
     },
     {
       hubKey: 'studio-info',
-      title: 'Equipment You\'ll Actually Use',
+      title: 'The Room and the Gear',
       items: [
         {
-          heading: 'Microphone Selection Guide',
-          body: 'Not sure which mic is right for your voice? Our engineers provide a free 15-minute consultation to match your vocal style with the perfect microphone — from the Neumann U87AI for warm vocals to the AKG C414 for bright acoustic instruments.'
+          heading: 'Microphones and Signal Chain',
+          body: 'Neumann U87Ai and AKG C414 XLS condensers, Shure SM58 and SM57 dynamics, a Vintech X73i preamp in the Neve 1073 tradition, and Prism Sound Lyra 2 conversion. A Yamaha U3 upright piano is available for acoustic recording.'
         },
         {
-          heading: 'Genre-Specific Setup Recommendations',
-          body: 'Whether you\'re recording hip-hop, ballad, rock, or electronic music, we have genre-tailored equipment setups. Tell us your genre and we\'ll prepare the optimal signal chain before you arrive.'
+          heading: 'Monitoring',
+          body: 'Mixes are checked across three monitor pairs — Proac Tablett 50, EVE Audio SC207, and ADAM Audio A5 — alongside SSL Fusion, Tegeler Vari Tube, and SPL Optimizer outboard.'
         }
       ]
     }
@@ -532,61 +535,61 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
   zh: [
     {
       hubKey: 'about',
-      title: '在韩中国音乐人专属服务',
+      title: '身在海外，也能与 Studio NOL 合作',
       items: [
         {
-          heading: '签证与KOMCA版权登记支持',
-          body: '从C-4艺术家签证申请到韩国音乐著作权协会(KOMCA)登记，我们全程协助。让您安心专注于音乐创作。'
+          heading: '远程完成混音与母带处理',
+          body: '不必人在首尔。通过 KakaoTalk、Google Drive 或 WeTransfer 发送人声干声与伴奏的 WAV 文件即可，完成后的母带也会以同样方式交还给您。报价、混音说明和修改需求均以英文沟通。'
         },
         {
-          heading: '微信付款 · 中文服务',
-          body: '支持微信支付和支付宝。中文工作人员常驻，合同、会话记录全部提供中文版本。'
+          heading: '交付周期与修改次数',
+          body: '收到您的音轨后，3~7个工作日内交付完成文件。混音含2次修改，母带处理含1次修改。'
         },
         {
-          heading: '中国平台发行',
-          body: '支持网易云音乐、QQ音乐、酷狗等中国主流平台发行。让您的音乐触达中国听众。'
+          heading: '发行',
+          body: '发行制作套餐通过我们与 Audioguy 的合作，将作品发行至 Spotify、Apple Music、YouTube Music 等平台，净收益的70%归您所有。'
         }
       ]
     },
     {
       hubKey: 'lesson',
-      title: '中国音乐人专属课程',
+      title: '课程实际教什么',
       items: [
         {
-          heading: 'K-pop声乐技巧与韩语发音',
-          body: '课程涵盖K-pop声乐技巧、韩语歌词发音、舞台表演风格。无论您是准备出道还是录制第一首单曲，我们帮您建立所需技能。'
+          heading: '教制作，不教演唱',
+          body: '课程教授的是音乐制作：MIDI作曲编曲、录音技术、混音、母带处理，以及将作品发行到流媒体平台的全过程。我们不教授演唱或乐器演奏技巧——如果您需要歌唱指导，请另寻歌唱老师，制作部分再来找我们。'
         },
         {
-          heading: '巡演艺术家灵活安排',
-          body: '提供周末和晚间课程，适应巡演日程。为即将发行的艺术家提供强化速成课程。'
+          heading: '课程形式与进度',
+          body: '每周1次60分钟一对一课程，每月共4次。建议周期为6个月：前3个月完成一首属于自己的单曲，后3个月完成混音、母带处理与发行。课程以韩语授课。'
         }
       ]
     },
     {
       hubKey: 'pricing',
-      title: '中国客户专属价格方案',
+      title: '价格提前公开',
       items: [
         {
-          heading: '中国支付方式',
-          body: '支持微信支付、支付宝、银联卡付款。提供中文发票，方便您的财务和税务记录。'
+          heading: '所有价格均公开标示',
+          body: '录音、混音、母带处理、课程和练习室的价格都公开标示在本网站上，没有“仅限报价”的项目。所有价格均不含增值税。'
         },
         {
-          heading: '中国平台发行套餐',
-          body: '新增网易云音乐、QQ音乐、酷狗平台发行套餐。让您的音乐触达中国数亿听众。'
+          heading: '不包含的项目',
+          body: '混音服务涵盖平衡、音色和效果处理，含2次修改。精细的人声调音与节奏校正需另加150,000韩元/首。发行项目中的会话乐手、编曲和媒体宣传按项目单独报价。'
         }
       ]
     },
     {
       hubKey: 'studio-info',
-      title: '适合中国音乐人的设备配置',
+      title: '录音室与设备',
       items: [
         {
-          heading: '中文设备使用指南',
-          body: '提供中文设备使用手册。从麦克风选择到效果器设置，中文工作人员全程指导。'
+          heading: '麦克风与信号链',
+          body: '配备 Neumann U87Ai 和 AKG C414 XLS 电容麦克风、Shure SM58 和 SM57 动圈麦克风、承袭 Neve 1073 血统的 Vintech X73i 前级，以及 Prism Sound Lyra 2 音频接口。此外还有 Yamaha U3 立式钢琴，可供原声录音使用。'
         },
         {
-          heading: '华语流行音乐专用设置',
-          body: '针对华语流行音乐特点，我们准备了专门的麦克风、前置放大器和效果器组合，还原您想要的声音。'
+          heading: '监听',
+          body: '混音会在 Proac Tablett 50、EVE Audio SC207、ADAM Audio A5 三组监听音箱间交叉核对，并配合 SSL Fusion、Tegeler Vari Tube、SPL Optimizer 等外部处理设备。'
         }
       ]
     }
@@ -594,61 +597,61 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
   es: [
     {
       hubKey: 'about',
-      title: 'Para Artistas Latinoamericanos en Corea',
+      title: 'Trabajar con Studio NOL desde el extranjero',
       items: [
         {
-          heading: 'Visa de Artista (C-4) y Registro KOMCA',
-          body: 'El proceso de inmigración coreano y el registro de derechos de autor pueden ser complejos. Le guiamos desde la visa C-4 hasta el registro en la Korean Music Copyright Association (KOMCA), para que pueda concentrarse en crear música.'
+          heading: 'Mezcla y masterización remotas',
+          body: 'No hace falta estar en Seúl. Envía tus pistas de voz limpia e instrumental en WAV por KakaoTalk, Google Drive o WeTransfer, y te devolvemos el máster terminado por el mismo medio. El presupuesto, las notas de mezcla y las solicitudes de revisión se gestionan en inglés.'
         },
         {
-          heading: 'Experiencia en Estudio en Español',
-          body: 'Toda la comunicación es en español. Nuestros ingenieros documentan cada sesión por escrito, y proporcionamos plantillas de contrato en español para su tranquilidad.'
+          heading: 'Plazos de entrega y revisiones',
+          body: 'Entregamos los archivos terminados entre 3 y 7 días hábiles después de recibir tus pistas. La mezcla incluye 2 rondas de revisión y la masterización, 1.'
         },
         {
-          heading: 'Distribución Global Incluida',
-          body: 'Cada paquete de producción incluye distribución gratuita a Spotify, Apple Music, YouTube Music y más a través de nuestra asociación con Audioguy. Quedarse con el 70% de sus ingresos por streaming.'
+          heading: 'Distribución',
+          body: 'Los paquetes de producción para lanzamiento incluyen distribución a Spotify, Apple Music, YouTube Music y otras plataformas a través de nuestra alianza con Audioguy, y te quedas con el 70% de tus ingresos por streaming.'
         }
       ]
     },
     {
       hubKey: 'lesson',
-      title: 'Lecciones de Música para Artistas Extranjeros',
+      title: 'Qué cubre realmente la clase',
       items: [
         {
-          heading: 'Técnica Vocal K-pop y Español',
-          body: 'Nuestro currículo cubre técnicas vocales de K-pop, pronunciación coreana para letras, y estilo de actuación. Si se prepara para un debut o grabando su primer sencillo, construimos las habilidades que necesita.'
+          heading: 'Producción, no interpretación',
+          body: 'La clase enseña producción musical: composición y arreglos en MIDI, técnica de grabación, mezcla, masterización y cómo lanzar tu tema a las plataformas de streaming. No enseñamos técnica vocal ni interpretación instrumental — si buscas clases de canto, trabaja con un coach vocal y ven a nosotros para la parte de producción.'
         },
         {
-          heading: 'Horarios Flexibles para Artistas en Giro',
-          body: 'Ofrecemos lecciones de fines de semana y noches para adaptarse a horarios de gira. Cursos intensivos disponibles para artistas que se preparan para un lanzamiento próximo.'
+          heading: 'Formato y ritmo',
+          body: 'Una sesión privada de 60 minutos por semana, 4 sesiones al mes. El plan recomendado es de 6 meses: 3 meses para terminar un tema propio, y otros 3 meses hasta la mezcla, masterización y lanzamiento. Las clases se imparten en coreano.'
         }
       ]
     },
     {
       hubKey: 'pricing',
-      title: 'Precios Transparentes para Clientes Internacionales',
+      title: 'Precios claros desde el principio',
       items: [
         {
-          heading: 'Múltiples Opciones de Pago',
-          body: 'Pague por transferencia bancaria (bancos coreanos locales), tarjeta de crédito o PayPal. Proporcionamos facturas detalladas en español para su contabilidad y registros fiscales.'
+          heading: 'Todas las tarifas están publicadas',
+          body: 'La grabación, la mezcla, la masterización, las clases y la sala de práctica tienen precios publicados en este sitio — nada funciona solo por presupuesto. Todos los precios excluyen el IVA.'
         },
         {
-          heading: 'Sin Costos Ocultos',
-          body: 'Todos los precios incluyen ingeniería profesional. Fotos de sesión y un informe de resumen se incluyen con cada reserva. Lo que ve es lo que paga.'
+          heading: 'Qué no incluye el precio',
+          body: 'La mezcla cubre balance, tono y efectos, con 2 revisiones. La afinación vocal detallada y la corrección de tiempo cuestan aparte, 150.000 KRW por canción. Los músicos de sesión, el arreglo y la difusión con medios en proyectos de lanzamiento se cotizan por proyecto.'
         }
       ]
     },
     {
       hubKey: 'studio-info',
-      title: 'Equipo que Realmente Usarás',
+      title: 'La sala y el equipo',
       items: [
         {
-          heading: 'Guía de Selección de Micrófono',
-          body: '¿No sabe qué micrófono es adecuado para su voz? Nuestros ingenieros brindan una consulta gratuita de 15 minutos para emparejar su estilo vocal con el micrófono perfecto.'
+          heading: 'Micrófonos y cadena de señal',
+          body: 'Condensadores Neumann U87Ai y AKG C414 XLS, dinámicos Shure SM58 y SM57, un preamplificador Vintech X73i dentro de la tradición Neve 1073, y conversión Prism Sound Lyra 2. También contamos con un piano vertical Yamaha U3 para grabación acústica.'
         },
         {
-          heading: 'Recomendaciones por Género Musical',
-          body: 'Ya sea que grabe reggaetón, balada, rock o música electrónica, tenemos configuraciones de equipo adaptadas por género. Dinos tu género y prepararemos la cadena de señal óptima antes de tu llegada.'
+          heading: 'Monitoreo',
+          body: 'Las mezclas se revisan en tres pares de monitores — Proac Tablett 50, EVE Audio SC207 y ADAM Audio A5 — junto con outboard SSL Fusion, Tegeler Vari Tube y SPL Optimizer.'
         }
       ]
     }
@@ -656,61 +659,61 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
   vi: [
     {
       hubKey: 'about',
-      title: 'Cho Nghệ Sĩ Việt Nam Tại Hàn Quốc',
+      title: 'Làm việc với Studio NOL từ nước ngoài',
       items: [
         {
-          heading: 'Hướng dẫn Visa Nghệ sĩ & KOMCA',
-          body: 'Quy trình nhập cư Hàn Quốc và đăng ký quyền tác giả có thể phức tạp. Chúng tôi đồng hành bạn từ visa C-4 đến đăng ký tại Korean Music Copyright Association (KOMCA), để bạn tập trung sáng tạo âm nhạc.'
+          heading: 'Mixing và Mastering từ xa',
+          body: 'Bạn không cần có mặt tại Seoul. Gửi track vocal khô và instrumental dạng WAV qua KakaoTalk, Google Drive hoặc WeTransfer, chúng tôi sẽ gửi lại bản master hoàn thiện theo cách tương tự. Báo giá, ghi chú mixing và yêu cầu sửa đều trao đổi bằng tiếng Anh.'
         },
         {
-          heading: 'Trải nghiệm Studio bằng Tiếng Việt',
-          body: 'Mọi giao tiếp đều bằng tiếng Việt. Kỹ sư của chúng tôi ghi chép mọi buổi session, cung cấp hợp đồng tiếng Việt để bạn an tâm.'
+          heading: 'Thời gian giao và số lần sửa',
+          body: 'Sau khi nhận track của bạn, chúng tôi giao file hoàn thiện trong 3-7 ngày làm việc. Mixing gồm 2 lần sửa, mastering gồm 1 lần.'
         },
         {
-          heading: 'Phân phối Toàn cầu Miễn phí',
-          body: 'Mỗi gói sản xuất bao gồm phân phối miễn phí đến Spotify, Apple Music, YouTube Music qua đối tác Audioguy. Giữ 70% doanh thu streaming của bạn.'
+          heading: 'Phát hành',
+          body: 'Gói sản xuất phát hành bao gồm phân phối đến Spotify, Apple Music, YouTube Music và các nền tảng khác qua đối tác Audioguy, và bạn giữ 70% doanh thu streaming của mình.'
         }
       ]
     },
     {
       hubKey: 'lesson',
-      title: 'Bài học Âm nhạc cho Nghệ sĩ Nước ngoài',
+      title: 'Khóa học thực sự dạy gì',
       items: [
         {
-          heading: 'Kỹ thuật Hát K-pop & Tiếng Hàn',
-          body: 'Chương trình giảng dạy bao gồm kỹ thuật thanh nhạc K-pop, phát âm tiếng Hàn cho lời bài hát, và phong cách biểu diễn. Dù bạn chuẩn bị ra mắt hay thu âm single đầu tiên, chúng tôi xây dựng kỹ năng bạn cần.'
+          heading: 'Dạy sản xuất, không dạy trình diễn',
+          body: 'Khóa học dạy sản xuất âm nhạc: sáng tác và phối khí MIDI, kỹ thuật thu âm, mixing, mastering, và phát hành track của bạn lên các nền tảng streaming. Chúng tôi không dạy kỹ thuật hát hay chơi nhạc cụ — nếu bạn muốn học hát, hãy tìm một vocal coach, rồi quay lại đây cho phần sản xuất.'
         },
         {
-          heading: 'Lịch học Linh hoạt cho Nghệ sĩ Lưu động',
-          body: 'Chúng tôi cung cấp buổi học cuối tuần và buổi tối để phù hợp với lịch biểu diễn. Khóa học intensives có sẵn cho nghệ sĩ chuẩn bị phát hành.'
+          heading: 'Hình thức và tiến độ học',
+          body: '1 buổi riêng 60 phút mỗi tuần, 4 buổi mỗi tháng. Lộ trình khuyên dùng là 6 tháng: 3 tháng đầu hoàn thiện một track của riêng bạn, 3 tháng sau đi qua mixing, mastering và phát hành. Lớp học dạy bằng tiếng Hàn.'
         }
       ]
     },
     {
       hubKey: 'pricing',
-      title: 'Giá Minh bạch cho Khách quốc tế',
+      title: 'Giá cả công khai ngay từ đầu',
       items: [
         {
-          heading: 'Nhiều Phương thức Thanh toán',
-          body: 'Thanh toán bằng chuyển khoản ngân hàng (ngân hàng Hàn Quốc), thẻ tín dụng hoặc PayPal. Chúng tôi cung cấp hóa đơn chi tiết bằng tiếng Việt cho kế toán và hồ sơ thuế.'
+          heading: 'Mọi mức giá đều được công khai',
+          body: 'Thu âm, mixing, mastering, khóa học và phòng tập đều có giá niêm yết trên trang này — không có mục nào chỉ báo giá riêng. Tất cả giá đều chưa gồm VAT.'
         },
         {
-          heading: 'Không Chi phí Ẩn',
-          body: 'Tất cả giá đã bao gồm kỹ thuật chuyên nghiệp. Ảnh session và báo cáo tóm tắt được bao gồm với mỗi đặt lịch. Thấy giá nào trả giá đó.'
+          heading: 'Những gì không nằm trong giá',
+          body: 'Mixing bao gồm cân bằng, tông màu và hiệu ứng, với 2 lần sửa. Chỉnh giọng chi tiết và sửa timing tính riêng, 150.000 KRW/bài. Nhạc công session, phối khí và tiếp cận báo chí trong các dự án phát hành được báo giá theo từng dự án.'
         }
       ]
     },
     {
       hubKey: 'studio-info',
-      title: 'Thiết bị Bạn sẽ Thực sự Sử dụng',
+      title: 'Phòng thu và thiết bị',
       items: [
         {
-          heading: 'Hướng dẫn Chọn Micro',
-          body: 'Không biết micro nào phù hợp với giọng hát? Kỹ sư tư vấn miễn phí 15 phút để chọn micro hoàn hảo cho phong cách giọng hát của bạn.'
+          heading: 'Micro và chuỗi tín hiệu',
+          body: 'Micro condenser Neumann U87Ai và AKG C414 XLS, micro dynamic Shure SM58 và SM57, preamp Vintech X73i theo phong cách Neve 1073, và bộ chuyển đổi Prism Sound Lyra 2. Ngoài ra còn có piano đứng Yamaha U3 cho thu âm mộc.'
         },
         {
-          heading: 'Đề xuất theo Thể loại Âm nhạc',
-          body: 'Dù bạn thu hip-hop, ballad, rock hay electronic, chúng tôi có thiết bị chuẩn bị sẵn theo thể loại. Hãy cho chúng tôi biết thể loại của bạn và chúng tôi sẽ chuẩn bị chuỗi tín hiệu tối ưu trước khi bạn đến.'
+          heading: 'Giám sát âm thanh (Monitor)',
+          body: 'Bản mix được kiểm tra qua ba cặp loa monitor — Proac Tablett 50, EVE Audio SC207 và ADAM Audio A5 — cùng với outboard SSL Fusion, Tegeler Vari Tube và SPL Optimizer.'
         }
       ]
     }
@@ -718,61 +721,61 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
   th: [
     {
       hubKey: 'about',
-      title: 'สำหรับศิลปินไทยในเกาหลี',
+      title: 'ทำงานกับ Studio NOL จากต่างประเทศ',
       items: [
         {
-          heading: 'คำแนะนำวีซ่าศิลปิน & KOMCA',
-          body: 'กระบวนการเข้าเมืองเกาหลีและการจดทะเบียนลิขสิทธิ์อาจซับซ้อน เราช่วยเหลือคุณตั้งแต่วีซ่า C-4 จนถึงการจดทะเบียนที่ Korean Music Copyright Association (KOMCA) เพื่อให้คุณมุ่งเน้นการสร้างดนตรี'
+          heading: 'มิกซ์และมาสเตอริ่งทางไกล',
+          body: 'คุณไม่จำเป็นต้องอยู่ที่โซล ส่งแทร็กเสียงร้องดิบและแทร็กดนตรีเป็นไฟล์ WAV ผ่าน KakaoTalk, Google Drive หรือ WeTransfer แล้วเราจะส่งมาสเตอร์ที่เสร็จสมบูรณ์กลับให้ด้วยวิธีเดียวกัน ใบเสนอราคา บันทึกการมิกซ์ และคำขอแก้ไขทั้งหมดสื่อสารเป็นภาษาอังกฤษ'
         },
         {
-          heading: 'ประสบการณ์สตูดิโอภาษาไทย',
-          body: 'การสื่อสารทั้งหมดเป็นภาษาไทย วิศวกรของเราบันทึกทุกเซสชันเป็นลายลักษณ์อักษร และจัดเตรียมสัญญาเป็นภาษาไทยเพื่อความสบายใจของคุณ'
+          heading: 'ระยะเวลาส่งงานและการแก้ไข',
+          body: 'หลังจากได้รับแทร็กของคุณ เราจะส่งไฟล์ที่เสร็จสมบูรณ์ภายใน 3-7 วันทำการ มิกซ์รวมแก้ไข 2 ครั้ง มาสเตอร์รวมแก้ไข 1 ครั้ง'
         },
         {
-          heading: 'จัดจำหน่ายทั่วโลกฟรี',
-          body: 'ทุกแพ็กเกจการผลิตมาพร้อมจัดจำหน่ายฟรีไปยัง Spotify, Apple Music, YouTube Music ผ่านพันธมิตร Audioguy เก็บรายได้สตรีมมิ่ง 70% ของคุณ'
+          heading: 'การจัดจำหน่าย',
+          body: 'แพ็กเกจโปรดักชันเพื่อปล่อยเพลงรวมการจัดจำหน่ายไปยัง Spotify, Apple Music, YouTube Music และแพลตฟอร์มอื่นๆ ผ่านพันธมิตร Audioguy ของเรา และคุณจะได้รับ 70% ของรายได้จากสตรีมมิ่ง'
         }
       ]
     },
     {
       hubKey: 'lesson',
-      title: 'บทเรียนดนตรีสำหรับศิลปินต่างชาติ',
+      title: 'คอร์สนี้สอนอะไรจริงๆ',
       items: [
         {
-          heading: 'เทคนิคการร้อง K-pop & ภาษาเกาหลี',
-          body: 'หลักสูตรครอบคลุมเทคนิคการร้อง K-pop การออกเสียงภาษาเกาหลีสำหรับเนื้อเพลง และสไตล์การแสดง ไม่ว่าคุณกำลังเตรียมเดบิวต์หรืออัดซิงเกิลแรก เราสร้างทักษะที่คุณต้องการ'
+          heading: 'สอนโปรดักชัน ไม่ใช่การแสดง',
+          body: 'คอร์สนี้สอนการโปรดักชันเพลง ได้แก่ การแต่งเพลงและเรียบเรียงด้วย MIDI เทคนิคการบันทึกเสียง มิกซ์ มาสเตอริ่ง และการปล่อยเพลงของคุณลงแพลตฟอร์มสตรีมมิ่ง เราไม่สอนเทคนิคการร้องหรือการเล่นเครื่องดนตรี — หากต้องการเรียนร้องเพลง ให้หาครูสอนร้องแยกต่างหาก แล้วมาหาเราสำหรับส่วนโปรดักชัน'
         },
         {
-          heading: 'ตารางเรียนยืดหยุ่นสำหรับศิลปินทัวร์',
-          body: 'มีบทเรียนวันหยุดสุดสัปดาห์และตอนเย็นเพื่อรองรับตารางทัวร์ มีคอร์สเข้มข้นสำหรับศิลปินที่กำลังเตรียมปล่อยผลงาน'
+          heading: 'รูปแบบและจังหวะการเรียน',
+          body: 'เรียนส่วนตัวสัปดาห์ละ 1 ครั้ง ครั้งละ 60 นาที เดือนละ 4 ครั้ง แผนที่แนะนำคือ 6 เดือน: 3 เดือนแรกทำเพลงของคุณเองให้เสร็จ 1 เพลง จากนั้น 3 เดือนถัดไปคือมิกซ์ มาสเตอริ่ง และปล่อยเพลง คอร์สสอนเป็นภาษาเกาหลี'
         }
       ]
     },
     {
       hubKey: 'pricing',
-      title: 'ราคาโปร่งใสสำหรับลูกค้าต่างชาติ',
+      title: 'ราคาที่เปิดเผยตั้งแต่ต้น',
       items: [
         {
-          heading: 'หลายตัวเลือกการชำระเงิน',
-          body: 'ชำระเงินด้วยการโอนธนาคาร (ธนาคารเกาหลี), บัตรเครดิต หรือ PayPal เราออกใบแจ้งหนี้โดยละเอียดเป็นภาษาไทยสำหรับบัญชีและบันทึกภาษี'
+          heading: 'ทุกราคาเปิดเผยต่อสาธารณะ',
+          body: 'การบันทึกเสียง มิกซ์ มาสเตอริ่ง คอร์สเรียน และห้องซ้อม ล้วนมีราคาที่ระบุไว้บนเว็บไซต์นี้ — ไม่มีรายการใดที่ต้องขอใบเสนอราคาเท่านั้น ราคาทั้งหมดไม่รวม VAT'
         },
         {
-          heading: 'ไม่มีค่าใช้จ่ายแอบแฝง',
-          body: 'ราคาทั้งหมดรวมวิศวกรมืออาชีพ มีภาพเซสชันและรายงานสรุปทุกครั้งที่คุณจอง เห็นราคาไหนจ่ายราคา đó'
+          heading: 'สิ่งที่ไม่รวมอยู่ในราคา',
+          body: 'มิกซ์ครอบคลุมบาลานซ์ โทนเสียง และเอฟเฟกต์ พร้อมแก้ไข 2 ครั้ง การจูนเสียงร้องแบบละเอียดและการแก้ timing คิดแยก 150,000 วอนต่อเพลง นักดนตรีเซสชัน การเรียบเรียง และการประชาสัมพันธ์สื่อในโปรเจกต์ปล่อยเพลง คิดราคาตามแต่ละโปรเจกต์'
         }
       ]
     },
     {
       hubKey: 'studio-info',
-      title: 'อุปกรณ์ที่คุณจะได้ใช้จริง',
+      title: 'ห้องอัดและอุปกรณ์',
       items: [
         {
-          heading: 'คู่มือเลือกไมโครโฟน',
-          body: 'ไม่รู้ว่าไมโครโฟนไหนเหมาะกับเสียงของคุณ? วิศวกรให้คำปรึกษาฟรี 15 นาที เพื่อจับคู่สไตล์เสียงของคุณกับไมโครโฟนที่สมบูรณ์แบบ'
+          heading: 'ไมโครโฟนและสัญญาณเสียง',
+          body: 'ไมค์คอนเดนเซอร์ Neumann U87Ai และ AKG C414 XLS ไมค์ไดนามิก Shure SM58 และ SM57 ปรีแอมป์ Vintech X73i ในสาย Neve 1073 และตัวแปลงสัญญาณ Prism Sound Lyra 2 นอกจากนี้ยังมีเปียโนตั้ง Yamaha U3 สำหรับบันทึกเสียงอะคูสติก'
         },
         {
-          heading: 'คำแนะนำตามแนวเพลง',
-          body: 'ไม่ว่าคุณจะอัดฮิปฮอป บัลลาด ร็อก หรืออิเล็กทรอนิกส์ เรามีอุปกรณ์เตรียมไว้ตามแนวเพลง บอกแนวเพลงของคุณและเราจะเตรียมสัญญาณที่เหมาะสมก่อนคุณมาถึง'
+          heading: 'มอนิเตอร์',
+          body: 'การมิกซ์จะถูกตรวจสอบข้ามลำโพงมอนิเตอร์ 3 คู่ — Proac Tablett 50, EVE Audio SC207 และ ADAM Audio A5 — พร้อมกับเอาต์บอร์ด SSL Fusion, Tegeler Vari Tube และ SPL Optimizer'
         }
       ]
     }
@@ -780,61 +783,61 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
   uz: [
     {
       hubKey: 'about',
-      title: "Koreyada San'atkorlar Uchun",
+      title: "Chet eldan Studio NOL bilan ishlash",
       items: [
         {
-          heading: "C-4 Vizasi va KOMCA Ro'yxatdan o'tish",
-          body: "Koreya immigratsiya va mualliflik huquqini ro'yxatga olish jarayoni murakkab bo'lishi mumkin. Biz sizni C-4 vizasidan Korean Music Copyright Association (KOMCA) ro'yxatigacha yo'l-yo'riq beramiz."
+          heading: "Miks va mastering — masofadan",
+          body: "Seulda bo'lishingiz shart emas. Vokal va instrumental treklaringizni WAV formatida KakaoTalk, Google Drive yoki WeTransfer orqali yuboring, tayyor masterni ham xuddi shu tarzda qaytarib beramiz. Narx taklifi, miks bo'yicha izohlar va tuzatish so'rovlari ingliz tilida olib boriladi."
         },
         {
-          heading: "O'zbek tilida Studiya Tajribasi",
-          body: "Barcha muloqot o'zbek tilida. Muhandislarimiz har bir sessiyani yozma shaklda hujjatlashtiradi va xavfsizligingiz uchun o'zbek tilida shartnoma shablonlarini taqdim etadi."
+          heading: "Yetkazib berish muddati va tuzatishlar",
+          body: "Treklaringizni qabul qilgandan so'ng, tayyor fayllarni 3-7 ish kuni ichida yetkazamiz. Miksda 2 marta, masteringda 1 marta tuzatish kiritilgan."
         },
         {
-          heading: "Global Tarqatish Bepul",
-          body: "Har bir prodakshn paketi Audioguy hamkorligi orqali Spotify, Apple Music, YouTube Music ga bepul tarqatishni o'z ichiga oladi. Streaming daromadingizning 70% ni ushlab qoling."
+          heading: "Tarqatish",
+          body: "Reliz uchun prodakshn paketlari Audioguy hamkorligimiz orqali Spotify, Apple Music, YouTube Music va boshqa platformalarga tarqatishni o'z ichiga oladi, va siz streaming daromadingizning 70% ni saqlab qolasiz."
         }
       ]
     },
     {
       hubKey: 'lesson',
-      title: "Chet ellik San'atkorlar Uchun Musiqa Darslari",
+      title: "Dars aslida nimani qamrab oladi",
       items: [
         {
-          heading: "K-pop Vokal Texnikasi va Koreys Tili",
-          body: "Dastur K-pop vokal texnikasi, koreys tilida so'zlar talaffuzi va sahna uslubini qamrab oladi."
+          heading: "Prodakshn, ijro emas",
+          body: "Dars musiqa prodakshnini o'rgatadi: MIDI bastakorlik va aranjirovka, yozuv texnikasi, miks, mastering va trekingizni streaming platformalariga chiqarish. Biz vokal yoki instrument ijrosini o'rgatmaymiz — agar qo'shiq aytish darslari kerak bo'lsa, vokal murabbiyi bilan ishlang va prodakshn qismi uchun bizga keling."
         },
         {
-          heading: "G'arbiy San'atkorlar Uchun Moslashuvchan Jadval",
-          body: "G'arbiy san'atkorlar uchun dam olish kunlari va kechki darslar mavjud."
+          heading: "Format va sur'at",
+          body: "Haftada 1 marta 60 daqiqalik shaxsiy dars, oyiga 4 dars. Tavsiya etilgan yo'l — 6 oy: birinchi 3 oyda o'zingizning bitta qo'shig'ingizni yakunlash, keyingi 3 oyda miks, mastering va relizgacha. Darslar koreys tilida o'tiladi."
         }
       ]
     },
     {
       hubKey: 'pricing',
-      title: "Chet Ellik Mijozlar Uchun Shaffof Narxlar",
+      title: "Narxlar oldindan ochiq e'lon qilingan",
       items: [
         {
-          heading: "Bir nechto To'lov Variantlari",
-          body: "Bank o'tkazmasi (mahalliy Koreya banklari), kredit karta yoki PayPal orqali to'lang."
+          heading: "Har bir narx e'lon qilingan",
+          body: "Yozuv, miks, mastering, darslar va mashg'ulot xonasining barchasi ushbu saytda e'lon qilingan narxlarga ega — hech narsa faqat so'rov bo'yicha emas. Barcha narxlar VATsiz ko'rsatilgan."
         },
         {
-          heading: "Yashirin Xarajatlar Yo'q",
-          body: "Barcha narxlar professional muhandislikni o'z ichiga oladi."
+          heading: "Narxga kirmaydigan narsalar",
+          body: "Miks balans, ton va effektlarni qamrab oladi, 2 marta tuzatish bilan. Batafsil vokal tuning va timing tuzatish alohida — qo'shiq boshiga 150,000 KRW. Reliz loyihalaridagi sessiya musiqachilari, aranjirovka va OAVga yetkazish har bir loyiha uchun alohida taklif qilinadi."
         }
       ]
     },
     {
       hubKey: 'studio-info',
-      title: "Aslida Foydalanadigan Uskunalar",
+      title: "Xona va uskunalar",
       items: [
         {
-          heading: "Mikrofon Tanlash Qo'llanmasi",
-          body: "Qaysi mikrofon sizning ovozingizga mos? Muhandislarimiz 15 daqiqalik bepul maslahat beradi."
+          heading: "Mikrofonlar va signal zanjiri",
+          body: "Neumann U87Ai va AKG C414 XLS kondensator mikrofonlari, Shure SM58 va SM57 dinamik mikrofonlari, Neve 1073 an'analaridagi Vintech X73i preamp va Prism Sound Lyra 2 konvertatsiya. Akustik yozuv uchun Yamaha U3 pianino ham mavjud."
         },
         {
-          heading: "Janr bo'yicha Tavsiyalar",
-          body: "Gip-hop, ballada, rok yoki elektron musiqa yozayotganingizdan qat'iy nazar, bizda janrga mos uskunalar mavjud."
+          heading: "Monitoring",
+          body: "Mikslar uchta monitor jufti — Proac Tablett 50, EVE Audio SC207 va ADAM Audio A5 — orqali tekshiriladi, shuningdek SSL Fusion, Tegeler Vari Tube va SPL Optimizer outboard uskunalari bilan."
         }
       ]
     }

@@ -108,6 +108,58 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     allow: /않|없|외부|학원|코치|트레이너/,
   },
   {
+    // 2026-07-28: hubLocaleContentData(data/faq.ts)가 6개 언어로 "K-pop 보컬 테크닉·한국어
+    // 발음·퍼포먼스 스타일링" 커리큘럼을 광고하고 있었다. 기존 vocal-lesson-claim-en은
+    // "vocal lessons"라는 명사구만 잡아서 "vocal techniques"를 통과시켰고, 중국어·스페인어·
+    // 베트남어·태국어 표기는 아예 커버되지 않았다. 언어별 '보컬/발성 지도' 표현을 직접 막는다.
+    id: 'vocal-technique-teaching-multilang',
+    description:
+      '보컬·발성 지도는 미운영 — 어떤 언어로도 보컬 테크닉을 우리 커리큘럼으로 광고 금지',
+    pattern:
+      /vocal\s+techniques?|singing\s+techniques?|Korean\s+pronunciation\s+for\s+lyrics|声乐技巧|唱法技巧|Técnicas?\s+[Vv]ocal(?:es)?|Kỹ\s+thuật\s+Hát|เทคนิคการร้อง|vokal\s+texnikasi/i,
+    // 보컬 테크닉을 설명하는 정보성 글(diaphragm1·posture1)과 성악 교육사 서술
+    // (벨칸토·CVT·SLS 같은 고유 메서드명)은 정상 콘텐츠다. 막아야 하는 건 "우리 커리큘럼이
+    // 그걸 가르친다"는 1인칭 교습 주장뿐이므로, 마커를 소유격 1인칭으로 좁힌다.
+    marker:
+      /our\s+curriculum|Nuestro\s+currículo|우리\s?(?:커리큘럼|레슨|수업)|저희\s?(?:커리큘럼|레슨|수업)|课程涵盖|chương\s+trình\s+(?:của\s+chúng\s+tôi|học)|หลักสูตรของเรา|Dasturimiz|\bwe\s+(?:teach|train)\b/i,
+    allow: /않|없|미운영|미제공|외부|\bnot?\b|don'?t|doesn'?t|不提供|no\s+ofrecemos|không\s+cung\s+cấp|ไม่ให้บริการ/i,
+  },
+  {
+    // 같은 블록에 있던 "C-4 아티스트 비자 안내", "KOMCA 등록 지원" — 스튜디오가 제공한
+    // 적 없는 행정·법률 성격 서비스다. 잘못 믿고 온 외국인 아티스트에게 실질 피해가 간다.
+    id: 'visa-komca-agency-claim',
+    description: '비자 안내·저작권협회 등록 대행은 제공 서비스가 아님 — 1인칭 지원 단정 금지',
+    // KOMCA 등록 절차를 설명하는 정보성 글(copyright1·distribution1 등)은 정상 콘텐츠이자
+    // 이 사이트의 핵심 자산이다. 막아야 하는 건 "우리가 대신 처리해 준다"는 서비스 주장뿐이다.
+    // 그래서 비자는 C-4 문맥에서만, KOMCA는 1인칭 지원 동사와 붙을 때만 잡는다.
+    pattern:
+      /C-4[^\n]{0,60}(?:visa|비자|签证)|(?:artist\s+visa|아티스트\s?비자|艺术家签证)|KOMCA\s+support|KOMCA[^\n]{0,30}(?:대행|등록을?\s?지원|가입\s?지원)/i,
+    marker:
+      /\bwe\s+(?:help|guide|assist|support|handle|navigate)\b|저희(?:가|는)?\s?(?:도와|지원|대행)|스튜디오\s?놀(?:이|에서)?\s?(?:도와|지원|대행)|Studio\s?NOL[^\n]{0,40}(?:help|support|assist)/i,
+    allow: /않|없|미제공|대행하지|\bnot?\b|don'?t|doesn'?t|不提供/i,
+  },
+  {
+    // 해외 결제 수단(PayPal·위챗페이·알리페이·은련) 주장. 2026-07-28 황경하 확인:
+    // 전부 받지 않는다. 결제 조건 오안내는 실제 거래 분쟁으로 이어진다.
+    id: 'foreign-payment-method-claim',
+    description: 'PayPal·위챗페이·알리페이·은련카드 미지원 — 결제 수단으로 안내 금지',
+    pattern: /PayPal|微信支付|微信付款|支付宝|银联|Alipay|WeChat\s+Pay|UnionPay/i,
+    // "한국 스튜디오는 대체로 계좌이체·카드이고, 일부는 은련카드를 받기도 하니 미리 물어보라"는
+    // 식의 시장 안내는 정상 콘텐츠다(zh 외국인 가이드). 막는 건 우리가 받는다는 단정뿐이다.
+    allow:
+      /않|없|미지원|불가|\bnot?\b|don'?t|doesn'?t|不支持|部分工作室|一定要提前问|建议提前|不是默认选项/i,
+  },
+  {
+    // "中文工作人员常驻", "Experiencia en Estudio en Español" 계열 — 해당 언어 상주 인력·
+    // 서면 자료 주장. 영어 응대(예약+원격 믹싱) 외에는 다국어 인력이 없다.
+    id: 'non-english-staff-claim',
+    description:
+      '중국어·스페인어·베트남어·태국어 상주 인력/서면 자료 없음 — 영어 응대 외 다국어 지원 단정 금지',
+    pattern:
+      /中文工作人员|中文服务|中文版本|中文发票|中文设备|Estudio\s+en\s+Español|Studio\s+bằng\s+Tiếng\s+Việt|สตูดิโอภาษาไทย|hóa\s+đơn[^\n]{0,20}tiếng\s+Việt/i,
+    allow: /않|없|미제공|\bnot?\b|不提供/i,
+  },
+  {
     id: 'english-engineer-claim',
     description:
       '영어 전담·상주 엔지니어 없음 — 영어 제공은 예약 응대 + 원격 믹싱뿐 (wiki 서비스 범위 가드)',

@@ -193,8 +193,8 @@ const homeData = {
           body: "Booking, quotes, mix notes, and revisions are all handled in English, and our remote mixing & mastering runs entirely in English — send your tracks from anywhere. Whether you are an exchange student, K-pop trainee, or expat artist, the process stays clear from first message to final delivery. Transparent pricing, no hidden fees — quotes confirmed before the session begins."
         },
         {
-          heading: "K-pop trainees · C-4 artist visa · KOMCA support",
-          body: "We understand the specific needs of foreign artists preparing for the Korean music market. From vocal direction tuned for K-pop phrasing to guidance on registering your work with Korean Music Copyright Association (KOMCA) and navigating the C-4 artist visa, we help you get studio-ready and release-ready."
+          heading: "Recording for Artists Aiming at the Korean Market",
+          body: "Vocal direction is part of every recording session, and it adapts to the phrasing a K-pop or Korean-market release calls for. Sessions run in English, and mixing and mastering can be commissioned remotely if you cannot come to Seoul."
         },
         {
           heading: "Release on Melon · Genie · Bugs · Spotify Korea",
@@ -278,8 +278,8 @@ const homeData = {
       title: "专为中国音乐人打造的 Studio NOL",
       items: [
         {
-          heading: "微信支付 · 中文沟通支持",
-          body: "支持中国本地微信支付方式，常驻可用中文沟通的工作人员。熟悉韩国音乐市场的工程师将全程指导您的项目进行。"
+          heading: "远程混音与母带处理",
+          body: "无需来首尔。将干声和伴奏的 WAV 文件发送给我们，收到文件后 3 至 7 个工作日内交付成品。沟通以英语进行。"
         },
         {
           heading: "在韩音乐人专属服务方案",
@@ -550,7 +550,7 @@ const homeData = {
         },
         {
           heading: "การผลิตเพลงสไตล์ K-pop",
-          body: "ต่างจากสตูดิโอทั่วไป Studio NOL เข้าใจความต้องการพิเศษของตลาด K-pop ตั้งแต่เทคนิคการร้อง การแสดง ไปจนถึงสไตล์การนำเสนอ — เราช่วยคุณเตรียมผลงานเพลงที่สมบูรณ์แบบสำหรับตลาดเกาหลี"
+          body: "Studio NOL รับบันทึกเสียง มิกซ์ และมาสเตอร์สำหรับเพลงที่มุ่งสู่ตลาดเกาหลี การกำกับเสียงร้องรวมอยู่ในทุกเซสชันบันทึกเสียง และงานมิกซ์·มาสเตอร์สามารถส่งไฟล์มาทำระยะไกลได้"
         },
         {
           heading: "รีวิวจากศิลปินไทย",

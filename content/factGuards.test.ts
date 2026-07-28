@@ -139,6 +139,15 @@ describe('fact guard rules self-check', () => {
       ['한국스마트협동조합은 Studio NOL의 모기업입니다', 'kosmart-parent-claim'],
       // '불가능'이 allow '가능'에 자기 면제되던 우회 경로 (1인칭 배제 단정)
       ['스튜디오 놀에서 드럼 녹음은 불가능합니다.', 'drum-exclusion-claim'],
+      // 2026-07-28 사고: hubLocaleContentData(data/faq.ts)와 홈(data/home.ts)이 6개 언어로
+      // 실재하지 않는 서비스를 광고하고 있었다. 아래는 그때 라이브에 떠 있던 실제 문구들이다.
+      ['Our curriculum covers K-pop vocal techniques, Korean pronunciation for lyrics', 'vocal-technique-teaching-multilang'],
+      ['课程涵盖K-pop声乐技巧、韩语歌词发音', 'vocal-technique-teaching-multilang'],
+      ['Nuestro currículo cubre técnicas vocales de K-pop', 'vocal-technique-teaching-multilang'],
+      ['heading: "K-pop trainees · C-4 artist visa · KOMCA support"\nbody: "We help you get studio-ready."', 'visa-komca-agency-claim'],
+      ['Pay by bank transfer (local Korean banks), credit card, or PayPal.', 'foreign-payment-method-claim'],
+      ['支持微信支付、支付宝、银联卡付款', 'foreign-payment-method-claim'],
+      ['中文工作人员常驻，合同、会话记录全部提供中文版本', 'non-english-staff-claim'],
     ];
 
     for (const [text, expectedRule] of fixtures) {
