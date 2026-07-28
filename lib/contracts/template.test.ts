@@ -117,6 +117,8 @@ describe('공동생활 이용수칙', () => {
   it('사본이 없는 과거 계약만 현재 파일로 되돌아간다', () => {
     expect(resolveRulesContent([{ type: 'rules', content: null }])).toBe(buildRulesContent());
     expect(resolveRulesContent([])).toBe(buildRulesContent());
+    // 빈 사본으로 백지 첨부를 발행하지 않는다.
+    expect(resolveRulesContent([{ type: 'rules', content: '' }])).toBe(buildRulesContent());
   });
 
   it('rules 이외의 첨부는 이용수칙으로 오인하지 않는다', () => {

@@ -95,5 +95,6 @@ export const resolveRulesContent = (
   attachments: ReadonlyArray<{ type: string; content: string | null }>,
 ): string => {
   const snapshot = attachments.find((attachment) => attachment.type === 'rules')?.content;
-  return snapshot ?? buildRulesContent();
+  // 빈 사본도 없는 것으로 본다 — 첨부가 백지인 계약서를 발행하느니 현재 판본을 싣는다.
+  return snapshot || buildRulesContent();
 };
