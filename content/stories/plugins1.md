@@ -63,7 +63,7 @@ howTo:
 
 플러그인은 도구입니다. 어떤 도구를 쓰느냐보다 어떻게 쓰느냐가 더 중요합니다. 다만 좋은 도구는 작업 효율을 높여줍니다.
 
-플러그인 기반 오디오 믹싱은 **1996년 Waves Audio가 L1 Ultramaximizer를 시작으로 Native Power Pack 번들을 출시**([Sound on Sound: Waves Native Power Pack 리뷰](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack))하면서 본격화됐습니다. 하드웨어 랙 장비에만 있던 EQ·컴프레서·리버브가 처음 소프트웨어로 옮겨오면서 DAW 안에서 플러그인으로 믹싱하는 시대가 열렸습니다. **Steinberg의 VST 표준은 1996년 1.0, 1999년 2.0, 2008년 3.0** 순으로 발전([Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — About VST SDK](https://www.steinberg.net/developers/vstsdk/))했고 플러그인 생태계도 그만큼 빠르게 커졌습니다. 2010년대에는 Universal Audio가 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 내놓았습니다. 이때부터 홈 레코딩 환경에서도 스튜디오 품질 사운드를 구현할 수 있게 됐습니다. 한국 시장은 2015년 이후 FabFilter와 Waves 번들 가격이 대중화되면서 홈 레코딩 엔지니어의 플러그인 구성이 빠르게 고도화됐습니다. 국내 인디 레이블과 유튜브 음악 채널 제작자 사이에서는 FabFilter Pro-Q 3·Valhalla Room·CLA-76 조합이 사실상의 표준으로 자리잡았습니다.
+플러그인 기반 오디오 믹싱은 **1996년 Waves Audio가 L1 Ultramaximizer를 시작으로 Native Power Pack 번들을 출시**([Sound on Sound: Waves Native Power Pack 리뷰](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack))하면서 본격화됐습니다. 하드웨어 랙 장비에만 있던 EQ·컴프레서·리버브가 처음 소프트웨어로 옮겨오면서 DAW 안에서 플러그인으로 믹싱하는 시대가 열렸습니다. **Steinberg의 VST 표준은 1996년 1.0, 1999년 2.0, 2008년 3.0** 순으로 발전([Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — About VST SDK](https://www.steinberg.net/developers/vstsdk/))했고 플러그인 생태계도 폭발적으로 성장했습니다. 2010년대에는 Universal Audio가 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 내놓았습니다. 이때부터 홈 레코딩 환경에서도 스튜디오 품질 사운드를 구현할 수 있게 됐습니다. 한국 시장은 2015년 이후 FabFilter와 Waves 번들 가격이 대중화되면서 홈 레코딩 엔지니어의 플러그인 구성이 급격히 고도화됐습니다. 국내 인디 레이블과 유튜브 음악 채널 제작자 사이에서는 FabFilter Pro-Q 3·Valhalla Room·CLA-76 조합이 사실상의 표준으로 자리잡았습니다.
 
 ---
 
@@ -143,7 +143,7 @@ howTo:
 - Waves Audio 플러그인 역사 (L1 Ultramaximizer 1996, Native Power Pack): [Sound on Sound — Waves Native Power Pack](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack)
 - Steinberg VST 표준 (1.0=1996, 2.0=1999, 3.0=2008): [Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — VST SDK](https://www.steinberg.net/developers/vstsdk/)
 
-본 가이드의 추천 조합(FabFilter Pro-Q 3·Valhalla Room·CLA-76 등)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 보컬 녹음·믹싱 세션에서 직접 쓰고 검증한 도구입니다. 한국 인디 레이블·유튜브 채널 제작자의 실제 사용 패턴을 관찰한 결과도 함께 반영했습니다. 가격·할인 정보는 2026년 5월 기준입니다. 각 제조사(Waves·FabFilter·Valhalla DSP·Universal Audio·Celemony·Antares) 공식 사이트에서 최신 정보를 확인하시기 바랍니다.
+본 가이드의 추천 조합(FabFilter Pro-Q 3·Valhalla Room·CLA-76 등)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 보컬 녹음·믹싱 세션에서 직접 쓰고 검증한 도구입니다. 한국 인디 레이블·유튜브 채널 제작자 사이의 실제 사용 패턴 관찰에 기반합니다. 가격·할인 정보는 2026년 5월 기준입니다. 각 제조사(Waves·FabFilter·Valhalla DSP·Universal Audio·Celemony·Antares) 공식 사이트에서 최신 정보를 확인하시기 바랍니다.
 
 ---
 
