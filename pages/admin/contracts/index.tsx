@@ -11,7 +11,7 @@ import {
   mutateContract,
 } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
-import { db } from '../../../db/client';
+import { getDb } from '../../../db/client';
 import { contractStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import {
@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
     // 목록을 여는 시점이 곧 만료를 판정할 시점이다(크론 없이 lazy 처리).
     await expireOverdueContracts();
 
-    const allContracts = await db.query.contracts.findMany({
+    const allContracts = await getDb().query.contracts.findMany({
       orderBy: (contracts, { desc }) => [desc(contracts.createdAt)],
       limit: 200,
     });

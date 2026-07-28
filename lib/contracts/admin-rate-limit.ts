@@ -1,7 +1,9 @@
 import { createHash } from 'crypto';
+import { lte, sql } from 'drizzle-orm';
 import type { NextApiRequest } from 'next';
 
-import { getRedisRestConfig, incrWithExpire } from '../rate-limit/redisRest';
+import { getDb } from '../../db/client';
+import { rateLimits } from '../../db/schema';
 
 /** 관리자 비밀번호는 하나뿐이라 무차별 대입에 특히 취약하다. 창을 좁게 잡는다. */
 const LIMIT = 10;
@@ -13,14 +15,13 @@ interface MemoryEntry {
 }
 
 const memoryStore = new Map<string, MemoryEntry>();
-let hasLoggedMemoryFallback = false;
 
 const getSubjectKey = (req: NextApiRequest): string => {
   const forwarded = req.headers['x-vercel-forwarded-for'] ?? req.headers['x-forwarded-for'];
   const raw = Array.isArray(forwarded) ? forwarded[0] : forwarded;
   const ip = String(raw || req.socket.remoteAddress || '').split(',')[0].trim();
 
-  if (ip) return `ip:${ip}`;
+  if (ip) return `admin_login:ip:${ip}`;
 
   // IP를 못 얻으면 요청 지문으로 대체한다 — 없는 것보다는 낫다.
   const fingerprint = createHash('sha256')
@@ -28,19 +29,18 @@ const getSubjectKey = (req: NextApiRequest): string => {
     .update(String(req.headers['accept-language'] || ''))
     .digest('hex')
     .slice(0, 24);
-  return `fp:${fingerprint}`;
+  return `admin_login:fp:${fingerprint}`;
 };
 
-const checkInMemory = (key: string): boolean => {
-  const now = Date.now();
-
+/** DB에 닿지 못할 때만 쓰는 인스턴스 로컬 폴백. */
+const checkInMemory = (key: string, nowSeconds: number): boolean => {
   for (const [storedKey, entry] of memoryStore.entries()) {
-    if (entry.expiresAt <= now) memoryStore.delete(storedKey);
+    if (entry.expiresAt <= nowSeconds) memoryStore.delete(storedKey);
   }
 
   const existing = memoryStore.get(key);
-  if (!existing || existing.expiresAt <= now) {
-    memoryStore.set(key, { count: 1, expiresAt: now + WINDOW_SECONDS * 1000 });
+  if (!existing || existing.expiresAt <= nowSeconds) {
+    memoryStore.set(key, { count: 1, expiresAt: nowSeconds + WINDOW_SECONDS });
     return true;
   }
 
@@ -51,25 +51,34 @@ const checkInMemory = (key: string): boolean => {
 /**
  * 관리자 로그인 시도 제한. 허용이면 true.
  *
- * Redis가 없으면 인스턴스 로컬 메모리로 폴백한다. 서버리스에서는 인스턴스마다 카운터가
- * 갈리므로 완벽하지 않지만, 로그인 실패는 세션 없이 반복되므로 같은 인스턴스로 몰리는
- * 경우가 많아 실효가 있다. 정확한 제한이 필요하면 KV_REST_API_URL을 설정한다.
+ * 카운터를 Turso에 두어 서버리스 인스턴스 사이에서 공유한다. 프로세스 메모리에 두면
+ * 인스턴스마다 카운터가 갈려 제한이 사실상 무력해진다.
+ *
+ * DB에 닿지 못하면 인스턴스 로컬 메모리로 폴백한다. 제한이 느슨해지긴 하지만,
+ * 카운터를 셀 수 없다는 이유로 정당한 로그인까지 막지는 않는다(비밀번호라는 방어선이
+ * 여전히 남아 있다).
  */
 export const checkAdminLoginRateLimit = async (req: NextApiRequest): Promise<boolean> => {
-  const key = `rate_limit_admin_login:${getSubjectKey(req)}`;
-  const config = getRedisRestConfig();
+  const key = getSubjectKey(req);
+  const nowSeconds = Math.floor(Date.now() / 1000);
 
-  if (config) {
-    try {
-      const count = await incrWithExpire({ key, windowSeconds: WINDOW_SECONDS, config });
-      return count <= LIMIT;
-    } catch (error: unknown) {
-      console.error('[admin-rate-limit] Redis REST failed, falling back to memory:', error);
-    }
-  } else if (!hasLoggedMemoryFallback) {
-    console.warn('[admin-rate-limit] Redis REST not configured. Using in-memory limiter.');
-    hasLoggedMemoryFallback = true;
+  try {
+    // 만료된 창을 먼저 지운다. 이후의 삽입은 항상 새 창을 여는 셈이 되고,
+    // 행이 무한정 쌓이지도 않는다(로그인 시도 자체가 드물어 비용은 무시할 수준).
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+
+    const [row] = await getDb()
+      .insert(rateLimits)
+      .values({ key, count: 1, expiresAt: nowSeconds + WINDOW_SECONDS })
+      .onConflictDoUpdate({
+        target: rateLimits.key,
+        set: { count: sql`${rateLimits.count} + 1` },
+      })
+      .returning();
+
+    return (row?.count ?? 1) <= LIMIT;
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Falling back to in-memory counter:', error);
+    return checkInMemory(key, nowSeconds);
   }
-
-  return checkInMemory(key);
 };

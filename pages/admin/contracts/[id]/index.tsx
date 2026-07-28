@@ -11,7 +11,7 @@ import {
   mutateContract,
 } from '../../../../components/admin/contractActions';
 import { Button } from '../../../../components/ui/Button';
-import { db } from '../../../../db/client';
+import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import {
   serializeAttachment,
@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
     return { notFound: true };
   }
 
-  const contract = await db.query.contracts
+  const contract = await getDb().query.contracts
     .findFirst({
       where: (contracts, { eq }) => eq(contracts.id, id),
       with: { signatures: true, contractClauses: true, contractAttachments: true },

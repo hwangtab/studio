@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { waitUntil } from '@vercel/functions';
 
-import { db } from '../../../db/client';
+import { getDb } from '../../../db/client';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
 import {
   serializeAttachment,
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '잘못된 계약 ID입니다.' });
   }
 
-  const contract = await db.query.contracts
+  const contract = await getDb().query.contracts
     .findFirst({
       where: (contractsTable, { eq }) => eq(contractsTable.id, id),
       with: { signatures: true, contractClauses: true, contractAttachments: true },

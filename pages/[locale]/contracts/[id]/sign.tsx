@@ -6,7 +6,7 @@ import Markdown from 'markdown-to-jsx';
 
 import ContractContent from '../../../../components/contracts/ContractContent';
 import { Button } from '../../../../components/ui/Button';
-import { db } from '../../../../db/client';
+import { getDb } from '../../../../db/client';
 import {
   serializeAttachment,
   serializeClause,
@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
     // 접근 시점에 만료를 판정한다(크론 없는 lazy 방식).
     await expireOverdueContracts();
 
-    const contract = await db.query.contracts.findFirst({
+    const contract = await getDb().query.contracts.findFirst({
       where: (contracts, { eq, and }) => and(eq(contracts.id, id), eq(contracts.signToken, token)),
       with: { contractClauses: true, contractAttachments: true },
     });

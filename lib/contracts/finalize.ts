@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 
-import { db } from '../../db/client';
+import { getDb } from '../../db/client';
 import { contracts, type Signature } from '../../db/schema';
 import { sendContractSignedEmail, sendOperatorContractNotification } from './email';
 import { generateContractPdf } from './pdf';
@@ -15,7 +15,7 @@ import { buildRulesContent } from './template';
  * PDF는 관리자 화면에서 언제든 재생성할 수 있어 유실이 치명적이지 않다.
  */
 export const finalizeSignedContract = async (contractId: string): Promise<void> => {
-  const contract = await db.query.contracts.findFirst({
+  const contract = await getDb().query.contracts.findFirst({
     where: (contractsTable, { eq: equals }) => equals(contractsTable.id, contractId),
     with: { signatures: true, contractClauses: true, contractAttachments: true },
   });
@@ -43,7 +43,7 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
 
     const pdfUrl = await uploadContractPdf(contract.id, pdfBuffer);
 
-    await db
+    await getDb()
       .update(contracts)
       .set({ pdfUrl, pdfGeneratedAt: new Date(), updatedAt: new Date() })
       .where(eq(contracts.id, contract.id));

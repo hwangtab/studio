@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import { Button } from '../../../../components/ui/Button';
-import { db } from '../../../../db/client';
+import { getDb } from '../../../../db/client';
 import { serializeContract, type SerializedContract } from '../../../../lib/contracts/serialize';
 
 interface CompletePageProps {
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
   }
 
   try {
-    const contract = await db.query.contracts.findFirst({
+    const contract = await getDb().query.contracts.findFirst({
       where: (contracts, { eq, and }) => and(eq(contracts.id, id), eq(contracts.signToken, token)),
     });
 

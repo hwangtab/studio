@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { db } from '../../../db/client';
+import { getDb } from '../../../db/client';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
 import { serializeContractForAdmin } from '../../../lib/contracts/serialize';
 import { createContract, expireOverdueContracts } from '../../../lib/contracts/service';
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       await expireOverdueContracts();
 
-      const allContracts = await db.query.contracts.findMany({
+      const allContracts = await getDb().query.contracts.findMany({
         orderBy: (contractsTable, { desc }) => [desc(contractsTable.createdAt)],
         limit: LIST_LIMIT,
       });

@@ -1,6 +1,6 @@
 import { and, eq, lte } from 'drizzle-orm';
 
-import { db } from '../../db/client';
+import { getDb } from '../../db/client';
 import {
   contractAttachments,
   contractClauses,
@@ -35,7 +35,7 @@ export const REQUIRED_ATTACHMENTS = [
  */
 export const expireOverdueContracts = async (now: Date = new Date()): Promise<number> => {
   try {
-    const result = await db
+    const result = await getDb()
       .update(contracts)
       .set({ status: 'expired', updatedAt: now })
       .where(and(eq(contracts.status, 'sent'), lte(contracts.expiresAt, now)));
@@ -64,7 +64,7 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     specialTerms: data.specialTerms,
   });
 
-  const [contract] = await db
+  const [contract] = await getDb()
     .insert(contracts)
     .values({
       title: data.title,
@@ -87,7 +87,7 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     })
     .returning();
 
-  await db.insert(signatures).values({
+  await getDb().insert(signatures).values({
     contractId: contract.id,
     signerName: data.customerName,
     signerEmail: data.customerEmail,
@@ -95,7 +95,7 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     status: 'pending',
   });
 
-  await db.insert(contractClauses).values(
+  await getDb().insert(contractClauses).values(
     REQUIRED_CLAUSES.map((clause) => ({
       contractId: contract.id,
       clauseNumber: clause.clauseNumber,
@@ -103,7 +103,7 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     })),
   );
 
-  await db.insert(contractAttachments).values(
+  await getDb().insert(contractAttachments).values(
     REQUIRED_ATTACHMENTS.map((attachment) => ({
       contractId: contract.id,
       type: attachment.type,
@@ -135,7 +135,7 @@ export const updateDraftContract = async (
     specialTerms: data.specialTerms,
   });
 
-  const [updated] = await db
+  const [updated] = await getDb()
     .update(contracts)
     .set({
       title: data.title,
@@ -159,7 +159,7 @@ export const updateDraftContract = async (
     .returning();
 
   // 서명자 정보도 함께 따라가야 서명 페이지의 기본값이 어긋나지 않는다.
-  await db
+  await getDb()
     .update(signatures)
     .set({ signerName: data.customerName, signerEmail: data.customerEmail, updatedAt: new Date() })
     .where(and(eq(signatures.contractId, contractId), eq(signatures.status, 'pending')));
@@ -185,7 +185,7 @@ export const markContractSent = async (
   const now = new Date();
   const signToken = options.regenerateToken ? generateSignToken() : undefined;
 
-  const [contract] = await db
+  const [contract] = await getDb()
     .update(contracts)
     .set({
       status: 'sent',
@@ -225,7 +225,7 @@ export const sendContractNotifications = async (
 };
 
 export const cancelContract = async (contractId: string): Promise<Contract> => {
-  const [contract] = await db
+  const [contract] = await getDb()
     .update(contracts)
     .set({ status: 'cancelled', updatedAt: new Date() })
     .where(eq(contracts.id, contractId))
@@ -235,8 +235,8 @@ export const cancelContract = async (contractId: string): Promise<Contract> => {
 
 export const deleteContract = async (contractId: string): Promise<void> => {
   // SQLite 외래키 CASCADE가 PRAGMA에 의존하므로 자식 행을 명시적으로 지운다.
-  await db.delete(signatures).where(eq(signatures.contractId, contractId));
-  await db.delete(contractClauses).where(eq(contractClauses.contractId, contractId));
-  await db.delete(contractAttachments).where(eq(contractAttachments.contractId, contractId));
-  await db.delete(contracts).where(eq(contracts.id, contractId));
+  await getDb().delete(signatures).where(eq(signatures.contractId, contractId));
+  await getDb().delete(contractClauses).where(eq(contractClauses.contractId, contractId));
+  await getDb().delete(contractAttachments).where(eq(contractAttachments.contractId, contractId));
+  await getDb().delete(contracts).where(eq(contracts.id, contractId));
 };

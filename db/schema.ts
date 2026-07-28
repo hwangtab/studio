@@ -132,6 +132,21 @@ export const contractAttachmentsRelations = relations(contractAttachments, ({ on
   }),
 }));
 
+/**
+ * 요청 제한 카운터. 서버리스는 인스턴스가 여러 개라 프로세스 메모리로는 제한이 새기
+ * 때문에, 이미 붙어 있는 Turso를 공유 저장소로 쓴다(관리자 로그인은 빈도가 매우 낮아
+ * 전용 Redis를 둘 만한 부하가 아니다).
+ */
+export const rateLimits = sqliteTable('rate_limits', {
+  /** 제한 대상 식별자 — 예: `admin_login:ip:1.2.3.4` */
+  key: text('key').primaryKey(),
+  count: integer('count').notNull(),
+  /** 현재 창이 끝나는 시각 (epoch seconds). 지나면 카운터를 새로 시작한다. */
+  expiresAt: integer('expires_at').notNull(),
+});
+
+export type RateLimit = typeof rateLimits.$inferSelect;
+
 export type Contract = typeof contracts.$inferSelect;
 export type NewContract = typeof contracts.$inferInsert;
 export type Signature = typeof signatures.$inferSelect;

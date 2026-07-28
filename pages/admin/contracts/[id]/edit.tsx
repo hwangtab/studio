@@ -7,7 +7,7 @@ import ContractForm, {
   toContractPayload,
   type ContractFormValues,
 } from '../../../../components/admin/ContractForm';
-import { db } from '../../../../db/client';
+import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { getEffectiveStatus, isActionAllowed } from '../../../../lib/contracts/status';
 import type { ValidationError } from '../../../../lib/contracts/validation';
@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps<EditContractPageProps> = asy
     return { notFound: true };
   }
 
-  const contract = await db.query.contracts
+  const contract = await getDb().query.contracts
     .findFirst({ where: (contracts, { eq }) => eq(contracts.id, id) })
     .catch(() => null);
 

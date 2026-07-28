@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { db } from '../../../../db/client';
+import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { generateContractPdf } from '../../../../lib/contracts/pdf';
 import { buildRulesContent } from '../../../../lib/contracts/template';
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const contract = await db.query.contracts.findFirst({
+    const contract = await getDb().query.contracts.findFirst({
       where: (contractsTable, { eq }) => eq(contractsTable.id, id),
       with: { signatures: true, contractClauses: true, contractAttachments: true },
     });

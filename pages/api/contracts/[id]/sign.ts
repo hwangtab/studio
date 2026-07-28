@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { waitUntil } from '@vercel/functions';
 import { and, eq } from 'drizzle-orm';
 
-import { db } from '../../../../db/client';
+import { getDb } from '../../../../db/client';
 import { contractAttachments, contractClauses, contracts, signatures } from '../../../../db/schema';
 import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
 import { serializeContract } from '../../../../lib/contracts/serialize';
@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const agreedIds = new Set(agreements as string[]);
 
   try {
-    const contract = await db.query.contracts.findFirst({
+    const contract = await getDb().query.contracts.findFirst({
       where: (contractsTable, { eq: equals, and: both }) =>
         both(equals(contractsTable.id, id), equals(contractsTable.signToken, token)),
       with: { signatures: true, contractClauses: true, contractAttachments: true },
@@ -98,7 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     const signatureWrite = pendingSignature
-      ? db
+      ? getDb()
           .update(signatures)
           .set({
             status: 'signed',
@@ -109,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             updatedAt: now,
           })
           .where(eq(signatures.id, pendingSignature.id))
-      : db.insert(signatures).values({
+      : getDb().insert(signatures).values({
           contractId: contract.id,
           signerName: contract.customerName,
           signerEmail: contract.customerEmail,
@@ -121,17 +121,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           userAgent,
         });
 
-    await db.batch([
+    await getDb().batch([
       signatureWrite,
-      db
+      getDb()
         .update(contractClauses)
         .set({ agreedAt: now })
         .where(eq(contractClauses.contractId, contract.id)),
-      db
+      getDb()
         .update(contractAttachments)
         .set({ agreedAt: now })
         .where(eq(contractAttachments.contractId, contract.id)),
-      db
+      getDb()
         .update(contracts)
         .set({
           status: 'signed',
@@ -145,7 +145,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent'))),
     ]);
 
-    const signedContract = await db.query.contracts.findFirst({
+    const signedContract = await getDb().query.contracts.findFirst({
       where: (contractsTable, { eq: equals }) => equals(contractsTable.id, contract.id),
     });
 
