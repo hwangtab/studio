@@ -4,7 +4,7 @@ import type {
   ContractClause,
   Signature,
 } from '../../db/schema';
-import { getEffectiveStatus } from './status';
+import { getEffectiveStatus, type ContractStatus } from './status';
 import { buildSignUrl } from './token';
 
 type SerializeValue<V> = V extends Date ? string : V extends Date | null ? string | null : V;
@@ -44,17 +44,30 @@ export const serializeContract = (contract: Contract, now: Date = new Date()): S
 };
 
 export interface AdminSerializedContract extends SerializedContract {
-  /** 관리자가 고객에게 전달할 서명 링크. 서명 전(sent/expired) 상태에서만 의미가 있다. */
+  /**
+   * 관리자가 고객에게 전달할 서명 링크.
+   *
+   * 서명이 끝났거나 취소된 계약에서는 빈 문자열이다 — 링크는 토큰을 그대로 담고 있어
+   * 넘길 이유가 없는 상태까지 관리자 화면 HTML에 실어 둘 필요가 없다.
+   */
   signUrl: string;
 }
+
+const SIGN_URL_STATUSES = new Set<ContractStatus>(['draft', 'sent', 'expired']);
 
 export const serializeContractForAdmin = (
   contract: Contract,
   now: Date = new Date(),
-): AdminSerializedContract => ({
-  ...serializeContract(contract, now),
-  signUrl: buildSignUrl(contract.id, contract.signToken),
-});
+): AdminSerializedContract => {
+  const serialized = serializeContract(contract, now);
+
+  return {
+    ...serialized,
+    signUrl: SIGN_URL_STATUSES.has(serialized.status)
+      ? buildSignUrl(contract.id, contract.signToken)
+      : '',
+  };
+};
 
 export const serializeSignature = (signature: Signature): SerializedSignature => ({
   ...signature,

@@ -40,6 +40,17 @@ const parseDate = (value: string): Date | null => {
   return Number.isNaN(date.getTime()) ? null : date;
 };
 
+/**
+ * 한 줄 입력에 섞이면 안 되는 문자.
+ *
+ * 줄바꿈은 계약서 표의 셀 안에서 <br>로 살아남아, 이름 한 칸에 "홍길동 / 보증금 면제
+ * 확정" 같은 문구를 두 줄로 심을 수 있다(파이프를 막아도 남는 우회 경로). 제로폭
+ * 문자는 눈에 보이지 않아 동명이인 위장에 쓰이고, 그 밖의 제어문자는 이메일 제목과
+ * 로그를 깨뜨린다.
+ */
+const CONTROL_CHARS =
+  /[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028\u2029\u202A-\u202E\uFEFF]/;
+
 export const validateCreateContractPayload = (
   payload: Record<string, unknown>,
 ): ValidationResult => {
@@ -55,6 +66,10 @@ export const validateCreateContractPayload = (
     const trimmed = value.trim();
     if (trimmed.length > maxLength) {
       push(field, `${maxLength}자 이내로 입력해 주세요.`);
+      return undefined;
+    }
+    if (CONTROL_CHARS.test(trimmed)) {
+      push(field, '줄바꿈이나 보이지 않는 문자는 사용할 수 없습니다.');
       return undefined;
     }
     return trimmed;
@@ -141,6 +156,9 @@ export const validateCreateContractPayload = (
         push('specialTerms', `특약사항은 최대 ${MAX_SPECIAL_TERMS}개까지 입력할 수 있습니다.`);
       } else if (terms.some((term) => term.length > MAX_SPECIAL_TERM_LENGTH)) {
         push('specialTerms', `각 특약사항은 ${MAX_SPECIAL_TERM_LENGTH}자 이내로 입력해 주세요.`);
+      } else if (terms.some((term) => CONTROL_CHARS.test(term))) {
+        // 특약도 계약서 표의 한 칸에 들어간다 — 다른 한 줄 입력과 같은 규칙을 적용한다.
+        push('specialTerms', '줄바꿈이나 보이지 않는 문자는 사용할 수 없습니다.');
       } else if (terms.length > 0) {
         specialTerms = terms;
       }

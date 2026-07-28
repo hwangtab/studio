@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { waitUntil } from '@vercel/functions';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../../../db/client';
 import { contractAttachments, contractClauses, contracts, signatures } from '../../../../db/schema';
@@ -97,70 +97,65 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       (signature) => signature.signerRole === 'customer' && signature.status === 'pending',
     );
 
-    /**
-     * 상태 전이를 먼저 원자적으로 선점한다.
-     *
-     * 위에서 상태를 확인한 뒤 쓰기까지는 틈이 있어(TOCTOU) 동시에 들어온 두 요청이 모두
-     * 검사를 통과할 수 있다. 서명 데이터를 먼저 쓰면 늦게 도착한 요청이 이미 확정된
-     * 서명 이미지·시각·IP를 덮어쓴다 — 토큰을 아는 제3자가 남의 서명을 갈아치울 수 있고
-     * 확인 메일과 PDF도 두 번 나간다.
-     *
-     * UPDATE ... WHERE status = 'sent' 는 단일 원자 연산이라 동시에 몇 개가 오든 정확히
-     * 하나만 행을 바꾼다. 그 하나만 서명을 기록할 자격을 얻는다.
-     */
-    const claimed = await getDb()
-      .update(contracts)
-      .set({
-        status: 'signed',
-        signedAt: now,
-        signTokenUsedAt: now,
-        rulesAgreed: true,
-        rulesAgreedAt: now,
-        updatedAt: now,
-      })
-      .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent')))
-      .returning({ id: contracts.id });
-
-    if (claimed.length === 0) {
+    // 서명 대기 행이 없다면 이미 처리됐거나 데이터가 어긋난 상태다. 새로 만들지 않는다
+    // — 조건 없는 삽입은 중복 서명 기록을 남기는 유일한 구멍이 된다.
+    if (!pendingSignature) {
       return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
     }
 
-    const signatureWrite = pendingSignature
-      ? getDb()
-          .update(signatures)
-          .set({
-            status: 'signed',
-            signedAt: now,
-            signatureData,
-            ipAddress,
-            userAgent,
-            updatedAt: now,
-          })
-          // 선점에 성공했더라도 서명 행이 다른 경로로 확정됐을 수 있으니 조건을 함께 건다.
-          .where(and(eq(signatures.id, pendingSignature.id), eq(signatures.status, 'pending')))
-      : getDb().insert(signatures).values({
-          contractId: contract.id,
-          signerName: contract.customerName,
-          signerEmail: contract.customerEmail,
-          signerRole: 'customer',
+    /**
+     * 서명 확정에 필요한 쓰기를 하나의 트랜잭션으로 묶는다.
+     *
+     * 두 가지를 동시에 만족해야 한다.
+     *
+     * 하나는 중복 방지다. 상태를 확인한 뒤 쓰기까지는 틈이 있어(TOCTOU) 동시에 들어온
+     * 요청이 모두 검사를 통과할 수 있다. 조건 없이 쓰면 늦게 도착한 요청이 이미 확정된
+     * 서명 이미지·시각·IP를 덮어쓴다. 그래서 모든 UPDATE에 "아직 처리 전"이라는 조건을
+     * 걸고, 실제로 몇 행이 바뀌었는지로 판정한다.
+     *
+     * 다른 하나는 원자성이다. 선점과 서명 기록을 나눠 실행하면 그 사이에서 실패했을 때
+     * 서명 없는 signed 계약이 남고, 재시도는 "이미 서명됨"으로 막혀 복구할 수 없다.
+     * batch는 트랜잭션이라 전부 반영되거나 전부 취소된다.
+     */
+    const [contractResult, signatureResult] = await getDb().batch([
+      getDb()
+        .update(contracts)
+        .set({
+          status: 'signed',
+          signedAt: now,
+          signTokenUsedAt: now,
+          rulesAgreed: true,
+          rulesAgreedAt: now,
+          updatedAt: now,
+        })
+        .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent'))),
+      getDb()
+        .update(signatures)
+        .set({
           status: 'signed',
           signedAt: now,
           signatureData,
           ipAddress,
           userAgent,
-        });
-
-    await getDb().batch([
-      signatureWrite,
+          updatedAt: now,
+        })
+        .where(and(eq(signatures.id, pendingSignature.id), eq(signatures.status, 'pending'))),
+      // 동의 시각은 최초 서명 때만 남긴다(재실행이 감사 기록을 밀어내지 않도록).
       getDb()
         .update(contractClauses)
         .set({ agreedAt: now })
-        .where(eq(contractClauses.contractId, contract.id)),
+        .where(and(eq(contractClauses.contractId, contract.id), isNull(contractClauses.agreedAt))),
       getDb()
         .update(contractAttachments)
         .set({ agreedAt: now })
-        .where(eq(contractAttachments.contractId, contract.id)),
+        .where(
+          and(eq(contractAttachments.contractId, contract.id), isNull(contractAttachments.agreedAt)),
+        ),
     ]);
+
+    if (contractResult.rowsAffected === 0 || signatureResult.rowsAffected === 0) {
+      return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
+    }
 
     const signedContract = await getDb().query.contracts.findFirst({
       where: (contractsTable, { eq: equals }) => equals(contractsTable.id, contract.id),

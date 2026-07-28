@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { lte, sql } from 'drizzle-orm';
+import { eq, lte, sql } from 'drizzle-orm';
 import type { NextApiRequest } from 'next';
 
 import { getDb } from '../../db/client';
@@ -80,5 +80,23 @@ export const checkAdminLoginRateLimit = async (req: NextApiRequest): Promise<boo
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Falling back to in-memory counter:', error);
     return checkInMemory(key, nowSeconds);
+  }
+};
+
+/**
+ * 로그인에 성공하면 카운터를 지운다.
+ *
+ * 지우지 않으면 실패가 쌓인 창 안에서는 정상 로그인도 한도를 채워 나가, 비밀번호를
+ * 아는 관리자가 자기 시스템에서 잠긴다. 공유 IP(NAT)에서는 남이 흘린 실패까지 얹히므로
+ * 더 쉽게 발생한다. 성공은 "이 주체는 공격자가 아니다"라는 증거이므로 창을 닫아 준다.
+ */
+export const resetAdminLoginRateLimit = async (req: NextApiRequest): Promise<void> => {
+  const key = getSubjectKey(req);
+  memoryStore.delete(key);
+
+  try {
+    await getDb().delete(rateLimits).where(eq(rateLimits.key, key));
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Failed to reset counter after login:', error);
   }
 };

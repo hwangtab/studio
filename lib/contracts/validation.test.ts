@@ -139,6 +139,42 @@ describe('계약 생성 페이로드 검증', () => {
     ).toContain('specialTerms');
   });
 
+  describe('한 줄 입력의 제어문자 차단', () => {
+    // 파이프를 막아도 줄바꿈이 <br>로 살아남아 표 한 칸에 문구를 심을 수 있었다.
+    it.each([
+      ['줄바꿈', '홍길동\n보증금 면제 확정'],
+      ['CRLF', '홍길동\r\n위약금 없음'],
+      ['탭', '홍길동\t\t승인됨'],
+      ['제로폭 문자', '홍길​동'],
+      ['ANSI 제어문자', '홍길동[31m'],
+      ['줄 구분자', '홍길동 승인'],
+    ])('이름의 %s를 거부한다', (_label, name) => {
+      expect(errorFields({ ...validPayload(), customerName: name })).toContain('customerName');
+    });
+
+    it('주소·호실 등 다른 한 줄 항목에도 같은 규칙이 적용된다', () => {
+      expect(errorFields({ ...validPayload(), customerAddress: '서울시\n| 특약 | 없음 |' })).toContain(
+        'customerAddress',
+      );
+      expect(errorFields({ ...validPayload(), roomNumber: 'A\n관리자동' })).toContain('roomNumber');
+    });
+
+    it('특약사항의 제어문자도 거부한다', () => {
+      expect(
+        errorFields({ ...validPayload(), specialTerms: ['정상 특약', '위약금\n면제'] }),
+      ).toContain('specialTerms');
+    });
+
+    it('정상적인 한글·공백·기호는 그대로 통과한다', () => {
+      const result = validateCreateContractPayload({
+        ...validPayload(),
+        customerName: '홍 길동',
+        customerAddress: '서울특별시 은평구 대조동 84-3, 3층',
+      });
+      expect(result.ok).toBe(true);
+    });
+  });
+
   it('지나치게 긴 이름은 거부한다', () => {
     expect(errorFields({ ...validPayload(), customerName: '가'.repeat(61) })).toContain(
       'customerName',
