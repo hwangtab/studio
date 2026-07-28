@@ -1,5 +1,5 @@
 import type { Locale } from '../lib/i18n';
-import { studioOperator } from './siteConfig';
+import { getOperatorProfileUrlById, studioOperator } from './siteConfig';
 
 // 저자 프로필 페이지(/[locale]/author) 콘텐츠 단일 소스.
 // 정본 사실만 사용한다: studioOperator(수상·외부 프로필, data/siteConfig.ts)와
@@ -78,10 +78,15 @@ export const getAuthorProfile = (locale: Locale) => ({
       en: 'Producer of "Gentrification" (2016). Also nominated for Best Folk Album the same year.',
     }),
   },
-  // studioOperator.sameAs 순서와 대응(0: ggac.kr, 1: Bugs) — siteConfig가 단일 소스.
+  // URL은 siteConfig.operatorProfiles가 단일 소스 — 여기선 라벨만 붙인다.
+  // id로 찾으므로 siteConfig에서 순서가 바뀌어도 어긋나지 않는다.
   externalProfiles: [
-    { label: t(locale, { ko: 'ggac.kr 아티스트 프로필', en: 'Artist profile on ggac.kr' }), url: studioOperator.sameAs[0] },
-    { label: t(locale, { ko: '벅스(Bugs) 아티스트 페이지', en: 'Artist page on Bugs Music' }), url: studioOperator.sameAs[1] },
+    { label: t(locale, { ko: 'ggac.kr 아티스트 프로필', en: 'Artist profile on ggac.kr' }), url: getOperatorProfileUrlById('ggac') },
+    { label: t(locale, { ko: '벅스(Bugs) 아티스트 페이지', en: 'Artist page on Bugs Music' }), url: getOperatorProfileUrlById('bugs') },
+    { label: t(locale, { ko: 'Apple Music 아티스트 페이지', en: 'Artist page on Apple Music' }), url: getOperatorProfileUrlById('appleMusic') },
+    { label: t(locale, { ko: '멜론 아티스트 페이지', en: 'Artist page on Melon' }), url: getOperatorProfileUrlById('melon') },
+    { label: t(locale, { ko: '지니 아티스트 페이지', en: 'Artist page on Genie' }), url: getOperatorProfileUrlById('genie') },
+    { label: t(locale, { ko: '네이버 바이브 아티스트 페이지', en: 'Artist page on NAVER VIBE' }), url: getOperatorProfileUrlById('vibe') },
   ],
   // 제3자 보도 — 수상 이력을 사이트 밖에서 검증할 수 있는 근거. siteConfig가 단일 소스.
   pressCoverage: studioOperator.pressCoverage.map((article) => ({

@@ -504,7 +504,10 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "황경하",
-            "releaseDate": "2025-01-15",
+            // 2026-07-28 정정: 2025-01-15로 적혀 있었으나 Apple Music(iTunes 공식 API)·Bugs·
+            // 멜론·지니·네이버 VIBE가 모두 2024-08-05로 표기한다. Apple Music 앨범아트 경로의
+            // UPC(888618381700)가 위 image 필드와 동일해 같은 발매물임이 확정된다.
+            "releaseDate": "2024-08-05",
             "label": "Studio NOL",
             "credits": {
                 "engineer": "황경하 (전 과정 총괄)",
