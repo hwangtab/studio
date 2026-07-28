@@ -89,6 +89,37 @@ describe('계약 생성 페이로드 검증', () => {
     });
   });
 
+  describe('시작일 범위', () => {
+    // 연도 오타(2026→2020)가 통과하면 이미 끝난 계약이 만들어지고, 보관 기간 계산에도
+    // 곧바로 걸린다. 실무에서 있을 법한 범위만 받는다.
+    const shift = (months: number, extraDays = 0): string => {
+      const d = new Date();
+      d.setMonth(d.getMonth() + months);
+      d.setDate(d.getDate() + extraDays);
+      return d.toISOString().slice(0, 10);
+    };
+
+    it('몇 년 전 시작일은 거부한다', () => {
+      expect(
+        errorFields({ ...validPayload(), startDate: shift(-72), endDate: shift(-66) }),
+      ).toContain('startDate');
+    });
+
+    it('먼 미래 시작일도 거부한다', () => {
+      expect(
+        errorFields({ ...validPayload(), startDate: shift(60), endDate: shift(66) }),
+      ).toContain('startDate');
+    });
+
+    it('가까운 과거는 허용한다 (지난 계약의 뒤늦은 문서화)', () => {
+      expect(errorFields({ ...validPayload(), startDate: shift(-2), endDate: shift(4) })).toEqual([]);
+    });
+
+    it('가까운 미래는 허용한다 (선계약)', () => {
+      expect(errorFields({ ...validPayload(), startDate: shift(3), endDate: shift(9) })).toEqual([]);
+    });
+  });
+
   describe('최소 계약 기간', () => {
     it('1개월 미만은 거부한다', () => {
       expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-02' })).toContain('endDate');

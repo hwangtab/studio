@@ -52,6 +52,16 @@ const normalizeRoomNumber = (value: string): string => value.replace(/\s+/g, '')
 /** 계약서에 적히는 최소 이용 기간. 운영상 6개월 이상을 권하지만 강제하지는 않는다. */
 export const MIN_CONTRACT_MONTHS = 1;
 
+/**
+ * 시작일로 받아들이는 범위.
+ *
+ * 지난 계약을 뒤늦게 문서화하는 일은 있으므로 과거를 완전히 막지는 않는다. 다만 연도를
+ * 잘못 적으면(2026을 2025로) 아무 저항 없이 통과해, 계약 기간이 이미 끝난 문서가
+ * 만들어진다. 실무에서 있을 법한 범위만 남긴다.
+ */
+const MAX_BACKDATE_MONTHS = 12;
+const MAX_FUTURE_MONTHS = 24;
+
 /** 말일을 넘기지 않고 개월 수를 더한다 (1/31 + 1개월 = 2/28). */
 const addMonths = (date: Date, months: number): Date => {
   const result = new Date(date);
@@ -135,6 +145,18 @@ export const validateCreateContractPayload = (
 
   if (startDateRaw && !startDate) push('startDate', '올바른 날짜가 아닙니다.');
   if (endDateRaw && !endDate) push('endDate', '올바른 날짜가 아닙니다.');
+
+  if (startDate) {
+    const today = new Date();
+    const earliest = addMonths(today, -MAX_BACKDATE_MONTHS);
+    const latest = addMonths(today, MAX_FUTURE_MONTHS);
+
+    if (startDate.getTime() < earliest.getTime()) {
+      push('startDate', `시작일이 너무 과거입니다. 연도를 확인해 주세요.`);
+    } else if (startDate.getTime() > latest.getTime()) {
+      push('startDate', `시작일이 너무 먼 미래입니다. 연도를 확인해 주세요.`);
+    }
+  }
 
   if (startDate && endDate) {
     if (endDate.getTime() <= startDate.getTime()) {

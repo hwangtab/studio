@@ -318,7 +318,17 @@ export default function ContractForm({
             />
           </Field>
 
-          <Field label="납부일" htmlFor="paymentDay" error={errorMap.paymentDay} hint="매월 며칠(선불)">
+          <Field
+            label="납부일"
+            htmlFor="paymentDay"
+            error={errorMap.paymentDay}
+            // 29~31일은 없는 달이 있어 계약서에 그대로 적히면 이행 시점이 모호해진다.
+            hint={
+              Number(values.paymentDay) >= 29
+                ? '29~31일은 없는 달이 있습니다. 그런 달은 말일에 납부하게 됩니다.'
+                : '매월 며칠(선불)'
+            }
+          >
             <input
               id="paymentDay"
               inputMode="numeric"

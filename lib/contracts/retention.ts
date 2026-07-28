@@ -1,8 +1,9 @@
 import { del } from '@vercel/blob';
-import { and, eq, isNull, lt } from 'drizzle-orm';
+import { and, eq, inArray, isNull, lt } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { contracts, signatures } from '../../db/schema';
+import type { ContractStatus } from './status';
 
 /**
  * 계약서 제12조가 약속한 보관 기간. 계약 종료일로부터 이 기간이 지나면 개인정보를
@@ -40,7 +41,26 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
   const targets = await getDb()
     .select({ id: contracts.id, pdfUrl: contracts.pdfUrl })
     .from(contracts)
-    .where(and(lt(contracts.endDate, boundary), isNull(contracts.purgedAt)));
+    .where(
+      and(
+        lt(contracts.endDate, boundary),
+        /**
+         * 기록을 만든 지도 그만큼 지났어야 한다.
+         *
+         * 종료일만 보면, 지난 계약을 뒤늦게 문서화하거나 연도를 잘못 적어 만든 계약이
+         * 만들자마자 파기 대상이 된다. 보관 기간은 "우리가 이 정보를 가지고 있던 기간"이지
+         * 계약서에 적힌 날짜가 아니다.
+         */
+        lt(contracts.createdAt, boundary),
+        /**
+         * 종결된 계약만 파기한다. draft는 아직 계약이 아니라 작성 중인 문서이고, sent는
+         * 서명을 기다리는 중이다 — 진행 중인 건의 이름과 연락처를 지우면 그 계약을 더는
+         * 이어갈 수 없다.
+         */
+        inArray(contracts.status, ['signed', 'expired', 'cancelled'] satisfies ContractStatus[]),
+        isNull(contracts.purgedAt),
+      ),
+    );
 
   let purged = 0;
   let failed = 0;
