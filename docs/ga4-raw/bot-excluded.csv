@@ -1,25 +1,24 @@
 screen_resolution,operating_system,device,sessions,engagement_rate,avg_session_sec
-"412x732","(not set)","desktop",1009,0.771,0.0
-"393x851","Android","mobile",917,0.974,0.0
-"1280x1200","Windows","desktop",399,0.734,0.5
-"1512x982","Linux","desktop",52,1.000,28.9
-"1200x1800","Android","mobile",18,1.000,6.2
-"1280x1024","Linux","desktop",15,0.000,0.0
+"412x732","(not set)","desktop",1017,0.767,0.0
+"393x851","Android","mobile",1011,0.886,0.0
+"1280x1200","Windows","desktop",364,0.832,0.5
+"1512x982","Linux","desktop",81,0.889,31.7
+"1200x1800","Android","mobile",20,1.000,8.0
 "1600x1200","Android","mobile",15,1.000,3.5
-"360x640","Android","mobile",15,0.000,0.0
-"800x600","Linux","desktop",15,0.533,6.2
-"800x600","Macintosh","desktop",12,0.250,0.3
-"1920x1080","Windows","desktop",8,0.750,21.2
-"384x832","Android","mobile",7,1.000,324.4
-"800x600","Android","mobile",7,0.286,8.4
+"800x600","Linux","desktop",12,0.667,7.7
+"800x600","Macintosh","desktop",11,0.273,0.4
+"1920x1080","Windows","desktop",9,0.667,19.7
+"384x832","Android","mobile",8,0.875,283.8
 "800x600","(not set)","desktop",6,0.000,0.0
+"800x600","Android","mobile",5,0.400,10.0
 "1280x900","Linux","desktop",4,1.000,880.2
 "1280x900","Macintosh","desktop",4,1.000,1374.8
 "1280x900","Windows","desktop",4,1.000,1643.7
 "1280x960","Macintosh","desktop",4,1.000,2.7
+"1800x1125","Windows","desktop",4,0.750,0.0
 "1920x890","Linux","desktop",4,1.000,0.4
 "1800x1125","Macintosh","desktop",3,1.000,0.0
-"1800x1125","Windows","desktop",3,1.000,0.0
+"390x844","iOS","mobile",3,0.667,64.8
 "800x600","Windows","desktop",3,1.000,0.0
 "1280x1280","Linux","desktop",2,1.000,18.6
 "1512x982","Macintosh","desktop",2,1.000,471.4
@@ -35,9 +34,13 @@ screen_resolution,operating_system,device,sessions,engagement_rate,avg_session_s
 "1600x1600","Windows","desktop",1,1.000,0.4
 "1600x900","Macintosh","desktop",1,1.000,1411.8
 "2560x1440","Macintosh","desktop",1,1.000,59.9
+"2560x1440","Windows","desktop",1,1.000,12.6
+"3072x1728","Linux","desktop",1,1.000,77.9
 "360x760","Android","mobile",1,1.000,0.0
 "385x811","Android","mobile",1,1.000,0.0
 "390x664","iOS","mobile",1,1.000,0.0
+"402x874","iOS","mobile",1,1.000,73.1
+"412x732","","desktop",1,0.000,0.0
 "428x926","iOS","mobile",1,1.000,0.0
 "430x739","iOS","mobile",1,1.000,0.0
 "468x1014","Android","mobile",1,1.000,969.5
