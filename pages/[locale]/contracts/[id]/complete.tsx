@@ -10,6 +10,8 @@ import { serializeContract, type SerializedContract } from '../../../../lib/cont
 interface CompletePageProps {
   locale: string;
   contract: SerializedContract;
+  /** 계약서를 다시 받는 주소. 토큰이 실려 있어 본인만 접근할 수 있다. */
+  downloadUrl: string;
 }
 
 export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (context) => {
@@ -30,7 +32,13 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
       return { notFound: true };
     }
 
-    return { props: { locale, contract: serializeContract(contract) } };
+    return {
+      props: {
+        locale,
+        contract: serializeContract(contract),
+        downloadUrl: `/api/contracts/${contract.id}/download?token=${encodeURIComponent(token)}`,
+      },
+    };
   } catch (error: unknown) {
     console.error('[contracts/[id]/complete] Failed to load contract:', error);
     return { notFound: true };
@@ -46,7 +54,11 @@ const formatDate = (date: string | null): string => {
   });
 };
 
-export default function ContractCompletePage({ locale, contract }: CompletePageProps) {
+export default function ContractCompletePage({
+  locale,
+  contract,
+  downloadUrl,
+}: CompletePageProps) {
   const signed = contract.status === 'signed';
 
   // 서명 전에 이 주소로 들어오면(북마크·뒤로가기 등) 완료됐다고 오해하기 쉽다.
@@ -123,12 +135,20 @@ export default function ContractCompletePage({ locale, contract }: CompletePageP
             </dl>
           </div>
 
-          <p className="text-sm text-gray-500 mb-6">
-            메일이 오지 않았다면 스팸함을 확인하시거나 010-4255-7893으로 문의해 주세요.
+          {/* 메일이 유실되거나 첨부가 열리지 않는 경우가 있어, 이 자리에서 바로 받을 수 있게 한다. */}
+          <a href={downloadUrl} className="block">
+            <Button size="lg" fullWidth>
+              계약서 PDF 내려받기
+            </Button>
+          </a>
+
+          <p className="text-sm text-gray-500 mt-4 mb-6">
+            같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나
+            010-4255-7893으로 문의해 주세요.
           </p>
 
           <Link href={`/${locale}`} passHref>
-            <Button size="lg" fullWidth>
+            <Button size="lg" variant="outline" fullWidth>
               스튜디오 홈으로
             </Button>
           </Link>

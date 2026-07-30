@@ -1,6 +1,8 @@
-import { sendEmail, buildEmailHtml } from '../email/resend';
+import { sendEmail } from '../email/resend';
 import type { Contract } from '../../db/schema';
+import { buildContractEmailHtml, strong, type ContractEmailRow } from './email-template';
 import { escapeHtml } from './html-escape';
+import { IDENTITY_DIGITS } from './identity';
 import { SIGN_TOKEN_TTL_DAYS } from './status';
 
 const OPERATOR_EMAIL = process.env.CONTRACT_OPERATOR_EMAIL || 'hwangtab@gmail.com';
@@ -13,14 +15,26 @@ const formatDate = (date: string | Date | null): string => {
   return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
-const CELL = 'padding: 12px; border-bottom: 1px solid #e5e5e5;';
-const LABEL_CELL = `${CELL} background: #f9f9f9; width: 120px;`;
+/**
+ * 표에 들어가는 기간은 짧은 형식으로 쓴다.
+ *
+ * "2026년 9월 1일 ~ 2027년 3월 1일"은 좁은 화면의 표 셀에서 "2027년 3월 / 1일"로 쪼개져
+ * 날짜를 잘못 읽기 쉽다. 계약 기간은 오독이 곧 분쟁이라 한 줄에 담기는 형태가 낫다.
+ */
+const compactDate = (date: Date): string =>
+  `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 
-const row = (label: string, value: string): string =>
-  `<tr><td style="${LABEL_CELL}">${escapeHtml(label)}</td><td style="${CELL}">${escapeHtml(value)}</td></tr>`;
+const period = (contract: Contract): string =>
+  `${compactDate(contract.startDate)} ~ ${compactDate(contract.endDate)}`;
 
-const table = (rows: string): string =>
-  `<table style="width: 100%; border-collapse: collapse; margin: 24px 0; border: 1px solid #e5e5e5;">${rows}</table>`;
+/** 계약 조건은 메일 본문에도 그대로 적는다 — 링크를 누르기 전에 확인할 수 있어야 한다. */
+const contractRows = (contract: Contract): ContractEmailRow[] => [
+  { label: '이용 호실', value: `${contract.roomNumber}호` },
+  { label: '계약 기간', value: period(contract) },
+  { label: '월 이용료', value: `${formatCurrency(contract.monthlyRent)}원`, emphasis: true },
+  { label: '보증금', value: `${formatCurrency(contract.depositAmount)}원 (계약 시 면제)` },
+  { label: '납부일', value: `매월 ${contract.paymentDay}일 선불` },
+];
 
 export interface SendContractEmailResult {
   ok: boolean;
@@ -32,53 +46,45 @@ export const sendContractCreatedEmail = async (
   contract: Contract,
   signUrl: string,
 ): Promise<SendContractEmailResult> => {
-  const subject = `[Studio NOL] ${contract.customerName}님, 음악연습실 이용계약서 서명 요청`;
-
-  // signUrl은 우리가 만든 값이지만 href·본문에 들어가므로 동일하게 이스케이프한다.
-  const safeUrl = escapeHtml(signUrl);
-
-  const body = `
-    <p>${escapeHtml(contract.customerName)}님, 안녕하세요. 스튜디오 놀입니다.</p>
-    <p>아래 내용 확인 후 계약서 서명을 완료해 주세요.</p>
-    ${table(
-      row('계약 기간', `${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`) +
-        row('이용 호실', `${contract.roomNumber}호`) +
-        row('월 이용료', `월 ${formatCurrency(contract.monthlyRent)}원`) +
-        row('보증금', `${formatCurrency(contract.depositAmount)}원 (계약 시 면제)`),
-    )}
-    <div style="text-align: center; margin: 32px 0;">
-      <a href="${safeUrl}" style="display: inline-block; padding: 14px 32px; background: #111; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">계약서 서명하기</a>
-    </div>
-    <p style="font-size: 13px; color: #666;">
-      이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다. 기한이 지나면 운영자에게 재발송을 요청해 주세요.<br />
-      버튼이 눌리지 않으면 아래 주소를 복사해 브라우저에 붙여 넣으세요.<br />${safeUrl}
-    </p>
-  `;
+  const html = buildContractEmailHtml({
+    heading: '음악연습실 이용계약서 서명 요청',
+    paragraphs: [
+      `${escapeHtml(contract.customerName)}님, 안녕하세요. 스튜디오 놀입니다.`,
+      `아래 계약 조건을 확인하신 뒤 ${strong('계약서 서명하기')}를 눌러 서명을 완료해 주세요.`,
+    ],
+    rows: contractRows(contract),
+    cta: { label: '계약서 서명하기', url: signUrl },
+    notices: [
+      `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다. 기한이 지나면 다시 보내 드립니다.`,
+      `본인 확인을 위해 서명 화면에서 <strong>연락처 뒤 ${IDENTITY_DIGITS}자리</strong>를 입력하게 됩니다.`,
+      '서명이 끝나면 서명본 PDF를 첨부한 확인 메일을 보내 드립니다.',
+    ],
+  });
 
   const text = [
     '[음악연습실 이용계약서 서명 요청]',
     '',
     `${contract.customerName}님, 안녕하세요. 스튜디오 놀입니다.`,
     '',
-    `계약 기간: ${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`,
     `이용 호실: ${contract.roomNumber}호`,
+    `계약 기간: ${period(contract)}`,
     `월 이용료: ${formatCurrency(contract.monthlyRent)}원`,
     `보증금: ${formatCurrency(contract.depositAmount)}원 (계약 시 면제)`,
+    `납부일: 매월 ${contract.paymentDay}일 선불`,
     '',
     `아래 링크에서 계약서를 확인하고 서명해 주세요. (${SIGN_TOKEN_TTL_DAYS}일간 유효)`,
     signUrl,
     '',
+    `서명 화면에서 본인 확인을 위해 연락처 뒤 ${IDENTITY_DIGITS}자리를 입력하게 됩니다.`,
+    '',
+    '스튜디오 놀 · 문의 010-4255-7893',
     '본 메일은 발송 전용입니다.',
   ].join('\n');
 
   return sendEmail({
     to: contract.customerEmail,
-    subject,
-    html: buildEmailHtml({
-      title: '음악연습실 이용계약서 서명 요청',
-      body,
-      footer: '본 메일은 발송 전용입니다.',
-    }),
+    subject: `[스튜디오 놀] ${contract.customerName}님, 음악연습실 이용계약서 서명 요청`,
+    html,
     text,
   });
 };
@@ -86,42 +92,58 @@ export const sendContractCreatedEmail = async (
 export const sendContractSignedEmail = async (
   contract: Contract,
   pdfBuffer?: Buffer,
+  downloadUrl?: string,
 ): Promise<SendContractEmailResult> => {
-  const subject = `[Studio NOL] ${contract.customerName}님, 이용계약서 서명이 완료되었습니다`;
-
-  const body = `
-    <p>${escapeHtml(contract.customerName)}님, 계약서 서명이 정상적으로 완료되었습니다.</p>
-    ${table(
-      row('계약 기간', `${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`) +
-        row('이용 호실', `${contract.roomNumber}호`) +
-        row('월 이용료', `월 ${formatCurrency(contract.monthlyRent)}원`) +
-        row('서명일', formatDate(contract.signedAt)),
-    )}
-    ${pdfBuffer ? '<p>서명이 완료된 계약서를 PDF로 첨부합니다. 보관해 주세요.</p>' : ''}
-  `;
+  const html = buildContractEmailHtml({
+    heading: '계약서 서명이 완료되었습니다',
+    paragraphs: [
+      `${escapeHtml(contract.customerName)}님, 계약서 서명이 정상적으로 접수되었습니다.`,
+      pdfBuffer
+        ? '서명본 계약서를 이 메일에 PDF로 첨부했습니다. 보관해 주세요.'
+        : '서명본 계약서는 아래 버튼에서 받으실 수 있습니다.',
+    ],
+    rows: [
+      ...contractRows(contract),
+      { label: '서명 완료', value: formatDate(contract.signedAt), emphasis: true },
+    ],
+    cta: downloadUrl ? { label: '계약서 PDF 다시 받기', url: downloadUrl } : undefined,
+    notices: [
+      '이용 시작일부터 24시간 상시 이용하실 수 있습니다.',
+      '입금 계좌: 카카오뱅크 3333-12-5480849 (예금주: 황경하 / 스튜디오 놀)',
+      '시설 이용 중 불편한 점이 있으면 언제든 연락해 주세요.',
+    ],
+  });
 
   const text = [
     '[이용계약서 서명 완료]',
     '',
-    `${contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.`,
+    `${contract.customerName}님, 계약서 서명이 정상적으로 접수되었습니다.`,
     '',
-    `계약 기간: ${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`,
     `이용 호실: ${contract.roomNumber}호`,
+    `계약 기간: ${period(contract)}`,
     `월 이용료: ${formatCurrency(contract.monthlyRent)}원`,
-    `서명일: ${formatDate(contract.signedAt)}`,
+    `서명 완료: ${formatDate(contract.signedAt)}`,
     '',
+    pdfBuffer ? '서명본 계약서를 PDF로 첨부했습니다.' : '',
+    downloadUrl ? `계약서 다시 받기: ${downloadUrl}` : '',
+    '',
+    '입금 계좌: 카카오뱅크 3333-12-5480849 (예금주: 황경하 / 스튜디오 놀)',
+    '',
+    '스튜디오 놀 · 문의 010-4255-7893',
     '본 메일은 발송 전용입니다.',
-  ].join('\n');
+  ]
+    .filter((line) => line !== '')
+    .join('\n');
 
   return sendEmail({
     to: contract.customerEmail,
-    subject,
-    html: buildEmailHtml({ title: '이용계약서 서명 완료', body, footer: '본 메일은 발송 전용입니다.' }),
+    subject: `[스튜디오 놀] ${contract.customerName}님, 이용계약서 서명이 완료되었습니다`,
+    html,
     text,
     attachments: pdfBuffer
       ? [
           {
-            filename: `${contract.customerName}_이용계약서.pdf`,
+            filename: `${contract.customerName}_음악연습실_이용계약서.pdf`,
             content: pdfBuffer.toString('base64'),
           },
         ]
@@ -129,24 +151,28 @@ export const sendContractSignedEmail = async (
   });
 };
 
+/** 운영자용. 고객에게 가는 메일과 달리 연락처까지 담아 바로 응대할 수 있게 한다. */
 export const sendOperatorContractNotification = async (
   contract: Contract,
   signed: boolean,
 ): Promise<SendContractEmailResult> => {
   const statusText = signed ? '서명 완료' : '발송 완료 (서명 대기)';
-  const subject = signed
-    ? `[Studio NOL] ${contract.customerName}님 계약서 서명 완료`
-    : `[Studio NOL] ${contract.customerName}님에게 계약서 발송 완료`;
 
-  const body = table(
-    row('이용자', contract.customerName) +
-      row('이메일', contract.customerEmail) +
-      row('연락처', contract.customerPhone) +
-      row('호실', `${contract.roomNumber}호`) +
-      row('계약 기간', `${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`) +
-      row('월 이용료', `${formatCurrency(contract.monthlyRent)}원`) +
-      row('상태', statusText),
-  );
+  const html = buildContractEmailHtml({
+    heading: `계약서 ${statusText}`,
+    paragraphs: [`${escapeHtml(contract.customerName)}님의 계약이 ${statusText} 상태입니다.`],
+    rows: [
+      { label: '이용자', value: contract.customerName, emphasis: true },
+      { label: '이메일', value: contract.customerEmail },
+      { label: '연락처', value: contract.customerPhone },
+      ...contractRows(contract),
+      ...(signed ? [{ label: '서명 완료', value: formatDate(contract.signedAt) }] : []),
+    ],
+    cta: {
+      label: '관리자 화면에서 보기',
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr'}/admin/contracts/${contract.id}`,
+    },
+  });
 
   const text = [
     `계약서 ${statusText}`,
@@ -155,14 +181,15 @@ export const sendOperatorContractNotification = async (
     `이메일: ${contract.customerEmail}`,
     `연락처: ${contract.customerPhone}`,
     `호실: ${contract.roomNumber}호`,
-    `계약 기간: ${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`,
+    `계약 기간: ${period(contract)}`,
     `월 이용료: ${formatCurrency(contract.monthlyRent)}원`,
+    ...(signed ? [`서명 완료: ${formatDate(contract.signedAt)}`] : []),
   ].join('\n');
 
   return sendEmail({
     to: OPERATOR_EMAIL,
-    subject,
-    html: buildEmailHtml({ title: `계약서 ${statusText}`, body }),
+    subject: `[스튜디오 놀] ${contract.customerName}님 계약서 ${statusText}`,
+    html,
     text,
   });
 };

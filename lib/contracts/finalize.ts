@@ -30,6 +30,9 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
       (signature: Signature) => signature.signerRole === 'customer' && signature.status === 'signed',
     ) ?? null;
 
+  // 첨부가 유실되거나 열리지 않는 경우가 있어 메일에도 다시 받는 링크를 넣는다.
+  const downloadUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr'}/api/contracts/${contract.id}/download?token=${encodeURIComponent(contract.signToken)}`;
+
   let pdfBuffer: Buffer | undefined;
 
   try {
@@ -58,7 +61,7 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
 
   try {
     const [customerResult, operatorResult] = await Promise.all([
-      sendContractSignedEmail(contract, pdfBuffer),
+      sendContractSignedEmail(contract, pdfBuffer, downloadUrl),
       sendOperatorContractNotification(contract, true),
     ]);
 

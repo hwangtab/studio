@@ -113,6 +113,36 @@ export const checkIdentityAttemptLimit = async (contractId: string): Promise<boo
   }
 };
 
+/**
+ * 계약서 재발급 제한.
+ *
+ * 보관본이 없으면 Chromium을 띄워 다시 만들어야 해서, 토큰을 아는 쪽이 반복 요청하면
+ * 부담이 된다. 정상적인 이용자가 몇 번 다시 받는 것은 막지 않을 만큼만 허용한다.
+ */
+const DOWNLOAD_LIMIT = 10;
+const DOWNLOAD_WINDOW_SECONDS = 10 * 60;
+
+export const checkDownloadRateLimit = async (contractId: string): Promise<boolean> => {
+  const key = `contract_download:${contractId}`;
+  const nowSeconds = Math.floor(Date.now() / 1000);
+
+  try {
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+
+    const [row] = await getDb()
+      .insert(rateLimits)
+      .values({ key, count: 1, expiresAt: nowSeconds + DOWNLOAD_WINDOW_SECONDS })
+      .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
+      .returning();
+
+    return (row?.count ?? 1) <= DOWNLOAD_LIMIT;
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Download limit unavailable:', error);
+    // 셀 수 없다는 이유로 계약 당사자가 자기 계약서를 못 받게 하지는 않는다.
+    return true;
+  }
+};
+
 /** 본인 확인에 성공하면 시도 기록을 지운다. */
 export const resetIdentityAttempts = async (contractId: string): Promise<void> => {
   try {
