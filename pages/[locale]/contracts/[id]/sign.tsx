@@ -15,6 +15,7 @@ import {
   type SerializedClause,
   type SerializedContract,
 } from '../../../../lib/contracts/serialize';
+import { IDENTITY_DIGITS } from '../../../../lib/contracts/identity';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
@@ -125,6 +126,8 @@ export default function ContractSignPage({
   const pointCountRef = useRef(0);
 
   const [hasSigned, setHasSigned] = useState(false);
+  const [identityDigits, setIdentityDigits] = useState('');
+  const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [agreements, setAgreements] = useState<Record<string, boolean>>({});
   const [showRules, setShowRules] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -134,6 +137,8 @@ export default function ContractSignPage({
     contract !== null &&
     clauses.every((clause) => agreements[clause.id]) &&
     attachments.every((attachment) => agreements[attachment.id]);
+
+  const identityReady = identityDigits.length === IDENTITY_DIGITS && identityConfirmed;
 
   /**
    * 캔버스 해상도를 화면에 보이는 크기에 맞춘다.
@@ -259,6 +264,14 @@ export default function ContractSignPage({
       setSubmitError('모든 동의 항목을 확인해 주세요.');
       return;
     }
+    if (!identityReady) {
+      setSubmitError(
+        identityDigits.length !== IDENTITY_DIGITS
+          ? `연락처 뒤 ${IDENTITY_DIGITS}자리를 입력해 주세요.`
+          : '본인 확인 및 전자서명 방식 동의에 체크해 주세요.',
+      );
+      return;
+    }
     if (!hasSigned) {
       setSubmitError('서명을 완료해 주세요.');
       return;
@@ -278,6 +291,8 @@ export default function ContractSignPage({
           token,
           signatureData: canvas.toDataURL('image/png'),
           agreements: [...clauses.map((c) => c.id), ...attachments.map((a) => a.id)],
+          identityDigits,
+          identityConfirmed,
         }),
       });
 
@@ -430,6 +445,40 @@ export default function ContractSignPage({
               </div>
 
               <div className="mt-10 border-t border-gray-200 pt-8">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">본인 확인</h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  계약서에 적힌 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+                </p>
+
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={IDENTITY_DIGITS}
+                  value={identityDigits}
+                  onChange={(e) =>
+                    setIdentityDigits(e.target.value.replace(/\D/g, '').slice(0, IDENTITY_DIGITS))
+                  }
+                  placeholder={'0'.repeat(IDENTITY_DIGITS)}
+                  aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
+                  className="w-32 text-center tracking-[0.4em] text-lg rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+
+                <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                    checked={identityConfirmed}
+                    onChange={(e) => setIdentityConfirmed(e.target.checked)}
+                  />
+                  <span className="text-gray-700">
+                    본인이 계약 당사자임을 확인하며, 위 계약 내용을 모두 읽고 이해했습니다.
+                    아래 <strong>전자서명</strong>이 자필 서명과 같은 효력을 가지는 데 동의합니다.
+                  </span>
+                </label>
+              </div>
+
+              <div className="mt-10 border-t border-gray-200 pt-8">
                 <h2 className="text-lg font-bold text-gray-900 mb-2">전자서명</h2>
                 <p className="text-sm text-gray-600 mb-4">
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
@@ -470,14 +519,18 @@ export default function ContractSignPage({
                 <Button
                   size="lg"
                   fullWidth
-                  disabled={submitting || !allAgreed || !hasSigned}
+                  disabled={submitting || !allAgreed || !identityReady || !hasSigned}
                   onClick={handleSubmit}
                 >
                   {submitting ? '처리 중...' : '계약서 서명 완료'}
                 </Button>
-                {!submitting && (!allAgreed || !hasSigned) && (
+                {!submitting && (!allAgreed || !identityReady || !hasSigned) && (
                   <p className="mt-3 text-center text-sm text-gray-500">
-                    {!allAgreed ? '모든 동의 항목에 체크해 주세요.' : '서명을 입력해 주세요.'}
+                    {!allAgreed
+                      ? '모든 동의 항목에 체크해 주세요.'
+                      : !identityReady
+                        ? '본인 확인을 완료해 주세요.'
+                        : '서명을 입력해 주세요.'}
                   </p>
                 )}
               </div>

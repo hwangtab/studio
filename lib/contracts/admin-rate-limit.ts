@@ -84,6 +84,45 @@ export const checkAdminLoginRateLimit = async (req: NextApiRequest): Promise<boo
 };
 
 /**
+ * 서명 본인 확인 시도 제한.
+ *
+ * 뒷자리는 네 자리뿐이라 제한이 없으면 링크를 아는 사람이 전부 대입해 볼 수 있다. 다만
+ * 오타로 정당한 고객이 막히면 계약이 멈추므로, 창을 짧게 두고 횟수는 넉넉히 잡는다.
+ */
+const IDENTITY_LIMIT = 10;
+const IDENTITY_WINDOW_SECONDS = 15 * 60;
+
+export const checkIdentityAttemptLimit = async (contractId: string): Promise<boolean> => {
+  const key = `sign_identity:${contractId}`;
+  const nowSeconds = Math.floor(Date.now() / 1000);
+
+  try {
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+
+    const [row] = await getDb()
+      .insert(rateLimits)
+      .values({ key, count: 1, expiresAt: nowSeconds + IDENTITY_WINDOW_SECONDS })
+      .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
+      .returning();
+
+    return (row?.count ?? 1) <= IDENTITY_LIMIT;
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Identity attempt limit unavailable:', error);
+    // 셀 수 없다는 이유로 정당한 서명을 막지는 않는다. 뒷자리 대조 자체는 그대로 남는다.
+    return true;
+  }
+};
+
+/** 본인 확인에 성공하면 시도 기록을 지운다. */
+export const resetIdentityAttempts = async (contractId: string): Promise<void> => {
+  try {
+    await getDb().delete(rateLimits).where(eq(rateLimits.key, `sign_identity:${contractId}`));
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Failed to reset identity attempts:', error);
+  }
+};
+
+/**
  * 로그인에 성공하면 카운터를 지운다.
  *
  * 지우지 않으면 실패가 쌓인 창 안에서는 정상 로그인도 한도를 채워 나가, 비밀번호를

@@ -314,6 +314,23 @@ export default function AdminContractDetailPage({
                     <p>이메일: {customerSignature.signerEmail}</p>
                     <p>일시: {formatDateTime(customerSignature.signedAt)}</p>
                     <p>IP: {customerSignature.ipAddress || '-'}</p>
+                    {/* 분쟁 시 쓰이는 증거이므로 관리자가 바로 확인할 수 있어야 한다. */}
+                    <p>
+                      본인 확인:{' '}
+                      {contract.identityVerifiedAt ? (
+                        <span className="text-green-600">
+                          연락처 뒷자리 대조 완료 ({formatDateTime(contract.identityVerifiedAt)})
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">기록 없음</span>
+                      )}
+                    </p>
+                    {contract.contentHash && (
+                      <p className="break-all">
+                        문서 지문:{' '}
+                        <span className="font-mono text-xs">{contract.contentHash}</span>
+                      </p>
+                    )}
                   </div>
                 </div>
               ) : (

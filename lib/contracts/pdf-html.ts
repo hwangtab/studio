@@ -181,6 +181,27 @@ export const buildContractPdfHtml = (input: BuildContractPdfInput): string => {
        </div>`
     : '<p style="color: #999;">서명 기록이 없습니다.</p>';
 
+  /**
+   * 본인 확인과 문서 지문을 계약서에 함께 남긴다.
+   *
+   * 증거는 보이는 곳에 있어야 쓸 수 있다. 서명 당시 연락처 뒷자리로 당사자를 확인했다는
+   * 사실과, 그때 문서의 지문을 적어 두면 사후에 문서를 대조할 근거가 문서 안에 남는다.
+   */
+  const verificationRows = [
+    contract.identityVerifiedAt
+      ? `<div>본인 확인: 계약서 등록 연락처 뒷자리 대조 완료 (${formatDateTime(contract.identityVerifiedAt)})</div>`
+      : '',
+    contract.contentHash
+      ? `<div>문서 지문(SHA-256): <span style="font-family: monospace;">${escapeHtml(contract.contentHash)}</span></div>`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('');
+
+  const verificationHtml = verificationRows
+    ? `<div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #d4d4d4; font-size: 10px; color: #666; line-height: 1.7;">${verificationRows}</div>`
+    : '';
+
   const rulesHtml = rulesContent
     ? `<div class="page-break">
         ${renderMarkdown(rulesContent)}
@@ -272,8 +293,12 @@ export const buildContractPdfHtml = (input: BuildContractPdfInput): string => {
 
   <div class="signature-box">
     <h3 style="margin-top: 0;">전자서명</h3>
-    <p>본 계약서의 내용을 충분히 읽고 이해하였으며, 상기 내용에 동의하고 서명합니다.</p>
+    <p>
+      이용자는 본인이 계약 당사자임을 확인하고, 계약서의 내용을 모두 읽고 이해하였으며,
+      아래 전자서명이 자필 서명과 같은 효력을 가지는 데 동의하였다.
+    </p>
     ${signatureHtml}
+    ${verificationHtml}
   </div>
 
   ${rulesHtml}

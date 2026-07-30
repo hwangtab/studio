@@ -4,7 +4,10 @@ import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../../../db/client';
 import { contractAttachments, contractClauses, contracts, signatures } from '../../../../db/schema';
+import { checkIdentityAttemptLimit, resetIdentityAttempts } from '../../../../lib/contracts/admin-rate-limit';
 import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
+import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
+import { computeContractFingerprint } from '../../../../lib/contracts/integrity';
 import { serializeContract } from '../../../../lib/contracts/serialize';
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
@@ -38,7 +41,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
   }
 
-  const { token, signatureData, agreements } = req.body as Record<string, unknown>;
+  const { token, signatureData, agreements, identityDigits, identityConfirmed } = req.body as Record<
+    string,
+    unknown
+  >;
 
   if (typeof token !== 'string' || token.trim() === '') {
     return res.status(400).json({ ok: false, message: '서명 토큰이 없습니다.' });
@@ -79,6 +85,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? '서명 링크가 만료되었습니다. 운영자에게 재발송을 요청해 주세요.'
           : allowed.message;
       return res.status(409).json({ ok: false, message, status: effectiveStatus });
+    }
+
+    /**
+     * 서명자가 계약 당사자인지 확인한다.
+     *
+     * 이메일 링크만으로는 그것을 받은 사람이 당사자인지 알 수 없다. 계약서에 적힌 연락처의
+     * 뒷자리를 맞추게 해, 링크를 알게 된 제3자를 걸러낸다. 네 자리뿐이라 대입이 가능하므로
+     * 시도 횟수도 제한한다.
+     */
+    const withinAttempts = await checkIdentityAttemptLimit(contract.id);
+    if (!withinAttempts) {
+      return res.status(429).json({
+        ok: false,
+        message: '본인 확인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.',
+      });
+    }
+
+    const identity = verifyIdentityDigits(identityDigits, contract.customerPhone);
+    if (!identity.ok) {
+      const message =
+        identity.reason === 'unverifiable'
+          ? '계약서의 연락처가 올바르지 않아 본인 확인을 할 수 없습니다. 운영자에게 문의해 주세요.'
+          : `계약서에 등록된 연락처 뒤 ${IDENTITY_DIGITS}자리를 정확히 입력해 주세요.`;
+      return res.status(400).json({ ok: false, message });
+    }
+
+    // 본인임을 확인하고 이 방식으로 서명한다는 동의. 서명 행위와 별개로 명시적으로 받는다.
+    if (identityConfirmed !== true) {
+      return res.status(400).json({
+        ok: false,
+        message: '본인 확인 및 전자서명 방식 동의에 체크해 주세요.',
+      });
     }
 
     // 필수 동의 항목을 서버에서 다시 확인한다(클라이언트 검사만으로는 우회 가능).
@@ -123,6 +161,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 서명 없는 signed 계약이 남고, 재시도는 "이미 서명됨"으로 막혀 복구할 수 없다.
      * batch는 트랜잭션이라 전부 반영되거나 전부 취소된다.
      */
+    // 서명 시점 문서의 지문. 나중에 다시 계산해 대조하면 사후 변조를 탐지할 수 있다.
+    const contentHash = computeContractFingerprint({
+      contractId: contract.id,
+      content: contract.content,
+      attachmentContents: contract.contractAttachments.map((attachment) => attachment.content),
+      signatureData,
+      signedAt: now,
+    });
+
     const [contractResult, signatureResult] = await getDb().batch([
       getDb()
         .update(contracts)
@@ -132,6 +179,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           signTokenUsedAt: now,
           rulesAgreed: true,
           rulesAgreedAt: now,
+          identityVerifiedAt: now,
+          contentHash,
           updatedAt: now,
         })
         .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent'))),
@@ -173,6 +222,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // PDF 생성·메일 발송은 응답을 보낸 뒤 이어서 처리한다. 서버리스에서 응답 직후 실행이
     // 중단되지 않도록 waitUntil로 런타임에 알린다.
+    await resetIdentityAttempts(contract.id);
+
     waitUntil(finalizeSignedContract(contract.id));
 
     return res.status(200).json({ ok: true, contract: serializeContract(signedContract) });

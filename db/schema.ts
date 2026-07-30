@@ -44,6 +44,22 @@ export const contracts = sqliteTable('contracts', {
   // 발송·서명
   sentAt: integer('sent_at', { mode: 'timestamp' }),
   signedAt: integer('signed_at', { mode: 'timestamp' }),
+
+  /**
+   * 서명자가 계약서에 적힌 연락처 뒷자리를 맞춘 시각.
+   *
+   * 링크를 받은 사람이 계약 당사자인지 확인할 근거다. 완전한 본인인증은 아니지만,
+   * "링크만 아는 제3자"는 걸러진다. 값이 없으면 그 확인 없이 서명된 계약이다.
+   */
+  identityVerifiedAt: integer('identity_verified_at', { mode: 'timestamp' }),
+
+  /**
+   * 서명 시점 문서의 SHA-256.
+   *
+   * 계약 본문·첨부·서명 이미지·서명 시각을 묶어 계산한다. 나중에 다시 계산해 이 값과
+   * 맞춰 보면 "그때 서명한 그 문서인지"를 애플리케이션 밖에서도 확인할 수 있다.
+   */
+  contentHash: text('content_hash'),
   // 서명 링크 만료 시각. 발송(sent 전환) 시점에 설정되며, 재발송하면 갱신된다.
   expiresAt: integer('expires_at', { mode: 'timestamp' }),
 
