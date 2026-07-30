@@ -22,6 +22,15 @@ export interface ContractFingerprintInput {
 }
 
 /**
+ * 서명 시각을 초 단위로 맞춘다.
+ *
+ * DB의 타임스탬프는 초 단위로 저장되므로, 밀리초까지 넣어 지문을 만들면 저장 과정에서
+ * 잘려 나간 만큼 재계산 값이 달라진다. 그러면 아무것도 변조되지 않았는데도 대조가 늘
+ * 실패해, 무결성 검증이 있으나 없으나 같아진다.
+ */
+const toSeconds = (date: Date): number => Math.floor(date.getTime() / 1000);
+
+/**
  * 해시 대상을 사람이 읽을 수 있는 형태로 조립한다.
  *
  * 필드 경계를 개행과 라벨로 명확히 나눈다. 값을 그냥 이어 붙이면 서로 다른 조합이 같은
@@ -30,7 +39,7 @@ export interface ContractFingerprintInput {
 const buildCanonicalForm = (input: ContractFingerprintInput): string =>
   [
     `contract:${input.contractId}`,
-    `signedAt:${input.signedAt.toISOString()}`,
+    `signedAt:${toSeconds(input.signedAt)}`,
     `content:${input.content.length}:${input.content}`,
     ...input.attachmentContents.map(
       (attachment, index) => `attachment[${index}]:${attachment?.length ?? 0}:${attachment ?? ''}`,

@@ -37,6 +37,45 @@ describe('문서 무결성 지문', () => {
     expect(changed).not.toBe(original);
   });
 
+  /**
+   * DB 타임스탬프는 초 단위다. 밀리초까지 지문에 넣으면 저장 과정에서 잘려, 아무것도
+   * 변조되지 않았는데도 재계산 값이 달라진다 — 무결성 검증이 늘 실패하는 상태가 된다.
+   */
+  it('같은 초 안의 밀리초 차이는 지문에 영향을 주지 않는다', () => {
+    const withMs = computeContractFingerprint({
+      ...base(),
+      signedAt: new Date('2026-07-30T05:00:00.789Z'),
+    });
+    const truncated = computeContractFingerprint({
+      ...base(),
+      signedAt: new Date('2026-07-30T05:00:00.000Z'),
+    });
+
+    expect(withMs).toBe(truncated);
+  });
+
+  it('초가 다르면 여전히 지문이 달라진다', () => {
+    const a = computeContractFingerprint({
+      ...base(),
+      signedAt: new Date('2026-07-30T05:00:00.999Z'),
+    });
+    const b = computeContractFingerprint({
+      ...base(),
+      signedAt: new Date('2026-07-30T05:00:01.000Z'),
+    });
+
+    expect(a).not.toBe(b);
+  });
+
+  it('DB 왕복(초 절삭) 후에도 대조가 통과한다', () => {
+    const signedAt = new Date('2026-07-30T05:00:00.456Z');
+    const stored = computeContractFingerprint({ ...base(), signedAt });
+
+    // DB에 저장·조회하면 밀리초가 사라진 Date가 돌아온다
+    const roundTripped = new Date(Math.floor(signedAt.getTime() / 1000) * 1000);
+    expect(verifyContractFingerprint(stored, { ...base(), signedAt: roundTripped }).ok).toBe(true);
+  });
+
   it('첨부가 없는 계약과 빈 첨부가 있는 계약을 구분한다', () => {
     const none = computeContractFingerprint({ ...base(), attachmentContents: [] });
     const empty = computeContractFingerprint({ ...base(), attachmentContents: [null] });
