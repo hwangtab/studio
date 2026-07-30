@@ -31,16 +31,16 @@ export const getIdentityDigits = (phone: string): string | null => {
  * DB에 보관하는 계약 본문은 그대로 두고 화면 표시만 가린다. 서명 후 발급되는 계약서에는
  * 전체 번호가 기재된다.
  */
-export const maskIdentityDigitsInContent = (content: string, phone: string): string => {
+export const maskIdentityDigits = (phone: string): string => {
   const trimmed = phone.trim();
 
   // 확인에 쓸 수 없는 번호는 가리지도 않는다. 가려 봐야 물어볼 값이 없고, 계약서 정보만
   // 이유 없이 사라진다.
-  if (!getIdentityDigits(trimmed)) return content;
+  if (!getIdentityDigits(trimmed)) return trimmed;
 
   // 뒤에서 네 개의 숫자만 *로 바꾼다. 하이픈·공백 위치는 건드리지 않는다.
   let remaining = IDENTITY_DIGITS;
-  const masked = [...trimmed]
+  return [...trimmed]
     .reverse()
     .map((char) => {
       if (remaining > 0 && /\d/.test(char)) {
@@ -51,6 +51,11 @@ export const maskIdentityDigitsInContent = (content: string, phone: string): str
     })
     .reverse()
     .join('');
+};
+
+export const maskIdentityDigitsInContent = (content: string, phone: string): string => {
+  const trimmed = phone.trim();
+  const masked = maskIdentityDigits(trimmed);
 
   if (masked === trimmed) return content;
   return content.split(trimmed).join(masked);

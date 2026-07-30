@@ -15,7 +15,11 @@ import {
   type SerializedClause,
   type SerializedContract,
 } from '../../../../lib/contracts/serialize';
-import { IDENTITY_DIGITS, maskIdentityDigitsInContent } from '../../../../lib/contracts/identity';
+import {
+  IDENTITY_DIGITS,
+  maskIdentityDigits,
+  maskIdentityDigitsInContent,
+} from '../../../../lib/contracts/identity';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
@@ -86,10 +90,17 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
       props: {
         locale,
         token,
-        // 확인 값을 화면에서 가린다 — 같은 페이지에 답이 있으면 본인 확인이 무의미하다.
+        /**
+         * 확인 값을 이 페이지에서 완전히 걷어낸다.
+         *
+         * 본문만 가리는 것으로는 부족하다. Next.js는 이 props를 __NEXT_DATA__로 HTML에
+         * 직렬화해 넣으므로, 연락처 컬럼을 그대로 두면 페이지 소스에서 그대로 읽힌다.
+         * 같은 페이지에 답이 남아 있으면 본인 확인이 무의미하다.
+         */
         contract: serializeContract({
           ...rest,
           content: maskIdentityDigitsInContent(contract.content, contract.customerPhone),
+          customerPhone: maskIdentityDigits(contract.customerPhone),
           signToken: contract.signToken,
         }),
         clauses: contractClauses.map(serializeClause),

@@ -3,6 +3,7 @@
 import {
   IDENTITY_DIGITS,
   getIdentityDigits,
+  maskIdentityDigits,
   maskIdentityDigitsInContent,
   verifyIdentityDigits,
 } from './identity';
@@ -87,5 +88,23 @@ describe('서명 화면의 확인 값 가리기', () => {
   it('본문에 번호가 없으면 아무것도 바꾸지 않는다', () => {
     const content = '# 계약서\n\n연락처 없음';
     expect(maskIdentityDigitsInContent(content, '010-1234-5678')).toBe(content);
+  });
+});
+
+describe('연락처 자체 가리기', () => {
+  it('뒷자리만 가리고 앞자리는 남긴다', () => {
+    expect(maskIdentityDigits('010-1234-5678')).toBe('010-1234-****');
+    expect(maskIdentityDigits('01012345678')).toBe('0101234****');
+  });
+
+  it('확인에 쓸 수 없는 번호는 그대로 둔다', () => {
+    expect(maskIdentityDigits('123')).toBe('123');
+    expect(maskIdentityDigits('')).toBe('');
+  });
+
+  it('가린 값에서는 확인 값을 복원할 수 없다', () => {
+    const masked = maskIdentityDigits('010-1234-5678');
+    expect(masked).not.toContain('5678');
+    expect(getIdentityDigits(masked)).not.toBe('5678');
   });
 });
