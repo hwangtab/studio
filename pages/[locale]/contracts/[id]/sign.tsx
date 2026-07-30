@@ -15,7 +15,7 @@ import {
   type SerializedClause,
   type SerializedContract,
 } from '../../../../lib/contracts/serialize';
-import { IDENTITY_DIGITS } from '../../../../lib/contracts/identity';
+import { IDENTITY_DIGITS, maskIdentityDigitsInContent } from '../../../../lib/contracts/identity';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
@@ -86,7 +86,12 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
       props: {
         locale,
         token,
-        contract: serializeContract({ ...rest, signToken: contract.signToken }),
+        // 확인 값을 화면에서 가린다 — 같은 페이지에 답이 있으면 본인 확인이 무의미하다.
+        contract: serializeContract({
+          ...rest,
+          content: maskIdentityDigitsInContent(contract.content, contract.customerPhone),
+          signToken: contract.signToken,
+        }),
         clauses: contractClauses.map(serializeClause),
         attachments: contractAttachments.map(serializeAttachment),
         rulesContent: resolveRulesContent(contractAttachments),
@@ -447,7 +452,11 @@ export default function ContractSignPage({
               <div className="mt-10 border-t border-gray-200 pt-8">
                 <h2 className="text-lg font-bold text-gray-900 mb-2">본인 확인</h2>
                 <p className="text-sm text-gray-600 mb-4">
-                  계약서에 적힌 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+                  계약 체결 시 등록하신 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+                  <span className="block mt-1 text-gray-500">
+                    본인 확인을 위해 위 계약서에서는 이 자리를 가려 두었습니다. 서명이 끝난
+                    계약서에는 전체 번호가 기재됩니다.
+                  </span>
                 </p>
 
                 <input

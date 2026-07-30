@@ -7,7 +7,7 @@ import { contractAttachments, contractClauses, contracts, signatures } from '../
 import { checkIdentityAttemptLimit, resetIdentityAttempts } from '../../../../lib/contracts/admin-rate-limit';
 import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
-import { computeContractFingerprint } from '../../../../lib/contracts/integrity';
+import { buildFingerprintInput, computeContractFingerprint } from '../../../../lib/contracts/integrity';
 import { serializeContract } from '../../../../lib/contracts/serialize';
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
@@ -162,13 +162,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * batch는 트랜잭션이라 전부 반영되거나 전부 취소된다.
      */
     // 서명 시점 문서의 지문. 나중에 다시 계산해 대조하면 사후 변조를 탐지할 수 있다.
-    const contentHash = computeContractFingerprint({
-      contractId: contract.id,
-      content: contract.content,
-      attachmentContents: contract.contractAttachments.map((attachment) => attachment.content),
-      signatureData,
-      signedAt: now,
-    });
+    const contentHash = computeContractFingerprint(
+      buildFingerprintInput(contract, {
+        attachments: contract.contractAttachments,
+        signatureData,
+        signedAt: now,
+        identityVerifiedAt: now,
+      }),
+    );
 
     const [contractResult, signatureResult] = await getDb().batch([
       getDb()

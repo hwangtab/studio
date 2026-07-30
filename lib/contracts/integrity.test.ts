@@ -9,10 +9,18 @@ import {
 
 const base = (): ContractFingerprintInput => ({
   contractId: 'contract-1',
+  customerName: '홍길동',
+  customerPhone: '010-1234-5678',
+  roomNumber: 'A',
+  startDate: new Date('2026-09-01T00:00:00.000Z'),
+  endDate: new Date('2026-12-01T00:00:00.000Z'),
+  monthlyRent: 300000,
+  depositAmount: 300000,
   content: '# 음악연습실 이용계약서\n\n월 이용료 300,000원',
   attachmentContents: ['# 공동생활 이용수칙\n\n금연'],
   signatureData: 'data:image/png;base64,AAAA',
   signedAt: new Date('2026-07-30T05:00:00.000Z'),
+  identityVerifiedAt: new Date('2026-07-30T05:00:00.000Z'),
 });
 
 describe('문서 무결성 지문', () => {
@@ -74,6 +82,25 @@ describe('문서 무결성 지문', () => {
     // DB에 저장·조회하면 밀리초가 사라진 Date가 돌아온다
     const roundTripped = new Date(Math.floor(signedAt.getTime() / 1000) * 1000);
     expect(verifyContractFingerprint(stored, { ...base(), signedAt: roundTripped }).ok).toBe(true);
+  });
+
+  /**
+   * PDF의 "계약 요약" 표와 관리자 화면은 본문이 아니라 컬럼을 그대로 출력한다.
+   * 지문이 컬럼을 덮지 않으면 본문은 멀쩡한 채 인쇄되는 금액만 달라질 수 있다.
+   */
+  it.each([
+    ['월 이용료', { monthlyRent: 900000 }],
+    ['보증금', { depositAmount: 0 }],
+    ['이용자 이름', { customerName: '김철수' }],
+    ['연락처', { customerPhone: '010-9999-9999' }],
+    ['호실', { roomNumber: 'B' }],
+    ['시작일', { startDate: new Date('2026-10-01T00:00:00.000Z') }],
+    ['종료일', { endDate: new Date('2027-03-01T00:00:00.000Z') }],
+    ['본인 확인 시각', { identityVerifiedAt: null }],
+  ])('%s만 바뀌어도 지문이 달라진다', (_label, patch) => {
+    expect(computeContractFingerprint({ ...base(), ...patch })).not.toBe(
+      computeContractFingerprint(base()),
+    );
   });
 
   it('첨부가 없는 계약과 빈 첨부가 있는 계약을 구분한다', () => {

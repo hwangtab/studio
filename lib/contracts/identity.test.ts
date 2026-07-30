@@ -1,6 +1,11 @@
 /** @jest-environment node */
 
-import { IDENTITY_DIGITS, getIdentityDigits, verifyIdentityDigits } from './identity';
+import {
+  IDENTITY_DIGITS,
+  getIdentityDigits,
+  maskIdentityDigitsInContent,
+  verifyIdentityDigits,
+} from './identity';
 
 describe('서명자 본인 확인', () => {
   it('계약서 번호의 표기가 달라도 같은 뒷자리를 뽑는다', () => {
@@ -44,5 +49,43 @@ describe('서명자 본인 확인', () => {
 
   it('확인에 쓰는 자릿수는 4자리다', () => {
     expect(IDENTITY_DIGITS).toBe(4);
+  });
+});
+
+describe('서명 화면의 확인 값 가리기', () => {
+  const contentWith = (phone: string) => `| 연락처 | ${phone} |\n\n문의: ${phone}`;
+
+  it('계약서에 적힌 연락처의 뒷자리를 가린다', () => {
+    const masked = maskIdentityDigitsInContent(contentWith('010-1234-5678'), '010-1234-5678');
+
+    expect(masked).not.toContain('5678');
+    expect(masked).toContain('010-1234-****');
+  });
+
+  it('같은 번호가 여러 번 나와도 모두 가린다', () => {
+    const masked = maskIdentityDigitsInContent(contentWith('010-1234-5678'), '010-1234-5678');
+    expect(masked.match(/\*\*\*\*/g)?.length).toBe(2);
+  });
+
+  it('하이픈이 없는 표기도 가린다', () => {
+    const masked = maskIdentityDigitsInContent(contentWith('01012345678'), '01012345678');
+    expect(masked).not.toContain('5678');
+    expect(masked).toContain('0101234****');
+  });
+
+  it('앞자리는 그대로 남겨 본인이 자기 번호를 알아볼 수 있게 한다', () => {
+    const masked = maskIdentityDigitsInContent(contentWith('010-1234-5678'), '010-1234-5678');
+    expect(masked).toContain('010-1234');
+  });
+
+  it('가릴 수 없는 번호는 본문을 그대로 둔다', () => {
+    const content = contentWith('123');
+    expect(maskIdentityDigitsInContent(content, '123')).toBe(content);
+    expect(maskIdentityDigitsInContent(content, '')).toBe(content);
+  });
+
+  it('본문에 번호가 없으면 아무것도 바꾸지 않는다', () => {
+    const content = '# 계약서\n\n연락처 없음';
+    expect(maskIdentityDigitsInContent(content, '010-1234-5678')).toBe(content);
   });
 });

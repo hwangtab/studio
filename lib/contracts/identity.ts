@@ -21,6 +21,41 @@ export const getIdentityDigits = (phone: string): string | null => {
   return digits.slice(-IDENTITY_DIGITS);
 };
 
+/**
+ * 서명 화면에 보여 줄 계약서에서 확인 값을 가린다.
+ *
+ * 서명 페이지는 계약서 전문을 보여 주고, 그 안에는 이용자 연락처가 그대로 적혀 있다.
+ * 뒷자리를 묻는데 같은 화면에 답이 있으면, 링크를 알게 된 제3자도 읽어서 입력하면 된다
+ * — 본인 확인이 걸러내려던 대상을 전혀 막지 못한다.
+ *
+ * DB에 보관하는 계약 본문은 그대로 두고 화면 표시만 가린다. 서명 후 발급되는 계약서에는
+ * 전체 번호가 기재된다.
+ */
+export const maskIdentityDigitsInContent = (content: string, phone: string): string => {
+  const trimmed = phone.trim();
+
+  // 확인에 쓸 수 없는 번호는 가리지도 않는다. 가려 봐야 물어볼 값이 없고, 계약서 정보만
+  // 이유 없이 사라진다.
+  if (!getIdentityDigits(trimmed)) return content;
+
+  // 뒤에서 네 개의 숫자만 *로 바꾼다. 하이픈·공백 위치는 건드리지 않는다.
+  let remaining = IDENTITY_DIGITS;
+  const masked = [...trimmed]
+    .reverse()
+    .map((char) => {
+      if (remaining > 0 && /\d/.test(char)) {
+        remaining -= 1;
+        return '*';
+      }
+      return char;
+    })
+    .reverse()
+    .join('');
+
+  if (masked === trimmed) return content;
+  return content.split(trimmed).join(masked);
+};
+
 export type IdentityCheck =
   | { ok: true }
   | { ok: false; reason: 'malformed' | 'mismatch' | 'unverifiable' };
