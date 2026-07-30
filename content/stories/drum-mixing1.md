@@ -169,6 +169,6 @@ SSL G-Bus 타입 버스 컴프의 Attack을 10ms 미만으로 두면 트랜지�
 
 드럼 믹싱은 킥·스네어 중심의 타격감부터 전체 드럼 버스의 통일감까지 균형이 중요합니다. 드럼 버스 컴프레서(SSL G-Bus 타입)의 Attack 설정은 타협 없이 귀로 판단해야 하는 영역입니다. Attack이 10ms 미만으로 너무 빠르면 트랜지언트가 짓눌려 드럼이 평평하게 들리고, 50ms를 넘으면 컴프가 전혀 작동하지 않는 것처럼 들립니다. 장르에 따라 Attack 10~30ms 구간을 천천히 조정하면서 GR 미터가 -4~-8dB를 가리키는 지점을 찾으세요.
 
-드럼 샘플 레이어링은 실제 드럼 녹음이 있을 때와 프로그래밍 드럼만 있을 때 적용 방법이 다릅니다. 실제 녹음에는 Slate Digital Trigger 같은 트랜지언트 디텍터 플러그인으로 킥·스네어 타격 포인트를 감지해 샘플을 자동 배치하고, 레벨은 원본 대비 -6~-10dB로 블렌드해 자연스럽게 보강합니다. 프로그래밍 드럼만 있을 때는 Velocity 레이어가 풍부한 라이브러리(Steven Slate Drums, Addictive Drums)를 선택하는 것이 타격 표현의 출발점이며, 과도한 양자화 그리드를 풀어 휴머나이즈를 적용하는 것이 기계적 느낌을 제거하는 핵심입니다.
+드럼 샘플 레이어링은 실제 드럼 녹음이 있을 때와 프로그래밍 드럼만 있을 때 적용 방법이 다릅니다. 실제 녹음에는 Slate Digital Trigger 같은 트랜지언트 디텍터 플러그인으로 킥·스네어 타격 포인트를 감지해 샘플을 자동 배치하고, 레벨은 원본 대비 -6~-10dB로 블렌드해 자연스럽게 보강합니다. 프로그래밍 드럼만 있을 때는 Velocity 레이어가 풍부한 라이브러리(Steven Slate Drums, Addictive Drums)를 선택하는 것이 타격 표현의 출발점이며, 과도한 양자화 그리드를 풀어 휴머나이즈를 적용하는 것이 기계적 느낌을 제거하는 핵심입니다. 이 작업을 직접 하기 어렵다면 [드럼 믹싱 의뢰](/mixing-mastering)로 맡기는 방법도 있습니다.
 
 [믹싱 패닝 완전 가이드](/stories/panning-guide1) | [피아노 믹싱 완전 가이드](/stories/piano-mixing1) | [기타 믹싱 완전 가이드](/stories/guitar-mixing1) | [베이스 믹싱 완전 가이드](/stories/bass-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [믹싱 비용 기준표 (2026)](/stories/recording-price1) | [위상 문제 식별·교정 가이드](/stories/phase1) | [드럼 심벌 기법 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [드럼 고스트 노트 완전 가이드](/stories/practice-room-drum-ghost-notes1)
