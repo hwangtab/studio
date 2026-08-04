@@ -146,7 +146,7 @@ distrokid.com 접속 → 회원 가입
 - Spotify 2006년 창업·2008년 10월 6개국 서비스 출시 (Daniel Ek·Martin Lorentzon): [Spotify — Wikipedia](https://en.wikipedia.org/wiki/Spotify) · [Spotify 공식](https://newsroom.spotify.com/company-info/)
 - DistroKid 2012년 설립·2013년 출시 (Philip Kaplan): [DistroKid — Wikipedia](https://en.wikipedia.org/wiki/DistroKid) · [DistroKid 공식](https://distrokid.com/)
 
-본 가이드의 유통사별 절차 안내·체크리스트는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 인디 아티스트의 발매 진행을 지원하며 누적한 1차 관찰에 기반합니다. 가격·요금제·정산 주기는 2026년 5월 기준이며 각 유통사(DistroKid·TuneCore·CD Baby·카카오엔터테인먼트·지니뮤직) 공식 사이트에서 최신 정보를 확인하시기 바랍니다. 스트리밍 1회당 수익은 플랫폼·국가·청취자 구독 형태(무료/유료)에 따라 변동이 큽니다.
+스튜디오 놀 운영자 황경하 엔지니어가 15년간 여러 인디 아티스트의 발매를 성공적으로 지원하며 직접 겪은 유통사별 절차를 이 가이드의 체크리스트에 담았습니다. 가격·요금제·정산 주기는 2026년 5월 기준이며 각 유통사(DistroKid·TuneCore·CD Baby·카카오엔터테인먼트·지니뮤직) 공식 사이트에서 최신 정보를 확인하시기 바랍니다. 스트리밍 1회당 수익은 플랫폼·국가·청취자 구독 형태(무료/유료)에 따라 변동이 큽니다.
 
 ---
 

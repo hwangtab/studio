@@ -164,7 +164,7 @@ MR 파일의 피치를 조정해드립니다.
 - 노래방(가라오케) 발명 — 1971년 일본 고베, Daisuke Inoue: [Daisuke Inoue — Wikipedia](https://en.wikipedia.org/wiki/Daisuke_Inoue) · [WIPO Magazine — The Father of Karaoke](https://www.wipo.int/en/web/wipo-magazine/articles/the-father-of-karaoke-36671)
 - 음역 표기(Scientific Pitch Notation, A2/C4/E6 등): [Scientific pitch notation — Wikipedia](https://en.wikipedia.org/wiki/Scientific_pitch_notation)
 
-본 가이드의 보컬 음역대 측정·키 조절 기준(실용 최고음, 후렴 -2~-3반음 마진 등)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 보컬 녹음 세션에서 적용한 1차 관찰에 기반합니다. 개별 발성·컨디션·곡 장르에 따라 적정 키는 달라지므로 녹음 전 5~10분 부르며 직접 확인하는 것이 정확합니다.
+이 가이드의 실용 최고음·후렴 마진(-2~-3반음) 기준은 스튜디오 놀 엔지니어 황경하가 여러 보컬 녹음 세션에서 15년간 키를 정하며 확인해 온 것입니다. 개별 발성·컨디션·곡 장르에 따라 적정 키는 달라지므로 녹음 전 5~10분 부르며 직접 확인하는 것이 정확합니다.
 
 ---
 

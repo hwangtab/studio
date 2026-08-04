@@ -181,7 +181,7 @@ Studio NOL에서 U87Ai를 메인 보컬 마이크로 고정하는 이유는 장�
 - Neumann U47 (1949년 출시): [Neumann U 47 — Wikipedia](https://en.wikipedia.org/wiki/Neumann_U_47)
 - Neumann U87 (1967년 출시, FET·팬텀 파워): [Neumann U 87 — Wikipedia](https://en.wikipedia.org/wiki/Neumann_U_87) · [Sweetwater — The History of the Legendary Neumann U 87](https://www.sweetwater.com/insync/the-legendary-neumann-u-87/)
 
-본 가이드의 가격·추천 조합(AT2020·NT1·SM7B·C214·TLM 102·U87 라인업)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 보컬·성우·축가 녹음 세션에서 직접 사용·비교한 1차 관찰에 기반합니다. 가격은 2026년 5월 한국 시장 기준이며 유통사·환율·재고에 따라 변동이 큽니다. 정확한 spec(셀프 노이즈·SPL·지향 패턴)은 각 제조사(Shure·Neumann·Audio-Technica·Rode·AKG·Sony) 공식 사이트에서 확인하시기 바랍니다.
+이 가이드에서 추천하는 AT2020·NT1·SM7B·C214·TLM 102·U87 여섯 모델은 15년간 보컬·성우·축가 녹음 세션에서 직접 써보고 비교해 온 스튜디오 놀(연신내, 서울 은평구) 황경하 엔지니어의 선택입니다. 가격은 2026년 5월 한국 시장 기준이며 유통사·환율·재고에 따라 변동이 큽니다. 정확한 spec(셀프 노이즈·SPL·지향 패턴)은 각 제조사(Shure·Neumann·Audio-Technica·Rode·AKG·Sony) 공식 사이트에서 확인하시기 바랍니다.
 
 ---
 

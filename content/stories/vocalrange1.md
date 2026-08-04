@@ -127,7 +127,7 @@ inlineFallback:
 - Pavarotti의 9개 high C와 "King of the High Cs" 별명: [La fille du régiment — Wikipedia](https://en.wikipedia.org/wiki/La_fille_du_r%C3%A9giment) · [Classic FM: Pavarotti's 9 consecutive high Cs](https://www.classicfm.com/artists/luciano-pavarotti/sang-nine-high-cs-donizetti-ah-mes-amis-met-opera/)
 - 음역 표기(Scientific Pitch Notation, C4/E6 등): [Scientific pitch notation — Wikipedia](https://en.wikipedia.org/wiki/Scientific_pitch_notation)
 
-본 가이드의 측정 절차·실용 음역 마진(2~3반음) 기준은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 보컬 세션에서 적용한 1차 관찰에 기반합니다. 음역은 개인 발성·컨디션·시즌에 따라 반음~1음 단위로 변동하므로 동일 조건(워밍업 10분 후, 같은 시간대)에서 반복 측정하시기 바랍니다.
+스튜디오 놀 황경하 엔지니어는 지난 15년간 수많은 보컬 세션에서 음역을 측정해 왔고, 이 가이드의 측정 절차와 실용 마진(2~3반음) 기준은 그 경험에서 나왔습니다. 음역은 개인 발성·컨디션·시즌에 따라 반음~1음 단위로 변동하므로 동일 조건(워밍업 10분 후, 같은 시간대)에서 반복 측정하시기 바랍니다.
 
 ---
 

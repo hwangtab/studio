@@ -195,7 +195,7 @@ faq:
 - Musical.ly 2014년 8월 출시, 2017-11 ByteDance 인수, 2018-08 TikTok 통합: [Musical.ly — Wikipedia](https://en.wikipedia.org/wiki/Musical.ly)
 - Spotify for Artists 에디터 피칭 절차: [Spotify for Artists — Pitch your music](https://artists.spotify.com/help/article/submit-music-for-playlist-consideration)
 
-본 가이드의 발매 타임라인(T-4주~D+1주)·SNS 채널별 빈도·알고리즘 시그널 우선순위(저장·팔로우·플레이리스트 > 단순 재생)는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 다수 인디 아티스트의 발매 진행을 지원하며 누적한 1차 관찰에 기반합니다. 각 플랫폼의 알고리즘 가중치는 비공개이며 변동되므로 위 우선순위는 일반화된 패턴 안내이지 보장된 공식이 아닙니다.
+발매 타임라인(T-4주~D+1주)·SNS 채널별 빈도·알고리즘 시그널 우선순위(저장·팔로우·플레이리스트 > 단순 재생)는 스튜디오 놀 프로듀서 황경하가 15년간 인디 아티스트의 컨셉과 테마를 기획해 마케팅해 온 경험에서 정리한 것입니다. 각 플랫폼의 알고리즘 가중치는 비공개이며 변동되므로 위 우선순위는 일반화된 패턴 안내이지 보장된 공식이 아닙니다.
 
 ---
 
