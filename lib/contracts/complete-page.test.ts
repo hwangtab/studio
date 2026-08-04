@@ -1,0 +1,169 @@
+/** @jest-environment node */
+
+/**
+ * 서명 완료 페이지가 무엇을 HTML에 실어 보내는지 검증한다.
+ *
+ * 이 페이지는 서명 페이지와 같은 토큰으로 열린다. 서명 페이지는 본인 확인을 위해
+ * 연락처 뒷자리를 가리는데(maskIdentityDigits), 이 페이지가 원본을 그대로 넘기면
+ * 링크만 아는 제3자가 경로 한 단어를 바꿔 정답을 읽어 낼 수 있다 — 실제로 그런
+ * 상태였고, 화면 분기로는 막히지 않는다. getServerSideProps가 돌려주는 props는
+ * 렌더 결과와 무관하게 __NEXT_DATA__로 직렬화되기 때문이다.
+ *
+ * 그래서 검증 대상은 "화면에 무엇이 보이는가"가 아니라 "props에 무엇이 담기는가"다.
+ */
+
+jest.mock('../../db/client', () => ({ getDb: jest.fn() }));
+
+import { getDb } from '../../db/client';
+import { getServerSideProps } from '../../pages/[locale]/contracts/[id]/complete';
+import type { Contract } from '../../db/schema';
+
+const PHONE = '010-1234-5678';
+/** 연락처 뒷자리와 우연히 겹치지 않는 토큰 — 겹치면 유출 검사가 자기 자신을 잡는다. */
+const TOKEN = 'tok_qwertyuiopasdfgh';
+
+const contractFixture = (overrides: Partial<Contract> = {}): Contract =>
+  ({
+    id: 'c1',
+    title: '홍길동 302호 이용계약',
+    description: null,
+    customerName: '홍길동',
+    customerBirthdate: '1990-01-02',
+    customerEmail: 'customer@studionol.co.kr',
+    customerPhone: PHONE,
+    customerAddress: '서울시 은평구 대조동 84-3',
+    roomNumber: '302',
+    roomArea: '3m × 2m',
+    startDate: new Date('2026-09-01T00:00:00Z'),
+    endDate: new Date('2027-03-01T00:00:00Z'),
+    monthlyRent: 300000,
+    depositAmount: 300000,
+    paymentDay: 1,
+    paymentBank: '카카오뱅크',
+    paymentAccount: '3333-12-5480849',
+    paymentAccountHolder: '황경하 / 스튜디오 놀',
+    content: `| 연락처 | ${PHONE} |\n| 주소 | 서울시 은평구 대조동 84-3 |`,
+    status: 'signed',
+    rulesAgreed: true,
+    rulesAgreedAt: new Date('2026-08-20T00:00:00Z'),
+    specialTerms: null,
+    sentAt: new Date('2026-08-19T00:00:00Z'),
+    signedAt: new Date('2026-08-20T00:00:00Z'),
+    identityVerifiedAt: new Date('2026-08-20T00:00:00Z'),
+    contentHash: 'v2:deadbeef',
+    expiresAt: new Date('2026-08-26T00:00:00Z'),
+    signToken: TOKEN,
+    signTokenUsedAt: new Date('2026-08-20T00:00:00Z'),
+    pdfUrl: 'https://blob.example/contract.pdf',
+    pdfGeneratedAt: new Date('2026-08-20T00:00:00Z'),
+    notificationError: null,
+    notifiedAt: new Date('2026-08-20T00:00:00Z'),
+    purgedAt: null,
+    createdAt: new Date('2026-08-19T00:00:00Z'),
+    updatedAt: new Date('2026-08-20T00:00:00Z'),
+    ...overrides,
+  }) as Contract;
+
+const mockFound = (contract: Contract | undefined) => {
+  (getDb as jest.Mock).mockReturnValue({
+    query: { contracts: { findFirst: jest.fn().mockResolvedValue(contract) } },
+  });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const run = (query: Record<string, unknown> = { token: TOKEN }): Promise<any> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (getServerSideProps as any)({ params: { locale: 'ko', id: 'c1' }, query });
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('서명 완료 페이지 props', () => {
+  it('토큰이 없으면 계약을 조회조차 하지 않는다', async () => {
+    mockFound(contractFixture());
+    await expect(run({})).resolves.toEqual({ notFound: true });
+  });
+
+  it('없는 계약이면 404', async () => {
+    mockFound(undefined);
+    await expect(run()).resolves.toEqual({ notFound: true });
+  });
+
+  describe('서명이 끝난 계약', () => {
+    it('화면에 그리는 값만 넘긴다', async () => {
+      mockFound(contractFixture());
+      const result = await run();
+
+      expect(Object.keys(result.props.contract).sort()).toEqual([
+        'customerName',
+        'endDate',
+        'monthlyRent',
+        'roomNumber',
+        'signedAt',
+        'startDate',
+      ]);
+    });
+
+    it('연락처·생년월일·주소·계약 본문을 props에 담지 않는다', async () => {
+      mockFound(contractFixture());
+      const serialized = JSON.stringify(await run());
+
+      // __NEXT_DATA__에 실릴 내용 그대로를 본다.
+      expect(serialized).not.toContain(PHONE);
+      expect(serialized).not.toContain('5678');
+      expect(serialized).not.toContain('1990-01-02');
+      expect(serialized).not.toContain('대조동 84-3');
+      expect(serialized).not.toContain('customer@studionol.co.kr');
+    });
+
+    it('서명 토큰을 본문에 다시 싣지 않는다 (다운로드 주소에만 쓴다)', async () => {
+      mockFound(contractFixture());
+      const result = await run();
+
+      expect(JSON.stringify(result.props.contract)).not.toContain(TOKEN);
+      expect(result.props.downloadUrl).toContain(TOKEN);
+    });
+
+    it('파기된 계약은 내려받기를 제안하지 않는다', async () => {
+      mockFound(contractFixture({ purgedAt: new Date('2030-01-01T00:00:00Z') }));
+      const result = await run();
+
+      expect(result.props.purged).toBe(true);
+    });
+  });
+
+  /**
+   * 서명 전에는 이 페이지가 아무것도 만들지 않아야 한다. 화면을 숨기는 것으로는 부족하다 —
+   * props는 렌더 분기와 무관하게 이미 HTML에 직렬화된 뒤다.
+   */
+  describe('서명 전 계약', () => {
+    it.each(['draft', 'sent', 'cancelled'] as const)(
+      '%s 상태면 개인정보를 담지 않고 서명 페이지로 보낸다',
+      async (status) => {
+        mockFound(contractFixture({ status, signedAt: null }));
+        const result = await run();
+
+        expect(result.redirect.destination).toBe(
+          `/ko/contracts/c1/sign?token=${encodeURIComponent(TOKEN)}`,
+        );
+        expect(result.props).toBeUndefined();
+        expect(JSON.stringify(result)).not.toContain(PHONE);
+      },
+    );
+
+    it('기한이 지난 계약도 마찬가지다', async () => {
+      mockFound(
+        contractFixture({
+          status: 'sent',
+          signedAt: null,
+          expiresAt: new Date('2020-01-01T00:00:00Z'),
+        }),
+      );
+      const result = await run();
+
+      expect(result.redirect).toBeDefined();
+      expect(JSON.stringify(result)).not.toContain(PHONE);
+    });
+  });
+});

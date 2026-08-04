@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { escapeMarkdown, escapeTableCell } from './html-escape';
+import { escapeTableCell } from './html-escape';
 
 export interface ContractTemplateData {
   customerName: string;
@@ -62,8 +62,11 @@ export const buildContractContent = (data: ContractTemplateData): string => {
     content = content.replaceAll(placeholder, value);
   }
 
+  // 특약사항도 표 셀에 들어간다 — 위 필드들과 같은 escapeTableCell을 쓴다.
+  // escapeMarkdown만으로는 파이프·개행만 막고 꺾쇠는 통과시켜, 특약 문구가
+  // 마크업으로 해석되며 계약서에서 사라지거나 다른 것으로 바뀐다.
   const termsRows = (data.specialTerms ?? [])
-    .map((term, index) => `| ${index + 1} | ${escapeMarkdown(term)} |`)
+    .map((term, index) => `| ${index + 1} | ${escapeTableCell(term)} |`)
     .join('\n');
   content = content.replace('{{specialTerms}}', termsRows || '| 1 | |\n| 2 | |\n| 3 | |');
 

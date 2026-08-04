@@ -4,6 +4,7 @@ import path from 'node:path';
 import type { Contract, Signature, ContractClause, ContractAttachment } from '../../db/schema';
 import { escapeHtml } from './html-escape';
 import { renderMarkdown } from './markdown';
+import { isSignatureDataUrl } from './signature-validation';
 
 /**
  * 계약서 PDF의 HTML을 만든다. 브라우저 실행(pdf.ts)과 분리해 둔 이유는 두 가지다.
@@ -100,20 +101,21 @@ export const buildSealCss = (): string => {
   return cachedSealCss;
 };
 
-/**
- * 서명 이미지가 반드시 만족해야 하는 형태. 저장 시점에도 검증하지만(signature-validation),
- * 여기서 한 번 더 확인한다 — 이 문자열은 Chromium이 실제로 렌더링하는 HTML 속성에
- * 들어가므로, 따옴표가 섞이면 속성을 탈출해 임의의 태그·핸들러를 주입할 수 있다.
- * 저장 경로가 하나 늘어나는 것만으로 무너지지 않도록 sink에서 막는다.
- */
-const SIGNATURE_DATA_URL = /^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/;
-
 const renderSignatureImage = (signatureData: string | null): string => {
   if (!signatureData) {
     return '<p style="color: #999;">서명 이미지가 없습니다.</p>';
   }
 
-  if (!SIGNATURE_DATA_URL.test(signatureData)) {
+  /**
+   * 저장 시점에도 검증하지만(signature-validation) 여기서 한 번 더 확인한다 — 이 문자열은
+   * Chromium이 실제로 렌더링하는 HTML 속성에 들어가므로, 따옴표가 섞이면 속성을 탈출해
+   * 임의의 태그·핸들러를 주입할 수 있다. 저장 경로가 하나 늘어나는 것만으로 무너지지
+   * 않도록 sink에서 막는다.
+   *
+   * 판정 함수는 저장 쪽과 같은 것을 쓴다. 규칙을 따로 두면 한쪽만 통과하는 값이 생겨,
+   * 서명은 접수됐는데 계약서에는 오류 문구가 인쇄되는 상태가 만들어진다.
+   */
+  if (!isSignatureDataUrl(signatureData)) {
     console.error('[contracts/pdf] Unexpected signature data format — image omitted.');
     return '<p style="color: #b91c1c;">서명 이미지를 표시할 수 없습니다.</p>';
   }

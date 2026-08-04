@@ -44,6 +44,49 @@ describe('계약서 본문 생성', () => {
     expect(content).toContain('A \\| B');
   });
 
+  /**
+   * 특약사항은 나머지 필드와 달리 escapeMarkdown만 거쳤다. 파이프는 막혔지만 꺾쇠는
+   * 통과해, 특약 문구가 마크업으로 해석되며 계약서에서 사라질 수 있었다. 특약은
+   * 당사자가 따로 합의한 조건이라 사라지면 곧바로 분쟁이 된다.
+   */
+  it('특약사항의 HTML을 이스케이프한다 — 문구가 마크업으로 사라지지 않는다', () => {
+    const content = buildContractContent({
+      ...baseData,
+      specialTerms: ['위약금 <b>면제</b> 없음'],
+    });
+
+    expect(content).toContain('&lt;b&gt;');
+    expect(content).not.toContain('<b>');
+  });
+
+  it('특약사항이 렌더링 후에도 원문 그대로 남는다', () => {
+    const html = renderMarkdown(
+      buildContractContent({
+        ...baseData,
+        specialTerms: ['<span style="display:none">삭제</span> 위약금 300만원'],
+      }),
+    );
+
+    // 태그로 해석됐다면 "삭제"가 화면에서 사라지고 금액만 남는다.
+    expect(html).toContain('삭제');
+    expect(html).toContain('위약금 300만원');
+    // 원문 문자열은 이스케이프된 형태로 남지만, 태그로는 살아나지 않아야 한다.
+    expect(html).not.toContain('<span style');
+  });
+
+  it('특약사항이 다른 필드와 같은 이스케이프 규칙을 쓴다', () => {
+    const payload = '값 | 칸 <b>굵게</b>';
+    const fromName = buildContractContent({ ...baseData, customerName: payload });
+    const fromTerms = buildContractContent({ ...baseData, specialTerms: [payload] });
+
+    const escapedName = fromName.split('\n').find((line) => line.includes('성명')) ?? '';
+    const escapedTerm = fromTerms.split('\n').find((line) => line.includes('굵게')) ?? '';
+
+    // 같은 입력이 어느 칸에 들어가든 같은 형태로 남아야 한다.
+    const extract = (row: string) => row.split('|').map((cell) => cell.trim()).join('|');
+    expect(extract(escapedTerm)).toContain(extract(escapedName).split('|').pop());
+  });
+
   it('이용자 입력의 파이프로 표에 칸을 추가하지 못한다', () => {
     // 이름 한 줄로 계약서에 없던 칸과 문구를 심는 경로를 막는다.
     const content = buildContractContent({

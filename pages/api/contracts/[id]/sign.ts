@@ -8,7 +8,6 @@ import { checkIdentityAttemptLimit, resetIdentityAttempts } from '../../../../li
 import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
 import { buildFingerprintInput, computeContractFingerprint } from '../../../../lib/contracts/integrity';
-import { serializeContract } from '../../../../lib/contracts/serialize';
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
 
@@ -213,21 +212,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
     }
 
-    const signedContract = await getDb().query.contracts.findFirst({
-      where: (contractsTable, { eq: equals }) => equals(contractsTable.id, contract.id),
-    });
-
-    if (!signedContract) {
-      return res.status(500).json({ ok: false, message: '서명 결과를 확인하지 못했습니다.' });
-    }
-
     // PDF 생성·메일 발송은 응답을 보낸 뒤 이어서 처리한다. 서버리스에서 응답 직후 실행이
     // 중단되지 않도록 waitUntil로 런타임에 알린다.
     await resetIdentityAttempts(contract.id);
 
     waitUntil(finalizeSignedContract(contract.id));
 
-    return res.status(200).json({ ok: true, contract: serializeContract(signedContract) });
+    /**
+     * 계약 레코드를 응답에 싣지 않는다.
+     *
+     * 서명 화면은 ok와 message만 읽고 완료 페이지로 이동한다(sign.tsx). 쓰지도 않는
+     * 연락처·주소·계약 본문을 응답에 담으면 브라우저 이력·중계 로그·확장 프로그램에
+     * 남을 뿐이다. 완료 화면에 필요한 값은 완료 페이지가 서버에서 다시 읽는다.
+     */
+    return res.status(200).json({ ok: true });
   } catch (error: unknown) {
     console.error('[API/contracts/[id]/sign] Failed to sign contract:', error);
     return res.status(500).json({ ok: false, message: '서명 처리에 실패했습니다.' });

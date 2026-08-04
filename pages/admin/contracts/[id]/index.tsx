@@ -189,7 +189,7 @@ export default function AdminContractDetailPage({
           {contract.purgedAt && (
             <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
               <strong className="block mb-1">보관 기간이 지나 개인정보가 파기된 계약입니다</strong>
-              {formatDate(contract.purgedAt)}에 이름·연락처·계약 본문·서명 기록을 지웠습니다.
+              {formatDate(contract.purgedAt)}에 제목·이름·연락처·계약 본문·서명 기록을 지웠습니다.
               계약 기간과 금액만 운영 기록으로 남아 있으며, 계약서를 다시 발급할 수 없습니다.
             </div>
           )}

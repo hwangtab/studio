@@ -5,13 +5,34 @@ import Link from 'next/link';
 
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
-import { serializeContract, type SerializedContract } from '../../../../lib/contracts/serialize';
+import { getEffectiveStatus } from '../../../../lib/contracts/status';
+
+/**
+ * 이 페이지가 화면에 실제로 그리는 값만 담는다.
+ *
+ * 계약 레코드를 통째로 넘기면 안 된다. Next.js는 getServerSideProps의 props를
+ * __NEXT_DATA__로 HTML에 직렬화하므로, 넘긴 것은 전부 페이지 소스에서 읽힌다.
+ * 서명 페이지가 본인 확인을 위해 연락처를 가리는데(sign.tsx의 maskIdentityDigits)
+ * 같은 토큰으로 열리는 이 페이지가 원본을 실어 보내면 그 확인이 통째로 무의미해진다.
+ *
+ * 필드를 골라 담는 방식이라 계약 스키마에 컬럼이 늘어도 여기로 새지 않는다.
+ */
+interface CompleteViewContract {
+  customerName: string;
+  roomNumber: string;
+  startDate: string;
+  endDate: string;
+  monthlyRent: number;
+  signedAt: string | null;
+}
 
 interface CompletePageProps {
   locale: string;
-  contract: SerializedContract;
+  contract: CompleteViewContract;
   /** 계약서를 다시 받는 주소. 토큰이 실려 있어 본인만 접근할 수 있다. */
   downloadUrl: string;
+  /** 보관 기간이 지나 개인정보가 파기된 계약 — 내려받을 원본이 없다. */
+  purged: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (context) => {
@@ -32,11 +53,36 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
       return { notFound: true };
     }
 
+    /**
+     * 서명 전에는 이 페이지를 열지 않는다 — 서명 페이지가 갈 곳을 안내한다.
+     *
+     * 화면을 숨기는 것만으로는 부족하다. 렌더 단계에서 분기해도 props는 이미
+     * HTML에 실린 뒤라, 서명하지 않은 사람이 계약 정보를 읽어 갈 수 있다.
+     * 아직 서명하지 않았다면 아무것도 만들지 않고 서명 페이지로 보낸다.
+     * (반대 방향은 sign.tsx가 담당한다 — 서명이 끝났으면 이 페이지로 보낸다.)
+     */
+    if (getEffectiveStatus(contract) !== 'signed') {
+      return {
+        redirect: {
+          destination: `/${locale}/contracts/${id}/sign?token=${encodeURIComponent(token)}`,
+          permanent: false,
+        },
+      };
+    }
+
     return {
       props: {
         locale,
-        contract: serializeContract(contract),
+        contract: {
+          customerName: contract.customerName,
+          roomNumber: contract.roomNumber,
+          startDate: contract.startDate.toISOString(),
+          endDate: contract.endDate.toISOString(),
+          monthlyRent: contract.monthlyRent,
+          signedAt: contract.signedAt ? contract.signedAt.toISOString() : null,
+        },
         downloadUrl: `/api/contracts/${contract.id}/download?token=${encodeURIComponent(token)}`,
+        purged: contract.purgedAt !== null,
       },
     };
   } catch (error: unknown) {
@@ -58,35 +104,8 @@ export default function ContractCompletePage({
   locale,
   contract,
   downloadUrl,
+  purged,
 }: CompletePageProps) {
-  const signed = contract.status === 'signed';
-
-  // 서명 전에 이 주소로 들어오면(북마크·뒤로가기 등) 완료됐다고 오해하기 쉽다.
-  // 계약 맥락에서 잘못된 확인은 분쟁 소지가 되므로 상태를 그대로 알린다.
-  if (!signed) {
-    return (
-      <>
-        <Head>
-          <title>서명 미완료 | Studio NOL</title>
-          <meta name="robots" content="noindex, nofollow" />
-          <meta name="referrer" content="no-referrer" />
-        </Head>
-
-        <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-          <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12 max-w-lg w-full text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-3">아직 서명이 완료되지 않았습니다</h1>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              {contract.customerName}님, 계약서 서명이 접수되지 않은 상태입니다.
-              <br />
-              메일로 받으신 서명 링크에서 서명을 완료해 주세요.
-            </p>
-            <p className="text-sm text-gray-500">문의: 스튜디오 놀 010-4255-7893</p>
-          </div>
-        </main>
-      </>
-    );
-  }
-
   return (
     <>
       <Head>
@@ -108,9 +127,7 @@ export default function ContractCompletePage({
           <p className="text-gray-600 mb-8 leading-relaxed">
             {contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.
             <br />
-            {signed
-              ? '서명본 PDF를 첨부한 확인 메일을 보내 드렸습니다.'
-              : '확인 메일을 발송했습니다.'}
+            서명본 PDF를 첨부한 확인 메일을 보내 드렸습니다.
           </p>
 
           <div className="bg-gray-50 rounded-xl p-6 text-left mb-8">
@@ -135,17 +152,29 @@ export default function ContractCompletePage({
             </dl>
           </div>
 
-          {/* 메일이 유실되거나 첨부가 열리지 않는 경우가 있어, 이 자리에서 바로 받을 수 있게 한다. */}
-          <a href={downloadUrl} className="block">
-            <Button size="lg" fullWidth>
-              계약서 PDF 내려받기
-            </Button>
-          </a>
+          {/* 메일이 유실되거나 첨부가 열리지 않는 경우가 있어, 이 자리에서 바로 받을 수 있게 한다.
+              보관 기간이 지나 파기된 계약은 내려받을 원본이 없다 — 눌러도 실패하는 버튼 대신
+              왜 받을 수 없는지 알린다. */}
+          {purged ? (
+            <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-4 mb-6 leading-relaxed">
+              보관 기간(3년)이 지나 계약 원본과 개인정보를 파기했습니다.
+              <br />
+              문의는 010-4255-7893으로 연락해 주세요.
+            </p>
+          ) : (
+            <>
+              <a href={downloadUrl} className="block">
+                <Button size="lg" fullWidth>
+                  계약서 PDF 내려받기
+                </Button>
+              </a>
 
-          <p className="text-sm text-gray-500 mt-4 mb-6">
-            같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나
-            010-4255-7893으로 문의해 주세요.
-          </p>
+              <p className="text-sm text-gray-500 mt-4 mb-6">
+                같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나
+                010-4255-7893으로 문의해 주세요.
+              </p>
+            </>
+          )}
 
           <Link href={`/${locale}`} passHref>
             <Button size="lg" variant="outline" fullWidth>

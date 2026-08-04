@@ -34,6 +34,11 @@ export const getRetentionBoundary = (now: Date = new Date()): Date => {
  * 설명할 수 없다. 지우는 것은 이름·생년월일·연락처·주소, 이 정보가 그대로 박혀 있는
  * 계약 본문, 그리고 서명 이미지·IP·단말 정보다. 보관된 PDF에도 같은 내용이 있으므로
  * 함께 지운다.
+ *
+ * 계약 제목(title)도 지운다. 관리자가 자유롭게 적는 칸이라 무엇이 들어 있는지 알 수 없고,
+ * 목록에서 계약을 구분하려면 "홍길동 302호"처럼 이름을 넣는 것이 가장 자연스럽다.
+ * 여기를 남겨 두면 다른 곳을 다 지워도 이름이 그대로 남는다. 호실·기간·금액은 컬럼에
+ * 따로 있으므로 제목을 지워도 운영 기록으로서의 식별은 유지된다.
  */
 export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<PurgeResult> => {
   const boundary = getRetentionBoundary(now);
@@ -77,6 +82,7 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
         getDb()
           .update(contracts)
           .set({
+            title: PURGED_MARK,
             customerName: PURGED_MARK,
             customerBirthdate: null,
             customerEmail: PURGED_MARK,
