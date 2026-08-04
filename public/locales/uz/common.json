@@ -527,7 +527,10 @@
           "caption": "1 oydan boshlab"
         }
       ],
-      "note": "Korea Smart Cooperative tomonidan boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang."
+      "note": "Korea Smart Cooperative tomonidan boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Xonalar to'la bo'lsa, navbatga yozilish mumkin."
+    },
+    "midCta": {
+      "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz."
     },
     "painPoints": {
       "title": "Quyidagi muammolar sizda bormi?",

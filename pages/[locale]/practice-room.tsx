@@ -369,6 +369,29 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         </Section>
       )}
 
+      {/* 중간 전환 CTA — 히어로와 최하단 ContactCTA 사이(페이지의 ~70% 스크롤 구간)에
+          클릭 가능한 전환 버튼이 없던 공백을 메운다(2026-08-04 매출 감사).
+          만실이어도 문의는 입주 대기로 이어지므로(운영 방침) 대기 접수를 명시해
+          "만실이면 문의해도 소용없겠지" 이탈을 막는다. */}
+      <Section variant="default" className="py-12">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-6">
+            {t('practiceRoom.midCta.note')}
+          </p>
+          <div className="flex justify-center">
+            <HeroKakaoCta
+              locale={locale}
+              kakaoUrl={siteConfig.contact.kakaoUrl}
+              component="PracticeRoomMidCta"
+              ctaId="practice_room_mid_kakao"
+              label={t('practiceRoom.cta.inquiry')}
+              phone={siteConfig.contact.phone}
+              phoneCtaId="practice_room_mid_phone"
+            />
+          </div>
+        </div>
+      </Section>
+
       <FAQSection
         items={practiceRoomFaqs}
         title={t('practiceRoom.faq.title')}

@@ -44,7 +44,7 @@ faq:
 | 마스터링 | 3~5만원 | LUFS·챕터 분할 포함 |
 | 표지·메타데이터 제작 | 5~15만원 | 썸네일·설명·키워드 |
 
-%%service:recording%%
+%%service:voice%%
 
 ---
 
