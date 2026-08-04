@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Disc, GraduationCap, Heart, Mic, Speaker, Sparkles } from '@/lib/lucide-icons';
+import { ArrowRight, CheckCircle2, Disc, GraduationCap, Heart, Mic, SlidersHorizontal, Speaker, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
-type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'practice' | 'release';
+type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release';
 
 interface InlineServiceCalloutProps {
   type: string;
@@ -19,6 +19,7 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   voice: '/voice-acting',
   lesson: '/lesson',
   recording: '/recording',
+  mixing: '/mixing-mastering',
   practice: '/practice-room',
   release: '/release-project',
 };
@@ -28,6 +29,7 @@ const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
   voice: Mic,
   lesson: GraduationCap,
   recording: Disc,
+  mixing: SlidersHorizontal,
   practice: Speaker,
   release: Sparkles,
 };
@@ -37,6 +39,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   voice: 'nav.voiceActing',
   lesson: 'nav.lesson',
   recording: 'nav.recording',
+  mixing: 'nav.mixingMastering',
   practice: 'nav.practiceRoom',
   release: 'nav.releaseProject',
 };
@@ -87,6 +90,17 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       'Neumann U87AI 메인 마이크',
     ],
   },
+  mixing: {
+    title: '믹싱·마스터링 의뢰',
+    description: '파일만 보내면 전국·해외 어디서든 진행. 3~7영업일 안에 완성본을 드립니다.',
+    features: [
+      '믹싱 곡당 20만원부터 (트랙 수 기준 3단계)',
+      '마스터링 싱글 10만원 · 4곡 이상 곡당 8만원',
+      '기본 2회 수정 포함',
+      '파일 전송 비대면 진행 — 방문 불필요',
+    ],
+    softNote: '트랙 수만 알려주시면 견적을 바로 드립니다. 문의는 무료입니다.',
+  },
   practice: {
     title: '음악연습실',
     description: '월세 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물.',
@@ -111,7 +125,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
 };
 
 const isServiceType = (v: string): v is ServiceType =>
-  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'practice' || v === 'release';
+  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'mixing' || v === 'practice' || v === 'release';
 
 /**
  * 본문 안 서비스 강조 박스. %%service:<type>%% short-code로 트리거.

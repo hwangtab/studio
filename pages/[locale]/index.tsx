@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, Video, ShieldCheck, Award } from '@/lib/lucide-icons';
+import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, SlidersHorizontal, Video, ShieldCheck, Award } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -39,6 +39,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Music,
   Upload,
   GraduationCap,
+  SlidersHorizontal,
   Video,
 };
 
@@ -262,6 +263,13 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+          <Link
+            href={getLink('/mixing-mastering')}
+            prefetch={false}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+          >
+            {t('nav.mixingMastering')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/wedding-song')}

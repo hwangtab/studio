@@ -28,10 +28,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: '녹음 & 믹싱',
-        description: '고급 장비와 전문가와 함께 최상의 사운드를 만들어보세요. 당신의 소리에 생명을 불어넣습니다.',
-        link: '/studio-info',
+        title: '보컬·악기 녹음',
+        description: '전담 엔지니어의 디렉팅과 하이엔드 장비로, 데모부터 발매용 음원까지 제대로 녹음하세요.',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: '믹싱·마스터링 의뢰',
+        description: '파일만 보내면 전국·해외 어디서든 — 트랙 수 기준 투명한 가격으로 3~7영업일 안에 완성합니다.',
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: '음원 발매 & 유통',
@@ -141,10 +147,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: 'Recording & Mixing',
-        description: 'Create the best sound with high-end equipment and experts. We breathe life into your sound.',
-        link: '/studio-info',
+        title: 'Vocal & Instrument Recording',
+        description: 'Dedicated engineer and high-end gear — from demos to release-ready tracks.',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: 'Mixing & Mastering',
+        description: 'Send your files from anywhere — transparent per-track pricing, delivered in 3–7 business days.',
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: 'Release & Distribution',
@@ -230,10 +242,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: '录音 & 混音',
-        description: '与专家一起使用高级设备创造最佳声音。为您的声音注入生命。',
-        link: '/studio-info',
+        title: '人声·乐器录音',
+        description: '专属工程师全程指导，高端设备加持 — 从Demo到发行级音源。',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: '混音·母带',
+        description: '只需发送文件，海外亦可 — 按轨道数透明定价，3–7个工作日交付。',
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: '音源发行 & 分发',
@@ -319,10 +337,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: 'Grabación y Mezcla',
-        description: 'Crea el mejor sonido con equipos de alta gama y expertos. Damos vida a tu sonido.',
-        link: '/studio-info',
+        title: 'Grabación Vocal e Instrumental',
+        description: 'Ingeniero dedicado y equipo de alta gama — de la maqueta a pistas listas para publicar.',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: 'Mezcla y Masterización',
+        description: 'Envía tus archivos desde cualquier lugar — precios transparentes por pistas, entrega en 3–7 días hábiles.',
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: 'Lanzamiento y Distribución',
@@ -408,10 +432,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: 'Thu âm & Mixing',
-        description: 'Tạo âm thanh tốt nhất với thiết bị cao cấp và chuyên gia. Thổi sự sống vào âm thanh của bạn.',
-        link: '/studio-info',
+        title: 'Thu âm vocal & nhạc cụ',
+        description: 'Kỹ sư chuyên trách và thiết bị cao cấp — từ demo đến bản thu sẵn sàng phát hành.',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: 'Mixing & Mastering',
+        description: 'Chỉ cần gửi file từ bất cứ đâu — giá minh bạch theo số track, hoàn thành trong 3–7 ngày làm việc.',
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: 'Phát hành & Phân phối',
@@ -497,10 +527,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: 'บันทึกเสียง & มิกซ์',
-        description: 'สร้างซาวด์ที่ดีที่สุดด้วยอุปกรณ์ไฮเอนด์และผู้เชี่ยวชาญ เราเติมชีวิตให้เสียงของคุณ',
-        link: '/studio-info',
+        title: 'อัดเสียงร้อง·เครื่องดนตรี',
+        description: 'วิศวกรเสียงประจำและอุปกรณ์ไฮเอนด์ — ตั้งแต่เดโมจนถึงเพลงพร้อมปล่อย',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: 'มิกซ์ & มาสเตอร์',
+        description: 'เพียงส่งไฟล์จากที่ไหนก็ได้ — ราคาโปร่งใสตามจำนวนแทร็ก เสร็จใน 3–7 วันทำการ',
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: 'ปล่อยเพลง & จัดจำหน่าย',
@@ -586,10 +622,16 @@ const homeData = {
         icon: 'Disc',
       },
       {
-        title: 'Yozuv & Miks',
-        description: "Yuqori darajadagi uskunalar va mutaxassislar bilan eng yaxshi tovushni yarating. Tovushingizga hayot bag'ishlaymiz.",
-        link: '/studio-info',
+        title: "Vokal va cholg'u yozuvi",
+        description: 'Maxsus muhandis va yuqori darajali uskunalar — demodan relizga tayyor treklargacha.',
+        link: '/recording',
         icon: 'Mic',
+      },
+      {
+        title: 'Miks va mastering',
+        description: "Fayllarni istalgan joydan yuboring — treklar soniga ko'ra shaffof narx, 3–7 ish kunida tayyor.",
+        link: '/mixing-mastering',
+        icon: 'SlidersHorizontal',
       },
       {
         title: 'Chiqarish & Tarqatish',
