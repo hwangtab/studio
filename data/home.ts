@@ -16,7 +16,12 @@ const homeData = {
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
         reserve: "카톡으로 무료 상담",
-        portfolio: "포트폴리오"
+        // 히어로 헤드라인("곡은 다 썼는데, 그 다음")이 부르는 발매 의도 방문자를
+        // 스크롤 없이 플래그십으로 보낸다. 포트폴리오는 발매 페이지 안에서
+        // 디스코그래피 증거로 다시 연결된다. (2026-08-04 매출 감사: 발매 허브
+        // 90일 방문 37명 — 홈 히어로에 진입로가 없던 것이 원인 중 하나)
+        secondary: "발매 프로젝트 보기",
+        secondaryLink: "/release-project"
       },
       ctaImageAlt: "연신내 녹음실 스튜디오 놀 - 전문 녹음 장비와 하드웨어"
     },
@@ -135,7 +140,8 @@ const homeData = {
       imageAlt: "Studio NOL Main Studio",
       cta: {
         reserve: "Free Release Consultation",
-        portfolio: "Portfolio"
+        secondary: "Portfolio",
+        secondaryLink: "/portfolio"
       },
       ctaImageAlt: "Studio NOL Seoul - Professional Recording Equipment and Hardware"
     },
@@ -230,7 +236,8 @@ const homeData = {
       imageAlt: "Studio NOL 主录音室",
       cta: {
         reserve: "免费发行咨询",
-        portfolio: "作品集"
+        secondary: "作品集",
+        secondaryLink: "/portfolio"
       },
       ctaImageAlt: "Studio NOL 首尔 - 专业录音设备和硬件"
     },
@@ -325,7 +332,8 @@ const homeData = {
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
         reserve: "Consulta Gratuita de Lanzamiento",
-        portfolio: "Portafolio"
+        secondary: "Portafolio",
+        secondaryLink: "/portfolio"
       },
       ctaImageAlt: "Studio NOL Seúl - Equipo de grabación profesional"
     },
@@ -420,7 +428,8 @@ const homeData = {
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
         reserve: "Tư vấn Phát hành Miễn phí",
-        portfolio: "Portfolio"
+        secondary: "Portfolio",
+        secondaryLink: "/portfolio"
       },
       ctaImageAlt: "Studio NOL Seoul - Thiết bị thu âm chuyên nghiệp"
     },
@@ -515,7 +524,8 @@ const homeData = {
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
         reserve: "ปรึกษาการปล่อยเพลงฟรี",
-        portfolio: "ผลงาน"
+        secondary: "ผลงาน",
+        secondaryLink: "/portfolio"
       },
       ctaImageAlt: "Studio NOL โซล - อุปกรณ์บันทึกเสียงมืออาชีพ"
     },
@@ -610,7 +620,8 @@ const homeData = {
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
         reserve: "Bepul Chiqarish Maslahati",
-        portfolio: "Portfel"
+        secondary: "Portfel",
+        secondaryLink: "/portfolio"
       },
       ctaImageAlt: "Studio NOL Seul - Professional yozuv uskunalari"
     },
@@ -720,7 +731,7 @@ export interface HomeData {
     subtitle: string;
     backgroundImage: string;
     imageAlt: string;
-    cta: { reserve: string; portfolio: string };
+    cta: { reserve: string; secondary: string; secondaryLink: string };
     ctaImageAlt: string;
   };
   homeServices: { title: string; description: string; link: string; icon: string }[];
