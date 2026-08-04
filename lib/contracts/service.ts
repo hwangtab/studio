@@ -8,6 +8,7 @@ import {
   signatures,
   type Contract,
 } from '../../db/schema';
+import { resetIdentityAttempts } from './admin-rate-limit';
 import { sendContractCreatedEmail, sendOperatorContractNotification } from './email';
 import { computeExpiresAt, type ContractStatus } from './status';
 import { buildContractContent, buildRulesContent } from './template';
@@ -262,6 +263,15 @@ export const markContractSent = async (
     .returning();
 
   if (!contract) return null;
+
+  /**
+   * 본인 확인 시도 기록을 지운다.
+   *
+   * 누적 상한에 걸려 잠긴 링크를 푸는 유일한 수단이다. 오타를 반복한 고객이 연락해 오면
+   * 관리자가 다시 보내는 것으로 해결되고, 새 토큰이 나가므로 그 전에 쌓인 시도를 이어서
+   * 세는 것도 맞지 않는다.
+   */
+  await resetIdentityAttempts(contract.id);
 
   return { contract, signUrl: buildSignUrl(contract.id, contract.signToken) };
 };

@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { eq, lte, sql } from 'drizzle-orm';
+import { eq, inArray, lte, sql } from 'drizzle-orm';
 import type { NextApiRequest } from 'next';
 
 import { getDb } from '../../db/client';
@@ -92,24 +92,68 @@ export const checkAdminLoginRateLimit = async (req: NextApiRequest): Promise<boo
 const IDENTITY_LIMIT = 10;
 const IDENTITY_WINDOW_SECONDS = 15 * 60;
 
-export const checkIdentityAttemptLimit = async (contractId: string): Promise<boolean> => {
-  const key = `sign_identity:${contractId}`;
+/**
+ * 계약 하나에 대한 누적 상한.
+ *
+ * 창 단위 제한만으로는 부족하다. 15분에 10회라도 링크 유효기간이 7일이면 6,700번을
+ * 시도할 수 있고, 그것은 네 자리 조합 1만 개의 3분의 2다. 기다릴 줄 아는 공격자에게는
+ * 창 제한이 속도만 늦출 뿐 벽이 되지 못한다.
+ *
+ * 자기 연락처 뒷자리를 스무 번 넘게 틀리는 당사자는 사실상 없다. 상한에 걸리면 관리자가
+ * 재발송해야 풀린다 — 잠긴 사람이 정말 당사자라면 연락이 올 것이고, 그때 사람이 판단하는
+ * 편이 네 자리 대조보다 확실하다.
+ *
+ * 만료를 링크 유효기간보다 길게 잡는 이유: 만료가 짧으면 그만큼 기다렸다 다시 시작하는
+ * 것으로 상한이 무력해진다.
+ */
+const IDENTITY_TOTAL_LIMIT = 20;
+const IDENTITY_TOTAL_WINDOW_SECONDS = 60 * 24 * 60 * 60;
+
+const identityWindowKey = (contractId: string) => `sign_identity:${contractId}`;
+const identityTotalKey = (contractId: string) => `sign_identity_total:${contractId}`;
+
+export type IdentityAttemptVerdict =
+  /** 확인을 진행해도 된다 */
+  | 'ok'
+  /** 잠시 뒤 다시 시도하면 된다 */
+  | 'throttled'
+  /** 누적 상한을 넘었다 — 재발송해야 풀린다 */
+  | 'locked';
+
+export const checkIdentityAttempt = async (contractId: string): Promise<IdentityAttemptVerdict> => {
   const nowSeconds = Math.floor(Date.now() / 1000);
 
   try {
     await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
 
-    const [row] = await getDb()
-      .insert(rateLimits)
-      .values({ key, count: 1, expiresAt: nowSeconds + IDENTITY_WINDOW_SECONDS })
-      .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
-      .returning();
+    const [windowRows, totalRows] = await getDb().batch([
+      getDb()
+        .insert(rateLimits)
+        .values({
+          key: identityWindowKey(contractId),
+          count: 1,
+          expiresAt: nowSeconds + IDENTITY_WINDOW_SECONDS,
+        })
+        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
+        .returning(),
+      getDb()
+        .insert(rateLimits)
+        .values({
+          key: identityTotalKey(contractId),
+          count: 1,
+          expiresAt: nowSeconds + IDENTITY_TOTAL_WINDOW_SECONDS,
+        })
+        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
+        .returning(),
+    ]);
 
-    return (row?.count ?? 1) <= IDENTITY_LIMIT;
+    if ((totalRows[0]?.count ?? 1) > IDENTITY_TOTAL_LIMIT) return 'locked';
+    if ((windowRows[0]?.count ?? 1) > IDENTITY_LIMIT) return 'throttled';
+    return 'ok';
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Identity attempt limit unavailable:', error);
     // 셀 수 없다는 이유로 정당한 서명을 막지는 않는다. 뒷자리 대조 자체는 그대로 남는다.
-    return true;
+    return 'ok';
   }
 };
 
@@ -143,10 +187,20 @@ export const checkDownloadRateLimit = async (contractId: string): Promise<boolea
   }
 };
 
-/** 본인 확인에 성공하면 시도 기록을 지운다. */
+/**
+ * 시도 기록을 지운다. 본인 확인에 성공했을 때, 그리고 관리자가 계약서를 재발송할 때.
+ *
+ * 재발송에서 지우는 것이 누적 상한의 해제 수단이다. 상한에 걸린 사람이 정말 당사자라면
+ * 운영자에게 연락할 것이고, 운영자가 다시 보내면 처음 상태로 돌아간다. 누적 카운터만
+ * 두고 푸는 방법을 두지 않으면 오타를 반복한 고객이 영영 서명할 수 없게 된다.
+ */
 export const resetIdentityAttempts = async (contractId: string): Promise<void> => {
   try {
-    await getDb().delete(rateLimits).where(eq(rateLimits.key, `sign_identity:${contractId}`));
+    await getDb()
+      .delete(rateLimits)
+      .where(
+        inArray(rateLimits.key, [identityWindowKey(contractId), identityTotalKey(contractId)]),
+      );
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Failed to reset identity attempts:', error);
   }

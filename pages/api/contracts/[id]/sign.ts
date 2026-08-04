@@ -1,14 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { waitUntil } from '@vercel/functions';
-import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../../../db/client';
-import { contractAttachments, contractClauses, contracts, signatures } from '../../../../db/schema';
-import { checkIdentityAttemptLimit, resetIdentityAttempts } from '../../../../lib/contracts/admin-rate-limit';
+import { checkIdentityAttempt, resetIdentityAttempts } from '../../../../lib/contracts/admin-rate-limit';
 import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
 import { buildFingerprintInput, computeContractFingerprint } from '../../../../lib/contracts/integrity';
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
+import { buildSignStatements } from '../../../../lib/contracts/sign-transaction';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
 
 const getClientIp = (req: NextApiRequest): string => {
@@ -93,8 +92,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 뒷자리를 맞추게 해, 링크를 알게 된 제3자를 걸러낸다. 네 자리뿐이라 대입이 가능하므로
      * 시도 횟수도 제한한다.
      */
-    const withinAttempts = await checkIdentityAttemptLimit(contract.id);
-    if (!withinAttempts) {
+    const attemptVerdict = await checkIdentityAttempt(contract.id);
+    if (attemptVerdict === 'locked') {
+      return res.status(429).json({
+        ok: false,
+        message:
+          '본인 확인에 여러 번 실패해 이 서명 링크가 잠겼습니다. 운영자에게 재발송을 요청해 주세요. (010-4255-7893)',
+      });
+    }
+    if (attemptVerdict === 'throttled') {
       return res.status(429).json({
         ok: false,
         message: '본인 확인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.',
@@ -146,20 +152,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
     }
 
-    /**
-     * 서명 확정에 필요한 쓰기를 하나의 트랜잭션으로 묶는다.
-     *
-     * 두 가지를 동시에 만족해야 한다.
-     *
-     * 하나는 중복 방지다. 상태를 확인한 뒤 쓰기까지는 틈이 있어(TOCTOU) 동시에 들어온
-     * 요청이 모두 검사를 통과할 수 있다. 조건 없이 쓰면 늦게 도착한 요청이 이미 확정된
-     * 서명 이미지·시각·IP를 덮어쓴다. 그래서 모든 UPDATE에 "아직 처리 전"이라는 조건을
-     * 걸고, 실제로 몇 행이 바뀌었는지로 판정한다.
-     *
-     * 다른 하나는 원자성이다. 선점과 서명 기록을 나눠 실행하면 그 사이에서 실패했을 때
-     * 서명 없는 signed 계약이 남고, 재시도는 "이미 서명됨"으로 막혀 복구할 수 없다.
-     * batch는 트랜잭션이라 전부 반영되거나 전부 취소된다.
-     */
     // 서명 시점 문서의 지문. 나중에 다시 계산해 대조하면 사후 변조를 탐지할 수 있다.
     const contentHash = computeContractFingerprint(
       buildFingerprintInput(contract, {
@@ -170,43 +162,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }),
     );
 
-    const [contractResult, signatureResult] = await getDb().batch([
-      getDb()
-        .update(contracts)
-        .set({
-          status: 'signed',
-          signedAt: now,
-          signTokenUsedAt: now,
-          rulesAgreed: true,
-          rulesAgreedAt: now,
-          identityVerifiedAt: now,
-          contentHash,
-          updatedAt: now,
-        })
-        .where(and(eq(contracts.id, contract.id), eq(contracts.status, 'sent'))),
-      getDb()
-        .update(signatures)
-        .set({
-          status: 'signed',
-          signedAt: now,
-          signatureData,
-          ipAddress,
-          userAgent,
-          updatedAt: now,
-        })
-        .where(and(eq(signatures.id, pendingSignature.id), eq(signatures.status, 'pending'))),
-      // 동의 시각은 최초 서명 때만 남긴다(재실행이 감사 기록을 밀어내지 않도록).
-      getDb()
-        .update(contractClauses)
-        .set({ agreedAt: now })
-        .where(and(eq(contractClauses.contractId, contract.id), isNull(contractClauses.agreedAt))),
-      getDb()
-        .update(contractAttachments)
-        .set({ agreedAt: now })
-        .where(
-          and(eq(contractAttachments.contractId, contract.id), isNull(contractAttachments.agreedAt)),
-        ),
-    ]);
+    /**
+     * 상태를 확인한 뒤 쓰기까지는 틈이 있어(TOCTOU) 동시에 들어온 요청이 모두 검사를
+     * 통과할 수 있다. 조건 없이 쓰면 늦게 도착한 요청이 이미 확정된 서명 이미지·시각·IP를
+     * 덮어쓴다. 그래서 모든 문장이 "계약이 아직 서명 대기"라는 조건에 걸리고, 실제로 몇
+     * 행이 바뀌었는지로 판정한다. 조건과 순서는 sign-transaction.ts에 있다.
+     */
+    const [signatureResult, , , contractResult] = await getDb().batch(
+      buildSignStatements(getDb(), {
+        contractId: contract.id,
+        signatureId: pendingSignature.id,
+        now,
+        signatureData,
+        ipAddress,
+        userAgent,
+        contentHash,
+      }),
+    );
 
     if (contractResult.rowsAffected === 0 || signatureResult.rowsAffected === 0) {
       return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
