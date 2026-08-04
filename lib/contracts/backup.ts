@@ -43,17 +43,38 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   const sanitized = all.map(({ signToken: _signToken, ...rest }) => rest);
 
   const stamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
-  const blob = await put(
-    `${BACKUP_PREFIX}${stamp}.json`,
-    JSON.stringify({ exportedAt: now.toISOString(), contracts: sanitized }, null, 2),
-    { access: 'private', contentType: 'application/json', addRandomSuffix: false },
-  );
+
+  /**
+   * 백업 쓰기가 실패해도 정리는 한다.
+   *
+   * 예전에는 put이 던지면 여기서 함수가 끝나 만료된 백업이 남았다. 그 파일들에는 이름·연락처·
+   * 주소·계약 본문이 평문으로 들어 있어, 백업이 며칠 연속 실패하면 보관 기한이 지난 개인정보가
+   * 그만큼 계속 쌓인 채로 있게 된다. 백업을 못 뜬 것과 옛 개인정보를 못 지운 것은 별개의
+   * 문제이고, 하나가 실패했다고 다른 하나를 건너뛸 이유가 없다.
+   */
+  let blobPath: string | null = null;
+  let backupError: unknown = null;
+
+  try {
+    const blob = await put(
+      `${BACKUP_PREFIX}${stamp}.json`,
+      JSON.stringify({ exportedAt: now.toISOString(), contracts: sanitized }, null, 2),
+      { access: 'private', contentType: 'application/json', addRandomSuffix: false },
+    );
+    blobPath = blob.pathname;
+  } catch (error: unknown) {
+    backupError = error;
+    console.error('[contracts/backup] Failed to write backup — 정리는 계속한다:', error);
+  }
 
   const removedBackups = await removeExpiredBackups(now);
   const removedOrphanPdfs = await removeOrphanPdfs(all, now);
 
+  // 정리를 마친 뒤에 실패를 알린다. 호출부(크론)가 운영자에게 메일을 보낸다.
+  if (backupError) throw backupError;
+
   return {
-    backupPath: blob.pathname,
+    backupPath: blobPath as string,
     contracts: all.length,
     removedBackups,
     removedOrphanPdfs,

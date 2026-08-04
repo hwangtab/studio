@@ -49,14 +49,14 @@ describe('계약서 본문 생성', () => {
    * 통과해, 특약 문구가 마크업으로 해석되며 계약서에서 사라질 수 있었다. 특약은
    * 당사자가 따로 합의한 조건이라 사라지면 곧바로 분쟁이 된다.
    */
-  it('특약사항의 HTML을 이스케이프한다 — 문구가 마크업으로 사라지지 않는다', () => {
+  it('특약사항의 태그가 살아나지 않는다 — 문구가 마크업으로 사라지지 않는다', () => {
     const content = buildContractContent({
       ...baseData,
       specialTerms: ['위약금 <b>면제</b> 없음'],
     });
 
-    expect(content).toContain('&lt;b&gt;');
     expect(content).not.toContain('<b>');
+    expect(content).toContain('\\<b\\>');
   });
 
   it('특약사항이 렌더링 후에도 원문 그대로 남는다', () => {
@@ -125,14 +125,39 @@ describe('계약서 본문 생성', () => {
     expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
   });
 
-  it('이용자 입력의 HTML을 이스케이프한다', () => {
+  it('이용자 입력의 태그가 살아나지 않는다', () => {
     const content = buildContractContent({
       ...baseData,
       customerName: '<script>alert(1)</script>',
     });
 
     expect(content).not.toContain('<script>');
-    expect(content).toContain('&lt;script&gt;');
+    expect(content).toContain('\\<script\\>');
+
+    // 판정 기준은 렌더링 결과다 — markdown-to-jsx는 인라인 HTML을 실제 태그로 살려낸다.
+    const html = renderMarkdown(content);
+    expect(html).not.toContain('<script>');
+    expect(html).toContain('&lt;script&gt;');
+  });
+
+  /**
+   * 이스케이프를 HTML 엔티티로 하면 렌더러가 앰퍼샌드를 한 번 더 처리해, 아포스트로피가
+   * 든 이름이 계약서에 O&#039;Brien으로 인쇄된다. 7개 언어로 운영하는 사이트라 실제로
+   * 생기는 일이고, 이름이 틀린 계약서는 그 자체로 분쟁거리다.
+   */
+  it.each([
+    ["O'Brien", 'O&#x27;Brien'],
+    ['Tom & Jerry', 'Tom &amp; Jerry'],
+    ['He said "hi"', 'He said &quot;hi&quot;'],
+  ])('%s 같은 이름이 계약서에 그대로 인쇄된다', (name, expected) => {
+    const html = renderMarkdown(buildContractContent({ ...baseData, customerName: name }));
+    const row = html.match(/<tr><td>\s*성명\s*<\/td>[\s\S]*?<\/tr>/)?.[0] ?? '';
+
+    // 브라우저·PDF가 이 엔티티를 원래 문자로 되돌려 화면에 보여 준다.
+    expect(row).toContain(expected);
+    // 이중 이스케이프의 흔적이 남으면 화면에 &#039; 같은 것이 그대로 보인다.
+    expect(row).not.toContain('&amp;#');
+    expect(row).not.toContain('&amp;quot;');
   });
 
   it('납부일을 생략하면 1일로 채운다', () => {
