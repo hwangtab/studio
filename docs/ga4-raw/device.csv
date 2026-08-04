@@ -1,36 +1,36 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",7479,0.137
-"mobile","South Korea",6386,0.159
-"tablet","South Korea",255,0.149
-"desktop","China",129,0.597
-"mobile","United States",84,0.143
-"desktop","United States",82,0.146
-"desktop","Japan",58,0.121
-"mobile","Japan",50,0.140
+"desktop","South Korea",7987,0.154
+"mobile","South Korea",6948,0.184
+"tablet","South Korea",272,0.188
+"desktop","China",139,0.626
+"desktop","United States",93,0.204
+"mobile","United States",87,0.161
+"desktop","Japan",69,0.174
+"mobile","Japan",56,0.161
 "desktop","Canada",28,0.107
 "mobile","Canada",20,0.100
-"desktop","Singapore",17,0.176
-"mobile","Australia",13,0.154
-"mobile","Thailand",11,0.182
-"mobile","Vietnam",11,0.091
-"mobile","China",10,0.400
-"desktop","Australia",9,0.333
-"desktop","Hong Kong",9,0.444
-"desktop","New Zealand",9,0.444
+"desktop","Singapore",19,0.263
+"mobile","Australia",16,0.188
+"mobile","Vietnam",15,0.267
+"mobile","China",12,0.500
+"mobile","Thailand",12,0.250
+"desktop","Australia",10,0.300
+"desktop","New Zealand",7,0.286
 "mobile","New Zealand",7,0.143
 "desktop","France",6,0.000
+"desktop","Hong Kong",6,0.333
 "desktop","Spain",6,0.000
 "desktop","Brazil",5,0.000
 "desktop","Philippines",5,0.200
+"desktop","Taiwan",5,0.200
 "desktop","Thailand",5,0.000
+"mobile","Hong Kong",5,0.400
 "mobile","Indonesia",5,0.400
 "desktop","India",4,0.000
 "desktop","Malaysia",4,0.000
 "desktop","Namibia",4,0.000
 "desktop","Russia",4,0.000
-"desktop","Taiwan",4,0.250
 "desktop","United Kingdom",4,0.000
-"mobile","Hong Kong",4,0.250
 "tablet","United States",4,0.500
 "desktop","(not set)",3,0.000
 "desktop","Indonesia",3,0.000
@@ -40,12 +40,12 @@ device,country,sessions,bounce_rate
 "desktop","Bangladesh",2,0.000
 "desktop","Ecuador",2,0.000
 "desktop","Pakistan",2,0.000
+"desktop","Venezuela",2,0.500
 "mobile","Brazil",2,0.500
 "mobile","Panama",2,0.000
 "mobile","Philippines",2,0.000
 "mobile","Türkiye",2,0.000
+"tablet","Türkiye",2,0.500
 "desktop","Cambodia",1,0.000
 "desktop","Fiji",1,0.000
 "desktop","Ireland",1,0.000
-"desktop","Kenya",1,0.000
-"desktop","Mexico",1,0.000
