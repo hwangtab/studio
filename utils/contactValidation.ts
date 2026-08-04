@@ -35,7 +35,9 @@ export const CONTACT_LIMITS = {
   message: { min: 10, max: 5000 },
 } as const;
 
-const NAME_PATTERN = /^[\p{L}\p{M}\s'.,-]+$/u;
+// 숫자·괄호·&·/ 허용 — "Alex (DJ)", "MC 스나이퍼", "AB6IX 팬" 같은 활동명·팀명이
+// name_invalid로 튕기던 것을 완화 (2026-08-04 매출 감사: en 폼 필드 에러 12건 vs 성공 2건).
+const NAME_PATTERN = /^[\p{L}\p{M}\p{N}\s'.,()&/-]+$/u;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^[\d\s+\-\(\)\.]+$/;
 

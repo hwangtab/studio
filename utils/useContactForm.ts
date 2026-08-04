@@ -180,8 +180,19 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
   // field_error 이벤트는 "사용자가 잘못된 값을 남기고 떠났다"는 진짜 신호일 때만 발사.
   const handleBlur = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name } = event.target;
+      const { name, value } = event.target;
       if (!isContactField(name)) return;
+
+      // 빈 필드는 blur에서 검증하지 않는다 — 탭·클릭으로 지나가기만 해도
+      // required 에러가 뜨면, 폼 위에 카톡·이메일 대안 버튼이 많아 훑어보는
+      // 동선이 긴 페이지(특히 /en/contact)에서 이탈을 유발하고 field_error
+      // 이벤트를 부풀린다(90일 en 필드 에러 12건 vs 제출 성공 2건).
+      // required 검증은 submit 시점이 담당한다. 값을 지우고 떠난 경우엔
+      // 남아 있던 형식 에러만 조용히 해제한다.
+      if (!value.trim()) {
+        setErrors((prev) => (prev[name] ? { ...prev, [name]: '' } : prev));
+        return;
+      }
 
       const code = validateContactField(name, toContactFormFields(formData));
       const nextMessage = getValidationMessage(code);
