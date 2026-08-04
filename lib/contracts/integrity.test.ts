@@ -9,16 +9,22 @@ import {
 
 const base = (): ContractFingerprintInput => ({
   contractId: 'contract-1',
+  title: '홍길동 A호 이용계약',
   customerName: '홍길동',
+  customerEmail: 'a@studionol.co.kr',
   customerPhone: '010-1234-5678',
+  customerAddress: '서울시 은평구 대조동',
   roomNumber: 'A',
+  paymentDay: 1,
   startDate: new Date('2026-09-01T00:00:00.000Z'),
   endDate: new Date('2026-12-01T00:00:00.000Z'),
   monthlyRent: 300000,
   depositAmount: 300000,
   content: '# 음악연습실 이용계약서\n\n월 이용료 300,000원',
-  attachmentContents: ['# 공동생활 이용수칙\n\n금연'],
+  attachments: [{ type: 'rules', title: '공동생활 이용수칙', content: '# 공동생활 이용수칙\n\n금연' }],
+  clauses: [{ clauseNumber: '제5조', title: '보증금 및 그 납부 면제' }],
   signatureData: 'data:image/png;base64,AAAA',
+  signer: { name: '홍길동', email: 'a@studionol.co.kr', ipAddress: '203.0.113.9' },
   signedAt: new Date('2026-07-30T05:00:00.000Z'),
   identityVerifiedAt: new Date('2026-07-30T05:00:00.000Z'),
 });
@@ -35,7 +41,7 @@ describe('문서 무결성 지문', () => {
   // 아래 항목이 하나라도 바뀌면 "그때 서명한 그 문서"가 아니다.
   it.each([
     ['계약 본문', { content: '# 음악연습실 이용계약서\n\n월 이용료 900,000원' }],
-    ['첨부 내용', { attachmentContents: ['# 공동생활 이용수칙\n\n흡연 허용'] }],
+    ['첨부 내용', { attachments: [{ type: 'rules', title: '공동생활 이용수칙', content: '# 공동생활 이용수칙\n\n흡연 허용' }] }],
     ['서명 이미지', { signatureData: 'data:image/png;base64,BBBB' }],
     ['서명 시각', { signedAt: new Date('2026-07-30T05:00:01.000Z') }],
     ['계약 식별자', { contractId: 'contract-2' }],
@@ -97,6 +103,17 @@ describe('문서 무결성 지문', () => {
     ['시작일', { startDate: new Date('2026-10-01T00:00:00.000Z') }],
     ['종료일', { endDate: new Date('2027-03-01T00:00:00.000Z') }],
     ['본인 확인 시각', { identityVerifiedAt: null }],
+    ['계약 제목', { title: '다른 제목' }],
+    ['이메일', { customerEmail: 'other@studionol.co.kr' }],
+    ['주소', { customerAddress: '서울시 강남구' }],
+    ['납부일', { paymentDay: 15 }],
+    ['서명자 이름', { signer: { name: '김철수', email: 'a@studionol.co.kr', ipAddress: '203.0.113.9' } }],
+    ['서명자 이메일', { signer: { name: '홍길동', email: 'x@studionol.co.kr', ipAddress: '203.0.113.9' } }],
+    ['서명자 IP', { signer: { name: '홍길동', email: 'a@studionol.co.kr', ipAddress: '198.51.100.1' } }],
+    ['첨부 종류', { attachments: [{ type: 'other', title: '공동생활 이용수칙', content: '# 공동생활 이용수칙\n\n금연' }] }],
+    ['첨부 제목', { attachments: [{ type: 'rules', title: '다른 문서', content: '# 공동생활 이용수칙\n\n금연' }] }],
+    ['동의 조항 번호', { clauses: [{ clauseNumber: '제6조', title: '보증금 및 그 납부 면제' }] }],
+    ['동의 조항 제목', { clauses: [{ clauseNumber: '제5조', title: '다른 조항' }] }],
   ])('%s만 바뀌어도 지문이 달라진다', (_label, patch) => {
     expect(computeContractFingerprint({ ...base(), ...patch })).not.toBe(
       computeContractFingerprint(base()),
@@ -104,8 +121,11 @@ describe('문서 무결성 지문', () => {
   });
 
   it('첨부가 없는 계약과 빈 첨부가 있는 계약을 구분한다', () => {
-    const none = computeContractFingerprint({ ...base(), attachmentContents: [] });
-    const empty = computeContractFingerprint({ ...base(), attachmentContents: [null] });
+    const none = computeContractFingerprint({ ...base(), attachments: [] });
+    const empty = computeContractFingerprint({
+      ...base(),
+      attachments: [{ type: 'rules', title: '공동생활 이용수칙', content: null }],
+    });
     expect(none).not.toBe(empty);
   });
 
@@ -117,12 +137,12 @@ describe('문서 무결성 지문', () => {
     const a = computeContractFingerprint({
       ...base(),
       content: 'AB',
-      attachmentContents: ['CD'],
+      attachments: [{ type: 'rules', title: 'T', content: 'CD' }],
     });
     const b = computeContractFingerprint({
       ...base(),
       content: 'ABC',
-      attachmentContents: ['D'],
+      attachments: [{ type: 'rules', title: 'T', content: 'D' }],
     });
     expect(a).not.toBe(b);
   });

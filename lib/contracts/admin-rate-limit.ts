@@ -3,6 +3,7 @@ import { eq, inArray, lte, sql } from 'drizzle-orm';
 import type { NextApiRequest } from 'next';
 
 import { getDb } from '../../db/client';
+import { getClientIp } from './client-ip';
 import { rateLimits } from '../../db/schema';
 
 /** 관리자 비밀번호는 하나뿐이라 무차별 대입에 특히 취약하다. 창을 좁게 잡는다. */
@@ -17,9 +18,8 @@ interface MemoryEntry {
 const memoryStore = new Map<string, MemoryEntry>();
 
 const getSubjectKey = (req: NextApiRequest): string => {
-  const forwarded = req.headers['x-vercel-forwarded-for'] ?? req.headers['x-forwarded-for'];
-  const raw = Array.isArray(forwarded) ? forwarded[0] : forwarded;
-  const ip = String(raw || req.socket.remoteAddress || '').split(',')[0].trim();
+  // 위조 가능한 헤더를 기준으로 세면 제한이 무의미하다 — 판정은 client-ip 한 곳에 둔다.
+  const ip = getClientIp(req);
 
   if (ip) return `admin_login:ip:${ip}`;
 

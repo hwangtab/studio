@@ -3,18 +3,13 @@ import { waitUntil } from '@vercel/functions';
 
 import { getDb } from '../../../../db/client';
 import { checkIdentityAttempt, resetIdentityAttempts } from '../../../../lib/contracts/admin-rate-limit';
+import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { finalizeSignedContract } from '../../../../lib/contracts/finalize';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
 import { buildFingerprintInput, computeContractFingerprint } from '../../../../lib/contracts/integrity';
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
 import { buildSignStatements } from '../../../../lib/contracts/sign-transaction';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
-
-const getClientIp = (req: NextApiRequest): string => {
-  const forwarded = req.headers['x-forwarded-for'];
-  const raw = Array.isArray(forwarded) ? forwarded[0] : forwarded || req.socket.remoteAddress || '';
-  return String(raw).split(',')[0].trim();
-};
 
 /**
  * 응답 뒤에 이어지는 후처리(PDF 생성·메일 발송)까지 이 함수의 실행 시간 안에서 끝나야
@@ -156,7 +151,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const contentHash = computeContractFingerprint(
       buildFingerprintInput(contract, {
         attachments: contract.contractAttachments,
+        clauses: contract.contractClauses,
         signatureData,
+        // 서명란에 인쇄되는 값 그대로. 서명행에 저장하는 것과 같은 값을 지문에도 넣는다.
+        signer: {
+          name: pendingSignature.signerName,
+          email: pendingSignature.signerEmail,
+          ipAddress,
+        },
         signedAt: now,
         identityVerifiedAt: now,
       }),
