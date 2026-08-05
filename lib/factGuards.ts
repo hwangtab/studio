@@ -188,11 +188,15 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     // 아티스트의 kosmart 소속·제작지원 서술은 합법(고객 이력) — 스튜디오의
     // 모조직 관계 주장(parent organization 류)만 금지한다. 어순 양방향
     // ("모기업 kosmart" / "kosmart는 …의 모기업") + subsidiary 표현 모두 커버.
+    // 2026-08-05 확장: 연습실 가격 블록에 "한국스마트협동조합 운영"이, 포트폴리오에
+    // "산하 스튜디오" / "operated under" / "Studio NOL(한국스마트협동조합)" 동일시
+    // 표기가 잔재로 발견됨(운영자 확인: 전부 황경하 인수, 현재 운영 관계 없음).
+    // 과거 발매작의 레이블·기획·제작·주관 크레딧은 역사적 사실이라 계속 허용.
     id: 'kosmart-parent-claim',
     description:
-      'kosmart는 현재 Studio NOL의 모조직 아님 — parent/모기업 표기 금지 (설립 이력 서술은 허용)',
+      'kosmart는 현재 Studio NOL의 모조직·운영 주체 아님 — parent/모기업/운영/산하 표기 금지 (설립 이력·발매작 크레딧 서술은 허용)',
     pattern:
-      /(?:parent\s+(?:organization|company)|모기업|모회사|모조직|상위\s?기관)[^\n]{0,40}(?:kosmart|한국스마트협동조합)|(?:kosmart|한국스마트협동조합)[^\n]{0,40}(?:모기업|모회사|모조직|parent\s+(?:organization|company))|(?:subsidiary|자회사|산하\s?기관)[^\n]{0,30}(?:kosmart|한국스마트협동조합)/i,
+      /(?:parent\s+(?:organization|company)|모기업|모회사|모조직|상위\s?기관)[^\n]{0,40}(?:kosmart|한국스마트협동조합)|(?:kosmart|한국스마트협동조합)[^\n]{0,40}(?:모기업|모회사|모조직|parent\s+(?:organization|company))|(?:subsidiary|자회사|산하\s?기관)[^\n]{0,30}(?:kosmart|한국스마트협동조합)|(?:kosmart|한국스마트협동조합)\s?산하|operated\s+(?:under|by)[^\n]{0,30}(?:kosmart|Korea(?:n)?\s+Smart\s+Cooperative)|(?:kosmart|한국스마트협동조합)[^\n]{0,8}(?:운영|직영)|韩国智慧合作社[^\n]{0,8}运营|Studio\s?NOL\s?[\(（](?:kosmart|한국스마트협동조합|Korea(?:n)?\s+Smart\s+Cooperative)[\)）]/i,
   },
   {
     // (1) allow에 단독 '가능'을 쓰면 금지 대상인 '불가능'이 자기 자신을 면제한다

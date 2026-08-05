@@ -137,6 +137,12 @@ describe('fact guard rules self-check', () => {
       ['Parent organization: kosmart.org', 'kosmart-parent-claim'],
       // 어순 역전형 parent 주장
       ['한국스마트협동조합은 Studio NOL의 모기업입니다', 'kosmart-parent-claim'],
+      // 2026-08-05 실사고: 연습실 가격 블록·포트폴리오에 라이브로 떠 있던 잔재들
+      ['한국스마트협동조합 운영 · 국내 최고 수준 방음 성능', 'kosmart-parent-claim'],
+      ['스튜디오 놀은 한국스마트협동조합 산하 스튜디오로서 본 작업에 관여했다.', 'kosmart-parent-claim'],
+      ['Studio NOL, operated under the Korea Smart Cooperative, was involved.', 'kosmart-parent-claim'],
+      ['Studio NOL(한국스마트협동조합)에서는 황경하가 전 과정을 담당했다.', 'kosmart-parent-claim'],
+      ['韩国智慧合作社运营 · 国内最高水平隔音性能', 'kosmart-parent-claim'],
       // '불가능'이 allow '가능'에 자기 면제되던 우회 경로 (1인칭 배제 단정)
       ['스튜디오 놀에서 드럼 녹음은 불가능합니다.', 'drum-exclusion-claim'],
       // 2026-07-28 사고: hubLocaleContentData(data/faq.ts)와 홈(data/home.ts)이 6개 언어로
@@ -201,6 +207,14 @@ describe('fact guard rules self-check', () => {
       '일산 신도시 아파트 단지에서 보컬·드럼·악기 연습은 사실상 불가능. STC 60+ 방음 개인실이 대안입니다.',
       '전화 010-4255-7893 또는 카카오톡으로 문의',
       '한국스마트협동조합이 제작을 지원한 아티스트의 발매작이다.',
+      // 발매작의 역사적 크레딧(레이블·기획·제작·펀딩 주관)은 현재 운영 주장이 아니다
+      "한국스마트협동조합 레이블을 통해 FUGA가 유통했다.",
+      '유통은 FUGA, 기획은 한국스마트협동조합이며 러닝타임은 4분 48초다.',
+      '한국스마트협동조합 제작, 바른음원협동조합 유통으로 발매된 8곡짜리 작품이다.',
+      '한국스마트협동조합이 주관한 텀블벅 크라우드펀딩을 통해 제작 자금을 모았다.',
+      'The release was produced in cooperation with the Korea Smart Cooperative.',
+      'The single is distributed by FUGA and planned by Korean Smart Cooperative.',
+      '스튜디오 놀 직영 · 국내 최고 수준 방음 성능 · 월 단위 계약으로 부담 없이 시작.',
       'Studio NOL does not offer vocal lessons; use an external vocal coach.',
     ];
 
