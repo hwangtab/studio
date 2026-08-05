@@ -117,7 +117,11 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
   스케일(0.98/0.1s), Button glass variant press(active:scale-[0.97]).
   카드 hover에 SHADOW_HOVER 금지 원칙은 전 glass variant로 확대.
 - 남은 솔리드: outline variant, 모달 본문 패널, StoryCard(BaseCard 미사용), KakaoFab.
-  프리뷰 배포 PSI 실측은 아직 미수행 — 배포 전 필수.
+- **성능 실측 완료 (2026-08-05, 프로덕션)**: lighthouse devtools 스로틀 기준
+  모바일 홈 96 · practice-room 95 · story 94 · pricing 92 (LCP 전부 1.8s),
+  데스크톱 홈(글래스 blur 전면 활성) 100 · TBT 0ms · CLS 0. CDN TTFB 58~67ms HIT.
+  글래스 리뉴얼 성능 회귀 없음 — 배포 게이트 통과. 익명 PSI API는 쿼터로 실패했으니
+  재측정 시 `--throttling-method=devtools` 로컬 측정을 쓸 것(방법론: PSI 메모리 참조).
 
 ## Next.js Experimental Flags
 
