@@ -215,6 +215,11 @@ describe('fact guard rules self-check', () => {
       'The release was produced in cooperation with the Korea Smart Cooperative.',
       'The single is distributed by FUGA and planned by Korean Smart Cooperative.',
       '스튜디오 놀 직영 · 국내 최고 수준 방음 성능 · 월 단위 계약으로 부담 없이 시작.',
+      // 부정문·인수 연혁 서술은 이 규칙이 지키려는 사실 그 자체 (2026-08-05 리뷰 지적)
+      '한국스마트협동조합이 설립해 운영하던 스튜디오였으나 황경하가 인수해 독립했다.',
+      '한국스마트협동조합이 운영하지 않습니다.',
+      'Studio NOL is no longer operated by the Korea Smart Cooperative.',
+      'The studio was operated by the Korea Smart Cooperative until 2024.',
       'Studio NOL does not offer vocal lessons; use an external vocal coach.',
     ];
 

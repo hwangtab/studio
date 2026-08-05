@@ -387,6 +387,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               label={t('practiceRoom.cta.inquiry')}
               phone={siteConfig.contact.phone}
               phoneCtaId="practice_room_mid_phone"
+              surface="onSurface"
             />
           </div>
         </div>

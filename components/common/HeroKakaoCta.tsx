@@ -19,6 +19,13 @@ interface HeroKakaoCtaProps {
    */
   phone?: string;
   phoneCtaId?: string;
+  /**
+   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 흰 카카오 버튼 + 반투명 흰 전화 버튼.
+   * 'onSurface': 본문 섹션 배경 위 — 히어로용 스타일은 라이트 모드 밝은 배경에서
+   * 전화 버튼(text-white/bg-white/15)이 보이지 않으므로, 솔리드 primary 카카오 +
+   * 테두리 전화 버튼으로 강등한다.
+   */
+  surface?: 'onImage' | 'onSurface';
 }
 
 /**
@@ -28,7 +35,8 @@ interface HeroKakaoCtaProps {
  * 직링크를 히어로에 노출하고 `lead_click_kakao`를 발화한다.
  * (pricing/release 히어로 CTA와 동일한 시각·계측 패턴을 단일 컴포넌트로 통일.)
  */
-const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneCtaId }: HeroKakaoCtaProps) => {
+const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneCtaId, surface = 'onImage' }: HeroKakaoCtaProps) => {
+  const onImage = surface === 'onImage';
   const kakaoButton = (
     <a
       href={kakaoUrl}
@@ -41,7 +49,11 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneC
           cta_id: ctaId,
         })
       }
-      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] font-bold text-base sm:text-lg py-4 px-10 rounded-full transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+        onImage
+          ? 'bg-white text-primary-dark hover:bg-gray-100 focus-visible:ring-primary/40 focus-visible:ring-offset-white'
+          : 'bg-primary text-white hover:bg-primary-dark focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
+      }`}
     >
       <MessageCircle className="w-5 h-5" aria-hidden="true" />
       {label}
@@ -64,7 +76,11 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneC
             cta_id: phoneCtaId ?? `${ctaId}_phone`,
           })
         }
-        className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-[48px] py-4 px-8 rounded-full border border-white/40 bg-white/15 text-white font-semibold text-base sm:text-lg hover:bg-white/25 transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+        className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-[48px] py-4 px-8 rounded-full border font-semibold text-base sm:text-lg transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+          onImage
+            ? 'border-white/40 bg-white/15 text-white hover:bg-white/25 focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
+            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
+        }`}
       >
         <Phone className="w-5 h-5" aria-hidden="true" />
         {phone}

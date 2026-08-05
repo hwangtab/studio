@@ -197,6 +197,11 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
       'kosmart는 현재 Studio NOL의 모조직·운영 주체 아님 — parent/모기업/운영/산하 표기 금지 (설립 이력·발매작 크레딧 서술은 허용)',
     pattern:
       /(?:parent\s+(?:organization|company)|모기업|모회사|모조직|상위\s?기관)[^\n]{0,40}(?:kosmart|한국스마트협동조합)|(?:kosmart|한국스마트협동조합)[^\n]{0,40}(?:모기업|모회사|모조직|parent\s+(?:organization|company))|(?:subsidiary|자회사|산하\s?기관)[^\n]{0,30}(?:kosmart|한국스마트협동조합)|(?:kosmart|한국스마트협동조합)\s?산하|operated\s+(?:under|by)[^\n]{0,30}(?:kosmart|Korea(?:n)?\s+Smart\s+Cooperative)|(?:kosmart|한국스마트협동조합)[^\n]{0,8}(?:운영|직영)|韩国智慧合作社[^\n]{0,8}运营|Studio\s?NOL\s?[\(（](?:kosmart|한국스마트협동조합|Korea(?:n)?\s+Smart\s+Cooperative)[\)）]/i,
+    // 부정문("운영하지 않")·과거형("운영하던/운영했")·인수·독립 연혁 서술은 이 규칙이
+    // 지키려는 사실 그 자체라 합법이다. '했'을 단독으로 넣으면 "관여했다" 같은 위반
+    // 문장의 서술어가 자기 면제된다 — 반드시 '운영했/직영했'처럼 결합형으로만 쓸 것.
+    allow:
+      /(?:운영|직영)하지\s?않|(?:운영|직영)\s?아님|(?:운영|직영)하던|(?:운영|직영)했|였으나|no\s+longer|formerly|was\s+(?:founded|operated)|until\s+\d{4}|인수(?:하며|하면서|해|한|로)|독립/i,
   },
   {
     // (1) allow에 단독 '가능'을 쓰면 금지 대상인 '불가능'이 자기 자신을 면제한다
