@@ -4,7 +4,16 @@ import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 
 import { getAdminSession, getAdminSessionFromContext, isAdminSessionValid } from './admin-session';
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const MIN_PASSWORD_LENGTH = 16;
+
+/**
+ * 관리자 비밀번호의 최소 길이.
+ *
+ * 이 값 하나가 모든 계약의 개인정보를 지키는 유일한 자물쇠이므로 짧은 값을 허용하지 않는다.
+ * 대소문자·숫자·기호를 섞은 13자는 조합이 10^23을 넘고, 로그인은 10분에 10회로 제한되므로
+ * 무작위 대입으로는 사실상 뚫리지 않는다. 실제 위험은 길이가 아니라 짐작 가능한 값
+ * (사이트명, 연도, 흔한 단어)이며 그것은 길이로 막을 수 없다.
+ */
+const MIN_PASSWORD_LENGTH = 13;
 
 /**
  * 길이가 달라도 상수 시간에 비교하기 위해 양쪽을 SHA-256으로 고정 길이화한 뒤
