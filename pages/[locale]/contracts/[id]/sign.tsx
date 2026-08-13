@@ -115,11 +115,11 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
 };
 
 const Notice = ({ title, description }: { title: string; description: string }) => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-    <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
-      <h1 className="text-xl font-bold text-gray-900 mb-3">{title}</h1>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
-      <p className="text-sm text-gray-400 mt-6">
+  <div className="min-h-screen bg-gray-50 dark:bg-gray-50 flex items-center justify-center px-4">
+    <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
+      <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-3">{title}</h1>
+      <p className="text-gray-600 dark:text-gray-600 leading-relaxed">{description}</p>
+      <p className="text-sm text-gray-400 dark:text-gray-400 mt-6">
         문의: 스튜디오 놀 010-4255-7893
       </p>
     </div>
@@ -382,12 +382,12 @@ export default function ContractSignPage({
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 py-8 md:py-12">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-primary p-6 md:p-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-white">음악연습실 이용계약서</h1>
-              <p className="text-white/80 mt-2">
+              <h1 className="text-2xl md:text-3xl font-bold text-white dark:text-white">음악연습실 이용계약서</h1>
+              <p className="text-white dark:text-white/80 mt-2">
                 {contract.customerName}님, 아래 내용을 확인하고 서명해 주세요.
               </p>
             </div>
@@ -396,16 +396,16 @@ export default function ContractSignPage({
               <ContractContent content={contract.content} />
 
               {rulesContent && (
-                <div className="mt-8 border border-gray-200 rounded-xl overflow-hidden">
+                <div className="mt-8 border border-gray-200 dark:border-gray-200 rounded-xl overflow-hidden">
                   <button
                     type="button"
                     onClick={() => setShowRules((prev) => !prev)}
-                    className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 hover:bg-gray-100 text-left"
+                    className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-50 hover:bg-gray-100 text-left"
                   >
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-gray-900 dark:text-gray-900">
                       첨부 「공동생활 이용수칙」 {showRules ? '접기' : '펼쳐 보기'}
                     </span>
-                    <span className="text-gray-400">{showRules ? '−' : '+'}</span>
+                    <span className="text-gray-400 dark:text-gray-400">{showRules ? '−' : '+'}</span>
                   </button>
                   {showRules && (
                     <div className="px-5 py-4 prose prose-sm max-w-none prose-headings:font-bold">
@@ -415,24 +415,24 @@ export default function ContractSignPage({
                 </div>
               )}
 
-              <div className="mt-10 border-t border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">필수 동의</h2>
+              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
 
                 <div className="space-y-3">
                   {clauses.map((clause) => (
                     <label
                       key={clause.id}
-                      className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
+                      className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
                     >
                       <input
                         type="checkbox"
-                        className="mt-1 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                        className="mt-1 h-5 w-5 rounded border-gray-300 dark:border-gray-300 text-primary focus:ring-primary"
                         checked={agreements[clause.id] || false}
                         onChange={(e) =>
                           setAgreements((prev) => ({ ...prev, [clause.id]: e.target.checked }))
                         }
                       />
-                      <span className="text-gray-700">
+                      <span className="text-gray-700 dark:text-gray-700">
                         <span className="font-semibold">{clause.clauseNumber}</span> {clause.title}
                         에 동의합니다.
                       </span>
@@ -442,17 +442,17 @@ export default function ContractSignPage({
                   {attachments.map((attachment) => (
                     <label
                       key={attachment.id}
-                      className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
+                      className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
                     >
                       <input
                         type="checkbox"
-                        className="mt-1 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                        className="mt-1 h-5 w-5 rounded border-gray-300 dark:border-gray-300 text-primary focus:ring-primary"
                         checked={agreements[attachment.id] || false}
                         onChange={(e) =>
                           setAgreements((prev) => ({ ...prev, [attachment.id]: e.target.checked }))
                         }
                       />
-                      <span className="text-gray-700">
+                      <span className="text-gray-700 dark:text-gray-700">
                         「{attachment.title}」을 읽고 동의합니다.
                       </span>
                     </label>
@@ -460,11 +460,11 @@ export default function ContractSignPage({
                 </div>
               </div>
 
-              <div className="mt-10 border-t border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-2">본인 확인</h2>
-                <p className="text-sm text-gray-600 mb-4">
+              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   계약 체결 시 등록하신 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
-                  <span className="block mt-1 text-gray-500">
+                  <span className="block mt-1 text-gray-500 dark:text-gray-500">
                     본인 확인을 위해 위 계약서에서는 이 자리를 가려 두었습니다. 서명이 끝난
                     계약서에는 전체 번호가 기재됩니다.
                   </span>
@@ -481,30 +481,33 @@ export default function ContractSignPage({
                   }
                   placeholder={'0'.repeat(IDENTITY_DIGITS)}
                   aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
-                  className="w-32 text-center tracking-[0.4em] text-lg rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  /* 배경·글자색을 명시한다. globals.css의 `color-scheme: light dark` 때문에
+                     OS가 다크 모드면 브라우저가 입력칸을 제멋대로 어둡게 칠하고, 글자색은
+                     상속을 따라가 입력한 네 자리가 보이지 않는 조합이 만들어진다. */
+                  className="w-32 text-center tracking-[0.4em] text-lg rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [color-scheme:light]"
                 />
 
-                <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
+                <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
                   <input
                     type="checkbox"
-                    className="mt-1 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="mt-1 h-5 w-5 rounded border-gray-300 dark:border-gray-300 text-primary focus:ring-primary"
                     checked={identityConfirmed}
                     onChange={(e) => setIdentityConfirmed(e.target.checked)}
                   />
-                  <span className="text-gray-700">
+                  <span className="text-gray-700 dark:text-gray-700">
                     본인이 계약 당사자임을 확인하며, 위 계약 내용을 모두 읽고 이해했습니다.
                     아래 <strong>전자서명</strong>이 자필 서명과 같은 효력을 가지는 데 동의합니다.
                   </span>
                 </label>
               </div>
 
-              <div className="mt-10 border-t border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-2">전자서명</h2>
-                <p className="text-sm text-gray-600 mb-4">
+              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
                 </p>
 
-                <div className="border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-white">
+                <div className="border-2 border-dashed border-gray-300 dark:border-gray-300 rounded-xl overflow-hidden bg-white dark:bg-white">
                   {/* 해상도는 마운트 후 표시 크기에 맞춰 잡는다(setupCanvas). 여기서
                       width/height를 고정하면 화면 비율과 어긋나 서명이 늘어난다. */}
                   <canvas
@@ -523,14 +526,14 @@ export default function ContractSignPage({
                 <button
                   type="button"
                   onClick={clearSignature}
-                  className="mt-3 text-sm text-gray-500 hover:text-gray-700 underline"
+                  className="mt-3 text-sm text-gray-500 dark:text-gray-500 hover:text-gray-700 underline"
                 >
                   서명 지우기
                 </button>
               </div>
 
               {submitError && (
-                <div className="mt-6 p-4 bg-red-50 text-red-700 rounded-xl text-sm">
+                <div className="mt-6 p-4 bg-red-50 dark:bg-red-50 text-red-700 dark:text-red-700 rounded-xl text-sm">
                   {submitError}
                 </div>
               )}
@@ -545,7 +548,7 @@ export default function ContractSignPage({
                   {submitting ? '처리 중...' : '계약서 서명 완료'}
                 </Button>
                 {!submitting && (!allAgreed || !identityReady || !hasSigned) && (
-                  <p className="mt-3 text-center text-sm text-gray-500">
+                  <p className="mt-3 text-center text-sm text-gray-500 dark:text-gray-500">
                     {!allAgreed
                       ? '모든 동의 항목에 체크해 주세요.'
                       : !identityReady

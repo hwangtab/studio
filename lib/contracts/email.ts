@@ -1,31 +1,16 @@
 import { sendEmail } from '../email/resend';
 import type { Contract } from '../../db/schema';
 import { buildContractEmailHtml, strong, type ContractEmailRow } from './email-template';
+import { formatCompactDate, formatCurrency, formatDate } from './format';
 import { escapeHtml } from './html-escape';
 import { IDENTITY_DIGITS } from './identity';
 import { SIGN_TOKEN_TTL_DAYS } from './status';
 
 const OPERATOR_EMAIL = process.env.CONTRACT_OPERATOR_EMAIL || 'hwangtab@gmail.com';
 
-const formatCurrency = (amount: number): string => new Intl.NumberFormat('ko-KR').format(amount);
-
-const formatDate = (date: string | Date | null): string => {
-  if (!date) return '-';
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-};
-
-/**
- * 표에 들어가는 기간은 짧은 형식으로 쓴다.
- *
- * "2026년 9월 1일 ~ 2027년 3월 1일"은 좁은 화면의 표 셀에서 "2027년 3월 / 1일"로 쪼개져
- * 날짜를 잘못 읽기 쉽다. 계약 기간은 오독이 곧 분쟁이라 한 줄에 담기는 형태가 낫다.
- */
-const compactDate = (date: Date): string =>
-  `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 
 const period = (contract: Contract): string =>
-  `${compactDate(contract.startDate)} ~ ${compactDate(contract.endDate)}`;
+  `${formatCompactDate(contract.startDate)} ~ ${formatCompactDate(contract.endDate)}`;
 
 /** 계약 조건은 메일 본문에도 그대로 적는다 — 링크를 누르기 전에 확인할 수 있어야 한다. */
 const contractRows = (contract: Contract): ContractEmailRow[] => [

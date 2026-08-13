@@ -1,5 +1,6 @@
 /** @jest-environment node */
 
+import { addMonths } from '../../components/admin/ContractForm';
 import { validateCreateContractPayload } from './validation';
 
 const validPayload = () => ({
@@ -120,18 +121,24 @@ describe('계약 생성 페이로드 검증', () => {
     });
   });
 
+  /**
+   * 계약 기간은 종료일을 포함해서 센다 — 9월 1일 ~ 9월 30일이 1개월이다.
+   * 계약서에도 그렇게 인쇄되고 작성 폼의 기간 버튼도 그 규칙으로 종료일을 채운다.
+   */
   describe('최소 계약 기간', () => {
     it('1개월 미만은 거부한다', () => {
       expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-02' })).toContain('endDate');
-      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-31' })).toContain('endDate');
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-30' })).toContain('endDate');
     });
 
-    it('정확히 1개월은 통과한다', () => {
+    it('종료일을 포함해 딱 1개월이면 통과한다', () => {
+      expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-08-31' })).toEqual([]);
       expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2026-09-01' })).toEqual([]);
     });
 
     it('말일에서 시작해도 1개월을 정확히 판정한다', () => {
       // 1/31 + 1개월은 2/28로 본다. 3/3까지 요구하면 정당한 계약이 막힌다.
+      expect(errorFields({ ...validPayload(), startDate: '2026-01-31', endDate: '2026-02-27' })).toEqual([]);
       expect(errorFields({ ...validPayload(), startDate: '2026-01-31', endDate: '2026-02-28' })).toEqual([]);
       expect(errorFields({ ...validPayload(), startDate: '2026-01-31', endDate: '2026-02-20' })).toContain('endDate');
     });
@@ -139,6 +146,24 @@ describe('계약 생성 페이로드 검증', () => {
     it('6개월·12개월 계약도 통과한다', () => {
       expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2027-02-01' })).toEqual([]);
       expect(errorFields({ ...validPayload(), startDate: '2026-08-01', endDate: '2027-08-01' })).toEqual([]);
+    });
+
+    /**
+     * 이 테스트가 이 묶음의 핵심이다. 폼이 제안한 값을 서버가 거부하면, 운영자는
+     * 버튼을 눌러 채운 값에 대해 "최소 1개월이어야 합니다"라는 오류를 받는다 —
+     * 무엇을 고쳐야 하는지 알 수 없는 상태가 된다.
+     */
+    describe('작성 폼의 기간 버튼이 만든 값을 서버가 받아들인다', () => {
+      const startDates = ['2026-08-01', '2026-01-31', '2026-08-15', '2026-02-28'];
+      const presets = [1, 3, 6, 12];
+
+      it.each(startDates.flatMap((start) => presets.map((months) => [start, months] as const)))(
+        '%s 부터 %d개월',
+        (start, months) => {
+          const endDate = addMonths(start, months);
+          expect(errorFields({ ...validPayload(), startDate: start, endDate })).toEqual([]);
+        },
+      );
     });
   });
 

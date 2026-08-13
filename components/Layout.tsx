@@ -101,6 +101,14 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   // 스토리 상세는 스크롤 시 StickyBottomCTA(하단 바)가 상시 카카오 CTA 역할을 하므로
   // 전역 KakaoFab을 숨겨 우하단 요소 중복·시각 충돌을 제거한다.
   const isStoryDetail = router.pathname === '/[locale]/stories/[id]';
+  /**
+   * 계약 화면에서는 떠 있는 버튼을 전부 치운다.
+   *
+   * 서명 캔버스와 [계약서 서명 완료] 버튼이 화면 아래쪽에 있어, 우하단에 떠 있는 카카오
+   * 버튼과 손가락이 닿는 자리가 겹친다. 서명하려다 카카오톡이 열리면 그리던 서명이 날아간다.
+   * 계약 화면은 서명 하나만 하러 오는 곳이라 다른 데로 새게 할 이유도 없다.
+   */
+  const isContractPage = router.pathname.startsWith('/[locale]/contracts/');
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const skipLabel = t('actions.skipToContent');
 
@@ -138,8 +146,8 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       <Footer locale={locale} />
-      {!isStoryDetail && <KakaoFab locale={locale} />}
-      <ScrollToTop locale={locale} />
+      {!isStoryDetail && !isContractPage && <KakaoFab locale={locale} />}
+      {!isContractPage && <ScrollToTop locale={locale} />}
     </div>
   );
 };

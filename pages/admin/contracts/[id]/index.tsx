@@ -23,6 +23,7 @@ import {
   type SerializedClause,
   type SerializedSignature,
 } from '../../../../lib/contracts/serialize';
+import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/contracts/format';
 import { getStatusLabel, isActionAllowed } from '../../../../lib/contracts/status';
 
 interface AdminContractDetailPageProps {
@@ -69,27 +70,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
   };
 };
 
-const formatDate = (date: string | null): string => {
-  if (!date) return '-';
-  return new Date(date).toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
 
-const formatDateTime = (date: string | null): string => {
-  if (!date) return '-';
-  return new Date(date).toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
-
-const formatCurrency = (amount: number): string => new Intl.NumberFormat('ko-KR').format(amount);
 
 const STATUS_CLASS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-700',

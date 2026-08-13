@@ -4,6 +4,7 @@ import path from 'node:path';
 import type { Contract, Signature, ContractClause, ContractAttachment } from '../../db/schema';
 import { escapeHtml } from './html-escape';
 import { renderMarkdown } from './markdown';
+import { formatCurrency, formatDate, formatDateTime } from './format';
 import { isSignatureDataUrl } from './signature-validation';
 
 /**
@@ -12,30 +13,6 @@ import { isSignatureDataUrl } from './signature-validation';
  * 테스트할 수 있다는 것이다(서명 이미지 주입 방어는 반드시 테스트로 고정해야 한다).
  */
 
-const formatCurrency = (amount: number): string =>
-  new Intl.NumberFormat('ko-KR').format(amount);
-
-const formatDateTime = (date: string | Date | null): string => {
-  if (!date) return '-';
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
-
-const formatDate = (date: string | Date | null): string => {
-  if (!date) return '-';
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
 
 /**
  * 서버리스 Chromium에는 한글 폰트가 없어 그대로 두면 계약서 전체가 두부(□)로 렌더링된다.

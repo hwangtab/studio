@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
+import { formatDate } from '../../../../lib/contracts/format';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 
 /**
@@ -91,14 +92,6 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
   }
 };
 
-const formatDate = (date: string | null): string => {
-  if (!date) return '-';
-  return new Date(date).toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
 
 export default function ContractCompletePage({
   locale,
@@ -115,38 +108,38 @@ export default function ContractCompletePage({
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-        <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12 max-w-lg w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 flex items-center justify-center px-4 py-12">
+        <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-8 md:p-12 max-w-lg w-full text-center">
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-green-600 dark:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">계약서 서명 완료</h1>
-          <p className="text-gray-600 mb-8 leading-relaxed">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-900 mb-3">계약서 서명 완료</h1>
+          <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
             {contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.
             <br />
             서명본 PDF를 첨부한 확인 메일을 보내 드렸습니다.
           </p>
 
-          <div className="bg-gray-50 rounded-xl p-6 text-left mb-8">
+          <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
             <dl className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-              <dt className="text-gray-500">이용 호실</dt>
-              <dd className="text-gray-900 font-medium text-right">{contract.roomNumber}호</dd>
+              <dt className="text-gray-500 dark:text-gray-500">이용 호실</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{contract.roomNumber}호</dd>
 
-              <dt className="text-gray-500">계약 기간</dt>
-              <dd className="text-gray-900 font-medium text-right">
+              <dt className="text-gray-500 dark:text-gray-500">계약 기간</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">
                 {formatDate(contract.startDate)} ~ {formatDate(contract.endDate)}
               </dd>
 
-              <dt className="text-gray-500">월 이용료</dt>
-              <dd className="text-gray-900 font-medium text-right">
+              <dt className="text-gray-500 dark:text-gray-500">월 이용료</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">
                 {new Intl.NumberFormat('ko-KR').format(contract.monthlyRent)}원
               </dd>
 
-              <dt className="text-gray-500">서명일</dt>
-              <dd className="text-gray-900 font-medium text-right">
+              <dt className="text-gray-500 dark:text-gray-500">서명일</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">
                 {formatDate(contract.signedAt)}
               </dd>
             </dl>
@@ -156,7 +149,7 @@ export default function ContractCompletePage({
               보관 기간이 지나 파기된 계약은 내려받을 원본이 없다 — 눌러도 실패하는 버튼 대신
               왜 받을 수 없는지 알린다. */}
           {purged ? (
-            <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-4 mb-6 leading-relaxed">
+            <p className="text-sm text-gray-600 dark:text-gray-600 bg-gray-50 dark:bg-gray-50 rounded-xl p-4 mb-6 leading-relaxed">
               보관 기간(3년)이 지나 계약 원본과 개인정보를 파기했습니다.
               <br />
               문의는 010-4255-7893으로 연락해 주세요.
@@ -169,7 +162,7 @@ export default function ContractCompletePage({
                 </Button>
               </a>
 
-              <p className="text-sm text-gray-500 mt-4 mb-6">
+              <p className="text-sm text-gray-500 dark:text-gray-500 mt-4 mb-6">
                 같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나
                 010-4255-7893으로 문의해 주세요.
               </p>

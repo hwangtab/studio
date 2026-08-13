@@ -79,8 +79,15 @@ const Field = ({ label, htmlFor, error, hint, required, children }: FieldProps) 
   </div>
 );
 
-/** YYYY-MM-DD 문자열에 개월 수를 더한다. 말일 보정(1/31 + 1개월 = 2/28)을 포함한다. */
-const addMonths = (dateString: string, months: number): string => {
+/**
+ * 기간 버튼이 채우는 종료일. 말일 보정(1/31 + 1개월 = 2/28)을 포함한다.
+ *
+ * 여기서 만든 값은 서버 검증(lib/contracts/validation.ts)을 그대로 통과해야 한다. 한때
+ * 종료일을 세는 기준이 서로 달라([1개월] 버튼이 만든 9/1~9/30을 서버가 "1개월 미만"으로
+ * 거부했다) 폼이 제안한 값을 서버가 거부하는 상태였다. 그 정합은 validation.test.ts가
+ * 이 함수를 직접 불러 확인한다.
+ */
+export const addMonths = (dateString: string, months: number): string => {
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) return '';
 

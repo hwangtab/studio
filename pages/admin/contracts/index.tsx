@@ -20,6 +20,7 @@ import {
 } from '../../../lib/contracts/serialize';
 import { expireOverdueContracts } from '../../../lib/contracts/service';
 import { getStatusLabel } from '../../../lib/contracts/status';
+import { formatCurrency, formatShortDate as formatDate } from '../../../lib/contracts/format';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 계약이 잘린다는 사실을 화면에 알린다. */
 const LIST_LIMIT = 200;
@@ -78,16 +79,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
   }
 };
 
-const formatDate = (date: string | null): string => {
-  if (!date) return '-';
-  return new Date(date).toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-};
 
-const formatCurrency = (amount: number): string => new Intl.NumberFormat('ko-KR').format(amount);
 
 const STATUS_CLASS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-700',

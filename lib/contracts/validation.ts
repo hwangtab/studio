@@ -62,6 +62,20 @@ export const MIN_CONTRACT_MONTHS = 1;
 const MAX_BACKDATE_MONTHS = 12;
 const MAX_FUTURE_MONTHS = 24;
 
+/**
+ * 계약 기간은 종료일을 포함해서 센다.
+ *
+ * 9월 1일 ~ 9월 30일이 1개월 계약이다 — 계약서에도 그렇게 인쇄되고, 작성 폼의 기간 버튼도
+ * 그 규칙으로 종료일을 채운다. 검증만 종료일을 빼고 세면 폼이 만들어 준 값을 서버가
+ * 거부하는데, 오류 문구는 "최소 1개월이어야 합니다"라 운영자는 무엇을 고쳐야 하는지 알 수
+ * 없다. 여기서 하루를 더해 두 해석을 맞춘다.
+ */
+const dayAfter = (date: Date): Date => {
+  const next = new Date(date);
+  next.setDate(next.getDate() + 1);
+  return next;
+};
+
 /** 말일을 넘기지 않고 개월 수를 더한다 (1/31 + 1개월 = 2/28). */
 const addMonths = (date: Date, months: number): Date => {
   const result = new Date(date);
@@ -161,7 +175,7 @@ export const validateCreateContractPayload = (
   if (startDate && endDate) {
     if (endDate.getTime() <= startDate.getTime()) {
       push('endDate', '종료일은 시작일보다 뒤여야 합니다.');
-    } else if (endDate.getTime() < addMonths(startDate, MIN_CONTRACT_MONTHS).getTime()) {
+    } else if (dayAfter(endDate).getTime() < addMonths(startDate, MIN_CONTRACT_MONTHS).getTime()) {
       push('endDate', `계약 기간은 최소 ${MIN_CONTRACT_MONTHS}개월이어야 합니다.`);
     }
   }
