@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '../ui/Button';
 import type { ValidationError } from '../../lib/contracts/validation';
@@ -128,6 +128,36 @@ export default function ContractForm({
   onCancel,
 }: ContractFormProps) {
   const [values, setValues] = useState<ContractFormValues>(initialValues);
+
+  /**
+   * 작성 중인 내용을 실수로 날리지 않게 한다.
+   *
+   * 계약 폼은 14개 항목이라 다 채우는 데 몇 분이 걸린다. 그 상태에서 뒤로 가기나 탭 닫기를
+   * 누르면 아무 확인 없이 전부 사라졌다. 브라우저가 주는 확인창을 붙여 둔다 — 사용자가
+   * 무언가 입력한 뒤에만, 그리고 저장하는 중에는 방해하지 않는다.
+   */
+  const isDirty = useMemo(
+    () => JSON.stringify(values) !== JSON.stringify(initialValues),
+    [values, initialValues],
+  );
+
+  useEffect(() => {
+    if (!isDirty || submitting) return;
+
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      // 브라우저는 문구를 무시하고 자체 확인창을 띄운다. 값을 넣는 것 자체가 신호다.
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [isDirty, submitting]);
+
+  const handleCancel = () => {
+    if (isDirty && !window.confirm('작성 중인 내용이 사라집니다. 나가시겠습니까?')) return;
+    onCancel();
+  };
 
   const errorMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -426,7 +456,7 @@ export default function ContractForm({
         <Button type="submit" size="lg" disabled={submitting}>
           {submitting ? '저장 중...' : submitLabel}
         </Button>
-        <Button type="button" size="lg" variant="outline" onClick={onCancel} disabled={submitting}>
+        <Button type="button" size="lg" variant="outline" onClick={handleCancel} disabled={submitting}>
           취소
         </Button>
       </div>

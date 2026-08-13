@@ -25,12 +25,15 @@ import {
 } from '../../../../lib/contracts/serialize';
 import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/contracts/format';
 import { getStatusLabel, isActionAllowed, needsTermination } from '../../../../lib/contracts/status';
+import { resolveRulesContent } from '../../../../lib/contracts/template';
 
 interface AdminContractDetailPageProps {
   contract: AdminSerializedContract;
   signatures: SerializedSignature[];
   clauses: SerializedClause[];
   attachments: SerializedAttachment[];
+  /** 계약에 붙은 이용수칙 사본. 첨부 목록은 제목만 보여 주므로 본문은 따로 싣는다. */
+  rulesContent: string;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -66,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       signatures: contract.signatures.map(serializeSignature),
       clauses: contract.contractClauses.map(serializeClause),
       attachments: contract.contractAttachments.map(serializeAttachment),
+      rulesContent: resolveRulesContent(contract.contractAttachments),
     },
   };
 };
@@ -93,6 +97,7 @@ export default function AdminContractDetailPage({
   signatures,
   clauses,
   attachments,
+  rulesContent,
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -367,10 +372,23 @@ export default function AdminContractDetailPage({
               )}
             </div>
 
-            <div className="p-6 md:p-8">
+            <div className="p-6 md:p-8 border-b border-gray-200">
               <h2 className="text-lg font-bold text-gray-900 mb-4">계약서 본문</h2>
               <ContractContent content={contract.content} size="sm" />
             </div>
+
+            {/* 계약 시점에 떠 둔 이용수칙 사본. 원본 파일이 바뀌어도 이 계약에 적용되는 것은
+                이 내용이므로, 분쟁이 생기면 여기를 봐야 한다. */}
+            {rulesContent && (
+              <details className="p-6 md:p-8">
+                <summary className="text-lg font-bold text-gray-900 cursor-pointer">
+                  첨부: 공동생활 이용수칙 (계약 시점 사본)
+                </summary>
+                <div className="mt-4">
+                  <ContractContent content={rulesContent} size="sm" />
+                </div>
+              </details>
+            )}
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">

@@ -40,6 +40,24 @@ const daysUntil = (iso: string | null, now: string): number | null => {
   return Math.ceil((new Date(iso).getTime() - new Date(now).getTime()) / (24 * 60 * 60 * 1000));
 };
 
+/**
+ * 남은 기간을 사람이 읽는 말로.
+ *
+ * 일수만 올림해서 쓰면 두 시간 남은 링크도 "1일 남음"이 된다. 오늘 안에 손을 써야 하는
+ * 상황과 하루 여유가 있는 상황이 같은 문구로 보이면 판단이 늦는다.
+ */
+const formatTimeLeft = (iso: string | null, now: string): string | null => {
+  if (!iso) return null;
+
+  const ms = new Date(iso).getTime() - new Date(now).getTime();
+  if (ms <= 0) return '만료됨';
+
+  const hours = Math.floor(ms / (60 * 60 * 1000));
+  if (hours < 1) return '1시간 내 만료';
+  if (hours < 24) return `${hours}시간 남음`;
+  return `${Math.floor(hours / 24)}일 남음`;
+};
+
 /** 이 안으로 들어오면 재발송을 준비해야 한다. */
 const EXPIRY_WARNING_DAYS = 2;
 
@@ -319,7 +337,8 @@ export default function AdminContractsPage({
                             {contract.status === 'sent' &&
                               (() => {
                                 const left = daysUntil(contract.expiresAt, now);
-                                if (left === null) return null;
+                                const label = formatTimeLeft(contract.expiresAt, now);
+                                if (left === null || label === null) return null;
                                 return (
                                   <div
                                     className={`mt-1 text-xs ${
@@ -328,7 +347,7 @@ export default function AdminContractsPage({
                                         : 'text-gray-500'
                                     }`}
                                   >
-                                    {left <= 0 ? '오늘 만료' : `${left}일 남음`}
+                                    {label}
                                   </div>
                                 );
                               })()}

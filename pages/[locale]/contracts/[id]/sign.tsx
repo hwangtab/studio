@@ -27,7 +27,11 @@ import { resolveRulesContent } from '../../../../lib/contracts/template';
 /** 점 하나만 찍고 제출하는 것을 막기 위한 최소 획 점 개수. */
 const MIN_STROKE_POINTS = 12;
 
-type UnavailableReason = 'expired' | 'cancelled';
+type UnavailableReason =
+  | 'expired'
+  | 'cancelled'
+  /** 재발송 등으로 이 링크가 무효가 됐다 — 계약 자체는 살아 있을 수 있다. */
+  | 'superseded';
 
 interface SignPageProps {
   locale: string;
@@ -60,7 +64,19 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
     });
 
     if (!contract) {
-      return { notFound: true };
+      /**
+       * 사이트 공용 404를 띄우지 않는다.
+       *
+       * 여기 오는 사람은 대부분 재발송으로 무효가 된 옛 링크를 누른 계약 당사자다.
+       * "페이지를 찾을 수 없습니다"를 보면 자기가 잘못한 줄 알고 헤매게 된다.
+       * 무엇이 일어났고 무엇을 하면 되는지 계약 맥락으로 알려 준다.
+       */
+      return {
+        props: {
+          ...empty,
+          unavailable: 'superseded',
+        },
+      };
     }
 
     const status = getEffectiveStatus(contract);
@@ -110,7 +126,15 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
     };
   } catch (error: unknown) {
     console.error('[contracts/[id]/sign] Failed to load contract:', error);
-    return { props: { ...empty, error: '계약서를 불러오는 중 오류가 발생했습니다.' } };
+    // DB 장애다 — 링크가 잘못된 것이 아니므로 '찾을 수 없다'고 말하면 안 된다.
+    // 고객이 링크를 의심하며 헤매지 않도록 다시 시도할 일이라고 알린다.
+    return {
+      props: {
+        ...empty,
+        error:
+          '지금 계약서를 불러올 수 없습니다. 잠시 후 링크를 다시 열어 주세요. 계속 안 되면 010-4255-7893으로 연락해 주세요.',
+      },
+    };
   }
 };
 
@@ -369,6 +393,21 @@ export default function ContractSignPage({
     );
   }
 
+  if (unavailable === 'superseded') {
+    return (
+      <>
+        <Head>
+          <title>사용할 수 없는 링크 | Studio NOL</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <Notice
+          title="이 서명 링크는 더 이상 사용할 수 없습니다"
+          description="계약서를 다시 보내 드렸다면 가장 최근에 받으신 메일의 링크를 열어 주세요. 최근 메일이 없다면 운영자에게 재발송을 요청해 주세요."
+        />
+      </>
+    );
+  }
+
   if (unavailable === 'cancelled') {
     return (
       <>
@@ -385,14 +424,17 @@ export default function ContractSignPage({
   }
 
   if (error || !contract) {
+    // 장애로 못 읽은 것과 링크가 잘못된 것은 고객이 할 일이 다르다. 제목부터 구분한다.
+    const title = error ? '계약서를 여는 중 문제가 생겼습니다' : '계약서를 찾을 수 없습니다';
+
     return (
       <>
         <Head>
-          <title>계약서를 찾을 수 없습니다 | Studio NOL</title>
+          <title>{title} | Studio NOL</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
         <Notice
-          title="계약서를 찾을 수 없습니다"
+          title={title}
           description={error || '잘못된 링크입니다. 메일에 포함된 링크를 다시 확인해 주세요.'}
         />
       </>
@@ -413,6 +455,11 @@ export default function ContractSignPage({
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white dark:bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-primary p-6 md:p-8">
+              {/* 어디서 온 문서인지 먼저 밝힌다. 메일 링크로 들어온 사람이 피싱과 구별할
+                  근거이고, 사이트 헤더를 붙이지 않으므로 여기가 유일한 자리다. */}
+              <p className="text-white/70 dark:text-white/70 text-sm font-medium mb-1">
+                스튜디오 놀 · 서울 은평구 대조동
+              </p>
               <h1 className="text-2xl md:text-3xl font-bold text-white dark:text-white">음악연습실 이용계약서</h1>
               <p className="text-white dark:text-white/80 mt-2">
                 {contract.customerName}님, 아래 내용을 확인하고 서명해 주세요.

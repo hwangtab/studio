@@ -123,14 +123,25 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         {skipLabel}
       </a>
 
-      <Header
-        ref={headerRef}
-        locale={locale}
-        isScrolled={isScrolled}
-        hasHero={hasHero || false}
-        isDarkMode={isDarkMode}
-        toggleDarkMode={toggleDarkMode}
-      />
+      {/*
+        계약 화면에는 사이트 헤더를 붙이지 않는다.
+
+        서명하러 온 사람에게 필요한 것은 계약서와 서명란뿐이다. 네비게이션은 다른 데로
+        새게 만들고, 언어 전환기는 눌러도 계약서가 한국어 그대로인 채 입력만 초기화되며,
+        다크 모드 토글은 계약 화면이 라이트 고정이라 아무 일도 하지 않는다.
+        브랜드는 계약 화면이 자기 상단에 직접 밝힌다 — 피싱과 구별되어야 하는 화면이라
+        "어디서 온 문서인가"는 남아 있어야 한다.
+      */}
+      {!isContractPage && (
+        <Header
+          ref={headerRef}
+          locale={locale}
+          isScrolled={isScrolled}
+          hasHero={hasHero || false}
+          isDarkMode={isDarkMode}
+          toggleDarkMode={toggleDarkMode}
+        />
+      )}
 
       {/* paddingTop을 inline style 동적 변경(setHeaderHeight setState)에서 정적 Tailwind
           'pt-20' (=80px, INITIAL_HEADER_HEIGHT_PX와 일치)로 변경. React re-render 시
@@ -140,7 +151,9 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       <main
         id="main-content"
         tabIndex={-1}
-        className={`page-main flex-grow outline-none ${isHome || hasHero ? 'pt-0' : 'pt-20'}`}
+        className={`page-main flex-grow outline-none ${
+          isHome || hasHero || isContractPage ? 'pt-0' : 'pt-20'
+        }`}
       >
         {children}
       </main>

@@ -158,11 +158,17 @@ export default function ContractCompletePage({
             </svg>
           </div>
 
+          {/* 사이트 헤더를 붙이지 않으므로 여기가 브랜드를 밝히는 유일한 자리다. */}
+          <p className="text-gray-400 dark:text-gray-400 text-sm font-medium mb-2">스튜디오 놀</p>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-900 mb-3">계약서 서명 완료</h1>
           <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
-            {contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.
+            {/* 파기된 계약은 이름 자리에 "(개인정보 파기됨)"이 들어 있다. 그대로 부르면
+                기계가 사람 이름을 잘못 읽은 것처럼 보인다. */}
+            {purged ? '계약서 서명이 완료된 계약입니다.' : `${contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.`}
             <br />
-            서명본 PDF를 첨부한 확인 메일을 보내 드렸습니다.
+            {/* 메일은 이 화면을 그린 뒤에 발송되므로 "보냈다"고 단정할 수 없다. 아래에
+                내려받기 버튼과 전화번호가 있으니, 오지 않았을 때 할 일을 함께 적는다. */}
+            {purged ? '보관 기간이 지나 개인정보를 파기했습니다.' : '서명본 PDF를 첨부한 확인 메일도 함께 보내 드립니다.'}
           </p>
 
           <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
