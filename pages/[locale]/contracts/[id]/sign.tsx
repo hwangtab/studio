@@ -312,7 +312,22 @@ export default function ContractSignPage({
         }),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
+
+      /**
+       * 이미 서명이 끝난 계약이면 오류가 아니다.
+       *
+       * 응답을 받기 전에 연결이 끊기면 화면에는 실패로 보이는데 서버에서는 서명이 확정된
+       * 상태가 된다. 고객이 버튼을 다시 누르면 "서명완료 상태의 계약은 서명할 수 없습니다"
+       * 같은 관리자용 문구를 보게 되고, 정작 자기 계약서를 받을 길은 화면에 없다.
+       * 결과가 이미 서명 완료라면 완료 화면으로 보내는 것이 사실에 맞다.
+       */
+      if (response.status === 409 && result.status === 'signed') {
+        await router.push(
+          `/${locale}/contracts/${contract.id}/complete?token=${encodeURIComponent(token)}`,
+        );
+        return;
+      }
 
       if (!response.ok || !result.ok) {
         throw new Error(result.message || '서명 제출에 실패했습니다.');
@@ -322,7 +337,19 @@ export default function ContractSignPage({
         `/${locale}/contracts/${contract.id}/complete?token=${encodeURIComponent(token)}`,
       );
     } catch (err: unknown) {
-      setSubmitError(err instanceof Error ? err.message : '서명 제출 중 오류가 발생했습니다.');
+      /**
+       * 네트워크가 끊긴 경우 브라우저는 "Failed to fetch"(사파리는 "Load failed")를 준다.
+       * 그 말을 그대로 보여 주면 고객은 무엇을 해야 할지 알 수 없고, 서명이 접수됐는지조차
+       * 모른다. 실제로 접수된 경우가 있으므로 다시 눌러 보라고 안내한다.
+       */
+      const isNetworkError = err instanceof TypeError;
+      setSubmitError(
+        isNetworkError
+          ? '제출 결과를 확인하지 못했습니다. 연결을 확인한 뒤 아래 버튼을 다시 눌러 주세요. 이미 접수되었다면 완료 화면으로 이동합니다.'
+          : err instanceof Error
+            ? err.message
+            : '서명 제출 중 오류가 발생했습니다.',
+      );
       setSubmitting(false);
     }
   };

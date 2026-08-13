@@ -1,4 +1,6 @@
-import { and, eq, gt, inArray, isNull, lt, lte, ne, or } from 'drizzle-orm';
+import { randomUUID } from 'node:crypto';
+
+import { and, eq, gte, inArray, isNull, lte, ne, or } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
@@ -48,13 +50,26 @@ export const expireOverdueContracts = async (now: Date = new Date()): Promise<nu
 };
 
 /**
- * 같은 호실에 기간이 겹치는 유효 계약을 찾는다. 있으면 그 계약을 돌려준다.
+ * 같은 호실을 이미 쓰고 있는 계약을 찾는다. 있으면 그 계약을 돌려준다.
  *
  * 연습실 호실은 한 사람이 쓰는 것을 전제로 하고(계약서 제6조 4항이 제3자 사용을
  * 금지한다), 겹치는 계약이 둘 다 서명되면 두 고객이 같은 방을 배정받는다. 두 계약
  * 모두 효력이 있어 어느 쪽도 물러설 근거가 없는 분쟁이 된다.
  *
- * 확정된 것만 본다 — draft는 아직 고객에게 가지 않았고, 취소·만료 건은 효력이 없다.
+ * ## 서명된 계약과 발송 대기 계약을 다르게 본다
+ *
+ * 서명된 계약은 **종료 처리를 하기 전까지 계속 방을 쓰는 것으로 본다.** 계약서 제3조는
+ * 만료일까지 어느 쪽도 통지하지 않으면 1개월씩 자동 갱신된다고 정하므로, 종료일이 지났다는
+ * 사실만으로 방이 비었다고 볼 수 없다. 기간 겹침만 보면 갱신해서 계속 쓰는 방이 만료일
+ * 다음 날부터 "비어 있음"이 되어, 이중 임대를 막으려고 만든 검사가 조용히 무력해진다.
+ *
+ * 반대로 중도 퇴실로 방이 일찍 빈 경우에는 종료 처리를 하면 그 즉시 새 계약을 만들 수 있다.
+ * 어느 쪽이든 "지금 이 방을 누가 쓰는가"에 대한 답은 운영자가 적은 것이지 날짜 계산이 아니다.
+ *
+ * 아직 서명 전인 발송 건은 기간 겹침으로 본다 — 서명될지 알 수 없는 계약이 방을 무기한
+ * 잡아 두면 곤란하고, 만료되면 검사에서 빠진다.
+ *
+ * 확정된 것만 본다 — draft는 아직 고객에게 가지 않았고, 취소·만료·종료 건은 효력이 없다.
  */
 export const findRoomConflict = async (params: {
   roomNumber: string;
@@ -64,10 +79,20 @@ export const findRoomConflict = async (params: {
 }): Promise<Contract | null> => {
   const conditions = [
     eq(contracts.roomNumber, params.roomNumber),
-    inArray(contracts.status, ['sent', 'signed'] satisfies ContractStatus[]),
-    // 기간이 하루라도 겹치면 충돌이다.
-    lt(contracts.startDate, params.endDate),
-    gt(contracts.endDate, params.startDate),
+    or(
+      // 서명된 계약: 종료 처리 전까지 점유. 새 계약이 그 시작일 이후에 걸치면 충돌이다.
+      and(
+        eq(contracts.status, 'signed'),
+        isNull(contracts.terminatedAt),
+        lte(contracts.startDate, params.endDate),
+      ),
+      // 발송 대기: 기간이 하루라도 겹치면 충돌. 종료일 당일도 아직 이용 기간이다.
+      and(
+        eq(contracts.status, 'sent'),
+        lte(contracts.startDate, params.endDate),
+        gte(contracts.endDate, params.startDate),
+      ),
+    ),
   ];
 
   if (params.excludeContractId) {
@@ -76,6 +101,38 @@ export const findRoomConflict = async (params: {
 
   const [conflict] = await getDb().select().from(contracts).where(and(...conditions)).limit(1);
   return conflict ?? null;
+};
+
+/**
+ * 이용이 끝났음을 기록한다. 계약 문서 자체(본문·서명·지문)는 건드리지 않는다.
+ *
+ * 서명된 계약만 대상이다. 되돌릴 수 없으므로 호출부가 확인을 받아야 한다.
+ * 이미 종료된 계약에는 아무 일도 일어나지 않고 null을 돌려준다(중복 클릭·경쟁 요청 방어).
+ */
+export const terminateContract = async (
+  contractId: string,
+  options: { reason: string; terminatedAt?: Date },
+): Promise<Contract | null> => {
+  const now = new Date();
+
+  const [contract] = await getDb()
+    .update(contracts)
+    .set({
+      status: 'terminated',
+      terminatedAt: options.terminatedAt ?? now,
+      terminationReason: options.reason,
+      updatedAt: now,
+    })
+    .where(
+      and(
+        eq(contracts.id, contractId),
+        eq(contracts.status, 'signed'),
+        isNull(contracts.terminatedAt),
+      ),
+    )
+    .returning();
+
+  return contract ?? null;
 };
 
 /** 계약을 draft로 생성한다. 이메일은 발송하지 않는다(발송은 별도 액션). */
@@ -96,9 +153,27 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     specialTerms: data.specialTerms,
   });
 
-  const [contract] = await getDb()
-    .insert(contracts)
-    .values({
+  // 첨부 문서는 계약 시점 내용을 그대로 떠서 보관한다 — 원본 파일이 바뀌어도
+  // 이미 체결된 계약의 첨부는 달라지지 않아야 한다.
+  const rulesContent = buildRulesContent();
+
+  /**
+   * 네 개의 쓰기를 한 트랜잭션으로 묶는다.
+   *
+   * 나눠 실행하면 중간에 끊겼을 때 반쪽 계약이 남는다. 서명행 없이 계약만 있으면 고객이
+   * 서명 페이지까지 가서도 제출이 거부되고(서명 대기 행이 없다), 동의 조항이 비어 있으면
+   * 필수 동의를 하나도 받지 않은 채로 서명이 통과한다. 어느 쪽도 화면에서는 정상으로
+   * 보이므로 운영자가 알아채는 시점이 고객의 전화다.
+   *
+   * 계약 ID를 먼저 만들어야 나머지가 그것을 참조할 수 있어, 서버가 만들던 기본값을
+   * 여기서 직접 정한다.
+   */
+  const contractId = randomUUID();
+  const now = new Date();
+
+  await getDb().batch([
+    getDb().insert(contracts).values({
+      id: contractId,
       title: data.title,
       customerName: data.customerName,
       customerBirthdate: data.customerBirthdate,
@@ -116,37 +191,40 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
       status: 'draft',
       signToken: generateSignToken(),
       specialTerms: data.specialTerms ? JSON.stringify(data.specialTerms) : undefined,
-    })
-    .returning();
+      createdAt: now,
+      updatedAt: now,
+    }),
+    getDb().insert(signatures).values({
+      contractId,
+      signerName: data.customerName,
+      signerEmail: data.customerEmail,
+      signerRole: 'customer',
+      status: 'pending',
+    }),
+    getDb().insert(contractClauses).values(
+      REQUIRED_CLAUSES.map((clause) => ({
+        contractId,
+        clauseNumber: clause.clauseNumber,
+        title: clause.title,
+      })),
+    ),
+    getDb().insert(contractAttachments).values(
+      REQUIRED_ATTACHMENTS.map((attachment) => ({
+        contractId,
+        type: attachment.type,
+        title: attachment.title,
+        content: attachment.type === 'rules' ? rulesContent : null,
+      })),
+    ),
+  ]);
 
-  await getDb().insert(signatures).values({
-    contractId: contract.id,
-    signerName: data.customerName,
-    signerEmail: data.customerEmail,
-    signerRole: 'customer',
-    status: 'pending',
+  const contract = await getDb().query.contracts.findFirst({
+    where: eq(contracts.id, contractId),
   });
 
-  await getDb().insert(contractClauses).values(
-    REQUIRED_CLAUSES.map((clause) => ({
-      contractId: contract.id,
-      clauseNumber: clause.clauseNumber,
-      title: clause.title,
-    })),
-  );
-
-  // 첨부 문서는 계약 시점 내용을 그대로 떠서 보관한다 — 원본 파일이 바뀌어도
-  // 이미 체결된 계약의 첨부는 달라지지 않아야 한다.
-  const rulesContent = buildRulesContent();
-
-  await getDb().insert(contractAttachments).values(
-    REQUIRED_ATTACHMENTS.map((attachment) => ({
-      contractId: contract.id,
-      type: attachment.type,
-      title: attachment.title,
-      content: attachment.type === 'rules' ? rulesContent : null,
-    })),
-  );
+  if (!contract) {
+    throw new Error('계약을 만들었지만 다시 읽지 못했습니다.');
+  }
 
   return contract;
 };

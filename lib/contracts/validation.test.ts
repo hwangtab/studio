@@ -188,8 +188,20 @@ describe('계약 생성 페이로드 검증', () => {
     expect(errorFields({ ...validPayload(), monthlyRent: -1000 })).toContain('monthlyRent');
   });
 
-  it('보증금은 0을 허용한다', () => {
-    expect(errorFields({ ...validPayload(), depositAmount: 0 })).toEqual([]);
+  /**
+   * 계약서 제5조 ①이 "보증금은 월 이용료와 동일한 금액"이라고 정한다. 다른 값을 넣으면
+   * 같은 계약서 안에서 요약표와 제5조가 서로 다른 말을 하고, 제5조 ③의 위약금이
+   * "보증금 상당액"이라 곧바로 돈 문제가 된다.
+   */
+  it('보증금이 월 이용료와 다르면 거부한다', () => {
+    expect(errorFields({ ...validPayload(), depositAmount: 0 })).toContain('depositAmount');
+    expect(errorFields({ ...validPayload(), depositAmount: 100000 })).toContain('depositAmount');
+  });
+
+  it('보증금이 월 이용료와 같으면 통과한다', () => {
+    expect(errorFields({ ...validPayload(), monthlyRent: 450000, depositAmount: 450000 })).toEqual(
+      [],
+    );
   });
 
   it('금액 상한을 넘으면 거부한다 (0을 잘못 붙인 입력 방지)', () => {

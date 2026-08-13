@@ -1,7 +1,21 @@
 import { relations, sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-export const contractStatusEnum = ['draft', 'sent', 'signed', 'cancelled', 'expired'] as const;
+export const contractStatusEnum = [
+  'draft',
+  'sent',
+  'signed',
+  'cancelled',
+  'expired',
+  /**
+   * 이용이 끝난 계약.
+   *
+   * 서명까지 마친 계약은 지우거나 되돌릴 수 없지만(법적 보존), 이용 관계는 언젠가 끝난다 —
+   * 기간 만료, 중도 퇴실(제4조), 해지(제9조). 그 사실을 적을 자리가 없으면 방이 비어도
+   * 시스템은 계속 점유로 보고, 새 이용자에게 그 호실로 계약을 만들 수 없다.
+   */
+  'terminated',
+] as const;
 export const signatureStatusEnum = ['pending', 'signed', 'declined'] as const;
 
 export const contracts = sqliteTable('contracts', {
@@ -80,6 +94,18 @@ export const contracts = sqliteTable('contracts', {
    */
   notificationError: text('notification_error'),
   notifiedAt: integer('notified_at', { mode: 'timestamp' }),
+
+  /**
+   * 이용이 실제로 끝난 시각과 사유.
+   *
+   * 계약서에 적힌 종료일(endDate)과 다를 수 있다 — 중도 퇴실이면 그보다 이르고, 제3조의
+   * 자동 갱신으로 계속 이용했다면 그보다 늦다. 호실이 언제부터 비었는지는 이 값이 답한다.
+   *
+   * 값이 없는 서명 계약은 기간이 지났어도 이용 중으로 본다. 갱신은 통지가 없으면 자동으로
+   * 이뤄지므로, 종료일이 지났다는 사실만으로 방이 비었다고 볼 수 없기 때문이다.
+   */
+  terminatedAt: integer('terminated_at', { mode: 'timestamp' }),
+  terminationReason: text('termination_reason'),
 
   /**
    * 개인정보를 파기한 시각.

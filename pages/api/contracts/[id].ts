@@ -15,13 +15,14 @@ import {
   findRoomConflict,
   markContractSent,
   sendContractNotifications,
+  terminateContract,
   updateDraftContract,
 } from '../../../lib/contracts/service';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { checkAction, getEffectiveStatus, type ContractAction } from '../../../lib/contracts/status';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
 
-const MUTABLE_ACTIONS = ['send', 'resend', 'cancel', 'update'] as const;
+const MUTABLE_ACTIONS = ['send', 'resend', 'cancel', 'update', 'terminate'] as const;
 type MutableAction = (typeof MUTABLE_ACTIONS)[number];
 
 const isMutableAction = (value: unknown): value is MutableAction =>
@@ -112,6 +113,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(updated) });
+      }
+
+      if (action === 'terminate') {
+        /**
+         * 이용 종료. 계약 문서(본문·서명·지문)는 건드리지 않고 "언제, 왜 끝났는지"만 남긴다.
+         *
+         * 사유는 나중에 이 방이 왜 비었는지를 설명하는 유일한 기록이라 반드시 받는다.
+         * 위약금 청구(제5조 ③)나 분쟁이 생기면 중도 퇴실인지 정상 만료인지가 쟁점이 된다.
+         */
+        const { reason } = req.body as Record<string, unknown>;
+        if (typeof reason !== 'string' || reason.trim() === '') {
+          return res.status(400).json({ ok: false, message: '종료 사유를 입력해 주세요.' });
+        }
+        if (reason.length > 500) {
+          return res.status(400).json({ ok: false, message: '종료 사유가 너무 깁니다.' });
+        }
+
+        const terminated = await terminateContract(id, { reason: reason.trim() });
+        if (!terminated) {
+          return res.status(409).json({
+            ok: false,
+            message: '계약 상태가 바뀌어 종료 처리할 수 없습니다. 새로고침 후 확인해 주세요.',
+          });
+        }
+        return res.status(200).json({ ok: true, contract: serializeContractForAdmin(terminated) });
       }
 
       if (action === 'cancel') {

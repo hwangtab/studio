@@ -139,14 +139,16 @@ export default function ContractForm({
     setValues((prev) => ({ ...prev, [key]: value }));
   };
 
-  // 제5조에 따라 보증금은 월 이용료와 같은 금액이다. 따로 입력받지 않고 따라가게 한다.
+  /**
+   * 계약서 제5조 ①이 "보증금은 월 이용료와 동일한 금액"이라고 정하므로 항상 따라가게 한다.
+   *
+   * 예전에는 두 값이 같을 때만 동기화해서, 보증금을 한 번 손대면 그 뒤로는 월 이용료를
+   * 고쳐도 따라오지 않았다. 서버 검증이 다른 값을 거부하므로 저장 단계에서야 막히는데,
+   * 그때는 무엇이 어긋났는지 알기 어렵다.
+   */
   const handleMonthlyRentChange = (raw: string) => {
     const digitsOnly = raw.replace(/[^0-9]/g, '');
-    setValues((prev) => ({
-      ...prev,
-      monthlyRent: digitsOnly,
-      depositAmount: prev.monthlyRent === prev.depositAmount ? digitsOnly : prev.depositAmount,
-    }));
+    setValues((prev) => ({ ...prev, monthlyRent: digitsOnly, depositAmount: digitsOnly }));
   };
 
   const applyTerm = (months: number) => {
@@ -314,14 +316,17 @@ export default function ContractForm({
             htmlFor="depositAmount"
             error={errorMap.depositAmount}
             required
-            hint="제5조에 따라 계약 시 납부 면제"
+            hint="제5조에 따라 월 이용료와 같은 금액이며, 계약 시 납부를 면제합니다"
           >
+            {/* 제5조가 금액을 정하고 있어 따로 받지 않는다. 다른 값을 넣으면 계약서 안에서
+                요약표와 제5조가 서로 다른 말을 하게 된다. */}
             <input
               id="depositAmount"
               inputMode="numeric"
-              className={INPUT_CLASS}
+              readOnly
+              tabIndex={-1}
+              className={`${INPUT_CLASS} bg-gray-50 text-gray-600 cursor-not-allowed`}
               value={values.depositAmount}
-              onChange={(e) => set('depositAmount', e.target.value.replace(/[^0-9]/g, ''))}
             />
           </Field>
 

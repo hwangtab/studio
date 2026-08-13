@@ -42,7 +42,7 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
           cta_id: 'en_contact_fast_kakao',
         })
       }
-      className="mt-3 inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-md bg-yellow-400 px-4 py-3 text-base font-bold text-gray-950 shadow-sm transition-colors hover:bg-yellow-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
+      className="mt-3 inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-md bg-kakao px-4 py-3 text-base font-bold text-kakao-ink shadow-sm transition-colors hover:bg-kakao-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
     >
       <MessageCircle size={20} aria-hidden="true" />
       Message on KakaoTalk

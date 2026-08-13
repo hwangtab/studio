@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
-import { generateContractPdf } from '../../../../lib/contracts/pdf';
-import { resolveRulesContent } from '../../../../lib/contracts/template';
+import { loadOrRenderContractPdf } from '../../../../lib/contracts/pdf-storage';
 
 /**
  * PDF 생성은 Chromium을 띄운다. 콜드 스타트에서는 64MB짜리 바이너리를 풀어 쓰므로
@@ -52,16 +51,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const customerSignature =
-      contract.signatures.find((s) => s.signerRole === 'customer' && s.status === 'signed') ?? null;
-
-    const pdfBuffer = await generateContractPdf({
-      contract,
-      signature: customerSignature,
-      clauses: contract.contractClauses,
-      attachments: contract.contractAttachments,
-      rulesContent: resolveRulesContent(contract.contractAttachments),
-    });
+    // 보관본이 있으면 그것을 그대로 준다. 고객이 받은 문서와 같아야 하고, 요청마다
+    // Chromium을 새로 띄우면 느린 데다 비용도 든다.
+    const pdfBuffer = await loadOrRenderContractPdf(contract);
 
     // 한글 파일명은 RFC 5987 filename*로 넘긴다. filename만 쓰면 일부 브라우저가 깨뜨린다.
     const filename = `${contract.customerName}_이용계약서.pdf`;

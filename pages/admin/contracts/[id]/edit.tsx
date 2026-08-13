@@ -9,6 +9,7 @@ import ContractForm, {
 } from '../../../../components/admin/ContractForm';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
+import { contractToFormValues } from '../../../../lib/contracts/form-values';
 import { getEffectiveStatus, isActionAllowed } from '../../../../lib/contracts/status';
 import type { ValidationError } from '../../../../lib/contracts/validation';
 
@@ -20,32 +21,12 @@ interface EditContractPageProps {
 }
 
 /** ISO 문자열을 <input type="date">가 받는 YYYY-MM-DD로 자른다. */
-const toDateInputValue = (date: Date | null): string => {
-  if (!date) return '';
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
-};
-
 /**
  * 특약사항을 폼에 되살린다.
  *
  * 읽지 못한 값을 조용히 빈 배열로 넘기면, 관리자가 눈치채지 못한 채 저장해 특약이
  * 사라진다. 읽기에 실패했다는 사실을 그대로 돌려 화면에서 경고하게 한다.
  */
-const parseSpecialTerms = (raw: string | null): { terms: string[]; failed: boolean } => {
-  if (!raw) return { terms: [], failed: false };
-
-  try {
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return { terms: [], failed: true };
-    return { terms: parsed.filter((t): t is string => typeof t === 'string'), failed: false };
-  } catch {
-    return { terms: [], failed: true };
-  }
-};
-
 export const getServerSideProps: GetServerSideProps<EditContractPageProps> = async (context) => {
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) {
@@ -70,28 +51,13 @@ export const getServerSideProps: GetServerSideProps<EditContractPageProps> = asy
     return { redirect: { destination: `/admin/contracts/${id}`, permanent: false } };
   }
 
-  const specialTerms = parseSpecialTerms(contract.specialTerms);
+  const { values, specialTermsUnreadable } = contractToFormValues(contract);
 
   return {
     props: {
       contractId: contract.id,
-      initialValues: {
-        title: contract.title,
-        customerName: contract.customerName,
-        customerBirthdate: contract.customerBirthdate ?? '',
-        customerEmail: contract.customerEmail,
-        customerPhone: contract.customerPhone,
-        customerAddress: contract.customerAddress ?? '',
-        roomNumber: contract.roomNumber,
-        roomArea: contract.roomArea ?? '',
-        startDate: toDateInputValue(contract.startDate),
-        endDate: toDateInputValue(contract.endDate),
-        monthlyRent: String(contract.monthlyRent),
-        depositAmount: String(contract.depositAmount),
-        paymentDay: String(contract.paymentDay),
-        specialTerms: specialTerms.terms,
-      },
-      specialTermsUnreadable: specialTerms.failed,
+      initialValues: values,
+      specialTermsUnreadable,
     },
   };
 };
@@ -122,6 +88,15 @@ export default function EditContractPage({
       const result = await response.json();
 
       if (!response.ok || !result.ok) {
+        // 401은 세션이 끊긴 것이다. 서버가 주는 'Unauthorized'를 그대로 보여 주면
+        // 무엇을 해야 하는지 알 수 없다. 입력값은 화면에 그대로 남아 있으므로,
+        // 다른 탭에서 로그인한 뒤 다시 저장하면 된다.
+        if (response.status === 401) {
+          setGeneralError(
+            '로그인이 만료되었습니다. 새 탭에서 /admin/login 으로 다시 로그인한 뒤 이 화면에서 저장을 다시 눌러 주세요. 입력하신 내용은 그대로 있습니다.',
+          );
+          return;
+        }
         if (Array.isArray(result.errors)) {
           setErrors(result.errors);
           setGeneralError('입력 내용을 확인해 주세요.');

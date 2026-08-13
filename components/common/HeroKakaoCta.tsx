@@ -20,10 +20,11 @@ interface HeroKakaoCtaProps {
   phone?: string;
   phoneCtaId?: string;
   /**
-   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 흰 카카오 버튼 + 반투명 흰 전화 버튼.
-   * 'onSurface': 본문 섹션 배경 위 — 히어로용 스타일은 라이트 모드 밝은 배경에서
-   * 전화 버튼(text-white/bg-white/15)이 보이지 않으므로, 솔리드 primary 카카오 +
-   * 테두리 전화 버튼으로 강등한다.
+   * 카카오 버튼 자체는 두 경우 모두 카카오 옐로로 동일하다(사이트 전역 규칙:
+   * 노란 버튼 = 카카오톡). surface는 옆에 붙는 2차 전화 버튼과 focus ring만 가른다.
+   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 반투명 흰 전화 버튼.
+   * 'onSurface': 본문 섹션 배경 위 — 라이트 모드 밝은 배경에서 전화 버튼
+   * (text-white/bg-white/15)이 보이지 않으므로 테두리 전화 버튼으로 강등한다.
    */
   surface?: 'onImage' | 'onSurface';
 }
@@ -49,10 +50,10 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneC
           cta_id: ctaId,
         })
       }
-      className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] font-bold text-base sm:text-lg py-4 px-10 rounded-full transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+      className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] font-bold text-base sm:text-lg py-4 px-10 rounded-full bg-kakao text-kakao-ink hover:bg-kakao-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
         onImage
-          ? 'bg-white text-primary-dark hover:bg-gray-100 focus-visible:ring-primary/40 focus-visible:ring-offset-white'
-          : 'bg-primary text-white hover:bg-primary-dark focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
+          ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
+          : 'focus-visible:ring-kakao-ink focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
       }`}
     >
       <MessageCircle className="w-5 h-5" aria-hidden="true" />

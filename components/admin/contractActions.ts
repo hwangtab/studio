@@ -47,18 +47,20 @@ export const downloadContractPdf = async (
   }
 };
 
-export type ContractMutation = 'send' | 'resend' | 'cancel';
+export type ContractMutation = 'send' | 'resend' | 'cancel' | 'terminate';
 
 export const mutateContract = async (
   contractId: string,
   action: ContractMutation,
+  /** terminate에는 종료 사유가 필요하다 — 이 방이 왜 비었는지를 설명하는 유일한 기록이다. */
+  payload?: { reason?: string },
 ): Promise<ContractActionResult> => {
   try {
     const response = await fetch(`/api/contracts/${contractId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify({ action }),
+      body: JSON.stringify({ action, ...payload }),
     });
 
     if (!response.ok) {

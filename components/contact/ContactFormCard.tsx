@@ -319,7 +319,7 @@ const ContactFormCard = ({
                 cta_id: 'contact_form_kakao',
               })
             }
-            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-gray-900 dark:text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 font-title touch-manipulation"
+            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-kakao-ink dark:text-kakao-ink bg-kakao hover:bg-kakao-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-kakao-ink transition-colors duration-200 font-title touch-manipulation"
           >
             <MessageCircle className="mr-2" size={18} aria-hidden="true" />
             {t('contact.form.kakao')}

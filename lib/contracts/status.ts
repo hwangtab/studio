@@ -5,15 +5,23 @@ export type ContractStatus = Contract['status'];
 /**
  * 계약 상태 전이 규칙.
  *
- *   draft ──발송──▶ sent ──서명──▶ signed
+ *   draft ──발송──▶ sent ──서명──▶ signed ──종료──▶ terminated
  *     │              │ ▲
  *     │취소          │ │재발송(토큰·만료 갱신)
  *     ▼              ▼ │
  *   cancelled      expired
  *
- * signed는 종착 상태다. 서명된 계약은 수정·취소·삭제할 수 없다(법적 보존).
+ * 서명된 계약의 문서 자체는 손댈 수 없다(법적 보존). 다만 이용 관계는 언젠가 끝나므로,
+ * 그 사실만 terminated로 적는다 — 본문·서명·지문은 그대로 두고 "언제 끝났는지"만 남긴다.
  */
-export type ContractAction = 'send' | 'resend' | 'cancel' | 'update' | 'delete' | 'sign';
+export type ContractAction =
+  | 'send'
+  | 'resend'
+  | 'cancel'
+  | 'update'
+  | 'delete'
+  | 'sign'
+  | 'terminate';
 
 const ALLOWED_STATUSES: Record<ContractAction, readonly ContractStatus[]> = {
   send: ['draft'],
@@ -24,6 +32,7 @@ const ALLOWED_STATUSES: Record<ContractAction, readonly ContractStatus[]> = {
   update: ['draft'],
   delete: ['draft', 'cancelled'],
   sign: ['sent'],
+  terminate: ['signed'],
 };
 
 const ACTION_LABEL: Record<ContractAction, string> = {
@@ -33,6 +42,7 @@ const ACTION_LABEL: Record<ContractAction, string> = {
   update: '수정',
   delete: '삭제',
   sign: '서명',
+  terminate: '종료 처리',
 };
 
 const STATUS_LABEL: Record<ContractStatus, string> = {
@@ -41,7 +51,28 @@ const STATUS_LABEL: Record<ContractStatus, string> = {
   signed: '서명완료',
   cancelled: '취소됨',
   expired: '만료됨',
+  terminated: '이용종료',
 };
+
+/**
+ * 이용이 끝났다고 적어야 하는 계약.
+ *
+ * 서명된 계약의 종료일이 지났는데 종료 처리가 없으면, 그 호실은 계속 점유로 남아 새 계약을
+ * 만들 수 없다. 제3조의 자동 갱신 때문에 기간이 지났다는 사실만으로 방이 비었다고 볼 수는
+ * 없으므로, 시스템이 임의로 끝내지 않고 운영자에게 확인을 요청한다.
+ */
+export const needsTermination = (
+  // 서버(Date)와 화면(직렬화된 문자열) 양쪽에서 같은 판정을 써야 표시가 어긋나지 않는다.
+  contract: {
+    status: ContractStatus;
+    endDate: Date | string;
+    terminatedAt: Date | string | null;
+  },
+  now: Date | string = new Date(),
+): boolean =>
+  contract.status === 'signed' &&
+  contract.terminatedAt === null &&
+  new Date(contract.endDate).getTime() < new Date(now).getTime();
 
 export const getStatusLabel = (status: ContractStatus): string => STATUS_LABEL[status] ?? status;
 

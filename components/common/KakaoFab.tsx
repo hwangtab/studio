@@ -43,7 +43,7 @@ const KakaoFab = ({ locale }: KakaoFabProps) => {
       onClick={handleClick}
       aria-label={label}
       style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
-      className="fixed right-6 z-40 inline-flex items-center gap-2 rounded-full bg-[#FEE500] hover:bg-[#FADA0A] text-[#191600] shadow-lg shadow-black/20 pl-4 pr-5 py-3 min-h-[52px] font-bold touch-manipulation transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+      className="fixed right-6 z-40 inline-flex items-center gap-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink shadow-lg shadow-black/20 pl-4 pr-5 py-3 min-h-[52px] font-bold touch-manipulation transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
     >
       <MessageCircle size={22} aria-hidden="true" className="flex-shrink-0" />
       <span className="text-sm whitespace-nowrap">{label}</span>

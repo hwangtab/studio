@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -99,6 +99,48 @@ export default function ContractCompletePage({
   downloadUrl,
   purged,
 }: CompletePageProps) {
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+
+  /**
+   * 링크로 바로 이동하지 않고 받아서 저장한다.
+   *
+   * API 라우트는 실패를 JSON으로 돌려주므로, 링크를 그대로 누르면 계약서 대신
+   * {"ok":false,...} 한 줄이 적힌 흰 화면으로 넘어간다. 이 링크는 메일함에 영구히 남아
+   * 몇 년 뒤에도 눌리는데, 그때 고객이 보는 것이 그 화면이어서는 안 된다.
+   */
+  const handleDownload = async () => {
+    setDownloading(true);
+    setDownloadError(null);
+
+    try {
+      const response = await fetch(downloadUrl);
+
+      if (!response.ok) {
+        const message = await response
+          .json()
+          .then((body) => (typeof body?.message === 'string' ? body.message : null))
+          .catch(() => null);
+        setDownloadError(message ?? '계약서를 받지 못했습니다. 잠시 후 다시 시도해 주세요.');
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${contract.customerName}_음악연습실_이용계약서.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      setDownloadError('연결이 끊겼습니다. 잠시 후 다시 시도해 주세요.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -156,11 +198,17 @@ export default function ContractCompletePage({
             </p>
           ) : (
             <>
-              <a href={downloadUrl} className="block">
-                <Button size="lg" fullWidth>
-                  계약서 PDF 내려받기
-                </Button>
-              </a>
+              <Button size="lg" fullWidth disabled={downloading} onClick={handleDownload}>
+                {downloading ? '준비 중…' : '계약서 PDF 내려받기'}
+              </Button>
+
+              {downloadError && (
+                <p className="mt-3 text-sm text-red-700 dark:text-red-700 bg-red-50 dark:bg-red-50 rounded-xl p-3 leading-relaxed">
+                  {downloadError}
+                  <br />
+                  계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.
+                </p>
+              )}
 
               <p className="text-sm text-gray-500 dark:text-gray-500 mt-4 mb-6">
                 같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나

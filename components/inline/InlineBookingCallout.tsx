@@ -90,7 +90,7 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
             booking_message: headline,
           })
         }
-        className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-bold min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
+        className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
       >
         {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}
         <ArrowRight size={16} aria-hidden="true" />

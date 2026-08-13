@@ -129,7 +129,9 @@ const ContactCTA = ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={trackPrimaryCta}
-                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
+                                /* 목적지가 카카오톡일 때만 옐로. 비-ko는 /contact 폼으로 가므로
+                                   아래 Link가 primary 보라를 유지한다(노란 버튼 = 카카오톡 규칙). */
+                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                             >
                                 <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
                                 <span className="min-w-0">{primaryLabel}</span>

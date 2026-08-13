@@ -111,7 +111,13 @@ const PricingCard = ({
                     target={ctaHref.startsWith('http') ? '_blank' : undefined}
                     rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
                     onClick={handleCtaClick}
-                    className="mt-6 block w-full text-center py-3 px-4 rounded-xl font-semibold text-sm transition-colors bg-primary hover:bg-primary-dark text-white"
+                    /* 카드마다 상품은 달라도 행동은 하나(카톡 문의)라 CTA 색도 하나여야
+                       한다. 카카오가 아닌 목적지(폼·상세 페이지)일 때만 primary 유지. */
+                    className={`mt-6 block w-full text-center py-3 px-4 rounded-xl font-semibold text-sm transition-colors ${
+                        isKakaoCta
+                            ? 'bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold'
+                            : 'bg-primary hover:bg-primary-dark text-white'
+                    }`}
                 >
                     {ctaLabel}
                 </a>

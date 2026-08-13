@@ -19,7 +19,7 @@ import {
   type AdminSerializedContract,
 } from '../../../lib/contracts/serialize';
 import { expireOverdueContracts } from '../../../lib/contracts/service';
-import { getStatusLabel } from '../../../lib/contracts/status';
+import { getStatusLabel, needsTermination } from '../../../lib/contracts/status';
 import { formatCurrency, formatShortDate as formatDate } from '../../../lib/contracts/format';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 계약이 잘린다는 사실을 화면에 알린다. */
@@ -87,6 +87,7 @@ const STATUS_CLASS: Record<string, string> = {
   signed: 'bg-green-100 text-green-700',
   cancelled: 'bg-red-100 text-red-700',
   expired: 'bg-yellow-100 text-yellow-700',
+  terminated: 'bg-gray-200 text-gray-600',
 };
 
 export default function AdminContractsPage({
@@ -126,6 +127,18 @@ export default function AdminContractsPage({
     [contracts, now],
   );
 
+  /**
+   * 메일이 나가지 않은 계약. 고객은 서명 링크를 못 받았는데 목록에는 '발송완료'로 보인다.
+   * 발송은 응답 뒤에 처리되므로 방금 보낸 건은 아직 결과가 없을 수 있다.
+   */
+  const mailFailed = useMemo(() => contracts.filter((c) => c.notificationError), [contracts]);
+
+  /** 종료 처리를 해야 그 호실로 새 계약을 만들 수 있는 것들. */
+  const awaitingTermination = useMemo(
+    () => contracts.filter((c) => needsTermination(c, now)),
+    [contracts, now],
+  );
+
   const counts = useMemo(() => {
     const result: Record<string, number> = { all: contracts.length };
     for (const status of contractStatusEnum) {
@@ -146,6 +159,24 @@ export default function AdminContractsPage({
     // 실패했더라도 새로고침한다. 거절 사유는 대개 "화면이 낡았다"는 것이라,
     // 낡은 상태를 그대로 두면 같은 버튼을 계속 누르게 된다.
     await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
+  /**
+   * 발송은 실제로 고객에게 메일이 나가는 동작이라 확인을 받는다. 상세 화면은 이미 확인창을
+   * 띄우는데 목록만 곧바로 나가서, 목록에서 잘못 누르면 되돌릴 방법이 없었다.
+   */
+  const handleSend = async (contract: AdminSerializedContract) => {
+    if (
+      !window.confirm(`${contract.customerEmail} 주소로 서명 요청 메일을 보냅니다. 계속할까요?`)
+    ) {
+      return;
+    }
+    await withBusy(contract.id, () => mutateContract(contract.id, 'send'));
+  };
+
+  const handleResend = async (contract: AdminSerializedContract) => {
+    if (!window.confirm('재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 계속할까요?')) return;
+    await withBusy(contract.id, () => mutateContract(contract.id, 'resend'));
   };
 
   const handleCopyLink = async (contract: AdminSerializedContract) => {
@@ -199,11 +230,30 @@ export default function AdminContractsPage({
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
               )}
 
+              {/* 메일 실패를 가장 먼저 알린다. 고객이 아무것도 못 받은 상태이고,
+                  운영자가 알아채지 못하면 계약이 그대로 멈춘다. */}
+              {mailFailed.length > 0 && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-900 rounded-lg text-sm">
+                  <strong>메일이 발송되지 않은 계약이 {mailFailed.length}건 있습니다</strong> (
+                  {mailFailed.map((c) => c.customerName).join(', ')}). 고객이 서명 링크를 받지
+                  못했습니다 — 해당 계약을 열어 재발송하거나 링크를 직접 전달해 주세요.
+                </div>
+              )}
+
               {expiringSoon.length > 0 && (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
                   서명 링크가 곧 만료되는 계약이 {expiringSoon.length}건 있습니다 (
                   {expiringSoon.map((c) => c.customerName).join(', ')}). 고객이 서명하지 못하면
                   재발송해야 합니다.
+                </div>
+              )}
+
+              {awaitingTermination.length > 0 && (
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm">
+                  이용 기간이 지난 계약이 {awaitingTermination.length}건 있습니다 (
+                  {awaitingTermination.map((c) => `${c.roomNumber}호 ${c.customerName}`).join(', ')}
+                  ). 갱신해서 계속 이용 중이면 그대로 두시고, 끝났다면 종료 처리를 해야 그
+                  호실로 새 계약을 만들 수 있습니다.
                 </div>
               )}
 
@@ -282,6 +332,21 @@ export default function AdminContractsPage({
                                   </div>
                                 );
                               })()}
+
+                            {/* 메일이 안 나간 계약은 겉보기에 정상 발송과 구별되지 않는다.
+                                고객은 링크를 못 받았는데 목록은 '발송완료'로 보인다. */}
+                            {contract.notificationError && (
+                              <div className="mt-1 text-xs text-amber-700 font-medium">
+                                메일 실패
+                              </div>
+                            )}
+
+                            {/* 종료 처리를 해야 이 호실로 새 계약을 만들 수 있다. */}
+                            {needsTermination(contract, now) && (
+                              <div className="mt-1 text-xs text-blue-700 font-medium">
+                                종료 처리 필요
+                              </div>
+                            )}
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-900">
                             {contract.customerName}
@@ -309,9 +374,7 @@ export default function AdminContractsPage({
                                 <Button
                                   size="sm"
                                   disabled={busy}
-                                  onClick={() =>
-                                    withBusy(contract.id, () => mutateContract(contract.id, 'send'))
-                                  }
+                                  onClick={() => handleSend(contract)}
                                 >
                                   {busy ? '발송 중...' : '발송'}
                                 </Button>
@@ -331,11 +394,7 @@ export default function AdminContractsPage({
                                 <Button
                                   size="sm"
                                   disabled={busy}
-                                  onClick={() =>
-                                    withBusy(contract.id, () =>
-                                      mutateContract(contract.id, 'resend'),
-                                    )
-                                  }
+                                  onClick={() => handleResend(contract)}
                                 >
                                   {busy ? '재발송 중...' : '재발송'}
                                 </Button>

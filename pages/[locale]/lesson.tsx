@@ -300,7 +300,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                 cta_id: 'lesson_curriculum_kakao',
                             })
                         }
-                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark transition-colors duration-200"
+                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-kakao text-kakao-ink font-bold text-lg hover:bg-kakao-dark transition-colors duration-200"
                     >
                         {t('lesson.pricing.cta')}
                     </a>
@@ -388,7 +388,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                         cta_id: 'lesson_pricing_kakao',
                                     })
                                 }
-                                className="block w-full text-center bg-gray-900 dark:bg-gray-700 hover:bg-primary text-white font-bold py-4 rounded-xl transition-colors duration-300"
+                                className="block w-full text-center bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 rounded-xl transition-colors duration-300"
                             >
                                 {t('lesson.pricing.cta')}
                             </a>

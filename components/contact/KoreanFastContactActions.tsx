@@ -43,7 +43,7 @@ const KoreanFastContactActions = ({ locale, naverMapUrl, kakaoUrl, phone }: Kore
             cta_id: 'ko_contact_fast_kakao',
           })
         }
-        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-yellow-400 px-3 py-2 text-sm font-semibold text-gray-950 transition-colors hover:bg-yellow-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
+        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-kakao px-3 py-2 text-sm font-bold text-kakao-ink transition-colors hover:bg-kakao-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
       >
         <MessageCircle size={18} aria-hidden="true" />
         카카오톡

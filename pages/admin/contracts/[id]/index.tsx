@@ -24,7 +24,7 @@ import {
   type SerializedSignature,
 } from '../../../../lib/contracts/serialize';
 import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/contracts/format';
-import { getStatusLabel, isActionAllowed } from '../../../../lib/contracts/status';
+import { getStatusLabel, isActionAllowed, needsTermination } from '../../../../lib/contracts/status';
 
 interface AdminContractDetailPageProps {
   contract: AdminSerializedContract;
@@ -78,6 +78,7 @@ const STATUS_CLASS: Record<string, string> = {
   signed: 'bg-green-100 text-green-700',
   cancelled: 'bg-red-100 text-red-700',
   expired: 'bg-yellow-100 text-yellow-700',
+  terminated: 'bg-gray-200 text-gray-600',
 };
 
 const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -117,6 +118,27 @@ export default function AdminContractDetailPage({
   const handleCopyLink = async () => {
     const copied = await copyToClipboard(contract.signUrl);
     setNotice(copied ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.');
+  };
+
+  /**
+   * 이용 종료 처리.
+   *
+   * 사유를 반드시 받는다. 나중에 이 방이 왜, 언제 비었는지를 설명하는 유일한 기록이고,
+   * 위약금(제5조 ③)이 걸린 중도 퇴실인지 정상 만료인지가 분쟁의 쟁점이 된다.
+   */
+  const handleTerminate = async () => {
+    const reason = window.prompt(
+      '이용 종료 사유를 적어 주세요. 계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.\n\n' +
+        '예: 기간 만료 후 종료 / 중도 퇴실(위약금 납부) / 이용료 연체로 해지',
+    );
+    if (reason === null) return;
+
+    if (reason.trim() === '') {
+      setNotice('종료 사유를 입력해 주세요.');
+      return;
+    }
+
+    await run(() => mutateContract(contract.id, 'terminate', { reason: reason.trim() }));
   };
 
   const handleDelete = async () => {
@@ -172,6 +194,32 @@ export default function AdminContractDetailPage({
               <strong className="block mb-1">보관 기간이 지나 개인정보가 파기된 계약입니다</strong>
               {formatDate(contract.purgedAt)}에 제목·이름·연락처·계약 본문·서명 기록을 지웠습니다.
               계약 기간과 금액만 운영 기록으로 남아 있으며, 계약서를 다시 발급할 수 없습니다.
+            </div>
+          )}
+
+          {/* 기간이 끝났는데 종료 처리가 없으면 그 호실로 새 계약을 만들 수 없다.
+              제3조의 자동 갱신 때문에 시스템이 임의로 끝내지 않고 운영자에게 확인을 받는다. */}
+          {needsTermination(contract) && (
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm">
+              <strong className="block mb-1">이용 기간이 지났습니다</strong>
+              계약서상 종료일({formatDate(contract.endDate)})이 지났습니다. 갱신해서 계속
+              이용 중이면 그대로 두시고, 이용이 끝났다면 아래 “이용 종료 처리”를 눌러 주세요.
+              <span className="block mt-2 text-blue-700">
+                종료 처리를 해야 {contract.roomNumber}호로 새 계약을 만들 수 있습니다.
+              </span>
+            </div>
+          )}
+
+          {contract.status === 'terminated' && (
+            <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
+              <strong className="block mb-1">이용이 종료된 계약입니다</strong>
+              {formatDate(contract.terminatedAt)}에 종료 처리했습니다.
+              {contract.terminationReason && (
+                <span className="block mt-1">사유: {contract.terminationReason}</span>
+              )}
+              <span className="block mt-2 text-gray-500">
+                계약서와 서명 기록은 그대로 보관됩니다.
+              </span>
             </div>
           )}
 
@@ -393,6 +441,18 @@ export default function AdminContractDetailPage({
                 </Button>
               )}
 
+              {/* 같은 고객의 재계약·갱신은 14개 항목을 다시 타이핑하는 자리다.
+                  발송 후에는 수정이 막히므로(설계상 의도) 복제해서 새로 만드는 길을 준다. */}
+              <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
+                <Button variant="outline">복제해서 새 계약</Button>
+              </Link>
+
+              {isActionAllowed(contract.status, 'terminate') && (
+                <Button variant="ghost" disabled={busy} onClick={handleTerminate}>
+                  이용 종료 처리
+                </Button>
+              )}
+
               {isActionAllowed(contract.status, 'delete') && (
                 <Button
                   variant="ghost"
@@ -407,7 +467,9 @@ export default function AdminContractDetailPage({
 
             {contract.status === 'signed' && (
               <p className="mt-4 text-sm text-gray-500">
-                서명이 완료된 계약은 수정·삭제할 수 없습니다.
+                서명이 완료된 계약은 수정·삭제할 수 없습니다. 이용이 끝났다면 “이용 종료
+                처리”를 해 주세요 — 계약서는 그대로 보관되고, 그 호실로 새 계약을 만들 수
+                있게 됩니다.
               </p>
             )}
           </div>

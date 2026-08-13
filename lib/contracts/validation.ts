@@ -204,6 +204,24 @@ export const validateCreateContractPayload = (
   const monthlyRent = readAmount('monthlyRent', false);
   const depositAmount = readAmount('depositAmount', true);
 
+  /**
+   * 계약서 제5조 ①은 "보증금은 월 이용료와 동일한 금액으로 한다"고 못박는다.
+   *
+   * 다른 값을 넣으면 같은 계약서 안에서 요약표의 보증금과 제5조가 서로 다른 말을 하게 된다.
+   * 제5조 ③의 위약금이 "보증금 상당액"이라 어느 쪽이 맞는지가 곧바로 돈 문제가 된다.
+   * 조항을 고칠 생각이면 이 검사도 함께 풀어야 한다.
+   */
+  if (
+    monthlyRent !== undefined &&
+    depositAmount !== undefined &&
+    depositAmount !== monthlyRent
+  ) {
+    push(
+      'depositAmount',
+      `계약서 제5조에 따라 보증금은 월 이용료와 같아야 합니다 (${monthlyRent.toLocaleString('ko-KR')}원).`,
+    );
+  }
+
   let paymentDay: number | undefined;
   if (payload.paymentDay !== undefined && payload.paymentDay !== null) {
     const value = payload.paymentDay;

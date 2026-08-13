@@ -144,7 +144,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 서명 대기 행이 없다면 이미 처리됐거나 데이터가 어긋난 상태다. 새로 만들지 않는다
     // — 조건 없는 삽입은 중복 서명 기록을 남기는 유일한 구멍이 된다.
     if (!pendingSignature) {
-      return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
+      // 상태를 함께 돌려준다 — 응답 도중 연결이 끊겨 다시 제출한 고객을 완료 화면으로
+      // 보내려면 화면이 "이미 끝났다"는 것을 구별할 수 있어야 한다.
+      return res
+        .status(409)
+        .json({ ok: false, message: '이미 서명이 처리된 계약입니다.', status: 'signed' });
     }
 
     // 서명 시점 문서의 지문. 나중에 다시 계산해 대조하면 사후 변조를 탐지할 수 있다.
@@ -183,7 +187,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     if (contractResult.rowsAffected === 0 || signatureResult.rowsAffected === 0) {
-      return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.' });
+      return res
+        .status(409)
+        .json({ ok: false, message: '이미 서명이 처리된 계약입니다.', status: 'signed' });
     }
 
     // PDF 생성·메일 발송은 응답을 보낸 뒤 이어서 처리한다. 서버리스에서 응답 직후 실행이

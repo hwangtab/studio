@@ -162,7 +162,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                       cta_id: 'contact_en_quickfacts_kakao',
                     })
                   }
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-dark transition-colors min-h-[44px] touch-manipulation"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-kakao px-6 py-3 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
                 >
                   <MessageCircle className="w-4 h-4" aria-hidden="true" />
                   Chat on KakaoTalk

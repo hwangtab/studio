@@ -95,7 +95,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
         target="_blank"
         rel="noopener noreferrer"
         onClick={trackKakaoClick}
-        className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 text-sm font-bold min-h-[44px] touch-manipulation"
+        className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink text-sm font-bold min-h-[44px] touch-manipulation"
       >
         {t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
         <ArrowRight size={14} aria-hidden="true" />
@@ -112,7 +112,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
         target="_blank"
         rel="noopener noreferrer"
         onClick={trackKakaoClick}
-        className="sm:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 touch-manipulation"
+        className="sm:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink touch-manipulation"
         aria-label={t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
       >
         <MessageCircle size={20} aria-hidden="true" />

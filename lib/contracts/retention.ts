@@ -62,7 +62,10 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
          * 서명을 기다리는 중이다 — 진행 중인 건의 이름과 연락처를 지우면 그 계약을 더는
          * 이어갈 수 없다.
          */
-        inArray(contracts.status, ['signed', 'expired', 'cancelled'] satisfies ContractStatus[]),
+        inArray(
+          contracts.status,
+          ['signed', 'expired', 'cancelled', 'terminated'] satisfies ContractStatus[],
+        ),
         isNull(contracts.purgedAt),
       ),
     );

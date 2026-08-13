@@ -8,19 +8,11 @@
  * 보관된 PDF가 있으면 그것을 그대로 내려 준다 — 서명 당시 발급한 문서와 같아야 하고,
  * Chromium을 다시 띄우는 비용도 들지 않는다.
  */
-import { get } from '@vercel/blob';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
-import type {
-  Contract,
-  ContractAttachment,
-  ContractClause,
-  Signature,
-} from '../../../../db/schema';
 import { checkDownloadRateLimit } from '../../../../lib/contracts/admin-rate-limit';
-import { generateContractPdf } from '../../../../lib/contracts/pdf';
-import { resolveRulesContent } from '../../../../lib/contracts/template';
+import { loadOrRenderContractPdf } from '../../../../lib/contracts/pdf-storage';
 
 export const config = { maxDuration: 60 };
 
@@ -73,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const pdf = await loadOrRenderPdf(contract);
+    const pdf = await loadOrRenderContractPdf(contract);
 
     const filename = `${contract.customerName}_음악연습실_이용계약서.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
@@ -89,40 +81,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-type ContractWithRelations = Contract & {
-  signatures: Signature[];
-  contractClauses: ContractClause[];
-  contractAttachments: ContractAttachment[];
-};
-
-/**
- * 보관된 PDF를 먼저 찾고, 없을 때만 새로 만든다.
- *
- * 서명 당시 발급한 문서를 그대로 주는 것이 원칙이다. 보관본을 읽지 못하면(파일이 지워졌거나
- * 저장에 실패했던 경우) 계약 내용으로 다시 만든다 — 계약 내용은 서명 후 바뀌지 않으므로
- * 같은 문서가 나온다.
- */
-const loadOrRenderPdf = async (contract: ContractWithRelations): Promise<Buffer> => {
-  if (contract.pdfUrl) {
-    try {
-      const stored = await get(contract.pdfUrl, { access: 'private' });
-      if (stored?.stream) {
-        const buffer = Buffer.from(await new Response(stored.stream).arrayBuffer());
-        if (buffer.length > 0) return buffer;
-      }
-    } catch (error: unknown) {
-      console.error('[API/contracts/[id]/download] Stored PDF unavailable, re-rendering:', error);
-    }
-  }
-
-  const customerSignature =
-    contract.signatures.find((s) => s.signerRole === 'customer' && s.status === 'signed') ?? null;
-
-  return generateContractPdf({
-    contract,
-    signature: customerSignature,
-    clauses: contract.contractClauses,
-    attachments: contract.contractAttachments,
-    rulesContent: resolveRulesContent(contract.contractAttachments),
-  });
-};
