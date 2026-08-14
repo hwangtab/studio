@@ -29,7 +29,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "티어라이너",
-            "releaseDate": "2026-02-22",
+            "releaseDate": "2026-02-23",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["티어라이너 (Vocal)"]
@@ -53,7 +53,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "더 프로젝터스",
-            "releaseDate": "2024-03-15",
+            "releaseDate": "2025-11-10",
             "label": "The Projectors",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
@@ -102,7 +102,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "하루살이 프로젝트",
-            "releaseDate": "2024-01-20",
+            "releaseDate": "2025-07-22",
             "label": "Harusali Project",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
@@ -130,7 +130,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "삼각전파사",
-            "releaseDate": "2025-02-10",
+            "releaseDate": "2025-05-02",
             "label": "Samgeuk Jeonpasa",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
@@ -156,7 +156,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "자이",
-            "releaseDate": "2023-09-01",
+            "releaseDate": "2025-03-10",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["자이 (Vocal)"]
@@ -180,7 +180,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "허정혁",
-            "releaseDate": "2023-05-18",
+            "releaseDate": "2024-12-13",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["허정혁 (Vocal)"]
@@ -206,7 +206,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "Various Artists",
-            "releaseDate": "2023-07-22",
+            "releaseDate": "2025-02-07",
             "label": "Peace and Music",
             "credits": {
                 "engineer": "Studio NOL (황경하) — Mastering & Album Direction",
@@ -231,7 +231,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "이서영",
-            "releaseDate": "2024-11-29",
+            "releaseDate": "2025-02-07",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["이서영 (Vocal)"]
@@ -255,7 +255,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "자이 x HANASH",
-            "releaseDate": "2024-12-03",
+            "releaseDate": "2024-12-04",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["자이 (Vocal)", "HANASH (Rap)"]
@@ -280,7 +280,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "모모",
-            "releaseDate": "2024-11-26",
+            "releaseDate": "2024-11-27",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["모모 (Vocal)"]
@@ -304,6 +304,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "여유",
+            "releaseDate": "2025-02-05",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["여유 (Vocal)", "정수민 (Vocal, Featuring)"]
@@ -328,6 +329,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "나뭇잎들",
+            "releaseDate": "2025-01-16",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["나뭇잎들"]
@@ -352,6 +354,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "모레도토요일",
+            "releaseDate": "2024-11-25",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["모레도토요일"]
@@ -403,6 +406,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "까르",
+            "releaseDate": "2024-12-13",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["까르 (Vocal)"]
@@ -427,7 +431,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "남수",
-            "releaseDate": "2024-11-21",
+            "releaseDate": "2024-11-22",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["남수 (Vocal)"]
@@ -452,6 +456,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "김동산과 블루이웃",
+            "releaseDate": "2024-12-20",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["김동산과 블루이웃"]
@@ -477,6 +482,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "정진석",
+            "releaseDate": "2024-12-02",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["정진석 (Vocal)"]
@@ -534,7 +540,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "남자애",
-            "releaseDate": "2022-11-09",
+            "releaseDate": "2023-01-11",
             "label": "Namjae",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
@@ -561,7 +567,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "Various Artists",
-            "releaseDate": "2024-06-01",
+            "releaseDate": "2022-11-24",
             "label": "Studio NOL / Melon Music",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
@@ -588,7 +594,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "희우",
-            "releaseDate": "2024-04-02",
+            "releaseDate": "2024-04-03",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["희우 (Vocal)"]
@@ -614,7 +620,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "희우",
-            "releaseDate": "2024-08-05",
+            "releaseDate": "2024-08-06",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["희우 (Vocal)"]
@@ -659,6 +665,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "남자애",
+            "releaseDate": "2024-08-29",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["남자애"]
@@ -708,6 +715,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "세민",
+            "releaseDate": "2024-01-10",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["세민 (Vocal)"]
@@ -730,7 +738,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "영인",
-            "releaseDate": "2023-03-13",
+            "releaseDate": "2023-01-15",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["영인 (Vocal)"]
@@ -755,7 +763,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "류형수",
-            "releaseDate": "2023-06-20",
+            "releaseDate": "2023-06-30",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["류형수 (Vocal)"]
@@ -781,6 +789,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "엉아들",
+            "releaseDate": "2022-08-05",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["엉아들"]
@@ -806,7 +815,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": false,
             "artist": "강호중",
-            "releaseDate": "2022-03-07",
+            "releaseDate": "2022-03-26",
             "credits": {
                 "engineer": "Studio NOL (황경하)",
                 "musicians": ["강호중 (Vocal)"]
