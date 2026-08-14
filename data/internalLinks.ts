@@ -171,11 +171,13 @@ export const topicLinks: Record<string, TopicLink> = {
   '세션 뮤지션': { slug: 'session-musician1', anchorText: '세션 뮤지션 완전 가이드' },
 
   // ─── 성우 클러스터 (2026-07-20 신규) ───
-  // "성우 녹음실" pos 24.6 → 15위권 목표. buyer-intent 강화: voice-acting-rate1(단가),
+  // "성우 녹음실" pos 24.6 → 15위권 목표. buyer-intent 강화: voice-actor-hiring-quote-cost(견적),
   // audiobook-production-cost1(오디오북 견적)이 /ko/voice-acting 허브로 수렴.
-  '성우 녹음 단가': { slug: 'voice-acting-rate1', anchorText: '성우 녹음 단가·비용 가이드' },
-  '성우 섭외 비용': { slug: 'voice-acting-rate1', anchorText: '성우 섭외 비용·견적 가이드' },
-  '성우 녹음 비용': { slug: 'voice-acting-rate1', anchorText: '성우 녹음 비용 완전 가이드' },
+  // 2026-08-14: voice-acting-rate1은 근접중복 통합으로 voice-actor-hiring-quote-cost에 308
+  // (regionRedirectMap.json) — 대상 slug를 갱신해 auto-link가 redirect hop을 만들지 않게 함.
+  '성우 녹음 단가': { slug: 'voice-actor-hiring-quote-cost', anchorText: '성우 녹음 단가·비용 가이드' },
+  '성우 섭외 비용': { slug: 'voice-actor-hiring-quote-cost', anchorText: '성우 섭외 비용·견적 가이드' },
+  '성우 녹음 비용': { slug: 'voice-actor-hiring-quote-cost', anchorText: '성우 녹음 비용 완전 가이드' },
   '오디오북 제작 비용': { slug: 'audiobook-production-cost1', anchorText: '오디오북 제작 비용 완전 가이드' },
   '오디오북 견적': { slug: 'audiobook-production-cost1', anchorText: '오디오북 제작 견적 가이드' },
   '오디오북 제작 견적': { slug: 'audiobook-production-cost1', anchorText: '오디오북 제작 비용·견적' },

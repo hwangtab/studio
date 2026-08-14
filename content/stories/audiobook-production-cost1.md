@@ -133,4 +133,4 @@ faq:
 
 오디오북 제작을 고민 중이라면 스튜디오 놀에 문의해 주세요. 프로젝트 분량과 목적에 맞춰 최적의 제작 플랜을 제안해 드립니다.
 
-[성우 녹음 단가·비용 가이드](/stories/voice-acting-rate1) | [오디오북 제작 완전 가이드](/stories/audiobook-guide1) | [성우 녹음실 정보](/ko/voice-acting) | [나레이션 녹음 가이드](/stories/narration1) | [팟캐스트 녹음 가이드](/stories/podcast-vocal1)
+[성우 녹음 섭외 견적·비용 가이드](/stories/voice-actor-hiring-quote-cost) | [오디오북 제작 완전 가이드](/stories/audiobook-guide1) | [성우 녹음실 정보](/ko/voice-acting) | [나레이션 녹음 가이드](/stories/narration1) | [팟캐스트 녹음 가이드](/stories/podcast-vocal1)

@@ -111,4 +111,4 @@ Studio NOL의 강점은 녹음 직후 엔지니어가 NG 컷과 챕터 붙임을
 
 ## 함께 보면 좋은 가이드
 
-이 주제와 이어지는 준비 과정은 [성우·내레이션 녹음 가이드](/stories/voice-acting1)와 [보컬 녹음 비용 가이드](/stories/pricing1)에서 더 구체적으로 확인할 수 있습니다.
+이 주제와 이어지는 준비 과정은 [성우·내레이션 녹음 가이드](/stories/voice-acting1)와 [보컬 녹음 비용 가이드](/stories/pricing1)에서 더 구체적으로 확인할 수 있습니다. 분량별·성우별로 더 세분화된 예산을 짜고 싶다면 [오디오북 제작 비용 완전 가이드](/stories/audiobook-production-cost1)도 참고하세요.
