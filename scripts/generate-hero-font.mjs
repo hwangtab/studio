@@ -122,10 +122,18 @@ function collectHeroChars() {
     }
   }
 
-  // 4) siteConfig.name — about 페이지가 ImageHero title={siteConfig.name} 호출
+  // 4) siteConfig — about 페이지가 ImageHero title={siteConfig.name},
+  //    /author 페이지가 ImageHero title={studioOperator.name}을 h1으로 렌더한다.
+  //
+  //    studioOperator 블록은 통째로 긁으면 안 된다: awards[].name 같은 하위 name이
+  //    h1에 절대 안 나오는 글자를 LCP 크리티컬 서브셋에 밀어넣는다(실제로 '레드어워드'·
+  //    '한국대중음악상'이 유입돼 --check가 잡았다). 블록을 잘라낸 뒤 최상위 name만 따로 넣는다.
   try {
     const siteCfg = fs.readFileSync(path.join(ROOT, 'data', 'siteConfig.ts'), 'utf8');
-    for (const m of siteCfg.matchAll(/name\s*:\s*(["'`])([\s\S]*?)\1/g)) addStr(m[2]);
+    const operatorName = siteCfg.match(/export const studioOperator\s*=\s*{\s*\n\s*name\s*:\s*(["'`])([\s\S]*?)\1/);
+    if (operatorName) addStr(operatorName[2]);
+    const withoutOperator = siteCfg.replace(/export const studioOperator[\s\S]*?\n};/, '');
+    for (const m of withoutOperator.matchAll(/name\s*:\s*(["'`])([\s\S]*?)\1/g)) addStr(m[2]);
   } catch {}
 
   // 5) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)

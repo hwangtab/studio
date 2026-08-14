@@ -103,7 +103,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
           ))}
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {profile.stats.map((stat) => (
             <div
               key={stat.label}
@@ -118,12 +118,55 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
 
       <Section variant="alternate">
         <SectionHeading icon={Award} title={profile.headings.award} className="mb-8" />
-        <div className="max-w-3xl rounded-lg border-l-4 border-primary bg-primary/5 p-6 dark:bg-primary/10">
-          <p className="font-semibold text-gray-900 dark:text-gray-50">{profile.award.title}</p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-            {profile.award.detail}
-          </p>
-        </div>
+        {/* 목록 형식 — 수상 한 건을 문장으로 늘여 쓰면 자랑으로 읽히고, 연도별로 늘어놓으면 이력으로 읽힌다. */}
+        <ul className="max-w-3xl space-y-3">
+          {profile.awards.map((award) => (
+            <li
+              key={`${award.year}-${award.title}-${award.work}`}
+              className="flex flex-col gap-1 border-l-2 border-primary/40 pl-4 sm:flex-row sm:items-baseline sm:gap-3"
+            >
+              <span className="text-sm font-semibold tabular-nums text-primary sm:w-14 sm:flex-shrink-0">
+                {award.year}
+              </span>
+              <span className="text-gray-900 dark:text-gray-50">
+                {award.title}
+                <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">〈{award.work}〉</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {/* 작업 연보 — 음반을 앞에, 기획·전시·축제를 뒤에. 녹음을 의뢰하러 온 사람은 앞부분만
+            보고 판단하고, 더 궁금한 사람이 아래까지 읽는다. 배경 설명은 넣지 않는다(작품명·연도·역할만). */}
+        <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+          {profile.headings.credits}
+        </h3>
+        {([
+          { label: profile.headings.creditAlbums, items: profile.credits.albums },
+          { label: profile.headings.creditProjects, items: profile.credits.projects },
+        ] as const).map((group) => (
+          <div key={group.label} className="mb-8 max-w-3xl last:mb-0">
+            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              {group.label}
+            </h4>
+            <ul className="space-y-2">
+              {group.items.map((credit) => (
+                <li
+                  key={`${credit.year}-${credit.title}`}
+                  className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-4"
+                >
+                  <span className="text-sm tabular-nums text-gray-500 dark:text-gray-400 sm:w-24 sm:flex-shrink-0">
+                    {credit.year}
+                  </span>
+                  <span className="break-keep text-gray-800 dark:text-gray-100">
+                    {credit.title}
+                    <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{credit.role}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
 
         <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
           {profile.headings.expertise}

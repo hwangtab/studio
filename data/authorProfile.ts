@@ -10,6 +10,21 @@ const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: str
   return dict[locale as keyof typeof dict] || dict.en || dict.ko;
 };
 
+// 작업 연보의 역할 라벨 — siteConfig.studioOperator.credits의 role 키를 로케일 문구로 옮긴다.
+const CREDIT_ROLE_LABELS: Record<string, { ko: string; en: string }> = {
+  planProduce: { ko: '기획·제작', en: 'Planning & production' },
+  producer: { ko: '프로듀서', en: 'Producer' },
+  plan: { ko: '기획', en: 'Planning' },
+  coPlan: { ko: '공동기획', en: 'Co-planning' },
+  release: { ko: '발매', en: 'Release' },
+  write: { ko: '집필', en: 'Writing' },
+};
+
+const creditRoleLabel = (locale: Locale, role: string): string => {
+  const label = CREDIT_ROLE_LABELS[role];
+  return label ? t(locale, label) : role;
+};
+
 export interface AuthorWorkLink {
   href: string;
   title: string;
@@ -29,8 +44,8 @@ export const getAuthorProfile = (locale: Locale) => ({
       en: 'Kyungha Hwang — Music Producer · Engineer | Studio NOL',
     }),
     description: t(locale, {
-      ko: '15년차 인디씬 음반 기획자·프로듀서 황경하. 70개가 넘는 발매작을 함께했고, 2017 한국대중음악상 선정위원 특별상을 수상했습니다. 서울 연신내 스튜디오 놀에서 기획·녹음·믹싱·발매·PR까지 동행합니다.',
-      en: 'Kyungha Hwang, record planner & producer with 15 years in the Korean indie scene: 70+ releases, 2017 Korean Music Awards special committee prize. Runs Studio NOL in Seoul.',
+      ko: '15년차 인디씬 음반 기획자·프로듀서 황경하. 70개가 넘는 발매작을 함께했고 한국대중음악상·레드어워드 수상작을 기획·제작했습니다. 서울 연신내 스튜디오 놀에서 기획·녹음·믹싱·발매·PR까지 동행합니다.',
+      en: 'Kyungha Hwang, record planner & producer with 15 years in the Korean indie scene: 70+ releases, and albums that won the Korean Music Awards and Red Awards. Runs Studio NOL in Seoul.',
     }),
     keywords: t(locale, {
       ko: '황경하, 음악 프로듀서, 인디 음반 기획, 스튜디오 놀, 연신내 녹음실, 한국대중음악상',
@@ -62,31 +77,41 @@ export const getAuthorProfile = (locale: Locale) => ({
       en: 'For 15 years I have released music together with indie singer-songwriters and bands — shaping songs, getting them on Melon and Spotify, connecting session players, and reaching music press and critics.',
     }),
     t(locale, {
-      ko: '서울 연신내의 스튜디오 놀을 운영하며 보컬 디렉팅과 녹음·믹싱·마스터링을 인하우스로 진행합니다. 70개가 넘는 발매작을 아티스트와 함께 만들었고, 2017년에는 〈젠트리피케이션〉의 프로듀서로 제14회 한국대중음악상 선정위원 특별상을 받았습니다.',
-      en: 'I run Studio NOL in Yeonsinnae, Seoul, handling vocal direction, recording, mixing, and mastering in-house. I have made 70+ releases with artists, and in 2017 received the 14th Korean Music Awards special committee prize as producer of "Gentrification".',
+      ko: '서울 연신내의 스튜디오 놀을 운영하며 보컬 디렉팅과 녹음·믹싱·마스터링을 인하우스로 진행합니다. 70개가 넘는 발매작을 아티스트와 함께 만들었습니다.',
+      en: 'I run Studio NOL in Yeonsinnae, Seoul, handling vocal direction, recording, mixing, and mastering in-house. I have made 70+ releases with artists.',
     }),
     t(locale, {
       ko: '성공적인 발매는 혼자 해내기 어렵습니다. 결과를 약속하기보다, 음악이 세상에 닿는 동선을 함께 만드는 동료가 되는 것 — 그게 제가 하는 일입니다.',
       en: 'A successful release is hard to pull off alone. Rather than promising outcomes, my job is to be the colleague who builds the path your music takes into the world.',
     }),
   ],
+  // 수상은 아래 award 섹션이 맡는다 — 같은 페이지에서 카드로 한 번 더 세는 건 반복이다.
   stats: [
     { value: '70+', label: t(locale, { ko: '함께한 발매작', en: 'Releases together' }) },
     { value: '15년', label: t(locale, { ko: '음반 작업 경력', en: 'Years of record work' }) },
-    { value: '2017', label: t(locale, { ko: '한국대중음악상 선정위원 특별상', en: 'Korean Music Awards special prize' }) },
   ],
   expertise: locale === 'ko'
     ? ['A&R', '음반 기획', '보컬 디렉팅', '믹싱', '인디 음악 유통', '평론 PR', '세션 네트워킹']
     : ['A&R', 'Album Production', 'Vocal Direction', 'Mixing', 'Indie Music Distribution', 'Press PR', 'Session Networking'],
-  award: {
-    title: t(locale, {
-      ko: '2017 제14회 한국대중음악상 — 선정위원 특별상',
-      en: '2017 14th Korean Music Awards — Special Committee Prize',
-    }),
-    detail: t(locale, {
-      ko: '〈젠트리피케이션〉(자립음악생산조합 기획·제작, 2016 발매) 프로듀서. 같은 해 최우수 포크 음반 부문 후보.',
-      en: 'Producer of "Gentrification" (2016). Also nominated for Best Folk Album the same year.',
-    }),
+  // 수상·작업 연보는 siteConfig.studioOperator가 단일 소스 — 여기선 라벨만 붙인다.
+  // 목록 형식을 쓰는 이유: 같은 수상 한 건을 문장으로 늘여 쓰면 자랑으로 읽히지만,
+  // 연도별로 늘어놓으면 이력으로 읽힌다.
+  awards: studioOperator.awards.map((award) => ({
+    year: award.year,
+    title: award.category ? `${award.name} ${award.category}` : award.name,
+    work: award.work,
+  })),
+  credits: {
+    albums: studioOperator.credits.filter((credit) => credit.kind === 'album').map((credit) => ({
+      year: credit.year,
+      title: credit.title,
+      role: creditRoleLabel(locale, credit.role),
+    })),
+    projects: studioOperator.credits.filter((credit) => credit.kind === 'project').map((credit) => ({
+      year: credit.year,
+      title: credit.title,
+      role: creditRoleLabel(locale, credit.role),
+    })),
   },
   // URL은 siteConfig.operatorProfiles가 단일 소스 — 여기선 라벨만 붙인다.
   // id로 찾으므로 siteConfig에서 순서가 바뀌어도 어긋나지 않는다.
@@ -107,7 +132,10 @@ export const getAuthorProfile = (locale: Locale) => ({
   headings: {
     about: t(locale, { ko: '소개', en: 'About' }),
     expertise: t(locale, { ko: '전문 분야', en: 'Expertise' }),
-    award: t(locale, { ko: '수상', en: 'Award' }),
+    award: t(locale, { ko: '수상', en: 'Awards' }),
+    credits: t(locale, { ko: '작업 연보', en: 'Selected works' }),
+    creditAlbums: t(locale, { ko: '음반', en: 'Records' }),
+    creditProjects: t(locale, { ko: '기획·전시·축제', en: 'Projects, exhibitions, festivals' }),
     profiles: t(locale, { ko: '외부 프로필', en: 'Profiles elsewhere' }),
     press: t(locale, { ko: '언론 보도', en: 'In the press' }),
     work: t(locale, { ko: '함께 하는 방법', en: 'Work with me' }),

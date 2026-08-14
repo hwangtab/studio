@@ -52,10 +52,47 @@ export const studioOperator = {
   // 운영자 인물 사진(정사각, 원형 크롭 전제) — 홈 신뢰 스트립·/author 히어로·Person JSON-LD의
   // image가 함께 쓴다. 사진을 교체하면 치수도 여기서 같이 바뀌도록 src와 한자리에 둔다.
   portrait: { src: '/images/producer-hwang-kyungha.jpg', width: 864, height: 864 },
-  // 검증된 수상 이력 — JSON-LD Person.award. AI 엔진이 author를 "수상 프로듀서" 엔티티로 인식하는 강한 E-E-A-T 신호.
-  // 〈젠트리피케이션〉(자립음악생산조합 기획·제작, 2016.10.05 발매)의 프로듀서로 2017 제14회 한국대중음악상
-  // '선정위원 특별상' 수상. (같은 해 '최우수 포크 음반'은 후보 등재.) 출처: 아래 pressCoverage 노컷뉴스 보도.
-  award: '2017 한국대중음악상 선정위원 특별상 〈젠트리피케이션〉',
+  // 수상 이력 — JSON-LD Person.award. AI 엔진이 author를 "수상 프로듀서" 엔티티로 인식하는 강한 E-E-A-T 신호.
+  //
+  // source 필드는 검증 근거를 구분한다. 이 구분을 지울 것:
+  //   'press'      — 아래 pressCoverage 보도로 사이트 밖에서 확인 가능
+  //   'self'       — 본인 진술. 시상 자체의 실재는 확인했으나(레드어워드=문화연대·노동당 계열,
+  //                  '연대'·'현장' 부문 실재) 연도별 수상자 명단이 공개 색인에 없다.
+  //                  공식 기록 URL을 찾으면 source를 'press'로 올리고 근거를 pressCoverage에 추가할 것.
+  awards: [
+    { year: '2024', name: '레드어워드', category: '주목할만한 연대', work: '이름을 모르는 먼 곳의 그대에게', source: 'self' },
+    { year: '2019', name: '레드어워드', category: '주목할만한 연대', work: '몸의 중심', source: 'self' },
+    // 〈젠트리피케이션〉(자립음악생산조합 기획·제작, 2016.10.05 발매)으로 제14회 한국대중음악상
+    // '선정위원 특별상' 공동 수상. 같은 해 '최우수 포크 음반'은 후보 등재.
+    { year: '2017', name: '한국대중음악상', category: '선정위원 특별상', work: '젠트리피케이션', source: 'press' },
+    { year: '2017', name: '레드어워드', category: '현장', work: '콜트콜텍 투쟁 10주년 기념음반', source: 'self' },
+    { year: '2015', name: '레드어워드', category: '주목할만한 연대', work: '테이크아웃드로잉', source: 'self' },
+    { year: '2012', name: '다음뮤직 이달의 음반', category: '', work: 'No Control', source: 'self' },
+  ],
+  // 작업 연보 — 기획·제작·프로듀싱 크레딧. kind로 음반/그 외를 나눈다(프로필 페이지가 두 그룹으로 렌더).
+  // 배경 설명은 넣지 않는다: 작품명·연도·역할만 적으면 아는 사람은 알아보고, 모르는 사람에겐 음반 이력으로 읽힌다.
+  credits: [
+    { year: '2024', title: '이름을 모르는 먼 곳의 그대에게', role: 'producer', kind: 'album' },
+    { year: '2024', title: '세민 〈여린잎〉', role: 'planProduce', kind: 'album' },
+    { year: '2024', title: '황경하 〈눈녹듯〉', role: 'release', kind: 'album' },
+    { year: '2022', title: '〈강호중〉', role: 'producer', kind: 'album' },
+    { year: '2022', title: '〈엉아들〉', role: 'producer', kind: 'album' },
+    { year: '2022', title: '물고기는 물이 없으면 죽어요', role: 'planProduce', kind: 'album' },
+    { year: '2019', title: '몸의 중심', role: 'planProduce', kind: 'album' },
+    { year: '2018', title: '경하와 세민 EP 〈볼찌어다 내가 세상 끝날까지 너희와 항상 함께 있으리라〉', role: 'planProduce', kind: 'album' },
+    { year: '2017–2018', title: '새 민중음악 선곡집 1·2·3', role: 'planProduce', kind: 'album' },
+    { year: '2017', title: '콜트콜텍 기타노동자 밴드 〈콜트콜텍 투쟁 10주년 기념음반〉', role: 'planProduce', kind: 'album' },
+    { year: '2016', title: '젠트리피케이션', role: 'planProduce', kind: 'album' },
+    { year: '2015', title: '테이크아웃드로잉', role: 'planProduce', kind: 'album' },
+    { year: '2014', title: '김사월X김해원 〈비밀〉', role: 'plan', kind: 'album' },
+    { year: '2023–2026', title: '강정피스앤뮤직캠프', role: 'coPlan', kind: 'project' },
+    { year: '2023', title: '씨앗페', role: 'coPlan', kind: 'project' },
+    { year: '2020', title: '전시 〈노량진 — 터, 도시, 사람〉', role: 'planProduce', kind: 'project' },
+    { year: '2017', title: '아현포차 요리책', role: 'write', kind: 'project' },
+    { year: '2015', title: '한남동 자립심 페스티벌', role: 'plan', kind: 'project' },
+    { year: '2012–2015', title: '51플러스 페스티벌', role: 'plan', kind: 'project' },
+    { year: '2011–2016', title: '레코드폐허', role: 'plan', kind: 'project' },
+  ],
   // 운영자를 다룬 제3자 언론 보도. sameAs(본인이 관리하는 프로필)와 성격이 다르므로
   // JSON-LD에서도 Person.subjectOf로 따로 낸다 — 수상·이력 주장을 사이트 밖에서
   // 검증할 수 있는 근거다. 전부 2026-07-28 원문 직접 확인.
@@ -71,6 +108,12 @@ export const studioOperator = {
       title: '천 번을 들어줘야 4200원, 먹고 살 수 있습니까?',
       publisher: '경향신문',
       datePublished: '2016-06-25',
+    },
+    {
+      url: 'https://h21.hani.co.kr/arti/society/society_general/44394.html',
+      title: '민중음악이 구리다고요?',
+      publisher: '한겨레21',
+      datePublished: '2017-11-02',
     },
   ],
   jobTitleByLocale: {

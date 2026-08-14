@@ -150,3 +150,20 @@
 - **재템플릿 자체 교정 사례**: 한 에이전트가 H2에 "— 황경하" 접미사를 7편 반복 생성 → 검증에서 적발·전량 제거.
   교훈: 배치마다 '새로 생긴 반복 패턴'도 점검할 것(박스 잔여·Jaccard만으로는 안 잡힘)
 - 검증: 박스 0·깨진문자 0·상호 Jaccard ≤0.204·factGuards·storyLinks·content-check·전체 jest 305 통과
+
+## 2026-08-14 · ingest · 운영자 이력 정본화 + 프로듀서 노출 톤 조정
+- 발단: 홈 프로듀서 스트립이 "오그라든다"는 지적. 진단해보니 문제는 이력이 아니라 **반복**이었다 —
+  정본에 수상이 〈젠트리피케이션〉 1건만 있어서 같은 상을 홈·프로필·레슨 문구·스토리 3편 등 7곳에서 돌려썼다
+- 본인 이력 수령 → [[entities/operator-hwang-kyungha]] 신설: 수상 6건·작업 연보 20건·언론 보도 3건
+- `siteConfig.studioOperator`: `award` 문자열 1개 → `awards` 배열 6건 + `credits` 20건.
+  각 수상에 `source`(press/self) 부여해 검증 근거 구분 — 레드어워드 4건·다음뮤직 1건은 공개 색인에
+  수상자 명단이 없어 self. 공식 기록 URL 확보 시 press로 승격할 것
+- 언론 보도 한겨레21 "민중음악이 구리다고요?"(2017-11-02) 추가 → subjectOf 3건
+- 표기 방침 확정: 홈에서 수상 언급 0 · 목록 형식(문장으로 늘이면 자랑, 연도별로 늘어놓으면 이력) ·
+  기계가 읽는 곳(JSON-LD·llms.ts)은 유지 · 음반 앞 / 기획·전시 뒤
+- Person JSON-LD `award` 6건 배열화(article·releaseProject도 `getOperatorAwards()` 공유)
+- 부수: `/author` 히어로에 인물 사진 추가 + alt 불일치 교정(배경은 스튜디오인데 alt가 "프로듀서 프로필"이었음),
+  홈→/author 내부링크 신설(준-고아 페이지였음), Person JSON-LD `image` 추가
+- **회귀 1건 발견·수정**: `scripts/generate-hero-font.mjs`가 siteConfig의 모든 `name:`을 정규식으로 긁어
+  `awards[].name`("레드어워드"·"한국대중음악상")이 LCP 크리티컬 hero 서브셋에 유입. studioOperator 블록을
+  제외하되 최상위 name(= /author h1 "황경하")만 따로 수집하도록 수정 → 444 glyphs, woff2 재생성 불필요

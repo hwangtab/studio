@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
-import { getSiteConfig } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
@@ -35,7 +35,7 @@ const BASE_SECTIONS = (siteUrl: string) => `# Studio NOL (${siteUrl.replace(/^ht
 
 Studio NOL (스튜디오 놀) is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
 Established in 2024 and now in its second year of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
-It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, recipient of the Selection Committee Special Award at the 14th Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상').
+It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, who has planned and produced albums awarded at the Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상') and the Red Awards (2015, 2017, 2019, 2024).
 The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
 ## Primary Services
@@ -233,10 +233,11 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 const OPERATOR_AUTHOR = `
 ## Operator / Author
 
-Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. He received the Selection Committee Special Award at the 14th Korean Music Awards (2017). The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
+Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. Albums he planned or produced have received six awards since 2012 (listed below). The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
 
 - Operator: Hwang Kyungha (황경하)
-- Award: 제14회 한국대중음악상 '선정위원 특별상' (Selection Committee Special Award, 14th Korean Music Awards, 2017)
+- Awards (as planner / producer of the album named):
+${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr
 - Studio founded: 2024
 - Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)

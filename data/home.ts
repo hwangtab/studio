@@ -118,7 +118,9 @@ const homeData = {
     producerCredibility: {
       eyebrow: "이 스튜디오를 이끄는 사람",
       name: "프로듀서 황경하",
-      tagline: "15년차 음반 기획자·프로듀서 · 2017 한국대중음악상 선정위원 특별상 수상",
+      // 첫 화면에서 수상부터 꺼내지 않는다 — 수상 이력은 /author의 수상 섹션과 Person JSON-LD가
+      // 맡고, 홈 태그라인은 '무슨 일을 하는 사람인가'만 말한다. 아래 카드(70+·15년)와도 중복되지 않게.
+      tagline: "인디 싱어송라이터와 밴드의 발매를 함께 만드는 음반 기획자·프로듀서",
       photo: {
         src: studioOperator.portrait.src,
         alt: "스튜디오 놀 프로듀서 황경하"

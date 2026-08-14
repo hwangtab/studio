@@ -1,6 +1,7 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
 import { getSchemaLanguage } from './shared';
+import { getOperatorAwards } from './person';
 
 export const generateArticleSchema = (
   title: string,
@@ -42,6 +43,7 @@ export const generateArticleSchema = (
   // canonical Person @id (host 기반) — release-project schema와 동일 entity로 묶어
   // AI/Google이 황경하를 단일 entity로 인식하게 함. locale 독립 ID로 다국어 alternate도 통합.
   const personId = `${siteUrl}/#person-hwang`;
+  const operatorAwards = getOperatorAwards();
   const author = isStudioAuthor
     ? {
         '@type': 'Person',
@@ -51,7 +53,7 @@ export const generateArticleSchema = (
         // Person 권위 프로필 홈 — /author 프로필 페이지(ProfilePage mainEntity)와 일치.
         url: `${siteUrl}/${locale}/author`,
         ...(authorSameAs.length > 0 && { sameAs: authorSameAs }),
-        ...(studioOperator.award && { award: studioOperator.award }),
+        ...(operatorAwards.length > 0 && { award: operatorAwards }),
         worksFor: {
           '@type': 'Organization',
           '@id': organizationId,

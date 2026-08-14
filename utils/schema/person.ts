@@ -31,6 +31,15 @@ export const getOperatorPressCoverage = () =>
   }));
 
 /**
+ * Person.award — 수상 이력을 "2017 한국대중음악상 선정위원 특별상 〈젠트리피케이션〉" 형태 문자열로.
+ * article·releaseProject 스키마도 같은 목록을 쓸 수 있도록 여기가 단일 변환 지점이다.
+ */
+export const getOperatorAwards = (): string[] =>
+  (studioOperator.awards ?? []).map((award) =>
+    [award.year, award.name, award.category, `〈${award.work}〉`].filter(Boolean).join(' ')
+  );
+
+/**
  * Person 프로필 스키마 — /[locale]/author 페이지의 mainEntity.
  * generateArticleSchema·generateReleaseProjectSchema와 동일한 @id(#person-hwang)를 사용해
  * 사이트 전체에서 황경하를 단일 entity로 인식시킨다 (GEO/E-E-A-T 핵심).
@@ -47,6 +56,7 @@ export const generatePersonProfileSchema = (
     ...(studioOperator.sameAs ?? []),
   ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
   const press = getOperatorPressCoverage();
+  const awards = getOperatorAwards();
 
   return {
     '@context': 'https://schema.org',
@@ -64,7 +74,8 @@ export const generatePersonProfileSchema = (
       width: studioOperator.portrait.width,
       height: studioOperator.portrait.height,
     },
-    ...(studioOperator.award && { award: studioOperator.award }),
+    // Person.award — 수상 이력 전체를 배열로. 문자열 하나였을 땐 한 건만 나갔다.
+    ...(awards.length > 0 && { award: awards }),
     ...(sameAs.length > 0 && { sameAs }),
     ...(press.length > 0 && { subjectOf: press }),
     knowsAbout: getOperatorKnowsAbout(locale),

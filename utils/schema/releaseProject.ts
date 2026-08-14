@@ -1,7 +1,7 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
 import { getSchemaLanguage } from './shared';
-import { getOperatorKnowsAbout } from './person';
+import { getOperatorAwards, getOperatorKnowsAbout } from './person';
 
 const RELEASE_SERVICE_NAMES: Record<Locale, string> = {
   ko: '음원 발매 프로듀싱',
@@ -79,6 +79,8 @@ export const generateReleaseProjectSchema = (
     ...(studioOperator.sameAs ?? []),
   ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
 
+  const operatorAwards = getOperatorAwards();
+
   const person = {
     '@type': 'Person',
     '@id': personId,
@@ -87,7 +89,7 @@ export const generateReleaseProjectSchema = (
     description: RELEASE_PERSON_DESCRIPTIONS[locale],
     // Person 권위 프로필 홈 — /author 프로필 페이지·generateArticleSchema와 일치 (단일 entity url).
     url: `${siteUrl}/${locale}/author`,
-    ...(studioOperator.award && { award: studioOperator.award }),
+    ...(operatorAwards.length > 0 && { award: operatorAwards }),
     knowsAbout: getOperatorKnowsAbout(locale),
     ...(personSameAs.length > 0 && { sameAs: personSameAs }),
     worksFor: { '@type': 'Organization', '@id': organizationId, name: config.name },
