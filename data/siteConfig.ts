@@ -104,7 +104,7 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
     }),
     contact: {
       phone: CANONICAL_FACTS.phone,
-      email: 'hwangtab@gmail.com',
+      email: 'hello@studionol.co.kr',
       address: t(locale, {
         ko: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',
         en: '3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul',

@@ -188,7 +188,7 @@
       "phone": "Phone (optional)",
       "phonePlaceholder": "e.g., +82 10-1234-5678…",
       "email": "Email",
-      "emailPlaceholder": "e.g., hwangtab@gmail.com…",
+      "emailPlaceholder": "e.g., name@example.com…",
       "message": "Message",
       "messagePlaceholder": "e.g., project goal, schedule, reference links…",
       "submit": "Send Email Inquiry",

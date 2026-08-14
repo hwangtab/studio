@@ -27,7 +27,7 @@ describe('ContactFormErrorFallback', () => {
         locale="ko"
         kakaoUrl="https://open.kakao.com/me/nol"
         phone="010-4255-7893"
-        email="hwangtab@gmail.com"
+        email="hello@studionol.co.kr"
         t={t}
       />
     );
@@ -38,9 +38,9 @@ describe('ContactFormErrorFallback', () => {
       'href',
       'tel:010-4255-7893'
     );
-    expect(screen.getByRole('link', { name: /hwangtab@gmail.com/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /hello@studionol.co.kr/i })).toHaveAttribute(
       'href',
-      'mailto:hwangtab@gmail.com'
+      'mailto:hello@studionol.co.kr'
     );
 
     fireEvent.click(kakao);

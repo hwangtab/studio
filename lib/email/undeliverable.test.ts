@@ -21,7 +21,7 @@ describe('배달 불가 주소 차단', () => {
   });
 
   it.each([
-    'hwangtab@gmail.com',
+    'hello@studionol.co.kr',
     'user@naver.com',
     'someone@studionol.co.kr',
     'a@example.co.kr',

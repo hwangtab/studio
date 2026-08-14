@@ -18,7 +18,7 @@ const siteConfig: SiteConfig = {
   contact: {
     address: '서울특별시 은평구 대조동 84-3',
     phone: '010-4255-7893',
-    email: 'hwangtab@gmail.com',
+    email: 'hello@studionol.co.kr',
     kakaoUrl: 'https://open.kakao.com/me/nol',
     naverMapUrl: 'https://naver.me/5gFZhS3X',
   },
@@ -60,9 +60,9 @@ describe('ContactInfoCard', () => {
     );
     const phone = screen.getByRole('link', { name: /010-4255-7893/i });
     expect(phone).toHaveAttribute('href', 'tel:010-4255-7893');
-    expect(screen.getByRole('link', { name: /hwangtab@gmail.com/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /hello@studionol.co.kr/i })).toHaveAttribute(
       'href',
-      'mailto:hwangtab@gmail.com'
+      'mailto:hello@studionol.co.kr'
     );
 
     fireEvent.click(phone);

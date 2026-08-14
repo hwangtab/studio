@@ -188,7 +188,7 @@
       "phone": "연락처 (선택)",
       "phonePlaceholder": "예: 010-1234-5678…",
       "email": "이메일",
-      "emailPlaceholder": "예: hwangtab@gmail.com…",
+      "emailPlaceholder": "예: name@example.com…",
       "message": "메시지",
       "messagePlaceholder": "예: 프로젝트 목적, 일정, 참고 링크…",
       "submit": "이메일로 문의하기",

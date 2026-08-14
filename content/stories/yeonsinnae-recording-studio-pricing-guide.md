@@ -89,7 +89,7 @@ Studio NOL의 1:1 음악 레슨은 **월 ₩350,000 정액(4세션 × 60분)**�
 
 ## 견적 의뢰 / 다음 단계
 
-24시간 내 무료 견적은 KakaoTalk 채널 [open.kakao.com/me/nol](https://open.kakao.com/me/nol)이 가장 빠릅니다. 이메일은 hwangtab@gmail.com, 전화는 %%phone-intl%%로 연결됩니다. 곡 가이드(러프 데모·가사·참고 곡 링크)와 함께 "보컬 1곡 / 트랙 약 15개 / 마스터까지" 같은 한 줄 정보를 보내주시면 그날 안에 견적이 회신됩니다.
+24시간 내 무료 견적은 KakaoTalk 채널 [open.kakao.com/me/nol](https://open.kakao.com/me/nol)이 가장 빠릅니다. 이메일은 hello@studionol.co.kr, 전화는 %%phone-intl%%로 연결됩니다. 곡 가이드(러프 데모·가사·참고 곡 링크)와 함께 "보컬 1곡 / 트랙 약 15개 / 마스터까지" 같은 한 줄 정보를 보내주시면 그날 안에 견적이 회신됩니다.
 
 위치는 **연신내역(3호선·6호선 환승) 4번 출구에서 도보 5분**, 서울 은평구에 있습니다. 가격표 원본은 [/pricing](/ko/pricing), 연습실 조건은 [/practice-room](/ko/practice-room), 1:1 레슨 커리큘럼은 [/lesson](/ko/lesson)에서 확인하실 수 있습니다. 이번 곡, 합리적인 예산으로 깔끔하게 마무리하시길 바랍니다.
 

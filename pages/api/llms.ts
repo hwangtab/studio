@@ -57,9 +57,9 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR 03424 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
 - Geo: 37.614353, 126.925887
 - Phone: ${CANONICAL_FACTS.phoneIntl} (domestic: ${CANONICAL_FACTS.phone})
-- Email: hwangtab@gmail.com
+- Email: hello@studionol.co.kr
 - Business Hours: Daily 10:00 AM – Midnight (Mon–Sun, including weekends and holidays)
-- Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (${CANONICAL_FACTS.phoneIntl}), Email (hwangtab@gmail.com)
+- Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (${CANONICAL_FACTS.phoneIntl}), Email (hello@studionol.co.kr)
 - Naver Map: https://naver.me/5gFZhS3X
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
 
@@ -153,7 +153,7 @@ Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recor
 Korean (primary), English, Chinese Simplified, Spanish, Vietnamese, Thai, Uzbek.
 
 ### How do I book or get a quote?
-KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FACTS.phoneIntl}. Email: hwangtab@gmail.com. Free quote, same-day booking possible.
+KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FACTS.phoneIntl}. Email: hello@studionol.co.kr. Free quote, same-day booking possible.
 
 ## Sitemaps & Feeds
 
@@ -206,7 +206,7 @@ const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
 Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-language booking and communication support. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
-- English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hwangtab@gmail.com), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
+- English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
 - Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
@@ -225,7 +225,7 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 - 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
 - 婚礼献唱套餐：₩${krw(WEDDING_PACKAGE_PRICE)}（2 小时录音 + 人声调音 + 混音及母带），新手友好。
 - 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 3 篇 spoke 指南（练习室预约、价格、交通指引）。
-- 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hwangtab@gmail.com)、电话 ${CANONICAL_FACTS.phoneIntl}，24 小时内免费报价。
+- 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hello@studionol.co.kr)、电话 ${CANONICAL_FACTS.phoneIntl}，24 小时内免费报价。
 `;
 
 // Author entity grounding — E-E-A-T 시그널 + LLM이 사실 신뢰도 판단 시 참조하는
@@ -237,7 +237,7 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music produ
 
 - Operator: Hwang Kyungha (황경하)
 - Award: 제14회 한국대중음악상 '선정위원 특별상' (Selection Committee Special Award, 14th Korean Music Awards, 2017)
-- Contact: hwangtab@gmail.com
+- Contact: hello@studionol.co.kr
 - Studio founded: 2024
 - Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)
 `;

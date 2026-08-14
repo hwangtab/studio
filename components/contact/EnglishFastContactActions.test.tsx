@@ -18,7 +18,7 @@ describe('EnglishFastContactActions', () => {
       <EnglishFastContactActions
         locale="en"
         kakaoUrl="https://open.kakao.com/me/nol"
-        email="hwangtab@gmail.com"
+        email="hello@studionol.co.kr"
         phone="010-4255-7893"
       />
     );
@@ -27,7 +27,7 @@ describe('EnglishFastContactActions', () => {
     expect(kakao).toHaveAttribute('href', 'https://open.kakao.com/me/nol');
     expect(screen.getByRole('link', { name: /email studio nol/i })).toHaveAttribute(
       'href',
-      'mailto:hwangtab@gmail.com'
+      'mailto:hello@studionol.co.kr'
     );
     expect(screen.getByRole('link', { name: /call studio nol/i })).toHaveAttribute(
       'href',
@@ -47,7 +47,7 @@ describe('EnglishFastContactActions', () => {
       <EnglishFastContactActions
         locale="en"
         kakaoUrl="https://open.kakao.com/me/nol"
-        email="hwangtab@gmail.com"
+        email="hello@studionol.co.kr"
         phone="010-4255-7893"
       />
     );
