@@ -167,3 +167,15 @@
 - **회귀 1건 발견·수정**: `scripts/generate-hero-font.mjs`가 siteConfig의 모든 `name:`을 정규식으로 긁어
   `awards[].name`("레드어워드"·"한국대중음악상")이 LCP 크리티컬 hero 서브셋에 유입. studioOperator 블록을
   제외하되 최상위 name(= /author h1 "황경하")만 따로 수집하도록 수정 → 444 glyphs, woff2 재생성 불필요
+
+## 2026-08-14 · ingest · 수상 언급 2차 정리 + 포트폴리오 사실 오류 수정
+- 스토리 전수 재스캔: 운영자 수상 언급은 producer1 1곳만 남아 있었고, 이것도 제거
+  (문단 논지가 "15년 하며 지망생을 많이 봤다 → 조언한다"라 수상은 권위 세우기로만 붙어 있었음).
+  나머지 "수상"은 그래미 등 일반 서술이라 무관. "15년/70장" 경험 근거 20편은 문맥마다 달라 유지
+- 포트폴리오 〈눈녹듯〉 설명에서 "…한국대중음악상 선정위원 특별상을 수상한 바 있다" 제거(ko/en)
+- **사실 오류 3건 수정** — 〈젠트리피케이션〉 포트폴리오 항목이 수상을 표시하려다 메타가 오염돼 있었다:
+  - `label`(= 상세 페이지 '레이블' 표시)이 "Korean Music Awards" → **Poclanos**(본문 근거: 포크라노스 발매)
+  - `releaseDate` "2023-11-15" → **2016-10-05**(본문·siteConfig 주석 일치). 발매일 7년 오차였고
+    release-project 페이지의 releaseDate 정렬에도 영향
+  - `musicians` "Various Artists (KMA 참여 아티스트 전원)" → "Various Artists (11팀 참여)"
+- 부수: voice-acting-rate1 오타 "직집 엔지니어링" → "직접"

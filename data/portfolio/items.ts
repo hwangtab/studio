@@ -514,8 +514,8 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
                 "musicians": ["황경하 (Vocal, Acoustic Guitar, Piano, Synthesizer)"]
             },
             "productionNotes": {
-                "ko": "'눈녹듯'은 음악가이자 기획자 황경하가 2024년 8월 5일 발매한 솔로 디지털 싱글이다. Apple Music, Spotify, Bugs, Genie 등 주요 음원 플랫폼에 유통되어 있으며, 단일 곡으로 구성된 싱글 형태로 발표되었다.\n\n황경하는 밴드 노컨트롤 멤버이자 자립음악생산조합 운영위원으로 활동해 왔으며, 11팀이 참여한 사회참여 컴필레이션 '젠트리피케이션'을 기획·제작해 한국대중음악상 선정위원 특별상을 수상한 바 있다. 솔로 활동으로는 2022년 싱글 '가지말아요'에 이어 본 작품을 선보였다. 본 작품은 Studio NOL에서 작업되었다.",
-                "en": "\"Like Snow Melting\" (눈녹듯) is a solo digital single by Korean indie musician and producer Hwang Gyeong-ha, released on August 5, 2024. The single-track release is distributed on major streaming platforms including Apple Music, Spotify, Bugs, and Genie.\n\nHwang Gyeong-ha is known as a member of the band No Control and as a longtime operating committee member of the Jarip Music Production Cooperative. He produced the socially engaged compilation album \"Gentrification,\" gathering 11 acts, for which he received a Special Award from the Korean Music Awards selection committee. Following his 2022 single \"Don't Go\" (가지말아요), this track marks another entry in his solo catalog. The work was produced at Studio NOL."
+                "ko": "'눈녹듯'은 음악가이자 기획자 황경하가 2024년 8월 5일 발매한 솔로 디지털 싱글이다. Apple Music, Spotify, Bugs, Genie 등 주요 음원 플랫폼에 유통되어 있으며, 단일 곡으로 구성된 싱글 형태로 발표되었다.\n\n황경하는 밴드 노컨트롤 멤버이자 자립음악생산조합 운영위원으로 활동해 왔으며, 11팀이 참여한 사회참여 컴필레이션 '젠트리피케이션'을 기획·제작했다. 솔로 활동으로는 2022년 싱글 '가지말아요'에 이어 본 작품을 선보였다. 본 작품은 Studio NOL에서 작업되었다.",
+                "en": "\"Like Snow Melting\" (눈녹듯) is a solo digital single by Korean indie musician and producer Hwang Gyeong-ha, released on August 5, 2024. The single-track release is distributed on major streaming platforms including Apple Music, Spotify, Bugs, and Genie.\n\nHwang Gyeong-ha is known as a member of the band No Control and as a longtime operating committee member of the Jarip Music Production Cooperative. He produced the socially engaged compilation album \"Gentrification,\" gathering 11 acts. Following his 2022 single \"Don't Go\" (가지말아요), this track marks another entry in his solo catalog. The work was produced at Studio NOL."
             }
         },
         {
@@ -852,11 +852,11 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             ],
             "featured": true,
             "artist": "Various Artists",
-            "releaseDate": "2023-11-15",
-            "label": "Korean Music Awards",
+            "releaseDate": "2016-10-05",
+            "label": "Poclanos",
             "credits": {
                 "engineer": "Studio NOL (황경하) — Mastering & Album Direction",
-                "musicians": ["Various Artists (KMA 참여 아티스트 전원)"]
+                "musicians": ["Various Artists (11팀 참여)"]
             },
             "productionNotes": {
                 "ko": "2016년 10월 5일 포크라노스를 통해 발매된 컴필레이션 앨범으로, 자립음악생산조합이 기획했다. 옥바라지골목, 테이크아웃드로잉, 경의선공유지 등 강제 철거 위기에 놓인 공간과 그 곳의 이야기를 음악으로 기록한 프로젝트로, 파다파, 여행하는 작곡가 김동산, 아나킨 프로젝트, 황푸하, 김해원, 여유, 잇다, 심애리·이권형, 우레루나, 박지하·김오키 등 11곡이 수록되어 있다.\n\n황경하가 프로듀스·녹음·믹스를 맡았으며, 마스터링은 소노리떼 마스터링 스튜디오에서 진행했다. 포크, 블루스, 락 등 다양한 인디 사운드가 한 앨범에 모여 젠트리피케이션이라는 사회적 의제를 음악적으로 기록한 작품이다.",
