@@ -32,7 +32,7 @@
 전화      010-4255-7893          ← 0507 안심번호 절대 사용 금지
 카카오    https://open.kakao.com/me/nol
 네이버맵  https://naver.me/5gFZhS3X
-이메일    hwangtab@gmail.com
+이메일    hello@studionol.co.kr
 교통      6호선 불광역 7번 출구 도보 5분 / 3호선 연신내역 도보 5분
 영업시간  사이트/llms 기준 매일 10:00–24:00 (실제 운영 정책으로 확정 후 네이버·구글에 동일 적용)
 ```
