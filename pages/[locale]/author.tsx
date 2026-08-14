@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight, Award, ExternalLink, Music } from '@/lib/lucide-icons';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import { Section } from '../../components/ui/Section';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
@@ -61,6 +62,21 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
         locale={locale}
         priority
         title={profile.name}
+        // 인물 사진은 히어로 안 아바타로. 배경(studio1)은 그대로 두고 사람을 얹어야
+        // "프로필 페이지에 얼굴이 없다"와 "스튜디오 사진에 인물 alt가 붙어 있다"가 함께 풀린다.
+        // priority는 주지 않는다 — preload 예산은 LCP인 배경 이미지 몫이고, eager로 충분히 이르다.
+        aboveTitle={
+          <ResponsiveImage
+            src={profile.photo.src}
+            alt={profile.photo.alt}
+            width={128}
+            height={128}
+            sizes="128px"
+            loading="eager"
+            containerClassName="w-32 h-32 rounded-full overflow-hidden ring-2 ring-white/70 shadow-lg"
+            className="w-full h-full object-cover"
+          />
+        }
         subtitle={
           <div className="mt-4 space-y-1 text-lg opacity-90">
             <p>{profile.jobTitle}</p>

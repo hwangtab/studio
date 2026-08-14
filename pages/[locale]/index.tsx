@@ -9,6 +9,7 @@ import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import ImageHero from '../../components/common/ImageHero';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import MediaGallery from '../../components/ui/MediaGallery';
 import { Section } from '../../components/ui/Section';
 
@@ -187,11 +188,22 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         </Section>
       )}
 
-      {/* 프로듀서 신뢰 스트립 — 그동안 /release-project에만 있던 실적(70+ 발매작·15년·
-          2017 한국대중음악상)을 홈으로 승격해 첫 화면 신뢰도 보강. */}
+      {/* 프로듀서 신뢰 스트립 — 그동안 /release-project에만 있던 실적(70+ 발매작·15년 경력)을
+          홈으로 승격해 첫 화면 신뢰도 보강. 수치 주장은 반드시 /author로 이어져야 한다:
+          방문자가 실적을 검증할 유일한 경로이고, Person entity(utils/schema/person.ts가
+          Person.url을 /author로 일원화) 쪽으로 가는 가장 강한 내부링크다. */}
       {producerCredibility && (
         <Section variant="default">
           <div className="max-w-4xl mx-auto text-center">
+            <ResponsiveImage
+              src={producerCredibility.photo.src}
+              alt={producerCredibility.photo.alt}
+              width={112}
+              height={112}
+              sizes="112px"
+              containerClassName="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden ring-1 ring-black/10 dark:ring-white/15 shadow-md"
+              className="w-full h-full object-cover"
+            />
             <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary mb-2">
               <Award size={18} aria-hidden="true" />
               {producerCredibility.eyebrow}
@@ -200,7 +212,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-8 break-keep">
               {producerCredibility.tagline}
             </p>
-            <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
               {producerCredibility.stats.map((stat) => (
                 <div
                   key={stat.label}
@@ -211,6 +223,13 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                 </div>
               ))}
             </div>
+            <Link
+              href={getLink('/author')}
+              className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold text-primary hover:underline underline-offset-4"
+            >
+              {producerCredibility.profileCtaLabel}
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
           </div>
         </Section>
       )}

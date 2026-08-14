@@ -37,10 +37,20 @@ export const getAuthorProfile = (locale: Locale) => ({
       en: 'Kyungha Hwang, music producer, indie album production, Studio NOL, Korean Music Awards',
     }),
   },
+  // 히어로 배경은 스튜디오 사진(studio1.webp)이다 — alt는 실제 이미지 내용을 기술한다.
+  // 인물 사진 alt는 photoAlt로 분리(예전엔 배경·인물 구분 없이 heroAlt 하나를 돌려써서
+  // 스튜디오 사진에 "프로듀서 프로필"이라는 alt가 붙어 있었다).
   heroAlt: t(locale, {
-    ko: '스튜디오 놀 프로듀서 황경하 프로필',
-    en: 'Profile of Kyungha Hwang, producer at Studio NOL',
+    ko: '스튜디오 놀 녹음실 내부 — 황경하가 작업하는 공간',
+    en: 'Inside the Studio NOL recording room where Kyungha Hwang works',
   }),
+  photo: {
+    src: studioOperator.portrait.src,
+    alt: t(locale, {
+      ko: '프로듀서 황경하',
+      en: 'Kyungha Hwang, producer',
+    }),
+  },
   // Person JSON-LD description — 한 문장 자기소개.
   schemaDescription: t(locale, {
     ko: '여러 인디 아티스트와 함께한 15년차 음반 기획자·프로듀서. 서울 연신내 스튜디오 놀 운영 — 기획·보컬 디렉팅·녹음·믹싱·유통·평론 PR 동행.',

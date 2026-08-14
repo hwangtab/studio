@@ -7,6 +7,8 @@ import { hasNavigatedSinceLoad } from '../../lib/navigationState';
 
 interface ImageHeroProps {
   title: React.ReactNode;
+  /** h1 위에 놓이는 요소(예: /author의 인물 아바타). h1 안에 넣으면 hero 텍스트가 오염되므로 별도 슬롯. */
+  aboveTitle?: React.ReactNode;
   subtitle?: React.ReactNode;
   ctaButtons?: React.ReactNode;
   backgroundImage: string;
@@ -22,6 +24,7 @@ interface ImageHeroProps {
 
 const ImageHero = ({
   title,
+  aboveTitle,
   subtitle,
   ctaButtons,
   backgroundImage,
@@ -89,6 +92,11 @@ const ImageHero = ({
             원인. SSR HTML이 즉시 최종 위치에 페인트되도록 순수 <div>로 교체.
             줌 애니메이션(hero-zoom)은 CSS keyframes라 영향 없음. */}
         <div>
+          {aboveTitle && (
+            <div className={`mb-6 ${textAlign === 'center' ? 'flex justify-center' : ''}`}>
+              {aboveTitle}
+            </div>
+          )}
           {/* font-hero = Pretendard Bold 700 micro-subset (lib/fonts.ts pretendardHero).
               사이트 hero 텍스트 글자만 self-host + preload → critical path 진입,
               swap 거의 즉시. 글리프 미포함 글자는 fallback chain(--font-pretendard →

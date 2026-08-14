@@ -56,6 +56,14 @@ export const generatePersonProfileSchema = (
     jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
     description,
     url: getOperatorProfileUrl(siteUrl, locale),
+    // Person.image — 검색·AI 엔진이 entity에 얼굴을 연결하는 신호. 절대 URL이어야 한다.
+    // /author 히어로 아바타와 같은 사진(siteConfig.studioOperator.portrait 단일 소스).
+    image: {
+      '@type': 'ImageObject',
+      url: `${siteUrl}${studioOperator.portrait.src}`,
+      width: studioOperator.portrait.width,
+      height: studioOperator.portrait.height,
+    },
     ...(studioOperator.award && { award: studioOperator.award }),
     ...(sameAs.length > 0 && { sameAs }),
     ...(press.length > 0 && { subjectOf: press }),

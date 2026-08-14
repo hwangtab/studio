@@ -1,4 +1,5 @@
 import type { Locale } from '../lib/i18n';
+import { studioOperator } from './siteConfig';
 
 const homeData = {
     ko: {
@@ -118,11 +119,17 @@ const homeData = {
       eyebrow: "이 스튜디오를 이끄는 사람",
       name: "프로듀서 황경하",
       tagline: "15년차 음반 기획자·프로듀서 · 2017 한국대중음악상 선정위원 특별상 수상",
+      photo: {
+        src: studioOperator.portrait.src,
+        alt: "스튜디오 놀 프로듀서 황경하"
+      },
+      // 카드는 '양'으로 읽히는 수치만. 수상 연도(2017)는 같은 크기의 숫자 카드로 두면
+      // 나머지 둘과 단위가 어긋나고 9년 전 실적이 첫 화면에서 과대 노출되므로 tagline 문장에만 둔다.
       stats: [
         { value: "70+", label: "함께한 발매작" },
-        { value: "15년", label: "음반 작업 경력" },
-        { value: "2017", label: "한국대중음악상 수상" }
-      ]
+        { value: "15년", label: "음반 작업 경력" }
+      ],
+      profileCtaLabel: "프로듀서 프로필 보기"
     }
   },
   en: {
@@ -718,7 +725,11 @@ export interface ProducerCredibility {
   eyebrow: string;
   name: string;
   tagline: string;
+  /** 정사각 인물 사진(원형 크롭). '이끄는 사람' 섹션의 핵심 신뢰 자산이라 필수. */
+  photo: { src: string; alt: string };
   stats: { value: string; label: string }[];
+  /** /author 프로필로 보내는 링크 라벨. 홈에서 실적을 검증할 경로이자 Person entity 내부링크라 필수. */
+  profileCtaLabel: string;
 }
 
 /** Type for the full home data object */

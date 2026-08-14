@@ -39,6 +39,22 @@
     "width": 960,
     "height": 1280
   },
+  "/images/contract-seal.png": {
+    "width": 360,
+    "height": 360
+  },
+  "/images/contract-seal.webp": {
+    "width": 360,
+    "height": 360
+  },
+  "/images/email-logo.png": {
+    "width": 280,
+    "height": 72
+  },
+  "/images/email-logo.webp": {
+    "width": 280,
+    "height": 72
+  },
   "/images/hardware1.jpg": {
     "width": 1280,
     "height": 720
@@ -266,6 +282,10 @@
   "/images/portfolio6.webp": {
     "width": 300,
     "height": 300
+  },
+  "/images/producer-hwang-kyungha.jpg": {
+    "width": 864,
+    "height": 864
   },
   "/images/recording1.webp": {
     "width": 1920,
