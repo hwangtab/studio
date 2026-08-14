@@ -251,4 +251,4 @@ R&B에서 즉흥적으로 나오는 "감으로 하는" 런:
 
 ---
 
-[보컬 R&B 프레이징·그루브·어택 포인트 — 완전 가이드](/stories/practice-room-vocal-rnb-phrasing1) | [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [보컬 소울·R&B 창법·멜리즈마 기법 — 완전 가이드](/stories/practice-room-vocal-soul1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)
+[보컬 R&B 프레이징·그루브·어택 포인트 — 완전 가이드](/stories/practice-room-vocal-rnb-phrasing1) | [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [보컬 소울·R&B 창법·멜리즈마 기법 — 완전 가이드](/stories/practice-room-vocal-soul1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

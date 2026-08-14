@@ -499,7 +499,6 @@ export const PRACTICE_ROOM_RELATED_GUIDES: PracticeRoomRelatedGuide[] = [
   { slug: 'practice-room-drum-rim-techniques1', title: '드럼 림샷·크로스스틱·림 기법 음악연습실' },
   { slug: 'practice-room-guitar-blues-rhythm1', title: '기타 블루스 리듬·셔플 패턴 음악연습실' },
   { slug: 'practice-room-piano-gospel1', title: '피아노 가스펠·R&B 피아노 음악연습실' },
-  { slug: 'practice-room-vocal-chest-voice1', title: '보컬 흉성·체스트 보이스 강화 훈련 음악연습실' },
   { slug: 'practice-room-bass-funk-groove1', title: '베이스 펑크 그루브·원 드롭 베이스라인 음악연습실' },
   { slug: 'practice-room-drum-cymbal-techniques1', title: '드럼 심벌 기법·라이드·크래쉬 활용법 음악연습실' },
   { slug: 'practice-room-guitar-country1', title: '기타 컨트리·치킨피킹 기법 음악연습실' },

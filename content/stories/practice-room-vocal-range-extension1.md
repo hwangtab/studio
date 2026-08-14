@@ -268,4 +268,4 @@ summary: >-
 
 ---
 
-[보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 발음 훈련·딕션 스피드 연습 — 완전 가이드](/stories/practice-room-vocal-tongue-twisters1)
+[보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 발음 훈련·딕션 스피드 연습 — 완전 가이드](/stories/practice-room-vocal-tongue-twisters1)

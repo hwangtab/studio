@@ -178,4 +178,4 @@ faq:
 
 ---
 
-[보컬 더블링·더블트래킹 완전 가이드](/stories/vocal-doubling1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [코러스·백보컬 녹음 완전 가이드](/stories/background-vocal1)
+[보컬 더블링·더블트래킹 완전 가이드](/stories/vocal-doubling1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [코러스·백보컬 녹음 완전 가이드](/stories/background-vocal1)

@@ -146,4 +146,4 @@ inlineFallback:
 
 ---
 
-[작사 방법 완전 가이드](/stories/lyrics1) | [보컬 딕션 완전 가이드](/stories/diction1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [녹음 세션 준비 완전 가이드](/stories/session1)
+[작사 방법 완전 가이드](/stories/lyrics1) | [보컬 딕션 완전 가이드](/stories/practice-room-vocal-diction1) | [보컬 연습 스케줄 가이드](/stories/practice-schedule1) | [녹음 세션 준비 완전 가이드](/stories/session1)

@@ -129,4 +129,4 @@ faq:
 
 ---
 
-[보컬 더블 트래킹 가이드](/stories/doubletracking1) | [아카펠라 녹음 가이드](/stories/acapella1) | [듀엣 녹음 가이드](/stories/duet1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [백보컬·코러스 녹음 가이드](/stories/background-vocal1)
+[보컬 더블 트래킹 가이드](/stories/vocal-doubling1) | [아카펠라 녹음 가이드](/stories/acapella1) | [듀엣 녹음 가이드](/stories/duet1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 녹음 실수 10가지](/stories/mistakes1) | [백보컬·코러스 녹음 가이드](/stories/background-vocal1)

@@ -163,4 +163,4 @@ faq:
 
 하모니 오버더빙에서 흔한 실수는 피치를 귀로만 확인하는 것입니다. DAW의 피치 모니터링 플러그인(Melodyne, Auto-Tune Live)을 레코딩 상태에서 활성화하면 화음 음정의 정확성을 실시간으로 시각적으로 확인하며 녹음할 수 있습니다. 하모니 파트 믹싱 시에는 리드 보컬보다 -8~-12dB 낮게, L/R 패닝으로 분리해 배치하면 리드 보컬의 선명도를 해치지 않고 자연스러운 앙상블이 만들어집니다.
 
-[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/doubletracking1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1)
+[보컬 레이어링 완전 가이드](/stories/vocal-layering1) | [하모니 노래 완전 가이드](/stories/harmony-singing1) | [더블 트래킹 완전 가이드](/stories/vocal-doubling1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1)

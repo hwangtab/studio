@@ -374,4 +374,4 @@ R&B·소울에 적합
 
 ---
 
-[보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/practice-room-vocal-chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1)
+[보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 팔세토·두성 트레이닝 — 완전 가이드](/stories/practice-room-vocal-falsetto1) | [보컬 흉성·체스트 보이스 강화 훈련 — 완전 가이드](/stories/chest-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1)

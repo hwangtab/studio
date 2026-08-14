@@ -187,4 +187,4 @@ inlineFallback:
 
 ---
 
-[펑크 음악 제작 완전 가이드](/stories/funk-music1) | [힙합 보컬 믹싱 가이드](/stories/hip-hop-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 딕션 완전 가이드](/stories/diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1)
+[펑크 음악 제작 완전 가이드](/stories/funk-music1) | [힙합 보컬 믹싱 가이드](/stories/hip-hop-vocal1) | [보컬 런(멜리스마) 완전 가이드](/stories/vocal-runs1) | [보컬 딕션 완전 가이드](/stories/practice-room-vocal-diction1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [힙합 래핑·플로우 보컬 완전 가이드](/stories/hiphop-vocal1)
