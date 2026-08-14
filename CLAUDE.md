@@ -123,6 +123,40 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
   글래스 리뉴얼 성능 회귀 없음 — 배포 게이트 통과. 익명 PSI API는 쿼터로 실패했으니
   재측정 시 `--throttling-method=devtools` 로컬 측정을 쓸 것(방법론: PSI 메모리 참조).
 
+## 카카오 CTA 배색 규칙
+
+카카오톡은 GA4 기준 검증된 유일 전환 채널인데, 예전엔 같은 오픈채팅으로 가는 링크가
+위치마다 색이 달랐다(옐로·보라 그라디언트·반투명 검정·흰색·보라·앰버·yellow-400 — 7종).
+`#FEE500`은 KakaoFab 한 곳뿐이라 방문자가 "노란 건 카톡"을 학습할 기회가 없었다.
+아래 규칙으로 진입점을 통일했다.
+
+- **토큰**: `tailwind.config.ts`의 `kakao`(`#FEE500`) / `kakao-dark`(`#FADA0A`, hover) /
+  `kakao-ink`(`#191600`, 옐로 위 텍스트·아이콘·focus ring)
+- **단일 규칙(양방향)**: 목적지가 카카오톡인 링크는 **전부** 옐로, 카카오가 아닌 링크에는
+  **절대** 옐로를 쓰지 않는다. 이 규칙이 깨지는 순간 노란색의 신호 가치가 사라진다.
+  - 비-ko 로케일은 같은 자리라도 목적지가 `/contact` 폼이므로 옐로 금지 —
+    `ContactCTA`·`ReleaseHeroCtas`가 `isKorean`/locale로 분기한다.
+  - `PricingCard`는 `isKakaoCta`(ctaHref에 'kakao' 포함)로 분기. 카드 5장이 나란히
+    노란 CTA인 건 의도 — 상품은 달라도 행동은 하나다.
+- **옐로 위 글씨는 항상 `text-kakao-ink`.** 흰 글씨는 대비 1.3:1로 WCAG 미달이라
+  올릴 수 없다. `#191600` on `#FEE500`은 약 16:1.
+- **히어로 위계**: 1차(카카오)가 옐로면 2차는 솔리드 `bg-primary`를 쓰지 않는다 —
+  어두운 히어로 사진 위에서 채도 높은 보라가 옐로와 경쟁해 위계가 뒤집힌다.
+  2차는 `bg-black/30 + border-white/40 + text-shadow` 스크림 아웃라인
+  (홈 히어로·ReleaseHeroCtas 공통). 흰 틴트(`bg-white/*`)는 배경을 밝혀
+  흰 글씨 대비를 오히려 떨어뜨리므로 쓰지 않는다(HeaderActions와 동일 판단).
+- 적용: HeaderActions, KakaoFab, 홈·pricing 히어로, HeroKakaoCta(onImage/onSurface 공통),
+  ContactCTA, ReleaseHeroCtas, PricingCard, StickyBottomCTA, Inline{Booking,Price,Service}Callout,
+  {Korean,English}FastContactActions, ContactFormCard, ContactFormErrorFallback,
+  서비스 페이지(recording·lesson·voice-acting·wedding-song·cover-video) 섹션 CTA
+- **헤더 CTA는 투명 상태에서도 옐로**(`kakaoCtaButtonClass`). 솔리드 옐로는 배경 사진
+  밝기와 무관하게 `kakao-ink` 대비가 16:1로 고정되므로, 밝은 히어로에서 흰 글씨가
+  흐려지던 스크림 방식보다 안정적이고 text-shadow도 필요 없다. 비-ko는 목적지가
+  `/contact` 폼이라 기존 그라디언트/스크림을 그대로 쓴다(`formCtaButtonClass`) —
+  헤더는 이 규칙의 ko/비-ko 분기가 가장 눈에 띄는 자리다.
+- **미적용(의도)**: `ContactInfoCard`·`about` 연락처 카드는 버튼이 아니라 텍스트/카드형
+  링크라 제외. `StoryCTA`의 amber는 스토리 테마 색이지 카카오 신호가 아니므로 건드리지 않는다.
+
 ## Next.js Experimental Flags
 
 `next.config.mjs` `experimental` 블록 결정 사항 — 이유 없이 건드리지 말 것:
