@@ -133,7 +133,7 @@ export const DropdownMenu = ({
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.97 }}
                         transition={{ duration: DUR.fast, ease: EASE_STANDARD }}
-                        className="absolute left-0 mt-1 w-48 rounded-xl glass-regular overflow-hidden z-50 origin-top-left"
+                        className="absolute left-0 mt-1 w-48 rounded-xl glass-menu overflow-hidden z-50 origin-top-left"
                     >
                         <div className="py-2" role="menu" aria-orientation="vertical">
                             {items.map((item, index) => {

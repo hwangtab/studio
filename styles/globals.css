@@ -18,10 +18,12 @@
        기기·설정별 강등은 아래 폴백 블록이 토큰 교체로 일괄 처리한다.
        solid 값은 기존 bg-white/95 · dark:bg-gray-900/95와 동일 — 강등 시
        리뉴얼 이전의 검증된 모습으로 돌아간다. */
-    /* 틴트 0.72: 드롭다운·언어 메뉴가 어두운 히어로 위에 열려도 본문 텍스트가
-       AA(4.5:1)를 유지하도록 상향(0.6은 어두운 배경 위 gray-600이 2.6~4.0:1로 미달).
-       흰 섹션 위 카드는 여전히 사실상 흰색이라 시각 변화 미미. */
+    /* 틴트 0.72: 흰 섹션 위 카드는 사실상 흰색이라 시각 변화 미미.
+       단, 텍스트 밀도 높은 플로팅 메뉴(드롭다운·언어 메뉴)에는 부족 —
+       큰 컬러 타이포그래피 위에 열리면 28% 비침이 blur(저주파는 살아남음)를
+       뚫고 유령 글자로 남아 14px 메뉴 레이블과 경쟁한다. 메뉴는 0.88 전용 틴트. */
     --glass-tint: rgba(255, 255, 255, 0.72);
+    --glass-tint-menu: rgba(255, 255, 255, 0.88);
     --glass-tint-clear: rgba(255, 255, 255, 0.35);
     --glass-solid: rgba(255, 255, 255, 0.95);
     --glass-filter: blur(14px) saturate(1.7);
@@ -36,6 +38,7 @@
 
   .dark {
     --glass-tint: rgba(17, 24, 39, 0.72);
+    --glass-tint-menu: rgba(17, 24, 39, 0.88);
     --glass-tint-clear: rgba(17, 24, 39, 0.35);
     --glass-solid: rgba(3, 7, 18, 0.95);
     --glass-border: rgba(255, 255, 255, 0.12);
@@ -54,6 +57,7 @@
   @media (prefers-reduced-transparency: reduce) {
     :root {
       --glass-tint: var(--glass-solid);
+      --glass-tint-menu: var(--glass-solid);
       --glass-tint-clear: var(--glass-solid);
       --glass-filter: none;
       --glass-filter-clear: none;
@@ -63,6 +67,7 @@
   @media (hover: none) and (pointer: coarse), (max-width: 768px) {
     :root {
       --glass-tint: var(--glass-solid);
+      --glass-tint-menu: var(--glass-solid);
       --glass-tint-clear: var(--glass-solid);
       --glass-filter: none;
       --glass-filter-clear: none;
@@ -71,6 +76,7 @@
   }
   html[data-glass='solid'] {
     --glass-tint: var(--glass-solid);
+    --glass-tint-menu: var(--glass-solid);
     --glass-tint-clear: var(--glass-solid);
     --glass-filter: none;
     --glass-filter-clear: none;

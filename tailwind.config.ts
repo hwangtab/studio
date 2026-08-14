@@ -238,9 +238,19 @@ const config: Config = {
       // 클래스들에 프리픽스를 일관되게 안 붙이는 것이 빌드 CSS 감사로 확인됨
       // (glass-regular만 붙고 glass-clear·glass-bar 누락). Safari 16–17 필수.
       addComponents({
-        // 기본 재질: 헤더, 카드, 모달, 드롭다운 등 텍스트를 얹는 표면
+        // 기본 재질: 헤더, 카드, 모달 등 텍스트를 얹는 표면
         '.glass-regular': {
           backgroundColor: 'var(--glass-tint)',
+          '-webkit-backdrop-filter': 'var(--glass-filter)',
+          backdropFilter: 'var(--glass-filter)',
+          border: '1px solid var(--glass-border)',
+          boxShadow: 'inset 0 1px 0 var(--glass-spec), var(--glass-shadow)',
+        },
+        // 텍스트 밀도 높은 플로팅 메뉴 전용(드롭다운·언어 메뉴): 큰 컬러
+        // 타이포그래피 위에 열려도 비침이 레이블과 경쟁하지 않도록 틴트만
+        // 0.88로 올린 regular 변형. iOS 26도 메뉴/팝오버엔 최불투명 재질을 쓴다.
+        '.glass-menu': {
+          backgroundColor: 'var(--glass-tint-menu)',
           '-webkit-backdrop-filter': 'var(--glass-filter)',
           backdropFilter: 'var(--glass-filter)',
           border: '1px solid var(--glass-border)',

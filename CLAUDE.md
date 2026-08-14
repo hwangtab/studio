@@ -83,6 +83,8 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
 
 - **토큰**: `styles/globals.css`의 `--glass-*` CSS 변수 (라이트/`.dark` 분기 포함)
 - **클래스**: `tailwind.config.ts` 플러그인의 `.glass-regular`(기본 표면),
+  `.glass-menu`(텍스트 밀도 높은 플로팅 메뉴 전용 — 틴트 0.88, DropdownMenu·
+  LanguageSwitcher. 큰 컬러 타이포그래피 위에서 0.72는 비침이 레이블과 경쟁),
   `.glass-clear`(화려한 배경 위 소수 요소 전용, 뷰포트당 1–2개), `.glass-bar`(전폭
   sticky 바 — border·그림자는 컴포넌트가 직접 관리)
 - **자동 폴백** (토큰 교체만으로 전체 강등, 컴포넌트 코드 무변경):

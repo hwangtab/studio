@@ -210,7 +210,7 @@ export const LanguageSwitcher = ({
           }}
           className={`
             absolute right-0 top-full mt-2 origin-top-right ${menuWidthClass} max-w-[90vw] max-h-[60vh] overflow-y-auto overscroll-contain
-            rounded-xl glass-regular py-2 z-[100]
+            rounded-xl glass-menu py-2 z-[100]
           `}
         >
           <ul className={`grid ${menuGridClass} gap-1 px-2`} aria-label={t('common.languageOptions')}>
